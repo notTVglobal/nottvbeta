@@ -311,7 +311,7 @@ const logout = () => {
 
             <!-- Page Content -->
             <main>
-                https://videodelivery.net/39ce0cc05aaf8186079fb844942f0afe/manifest/video.m3u8
+<!--                https://videodelivery.net/39ce0cc05aaf8186079fb844942f0afe/manifest/video.m3u8-->
                 <slot />
             </main>
         </div>
