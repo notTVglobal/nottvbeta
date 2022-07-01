@@ -2,6 +2,7 @@
 
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ImageController;
 use Inertia\Inertia;
 
 /*
@@ -32,4 +33,10 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
+    Route::get('/image', function () {
+        return Inertia::render('Image');
+    })->name('image');
+//    Route::get('/image', [ImageController::class, 'index'])->name('image');
+    Route::get('/images', [ImageController::class, 'show']);
+    Route::post('/upload', [ImageController::class, 'store'])->name('image.upload');
 });
