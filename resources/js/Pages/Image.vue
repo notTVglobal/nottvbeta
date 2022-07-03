@@ -14,9 +14,17 @@
             />
     </div>
     <div>
-        <video width="320" height="240" controls>
-            <source src="https://cloudflarestream.com/91dc50d14c619364b534537fc95b45b4/manifest/manifest.m3u8" type="application/x-mpegURL">
-        </video>
+<!--        <video width="320" height="240" controls>-->
+<!--&lt;!&ndash;            <source src="https://cloudflarestream.com/91dc50d14c619364b534537fc95b45b4/manifest/manifest.m3u8" type="application/x-mpegURL">&ndash;&gt;-->
+<!--&lt;!&ndash;            <source src="http://mist.nottv.io:8080/liberty_april_02.mp4" type="video/mp4">&ndash;&gt;-->
+<!--            <source src="http://mist.nottv.io:8080/hls/liberty_april_02/index.m3u8" type="application/x-mpegURL">-->
+
+
+<!--        </video>-->
+<!--        <video :as="videoPlayer" class="video-js"></video>-->
+<!--        <video id='hls-example'  class="video-js vjs-default-skin" width="400" height="300" controls>-->
+<!--            <source type="application/x-mpegURL" src="http://www.streambox.fr/playlists/test_001/stream.m3u8">-->
+<!--        </video>-->
     </div>
 </template>
 
@@ -44,8 +52,6 @@ const pond = ref([]);
 const FilePondInitialized = ref();
 console.log(FilePondInitialized, "Filepond is ready!");
 console.log("Filepond object:", pond);
-
-
 
 </script>
 

@@ -26,7 +26,9 @@
         "vue-loader": "^17.0.0"
     },
     "dependencies": {
+        "@videojs/http-streaming": "^2.14.2",
         "filepond": "^4.30.4",
+        "video.js": "^7.19.2",
         "vue-filepond": "^7.0.3"
     }
 }

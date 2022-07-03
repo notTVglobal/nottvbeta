@@ -5,7 +5,7 @@ import { Link } from '@inertiajs/inertia-vue3';
 <template>
     <Link :href="'/'">
 
-        <img :src="`images/logo_black_311.png`" alt="image" class="w-1/2">
+        <img :src="`images/logo_black_311.png`" alt="image" class="justify-center">
 <!--        <svg-->
 <!--            class="w-16 h-16"-->
 <!--            viewBox="0 0 48 48"-->

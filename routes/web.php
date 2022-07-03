@@ -20,8 +20,6 @@ Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
     ]);
 });
 
@@ -33,6 +31,10 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
+    Route::get('/video', function () {
+        return Inertia::render('Video');
+    })->name('video');
+
     Route::get('/image', function () {
         return Inertia::render('Image');
     })->name('image');
