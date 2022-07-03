@@ -8,6 +8,7 @@ import JetDropdown from '@/Jetstream/Dropdown.vue';
 import JetDropdownLink from '@/Jetstream/DropdownLink.vue';
 import JetNavLink from '@/Jetstream/NavLink.vue';
 import JetResponsiveNavLink from '@/Jetstream/ResponsiveNavLink.vue';
+import VideoPlayer from "../Components/VideoPlayer";
 
 defineProps({
     title: String,
@@ -36,7 +37,7 @@ const logout = () => {
 
         <JetBanner/>
 
-        <div class="min-h-screen bg-gray-100">
+        <div class="bg-gray-800 text-gray-200">
             <nav class="bg-white border-b border-gray-100">
                 <!-- Primary Navigation Menu -->
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -56,6 +57,12 @@ const logout = () => {
                                 </JetNavLink>
                                 <JetNavLink :href="route('image')" :active="route().current('image')">
                                     Image Uploader
+                                </JetNavLink>
+                                <JetNavLink :href="route('video')" :active="route().current('video')">
+                                    Video
+                                </JetNavLink>
+                                <JetNavLink :href="route('video2')" :active="route().current('video2')">
+                                    Video2
                                 </JetNavLink>
                             </div>
                         </div>
@@ -328,22 +335,16 @@ const logout = () => {
             </nav>
 
             <!-- Page Heading -->
-            <!--            <header v-if="$slots.header" class="bg-white shadow">-->
-            <!--                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">-->
-            <!--                    <slot name="header" />-->
-            <!--                </div>-->
-            <!--            </header>-->
+                        <header v-if="$slots.header" class="bg-white shadow">
+                            <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                                <slot name="header" />
+                            </div>
+                        </header>
 
 
             <!-- Page Content -->
             <main>
-                <div style="position: relative; padding-top: 56.25%; width: 34%; height: 34%;">
-                    <iframe src="https://iframe.cloudflarestream.com/8f039aa05c93a34bec6904df615dd747"
-                            style="border: none; position: absolute; top: 0; left: 0; height: 100%; width: 100%;"
-                            allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
-                            allowfullscreen="true"></iframe>
-                </div>
-                <!--                https://videodelivery.net/39ce0cc05aaf8186079fb844942f0afe/manifest/video.m3u8-->
+                <VideoPlayer />
                 <slot/>
             </main>
         </div>

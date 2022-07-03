@@ -25,6 +25,12 @@ const submit = () => {
     });
 };
 </script>
+<script>
+import NoLayout from '../../Layouts/NoLayout';
+export default {
+    layout: NoLayout,
+}
+</script>
 
 <template>
     <Head title="Reset Password" />

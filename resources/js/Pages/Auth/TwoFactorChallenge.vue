@@ -36,6 +36,12 @@ const submit = () => {
     form.post(route('two-factor.login'));
 };
 </script>
+<script>
+import NoLayout from '../../Layouts/NoLayout';
+export default {
+    layout: NoLayout,
+}
+</script>
 
 <template>
     <Head title="Two-factor Confirmation" />

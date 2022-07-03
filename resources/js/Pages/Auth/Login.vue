@@ -1,5 +1,5 @@
 <script setup>
-import { Head, Link, useForm } from '@inertiajs/inertia-vue3';
+import { useForm } from '@inertiajs/inertia-vue3';
 import JetAuthenticationCard from '@/Jetstream/AuthenticationCard.vue';
 import JetAuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo.vue';
 import JetButton from '@/Jetstream/Button.vue';
@@ -27,6 +27,13 @@ const submit = () => {
         onFinish: () => form.reset('password'),
     });
 };
+
+</script>
+<script>
+import NoLayout from '../../Layouts/NoLayout';
+export default {
+    layout: NoLayout,
+}
 </script>
 
 <template>

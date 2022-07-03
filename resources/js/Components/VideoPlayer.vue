@@ -1,11 +1,18 @@
 <template>
-    <div style="position: relative; padding-top: 56.25%; width: 100%">
-        <iframe src="https://iframe.cloudflarestream.com/8f039aa05c93a34bec6904df615dd747"
-                style="border: none; position: absolute; top: 0; left: 0; height: 100%; width: 100%;"
-                allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
-                allowfullscreen="true"></iframe>
-    </div>
+        <video controls autoplay ref="VideoPlayer">
+            <source :src="`images/Spring-BlenderOpenMovie-WhWc3b3KhnY.webm`" type="video/webm" />
+            Sorry, your browser doesn't support embedded videos.
+        </video>
+
 </template>
 
 <script setup>
+import { ref } from 'vue'
+
+defineProps({
+    VideoId: Object
+});
+
+const VideoId = ref([`images/Spring-BlenderOpenMovie-WhWc3b3KhnY.webm`])
+
 </script>

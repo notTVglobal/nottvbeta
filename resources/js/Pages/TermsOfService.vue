@@ -6,6 +6,12 @@ defineProps({
     terms: String,
 });
 </script>
+<script>
+import NoLayout from '../Layouts/NoLayout';
+export default {
+    layout: NoLayout,
+}
+</script>
 
 <template>
     <Head title="Terms of Service" />

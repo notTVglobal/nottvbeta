@@ -34,6 +34,9 @@ Route::middleware([
     Route::get('/video', function () {
         return Inertia::render('Video');
     })->name('video');
+    Route::get('/video2', function () {
+        return Inertia::render('Video2');
+    })->name('video2');
 
     Route::get('/image', function () {
         return Inertia::render('Image');

@@ -19,6 +19,12 @@ const submit = () => {
     form.post(route('password.email'));
 };
 </script>
+<script>
+import NoLayout from '../../Layouts/NoLayout';
+export default {
+    layout: NoLayout,
+}
+</script>
 
 <template>
     <Head title="Forgot Password" />

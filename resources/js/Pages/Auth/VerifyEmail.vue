@@ -17,6 +17,12 @@ const submit = () => {
 
 const verificationLinkSent = computed(() => props.status === 'verification-link-sent');
 </script>
+<script>
+import NoLayout from '../../Layouts/NoLayout';
+export default {
+    layout: NoLayout,
+}
+</script>
 
 <template>
     <Head title="Email Verification" />

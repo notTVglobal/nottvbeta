@@ -1,12 +1,9 @@
 <template>
+    <Head title="Video2" />
 
-    <Head title="Video" />
-    VIDEO
+    VIDEO 2
 
 </template>
 
 <script setup>
-
 </script>
-
-
