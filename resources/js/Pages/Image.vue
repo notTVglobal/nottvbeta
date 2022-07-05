@@ -11,7 +11,7 @@
             accepted-file-types="image/*"
         />
     </div>
-    <div>
+    <div class="pt-10 pb-10">
     </div>
 </template>
 

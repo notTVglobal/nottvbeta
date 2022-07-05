@@ -38,22 +38,22 @@ const logout = () => {
         <JetBanner/>
 
         <div class="bg-gray-800 text-gray-200">
-            <nav class="bg-white border-b border-gray-100">
+            <nav class="bg-black border-b border-gray-100">
                 <!-- Primary Navigation Menu -->
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="flex justify-between h-16">
                         <div class="flex">
                             <!-- Logo -->
                             <div class="shrink-0 flex items-center">
-                                <Link :href="route('dashboard')">
+                                <Link :href="route('stream')">
                                     <JetApplicationMark class="block h-9 w-auto"/>
                                 </Link>
                             </div>
 
                             <!-- Navigation Links -->
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <JetNavLink :href="route('dashboard')" :active="route().current('dashboard')">
-                                    Dashboard
+                                <JetNavLink :href="route('stream')" :active="route().current('stream')">
+                                    Stream
                                 </JetNavLink>
                                 <JetNavLink :href="route('image')" :active="route().current('image')">
                                     Image Uploader
@@ -61,8 +61,8 @@ const logout = () => {
                                 <JetNavLink :href="route('video')" :active="route().current('video')">
                                     Video
                                 </JetNavLink>
-                                <JetNavLink :href="route('video2')" :active="route().current('video2')">
-                                    Video2
+                                <JetNavLink :href="route('shows')" :active="route().current('shows')">
+                                    Shows
                                 </JetNavLink>
                             </div>
                         </div>
@@ -181,6 +181,10 @@ const logout = () => {
                                             Manage Account
                                         </div>
 
+                                        <JetDropdownLink :href="route('dashboard')">
+                                            Dashboard
+                                        </JetDropdownLink>
+
                                         <JetDropdownLink :href="route('profile.show')">
                                             Profile
                                         </JetDropdownLink>
@@ -206,7 +210,7 @@ const logout = () => {
                         <!-- Hamburger -->
                         <div class="-mr-2 flex items-center sm:hidden">
                             <button
-                                class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition"
+                                class="inline-flex items-center justify-center p-2 rounded-md text-gray-100 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition"
                                 @click="showingNavigationDropdown = ! showingNavigationDropdown">
                                 <svg
                                     class="h-6 w-6"
@@ -236,10 +240,23 @@ const logout = () => {
 
                 <!-- Responsive Navigation Menu -->
                 <div :class="{'block': showingNavigationDropdown, 'hidden': ! showingNavigationDropdown}"
-                     class="sm:hidden">
+                     class="sm:hidden bg-gray-800 text-gray-50">
                     <div class="pt-2 pb-3 space-y-1">
-                        <JetResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
+                        <JetResponsiveNavLink :href="route('dashboard')"
+                                              :active="route().current('dashboard')">
                             Dashboard
+                        </JetResponsiveNavLink>
+                        <JetResponsiveNavLink :href="route('video')"
+                                              :active="route().current('video')"
+
+                        >
+                            Video
+                        </JetResponsiveNavLink>
+                        <JetResponsiveNavLink :href="route('video2')"
+                                              :active="route().current('video2')"
+
+                        >
+                            Video2
                         </JetResponsiveNavLink>
                     </div>
 

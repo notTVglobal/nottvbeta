@@ -26,6 +26,9 @@
         "vue-loader": "^17.0.0"
     },
     "dependencies": {
+        "@vueuse/components": "^8.7.5",
+        "@vueuse/core": "^8.7.5",
+        "@vueuse/shared": "^8.7.5",
         "filepond": "^4.30.4",
         "vue-filepond": "^7.0.3"
     }

@@ -31,12 +31,18 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
+    Route::get('/stream', function () {
+        return Inertia::render('Stream');
+    })->name('stream');
     Route::get('/video', function () {
         return Inertia::render('Video');
     })->name('video');
     Route::get('/video2', function () {
         return Inertia::render('Video2');
     })->name('video2');
+    Route::get('/shows', function () {
+        return Inertia::render('Shows');
+    })->name('shows');
 
     Route::get('/image', function () {
         return Inertia::render('Image');

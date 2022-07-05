@@ -1,7 +1,7 @@
 <template>
-    <Head title="Video2" />
+    <Head title="Shows" />
 
-    VIDEO 2
+    Shows
 
 </template>
 

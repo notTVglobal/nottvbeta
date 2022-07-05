@@ -44,6 +44,7 @@ class ImageController extends Controller
         $uploadedFile = $request->file('image');
 
         // create image model
+        // NEED TO PROTECT THESE
         $image = Image::create([
             'name' => $uploadedFile->hashName(),
             'extension' => $uploadedFile->extension(),

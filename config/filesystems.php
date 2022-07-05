@@ -37,7 +37,7 @@ return [
         ],
 
         'public' => [
-            'driver' => 's3',
+            'driver' => 'local',
             'root' => storage_path('app/public'),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
@@ -46,11 +46,20 @@ return [
 
         's3' => [
             'driver' => 's3',
-            'key' => env('DO_SPACES_KEY'),
-            'secret' => env('DO_SPACES_SECRET'),
-            'region' => env('DO_SPACES_REGION'),
-            'bucket' => env('DO_SPACES_BUCKET'),
-            'endpoint' => env('DO_SPACES_ENDPOINT'),
+            'key' => env('AWS_ACCESS_KEY_ID'),
+            'secret' => env('AWS_SECRET_ACCESS_KEY'),
+            'region' => env('AWS_DEFAULT_REGION'),
+            'bucket' => env('AWS_BUCKET'),
+            'endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT'),
+        ],
+
+        'do_spaces' => [
+         'driver' => 's3',
+         'key' => env('DO_SPACES_KEY'),
+         'secret' => env('DO_SPACES_SECRET'),
+         'endpoint' => env('DO_SPACES_ENDPOINT'),
+         'region' => env('DO_SPACES_REGION'),
+         'bucket' => env('DO_SPACES_BUCKET'),
         ],
 
     ],
@@ -69,6 +78,7 @@ return [
     'links' => [
         public_path('storage') => storage_path('app/public'),
         public_path('images') => storage_path('app/images'),
+        public_path('profile-photos') => storage_path('app/profile-photos'),
     ],
 
 ];

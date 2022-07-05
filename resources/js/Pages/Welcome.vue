@@ -32,6 +32,7 @@ export default {
                     </Link>
 
                     <template v-else>
+                        <div class="fixed left-0 top-0 w-36 p-5"><JetApplicationLogo class=""/></div>
                         <Link :href="route('login')" class="text-sm text-gray-200 underline">
                             Log in
                         </Link>
