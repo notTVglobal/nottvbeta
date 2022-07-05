@@ -14,15 +14,15 @@
             storage-key="vueuse-draggable-pos"
             storage-type="session"
         >
-<!--            <iframe src="https://iframe.videodelivery.net/39ce0cc05aaf8186079fb844942f0afe"-->
-<!--                    class="w-96"-->
-<!--                    allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"-->
-<!--                    allowfullscreen="true">-->
-<!--            </iframe>-->
-            <video controls autoplay muted ref="VideoPlayer" class="w-96">
+            <video controls autoplay muted loop ref="VideoPlayer" class="w-96">
                 <source :src="`images/Spring-BlenderOpenMovie-WhWc3b3KhnY.webm`" type="video/webm"/>
                 Sorry, your browser doesn't support embedded videos.
             </video>
+            <!--            <iframe src="https://iframe.videodelivery.net/39ce0cc05aaf8186079fb844942f0afe"-->
+            <!--                    class="w-96"-->
+            <!--                    allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"-->
+            <!--                    allowfullscreen="true">-->
+            <!--            </iframe>-->
             <div class="text-xs opacity-50 bg-gray-800 text-gray-200">
                 ({{ Math.round(x) }}, {{ Math.round(y) }}) CLICK HERE TO MOVE VIDEO PLAYER
             </div>
