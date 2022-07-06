@@ -26976,7 +26976,7 @@ var _hoisted_3 = {
 };
 var _hoisted_4 = {
   key: 0,
-  "class": "fixed top-0 right-0 px-6 py-4 sm:block sm:items-center sm:pt-0"
+  "class": "fixed top-0 right-0 px-6 py-4 sm:block sm:items-center sm:pt-2"
 };
 
 var _hoisted_5 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Dashboard ");

@@ -26,7 +26,7 @@ export default {
                 <div class="flex justify-center items-center h-screen">
                     <JetApplicationLogo class="block w-auto p-10"/>
                 </div>
-                <div v-if="canLogin" class="fixed top-0 right-0 px-6 py-4 sm:block sm:items-center sm:pt-0">
+                <div v-if="canLogin" class="fixed top-0 right-0 px-6 py-4 sm:block sm:items-center sm:pt-2">
                     <Link v-if="$page.props.user" :href="route('dashboard')" class="text-sm text-gray-200 underline">
                         Dashboard
                     </Link>
