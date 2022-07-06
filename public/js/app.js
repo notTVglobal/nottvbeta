@@ -19549,7 +19549,7 @@ __webpack_require__.r(__webpack_exports__);
         y = _useDraggable.y,
         style = _useDraggable.style;
 
-    var VideoId = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)(["images/Spring-BlenderOpenMovie-WhWc3b3KhnY.webm"]);
+    var VideoId = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)(["@/images/Spring-BlenderOpenMovie-WhWc3b3KhnY.webm"]);
     var __returned__ = {
       el: el,
       innerWidth: innerWidth,

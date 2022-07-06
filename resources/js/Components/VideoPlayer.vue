@@ -51,7 +51,7 @@ defineProps({
     VideoId: Object
 });
 
-const VideoId = ref([`images/Spring-BlenderOpenMovie-WhWc3b3KhnY.webm`])
+const VideoId = ref([`@/images/Spring-BlenderOpenMovie-WhWc3b3KhnY.webm`])
 
 
 </script>
