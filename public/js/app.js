@@ -19549,7 +19549,7 @@ __webpack_require__.r(__webpack_exports__);
         y = _useDraggable.y,
         style = _useDraggable.style;
 
-    var VideoId = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)(["@/images/Spring-BlenderOpenMovie-WhWc3b3KhnY.webm"]);
+    var VideoId = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)(["./images/Spring-BlenderOpenMovie-WhWc3b3KhnY.webm"]);
     var __returned__ = {
       el: el,
       innerWidth: innerWidth,
@@ -22373,7 +22373,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       var x = _ref.x,
           y = _ref.y;
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("video", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("source", {
-        src: "images/Spring-BlenderOpenMovie-WhWc3b3KhnY.webm",
+        src: "./images/Spring-BlenderOpenMovie-WhWc3b3KhnY.webm",
         type: "video/webm"
       }, null, 8
       /* PROPS */

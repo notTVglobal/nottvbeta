@@ -15,7 +15,7 @@
             storage-type="session"
         >
             <video controls autoplay muted loop ref="VideoPlayer" class="w-96">
-                <source :src="`images/Spring-BlenderOpenMovie-WhWc3b3KhnY.webm`" type="video/webm"/>
+                <source :src="`./images/Spring-BlenderOpenMovie-WhWc3b3KhnY.webm`" type="video/webm"/>
                 Sorry, your browser doesn't support embedded videos.
             </video>
             <!--            <iframe src="https://iframe.videodelivery.net/39ce0cc05aaf8186079fb844942f0afe"-->
@@ -51,7 +51,7 @@ defineProps({
     VideoId: Object
 });
 
-const VideoId = ref([`@/images/Spring-BlenderOpenMovie-WhWc3b3KhnY.webm`])
+const VideoId = ref([`./images/Spring-BlenderOpenMovie-WhWc3b3KhnY.webm`])
 
 
 </script>
