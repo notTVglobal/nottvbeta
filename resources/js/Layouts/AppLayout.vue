@@ -244,28 +244,9 @@ const logout = () => {
 
                 <!-- Responsive Navigation Menu -->
                 <div :class="{'block': showingNavigationDropdown, 'hidden': ! showingNavigationDropdown}"
-                     class="sm:hidden bg-gray-800 text-gray-50">
-                    <div class="pt-2 pb-3 space-y-1">
-                        <JetResponsiveNavLink :href="route('dashboard')"
-                                              :active="route().current('dashboard')">
-                            Dashboard
-                        </JetResponsiveNavLink>
-                        <JetResponsiveNavLink :href="route('video')"
-                                              :active="route().current('video')"
-
-                        >
-                            Video
-                        </JetResponsiveNavLink>
-                        <JetResponsiveNavLink :href="route('video2')"
-                                              :active="route().current('video2')"
-
-                        >
-                            Video2
-                        </JetResponsiveNavLink>
-                    </div>
-
+                     class="sm:hidden bg-gray-800 text-gray-50 mb-5">
                     <!-- Responsive Settings Options -->
-                    <div class="pt-4 pb-1 border-t border-gray-200">
+                    <div class="pt-4 pb-4 border-t border-gray-200">
                         <div class="flex items-center px-4">
                             <div v-if="$page.props.jetstream.managesProfilePhotos" class="shrink-0 mr-3">
                                 <img class="h-10 w-10 rounded-full object-cover"
@@ -283,6 +264,41 @@ const logout = () => {
                         </div>
 
                         <div class="mt-3 space-y-1">
+
+                                <JetResponsiveNavLink :href="route('dashboard')"
+                                                      :active="route().current('dashboard')">
+                                    Dashboard
+                                </JetResponsiveNavLink>
+                                <JetResponsiveNavLink :href="route('stream')"
+                                                      :active="route().current('stream')"
+
+                                >
+                                    Stream
+                                </JetResponsiveNavLink>
+                                <JetResponsiveNavLink :href="route('image')"
+                                                      :active="route().current('image')"
+
+                                >
+                                    Image Uploader
+                                </JetResponsiveNavLink>
+                                <JetResponsiveNavLink :href="route('video')"
+                                                      :active="route().current('video')"
+
+                                >
+                                    Video
+                                </JetResponsiveNavLink>
+                                <JetResponsiveNavLink :href="route('shows')"
+                                                      :active="route().current('shows')"
+
+                                >
+                                    Shows
+                                </JetResponsiveNavLink>
+
+                            <JetResponsiveNavLink :href="route('training')"
+                                                  :active="route().current('training')">
+                                Training
+                            </JetResponsiveNavLink>
+
                             <JetResponsiveNavLink :href="route('profile.show')"
                                                   :active="route().current('profile.show')">
                                 Profile
