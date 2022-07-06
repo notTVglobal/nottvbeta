@@ -24,7 +24,10 @@
             <!--                    allowfullscreen="true">-->
             <!--            </iframe>-->
             <div class="text-xs opacity-50 bg-gray-800 text-gray-200">
-                ({{ Math.round(x) }}, {{ Math.round(y) }}) CLICK HERE TO MOVE VIDEO PLAYER
+                <p>({{ Math.round(x) }}, {{ Math.round(y) }}) CLICK HERE TO MOVE VIDEO PLAYER</p>
+                <p>This video is a webm format and won't playback on an iPhone or iPad.<br />
+                    This is just for testing purposes.
+                </p>
             </div>
         </Draggable>
     </div>

@@ -22355,6 +22355,11 @@ var _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNod
 var _hoisted_5 = {
   "class": "text-xs opacity-50 bg-gray-800 text-gray-200"
 };
+
+var _hoisted_6 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("This video is a webm format and won't playback on an iPhone or iPad."), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" This is just for testing purposes. ")], -1
+/* HOISTED */
+);
+
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("    style=\"border: none; position: absolute; top: 0; left: 0; height: 100%; width: 100%;\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["Draggable"], {
     p: "x-4 y-2",
@@ -22379,9 +22384,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       /* PROPS */
       , _hoisted_3), _hoisted_4], 512
       /* NEED_PATCH */
-      ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            <iframe src=\"https://iframe.videodelivery.net/39ce0cc05aaf8186079fb844942f0afe\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    class=\"w-96\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    allow=\"accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    allowfullscreen=\"true\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            </iframe>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, " (" + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(Math.round(x)) + ", " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(Math.round(y)) + ") CLICK HERE TO MOVE VIDEO PLAYER ", 1
+      ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            <iframe src=\"https://iframe.videodelivery.net/39ce0cc05aaf8186079fb844942f0afe\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    class=\"w-96\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    allow=\"accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    allowfullscreen=\"true\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            </iframe>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, "(" + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(Math.round(x)) + ", " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(Math.round(y)) + ") CLICK HERE TO MOVE VIDEO PLAYER", 1
       /* TEXT */
-      )];
+      ), _hoisted_6])];
     }),
     _: 1
     /* STABLE */
