@@ -31,6 +31,9 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
+    Route::get('/training', function () {
+        return Inertia::render('Training');
+    })->name('training');
     Route::get('/stream', function () {
         return Inertia::render('Stream');
     })->name('stream');

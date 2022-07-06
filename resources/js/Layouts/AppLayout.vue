@@ -185,6 +185,10 @@ const logout = () => {
                                             Dashboard
                                         </JetDropdownLink>
 
+                                        <JetDropdownLink :href="route('training')">
+                                            Training
+                                        </JetDropdownLink>
+
                                         <JetDropdownLink :href="route('profile.show')">
                                             Profile
                                         </JetDropdownLink>

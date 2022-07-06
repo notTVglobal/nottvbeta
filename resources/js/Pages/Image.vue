@@ -2,7 +2,9 @@
     <Head title="Image uploading"/>
     <div class="max-w-lg mx-auto mt-24">
         <h1 class="text-4xl font-bold text-center">Image Uploader</h1>
-        <Link :href="('/dashboard')">Dashboard</Link>
+        <p class="pt-3 pb-4 text-orange-400">
+            This uploader is not currently functioning.
+        </p>
         <file-pond
             name="image"
             ref={{pond}}

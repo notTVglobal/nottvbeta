@@ -1053,6 +1053,9 @@ select {
 .col-span-6 {
   grid-column: span 6 / span 6;
 }
+.m-auto {
+  margin: auto;
+}
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
@@ -1131,6 +1134,9 @@ select {
 }
 .mt-24 {
   margin-top: 6rem;
+}
+.mb-10 {
+  margin-bottom: 2.5rem;
 }
 .block {
   display: block;
@@ -1620,6 +1626,9 @@ select {
 .pb-10 {
   padding-bottom: 2.5rem;
 }
+.pt-3 {
+  padding-top: 0.75rem;
+}
 .text-left {
   text-align: left;
 }
@@ -1772,6 +1781,10 @@ select {
 .text-black {
   --tw-text-opacity: 1;
   color: rgb(0 0 0 / var(--tw-text-opacity));
+}
+.text-orange-400 {
+  --tw-text-opacity: 1;
+  color: rgb(251 146 60 / var(--tw-text-opacity));
 }
 .underline {
   -webkit-text-decoration-line: underline;

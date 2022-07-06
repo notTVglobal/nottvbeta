@@ -6,13 +6,20 @@
 <!--            </h2>-->
 <!--        </template>-->
 
-<!--        <div class="py-12">-->
-<!--            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">-->
-<!--                <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">-->
-                    Stream
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
+        <div class="py-12">
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <div class="bg-white text-black shadow-xl sm:rounded-lg">
+                    <div class="flex m-auto mt-10 mb-10 w-1/2">
+                        <div class="bg-white rounded text-black p-5 mb-10">
+                            <h1 class="text-2xl pb-3">Stream</h1>
+                            <p>
+                                The video player will play full page here with a live chat. A menu button in the top left will allow people to select different streams of content.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 </template>
 
 <script setup>
