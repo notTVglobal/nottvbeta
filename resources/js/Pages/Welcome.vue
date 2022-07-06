@@ -24,7 +24,7 @@ export default {
 
             <div class="relative flex items-top justify-center min-h-screen bg-gray-800 text-gray-200 sm:items-center sm:pt-0">
                 <div class="flex justify-center items-center h-screen">
-<!--                    <JetApplicationLogo class="block w-auto"/>-->
+                    <JetApplicationLogo class="block w-auto"/>
                 </div>
                 <div v-if="canLogin" class="hidden fixed top-0 right-0 px-6 py-4 sm:block">
                     <Link v-if="$page.props.user" :href="route('dashboard')" class="text-sm text-gray-200 underline">
@@ -32,7 +32,7 @@ export default {
                     </Link>
 
                     <template v-else>
-                        <div class="fixed left-0 top-0 w-36 p-5"><JetApplicationLogo class=""/></div>
+<!--                        <div class="fixed left-0 top-0 w-36 p-5"><JetApplicationLogo class=""/></div>-->
                         <Link :href="route('login')" class="text-sm text-gray-200 underline">
                             Log in
                         </Link>
