@@ -59,7 +59,7 @@ const logout = () => {
                                     Image Uploader
                                 </JetNavLink>
                                 <JetNavLink :href="route('video')" :active="route().current('video')">
-                                    Video
+                                    Videos
                                 </JetNavLink>
                                 <JetNavLink :href="route('shows')" :active="route().current('shows')">
                                     Shows
@@ -175,37 +175,51 @@ const logout = () => {
                                     </template>
 
                                     <template #content>
+                                        <div class="divide-y">
+                                            <div class="pb-3">
+                                                <!-- Administrator Links -->
+                                                <!-- Need to add v-if="$page.props.jetstream.hasTeamFeatures in a template tag -->
+                                                <div class="block px-4 py-2 text-xs text-gray-400">
+                                                    Administrator Links
+                                                </div>
 
-                                        <!-- Account Management -->
-                                        <div class="block px-4 py-2 text-xs text-gray-400">
-                                            Manage Account
+                                                <JetDropdownLink :href="route('admin.users')">
+                                                    Users
+                                                </JetDropdownLink>
+                                            </div>
+                                            <div class="pt-2 pb-3">
+                                                <!-- Account Management -->
+                                                <div class="block px-4 py-2 text-xs text-gray-400">
+                                                    Manage Account
+                                                </div>
+
+                                                <JetDropdownLink :href="route('dashboard')">
+                                                    Dashboard
+                                                </JetDropdownLink>
+
+                                                <JetDropdownLink :href="route('training')">
+                                                    Training
+                                                </JetDropdownLink>
+
+                                                <JetDropdownLink :href="route('profile.show')">
+                                                    Profile
+                                                </JetDropdownLink>
+
+                                                <JetDropdownLink v-if="$page.props.jetstream.hasApiFeatures"
+                                                                 :href="route('api-tokens.index')">
+                                                    API Tokens
+                                                </JetDropdownLink>
+
+                                            </div>
+                                            <div class="border-t border-gray-100">
+                                                <!-- Authentication -->
+                                                <form @submit.prevent="logout">
+                                                    <JetDropdownLink as="button">
+                                                        Log Out
+                                                    </JetDropdownLink>
+                                                </form>
+                                            </div>
                                         </div>
-
-                                        <JetDropdownLink :href="route('dashboard')">
-                                            Dashboard
-                                        </JetDropdownLink>
-
-                                        <JetDropdownLink :href="route('training')">
-                                            Training
-                                        </JetDropdownLink>
-
-                                        <JetDropdownLink :href="route('profile.show')">
-                                            Profile
-                                        </JetDropdownLink>
-
-                                        <JetDropdownLink v-if="$page.props.jetstream.hasApiFeatures"
-                                                         :href="route('api-tokens.index')">
-                                            API Tokens
-                                        </JetDropdownLink>
-
-                                        <div class="border-t border-gray-100"/>
-
-                                        <!-- Authentication -->
-                                        <form @submit.prevent="logout">
-                                            <JetDropdownLink as="button">
-                                                Log Out
-                                            </JetDropdownLink>
-                                        </form>
                                     </template>
                                 </JetDropdown>
                             </div>
