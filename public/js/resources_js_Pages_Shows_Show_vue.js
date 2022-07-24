@@ -14,7 +14,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   __name: 'Show',
   props: {
-    show: Object
+    show: Object,
+    episodes: Object
   },
   setup: function setup(__props, _ref) {
     var expose = _ref.expose;
@@ -60,6 +61,12 @@ var _hoisted_4 = {
 
 var _hoisted_5 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Go back");
 
+var _hoisted_6 = {
+  "class": "mb-6"
+};
+
+var _hoisted_7 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"flex flex-col\"><div class=\"-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8\"><div class=\"py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8\"><div class=\"shadow overflow-hidden border-b border-gray-200 sm:rounded-lg\"><div class=\"bg-orange-300\"> Episodes list. New features will be added to sort, search and browse episodes. </div><!--                            &lt;table class=&quot;min-w-full divide-y divide-gray-200&quot;&gt;--><!--                                &lt;tbody class=&quot;bg-white divide-y divide-gray-200&quot;&gt;--><!--                                &lt;tr v-for=&quot;episode in episodes.data&quot; :key=&quot;episode.id&quot;&gt;--><!--                                    &lt;td class=&quot;px-6 py-4 whitespace-nowrap&quot;&gt;--><!--                                        &lt;div class=&quot;flex items-center&quot;&gt;--><!--                                            &lt;div&gt;--><!--                                                &lt;div class=&quot;text-sm font-medium text-gray-900&quot;&gt;--><!--                                                    &lt;Link :href=&quot;`/admin/users/${episode.id}`&quot; class=&quot;text-indigo-600 hover:text-indigo-900&quot;&gt;{{ episode.name }}&lt;/Link&gt;--><!--                                                &lt;/div&gt;--><!--                                            &lt;/div&gt;--><!--                                        &lt;/div&gt;--><!--                                    &lt;/td&gt;--><!--                                    &lt;td class=&quot;px-6 py-4 whitespace-nowrap text-right text-sm font-medium&quot;&gt;--><!--                                        &lt;Link :href=&quot;`/admin/users/edit/${episode.id}`&quot; class=&quot;text-indigo-600 hover:text-indigo-900&quot;&gt;Edit&lt;/Link&gt;--><!--                                    &lt;/td&gt;--><!--                                &lt;/tr&gt;--><!--                                &lt;/tbody&gt;--><!--                            &lt;/table&gt;--><!--                            &amp;lt;!&amp;ndash; Paginator &amp;ndash;&amp;gt;--><!--                            &lt;Pagination :links=&quot;episode.links&quot; class=&quot;mt-6&quot;/&gt;--></div></div></div></div>", 1);
+
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_Head = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Head");
 
@@ -81,9 +88,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1
     /* STABLE */
 
-  })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.props.show.description), 1
+  })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_6, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.props.show.description), 1
   /* TEXT */
-  )])])], 64
+  ), _hoisted_7])])], 64
   /* STABLE_FRAGMENT */
   );
 }
