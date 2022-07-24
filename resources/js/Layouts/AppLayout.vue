@@ -25,11 +25,17 @@
                                 <JetNavLink @click="videoTopRight" :href="route('image')" :active="route().current('image')">
                                     Image Uploader
                                 </JetNavLink>
+                                <JetNavLink @click="videoTopRight" :href="route('creators')" :active="route().current('creators')">
+                                    Creators
+                                </JetNavLink>
                                 <JetNavLink @click="videoTopRight" :href="route('video')" :active="route().current('video')">
                                     Videos
                                 </JetNavLink>
                                 <JetNavLink @click="videoTopRight" :href="route('shows')" :active="route().current('shows')">
                                     Shows
+                                </JetNavLink>
+                                <JetNavLink @click="videoTopRight" :href="route('schedule')" :active="route().current('schedule')">
+                                    Schedule
                                 </JetNavLink>
                             </div>
                         </div>

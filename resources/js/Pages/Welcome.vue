@@ -48,14 +48,14 @@ export default {
             <div class="flex justify-center items-center h-screen bg-white text-black p-10">
                 Welcome to notTV! Where artists own the platform!
             </div>
-            <div class="flex justify-center items-center h-screen bg-white text-black p-10">
-                <p>Join now to register your content as your very own NFT on a blockchain that you own.</p>
-                <p>Reap the rewards of a cooperative blockchain media distribution platform and streaming service.</p>
-                <p>Share your audience with other creators.. which means they also share their audience with you!</p>
-                <p>Help fund the public good, free speech and free press automatically as part of the business model and original concept to keep
-                a free democracy and make the world a better place.</p>
-                <p>#mediaforabetterworld</p>
+            <div class="grid grid-cols-2 place-items-center h-screen bg-gray-300 text-black p-10">
+                <div class="p-20 bg-emerald-500 rounded m-10 font-bold">Join now to register your content as your very own NFT on a blockchain that you own.</div>
+                <div class="p-20 bg-emerald-500 rounded m-10 font-bold">Reap the rewards of a cooperative blockchain media distribution platform and streaming service.</div>
+                <div class="p-20 bg-emerald-500 rounded m-10 font-bold">Share your audience with other creators.. which means they also share their audience with you!</div>
+                <div class="p-20 bg-emerald-500 rounded m-10 font-bold">Help fund the public good, free speech and free press automatically as part of the business model and original concept to keep
+                a free democracy and make the world a better place.</div>
             </div>
+            <div class="flex justify-center items-center h-screen">#mediaforabetterworld</div>
         </div>
 </template>
 

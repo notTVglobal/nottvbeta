@@ -1,8 +1,9 @@
 <?php
 
-use App\Http\Controllers\ImageController;
-use App\Http\Controllers\UsersController;
+use App\Http\Controllers\CreatorsController;
 use App\Http\Controllers\ShowsController;
+use App\Http\Controllers\UsersController;
+use App\Http\Controllers\ImageController;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -53,10 +54,15 @@ Route::middleware([
     Route::get('/video', function () {
         return Inertia::render('Video');
     })->name('video');
-    Route::get('/video2', function () {
-        return Inertia::render('Video2');
-    })->name('video2');
+    Route::get('/schedule', function () {
+        return Inertia::render('Schedule');
+    })->name('schedule');
 
+
+    // List all creators
+    Route::get('/creators', [CreatorsController::class, 'index'])->name('creators');
+    // Create a creator
+    Route::get('/creators/create', [CreatorsController::class, 'create'])->name('creators.create');
 
     // List all shows
     Route::get('/shows', [ShowsController::class, 'index'])->name('shows');

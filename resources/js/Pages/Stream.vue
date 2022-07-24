@@ -11,9 +11,8 @@
                 <div class="bg-white text-black shadow-xl sm:rounded-lg">
                     <div class="flex m-auto mt-10 mb-10 w-1/2">
                         <div class="bg-white rounded text-black p-5 mb-10">
-                            <h1 class="text-2xl pb-3">{{ video }} 1</h1>
                             <h1 class="text-2xl pb-3">Stream</h1>
-                            <button @click="videoClass">{{ video }}</button>
+                            <div class="py-10 bg-orange-400">If this page does not show a full screen video, then click "Stream" again.</div>
                             <p>
                                 The video player will play full page here with a live chat. A menu button in the top left will allow people to select different streams of content.
                             </p>

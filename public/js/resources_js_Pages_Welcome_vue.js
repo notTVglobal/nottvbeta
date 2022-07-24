@@ -130,17 +130,7 @@ var _hoisted_7 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNod
 
 var _hoisted_8 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Register ");
 
-var _hoisted_9 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
-  "class": "flex justify-center items-center h-screen bg-white text-black p-10"
-}, " Welcome to notTV! Where artists own the platform! ", -1
-/* HOISTED */
-);
-
-var _hoisted_10 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
-  "class": "flex justify-center items-center h-screen bg-white text-black p-10"
-}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, "Join now to register your content as your very own NFT on a blockchain that you own."), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, "Reap the rewards of a cooperative blockchain media distribution platform and streaming service."), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, "Share your audience with other creators.. which means they also share their audience with you!"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, "Help fund the public good, free speech and free press automatically as part of the business model and original concept to keep a free democracy and make the world a better place."), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, "#mediaforabetterworld")], -1
-/* HOISTED */
-);
+var _hoisted_9 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"flex justify-center items-center h-screen bg-white text-black p-10\"> Welcome to notTV! Where artists own the platform! </div><div class=\"grid grid-cols-2 place-items-center h-screen bg-gray-300 text-black p-10\"><div class=\"p-20 bg-emerald-500 rounded m-10 font-bold\">Join now to register your content as your very own NFT on a blockchain that you own.</div><div class=\"p-20 bg-emerald-500 rounded m-10 font-bold\">Reap the rewards of a cooperative blockchain media distribution platform and streaming service.</div><div class=\"p-20 bg-emerald-500 rounded m-10 font-bold\">Share your audience with other creators.. which means they also share their audience with you!</div><div class=\"p-20 bg-emerald-500 rounded m-10 font-bold\">Help fund the public good, free speech and free press automatically as part of the business model and original concept to keep a free democracy and make the world a better place.</div></div><div class=\"flex justify-center items-center h-screen\">#mediaforabetterworld</div>", 3);
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_Head = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Head");
@@ -193,7 +183,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* PROPS */
   , ["href"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)], 64
   /* STABLE_FRAGMENT */
-  ))])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), _hoisted_9, _hoisted_10])], 64
+  ))])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), _hoisted_9])], 64
   /* STABLE_FRAGMENT */
   );
 }
