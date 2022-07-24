@@ -5,7 +5,7 @@
         <JetBanner/>
 
         <div class="bg-gray-800 text-gray-200">
-            <nav class="bg-black border-b border-gray-100">
+            <nav class="bg-black border-b border-gray-100 z-30">
                 <!-- Primary Navigation Menu -->
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="flex justify-between h-16">
@@ -37,6 +37,7 @@
                                 <JetNavLink @click="videoTopRight" :href="route('schedule')" :active="route().current('schedule')">
                                     Schedule
                                 </JetNavLink>
+                                <ChatToggle v-model:checked="ChatOn" label="Chat On/Off" />
                             </div>
                         </div>
 
@@ -388,7 +389,8 @@ import JetDropdown from '@/Jetstream/Dropdown.vue';
 import JetDropdownLink from '@/Jetstream/DropdownLink.vue';
 import JetNavLink from '@/Jetstream/NavLink.vue';
 import JetResponsiveNavLink from '@/Jetstream/ResponsiveNavLink.vue';
-import VideoPlayer from "@/Components/VideoPlayer";
+import VideoPlayer from "@/Components/VideoPlayer.vue";
+import ChatToggle from "@/Components/ChatToggle.vue";
 
 let props = defineProps({
     title: String,
