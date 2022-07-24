@@ -15,7 +15,7 @@
             storage-type="session"
         >
             <video controls autoplay muted loop ref="VideoPlayer" class="w-96">
-                <source :src="`../images/Spring-BlenderOpenMovie-WhWc3b3KhnY.webm`" type="video/webm"/>
+                <source :src="`../../images/Spring-BlenderOpenMovie-WhWc3b3KhnY.webm`" type="video/webm"/>
 
                 Sorry, your browser doesn't support embedded videos.
             </video>

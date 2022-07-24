@@ -13,8 +13,11 @@ const appName = window.document.getElementsByTagName('title')[0]?.innerText || '
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
-    resolve: (name) => {
-        let page = require(`./Pages/${name}`).default;
+    resolve: async name => {
+        let page = await import(`./Pages/${name}`);
+
+        page = page.default;
+
         if (! page.layout) {
             page.layout = AppLayout;
         }
@@ -31,4 +34,4 @@ createInertiaApp({
     },
 });
 
-InertiaProgress.init({ color: '#4B5563' });
+InertiaProgress.init({ delay: 250, color: '#FCEF5B', includeCSS: true, showSpinner: true, });

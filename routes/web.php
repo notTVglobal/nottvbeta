@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\ImageController;
+use App\Http\Controllers\ShowsController;
+use App\Models\Show;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -46,9 +48,28 @@ Route::middleware([
     Route::get('/video2', function () {
         return Inertia::render('Video2');
     })->name('video2');
-    Route::get('/shows', function () {
-        return Inertia::render('Shows');
-    })->name('shows');
+
+
+    // List all shows
+    Route::get('/shows', [ShowsController::class, 'index'])->name('shows');
+
+
+
+
+
+
+
+
+    //     Create a show
+    Route::get('/shows/create', [ShowsController::class, 'create'])->name('shows.create');
+    // Single show page
+    Route::get('/shows/{show}', [ShowsController::class, 'show'])->name('shows.show');
+
+
+
+
+
+
     Route::get('/image', function () {
         return Inertia::render('Image');
     })->name('image');
@@ -58,7 +79,7 @@ Route::middleware([
 
     // Need to move this to a new middleware section for auth_admin
     Route::get('/admin/users', function () {
-        return Inertia::render('Admin/Users', [
+        return Inertia::render('Admin/Users/Index', [
             'users' => User::query()
                 ->when(Request::input('search'), function ($query, $search) {
                     $query->where('name', 'like', "%{$search}%");
@@ -69,8 +90,37 @@ Route::middleware([
                     'id' => $user->id,
                     'name' => $user->name
             ]),
-
             'filters' => Request::only(['search'])
         ]);
-    })->name('admin.users');
+    })->name('admin.users.index');
+    Route::get('/admin/users/create', function() {
+        return Inertia::render('Admin/Users/Create');
+    })->name('admin.users.create');
+    Route::post('/admin/users', function() {
+        // validate the request
+        $attributes = Request::validate([
+           'name' => 'required',
+           'email' => ['required', 'email'],
+           'password' => ['required', 'min:8'],
+        ]);
+        // create the user
+        User::create($attributes);
+        // redirect
+        return redirect('/admin/users');
+    });
+    Route::post('/admin/users/edit', function($userId) {
+        return Inertia::render('Admin/Users/Edit/{id}' . ${$userId});
+    })->name('admin.users.edit');
+    Route::patch('/admin/users', function() {
+        // validate the request
+        $attributes = Request::validate([
+            'name' => 'required',
+            'email' => ['required', 'email'],
+            'password' => ['required', 'min:8'],
+        ]);
+        // update the user
+        User::where("userId", $id)-> update($attributes);
+        // redirect
+        return redirect('/admin/users');
+    });
 });

@@ -1282,10 +1282,10 @@ var _hoisted_2 = {
   "class": "px-4 sm:px-0"
 };
 var _hoisted_3 = {
-  "class": "text-lg font-medium text-gray-900"
+  "class": "text-lg font-medium text-gray-100"
 };
 var _hoisted_4 = {
-  "class": "mt-1 text-sm text-gray-600"
+  "class": "mt-1 text-sm text-gray-300"
 };
 var _hoisted_5 = {
   "class": "px-4 sm:px-0"

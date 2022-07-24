@@ -1140,14 +1140,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _Layouts_AppLayout_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Layouts/AppLayout.vue */ "./resources/js/Layouts/AppLayout.vue");
-/* harmony import */ var _Pages_Profile_Partials_DeleteUserForm_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Pages/Profile/Partials/DeleteUserForm.vue */ "./resources/js/Pages/Profile/Partials/DeleteUserForm.vue");
-/* harmony import */ var _Jetstream_SectionBorder_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/Jetstream/SectionBorder.vue */ "./resources/js/Jetstream/SectionBorder.vue");
-/* harmony import */ var _Pages_Profile_Partials_LogoutOtherBrowserSessionsForm_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/Pages/Profile/Partials/LogoutOtherBrowserSessionsForm.vue */ "./resources/js/Pages/Profile/Partials/LogoutOtherBrowserSessionsForm.vue");
-/* harmony import */ var _Pages_Profile_Partials_TwoFactorAuthenticationForm_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/Pages/Profile/Partials/TwoFactorAuthenticationForm.vue */ "./resources/js/Pages/Profile/Partials/TwoFactorAuthenticationForm.vue");
-/* harmony import */ var _Pages_Profile_Partials_UpdatePasswordForm_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/Pages/Profile/Partials/UpdatePasswordForm.vue */ "./resources/js/Pages/Profile/Partials/UpdatePasswordForm.vue");
-/* harmony import */ var _Pages_Profile_Partials_UpdateProfileInformationForm_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/Pages/Profile/Partials/UpdateProfileInformationForm.vue */ "./resources/js/Pages/Profile/Partials/UpdateProfileInformationForm.vue");
-
+/* harmony import */ var _Pages_Profile_Partials_DeleteUserForm_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Pages/Profile/Partials/DeleteUserForm.vue */ "./resources/js/Pages/Profile/Partials/DeleteUserForm.vue");
+/* harmony import */ var _Jetstream_SectionBorder_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Jetstream/SectionBorder.vue */ "./resources/js/Jetstream/SectionBorder.vue");
+/* harmony import */ var _Pages_Profile_Partials_LogoutOtherBrowserSessionsForm_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/Pages/Profile/Partials/LogoutOtherBrowserSessionsForm.vue */ "./resources/js/Pages/Profile/Partials/LogoutOtherBrowserSessionsForm.vue");
+/* harmony import */ var _Pages_Profile_Partials_TwoFactorAuthenticationForm_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/Pages/Profile/Partials/TwoFactorAuthenticationForm.vue */ "./resources/js/Pages/Profile/Partials/TwoFactorAuthenticationForm.vue");
+/* harmony import */ var _Pages_Profile_Partials_UpdatePasswordForm_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/Pages/Profile/Partials/UpdatePasswordForm.vue */ "./resources/js/Pages/Profile/Partials/UpdatePasswordForm.vue");
+/* harmony import */ var _Pages_Profile_Partials_UpdateProfileInformationForm_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/Pages/Profile/Partials/UpdateProfileInformationForm.vue */ "./resources/js/Pages/Profile/Partials/UpdateProfileInformationForm.vue");
 
 
 
@@ -1162,15 +1160,15 @@ __webpack_require__.r(__webpack_exports__);
   },
   setup: function setup(__props, _ref) {
     var expose = _ref.expose;
-    expose();
+    expose(); // import AppLayout from '@/Layouts/AppLayout.vue';
+
     var __returned__ = {
-      AppLayout: _Layouts_AppLayout_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
-      DeleteUserForm: _Pages_Profile_Partials_DeleteUserForm_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
-      JetSectionBorder: _Jetstream_SectionBorder_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
-      LogoutOtherBrowserSessionsForm: _Pages_Profile_Partials_LogoutOtherBrowserSessionsForm_vue__WEBPACK_IMPORTED_MODULE_3__["default"],
-      TwoFactorAuthenticationForm: _Pages_Profile_Partials_TwoFactorAuthenticationForm_vue__WEBPACK_IMPORTED_MODULE_4__["default"],
-      UpdatePasswordForm: _Pages_Profile_Partials_UpdatePasswordForm_vue__WEBPACK_IMPORTED_MODULE_5__["default"],
-      UpdateProfileInformationForm: _Pages_Profile_Partials_UpdateProfileInformationForm_vue__WEBPACK_IMPORTED_MODULE_6__["default"]
+      DeleteUserForm: _Pages_Profile_Partials_DeleteUserForm_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
+      JetSectionBorder: _Jetstream_SectionBorder_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
+      LogoutOtherBrowserSessionsForm: _Pages_Profile_Partials_LogoutOtherBrowserSessionsForm_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
+      TwoFactorAuthenticationForm: _Pages_Profile_Partials_TwoFactorAuthenticationForm_vue__WEBPACK_IMPORTED_MODULE_3__["default"],
+      UpdatePasswordForm: _Pages_Profile_Partials_UpdatePasswordForm_vue__WEBPACK_IMPORTED_MODULE_4__["default"],
+      UpdateProfileInformationForm: _Pages_Profile_Partials_UpdateProfileInformationForm_vue__WEBPACK_IMPORTED_MODULE_5__["default"]
     };
     Object.defineProperty(__returned__, '__isScriptSetup', {
       enumerable: false,
@@ -1729,10 +1727,10 @@ var _hoisted_2 = {
   "class": "px-4 sm:px-0"
 };
 var _hoisted_3 = {
-  "class": "text-lg font-medium text-gray-900"
+  "class": "text-lg font-medium text-gray-100"
 };
 var _hoisted_4 = {
-  "class": "mt-1 text-sm text-gray-600"
+  "class": "mt-1 text-sm text-gray-300"
 };
 var _hoisted_5 = {
   "class": "px-4 sm:px-0"
@@ -2779,32 +2777,37 @@ var _hoisted_1 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementV
 );
 
 var _hoisted_2 = {
-  "class": "max-w-7xl mx-auto py-10 sm:px-6 lg:px-8"
+  "class": "text-black"
 };
 var _hoisted_3 = {
-  key: 0
+  "class": "max-w-7xl mx-auto py-10 sm:px-6 lg:px-8"
 };
 var _hoisted_4 = {
-  key: 1
+  key: 0
 };
 var _hoisted_5 = {
+  key: 1
+};
+var _hoisted_6 = {
   key: 2
 };
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)($setup["AppLayout"], {
+  var _component_AppLayout = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("AppLayout");
+
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_AppLayout, {
     title: "Profile"
   }, {
     header: (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [_hoisted_1];
     }),
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [_ctx.$page.props.jetstream.canUpdateProfileInformation ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["UpdateProfileInformationForm"], {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [_ctx.$page.props.jetstream.canUpdateProfileInformation ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["UpdateProfileInformationForm"], {
         user: _ctx.$page.props.user
       }, null, 8
       /* PROPS */
-      , ["user"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["JetSectionBorder"])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _ctx.$page.props.jetstream.canUpdatePassword ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["UpdatePasswordForm"], {
+      , ["user"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["JetSectionBorder"])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _ctx.$page.props.jetstream.canUpdatePassword ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["UpdatePasswordForm"], {
         "class": "mt-10 sm:mt-0"
-      }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["JetSectionBorder"])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _ctx.$page.props.jetstream.canManageTwoFactorAuthentication ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["TwoFactorAuthenticationForm"], {
+      }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["JetSectionBorder"])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _ctx.$page.props.jetstream.canManageTwoFactorAuthentication ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["TwoFactorAuthenticationForm"], {
         "requires-confirmation": $props.confirmsTwoFactorAuthentication,
         "class": "mt-10 sm:mt-0"
       }, null, 8

@@ -11,22 +11,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _Layouts_AppLayout__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Layouts/AppLayout */ "./resources/js/Layouts/AppLayout.vue");
-/* harmony import */ var _Jetstream_Welcome_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Jetstream/Welcome.vue */ "./resources/js/Jetstream/Welcome.vue");
+/* harmony import */ var _Jetstream_Welcome_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Jetstream/Welcome.vue */ "./resources/js/Jetstream/Welcome.vue");
 
-var __default__ = {
-  layout: _Layouts_AppLayout__WEBPACK_IMPORTED_MODULE_0__["default"]
-};
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (/*#__PURE__*/Object.assign(__default__, {
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   __name: 'Dashboard',
   setup: function setup(__props, _ref) {
     var expose = _ref.expose;
-    expose(); // import AppLayout from '@/Layouts/AppLayout.vue';
-
+    expose();
     var __returned__ = {
-      AppLayout: _Layouts_AppLayout__WEBPACK_IMPORTED_MODULE_0__["default"],
-      Welcome: _Jetstream_Welcome_vue__WEBPACK_IMPORTED_MODULE_1__["default"]
+      Welcome: _Jetstream_Welcome_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
     };
     Object.defineProperty(__returned__, '__isScriptSetup', {
       enumerable: false,
@@ -34,7 +27,7 @@ var __default__ = {
     });
     return __returned__;
   }
-}));
+});
 
 /***/ }),
 
@@ -52,7 +45,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var _hoisted_1 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h2", {
-  "class": "text-xl text-center text-gray-700"
+  "class": "text-xl text-center text-gray-200"
 }, "This page is in /resources/js/Jetstream/Welcome.vue", -1
 /* HOISTED */
 );
@@ -76,17 +69,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 
-function render(_ctx, _cache, $props, $setup, $data, $options) {
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)($setup["AppLayout"], {
-    title: "Dashboard"
-  }, {
-    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("        <template #header>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            <h2 class=\"font-semibold text-xl text-gray-800 leading-tight\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                Dashboard"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            </h2>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("        </template>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("        <div class=\"py-12\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            <div class=\"max-w-7xl mx-auto sm:px-6 lg:px-8\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <div class=\"bg-white overflow-hidden shadow-xl sm:rounded-lg\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    <Welcome />"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                </div>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            </div>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("        </div>")];
-    }),
-    _: 1
-    /* STABLE */
 
-  });
+var _hoisted_1 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, "Dashboard", -1
+/* HOISTED */
+);
+
+function render(_ctx, _cache, $props, $setup, $data, $options) {
+  var _component_Head = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Head");
+
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Head, {
+    title: "Dashboard"
+  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("        <template #header>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            <h2 class=\"font-semibold text-xl text-gray-800 leading-tight\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                Dashboard"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            </h2>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("        </template>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("        <div class=\"py-12\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            <div class=\"max-w-7xl mx-auto sm:px-6 lg:px-8\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <div class=\"bg-white overflow-hidden shadow-xl sm:rounded-lg\">"), _hoisted_1, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["Welcome"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                </div>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            </div>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("        </div>")], 64
+  /* STABLE_FRAGMENT */
+  );
 }
 
 /***/ }),

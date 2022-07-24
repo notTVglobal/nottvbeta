@@ -183,7 +183,7 @@ const logout = () => {
                                                     Administrator Links
                                                 </div>
 
-                                                <JetDropdownLink :href="route('admin.users')">
+                                                <JetDropdownLink :href="route('admin.users.index')">
                                                     Users
                                                 </JetDropdownLink>
                                             </div>

@@ -11,11 +11,13 @@ const mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/js/app.js', 'public/js').vue()
+mix.js('resources/js/app.js', 'public/js')
+    .vue(3)
     .postCss('resources/css/app.css', 'public/css', [
         require('tailwindcss'),
     ])
     .alias({
+        // if the @ path changes update the webpack.config.js file too!
         '@': 'resources/js',
         ziggy: "vendor/tightenco/ziggy/dist/vue",
     });
