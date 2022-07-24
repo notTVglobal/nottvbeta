@@ -15,7 +15,7 @@ class Show extends Model
      * @var string[]
      */
     protected $fillable = [
-        'title',
+        'name',
         'description',
     ];
 }

@@ -1,36 +1,3 @@
-<script setup>
-import {ref} from 'vue';
-import {Inertia} from '@inertiajs/inertia';
-import {Head, Link} from '@inertiajs/inertia-vue3';
-import JetApplicationMark from '@/Jetstream/ApplicationMark.vue';
-import JetBanner from '@/Jetstream/Banner.vue';
-import JetDropdown from '@/Jetstream/Dropdown.vue';
-import JetDropdownLink from '@/Jetstream/DropdownLink.vue';
-import JetNavLink from '@/Jetstream/NavLink.vue';
-import JetResponsiveNavLink from '@/Jetstream/ResponsiveNavLink.vue';
-import VideoPlayer from "../Components/VideoPlayer";
-
-defineProps({
-    title: String,
-});
-
-const showingNavigationDropdown = ref(false);
-
-const switchToTeam = (team) => {
-    Inertia.put(route('current-team.update'), {
-        team_id: team.id,
-    }, {
-        preserveState: false,
-    });
-};
-
-const logout = () => {
-    Inertia.post(route('logout'));
-};
-
-
-</script>
-
 <template>
     <div>
         <Head :title="title"/>
@@ -52,16 +19,16 @@ const logout = () => {
 
                             <!-- Navigation Links -->
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <JetNavLink :href="route('stream')" :active="route().current('stream')">
+                                <JetNavLink @click="videoFullPage" :href="route('stream')" :active="route().current('stream')">
                                     Stream
                                 </JetNavLink>
-                                <JetNavLink :href="route('image')" :active="route().current('image')">
+                                <JetNavLink @click="videoTopRight" :href="route('image')" :active="route().current('image')">
                                     Image Uploader
                                 </JetNavLink>
-                                <JetNavLink :href="route('video')" :active="route().current('video')">
+                                <JetNavLink @click="videoTopRight" :href="route('video')" :active="route().current('video')">
                                     Videos
                                 </JetNavLink>
-                                <JetNavLink :href="route('shows')" :active="route().current('shows')">
+                                <JetNavLink @click="videoTopRight" :href="route('shows')" :active="route().current('shows')">
                                     Shows
                                 </JetNavLink>
                             </div>
@@ -101,11 +68,13 @@ const logout = () => {
 
                                                 <!-- Team Settings -->
                                                 <JetDropdownLink
+                                                    @click="videoTopRight"
                                                     :href="route('teams.show', $page.props.user.current_team)">
                                                     Team Settings
                                                 </JetDropdownLink>
 
                                                 <JetDropdownLink v-if="$page.props.jetstream.canCreateTeams"
+                                                                 @click="videoTopRight"
                                                                  :href="route('teams.create')">
                                                     Create New Team
                                                 </JetDropdownLink>
@@ -183,7 +152,7 @@ const logout = () => {
                                                     Administrator Links
                                                 </div>
 
-                                                <JetDropdownLink :href="route('admin.users.index')">
+                                                <JetDropdownLink @click="videoTopRight" :href="route('admin.users.index')">
                                                     Users
                                                 </JetDropdownLink>
                                             </div>
@@ -193,19 +162,20 @@ const logout = () => {
                                                     Manage Account
                                                 </div>
 
-                                                <JetDropdownLink :href="route('dashboard')">
+                                                <JetDropdownLink @click="videoTopRight" :href="route('dashboard')">
                                                     Dashboard
                                                 </JetDropdownLink>
 
-                                                <JetDropdownLink :href="route('training')">
+                                                <JetDropdownLink @click="videoTopRight" :href="route('training')">
                                                     Training
                                                 </JetDropdownLink>
 
-                                                <JetDropdownLink :href="route('profile.show')">
+                                                <JetDropdownLink @click="videoTopRight" :href="route('profile.show')">
                                                     Profile
                                                 </JetDropdownLink>
 
                                                 <JetDropdownLink v-if="$page.props.jetstream.hasApiFeatures"
+                                                                 @click="videoTopRight"
                                                                  :href="route('api-tokens.index')">
                                                     API Tokens
                                                 </JetDropdownLink>
@@ -395,9 +365,66 @@ const logout = () => {
 
             <!-- Page Content -->
             <main>
-                <VideoPlayer />
-                <slot/>
+                <VideoPlayer :video="video"/>
+                <slot />
             </main>
         </div>
     </div>
 </template>
+
+<script setup>
+import { ref, provide } from 'vue';
+import { Inertia } from '@inertiajs/inertia';
+import { Head, Link } from '@inertiajs/inertia-vue3';
+import JetApplicationMark from '@/Jetstream/ApplicationMark.vue';
+import JetBanner from '@/Jetstream/Banner.vue';
+import JetDropdown from '@/Jetstream/Dropdown.vue';
+import JetDropdownLink from '@/Jetstream/DropdownLink.vue';
+import JetNavLink from '@/Jetstream/NavLink.vue';
+import JetResponsiveNavLink from '@/Jetstream/ResponsiveNavLink.vue';
+import VideoPlayer from "@/Components/VideoPlayer";
+
+let props = defineProps({
+    title: String,
+    video: Object
+})
+
+// provide('video', props.video);
+
+let videoClass = ref('videoFullPage');
+provide('videoClass', videoClass);
+
+
+
+function videoFullPage() {
+    videoClass.value = 'videoFullPage';
+}
+
+function videoTopRight() {
+    videoClass.value = 'videoTopRight';
+}
+
+function videoBottomRight() {
+    videoClass.value = 'videoBottomRight';
+}
+
+const showingNavigationDropdown = ref(false);
+
+const switchToTeam = (team) => {
+    Inertia.put(route('current-team.update'), {
+        team_id: team.id,
+    }, {
+        preserveState: false,
+    });
+};
+
+const logout = () => {
+    Inertia.post(route('logout'));
+};
+
+
+
+
+
+
+</script>

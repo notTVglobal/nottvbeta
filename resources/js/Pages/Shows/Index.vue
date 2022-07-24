@@ -24,7 +24,7 @@
                                         <div class="flex items-center">
                                             <div>
                                                 <div class="text-sm font-medium text-gray-900">
-                                                    {{ show.name }}
+                                                    <Link :href="`/shows/${show.id}`" class="text-indigo-600 hover:text-indigo-900">{{ show.name }}</Link>
                                                 </div>
                                             </div>
                                         </div>

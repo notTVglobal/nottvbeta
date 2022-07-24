@@ -20,7 +20,9 @@ var _hoisted_1 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementV
   "class": "bg-white rounded text-black p-5 mb-10"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h1", {
   "class": "text-2xl pb-3"
-}, "Video"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, " This is a temporary page. Created for testing purposes. ")])], -1
+}, "Video"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", {
+  "class": "mb-8"
+}, " This is a temporary page. Created for testing purposes. "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, " Display a MistServer API call here. ")])], -1
 /* HOISTED */
 );
 

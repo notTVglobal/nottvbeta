@@ -4,7 +4,7 @@
     <div class="bg-white rounded text-black p-5 mb-10 py-20 w-3/4">
         <div class="flex justify-between mb-6">
             <h1 class="text-3xl">Create New User</h1>
-        <Link href="/admin/users" class="text-blue-500 text-sm ml-2">Go back</Link>
+            <Link href="/admin/users" class="text-blue-500 text-sm ml-2">Go back</Link>
         </div>
 
         <form @submit.prevent="submit" class="max-w-md mx-auto mt-8">

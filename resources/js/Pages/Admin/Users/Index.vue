@@ -16,7 +16,10 @@
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                     <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-
+                        <div class="bg-orange-300">
+                            Only users who are creators should have a clickable name
+                            which goes to their creator profile page.
+                        </div>
 
                         <table class="min-w-full divide-y divide-gray-200">
                             <tbody class="bg-white divide-y divide-gray-200">
@@ -25,7 +28,7 @@
                                     <div class="flex items-center">
                                         <div>
                                             <div class="text-sm font-medium text-gray-900">
-                                                {{ user.name }}
+                                                <Link :href="`/admin/users/${user.id}`" class="text-indigo-600 hover:text-indigo-900">{{ user.name }}</Link>
                                             </div>
                                         </div>
                                     </div>

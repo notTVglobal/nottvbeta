@@ -1,8 +1,8 @@
 <?php
 
 use App\Http\Controllers\ImageController;
+use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ShowsController;
-use App\Models\Show;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -52,22 +52,14 @@ Route::middleware([
 
     // List all shows
     Route::get('/shows', [ShowsController::class, 'index'])->name('shows');
-
-
-
-
-
-
-
-
-    //     Create a show
+    // Create a show
     Route::get('/shows/create', [ShowsController::class, 'create'])->name('shows.create');
+    // Add new show to database
+    Route::post('/shows', [ShowsController::class, 'store'])->name('shows.store');
     // Single show page
     Route::get('/shows/{show}', [ShowsController::class, 'show'])->name('shows.show');
-
-
-
-
+    // Edit show
+    Route::get('/shows/edit/{show}', [ShowsController::class, 'edit'])->name('shows.edit');
 
 
     Route::get('/image', function () {
@@ -78,49 +70,18 @@ Route::middleware([
     Route::post('/upload', [ImageController::class, 'store'])->name('image.upload');
 
     // Need to move this to a new middleware section for auth_admin
-    Route::get('/admin/users', function () {
-        return Inertia::render('Admin/Users/Index', [
-            'users' => User::query()
-                ->when(Request::input('search'), function ($query, $search) {
-                    $query->where('name', 'like', "%{$search}%");
-                })
-                ->paginate(10)
-                ->withQueryString()
-                ->through(fn($user) => [
-                    'id' => $user->id,
-                    'name' => $user->name
-            ]),
-            'filters' => Request::only(['search'])
-        ]);
-    })->name('admin.users.index');
-    Route::get('/admin/users/create', function() {
-        return Inertia::render('Admin/Users/Create');
-    })->name('admin.users.create');
-    Route::post('/admin/users', function() {
-        // validate the request
-        $attributes = Request::validate([
-           'name' => 'required',
-           'email' => ['required', 'email'],
-           'password' => ['required', 'min:8'],
-        ]);
-        // create the user
-        User::create($attributes);
-        // redirect
-        return redirect('/admin/users');
-    });
-    Route::post('/admin/users/edit', function($userId) {
-        return Inertia::render('Admin/Users/Edit/{id}' . ${$userId});
-    })->name('admin.users.edit');
-    Route::patch('/admin/users', function() {
-        // validate the request
-        $attributes = Request::validate([
-            'name' => 'required',
-            'email' => ['required', 'email'],
-            'password' => ['required', 'min:8'],
-        ]);
-        // update the user
-        User::where("userId", $id)-> update($attributes);
-        // redirect
-        return redirect('/admin/users');
-    });
+    //
+    // List all users
+    Route::get('/admin/users', [UsersController::class, 'index'])->name('admin.users.index');
+    // Create a user
+    Route::get('/admin/users/create', [UsersController::class, 'create'])->name('admin.users.create');
+    // Add new user to the database
+    Route::post('/admin/users', [UsersController::class, 'store'])->name('admin.users.store');
+    // Show user
+    Route::get('/admin/users/{user}', [UsersController::class, 'show'])->name('admin.users.show');
+    // Edit user
+    Route::get('/admin/users/edit/{user}', [UsersController::class, 'edit'])->name('admin.users.edit');
+    // Update user
+    Route::put('/admin/users', [UsersController::class, 'update'])->name('admin.users.update');
+
 });

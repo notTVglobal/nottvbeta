@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+    .videoFullPage {
+        @apply relative top-0 left-0 h-max;
+    }
+    .videoTopRight {
+        @apply relative top-0 right-0 p-10 w-96;
+    }
+    .videoBottomRight {
+        @apply relative bottom-0 right-0 p-10 w-96;
+    }
+}
+

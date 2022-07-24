@@ -39,6 +39,7 @@ class User extends Authenticatable
         'remember_token',
         'two_factor_recovery_codes',
         'two_factor_secret',
+        'stripe_token',
     ];
 
     /**
@@ -50,10 +51,19 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function setPasswordAttribute($value)
-    {
-        $this->attributes['password'] = bcrypt($value);
-    }
+//    public function setPasswordAttribute($value)
+//    {
+//        $this->attributes['password'] = bcrypt($value);
+//    }
+
+    // Add this function to NOT send all
+    // loggedin user database data back
+    // to the browser.
+    //
+//    public function toArray()
+//    {
+//        return ([]);
+//    }
 
     /**
      * The accessors to append to the model's array form.
