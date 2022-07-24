@@ -1071,6 +1071,12 @@ select {
 .top-0 {
   top: 0px;
 }
+.top-16 {
+  top: 4rem;
+}
+.top-32 {
+  top: 8rem;
+}
 .z-0 {
   z-index: 0;
 }
