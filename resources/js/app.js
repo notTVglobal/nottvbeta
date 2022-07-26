@@ -5,6 +5,7 @@ import { createInertiaApp } from '@inertiajs/inertia-vue3';
 import { InertiaProgress } from '@inertiajs/progress';
 import { Head, Link } from '@inertiajs/inertia-vue3';
 import AppLayout from "./Layouts/AppLayout";
+import { createPinia } from "pinia";
 // import NoLayout from "./Layouts/NoLayout";
 import { ZiggyVue } from 'ziggy';
 import VideoPlayer from "./Components/VideoPlayer";
@@ -27,6 +28,7 @@ createInertiaApp({
         createApp({ render: () => h(app, props) })
             .use(plugin)
             .use(ZiggyVue, Ziggy)
+            .use(createPinia())
             .component("Link", Link)
             .component("Head", Head)
             .component('VideoPlayer', VideoPlayer)

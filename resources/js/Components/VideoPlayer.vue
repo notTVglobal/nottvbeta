@@ -12,11 +12,16 @@
 <!--            storage-key="vueuse-draggable-pos"-->
 <!--            storage-type="session"-->
 <!--        >-->
-            <video controls autoplay muted loop ref="VideoPlayer" :class="videoClass">
-                <source :src="videoId" type="video/webm"/>
-
+            <video controls autoplay muted loop id="videoPlayer" :class="videoPlayer.class">
+                <source id="src" :src="videoFirstPlay" type="video/webm"/>
                 Sorry, your browser doesn't support embedded videos.
             </video>
+        <button @click="loadVideo1" class="bg-gray-300 text-black p-1 m-2">Spring</button>
+        <button @click="loadVideo2" class="bg-gray-300 text-black p-1 m-2">Dune</button>
+        <button @click="loadVideo3" class="bg-gray-300 text-black p-1 m-2">1984</button>
+        <button @click="loadVideo4" class="bg-gray-300 text-black p-1 m-2">The Terminator</button>
+        <button @click="loadVideo5" class="bg-gray-300 text-black p-1 m-2">Natural World</button>
+        <div> Now Playing: {{ videoPlayer.videoName }} </div>
             <!--            <iframe src="https://iframe.videodelivery.net/39ce0cc05aaf8186079fb844942f0afe"-->
             <!--                    class="w-96"-->
             <!--                    allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"-->
@@ -34,20 +39,40 @@
 </template>
 
 <script setup>
-import { ref, inject } from "vue";
-import { isClient } from "@vueuse/shared";
-import { useDraggable } from "@vueuse/core";
-import { UseDraggable as Draggable } from "@vueuse/components";
+import { ref } from "vue";
+// import { isClient } from "@vueuse/shared";
+// import { useDraggable } from "@vueuse/core";
+// import { UseDraggable as Draggable } from "@vueuse/components";
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
 
-let videoClass = inject('videoClass');
+let videoPlayer = useVideoPlayerStore();
+let videoFirstPlay = ref([`../../images/Spring-BlenderOpenMovie-WhWc3b3KhnY.webm`]);
 
-let videoId = ref([`../../images/Spring-BlenderOpenMovie-WhWc3b3KhnY.webm`]);
-
-// Use the prop.video to send/receive videoPlayer data from the server
-defineProps({
-    video: Object
-});
-
+function loadVideo1() {
+    videoPlayer.loadVideo1()
+    document.getElementById("src").src = videoPlayer.videoSourceId;
+    document.getElementById("videoPlayer").load();
+}
+function loadVideo2() {
+    videoPlayer.loadVideo2()
+    document.getElementById("src").src = videoPlayer.videoSourceId;
+    document.getElementById("videoPlayer").load();
+}
+function loadVideo3() {
+    videoPlayer.loadVideo3()
+    document.getElementById("src").src = videoPlayer.videoSourceId;
+    document.getElementById("videoPlayer").load();
+}
+function loadVideo4() {
+    videoPlayer.loadVideo4()
+    document.getElementById("src").src = videoPlayer.videoSourceId;
+    document.getElementById("videoPlayer").load();
+}
+function loadVideo5() {
+    videoPlayer.loadVideo5()
+    document.getElementById("src").src = videoPlayer.videoSourceId;
+    document.getElementById("videoPlayer").load();
+}
 
 // const el = ref<HTMLElement | null>(null)
 // const innerWidth = isClient ? window.innerWidth : 200
@@ -55,11 +80,5 @@ defineProps({
 //     initialValue: { x: innerWidth / 4.2, y: 80 },
 //     preventDefault: true,
 // })
-
-
-
-
-
-
 
 </script>

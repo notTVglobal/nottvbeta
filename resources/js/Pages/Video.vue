@@ -10,12 +10,14 @@
             <p>
                 Display a MistServer API call here.
             </p>
+<!--            <VideoPlayer :video="video"/>-->
         </div>
     </div>
 
 </template>
 
 <script setup>
+// import VideoPlayer from "@/Components/VideoPlayer.vue";
 
 </script>
 

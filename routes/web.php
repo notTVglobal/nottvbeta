@@ -58,6 +58,11 @@ Route::middleware([
         return Inertia::render('Schedule');
     })->name('schedule');
 
+    // temp page to test Stores
+    Route::get('/quiz', function () {
+        return Inertia::render('QuizHome');
+    })->name('quiz');
+
 
     // List all creators
     Route::get('/creators', [CreatorsController::class, 'index'])->name('creators');

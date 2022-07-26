@@ -4,7 +4,7 @@
 
 @layer utilities {
     .videoFullPage {
-        @apply relative top-0 left-0 h-max;
+        @apply absolute top-0 left-0 right-0 bottom-0 min-w-max max-h-screen min-h-max z-0;
     }
     .videoTopRight {
         @apply relative top-0 right-0 p-10 w-96;
