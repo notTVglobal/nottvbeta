@@ -6,7 +6,7 @@
                 <div class="flex">
                     <!-- Logo -->
                     <div class="shrink-0 flex items-center">
-                        <Link :href="route('stream')">
+                        <Link @click="videoPlayer.makeVideoFullPage()" :href="route('stream')">
                             <JetApplicationMark class="block h-9 w-auto"/>
                         </Link>
                     </div>
@@ -69,13 +69,13 @@
 
                                         <!-- Team Settings -->
                                         <JetDropdownLink
-                                            @click="videoTopRight"
+                                            @click="videoPlayer.makeVideoTopRight()"
                                             :href="route('teams.show', $page.props.user.current_team)">
                                             Team Settings
                                         </JetDropdownLink>
 
                                         <JetDropdownLink v-if="$page.props.jetstream.canCreateTeams"
-                                                         @click="videoTopRight"
+                                                         @click="videoPlayer.makeVideoTopRight()"
                                                          :href="route('teams.create')">
                                             Create New Team
                                         </JetDropdownLink>
@@ -153,7 +153,9 @@
                                             Administrator Links
                                         </div>
 
-                                        <JetDropdownLink @click="videoTopRight" :href="route('admin.users.index')">
+                                        <JetDropdownLink
+                                            @click="videoPlayer.makeVideoTopRight()"
+                                            :href="route('admin.users.index')">
                                             Users
                                         </JetDropdownLink>
                                     </div>
@@ -163,20 +165,26 @@
                                             Manage Account
                                         </div>
 
-                                        <JetDropdownLink @click="videoTopRight" :href="route('dashboard')">
+                                        <JetDropdownLink
+                                            @click="videoPlayer.makeVideoTopRight()"
+                                            :href="route('dashboard')">
                                             Dashboard
                                         </JetDropdownLink>
 
-                                        <JetDropdownLink @click="videoTopRight" :href="route('training')">
+                                        <JetDropdownLink
+                                            @click="videoPlayer.makeVideoTopRight()"
+                                            :href="route('training')">
                                             Training
                                         </JetDropdownLink>
 
-                                        <JetDropdownLink @click="videoTopRight" :href="route('profile.show')">
+                                        <JetDropdownLink
+                                            @click="videoPlayer.makeVideoTopRight()"
+                                            :href="route('profile.show')">
                                             Profile
                                         </JetDropdownLink>
 
                                         <JetDropdownLink v-if="$page.props.jetstream.hasApiFeatures"
-                                                         @click="videoTopRight"
+                                                         @click="videoPlayer.makeVideoTopRight()"
                                                          :href="route('api-tokens.index')">
                                             API Tokens
                                         </JetDropdownLink>

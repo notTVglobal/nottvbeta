@@ -22,46 +22,54 @@
 
             <div class="mt-3 space-y-1">
 
-                <JetResponsiveNavLink :href="route('dashboard')"
+                <JetResponsiveNavLink @click="videoPlayer.makeVideoTopRight()"
+                                      :href="route('dashboard')"
                                       :active="route().current('dashboard')">
                     Dashboard
                 </JetResponsiveNavLink>
-                <JetResponsiveNavLink :href="route('stream')"
+                <JetResponsiveNavLink @click="videoPlayer.makeVideoTopRight()"
+                                      :href="route('stream')"
                                       :active="route().current('stream')"
 
                 >
                     Stream
                 </JetResponsiveNavLink>
-                <JetResponsiveNavLink :href="route('image')"
+                <JetResponsiveNavLink @click="videoPlayer.makeVideoFullPage()"
+                                      :href="route('image')"
                                       :active="route().current('image')"
 
                 >
                     Image Uploader
                 </JetResponsiveNavLink>
-                <JetResponsiveNavLink :href="route('video')"
+                <JetResponsiveNavLink @click="videoPlayer.makeVideoTopRight()"
+                                      :href="route('video')"
                                       :active="route().current('video')"
 
                 >
                     Video
                 </JetResponsiveNavLink>
-                <JetResponsiveNavLink :href="route('shows')"
+                <JetResponsiveNavLink @click="videoPlayer.makeVideoTopRight()"
+                                      :href="route('shows')"
                                       :active="route().current('shows')"
 
                 >
                     Shows
                 </JetResponsiveNavLink>
 
-                <JetResponsiveNavLink :href="route('training')"
+                <JetResponsiveNavLink @click="videoPlayer.makeVideoTopRight()"
+                                      :href="route('training')"
                                       :active="route().current('training')">
                     Training
                 </JetResponsiveNavLink>
 
-                <JetResponsiveNavLink :href="route('profile.show')"
+                <JetResponsiveNavLink @click="videoPlayer.makeVideoTopRight()"
+                                      :href="route('profile.show')"
                                       :active="route().current('profile.show')">
                     Profile
                 </JetResponsiveNavLink>
 
-                <JetResponsiveNavLink v-if="$page.props.jetstream.hasApiFeatures"
+                <JetResponsiveNavLink @click="videoPlayer.makeVideoTopRight()"
+                                      v-if="$page.props.jetstream.hasApiFeatures"
                                       :href="route('api-tokens.index')"
                                       :active="route().current('api-tokens.index')">
                     API Tokens
@@ -83,12 +91,14 @@
                     </div>
 
                     <!-- Team Settings -->
-                    <JetResponsiveNavLink :href="route('teams.show', $page.props.user.current_team)"
+                    <JetResponsiveNavLink @click="videoPlayer.makeVideoTopRight()"
+                                          :href="route('teams.show', $page.props.user.current_team)"
                                           :active="route().current('teams.show')">
                         Team Settings
                     </JetResponsiveNavLink>
 
-                    <JetResponsiveNavLink v-if="$page.props.jetstream.canCreateTeams"
+                    <JetResponsiveNavLink @click="videoPlayer.makeVideoTopRight()"
+                                          v-if="$page.props.jetstream.canCreateTeams"
                                           :href="route('teams.create')"
                                           :active="route().current('teams.create')">
                         Create New Team
@@ -130,4 +140,7 @@
 
 <script setup>
 import JetResponsiveNavLink from '@/Jetstream/ResponsiveNavLink.vue';
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
+
+let videoPlayer = useVideoPlayerStore();
 </script>
