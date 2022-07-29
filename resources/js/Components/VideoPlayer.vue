@@ -1,6 +1,6 @@
 <template>
 <!--    style="border: none; position: absolute; top: 0; left: 0; height: 100%; width: 100%;"-->
-    <div class="absolute mt-16 top-0 right-0 h-max z-10">
+
 <!--        <Draggable-->
 <!--            v-slot="{ x, y }"-->
 <!--            p="x-4 y-2"-->
@@ -12,7 +12,10 @@
 <!--            storage-key="vueuse-draggable-pos"-->
 <!--            storage-type="session"-->
 <!--        >-->
-            <video controls autoplay muted loop id="videoPlayer" :class="videoPlayer.class">
+<div class="videoContainer">
+    <div :class="videoPlayer.class">
+        <div class="absolute top-16 left-0 p-5 drop-shadow" v-if="videoPlayer.fullPage">Now Playing: {{ videoPlayer.videoName }}</div>
+            <video controls autoplay muted loop id="videoPlayer" class="object-contain w-full">
                 <source id="src" :src="videoFirstPlay" type="video/webm"/>
                 Sorry, your browser doesn't support embedded videos.
             </video>
@@ -21,7 +24,7 @@
         <button @click="loadVideo3" class="bg-gray-300 text-black p-1 m-2">1984</button>
         <button @click="loadVideo4" class="bg-gray-300 text-black p-1 m-2">The Terminator</button>
         <button @click="loadVideo5" class="bg-gray-300 text-black p-1 m-2">Natural World</button>
-        <div> Now Playing: {{ videoPlayer.videoName }} </div>
+        <div v-if="!videoPlayer.fullPage"> Now Playing: {{ videoPlayer.videoName }} </div>
             <!--            <iframe src="https://iframe.videodelivery.net/39ce0cc05aaf8186079fb844942f0afe"-->
             <!--                    class="w-96"-->
             <!--                    allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"-->
@@ -35,7 +38,7 @@
 <!--            </div>-->
 <!--        </Draggable>-->
     </div>
-
+</div>
 </template>
 
 <script setup>
@@ -47,6 +50,7 @@ import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
 
 let videoPlayer = useVideoPlayerStore();
 let videoFirstPlay = ref([`../../images/Spring-BlenderOpenMovie-WhWc3b3KhnY.webm`]);
+videoPlayer.videoName = "Spring";
 
 function loadVideo1() {
     videoPlayer.loadVideo1()

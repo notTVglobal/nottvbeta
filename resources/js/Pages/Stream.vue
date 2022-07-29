@@ -8,12 +8,17 @@
 
 
 
-        <ChatBox />
+        <ChatBox class="z-20" />
 </template>
 
 
 <script setup>
 import ChatBox from "@/Components/ChatBox.vue";
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
+
+let videoPlayer = useVideoPlayerStore();
+
+videoPlayer.fullPage = true;
 
 defineProps ({
     video: Object

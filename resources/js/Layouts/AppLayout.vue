@@ -2,11 +2,13 @@
     <div>
         <JetBanner/>
 
-        <div class="bg-gray-800 text-gray-200">
+        <div class="relative top-0 bg-gray-800 text-gray-200 h-full w-full ">
 
             <NavigationMenu>
                 <ResponsiveNavigationMenu />
             </NavigationMenu>
+
+            <VideoPlayer class="z-30"/>
 
             <!-- Page Heading -->
                         <header v-if="$slots.header" class="bg-white shadow">
@@ -18,8 +20,7 @@
 
             <!-- Page Content -->
             <main>
-                <VideoPlayer />
-                <slot />
+                <slot class="absolute top-0"/>
             </main>
         </div>
     </div>

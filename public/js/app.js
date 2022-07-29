@@ -54,6 +54,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @inertiajs/inertia */ "./node_modules/@inertiajs/inertia/dist/index.js");
 /* harmony import */ var _Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @/Stores/VideoPlayerStore.js */ "./resources/js/Stores/VideoPlayerStore.js");
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+/* harmony import */ var _Stores_ChatStore_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @/Stores/ChatStore.js */ "./resources/js/Stores/ChatStore.js");
+
 
 
 
@@ -68,6 +70,7 @@ __webpack_require__.r(__webpack_exports__);
   setup: function setup(__props, _ref) {
     var expose = _ref.expose;
     expose();
+    var chat = (0,_Stores_ChatStore_js__WEBPACK_IMPORTED_MODULE_9__.useChatStore)();
     var videoPlayer = (0,_Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_7__.useVideoPlayerStore)();
     var showingNavigationDropdown = (0,vue__WEBPACK_IMPORTED_MODULE_8__.ref)(false);
 
@@ -80,6 +83,7 @@ __webpack_require__.r(__webpack_exports__);
     };
 
     var __returned__ = {
+      chat: chat,
       videoPlayer: videoPlayer,
       showingNavigationDropdown: showingNavigationDropdown,
       switchToTeam: switchToTeam,
@@ -91,7 +95,8 @@ __webpack_require__.r(__webpack_exports__);
       JetNavLink: _Jetstream_NavLink_vue__WEBPACK_IMPORTED_MODULE_5__["default"],
       Inertia: _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_6__.Inertia,
       useVideoPlayerStore: _Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_7__.useVideoPlayerStore,
-      ref: vue__WEBPACK_IMPORTED_MODULE_8__.ref
+      ref: vue__WEBPACK_IMPORTED_MODULE_8__.ref,
+      useChatStore: _Stores_ChatStore_js__WEBPACK_IMPORTED_MODULE_9__.useChatStore
     };
     Object.defineProperty(__returned__, '__isScriptSetup', {
       enumerable: false,
@@ -164,6 +169,7 @@ __webpack_require__.r(__webpack_exports__);
     expose();
     var videoPlayer = (0,_Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_1__.useVideoPlayerStore)();
     var videoFirstPlay = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)(["../../images/Spring-BlenderOpenMovie-WhWc3b3KhnY.webm"]);
+    videoPlayer.videoName = "Spring";
 
     function loadVideo1() {
       videoPlayer.loadVideo1();
@@ -618,7 +624,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 
 var _hoisted_1 = {
-  "class": "bg-black border-b border-gray-100 z-30"
+  "class": "sticky top-0 bg-black bg-opacity-50 border-b border-gray-100 z-50"
 };
 var _hoisted_2 = {
   "class": "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
@@ -802,8 +808,6 @@ var _hoisted_48 = {
   viewBox: "0 0 24 24"
 };
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  var _component_Slot = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Slot");
-
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("nav", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Primary Navigation Menu "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Logo "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["Link"], {
     onClick: _cache[0] || (_cache[0] = function ($event) {
       return $setup.videoPlayer.makeVideoFullPage();
@@ -911,9 +915,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, 8
   /* PROPS */
   , ["href", "active"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ChatToggle"], {
-    checked: _ctx.ChatOn,
+    checked: $setup.chat.chatToggle,
     "onUpdate:checked": _cache[7] || (_cache[7] = function ($event) {
-      return _ctx.ChatOn = $event;
+      return $setup.chat.chatToggle = $event;
     }),
     label: "Chat On/Off"
   }, null, 8
@@ -1125,7 +1129,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     d: "M6 18L18 6M6 6l12 12"
   }, null, 2
   /* CLASS */
-  )]))])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Slot)]);
+  )]))])])])])]);
 }
 
 /***/ }),
@@ -1467,29 +1471,39 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 
 var _hoisted_1 = {
-  "class": "absolute mt-16 top-0 right-0 h-max z-10"
+  "class": "videoContainer"
 };
-var _hoisted_2 = ["src"];
+var _hoisted_2 = {
+  key: 0,
+  "class": "absolute top-16 left-0 p-5 drop-shadow"
+};
+var _hoisted_3 = {
+  controls: "",
+  autoplay: "",
+  muted: "",
+  loop: "",
+  id: "videoPlayer",
+  "class": "object-contain w-full"
+};
+var _hoisted_4 = ["src"];
 
-var _hoisted_3 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Sorry, your browser doesn't support embedded videos. ");
+var _hoisted_5 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Sorry, your browser doesn't support embedded videos. ");
 
+var _hoisted_6 = {
+  key: 1
+};
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("    style=\"border: none; position: absolute; top: 0; left: 0; height: 100%; width: 100%;\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("        <Draggable"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            v-slot=\"{ x, y }\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            p=\"x-4 y-2\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            border=\"~ gray-400 rounded\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            shadow=\"~ hover:lg\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            class=\"fixed bg-$vt-c-bg select-none cursor-move z-10\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            :initial-value=\"{ x: innerWidth / 3.9, y: 150 }\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            :prevent-default=\"true\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            storage-key=\"vueuse-draggable-pos\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            storage-type=\"session\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("        >"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("video", {
-    controls: "",
-    autoplay: "",
-    muted: "",
-    loop: "",
-    id: "videoPlayer",
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("    style=\"border: none; position: absolute; top: 0; left: 0; height: 100%; width: 100%;\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("        <Draggable"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            v-slot=\"{ x, y }\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            p=\"x-4 y-2\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            border=\"~ gray-400 rounded\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            shadow=\"~ hover:lg\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            class=\"fixed bg-$vt-c-bg select-none cursor-move z-10\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            :initial-value=\"{ x: innerWidth / 3.9, y: 150 }\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            :prevent-default=\"true\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            storage-key=\"vueuse-draggable-pos\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            storage-type=\"session\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("        >"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)($setup.videoPlayer["class"])
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("source", {
+  }, [$setup.videoPlayer.fullPage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_2, "Now Playing: " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.videoPlayer.videoName), 1
+  /* TEXT */
+  )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("video", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("source", {
     id: "src",
     src: $setup.videoFirstPlay,
     type: "video/webm"
   }, null, 8
   /* PROPS */
-  , _hoisted_2), _hoisted_3], 2
-  /* CLASS */
-  ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  , _hoisted_4), _hoisted_5]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     onClick: $setup.loadVideo1,
     "class": "bg-gray-300 text-black p-1 m-2"
   }, "Spring"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
@@ -1504,9 +1518,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, "The Terminator"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     onClick: $setup.loadVideo5,
     "class": "bg-gray-300 text-black p-1 m-2"
-  }, "Natural World"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, " Now Playing: " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.videoPlayer.videoName), 1
+  }, "Natural World"), !$setup.videoPlayer.fullPage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_6, " Now Playing: " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.videoPlayer.videoName), 1
   /* TEXT */
-  ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            <iframe src=\"https://iframe.videodelivery.net/39ce0cc05aaf8186079fb844942f0afe\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    class=\"w-96\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    allow=\"accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    allowfullscreen=\"true\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            </iframe>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            <div class=\"text-xs opacity-50 bg-gray-800 text-gray-200\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <p>({{ Math.round(x) }}, {{ Math.round(y) }}) CLICK HERE TO MOVE VIDEO PLAYER</p>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <p>This video is a webm format and won't playback on an iPhone or iPad.<br />"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    This is just for testing purposes."), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                </p>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            </div>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("        </Draggable>")])], 2112
+  )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            <iframe src=\"https://iframe.videodelivery.net/39ce0cc05aaf8186079fb844942f0afe\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    class=\"w-96\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    allow=\"accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    allowfullscreen=\"true\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            </iframe>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            <div class=\"text-xs opacity-50 bg-gray-800 text-gray-200\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <p>({{ Math.round(x) }}, {{ Math.round(y) }}) CLICK HERE TO MOVE VIDEO PLAYER</p>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <p>This video is a webm format and won't playback on an iPhone or iPad.<br />"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    This is just for testing purposes."), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                </p>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            </div>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("        </Draggable>")], 2
+  /* CLASS */
+  )])], 2112
   /* STABLE_FRAGMENT, DEV_ROOT_FRAGMENT */
   );
 }
@@ -1844,7 +1860,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 
 var _hoisted_1 = {
-  "class": "bg-gray-800 text-gray-200"
+  "class": "relative top-0 bg-gray-800 text-gray-200 h-full w-full"
 };
 var _hoisted_2 = {
   key: 0,
@@ -1861,8 +1877,40 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1
     /* STABLE */
 
-  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Page Heading "), _ctx.$slots.header ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("header", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.renderSlot)(_ctx.$slots, "header")])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Page Content "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("main", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["VideoPlayer"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderSlot)(_ctx.$slots, "default")])])]);
+  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["VideoPlayer"], {
+    "class": "z-30"
+  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Page Heading "), _ctx.$slots.header ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("header", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.renderSlot)(_ctx.$slots, "header")])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Page Content "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("main", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.renderSlot)(_ctx.$slots, "default", {
+    "class": "absolute top-0"
+  })])])]);
 }
+
+/***/ }),
+
+/***/ "./resources/js/Stores/ChatStore.js":
+/*!******************************************!*\
+  !*** ./resources/js/Stores/ChatStore.js ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "useChatStore": () => (/* binding */ useChatStore)
+/* harmony export */ });
+/* harmony import */ var pinia__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! pinia */ "./node_modules/pinia/dist/pinia.esm-browser.js");
+
+var useChatStore = (0,pinia__WEBPACK_IMPORTED_MODULE_0__.defineStore)('chatBox', {
+  state: function state() {
+    return {
+      "class": 'hidden'
+    };
+  },
+  actions: {
+    chatToggle: function chatToggle() {
+      if (this["class"] = 'hidden', this["class"] = '') ;else this["class"] = 'hidden';
+    }
+  }
+});
 
 /***/ }),
 
@@ -1885,15 +1933,18 @@ var useVideoPlayerStore = (0,pinia__WEBPACK_IMPORTED_MODULE_0__.defineStore)('vi
       "class": 'blue',
       videoSourceId: '',
       key: 0,
-      videoName: ''
+      videoName: '',
+      fullPage: false
     };
   },
   actions: {
     makeVideoFullPage: function makeVideoFullPage() {
       this["class"] = 'videoFullPage';
+      this.fullPage = true;
     },
     makeVideoTopRight: function makeVideoTopRight() {
       this["class"] = 'videoTopRight';
+      this.fullPage = false;
     },
     loadVideo1: function loadVideo1() {
       this.videoSourceId = "../../images/Spring-BlenderOpenMovie-WhWc3b3KhnY.webm";

@@ -6,16 +6,19 @@ export let useVideoPlayerStore = defineStore('videoPlayer', {
             class: 'blue',
             videoSourceId: '',
             key: 0,
-            videoName: ''
+            videoName: '',
+            fullPage: false
         };
     },
 
     actions: {
         makeVideoFullPage() {
             this.class = 'videoFullPage';
+            this.fullPage = true;
         },
         makeVideoTopRight() {
             this.class = 'videoTopRight';
+            this.fullPage = false;
         },
         loadVideo1() {
             this.videoSourceId = "../../images/Spring-BlenderOpenMovie-WhWc3b3KhnY.webm";

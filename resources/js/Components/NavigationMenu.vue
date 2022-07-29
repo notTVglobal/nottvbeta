@@ -1,5 +1,5 @@
 <template>
-    <nav class="bg-black border-b border-gray-100 z-30">
+    <nav class="sticky top-0 bg-black bg-opacity-50 border-b border-gray-100 z-50">
         <!-- Primary Navigation Menu -->
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
@@ -31,7 +31,7 @@
                         <JetNavLink @click="videoPlayer.makeVideoTopRight()" :href="route('schedule')" :active="route().current('schedule')">
                             Schedule
                         </JetNavLink>
-                        <ChatToggle v-model:checked="ChatOn" label="Chat On/Off" />
+                        <ChatToggle v-model:checked="chat.chatToggle" label="Chat On/Off" />
                     </div>
                 </div>
 
@@ -234,7 +234,6 @@
                 </div>
             </div>
         </div>
-        <Slot />
     </nav>
 </template>
 
@@ -248,7 +247,9 @@ import JetNavLink from '@/Jetstream/NavLink.vue';
 import {Inertia} from "@inertiajs/inertia";
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
 import { ref } from "vue";
+import { useChatStore } from "@/Stores/ChatStore.js";
 
+let chat = useChatStore();
 let videoPlayer = useVideoPlayerStore();
 
 const showingNavigationDropdown = ref(false);
