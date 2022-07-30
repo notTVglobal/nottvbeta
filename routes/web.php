@@ -4,6 +4,7 @@ use App\Http\Controllers\CreatorsController;
 use App\Http\Controllers\ShowsController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ImageController;
+use App\Http\Controllers\TeamsController;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -62,6 +63,17 @@ Route::middleware([
     Route::get('/quiz', function () {
         return Inertia::render('QuizHome');
     })->name('quiz');
+
+    // List all teams
+    Route::get('/teams', [TeamsController::class, 'index'])->name('teams.index');
+    // Create a team
+    Route::get('/teams/create', [TeamsController::class, 'create'])->name('teams.create');
+    // Add new team to database
+    Route::post('/teams', [TeamsController::class, 'store'])->name('teams.store');
+    // Single team page
+    Route::get('/teams/{team}', [TeamsController::class, 'show'])->name('teams.show');
+    // Edit team
+    Route::get('/teams/edit/{team}', [TeamsController::class, 'edit'])->name('teams.edit');
 
 
     // List all creators

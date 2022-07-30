@@ -148,7 +148,6 @@
                                 <div class="divide-y">
                                     <div class="pb-3">
                                         <!-- Administrator Links -->
-                                        <!-- Need to add v-if="$page.props.jetstream.hasTeamFeatures in a template tag -->
                                         <div class="block px-4 py-2 text-xs text-gray-400">
                                             Administrator Links
                                         </div>
@@ -157,6 +156,19 @@
                                             @click="videoPlayer.makeVideoTopRight()"
                                             :href="route('admin.users.index')">
                                             Users
+                                        </JetDropdownLink>
+                                    </div>
+                                    <div class="pb-3">
+                                        <!-- Teams Links -->
+                                        <!-- Need to add v-if="$page.props.jetstream.hasTeamFeatures in a template tag -->
+                                        <div class="block px-4 py-2 text-xs text-gray-400">
+                                            Manage Teams
+                                        </div>
+
+                                        <JetDropdownLink
+                                            @click="videoPlayer.makeVideoTopRight()"
+                                            :href="route('teams.index')">
+                                            Teams
                                         </JetDropdownLink>
                                     </div>
                                     <div class="pt-2 pb-3">
