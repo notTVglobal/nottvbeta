@@ -1,14 +1,16 @@
 <template>
 
     <Head :title="Edit" />
-    <div class=" m-auto mt-10 mb-10 w-3/4">
-        <div class="bg-white rounded text-black p-5 mb-10">
+
+    <div class="place-self-center flex flex-col gap-y-3 mr-96">
+        <div class="bg-white text-black p-5 mb-10">
+
             <div class="flex justify-between mb-6">
-                <h1 class="text-3xl">Edit > {{props.team.name}}</h1>
-                <Link href="/teams" class="text-blue-500 text-sm ml-2">Go back</Link>
+                <h1 class="text-3xl"><Link :href="`/teams/${team.id}`" class="text-indigo-600">{{props.team.name}}</Link> > <span class="font-semibold">Edit</span></h1>
+                <Link :href="`/teams/${team.id}`" class="text-blue-500 text-sm ml-2">Cancel</Link>
             </div>
             <div class="max-w-lg mx-auto mt-8">
-                <div class="mb-6">team ID: {{props.team.id}}</div>
+                <div class="mb-6"><span class="text-xs">Team ID: </span><span class="font-semibold">{{props.team.id}}</span></div>
                 <div class="mb-6"><img :src="props.team.team_poster_url" /></div>
                 <form @submit.prevent="submit">
                     <div class="mb-6">
@@ -62,6 +64,9 @@
 <script setup>
 import { useForm } from "@inertiajs/inertia-vue3";
 import TabbableTextarea from "@/Components/TabbableTextarea";
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
+let videoPlayer = useVideoPlayerStore();
+videoPlayer.class = "videoTopRight"
 
 let props = defineProps({
     team: Object

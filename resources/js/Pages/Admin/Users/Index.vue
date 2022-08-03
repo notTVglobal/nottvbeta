@@ -1,10 +1,11 @@
 <template>
     <Head title="Users" />
 
-        <div class="bg-white rounded text-black p-5 mb-10 py-20 w-3/4">
+    <div class="place-self-center flex flex-col gap-y-3 mr-96">
+        <div class="bg-white text-black p-5 mb-10">
             <div class="flex justify-between mb-6">
                 <div class="flex items-center">
-                    <h1 class="text-3xl">Users</h1>
+                    <h1 class="text-3xl font-semibold">Users</h1>
 
                     <Link href="/admin/users/create" class="text-blue-500 text-sm ml-2">New User</Link>
                 </div>
@@ -16,6 +17,8 @@
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                     <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                            <!-- Paginator -->
+                            <Pagination :links="users.links" class="mb-2"/>
                         <div class="bg-orange-300">
                             Only users who are creators should have a clickable name
                             which goes to their creator profile page.
@@ -49,6 +52,7 @@
                 </div>
             </div>
         </div>
+    </div>
 
 </template>
 
@@ -58,6 +62,9 @@ import Pagination from "@/Components/Pagination";
 import { ref, watch } from "vue";
 import {Inertia} from "@inertiajs/inertia";
 import throttle from "lodash/throttle";
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
+let videoPlayer = useVideoPlayerStore();
+videoPlayer.class = "videoTopRight"
 
 let props = defineProps({
     users: Object,

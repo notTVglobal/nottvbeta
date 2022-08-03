@@ -1,46 +1,23 @@
 <template>
 
-    <Head :title="props.team.name" />
-    <div class="flex m-auto mt-10 mb-10 w-1/2">
+    <Head :title="team.name + ' Team'" />
+
+
+    <div class="place-self-center flex flex-col gap-y-3 mr-96">
+
         <div class="bg-white rounded text-black p-5 mb-10">
-            <div class="flex justify-between mb-6">
-                <h1 class="text-2xl pb-3">{{props.team.name}}</h1>
-                <Link href="/teams" class="text-blue-500 text-sm ml-2">Go back</Link>
-            </div>
-            <p class="mb-6">
-                {{ props.team.description }}
-            </p>
+
+
+            <TeamHeader />
 
             <div class="flex flex-col">
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                     <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                            <div class="bg-orange-300">
-                                Follow <a href="https://laracasts.com/series/learn-vue-3-step-by-step/episodes/26" class="text-blue-600">Jeffrey's course</a> to set this page up.
-                            </div>
 
-<!--                            <table class="min-w-full divide-y divide-gray-200">-->
-<!--                                <tbody class="bg-white divide-y divide-gray-200">-->
-<!--                                <tr v-for="episode in episodes.data" :key="episode.id">-->
-<!--                                    <td class="px-6 py-4 whitespace-nowrap">-->
-<!--                                        <div class="flex items-center">-->
-<!--                                            <div>-->
-<!--                                                <div class="text-sm font-medium text-gray-900">-->
-<!--                                                    <Link :href="`/admin/users/${episode.id}`" class="text-indigo-600 hover:text-indigo-900">{{ episode.name }}</Link>-->
-<!--                                                </div>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                    </td>-->
+                        <TeamMembersList />
 
-<!--                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">-->
-<!--                                        <Link :href="`/admin/users/edit/${episode.id}`" class="text-indigo-600 hover:text-indigo-900">Edit</Link>-->
-<!--                                    </td>-->
-<!--                                </tr>-->
-<!--                                </tbody>-->
-<!--                            </table>-->
-
-<!--                            &lt;!&ndash; Paginator &ndash;&gt;-->
-<!--                            <Pagination :links="episode.links" class="mt-6"/>-->
+                        <TeamFooter />
 
                         </div>
                     </div>
@@ -52,11 +29,22 @@
 
 </template>
 
+
 <script setup>
-let props = defineProps({
-    team: Object,
-    episodes: Object
-});
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
+import TeamHeader from "@/Components/Teams/TeamHeader";
+import TeamMembersList from "@/Components/Teams/TeamMembersList";
+import TeamFooter from "@/Components/Teams/TeamFooter";
+import { useTeamStore } from "@/Stores/TeamStore.js";
+
+let videoPlayer = useVideoPlayerStore();
+videoPlayer.class = "videoTopRight"
+
+let team = useTeamStore();
+team.fill();
+
+setTimeout(() => {
+    team.spots = 10;
+}, 2000)
+
 </script>
-
-

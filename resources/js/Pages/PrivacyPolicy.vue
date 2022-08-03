@@ -1,6 +1,9 @@
 <script setup>
 import { Head } from '@inertiajs/inertia-vue3';
 import JetAuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo.vue';
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
+let videoPlayer = useVideoPlayerStore();
+videoPlayer.class = "videoTopRight"
 
 defineProps({
     policy: String,

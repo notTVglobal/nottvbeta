@@ -57,6 +57,7 @@ __webpack_require__.r(__webpack_exports__);
     expose();
     var videoPlayer = (0,_Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_1__.useVideoPlayerStore)();
     videoPlayer.fullPage = true;
+    videoPlayer["class"] = "videoFullPage";
     var __returned__ = {
       videoPlayer: videoPlayer,
       ChatBox: _Components_ChatBox_vue__WEBPACK_IMPORTED_MODULE_0__["default"],

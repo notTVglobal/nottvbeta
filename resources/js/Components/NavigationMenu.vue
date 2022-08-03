@@ -31,7 +31,7 @@
                         <JetNavLink @click="videoPlayer.makeVideoTopRight()" :href="route('schedule')" :active="route().current('schedule')">
                             Schedule
                         </JetNavLink>
-                        <ChatToggle v-model:checked="chat.chatToggle" label="Chat On/Off" />
+                        <ChatToggle v-model:checked="chat.chatToggle" label="Chat" />
                     </div>
                 </div>
 
@@ -154,6 +154,12 @@
 
                                         <JetDropdownLink
                                             @click="videoPlayer.makeVideoTopRight()"
+                                            :href="route('teams.index')">
+                                            Teams
+                                        </JetDropdownLink>
+
+                                        <JetDropdownLink
+                                            @click="videoPlayer.makeVideoTopRight()"
                                             :href="route('admin.users.index')">
                                             Users
                                         </JetDropdownLink>
@@ -162,13 +168,13 @@
                                         <!-- Teams Links -->
                                         <!-- Need to add v-if="$page.props.jetstream.hasTeamFeatures in a template tag -->
                                         <div class="block px-4 py-2 text-xs text-gray-400">
-                                            Manage Teams
+                                            My Teams
                                         </div>
 
                                         <JetDropdownLink
                                             @click="videoPlayer.makeVideoTopRight()"
                                             :href="route('teams.index')">
-                                            Teams
+                                            notTV Founders
                                         </JetDropdownLink>
                                     </div>
                                     <div class="pt-2 pb-3">

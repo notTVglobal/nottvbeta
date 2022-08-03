@@ -1,10 +1,15 @@
 <template>
     <AppLayout title="Profile">
+
+
+
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 Profile
             </h2>
         </template>
+        <div class="place-self-center flex flex-col gap-y-3 mr-96">
+            <div class="text-black p-5 mb-10">
 
         <div class="text-black">
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
@@ -38,6 +43,8 @@
                 </template>
             </div>
         </div>
+            </div>
+        </div>
     </AppLayout>
 </template>
 
@@ -49,6 +56,9 @@ import LogoutOtherBrowserSessionsForm from '@/Pages/Profile/Partials/LogoutOther
 import TwoFactorAuthenticationForm from '@/Pages/Profile/Partials/TwoFactorAuthenticationForm.vue';
 import UpdatePasswordForm from '@/Pages/Profile/Partials/UpdatePasswordForm.vue';
 import UpdateProfileInformationForm from '@/Pages/Profile/Partials/UpdateProfileInformationForm.vue';
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
+let videoPlayer = useVideoPlayerStore();
+videoPlayer.class = "videoTopRight"
 
 defineProps({
     confirmsTwoFactorAuthentication: Boolean,

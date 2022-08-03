@@ -1,8 +1,10 @@
 <template>
 
     <Head :title="title" />
-    <div class=" m-auto mt-10 mb-10 w-3/4">
-        <div class="bg-white rounded text-black p-5 mb-10">
+
+    <div class="place-self-center flex flex-col gap-y-3 mr-96">
+        <div class="bg-white text-black p-5 mb-10">
+
             <div class="flex justify-between mb-6">
                 <h1 class="text-3xl">Edit > {{props.show.name}}</h1>
                 <Link href="/shows" class="text-blue-500 text-sm ml-2">Go back</Link>
@@ -62,6 +64,9 @@
 <script setup>
 import { useForm } from "@inertiajs/inertia-vue3";
 import TabbableTextarea from "@/Components/TabbableTextarea";
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
+let videoPlayer = useVideoPlayerStore();
+videoPlayer.class = "videoTopRight"
 
 let props = defineProps({
     show: Object

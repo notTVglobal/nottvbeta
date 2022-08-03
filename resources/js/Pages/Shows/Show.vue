@@ -1,10 +1,12 @@
 <template>
 
     <Head :title="props.show.name" />
-    <div class="flex m-auto mt-10 mb-10 w-1/2">
-        <div class="bg-white rounded text-black p-5 mb-10">
+
+    <div class="place-self-center flex flex-col gap-y-3 mr-96">
+        <div class="bg-white text-black p-5 mb-10">
+
             <div class="flex justify-between mb-6">
-                <h1 class="text-2xl pb-3">{{props.show.name}}</h1>
+                <h1 class="text-2xl font-semibold pb-3">{{props.show.name}}</h1>
                 <Link href="/shows" class="text-blue-500 text-sm ml-2">Go back</Link>
             </div>
             <p class="mb-6">
@@ -15,7 +17,7 @@
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                     <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                            <div class="bg-orange-300">
+                            <div class="bg-orange-300 px-2">
                                 Episodes list. New features will be added to sort, search and browse episodes.
                             </div>
 
@@ -53,6 +55,10 @@
 </template>
 
 <script setup>
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
+let videoPlayer = useVideoPlayerStore();
+videoPlayer.class = "videoTopRight"
+
 let props = defineProps({
     show: Object,
     episodes: Object

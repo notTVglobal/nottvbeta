@@ -18,32 +18,37 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var filepond_dist_filepond_min_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! filepond/dist/filepond.min.css */ "./node_modules/filepond/dist/filepond.min.css");
 /* harmony import */ var filepond_plugin_file_validate_type__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! filepond-plugin-file-validate-type */ "./node_modules/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js");
 /* harmony import */ var filepond_plugin_file_validate_type__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(filepond_plugin_file_validate_type__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/Stores/VideoPlayerStore.js */ "./resources/js/Stores/VideoPlayerStore.js");
 
 
 
 
- //
-// config: { headers: function () { return {} } },
-// const props = defineProps({
-//             process: {
-//                 url: './upload',
-//                 headers: {
-//                     'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf_token"]').content
-//                 }
-//             }
-// });
+
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   __name: 'Image',
   setup: function setup(__props, _ref) {
     var expose = _ref.expose;
     expose();
+    var videoPlayer = (0,_Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_5__.useVideoPlayerStore)();
+    videoPlayer["class"] = "videoTopRight"; //
+    // config: { headers: function () { return {} } },
+    // const props = defineProps({
+    //             process: {
+    //                 url: './upload',
+    //                 headers: {
+    //                     'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf_token"]').content
+    //                 }
+    //             }
+    // });
+
     var FilePond = vue_filepond__WEBPACK_IMPORTED_MODULE_2___default()((filepond_plugin_file_validate_type__WEBPACK_IMPORTED_MODULE_4___default()));
     var pond = (0,vue__WEBPACK_IMPORTED_MODULE_1__.ref)([]);
     var FilePondInitialized = (0,vue__WEBPACK_IMPORTED_MODULE_1__.ref)();
     console.log(FilePondInitialized, "Filepond is ready!");
     console.log("Filepond object:", pond);
     var __returned__ = {
+      videoPlayer: videoPlayer,
       FilePond: FilePond,
       pond: pond,
       FilePondInitialized: FilePondInitialized,
@@ -52,7 +57,8 @@ __webpack_require__.r(__webpack_exports__);
       ref: vue__WEBPACK_IMPORTED_MODULE_1__.ref,
       vueFilePond: (vue_filepond__WEBPACK_IMPORTED_MODULE_2___default()),
       setOptions: vue_filepond__WEBPACK_IMPORTED_MODULE_2__.setOptions,
-      FilePondPluginFileValidateType: (filepond_plugin_file_validate_type__WEBPACK_IMPORTED_MODULE_4___default())
+      FilePondPluginFileValidateType: (filepond_plugin_file_validate_type__WEBPACK_IMPORTED_MODULE_4___default()),
+      useVideoPlayerStore: _Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_5__.useVideoPlayerStore
     };
     Object.defineProperty(__returned__, '__isScriptSetup', {
       enumerable: false,
@@ -77,22 +83,28 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 
 var _hoisted_1 = {
+  "class": "place-self-center flex flex-col gap-y-3 mr-96"
+};
+var _hoisted_2 = {
+  "class": "bg-white text-black p-5 mb-10"
+};
+var _hoisted_3 = {
   "class": "max-w-lg mx-auto mt-24"
 };
 
-var _hoisted_2 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h1", {
+var _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h1", {
   "class": "text-4xl font-bold text-center"
 }, "Image Uploader", -1
 /* HOISTED */
 );
 
-var _hoisted_3 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", {
+var _hoisted_5 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", {
   "class": "pt-3 pb-4 text-orange-400"
 }, " This uploader is not currently functioning. ", -1
 /* HOISTED */
 );
 
-var _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+var _hoisted_6 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "pt-10 pb-10"
 }, null, -1
 /* HOISTED */
@@ -101,7 +113,7 @@ var _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementV
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["Head"], {
     title: "Image uploading"
-  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [_hoisted_2, _hoisted_3, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["FilePond"], {
+  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [_hoisted_4, _hoisted_5, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["FilePond"], {
     name: "image",
     ref: "{{pond}}",
     "label-idle": "Click to choose image, or drag here...",
@@ -109,7 +121,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "accepted-file-types": "image/*"
   }, null, 8
   /* PROPS */
-  , ["onInit"])]), _hoisted_4], 64
+  , ["onInit"])]), _hoisted_6])])], 64
   /* STABLE_FRAGMENT */
   );
 }

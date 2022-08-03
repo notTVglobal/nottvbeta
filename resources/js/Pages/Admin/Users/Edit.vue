@@ -1,14 +1,16 @@
 <template>
     <Head title="Edit User"/>
 
-    <div class="bg-white rounded text-black p-5 mb-10 py-20 w-3/4">
+    <div class="place-self-center flex flex-col gap-y-3 mr-96">
+        <div class="bg-white text-black p-5 mb-10">
+
         <div class="flex justify-between mb-6">
             <h1 class="text-3xl">Edit User</h1>
             <Link href="/admin/users" class="text-blue-500 text-sm ml-2">Go back</Link>
         </div>
 
         <div class="max-w-md mx-auto mt-8">
-            <div class="mb-6">User ID: {{props.user.id}}</div>
+            <div class="mb-6"><span class="text-xs uppercase">User ID: </span><span class="font-semibold">{{props.user.id}}</span></div>
             <div class="mb-6"><img :src="props.user.profile_photo_url" /></div>
             <form @submit.prevent="submit">
                 <div class="mb-6">
@@ -59,10 +61,14 @@
         </div>
 
     </div>
+    </div>
 </template>
 
 <script setup>
 import { useForm } from "@inertiajs/inertia-vue3";
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
+let videoPlayer = useVideoPlayerStore();
+videoPlayer.class = "videoTopRight"
 
 let props = defineProps({
     user: Object

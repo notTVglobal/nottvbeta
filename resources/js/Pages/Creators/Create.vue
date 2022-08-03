@@ -1,6 +1,9 @@
 <template>
     <Head title="Create a Creator"/>
-    <div class="bg-white rounded text-black p-5 mb-10 py-20 w-3/4">
+
+    <div class="place-self-center flex flex-col gap-y-3 mr-96">
+        <div class="bg-white text-black p-5 mb-10">
+
         <div class="flex justify-between mb-6">
             <h1 class="text-3xl">Create New Creator</h1>
             <Link href="/creators" class="text-blue-500 text-sm ml-2">Go back</Link>
@@ -38,10 +41,14 @@
         </form>
 
     </div>
+    </div>
 </template>
 
 <script setup>
 import { useForm } from "@inertiajs/inertia-vue3";
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
+let videoPlayer = useVideoPlayerStore();
+videoPlayer.class = "videoTopRight"
 
 let form = useForm({
     name: '',

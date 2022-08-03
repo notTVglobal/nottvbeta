@@ -9,9 +9,11 @@
 <!--        <div class="py-12">-->
 <!--            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">-->
 <!--                <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">-->
-                    <div class="flex m-auto mt-10 mb-10 w-1/2">
-                        <div class="bg-white rounded text-black p-5 mb-10">
-                            <h1 class="text-2xl pb-3">Training</h1>
+
+    <div class="place-self-center flex flex-col gap-y-3 mr-96">
+        <div class="bg-white text-black p-5 mb-10">
+
+                            <h1 class="text-3xl pb-3 font-semibold">Training</h1>
                             <p>
                                 Travis will create some training videos to help people create content in a higher broadcast quality.
                             </p>
@@ -33,5 +35,9 @@
 
 <script setup>
 import Welcome from '@/Jetstream/Welcome.vue';
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
+let videoPlayer = useVideoPlayerStore();
+videoPlayer.class = "videoTopRight"
+
 </script>
 

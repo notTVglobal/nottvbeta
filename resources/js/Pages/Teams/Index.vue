@@ -1,10 +1,15 @@
 <template>
     <Head title="Teams" />
 
-    <div class="bg-white rounded text-black p-5 mb-10 py-20 w-3/4">
+
+    <div class="place-self-center flex flex-col gap-y-3 mr-96">
+        <div class="bg-white text-black p-5 mb-10">
+
+
+<!--    <div class="bg-white rounded text-black p-5 mb-10 py-20 w-3/4">-->
         <div class="flex justify-between mb-6">
             <div class="flex items-center">
-                <h1 class="text-3xl">Teams</h1>
+                <h1 class="text-3xl font-semibold">Teams</h1>
 
                 <Link href="/teams/create" class="text-blue-500 text-sm ml-2">New Team</Link>
             </div>
@@ -51,6 +56,7 @@
 
         </div>
     </div>
+    </div>
 
 </template>
 
@@ -59,6 +65,10 @@ import Pagination from "@/Components/Pagination";
 import { ref, watch } from "vue";
 import {Inertia} from "@inertiajs/inertia";
 import throttle from "lodash/throttle";
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
+
+let videoPlayer = useVideoPlayerStore();
+videoPlayer.class = "videoTopRight"
 
 let props = defineProps({
     teams: Object,

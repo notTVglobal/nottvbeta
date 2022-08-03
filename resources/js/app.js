@@ -8,7 +8,6 @@ import AppLayout from "./Layouts/AppLayout";
 import { createPinia } from "pinia";
 // import NoLayout from "./Layouts/NoLayout";
 import { ZiggyVue } from 'ziggy';
-import VideoPlayer from "./Components/VideoPlayer";
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'notTV';
 
@@ -31,7 +30,6 @@ createInertiaApp({
             .use(createPinia())
             .component("Link", Link)
             .component("Head", Head)
-            .component('VideoPlayer', VideoPlayer)
             .mount(el);
     },
 });

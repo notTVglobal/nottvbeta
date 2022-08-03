@@ -1,22 +1,27 @@
 <template>
     <Head title="Dashboard" />
-<!--        <template #header>-->
-<!--            <h2 class="font-semibold text-xl text-gray-800 leading-tight">-->
-<!--                Dashboard-->
-<!--            </h2>-->
-<!--        </template>-->
 
-<!--        <div class="py-12">-->
-<!--            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">-->
-<!--                <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">-->
-                    <div>Dashboard</div>
+    <div class="place-self-center flex flex-col gap-y-3 mr-96">
+        <div class="bg-white text-black p-5 mb-10">
 
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
+            <h1 class="text-3xl font-semibold pb-3">Dashboard</h1>
+            <p class="mb-8">
+                Coming soon.
+            </p>
+            <div class="bg-orange-300 px-2">
+                Display account information here.
+            </div>
+
+            <!--            <VideoPlayer :video="video"/>-->
+        </div>
+    </div>
+
 </template>
 
 <script setup>
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
+let videoPlayer = useVideoPlayerStore();
+videoPlayer.class = "videoTopRight"
 
 </script>
 
