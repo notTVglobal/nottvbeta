@@ -1,12 +1,6 @@
 @tailwind base;
 @tailwind components;
 
-.videoContainer {
-    position:relative;
-    top: -4rem;
-    left:0;
-    width:100%;
-}
 .videoFullPage {
     position:absolute;
     top:0;

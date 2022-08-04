@@ -31,7 +31,7 @@
                         <JetNavLink @click="videoPlayer.makeVideoTopRight()" :href="route('schedule')" :active="route().current('schedule')">
                             Schedule
                         </JetNavLink>
-                        <ChatToggle v-model:checked="chat.chatToggle" label="Chat" />
+                        <ChatToggle v-model:checked="chat.show" label="Chat" />
                     </div>
                 </div>
 

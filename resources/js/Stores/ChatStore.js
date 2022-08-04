@@ -1,13 +1,18 @@
 import { defineStore } from "pinia";
 
-export let useChatStore = defineStore('chatBox', {
+export let useChatStore = defineStore('chat', {
     state() {
         return {
-            class: 'hidden'
+            show: Boolean
         };
     },
 
     actions: {
-        chatToggle() {
-            if (this.class = 'hidden', this.class = ''); else (this.class = 'hidden');
-        }}})
+        show() {
+            show = true
+        },
+        hide() {
+            show = false
+        }
+    }
+})

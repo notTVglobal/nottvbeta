@@ -12,36 +12,36 @@
 <!--            storage-key="vueuse-draggable-pos"-->
 <!--            storage-type="session"-->
 <!--        >-->
-<div class="videoContainer">
-    <div :class="videoPlayer.class">
-        <div class="absolute top-16 left-0 p-5 drop-shadow" v-if="videoPlayer.fullPage"><span class="text-xs uppercase pr-2">Now playing: </span><span class="font-semibold">{{ videoPlayer.videoName }}</span></div>
-            <video controls autoplay muted loop id="videoPlayer" class="object-contain w-full">
-                <source id="src" :src="videoFirstPlay" type="video/webm"/>
-                Sorry, your browser doesn't support embedded videos.
-            </video>
-        <div v-if="!videoPlayer.fullPage" class="bg-gray-800 px-2"><span class="text-xs uppercase pr-2">Now playing: </span><span class="font-semibold">{{ videoPlayer.videoName }}</span></div>
-        <div class="my-3">
-            <button @click="loadVideo1" class="bg-gray-300 text-black p-1 m-2">Spring</button>
-            <button @click="loadVideo2" class="bg-gray-300 text-black p-1 m-2">Dune</button>
-            <button @click="loadVideo3" class="bg-gray-300 text-black p-1 m-2">1984</button>
-            <button @click="loadVideo4" class="bg-gray-300 text-black p-1 m-2">The Terminator</button>
-            <button @click="loadVideo5" class="bg-gray-300 text-black p-1 m-2">Natural World</button>
-        </div>
+    <div class="videoContainer">
+        <div :class="videoPlayer.class">
+            <div class="absolute top-16 left-0 p-5 drop-shadow" v-if="videoPlayer.fullPage"><span class="text-xs uppercase pr-2">Now playing: </span><span class="font-semibold">{{ videoPlayer.videoName }}</span></div>
+                <video controls autoplay muted loop id="videoPlayer" class="object-contain w-full">
+                    <source id="src" :src="videoFirstPlay" type="video/webm"/>
+                    Sorry, your browser doesn't support embedded videos.
+                </video>
+            <div v-if="!videoPlayer.fullPage" class="bg-gray-800 px-2"><span class="text-xs uppercase pr-2">Now playing: </span><span class="font-semibold">{{ videoPlayer.videoName }}</span></div>
+            <div class="my-3">
+                <button @click="loadVideo1" class="bg-gray-300 text-black p-1 m-2">Spring</button>
+                <button @click="loadVideo2" class="bg-gray-300 text-black p-1 m-2">Dune</button>
+                <button @click="loadVideo3" class="bg-gray-300 text-black p-1 m-2">1984</button>
+                <button @click="loadVideo4" class="bg-gray-300 text-black p-1 m-2">The Terminator</button>
+                <button @click="loadVideo5" class="bg-gray-300 text-black p-1 m-2">Natural World</button>
+            </div>
 
-            <!--            <iframe src="https://iframe.videodelivery.net/39ce0cc05aaf8186079fb844942f0afe"-->
-            <!--                    class="w-96"-->
-            <!--                    allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"-->
-            <!--                    allowfullscreen="true">-->
-            <!--            </iframe>-->
-<!--            <div class="text-xs opacity-50 bg-gray-800 text-gray-200">-->
-<!--                <p>({{ Math.round(x) }}, {{ Math.round(y) }}) CLICK HERE TO MOVE VIDEO PLAYER</p>-->
-<!--                <p>This video is a webm format and won't playback on an iPhone or iPad.<br />-->
-<!--                    This is just for testing purposes.-->
-<!--                </p>-->
-<!--            </div>-->
-<!--        </Draggable>-->
+                <!--            <iframe src="https://iframe.videodelivery.net/39ce0cc05aaf8186079fb844942f0afe"-->
+                <!--                    class="w-96"-->
+                <!--                    allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"-->
+                <!--                    allowfullscreen="true">-->
+                <!--            </iframe>-->
+    <!--            <div class="text-xs opacity-50 bg-gray-800 text-gray-200">-->
+    <!--                <p>({{ Math.round(x) }}, {{ Math.round(y) }}) CLICK HERE TO MOVE VIDEO PLAYER</p>-->
+    <!--                <p>This video is a webm format and won't playback on an iPhone or iPad.<br />-->
+    <!--                    This is just for testing purposes.-->
+    <!--                </p>-->
+    <!--            </div>-->
+    <!--        </Draggable>-->
+        </div>
     </div>
-</div>
 </template>
 
 <script setup>
@@ -89,3 +89,12 @@ function loadVideo5() {
 // })
 
 </script>
+
+<style>
+.videoContainer {
+    position:fixed;
+    top: 0rem;
+    left:0;
+    width:100%;
+}
+</style>

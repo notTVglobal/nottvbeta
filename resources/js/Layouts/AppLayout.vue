@@ -8,7 +8,9 @@
                 <ResponsiveNavigationMenu />
             </NavigationMenu>
 
-            <VideoPlayer class="z-30"/>
+            <Chat />
+            <VideoPlayer class="z-30" />
+
 
             <!-- Page Heading -->
                         <header v-if="$slots.header" class="bg-white shadow">
@@ -30,8 +32,12 @@
 import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu";
 import NavigationMenu from "@/Components/NavigationMenu";
 import VideoPlayer from "@/Components/VideoPlayer.vue";
+import Chat from "@/Components/Chat/Chat";
 import { Inertia } from '@inertiajs/inertia';
 import JetBanner from '@/Jetstream/Banner.vue';
+import { useChatStore } from "@/Stores/ChatStore";
+
+let chat = useChatStore();
 
 const logout = () => {
     Inertia.post(route('logout'));

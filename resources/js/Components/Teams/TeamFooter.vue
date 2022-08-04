@@ -8,7 +8,6 @@
         <div class="py-4 font-semibold text-center bg-orange-300">
             {{ team.spots }} Member Team
         </div>
-
     </div>
 
 </template>

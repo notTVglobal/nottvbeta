@@ -8,7 +8,7 @@
         <div class="bg-white rounded text-black p-5 mb-10">
 
 
-            <TeamHeader />
+            <TeamHeader @add="showModal = true"/>
 
             <div class="flex flex-col">
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -27,6 +27,32 @@
         </div>
     </div>
 
+    <Teleport to="body">
+    <Modal :show="showModal" @close="showModal = false">
+        <template #header>
+            Add a new team member
+        </template>
+        <template #default>
+            <div class="pb-2">
+                Send an email invitation to join your team.
+            </div>
+            <form>
+                <div class="flex gap-2">
+                    <input
+                        type="email"
+                        placeholder="Email Address..."
+                        class="rounded flex-1"
+                    >
+                    <button class="bg-gray-300 rounded-md w-20 p-2 hover:bg-gray-400 text-sm">Add</button>
+                </div>
+            </form>
+        </template>
+        <template #footer>
+            <button @click="showModal = false" class="text-blue-600 hover:text-gray-500">Cancel</button>
+        </template>
+    </Modal>
+    </Teleport>
+
 </template>
 
 
@@ -36,6 +62,8 @@ import TeamHeader from "@/Components/Teams/TeamHeader";
 import TeamMembersList from "@/Components/Teams/TeamMembersList";
 import TeamFooter from "@/Components/Teams/TeamFooter";
 import { useTeamStore } from "@/Stores/TeamStore.js";
+import Modal from "@/Components/Modal";
+import { ref } from 'vue';
 
 let videoPlayer = useVideoPlayerStore();
 videoPlayer.class = "videoTopRight"
@@ -43,8 +71,6 @@ videoPlayer.class = "videoTopRight"
 let team = useTeamStore();
 team.fill();
 
-setTimeout(() => {
-    team.spots = 10;
-}, 2000)
+let showModal = ref(false);
 
 </script>
