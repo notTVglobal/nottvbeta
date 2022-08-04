@@ -1156,6 +1156,10 @@ select {
   z-index: 30;
 }
 
+.-z-20 {
+  z-index: -20;
+}
+
 .col-span-6 {
   grid-column: span 6 / span 6;
 }
