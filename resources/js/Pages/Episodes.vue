@@ -1,7 +1,7 @@
 <template>
-    <Head title="Shows" />
+    <Head title="Episodes" />
 
-    Shows
+    Episodes
 
 </template>
 

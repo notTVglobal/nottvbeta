@@ -9,13 +9,17 @@
     background-color: black;
 }
 .videoTopRight {
-    position:absolute;
+    position:fixed;
     top: 4rem;
     right:0;
     padding:10px;
-    width:24em;
+    width:26vw;
     background-color: black;
-}
 
+}
+.pageWidth {
+    margin-right: 26vw;
+    z-index: 60;
+}
 @tailwind utilities;
 

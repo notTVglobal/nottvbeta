@@ -1,7 +1,7 @@
 <template>
     <Head title="Image uploading"/>
 
-    <div class="place-self-center flex flex-col gap-y-3 mr-96">
+    <div class="place-self-center flex flex-col gap-y-3 pageWidth">
         <div class="bg-white text-black p-5 mb-10">
 
     <div class="max-w-lg mx-auto mt-24">

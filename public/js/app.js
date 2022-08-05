@@ -660,14 +660,12 @@ __webpack_require__.r(__webpack_exports__);
 
 var _hoisted_1 = {
   key: 0,
-  "class": "chatContainer text-center p-10 z-40 h-1/2"
+  "class": "fixed bg-blue-800 bottom-0 right-0 bg-opacity-80 chatContainer text-center p-10 z-40 h-2/5"
 };
 
-var _hoisted_2 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" CHAT BOX ");
-
-var _hoisted_3 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
-  "class": "top-16 right-0 h-full pt-16 overflow-hidden p-10 chat text-white"
-}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+var _hoisted_2 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  "class": "right-0 pt-6 overflow-hidden p-10 chat text-white"
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, "CHAT BOX"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "chatBoxes text-white opacity-100"
 }, "Chat goes here. It needs to be on top of the video player as an overlay on desktops and tablets, but below the video on mobile devices.")], -1
 /* HOISTED */
@@ -683,7 +681,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "leave-to-class": "opacity-0"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [$setup.chat.show ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [_hoisted_2, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            <div class=\"absolute top-16 left-0 p-5 drop-shadow\" v-if=\"videoPlayer.fullPage\"><span class=\"text-xs uppercase pr-2\">CHAT BOX </span><span class=\"font-semibold\">Chat goes here.</span></div>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            <div v-if=\"!videoPlayer.fullPage\" class=\"bg-gray-800 px-2\"><span class=\"text-xs uppercase pr-2\">CHAT BOX </span><span class=\"font-semibold\">Chat goes here</span></div>"), _hoisted_3])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)];
+      return [$setup.chat.show ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            <div class=\"absolute top-16 left-0 p-5 drop-shadow\" v-if=\"videoPlayer.fullPage\"><span class=\"text-xs uppercase pr-2\">CHAT BOX </span><span class=\"font-semibold\">Chat goes here.</span></div>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            <div v-if=\"!videoPlayer.fullPage\" class=\"bg-gray-800 px-2\"><span class=\"text-xs uppercase pr-2\">CHAT BOX </span><span class=\"font-semibold\">Chat goes here</span></div>"), _hoisted_2])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)];
     }),
     _: 1
     /* STABLE */
@@ -3131,7 +3129,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.chatContainer {\n    position: fixed;\n    background: rgba(63, 123, 201, 1);\n    bottom: 0px;\n    right: 0px;\n    width: 24em;\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.chatContainer {\n    width: 24em;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

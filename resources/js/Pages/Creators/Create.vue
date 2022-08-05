@@ -1,7 +1,7 @@
 <template>
     <Head title="Create a Creator"/>
 
-    <div class="place-self-center flex flex-col gap-y-3 mr-96">
+    <div class="place-self-center flex flex-col gap-y-3 pageWidth">
         <div class="bg-white text-black p-5 mb-10">
 
         <div class="flex justify-between mb-6">

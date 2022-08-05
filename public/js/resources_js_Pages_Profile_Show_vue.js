@@ -2784,7 +2784,7 @@ var _hoisted_1 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementV
 );
 
 var _hoisted_2 = {
-  "class": "place-self-center flex flex-col gap-y-3 mr-96"
+  "class": "place-self-center flex flex-col gap-y-3 pageWidth"
 };
 var _hoisted_3 = {
   "class": "text-black p-5 mb-10"

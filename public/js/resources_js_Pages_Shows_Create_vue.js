@@ -69,7 +69,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 
 var _hoisted_1 = {
-  "class": "place-self-center flex flex-col gap-y-3 mr-96"
+  "class": "place-self-center flex flex-col gap-y-3 pageWidth"
 };
 var _hoisted_2 = {
   "class": "bg-white text-black p-5 mb-10"

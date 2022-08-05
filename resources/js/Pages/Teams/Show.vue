@@ -3,7 +3,7 @@
     <Head :title="team.name + ' Team'" />
 
 
-    <div class="place-self-center flex flex-col gap-y-3 mr-96">
+    <div class="place-self-center flex flex-col gap-y-3 pageWidth">
 
         <div class="bg-white rounded text-black p-5 mb-10">
 
