@@ -16,17 +16,23 @@
                         <JetNavLink @click="videoPlayer.makeVideoFullPage()" :href="route('stream')" :active="route().current('stream')">
                             Stream
                         </JetNavLink>
-                        <JetNavLink @click="videoPlayer.makeVideoTopRight()" :href="route('image')" :active="route().current('image')">
-                            Image Uploader
+                        <JetNavLink @click="videoPlayer.makeVideoFullPage()" :href="route('posts')" :active="route().current('posts')">
+                            Posts
                         </JetNavLink>
-                        <JetNavLink @click="videoPlayer.makeVideoTopRight()" :href="route('creators')" :active="route().current('creators')">
-                            Creators
+                        <JetNavLink @click="videoPlayer.makeVideoFullPage()" :href="route('channels')" :active="route().current('channels')">
+                            Channels
                         </JetNavLink>
-                        <JetNavLink @click="videoPlayer.makeVideoTopRight()" :href="route('video')" :active="route().current('video')">
-                            Videos
+                        <JetNavLink @click="videoPlayer.makeVideoTopRight()" :href="route('movies')" :active="route().current('movies')">
+                            Movies
                         </JetNavLink>
                         <JetNavLink @click="videoPlayer.makeVideoTopRight()" :href="route('shows')" :active="route().current('shows')">
                             Shows
+                        </JetNavLink>
+                        <JetNavLink @click="videoPlayer.makeVideoTopRight()" :href="route('video')" :active="route().current('video')">
+                            MistServer API
+                        </JetNavLink>
+                        <JetNavLink @click="videoPlayer.makeVideoTopRight()" :href="route('shop')" :active="route().current('shop')">
+                            Shop
                         </JetNavLink>
                         <JetNavLink @click="videoPlayer.makeVideoTopRight()" :href="route('schedule')" :active="route().current('schedule')">
                             Schedule

@@ -1,26 +1,24 @@
 <template>
 
-    <Head title="MistServer API" />
+    <Head title="Movies" />
 
     <div class="place-self-center flex flex-col gap-y-3 mr-96">
         <div class="bg-white text-black p-5 mb-10">
 
-            <h1 class="text-3xl font-semibold pb-3">MistServer API</h1>
+            <h1 class="text-3xl font-semibold pb-3">Movies</h1>
             <p class="mb-8">
-                This is a temporary page. Created for testing purposes.
+                Display a grid of movies and documentaries available for free, PPV and to purchase. Also search, and browse by category/date/popularity.
             </p>
             <div class="bg-orange-300 px-2">
-            Display a MistServer API call here.
+                Display movies here.
             </div>
 
-<!--            <VideoPlayer :video="video"/>-->
         </div>
     </div>
 
 </template>
 
 <script setup>
-// import VideoPlayer from "@/Components/VideoPlayer.vue";
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
 let videoPlayer = useVideoPlayerStore();
 videoPlayer.class = "videoTopRight"

@@ -48,18 +48,30 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
-    Route::get('/training', function () {
-        return Inertia::render('Training');
-    })->name('training');
     Route::get('/stream', function () {
         return Inertia::render('Stream');
     })->name('stream');
+    Route::get('/posts', function () {
+        return Inertia::render('Posts');
+    })->name('posts');
+    Route::get('/channels', function () {
+        return Inertia::render('Channels');
+    })->name('channels');
+    Route::get('/movies', function () {
+        return Inertia::render('Movies');
+    })->name('movies');
     Route::get('/video', function () {
         return Inertia::render('Video');
     })->name('video');
+    Route::get('/shop', function () {
+        return Inertia::render('Shop');
+    })->name('shop');
     Route::get('/schedule', function () {
         return Inertia::render('Schedule');
     })->name('schedule');
+    Route::get('/training', function () {
+        return Inertia::render('Training');
+    })->name('training');
 
     // temp page to test Stores
     Route::get('/quiz', function () {
