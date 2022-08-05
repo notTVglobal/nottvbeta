@@ -6,7 +6,7 @@
                 <div class="flex">
                     <!-- Logo -->
                     <div class="shrink-0 flex items-center">
-                        <Link @click="videoPlayer.makeVideoFullPage()" :href="route('stream')">
+                        <Link @click="videoPlayer.makeVideoTopRight()" :href="route('dashboard')">
                             <JetApplicationMark class="block h-9 w-auto"/>
                         </Link>
                     </div>
@@ -211,6 +211,7 @@
                                     <div class="border-t border-gray-100">
                                         <!-- Authentication -->
                                         <form @submit.prevent="logout">
+
                                             <JetDropdownLink as="button">
                                                 Log Out
                                             </JetDropdownLink>
@@ -278,6 +279,10 @@ const switchToTeam = (team) => {
     }, {
         preserveState: false,
     });
+};
+
+const logout = () => {
+    Inertia.post(route('logout'));
 };
 
 </script>

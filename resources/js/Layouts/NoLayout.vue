@@ -2,7 +2,7 @@
     <div>
        <Head :title="title"/>
     </div>
-<!--    <VideoPlayer />-->
+
     <slot />
 </template>
 

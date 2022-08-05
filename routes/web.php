@@ -30,6 +30,8 @@ Route::get('/', function () {
     ]);
 });
 
+
+
 Route::get('/terms', function () {
     return Inertia::render('TermsOfService');
 })->name('terms');

@@ -24,8 +24,10 @@ export default {
 
             <div class="relative flex items-top justify-center min-h-screen bg-gray-800 text-gray-200">
                 <div class="flex justify-center items-center h-screen">
-                    <JetApplicationLogo class="block w-auto p-10"/>
-                    SCROLL DOWN
+                    <div class="grid md:grid-cols-1 grid-cols-1">
+                        <JetApplicationLogo class="block md:w-auto p-10"/>
+                        <div class="text-center">SCROLL DOWN</div>
+                    </div>
                 </div>
                 <div v-if="canLogin" class="fixed top-0 right-0 px-6 py-4 sm:block sm:items-center sm:pt-2">
                     <Link v-if="$page.props.user" :href="route('stream')" class="text-sm text-gray-200 underline">
@@ -45,17 +47,34 @@ export default {
                     </template>
                 </div>
             </div>
-            <div class="flex justify-center items-center h-screen bg-white text-black p-10">
-                Welcome to notTV! Where artists own the platform!
-            </div>
-            <div class="grid grid-cols-2 place-items-center h-screen bg-gray-300 text-black p-10">
-                <div class="p-20 bg-emerald-500 rounded m-10 font-bold">Join now to register your content as your very own NFT on a blockchain that you own.</div>
-                <div class="p-20 bg-emerald-500 rounded m-10 font-bold">Reap the rewards of a cooperative blockchain media distribution platform and streaming service.</div>
-                <div class="p-20 bg-emerald-500 rounded m-10 font-bold">Share your audience with other creators.. which means they also share their audience with you!</div>
-                <div class="p-20 bg-emerald-500 rounded m-10 font-bold">Help fund the public good, free speech and free press automatically as part of the business model and original concept to keep
-                a free democracy and make the world a better place.</div>
-            </div>
-            <div class="flex justify-center items-center h-screen">#mediaforabetterworld</div>
+            <section class="flex justify-center items-center h-screen bg-white text-black p-10">
+                <div class="grid grid-cols-1 gap-2">
+                    <div class="text-center font-semibold">Welcome to notTV</div>
+                    <div class="text-center">Where artists own the platform.</div>
+                </div>
+            </section>
+            <section class="grid md:grid-cols-2 content-center gap-10 bg-gray-300 text-white p-10">
+                <div class="p-20 bg-fuchsia-600 rounded">
+                    <h2 class="font-bold text-2xl text-center pb-3">Rewards</h2>
+                    <p class="text-center">Reap the rewards of a cooperative blockchain media distribution platform and streaming service.</p>
+                </div>
+                <div class="p-20 bg-green-600 rounded">
+                    <h2 class="font-bold text-2xl text-center pb-3">New audiences</h2>
+                    <p class="text-center">Share your audience with other creators.. which means they also share their audience with you!</p>
+                </div>
+                <div class="p-20 bg-blue-600 rounded">
+                    <h2 class="font-bold text-2xl text-center pb-3">Public good</h2>
+                    <p class="text-center">Help fund the public good, free speech and free press automatically as part of the business model and original concept to keep
+                a free democracy and make the world a better place.</p>
+                </div>
+                <div class="p-20 bg-purple-600 rounded">
+                    <h2 class="font-bold text-2xl text-center pb-3">Join now</h2>
+                    <p class="text-center">Register your content as your very own NFT on a blockchain that you own.</p>
+                </div>
+            </section>
+            <section class="flex justify-center items-center h-screen">
+                <div class="">#mediaforabetterworld</div>
+            </section>
         </div>
 </template>
 

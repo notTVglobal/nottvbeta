@@ -43,8 +43,4 @@ import { useChatStore } from "@/Stores/ChatStore";
 
 let chat = useChatStore();
 
-const logout = () => {
-    Inertia.post(route('logout'));
-};
-
 </script>

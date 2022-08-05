@@ -88,7 +88,7 @@ function render(_ctx, _cache) {
     title: _ctx.title
   }, null, 8
   /* PROPS */
-  , ["title"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("    <VideoPlayer />"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderSlot)(_ctx.$slots, "default")], 64
+  , ["title"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderSlot)(_ctx.$slots, "default")], 64
   /* STABLE_FRAGMENT */
   );
 }
@@ -116,21 +116,28 @@ var _hoisted_2 = {
 var _hoisted_3 = {
   "class": "flex justify-center items-center h-screen"
 };
+var _hoisted_4 = {
+  "class": "grid md:grid-cols-1 grid-cols-1"
+};
 
-var _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" SCROLL DOWN ");
+var _hoisted_5 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  "class": "text-center"
+}, "SCROLL DOWN", -1
+/* HOISTED */
+);
 
-var _hoisted_5 = {
+var _hoisted_6 = {
   key: 0,
   "class": "fixed top-0 right-0 px-6 py-4 sm:block sm:items-center sm:pt-2"
 };
 
-var _hoisted_6 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Stream ");
+var _hoisted_7 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Stream ");
 
-var _hoisted_7 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Log in ");
+var _hoisted_8 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Log in ");
 
-var _hoisted_8 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Register ");
+var _hoisted_9 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Register ");
 
-var _hoisted_9 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"flex justify-center items-center h-screen bg-white text-black p-10\"> Welcome to notTV! Where artists own the platform! </div><div class=\"grid grid-cols-2 place-items-center h-screen bg-gray-300 text-black p-10\"><div class=\"p-20 bg-emerald-500 rounded m-10 font-bold\">Join now to register your content as your very own NFT on a blockchain that you own.</div><div class=\"p-20 bg-emerald-500 rounded m-10 font-bold\">Reap the rewards of a cooperative blockchain media distribution platform and streaming service.</div><div class=\"p-20 bg-emerald-500 rounded m-10 font-bold\">Share your audience with other creators.. which means they also share their audience with you!</div><div class=\"p-20 bg-emerald-500 rounded m-10 font-bold\">Help fund the public good, free speech and free press automatically as part of the business model and original concept to keep a free democracy and make the world a better place.</div></div><div class=\"flex justify-center items-center h-screen\">#mediaforabetterworld</div>", 3);
+var _hoisted_10 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<section class=\"flex justify-center items-center h-screen bg-white text-black p-10\"><div class=\"grid grid-cols-1 gap-2\"><div class=\"text-center font-semibold\">Welcome to notTV</div><div class=\"text-center\">Where artists own the platform.</div></div></section><section class=\"grid md:grid-cols-2 content-center gap-10 bg-gray-300 text-white p-10\"><div class=\"p-20 bg-fuchsia-600 rounded\"><h2 class=\"font-bold text-2xl text-center pb-3\">Rewards</h2><p class=\"text-center\">Reap the rewards of a cooperative blockchain media distribution platform and streaming service.</p></div><div class=\"p-20 bg-green-600 rounded\"><h2 class=\"font-bold text-2xl text-center pb-3\">New audiences</h2><p class=\"text-center\">Share your audience with other creators.. which means they also share their audience with you!</p></div><div class=\"p-20 bg-blue-600 rounded\"><h2 class=\"font-bold text-2xl text-center pb-3\">Public good</h2><p class=\"text-center\">Help fund the public good, free speech and free press automatically as part of the business model and original concept to keep a free democracy and make the world a better place.</p></div><div class=\"p-20 bg-purple-600 rounded\"><h2 class=\"font-bold text-2xl text-center pb-3\">Join now</h2><p class=\"text-center\">Register your content as your very own NFT on a blockchain that you own.</p></div></section><section class=\"flex justify-center items-center h-screen\"><div class=\"\">#mediaforabetterworld</div></section>", 3);
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_Head = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Head");
@@ -139,15 +146,15 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Head, {
     title: "Beta"
-  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["JetApplicationLogo"], {
-    "class": "block w-auto p-10"
-  }), _hoisted_4]), $props.canLogin ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_5, [_ctx.$page.props.user ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Link, {
+  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["JetApplicationLogo"], {
+    "class": "block md:w-auto p-10"
+  }), _hoisted_5])]), $props.canLogin ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_6, [_ctx.$page.props.user ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Link, {
     key: 0,
     href: _ctx.route('stream'),
     "class": "text-sm text-gray-200 underline"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [_hoisted_6];
+      return [_hoisted_7];
     }),
     _: 1
     /* STABLE */
@@ -161,7 +168,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "text-sm text-gray-200 underline"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [_hoisted_7];
+      return [_hoisted_8];
     }),
     _: 1
     /* STABLE */
@@ -174,7 +181,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "ml-4 text-sm text-gray-200 underline"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [_hoisted_8];
+      return [_hoisted_9];
     }),
     _: 1
     /* STABLE */
@@ -183,7 +190,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* PROPS */
   , ["href"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)], 64
   /* STABLE_FRAGMENT */
-  ))])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), _hoisted_9])], 64
+  ))])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), _hoisted_10])], 64
   /* STABLE_FRAGMENT */
   );
 }
