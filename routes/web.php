@@ -129,4 +129,9 @@ Route::middleware([
     // Update user
     Route::put('/admin/users', [UsersController::class, 'update'])->name('admin.users.update');
 
+    // List all channels
+    Route::get('/admin/channels', function () {
+        return Inertia::render('Admin/Channels/Index');
+    })->name('admin.channels.index');
+
 });

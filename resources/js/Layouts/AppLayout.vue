@@ -4,9 +4,9 @@
 
         <div class="relative top-0 bg-gray-800 text-gray-200 h-full w-full ">
 
-            <NavigationMenu>
-                <ResponsiveNavigationMenu/>
-            </NavigationMenu>
+            <ResponsiveNavigationMenu/>
+            <NavigationMenu />
+
 
 
 

@@ -1,5 +1,5 @@
 <template>
-    <Head title="Users" />
+    <Head title="Users Admin" />
 
     <div class="place-self-center flex flex-col gap-y-3 pageWidth">
         <div class="bg-white text-black p-5 mb-10">

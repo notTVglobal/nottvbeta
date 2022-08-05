@@ -160,6 +160,12 @@
 
                                         <JetDropdownLink
                                             @click="videoPlayer.makeVideoTopRight()"
+                                            :href="route('admin.channels.index')">
+                                            Channels
+                                        </JetDropdownLink>
+
+                                        <JetDropdownLink
+                                            @click="videoPlayer.makeVideoTopRight()"
                                             :href="route('teams.index')">
                                             Teams
                                         </JetDropdownLink>
@@ -179,8 +185,8 @@
 
                                         <JetDropdownLink
                                             @click="videoPlayer.makeVideoTopRight()"
-                                            :href="route('teams.index')">
-                                            notTV Founders
+                                            :href="`/teams/1`">
+                                                  notTV Founders
                                         </JetDropdownLink>
                                     </div>
                                     <div class="pt-2 pb-3">
@@ -229,34 +235,8 @@
                     </div>
                 </div>
 
-                <!-- Hamburger -->
-                <div class="-mr-2 flex items-center sm:hidden">
-                    <button
-                        class="inline-flex items-center justify-center p-2 rounded-md text-gray-100 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition"
-                        @click="showingNavigationDropdown = ! showingNavigationDropdown">
-                        <svg
-                            class="h-6 w-6"
-                            stroke="currentColor"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                :class="{'hidden': showingNavigationDropdown, 'inline-flex': ! showingNavigationDropdown }"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M4 6h16M4 12h16M4 18h16"
-                            />
-                            <path
-                                :class="{'hidden': ! showingNavigationDropdown, 'inline-flex': showingNavigationDropdown }"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M6 18L18 6M6 6l12 12"
-                            />
-                        </svg>
-                    </button>
-                </div>
+
+
             </div>
         </div>
     </nav>
@@ -271,13 +251,10 @@ import JetDropdown from '@/Jetstream/Dropdown.vue';
 import JetNavLink from '@/Jetstream/NavLink.vue';
 import {Inertia} from "@inertiajs/inertia";
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
-import { ref } from "vue";
 import { useChatStore } from "@/Stores/ChatStore.js";
 
 let chat = useChatStore();
 let videoPlayer = useVideoPlayerStore();
-
-const showingNavigationDropdown = ref(false);
 
 const switchToTeam = (team) => {
     Inertia.put(route('current-team.update'), {
