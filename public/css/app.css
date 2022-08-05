@@ -1064,6 +1064,10 @@ select {
     background-color: black;
 }
 
+.pointer-events-none {
+  pointer-events: none;
+}
+
 .fixed {
   position: fixed;
 }
@@ -1114,6 +1118,22 @@ select {
 
 .right-96 {
   right: 24rem;
+}
+
+.bottom-0 {
+  bottom: 0px;
+}
+
+.bottom-3 {
+  bottom: 0.75rem;
+}
+
+.bottom-8 {
+  bottom: 2rem;
+}
+
+.bottom-16 {
+  bottom: 4rem;
 }
 
 .z-0 {
@@ -2729,6 +2749,11 @@ select {
 .hover\:text-white:hover {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
+.hover\:text-blue-600:hover {
+  --tw-text-opacity: 1;
+  color: rgb(37 99 235 / var(--tw-text-opacity));
 }
 
 .focus\:z-10:focus {

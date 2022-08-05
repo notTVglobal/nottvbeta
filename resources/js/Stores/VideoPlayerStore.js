@@ -7,7 +7,9 @@ export let useVideoPlayerStore = defineStore('videoPlayer', {
             videoSourceId: '',
             key: 0,
             videoName: '',
-            fullPage: Boolean
+            fullPage: Boolean,
+            muted: Boolean,
+            paused: Boolean
         };
     },
 

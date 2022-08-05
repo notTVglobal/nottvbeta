@@ -196,19 +196,60 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 /* harmony import */ var _Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Stores/VideoPlayerStore.js */ "./resources/js/Stores/VideoPlayerStore.js");
+var __default__ = {
+  name: "VideoPlayerApp",
+  methods: {
+    play: function play() {
+      this.$refs.videoPlayerApp.play();
+    },
+    pause: function pause() {
+      this.$refs.videoPlayerApp.pause();
+    },
+    mute: function mute() {
+      if (this.$refs.videoPlayerApp.muted === false) {
+        this.$refs.videoPlayerApp.muted = true;
+      } else {
+        this.$refs.videoPlayerApp.muted = false;
+      }
+    },
+    setSpeed: function setSpeed(speed) {
+      this.$refs.videoPlayerApp.playbackRate = speed;
+    }
+  }
+};
  // import { isClient } from "@vueuse/shared";
 // import { useDraggable } from "@vueuse/core";
 // import { UseDraggable as Draggable } from "@vueuse/components";
 
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  __name: 'VideoPlayer',
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (/*#__PURE__*/Object.assign(__default__, {
   setup: function setup(__props, _ref) {
     var expose = _ref.expose;
     expose();
     var videoPlayer = (0,_Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_1__.useVideoPlayerStore)();
     var videoFirstPlay = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)(["../../images/Spring-BlenderOpenMovie-WhWc3b3KhnY.webm"]);
     videoPlayer.videoName = "Spring";
+    videoPlayer.paused = false;
+
+    function muteVideo() {
+      document.getElementById("videoPlayer").muted = true;
+      videoPlayer.muted = true;
+    }
+
+    function pauseVideo() {
+      document.getElementById("videoPlayer").pause();
+      videoPlayer.paused = true;
+    }
+
+    function playVideo() {
+      document.getElementById("videoPlayer").play();
+      videoPlayer.paused = false;
+    }
+
+    function unMuteVideo() {
+      document.getElementById("videoPlayer").muted = false;
+      videoPlayer.muted = false;
+    }
 
     function loadVideo1() {
       videoPlayer.loadVideo1();
@@ -249,6 +290,10 @@ __webpack_require__.r(__webpack_exports__);
     var __returned__ = {
       videoPlayer: videoPlayer,
       videoFirstPlay: videoFirstPlay,
+      muteVideo: muteVideo,
+      pauseVideo: pauseVideo,
+      playVideo: playVideo,
+      unMuteVideo: unMuteVideo,
       loadVideo1: loadVideo1,
       loadVideo2: loadVideo2,
       loadVideo3: loadVideo3,
@@ -263,7 +308,7 @@ __webpack_require__.r(__webpack_exports__);
     });
     return __returned__;
   }
-});
+}));
 
 /***/ }),
 
@@ -1652,11 +1697,11 @@ var _hoisted_4 = {
   "class": "font-semibold"
 };
 var _hoisted_5 = {
-  controls: "",
   autoplay: "",
   muted: "",
   loop: "",
   id: "videoPlayer",
+  ref: "videoPlayerApp",
   "class": "object-contain w-full"
 };
 var _hoisted_6 = ["src"];
@@ -1665,34 +1710,78 @@ var _hoisted_7 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNod
 
 var _hoisted_8 = {
   key: 1,
+  "class": "flex flex-col-4 gap-4 fixed ml-6 bottom-16"
+};
+var _hoisted_9 = {
+  key: 2,
+  "class": "fixed bottom-0 ml-3 my-3"
+};
+var _hoisted_10 = {
+  key: 3,
   "class": "bg-gray-800 px-2"
 };
 
-var _hoisted_9 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+var _hoisted_11 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
   "class": "text-xs uppercase pr-2"
 }, "Now playing: ", -1
 /* HOISTED */
 );
 
-var _hoisted_10 = {
+var _hoisted_12 = {
   "class": "font-semibold"
 };
+var _hoisted_13 = {
+  key: 4,
+  "class": "flex flex-col-4 gap-4 my-3"
+};
+var _hoisted_14 = {
+  key: 5,
+  "class": "my-3"
+};
 function render(_ctx, _cache, $props, $setup, $data, $options) {
+  var _component_Link = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Link");
+
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("    style=\"border: none; position: absolute; top: 0; left: 0; height: 100%; width: 100%;\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("        <Draggable"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            v-slot=\"{ x, y }\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            p=\"x-4 y-2\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            border=\"~ gray-400 rounded\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            shadow=\"~ hover:lg\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            class=\"fixed bg-$vt-c-bg select-none cursor-move z-10\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            :initial-value=\"{ x: innerWidth / 3.9, y: 150 }\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            :prevent-default=\"true\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            storage-key=\"vueuse-draggable-pos\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            storage-type=\"session\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("        >"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)($setup.videoPlayer["class"])
   }, [$setup.videoPlayer.fullPage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_2, [_hoisted_3, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.videoPlayer.videoName), 1
   /* TEXT */
-  )])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("video", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("source", {
-    id: "src",
-    src: $setup.videoFirstPlay,
-    type: "video/webm"
-  }, null, 8
+  )])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)($setup.videoPlayer.fullPage === true && 'disabled'),
+    href: _ctx.route('stream')
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("video", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("source", {
+        id: "src",
+        src: $setup.videoFirstPlay,
+        type: "video/webm"
+      }, null, 8
+      /* PROPS */
+      , _hoisted_6), _hoisted_7], 512
+      /* NEED_PATCH */
+      )];
+    }),
+    _: 1
+    /* STABLE */
+
+  }, 8
   /* PROPS */
-  , _hoisted_6), _hoisted_7]), !$setup.videoPlayer.fullPage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_8, [_hoisted_9, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_10, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.videoPlayer.videoName), 1
-  /* TEXT */
-  )])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
-    "class": "my-3"
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  , ["class", "href"]), $setup.videoPlayer.fullPage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_8, [$setup.videoPlayer.paused ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+    key: 0,
+    onClick: $setup.playVideo,
+    "class": "hover:text-blue-600"
+  }, "play")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$setup.videoPlayer.paused ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+    key: 1,
+    onClick: $setup.pauseVideo,
+    "class": "hover:text-blue-600"
+  }, "pause")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $setup.videoPlayer.muted ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+    key: 2,
+    onClick: $setup.unMuteVideo,
+    "class": "text-red-500 hover:text-blue-600"
+  }, "unmute")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$setup.videoPlayer.muted ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+    key: 3,
+    onClick: $setup.muteVideo,
+    "class": "hover:text-blue-600"
+  }, "mute")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $setup.videoPlayer.fullPage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     onClick: $setup.loadVideo1,
     "class": "bg-gray-300 text-black p-1 m-2"
   }, "Spring"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
@@ -1707,7 +1796,40 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, "The Terminator"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     onClick: $setup.loadVideo5,
     "class": "bg-gray-300 text-black p-1 m-2"
-  }, "Natural World")]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            <iframe src=\"https://iframe.videodelivery.net/39ce0cc05aaf8186079fb844942f0afe\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    class=\"w-96\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    allow=\"accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    allowfullscreen=\"true\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            </iframe>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            <div class=\"text-xs opacity-50 bg-gray-800 text-gray-200\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <p>({{ Math.round(x) }}, {{ Math.round(y) }}) CLICK HERE TO MOVE VIDEO PLAYER</p>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <p>This video is a webm format and won't playback on an iPhone or iPad.<br />"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    This is just for testing purposes."), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                </p>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            </div>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("        </Draggable>")], 2
+  }, "Natural World")])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$setup.videoPlayer.fullPage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_10, [_hoisted_11, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_12, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.videoPlayer.videoName), 1
+  /* TEXT */
+  )])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$setup.videoPlayer.fullPage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_13, [$setup.videoPlayer.paused ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+    key: 0,
+    onClick: $setup.playVideo,
+    "class": "hover:text-blue-600"
+  }, "play")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$setup.videoPlayer.paused ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+    key: 1,
+    onClick: $setup.pauseVideo,
+    "class": "hover:text-blue-600"
+  }, "pause")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $setup.videoPlayer.muted ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+    key: 2,
+    onClick: $setup.unMuteVideo,
+    "class": "text-red-500 hover:text-blue-600"
+  }, "unmute")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$setup.videoPlayer.muted ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+    key: 3,
+    onClick: $setup.muteVideo,
+    "class": "hover:text-blue-600"
+  }, "mute")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$setup.videoPlayer.fullPage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_14, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    onClick: $setup.loadVideo1,
+    "class": "bg-gray-300 text-black p-1 m-2"
+  }, "Spring"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    onClick: $setup.loadVideo2,
+    "class": "bg-gray-300 text-black p-1 m-2"
+  }, "Dune"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    onClick: $setup.loadVideo3,
+    "class": "bg-gray-300 text-black p-1 m-2"
+  }, "1984"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    onClick: $setup.loadVideo4,
+    "class": "bg-gray-300 text-black p-1 m-2"
+  }, "The Terminator"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    onClick: $setup.loadVideo5,
+    "class": "bg-gray-300 text-black p-1 m-2"
+  }, "Natural World")])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            <iframe src=\"https://iframe.videodelivery.net/39ce0cc05aaf8186079fb844942f0afe\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    class=\"w-96\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    allow=\"accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    allowfullscreen=\"true\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            </iframe>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            <div class=\"text-xs opacity-50 bg-gray-800 text-gray-200\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <p>({{ Math.round(x) }}, {{ Math.round(y) }}) CLICK HERE TO MOVE VIDEO PLAYER</p>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <p>This video is a webm format and won't playback on an iPhone or iPad.<br />"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    This is just for testing purposes."), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                </p>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            </div>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("        </Draggable>")], 2
   /* CLASS */
   )])], 2112
   /* STABLE_FRAGMENT, DEV_ROOT_FRAGMENT */
@@ -2134,7 +2256,9 @@ var useVideoPlayerStore = (0,pinia__WEBPACK_IMPORTED_MODULE_0__.defineStore)('vi
       videoSourceId: '',
       key: 0,
       videoName: '',
-      fullPage: Boolean
+      fullPage: Boolean,
+      muted: Boolean,
+      paused: Boolean
     };
   },
   actions: {
@@ -3055,7 +3179,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.videoContainer {\n    position:fixed;\n    top: 0rem;\n    left:0;\n    width:100%;\n}\n\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.videoContainer {\n    position:fixed;\n    top: 0rem;\n    left:0;\n    width:100%;\n}\n.disabled {\n    pointer-events: none;\n}\n\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

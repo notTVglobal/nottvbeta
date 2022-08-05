@@ -15,12 +15,34 @@
     <div class="videoContainer">
         <div :class="videoPlayer.class">
             <div class="absolute top-16 left-0 p-5 drop-shadow" v-if="videoPlayer.fullPage"><span class="text-xs uppercase pr-2">Now playing: </span><span class="font-semibold">{{ videoPlayer.videoName }}</span></div>
-                <video controls autoplay muted loop id="videoPlayer" class="object-contain w-full">
+            <Link :class="videoPlayer.fullPage === true && 'disabled'" :href="route('stream')">
+                <video autoplay muted loop id="videoPlayer" ref="videoPlayerApp" class="object-contain w-full">
                     <source id="src" :src="videoFirstPlay" type="video/webm"/>
                     Sorry, your browser doesn't support embedded videos.
                 </video>
+            </Link>
+            <div v-if="videoPlayer.fullPage" class="flex flex-col-4 gap-4 fixed ml-6 bottom-16">
+                <button v-if="videoPlayer.paused" @click="playVideo" class="hover:text-blue-600">play</button>
+                <button v-if="!videoPlayer.paused" @click="pauseVideo" class="hover:text-blue-600">pause</button>
+                <button v-if="videoPlayer.muted" @click="unMuteVideo" class="text-red-500 hover:text-blue-600">unmute</button>
+                <button v-if="!videoPlayer.muted" @click="muteVideo" class="hover:text-blue-600">mute</button>
+            </div>
+            <div v-if="videoPlayer.fullPage" class="fixed bottom-0 ml-3 my-3">
+                <button @click="loadVideo1" class="bg-gray-300 text-black p-1 m-2">Spring</button>
+                <button @click="loadVideo2" class="bg-gray-300 text-black p-1 m-2">Dune</button>
+                <button @click="loadVideo3" class="bg-gray-300 text-black p-1 m-2">1984</button>
+                <button @click="loadVideo4" class="bg-gray-300 text-black p-1 m-2">The Terminator</button>
+                <button @click="loadVideo5" class="bg-gray-300 text-black p-1 m-2">Natural World</button>
+            </div>
+
             <div v-if="!videoPlayer.fullPage" class="bg-gray-800 px-2"><span class="text-xs uppercase pr-2">Now playing: </span><span class="font-semibold">{{ videoPlayer.videoName }}</span></div>
-            <div class="my-3">
+            <div v-if="!videoPlayer.fullPage" class="flex flex-col-4 gap-4 my-3">
+                <button v-if="videoPlayer.paused" @click="playVideo" class="hover:text-blue-600">play</button>
+                <button v-if="!videoPlayer.paused" @click="pauseVideo" class="hover:text-blue-600">pause</button>
+                <button v-if="videoPlayer.muted" @click="unMuteVideo" class="text-red-500 hover:text-blue-600">unmute</button>
+                <button v-if="!videoPlayer.muted" @click="muteVideo" class="hover:text-blue-600">mute</button>
+            </div>
+            <div v-if="!videoPlayer.fullPage" class="my-3">
                 <button @click="loadVideo1" class="bg-gray-300 text-black p-1 m-2">Spring</button>
                 <button @click="loadVideo2" class="bg-gray-300 text-black p-1 m-2">Dune</button>
                 <button @click="loadVideo3" class="bg-gray-300 text-black p-1 m-2">1984</button>
@@ -54,6 +76,27 @@ import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
 let videoPlayer = useVideoPlayerStore();
 let videoFirstPlay = ref([`../../images/Spring-BlenderOpenMovie-WhWc3b3KhnY.webm`]);
 videoPlayer.videoName = "Spring";
+videoPlayer.paused = false;
+
+function muteVideo() {
+    document.getElementById("videoPlayer").muted = true;
+    videoPlayer.muted = true;
+}
+
+function pauseVideo() {
+    document.getElementById("videoPlayer").pause();
+    videoPlayer.paused = true;
+}
+
+function playVideo() {
+    document.getElementById("videoPlayer").play();
+    videoPlayer.paused = false;
+}
+
+function unMuteVideo() {
+    document.getElementById("videoPlayer").muted = false;
+    videoPlayer.muted = false;
+}
 
 function loadVideo1() {
     videoPlayer.loadVideo1()
@@ -90,12 +133,40 @@ function loadVideo5() {
 
 </script>
 
+<script>
+export default {
+    name: "VideoPlayerApp",
+    methods: {
+        play() {
+            this.$refs.videoPlayerApp.play();
+        },
+        pause() {
+            this.$refs.videoPlayerApp.pause();
+        },
+        mute() {
+            if (this.$refs.videoPlayerApp.muted === false) {
+                this.$refs.videoPlayerApp.muted = true;
+            } else {
+                this.$refs.videoPlayerApp.muted = false;
+            }
+        },
+        setSpeed(speed) {
+            this.$refs.videoPlayerApp.playbackRate = speed;
+        },
+    },
+};
+</script>
+
 <style>
 .videoContainer {
     position:fixed;
     top: 0rem;
     left:0;
     width:100%;
+}
+
+.disabled {
+    pointer-events: none;
 }
 
 </style>
