@@ -67,6 +67,7 @@ import TabbableTextarea from "@/Components/TabbableTextarea";
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
 let videoPlayer = useVideoPlayerStore();
 videoPlayer.class = "videoTopRight"
+videoPlayer.fullPage = false
 
 let props = defineProps({
     team: Object

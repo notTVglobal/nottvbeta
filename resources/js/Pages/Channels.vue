@@ -28,6 +28,7 @@
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
 let videoPlayer = useVideoPlayerStore();
 videoPlayer.class = "videoFullPage"
+videoPlayer.fullPage = true
 
 </script>
 

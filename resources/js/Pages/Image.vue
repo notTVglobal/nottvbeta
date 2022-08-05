@@ -33,6 +33,7 @@ import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
 let videoPlayer = useVideoPlayerStore();
 videoPlayer.class = "videoTopRight"
+videoPlayer.fullPage = false
 //
 // config: { headers: function () { return {} } },
 // const props = defineProps({

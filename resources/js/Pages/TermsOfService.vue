@@ -1,21 +1,3 @@
-<script setup>
-import { Head } from '@inertiajs/inertia-vue3';
-import JetAuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo.vue';
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
-let videoPlayer = useVideoPlayerStore();
-videoPlayer.class = "videoTopRight"
-
-defineProps({
-    terms: String,
-});
-</script>
-<script>
-import NoLayout from '@/Layouts/NoLayout';
-export default {
-    layout: NoLayout,
-}
-</script>
-
 <template>
     <Head title="Terms of Service" />
 
@@ -31,3 +13,22 @@ export default {
         </div>
     </div>
 </template>
+
+<script setup>
+import { Head } from '@inertiajs/inertia-vue3';
+import JetAuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo.vue';
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
+let videoPlayer = useVideoPlayerStore();
+videoPlayer.class = "videoTopRight"
+videoPlayer.fullPage = false
+
+defineProps({
+    terms: String,
+});
+</script>
+<script>
+import NoLayout from '@/Layouts/NoLayout';
+export default {
+    layout: NoLayout,
+}
+</script>

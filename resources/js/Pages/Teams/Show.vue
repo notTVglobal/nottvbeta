@@ -67,6 +67,7 @@ import { ref } from 'vue';
 
 let videoPlayer = useVideoPlayerStore();
 videoPlayer.class = "videoTopRight"
+videoPlayer.fullPage = false
 
 let team = useTeamStore();
 team.fill();

@@ -80,6 +80,7 @@ import { useForm } from "@inertiajs/inertia-vue3";
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
 let videoPlayer = useVideoPlayerStore();
 videoPlayer.class = "videoTopRight"
+videoPlayer.fullPage = false
 
 let form = useForm({
     name: '',

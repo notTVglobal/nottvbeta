@@ -21,6 +21,7 @@ __webpack_require__.r(__webpack_exports__);
 
     var videoPlayer = (0,_Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_0__.useVideoPlayerStore)();
     videoPlayer["class"] = "videoTopRight";
+    videoPlayer.fullPage = false;
     var __returned__ = {
       videoPlayer: videoPlayer,
       useVideoPlayerStore: _Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_0__.useVideoPlayerStore

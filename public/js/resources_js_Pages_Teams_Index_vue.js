@@ -52,6 +52,7 @@ __webpack_require__.r(__webpack_exports__);
     var props = __props;
     var videoPlayer = (0,_Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_4__.useVideoPlayerStore)();
     videoPlayer["class"] = "videoTopRight";
+    videoPlayer.fullPage = false;
     var search = (0,vue__WEBPACK_IMPORTED_MODULE_1__.ref)(props.filters.search);
     (0,vue__WEBPACK_IMPORTED_MODULE_1__.watch)(search, lodash_throttle__WEBPACK_IMPORTED_MODULE_3___default()(function (value) {
       _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_2__.Inertia.get('/teams', {

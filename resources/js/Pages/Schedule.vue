@@ -25,6 +25,7 @@
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
 let videoPlayer = useVideoPlayerStore();
 videoPlayer.class = "videoTopRight"
+videoPlayer.fullPage = false
 
 </script>
 

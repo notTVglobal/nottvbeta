@@ -31,7 +31,8 @@ __webpack_require__.r(__webpack_exports__);
     var expose = _ref.expose;
     expose();
     var videoPlayer = (0,_Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_5__.useVideoPlayerStore)();
-    videoPlayer["class"] = "videoTopRight"; //
+    videoPlayer["class"] = "videoTopRight";
+    videoPlayer.fullPage = false; //
     // config: { headers: function () { return {} } },
     // const props = defineProps({
     //             process: {

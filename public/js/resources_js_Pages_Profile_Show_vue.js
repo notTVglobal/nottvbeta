@@ -1166,6 +1166,7 @@ __webpack_require__.r(__webpack_exports__);
 
     var videoPlayer = (0,_Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_6__.useVideoPlayerStore)();
     videoPlayer["class"] = "videoTopRight";
+    videoPlayer.fullPage = false;
     var __returned__ = {
       videoPlayer: videoPlayer,
       DeleteUserForm: _Pages_Profile_Partials_DeleteUserForm_vue__WEBPACK_IMPORTED_MODULE_0__["default"],

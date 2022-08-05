@@ -53,14 +53,9 @@
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
 let videoPlayer = useVideoPlayerStore();
 videoPlayer.class = "videoTopRight"
+videoPlayer.fullPage = false
 // onload(videoPlayer.class = "videoTopRight")
 </script>
 
-<script>
-export default {
-    window:onload = function() {
-        videoPlayer.class = "videoTopRight";
-    }
-}
-</script>
+
 

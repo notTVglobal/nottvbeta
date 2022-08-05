@@ -191,6 +191,7 @@ __webpack_require__.r(__webpack_exports__);
     expose();
     var videoPlayer = (0,_Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_0__.useVideoPlayerStore)();
     videoPlayer["class"] = "videoTopRight";
+    videoPlayer.fullPage = false;
     var team = (0,_Stores_TeamStore_js__WEBPACK_IMPORTED_MODULE_4__.useTeamStore)();
     team.fill();
     var showModal = (0,vue__WEBPACK_IMPORTED_MODULE_6__.ref)(false);

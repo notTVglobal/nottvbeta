@@ -62,6 +62,7 @@ var __default__ = {
     expose();
     var videoPlayer = (0,_Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_3__.useVideoPlayerStore)();
     videoPlayer["class"] = "videoTopRight";
+    videoPlayer.fullPage = false;
     var __returned__ = {
       videoPlayer: videoPlayer,
       NoLayout: _Layouts_NoLayout__WEBPACK_IMPORTED_MODULE_0__["default"],
