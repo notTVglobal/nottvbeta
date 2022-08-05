@@ -16,7 +16,7 @@
                         <JetNavLink @click="videoPlayer.makeVideoFullPage()" :href="route('stream')" :active="route().current('stream')">
                             Stream
                         </JetNavLink>
-                        <JetNavLink @click="videoPlayer.makeVideoFullPage()" :href="route('posts')" :active="route().current('posts')">
+                        <JetNavLink @click="videoPlayer.makeVideoTopRight()" :href="route('posts')" :active="route().current('posts')">
                             Posts
                         </JetNavLink>
                         <JetNavLink @click="videoPlayer.makeVideoFullPage()" :href="route('channels')" :active="route().current('channels')">

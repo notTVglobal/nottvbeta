@@ -949,7 +949,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* PROPS */
   , ["href", "active"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["JetNavLink"], {
     onClick: _cache[2] || (_cache[2] = function ($event) {
-      return $setup.videoPlayer.makeVideoFullPage();
+      return $setup.videoPlayer.makeVideoTopRight();
     }),
     href: _ctx.route('posts'),
     active: _ctx.route().current('posts')
