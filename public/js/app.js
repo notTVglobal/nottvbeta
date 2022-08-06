@@ -227,7 +227,9 @@ var __default__ = {
     var expose = _ref.expose;
     expose();
     var videoPlayer = (0,_Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_1__.useVideoPlayerStore)();
-    var videoFirstPlay = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)(["../../images/Spring-BlenderOpenMovie-WhWc3b3KhnY.webm"]);
+    var videoFirstPlaySrc1 = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)(["http://mist.nottv.io:8080/spring.mp4"]);
+    var videoFirstPlaySrc2 = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)(["http://mist.nottv.io:8080/hls/spring/index.m3u8"]);
+    var videoFirstPlaySrc3 = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)(["ws://mist.nottv.io:8080/spring.mp4"]);
     videoPlayer.videoName = "Spring";
     videoPlayer.paused = false;
 
@@ -253,31 +255,41 @@ var __default__ = {
 
     function loadVideo1() {
       videoPlayer.loadVideo1();
-      document.getElementById("src").src = videoPlayer.videoSourceId;
+      document.getElementById("src1").src = videoPlayer.videoSourceIdSrc1;
+      document.getElementById("src2").src = videoPlayer.videoSourceIdSrc2;
+      document.getElementById("src3").src = videoPlayer.videoSourceIdSrc3;
       document.getElementById("videoPlayer").load();
     }
 
     function loadVideo2() {
       videoPlayer.loadVideo2();
-      document.getElementById("src").src = videoPlayer.videoSourceId;
+      document.getElementById("src1").src = videoPlayer.videoSourceIdSrc1;
+      document.getElementById("src2").src = videoPlayer.videoSourceIdSrc2;
+      document.getElementById("src3").src = videoPlayer.videoSourceIdSrc3;
       document.getElementById("videoPlayer").load();
     }
 
     function loadVideo3() {
       videoPlayer.loadVideo3();
-      document.getElementById("src").src = videoPlayer.videoSourceId;
+      document.getElementById("src1").src = videoPlayer.videoSourceIdSrc1;
+      document.getElementById("src2").src = videoPlayer.videoSourceIdSrc2;
+      document.getElementById("src3").src = videoPlayer.videoSourceIdSrc3;
       document.getElementById("videoPlayer").load();
     }
 
     function loadVideo4() {
       videoPlayer.loadVideo4();
-      document.getElementById("src").src = videoPlayer.videoSourceId;
+      document.getElementById("src1").src = videoPlayer.videoSourceIdSrc1;
+      document.getElementById("src2").src = videoPlayer.videoSourceIdSrc2;
+      document.getElementById("src3").src = videoPlayer.videoSourceIdSrc3;
       document.getElementById("videoPlayer").load();
     }
 
     function loadVideo5() {
       videoPlayer.loadVideo5();
-      document.getElementById("src").src = videoPlayer.videoSourceId;
+      document.getElementById("src1").src = videoPlayer.videoSourceIdSrc1;
+      document.getElementById("src2").src = videoPlayer.videoSourceIdSrc2;
+      document.getElementById("src3").src = videoPlayer.videoSourceIdSrc3;
       document.getElementById("videoPlayer").load();
     } // const el = ref<HTMLElement | null>(null)
     // const innerWidth = isClient ? window.innerWidth : 200
@@ -289,7 +301,9 @@ var __default__ = {
 
     var __returned__ = {
       videoPlayer: videoPlayer,
-      videoFirstPlay: videoFirstPlay,
+      videoFirstPlaySrc1: videoFirstPlaySrc1,
+      videoFirstPlaySrc2: videoFirstPlaySrc2,
+      videoFirstPlaySrc3: videoFirstPlaySrc3,
       muteVideo: muteVideo,
       pauseVideo: pauseVideo,
       playVideo: playVideo,
@@ -1717,36 +1731,38 @@ var _hoisted_5 = {
   "class": "object-contain w-full"
 };
 var _hoisted_6 = ["src"];
+var _hoisted_7 = ["src"];
+var _hoisted_8 = ["src"];
 
-var _hoisted_7 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Sorry, your browser doesn't support embedded videos. ");
+var _hoisted_9 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Sorry, your browser doesn't support embedded videos. ");
 
-var _hoisted_8 = {
+var _hoisted_10 = {
   key: 1,
   "class": "flex flex-col-4 gap-4 fixed ml-6 bottom-16"
 };
-var _hoisted_9 = {
+var _hoisted_11 = {
   key: 2,
   "class": "fixed bottom-0 ml-3 my-3"
 };
-var _hoisted_10 = {
+var _hoisted_12 = {
   key: 3,
   "class": "bg-gray-800 px-2"
 };
 
-var _hoisted_11 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+var _hoisted_13 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
   "class": "text-xs uppercase pr-2"
 }, "Now playing: ", -1
 /* HOISTED */
 );
 
-var _hoisted_12 = {
+var _hoisted_14 = {
   "class": "font-semibold"
 };
-var _hoisted_13 = {
+var _hoisted_15 = {
   key: 4,
   "class": "flex flex-col-4 gap-4 my-3"
 };
-var _hoisted_14 = {
+var _hoisted_16 = {
   key: 5,
   "class": "my-3"
 };
@@ -1763,12 +1779,24 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("video", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("source", {
-        id: "src",
-        src: $setup.videoFirstPlay,
+        id: "src1",
+        src: $setup.videoFirstPlaySrc1,
         type: "video/webm"
       }, null, 8
       /* PROPS */
-      , _hoisted_6), _hoisted_7], 512
+      , _hoisted_6), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("source", {
+        id: "src2",
+        src: $setup.videoFirstPlaySrc2,
+        type: "video/webm"
+      }, null, 8
+      /* PROPS */
+      , _hoisted_7), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("source", {
+        id: "src3",
+        src: $setup.videoFirstPlaySrc3,
+        type: "video/webm"
+      }, null, 8
+      /* PROPS */
+      , _hoisted_8), _hoisted_9], 512
       /* NEED_PATCH */
       )];
     }),
@@ -1777,7 +1805,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
   }, 8
   /* PROPS */
-  , ["class", "href"]), $setup.videoPlayer.fullPage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_8, [$setup.videoPlayer.paused ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+  , ["class", "href"]), $setup.videoPlayer.fullPage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_10, [$setup.videoPlayer.paused ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
     key: 0,
     onClick: $setup.playVideo,
     "class": "hover:text-blue-600"
@@ -1793,7 +1821,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     key: 3,
     onClick: $setup.muteVideo,
     "class": "hover:text-blue-600"
-  }, "mute")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $setup.videoPlayer.fullPage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  }, "mute")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $setup.videoPlayer.fullPage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     onClick: $setup.loadVideo1,
     "class": "bg-gray-300 text-black p-1 m-2"
   }, "Spring"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
@@ -1808,9 +1836,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, "The Terminator"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     onClick: $setup.loadVideo5,
     "class": "bg-gray-300 text-black p-1 m-2"
-  }, "Natural World")])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$setup.videoPlayer.fullPage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_10, [_hoisted_11, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_12, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.videoPlayer.videoName), 1
+  }, "Natural World")])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$setup.videoPlayer.fullPage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_12, [_hoisted_13, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_14, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.videoPlayer.videoName), 1
   /* TEXT */
-  )])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$setup.videoPlayer.fullPage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_13, [$setup.videoPlayer.paused ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+  )])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$setup.videoPlayer.fullPage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_15, [$setup.videoPlayer.paused ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
     key: 0,
     onClick: $setup.playVideo,
     "class": "hover:text-blue-600"
@@ -1826,7 +1854,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     key: 3,
     onClick: $setup.muteVideo,
     "class": "hover:text-blue-600"
-  }, "mute")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$setup.videoPlayer.fullPage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_14, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  }, "mute")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$setup.videoPlayer.fullPage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_16, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     onClick: $setup.loadVideo1,
     "class": "bg-gray-300 text-black p-1 m-2"
   }, "Spring"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
@@ -2258,7 +2286,9 @@ var useVideoPlayerStore = (0,pinia__WEBPACK_IMPORTED_MODULE_0__.defineStore)('vi
   state: function state() {
     return {
       "class": 'blue',
-      videoSourceId: '',
+      videoSourceIdSrc1: '',
+      videoSourceIdSrc2: '',
+      videoSourceIdSrc3: '',
       key: 0,
       videoName: '',
       fullPage: Boolean,
@@ -2276,31 +2306,41 @@ var useVideoPlayerStore = (0,pinia__WEBPACK_IMPORTED_MODULE_0__.defineStore)('vi
       this.fullPage = false;
     },
     loadVideo1: function loadVideo1() {
-      this.videoSourceId = "http://mist.nottv.io:8080/spring.mp4";
+      this.videoSourceIdSrc1 = "http://mist.nottv.io:8080/spring.mp4";
+      this.videoSourceIdSrc2 = "http://mist.nottv.io:8080/hls/spring/index.m3u8";
+      this.videoSourceIdSrc3 = "ws://mist.nottv.io:8080/spring.mp4";
       this.key += 1;
       this.videoName = "Spring";
       this.paused = false;
     },
     loadVideo2: function loadVideo2() {
-      this.videoSourceId = "http://mist.nottv.io:8080/dune1984.mp4";
+      this.videoSourceIdSrc1 = "http://mist.nottv.io:8080/dune1984.mp4";
+      this.videoSourceIdSrc2 = "http://mist.nottv.io:8080/hls/dune1984/index.m3u8";
+      this.videoSourceIdSrc3 = "ws://mist.nottv.io:8080/dune1984.mp4";
       this.key += 1;
       this.videoName = "Dune";
       this.paused = false;
     },
     loadVideo3: function loadVideo3() {
-      this.videoSourceId = "http://mist.nottv.io:8080/go1984.mp4";
+      this.videoSourceIdSrc1 = "http://mist.nottv.io:8080/go1984.mp4";
+      this.videoSourceIdSrc2 = "http://mist.nottv.io:8080/hls/go1984/index.m3u8";
+      this.videoSourceIdSrc3 = "ws://mist.nottv.io:8080/go1984.mp4";
       this.key += 1;
       this.videoName = "1984";
       this.paused = false;
     },
     loadVideo4: function loadVideo4() {
-      this.videoSourceId = "http://mist.nottv.io:8080/tmr1984.mp4";
+      this.videoSourceIdSrc1 = "http://mist.nottv.io:8080/tmr1984.mp4";
+      this.videoSourceIdSrc2 = "http://mist.nottv.io:8080/hls/tmr1984/index.m3u8";
+      this.videoSourceIdSrc3 = "ws://mist.nottv.io:8080/tmr1984.mp4";
       this.key += 1;
       this.videoName = "The Terminator";
       this.paused = false;
     },
     loadVideo5: function loadVideo5() {
-      this.videoSourceId = "http://mist.nottv.io:8080/naturalworld.mp4";
+      this.videoSourceIdSrc1 = "http://mist.nottv.io:8080/naturalworld.mp4";
+      this.videoSourceIdSrc2 = "http://mist.nottv.io:8080/hls/naturalworld/index.m3u8";
+      this.videoSourceIdSrc3 = "ws://mist.nottv.io:8080/naturalworld.mp4";
       this.key += 1;
       this.videoName = "Natural World";
       this.paused = false;
