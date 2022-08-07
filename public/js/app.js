@@ -256,40 +256,55 @@ var __default__ = {
     function loadVideo1() {
       videoPlayer.loadVideo1();
       document.getElementById("src1").src = videoPlayer.videoSourceIdSrc1;
+      document.getElementById("src1").type = videoPlayer.videoSourceTypeSrc1;
       document.getElementById("src2").src = videoPlayer.videoSourceIdSrc2;
+      document.getElementById("src2").type = videoPlayer.videoSourceTypeSrc2;
       document.getElementById("src3").src = videoPlayer.videoSourceIdSrc3;
+      document.getElementById("src3").type = videoPlayer.videoSourceTypeSrc3;
       document.getElementById("videoPlayer").load();
     }
 
     function loadVideo2() {
       videoPlayer.loadVideo2();
       document.getElementById("src1").src = videoPlayer.videoSourceIdSrc1;
+      document.getElementById("src1").type = videoPlayer.videoSourceTypeSrc1;
       document.getElementById("src2").src = videoPlayer.videoSourceIdSrc2;
+      document.getElementById("src2").type = videoPlayer.videoSourceTypeSrc2;
       document.getElementById("src3").src = videoPlayer.videoSourceIdSrc3;
+      document.getElementById("src3").type = videoPlayer.videoSourceTypeSrc3;
       document.getElementById("videoPlayer").load();
     }
 
     function loadVideo3() {
       videoPlayer.loadVideo3();
       document.getElementById("src1").src = videoPlayer.videoSourceIdSrc1;
+      document.getElementById("src1").type = videoPlayer.videoSourceTypeSrc1;
       document.getElementById("src2").src = videoPlayer.videoSourceIdSrc2;
+      document.getElementById("src2").type = videoPlayer.videoSourceTypeSrc2;
       document.getElementById("src3").src = videoPlayer.videoSourceIdSrc3;
+      document.getElementById("src3").type = videoPlayer.videoSourceTypeSrc3;
       document.getElementById("videoPlayer").load();
     }
 
     function loadVideo4() {
       videoPlayer.loadVideo4();
       document.getElementById("src1").src = videoPlayer.videoSourceIdSrc1;
+      document.getElementById("src1").type = videoPlayer.videoSourceTypeSrc1;
       document.getElementById("src2").src = videoPlayer.videoSourceIdSrc2;
+      document.getElementById("src2").type = videoPlayer.videoSourceTypeSrc2;
       document.getElementById("src3").src = videoPlayer.videoSourceIdSrc3;
+      document.getElementById("src3").type = videoPlayer.videoSourceTypeSrc3;
       document.getElementById("videoPlayer").load();
     }
 
     function loadVideo5() {
       videoPlayer.loadVideo5();
       document.getElementById("src1").src = videoPlayer.videoSourceIdSrc1;
+      document.getElementById("src1").type = videoPlayer.videoSourceTypeSrc1;
       document.getElementById("src2").src = videoPlayer.videoSourceIdSrc2;
+      document.getElementById("src2").type = videoPlayer.videoSourceTypeSrc2;
       document.getElementById("src3").src = videoPlayer.videoSourceIdSrc3;
+      document.getElementById("src3").type = videoPlayer.videoSourceTypeSrc3;
       document.getElementById("videoPlayer").load();
     } // const el = ref<HTMLElement | null>(null)
     // const innerWidth = isClient ? window.innerWidth : 200
@@ -1781,19 +1796,19 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("video", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("source", {
         id: "src1",
         src: $setup.videoFirstPlaySrc1,
-        type: "video/webm"
+        type: "video/mp4"
       }, null, 8
       /* PROPS */
       , _hoisted_6), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("source", {
         id: "src2",
         src: $setup.videoFirstPlaySrc2,
-        type: "video/webm"
+        type: "application/x-mpegURL"
       }, null, 8
       /* PROPS */
       , _hoisted_7), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("source", {
         id: "src3",
         src: $setup.videoFirstPlaySrc3,
-        type: "video/webm"
+        type: "video/mp4"
       }, null, 8
       /* PROPS */
       , _hoisted_8), _hoisted_9], 512
@@ -2289,6 +2304,9 @@ var useVideoPlayerStore = (0,pinia__WEBPACK_IMPORTED_MODULE_0__.defineStore)('vi
       videoSourceIdSrc1: '',
       videoSourceIdSrc2: '',
       videoSourceIdSrc3: '',
+      videoSourceTypeSrc1: '',
+      videoSourceTypeSrc2: '',
+      videoSourceTypeSrc3: '',
       key: 0,
       videoName: '',
       fullPage: Boolean,
@@ -2307,32 +2325,44 @@ var useVideoPlayerStore = (0,pinia__WEBPACK_IMPORTED_MODULE_0__.defineStore)('vi
     },
     loadVideo1: function loadVideo1() {
       this.videoSourceIdSrc1 = "http://mist.nottv.io:8080/spring.mp4";
+      this.videoSourceTypeSrc1 = "video/mp4";
       this.videoSourceIdSrc2 = "http://mist.nottv.io:8080/hls/spring/index.m3u8";
+      this.videoSourceTypeSrc2 = "application/x-mpegURL";
       this.videoSourceIdSrc3 = "ws://mist.nottv.io:8080/spring.mp4";
+      this.videoSourceTypeSrc3 = "video/mp4";
       this.key += 1;
       this.videoName = "Spring";
       this.paused = false;
     },
     loadVideo2: function loadVideo2() {
       this.videoSourceIdSrc1 = "http://mist.nottv.io:8080/dune1984.mp4";
+      this.videoSourceTypeSrc1 = "video/mp4";
       this.videoSourceIdSrc2 = "http://mist.nottv.io:8080/hls/dune1984/index.m3u8";
+      this.videoSourceTypeSrc2 = "application/x-mpegURL";
       this.videoSourceIdSrc3 = "ws://mist.nottv.io:8080/dune1984.mp4";
+      this.videoSourceTypeSrc3 = "video/mp4";
       this.key += 1;
       this.videoName = "Dune";
       this.paused = false;
     },
     loadVideo3: function loadVideo3() {
       this.videoSourceIdSrc1 = "http://mist.nottv.io:8080/go1984.mp4";
+      this.videoSourceTypeSrc1 = "video/mp4";
       this.videoSourceIdSrc2 = "http://mist.nottv.io:8080/hls/go1984/index.m3u8";
+      this.videoSourceTypeSrc2 = "application/x-mpegURL";
       this.videoSourceIdSrc3 = "ws://mist.nottv.io:8080/go1984.mp4";
+      this.videoSourceTypeSrc3 = "video/mp4";
       this.key += 1;
       this.videoName = "1984";
       this.paused = false;
     },
     loadVideo4: function loadVideo4() {
       this.videoSourceIdSrc1 = "http://mist.nottv.io:8080/tmr1984.mp4";
+      this.videoSourceTypeSrc1 = "video/mp4";
       this.videoSourceIdSrc2 = "http://mist.nottv.io:8080/hls/tmr1984/index.m3u8";
+      this.videoSourceTypeSrc2 = "application/x-mpegURL";
       this.videoSourceIdSrc3 = "ws://mist.nottv.io:8080/tmr1984.mp4";
+      this.videoSourceTypeSrc3 = "video/mp4";
       this.key += 1;
       this.videoName = "The Terminator";
       this.paused = false;
@@ -2341,6 +2371,7 @@ var useVideoPlayerStore = (0,pinia__WEBPACK_IMPORTED_MODULE_0__.defineStore)('vi
       this.videoSourceIdSrc1 = "http://mist.nottv.io:8080/naturalworld.mp4";
       this.videoSourceIdSrc2 = "http://mist.nottv.io:8080/hls/naturalworld/index.m3u8";
       this.videoSourceIdSrc3 = "ws://mist.nottv.io:8080/naturalworld.mp4";
+      this.videoSourceTypeSrc3 = "video/mp4";
       this.key += 1;
       this.videoName = "Natural World";
       this.paused = false;
@@ -4470,10 +4501,12 @@ var map = {
 	],
 	"./Video": [
 		"./resources/js/Pages/Video.vue",
+		"/js/vendor",
 		"resources_js_Pages_Video_vue"
 	],
 	"./Video.vue": [
 		"./resources/js/Pages/Video.vue",
+		"/js/vendor",
 		"resources_js_Pages_Video_vue"
 	],
 	"./Welcome": [

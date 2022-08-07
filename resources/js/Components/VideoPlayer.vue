@@ -17,9 +17,9 @@
             <div class="absolute top-16 left-0 p-5 drop-shadow" v-if="videoPlayer.fullPage"><span class="text-xs uppercase pr-2">Now playing: </span><span class="font-semibold">{{ videoPlayer.videoName }}</span></div>
             <Link :class="videoPlayer.fullPage === true && 'disabled'" :href="route('stream')">
                 <video autoplay muted loop id="videoPlayer" ref="videoPlayerApp" class="object-contain w-full">
-                    <source id="src1" :src="videoFirstPlaySrc1" type="video/webm"/>
-                    <source id="src2" :src="videoFirstPlaySrc2" type="video/webm"/>
-                    <source id="src3" :src="videoFirstPlaySrc3" type="video/webm"/>
+                    <source id="src1" :src="videoFirstPlaySrc1" type="video/mp4"/>
+                    <source id="src2" :src="videoFirstPlaySrc2" type="application/x-mpegURL"/>
+                    <source id="src3" :src="videoFirstPlaySrc3" type="video/mp4"/>
                     Sorry, your browser doesn't support embedded videos.
                 </video>
             </Link>
@@ -70,6 +70,7 @@
 
 <script setup>
 import { ref } from "vue";
+
 // import { isClient } from "@vueuse/shared";
 // import { useDraggable } from "@vueuse/core";
 // import { UseDraggable as Draggable } from "@vueuse/components";
@@ -105,36 +106,51 @@ function unMuteVideo() {
 function loadVideo1() {
     videoPlayer.loadVideo1()
     document.getElementById("src1").src = videoPlayer.videoSourceIdSrc1;
+    document.getElementById("src1").type = videoPlayer.videoSourceTypeSrc1;
     document.getElementById("src2").src = videoPlayer.videoSourceIdSrc2;
+    document.getElementById("src2").type = videoPlayer.videoSourceTypeSrc2;
     document.getElementById("src3").src = videoPlayer.videoSourceIdSrc3;
+    document.getElementById("src3").type = videoPlayer.videoSourceTypeSrc3;
     document.getElementById("videoPlayer").load();
 }
 function loadVideo2() {
     videoPlayer.loadVideo2()
     document.getElementById("src1").src = videoPlayer.videoSourceIdSrc1;
+    document.getElementById("src1").type = videoPlayer.videoSourceTypeSrc1;
     document.getElementById("src2").src = videoPlayer.videoSourceIdSrc2;
+    document.getElementById("src2").type = videoPlayer.videoSourceTypeSrc2;
     document.getElementById("src3").src = videoPlayer.videoSourceIdSrc3;
+    document.getElementById("src3").type = videoPlayer.videoSourceTypeSrc3;
     document.getElementById("videoPlayer").load();
 }
 function loadVideo3() {
     videoPlayer.loadVideo3()
     document.getElementById("src1").src = videoPlayer.videoSourceIdSrc1;
+    document.getElementById("src1").type = videoPlayer.videoSourceTypeSrc1;
     document.getElementById("src2").src = videoPlayer.videoSourceIdSrc2;
+    document.getElementById("src2").type = videoPlayer.videoSourceTypeSrc2;
     document.getElementById("src3").src = videoPlayer.videoSourceIdSrc3;
+    document.getElementById("src3").type = videoPlayer.videoSourceTypeSrc3;
     document.getElementById("videoPlayer").load();
 }
 function loadVideo4() {
     videoPlayer.loadVideo4()
     document.getElementById("src1").src = videoPlayer.videoSourceIdSrc1;
+    document.getElementById("src1").type = videoPlayer.videoSourceTypeSrc1;
     document.getElementById("src2").src = videoPlayer.videoSourceIdSrc2;
+    document.getElementById("src2").type = videoPlayer.videoSourceTypeSrc2;
     document.getElementById("src3").src = videoPlayer.videoSourceIdSrc3;
+    document.getElementById("src3").type = videoPlayer.videoSourceTypeSrc3;
     document.getElementById("videoPlayer").load();
 }
 function loadVideo5() {
     videoPlayer.loadVideo5()
     document.getElementById("src1").src = videoPlayer.videoSourceIdSrc1;
+    document.getElementById("src1").type = videoPlayer.videoSourceTypeSrc1;
     document.getElementById("src2").src = videoPlayer.videoSourceIdSrc2;
+    document.getElementById("src2").type = videoPlayer.videoSourceTypeSrc2;
     document.getElementById("src3").src = videoPlayer.videoSourceIdSrc3;
+    document.getElementById("src3").type = videoPlayer.videoSourceTypeSrc3;
     document.getElementById("videoPlayer").load();
 }
 
