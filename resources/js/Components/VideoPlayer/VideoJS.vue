@@ -4,6 +4,7 @@
         preload="auto"
         class="video-js vjs-big-play-centered"
         ref="video-player"
+        type="application/x-mpegURL"
     >
         <source :src="src">
     </video-js>

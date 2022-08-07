@@ -1945,7 +1945,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     controls: "",
     preload: "auto",
     "class": "video-js vjs-big-play-centered",
-    ref: "video-player"
+    ref: "video-player",
+    type: "application/x-mpegURL"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("source", {
