@@ -8,6 +8,7 @@ import AppLayout from "./Layouts/AppLayout";
 import { createPinia } from "pinia";
 // import NoLayout from "./Layouts/NoLayout";
 import { ZiggyVue } from 'ziggy';
+import video from "@/Components/VideoPlayer/VideoJS";
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'notTV';
 
@@ -30,8 +31,9 @@ createInertiaApp({
             .use(createPinia())
             .component("Link", Link)
             .component("Head", Head)
+            .component("video-player", video)
             .mount(el);
-    },
+    }
 });
 
 InertiaProgress.init({ delay: 250, color: '#FCEF5B', includeCSS: true, showSpinner: true, });

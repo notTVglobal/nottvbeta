@@ -14,10 +14,7 @@
             </div>
 
             <div>
-                <video controls autoplay muted preload="auto">
-                    <source src="http://mist.nottv.io:8080/hls/ctd1984/index.m3u8" type="application/x-mpegURL"/>
-                    <source src="http://mist.nottv.io:8080/ctd1984.mp4" type="video/mp4"/>
-                </video>
+                <video-player src="http://mist.nottv.io:8080/hls/vmixsource03/index.m3u8"></video-player>
             </div>
         </div>
     </div>
@@ -25,33 +22,12 @@
 </template>
 
 <script setup>
-
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
-import VideoJs from "@/Components/VideoPlayer/VideoJs";
-import { ref } from "vue"
-
+import VideoPlayer from "@/Components/VideoPlayer/VideoJS.vue";
 
 let videoPlayer = useVideoPlayerStore();
 videoPlayer.class = "videoTopRight"
 videoPlayer.fullPage = false
-
-defineProps({
-    videoJs: Object,
-    options: ref({
-        autoplay: true,
-        controls: true,
-        sources: [
-            {
-                src:
-                    'http://mist.nottv.io:8080/ctd1984.mp4',
-                type: 'video/mp4'
-            }
-        ]
-
-})
-});
-
-
 
 </script>
 
