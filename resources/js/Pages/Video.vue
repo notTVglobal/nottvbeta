@@ -14,7 +14,7 @@
             </div>
 
             <div>
-                <video-player src="http://mist.nottv.io:8080/hls/vmixsource03/index.m3u8"></video-player>
+                <video-player src="http://mist.nottv.io:8080/hls/ctd1984/index.m3u8"></video-player>
             </div>
         </div>
     </div>
