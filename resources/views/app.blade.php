@@ -11,10 +11,6 @@
 
         <!-- Styles -->
         <link rel="stylesheet" href="{{ mix('css/app.css') }}">
-        <link
-            href="https://unpkg.com/video.js@7/dist/video-js.min.css"
-            rel="stylesheet"
-        />
 
         @routes
         <script src="{{ mix('js/manifest.js') }}" defer></script>

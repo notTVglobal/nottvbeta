@@ -34,7 +34,6 @@
 </template>
 
 <script setup>
-import Welcome from '@/Jetstream/Welcome.vue';
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
 let videoPlayer = useVideoPlayerStore();
 videoPlayer.class = "videoTopRight"
