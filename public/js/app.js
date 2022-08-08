@@ -224,7 +224,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     var videoPlayerStore = (0,_Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_2__.useVideoPlayerStore)();
     var player = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)(null);
     var options = (0,vue__WEBPACK_IMPORTED_MODULE_0__.reactive)({
-      container: '.artplayer-app',
       customType: {
         m3u8: function m3u8(video, url) {
           if (hls_js__WEBPACK_IMPORTED_MODULE_3___default().isSupported()) {
@@ -373,9 +372,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         }
       }],
       icons: {
-        loading: '<img src="${ploadingUrl}">',
-        state: '<img width="150" heigth="150" src="${stateUrl}">',
-        indicator: '<img width="16" heigth="16" src="../../images/indicator.svg">'
+        loading: '`<img src="${ploadingUrl}">`',
+        state: '`<img width="150" heigth="150" src="${stateUrl}">`',
+        indicator: '`<img width="16" heigth="16" src="../../images/indicator.svg">`'
       }
     });
     (0,vue__WEBPACK_IMPORTED_MODULE_0__.onMounted)(function () {
@@ -398,7 +397,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
     function webFull() {
       console.log('You clicked WebFull button');
-      player.useFullscreen();
+      player.fullScreenWebOn = 1;
     }
 
     function loadVideo1() {
@@ -839,11 +838,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 
 var _hoisted_1 = {
+  "class": "chatContainer"
+};
+var _hoisted_2 = {
   key: 0,
-  "class": "fixed bg-blue-800 bottom-0 right-0 bg-opacity-80 chatContainer text-center p-10 z-40 h-2/5"
+  "class": "fixed bg-blue-800 bottom-0 right-0 bg-opacity-80 text-center p-10 z-40 w-1/4 h-2/5"
 };
 
-var _hoisted_2 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+var _hoisted_3 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "right-0 pt-6 overflow-hidden p-10 chat text-white"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, "CHAT BOX"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "chatBoxes text-white opacity-100"
@@ -861,7 +863,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "leave-to-class": "opacity-0"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [$setup.chat.show ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            <div class=\"absolute top-16 left-0 p-5 drop-shadow\" v-if=\"videoPlayer.fullPage\"><span class=\"text-xs uppercase pr-2\">CHAT BOX </span><span class=\"font-semibold\">Chat goes here.</span></div>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            <div v-if=\"!videoPlayer.fullPage\" class=\"bg-gray-800 px-2\"><span class=\"text-xs uppercase pr-2\">CHAT BOX </span><span class=\"font-semibold\">Chat goes here</span></div>"), _hoisted_2])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)];
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [$setup.chat.show ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            <div class=\"absolute top-16 left-0 p-5 drop-shadow\" v-if=\"videoPlayer.fullPage\"><span class=\"text-xs uppercase pr-2\">CHAT BOX </span><span class=\"font-semibold\">Chat goes here.</span></div>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            <div v-if=\"!videoPlayer.fullPage\" class=\"bg-gray-800 px-2\"><span class=\"text-xs uppercase pr-2\">CHAT BOX </span><span class=\"font-semibold\">Chat goes here</span></div>"), _hoisted_3])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])];
     }),
     _: 1
     /* STABLE */
@@ -1875,81 +1877,64 @@ var _hoisted_1 = {
   "class": "videoContainer"
 };
 var _hoisted_2 = {
-  "class": "object-contain w-full"
-};
-var _hoisted_3 = {
   ref: "player",
   style: {
-    "width": "320px",
-    "height": "320px"
-  }
+    "position": "absolute",
+    "top": "12px",
+    "right": "0",
+    "left": "0",
+    "bottom": "0",
+    "min-width": "24rem",
+    "min-height": "16rem"
+  },
+  "class": "shrink"
 };
-var _hoisted_4 = {
+var _hoisted_3 = {
   key: 0,
   "class": "absolute top-16 left-0 p-5 drop-shadow z-50"
 };
 
-var _hoisted_5 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+var _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
   "class": "text-xs uppercase pr-2"
 }, "Now playing: ", -1
 /* HOISTED */
 );
 
+var _hoisted_5 = {
+  "class": "font-semibold"
+};
 var _hoisted_6 = {
-  "class": "font-semibold"
-};
-var _hoisted_7 = {
   key: 1,
-  "class": "bg-gray-800 px-2"
+  "class": "absolute top-0 bg-gray-800 px-2 z-50"
 };
 
-var _hoisted_8 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+var _hoisted_7 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
   "class": "text-xs uppercase pr-2"
 }, "Now playing: ", -1
 /* HOISTED */
 );
 
-var _hoisted_9 = {
+var _hoisted_8 = {
   "class": "font-semibold"
+};
+var _hoisted_9 = {
+  key: 2,
+  "class": "flex flex-col-4 gap-4 fixed ml-6 px-2 bottom-16"
 };
 var _hoisted_10 = {
-  key: 2,
-  "class": "flex flex-col-4 gap-4 fixed ml-6 bottom-16"
-};
-var _hoisted_11 = {
   key: 3,
-  "class": "flex flex-col-4 gap-4 my-3"
-};
-var _hoisted_12 = {
-  key: 2,
-  ref: "unmute",
-  "class": "text-red-500 hover:text-blue-600"
-};
-var _hoisted_13 = {
-  key: 3,
-  ref: "mute",
-  "class": "hover:text-blue-600"
-};
-var _hoisted_14 = {
-  key: 4,
   "class": "fixed bottom-0 ml-3 my-3"
-};
-var _hoisted_15 = {
-  key: 5,
-  "class": "my-3"
 };
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)($setup.videoPlayerStore["class"])
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <video"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    controls"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    loop"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    autoplay"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    muted"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    preload=\"auto\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    id=\"videoPlayer\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    class=\"video-js vjs-big-play-centered object-contain w-full\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                >"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    <source id=\"src1\" :src=\"`http://mist.nottv.io:8080/ctd1984.mp4`\" type=\"`video/mp4`\"/>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    <source id=\"src2\" :src=\"`http://mist.nottv.io:8080/hls/ctd1984/index.m3u8`\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                            type=\"`application/x-mpegURL`\"/>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    <source id=\"src3\" :src=\"`ws://mist.nottv.io:8080/ctd1984.mp4`\" type=\"`video/mp4`\"/>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                </video>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, null, 512
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <video"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    controls"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    loop"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    autoplay"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    muted"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    preload=\"auto\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    id=\"videoPlayer\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    class=\"video-js vjs-big-play-centered object-contain w-full\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                >"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    <source id=\"src1\" :src=\"`http://mist.nottv.io:8080/ctd1984.mp4`\" type=\"`video/mp4`\"/>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    <source id=\"src2\" :src=\"`http://mist.nottv.io:8080/hls/ctd1984/index.m3u8`\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                            type=\"`application/x-mpegURL`\"/>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    <source id=\"src3\" :src=\"`ws://mist.nottv.io:8080/ctd1984.mp4`\" type=\"`video/mp4`\"/>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                </video>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, "TEST", 512
   /* NEED_PATCH */
-  ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
-    onClick: $setup.webFull
-  }, "CLICK ME")]), $setup.videoPlayerStore.fullPage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_4, [_hoisted_5, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_6, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.videoPlayerStore.videoName), 1
+  ), $setup.videoPlayerStore.fullPage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_3, [_hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_5, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.videoPlayerStore.videoName), 1
   /* TEXT */
-  )])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$setup.videoPlayerStore.fullPage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_7, [_hoisted_8, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_9, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.videoPlayerStore.videoName), 1
+  )])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$setup.videoPlayerStore.fullPage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_6, [_hoisted_7, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_8, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.videoPlayerStore.videoName), 1
   /* TEXT */
-  )])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $setup.videoPlayerStore.fullPage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_10, [$setup.videoPlayerStore.paused ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+  )])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $setup.videoPlayerStore.fullPage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_9, [$setup.videoPlayerStore.paused ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
     key: 0,
     onClick: _cache[0] || (_cache[0] = function () {
       return _ctx.playVideo && _ctx.playVideo.apply(_ctx, arguments);
@@ -1973,41 +1958,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return _ctx.muteVideo && _ctx.muteVideo.apply(_ctx, arguments);
     }),
     "class": "hover:text-blue-600"
-  }, "mute")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$setup.videoPlayerStore.fullPage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_11, [$setup.videoPlayerStore.paused ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
-    key: 0,
-    onClick: _cache[4] || (_cache[4] = function () {
-      return _ctx.onPlay && _ctx.onPlay.apply(_ctx, arguments);
-    }),
-    "class": "hover:text-blue-600"
-  }, "play")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$setup.videoPlayerStore.paused ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
-    key: 1,
-    onClick: _cache[5] || (_cache[5] = function () {
-      return _ctx.onPause && _ctx.onPause.apply(_ctx, arguments);
-    }),
-    "class": "hover:text-blue-600"
-  }, "pause")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $setup.videoPlayerStore.muted ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", _hoisted_12, "unmute ", 512
-  /* NEED_PATCH */
-  )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$setup.videoPlayerStore.muted ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", _hoisted_13, "mute", 512
-  /* NEED_PATCH */
-  )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
-    onClick: $setup.newMuted,
-    "class": "hover:text-blue-600"
-  }, "NewMute")])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $setup.videoPlayerStore.fullPage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_14, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
-    onClick: $setup.loadVideo1,
-    "class": "bg-gray-300 text-black p-1 m-2"
-  }, "Spring"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
-    onClick: $setup.loadVideo2,
-    "class": "bg-gray-300 text-black p-1 m-2"
-  }, "Dune"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
-    onClick: $setup.loadVideo3,
-    "class": "bg-gray-300 text-black p-1 m-2"
-  }, "1984"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
-    onClick: $setup.loadVideo4,
-    "class": "bg-gray-300 text-black p-1 m-2"
-  }, "The Terminator"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
-    onClick: $setup.loadVideo5,
-    "class": "bg-gray-300 text-black p-1 m-2"
-  }, "Natural World")])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$setup.videoPlayerStore.fullPage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_15, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  }, "mute")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $setup.videoPlayerStore.fullPage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     onClick: $setup.loadVideo1,
     "class": "bg-gray-300 text-black p-1 m-2"
   }, "Spring"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
@@ -3398,7 +3349,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.videoContainer {\n    position: fixed;\n    top: 0rem;\n    left: 0;\n    width: 100%;\n}\n\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.videoContainer {\n    position: fixed;\n    top: 0rem;\n    left: 0;\n    width: 100%;\n    height: 100%;\n}\n\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
