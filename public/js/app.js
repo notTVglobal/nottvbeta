@@ -183,6 +183,71 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/VideoPlayer/VideoJs.vue?vue&type=script&setup=true&lang=js":
+/*!************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/VideoPlayer/VideoJs.vue?vue&type=script&setup=true&lang=js ***!
+  \************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var video_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! video.js */ "./node_modules/video.js/dist/video.es.js");
+/* harmony import */ var video_js_dist_video_js_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! video.js/dist/video-js.css */ "./node_modules/video.js/dist/video-js.css");
+/* harmony import */ var _Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/Stores/VideoPlayerStore.js */ "./resources/js/Stores/VideoPlayerStore.js");
+
+
+var __default__ = {
+  name: 'VideoPlayer',
+  props: {
+    options: {
+      type: Object,
+      "default": function _default() {
+        return {};
+      }
+    }
+  },
+  data: function data() {
+    return {
+      player: null
+    };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    this.player = (0,video_js__WEBPACK_IMPORTED_MODULE_0__["default"])(this.$refs.videoPlayer, this.options, function () {
+      _this.player.log('onPlayerReady', _this);
+    });
+  },
+  beforeDestroy: function beforeDestroy() {
+    if (this.player) {
+      this.player.dispose();
+    }
+  }
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (/*#__PURE__*/Object.assign(__default__, {
+  setup: function setup(__props, _ref) {
+    var expose = _ref.expose;
+    expose();
+    var videoPlayerStore = (0,_Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_2__.useVideoPlayerStore)();
+    var __returned__ = {
+      videoPlayerStore: videoPlayerStore,
+      videojs: video_js__WEBPACK_IMPORTED_MODULE_0__["default"],
+      useVideoPlayerStore: _Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_2__.useVideoPlayerStore
+    };
+    Object.defineProperty(__returned__, '__isScriptSetup', {
+      enumerable: false,
+      value: true
+    });
+    return __returned__;
+  }
+}));
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/VideoPlayer/VideoPlayer.vue?vue&type=script&setup=true&lang=js":
 /*!****************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/VideoPlayer/VideoPlayer.vue?vue&type=script&setup=true&lang=js ***!
@@ -194,211 +259,36 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
-/* harmony import */ var artplayer__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! artplayer */ "./node_modules/artplayer/dist/artplayer.js");
-/* harmony import */ var artplayer__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(artplayer__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/Stores/VideoPlayerStore.js */ "./resources/js/Stores/VideoPlayerStore.js");
-/* harmony import */ var hls_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! hls.js */ "./node_modules/hls.js/dist/hls.js");
-/* harmony import */ var hls_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(hls_js__WEBPACK_IMPORTED_MODULE_3__);
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+/* harmony import */ var _Components_VideoPlayer_VideoJs_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Components/VideoPlayer/VideoJs.vue */ "./resources/js/Components/VideoPlayer/VideoJs.vue");
+/* harmony import */ var _Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Stores/VideoPlayerStore.js */ "./resources/js/Stores/VideoPlayerStore.js");
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+var __default__ = {
+  name: 'VideoPlayer',
+  components: {
+    VideoPlayer: _Components_VideoPlayer_VideoJs_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
+  data: function data() {
+    return {
+      videoOptions: {
+        autoplay: true,
+        muted: true,
+        controls: true,
+        sources: [{
+          src: 'http://mist.nottv.io:8080/hls/spring/index.m3u8',
+          type: 'application/x-mpegURL'
+        }]
+      }
+    };
+  }
+};
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-
-
-
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  __name: 'VideoPlayer',
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (/*#__PURE__*/Object.assign(__default__, {
   setup: function setup(__props, _ref) {
     var expose = _ref.expose;
-    var videoUrl = "http://mist.nottv.io:8080/hls/ctd1984/index.m3u8";
-    var url = "http://mist.nottv.io:8080/hls/ctd1984/index.m3u8";
-    var posterUrl = '../../images/poster.jpg';
-    var thumbnailsUrl = '../../images/thumbnails.png';
-    var subtitleUrl = '../../images/subtitle.srt';
-    var ploadingUrl = '../../images/ploading.gif';
-    var stateUrl = '../../images/state.png';
-    var videoPlayerStore = (0,_Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_2__.useVideoPlayerStore)();
-    var player = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)(null);
-    var options = (0,vue__WEBPACK_IMPORTED_MODULE_0__.reactive)({
-      customType: {
-        m3u8: function m3u8(video, url) {
-          if (hls_js__WEBPACK_IMPORTED_MODULE_3___default().isSupported()) {
-            var hls = new (hls_js__WEBPACK_IMPORTED_MODULE_3___default())();
-            hls.loadSource(url);
-            hls.attachMedia(video);
-          } else {
-            var canPlay = video.canPlayType('application/vnd.apple.mpegurl');
-
-            if (canPlay === 'probably' || canPlay == 'maybe') {
-              video.src = url;
-            } else {
-              console.log('Does not support playback of m3u8');
-            }
-          }
-        }
-      },
-      url: videoUrl,
-      title: 'Video Title',
-      poster: posterUrl,
-      volume: 0.5,
-      isLive: false,
-      muted: true,
-      autoplay: true,
-      pip: true,
-      autoSize: true,
-      autoMini: true,
-      screenshot: false,
-      setting: true,
-      loop: true,
-      flip: false,
-      playbackRate: true,
-      aspectRatio: false,
-      fullscreen: true,
-      fullscreenWeb: true,
-      subtitleOffset: false,
-      miniProgressBar: true,
-      mutex: true,
-      backdrop: true,
-      playsInline: true,
-      autoPlayback: true,
-      airplay: true,
-      theme: '#23ade5',
-      lang: navigator.language.toLowerCase(),
-      whitelist: ['*'],
-      moreVideoAttr: {
-        crossOrigin: 'anonymous'
-      },
-      settings: [{
-        width: 100,
-        html: 'Subtitle',
-        tooltip: 'Bilingual',
-        icon: "<img width=\"22\" heigth=\"22\" src=\"/assets/img/subtitle.svg\">",
-        selector: [{
-          html: 'Display',
-          tooltip: 'Show',
-          "switch": true,
-          onSwitch: function onSwitch(item) {
-            item.tooltip = item["switch"] ? 'Hide' : 'Show';
-            art.subtitle.show = !item["switch"];
-            return !item["switch"];
-          }
-        }, {
-          "default": true,
-          html: 'Bilingual',
-          url: '/assets/sample/subtitle.srt'
-        }, {
-          html: 'Chinese',
-          url: '/assets/sample/subtitle.cn.srt'
-        }, {
-          html: 'Japanese',
-          url: '/assets/sample/subtitle.jp.srt'
-        }],
-        onSelect: function onSelect(item) {
-          art.subtitle["switch"](item.url, {
-            name: item.html
-          });
-          return item.html;
-        }
-      }],
-      contextmenu: [{
-        html: 'Custom menu',
-        click: function click(contextmenu) {
-          console.info('You clicked on the custom menu');
-          contextmenu.show = true;
-        }
-      }],
-      layers: [{
-        html: '<img width="100" src="../../images/poster.jpg">',
-        click: function click() {
-          window.open('https://not.tv');
-          console.info('You clicked on the custom layer');
-        },
-        style: {
-          position: 'absolute',
-          top: '20px',
-          right: '20px',
-          opacity: '.9',
-          display: 'none'
-        }
-      }],
-      quality: [{
-        "default": true,
-        html: 'SD 480P',
-        url: videoUrl
-      }, {
-        html: 'HD 720P',
-        url: videoUrl
-      }],
-      thumbnails: {
-        url: thumbnailsUrl,
-        number: 60,
-        column: 10
-      },
-      subtitle: {
-        url: subtitleUrl,
-        type: 'srt',
-        style: {
-          color: '#fe9200',
-          fontSize: '20px'
-        },
-        encoding: 'utf-8'
-      },
-      highlight: [{
-        time: 15,
-        text: 'One more chance'
-      }, {
-        time: 30,
-        text: '谁でもいいはずなのに'
-      }, {
-        time: 45,
-        text: '夏の想い出がまわる'
-      }, {
-        time: 60,
-        text: 'こんなとこにあるはずもないのに'
-      }, {
-        time: 75,
-        text: '终わり'
-      }],
-      controls: [{
-        position: 'right',
-        html: 'Control',
-        tooltip: 'Control Tooltip',
-        click: function click() {
-          console.info('You clicked on the custom control');
-        }
-      }],
-      icons: {
-        loading: '`<img src="${ploadingUrl}">`',
-        state: '`<img width="150" heigth="150" src="${stateUrl}">`',
-        indicator: '`<img width="16" heigth="16" src="../../images/indicator.svg">`'
-      }
-    });
-    (0,vue__WEBPACK_IMPORTED_MODULE_0__.onMounted)(function () {
-      (0,vue__WEBPACK_IMPORTED_MODULE_0__.nextTick)(function () {
-        new (artplayer__WEBPACK_IMPORTED_MODULE_1___default())(_objectSpread(_objectSpread({}, options), {}, {
-          container: player.value
-        }));
-      });
-    });
-    expose({
-      player: player,
-      options: options
-    });
+    expose();
+    var videoPlayerStore = (0,_Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_1__.useVideoPlayerStore)();
     videoPlayerStore.videoName = "Conan The Destroyer";
     videoPlayerStore.paused = false;
-
-    function newMuted() {
-      props.muted = true;
-    }
-
-    function webFull() {
-      console.log('You clicked WebFull button');
-      player.fullScreenWebOn = 1;
-    }
 
     function loadVideo1() {
       videoPlayerStore.loadVideo1();
@@ -456,30 +346,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
 
     var __returned__ = {
-      videoUrl: videoUrl,
-      url: url,
-      posterUrl: posterUrl,
-      thumbnailsUrl: thumbnailsUrl,
-      subtitleUrl: subtitleUrl,
-      ploadingUrl: ploadingUrl,
-      stateUrl: stateUrl,
       videoPlayerStore: videoPlayerStore,
-      player: player,
-      options: options,
-      newMuted: newMuted,
-      webFull: webFull,
       loadVideo1: loadVideo1,
       loadVideo2: loadVideo2,
       loadVideo3: loadVideo3,
       loadVideo4: loadVideo4,
       loadVideo5: loadVideo5,
-      ref: vue__WEBPACK_IMPORTED_MODULE_0__.ref,
-      reactive: vue__WEBPACK_IMPORTED_MODULE_0__.reactive,
-      onMounted: vue__WEBPACK_IMPORTED_MODULE_0__.onMounted,
-      nextTick: vue__WEBPACK_IMPORTED_MODULE_0__.nextTick,
-      Artplayer: (artplayer__WEBPACK_IMPORTED_MODULE_1___default()),
-      useVideoPlayerStore: _Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_2__.useVideoPlayerStore,
-      Hls: (hls_js__WEBPACK_IMPORTED_MODULE_3___default())
+      VideoPlayer: _Components_VideoPlayer_VideoJs_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
+      useVideoPlayerStore: _Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_1__.useVideoPlayerStore
     };
     Object.defineProperty(__returned__, '__isScriptSetup', {
       enumerable: false,
@@ -487,7 +361,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     });
     return __returned__;
   }
-});
+}));
 
 /***/ }),
 
@@ -1860,6 +1734,35 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/VideoPlayer/VideoJs.vue?vue&type=template&id=426db0b6":
+/*!*****************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/VideoPlayer/VideoJs.vue?vue&type=template&id=426db0b6 ***!
+  \*****************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render)
+/* harmony export */ });
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+
+var _hoisted_1 = {
+  ref: "videoPlayer",
+  "class": "video-js",
+  style: {
+    "max-width": "10rem",
+    "max-height": "10rem"
+  }
+};
+function render(_ctx, _cache, $props, $setup, $data, $options) {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("video", _hoisted_1, null, 512
+  /* NEED_PATCH */
+  )]);
+}
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/VideoPlayer/VideoPlayer.vue?vue&type=template&id=3ffa0064":
 /*!*********************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/VideoPlayer/VideoPlayer.vue?vue&type=template&id=3ffa0064 ***!
@@ -1877,64 +1780,59 @@ var _hoisted_1 = {
   "class": "videoContainer"
 };
 var _hoisted_2 = {
-  ref: "player",
-  style: {
-    "position": "absolute",
-    "top": "12px",
-    "right": "0",
-    "left": "0",
-    "bottom": "0",
-    "min-width": "24rem",
-    "min-height": "16rem"
-  },
-  "class": "shrink"
-};
-var _hoisted_3 = {
   key: 0,
   "class": "absolute top-16 left-0 p-5 drop-shadow z-50"
 };
 
-var _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+var _hoisted_3 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
   "class": "text-xs uppercase pr-2"
 }, "Now playing: ", -1
 /* HOISTED */
 );
 
-var _hoisted_5 = {
+var _hoisted_4 = {
   "class": "font-semibold"
 };
-var _hoisted_6 = {
+var _hoisted_5 = {
   key: 1,
   "class": "absolute top-0 bg-gray-800 px-2 z-50"
 };
 
-var _hoisted_7 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+var _hoisted_6 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
   "class": "text-xs uppercase pr-2"
 }, "Now playing: ", -1
 /* HOISTED */
 );
 
-var _hoisted_8 = {
+var _hoisted_7 = {
   "class": "font-semibold"
 };
-var _hoisted_9 = {
+var _hoisted_8 = {
   key: 2,
   "class": "flex flex-col-4 gap-4 fixed ml-6 px-2 bottom-16"
 };
-var _hoisted_10 = {
+var _hoisted_9 = {
   key: 3,
   "class": "fixed bottom-0 ml-3 my-3"
 };
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)($setup.videoPlayerStore["class"])
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <video"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    controls"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    loop"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    autoplay"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    muted"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    preload=\"auto\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    id=\"videoPlayer\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    class=\"video-js vjs-big-play-centered object-contain w-full\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                >"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    <source id=\"src1\" :src=\"`http://mist.nottv.io:8080/ctd1984.mp4`\" type=\"`video/mp4`\"/>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    <source id=\"src2\" :src=\"`http://mist.nottv.io:8080/hls/ctd1984/index.m3u8`\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                            type=\"`application/x-mpegURL`\"/>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    <source id=\"src3\" :src=\"`ws://mist.nottv.io:8080/ctd1984.mp4`\" type=\"`video/mp4`\"/>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                </video>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, "TEST", 512
-  /* NEED_PATCH */
-  ), $setup.videoPlayerStore.fullPage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_3, [_hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_5, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.videoPlayerStore.videoName), 1
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <video"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    controls"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    loop"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    autoplay"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    muted"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    preload=\"auto\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    id=\"videoPlayer\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    class=\"video-js vjs-big-play-centered object-contain w-full\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                >"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    <source id=\"src1\" :src=\"`http://mist.nottv.io:8080/ctd1984.mp4`\" type=\"`video/mp4`\"/>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    <source id=\"src2\" :src=\"`http://mist.nottv.io:8080/hls/ctd1984/index.m3u8`\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                            type=\"`application/x-mpegURL`\"/>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    <source id=\"src3\" :src=\"`ws://mist.nottv.io:8080/ctd1984.mp4`\" type=\"`video/mp4`\"/>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                </video>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    <div"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                        ref=\"player\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                        style=\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                            position: absolute;"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                            top:12px;"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                            right:0;"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                            left:0;"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                            bottom:0;"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                            min-width:24rem;"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                            min-height:16rem;"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                            \""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                            class=\"shrink\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    >TEST</div>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["VideoPlayer"], {
+    options: $data.videoOptions,
+    style: {
+      "max-width": "10rem",
+      "max-height": "10rem"
+    }
+  }, null, 8
+  /* PROPS */
+  , ["options"])], 2
+  /* CLASS */
+  ), $setup.videoPlayerStore.fullPage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_2, [_hoisted_3, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.videoPlayerStore.videoName), 1
   /* TEXT */
-  )])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$setup.videoPlayerStore.fullPage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_6, [_hoisted_7, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_8, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.videoPlayerStore.videoName), 1
+  )])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$setup.videoPlayerStore.fullPage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_5, [_hoisted_6, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_7, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.videoPlayerStore.videoName), 1
   /* TEXT */
-  )])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $setup.videoPlayerStore.fullPage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_9, [$setup.videoPlayerStore.paused ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+  )])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $setup.videoPlayerStore.fullPage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_8, [$setup.videoPlayerStore.paused ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
     key: 0,
     onClick: _cache[0] || (_cache[0] = function () {
       return _ctx.playVideo && _ctx.playVideo.apply(_ctx, arguments);
@@ -1958,7 +1856,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return _ctx.muteVideo && _ctx.muteVideo.apply(_ctx, arguments);
     }),
     "class": "hover:text-blue-600"
-  }, "mute")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $setup.videoPlayerStore.fullPage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  }, "mute")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $setup.videoPlayerStore.fullPage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     onClick: $setup.loadVideo1,
     "class": "bg-gray-300 text-black p-1 m-2"
   }, "Spring"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
@@ -1973,9 +1871,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, "The Terminator"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     onClick: $setup.loadVideo5,
     "class": "bg-gray-300 text-black p-1 m-2"
-  }, "Natural World")])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)], 2
-  /* CLASS */
-  )]);
+  }, "Natural World")])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]);
 }
 
 /***/ }),
@@ -3349,7 +3245,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.videoContainer {\n    position: fixed;\n    top: 0rem;\n    left: 0;\n    width: 100%;\n    height: 100%;\n}\n\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.videoContainer {\n    position: fixed;\n    top: 0rem;\n    right: 0rem;\n    width:10rem;\n    height:10rem;\n}\n\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -3569,6 +3465,34 @@ __webpack_require__.r(__webpack_exports__);
 
 ;
 const __exports__ = /*#__PURE__*/(0,_var_www_nottvbeta_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_ResponsiveNavigationMenu_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_ResponsiveNavigationMenu_vue_vue_type_template_id_7e56279c__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Components/ResponsiveNavigationMenu.vue"]])
+/* hot reload */
+if (false) {}
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__exports__);
+
+/***/ }),
+
+/***/ "./resources/js/Components/VideoPlayer/VideoJs.vue":
+/*!*********************************************************!*\
+  !*** ./resources/js/Components/VideoPlayer/VideoJs.vue ***!
+  \*********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _VideoJs_vue_vue_type_template_id_426db0b6__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./VideoJs.vue?vue&type=template&id=426db0b6 */ "./resources/js/Components/VideoPlayer/VideoJs.vue?vue&type=template&id=426db0b6");
+/* harmony import */ var _VideoJs_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./VideoJs.vue?vue&type=script&setup=true&lang=js */ "./resources/js/Components/VideoPlayer/VideoJs.vue?vue&type=script&setup=true&lang=js");
+/* harmony import */ var _var_www_nottvbeta_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+
+
+
+
+;
+const __exports__ = /*#__PURE__*/(0,_var_www_nottvbeta_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_VideoJs_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_VideoJs_vue_vue_type_template_id_426db0b6__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Components/VideoPlayer/VideoJs.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -3866,6 +3790,22 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/Components/VideoPlayer/VideoJs.vue?vue&type=script&setup=true&lang=js":
+/*!********************************************************************************************!*\
+  !*** ./resources/js/Components/VideoPlayer/VideoJs.vue?vue&type=script&setup=true&lang=js ***!
+  \********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_VideoJs_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"])
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_VideoJs_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./VideoJs.vue?vue&type=script&setup=true&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/VideoPlayer/VideoJs.vue?vue&type=script&setup=true&lang=js");
+ 
+
+/***/ }),
+
 /***/ "./resources/js/Components/VideoPlayer/VideoPlayer.vue?vue&type=script&setup=true&lang=js":
 /*!************************************************************************************************!*\
   !*** ./resources/js/Components/VideoPlayer/VideoPlayer.vue?vue&type=script&setup=true&lang=js ***!
@@ -4038,6 +3978,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "render": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_ResponsiveNavigationMenu_vue_vue_type_template_id_7e56279c__WEBPACK_IMPORTED_MODULE_0__.render)
 /* harmony export */ });
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_ResponsiveNavigationMenu_vue_vue_type_template_id_7e56279c__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./ResponsiveNavigationMenu.vue?vue&type=template&id=7e56279c */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/ResponsiveNavigationMenu.vue?vue&type=template&id=7e56279c");
+
+
+/***/ }),
+
+/***/ "./resources/js/Components/VideoPlayer/VideoJs.vue?vue&type=template&id=426db0b6":
+/*!***************************************************************************************!*\
+  !*** ./resources/js/Components/VideoPlayer/VideoJs.vue?vue&type=template&id=426db0b6 ***!
+  \***************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_VideoJs_vue_vue_type_template_id_426db0b6__WEBPACK_IMPORTED_MODULE_0__.render)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_VideoJs_vue_vue_type_template_id_426db0b6__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./VideoJs.vue?vue&type=template&id=426db0b6 */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Components/VideoPlayer/VideoJs.vue?vue&type=template&id=426db0b6");
 
 
 /***/ }),
@@ -4622,6 +4578,16 @@ function webpackAsyncContext(req) {
 webpackAsyncContext.keys = () => (Object.keys(map));
 webpackAsyncContext.id = "./resources/js/Pages lazy recursive ^\\.\\/.*$";
 module.exports = webpackAsyncContext;
+
+/***/ }),
+
+/***/ "?6298":
+/*!******************************!*\
+  !*** min-document (ignored) ***!
+  \******************************/
+/***/ (() => {
+
+/* (ignored) */
 
 /***/ }),
 

@@ -1212,8 +1212,8 @@ select {
 .videoTopRight {
     position:fixed;
     top: 4rem;
-    right:0;
-    width:26vw;
+    left:0;
+    width:10px;
     background-color: black;
 }
 .pageWidth {
