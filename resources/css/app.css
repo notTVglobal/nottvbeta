@@ -15,14 +15,31 @@
 .videoTopRight {
     position:fixed;
     top: 4rem;
-    left:0;
-    width:10px;
+    right:0;
+    max-width:26rem;
+    min-width:10rem;
+    width:100%;
+    height:14rem;
     background-color: black;
+}
+.videoContainerFullPage {
+    position: fixed;
+    top: 0rem;
+    right: 0rem;
+    width:100%;
+    height:100%;
+}
+.videoContainerTopRight {
+    position: fixed;
+    top: 0rem;
+    right: 0rem;
 }
 .pageWidth {
     margin-right: 26vw;
     z-index: 60;
+    width: calc(100% - 26rem);
 }
+
 @tailwind utilities;
 
 

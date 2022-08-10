@@ -3,7 +3,8 @@ import { defineStore } from "pinia";
 export let useVideoPlayerStore = defineStore('videoPlayer', {
     state() {
         return {
-            class: 'blue',
+            class: '',
+            videoContainerClass: '',
             videoSourceIdSrc1: '',
             videoSourceIdSrc2: '',
             videoSourceIdSrc3: '',
@@ -21,10 +22,12 @@ export let useVideoPlayerStore = defineStore('videoPlayer', {
     actions: {
         makeVideoFullPage() {
             this.class = 'videoFullPage';
+            this.videoContainerClass = 'videoContainerFullPage';
             this.fullPage = true;
         },
         makeVideoTopRight() {
             this.class = 'videoTopRight';
+            this.videoContainerClass = 'videoContainerTopRight';
             this.fullPage = false;
         },
         loadVideo1() {

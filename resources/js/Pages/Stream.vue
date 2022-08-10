@@ -11,6 +11,7 @@ let videoPlayer = useVideoPlayerStore();
 
 videoPlayer.fullPage = true;
 videoPlayer.class = "videoFullPage";
+videoPlayer.videoContainerClass = "videoContainerFullPage";
 
 defineProps ({
     video: Object

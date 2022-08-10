@@ -1,5 +1,5 @@
 <template>
-    <div class="videoContainer">
+    <div :class="videoPlayerStore.videoContainerClass">
         <div :class="videoPlayerStore.class">
 
 
@@ -33,9 +33,9 @@
 <!--                    >TEST</div>-->
 
 
-                    <video-player :options="videoOptions" style="max-width: 10rem; max-height: 10rem;"/>
+                    <video-player :options="videoOptions"/>
 
-        </div>
+
             <div v-if="videoPlayerStore.fullPage" class="absolute top-16 left-0 p-5 drop-shadow z-50">
                 <span class="text-xs uppercase pr-2">Now playing: </span>
                 <span class="font-semibold">{{ videoPlayerStore.videoName }}</span>
@@ -47,22 +47,23 @@
 
 
 
-            <div v-if="videoPlayerStore.fullPage" class="flex flex-col-4 gap-4 fixed ml-6 px-2 bottom-16">
-                <button v-if="videoPlayerStore.paused" @click="playVideo" class="hover:text-blue-600">play</button>
-                <button v-if="!videoPlayerStore.paused" @click="pauseVideo" class="hover:text-blue-600">pause</button>
-                <button v-if="videoPlayerStore.muted" @click="unMuteVideo" class="text-red-500 hover:text-blue-600">
-                    unmute
-                </button>
-                <button v-if="!videoPlayerStore.muted" @click="muteVideo" class="hover:text-blue-600">mute</button>
+<!--            <div v-if="videoPlayerStore.fullPage" class="flex flex-col-4 gap-4 fixed ml-6 px-2 bottom-16 z-50">-->
+<!--                <button v-if="videoPlayerStore.paused" @click="playVideo" class="hover:text-blue-600">play</button>-->
+<!--                <button v-if="!videoPlayerStore.paused" @click="pauseVideo" class="hover:text-blue-600">pause</button>-->
+<!--                <button v-if="videoPlayerStore.muted" @click="unMuteVideo" class="text-red-500 hover:text-blue-600">-->
+<!--                    unmute-->
+<!--                </button>-->
+<!--                <button v-if="!videoPlayerStore.muted" @click="muteVideo" class="hover:text-blue-600">mute</button>-->
+<!--            </div>-->
+<!--            <div v-if="videoPlayerStore.fullPage" class="fixed bottom-0 ml-3 my-3 z-50">-->
+<!--                <button @click="loadVideo1" class="bg-gray-300 text-black p-1 m-2">Spring</button>-->
+<!--                <button @click="loadVideo2" class="bg-gray-300 text-black p-1 m-2">Dune</button>-->
+<!--                <button @click="loadVideo3" class="bg-gray-300 text-black p-1 m-2">1984</button>-->
+<!--                <button @click="loadVideo4" class="bg-gray-300 text-black p-1 m-2">The Terminator</button>-->
+<!--                <button @click="loadVideo5" class="bg-gray-300 text-black p-1 m-2">Natural World</button>-->
+<!--            </div>-->
             </div>
-            <div v-if="videoPlayerStore.fullPage" class="fixed bottom-0 ml-3 my-3">
-                <button @click="loadVideo1" class="bg-gray-300 text-black p-1 m-2">Spring</button>
-                <button @click="loadVideo2" class="bg-gray-300 text-black p-1 m-2">Dune</button>
-                <button @click="loadVideo3" class="bg-gray-300 text-black p-1 m-2">1984</button>
-                <button @click="loadVideo4" class="bg-gray-300 text-black p-1 m-2">The Terminator</button>
-                <button @click="loadVideo5" class="bg-gray-300 text-black p-1 m-2">Natural World</button>
-            </div>
-            </div>
+    </div>
 
 </template>
 
@@ -151,7 +152,7 @@ export default {
                 sources: [
                     {
                         src:
-                            'http://mist.nottv.io:8080/hls/spring/index.m3u8',
+                            'http://mist.nottv.io:8080/hls/ctd1984/index.m3u8',
                         type: 'application/x-mpegURL'
                     }
                 ]
@@ -160,15 +161,3 @@ export default {
     }
 };
 </script>
-
-
-<style>
-.videoContainer {
-    position: fixed;
-    top: 0rem;
-    right: 0rem;
-    width:10rem;
-    height:10rem;
-}
-
-</style>

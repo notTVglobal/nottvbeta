@@ -23,11 +23,11 @@
                             </div>
                         </header>
 
-
             <!-- Page Content -->
             <main>
-                <slot class="absolute top-0"/>
+                <slot class="z-50"/>
             </main>
+
         </div>
     </div>
 </template>

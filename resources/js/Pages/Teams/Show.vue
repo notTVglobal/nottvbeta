@@ -8,7 +8,7 @@
         <div class="bg-white rounded text-black p-5 mb-10">
 
 
-            <TeamHeader @add="showModal = true"/>
+            <TeamHeader @add="showModal = true" />
 
             <div class="flex flex-col">
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -29,6 +29,7 @@
 
     <Teleport to="body">
     <Modal :show="showModal" @close="showModal = false">
+
         <template #header>
             Add a new team member
         </template>

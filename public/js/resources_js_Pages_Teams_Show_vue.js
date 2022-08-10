@@ -342,7 +342,7 @@ var _hoisted_6 = {
   "class": "bg-green-400 w-5 h-5 text-xs text-white rounded-full flex justify-center items-center absolute -right-4 -top-2"
 };
 var _hoisted_7 = {
-  "class": "absolute right-96 mr-8 mt-6"
+  "class": "mr-8 mt-6"
 };
 var _hoisted_8 = ["disabled"];
 var _hoisted_9 = {
