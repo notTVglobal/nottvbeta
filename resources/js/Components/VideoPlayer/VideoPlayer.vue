@@ -55,13 +55,13 @@
 <!--                </button>-->
 <!--                <button v-if="!videoPlayerStore.muted" @click="muteVideo" class="hover:text-blue-600">mute</button>-->
 <!--            </div>-->
-<!--            <div v-if="videoPlayerStore.fullPage" class="fixed bottom-0 ml-3 my-3 z-50">-->
-<!--                <button @click="loadVideo1" class="bg-gray-300 text-black p-1 m-2">Spring</button>-->
-<!--                <button @click="loadVideo2" class="bg-gray-300 text-black p-1 m-2">Dune</button>-->
-<!--                <button @click="loadVideo3" class="bg-gray-300 text-black p-1 m-2">1984</button>-->
-<!--                <button @click="loadVideo4" class="bg-gray-300 text-black p-1 m-2">The Terminator</button>-->
-<!--                <button @click="loadVideo5" class="bg-gray-300 text-black p-1 m-2">Natural World</button>-->
-<!--            </div>-->
+            <div v-if="videoPlayerStore.fullPage" class="fixed bottom-0 ml-3 my-3 z-50">
+                <button @click="loadVideo1" class="bg-gray-300 text-black p-1 m-2">Spring</button>
+                <button @click="loadVideo2" class="bg-gray-300 text-black p-1 m-2">Dune</button>
+                <button @click="loadVideo3" class="bg-gray-300 text-black p-1 m-2">1984</button>
+                <button @click="loadVideo4" class="bg-gray-300 text-black p-1 m-2">The Terminator</button>
+                <button @click="loadVideo5" class="bg-gray-300 text-black p-1 m-2">Natural World</button>
+            </div>
             </div>
     </div>
 
@@ -84,7 +84,7 @@ function loadVideo1() {
     document.getElementById("src2").type = videoPlayerStore.videoSourceTypeSrc2;
     document.getElementById("src3").src = videoPlayerStore.videoSourceIdSrc3;
     document.getElementById("src3").type = videoPlayerStore.videoSourceTypeSrc3;
-    document.getElementById("videoPlayer").load();
+    document.getElementById("VideoPlayer").load();
 }
 
 function loadVideo2() {
@@ -95,7 +95,7 @@ function loadVideo2() {
     document.getElementById("src2").type = videoPlayerStore.videoSourceTypeSrc2;
     document.getElementById("src3").src = videoPlayerStore.videoSourceIdSrc3;
     document.getElementById("src3").type = videoPlayerStore.videoSourceTypeSrc3;
-    document.getElementById("videoPlayer").load();
+    // my.load();
 }
 
 function loadVideo3() {
@@ -117,18 +117,18 @@ function loadVideo4() {
     document.getElementById("src2").type = videoPlayerStore.videoSourceTypeSrc2;
     document.getElementById("src3").src = videoPlayerStore.videoSourceIdSrc3;
     document.getElementById("src3").type = videoPlayerStore.videoSourceTypeSrc3;
-    document.getElementById("videoPlayer").load();
+    document.getElementById("VideoPlayer").load();
 }
 
 function loadVideo5() {
     videoPlayerStore.loadVideo5()
-    document.getElementById("src1").src = videoPlayerStore.videoSourceIdSrc1;
+    document.getElementById("src").src = videoPlayerStore.videoSourceIdSrc1;
     document.getElementById("src1").type = videoPlayerStore.videoSourceTypeSrc1;
     document.getElementById("src2").src = videoPlayerStore.videoSourceIdSrc2;
     document.getElementById("src2").type = videoPlayerStore.videoSourceTypeSrc2;
     document.getElementById("src3").src = videoPlayerStore.videoSourceIdSrc3;
     document.getElementById("src3").type = videoPlayerStore.videoSourceTypeSrc3;
-    document.getElementById("videoPlayer").load();
+    document.getElementById("VideoPlayer").load();
 }
 
 
@@ -136,7 +136,6 @@ function loadVideo5() {
 
 <script>
 import VideoPlayer from '@/Components/VideoPlayer/VideoJs.vue';
-
 
 export default {
     name: 'VideoPlayer',

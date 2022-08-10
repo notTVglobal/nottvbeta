@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['*', 'nottv.io'],
+    'allowed_origins' => ['*', 'http://mist.nottv.io'],
 
     'allowed_origins_patterns' => [],
 
