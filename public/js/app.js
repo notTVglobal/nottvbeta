@@ -272,7 +272,8 @@ var __default__ = {
         muted: true,
         controls: true,
         sources: [{
-          src: 'http://mist.nottv.io:8080/hls/ctd1984/index.m3u8',
+          src: 'https://mist.nottv.io/cmaf/ctd1984/index.m3u8',
+          // 'ws://mist.nottv.io:8080/ctd1984.mp4',
           type: 'application/x-mpegURL'
         }]
       }
