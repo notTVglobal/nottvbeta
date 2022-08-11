@@ -58,13 +58,16 @@
 
 
 <script setup>
-import Pagination from "@/Components/Pagination";
-import { ref, watch } from "vue";
-import {Inertia} from "@inertiajs/inertia";
-import throttle from "lodash/throttle";
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
-let videoPlayer = useVideoPlayerStore();
+import Pagination from "@/Components/Pagination"
+import { ref, watch } from "vue"
+import {Inertia} from "@inertiajs/inertia"
+import throttle from "lodash/throttle"
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+
+let videoPlayer = useVideoPlayerStore()
+
 videoPlayer.class = "videoTopRight"
+videoPlayer.videoContainerClass = "videoContainerTopRight"
 videoPlayer.fullPage = false
 
 let props = defineProps({

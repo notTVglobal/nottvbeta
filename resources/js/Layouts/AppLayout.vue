@@ -33,14 +33,14 @@
 </template>
 
 <script setup>
-import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu";
-import NavigationMenu from "@/Components/NavigationMenu";
-import VideoPlayer from "@/Components/VideoPlayer/VideoPlayer.vue";
-import Chat from "@/Components/Chat/Chat";
-import { Inertia } from '@inertiajs/inertia';
-import JetBanner from '@/Jetstream/Banner.vue';
-import { useChatStore } from "@/Stores/ChatStore";
+import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
+import NavigationMenu from "@/Components/NavigationMenu"
+import VideoPlayer from "@/Components/VideoPlayer/VideoPlayer.vue"
+import Chat from "@/Components/Chat/Chat"
+import { Inertia } from '@inertiajs/inertia'
+import JetBanner from '@/Jetstream/Banner.vue'
+import { useChatStore } from "@/Stores/ChatStore"
 
-let chat = useChatStore();
+let chat = useChatStore()
 
 </script>

@@ -22,6 +22,7 @@ __webpack_require__.r(__webpack_exports__);
     expose();
     var videoPlayer = (0,_Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_1__.useVideoPlayerStore)();
     videoPlayer["class"] = "videoTopRight";
+    videoPlayer.videoContainerClass = "videoContainerTopRight";
     videoPlayer.fullPage = false;
     var form = (0,_inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_0__.useForm)({
       name: '',

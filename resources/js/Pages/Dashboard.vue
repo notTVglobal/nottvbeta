@@ -50,9 +50,12 @@
 </template>
 
 <script setup>
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
-let videoPlayer = useVideoPlayerStore();
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+
+let videoPlayer = useVideoPlayerStore()
+
 videoPlayer.class = "videoTopRight"
+videoPlayer.videoContainerClass = "videoContainerTopRight"
 videoPlayer.fullPage = false
 // onload(videoPlayer.class = "videoTopRight")
 </script>

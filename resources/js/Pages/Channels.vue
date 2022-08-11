@@ -25,9 +25,12 @@
 </template>
 
 <script setup>
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
-let videoPlayer = useVideoPlayerStore();
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+
+let videoPlayer = useVideoPlayerStore()
+
 videoPlayer.class = "videoFullPage"
+videoPlayer.videoContainerClass = "videoContainerFullPage"
 videoPlayer.fullPage = true
 
 </script>

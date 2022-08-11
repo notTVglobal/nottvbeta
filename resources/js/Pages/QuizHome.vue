@@ -14,15 +14,16 @@
 
 
 <script setup>
-import Quiz from "@/Components/Quiz/Quiz.vue";
-import { state } from "@/Stores/QuizStore.js";
-import {useCounterStore} from "@/Stores/CounterStore";
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
+import Quiz from "@/Components/Quiz/Quiz.vue"
+import { state } from "@/Stores/QuizStore.js"
+import {useCounterStore} from "@/Stores/CounterStore"
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 
-let counter = useCounterStore();
+let counter = useCounterStore()
 
-let videoPlayer = useVideoPlayerStore();
+let videoPlayer = useVideoPlayerStore()
 videoPlayer.class = "videoTopRight"
+videoPlayer.videoContainerClass = "videoContainerTopRight"
 videoPlayer.fullPage = false
 
 </script>

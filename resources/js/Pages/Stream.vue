@@ -5,13 +5,13 @@
 
 
 <script setup>
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 
-let videoPlayer = useVideoPlayerStore();
+let videoPlayer = useVideoPlayerStore()
 
-videoPlayer.fullPage = true;
-videoPlayer.class = "videoFullPage";
-videoPlayer.videoContainerClass = "videoContainerFullPage";
+videoPlayer.fullPage = true
+videoPlayer.class = "videoFullPage"
+videoPlayer.videoContainerClass = "videoContainerFullPage"
 
 defineProps ({
     video: Object

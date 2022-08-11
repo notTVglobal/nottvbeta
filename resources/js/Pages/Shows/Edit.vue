@@ -62,11 +62,14 @@
 </template>
 
 <script setup>
-import { useForm } from "@inertiajs/inertia-vue3";
-import TabbableTextarea from "@/Components/TabbableTextarea";
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
-let videoPlayer = useVideoPlayerStore();
+import { useForm } from "@inertiajs/inertia-vue3"
+import TabbableTextarea from "@/Components/TabbableTextarea"
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+
+let videoPlayer = useVideoPlayerStore()
+
 videoPlayer.class = "videoTopRight"
+videoPlayer.videoContainerClass = "videoContainerTopRight"
 videoPlayer.fullPage = false
 
 let props = defineProps({

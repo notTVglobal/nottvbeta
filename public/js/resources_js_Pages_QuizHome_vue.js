@@ -159,6 +159,7 @@ __webpack_require__.r(__webpack_exports__);
     var counter = (0,_Stores_CounterStore__WEBPACK_IMPORTED_MODULE_2__.useCounterStore)();
     var videoPlayer = (0,_Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_3__.useVideoPlayerStore)();
     videoPlayer["class"] = "videoTopRight";
+    videoPlayer.videoContainerClass = "videoContainerTopRight";
     videoPlayer.fullPage = false;
     var __returned__ = {
       counter: counter,

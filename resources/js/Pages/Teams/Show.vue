@@ -58,16 +58,18 @@
 
 
 <script setup>
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
-import TeamHeader from "@/Components/Teams/TeamHeader";
-import TeamMembersList from "@/Components/Teams/TeamMembersList";
-import TeamFooter from "@/Components/Teams/TeamFooter";
-import { useTeamStore } from "@/Stores/TeamStore.js";
-import Modal from "@/Components/Modal";
-import { ref } from 'vue';
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+import TeamHeader from "@/Components/Teams/TeamHeader"
+import TeamMembersList from "@/Components/Teams/TeamMembersList"
+import TeamFooter from "@/Components/Teams/TeamFooter"
+import { useTeamStore } from "@/Stores/TeamStore.js"
+import Modal from "@/Components/Modal"
+import { ref } from 'vue'
 
-let videoPlayer = useVideoPlayerStore();
+let videoPlayer = useVideoPlayerStore()
+
 videoPlayer.class = "videoTopRight"
+videoPlayer.videoContainerClass = "videoContainerTopRight"
 videoPlayer.fullPage = false
 
 let team = useTeamStore();

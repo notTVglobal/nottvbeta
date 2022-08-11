@@ -25,14 +25,17 @@
 
 
 <script setup>
-import {Head, Link} from '@inertiajs/inertia-vue3';
-import {ref} from 'vue';
-import vueFilePond, {setOptions} from 'vue-filepond';
-import "filepond/dist/filepond.min.css";
-import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
-let videoPlayer = useVideoPlayerStore();
+import {Head, Link} from '@inertiajs/inertia-vue3'
+import {ref} from 'vue'
+import vueFilePond, {setOptions} from 'vue-filepond'
+import "filepond/dist/filepond.min.css"
+import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type'
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+
+let videoPlayer = useVideoPlayerStore()
+
 videoPlayer.class = "videoTopRight"
+videoPlayer.videoContainerClass = "videoContainerTopRight"
 videoPlayer.fullPage = false
 //
 // config: { headers: function () { return {} } },
