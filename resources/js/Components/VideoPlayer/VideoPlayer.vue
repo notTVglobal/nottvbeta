@@ -72,7 +72,7 @@ import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js";
 
 let videoPlayerStore = useVideoPlayerStore();
 
-videoPlayerStore.videoName = "Conan The Destroyer";
+videoPlayerStore.videoName = "Spring";
 videoPlayerStore.paused = false;
 
 
@@ -151,7 +151,7 @@ export default {
                 sources: [
                     {
                         src:
-                            'https://mist.nottv.io/hls/ctd1984/index.m3u8',
+                            'https://mist.nottv.io:4433/hls/spring/index.m3u8',
                             // 'ws://mist.nottv.io:8080/ctd1984.mp4',
                         type: 'application/x-mpegURL'
                     }
