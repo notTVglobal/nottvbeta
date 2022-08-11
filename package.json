@@ -32,7 +32,6 @@
         "@vueuse/shared": "^8.7.5",
         "file-type": "^17.1.3",
         "filepond": "^4.30.4",
-        "hls.js": "^1.2.0",
         "imagemin": "^8.0.1",
         "pinia": "^2.0.17",
         "video.js": "^7.20.1",
