@@ -1198,6 +1198,9 @@ select {
   margin-bottom: 0;
 }
 
+.videoZ {
+    z-index:1;
+}
 .nav-mask {
     z-index:100;
 }

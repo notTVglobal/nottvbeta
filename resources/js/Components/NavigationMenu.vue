@@ -133,7 +133,7 @@
                                             @click="videoPlayer.makeVideoTopRight()"
                                             :href="route('profile.show')">
                                             Profile
-                                        </JetDropdownLink
+                                        </JetDropdownLink>
 
                                     </div>
                                     <div class="border-t border-gray-100">
