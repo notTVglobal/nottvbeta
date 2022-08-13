@@ -133,13 +133,7 @@
                                             @click="videoPlayer.makeVideoTopRight()"
                                             :href="route('profile.show')">
                                             Profile
-                                        </JetDropdownLink>
-
-                                        <JetDropdownLink v-if="$page.props.jetstream.hasApiFeatures"
-                                                         @click="videoPlayer.makeVideoTopRight()"
-                                                         :href="route('api-tokens.index')">
-                                            API Tokens
-                                        </JetDropdownLink>
+                                        </JetDropdownLink
 
                                     </div>
                                     <div class="border-t border-gray-100">
@@ -177,14 +171,6 @@ import { useChatStore } from "@/Stores/ChatStore.js";
 
 let chat = useChatStore();
 let videoPlayer = useVideoPlayerStore();
-
-const switchToTeam = (team) => {
-    Inertia.put(route('current-team.update'), {
-        team_id: team.id,
-    }, {
-        preserveState: false,
-    });
-};
 
 const logout = () => {
     Inertia.post(route('logout'));
