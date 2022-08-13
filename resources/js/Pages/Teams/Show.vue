@@ -1,6 +1,10 @@
 <template>
 
     <Head :title="team.name + ' Team'" />
+    <div class="sticky top-0 w-full nav-mask">
+        <ResponsiveNavigationMenu/>
+        <NavigationMenu />
+    </div>
 
 
     <div class="place-self-center flex flex-col gap-y-3 pageWidth">
@@ -65,6 +69,8 @@ import TeamFooter from "@/Components/Teams/TeamFooter"
 import { useTeamStore } from "@/Stores/TeamStore.js"
 import Modal from "@/Components/Modal"
 import { ref } from 'vue'
+import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
+import NavigationMenu from "@/Components/NavigationMenu"
 
 let videoPlayer = useVideoPlayerStore()
 

@@ -1,6 +1,9 @@
 <template>
     <Head title="Stream" />
-
+    <div class="sticky top-0 w-full nav-mask">
+        <ResponsiveNavigationMenu/>
+        <NavigationMenu />
+    </div>
 
 
 </template>

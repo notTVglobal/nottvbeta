@@ -36,7 +36,7 @@
                 <Login v-if="!videoPlayerStore.loggedIn" :show="showLogin" @close="showLogin = false" />
             </Teleport>
             <video-player :options="videoOptions"/>
-            <div class="pt-16 pl-6">If you can read this, please refresh the page.</div>
+            <div :show="videoPlayerStore.loggedIn" class="pt-16 pl-6">If you can read this, please refresh the page.</div>
 
             <div v-if="videoPlayerStore.fullPage" class="absolute top-16 left-0 p-5 drop-shadow z-50">
                 <span class="text-xs uppercase pr-2">Now playing: </span>

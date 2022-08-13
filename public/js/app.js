@@ -1237,13 +1237,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 
-
-var _hoisted_1 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
-  "class": "pt-16 pl-6"
-}, "If you can read this, please refresh the page.", -1
-/* HOISTED */
-);
-
+var _hoisted_1 = ["show"];
 var _hoisted_2 = {
   key: 0,
   "class": "absolute top-16 left-0 p-5 drop-shadow z-50"
@@ -1310,7 +1304,12 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     options: $data.videoOptions
   }, null, 8
   /* PROPS */
-  , ["options"]), _hoisted_1, $setup.videoPlayerStore.fullPage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_2, [_hoisted_3, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.videoPlayerStore.videoName), 1
+  , ["options"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+    show: $setup.videoPlayerStore.loggedIn,
+    "class": "pt-16 pl-6"
+  }, "If you can read this, please refresh the page.", 8
+  /* PROPS */
+  , _hoisted_1), $setup.videoPlayerStore.fullPage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_2, [_hoisted_3, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.videoPlayerStore.videoName), 1
   /* TEXT */
   )])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$setup.videoPlayerStore.fullPage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_5, [_hoisted_6, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_7, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.videoPlayerStore.videoName), 1
   /* TEXT */

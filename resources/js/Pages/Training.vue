@@ -1,5 +1,9 @@
 <template>
     <Head title="Training" />
+    <div class="sticky top-0 w-full nav-mask">
+        <ResponsiveNavigationMenu/>
+        <NavigationMenu />
+    </div>
 <!--        <template #header>-->
 <!--            <h2 class="font-semibold text-xl text-gray-800 leading-tight">-->
 <!--                Dashboard-->
@@ -35,7 +39,11 @@
 
 <script setup>
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
+import NavigationMenu from "@/Components/NavigationMenu"
+
 let videoPlayer = useVideoPlayerStore()
+
 videoPlayer.class = "videoTopRight"
 videoPlayer.videoContainerClass = "videoContainerTopRight"
 videoPlayer.fullPage = false

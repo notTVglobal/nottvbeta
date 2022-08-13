@@ -1,5 +1,9 @@
 <template>
     <Head title="Teams" />
+    <div class="sticky top-0 w-full nav-mask">
+        <ResponsiveNavigationMenu/>
+        <NavigationMenu />
+    </div>
 
 
     <div class="place-self-center flex flex-col gap-y-3 pageWidth">
@@ -66,6 +70,8 @@ import { ref, watch } from "vue"
 import {Inertia} from "@inertiajs/inertia"
 import throttle from "lodash/throttle"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
+import NavigationMenu from "@/Components/NavigationMenu"
 
 let videoPlayer = useVideoPlayerStore()
 

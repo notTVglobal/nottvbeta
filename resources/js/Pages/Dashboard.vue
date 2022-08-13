@@ -1,5 +1,9 @@
 <template>
     <Head title="Dashboard" />
+    <div class="sticky top-0 w-full nav-mask">
+        <ResponsiveNavigationMenu/>
+        <NavigationMenu />
+    </div>
 
     <div class="place-self-center flex flex-col gap-y-3 pageWidth">
         <div class="bg-white text-black p-5 mb-10">
@@ -51,6 +55,8 @@
 
 <script setup>
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
+import NavigationMenu from "@/Components/NavigationMenu"
 
 let videoPlayer = useVideoPlayerStore()
 

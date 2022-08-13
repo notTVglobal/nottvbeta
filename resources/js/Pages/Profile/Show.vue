@@ -1,5 +1,9 @@
 <template>
     <AppLayout title="Profile">
+        <div class="sticky top-0 w-full nav-mask">
+            <ResponsiveNavigationMenu/>
+            <NavigationMenu />
+        </div>
 
 
 
@@ -57,6 +61,8 @@ import TwoFactorAuthenticationForm from '@/Pages/Profile/Partials/TwoFactorAuthe
 import UpdatePasswordForm from '@/Pages/Profile/Partials/UpdatePasswordForm.vue'
 import UpdateProfileInformationForm from '@/Pages/Profile/Partials/UpdateProfileInformationForm.vue'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
+import NavigationMenu from "@/Components/NavigationMenu"
 
 let videoPlayer = useVideoPlayerStore()
 

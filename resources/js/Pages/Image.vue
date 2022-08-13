@@ -1,5 +1,9 @@
 <template>
     <Head title="Image uploading"/>
+    <div class="sticky top-0 w-full nav-mask">
+        <ResponsiveNavigationMenu/>
+        <NavigationMenu />
+    </div>
 
     <div class="place-self-center flex flex-col gap-y-3 pageWidth">
         <div class="bg-white text-black p-5 mb-10">
@@ -31,6 +35,8 @@ import vueFilePond, {setOptions} from 'vue-filepond'
 import "filepond/dist/filepond.min.css"
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
+import NavigationMenu from "@/Components/NavigationMenu"
 
 let videoPlayer = useVideoPlayerStore()
 
