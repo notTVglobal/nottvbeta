@@ -42,7 +42,7 @@
                 <span class="text-xs uppercase pr-2">Now playing: </span>
                 <span class="font-semibold">{{ videoPlayerStore.videoName }}</span>
             </div>
-            <div v-if="!videoPlayerStore.fullPage" class="absolute top-0 bg-gray-800 px-2 z-50">
+            <div v-if="!videoPlayerStore.fullPage" class="absolute top-0 bg-gray-800 px-2 w-full z-50">
                 <span class="text-xs uppercase pr-2">Now playing: </span>
                 <span class="font-semibold">{{ videoPlayerStore.videoName }}</span>
             </div>
@@ -161,7 +161,7 @@ export default {
                 sources: [
                     {
                         src:
-                            'https://mist.nottv.io/hls/spring/index.m3u8',
+                            'https://mist.nottv.io/hls/dune1984/index.m3u8',
                             // 'ws://mist.nottv.io:8080/ctd1984.mp4',
                         type: 'application/x-mpegURL'
                     }

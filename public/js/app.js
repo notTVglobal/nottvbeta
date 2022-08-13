@@ -348,7 +348,7 @@ var __default__ = {
         muted: true,
         controls: true,
         sources: [{
-          src: 'https://mist.nottv.io/hls/spring/index.m3u8',
+          src: 'https://mist.nottv.io/hls/dune1984/index.m3u8',
           // 'ws://mist.nottv.io:8080/ctd1984.mp4',
           type: 'application/x-mpegURL'
         }]
@@ -1000,7 +1000,6 @@ __webpack_require__.r(__webpack_exports__);
     var videoPlayerStore = (0,_Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_7__.useVideoPlayerStore)();
     videoPlayerStore["class"] = '';
     videoPlayerStore.videoContainerClass = '';
-    videoPlayerStore.loggedIn = false;
     var chat = (0,_Stores_ChatStore__WEBPACK_IMPORTED_MODULE_6__.useChatStore)();
     var __returned__ = {
       videoPlayerStore: videoPlayerStore,
@@ -1987,7 +1986,7 @@ var _hoisted_4 = {
 };
 var _hoisted_5 = {
   key: 2,
-  "class": "absolute top-0 bg-gray-800 px-2 z-50"
+  "class": "absolute top-0 bg-gray-800 px-2 w-full z-50"
 };
 
 var _hoisted_6 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
