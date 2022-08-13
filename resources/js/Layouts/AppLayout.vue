@@ -6,7 +6,7 @@
 
         <div class="relative top-0 bg-gray-800 text-gray-200 h-full w-full ">
 
-            <div v-if="videoPlayerStore.loggedIn" class="sticky top-0  w-full nav-mask">
+            <div :show="videoPlayerStore.loggedIn" v-if="videoPlayerStore.loggedIn" class="sticky top-0  w-full nav-mask">
                 <ResponsiveNavigationMenu/>
                 <NavigationMenu />
             </div>
@@ -51,6 +51,7 @@ let videoPlayerStore = useVideoPlayerStore()
 
 videoPlayerStore.class = ''
 videoPlayerStore.videoContainerClass = ''
+videoPlayerStore.loggedIn = Boolean
 
 let chat = useChatStore()
 
