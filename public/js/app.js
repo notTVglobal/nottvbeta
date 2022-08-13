@@ -368,7 +368,7 @@ var __default__ = {
     var expose = _ref.expose;
     expose();
     var videoPlayerStore = (0,_Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_1__.useVideoPlayerStore)();
-    videoPlayerStore.videoName = "Spring";
+    videoPlayerStore.videoName = "Dune";
     videoPlayerStore.paused = false;
     var showLogin = (0,vue__WEBPACK_IMPORTED_MODULE_3__.ref)(false);
 

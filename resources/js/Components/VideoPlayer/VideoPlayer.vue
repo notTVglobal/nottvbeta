@@ -80,7 +80,7 @@ import { ref } from 'vue'
 
 let videoPlayerStore = useVideoPlayerStore()
 
-videoPlayerStore.videoName = "Spring"
+videoPlayerStore.videoName = "Dune"
 videoPlayerStore.paused = false
 
 let showLogin = ref(false)
