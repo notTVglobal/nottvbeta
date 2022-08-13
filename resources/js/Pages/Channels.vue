@@ -43,7 +43,7 @@ videoPlayer.fullPage = true
 
 <style>
 .channels-mask {
-    z-index:100;
+    z-index:90;
 }
 </style>
 
