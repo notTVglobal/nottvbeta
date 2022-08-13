@@ -1238,9 +1238,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 
-var _hoisted_1 = ["show"];
-var _hoisted_2 = {
+var _hoisted_1 = {
   key: 0,
+  "class": "pt-16 pl-6"
+};
+var _hoisted_2 = {
+  key: 1,
   "class": "absolute top-16 left-0 p-5 drop-shadow z-50"
 };
 
@@ -1254,7 +1257,7 @@ var _hoisted_4 = {
   "class": "font-semibold"
 };
 var _hoisted_5 = {
-  key: 1,
+  key: 2,
   "class": "absolute top-0 bg-gray-800 px-2 z-50"
 };
 
@@ -1268,7 +1271,7 @@ var _hoisted_7 = {
   "class": "font-semibold"
 };
 var _hoisted_8 = {
-  key: 2,
+  key: 3,
   "class": "absolute top-0 right-0 p-5 drop-shadow z-50"
 };
 
@@ -1281,7 +1284,7 @@ var _hoisted_9 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementV
 var _hoisted_10 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" to chat");
 
 var _hoisted_11 = {
-  key: 3,
+  key: 4,
   "class": "fixed bottom-0 ml-3 my-3 z-50"
 };
 function render(_ctx, _cache, $props, $setup, $data, $options) {
@@ -1305,12 +1308,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     options: $data.videoOptions
   }, null, 8
   /* PROPS */
-  , ["options"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
-    show: $setup.videoPlayerStore.loggedIn,
-    "class": "pt-16 pl-6"
-  }, "If you can read this, please refresh the page.", 8
-  /* PROPS */
-  , _hoisted_1), $setup.videoPlayerStore.fullPage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_2, [_hoisted_3, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.videoPlayerStore.videoName), 1
+  , ["options"]), $setup.videoPlayerStore.loggedIn ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, "If you can read this, please refresh the page.")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $setup.videoPlayerStore.fullPage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_2, [_hoisted_3, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.videoPlayerStore.videoName), 1
   /* TEXT */
   )])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$setup.videoPlayerStore.fullPage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_5, [_hoisted_6, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_7, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.videoPlayerStore.videoName), 1
   /* TEXT */
