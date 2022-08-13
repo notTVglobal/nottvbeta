@@ -55,7 +55,5 @@ let chat = useChatStore()
 </script>
 
 <style>
-.nav-mask {
-    z-index:100;
-}
+
 </style>

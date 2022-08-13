@@ -1,8 +1,8 @@
 @tailwind base;
 @tailwind components;
 
-.videoZ {
-    z-index:1;
+.nav-mask {
+    z-index:100;
 }
 .videoBgFull {
     position:static;
