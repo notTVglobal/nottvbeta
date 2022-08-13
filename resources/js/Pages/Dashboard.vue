@@ -57,6 +57,7 @@ let videoPlayer = useVideoPlayerStore()
 videoPlayer.class = "videoTopRight"
 videoPlayer.videoContainerClass = "videoContainerTopRight"
 videoPlayer.fullPage = false
+videoPlayer.loggedIn = true
 // onload(videoPlayer.class = "videoTopRight")
 </script>
 

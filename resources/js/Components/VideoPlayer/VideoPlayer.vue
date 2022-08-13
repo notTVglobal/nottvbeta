@@ -32,9 +32,11 @@
 <!--                            class="shrink"-->
 <!--                    >TEST</div>-->
 
-
-                    <video-player :options="videoOptions"/>
-
+            <Teleport to="body">
+                <Login v-if="!videoPlayerStore.loggedIn" :show="showLogin" @close="showLogin = false" />
+            </Teleport>
+            <video-player :options="videoOptions"/>
+            <div class="pt-16 pl-6">If you can read this, please refresh the page.</div>
 
             <div v-if="videoPlayerStore.fullPage" class="absolute top-16 left-0 p-5 drop-shadow z-50">
                 <span class="text-xs uppercase pr-2">Now playing: </span>
@@ -43,6 +45,10 @@
             <div v-if="!videoPlayerStore.fullPage" class="absolute top-0 bg-gray-800 px-2 z-50">
                 <span class="text-xs uppercase pr-2">Now playing: </span>
                 <span class="font-semibold">{{ videoPlayerStore.videoName }}</span>
+            </div>
+            <div v-if="!videoPlayerStore.loggedIn" class="absolute top-0 right-0 p-5 drop-shadow z-50">
+                <Button @click="showLogin = true" class="text-xs uppercase pr-2">
+                    <span class="underline">Log in</span> to chat</Button>
             </div>
 
 
@@ -68,12 +74,16 @@
 </template>
 
 <script setup>
-import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js";
+import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
+import Login from "@/Components/Login.vue"
+import { ref } from 'vue'
 
-let videoPlayerStore = useVideoPlayerStore();
+let videoPlayerStore = useVideoPlayerStore()
 
-videoPlayerStore.videoName = "Spring";
-videoPlayerStore.paused = false;
+videoPlayerStore.videoName = "Spring"
+videoPlayerStore.paused = false
+
+let showLogin = ref(false)
 
 
 function loadVideo1() {

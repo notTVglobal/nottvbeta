@@ -2,7 +2,7 @@
 
     <Head title="Channels" />
 
-        <div class="fixed bg-black bg-opacity-90 text-white p-5 pt-16 z-40 h-screen w-full">
+        <div class="fixed bg-black bg-opacity-90 text-white p-5 pt-16 h-screen w-full channels-mask">
             <div class="grid grid-cols-3 gap-4 px-16 justify-center text-center">
                 <div class="col-span-3">
                     <h1 class="text-3xl font-semibold">Channels</h1>
@@ -34,5 +34,11 @@ videoPlayer.videoContainerClass = "videoContainerFullPage"
 videoPlayer.fullPage = true
 
 </script>
+
+<style>
+.channels-mask {
+    z-index:100;
+}
+</style>
 
 

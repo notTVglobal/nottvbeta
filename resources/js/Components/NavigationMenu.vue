@@ -1,7 +1,7 @@
 <template>
-    <nav class="sticky top-0 bg-black bg-opacity-50 border-b border-gray-100 z-50">
+    <nav class="sticky top-0 bg-black border-b border-gray-100 z-50">
         <!-- Primary Navigation Menu -->
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-50">
             <div class="flex justify-between h-16">
                 <div class="flex">
                     <!-- Logo -->
@@ -13,7 +13,7 @@
 
                     <!-- Navigation Links -->
                     <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                        <JetNavLink @click="videoPlayer.makeVideoFullPage()" :href="route('stream')" :active="route().current('stream')">
+                        <JetNavLink @click="videoPlayer.makeVideoFullPage() && videoPlayer.videoContainerClassFullPage()" :href="route('stream')" :active="route().current('stream')">
                             Stream
                         </JetNavLink>
                         <JetNavLink @click="videoPlayer.makeVideoTopRight()" :href="route('posts')" :active="route().current('posts')">
@@ -41,7 +41,7 @@
                     </div>
                 </div>
 
-                <div class="hidden sm:flex sm:items-center sm:ml-6">
+                <div class="hidden sm:flex sm:items-center sm:ml-6 z-50">
                     <div class="ml-3 relative">
                         <!-- Teams Dropdown -->
                         <JetDropdown v-if="$page.props.jetstream.hasTeamFeatures" align="right" width="60">
@@ -122,7 +122,7 @@
                     </div>
 
                     <!-- Settings Dropdown -->
-                    <div class="ml-3 relative">
+                    <div class="ml-3 relative z-50">
                         <JetDropdown align="right" width="48">
                             <template #trigger>
                                 <button v-if="$page.props.jetstream.managesProfilePhotos"

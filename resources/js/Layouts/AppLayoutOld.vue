@@ -2,18 +2,18 @@
     <div>
         <JetBanner/>
 
-
-
         <div class="relative top-0 bg-gray-800 text-gray-200 h-full w-full ">
 
-            <div v-if="videoPlayerStore.loggedIn" class="sticky top-0  w-full nav-mask">
-                <ResponsiveNavigationMenu/>
-                <NavigationMenu />
-            </div>
+            <ResponsiveNavigationMenu/>
+            <NavigationMenu />
+
+
+
+
 
 
             <Chat />
-
+            <VideoPlayer class="z-30" />
 
 
             <!-- Page Heading -->
@@ -25,16 +25,11 @@
 
             <!-- Page Content -->
             <main>
-                <slot />
+                <slot class="z-50"/>
             </main>
-            <div class="relative w-full h-full">
-                <VideoPlayer :class="videoPlayerStore.class"/>
-            </div>
 
         </div>
-
     </div>
-
 </template>
 
 <script setup>
@@ -49,15 +44,9 @@ import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
 
 let videoPlayerStore = useVideoPlayerStore()
 
-videoPlayerStore.class = ''
-videoPlayerStore.videoContainerClass = ''
+videoPlayerStore.class = 'videoFullPage'
+videoPlayerStore.videoContainerClass = 'videoContainerFullPage'
 
 let chat = useChatStore()
 
 </script>
-
-<style>
-.nav-mask {
-    z-index:100;
-}
-</style>
