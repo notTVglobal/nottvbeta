@@ -173,6 +173,10 @@ let chat = useChatStore();
 let videoPlayer = useVideoPlayerStore();
 
 const logout = () => {
+    videoPlayer.fullPage = true;
+    videoPlayer.loggedIn = false;
+    videoPlayer.class = "videoBgFull";
+    videoPlayer.videoContainerClass = "videoContainerBgFull";
     Inertia.post(route('logout'));
 };
 

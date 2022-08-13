@@ -189,6 +189,10 @@ __webpack_require__.r(__webpack_exports__);
     var videoPlayer = (0,_Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_7__.useVideoPlayerStore)();
 
     var logout = function logout() {
+      videoPlayer.fullPage = true;
+      videoPlayer.loggedIn = false;
+      videoPlayer["class"] = "videoBgFull";
+      videoPlayer.videoContainerClass = "videoContainerBgFull";
       _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_6__.Inertia.post(route('logout'));
     };
 
