@@ -737,6 +737,7 @@ __webpack_require__.r(__webpack_exports__);
     var videoPlayerStore = (0,_Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_7__.useVideoPlayerStore)();
     videoPlayerStore["class"] = '';
     videoPlayerStore.videoContainerClass = '';
+    videoPlayerStore.loggedIn = false;
     var chat = (0,_Stores_ChatStore__WEBPACK_IMPORTED_MODULE_6__.useChatStore)();
     var __returned__ = {
       videoPlayerStore: videoPlayerStore,

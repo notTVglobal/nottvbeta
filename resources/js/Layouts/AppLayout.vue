@@ -48,6 +48,7 @@ let videoPlayerStore = useVideoPlayerStore()
 
 videoPlayerStore.class = ''
 videoPlayerStore.videoContainerClass = ''
+videoPlayerStore.loggedIn = false
 
 let chat = useChatStore()
 
