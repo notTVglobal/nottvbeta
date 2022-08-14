@@ -7,7 +7,7 @@
         leave-from-class="opacity-100"
         leave-to-class="opacity-0"
     >
-            <div v-if="chatToggle.show" class="absolute h-full bg-blue-800 bg-opacity-80 text-white pb-2 px-2 chat-mask overflow-y-auto scroll-smooth hover:scroll-auto">
+            <div v-if="chatToggle.show" class="absolute h-full text-white pb-2 px-2 chat-mask overflow-y-auto scroll-smooth hover:scroll-auto">
     <!--            <div class="absolute top-16 left-0 p-5 drop-shadow" v-if="videoPlayer.fullPage"><span class="text-xs uppercase pr-2">CHAT BOX </span><span class="font-semibold">Chat goes here.</span></div>-->
     <!--            <div v-if="!videoPlayer.fullPage" class="bg-gray-800 px-2"><span class="text-xs uppercase pr-2">CHAT BOX </span><span class="font-semibold">Chat goes here</span></div>-->
 
@@ -97,8 +97,5 @@ const submit = async () => {
 
 <style>
 
-.chat-mask {
-
-}
 
 </style>

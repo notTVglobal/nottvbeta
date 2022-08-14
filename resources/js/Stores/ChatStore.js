@@ -3,7 +3,8 @@ import { defineStore } from "pinia";
 export let useChatStore = defineStore('chat', {
     state() {
         return {
-            show: Boolean
+            show: Boolean,
+            class: ''
         };
     },
 
@@ -13,6 +14,14 @@ export let useChatStore = defineStore('chat', {
         },
         hide() {
             show = false
+        },
+        makeBig() {
+            this.class = 'chatBig';
+        },
+        makeSmall() {
+            this.class = 'chatSmall';
         }
     }
+
+
 })

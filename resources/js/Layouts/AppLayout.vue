@@ -27,7 +27,7 @@
             <div class="relative w-full h-full">
                 <VideoPlayer :class="videoPlayerStore.class" class="videoContainer"/>
             </div>
-            <Chat :user="user" class="chatContainer"/>
+            <Chat :user="user" :class="chat.class" class="chatContainer"/>
 
         </div>
 
@@ -60,16 +60,7 @@ let chat = useChatStore()
 
 <style>
 .chatContainer {
-    position: absolute;
-    top: 0;
-    right:0;
-    bottom:0;
-    min-height: 100vh;
-    max-height: 100vh;
-    padding-top: 20rem;
-    min-width: 24rem;
-    background-color: green;
-    z-index: 0;
+
 }
 .videoContainer {
     z-index:50;

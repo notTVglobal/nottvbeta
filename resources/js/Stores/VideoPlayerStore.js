@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { useChatStore } from "@/Stores/ChatStore";
 
 export let useVideoPlayerStore = defineStore('videoPlayer', {
     state() {
@@ -25,11 +26,13 @@ export let useVideoPlayerStore = defineStore('videoPlayer', {
             this.class = 'videoFullPage';
             this.videoContainerClass = 'videoContainerFullPage';
             this.fullPage = true;
+            useChatStore().makeBig();
         },
         makeVideoTopRight() {
             this.class = 'videoTopRight';
             this.videoContainerClass = 'videoContainerTopRight';
             this.fullPage = false;
+            useChatStore().makeSmall();
         },
         loadVideo1() {
             this.videoSourceIdSrc1 = "http://mist.nottv.io:8080/spring.mp4";

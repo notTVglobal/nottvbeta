@@ -63,6 +63,30 @@
     z-index: 60;
     width: calc(100% - 26rem);
 }
+.chatBig {
+    z-index: 200;
+    position: absolute;
+    top: 4rem;
+    right:0;
+    bottom:0;
+    min-height: calc(100vh - 6rem);
+    max-height: calc(100vh - 6rem);
+    padding: 2px;
+    min-width: 24rem;
+    background-color: blue;
+}
+.chatSmall {
+    z-index: 0;
+    position: absolute;
+    top: 0;
+    right:0;
+    bottom:0;
+    min-height: 100vh;
+    max-height: 100vh;
+    padding-top: 20rem;
+    min-width: 24rem;
+    background-color: purple;
+}
 
 @tailwind utilities;
 
