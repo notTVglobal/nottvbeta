@@ -55,7 +55,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     ;
     (0,vue__WEBPACK_IMPORTED_MODULE_1__.onMounted)(function () {
       // Enable pusher logging - don't include this in production
-      (pusher_js__WEBPACK_IMPORTED_MODULE_2___default().logToConsole) = true;
+      (pusher_js__WEBPACK_IMPORTED_MODULE_2___default().logToConsole) = true; // Pusher Key for development: 679608fe1b2e6a2bf76b
+      // Pusher Key for staging: d03ec1b33bc0f17392c4
+      // Pusher Key for production: f0b385d3a5994dca4741
+
       var pusher = new (pusher_js__WEBPACK_IMPORTED_MODULE_2___default())('d03ec1b33bc0f17392c4', {
         cluster: 'us3'
       });
@@ -63,7 +66,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       channel.bind('message', function (data) {
         messages.value.push(data);
       });
-    });
+    }); // URI for development: http://beta.local:8080/api/messages
+    // URI for staging: https://beta-staging.not.tv/api/messages
+    // URI for production: https://beta.not.tv/api/messages
 
     var submit = /*#__PURE__*/function () {
       var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {

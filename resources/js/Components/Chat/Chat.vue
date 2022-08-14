@@ -64,6 +64,9 @@ onMounted(() => {
     // Enable pusher logging - don't include this in production
     Pusher.logToConsole = true;
 
+    // Pusher Key for development: 679608fe1b2e6a2bf76b
+    // Pusher Key for staging: d03ec1b33bc0f17392c4
+    // Pusher Key for production: f0b385d3a5994dca4741
     const pusher = new Pusher('d03ec1b33bc0f17392c4', {
         cluster: 'us3'
     });
@@ -76,7 +79,9 @@ onMounted(() => {
 })
 
 
-
+// URI for development: http://beta.local:8080/api/messages
+// URI for staging: https://beta-staging.not.tv/api/messages
+// URI for production: https://beta.not.tv/api/messages
 const submit = async () => {
     await fetch('https://beta-staging.not.tv/api/messages', {
         method: 'POST',
