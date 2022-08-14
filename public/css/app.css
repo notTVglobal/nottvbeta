@@ -1504,6 +1504,14 @@ select {
   margin-right: 2rem;
 }
 
+.mb-1 {
+  margin-bottom: 0.25rem;
+}
+
+.mt-72 {
+  margin-top: 18rem;
+}
+
 .block {
   display: block;
 }
@@ -1592,8 +1600,38 @@ select {
   height: 40%;
 }
 
+.h-min {
+  height: -webkit-min-content;
+  height: -moz-min-content;
+  height: min-content;
+}
+
+.h-max {
+  height: -webkit-max-content;
+  height: -moz-max-content;
+  height: max-content;
+}
+
+.max-h-40 {
+  max-height: 10rem;
+}
+
+.max-h-full {
+  max-height: 100%;
+}
+
 .min-h-screen {
   min-height: 100vh;
+}
+
+.min-h-max {
+  min-height: -webkit-max-content;
+  min-height: -moz-max-content;
+  min-height: max-content;
+}
+
+.min-h-full {
+  min-height: 100%;
 }
 
 .w-5 {
@@ -1898,6 +1936,10 @@ select {
   overflow: hidden;
 }
 
+.overflow-scroll {
+  overflow: scroll;
+}
+
 .overflow-x-auto {
   overflow-x: auto;
 }
@@ -1908,6 +1950,14 @@ select {
 
 .overflow-y-hidden {
   overflow-y: hidden;
+}
+
+.scroll-auto {
+  scroll-behavior: auto;
+}
+
+.scroll-smooth {
+  scroll-behavior: smooth;
 }
 
 .truncate {
@@ -2732,6 +2782,10 @@ select {
 
 .ease-in {
   transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
+}
+
+.hover\:scroll-auto:hover {
+  scroll-behavior: auto;
 }
 
 .hover\:border-gray-300:hover {

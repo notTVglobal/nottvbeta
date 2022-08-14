@@ -10,6 +10,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Models\User;
+use App\Http\Middleware\PusherEvent;
 
 
 /*
@@ -52,6 +53,7 @@ Route::middleware([
         return Inertia::render('Stream');
     })->name('stream');
     Route::get('/posts', function () {
+        event(new PusherEvent('hello world'));
         return Inertia::render('Posts');
     })->name('posts');
     Route::get('/channels', function () {

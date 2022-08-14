@@ -7,24 +7,78 @@
         leave-from-class="opacity-100"
         leave-to-class="opacity-0"
     >
-        <div class="chatContainer z-50">
-            <div v-if="chat.show" class="fixed bg-blue-800 bottom-0 right-0 bg-opacity-80 text-center p-6 z-40 w-1/4 h-2/5 chat-mask">
+            <div v-if="chatToggle.show" class="chatContainer bg-blue-800 bg-opacity-80 bottom-0 right-0 mt-72 h-full p-2 chat-mask">
     <!--            <div class="absolute top-16 left-0 p-5 drop-shadow" v-if="videoPlayer.fullPage"><span class="text-xs uppercase pr-2">CHAT BOX </span><span class="font-semibold">Chat goes here.</span></div>-->
     <!--            <div v-if="!videoPlayer.fullPage" class="bg-gray-800 px-2"><span class="text-xs uppercase pr-2">CHAT BOX </span><span class="font-semibold">Chat goes here</span></div>-->
-                <div class="right-0 pt-6 overflow-hidden chat text-white">
-                    <div>CHAT BOX</div>
-                    <div class="chatBoxes text-white opacity-100">Chat goes here. It needs to be on top of the video player as an overlay on desktops and tablets, but below the video on mobile devices.</div>
+                <div class="text-white">
+                    CHAT
+<!--                    Set username manually-->
+<!--                                <div>-->
+<!--                                    <input class="border border-2 text-black font-semibold p-2 mt-2" v-model="username"/>-->
+<!--                                </div>-->
+<!--                    <div class="h-2/5">-->
+                        <div class="list-group list-group-flush border-bottom min-h-100 max-h-100 overflow-y-auto scroll-smooth hover:scroll-auto">
+                            <div class="list-group-item py-3 leading-tight" v-for="message in messages" :key="message">
+                                <div class="flex w-100 align-items-center justify-content-between">
+                                    <strong class="mb-1">{{ message.username }}</strong>
+                                </div>
+                                <div class="col-10 mb-1 small">{{ message.message }}</div>
+                            </div>
+                        </div>
+                        <form @submit.prevent="submit">
+                            <input class="fixed bottom-0 right-0 text-black form-control border-2 p-2 m-2" placeholder="Write a message..." v-model="message"/>
+                        </form>
+<!--                    </div>-->
+
                 </div>
             </div>
-        </div>
     </Transition>
 </template>
 
 <script setup>
 import { useChatStore } from "@/Stores/ChatStore";
+import { ref, onMounted } from "vue"
+import Pusher from "pusher-js"
 
-let chat = useChatStore();
-chat.show = false;
+let chatToggle = useChatStore();
+chatToggle.show = false;
+
+const props = defineProps({
+    user: Object,
+});
+
+// set username manually in ChatForm
+// const username = ref([])
+const messages = ref([])
+const message = ref('')
+
+onMounted(() => {
+    // Enable pusher logging - don't include this in production
+    Pusher.logToConsole = true;
+
+    const pusher = new Pusher('679608fe1b2e6a2bf76b', {
+        cluster: 'us3'
+    });
+
+    const channel = pusher.subscribe('chat');
+    channel.bind('message', data => {
+        messages.value.push(data);
+    });
+})
+
+const submit = async () => {
+    await fetch('http://beta.local:8080/api/messages', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            username: props.user.name,
+            message: message.value
+        })
+    })
+
+    message.value = '';
+}
+
 
 </script>
 
@@ -35,4 +89,5 @@ chat.show = false;
 .chat-mask {
     z-index:100;
 }
+
 </style>

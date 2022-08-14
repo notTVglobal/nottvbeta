@@ -9,7 +9,7 @@
 
 
 
-            <Chat />
+
 
 
 
@@ -25,7 +25,13 @@
                 <slot />
             </main>
             <div class="relative w-full h-full">
-                <VideoPlayer :class="videoPlayerStore.class"/>
+                <div>
+                    <VideoPlayer :class="videoPlayerStore.class"/>
+                </div>
+                <div class="fixed right-0">
+                    <Chat :user="user" />
+                </div>
+
             </div>
 
         </div>
@@ -45,6 +51,10 @@ import { useChatStore } from "@/Stores/ChatStore"
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
 
 let videoPlayerStore = useVideoPlayerStore()
+
+defineProps({
+    user: Object,
+});
 
 videoPlayerStore.class = ''
 videoPlayerStore.videoContainerClass = ''

@@ -34,6 +34,7 @@
         "filepond": "^4.30.4",
         "imagemin": "^8.0.1",
         "pinia": "^2.0.17",
+        "pusher-js": "^7.3.0",
         "video.js": "^7.20.1",
         "vue-filepond": "^7.0.3",
         "yargs": "^17.5.1",
