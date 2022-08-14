@@ -78,7 +78,7 @@ onMounted(() => {
 
 
 const submit = async () => {
-    await fetch('https://localhost:8000/api/messages', {
+    await fetch('https://beta-staging.not.tv/api/messages', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({

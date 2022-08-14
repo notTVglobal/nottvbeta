@@ -72,7 +72,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context.prev = _context.next) {
               case 0:
                 _context.next = 2;
-                return fetch('https://localhost:8000/api/messages', {
+                return fetch('https://beta-staging.not.tv/api/messages', {
                   method: 'POST',
                   headers: {
                     'Content-Type': 'application/json'
