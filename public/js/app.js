@@ -56,7 +56,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     (0,vue__WEBPACK_IMPORTED_MODULE_1__.onMounted)(function () {
       // Enable pusher logging - don't include this in production
       (pusher_js__WEBPACK_IMPORTED_MODULE_2___default().logToConsole) = true;
-      var pusher = new (pusher_js__WEBPACK_IMPORTED_MODULE_2___default())('679608fe1b2e6a2bf76b', {
+      var pusher = new (pusher_js__WEBPACK_IMPORTED_MODULE_2___default())('d03ec1b33bc0f17392c4', {
         cluster: 'us3'
       });
       var channel = pusher.subscribe('chat');
@@ -72,7 +72,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context.prev = _context.next) {
               case 0:
                 _context.next = 2;
-                return fetch('http://beta.local:8080/api/messages', {
+                return fetch('https://localhost:8000/api/messages', {
                   method: 'POST',
                   headers: {
                     'Content-Type': 'application/json'

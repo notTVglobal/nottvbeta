@@ -64,7 +64,7 @@ onMounted(() => {
     // Enable pusher logging - don't include this in production
     Pusher.logToConsole = true;
 
-    const pusher = new Pusher('679608fe1b2e6a2bf76b', {
+    const pusher = new Pusher('d03ec1b33bc0f17392c4', {
         cluster: 'us3'
     });
 
@@ -78,7 +78,7 @@ onMounted(() => {
 
 
 const submit = async () => {
-    await fetch('http://beta.local:8080/api/messages', {
+    await fetch('https://localhost:8000/api/messages', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
