@@ -1202,7 +1202,7 @@ select {
     z-index:1;
 }
 .nav-mask {
-    z-index:100;
+    z-index:300;
 }
 .videoBgFull {
     position:static;
