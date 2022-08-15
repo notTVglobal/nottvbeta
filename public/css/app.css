@@ -1347,6 +1347,14 @@ select {
   bottom: 4rem;
 }
 
+.right-14 {
+  right: 3.5rem;
+}
+
+.right-10 {
+  right: 2.5rem;
+}
+
 .z-0 {
   z-index: 0;
 }
@@ -1718,6 +1726,12 @@ select {
   width: 20rem;
 }
 
+.w-fit {
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+
 .min-w-0 {
   min-width: 0px;
 }
@@ -1950,6 +1964,10 @@ select {
   justify-self: end;
 }
 
+.justify-self-center {
+  justify-self: center;
+}
+
 .overflow-hidden {
   overflow: hidden;
 }
@@ -1964,6 +1982,10 @@ select {
 
 .overflow-y-hidden {
   overflow-y: hidden;
+}
+
+.overscroll-y-auto {
+  overscroll-behavior-y: auto;
 }
 
 .scroll-smooth {

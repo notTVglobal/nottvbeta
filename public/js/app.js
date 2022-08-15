@@ -1154,7 +1154,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var _hoisted_1 = {
   key: 0,
-  "class": "absolute h-full text-sm text-white pb-2 pb-2 chat-mask overflow-y-auto scroll-smooth hover:scroll-auto break-words"
+  "class": "fixed h-full text-sm text-white pb-2 pb-2 chat-mask overflow-y-auto scroll-smooth hover:scroll-auto break-words"
 };
 var _hoisted_2 = {
   "class": "list-group list-group-flush border-bottom w-full min-h-max max-h-max pt-4 px-2 mb-12 break-words drop-shadow-md shadow-black tracking-wide leading-relaxed subpixel-antialiased"
@@ -1199,7 +1199,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       ))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", {
         onSubmit: (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)($setup.submit, ["prevent"])
       }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
-        "class": "fixed bottom-0 right-0 p-2 m-2 mb-8 w-80 text-black form-control border-2 border-gray-800 hover:border-indigo-300 focus:outline-none",
+        "class": "fixed bottom-0 right-10 p-2 m-2 mb-8 w-80 text-black form-control border-2 border-gray-800 hover:border-indigo-300 focus:outline-none",
         placeholder: "Write a message...",
         "onUpdate:modelValue": _cache[0] || (_cache[0] = function ($event) {
           return $setup.message = $event;

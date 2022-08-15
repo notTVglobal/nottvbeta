@@ -7,7 +7,7 @@
         leave-from-class="opacity-100"
         leave-to-class="opacity-0"
     >
-            <div v-if="chatToggle.show" class="absolute h-full text-sm text-white pb-2 pb-2 chat-mask overflow-y-auto scroll-smooth hover:scroll-auto break-words">
+            <div v-if="chatToggle.show" class="fixed h-full text-sm text-white pb-2 pb-2 chat-mask overflow-y-auto scroll-smooth hover:scroll-auto break-words">
     <!--            <div class="absolute top-16 left-0 p-5 drop-shadow" v-if="videoPlayer.fullPage"><span class="text-xs uppercase pr-2">CHAT BOX </span><span class="font-semibold">Chat goes here.</span></div>-->
     <!--            <div v-if="!videoPlayer.fullPage" class="bg-gray-800 px-2"><span class="text-xs uppercase pr-2">CHAT BOX </span><span class="font-semibold">Chat goes here</span></div>-->
 
@@ -26,7 +26,7 @@
 
                         </div>
                         <form @submit.prevent="submit">
-                            <input class="fixed bottom-0 right-0 p-2 m-2 mb-8 w-80 text-black form-control border-2 border-gray-800 hover:border-indigo-300 focus:outline-none" placeholder="Write a message..." v-model="message"/>
+                            <input class="fixed bottom-0 right-10 p-2 m-2 mb-8 w-80 text-black form-control border-2 border-gray-800 hover:border-indigo-300 focus:outline-none" placeholder="Write a message..." v-model="message"/>
                         </form>
 <!--                    </div>-->
                 <div></div>
