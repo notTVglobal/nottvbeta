@@ -35,8 +35,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     var expose = _ref.expose;
     expose();
     var props = __props;
-    var chatToggle = (0,_Stores_ChatStore__WEBPACK_IMPORTED_MODULE_0__.useChatStore)();
-    chatToggle.show = false; // set username manually in ChatForm
+    var chat = (0,_Stores_ChatStore__WEBPACK_IMPORTED_MODULE_0__.useChatStore)();
+    chat.show = false; // set username manually in ChatForm
     // const username = ref([])
 
     var messages = (0,vue__WEBPACK_IMPORTED_MODULE_1__.ref)([]);
@@ -109,7 +109,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     }();
 
     var __returned__ = {
-      chatToggle: chatToggle,
+      chat: chat,
       props: props,
       messages: messages,
       message: message,
@@ -1158,25 +1158,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 
 var _hoisted_1 = {
-  key: 0,
-  "class": "fixed h-full text-sm text-white pb-2 pb-2 chat-mask overflow-y-auto scroll-smooth hover:scroll-auto break-words"
-};
-var _hoisted_2 = {
   "class": "list-group list-group-flush border-bottom w-full min-h-max max-h-max pt-4 px-2 mb-12 break-words drop-shadow-md shadow-black tracking-wide leading-relaxed subpixel-antialiased"
 };
-var _hoisted_3 = {
+var _hoisted_2 = {
   "class": "flex w-100 align-items-center justify-content-between"
 };
-var _hoisted_4 = {
+var _hoisted_3 = {
   "class": "mb-1"
 };
-var _hoisted_5 = {
+var _hoisted_4 = {
   "class": "col-10 mb-2 small break-words max-w-max",
   refs: "scrollToMe"
 };
-var _hoisted_6 = ["onSubmit"];
+var _hoisted_5 = ["onSubmit"];
 
-var _hoisted_7 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, null, -1
+var _hoisted_6 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, null, -1
 /* HOISTED */
 );
 
@@ -1190,13 +1186,16 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "leave-to-class": "opacity-0"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [$setup.chatToggle.show ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            <div class=\"absolute top-16 left-0 p-5 drop-shadow\" v-if=\"videoPlayer.fullPage\"><span class=\"text-xs uppercase pr-2\">CHAT BOX </span><span class=\"font-semibold\">Chat goes here.</span></div>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            <div v-if=\"!videoPlayer.fullPage\" class=\"bg-gray-800 px-2\"><span class=\"text-xs uppercase pr-2\">CHAT BOX </span><span class=\"font-semibold\">Chat goes here</span></div>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    Set username manually"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                <div>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                    <input class=\"border border-2 text-black font-semibold p-2 mt-2\" v-model=\"username\"/>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                </div>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    <div class=\"h-2/5\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($setup.messages, function (message) {
+      return [$setup.chat.show ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
+        key: 0,
+        "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)([$setup.chat["class"], "fixed h-full text-sm text-white pb-2 pb-2 chat-mask overflow-y-auto scroll-smooth hover:scroll-auto break-words"])
+      }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            <div class=\"absolute top-16 left-0 p-5 drop-shadow\" v-if=\"videoPlayer.fullPage\"><span class=\"text-xs uppercase pr-2\">CHAT BOX </span><span class=\"font-semibold\">Chat goes here.</span></div>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            <div v-if=\"!videoPlayer.fullPage\" class=\"bg-gray-800 px-2\"><span class=\"text-xs uppercase pr-2\">CHAT BOX </span><span class=\"font-semibold\">Chat goes here</span></div>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    Set username manually"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                <div>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                    <input class=\"border border-2 text-black font-semibold p-2 mt-2\" v-model=\"username\"/>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                </div>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    <div class=\"h-2/5\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($setup.messages, function (message) {
         return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
           "class": "list-group-item pb-2 leading-tight break-words",
           key: message
-        }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("strong", _hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(message.username), 1
+        }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("strong", _hoisted_3, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(message.username), 1
         /* TEXT */
-        )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(message.message), 1
+        )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(message.message), 1
         /* TEXT */
         )]);
       }), 128
@@ -1213,7 +1212,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       /* NEED_PATCH */
       ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $setup.message]])], 40
       /* PROPS, HYDRATE_EVENTS */
-      , _hoisted_6), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    </div>"), _hoisted_7])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)];
+      , _hoisted_5), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    </div>"), _hoisted_6], 2
+      /* CLASS */
+      )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)];
     }),
     _: 1
     /* STABLE */
