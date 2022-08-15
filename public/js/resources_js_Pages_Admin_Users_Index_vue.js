@@ -35,8 +35,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var lodash_throttle__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! lodash/throttle */ "./node_modules/lodash/throttle.js");
 /* harmony import */ var lodash_throttle__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(lodash_throttle__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/Stores/VideoPlayerStore.js */ "./resources/js/Stores/VideoPlayerStore.js");
-/* harmony import */ var _Components_ResponsiveNavigationMenu__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/Components/ResponsiveNavigationMenu */ "./resources/js/Components/ResponsiveNavigationMenu.vue");
-/* harmony import */ var _Components_NavigationMenu__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/Components/NavigationMenu */ "./resources/js/Components/NavigationMenu.vue");
+/* harmony import */ var _Stores_ChatStore_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/Stores/ChatStore.js */ "./resources/js/Stores/ChatStore.js");
+/* harmony import */ var _Components_ResponsiveNavigationMenu__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/Components/ResponsiveNavigationMenu */ "./resources/js/Components/ResponsiveNavigationMenu.vue");
+/* harmony import */ var _Components_NavigationMenu__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @/Components/NavigationMenu */ "./resources/js/Components/NavigationMenu.vue");
+
 
 
 
@@ -55,9 +57,11 @@ __webpack_require__.r(__webpack_exports__);
     expose();
     var props = __props;
     var videoPlayer = (0,_Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_4__.useVideoPlayerStore)();
+    var chat = (0,_Stores_ChatStore_js__WEBPACK_IMPORTED_MODULE_5__.useChatStore)();
     videoPlayer["class"] = "videoTopRight";
     videoPlayer.videoContainerClass = "videoContainerTopRight";
     videoPlayer.fullPage = false;
+    chat["class"] = "chatSmall";
     var search = (0,vue__WEBPACK_IMPORTED_MODULE_1__.ref)(props.filters.search);
     (0,vue__WEBPACK_IMPORTED_MODULE_1__.watch)(search, lodash_throttle__WEBPACK_IMPORTED_MODULE_3___default()(function (value) {
       _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_2__.Inertia.get('/admin/users', {
@@ -69,6 +73,7 @@ __webpack_require__.r(__webpack_exports__);
     }, 300));
     var __returned__ = {
       videoPlayer: videoPlayer,
+      chat: chat,
       props: props,
       search: search,
       Pagination: _Components_Pagination__WEBPACK_IMPORTED_MODULE_0__["default"],
@@ -77,8 +82,9 @@ __webpack_require__.r(__webpack_exports__);
       Inertia: _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_2__.Inertia,
       throttle: (lodash_throttle__WEBPACK_IMPORTED_MODULE_3___default()),
       useVideoPlayerStore: _Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_4__.useVideoPlayerStore,
-      ResponsiveNavigationMenu: _Components_ResponsiveNavigationMenu__WEBPACK_IMPORTED_MODULE_5__["default"],
-      NavigationMenu: _Components_NavigationMenu__WEBPACK_IMPORTED_MODULE_6__["default"]
+      useChatStore: _Stores_ChatStore_js__WEBPACK_IMPORTED_MODULE_5__.useChatStore,
+      ResponsiveNavigationMenu: _Components_ResponsiveNavigationMenu__WEBPACK_IMPORTED_MODULE_6__["default"],
+      NavigationMenu: _Components_NavigationMenu__WEBPACK_IMPORTED_MODULE_7__["default"]
     };
     Object.defineProperty(__returned__, '__isScriptSetup', {
       enumerable: false,

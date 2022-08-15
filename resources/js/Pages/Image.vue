@@ -35,14 +35,17 @@ import vueFilePond, {setOptions} from 'vue-filepond'
 import "filepond/dist/filepond.min.css"
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+import { useChatStore } from "@/Stores/ChatStore.js"
 import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/NavigationMenu"
 
 let videoPlayer = useVideoPlayerStore()
+let chat = useChatStore()
 
 videoPlayer.class = "videoTopRight"
 videoPlayer.videoContainerClass = "videoContainerTopRight"
 videoPlayer.fullPage = false
+chat.class = "chatSmall"
 //
 // config: { headers: function () { return {} } },
 // const props = defineProps({

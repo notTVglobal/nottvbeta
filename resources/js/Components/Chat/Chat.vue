@@ -7,30 +7,29 @@
         leave-from-class="opacity-100"
         leave-to-class="opacity-0"
     >
-            <div v-if="chatToggle.show" class="absolute h-full text-white pb-2 px-2 chat-mask overflow-y-auto scroll-smooth hover:scroll-auto">
+            <div v-if="chatToggle.show" class="absolute h-full text-sm text-white pb-2 pb-2 chat-mask overflow-y-auto scroll-smooth hover:scroll-auto break-words">
     <!--            <div class="absolute top-16 left-0 p-5 drop-shadow" v-if="videoPlayer.fullPage"><span class="text-xs uppercase pr-2">CHAT BOX </span><span class="font-semibold">Chat goes here.</span></div>-->
     <!--            <div v-if="!videoPlayer.fullPage" class="bg-gray-800 px-2"><span class="text-xs uppercase pr-2">CHAT BOX </span><span class="font-semibold">Chat goes here</span></div>-->
 
-                    CHAT
 <!--                    Set username manually-->
 <!--                                <div>-->
 <!--                                    <input class="border border-2 text-black font-semibold p-2 mt-2" v-model="username"/>-->
 <!--                                </div>-->
 <!--                    <div class="h-2/5">-->
-                        <div class="list-group list-group-flush border-bottom b-20 w-fit min-h-max max-h-max mb-24">
-                            <div class="list-group-item py-3 leading-tight" v-for="message in messages" :key="message">
+                        <div class="list-group list-group-flush border-bottom w-full min-h-max max-h-max pt-4 px-2 mb-12 break-words drop-shadow-md shadow-black tracking-wide leading-relaxed subpixel-antialiased">
+                            <div class="list-group-item pb-2 leading-tight break-words" v-for="message in messages" :key="message">
                                 <div class="flex w-100 align-items-center justify-content-between">
                                     <strong class="mb-1">{{ message.username }}</strong>
                                 </div>
-                                <div class="col-10 mb-1 small">{{ message.message }}</div>
+                                <div class="col-10 mb-2 small break-words max-w-max" refs="scrollToMe">{{ message.message }}</div>
                             </div>
 
                         </div>
-                        <form @submit.prevent="submit" class="w-full">
-                            <input class="fixed bottom-0 right-0 w-fit text-black form-control border-2 p-2 m-2" placeholder="Write a message..." v-model="message"/>
+                        <form @submit.prevent="submit">
+                            <input class="fixed bottom-0 right-0 p-2 m-2 mb-8 w-80 text-black form-control border-2 border-gray-800 hover:border-indigo-300 focus:outline-none" placeholder="Write a message..." v-model="message"/>
                         </form>
 <!--                    </div>-->
-                <div refs="scrollToMe"></div>
+                <div></div>
                 </div>
 
     </Transition>
@@ -67,7 +66,9 @@ onMounted(() => {
     // Pusher Key for development: 679608fe1b2e6a2bf76b
     // Pusher Key for staging: d03ec1b33bc0f17392c4
     // Pusher Key for production: f0b385d3a5994dca4741
+    //
     const pusher = new Pusher('d03ec1b33bc0f17392c4', {
+    // const pusher = new Pusher('679608fe1b2e6a2bf76b', {
         cluster: 'us3'
     });
 
@@ -84,6 +85,7 @@ onMounted(() => {
 // URI for production: https://beta.not.tv/api/messages
 const submit = async () => {
     await fetch('https://beta-staging.not.tv/api/messages', {
+    // await fetch('http://beta.local:8080/api/messages', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({

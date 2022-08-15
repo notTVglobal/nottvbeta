@@ -113,8 +113,18 @@
 import JetResponsiveNavLink from '@/Jetstream/ResponsiveNavLink.vue';
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
 import { ref } from "vue";
+import {Inertia} from "@inertiajs/inertia";
 
 const showingNavigationDropdown = ref(false);
 
 let videoPlayer = useVideoPlayerStore();
+
+const logout = () => {
+    videoPlayer.fullPage = true;
+    videoPlayer.loggedIn = false;
+    videoPlayer.class = "videoBgFull";
+    videoPlayer.videoContainerClass = "videoContainerBgFull";
+    Inertia.post(route('logout'));
+};
+
 </script>

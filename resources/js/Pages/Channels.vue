@@ -30,14 +30,17 @@
 
 <script setup>
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+import { useChatStore } from "@/Stores/ChatStore.js"
 import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/NavigationMenu"
 
 let videoPlayer = useVideoPlayerStore()
+let chat = useChatStore()
 
 videoPlayer.class = "videoFullPage"
 videoPlayer.videoContainerClass = "videoContainerFullPage"
 videoPlayer.fullPage = true
+chat.class = "chatSmall"
 
 </script>
 

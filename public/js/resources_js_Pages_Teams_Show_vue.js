@@ -171,14 +171,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Stores/VideoPlayerStore.js */ "./resources/js/Stores/VideoPlayerStore.js");
-/* harmony import */ var _Components_Teams_TeamHeader__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Components/Teams/TeamHeader */ "./resources/js/Components/Teams/TeamHeader.vue");
-/* harmony import */ var _Components_Teams_TeamMembersList__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/Components/Teams/TeamMembersList */ "./resources/js/Components/Teams/TeamMembersList.vue");
-/* harmony import */ var _Components_Teams_TeamFooter__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/Components/Teams/TeamFooter */ "./resources/js/Components/Teams/TeamFooter.vue");
-/* harmony import */ var _Stores_TeamStore_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/Stores/TeamStore.js */ "./resources/js/Stores/TeamStore.js");
-/* harmony import */ var _Components_Modal__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/Components/Modal */ "./resources/js/Components/Modal.vue");
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
-/* harmony import */ var _Components_ResponsiveNavigationMenu__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @/Components/ResponsiveNavigationMenu */ "./resources/js/Components/ResponsiveNavigationMenu.vue");
-/* harmony import */ var _Components_NavigationMenu__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @/Components/NavigationMenu */ "./resources/js/Components/NavigationMenu.vue");
+/* harmony import */ var _Stores_ChatStore_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Stores/ChatStore.js */ "./resources/js/Stores/ChatStore.js");
+/* harmony import */ var _Stores_TeamStore_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/Stores/TeamStore.js */ "./resources/js/Stores/TeamStore.js");
+/* harmony import */ var _Components_Teams_TeamHeader__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/Components/Teams/TeamHeader */ "./resources/js/Components/Teams/TeamHeader.vue");
+/* harmony import */ var _Components_Teams_TeamMembersList__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/Components/Teams/TeamMembersList */ "./resources/js/Components/Teams/TeamMembersList.vue");
+/* harmony import */ var _Components_Teams_TeamFooter__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/Components/Teams/TeamFooter */ "./resources/js/Components/Teams/TeamFooter.vue");
+/* harmony import */ var _Components_Modal__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/Components/Modal */ "./resources/js/Components/Modal.vue");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+/* harmony import */ var _Components_ResponsiveNavigationMenu__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @/Components/ResponsiveNavigationMenu */ "./resources/js/Components/ResponsiveNavigationMenu.vue");
+/* harmony import */ var _Components_NavigationMenu__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @/Components/NavigationMenu */ "./resources/js/Components/NavigationMenu.vue");
+
 
 
 
@@ -194,25 +196,29 @@ __webpack_require__.r(__webpack_exports__);
     var expose = _ref.expose;
     expose();
     var videoPlayer = (0,_Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_0__.useVideoPlayerStore)();
+    var chat = (0,_Stores_ChatStore_js__WEBPACK_IMPORTED_MODULE_1__.useChatStore)();
     videoPlayer["class"] = "videoTopRight";
     videoPlayer.videoContainerClass = "videoContainerTopRight";
     videoPlayer.fullPage = false;
-    var team = (0,_Stores_TeamStore_js__WEBPACK_IMPORTED_MODULE_4__.useTeamStore)();
+    chat["class"] = "chatSmall";
+    var team = (0,_Stores_TeamStore_js__WEBPACK_IMPORTED_MODULE_2__.useTeamStore)();
     team.fill();
-    var showModal = (0,vue__WEBPACK_IMPORTED_MODULE_6__.ref)(false);
+    var showModal = (0,vue__WEBPACK_IMPORTED_MODULE_7__.ref)(false);
     var __returned__ = {
       videoPlayer: videoPlayer,
+      chat: chat,
       team: team,
       showModal: showModal,
       useVideoPlayerStore: _Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_0__.useVideoPlayerStore,
-      TeamHeader: _Components_Teams_TeamHeader__WEBPACK_IMPORTED_MODULE_1__["default"],
-      TeamMembersList: _Components_Teams_TeamMembersList__WEBPACK_IMPORTED_MODULE_2__["default"],
-      TeamFooter: _Components_Teams_TeamFooter__WEBPACK_IMPORTED_MODULE_3__["default"],
-      useTeamStore: _Stores_TeamStore_js__WEBPACK_IMPORTED_MODULE_4__.useTeamStore,
-      Modal: _Components_Modal__WEBPACK_IMPORTED_MODULE_5__["default"],
-      ref: vue__WEBPACK_IMPORTED_MODULE_6__.ref,
-      ResponsiveNavigationMenu: _Components_ResponsiveNavigationMenu__WEBPACK_IMPORTED_MODULE_7__["default"],
-      NavigationMenu: _Components_NavigationMenu__WEBPACK_IMPORTED_MODULE_8__["default"]
+      useChatStore: _Stores_ChatStore_js__WEBPACK_IMPORTED_MODULE_1__.useChatStore,
+      useTeamStore: _Stores_TeamStore_js__WEBPACK_IMPORTED_MODULE_2__.useTeamStore,
+      TeamHeader: _Components_Teams_TeamHeader__WEBPACK_IMPORTED_MODULE_3__["default"],
+      TeamMembersList: _Components_Teams_TeamMembersList__WEBPACK_IMPORTED_MODULE_4__["default"],
+      TeamFooter: _Components_Teams_TeamFooter__WEBPACK_IMPORTED_MODULE_5__["default"],
+      Modal: _Components_Modal__WEBPACK_IMPORTED_MODULE_6__["default"],
+      ref: vue__WEBPACK_IMPORTED_MODULE_7__.ref,
+      ResponsiveNavigationMenu: _Components_ResponsiveNavigationMenu__WEBPACK_IMPORTED_MODULE_8__["default"],
+      NavigationMenu: _Components_NavigationMenu__WEBPACK_IMPORTED_MODULE_9__["default"]
     };
     Object.defineProperty(__returned__, '__isScriptSetup', {
       enumerable: false,

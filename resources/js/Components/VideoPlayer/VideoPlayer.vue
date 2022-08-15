@@ -85,7 +85,6 @@ videoPlayerStore.paused = false
 
 let showLogin = ref(false)
 
-
 function loadVideo1() {
     videoPlayerStore.loadVideo1()
     document.getElementById("src1").src = videoPlayerStore.videoSourceIdSrc1;
@@ -145,7 +144,7 @@ function loadVideo5() {
 </script>
 
 <script>
-import VideoPlayer from '@/Components/VideoPlayer/VideoJs.vue';
+import VideoPlayer from '@/Components/VideoPlayer/VideoJs'
 
 export default {
     name: 'VideoPlayer',
@@ -170,4 +169,7 @@ export default {
         };
     }
 };
+
+
+
 </script>

@@ -55,15 +55,18 @@
 
 <script setup>
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+import { useChatStore } from "@/Stores/ChatStore.js"
 import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/NavigationMenu"
 
 let videoPlayer = useVideoPlayerStore()
+let chat = useChatStore()
 
 videoPlayer.class = "videoTopRight"
 videoPlayer.videoContainerClass = "videoContainerTopRight"
 videoPlayer.fullPage = false
 videoPlayer.loggedIn = true
+chat.class = "chatSmall"
 // onload(videoPlayer.class = "videoTopRight")
 </script>
 

@@ -53,7 +53,6 @@ Route::middleware([
         return Inertia::render('Stream');
     })->name('stream');
     Route::get('/posts', function () {
-        event(new PusherEvent('hello world'));
         return Inertia::render('Posts');
     })->name('posts');
     Route::get('/channels', function () {

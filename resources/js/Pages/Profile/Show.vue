@@ -61,14 +61,17 @@ import TwoFactorAuthenticationForm from '@/Pages/Profile/Partials/TwoFactorAuthe
 import UpdatePasswordForm from '@/Pages/Profile/Partials/UpdatePasswordForm.vue'
 import UpdateProfileInformationForm from '@/Pages/Profile/Partials/UpdateProfileInformationForm.vue'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+import { useChatStore } from "@/Stores/ChatStore.js"
 import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/NavigationMenu"
 
 let videoPlayer = useVideoPlayerStore()
+let chat = useChatStore()
 
 videoPlayer.class = "videoTopRight"
 videoPlayer.videoContainerClass = "videoContainerTopRight"
 videoPlayer.fullPage = false
+chat.class = "chatSmall"
 
 defineProps({
     confirmsTwoFactorAuthentication: Boolean,

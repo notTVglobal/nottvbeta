@@ -6,7 +6,6 @@ import { InertiaProgress } from '@inertiajs/progress';
 import { Head, Link } from '@inertiajs/inertia-vue3';
 import AppLayout from "./Layouts/AppLayout";
 import { createPinia } from "pinia";
-// import NoLayout from "./Layouts/NoLayout";
 import { ZiggyVue } from 'ziggy';
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'notTV';
