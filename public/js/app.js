@@ -294,6 +294,8 @@ __webpack_require__.r(__webpack_exports__);
       videoPlayer.loggedIn = false;
       videoPlayer["class"] = "videoBgFull";
       videoPlayer.videoContainerClass = "videoContainerBgFull";
+      chat["class"] = "chatHidden";
+      chat.show = false;
       _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_6__.Inertia.post(route('logout'));
     };
 
@@ -334,8 +336,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _Jetstream_ResponsiveNavLink_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Jetstream/ResponsiveNavLink.vue */ "./resources/js/Jetstream/ResponsiveNavLink.vue");
 /* harmony import */ var _Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Stores/VideoPlayerStore.js */ "./resources/js/Stores/VideoPlayerStore.js");
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
-/* harmony import */ var _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @inertiajs/inertia */ "./node_modules/@inertiajs/inertia/dist/index.js");
+/* harmony import */ var _Stores_ChatStore__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/Stores/ChatStore */ "./resources/js/Stores/ChatStore.js");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+/* harmony import */ var _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @inertiajs/inertia */ "./node_modules/@inertiajs/inertia/dist/index.js");
+
 
 
 
@@ -345,25 +349,30 @@ __webpack_require__.r(__webpack_exports__);
   setup: function setup(__props, _ref) {
     var expose = _ref.expose;
     expose();
-    var showingNavigationDropdown = (0,vue__WEBPACK_IMPORTED_MODULE_2__.ref)(false);
+    var showingNavigationDropdown = (0,vue__WEBPACK_IMPORTED_MODULE_3__.ref)(false);
     var videoPlayer = (0,_Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_1__.useVideoPlayerStore)();
+    var chat = (0,_Stores_ChatStore__WEBPACK_IMPORTED_MODULE_2__.useChatStore)();
 
     var logout = function logout() {
       videoPlayer.fullPage = true;
       videoPlayer.loggedIn = false;
       videoPlayer["class"] = "videoBgFull";
       videoPlayer.videoContainerClass = "videoContainerBgFull";
-      _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_3__.Inertia.post(route('logout'));
+      chat["class"] = "chatHidden";
+      chat.show = false;
+      _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_4__.Inertia.post(route('logout'));
     };
 
     var __returned__ = {
       showingNavigationDropdown: showingNavigationDropdown,
       videoPlayer: videoPlayer,
+      chat: chat,
       logout: logout,
       JetResponsiveNavLink: _Jetstream_ResponsiveNavLink_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
       useVideoPlayerStore: _Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_1__.useVideoPlayerStore,
-      ref: vue__WEBPACK_IMPORTED_MODULE_2__.ref,
-      Inertia: _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_3__.Inertia
+      useChatStore: _Stores_ChatStore__WEBPACK_IMPORTED_MODULE_2__.useChatStore,
+      ref: vue__WEBPACK_IMPORTED_MODULE_3__.ref,
+      Inertia: _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_4__.Inertia
     };
     Object.defineProperty(__returned__, '__isScriptSetup', {
       enumerable: false,
@@ -1120,10 +1129,6 @@ __webpack_require__.r(__webpack_exports__);
     expose();
     var videoPlayerStore = (0,_Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_7__.useVideoPlayerStore)();
     var chat = (0,_Stores_ChatStore__WEBPACK_IMPORTED_MODULE_6__.useChatStore)();
-    videoPlayerStore["class"] = '';
-    videoPlayerStore.videoContainerClass = '';
-    chat["class"] = 'chatHidden';
-    chat.show = false;
     var __returned__ = {
       videoPlayerStore: videoPlayerStore,
       chat: chat,
@@ -2889,14 +2894,14 @@ var useVideoPlayerStore = (0,pinia__WEBPACK_IMPORTED_MODULE_1__.defineStore)('vi
   },
   actions: {
     makeVideoFullPage: function makeVideoFullPage() {
-      this["class"] = 'videoFullPage';
       this.videoContainerClass = 'videoContainerFullPage';
+      this["class"] = 'videoFullPage';
       this.fullPage = true;
       (0,_Stores_ChatStore__WEBPACK_IMPORTED_MODULE_0__.useChatStore)().makeBig();
     },
     makeVideoTopRight: function makeVideoTopRight() {
+      // this.videoContainerClass = 'videoContainerTopRight';
       this["class"] = 'videoTopRight';
-      this.videoContainerClass = 'videoContainerTopRight';
       this.fullPage = false;
       (0,_Stores_ChatStore__WEBPACK_IMPORTED_MODULE_0__.useChatStore)().makeSmall();
     },

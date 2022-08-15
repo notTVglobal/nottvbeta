@@ -177,6 +177,8 @@ const logout = () => {
     videoPlayer.loggedIn = false;
     videoPlayer.class = "videoBgFull";
     videoPlayer.videoContainerClass = "videoContainerBgFull";
+    chat.class = "chatHidden";
+    chat.show = false;
     Inertia.post(route('logout'));
 };
 

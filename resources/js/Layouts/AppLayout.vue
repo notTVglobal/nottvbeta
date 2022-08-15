@@ -53,11 +53,6 @@ defineProps({
     user: Object,
 });
 
-videoPlayerStore.class = ''
-videoPlayerStore.videoContainerClass = ''
-chat.class = 'chatHidden'
-chat.show = false
-
 
 </script>
 

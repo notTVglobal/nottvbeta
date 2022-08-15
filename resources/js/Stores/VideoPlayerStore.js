@@ -23,14 +23,14 @@ export let useVideoPlayerStore = defineStore('videoPlayer', {
 
     actions: {
         makeVideoFullPage() {
-            this.class = 'videoFullPage';
             this.videoContainerClass = 'videoContainerFullPage';
+            this.class = 'videoFullPage';
             this.fullPage = true;
             useChatStore().makeBig();
         },
         makeVideoTopRight() {
+            // this.videoContainerClass = 'videoContainerTopRight';
             this.class = 'videoTopRight';
-            this.videoContainerClass = 'videoContainerTopRight';
             this.fullPage = false;
             useChatStore().makeSmall();
         },

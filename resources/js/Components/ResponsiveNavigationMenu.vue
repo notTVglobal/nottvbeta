@@ -110,20 +110,24 @@
 </template>
 
 <script setup>
-import JetResponsiveNavLink from '@/Jetstream/ResponsiveNavLink.vue';
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
-import { ref } from "vue";
-import {Inertia} from "@inertiajs/inertia";
+import JetResponsiveNavLink from '@/Jetstream/ResponsiveNavLink.vue'
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+import { useChatStore } from "@/Stores/ChatStore"
+import { ref } from "vue"
+import {Inertia} from "@inertiajs/inertia"
 
 const showingNavigationDropdown = ref(false);
 
 let videoPlayer = useVideoPlayerStore();
+let chat = useChatStore();
 
 const logout = () => {
     videoPlayer.fullPage = true;
     videoPlayer.loggedIn = false;
     videoPlayer.class = "videoBgFull";
     videoPlayer.videoContainerClass = "videoContainerBgFull";
+    chat.class = "chatHidden";
+    chat.show = false;
     Inertia.post(route('logout'));
 };
 
