@@ -13,6 +13,10 @@
 </template>
 
 <script setup>
+import { useChatStore } from "@/Stores/ChatStore.js"
+
+let chat = useChatStore()
+
 let Switch = defineProps({
     label: String,
     checked: Boolean

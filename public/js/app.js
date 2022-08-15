@@ -141,6 +141,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var _Stores_ChatStore_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Stores/ChatStore.js */ "./resources/js/Stores/ChatStore.js");
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   __name: 'ChatToggle',
   props: {
@@ -151,8 +153,11 @@ __webpack_require__.r(__webpack_exports__);
     var expose = _ref.expose;
     expose();
     var Switch = __props;
+    var chat = (0,_Stores_ChatStore_js__WEBPACK_IMPORTED_MODULE_0__.useChatStore)();
     var __returned__ = {
-      Switch: Switch
+      chat: chat,
+      Switch: Switch,
+      useChatStore: _Stores_ChatStore_js__WEBPACK_IMPORTED_MODULE_0__.useChatStore
     };
     Object.defineProperty(__returned__, '__isScriptSetup', {
       enumerable: false,

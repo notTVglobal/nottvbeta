@@ -16,6 +16,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Components_Login_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/Components/Login.vue */ "./resources/js/Components/Login.vue");
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 /* harmony import */ var _Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/Stores/VideoPlayerStore.js */ "./resources/js/Stores/VideoPlayerStore.js");
+/* harmony import */ var _Stores_ChatStore__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/Stores/ChatStore */ "./resources/js/Stores/ChatStore.js");
 
 var __default__ = {
   layout: _Layouts_AppLayout__WEBPACK_IMPORTED_MODULE_0__["default"],
@@ -35,6 +36,7 @@ var __default__ = {
 
 
 
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (/*#__PURE__*/Object.assign(__default__, {
   __name: 'Welcome',
   props: {
@@ -47,19 +49,23 @@ var __default__ = {
     var expose = _ref.expose;
     expose();
     var videoPlayer = (0,_Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_4__.useVideoPlayerStore)();
+    var chat = (0,_Stores_ChatStore__WEBPACK_IMPORTED_MODULE_5__.useChatStore)();
     videoPlayer.fullPage = false;
     videoPlayer.loggedIn = false;
     videoPlayer["class"] = "videoBgFull";
-    videoPlayer.videoContainerClass = "videoContainerBgFull";
+    videoPlayer.videoContainerClass = "videoContainerHomePage";
+    chat["class"] = "chatHidden";
     var showLogin = (0,vue__WEBPACK_IMPORTED_MODULE_3__.ref)(false);
     var __returned__ = {
       videoPlayer: videoPlayer,
+      chat: chat,
       showLogin: showLogin,
       AppLayout: _Layouts_AppLayout__WEBPACK_IMPORTED_MODULE_0__["default"],
       JetApplicationLogo: _Jetstream_ApplicationLogo_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
       Login: _Components_Login_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
       ref: vue__WEBPACK_IMPORTED_MODULE_3__.ref,
-      useVideoPlayerStore: _Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_4__.useVideoPlayerStore
+      useVideoPlayerStore: _Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_4__.useVideoPlayerStore,
+      useChatStore: _Stores_ChatStore__WEBPACK_IMPORTED_MODULE_5__.useChatStore
     };
     Object.defineProperty(__returned__, '__isScriptSetup', {
       enumerable: false,

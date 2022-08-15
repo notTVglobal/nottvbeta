@@ -80,13 +80,16 @@ import JetApplicationLogo from '@/Jetstream/ApplicationLogo.vue';
 import Login from "@/Components/Login.vue"
 import { ref } from 'vue'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+import {useChatStore} from "@/Stores/ChatStore";
 
 let videoPlayer = useVideoPlayerStore()
+let chat = useChatStore()
 
 videoPlayer.fullPage = false
 videoPlayer.loggedIn = false
 videoPlayer.class = "videoBgFull"
-videoPlayer.videoContainerClass = "videoContainerBgFull"
+videoPlayer.videoContainerClass = "videoContainerHomePage"
+chat.class = "chatHidden"
 
 defineProps({
     canLogin: Boolean,
