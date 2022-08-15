@@ -89,7 +89,7 @@ videoPlayer.fullPage = false
 videoPlayer.loggedIn = false
 videoPlayer.class = "videoBgFull"
 videoPlayer.videoContainerClass = "videoContainerHomePage"
-chat.class = "chatHidden"
+chat.show = false
 
 defineProps({
     canLogin: Boolean,
