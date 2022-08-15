@@ -56,6 +56,7 @@ defineProps({
 videoPlayerStore.class = ''
 videoPlayerStore.videoContainerClass = ''
 chat.class = 'chatHidden'
+chat.show = false
 
 
 </script>

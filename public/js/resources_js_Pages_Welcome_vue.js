@@ -55,6 +55,7 @@ var __default__ = {
     videoPlayer["class"] = "videoBgFull";
     videoPlayer.videoContainerClass = "videoContainerHomePage";
     chat.show = false;
+    chat["class"] = 'chatHidden';
     var showLogin = (0,vue__WEBPACK_IMPORTED_MODULE_3__.ref)(false);
     var __returned__ = {
       videoPlayer: videoPlayer,

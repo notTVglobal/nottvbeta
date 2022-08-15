@@ -1123,6 +1123,7 @@ __webpack_require__.r(__webpack_exports__);
     videoPlayerStore["class"] = '';
     videoPlayerStore.videoContainerClass = '';
     chat["class"] = 'chatHidden';
+    chat.show = false;
     var __returned__ = {
       videoPlayerStore: videoPlayerStore,
       chat: chat,
