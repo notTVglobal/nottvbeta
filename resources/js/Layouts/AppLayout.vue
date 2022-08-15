@@ -46,6 +46,8 @@ import { useChatStore } from "@/Stores/ChatStore"
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
 
 let videoPlayerStore = useVideoPlayerStore()
+let chat = useChatStore()
+
 
 defineProps({
     user: Object,
@@ -53,8 +55,8 @@ defineProps({
 
 videoPlayerStore.class = ''
 videoPlayerStore.videoContainerClass = ''
+chat.class = 'chatHidden'
 
-let chat = useChatStore()
 
 </script>
 
