@@ -85,6 +85,12 @@
 
                                         <JetDropdownLink
                                             @click="videoPlayer.makeVideoTopRight()"
+                                            :href="route('image')">
+                                            Image Uploader
+                                        </JetDropdownLink>
+
+                                        <JetDropdownLink
+                                            @click="videoPlayer.makeVideoTopRight()"
                                             :href="route('admin.channels.index')">
                                             Channels
                                         </JetDropdownLink>
@@ -101,19 +107,19 @@
                                             Users
                                         </JetDropdownLink>
                                     </div>
-                                    <div class="pb-3">
-                                        <!-- Teams Links -->
-                                        <!-- Need to add v-if="$page.props.jetstream.hasTeamFeatures in a template tag -->
-                                        <div class="block px-4 py-2 text-xs text-gray-400">
-                                            My Teams
-                                        </div>
+<!--                                    <div class="pb-3">-->
+<!--                                        &lt;!&ndash; Teams Links &ndash;&gt;-->
+<!--                                        &lt;!&ndash; Need to add v-if="$page.props.jetstream.hasTeamFeatures in a template tag &ndash;&gt;-->
+<!--                                        <div class="block px-4 py-2 text-xs text-gray-400">-->
+<!--                                            My Teams-->
+<!--                                        </div>-->
 
-                                        <JetDropdownLink
-                                            @click="videoPlayer.makeVideoTopRight()"
-                                            :href="`/teams/1`">
-                                                  notTV Founders
-                                        </JetDropdownLink>
-                                    </div>
+<!--                                        <JetDropdownLink-->
+<!--                                            @click="videoPlayer.makeVideoTopRight()"-->
+<!--                                            :href="`/teams/1`">-->
+<!--                                                  notTV Founders-->
+<!--                                        </JetDropdownLink>-->
+<!--                                    </div>-->
                                     <div class="pt-2 pb-3">
                                         <!-- Account Management -->
                                         <div class="block px-4 py-2 text-xs text-gray-400">
