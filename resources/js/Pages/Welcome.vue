@@ -7,19 +7,14 @@
 <!--                    <template #menu></template>-->
                     <div class="grid md:grid-cols-1 grid-cols-1 align-items-center">
                         <JetApplicationLogo class="block md:w-auto p-10"/>
-                        <div class="text-center">SCROLL DOWN</div>
-                        <div class="mt-6 text-center">OR</div>
-
-
-                        <div class="mt-6 text-center">
+                        <div class="text-center text-bold">SCROLL DOWN</div>
+                        <div class="mt-2 text-xs text-center">OR</div>
+                        <div class="mt-4 text-center">
                             <button
                                 class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded disabled:bg-gray-400"
                                 @click="scrollToElement"
                             >Watch Now</button>
                         </div>
-
-
-
                     </div>
                 </div>
                 <div v-if="canLogin" class="fixed top-0 right-0 px-6 py-4 sm:block sm:items-center sm:pt-2">
@@ -34,7 +29,6 @@
                         </Button>
                         <Link v-if="canRegister" :href="route('register')" class="ml-4 text-sm text-gray-200 underline">
                             Register
-
                         </Link>
 
                     </template>
@@ -65,7 +59,7 @@
                     <p class="text-center">Register your content as your very own NFT on a blockchain that you own.</p>
                 </div>
             </section>
-            <section class="flex justify-center items-center h-screen" ref="scrollToMe">
+            <section class="flex justify-center items-center h-screen" ref="scrollToMe" v-if="!showDiv">
                 <div class="">#mediaforabetterworld</div>
             </section>
         </div>
@@ -100,22 +94,33 @@ defineProps({
 });
 
 let showLogin = ref(false)
+let showDiv = ref(null)
+const scrollToMe = ref(null)
+
+function scrollToElement(){
+    scrollToMe.value?.scrollIntoView({behavior: "smooth"})
+    setTimeout(() => {
+    showDiv.value = true}, 10);
+}
+
 
 </script>
 
 <script>
 import AppLayout from '../Layouts/AppLayout';
 export default {
-    layout: AppLayout,
-    methods: {
-        scrollToElement() {
-            const el = this.$refs.scrollToMe;
-            if (el) {
-                el.scrollIntoView({ behavior: "smooth" });
-            }
-        },
-    },
+    layout: AppLayout
+    // methods: {
+    //     scrollToElement() {
+    //         const el = this.$refs.scrollToMe;
+    //         if (el) {
+    //             el.scrollIntoView({ behavior: "smooth" });
+    //         }
+    //     },
+    // },
 }
+
+
 </script>
 
 

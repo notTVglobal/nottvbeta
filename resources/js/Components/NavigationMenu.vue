@@ -1,7 +1,7 @@
 <template>
     <nav class="sticky top-0 bg-black border-b border-gray-100 z-50">
         <!-- Primary Navigation Menu -->
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-50">
+        <div class="max-w-7xl mx-auto px-4 lg:px-6 xl:px-8 z-50">
             <div class="flex justify-between h-16">
                 <div class="flex">
                     <!-- Logo -->
@@ -12,7 +12,7 @@
                     </div>
 
                     <!-- Navigation Links -->
-                    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    <div class="hidden space-x-8 lg:-my-px lg:ml-10 lg:flex">
                         <JetNavLink @click="videoPlayer.makeVideoFullPage() && videoPlayer.videoContainerClassFullPage()" :href="route('stream')" :active="route().current('stream')">
                             Stream
                         </JetNavLink>
@@ -28,9 +28,6 @@
                         <JetNavLink @click="videoPlayer.makeVideoTopRight()" :href="route('shows')" :active="route().current('shows')">
                             Shows
                         </JetNavLink>
-                        <JetNavLink @click="videoPlayer.makeVideoTopRight()" :href="route('video')" :active="route().current('video')">
-                            MistServer API
-                        </JetNavLink>
                         <JetNavLink @click="videoPlayer.makeVideoTopRight()" :href="route('shop')" :active="route().current('shop')">
                             Shop
                         </JetNavLink>
@@ -41,7 +38,7 @@
                     </div>
                 </div>
 
-                <div class="hidden sm:flex sm:items-center sm:ml-6 z-50">
+                <div class="hidden lg:flex lg:items-center lg:ml-6 z-50">
 
                     <!-- Settings Dropdown -->
                     <div class="ml-3 relative z-50">
@@ -79,6 +76,12 @@
                                         <div class="block px-4 py-2 text-xs text-gray-400">
                                             Administrator Links
                                         </div>
+
+                                        <JetDropdownLink
+                                            @click="videoPlayer.makeVideoTopRight()"
+                                            :href="route('video')">
+                                            MistServer API
+                                        </JetDropdownLink>
 
                                         <JetDropdownLink
                                             @click="videoPlayer.makeVideoTopRight()"
@@ -132,7 +135,7 @@
                                         <JetDropdownLink
                                             @click="videoPlayer.makeVideoTopRight()"
                                             :href="route('profile.show')">
-                                            Profile
+                                            Settings
                                         </JetDropdownLink>
 
                                     </div>

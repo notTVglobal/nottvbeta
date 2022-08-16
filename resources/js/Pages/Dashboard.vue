@@ -5,23 +5,52 @@
         <NavigationMenu />
     </div>
 
-    <div class="place-self-center flex flex-col gap-y-3 pageWidth">
+    <div class="place-self-center flex flex-col gap-y-3 md:pageWidth">
         <div class="bg-white text-black p-5 mb-10">
 
             <h1 class="text-3xl font-semibold pb-3">Dashboard</h1>
 
             <section class="grid grid-cols-1 lg:grid-cols-3 gap-4 my-3 m-auto p-1 text-black">
                 <div class="p-5 bg-gray-200 rounded">
-                    <h2 class="font-semibold text-xl">Assignments</h2>
+                    <h2 class="font-semibold text-xl">My Assignments</h2>
                     <p class="mt-1">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
                 </div>
                 <div class="p-5 bg-gray-200 rounded">
-                    <h2 class="font-semibold text-xl">Shows</h2>
-                    <p class="mt-1">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                    <h2 class="font-semibold text-xl mb-1">My Shows</h2>
+                    <p class=""><Link
+                        @click="videoPlayer.makeVideoTopRight()"
+                        :href="`/teams/1`"
+                        class="text-blue-800 hover:text-blue-400">
+                        Down The Rabbit Hole
+                    </Link></p>
+                    <p class=""><Link
+                        @click="videoPlayer.makeVideoTopRight()"
+                        :href="`/teams/1`"
+                        class="text-blue-800 hover:text-blue-400">
+                        News & Talk
+                    </Link></p>
                 </div>
                 <div class="p-5 bg-gray-200 rounded">
-                    <h2 class="font-semibold text-xl">Teams</h2>
-                    <p class="mt-1">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."</p>
+                    <h2 class="font-semibold text-xl mb-1">My Teams</h2>
+                    <p class=""><Link
+                        @click="videoPlayer.makeVideoTopRight()"
+                        :href="`/teams/1`"
+                        class="text-blue-800 hover:text-blue-400">
+                        notTV Founders
+                    </Link></p>
+                    <p class=""><Link
+                        @click="videoPlayer.makeVideoTopRight()"
+                        :href="`/teams/1`"
+                        class="text-blue-800 hover:text-blue-400">
+                        notTV Street Team
+                    </Link></p>
+                    <p class=""><Link
+                        @click="videoPlayer.makeVideoTopRight()"
+                        :href="`/teams/1`"
+                        class="text-blue-800 hover:text-blue-400">
+                        RJG Productions
+                    </Link></p>
+
                 </div>
             </section>
 <div class="mt-6 h-0.5 bg-gray-800"></div>
@@ -44,6 +73,10 @@
 
                     <h2 class="bg-blue-400 font-semibold text-sm text-black my-3 px-2 col-span-2">Team Accounts</h2>
                     <p class="px-2">notTV Founders Shares</p>
+                    <p class="px-2 justify-self-end">0.00</p>
+                    <p class="px-2">notTV Street Team Shares</p>
+                    <p class="px-2 justify-self-end">0.00</p>
+                    <p class="px-2">RJG Production Shares</p>
                     <p class="px-2 justify-self-end">0.00</p>
                 </div>
             </section>

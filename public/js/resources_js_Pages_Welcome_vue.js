@@ -19,18 +19,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Stores_ChatStore__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/Stores/ChatStore */ "./resources/js/Stores/ChatStore.js");
 
 var __default__ = {
-  layout: _Layouts_AppLayout__WEBPACK_IMPORTED_MODULE_0__["default"],
-  methods: {
-    scrollToElement: function scrollToElement() {
-      var el = this.$refs.scrollToMe;
+  layout: _Layouts_AppLayout__WEBPACK_IMPORTED_MODULE_0__["default"] // methods: {
+  //     scrollToElement() {
+  //         const el = this.$refs.scrollToMe;
+  //         if (el) {
+  //             el.scrollIntoView({ behavior: "smooth" });
+  //         }
+  //     },
+  // },
 
-      if (el) {
-        el.scrollIntoView({
-          behavior: "smooth"
-        });
-      }
-    }
-  }
 };
 
 
@@ -57,10 +54,27 @@ var __default__ = {
     chat.show = false;
     chat["class"] = 'chatHidden';
     var showLogin = (0,vue__WEBPACK_IMPORTED_MODULE_3__.ref)(false);
+    var showDiv = (0,vue__WEBPACK_IMPORTED_MODULE_3__.ref)(null);
+    var scrollToMe = (0,vue__WEBPACK_IMPORTED_MODULE_3__.ref)(null);
+
+    function scrollToElement() {
+      var _scrollToMe$value;
+
+      (_scrollToMe$value = scrollToMe.value) === null || _scrollToMe$value === void 0 ? void 0 : _scrollToMe$value.scrollIntoView({
+        behavior: "smooth"
+      });
+      setTimeout(function () {
+        showDiv.value = true;
+      }, 10);
+    }
+
     var __returned__ = {
       videoPlayer: videoPlayer,
       chat: chat,
       showLogin: showLogin,
+      showDiv: showDiv,
+      scrollToMe: scrollToMe,
+      scrollToElement: scrollToElement,
       AppLayout: _Layouts_AppLayout__WEBPACK_IMPORTED_MODULE_0__["default"],
       JetApplicationLogo: _Jetstream_ApplicationLogo_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
       Login: _Components_Login_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
@@ -130,45 +144,43 @@ var _hoisted_4 = {
 };
 
 var _hoisted_5 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
-  "class": "text-center"
+  "class": "text-center text-bold"
 }, "SCROLL DOWN", -1
 /* HOISTED */
 );
 
 var _hoisted_6 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
-  "class": "mt-6 text-center"
+  "class": "mt-2 text-xs text-center"
 }, "OR", -1
 /* HOISTED */
 );
 
 var _hoisted_7 = {
-  "class": "mt-6 text-center"
-};
-var _hoisted_8 = {
   key: 0,
   "class": "fixed top-0 right-0 px-6 py-4 sm:block sm:items-center sm:pt-2"
 };
 
-var _hoisted_9 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Stream ");
+var _hoisted_8 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Stream ");
 
-var _hoisted_10 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Log in ");
+var _hoisted_9 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Log in ");
 
-var _hoisted_11 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Register ");
+var _hoisted_10 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Register ");
 
-var _hoisted_12 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<section class=\"flex justify-center items-center h-screen bg-white text-black p-10\"><div class=\"grid grid-cols-1 gap-2\"><div class=\"text-center font-semibold\">Welcome to notTV</div><div class=\"text-center\">Where artists own the platform.</div></div></section><section class=\"grid md:grid-cols-2 content-center gap-10 bg-gray-300 text-white p-10\"><div class=\"p-20 bg-fuchsia-600 rounded\"><h2 class=\"font-bold text-2xl text-center pb-3\">Rewards</h2><p class=\"text-center\">Reap the rewards of a cooperative blockchain media distribution platform and streaming service.</p></div><div class=\"p-20 bg-green-600 rounded\"><h2 class=\"font-bold text-2xl text-center pb-3\">New audiences</h2><p class=\"text-center\">Share your audience with other creators.. which means they also share their audience with you!</p></div><div class=\"p-20 bg-blue-600 rounded\"><h2 class=\"font-bold text-2xl text-center pb-3\">Public good</h2><p class=\"text-center\">Help fund the public good, free speech and free press automatically as part of the business model and original concept to keep a free democracy and make the world a better place.</p></div><div class=\"p-20 bg-purple-600 rounded\"><h2 class=\"font-bold text-2xl text-center pb-3\">Join now</h2><p class=\"text-center\">Register your content as your very own NFT on a blockchain that you own.</p></div></section>", 2);
+var _hoisted_11 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<section class=\"flex justify-center items-center h-screen bg-white text-black p-10\"><div class=\"grid grid-cols-1 gap-2\"><div class=\"text-center font-semibold\">Welcome to notTV</div><div class=\"text-center\">Where artists own the platform.</div></div></section><section class=\"grid md:grid-cols-2 content-center gap-10 bg-gray-300 text-white p-10\"><div class=\"p-20 bg-fuchsia-600 rounded\"><h2 class=\"font-bold text-2xl text-center pb-3\">Rewards</h2><p class=\"text-center\">Reap the rewards of a cooperative blockchain media distribution platform and streaming service.</p></div><div class=\"p-20 bg-green-600 rounded\"><h2 class=\"font-bold text-2xl text-center pb-3\">New audiences</h2><p class=\"text-center\">Share your audience with other creators.. which means they also share their audience with you!</p></div><div class=\"p-20 bg-blue-600 rounded\"><h2 class=\"font-bold text-2xl text-center pb-3\">Public good</h2><p class=\"text-center\">Help fund the public good, free speech and free press automatically as part of the business model and original concept to keep a free democracy and make the world a better place.</p></div><div class=\"p-20 bg-purple-600 rounded\"><h2 class=\"font-bold text-2xl text-center pb-3\">Join now</h2><p class=\"text-center\">Register your content as your very own NFT on a blockchain that you own.</p></div></section>", 2);
 
-var _hoisted_14 = {
+var _hoisted_13 = {
+  key: 0,
   "class": "flex justify-center items-center h-screen",
   ref: "scrollToMe"
 };
 
-var _hoisted_15 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+var _hoisted_14 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": ""
 }, "#mediaforabetterworld", -1
 /* HOISTED */
 );
 
-var _hoisted_16 = [_hoisted_15];
+var _hoisted_15 = [_hoisted_14];
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_Head = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Head");
 
@@ -180,18 +192,18 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     title: "Beta"
   }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    <template #menu></template>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["JetApplicationLogo"], {
     "class": "block md:w-auto p-10"
-  }), _hoisted_5, _hoisted_6, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  }), _hoisted_5, _hoisted_6, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+    "class": "mt-4 text-center"
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     "class": "bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded disabled:bg-gray-400",
-    onClick: _cache[0] || (_cache[0] = function () {
-      return $options.scrollToElement && $options.scrollToElement.apply($options, arguments);
-    })
-  }, "Watch Now")])])]), $props.canLogin ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_8, [_ctx.$page.props.user ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Link, {
+    onClick: $setup.scrollToElement
+  }, "Watch Now")])])]), $props.canLogin ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_7, [_ctx.$page.props.user ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Link, {
     key: 0,
     href: _ctx.route('stream'),
     "class": "text-sm text-gray-200 underline"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [_hoisted_9];
+      return [_hoisted_8];
     }),
     _: 1
     /* STABLE */
@@ -201,13 +213,13 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   , ["href"])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
     key: 1
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                        <div class=\"fixed left-0 top-0 w-36 p-5\"><JetApplicationLogo class=\"\"/></div>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Button, {
-    onClick: _cache[1] || (_cache[1] = function ($event) {
+    onClick: _cache[0] || (_cache[0] = function ($event) {
       return $setup.showLogin = true;
     }),
     "class": "text-sm text-gray-200 underline"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [_hoisted_10];
+      return [_hoisted_9];
     }),
     _: 1
     /* STABLE */
@@ -218,7 +230,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "ml-4 text-sm text-gray-200 underline"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [_hoisted_11];
+      return [_hoisted_10];
     }),
     _: 1
     /* STABLE */
@@ -227,13 +239,13 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* PROPS */
   , ["href"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)], 64
   /* STABLE_FRAGMENT */
-  ))])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), _hoisted_12, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("section", _hoisted_14, _hoisted_16, 512
+  ))])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), _hoisted_11, !$setup.showDiv ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("section", _hoisted_13, _hoisted_15, 512
   /* NEED_PATCH */
-  )]), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Teleport, {
+  )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Teleport, {
     to: "body"
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["Login"], {
     show: $setup.showLogin,
-    onClose: _cache[2] || (_cache[2] = function ($event) {
+    onClose: _cache[1] || (_cache[1] = function ($event) {
       return $setup.showLogin = false;
     })
   }, null, 8

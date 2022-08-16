@@ -1,5 +1,6 @@
 <template>
-    <AppLayout title="Profile">
+    <Head title="Settings" />
+    <AppLayout>
         <div class="sticky top-0 w-full nav-mask">
             <ResponsiveNavigationMenu/>
             <NavigationMenu />

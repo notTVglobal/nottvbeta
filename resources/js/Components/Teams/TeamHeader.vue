@@ -14,26 +14,30 @@
                         class="bg-green-400 w-5 h-5 text-xs text-white rounded-full flex justify-center items-center absolute -right-4 -top-2">
                         {{ team.spots }}
                     </div>
-
-
                 </h3>
+                <div class="mt-2 p-5">
+                    <p class="mb-6">
+                        {{ team.description }}
+                    </p>
+                </div>
             </div>
-            <div class="mr-8 mt-6">
-                <button
-                    class="bg-green-500 hover:bg-green-600 text-white mt-8 ml-6 px-4 py-2 rounded disabled:bg-gray-400"
-                    :disabled="! team.spotsRemaining"
-                    @click="$emit('add')"
-                    >Add Member ({{ team.spotsRemaining }} spots left)</button>
+            <div>
+                <div class="mr-8 mt-6">
+                    <button
+                        class="bg-green-500 hover:bg-green-600 text-white mt-1 ml-6 px-4 py-2 rounded disabled:bg-gray-400"
+                        :disabled="! team.spotsRemaining"
+                        @click="$emit('add')"
+                        >Add Member ({{ team.spotsRemaining }} spots left)</button>
+                </div>
+                <div class="mr-8">
+                    <button
+                        class="bg-green-500 hover:bg-green-600 text-white mt-1 ml-6 px-4 py-2 rounded disabled:bg-gray-400"
+                        :disabled="! team.spotsRemaining"
+                        @click="$emit('add')"
+                    >Create Assignment</button>
+                </div>
             </div>
         </header>
-
-        <div class="flex justify-between mt-12 mb-6 p-5">
-
-            <p class="mb-6">
-                {{ team.description }}
-            </p>
-
-        </div>
 
 </template>
 

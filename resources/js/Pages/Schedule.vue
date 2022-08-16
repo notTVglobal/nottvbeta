@@ -17,7 +17,7 @@
 <!--            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">-->
 <!--                <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">-->
                     <div class="text-3xl font-semibold">Schedule</div>
-
+                    <button class="border-gray-800">Add Event</button>
 <!--                </div>-->
 <!--            </div>-->
 <!--        </div>-->

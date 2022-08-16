@@ -19,11 +19,13 @@
                     <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
 
-                        <TeamMembersList />
+                            <TeamMembersList />
 
-                        <TeamFooter />
+<!--                        <TeamFooter />-->
+
 
                         </div>
+                        <div class="bg-orange-300 w-full mt-6 p-2 rounded font-bold">Team Assignments</div>
                     </div>
                 </div>
             </div>
