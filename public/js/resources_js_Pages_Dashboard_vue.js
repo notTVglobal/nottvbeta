@@ -66,23 +66,56 @@ var _hoisted_1 = {
   "class": "sticky top-0 w-full nav-mask"
 };
 var _hoisted_2 = {
-  "class": "place-self-center flex flex-col gap-y-3 md:pageWidth"
+  "class": "place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall"
 };
 var _hoisted_3 = {
   "class": "bg-white text-black p-5 mb-10"
 };
+var _hoisted_4 = {
+  "class": "mb-4"
+};
 
-var _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h1", {
+var _hoisted_5 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h1", {
   "class": "text-3xl font-semibold pb-3"
 }, "Dashboard", -1
 /* HOISTED */
 );
 
-var _hoisted_5 = {
+var _hoisted_6 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  "class": "bg-green-500 hover:bg-green-600 text-white mt-1 ml-6 px-4 py-2 rounded disabled:bg-gray-400"
+}, "All Users", -1
+/* HOISTED */
+);
+
+var _hoisted_7 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  "class": "bg-green-500 hover:bg-green-600 text-white mt-1 ml-6 px-4 py-2 rounded disabled:bg-gray-400"
+}, "All Channels", -1
+/* HOISTED */
+);
+
+var _hoisted_8 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  "class": "bg-green-500 hover:bg-green-600 text-white mt-1 ml-6 px-4 py-2 rounded disabled:bg-gray-400"
+}, "All Teams", -1
+/* HOISTED */
+);
+
+var _hoisted_9 = {
+  "class": "pl-5"
+};
+
+var _hoisted_10 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" MistServer API ");
+
+var _hoisted_11 = {
+  "class": "pl-5"
+};
+
+var _hoisted_12 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Image Uploader ");
+
+var _hoisted_13 = {
   "class": "grid grid-cols-1 lg:grid-cols-3 gap-4 my-3 m-auto p-1 text-black"
 };
 
-var _hoisted_6 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+var _hoisted_14 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "p-5 bg-gray-200 rounded"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h2", {
   "class": "font-semibold text-xl"
@@ -92,57 +125,57 @@ var _hoisted_6 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementV
 /* HOISTED */
 );
 
-var _hoisted_7 = {
+var _hoisted_15 = {
   "class": "p-5 bg-gray-200 rounded"
 };
 
-var _hoisted_8 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h2", {
+var _hoisted_16 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h2", {
   "class": "font-semibold text-xl mb-1"
 }, "My Shows", -1
 /* HOISTED */
 );
 
-var _hoisted_9 = {
-  "class": ""
-};
-
-var _hoisted_10 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Down The Rabbit Hole ");
-
-var _hoisted_11 = {
-  "class": ""
-};
-
-var _hoisted_12 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" News & Talk ");
-
-var _hoisted_13 = {
-  "class": "p-5 bg-gray-200 rounded"
-};
-
-var _hoisted_14 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h2", {
-  "class": "font-semibold text-xl mb-1"
-}, "My Teams", -1
-/* HOISTED */
-);
-
-var _hoisted_15 = {
-  "class": ""
-};
-
-var _hoisted_16 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" notTV Founders ");
-
 var _hoisted_17 = {
   "class": ""
 };
 
-var _hoisted_18 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" notTV Street Team ");
+var _hoisted_18 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Down The Rabbit Hole ");
 
 var _hoisted_19 = {
   "class": ""
 };
 
-var _hoisted_20 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" RJG Productions ");
+var _hoisted_20 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" News & Talk ");
 
-var _hoisted_21 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"mt-6 h-0.5 bg-gray-800\"></div><section class=\"grid grid-cols-1 mt-6 gap-2\"><div class=\"font-semibold text-2xl text-gray-800 px-2\"> Account Summary </div><div class=\"px-2\"> Account: 000000 </div><div class=\"grid grid-cols-2 border-2 pb-3\"><h2 class=\"bg-gray-800 text-white text-sm p-2 col-span-2\">Membership: 000000</h2><h2 class=\"bg-blue-400 font-semibold text-sm text-black px-2 mb-3 col-span-2\">Account Name</h2><p class=\"px-2\">Chequing</p><p class=\"px-2 justify-self-end\">0.00</p><p class=\"px-2\">Equity Shares</p><p class=\"px-2 justify-self-end\">10.00</p><p class=\"px-2\">Savings</p><p class=\"px-2 justify-self-end\">0.00</p><h2 class=\"bg-blue-400 font-semibold text-sm text-black my-3 px-2 col-span-2\">Team Accounts</h2><p class=\"px-2\">notTV Founders Shares</p><p class=\"px-2 justify-self-end\">0.00</p><p class=\"px-2\">notTV Street Team Shares</p><p class=\"px-2 justify-self-end\">0.00</p><p class=\"px-2\">RJG Production Shares</p><p class=\"px-2 justify-self-end\">0.00</p></div></section>", 2);
+var _hoisted_21 = {
+  "class": "p-5 bg-gray-200 rounded"
+};
+
+var _hoisted_22 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h2", {
+  "class": "font-semibold text-xl mb-1"
+}, "My Teams", -1
+/* HOISTED */
+);
+
+var _hoisted_23 = {
+  "class": ""
+};
+
+var _hoisted_24 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" notTV Founders ");
+
+var _hoisted_25 = {
+  "class": ""
+};
+
+var _hoisted_26 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" notTV Street Team ");
+
+var _hoisted_27 = {
+  "class": ""
+};
+
+var _hoisted_28 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" RJG Productions ");
+
+var _hoisted_29 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"mt-6 h-0.5 bg-gray-800\"></div><section class=\"grid grid-cols-1 mt-6 gap-2\"><div class=\"font-semibold text-2xl text-gray-800 px-2\"> Account Summary </div><div class=\"px-2\"> Account: 000000 </div><div class=\"grid grid-cols-2 border-2 pb-3\"><h2 class=\"bg-gray-800 text-white text-sm p-2 col-span-2\">Membership: 000000</h2><h2 class=\"bg-blue-400 font-semibold text-sm text-black px-2 mb-3 col-span-2\">Account Name</h2><p class=\"px-2\">Chequing</p><p class=\"px-2 justify-self-end\">0.00</p><p class=\"px-2\">Equity Shares</p><p class=\"px-2 justify-self-end\">10.00</p><p class=\"px-2\">Savings</p><p class=\"px-2 justify-self-end\">0.00</p><h2 class=\"bg-blue-400 font-semibold text-sm text-black my-3 px-2 col-span-2\">Team Accounts</h2><p class=\"px-2\">notTV Founders Shares</p><p class=\"px-2 justify-self-end\">0.00</p><p class=\"px-2\">notTV Street Team Shares</p><p class=\"px-2 justify-self-end\">0.00</p><p class=\"px-2\">RJG Production Shares</p><p class=\"px-2 justify-self-end\">0.00</p></div></section>", 2);
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_Head = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Head");
@@ -151,11 +184,35 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Head, {
     title: "Dashboard"
-  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ResponsiveNavigationMenu"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["NavigationMenu"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [_hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("section", _hoisted_5, [_hoisted_6, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [_hoisted_8, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
-    onClick: _cache[0] || (_cache[0] = function ($event) {
-      return $setup.videoPlayer.makeVideoTopRight();
+  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ResponsiveNavigationMenu"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["NavigationMenu"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [_hoisted_5, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("disable button if ! admin"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+    href: "/admin/users"
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [_hoisted_6];
     }),
-    href: "/teams/1",
+    _: 1
+    /* STABLE */
+
+  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("disable button if ! admin"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+    href: "/admin/channels"
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [_hoisted_7];
+    }),
+    _: 1
+    /* STABLE */
+
+  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("disable button if ! admin"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+    href: "/teams"
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [_hoisted_8];
+    }),
+    _: 1
+    /* STABLE */
+
+  })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+    href: "/video",
     "class": "text-blue-800 hover:text-blue-400"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
@@ -164,11 +221,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1
     /* STABLE */
 
-  })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
-    onClick: _cache[1] || (_cache[1] = function ($event) {
-      return $setup.videoPlayer.makeVideoTopRight();
-    }),
-    href: "/teams/1",
+  })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+    href: "/image",
     "class": "text-blue-800 hover:text-blue-400"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
@@ -177,21 +231,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1
     /* STABLE */
 
-  })])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_13, [_hoisted_14, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_15, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
-    onClick: _cache[2] || (_cache[2] = function ($event) {
-      return $setup.videoPlayer.makeVideoTopRight();
-    }),
-    href: "/teams/1",
-    "class": "text-blue-800 hover:text-blue-400"
-  }, {
-    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [_hoisted_16];
-    }),
-    _: 1
-    /* STABLE */
-
-  })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_17, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
-    onClick: _cache[3] || (_cache[3] = function ($event) {
+  })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("section", _hoisted_13, [_hoisted_14, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_15, [_hoisted_16, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_17, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+    onClick: _cache[0] || (_cache[0] = function ($event) {
       return $setup.videoPlayer.makeVideoTopRight();
     }),
     href: "/teams/1",
@@ -204,7 +245,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     /* STABLE */
 
   })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_19, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
-    onClick: _cache[4] || (_cache[4] = function ($event) {
+    onClick: _cache[1] || (_cache[1] = function ($event) {
       return $setup.videoPlayer.makeVideoTopRight();
     }),
     href: "/teams/1",
@@ -216,7 +257,46 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1
     /* STABLE */
 
-  })])])]), _hoisted_21])])], 64
+  })])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_21, [_hoisted_22, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_23, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+    onClick: _cache[2] || (_cache[2] = function ($event) {
+      return $setup.videoPlayer.makeVideoTopRight();
+    }),
+    href: "/teams/1",
+    "class": "text-blue-800 hover:text-blue-400"
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [_hoisted_24];
+    }),
+    _: 1
+    /* STABLE */
+
+  })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_25, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+    onClick: _cache[3] || (_cache[3] = function ($event) {
+      return $setup.videoPlayer.makeVideoTopRight();
+    }),
+    href: "/teams/1",
+    "class": "text-blue-800 hover:text-blue-400"
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [_hoisted_26];
+    }),
+    _: 1
+    /* STABLE */
+
+  })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_27, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+    onClick: _cache[4] || (_cache[4] = function ($event) {
+      return $setup.videoPlayer.makeVideoTopRight();
+    }),
+    href: "/teams/1",
+    "class": "text-blue-800 hover:text-blue-400"
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [_hoisted_28];
+    }),
+    _: 1
+    /* STABLE */
+
+  })])])]), _hoisted_29])])], 64
   /* STABLE_FRAGMENT */
   );
 }

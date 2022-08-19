@@ -42,7 +42,9 @@ var __default__ = {
       email: '',
       password: '',
       password_confirmation: '',
-      terms: false
+      role_id: '',
+      user_phone: '',
+      terms: true
     });
 
     var submit = function submit() {
@@ -224,20 +226,20 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         autocomplete: "new-password"
       }, null, 8
       /* PROPS */
-      , ["modelValue"])]), _ctx.$page.props.jetstream.hasTermsAndPrivacyPolicyFeature ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["JetLabel"], {
+      , ["modelValue"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            Jetstream/Fortify Multi-Auth: Roles, Permissions and Guards"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            https://www.youtube.com/watch?v=NiQSNjWKLfU"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            <div class=\"mt-4\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <JetLabel  for=\"role_id\" value=\"Register as\" />"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <select name=\"role_id\" v-model=\"form.role_id\" class=\"mt-1 w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    <option value=\"2\" selected>Viewer</option>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    <option value=\"3\">Creator</option>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                </select>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            </div>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            <div class=\"mt-4\" v-if=\"form.role_id == 3\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <JetLabel for=\"user_phone\" value=\"Phone Number\" />"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <JetInput"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    id=\"user_phone\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    v-model=\"form.user_phone\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    type=\"phone\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    class=\"mt-1 block w-full\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    required"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    autocomplete=\"new-password\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                />"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            </div>"), _ctx.$page.props.jetstream.hasTermsAndPrivacyPolicyFeature ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["JetLabel"], {
         "for": "terms"
       }, {
         "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
           return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["JetCheckbox"], {
             id: "terms",
-            checked: $setup.form.terms,
-            "onUpdate:checked": _cache[4] || (_cache[4] = function ($event) {
+            modelValue: $setup.form.terms,
+            "onUpdate:modelValue": _cache[4] || (_cache[4] = function ($event) {
               return $setup.form.terms = $event;
             }),
             name: "terms"
           }, null, 8
           /* PROPS */
-          , ["checked"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [_hoisted_8, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
+          , ["modelValue"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [_hoisted_8, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
             target: "_blank",
             href: _ctx.route('terms.show'),
             "class": "underline text-sm text-gray-600 hover:text-gray-900"

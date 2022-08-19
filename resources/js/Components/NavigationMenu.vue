@@ -16,6 +16,9 @@
                         <JetNavLink @click="videoPlayer.makeVideoFullPage() && videoPlayer.videoContainerClassFullPage()" :href="route('stream')" :active="route().current('stream')">
                             Stream
                         </JetNavLink>
+                        <JetNavLink @click="videoPlayer.makeVideoTopRight()" :href="route('schedule')" :active="route().current('schedule')">
+                            Schedule
+                        </JetNavLink>
                         <JetNavLink @click="videoPlayer.makeVideoTopRight()" :href="route('posts')" :active="route().current('posts')">
                             Posts
                         </JetNavLink>
@@ -30,9 +33,6 @@
                         </JetNavLink>
                         <JetNavLink @click="videoPlayer.makeVideoTopRight()" :href="route('shop')" :active="route().current('shop')">
                             Shop
-                        </JetNavLink>
-                        <JetNavLink @click="videoPlayer.makeVideoTopRight()" :href="route('schedule')" :active="route().current('schedule')">
-                            Schedule
                         </JetNavLink>
                         <ChatToggle v-model:checked="chat.show" label="Chat" />
                     </div>
@@ -71,42 +71,6 @@
 
                             <template #content>
                                 <div class="divide-y">
-                                    <div class="pb-3">
-                                        <!-- Administrator Links -->
-                                        <div class="block px-4 py-2 text-xs text-gray-400">
-                                            Administrator Links
-                                        </div>
-
-                                        <JetDropdownLink
-                                            @click="videoPlayer.makeVideoTopRight()"
-                                            :href="route('video')">
-                                            MistServer API
-                                        </JetDropdownLink>
-
-                                        <JetDropdownLink
-                                            @click="videoPlayer.makeVideoTopRight()"
-                                            :href="route('image')">
-                                            Image Uploader
-                                        </JetDropdownLink>
-
-                                        <JetDropdownLink
-                                            @click="videoPlayer.makeVideoTopRight()"
-                                            :href="route('admin.channels.index')">
-                                            Channels
-                                        </JetDropdownLink>
-
-                                        <JetDropdownLink
-                                            @click="videoPlayer.makeVideoTopRight()"
-                                            :href="route('teams.index')">
-                                            Teams
-                                        </JetDropdownLink>
-
-                                        <JetDropdownLink
-                                            @click="videoPlayer.makeVideoTopRight()"
-                                            :href="route('admin.users.index')">
-                                            Users
-                                        </JetDropdownLink>
-                                    </div>
 <!--                                    <div class="pb-3">-->
 <!--                                        &lt;!&ndash; Teams Links &ndash;&gt;-->
 <!--                                        &lt;!&ndash; Need to add v-if="$page.props.jetstream.hasTeamFeatures in a template tag &ndash;&gt;-->

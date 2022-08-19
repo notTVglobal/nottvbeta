@@ -27,6 +27,14 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role_id',
+        'user_address_1',
+        'user_address_2',
+        'user_city',
+        'user_province',
+        'user_country',
+        'user_postal_code',
+        'user_phone',
     ];
 
     /**
@@ -40,6 +48,8 @@ class User extends Authenticatable
         'two_factor_recovery_codes',
         'two_factor_secret',
         'stripe_token',
+        'creator_number',
+        'subscription_status',
     ];
 
     /**

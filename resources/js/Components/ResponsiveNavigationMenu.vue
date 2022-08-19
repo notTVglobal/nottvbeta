@@ -107,22 +107,6 @@
 <!--                    Manage Account-->
 <!--                </div>-->
 
-                <JetResponsiveNavLink @click="videoPlayer.makeVideoTopRight()"
-                                      :href="route('dashboard')"
-                                      :active="route().current('dashboard')">
-                    Dashboard
-                </JetResponsiveNavLink>
-                <JetResponsiveNavLink @click="videoPlayer.makeVideoTopRight()"
-                                      :href="route('profile.show')"
-                                      :active="route().current('profile.show')">
-                    Settings
-                </JetResponsiveNavLink>
-
-                <JetResponsiveNavLink @click="videoPlayer.makeVideoTopRight()"
-                                      :href="route('training')"
-                                      :active="route().current('training')">
-                    Training
-                </JetResponsiveNavLink>
 
 <!--                <div class="block px-4 py-2 text-xs text-gray-400">-->
 <!--                    Links-->
@@ -137,24 +121,32 @@
                 </JetResponsiveNavLink>
 
                 <JetResponsiveNavLink @click="videoPlayer.makeVideoTopRight()"
-                                      :href="route('shows')"
-                                      :active="route().current('shows')"
+                                      :href="route('schedule')"
+                                      :active="route().current('schedule')"
+
+                >
+                    Schedule
+                </JetResponsiveNavLink>
+
+                <JetResponsiveNavLink @click="videoPlayer.makeVideoTopRight()"
+                                      :href="route('posts')"
+                                      :active="route().current('posts')"
 
                 >
                     Posts
                 </JetResponsiveNavLink>
 
                 <JetResponsiveNavLink @click="videoPlayer.makeVideoTopRight()"
-                                      :href="route('shows')"
-                                      :active="route().current('shows')"
+                                      :href="route('channels')"
+                                      :active="route().current('channels')"
 
                 >
                     Channels
                 </JetResponsiveNavLink>
 
                 <JetResponsiveNavLink @click="videoPlayer.makeVideoTopRight()"
-                                      :href="route('shows')"
-                                      :active="route().current('shows')"
+                                      :href="route('movies')"
+                                      :active="route().current('movies')"
 
                 >
                     Movies
@@ -169,26 +161,38 @@
                 </JetResponsiveNavLink>
 
                 <JetResponsiveNavLink @click="videoPlayer.makeVideoTopRight()"
-                                      :href="route('shows')"
-                                      :active="route().current('shows')"
+                                      :href="route('shop')"
+                                      :active="route().current('shop')"
 
                 >
                     Shop
                 </JetResponsiveNavLink>
 
                 <JetResponsiveNavLink @click="videoPlayer.makeVideoTopRight()"
-                                      :href="route('shows')"
-                                      :active="route().current('shows')"
-
-                >
-                    Schedule
+                                      :href="route('dashboard')"
+                                      :active="route().current('dashboard')"
+                                      class="border-t-2">
+                    Dashboard
                 </JetResponsiveNavLink>
+
+                <JetResponsiveNavLink @click="videoPlayer.makeVideoTopRight()"
+                                      :href="route('profile.show')"
+                                      :active="route().current('profile.show')">
+                    Settings
+                </JetResponsiveNavLink>
+
+                <JetResponsiveNavLink @click="videoPlayer.makeVideoTopRight()"
+                                      :href="route('training')"
+                                      :active="route().current('training')">
+                    Training
+                </JetResponsiveNavLink>
+
 
 
 
                 <!-- Authentication -->
                 <form method="POST" @submit.prevent="logout">
-                    <JetResponsiveNavLink as="button">
+                    <JetResponsiveNavLink as="button" class="border-t-0">
                         Log Out
                     </JetResponsiveNavLink>
                 </form>

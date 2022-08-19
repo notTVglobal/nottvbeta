@@ -7,7 +7,7 @@
     </div>
 
 
-    <div class="place-self-center flex flex-col gap-y-3 pageWidth">
+    <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
 
         <div class="bg-white rounded text-black p-5 mb-10">
 
@@ -26,6 +26,7 @@
 
                         </div>
                         <div class="bg-orange-300 w-full mt-6 p-2 rounded font-bold">Team Assignments</div>
+                        <div class="p-2">Coming Soon!</div>
                     </div>
                 </div>
             </div>

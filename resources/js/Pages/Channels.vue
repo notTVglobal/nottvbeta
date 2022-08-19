@@ -22,6 +22,7 @@
                 <div class="bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-4 cursor-pointer">Music</div>
                 <div class="bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-4 cursor-pointer">Kids</div>
                 <div class="bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-4 cursor-pointer">Live</div>
+                <div class="bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-4 cursor-pointer">Random</div>
             </div>
 
         </div>

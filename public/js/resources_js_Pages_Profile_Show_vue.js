@@ -2612,7 +2612,7 @@ var _hoisted_2 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementV
 );
 
 var _hoisted_3 = {
-  "class": "place-self-center flex flex-col gap-y-3 pageWidth"
+  "class": "place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall"
 };
 var _hoisted_4 = {
   "class": "text-black p-5 mb-10"

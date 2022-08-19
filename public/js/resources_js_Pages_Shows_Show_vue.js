@@ -70,7 +70,7 @@ var _hoisted_1 = {
   "class": "sticky top-0 w-full nav-mask"
 };
 var _hoisted_2 = {
-  "class": "place-self-center flex flex-col gap-y-3 pageWidth"
+  "class": "place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall"
 };
 var _hoisted_3 = {
   "class": "bg-white text-black p-5 mb-10"

@@ -13,7 +13,9 @@ const form = useForm({
     email: '',
     password: '',
     password_confirmation: '',
-    terms: false,
+    role_id: '',
+    user_phone: '',
+    terms: true,
 });
 
 const submit = () => {
@@ -88,10 +90,34 @@ export default {
                 />
             </div>
 
+            <!--            Jetstream/Fortify Multi-Auth: Roles, Permissions and Guards-->
+            <!--            https://www.youtube.com/watch?v=NiQSNjWKLfU-->
+
+<!--            <div class="mt-4">-->
+<!--                <JetLabel  for="role_id" value="Register as" />-->
+<!--                <select name="role_id" v-model="form.role_id" class="mt-1 w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">-->
+<!--                    <option value="2" selected>Viewer</option>-->
+<!--                    <option value="3">Creator</option>-->
+<!--                </select>-->
+<!--            </div>-->
+
+<!--            <div class="mt-4" v-if="form.role_id == 3">-->
+<!--                <JetLabel for="user_phone" value="Phone Number" />-->
+<!--                <JetInput-->
+<!--                    id="user_phone"-->
+<!--                    v-model="form.user_phone"-->
+<!--                    type="phone"-->
+<!--                    class="mt-1 block w-full"-->
+<!--                    required-->
+<!--                    autocomplete="new-password"-->
+<!--                />-->
+<!--            </div>-->
+
+
             <div v-if="$page.props.jetstream.hasTermsAndPrivacyPolicyFeature" class="mt-4">
                 <JetLabel for="terms">
                     <div class="flex items-center">
-                        <JetCheckbox id="terms" v-model:checked="form.terms" name="terms" />
+                        <JetCheckbox id="terms" v-model="form.terms" name="terms" />
 
                         <div class="ml-2">
                             I agree to the <a target="_blank" :href="route('terms.show')" class="underline text-sm text-gray-600 hover:text-gray-900">Terms of Service</a> and <a target="_blank" :href="route('policy.show')" class="underline text-sm text-gray-600 hover:text-gray-900">Privacy Policy</a>

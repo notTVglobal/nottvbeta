@@ -5,10 +5,37 @@
         <NavigationMenu />
     </div>
 
-    <div class="place-self-center flex flex-col gap-y-3 md:pageWidth">
+    <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
         <div class="bg-white text-black p-5 mb-10">
 
+            <div class="mb-4">
             <h1 class="text-3xl font-semibold pb-3">Dashboard</h1>
+<!--disable button if ! admin-->
+            <Link :href="`/admin/users`"><button
+                class="bg-green-500 hover:bg-green-600 text-white mt-1 ml-6 px-4 py-2 rounded disabled:bg-gray-400"
+            >All Users</button>
+            </Link>
+<!--disable button if ! admin-->
+            <Link :href="`/admin/channels`"><button
+                class="bg-green-500 hover:bg-green-600 text-white mt-1 ml-6 px-4 py-2 rounded disabled:bg-gray-400"
+            >All Channels</button>
+            </Link>
+<!--disable button if ! admin-->
+            <Link :href="`/teams`"><button
+                class="bg-green-500 hover:bg-green-600 text-white mt-1 ml-6 px-4 py-2 rounded disabled:bg-gray-400"
+            >All Teams</button>
+            </Link>
+            </div>
+            <div class="pl-5">
+                <Link :href="`/video`" class="text-blue-800 hover:text-blue-400">
+                    MistServer API
+                </Link>
+            </div>
+            <div class="pl-5">
+                <Link :href="`/image`" class="text-blue-800 hover:text-blue-400">
+                    Image Uploader
+                </Link>
+            </div>
 
             <section class="grid grid-cols-1 lg:grid-cols-3 gap-4 my-3 m-auto p-1 text-black">
                 <div class="p-5 bg-gray-200 rounded">
@@ -52,6 +79,7 @@
                     </Link></p>
 
                 </div>
+
             </section>
 <div class="mt-6 h-0.5 bg-gray-800"></div>
             <section class="grid grid-cols-1 mt-6 gap-2">

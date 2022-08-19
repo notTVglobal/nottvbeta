@@ -61,13 +61,13 @@
 <!--                </button>-->
 <!--                <button v-if="!videoPlayerStore.muted" @click="muteVideo" class="hover:text-blue-600">mute</button>-->
 <!--            </div>-->
-            <div v-if="videoPlayerStore.fullPage" class="fixed bottom-0 ml-3 my-3 z-50">
-                <button @click="loadVideo1" class="bg-gray-300 text-black p-1 m-2">Spring</button>
-                <button @click="loadVideo2" class="bg-gray-300 text-black p-1 m-2">Dune</button>
-                <button @click="loadVideo3" class="bg-gray-300 text-black p-1 m-2">1984</button>
-                <button @click="loadVideo4" class="bg-gray-300 text-black p-1 m-2">The Terminator</button>
-                <button @click="loadVideo5" class="bg-gray-300 text-black p-1 m-2">Natural World</button>
-            </div>
+<!--            <div v-if="videoPlayerStore.fullPage" class="fixed bottom-0 ml-3 my-3 z-50">-->
+<!--                <button @click="loadVideo1" class="bg-gray-300 text-black p-1 m-2">Spring</button>-->
+<!--                <button @click="loadVideo2" class="bg-gray-300 text-black p-1 m-2">Dune</button>-->
+<!--                <button @click="loadVideo3" class="bg-gray-300 text-black p-1 m-2">1984</button>-->
+<!--                <button @click="loadVideo4" class="bg-gray-300 text-black p-1 m-2">The Terminator</button>-->
+<!--                <button @click="loadVideo5" class="bg-gray-300 text-black p-1 m-2">Natural World</button>-->
+<!--            </div>-->
             </div>
     </div>
 

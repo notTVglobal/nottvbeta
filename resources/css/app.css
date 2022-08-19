@@ -102,9 +102,11 @@
         margin-right: 26vw;
         z-index: 60;
         width: calc(100% - 26rem);
+        margin-top: 0;
     }
     .pageWidthSmall {
         z-index: 60;
         width: 100%;
+        margin-top: 14rem;
     }
 }

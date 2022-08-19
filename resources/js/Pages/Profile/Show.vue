@@ -13,7 +13,7 @@
                 Profile
             </h2>
         </template>
-        <div class="place-self-center flex flex-col gap-y-3 pageWidth">
+        <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
             <div class="text-black p-5 mb-10">
 
         <div class="text-black">

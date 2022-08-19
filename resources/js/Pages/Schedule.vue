@@ -5,7 +5,7 @@
         <NavigationMenu />
     </div>
 
-    <div class="place-self-center flex flex-col gap-y-3 pageWidth">
+    <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
         <div class="p-5 mb-10">
 <!--        <template #header>-->
 <!--            <h2 class="font-semibold text-xl text-gray-800 leading-tight">-->
