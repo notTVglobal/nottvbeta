@@ -54,7 +54,7 @@
                                     <div class="flex items-center">
                                         <div>
                                             <div class="text-sm font-medium text-gray-900">
-                                                {{ user.role_id }}
+                                                {{ userRole }}
                                             </div>
                                         </div>
                                     </div>
@@ -92,6 +92,22 @@ import NavigationMenu from "@/Components/NavigationMenu"
 
 let videoPlayer = useVideoPlayerStore()
 let chat = useChatStore()
+
+function userRole() {
+    let id = '1';
+    let roles = {
+        1: 'Standard User',
+        2: 'Premium Subscriber',
+        3: 'VIP',
+        4: 'Creator',
+        5: 'Administrator'
+    }
+    roles.data = id;
+    return roles.data;
+}
+
+
+
 
 videoPlayer.class = "videoTopRight"
 videoPlayer.videoContainerClass = "videoContainerTopRight"

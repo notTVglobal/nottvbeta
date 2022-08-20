@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Administrator',
             'email' => 'admin@not.tv',
             'password' => bcrypt('nottv123'),
-            'role_id' => 4
+            'role_id' => 5
         ]);
 
         $this->call([

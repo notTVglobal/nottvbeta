@@ -30,6 +30,11 @@ return new class extends Migration
         );
         DB::table('roles')->insert(
             array(
+                'role' => 'VIP'
+            )
+        );
+        DB::table('roles')->insert(
+            array(
                 'role' => 'Creator'
             )
         );

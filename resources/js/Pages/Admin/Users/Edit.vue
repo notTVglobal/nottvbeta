@@ -60,8 +60,9 @@
                     >
                         <option value="1">Standard User</option>
                         <option value="2">Premium Subscriber</option>
-                        <option value="3">Creator</option>
-                        <option value="4">Administrator</option>
+                        <option value="3">VIP</option>
+                        <option value="4">Creator</option>
+                        <option value="5">Administrator</option>
                     </select>
 
                     <div v-if="form.errors.email" v-text="form.errors.email" class="text-xs text-red-600 mt-1"></div>
@@ -138,12 +139,7 @@ let form = useForm({
 
 });
 
-let options = [
-    {value: null, text: 'P',},
-    {value: '1', text: '1'},
-    {value: '2', text: '2'}
 
-]
 
 function reset() {
     form.reset();
