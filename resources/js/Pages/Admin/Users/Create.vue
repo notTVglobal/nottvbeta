@@ -23,8 +23,7 @@
                 <select name="role"
                         id="role"
                         class="border border-gray-400 p-2 w-full rounded-lg block mb-2 uppercase font-bold text-xs text-gray-700"
-                        v-model=""
-                        :options="options"
+                        v-model="form.role"
                 >
                     <option value="1" selected="selected">Standard User</option>
                     <option value="2">Premium Subscriber</option>
@@ -220,7 +219,7 @@ let form = useForm({
     name: '',
     email: '',
     password: '',
-    role: null,
+    role: '',
     address_1: '',
     address_2: '',
     city: '',
