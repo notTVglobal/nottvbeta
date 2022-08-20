@@ -170,7 +170,7 @@
                     >
                     <div v-if="form.errors.postal_code" v-text="form.errors.postal_code" class="text-xs text-red-600 mt-1"></div>
                 </div>
-                
+
                 <div class="flex justify-between mb-6">
                     <button
                         type="submit"
