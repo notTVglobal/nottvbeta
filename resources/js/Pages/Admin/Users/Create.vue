@@ -18,6 +18,27 @@
                 <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
                        for="name"
                 >
+                    User Role
+                </label>
+                <select name="role"
+                        id="role"
+                        class="border border-gray-400 p-2 w-full rounded-lg block mb-2 uppercase font-bold text-xs text-gray-700"
+                        v-model=""
+                        :options="options"
+                >
+                    <option value="1" selected="selected">Standard User</option>
+                    <option value="2">Premium Subscriber</option>
+                    <option value="3">VIP</option>
+                    <option value="4">Creator</option>
+                    <option value="5">Administrator</option>
+                </select>
+
+                <div v-if="form.errors.role" v-text="form.errors.role" class="text-xs text-red-600 mt-1"></div>
+            </div>
+            <div class="mb-6">
+                <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
+                       for="name"
+                >
                     Name
                 </label>
 
@@ -62,6 +83,106 @@
                 >
                 <div v-if="form.errors.password" v-text="form.errors.password" class="text-xs text-red-600 mt-1"></div>
             </div>
+            <div class="mb-6">
+                <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
+                       for="email"
+                >
+                    Phone Number
+                </label>
+
+                <input v-model="form.phone"
+                       class="border border-gray-400 p-2 w-full rounded-lg"
+                       type="text"
+                       name="phone"
+                       id="phone"
+                >
+                <div v-if="form.errors.phone" v-text="form.errors.phone" class="text-xs text-red-600 mt-1"></div>
+            </div>
+
+            <div class="mb-6">
+                <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
+                       for="email"
+                >
+                    Address
+                </label>
+
+                <input v-model="form.address_1"
+                       class="border border-gray-400 p-2 mb-2 w-full rounded-lg"
+                       type="text"
+                       name="address_1"
+                       id="address_1"
+                >
+
+                <input v-model="form.address_2"
+                       class="border border-gray-400 p-2 w-full rounded-lg"
+                       type="text"
+                       name="address_2"
+                       id="address_2"
+                >
+                <div v-if="form.errors.address_1" v-text="form.errors.address_1" class="text-xs text-red-600 mt-1"></div>
+                <div v-if="form.errors.address_2" v-text="form.errors.address_2" class="text-xs text-red-600 mt-1"></div>
+            </div>
+            <div class="mb-6">
+                <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
+                       for="email"
+                >
+                    City
+                </label>
+
+                <input v-model="form.city"
+                       class="border border-gray-400 p-2 w-full rounded-lg"
+                       type="text"
+                       name="city"
+                       id="city"
+                >
+                <div v-if="form.errors.city" v-text="form.errors.city" class="text-xs text-red-600 mt-1"></div>
+            </div>
+            <div class="mb-6">
+                <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
+                       for="email"
+                >
+                    Province
+                </label>
+
+                <input v-model="form.province"
+                       class="border border-gray-400 p-2 w-full rounded-lg"
+                       type="text"
+                       name="province"
+                       id="province"
+                >
+                <div v-if="form.errors.province" v-text="form.errors.province" class="text-xs text-red-600 mt-1"></div>
+            </div>
+            <div class="mb-6">
+                <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
+                       for="email"
+                >
+                    Country
+                </label>
+
+                <input v-model="form.country"
+                       class="border border-gray-400 p-2 w-full rounded-lg"
+                       type="text"
+                       name="country"
+                       id="country"
+                >
+                <div v-if="form.errors.country" v-text="form.errors.country" class="text-xs text-red-600 mt-1"></div>
+            </div>
+
+            <div class="mb-6">
+                <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
+                       for="email"
+                >
+                    Postal Code
+                </label>
+
+                <input v-model="form.postal_code"
+                       class="border border-gray-400 p-2 w-full rounded-lg"
+                       type="text"
+                       name="postal_code"
+                       id="postal_code"
+                >
+                <div v-if="form.errors.postal_code" v-text="form.errors.postal_code" class="text-xs text-red-600 mt-1"></div>
+            </div>
             <div class="flex justify-between mb-6">
                 <button
                     type="submit"
@@ -81,6 +202,7 @@
 
 <script setup>
 import { useForm } from "@inertiajs/inertia-vue3"
+import { ref } from "vue"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useChatStore } from "@/Stores/ChatStore.js"
 import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
@@ -98,7 +220,17 @@ let form = useForm({
     name: '',
     email: '',
     password: '',
+    role: null,
+    address_1: '',
+    address_2: '',
+    city: '',
+    province: '',
+    country: '',
+    postal_code: '',
+    phone: '',
 });
+
+const role = ref(null);
 
 function reset() {
     form.reset();
