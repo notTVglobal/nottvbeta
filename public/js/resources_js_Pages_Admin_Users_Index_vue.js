@@ -59,18 +59,7 @@ __webpack_require__.r(__webpack_exports__);
     var videoPlayer = (0,_Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_4__.useVideoPlayerStore)();
     var chat = (0,_Stores_ChatStore_js__WEBPACK_IMPORTED_MODULE_5__.useChatStore)();
 
-    function userRole() {
-      var id = '1';
-      var roles = {
-        1: 'Standard User',
-        2: 'Premium Subscriber',
-        3: 'VIP',
-        4: 'Creator',
-        5: 'Administrator'
-      };
-      roles.data = id;
-      return roles.data;
-    }
+    function userRole() {}
 
     videoPlayer["class"] = "videoTopRight";
     videoPlayer.videoContainerClass = "videoContainerTopRight";

@@ -94,16 +94,6 @@ let videoPlayer = useVideoPlayerStore()
 let chat = useChatStore()
 
 function userRole() {
-    let id = '1';
-    let roles = {
-        1: 'Standard User',
-        2: 'Premium Subscriber',
-        3: 'VIP',
-        4: 'Creator',
-        5: 'Administrator'
-    }
-    roles.data = id;
-    return roles.data;
 }
 
 
