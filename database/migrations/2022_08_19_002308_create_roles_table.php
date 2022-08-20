@@ -16,7 +16,28 @@ return new class extends Migration
         Schema::create('roles', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->string('role');
         });
+        DB::table('roles')->insert(
+            array(
+                'role' => 'Standard User'
+            )
+        );
+        DB::table('roles')->insert(
+            array(
+                'role' => 'Premium Subscriber'
+            )
+        );
+        DB::table('roles')->insert(
+            array(
+                'role' => 'Creator'
+            )
+        );
+        DB::table('roles')->insert(
+            array(
+                'role' => 'Administrator'
+            )
+        );
     }
 
     /**

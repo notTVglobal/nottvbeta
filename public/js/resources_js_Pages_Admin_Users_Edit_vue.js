@@ -39,8 +39,28 @@ __webpack_require__.r(__webpack_exports__);
     var form = (0,_inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_0__.useForm)({
       id: props.user.id,
       name: props.user.name,
-      email: props.user.email
+      email: props.user.email,
+      role: props.user.role_id,
+      address_1: props.user.address_1,
+      address_2: props.user.address_2,
+      city: props.user.address_city,
+      province: props.user.address_province,
+      country: props.user.address_country,
+      postal_code: props.user.address_postal_code,
+      phone: props.user.phone,
+      creator_number: props.user._creator_number,
+      subscription_status: props.user.subscription_status
     });
+    var options = [{
+      value: null,
+      text: 'P'
+    }, {
+      value: '1',
+      text: '1'
+    }, {
+      value: '2',
+      text: '2'
+    }];
 
     function reset() {
       form.reset();
@@ -55,6 +75,7 @@ __webpack_require__.r(__webpack_exports__);
       chat: chat,
       props: props,
       form: form,
+      options: options,
       reset: reset,
       useForm: _inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_0__.useForm,
       useVideoPlayerStore: _Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_1__.useVideoPlayerStore,
@@ -149,17 +170,68 @@ var _hoisted_17 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 );
 
 var _hoisted_18 = ["textContent"];
+var _hoisted_19 = {
+  "class": "mb-6"
+};
 
-var _hoisted_19 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+var _hoisted_20 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+  "class": "block mb-2 uppercase font-bold text-xs text-gray-700",
+  "for": "name"
+}, " User Role ", -1
+/* HOISTED */
+);
+
+var _hoisted_21 = ["options"];
+
+var _hoisted_22 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
+  value: "1"
+}, "Standard User", -1
+/* HOISTED */
+);
+
+var _hoisted_23 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
+  value: "2"
+}, "Premium Subscriber", -1
+/* HOISTED */
+);
+
+var _hoisted_24 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
+  value: "3"
+}, "Creator", -1
+/* HOISTED */
+);
+
+var _hoisted_25 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
+  value: "4"
+}, "Administrator", -1
+/* HOISTED */
+);
+
+var _hoisted_26 = [_hoisted_22, _hoisted_23, _hoisted_24, _hoisted_25];
+var _hoisted_27 = ["textContent"];
+var _hoisted_28 = {
+  "class": "mb-6"
+};
+
+var _hoisted_29 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+  "class": "block mb-2 uppercase font-bold text-xs text-gray-700",
+  "for": "email"
+}, " Email ", -1
+/* HOISTED */
+);
+
+var _hoisted_30 = ["textContent"];
+
+var _hoisted_31 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "mb-6"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, "Create a password reset function (insert button here).")], -1
 /* HOISTED */
 );
 
-var _hoisted_20 = {
+var _hoisted_32 = {
   "class": "flex justify-between mb-6"
 };
-var _hoisted_21 = ["disabled"];
+var _hoisted_33 = ["disabled"];
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_Head = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Head");
 
@@ -184,7 +256,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, null, 8
   /* PROPS */
   , _hoisted_12)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", {
-    onSubmit: _cache[2] || (_cache[2] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function () {
+    onSubmit: _cache[4] || (_cache[4] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function () {
       return _ctx.submit && _ctx.submit.apply(_ctx, arguments);
     }, ["prevent"]))
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_13, [_hoisted_14, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
@@ -221,13 +293,44 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "text-xs text-red-600 mt-1"
   }, null, 8
   /* PROPS */
-  , _hoisted_18)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), _hoisted_19, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_20, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  , _hoisted_18)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_19, [_hoisted_20, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
+    "class": "border border-gray-400 p-2 w-full rounded-lg block mb-2 uppercase font-bold text-xs text-gray-700",
+    "onUpdate:modelValue": _cache[2] || (_cache[2] = function ($event) {
+      return $setup.form.role = $event;
+    }),
+    options: $setup.options
+  }, _hoisted_26, 8
+  /* PROPS */
+  , _hoisted_21), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $setup.form.role]]), $setup.form.errors.email ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
+    key: 0,
+    textContent: (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.form.errors.email),
+    "class": "text-xs text-red-600 mt-1"
+  }, null, 8
+  /* PROPS */
+  , _hoisted_27)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_28, [_hoisted_29, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    "onUpdate:modelValue": _cache[3] || (_cache[3] = function ($event) {
+      return $setup.form.email = $event;
+    }),
+    "class": "border border-gray-400 p-2 w-full rounded-lg",
+    type: "email",
+    name: "email",
+    id: "email",
+    required: ""
+  }, null, 512
+  /* NEED_PATCH */
+  ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $setup.form.email]]), $setup.form.errors.email ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
+    key: 0,
+    textContent: (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.form.errors.email),
+    "class": "text-xs text-red-600 mt-1"
+  }, null, 8
+  /* PROPS */
+  , _hoisted_30)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), _hoisted_31, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_32, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     type: "submit",
     "class": "bg-blue-400 text-white rounded py-2 px-4 hover:bg-blue-500",
     disabled: $setup.form.processing
   }, " Submit ", 8
   /* PROPS */
-  , _hoisted_21)])], 32
+  , _hoisted_33)])], 32
   /* HYDRATE_EVENTS */
   )])])])], 64
   /* STABLE_FRAGMENT */

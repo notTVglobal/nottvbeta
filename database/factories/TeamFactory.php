@@ -20,7 +20,7 @@ class TeamFactory extends Factory
         return [
             'name' => $this->faker->word(),
             'description' => $this->faker->paragraph(3),
-            'members' => Array_::KIND_SHORT,
+//            'members' => Array_::KIND_SHORT,
         ];
     }
 }

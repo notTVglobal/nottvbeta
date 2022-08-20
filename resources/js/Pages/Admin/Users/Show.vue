@@ -16,6 +16,9 @@
             <p>
                 <img :src="props.user.profile_photo_url" />
             </p>
+            <p>
+                User Type: {{props.user.role_id}}
+            </p>
 
         </div>
     </div>

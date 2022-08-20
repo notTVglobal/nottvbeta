@@ -31,6 +31,16 @@ class UserFactory extends Factory
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token' => Str::random(10),
             'stripe_token' => Str::random(10),
+            'role_id' => 1,
+            'user_address_1' => null,
+            'user_address_2' => null,
+            'user_address_city' => null,
+            'user_address_province' => null,
+            'user_address_country' => null,
+            'user_address_postal_code' => null,
+            'user_phone' => null,
+            'creator_number' => null,
+            'subscription_status' => null,
         ];
     }
 

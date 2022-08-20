@@ -24,7 +24,8 @@ class UsersController extends Controller
                 ->withQueryString()
                 ->through(fn($user) => [
                     'id' => $user->id,
-                    'name' => $user->name
+                    'name' => $user->name,
+                    'role_id' => $user->role_id
                 ]),
             'filters' => Request::only(['search'])
         ]);
@@ -68,7 +69,9 @@ class UsersController extends Controller
     public function show(User $user)
     {
         return Inertia::render('Admin/Users/Show', [
-            'user' => $user
+            'user' => $user,
+            'role_id' => $user->role_id,
+
         ]);
     }
 
@@ -81,7 +84,8 @@ class UsersController extends Controller
     public function edit(User $user)
     {
         return Inertia::render('Admin/Users/Edit', [
-            'user' => $user
+            'user' => $user,
+            'role_id' => $user->role_id
         ]);
     }
 

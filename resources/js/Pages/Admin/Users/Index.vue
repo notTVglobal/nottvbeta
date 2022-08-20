@@ -29,6 +29,16 @@
                         </div>
 
                         <table class="min-w-full divide-y divide-gray-200">
+                            <thead>
+                            <td>
+                                Name
+                            </td>
+                            <td>
+                                Role
+                            </td>
+                            <td>
+                            </td>
+                            </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                             <tr v-for="user in users.data" :key="user.id">
                                 <td class="px-6 py-4 whitespace-nowrap">
@@ -36,6 +46,15 @@
                                         <div>
                                             <div class="text-sm font-medium text-gray-900">
                                                 <Link :href="`/admin/users/${user.id}`" class="text-indigo-600 hover:text-indigo-900">{{ user.name }}</Link>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div>
+                                            <div class="text-sm font-medium text-gray-900">
+                                                {{ user.role_id }}
                                             </div>
                                         </div>
                                     </div>

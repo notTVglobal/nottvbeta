@@ -109,7 +109,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     src: $setup.props.user.profile_photo_url
   }, null, 8
   /* PROPS */
-  , _hoisted_7)])])])], 64
+  , _hoisted_7)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, " User Type: " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.props.user.role_id), 1
+  /* TEXT */
+  )])])], 64
   /* STABLE_FRAGMENT */
   );
 }

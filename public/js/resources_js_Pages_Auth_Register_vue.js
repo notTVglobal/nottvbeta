@@ -42,8 +42,6 @@ var __default__ = {
       email: '',
       password: '',
       password_confirmation: '',
-      role_id: '',
-      user_phone: '',
       terms: true
     });
 

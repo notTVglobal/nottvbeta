@@ -2890,13 +2890,6 @@ select {
   transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
 }
 
-.pageWidth {
-        margin-right: 26vw;
-        z-index: 60;
-        width: calc(100% - 26rem);
-        margin-top: 0;
-    }
-
 .pageWidthSmall {
         z-index: 60;
         width: 100%;

@@ -14,14 +14,17 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-         \App\Models\User::factory(99)->create();
+        \App\Models\User::factory()->create([
+            'name' => 'Administrator',
+            'email' => 'admin@not.tv',
+            'password' => bcrypt('nottv123'),
+            'role_id' => 4
+        ]);
 
-//         \App\Models\User::factory()->create([
-//             'name' => 'Travis Cross',
-//             'email' => 'travis@not.tv',
-//             'password' => bcrypt('we67djcm')
-//         ]);
-
-        \App\Models\Show::factory(99)->create();
+        $this->call([
+            UserSeeder::class,
+            ShowSeeder::class,
+            TeamSeeder::class,
+        ]);
     }
 }
