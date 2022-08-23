@@ -13,7 +13,9 @@
 
 </head>
 <body>
-<p>Verification email re-sent!</p>
+<h1>Verification email re-sent!</h1>
+<p>Please check your email to confirm your account!</p>
+<p>Check your junk mail folder as well!</p>
 
 </body>
 </html>
