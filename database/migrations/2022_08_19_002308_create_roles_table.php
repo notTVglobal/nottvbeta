@@ -20,6 +20,12 @@ return new class extends Migration
         });
         DB::table('roles')->insert(
             array(
+                'id' => 0,
+                'role' => 'Undefined Role'
+            )
+        );
+        DB::table('roles')->insert(
+            array(
                 'role' => 'Standard User'
             )
         );
