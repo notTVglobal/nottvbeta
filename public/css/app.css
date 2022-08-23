@@ -1918,10 +1918,6 @@ select {
   justify-content: space-between;
 }
 
-.justify-items-end {
-  justify-items: end;
-}
-
 .justify-items-center {
   justify-items: center;
 }

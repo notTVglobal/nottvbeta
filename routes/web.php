@@ -1,12 +1,14 @@
 <?php
 
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\CreatorsController;
 use App\Http\Controllers\ShowsController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\TeamsController;
-use Illuminate\Support\Facades\Request;
+//use Illuminate\Support\Facades\Request;
 use Illuminate\Foundation\Application;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Models\User;
@@ -30,6 +32,20 @@ Route::get('/', function () {
         'canRegister' => Route::has('register'),
     ]);
 });
+
+Route::get('/email/verify', function () {
+    return view('auth.verify-email');
+})->middleware('auth')->name('verification.notice');
+
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
+    return redirect('/stream');
+})->middleware(['auth', 'signed'])->name('verification.verify');
+
+Route::post('/email/verification-notification', function (Request $request) {
+    $request->user()->sendEmailVerificationNotification();
+    return view('auth.verify-sent');
+})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
 Route::get('/terms', function () {
     return Inertia::render('TermsOfService');
