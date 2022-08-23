@@ -23,7 +23,6 @@ return new class extends Migration
             $table->rememberToken();
             $table->foreignId('current_team_id')->nullable();
             $table->string('profile_photo_path', 2048)->nullable();
-            $table->foreignId('role_id')->constrained();
             $table->string('user_address_1')->nullable();
             $table->string('user_address_2')->nullable();
             $table->string('user_address_city')->nullable();
