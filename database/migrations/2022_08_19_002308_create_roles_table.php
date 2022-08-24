@@ -15,12 +15,11 @@ return new class extends Migration
     {
         Schema::create('roles', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
             $table->string('role');
+            $table->timestamps();
         });
         DB::table('roles')->insert(
             array(
-                'id' => 0,
                 'role' => 'Undefined Role'
             )
         );
