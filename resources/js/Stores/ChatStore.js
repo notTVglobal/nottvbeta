@@ -3,17 +3,17 @@ import { defineStore } from "pinia";
 export let useChatStore = defineStore('chat', {
     state() {
         return {
-            show: Boolean,
+            showChat: Boolean,
             class: ''
         };
     },
 
     actions: {
-        show() {
-            show = true
+        toggleShowChatOn() {
+            this.showChat = true
         },
-        hide() {
-            show = false
+        toggleShowChatOff() {
+            this.showChat = false
         },
         makeBig() {
             this.class = 'chatBig';

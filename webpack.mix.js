@@ -19,6 +19,10 @@ mix.js('resources/js/app.js', 'public/js')
         options: {
             compilerOptions: {
                 isCustomElement: (tag) => ['video-js'].includes(tag),
+                isCustomElement: (tag) => ['AppLayout'].includes(tag),
+                isCustomElement: (tag) => ['Button'].includes(tag),
+                isCustomElement: (tag) => ['VideoPlayer'].includes(tag),
+                isCustomElement: (tag) => ['Chat'].includes(tag),
             },
         },
     })

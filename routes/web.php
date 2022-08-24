@@ -121,13 +121,9 @@ Route::middleware([
     // Edit show
     Route::get('/shows/edit/{show}', [ShowsController::class, 'edit'])->name('shows.edit');
 
-
-    Route::get('/image', function () {
-        return Inertia::render('Image');
-    })->name('image');
-//    Route::get('/image', [ImageController::class, 'index'])->name('image');
-    Route::get('/images', [ImageController::class, 'show']);
-    Route::post('/upload', [ImageController::class, 'store'])->name('image.upload');
+    Route::get('/image', [ImageController::class, 'index'])->name('image.index');
+    Route::get('/images', [ImageController::class, 'show'])->name('image.show');
+    Route::post('/upload', [ImageController::class, 'store'])->name('image.store');
 
     // Need to move this to a new middleware section for auth_admin
     //
