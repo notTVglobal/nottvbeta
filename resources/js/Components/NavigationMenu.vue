@@ -34,7 +34,7 @@
                         <JetNavLink @click="videoPlayer.makeVideoTopRight()" :href="route('shop')" :active="route().current('shop')">
                             Shop
                         </JetNavLink>
-                        <ChatToggle v-model:checked="chat.show" label="Chat" />
+                        <ChatToggle v-model:checked="chat.toggleShowChatOn" label="Chat" />
                     </div>
                 </div>
 
@@ -135,7 +135,7 @@
 import JetApplicationMark from '@/Jetstream/ApplicationMark.vue';
 import JetDropdownLink from '@/Jetstream/DropdownLink.vue';
 import { Link } from '@inertiajs/inertia-vue3';
-import ChatToggle from "@/Components/ChatToggle.vue";
+import ChatToggle from "@/Components/Chat/ChatToggle.vue";
 import JetDropdown from '@/Jetstream/Dropdown.vue';
 import JetNavLink from '@/Jetstream/NavLink.vue';
 import {Inertia} from "@inertiajs/inertia";
@@ -151,7 +151,7 @@ const logout = () => {
     videoPlayer.class = "videoBgFull";
     videoPlayer.videoContainerClass = "videoContainerBgFull";
     chat.class = "chatHidden";
-    chat.show = false;
+    chat.showChat = false;
     Inertia.post(route('logout'));
 };
 

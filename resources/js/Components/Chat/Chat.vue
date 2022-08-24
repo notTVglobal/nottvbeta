@@ -7,7 +7,7 @@
         leave-from-class="opacity-100"
         leave-to-class="opacity-0"
     >
-            <div v-if="chat.show" :class="chat.class" class="fixed h-full text-sm text-white pb-2 pb-2 chat-mask overflow-y-auto scroll-smooth hover:scroll-auto break-words">
+            <div v-if="chat.showChat" :class="chat.class" class="fixed h-full text-sm text-white pb-2 pb-2 chat-mask overflow-y-auto scroll-smooth hover:scroll-auto break-words">
     <!--            <div class="absolute top-16 left-0 p-5 drop-shadow" v-if="videoPlayer.fullPage"><span class="text-xs uppercase pr-2">CHAT BOX </span><span class="font-semibold">Chat goes here.</span></div>-->
     <!--            <div v-if="!videoPlayer.fullPage" class="bg-gray-800 px-2"><span class="text-xs uppercase pr-2">CHAT BOX </span><span class="font-semibold">Chat goes here</span></div>-->
 
@@ -41,7 +41,7 @@ import { ref, onMounted } from "vue"
 import Pusher from "pusher-js"
 
 let chat = useChatStore();
-chat.show = false;
+chat.showChat = false;
 
 const props = defineProps({
     user: Object,
@@ -52,12 +52,6 @@ const props = defineProps({
 const messages = ref([])
 const message = ref('')
 
-function scrollToElement() {
-    const el = this.$refs.scrollToMe;
-    if (el) {
-        el.scrollIntoView({ behavior: "smooth" });
-    }
-};
 
 onMounted(() => {
     // Enable pusher logging - don't include this in production

@@ -15,13 +15,21 @@
         </p>
         <file-pond
             name="image"
-            ref={{pond}}
+            ref="pond"
             label-idle="Click to choose image, or drag here..."
-            @init="FilePondInitialized"
+            server="upload"
+            @init="filepondInitialized"
             accepted-file-types="image/*"
         />
     </div>
-    <div class="pt-10 pb-10">
+    <div class="mt-8 mb-24 mx-auto">
+        <h3 class="text-2xl font-medium text-center">Image Gallery</h3>
+        <div class="grid grid-cols-3 gap-2 justify-evenly mt-4">
+            <div v-for="(image, index) in images" :key="index">
+                <img :src="'/storage/images/' + image">
+            </div>
+        </div>
+        Hello?
     </div>
         </div>
     </div>
@@ -30,10 +38,10 @@
 
 <script setup>
 import {Head, Link} from '@inertiajs/inertia-vue3'
-import {ref} from 'vue'
-import vueFilePond, {setOptions} from 'vue-filepond'
+// import {ref, onMounted } from 'vue'
+// import vueFilePond, { setOptions } from 'vue-filepond'
 import "filepond/dist/filepond.min.css"
-import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type'
+// import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useChatStore } from "@/Stores/ChatStore.js"
 import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
@@ -46,81 +54,102 @@ videoPlayer.class = "videoTopRight"
 videoPlayer.videoContainerClass = "videoContainerTopRight"
 videoPlayer.fullPage = false
 chat.class = "chatSmall"
-//
-// config: { headers: function () { return {} } },
-// const props = defineProps({
-//             process: {
-//                 url: './upload',
-//                 headers: {
-//                     'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf_token"]').content
-//                 }
-//             }
+
+// let props = defineProps({
+//     images: Object,
 // });
 
+// config: { headers: function () { return {} } }
 
-const FilePond = vueFilePond(FilePondPluginFileValidateType);
-const pond = ref([]);
-const FilePondInitialized = ref();
-console.log(FilePondInitialized, "Filepond is ready!");
-console.log("Filepond object:", pond);
+
+
+// const FilePond = vueFilePond(FilePondPluginFileValidateType);
+// const pond = ref([]);
+// const FilePondInitialized = ref();
+// console.log(FilePondInitialized, "Filepond is ready!");
+// console.log("Filepond object:", pond);
+//
+// onMounted(() => setOptions({
+//     server: {
+//         process: {
+//             url: './upload',
+//             headers: {
+//                 "X-CSRF-TOKEN": document.head.querySelector('meta[name="csrf-token"]').content
+//             }
+//         }
+//     }
+// }))
+
+</script>
+<script>
 
 </script>
 
-<!--<script>-->
-<!--import vueFilePond, { setOptions } from "vue-filepond";-->
-<!--import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";-->
-<!--import "filepond/dist/filepond.min.css";-->
-<!--import { ref } from "vue";-->
-<!--import { Inertia } from "@inertiajs/inertia";-->
+<script>
+import vueFilePond, { setOptions } from 'vue-filepond';
+import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
+// import FilePondPluginImagePreview from "filepond-plugin-image-preview";
+import 'filepond/dist/filepond.min.css';
 
-<!--const FilePond = vueFilePond(FilePondPluginFileValidateType);-->
+// const FilePond = vueFilePond();
+const FilePond = vueFilePond(
+    FilePondPluginFileValidateType
+    // this is a plugin that needs to be installed:
+    // FilePondPluginImagePreview
+);
 
-<!--// setOptions({-->
-<!--//     server: {-->
-<!--//         process: {-->
-<!--//             url: './upload',-->
-<!--//             headers: {-->
-<!--//                 "X-CSRF-TOKEN": document.head.querySelector('meta[name="csrf-token"]')-->
-<!--//                     .content,-->
-<!--//             },-->
-<!--//         },-->
-<!--//     },-->
-<!--// });-->
+// we have a CORS exception for the /upload route.. if we want more security than we need to remove the
+// CORS exception and implement this function.. however, I couldn't get it to work (tec21).
+// setOptions({
+//     server: {
+//         process: {
+//             url: './upload',
+//             headers: {
+//                 "X-CSRF-TOKEN": document.head.querySelector('meta[name="csrf-token"]').content
+//             }
+//         }
+//     }
+// });
 
-<!--export default {-->
-<!--    components: {-->
-<!--        Head,-->
-<!--        Link,-->
-<!--        FilePond,-->
-<!--    },-->
-<!--    props: {-->
-<!--        images: Object,-->
-<!--    },-->
-<!--    setup() {-->
-<!--        const pond = ref(null);-->
 
-<!--        const filepondInitialized = () => {-->
-<!--            console.log("Filepond initialized");-->
 
-<!--            // console log filepond object-->
-<!--            console.log(pond.value);-->
-<!--        };-->
+export default {
+    components: {
+        FilePond
+    },
+    data() {
+        return {
+            images: []
+        }
+    },
+    mounted() {
+        axios.get('/images')
+            .then((response) => {
+                this.images = response.data;
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    },
+    methods: {
 
-<!--        const filepondProcessFile = (error, file) => {-->
-<!--            console.log("Filepond processed file");-->
-<!--            console.log(error);-->
-<!--            console.log(file);-->
+        filepondInitialized: function () {
+            console.log("Filepond is ready!");
+            console.log('Filepond object:', this.$refs.pond);
 
-<!--            Inertia.reload({-->
-<!--                only: ["images"],-->
-<!--            });-->
-<!--        };-->
+        }
 
-<!--        return {-->
-<!--            pond,-->
-<!--            filepondInitialized,-->
-<!--            filepondProcessFile,-->
-<!--        };-->
-<!--    },-->
-<!--};-->
-<!--</script>-->
+        // filepondProcessFile = (error, file) {
+        //     console.log("Filepond processed file");
+        //     console.log(error);
+        //     console.log(file);
+        //
+        //     Inertia.reload({
+        //         only: ["images"],
+        //     });
+        // };
+
+
+    },
+};
+</script>

@@ -17,12 +17,13 @@ class ImageController extends Controller
     public function show()
     {
         // return all images
+        return Image::latest()->pluck('name')->toArray();
     }
 
     public function store(Request $request)
     {
         // validate the incoming file
-        if (!$request->hasFile('imaage')) {
+        if (!$request->hasFile('image')) {
             return response()->json(['error' => 'There is no image present'], 400);
         }
 
@@ -31,14 +32,14 @@ class ImageController extends Controller
         ]);
 
         // save the file in storage
-        $path = $request->file('image')->store('public/images');
+        $path = $request->file('image')->store('images');
 //        $files = Storage::disk('spaces')->files('uploads');
 //        function() {
 //            Storage::disk('spaces')->putFile('uploads', request()->file, 'public');
 //        };
 
         if (!$path) {
-            return response()->json(['error', 'The file could not be saved.'], 500);
+            return response()->json(['error' => 'The file could not be saved.'], 500);
         }
 
         $uploadedFile = $request->file('image');
@@ -51,6 +52,8 @@ class ImageController extends Controller
             'size' => $uploadedFile->getSize()
         ]);
 
+        // return that image model back to the frontend
+        return $image;
 
         //Route::get('/upload', function() {
 //
@@ -65,8 +68,7 @@ class ImageController extends Controller
 
 
 
-        // return that image model back to the frontend
-        return $image;
+
     }
 
 
