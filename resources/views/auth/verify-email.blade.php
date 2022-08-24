@@ -13,12 +13,11 @@
 
 </head>
 <body>
-<p>Please check your email to confirm your account!</p>
-<p>Check your junk mail folder as well!</p>
+<p>Please check your email to confirm your account! <br />(check your junk mail folder too!)</p>
 <form action="/email/verification-notification" method="POST">
     @csrf
     <button type="submit" value="Submit">Re-send verification</button>
 </form>
-
+<p>If you need help, please send us a message <a href="https://help.not.tv/">here</a>.</p>
 </body>
 </html>

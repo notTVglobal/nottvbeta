@@ -159,7 +159,7 @@ var _hoisted_17 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 
 var _hoisted_18 = ["options"];
 
-var _hoisted_19 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<option value=\"1\">Standard User</option><option value=\"2\">Premium Subscriber</option><option value=\"3\">VIP</option><option value=\"4\">Creator</option><option value=\"5\">Administrator</option>", 5);
+var _hoisted_19 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<option value=\"2\">Standard User</option><option value=\"3\">Premium Subscriber</option><option value=\"4\">VIP</option><option value=\"5\">Creator</option><option value=\"6\">Administrator</option>", 5);
 
 var _hoisted_24 = [_hoisted_19];
 var _hoisted_25 = ["textContent"];

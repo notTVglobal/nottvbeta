@@ -28,11 +28,11 @@
                     <select class="border border-gray-400 p-2 w-full rounded-lg block mb-2 uppercase font-bold text-xs text-gray-700"
                             v-model="form.role" :options="options"
                     >
-                        <option value="1">Standard User</option>
-                        <option value="2">Premium Subscriber</option>
-                        <option value="3">VIP</option>
-                        <option value="4">Creator</option>
-                        <option value="5">Administrator</option>
+                        <option value="2">Standard User</option>
+                        <option value="3">Premium Subscriber</option>
+                        <option value="4">VIP</option>
+                        <option value="5">Creator</option>
+                        <option value="6">Administrator</option>
                     </select>
 
                     <div v-if="form.errors.role" v-text="form.errors.role" class="text-xs text-red-600 mt-1"></div>
