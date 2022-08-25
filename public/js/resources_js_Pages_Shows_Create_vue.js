@@ -1164,7 +1164,7 @@ __webpack_require__.r(__webpack_exports__);
 var _hoisted_1 = ["src"];
 function render(_ctx, _cache) {
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("img", {
-    src: "../../../images/logo_white_512.png",
+    src: "../../../storage/images/logo_white_512.png",
     alt: "image"
   }, null, 8
   /* PROPS */

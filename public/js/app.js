@@ -1181,7 +1181,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
-        src: "images/logo_black_311.png",
+        src: "../storage/images/logo_black_311.png",
         alt: "image",
         "class": "justify-center"
       }, null, 8
