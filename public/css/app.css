@@ -1544,6 +1544,10 @@ select {
   margin-top: 6rem;
 }
 
+.mb-24 {
+  margin-bottom: 6rem;
+}
+
 .mb-8 {
   margin-bottom: 2rem;
 }
@@ -1558,10 +1562,6 @@ select {
 
 .mr-8 {
   margin-right: 2rem;
-}
-
-.mb-24 {
-  margin-bottom: 6rem;
 }
 
 .block {
@@ -2026,10 +2026,6 @@ select {
   overflow-wrap: break-word;
 }
 
-.break-all {
-  word-break: break-all;
-}
-
 .rounded-md {
   border-radius: 0.375rem;
 }
@@ -2483,14 +2479,6 @@ select {
 
 .pl-5 {
   padding-left: 1.25rem;
-}
-
-.pt-10 {
-  padding-top: 2.5rem;
-}
-
-.pb-10 {
-  padding-bottom: 2.5rem;
 }
 
 .pb-2 {
