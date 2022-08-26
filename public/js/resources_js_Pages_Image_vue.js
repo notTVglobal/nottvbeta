@@ -389,21 +389,38 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_filepond__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_filepond__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var filepond_plugin_file_validate_type__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! filepond-plugin-file-validate-type */ "./node_modules/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js");
 /* harmony import */ var filepond_plugin_file_validate_type__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(filepond_plugin_file_validate_type__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var filepond_dist_filepond_min_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! filepond/dist/filepond.min.css */ "./node_modules/filepond/dist/filepond.min.css");
-/* harmony import */ var _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @inertiajs/inertia */ "./node_modules/@inertiajs/inertia/dist/index.js");
-/* harmony import */ var _inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @inertiajs/inertia-vue3 */ "./node_modules/@inertiajs/inertia-vue3/dist/index.js");
-/* harmony import */ var _Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/Stores/VideoPlayerStore.js */ "./resources/js/Stores/VideoPlayerStore.js");
-/* harmony import */ var _Stores_ChatStore_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/Stores/ChatStore.js */ "./resources/js/Stores/ChatStore.js");
-/* harmony import */ var _Components_ResponsiveNavigationMenu__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @/Components/ResponsiveNavigationMenu */ "./resources/js/Components/ResponsiveNavigationMenu.vue");
-/* harmony import */ var _Components_NavigationMenu__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @/Components/NavigationMenu */ "./resources/js/Components/NavigationMenu.vue");
+/* harmony import */ var filepond_plugin_file_validate_size__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! filepond-plugin-file-validate-size */ "./node_modules/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.js");
+/* harmony import */ var filepond_plugin_file_validate_size__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(filepond_plugin_file_validate_size__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var filepond_dist_filepond_min_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! filepond/dist/filepond.min.css */ "./node_modules/filepond/dist/filepond.min.css");
+/* harmony import */ var _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @inertiajs/inertia */ "./node_modules/@inertiajs/inertia/dist/index.js");
+/* harmony import */ var _inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @inertiajs/inertia-vue3 */ "./node_modules/@inertiajs/inertia-vue3/dist/index.js");
+/* harmony import */ var _Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/Stores/VideoPlayerStore.js */ "./resources/js/Stores/VideoPlayerStore.js");
+/* harmony import */ var _Stores_ChatStore_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @/Stores/ChatStore.js */ "./resources/js/Stores/ChatStore.js");
+/* harmony import */ var _Components_ResponsiveNavigationMenu__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @/Components/ResponsiveNavigationMenu */ "./resources/js/Components/ResponsiveNavigationMenu.vue");
+/* harmony import */ var _Components_NavigationMenu__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @/Components/NavigationMenu */ "./resources/js/Components/NavigationMenu.vue");
+
 
  // import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 
 
 
-var FilePond = vue_filepond__WEBPACK_IMPORTED_MODULE_0___default()((filepond_plugin_file_validate_type__WEBPACK_IMPORTED_MODULE_1___default()) // this is a plugin that needs to be installed:
+var FilePond = vue_filepond__WEBPACK_IMPORTED_MODULE_0___default()((filepond_plugin_file_validate_type__WEBPACK_IMPORTED_MODULE_1___default()), (filepond_plugin_file_validate_size__WEBPACK_IMPORTED_MODULE_2___default()) // this is a plugin that needs to be installed:
 // FilePondPluginImagePreview
-);
+); // The setOptions isn't working. It works in the Laracast Advanced Image Uploading Tutorial, but it isn't working here.
+// let serverMessage = {};
+// setOptions({
+//     server: {
+//         process: {
+//             onerror: (response) => {
+//                 serverMessage = JSON.parse(response);
+//             },
+//         }
+//     },
+//     labelFileProcessing: () => {
+//         return serverMessage.error;
+//     }
+// });
+
 var __default__ = {
   components: {
     FilePond: FilePond
@@ -422,7 +439,7 @@ var __default__ = {
       } // add the file to our images array
 
 
-      _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_3__.Inertia.reload({
+      _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_4__.Inertia.reload({
         only: ["images"]
       });
     }
@@ -455,8 +472,8 @@ var __default__ = {
   setup: function setup(__props, _ref) {
     var expose = _ref.expose;
     expose();
-    var videoPlayer = (0,_Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_5__.useVideoPlayerStore)();
-    var chat = (0,_Stores_ChatStore_js__WEBPACK_IMPORTED_MODULE_6__.useChatStore)();
+    var videoPlayer = (0,_Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_6__.useVideoPlayerStore)();
+    var chat = (0,_Stores_ChatStore_js__WEBPACK_IMPORTED_MODULE_7__.useChatStore)();
     videoPlayer["class"] = "videoTopRight";
     videoPlayer.videoContainerClass = "videoContainerTopRight";
     videoPlayer.fullPage = false;
@@ -488,13 +505,14 @@ var __default__ = {
       vueFilePond: (vue_filepond__WEBPACK_IMPORTED_MODULE_0___default()),
       setOptions: vue_filepond__WEBPACK_IMPORTED_MODULE_0__.setOptions,
       FilePondPluginFileValidateType: (filepond_plugin_file_validate_type__WEBPACK_IMPORTED_MODULE_1___default()),
-      Inertia: _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_3__.Inertia,
-      Head: _inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_4__.Head,
-      Link: _inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_4__.Link,
-      useVideoPlayerStore: _Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_5__.useVideoPlayerStore,
-      useChatStore: _Stores_ChatStore_js__WEBPACK_IMPORTED_MODULE_6__.useChatStore,
-      ResponsiveNavigationMenu: _Components_ResponsiveNavigationMenu__WEBPACK_IMPORTED_MODULE_7__["default"],
-      NavigationMenu: _Components_NavigationMenu__WEBPACK_IMPORTED_MODULE_8__["default"]
+      FilePondPluginFileValidateSize: (filepond_plugin_file_validate_size__WEBPACK_IMPORTED_MODULE_2___default()),
+      Inertia: _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_4__.Inertia,
+      Head: _inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_5__.Head,
+      Link: _inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_5__.Link,
+      useVideoPlayerStore: _Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_6__.useVideoPlayerStore,
+      useChatStore: _Stores_ChatStore_js__WEBPACK_IMPORTED_MODULE_7__.useChatStore,
+      ResponsiveNavigationMenu: _Components_ResponsiveNavigationMenu__WEBPACK_IMPORTED_MODULE_8__["default"],
+      NavigationMenu: _Components_NavigationMenu__WEBPACK_IMPORTED_MODULE_9__["default"]
     };
     Object.defineProperty(__returned__, '__isScriptSetup', {
       enumerable: false,
@@ -1428,18 +1446,22 @@ var _hoisted_3 = {
   "class": "bg-white text-black p-5 mb-10"
 };
 var _hoisted_4 = {
-  "class": "max-w-lg mx-auto mt-24"
+  "class": "max-w-lg mx-auto mt-2"
 };
 
 var _hoisted_5 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h1", {
-  "class": "text-4xl font-bold text-center"
+  "class": "text-4xl font-bold text-center mb-4"
 }, "Image Uploader", -1
 /* HOISTED */
 );
 
 var _hoisted_6 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", {
-  "class": "pt-3 pb-4 text-orange-400"
-}, " This uploader is not currently functioning. ", -1
+  "class": "pt-3 pb-4"
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Max File Size: "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+  "class": "text-orange-400"
+}, "20MB")]), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("File Types accepted: "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+  "class": "text-orange-400"
+}, "jpg, jpeg, png")])])], -1
 /* HOISTED */
 );
 
@@ -1466,10 +1488,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "label-idle": "Click to choose image, or drag here...",
     server: "upload",
     onInit: $options.filepondInitialized,
-    "accepted-file-types": "image/*",
+    "accepted-file-types": "image/jpg, image/jpeg, image/png",
     onProcessfile: $options.handleProcessedFile,
     "allow-multiple": "true",
-    "max-files": "10"
+    "max-files": "10",
+    "max-file-size": "20MB"
   }, null, 8
   /* PROPS */
   , ["onInit", "onProcessfile"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [_hoisted_8, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($props.images, function (image, index) {

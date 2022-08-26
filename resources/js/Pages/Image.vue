@@ -8,10 +8,13 @@
     <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
         <div class="bg-white text-black p-5 mb-10">
 
-    <div class="max-w-lg mx-auto mt-24">
-        <h1 class="text-4xl font-bold text-center">Image Uploader</h1>
-        <p class="pt-3 pb-4 text-orange-400">
-            This uploader is not currently functioning.
+    <div class="max-w-lg mx-auto mt-2">
+        <h1 class="text-4xl font-bold text-center mb-4">Image Uploader</h1>
+        <p class="pt-3 pb-4">
+            <ul>
+                <li>Max File Size: <span class="text-orange-400">20MB</span></li>
+                <li>File Types accepted: <span class="text-orange-400">jpg, jpeg, png</span></li>
+            </ul>
         </p>
         <file-pond
             name="image"
@@ -19,9 +22,10 @@
             label-idle="Click to choose image, or drag here..."
             server="upload"
             @init="filepondInitialized"
-            accepted-file-types="image/*"
+            accepted-file-types="image/jpg, image/jpeg, image/png"
             @processfile="handleProcessedFile"
             allow-multiple="true" max-files="10"
+            max-file-size="20MB"
         />
     </div>
     <div class="mt-8 mb-24 mx-auto">
@@ -89,17 +93,32 @@ chat.class = "chatSmall"
 <script>
 import vueFilePond, { setOptions } from 'vue-filepond';
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
+import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size';
 // import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import 'filepond/dist/filepond.min.css';
 import {Inertia} from "@inertiajs/inertia";
 
 const FilePond = vueFilePond(
-    FilePondPluginFileValidateType
+    FilePondPluginFileValidateType,
+    FilePondPluginFileValidateSize
     // this is a plugin that needs to be installed:
     // FilePondPluginImagePreview
 );
 
-
+// The setOptions isn't working. It works in the Laracast Advanced Image Uploading Tutorial, but it isn't working here.
+// let serverMessage = {};
+// setOptions({
+//     server: {
+//         process: {
+//             onerror: (response) => {
+//                 serverMessage = JSON.parse(response);
+//             },
+//         }
+//     },
+//     labelFileProcessing: () => {
+//         return serverMessage.error;
+//     }
+// });
 
 
 
