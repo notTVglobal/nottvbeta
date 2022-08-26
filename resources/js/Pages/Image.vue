@@ -20,16 +20,17 @@
             server="upload"
             @init="filepondInitialized"
             accepted-file-types="image/*"
+            @processfile="handleProcessedFile"
+            allow-multiple="true" max-files="10"
         />
     </div>
     <div class="mt-8 mb-24 mx-auto">
         <h3 class="text-2xl font-medium text-center">Image Gallery</h3>
         <div class="grid grid-cols-3 gap-2 justify-evenly mt-4">
             <div v-for="(image, index) in images" :key="index">
-                <img :src="'/storage/images/' + image">
+                <img :src="'/storage/images/' + image.name">
             </div>
         </div>
-        Hello?
     </div>
         </div>
     </div>
@@ -90,26 +91,15 @@ import vueFilePond, { setOptions } from 'vue-filepond';
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 // import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import 'filepond/dist/filepond.min.css';
+import {Inertia} from "@inertiajs/inertia";
 
-// const FilePond = vueFilePond();
 const FilePond = vueFilePond(
     FilePondPluginFileValidateType
     // this is a plugin that needs to be installed:
     // FilePondPluginImagePreview
 );
 
-// we have a CORS exception for the /upload route.. if we want more security than we need to remove the
-// CORS exception and implement this function.. however, I couldn't get it to work (tec21).
-// setOptions({
-//     server: {
-//         process: {
-//             url: './upload',
-//             headers: {
-//                 "X-CSRF-TOKEN": document.head.querySelector('meta[name="csrf-token"]').content
-//             }
-//         }
-//     }
-// });
+
 
 
 
@@ -117,27 +107,33 @@ export default {
     components: {
         FilePond
     },
-    data() {
-        return {
-            images: []
-        }
-    },
-    mounted() {
-        axios.get('/images')
-            .then((response) => {
-                this.images = response.data;
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-    },
     methods: {
 
         filepondInitialized: function () {
             console.log("Filepond is ready!");
             console.log('Filepond object:', this.$refs.pond);
 
+        },
+        handleProcessedFile(error, file) {
+            if (error) {
+                console.log("Filepond processed file");
+                console.log(error);
+                console.log(file);
+                return;
+            }
+
+            // add the file to our images array
+            Inertia.reload({
+                        only: ["images"],
+            });
         }
+    },
+    props: {
+            images: Object
+    },
+    setup(props) {
+
+    }
 
         // filepondProcessFile = (error, file) {
         //     console.log("Filepond processed file");
@@ -150,6 +146,5 @@ export default {
         // };
 
 
-    },
 };
 </script>

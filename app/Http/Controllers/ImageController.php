@@ -11,7 +11,8 @@ class ImageController extends Controller
 
     public function index()
     {
-        return Inertia::render('Image');
+        $images = Image::latest()->get();
+        return Inertia::render('Image', ['images' => $images]);
     }
 
     public function show()
@@ -53,7 +54,7 @@ class ImageController extends Controller
         ]);
 
         // return that image model back to the frontend
-        return $image;
+        return $image->name;
 
         //Route::get('/upload', function() {
 //
