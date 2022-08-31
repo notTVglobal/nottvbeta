@@ -11,11 +11,12 @@
 
             <div class="flex justify-between mb-6">
                 <h1 class="text-3xl">Edit > {{props.show.name}}</h1>
-                <Link href="/shows" class="text-blue-500 text-sm ml-2">Go back</Link>
+                <Link :href="`/shows/${show.id}`" class="text-blue-500 text-sm ml-2">Go back</Link>
             </div>
+            <ImageUpload />
             <div class="max-w-lg mx-auto mt-8">
                 <div class="mb-6">Show ID: {{props.show.id}}</div>
-                <div class="mb-6"><img :src="props.show.show_poster_url" /></div>
+                <div class="mb-6"><img :src="props.show.poster" /></div>
                 <form @submit.prevent="submit">
                     <div class="mb-6">
                         <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
@@ -72,6 +73,7 @@ import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useChatStore } from "@/Stores/ChatStore.js"
 import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/NavigationMenu"
+import ImageUpload from "@/Components/ImageUpload";
 
 let videoPlayer = useVideoPlayerStore()
 let chat = useChatStore()

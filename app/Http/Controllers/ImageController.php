@@ -3,16 +3,35 @@
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Request;
 use App\Models\Image;
 
 class ImageController extends Controller
 {
 
-    public function index()
-    {
-        $images = Image::latest()->get();
-        return Inertia::render('Image', ['images' => $images]);
+    public function index() {
+//        $images = Image::latest()->get();
+//        $images = Image::simplePaginate(10);
+//
+//
+//        return Inertia::render('Image', [
+//            'images' => $images
+//        ]);
+//
+        return Inertia::render('Image', [
+            'images' => Image::query()
+                ->when(Request::input('search'), function ($query, $search) {
+                    $query->where('name', 'like', "%{$search}%");
+                })
+                ->paginate(10)
+                ->withQueryString()
+                ->through(fn($image) => [
+                    'id' => $image->id,
+                    'name' => $image->name,
+                    'extension' => $image->extension
+                ]),
+            'filters' => Request::only(['search'])
+        ]);
     }
 
     public function show()
@@ -27,7 +46,6 @@ class ImageController extends Controller
         if (!$request->hasFile('image')) {
             return response()->json(['error' => 'There is no image present'], 400);
         }
-
         $request->validate([
             'image' => 'required|file|image|mimes:jpg,jpeg,png'
         ]);

@@ -3749,10 +3749,12 @@ var map = {
 	],
 	"./Shows/Edit": [
 		"./resources/js/Pages/Shows/Edit.vue",
+		"/js/vendor",
 		"resources_js_Pages_Shows_Edit_vue"
 	],
 	"./Shows/Edit.vue": [
 		"./resources/js/Pages/Shows/Edit.vue",
+		"/js/vendor",
 		"resources_js_Pages_Shows_Edit_vue"
 	],
 	"./Shows/Index": [

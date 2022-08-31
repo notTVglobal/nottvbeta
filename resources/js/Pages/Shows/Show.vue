@@ -7,23 +7,15 @@
     </div>
 
     <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
-        <div class="bg-white text-black p-5 mb-10">
+        <div class="bg-white rounded text-black p-5 mb-10">
 
-            <div class="flex justify-between mb-6">
-                <h1 class="text-2xl font-semibold pb-3">{{props.show.name}}</h1>
-                <Link href="/shows" class="text-blue-500 text-sm ml-2">Go back</Link>
-            </div>
-            <p class="mb-6">
-                {{ props.show.description }}
-            </p>
+            <ShowHeader />
 
             <div class="flex flex-col">
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                     <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                            <div class="bg-orange-300 px-2">
-                                Episodes list. New features will be added to sort, search and browse episodes.
-                            </div>
+                            <ShowEpisodesList />
 
 <!--                            <table class="min-w-full divide-y divide-gray-200">-->
 <!--                                <tbody class="bg-white divide-y divide-gray-200">-->
@@ -49,6 +41,7 @@
 <!--                            <Pagination :links="episode.links" class="mt-6"/>-->
 
                         </div>
+                        <ShowFooter />
                     </div>
                 </div>
             </div>
@@ -61,6 +54,10 @@
 <script setup>
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useChatStore } from "@/Stores/ChatStore.js"
+import { useShowStore } from "@/Stores/ShowStore.js"
+import ShowHeader from "@/Components/Shows/ShowHeader"
+import ShowEpisodesList from "@/Components/Shows/ShowEpisodesList"
+import ShowFooter from "@/Components/Shows/ShowFooter"
 import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/NavigationMenu"
 
@@ -76,6 +73,10 @@ let props = defineProps({
     show: Object,
     episodes: Object
 });
+
+let show = useShowStore();
+show.fill();
+
 </script>
 
 
