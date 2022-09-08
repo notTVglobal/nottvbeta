@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('shows', function (Blueprint $table) {
-            $table->string('poster');
+            $table->string('poster')->default(null);
         });
     }
 
