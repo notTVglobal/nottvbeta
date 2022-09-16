@@ -430,13 +430,18 @@ var FilePond = vue_filepond__WEBPACK_IMPORTED_MODULE_0___default()((filepond_plu
 // FilePondPluginImagePreview
 ); // The setOptions isn't working. It works in the Laracast Advanced Image Uploading Tutorial, but it isn't working here.
 // let serverMessage = {};
+// let csrfToken = document.head.querySelector('meta[name="nottv_local_session"]')
 // setOptions({
 //     server: {
 //         process: {
 //             onerror: (response) => {
 //                 serverMessage = JSON.parse(response);
 //             },
-//         }
+//             url: route("image.store"),
+//             headers: {
+//                 'X-CSRF-TOKEN': csrfToken,
+//             },
+//         },
 //     },
 //     labelFileProcessing: () => {
 //         return serverMessage.error;
@@ -466,7 +471,8 @@ var __default__ = {
       });
     }
   },
-  props: {// images: Object
+  props: {
+    images: Object
   },
   setup: function setup(props) {} // filepondProcessFile = (error, file) {
   //     console.log("Filepond processed file");

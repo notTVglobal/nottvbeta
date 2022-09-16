@@ -126,13 +126,18 @@ const FilePond = vueFilePond(
 
 // The setOptions isn't working. It works in the Laracast Advanced Image Uploading Tutorial, but it isn't working here.
 // let serverMessage = {};
+// let csrfToken = document.head.querySelector('meta[name="nottv_local_session"]')
 // setOptions({
 //     server: {
 //         process: {
 //             onerror: (response) => {
 //                 serverMessage = JSON.parse(response);
 //             },
-//         }
+//             url: route("image.store"),
+//             headers: {
+//                 'X-CSRF-TOKEN': csrfToken,
+//             },
+//         },
 //     },
 //     labelFileProcessing: () => {
 //         return serverMessage.error;
@@ -167,7 +172,7 @@ export default {
         }
     },
     props: {
-            // images: Object
+            images: Object
     },
     setup(props) {
 

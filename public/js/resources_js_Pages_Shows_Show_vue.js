@@ -1440,6 +1440,9 @@ var _hoisted_7 = {
 var _hoisted_8 = {
   "class": "mr-8"
 };
+var _hoisted_9 = {
+  "class": "mr-8"
+};
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_Link = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Link");
 
@@ -1482,7 +1485,12 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onClick: _cache[0] || (_cache[0] = function ($event) {
       return _ctx.$emit('add');
     })
-  }, "Add an episode")])])])], 64
+  }, "Add an episode")]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    "class": "bg-red-500 hover:bg-red-600 text-white mt-1 ml-6 px-4 py-2 rounded disabled:bg-gray-400",
+    onClick: _cache[1] || (_cache[1] = function ($event) {
+      return _ctx.$emit('add');
+    })
+  }, "Stream live")])])])], 64
   /* STABLE_FRAGMENT */
   );
 }

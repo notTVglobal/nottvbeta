@@ -25,6 +25,12 @@
                         @click="$emit('add')"
                     >Add an episode</button>
                 </div>
+                <div class="mr-8">
+                    <button
+                        class="bg-red-500 hover:bg-red-600 text-white mt-1 ml-6 px-4 py-2 rounded disabled:bg-gray-400"
+                        @click="$emit('add')"
+                    >Stream live</button>
+            </div>
             </div>
         </header>
 

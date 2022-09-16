@@ -32,8 +32,6 @@
                 <div class="mr-8">
                     <button
                         class="bg-green-500 hover:bg-green-600 text-white mt-1 ml-6 px-4 py-2 rounded disabled:bg-gray-400"
-                        :disabled="! team.spotsRemaining"
-                        @click="$emit('add')"
                     >Create Assignment</button>
                 </div>
             </div>

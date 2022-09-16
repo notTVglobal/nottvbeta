@@ -46,13 +46,13 @@
                     <h2 class="font-semibold text-xl mb-1">My Shows</h2>
                     <p class=""><Link
                         @click="videoPlayer.makeVideoTopRight()"
-                        :href="`/teams/1`"
+                        :href="`/shows/1`"
                         class="text-blue-800 hover:text-blue-400">
                         Down The Rabbit Hole
                     </Link></p>
                     <p class=""><Link
                         @click="videoPlayer.makeVideoTopRight()"
-                        :href="`/teams/1`"
+                        :href="`/shows/1`"
                         class="text-blue-800 hover:text-blue-400">
                         News & Talk
                     </Link></p>

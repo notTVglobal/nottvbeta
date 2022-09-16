@@ -1509,7 +1509,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onClick: _cache[0] || (_cache[0] = function ($event) {
       return $setup.videoPlayer.makeVideoTopRight();
     }),
-    href: "/teams/1",
+    href: "/shows/1",
     "class": "text-blue-800 hover:text-blue-400"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
@@ -1522,7 +1522,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onClick: _cache[1] || (_cache[1] = function ($event) {
       return $setup.videoPlayer.makeVideoTopRight();
     }),
-    href: "/teams/1",
+    href: "/shows/1",
     "class": "text-blue-800 hover:text-blue-400"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
