@@ -73,7 +73,7 @@
                         @click="videoPlayer.makeVideoTopRight()"
                         :href="`/teams/1`"
                         class="text-blue-800 hover:text-blue-400">
-                        notTV Street Team
+                        notTV News Team
                     </Link></p>
                     <p class=""><Link
                         @click="videoPlayer.makeVideoTopRight()"
@@ -106,7 +106,7 @@
                     <h2 class="bg-blue-400 font-semibold text-sm text-black my-3 px-2 col-span-2">Team Accounts</h2>
                     <p class="px-2">notTV Founders Shares</p>
                     <p class="px-2 justify-self-end">0.00</p>
-                    <p class="px-2">notTV Street Team Shares</p>
+                    <p class="px-2">notTV News Team Shares</p>
                     <p class="px-2 justify-self-end">0.00</p>
                     <p class="px-2">RJG Production Shares</p>
                     <p class="px-2 justify-self-end">0.00</p>
