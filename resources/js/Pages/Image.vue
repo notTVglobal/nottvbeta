@@ -20,8 +20,8 @@
             name="image"
             ref="pond"
             label-idle="Click to choose image, or drag here..."
-            server="upload"
             @init="filepondInitialized"
+            server="/upload"
             accepted-file-types="image/jpg, image/jpeg, image/png"
             @processfile="handleProcessedFile"
             allow-multiple="true" max-files="10"
@@ -30,7 +30,7 @@
     </div>
     <div class="mt-8 mb-24 mx-auto">
         <h3 class="text-2xl font-medium text-center">Image Gallery</h3>
-        <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg" />
+<!--        <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg" />-->
         <!-- Paginator -->
         <Pagination :links="images.links" class="mt-6"/>
         <div class="grid grid-cols-3 gap-2 justify-evenly mt-4">
@@ -71,17 +71,17 @@ chat.class = "chatSmall"
 
 let props = defineProps({
     images: Object,
-    filters: Object,
+    // filters: Object,
 });
 
-let search = ref(props.filters.search);
-
-watch(search, throttle(function (value) {
-    Inertia.get('image', { search: value }, {
-        preserveState: true,
-        replace: true
-    });
-}, 300));
+// let search = ref(props.filters.search);
+//
+// watch(search, throttle(function (value) {
+//     Inertia.get('image', { search: value }, {
+//         preserveState: true,
+//         replace: true
+//     });
+// }, 300));
 
 // config: { headers: function () { return {} } }
 
@@ -126,22 +126,21 @@ const FilePond = vueFilePond(
 
 // The setOptions isn't working. It works in the Laracast Advanced Image Uploading Tutorial, but it isn't working here.
 // let serverMessage = {};
-// let csrfToken = document.head.querySelector('meta[name="nottv_local_session"]')
 // setOptions({
 //     server: {
 //         process: {
-//             onerror: (response) => {
-//                 serverMessage = JSON.parse(response);
-//             },
-//             url: route("image.store"),
+//             // onerror: (response) => {
+//             //     serverMessage = JSON.parse(response);
+//             // },
+//             url: './upload',
 //             headers: {
-//                 'X-CSRF-TOKEN': csrfToken,
+//                 'X-CSRF-TOKEN': '',
 //             },
 //         },
 //     },
-//     labelFileProcessing: () => {
-//         return serverMessage.error;
-//     }
+//     // labelFileProcessing: () => {
+//     //     return serverMessage.error;
+//     // }
 // });
 
 
