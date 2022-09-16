@@ -23,6 +23,9 @@
                 <div class="bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-4 cursor-pointer">Kids</div>
                 <div class="bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-4 cursor-pointer">Live</div>
                 <div class="bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-4 cursor-pointer">Random</div>
+                <div class="bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-4 cursor-pointer">Documentaries</div>
+                <div class="bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-4 cursor-pointer">Sports</div>
+                <div class="bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-4 cursor-pointer">Education</div>
             </div>
 
         </div>
