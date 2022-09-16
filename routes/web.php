@@ -87,6 +87,9 @@ Route::middleware([
     Route::get('/training', function () {
         return Inertia::render('Training');
     })->name('training');
+    Route::get('/golive', function () {
+        return Inertia::render('GoLive');
+    })->name('golive');
 
     // temp page to test Stores
     Route::get('/quiz', function () {

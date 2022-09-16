@@ -25,6 +25,10 @@
                 class="bg-green-500 hover:bg-green-600 text-white mt-1 ml-6 px-4 py-2 rounded disabled:bg-gray-400"
             >All Teams</button>
             </Link>
+            <Link :href="`/golive`"><button
+                class="bg-red-500 hover:bg-red-600 text-white mt-1 ml-6 px-4 py-2 rounded disabled:bg-gray-400"
+            >Go Live</button>
+            </Link>
             </div>
             <div class="pl-5">
                 <Link :href="`/video`" class="text-blue-800 hover:text-blue-400">

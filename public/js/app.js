@@ -3633,6 +3633,14 @@ var map = {
 		"./resources/js/Pages/Episodes.vue",
 		"resources_js_Pages_Episodes_vue"
 	],
+	"./GoLive": [
+		"./resources/js/Pages/GoLive.vue",
+		"resources_js_Pages_GoLive_vue"
+	],
+	"./GoLive.vue": [
+		"./resources/js/Pages/GoLive.vue",
+		"resources_js_Pages_GoLive_vue"
+	],
 	"./Image": [
 		"./resources/js/Pages/Image.vue",
 		"/js/vendor",
