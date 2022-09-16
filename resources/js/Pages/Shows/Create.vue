@@ -10,7 +10,7 @@
 
         <div class="flex justify-between mb-6">
             <h1 class="text-3xl">Create Show</h1>
-            <Link href="/shows" class="text-blue-500 text-sm ml-2">Go back</Link>
+            <Link href="/dashboard" class="text-blue-500 text-sm ml-2">Dashboard</Link>
         </div>
 
         <form @submit.prevent="submit" class="max-w-md mx-auto mt-8">

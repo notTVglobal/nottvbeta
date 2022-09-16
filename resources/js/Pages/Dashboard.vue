@@ -9,45 +9,63 @@
         <div class="bg-white text-black p-5 mb-10">
 
             <div class="mb-4">
-            <h1 class="text-3xl font-semibold pb-3">Dashboard</h1>
-<!--disable button if ! admin-->
-            <Link :href="`/admin/users`"><button
-                class="bg-green-500 hover:bg-green-600 text-white mt-1 ml-6 px-4 py-2 rounded disabled:bg-gray-400"
-            >All Users</button>
-            </Link>
-<!--disable button if ! admin-->
-            <Link :href="`/admin/channels`"><button
-                class="bg-green-500 hover:bg-green-600 text-white mt-1 ml-6 px-4 py-2 rounded disabled:bg-gray-400"
-            >All Channels</button>
-            </Link>
-<!--disable button if ! admin-->
-            <Link :href="`/teams`"><button
-                class="bg-green-500 hover:bg-green-600 text-white mt-1 ml-6 px-4 py-2 rounded disabled:bg-gray-400"
-            >All Teams</button>
-            </Link>
-            <Link :href="`/golive`"><button
-                class="bg-red-500 hover:bg-red-600 text-white mt-1 ml-6 px-4 py-2 rounded disabled:bg-gray-400"
-            >Go Live</button>
-            </Link>
-            </div>
-            <div class="pl-5">
-                <Link :href="`/video`" class="text-blue-800 hover:text-blue-400">
-                    MistServer API
-                </Link>
-            </div>
-            <div class="pl-5">
-                <Link :href="`/image`" class="text-blue-800 hover:text-blue-400">
-                    Image Uploader
+
+            <div class="flex justify-between mb-3">
+                <h1 class="text-3xl font-semibold pb-3">Dashboard</h1>
+                <Link :href="`/golive`"><button
+                    class="bg-red-500 hover:bg-red-600 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
+                >Go Live</button>
                 </Link>
             </div>
 
-            <section class="grid grid-cols-1 lg:grid-cols-3 gap-4 my-3 m-auto p-1 text-black">
+                <div class="bg-gray-300 rounded pb-2 p-3 mx-2">
+                    <div class="font-semibold text-xl pb-2">Administrator only links</div>
+                    <!--disable button if ! admin-->
+                    <Link :href="`/admin/users`"><button
+                        class="bg-blue-500 hover:bg-blue-600 text-white mt-1 ml-6 px-4 py-2 rounded disabled:bg-gray-400"
+                    >All Users</button>
+                    </Link>
+                    <!--disable button if ! admin-->
+                    <Link :href="`/admin/channels`"><button
+                        class="bg-blue-500 hover:bg-blue-600 text-white mt-1 ml-6 px-4 py-2 rounded disabled:bg-gray-400"
+                    >All Channels</button>
+                    </Link>
+                    <!--disable button if ! admin-->
+                    <Link :href="`/teams`"><button
+                        class="bg-blue-500 hover:bg-blue-600 text-white mt-1 ml-6 px-4 py-2 rounded disabled:bg-gray-400"
+                    >All Teams</button>
+                    </Link>
+
+                    <div class="pl-5 pt-2">
+                        <Link :href="`/video`" class="text-blue-800 hover:text-blue-400">
+                            MistServer API
+                        </Link>
+                    </div>
+                    <div class="pl-5">
+                        <Link :href="`/image`" class="text-blue-800 hover:text-blue-400">
+                            Image Uploader
+                        </Link>
+                    </div>
+                </div>
+                </div>
+
+            <section class="grid grid-cols-1 lg:grid-cols-3 gap-4 my-3 mx-2 m-auto text-black">
                 <div class="p-5 bg-gray-200 rounded">
-                    <h2 class="font-semibold text-xl">My Assignments</h2>
-                    <p class="mt-1">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                    <div class="mb-1 flex-col-1">
+                        <div class="font-semibold text-xl">My Assignments</div>
+                        <div><Link :href="`#`" class="text-blue-500 text-xs">Create New Assignment</Link></div>
+                    </div>
+                    <div class="ml-3">
+                        <li>
+                            Assignments list goes here
+                        </li>
+                    </div>
                 </div>
                 <div class="p-5 bg-gray-200 rounded">
-                    <h2 class="font-semibold text-xl mb-1">My Shows</h2>
+                    <div class="mb-1 flex-col-1">
+                        <div class="font-semibold text-xl">My Shows</div>
+                        <div><Link :href="`/shows/create`" class="text-blue-500 text-xs">Create New Show</Link></div>
+                    </div>
                     <p class=""><Link
                         @click="videoPlayer.makeVideoTopRight()"
                         :href="`/shows/1`"
@@ -62,7 +80,10 @@
                     </Link></p>
                 </div>
                 <div class="p-5 bg-gray-200 rounded">
-                    <h2 class="font-semibold text-xl mb-1">My Teams</h2>
+                    <div class="mb-1 flex-col-1">
+                        <div class="font-semibold text-xl">My Teams</div>
+                        <div><Link :href="`/teams/create`" class="text-blue-500 text-xs">Create New Team</Link></div>
+                    </div>
                     <p class=""><Link
                         @click="videoPlayer.makeVideoTopRight()"
                         :href="`/teams/1`"
