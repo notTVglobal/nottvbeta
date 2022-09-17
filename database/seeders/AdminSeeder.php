@@ -19,7 +19,8 @@ class AdminSeeder extends Seeder
             'name' => 'Administrator',
             'email' => 'admin@not.tv',
             'password' => bcrypt('nottv123'),
-            'role_id' => 6
+            'role_id' => 5,
+            'isAdmin' => 1
         ]);
     }
 }
