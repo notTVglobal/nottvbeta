@@ -23,10 +23,6 @@
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
                             <!-- Paginator -->
                             <Pagination :links="users.links" class="mb-2"/>
-                        <div class="bg-orange-300">
-                            Only users who are creators should have a clickable name
-                            which goes to their creator profile page.
-                        </div>
 
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead>
