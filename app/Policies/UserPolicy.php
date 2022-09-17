@@ -51,7 +51,7 @@ class UserPolicy
      */
     public function viewAdmin(User $user)
     {
-        return $user->isAdmin = true;
+        return $user->isAdmin === 1;
     }
 
     /**
@@ -62,7 +62,7 @@ class UserPolicy
      */
     public function viewAllUsers(User $user)
     {
-        return $user->isAdmin = true;
+        return $user->isAdmin === 1;
     }
 
     /**
@@ -73,7 +73,7 @@ class UserPolicy
      */
     public function create(User $user)
     {
-        return $user->isAdmin = true;
+        return $user->isAdmin === 1;
     }
 
     /**
@@ -84,7 +84,7 @@ class UserPolicy
      */
     public function edit(User $user)
     {
-        return $user->isAdmin = true;
+        return $user->isAdmin === 1;
     }
 
 
