@@ -1992,7 +1992,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
   }, 8
   /* PROPS */
-  , ["href", "active"])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <JetResponsiveNavLink"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    @click=\"videoPlayer.makeVideoTopRight()\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    :href=\"route('video')\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    :active=\"route().current('video')\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    MistServer API"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                </JetResponsiveNavLink>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <JetResponsiveNavLink @click=\"videoPlayer.makeVideoFullPage()\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                      :href=\"route('image')\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                      :active=\"route().current('image')\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                >"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    Image Uploader"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                </JetResponsiveNavLink>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <JetResponsiveNavLink"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    @click=\"videoPlayer.makeVideoTopRight()\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    :href=\"route('admin.channels.index')\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    :active=\"route().current('admin.channels.index')\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    Channels"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                </JetResponsiveNavLink>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <JetResponsiveNavLink"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    @click=\"videoPlayer.makeVideoTopRight()\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    :href=\"route('teams.index')\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    :active=\"route().current('teams.index')\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    Teams"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                </JetResponsiveNavLink>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <JetResponsiveNavLink"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    @click=\"videoPlayer.makeVideoTopRight()\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    :href=\"route('admin.users.index')\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    :active=\"route().current('admin.users.index')\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    Users"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                </JetResponsiveNavLink>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <div class=\"block px-4 py-2 text-xs text-gray-400\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    Manage Account"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                </div>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <div class=\"block px-4 py-2 text-xs text-gray-400\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    Links"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                </div>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["JetResponsiveNavLink"], {
+  , ["href", "active"])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["JetResponsiveNavLink"], {
     onClick: _cache[4] || (_cache[4] = function ($event) {
       return $setup.videoPlayer.makeVideoTopRight();
     }),
@@ -2097,7 +2097,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
   }, 8
   /* PROPS */
-  , ["href", "active"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["JetResponsiveNavLink"], {
+  , ["href", "active"]), _ctx.$page.props.user.role_id === 5 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)($setup["JetResponsiveNavLink"], {
+    key: 0,
     onClick: _cache[11] || (_cache[11] = function ($event) {
       return $setup.videoPlayer.makeVideoTopRight();
     }),
@@ -2113,7 +2114,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
   }, 8
   /* PROPS */
-  , ["href", "active"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["JetResponsiveNavLink"], {
+  , ["href", "active"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["JetResponsiveNavLink"], {
     onClick: _cache[12] || (_cache[12] = function ($event) {
       return $setup.videoPlayer.makeVideoTopRight();
     }),
@@ -2128,7 +2129,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
   }, 8
   /* PROPS */
-  , ["href", "active"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["JetResponsiveNavLink"], {
+  , ["href", "active"]), _ctx.$page.props.user.role_id === 5 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)($setup["JetResponsiveNavLink"], {
+    key: 1,
     onClick: _cache[13] || (_cache[13] = function ($event) {
       return $setup.videoPlayer.makeVideoTopRight();
     }),
@@ -2143,7 +2145,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
   }, 8
   /* PROPS */
-  , ["href", "active"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Authentication "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", {
+  , ["href", "active"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Authentication "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", {
     method: "POST",
     onSubmit: (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)($setup.logout, ["prevent"])
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["JetResponsiveNavLink"], {
