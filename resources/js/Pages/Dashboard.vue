@@ -18,7 +18,7 @@
                 </Link>
             </div>
 
-                <div class="bg-gray-300 rounded pb-2 p-3 mx-2">
+                <div v-show="can.viewAdmin" class="bg-gray-300 rounded pb-2 p-3 mx-2">
                     <div class="font-semibold text-xl pb-2">Administrator only links</div>
                     <!--disable button if ! admin-->
                     <Link :href="`/admin/users`"><button
@@ -154,6 +154,10 @@ videoPlayer.fullPage = false
 videoPlayer.loggedIn = true
 chat.class = "chatSmall"
 // onload(videoPlayer.class = "videoTopRight")
+
+let props = defineProps({
+    can: Object
+});
 </script>
 
 

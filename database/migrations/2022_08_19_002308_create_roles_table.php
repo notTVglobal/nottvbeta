@@ -38,11 +38,6 @@ return new class extends Migration
                 'role' => 'Creator'
             )
         );
-        DB::table('roles')->insert(
-            array(
-                'role' => 'Administrator'
-            )
-        );
     }
 
     /**

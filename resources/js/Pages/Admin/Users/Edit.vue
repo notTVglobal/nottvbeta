@@ -32,7 +32,6 @@
                         <option value="3">Premium Subscriber</option>
                         <option value="4">VIP</option>
                         <option value="5">Creator</option>
-                        <option value="6">Administrator</option>
                     </select>
 
                     <div v-if="form.errors.role" v-text="form.errors.role" class="text-xs text-red-600 mt-1"></div>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class UsersController extends Controller
 {
@@ -25,9 +26,18 @@ class UsersController extends Controller
                 ->through(fn($user) => [
                     'id' => $user->id,
                     'name' => $user->name,
-                    'role_id' => $user->role_id
+                    'role_id' => $user->role_id,
+                    'isAdmin' => $user->isAdmin,
+                    'can' => [
+                        'edit' => Auth::user()->can('edit', $user)
+                    ]
                 ]),
-            'filters' => Request::only(['search'])
+            'filters' => Request::only(['search']),
+            'can' => [
+                'viewAllUsers' => Auth::user()->can('viewAll', User::class),
+                'createUser' => Auth::user()->can('create', User::class),
+                'editUser' => Auth::user()->can('edit', User::class)
+            ]
         ]);
     }
 
@@ -85,7 +95,7 @@ class UsersController extends Controller
     {
         return Inertia::render('Admin/Users/Edit', [
             'user' => $user,
-            'role_id' => $user->role_id
+            'role_id' => $user->role_id,
         ]);
     }
 

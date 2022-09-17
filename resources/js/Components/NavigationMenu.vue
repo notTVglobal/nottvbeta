@@ -91,12 +91,14 @@
                                         </div>
 
                                         <JetDropdownLink
+                                            v-if="$page.props.user.role_id === 5"
                                             @click="videoPlayer.makeVideoTopRight()"
                                             :href="route('dashboard')">
                                             Dashboard
                                         </JetDropdownLink>
 
                                         <JetDropdownLink
+                                            v-if="$page.props.user.role_id === 5"
                                             @click="videoPlayer.makeVideoTopRight()"
                                             :href="route('training')">
                                             Training

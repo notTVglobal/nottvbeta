@@ -6,6 +6,7 @@ use App\Http\Controllers\ShowsController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\TeamsController;
+use App\Http\Controllers\DashboardController;
 //use Illuminate\Support\Facades\Request;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
@@ -60,9 +61,17 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
+
+    Route::get('/dashboard', [DashboardController::class, 'index'])
+        ->can('viewCreator', 'App\Models\User')
+        ->name('dashboard');
+
+    Route::get('/training', function () {
+        return Inertia::render('Training');
+    })
+        ->can('viewCreator', 'App\Models\User')
+        ->name('training');
+
     Route::get('/stream', function () {
         return Inertia::render('Stream');
     })->name('stream');
@@ -84,9 +93,6 @@ Route::middleware([
     Route::get('/schedule', function () {
         return Inertia::render('Schedule');
     })->name('schedule');
-    Route::get('/training', function () {
-        return Inertia::render('Training');
-    })->name('training');
     Route::get('/golive', function () {
         return Inertia::render('GoLive');
     })->name('golive');
@@ -131,15 +137,21 @@ Route::middleware([
     // Need to move this to a new middleware section for auth_admin
     //
     // List all users
-    Route::get('/admin/users', [UsersController::class, 'index'])->name('admin.users.index');
+    Route::get('/admin/users', [UsersController::class, 'index'])
+        ->can('viewAllUsers', 'App\Models\User')
+        ->name('admin.users.index');
     // Create a user
-    Route::get('/admin/users/create', [UsersController::class, 'create'])->name('admin.users.create');
+    Route::get('/admin/users/create', [UsersController::class, 'create'])
+        ->can('create', 'App\Models\User')
+        ->name('admin.users.create');
     // Add new user to the database
     Route::post('/admin/users', [UsersController::class, 'store'])->name('admin.users.store');
     // Show user
     Route::get('/admin/users/{user}', [UsersController::class, 'show'])->name('admin.users.show');
     // Edit user
-    Route::get('/admin/users/edit/{user}', [UsersController::class, 'edit'])->name('admin.users.edit');
+    Route::get('/admin/users/edit/{user}', [UsersController::class, 'edit'])
+        ->can('edit', 'App\Models\User')
+        ->name('admin.users.edit');
     // Update user
     Route::put('/admin/users', [UsersController::class, 'update'])->name('admin.users.update');
 

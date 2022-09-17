@@ -399,13 +399,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _Quiz_vue_vue_type_template_id_171d9e98__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Quiz.vue?vue&type=template&id=171d9e98 */ "./resources/js/Components/Quiz/Quiz.vue?vue&type=template&id=171d9e98");
 /* harmony import */ var _Quiz_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Quiz.vue?vue&type=script&setup=true&lang=js */ "./resources/js/Components/Quiz/Quiz.vue?vue&type=script&setup=true&lang=js");
-/* harmony import */ var C_Users_tcross_www_nottvbeta_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var _var_www_nottvbeta_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
 
 ;
-const __exports__ = /*#__PURE__*/(0,C_Users_tcross_www_nottvbeta_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_Quiz_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Quiz_vue_vue_type_template_id_171d9e98__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Components/Quiz/Quiz.vue"]])
+const __exports__ = /*#__PURE__*/(0,_var_www_nottvbeta_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_Quiz_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Quiz_vue_vue_type_template_id_171d9e98__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Components/Quiz/Quiz.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -426,13 +426,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _QuizFooter_vue_vue_type_template_id_a2c11022__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./QuizFooter.vue?vue&type=template&id=a2c11022 */ "./resources/js/Components/Quiz/QuizFooter.vue?vue&type=template&id=a2c11022");
 /* harmony import */ var _QuizFooter_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./QuizFooter.vue?vue&type=script&setup=true&lang=js */ "./resources/js/Components/Quiz/QuizFooter.vue?vue&type=script&setup=true&lang=js");
-/* harmony import */ var C_Users_tcross_www_nottvbeta_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var _var_www_nottvbeta_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
 
 ;
-const __exports__ = /*#__PURE__*/(0,C_Users_tcross_www_nottvbeta_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_QuizFooter_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_QuizFooter_vue_vue_type_template_id_a2c11022__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Components/Quiz/QuizFooter.vue"]])
+const __exports__ = /*#__PURE__*/(0,_var_www_nottvbeta_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_QuizFooter_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_QuizFooter_vue_vue_type_template_id_a2c11022__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Components/Quiz/QuizFooter.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -453,13 +453,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _QuizFooterLinks_vue_vue_type_template_id_0588d28c__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./QuizFooterLinks.vue?vue&type=template&id=0588d28c */ "./resources/js/Components/Quiz/QuizFooterLinks.vue?vue&type=template&id=0588d28c");
 /* harmony import */ var _QuizFooterLinks_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./QuizFooterLinks.vue?vue&type=script&setup=true&lang=js */ "./resources/js/Components/Quiz/QuizFooterLinks.vue?vue&type=script&setup=true&lang=js");
-/* harmony import */ var C_Users_tcross_www_nottvbeta_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var _var_www_nottvbeta_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
 
 ;
-const __exports__ = /*#__PURE__*/(0,C_Users_tcross_www_nottvbeta_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_QuizFooterLinks_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_QuizFooterLinks_vue_vue_type_template_id_0588d28c__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Components/Quiz/QuizFooterLinks.vue"]])
+const __exports__ = /*#__PURE__*/(0,_var_www_nottvbeta_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_QuizFooterLinks_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_QuizFooterLinks_vue_vue_type_template_id_0588d28c__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Components/Quiz/QuizFooterLinks.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -480,13 +480,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _QuizHeader_vue_vue_type_template_id_605c483e__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./QuizHeader.vue?vue&type=template&id=605c483e */ "./resources/js/Components/Quiz/QuizHeader.vue?vue&type=template&id=605c483e");
 /* harmony import */ var _QuizHeader_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./QuizHeader.vue?vue&type=script&setup=true&lang=js */ "./resources/js/Components/Quiz/QuizHeader.vue?vue&type=script&setup=true&lang=js");
-/* harmony import */ var C_Users_tcross_www_nottvbeta_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var _var_www_nottvbeta_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
 
 ;
-const __exports__ = /*#__PURE__*/(0,C_Users_tcross_www_nottvbeta_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_QuizHeader_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_QuizHeader_vue_vue_type_template_id_605c483e__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Components/Quiz/QuizHeader.vue"]])
+const __exports__ = /*#__PURE__*/(0,_var_www_nottvbeta_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_QuizHeader_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_QuizHeader_vue_vue_type_template_id_605c483e__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Components/Quiz/QuizHeader.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -506,12 +506,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _QuizQuestion_vue_vue_type_template_id_401efc8c__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./QuizQuestion.vue?vue&type=template&id=401efc8c */ "./resources/js/Components/Quiz/QuizQuestion.vue?vue&type=template&id=401efc8c");
-/* harmony import */ var C_Users_tcross_www_nottvbeta_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var _var_www_nottvbeta_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 const script = {}
 
 ;
-const __exports__ = /*#__PURE__*/(0,C_Users_tcross_www_nottvbeta_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_1__["default"])(script, [['render',_QuizQuestion_vue_vue_type_template_id_401efc8c__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Components/Quiz/QuizQuestion.vue"]])
+const __exports__ = /*#__PURE__*/(0,_var_www_nottvbeta_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_1__["default"])(script, [['render',_QuizQuestion_vue_vue_type_template_id_401efc8c__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Components/Quiz/QuizQuestion.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -532,13 +532,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _QuizHome_vue_vue_type_template_id_3d63957d__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./QuizHome.vue?vue&type=template&id=3d63957d */ "./resources/js/Pages/QuizHome.vue?vue&type=template&id=3d63957d");
 /* harmony import */ var _QuizHome_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./QuizHome.vue?vue&type=script&setup=true&lang=js */ "./resources/js/Pages/QuizHome.vue?vue&type=script&setup=true&lang=js");
-/* harmony import */ var C_Users_tcross_www_nottvbeta_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var _var_www_nottvbeta_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
 
 ;
-const __exports__ = /*#__PURE__*/(0,C_Users_tcross_www_nottvbeta_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_QuizHome_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_QuizHome_vue_vue_type_template_id_3d63957d__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Pages/QuizHome.vue"]])
+const __exports__ = /*#__PURE__*/(0,_var_www_nottvbeta_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_QuizHome_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_QuizHome_vue_vue_type_template_id_3d63957d__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/Pages/QuizHome.vue"]])
 /* hot reload */
 if (false) {}
 
