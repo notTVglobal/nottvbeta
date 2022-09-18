@@ -8,6 +8,7 @@ use App\Http\Controllers\ImageController;
 use App\Http\Controllers\TeamsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ScheduleController;
+use App\Http\Controllers\PostController;
 //use Illuminate\Support\Facades\Request;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
@@ -76,10 +77,27 @@ Route::middleware([
         return Inertia::render('Stream');
     })->name('stream');
 
-    Route::get('/posts', function () {
-        return Inertia::render('Posts');
-    })->can('viewPremium', 'App\Models\User')
+//    Route::get('/posts', function () {
+//        return Inertia::render('Posts/Index');
+//    })->can('viewPremium', 'App\Models\User')
+//        ->name('posts');
+
+    Route::resource('posts',PostController::class);
+
+    Route::get('/posts', [PostController::class, 'index'])
+        ->can('viewPremium', 'App\Models\User')
         ->name('posts');
+
+//    Route::get('/posts/create', [PostController::class, 'create'])
+//        ->can('viewPremium', 'App\Models\User')
+//        ->name('posts.create');
+//
+//    Route::get('/posts/edit', [PostController::class, 'edit'])
+//        ->can('viewPremium', 'App\Models\User')
+//        ->name('posts.edit');
+//
+//    Route::post('/posts', [PostController::class, 'store'])
+//        ->name('posts.store');
 
     Route::get('/channels', function () {
         return Inertia::render('Channels');

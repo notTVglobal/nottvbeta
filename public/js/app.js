@@ -3667,6 +3667,38 @@ var map = {
 		"./resources/js/Pages/Posts.vue",
 		"resources_js_Pages_Posts_vue"
 	],
+	"./Posts/Create": [
+		"./resources/js/Pages/Posts/Create.vue",
+		"resources_js_Pages_Posts_Create_vue"
+	],
+	"./Posts/Create.vue": [
+		"./resources/js/Pages/Posts/Create.vue",
+		"resources_js_Pages_Posts_Create_vue"
+	],
+	"./Posts/Index": [
+		"./resources/js/Pages/Posts/Index.vue",
+		"resources_js_Pages_Posts_Index_vue"
+	],
+	"./Posts/Index.vue": [
+		"./resources/js/Pages/Posts/Index.vue",
+		"resources_js_Pages_Posts_Index_vue"
+	],
+	"./Posts/{$id}/Edit": [
+		"./resources/js/Pages/Posts/{$id}/Edit.vue",
+		"resources_js_Pages_Posts_id_Edit_vue"
+	],
+	"./Posts/{$id}/Edit.vue": [
+		"./resources/js/Pages/Posts/{$id}/Edit.vue",
+		"resources_js_Pages_Posts_id_Edit_vue"
+	],
+	"./Posts/{$id}/Index": [
+		"./resources/js/Pages/Posts/{$id}/Index.vue",
+		"resources_js_Pages_Posts_id_Index_vue"
+	],
+	"./Posts/{$id}/Index.vue": [
+		"./resources/js/Pages/Posts/{$id}/Index.vue",
+		"resources_js_Pages_Posts_id_Index_vue"
+	],
 	"./PrivacyPolicy": [
 		"./resources/js/Pages/PrivacyPolicy.vue",
 		"resources_js_Pages_PrivacyPolicy_vue"
