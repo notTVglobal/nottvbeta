@@ -6,7 +6,7 @@
                 <div class="flex">
                     <!-- Logo -->
                     <div class="shrink-0 flex items-center">
-                        <Link @click="videoPlayer.makeVideoTopRight()" :href="route('dashboard')">
+                        <Link @click="videoPlayer.makeVideoTopRight()" :href="route('stream')">
                             <JetApplicationMark class="block h-9 w-auto"/>
                         </Link>
                     </div>
@@ -19,16 +19,32 @@
                         <JetNavLink @click="videoPlayer.makeVideoTopRight()" :href="route('schedule')" :active="route().current('schedule')">
                             Schedule
                         </JetNavLink>
-                        <JetNavLink @click="videoPlayer.makeVideoTopRight()" :href="route('posts')" :active="route().current('posts')">
-                            Posts
+                        <JetNavLink
+                            v-if="$page.props.user.role_id === 3 || $page.props.user.role_id === 4 || $page.props.user.role_id === 5"
+                            @click="videoPlayer.makeVideoTopRight()"
+                            :href="route('posts')"
+                            :active="route().current('posts')">
+                                Posts
                         </JetNavLink>
-                        <JetNavLink @click="videoPlayer.makeVideoFullPage()" :href="route('channels')" :active="route().current('channels')">
+                        <JetNavLink
+                            v-if="$page.props.user.role_id === 3 || $page.props.user.role_id === 4 || $page.props.user.role_id === 5"
+                            @click="videoPlayer.makeVideoFullPage()"
+                            :href="route('channels')"
+                            :active="route().current('channels')">
                             Channels
                         </JetNavLink>
-                        <JetNavLink @click="videoPlayer.makeVideoTopRight()" :href="route('movies')" :active="route().current('movies')">
+                        <JetNavLink
+                            v-if="$page.props.user.role_id === 3 || $page.props.user.role_id === 4 || $page.props.user.role_id === 5"
+                            @click="videoPlayer.makeVideoTopRight()"
+                            :href="route('movies')"
+                            :active="route().current('movies')">
                             Movies
                         </JetNavLink>
-                        <JetNavLink @click="videoPlayer.makeVideoTopRight()" :href="route('shows')" :active="route().current('shows')">
+                        <JetNavLink
+                            v-if="$page.props.user.role_id === 3 || $page.props.user.role_id === 4 || $page.props.user.role_id === 5"
+                            @click="videoPlayer.makeVideoTopRight()"
+                            :href="route('shows')"
+                            :active="route().current('shows')">
                             Shows
                         </JetNavLink>
                         <JetNavLink @click="videoPlayer.makeVideoTopRight()" :href="route('shop')" :active="route().current('shop')">
@@ -39,9 +55,15 @@
                 </div>
 
                 <div class="hidden lg:flex lg:items-center lg:ml-6 z-50">
-
+                    <div class="flex-col-1">
+                        <div v-if="$page.props.user.role_id === 3" class="text-xs text-fuchsia-700">PREMIUM SUBSCRIBER</div>
+                        <div v-if="$page.props.user.role_id === 4" class="text-xs text-fuchsia-700">VIP</div>
+                        <div v-if="$page.props.user.role_id === 5" class="text-xs text-fuchsia-700">CREATOR</div>
+                        <div v-if="$page.props.user.isAdmin === 1" class="text-xs text-red-700">ADMIN</div>
+                    </div>
                     <!-- Settings Dropdown -->
                     <div class="ml-3 relative z-50">
+
                         <JetDropdown align="right" width="48">
                             <template #trigger>
                                 <button v-if="$page.props.jetstream.managesProfilePhotos"

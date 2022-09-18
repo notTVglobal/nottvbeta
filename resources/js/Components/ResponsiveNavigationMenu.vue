@@ -63,9 +63,24 @@
                     </div>
                 </div>
             </div>
+            <div class="">
+                <div v-if="$page.props.user.role_id === 3" class="text-xs text-fuchsia-700">PREMIUM SUBSCRIBER</div>
+                <div v-if="$page.props.user.role_id === 4" class="text-xs text-fuchsia-700">VIP</div>
+                <div v-if="$page.props.user.role_id === 5" class="text-xs text-fuchsia-700">CREATOR</div>
+                <div v-if="$page.props.user.isAdmin === 1" class="text-xs text-red-700">ADMIN</div>
+            </div>
 
 
             <div class="pt-3 space-y-1 z-50 bg-gray-900 h-max overflow-y-scroll">
+
+                <JetResponsiveNavLink
+                    v-if="$page.props.user.role_id === 5"
+                    @click="videoPlayer.makeVideoTopRight()"
+                    :href="route('dashboard')"
+                    :active="route().current('dashboard')"
+                    class="border-b-2">
+                    Dashboard
+                </JetResponsiveNavLink>
 
                 <JetResponsiveNavLink
                     @click="videoPlayer.makeVideoTopRight()"
@@ -82,6 +97,7 @@
                 </JetResponsiveNavLink>
 
                 <JetResponsiveNavLink
+                    v-if="$page.props.user.role_id === 3 || $page.props.user.role_id === 4 || $page.props.user.role_id === 5"
                     @click="videoPlayer.makeVideoTopRight()"
                     :href="route('posts')"
                     :active="route().current('posts')">
@@ -89,6 +105,7 @@
                 </JetResponsiveNavLink>
 
                 <JetResponsiveNavLink
+                    v-if="$page.props.user.role_id === 3 || $page.props.user.role_id === 4 || $page.props.user.role_id === 5"
                     @click="videoPlayer.makeVideoTopRight()"
                     :href="route('channels')"
                     :active="route().current('channels')">
@@ -96,6 +113,7 @@
                 </JetResponsiveNavLink>
 
                 <JetResponsiveNavLink
+                    v-if="$page.props.user.role_id === 3 || $page.props.user.role_id === 4 || $page.props.user.role_id === 5"
                     @click="videoPlayer.makeVideoTopRight()"
                     :href="route('movies')"
                     :active="route().current('movies')">
@@ -103,6 +121,7 @@
                 </JetResponsiveNavLink>
 
                 <JetResponsiveNavLink
+                    v-if="$page.props.user.role_id === 3 || $page.props.user.role_id === 4 || $page.props.user.role_id === 5"
                     @click="videoPlayer.makeVideoTopRight()"
                     :href="route('shows')"
                     :active="route().current('shows')">
@@ -114,15 +133,6 @@
                     :href="route('shop')"
                     :active="route().current('shop')">
                         Shop
-                </JetResponsiveNavLink>
-
-                <JetResponsiveNavLink
-                    v-if="$page.props.user.role_id === 5"
-                    @click="videoPlayer.makeVideoTopRight()"
-                    :href="route('dashboard')"
-                    :active="route().current('dashboard')"
-                    class="border-t-2">
-                        Dashboard
                 </JetResponsiveNavLink>
 
                 <JetResponsiveNavLink

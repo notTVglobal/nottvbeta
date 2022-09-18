@@ -7,6 +7,7 @@ use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\TeamsController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ScheduleController;
 //use Illuminate\Support\Facades\Request;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
@@ -49,11 +50,11 @@ Route::post('/email/verification-notification', function (Request $request) {
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
 Route::get('/terms', function () {
-    return Inertia::render('TermsOfService');
+    return redirect('/terms-of-service');
 })->name('terms');
 
 Route::get('/privacy', function () {
-    return Inertia::render('PrivacyPolicy');
+    return redirect('/privacy-policy');
 })->name('privacy');
 
 Route::middleware([
@@ -68,42 +69,55 @@ Route::middleware([
 
     Route::get('/training', function () {
         return Inertia::render('Training');
-    })
-        ->can('viewCreator', 'App\Models\User')
+    })->can('viewCreator', 'App\Models\User')
         ->name('training');
 
     Route::get('/stream', function () {
         return Inertia::render('Stream');
     })->name('stream');
+
     Route::get('/posts', function () {
         return Inertia::render('Posts');
-    })->name('posts');
+    })->can('viewPremium', 'App\Models\User')
+        ->name('posts');
+
     Route::get('/channels', function () {
         return Inertia::render('Channels');
-    })->name('channels');
+    })->can('viewPremium', 'App\Models\User')
+        ->name('channels');
+
     Route::get('/movies', function () {
         return Inertia::render('Movies');
-    })->name('movies');
+    })->can('viewPremium', 'App\Models\User')
+        ->name('movies');
+
     Route::get('/video', function () {
         return Inertia::render('Video');
-    })->name('video');
+    })->can('viewAdmin', 'App\Models\User')
+        ->name('video');
+
     Route::get('/shop', function () {
         return Inertia::render('Shop');
     })->name('shop');
-    Route::get('/schedule', function () {
-        return Inertia::render('Schedule');
-    })->name('schedule');
+
+    Route::get('/schedule', [ScheduleController::class, 'index'])
+        ->name('schedule');
+
     Route::get('/golive', function () {
         return Inertia::render('GoLive');
-    })->name('golive');
+    })->can('viewCreator', 'App\Models\User')
+        ->name('golive');
 
     // temp page to test Stores
     Route::get('/quiz', function () {
         return Inertia::render('QuizHome');
-    })->name('quiz');
+    })->can('viewAdmin', 'App\Models\User')
+        ->name('quiz');
 
     // List all teams
-    Route::get('/teams', [TeamsController::class, 'index'])->name('teams.index');
+    Route::get('/teams', [TeamsController::class, 'index'])
+        ->can('viewAdmin', 'App\Models\User')
+        ->name('teams.index');
     // Create a team
     Route::get('/teams/create', [TeamsController::class, 'create'])->name('teams.create');
     // Add new team to database
@@ -115,24 +129,40 @@ Route::middleware([
 
 
     // List all creators
-    Route::get('/creators', [CreatorsController::class, 'index'])->name('creators');
+    Route::get('/creators', [CreatorsController::class, 'index'])
+        ->can('viewAdmin', 'App\Models\User')
+        ->name('creators');
     // Create a creator
-    Route::get('/creators/create', [CreatorsController::class, 'create'])->name('creators.create');
+    Route::get('/creators/create', [CreatorsController::class, 'create'])
+        ->can('viewAdmin', 'App\Models\User')
+        ->name('creators.create');
 
     // List all shows
     Route::get('/shows', [ShowsController::class, 'index'])->name('shows');
     // Create a show
-    Route::get('/shows/create', [ShowsController::class, 'create'])->name('shows.create');
+    Route::get('/shows/create', [ShowsController::class, 'create'])
+        ->can('viewCreator', 'App\Models\User')
+        ->name('shows.create');
     // Add new show to database
-    Route::post('/shows', [ShowsController::class, 'store'])->name('shows.store');
+    Route::post('/shows', [ShowsController::class, 'store'])
+        ->can('viewCreator', 'App\Models\User')
+        ->name('shows.store');
     // Single show page
     Route::get('/shows/{show}', [ShowsController::class, 'show'])->name('shows.show');
     // Edit show
-    Route::get('/shows/edit/{show}', [ShowsController::class, 'edit'])->name('shows.edit');
+    Route::get('/shows/edit/{show}', [ShowsController::class, 'edit'])
+        ->can('viewCreator', 'App\Models\User')
+        ->name('shows.edit');
 
-    Route::get('/image', [ImageController::class, 'index'])->name('image.index');
-    Route::get('/images', [ImageController::class, 'show'])->name('image.show');
-    Route::post('/upload', [ImageController::class, 'store'])->name('image.store');
+    Route::get('/image', [ImageController::class, 'index'])
+        ->can('viewAdmin', 'App\Models\User')
+        ->name('image.index');
+    Route::get('/images', [ImageController::class, 'show'])
+        ->can('viewAdmin', 'App\Models\User')
+        ->name('image.show');
+    Route::post('/upload', [ImageController::class, 'store'])
+        ->can('viewAdmin', 'App\Models\User')
+        ->name('image.store');
 
     // Need to move this to a new middleware section for auth_admin
     //
@@ -158,6 +188,7 @@ Route::middleware([
     // List all channels
     Route::get('/admin/channels', function () {
         return Inertia::render('Admin/Channels/Index');
-    })->name('admin.channels.index');
+    })->can('viewAdmin', 'App\Models\User')
+        ->name('admin.channels.index');
 
 });

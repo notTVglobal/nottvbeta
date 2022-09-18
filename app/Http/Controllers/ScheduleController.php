@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Models\Schedule;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
-use App\Models\Show;
 
-class ShowsController extends Controller
+class ScheduleController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,9 +16,9 @@ class ShowsController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Shows/Index', [
-            'shows' => Show::query()
-                ->when(Request::input('search'), function ($query, $search) {
+        return Inertia::render('Schedule', [
+            'schedule' => Schedule::query()
+                ->when(\Illuminate\Support\Facades\Request::input('search'), function ($query, $search) {
                     $query->where('name', 'like', "%{$search}%");
                 })
                 ->paginate(10)
@@ -28,17 +27,12 @@ class ShowsController extends Controller
                     'id' => $show->id,
                     'name' => $show->name
                 ]),
-            'filters' => Request::only(['search']),
             'can' => [
-                'viewShows' => Auth::user()->can('view', Show::class),
-                'createShow' => Auth::user()->can('create', Show::class),
-                'editShow' => Auth::user()->can('edit', Show::class)
+                'addEvent' => Auth::user()->can('create', Show::class),
+                'editEvent' => Auth::user()->can('edit', Show::class)
             ]
         ]);
     }
-
-
-
 
     /**
      * Show the form for creating a new resource.
@@ -47,10 +41,8 @@ class ShowsController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Shows/Create');
+        //
     }
-
-
 
     /**
      * Store a newly created resource in storage.
@@ -60,51 +52,39 @@ class ShowsController extends Controller
      */
     public function store(Request $request)
     {
-            // validate the request
-            $attributes = Request::validate([
-                'name' => 'required',
-                'description' => 'required',
-            ]);
-            // create the user
-            Show::create($attributes);
-            // redirect
-            return redirect('/shows');
+        //
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\Schedule  $schedule
      * @return \Illuminate\Http\Response
      */
-    public function show(Show $show)
+    public function show(Schedule $schedule)
     {
-        return Inertia::render('Shows/Show', [
-            'show' => $show
-        ]);
+        //
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\Schedule  $schedule
      * @return \Illuminate\Http\Response
      */
-    public function edit(Show $show)
+    public function edit(Schedule $schedule)
     {
-        return Inertia::render('Shows/Edit', [
-            'show' => $show
-        ]);
+        //
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Models\Schedule  $schedule
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Schedule $schedule)
     {
         //
     }
@@ -112,10 +92,10 @@ class ShowsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Models\Schedule  $schedule
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Schedule $schedule)
     {
         //
     }

@@ -12,7 +12,7 @@
                 <div class="flex items-center">
                     <h1 class="text-3xl font-semibold">Shows</h1>
 
-                    <Link href="/shows/create" class="text-blue-500 text-sm ml-2">New Show</Link>
+                    <Link v-if="can.createShow" href="/shows/create" class="text-blue-500 text-sm ml-2">New Show</Link>
                 </div>
                 <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg" />
             </div>
@@ -36,7 +36,7 @@
                                         </div>
                                     </td>
 
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <td v-if="can.editShow" class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         <Link :href="`/shows/edit/${show.id}`" class="text-indigo-600 hover:text-indigo-900">Edit</Link>
                                     </td>
                                 </tr>
@@ -82,6 +82,7 @@ chat.class = "chatSmall"
 let props = defineProps({
     shows: Object,
     filters: Object,
+    can: Object
 });
 
 let search = ref(props.filters.search);

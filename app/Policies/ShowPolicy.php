@@ -2,10 +2,11 @@
 
 namespace App\Policies;
 
+use App\Models\Show;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class UserPolicy
+class ShowPolicy
 {
     use HandlesAuthorization;
 
@@ -24,32 +25,9 @@ class UserPolicy
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\User  $model
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, User $model)
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can view Creator content.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function viewCreator(User $user)
-    {
-        return $user->role_id === 5;
-    }
-
-    /**
-     * Determine whether the user can view Premium content.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function viewPremium(User $user)
+    public function view(User $user)
     {
         if ($user->role_id === 3)
             return $user->role_id === 3;
@@ -62,43 +40,6 @@ class UserPolicy
     }
 
     /**
-     * Determine whether the user can view VIP content.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function viewVip(User $user)
-    {
-        if($user->role_id === 4)
-            return $user->role_id === 4;
-
-        elseif($user->role_id === 5)
-            return $user->role_id === 5;
-    }
-
-    /**
-     * Determine whether the user can view all users.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function viewAdmin(User $user)
-    {
-        return $user->isAdmin === 1;
-    }
-
-    /**
-     * Determine whether the user can view all users.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function viewAllUsers(User $user)
-    {
-        return $user->isAdmin === 1;
-    }
-
-    /**
      * Determine whether the user can create models.
      *
      * @param  \App\Models\User  $user
@@ -106,7 +47,7 @@ class UserPolicy
      */
     public function create(User $user)
     {
-        return $user->isAdmin === 1;
+        return $user->role_id === 5;
     }
 
     /**
@@ -117,18 +58,17 @@ class UserPolicy
      */
     public function edit(User $user)
     {
-        return $user->isAdmin === 1;
+        return $user->role_id === 5;
     }
-
 
     /**
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\User  $model
+     * @param  \App\Models\Show  $show
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, User $model)
+    public function update(User $user, Show $show)
     {
         //
     }
@@ -137,10 +77,10 @@ class UserPolicy
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\User  $model
+     * @param  \App\Models\Show  $show
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, User $model)
+    public function delete(User $user, Show $show)
     {
         //
     }
@@ -149,10 +89,10 @@ class UserPolicy
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\User  $model
+     * @param  \App\Models\Show  $show
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, User $model)
+    public function restore(User $user, Show $show)
     {
         //
     }
@@ -161,10 +101,10 @@ class UserPolicy
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\User  $model
+     * @param  \App\Models\Show  $show
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, User $model)
+    public function forceDelete(User $user, Show $show)
     {
         //
     }

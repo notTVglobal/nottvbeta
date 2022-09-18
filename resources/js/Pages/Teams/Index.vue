@@ -85,6 +85,7 @@ chat.class = "chatSmall"
 let props = defineProps({
     teams: Object,
     filters: Object,
+    can: Object
 });
 
 let search = ref(props.filters.search);
