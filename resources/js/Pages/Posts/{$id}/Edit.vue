@@ -8,7 +8,6 @@
 
     <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
         <div class="bg-white text-black p-5 mb-10">
-
             <h2 class="text-xl font-semibold leading-tight text-gray-800">
                 Edit Post
             </h2>

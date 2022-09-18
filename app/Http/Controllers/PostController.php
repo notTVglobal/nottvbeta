@@ -71,7 +71,7 @@ class PostController extends Controller
         return Inertia::render(
             'Posts/{$id}/Index',
             [
-                'post' => $post
+                'post' => $post,
             ]);
     }
 

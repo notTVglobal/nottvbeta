@@ -84,6 +84,10 @@
                     >
                         Submit
                     </button>
+                    <Link :href="`/posts`"><button
+                        class="ml-2 px-4 py-2 text-white bg-blue-500 hover:bg-blue-300 rounded-lg"
+                    >Cancel</button>
+                    </Link>
                 </form>
             </div>
 
