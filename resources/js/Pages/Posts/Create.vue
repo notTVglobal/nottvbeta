@@ -10,7 +10,7 @@
         <div class="bg-white text-black p-5 mb-10">
 
             <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                Post Create
+                Create Post
             </h2>
 
             <div class="p-6 bg-white border-b border-gray-200">

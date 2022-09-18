@@ -1413,7 +1413,7 @@ var _hoisted_3 = {
 
 var _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h2", {
   "class": "text-xl font-semibold leading-tight text-gray-800"
-}, " Post Create ", -1
+}, " Create Post ", -1
 /* HOISTED */
 );
 
