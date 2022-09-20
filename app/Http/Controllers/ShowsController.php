@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Models\Image;
+use App\Models\Show;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
-use App\Models\Show;
 
 class ShowsController extends Controller
 {
@@ -39,7 +39,6 @@ class ShowsController extends Controller
 
 
 
-
     /**
      * Show the form for creating a new resource.
      *
@@ -63,12 +62,12 @@ class ShowsController extends Controller
             // validate the request
             $attributes = Request::validate([
                 'name' => 'required',
-                'description' => 'required',
+                'description' => 'required'
             ]);
             // create the user
             Show::create($attributes);
             // redirect
-            return redirect('/shows');
+            return redirect('/shows')->with('message', 'Show Created Successfully');
     }
 
     /**
@@ -79,7 +78,7 @@ class ShowsController extends Controller
      */
     public function show(Show $show)
     {
-        return Inertia::render('Shows/Show', [
+        return Inertia::render('Shows/{$id}/Index', [
             'show' => $show
         ]);
     }
@@ -92,9 +91,13 @@ class ShowsController extends Controller
      */
     public function edit(Show $show)
     {
-        return Inertia::render('Shows/Edit', [
-            'show' => $show
+        return Inertia::render('Shows/{$id}/Edit', [
+            'show' => $show,
+            'images' => Image::query()
         ]);
+
+        // return that image model back to the frontend
+        return $images;
     }
 
     /**
@@ -104,9 +107,37 @@ class ShowsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Show $show)
     {
-        //
+
+
+        // validate the request
+        $attributes = Request::validate([
+            'name' => 'required',
+            'description' => 'required',
+            'poster'
+        ]);
+        // update the show
+        $show->update($attributes);
+
+        // redirect
+        return Inertia::render('Shows/{$id}/Index', [
+            'show' => $show
+        ])->with('message', 'Show Updated Successfully');
+
+//        $request->validate([
+//            'name' => 'required|string|max:255',
+//            'description' => 'required',
+//        ]);
+//
+//        $show->name = $request->name;
+//        $show->description = $request->description;
+//        $show->save();
+//        sleep(1);
+//
+//        return Inertia::render('Shows', [
+//            'show' => $show
+//        ])->with('message', 'Show Updated Successfully');
     }
 
     /**

@@ -3787,16 +3787,6 @@ var map = {
 		"./resources/js/Pages/Shows/Create.vue",
 		"resources_js_Pages_Shows_Create_vue"
 	],
-	"./Shows/Edit": [
-		"./resources/js/Pages/Shows/Edit.vue",
-		"/js/vendor",
-		"resources_js_Pages_Shows_Edit_vue"
-	],
-	"./Shows/Edit.vue": [
-		"./resources/js/Pages/Shows/Edit.vue",
-		"/js/vendor",
-		"resources_js_Pages_Shows_Edit_vue"
-	],
 	"./Shows/Index": [
 		"./resources/js/Pages/Shows/Index.vue",
 		"/js/vendor",
@@ -3807,13 +3797,23 @@ var map = {
 		"/js/vendor",
 		"resources_js_Pages_Shows_Index_vue"
 	],
-	"./Shows/Show": [
-		"./resources/js/Pages/Shows/Show.vue",
-		"resources_js_Pages_Shows_Show_vue"
+	"./Shows/{$id}/Edit": [
+		"./resources/js/Pages/Shows/{$id}/Edit.vue",
+		"/js/vendor",
+		"resources_js_Pages_Shows_id_Edit_vue"
 	],
-	"./Shows/Show.vue": [
-		"./resources/js/Pages/Shows/Show.vue",
-		"resources_js_Pages_Shows_Show_vue"
+	"./Shows/{$id}/Edit.vue": [
+		"./resources/js/Pages/Shows/{$id}/Edit.vue",
+		"/js/vendor",
+		"resources_js_Pages_Shows_id_Edit_vue"
+	],
+	"./Shows/{$id}/Index": [
+		"./resources/js/Pages/Shows/{$id}/Index.vue",
+		"resources_js_Pages_Shows_id_Index_vue"
+	],
+	"./Shows/{$id}/Index.vue": [
+		"./resources/js/Pages/Shows/{$id}/Index.vue",
+		"resources_js_Pages_Shows_id_Index_vue"
 	],
 	"./Stream": [
 		"./resources/js/Pages/Stream.vue",

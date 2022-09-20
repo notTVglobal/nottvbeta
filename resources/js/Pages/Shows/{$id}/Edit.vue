@@ -10,13 +10,27 @@
         <div class="bg-white text-black p-5 mb-10">
 
             <div class="flex justify-between mb-6">
-                <h1 class="text-3xl">Edit > {{props.show.name}}</h1>
-                <Link :href="`/shows/${show.id}`" class="text-blue-500 text-sm ml-2">Go back</Link>
+                <h1 class="text-3xl"><span class="font-semibold">{{props.show.name}}</span></h1>
+                <span class="text-xs font-semibold text-red-700">Edit Mode</span>
+                <Link :href="`/shows/${props.show.id}`" class="text-blue-500 text-sm ml-2">Go back</Link>
             </div>
-            <ImageUpload />
             <div class="max-w-lg mx-auto mt-8">
                 <div class="mb-6">Show ID: {{props.show.id}}</div>
-                <div class="mb-6"><img :src="props.show.poster" /></div>
+                <div class="flex space-y-3">
+                    <div class="mb-6"><img :src="`/storage/images/${props.show.poster}`" /></div>
+                    <file-pond
+                        name="image"
+                        ref="pond"
+                        label-idle="Click to change poster"
+                        server="/upload"
+                        @init="filepondInitialized"
+                        accepted-file-types="image/jpg, image/jpeg, image/png"
+                        @processfile="handleProcessedFile"
+                        allow-multiple="true" max-files="10"
+                        max-file-size="20MB"
+                    />
+                </div>
+
                 <form @submit.prevent="submit">
                     <div class="mb-6">
                         <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
@@ -49,6 +63,7 @@
                         />
                         <div v-if="form.errors.description" v-text="form.errors.description" class="text-xs text-red-600 mt-1"></div>
                     </div>
+
                     <div class="flex justify-between mb-6">
                         <button
                             type="submit"
@@ -74,6 +89,10 @@ import { useChatStore } from "@/Stores/ChatStore.js"
 import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/NavigationMenu"
 import ImageUpload from "@/Components/ImageUpload";
+import { ref } from 'vue'
+
+import "filepond/dist/filepond.min.css"
+import {Inertia} from "@inertiajs/inertia";
 
 let videoPlayer = useVideoPlayerStore()
 let chat = useChatStore()
@@ -84,20 +103,103 @@ videoPlayer.fullPage = false
 chat.class = "chatSmall"
 
 let props = defineProps({
-    show: Object
+    show: {
+        type: Object,
+        default: () => ({}),
+    },
+    images: Object
 });
 
+console.log(props.show.poster)
 let title = "Edit > " + props.show.name;
 
 let form = useForm({
     id: props.show.id,
     name: props.show.name,
     description: props.show.description,
+    poster: props.show.poster,
 });
 
-// let submit = () => {
-//     form.put('/shows');
-// };
+// let setPoster = () => {props.show.poster = props.image.name};
+
+let submit = () => {
+    // setPoster()
+    form.put(route('shows.update', props.show.id));
+};
 </script>
+<script>
+import vueFilePond, { setOptions } from 'vue-filepond';
+import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
+import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size';
+// import FilePondPluginImagePreview from "filepond-plugin-image-preview";
+import 'filepond/dist/filepond.min.css';
+import {Inertia} from "@inertiajs/inertia";
+
+const FilePond = vueFilePond(
+    FilePondPluginFileValidateType,
+    FilePondPluginFileValidateSize
+    // this is a plugin that needs to be installed:
+    // FilePondPluginImagePreview
+);
+
+// The setOptions isn't working. It works in the Laracast Advanced Image Uploading Tutorial, but it isn't working here.
+// let serverMessage = {};
+// setOptions({
+//     server: {
+//         process: {
+//             onerror: (response) => {
+//                 serverMessage = JSON.parse(response);
+//             },
+//         }
+//     },
+//     labelFileProcessing: () => {
+//         return serverMessage.error;
+//     }
+// });
+
+export default {
+    components: {
+        FilePond
+    },
+    methods: {
+
+        filepondInitialized: function () {
+            console.log("Filepond is ready!");
+            console.log('Filepond object:', this.$refs.pond);
+
+        },
+        handleProcessedFile(error, file) {
+            if (error) {
+                console.log("Filepond processed file");
+                console.log(error);
+                console.log(file);
+                return;
+            }
+
+            // add the file to our images array
+            Inertia.reload({
+                only: ["images"],
+            });
+
+        }
+    },
+    props: {
+        images: Object
+    },
+    setup(props) {
+
+    }
+
+    // filepondProcessFile = (error, file) {
+    //     console.log("Filepond processed file");
+    //     console.log(error);
+    //     console.log(file);
+    //
+    //     Inertia.reload({
+    //         only: ["images"],
+    //     });
+    // };
 
 
+};
+</script>

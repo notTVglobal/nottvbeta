@@ -1,6 +1,6 @@
 <template>
 
-    <Head :title="props.show.name" />
+    <Head :title="show.name" />
     <div class="sticky top-0 w-full nav-mask">
         <ResponsiveNavigationMenu/>
         <NavigationMenu />
@@ -69,10 +69,10 @@ videoPlayer.videoContainerClass = "videoContainerTopRight"
 videoPlayer.fullPage = false
 chat.class = "chatSmall"
 
-let props = defineProps({
-    show: Object,
-    episodes: Object
-});
+// let props = defineProps({
+//     show: Object,
+//     episodes: Object
+// });
 
 let show = useShowStore();
 show.fill();

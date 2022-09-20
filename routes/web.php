@@ -5,6 +5,7 @@ use App\Http\Controllers\CreatorsController;
 use App\Http\Controllers\ShowsController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ImageController;
+use App\Http\Controllers\ImageUploadController;
 use App\Http\Controllers\TeamsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ScheduleController;
@@ -155,22 +156,31 @@ Route::middleware([
         ->can('viewAdmin', 'App\Models\User')
         ->name('creators.create');
 
+
+    Route::resource('shows',ShowsController::class);
+
+    Route::get('/shows', [ShowsController::class, 'index'])
+        ->can('viewPremium', 'App\Models\User')
+        ->name('shows');
+
     // List all shows
-    Route::get('/shows', [ShowsController::class, 'index'])->name('shows');
+//    Route::get('/shows', [ShowsController::class, 'index'])->name('shows');
     // Create a show
-    Route::get('/shows/create', [ShowsController::class, 'create'])
-        ->can('viewCreator', 'App\Models\User')
-        ->name('shows.create');
+//    Route::get('/shows/create', [ShowsController::class, 'create'])
+//        ->can('viewCreator', 'App\Models\User')
+//        ->name('shows.create');
     // Add new show to database
-    Route::post('/shows', [ShowsController::class, 'store'])
-        ->can('viewCreator', 'App\Models\User')
-        ->name('shows.store');
+//    Route::post('/shows', [ShowsController::class, 'store'])
+//        ->can('viewCreator', 'App\Models\User')
+//        ->name('shows.store');
     // Single show page
-    Route::get('/shows/{show}', [ShowsController::class, 'show'])->name('shows.show');
+//    Route::get('/shows/{show}', [ShowsController::class, 'show'])->name('shows.show');
     // Edit show
-    Route::get('/shows/edit/{show}', [ShowsController::class, 'edit'])
-        ->can('viewCreator', 'App\Models\User')
-        ->name('shows.edit');
+//    Route::get('/shows/edit/{show}', [ShowsController::class, 'edit'])
+//        ->can('viewCreator', 'App\Models\User')
+//        ->name('shows.edit');
+
+
 
     Route::get('/image', [ImageController::class, 'index'])
         ->can('viewAdmin', 'App\Models\User')
@@ -178,6 +188,7 @@ Route::middleware([
     Route::get('/images', [ImageController::class, 'show'])
         ->can('viewAdmin', 'App\Models\User')
         ->name('image.show');
+
     Route::post('/upload', [ImageController::class, 'store'])
         ->can('viewAdmin', 'App\Models\User')
         ->name('image.store');

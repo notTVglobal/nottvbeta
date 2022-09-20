@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 use App\Models\User;
@@ -59,13 +60,57 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
+//        Validator::make($request, [
+//            'name' => ['required', 'string', 'max:255'],
+//            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+//            'password' => $this->passwordRules(),
+//        ])->validate();
+//
+//        return User::create([
+//            'name' => $request['name'],
+//            'email' => $request['email'],
+//            'password' => Hash::make($request['password']),
+//            'role_id' => '2',
+//            'user_address_1' => null,
+//            'user_address_2' => null,
+//            'user_address_city' => null,
+//            'user_address_province' => null,
+//            'user_address_country' => null,
+//            'user_address_postal_code' => null,
+//            'user_phone' => null,
+//            'creator_number' => null,
+//            'subscription_status' => null,
+//        ]);
+
         $attributes = Request::validate([
             'name' => 'required',
             'email' => ['required', 'email'],
-            'password' => ['required', 'min:8'],
+            'password' => ['required'],
+            'role_id',
+            'user_address_1',
+            'user_address_2',
+            'user_city',
+            'user_province',
+            'user_country',
+            'user_postal_code',
+            'user_phone',
         ]);
         // create the user
-        User::create($attributes);
+        User::create([
+            'name' => $request['name'],
+            'email' => $request['email'],
+            'password' => $request['password'],
+            'role_id' => $request['role_id'],
+            'user_address_1' => $request['user_address_1'],
+            'user_address_2' => $request['user_address_2'],
+            'user_address_city' => $request['user_address_city'],
+            'user_address_province' => $request['user_address_province'],
+            'user_address_country' => $request['user_address_country'],
+            'user_address_postal_code' => $request['user_address_postal_code'],
+            'user_phone' => $request['user_phone'],
+            'creator_number' => null,
+            'subscription_status' => null,
+        ]);
         // redirect
         return redirect('/admin/users');
     }

@@ -61,9 +61,6 @@ let props = defineProps({
 // }))
 
 </script>
-<script>
-
-</script>
 
 <script>
 import vueFilePond, { setOptions } from 'vue-filepond';
@@ -118,6 +115,7 @@ export default {
             Inertia.reload({
                 only: ["images"],
             });
+
         }
     },
     props: {

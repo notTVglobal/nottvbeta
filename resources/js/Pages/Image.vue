@@ -28,6 +28,7 @@
             max-file-size="20MB"
         />
     </div>
+
     <div class="mt-8 mb-24 mx-auto">
         <h3 class="text-2xl font-medium text-center">Image Gallery</h3>
 <!--        <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg" />-->
@@ -73,6 +74,8 @@ let props = defineProps({
     images: Object,
     // filters: Object,
 });
+
+
 
 // let search = ref(props.filters.search);
 //

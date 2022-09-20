@@ -46,6 +46,13 @@
                 >
                 <div v-if="form.errors.description" v-text="form.errors.description" class="text-xs text-red-600 mt-1"></div>
             </div>
+
+            <input v-model="form.poster"
+                   class="border border-gray-400 p-2 w-full rounded-lg"
+                   type="hidden"
+                   name="poster"
+                   id="poster"
+            >
             <div class="flex justify-between mb-6">
                 <button
                     type="submit"
@@ -81,6 +88,7 @@ chat.class = "chatSmall"
 let form = useForm({
     name: '',
     description: '',
+    poster: ''
 });
 
 function reset() {
