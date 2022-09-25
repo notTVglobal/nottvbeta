@@ -110,7 +110,6 @@ let props = defineProps({
     images: Object
 });
 
-console.log(props.show.poster)
 let title = "Edit > " + props.show.name;
 
 let form = useForm({

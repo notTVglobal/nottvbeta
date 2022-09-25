@@ -3485,40 +3485,6 @@ var map = {
 		"/js/vendor",
 		"resources_js_Pages_Admin_Channels_Index_vue"
 	],
-	"./Admin/Users/Create": [
-		"./resources/js/Pages/Admin/Users/Create.vue",
-		"resources_js_Pages_Admin_Users_Create_vue"
-	],
-	"./Admin/Users/Create.vue": [
-		"./resources/js/Pages/Admin/Users/Create.vue",
-		"resources_js_Pages_Admin_Users_Create_vue"
-	],
-	"./Admin/Users/Edit": [
-		"./resources/js/Pages/Admin/Users/Edit.vue",
-		"resources_js_Pages_Admin_Users_Edit_vue"
-	],
-	"./Admin/Users/Edit.vue": [
-		"./resources/js/Pages/Admin/Users/Edit.vue",
-		"resources_js_Pages_Admin_Users_Edit_vue"
-	],
-	"./Admin/Users/Index": [
-		"./resources/js/Pages/Admin/Users/Index.vue",
-		"/js/vendor",
-		"resources_js_Pages_Admin_Users_Index_vue"
-	],
-	"./Admin/Users/Index.vue": [
-		"./resources/js/Pages/Admin/Users/Index.vue",
-		"/js/vendor",
-		"resources_js_Pages_Admin_Users_Index_vue"
-	],
-	"./Admin/Users/Show": [
-		"./resources/js/Pages/Admin/Users/Show.vue",
-		"resources_js_Pages_Admin_Users_Show_vue"
-	],
-	"./Admin/Users/Show.vue": [
-		"./resources/js/Pages/Admin/Users/Show.vue",
-		"resources_js_Pages_Admin_Users_Show_vue"
-	],
 	"./Auth/ConfirmPassword": [
 		"./resources/js/Pages/Auth/ConfirmPassword.vue",
 		"resources_js_Pages_Auth_ConfirmPassword_vue"
@@ -3872,6 +3838,40 @@ var map = {
 	"./Training.vue": [
 		"./resources/js/Pages/Training.vue",
 		"resources_js_Pages_Training_vue"
+	],
+	"./Users/Create": [
+		"./resources/js/Pages/Users/Create.vue",
+		"resources_js_Pages_Users_Create_vue"
+	],
+	"./Users/Create.vue": [
+		"./resources/js/Pages/Users/Create.vue",
+		"resources_js_Pages_Users_Create_vue"
+	],
+	"./Users/Index": [
+		"./resources/js/Pages/Users/Index.vue",
+		"/js/vendor",
+		"resources_js_Pages_Users_Index_vue"
+	],
+	"./Users/Index.vue": [
+		"./resources/js/Pages/Users/Index.vue",
+		"/js/vendor",
+		"resources_js_Pages_Users_Index_vue"
+	],
+	"./Users/{$id}/Edit": [
+		"./resources/js/Pages/Users/{$id}/Edit.vue",
+		"resources_js_Pages_Users_id_Edit_vue"
+	],
+	"./Users/{$id}/Edit.vue": [
+		"./resources/js/Pages/Users/{$id}/Edit.vue",
+		"resources_js_Pages_Users_id_Edit_vue"
+	],
+	"./Users/{$id}/Index": [
+		"./resources/js/Pages/Users/{$id}/Index.vue",
+		"resources_js_Pages_Users_id_Index_vue"
+	],
+	"./Users/{$id}/Index.vue": [
+		"./resources/js/Pages/Users/{$id}/Index.vue",
+		"resources_js_Pages_Users_id_Index_vue"
 	],
 	"./Video": [
 		"./resources/js/Pages/Video.vue",

@@ -9,7 +9,10 @@
     <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
         <div class="bg-white text-black p-5 mb-10">
 
-            <h1 class="text-3xl font-semibold pb-3">MistServer API</h1>
+            <div class="flex justify-between">
+                <h1 class="text-3xl font-semibold pb-3">MistServer API</h1>
+                <Link href="/dashboard" class="text-blue-500 text-sm ml-2">Dashboard</Link>
+            </div>
             <p class="mb-8">
                 This is a temporary page. Created for testing purposes.
             </p>

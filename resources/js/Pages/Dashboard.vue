@@ -21,7 +21,7 @@
                 <div v-show="can.viewAdmin" class="bg-gray-300 rounded pb-2 p-3 mx-2">
                     <div class="font-semibold text-xl pb-2">Administrator only links</div>
                     <!--disable button if ! admin-->
-                    <Link :href="`/admin/users`"><button
+                    <Link :href="`/users`"><button
                         class="bg-blue-500 hover:bg-blue-600 text-white mt-1 ml-6 px-4 py-2 rounded disabled:bg-gray-400"
                     >All Users</button>
                     </Link>

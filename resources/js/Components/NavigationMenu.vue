@@ -20,28 +20,28 @@
                             Schedule
                         </JetNavLink>
                         <JetNavLink
-                            v-if="$page.props.user.role_id === 3 || $page.props.user.role_id === 4 || $page.props.user.role_id === 5"
+                            v-if="$page.props.user.role_id === 2 || $page.props.user.role_id === 3 || $page.props.user.role_id === 4"
                             @click="videoPlayer.makeVideoTopRight()"
                             :href="route('posts')"
                             :active="route().current('posts')">
                                 Posts
                         </JetNavLink>
                         <JetNavLink
-                            v-if="$page.props.user.role_id === 3 || $page.props.user.role_id === 4 || $page.props.user.role_id === 5"
+                            v-if="$page.props.user.role_id === 2 || $page.props.user.role_id === 3 || $page.props.user.role_id === 4"
                             @click="videoPlayer.makeVideoFullPage()"
                             :href="route('channels')"
                             :active="route().current('channels')">
                             Channels
                         </JetNavLink>
                         <JetNavLink
-                            v-if="$page.props.user.role_id === 3 || $page.props.user.role_id === 4 || $page.props.user.role_id === 5"
+                            v-if="$page.props.user.role_id === 2 || $page.props.user.role_id === 3 || $page.props.user.role_id === 4"
                             @click="videoPlayer.makeVideoTopRight()"
                             :href="route('movies')"
                             :active="route().current('movies')">
                             Movies
                         </JetNavLink>
                         <JetNavLink
-                            v-if="$page.props.user.role_id === 3 || $page.props.user.role_id === 4 || $page.props.user.role_id === 5"
+                            v-if="$page.props.user.role_id === 2 || $page.props.user.role_id === 3 || $page.props.user.role_id === 4"
                             @click="videoPlayer.makeVideoTopRight()"
                             :href="route('shows')"
                             :active="route().current('shows')">
@@ -56,9 +56,9 @@
 
                 <div class="hidden lg:flex lg:items-center lg:ml-6 z-50">
                     <div class="flex-col-1">
-                        <div v-if="$page.props.user.role_id === 3" class="text-xs text-fuchsia-700">PREMIUM SUBSCRIBER</div>
-                        <div v-if="$page.props.user.role_id === 4" class="text-xs text-fuchsia-700">VIP</div>
-                        <div v-if="$page.props.user.role_id === 5" class="text-xs text-fuchsia-700">CREATOR</div>
+                        <div v-if="$page.props.user.role_id === 2" class="text-xs text-fuchsia-700">PREMIUM SUBSCRIBER</div>
+                        <div v-if="$page.props.user.role_id === 3" class="text-xs text-fuchsia-700">VIP</div>
+                        <div v-if="$page.props.user.role_id === 4" class="text-xs text-fuchsia-700">CREATOR</div>
                         <div v-if="$page.props.user.isAdmin === 1" class="text-xs text-red-700">ADMIN</div>
                     </div>
                     <!-- Settings Dropdown -->
@@ -113,14 +113,14 @@
                                         </div>
 
                                         <JetDropdownLink
-                                            v-if="$page.props.user.role_id === 5"
+                                            v-if="$page.props.user.role_id === 4"
                                             @click="videoPlayer.makeVideoTopRight()"
                                             :href="route('dashboard')">
                                             Dashboard
                                         </JetDropdownLink>
 
                                         <JetDropdownLink
-                                            v-if="$page.props.user.role_id === 5"
+                                            v-if="$page.props.user.role_id === 4"
                                             @click="videoPlayer.makeVideoTopRight()"
                                             :href="route('training')">
                                             Training

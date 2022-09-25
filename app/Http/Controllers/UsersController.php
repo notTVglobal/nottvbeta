@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 use App\Models\User;
@@ -17,7 +16,7 @@ class UsersController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Admin/Users/Index', [
+        return Inertia::render('Users/Index', [
             'users' => User::query()
                 ->when(Request::input('search'), function ($query, $search) {
                     $query->where('name', 'like', "%{$search}%");
@@ -49,7 +48,7 @@ class UsersController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Admin/Users/Create');
+        return Inertia::render('Users/Create');
     }
 
     /**
@@ -87,13 +86,13 @@ class UsersController extends Controller
             'email' => ['required', 'email'],
             'password' => ['required'],
             'role_id',
-            'user_address_1',
-            'user_address_2',
-            'user_city',
-            'user_province',
-            'user_country',
-            'user_postal_code',
-            'user_phone',
+            'address_1',
+            'address_2',
+            'city',
+            'province',
+            'country',
+            'postal_code',
+            'phone',
         ]);
         // create the user
         User::create([
@@ -101,18 +100,18 @@ class UsersController extends Controller
             'email' => $request['email'],
             'password' => $request['password'],
             'role_id' => $request['role_id'],
-            'user_address_1' => $request['user_address_1'],
-            'user_address_2' => $request['user_address_2'],
-            'user_address_city' => $request['user_address_city'],
-            'user_address_province' => $request['user_address_province'],
-            'user_address_country' => $request['user_address_country'],
-            'user_address_postal_code' => $request['user_address_postal_code'],
-            'user_phone' => $request['user_phone'],
+            'address_1' => $request['address_1'],
+            'address_2' => $request['address_2'],
+            'city' => $request['city'],
+            'province' => $request['province'],
+            'country' => $request['country'],
+            'postal_code' => $request['postal_code'],
+            'phone' => $request['user_phone'],
             'creator_number' => null,
             'subscription_status' => null,
         ]);
         // redirect
-        return redirect('/admin/users');
+        return redirect('/users');
     }
 
     /**
@@ -123,10 +122,8 @@ class UsersController extends Controller
      */
     public function show(User $user)
     {
-        return Inertia::render('Admin/Users/Show', [
-            'user' => $user,
-            'role_id' => $user->role_id,
-
+        return Inertia::render('Users/{$id}/Index', [
+            'userSelected' => $user,
         ]);
     }
 
@@ -138,9 +135,9 @@ class UsersController extends Controller
      */
     public function edit(User $user)
     {
-        return Inertia::render('Admin/Users/Edit', [
-            'user' => $user,
-            'role_id' => $user->role_id,
+        return Inertia::render('Users/{$id}/Edit', [
+            'userEdit' => $user,
+//            'role_id' => $user->role_id,
         ]);
     }
 
@@ -164,6 +161,63 @@ class UsersController extends Controller
 //        // redirect
 //        return redirect('/admin/users')
 //            ->with ('message', 'User updated succesfully');
+
+        // validate the request
+        $attributes = Request::validate([
+            'id',
+            'name',
+            'email',
+            'address_1',
+            'address_2',
+            'city',
+            'province',
+            'country',
+            'postal_code',
+            'phone',
+            'role_id'
+        ]);
+
+        // update the user
+//        User::where('id', $user)->update($attributes);
+        $user->update($attributes);
+//        $user>save($attributes);
+//        sleep(1);
+
+        // redirect
+        return Inertia::render('Users/{$id}/Index', [
+            'userSelected' => $user
+        ])->with('message', 'User Updated Successfully');
+
+
+//        $request->validate([
+//            'name' => 'required',
+//            'email' => 'required',
+//            'address_1',
+//            'address_2',
+//            'city',
+//            'province',
+//            'country',
+//            'postal_code',
+//            'phone',
+//            'role_id',
+//        ]);
+//
+//        $user->name = $request->name;
+//        $user->email = $request->email;
+//        $user->address_1 = $request->address_1;
+//        $user->address_2 = $request->address_2;
+//        $user->city = $request->city;
+//        $user->province = $request->province;
+//        $user->country = $request->country;
+//        $user->postal_code = $request->postal_code;
+//        $user->phone = $request->phone;
+//        $user->role_id = $request->role_id;
+//
+//        $user->save();
+//        sleep(1);
+//
+//        return redirect()->route('admin.users')->with('message', 'Blog Updated Successfully');
+
     }
 
     /**

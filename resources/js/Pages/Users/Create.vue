@@ -10,7 +10,7 @@
 
         <div class="flex justify-between mb-6">
             <h1 class="text-3xl">Create New User</h1>
-            <Link href="/admin/users" class="text-blue-500 text-sm ml-2">Go back</Link>
+            <Link href="/users" class="text-blue-500 text-sm ml-2">All Users</Link>
         </div>
 
         <form @submit.prevent="submit" class="max-w-md mx-auto mt-8">
@@ -89,13 +89,13 @@
                     Phone Number
                 </label>
 
-                <input v-model="form.user_phone"
+                <input v-model="form.phone"
                        class="border border-gray-400 p-2 w-full rounded-lg"
                        type="text"
                        name="phone"
                        id="phone"
                 >
-                <div v-if="form.errors.user_phone" v-text="form.errors.user_phone" class="text-xs text-red-600 mt-1"></div>
+                <div v-if="form.errors.phone" v-text="form.errors.phone" class="text-xs text-red-600 mt-1"></div>
             </div>
 
             <div class="mb-6">
@@ -105,21 +105,21 @@
                     Address
                 </label>
 
-                <input v-model="form.user_address_1"
+                <input v-model="form.address_1"
                        class="border border-gray-400 p-2 mb-2 w-full rounded-lg"
                        type="text"
                        name="address_1"
                        id="address_1"
                 >
 
-                <input v-model="form.user_address_2"
+                <input v-model="form.address_2"
                        class="border border-gray-400 p-2 w-full rounded-lg"
                        type="text"
                        name="address_2"
                        id="address_2"
                 >
-                <div v-if="form.errors.user_address_1" v-text="form.errors.user_address_1" class="text-xs text-red-600 mt-1"></div>
-                <div v-if="form.errors.user_address_2" v-text="form.errors.user_address_2" class="text-xs text-red-600 mt-1"></div>
+                <div v-if="form.errors.address_1" v-text="form.errors.address_1" class="text-xs text-red-600 mt-1"></div>
+                <div v-if="form.errors.address_2" v-text="form.errors.address_2" class="text-xs text-red-600 mt-1"></div>
             </div>
             <div class="mb-6">
                 <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
@@ -128,13 +128,13 @@
                     City
                 </label>
 
-                <input v-model="form.user_city"
+                <input v-model="form.city"
                        class="border border-gray-400 p-2 w-full rounded-lg"
                        type="text"
                        name="city"
                        id="city"
                 >
-                <div v-if="form.errors.user_city" v-text="form.errors.user_city" class="text-xs text-red-600 mt-1"></div>
+                <div v-if="form.errors.city" v-text="form.errors.city" class="text-xs text-red-600 mt-1"></div>
             </div>
             <div class="mb-6">
                 <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
@@ -143,13 +143,13 @@
                     Province
                 </label>
 
-                <input v-model="form.user_province"
+                <input v-model="form.province"
                        class="border border-gray-400 p-2 w-full rounded-lg"
                        type="text"
                        name="province"
                        id="province"
                 >
-                <div v-if="form.errors.user_province" v-text="form.errors.user_province" class="text-xs text-red-600 mt-1"></div>
+                <div v-if="form.errors.province" v-text="form.errors.province" class="text-xs text-red-600 mt-1"></div>
             </div>
             <div class="mb-6">
                 <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
@@ -158,13 +158,13 @@
                     Country
                 </label>
 
-                <input v-model="form.user_country"
+                <input v-model="form.country"
                        class="border border-gray-400 p-2 w-full rounded-lg"
                        type="text"
                        name="country"
                        id="country"
                 >
-                <div v-if="form.errors.user_country" v-text="form.errors.user_country" class="text-xs text-red-600 mt-1"></div>
+                <div v-if="form.errors.country" v-text="form.errors.country" class="text-xs text-red-600 mt-1"></div>
             </div>
 
             <div class="mb-6">
@@ -174,13 +174,13 @@
                     Postal Code
                 </label>
 
-                <input v-model="form.user_postal_code"
+                <input v-model="form.postal_code"
                        class="border border-gray-400 p-2 w-full rounded-lg"
                        type="text"
                        name="postal_code"
                        id="postal_code"
                 >
-                <div v-if="form.errors.user_postal_code" v-text="form.errors.user_postal_code" class="text-xs text-red-600 mt-1"></div>
+                <div v-if="form.errors.postal_code" v-text="form.errors.postal_code" class="text-xs text-red-600 mt-1"></div>
             </div>
             <div class="flex justify-between mb-6">
                 <button
@@ -221,13 +221,13 @@ let form = useForm({
     email: '',
     password: '',
     role_id: '',
-    user_address_1: '',
-    user_address_2: '',
-    user_city: '',
-    user_province: '',
-    user_country: '',
-    user_postal_code: '',
-    user_phone: '',
+    address_1: '',
+    address_2: '',
+    city: '',
+    province: '',
+    country: '',
+    postal_code: '',
+    phone: '',
 });
 
 // const role = ref(null);

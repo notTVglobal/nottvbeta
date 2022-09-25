@@ -1,6 +1,6 @@
 <template>
 
-    <Head :title="props.user.name" />
+    <Head :title="props.userSelected.name" />
     <div class="sticky top-0 w-full nav-mask">
         <ResponsiveNavigationMenu/>
         <NavigationMenu />
@@ -10,14 +10,17 @@
         <div class="bg-white text-black p-5 mb-10">
 
             <div class="flex justify-between mb-6">
-                <h1 class="text-2xl pb-3">{{props.user.name}}</h1>
-                <Link href="/admin/users" class="text-blue-500 text-sm ml-2">Go back</Link>
+                <h1 class="text-2xl pb-3">{{props.userSelected.name}}</h1>
+                <div>
+                    <Link href="/users" class="text-blue-500 text-sm ml-2">All Users</Link>
+                    <Link :href="`/users/${props.userSelected.id}/edit`" class="text-blue-500 text-sm ml-2">Edit</Link>
+                </div>
             </div>
             <p>
-                <img :src="props.user.profile_photo_url" />
+                <img :src="props.userSelected.profile_photo_url" />
             </p>
             <p>
-                User Type: {{props.user.role_id}}
+                User Type: {{props.userSelected.role_id}}
             </p>
 
         </div>
@@ -40,6 +43,6 @@ videoPlayer.fullPage = false
 chat.class = "chatSmall"
 
 let props = defineProps({
-    user: Object
+    userSelected: Object
 });
 </script>

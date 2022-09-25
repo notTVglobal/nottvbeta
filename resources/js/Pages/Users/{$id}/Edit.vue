@@ -9,14 +9,18 @@
         <div class="bg-white text-black p-5 mb-10">
 
         <div class="flex justify-between mb-6">
-            <h1 class="text-3xl">Edit User: {{ props.user.name }}</h1>
-            <Link href="/admin/users" class="text-blue-500 text-sm ml-2">Go back</Link>
+            <h1 class="text-3xl">Edit User: {{ props.userEdit.name }}</h1>
+            <div>
+                <Link href="/users" class="text-blue-500 text-sm ml-2">All Users</Link>
+                <Link :href="`/users/${props.userEdit.id}`" class="text-blue-500 text-sm ml-2">Cancel</Link>
+            </div>
         </div>
 
         <div class="max-w-md mx-auto mt-8">
-            <div class="mb-6"><img :src="props.user.profile_photo_url" /></div>
-            <div class=""><span class="text-xs uppercase">Subscription Status: </span><span class="font-semibold">{{props.user.subscription_status}}</span></div>
-            <div class="" v-if="props.user.role_id == 4"><span class="text-xs uppercase">Creator #: </span><span class="font-semibold">{{props.user.creator_number}}</span></div>
+            <div class="mb-6"><img :src="props.userEdit.profile_photo_url" /></div>
+            <div class=""><span class="text-xs uppercase">User ID: </span><span class="font-semibold">{{props.userEdit.id}}</span></div>
+            <div class=""><span class="text-xs uppercase">Subscription Status: </span><span class="font-semibold">{{props.userEdit.subscription_status}}</span></div>
+            <div class="" v-if="props.userEdit.role_id == 4"><span class="text-xs uppercase">Creator #: </span><span class="font-semibold">{{props.userEdit.creator_number}}</span></div>
 
             <form @submit.prevent="submit" class="mt-6">
                 <div class="mb-6">
@@ -26,15 +30,15 @@
                         User Role
                     </label>
                     <select class="border border-gray-400 p-2 w-full rounded-lg block mb-2 uppercase font-bold text-xs text-gray-700"
-                            v-model="form.role" :options="options"
+                            v-model="form.role_id" :options="options"
                     >
-                        <option value="2">Standard User</option>
-                        <option value="3">Premium Subscriber</option>
-                        <option value="4">VIP</option>
-                        <option value="5">Creator</option>
+                        <option value="1">Standard User</option>
+                        <option value="2">Premium Subscriber</option>
+                        <option value="3">VIP</option>
+                        <option value="4">Creator</option>
                     </select>
 
-                    <div v-if="form.errors.role" v-text="form.errors.role" class="text-xs text-red-600 mt-1"></div>
+                    <div v-if="form.errors.role_id" v-text="form.errors.role_id" class="text-xs text-red-600 mt-1"></div>
                 </div>
                 <div class="my-6">
                     <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
@@ -71,7 +75,7 @@
 
                 <div class="mb-6">
                     <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
-                           for="email"
+                           for="phone"
                     >
                         Phone Number
                     </label>
@@ -87,9 +91,9 @@
 
                 <div class="mb-6">
                     <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
-                           for="email"
+                           for="address_1"
                     >
-                        Address
+                        Address 1
                     </label>
 
                     <input v-model="form.address_1"
@@ -98,6 +102,14 @@
                            name="address_1"
                            id="address_1"
                     >
+                </div>
+
+                    <div class="mb-6">
+                        <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
+                               for="address_1"
+                        >
+                            Address 2
+                        </label>
 
                     <input v-model="form.address_2"
                            class="border border-gray-400 p-2 w-full rounded-lg"
@@ -110,7 +122,7 @@
                 </div>
                 <div class="mb-6">
                     <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
-                           for="email"
+                           for="city"
                     >
                         City
                     </label>
@@ -125,7 +137,7 @@
                 </div>
                 <div class="mb-6">
                     <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
-                           for="email"
+                           for="province"
                     >
                         Province
                     </label>
@@ -140,7 +152,7 @@
                 </div>
                 <div class="mb-6">
                     <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
-                           for="email"
+                           for="country"
                     >
                         Country
                     </label>
@@ -156,7 +168,7 @@
 
                 <div class="mb-6">
                     <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
-                           for="email"
+                           for="postal_code"
                     >
                         Postal Code
                     </label>
@@ -180,7 +192,6 @@
                     </button>
                 </div>
             </form>
-            <div class=""><span class="text-xs uppercase">User ID: </span><span class="font-semibold">{{props.user.id}}</span></div>
         </div>
 
     </div>
@@ -203,32 +214,30 @@ videoPlayer.fullPage = false
 chat.class = "chatSmall"
 
 let props = defineProps({
-    user: Object
+    userEdit: Object
 });
 
 let form = useForm({
-    id: props.user.id,
-    name: props.user.name,
-    email: props.user.email,
-    role: props.user.role_id,
-    address_1: props.user.address_1,
-    address_2: props.user.address_2,
-    city: props.user.address_city,
-    province: props.user.address_province,
-    country: props.user.address_country,
-    postal_code: props.user.address_postal_code,
-    phone: props.user.phone,
-    creator_number: props.user._creator_number,
-    subscription_status: props.user.subscription_status,
-
+    id: props.userEdit.id,
+    name: props.userEdit.name,
+    email: props.userEdit.email,
+    role_id: props.userEdit.role_id,
+    address_1: props.userEdit.address_1,
+    address_2: props.userEdit.address_2,
+    city: props.userEdit.city,
+    province: props.userEdit.province,
+    country: props.userEdit.country,
+    postal_code: props.userEdit.postal_code,
+    phone: props.userEdit.phone,
 });
-
-
 
 function reset() {
     form.reset();
 };
 
+let submit = () => {
+    form.put(route('users.update', props.userEdit.id));
+};
 // let submit = () => {
 //     form.put('/admin/users');
 // };

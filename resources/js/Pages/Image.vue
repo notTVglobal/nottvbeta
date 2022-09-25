@@ -7,9 +7,13 @@
 
     <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
         <div class="bg-white text-black p-5 mb-10">
+            <div class="flex justify-between">
+                <h1 class="text-4xl font-bold text-center mb-4">Image Uploader</h1>
+                <Link href="/dashboard" class="text-blue-500 text-sm ml-2">Dashboard</Link>
+            </div>
 
     <div class="max-w-lg mx-auto mt-2 bg-gray-200 p-6">
-        <h1 class="text-4xl font-bold text-center mb-4">Image Uploader</h1>
+
         <div class="pt-3 pb-4">
             <ul>
                 <li>Max File Size: <span class="text-orange-400">20MB</span></li>

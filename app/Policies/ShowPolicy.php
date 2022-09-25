@@ -29,14 +29,14 @@ class ShowPolicy
      */
     public function view(User $user)
     {
-        if ($user->role_id === 3)
+        if ($user->role_id === 2)
+            return $user->role_id === 2;
+
+        elseif($user->role_id === 3)
             return $user->role_id === 3;
 
         elseif($user->role_id === 4)
             return $user->role_id === 4;
-
-        elseif($user->role_id === 5)
-            return $user->role_id === 5;
     }
 
     /**
@@ -47,7 +47,7 @@ class ShowPolicy
      */
     public function create(User $user)
     {
-        return $user->role_id === 5;
+        return $user->role_id === 4;
     }
 
     /**
@@ -58,7 +58,7 @@ class ShowPolicy
      */
     public function edit(User $user)
     {
-        return $user->role_id === 5;
+        return $user->role_id === 4;
     }
 
     /**

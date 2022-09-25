@@ -17,7 +17,11 @@
     <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
         <div class="bg-white text-black p-5 mb-10">
 
-                            <h1 class="text-3xl pb-3 font-semibold">Training</h1>
+
+            <div class="flex justify-between">
+                <h1 class="text-3xl pb-3 font-semibold">Training</h1>
+                <Link href="/dashboard" class="text-blue-500 text-sm ml-2">Dashboard</Link>
+            </div>
                             <p>
                                 Travis will create some training videos to help people create content in a higher broadcast quality.
                             </p>

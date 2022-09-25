@@ -1659,10 +1659,6 @@ select {
   height: 40%;
 }
 
-.h-96 {
-  height: 24rem;
-}
-
 .max-h-max {
   max-height: -webkit-max-content;
   max-height: -moz-max-content;
@@ -1749,14 +1745,6 @@ select {
 
 .w-80 {
   width: 20rem;
-}
-
-.w-24 {
-  width: 6rem;
-}
-
-.w-96 {
-  width: 24rem;
 }
 
 .min-w-0 {
@@ -2795,11 +2783,6 @@ select {
 .text-blue-600 {
   --tw-text-opacity: 1;
   color: rgb(37 99 235 / var(--tw-text-opacity));
-}
-
-.text-fuchsia-900 {
-  --tw-text-opacity: 1;
-  color: rgb(112 26 117 / var(--tw-text-opacity));
 }
 
 .underline {

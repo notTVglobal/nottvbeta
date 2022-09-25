@@ -40,7 +40,7 @@ class UserPolicy
      */
     public function viewCreator(User $user)
     {
-        return $user->role_id === 5;
+        return $user->role_id === 4;
     }
 
     /**
@@ -51,14 +51,14 @@ class UserPolicy
      */
     public function viewPremium(User $user)
     {
-        if ($user->role_id === 3)
+        if ($user->role_id === 2)
+            return $user->role_id === 2;
+
+        elseif($user->role_id === 3)
             return $user->role_id === 3;
 
         elseif($user->role_id === 4)
             return $user->role_id === 4;
-
-        elseif($user->role_id === 5)
-            return $user->role_id === 5;
     }
 
     /**
@@ -69,11 +69,11 @@ class UserPolicy
      */
     public function viewVip(User $user)
     {
-        if($user->role_id === 4)
-            return $user->role_id === 4;
+        if($user->role_id === 3)
+            return $user->role_id === 3;
 
-        elseif($user->role_id === 5)
-            return $user->role_id === 5;
+        elseif($user->role_id === 4)
+            return $user->role_id === 4;
     }
 
     /**

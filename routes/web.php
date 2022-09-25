@@ -195,24 +195,27 @@ Route::middleware([
 
     // Need to move this to a new middleware section for auth_admin
     //
+    Route::resource('users',UsersController::class);
     // List all users
-    Route::get('/admin/users', [UsersController::class, 'index'])
+    Route::get('/users', [UsersController::class, 'index'])
         ->can('viewAllUsers', 'App\Models\User')
-        ->name('admin.users.index');
-    // Create a user
-    Route::get('/admin/users/create', [UsersController::class, 'create'])
-        ->can('create', 'App\Models\User')
-        ->name('admin.users.create');
-    // Add new user to the database
-    Route::post('/admin/users', [UsersController::class, 'store'])->name('admin.users.store');
-    // Show user
-    Route::get('/admin/users/{user}', [UsersController::class, 'show'])->name('admin.users.show');
-    // Edit user
-    Route::get('/admin/users/edit/{user}', [UsersController::class, 'edit'])
-        ->can('edit', 'App\Models\User')
-        ->name('admin.users.edit');
+        ->name('users');
+//    // Create a user
+//    Route::get('/users/create', [UsersController::class, 'create'])
+//        ->can('create', 'App\Models\User')
+//        ->name('users.create');
+//    // Add new user to the database
+//    Route::post('/users', [UsersController::class, 'store'])->name('users.store');
+//    // Show user
+//    Route::get('/users/{user}', [UsersController::class, 'show'])->name('users.show');
+//    // Edit user
+//    Route::get('/users/{user}/edit', [UsersController::class, 'edit'])
+//        ->can('edit', 'App\Models\User')
+//        ->name('users.edit');
     // Update user
-    Route::put('/admin/users', [UsersController::class, 'update'])->name('admin.users.update');
+//    Route::put('/admin/users', [UsersController::class, 'update'])->name('admin.users.update');
+
+
 
     // List all channels
     Route::get('/admin/channels', function () {

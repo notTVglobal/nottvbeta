@@ -41,7 +41,7 @@ class SchedulePolicy
      */
     public function create(User $user)
     {
-        return $user->role_id === 5;
+        return $user->role_id === 4;
     }
 
     /**

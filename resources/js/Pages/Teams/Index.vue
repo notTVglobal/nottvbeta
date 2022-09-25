@@ -17,7 +17,10 @@
 
                 <Link href="/teams/create" class="text-blue-500 text-sm ml-2">New Team</Link>
             </div>
-            <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg" />
+            <div>
+                <Link href="/dashboard" class="text-blue-500 text-sm ml-2">Dashboard</Link>
+                <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg" />
+            </div>
         </div>
 
         <div class="flex flex-col">
