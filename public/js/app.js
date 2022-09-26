@@ -3697,6 +3697,14 @@ var map = {
 		"./resources/js/Pages/Profile/Partials/TwoFactorAuthenticationForm.vue",
 		"resources_js_Pages_Profile_Partials_TwoFactorAuthenticationForm_vue"
 	],
+	"./Profile/Partials/UpdateContactInformationForm": [
+		"./resources/js/Pages/Profile/Partials/UpdateContactInformationForm.vue",
+		"resources_js_Pages_Profile_Partials_UpdateContactInformationForm_vue"
+	],
+	"./Profile/Partials/UpdateContactInformationForm.vue": [
+		"./resources/js/Pages/Profile/Partials/UpdateContactInformationForm.vue",
+		"resources_js_Pages_Profile_Partials_UpdateContactInformationForm_vue"
+	],
 	"./Profile/Partials/UpdatePasswordForm": [
 		"./resources/js/Pages/Profile/Partials/UpdatePasswordForm.vue",
 		"resources_js_Pages_Profile_Partials_UpdatePasswordForm_vue"
@@ -3838,6 +3846,14 @@ var map = {
 	"./Training.vue": [
 		"./resources/js/Pages/Training.vue",
 		"resources_js_Pages_Training_vue"
+	],
+	"./Upgrade": [
+		"./resources/js/Pages/Upgrade.vue",
+		"resources_js_Pages_Upgrade_vue"
+	],
+	"./Upgrade.vue": [
+		"./resources/js/Pages/Upgrade.vue",
+		"resources_js_Pages_Upgrade_vue"
 	],
 	"./Users/Create": [
 		"./resources/js/Pages/Users/Create.vue",

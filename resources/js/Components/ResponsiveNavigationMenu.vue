@@ -35,33 +35,42 @@
          class="lg:hidden bg-gray-800 text-white fixed top-12 w-full h-full">
         <!-- Responsive Settings Options -->
         <div class="pt-7 pb-4">
-            <div class="flex items-center px-4 bg-gray-800 pb-3 border-b border-spacing-4 border-1 border-white">
-                <div v-if="$page.props.jetstream.managesProfilePhotos" class="shrink-0 mr-3">
-                    <Link @click="videoPlayer.makeVideoTopRight()"
-                          :href="route('profile.show')"
-                          :active="route().current('profile.show')">
-                        <img class="h-10 w-10 rounded-full object-cover"
-                             :src="$page.props.user.profile_photo_url" :alt="$page.props.user.name">
-                    </Link>
+            <div class="px-4 bg-gray-800 pb-3 border-b border-spacing-4 border-1 border-white">
 
-                </div>
-
-                <div>
-                    <div class="font-medium text-base text-gray-100">
-                        <Link @click="videoPlayer.makeVideoTopRight()"
-                                              :href="route('profile.show')"
-                                              :active="route().current('profile.show')">
-                            {{ $page.props.user.name }}
+                <div class="flex justify-between">
+                    <div class="grid grid-cols-3 grid-rows-2">
+                        <div v-if="$page.props.jetstream.managesProfilePhotos">
+                            <Link @click="videoPlayer.makeVideoTopRight()"
+                                  :href="route('profile.show')"
+                                  :active="route().current('profile.show')">
+                                <img class="h-10 w-10 rounded-full object-cover"
+                                     :src="$page.props.user.profile_photo_url" :alt="$page.props.user.name">
+                            </Link>
+                        </div>
+                        <div>
+                            <div class="font-medium text-base text-gray-100">
+                                <Link @click="videoPlayer.makeVideoTopRight()"
+                                                      :href="route('profile.show')"
+                                                      :active="route().current('profile.show')">
+                                    {{ $page.props.user.name }}
+                                </Link>
+                            </div>
+                            <div class="font-medium text-sm text-gray-100">
+                                <Link @click="videoPlayer.makeVideoTopRight()"
+                                      :href="route('profile.show')"
+                                      :active="route().current('profile.show')">
+                                    {{ $page.props.user.email }}
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-if="$page.props.user.role_id === 1" class="align-self-end text-xl text-fuchsia-700 hover:text-fuchsia-500">
+                        <Link @click="videoPlayer.makeVideoTopRight()" :href="route('upgrade')" :active="route().current('upgrade')">
+                            UPGRADE ACCOUNT
                         </Link>
                     </div>
-                    <div class="font-medium text-sm text-gray-100">
-                        <Link @click="videoPlayer.makeVideoTopRight()"
-                              :href="route('profile.show')"
-                              :active="route().current('profile.show')">
-                            {{ $page.props.user.email }}
-                        </Link>
-                    </div>
                 </div>
+
             </div>
             <div class="">
                 <div v-if="$page.props.user.role_id === 2" class="text-xs text-fuchsia-700">PREMIUM SUBSCRIBER</div>

@@ -164,9 +164,6 @@ class UsersController extends Controller
 
         // validate the request
         $attributes = Request::validate([
-            'id',
-            'name',
-            'email',
             'address_1',
             'address_2',
             'city',
@@ -174,7 +171,7 @@ class UsersController extends Controller
             'country',
             'postal_code',
             'phone',
-            'role_id'
+            'role_id',
         ]);
 
         // update the user

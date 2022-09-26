@@ -12,13 +12,12 @@
 
 <!--    <div class="bg-white rounded text-black p-5 mb-10 py-20 w-3/4">-->
         <div class="flex justify-between mb-6">
-            <div class="flex items-center">
+            <div class="grid grid-cols-1 grid-rows-2">
                 <h1 class="text-3xl font-semibold">Teams</h1>
-
-                <Link href="/teams/create" class="text-blue-500 text-sm ml-2">New Team</Link>
+                <Link href="/teams/create" class="text-blue-500 text-sm">New Team</Link>
             </div>
-            <div>
-                <Link href="/dashboard" class="text-blue-500 text-sm ml-2">Dashboard</Link>
+            <div class="grid grid-cols-1 grid-rows-2">
+                <Link href="/dashboard" class="text-blue-500 text-sm ml-2 justify-self-end">Dashboard</Link>
                 <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg" />
             </div>
         </div>

@@ -10,9 +10,14 @@
         <div class="bg-white text-black p-5 mb-10">
 
             <div class="flex justify-between mb-6">
-                <h1 class="text-3xl"><Link :href="`/teams/${team.id}`" class="text-indigo-600">{{props.team.name}}</Link> > <span class="font-semibold">Edit</span></h1>
-                <Link :href="`/teams/${team.id}`" class="text-blue-500 text-sm ml-2">Cancel</Link>
+                <h1 class="text-3xl"><Link :href="`/teams/${props.team.id}`" class="text-indigo-600">{{props.team.name}}</Link> > <span class="font-semibold">Edit</span></h1>
+                <span class="text-xs font-semibold text-red-700">Edit Mode</span>
+                <div>
+                    <Link href="/teams" class="text-blue-500 text-sm ml-2">All Teams</Link>
+                    <Link :href="`/teams/${props.team.id}`" class="text-blue-500 text-sm ml-2">Cancel</Link>
+                </div>
             </div>
+
             <div class="max-w-lg mx-auto mt-8">
                 <div class="mb-6"><span class="text-xs">Team ID: </span><span class="font-semibold">{{props.team.id}}</span></div>
                 <div class="mb-6"><img :src="props.team.team_poster_url" /></div>

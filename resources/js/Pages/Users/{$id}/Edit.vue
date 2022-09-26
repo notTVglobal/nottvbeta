@@ -8,13 +8,14 @@
     <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
         <div class="bg-white text-black p-5 mb-10">
 
-        <div class="flex justify-between mb-6">
-            <h1 class="text-3xl">Edit User: {{ props.userEdit.name }}</h1>
-            <div>
-                <Link href="/users" class="text-blue-500 text-sm ml-2">All Users</Link>
-                <Link :href="`/users/${props.userEdit.id}`" class="text-blue-500 text-sm ml-2">Cancel</Link>
+            <div class="flex justify-between mb-6">
+                <h1 class="text-3xl"><Link :href="`/users/${props.userEdit.id}`" class="text-indigo-600">{{props.userEdit.name}}</Link> > <span class="font-semibold">Edit</span></h1>
+                <span class="text-xs font-semibold text-red-700">Edit Mode</span>
+                <div>
+                    <Link href="/users" class="text-blue-500 text-sm ml-2">All Users</Link>
+                    <Link :href="`/users/${props.userEdit.id}`" class="text-blue-500 text-sm ml-2">Cancel</Link>
+                </div>
             </div>
-        </div>
 
         <div class="max-w-md mx-auto mt-8">
             <div class="mb-6"><img :src="props.userEdit.profile_photo_url" /></div>
@@ -236,7 +237,7 @@ function reset() {
 };
 
 let submit = () => {
-    form.put(route('users.update', props.userEdit.id));
+    form.put(route('usersAdminCreateEdit.update', props.userEdit.id));
 };
 // let submit = () => {
 //     form.put('/admin/users');

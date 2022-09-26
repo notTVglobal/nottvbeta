@@ -4,6 +4,7 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\CreatorsController;
 use App\Http\Controllers\ShowsController;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\UsersAdminCreateEditController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\ImageUploadController;
 use App\Http\Controllers\TeamsController;
@@ -77,6 +78,10 @@ Route::middleware([
     Route::get('/stream', function () {
         return Inertia::render('Stream');
     })->name('stream');
+
+    Route::get('/upgrade', function () {
+        return Inertia::render('Upgrade');
+    })->name('upgrade');
 
 //    Route::get('/posts', function () {
 //        return Inertia::render('Posts/Index');
@@ -193,27 +198,34 @@ Route::middleware([
         ->can('viewAdmin', 'App\Models\User')
         ->name('image.store');
 
-    // Need to move this to a new middleware section for auth_admin
-    //
+    // Users resource for admin to create/edit users
     Route::resource('users',UsersController::class);
-    // List all users
+
+    // List all users -- this has to be a different controller than the UsersAdminCreateEditController
+    // because it uses a different resource class for the search function.
     Route::get('/users', [UsersController::class, 'index'])
         ->can('viewAllUsers', 'App\Models\User')
         ->name('users');
+
 //    // Create a user
-//    Route::get('/users/create', [UsersController::class, 'create'])
-//        ->can('create', 'App\Models\User')
-//        ->name('users.create');
+    Route::get('/users/create', [UsersController::class, 'create'])
+        ->can('create', 'App\Models\User')
+        ->name('usersAdminCreateEdit.create');
+
 //    // Add new user to the database
 //    Route::post('/users', [UsersController::class, 'store'])->name('users.store');
+
 //    // Show user
-//    Route::get('/users/{user}', [UsersController::class, 'show'])->name('users.show');
+    Route::get('/users/{user}', [UsersController::class, 'show'])
+        ->name('users.show');
+
 //    // Edit user
-//    Route::get('/users/{user}/edit', [UsersController::class, 'edit'])
-//        ->can('edit', 'App\Models\User')
-//        ->name('users.edit');
+    Route::get('/users/{user}/edit', [UsersController::class, 'edit'])
+        ->can('edit', 'App\Models\User')
+        ->name('users.edit');
+
     // Update user
-//    Route::put('/admin/users', [UsersController::class, 'update'])->name('admin.users.update');
+    Route::put('/users', [UsersController::class, 'update'])->name('users.update');
 
 
 

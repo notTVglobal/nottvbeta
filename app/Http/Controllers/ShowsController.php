@@ -89,7 +89,7 @@ class ShowsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Show $show)
+    public function edit(Show $show, Image $image)
     {
         return Inertia::render('Shows/{$id}/Edit', [
             'show' => $show,
@@ -97,7 +97,7 @@ class ShowsController extends Controller
         ]);
 
         // return that image model back to the frontend
-        return $images;
+        return $image;
     }
 
     /**

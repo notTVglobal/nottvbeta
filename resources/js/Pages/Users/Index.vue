@@ -8,14 +8,13 @@
     <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
         <div class="bg-white text-black p-5 mb-10">
             <div class="flex justify-between mb-6">
-                <div class="flex items-center">
+                <div class="grid grid-cols-1 grid-rows-2">
                     <h1 class="text-3xl font-semibold">Users</h1>
-
-                    <Link v-if="can.createUser" href="/users/create" class="text-blue-500 text-sm ml-2">New User</Link>
+                    <Link v-if="can.createUser" href="/users/create" class="text-blue-500 text-sm">New User</Link>
                 </div>
 
-                <div>
-                    <Link href="/dashboard" class="text-blue-500 text-sm ml-2">Dashboard</Link>
+                <div class="grid grid-cols-1 grid-rows-2">
+                    <Link href="/dashboard" class="text-blue-500 text-sm ml-2 justify-self-end">Dashboard</Link>
                     <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg" />
                 </div>
             </div>

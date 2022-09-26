@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->foreignId('role_id')->default(1)->constrained();
+            /* Users: 1=>Standard User, 2=>Premium Subscriber, 3=>VIP, 4=>Creator */
         });
     }
 

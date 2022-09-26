@@ -10,10 +10,14 @@
         <div class="bg-white text-black p-5 mb-10">
 
             <div class="flex justify-between mb-6">
-                <h1 class="text-3xl"><span class="font-semibold">{{props.show.name}}</span></h1>
+                <h1 class="text-3xl"><Link :href="`/shows/${props.show.id}`" class="text-indigo-600">{{props.show.name}}</Link> > <span class="font-semibold">Edit</span></h1>
                 <span class="text-xs font-semibold text-red-700">Edit Mode</span>
-                <Link :href="`/shows/${props.show.id}`" class="text-blue-500 text-sm ml-2">Go back</Link>
+                <div>
+                    <Link href="/shows" class="text-blue-500 text-sm ml-2">All Shows</Link>
+                    <Link :href="`/shows/${props.show.id}`" class="text-blue-500 text-sm ml-2">Cancel</Link>
+                </div>
             </div>
+
             <div class="max-w-lg mx-auto mt-8">
                 <div class="mb-6">Show ID: {{props.show.id}}</div>
                 <div class="flex space-y-3">

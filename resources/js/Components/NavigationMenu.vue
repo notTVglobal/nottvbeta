@@ -56,6 +56,11 @@
 
                 <div class="hidden lg:flex lg:items-center lg:ml-6 z-50">
                     <div class="flex-col-1">
+                        <div v-if="$page.props.user.role_id === 1" class="text-xs text-fuchsia-700">
+                            <JetNavLink @click="videoPlayer.makeVideoTopRight()" :href="route('upgrade')" :active="route().current('upgrade')">
+                                UPGRADE ACCOUNT
+                            </JetNavLink>
+                        </div>
                         <div v-if="$page.props.user.role_id === 2" class="text-xs text-fuchsia-700">PREMIUM SUBSCRIBER</div>
                         <div v-if="$page.props.user.role_id === 3" class="text-xs text-fuchsia-700">VIP</div>
                         <div v-if="$page.props.user.role_id === 4" class="text-xs text-fuchsia-700">CREATOR</div>

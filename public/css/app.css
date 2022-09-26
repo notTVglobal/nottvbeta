@@ -1396,6 +1396,22 @@ select {
   grid-column: span 2 / span 2;
 }
 
+.col-span-1 {
+  grid-column: span 1 / span 1;
+}
+
+.row-span-1 {
+  grid-row: span 1 / span 1;
+}
+
+.row-span-2 {
+  grid-row: span 2 / span 2;
+}
+
+.row-start-2 {
+  grid-row-start: 2;
+}
+
 .m-auto {
   margin: auto;
 }
@@ -1427,6 +1443,16 @@ select {
 .my-6 {
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
+}
+
+.my-10 {
+  margin-top: 2.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.my-20 {
+  margin-top: 5rem;
+  margin-bottom: 5rem;
 }
 
 .ml-3 {
@@ -1563,6 +1589,14 @@ select {
 
 .mt-12 {
   margin-top: 3rem;
+}
+
+.mt-20 {
+  margin-top: 5rem;
+}
+
+.mt-28 {
+  margin-top: 7rem;
 }
 
 .block {
@@ -1789,6 +1823,10 @@ select {
   flex: 1 1 0%;
 }
 
+.flex-initial {
+  flex: 0 1 auto;
+}
+
 .flex-shrink {
   flex-shrink: 1;
 }
@@ -1883,6 +1921,10 @@ select {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.grid-rows-2 {
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+}
+
 .flex-row {
   flex-direction: row;
 }
@@ -1897,6 +1939,10 @@ select {
 
 .content-center {
   align-content: center;
+}
+
+.items-start {
+  align-items: flex-start;
 }
 
 .items-center {
@@ -1991,6 +2037,10 @@ select {
   place-self: center;
 }
 
+.self-end {
+  align-self: flex-end;
+}
+
 .justify-self-end {
   justify-self: end;
 }
@@ -2031,6 +2081,10 @@ select {
 
 .break-words {
   overflow-wrap: break-word;
+}
+
+.break-all {
+  word-break: break-all;
 }
 
 .rounded-md {
@@ -2528,6 +2582,14 @@ select {
 
 .pl-6 {
   padding-left: 1.5rem;
+}
+
+.pb-36 {
+  padding-bottom: 9rem;
+}
+
+.pb-28 {
+  padding-bottom: 7rem;
 }
 
 .text-left {
@@ -3057,6 +3119,11 @@ select {
 .hover\:text-blue-600:hover {
   --tw-text-opacity: 1;
   color: rgb(37 99 235 / var(--tw-text-opacity));
+}
+
+.hover\:text-fuchsia-500:hover {
+  --tw-text-opacity: 1;
+  color: rgb(217 70 239 / var(--tw-text-opacity));
 }
 
 .focus\:z-10:focus {

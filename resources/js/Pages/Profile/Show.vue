@@ -22,6 +22,10 @@
                     <UpdateProfileInformationForm :user="$page.props.user" />
 
                     <JetSectionBorder />
+
+                    <UpdateContactInformationForm :user="$page.props.user" />
+
+                    <JetSectionBorder />
                 </div>
 
                 <div v-if="$page.props.jetstream.canUpdatePassword">
@@ -61,6 +65,7 @@ import LogoutOtherBrowserSessionsForm from '@/Pages/Profile/Partials/LogoutOther
 import TwoFactorAuthenticationForm from '@/Pages/Profile/Partials/TwoFactorAuthenticationForm.vue'
 import UpdatePasswordForm from '@/Pages/Profile/Partials/UpdatePasswordForm.vue'
 import UpdateProfileInformationForm from '@/Pages/Profile/Partials/UpdateProfileInformationForm.vue'
+import UpdateContactInformationForm from '@/Pages/Profile/Partials/UpdateContactInformationForm.vue'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useChatStore } from "@/Stores/ChatStore.js"
 import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
