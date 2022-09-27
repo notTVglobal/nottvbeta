@@ -11,7 +11,7 @@
             <div class="flex justify-between mb-6">
                 <div class="grid grid-cols-1 grid-rows-2">
                     <h1 class="text-3xl font-semibold">Users</h1>
-                    <Link href="/teams/create" class="text-blue-500 text-sm">New User</Link>
+                    <Link href="/users/create" class="text-blue-500 text-sm">New User</Link>
                 </div>
                 <div class="grid grid-cols-1 grid-rows-2">
                     <div class="justify-self-end mb-4">
