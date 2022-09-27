@@ -3805,14 +3805,6 @@ var map = {
 		"./resources/js/Pages/Teams/Create.vue",
 		"resources_js_Pages_Teams_Create_vue"
 	],
-	"./Teams/Edit": [
-		"./resources/js/Pages/Teams/Edit.vue",
-		"resources_js_Pages_Teams_Edit_vue"
-	],
-	"./Teams/Edit.vue": [
-		"./resources/js/Pages/Teams/Edit.vue",
-		"resources_js_Pages_Teams_Edit_vue"
-	],
 	"./Teams/Index": [
 		"./resources/js/Pages/Teams/Index.vue",
 		"/js/vendor",
@@ -3823,13 +3815,21 @@ var map = {
 		"/js/vendor",
 		"resources_js_Pages_Teams_Index_vue"
 	],
-	"./Teams/Show": [
-		"./resources/js/Pages/Teams/Show.vue",
-		"resources_js_Pages_Teams_Show_vue"
+	"./Teams/{$id}/Edit": [
+		"./resources/js/Pages/Teams/{$id}/Edit.vue",
+		"resources_js_Pages_Teams_id_Edit_vue"
 	],
-	"./Teams/Show.vue": [
-		"./resources/js/Pages/Teams/Show.vue",
-		"resources_js_Pages_Teams_Show_vue"
+	"./Teams/{$id}/Edit.vue": [
+		"./resources/js/Pages/Teams/{$id}/Edit.vue",
+		"resources_js_Pages_Teams_id_Edit_vue"
+	],
+	"./Teams/{$id}/Index": [
+		"./resources/js/Pages/Teams/{$id}/Index.vue",
+		"resources_js_Pages_Teams_id_Index_vue"
+	],
+	"./Teams/{$id}/Index.vue": [
+		"./resources/js/Pages/Teams/{$id}/Index.vue",
+		"resources_js_Pages_Teams_id_Index_vue"
 	],
 	"./TermsOfService": [
 		"./resources/js/Pages/TermsOfService.vue",

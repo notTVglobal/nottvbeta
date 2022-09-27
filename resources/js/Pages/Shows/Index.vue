@@ -14,6 +14,12 @@
                     <Link v-if="can.createShow" href="/shows/create" class="text-blue-500 text-sm">New Show</Link>
                 </div>
                 <div class="grid grid-cols-1 grid-rows-2">
+                    <div class="justify-self-end mb-4">
+                        <Link :href="`/dashboard`"><button
+                            class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                        >Dashboard</button>
+                        </Link>
+                    </div>
                     <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg row-start-2" />
                 </div>
             </div>

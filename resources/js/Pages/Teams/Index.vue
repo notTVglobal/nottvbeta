@@ -17,10 +17,17 @@
                 <Link href="/teams/create" class="text-blue-500 text-sm">New Team</Link>
             </div>
             <div class="grid grid-cols-1 grid-rows-2">
-                <Link href="/dashboard" class="text-blue-500 text-sm ml-2 justify-self-end">Dashboard</Link>
+                <div class="justify-self-end mb-4">
+                    <Link :href="`/dashboard`"><button
+                    class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                    >Dashboard</button>
+                    </Link>
+                </div>
                 <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg" />
             </div>
         </div>
+
+
 
         <div class="flex flex-col">
             <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -42,7 +49,7 @@
                                 </td>
 
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                    <Link :href="`/teams/edit/${team.id}`" class="text-indigo-600 hover:text-indigo-900">Edit</Link>
+                                    <Link :href="`/teams/${team.id}/edit`" class="text-indigo-600 hover:text-indigo-900">Edit</Link>
                                 </td>
                             </tr>
                             </tbody>

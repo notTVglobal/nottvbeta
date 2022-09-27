@@ -14,7 +14,7 @@
                     {{ props.post.title }}
                 </h2>
                 <div class="grid grid-cols-1 grid-rows-2">
-                    <Link :href="`/posts`" class="mr-2 text-blue-800 hover:text-blue-600">Back to Posts</Link>
+                    <Link :href="`/posts`" class="mr-2 text-blue-800 hover:text-blue-600">All Posts</Link>
                     <Link :href="`/posts/${props.post.id}/edit`"><button
                         class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                     >Edit</button>

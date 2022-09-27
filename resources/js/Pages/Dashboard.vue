@@ -8,7 +8,7 @@
     <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
         <div class="bg-white text-black p-5 mb-10">
 
-            <div class="mb-4">
+
 
             <div class="flex justify-between mb-3">
                 <h1 class="text-3xl font-semibold pb-3">Dashboard</h1>
@@ -18,36 +18,37 @@
                 </Link>
             </div>
 
-                <div v-show="can.viewAdmin" class="bg-gray-300 rounded pb-2 p-3 mx-2">
-                    <div class="font-semibold text-xl pb-2">Administrator only links</div>
-                    <!--disable button if ! admin-->
-                    <Link :href="`/users`"><button
-                        class="bg-blue-500 hover:bg-blue-600 text-white mt-1 ml-6 px-4 py-2 rounded disabled:bg-gray-400"
-                    >All Users</button>
-                    </Link>
-                    <!--disable button if ! admin-->
-                    <Link :href="`/admin/channels`"><button
-                        class="bg-blue-500 hover:bg-blue-600 text-white mt-1 ml-6 px-4 py-2 rounded disabled:bg-gray-400"
-                    >All Channels</button>
-                    </Link>
-                    <!--disable button if ! admin-->
-                    <Link :href="`/teams`"><button
-                        class="bg-blue-500 hover:bg-blue-600 text-white mt-1 ml-6 px-4 py-2 rounded disabled:bg-gray-400"
-                    >All Teams</button>
-                    </Link>
+            <div v-show="can.viewAdmin" class="bg-gray-300 rounded pb-8 p-3 mb-6 mx-2 border-b border-2">
+                <div class="font-semibold text-xl pb-2">Administrator only links</div>
+                <!--disable button if ! admin-->
+                <Link :href="`/users`"><button
+                    class="bg-blue-500 hover:bg-blue-600 text-white mt-1 ml-6 px-4 py-2 rounded disabled:bg-gray-400"
+                >All Users</button>
+                </Link>
+                <!--disable button if ! admin-->
+                <Link :href="`/admin/channels`"><button
+                    class="bg-blue-500 hover:bg-blue-600 text-white mt-1 ml-6 px-4 py-2 rounded disabled:bg-gray-400"
+                >All Channels</button>
+                </Link>
+                <!--disable button if ! admin-->
+                <Link :href="`/teams`"><button
+                    class="bg-blue-500 hover:bg-blue-600 text-white mt-1 ml-6 px-4 py-2 rounded disabled:bg-gray-400"
+                >All Teams</button>
+                </Link>
 
-                    <div class="pl-5 pt-2">
-                        <Link :href="`/video`" class="text-blue-800 hover:text-blue-400">
-                            MistServer API
-                        </Link>
-                    </div>
-                    <div class="pl-5">
-                        <Link :href="`/image`" class="text-blue-800 hover:text-blue-400">
-                            Image Uploader
-                        </Link>
-                    </div>
-                </div>
-                </div>
+                <!--disable button if ! admin-->
+                <Link :href="`/video`"><button
+                    class="bg-blue-500 hover:bg-blue-600 text-white mt-1 ml-6 px-4 py-2 rounded disabled:bg-gray-400"
+                >MistServer API</button>
+                </Link>
+
+                <!--disable button if ! admin-->
+                <Link :href="`/image`"><button
+                    class="bg-blue-500 hover:bg-blue-600 text-white mt-1 ml-6 px-4 py-2 rounded disabled:bg-gray-400"
+                >Image Uploader</button>
+                </Link>
+
+            </div>
 
             <section class="grid grid-cols-1 lg:grid-cols-3 gap-4 my-3 mx-2 m-auto text-black">
                 <div class="p-5 bg-gray-200 rounded">
@@ -92,13 +93,13 @@
                     </Link></p>
                     <p class=""><Link
                         @click="videoPlayer.makeVideoTopRight()"
-                        :href="`/teams/1`"
+                        :href="`/teams/2`"
                         class="text-blue-800 hover:text-blue-400">
                         notTV News Team
                     </Link></p>
                     <p class=""><Link
                         @click="videoPlayer.makeVideoTopRight()"
-                        :href="`/teams/1`"
+                        :href="`/teams/3`"
                         class="text-blue-800 hover:text-blue-400">
                         RJG Productions
                     </Link></p>

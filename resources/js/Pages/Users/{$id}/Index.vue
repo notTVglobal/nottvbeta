@@ -6,25 +6,70 @@
         <NavigationMenu />
     </div>
 
-    <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
+    <div class="flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
         <div class="bg-white text-black p-5 mb-10">
 
-            <div class="flex justify-between mb-6">
-                <h1 class="text-2xl pb-3">{{props.userSelected.name}}</h1>
-                <div>
-                    <Link href="/users" class="text-blue-500 text-sm ml-2">All Users</Link>
-                    <Link :href="`/users/${props.userSelected.id}/edit`" class="text-blue-500 text-sm ml-2">Edit</Link>
-                </div>
+
+
+            <div v-if="$page.props.user.isAdmin === 1" class="flex justify-between mb-3">
+                <Link :href="`/users`" class="mr-2 text-blue-800 hover:text-blue-600">All Users</Link>
+                <Link :href="`/users/${props.userSelected.id}/edit`"><button
+                    class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                >Edit User</button>
+                </Link>
             </div>
-            <p>
+
+            <p class="mb-6">
                 <img :src="props.userSelected.profile_photo_url" />
             </p>
-            <p>
-                User Type: {{props.userSelected.role_id}}
-            </p>
+
+            <h2 class="text-2xl pb-2">
+                {{ props.userSelected.name }}
+            </h2>
+
+            <div class="p-6 bg-white border-b border-gray-200 space-y-1">
+                <div>
+                    <span class="text-sm font-semibold capitalize">User Type: </span>{{props.userSelected.role_id}}
+                </div>
+                <div>
+                    <span v-if="$page.props.userSelected.role_id === 4" class="text-sm font-semibold capitalize">Creator Number: </span>{{props.userSelected.creatorNumber}}
+                </div>
+                <div>
+                    <span class="text-sm font-semibold capitalize">Subscription Status: </span>{{props.userSelected.subscriptionStatus}}
+                </div>
+            </div>
+            <div class="p-6 bg-white border-b border-gray-200">
+                <div class="">
+                    <span class="text-sm font-semibold capitalize">Email: </span>{{ props.userSelected.email }}
+                </div>
+                <div class="mb-6">
+                    <span class="text-sm font-semibold capitalize">Phone: </span>{{ props.userSelected.phone }}
+                </div>
+                <div>
+                    <span class="text-sm font-semibold capitalize">Address 1: </span>{{props.userSelected.address1}}
+                </div>
+                <div class="">
+                    <span class="text-sm font-semibold capitalize">Address 2: </span>{{ props.userSelected.address2 }}
+                </div>
+                <div class="">
+                    <span class="text-sm font-semibold capitalize">City: </span>{{ props.userSelected.city }}
+                </div>
+                <div class="">
+                    <span class="text-sm font-semibold capitalize">Province: </span>{{ props.userSelected.province }}
+                </div>
+                <div class="">
+                    <span class="text-sm font-semibold capitalize">Country: </span>{{ props.userSelected.country }}
+                </div>
+                <div class="">
+                    <span class="text-sm font-semibold capitalize">Postal Code: </span>{{ props.userSelected.postalCode }}
+                </div>
+            </div>
 
         </div>
     </div>
+
+
+
 
 </template>
 

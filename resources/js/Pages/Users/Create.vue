@@ -8,9 +8,23 @@
     <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
         <div class="bg-white text-black p-5 mb-10">
 
-        <div class="flex justify-between mb-6">
-            <h1 class="text-3xl">Create New User</h1>
-            <Link href="/users" class="text-blue-500 text-sm ml-2">All Users</Link>
+            <div class="flex justify-between mt-3 mb-6">
+                <div class="text-3xl">Create New User</div>
+                <div>
+                    <Link :href="`/users`"><button
+                        class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
+                    >Cancel</button>
+                    </Link>
+                </div>
+            </div>
+
+        <div
+            class="p-4 mb-4 text-sm text-orange700 bg-orange-100 rounded-lg dark:bg-orange-200 dark:text-orange-800"
+            role="alert"
+        >
+                <span class="font-medium">
+                    New users will need to "Reset Password" then "re-send the verification email".
+                </span>
         </div>
 
         <form @submit.prevent="submit" class="max-w-md mx-auto mt-8">
@@ -66,7 +80,7 @@
                 >
                 <div v-if="form.errors.email" v-text="form.errors.email" class="text-xs text-red-600 mt-1"></div>
             </div>
-            <div class="mb-6">
+            <div class="mb-6 hidden">
                 <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
                        for="password"
                 >
@@ -78,7 +92,7 @@
                        type="password"
                        name="password"
                        id="password"
-                       required
+                       hidden
                 >
                 <div v-if="form.errors.password" v-text="form.errors.password" class="text-xs text-red-600 mt-1"></div>
             </div>
@@ -105,21 +119,21 @@
                     Address
                 </label>
 
-                <input v-model="form.address_1"
+                <input v-model="form.address1"
                        class="border border-gray-400 p-2 mb-2 w-full rounded-lg"
                        type="text"
-                       name="address_1"
-                       id="address_1"
+                       name="address1"
+                       id="address1"
                 >
 
-                <input v-model="form.address_2"
+                <input v-model="form.address2"
                        class="border border-gray-400 p-2 w-full rounded-lg"
                        type="text"
-                       name="address_2"
-                       id="address_2"
+                       name="address2"
+                       id="address2"
                 >
-                <div v-if="form.errors.address_1" v-text="form.errors.address_1" class="text-xs text-red-600 mt-1"></div>
-                <div v-if="form.errors.address_2" v-text="form.errors.address_2" class="text-xs text-red-600 mt-1"></div>
+                <div v-if="form.errors.address1" v-text="form.errors.address1" class="text-xs text-red-600 mt-1"></div>
+                <div v-if="form.errors.address2" v-text="form.errors.address2" class="text-xs text-red-600 mt-1"></div>
             </div>
             <div class="mb-6">
                 <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
@@ -174,13 +188,13 @@
                     Postal Code
                 </label>
 
-                <input v-model="form.postal_code"
+                <input v-model="form.postalCode"
                        class="border border-gray-400 p-2 w-full rounded-lg"
                        type="text"
-                       name="postal_code"
-                       id="postal_code"
+                       name="postalCode"
+                       id="postalCode"
                 >
-                <div v-if="form.errors.postal_code" v-text="form.errors.postal_code" class="text-xs text-red-600 mt-1"></div>
+                <div v-if="form.errors.postalCode" v-text="form.errors.postalCode" class="text-xs text-red-600 mt-1"></div>
             </div>
             <div class="flex justify-between mb-6">
                 <button
@@ -219,15 +233,15 @@ chat.class = "chatSmall"
 let form = useForm({
     name: '',
     email: '',
-    password: '',
+    password: ' ',
     role_id: '',
-    address_1: '',
-    address_2: '',
-    city: '',
-    province: '',
-    country: '',
-    postal_code: '',
-    phone: '',
+    address1: null,
+    address2: null,
+    city: null,
+    province: null,
+    country: null,
+    postalCode: null,
+    phone: null,
 });
 
 // const role = ref(null);
@@ -236,8 +250,8 @@ function reset() {
     form.reset();
 };
 
-let submit = () => {
-    form.post('/admin/users');
+const submit = () => {
+    form.post(route("users.store"));
 };
 
 </script>

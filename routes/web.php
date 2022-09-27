@@ -138,18 +138,28 @@ Route::middleware([
     })->can('viewAdmin', 'App\Models\User')
         ->name('quiz');
 
+
+    Route::resource('teams',TeamsController::class);
     // List all teams
     Route::get('/teams', [TeamsController::class, 'index'])
         ->can('viewAdmin', 'App\Models\User')
         ->name('teams.index');
     // Create a team
-    Route::get('/teams/create', [TeamsController::class, 'create'])->name('teams.create');
+    Route::get('/teams/create', [TeamsController::class, 'create'])
+        ->can('viewCreator', 'App\Models\User')
+        ->name('teams.create');
     // Add new team to database
-    Route::post('/teams', [TeamsController::class, 'store'])->name('teams.store');
+//    Route::post('/teams', [TeamsController::class, 'store'])
+//        ->can('viewCreator', 'App\Models\User')
+//        ->name('teams.store');
     // Single team page
-    Route::get('/teams/{team}', [TeamsController::class, 'show'])->name('teams.show');
+    Route::get('/teams/{team}', [TeamsController::class, 'show'])
+        ->can('viewCreator', 'App\Models\User')
+        ->name('teams.show');
     // Edit team
-    Route::get('/teams/edit/{team}', [TeamsController::class, 'edit'])->name('teams.edit');
+    Route::get('/teams/{team}/edit', [TeamsController::class, 'edit'])
+        ->can('viewCreator', 'App\Models\User')
+        ->name('teams.edit');
 
 
     // List all creators
@@ -198,6 +208,10 @@ Route::middleware([
         ->can('viewAdmin', 'App\Models\User')
         ->name('image.store');
 
+    Route::get('/upload', function () {
+        return redirect('/stream');
+    });
+
     // Users resource for admin to create/edit users
     Route::resource('users',UsersController::class);
 
@@ -217,6 +231,7 @@ Route::middleware([
 
 //    // Show user
     Route::get('/users/{user}', [UsersController::class, 'show'])
+        ->can('viewAllUsers', 'App\Models\User')
         ->name('users.show');
 
 //    // Edit user
@@ -225,7 +240,7 @@ Route::middleware([
         ->name('users.edit');
 
     // Update user
-    Route::put('/users', [UsersController::class, 'update'])->name('users.update');
+//    Route::put('/users', [UsersController::class, 'update'])->name('users.update');
 
 
 

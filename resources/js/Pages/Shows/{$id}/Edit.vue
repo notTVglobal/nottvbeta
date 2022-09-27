@@ -13,8 +13,10 @@
                 <h1 class="text-3xl"><Link :href="`/shows/${props.show.id}`" class="text-indigo-600">{{props.show.name}}</Link> > <span class="font-semibold">Edit</span></h1>
                 <span class="text-xs font-semibold text-red-700">Edit Mode</span>
                 <div>
-                    <Link href="/shows" class="text-blue-500 text-sm ml-2">All Shows</Link>
-                    <Link :href="`/shows/${props.show.id}`" class="text-blue-500 text-sm ml-2">Cancel</Link>
+                    <Link :href="`/shows/${props.show.id}`"><button
+                        class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
+                    >Cancel</button>
+                    </Link>
                 </div>
             </div>
 

@@ -8,9 +8,14 @@
     <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
         <div class="bg-white text-black p-5 mb-10">
 
-        <div class="flex justify-between mb-6">
-            <h1 class="text-3xl">Create Team</h1>
-            <Link href="/dashboard" class="text-blue-500 text-sm ml-2">Dashboard</Link>
+        <div class="flex justify-between mt-3 mb-6">
+            <div class="text-3xl">Create New Team</div>
+            <div>
+                <Link :href="`/teams`"><button
+                    class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
+                >Cancel</button>
+                </Link>
+            </div>
         </div>
 
         <form @submit.prevent="submit" class="max-w-md mx-auto mt-8">

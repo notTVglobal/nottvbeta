@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Request;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -57,7 +58,7 @@ class UsersController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(User $user, Request $request)
     {
 //        Validator::make($request, [
 //            'name' => ['required', 'string', 'max:255'],
@@ -70,48 +71,33 @@ class UsersController extends Controller
 //            'email' => $request['email'],
 //            'password' => Hash::make($request['password']),
 //            'role_id' => '2',
-//            'user_address_1' => null,
-//            'user_address_2' => null,
-//            'user_address_city' => null,
-//            'user_address_province' => null,
-//            'user_address_country' => null,
-//            'user_address_postal_code' => null,
-//            'user_phone' => null,
-//            'creator_number' => null,
-//            'subscription_status' => null,
+//            'address1' => null,
+//            'address2' => null,
+//            'city' => null,
+//            'province' => null,
+//            'country' => null,
+//            'postalCode' => null,
+//            'phone' => null,
+//            'creatorNumber' => null,
+//            'subscriptionStatus' => null,
 //        ]);
 
         $attributes = Request::validate([
-            'name' => 'required',
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-            'role_id',
-            'address_1',
-            'address_2',
-            'city',
-            'province',
-            'country',
-            'postal_code',
-            'phone',
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+            'password' => 'string',
+            'role_id' => 'integer',
+            'address1' => ['nullable', 'string', 'max:255'],
+            'address2' => ['nullable', 'string', 'max:255'],
+            'city' => ['nullable', 'string', 'max:255'],
+            'province' => ['nullable', 'string', 'max:255'],
+            'country' => ['nullable', 'string', 'max:255'],
+            'postalCode' => ['nullable', 'string', 'max:255'],
+            'phone' => ['nullable', 'regex:/^([0-9\s\-\+\(\)]*)$/', 'min:10'],
         ]);
         // create the user
-        User::create([
-            'name' => $request['name'],
-            'email' => $request['email'],
-            'password' => $request['password'],
-            'role_id' => $request['role_id'],
-            'address_1' => $request['address_1'],
-            'address_2' => $request['address_2'],
-            'city' => $request['city'],
-            'province' => $request['province'],
-            'country' => $request['country'],
-            'postal_code' => $request['postal_code'],
-            'phone' => $request['user_phone'],
-            'creator_number' => null,
-            'subscription_status' => null,
-        ]);
-        // redirect
-        return redirect('/users');
+        User::create($attributes);
+        return redirect('/users')->with('message', 'User Created Successfully');
     }
 
     /**
@@ -137,7 +123,6 @@ class UsersController extends Controller
     {
         return Inertia::render('Users/{$id}/Edit', [
             'userEdit' => $user,
-//            'role_id' => $user->role_id,
         ]);
     }
 
@@ -150,71 +135,27 @@ class UsersController extends Controller
      */
     public function update(Request $request, User $user)
     {
-//        $attributes = Request::validate([
-//            'id',
-//            'profile_photo_url',
-//            'name' => 'required',
-//            'email' => ['required', 'email'],
-//        ]);
-//        // update the user
-//        User::where('id', $user)->update($attributes);
-//        // redirect
-//        return redirect('/admin/users')
-//            ->with ('message', 'User updated succesfully');
-
         // validate the request
         $attributes = Request::validate([
-            'address_1',
-            'address_2',
-            'city',
-            'province',
-            'country',
-            'postal_code',
-            'phone',
-            'role_id',
+            'address1' => ['nullable', 'string', 'max:255'],
+            'address2' => ['nullable', 'string', 'max:255'],
+            'city' => ['nullable', 'string', 'max:255'],
+            'province' => ['nullable', 'string', 'max:255'],
+            'country' => ['nullable', 'string', 'max:255'],
+            'postalCode' => ['nullable', 'string', 'max:255'],
+            'phone' => ['nullable', 'regex:/^([0-9\s\-\+\(\)]*)$/', 'min:10'],
+            'role_id' => 'integer',
         ]);
 
         // update the user
-//        User::where('id', $user)->update($attributes);
+
         $user->update($attributes);
-//        $user>save($attributes);
-//        sleep(1);
+        sleep(1);
 
         // redirect
         return Inertia::render('Users/{$id}/Index', [
             'userSelected' => $user
         ])->with('message', 'User Updated Successfully');
-
-
-//        $request->validate([
-//            'name' => 'required',
-//            'email' => 'required',
-//            'address_1',
-//            'address_2',
-//            'city',
-//            'province',
-//            'country',
-//            'postal_code',
-//            'phone',
-//            'role_id',
-//        ]);
-//
-//        $user->name = $request->name;
-//        $user->email = $request->email;
-//        $user->address_1 = $request->address_1;
-//        $user->address_2 = $request->address_2;
-//        $user->city = $request->city;
-//        $user->province = $request->province;
-//        $user->country = $request->country;
-//        $user->postal_code = $request->postal_code;
-//        $user->phone = $request->phone;
-//        $user->role_id = $request->role_id;
-//
-//        $user->save();
-//        sleep(1);
-//
-//        return redirect()->route('admin.users')->with('message', 'Blog Updated Successfully');
-
     }
 
     /**

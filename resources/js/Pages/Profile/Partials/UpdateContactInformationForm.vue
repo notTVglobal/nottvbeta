@@ -16,58 +16,68 @@ const props = defineProps({
 
 const form = useForm({
     _method: 'PUT',
-    address_1: props.user.address_1,
-    address_2: props.user.address_2,
+    address1: props.user.address1,
+    address2: props.user.address2,
     city: props.user.city,
     province: props.user.province,
     country: props.user.country,
-    postal_code: props.user.postal_code,
+    postalCode: props.user.postalCode,
     phone: props.user.phone,
 });
 
-const updateContactInformation = () => {
+const verificationLinkSent = ref(null);
+
+const updateProfileInformation = () => {
     form.post(route('user-profile-information.update'), {
         errorBag: 'updateProfileInformation',
         preserveScroll: true,
     });
 };
 
+const sendEmailVerification = () => {
+    verificationLinkSent.value = true;
+};
+
 </script>
 
 <template>
-    <JetFormSection @submitted="updateContactInformation">
+    <JetFormSection @submitted="updateProfileInformation">
         <template #title>
             Contact Information
         </template>
 
         <template #description>
             Update your account's contact information.
+            <div class="bg-orange-300 font-semibold text-orange-700">
+                Contact form will not save. We are working on this bug.
+            </div>
         </template>
+
 
         <template #form>
 
             <!-- Address -->
             <div class="col-span-6 sm:col-span-4">
-                <JetLabel for="address_1" value="Address 1" />
+                <JetLabel for="address1" value="Address 1" />
                 <JetInput
-                    id="address_1"
-                    v-model="form.address_1"
+                    id="address1"
+                    v-model="form.address1"
                     type="text"
                     class="mt-1 block w-full"
-                    autocomplete="address_1"
+                    autocomplete="address1"
                 />
-                <JetInputError :message="form.errors.address_1" class="mt-2" />
+                <JetInputError :message="form.errors.address1" class="mt-2" />
             </div>
             <div class="col-span-6 sm:col-span-4">
-                <JetLabel for="address_2" value="Address 2" />
+                <JetLabel for="address2" value="Address 2" />
                 <JetInput
-                    id="address_2"
-                    v-model="form.address_2"
+                    id="address2"
+                    v-model="form.address2"
                     type="text"
                     class="mt-1 block w-full"
-                    autocomplete="address_2"
+                    autocomplete="address2"
                 />
-                <JetInputError :message="form.errors.address_2" class="mt-2" />
+                <JetInputError :message="form.errors.address2" class="mt-2" />
             </div>
             <div class="col-span-6 sm:col-span-4">
                 <JetLabel for="city" value="City" />
@@ -103,15 +113,15 @@ const updateContactInformation = () => {
                 <JetInputError :message="form.errors.country" class="mt-2" />
             </div>
             <div class="col-span-6 sm:col-span-4">
-                <JetLabel for="postal_code" value="Postal Code/Zip" />
+                <JetLabel for="postalCode" value="Postal Code/Zip" />
                 <JetInput
                     id="postal_code"
-                    v-model="form.postal_code"
+                    v-model="form.postalCode"
                     type="text"
                     class="mt-1 block w-full"
-                    autocomplete="postal_code"
+                    autocomplete="postalCode"
                 />
-                <JetInputError :message="form.errors.postal_code" class="mt-2" />
+                <JetInputError :message="form.errors.postalCode" class="mt-2" />
             </div>
             <div class="col-span-6 sm:col-span-4">
                 <JetLabel for="phone" value="Phone Number" />

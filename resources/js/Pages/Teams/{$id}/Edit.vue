@@ -13,8 +13,10 @@
                 <h1 class="text-3xl"><Link :href="`/teams/${props.team.id}`" class="text-indigo-600">{{props.team.name}}</Link> > <span class="font-semibold">Edit</span></h1>
                 <span class="text-xs font-semibold text-red-700">Edit Mode</span>
                 <div>
-                    <Link href="/teams" class="text-blue-500 text-sm ml-2">All Teams</Link>
-                    <Link :href="`/teams/${props.team.id}`" class="text-blue-500 text-sm ml-2">Cancel</Link>
+                    <Link :href="`/teams/${props.team.id}`"><button
+                        class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
+                    >Cancel</button>
+                    </Link>
                 </div>
             </div>
 
@@ -52,6 +54,20 @@
                                required
                         />
                         <div v-if="form.errors.description" v-text="form.errors.description" class="text-xs text-red-600 mt-1"></div>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
+                               for="description"
+                        >
+                            Maximum # of Team Members
+                        </label>
+                        <input v-model="form.totalSpots"
+                                          class="border border-gray-400 p-2 w-full rounded-lg"
+                                          type="text"
+                                          name="totalSpots"
+                                          id="totalSpots"
+                        />
+                        <div v-if="form.errors.totalSpots" v-text="form.errors.totalSpots" class="text-xs text-red-600 mt-1"></div>
                     </div>
                     <div class="flex justify-between mb-6">
                         <button
@@ -96,7 +112,13 @@ let form = useForm({
     id: props.team.id,
     name: props.team.name,
     description: props.team.description,
+    totalSpots: props.team.totalSpots,
+    logo: props.team.logo,
 });
+
+let submit = () => {
+    form.put(route('teams.update', props.team.id));
+};
 
 // let submit = () => {
 //     form.put('/teams');

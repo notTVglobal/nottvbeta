@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Request;
 use App\Models\Team;
+use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 
 class TeamsController extends Controller
@@ -51,6 +51,8 @@ class TeamsController extends Controller
         $attributes = Request::validate([
             'name' => 'required',
             'description' => 'required',
+            'logo',
+            'totalSpots',
         ]);
         // create the team
         Team::create($attributes);
@@ -66,7 +68,7 @@ class TeamsController extends Controller
      */
     public function show(team $team)
     {
-        return Inertia::render('Teams/Show', [
+        return Inertia::render('Teams/{$id}/Index', [
             'team' => $team
         ]);
     }
@@ -79,7 +81,7 @@ class TeamsController extends Controller
      */
     public function edit(team $team)
     {
-        return Inertia::render('Teams/Edit', [
+        return Inertia::render('Teams/{$id}/Edit', [
             'team' => $team
         ]);
     }
@@ -91,9 +93,33 @@ class TeamsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Team $team)
     {
-        //
+//        $request->validate([
+//            'name' => 'required|string|max:255',
+//            'description' => 'required|string|max:5000',
+//            'logo',
+//            'member_spots'
+//        ]);
+//        $team->name = $request->name;
+//        $team->description = $request->description;
+//        $team->logo = $request->logo;
+//        $team->save();
+//        sleep(1);
+        // validate the request
+        $attributes = Request::validate([
+            'name' => 'required',
+            'description' => 'required',
+            'logo',
+            'totalSpots' => 'integer',
+        ]);
+        // update the show
+        $team->update($attributes);
+
+        // redirect
+        return Inertia::render('Teams/{$id}/Index', [
+            'team' => $team
+        ])->with('message', 'Team Updated Successfully');
     }
 
     /**

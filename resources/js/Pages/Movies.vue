@@ -9,7 +9,22 @@
     <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
         <div class="bg-white text-black p-5 mb-10">
 
-            <h1 class="text-3xl font-semibold pb-3">Movies</h1>
+            <div class="flex justify-between mb-6">
+                <div class="grid grid-cols-1 grid-rows-2">
+                    <h1 class="text-3xl font-semibold">Movies</h1>
+<!--                    <Link v-if="can.createShow" href="#" class="text-blue-500 text-sm">Add Movie</Link>-->
+                </div>
+                <div class="grid grid-cols-1 grid-rows-2">
+                    <div class="justify-self-end mb-4">
+                        <Link :href="`/dashboard`"><button
+                            class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                        >Dashboard</button>
+                        </Link>
+                    </div>
+                    <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg row-start-2" />
+                </div>
+            </div>
+
             <p class="mb-8">
                 Display a grid of movies and documentaries available for free, PPV and to purchase. Also search, and browse by category/date/popularity.
             </p>

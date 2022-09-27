@@ -9,6 +9,28 @@
     <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
         <div class="bg-white text-black p-5 mb-10">
 
+            <div class="flex justify-between mb-3">
+                <h1 class="text-3xl font-semibold pb-3">Posts</h1>
+                <div class="grid grid-cols-1 grid-rows-2">
+                    <div class="justify-self-end mb-4">
+                        <Link :href="`/dashboard`"><button
+                            class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                        >Dashboard</button>
+                        </Link>
+                    </div>
+                    <div>
+                        <Link :href="`/posts/create`"><button
+                        class="bg-green-500 hover:bg-green-600 text-white mx-2 px-4 py-2 rounded disabled:bg-gray-400"
+                        >Add Post</button>
+                        </Link>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-2">
+                Display our posts here of new events, blog items, etc.
+            </div>
+
             <div
                 class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
                 role="alert"
@@ -17,19 +39,6 @@
                         Alerts go here.
                     </span>
             </div>
-
-            <div class="flex justify-between mb-3">
-                <h1 class="text-3xl font-semibold pb-3">Posts</h1>
-                <Link :href="`/posts/create`"><button
-                    class="bg-green-500 hover:bg-green-600 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
-                >Add Post</button>
-                </Link>
-            </div>
-
-            <div class="mb-2">
-                Display our posts here of new events, blog items, etc.
-            </div>
-
 
             <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
