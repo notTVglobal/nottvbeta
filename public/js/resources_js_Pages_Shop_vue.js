@@ -1462,7 +1462,7 @@ var _hoisted_8 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementV
 var _hoisted_9 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
   type: "search",
   placeholder: "Search...",
-  "class": "border px-2 rounded-lg row-start-2"
+  "class": "border px-2 rounded-lg"
 }, null, -1
 /* HOISTED */
 );

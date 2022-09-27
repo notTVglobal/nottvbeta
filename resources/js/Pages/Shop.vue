@@ -21,11 +21,9 @@
                         >Dashboard</button>
                         </Link>
                     </div>
-                    <input v-model="" type="search" placeholder="Search..." class="border px-2 rounded-lg row-start-2" />
+                    <input type="search" placeholder="Search..." class="border px-2 rounded-lg" />
                 </div>
             </div>
-
-
 
             <p class="mb-8">
                 Our notTV Shop.
