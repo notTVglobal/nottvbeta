@@ -62,11 +62,12 @@
 
             <section class="grid grid-cols-1 lg:grid-cols-3 gap-4 my-3 mx-2 m-auto text-black">
                 <div class="p-5 bg-gray-200 rounded">
-                    <div class="mb-1 flex justify-between">
-                        <div class="font-semibold text-xl">My Assignments</div>
-                        <div><Link :href="`#`" class="text-blue-500 text-xs">All Assignments</Link></div>
-                        <div><Link :href="`#`"><button
-                            class="bg-green-500 hover:bg-green-600 text-white mt-1 ml-6 px-4 py-2 rounded disabled:bg-gray-400"
+                    <div class="mb-1 grid grid-cols-3">
+                        <div class="font-semibold text-xl justify-self-start">My Assignments</div>
+                        <div class="justify-self-center"><Link :href="`#`" class="text-blue-500 text-xs">All Assignments</Link></div>
+                        <div class="justify-self-end">
+                            <Link :href="`#`"><button
+                            class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 text-sm rounded disabled:bg-gray-400"
                             >New Assignment</button>
                             </Link>
                         </div>
@@ -78,43 +79,47 @@
                     </div>
                 </div>
                 <div class="p-5 bg-gray-200 rounded">
-                    <div class="mb-1 flex justify-between">
-                        <div class="font-semibold text-xl">My Episodes</div>
-                        <div><Link :href="`#`" class="text-blue-500 text-xs">All Episodes</Link></div>
-                        <div>
+                    <div class="grid md:grid-cols-3">
+                        <div class="font-semibold text-xl justify-self-start">My Episodes</div>
+                        <div class="justify-self-center"><Link :href="`#`" class="text-blue-500 text-xs">All Episodes</Link></div>
+                        <div class="justify-self-end">
                             <Link :href="`#`"><button
-                            class="bg-green-500 hover:bg-green-600 text-white mt-1 ml-6 px-4 py-2 rounded disabled:bg-gray-400"
+                            class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 text-sm rounded disabled:bg-gray-400"
                             >New Episode</button>
                             </Link>
                         </div>
                     </div>
-                    <p class=""><Link
-                        @click="videoPlayer.makeVideoTopRight()"
-                        :href="`#`"
-                        class="text-blue-800 hover:text-blue-400">
-                        Epsiode ### or NAME
-                    </Link></p>
-                    <p class=""><Link
-                        @click="videoPlayer.makeVideoTopRight()"
-                        :href="`#`"
-                        class="text-blue-800 hover:text-blue-400">
-                        Epsiode ### or NAME
-                    </Link></p>
-                    <p class=""><Link
-                        @click="videoPlayer.makeVideoTopRight()"
-                        :href="`#`"
-                        class="text-blue-800 hover:text-blue-400">
-                        Epsiode ### or NAME
-                    </Link></p>
+                    <div class="grid grid-cols-1">
+                        <div class="">
+                            <p class=""><Link
+                                @click="videoPlayer.makeVideoTopRight()"
+                                :href="`#`"
+                                class="text-blue-800 hover:text-blue-400">
+                                Epsiode ### or NAME
+                            </Link></p>
+                            <p class=""><Link
+                                @click="videoPlayer.makeVideoTopRight()"
+                                :href="`#`"
+                                class="text-blue-800 hover:text-blue-400">
+                                Epsiode ### or NAME
+                            </Link></p>
+                            <p class=""><Link
+                                @click="videoPlayer.makeVideoTopRight()"
+                                :href="`#`"
+                                class="text-blue-800 hover:text-blue-400">
+                                Epsiode ### or NAME
+                            </Link></p>
+                        </div>
+                    </div>
 
                 </div>
                 <div class="p-5 bg-gray-200 rounded">
-                    <div class="mb-1 flex justify-between">
-                        <div class="font-semibold text-xl">My Shows</div>
-                        <div><Link :href="`/shows`" class="text-blue-500 text-xs">All Shows</Link></div>
-                        <div>
+                    <div class="mb-1 grid grid-cols-3">
+                        <div class="font-semibold text-xl justify-self-start">My Shows</div>
+                        <div class="justify-self-center"><Link :href="`/shows`" class="text-blue-500 text-xs">All Shows</Link></div>
+                        <div class="justify-self-end">
                             <Link :href="`/shows/create`"><button
-                                class="bg-green-500 hover:bg-green-600 text-white mt-1 ml-6 px-4 py-2 rounded disabled:bg-gray-400"
+                                class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 text-sm rounded disabled:bg-gray-400"
                             >New Show</button>
                             </Link>
                         </div>
@@ -133,12 +138,12 @@
                     </Link></p>
                 </div>
                 <div class="p-5 bg-gray-200 rounded">
-                    <div class="mb-1 flex justify-between">
-                        <div class="font-semibold text-xl">My Teams</div>
-                        <div><Link :href="`/teams`" class="text-blue-500 text-xs">All Teams</Link></div>
-                        <div>
+                    <div class="mb-1 grid grid-cols-3">
+                        <div class="font-semibold text-xl justify-self-start">My Teams</div>
+                        <div class="justify-self-center"><Link :href="`/teams`" class="text-blue-500 text-xs">All Teams</Link></div>
+                        <div class="justify-self-end">
                             <Link :href="`/teams/create`"><button
-                                class="bg-green-500 hover:bg-green-600 text-white mt-1 ml-6 px-4 py-2 rounded disabled:bg-gray-400"
+                                class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 text-sm rounded disabled:bg-gray-400"
                             >New Team</button>
                             </Link>
                         </div>
