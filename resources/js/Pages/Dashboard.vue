@@ -62,6 +62,9 @@
 
             <section class="grid grid-cols-1 lg:grid-cols-3 gap-4 my-3 mx-2 m-auto text-black">
                 <div class="p-5 bg-gray-200 rounded">
+                    <div class="mb-3 bg-orange-300 px-2">
+                        In development. Not currently working.
+                    </div>
                     <div class="mb-1 grid grid-cols-3">
                         <div class="font-semibold text-xl justify-self-start">My Assignments</div>
                         <div class="justify-self-center"><Link :href="`#`" class="text-blue-500 text-xs">All Assignments</Link></div>
@@ -79,6 +82,9 @@
                     </div>
                 </div>
                 <div class="p-5 bg-gray-200 rounded">
+                    <div class="mb-3 bg-orange-300 px-2">
+                        In development. Not currently working.
+                    </div>
                     <div class="grid md:grid-cols-3">
                         <div class="font-semibold text-xl justify-self-start">My Episodes</div>
                         <div class="justify-self-center"><Link :href="`#`" class="text-blue-500 text-xs">All Episodes</Link></div>
