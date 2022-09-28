@@ -147,8 +147,12 @@ class ShowsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Show $show)
     {
-        //
+        $show->delete();
+        sleep(1);
+
+        // redirect
+        return redirect()->route('shows')->with('message', 'Show Deleted Successfully');
     }
 }

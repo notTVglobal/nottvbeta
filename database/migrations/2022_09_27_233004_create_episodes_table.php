@@ -13,11 +13,16 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('teams', function (Blueprint $table) {
+        Schema::create('episodes', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->longtext('description');
+            $table->string('description');
+            $table->string('poster')->nullable();
+            $table->foreignId('team_id')->constrained();
             $table->foreignId('user_id')->constrained();
+            $table->foreignId('show_id')->constrained();
+            $table->json('notes');
+            $table->boolean('isPublished');
             $table->timestamps();
         });
     }
@@ -29,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('teams');
+        Schema::dropIfExists('episodes');
     }
 };

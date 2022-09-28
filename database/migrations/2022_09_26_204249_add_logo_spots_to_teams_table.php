@@ -14,8 +14,8 @@ return new class extends Migration
     public function up()
     {
         Schema::table('teams', function (Blueprint $table) {
-            $table->string('logo')->default('');
-            $table->integer('memberSpots')->default(0);
+            $table->string('logo')->default('https://cdn.not.tv/wp-content/uploads/2022/09/27220247/Ping.png');
+            $table->integer('memberSpots')->default(1);
             $table->integer('totalSpots')->default(1);
         });
     }

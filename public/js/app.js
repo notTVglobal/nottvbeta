@@ -3625,14 +3625,6 @@ var map = {
 		"./resources/js/Pages/Movies.vue",
 		"resources_js_Pages_Movies_vue"
 	],
-	"./Posts": [
-		"./resources/js/Pages/Posts.vue",
-		"resources_js_Pages_Posts_vue"
-	],
-	"./Posts.vue": [
-		"./resources/js/Pages/Posts.vue",
-		"resources_js_Pages_Posts_vue"
-	],
 	"./Posts/Create": [
 		"./resources/js/Pages/Posts/Create.vue",
 		"resources_js_Pages_Posts_Create_vue"
@@ -3643,10 +3635,12 @@ var map = {
 	],
 	"./Posts/Index": [
 		"./resources/js/Pages/Posts/Index.vue",
+		"/js/vendor",
 		"resources_js_Pages_Posts_Index_vue"
 	],
 	"./Posts/Index.vue": [
 		"./resources/js/Pages/Posts/Index.vue",
+		"/js/vendor",
 		"resources_js_Pages_Posts_Index_vue"
 	],
 	"./Posts/{$id}/Edit": [

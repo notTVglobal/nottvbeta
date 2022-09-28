@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
-use Illuminate\Http\Request;
+//use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Str;
 use Inertia\Inertia;
 
 class PostController extends Controller
@@ -15,14 +18,35 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::all();
+//        $posts = Post::all();
+//
+//        return Inertia::render(
+//            'Posts/Index',
+//            [
+//                'posts' => $posts,
+//            ]
+//    );
 
-        return Inertia::render(
-            'Posts/Index',
-            [
-                'posts' => $posts
-            ]
-        );
+                    return Inertia::render('Posts/Index', [
+                        'posts' => Post::query()
+                            ->when(Request::input('search'), function ($query, $search) {
+                                $query->where('title', 'like', "%{$search}%");
+                            })
+                            ->paginate(10)
+                            ->withQueryString()
+                            ->through(fn($post) => [
+                                'id' => $post->id,
+                                'title' => $post->title,
+                                'slug' => $post->slug
+                            ]),
+                        'filters' => Request::only(['search']),
+                        'can' => [
+                            'viewPosts' => Auth::user()->can('view', Post::class),
+                            'createPosts' => Auth::user()->can('create', Post::class),
+                            'editPosts' => Auth::user()->can('edit', Post::class)
+                        ]
+                    ]);
+
     }
 
     /**
@@ -45,19 +69,31 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-           'title' => 'required|string|max:255',
-           'slug' => 'required|string|max:255',
-           'content' => 'required',
-        ]);
-        Post::create([
-           'title' => $request->title,
-           'slug' => \Str::slug($request->slug),
-           'content' => $request->content
-        ]);
-        sleep(1);
+//        $request->validate([
+//           'title' => 'required|string|max:255',
+//           'slug' => 'required|string|max:255',
+//           'content' => 'required',
+//        ]);
+//        Post::create([
+//           'title' => $request->title,
+//           'slug' => \Str::slug($request->slug),
+//           'content' => $request->content
+//        ]);
+//        return redirect()->route('posts')->with('message', 'Post Created Successfully');
 
-        return redirect()->route('posts')->with('message', 'Blog Created Successfully');
+
+        // validate the request
+        $attributes = Request::validate([
+            'title' => 'required|string|max:255',
+            'slug' => 'required|string|max:255',
+            'content' => 'required',
+        ]);
+        // create the user
+        Post::create($attributes);
+        sleep(1);
+        // redirect
+        return redirect('/posts')->with('message', 'Post Created Successfully');
+
     }
 
     /**
@@ -99,19 +135,33 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        $request->validate([
+//        $request->validate([
+//            'title' => 'required|string|max:255',
+//            'slug' => 'required|string|max:255',
+//            'content' => 'required',
+//        ]);
+//
+//        $post->title = $request->title;
+//        $post->slug = \Str::slug($request->slug);
+//        $post->content = $request->content;
+//        $post->save();
+//        sleep(1);
+//
+//        return redirect()->route('posts')->with('message', 'Post Updated Successfully');
+
+        // validate the request
+        $attributes = Request::validate([
             'title' => 'required|string|max:255',
             'slug' => 'required|string|max:255',
             'content' => 'required',
         ]);
-
-        $post->title = $request->title;
-        $post->slug = \Str::slug($request->slug);
-        $post->content = $request->content;
-        $post->save();
+        // update the show
+        $post->update($attributes);
         sleep(1);
-
-        return redirect()->route('posts')->with('message', 'Blog Updated Successfully');
+        // redirect
+        return Inertia::render('Posts/{$id}/Index', [
+            'post' => $post
+        ])->with('message', 'Post Updated Successfully');
     }
 
     /**
@@ -125,6 +175,6 @@ class PostController extends Controller
         $post->delete();
         sleep(1);
 
-        return redirect()->route('posts')->with('message', 'Blog Delete Successfully');
+        return redirect()->route('posts')->with('message', 'Post Deleted Successfully');
     }
 }

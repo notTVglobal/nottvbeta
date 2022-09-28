@@ -22,9 +22,12 @@ class TeamsController extends Controller
                 })
                 ->paginate(10)
                 ->withQueryString()
-                ->through(fn($show) => [
-                    'id' => $show->id,
-                    'name' => $show->name
+                ->through(fn($team) => [
+                    'id' => $team->id,
+                    'name' => $team->name,
+                    'logo' => $team->logo,
+                    'memberSpots' => $team->memberSpots,
+                    'totalSpots' => $team->totalSpots
                 ]),
             'filters' => Request::only(['search'])
         ]);
@@ -57,7 +60,7 @@ class TeamsController extends Controller
         // create the team
         Team::create($attributes);
         // redirect
-        return redirect('/teams');
+        return redirect('/teams')->with('message', 'Team Created Successfully');
     }
 
     /**
@@ -128,8 +131,11 @@ class TeamsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Team $team)
     {
-        //
+        $team->delete();
+        sleep(1);
+
+        return redirect()->route('teams')->with('message', 'Team Deleted Successfully');
     }
 }

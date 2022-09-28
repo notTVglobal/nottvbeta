@@ -11,9 +11,7 @@
 
         <div class="bg-white rounded text-black p-5 mb-10">
 
-
 <!--            <TeamHeader v-bind="team" @add="showModal = true" />-->
-
 
             <div class="flex justify-between mb-3">
                     <Link :href="`/teams`" class="mr-2 text-blue-800 hover:text-blue-600">All Teams</Link>
@@ -23,10 +21,13 @@
                     </Link>
             </div>
 
+
+
+
             <header class="flex justify-between">
                 <div>
                     <h3 class="inline-flex items-center text-3xl font-semibold relative">
-                        <img :src="`../../images/Ping.png`" alt="" class="w-20 mr-2">
+                        <img :src="`/storage/${team.logo}`" alt="" class="w-20 mr-2">
                         {{ props.team.name }} Team
                         <div
                             class="bg-green-400 w-5 h-5 text-xs text-white rounded-full flex justify-center items-center absolute -right-4 -top-2">
@@ -66,6 +67,16 @@
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                     <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+
+                            <div
+                                class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
+                                role="alert"
+                                v-if="props.message"
+                            >
+                                <span class="font-medium">
+                                    {{props.message}}
+                                </span>
+                            </div>
 
                             <TeamMembersList />
 
@@ -139,7 +150,8 @@ chat.class = "chatSmall"
 // team.fill();
 
 let props = defineProps({
-    team: Object
+    team: Object,
+    message: String
 });
 
 let showModal = ref(false);

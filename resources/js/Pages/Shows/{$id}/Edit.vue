@@ -131,6 +131,7 @@ let submit = () => {
     // setPoster()
     form.put(route('shows.update', props.show.id));
 };
+
 </script>
 <script>
 import vueFilePond, { setOptions } from 'vue-filepond';

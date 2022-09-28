@@ -27,6 +27,8 @@ class UsersController extends Controller
                 ->through(fn($user) => [
                     'id' => $user->id,
                     'name' => $user->name,
+                    'email' => $user->email,
+                    'profile_photo_path' => $user->profile_photo_path,
                     'role_id' => $user->role_id,
                     'isAdmin' => $user->isAdmin,
                     'can' => [

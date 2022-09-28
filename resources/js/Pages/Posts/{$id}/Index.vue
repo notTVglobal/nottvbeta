@@ -22,7 +22,15 @@
                 </div>
             </div>
 
-
+            <div
+                class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
+                role="alert"
+                v-if="props.message"
+            >
+                    <span class="font-medium">
+                        {{props.message}}
+                    </span>
+            </div>
 
             <div class="p-6 bg-white border-b border-gray-200">
                     <div class="mb-6">
@@ -56,6 +64,7 @@ const props = defineProps({
         type: Object,
         default: () => ({}),
     },
+    message: String
 });
 
 </script>

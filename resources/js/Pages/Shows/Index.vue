@@ -8,50 +8,118 @@
     <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
         <div class="bg-white text-black p-5 mb-10">
 
-            <div class="flex justify-between mb-6">
-                <div class="grid grid-cols-1 grid-rows-2">
-                    <h1 class="text-3xl font-semibold">Shows</h1>
-                    <Link v-if="can.createShow" href="/shows/create" class="text-blue-500 text-sm">New Show</Link>
+            <div class="flex justify-between mb-3">
+                <div>
+                    <h1 class="text-3xl font-semibold pb-3">Shows</h1>
+                    <Link v-if="can.createShow" :href="`/shows/create`"><button
+                        class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded disabled:bg-gray-400"
+                    >Add Show</button>
+                    </Link>
                 </div>
-                <div class="grid grid-cols-1 grid-rows-2">
+                <div class="grid grid-cols-1 grid-rows-3">
                     <div class="justify-self-end mb-4">
                         <Link :href="`/dashboard`"><button
                             class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                         >Dashboard</button>
                         </Link>
                     </div>
-                    <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg row-start-2" />
+                    <div>
+                        <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg row-start-2" />
+                    </div>
                 </div>
             </div>
+
+
 
             <div class="flex flex-col">
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                     <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
 
+                            <div
+                                class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
+                                role="alert"
+                                v-if="props.message"
+                            >
+                                <span class="font-medium">
+                                    {{props.message}}
+                                </span>
+                            </div>
 
-                            <table class="min-w-full divide-y divide-gray-200">
-                                <tbody class="bg-white divide-y divide-gray-200">
-                                <tr v-for="show in shows.data" :key="show.id">
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex items-center">
-                                            <div>
-                                                <div class="text-sm font-medium text-gray-900">
-                                                    <Link :href="`/shows/${show.id}`" class="text-indigo-600 hover:text-indigo-900">{{ show.name }}</Link>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
 
-                                    <td v-if="can.editShow" class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <Link :href="`/shows/${show.id}/edit`" class="text-indigo-600 hover:text-indigo-900">Edit</Link>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
+                            <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+                                <div class="p-6 bg-white border-b border-gray-200">
+                                    <div
+                                        class="relative overflow-x-auto shadow-md sm:rounded-lg"
+                                    >
+                                        <!-- Paginator -->
+                                        <Pagination :links="shows.links" class="mb-6"/>
 
-                            <!-- Paginator -->
-                            <Pagination :links="shows.links" class="mt-6"/>
+                                        <table
+                                            class="w-full text-sm text-left text-gray-500 dark:text-gray-400"
+                                        >
+                                            <thead
+                                                class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+                                            >
+                                            <tr>
+                                                <th scope="col" class="px-6 py-3">
+                                                    Poster
+                                                </th>
+                                                <th scope="col" class="px-6 py-3">
+                                                    Show Name
+                                                </th>
+                                                <th scope="col" class="px-6 py-3">
+                                                    Team
+                                                </th>
+                                                <th scope="col" class="px-6 py-3">
+                                                    Status
+                                                </th>
+                                                <th scope="col" class="px-6 py-3">
+                                                    Edit
+                                                </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr
+                                                v-for="show in shows.data"
+                                                :key="show.id"
+                                                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                                            >
+                                                <th
+                                                    scope="row"
+                                                    class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
+                                                >
+<!--                                                    <img :src="`/storage/images/${show.poster}`" class="rounded-full h-20 w-20 object-cover">-->
+                                                    <img :src="`https://cdn.not.tv/wp-content/uploads/2022/09/27220247/Ping.png`" class="rounded-full h-20 w-20 object-cover">
+                                                </th>
+                                                <th
+                                                    scope="row"
+                                                    class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
+                                                >
+                                                    <Link :href="`/shows/${show.id}`" class="text-blue-800 hover:text-blue-600">{{ show.name }}</Link>
+                                                </th>
+                                                <th
+                                                    scope="row"
+                                                    class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
+                                                >
+                                                </th>
+                                                <td class="px-6 py-4">
+
+                                                </td>
+                                                <td class="px-6 py-4">
+                                                    <Link :href="`/shows/${show.id}/edit`"><button
+                                                        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                                                    >Edit</button>
+                                                    </Link>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                        <!-- Paginator -->
+                                        <Pagination :links="shows.links" class="mt-6"/>
+                                    </div>
+                                </div>
+                            </div>
 
                         </div>
                     </div>
@@ -87,9 +155,13 @@ videoPlayer.fullPage = false
 chat.class = "chatSmall"
 
 let props = defineProps({
-    shows: Object,
     filters: Object,
-    can: Object
+    can: Object,
+    message: String,
+    shows: {
+        type: Object,
+        default: () => ({}),
+    }
 });
 
 let search = ref(props.filters.search);
@@ -100,6 +172,7 @@ watch(search, throttle(function (value) {
         replace: true
     });
 }, 300));
+
 </script>
 
 

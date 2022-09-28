@@ -10,8 +10,14 @@
         <div class="bg-white text-black p-5 mb-10">
 
             <div class="flex justify-between mb-3">
-                <h1 class="text-3xl font-semibold pb-3">Posts</h1>
-                <div class="grid grid-cols-1 grid-rows-2">
+                <div>
+                    <h1 class="text-3xl font-semibold pb-3">Posts</h1>
+                    <Link :href="`/posts/create`"><button
+                        class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded disabled:bg-gray-400"
+                    >Add Post</button>
+                    </Link>
+                </div>
+                <div class="grid grid-cols-1 grid-rows-3">
                     <div class="justify-self-end mb-4">
                         <Link :href="`/dashboard`"><button
                             class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
@@ -19,24 +25,27 @@
                         </Link>
                     </div>
                     <div>
-                        <Link :href="`/posts/create`"><button
-                        class="bg-green-500 hover:bg-green-600 text-white mx-2 px-4 py-2 rounded disabled:bg-gray-400"
-                        >Add Post</button>
-                        </Link>
+                        <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg row-start-2" />
                     </div>
                 </div>
             </div>
 
+
+
+
+
             <div class="mb-2">
-                Display our posts here of new events, blog items, etc.
+                New events, shows, episodes, movies, blog posts, channel updates, announcements, etc.
             </div>
+
 
             <div
                 class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
                 role="alert"
+                v-if="props.message"
             >
                     <span class="font-medium">
-                        Alerts go here.
+                        {{props.message}}
                     </span>
             </div>
 
@@ -45,6 +54,8 @@
                     <div
                         class="relative overflow-x-auto shadow-md sm:rounded-lg"
                     >
+                        <!-- Paginator -->
+                        <Pagination :links="posts.links" class="mb-6"/>
                         <table
                             class="w-full text-sm text-left text-gray-500 dark:text-gray-400"
                         >
@@ -69,23 +80,23 @@
                             </thead>
                             <tbody>
                             <tr
-                                v-for="post in posts"
+                                v-for="post in posts.data"
                                 :key="post.id"
                                 class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
                             >
-                                <th
+                                <td
                                     scope="row"
                                     class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                                 >
                                     {{ post.id }}
-                                </th>
-                                <th
+                                </td>
+                                <td
                                     scope="row"
                                     class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                                 >
                                     <Link :href="`/posts/${post.id}`" class="text-blue-800 hover:text-blue-600">{{ post.title }}</Link>
-                                </th>
-                                <td class="px-6 py-4">
+                                </td>
+                                <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                                     {{ post.slug }}
                                 </td>
 
@@ -107,6 +118,8 @@
                             </tr>
                             </tbody>
                         </table>
+                        <!-- Paginator -->
+                        <Pagination :links="posts.links" class="mt-6"/>
                     </div>
                 </div>
             </div>
@@ -119,11 +132,15 @@
 </template>
 
 <script setup>
+import Pagination from "@/Components/Pagination"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useChatStore } from "@/Stores/ChatStore.js"
 import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/NavigationMenu"
 import { useForm } from '@inertiajs/inertia-vue3'
+import {ref, watch} from "vue";
+import throttle from "lodash/throttle";
+import {Inertia} from "@inertiajs/inertia";
 
 let videoPlayer = useVideoPlayerStore()
 let chat = useChatStore()
@@ -133,12 +150,24 @@ videoPlayer.videoContainerClass = "videoContainerTopRight"
 videoPlayer.fullPage = false
 chat.class = "chatSmall"
 
-const props = defineProps({
+let props = defineProps({
+    filters: Object,
+    can: Object,
     posts: {
         type: Object,
         default: () => ({}),
     },
+    message: String,
 });
+
+let search = ref(props.filters.search);
+
+watch(search, throttle(function (value) {
+    Inertia.get('/posts', { search: value }, {
+        preserveState: true,
+        replace: true
+    });
+}, 300));
 
 const form = useForm();
 

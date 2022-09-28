@@ -8,13 +8,18 @@
     <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
         <div class="bg-white text-black p-5 mb-10">
 
-            <div class="flex justify-between mb-6">
+            <div class="flex justify-between mb-2">
                 <div class="grid grid-cols-1 grid-rows-2">
-                    <h1 class="text-3xl font-semibold">Channels</h1>
-                    <Link href="#" class="text-blue-500 text-sm">New Channel</Link>
+                        <div>
+                            <h1 class="text-3xl font-semibold pb-3">Channels</h1>
+                            <Link :href="`/channels/create`"><button
+                                class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded disabled:bg-gray-400"
+                            >Add Channel</button>
+                            </Link>
+                        </div>
                 </div>
                 <div class="grid grid-cols-1 grid-rows-2">
-                    <div class="justify-self-end mb-4">
+                    <div class="justify-self-end">
                         <Link :href="`/dashboard`"><button
                             class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                         >Dashboard</button>
@@ -22,15 +27,16 @@
                     </div>
                 </div>
             </div>
+            <div class="bg-orange-300 px-2">
+                Add a channel: create playlist and add shows.
+            </div>
 
             <div class="flex flex-col">
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                     <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
 
-                            <div class="bg-orange-300 px-2">
-                                Edit a channels playlist and shows.
-                            </div>
+
 
                         </div>
                     </div>

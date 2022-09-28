@@ -24,9 +24,11 @@ class ShowFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->word(),
-            'description' => $this->faker->paragraph(3),
-            'poster' => 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/EBU_Colorbars.svg/1280px-EBU_Colorbars.svg.png'
+            'name' => $this->faker->sentence($nbWords = 3, $variableNbWords = true),
+            'description' => $this->faker->paragraph,
+            'poster' => 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/EBU_Colorbars.svg/1280px-EBU_Colorbars.png',
+            'user_id' => \App\Models\User::all()->random()->id,
+            'team_id' => \App\Models\Team::all()->random()->id
         ];
     }
 

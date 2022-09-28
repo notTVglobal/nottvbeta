@@ -11,21 +11,28 @@
 
 
 <!--    <div class="bg-white rounded text-black p-5 mb-10 py-20 w-3/4">-->
-        <div class="flex justify-between mb-6">
-            <div class="grid grid-cols-1 grid-rows-2">
-                <h1 class="text-3xl font-semibold">Teams</h1>
-                <Link href="/teams/create" class="text-blue-500 text-sm">New Team</Link>
-            </div>
-            <div class="grid grid-cols-1 grid-rows-2">
-                <div class="justify-self-end mb-4">
-                    <Link :href="`/dashboard`"><button
-                    class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                    >Dashboard</button>
+
+            <div class="flex justify-between mb-3">
+                <div>
+                    <h1 class="text-3xl font-semibold pb-3">Teams</h1>
+                    <Link :href="`/teams/create`"><button
+                        class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded disabled:bg-gray-400"
+                    >Add Team</button>
                     </Link>
                 </div>
-                <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg" />
+                <div class="grid grid-cols-1 grid-rows-3">
+                    <div class="justify-self-end mb-4">
+                        <Link :href="`/dashboard`"><button
+                            class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                        >Dashboard</button>
+                        </Link>
+                    </div>
+                    <div>
+                        <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg row-start-2" />
+                    </div>
+                </div>
             </div>
-        </div>
+
 
 
 
@@ -34,40 +41,98 @@
                 <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                     <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
 
+                        <div
+                            class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
+                            role="alert"
+                            v-if="props.message"
+                        >
+                                <span class="font-medium">
+                                    {{props.message}}
+                                </span>
+                        </div>
 
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <tbody class="bg-white divide-y divide-gray-200">
-                            <tr v-for="team in teams.data" :key="team.id">
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        <div>
-                                            <div class="text-sm font-medium text-gray-900">
-                                                <Link :href="`/teams/${team.id}`" class="text-indigo-600 hover:text-indigo-900">{{ team.name }}</Link>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
 
-                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                    <Link :href="`/teams/${team.id}/edit`" class="text-indigo-600 hover:text-indigo-900">Edit</Link>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
 
-                        <!-- Paginator -->
-                        <Pagination :links="teams.links" class="mt-6"/>
+                        <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+                            <div class="p-6 bg-white border-b border-gray-200">
+                                <div
+                                    class="relative overflow-x-auto shadow-md sm:rounded-lg"
+                                >
+                                    <!-- Paginator -->
+                                    <Pagination :links="teams.links" class="mb-6"/>
+
+                                    <table
+                                        class="w-full text-sm text-left text-gray-500 dark:text-gray-400"
+                                    >
+                                        <thead
+                                            class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+                                        >
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3">
+                                                Logo
+                                            </th>
+                                            <th scope="col" class="px-6 py-3">
+                                                Team Name
+                                            </th>
+                                            <th scope="col" class="px-6 py-3">
+                                                # of Members
+                                            </th>
+                                            <th scope="col" class="px-6 py-3">
+                                                Total Members Allowed
+                                            </th>
+                                            <th scope="col" class="px-6 py-3">
+                                                Edit
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr
+                                            v-for="team in teams.data"
+                                            :key="team.id"
+                                            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                                        >
+                                            <th
+                                                scope="row"
+                                                class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
+                                            >
+<!--                                                <img :src="`/storage/${team.logo}`" class="rounded-full h-20 w-20 object-cover">-->
+                                                <img :src="`https://cdn.not.tv/wp-content/uploads/2022/09/27220247/Ping.png`" class="rounded-full h-20 w-20 object-cover">
+                                            </th>
+                                            <th
+                                                scope="row"
+                                                class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
+                                            >
+                                                <Link :href="`/teams/${team.id}`" class="text-blue-800 hover:text-blue-600">{{ team.name }}</Link>
+                                            </th>
+                                            <th
+                                                scope="row"
+                                                class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
+                                            >
+                                                {{ team.memberSpots }}
+                                            </th>
+                                            <td class="px-6 py-4">
+                                                {{ team.totalSpots }}
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <Link :href="`/teams/${team.id}/edit`"><button
+                                                    class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                                                >Edit</button>
+                                                </Link>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <!-- Paginator -->
+                                    <Pagination :links="teams.links" class="mt-6"/>
+                                </div>
+                            </div>
+                        </div>
 
                     </div>
                 </div>
             </div>
         </div>
 
-
-        <div class="flex items-center">
-            <!--               <Link :href="`/shows/${show.id}`" class="text-indigo-600 hover:text-indigo-900">Link to a show</Link>-->
-
-        </div>
     </div>
     </div>
 
@@ -94,7 +159,8 @@ chat.class = "chatSmall"
 let props = defineProps({
     teams: Object,
     filters: Object,
-    can: Object
+    can: Object,
+    message: String
 });
 
 let search = ref(props.filters.search);
