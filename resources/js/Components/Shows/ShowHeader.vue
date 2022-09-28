@@ -21,24 +21,21 @@
             </div>
         </div>
         <div class="space-y-4 mr-8">
-            <div class="">
-                <button
-                    class="bg-red-500 hover:bg-red-600 text-white ml-6 px-4 py-2 rounded disabled:bg-gray-400"
-                    @click="$emit('add')"
-                >Stream Live</button>
-            </div>
-            <div class="">
+                <Link
+                    class="bg-red-500 hover:bg-red-600 text-white ml-6 px-4 py-3 rounded disabled:bg-gray-400"
+                    :href="`/golive`"
+                >Go Live</Link>
                 <Link
                     class="bg-blue-500 hover:bg-blue-600 text-white ml-6 px-4 py-3 rounded disabled:bg-gray-400"
                     :href="`/shows/${show.id}/edit`"
                 >Edit Show</Link>
-            </div>
-            <div class="">
+
+
                 <button
                     class="bg-green-500 hover:bg-green-600 text-white ml-6 px-4 py-2 rounded disabled:bg-gray-400"
                     @click="$emit('add')"
                 >Add Episode</button>
-            </div>
+
         </div>
     </header>
 
