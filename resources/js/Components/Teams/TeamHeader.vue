@@ -40,16 +40,16 @@
 </template>
 
 <script setup>
-// import {useTeamStore} from "@/Stores/TeamStore.js";
+import {useTeamStore} from "@/Stores/TeamStore.js";
 import { ref, computed } from 'vue';
 
-// let teamStore = useTeamStore();
+let teamStore = useTeamStore();
 
 let props = defineProps({
     team: Object
 });
-//
-// const a = ref(3)
-// const spotsRemaining = computed(() => props.team.memberSpots - a )
+
+const a = ref(3)
+const spotsRemaining = computed(() => props.team.memberSpots - a )
 
 </script>

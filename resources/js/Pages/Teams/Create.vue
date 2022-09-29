@@ -11,7 +11,7 @@
         <div class="flex justify-between mt-3 mb-6">
             <div class="text-3xl">Create New Team</div>
             <div>
-                <Link :href="`/teams`"><button
+                <Link :href="`/dashboard`"><button
                     class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
                 >Cancel</button>
                 </Link>

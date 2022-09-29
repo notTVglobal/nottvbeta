@@ -1,9 +1,17 @@
 <template>
 <div class="bg-orange-300 p-2 font-bold">Team Members</div>
+    <button
+        class="bg-green-500 hover:bg-green-600 text-white my-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
+        :disabled="! spotsRemaining"
+        @click="$emit('add')"
+    >Add Member ({{ spotsRemaining }} spots left)</button>
     <table class="min-w-full divide-y divide-gray-200">
         <thead class="bg-white divide-y divide-gray-200">
         <!--                                <tr v-for="episode in episodes.data" :key="episode.id">-->
         <tr>
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <!-- Avatar -->
+            </td>
             <td class="px-6 py-4 whitespace-nowrap">
                 <div class="flex items-center">
                     <div>
@@ -13,6 +21,14 @@
                         </div>
                     </div>
                 </div>
+            </td>
+
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                Position
+            </td>
+
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                Phone
             </td>
 
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
