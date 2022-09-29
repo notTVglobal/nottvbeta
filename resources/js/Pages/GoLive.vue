@@ -21,6 +21,7 @@
                 <div class="grid grid-cols-1 grid-rows-2">
                     <h1 class="text-3xl font-semibold">Go Live</h1>
                 </div>
+                <div><span class="text-xs font-semibold text-purple-700">Creator Mode</span></div>
                 <div class="grid grid-cols-1 grid-rows-2">
                     <div class="justify-self-end">
                         <Link :href="`/dashboard`"><button

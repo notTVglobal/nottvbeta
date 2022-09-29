@@ -18,6 +18,7 @@
                             </Link>
                         </div>
                 </div>
+                <span class="text-xs font-semibold text-red-700">Admin Mode</span>
                 <div class="grid grid-cols-1 grid-rows-2">
                     <div class="justify-self-end">
                         <Link :href="`/dashboard`"><button

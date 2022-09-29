@@ -20,6 +20,7 @@
                     >Add Team</button>
                     </Link>
                 </div>
+                <span class="text-xs font-semibold text-red-700">Admin Mode</span>
                 <div class="grid grid-cols-1 grid-rows-3">
                     <div class="justify-self-end mb-4">
                         <Link :href="`/dashboard`"><button
@@ -160,7 +161,7 @@ let props = defineProps({
     teams: Object,
     filters: Object,
     can: Object,
-    message: String
+    message: String,
 });
 
 let search = ref(props.filters.search);
