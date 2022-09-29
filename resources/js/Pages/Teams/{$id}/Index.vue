@@ -1,6 +1,6 @@
 <template>
 
-    <Head :title="props.team.name + ' Team'" />
+    <Head :title="props.team.name" />
     <div class="sticky top-0 w-full nav-mask">
         <ResponsiveNavigationMenu/>
         <NavigationMenu />
