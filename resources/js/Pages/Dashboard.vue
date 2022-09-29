@@ -12,6 +12,10 @@
 
             <div class="flex justify-between mb-3">
                 <h1 class="text-3xl font-semibold pb-3">Dashboard</h1>
+                <div>
+                    <span class="text-xs font-semibold text-purple-700">Creator Mode</span>
+                    <span v-show="can.viewAdmin" class="text-xs font-semibold text-black"> | </span><span v-show="can.viewAdmin" class="text-xs font-semibold text-red-700">Admin Mode</span>
+                </div>
                 <Link :href="`/golive`"><button
                     class="bg-red-500 hover:bg-red-600 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
                 >Go Live</button>

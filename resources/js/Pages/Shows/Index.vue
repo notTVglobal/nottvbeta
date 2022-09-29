@@ -16,6 +16,7 @@
                     >Add Show</button>
                     </Link>
                 </div>
+                <div><span class="text-xs font-semibold text-purple-700">Creator Mode</span></div>
                 <div class="grid grid-cols-1 grid-rows-3">
                     <div class="justify-self-end mb-4">
                         <Link :href="`/dashboard`"><button

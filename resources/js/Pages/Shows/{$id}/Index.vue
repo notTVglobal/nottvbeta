@@ -52,6 +52,13 @@
 <!--                            <Pagination :links="episode.links" class="mt-6"/>-->
 
                         </div>
+
+                        <div class="bg-orange-300 w-full mt-6 p-2 rounded font-bold">Credits</div>
+                        <button
+                            class="bg-green-500 hover:bg-green-600 text-white my-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
+                        >Create Assignment</button>
+                        <div class="p-2">Coming Soon!</div>
+
                         <ShowFooter />
                     </div>
                 </div>
