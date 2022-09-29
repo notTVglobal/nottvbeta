@@ -10,8 +10,16 @@
             {{  description }}
         </td>
 
+        <td class="text-gray-500 px-6 py-4 text-sm">
+            Notes go here.
+        </td>
+
+        <td class="text-gray-500 px-6 py-4 text-sm">
+            {{  number }}
+        </td>
+
         <td class="px-6 py-4">
-            <button class="text-green-400 text-xl font-semibold">{{ poster }}</button>
+            <button class="text-green-400 text-xl font-semibold">Status</button>
         </td>
     </tr>
 </template>
@@ -20,6 +28,9 @@
 defineProps({
    name: String,
    description: String,
+    number: String,
+    notes: String,
    poster: String,
+    status: String,
 });
 </script>

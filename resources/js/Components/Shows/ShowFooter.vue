@@ -1,9 +1,9 @@
 <template>
 
-    <div class="mt-6">
+    <div class="flex justify-start mt-6">
         <!-- Paginator -->
         <!--                            <Pagination :links="`#`" class="mt-6"/>-->
-        Footer here.
+        <Link href="/teams/1" class="text-blue-500 ml-2">Team Name © 2022 </Link>
     </div>
 
 </template>

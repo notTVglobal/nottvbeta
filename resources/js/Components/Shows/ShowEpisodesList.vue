@@ -22,6 +22,14 @@
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                 Notes
             </td>
+
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                Ep.#
+            </td>
+
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                Status
+            </td>
         </tr>
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">

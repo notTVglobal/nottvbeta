@@ -16,21 +16,6 @@
 
 
             <div class="flex justify-between mb-3">
-                <Link href="/teams" class="text-blue-500 text-sm ml-2">All Teams</Link>
-                <div class="space-x-4">
-                    <Link
-                        :href="`/teams/${props.team.id}/edit`"><button
-                        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                    >Edit Team</button>
-                    </Link>
-                    <Link :href="`/dashboard`"><button
-                        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                    >Dashboard</button>
-                    </Link>
-                </div>
-            </div>
-
-            <header class="flex justify-between">
                 <div>
                     <h3 class="inline-flex items-center text-3xl font-semibold relative">
                         <img :src="`/storage/images/oeV64kpa339M8tmLEZrERCb7bLfuAy8BIqJ17x8t.png`" alt="" class="w-20 mr-2">
@@ -45,6 +30,22 @@
                     </p>
 
                 </div>
+                <span class="text-xs font-semibold text-purple-700">Creator Mode</span>
+                <div class="space-x-4">
+                    <Link
+                        :href="`/teams/${props.team.id}/edit`"><button
+                        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                    >Edit Team</button>
+                    </Link>
+                    <Link :href="`/dashboard`"><button
+                        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                    >Dashboard</button>
+                    </Link>
+                </div>
+            </div>
+
+            <header class="flex justify-between">
+
             </header>
 
 
