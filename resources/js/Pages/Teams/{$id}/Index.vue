@@ -15,7 +15,7 @@
 
 
 
-            <div class="flex justify-between mb-3">
+            <header class="flex justify-between mb-3">
                 <div>
                     <h3 class="inline-flex items-center text-3xl font-semibold relative">
                         <img :src="`/storage/images/oeV64kpa339M8tmLEZrERCb7bLfuAy8BIqJ17x8t.png`" alt="" class="w-20 mr-2">
@@ -25,12 +25,9 @@
                             {{ props.team.memberSpots }}
                         </div>
                     </h3>
-                    <p class="mb-6 p-5">
-                        {{ props.team.description }}
-                    </p>
 
                 </div>
-                <span class="text-xs font-semibold text-purple-700">Creator Mode</span>
+                <div><span class="text-xs font-semibold text-purple-700">Creator Mode</span></div>
                 <div class="space-x-4">
                     <Link
                         :href="`/teams/${props.team.id}/edit`"><button
@@ -42,11 +39,11 @@
                     >Dashboard</button>
                     </Link>
                 </div>
-            </div>
-
-            <header class="flex justify-between">
-
             </header>
+
+            <p class="mb-6 p-5">
+                {{ props.team.description }}
+            </p>
 
 
             <div class="flex flex-col">
