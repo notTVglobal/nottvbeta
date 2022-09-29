@@ -1534,7 +1534,7 @@ var _hoisted_6 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementV
 
 var _hoisted_7 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
   "class": "text-xs font-semibold text-red-700"
-}, "Admin Mode ", -1
+}, "Admin Mode", -1
 /* HOISTED */
 );
 
