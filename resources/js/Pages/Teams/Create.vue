@@ -67,7 +67,7 @@
                 />
                 <div v-if="form.errors.totalSpots" v-text="form.errors.totalSpots" class="text-xs text-red-600 mt-1"></div>
             </div>
-            <div><input v-model="form.user_id" :value="props.user.id" hidden></div>
+            <div><input v-model="form.user_id" hidden></div>
             <div class="flex justify-between mb-6">
                 <button
                     type="submit"
