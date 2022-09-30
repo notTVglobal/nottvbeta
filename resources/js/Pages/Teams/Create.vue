@@ -27,7 +27,7 @@
                 </label>
 
                 <input v-model="form.name"
-                       class="border border-gray-400 p-2 w-full rounded-lg"
+                       class="bg-gray-50 border border-gray-400 text-gray-900 text-sm p-2 w-full rounded-lg focus:ring-blue-500 focus:border-blue-500 "
                        type="text"
                        name="name"
                        id="name"
@@ -35,6 +35,7 @@
                 >
                 <div v-if="form.errors.name" v-text="form.errors.name" class="text-xs text-red-600 mt-1"></div>
             </div>
+
             <div class="mb-6">
                 <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
                        for="description"
@@ -42,15 +43,31 @@
                     Description
                 </label>
 
-                <input v-model="form.description"
-                       class="border border-gray-400 p-2 w-full rounded-lg"
+                <textarea v-model="form.description"
+                       class="bg-gray-50 border border-gray-400 text-gray-900 text-sm p-2 w-full rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                        type="text"
                        name="description"
                        id="description"
                        required
-                >
+                ></textarea>
                 <div v-if="form.errors.description" v-text="form.errors.description" class="text-xs text-red-600 mt-1"></div>
             </div>
+
+            <div class="mb-6">
+                <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
+                       for="totalSpots"
+                >
+                    Maximum # of Team Members
+                </label>
+                <input v-model="form.totalSpots"
+                       class="bg-gray-50 border border-gray-400 text-gray-900 text-sm p-2 w-full rounded-lg focus:ring-blue-500 focus:border-blue-500 "
+                       type="text"
+                       name="totalSpots"
+                       id="totalSpots"
+                />
+                <div v-if="form.errors.totalSpots" v-text="form.errors.totalSpots" class="text-xs text-red-600 mt-1"></div>
+            </div>
+            <div><input v-model="form.user_id" :value="props.user.id" hidden></div>
             <div class="flex justify-between mb-6">
                 <button
                     type="submit"
@@ -74,6 +91,7 @@ import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useChatStore } from "@/Stores/ChatStore.js"
 import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/NavigationMenu"
+import { ref } from 'vue';
 
 let videoPlayer = useVideoPlayerStore()
 let chat = useChatStore()
@@ -83,9 +101,15 @@ videoPlayer.videoContainerClass = "videoContainerTopRight"
 videoPlayer.fullPage = false
 chat.class = "chatSmall"
 
+let props = defineProps({
+    user: Object,
+})
+
 let form = useForm({
     name: '',
     description: '',
+    totalSpots: '1',
+    user_id: props.user.id,
 });
 
 function reset() {

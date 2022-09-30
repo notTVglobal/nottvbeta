@@ -22,6 +22,7 @@
 <!--            </div>-->
 <!--        </div>-->
         </div>
+        <div class="p-2 text-red-600">This section is in development. Not currently working.</div>
     </div>
 </template>
 

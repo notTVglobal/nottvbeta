@@ -45,40 +45,35 @@
                 {{ props.team.description }}
             </p>
 
+            <div
+                class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
+                role="alert"
+                v-if="props.message"
+            >
+                                <span class="font-medium">
+                                    {{props.message}}
+                                </span>
+            </div>
+
 
             <div class="flex flex-col">
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                     <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-
-                            <div
-                                class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
-                                role="alert"
-                                v-if="props.message"
-                            >
-                                <span class="font-medium">
-                                    {{props.message}}
-                                </span>
-                            </div>
-
-                            <TeamMembersList />
-
-<!--                        <TeamFooter />-->
-
-
+                            <TeamMembersList :memberSpots="props.team.memberSpots" :totalSpots="props.team.totalSpots"/>
                         </div>
-                        <div class="bg-orange-300 w-full mt-6 p-2 rounded font-bold">Team Assignments</div>
-                        <button
-                            class="bg-green-500 hover:bg-green-600 text-white my-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
-                        >Create Assignment</button>
-                        <div class="p-2">Coming Soon!</div>
 
-                        <div class="bg-orange-300 w-full mt-6 p-2 rounded font-bold">Shows</div>
-                        <Link
-                            :href="`/shows/create`"><button
-                            class="bg-green-500 hover:bg-green-600 text-white my-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
-                        >Create Show</button></Link>
-                        <div class="p-2">This section is in development.</div>
+                        <div class="mt-4 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                            <TeamShowsList />
+                        </div>
+
+                        <div class="mt-4 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                            <TeamAssignmentsList />
+                        </div>
+
+                        <!--  <TeamFooter />  -->
+
                     </div>
                 </div>
             </div>
@@ -127,6 +122,8 @@ import Modal from "@/Components/Modal"
 import { ref, reactive, computed } from 'vue'
 import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/NavigationMenu"
+import TeamShowsList from "@/Components/Teams/TeamShowsList";
+import TeamAssignmentsList from "@/Components/Teams/TeamAssignmentsList";
 
 let videoPlayer = useVideoPlayerStore()
 let chat = useChatStore()

@@ -1,38 +1,34 @@
 <template>
-<div class="bg-orange-300 p-2 font-bold">Team Members</div>
-    <button
+    <div class="bg-orange-300 p-2 font-bold">Shows</div>
+    <Link
+        :href="`/shows/create`"><button
         class="bg-green-500 hover:bg-green-600 text-white ml-2 my-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
-        :disabled="! spotsRemaining"
-        @click="$emit('add')"
-    >Add Member ({{ spotsRemaining }} spots left)</button>
+    >Create Show</button></Link>
     <table class="min-w-full divide-y divide-gray-200">
         <thead class="bg-white divide-y divide-gray-200">
         <!--                                <tr v-for="episode in episodes.data" :key="episode.id">-->
         <tr>
-            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                <!-- Avatar -->
-            </td>
             <td class="px-6 py-4 whitespace-nowrap">
                 <div class="flex items-center">
                     <div>
-                        <div class="text-sm font-medium text-gray-900">
+                        <div class="text-sm font-medium text-gray-900 pl-14">
                             <!--                                                    <Link :href="`/admin/users/${episode.id}`" class="text-indigo-600 hover:text-indigo-900">{{ episode.name }}</Link>-->
-                            Name
+                            Title
                         </div>
                     </div>
                 </div>
             </td>
 
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                Position
+                Description
             </td>
 
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                Phone
+                Show Runner
             </td>
 
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                Email
+                Notes
             </td>
 
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -42,7 +38,7 @@
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
         <!--                                <tr v-for="episode in episodes.data" :key="episode.id">-->
-<!--        <TeamMember v-for="member in team.members" :name="member.name" :email="member.email" :status="member.status" />-->
+<!--        <ShowEpisode v-for="episode in show.episodes" :name="episode.name" :description="episode.description" :poster="episode.poster" />-->
         </tbody>
 
     </table>
@@ -50,21 +46,9 @@
 </template>
 
 <script setup>
-import TeamMember from "@/Components/Teams/TeamMember.vue";
-import {useTeamStore} from "@/Stores/TeamStore";
-import {computed, reactive, ref} from "vue";
+import ShowEpisode from "@/Components/Shows/ShowEpisode.vue";
+import {useShowStore} from "@/Stores/ShowStore";
 
-// let team = useTeamStore();
-
-let props = defineProps({
-    memberSpots: Number,
-    totalSpots: Number,
-})
-
-// let showModal = ref(false);
-let a = reactive(props.memberSpots)
-let b = reactive(props.totalSpots);
-let spotsRemaining = computed(() => b - a)
-
+let show = useShowStore();
 
 </script>

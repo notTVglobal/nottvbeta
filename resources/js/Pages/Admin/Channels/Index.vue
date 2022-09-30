@@ -12,7 +12,7 @@
                 <div class="grid grid-cols-1 grid-rows-2">
                         <div>
                             <h1 class="text-3xl font-semibold pb-3">Channels</h1>
-                            <Link :href="`/channels/create`"><button
+                            <Link :href="`#`"><button
                                 class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded disabled:bg-gray-400"
                             >Add Channel</button>
                             </Link>
@@ -28,6 +28,7 @@
                     </div>
                 </div>
             </div>
+            <div class="p-2 text-red-600">This section is in development. Not currently working.</div>
             <div class="bg-orange-300 px-2">
                 Add a channel: create playlist and add shows.
             </div>

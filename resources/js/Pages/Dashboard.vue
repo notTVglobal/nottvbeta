@@ -66,17 +66,11 @@
 
             <section class="grid grid-cols-1 lg:grid-cols-3 gap-4 my-3 mx-2 m-auto text-black">
                 <div class="p-5 bg-gray-200 rounded">
-                    <div class="mb-3 bg-orange-300 px-2 text-xs">
+                    <div class="mb-3 bg-orange-300 py-1 px-2 text-xs font-semibold text-red-800">
                         In development. Not currently working.
                     </div>
                     <div class="mb-3 grid grid-cols-1">
-                        <div class="mb-1 font-semibold text-xl justify-self-start">My Assignments</div>
-                        <div class="justify-self-start">
-                            <Link :href="`#`"><button
-                            class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 text-xs rounded disabled:bg-gray-400"
-                            >Create Assignment</button>
-                            </Link>
-                        </div>
+                        <div class="mb-1 font-semibold text-xl justify-self-start">Open Assignments</div>
                     </div>
                     <div class="ml-3">
                         <li>
@@ -85,51 +79,8 @@
                     </div>
                 </div>
                 <div class="p-5 bg-gray-200 rounded">
-                    <div class="mb-3 bg-orange-300 px-2 text-xs">
-                        In development. Not currently working.
-                    </div>
-                    <div class="mb-3 grid md:grid-cols-1">
-                        <div class="mb-1 font-semibold text-xl justify-self-start">My Episodes</div>
-                        <div class="justify-self-start">
-                            <Link :href="`#`"><button
-                            class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 text-xs rounded disabled:bg-gray-400"
-                            >New Episode</button>
-                            </Link>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-1">
-                        <div class="">
-                            <p class=""><Link
-                                @click="videoPlayer.makeVideoTopRight()"
-                                :href="`#`"
-                                class="text-blue-800 hover:text-blue-400">
-                                Epsiode ### or NAME
-                            </Link></p>
-                            <p class=""><Link
-                                @click="videoPlayer.makeVideoTopRight()"
-                                :href="`#`"
-                                class="text-blue-800 hover:text-blue-400">
-                                Epsiode ### or NAME
-                            </Link></p>
-                            <p class=""><Link
-                                @click="videoPlayer.makeVideoTopRight()"
-                                :href="`#`"
-                                class="text-blue-800 hover:text-blue-400">
-                                Epsiode ### or NAME
-                            </Link></p>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="p-5 bg-gray-200 rounded">
                     <div class="mb-3 grid grid-cols-1">
                         <div class="mb-1 font-semibold text-xl justify-self-start">My Shows</div>
-                        <div class="justify-self-start">
-                            <Link :href="`/shows/create`"><button
-                                class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 text-xs rounded disabled:bg-gray-400"
-                            >New Show</button>
-                            </Link>
-                        </div>
                     </div>
                     <p class=""><Link
                         @click="videoPlayer.makeVideoTopRight()"
@@ -181,6 +132,7 @@
                 <div class="font-semibold text-2xl text-gray-800 px-2">
                     Account Summary
                 </div>
+                <div class="p-2 text-red-600">This section is in development. Not currently working.</div>
                 <div class="px-2">
                     Account: 000000
                 </div>

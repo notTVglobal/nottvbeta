@@ -30,7 +30,7 @@
                     </div>
                 </div>
             </div>
-
+            <div class="p-2 text-red-600">This section is in development. Not currently working.</div>
             <p class="mb-8">
                 Display a grid of movies and documentaries available for free, PPV and to purchase. Also search, and browse by category/date/popularity.
             </p>

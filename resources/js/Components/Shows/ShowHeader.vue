@@ -18,7 +18,7 @@
         {{ show.description }}
     </p>
 
-    <header class="flex justify-end mb-2">
+    <header class="flex justify-end mb-4">
         <div class="space-x-2">
                 <Link
                     class="bg-red-500 hover:bg-red-600 text-white px-4 py-3 rounded disabled:bg-gray-400"
@@ -28,10 +28,6 @@
                     class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-3 rounded disabled:bg-gray-400"
                     :href="`/shows/${show.id}/edit`"
                 >Edit Show</Link>
-                <button
-                    class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded disabled:bg-gray-400"
-                    @click="$emit('add')"
-                >Add Episode</button>
         </div>
     </header>
 

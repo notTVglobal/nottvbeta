@@ -26,8 +26,9 @@ class TeamsController extends Controller
                     'id' => $team->id,
                     'name' => $team->name,
                     'logo' => $team->logo,
+                    'user_id' => $team->user_id,
                     'memberSpots' => $team->memberSpots,
-                    'totalSpots' => $team->totalSpots
+                    'totalSpots' => $team->totalSpots,
                 ]),
             'filters' => Request::only(['search'])
         ]);
@@ -56,6 +57,7 @@ class TeamsController extends Controller
             'description' => 'required',
             'logo',
             'totalSpots',
+            'user_id' => 'required'
         ]);
         // create the team
         Team::create($attributes);

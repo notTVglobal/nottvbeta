@@ -56,11 +56,12 @@
 
                         <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                             <div class="p-6 bg-white border-b border-gray-200">
+                                <!-- Paginator -->
+                                <Pagination :links="teams.links" class="mb-6"/>
                                 <div
                                     class="relative overflow-x-auto shadow-md sm:rounded-lg"
                                 >
-                                    <!-- Paginator -->
-                                    <Pagination :links="teams.links" class="mb-6"/>
+
 
                                     <table
                                         class="w-full text-sm text-left text-gray-500 dark:text-gray-400"
@@ -76,10 +77,10 @@
                                                 Team Name
                                             </th>
                                             <th scope="col" class="px-6 py-3">
-                                                # of Members
+                                                Team Lead
                                             </th>
                                             <th scope="col" class="px-6 py-3">
-                                                Total Members Allowed
+                                                # of Members
                                             </th>
                                             <th scope="col" class="px-6 py-3">
                                                 Edit
@@ -109,10 +110,13 @@
                                                 scope="row"
                                                 class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                                             >
-                                                {{ team.memberSpots }}
+                                                {{ team.user_id }}
                                             </th>
-                                            <td class="px-6 py-4">
-                                                {{ team.totalSpots }}
+                                            <td
+                                                scope="row"
+                                                class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
+                                            >
+                                                {{ team.memberSpots }}
                                             </td>
                                             <td class="px-6 py-4">
                                                 <Link :href="`/teams/${team.id}/edit`"><button

@@ -14,5 +14,6 @@ class Team extends Model
         'description',
         'logo',
         'totalSpots',
+        'user_id',
     ];
 }

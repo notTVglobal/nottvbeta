@@ -27,7 +27,7 @@
                 </label>
 
                 <input v-model="form.name"
-                       class="border border-gray-400 p-2 w-full rounded-lg"
+                       class="bg-gray-50 border border-gray-400 text-gray-900 text-sm p-2 w-full rounded-lg focus:ring-blue-500 focus:border-blue-500"
                        type="text"
                        name="name"
                        id="name"
@@ -35,20 +35,20 @@
                 >
                 <div v-if="form.errors.name" v-text="form.errors.name" class="text-xs text-red-600 mt-1"></div>
             </div>
+
             <div class="mb-6">
                 <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
                        for="description"
                 >
                     Description
                 </label>
-
-                <input v-model="form.description"
-                       class="border border-gray-400 p-2 w-full rounded-lg"
-                       type="text"
-                       name="description"
-                       id="description"
-                       required
-                >
+                <textarea v-model="form.description"
+                          class="bg-gray-50 border border-gray-400 text-gray-900 text-sm p-2 w-full rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                          type="text"
+                          name="description"
+                          id="description"
+                          required
+                ></textarea>
                 <div v-if="form.errors.description" v-text="form.errors.description" class="text-xs text-red-600 mt-1"></div>
             </div>
 
@@ -90,10 +90,15 @@ videoPlayer.videoContainerClass = "videoContainerTopRight"
 videoPlayer.fullPage = false
 chat.class = "chatSmall"
 
+let props = defineProps({
+    user: Object,
+})
+
 let form = useForm({
     name: '',
     description: '',
-    poster: ''
+    poster: '',
+    user_id: props.user.id,
 });
 
 function reset() {
