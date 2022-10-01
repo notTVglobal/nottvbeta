@@ -1,12 +1,13 @@
 import { defineStore } from "pinia";
 
-export let useShowStore = defineStore('show', {
+export let useShowStore = defineStore('showStore', {
     state: () => ({
         id: 0,
         name: '',
         description: '',
         poster: '',
-        episodes: []
+        episodes: [],
+        team_id: 'team id',
     }),
 
     actions: {

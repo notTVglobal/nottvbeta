@@ -57,7 +57,7 @@
                             <ShowCreditsList />
                         </div>
 
-                        <ShowFooter />
+                        <ShowFooter :show="props.show.team_id"/>
                     </div>
                 </div>
             </div>
@@ -80,6 +80,8 @@ import ShowCreditsList from "@/Components/Shows/ShowCreditsList";
 
 let videoPlayer = useVideoPlayerStore()
 let chat = useChatStore()
+let showStore = useShowStore();
+showStore.fill();
 
 videoPlayer.class = "videoTopRight"
 videoPlayer.videoContainerClass = "videoContainerTopRight"
@@ -92,8 +94,7 @@ let props = defineProps({
     message: String
 });
 
-let show = useShowStore();
-show.fill();
+
 
 
 </script>

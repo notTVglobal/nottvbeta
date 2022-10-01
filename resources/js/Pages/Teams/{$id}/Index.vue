@@ -114,7 +114,7 @@
 <script setup>
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useChatStore } from "@/Stores/ChatStore.js"
-// import { useTeamStore } from "@/Stores/TeamStore.js"
+import { useTeamStore } from "@/Stores/TeamStore.js"
 // import TeamHeader from "@/Components/Teams/TeamHeader"
 import TeamMembersList from "@/Components/Teams/TeamMembersList"
 import TeamFooter from "@/Components/Teams/TeamFooter"
@@ -133,13 +133,15 @@ videoPlayer.videoContainerClass = "videoContainerTopRight"
 videoPlayer.fullPage = false
 chat.class = "chatSmall"
 
-// let team = useTeamStore();
+let teamStore = useTeamStore();
 // team.fill();
 
 let props = defineProps({
     team: Object,
     message: String
 });
+
+teamStore.setActiveTeam(props.team.id);
 
 let showModal = ref(false);
 let a = reactive(props.team.memberSpots)

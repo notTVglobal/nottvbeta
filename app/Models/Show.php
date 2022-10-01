@@ -18,5 +18,7 @@ class Show extends Model
         'name',
         'description',
         'poster',
+        'user_id',
+        'team_id',
     ];
 }

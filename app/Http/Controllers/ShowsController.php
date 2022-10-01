@@ -63,7 +63,9 @@ class ShowsController extends Controller
             // validate the request
             $attributes = Request::validate([
                 'name' => 'required',
-                'description' => 'required'
+                'description' => 'required',
+                'user_id' => 'required',
+                'team_id' => 'required',
             ]);
             // create the user
             Show::create($attributes);

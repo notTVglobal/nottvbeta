@@ -674,17 +674,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Stores/VideoPlayerStore.js */ "./resources/js/Stores/VideoPlayerStore.js");
 /* harmony import */ var _Stores_ChatStore_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Stores/ChatStore.js */ "./resources/js/Stores/ChatStore.js");
-/* harmony import */ var _Components_Teams_TeamMembersList__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/Components/Teams/TeamMembersList */ "./resources/js/Components/Teams/TeamMembersList.vue");
-/* harmony import */ var _Components_Teams_TeamFooter__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/Components/Teams/TeamFooter */ "./resources/js/Components/Teams/TeamFooter.vue");
-/* harmony import */ var _Components_Modal__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/Components/Modal */ "./resources/js/Components/Modal.vue");
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
-/* harmony import */ var _Components_ResponsiveNavigationMenu__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/Components/ResponsiveNavigationMenu */ "./resources/js/Components/ResponsiveNavigationMenu.vue");
-/* harmony import */ var _Components_NavigationMenu__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @/Components/NavigationMenu */ "./resources/js/Components/NavigationMenu.vue");
-/* harmony import */ var _Components_Teams_TeamShowsList__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @/Components/Teams/TeamShowsList */ "./resources/js/Components/Teams/TeamShowsList.vue");
-/* harmony import */ var _Components_Teams_TeamAssignmentsList__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @/Components/Teams/TeamAssignmentsList */ "./resources/js/Components/Teams/TeamAssignmentsList.vue");
+/* harmony import */ var _Stores_TeamStore_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/Stores/TeamStore.js */ "./resources/js/Stores/TeamStore.js");
+/* harmony import */ var _Components_Teams_TeamMembersList__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/Components/Teams/TeamMembersList */ "./resources/js/Components/Teams/TeamMembersList.vue");
+/* harmony import */ var _Components_Teams_TeamFooter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/Components/Teams/TeamFooter */ "./resources/js/Components/Teams/TeamFooter.vue");
+/* harmony import */ var _Components_Modal__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/Components/Modal */ "./resources/js/Components/Modal.vue");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+/* harmony import */ var _Components_ResponsiveNavigationMenu__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @/Components/ResponsiveNavigationMenu */ "./resources/js/Components/ResponsiveNavigationMenu.vue");
+/* harmony import */ var _Components_NavigationMenu__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @/Components/NavigationMenu */ "./resources/js/Components/NavigationMenu.vue");
+/* harmony import */ var _Components_Teams_TeamShowsList__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @/Components/Teams/TeamShowsList */ "./resources/js/Components/Teams/TeamShowsList.vue");
+/* harmony import */ var _Components_Teams_TeamAssignmentsList__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @/Components/Teams/TeamAssignmentsList */ "./resources/js/Components/Teams/TeamAssignmentsList.vue");
 
- // import { useTeamStore } from "@/Stores/TeamStore.js"
-// import TeamHeader from "@/Components/Teams/TeamHeader"
+
+ // import TeamHeader from "@/Components/Teams/TeamHeader"
 
 
 
@@ -709,18 +710,20 @@ __webpack_require__.r(__webpack_exports__);
     videoPlayer["class"] = "videoTopRight";
     videoPlayer.videoContainerClass = "videoContainerTopRight";
     videoPlayer.fullPage = false;
-    chat["class"] = "chatSmall"; // let team = useTeamStore();
-    // team.fill();
+    chat["class"] = "chatSmall";
+    var teamStore = (0,_Stores_TeamStore_js__WEBPACK_IMPORTED_MODULE_2__.useTeamStore)(); // team.fill();
 
-    var showModal = (0,vue__WEBPACK_IMPORTED_MODULE_5__.ref)(false);
-    var a = (0,vue__WEBPACK_IMPORTED_MODULE_5__.reactive)(props.team.memberSpots);
-    var b = (0,vue__WEBPACK_IMPORTED_MODULE_5__.reactive)(props.team.totalSpots);
-    var spotsRemaining = (0,vue__WEBPACK_IMPORTED_MODULE_5__.computed)(function () {
+    teamStore.setActiveTeam(props.team.id);
+    var showModal = (0,vue__WEBPACK_IMPORTED_MODULE_6__.ref)(false);
+    var a = (0,vue__WEBPACK_IMPORTED_MODULE_6__.reactive)(props.team.memberSpots);
+    var b = (0,vue__WEBPACK_IMPORTED_MODULE_6__.reactive)(props.team.totalSpots);
+    var spotsRemaining = (0,vue__WEBPACK_IMPORTED_MODULE_6__.computed)(function () {
       return b - a;
     });
     var __returned__ = {
       videoPlayer: videoPlayer,
       chat: chat,
+      teamStore: teamStore,
       props: props,
       showModal: showModal,
       a: a,
@@ -728,16 +731,17 @@ __webpack_require__.r(__webpack_exports__);
       spotsRemaining: spotsRemaining,
       useVideoPlayerStore: _Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_0__.useVideoPlayerStore,
       useChatStore: _Stores_ChatStore_js__WEBPACK_IMPORTED_MODULE_1__.useChatStore,
-      TeamMembersList: _Components_Teams_TeamMembersList__WEBPACK_IMPORTED_MODULE_2__["default"],
-      TeamFooter: _Components_Teams_TeamFooter__WEBPACK_IMPORTED_MODULE_3__["default"],
-      Modal: _Components_Modal__WEBPACK_IMPORTED_MODULE_4__["default"],
-      ref: vue__WEBPACK_IMPORTED_MODULE_5__.ref,
-      reactive: vue__WEBPACK_IMPORTED_MODULE_5__.reactive,
-      computed: vue__WEBPACK_IMPORTED_MODULE_5__.computed,
-      ResponsiveNavigationMenu: _Components_ResponsiveNavigationMenu__WEBPACK_IMPORTED_MODULE_6__["default"],
-      NavigationMenu: _Components_NavigationMenu__WEBPACK_IMPORTED_MODULE_7__["default"],
-      TeamShowsList: _Components_Teams_TeamShowsList__WEBPACK_IMPORTED_MODULE_8__["default"],
-      TeamAssignmentsList: _Components_Teams_TeamAssignmentsList__WEBPACK_IMPORTED_MODULE_9__["default"]
+      useTeamStore: _Stores_TeamStore_js__WEBPACK_IMPORTED_MODULE_2__.useTeamStore,
+      TeamMembersList: _Components_Teams_TeamMembersList__WEBPACK_IMPORTED_MODULE_3__["default"],
+      TeamFooter: _Components_Teams_TeamFooter__WEBPACK_IMPORTED_MODULE_4__["default"],
+      Modal: _Components_Modal__WEBPACK_IMPORTED_MODULE_5__["default"],
+      ref: vue__WEBPACK_IMPORTED_MODULE_6__.ref,
+      reactive: vue__WEBPACK_IMPORTED_MODULE_6__.reactive,
+      computed: vue__WEBPACK_IMPORTED_MODULE_6__.computed,
+      ResponsiveNavigationMenu: _Components_ResponsiveNavigationMenu__WEBPACK_IMPORTED_MODULE_7__["default"],
+      NavigationMenu: _Components_NavigationMenu__WEBPACK_IMPORTED_MODULE_8__["default"],
+      TeamShowsList: _Components_Teams_TeamShowsList__WEBPACK_IMPORTED_MODULE_9__["default"],
+      TeamAssignmentsList: _Components_Teams_TeamAssignmentsList__WEBPACK_IMPORTED_MODULE_10__["default"]
     };
     Object.defineProperty(__returned__, '__isScriptSetup', {
       enumerable: false,
@@ -2336,14 +2340,15 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 
-var useShowStore = (0,pinia__WEBPACK_IMPORTED_MODULE_0__.defineStore)('show', {
+var useShowStore = (0,pinia__WEBPACK_IMPORTED_MODULE_0__.defineStore)('showStore', {
   state: function state() {
     return {
       id: 0,
       name: '',
       description: '',
       poster: '',
-      episodes: []
+      episodes: [],
+      team_id: 'team id'
     };
   },
   actions: {
@@ -2398,14 +2403,15 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 
-var useTeamStore = (0,pinia__WEBPACK_IMPORTED_MODULE_0__.defineStore)('team', {
+var useTeamStore = (0,pinia__WEBPACK_IMPORTED_MODULE_0__.defineStore)('teamStore', {
   state: function state() {
     return {
       id: 0,
       name: '',
       description: '',
       spots: 0,
-      members: []
+      members: [],
+      activeTeam: ''
     };
   },
   actions: {
@@ -2432,6 +2438,9 @@ var useTeamStore = (0,pinia__WEBPACK_IMPORTED_MODULE_0__.defineStore)('team', {
           }
         }, _callee);
       }))();
+    },
+    setActiveTeam: function setActiveTeam(id) {
+      this.activeTeam = id;
     }
   },
   getters: {

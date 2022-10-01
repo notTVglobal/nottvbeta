@@ -23,6 +23,17 @@
                 <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
                        for="name"
                 >
+                    Team Name
+                </label>
+
+                <div class="border border-gray-400 text-gray-900 text-sm p-2">{{ teamStore.activeTeam }}</div>
+                <span class="text-xs text-blue-800 cursor-pointer">CHANGE TEAM</span>
+                <input v-model="form.user_id" hidden>
+            </div>
+            <div class="mb-6">
+                <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
+                       for="name"
+                >
                     Show Name
                 </label>
 
@@ -58,6 +69,7 @@
                    name="poster"
                    id="poster"
             >
+            <div><input v-model="form.user_id" hidden></div>
             <div class="flex justify-between mb-6">
                 <button
                     type="submit"
@@ -78,11 +90,13 @@
 <script setup>
 import { useForm } from "@inertiajs/inertia-vue3"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+import { useTeamStore } from "@/Stores/TeamStore.js"
 import { useChatStore } from "@/Stores/ChatStore.js"
 import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/NavigationMenu"
 
 let videoPlayer = useVideoPlayerStore()
+let teamStore = useTeamStore()
 let chat = useChatStore()
 
 videoPlayer.class = "videoTopRight"
@@ -99,6 +113,7 @@ let form = useForm({
     description: '',
     poster: '',
     user_id: props.user.id,
+    team_id: teamStore.activeTeam,
 });
 
 function reset() {
