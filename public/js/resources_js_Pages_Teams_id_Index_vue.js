@@ -1979,12 +1979,18 @@ var _hoisted_1 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementV
 /* HOISTED */
 );
 
-var _hoisted_2 = ["disabled"];
+var _hoisted_2 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  "class": "border-1 border-t mb-3 bg-orange-300 py-1 px-2 text-xs font-semibold text-red-800"
+}, " In development. Not currently working. ", -1
+/* HOISTED */
+);
 
-var _hoisted_3 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<table class=\"min-w-full divide-y divide-gray-200\"><thead class=\"bg-white divide-y divide-gray-200\"><!--                                &lt;tr v-for=&quot;episode in episodes.data&quot; :key=&quot;episode.id&quot;&gt;--><tr><td class=\"px-6 py-4 whitespace-nowrap text-sm font-medium\"><!-- Avatar --></td><td class=\"px-6 py-4 whitespace-nowrap\"><div class=\"flex items-center\"><div><div class=\"text-sm font-medium text-gray-900\"><!--                                                    &lt;Link :href=&quot;`/admin/users/${episode.id}`&quot; class=&quot;text-indigo-600 hover:text-indigo-900&quot;&gt;{{ episode.name }}&lt;/Link&gt;--> Name </div></div></div></td><td class=\"px-6 py-4 whitespace-nowrap text-sm font-medium\"> Position </td><td class=\"px-6 py-4 whitespace-nowrap text-sm font-medium\"> Phone </td><td class=\"px-6 py-4 whitespace-nowrap text-sm font-medium\"> Email </td><td class=\"px-6 py-4 whitespace-nowrap text-sm font-medium\"> Status </td></tr></thead><tbody class=\"bg-white divide-y divide-gray-200\"><!--                                &lt;tr v-for=&quot;episode in episodes.data&quot; :key=&quot;episode.id&quot;&gt;--><!--        &lt;TeamMember v-for=&quot;member in team.members&quot; :name=&quot;member.name&quot; :email=&quot;member.email&quot; :status=&quot;member.status&quot; /&gt;--></tbody></table>", 1);
+var _hoisted_3 = ["disabled"];
+
+var _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<table class=\"min-w-full divide-y divide-gray-200\"><thead class=\"bg-white divide-y divide-gray-200\"><!--                                &lt;tr v-for=&quot;episode in episodes.data&quot; :key=&quot;episode.id&quot;&gt;--><tr><td class=\"px-6 py-4 whitespace-nowrap text-sm font-medium\"><!-- Avatar --></td><td class=\"px-6 py-4 whitespace-nowrap\"><div class=\"flex items-center\"><div><div class=\"text-sm font-medium text-gray-900\"><!--                                                    &lt;Link :href=&quot;`/admin/users/${episode.id}`&quot; class=&quot;text-indigo-600 hover:text-indigo-900&quot;&gt;{{ episode.name }}&lt;/Link&gt;--> Name </div></div></div></td><td class=\"px-6 py-4 whitespace-nowrap text-sm font-medium\"> Position </td><td class=\"px-6 py-4 whitespace-nowrap text-sm font-medium\"> Phone </td><td class=\"px-6 py-4 whitespace-nowrap text-sm font-medium\"> Email </td><td class=\"px-6 py-4 whitespace-nowrap text-sm font-medium\"> Status </td></tr></thead><tbody class=\"bg-white divide-y divide-gray-200\"><!--                                &lt;tr v-for=&quot;episode in episodes.data&quot; :key=&quot;episode.id&quot;&gt;--><!--        &lt;TeamMember v-for=&quot;member in team.members&quot; :name=&quot;member.name&quot; :email=&quot;member.email&quot; :status=&quot;member.status&quot; /&gt;--></tbody></table>", 1);
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [_hoisted_1, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [_hoisted_1, _hoisted_2, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     "class": "bg-green-500 hover:bg-green-600 text-white ml-2 my-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max",
     disabled: !$setup.spotsRemaining,
     onClick: _cache[0] || (_cache[0] = function ($event) {
@@ -1992,7 +1998,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     })
   }, "Add Member (" + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.spotsRemaining) + " spots left)", 9
   /* TEXT, PROPS */
-  , _hoisted_2), _hoisted_3], 64
+  , _hoisted_3), _hoisted_4], 64
   /* STABLE_FRAGMENT */
   );
 }

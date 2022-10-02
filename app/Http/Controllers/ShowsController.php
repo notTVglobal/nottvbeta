@@ -149,7 +149,7 @@ class ShowsController extends Controller
      */
     public function update(HttpRequest $request, Show $show)
     {
-        
+
 //        // validate the request
 //        $attributes = Request::validate([
 //            'name' => 'required',
