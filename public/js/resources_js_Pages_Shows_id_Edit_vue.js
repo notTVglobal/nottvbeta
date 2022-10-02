@@ -648,7 +648,8 @@ var __default__ = {
       type: Object,
       "default": function _default() {
         return {};
-      }
+      },
+      id: String
     },
     images: Object
   },
@@ -664,7 +665,7 @@ var __default__ = {
     chat["class"] = "chatSmall";
     var title = "Edit > " + props.show.name;
     var form = (0,_inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_5__.useForm)({
-      id: props.show.id,
+      id: (0,vue__WEBPACK_IMPORTED_MODULE_12__.ref)(props.show.id),
       name: props.show.name,
       description: props.show.description,
       poster: props.show.poster

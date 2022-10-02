@@ -112,6 +112,7 @@ let props = defineProps({
     show: {
         type: Object,
         default: () => ({}),
+        id: String,
     },
     images: Object
 });
@@ -119,7 +120,7 @@ let props = defineProps({
 let title = "Edit > " + props.show.name;
 
 let form = useForm({
-    id: props.show.id,
+    id: ref(props.show.id),
     name: props.show.name,
     description: props.show.description,
     poster: props.show.poster,

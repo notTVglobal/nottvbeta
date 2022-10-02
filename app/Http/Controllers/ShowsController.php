@@ -147,37 +147,44 @@ class ShowsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Show $show)
+    public function update(HttpRequest $request, Show $show)
     {
-
-
-        // validate the request
-        $attributes = Request::validate([
-            'name' => 'required',
-            'description' => 'required',
-            'poster'
-        ]);
-        // update the show
-        $show->update($attributes);
-
-        // redirect
-        return Inertia::render('Shows/{$id}/Index', [
-            'show' => $show
-        ])->with('message', 'Show Updated Successfully');
-
-//        $request->validate([
-//            'name' => 'required|string|max:255',
+        
+//        // validate the request
+//        $attributes = Request::validate([
+//            'name' => 'required',
 //            'description' => 'required',
+//            'poster'
 //        ]);
+//        // update the show
+//        $show->update($attributes);
 //
-//        $show->name = $request->name;
-//        $show->description = $request->description;
-//        $show->save();
-//        sleep(1);
-//
-//        return Inertia::render('Shows', [
-//            'show' => $show
+//        // redirect
+//        return Inertia::render('Shows/{$id}/Index', [
+//            'show' => $show,
+//            'team' => Team::query()->where('id', $team)->firstOrFail(),
 //        ])->with('message', 'Show Updated Successfully');
+
+        $show = Show::query()->where('id', $show->id)->firstOrFail();
+        $team = $show->team_id;
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required',
+        ]);
+
+        $show->name = $request->name;
+        $show->description = $request->description;
+        $show->save();
+        sleep(1);
+
+        return Inertia::render('Shows/{$id}/Index', [
+            // responses need to be limited to only
+            // the information required with ->only()
+            // https://inertiajs.com/responses
+            'show' => $show,
+            'team' => Team::query()->where('id', $team)->firstOrFail(),
+        ])->with('message', 'Show Updated Successfully');
     }
 
     /**
