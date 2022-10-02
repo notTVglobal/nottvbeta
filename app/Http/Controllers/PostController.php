@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
-//use Illuminate\Http\Request;
+use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Str;
@@ -67,32 +67,32 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(HttpRequest $request)
     {
-//        $request->validate([
-//           'title' => 'required|string|max:255',
-//           'slug' => 'required|string|max:255',
-//           'content' => 'required',
-//        ]);
-//        Post::create([
-//           'title' => $request->title,
-//           'slug' => \Str::slug($request->slug),
-//           'content' => $request->content
-//        ]);
-//        return redirect()->route('posts')->with('message', 'Post Created Successfully');
-
-
-        // validate the request
-        $attributes = Request::validate([
-            'title' => 'required|string|max:255',
-            'slug' => 'required|string|max:255',
-            'content' => 'required',
+        $request->validate([
+           'title' => 'required|string|max:255',
+           'slug' => 'unique:posts|required|string|max:255',
+           'content' => 'required',
         ]);
-        // create the user
-        Post::create($attributes);
-        sleep(1);
-        // redirect
-        return redirect('/posts')->with('message', 'Post Created Successfully');
+        Post::create([
+           'title' => $request->title,
+           'slug' => \Str::slug($request->slug),
+           'content' => $request->content,
+        ]);
+        return redirect()->route('posts')->with('message', 'Post Created Successfully');
+
+//        $attributes = Request::validate([
+//            'title' => 'required|string|max:255',
+//            'slug' => 'unique:posts|required|string|max:255',
+//            'content' => 'required',
+//        ]);
+//
+//        // create the post
+//        Post::create($attributes);
+//
+//        sleep(1);
+//        // redirect
+//        return redirect('/posts')->with('message', 'Post Created Successfully');
 
     }
 
@@ -102,8 +102,10 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function show(Post $post)
+    public function show($slug)
     {
+        $post = Post::query()->where('slug', $slug)->firstOrFail();
+
         return Inertia::render(
             'Posts/{$id}/Index',
             [
@@ -133,35 +135,35 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Post $post)
+    public function update(HttpRequest $request, Post $post)
     {
-//        $request->validate([
-//            'title' => 'required|string|max:255',
-//            'slug' => 'required|string|max:255',
-//            'content' => 'required',
-//        ]);
-//
-//        $post->title = $request->title;
-//        $post->slug = \Str::slug($request->slug);
-//        $post->content = $request->content;
-//        $post->save();
-//        sleep(1);
-//
-//        return redirect()->route('posts')->with('message', 'Post Updated Successfully');
-
-        // validate the request
-        $attributes = Request::validate([
+        $request->validate([
             'title' => 'required|string|max:255',
             'slug' => 'required|string|max:255',
             'content' => 'required',
         ]);
-        // update the show
-        $post->update($attributes);
+
+        $post->title = $request->title;
+        $post->slug = \Str::slug($request->slug);
+        $post->content = $request->content;
+        $post->save();
         sleep(1);
-        // redirect
-        return Inertia::render('Posts/{$id}/Index', [
-            'post' => $post
-        ])->with('message', 'Post Updated Successfully');
+
+        return redirect()->route('posts')->with('message', 'Post Updated Successfully');
+
+//        // validate the request
+//        $attributes = Request::validate([
+//            'title' => 'required|string|max:255',
+//            'slug' => 'required|string|max:255',
+//            'content' => 'required',
+//        ]);
+//        // update the show
+//        $post->update($attributes);
+//        sleep(1);
+//        // redirect
+//        return Inertia::render('Posts/{$id}/Index', [
+//            'post' => $post
+//        ])->with('message', 'Post Updated Successfully');
     }
 
     /**

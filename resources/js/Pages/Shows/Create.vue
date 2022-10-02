@@ -11,7 +11,7 @@
         <div class="flex justify-between mt-3 mb-6">
             <div class="text-3xl">Create Show</div>
             <div>
-                <Link :href="`/dashboard`"><button
+                <Link :href="`/teams/${teamStore.activeTeam}`"><button
                     class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
                 >Cancel</button>
                 </Link>
@@ -26,7 +26,7 @@
                     Team Name
                 </label>
 
-                <div class="border border-gray-400 text-gray-900 text-sm p-2">{{ teamStore.activeTeam }}</div>
+                <div class="border border-gray-400 text-gray-900 text-sm p-2">{{ props.teamName.name }}</div>
                 <span class="text-xs text-blue-800 cursor-pointer">CHANGE TEAM</span>
                 <input v-model="form.user_id" hidden>
             </div>
@@ -69,7 +69,7 @@
                    name="poster"
                    id="poster"
             >
-            <div><input v-model="form.user_id" hidden></div>
+            <input v-model="form.user_id" hidden>
             <div class="flex justify-between mb-6">
                 <button
                     type="submit"
@@ -89,6 +89,7 @@
 
 <script setup>
 import { useForm } from "@inertiajs/inertia-vue3"
+import { ref } from 'vue'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useTeamStore } from "@/Stores/TeamStore.js"
 import { useChatStore } from "@/Stores/ChatStore.js"
@@ -106,6 +107,7 @@ chat.class = "chatSmall"
 
 let props = defineProps({
     user: Object,
+    teamName: String,
 })
 
 let form = useForm({
@@ -115,6 +117,7 @@ let form = useForm({
     user_id: props.user.id,
     team_id: teamStore.activeTeam,
 });
+
 
 function reset() {
     form.reset();

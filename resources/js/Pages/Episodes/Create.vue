@@ -1,5 +1,5 @@
 <template>
-    <Head title="Create Team"/>
+    <Head title="Create Episode"/>
     <div class="sticky top-0 w-full nav-mask">
         <ResponsiveNavigationMenu/>
         <NavigationMenu />
@@ -9,7 +9,7 @@
         <div class="bg-white text-black p-5 mb-10">
 
         <div class="flex justify-between mt-3 mb-6">
-            <div class="text-3xl">Create New Team</div>
+            <div class="text-3xl">Create Episode</div>
             <div>
                 <Link :href="`/dashboard`"><button
                     class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
@@ -26,8 +26,19 @@
                     Team Name
                 </label>
 
+                <div class="border border-gray-400 text-gray-900 text-sm p-2">{{ teamStore.activeTeam }}</div>
+                <span class="text-xs text-blue-800 cursor-pointer">CHANGE TEAM</span>
+                <input v-model="form.user_id" hidden>
+            </div>
+            <div class="mb-6">
+                <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
+                       for="name"
+                >
+                    Show Name
+                </label>
+
                 <input v-model="form.name"
-                       class="bg-gray-50 border border-gray-400 text-gray-900 text-sm p-2 w-full rounded-lg focus:ring-blue-500 focus:border-blue-500 "
+                       class="bg-gray-50 border border-gray-400 text-gray-900 text-sm p-2 w-full rounded-lg focus:ring-blue-500 focus:border-blue-500"
                        type="text"
                        name="name"
                        id="name"
@@ -42,32 +53,23 @@
                 >
                     Description
                 </label>
-
                 <textarea v-model="form.description"
-                       class="bg-gray-50 border border-gray-400 text-gray-900 text-sm p-2 w-full rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                       type="text"
-                       name="description"
-                       id="description"
-                       required
+                          class="bg-gray-50 border border-gray-400 text-gray-900 text-sm p-2 w-full rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                          type="text"
+                          name="description"
+                          id="description"
+                          required
                 ></textarea>
                 <div v-if="form.errors.description" v-text="form.errors.description" class="text-xs text-red-600 mt-1"></div>
             </div>
 
-            <div class="mb-6">
-                <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
-                       for="totalSpots"
-                >
-                    Maximum # of Team Members
-                </label>
-                <input v-model="form.totalSpots"
-                       class="bg-gray-50 border border-gray-400 text-gray-900 text-sm p-2 w-full rounded-lg focus:ring-blue-500 focus:border-blue-500 "
-                       type="text"
-                       name="totalSpots"
-                       id="totalSpots"
-                />
-                <div v-if="form.errors.totalSpots" v-text="form.errors.totalSpots" class="text-xs text-red-600 mt-1"></div>
-            </div>
-            <input v-model="form.user_id" hidden>
+            <input v-model="form.poster"
+                   class="border border-gray-400 p-2 w-full rounded-lg"
+                   type="hidden"
+                   name="poster"
+                   id="poster"
+            >
+            <div><input v-model="form.user_id" hidden></div>
             <div class="flex justify-between mb-6">
                 <button
                     type="submit"
@@ -88,12 +90,13 @@
 <script setup>
 import { useForm } from "@inertiajs/inertia-vue3"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+import { useTeamStore } from "@/Stores/TeamStore.js"
 import { useChatStore } from "@/Stores/ChatStore.js"
 import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/NavigationMenu"
-import { ref } from 'vue';
 
 let videoPlayer = useVideoPlayerStore()
+let teamStore = useTeamStore()
 let chat = useChatStore()
 
 videoPlayer.class = "videoTopRight"
@@ -108,9 +111,9 @@ let props = defineProps({
 let form = useForm({
     name: '',
     description: '',
+    poster: '',
     user_id: props.user.id,
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/EBU_Colorbars.svg/1280px-EBU_Colorbars.png',
-    totalSpots: '1',
+    team_id: teamStore.activeTeam,
 });
 
 function reset() {
@@ -118,7 +121,7 @@ function reset() {
 };
 
 let submit = () => {
-    form.post('/teams');
+    form.post('/shows');
 };
 
 </script>

@@ -97,7 +97,7 @@
                                                     scope="row"
                                                     class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                                                 >
-                                                    <Link :href="`/shows/${show.id}`" class="text-blue-800 hover:text-blue-600">{{ show.name }}</Link>
+                                                    <Link :href="`/shows/${show.slug}`" class="text-blue-800 hover:text-blue-600">{{ show.name }}</Link>
                                                 </th>
                                                 <th
                                                     scope="row"

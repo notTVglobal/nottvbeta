@@ -446,6 +446,7 @@ __webpack_require__.r(__webpack_exports__);
     videoPlayer.fullPage = false;
     chat["class"] = "chatSmall";
     var search = (0,vue__WEBPACK_IMPORTED_MODULE_6__.ref)(props.filters.search);
+    var form = (0,_inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_5__.useForm)({});
     (0,vue__WEBPACK_IMPORTED_MODULE_6__.watch)(search, lodash_throttle__WEBPACK_IMPORTED_MODULE_7___default()(function (value) {
       _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_8__.Inertia.get('/posts', {
         search: value
@@ -454,7 +455,6 @@ __webpack_require__.r(__webpack_exports__);
         replace: true
       });
     }, 300));
-    var form = (0,_inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_5__.useForm)();
 
     function destroy(id) {
       if (confirm("Are you sure you want to Delete")) {
@@ -1694,7 +1694,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_19, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(post.id), 1
     /* TEXT */
     ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_20, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
-      href: "/posts/".concat(post.id),
+      href: "/posts/".concat(post.slug),
       "class": "text-blue-800 hover:text-blue-600"
     }, {
       "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {

@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Team;
+use App\Models\User;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Str;
+use Illuminate\Http\Request as HttpRequest;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class TeamsController extends Controller
@@ -13,6 +17,7 @@ class TeamsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
     public function index()
     {
         return Inertia::render('Teams/Index', [
@@ -27,6 +32,7 @@ class TeamsController extends Controller
                     'name' => $team->name,
                     'logo' => $team->logo,
                     'user_id' => $team->user_id,
+                    'team_id' => $team->team_id,
                     'memberSpots' => $team->memberSpots,
                     'totalSpots' => $team->totalSpots,
                 ]),
@@ -50,19 +56,40 @@ class TeamsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(HttpRequest $request)
     {
-        $attributes = Request::validate([
-            'name' => 'required',
+//        $attributes = Request::validate([
+//            'name' => 'unique:teams|required',
+//            'description' => 'required',
+//            'logo',
+//            'totalSpots',
+//            'user_id' => 'required',
+//            'slug' => 'required',
+//        ]);
+//        // create the team
+//        Team::create($attributes);
+//        // redirect
+//        return redirect('/teams')->with('message', 'Team Created Successfully');
+
+        $request->validate([
+            'name' => 'unique:teams|required',
             'description' => 'required',
+            'user_id' => 'required',
             'logo',
             'totalSpots',
-            'user_id' => 'required'
         ]);
-        // create the team
-        Team::create($attributes);
-        // redirect
-        return redirect('/teams')->with('message', 'Team Created Successfully');
+        Team::create([
+            'name' => $request->name,
+            'description' => $request->description,
+            'user_id' => $request->user_id,
+            'logo' => $request->logo,
+            'totalSpots' => $request->totalSpots,
+            'slug' => \Str::slug($request->name),
+        ]);
+
+        $teamId = Team::query()->where('name', $request->name)->firstOrFail();
+        return redirect()->route('teams.show', $teamId)->with('message', 'Team Created Successfully');
+
     }
 
     /**
@@ -73,8 +100,25 @@ class TeamsController extends Controller
      */
     public function show(team $team)
     {
+        function showRunner($userId) {
+            $user = User::query()->where('id', $userId)->first();
+            return $user->name;
+        }
         return Inertia::render('Teams/{$id}/Index', [
-            'team' => $team
+            'team' => $team,
+            'shows' => DB::table('shows')->where('team_id', $team->id)
+                ->latest()
+                ->paginate(5)
+                ->withQueryString()
+                ->through(fn($show) => [
+                    'id' => $show->id,
+                    'name' => $show->name,
+                    'description' => $show->description,
+                    'showRunner' => showRunner($show->user_id),
+                    'team_id' => $show->team_id,
+                    'poster' => $show->poster
+                ]),
+            'filters' => Request::only(['team_id'])
         ]);
     }
 

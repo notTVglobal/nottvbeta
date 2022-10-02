@@ -1744,6 +1744,7 @@ _inertiajs_progress__WEBPACK_IMPORTED_MODULE_2__.InertiaProgress.init({
   includeCSS: true,
   showSpinner: true
 });
+app.config.globalProperties.$route = route;
 
 /***/ }),
 
@@ -3583,21 +3584,31 @@ var map = {
 		"./resources/js/Pages/Dashboard.vue",
 		"resources_js_Pages_Dashboard_vue"
 	],
-	"./Episode/Index": [
-		"./resources/js/Pages/Episode/Index.vue",
-		"resources_js_Pages_Episode_Index_vue"
+	"./Episodes/Create": [
+		"./resources/js/Pages/Episodes/Create.vue",
+		"resources_js_Pages_Episodes_Create_vue"
 	],
-	"./Episode/Index.vue": [
-		"./resources/js/Pages/Episode/Index.vue",
-		"resources_js_Pages_Episode_Index_vue"
+	"./Episodes/Create.vue": [
+		"./resources/js/Pages/Episodes/Create.vue",
+		"resources_js_Pages_Episodes_Create_vue"
 	],
-	"./Episodes": [
-		"./resources/js/Pages/Episodes.vue",
-		"resources_js_Pages_Episodes_vue"
+	"./Episodes/{$id}/Edit": [
+		"./resources/js/Pages/Episodes/{$id}/Edit.vue",
+		"/js/vendor",
+		"resources_js_Pages_Episodes_id_Edit_vue"
 	],
-	"./Episodes.vue": [
-		"./resources/js/Pages/Episodes.vue",
-		"resources_js_Pages_Episodes_vue"
+	"./Episodes/{$id}/Edit.vue": [
+		"./resources/js/Pages/Episodes/{$id}/Edit.vue",
+		"/js/vendor",
+		"resources_js_Pages_Episodes_id_Edit_vue"
+	],
+	"./Episodes/{$id}/Index": [
+		"./resources/js/Pages/Episodes/{$id}/Index.vue",
+		"resources_js_Pages_Episodes_id_Index_vue"
+	],
+	"./Episodes/{$id}/Index.vue": [
+		"./resources/js/Pages/Episodes/{$id}/Index.vue",
+		"resources_js_Pages_Episodes_id_Index_vue"
 	],
 	"./GoLive": [
 		"./resources/js/Pages/GoLive.vue",

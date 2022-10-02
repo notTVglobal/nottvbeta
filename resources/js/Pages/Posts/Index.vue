@@ -95,7 +95,7 @@
                                     scope="row"
                                     class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                                 >
-                                    <Link :href="`/posts/${post.id}`" class="text-blue-800 hover:text-blue-600">{{ post.title }}</Link>
+                                    <Link :href="`/posts/${post.slug}`" class="text-blue-800 hover:text-blue-600">{{ post.title }}</Link>
                                 </td>
                                 <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                                     {{ post.slug }}
@@ -163,6 +163,10 @@ let props = defineProps({
 
 let search = ref(props.filters.search);
 
+let form = useForm({
+
+});
+
 watch(search, throttle(function (value) {
     Inertia.get('/posts', { search: value }, {
         preserveState: true,
@@ -170,11 +174,10 @@ watch(search, throttle(function (value) {
     });
 }, 300));
 
-const form = useForm();
-
 function destroy(id) {
     if (confirm("Are you sure you want to Delete")) {
         form.delete(route('posts.destroy', id));
+
     }
 }
 

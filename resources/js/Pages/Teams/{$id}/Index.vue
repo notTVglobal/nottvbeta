@@ -65,7 +65,9 @@
                         </div>
 
                         <div class="mt-4 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                            <TeamShowsList />
+                            <TeamShowsList :shows="props.shows.data"/>
+                            <!-- Paginator -->
+                            <Pagination :links="props.shows.links" class="mt-6"/>
                         </div>
 
                         <div class="mt-4 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
@@ -124,6 +126,7 @@ import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/NavigationMenu"
 import TeamShowsList from "@/Components/Teams/TeamShowsList";
 import TeamAssignmentsList from "@/Components/Teams/TeamAssignmentsList";
+import Pagination from "@/Components/Pagination";
 
 let videoPlayer = useVideoPlayerStore()
 let chat = useChatStore()
@@ -138,14 +141,19 @@ let teamStore = useTeamStore();
 
 let props = defineProps({
     team: Object,
-    message: String
+    shows: Object,
+    message: String,
+    filters: Object,
 });
+
+// let team_id = ref(props.filters.team_id)
+
 
 teamStore.setActiveTeam(props.team.id);
 
 let showModal = ref(false);
-let a = reactive(props.team.memberSpots)
-let b = reactive(props.team.totalSpots);
-let spotsRemaining = computed(() => b - a)
+let a = ref(props.team.memberSpots);
+let b = ref(props.team.totalSpots);
+let spotsRemaining = computed(() => b - a);
 
 </script>

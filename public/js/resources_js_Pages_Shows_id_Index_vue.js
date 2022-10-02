@@ -315,12 +315,17 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   __name: 'ShowHeader',
+  props: {
+    id: String,
+    name: String,
+    description: String
+  },
   setup: function setup(__props, _ref) {
     var expose = _ref.expose;
     expose();
-    var show = (0,_Stores_ShowStore_js__WEBPACK_IMPORTED_MODULE_0__.useShowStore)();
+    var showStore = (0,_Stores_ShowStore_js__WEBPACK_IMPORTED_MODULE_0__.useShowStore)();
     var __returned__ = {
-      show: show,
+      showStore: showStore,
       useShowStore: _Stores_ShowStore_js__WEBPACK_IMPORTED_MODULE_0__.useShowStore
     };
     Object.defineProperty(__returned__, '__isScriptSetup', {
@@ -571,6 +576,7 @@ __webpack_require__.r(__webpack_exports__);
   __name: 'Index',
   props: {
     show: Object,
+    team: Object,
     episodes: Object,
     message: String
   },
@@ -1465,7 +1471,7 @@ var _hoisted_2 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementV
 /* HOISTED */
 );
 
-var _hoisted_3 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"p-2\">This section is in development.</div><table class=\"min-w-full divide-y divide-gray-200\"><thead class=\"bg-white divide-y divide-gray-200\"><!--                                &lt;tr v-for=&quot;episode in episodes.data&quot; :key=&quot;episode.id&quot;&gt;--><tr><td class=\"px-6 py-4 whitespace-nowrap\"><div class=\"flex items-center\"><div><div class=\"text-sm font-medium text-gray-900 pl-14\"><!--                                                    &lt;Link :href=&quot;`/admin/users/${episode.id}`&quot; class=&quot;text-indigo-600 hover:text-indigo-900&quot;&gt;{{ episode.name }}&lt;/Link&gt;--> Name </div></div></div></td><td class=\"px-6 py-4 whitespace-nowrap text-sm font-medium\"> Role </td><td class=\"px-6 py-4 whitespace-nowrap text-sm font-medium\"> Completed Assignments </td><td class=\"px-6 py-4 whitespace-nowrap text-sm font-medium\"> Total Credits </td><td class=\"px-6 py-4 whitespace-nowrap text-sm font-medium\"> Status </td></tr></thead><tbody class=\"bg-white divide-y divide-gray-200\"><!--  INSERT CREDITS HERE  --></tbody></table>", 2);
+var _hoisted_3 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"p-2\">This section is in development.</div><table class=\"min-w-full divide-y divide-gray-200\"><thead class=\"bg-white divide-y divide-gray-200\"><!--                                &lt;tr v-for=&quot;episode in episodes.data&quot; :key=&quot;episode.id&quot;&gt;--><tr><td class=\"px-6 py-4 whitespace-nowrap\"><div class=\"flex items-center\"><div><div class=\"text-sm font-medium text-gray-900 pl-14\"><!--                                                    &lt;Link :href=&quot;`/admin/users/${episode.id}`&quot; class=&quot;text-indigo-600 hover:text-indigo-900&quot;&gt;{{ episode.name }}&lt;/Link&gt;--> Name </div></div></div></td><td class=\"px-6 py-4 whitespace-nowrap text-sm font-medium\"> Role </td><td class=\"px-6 py-4 whitespace-nowrap text-sm font-medium\"> Completed Assignments </td><td class=\"px-6 py-4 whitespace-nowrap text-sm font-medium\"> Total Credits </td><td class=\"px-6 py-4 whitespace-nowrap text-sm font-medium text-right\"> Status </td></tr></thead><tbody class=\"bg-white divide-y divide-gray-200\"><!--  INSERT CREDITS HERE  --></tbody></table>", 2);
 
 function render(_ctx, _cache) {
   var _component_Link = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Link");
@@ -1499,12 +1505,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 
 var _hoisted_1 = {
-  "class": "text-xl font-medium flex items-center gap-x-4 px-6 py-4"
-};
-var _hoisted_2 = ["src"];
-var _hoisted_3 = {
   "class": "text-gray-500 px-6 py-4 text-sm"
 };
+var _hoisted_2 = {
+  "class": "text-xl font-medium flex items-center gap-x-4 px-6 py-4"
+};
+var _hoisted_3 = ["src"];
 
 var _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
   "class": "text-gray-500 px-6 py-4 text-sm"
@@ -1512,12 +1518,8 @@ var _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementV
 /* HOISTED */
 );
 
-var _hoisted_5 = {
-  "class": "text-gray-500 px-6 py-4 text-sm"
-};
-
-var _hoisted_6 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
-  "class": "px-6 py-4"
+var _hoisted_5 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+  "class": "px-6 py-4 text-right"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
   "class": "text-orange-400 text-xl font-semibold"
 }, "Development")], -1
@@ -1525,19 +1527,17 @@ var _hoisted_6 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementV
 );
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_1, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.number), 1
+  /* TEXT */
+  ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
     src: "/storage/images/oeV64kpa339M8tmLEZrERCb7bLfuAy8BIqJ17x8t.png",
     alt: "",
     "class": "rounded-xl w-10"
   }, null, 8
   /* PROPS */
-  , _hoisted_2), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                                    <Link :href=\"`/admin/users/${episode.id}`\" class=\"text-indigo-600 hover:text-indigo-900\">{{ episode.name }}</Link>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.name), 1
+  , _hoisted_3), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                                    <Link :href=\"`/admin/users/${episode.id}`\" class=\"text-indigo-600 hover:text-indigo-900\">{{ episode.name }}</Link>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.name), 1
   /* TEXT */
-  )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_3, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.description), 1
-  /* TEXT */
-  ), _hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_5, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.number), 1
-  /* TEXT */
-  ), _hoisted_6]);
+  )]), _hoisted_4, _hoisted_5]);
 }
 
 /***/ }),
@@ -1574,19 +1574,17 @@ var _hoisted_3 = {
 var _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", {
   "class": "bg-white divide-y divide-gray-200"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                <tr v-for=\"episode in episodes.data\" :key=\"episode.id\">"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+  "class": "px-6 py-4 whitespace-nowrap text-sm font-medium"
+}, " Ep.# "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
   "class": "px-6 py-4 whitespace-nowrap"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "flex items-center"
-}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "text-sm font-medium text-gray-900 pl-14"
-}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                                    <Link :href=\"`/admin/users/${episode.id}`\" class=\"text-indigo-600 hover:text-indigo-900\">{{ episode.name }}</Link>"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Name ")])])])]), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
-  "class": "px-6 py-4 whitespace-nowrap text-sm font-medium"
-}, " Description "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                                    <Link :href=\"`/admin/users/${episode.id}`\" class=\"text-indigo-600 hover:text-indigo-900\">{{ episode.name }}</Link>"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Name ")])])]), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
   "class": "px-6 py-4 whitespace-nowrap text-sm font-medium"
 }, " Notes "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
-  "class": "px-6 py-4 whitespace-nowrap text-sm font-medium"
-}, " Ep.# "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
-  "class": "px-6 py-4 whitespace-nowrap text-sm font-medium"
+  "class": "px-6 py-4 whitespace-nowrap text-sm font-medium text-right"
 }, " Status ")])], -1
 /* HOISTED */
 );
@@ -1685,16 +1683,16 @@ var _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementV
 );
 
 var _hoisted_5 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
-  "class": "px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+  "class": "hidden sm:block px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
 }, "Dashboard", -1
 /* HOISTED */
 );
 
 var _hoisted_6 = {
-  "class": "mb-6"
+  "class": "my-6 ml-10 md:w-3/4"
 };
 var _hoisted_7 = {
-  "class": "flex justify-end mb-4"
+  "class": "mt-10 flex justify-end mb-4"
 };
 var _hoisted_8 = {
   "class": "space-x-2"
@@ -1713,7 +1711,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "w-20 mr-2"
   }, null, 8
   /* PROPS */
-  , _hoisted_3), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.show.name), 1
+  , _hoisted_3), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.name), 1
   /* TEXT */
   )])]), _hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
     href: "/dashboard"
@@ -1724,7 +1722,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1
     /* STABLE */
 
-  })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_6, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.show.description), 1
+  })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.description), 1
   /* TEXT */
   ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("header", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
     "class": "bg-red-500 hover:bg-red-600 text-white px-4 py-3 rounded disabled:bg-gray-400",
@@ -1738,7 +1736,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
   }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
     "class": "bg-blue-500 hover:bg-blue-600 text-white px-4 py-3 rounded disabled:bg-gray-400",
-    href: "/shows/".concat($setup.show.id, "/edit")
+    href: "/shows/".concat($props.id, "/edit")
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [_hoisted_10];
@@ -2000,13 +1998,19 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     title: $props.show.name
   }, null, 8
   /* PROPS */
-  , ["title"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ResponsiveNavigationMenu"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["NavigationMenu"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ShowHeader"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [$setup.props.message ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_9, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.props.message), 1
-  /* TEXT */
-  )])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ShowEpisodesList"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                            <table class=\"min-w-full divide-y divide-gray-200\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                <tbody class=\"bg-white divide-y divide-gray-200\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                <tr v-for=\"episode in episodes.data\" :key=\"episode.id\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                    <td class=\"px-6 py-4 whitespace-nowrap\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                        <div class=\"flex items-center\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                            <div>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                                <div class=\"text-sm font-medium text-gray-900\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                                    <Link :href=\"`/admin/users/${episode.id}`\" class=\"text-indigo-600 hover:text-indigo-900\">{{ episode.name }}</Link>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                                </div>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                            </div>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                        </div>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                    </td>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                    <td class=\"px-6 py-4 whitespace-nowrap text-right text-sm font-medium\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                        <Link :href=\"`/admin/users/edit/${episode.id}`\" class=\"text-indigo-600 hover:text-indigo-900\">Edit</Link>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                    </td>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                </tr>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                </tbody>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                            </table>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                            &lt;!&ndash; Paginator &ndash;&gt;"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                            <Pagination :links=\"episode.links\" class=\"mt-6\"/>")]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ShowCreditsList"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ShowFooter"], {
-    show: $setup.props.show.team_id
+  , ["title"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ResponsiveNavigationMenu"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["NavigationMenu"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ShowHeader"], {
+    id: $setup.props.show.id,
+    name: $setup.props.show.name,
+    description: $setup.props.show.description
   }, null, 8
   /* PROPS */
-  , ["show"])])])])])])], 64
+  , ["id", "name", "description"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [$setup.props.message ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_9, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.props.message), 1
+  /* TEXT */
+  )])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ShowEpisodesList"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                            <table class=\"min-w-full divide-y divide-gray-200\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                <tbody class=\"bg-white divide-y divide-gray-200\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                <tr v-for=\"episode in episodes.data\" :key=\"episode.id\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                    <td class=\"px-6 py-4 whitespace-nowrap\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                        <div class=\"flex items-center\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                            <div>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                                <div class=\"text-sm font-medium text-gray-900\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                                    <Link :href=\"`/admin/users/${episode.id}`\" class=\"text-indigo-600 hover:text-indigo-900\">{{ episode.name }}</Link>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                                </div>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                            </div>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                        </div>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                    </td>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                    <td class=\"px-6 py-4 whitespace-nowrap text-right text-sm font-medium\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                        <Link :href=\"`/admin/users/edit/${episode.id}`\" class=\"text-indigo-600 hover:text-indigo-900\">Edit</Link>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                    </td>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                </tr>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                </tbody>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                            </table>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                            &lt;!&ndash; Paginator &ndash;&gt;"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                            <Pagination :links=\"episode.links\" class=\"mt-6\"/>")]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ShowCreditsList"])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ShowFooter"], {
+    show: $setup.props.team.name
+  }, null, 8
+  /* PROPS */
+  , ["show"])])])], 64
   /* STABLE_FRAGMENT */
   );
 }

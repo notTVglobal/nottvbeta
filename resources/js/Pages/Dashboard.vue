@@ -86,19 +86,19 @@
                         @click="videoPlayer.makeVideoTopRight()"
                         :href="`/shows/1`"
                         class="text-blue-800 hover:text-blue-400">
-                        Down The Rabbit Hole
+                        News & Talk
                     </Link></p>
                     <p class=""><Link
                         @click="videoPlayer.makeVideoTopRight()"
-                        :href="`/shows/1`"
+                        :href="`/shows/2`"
                         class="text-blue-800 hover:text-blue-400">
-                        News & Talk
+                        Down The Rabbit Hole
                     </Link></p>
                 </div>
                 <div class="p-5 bg-gray-200 rounded">
-                    <div class="mb-3 grid grid-cols-1">
-                        <div class="mb-1 font-semibold text-xl justify-self-start">My Teams</div>
-                        <div class="justify-self-start">
+                    <div class="mb-3 flex justify-between">
+                        <div class="mb-1 font-semibold text-xl">My Teams</div>
+                        <div class="">
                             <Link :href="`/teams/create`"><button
                                 class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 text-xs rounded disabled:bg-gray-400"
                             >New Team</button>
@@ -127,33 +127,40 @@
                 </div>
 
             </section>
-<div class="mt-6 h-0.5 bg-gray-800"></div>
+
+            <div class="mt-6 h-0.5 bg-gray-800"></div>
+
             <section class="grid grid-cols-1 mt-6 gap-2">
                 <div class="font-semibold text-2xl text-gray-800 px-2">
                     Account Summary
                 </div>
-                <div class="p-2 text-red-600">This section is in development. Not currently working.</div>
-                <div class="px-2">
-                    Account: 000000
-                </div>
-                <div class="grid grid-cols-3 border-2 pb-3">
-                    <h2 class="bg-gray-800 text-white text-sm p-2 col-span-3">Membership: 000000</h2>
-                    <h2 class="bg-blue-400 font-semibold text-sm text-black px-2 mb-3 col-span-3">Account Name</h2>
-                    <p class="px-2 col-span-2">Chequing</p>
-                    <p class="px-2 justify-self-end">0.00</p>
-                    <p class="px-2 col-span-2">Equity Shares</p>
-                    <p class="px-2 justify-self-end">10.00</p>
-                    <p class="px-2 col-span-2">Savings</p>
-                    <p class="px-2 justify-self-end">0.00</p>
 
-                    <h2 class="bg-blue-400 font-semibold text-sm text-black my-3 px-2 col-span-3">Team Accounts</h2>
-                    <p class="px-2 col-span-2">notTV Founders Shares</p>
-                    <p class="px-2 justify-self-end">0.00</p>
-                    <p class="px-2 col-span-2">notTV News Team Shares</p>
-                    <p class="px-2 justify-self-end">0.00</p>
-                    <p class="px-2 col-span-2">RJG Production Shares</p>
-                    <p class="px-2 justify-self-end">0.00</p>
+                <div class="p-2 text-red-600">This section is in development. Not currently working.</div>
+
+                <div class="border-2 pb-3">
+                    <div class="grid justify-items-stretch grid-cols-3 ">
+                        <div class="bg-gray-800 text-white text-sm p-2 col-span-3">Membership: 000000</div>
+                    </div>
+                    <div class="grid justify-items-stretch grid-cols-3 pb-3">
+                        <div class="bg-blue-400 font-semibold text-sm text-black px-2 mb-3 col-span-2">Account Name</div>
+                        <div class="bg-blue-400 px-2 mb-3 w-full text-right font-semibold text-sm text-black">Balance</div>
+                        <p class="px-2 col-span-2">Chequing</p>
+                        <p class="px-2 justify-self-end">0.00</p>
+                        <p class="px-2 col-span-2">Equity Shares</p>
+                        <p class="px-2 justify-self-end">10.00</p>
+                    </div>
+                    <div class="grid justify-items-stretch grid-cols-3">
+                        <div class="bg-blue-400 font-semibold text-sm text-black px-2 mb-3 col-span-2">Team Shares</div>
+                        <div class="bg-blue-400 px-2 mb-3 w-full text-right font-semibold text-sm text-black">Balance</div>
+                        <p class="px-2 col-span-2">notTV Founders</p>
+                        <p class="px-2 justify-self-end">0.00</p>
+                        <p class="px-2 col-span-2">notTV News Team</p>
+                        <p class="px-2 justify-self-end">0.00</p>
+                        <p class="px-2 col-span-2">RJG Production</p>
+                        <p class="px-2 justify-self-end">0.00</p>
+                    </div>
                 </div>
+
             </section>
 
         </div>

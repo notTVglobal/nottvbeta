@@ -3,13 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Image;
+use App\Models\Post;
 use App\Models\Show;
+use App\Models\Team;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Str;
+use Illuminate\Http\Request as HttpRequest;
 use Inertia\Inertia;
 
 class ShowsController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *
@@ -26,7 +31,8 @@ class ShowsController extends Controller
                 ->withQueryString()
                 ->through(fn($show) => [
                     'id' => $show->id,
-                    'name' => $show->name
+                    'name' => $show->name,
+                    'slug' => $show->slug,
                 ]),
             'filters' => Request::only(['search']),
             'can' => [
@@ -47,8 +53,16 @@ class ShowsController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Shows/Create');
+//        $team = \Str::slug($request);
+
+//        return Inertia::render('Shows/Create');
+             return Inertia::render('Shows/Create', [
+            'teamName' => Team::query()->where('id', '1')->firstOrFail(),
+        ]);
+
     }
+
+
 
 
 
@@ -58,19 +72,35 @@ class ShowsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(HttpRequest $request)
     {
-            // validate the request
-            $attributes = Request::validate([
-                'name' => 'required',
-                'description' => 'required',
-                'user_id' => 'required',
-                'team_id' => 'required',
-            ]);
-            // create the user
-            Show::create($attributes);
-            // redirect
-            return redirect('/shows')->with('message', 'Show Created Successfully');
+//            // validate the request
+//            $attributes = Request::validate([
+//                'name' => 'unique:shows|required',
+//                'description' => 'required',
+//                'user_id' => 'required',
+//                'team_id' => 'required',
+//                'slug' => 'required',
+//            ]);
+//            // create the user
+//            Show::create($attributes);
+//            // redirect
+//            return redirect('/shows')->with('message', 'Show Created Successfully');
+
+        $request->validate([
+            'name' => 'unique:shows|required',
+            'description' => 'required',
+            'user_id' => 'required',
+            'team_id' => 'required',
+        ]);
+        Show::create([
+            'name' => $request->name,
+            'description' => $request->description,
+            'user_id' => $request->user_id,
+            'team_id' => $request->team_id,
+            'slug' => \Str::slug($request->name),
+        ]);
+        return redirect()->route('teams.show', $request->team_id)->with('message', 'Show Created Successfully');
     }
 
     /**
@@ -79,10 +109,17 @@ class ShowsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Show $show)
+    // URL path is currently set to show.id
+    // change show($id) to show($slug) to
+    // make URL path = slug.
+    public function show($id)
     {
+        $show = Show::query()->where('id', $id)->firstOrFail();
+        $team = $show->team_id;
+
         return Inertia::render('Shows/{$id}/Index', [
-            'show' => $show
+            'show' => $show,
+            'team' => Team::query()->where('id', $team)->firstOrFail(),
         ]);
     }
 
