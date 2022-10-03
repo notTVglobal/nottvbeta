@@ -1744,7 +1744,6 @@ _inertiajs_progress__WEBPACK_IMPORTED_MODULE_2__.InertiaProgress.init({
   includeCSS: true,
   showSpinner: true
 });
-app.config.globalProperties.$route = route;
 
 /***/ }),
 

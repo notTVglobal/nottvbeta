@@ -1684,6 +1684,18 @@ select {
   height: 40%;
 }
 
+.h-\[calc\(100\%\/0\.5\)\] {
+  height: calc(100% / 0.5);
+}
+
+.h-\[calc\(100\%\*1\/2\)\] {
+  height: calc(100% * 1 / 2);
+}
+
+.h-\[calc\(\(100\%-12rem\)\*2\/3\)\] {
+  height: calc((100% - 12rem) * 2 / 3);
+}
+
 .max-h-max {
   max-height: -webkit-max-content;
   max-height: -moz-max-content;

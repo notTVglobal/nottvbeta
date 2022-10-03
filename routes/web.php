@@ -178,6 +178,15 @@ Route::middleware([
         ->can('viewPremium', 'App\Models\User')
         ->name('shows');
 
+    // tec21: This is probably not the best way to do this
+    // I'm unable to get the FilePond uploader to show the
+    // uploaded image on the shows/edit page after upload.
+    // this is my solution. Copy the ImageController.store
+    // code to a new ShowController.uploadPoster function.
+    Route::post('/showsUploadPoster', [ShowsController::class, 'uploadPoster'])
+        ->can('viewCreator', 'App\Models\User')
+        ->name('shows.uploadPoster');
+
     // List all shows
 //    Route::get('/shows', [ShowsController::class, 'index'])->name('shows');
     // Create a show

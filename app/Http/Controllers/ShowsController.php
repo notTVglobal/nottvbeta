@@ -129,15 +129,21 @@ class ShowsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Show $show, Image $image)
+    public function edit(Show $show)
     {
         return Inertia::render('Shows/{$id}/Edit', [
             'show' => $show,
+            'poster' => Image::query()->where('show_id', $show->id)->latest()->pluck('name')->first(),
             'images' => Image::query()
+//                ->when(Request::input('search'), function ($query, $search) {
+//                    $query->where('name', 'like', "%{$search}%");
+//                })
+                ->latest()
+                ->paginate(10)
+                ->through(fn($image) => [
+                    'name' => $image->name,
+                ]),
         ]);
-
-        // return that image model back to the frontend
-        return $image;
     }
 
     /**
@@ -185,6 +191,41 @@ class ShowsController extends Controller
             'show' => $show,
             'team' => Team::query()->where('id', $team)->firstOrFail(),
         ])->with('message', 'Show Updated Successfully');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function uploadPoster(HttpRequest $request)
+    {
+        $request->file('image')->store('images');
+
+////        $files = Storage::disk('spaces')->files('uploads');
+////        function() {
+////            Storage::disk('spaces')->putFile('uploads', request()->file, 'public');
+////        };
+//
+//        if (!$path) {
+//            return response()->json(['error' => 'The file could not be saved.'], 500);
+//        }
+        $user_id = 1;
+        $uploadedFile = $request->file('image');
+
+        // create image model
+        // NEED TO PROTECT THESE
+        $image = Image::create([
+            'name' => $uploadedFile->hashName(),
+            'extension' => $uploadedFile->extension(),
+            'size' => $uploadedFile->getSize(),
+            'user_id' => $user_id,
+        ]);
+
+        // return that image model back to the frontend
+        return $image->name;
+
     }
 
     /**

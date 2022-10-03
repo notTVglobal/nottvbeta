@@ -34,5 +34,3 @@ createInertiaApp({
 });
 
 InertiaProgress.init({ delay: 250, color: '#FCEF5B', includeCSS: true, showSpinner: true, });
-
-app.config.globalProperties.$route = route
