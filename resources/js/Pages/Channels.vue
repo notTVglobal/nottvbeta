@@ -7,27 +7,26 @@
     <Head title="Channels" />
 
         <div class="fixed bg-black bg-opacity-90 text-white p-5 pt-16 h-screen w-full channels-mask">
-            <div class="grid grid-cols-3 gap-4 px-16 justify-center text-center">
-                <div class="col-span-3">
-                    <h1 class="text-3xl font-semibold">Channels</h1>
-                    <div class="bg-red-800 col-span-3 mt-8 mb-4 py-1">
-                        Channels are not currently enabled.
-                    </div>
-                </div>
-                <div class="bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-4 cursor-pointer">Ambient</div>
-                <div class="bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-4 cursor-pointer">Local</div>
-                <div class="bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-4 cursor-pointer">News</div>
-                <div class="bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-4 cursor-pointer">Talk</div>
-                <div class="bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-4 cursor-pointer">Variety</div>
-                <div class="bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-4 cursor-pointer">Music</div>
-                <div class="bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-4 cursor-pointer">Kids</div>
-                <div class="bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-4 cursor-pointer">Live</div>
-                <div class="bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-4 cursor-pointer">Random</div>
-                <div class="bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-4 cursor-pointer">Documentaries</div>
-                <div class="bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-4 cursor-pointer">Sports</div>
-                <div class="bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-4 cursor-pointer">Education</div>
+
+            <h1 class="text-3xl font-semibold text-center">Channels</h1>
+            <div class="bg-red-800 col-span-3 mt-8 mb-4 py-1 text-center">
+                Channels are not currently enabled.
             </div>
 
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-x-2 space-y-2 px-16 text-center h-3/4 overflow-y-auto pb-20 items-stretch">
+                <div class="bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-10 cursor-pointer my-auto">Ambient</div>
+                <div class="bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-10 cursor-pointer my-auto">Local</div>
+                <div class="bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-10 cursor-pointer my-auto">News</div>
+                <div class="bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-10 cursor-pointer my-auto">Talk</div>
+                <div class="bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-10 cursor-pointer my-auto">Variety</div>
+                <div class="bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-10 cursor-pointer my-auto">Music</div>
+                <div class="bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-10 cursor-pointer my-auto">Kids</div>
+                <div class="bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-10 cursor-pointer my-auto">Live</div>
+                <div class="bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-10 cursor-pointer my-auto">Random</div>
+                <div class="bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-10 cursor-pointer my-auto">Documentaries</div>
+                <div class="bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-10 cursor-pointer my-auto">Sports</div>
+                <div class="bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-10 cursor-pointer my-auto">Education</div>
+            </div>
         </div>
 
 </template>

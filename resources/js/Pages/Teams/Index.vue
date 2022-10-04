@@ -9,32 +9,21 @@
     <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
         <div class="bg-white text-black p-5 mb-10">
 
-
-<!--    <div class="bg-white rounded text-black p-5 mb-10 py-20 w-3/4">-->
-
-            <div class="flex justify-between mb-3">
-                <div>
-                    <h1 class="text-3xl font-semibold pb-3">Teams</h1>
-                    <Link :href="`/teams/create`"><button
-                        class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded disabled:bg-gray-400"
-                    >Add Team</button>
-                    </Link>
-                </div>
-                <span class="text-xs font-semibold text-red-700">Admin Mode</span>
-                <div class="grid grid-cols-1 grid-rows-3">
-                    <div class="justify-self-end mb-4">
-                        <Link :href="`/dashboard`"><button
-                            class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                        >Dashboard</button>
-                        </Link>
-                    </div>
-                    <div>
-                        <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg row-start-2" />
-                    </div>
-                </div>
+            <div class="flex justify-between">
+                <h1 class="text-3xl font-semibold pb-3">Teams</h1>
+                <Link :href="`/dashboard`"><button
+                    class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                >Dashboard</button>
+                </Link>
             </div>
 
-
+            <div class="flex flex-row justify-between gap-x-4">
+                <Link v-if="can.createTeams" :href="`/teams/create`"><button
+                    class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded disabled:bg-gray-400"
+                >Add Team</button>
+                </Link>
+                <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg" />
+            </div>
 
 
         <div class="flex flex-col">
@@ -70,7 +59,7 @@
                                             class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
                                         >
                                         <tr>
-                                            <th scope="col" class="px-6 py-3">
+                                            <th scope="col" class="min-w-[8rem] px-6 py-3">
                                                 Logo
                                             </th>
                                             <th scope="col" class="px-6 py-3">
@@ -95,7 +84,7 @@
                                         >
                                             <th
                                                 scope="row"
-                                                class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
+                                                class="min-w-[8rem] px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                                             >
 <!--                                                <img :src="`/storage/${team.logo}`" class="rounded-full h-20 w-20 object-cover">-->
                                                 <img :src="`https://cdn.not.tv/wp-content/uploads/2022/09/27220247/Ping.png`" class="rounded-full h-20 w-20 object-cover">

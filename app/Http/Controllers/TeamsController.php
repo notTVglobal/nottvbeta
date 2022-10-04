@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Team;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Str;
 use Illuminate\Http\Request as HttpRequest;
@@ -36,7 +37,12 @@ class TeamsController extends Controller
                     'memberSpots' => $team->memberSpots,
                     'totalSpots' => $team->totalSpots,
                 ]),
-            'filters' => Request::only(['search'])
+            'filters' => Request::only(['search']),
+            'can' => [
+                'viewTeams' => Auth::user()->can('view', Team::class),
+                'createTeams' => Auth::user()->can('create', Team::class),
+                'editTeams' => Auth::user()->can('edit', Team::class)
+            ]
         ]);
     }
 

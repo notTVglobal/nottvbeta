@@ -12,10 +12,6 @@
 
             <div class="flex justify-between mb-3">
                 <h1 class="text-3xl font-semibold pb-3">Dashboard</h1>
-                <div>
-                    <span class="text-xs font-semibold text-purple-700">Creator Mode</span>
-                    <span v-show="can.viewAdmin" class="text-xs font-semibold text-black"> | </span><span v-show="can.viewAdmin" class="text-xs font-semibold text-red-700">Admin Mode</span>
-                </div>
                 <Link :href="`/golive`"><button
                     class="bg-red-500 hover:bg-red-600 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
                 >Go Live</button>
@@ -34,33 +30,35 @@
 
             <div v-show="can.viewAdmin" class="bg-gray-300 rounded pb-8 p-3 mb-6 mx-2 border-b border-2">
                 <div class="font-semibold text-xl pb-2">Administrator only links</div>
-                <!--disable button if ! admin-->
-                <Link :href="`/users`"><button
-                    class="bg-blue-500 hover:bg-blue-600 text-white mt-1 ml-6 px-4 py-2 rounded disabled:bg-gray-400"
-                >All Users</button>
-                </Link>
-                <!--disable button if ! admin-->
-                <Link :href="`/admin/channels`"><button
-                    class="bg-blue-500 hover:bg-blue-600 text-white mt-1 ml-6 px-4 py-2 rounded disabled:bg-gray-400"
-                >All Channels</button>
-                </Link>
-                <!--disable button if ! admin-->
-                <Link :href="`/teams`"><button
-                    class="bg-blue-500 hover:bg-blue-600 text-white mt-1 ml-6 px-4 py-2 rounded disabled:bg-gray-400"
-                >All Teams</button>
-                </Link>
+                <div class="flex flex-wrap md:flex-row justify-items-start gap-2">
+                    <!--disable button if ! admin-->
+                    <Link :href="`/users`"><button
+                        class="bg-blue-500 hover:bg-blue-600 text-white mt-1 p-2 col-span-1 rounded disabled:bg-gray-400"
+                    >All Users</button>
+                    </Link>
+                    <!--disable button if ! admin-->
+                    <Link :href="`/admin/channels`"><button
+                        class="bg-blue-500 hover:bg-blue-600 text-white mt-1 p-2 rounded disabled:bg-gray-400"
+                    >All Channels</button>
+                    </Link>
+                    <!--disable button if ! admin-->
+                    <Link :href="`/teams`"><button
+                        class="bg-blue-500 hover:bg-blue-600 text-white mt-1 p-2 rounded disabled:bg-gray-400"
+                    >All Teams</button>
+                    </Link>
 
-                <!--disable button if ! admin-->
-                <Link :href="`/video`"><button
-                    class="bg-blue-500 hover:bg-blue-600 text-white mt-1 ml-6 px-4 py-2 rounded disabled:bg-gray-400"
-                >MistServer API</button>
-                </Link>
+                    <!--disable button if ! admin-->
+                    <Link :href="`/video`"><button
+                        class="bg-blue-500 hover:bg-blue-600 text-white mt-1 p-2 rounded disabled:bg-gray-400"
+                    >MistServer API</button>
+                    </Link>
 
-                <!--disable button if ! admin-->
-                <Link :href="`/image`"><button
-                    class="bg-blue-500 hover:bg-blue-600 text-white mt-1 ml-6 px-4 py-2 rounded disabled:bg-gray-400"
-                >Image Uploader</button>
-                </Link>
+                    <!--disable button if ! admin-->
+                    <Link :href="`/image`"><button
+                        class="bg-blue-500 hover:bg-blue-600 text-white mt-1 p-2 rounded disabled:bg-gray-400"
+                    >Image Uploader</button>
+                    </Link>
+                </div>
 
             </div>
 

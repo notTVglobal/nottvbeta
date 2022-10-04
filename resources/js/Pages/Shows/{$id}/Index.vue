@@ -9,7 +9,7 @@
     <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
         <div class="bg-white rounded text-black p-5 mb-10">
 
-            <ShowHeader :id="props.show.id" :name="props.show.name" :description="props.show.description" />
+            <ShowHeader :id="props.show.id" :name="props.show.name" :description="props.show.description" :show="props.team.name"/>
 
             <div class="flex flex-col">
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">

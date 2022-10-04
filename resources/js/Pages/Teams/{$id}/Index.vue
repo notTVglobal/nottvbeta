@@ -11,7 +11,7 @@
 
         <div class="bg-white rounded text-black p-5 mb-10">
 
-<!--            <TeamHeader v-bind="team" @add="showModal = true" />-->
+<!--            <TeamHeader v-bind="team" :memberSpots="props.team.memberSpots"/>-->
 
 
 
@@ -27,8 +27,7 @@
                     </h3>
 
                 </div>
-                <div><span class="text-xs font-semibold text-purple-700">Creator Mode</span></div>
-                <div class="space-x-4">
+                <div class="flex flex-wrap justify-end space-x-4">
                     <Link
                         :href="`/teams/${props.team.id}/edit`"><button
                         class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
@@ -117,7 +116,7 @@
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useChatStore } from "@/Stores/ChatStore.js"
 import { useTeamStore } from "@/Stores/TeamStore.js"
-// import TeamHeader from "@/Components/Teams/TeamHeader"
+import TeamHeader from "@/Components/Teams/TeamHeader"
 import TeamMembersList from "@/Components/Teams/TeamMembersList"
 import TeamFooter from "@/Components/Teams/TeamFooter"
 import Modal from "@/Components/Modal"

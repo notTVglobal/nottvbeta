@@ -3,6 +3,7 @@
     <Link
         :href="`#`"><button
         class="bg-green-500 hover:bg-green-600 text-white ml-2 my-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
+        disabled
     >Create Assignment</button></Link>
     <div class="p-2">This section is in development.</div>
     <table class="min-w-full divide-y divide-gray-200">

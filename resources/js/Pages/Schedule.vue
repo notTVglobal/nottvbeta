@@ -5,24 +5,19 @@
         <NavigationMenu />
     </div>
 
-    <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
-        <div class="p-5 mb-10">
-<!--        <template #header>-->
-<!--            <h2 class="font-semibold text-xl text-gray-800 leading-tight">-->
-<!--                Dashboard-->
-<!--            </h2>-->
-<!--        </template>-->
+    <div class="place-self-center flex flex-col md:pageWidth pageWidthSmall h-screen">
+        <div class="flex justify-between p-5 mb-5">
 
-<!--        <div class="py-12">-->
-<!--            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">-->
-<!--                <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">-->
                     <div class="text-3xl font-semibold">Schedule</div>
-                    <button v-if="can.addEvent" class="border-gray-800">Add Event</button>
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
+                    <Link :href="`#`"><button
+                        v-if="can.addEvent"
+                        class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded disabled:bg-gray-400"
+                        disabled
+                    >Add Event</button></Link>
+
+
         </div>
-        <div class="p-2 text-red-600">This section is in development. Not currently working.</div>
+        <div class="ml-5 mb-5 text-red-600">This section is in development. Not currently working.</div>
     </div>
 </template>
 

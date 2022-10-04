@@ -9,28 +9,21 @@
         <div class="bg-white text-black p-5 mb-10">
 
             <div class="flex justify-between">
-                <div class="grid grid-cols-1 grid-rows-2">
-                    <div>
-                        <h1 class="text-3xl font-semibold pb-3">Users</h1>
-                        <Link :href="`/users/create`"><button
-                            class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded disabled:bg-gray-400"
-                        >Add User</button>
-                        </Link>
-                    </div>
-                </div>
-                <span class="text-xs font-semibold text-red-700">Admin Mode</span>
-                <div class="grid grid-cols-1 grid-rows-3">
-                    <div class="justify-self-end mb-4">
-                        <Link :href="`/dashboard`"><button
-                            class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                        >Dashboard</button>
-                        </Link>
-                    </div>
-                    <div>
-                        <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg row-start-2" />
-                    </div>
-                </div>
+                <h1 class="text-3xl font-semibold pb-3">Users</h1>
+                <Link :href="`/dashboard`"><button
+                    class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                >Dashboard</button>
+                </Link>
             </div>
+
+            <div class="flex flex-row justify-between gap-x-4">
+                <Link :href="`/users/create`"><button
+                    class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded disabled:bg-gray-400"
+                >Add User</button>
+                </Link>
+                <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg" />
+            </div>
+
 
             <div class="flex flex-col">
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -62,7 +55,7 @@
                                                 class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
                                             >
                                             <tr>
-                                                <th scope="col" class="px-6 py-3">
+                                                <th scope="col" class="min-w-[8rem] px-6 py-3">
                                                     Avatar
                                                 </th>
                                                 <th scope="col" class="px-6 py-3">
@@ -87,7 +80,7 @@
                                             >
                                                 <th
                                                     scope="row"
-                                                    class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
+                                                    class="min-w-[8rem] px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                                                 >
                                                     <img :src="`/storage/${user.profile_photo_path}`" class="rounded-full h-20 w-20 object-cover">
                                                 </th>

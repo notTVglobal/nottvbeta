@@ -34,12 +34,12 @@
     <div :class="{'block': showingNavigationDropdown, 'hidden': ! showingNavigationDropdown}"
          class="lg:hidden bg-gray-800 text-white fixed top-12 w-full h-full">
         <!-- Responsive Settings Options -->
-        <div class="pt-7 pb-4">
-            <div class="px-4 bg-gray-800 pb-3 border-b border-spacing-4 border-1 border-white">
+        <div class="pt-7 pb-4 h-5/6 overflow-y-auto">
+            <div class="px-4 bg-gray-800 border-b border-spacing-4 border-1 border-white">
 
                 <div class="flex justify-between">
-                    <div class="grid grid-cols-3 grid-rows-2">
-                        <div v-if="$page.props.jetstream.managesProfilePhotos">
+                    <div class="flex justify-start pb-3">
+                        <div v-if="$page.props.jetstream.managesProfilePhotos" class="w-10">
                             <Link @click="videoPlayer.makeVideoTopRight()"
                                   :href="route('profile.show')"
                                   :active="route().current('profile.show')">
@@ -47,11 +47,11 @@
                                      :src="$page.props.user.profile_photo_url" :alt="$page.props.user.name">
                             </Link>
                         </div>
-                        <div>
+                        <div class="ml-3">
                             <div class="font-medium text-base text-gray-100">
                                 <Link @click="videoPlayer.makeVideoTopRight()"
-                                                      :href="route('profile.show')"
-                                                      :active="route().current('profile.show')">
+                                      :href="route('profile.show')"
+                                      :active="route().current('profile.show')">
                                     {{ $page.props.user.name }}
                                 </Link>
                             </div>
@@ -64,30 +64,29 @@
                             </div>
                         </div>
                     </div>
-                    <div v-if="$page.props.user.role_id === 1" class="align-self-end text-xl text-fuchsia-700 hover:text-fuchsia-500">
-                        <Link @click="videoPlayer.makeVideoTopRight()" :href="route('upgrade')" :active="route().current('upgrade')">
-                            UPGRADE ACCOUNT
-                        </Link>
+                    <div class="justify-end text-right w-full">
+                        <div v-if="$page.props.user.role_id === 2" class="text-xs text-fuchsia-700">PREMIUM SUBSCRIBER</div>
+                        <div v-if="$page.props.user.role_id === 3" class="text-xs text-fuchsia-700">VIP</div>
+                        <div v-if="$page.props.user.role_id === 4" class="text-xs text-fuchsia-700">CREATOR</div>
+                        <div v-if="$page.props.user.isAdmin === 1" class="text-xs text-red-700">ADMIN</div>
+                        <div v-if="$page.props.user.role_id === 1" class="align-self-end text-xl text-fuchsia-700 hover:text-fuchsia-500">
+                            <Link @click="videoPlayer.makeVideoTopRight()" :href="route('upgrade')" :active="route().current('upgrade')">
+                                UPGRADE ACCOUNT
+                            </Link>
+                        </div>
                     </div>
+
                 </div>
-
-            </div>
-            <div class="">
-                <div v-if="$page.props.user.role_id === 2" class="text-xs text-fuchsia-700">PREMIUM SUBSCRIBER</div>
-                <div v-if="$page.props.user.role_id === 3" class="text-xs text-fuchsia-700">VIP</div>
-                <div v-if="$page.props.user.role_id === 4" class="text-xs text-fuchsia-700">CREATOR</div>
-                <div v-if="$page.props.user.isAdmin === 1" class="text-xs text-red-700">ADMIN</div>
             </div>
 
 
-            <div class="pt-3 space-y-1 z-50 bg-gray-900 h-max overflow-y-scroll">
+            <div class="pt-3 space-y-1 z-50 bg-gray-900">
 
                 <JetResponsiveNavLink
                     v-if="$page.props.user.role_id === 4"
                     @click="videoPlayer.makeVideoTopRight()"
                     :href="route('dashboard')"
-                    :active="route().current('dashboard')"
-                    class="border-b-2">
+                    :active="route().current('dashboard')">
                     Dashboard
                 </JetResponsiveNavLink>
 

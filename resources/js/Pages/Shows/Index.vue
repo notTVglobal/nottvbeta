@@ -8,30 +8,23 @@
     <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
         <div class="bg-white text-black p-5 mb-10">
 
-            <div class="flex justify-between mb-3">
-                <div>
-                    <h1 class="text-3xl font-semibold pb-3">Shows</h1>
-                    <Link v-if="can.createShow" :href="`/shows/create`"><button
-                        class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded disabled:bg-gray-400"
-                    >Add Show</button>
-                    </Link>
-                </div>
-                <div><span class="text-xs font-semibold text-purple-700">Creator Mode</span></div>
-                <div class="grid grid-cols-1 grid-rows-3">
-                    <div class="justify-self-end mb-4">
-                        <Link :href="`/dashboard`"><button
-                            class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                        >Dashboard</button>
-                        </Link>
-                    </div>
-                    <div>
-                        <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg row-start-2" />
-                    </div>
-                </div>
+            <div class="flex justify-between">
+                <h1 class="text-3xl font-semibold pb-3">Shows</h1>
+                <Link :href="`/dashboard`"><button
+                    class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                >Dashboard</button>
+                </Link>
             </div>
 
 
 
+            <div class="flex flex-row justify-between gap-x-4">
+                <Link v-if="can.createShow" :href="`/shows/create`"><button
+                    class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded disabled:bg-gray-400"
+                >Add Show</button>
+                </Link>
+                <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg" />
+            </div>
             <div class="flex flex-col">
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                     <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
@@ -62,8 +55,8 @@
                                             <thead
                                                 class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
                                             >
-                                            <tr>
-                                                <th scope="col" class="px-6 py-3">
+                                            <tr class="">
+                                                <th scope="col" class="min-w-[8rem] px-6 py-3">
                                                     Poster
                                                 </th>
                                                 <th scope="col" class="px-6 py-3">
@@ -88,7 +81,7 @@
                                             >
                                                 <th
                                                     scope="row"
-                                                    class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
+                                                    class="min-w-[8rem] px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                                                 >
 <!--                                                    <img :src="`/storage/images/${show.poster}`" class="rounded-full h-20 w-20 object-cover">-->
                                                     <img :src="`https://cdn.not.tv/wp-content/uploads/2022/09/27220247/Ping.png`" class="rounded-full h-20 w-20 object-cover">
