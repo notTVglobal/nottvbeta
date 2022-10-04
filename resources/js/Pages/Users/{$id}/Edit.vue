@@ -9,7 +9,7 @@
         <div class="bg-white text-black p-5 mb-10">
 
             <div class="flex justify-between mb-6">
-                <h1 class="text-3xl"><Link :href="`/users/${props.userEdit.id}`" class="text-indigo-600">{{props.userEdit.name}}</Link> > <span class="font-semibold">Edit</span></h1>
+                <h1 class="text-3xl"><Link :href="`/users/${props.userEdit.id}`" class="text-indigo-600">{{props.userEdit.name}}</Link></h1>
                 <span class="text-xs font-semibold text-red-700">Edit Mode</span>
                 <div>
                     <Link :href="`/users/${props.userEdit.id}`"><button
@@ -20,7 +20,7 @@
             </div>
 
         <div class="max-w-md mx-auto mt-8">
-            <div class="mb-6"><img :src="props.userEdit.profile_photo_url" /></div>
+            <div class="mb-6"><img :src="props.userEdit.profile_photo_url" class="rounded-full h-20 w-20 object-cover"/></div>
             <div class=""><span class="text-xs uppercase">User ID: </span><span class="font-semibold">{{props.userEdit.id}}</span></div>
             <div class=""><span class="text-xs uppercase">Subscription Status: </span><span class="font-semibold">{{props.userEdit.subscriptionStatus}}</span></div>
             <div class="" v-if="props.userEdit.role_id == 4"><span class="text-xs uppercase">Creator #: </span><span class="font-semibold">{{props.userEdit.creatorNumber}}</span></div>

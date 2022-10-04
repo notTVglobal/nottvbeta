@@ -11,16 +11,23 @@
 
 
 
-            <div v-if="$page.props.user.isAdmin === 1" class="flex justify-between mb-3">
-                <Link :href="`/users`" class="mr-2 text-blue-800 hover:text-blue-600">All Users</Link>
-                <Link :href="`/users/${props.userSelected.id}/edit`"><button
+            <div class="flex justify-end mb-3 gap-2">
+                <Link v-if="$page.props.user.isAdmin === 1" :href="`/users`"><button
+                    class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                >All Users</button>
+                </Link>
+                <Link v-if="$page.props.user.isAdmin === 1" :href="`/users/${props.userSelected.id}/edit`"><button
                     class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                 >Edit User</button>
+                </Link>
+                <Link :href="`/dashboard`"><button
+                    class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                >Dashboard</button>
                 </Link>
             </div>
 
             <p class="mb-6">
-                <img :src="props.userSelected.profile_photo_url" />
+                <img :src="props.userSelected.profile_photo_url" class="rounded-full h-20 w-20 object-cover"/>
             </p>
 
             <h2 class="text-2xl pb-2">
