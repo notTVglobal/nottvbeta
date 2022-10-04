@@ -10,7 +10,7 @@
         <div class="bg-white text-black p-5 mb-10">
 
             <div class="flex justify-between mb-6">
-                <h1 class="text-3xl"><Link :href="`/teams/${props.team.id}`" class="text-indigo-600">{{props.team.name}}</Link> > <span class="font-semibold">Edit</span></h1>
+                <h1 class="text-3xl"><Link :href="`/teams/${props.team.id}`" class="text-indigo-600">{{props.team.name}}</Link></h1>
                 <span class="text-xs font-semibold text-red-700">Edit Mode</span>
                 <div>
                     <Link :href="`/teams/${props.team.id}`"><button

@@ -41,9 +41,9 @@ class PostController extends Controller
                             ]),
                         'filters' => Request::only(['search']),
                         'can' => [
-                            'viewPosts' => Auth::user()->can('view', Post::class),
-                            'createPosts' => Auth::user()->can('create', Post::class),
-                            'editPosts' => Auth::user()->can('edit', Post::class)
+                            'viewPost' => Auth::user()->can('view', Post::class),
+                            'createPost' => Auth::user()->can('create', Post::class),
+                            'editPost' => Auth::user()->can('edit', Post::class)
                         ]
                     ]);
 

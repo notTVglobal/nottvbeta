@@ -18,7 +18,7 @@
             </div>
 
             <div class="flex flex-row justify-between gap-x-4">
-                <Link v-if="can.createTeams" :href="`/teams/create`"><button
+                <Link v-if="can.createTeam" :href="`/teams/create`"><button
                     class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded disabled:bg-gray-400"
                 >Add Team</button>
                 </Link>

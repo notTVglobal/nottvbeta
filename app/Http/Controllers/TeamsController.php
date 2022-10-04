@@ -40,8 +40,8 @@ class TeamsController extends Controller
             'filters' => Request::only(['search']),
             'can' => [
                 'viewTeams' => Auth::user()->can('view', Team::class),
-                'createTeams' => Auth::user()->can('create', Team::class),
-                'editTeams' => Auth::user()->can('edit', Team::class)
+                'createTeam' => Auth::user()->can('create', Team::class),
+                'editTeam' => Auth::user()->can('edit', Team::class)
             ]
         ]);
     }
@@ -124,7 +124,10 @@ class TeamsController extends Controller
                     'team_id' => $show->team_id,
                     'poster' => $show->poster
                 ]),
-            'filters' => Request::only(['team_id'])
+            'filters' => Request::only(['team_id']),
+            'can' => [
+                'editTeam' => Auth::user()->can('edit', Team::class)
+            ]
         ]);
     }
 
@@ -137,7 +140,10 @@ class TeamsController extends Controller
     public function edit(team $team)
     {
         return Inertia::render('Teams/{$id}/Edit', [
-            'team' => $team
+            'team' => $team,
+            'can' => [
+                'editTeam' => Auth::user()->can('edit', Team::class)
+            ]
         ]);
     }
 

@@ -11,7 +11,7 @@
             <div class="flex justify-between mb-6">
                 <h1 class="text-3xl">
                     <Link :href="`/shows/${props.show.id}`" class="text-indigo-600">{{ props.show.name }}</Link>
-                    > <span class="font-semibold">Edit</span></h1>
+                </h1>
                 <span class="text-xs font-semibold text-red-700">Edit Mode</span>
                 <div>
                     <Link :href="`/shows/${props.show.id}`">

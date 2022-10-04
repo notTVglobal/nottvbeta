@@ -29,7 +29,7 @@
                 </div>
                 <div class="flex flex-wrap justify-end space-x-4">
                     <Link
-                        :href="`/teams/${props.team.id}/edit`"><button
+                        v-if="can.editTeam" :href="`/teams/${props.team.id}/edit`"><button
                         class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                     >Edit Team</button>
                     </Link>
@@ -143,6 +143,7 @@ let props = defineProps({
     shows: Object,
     message: String,
     filters: Object,
+    can: Object,
 });
 
 // let team_id = ref(props.filters.team_id)
