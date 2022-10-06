@@ -149,6 +149,8 @@
                         <p class="px-2 justify-self-end">0.00</p>
                         <p class="px-2 col-span-2">Equity Shares</p>
                         <p class="px-2 justify-self-end">10.00</p>
+                        <p class="px-2 col-span-2">Team Account Example</p>
+                        <p class="px-2 justify-self-end">0.00</p>
                     </div>
                     <div class="grid justify-items-stretch grid-cols-3">
                         <div class="bg-blue-400 font-semibold text-sm text-black px-2 mb-3 col-span-2">Team Shares</div>
