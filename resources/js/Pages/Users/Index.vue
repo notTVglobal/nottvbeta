@@ -97,7 +97,7 @@
                                                     {{ user.email }}
                                                 </th>
                                                 <td class="px-6 py-4">
-                                                    {{ user.role_id }}
+                                                    {{ user.role }}
                                                 </td>
                                                 <td class="px-6 py-4">
                                                     <Link :href="`/users/${user.id}/edit`"><button

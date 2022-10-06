@@ -96,6 +96,7 @@
                                                     scope="row"
                                                     class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                                                 >
+                                                    <Link :href="`/teams/${show.team_id}`" class="text-blue-800 hover:text-blue-600">{{ show.teamOwner }}</Link>
                                                 </th>
                                                 <td class="px-6 py-4">
 

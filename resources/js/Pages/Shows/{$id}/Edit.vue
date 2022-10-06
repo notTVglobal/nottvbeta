@@ -24,7 +24,8 @@
             </div>
 
             <div class="max-w-lg mx-auto mt-8">
-                <div class="mb-6">Show ID: {{ props.show.id }}</div>
+                <div class=""><span class="text-xs uppercase font-semibold">Show ID: </span>{{ props.show.id }}</div>
+                <div class="mb-6"><span class="text-xs uppercase font-semibold">Team: </span>{{ props.team }}</div>
                 <div class="flex space-y-3">
                     <div class="mb-6"><img :src="`/storage/images/${props.poster}`"/></div>
                 </div>
@@ -155,6 +156,7 @@ const props = defineProps({
     },
     poster: String,
     images: Object,
+    team: String,
 });
 
 let title = "Edit > " + props.show.name;

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Role;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
@@ -17,6 +18,10 @@ class UsersController extends Controller
      */
     public function index()
     {
+        function role($roleId) {
+            $role = Role::query()->where('id', $roleId)->first();
+            return $role->role;
+        }
         return Inertia::render('Users/Index', [
             'users' => User::query()
                 ->when(Request::input('search'), function ($query, $search) {
@@ -29,7 +34,7 @@ class UsersController extends Controller
                     'name' => $user->name,
                     'email' => $user->email,
                     'profile_photo_path' => $user->profile_photo_path,
-                    'role_id' => $user->role_id,
+                    'role' => role($user->role_id),
                     'isAdmin' => $user->isAdmin,
                     'can' => [
                         'edit' => Auth::user()->can('edit', $user)
@@ -110,8 +115,13 @@ class UsersController extends Controller
      */
     public function show(User $user)
     {
+        function role($roleId) {
+            $role = Role::query()->where('id', $roleId)->first();
+            return $role->role;
+        }
         return Inertia::render('Users/{$id}/Index', [
             'userSelected' => $user,
+            'role' => role($user->role_id),
         ]);
     }
 

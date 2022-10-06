@@ -6,6 +6,7 @@ use App\Models\Image;
 use App\Models\Post;
 use App\Models\Show;
 use App\Models\Team;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Str;
@@ -22,6 +23,11 @@ class ShowsController extends Controller
      */
     public function index()
     {
+        function teamOwner($teamId) {
+            $team = Team::query()->where('id', $teamId)->first();
+            return $team->name;
+        }
+
         return Inertia::render('Shows/Index', [
             'shows' => Show::query()
                 ->when(Request::input('search'), function ($query, $search) {
@@ -32,6 +38,8 @@ class ShowsController extends Controller
                 ->through(fn($show) => [
                     'id' => $show->id,
                     'name' => $show->name,
+                    'team_id' => $show->team_id,
+                    'teamOwner' => teamOwner($show->team_id),
                     'slug' => $show->slug,
                 ]),
             'filters' => Request::only(['search']),
@@ -117,9 +125,11 @@ class ShowsController extends Controller
         $show = Show::query()->where('id', $id)->firstOrFail();
         $team = $show->team_id;
 
+
         return Inertia::render('Shows/{$id}/Index', [
             'show' => $show,
             'team' => Team::query()->where('id', $team)->firstOrFail(),
+            'showRunner' => User::query()->where('id', $show->user_id)->pluck('name')->firstOrFail(),
         ]);
     }
 
@@ -131,6 +141,9 @@ class ShowsController extends Controller
      */
     public function edit(Show $show)
     {
+        $show = Show::query()->where('id', $show->id)->firstOrFail();
+        $team = $show->team_id;
+
         return Inertia::render('Shows/{$id}/Edit', [
             'show' => $show,
             'poster' => Image::query()->where('show_id', $show->id)->latest()->pluck('name')->first(),
@@ -143,6 +156,7 @@ class ShowsController extends Controller
                 ->through(fn($image) => [
                     'name' => $image->name,
                 ]),
+            'team' => Team::query()->where('id', $team)->pluck('name')->firstOrFail(),
         ]);
     }
 

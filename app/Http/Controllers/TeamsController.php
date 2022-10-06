@@ -21,6 +21,11 @@ class TeamsController extends Controller
 
     public function index()
     {
+        function teamOwner($userId) {
+            $user = User::query()->where('id', $userId)->first();
+            return $user->name;
+        }
+
         return Inertia::render('Teams/Index', [
             'teams' => Team::query()
                 ->when(Request::input('search'), function ($query, $search) {
@@ -32,7 +37,7 @@ class TeamsController extends Controller
                     'id' => $team->id,
                     'name' => $team->name,
                     'logo' => $team->logo,
-                    'user_id' => $team->user_id,
+                    'teamOwner' => teamOwner($team->user_id),
                     'team_id' => $team->team_id,
                     'memberSpots' => $team->memberSpots,
                     'totalSpots' => $team->totalSpots,

@@ -51,20 +51,28 @@
                             Shop
                         </JetNavLink>
 <!--                        <ChatToggle v-model:checked="chat.toggleShowChatOn" label="Chat" />-->
+
                     </div>
                 </div>
 
+
                 <div class="hidden lg:flex lg:items-center lg:ml-6 z-50">
-                    <div class="flex-col-1">
-                        <div v-if="$page.props.user.role_id === 1" class="text-xs text-fuchsia-700">
-                            <JetNavLink @click="videoPlayer.makeVideoTopRight()" :href="route('upgrade')" :active="route().current('upgrade')">
-                                UPGRADE ACCOUNT
-                            </JetNavLink>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="align-text-top -mt-5">
+                            <NotificationsButton class=""/>
                         </div>
-                        <div v-if="$page.props.user.role_id === 2" class="text-xs text-fuchsia-700">PREMIUM SUBSCRIBER</div>
-                        <div v-if="$page.props.user.role_id === 3" class="text-xs text-fuchsia-700">VIP</div>
-                        <div v-if="$page.props.user.role_id === 4" class="text-xs text-fuchsia-700">CREATOR</div>
-                        <div v-if="$page.props.user.isAdmin === 1" class="text-xs text-red-700">ADMIN</div>
+                        <div>
+                            <div v-if="$page.props.user.role_id === 1" class="text-xs text-fuchsia-700">
+                                <JetNavLink @click="videoPlayer.makeVideoTopRight()" :href="route('upgrade')" :active="route().current('upgrade')">
+                                    UPGRADE ACCOUNT
+                                </JetNavLink>
+                            </div>
+                            <div v-if="$page.props.user.role_id === 2" class="text-xs text-fuchsia-700">PREMIUM SUBSCRIBER</div>
+                            <div v-if="$page.props.user.role_id === 3" class="text-xs text-fuchsia-700">VIP</div>
+                            <div v-if="$page.props.user.role_id === 4" class="text-xs text-fuchsia-700">CREATOR</div>
+                            <div v-if="$page.props.user.isAdmin === 1" class="text-xs text-red-700">ADMIN</div>
+                        </div>
                     </div>
                     <!-- Settings Dropdown -->
                     <div class="ml-3 relative z-50">
@@ -165,6 +173,7 @@ import JetApplicationMark from '@/Jetstream/ApplicationMark.vue';
 import JetDropdownLink from '@/Jetstream/DropdownLink.vue';
 import { Link } from '@inertiajs/inertia-vue3';
 import ChatToggle from "@/Components/Chat/ChatToggle.vue";
+import NotificationsButton from "@/Components/Navigation/NotificationsButton.vue";
 import JetDropdown from '@/Jetstream/Dropdown.vue';
 import JetNavLink from '@/Jetstream/NavLink.vue';
 import {Inertia} from "@inertiajs/inertia";

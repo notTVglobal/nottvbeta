@@ -36,7 +36,7 @@
 
             <div class="p-6 bg-white border-b border-gray-200 space-y-1">
                 <div>
-                    <span class="text-sm font-semibold capitalize">User Type: </span>{{props.userSelected.role_id}}
+                    <span class="text-sm font-semibold capitalize">User Type: </span>{{props.role}}
                 </div>
                 <div>
                     <span v-if="$page.props.userSelected.role_id === 4" class="text-sm font-semibold capitalize">Creator Number: </span>{{props.userSelected.creatorNumber}}
@@ -95,6 +95,7 @@ videoPlayer.fullPage = false
 chat.class = "chatSmall"
 
 let props = defineProps({
-    userSelected: Object
+    userSelected: Object,
+    role: String,
 });
 </script>

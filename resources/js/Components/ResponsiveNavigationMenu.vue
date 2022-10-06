@@ -2,6 +2,9 @@
     <!-- Hamburger -->
     <div class="absolute top-3 right-4 hamburgerMask">
         <div class="-mr-2 flex items-center lg:hidden z-50">
+                <div class="-mt-16 mr-12">
+                    <NotificationsButton class=""/>
+                </div>
             <button
                 class="inline-flex items-center justify-center p-2 rounded-md text-gray-100 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition"
                 @click="showingNavigationDropdown = ! showingNavigationDropdown">
@@ -34,6 +37,7 @@
     <div :class="{'block': showingNavigationDropdown, 'hidden': ! showingNavigationDropdown}"
          class="lg:hidden bg-gray-800 text-white fixed top-12 w-full h-full">
         <!-- Responsive Settings Options -->
+        <!--   Fix Menu height e.g., h-[calc(h-100%-16rem)]      -->
         <div class="pt-7 pb-4 h-5/6 overflow-y-auto">
             <div class="px-4 bg-gray-800 border-b border-spacing-4 border-1 border-white">
 
@@ -172,6 +176,7 @@
 
 <script setup>
 import JetResponsiveNavLink from '@/Jetstream/ResponsiveNavLink.vue'
+import NotificationsButton from '@/Components/Navigation/NotificationsButton.vue'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useChatStore } from "@/Stores/ChatStore"
 import { ref } from "vue"

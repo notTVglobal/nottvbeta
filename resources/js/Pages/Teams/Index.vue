@@ -66,7 +66,7 @@
                                                 Team Name
                                             </th>
                                             <th scope="col" class="px-6 py-3">
-                                                Team Lead
+                                                Team Owner
                                             </th>
                                             <th scope="col" class="px-6 py-3">
                                                 # of Members
@@ -99,7 +99,7 @@
                                                 scope="row"
                                                 class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                                             >
-                                                {{ team.user_id }}
+                                                {{ team.teamOwner }}
                                             </th>
                                             <td
                                                 scope="row"

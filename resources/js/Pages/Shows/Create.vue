@@ -27,7 +27,7 @@
                 </label>
 
                 <div class="border border-gray-400 text-gray-900 text-sm p-2">{{ props.teamName.name }}</div>
-                <span class="text-xs text-blue-800 cursor-pointer">CHANGE TEAM</span>
+                <button class="text-xs text-blue-800 cursor-pointer disabled:text-gray-400 disabled:cursor-not-allowed" disabled>CHANGE TEAM</button>
                 <input v-model="form.user_id" hidden>
             </div>
             <div class="mb-6">

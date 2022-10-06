@@ -7,7 +7,15 @@
                 {{ name }}
             </h3>
 
-            <div class="flex flex-wrap-reverse justify-end space-x-4 gap-2">
+            <div class="flex flex-wrap-reverse justify-end gap-2">
+                <div class="">
+                    <Link
+                        :href="`/golive`"><button
+                        class="px-4 py-2 text-white bg-red-600 hover:bg-red-500 rounded-lg disabled:bg-gray-400"
+                        disabled
+                    >Go Live</button>
+                    </Link>
+                </div>
                 <div class="">
                     <Link
                     :href="`/shows/${id}/edit`"><button
@@ -29,7 +37,10 @@
     </div>
 
     <div class="flex justify-end mt-6">
-        <span class="text-xs capitalize font-semibold">TEAM: </span><Link href="/teams/1" class="text-blue-500 ml-2"> {{ show }} </Link>
+        <div class="flex flex-col">
+            <div><span class="text-xs capitalize font-semibold">Team: </span><Link href="/teams/1" class="text-blue-500 ml-2"> {{ show }} </Link></div>
+            <div><span class="text-xs capitalize font-semibold">Show Runner: </span>{{ showRunner }}</div>
+        </div>
     </div>
 
 
@@ -45,6 +56,7 @@ defineProps({
     name: String,
     description: String,
     show: String,
+    showRunner: String,
 })
 
 </script>

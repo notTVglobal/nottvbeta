@@ -76,23 +76,7 @@
                         </li>
                     </div>
                 </div>
-                <div class="p-5 bg-gray-200 rounded">
-                    <div class="mb-3 grid grid-cols-1">
-                        <div class="mb-1 font-semibold text-xl justify-self-start">My Shows</div>
-                    </div>
-                    <p class=""><Link
-                        @click="videoPlayer.makeVideoTopRight()"
-                        :href="`/shows/1`"
-                        class="text-blue-800 hover:text-blue-400">
-                        News & Talk
-                    </Link></p>
-                    <p class=""><Link
-                        @click="videoPlayer.makeVideoTopRight()"
-                        :href="`/shows/2`"
-                        class="text-blue-800 hover:text-blue-400">
-                        Down The Rabbit Hole
-                    </Link></p>
-                </div>
+
                 <div class="p-5 bg-gray-200 rounded">
                     <div class="mb-3 flex justify-between">
                         <div class="mb-1 font-semibold text-xl">My Teams</div>
@@ -123,6 +107,25 @@
                     </Link></p>
 
                 </div>
+
+                <div class="p-5 bg-gray-200 rounded">
+                    <div class="mb-3 grid grid-cols-1">
+                        <div class="mb-1 font-semibold text-xl justify-self-start">My Shows</div>
+                    </div>
+                    <p class=""><Link
+                        @click="videoPlayer.makeVideoTopRight()"
+                        :href="`/shows/1`"
+                        class="text-blue-800 hover:text-blue-400">
+                        News & Talk
+                    </Link></p>
+                    <p class=""><Link
+                        @click="videoPlayer.makeVideoTopRight()"
+                        :href="`/shows/2`"
+                        class="text-blue-800 hover:text-blue-400">
+                        Down The Rabbit Hole
+                    </Link></p>
+                </div>
+
 
             </section>
 

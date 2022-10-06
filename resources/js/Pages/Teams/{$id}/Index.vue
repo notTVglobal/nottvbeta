@@ -27,7 +27,7 @@
                     </h3>
 
                 </div>
-                <div class="flex flex-wrap justify-end space-x-4">
+                <div class="flex flex-wrap-reverse justify-end gap-2">
                     <Link
                         v-if="can.editTeam" :href="`/teams/${props.team.id}/edit`"><button
                         class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
