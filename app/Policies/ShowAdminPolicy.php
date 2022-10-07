@@ -2,11 +2,12 @@
 
 namespace App\Policies;
 
-use App\Models\Show;
+use App\Models\ShowAdmin;
 use App\Models\User;
+use App\Models\Show;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class ShowPolicy
+class ShowAdminPolicy
 {
     use HandlesAuthorization;
 
@@ -25,18 +26,12 @@ class ShowPolicy
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
+     * @param  \App\Models\ShowAdmin  $showAdmin
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user)
+    public function view(User $user, ShowAdmin $showAdmin)
     {
-        if ($user->role_id === 2)
-            return $user->role_id === 2;
-
-        elseif($user->role_id === 3)
-            return $user->role_id === 3;
-
-        elseif($user->role_id === 4)
-            return $user->role_id === 4;
+        //
     }
 
     /**
@@ -47,39 +42,17 @@ class ShowPolicy
      */
     public function create(User $user)
     {
-        return $user->role_id === 4;
-    }
-
-    /**
-     * Determine whether the user can edit models.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function manage(User $user)
-    {
-        return $user->role_id === 4;
-    }
-
-    /**
-     * Determine whether the user can edit models.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function edit(User $user)
-    {
-        return $user->role_id === 4;
+        //
     }
 
     /**
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Show  $show
+     * @param  \App\Models\ShowAdmin  $showAdmin
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Show $show)
+    public function update(User $user, ShowAdmin $showAdmin)
     {
         //
     }
@@ -88,10 +61,10 @@ class ShowPolicy
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Show  $show
+     * @param  \App\Models\ShowAdmin  $showAdmin
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, Show $show)
+    public function delete(User $user, ShowAdmin $showAdmin)
     {
         //
     }
@@ -100,10 +73,10 @@ class ShowPolicy
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Show  $show
+     * @param  \App\Models\ShowAdmin  $showAdmin
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, Show $show)
+    public function restore(User $user, ShowAdmin $showAdmin)
     {
         //
     }
@@ -112,10 +85,10 @@ class ShowPolicy
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Show  $show
+     * @param  \App\Models\ShowAdmin  $showAdmin
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, Show $show)
+    public function forceDelete(User $user, ShowAdmin $showAdmin)
     {
         //
     }

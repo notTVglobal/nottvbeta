@@ -13,8 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('teams', function (Blueprint $table) {
-            $table->string('slug')->default(null);
+        Schema::create('show_admins', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+            $table->foreignId('show_id')->default(null)->constrained();
+            $table->foreignId('user_id')->default(null)->constrained();
         });
     }
 
@@ -25,8 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('teams', function (Blueprint $table) {
-            $table->dropColumn('slug');
-        });
+        Schema::dropIfExists('show_admins');
     }
 };

@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Models\User;
+use GuzzleHttp\Psr7\Request;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class UserPolicy
@@ -17,7 +18,7 @@ class UserPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        return $user->isAdmin === 1;
     }
 
     /**
@@ -27,7 +28,7 @@ class UserPolicy
      * @param  \App\Models\User  $model
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, User $model)
+    public function view(User $user)
     {
         //
     }
@@ -88,17 +89,6 @@ class UserPolicy
     }
 
     /**
-     * Determine whether the user can view all users.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function viewAllUsers(User $user)
-    {
-        return $user->isAdmin === 1;
-    }
-
-    /**
      * Determine whether the user can create models.
      *
      * @param  \App\Models\User  $user
@@ -130,7 +120,7 @@ class UserPolicy
      */
     public function update(User $user, User $model)
     {
-        //
+        return $user->isAdmin === 1;
     }
 
     /**
@@ -142,7 +132,8 @@ class UserPolicy
      */
     public function delete(User $user, User $model)
     {
-        //
+        // tec21: I entered a bad value on purpose so no one can delete a user right now
+        return $user->isAdmin === 2;
     }
 
     /**
@@ -154,7 +145,7 @@ class UserPolicy
      */
     public function restore(User $user, User $model)
     {
-        //
+        return $user->isAdmin === 1;
     }
 
     /**
@@ -166,6 +157,7 @@ class UserPolicy
      */
     public function forceDelete(User $user, User $model)
     {
-        //
+        // tec21: I entered a bad value on purpose so no one can delete a user right now
+        return $user->isAdmin === 2;
     }
 }

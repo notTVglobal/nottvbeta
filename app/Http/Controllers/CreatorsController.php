@@ -17,7 +17,7 @@ class CreatorsController extends Controller
     {
         return Inertia::render('Creators/Index', [
             'creators' => Creator::query()
-                ->when(\Illuminate\Support\Facades\Request::input('search'), function ($query, $search) {
+                ->when(Request::input('search'), function ($query, $search) {
                     $query->where('name', 'like', "%{$search}%");
                 })
                 ->paginate(10)
@@ -59,7 +59,11 @@ class CreatorsController extends Controller
      */
     public function show($id)
     {
-        //
+        $creator = Creator::query()->where('id', $id)->firstOrFail();
+
+        return Inertia::render('Creators/{$id}/Index', [
+            'creator' => $creator,
+        ]);
     }
 
     /**

@@ -11,29 +11,26 @@
 
         <div class="bg-white rounded text-black p-5 mb-10">
 
-<!--            <TeamHeader v-bind="team" :memberSpots="props.team.memberSpots"/>-->
-
-
-
             <header class="flex justify-between mb-3">
                 <div>
                     <h3 class="inline-flex items-center text-3xl font-semibold relative">
                         <img :src="`/storage/images/oeV64kpa339M8tmLEZrERCb7bLfuAy8BIqJ17x8t.png`" alt="" class="w-20 mr-2">
                         {{ props.team.name }}
-                        <div
-                            class="bg-green-400 w-5 h-5 text-xs text-white rounded-full flex justify-center items-center absolute -right-4 -top-0.5">
-                            {{ props.team.memberSpots }}
-                        </div>
                     </h3>
 
                 </div>
                 <div class="flex flex-wrap-reverse justify-end gap-2">
                     <Link
+                        v-if="can.manageTeam" :href="`/teams/${props.team.id}/manage`"><button
+                        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                    >Manage</button>
+                    </Link>
+                    <Link
                         v-if="can.editTeam" :href="`/teams/${props.team.id}/edit`"><button
                         class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                    >Edit Team</button>
+                    >Edit</button>
                     </Link>
-                    <Link :href="`/dashboard`"><button
+                    <Link v-if="props.user.role_id === 4" :href="`/dashboard`"><button
                         class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                     >Dashboard</button>
                     </Link>
@@ -44,34 +41,11 @@
                 {{ props.team.description }}
             </p>
 
-            <div
-                class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
-                role="alert"
-                v-if="props.message"
-            >
-                                <span class="font-medium">
-                                    {{props.message}}
-                                </span>
-            </div>
-
-
             <div class="flex flex-col">
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                     <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
 
-                        <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                            <TeamMembersList :memberSpots="props.team.memberSpots" :totalSpots="props.team.totalSpots"/>
-                        </div>
-
-                        <div class="mt-4 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                            <TeamShowsList :shows="props.shows.data"/>
-                            <!-- Paginator -->
-                            <Pagination :links="props.shows.links" class="mt-6"/>
-                        </div>
-
-                        <div class="mt-4 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                            <TeamAssignmentsList />
-                        </div>
+                    BODY
 
                         <!--  <TeamFooter />  -->
 
@@ -81,33 +55,6 @@
 
         </div>
     </div>
-
-    <Teleport to="body">
-    <Modal :show="showModal" @close="showModal = false">
-
-        <template #header>
-            Add a new team member
-        </template>
-        <template #default>
-            <div class="pb-2">
-                Send an email invitation to join your team.
-            </div>
-            <form>
-                <div class="flex gap-2">
-                    <input
-                        type="email"
-                        placeholder="Email Address..."
-                        class="rounded flex-1"
-                    >
-                    <button class="bg-gray-300 rounded-md w-20 p-2 hover:bg-gray-400 text-sm">Add</button>
-                </div>
-            </form>
-        </template>
-        <template #footer>
-            <button @click="showModal = false" class="text-blue-600 hover:text-gray-500">Cancel</button>
-        </template>
-    </Modal>
-    </Teleport>
 
 </template>
 
@@ -139,6 +86,7 @@ let teamStore = useTeamStore();
 // team.fill();
 
 let props = defineProps({
+    user: Object,
     team: Object,
     shows: Object,
     message: String,
@@ -146,14 +94,5 @@ let props = defineProps({
     can: Object,
 });
 
-// let team_id = ref(props.filters.team_id)
-
-
-teamStore.setActiveTeam(props.team.id);
-
-let showModal = ref(false);
-let a = ref(props.team.memberSpots);
-let b = ref(props.team.totalSpots);
-let spotsRemaining = computed(() => b - a);
 
 </script>

@@ -26,6 +26,16 @@
                 </Link>
             </div>
 
+            <div
+                class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
+                role="alert"
+                v-if="props.message"
+            >
+                                <span class="font-medium">
+                                    {{props.message}}
+                                </span>
+            </div>
+
             <p class="mb-6">
                 <img :src="props.userSelected.profile_photo_url" class="rounded-full h-20 w-20 object-cover"/>
             </p>
@@ -97,5 +107,6 @@ chat.class = "chatSmall"
 let props = defineProps({
     userSelected: Object,
     role: String,
+    message: String,
 });
 </script>

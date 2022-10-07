@@ -125,8 +125,32 @@ class ShowsController extends Controller
         $show = Show::query()->where('id', $id)->firstOrFail();
         $team = $show->team_id;
 
-
         return Inertia::render('Shows/{$id}/Index', [
+            'show' => $show,
+            'team' => Team::query()->where('id', $team)->firstOrFail(),
+            'showRunner' => User::query()->where('id', $show->user_id)->pluck('name')->firstOrFail(),
+            'can' => [
+                'manageShow' => Auth::user()->can('manage', Show::class),
+                'editShow' => Auth::user()->can('edit', Show::class),
+            ]
+        ]);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    // URL path is currently set to show.id
+    // change show($id) to show($slug) to
+    // make URL path = slug.
+    public function manage($id)
+    {
+        $show = Show::query()->where('id', $id)->firstOrFail();
+        $team = $show->team_id;
+
+        return Inertia::render('Shows/{$id}/Manage', [
             'show' => $show,
             'team' => Team::query()->where('id', $team)->firstOrFail(),
             'showRunner' => User::query()->where('id', $show->user_id)->pluck('name')->firstOrFail(),

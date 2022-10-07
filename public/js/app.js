@@ -3549,14 +3549,6 @@ var map = {
 		"./resources/js/Pages/Channels.vue",
 		"resources_js_Pages_Channels_vue"
 	],
-	"./Creators/Create": [
-		"./resources/js/Pages/Creators/Create.vue",
-		"resources_js_Pages_Creators_Create_vue"
-	],
-	"./Creators/Create.vue": [
-		"./resources/js/Pages/Creators/Create.vue",
-		"resources_js_Pages_Creators_Create_vue"
-	],
 	"./Creators/Index": [
 		"./resources/js/Pages/Creators/Index.vue",
 		"/js/vendor",
@@ -3567,13 +3559,13 @@ var map = {
 		"/js/vendor",
 		"resources_js_Pages_Creators_Index_vue"
 	],
-	"./Creators/Show": [
-		"./resources/js/Pages/Creators/Show.vue",
-		"resources_js_Pages_Creators_Show_vue"
+	"./Creators/{$id}/Index": [
+		"./resources/js/Pages/Creators/{$id}/Index.vue",
+		"resources_js_Pages_Creators_id_Index_vue"
 	],
-	"./Creators/Show.vue": [
-		"./resources/js/Pages/Creators/Show.vue",
-		"resources_js_Pages_Creators_Show_vue"
+	"./Creators/{$id}/Index.vue": [
+		"./resources/js/Pages/Creators/{$id}/Index.vue",
+		"resources_js_Pages_Creators_id_Index_vue"
 	],
 	"./Dashboard": [
 		"./resources/js/Pages/Dashboard.vue",
@@ -3793,6 +3785,14 @@ var map = {
 		"./resources/js/Pages/Shows/{$id}/Index.vue",
 		"resources_js_Pages_Shows_id_Index_vue"
 	],
+	"./Shows/{$id}/Manage": [
+		"./resources/js/Pages/Shows/{$id}/Manage.vue",
+		"resources_js_Pages_Shows_id_Manage_vue"
+	],
+	"./Shows/{$id}/Manage.vue": [
+		"./resources/js/Pages/Shows/{$id}/Manage.vue",
+		"resources_js_Pages_Shows_id_Manage_vue"
+	],
 	"./Stream": [
 		"./resources/js/Pages/Stream.vue",
 		"resources_js_Pages_Stream_vue"
@@ -3834,6 +3834,14 @@ var map = {
 	"./Teams/{$id}/Index.vue": [
 		"./resources/js/Pages/Teams/{$id}/Index.vue",
 		"resources_js_Pages_Teams_id_Index_vue"
+	],
+	"./Teams/{$id}/Manage": [
+		"./resources/js/Pages/Teams/{$id}/Manage.vue",
+		"resources_js_Pages_Teams_id_Manage_vue"
+	],
+	"./Teams/{$id}/Manage.vue": [
+		"./resources/js/Pages/Teams/{$id}/Manage.vue",
+		"resources_js_Pages_Teams_id_Manage_vue"
 	],
 	"./TermsOfService": [
 		"./resources/js/Pages/TermsOfService.vue",

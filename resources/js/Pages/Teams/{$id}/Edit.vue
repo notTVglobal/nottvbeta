@@ -13,7 +13,7 @@
                 <h1 class="text-3xl"><Link :href="`/teams/${props.team.id}`" class="text-indigo-600">{{props.team.name}}</Link></h1>
                 <span class="text-xs font-semibold text-red-700">Edit Mode</span>
                 <div>
-                    <Link :href="`/teams/${props.team.id}`"><button
+                    <Link :href="`/teams/${props.team.id}/manage`"><button
                         class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
                     >Cancel</button>
                     </Link>

@@ -42,7 +42,7 @@ class UsersController extends Controller
                 ]),
             'filters' => Request::only(['search']),
             'can' => [
-                'viewAllUsers' => Auth::user()->can('viewAll', User::class),
+                'viewAnyUser' => Auth::user()->can('viewAny', User::class),
                 'createUser' => Auth::user()->can('create', User::class),
                 'editUser' => Auth::user()->can('edit', User::class)
             ]
@@ -122,6 +122,11 @@ class UsersController extends Controller
         return Inertia::render('Users/{$id}/Index', [
             'userSelected' => $user,
             'role' => role($user->role_id),
+            'can' => [
+                'viewAnyUser' => Auth::user()->can('viewAny', User::class),
+                'createUser' => Auth::user()->can('create', User::class),
+                'editUser' => Auth::user()->can('edit', User::class)
+            ]
         ]);
     }
 

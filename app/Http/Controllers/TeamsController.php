@@ -131,6 +131,43 @@ class TeamsController extends Controller
                 ]),
             'filters' => Request::only(['team_id']),
             'can' => [
+                'editTeam' => Auth::user()->can('edit', Team::class),
+                'manageTeam' => Auth::user()->can('edit', Team::class)
+            ]
+        ]);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    // URL path is currently set to show.id
+    // change show($id) to show($slug) to
+    // make URL path = slug.
+    public function manage(team $team)
+    {
+        function showRunner($userId) {
+            $user = User::query()->where('id', $userId)->first();
+            return $user->name;
+        }
+        return Inertia::render('Teams/{$id}/Manage', [
+            'team' => $team,
+            'shows' => DB::table('shows')->where('team_id', $team->id)
+                ->latest()
+                ->paginate(5)
+                ->withQueryString()
+                ->through(fn($show) => [
+                    'id' => $show->id,
+                    'name' => $show->name,
+                    'description' => $show->description,
+                    'showRunner' => showRunner($show->user_id),
+                    'team_id' => $show->team_id,
+                    'poster' => $show->poster
+                ]),
+            'filters' => Request::only(['team_id']),
+            'can' => [
                 'editTeam' => Auth::user()->can('edit', Team::class)
             ]
         ]);

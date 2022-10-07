@@ -152,31 +152,32 @@ Route::middleware([
 //    Route::post('/teams', [TeamsController::class, 'store'])
 //        ->can('viewCreator', 'App\Models\User')
 //        ->name('teams.store');
-    // Single team page
-    Route::get('/teams/{team}', [TeamsController::class, 'show'])
+    // Display teams manage page
+    Route::get('/teams/{team}/manage', [TeamsController::class, 'manage'])
         ->can('viewCreator', 'App\Models\User')
-        ->name('teams.show');
+        ->name('teams.manage');
     // Edit team
     Route::get('/teams/{team}/edit', [TeamsController::class, 'edit'])
         ->can('viewCreator', 'App\Models\User')
         ->name('teams.edit');
 
 
-    // List all creators
-    Route::get('/creators', [CreatorsController::class, 'index'])
-        ->can('viewAdmin', 'App\Models\User')
-        ->name('creators');
-    // Create a creator
-    Route::get('/creators/create', [CreatorsController::class, 'create'])
-        ->can('viewAdmin', 'App\Models\User')
-        ->name('creators.create');
+    // Creators resource
+    Route::resource('creators',CreatorsController::class);
+    // Display creator page
+    Route::get('/creators/{creator}', [CreatorsController::class, 'show'])
+        ->name('creators.show');
 
-
+    // Shows resource
     Route::resource('shows',ShowsController::class);
-
+    // Display shows index page
     Route::get('/shows', [ShowsController::class, 'index'])
         ->can('viewPremium', 'App\Models\User')
         ->name('shows');
+    // Display shows manage page
+    Route::get('/shows/{show}/manage', [ShowsController::class, 'manage'])
+        ->can('viewCreator', 'App\Models\User')
+        ->name('shows.manage');
 
     // tec21: This is probably not the best way to do this
     // I'm unable to get the FilePond uploader to show the
@@ -227,7 +228,7 @@ Route::middleware([
     // List all users -- this has to be a different controller than the UsersAdminCreateEditController
     // because it uses a different resource class for the search function.
     Route::get('/users', [UsersController::class, 'index'])
-        ->can('viewAllUsers', 'App\Models\User')
+        ->can('viewAny', 'App\Models\User')
         ->name('users');
 
 //    // Create a user
@@ -240,7 +241,7 @@ Route::middleware([
 
 //    // Show user
     Route::get('/users/{user}', [UsersController::class, 'show'])
-        ->can('viewAllUsers', 'App\Models\User')
+        ->can('viewAny', 'App\Models\User')
         ->name('users.show');
 
 //    // Edit user

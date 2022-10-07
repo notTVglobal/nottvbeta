@@ -1,70 +1,64 @@
+
 <template>
 
-    <Head :title="show.name" />
+    <Head :title="props.show.name" />
     <div class="sticky top-0 w-full nav-mask">
         <ResponsiveNavigationMenu/>
         <NavigationMenu />
     </div>
 
     <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
+
         <div class="bg-white rounded text-black p-5 mb-10">
 
-            <ShowHeader :id="props.show.id" :name="props.show.name" :description="props.show.description" :show="props.team.name" :showRunner="props.showRunner"/>
+            <header class="flex justify-between mb-3">
+                <div>
+                    <h3 class="inline-flex items-center text-3xl font-semibold relative">
+                        <img :src="`/storage/images/oeV64kpa339M8tmLEZrERCb7bLfuAy8BIqJ17x8t.png`" alt="" class="w-20 mr-2">
+                        {{ props.show.name }}
+                    </h3>
+
+                </div>
+                <div class="flex flex-wrap-reverse justify-end gap-2">
+                    <Link
+                        v-if="props.can.manageShow" :href="`/shows/${props.show.id}/manage`"><button
+                        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                    >Manage</button>
+                    </Link>
+                    <Link
+                        v-if="can.editShow" :href="`/shows/${props.show.id}/edit`"><button
+                        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                    >Edit</button>
+                    </Link>
+                    <Link v-if="props.user.role_id === 4" :href="`/dashboard`"><button
+                        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                    >Dashboard</button>
+                    </Link>
+                </div>
+            </header>
+
+            <p class="mb-6 p-5">
+                {{ props.show.description }}
+            </p>
 
             <div class="flex flex-col">
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                     <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-                        <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
 
-                            <div
-                                class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
-                                role="alert"
-                                v-if="props.message"
-                            >
-                                <span class="font-medium">
-                                    {{props.message}}
-                                </span>
-                            </div>
+                        BODY
 
-                            <ShowEpisodesList />
-
-<!--                            <table class="min-w-full divide-y divide-gray-200">-->
-<!--                                <tbody class="bg-white divide-y divide-gray-200">-->
-<!--                                <tr v-for="episode in episodes.data" :key="episode.id">-->
-<!--                                    <td class="px-6 py-4 whitespace-nowrap">-->
-<!--                                        <div class="flex items-center">-->
-<!--                                            <div>-->
-<!--                                                <div class="text-sm font-medium text-gray-900">-->
-<!--                                                    <Link :href="`/admin/users/${episode.id}`" class="text-indigo-600 hover:text-indigo-900">{{ episode.name }}</Link>-->
-<!--                                                </div>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                    </td>-->
-
-<!--                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">-->
-<!--                                        <Link :href="`/admin/users/edit/${episode.id}`" class="text-indigo-600 hover:text-indigo-900">Edit</Link>-->
-<!--                                    </td>-->
-<!--                                </tr>-->
-<!--                                </tbody>-->
-<!--                            </table>-->
-
-<!--                            &lt;!&ndash; Paginator &ndash;&gt;-->
-<!--                            <Pagination :links="episode.links" class="mt-6"/>-->
-
-                        </div>
-
-                        <div class="mt-4 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                            <ShowCreditsList />
-                        </div>
+<!--                        <ShowFooter :show="props.team.name"/>-->
 
                     </div>
                 </div>
             </div>
-            <ShowFooter :show="props.team.name"/>
+
         </div>
     </div>
 
 </template>
+
+
 
 <script setup>
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
@@ -88,14 +82,14 @@ videoPlayer.fullPage = false
 chat.class = "chatSmall"
 
 let props = defineProps({
+    user: Object,
     show: Object,
     team: Object,
     showRunner: String,
     episodes: Object,
-    message: String
+    message: String,
+    can: Object,
 });
-
-
 
 
 </script>

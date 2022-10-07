@@ -3,7 +3,7 @@
     <Link
         :href="`/shows/create`">
         <button
-        class="bg-green-500 hover:bg-green-600 text-white ml-2 my-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
+        class="bg-green-500 hover:bg-green-600 text-white ml-2 mt-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
     >Create Show</button></Link>
 
     <table class="table-auto min-w-full divide-y divide-gray-200">
@@ -15,7 +15,7 @@
                     <div>
                         <div class="text-sm font-medium text-gray-900 pl-14">
                             <!--                                                    <Link :href="`/admin/users/${episode.id}`" class="text-indigo-600 hover:text-indigo-900">{{ episode.name }}</Link>-->
-
+                            Show Name
                         </div>
                     </div>
                 </div>

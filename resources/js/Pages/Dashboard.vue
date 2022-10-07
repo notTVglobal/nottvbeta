@@ -89,19 +89,19 @@
                     </div>
                     <p class=""><Link
                         @click="videoPlayer.makeVideoTopRight()"
-                        :href="`/teams/1`"
+                        :href="`/teams/1/manage`"
                         class="text-blue-800 hover:text-blue-400">
                         notTV Founders
                     </Link></p>
                     <p class=""><Link
                         @click="videoPlayer.makeVideoTopRight()"
-                        :href="`/teams/2`"
+                        :href="`/teams/2/manage`"
                         class="text-blue-800 hover:text-blue-400">
                         notTV News Team
                     </Link></p>
                     <p class=""><Link
                         @click="videoPlayer.makeVideoTopRight()"
-                        :href="`/teams/3`"
+                        :href="`/teams/3/manage`"
                         class="text-blue-800 hover:text-blue-400">
                         RJG Productions
                     </Link></p>
@@ -114,13 +114,13 @@
                     </div>
                     <p class=""><Link
                         @click="videoPlayer.makeVideoTopRight()"
-                        :href="`/shows/1`"
+                        :href="`/shows/1/manage`"
                         class="text-blue-800 hover:text-blue-400">
                         News & Talk
                     </Link></p>
                     <p class=""><Link
                         @click="videoPlayer.makeVideoTopRight()"
-                        :href="`/shows/2`"
+                        :href="`/shows/2/manage`"
                         class="text-blue-800 hover:text-blue-400">
                         Down The Rabbit Hole
                     </Link></p>
