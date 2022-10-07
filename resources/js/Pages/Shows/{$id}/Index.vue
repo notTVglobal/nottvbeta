@@ -48,7 +48,7 @@
                         BODY
 
 <!--                        <ShowFooter :show="props.team.name"/>-->
-
+                        <ShowFooter :show="props.team.name" :team_id="props.team.id"/>
                     </div>
                 </div>
             </div>
