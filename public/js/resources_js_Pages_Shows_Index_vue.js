@@ -1748,7 +1748,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       key: show.id,
       "class": "bg-white border-b dark:bg-gray-800 dark:border-gray-700"
     }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", _hoisted_20, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                                    <img :src=\"`/storage/images/${show.poster}`\" class=\"rounded-full h-20 w-20 object-cover\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
-      src: "https://cdn.not.tv/wp-content/uploads/2022/09/27220247/Ping.png",
+      src: '/storage/images/' + show.poster,
       "class": "rounded-full h-20 w-20 object-cover"
     }, null, 8
     /* PROPS */

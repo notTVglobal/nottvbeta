@@ -247,8 +247,8 @@ __webpack_require__.r(__webpack_exports__);
   __name: 'ShowEpisodesList',
   props: {
     episodes: Object,
-    filters: Object,
-    can: Object
+    filters: Object // can: Object,
+
   },
   setup: function setup(__props, _ref) {
     var expose = _ref.expose;
@@ -327,6 +327,7 @@ __webpack_require__.r(__webpack_exports__);
     name: String,
     description: String,
     show: String,
+    poster: String,
     showRunner: String,
     team_id: String
   },
@@ -586,6 +587,7 @@ __webpack_require__.r(__webpack_exports__);
   __name: 'Manage',
   props: {
     show: Object,
+    poster: String,
     team: Object,
     showRunner: String,
     episodes: Object,
@@ -1822,7 +1824,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_Link = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Link");
 
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("header", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
-    src: "/storage/images/oeV64kpa339M8tmLEZrERCb7bLfuAy8BIqJ17x8t.png",
+    src: '/storage/images/' + $props.poster,
     alt: "",
     "class": "w-20 mr-2"
   }, null, 8
@@ -2157,10 +2159,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     description: $setup.props.show.description,
     show: $setup.props.team.name,
     showRunner: $setup.props.showRunner,
-    team_id: $setup.props.team.id
+    team_id: $setup.props.team.id,
+    poster: $setup.props.poster
   }, null, 8
   /* PROPS */
-  , ["id", "name", "description", "show", "showRunner", "team_id"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [$setup.props.message ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_9, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.props.message), 1
+  , ["id", "name", "description", "show", "showRunner", "team_id", "poster"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [$setup.props.message ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_9, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.props.message), 1
   /* TEXT */
   )])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ShowEpisodesList"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                            <table class=\"min-w-full divide-y divide-gray-200\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                <tbody class=\"bg-white divide-y divide-gray-200\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                <tr v-for=\"episode in episodes.data\" :key=\"episode.id\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                    <td class=\"px-6 py-4 whitespace-nowrap\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                        <div class=\"flex items-center\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                            <div>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                                <div class=\"text-sm font-medium text-gray-900\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                                    <Link :href=\"`/admin/users/${episode.id}`\" class=\"text-indigo-600 hover:text-indigo-900\">{{ episode.name }}</Link>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                                </div>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                            </div>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                        </div>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                    </td>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                    <td class=\"px-6 py-4 whitespace-nowrap text-right text-sm font-medium\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                        <Link :href=\"`/admin/users/edit/${episode.id}`\" class=\"text-indigo-600 hover:text-indigo-900\">Edit</Link>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                    </td>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                </tr>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                </tbody>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                            </table>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                            &lt;!&ndash; Paginator &ndash;&gt;"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                            <Pagination :links=\"episode.links\" class=\"mt-6\"/>")]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ShowCreditsList"])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ShowFooter"], {
     show: $setup.props.team.name

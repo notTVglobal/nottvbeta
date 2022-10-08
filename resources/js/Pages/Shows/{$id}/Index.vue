@@ -14,7 +14,7 @@
             <header class="flex justify-between mb-3">
                 <div>
                     <h3 class="inline-flex items-center text-3xl font-semibold relative">
-                        <img :src="`/storage/images/oeV64kpa339M8tmLEZrERCb7bLfuAy8BIqJ17x8t.png`" alt="" class="w-20 mr-2">
+                        <img :src="'/storage/images/' + props.poster" alt="" class="w-20 mr-2">
                         {{ props.show.name }}
                     </h3>
 
@@ -84,6 +84,7 @@ chat.class = "chatSmall"
 let props = defineProps({
     user: Object,
     show: Object,
+    poster: String,
     team: Object,
     showRunner: String,
     episodes: Object,

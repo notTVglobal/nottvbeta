@@ -23,11 +23,14 @@
                 </div>
             </div>
 
+            <div v-if="form.errors.name" v-text="form.errors.name" class="bg-red-600 p-2 w-full text-white font-semibold mt-1"></div>
+            <div v-if="form.errors.description" v-text="form.errors.description" class="bg-red-600 p-2 w-full text-white font-semibold mt-1"></div>
+
             <div class="max-w-lg mx-auto mt-8">
                 <div class=""><span class="text-xs uppercase font-semibold">Show ID: </span>{{ props.show.id }}</div>
                 <div class="mb-6"><span class="text-xs uppercase font-semibold">Team: </span>{{ props.team }}</div>
                 <div class="flex space-y-3">
-                    <div class="mb-6"><img :src="`/storage/images/${props.poster}`"/></div>
+                    <div class="mb-6"><img :src="'/storage/images/' + props.poster"/></div>
                 </div>
 
                 <div class="max-w-lg mx-auto mt-2 mb-6 bg-gray-200 p-6">
@@ -152,7 +155,6 @@ const props = defineProps({
     show: {
         type: Object,
         id: String,
-        poster: String,
     },
     poster: String,
     images: Object,

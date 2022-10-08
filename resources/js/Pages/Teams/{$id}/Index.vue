@@ -14,19 +14,19 @@
             <header class="flex justify-between mb-3">
                 <div>
                     <h3 class="inline-flex items-center text-3xl font-semibold relative">
-                        <img :src="`/storage/images/oeV64kpa339M8tmLEZrERCb7bLfuAy8BIqJ17x8t.png`" alt="" class="w-20 mr-2">
+                        <img :src="'/storage/images/' + props.logo" alt="" class="w-20 mr-2">
                         {{ props.team.name }}
                     </h3>
 
                 </div>
                 <div class="flex flex-wrap-reverse justify-end gap-2">
                     <Link
-                        v-if="can.manageTeam" :href="`/teams/${props.team.id}/manage`"><button
+                        v-if="props.can.manageTeam" :href="`/teams/${props.team.id}/manage`"><button
                         class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                     >Manage</button>
                     </Link>
                     <Link
-                        v-if="can.editTeam" :href="`/teams/${props.team.id}/edit`"><button
+                        v-if="props.can.editTeam" :href="`/teams/${props.team.id}/edit`"><button
                         class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                     >Edit</button>
                     </Link>
@@ -88,6 +88,7 @@ let teamStore = useTeamStore();
 let props = defineProps({
     user: Object,
     team: Object,
+    logo: String,
     shows: Object,
     message: String,
     filters: Object,

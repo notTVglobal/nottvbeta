@@ -109,7 +109,6 @@ let form = useForm({
     name: '',
     description: '',
     user_id: props.user.id,
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/EBU_Colorbars.svg/1280px-EBU_Colorbars.png',
     totalSpots: '1',
 });
 

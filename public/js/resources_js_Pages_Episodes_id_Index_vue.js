@@ -247,8 +247,8 @@ __webpack_require__.r(__webpack_exports__);
   __name: 'ShowEpisodesList',
   props: {
     episodes: Object,
-    filters: Object,
-    can: Object
+    filters: Object // can: Object,
+
   },
   setup: function setup(__props, _ref) {
     var expose = _ref.expose;
@@ -327,6 +327,7 @@ __webpack_require__.r(__webpack_exports__);
     name: String,
     description: String,
     show: String,
+    poster: String,
     showRunner: String,
     team_id: String
   },
@@ -1820,7 +1821,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_Link = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Link");
 
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("header", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
-    src: "/storage/images/oeV64kpa339M8tmLEZrERCb7bLfuAy8BIqJ17x8t.png",
+    src: '/storage/images/' + $props.poster,
     alt: "",
     "class": "w-20 mr-2"
   }, null, 8

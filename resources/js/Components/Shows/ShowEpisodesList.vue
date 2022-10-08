@@ -53,7 +53,7 @@ let show = useShowStore();
 let props = defineProps({
     episodes: Object,
     filters: Object,
-    can: Object,
+    // can: Object,
 });
 
 </script>

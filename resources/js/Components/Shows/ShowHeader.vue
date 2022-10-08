@@ -3,7 +3,7 @@
 
     <header class="flex justify-between mb-3">
             <h3 class="inline-flex items-center text-3xl font-semibold relative">
-                <img :src="`/storage/images/oeV64kpa339M8tmLEZrERCb7bLfuAy8BIqJ17x8t.png`" alt="" class="w-20 mr-2">
+                <img :src="'/storage/images/' + poster" alt="" class="w-20 mr-2">
                 <Link :href="`/shows/${id}`" class="">{{ name }}</Link>
             </h3>
 
@@ -63,6 +63,7 @@ defineProps({
     name: String,
     description: String,
     show: String,
+    poster: String,
     showRunner: String,
     team_id: String,
 })

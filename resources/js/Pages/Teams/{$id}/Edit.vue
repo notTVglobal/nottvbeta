@@ -20,9 +20,13 @@
                 </div>
             </div>
 
+            <div v-if="form.errors.name" v-text="form.errors.name" class="bg-red-600 p-2 w-full text-white font-semibold mt-1"></div>
+            <div v-if="form.errors.description" v-text="form.errors.description" class="bg-red-600 p-2 w-full text-white font-semibold mt-1"></div>
+            <div v-if="form.errors.totalSpots" v-text="form.errors.totalSpots" class="bg-red-600 p-2 w-full text-white font-semibold mt-1"></div>
+
             <div class="max-w-lg mx-auto mt-8">
                 <div class="mb-6"><span class="text-xs">Team ID: </span><span class="font-semibold">{{props.team.id}}</span></div>
-                <div class="mb-6"><img :src="props.team.team_poster_url" /></div>
+                <div class="mb-6"><img :src="'/storage/images/' + logo" /></div>
                 <form @submit.prevent="submit">
                     <div class="mb-6">
                         <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
@@ -103,7 +107,8 @@ videoPlayer.fullPage = false
 chat.class = "chatSmall"
 
 let props = defineProps({
-    team: Object
+    team: Object,
+    logo: String,
 });
 
 let title = "Edit > " + props.team.name;
@@ -113,7 +118,6 @@ let form = useForm({
     name: props.team.name,
     description: props.team.description,
     totalSpots: props.team.totalSpots,
-    logo: props.team.logo,
 });
 
 let submit = () => {

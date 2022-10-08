@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Str;
 use Illuminate\Http\Request as HttpRequest;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class ShowsController extends Controller
@@ -24,8 +25,13 @@ class ShowsController extends Controller
     public function index()
     {
         function teamOwner($teamId) {
-            $team = Team::query()->where('id', $teamId)->first();
-            return $team->name;
+            $teamOwner = Team::query()->where('id', $teamId)->first();
+            return $teamOwner->name;
+        }
+
+        function poster($imageId) {
+            $poster = Image::query()->where('id', $imageId)->first();
+            return $poster->name;
         }
 
         return Inertia::render('Shows/Index', [
@@ -41,6 +47,7 @@ class ShowsController extends Controller
                     'team_id' => $show->team_id,
                     'teamOwner' => teamOwner($show->team_id),
                     'slug' => $show->slug,
+                    'poster' => poster($show->image_id),
                 ]),
             'filters' => Request::only(['search']),
             'can' => [
@@ -96,7 +103,8 @@ class ShowsController extends Controller
 //            return redirect('/shows')->with('message', 'Show Created Successfully');
 
         $request->validate([
-            'name' => 'unique:shows|required',
+            'name' => 'unique:shows|required|max:255',
+//            'name' => ['required', 'string', 'max:255', Rule::unique('shows')->ignore($show->id)],
             'description' => 'required',
             'user_id' => 'required',
             'team_id' => 'required',
@@ -108,7 +116,18 @@ class ShowsController extends Controller
             'team_id' => $request->team_id,
             'slug' => \Str::slug($request->name),
         ]);
-        return redirect()->route('teams.show', $request->team_id)->with('message', 'Show Created Successfully');
+
+        // Use this route to return
+        // the user to the new show page.
+
+        $showId = Show::query()->where('name', $request->name)->firstOrFail();
+        return redirect()->route('shows.manage', $showId)->with('message', 'Show Created Successfully');
+
+        // Use this route to return the
+        // user back to the team page
+        // instead of the new show page.
+
+//      return redirect()->route('teams.manage', $request->team_id)->with('message', 'Show Created Successfully');
     }
 
     /**
@@ -125,8 +144,14 @@ class ShowsController extends Controller
         $show = Show::query()->where('id', $id)->firstOrFail();
         $team = $show->team_id;
 
+        function poster($imageId) {
+            $poster = Image::query()->where('id', $imageId)->first();
+            return $poster->name;
+        }
+
         return Inertia::render('Shows/{$id}/Index', [
             'show' => $show,
+            'poster' => poster($show->image_id),
             'team' => Team::query()->where('id', $team)->firstOrFail(),
             'showRunner' => User::query()->where('id', $show->user_id)->pluck('name')->firstOrFail(),
             'can' => [
@@ -150,8 +175,14 @@ class ShowsController extends Controller
         $show = Show::query()->where('id', $id)->firstOrFail();
         $team = $show->team_id;
 
+        function poster($imageId) {
+            $poster = Image::query()->where('id', $imageId)->first();
+            return $poster->name;
+        }
+
         return Inertia::render('Shows/{$id}/Manage', [
             'show' => $show,
+            'poster' => poster($show->image_id),
             'team' => Team::query()->where('id', $team)->firstOrFail(),
             'showRunner' => User::query()->where('id', $show->user_id)->pluck('name')->firstOrFail(),
         ]);
@@ -168,9 +199,14 @@ class ShowsController extends Controller
         $show = Show::query()->where('id', $show->id)->firstOrFail();
         $team = $show->team_id;
 
+        function poster($imageId) {
+            $poster = Image::query()->where('id', $imageId)->first();
+            return $poster->name;
+        }
+
         return Inertia::render('Shows/{$id}/Edit', [
             'show' => $show,
-            'poster' => Image::query()->where('show_id', $show->id)->latest()->pluck('name')->first(),
+            'poster' => poster($show->image_id),
             'images' => Image::query()
 //                ->when(Request::input('search'), function ($query, $search) {
 //                    $query->where('name', 'like', "%{$search}%");
@@ -193,41 +229,39 @@ class ShowsController extends Controller
      */
     public function update(HttpRequest $request, Show $show)
     {
-
-//        // validate the request
-//        $attributes = Request::validate([
-//            'name' => 'required',
-//            'description' => 'required',
-//            'poster'
-//        ]);
-//        // update the show
-//        $show->update($attributes);
-//
-//        // redirect
-//        return Inertia::render('Shows/{$id}/Index', [
-//            'show' => $show,
-//            'team' => Team::query()->where('id', $team)->firstOrFail(),
-//        ])->with('message', 'Show Updated Successfully');
-
         $show = Show::query()->where('id', $show->id)->firstOrFail();
         $team = $show->team_id;
 
+        // validate the request
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => ['required', 'string', 'max:255', Rule::unique('shows')->ignore($show->id)],
             'description' => 'required',
         ]);
 
+        // update the show
         $show->name = $request->name;
         $show->description = $request->description;
         $show->save();
         sleep(1);
 
-        return Inertia::render('Shows/{$id}/Index', [
+        // gather the data needed to render the Manage page
+        // this is all redundant. It's all contained in the
+        // teams.manage route above. But I (tec21) don't know
+        // how to simplify this *frustrated*.
+
+        function poster($imageId) {
+            $poster = Image::query()->where('id', $imageId)->first();
+            return $poster->name;
+        }
+
+        return Inertia::render('Shows/{$id}/Manage', [
             // responses need to be limited to only
             // the information required with ->only()
             // https://inertiajs.com/responses
             'show' => $show,
+            'poster' => poster($show->image_id),
             'team' => Team::query()->where('id', $team)->firstOrFail(),
+            'showRunner' => User::query()->where('id', $show->user_id)->pluck('name')->firstOrFail(),
         ])->with('message', 'Show Updated Successfully');
     }
 

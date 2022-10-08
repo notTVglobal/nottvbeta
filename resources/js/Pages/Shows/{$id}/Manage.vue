@@ -9,7 +9,15 @@
     <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
         <div class="bg-white rounded text-black p-5 mb-10">
 
-            <ShowHeader :id="props.show.id" :name="props.show.name" :description="props.show.description" :show="props.team.name" :showRunner="props.showRunner" :team_id="props.team.id"/>
+            <ShowHeader
+                :id="props.show.id"
+                :name="props.show.name"
+                :description="props.show.description"
+                :show="props.team.name"
+                :showRunner="props.showRunner"
+                :team_id="props.team.id"
+                :poster="props.poster"
+            />
 
             <div class="flex flex-col">
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -89,6 +97,7 @@ chat.class = "chatSmall"
 
 let props = defineProps({
     show: Object,
+    poster: String,
     team: Object,
     showRunner: String,
     episodes: Object,

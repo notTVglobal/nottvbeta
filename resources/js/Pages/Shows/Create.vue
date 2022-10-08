@@ -11,7 +11,11 @@
         <div class="flex justify-between mt-3 mb-6">
             <div class="text-3xl">Create Show</div>
             <div>
-                <Link :href="`/teams/${teamStore.activeTeam}`"><button
+                <Link v-if="teamStore.activeTeam" :href="`/teams/${teamStore.activeTeam}/manage`"><button
+                    class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
+                >Cancel</button>
+                </Link>
+                <Link v-if="!teamStore.activeTeam" :href="`/dashboard`"><button
                     class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
                 >Cancel</button>
                 </Link>

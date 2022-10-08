@@ -84,7 +84,7 @@
                                                     class="min-w-[8rem] px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                                                 >
 <!--                                                    <img :src="`/storage/images/${show.poster}`" class="rounded-full h-20 w-20 object-cover">-->
-                                                    <img :src="`https://cdn.not.tv/wp-content/uploads/2022/09/27220247/Ping.png`" class="rounded-full h-20 w-20 object-cover">
+                                                    <img :src="'/storage/images/' + show.poster" class="rounded-full h-20 w-20 object-cover">
                                                 </th>
                                                 <th
                                                     scope="row"
