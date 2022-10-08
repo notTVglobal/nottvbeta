@@ -7,6 +7,7 @@ use App\Models\Post;
 use App\Models\Show;
 use App\Models\Team;
 use App\Models\User;
+use http\QueryString;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Str;
@@ -207,16 +208,16 @@ class ShowsController extends Controller
         return Inertia::render('Shows/{$id}/Edit', [
             'show' => $show,
             'poster' => poster($show->image_id),
+            'team' => Team::query()->where('id', $team)->pluck('name')->firstOrFail(),
             'images' => Image::query()
-//                ->when(Request::input('search'), function ($query, $search) {
-//                    $query->where('name', 'like', "%{$search}%");
-//                })
                 ->latest()
                 ->paginate(10)
+                ->withQueryString()
                 ->through(fn($image) => [
+                    'id' => $image->id,
                     'name' => $image->name,
+                    'extension' => $image->extension
                 ]),
-            'team' => Team::query()->where('id', $team)->pluck('name')->firstOrFail(),
         ]);
     }
 
@@ -241,6 +242,7 @@ class ShowsController extends Controller
         // update the show
         $show->name = $request->name;
         $show->description = $request->description;
+        $show->image_id = $request->image_id;
         $show->save();
         sleep(1);
 
@@ -271,7 +273,8 @@ class ShowsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function uploadPoster(HttpRequest $request)
+
+    public function uploadPoster(Request $request)
     {
         $request->file('image')->store('images');
 
@@ -283,20 +286,31 @@ class ShowsController extends Controller
 //        if (!$path) {
 //            return response()->json(['error' => 'The file could not be saved.'], 500);
 //        }
-        $user_id = 1;
+        $user = auth()->user()->id;
         $uploadedFile = $request->file('image');
-
+        $poster = $uploadedFile->hashName();
         // create image model
         // NEED TO PROTECT THESE
-        $image = Image::create([
-            'name' => $uploadedFile->hashName(),
+        Image::create([
+            'name' => $poster,
             'extension' => $uploadedFile->extension(),
             'size' => $uploadedFile->getSize(),
-            'user_id' => $user_id,
+            'user_id' => $user,
         ]);
 
+        // get new image_id
+
+        // store image_id to Shows table
+
+        // update Image on frontend
         // return that image model back to the frontend
-        return $image->name;
+//        return DB::table('images')->where('name', $poster)->pluck('id')->through(fn($image) => [
+//            'image_id' => $image->id,
+//            'poster' => $poster,
+//        ]);
+
+//        return $poster;
+        return Inertia::render('Shows/{$id}/Edit');
 
     }
 

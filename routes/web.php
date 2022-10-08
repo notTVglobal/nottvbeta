@@ -208,14 +208,14 @@ Route::middleware([
 
 
     Route::get('/image', [ImageController::class, 'index'])
-        ->can('viewAdmin', 'App\Models\User')
+        ->can('viewCreator', 'App\Models\User')
         ->name('image.index');
     Route::get('/images', [ImageController::class, 'show'])
         ->can('viewAdmin', 'App\Models\User')
         ->name('image.show');
 
     Route::post('/upload', [ImageController::class, 'store'])
-        ->can('viewAdmin', 'App\Models\User')
+        ->can('viewCreator', 'App\Models\User')
         ->name('image.store');
 
     Route::get('/upload', function () {

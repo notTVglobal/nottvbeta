@@ -79,9 +79,9 @@ class ShowPolicy
      * @param  \App\Models\Show  $show
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Show $show)
+    public function update(User $user)
     {
-        //
+        return $user->role_id === 4;
     }
 
     /**
