@@ -26,7 +26,7 @@ class ShowFactory extends Factory
         return [
             'name' => $name = $this->faker->sentence($nbWords = 3, $variableNbWords = true),
             'description' => $this->faker->paragraph,
-            'poster' => 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/EBU_Colorbars.svg/1280px-EBU_Colorbars.png',
+            'image_id' => '4',
             'user_id' => \App\Models\User::all()->random()->id,
             'team_id' => \App\Models\Team::all()->random()->id,
             'slug' => \Str::slug($name)

@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('shows', function (Blueprint $table) {
-            $table->string('poster')->default('');
+            $table->foreignId('image_id')->default(4)->constrained();
         });
     }
 
@@ -26,7 +26,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('shows', function (Blueprint $table) {
-            $table->dropColumn('poster');
+            $table->dropForeign('image_id');
         });
     }
 };

@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('teams', function (Blueprint $table) {
-            $table->string('logo')->default('https://cdn.not.tv/wp-content/uploads/2022/09/27220247/Ping.png');
+            $table->foreignId('image_id')->default(3)->constrained();
             $table->integer('memberSpots')->default(1);
             $table->integer('totalSpots')->default(1);
         });
@@ -28,7 +28,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('teams', function (Blueprint $table) {
-            $table->dropColumn('logo');
+            $table->dropForeign('image_id');
             $table->dropColumn('memberSpots');
             $table->dropColumn('totalSpots');
         });

@@ -21,14 +21,16 @@ class TeamSeeder extends Seeder
         'name' => 'notTV Founders',
         'description' => 'The founding team working actively on the notTV project.',
         'user_id' => '1',
-        'slug' => 'nottv-founders'
+        'slug' => 'nottv-founders',
+        'image_id' => '3',
     ]);
 
         DB::table('teams')->insert([
             'name' => 'notTV News',
             'description' => 'The notTV News Team.',
             'user_id' => '1',
-            'slug' => 'nottv-news'
+            'slug' => 'nottv-news',
+            'image_id' => '3',
         ]);
 
         \App\Models\Team::factory(99)->create();

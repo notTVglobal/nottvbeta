@@ -20,7 +20,8 @@ class ShowSeeder extends Seeder
             'description' => 'The notTV flagship news show.',
             'user_id' => '1',
             'team_id' => '2',
-            'slug' => 'nottv-news'
+            'slug' => 'nottv-news',
+            'image_id' => '4'
         ]);
         \App\Models\Show::factory(99)->create();
     }
