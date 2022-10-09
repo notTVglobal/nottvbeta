@@ -245,7 +245,7 @@ class ShowsController extends Controller
             // https://inertiajs.com/responses
             'show' => $show,
             'poster' => Image::query()->where('id', $show->image_id)->pluck('name')->first(),
-            'team' => Team::query()->where('id', $show->team_id)->firstOrFail(),
+            'team' => Team::query()->where('id', $show->team_id)->pluck('id','name')->firstOrFail(),
             'showRunner' => User::query()->where('id', $show->user_id)->pluck('name')->firstOrFail(),
         ])->with('message', 'Show Updated Successfully');
     }
