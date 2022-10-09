@@ -301,7 +301,7 @@ __webpack_require__.r(__webpack_exports__);
   __name: 'ShowEditBody',
   props: {
     show: Object,
-    poster: String,
+    posterName: String,
     images: {
       data: {
         0: {
@@ -316,15 +316,13 @@ __webpack_require__.r(__webpack_exports__);
     expose();
     var props = __props;
     var showStore = (0,_Stores_ShowStore__WEBPACK_IMPORTED_MODULE_0__.useShowStore)();
-    showStore.posterName = props.poster;
+    showStore.posterName = props.posterName;
     var form = (0,_inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_1__.useForm)({
       id: props.show.id,
       name: props.show.name,
       description: props.show.description,
-      image_id: (0,vue__WEBPACK_IMPORTED_MODULE_2__.ref)(props.poster.id)
-    }); // function updatePosterId () {
-    //     props.newPosterId = showStore.posterId
-    // }
+      image_id: (0,vue__WEBPACK_IMPORTED_MODULE_2__.ref)(props.show.image_id)
+    });
 
     var submit = function submit() {
       form.image_id = showStore.posterId;
@@ -338,7 +336,6 @@ __webpack_require__.r(__webpack_exports__);
       submit: submit,
       useShowStore: _Stores_ShowStore__WEBPACK_IMPORTED_MODULE_0__.useShowStore,
       useForm: _inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_1__.useForm,
-      reactive: vue__WEBPACK_IMPORTED_MODULE_2__.reactive,
       ref: vue__WEBPACK_IMPORTED_MODULE_2__.ref,
       TabbableTextarea: _Components_TabbableTextarea__WEBPACK_IMPORTED_MODULE_3__["default"],
       ShowPosterUpload: _Components_FilePond_ShowPosterUpload__WEBPACK_IMPORTED_MODULE_4__["default"]
@@ -367,10 +364,8 @@ __webpack_require__.r(__webpack_exports__);
   __name: 'ShowEditHeader',
   props: {
     show: Object,
-    team: {
-      name: String,
-      id: Number
-    }
+    teamId: Number,
+    teamName: String
   },
   setup: function setup(__props, _ref) {
     var expose = _ref.expose;
@@ -649,19 +644,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @inertiajs/inertia-vue3 */ "./node_modules/@inertiajs/inertia-vue3/dist/index.js");
-/* harmony import */ var _Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Stores/VideoPlayerStore.js */ "./resources/js/Stores/VideoPlayerStore.js");
-/* harmony import */ var _Stores_ChatStore_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/Stores/ChatStore.js */ "./resources/js/Stores/ChatStore.js");
-/* harmony import */ var _Stores_ShowStore_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/Stores/ShowStore.js */ "./resources/js/Stores/ShowStore.js");
-/* harmony import */ var _Components_ResponsiveNavigationMenu__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/Components/ResponsiveNavigationMenu */ "./resources/js/Components/ResponsiveNavigationMenu.vue");
-/* harmony import */ var _Components_NavigationMenu__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/Components/NavigationMenu */ "./resources/js/Components/NavigationMenu.vue");
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
-/* harmony import */ var _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @inertiajs/inertia */ "./node_modules/@inertiajs/inertia/dist/index.js");
-/* harmony import */ var _Components_Shows_Edit_ShowEditHeader__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @/Components/Shows/Edit/ShowEditHeader */ "./resources/js/Components/Shows/Edit/ShowEditHeader.vue");
-/* harmony import */ var _Components_Shows_Edit_ShowEditBody__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @/Components/Shows/Edit/ShowEditBody */ "./resources/js/Components/Shows/Edit/ShowEditBody.vue");
-
-
-
+/* harmony import */ var _Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Stores/VideoPlayerStore.js */ "./resources/js/Stores/VideoPlayerStore.js");
+/* harmony import */ var _Stores_ChatStore_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Stores/ChatStore.js */ "./resources/js/Stores/ChatStore.js");
+/* harmony import */ var _Stores_ShowStore_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/Stores/ShowStore.js */ "./resources/js/Stores/ShowStore.js");
+/* harmony import */ var _Components_ResponsiveNavigationMenu__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/Components/ResponsiveNavigationMenu */ "./resources/js/Components/ResponsiveNavigationMenu.vue");
+/* harmony import */ var _Components_NavigationMenu__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/Components/NavigationMenu */ "./resources/js/Components/NavigationMenu.vue");
+/* harmony import */ var _Components_Shows_Edit_ShowEditHeader__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/Components/Shows/Edit/ShowEditHeader */ "./resources/js/Components/Shows/Edit/ShowEditHeader.vue");
+/* harmony import */ var _Components_Shows_Edit_ShowEditBody__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/Components/Shows/Edit/ShowEditBody */ "./resources/js/Components/Shows/Edit/ShowEditBody.vue");
 
 
 
@@ -674,12 +663,8 @@ __webpack_require__.r(__webpack_exports__);
   props: {
     user: Object,
     show: Object,
-    team: {
-      type: Object,
-      name: String,
-      id: Number
-    },
-    poster: Object,
+    posterName: String,
+    teamName: String,
     images: {
       data: {
         0: {
@@ -693,33 +678,29 @@ __webpack_require__.r(__webpack_exports__);
     var expose = _ref.expose;
     expose();
     var props = __props;
-    var videoPlayer = (0,_Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_1__.useVideoPlayerStore)();
-    var chat = (0,_Stores_ChatStore_js__WEBPACK_IMPORTED_MODULE_2__.useChatStore)();
-    var showStore = (0,_Stores_ShowStore_js__WEBPACK_IMPORTED_MODULE_3__.useShowStore)();
+    var videoPlayer = (0,_Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_0__.useVideoPlayerStore)();
+    var chat = (0,_Stores_ChatStore_js__WEBPACK_IMPORTED_MODULE_1__.useChatStore)();
+    var showStore = (0,_Stores_ShowStore_js__WEBPACK_IMPORTED_MODULE_2__.useShowStore)();
     videoPlayer["class"] = "videoTopRight";
     videoPlayer.videoContainerClass = "videoContainerTopRight";
     videoPlayer.fullPage = false;
     chat["class"] = "chatSmall";
-    showStore.posterName = props.poster;
+    showStore.posterName = props.posterName;
     showStore.posterId = props.show.image_id;
-    var title = "Edit > " + props.team.name;
+    var title = "Edit > " + props.show.name;
     var __returned__ = {
       videoPlayer: videoPlayer,
       chat: chat,
       showStore: showStore,
       props: props,
       title: title,
-      useForm: _inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_0__.useForm,
-      useVideoPlayerStore: _Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_1__.useVideoPlayerStore,
-      useChatStore: _Stores_ChatStore_js__WEBPACK_IMPORTED_MODULE_2__.useChatStore,
-      useShowStore: _Stores_ShowStore_js__WEBPACK_IMPORTED_MODULE_3__.useShowStore,
-      ResponsiveNavigationMenu: _Components_ResponsiveNavigationMenu__WEBPACK_IMPORTED_MODULE_4__["default"],
-      NavigationMenu: _Components_NavigationMenu__WEBPACK_IMPORTED_MODULE_5__["default"],
-      ref: vue__WEBPACK_IMPORTED_MODULE_6__.ref,
-      reactive: vue__WEBPACK_IMPORTED_MODULE_6__.reactive,
-      Inertia: _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_7__.Inertia,
-      ShowEditHeader: _Components_Shows_Edit_ShowEditHeader__WEBPACK_IMPORTED_MODULE_8__["default"],
-      ShowEditBody: _Components_Shows_Edit_ShowEditBody__WEBPACK_IMPORTED_MODULE_9__["default"]
+      useVideoPlayerStore: _Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_0__.useVideoPlayerStore,
+      useChatStore: _Stores_ChatStore_js__WEBPACK_IMPORTED_MODULE_1__.useChatStore,
+      useShowStore: _Stores_ShowStore_js__WEBPACK_IMPORTED_MODULE_2__.useShowStore,
+      ResponsiveNavigationMenu: _Components_ResponsiveNavigationMenu__WEBPACK_IMPORTED_MODULE_3__["default"],
+      NavigationMenu: _Components_NavigationMenu__WEBPACK_IMPORTED_MODULE_4__["default"],
+      ShowEditHeader: _Components_Shows_Edit_ShowEditHeader__WEBPACK_IMPORTED_MODULE_5__["default"],
+      ShowEditBody: _Components_Shows_Edit_ShowEditBody__WEBPACK_IMPORTED_MODULE_6__["default"]
     };
     Object.defineProperty(__returned__, '__isScriptSetup', {
       enumerable: false,
@@ -1666,49 +1647,40 @@ var _hoisted_5 = {
 };
 var _hoisted_6 = ["src"];
 
-var _hoisted_7 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
-  "class": "block mb-2 uppercase font-bold text-xs text-gray-700",
-  "for": "name"
-}, " Poster Id ", -1
-/* HOISTED */
-);
-
-var _hoisted_8 = ["value"];
-
-var _hoisted_9 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+var _hoisted_7 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "mb-6"
 }, null, -1
 /* HOISTED */
 );
 
-var _hoisted_10 = {
+var _hoisted_8 = {
   "class": "mb-6"
 };
 
-var _hoisted_11 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+var _hoisted_9 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
   "class": "block mb-2 uppercase font-bold text-xs text-gray-700",
   "for": "name"
 }, " Show Name ", -1
 /* HOISTED */
 );
 
-var _hoisted_12 = ["textContent"];
-var _hoisted_13 = {
+var _hoisted_10 = ["textContent"];
+var _hoisted_11 = {
   "class": "mb-6"
 };
 
-var _hoisted_14 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+var _hoisted_12 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
   "class": "block mb-2 uppercase font-bold text-xs text-gray-700",
   "for": "description"
 }, " Description ", -1
 /* HOISTED */
 );
 
-var _hoisted_15 = ["textContent"];
-var _hoisted_16 = {
+var _hoisted_13 = ["textContent"];
+var _hoisted_14 = {
   "class": "flex justify-between mb-6"
 };
-var _hoisted_17 = ["disabled"];
+var _hoisted_15 = ["disabled"];
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [$setup.form.errors.name ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
     key: 0,
@@ -1732,20 +1704,12 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     images: $setup.props.images
   }, null, 8
   /* PROPS */
-  , ["show", "images"]), _hoisted_7, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
-    "onUpdate:modelValue": _cache[0] || (_cache[0] = function ($event) {
-      return $setup.form.image_id = $event;
-    }),
-    "class": "border border-gray-400 p-2 w-full rounded-lg",
-    value: $setup.showStore.posterId
-  }, null, 8
-  /* PROPS */
-  , _hoisted_8), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $setup.form.image_id]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", {
-    onSubmit: _cache[3] || (_cache[3] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function () {
+  , ["show", "images"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", {
+    onSubmit: _cache[2] || (_cache[2] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function () {
       return $setup.submit && $setup.submit.apply($setup, arguments);
     }, ["prevent"]))
-  }, [_hoisted_9, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [_hoisted_11, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
-    "onUpdate:modelValue": _cache[1] || (_cache[1] = function ($event) {
+  }, [_hoisted_7, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [_hoisted_9, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    "onUpdate:modelValue": _cache[0] || (_cache[0] = function ($event) {
       return $setup.form.name = $event;
     }),
     "class": "border border-gray-400 p-2 w-full rounded-lg",
@@ -1761,9 +1725,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "text-xs text-red-600 mt-1"
   }, null, 8
   /* PROPS */
-  , _hoisted_12)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_13, [_hoisted_14, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["TabbableTextarea"], {
+  , _hoisted_10)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [_hoisted_12, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["TabbableTextarea"], {
     modelValue: $setup.form.description,
-    "onUpdate:modelValue": _cache[2] || (_cache[2] = function ($event) {
+    "onUpdate:modelValue": _cache[1] || (_cache[1] = function ($event) {
       return $setup.form.description = $event;
     }),
     "class": "border border-gray-400 p-2 w-full rounded-lg",
@@ -1780,13 +1744,13 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "text-xs text-red-600 mt-1"
   }, null, 8
   /* PROPS */
-  , _hoisted_15)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_16, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  , _hoisted_13)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_14, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     type: "submit",
     "class": "bg-blue-400 text-white rounded py-2 px-4 hover:bg-blue-500",
     disabled: $setup.form.processing
   }, " Save ", 8
   /* PROPS */
-  , _hoisted_17)])], 32
+  , _hoisted_15)])], 32
   /* HYDRATE_EVENTS */
   )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" End Right Column ")]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" End grid 2-col ")], 64
   /* STABLE_FRAGMENT */
@@ -1876,7 +1840,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* PROPS */
   , ["href"])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [_hoisted_6, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.show.id), 1
   /* TEXT */
-  )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [_hoisted_8, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.team.name), 1
+  )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [_hoisted_8, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.teamName), 1
   /* TEXT */
   )])])], 64
   /* STABLE_FRAGMENT */
@@ -2148,16 +2112,17 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* PROPS */
   , ["title"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ResponsiveNavigationMenu"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["NavigationMenu"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ShowEditHeader"], {
     show: $setup.props.show,
-    team: $setup.props.team
+    teamId: $setup.props.teamId,
+    teamName: $setup.props.teamName
   }, null, 8
   /* PROPS */
-  , ["show", "team"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            <div class=\"max-w-lg mx-auto mt-8\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ShowEditBody"], {
+  , ["show", "teamId", "teamName"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            <div class=\"max-w-lg mx-auto mt-8\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ShowEditBody"], {
     show: $setup.props.show,
     images: $setup.props.images,
-    poster: $setup.props.poster
+    posterName: $setup.props.posterName
   }, null, 8
   /* PROPS */
-  , ["show", "images", "poster"])])])])])])])], 64
+  , ["show", "images", "posterName"])])])])])])])], 64
   /* STABLE_FRAGMENT */
   );
 }

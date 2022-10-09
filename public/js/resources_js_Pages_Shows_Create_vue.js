@@ -409,7 +409,8 @@ __webpack_require__.r(__webpack_exports__);
   __name: 'Create',
   props: {
     user: Object,
-    teamName: String
+    defaultTeamId: Number,
+    defaultTeamName: String
   },
   setup: function setup(__props, _ref) {
     var expose = _ref.expose;
@@ -427,7 +428,7 @@ __webpack_require__.r(__webpack_exports__);
       description: '',
       poster: '',
       user_id: props.user.id,
-      team_id: teamStore.activeTeam
+      team_id: (0,vue__WEBPACK_IMPORTED_MODULE_1__.ref)(props.defaultTeamId)
     });
 
     function reset() {
@@ -1640,7 +1641,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return $setup.submit && $setup.submit.apply($setup, arguments);
     }, ["prevent"])),
     "class": "max-w-md mx-auto mt-8"
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [_hoisted_9, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.props.teamName.name), 1
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [_hoisted_9, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.props.defaultTeamName), 1
   /* TEXT */
   ), _hoisted_11, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     "onUpdate:modelValue": _cache[0] || (_cache[0] = function ($event) {
@@ -1744,10 +1745,11 @@ var useTeamStore = (0,pinia__WEBPACK_IMPORTED_MODULE_0__.defineStore)('teamStore
       id: 0,
       name: '',
       description: '',
-      spots: 0,
+      totalSpots: 0,
       members: [],
       activeTeam: '',
-      logo: ''
+      logoId: 0,
+      logoName: ''
     };
   },
   actions: {
@@ -1781,7 +1783,7 @@ var useTeamStore = (0,pinia__WEBPACK_IMPORTED_MODULE_0__.defineStore)('teamStore
   },
   getters: {
     spotsRemaining: function spotsRemaining() {
-      return this.spots - this.members.length;
+      return this.totalSpots - this.members.length;
     }
   }
 }); // Another option for declaring specific data to return:

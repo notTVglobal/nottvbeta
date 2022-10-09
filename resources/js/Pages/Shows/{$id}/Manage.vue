@@ -1,6 +1,6 @@
 <template>
 
-    <Head :title="show.name" />
+    <Head :title="props.show.name" />
     <div class="sticky top-0 w-full nav-mask">
         <ResponsiveNavigationMenu/>
         <NavigationMenu />
@@ -10,13 +10,10 @@
         <div class="bg-white rounded text-black p-5 mb-10">
 
             <ShowHeader
-                :id="props.show.id"
-                :name="props.show.name"
-                :description="props.show.description"
-                :show="props.team.name"
-                :showRunner="props.showRunner"
-                :team_id="props.team.id"
-                :poster="props.poster"
+                :show="props.show"
+                :team="props.team"
+                :showRunnerName="props.showRunnerName"
+                :posterName="props.posterName"
             />
 
             <div class="flex flex-col">
@@ -68,7 +65,7 @@
                     </div>
                 </div>
             </div>
-            <ShowFooter :show="props.team.name"/>
+            <ShowFooter :team="props.team"/>
         </div>
     </div>
 
@@ -97,10 +94,10 @@ chat.class = "chatSmall"
 
 let props = defineProps({
     show: Object,
-    poster: String,
     team: Object,
-    showRunner: String,
-    episodes: Object,
+    posterName: String,
+    showRunnerName: String,
+    // episodes: Object,
     message: String
 });
 

@@ -2439,15 +2439,7 @@ var _hoisted_11 = {
   "class": "mb-6 p-5"
 };
 
-var _hoisted_12 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
-  "class": "flex flex-col"
-}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
-  "class": "-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8"
-}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
-  "class": "py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8"
-}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" BODY "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("  <TeamFooter />  ")])])], -1
-/* HOISTED */
-);
+var _hoisted_12 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"flex flex-col\"><div class=\"-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8\"><div class=\"py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8\"><div class=\"w-full bg-gray-300 text-2xl p-4 mb-8\">SHOWS</div><div class=\"w-full bg-gray-300 text-2xl p-4 mb-8\">CREATORS</div><div class=\"w-full bg-gray-300 text-2xl p-4 mb-8\">POSTS</div><!--  &lt;TeamFooter /&gt;  --></div></div></div>", 1);
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_Head = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Head");
@@ -2599,10 +2591,11 @@ var useTeamStore = (0,pinia__WEBPACK_IMPORTED_MODULE_0__.defineStore)('teamStore
       id: 0,
       name: '',
       description: '',
-      spots: 0,
+      totalSpots: 0,
       members: [],
       activeTeam: '',
-      logo: ''
+      logoId: 0,
+      logoName: ''
     };
   },
   actions: {
@@ -2636,7 +2629,7 @@ var useTeamStore = (0,pinia__WEBPACK_IMPORTED_MODULE_0__.defineStore)('teamStore
   },
   getters: {
     spotsRemaining: function spotsRemaining() {
-      return this.spots - this.members.length;
+      return this.totalSpots - this.members.length;
     }
   }
 }); // Another option for declaring specific data to return:

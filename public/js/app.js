@@ -3461,570 +3461,462 @@ __webpack_require__.r(__webpack_exports__);
 var map = {
 	"./API/Index": [
 		"./resources/js/Pages/API/Index.vue",
-		9,
 		"resources_js_Pages_API_Index_vue"
 	],
 	"./API/Index.vue": [
 		"./resources/js/Pages/API/Index.vue",
-		9,
 		"resources_js_Pages_API_Index_vue"
 	],
 	"./API/Partials/ApiTokenManager": [
 		"./resources/js/Pages/API/Partials/ApiTokenManager.vue",
-		9,
 		"resources_js_Pages_API_Partials_ApiTokenManager_vue"
 	],
 	"./API/Partials/ApiTokenManager.vue": [
 		"./resources/js/Pages/API/Partials/ApiTokenManager.vue",
-		9,
 		"resources_js_Pages_API_Partials_ApiTokenManager_vue"
 	],
 	"./Admin/Channels/Index": [
 		"./resources/js/Pages/Admin/Channels/Index.vue",
-		9,
 		"/js/vendor",
 		"resources_js_Pages_Admin_Channels_Index_vue"
 	],
 	"./Admin/Channels/Index.vue": [
 		"./resources/js/Pages/Admin/Channels/Index.vue",
-		9,
 		"/js/vendor",
 		"resources_js_Pages_Admin_Channels_Index_vue"
 	],
 	"./Auth/ConfirmPassword": [
 		"./resources/js/Pages/Auth/ConfirmPassword.vue",
-		9,
 		"resources_js_Pages_Auth_ConfirmPassword_vue"
 	],
 	"./Auth/ConfirmPassword.vue": [
 		"./resources/js/Pages/Auth/ConfirmPassword.vue",
-		9,
 		"resources_js_Pages_Auth_ConfirmPassword_vue"
 	],
 	"./Auth/ForgotPassword": [
 		"./resources/js/Pages/Auth/ForgotPassword.vue",
-		9,
 		"resources_js_Pages_Auth_ForgotPassword_vue"
 	],
 	"./Auth/ForgotPassword.vue": [
 		"./resources/js/Pages/Auth/ForgotPassword.vue",
-		9,
 		"resources_js_Pages_Auth_ForgotPassword_vue"
 	],
 	"./Auth/Login": [
 		"./resources/js/Pages/Auth/Login.vue",
-		9,
 		"resources_js_Pages_Auth_Login_vue"
 	],
 	"./Auth/Login.vue": [
 		"./resources/js/Pages/Auth/Login.vue",
-		9,
 		"resources_js_Pages_Auth_Login_vue"
 	],
 	"./Auth/Register": [
 		"./resources/js/Pages/Auth/Register.vue",
-		9,
 		"resources_js_Pages_Auth_Register_vue"
 	],
 	"./Auth/Register.vue": [
 		"./resources/js/Pages/Auth/Register.vue",
-		9,
 		"resources_js_Pages_Auth_Register_vue"
 	],
 	"./Auth/ResetPassword": [
 		"./resources/js/Pages/Auth/ResetPassword.vue",
-		9,
 		"resources_js_Pages_Auth_ResetPassword_vue"
 	],
 	"./Auth/ResetPassword.vue": [
 		"./resources/js/Pages/Auth/ResetPassword.vue",
-		9,
 		"resources_js_Pages_Auth_ResetPassword_vue"
 	],
 	"./Auth/TwoFactorChallenge": [
 		"./resources/js/Pages/Auth/TwoFactorChallenge.vue",
-		9,
 		"resources_js_Pages_Auth_TwoFactorChallenge_vue"
 	],
 	"./Auth/TwoFactorChallenge.vue": [
 		"./resources/js/Pages/Auth/TwoFactorChallenge.vue",
-		9,
 		"resources_js_Pages_Auth_TwoFactorChallenge_vue"
 	],
 	"./Auth/VerifyEmail": [
 		"./resources/js/Pages/Auth/VerifyEmail.vue",
-		9,
 		"resources_js_Pages_Auth_VerifyEmail_vue"
 	],
 	"./Auth/VerifyEmail.vue": [
 		"./resources/js/Pages/Auth/VerifyEmail.vue",
-		9,
 		"resources_js_Pages_Auth_VerifyEmail_vue"
 	],
 	"./Channels": [
 		"./resources/js/Pages/Channels.vue",
-		9,
 		"resources_js_Pages_Channels_vue"
 	],
 	"./Channels.vue": [
 		"./resources/js/Pages/Channels.vue",
-		9,
 		"resources_js_Pages_Channels_vue"
 	],
 	"./Creators/Index": [
 		"./resources/js/Pages/Creators/Index.vue",
-		9,
 		"/js/vendor",
 		"resources_js_Pages_Creators_Index_vue"
 	],
 	"./Creators/Index.vue": [
 		"./resources/js/Pages/Creators/Index.vue",
-		9,
 		"/js/vendor",
 		"resources_js_Pages_Creators_Index_vue"
 	],
 	"./Creators/{$id}/Index": [
 		"./resources/js/Pages/Creators/{$id}/Index.vue",
-		9,
 		"resources_js_Pages_Creators_id_Index_vue"
 	],
 	"./Creators/{$id}/Index.vue": [
 		"./resources/js/Pages/Creators/{$id}/Index.vue",
-		9,
 		"resources_js_Pages_Creators_id_Index_vue"
 	],
 	"./Dashboard": [
 		"./resources/js/Pages/Dashboard.vue",
-		9,
 		"resources_js_Pages_Dashboard_vue"
 	],
 	"./Dashboard.vue": [
 		"./resources/js/Pages/Dashboard.vue",
-		9,
 		"resources_js_Pages_Dashboard_vue"
 	],
 	"./Episodes/Create": [
 		"./resources/js/Pages/Episodes/Create.vue",
-		9,
 		"resources_js_Pages_Episodes_Create_vue"
 	],
 	"./Episodes/Create.vue": [
 		"./resources/js/Pages/Episodes/Create.vue",
-		9,
 		"resources_js_Pages_Episodes_Create_vue"
 	],
 	"./Episodes/{$id}/Edit": [
 		"./resources/js/Pages/Episodes/{$id}/Edit.vue",
-		9,
 		"/js/vendor",
 		"resources_js_Pages_Episodes_id_Edit_vue"
 	],
 	"./Episodes/{$id}/Edit.vue": [
 		"./resources/js/Pages/Episodes/{$id}/Edit.vue",
-		9,
 		"/js/vendor",
 		"resources_js_Pages_Episodes_id_Edit_vue"
 	],
 	"./Episodes/{$id}/Index": [
 		"./resources/js/Pages/Episodes/{$id}/Index.vue",
-		9,
 		"resources_js_Pages_Episodes_id_Index_vue"
 	],
 	"./Episodes/{$id}/Index.vue": [
 		"./resources/js/Pages/Episodes/{$id}/Index.vue",
-		9,
 		"resources_js_Pages_Episodes_id_Index_vue"
 	],
 	"./GoLive": [
 		"./resources/js/Pages/GoLive.vue",
-		9,
 		"resources_js_Pages_GoLive_vue"
 	],
 	"./GoLive.vue": [
 		"./resources/js/Pages/GoLive.vue",
-		9,
 		"resources_js_Pages_GoLive_vue"
 	],
 	"./Image": [
 		"./resources/js/Pages/Image.vue",
-		9,
 		"/js/vendor",
 		"resources_js_Pages_Image_vue"
 	],
 	"./Image.vue": [
 		"./resources/js/Pages/Image.vue",
-		9,
 		"/js/vendor",
 		"resources_js_Pages_Image_vue"
 	],
 	"./Movies": [
 		"./resources/js/Pages/Movies.vue",
-		9,
 		"resources_js_Pages_Movies_vue"
 	],
 	"./Movies.vue": [
 		"./resources/js/Pages/Movies.vue",
-		9,
 		"resources_js_Pages_Movies_vue"
 	],
 	"./Posts/Create": [
 		"./resources/js/Pages/Posts/Create.vue",
-		9,
 		"resources_js_Pages_Posts_Create_vue"
 	],
 	"./Posts/Create.vue": [
 		"./resources/js/Pages/Posts/Create.vue",
-		9,
 		"resources_js_Pages_Posts_Create_vue"
 	],
 	"./Posts/Index": [
 		"./resources/js/Pages/Posts/Index.vue",
-		9,
 		"/js/vendor",
 		"resources_js_Pages_Posts_Index_vue"
 	],
 	"./Posts/Index.vue": [
 		"./resources/js/Pages/Posts/Index.vue",
-		9,
 		"/js/vendor",
 		"resources_js_Pages_Posts_Index_vue"
 	],
 	"./Posts/{$id}/Edit": [
 		"./resources/js/Pages/Posts/{$id}/Edit.vue",
-		9,
 		"resources_js_Pages_Posts_id_Edit_vue"
 	],
 	"./Posts/{$id}/Edit.vue": [
 		"./resources/js/Pages/Posts/{$id}/Edit.vue",
-		9,
 		"resources_js_Pages_Posts_id_Edit_vue"
 	],
 	"./Posts/{$id}/Index": [
 		"./resources/js/Pages/Posts/{$id}/Index.vue",
-		9,
 		"resources_js_Pages_Posts_id_Index_vue"
 	],
 	"./Posts/{$id}/Index.vue": [
 		"./resources/js/Pages/Posts/{$id}/Index.vue",
-		9,
 		"resources_js_Pages_Posts_id_Index_vue"
 	],
 	"./PrivacyPolicy": [
 		"./resources/js/Pages/PrivacyPolicy.vue",
-		9,
 		"resources_js_Pages_PrivacyPolicy_vue"
 	],
 	"./PrivacyPolicy.vue": [
 		"./resources/js/Pages/PrivacyPolicy.vue",
-		9,
 		"resources_js_Pages_PrivacyPolicy_vue"
 	],
 	"./Profile/Partials/DeleteUserForm": [
 		"./resources/js/Pages/Profile/Partials/DeleteUserForm.vue",
-		9,
 		"resources_js_Pages_Profile_Partials_DeleteUserForm_vue"
 	],
 	"./Profile/Partials/DeleteUserForm.vue": [
 		"./resources/js/Pages/Profile/Partials/DeleteUserForm.vue",
-		9,
 		"resources_js_Pages_Profile_Partials_DeleteUserForm_vue"
 	],
 	"./Profile/Partials/LogoutOtherBrowserSessionsForm": [
 		"./resources/js/Pages/Profile/Partials/LogoutOtherBrowserSessionsForm.vue",
-		9,
 		"resources_js_Pages_Profile_Partials_LogoutOtherBrowserSessionsForm_vue"
 	],
 	"./Profile/Partials/LogoutOtherBrowserSessionsForm.vue": [
 		"./resources/js/Pages/Profile/Partials/LogoutOtherBrowserSessionsForm.vue",
-		9,
 		"resources_js_Pages_Profile_Partials_LogoutOtherBrowserSessionsForm_vue"
 	],
 	"./Profile/Partials/TwoFactorAuthenticationForm": [
 		"./resources/js/Pages/Profile/Partials/TwoFactorAuthenticationForm.vue",
-		9,
 		"resources_js_Pages_Profile_Partials_TwoFactorAuthenticationForm_vue"
 	],
 	"./Profile/Partials/TwoFactorAuthenticationForm.vue": [
 		"./resources/js/Pages/Profile/Partials/TwoFactorAuthenticationForm.vue",
-		9,
 		"resources_js_Pages_Profile_Partials_TwoFactorAuthenticationForm_vue"
 	],
 	"./Profile/Partials/UpdateContactInformationForm": [
 		"./resources/js/Pages/Profile/Partials/UpdateContactInformationForm.vue",
-		9,
 		"resources_js_Pages_Profile_Partials_UpdateContactInformationForm_vue"
 	],
 	"./Profile/Partials/UpdateContactInformationForm.vue": [
 		"./resources/js/Pages/Profile/Partials/UpdateContactInformationForm.vue",
-		9,
 		"resources_js_Pages_Profile_Partials_UpdateContactInformationForm_vue"
 	],
 	"./Profile/Partials/UpdatePasswordForm": [
 		"./resources/js/Pages/Profile/Partials/UpdatePasswordForm.vue",
-		9,
 		"resources_js_Pages_Profile_Partials_UpdatePasswordForm_vue"
 	],
 	"./Profile/Partials/UpdatePasswordForm.vue": [
 		"./resources/js/Pages/Profile/Partials/UpdatePasswordForm.vue",
-		9,
 		"resources_js_Pages_Profile_Partials_UpdatePasswordForm_vue"
 	],
 	"./Profile/Partials/UpdateProfileInformationForm": [
 		"./resources/js/Pages/Profile/Partials/UpdateProfileInformationForm.vue",
-		9,
 		"resources_js_Pages_Profile_Partials_UpdateProfileInformationForm_vue"
 	],
 	"./Profile/Partials/UpdateProfileInformationForm.vue": [
 		"./resources/js/Pages/Profile/Partials/UpdateProfileInformationForm.vue",
-		9,
 		"resources_js_Pages_Profile_Partials_UpdateProfileInformationForm_vue"
 	],
 	"./Profile/Show": [
 		"./resources/js/Pages/Profile/Show.vue",
-		9,
 		"resources_js_Pages_Profile_Show_vue"
 	],
 	"./Profile/Show.vue": [
 		"./resources/js/Pages/Profile/Show.vue",
-		9,
 		"resources_js_Pages_Profile_Show_vue"
 	],
 	"./QuizHome": [
 		"./resources/js/Pages/QuizHome.vue",
-		9,
 		"resources_js_Pages_QuizHome_vue"
 	],
 	"./QuizHome.vue": [
 		"./resources/js/Pages/QuizHome.vue",
-		9,
 		"resources_js_Pages_QuizHome_vue"
 	],
 	"./Schedule": [
 		"./resources/js/Pages/Schedule.vue",
-		9,
 		"resources_js_Pages_Schedule_vue"
 	],
 	"./Schedule.vue": [
 		"./resources/js/Pages/Schedule.vue",
-		9,
 		"resources_js_Pages_Schedule_vue"
 	],
 	"./Shop": [
 		"./resources/js/Pages/Shop.vue",
-		9,
 		"resources_js_Pages_Shop_vue"
 	],
 	"./Shop.vue": [
 		"./resources/js/Pages/Shop.vue",
-		9,
 		"resources_js_Pages_Shop_vue"
 	],
 	"./Shows/Create": [
 		"./resources/js/Pages/Shows/Create.vue",
-		9,
 		"resources_js_Pages_Shows_Create_vue"
 	],
 	"./Shows/Create.vue": [
 		"./resources/js/Pages/Shows/Create.vue",
-		9,
 		"resources_js_Pages_Shows_Create_vue"
 	],
 	"./Shows/Index": [
 		"./resources/js/Pages/Shows/Index.vue",
-		9,
 		"/js/vendor",
 		"resources_js_Pages_Shows_Index_vue"
 	],
 	"./Shows/Index.vue": [
 		"./resources/js/Pages/Shows/Index.vue",
-		9,
 		"/js/vendor",
 		"resources_js_Pages_Shows_Index_vue"
 	],
 	"./Shows/{$id}/Edit": [
 		"./resources/js/Pages/Shows/{$id}/Edit.vue",
-		9,
 		"/js/vendor",
 		"resources_js_Pages_Shows_id_Edit_vue"
 	],
 	"./Shows/{$id}/Edit.vue": [
 		"./resources/js/Pages/Shows/{$id}/Edit.vue",
-		9,
 		"/js/vendor",
 		"resources_js_Pages_Shows_id_Edit_vue"
 	],
 	"./Shows/{$id}/Index": [
 		"./resources/js/Pages/Shows/{$id}/Index.vue",
-		9,
 		"resources_js_Pages_Shows_id_Index_vue"
 	],
 	"./Shows/{$id}/Index.vue": [
 		"./resources/js/Pages/Shows/{$id}/Index.vue",
-		9,
 		"resources_js_Pages_Shows_id_Index_vue"
 	],
 	"./Shows/{$id}/Manage": [
 		"./resources/js/Pages/Shows/{$id}/Manage.vue",
-		9,
 		"resources_js_Pages_Shows_id_Manage_vue"
 	],
 	"./Shows/{$id}/Manage.vue": [
 		"./resources/js/Pages/Shows/{$id}/Manage.vue",
-		9,
 		"resources_js_Pages_Shows_id_Manage_vue"
 	],
 	"./Stream": [
 		"./resources/js/Pages/Stream.vue",
-		9,
 		"resources_js_Pages_Stream_vue"
 	],
 	"./Stream.vue": [
 		"./resources/js/Pages/Stream.vue",
-		9,
 		"resources_js_Pages_Stream_vue"
 	],
 	"./Teams/Create": [
 		"./resources/js/Pages/Teams/Create.vue",
-		9,
 		"resources_js_Pages_Teams_Create_vue"
 	],
 	"./Teams/Create.vue": [
 		"./resources/js/Pages/Teams/Create.vue",
-		9,
 		"resources_js_Pages_Teams_Create_vue"
 	],
 	"./Teams/Index": [
 		"./resources/js/Pages/Teams/Index.vue",
-		9,
 		"/js/vendor",
 		"resources_js_Pages_Teams_Index_vue"
 	],
 	"./Teams/Index.vue": [
 		"./resources/js/Pages/Teams/Index.vue",
-		9,
 		"/js/vendor",
 		"resources_js_Pages_Teams_Index_vue"
 	],
 	"./Teams/{$id}/Edit": [
 		"./resources/js/Pages/Teams/{$id}/Edit.vue",
-		7,
+		"/js/vendor",
 		"resources_js_Pages_Teams_id_Edit_vue"
 	],
 	"./Teams/{$id}/Edit.vue": [
 		"./resources/js/Pages/Teams/{$id}/Edit.vue",
-		7,
+		"/js/vendor",
 		"resources_js_Pages_Teams_id_Edit_vue"
 	],
 	"./Teams/{$id}/Index": [
 		"./resources/js/Pages/Teams/{$id}/Index.vue",
-		9,
 		"resources_js_Pages_Teams_id_Index_vue"
 	],
 	"./Teams/{$id}/Index.vue": [
 		"./resources/js/Pages/Teams/{$id}/Index.vue",
-		9,
 		"resources_js_Pages_Teams_id_Index_vue"
 	],
 	"./Teams/{$id}/Manage": [
 		"./resources/js/Pages/Teams/{$id}/Manage.vue",
-		9,
 		"resources_js_Pages_Teams_id_Manage_vue"
 	],
 	"./Teams/{$id}/Manage.vue": [
 		"./resources/js/Pages/Teams/{$id}/Manage.vue",
-		9,
 		"resources_js_Pages_Teams_id_Manage_vue"
 	],
 	"./TermsOfService": [
 		"./resources/js/Pages/TermsOfService.vue",
-		9,
 		"resources_js_Pages_TermsOfService_vue"
 	],
 	"./TermsOfService.vue": [
 		"./resources/js/Pages/TermsOfService.vue",
-		9,
 		"resources_js_Pages_TermsOfService_vue"
 	],
 	"./Training": [
 		"./resources/js/Pages/Training.vue",
-		9,
 		"resources_js_Pages_Training_vue"
 	],
 	"./Training.vue": [
 		"./resources/js/Pages/Training.vue",
-		9,
 		"resources_js_Pages_Training_vue"
 	],
 	"./Upgrade": [
 		"./resources/js/Pages/Upgrade.vue",
-		9,
 		"resources_js_Pages_Upgrade_vue"
 	],
 	"./Upgrade.vue": [
 		"./resources/js/Pages/Upgrade.vue",
-		9,
 		"resources_js_Pages_Upgrade_vue"
 	],
 	"./Users/Create": [
 		"./resources/js/Pages/Users/Create.vue",
-		9,
 		"resources_js_Pages_Users_Create_vue"
 	],
 	"./Users/Create.vue": [
 		"./resources/js/Pages/Users/Create.vue",
-		9,
 		"resources_js_Pages_Users_Create_vue"
 	],
 	"./Users/Index": [
 		"./resources/js/Pages/Users/Index.vue",
-		9,
 		"/js/vendor",
 		"resources_js_Pages_Users_Index_vue"
 	],
 	"./Users/Index.vue": [
 		"./resources/js/Pages/Users/Index.vue",
-		9,
 		"/js/vendor",
 		"resources_js_Pages_Users_Index_vue"
 	],
 	"./Users/{$id}/Edit": [
 		"./resources/js/Pages/Users/{$id}/Edit.vue",
-		9,
 		"resources_js_Pages_Users_id_Edit_vue"
 	],
 	"./Users/{$id}/Edit.vue": [
 		"./resources/js/Pages/Users/{$id}/Edit.vue",
-		9,
 		"resources_js_Pages_Users_id_Edit_vue"
 	],
 	"./Users/{$id}/Index": [
 		"./resources/js/Pages/Users/{$id}/Index.vue",
-		9,
 		"resources_js_Pages_Users_id_Index_vue"
 	],
 	"./Users/{$id}/Index.vue": [
 		"./resources/js/Pages/Users/{$id}/Index.vue",
-		9,
 		"resources_js_Pages_Users_id_Index_vue"
 	],
 	"./Video": [
 		"./resources/js/Pages/Video.vue",
-		9,
 		"resources_js_Pages_Video_vue"
 	],
 	"./Video.vue": [
 		"./resources/js/Pages/Video.vue",
-		9,
 		"resources_js_Pages_Video_vue"
 	],
 	"./Welcome": [
 		"./resources/js/Pages/Welcome.vue",
-		9,
 		"resources_js_Pages_Welcome_vue"
 	],
 	"./Welcome.vue": [
 		"./resources/js/Pages/Welcome.vue",
-		9,
 		"resources_js_Pages_Welcome_vue"
 	]
 };
@@ -4038,8 +3930,8 @@ function webpackAsyncContext(req) {
 	}
 
 	var ids = map[req], id = ids[0];
-	return Promise.all(ids.slice(2).map(__webpack_require__.e)).then(() => {
-		return __webpack_require__.t(id, ids[1] | 16)
+	return Promise.all(ids.slice(1).map(__webpack_require__.e)).then(() => {
+		return __webpack_require__(id);
 	});
 }
 webpackAsyncContext.keys = () => (Object.keys(map));

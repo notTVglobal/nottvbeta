@@ -1720,10 +1720,11 @@ var useTeamStore = (0,pinia__WEBPACK_IMPORTED_MODULE_0__.defineStore)('teamStore
       id: 0,
       name: '',
       description: '',
-      spots: 0,
+      totalSpots: 0,
       members: [],
       activeTeam: '',
-      logo: ''
+      logoId: 0,
+      logoName: ''
     };
   },
   actions: {
@@ -1757,7 +1758,7 @@ var useTeamStore = (0,pinia__WEBPACK_IMPORTED_MODULE_0__.defineStore)('teamStore
   },
   getters: {
     spotsRemaining: function spotsRemaining() {
-      return this.spots - this.members.length;
+      return this.totalSpots - this.members.length;
     }
   }
 }); // Another option for declaring specific data to return:

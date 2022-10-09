@@ -19,7 +19,7 @@
 
 
             <div class="flex flex-row justify-between gap-x-4">
-                <Link v-if="can.createShow" :href="`/shows/create`"><button
+                <Link v-if="props.can.createShow" :href="`/shows/create`"><button
                     class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded disabled:bg-gray-400"
                 >Add Show</button>
                 </Link>
@@ -47,7 +47,7 @@
                                         class="relative overflow-x-auto shadow-md sm:rounded-lg"
                                     >
                                         <!-- Paginator -->
-                                        <Pagination :links="shows.links" class="mb-6"/>
+                                        <Pagination :links="props.shows.links" class="mb-6"/>
 
                                         <table
                                             class="w-full text-sm text-left text-gray-500 dark:text-gray-400"
@@ -75,7 +75,7 @@
                                             </thead>
                                             <tbody>
                                             <tr
-                                                v-for="show in shows.data"
+                                                v-for="show in props.shows.data"
                                                 :key="show.id"
                                                 class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
                                             >
@@ -84,7 +84,7 @@
                                                     class="min-w-[8rem] px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                                                 >
 <!--                                                    <img :src="`/storage/images/${show.poster}`" class="rounded-full h-20 w-20 object-cover">-->
-                                                    <img :src="'/storage/images/' + show.poster" class="rounded-full h-20 w-20 object-cover">
+                                                    <img :src="'/storage/images/' + show.posterName" class="rounded-full h-20 w-20 object-cover">
                                                 </th>
                                                 <th
                                                     scope="row"
@@ -96,7 +96,7 @@
                                                     scope="row"
                                                     class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                                                 >
-                                                    <Link :href="`/teams/${show.team_id}`" class="text-blue-800 hover:text-blue-600">{{ show.teamOwner }}</Link>
+                                                    <Link :href="`/teams/${show.teamId}`" class="text-blue-800 hover:text-blue-600">{{ show.teamName }}</Link>
                                                 </th>
                                                 <td class="px-6 py-4">
 
@@ -150,13 +150,14 @@ videoPlayer.fullPage = false
 chat.class = "chatSmall"
 
 let props = defineProps({
+    shows: Object,
+    teamId: Number,
+    teamName: String,
+    posterName: String,
     filters: Object,
     can: Object,
     message: String,
-    shows: {
-        type: Object,
-        default: () => ({}),
-    }
+
 });
 
 let search = ref(props.filters.search);

@@ -30,7 +30,7 @@
                     Team Name
                 </label>
 
-                <div class="border border-gray-400 text-gray-900 text-sm p-2">{{ props.teamName.name }}</div>
+                <div class="border border-gray-400 text-gray-900 text-sm p-2">{{ props.defaultTeamName }}</div>
                 <button class="text-xs text-blue-800 cursor-pointer disabled:text-gray-400 disabled:cursor-not-allowed" disabled>CHANGE TEAM</button>
                 <input v-model="form.user_id" hidden>
             </div>
@@ -111,7 +111,8 @@ chat.class = "chatSmall"
 
 let props = defineProps({
     user: Object,
-    teamName: String,
+    defaultTeamId: Number,
+    defaultTeamName: String,
 })
 
 let form = useForm({
@@ -119,7 +120,7 @@ let form = useForm({
     description: '',
     poster: '',
     user_id: props.user.id,
-    team_id: teamStore.activeTeam,
+    team_id: ref(props.defaultTeamId),
 });
 
 

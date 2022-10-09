@@ -2,11 +2,11 @@
     <header>
     <div class="flex justify-between mb-6">
         <h1 class="text-3xl">
-            <Link :href="`/shows/${show.id}`" class="text-indigo-600">{{ show.name }}</Link>
+            <Link :href="`/teams/${team.id}`" class="text-indigo-600">{{ team.name }}</Link>
         </h1>
         <span class="text-xs font-semibold text-red-700">Edit Mode</span>
         <div>
-            <Link :href="`/shows/${show.id}/manage`">
+            <Link :href="`/teams/${team.id}/manage`">
                 <button
                     class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
                 >Cancel
@@ -18,9 +18,10 @@
     </header>
 
     <div>
-        <div class=""><span class="text-xs uppercase font-semibold">Show ID: </span>{{ show.id }}
+        <div class=""><span class="text-xs uppercase font-semibold">Team ID: </span>{{ team.id }}
         </div>
-        <div class="mb-6"><span class="text-xs uppercase font-semibold">Team: </span>{{ teamName }}
+        <div class="mb-6"><span class="text-xs uppercase font-semibold">Team Leader: </span>{{ teamLeaderName }}
+<!--     Insert into span when ready:       -->
         </div>
     </div>
 
@@ -29,9 +30,8 @@
 
 <script setup>
 defineProps({
-    show: Object,
-    teamId: Number,
-    teamName: String,
+    team: Object,
+    teamLeaderName: String,
 })
 
 </script>

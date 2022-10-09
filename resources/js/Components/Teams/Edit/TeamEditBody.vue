@@ -4,6 +4,8 @@
          class="bg-red-600 p-2 w-full text-white font-semibold mt-1"></div>
     <div v-if="form.errors.description" v-text="form.errors.description"
          class="bg-red-600 p-2 w-full text-white font-semibold mt-1"></div>
+    <div v-if="form.errors.totalSpots" v-text="form.errors.totalSpots"
+         class="bg-red-600 p-2 w-full text-white font-semibold mt-1"></div>
 
 <!-- Begin grid 2-col -->
     <div class="grid grid-cols-1 sm:grid-cols-2 space-x-6 p-6">
@@ -11,17 +13,15 @@
 <!--Left Column-->
         <div>
             <div class="flex space-y-3">
-                <div class="mb-6">
-                    <img :src="'/storage/images/' + showStore.posterName"
-                         ref="poster" />
-                </div>
+                <div class="mb-6"><img :src="'/storage/images/' + teamStore.logoName"/></div>
             </div>
         </div>
 
 <!--Right Column-->
         <div>
-            <ShowPosterUpload
-                :show="props.show"
+<!--            Replace this with TeamLogoUpload -->
+            <TeamLogoUpload
+                :team="props.team"
                 :images="props.images"
             />
 
@@ -33,7 +33,7 @@
                     <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
                            for="name"
                     >
-                        Show Name
+                        Team Name
                     </label>
 
                     <input v-model="form.name"
@@ -64,6 +64,22 @@
                          class="text-xs text-red-600 mt-1"></div>
                 </div>
 
+                <div class="mb-6">
+                    <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
+                           for="description"
+                    >
+                        Maximum # of Team Members
+                    </label>
+                    <input v-model="form.totalSpots"
+                           class="border border-gray-400 p-2 w-full rounded-lg"
+                           type="text"
+                           name="totalSpots"
+                           id="totalSpots"
+                    />
+                    <div v-if="form.errors.totalSpots" v-text="form.errors.totalSpots"
+                         class="text-xs text-red-600 mt-1"></div>
+                </div>
+
                 <div class="flex justify-between mb-6">
                     <button
                         type="submit"
@@ -83,17 +99,17 @@
 </template>
 
 <script setup>
-import {useShowStore} from "@/Stores/ShowStore";
+import {useTeamStore} from "@/Stores/TeamStore";
 import {useForm} from "@inertiajs/inertia-vue3";
 import { ref } from "vue";
 import TabbableTextarea from "@/Components/TabbableTextarea"
-import ShowPosterUpload from "@/Components/FilePond/ShowPosterUpload";
+import TeamLogoUpload from "@/Components/FilePond/TeamLogoUpload";
 
-let showStore = useShowStore()
+let teamStore = useTeamStore()
 
 let props = defineProps({
-    show: Object,
-    posterName: String,
+    team: Object,
+    logo: String,
     images: {
         data: {
             0: {
@@ -104,19 +120,23 @@ let props = defineProps({
     },
 });
 
-showStore.posterName = props.posterName;
+teamStore.logoName = props.logo;
 
 let form = useForm({
-    id: props.show.id,
-    name: props.show.name,
-    description: props.show.description,
-    image_id: ref(props.show.image_id),
+    id: props.team.id,
+    name: props.team.name,
+    description: props.team.description,
+    totalSpots: props.team.totalSpots,
+    image_id: ref(props.logo.id),
 });
 
+// function updatePosterId () {
+//     props.newPosterId = showStore.posterId
+// }
 
 let submit = () => {
-    form.image_id = showStore.posterId;
-    form.put(route('shows.update', props.show.id));
+    form.image_id = teamStore.logoId;
+    form.put(route('teams.update', props.team.id));
 };
 
 </script>

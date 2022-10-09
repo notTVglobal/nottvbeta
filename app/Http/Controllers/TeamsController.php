@@ -157,32 +157,19 @@ class TeamsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int  $team
      * @return \Illuminate\Http\Response
      */
     // URL path is currently set to show.id
     // change show($id) to show($slug) to
     // make URL path = slug.
-    public function manage(team $team)
+    public function manage(Team $team)
     {
-        function showRunner($userId) {
-            $showRunner = User::query()->where('id', $userId)->first();
-            return $showRunner->name;
-        }
-
-        function logo($imageId) {
-            $logo = Image::query()->where('id', $imageId)->first();
-            return $logo->name;
-        }
-
-        function poster($imageId) {
-            $poster = Image::query()->where('id', $imageId)->first();
-            return $poster->name;
-        }
+        $logo = Image::query()->where('id', $team->image_id)->pluck('name')->first();
 
         return Inertia::render('Teams/{$id}/Manage', [
             'team' => $team,
-            'logo' => logo($team->image_id),
+            'logoName' => $logo,
             'shows' => DB::table('shows')->where('team_id', $team->id)
                 ->latest()
                 ->paginate(5)
@@ -191,9 +178,9 @@ class TeamsController extends Controller
                     'id' => $show->id,
                     'name' => $show->name,
                     'description' => $show->description,
-                    'showRunner' => showRunner($show->user_id),
+                    'showRunner' => $show->user_id,
                     'team_id' => $show->team_id,
-                    'poster' => poster($show->image_id),
+                    'poster' => Image::query()->where('id', $show->image_id)->pluck('name')->first(),
                 ]),
             'filters' => Request::only(['team_id']),
             'can' => [
@@ -211,23 +198,27 @@ class TeamsController extends Controller
      */
     public function edit(team $team)
     {
-        function showRunner($userId) {
-            $showRunner = User::query()->where('id', $userId)->first();
-            return $showRunner->name;
-        }
 
-        function logo($imageId) {
-            $logo = Image::query()->where('id', $imageId)->first();
-            return $logo->name;
-        }
-
+        // Currently this queries all images in the database
+        // this needs to be changed to limit the query.
+        //
         return Inertia::render('Teams/{$id}/Edit', [
             'team' => $team,
-            'logo' => logo($team->image_id),
+            'teamLeaderName' => User::query()->where('id', $team->user_id)->pluck('name')->first(),
+            'logo' => Image::query()->where('id', $team->image_id)->pluck('name')->first(),
+            'images' => Image::query()
+                ->latest()
+                ->paginate(10)
+                ->withQueryString()
+                ->through(fn($image) => [
+                    'id' => $image->id,
+                    'name' => $image->name,
+                    'extension' => $image->extension
+                ]),
             'can' => [
                 'editTeam' => Auth::user()->can('edit', Team::class),
                 'manageTeam' => Auth::user()->can('edit', Team::class)
-            ]
+            ],
         ]);
     }
 
@@ -240,18 +231,19 @@ class TeamsController extends Controller
      */
     public function update(HttpRequest $request, Team $team)
     {
-//        $team = Team::query()->where('id', $team->id)->firstOrFail();
 
         // validate the request
         $request->validate([
             'name' => ['required', 'string', 'max:255', Rule::unique('teams')->ignore($team->id)],
             'description' => 'required|string|max:5000',
+            'image_id' => 'required|integer',
             'totalSpots' => 'required|integer|min:1',
         ]);
 
         // update the team
         $team->name = $request->name;
         $team->description = $request->description;
+        $team->image_id = $request->image_id;
         $team->totalSpots = $request->totalSpots;
         $team->save();
         sleep(1);
@@ -261,20 +253,6 @@ class TeamsController extends Controller
         // teams.manage route above. But I (tec21) don't know
         // how to simplify this *frustrated*.
 
-        function showRunner($userId) {
-            $showRunner = User::query()->where('id', $userId)->first();
-            return $showRunner->name;
-        }
-
-        function logo($imageId) {
-            $logo = Image::query()->where('id', $imageId)->first();
-            return $logo->name;
-        }
-
-        function poster($imageId) {
-            $poster = Image::query()->where('id', $imageId)->first();
-            return $poster->name;
-        }
 
         // redirect
         return Inertia::render('Teams/{$id}/Manage', [
@@ -282,7 +260,7 @@ class TeamsController extends Controller
             // the information required with ->only()
             // https://inertiajs.com/responses
             'team' => $team,
-            'logo' => logo($team->image_id),
+            'logoName' => Image::query()->where('id', $team->image_id)->pluck('name')->first(),
             'shows' => DB::table('shows')->where('team_id', $team->id)
                 ->latest()
                 ->paginate(5)
@@ -291,11 +269,9 @@ class TeamsController extends Controller
                     'id' => $show->id,
                     'name' => $show->name,
                     'description' => $show->description,
-                    'showRunner' => showRunner($show->user_id),
                     'team_id' => $show->team_id,
-                    'poster' => poster($show->image_id),
+                    'poster' => $show->image_id,
                 ]),
-            'filters' => Request::only(['team_id']),
             'can' => [
                 'editTeam' => Auth::user()->can('edit', Team::class),
                 'manageTeam' => Auth::user()->can('edit', Team::class),

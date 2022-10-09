@@ -45,7 +45,11 @@
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                     <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
 
-                    BODY
+                    <div class="w-full bg-gray-300 text-2xl p-4 mb-8">SHOWS</div>
+
+                    <div class="w-full bg-gray-300 text-2xl p-4 mb-8">CREATORS</div>
+
+                    <div class="w-full bg-gray-300 text-2xl p-4 mb-8">POSTS</div>
 
                         <!--  <TeamFooter />  -->
 

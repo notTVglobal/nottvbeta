@@ -287,8 +287,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   __name: 'ShowFooter',
   props: {
-    show: String,
-    team_id: Number
+    teamName: String,
+    teamId: Number
   },
   setup: function setup(__props, _ref) {
     var expose = _ref.expose;
@@ -323,13 +323,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   __name: 'ShowHeader',
   props: {
-    id: Number,
-    name: String,
-    description: String,
-    show: String,
-    poster: String,
-    showRunner: String,
-    team_id: Number
+    show: Object,
+    team: Object,
+    showRunnerName: String,
+    posterName: String
   },
   setup: function setup(__props, _ref) {
     var expose = _ref.expose;
@@ -568,12 +565,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Stores/VideoPlayerStore.js */ "./resources/js/Stores/VideoPlayerStore.js");
 /* harmony import */ var _Stores_ChatStore_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Stores/ChatStore.js */ "./resources/js/Stores/ChatStore.js");
 /* harmony import */ var _Stores_ShowStore_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/Stores/ShowStore.js */ "./resources/js/Stores/ShowStore.js");
-/* harmony import */ var _Components_Shows_ShowHeader__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/Components/Shows/ShowHeader */ "./resources/js/Components/Shows/ShowHeader.vue");
-/* harmony import */ var _Components_Shows_ShowEpisodesList__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/Components/Shows/ShowEpisodesList */ "./resources/js/Components/Shows/ShowEpisodesList.vue");
-/* harmony import */ var _Components_Shows_ShowFooter__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/Components/Shows/ShowFooter */ "./resources/js/Components/Shows/ShowFooter.vue");
-/* harmony import */ var _Components_ResponsiveNavigationMenu__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/Components/ResponsiveNavigationMenu */ "./resources/js/Components/ResponsiveNavigationMenu.vue");
-/* harmony import */ var _Components_NavigationMenu__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @/Components/NavigationMenu */ "./resources/js/Components/NavigationMenu.vue");
-/* harmony import */ var _Components_Shows_ShowCreditsList__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @/Components/Shows/ShowCreditsList */ "./resources/js/Components/Shows/ShowCreditsList.vue");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+/* harmony import */ var _Components_Shows_ShowHeader__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/Components/Shows/ShowHeader */ "./resources/js/Components/Shows/ShowHeader.vue");
+/* harmony import */ var _Components_Shows_ShowEpisodesList__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/Components/Shows/ShowEpisodesList */ "./resources/js/Components/Shows/ShowEpisodesList.vue");
+/* harmony import */ var _Components_Shows_ShowFooter__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/Components/Shows/ShowFooter */ "./resources/js/Components/Shows/ShowFooter.vue");
+/* harmony import */ var _Components_ResponsiveNavigationMenu__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @/Components/ResponsiveNavigationMenu */ "./resources/js/Components/ResponsiveNavigationMenu.vue");
+/* harmony import */ var _Components_NavigationMenu__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @/Components/NavigationMenu */ "./resources/js/Components/NavigationMenu.vue");
+/* harmony import */ var _Components_Shows_ShowCreditsList__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @/Components/Shows/ShowCreditsList */ "./resources/js/Components/Shows/ShowCreditsList.vue");
+
 
 
 
@@ -586,12 +585,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   __name: 'Index',
   props: {
-    user: Object,
+    // user: Object,
     show: Object,
-    poster: String,
-    team: Object,
+    posterName: (0,vue__WEBPACK_IMPORTED_MODULE_3__.ref)(String),
+    teamId: Number,
+    teamName: String,
     showRunner: String,
-    episodes: Object,
+    // episodes: Object,
     message: String,
     can: Object
   },
@@ -615,12 +615,13 @@ __webpack_require__.r(__webpack_exports__);
       useVideoPlayerStore: _Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_0__.useVideoPlayerStore,
       useChatStore: _Stores_ChatStore_js__WEBPACK_IMPORTED_MODULE_1__.useChatStore,
       useShowStore: _Stores_ShowStore_js__WEBPACK_IMPORTED_MODULE_2__.useShowStore,
-      ShowHeader: _Components_Shows_ShowHeader__WEBPACK_IMPORTED_MODULE_3__["default"],
-      ShowEpisodesList: _Components_Shows_ShowEpisodesList__WEBPACK_IMPORTED_MODULE_4__["default"],
-      ShowFooter: _Components_Shows_ShowFooter__WEBPACK_IMPORTED_MODULE_5__["default"],
-      ResponsiveNavigationMenu: _Components_ResponsiveNavigationMenu__WEBPACK_IMPORTED_MODULE_6__["default"],
-      NavigationMenu: _Components_NavigationMenu__WEBPACK_IMPORTED_MODULE_7__["default"],
-      ShowCreditsList: _Components_Shows_ShowCreditsList__WEBPACK_IMPORTED_MODULE_8__["default"]
+      ref: vue__WEBPACK_IMPORTED_MODULE_3__.ref,
+      ShowHeader: _Components_Shows_ShowHeader__WEBPACK_IMPORTED_MODULE_4__["default"],
+      ShowEpisodesList: _Components_Shows_ShowEpisodesList__WEBPACK_IMPORTED_MODULE_5__["default"],
+      ShowFooter: _Components_Shows_ShowFooter__WEBPACK_IMPORTED_MODULE_6__["default"],
+      ResponsiveNavigationMenu: _Components_ResponsiveNavigationMenu__WEBPACK_IMPORTED_MODULE_7__["default"],
+      NavigationMenu: _Components_NavigationMenu__WEBPACK_IMPORTED_MODULE_8__["default"],
+      ShowCreditsList: _Components_Shows_ShowCreditsList__WEBPACK_IMPORTED_MODULE_9__["default"]
     };
     Object.defineProperty(__returned__, '__isScriptSetup', {
       enumerable: false,
@@ -1723,11 +1724,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_Link = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Link");
 
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Paginator "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                            <Pagination :links=\"`#`\" class=\"mt-6\"/>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
-    href: "/teams/".concat($props.team_id),
+    href: "/teams/".concat($props.teamId),
     "class": "text-blue-500 ml-2"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.show) + " © 2022 ", 1
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.teamName) + " © 2022 ", 1
       /* TEXT */
       )];
     }),
@@ -1826,17 +1827,17 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_Link = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Link");
 
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("header", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
-    src: '/storage/images/' + $props.poster,
+    src: '/storage/images/' + $props.posterName,
     alt: "",
     "class": "w-20 mr-2"
   }, null, 8
   /* PROPS */
   , _hoisted_3), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
-    href: "/shows/".concat($props.id),
+    href: "/shows/".concat($props.show.id),
     "class": ""
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.name), 1
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.show.name), 1
       /* TEXT */
       )];
     }),
@@ -1855,7 +1856,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     /* STABLE */
 
   })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
-    href: "/teams/".concat($props.team_id, "/manage")
+    href: "/teams/".concat($props.team.id, "/manage")
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [_hoisted_8];
@@ -1866,7 +1867,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, 8
   /* PROPS */
   , ["href"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
-    href: "/shows/".concat($props.id, "/edit")
+    href: "/shows/".concat($props.show.id, "/edit")
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [_hoisted_10];
@@ -1885,14 +1886,14 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1
     /* STABLE */
 
-  })])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_12, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.description), 1
+  })])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_12, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.show.description), 1
   /* TEXT */
   ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_13, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_14, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [_hoisted_15, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
-    href: "/teams/".concat($props.team_id, "/manage"),
+    href: "/teams/".concat($props.team.id, "/manage"),
     "class": "text-blue-500 ml-2"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.show), 1
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.team.name), 1
       /* TEXT */
       )];
     }),
@@ -1901,7 +1902,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
   }, 8
   /* PROPS */
-  , ["href"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [_hoisted_16, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.showRunner), 1
+  , ["href"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [_hoisted_16, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.showRunnerName), 1
   /* TEXT */
   )])])])], 64
   /* STABLE_FRAGMENT */
@@ -2123,42 +2124,42 @@ var _hoisted_2 = {
   "class": "place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall"
 };
 var _hoisted_3 = {
-  "class": "bg-white rounded text-black p-5 mb-10"
+  "class": "bg-white rounded text-black py-5 mb-10"
 };
 var _hoisted_4 = {
-  "class": "flex justify-between mb-3"
+  "class": "flex justify-between mb-3 px-5"
 };
 var _hoisted_5 = {
   "class": "inline-flex items-center text-3xl font-semibold relative"
 };
-var _hoisted_6 = ["src"];
-var _hoisted_7 = {
+var _hoisted_6 = {
   "class": "flex flex-wrap-reverse justify-end gap-2"
 };
 
-var _hoisted_8 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+var _hoisted_7 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
   "class": "px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
 }, "Manage", -1
 /* HOISTED */
 );
 
-var _hoisted_9 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+var _hoisted_8 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
   "class": "px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
 }, "Edit", -1
 /* HOISTED */
 );
 
-var _hoisted_10 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+var _hoisted_9 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
   "class": "px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
 }, "Dashboard", -1
 /* HOISTED */
 );
 
-var _hoisted_11 = {
-  "class": "mb-6 p-5"
+var _hoisted_10 = {
+  "class": "flex justify-center w-full bg-black py-0"
 };
+var _hoisted_11 = ["src"];
 var _hoisted_12 = {
-  "class": "flex flex-col"
+  "class": "flex flex-col px-5"
 };
 var _hoisted_13 = {
   "class": "-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8"
@@ -2166,8 +2167,37 @@ var _hoisted_13 = {
 var _hoisted_14 = {
   "class": "py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8"
 };
+var _hoisted_15 = {
+  "class": "flex space-x-6 mt-6"
+};
 
-var _hoisted_15 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" BODY ");
+var _hoisted_16 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  "class": "w-1/2 h-96 bg-emerald-500 text-center align-content-center text-orange-500 font-semibold"
+}, " LIVE VIDEO ", -1
+/* HOISTED */
+);
+
+var _hoisted_17 = {
+  "class": "mb-6 p-5"
+};
+
+var _hoisted_18 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  "class": "font-semibold text-xs uppercase mb-3"
+}, "SHOW DESCRIPTION", -1
+/* HOISTED */
+);
+
+var _hoisted_19 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  "class": "mb-6 p-5"
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  "class": "w-full bg-gray-300 text-2xl p-4 mb-8"
+}, "EPISODES"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  "class": "w-full bg-gray-300 text-2xl p-4 mb-8"
+}, "CREDITS"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  "class": "w-full bg-gray-300 text-2xl p-4 mb-8"
+}, "POSTS")], -1
+/* HOISTED */
+);
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_Head = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Head");
@@ -2178,17 +2208,23 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     title: $setup.props.show.name
   }, null, 8
   /* PROPS */
-  , ["title"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ResponsiveNavigationMenu"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["NavigationMenu"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("header", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
-    src: '/storage/images/' + $setup.props.poster,
-    alt: "",
-    "class": "w-20 mr-2"
-  }, null, 8
-  /* PROPS */
-  , _hoisted_6), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.props.show.name), 1
+  , ["title"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ResponsiveNavigationMenu"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["NavigationMenu"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("header", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", _hoisted_5, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.props.show.name), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [$setup.props.can.manageShow ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Link, {
+  )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [$setup.props.can.manageShow ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Link, {
     key: 0,
     href: "/shows/".concat($setup.props.show.id, "/manage")
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [_hoisted_7];
+    }),
+    _: 1
+    /* STABLE */
+
+  }, 8
+  /* PROPS */
+  , ["href"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $setup.props.can.editShow ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Link, {
+    key: 1,
+    href: "/shows/".concat($setup.props.show.id, "/edit")
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [_hoisted_8];
@@ -2198,9 +2234,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
   }, 8
   /* PROPS */
-  , ["href"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $props.can.editShow ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Link, {
-    key: 1,
-    href: "/shows/".concat($setup.props.show.id, "/edit")
+  , ["href"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $setup.props.can.viewCreator ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Link, {
+    key: 2,
+    href: "/dashboard"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [_hoisted_9];
@@ -2208,26 +2244,20 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1
     /* STABLE */
 
-  }, 8
-  /* PROPS */
-  , ["href"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $setup.props.user.role_id === 4 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Link, {
-    key: 2,
-    href: "/dashboard"
-  }, {
-    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [_hoisted_10];
-    }),
-    _: 1
-    /* STABLE */
-
-  })) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_11, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.props.show.description), 1
-  /* TEXT */
-  ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_12, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_13, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_14, [_hoisted_15, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                        <ShowFooter :show=\"props.team.name\"/>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ShowFooter"], {
-    show: $setup.props.team.name,
-    team_id: $setup.props.team.id
+  })) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
+    src: '/storage/images/' + $setup.props.posterName,
+    alt: "",
+    "class": "w-1/2 mx-2"
   }, null, 8
   /* PROPS */
-  , ["show", "team_id"])])])])])])], 64
+  , _hoisted_11)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_12, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_13, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_14, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_15, [_hoisted_16, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_17, [_hoisted_18, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.props.show.description), 1
+  /* TEXT */
+  )])]), _hoisted_19, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ShowFooter"], {
+    teamName: $setup.props.teamName,
+    teamId: $setup.props.teamId
+  }, null, 8
+  /* PROPS */
+  , ["teamName", "teamId"])])])])])])], 64
   /* STABLE_FRAGMENT */
   );
 }

@@ -13,47 +13,12 @@
 
             <!--            <TeamHeader v-bind="team" :memberSpots="props.team.memberSpots"/>-->
 
-
-
-            <header class="flex justify-between mb-3">
-                <div>
-                    <h3 class="inline-flex items-center text-3xl font-semibold relative">
-                        <img :src="'/storage/images/' + logo" alt="" class="w-20 mr-2">
-                        <Link :href="`/teams/${team.id}`" class="">{{ team.name }}</Link>
-                        <div
-                            class="bg-green-400 w-5 h-5 text-xs text-white rounded-full flex justify-center items-center absolute -right-4 -top-0.5">
-                            {{ props.team.memberSpots }}
-                        </div>
-                    </h3>
-
-                </div>
-                <div class="flex flex-wrap-reverse justify-end gap-2">
-                    <Link
-                        v-if="can.editTeam" :href="`/teams/${props.team.id}/edit`"><button
-                        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                    >Edit</button>
-                    </Link>
-                    <Link :href="`/dashboard`"><button
-                        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                    >Dashboard</button>
-                    </Link>
-                </div>
-            </header>
-
-            <p class="mb-6 p-5">
-                {{ props.team.description }}
-            </p>
-
-            <div
-                class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
-                role="alert"
-                v-if="props.message"
-            >
-                                <span class="font-medium">
-                                    {{props.message}}
-                                </span>
-            </div>
-
+            <TeamManageHeader
+                :team="props.team"
+                :logoName="props.logoName"
+                :can="props.can"
+                :message="props.message"
+            />
 
             <div class="flex flex-col">
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -126,6 +91,7 @@ import NavigationMenu from "@/Components/NavigationMenu"
 import TeamShowsList from "@/Components/Teams/TeamShowsList";
 import TeamAssignmentsList from "@/Components/Teams/TeamAssignmentsList";
 import Pagination from "@/Components/Pagination";
+import TeamManageHeader from "@/Components/Teams/Manage/TeamManageHeader";
 
 let videoPlayer = useVideoPlayerStore()
 let chat = useChatStore()
@@ -140,7 +106,7 @@ let teamStore = useTeamStore();
 
 let props = defineProps({
     team: Object,
-    logo: String,
+    logoName: String,
     shows: Object,
     message: String,
     filters: Object,
