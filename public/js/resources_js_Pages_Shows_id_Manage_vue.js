@@ -288,7 +288,7 @@ __webpack_require__.r(__webpack_exports__);
   __name: 'ShowFooter',
   props: {
     show: String,
-    team_id: String
+    team_id: Number
   },
   setup: function setup(__props, _ref) {
     var expose = _ref.expose;
@@ -323,13 +323,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   __name: 'ShowHeader',
   props: {
-    id: String,
+    id: Number,
     name: String,
     description: String,
     show: String,
     poster: String,
     showRunner: String,
-    team_id: String
+    team_id: Number
   },
   setup: function setup(__props, _ref) {
     var expose = _ref.expose;
@@ -2202,7 +2202,8 @@ var useShowStore = (0,pinia__WEBPACK_IMPORTED_MODULE_0__.defineStore)('showStore
       id: 0,
       name: '',
       description: '',
-      poster: '',
+      posterName: '',
+      posterId: 0,
       episodes: [],
       team_id: 'team id'
     };

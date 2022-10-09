@@ -15,7 +15,7 @@ let showStore = useShowStore();
 
 defineProps({
     show: String,
-    team_id: String,
+    team_id: Number,
 })
 
 </script>

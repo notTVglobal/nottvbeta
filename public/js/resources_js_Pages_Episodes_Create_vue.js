@@ -1722,7 +1722,8 @@ var useTeamStore = (0,pinia__WEBPACK_IMPORTED_MODULE_0__.defineStore)('teamStore
       description: '',
       spots: 0,
       members: [],
-      activeTeam: ''
+      activeTeam: '',
+      logo: ''
     };
   },
   actions: {

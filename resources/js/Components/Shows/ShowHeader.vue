@@ -59,13 +59,13 @@ import {useShowStore} from "@/Stores/ShowStore.js";
 let showStore = useShowStore();
 
 defineProps({
-    id: String,
+    id: Number,
     name: String,
     description: String,
     show: String,
     poster: String,
     showRunner: String,
-    team_id: String,
+    team_id: Number,
 })
 
 </script>

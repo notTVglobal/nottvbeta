@@ -165,26 +165,20 @@ class ShowsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int  $show
      * @return \Illuminate\Http\Response
      */
     // URL path is currently set to show.id
     // change show($id) to show($slug) to
     // make URL path = slug.
-    public function manage($id)
+    public function manage(Show $show)
     {
-        $show = Show::query()->where('id', $id)->firstOrFail();
-        $team = $show->team_id;
-
-        function poster($imageId) {
-            $poster = Image::query()->where('id', $imageId)->first();
-            return $poster->name;
-        }
+        $team = Show::query()->where('id', $show->id)->pluck('team_id')->firstOrFail();
 
         return Inertia::render('Shows/{$id}/Manage', [
             'show' => $show,
-            'poster' => poster($show->image_id),
             'team' => Team::query()->where('id', $team)->firstOrFail(),
+            'poster' => Image::query()->where('id', $show->image_id)->pluck('name')->first(),
             'showRunner' => User::query()->where('id', $show->user_id)->pluck('name')->firstOrFail(),
         ]);
     }
@@ -192,23 +186,18 @@ class ShowsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int  $show
      * @return \Illuminate\Http\Response
      */
     public function edit(Show $show)
     {
-        $show = Show::query()->where('id', $show->id)->firstOrFail();
-        $team = $show->team_id;
-
-        function poster($imageId) {
-            $poster = Image::query()->where('id', $imageId)->first();
-            return $poster->name;
-        }
+        $team = Show::query()->where('id', $show->id)->pluck('team_id')->firstOrFail();
 
         return Inertia::render('Shows/{$id}/Edit', [
             'show' => $show,
-            'poster' => poster($show->image_id),
-            'team' => Team::query()->where('id', $team)->pluck('name')->firstOrFail(),
+//            'poster' => poster($show->image_id),
+            'poster' => Image::query()->where('id', $show->image_id)->pluck('name')->first(),
+            'team' => Team::query()->where('id', $team)->firstOrFail(),
             'images' => Image::query()
                 ->latest()
                 ->paginate(10)
@@ -230,13 +219,12 @@ class ShowsController extends Controller
      */
     public function update(HttpRequest $request, Show $show)
     {
-        $show = Show::query()->where('id', $show->id)->firstOrFail();
-        $team = $show->team_id;
 
         // validate the request
         $request->validate([
             'name' => ['required', 'string', 'max:255', Rule::unique('shows')->ignore($show->id)],
             'description' => 'required',
+            'image_id' => 'required',
         ]);
 
         // update the show
@@ -251,18 +239,13 @@ class ShowsController extends Controller
         // teams.manage route above. But I (tec21) don't know
         // how to simplify this *frustrated*.
 
-        function poster($imageId) {
-            $poster = Image::query()->where('id', $imageId)->first();
-            return $poster->name;
-        }
-
         return Inertia::render('Shows/{$id}/Manage', [
             // responses need to be limited to only
             // the information required with ->only()
             // https://inertiajs.com/responses
             'show' => $show,
-            'poster' => poster($show->image_id),
-            'team' => Team::query()->where('id', $team)->firstOrFail(),
+            'poster' => Image::query()->where('id', $show->image_id)->pluck('name')->first(),
+            'team' => Team::query()->where('id', $show->team_id)->firstOrFail(),
             'showRunner' => User::query()->where('id', $show->user_id)->pluck('name')->firstOrFail(),
         ])->with('message', 'Show Updated Successfully');
     }

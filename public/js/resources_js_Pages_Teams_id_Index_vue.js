@@ -2535,7 +2535,8 @@ var useShowStore = (0,pinia__WEBPACK_IMPORTED_MODULE_0__.defineStore)('showStore
       id: 0,
       name: '',
       description: '',
-      poster: '',
+      posterName: '',
+      posterId: 0,
       episodes: [],
       team_id: 'team id'
     };
@@ -2600,7 +2601,8 @@ var useTeamStore = (0,pinia__WEBPACK_IMPORTED_MODULE_0__.defineStore)('teamStore
       description: '',
       spots: 0,
       members: [],
-      activeTeam: ''
+      activeTeam: '',
+      logo: ''
     };
   },
   actions: {
