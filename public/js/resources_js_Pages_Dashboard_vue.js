@@ -402,6 +402,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   __name: 'Dashboard',
   props: {
+    shows: Object,
+    teams: Object,
     can: Object,
     message: String
   },
@@ -1604,26 +1606,11 @@ var _hoisted_23 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 var _hoisted_24 = {
   "class": ""
 };
-
-var _hoisted_25 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" notTV Founders ");
-
-var _hoisted_26 = {
-  "class": ""
-};
-
-var _hoisted_27 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" notTV News Team ");
-
-var _hoisted_28 = {
-  "class": ""
-};
-
-var _hoisted_29 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" RJG Productions ");
-
-var _hoisted_30 = {
+var _hoisted_25 = {
   "class": "p-5 bg-gray-200 rounded"
 };
 
-var _hoisted_31 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+var _hoisted_26 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "mb-3 grid grid-cols-1"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "mb-1 font-semibold text-xl justify-self-start"
@@ -1631,19 +1618,11 @@ var _hoisted_31 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 /* HOISTED */
 );
 
-var _hoisted_32 = {
+var _hoisted_27 = {
   "class": ""
 };
 
-var _hoisted_33 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" News & Talk ");
-
-var _hoisted_34 = {
-  "class": ""
-};
-
-var _hoisted_35 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Down The Rabbit Hole ");
-
-var _hoisted_36 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"mt-6 h-0.5 bg-gray-800\"></div><section class=\"grid grid-cols-1 mt-6 gap-2\"><div class=\"font-semibold text-2xl text-gray-800 px-2\"> Account Summary </div><div class=\"p-2 text-red-600\">This section is in development. Not currently working.</div><div class=\"border-2 pb-3\"><div class=\"grid justify-items-stretch grid-cols-3\"><div class=\"bg-gray-800 text-white text-sm p-2 col-span-3\">Membership: 000000</div></div><div class=\"grid justify-items-stretch grid-cols-3 pb-3\"><div class=\"bg-blue-400 font-semibold text-sm text-black px-2 mb-3 col-span-2\">Account Name</div><div class=\"bg-blue-400 px-2 mb-3 w-full text-right font-semibold text-sm text-black\">Balance</div><p class=\"px-2 col-span-2\">Chequing</p><p class=\"px-2 justify-self-end\">0.00</p><p class=\"px-2 col-span-2\">Equity Shares</p><p class=\"px-2 justify-self-end\">10.00</p><p class=\"px-2 col-span-2\">Team Account Example</p><p class=\"px-2 justify-self-end\">0.00</p></div><div class=\"grid justify-items-stretch grid-cols-3\"><div class=\"bg-blue-400 font-semibold text-sm text-black px-2 mb-3 col-span-2\">Team Shares</div><div class=\"bg-blue-400 px-2 mb-3 w-full text-right font-semibold text-sm text-black\">Balance</div><p class=\"px-2 col-span-2\">notTV Founders</p><p class=\"px-2 justify-self-end\">0.00</p><p class=\"px-2 col-span-2\">notTV News Team</p><p class=\"px-2 justify-self-end\">0.00</p><p class=\"px-2 col-span-2\">RJG Production</p><p class=\"px-2 justify-self-end\">0.00</p></div></div></section>", 2);
+var _hoisted_28 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"mt-6 h-0.5 bg-gray-800\"></div><section class=\"grid grid-cols-1 mt-6 gap-2\"><div class=\"font-semibold text-2xl text-gray-800 px-2\"> Account Summary </div><div class=\"p-2 text-red-600\">This section is in development. Not currently working.</div><div class=\"border-2 pb-3\"><div class=\"grid justify-items-stretch grid-cols-3\"><div class=\"bg-gray-800 text-white text-sm p-2 col-span-3\">Membership: 000000</div></div><div class=\"grid justify-items-stretch grid-cols-3 pb-3\"><div class=\"bg-blue-400 font-semibold text-sm text-black px-2 mb-3 col-span-2\">Account Name</div><div class=\"bg-blue-400 px-2 mb-3 w-full text-right font-semibold text-sm text-black\">Balance</div><p class=\"px-2 col-span-2\">Chequing</p><p class=\"px-2 justify-self-end\">0.00</p><p class=\"px-2 col-span-2\">Equity Shares</p><p class=\"px-2 justify-self-end\">10.00</p><p class=\"px-2 col-span-2\">Team Account Example</p><p class=\"px-2 justify-self-end\">0.00</p></div><div class=\"grid justify-items-stretch grid-cols-3\"><div class=\"bg-blue-400 font-semibold text-sm text-black px-2 mb-3 col-span-2\">Team Shares</div><div class=\"bg-blue-400 px-2 mb-3 w-full text-right font-semibold text-sm text-black\">Balance</div><p class=\"px-2 col-span-2\">notTV Founders</p><p class=\"px-2 justify-self-end\">0.00</p><p class=\"px-2 col-span-2\">notTV News Team</p><p class=\"px-2 justify-self-end\">0.00</p><p class=\"px-2 col-span-2\">RJG Production</p><p class=\"px-2 justify-self-end\">0.00</p></div></div></section>", 2);
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_Head = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Head");
@@ -1719,72 +1698,55 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     _: 1
     /* STABLE */
 
-  })])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_24, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
-    onClick: _cache[0] || (_cache[0] = function ($event) {
-      return $setup.videoPlayer.makeVideoTopRight();
-    }),
-    href: "/teams/1/manage",
-    "class": "text-blue-800 hover:text-blue-400"
-  }, {
-    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [_hoisted_25];
-    }),
-    _: 1
-    /* STABLE */
+  })])]), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($props.teams.data, function (team) {
+    return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
+      key: team.id,
+      "class": "bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+    }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_24, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+      onClick: _cache[0] || (_cache[0] = function ($event) {
+        return $setup.videoPlayer.makeVideoTopRight();
+      }),
+      href: "/teams/".concat(team.id, "/manage"),
+      "class": "text-blue-800 hover:text-blue-400"
+    }, {
+      "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+        return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(team.name), 1
+        /* TEXT */
+        )];
+      }),
+      _: 2
+      /* DYNAMIC */
 
-  })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_26, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
-    onClick: _cache[1] || (_cache[1] = function ($event) {
-      return $setup.videoPlayer.makeVideoTopRight();
-    }),
-    href: "/teams/2/manage",
-    "class": "text-blue-800 hover:text-blue-400"
-  }, {
-    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [_hoisted_27];
-    }),
-    _: 1
-    /* STABLE */
+    }, 1032
+    /* PROPS, DYNAMIC_SLOTS */
+    , ["href"])])]);
+  }), 128
+  /* KEYED_FRAGMENT */
+  ))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_25, [_hoisted_26, ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($props.shows.data, function (show) {
+    return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
+      key: show.id,
+      "class": "bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+    }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_27, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
+      onClick: _cache[1] || (_cache[1] = function ($event) {
+        return $setup.videoPlayer.makeVideoTopRight();
+      }),
+      href: "/shows/".concat(show.id, "/manage"),
+      "class": "text-blue-800 hover:text-blue-400"
+    }, {
+      "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+        return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(show.name), 1
+        /* TEXT */
+        )];
+      }),
+      _: 2
+      /* DYNAMIC */
 
-  })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_28, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
-    onClick: _cache[2] || (_cache[2] = function ($event) {
-      return $setup.videoPlayer.makeVideoTopRight();
-    }),
-    href: "/teams/3/manage",
-    "class": "text-blue-800 hover:text-blue-400"
-  }, {
-    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [_hoisted_29];
-    }),
-    _: 1
-    /* STABLE */
-
-  })])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_30, [_hoisted_31, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_32, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
-    onClick: _cache[3] || (_cache[3] = function ($event) {
-      return $setup.videoPlayer.makeVideoTopRight();
-    }),
-    href: "/shows/1/manage",
-    "class": "text-blue-800 hover:text-blue-400"
-  }, {
-    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [_hoisted_33];
-    }),
-    _: 1
-    /* STABLE */
-
-  })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_34, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
-    onClick: _cache[4] || (_cache[4] = function ($event) {
-      return $setup.videoPlayer.makeVideoTopRight();
-    }),
-    href: "/shows/2/manage",
-    "class": "text-blue-800 hover:text-blue-400"
-  }, {
-    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [_hoisted_35];
-    }),
-    _: 1
-    /* STABLE */
-
-  })])])]), _hoisted_36])])], 64
+    }, 1032
+    /* PROPS, DYNAMIC_SLOTS */
+    , ["href"])])]);
+  }), 128
+  /* KEYED_FRAGMENT */
+  ))])]), _hoisted_28])])], 64
   /* STABLE_FRAGMENT */
   );
 }

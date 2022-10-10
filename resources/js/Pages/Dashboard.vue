@@ -87,24 +87,18 @@
                             </Link>
                         </div>
                     </div>
-                    <p class=""><Link
-                        @click="videoPlayer.makeVideoTopRight()"
-                        :href="`/teams/1/manage`"
-                        class="text-blue-800 hover:text-blue-400">
-                        notTV Founders
-                    </Link></p>
-                    <p class=""><Link
-                        @click="videoPlayer.makeVideoTopRight()"
-                        :href="`/teams/2/manage`"
-                        class="text-blue-800 hover:text-blue-400">
-                        notTV News Team
-                    </Link></p>
-                    <p class=""><Link
-                        @click="videoPlayer.makeVideoTopRight()"
-                        :href="`/teams/3/manage`"
-                        class="text-blue-800 hover:text-blue-400">
-                        RJG Productions
-                    </Link></p>
+                    <div
+                        v-for="team in teams.data"
+                        :key="team.id"
+                        class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                    >
+                        <p class=""><Link
+                            @click="videoPlayer.makeVideoTopRight()"
+                            :href="`/teams/${team.id}/manage`"
+                            class="text-blue-800 hover:text-blue-400">
+                            {{ team.name }}
+                        </Link></p>
+                    </div>
 
                 </div>
 
@@ -112,18 +106,18 @@
                     <div class="mb-3 grid grid-cols-1">
                         <div class="mb-1 font-semibold text-xl justify-self-start">My Shows</div>
                     </div>
-                    <p class=""><Link
-                        @click="videoPlayer.makeVideoTopRight()"
-                        :href="`/shows/1/manage`"
-                        class="text-blue-800 hover:text-blue-400">
-                        News & Talk
-                    </Link></p>
-                    <p class=""><Link
-                        @click="videoPlayer.makeVideoTopRight()"
-                        :href="`/shows/2/manage`"
-                        class="text-blue-800 hover:text-blue-400">
-                        Down The Rabbit Hole
-                    </Link></p>
+                    <div
+                        v-for="show in shows.data"
+                        :key="show.id"
+                        class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                    >
+                        <p class=""><Link
+                            @click="videoPlayer.makeVideoTopRight()"
+                            :href="`/shows/${show.id}/manage`"
+                            class="text-blue-800 hover:text-blue-400">
+                            {{ show.name }}
+                        </Link></p>
+                    </div>
                 </div>
 
 
@@ -188,6 +182,8 @@ chat.class = "chatSmall"
 // onload(videoPlayer.class = "videoTopRight")
 
 let props = defineProps({
+    shows: Object,
+    teams: Object,
     can: Object,
     message: String
 });
