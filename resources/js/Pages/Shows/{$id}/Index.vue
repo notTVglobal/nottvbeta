@@ -11,6 +11,22 @@
 
         <div class="bg-white rounded text-black py-5 mb-10">
 
+            <div class="flex flex-end flex-wrap-reverse justify-end gap-2">
+                <Link
+                    v-if="props.can.manageShow" :href="`/shows/${props.show.id}/manage`"><button
+                    class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                >Manage</button>
+                </Link>
+                <Link
+                    v-if="props.can.editShow" :href="`/shows/${props.show.id}/edit`"><button
+                    class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                >Edit</button>
+                </Link>
+                <Link v-if="props.can.viewCreator" :href="`/dashboard`"><button
+                    class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                >Dashboard</button>
+                </Link>
+            </div>
             <header class="flex justify-between mb-3 px-5">
                 <div>
                     <h3 class="inline-flex items-center text-3xl font-semibold relative">
@@ -19,22 +35,12 @@
                     </h3>
 
                 </div>
-                <div class="flex flex-wrap-reverse justify-end gap-2">
-                    <Link
-                        v-if="props.can.manageShow" :href="`/shows/${props.show.id}/manage`"><button
-                        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                    >Manage</button>
-                    </Link>
-                    <Link
-                        v-if="props.can.editShow" :href="`/shows/${props.show.id}/edit`"><button
-                        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                    >Edit</button>
-                    </Link>
-                    <Link v-if="props.can.viewCreator" :href="`/dashboard`"><button
-                        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                    >Dashboard</button>
-                    </Link>
+                <div>
+                    <h3>
+                        <Link :href="`/teams/${teamId}`" class="text-blue-500 ml-2"> {{ teamName }} </Link>
+                    </h3>
                 </div>
+
             </header>
             <div class="flex justify-center w-full bg-black py-0">
                 <img :src="'/storage/images/' + props.posterName" alt="" class="w-1/2 mx-2">
@@ -47,10 +53,6 @@
                     <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
 
                         <div class="flex space-x-6 mt-6">
-
-                            <div class="w-1/2 h-96 bg-emerald-500 text-center align-content-center text-orange-500 font-semibold">
-                                LIVE VIDEO
-                            </div>
 
                             <div class="mb-6 p-5">
                                 <div class="font-semibold text-xs uppercase mb-3">SHOW DESCRIPTION</div>

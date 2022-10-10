@@ -63,7 +63,7 @@
                                                     Show Name
                                                 </th>
                                                 <th scope="col" class="px-6 py-3">
-                                                    Lead
+                                                    Creator
                                                 </th>
                                                 <th scope="col" class="px-6 py-3">
                                                     Team
@@ -71,7 +71,7 @@
                                                 <th scope="col" class="px-6 py-3">
                                                     Status
                                                 </th>
-                                                <th scope="col" class="px-6 py-3">
+                                                <th v-if="props.can.edit" scope="col" class="px-6 py-3">
                                                     Edit
                                                 </th>
                                             </tr>
@@ -87,15 +87,21 @@
                                                     class="min-w-[8rem] px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                                                 >
 <!--                                                    <img :src="`/storage/images/${show.poster}`" class="rounded-full h-20 w-20 object-cover">-->
-                                                    <img :src="'/storage/images/' + show.posterName" class="rounded-full h-20 w-20 object-cover">
+                                                    <Link :href="`/shows/${show.id}`" class="text-blue-800 hover:text-blue-600">
+                                                    <img :src="'/storage/images/' + show.posterName" class="rounded-full h-20 w-20 object-cover"></Link>
+                                                </th>
+                                                <th
+                                                    scope="row"
+                                                    class="px-6 py-4 text-xl text-gray-900 dark:text-white whitespace-nowrap"
+                                                >
+                                                    <Link :href="`/shows/${show.id}`" class="text-blue-800 hover:text-blue-600">{{ show.name }}</Link>
                                                 </th>
                                                 <th
                                                     scope="row"
                                                     class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
-                                                >
-                                                    <Link :href="`/shows/${show.id}`" class="text-blue-800 hover:text-blue-600">{{ show.name }}</Link>
+                                                    >
+                                                     {{ show.showRunnerName }}
                                                 </th>
-                                                <th></th>
                                                 <th
                                                     scope="row"
                                                     class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
@@ -105,7 +111,7 @@
                                                 <td class="px-6 py-4">
 
                                                 </td>
-                                                <td class="px-6 py-4">
+                                                <td v-if="props.can.edit" class="px-6 py-4">
                                                     <Link :href="`/shows/${show.id}/edit`"><button
                                                         class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                                                     >Edit</button>

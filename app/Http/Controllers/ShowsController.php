@@ -25,7 +25,6 @@ class ShowsController extends Controller
      */
     public function index()
     {
-
         return Inertia::render('Shows/Index', [
             'shows' => Show::query()
                 ->when(Request::input('search'), function ($query, $search) {
@@ -38,6 +37,8 @@ class ShowsController extends Controller
                     'name' => $show->name,
                     'teamId' => $show->team_id,
                     'teamName' => Team::query()->where('id', $show->team_id)->pluck('name')->first(),
+                    'showRunnerId' => $show->user_id,
+                    'showRunnerName' => User::query()->where('id', $show->user_id)->pluck('name')->first(),
                     'posterName' => Image::query()->where('id', $show->image_id)->pluck('name')->first(),
                 ]),
             'filters' => Request::only(['search']),

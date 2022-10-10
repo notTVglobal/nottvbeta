@@ -178,6 +178,14 @@ Route::middleware([
     Route::get('/shows/{show}/manage', [ShowsController::class, 'manage'])
         ->can('viewCreator', 'App\Models\User')
         ->name('shows.manage');
+    // Display shows edit page
+    Route::get('/shows/{show}/edit', [ShowsController::class, 'edit'])
+        ->can('viewCreator', 'App\Models\User')
+        ->name('shows.edit');
+    // Display shows create page
+    Route::get('/shows/create', [ShowsController::class, 'create'])
+        ->can('viewCreator', 'App\Models\User')
+        ->name('shows.create');
 
     // tec21: This is probably not the best way to do this
     // I'm unable to get the FilePond uploader to show the
@@ -243,6 +251,11 @@ Route::middleware([
     Route::get('/users/{user}', [UsersController::class, 'show'])
         ->can('viewAny', 'App\Models\User')
         ->name('users.show');
+
+    //    // Manage user
+    Route::get('/users/{user}', [UsersController::class, 'manage'])
+        ->can('viewAdmin', 'App\Models\User')
+        ->name('users.manage');
 
 //    // Edit user
     Route::get('/users/{user}/edit', [UsersController::class, 'edit'])

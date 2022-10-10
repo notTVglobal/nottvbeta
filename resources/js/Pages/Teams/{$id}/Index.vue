@@ -47,6 +47,30 @@
 
                     <div class="w-full bg-gray-300 text-2xl p-4 mb-8">SHOWS</div>
 
+                        <!-- Paginator -->
+                        <Pagination :links="props.shows.links" class="mb-6"/>
+
+<div class="flex flex-row flex-wrap">
+                            <div
+                                v-for="show in props.shows.data"
+                                :key="show.id"
+                                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                            >
+                                <div
+                                    class="min-w-[8rem] px-6 py-4 font-medium text-gray-900 dark:text-white"
+                                >
+                                    <!--                                                    <img :src="`/storage/images/${show.poster}`" class="rounded-full h-20 w-20 object-cover">-->
+                                    <Link :href="`/shows/${show.id}`" class="text-blue-800 hover:text-blue-600">
+                                    <img :src="'/storage/images/' + show.poster" class="rounded-full h-32 w-32 object-cover"></Link>
+                                </div>
+                                <div
+                                    class="px-6 py-4 font-medium text-gray-900 dark:text-white break-words grow-0 w-32"
+                                >
+                                    <Link :href="`/shows/${show.id}`" class="text-blue-800 hover:text-blue-600">{{ show.name }}</Link>
+                                </div>
+                            </div>
+</div>
+
                     <div class="w-full bg-gray-300 text-2xl p-4 mb-8">CREATORS</div>
 
                     <div class="w-full bg-gray-300 text-2xl p-4 mb-8">POSTS</div>

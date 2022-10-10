@@ -1733,6 +1733,10 @@ select {
   height: 24rem;
 }
 
+.h-32 {
+  height: 8rem;
+}
+
 .max-h-max {
   max-height: -webkit-max-content;
   max-height: -moz-max-content;
@@ -1837,6 +1841,10 @@ select {
   width: max-content;
 }
 
+.w-32 {
+  width: 8rem;
+}
+
 .min-w-0 {
   min-width: 0px;
 }
@@ -1883,6 +1891,10 @@ select {
   flex: 1 1 0%;
 }
 
+.flex-auto {
+  flex: 1 1 auto;
+}
+
 .flex-shrink {
   flex-shrink: 1;
 }
@@ -1893,6 +1905,10 @@ select {
 
 .shrink {
   flex-shrink: 1;
+}
+
+.grow-0 {
+  flex-grow: 0;
 }
 
 .table-auto {
@@ -2179,6 +2195,10 @@ select {
   justify-self: end;
 }
 
+.justify-self-center {
+  justify-self: center;
+}
+
 .overflow-hidden {
   overflow: hidden;
 }
@@ -2207,6 +2227,11 @@ select {
 
 .whitespace-nowrap {
   white-space: nowrap;
+}
+
+.break-normal {
+  overflow-wrap: normal;
+  word-break: normal;
 }
 
 .break-words {
