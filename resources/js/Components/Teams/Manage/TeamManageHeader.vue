@@ -1,4 +1,19 @@
 <template>
+    <div class="flex flex-wrap-reverse justify-end gap-2">
+        <Link
+            v-if="can.editTeam" :href="`/teams/${team.id}/edit`">
+            <button
+                class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+            >Edit
+            </button>
+        </Link>
+        <Link :href="`/dashboard`">
+            <button
+                class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+            >Dashboard
+            </button>
+        </Link>
+    </div>
     <header class="flex justify-between mb-3">
         <div>
             <h3 class="inline-flex items-center text-3xl font-semibold relative">
@@ -10,21 +25,6 @@
                 </div>
             </h3>
 
-        </div>
-        <div class="flex flex-wrap-reverse justify-end gap-2">
-            <Link
-                v-if="can.editTeam" :href="`/teams/${team.id}/edit`">
-                <button
-                    class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                >Edit
-                </button>
-            </Link>
-            <Link :href="`/dashboard`">
-                <button
-                    class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                >Dashboard
-                </button>
-            </Link>
         </div>
     </header>
 

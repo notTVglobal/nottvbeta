@@ -1,42 +1,40 @@
 
 <template>
-
+    <div class="flex flex-wrap-reverse justify-end gap-2">
+        <div class="">
+            <Link
+                :href="`/golive`"><button
+                class="px-4 py-2 text-white bg-red-600 hover:bg-red-500 rounded-lg disabled:bg-gray-400"
+                disabled
+            >Go Live</button>
+            </Link>
+        </div>
+        <div class="">
+            <Link
+                :href="`/teams/${team.id}/manage`"><button
+                class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+            >Team</button>
+            </Link>
+        </div>
+        <div class="">
+            <Link
+                :href="`/shows/${show.id}/edit`"><button
+                class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+            >Edit</button>
+            </Link>
+        </div>
+        <div>
+            <Link :href="`/dashboard`"><button
+                class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+            >Dashboard</button>
+            </Link>
+        </div>
+    </div>
     <header class="flex justify-between mb-3">
             <h3 class="inline-flex items-center text-3xl font-semibold relative">
                 <img :src="'/storage/images/' + posterName" alt="" class="w-20 mr-2">
                 <Link :href="`/shows/${show.id}`" class="">{{ show.name }}</Link>
             </h3>
-
-            <div class="flex flex-wrap-reverse justify-end gap-2">
-                <div class="">
-                    <Link
-                        :href="`/golive`"><button
-                        class="px-4 py-2 text-white bg-red-600 hover:bg-red-500 rounded-lg disabled:bg-gray-400"
-                        disabled
-                    >Go Live</button>
-                    </Link>
-                </div>
-                <div class="">
-                    <Link
-                        :href="`/teams/${team.id}/manage`"><button
-                        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                    >Team</button>
-                    </Link>
-                </div>
-                <div class="">
-                    <Link
-                    :href="`/shows/${show.id}/edit`"><button
-                    class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                    >Edit</button>
-                    </Link>
-                </div>
-                <div>
-                    <Link :href="`/dashboard`"><button
-                        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                    >Dashboard</button>
-                    </Link>
-                </div>
-            </div>
     </header>
 
     <div class="my-6 ml-10 md:w-3/4">
