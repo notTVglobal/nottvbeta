@@ -1622,7 +1622,57 @@ var _hoisted_27 = {
   "class": ""
 };
 
-var _hoisted_28 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"mt-6 h-0.5 bg-gray-800\"></div><section class=\"grid grid-cols-1 mt-6 gap-2\"><div class=\"font-semibold text-2xl text-gray-800 px-2\"> Account Summary </div><div class=\"p-2 text-red-600\">This section is in development. Not currently working.</div><div class=\"border-2 pb-3\"><div class=\"grid justify-items-stretch grid-cols-3\"><div class=\"bg-gray-800 text-white text-sm p-2 col-span-3\">Membership: 000000</div></div><div class=\"grid justify-items-stretch grid-cols-3 pb-3\"><div class=\"bg-blue-400 font-semibold text-sm text-black px-2 mb-3 col-span-2\">Account Name</div><div class=\"bg-blue-400 px-2 mb-3 w-full text-right font-semibold text-sm text-black\">Balance</div><p class=\"px-2 col-span-2\">Chequing</p><p class=\"px-2 justify-self-end\">0.00</p><p class=\"px-2 col-span-2\">Equity Shares</p><p class=\"px-2 justify-self-end\">10.00</p><p class=\"px-2 col-span-2\">Team Account Example</p><p class=\"px-2 justify-self-end\">0.00</p></div><div class=\"grid justify-items-stretch grid-cols-3\"><div class=\"bg-blue-400 font-semibold text-sm text-black px-2 mb-3 col-span-2\">Team Shares</div><div class=\"bg-blue-400 px-2 mb-3 w-full text-right font-semibold text-sm text-black\">Balance</div><p class=\"px-2 col-span-2\">notTV Founders</p><p class=\"px-2 justify-self-end\">0.00</p><p class=\"px-2 col-span-2\">notTV News Team</p><p class=\"px-2 justify-self-end\">0.00</p><p class=\"px-2 col-span-2\">RJG Production</p><p class=\"px-2 justify-self-end\">0.00</p></div></div></section>", 2);
+var _hoisted_28 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  "class": "mt-6 h-0.5 bg-gray-800"
+}, null, -1
+/* HOISTED */
+);
+
+var _hoisted_29 = {
+  "class": "grid grid-cols-1 mt-6 gap-2"
+};
+
+var _hoisted_30 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  "class": "font-semibold text-2xl text-gray-800 px-2"
+}, " Account Summary ", -1
+/* HOISTED */
+);
+
+var _hoisted_31 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  "class": "p-2 text-red-600"
+}, "This section is in development. Not currently working.", -1
+/* HOISTED */
+);
+
+var _hoisted_32 = {
+  "class": "border-2 pb-3"
+};
+
+var _hoisted_33 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"grid justify-items-stretch grid-cols-3\"><div class=\"bg-gray-800 text-white text-sm p-2 col-span-3\">Membership: 000000</div></div><table class=\"w-full mb-2\"><thead class=\"\"><td class=\"bg-blue-400 font-semibold text-sm text-black px-2 mb-3\">Account Name</td><td class=\"bg-blue-400 px-2 mb-3 text-right font-semibold text-sm text-black\">Balance</td></thead><tr class=\"border-b border-1 border-gray-100 py-2\"><td class=\"px-2 col-span-2\">Chequing</td><td class=\"px-2 text-right\">0.00</td></tr><tr class=\"border-b border-1 border-gray-100 py-2\"><td class=\"px-2 col-span-2\">Equity Shares</td><td class=\"px-2 text-right\">10.00</td></tr><tr class=\"border-b border-1 border-gray-100 py-2\"><td class=\"px-2 col-span-2\">Team Account Example</td><td class=\"px-2 text-right\">0.00</td></tr></table>", 2);
+
+var _hoisted_35 = {
+  "class": "w-full"
+};
+
+var _hoisted_36 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", {
+  "class": ""
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+  "class": "bg-blue-400 font-semibold text-sm text-black px-2 mb-3"
+}, "Team Shares"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+  "class": "bg-blue-400 px-2 mb-3 text-right font-semibold text-sm text-black"
+}, "Balance")], -1
+/* HOISTED */
+);
+
+var _hoisted_37 = {
+  "class": "px-2"
+};
+
+var _hoisted_38 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+  "class": "px-2 text-right"
+}, "0.00", -1
+/* HOISTED */
+);
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_Head = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Head");
@@ -1746,7 +1796,16 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     , ["href"])])]);
   }), 128
   /* KEYED_FRAGMENT */
-  ))])]), _hoisted_28])])], 64
+  ))])]), _hoisted_28, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("section", _hoisted_29, [_hoisted_30, _hoisted_31, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_32, [_hoisted_33, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_35, [_hoisted_36, ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($props.teams.data, function (team) {
+    return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", {
+      key: team.id,
+      "class": "border-b border-1 border-gray-100 py-2"
+    }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_37, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(team.name), 1
+    /* TEXT */
+    ), _hoisted_38]);
+  }), 128
+  /* KEYED_FRAGMENT */
+  ))])])])])])], 64
   /* STABLE_FRAGMENT */
   );
 }

@@ -136,27 +136,40 @@
                     <div class="grid justify-items-stretch grid-cols-3 ">
                         <div class="bg-gray-800 text-white text-sm p-2 col-span-3">Membership: 000000</div>
                     </div>
-                    <div class="grid justify-items-stretch grid-cols-3 pb-3">
-                        <div class="bg-blue-400 font-semibold text-sm text-black px-2 mb-3 col-span-2">Account Name</div>
-                        <div class="bg-blue-400 px-2 mb-3 w-full text-right font-semibold text-sm text-black">Balance</div>
-                        <p class="px-2 col-span-2">Chequing</p>
-                        <p class="px-2 justify-self-end">0.00</p>
-                        <p class="px-2 col-span-2">Equity Shares</p>
-                        <p class="px-2 justify-self-end">10.00</p>
-                        <p class="px-2 col-span-2">Team Account Example</p>
-                        <p class="px-2 justify-self-end">0.00</p>
+                    <table class="w-full mb-2">
+                        <thead class="">
+                        <td class="bg-blue-400 font-semibold text-sm text-black px-2 mb-3">Account Name</td>
+                        <td class="bg-blue-400 px-2 mb-3 text-right font-semibold text-sm text-black">Balance</td>
+                        </thead>
+                        <tr class="border-b border-1 border-gray-100 py-2">
+                            <td class="px-2 col-span-2">Chequing</td>
+                            <td class="px-2 text-right">0.00</td>
+                        </tr>
+                        <tr class="border-b border-1 border-gray-100 py-2">
+                            <td class="px-2 col-span-2">Equity Shares</td>
+                            <td class="px-2 text-right">10.00</td>
+                        </tr>
+                        <tr class="border-b border-1 border-gray-100 py-2">
+                            <td class="px-2 col-span-2">Team Account Example</td>
+                            <td class="px-2 text-right">0.00</td>
+                        </tr>
+                    </table>
+
+                        <table class="w-full">
+                            <thead class="">
+                                <td class="bg-blue-400 font-semibold text-sm text-black px-2 mb-3">Team Shares</td>
+                                <td class="bg-blue-400 px-2 mb-3 text-right font-semibold text-sm text-black">Balance</td>
+                            </thead>
+                            <tr v-for="team in teams.data"
+                                :key="team.id"
+                                class="border-b border-1 border-gray-100 py-2">
+                                <td class="px-2">{{ team.name }}</td>
+                                <td class="px-2 text-right">0.00</td>
+                            </tr>
+                        </table>
+
                     </div>
-                    <div class="grid justify-items-stretch grid-cols-3">
-                        <div class="bg-blue-400 font-semibold text-sm text-black px-2 mb-3 col-span-2">Team Shares</div>
-                        <div class="bg-blue-400 px-2 mb-3 w-full text-right font-semibold text-sm text-black">Balance</div>
-                        <p class="px-2 col-span-2">notTV Founders</p>
-                        <p class="px-2 justify-self-end">0.00</p>
-                        <p class="px-2 col-span-2">notTV News Team</p>
-                        <p class="px-2 justify-self-end">0.00</p>
-                        <p class="px-2 col-span-2">RJG Production</p>
-                        <p class="px-2 justify-self-end">0.00</p>
-                    </div>
-                </div>
+
 
             </section>
 
