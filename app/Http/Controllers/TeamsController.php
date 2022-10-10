@@ -174,7 +174,7 @@ class TeamsController extends Controller
 
         return Inertia::render('Teams/{$id}/Manage', [
             'team' => $team,
-            'logoName' => $logo,
+            'logo' => $logo,
             'teamLeader' => $teamLeader,
             'shows' => DB::table('shows')->where('team_id', $team->id)
                 ->latest()
