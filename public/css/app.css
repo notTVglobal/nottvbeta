@@ -1619,6 +1619,10 @@ select {
   margin-top: 3rem;
 }
 
+.mr-4 {
+  margin-right: 1rem;
+}
+
 .block {
   display: block;
 }

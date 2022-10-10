@@ -11,7 +11,7 @@
 
         <div class="bg-white rounded text-black py-5 mb-10">
 
-            <div class="flex flex-end flex-wrap-reverse justify-end gap-2">
+            <div class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4">
                 <Link
                     v-if="props.can.manageShow" :href="`/shows/${props.show.id}/manage`"><button
                     class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
@@ -35,7 +35,7 @@
                     </h3>
 
                 </div>
-                <div>
+                <div v-if="!props.can.viewCreator">
                     <h3>
                         <Link :href="`/teams/${teamId}`" class="text-blue-500 ml-2"> {{ teamName }} </Link>
                     </h3>
