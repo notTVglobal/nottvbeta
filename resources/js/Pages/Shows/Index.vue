@@ -63,6 +63,9 @@
                                                     Show Name
                                                 </th>
                                                 <th scope="col" class="px-6 py-3">
+                                                    Lead
+                                                </th>
+                                                <th scope="col" class="px-6 py-3">
                                                     Team
                                                 </th>
                                                 <th scope="col" class="px-6 py-3">
@@ -92,6 +95,7 @@
                                                 >
                                                     <Link :href="`/shows/${show.id}`" class="text-blue-800 hover:text-blue-600">{{ show.name }}</Link>
                                                 </th>
+                                                <th></th>
                                                 <th
                                                     scope="row"
                                                     class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"

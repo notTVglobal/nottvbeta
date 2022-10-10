@@ -1463,11 +1463,6 @@ select {
   margin-bottom: -0.5rem;
 }
 
-.mx-6 {
-  margin-left: 1.5rem;
-  margin-right: 1.5rem;
-}
-
 .ml-3 {
   margin-left: 0.75rem;
 }
@@ -1624,10 +1619,6 @@ select {
   margin-top: 3rem;
 }
 
-.mt-auto {
-  margin-top: auto;
-}
-
 .block {
   display: block;
 }
@@ -1738,22 +1729,6 @@ select {
   height: max-content;
 }
 
-.h-\[calc\(h-screen\/2\)\] {
-  height: calc(h-screen/2);
-}
-
-.h-\[calc\(h-100\%\/2\)\] {
-  height: calc(h-100% / 2);
-}
-
-.h-1\/4 {
-  height: 25%;
-}
-
-.h-56 {
-  height: 14rem;
-}
-
 .h-96 {
   height: 24rem;
 }
@@ -1862,10 +1837,6 @@ select {
   width: max-content;
 }
 
-.w-96 {
-  width: 24rem;
-}
-
 .min-w-0 {
   min-width: 0px;
 }
@@ -1912,10 +1883,6 @@ select {
   flex: 1 1 0%;
 }
 
-.flex-auto {
-  flex: 1 1 auto;
-}
-
 .flex-shrink {
   flex-shrink: 1;
 }
@@ -1926,10 +1893,6 @@ select {
 
 .shrink {
   flex-shrink: 1;
-}
-
-.basis-1\/2 {
-  flex-basis: 50%;
 }
 
 .table-auto {
@@ -2181,16 +2144,16 @@ select {
   margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
 }
 
-.space-y-3 > :not([hidden]) ~ :not([hidden]) {
-  --tw-space-y-reverse: 0;
-  margin-top: calc(0.75rem * calc(1 - var(--tw-space-y-reverse)));
-  margin-bottom: calc(0.75rem * var(--tw-space-y-reverse));
-}
-
 .space-x-6 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-x-reverse: 0;
   margin-right: calc(1.5rem * var(--tw-space-x-reverse));
   margin-left: calc(1.5rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
+.space-y-3 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(0.75rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(0.75rem * var(--tw-space-y-reverse));
 }
 
 .divide-y > :not([hidden]) ~ :not([hidden]) {
@@ -3689,10 +3652,6 @@ select {
     --tw-scale-x: 1;
     --tw-scale-y: 1;
     transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-  }
-
-  .sm\:grid-cols-1 {
-    grid-template-columns: repeat(1, minmax(0, 1fr));
   }
 
   .sm\:grid-cols-2 {
