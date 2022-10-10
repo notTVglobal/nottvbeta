@@ -15,7 +15,8 @@
 
             <TeamManageHeader
                 :team="props.team"
-                :logoName="props.logoName"
+                :teamLeader="props.teamLeader"
+                :logo="props.logo"
                 :can="props.can"
                 :message="props.message"
             />
@@ -106,7 +107,8 @@ let teamStore = useTeamStore();
 
 let props = defineProps({
     team: Object,
-    logoName: String,
+    logo: String,
+    teamLeader: String,
     shows: Object,
     message: String,
     filters: Object,

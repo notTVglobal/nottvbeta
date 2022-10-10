@@ -170,10 +170,12 @@ class TeamsController extends Controller
     public function manage(Team $team)
     {
         $logo = Image::query()->where('id', $team->image_id)->pluck('name')->first();
+        $teamLeader = User::query()->where('id', $team->user_id)->pluck('name')->first();
 
         return Inertia::render('Teams/{$id}/Manage', [
             'team' => $team,
             'logoName' => $logo,
+            'teamLeader' => $teamLeader,
             'shows' => DB::table('shows')->where('team_id', $team->id)
                 ->latest()
                 ->paginate(5)
