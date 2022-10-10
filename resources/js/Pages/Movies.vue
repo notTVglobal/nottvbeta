@@ -10,21 +10,22 @@
         <div class="bg-white text-black p-5 mb-10">
 
 
+            <div v-if="props.can.viewCreator" class="flex flex-wrap-reverse justify-end gap-2">
+                <Link :href="`#`"><button
+                    class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded disabled:bg-gray-400"
+                    disabled
+                >Add Movie</button>
+                </Link>
+                <Link :href="`/dashboard`"><button
+                    class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                >Dashboard</button>
+                </Link>
+            </div>
             <header class="flex justify-between mb-3">
                 <div>
                     <h1 class="text-3xl font-semibold pb-3">Movies</h1>
                 </div>
-                <div class="flex flex-wrap-reverse justify-end gap-2">
-                    <Link :href="`#`"><button
-                        class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded disabled:bg-gray-400"
-                        disabled
-                    >Add Movie</button>
-                    </Link>
-                    <Link :href="`/dashboard`"><button
-                        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                    >Dashboard</button>
-                    </Link>
-                </div>
+
             </header>
 
 
@@ -76,6 +77,10 @@ videoPlayer.class = "videoTopRight"
 videoPlayer.videoContainerClass = "videoContainerTopRight"
 videoPlayer.fullPage = false
 chat.class = "chatSmall"
+
+let props = defineProps ({
+    can: Object,
+})
 
 </script>
 

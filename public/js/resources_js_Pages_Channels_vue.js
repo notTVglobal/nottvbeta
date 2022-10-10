@@ -717,7 +717,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
   }, 8
   /* PROPS */
-  , ["href", "active"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _ctx.$page.props.user.role_id === 2 || _ctx.$page.props.user.role_id === 3 || _ctx.$page.props.user.role_id === 4 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)($setup["JetNavLink"], {
+  , ["href", "active"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _ctx.$page.props.user.role_id === 3 || _ctx.$page.props.user.role_id === 4 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)($setup["JetNavLink"], {
     key: 1,
     onClick: _cache[4] || (_cache[4] = function ($event) {
       return $setup.videoPlayer.makeVideoFullPage();
@@ -733,7 +733,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
   }, 8
   /* PROPS */
-  , ["href", "active"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _ctx.$page.props.user.role_id === 2 || _ctx.$page.props.user.role_id === 3 || _ctx.$page.props.user.role_id === 4 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)($setup["JetNavLink"], {
+  , ["href", "active"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _ctx.$page.props.user.role_id === 3 || _ctx.$page.props.user.role_id === 4 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)($setup["JetNavLink"], {
     key: 2,
     onClick: _cache[5] || (_cache[5] = function ($event) {
       return $setup.videoPlayer.makeVideoTopRight();
@@ -1163,7 +1163,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
   }, 8
   /* PROPS */
-  , ["href", "active"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _ctx.$page.props.user.role_id === 2 || _ctx.$page.props.user.role_id === 3 || _ctx.$page.props.user.role_id === 4 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)($setup["JetResponsiveNavLink"], {
+  , ["href", "active"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _ctx.$page.props.user.role_id === 3 || _ctx.$page.props.user.role_id === 4 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)($setup["JetResponsiveNavLink"], {
     key: 2,
     onClick: _cache[9] || (_cache[9] = function ($event) {
       return $setup.videoPlayer.makeVideoTopRight();
@@ -1179,7 +1179,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
   }, 8
   /* PROPS */
-  , ["href", "active"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _ctx.$page.props.user.role_id === 2 || _ctx.$page.props.user.role_id === 3 || _ctx.$page.props.user.role_id === 4 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)($setup["JetResponsiveNavLink"], {
+  , ["href", "active"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _ctx.$page.props.user.role_id === 3 || _ctx.$page.props.user.role_id === 4 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)($setup["JetResponsiveNavLink"], {
     key: 3,
     onClick: _cache[10] || (_cache[10] = function ($event) {
       return $setup.videoPlayer.makeVideoTopRight();
@@ -1491,7 +1491,7 @@ var _hoisted_1 = {
   "class": "sticky top-0 w-full nav-mask"
 };
 
-var _hoisted_2 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"fixed bg-black bg-opacity-90 text-white p-5 pt-16 h-screen w-full channels-mask\"><h1 class=\"text-3xl font-semibold text-center\">Channels</h1><div class=\"bg-red-800 col-span-3 mt-8 mb-4 py-1 text-center\"> Channels are not currently enabled. </div><div class=\"grid grid-cols-1 md:grid-cols-3 gap-x-2 space-y-2 px-16 text-center h-3/4 overflow-y-auto pb-20 items-stretch\"><div class=\"bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-10 cursor-pointer my-auto\">Ambient</div><div class=\"bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-10 cursor-pointer my-auto\">Local</div><div class=\"bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-10 cursor-pointer my-auto\">News</div><div class=\"bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-10 cursor-pointer my-auto\">Talk</div><div class=\"bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-10 cursor-pointer my-auto\">Variety</div><div class=\"bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-10 cursor-pointer my-auto\">Music</div><div class=\"bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-10 cursor-pointer my-auto\">Kids</div><div class=\"bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-10 cursor-pointer my-auto\">Live</div><div class=\"bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-10 cursor-pointer my-auto\">Random</div><div class=\"bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-10 cursor-pointer my-auto\">Documentaries</div><div class=\"bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-10 cursor-pointer my-auto\">Sports</div><div class=\"bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-10 cursor-pointer my-auto\">Education</div></div></div>", 1);
+var _hoisted_2 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"fixed bg-black bg-opacity-90 text-white p-5 pt-16 h-screen w-full channels-mask\"><h1 class=\"text-3xl font-semibold text-center\">Channels</h1><h2 class=\"bg-red-800 col-span-3 mt-8 mb-4 py-1 text-center\"> Channels are not currently enabled. </h2><div class=\"grid grid-cols-1 md:grid-cols-3 gap-x-2 space-y-2 text-center px-16 pb-20 h-3/4 overflow-y-auto items-stretch\"><div class=\"font-semibold text-3xl bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-10 cursor-pointer my-auto h-40 text-center\">Live</div><div class=\"font-semibold text-3xl bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-10 cursor-pointer my-auto h-40 text-center\">Ambient</div><div class=\"font-semibold text-3xl bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-10 cursor-pointer my-auto h-40 text-center\">Local</div><div class=\"font-semibold text-3xl bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-10 cursor-pointer my-auto h-40 text-center\">News</div><div class=\"font-semibold text-3xl bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-10 cursor-pointer my-auto h-40 text-center\">Talk</div><div class=\"font-semibold text-3xl bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-10 cursor-pointer my-auto h-40 text-center\">Music</div><div class=\"font-semibold text-3xl bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-10 cursor-pointer my-auto h-40 text-center\">Sports</div><div class=\"font-semibold text-3xl bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-10 cursor-pointer my-auto h-40 text-center\">Variety</div><div class=\"font-semibold text-3xl bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-10 cursor-pointer my-auto h-40 text-center\">Kids</div><div class=\"font-semibold text-3xl bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-10 cursor-pointer my-auto h-40 text-center\">Documentaries</div><div class=\"font-semibold text-3xl bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-10 cursor-pointer my-auto h-40 text-center\">Education</div><div class=\"font-semibold text-3xl bg-orange-300 hover:bg-blue-500 text-black hover:text-white p-10 cursor-pointer my-auto h-40 text-center\">Random</div></div></div>", 1);
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_Head = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Head");

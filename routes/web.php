@@ -11,6 +11,8 @@ use App\Http\Controllers\TeamsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\MovieController;
+use App\Http\Controllers\ShopController;
 //use Illuminate\Support\Facades\Request;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
@@ -60,20 +62,17 @@ Route::get('/privacy', function () {
     return redirect('/privacy-policy');
 })->name('privacy');
 
+
+// BEGIN ROUTES FOR
+// Logged In Users
+///////////
+
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
 
-    Route::get('/dashboard', [DashboardController::class, 'index'])
-        ->can('viewCreator', 'App\Models\User')
-        ->name('dashboard');
-
-    Route::get('/training', function () {
-        return Inertia::render('Training');
-    })->can('viewCreator', 'App\Models\User')
-        ->name('training');
 
     Route::get('/stream', function () {
         return Inertia::render('Stream');
@@ -83,11 +82,16 @@ Route::middleware([
         return Inertia::render('Upgrade');
     })->name('upgrade');
 
-//    Route::get('/posts', function () {
-//        return Inertia::render('Posts/Index');
-//    })->can('viewPremium', 'App\Models\User')
-//        ->name('posts');
 
+// Dashboard
+///////////
+    Route::get('/dashboard', [DashboardController::class, 'index'])
+        ->can('viewCreator', 'App\Models\User')
+        ->name('dashboard');
+
+
+// Posts
+///////////
     Route::resource('posts',PostController::class);
 
     Route::get('/posts', [PostController::class, 'index'])
@@ -105,32 +109,67 @@ Route::middleware([
 //    Route::post('/posts', [PostController::class, 'store'])
 //        ->name('posts.store');
 
+//    Route::get('/posts', function () {
+//        return Inertia::render('Posts/Index');
+//    })->can('viewPremium', 'App\Models\User')
+//        ->name('posts');
+
+// Channels
+///////////
+    // List all channels
     Route::get('/channels', function () {
         return Inertia::render('Channels');
-    })->can('viewPremium', 'App\Models\User')
+    })->can('viewVip', 'App\Models\User')
         ->name('channels');
 
-    Route::get('/movies', function () {
-        return Inertia::render('Movies');
-    })->can('viewPremium', 'App\Models\User')
+    // Admin manage the channels
+    Route::get('/admin/channels', function () {
+        return Inertia::render('Admin/Channels/Index');
+    })->can('viewAdmin', 'App\Models\User')
+        ->name('admin.channels.index');
+
+
+// Movies
+///////////
+    Route::resource('movies',MovieController::class);
+    // List all movies
+    Route::get('/movies', [MovieController::class, 'index'])
+        ->can('viewVip', 'App\Models\User')
         ->name('movies');
 
-    Route::get('/video', function () {
-        return Inertia::render('Video');
-    })->can('viewAdmin', 'App\Models\User')
-        ->name('video');
 
-    Route::get('/shop', function () {
-        return Inertia::render('Shop');
-    })->name('shop');
+
+
+// Shop
+///////////
+    Route::resource('shop',ShopController::class);
+    // List all movies
+    Route::get('/shop', [ShopController::class, 'index'])
+        ->name('shop');
+
+
+// Schedule
+///////////
 
     Route::get('/schedule', [ScheduleController::class, 'index'])
         ->name('schedule');
+
+
+// Go Live
+///////////
 
     Route::get('/golive', function () {
         return Inertia::render('GoLive');
     })->can('viewCreator', 'App\Models\User')
         ->name('golive');
+
+// For Testing
+///////////
+
+    Route::get('/video', function () {
+        return Inertia::render('Video');
+    })->can('viewAdmin', 'App\Models\User')
+        ->name('video');
 
     // temp page to test Stores
     Route::get('/quiz', function () {
@@ -138,7 +177,8 @@ Route::middleware([
     })->can('viewAdmin', 'App\Models\User')
         ->name('quiz');
 
-
+// Teams
+///////////
     Route::resource('teams',TeamsController::class);
     // List all teams
     Route::get('/teams', [TeamsController::class, 'index'])
@@ -161,13 +201,23 @@ Route::middleware([
         ->middleware('can:edit,team')
         ->name('teams.edit');
 
-
+// Creators
+///////////
     // Creators resource
     Route::resource('creators',CreatorsController::class);
     // Display creator page
     Route::get('/creators/{creator}', [CreatorsController::class, 'show'])
         ->name('creators.show');
 
+// Training
+///////////
+    Route::get('/training', function () {
+        return Inertia::render('Training');
+    })->can('viewCreator', 'App\Models\User')
+        ->name('training');
+
+// Shows
+///////////
     // Shows resource
     Route::resource('shows',ShowsController::class);
     // Display shows index page
@@ -214,7 +264,8 @@ Route::middleware([
 //        ->name('shows.edit');
 
 
-
+// Images + Upload
+///////////
     Route::get('/image', [ImageController::class, 'index'])
         ->can('viewCreator', 'App\Models\User')
         ->name('image.index');
@@ -230,6 +281,8 @@ Route::middleware([
         return redirect('/stream');
     });
 
+// Users
+///////////
     // Users resource for admin to create/edit users
     Route::resource('users',UsersController::class);
 
@@ -261,11 +314,5 @@ Route::middleware([
 //    Route::put('/users', [UsersController::class, 'update'])->name('users.update');
 
 
-
-    // List all channels
-    Route::get('/admin/channels', function () {
-        return Inertia::render('Admin/Channels/Index');
-    })->can('viewAdmin', 'App\Models\User')
-        ->name('admin.channels.index');
 
 });

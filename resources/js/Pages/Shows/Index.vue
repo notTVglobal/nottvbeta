@@ -8,23 +8,20 @@
     <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
         <div class="bg-white text-black p-5 mb-10">
 
-            <div class="flex justify-between">
-                <h1 class="text-3xl font-semibold pb-3">Shows</h1>
+
+            <div v-if="props.can.viewCreator" class="flex justify-end flex-wrap-reverse gap-x-2">
+                <Link :href="`/shows/create`"><button
+                    class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded disabled:bg-gray-400"
+                >Add Show</button>
+                </Link>
                 <Link :href="`/dashboard`"><button
                     class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                 >Dashboard</button>
                 </Link>
             </div>
 
+            <h1 class="text-3xl font-semibold pb-3">Shows</h1>
 
-
-            <div class="flex flex-row justify-between gap-x-4">
-                <Link v-if="props.can.createShow" :href="`/shows/create`"><button
-                    class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded disabled:bg-gray-400"
-                >Add Show</button>
-                </Link>
-                <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg" />
-            </div>
             <div class="flex flex-col">
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                     <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
@@ -39,6 +36,11 @@
                                     {{props.message}}
                                 </span>
                             </div>
+
+                            <div class="flex flex-row justify-end gap-x-4 mr-2">
+                                <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg" />
+                            </div>
+
 
 
                             <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">

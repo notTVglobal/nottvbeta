@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Auth;
@@ -37,13 +38,17 @@ class PostController extends Controller
                             ->through(fn($post) => [
                                 'id' => $post->id,
                                 'title' => $post->title,
-                                'slug' => $post->slug
+                                'slug' => $post->slug,
+                                'can' => [
+                                    'editPost' => Auth::user()->can('edit', Post::class),
+                                ]
                             ]),
                         'filters' => Request::only(['search']),
                         'can' => [
                             'viewPost' => Auth::user()->can('view', Post::class),
                             'createPost' => Auth::user()->can('create', Post::class),
-                            'editPost' => Auth::user()->can('edit', Post::class)
+                            'editPost' => Auth::user()->can('edit', Post::class),
+                            'viewCreator' => Auth::user()->can('viewCreator', User::class),
                         ]
                     ]);
 

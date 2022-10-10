@@ -11,16 +11,16 @@
         </div>
         <div class="">
             <Link
-                :href="`/teams/${team.id}/manage`"><button
+                :href="`/shows/${show.id}/edit`"><button
                 class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-            >Team</button>
+            >Edit</button>
             </Link>
         </div>
         <div class="">
             <Link
-                :href="`/shows/${show.id}/edit`"><button
+                :href="`/teams/${team.id}/manage`"><button
                 class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-            >Edit</button>
+            >Team</button>
             </Link>
         </div>
         <div>

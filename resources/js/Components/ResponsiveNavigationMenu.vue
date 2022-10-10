@@ -117,7 +117,7 @@
                 </JetResponsiveNavLink>
 
                 <JetResponsiveNavLink
-                    v-if="$page.props.user.role_id === 2 || $page.props.user.role_id === 3 || $page.props.user.role_id === 4"
+                    v-if="$page.props.user.role_id === 3 || $page.props.user.role_id === 4"
                     @click="videoPlayer.makeVideoTopRight()"
                     :href="route('channels')"
                     :active="route().current('channels')">
@@ -125,7 +125,7 @@
                 </JetResponsiveNavLink>
 
                 <JetResponsiveNavLink
-                    v-if="$page.props.user.role_id === 2 || $page.props.user.role_id === 3 || $page.props.user.role_id === 4"
+                    v-if="$page.props.user.role_id === 3 || $page.props.user.role_id === 4"
                     @click="videoPlayer.makeVideoTopRight()"
                     :href="route('movies')"
                     :active="route().current('movies')">

@@ -9,25 +9,21 @@
     <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
         <div class="bg-white text-black p-5 mb-10">
 
-            <div class="flex justify-between">
-                <h1 class="text-3xl font-semibold pb-3">Posts</h1>
-                <Link :href="`/dashboard`"><button
-                    class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                >Dashboard</button>
-                </Link>
+            <div v-if="props.can.viewCreator" class="flex justify-end flex-wrap-reverse gap-x-2">
+                    <Link :href="`/posts/create`"><button
+                        class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded disabled:bg-gray-400"
+                    >Add Post</button>
+                    </Link>
+                    <Link :href="`/dashboard`"><button
+                        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                    >Dashboard</button>
+                    </Link>
             </div>
+
+            <h1 class="text-3xl font-semibold pb-3">Posts</h1>
 
             <div class="mb-4">
-                New events, shows, episodes, movies, blog posts, channel updates, announcements, etc.
-            </div>
-
-
-            <div class="flex flex-row justify-between gap-x-4">
-                <Link v-if="can.createPost" :href="`/posts/create`"><button
-                    class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded disabled:bg-gray-400"
-                >Add Post</button>
-                </Link>
-                <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg" />
+                Events, shows, episodes, movies, news, channel updates, announcements, etc.
             </div>
 
 
@@ -42,13 +38,14 @@
                     </span>
             </div>
 
+            <div class="flex flex-row justify-end gap-x-4 mb-4">
+
+                <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg" />
+            </div>
+
             <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
-                    <div
-                        class="relative overflow-x-auto shadow-md sm:rounded-lg"
-                    >
-                        <!-- Paginator -->
-                        <Pagination :links="posts.links" class="mb-6"/>
+                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                         <table
                             class="w-full text-sm text-left text-gray-500 dark:text-gray-400"
                         >
@@ -60,13 +57,10 @@
                                 <th scope="col" class="px-6 py-3">
                                     Title
                                 </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Slug
-                                </th>
-                                <th scope="col" class="px-6 py-3">
+                                <th v-if="props.can.editPost" scope="col" class="px-6 py-3">
                                     Edit
                                 </th>
-                                <th scope="col" class="px-6 py-3">
+                                <th v-if="props.can.editPost" scope="col" class="px-6 py-3">
                                     Delete
                                 </th>
                             </tr>
@@ -89,18 +83,13 @@
                                 >
                                     <Link :href="`/posts/${post.slug}`" class="text-blue-800 hover:text-blue-600">{{ post.title }}</Link>
                                 </td>
-                                <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                                    {{ post.slug }}
-                                </td>
-
-
-                                <td class="px-6 py-4">
+                                <td v-if="post.can.editPost" class="px-6 py-4">
                                     <Link :href="`/posts/${post.id}/edit`"><button
                                         class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                                     >Edit</button>
                                     </Link>
                                 </td>
-                                <td class="px-6 py-4">
+                                <td v-if="post.can.editPost" class="px-6 py-4">
                                     <Button
                                         class="px-4 py-2 text-white bg-red-600 hover:bg-red-500 rounded-lg"
                                         @click="destroy(post.id)"

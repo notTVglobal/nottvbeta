@@ -36,7 +36,7 @@
                 <Login v-if="!videoPlayerStore.loggedIn" :show="showLogin" @close="showLogin = false" />
             </Teleport>
             <video-player :options="videoOptions"/>
-            <div v-if="videoPlayerStore.loggedIn" class="pt-16 pl-6">If you can read this, please refresh the page.</div>
+            <div v-if="videoPlayerStore.loggedIn" class="pt-16 pl-6">We are working on the video player sizing problem.</div>
 
             <div v-if="videoPlayerStore.fullPage" class="absolute top-16 left-0 p-5 drop-shadow z-50">
                 <span class="text-xs uppercase pr-2">Now playing: </span>
@@ -47,8 +47,8 @@
                 <span class="font-semibold">{{ videoPlayerStore.videoName }}</span>
             </div>
             <div v-if="!videoPlayerStore.loggedIn" class="absolute top-0 right-0 p-5 drop-shadow z-50">
-                <Button @click="showLogin = true" class="text-xs uppercase pr-2">
-                    <span class="underline">Log in</span> to chat</Button>
+                <Button @click="showLogin = true" class="text-2xl uppercase p-2">
+                    <span class="underline hover:text-blue-600">Log in</span> to chat</Button>
             </div>
 
 

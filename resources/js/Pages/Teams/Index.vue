@@ -9,19 +9,21 @@
     <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
         <div class="bg-white text-black p-5 mb-10">
 
-            <div class="flex justify-between">
-                <h1 class="text-3xl font-semibold pb-3">Teams</h1>
+            <div v-if="props.can.viewCreator" class="flex justify-end flex-wrap-reverse gap-x-2">
+
+                <Link v-if="can.createTeam" :href="`/teams/create`"><button
+                    class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded disabled:bg-gray-400"
+                >Add Team</button>
+                </Link>
                 <Link :href="`/dashboard`"><button
                     class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                 >Dashboard</button>
                 </Link>
             </div>
 
-            <div class="flex flex-row justify-between gap-x-4">
-                <Link v-if="can.createTeam" :href="`/teams/create`"><button
-                    class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded disabled:bg-gray-400"
-                >Add Team</button>
-                </Link>
+            <h1 class="text-3xl font-semibold pb-3">Teams</h1>
+
+            <div class="flex flex-row justify-end gap-x-4">
                 <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg" />
             </div>
 
