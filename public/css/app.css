@@ -1349,12 +1349,12 @@ select {
   top: 3rem;
 }
 
-.top-16 {
-  top: 4rem;
-}
-
 .bottom-0 {
   bottom: 0px;
+}
+
+.top-16 {
+  top: 4rem;
 }
 
 .right-10 {
@@ -1738,10 +1738,6 @@ select {
   height: max-content;
 }
 
-.h-96 {
-  height: 24rem;
-}
-
 .h-32 {
   height: 8rem;
 }
@@ -1898,10 +1894,6 @@ select {
 
 .flex-1 {
   flex: 1 1 0%;
-}
-
-.flex-auto {
-  flex: 1 1 auto;
 }
 
 .flex-shrink {
@@ -2204,10 +2196,6 @@ select {
   justify-self: end;
 }
 
-.justify-self-center {
-  justify-self: center;
-}
-
 .overflow-hidden {
   overflow: hidden;
 }
@@ -2236,11 +2224,6 @@ select {
 
 .whitespace-nowrap {
   white-space: nowrap;
-}
-
-.break-normal {
-  overflow-wrap: normal;
-  word-break: normal;
 }
 
 .break-words {
@@ -2527,11 +2510,6 @@ select {
   background-color: rgb(255 237 213 / var(--tw-bg-opacity));
 }
 
-.bg-emerald-500 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(16 185 129 / var(--tw-bg-opacity));
-}
-
 .bg-opacity-25 {
   --tw-bg-opacity: 0.25;
 }
@@ -2792,10 +2770,6 @@ select {
   vertical-align: middle;
 }
 
-.align-bottom {
-  vertical-align: bottom;
-}
-
 .align-text-top {
   vertical-align: text-top;
 }
@@ -3051,11 +3025,6 @@ select {
 .text-orange-700 {
   --tw-text-opacity: 1;
   color: rgb(194 65 12 / var(--tw-text-opacity));
-}
-
-.text-orange-500 {
-  --tw-text-opacity: 1;
-  color: rgb(249 115 22 / var(--tw-text-opacity));
 }
 
 .underline {
@@ -3501,18 +3470,9 @@ select {
   color: rgb(31 41 55 / var(--tw-text-opacity));
 }
 
-.disabled\:cursor-not-allowed:disabled {
-  cursor: not-allowed;
-}
-
 .disabled\:bg-gray-400:disabled {
   --tw-bg-opacity: 1;
   background-color: rgb(156 163 175 / var(--tw-bg-opacity));
-}
-
-.disabled\:text-gray-400:disabled {
-  --tw-text-opacity: 1;
-  color: rgb(156 163 175 / var(--tw-text-opacity));
 }
 
 .disabled\:opacity-25:disabled {
@@ -3536,14 +3496,14 @@ select {
     background-color: rgb(187 247 208 / var(--tw-bg-opacity));
   }
 
-  .dark\:bg-gray-700 {
-    --tw-bg-opacity: 1;
-    background-color: rgb(55 65 81 / var(--tw-bg-opacity));
-  }
-
   .dark\:bg-gray-800 {
     --tw-bg-opacity: 1;
     background-color: rgb(31 41 55 / var(--tw-bg-opacity));
+  }
+
+  .dark\:bg-gray-700 {
+    --tw-bg-opacity: 1;
+    background-color: rgb(55 65 81 / var(--tw-bg-opacity));
   }
 
   .dark\:bg-orange-200 {

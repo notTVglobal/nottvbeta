@@ -28,8 +28,8 @@ class ScheduleController extends Controller
                     'name' => $show->name
                 ]),
             'can' => [
-                'addEvent' => Auth::user()->can('create', Show::class),
-                'editEvent' => Auth::user()->can('edit', Show::class)
+                'addEvent' => Auth::user()->can('create', Schedule::class),
+                'editEvent' => Auth::user()->can('update', Schedule::class)
             ]
         ]);
     }

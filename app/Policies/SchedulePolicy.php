@@ -51,9 +51,9 @@ class SchedulePolicy
      * @param  \App\Models\Schedule  $schedule
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Schedule $schedule)
+    public function update(User $user)
     {
-        //
+        return $user->role_id === 4;
     }
 
     /**
