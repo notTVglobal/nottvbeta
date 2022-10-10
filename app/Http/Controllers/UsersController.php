@@ -38,7 +38,8 @@ class UsersController extends Controller
                     'isAdmin' => $user->isAdmin,
                     'can' => [
                         'edit' => Auth::user()->can('edit', $user)
-                    ]
+                    ],
+                    'userSelected' => $user,
                 ]),
             'filters' => Request::only(['search']),
             'can' => [

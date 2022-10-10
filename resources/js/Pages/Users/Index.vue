@@ -82,7 +82,8 @@
                                                     scope="row"
                                                     class="min-w-[8rem] px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                                                 >
-                                                    <img :src="`/storage/${user.profile_photo_path}`" class="rounded-full h-20 w-20 object-cover">
+                                                    <img v-if="!user.profile_photo_path" :src="user.userSelected.profile_photo_url" class="rounded-full h-20 w-20 object-cover">
+                                                    <img v-if="user.profile_photo_path" :src="`/storage/${user.profile_photo_path}`" class="rounded-full h-20 w-20 object-cover">
                                                 </th>
                                                 <th
                                                     scope="row"
