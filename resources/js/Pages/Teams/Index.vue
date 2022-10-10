@@ -71,7 +71,7 @@
                                             <th scope="col" class="px-6 py-3">
                                                 # of Members
                                             </th>
-                                            <th scope="col" class="px-6 py-3">
+                                            <th v-if="props.can.viewCreator" scope="col" class="px-6 py-3">
                                                 Edit
                                             </th>
                                         </tr>
@@ -107,7 +107,7 @@
                                             >
                                                 {{ team.memberSpots }}
                                             </td>
-                                            <td class="px-6 py-4">
+                                            <td v-if="team.can.editTeam" class="px-6 py-4">
                                                 <Link :href="`/teams/${team.id}/edit`"><button
                                                     class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                                                 >Edit</button>

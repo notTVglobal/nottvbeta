@@ -33,14 +33,36 @@ class TeamPolicy
     }
 
     /**
+     * Determine whether the user can manage models.
+     *
+     * @param  \App\Models\User  $user
+     *      * @param  \App\Models\Team  $team
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function manage(User $user, Team $team)
+    {
+        if ($user->id === $team->user_id)
+            return $user->id === $team->user_id;
+
+        elseif($user->isAdmin === 1)
+            return $user->isAdmin === 1;
+    }
+
+    /**
      * Determine whether the user can edit teams.
      *
      * @param  \App\Models\User  $user
+     *      * @param  \App\Models\Team  $team
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function edit(User $user)
+    public function edit(User $user, Team $team)
     {
-        return $user->role_id === 4;
+        if ($user->id === $team->user_id)
+            return $user->id === $team->user_id;
+
+        elseif($user->isAdmin === 1)
+            return $user->isAdmin === 1;
+
     }
 
     /**
@@ -52,7 +74,11 @@ class TeamPolicy
      */
     public function update(User $user, Team $team)
     {
-        //
+        if ($user->id === $team->user_id)
+            return $user->id === $team->user_id;
+
+        elseif($user->isAdmin === 1)
+            return $user->isAdmin === 1;
     }
 
     /**
@@ -64,7 +90,11 @@ class TeamPolicy
      */
     public function delete(User $user, Team $team)
     {
-        //
+        if ($user->id === $team->user_id)
+            return $user->id === $team->user_id;
+
+        elseif($user->isAdmin === 1)
+            return $user->isAdmin === 1;
     }
 
     /**
@@ -76,7 +106,11 @@ class TeamPolicy
      */
     public function restore(User $user, Team $team)
     {
-        //
+        if ($user->id === $team->user_id)
+            return $user->id === $team->user_id;
+
+        elseif($user->isAdmin === 1)
+            return $user->isAdmin === 1;
     }
 
     /**
@@ -88,6 +122,10 @@ class TeamPolicy
      */
     public function forceDelete(User $user, Team $team)
     {
-        //
+        if ($user->id === $team->user_id)
+            return $user->id === $team->user_id;
+
+        elseif($user->isAdmin === 1)
+            return $user->isAdmin === 1;
     }
 }

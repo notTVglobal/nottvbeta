@@ -71,7 +71,7 @@
                                                 <th scope="col" class="px-6 py-3">
                                                     Status
                                                 </th>
-                                                <th v-if="props.can.edit" scope="col" class="px-6 py-3">
+                                                <th v-if="props.can.viewCreator" scope="col" class="px-6 py-3">
                                                     Edit
                                                 </th>
                                             </tr>
@@ -111,7 +111,7 @@
                                                 <td class="px-6 py-4">
 
                                                 </td>
-                                                <td v-if="props.can.edit" class="px-6 py-4">
+                                                <td v-if="show.can.editShow" class="px-6 py-4">
                                                     <Link :href="`/shows/${show.id}/edit`"><button
                                                         class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                                                     >Edit</button>

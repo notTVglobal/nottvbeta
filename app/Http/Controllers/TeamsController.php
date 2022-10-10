@@ -49,12 +49,15 @@ class TeamsController extends Controller
                     'team_id' => $team->team_id,
                     'memberSpots' => $team->memberSpots,
                     'totalSpots' => $team->totalSpots,
+                    'can' => [
+                        'editTeam' => Auth::user()->can('edit', $team)
+                    ]
                 ]),
             'filters' => Request::only(['search']),
             'can' => [
                 'viewTeams' => Auth::user()->can('view', Team::class),
                 'createTeam' => Auth::user()->can('create', Team::class),
-                'editTeam' => Auth::user()->can('edit', Team::class)
+                'viewCreator' => Auth::user()->can('viewCreator', User::class),
             ]
         ]);
     }
@@ -149,8 +152,8 @@ class TeamsController extends Controller
                 ]),
             'filters' => Request::only(['team_id']),
             'can' => [
-                'editTeam' => Auth::user()->can('edit', Team::class),
-                'manageTeam' => Auth::user()->can('edit', Team::class)
+                'editTeam' => Auth::user()->can('edit', $team),
+                'manageTeam' => Auth::user()->can('edit', $team)
             ]
         ]);
     }
@@ -185,8 +188,8 @@ class TeamsController extends Controller
                 ]),
             'filters' => Request::only(['team_id']),
             'can' => [
-                'editTeam' => Auth::user()->can('edit', Team::class),
-                'manageTeam' => Auth::user()->can('edit', Team::class),
+                'editTeam' => Auth::user()->can('edit', $team),
+                'manageTeam' => Auth::user()->can('edit', $team),
             ]
         ]);
     }
@@ -218,8 +221,8 @@ class TeamsController extends Controller
                     'extension' => $image->extension
                 ]),
             'can' => [
-                'editTeam' => Auth::user()->can('edit', Team::class),
-                'manageTeam' => Auth::user()->can('edit', Team::class)
+                'editTeam' => Auth::user()->can('edit', $team),
+                'manageTeam' => Auth::user()->can('edit', $team)
             ],
         ]);
     }

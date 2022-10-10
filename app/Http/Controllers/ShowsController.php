@@ -40,12 +40,15 @@ class ShowsController extends Controller
                     'showRunnerId' => $show->user_id,
                     'showRunnerName' => User::query()->where('id', $show->user_id)->pluck('name')->first(),
                     'posterName' => Image::query()->where('id', $show->image_id)->pluck('name')->first(),
+                    'can' => [
+                        'editShow' => Auth::user()->can('edit', $show)
+                    ]
                 ]),
             'filters' => Request::only(['search']),
             'can' => [
                 'viewShows' => Auth::user()->can('view', Show::class),
                 'createShow' => Auth::user()->can('create', Show::class),
-                'editShow' => Auth::user()->can('edit', Show::class)
+                'viewCreator' => Auth::user()->can('viewCreator', User::class),
             ]
         ]);
     }
@@ -144,8 +147,8 @@ class ShowsController extends Controller
             'teamName' => Team::query()->where('id', $show->team_id)->pluck('name')->firstOrFail(),
             'showRunner' => User::query()->where('id', $show->user_id)->pluck('name')->firstOrFail(),
             'can' => [
-                'manageShow' => Auth::user()->can('manage', Show::class),
-                'editShow' => Auth::user()->can('edit', Show::class),
+                'manageShow' => Auth::user()->can('manage', $show),
+                'editShow' => Auth::user()->can('edit', $show),
                 'viewCreator' => Auth::user()->can('viewCreator', User::class),
             ]
         ]);

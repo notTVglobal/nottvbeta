@@ -51,25 +51,34 @@ class ShowPolicy
     }
 
     /**
-     * Determine whether the user can edit models.
+     * Determine whether the user can manage models.
      *
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function manage(User $user)
+    public function manage(User $user, Show $show)
     {
-        return $user->role_id === 4;
+        if ($user->id === $show->user_id)
+            return $user->id === $show->user_id;
+
+        elseif($user->isAdmin === 1)
+            return $user->isAdmin === 1;
     }
 
     /**
      * Determine whether the user can edit models.
      *
      * @param  \App\Models\User  $user
+     * @param  \App\Models\Show  $show
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function edit(User $user)
+    public function edit(User $user, Show $show)
     {
-        return $user->role_id === 4;
+        if ($user->id === $show->user_id)
+            return $user->id === $show->user_id;
+
+        elseif($user->isAdmin === 1)
+            return $user->isAdmin === 1;
     }
 
     /**
@@ -79,9 +88,13 @@ class ShowPolicy
      * @param  \App\Models\Show  $show
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user)
+    public function update(User $user, Show $show)
     {
-        return $user->role_id === 4;
+        if ($user->id === $show->user_id)
+            return $user->id === $show->user_id;
+
+        elseif($user->isAdmin === 1)
+            return $user->isAdmin === 1;
     }
 
     /**
@@ -93,7 +106,11 @@ class ShowPolicy
      */
     public function delete(User $user, Show $show)
     {
-        //
+        if ($user->id === $show->user_id)
+            return $user->id === $show->user_id;
+
+        elseif($user->isAdmin === 1)
+            return $user->isAdmin === 1;
     }
 
     /**
@@ -105,7 +122,11 @@ class ShowPolicy
      */
     public function restore(User $user, Show $show)
     {
-        //
+        if ($user->id === $show->user_id)
+            return $user->id === $show->user_id;
+
+        elseif($user->isAdmin === 1)
+            return $user->isAdmin === 1;
     }
 
     /**
@@ -117,6 +138,10 @@ class ShowPolicy
      */
     public function forceDelete(User $user, Show $show)
     {
-        //
+        if ($user->id === $show->user_id)
+            return $user->id === $show->user_id;
+
+        elseif($user->isAdmin === 1)
+            return $user->isAdmin === 1;
     }
 }

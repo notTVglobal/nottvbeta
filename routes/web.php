@@ -142,7 +142,7 @@ Route::middleware([
     Route::resource('teams',TeamsController::class);
     // List all teams
     Route::get('/teams', [TeamsController::class, 'index'])
-        ->can('viewAdmin', 'App\Models\User')
+        ->middleware('can:viewAny,App\Models\User')
         ->name('teams.index');
     // Create a team
     Route::get('/teams/create', [TeamsController::class, 'create'])
@@ -154,11 +154,11 @@ Route::middleware([
 //        ->name('teams.store');
     // Display teams manage page
     Route::get('/teams/{team}/manage', [TeamsController::class, 'manage'])
-        ->can('viewCreator', 'App\Models\User')
+        ->middleware('can:manage,team')
         ->name('teams.manage');
     // Edit team
     Route::get('/teams/{team}/edit', [TeamsController::class, 'edit'])
-        ->can('viewCreator', 'App\Models\User')
+        ->middleware('can:edit,team')
         ->name('teams.edit');
 
 
@@ -176,11 +176,11 @@ Route::middleware([
         ->name('shows');
     // Display shows manage page
     Route::get('/shows/{show}/manage', [ShowsController::class, 'manage'])
-        ->can('viewCreator', 'App\Models\User')
+        ->middleware('can:manage,show')
         ->name('shows.manage');
     // Display shows edit page
     Route::get('/shows/{show}/edit', [ShowsController::class, 'edit'])
-        ->can('viewCreator', 'App\Models\User')
+        ->middleware('can:edit,show')
         ->name('shows.edit');
     // Display shows create page
     Route::get('/shows/create', [ShowsController::class, 'create'])
