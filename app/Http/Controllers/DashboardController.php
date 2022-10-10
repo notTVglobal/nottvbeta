@@ -32,9 +32,7 @@ class DashboardController extends Controller
                     ]
                 ]),
             'teams' => Team::query()
-                ->when(Request::input('search'), function ($query, $search) {
-                    $query->where('name', 'like', "%{$search}%");
-                })
+                ->where('user_id', Auth::user()->id)
                 ->paginate(10)
                 ->withQueryString()
                 ->through(fn($team) => [
