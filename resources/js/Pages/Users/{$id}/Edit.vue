@@ -33,7 +33,7 @@
                         User Role
                     </label>
                     <select class="border border-gray-400 p-2 w-full rounded-lg block mb-2 uppercase font-bold text-xs text-gray-700"
-                            v-model="form.role_id" :options="options"
+                            v-model="form.role_id"
                     >
                         <option value="1">Standard User</option>
                         <option value="2">Premium Subscriber</option>

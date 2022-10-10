@@ -252,11 +252,6 @@ Route::middleware([
         ->can('viewAny', 'App\Models\User')
         ->name('users.show');
 
-    //    // Manage user
-    Route::get('/users/{user}', [UsersController::class, 'manage'])
-        ->can('viewAdmin', 'App\Models\User')
-        ->name('users.manage');
-
 //    // Edit user
     Route::get('/users/{user}/edit', [UsersController::class, 'edit'])
         ->can('edit', 'App\Models\User')

@@ -63,20 +63,22 @@ class ShowsController extends Controller
      */
     public function create()
     {
-//        $team = \Str::slug($request);
-        $user_id = auth()->user()->id;
-        $defaultTeamId = Team::query()->where('user_id', $user_id)->pluck('id')->firstOrFail();
-        $defaultTeamName = Team::query()->where('user_id', $user_id)->pluck('name')->firstOrFail();
-//        return Inertia::render('Shows/Create');
              return Inertia::render('Shows/Create', [
-                 'teamsId' => $defaultTeamId,
-                 'teamsName' => $defaultTeamName,
+                 'teams' => Team::query()
+                     ->where('user_id', Auth::user()->id)
+                     ->paginate(10)
+                     ->withQueryString()
+                     ->through(fn($team) => [
+                         'id' => $team->id,
+                         'name' => $team->name,
+                         'can' => [
+                             'manageTeam' => Auth::user()->can('manage', $team)
+                         ]
+                     ]),
+                 'userId' => Auth::user()->id,
         ]);
 
     }
-
-
-
 
 
     /**
