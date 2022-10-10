@@ -187,10 +187,11 @@ class ShowsController extends Controller
         //
         return Inertia::render('Shows/{$id}/Edit', [
             'show' => $show,
-            'posterName' => Image::query()->where('id', $show->image_id)->pluck('name')->firstOrFail(),
-            'team' => Team::query()->where('id', $show->team_id)->firstOrFail(),
+            'poster' => Image::query()->where('id', $show->image_id)->pluck('name')->firstOrFail(),
+            'teamName' => Team::query()->where('id', $show->team_id)->pluck('name')->firstOrFail(),
             'showRunner' => User::query()->where('id', $show->user_id)->pluck('id','name')->firstOrFail(),
             'images' => Image::query()
+                ->where('user_id', auth()->user()->id)
                 ->latest()
                 ->paginate(10)
                 ->withQueryString()

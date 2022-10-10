@@ -333,9 +333,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _Stores_TeamStore__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Stores/TeamStore */ "./resources/js/Stores/TeamStore.js");
 /* harmony import */ var _inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @inertiajs/inertia-vue3 */ "./node_modules/@inertiajs/inertia-vue3/dist/index.js");
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
-/* harmony import */ var _Components_TabbableTextarea__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/Components/TabbableTextarea */ "./resources/js/Components/TabbableTextarea.vue");
-/* harmony import */ var _Components_FilePond_TeamLogoUpload__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/Components/FilePond/TeamLogoUpload */ "./resources/js/Components/FilePond/TeamLogoUpload.vue");
+/* harmony import */ var _Components_TabbableTextarea__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/Components/TabbableTextarea */ "./resources/js/Components/TabbableTextarea.vue");
+/* harmony import */ var _Components_FilePond_TeamLogoUpload__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/Components/FilePond/TeamLogoUpload */ "./resources/js/Components/FilePond/TeamLogoUpload.vue");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 
 
 
@@ -366,7 +366,7 @@ __webpack_require__.r(__webpack_exports__);
       name: props.team.name,
       description: props.team.description,
       totalSpots: props.team.totalSpots,
-      image_id: (0,vue__WEBPACK_IMPORTED_MODULE_2__.ref)(props.logo.id)
+      image_id: (0,vue__WEBPACK_IMPORTED_MODULE_4__.ref)(props.team.image_id)
     }); // function updatePosterId () {
     //     props.newPosterId = showStore.posterId
     // }
@@ -383,9 +383,9 @@ __webpack_require__.r(__webpack_exports__);
       submit: submit,
       useTeamStore: _Stores_TeamStore__WEBPACK_IMPORTED_MODULE_0__.useTeamStore,
       useForm: _inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_1__.useForm,
-      ref: vue__WEBPACK_IMPORTED_MODULE_2__.ref,
-      TabbableTextarea: _Components_TabbableTextarea__WEBPACK_IMPORTED_MODULE_3__["default"],
-      TeamLogoUpload: _Components_FilePond_TeamLogoUpload__WEBPACK_IMPORTED_MODULE_4__["default"]
+      TabbableTextarea: _Components_TabbableTextarea__WEBPACK_IMPORTED_MODULE_2__["default"],
+      TeamLogoUpload: _Components_FilePond_TeamLogoUpload__WEBPACK_IMPORTED_MODULE_3__["default"],
+      ref: vue__WEBPACK_IMPORTED_MODULE_4__.ref
     };
     Object.defineProperty(__returned__, '__isScriptSetup', {
       enumerable: false,
@@ -662,7 +662,7 @@ __webpack_require__.r(__webpack_exports__);
   props: {
     team: Object,
     teamLeaderName: String,
-    logo: Object,
+    logo: String,
     images: {
       data: {
         0: {
@@ -1736,11 +1736,12 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "bg-red-600 p-2 w-full text-white font-semibold mt-1"
   }, null, 8
   /* PROPS */
-  , _hoisted_3)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Begin grid 2-col "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("Left Column"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
-    src: '/storage/images/' + $setup.teamStore.logoName
+  , _hoisted_3)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Begin grid 2-col "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("Left Column"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("img", {
+    src: '/storage/images/' + $setup.teamStore.logoName,
+    key: $props.images
   }, null, 8
   /* PROPS */
-  , _hoisted_7)])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("Right Column"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            Replace this with TeamLogoUpload "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["TeamLogoUpload"], {
+  , _hoisted_7))])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("Right Column"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            Replace this with TeamLogoUpload "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["TeamLogoUpload"], {
     team: $setup.props.team,
     images: $setup.props.images
   }, null, 8

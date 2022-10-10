@@ -63,8 +63,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var filepond_dist_filepond_min_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! filepond/dist/filepond.min.css */ "./node_modules/filepond/dist/filepond.min.css");
 /* harmony import */ var filepond_plugin_image_preview_dist_filepond_plugin_image_preview_min_css__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css */ "./node_modules/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css");
 /* harmony import */ var _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @inertiajs/inertia */ "./node_modules/@inertiajs/inertia/dist/index.js");
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
-
 
 
 
@@ -128,8 +126,7 @@ __webpack_require__.r(__webpack_exports__);
       FilePondPluginFileValidateSize: (filepond_plugin_file_validate_size__WEBPACK_IMPORTED_MODULE_3___default()),
       FilePondPluginImagePreview: (filepond_plugin_image_preview__WEBPACK_IMPORTED_MODULE_4___default()),
       FilePondPluginFileMetadata: (filepond_plugin_file_metadata__WEBPACK_IMPORTED_MODULE_5___default()),
-      Inertia: _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_8__.Inertia,
-      ref: vue__WEBPACK_IMPORTED_MODULE_9__.ref
+      Inertia: _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_8__.Inertia
     };
     Object.defineProperty(__returned__, '__isScriptSetup', {
       enumerable: false,
@@ -289,9 +286,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _Stores_ShowStore__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Stores/ShowStore */ "./resources/js/Stores/ShowStore.js");
 /* harmony import */ var _inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @inertiajs/inertia-vue3 */ "./node_modules/@inertiajs/inertia-vue3/dist/index.js");
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
-/* harmony import */ var _Components_TabbableTextarea__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/Components/TabbableTextarea */ "./resources/js/Components/TabbableTextarea.vue");
-/* harmony import */ var _Components_FilePond_ShowPosterUpload__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/Components/FilePond/ShowPosterUpload */ "./resources/js/Components/FilePond/ShowPosterUpload.vue");
+/* harmony import */ var _Components_TabbableTextarea__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/Components/TabbableTextarea */ "./resources/js/Components/TabbableTextarea.vue");
+/* harmony import */ var _Components_FilePond_ShowPosterUpload__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/Components/FilePond/ShowPosterUpload */ "./resources/js/Components/FilePond/ShowPosterUpload.vue");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 
 
 
@@ -301,7 +298,7 @@ __webpack_require__.r(__webpack_exports__);
   __name: 'ShowEditBody',
   props: {
     show: Object,
-    posterName: String,
+    poster: String,
     images: {
       data: {
         0: {
@@ -316,12 +313,12 @@ __webpack_require__.r(__webpack_exports__);
     expose();
     var props = __props;
     var showStore = (0,_Stores_ShowStore__WEBPACK_IMPORTED_MODULE_0__.useShowStore)();
-    showStore.posterName = props.posterName;
+    showStore.posterName = props.poster;
     var form = (0,_inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_1__.useForm)({
       id: props.show.id,
       name: props.show.name,
       description: props.show.description,
-      image_id: (0,vue__WEBPACK_IMPORTED_MODULE_2__.ref)(props.show.image_id)
+      image_id: (0,vue__WEBPACK_IMPORTED_MODULE_4__.ref)(props.show.image_id)
     });
 
     var submit = function submit() {
@@ -336,9 +333,9 @@ __webpack_require__.r(__webpack_exports__);
       submit: submit,
       useShowStore: _Stores_ShowStore__WEBPACK_IMPORTED_MODULE_0__.useShowStore,
       useForm: _inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_1__.useForm,
-      ref: vue__WEBPACK_IMPORTED_MODULE_2__.ref,
-      TabbableTextarea: _Components_TabbableTextarea__WEBPACK_IMPORTED_MODULE_3__["default"],
-      ShowPosterUpload: _Components_FilePond_ShowPosterUpload__WEBPACK_IMPORTED_MODULE_4__["default"]
+      TabbableTextarea: _Components_TabbableTextarea__WEBPACK_IMPORTED_MODULE_2__["default"],
+      ShowPosterUpload: _Components_FilePond_ShowPosterUpload__WEBPACK_IMPORTED_MODULE_3__["default"],
+      ref: vue__WEBPACK_IMPORTED_MODULE_4__.ref
     };
     Object.defineProperty(__returned__, '__isScriptSetup', {
       enumerable: false,
@@ -663,7 +660,7 @@ __webpack_require__.r(__webpack_exports__);
   props: {
     user: Object,
     show: Object,
-    posterName: String,
+    poster: String,
     teamName: String,
     images: {
       data: {
@@ -684,9 +681,9 @@ __webpack_require__.r(__webpack_exports__);
     videoPlayer["class"] = "videoTopRight";
     videoPlayer.videoContainerClass = "videoContainerTopRight";
     videoPlayer.fullPage = false;
-    chat["class"] = "chatSmall";
-    showStore.posterName = props.posterName;
-    showStore.posterId = props.show.image_id;
+    chat["class"] = "chatSmall"; // showStore.posterName = props.posterName;
+    // showStore.posterId = props.show.image_id;
+
     var title = "Edit > " + props.show.name;
     var __returned__ = {
       videoPlayer: videoPlayer,
@@ -1694,17 +1691,17 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "bg-red-600 p-2 w-full text-white font-semibold mt-1"
   }, null, 8
   /* PROPS */
-  , _hoisted_2)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Begin grid 2-col "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("Left Column"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
+  , _hoisted_2)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Begin grid 2-col "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("Left Column"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("img", {
     src: '/storage/images/' + $setup.showStore.posterName,
-    ref: "poster"
+    key: $props.images
   }, null, 8
   /* PROPS */
-  , _hoisted_6)])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("Right Column"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ShowPosterUpload"], {
-    show: $setup.props.show,
+  , _hoisted_6))])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("Right Column"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ShowPosterUpload"], {
+    team: $setup.props.show,
     images: $setup.props.images
   }, null, 8
   /* PROPS */
-  , ["show", "images"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", {
+  , ["team", "images"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", {
     onSubmit: _cache[2] || (_cache[2] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function () {
       return $setup.submit && $setup.submit.apply($setup, arguments);
     }, ["prevent"]))
@@ -2118,11 +2115,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* PROPS */
   , ["show", "teamId", "teamName"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            <div class=\"max-w-lg mx-auto mt-8\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ShowEditBody"], {
     show: $setup.props.show,
-    images: $setup.props.images,
-    posterName: $setup.props.posterName
+    poster: $setup.props.poster,
+    images: $setup.props.images
   }, null, 8
   /* PROPS */
-  , ["show", "images", "posterName"])])])])])])])], 64
+  , ["show", "poster", "images"])])])])])])])], 64
   /* STABLE_FRAGMENT */
   );
 }

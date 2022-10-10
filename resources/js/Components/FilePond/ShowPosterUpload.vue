@@ -39,11 +39,10 @@ import FilePondPluginFileMetadata from 'filepond-plugin-file-metadata';
 import 'filepond/dist/filepond.min.css';
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css';
 import {Inertia} from "@inertiajs/inertia";
-import {ref} from "vue";
 
 let showStore = useShowStore()
 
-const props = defineProps({
+let props = defineProps({
     show: Object,
     images: Object,
 });

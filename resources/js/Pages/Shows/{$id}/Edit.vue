@@ -21,8 +21,8 @@
 
                             <ShowEditBody
                                 :show="props.show"
+                                :poster="props.poster"
                                 :images="props.images"
-                                :posterName="props.posterName"
                             />
 
                             </div>
@@ -59,7 +59,7 @@ chat.class = "chatSmall"
 let props = defineProps({
     user: Object,
     show: Object,
-    posterName: String,
+    poster: String,
     teamName: String,
     images: {
         data: {
@@ -71,8 +71,8 @@ let props = defineProps({
     },
 });
 
-showStore.posterName = props.posterName;
-showStore.posterId = props.show.image_id;
+// showStore.posterName = props.posterName;
+// showStore.posterId = props.show.image_id;
 
 let title = "Edit > " + props.show.name;
 

@@ -10,7 +10,7 @@
         </td>
 
         <td class="text-gray-500 px-6 py-4 text-sm text-right">
-            {{  showRunner }}
+            {{  showRunnerName }}
         </td>
 
     </tr>
@@ -21,7 +21,7 @@ defineProps({
     id: String,
     name: String,
     description: String,
-    showRunner: String,
+    showRunnerName: String,
     poster: String,
     notes: String,
     slug: String,

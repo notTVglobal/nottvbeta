@@ -66,7 +66,7 @@ class ImageController extends Controller
 //        if (!$path) {
 //            return response()->json(['error' => 'The file could not be saved.'], 500);
 //        }
-        $user_id = auth()->user()->id;
+
         $uploadedFile = $request->file('image');
 
         // create image model
@@ -75,7 +75,7 @@ class ImageController extends Controller
             'name' => $uploadedFile->hashName(),
             'extension' => $uploadedFile->extension(),
             'size' => $uploadedFile->getSize(),
-            'user_id' => $user_id,
+            'user_id' => auth()->user()->id,
         ]);
 
         // return that image model back to the frontend

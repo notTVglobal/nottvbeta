@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Team;
 use App\Models\User;
 use App\Models\Image;
+use App\Models\Show;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Str;
@@ -178,7 +179,7 @@ class TeamsController extends Controller
                     'id' => $show->id,
                     'name' => $show->name,
                     'description' => $show->description,
-                    'showRunner' => $show->user_id,
+                    'showRunnerName' => User::query()->where('id', $show->user_id)->pluck('name')->first(),
                     'team_id' => $show->team_id,
                     'poster' => Image::query()->where('id', $show->image_id)->pluck('name')->first(),
                 ]),
@@ -207,6 +208,7 @@ class TeamsController extends Controller
             'teamLeaderName' => User::query()->where('id', $team->user_id)->pluck('name')->first(),
             'logo' => Image::query()->where('id', $team->image_id)->pluck('name')->first(),
             'images' => Image::query()
+                ->where('user_id', auth()->user()->id)
                 ->latest()
                 ->paginate(10)
                 ->withQueryString()

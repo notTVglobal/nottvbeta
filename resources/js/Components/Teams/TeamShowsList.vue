@@ -39,7 +39,7 @@
             :name="show.name"
             :description="show.description"
             :poster="show.poster"
-            :showRunner="show.showRunner"
+            :showRunnerName="show.showRunnerName"
         />
 
         </tbody>
@@ -48,13 +48,9 @@
 </template>
 
 <script setup>
-import Pagination from "@/Components/Pagination";
-import ShowEpisode from "@/Components/Shows/ShowEpisode.vue";
 import {useShowStore} from "@/Stores/ShowStore";
 import {useTeamStore} from "@/Stores/TeamStore";
 import TeamShow from "@/Components/Teams/TeamShow";
-import {useForm} from "@inertiajs/inertia-vue3";
-import {Inertia} from "@inertiajs/inertia";
 
 let showStore = useShowStore();
 let teamStore = useTeamStore();
@@ -62,6 +58,5 @@ let teamStore = useTeamStore();
 defineProps({
     shows: Object,
 })
-
 
 </script>

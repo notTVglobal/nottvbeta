@@ -13,7 +13,7 @@
             <div class="flex space-y-3">
                 <div class="mb-6">
                     <img :src="'/storage/images/' + showStore.posterName"
-                         ref="poster" />
+                         :key="images" />
                 </div>
             </div>
         </div>
@@ -21,7 +21,7 @@
 <!--Right Column-->
         <div>
             <ShowPosterUpload
-                :show="props.show"
+                :team="props.show"
                 :images="props.images"
             />
 
@@ -85,15 +85,15 @@
 <script setup>
 import {useShowStore} from "@/Stores/ShowStore";
 import {useForm} from "@inertiajs/inertia-vue3";
-import { ref } from "vue";
 import TabbableTextarea from "@/Components/TabbableTextarea"
 import ShowPosterUpload from "@/Components/FilePond/ShowPosterUpload";
+import { ref } from 'vue'
 
 let showStore = useShowStore()
 
 let props = defineProps({
     show: Object,
-    posterName: String,
+    poster: String,
     images: {
         data: {
             0: {
@@ -104,7 +104,7 @@ let props = defineProps({
     },
 });
 
-showStore.posterName = props.posterName;
+showStore.posterName = props.poster;
 
 let form = useForm({
     id: props.show.id,

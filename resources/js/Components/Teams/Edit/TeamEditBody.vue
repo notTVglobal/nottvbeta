@@ -13,7 +13,7 @@
 <!--Left Column-->
         <div>
             <div class="flex space-y-3">
-                <div class="mb-6"><img :src="'/storage/images/' + teamStore.logoName"/></div>
+                <div class="mb-6"><img :src="'/storage/images/' + teamStore.logoName" :key="images"/></div>
             </div>
         </div>
 
@@ -101,9 +101,9 @@
 <script setup>
 import {useTeamStore} from "@/Stores/TeamStore";
 import {useForm} from "@inertiajs/inertia-vue3";
-import { ref } from "vue";
 import TabbableTextarea from "@/Components/TabbableTextarea"
 import TeamLogoUpload from "@/Components/FilePond/TeamLogoUpload";
+import { ref } from "vue";
 
 let teamStore = useTeamStore()
 
@@ -127,7 +127,7 @@ let form = useForm({
     name: props.team.name,
     description: props.team.description,
     totalSpots: props.team.totalSpots,
-    image_id: ref(props.logo.id),
+    image_id: ref(props.team.image_id),
 });
 
 // function updatePosterId () {

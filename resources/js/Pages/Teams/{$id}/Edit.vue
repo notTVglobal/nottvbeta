@@ -54,7 +54,7 @@ chat.class = "chatSmall"
 let props = defineProps({
     team: Object,
     teamLeaderName: String,
-    logo: Object,
+    logo: String,
     images: {
         data: {
             0: {
