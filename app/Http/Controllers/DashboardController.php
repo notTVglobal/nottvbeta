@@ -22,7 +22,7 @@ class DashboardController extends Controller
         return Inertia::render('Dashboard', [
             'shows' => Show::query()
                 ->where('user_id', Auth::user()->id)
-                ->paginate(10)
+                ->paginate(5, ['*'], 'shows_per_page')
                 ->withQueryString()
                 ->through(fn($show) => [
                     'id' => $show->id,
@@ -33,7 +33,7 @@ class DashboardController extends Controller
                 ]),
             'teams' => Team::query()
                 ->where('user_id', Auth::user()->id)
-                ->paginate(10)
+                ->paginate(5, ['*'], 'teams_per_page')
                 ->withQueryString()
                 ->through(fn($team) => [
                     'id' => $team->id,

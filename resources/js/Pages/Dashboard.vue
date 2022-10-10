@@ -77,7 +77,7 @@
                     </div>
                 </div>
 
-                <div class="p-5 bg-gray-200 rounded">
+                <div class="p-5 bg-gray-200 rounded relative">
                     <div class="mb-3 flex justify-between">
                         <div class="mb-1 font-semibold text-xl">My Teams</div>
                         <div class="">
@@ -90,7 +90,7 @@
                     <div
                         v-for="team in teams.data"
                         :key="team.id"
-                        class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                        class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 inset-x-0 bottom-0"
                     >
                         <p class=""><Link
                             @click="videoPlayer.makeVideoTopRight()"
@@ -99,10 +99,14 @@
                             {{ team.name }}
                         </Link></p>
                     </div>
+                    <div class="bottom-0 py-2 px-2">
+                        <!-- Paginator -->
+                        <Pagination :links="teams.links" class="mt-6 absolute inset-x-0 bottom-0 py-2 px-2"/>
+                    </div>
 
                 </div>
 
-                <div class="p-5 bg-gray-200 rounded">
+                <div class="p-5 bg-gray-200 rounded relative">
                     <div class="mb-3 grid grid-cols-1">
                         <div class="mb-1 font-semibold text-xl justify-self-start">My Shows</div>
                     </div>
@@ -117,6 +121,10 @@
                             class="text-blue-800 hover:text-blue-400">
                             {{ show.name }}
                         </Link></p>
+                    </div>
+                    <div class="bottom-0 py-2 px-2">
+                        <!-- Paginator -->
+                        <Pagination :links="shows.links" class="mt-6 absolute inset-x-0 bottom-0 py-2 px-2"/>
                     </div>
                 </div>
 
@@ -179,6 +187,7 @@
 </template>
 
 <script setup>
+import Pagination from "@/Components/Pagination"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useChatStore } from "@/Stores/ChatStore.js"
 import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
