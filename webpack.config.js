@@ -7,7 +7,6 @@ module.exports = {
         alias: {
             '@': path.resolve('resources/js'),
             '@i': path.resolve('public/images'),
-            '@css': path.resolve('resources/css'),
         },
     },
 }

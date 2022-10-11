@@ -10,18 +10,18 @@ import { ZiggyVue } from 'ziggy';
 
 import "../../resources/css/theme.css"; // Magic happens here
 
-/* import the fontawesome core */
+// import the fontawesome core
 import { library } from '@fortawesome/fontawesome-svg-core'
 
-/* import font awesome icon component */
+// import font awesome icon component
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
-/* import specific icons */
+// import specific icons
 import { faUserSecret } from '@fortawesome/free-solid-svg-icons'
 import { faPlay } from '@fortawesome/free-solid-svg-icons'
 import { faQuestion } from '@fortawesome/free-solid-svg-icons'
 
-/* import popper for pop-up tooltips */
+// import popper for pop-up tooltips
 import Popper from "vue3-popper";
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'notTV';
@@ -45,13 +45,13 @@ createInertiaApp({
             .use(createPinia())
             .component("Link", Link)
             .component("Head", Head)
-            .component('font-awesome-icon', FontAwesomeIcon)
+            .component("font-awesome-icon", FontAwesomeIcon)
             .component("Popper", Popper)
             .mount(el);
 
     }
 });
 
-library.add(faUserSecret, faPlay, faQuestion)
+library.add(faUserSecret, faPlay, faQuestion);
 
 InertiaProgress.init({ delay: 250, color: '#FCEF5B', includeCSS: true, showSpinner: true, });
