@@ -176,21 +176,108 @@ var _hoisted_12 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNo
 
 var _hoisted_13 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Register ");
 
-var _hoisted_14 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<section class=\"flex flex-col justify-center items-center h-screen bg-white text-black p-10\"><div class=\"text-center font-semibold text-3xl\">Welcome to notTV</div><div class=\"text-center text-2xl\">Where artists own the platform.</div></section><section class=\"grid md:grid-cols-2 content-center gap-10 bg-gray-300 text-white p-10\"><div class=\"px-6 py-20 bg-fuchsia-600 rounded\"><h2 class=\"font-bold text-4xl text-center pb-3\">Rewards</h2><p class=\"text-center text-2xl\">Reap the rewards of a cooperative blockchain media distribution platform and streaming service.</p></div><div class=\"px-6 py-20 bg-green-600 rounded\"><h2 class=\"font-bold text-4xl text-center pb-3\">New audiences</h2><p class=\"text-center text-2xl\">Share your audience with other creators.. which means they also share their audience with you!</p></div><div class=\"px-6 py-20 bg-blue-600 rounded\"><h2 class=\"font-bold text-4xl text-center pb-3\">Public good</h2><p class=\"text-center text-2xl\">Help fund the public good, free speech and free press automatically as part of the business model and original concept to keep a free democracy and make the world a better place.</p></div><div class=\"px-6 py-20 bg-purple-600 rounded\"><h2 class=\"font-bold text-4xl text-center pb-3\">Join now</h2><p class=\"text-center text-2xl\">Register your content as your very own NFT on a blockchain that you own.</p></div></section>", 2);
+var _hoisted_14 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("section", {
+  "class": "flex flex-col justify-center items-center h-screen bg-white text-black p-5"
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  "class": "text-center font-semibold text-3xl"
+}, "Welcome to notTV"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  "class": "text-center text-2xl"
+}, "Where artists own the platform.")], -1
+/* HOISTED */
+);
 
+var _hoisted_15 = {
+  "class": "grid md:grid-cols-2 content-center gap-10 bg-gray-300 text-white p-10"
+};
 var _hoisted_16 = {
+  "class": "px-6 py-20 bg-fuchsia-600 rounded"
+};
+var _hoisted_17 = {
+  "class": "font-bold text-4xl text-center pb-3 space-x-2"
+};
+
+var _hoisted_18 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h2", {
+  "class": "font-bold text-4xl text-center pb-3"
+}, "Rewards", -1
+/* HOISTED */
+);
+
+var _hoisted_19 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", {
+  "class": "text-center text-2xl"
+}, "Reap the rewards of a cooperative blockchain media distribution platform and streaming service.", -1
+/* HOISTED */
+);
+
+var _hoisted_20 = {
+  "class": "px-6 py-20 bg-green-600 rounded"
+};
+var _hoisted_21 = {
+  "class": "font-bold text-4xl text-center pb-3 space-x-2"
+};
+
+var _hoisted_22 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h2", {
+  "class": "font-bold text-4xl text-center pb-3"
+}, "New audiences", -1
+/* HOISTED */
+);
+
+var _hoisted_23 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", {
+  "class": "text-center text-2xl"
+}, "Share your audience with other creators.. which means they also share their audience with you!", -1
+/* HOISTED */
+);
+
+var _hoisted_24 = {
+  "class": "px-6 py-20 bg-blue-600 rounded"
+};
+var _hoisted_25 = {
+  "class": "font-bold text-4xl text-center pb-3 space-x-2"
+};
+
+var _hoisted_26 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h2", {
+  "class": "font-bold text-4xl text-center pb-3"
+}, "Public good", -1
+/* HOISTED */
+);
+
+var _hoisted_27 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", {
+  "class": "text-center text-2xl"
+}, "Help fund the public good, free speech and free press automatically as part of the business model and original concept to keep a free democracy and make the world a better place.", -1
+/* HOISTED */
+);
+
+var _hoisted_28 = {
+  "class": "px-6 py-20 bg-purple-600 rounded"
+};
+var _hoisted_29 = {
+  "class": "font-bold text-4xl text-center pb-3 space-x-2"
+};
+
+var _hoisted_30 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h2", {
+  "class": "font-bold text-4xl text-center pb-3"
+}, "Join now", -1
+/* HOISTED */
+);
+
+var _hoisted_31 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", {
+  "class": "text-center text-2xl"
+}, "Register your content as your very own NFT on a blockchain that you own.", -1
+/* HOISTED */
+);
+
+var _hoisted_32 = {
   key: 0,
   "class": "flex justify-center items-center h-screen",
   ref: "scrollToMe"
 };
 
-var _hoisted_17 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+var _hoisted_33 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "text-2xl"
 }, "#mediaforabetterworld", -1
 /* HOISTED */
 );
 
-var _hoisted_18 = [_hoisted_17];
+var _hoisted_34 = [_hoisted_33];
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_Head = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Head");
 
@@ -251,7 +338,15 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* PROPS */
   , ["href"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])], 64
   /* STABLE_FRAGMENT */
-  ))])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), _hoisted_14, !$setup.showDiv ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("section", _hoisted_16, _hoisted_18, 512
+  ))])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), _hoisted_14, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("section", _hoisted_15, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_16, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_17, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_font_awesome_icon, {
+    icon: "fa-solid fa-star"
+  })]), _hoisted_18, _hoisted_19]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_20, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_21, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_font_awesome_icon, {
+    icon: "fa-solid fa-users"
+  })]), _hoisted_22, _hoisted_23]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_24, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_25, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_font_awesome_icon, {
+    icon: "fa-solid fa-hands-helping"
+  })]), _hoisted_26, _hoisted_27]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_28, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_29, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_font_awesome_icon, {
+    icon: "fa-solid fa-rocket"
+  })]), _hoisted_30, _hoisted_31])]), !$setup.showDiv ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("section", _hoisted_32, _hoisted_34, 512
   /* NEED_PATCH */
   )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Teleport, {
     to: "body"
