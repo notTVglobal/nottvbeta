@@ -63,15 +63,15 @@
                             <NotificationsButton class=""/>
                         </div>
                         <div>
-                            <div v-if="$page.props.user.role_id === 1" class="text-xs text-fuchsia-700">
+                            <div v-if="$page.props.user.role_id === 1">
                                 <JetNavLink @click="videoPlayer.makeVideoTopRight()" :href="route('upgrade')" :active="route().current('upgrade')">
-                                    UPGRADE ACCOUNT
+                                    <div class="text-fuchsia-700 hover:text-fuchsia-500">CLICK HERE TO UPGRADE YOUR ACCOUNT</div>
                                 </JetNavLink>
                             </div>
-                            <div v-if="$page.props.user.role_id === 2" class="text-xs text-fuchsia-700">PREMIUM SUBSCRIBER</div>
-                            <div v-if="$page.props.user.role_id === 3" class="text-xs text-fuchsia-700">VIP</div>
-                            <div v-if="$page.props.user.role_id === 4" class="text-xs text-fuchsia-700">CREATOR</div>
-                            <div v-if="$page.props.user.isAdmin === 1" class="text-xs text-red-700">ADMIN</div>
+                            <div v-if="$page.props.user.role_id === 2" class="text-fuchsia-700">PREMIUM SUBSCRIBER</div>
+                            <div v-if="$page.props.user.role_id === 3" class="text-fuchsia-700">VIP</div>
+                            <div v-if="$page.props.user.role_id === 4" class="text-fuchsia-700">CREATOR</div>
+                            <div v-if="$page.props.user.isAdmin === 1" class="text-sm text-red-700">ADMIN</div>
                         </div>
                     </div>
                     <!-- Settings Dropdown -->

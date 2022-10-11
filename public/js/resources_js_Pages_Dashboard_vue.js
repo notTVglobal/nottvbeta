@@ -381,7 +381,7 @@ __webpack_require__.r(__webpack_exports__);
     expose();
     var props = __props;
     var classes = (0,vue__WEBPACK_IMPORTED_MODULE_0__.computed)(function () {
-      return props.active ? 'block pl-3 pr-4 py-2 border-l-4 border-indigo-400 text-base font-medium text-indigo-700 bg-indigo-50 focus:outline-none focus:text-indigo-800 focus:bg-indigo-100 focus:border-indigo-700 transition' : 'block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-200 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition';
+      return props.active ? 'block pl-3 pr-4 py-10 border-l-4 border-indigo-400 text-base font-medium text-gray-50 bg-indigo-500 focus:outline-none focus:text-indigo-800 focus:bg-indigo-100 focus:border-indigo-50 transition' : 'block pl-3 pr-4 py-6 border-l-4 border-gray-300 text-base font-medium text-gray-200 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:text-gray-800 focus:bg-gray-50 focus:border-gray-300 transition';
     });
     var __returned__ = {
       props: props,
@@ -607,27 +607,30 @@ var _hoisted_16 = {
   "class": "align-text-top -mt-5"
 };
 var _hoisted_17 = {
-  key: 0,
-  "class": "text-xs text-fuchsia-700"
+  key: 0
 };
 
-var _hoisted_18 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" UPGRADE ACCOUNT ");
+var _hoisted_18 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  "class": "text-fuchsia-700 hover:text-fuchsia-500"
+}, "CLICK HERE TO UPGRADE YOUR ACCOUNT", -1
+/* HOISTED */
+);
 
 var _hoisted_19 = {
   key: 1,
-  "class": "text-xs text-fuchsia-700"
+  "class": "text-fuchsia-700"
 };
 var _hoisted_20 = {
   key: 2,
-  "class": "text-xs text-fuchsia-700"
+  "class": "text-fuchsia-700"
 };
 var _hoisted_21 = {
   key: 3,
-  "class": "text-xs text-fuchsia-700"
+  "class": "text-fuchsia-700"
 };
 var _hoisted_22 = {
   key: 4,
-  "class": "text-xs text-red-700"
+  "class": "text-sm text-red-700"
 };
 var _hoisted_23 = {
   "class": "ml-3 relative z-50"
@@ -1008,19 +1011,19 @@ var _hoisted_15 = {
 };
 var _hoisted_16 = {
   key: 0,
-  "class": "text-xs text-fuchsia-700"
+  "class": "text-xl text-fuchsia-700"
 };
 var _hoisted_17 = {
   key: 1,
-  "class": "text-xs text-fuchsia-700"
+  "class": "text-xl text-fuchsia-700"
 };
 var _hoisted_18 = {
   key: 2,
-  "class": "text-xs text-fuchsia-700"
+  "class": "text-xl text-fuchsia-700"
 };
 var _hoisted_19 = {
   key: 3,
-  "class": "text-xs text-red-700"
+  "class": "text-lg text-red-700"
 };
 var _hoisted_20 = {
   key: 4,
@@ -1664,20 +1667,20 @@ var _hoisted_25 = {
 };
 
 var _hoisted_26 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", {
-  "class": "text-xl mb-2"
-}, "🍿 Start a team to start a show.", -1
+  "class": "text-xl mb-2 font-semibold"
+}, "🎉 Start a new team", -1
 /* HOISTED */
 );
 
 var _hoisted_27 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", {
-  "class": "font-semibold"
-}, "Teams are how you manage your shows. ", -1
+  "class": ""
+}, "Teams manage shows, ", -1
 /* HOISTED */
 );
 
 var _hoisted_28 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", {
   "class": ""
-}, "Even if you're a solo creator.", -1
+}, "even if you're a solo creator", -1
 /* HOISTED */
 );
 
@@ -1701,8 +1704,8 @@ var _hoisted_32 = {
 };
 
 var _hoisted_33 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", {
-  "class": "font-semibold mb-2"
-}, "These are the shows from your teams. ", -1
+  "class": "text-xl font-semibold mb-2"
+}, "🍿 These are your shows ", -1
 /* HOISTED */
 );
 

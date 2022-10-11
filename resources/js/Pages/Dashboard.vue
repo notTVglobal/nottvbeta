@@ -108,9 +108,9 @@
                             hover openDelay="50" closeDelay="50"
                             arrow
                             ><template #content>
-                                <p class="text-xl mb-2">🍿 Start a team to start a show.</p>
-                                <p class="font-semibold">Teams are how you manage your shows. </p>
-                                <p class="">Even if you're a solo creator.</p>
+                                <p class="text-xl mb-2 font-semibold">🎉 Start a new team</p>
+                                <p class="">Teams manage shows, </p>
+                                <p class="">even if you're a solo creator</p>
 
                             </template>
                             <Button><font-awesome-icon
@@ -149,7 +149,7 @@
                             hover openDelay="50" closeDelay="50"
                             arrow
                         ><template #content class="space-y-3">
-                            <p class="font-semibold mb-2">These are the shows from your teams. </p>
+                            <p class="text-xl font-semibold mb-2">🍿 These are your shows </p>
                             <p class="">Join or create a team to start a show.</p>
                         </template>
                             <Button><font-awesome-icon

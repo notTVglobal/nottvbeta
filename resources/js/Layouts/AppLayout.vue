@@ -24,7 +24,7 @@
             <main>
                 <slot />
             </main>
-            <div class="relative w-full h-full">
+            <div class="relative w-full h-full ">
                 <VideoPlayer :class="videoPlayerStore.class" class="videoContainer"/>
             </div>
             <Chat :user="user" :class="chat.class" class="chatContainer hidden"/>

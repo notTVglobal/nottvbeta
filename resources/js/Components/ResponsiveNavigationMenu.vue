@@ -69,10 +69,10 @@
                         </div>
                     </div>
                     <div class="justify-end text-right w-full">
-                        <div v-if="$page.props.user.role_id === 2" class="text-xs text-fuchsia-700">PREMIUM SUBSCRIBER</div>
-                        <div v-if="$page.props.user.role_id === 3" class="text-xs text-fuchsia-700">VIP</div>
-                        <div v-if="$page.props.user.role_id === 4" class="text-xs text-fuchsia-700">CREATOR</div>
-                        <div v-if="$page.props.user.isAdmin === 1" class="text-xs text-red-700">ADMIN</div>
+                        <div v-if="$page.props.user.role_id === 2" class="text-xl text-fuchsia-700">PREMIUM SUBSCRIBER</div>
+                        <div v-if="$page.props.user.role_id === 3" class="text-xl text-fuchsia-700">VIP</div>
+                        <div v-if="$page.props.user.role_id === 4" class="text-xl text-fuchsia-700">CREATOR</div>
+                        <div v-if="$page.props.user.isAdmin === 1" class="text-lg text-red-700">ADMIN</div>
                         <div v-if="$page.props.user.role_id === 1" class="align-self-end text-xl text-fuchsia-700 hover:text-fuchsia-500">
                             <Link @click="videoPlayer.makeVideoTopRight()" :href="route('upgrade')" :active="route().current('upgrade')">
                                 UPGRADE ACCOUNT
