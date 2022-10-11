@@ -17,9 +17,7 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 // import specific icons
-import { faUserSecret } from '@fortawesome/free-solid-svg-icons'
-import { faPlay } from '@fortawesome/free-solid-svg-icons'
-import { faQuestion } from '@fortawesome/free-solid-svg-icons'
+import { faUserSecret, faPlay, faQuestion } from '@fortawesome/free-solid-svg-icons'
 
 // import popper for pop-up tooltips
 import Popper from "vue3-popper";

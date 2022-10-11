@@ -1699,8 +1699,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
  // import specific icons
 
-
-
  // import popper for pop-up tooltips
 
 
