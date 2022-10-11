@@ -2686,6 +2686,11 @@ select {
   padding-bottom: 0px;
 }
 
+.py-20 {
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+}
+
 .pt-6 {
   padding-top: 1.5rem;
 }
