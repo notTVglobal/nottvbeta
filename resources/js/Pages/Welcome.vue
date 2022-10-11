@@ -38,7 +38,7 @@
             <section class="flex flex-col justify-center items-center h-screen bg-white text-black p-10">
 
                     <div class="text-center font-semibold text-3xl">Welcome to notTV</div>
-                    <div class="text-center text-3xl">Where artists own the platform.</div>
+                    <div class="text-center text-2xl">Where artists own the platform.</div>
 
             </section>
             <section class="grid md:grid-cols-2 content-center gap-10 bg-gray-300 text-white p-10">
