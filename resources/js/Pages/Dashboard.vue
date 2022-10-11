@@ -99,10 +99,29 @@
                             {{ team.name }}
                         </Link></p>
                     </div>
-                    <div class="bottom-0 py-2 px-2">
+                    <div class="flex flex-row justify-between bottom-0 align-items-bottom py-2 px-2">
                         <!-- Paginator -->
-                        <Pagination :links="teams.links" class="mt-6 absolute inset-x-0 bottom-0 py-2 px-2"/>
+                        <div><Pagination :links="teams.links" class="mt-6 absolute inset-x-0 bottom-0 py-2 px-2 "/></div>
+
+                        <div>
+                        <Popper
+                            hover openDelay="50" closeDelay="50"
+                            arrow
+                            ><template #content>
+                                <p class="text-xl mb-2">🍿 Start a team to start a show.</p>
+                                <p class="font-semibold">Teams are how you manage your shows. </p>
+                                <p class="">Even if you're a solo creator.</p>
+
+                            </template>
+                            <Button><font-awesome-icon
+                                icon="fa-solid fa-question"
+                                class="mt-6 absolute bottom-0 text-right pr-4 py-2 "
+                            /></Button>
+                        </Popper>
+                        </div>
+
                     </div>
+
 
                 </div>
 
@@ -122,9 +141,23 @@
                             {{ show.name }}
                         </Link></p>
                     </div>
-                    <div class="bottom-0 py-2 px-2">
+                    <div class="flex flex-row justify-between bottom-0 align-items-bottom py-2 px-2">
                         <!-- Paginator -->
-                        <Pagination :links="shows.links" class="mt-6 absolute inset-x-0 bottom-0 py-2 px-2"/>
+                        <div><Pagination :links="shows.links" class="mt-6 absolute inset-x-0 bottom-0 py-2 px-2 "/></div>
+                        <div>
+                        <Popper
+                            hover openDelay="50" closeDelay="50"
+                            arrow
+                        ><template #content class="space-y-3">
+                            <p class="font-semibold mb-2">These are the shows from your teams. </p>
+                            <p class="">Join or create a team to start a show.</p>
+                        </template>
+                            <Button><font-awesome-icon
+                                icon="fa-solid fa-question"
+                                class="mt-6 absolute bottom-0 text-right pr-4 py-2 "
+                            /></Button>
+                        </Popper>
+                        </div>
                     </div>
                 </div>
 
@@ -210,6 +243,5 @@ let props = defineProps({
     message: String
 });
 </script>
-
 
 

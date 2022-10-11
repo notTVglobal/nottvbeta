@@ -11,9 +11,9 @@
                         <div class="mt-2 text-xs text-center">OR</div>
                         <div class="mt-4 text-center">
                             <button
-                                class="text-4xl bg-green-500 hover:bg-green-600 text-white p-5 rounded disabled:bg-gray-400"
+                                class="text-2xl bg-green-500 hover:bg-green-600 text-white px-5 py-3 rounded disabled:bg-gray-400"
                                 @click="scrollToElement"
-                            >Watch Now</button>
+                            ><font-awesome-icon icon="fa-solid fa-play" /> Watch Now  </button>
                         </div>
                     </div>
                 </div>
@@ -61,7 +61,7 @@
                 </div>
             </section>
             <section class="flex justify-center items-center h-screen" ref="scrollToMe" v-if="!showDiv">
-                <div class="text-5xl">#mediaforabetterworld</div>
+                <div class="text-2xl">#mediaforabetterworld</div>
             </section>
         </div>
 
