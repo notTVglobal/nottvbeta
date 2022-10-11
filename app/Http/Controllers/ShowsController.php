@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Image;
 use App\Models\Post;
 use App\Models\Show;
+use App\Models\Episode;
 use App\Models\Team;
 use App\Models\User;
 use http\QueryString;
@@ -175,6 +176,20 @@ class ShowsController extends Controller
             'team' => $team,
             'posterName' => $poster,
             'showRunnerName' => $showRunner,
+            'episodes' => Episode::query()->where('show_id', $show->id)->get(),
+//            'episodes' => Episode::query()
+//                ->when(Request::input('search'), function ($query, $search) {
+//                    $query->where('name', 'like', "%{$search}%");
+//                })
+//                ->paginate(10)
+//                ->withQueryString()
+//                ->through(fn($episode) => [
+//                    'id' => $episode->id,
+//                    'name' => $episode->name,
+//                    'description' => $episode->description,
+//                    'notes' => $episode->notes,
+//                    'poster' => Image::query()->where('id', $episode->image_id)->pluck('name')->first(),
+//                ]),
         ]);
     }
 

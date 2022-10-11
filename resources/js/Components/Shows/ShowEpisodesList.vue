@@ -34,7 +34,7 @@
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
         <!--                                <tr v-for="episode in episodes.data" :key="episode.id">-->
-        <ShowEpisode v-for="episode in show.episodes" :name="episode.name" :description="episode.description" :poster="episode.poster" />
+        <ShowEpisode v-for="episode in props.episodes" :name="episode.name" :notes="episode.notes" :status="episode.episodeStatus_id" />
         </tbody>
     </table>
 
@@ -48,12 +48,12 @@ import ShowEpisode from "@/Components/Shows/ShowEpisode.vue";
 import {useShowStore} from "@/Stores/ShowStore";
 import Pagination from "@/Components/Pagination";
 
-let show = useShowStore();
+// let showStore = useShowStore();
 
 let props = defineProps({
     episodes: Object,
     filters: Object,
-    // can: Object,
+    can: Object,
 });
 
 </script>

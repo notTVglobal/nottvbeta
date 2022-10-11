@@ -21,7 +21,7 @@ return new class extends Migration
             $table->foreignId('team_id')->constrained();
             $table->foreignId('user_id')->constrained();
             $table->foreignId('show_id')->constrained();
-            $table->json('notes');
+            $table->json('notes')->nullable();
             $table->boolean('isPublished');
             $table->timestamps();
         });

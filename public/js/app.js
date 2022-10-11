@@ -3687,32 +3687,6 @@ var map = {
 		"./resources/js/Pages/Dashboard.vue",
 		"resources_js_Pages_Dashboard_vue"
 	],
-	"./Episodes/Create": [
-		"./resources/js/Pages/Episodes/Create.vue",
-		"resources_js_Pages_Episodes_Create_vue"
-	],
-	"./Episodes/Create.vue": [
-		"./resources/js/Pages/Episodes/Create.vue",
-		"resources_js_Pages_Episodes_Create_vue"
-	],
-	"./Episodes/{$id}/Edit": [
-		"./resources/js/Pages/Episodes/{$id}/Edit.vue",
-		"/js/vendor",
-		"resources_js_Pages_Episodes_id_Edit_vue"
-	],
-	"./Episodes/{$id}/Edit.vue": [
-		"./resources/js/Pages/Episodes/{$id}/Edit.vue",
-		"/js/vendor",
-		"resources_js_Pages_Episodes_id_Edit_vue"
-	],
-	"./Episodes/{$id}/Index": [
-		"./resources/js/Pages/Episodes/{$id}/Index.vue",
-		"resources_js_Pages_Episodes_id_Index_vue"
-	],
-	"./Episodes/{$id}/Index.vue": [
-		"./resources/js/Pages/Episodes/{$id}/Index.vue",
-		"resources_js_Pages_Episodes_id_Index_vue"
-	],
 	"./GoLive": [
 		"./resources/js/Pages/GoLive.vue",
 		"resources_js_Pages_GoLive_vue"
@@ -3889,6 +3863,42 @@ var map = {
 		"/js/vendor",
 		"resources_js_Pages_Shows_id_Edit_vue"
 	],
+	"./Shows/{$id}/Episodes/Create": [
+		"./resources/js/Pages/Shows/{$id}/Episodes/Create.vue",
+		"resources_js_Pages_Shows_id_Episodes_Create_vue"
+	],
+	"./Shows/{$id}/Episodes/Create.vue": [
+		"./resources/js/Pages/Shows/{$id}/Episodes/Create.vue",
+		"resources_js_Pages_Shows_id_Episodes_Create_vue"
+	],
+	"./Shows/{$id}/Episodes/Index": [
+		"./resources/js/Pages/Shows/{$id}/Episodes/Index.vue",
+		"/js/vendor",
+		"resources_js_Pages_Shows_id_Episodes_Index_vue"
+	],
+	"./Shows/{$id}/Episodes/Index.vue": [
+		"./resources/js/Pages/Shows/{$id}/Episodes/Index.vue",
+		"/js/vendor",
+		"resources_js_Pages_Shows_id_Episodes_Index_vue"
+	],
+	"./Shows/{$id}/Episodes/{$id}/Edit": [
+		"./resources/js/Pages/Shows/{$id}/Episodes/{$id}/Edit.vue",
+		"/js/vendor",
+		"resources_js_Pages_Shows_id_Episodes_id_Edit_vue"
+	],
+	"./Shows/{$id}/Episodes/{$id}/Edit.vue": [
+		"./resources/js/Pages/Shows/{$id}/Episodes/{$id}/Edit.vue",
+		"/js/vendor",
+		"resources_js_Pages_Shows_id_Episodes_id_Edit_vue"
+	],
+	"./Shows/{$id}/Episodes/{$id}/Index": [
+		"./resources/js/Pages/Shows/{$id}/Episodes/{$id}/Index.vue",
+		"resources_js_Pages_Shows_id_Episodes_id_Index_vue"
+	],
+	"./Shows/{$id}/Episodes/{$id}/Index.vue": [
+		"./resources/js/Pages/Shows/{$id}/Episodes/{$id}/Index.vue",
+		"resources_js_Pages_Shows_id_Episodes_id_Index_vue"
+	],
 	"./Shows/{$id}/Index": [
 		"./resources/js/Pages/Shows/{$id}/Index.vue",
 		"resources_js_Pages_Shows_id_Index_vue"
@@ -3899,10 +3909,12 @@ var map = {
 	],
 	"./Shows/{$id}/Manage": [
 		"./resources/js/Pages/Shows/{$id}/Manage.vue",
+		"/js/vendor",
 		"resources_js_Pages_Shows_id_Manage_vue"
 	],
 	"./Shows/{$id}/Manage.vue": [
 		"./resources/js/Pages/Shows/{$id}/Manage.vue",
+		"/js/vendor",
 		"resources_js_Pages_Shows_id_Manage_vue"
 	],
 	"./Stream": [

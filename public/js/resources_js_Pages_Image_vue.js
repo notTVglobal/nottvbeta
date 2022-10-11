@@ -1176,6 +1176,14 @@ var _hoisted_33 = ["onSubmit"];
 
 var _hoisted_34 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Log Out ");
 
+var _hoisted_35 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)();
+
+var _hoisted_36 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  "class": "w-full absolute bottom-20 text-center"
+}, "Scroll the menu.", -1
+/* HOISTED */
+);
+
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_Link = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Link");
 
@@ -1454,7 +1462,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
   })], 40
   /* PROPS, HYDRATE_EVENTS */
-  , _hoisted_33)])])], 2
+  , _hoisted_33)])]), _hoisted_35, _hoisted_36], 2
   /* CLASS */
   )], 64
   /* STABLE_FRAGMENT */

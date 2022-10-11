@@ -11,6 +11,7 @@ import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
 defineProps({
     canResetPassword: Boolean,
     status: String,
+    userType: Number,
 });
 
 const form = useForm({

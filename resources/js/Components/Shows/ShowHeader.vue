@@ -16,13 +16,6 @@
             >Edit</button>
             </Link>
         </div>
-        <div class="">
-            <Link
-                :href="`/teams/${team.id}/manage`"><button
-                class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-            >Team</button>
-            </Link>
-        </div>
         <div>
             <Link :href="`/dashboard`"><button
                 class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"

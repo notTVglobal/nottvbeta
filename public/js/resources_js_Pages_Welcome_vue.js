@@ -40,7 +40,8 @@ var __default__ = {
     canLogin: Boolean,
     canRegister: Boolean,
     laravelVersion: String,
-    phpVersion: String
+    phpVersion: String,
+    userType: Number
   },
   setup: function setup(__props, _ref) {
     var expose = _ref.expose;
@@ -352,12 +353,13 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     to: "body"
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["Login"], {
     show: $setup.showLogin,
+    userType: $props.userType,
     onClose: _cache[1] || (_cache[1] = function ($event) {
       return $setup.showLogin = false;
     })
   }, null, 8
   /* PROPS */
-  , ["show"])]))], 64
+  , ["show", "userType"])]))], 64
   /* STABLE_FRAGMENT */
   );
 }

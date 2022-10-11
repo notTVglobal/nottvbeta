@@ -1,6 +1,6 @@
 <template>
 
-    <Head :title="show.name" />
+    <Head :title="props.episodes.name" />
     <div class="sticky top-0 w-full nav-mask">
         <ResponsiveNavigationMenu/>
         <NavigationMenu />
@@ -25,8 +25,7 @@
                                     {{props.message}}
                                 </span>
                             </div>
-
-                            <ShowEpisodesList />
+                            THIS IS THE EPISODE PAGE
 
 <!--                            <table class="min-w-full divide-y divide-gray-200">-->
 <!--                                <tbody class="bg-white divide-y divide-gray-200">-->
@@ -53,9 +52,6 @@
 
                         </div>
 
-                        <div class="mt-4 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                            <ShowCreditsList />
-                        </div>
 
                         <ShowFooter :show="props.show.team_id"/>
                     </div>
@@ -89,7 +85,8 @@ videoPlayer.fullPage = false
 chat.class = "chatSmall"
 
 let props = defineProps({
-    show: Object,
+    showName: String,
+    showId: Number,
     episodes: Object,
     message: String
 });

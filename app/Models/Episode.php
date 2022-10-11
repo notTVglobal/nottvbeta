@@ -15,13 +15,16 @@ class Episode extends Model
      * @var array
      */
     protected $casts = [
-        'name' => 'required',
-        'description' => 'required',
-        'team_id' => 'required',
-        'user_id' => 'required',
-        'show_id' => 'required',
-        'notes' => 'array',
-        'isPublished' => 'boolean',
-        'episodeStatus_id' => 'required',
+        'name',
+        'poster',
+        'description',
+        'image_id',
+        'team_id',
+        'user_id',
+        'show_id',
+        'slug',
+        'notes',
+        'isPublished',
+        'episodeStatus_id',
     ];
 }

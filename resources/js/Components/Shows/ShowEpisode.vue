@@ -1,7 +1,7 @@
 <template>
     <tr>
         <td class="text-gray-500 px-6 py-4 text-sm">
-            {{  number }}
+//number
         </td>
         <td class="text-xl font-medium flex items-center gap-x-4 px-6 py-4">
             <img :src="`/storage/images/oeV64kpa339M8tmLEZrERCb7bLfuAy8BIqJ17x8t.png`" alt="" class="rounded-xl w-10">
@@ -10,7 +10,7 @@
         </td>
 
         <td class="text-gray-500 px-6 py-4 text-sm">
-            Notes go here.
+            Notes go here. {{notes}}
         </td>
 
         <td class="px-6 py-4 text-right">
@@ -22,10 +22,6 @@
 <script setup>
 defineProps({
    name: String,
-   description: String,
-    number: String,
-    notes: String,
-   poster: String,
-    status: String,
+   notes: Array,
 });
 </script>

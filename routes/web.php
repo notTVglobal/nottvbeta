@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\CreatorsController;
 use App\Http\Controllers\ShowsController;
+use App\Http\Controllers\EpisodesController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\UsersAdminCreateEditController;
 use App\Http\Controllers\ImageController;
@@ -20,6 +21,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Models\User;
 use App\Http\Middleware\PusherEvent;
+use Illuminate\Support\Facades\Auth;
 
 
 /*
@@ -38,6 +40,12 @@ Route::get('/', function () {
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
     ]);
+});
+
+Route::get('/home', function () {
+    if (Auth::user()->role_id != 4) {
+        return redirect('/stream');
+    } return redirect('/dashboard');
 });
 
 Route::get('/email/verify', function () {
@@ -215,6 +223,19 @@ Route::middleware([
         return Inertia::render('Training');
     })->can('viewCreator', 'App\Models\User')
         ->name('training');
+
+// Episodes
+///////////
+    // Episodes resource
+    Route::resource('episodes',EpisodesController::class);
+    // Display episodes index page
+    Route::get('/shows/{show}/episodes', [EpisodesController::class, 'index'])
+        ->can('viewPremium', 'App\Models\User')
+        ->name('episodes');
+    // Display shows episode page
+    Route::get('/shows/{show}/episodes/{episode}', [EpisodesController::class, 'show'])
+        ->can('viewPremium', 'App\Models\User')
+        ->name('episodes.show');
 
 // Shows
 ///////////

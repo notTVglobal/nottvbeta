@@ -31,7 +31,7 @@
                                 </span>
                             </div>
 
-                            <ShowEpisodesList />
+                            <ShowEpisodesList :episodes="props.episodes"/>
 
                             <!--                            <table class="min-w-full divide-y divide-gray-200">-->
                             <!--                                <tbody class="bg-white divide-y divide-gray-200">-->
@@ -81,6 +81,9 @@ import ShowFooter from "@/Components/Shows/ShowFooter"
 import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/NavigationMenu"
 import ShowCreditsList from "@/Components/Shows/ShowCreditsList";
+import {ref, watch} from "vue";
+import throttle from "lodash/throttle";
+import {Inertia} from "@inertiajs/inertia";
 
 let videoPlayer = useVideoPlayerStore()
 let chat = useChatStore()
@@ -95,13 +98,21 @@ chat.class = "chatSmall"
 let props = defineProps({
     show: Object,
     team: Object,
+    episodes: Object,
     posterName: String,
     showRunnerName: String,
-    // episodes: Object,
+    // filters: Object,
     message: String
 });
 
-
+// let search = ref(props.filters.search);
+//
+// watch(search, throttle(function (value) {
+//     Inertia.get('/shows', { search: value }, {
+//         preserveState: true,
+//         replace: true
+//     });
+// }, 300));
 
 
 </script>

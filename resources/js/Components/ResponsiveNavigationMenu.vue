@@ -170,8 +170,9 @@
                 </form>
 
             </div>
-        </div>
+        </div> <div class="w-full absolute bottom-20 text-center">Scroll the menu.</div>
     </div>
+
 </template>
 
 <script setup>

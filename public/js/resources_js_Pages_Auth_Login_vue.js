@@ -42,7 +42,8 @@ var __default__ = {
   __name: 'Login',
   props: {
     canResetPassword: Boolean,
-    status: String
+    status: String,
+    userType: Number
   },
   setup: function setup(__props, _ref) {
     var expose = _ref.expose;

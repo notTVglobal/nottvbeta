@@ -78,7 +78,7 @@
         </div>
 
     <Teleport to="body">
-        <Login :show="showLogin" @close="showLogin = false" />
+        <Login :show="showLogin" :userType="userType" @close="showLogin = false" />
     </Teleport>
 </template>
 
@@ -104,6 +104,7 @@ defineProps({
     canRegister: Boolean,
     laravelVersion: String,
     phpVersion: String,
+    userType: Number,
 });
 
 let showLogin = ref(false)
