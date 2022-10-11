@@ -152,8 +152,9 @@ class TeamsController extends Controller
                 ]),
             'filters' => Request::only(['team_id']),
             'can' => [
-                'editTeam' => Auth::user()->can('edit', $team),
-                'manageTeam' => Auth::user()->can('edit', $team)
+                'viewTeams' => Auth::user()->can('view', Team::class),
+                'editTeam' => Auth::user()->can('edit', Team::class),
+                'viewCreator' => Auth::user()->can('viewCreator', User::class),
             ]
         ]);
     }
@@ -190,8 +191,10 @@ class TeamsController extends Controller
                 ]),
             'filters' => Request::only(['team_id']),
             'can' => [
-                'editTeam' => Auth::user()->can('edit', $team),
-                'manageTeam' => Auth::user()->can('edit', $team),
+                'viewTeams' => Auth::user()->can('view', Team::class),
+                'manageTeam' => Auth::user()->can('manage', Team::class),
+                'editTeam' => Auth::user()->can('edit', Team::class),
+                'viewCreator' => Auth::user()->can('viewCreator', User::class),
             ]
         ]);
     }
@@ -199,7 +202,7 @@ class TeamsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int  $team
      * @return \Illuminate\Http\Response
      */
     public function edit(team $team)
@@ -223,9 +226,10 @@ class TeamsController extends Controller
                     'extension' => $image->extension
                 ]),
             'can' => [
-                'editTeam' => Auth::user()->can('edit', $team),
-                'manageTeam' => Auth::user()->can('edit', $team)
-            ],
+                'viewTeams' => Auth::user()->can('view', Team::class),
+                'editTeam' => Auth::user()->can('edit', Team::class),
+                'viewCreator' => Auth::user()->can('viewCreator', User::class),
+            ]
         ]);
     }
 
@@ -262,28 +266,35 @@ class TeamsController extends Controller
 
 
         // redirect
-        return Inertia::render('Teams/{$id}/Manage', [
-            // responses need to be limited to only
-            // the information required with ->only()
-            // https://inertiajs.com/responses
-            'team' => $team,
-            'logoName' => Image::query()->where('id', $team->image_id)->pluck('name')->first(),
-            'shows' => DB::table('shows')->where('team_id', $team->id)
-                ->latest()
-                ->paginate(5)
-                ->withQueryString()
-                ->through(fn($show) => [
-                    'id' => $show->id,
-                    'name' => $show->name,
-                    'description' => $show->description,
-                    'team_id' => $show->team_id,
-                    'poster' => $show->image_id,
-                ]),
-            'can' => [
-                'editTeam' => Auth::user()->can('edit', Team::class),
-                'manageTeam' => Auth::user()->can('edit', Team::class),
-            ]
-        ])->with('message', 'Team Updated Successfully');
+        return redirect(route('teams.manage', [$team->id]))->with('message', 'Team Updated Successfully');
+//        return redirect('/teams/{$team->id}/manage');
+
+//        return Inertia::render('Teams/{$id}/Manage', [
+//            // responses need to be limited to only
+//            // the information required with ->only()
+//            // https://inertiajs.com/responses
+//            'team' => $team,
+//            'logoName' => Image::query()->where('id', $team->image_id)->pluck('name')->first(),
+//            'shows' => DB::table('shows')->where('team_id', $team->id)
+//                ->latest()
+//                ->paginate(5)
+//                ->withQueryString()
+//                ->through(fn($show) => [
+//                    'id' => $show->id,
+//                    'name' => $show->name,
+//                    'description' => $show->description,
+//                    'team_id' => $show->team_id,
+//                    'poster' => $show->image_id,
+//                ]),
+//// tec21: this edit() policy for Teams is broken. Expecting 2 arguments,
+//        // only 1 is getting passed.
+//            'can' => [
+//                'viewTeams' => Auth::user()->can('view', Team::class),
+//                'createTeam' => Auth::user()->can('create', Team::class),
+//                'editTeam' => Auth::user()->can('edit', Team::class),
+//                'viewCreator' => Auth::user()->can('viewCreator', User::class),
+//            ]
+//        ])->with('message', 'Team Updated Successfully');
     }
 
     /**

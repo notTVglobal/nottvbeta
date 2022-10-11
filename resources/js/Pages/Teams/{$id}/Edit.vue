@@ -52,6 +52,7 @@ videoPlayer.fullPage = false
 chat.class = "chatSmall"
 
 let props = defineProps({
+    user: Object,
     team: Object,
     teamLeaderName: String,
     logo: String,

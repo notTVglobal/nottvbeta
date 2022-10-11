@@ -190,6 +190,7 @@ class ShowsController extends Controller
 //                    'notes' => $episode->notes,
 //                    'poster' => Image::query()->where('id', $episode->image_id)->pluck('name')->first(),
 //                ]),
+
         ]);
     }
 
@@ -254,15 +255,17 @@ class ShowsController extends Controller
         // how to simplify this *frustrated*.
 
         // redirect
-        return Inertia::render('Shows/{$id}/Manage', [
-            // responses need to be limited to only
-            // the information required with ->only()
-            // https://inertiajs.com/responses
-            'show' => $show,
-            'posterName' => Image::query()->where('id', $show->image_id)->pluck('name')->firstOrFail(),
-            'team' => Team::query()->where('id', $show->team_id)->firstOrFail(),
-            'showRunnerName' => User::query()->where('id', $show->user_id)->pluck('name')->firstOrFail(),
-        ])->with('message', 'Show Updated Successfully');
+        return redirect(route('shows.manage', [$show->id]))->with('message', 'Show Updated Successfully');;
+
+//        return Inertia::render('Shows/{$id}/Manage', [
+//            // responses need to be limited to only
+//            // the information required with ->only()
+//            // https://inertiajs.com/responses
+//            'show' => $show,
+//            'posterName' => Image::query()->where('id', $show->image_id)->pluck('name')->firstOrFail(),
+//            'team' => Team::query()->where('id', $show->team_id)->firstOrFail(),
+//            'showRunnerName' => User::query()->where('id', $show->user_id)->pluck('name')->firstOrFail(),
+//        ])->with('message', 'Show Updated Successfully');
     }
 
     /**

@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Models\User;
 use App\Models\Team;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Auth\Access\Response;
 
 class TeamPolicy
 {
@@ -36,33 +37,40 @@ class TeamPolicy
      * Determine whether the user can manage models.
      *
      * @param  \App\Models\User  $user
-     *      * @param  \App\Models\Team  $team
+     * @param  \App\Models\Team  $team
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function manage(User $user, Team $team)
+    public function manage(User $user)
     {
-        if ($user->id === $team->user_id)
-            return $user->id === $team->user_id;
+//        if ($user->id === $team->user_id)
+//            return $user->id === $team->user_id;
+//
+//        elseif($user->isAdmin === 1)
+//            return $user->isAdmin === 1;
 
-        elseif($user->isAdmin === 1)
-            return $user->isAdmin === 1;
+        return $user->role_id === 4;
     }
 
     /**
      * Determine whether the user can edit teams.
      *
      * @param  \App\Models\User  $user
-     *      * @param  \App\Models\Team  $team
+     * @param  \App\Models\Team  $team
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function edit(User $user, Team $team)
+    public function edit(User $user)
     {
-        if ($user->id === $team->user_id)
-            return $user->id === $team->user_id;
+//        if ($team->user_id === $user->id)
+//            return $team->user_id === $user->id
+//                ? Response::allow()
+//                : Response::deny('This is not your team.');
+//
+//        elseif($user->isAdmin === 1)
+//            return $user->isAdmin === 1
+//                ? Response::allow()
+//                : Response::deny('This is not your team.');
 
-        elseif($user->isAdmin === 1)
-            return $user->isAdmin === 1;
-
+        return $user->role_id === 4;
     }
 
     /**
@@ -72,13 +80,19 @@ class TeamPolicy
      * @param  \App\Models\Team  $team
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Team $team)
+    public function update(User $user)
     {
-        if ($user->id === $team->user_id)
-            return $user->id === $team->user_id;
+//        if ($team->user_id === $user->id)
+//            return $team->user_id === $user->id
+//                ? Response::allow()
+//                : Response::deny('You do not own this team.');
+//
+//        elseif($user->isAdmin === 1)
+//            return $user->isAdmin === 1
+//                ? Response::allow()
+//                : Response::deny('You do not own this team.');
 
-        elseif($user->isAdmin === 1)
-            return $user->isAdmin === 1;
+        return $user->role_id === 4;
     }
 
     /**
