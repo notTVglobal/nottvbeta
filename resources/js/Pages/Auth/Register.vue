@@ -39,6 +39,10 @@ export default {
 
         <JetValidationErrors class="mb-4" />
 
+        <div class="my-4">
+            Please register for an account to watch notTV.
+        </div>
+
         <form @submit.prevent="submit">
             <div>
                 <JetLabel for="name" value="Name" />

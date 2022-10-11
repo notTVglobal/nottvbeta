@@ -25,10 +25,10 @@
                     <template v-else>
 <!--                        <div class="fixed left-0 top-0 w-36 p-5"><JetApplicationLogo class=""/></div>-->
                         <div class="mr-3 mt-6 space-x-6">
-                            <Button @click="showLogin = true" class="text-2xl text-gray-200 hover:text-blue-600">
+                            <Button @click="showLogin = true" class="text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md">
                                 Log in
                             </Button>
-                            <Link v-if="canRegister" :href="route('register')" class="ml-4 text-2xl text-gray-200 hover:text-blue-600">
+                            <Link v-if="canRegister" :href="route('register')" class="ml-4 text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md">
                                 Register
                             </Link>
                         </div>

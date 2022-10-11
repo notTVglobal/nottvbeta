@@ -48,7 +48,7 @@
             </div>
             <div v-if="!videoPlayerStore.loggedIn" class="absolute top-0 right-0 p-5 drop-shadow z-50">
                 <Button @click="showLogin = true" class="text-2xl uppercase p-2">
-                    <span class="underline hover:text-blue-600">Log in</span> to chat</Button>
+                    <span class="underline text-blue-400 hover:text-blue-600">Log in</span> to chat</Button>
             </div>
 
 

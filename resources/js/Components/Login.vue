@@ -17,6 +17,10 @@
                     </div>
                 </header>
 
+                <div class="py-3 text-gray-600">
+                    Please log in to watch notTV and chat.<br>
+                    Need to <Link href="/register" class="text-blue-800 hover:text-blue-600">register</Link> for an account?
+                </div>
                 <div class="py-3">
                         <form @submit.prevent="submit">
                             <div>

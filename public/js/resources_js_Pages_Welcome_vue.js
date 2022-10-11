@@ -315,7 +315,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onClick: _cache[0] || (_cache[0] = function ($event) {
       return $setup.showLogin = true;
     }),
-    "class": "text-2xl text-gray-200 hover:text-blue-600"
+    "class": "text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [_hoisted_12];
@@ -326,7 +326,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }), $props.canRegister ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Link, {
     key: 0,
     href: _ctx.route('register'),
-    "class": "ml-4 text-2xl text-gray-200 hover:text-blue-600"
+    "class": "ml-4 text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [_hoisted_13];
