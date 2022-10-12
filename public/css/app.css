@@ -1927,6 +1927,14 @@ select {
   max-width: 28rem;
 }
 
+.max-w-screen-lg {
+  max-width: 1024px;
+}
+
+.max-w-screen-md {
+  max-width: 768px;
+}
+
 .flex-1 {
   flex: 1 1 0%;
 }
@@ -3878,8 +3886,21 @@ select {
     grid-column: span 1 / span 1;
   }
 
+  .md\:-my-px {
+    margin-top: -1px;
+    margin-bottom: -1px;
+  }
+
   .md\:mt-0 {
     margin-top: 0px;
+  }
+
+  .md\:ml-10 {
+    margin-left: 2.5rem;
+  }
+
+  .md\:flex {
+    display: flex;
   }
 
   .md\:grid {

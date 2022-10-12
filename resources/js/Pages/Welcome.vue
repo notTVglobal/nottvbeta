@@ -1,7 +1,23 @@
 <template>
     <Head title="Beta" />
         <div class="bg-green-800 bg-opacity-10 min-h-screen text-gray-200 z-50">
+            <div v-if="canLogin" class="px-6 py-4 sm:block sm:items-center sm:pt-2">
+                <Link v-if="$page.props.user" :href="route('stream')" class="text-2xl text-gray-200 underline">
+                    Stream
+                </Link>
 
+                <template v-else>
+                    <!--                        <div class="fixed left-0 top-0 w-36 p-5"><JetApplicationLogo class=""/></div>-->
+                    <div class="flex mr-3 mt-6 space-x-6 justify-end">
+                        <Link :href="route('login')" class="ml-4 text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md">
+                            Log in
+                        </Link>
+                        <Link v-if="canRegister" :href="route('register')" class="ml-4 text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md">
+                            Register
+                        </Link>
+                    </div>
+                </template>
+            </div>
             <div class="relative flex items-top justify-center min-h-screen text-gray-200">
                 <div class="flex justify-center items-center h-screen">
 <!--                    <template #menu></template>-->
@@ -17,23 +33,7 @@
                         </div>
                     </div>
                 </div>
-                <div v-if="canLogin" class="fixed top-0 right-0 px-6 py-4 sm:block sm:items-center sm:pt-2">
-                    <Link v-if="$page.props.user" :href="route('stream')" class="text-sm text-gray-200 underline">
-                        Stream
-                    </Link>
 
-                    <template v-else>
-<!--                        <div class="fixed left-0 top-0 w-36 p-5"><JetApplicationLogo class=""/></div>-->
-                        <div class="mr-3 mt-6 space-x-6">
-                            <Button @click="showLogin = true" class="text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md">
-                                Log in
-                            </Button>
-                            <Link v-if="canRegister" :href="route('register')" class="ml-4 text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md">
-                                Register
-                            </Link>
-                        </div>
-                    </template>
-                </div>
             </div>
             <section class="flex flex-col justify-center items-center h-screen bg-white text-black p-5">
 
@@ -95,12 +95,16 @@ let chat = useChatStore()
 // This page loads properly calling these stores here
 // instead of calling the store action .makeVideoWelcomePage()
 // keep these here.
-videoPlayer.fullPage = false
-videoPlayer.loggedIn = false
-videoPlayer.class = "videoBgFull"
-videoPlayer.videoContainerClass = "videoContainerHomePage"
-chat.show = false
-chat.class = 'chatHidden'
+// videoPlayer.fullPage = false
+// videoPlayer.loggedIn = false
+// videoPlayer.class = "videoBgFull"
+// videoPlayer.videoContainerClass = "videoContainerHomePage"
+// chat.show = false
+// chat.class = 'chatHidden'
+
+onMounted(() => {
+    videoPlayer.makeVideoWelcomePage();
+});
 //------------------------//
 
 defineProps({
@@ -111,7 +115,7 @@ defineProps({
     userType: Number,
 });
 
-let showLogin = ref(false)
+let showLogin = false
 let showDiv = ref(null)
 const scrollToMe = ref(null)
 
