@@ -235,7 +235,7 @@ var _hoisted_28 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
   "class": "text-2xl"
 }, "#mediaforabetterworld")], -1 /* HOISTED */);
 var _hoisted_29 = {
-  "class": "flex justify-center items-center h-screen bg-green-900"
+  "class": "hidden sm:block flex justify-center items-center h-screen bg-green-900"
 };
 var _hoisted_30 = {
   "class": "text-2xl"
