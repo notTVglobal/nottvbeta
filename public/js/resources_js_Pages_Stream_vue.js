@@ -25,8 +25,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   __name: 'ChatForStreamPage',
   props: {
-    user: Object,
-    messages: Object
+    user: Object
   },
   setup: function setup(__props, _ref) {
     var expose = _ref.expose;
@@ -46,8 +45,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       // Pusher Key for staging: d03ec1b33bc0f17392c4
       // Pusher Key for production: f0b385d3a5994dca4741
       //
-      // const pusher = new Pusher('679608fe1b2e6a2bf76b', {
-      var pusher = new (pusher_js__WEBPACK_IMPORTED_MODULE_2___default())('d03ec1b33bc0f17392c4', {
+      var pusher = new (pusher_js__WEBPACK_IMPORTED_MODULE_2___default())('679608fe1b2e6a2bf76b', {
+        //     const pusher = new Pusher('d03ec1b33bc0f17392c4', {
         cluster: 'us3'
       });
       var channel = pusher.subscribe('chat');
@@ -66,8 +65,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context.prev = _context.next) {
               case 0:
                 _context.next = 2;
-                return fetch('https://beta-staging.not.tv/api/messages', {
-                  // await fetch('http://beta.local:8080/api/messages', {
+                return fetch('http://beta.local:8080/api/messages', {
                   method: 'POST',
                   headers: {
                     'Content-Type': 'application/json'
@@ -569,7 +567,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var _hoisted_1 = {
   key: 0,
-  "class": "chatForStreamPage space-x-6 bg-opacity-80 bg-orange-300 text-sm text-white pb-2 pb-2 chat-mask overflow-y-auto scroll-smooth hover:scroll-auto break-words"
+  "class": "chatForStreamPage bottom-0 sm:bottom-8 space-x-6 bg-opacity-80 bg-orange-300 text-sm text-white pb-2 pb-2 chat-mask overflow-y-auto scroll-smooth hover:scroll-auto break-words"
 };
 var _hoisted_2 = {
   "class": "list-group list-group-flush border-bottom w-full min-h-max max-h-max pt-4 px-2 mb-12 break-words drop-shadow-md shadow-black tracking-wide leading-relaxed subpixel-antialiased"
@@ -586,6 +584,7 @@ var _hoisted_5 = {
 };
 var _hoisted_6 = ["onSubmit"];
 function render(_ctx, _cache, $props, $setup, $data, $options) {
+  var _component_font_awesome_icon = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("font-awesome-icon");
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Transition, {
     "enter-from-class": "opacity-0",
     "enter-to-class": "opacity-100",
@@ -603,12 +602,18 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       }), 128 /* KEYED_FRAGMENT */))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", {
         onSubmit: (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)($setup.submit, ["prevent"])
       }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
-        "class": "fixed bottom-0 right-10 p-2 m-2 mb-8 w-fit text-black form-control border-2 border-gray-800 hover:border-indigo-300 focus:outline-none",
+        "class": "fixed bottom-0 right-10 p-2 m-2 mb-10 w-fit text-black form-control border-2 border-gray-800 hover:border-indigo-300 focus:outline-none",
         placeholder: "Write a message...",
         "onUpdate:modelValue": _cache[0] || (_cache[0] = function ($event) {
           return $setup.message = $event;
         })
-      }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $setup.message]])], 40 /* PROPS, HYDRATE_EVENTS */, _hoisted_6), $setup.chatStore.showChat ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+      }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $setup.message]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+        onClick: $setup.submit,
+        "class": "fixed bottom-0 right-0 p-2 m-2 mb-10 w-fit text-black form-control cursor-pointer"
+      }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_font_awesome_icon, {
+        icon: "fa-paper-plane",
+        "class": "hover:text-indigo-300 text-xl"
+      })])], 40 /* PROPS, HYDRATE_EVENTS */, _hoisted_6), $setup.chatStore.showChat ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
         key: 0,
         onClick: _cache[1] || (_cache[1] = function ($event) {
           return $setup.chatStore.showChat = false;

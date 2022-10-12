@@ -12,7 +12,7 @@
 
 
 
-            <Chat />
+
             <VideoPlayer class="z-30" />
 
 
@@ -36,17 +36,13 @@
 import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/NavigationMenu"
 import VideoPlayer from "@/Components/VideoPlayer/VideoPlayer.vue"
-import Chat from "@/Components/Chat/Chat"
 import { Inertia } from '@inertiajs/inertia'
 import JetBanner from '@/Jetstream/Banner.vue'
-import { useChatStore } from "@/Stores/ChatStore"
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
 
 let videoPlayerStore = useVideoPlayerStore()
 
 videoPlayerStore.class = 'videoFullPage'
 videoPlayerStore.videoContainerClass = 'videoContainerFullPage'
-
-let chat = useChatStore()
 
 </script>
