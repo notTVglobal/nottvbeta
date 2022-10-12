@@ -37,7 +37,6 @@
                 <Login v-if="!videoPlayerStore.loggedIn" :show="showLogin" @close="showLogin = false" />
             </Teleport>
             <video-player :options="videoOptions"/>
-            <div v-if="videoPlayerStore.loggedIn" class="hidden md:block pt-56 pl-6 text-red-700"><span class="font-semibold">NOTE:</span> We are working on the<br>video player sizing problem.</div>
 
             <div v-if="videoPlayerStore.fullPage" class="absolute top-16 left-0 p-5 drop-shadow z-50">
                 <span class="text-xs uppercase pr-2">Now playing: </span>
