@@ -1425,6 +1425,10 @@ select {
   bottom: 2.5rem;
 }
 
+.top-10 {
+  top: 2.5rem;
+}
+
 .z-0 {
   z-index: 0;
 }
@@ -2839,6 +2843,10 @@ select {
   padding-right: 0.25rem;
 }
 
+.pt-10 {
+  padding-top: 2.5rem;
+}
+
 .text-left {
   text-align: left;
 }
@@ -3164,6 +3172,10 @@ select {
 
 .opacity-20 {
   opacity: 0.2;
+}
+
+.opacity-10 {
+  opacity: 0.1;
 }
 
 .shadow-sm {
