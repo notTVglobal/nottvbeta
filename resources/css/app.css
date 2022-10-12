@@ -38,9 +38,11 @@
     background-color: black;
 }
 .videoContainerHomePage {
-    position: absolute;
+    position: static;
+    top:0px;
     bottom: 0px;
     left: 0px;
+    right:0px;
     width:100vw;
     height:100vh;
     z-index:1;

@@ -1581,10 +1581,10 @@ var useVideoPlayerStore = (0,pinia__WEBPACK_IMPORTED_MODULE_1__.defineStore)('vi
       (0,_Stores_ChatStore__WEBPACK_IMPORTED_MODULE_0__.useChatStore)().makeSmall();
     },
     makeVideoWelcomePage: function makeVideoWelcomePage() {
+      this.videoContainerClass = 'videoContainerFullPage';
+      this["class"] = 'videoBgFull';
       this.fullPage = false;
       this.loggedIn = false;
-      this["class"] = 'videoBgFull';
-      this.videoContainerClass = 'videoContainerHomePage';
       (0,_Stores_ChatStore__WEBPACK_IMPORTED_MODULE_0__.useChatStore)().chatHidden();
     },
     loadVideo1: function loadVideo1() {
