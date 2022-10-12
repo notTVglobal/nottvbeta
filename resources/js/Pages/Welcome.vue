@@ -75,8 +75,8 @@
             <section class="flex justify-center items-center h-screen">
                 <div class="text-2xl">#mediaforabetterworld</div>
             </section>
-            <section class="justify-center items-center h-screen bg-green-900" ref="scrollToMe" v-if="!showDiv">
-                <div class="text-2xl"><font-awesome-icon icon="fa-solid fa-rocket" /></div>
+            <section class="justify-center items-center h-screen bg-green-900">
+                <div class="text-2xl" ref="scrollToMe" v-if="!showDiv"><font-awesome-icon icon="fa-solid fa-rocket" /></div>
             </section>
         </div>
 
