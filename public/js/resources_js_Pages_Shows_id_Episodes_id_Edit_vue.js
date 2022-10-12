@@ -664,10 +664,9 @@ var __default__ = {
     var props = __props;
     var videoPlayer = (0,_Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_7__.useVideoPlayerStore)();
     var chat = (0,_Stores_ChatStore_js__WEBPACK_IMPORTED_MODULE_8__.useChatStore)();
-    videoPlayer["class"] = "videoTopRight";
-    videoPlayer.videoContainerClass = "videoContainerTopRight";
-    videoPlayer.fullPage = false;
-    chat["class"] = "chatSmall";
+    (0,vue__WEBPACK_IMPORTED_MODULE_12__.onMounted)(function () {
+      videoPlayer.makeVideoTopRight();
+    });
     var title = "Edit > " + props.show.name;
     var form = (0,_inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_5__.useForm)({
       id: props.show.id,
@@ -701,6 +700,7 @@ var __default__ = {
       ResponsiveNavigationMenu: _Components_ResponsiveNavigationMenu__WEBPACK_IMPORTED_MODULE_9__["default"],
       NavigationMenu: _Components_NavigationMenu__WEBPACK_IMPORTED_MODULE_10__["default"],
       ImageUpload: _Components_ImageUpload__WEBPACK_IMPORTED_MODULE_11__["default"],
+      onMounted: vue__WEBPACK_IMPORTED_MODULE_12__.onMounted,
       ref: vue__WEBPACK_IMPORTED_MODULE_12__.ref
     };
     Object.defineProperty(__returned__, '__isScriptSetup', {

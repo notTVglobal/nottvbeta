@@ -83,7 +83,7 @@
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useChatStore } from "@/Stores/ChatStore.js"
 import { useShowStore } from "@/Stores/ShowStore.js"
-import { ref } from 'vue'
+import {onMounted, ref} from 'vue'
 import ShowHeader from "@/Components/Shows/ShowHeader"
 import ShowEpisodesList from "@/Components/Shows/ShowEpisodesList"
 import ShowFooter from "@/Components/Shows/ShowFooter"
@@ -94,12 +94,11 @@ import ShowCreditsList from "@/Components/Shows/ShowCreditsList";
 let videoPlayer = useVideoPlayerStore()
 let chat = useChatStore()
 let showStore = useShowStore();
-showStore.fill();
+// showStore.fill();
 
-videoPlayer.class = "videoTopRight"
-videoPlayer.videoContainerClass = "videoContainerTopRight"
-videoPlayer.fullPage = false
-chat.class = "chatSmall"
+onMounted(() => {
+    videoPlayer.makeVideoTopRight();
+});
 
 let props = defineProps({
     // user: Object,

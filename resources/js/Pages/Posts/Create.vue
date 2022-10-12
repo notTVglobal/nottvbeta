@@ -104,14 +104,14 @@ import { useChatStore } from "@/Stores/ChatStore.js"
 import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/NavigationMenu"
 import { useForm } from '@inertiajs/inertia-vue3'
+import {onMounted} from "vue";
 
 let videoPlayer = useVideoPlayerStore()
 let chat = useChatStore()
 
-videoPlayer.class = "videoTopRight"
-videoPlayer.videoContainerClass = "videoContainerTopRight"
-videoPlayer.fullPage = false
-chat.class = "chatSmall"
+onMounted(() => {
+    videoPlayer.makeVideoTopRight();
+});
 
 const props = defineProps({
     posts: {

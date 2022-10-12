@@ -225,15 +225,16 @@ import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useChatStore } from "@/Stores/ChatStore.js"
 import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/NavigationMenu"
+import {onMounted} from "vue";
 
 let videoPlayer = useVideoPlayerStore()
 let chat = useChatStore()
 
-videoPlayer.class = "videoTopRight"
-videoPlayer.videoContainerClass = "videoContainerTopRight"
-videoPlayer.fullPage = false
+onMounted(() => {
+    videoPlayer.makeVideoTopRight();
+});
+
 videoPlayer.loggedIn = true
-chat.class = "chatSmall"
 // onload(videoPlayer.class = "videoTopRight")
 
 let props = defineProps({

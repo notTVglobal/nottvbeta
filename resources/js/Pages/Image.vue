@@ -135,6 +135,11 @@ import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size';
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import 'filepond/dist/filepond.min.css';
 import {Inertia} from "@inertiajs/inertia";
+import {onMounted} from "vue";
+
+onMounted(() => {
+    videoPlayer.makeVideoTopRight();
+});
 
 const FilePond = vueFilePond(
     FilePondPluginFileValidateType,

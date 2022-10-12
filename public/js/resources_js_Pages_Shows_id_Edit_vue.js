@@ -648,6 +648,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Components_NavigationMenu__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/Components/NavigationMenu */ "./resources/js/Components/NavigationMenu.vue");
 /* harmony import */ var _Components_Shows_Edit_ShowEditHeader__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/Components/Shows/Edit/ShowEditHeader */ "./resources/js/Components/Shows/Edit/ShowEditHeader.vue");
 /* harmony import */ var _Components_Shows_Edit_ShowEditBody__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/Components/Shows/Edit/ShowEditBody */ "./resources/js/Components/Shows/Edit/ShowEditBody.vue");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+
 
 
 
@@ -678,10 +680,9 @@ __webpack_require__.r(__webpack_exports__);
     var videoPlayer = (0,_Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_0__.useVideoPlayerStore)();
     var chat = (0,_Stores_ChatStore_js__WEBPACK_IMPORTED_MODULE_1__.useChatStore)();
     var showStore = (0,_Stores_ShowStore_js__WEBPACK_IMPORTED_MODULE_2__.useShowStore)();
-    videoPlayer["class"] = "videoTopRight";
-    videoPlayer.videoContainerClass = "videoContainerTopRight";
-    videoPlayer.fullPage = false;
-    chat["class"] = "chatSmall"; // showStore.posterName = props.posterName;
+    (0,vue__WEBPACK_IMPORTED_MODULE_7__.onMounted)(function () {
+      videoPlayer.makeVideoTopRight();
+    }); // showStore.posterName = props.posterName;
     // showStore.posterId = props.show.image_id;
 
     var title = "Edit > " + props.show.name;
@@ -697,7 +698,8 @@ __webpack_require__.r(__webpack_exports__);
       ResponsiveNavigationMenu: _Components_ResponsiveNavigationMenu__WEBPACK_IMPORTED_MODULE_3__["default"],
       NavigationMenu: _Components_NavigationMenu__WEBPACK_IMPORTED_MODULE_4__["default"],
       ShowEditHeader: _Components_Shows_Edit_ShowEditHeader__WEBPACK_IMPORTED_MODULE_5__["default"],
-      ShowEditBody: _Components_Shows_Edit_ShowEditBody__WEBPACK_IMPORTED_MODULE_6__["default"]
+      ShowEditBody: _Components_Shows_Edit_ShowEditBody__WEBPACK_IMPORTED_MODULE_6__["default"],
+      onMounted: vue__WEBPACK_IMPORTED_MODULE_7__.onMounted
     };
     Object.defineProperty(__returned__, '__isScriptSetup', {
       enumerable: false,

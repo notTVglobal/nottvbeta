@@ -81,19 +81,18 @@ import ShowFooter from "@/Components/Shows/ShowFooter"
 import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/NavigationMenu"
 import ShowCreditsList from "@/Components/Shows/ShowCreditsList";
-import {ref, watch} from "vue";
+import {onMounted, ref, watch} from "vue";
 import throttle from "lodash/throttle";
 import {Inertia} from "@inertiajs/inertia";
 
 let videoPlayer = useVideoPlayerStore()
 let chat = useChatStore()
 let showStore = useShowStore();
-showStore.fill();
+// showStore.fill();
 
-videoPlayer.class = "videoTopRight"
-videoPlayer.videoContainerClass = "videoContainerTopRight"
-videoPlayer.fullPage = false
-chat.class = "chatSmall"
+onMounted(() => {
+    videoPlayer.makeVideoTopRight();
+});
 
 let props = defineProps({
     show: Object,

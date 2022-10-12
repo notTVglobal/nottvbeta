@@ -45,16 +45,15 @@ import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/NavigationMenu"
 import ShowEditHeader from "@/Components/Shows/Edit/ShowEditHeader";
 import ShowEditBody from "@/Components/Shows/Edit/ShowEditBody";
+import {onMounted} from "vue";
 
 let videoPlayer = useVideoPlayerStore()
 let chat = useChatStore()
-
 let showStore = useShowStore()
 
-videoPlayer.class = "videoTopRight"
-videoPlayer.videoContainerClass = "videoContainerTopRight"
-videoPlayer.fullPage = false
-chat.class = "chatSmall"
+onMounted(() => {
+    videoPlayer.makeVideoTopRight();
+});
 
 let props = defineProps({
     user: Object,

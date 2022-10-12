@@ -20,8 +20,11 @@ export let useChatStore = defineStore('chat', {
         },
         makeSmall() {
             this.class = 'chatSmall';
+        },
+        chatHidden() {
+            this.class = 'chatHidden';
+            this.showChat = false;
         }
     }
-
 
 })

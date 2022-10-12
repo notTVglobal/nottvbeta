@@ -418,10 +418,9 @@ __webpack_require__.r(__webpack_exports__);
     var videoPlayer = (0,_Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_2__.useVideoPlayerStore)();
     var teamStore = (0,_Stores_TeamStore_js__WEBPACK_IMPORTED_MODULE_3__.useTeamStore)();
     var chat = (0,_Stores_ChatStore_js__WEBPACK_IMPORTED_MODULE_4__.useChatStore)();
-    videoPlayer["class"] = "videoTopRight";
-    videoPlayer.videoContainerClass = "videoContainerTopRight";
-    videoPlayer.fullPage = false;
-    chat["class"] = "chatSmall";
+    (0,vue__WEBPACK_IMPORTED_MODULE_1__.onMounted)(function () {
+      videoPlayer.makeVideoTopRight();
+    });
     var form = (0,_inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_0__.useForm)({
       name: '',
       description: '',
@@ -449,6 +448,7 @@ __webpack_require__.r(__webpack_exports__);
       reset: reset,
       submit: submit,
       useForm: _inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_0__.useForm,
+      onMounted: vue__WEBPACK_IMPORTED_MODULE_1__.onMounted,
       ref: vue__WEBPACK_IMPORTED_MODULE_1__.ref,
       useVideoPlayerStore: _Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_2__.useVideoPlayerStore,
       useTeamStore: _Stores_TeamStore_js__WEBPACK_IMPORTED_MODULE_3__.useTeamStore,

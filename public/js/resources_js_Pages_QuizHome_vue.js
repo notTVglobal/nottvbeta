@@ -147,6 +147,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Stores_QuizStore_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Stores/QuizStore.js */ "./resources/js/Stores/QuizStore.js");
 /* harmony import */ var _Stores_CounterStore__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/Stores/CounterStore */ "./resources/js/Stores/CounterStore.js");
 /* harmony import */ var _Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/Stores/VideoPlayerStore.js */ "./resources/js/Stores/VideoPlayerStore.js");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+
 
 
 
@@ -158,16 +160,17 @@ __webpack_require__.r(__webpack_exports__);
     expose();
     var counter = (0,_Stores_CounterStore__WEBPACK_IMPORTED_MODULE_2__.useCounterStore)();
     var videoPlayer = (0,_Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_3__.useVideoPlayerStore)();
-    videoPlayer["class"] = "videoTopRight";
-    videoPlayer.videoContainerClass = "videoContainerTopRight";
-    videoPlayer.fullPage = false;
+    (0,vue__WEBPACK_IMPORTED_MODULE_4__.onMounted)(function () {
+      videoPlayer.makeVideoTopRight();
+    });
     var __returned__ = {
       counter: counter,
       videoPlayer: videoPlayer,
       Quiz: _Components_Quiz_Quiz_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
       state: _Stores_QuizStore_js__WEBPACK_IMPORTED_MODULE_1__.state,
       useCounterStore: _Stores_CounterStore__WEBPACK_IMPORTED_MODULE_2__.useCounterStore,
-      useVideoPlayerStore: _Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_3__.useVideoPlayerStore
+      useVideoPlayerStore: _Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_3__.useVideoPlayerStore,
+      onMounted: vue__WEBPACK_IMPORTED_MODULE_4__.onMounted
     };
     Object.defineProperty(__returned__, '__isScriptSetup', {
       enumerable: false,

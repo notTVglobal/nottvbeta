@@ -120,17 +120,16 @@ import { useChatStore } from "@/Stores/ChatStore.js"
 import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/NavigationMenu"
 import { useForm } from '@inertiajs/inertia-vue3'
-import {ref, watch} from "vue";
+import {onMounted, ref, watch} from "vue";
 import throttle from "lodash/throttle";
 import {Inertia} from "@inertiajs/inertia";
 
 let videoPlayer = useVideoPlayerStore()
 let chat = useChatStore()
 
-videoPlayer.class = "videoTopRight"
-videoPlayer.videoContainerClass = "videoContainerTopRight"
-videoPlayer.fullPage = false
-chat.class = "chatSmall"
+onMounted(() => {
+    videoPlayer.makeVideoTopRight();
+});
 
 let props = defineProps({
     filters: Object,
@@ -147,6 +146,9 @@ let search = ref(props.filters.search);
 let form = useForm({
 
 });
+
+
+
 
 watch(search, throttle(function (value) {
     Inertia.get('/posts', { search: value }, {

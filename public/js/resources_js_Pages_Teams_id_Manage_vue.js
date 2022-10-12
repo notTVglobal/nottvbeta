@@ -783,12 +783,11 @@ __webpack_require__.r(__webpack_exports__);
     var props = __props;
     var videoPlayer = (0,_Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_0__.useVideoPlayerStore)();
     var chat = (0,_Stores_ChatStore_js__WEBPACK_IMPORTED_MODULE_1__.useChatStore)();
-    videoPlayer["class"] = "videoTopRight";
-    videoPlayer.videoContainerClass = "videoContainerTopRight";
-    videoPlayer.fullPage = false;
-    chat["class"] = "chatSmall";
     var teamStore = (0,_Stores_TeamStore_js__WEBPACK_IMPORTED_MODULE_2__.useTeamStore)(); // team.fill();
-    // let team_id = ref(props.filters.team_id)
+
+    (0,vue__WEBPACK_IMPORTED_MODULE_7__.onMounted)(function () {
+      videoPlayer.makeVideoTopRight();
+    }); // let team_id = ref(props.filters.team_id)
 
     teamStore.setActiveTeam(props.team.id);
     var showModal = (0,vue__WEBPACK_IMPORTED_MODULE_7__.ref)(false);
@@ -816,6 +815,7 @@ __webpack_require__.r(__webpack_exports__);
       ref: vue__WEBPACK_IMPORTED_MODULE_7__.ref,
       reactive: vue__WEBPACK_IMPORTED_MODULE_7__.reactive,
       computed: vue__WEBPACK_IMPORTED_MODULE_7__.computed,
+      onMounted: vue__WEBPACK_IMPORTED_MODULE_7__.onMounted,
       ResponsiveNavigationMenu: _Components_ResponsiveNavigationMenu__WEBPACK_IMPORTED_MODULE_8__["default"],
       NavigationMenu: _Components_NavigationMenu__WEBPACK_IMPORTED_MODULE_9__["default"],
       TeamShowsList: _Components_Teams_TeamShowsList__WEBPACK_IMPORTED_MODULE_10__["default"],

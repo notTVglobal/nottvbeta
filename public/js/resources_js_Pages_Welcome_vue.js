@@ -47,13 +47,17 @@ var __default__ = {
     var expose = _ref.expose;
     expose();
     var videoPlayer = (0,_Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_4__.useVideoPlayerStore)();
-    var chat = (0,_Stores_ChatStore__WEBPACK_IMPORTED_MODULE_5__.useChatStore)();
+    var chat = (0,_Stores_ChatStore__WEBPACK_IMPORTED_MODULE_5__.useChatStore)(); // This page loads properly calling these stores here
+    // instead of calling the store action .makeVideoWelcomePage()
+    // keep these here.
+
     videoPlayer.fullPage = false;
     videoPlayer.loggedIn = false;
     videoPlayer["class"] = "videoBgFull";
     videoPlayer.videoContainerClass = "videoContainerHomePage";
     chat.show = false;
-    chat["class"] = 'chatHidden';
+    chat["class"] = 'chatHidden'; //------------------------//
+
     var showLogin = (0,vue__WEBPACK_IMPORTED_MODULE_3__.ref)(false);
     var showDiv = (0,vue__WEBPACK_IMPORTED_MODULE_3__.ref)(null);
     var scrollToMe = (0,vue__WEBPACK_IMPORTED_MODULE_3__.ref)(null);
@@ -79,6 +83,7 @@ var __default__ = {
       AppLayout: _Layouts_AppLayout__WEBPACK_IMPORTED_MODULE_0__["default"],
       JetApplicationLogo: _Jetstream_ApplicationLogo_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
       Login: _Components_Login_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
+      onMounted: vue__WEBPACK_IMPORTED_MODULE_3__.onMounted,
       ref: vue__WEBPACK_IMPORTED_MODULE_3__.ref,
       useVideoPlayerStore: _Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_4__.useVideoPlayerStore,
       useChatStore: _Stores_ChatStore__WEBPACK_IMPORTED_MODULE_5__.useChatStore

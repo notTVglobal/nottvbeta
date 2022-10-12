@@ -95,7 +95,7 @@ import TeamHeader from "@/Components/Teams/TeamHeader"
 import TeamMembersList from "@/Components/Teams/TeamMembersList"
 import TeamFooter from "@/Components/Teams/TeamFooter"
 import Modal from "@/Components/Modal"
-import { ref, reactive, computed } from 'vue'
+import {ref, reactive, computed, onMounted} from 'vue'
 import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/NavigationMenu"
 import TeamShowsList from "@/Components/Teams/TeamShowsList";
@@ -105,10 +105,9 @@ import Pagination from "@/Components/Pagination";
 let videoPlayer = useVideoPlayerStore()
 let chat = useChatStore()
 
-videoPlayer.class = "videoTopRight"
-videoPlayer.videoContainerClass = "videoContainerTopRight"
-videoPlayer.fullPage = false
-chat.class = "chatSmall"
+onMounted(() => {
+    videoPlayer.makeVideoTopRight();
+});
 
 let teamStore = useTeamStore();
 // team.fill();

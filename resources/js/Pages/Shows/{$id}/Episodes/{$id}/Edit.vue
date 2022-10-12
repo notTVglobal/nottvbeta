@@ -95,7 +95,7 @@ import { useChatStore } from "@/Stores/ChatStore.js"
 import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/NavigationMenu"
 import ImageUpload from "@/Components/ImageUpload";
-import { ref } from 'vue'
+import {onMounted, ref} from 'vue'
 
 import "filepond/dist/filepond.min.css"
 import {Inertia} from "@inertiajs/inertia";
@@ -103,10 +103,9 @@ import {Inertia} from "@inertiajs/inertia";
 let videoPlayer = useVideoPlayerStore()
 let chat = useChatStore()
 
-videoPlayer.class = "videoTopRight"
-videoPlayer.videoContainerClass = "videoContainerTopRight"
-videoPlayer.fullPage = false
-chat.class = "chatSmall"
+onMounted(() => {
+    videoPlayer.makeVideoTopRight();
+});
 
 let props = defineProps({
     show: {

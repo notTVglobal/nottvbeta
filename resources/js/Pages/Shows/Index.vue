@@ -145,7 +145,7 @@
 
 <script setup>
 import Pagination from "@/Components/Pagination"
-import { ref, watch } from "vue"
+import {onMounted, ref, watch} from "vue"
 import {Inertia} from "@inertiajs/inertia"
 import throttle from "lodash/throttle"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
@@ -156,10 +156,9 @@ import NavigationMenu from "@/Components/NavigationMenu"
 let videoPlayer = useVideoPlayerStore()
 let chat = useChatStore()
 
-videoPlayer.class = "videoTopRight"
-videoPlayer.videoContainerClass = "videoContainerTopRight"
-videoPlayer.fullPage = false
-chat.class = "chatSmall"
+onMounted(() => {
+    videoPlayer.makeVideoTopRight();
+});
 
 let props = defineProps({
     shows: Object,

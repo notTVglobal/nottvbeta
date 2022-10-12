@@ -4,16 +4,16 @@ import { useChatStore } from "@/Stores/ChatStore";
 export let useVideoPlayerStore = defineStore('videoPlayer', {
     state() {
         return {
-            class: '',
-            videoContainerClass: '',
-            videoSourceIdSrc1: '',
-            videoSourceIdSrc2: '',
-            videoSourceIdSrc3: '',
-            videoSourceTypeSrc1: '',
-            videoSourceTypeSrc2: '',
-            videoSourceTypeSrc3: '',
-            key: 0,
-            videoName: '',
+            class: [],
+            videoContainerClass: [],
+            videoSourceIdSrc1: [],
+            videoSourceIdSrc2: [],
+            videoSourceIdSrc3: [],
+            videoSourceTypeSrc1: [],
+            videoSourceTypeSrc2: [],
+            videoSourceTypeSrc3: [],
+            key: [0],
+            videoName: [],
             fullPage: Boolean,
             loggedIn: Boolean,
             muted: Boolean,
@@ -29,10 +29,17 @@ export let useVideoPlayerStore = defineStore('videoPlayer', {
             useChatStore().makeBig();
         },
         makeVideoTopRight() {
-            // this.videoContainerClass = 'videoContainerTopRight';
+            this.videoContainerClass = 'videoContainerTopRight';
             this.class = 'videoTopRight';
             this.fullPage = false;
             useChatStore().makeSmall();
+        },
+        makeVideoWelcomePage() {
+            this.fullPage = false;
+            videoPlayer.loggedIn = false
+            this.class = 'videoBgFull';
+            this.videoContainerClass = 'videoContainerHomePage';
+            useChatStore().chatHidden();
         },
         loadVideo1() {
             this.videoSourceIdSrc1 = "http://mist.nottv.io:8080/spring.mp4";

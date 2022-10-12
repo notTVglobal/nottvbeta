@@ -106,7 +106,7 @@
 
 <script setup>
 import { useForm } from "@inertiajs/inertia-vue3"
-import { ref } from 'vue'
+import {onMounted, ref} from 'vue'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useTeamStore } from "@/Stores/TeamStore.js"
 import { useChatStore } from "@/Stores/ChatStore.js"
@@ -117,10 +117,9 @@ let videoPlayer = useVideoPlayerStore()
 let teamStore = useTeamStore()
 let chat = useChatStore()
 
-videoPlayer.class = "videoTopRight"
-videoPlayer.videoContainerClass = "videoContainerTopRight"
-videoPlayer.fullPage = false
-chat.class = "chatSmall"
+onMounted(() => {
+    videoPlayer.makeVideoTopRight();
+});
 
 let props = defineProps({
     teams: Object,

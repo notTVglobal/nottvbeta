@@ -216,7 +216,7 @@
 <script setup>
 import { useForm } from "@inertiajs/inertia-vue3"
 import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
-import { ref } from "vue"
+import {onMounted, ref} from "vue"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useChatStore } from "@/Stores/ChatStore.js"
 import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
@@ -225,10 +225,9 @@ import NavigationMenu from "@/Components/NavigationMenu"
 let videoPlayer = useVideoPlayerStore()
 let chat = useChatStore()
 
-videoPlayer.class = "videoTopRight"
-videoPlayer.videoContainerClass = "videoContainerTopRight"
-videoPlayer.fullPage = false
-chat.class = "chatSmall"
+onMounted(() => {
+    videoPlayer.makeVideoTopRight();
+});
 
 let form = useForm({
     name: '',

@@ -86,7 +86,7 @@ import TeamHeader from "@/Components/Teams/TeamHeader"
 import TeamMembersList from "@/Components/Teams/TeamMembersList"
 import TeamFooter from "@/Components/Teams/TeamFooter"
 import Modal from "@/Components/Modal"
-import { ref, reactive, computed } from 'vue'
+import {ref, reactive, computed, onMounted} from 'vue'
 import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/NavigationMenu"
 import TeamShowsList from "@/Components/Teams/TeamShowsList";
@@ -96,14 +96,12 @@ import TeamManageHeader from "@/Components/Teams/Manage/TeamManageHeader";
 
 let videoPlayer = useVideoPlayerStore()
 let chat = useChatStore()
-
-videoPlayer.class = "videoTopRight"
-videoPlayer.videoContainerClass = "videoContainerTopRight"
-videoPlayer.fullPage = false
-chat.class = "chatSmall"
-
 let teamStore = useTeamStore();
 // team.fill();
+
+onMounted(() => {
+    videoPlayer.makeVideoTopRight();
+});
 
 let props = defineProps({
     team: Object,
@@ -115,10 +113,7 @@ let props = defineProps({
     can: Object,
 });
 
-
 // let team_id = ref(props.filters.team_id)
-
-
 teamStore.setActiveTeam(props.team.id);
 
 let showModal = ref(false);

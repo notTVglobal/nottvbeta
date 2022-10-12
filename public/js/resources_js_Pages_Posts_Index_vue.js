@@ -447,10 +447,9 @@ __webpack_require__.r(__webpack_exports__);
     var props = __props;
     var videoPlayer = (0,_Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_1__.useVideoPlayerStore)();
     var chat = (0,_Stores_ChatStore_js__WEBPACK_IMPORTED_MODULE_2__.useChatStore)();
-    videoPlayer["class"] = "videoTopRight";
-    videoPlayer.videoContainerClass = "videoContainerTopRight";
-    videoPlayer.fullPage = false;
-    chat["class"] = "chatSmall";
+    (0,vue__WEBPACK_IMPORTED_MODULE_6__.onMounted)(function () {
+      videoPlayer.makeVideoTopRight();
+    });
     var search = (0,vue__WEBPACK_IMPORTED_MODULE_6__.ref)(props.filters.search);
     var form = (0,_inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_5__.useForm)({});
     (0,vue__WEBPACK_IMPORTED_MODULE_6__.watch)(search, lodash_throttle__WEBPACK_IMPORTED_MODULE_7___default()(function (value) {
@@ -481,6 +480,7 @@ __webpack_require__.r(__webpack_exports__);
       ResponsiveNavigationMenu: _Components_ResponsiveNavigationMenu__WEBPACK_IMPORTED_MODULE_3__["default"],
       NavigationMenu: _Components_NavigationMenu__WEBPACK_IMPORTED_MODULE_4__["default"],
       useForm: _inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_5__.useForm,
+      onMounted: vue__WEBPACK_IMPORTED_MODULE_6__.onMounted,
       ref: vue__WEBPACK_IMPORTED_MODULE_6__.ref,
       watch: vue__WEBPACK_IMPORTED_MODULE_6__.watch,
       throttle: (lodash_throttle__WEBPACK_IMPORTED_MODULE_7___default()),

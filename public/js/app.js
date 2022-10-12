@@ -1583,6 +1583,10 @@ var useChatStore = (0,pinia__WEBPACK_IMPORTED_MODULE_0__.defineStore)('chat', {
     },
     makeSmall: function makeSmall() {
       this["class"] = 'chatSmall';
+    },
+    chatHidden: function chatHidden() {
+      this["class"] = 'chatHidden';
+      this.showChat = false;
     }
   }
 });
@@ -1607,16 +1611,16 @@ __webpack_require__.r(__webpack_exports__);
 var useVideoPlayerStore = (0,pinia__WEBPACK_IMPORTED_MODULE_1__.defineStore)('videoPlayer', {
   state: function state() {
     return {
-      "class": '',
-      videoContainerClass: '',
-      videoSourceIdSrc1: '',
-      videoSourceIdSrc2: '',
-      videoSourceIdSrc3: '',
-      videoSourceTypeSrc1: '',
-      videoSourceTypeSrc2: '',
-      videoSourceTypeSrc3: '',
-      key: 0,
-      videoName: '',
+      "class": [],
+      videoContainerClass: [],
+      videoSourceIdSrc1: [],
+      videoSourceIdSrc2: [],
+      videoSourceIdSrc3: [],
+      videoSourceTypeSrc1: [],
+      videoSourceTypeSrc2: [],
+      videoSourceTypeSrc3: [],
+      key: [0],
+      videoName: [],
       fullPage: Boolean,
       loggedIn: Boolean,
       muted: Boolean,
@@ -1631,10 +1635,17 @@ var useVideoPlayerStore = (0,pinia__WEBPACK_IMPORTED_MODULE_1__.defineStore)('vi
       (0,_Stores_ChatStore__WEBPACK_IMPORTED_MODULE_0__.useChatStore)().makeBig();
     },
     makeVideoTopRight: function makeVideoTopRight() {
-      // this.videoContainerClass = 'videoContainerTopRight';
+      this.videoContainerClass = 'videoContainerTopRight';
       this["class"] = 'videoTopRight';
       this.fullPage = false;
       (0,_Stores_ChatStore__WEBPACK_IMPORTED_MODULE_0__.useChatStore)().makeSmall();
+    },
+    makeVideoWelcomePage: function makeVideoWelcomePage() {
+      this.fullPage = false;
+      videoPlayer.loggedIn = false;
+      this["class"] = 'videoBgFull';
+      this.videoContainerClass = 'videoContainerHomePage';
+      (0,_Stores_ChatStore__WEBPACK_IMPORTED_MODULE_0__.useChatStore)().chatHidden();
     },
     loadVideo1: function loadVideo1() {
       this.videoSourceIdSrc1 = "http://mist.nottv.io:8080/spring.mp4";

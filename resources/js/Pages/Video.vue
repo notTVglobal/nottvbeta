@@ -41,14 +41,14 @@ import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
 import {useChatStore} from "@/Stores/ChatStore";
 import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/NavigationMenu"
+import {onMounted} from "vue";
 
 let videoPlayer = useVideoPlayerStore()
 let chat = useChatStore()
 
-videoPlayer.class = "videoTopRight"
-videoPlayer.videoContainerClass = "videoContainerTopRight"
-videoPlayer.fullPage = false
-chat.class = "chatSmall"
+onMounted(() => {
+    videoPlayer.makeVideoTopRight();
+});
 
 </script>
 

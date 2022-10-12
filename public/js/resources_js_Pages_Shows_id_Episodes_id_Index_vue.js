@@ -566,6 +566,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Components_ResponsiveNavigationMenu__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/Components/ResponsiveNavigationMenu */ "./resources/js/Components/ResponsiveNavigationMenu.vue");
 /* harmony import */ var _Components_NavigationMenu__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @/Components/NavigationMenu */ "./resources/js/Components/NavigationMenu.vue");
 /* harmony import */ var _Components_Shows_ShowCreditsList__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @/Components/Shows/ShowCreditsList */ "./resources/js/Components/Shows/ShowCreditsList.vue");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+
 
 
 
@@ -589,12 +591,11 @@ __webpack_require__.r(__webpack_exports__);
     var props = __props;
     var videoPlayer = (0,_Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_0__.useVideoPlayerStore)();
     var chat = (0,_Stores_ChatStore_js__WEBPACK_IMPORTED_MODULE_1__.useChatStore)();
-    var showStore = (0,_Stores_ShowStore_js__WEBPACK_IMPORTED_MODULE_2__.useShowStore)();
-    showStore.fill();
-    videoPlayer["class"] = "videoTopRight";
-    videoPlayer.videoContainerClass = "videoContainerTopRight";
-    videoPlayer.fullPage = false;
-    chat["class"] = "chatSmall";
+    var showStore = (0,_Stores_ShowStore_js__WEBPACK_IMPORTED_MODULE_2__.useShowStore)(); // showStore.fill();
+
+    (0,vue__WEBPACK_IMPORTED_MODULE_9__.onMounted)(function () {
+      videoPlayer.makeVideoTopRight();
+    });
     var __returned__ = {
       videoPlayer: videoPlayer,
       chat: chat,
@@ -608,7 +609,8 @@ __webpack_require__.r(__webpack_exports__);
       ShowFooter: _Components_Shows_ShowFooter__WEBPACK_IMPORTED_MODULE_5__["default"],
       ResponsiveNavigationMenu: _Components_ResponsiveNavigationMenu__WEBPACK_IMPORTED_MODULE_6__["default"],
       NavigationMenu: _Components_NavigationMenu__WEBPACK_IMPORTED_MODULE_7__["default"],
-      ShowCreditsList: _Components_Shows_ShowCreditsList__WEBPACK_IMPORTED_MODULE_8__["default"]
+      ShowCreditsList: _Components_Shows_ShowCreditsList__WEBPACK_IMPORTED_MODULE_8__["default"],
+      onMounted: vue__WEBPACK_IMPORTED_MODULE_9__.onMounted
     };
     Object.defineProperty(__returned__, '__isScriptSetup', {
       enumerable: false,

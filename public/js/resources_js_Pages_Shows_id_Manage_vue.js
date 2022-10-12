@@ -599,12 +599,11 @@ __webpack_require__.r(__webpack_exports__);
     var props = __props;
     var videoPlayer = (0,_Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_0__.useVideoPlayerStore)();
     var chat = (0,_Stores_ChatStore_js__WEBPACK_IMPORTED_MODULE_1__.useChatStore)();
-    var showStore = (0,_Stores_ShowStore_js__WEBPACK_IMPORTED_MODULE_2__.useShowStore)();
-    showStore.fill();
-    videoPlayer["class"] = "videoTopRight";
-    videoPlayer.videoContainerClass = "videoContainerTopRight";
-    videoPlayer.fullPage = false;
-    chat["class"] = "chatSmall"; // let search = ref(props.filters.search);
+    var showStore = (0,_Stores_ShowStore_js__WEBPACK_IMPORTED_MODULE_2__.useShowStore)(); // showStore.fill();
+
+    (0,vue__WEBPACK_IMPORTED_MODULE_9__.onMounted)(function () {
+      videoPlayer.makeVideoTopRight();
+    }); // let search = ref(props.filters.search);
     //
     // watch(search, throttle(function (value) {
     //     Inertia.get('/shows', { search: value }, {
@@ -627,6 +626,7 @@ __webpack_require__.r(__webpack_exports__);
       ResponsiveNavigationMenu: _Components_ResponsiveNavigationMenu__WEBPACK_IMPORTED_MODULE_6__["default"],
       NavigationMenu: _Components_NavigationMenu__WEBPACK_IMPORTED_MODULE_7__["default"],
       ShowCreditsList: _Components_Shows_ShowCreditsList__WEBPACK_IMPORTED_MODULE_8__["default"],
+      onMounted: vue__WEBPACK_IMPORTED_MODULE_9__.onMounted,
       ref: vue__WEBPACK_IMPORTED_MODULE_9__.ref,
       watch: vue__WEBPACK_IMPORTED_MODULE_9__.watch,
       throttle: (lodash_throttle__WEBPACK_IMPORTED_MODULE_10___default()),

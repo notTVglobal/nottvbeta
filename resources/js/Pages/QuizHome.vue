@@ -18,12 +18,13 @@ import Quiz from "@/Components/Quiz/Quiz.vue"
 import { state } from "@/Stores/QuizStore.js"
 import {useCounterStore} from "@/Stores/CounterStore"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+import {onMounted} from "vue";
 
 let counter = useCounterStore()
-
 let videoPlayer = useVideoPlayerStore()
-videoPlayer.class = "videoTopRight"
-videoPlayer.videoContainerClass = "videoContainerTopRight"
-videoPlayer.fullPage = false
+
+onMounted(() => {
+    videoPlayer.makeVideoTopRight();
+});
 
 </script>

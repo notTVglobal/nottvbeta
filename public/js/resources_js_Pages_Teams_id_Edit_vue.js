@@ -650,6 +650,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Components_NavigationMenu__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/Components/NavigationMenu */ "./resources/js/Components/NavigationMenu.vue");
 /* harmony import */ var _Components_Teams_Edit_TeamEditHeader__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/Components/Teams/Edit/TeamEditHeader */ "./resources/js/Components/Teams/Edit/TeamEditHeader.vue");
 /* harmony import */ var _Components_Teams_Edit_TeamEditBody__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/Components/Teams/Edit/TeamEditBody */ "./resources/js/Components/Teams/Edit/TeamEditBody.vue");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+
 
 
 
@@ -680,10 +682,9 @@ __webpack_require__.r(__webpack_exports__);
     var videoPlayer = (0,_Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_0__.useVideoPlayerStore)();
     var chat = (0,_Stores_ChatStore_js__WEBPACK_IMPORTED_MODULE_1__.useChatStore)();
     var teamStore = (0,_Stores_TeamStore_js__WEBPACK_IMPORTED_MODULE_2__.useTeamStore)();
-    videoPlayer["class"] = "videoTopRight";
-    videoPlayer.videoContainerClass = "videoContainerTopRight";
-    videoPlayer.fullPage = false;
-    chat["class"] = "chatSmall";
+    (0,vue__WEBPACK_IMPORTED_MODULE_7__.onMounted)(function () {
+      videoPlayer.makeVideoTopRight();
+    });
     var title = "Edit > " + props.team.name;
     var __returned__ = {
       videoPlayer: videoPlayer,
@@ -697,7 +698,8 @@ __webpack_require__.r(__webpack_exports__);
       ResponsiveNavigationMenu: _Components_ResponsiveNavigationMenu__WEBPACK_IMPORTED_MODULE_3__["default"],
       NavigationMenu: _Components_NavigationMenu__WEBPACK_IMPORTED_MODULE_4__["default"],
       TeamEditHeader: _Components_Teams_Edit_TeamEditHeader__WEBPACK_IMPORTED_MODULE_5__["default"],
-      TeamEditBody: _Components_Teams_Edit_TeamEditBody__WEBPACK_IMPORTED_MODULE_6__["default"]
+      TeamEditBody: _Components_Teams_Edit_TeamEditBody__WEBPACK_IMPORTED_MODULE_6__["default"],
+      onMounted: vue__WEBPACK_IMPORTED_MODULE_7__.onMounted
     };
     Object.defineProperty(__returned__, '__isScriptSetup', {
       enumerable: false,

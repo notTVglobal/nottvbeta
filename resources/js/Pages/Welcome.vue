@@ -85,19 +85,23 @@
 <script setup>
 import JetApplicationLogo from '@/Jetstream/ApplicationLogo.vue';
 import Login from "@/Components/Login.vue"
-import { ref } from 'vue'
+import {onMounted, ref} from 'vue'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import {useChatStore} from "@/Stores/ChatStore";
 
 let videoPlayer = useVideoPlayerStore()
 let chat = useChatStore()
 
+// This page loads properly calling these stores here
+// instead of calling the store action .makeVideoWelcomePage()
+// keep these here.
 videoPlayer.fullPage = false
 videoPlayer.loggedIn = false
 videoPlayer.class = "videoBgFull"
 videoPlayer.videoContainerClass = "videoContainerHomePage"
 chat.show = false
 chat.class = 'chatHidden'
+//------------------------//
 
 defineProps({
     canLogin: Boolean,
