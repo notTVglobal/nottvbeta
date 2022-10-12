@@ -1583,7 +1583,7 @@ var useVideoPlayerStore = (0,pinia__WEBPACK_IMPORTED_MODULE_1__.defineStore)('vi
     makeVideoWelcomePage: function makeVideoWelcomePage() {
       this.videoContainerClass = 'videoContainerHomePage';
       this["class"] = 'videoBgFull';
-      this.fullPage = true;
+      this.fullPage = false;
       this.loggedIn = false;
       (0,_Stores_ChatStore__WEBPACK_IMPORTED_MODULE_0__.useChatStore)().chatHidden();
     },

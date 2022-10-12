@@ -59,7 +59,8 @@ var __default__ = {
     // keep these here.
     // videoPlayer.fullPage = false
     // videoPlayer.loggedIn = false
-    // videoPlayer.class = "videoBgFull"
+    videoPlayer["class"] = "videoBgFull";
+    videoPlayer.videoContainerClass = "videoContainerHomePage";
     // videoPlayer.videoContainerClass = "videoContainerHomePage"
     // chat.show = false
     // chat.class = 'chatHidden'

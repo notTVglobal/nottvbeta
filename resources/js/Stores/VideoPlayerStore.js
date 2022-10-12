@@ -38,7 +38,7 @@ export let useVideoPlayerStore = defineStore('videoPlayer', {
         makeVideoWelcomePage() {
             this.videoContainerClass = 'videoContainerHomePage';
             this.class = 'videoBgFull';
-            this.fullPage = true;
+            this.fullPage = false;
             this.loggedIn = false;
             useChatStore().chatHidden();
         },
