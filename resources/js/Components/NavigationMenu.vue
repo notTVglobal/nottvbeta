@@ -13,11 +13,20 @@
 
                     <!-- Navigation Links -->
                     <div class="hidden space-x-8 lg:-my-px lg:ml-10 lg:flex">
+                        <h3 class="inline-flex items-center relative">
                         <JetNavLink @click="videoPlayer.makeVideoFullPage() && videoPlayer.videoContainerClassFullPage()" :href="route('stream')" :active="route().current('stream')">
                             Stream
+
+                            <div v-if="streamStore.isLive"
+                                class="text-xs text-white bg-red-800 uppercase flex justify-center items-center absolute -right-4 top-1.5
+                                    font-semibold inline-block py-0.5 px-1 uppercase rounded last:mr-0 mr-1">
+                               live
+                            </div>
                         </JetNavLink>
+                        </h3>
                         <JetNavLink @click="videoPlayer.makeVideoTopRight()" :href="route('schedule')" :active="route().current('schedule')">
                             Schedule
+
                         </JetNavLink>
                         <JetNavLink
                             v-if="$page.props.user.role_id === 2 || $page.props.user.role_id === 3 || $page.props.user.role_id === 4"
@@ -179,15 +188,19 @@ import JetNavLink from '@/Jetstream/NavLink.vue';
 import {Inertia} from "@inertiajs/inertia";
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
 import { useChatStore } from "@/Stores/ChatStore.js";
+import {useStreamStore} from "@/Stores/StreamStore";
 
 let chat = useChatStore();
-let videoPlayer = useVideoPlayerStore();
+let videoPlayerStore = useVideoPlayerStore();
+let streamStore = useStreamStore()
+
+streamStore.isLive = true
 
 const logout = () => {
-    videoPlayer.fullPage = true;
-    videoPlayer.loggedIn = false;
-    videoPlayer.class = "videoBgFull";
-    videoPlayer.videoContainerClass = "videoContainerBgFull";
+    videoPlayerStore.fullPage = true;
+    videoPlayerStore.loggedIn = false;
+    videoPlayerStore.class = "videoBgFull";
+    videoPlayerStore.videoContainerClass = "videoContainerBgFull";
     chat.class = "chatHidden";
     chat.showChat = false;
     Inertia.post(route('logout'));

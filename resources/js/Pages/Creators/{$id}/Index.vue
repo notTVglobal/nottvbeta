@@ -24,16 +24,18 @@
 
 <script setup>
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+import { useStreamStore } from "@/Stores/StreamStore.js"
 import { useChatStore } from "@/Stores/ChatStore.js"
 import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/NavigationMenu"
 import {onMounted} from "vue";
 
-let videoPlayer = useVideoPlayerStore()
+let videoPlayerStore = useVideoPlayerStore()
+let streamStore = useStreamStore()
 let chat = useChatStore()
 
 onMounted(() => {
-    videoPlayer.makeVideoTopRight();
+    videoPlayerStore.makeVideoTopRight();
 });
 
 let props = defineProps({

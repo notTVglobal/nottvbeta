@@ -37,6 +37,9 @@
                 <Login v-if="!videoPlayerStore.loggedIn" :show="showLogin" @close="showLogin = false" />
             </Teleport>
             <video-player :options="videoOptions"/>
+            <div class="absolute bottom-10 opacity-20 px-2 w-full z-50">
+                <img :src="`/storage/images/logo_white_512.png`" class="w-20">
+            </div>
 
             <div v-if="videoPlayerStore.fullPage" class="absolute top-16 left-0 p-5 drop-shadow z-50">
                 <span class="text-xs uppercase pr-2">Now playing: </span>
@@ -45,6 +48,22 @@
             <div v-if="!videoPlayerStore.fullPage" class="absolute top-0 bg-gray-800 px-2 w-full z-50">
                 <span class="text-xs uppercase pr-2">Now playing: </span>
                 <span class="font-semibold">{{ videoPlayerStore.videoName }}</span>
+            </div>
+            <div v-if="videoPlayerStore.fullPage && streamStore.isLive" class="absolute top-24 left-0 p-5 drop-shadow z-50">
+                <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-white bg-opacity-80 bg-red-800 uppercase last:mr-0 mr-1">
+                    live
+                </span>
+                <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-white bg-opacity-50 bg-black uppercase last:mr-0 mr-1">
+                    <font-awesome-icon icon="fa-solid fa-eye" class="pr-1" /> 88
+                </span>
+            </div>
+            <div v-if="!videoPlayerStore.fullPage && streamStore.isLive" class="absolute top-5 left-0 p-2 drop-shadow z-50">
+                <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-white bg-opacity-80 bg-red-800 uppercase last:mr-0 mr-1">
+                    live
+                </span>
+                <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-white bg-opacity-50 bg-black uppercase last:mr-0 mr-1">
+                    <font-awesome-icon icon="fa-solid fa-eye" /> 88
+                </span>
             </div>
             <div v-if="!videoPlayerStore.loggedIn" class="absolute top-0 right-0 p-5 drop-shadow z-50">
                 <Button @click="showLogin = true" class="text-2xl uppercase p-2">
@@ -74,12 +93,14 @@
 
 <script setup>
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
+import {useStreamStore} from "@/Stores/StreamStore";
 import Login from "@/Components/Login.vue"
 import { ref } from 'vue'
 
 let videoPlayerStore = useVideoPlayerStore()
+let streamStore = useStreamStore()
 
-videoPlayerStore.videoName = "Liberty Talk Canada"
+videoPlayerStore.videoName = "Spring"
 videoPlayerStore.paused = false
 
 let showLogin = ref(false)
@@ -176,7 +197,7 @@ export default {
                 sources: [
                     {
                         src:
-                            'https://mist.nottv.io/hls/librti/index.m3u8',
+                            'https://mist.nottv.io/hls/spring/index.m3u8',
                             // 'ws://mist.nottv.io:8080/ctd1984.mp4',
                         type: 'application/x-mpegURL'
                     }

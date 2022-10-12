@@ -1,15 +1,17 @@
 <template>
-        <div>
-            <video ref="videoPlayer" class="w-100 video-js vjs-big-play-centered" :class="videoPlayerStore.class" playsinline autoplay loop muted/>
-
+        <div>TOP
+            <video ref="videoPlayer" class="w-full video-js vjs-big-play-centered" :class="videoPlayerStore.class" playsinline autoplay loop muted/>
+CHAT / INFO
         </div>
 </template>
 
 
 <script setup>
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js";
-let videoPlayerStore = useVideoPlayerStore();
+import {useStreamStore} from "@/Stores/StreamStore.js";
 
+let videoPlayerStore = useVideoPlayerStore();
+let streamStore = useStreamStore();
 
 </script>
 

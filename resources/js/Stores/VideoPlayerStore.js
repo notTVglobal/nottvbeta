@@ -17,7 +17,7 @@ export let useVideoPlayerStore = defineStore('videoPlayer', {
             fullPage: Boolean,
             loggedIn: Boolean,
             muted: Boolean,
-            paused: Boolean
+            paused: Boolean,
         };
     },
 
