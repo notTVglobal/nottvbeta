@@ -5,7 +5,9 @@
         <NavigationMenu />
     </div>
 
-
+<div class="opacity-80 chatButtonForStreamPage w-20 h-20 rounded-full bg-orange-400 text-orange-100 hover:bg-orange-600 hover:text-orange-300 cursor-pointer grid justify-center content-center">
+    <font-awesome-icon icon="fa-comments" class="text-3xl"/><div>CHAT</div>
+</div>
 </template>
 
 
