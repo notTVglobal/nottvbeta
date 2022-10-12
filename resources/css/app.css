@@ -71,6 +71,23 @@
     bottom:5rem;
     right:5rem;
 }
+.chatForStreamPage {
+    z-index: 200;
+    position: fixed;
+    top:4rem;
+    bottom:2rem;
+    right:0rem;
+    padding: 1rem;
+    min-width: 18rem;
+    max-width: 18rem;
+    max-height: 96rem;
+}
+.chatForStreamPage button {
+    z-index: 200;
+    position: fixed;
+    bottom:2.5rem;
+    right:18.5rem;
+}
 .chatBig {
     z-index: 200;
     position: absolute;

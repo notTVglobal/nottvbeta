@@ -27,7 +27,7 @@
             <div class="relative w-full h-full ">
                 <VideoPlayer :class="videoPlayerStore.class" class="videoContainer"/>
             </div>
-            <Chat :user="user" :class="chat.class" class="chatContainer hidden"/>
+
 
         </div>
 
@@ -42,7 +42,6 @@ import JetBanner from '@/Jetstream/Banner.vue'
 import { useChatStore } from "@/Stores/ChatStore"
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
 let videoPlayerStore = useVideoPlayerStore()
-let chat = useChatStore()
 
 
 defineProps({
@@ -53,9 +52,6 @@ defineProps({
 </script>
 
 <style>
-.chatContainer {
-
-}
 .videoContainer {
     z-index:50;
 }

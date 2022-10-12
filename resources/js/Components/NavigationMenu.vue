@@ -189,12 +189,14 @@ import {Inertia} from "@inertiajs/inertia";
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
 import { useChatStore } from "@/Stores/ChatStore.js";
 import {useStreamStore} from "@/Stores/StreamStore";
+import {useWelcomeStore} from "@/Stores/WelcomeStore";
 
 let chat = useChatStore();
 let videoPlayerStore = useVideoPlayerStore();
 let streamStore = useStreamStore()
+let welcomeStore = useWelcomeStore()
 
-streamStore.isLive = true
+streamStore.isLive(true)
 
 const logout = () => {
     videoPlayerStore.fullPage = true;

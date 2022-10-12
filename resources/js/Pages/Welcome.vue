@@ -78,7 +78,9 @@
         </div>
 
     <Teleport to="body">
+<!--        <Login :show="showLogin" :userType="userType" @close="showLogin = false" />-->
         <Login :show="showLogin" :userType="userType" @close="showLogin = false" />
+
     </Teleport>
 </template>
 
@@ -88,7 +90,9 @@ import Login from "@/Components/Login.vue"
 import {onMounted, ref} from 'vue'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import {useChatStore} from "@/Stores/ChatStore";
+import {useWelcomeStore} from "@/Stores/WelcomeStore";
 
+let welcomeStore = useWelcomeStore()
 let videoPlayer = useVideoPlayerStore()
 let chat = useChatStore()
 
@@ -102,6 +106,7 @@ let chat = useChatStore()
 // chat.show = false
 // chat.class = 'chatHidden'
 
+
 onMounted(() => {
     videoPlayer.makeVideoWelcomePage();
 });
@@ -113,11 +118,13 @@ defineProps({
     laravelVersion: String,
     phpVersion: String,
     userType: Number,
+    showLogin: Boolean,
 });
 
-let showLogin = false
+let showLogin = ref(false)
 let showDiv = ref(null)
 const scrollToMe = ref(null)
+
 
 function scrollToElement(){
     scrollToMe.value?.scrollIntoView({behavior: "smooth"})

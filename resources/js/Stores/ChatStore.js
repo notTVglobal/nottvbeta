@@ -9,10 +9,10 @@ export let useChatStore = defineStore('chat', {
     },
 
     actions: {
-        toggleShowChatOn() {
+        toggleChatOn() {
             this.showChat = true
         },
-        toggleShowChatOff() {
+        toggleChatOff() {
             this.showChat = false
         },
         makeBig() {

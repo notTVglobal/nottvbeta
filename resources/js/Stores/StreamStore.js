@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 
 export let useStreamStore = defineStore('streamStore', {
     state: () => ({
-        isLive: [],
+        isLive: Boolean,
         currentChannel: [],
         name: '',
         description: '',
