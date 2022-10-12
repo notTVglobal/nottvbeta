@@ -47,7 +47,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       // Pusher Key for production: f0b385d3a5994dca4741
       //
       // const pusher = new Pusher('679608fe1b2e6a2bf76b', {
-      var pusher = new (pusher_js__WEBPACK_IMPORTED_MODULE_2___default())('679608fe1b2e6a2bf76b', {
+      var pusher = new (pusher_js__WEBPACK_IMPORTED_MODULE_2___default())('d03ec1b33bc0f17392c4', {
         cluster: 'us3'
       });
       var channel = pusher.subscribe('chat');

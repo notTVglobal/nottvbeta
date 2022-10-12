@@ -69,7 +69,7 @@ onMounted(() => {
     // Pusher Key for production: f0b385d3a5994dca4741
     //
     // const pusher = new Pusher('679608fe1b2e6a2bf76b', {
-        const pusher = new Pusher('679608fe1b2e6a2bf76b', {
+        const pusher = new Pusher('d03ec1b33bc0f17392c4', {
         cluster: 'us3'
     });
 
