@@ -25,6 +25,7 @@ onMounted(() => {
     videoPlayer.makeVideoFullPage();
 });
 
+videoPlayer.loggedIn = true
 
 defineProps ({
     video: Object

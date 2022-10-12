@@ -72,10 +72,18 @@
             </div>
 
 
-            <div v-if="!videoPlayerStore.loggedIn" class="absolute top-0 right-0 p-5 drop-shadow z-50">
-                <Button @click="showLogin = true" class="text-2xl uppercase p-2">
+            <div v-if="!videoPlayerStore.loggedIn" class="z-50">
+                <div class="absolute top-0 right-0 p-5 drop-shadow">
+                    <div class="grid grid-rows-1 place-content-end pt-2">
+                        <img :src="`/storage/images/logo_white_512.png`" class="w-20 pt-2">
+                    </div>
+                    <Button @click="showLogin = true" class="text-2xl uppercase p-2">
                     <span class="underline text-blue-400 hover:text-blue-600">Log in</span> to chat</Button>
+                </div>
+
             </div>
+
+
 
 
 

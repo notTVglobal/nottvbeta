@@ -420,6 +420,7 @@ __webpack_require__.r(__webpack_exports__);
     (0,vue__WEBPACK_IMPORTED_MODULE_4__.onMounted)(function () {
       videoPlayer.makeVideoFullPage();
     });
+    videoPlayer.loggedIn = true;
     var __returned__ = {
       videoPlayer: videoPlayer,
       chat: chat,

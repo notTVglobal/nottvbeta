@@ -1403,6 +1403,10 @@ select {
   bottom: 4rem;
 }
 
+.bottom-10 {
+  bottom: 2.5rem;
+}
+
 .z-0 {
   z-index: 0;
 }
@@ -2068,6 +2072,10 @@ select {
   grid-template-rows: repeat(2, minmax(0, 1fr));
 }
 
+.grid-rows-1 {
+  grid-template-rows: repeat(1, minmax(0, 1fr));
+}
+
 .flex-row {
   flex-direction: row;
 }
@@ -2088,8 +2096,16 @@ select {
   place-content: center;
 }
 
+.place-content-end {
+  place-content: end;
+}
+
 .content-center {
   align-content: center;
+}
+
+.content-end {
+  align-content: flex-end;
 }
 
 .items-center {

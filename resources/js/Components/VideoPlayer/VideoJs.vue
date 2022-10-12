@@ -1,7 +1,6 @@
 <template>
-        <div>TOP
+        <div>
             <video ref="videoPlayer" class="w-full video-js vjs-big-play-centered" :class="videoPlayerStore.class" playsinline autoplay loop muted/>
-CHAT / INFO
         </div>
 </template>
 
