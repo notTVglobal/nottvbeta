@@ -291,7 +291,7 @@ var __default__ = {
         muted: true,
         controls: true,
         sources: [{
-          src: 'https://mist.nottv.io/hls/dune1984/index.m3u8',
+          src: 'https://mist.nottv.io/hls/librti/index.m3u8',
           // 'ws://mist.nottv.io:8080/ctd1984.mp4',
           type: 'application/x-mpegURL'
         }]
@@ -307,7 +307,7 @@ var __default__ = {
     var expose = _ref.expose;
     expose();
     var videoPlayerStore = (0,_Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_1__.useVideoPlayerStore)();
-    videoPlayerStore.videoName = "Dune";
+    videoPlayerStore.videoName = "Liberty Talk Canada";
     videoPlayerStore.paused = false;
     var showLogin = (0,vue__WEBPACK_IMPORTED_MODULE_3__.ref)(false);
 
@@ -1046,7 +1046,7 @@ __webpack_require__.r(__webpack_exports__);
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("video", {
     ref: "videoPlayer",
-    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["video-js vjs-big-play-centered top-0", $setup.videoPlayerStore["class"]]),
+    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["w-100 video-js vjs-big-play-centered", $setup.videoPlayerStore["class"]]),
     playsinline: "",
     autoplay: "",
     loop: "",
@@ -1680,6 +1680,17 @@ var useVideoPlayerStore = (0,pinia__WEBPACK_IMPORTED_MODULE_1__.defineStore)('vi
       this.videoSourceTypeSrc3 = "video/mp4";
       this.key += 1;
       this.videoName = "Natural World";
+      this.paused = false;
+    },
+    loadVideo6: function loadVideo6() {
+      this.videoSourceIdSrc1 = "http://mist.nottv.io:8080/librtid.mp4";
+      this.videoSourceTypeSrc1 = "video/mp4";
+      this.videoSourceIdSrc2 = "http://mist.nottv.io:8080/hls/naturalworld/librti.m3u8";
+      this.videoSourceTypeSrc2 = "application/x-mpegURL";
+      this.videoSourceIdSrc3 = "ws://mist.nottv.io:8080/librti.mp4";
+      this.videoSourceTypeSrc3 = "video/mp4";
+      this.key += 1;
+      this.videoName = "Liberty Talk Canada";
       this.paused = false;
     }
   }

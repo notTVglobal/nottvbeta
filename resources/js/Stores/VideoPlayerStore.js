@@ -96,5 +96,16 @@ export let useVideoPlayerStore = defineStore('videoPlayer', {
             this.videoName = "Natural World";
             this.paused = false;
         },
+        loadVideo6() {
+            this.videoSourceIdSrc1 = "http://mist.nottv.io:8080/librtid.mp4";
+            this.videoSourceTypeSrc1 = "video/mp4";
+            this.videoSourceIdSrc2 = "http://mist.nottv.io:8080/hls/naturalworld/librti.m3u8";
+            this.videoSourceTypeSrc2 = "application/x-mpegURL";
+            this.videoSourceIdSrc3 = "ws://mist.nottv.io:8080/librti.mp4";
+            this.videoSourceTypeSrc3 = "video/mp4";
+            this.key += 1;
+            this.videoName = "Liberty Talk Canada";
+            this.paused = false;
+        },
     }
 })

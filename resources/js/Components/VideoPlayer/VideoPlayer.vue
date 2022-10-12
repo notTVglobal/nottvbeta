@@ -79,7 +79,7 @@ import { ref } from 'vue'
 
 let videoPlayerStore = useVideoPlayerStore()
 
-videoPlayerStore.videoName = "Dune"
+videoPlayerStore.videoName = "Liberty Talk Canada"
 videoPlayerStore.paused = false
 
 let showLogin = ref(false)
@@ -176,7 +176,7 @@ export default {
                 sources: [
                     {
                         src:
-                            'https://mist.nottv.io/hls/dune1984/index.m3u8',
+                            'https://mist.nottv.io/hls/librti/index.m3u8',
                             // 'ws://mist.nottv.io:8080/ctd1984.mp4',
                         type: 'application/x-mpegURL'
                     }
