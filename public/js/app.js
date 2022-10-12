@@ -1581,7 +1581,7 @@ var useVideoPlayerStore = (0,pinia__WEBPACK_IMPORTED_MODULE_1__.defineStore)('vi
       (0,_Stores_ChatStore__WEBPACK_IMPORTED_MODULE_0__.useChatStore)().makeSmall();
     },
     makeVideoWelcomePage: function makeVideoWelcomePage() {
-      this.videoContainerClass = 'videoContainerHomePage';
+      this.videoContainerClass = 'videoContainerWelcomePage';
       this["class"] = 'videoBgFull';
       this.fullPage = false;
       this.loggedIn = false;

@@ -37,9 +37,10 @@
     height:14rem;
     background-color: black;
 }
-.videoContainerHomePage {
+.videoContainerWelcomePage {
     position: static;
     top:0px;
+    bottom:-4rem;
     left: 0px;
     right:0px;
     width:100vw;
