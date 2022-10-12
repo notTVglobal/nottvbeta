@@ -18,7 +18,7 @@
                     </div>
                 </template>
             </div>
-            <div class="relative flex items-top justify-center min-h-screen text-gray-200">
+            <div class="relative flex items-top justify-center min-h-screen -mt-20 text-gray-200">
                 <div class="flex justify-center items-center h-screen">
 <!--                    <template #menu></template>-->
                     <div class="grid md:grid-cols-1 grid-cols-1 align-items-center">

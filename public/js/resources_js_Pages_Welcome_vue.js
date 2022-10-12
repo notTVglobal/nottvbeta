@@ -154,7 +154,7 @@ var _hoisted_3 = {
   "class": "flex mr-3 mt-6 space-x-6 justify-end"
 };
 var _hoisted_4 = {
-  "class": "relative flex items-top justify-center min-h-screen text-gray-200"
+  "class": "relative flex items-top justify-center min-h-screen -mt-20 text-gray-200"
 };
 var _hoisted_5 = {
   "class": "flex justify-center items-center h-screen"
