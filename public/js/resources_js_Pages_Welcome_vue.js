@@ -235,11 +235,11 @@ var _hoisted_28 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
   "class": "text-2xl"
 }, "#mediaforabetterworld")], -1 /* HOISTED */);
 var _hoisted_29 = {
-  "class": "justify-center items-center h-screen bg-green-900"
+  "class": "flex flex-col justify-center items-center h-screen p-5 bg-green-900"
 };
 var _hoisted_30 = {
   key: 0,
-  "class": "text-2xl",
+  "class": "text-2xl text-center",
   ref: "scrollToMe"
 };
 function render(_ctx, _cache, $props, $setup, $data, $options) {
