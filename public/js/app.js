@@ -1043,13 +1043,32 @@ var _hoisted_15 = {
   "class": "z-50"
 };
 var _hoisted_16 = {
-  "class": "absolute top-0 right-0 p-5 drop-shadow"
+  "class": "landscape:hidden"
 };
 var _hoisted_17 = {
+  "class": "absolute top-0 right-0 p-5 drop-shadow"
+};
+var _hoisted_18 = {
   "class": "grid grid-rows-1 place-content-end pt-2"
 };
-var _hoisted_18 = ["src"];
-var _hoisted_19 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+var _hoisted_19 = ["src"];
+var _hoisted_20 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+  "class": "underline text-blue-400 hover:text-blue-600"
+}, "Log in", -1 /* HOISTED */);
+var _hoisted_21 = {
+  "class": "portrait:hidden"
+};
+var _hoisted_22 = {
+  "class": "absolute top-0 right-0 p-5 drop-shadow"
+};
+var _hoisted_23 = {
+  "class": "grid grid-rows-1 place-content-end pt-2"
+};
+var _hoisted_24 = ["src"];
+var _hoisted_25 = {
+  "class": "absolute bottom-0 right-0 p-5 drop-shadow"
+};
+var _hoisted_26 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
   "class": "underline text-blue-400 hover:text-blue-600"
 }, "Log in", -1 /* HOISTED */);
 
@@ -1079,20 +1098,33 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" 88 ")])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$setup.videoPlayerStore.fullPage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [_hoisted_10, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_11, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.videoPlayerStore.videoName), 1 /* TEXT */)]), $setup.streamStore.isLive ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_12, [_hoisted_13, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_14, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_font_awesome_icon, {
     icon: "fa-solid fa-eye",
     "class": "pr-1"
-  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" 88 ")])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$setup.videoPlayerStore.loggedIn ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_15, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_16, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_17, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
+  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" 88 ")])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$setup.videoPlayerStore.loggedIn ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_15, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_16, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_17, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_18, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
     src: "/storage/images/logo_white_512.png",
     "class": "w-20 pt-2"
-  }, null, 8 /* PROPS */, _hoisted_18)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Button, {
+  }, null, 8 /* PROPS */, _hoisted_19)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Button, {
     onClick: _cache[1] || (_cache[1] = function ($event) {
       return $setup.showLogin = true;
     }),
     "class": "text-2xl uppercase p-2"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [_hoisted_19, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" to chat")];
+      return [_hoisted_20, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" to chat")];
     }),
     _: 1 /* STABLE */
-  })])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            <div v-if=\"videoPlayerStore.fullPage\" class=\"flex flex-col-4 gap-4 fixed ml-6 px-2 bottom-16 z-50\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <button v-if=\"videoPlayerStore.paused\" @click=\"playVideo\" class=\"hover:text-blue-600\">play</button>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <button v-if=\"!videoPlayerStore.paused\" @click=\"pauseVideo\" class=\"hover:text-blue-600\">pause</button>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <button v-if=\"videoPlayerStore.muted\" @click=\"unMuteVideo\" class=\"text-red-500 hover:text-blue-600\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    unmute"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                </button>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <button v-if=\"!videoPlayerStore.muted\" @click=\"muteVideo\" class=\"hover:text-blue-600\">mute</button>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            </div>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            <div v-if=\"videoPlayerStore.fullPage\" class=\"fixed bottom-0 ml-3 my-3 z-50\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <button @click=\"loadVideo1\" class=\"bg-gray-300 text-black p-1 m-2\">Spring</button>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <button @click=\"loadVideo2\" class=\"bg-gray-300 text-black p-1 m-2\">Dune</button>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <button @click=\"loadVideo3\" class=\"bg-gray-300 text-black p-1 m-2\">1984</button>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <button @click=\"loadVideo4\" class=\"bg-gray-300 text-black p-1 m-2\">The Terminator</button>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <button @click=\"loadVideo5\" class=\"bg-gray-300 text-black p-1 m-2\">Natural World</button>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            </div>")], 2 /* CLASS */)], 2 /* CLASS */);
+  })])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_21, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_22, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_23, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
+    src: "/storage/images/logo_white_512.png",
+    "class": "w-20 pt-2"
+  }, null, 8 /* PROPS */, _hoisted_24)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_25, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Button, {
+    onClick: _cache[2] || (_cache[2] = function ($event) {
+      return $setup.showLogin = true;
+    }),
+    "class": "text-2xl uppercase p-2"
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [_hoisted_26, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" to chat")];
+    }),
+    _: 1 /* STABLE */
+  })])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            <div v-if=\"videoPlayerStore.fullPage\" class=\"flex flex-col-4 gap-4 fixed ml-6 px-2 bottom-16 z-50\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <button v-if=\"videoPlayerStore.paused\" @click=\"playVideo\" class=\"hover:text-blue-600\">play</button>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <button v-if=\"!videoPlayerStore.paused\" @click=\"pauseVideo\" class=\"hover:text-blue-600\">pause</button>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <button v-if=\"videoPlayerStore.muted\" @click=\"unMuteVideo\" class=\"text-red-500 hover:text-blue-600\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    unmute"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                </button>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <button v-if=\"!videoPlayerStore.muted\" @click=\"muteVideo\" class=\"hover:text-blue-600\">mute</button>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            </div>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            <div v-if=\"videoPlayerStore.fullPage\" class=\"fixed bottom-0 ml-3 my-3 z-50\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <button @click=\"loadVideo1\" class=\"bg-gray-300 text-black p-1 m-2\">Spring</button>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <button @click=\"loadVideo2\" class=\"bg-gray-300 text-black p-1 m-2\">Dune</button>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <button @click=\"loadVideo3\" class=\"bg-gray-300 text-black p-1 m-2\">1984</button>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <button @click=\"loadVideo4\" class=\"bg-gray-300 text-black p-1 m-2\">The Terminator</button>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <button @click=\"loadVideo5\" class=\"bg-gray-300 text-black p-1 m-2\">Natural World</button>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            </div>")], 2 /* CLASS */)], 2 /* CLASS */);
 }
 
 /***/ }),

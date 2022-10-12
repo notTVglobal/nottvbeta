@@ -72,8 +72,14 @@
                     <p class="text-center text-2xl">Register your content as your very own NFT on a blockchain that you own.</p>
                 </div>
             </section>
-            <section class="flex justify-center items-center h-screen" ref="scrollToMe" v-if="!showDiv">
+            <section class="flex justify-center items-center h-screen">
                 <div class="text-2xl">#mediaforabetterworld</div>
+            </section>
+            <section class="flex justify-center items-center h-screen bg-green-900">
+                <div class="text-2xl"><font-awesome-icon icon="fa-solid fa-rocket" /></div>
+            </section>
+            <section class="flex justify-center items-center h-screen" ref="scrollToMe" v-if="!showDiv">
+                <div class="text-2xl"></div>
             </section>
         </div>
 
