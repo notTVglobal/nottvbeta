@@ -1108,7 +1108,7 @@ var _hoisted_19 = {
 };
 var _hoisted_20 = {
   key: 4,
-  "class": "align-self-end text-xl text-fuchsia-700 hover:text-fuchsia-500"
+  "class": "align-self-end text-lg font-semibold text-fuchsia-700 hover:text-fuchsia-500"
 };
 var _hoisted_21 = {
   "class": "pt-3 space-y-1 z-50 bg-gray-900"
@@ -1197,7 +1197,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     active: _ctx.route().current('upgrade')
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" UPGRADE ACCOUNT ")];
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" CLICK HERE TO UPGRADE YOUR ACCOUNT ")];
     }),
     _: 1 /* STABLE */
   }, 8 /* PROPS */, ["href", "active"])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_21, [_ctx.$page.props.user.role_id === 4 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)($setup["JetResponsiveNavLink"], {

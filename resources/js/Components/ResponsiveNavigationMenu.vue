@@ -73,9 +73,9 @@
                         <div v-if="$page.props.user.role_id === 3" class="text-xl text-fuchsia-700">VIP</div>
                         <div v-if="$page.props.user.role_id === 4" class="text-xl text-fuchsia-700">CREATOR</div>
                         <div v-if="$page.props.user.isAdmin === 1" class="text-lg text-red-700">ADMIN</div>
-                        <div v-if="$page.props.user.role_id === 1" class="align-self-end text-xl text-fuchsia-700 hover:text-fuchsia-500">
+                        <div v-if="$page.props.user.role_id === 1" class="align-self-end text-lg font-semibold text-fuchsia-700 hover:text-fuchsia-500">
                             <Link @click="videoPlayer.makeVideoTopRight()" :href="route('upgrade')" :active="route().current('upgrade')">
-                                UPGRADE ACCOUNT
+                                CLICK HERE TO UPGRADE YOUR ACCOUNT
                             </Link>
                         </div>
                     </div>
