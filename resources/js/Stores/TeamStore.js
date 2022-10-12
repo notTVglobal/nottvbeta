@@ -8,8 +8,8 @@ export let useTeamStore = defineStore('teamStore', {
         totalSpots: 0,
         members: [],
         activeTeam: '',
-        logoId: 0,
-        logoName: '',
+        logoId: [0],
+        logoName: [],
     }),
 
     actions: {

@@ -2200,8 +2200,8 @@ var useTeamStore = (0,pinia__WEBPACK_IMPORTED_MODULE_0__.defineStore)('teamStore
       totalSpots: 0,
       members: [],
       activeTeam: '',
-      logoId: 0,
-      logoName: ''
+      logoId: [0],
+      logoName: []
     };
   },
   actions: {
