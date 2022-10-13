@@ -48,7 +48,7 @@
 
 <script setup>
 import {useChatStore} from "@/Stores/ChatStore";
-import {ref, onMounted} from "vue"
+import {ref, onMounted, watch} from "vue"
 import InputMessage from "@/Components/Chat/InputMessage"
 import ChatMessages from "@/Components/Chat/MessagesContainer"
 
@@ -67,10 +67,10 @@ onMounted(() => {
 
 function connect() {
     if( currentRoomId == 1) {
-        // let vm = getMessages();
+        let vm = getMessages();
         window.Echo.private("chat." + currentRoomId)
             .listen('.message.new', e => {
-                getMessages();
+                vm.getMessages();
             })
     }
 }
@@ -85,8 +85,6 @@ function getMessages() {
         })
 }
 
-
-
-watch: {connect()}
+watch(messages, getMessages)
 
 </script>

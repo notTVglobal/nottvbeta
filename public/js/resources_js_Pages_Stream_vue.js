@@ -36,9 +36,9 @@ __webpack_require__.r(__webpack_exports__);
     });
     function connect() {
       if (currentRoomId == 1) {
-        // let vm = getMessages();
+        var vm = getMessages();
         window.Echo["private"]("chat." + currentRoomId).listen('.message.new', function (e) {
-          getMessages();
+          vm.getMessages();
         });
       }
     }
@@ -51,9 +51,7 @@ __webpack_require__.r(__webpack_exports__);
         console.log(error);
       });
     }
-    watch: {
-      connect();
-    }
+    (0,vue__WEBPACK_IMPORTED_MODULE_1__.watch)(messages, getMessages);
     var __returned__ = {
       chatStore: chatStore,
       props: props,
@@ -64,6 +62,7 @@ __webpack_require__.r(__webpack_exports__);
       useChatStore: _Stores_ChatStore__WEBPACK_IMPORTED_MODULE_0__.useChatStore,
       ref: vue__WEBPACK_IMPORTED_MODULE_1__.ref,
       onMounted: vue__WEBPACK_IMPORTED_MODULE_1__.onMounted,
+      watch: vue__WEBPACK_IMPORTED_MODULE_1__.watch,
       InputMessage: _Components_Chat_InputMessage__WEBPACK_IMPORTED_MODULE_2__["default"],
       ChatMessages: _Components_Chat_MessagesContainer__WEBPACK_IMPORTED_MODULE_3__["default"]
     };

@@ -29,9 +29,9 @@ __webpack_require__.r(__webpack_exports__);
     });
     function connect() {
       if (currentRoomId == 1) {
-        // let vm = getMessages();
+        var vm = getMessages();
         window.Echo["private"]("chat." + currentRoomId).listen('.message.new', function (e) {
-          getMessages();
+          vm.getMessages();
         });
       }
     }
@@ -44,9 +44,9 @@ __webpack_require__.r(__webpack_exports__);
         console.log(error);
       });
     }
-    watch: {
-      connect();
-    }
+    (0,vue__WEBPACK_IMPORTED_MODULE_0__.watch)(messages, getMessages);
+    // watchEffect(() => connect(messages));
+
     var __returned__ = {
       messages: messages,
       currentRoomId: currentRoomId,
@@ -54,6 +54,8 @@ __webpack_require__.r(__webpack_exports__);
       getMessages: getMessages,
       onMounted: vue__WEBPACK_IMPORTED_MODULE_0__.onMounted,
       ref: vue__WEBPACK_IMPORTED_MODULE_0__.ref,
+      watchEffect: vue__WEBPACK_IMPORTED_MODULE_0__.watchEffect,
+      watch: vue__WEBPACK_IMPORTED_MODULE_0__.watch,
       InputMessage: _Components_Chat_InputMessage__WEBPACK_IMPORTED_MODULE_1__["default"],
       ChatMessages: _Components_Chat_MessagesContainer__WEBPACK_IMPORTED_MODULE_2__["default"]
     };

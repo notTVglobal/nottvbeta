@@ -14,7 +14,7 @@
 
 
 <script setup>
-import {onMounted, ref} from "vue";
+import {onMounted, ref, watchEffect, watch} from "vue";
 import InputMessage from "@/Components/Chat/InputMessage"
 import ChatMessages from "@/Components/Chat/MessagesContainer"
 
@@ -27,10 +27,10 @@ onMounted(() => {
 
 function connect() {
     if( currentRoomId == 1) {
-        // let vm = getMessages();
+        let vm = getMessages();
         window.Echo.private("chat." + currentRoomId)
             .listen('.message.new', e => {
-                getMessages();
+                vm.getMessages();
             })
     }
 }
@@ -44,7 +44,7 @@ function getMessages() {
             console.log(error);
         })
 }
-
-watch: {connect()}
+watch(messages, getMessages)
+// watchEffect(() => connect(messages));
 
 </script>
