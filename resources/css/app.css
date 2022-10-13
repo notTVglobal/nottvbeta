@@ -81,16 +81,16 @@
     /*bottom:2rem;*/
     right:0rem;
     padding: 1rem;
-    min-width: 18rem;
-    max-width: 18rem;
+    min-width: 24rem;
+    max-width: 24rem;
     max-height: 96rem;
 }
 /* this is the CLOSE chat button */
 .chatForStreamPage button {
     z-index: 200;
     position: fixed;
-    bottom:2.5rem;
-    right:18.5rem;
+    top:5rem;
+    right:1rem;
 }
 .chatBig {
     z-index: 200;

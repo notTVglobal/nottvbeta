@@ -6,7 +6,7 @@
 
             <div class="px-6 py-4 sm:block sm:items-center sm:pt-2">
                 <div class="flex justify-end pt-4 pr-6">
-                    <Button class="bg-opacity-0 hover:bg-opacity-0 text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md" @click="showLogin = true" >
+                    <Button class="bg-opacity-0 hover:bg-opacity-0 text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md" v-if="!$page.props.user" @click="showLogin = true" >
                         Log in
                     </Button>
                     <Button class="bg-opacity-0 hover:bg-opacity-0"><Link v-if="!$page.props.user" :href="route('register')" class="text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md">

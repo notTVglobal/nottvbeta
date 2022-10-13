@@ -334,6 +334,11 @@ Route::middleware([
     // Update user
 //    Route::put('/users', [UsersController::class, 'update'])->name('users.update');
 
+// Chat
+///////////
+    Route::get('/chat', [App\Http\Controllers\ChatController::class, 'index'])->name('chat');
+    Route::get('/messages', [App\Http\Controllers\ChatController::class, 'fetchMessages']);
+    Route::post('/messages', [App\Http\Controllers\ChatController::class, 'newMessage']);
 
 
 });

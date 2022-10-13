@@ -83,4 +83,13 @@ class User extends Authenticatable implements MustVerifyEmail
         'profile_photo_url',
     ];
 
+    /**
+     * Chat messages.
+     */
+
+    public function messages()
+    {
+        return $this->hasMany(ChatMessage::class);
+    }
+
 }
