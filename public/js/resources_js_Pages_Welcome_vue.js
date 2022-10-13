@@ -11,33 +11,36 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _Layouts_AppLayout__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Layouts/AppLayout */ "./resources/js/Layouts/AppLayout.vue");
-/* harmony import */ var _Jetstream_ApplicationLogo_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Jetstream/ApplicationLogo.vue */ "./resources/js/Jetstream/ApplicationLogo.vue");
-/* harmony import */ var _Components_Login_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/Components/Login.vue */ "./resources/js/Components/Login.vue");
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
-/* harmony import */ var _Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/Stores/VideoPlayerStore.js */ "./resources/js/Stores/VideoPlayerStore.js");
-/* harmony import */ var _Stores_ChatStore__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/Stores/ChatStore */ "./resources/js/Stores/ChatStore.js");
-/* harmony import */ var _Stores_WelcomeStore__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/Stores/WelcomeStore */ "./resources/js/Stores/WelcomeStore.js");
-
-var __default__ = {
-  layout: _Layouts_AppLayout__WEBPACK_IMPORTED_MODULE_0__["default"]
-  // methods: {
-  //     scrollToElement() {
-  //         const el = this.$refs.scrollToMe;
-  //         if (el) {
-  //             el.scrollIntoView({ behavior: "smooth" });
-  //         }
-  //     },
-  // },
-};
-
-
-
+/* harmony import */ var _Jetstream_ApplicationLogo_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Jetstream/ApplicationLogo.vue */ "./resources/js/Jetstream/ApplicationLogo.vue");
+/* harmony import */ var _Components_Login_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Components/Login.vue */ "./resources/js/Components/Login.vue");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+/* harmony import */ var _Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/Stores/VideoPlayerStore.js */ "./resources/js/Stores/VideoPlayerStore.js");
+/* harmony import */ var _Stores_ChatStore__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/Stores/ChatStore */ "./resources/js/Stores/ChatStore.js");
+/* harmony import */ var _Stores_WelcomeStore__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/Stores/WelcomeStore */ "./resources/js/Stores/WelcomeStore.js");
+/* harmony import */ var _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @inertiajs/inertia */ "./node_modules/@inertiajs/inertia/dist/index.js");
+/* harmony import */ var _Jetstream_Button__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @/Jetstream/Button */ "./resources/js/Jetstream/Button.vue");
+// import AppLayout from '../Layouts/AppLayout';
+// export default {
+//     layout: AppLayout
+//     // methods: {
+//     //     scrollToElement() {
+//     //         const el = this.$refs.scrollToMe;
+//     //         if (el) {
+//     //             el.scrollIntoView({ behavior: "smooth" });
+//     //         }
+//     //     },
+//     // },
+// }
 
 
 
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (/*#__PURE__*/Object.assign(__default__, {
+
+
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   __name: 'Welcome',
   props: {
     canLogin: Boolean,
@@ -50,9 +53,9 @@ var __default__ = {
   setup: function setup(__props, _ref) {
     var expose = _ref.expose;
     expose();
-    var welcomeStore = (0,_Stores_WelcomeStore__WEBPACK_IMPORTED_MODULE_6__.useWelcomeStore)();
-    var videoPlayer = (0,_Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_4__.useVideoPlayerStore)();
-    var chat = (0,_Stores_ChatStore__WEBPACK_IMPORTED_MODULE_5__.useChatStore)();
+    var welcomeStore = (0,_Stores_WelcomeStore__WEBPACK_IMPORTED_MODULE_5__.useWelcomeStore)();
+    var videoPlayer = (0,_Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_3__.useVideoPlayerStore)();
+    var chat = (0,_Stores_ChatStore__WEBPACK_IMPORTED_MODULE_4__.useChatStore)();
 
     // This page loads properly calling these stores here
     // instead of calling the store action .makeVideoWelcomePage()
@@ -65,17 +68,16 @@ var __default__ = {
     // chat.show = false
     // chat.class = 'chatHidden'
 
-    (0,vue__WEBPACK_IMPORTED_MODULE_3__.onMounted)(function () {
+    (0,vue__WEBPACK_IMPORTED_MODULE_2__.onMounted)(function () {
       videoPlayer.makeVideoWelcomePage();
     });
     //------------------------//
 
-    var showLogin = (0,vue__WEBPACK_IMPORTED_MODULE_3__.ref)(false);
-    var showDiv = (0,vue__WEBPACK_IMPORTED_MODULE_3__.ref)(null);
-    var scrollToMe = (0,vue__WEBPACK_IMPORTED_MODULE_3__.ref)(null);
+    var showLogin = (0,vue__WEBPACK_IMPORTED_MODULE_2__.ref)(false);
+    var showDiv = (0,vue__WEBPACK_IMPORTED_MODULE_2__.ref)(null);
+    var scrollToMe = (0,vue__WEBPACK_IMPORTED_MODULE_2__.ref)(null);
     function scrollToElement() {
-      var _scrollToMe$value;
-      (_scrollToMe$value = scrollToMe.value) === null || _scrollToMe$value === void 0 ? void 0 : _scrollToMe$value.scrollIntoView({
+      scrollToMe.value.scrollIntoView({
         behavior: "smooth"
       });
       setTimeout(function () {
@@ -90,14 +92,15 @@ var __default__ = {
       showDiv: showDiv,
       scrollToMe: scrollToMe,
       scrollToElement: scrollToElement,
-      AppLayout: _Layouts_AppLayout__WEBPACK_IMPORTED_MODULE_0__["default"],
-      JetApplicationLogo: _Jetstream_ApplicationLogo_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
-      Login: _Components_Login_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
-      onMounted: vue__WEBPACK_IMPORTED_MODULE_3__.onMounted,
-      ref: vue__WEBPACK_IMPORTED_MODULE_3__.ref,
-      useVideoPlayerStore: _Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_4__.useVideoPlayerStore,
-      useChatStore: _Stores_ChatStore__WEBPACK_IMPORTED_MODULE_5__.useChatStore,
-      useWelcomeStore: _Stores_WelcomeStore__WEBPACK_IMPORTED_MODULE_6__.useWelcomeStore
+      JetApplicationLogo: _Jetstream_ApplicationLogo_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
+      Login: _Components_Login_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
+      onMounted: vue__WEBPACK_IMPORTED_MODULE_2__.onMounted,
+      ref: vue__WEBPACK_IMPORTED_MODULE_2__.ref,
+      useVideoPlayerStore: _Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_3__.useVideoPlayerStore,
+      useChatStore: _Stores_ChatStore__WEBPACK_IMPORTED_MODULE_4__.useChatStore,
+      useWelcomeStore: _Stores_WelcomeStore__WEBPACK_IMPORTED_MODULE_5__.useWelcomeStore,
+      Inertia: _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_6__.Inertia,
+      Button: _Jetstream_Button__WEBPACK_IMPORTED_MODULE_7__["default"]
     };
     Object.defineProperty(__returned__, '__isScriptSetup', {
       enumerable: false,
@@ -105,7 +108,7 @@ var __default__ = {
     });
     return __returned__;
   }
-}));
+});
 
 /***/ }),
 
@@ -147,20 +150,19 @@ var _hoisted_1 = {
   "class": "bg-green-800 bg-opacity-10 min-h-screen text-gray-200 z-50"
 };
 var _hoisted_2 = {
-  key: 0,
   "class": "px-6 py-4 sm:block sm:items-center sm:pt-2"
 };
 var _hoisted_3 = {
-  "class": "flex mr-3 mt-6 space-x-6 justify-end"
+  "class": "flex justify-end pt-4 pr-6"
 };
 var _hoisted_4 = {
-  "class": "relative flex items-top justify-center min-h-screen -mt-20 text-gray-200"
+  "class": "relative flex items-top justify-center min-h-screen text-gray-200"
 };
 var _hoisted_5 = {
   "class": "flex justify-center items-center h-screen"
 };
 var _hoisted_6 = {
-  "class": "grid md:grid-cols-1 grid-cols-1 align-items-center"
+  "class": "grid md:grid-cols-1 grid-cols-1 align-items-center -mt-32"
 };
 var _hoisted_7 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "text-center text-bold text-3xl"
@@ -235,7 +237,7 @@ var _hoisted_28 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
   "class": "text-2xl"
 }, "#mediaforabetterworld")], -1 /* HOISTED */);
 var _hoisted_29 = {
-  key: 1,
+  key: 0,
   "class": "flex flex-col justify-center items-center h-screen p-5 bg-green-900",
   ref: "scrollToMe"
 };
@@ -248,35 +250,49 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_font_awesome_icon = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("font-awesome-icon");
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Head, {
     title: "Beta"
-  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [$props.canLogin ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_2, [_ctx.$page.props.user ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Link, {
-    key: 0,
-    href: _ctx.route('stream'),
-    "class": "text-2xl text-gray-200 underline"
-  }, {
-    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Stream ")];
-    }),
-    _: 1 /* STABLE */
-  }, 8 /* PROPS */, ["href"])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
-    key: 1
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                        <div class=\"fixed left-0 top-0 w-36 p-5\"><JetApplicationLogo class=\"\"/></div>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Link, {
-    href: _ctx.route('login'),
-    "class": "ml-4 text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"
+  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["Button"], {
+    "class": "bg-opacity-0 hover:bg-opacity-0 text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md",
+    onClick: _cache[0] || (_cache[0] = function ($event) {
+      return $setup.showLogin = true;
+    })
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Log in ")];
     }),
     _: 1 /* STABLE */
-  }, 8 /* PROPS */, ["href"]), $props.canRegister ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Link, {
-    key: 0,
-    href: _ctx.route('register'),
-    "class": "ml-4 text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"
+  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["Button"], {
+    "class": "bg-opacity-0 hover:bg-opacity-0"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Register ")];
+      return [!_ctx.$page.props.user ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Link, {
+        key: 0,
+        href: _ctx.route('register'),
+        "class": "text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"
+      }, {
+        "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+          return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Register ")];
+        }),
+        _: 1 /* STABLE */
+      }, 8 /* PROPS */, ["href"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)];
     }),
     _: 1 /* STABLE */
-  }, 8 /* PROPS */, ["href"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])], 64 /* STABLE_FRAGMENT */))])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                    <template #menu></template>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["JetApplicationLogo"], {
+  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["Button"], {
+    "class": "bg-opacity-0 hover:bg-opacity-0"
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [_ctx.$page.props.user ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Link, {
+        key: 0,
+        href: _ctx.route('stream'),
+        "class": "text-2xl text-gray-200 underline"
+      }, {
+        "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+          return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Return to stream ")];
+        }),
+        _: 1 /* STABLE */
+      }, 8 /* PROPS */, ["href"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)];
+    }),
+    _: 1 /* STABLE */
+  })])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["JetApplicationLogo"], {
     "class": "block md:w-auto p-10"
   }), _hoisted_7, _hoisted_8, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     "class": "text-2xl bg-green-500 hover:bg-green-600 text-white px-5 py-3 rounded disabled:bg-gray-400",
@@ -298,7 +314,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("        <Login :show=\"showLogin\" :userType=\"userType\" @close=\"showLogin = false\" />"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["Login"], {
     show: $setup.showLogin,
     userType: $props.userType,
-    onClose: _cache[0] || (_cache[0] = function ($event) {
+    onClose: _cache[1] || (_cache[1] = function ($event) {
       return $setup.showLogin = false;
     })
   }, null, 8 /* PROPS */, ["show", "userType"])]))], 64 /* STABLE_FRAGMENT */);

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div >
        <Head :title="title"/>
     </div>
 

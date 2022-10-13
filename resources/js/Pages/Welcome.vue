@@ -1,27 +1,28 @@
 <template>
     <Head title="Beta" />
         <div class="bg-green-800 bg-opacity-10 min-h-screen text-gray-200 z-50">
-            <div v-if="canLogin" class="px-6 py-4 sm:block sm:items-center sm:pt-2">
-                <Link v-if="$page.props.user" :href="route('stream')" class="text-2xl text-gray-200 underline">
-                    Stream
-                </Link>
 
-                <template v-else>
-                    <!--                        <div class="fixed left-0 top-0 w-36 p-5"><JetApplicationLogo class=""/></div>-->
-                    <div class="flex mr-3 mt-6 space-x-6 justify-end">
-                        <Link :href="route('login')" class="ml-4 text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md">
-                            Log in
-                        </Link>
-                        <Link v-if="canRegister" :href="route('register')" class="ml-4 text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md">
-                            Register
-                        </Link>
-                    </div>
-                </template>
+
+
+            <div class="px-6 py-4 sm:block sm:items-center sm:pt-2">
+                <div class="flex justify-end pt-4 pr-6">
+                    <Button class="bg-opacity-0 hover:bg-opacity-0 text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md" @click="showLogin = true" >
+                        Log in
+                    </Button>
+                    <Button class="bg-opacity-0 hover:bg-opacity-0"><Link v-if="!$page.props.user" :href="route('register')" class="text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md">
+                        Register
+                    </Link></Button>
+                        <Button class="bg-opacity-0 hover:bg-opacity-0"><Link v-if="$page.props.user" :href="route('stream')" class="text-2xl text-gray-200 underline">
+                        Return to stream
+                    </Link></Button>
+                </div>
             </div>
-            <div class="relative flex items-top justify-center min-h-screen -mt-20 text-gray-200">
+
+
+
+            <div class="relative flex items-top justify-center min-h-screen text-gray-200">
                 <div class="flex justify-center items-center h-screen">
-<!--                    <template #menu></template>-->
-                    <div class="grid md:grid-cols-1 grid-cols-1 align-items-center">
+                    <div class="grid md:grid-cols-1 grid-cols-1 align-items-center -mt-32">
                         <JetApplicationLogo class="block md:w-auto p-10"/>
                         <div class="text-center text-bold text-3xl">SCROLL DOWN</div>
                         <div class="mt-2 text-xs text-center">OR</div>
@@ -94,6 +95,8 @@ import {onMounted, ref} from 'vue'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import {useChatStore} from "@/Stores/ChatStore";
 import {useWelcomeStore} from "@/Stores/WelcomeStore";
+import {Inertia} from "@inertiajs/inertia";
+import Button from "@/Jetstream/Button";
 
 let welcomeStore = useWelcomeStore()
 let videoPlayer = useVideoPlayerStore()
@@ -129,9 +132,8 @@ let showLogin = ref(false)
 let showDiv = ref(null)
 const scrollToMe = ref(null)
 
-
 function scrollToElement(){
-    scrollToMe.value?.scrollIntoView({behavior: "smooth"})
+    scrollToMe.value.scrollIntoView({behavior: "smooth"})
     setTimeout(() => {
     showDiv.value = true}, 10);
 }
@@ -140,18 +142,18 @@ function scrollToElement(){
 </script>
 
 <script>
-import AppLayout from '../Layouts/AppLayout';
-export default {
-    layout: AppLayout
-    // methods: {
-    //     scrollToElement() {
-    //         const el = this.$refs.scrollToMe;
-    //         if (el) {
-    //             el.scrollIntoView({ behavior: "smooth" });
-    //         }
-    //     },
-    // },
-}
+// import AppLayout from '../Layouts/AppLayout';
+// export default {
+//     layout: AppLayout
+//     // methods: {
+//     //     scrollToElement() {
+//     //         const el = this.$refs.scrollToMe;
+//     //         if (el) {
+//     //             el.scrollIntoView({ behavior: "smooth" });
+//     //         }
+//     //     },
+//     // },
+// }
 
 
 </script>
