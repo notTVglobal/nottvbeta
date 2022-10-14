@@ -24,7 +24,7 @@ __webpack_require__.r(__webpack_exports__);
   props: {
     channels: Object,
     currentChannel: (0,vue__WEBPACK_IMPORTED_MODULE_2__.ref)([]),
-    messages: Object,
+    messages: (0,vue__WEBPACK_IMPORTED_MODULE_2__.ref)([]),
     message: Object
   },
   setup: function setup(__props, _ref) {
@@ -39,10 +39,7 @@ __webpack_require__.r(__webpack_exports__);
     (0,vue__WEBPACK_IMPORTED_MODULE_2__.onMounted)(function () {
       getChannels();
       connect();
-      // watch(messages, listenForMessages)
     });
-
-    (0,vue__WEBPACK_IMPORTED_MODULE_2__.watch)(messages, listenForMessages);
     function connect() {
       if (currentChannel.id) {
         window.Echo["private"]("chat." + currentChannel.id).listen('.message.new', function (e) {
@@ -81,6 +78,7 @@ __webpack_require__.r(__webpack_exports__);
         console.log('NEW MESSAGE');
       });
     }
+    (0,vue__WEBPACK_IMPORTED_MODULE_2__.watch)(messages, listenForMessages);
     (0,vue__WEBPACK_IMPORTED_MODULE_2__.onBeforeUnmount)(function () {
       disconnect();
     });

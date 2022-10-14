@@ -181,8 +181,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _Components_Chat_Message__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Components/Chat/Message */ "./resources/js/Components/Chat/Message.vue");
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
-
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   __name: 'MessagesContainer',
@@ -197,13 +195,9 @@ __webpack_require__.r(__webpack_exports__);
         behavior: 'smooth'
       });
     }
-
-    // watch(messages, scrollTo)
-
     var __returned__ = {
       scrollTo: scrollTo,
-      MessageItem: _Components_Chat_Message__WEBPACK_IMPORTED_MODULE_0__["default"],
-      watch: vue__WEBPACK_IMPORTED_MODULE_1__.watch
+      MessageItem: _Components_Chat_Message__WEBPACK_IMPORTED_MODULE_0__["default"]
     };
     Object.defineProperty(__returned__, '__isScriptSetup', {
       enumerable: false,

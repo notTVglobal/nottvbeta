@@ -22,7 +22,7 @@ let videoPlayer = useVideoPlayerStore()
 let props = defineProps({
     channels: Object,
     currentChannel: ref([]),
-    messages: Object,
+    messages: ref([]),
     message: Object,
 })
 
@@ -35,10 +35,7 @@ let newMessage = ref('')
 onMounted(() => {
     getChannels();
     connect();
-    // watch(messages, listenForMessages)
 });
-
-watch(messages, listenForMessages)
 
 function connect() {
     if( currentChannel.id ) {
@@ -91,7 +88,7 @@ function disconnect() {
          });
  }
 
-
+watch(messages, listenForMessages)
 
 onBeforeUnmount(() => {
     disconnect();

@@ -14,7 +14,6 @@
 
 <script setup>
 import MessageItem from "@/Components/Chat/Message"
-import {watch} from "vue";
 
 defineProps({
     messages: Object,
@@ -23,7 +22,5 @@ defineProps({
 function scrollTo(selector) {
     document.querySelector(selector).scrollIntoView({ behavior: 'smooth'});
 }
-
-// watch(messages, scrollTo)
 
 </script>
