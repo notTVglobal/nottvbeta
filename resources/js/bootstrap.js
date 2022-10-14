@@ -27,3 +27,9 @@ window.Echo = new Echo({
     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
     forceTLS: true
 });
+
+window.Echo.private('chat.1')
+.listen('.message.new', e => {
+   console.log('BOOTSTRAP MESSAGE CONNECT TO ECHO AND LISTEN.');
+   console.log(e.chatMessage.message);
+});

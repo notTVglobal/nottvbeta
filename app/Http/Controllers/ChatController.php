@@ -51,17 +51,11 @@ class ChatController extends Controller
     {
         $newMessage = new ChatMessage;
         $newMessage->user_id = Auth::id();
-//        $newMessage->channel_id = $channelId;
+        $newMessage->channel_id = $channelId;
         $newMessage->channel_id = $request->channel_id;
         $newMessage->message = $request->message;
         $newMessage->save();
 
-
-        // tec21: I disabled these 2 lines to troubleshoot the chat
-        // it continuously keeps GET the chat messages.
-        // Disabling these did not have an immediate effect on sending
-        // or receiving messages.
-        //
         broadcast(new NewChatMessage( $newMessage ))->toOthers();
         return $newMessage;
     }

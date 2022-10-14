@@ -108,7 +108,7 @@ __webpack_require__.r(__webpack_exports__);
       //Pushes it to the messages array
       // newMessage.push(getMessages)
       //POST request to the messages route with the message data in order for our Laravel server to broadcast it.
-      axios.post('/chat/channel/' + videoPlayer.currentChannel.id + '/message', {
+      axios.post('/api/chat/channel/' + videoPlayer.currentChannel.id + '/message', {
         message: form.message,
         channel_id: videoPlayer.currentChannel.id
       }).then(function (response) {
@@ -2046,6 +2046,10 @@ window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_2__["default"]({
   key: "679608fe1b2e6a2bf76b",
   cluster: "us3",
   forceTLS: true
+});
+window.Echo["private"]('chat.1').listen('.message.new', function (e) {
+  console.log('BOOTSTRAP MESSAGE CONNECT TO ECHO AND LISTEN.');
+  console.log(e.chatMessage.message);
 });
 
 /***/ }),

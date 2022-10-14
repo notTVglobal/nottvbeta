@@ -338,8 +338,8 @@ Route::middleware([
 // Chat
 ///////////
     Route::get('/chat', [ChatController::class, 'index'])->name('chat');
-    Route::get('/chat/channels', [ChatController::class, 'channels']);
-    Route::get('/chat/channel/{channelId}/messages', [ChatController::class, 'messages']);
-    Route::post('/chat/channel/{channelId}/message', [ChatController::class, 'newMessage']);
+    Route::get('/api/chat/channels', [ChatController::class, 'channels']);
+    Route::get('/api/chat/channel/{channelId}/messages', [ChatController::class, 'messages']);
+    Route::post('/api/chat/channel/{channelId}/message', [ChatController::class, 'newMessage']);
 
 });

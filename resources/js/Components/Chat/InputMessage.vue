@@ -77,7 +77,7 @@ function sendMessage() {
     //Pushes it to the messages array
     // newMessage.push(getMessages)
     //POST request to the messages route with the message data in order for our Laravel server to broadcast it.
-    axios.post('/chat/channel/' + videoPlayer.currentChannel.id + '/message', {message: form.message, channel_id: videoPlayer.currentChannel.id}).then(response => {
+    axios.post('/api/chat/channel/' + videoPlayer.currentChannel.id + '/message', {message: form.message, channel_id: videoPlayer.currentChannel.id}).then(response => {
         if( response.status == 201 ) {
             form.message = '';
             emit('messagesent');

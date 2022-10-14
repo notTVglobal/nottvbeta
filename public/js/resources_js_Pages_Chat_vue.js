@@ -25,7 +25,8 @@ __webpack_require__.r(__webpack_exports__);
     channels: Object,
     currentChannel: (0,vue__WEBPACK_IMPORTED_MODULE_2__.ref)([]),
     messages: (0,vue__WEBPACK_IMPORTED_MODULE_2__.ref)([]),
-    message: Object
+    message: (0,vue__WEBPACK_IMPORTED_MODULE_2__.ref)([]),
+    newMessage: (0,vue__WEBPACK_IMPORTED_MODULE_2__.ref)([])
   },
   setup: function setup(__props, _ref) {
     var expose = _ref.expose;
@@ -35,35 +36,60 @@ __webpack_require__.r(__webpack_exports__);
     var channels = (0,vue__WEBPACK_IMPORTED_MODULE_2__.ref)([]);
     var currentChannel = (0,vue__WEBPACK_IMPORTED_MODULE_2__.ref)([]);
     var messages = (0,vue__WEBPACK_IMPORTED_MODULE_2__.ref)([]);
-    var newMessage = (0,vue__WEBPACK_IMPORTED_MODULE_2__.ref)('');
-    (0,vue__WEBPACK_IMPORTED_MODULE_2__.onMounted)(function () {
+    var newMessage = (0,vue__WEBPACK_IMPORTED_MODULE_2__.ref)([]);
+    (0,vue__WEBPACK_IMPORTED_MODULE_2__.onBeforeMount)(function () {
       getChannels();
-      connect();
+
+      // window.Echo.private('chat.1').listen('.message.new', ({ chatMessage }) => {
+      //     // messages.value = newMessage.data;
+      //     console.log(chatMessage.data);
+      // })
+
+      window.Echo["private"]('chat.1').listen('.message.new', function (e) {
+        console.log('MESSAGE RECEIVED !!.');
+        console.log(e.chatMessage);
+        getMessages();
+      });
     });
+
+    // connect();
+    window.Echo["private"]('chat.' + currentChannel.id).listen('.message.new', function (e) {
+      getMessages();
+      console.log('MESSAGE RECEIVED (connect)');
+      console.log(e);
+    });
+    // function connect() {
+    //     if( currentChannel.id === 1) {
+    //         Echo.private("chat." + currentChannel.id)
+    //             .listen('.message.new', e => {
+    //                 getMessages();
+    //                 console.log('STREAM CHAT CONNECTED');
+    //             })
+    //     }
+    // }
+
     function connect() {
-      if (currentChannel.id) {
-        window.Echo["private"]("chat." + currentChannel.id).listen('.message.new', function (e) {
-          getMessages();
-          console.log('CHAT CONNECTED');
-        });
-      }
+      console.log('STREAM CHAT CONNECTED');
     }
     function getChannels() {
-      axios.get('/chat/channels').then(function (response) {
+      axios.get('/api/chat/channels').then(function (response) {
         channels = response;
         setChannel(channels.data[0]);
-        console.log('CURRENT CHANNEL: ' + currentChannel.id);
+        console.log('CURRENT CHANNEL: ' + currentChannel.name);
       })["catch"](function (error) {
         console.log(error);
       });
+      console.log('GET CHANNELS');
     }
     function setChannel(channel) {
       currentChannel = channel;
       videoPlayer.currentChannel = channel;
+      console.log('SET CHANNEL');
       getMessages();
+      console.log('RETRIEVE MESSAGES');
     }
     function getMessages() {
-      axios.get('/chat/channel/' + videoPlayer.currentChannel.id + '/messages').then(function (response) {
+      axios.get('/api/chat/channel/' + videoPlayer.currentChannel.id + '/messages').then(function (response) {
         messages.value = response.data;
       })["catch"](function (error) {
         console.log(error);
@@ -71,14 +97,18 @@ __webpack_require__.r(__webpack_exports__);
     }
     function disconnect() {
       window.Echo.leave("chat." + currentChannel.id);
+      console.log('STREAM CHAT DISCONNECTED');
     }
     function listenForMessages() {
       window.Echo["private"]("chat." + currentChannel.id).listen('.message.new', function (e) {
         getMessages();
-        console.log('NEW MESSAGE');
       });
+      console.log('MESSAGE RECEIVED');
     }
-    (0,vue__WEBPACK_IMPORTED_MODULE_2__.watch)(messages, listenForMessages);
+
+    // watch(messages, listenForMessages);
+    // watch(messages, listenForMessages);
+
     (0,vue__WEBPACK_IMPORTED_MODULE_2__.onBeforeUnmount)(function () {
       disconnect();
     });
@@ -101,6 +131,7 @@ __webpack_require__.r(__webpack_exports__);
       onMounted: vue__WEBPACK_IMPORTED_MODULE_2__.onMounted,
       watch: vue__WEBPACK_IMPORTED_MODULE_2__.watch,
       onBeforeUnmount: vue__WEBPACK_IMPORTED_MODULE_2__.onBeforeUnmount,
+      onBeforeMount: vue__WEBPACK_IMPORTED_MODULE_2__.onBeforeMount,
       useVideoPlayerStore: _Stores_VideoPlayerStore__WEBPACK_IMPORTED_MODULE_3__.useVideoPlayerStore
     };
     Object.defineProperty(__returned__, '__isScriptSetup', {
@@ -576,16 +607,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 
-var _hoisted_1 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+var _hoisted_1 = {
   "class": "flex flex-col p-5 mt-10 mb-5"
-}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+};
+var _hoisted_2 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "text-3xl font-semibold"
-}, "Conversation"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+}, "Conversation", -1 /* HOISTED */);
+var _hoisted_3 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "text-xl"
-}, "Please scroll to the bottom. We are in the process of building an auto-scroll function.")], -1 /* HOISTED */);
+}, "Please scroll to the bottom. We are in the process of building an auto-scroll function.", -1 /* HOISTED */);
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [_hoisted_1, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ChatMessages"], {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [_hoisted_2, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" new message: " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)() + " ", 1 /* TEXT */), _hoisted_3]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ChatMessages"], {
     messages: $setup.messages
   }, null, 8 /* PROPS */, ["messages"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["InputMessage"], {
     channel: $setup.currentChannel,
