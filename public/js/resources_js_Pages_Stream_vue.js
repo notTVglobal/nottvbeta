@@ -15,8 +15,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Components_Chat_MessagesContainer__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Components/Chat/MessagesContainer */ "./resources/js/Components/Chat/MessagesContainer.vue");
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 /* harmony import */ var _Stores_VideoPlayerStore__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/Stores/VideoPlayerStore */ "./resources/js/Stores/VideoPlayerStore.js");
-/* harmony import */ var _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @inertiajs/inertia */ "./node_modules/@inertiajs/inertia/dist/index.js");
-
 
 
 
@@ -26,7 +24,8 @@ __webpack_require__.r(__webpack_exports__);
   props: {
     channels: Object,
     currentChannel: (0,vue__WEBPACK_IMPORTED_MODULE_2__.ref)([]),
-    messages: Object
+    messages: Object,
+    message: Object
   },
   setup: function setup(__props, _ref) {
     var expose = _ref.expose;
@@ -36,15 +35,16 @@ __webpack_require__.r(__webpack_exports__);
     var channels = (0,vue__WEBPACK_IMPORTED_MODULE_2__.ref)([]);
     var currentChannel = (0,vue__WEBPACK_IMPORTED_MODULE_2__.ref)([]);
     var messages = (0,vue__WEBPACK_IMPORTED_MODULE_2__.ref)([]);
+    var newMessage = (0,vue__WEBPACK_IMPORTED_MODULE_2__.ref)('');
     (0,vue__WEBPACK_IMPORTED_MODULE_2__.onMounted)(function () {
       getChannels();
-      // getMessages();
+      connect();
     });
-
     function connect() {
       if (currentChannel.id) {
-        window.Echo["private"]("chat." + currentChannel.id).listen('.message.new', function (e) {
+        window.Echo["private"]("chat." + currentChannel.id).listen('message.new', function (e) {
           getMessages();
+          console.log('CHAT CONNECTED');
         });
       }
     }
@@ -69,41 +69,39 @@ __webpack_require__.r(__webpack_exports__);
         console.log(error);
       });
     }
-    (0,vue__WEBPACK_IMPORTED_MODULE_2__.watch)(messages, getMessages);
-    // watch(currentChannel, connect)
-
-    // watch(currentChannel, newChannel => {
-    //     if (newChannel[1]) {
-    //         props.currentChannel = currentChannel
-    //     }
-    //     props.currentChannel = 2;
-    // });
-
-    // watch( () => currentChannel.value, (value) => { currentChannel.value} )
-
-    // watch(messages, getMessages)
-
-    // watch(channels, getChannels)
-
+    function disconnect() {
+      window.Echo.leave("chat." + currentChannel.id);
+    }
+    function listenForMessages() {
+      window.Echo["private"]("chat." + currentChannel.id).listen('.message.new', function (e) {
+        getMessages();
+        console.log('NEW MESSAGE');
+      });
+    }
+    (0,vue__WEBPACK_IMPORTED_MODULE_2__.watch)(messages, listenForMessages);
+    (0,vue__WEBPACK_IMPORTED_MODULE_2__.onBeforeUnmount)(function () {
+      disconnect();
+    });
     var __returned__ = {
       videoPlayer: videoPlayer,
       props: props,
       channels: channels,
       currentChannel: currentChannel,
       messages: messages,
+      newMessage: newMessage,
       connect: connect,
       getChannels: getChannels,
       setChannel: setChannel,
       getMessages: getMessages,
+      disconnect: disconnect,
+      listenForMessages: listenForMessages,
       InputMessage: _Components_Chat_InputMessage__WEBPACK_IMPORTED_MODULE_0__["default"],
       ChatMessages: _Components_Chat_MessagesContainer__WEBPACK_IMPORTED_MODULE_1__["default"],
       ref: vue__WEBPACK_IMPORTED_MODULE_2__.ref,
-      toRef: vue__WEBPACK_IMPORTED_MODULE_2__.toRef,
       onMounted: vue__WEBPACK_IMPORTED_MODULE_2__.onMounted,
-      reactive: vue__WEBPACK_IMPORTED_MODULE_2__.reactive,
       watch: vue__WEBPACK_IMPORTED_MODULE_2__.watch,
-      useVideoPlayerStore: _Stores_VideoPlayerStore__WEBPACK_IMPORTED_MODULE_3__.useVideoPlayerStore,
-      Inertia: _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_4__.Inertia
+      onBeforeUnmount: vue__WEBPACK_IMPORTED_MODULE_2__.onBeforeUnmount,
+      useVideoPlayerStore: _Stores_VideoPlayerStore__WEBPACK_IMPORTED_MODULE_3__.useVideoPlayerStore
     };
     Object.defineProperty(__returned__, '__isScriptSetup', {
       enumerable: false,
@@ -651,6 +649,7 @@ __webpack_require__.r(__webpack_exports__);
     });
     chatStore.showChat = false;
     videoPlayer.loggedIn = true;
+    videoPlayer.currentView = 'stream';
     var __returned__ = {
       videoPlayer: videoPlayer,
       chatStore: chatStore,
@@ -687,7 +686,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 
 var _hoisted_1 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
-  "class": "flex flex-col p-5 mb-5"
+  "class": "flex flex-col p-5 mt-10 mb-5"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "text-3xl font-semibold"
 }, "Conversation"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {

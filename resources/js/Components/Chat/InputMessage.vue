@@ -24,7 +24,7 @@
             <span
                 v-if="videoPlayer.currentView != 'chat'"
                 class="input-group-btn px-3">
-                <div @click="sendMessage" class="fixed bottom-0 right-0 p-2 m-2 mb-10 w-fit text-black form-control cursor-pointer">
+                <div @click="sendMessage" class="fixed bottom-0 right-0 p-2 m-2 mb-10 w-fit text-white form-control cursor-pointer">
                     <font-awesome-icon icon="fa-paper-plane" class="hover:text-blue-800 text-xl"/>
                 </div>
             </span>
@@ -32,7 +32,7 @@
 <!-- If the current page view is the /chat page -->
             <div
                 v-if="videoPlayer.currentView === 'chat'"
-                class="fixed bottom-0 flex flex-row mb-10 w-fit"
+                class="fixed right-96 pl-28 mr-28 bottom-0 flex flex-row mb-10 w-fit"
             >
                 <input
                     v-if="videoPlayer.currentView === 'chat'"

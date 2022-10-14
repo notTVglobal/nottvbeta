@@ -181,6 +181,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _Components_Chat_Message__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Components/Chat/Message */ "./resources/js/Components/Chat/Message.vue");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   __name: 'MessagesContainer',
@@ -190,8 +192,18 @@ __webpack_require__.r(__webpack_exports__);
   setup: function setup(__props, _ref) {
     var expose = _ref.expose;
     expose();
+    function scrollTo(selector) {
+      document.querySelector(selector).scrollIntoView({
+        behavior: 'smooth'
+      });
+    }
+
+    // watch(messages, scrollTo)
+
     var __returned__ = {
-      MessageItem: _Components_Chat_Message__WEBPACK_IMPORTED_MODULE_0__["default"]
+      scrollTo: scrollTo,
+      MessageItem: _Components_Chat_Message__WEBPACK_IMPORTED_MODULE_0__["default"],
+      watch: vue__WEBPACK_IMPORTED_MODULE_1__.watch
     };
     Object.defineProperty(__returned__, '__isScriptSetup', {
       enumerable: false,
@@ -929,7 +941,7 @@ var _hoisted_3 = {
 };
 var _hoisted_4 = {
   key: 2,
-  "class": "fixed bottom-0 flex flex-row mb-10 w-fit"
+  "class": "fixed right-96 pl-28 mr-28 bottom-0 flex flex-row mb-10 w-fit"
 };
 var _hoisted_5 = ["onKeyup"];
 function render(_ctx, _cache, $props, $setup, $data, $options) {
@@ -949,7 +961,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onKeyup: (0,vue__WEBPACK_IMPORTED_MODULE_0__.withKeys)($setup.sendMessage, ["enter"])
   }, null, 40 /* PROPS, HYDRATE_EVENTS */, _hoisted_2)), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $setup.form.message]]) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $setup.videoPlayer.currentView != 'chat' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     onClick: $setup.sendMessage,
-    "class": "fixed bottom-0 right-0 p-2 m-2 mb-10 w-fit text-black form-control cursor-pointer"
+    "class": "fixed bottom-0 right-0 p-2 m-2 mb-10 w-fit text-white form-control cursor-pointer"
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_font_awesome_icon, {
     icon: "fa-paper-plane",
     "class": "hover:text-blue-800 text-xl"
@@ -1025,19 +1037,28 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 
 var _hoisted_1 = {
-  "class": "w-full h-full py-2 flex flex-col-reverse overflow-y-scroll overflow-x-clip break-words"
+  "class": "fixed mt-96 bottom-0 mr-12"
 };
 var _hoisted_2 = {
-  ref: "scrollToMe"
+  "class": "chatChrome w-full h-full py-2 flex flex-col-reverse overflow-y-scroll overflow-x-clip break-words messages"
 };
+var _hoisted_3 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  id: "scrollToMe"
+}, null, -1 /* HOISTED */);
+
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($props.messages, function (message, index) {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    onClick: _cache[0] || (_cache[0] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function ($event) {
+      return $setup.scrollTo('#scrollToMe');
+    }, ["prevent"])),
+    "class": "bottom-0 mr-32 h-12 bg-blue-800 hover:bg-blue-600 w-56"
+  }, "CLICK HERE TO SCROLL TO BOTTOM")]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [_hoisted_3, ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($props.messages, function (message, index) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
       key: index
     }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["MessageItem"], {
       message: message
     }, null, 8 /* PROPS */, ["message"])]);
-  }), 128 /* KEYED_FRAGMENT */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Message Container "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, null, 512 /* NEED_PATCH */)]);
+  }), 128 /* KEYED_FRAGMENT */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" The newest message is at the bottom. ")])], 64 /* STABLE_FRAGMENT */);
 }
 
 /***/ }),

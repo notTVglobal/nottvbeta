@@ -40,4 +40,8 @@ class NewChatMessage implements ShouldBroadcast
         // https://www.youtube.com/watch?v=CkRGJC0ytdU
         return new PrivateChannel('chat.'. $this->chatMessage->channel_id );
     }
+
+public function broadcastAs() {
+        return 'message.new';
+}
 }

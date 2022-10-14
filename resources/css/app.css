@@ -92,6 +92,16 @@
     top:5rem;
     right:1rem;
 }
+/* this is for the chat scrollbar in chrome */
+.chatChrome::-webkit-scrollbar {
+    width:3px;
+}
+.chatChrome::-webkit-scrollbar-track {
+    background: #ddd;
+}
+.chatChrome::-webkit-scrollbar-thumb {
+    background: #aaa;
+}
 .chatBig {
     z-index: 200;
     position: absolute;

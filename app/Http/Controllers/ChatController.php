@@ -56,8 +56,13 @@ class ChatController extends Controller
         $newMessage->message = $request->message;
         $newMessage->save();
 
-        broadcast(new NewChatMessage( $newMessage ))->toOthers();
 
+        // tec21: I disabled these 2 lines to troubleshoot the chat
+        // it continuously keeps GET the chat messages.
+        // Disabling these did not have an immediate effect on sending
+        // or receiving messages.
+        //
+        broadcast(new NewChatMessage( $newMessage ))->toOthers();
         return $newMessage;
     }
 

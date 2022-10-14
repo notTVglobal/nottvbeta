@@ -5,11 +5,11 @@
         <NavigationMenu />
     </div>
 
-    <div class="place-self-start flex flex-col justify-start w-50 h-screen px-10">
-        <div class="fixed flex flex-col w-24 p-5 mb-10 bg-blue-400 ">
-            <div class="text-3xl font-semibold">Conversation</div>
+    <div class="place-self-start flex flex-col justify-start w-50 h-screen w-3/4 px-10 break-words overflow-y-scroll ">
+        <div class="fixed flex flex-col w-64 p-5 mb-10 bg-blue-400 ">
+            <div class="text-3xl font-semibold">Chat</div>
         </div>
-            <div class="mt-28">
+            <div class="mt-28 pl-32 pb-32">
                 <ChatContainer />
             </div>
 

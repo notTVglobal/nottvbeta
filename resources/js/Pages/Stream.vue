@@ -33,6 +33,7 @@ onMounted(() => {
 });
 chatStore.showChat = false
 videoPlayer.loggedIn = true
+videoPlayer.currentView = 'stream'
 
 let props = defineProps ({
     video: Object,
