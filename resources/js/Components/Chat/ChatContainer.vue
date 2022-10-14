@@ -35,12 +35,15 @@ let newMessage = ref('')
 onMounted(() => {
     getChannels();
     connect();
+    // watch(messages, listenForMessages)
 });
+
+watch(messages, listenForMessages)
 
 function connect() {
     if( currentChannel.id ) {
         window.Echo.private("chat." + currentChannel.id)
-            .listen('message.new', e => {
+            .listen('.message.new', e => {
                 getMessages();
                 console.log('CHAT CONNECTED');
             })
@@ -82,13 +85,13 @@ function disconnect() {
 
  function listenForMessages() {
      window.Echo.private("chat." + currentChannel.id)
-         .listen('.message.new', e => {
+         .listen('.message.new', (e) => {
              getMessages();
              console.log('NEW MESSAGE');
          });
  }
 
-watch(messages, listenForMessages)
+
 
 onBeforeUnmount(() => {
     disconnect();

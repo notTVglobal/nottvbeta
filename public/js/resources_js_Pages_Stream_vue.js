@@ -39,10 +39,13 @@ __webpack_require__.r(__webpack_exports__);
     (0,vue__WEBPACK_IMPORTED_MODULE_2__.onMounted)(function () {
       getChannels();
       connect();
+      // watch(messages, listenForMessages)
     });
+
+    (0,vue__WEBPACK_IMPORTED_MODULE_2__.watch)(messages, listenForMessages);
     function connect() {
       if (currentChannel.id) {
-        window.Echo["private"]("chat." + currentChannel.id).listen('message.new', function (e) {
+        window.Echo["private"]("chat." + currentChannel.id).listen('.message.new', function (e) {
           getMessages();
           console.log('CHAT CONNECTED');
         });
@@ -78,7 +81,6 @@ __webpack_require__.r(__webpack_exports__);
         console.log('NEW MESSAGE');
       });
     }
-    (0,vue__WEBPACK_IMPORTED_MODULE_2__.watch)(messages, listenForMessages);
     (0,vue__WEBPACK_IMPORTED_MODULE_2__.onBeforeUnmount)(function () {
       disconnect();
     });
