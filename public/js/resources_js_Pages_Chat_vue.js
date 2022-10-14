@@ -69,8 +69,7 @@ __webpack_require__.r(__webpack_exports__);
         console.log(error);
       });
     }
-
-    // watch(messages, getMessages)
+    (0,vue__WEBPACK_IMPORTED_MODULE_2__.watch)(messages, getMessages);
     // watch(currentChannel, connect)
 
     // watch(currentChannel, newChannel => {

@@ -76,7 +76,7 @@ function getMessages() {
 
 }
 
-// watch(messages, getMessages)
+watch(messages, getMessages)
 // watch(currentChannel, connect)
 
 // watch(currentChannel, newChannel => {
