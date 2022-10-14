@@ -14,6 +14,7 @@ use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\ShopController;
+use App\Http\Controllers\ChatController;
 //use Illuminate\Support\Facades\Request;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
@@ -336,9 +337,9 @@ Route::middleware([
 
 // Chat
 ///////////
-    Route::get('/chat', [App\Http\Controllers\ChatController::class, 'index'])->name('chat');
-    Route::get('/messages', [App\Http\Controllers\ChatController::class, 'fetchMessages']);
-    Route::post('/messages', [App\Http\Controllers\ChatController::class, 'newMessage']);
-
+    Route::get('/chat', [ChatController::class, 'index'])->name('chat');
+    Route::get('/chat/channels', [ChatController::class, 'channels']);
+    Route::get('/chat/channel/{channelId}/messages', [ChatController::class, 'messages']);
+    Route::post('/chat/channel/{channelId}/message', [ChatController::class, 'newMessage']);
 
 });

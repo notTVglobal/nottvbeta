@@ -8,9 +8,28 @@
 <script setup>
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js";
 import {useStreamStore} from "@/Stores/StreamStore.js";
+// import videojs from 'video.js';
+// import {onMounted, ref, reactive} from "vue";
 
 let videoPlayerStore = useVideoPlayerStore();
 let streamStore = useStreamStore();
+
+// defineProps({
+//     options: Object,
+// })
+//
+// let video = videojs
+//
+// let player = videojs(videoPlayer.options())
+//
+// function loadPlayer() {
+//
+// }
+//
+// onMounted(() => {
+//         console.log('onPlayerReady', player)
+// })
+
 
 </script>
 

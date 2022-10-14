@@ -5,7 +5,7 @@
         <NavigationMenu />
     </div>
 <!--    <Chat :user="user" :class="chatStore.class" class="chatContainer"/>-->
-    <ChatForStreamPage :user="props.user" />
+    <ChatForStreamPageV2 :user="props.user" />
 
     <button v-if="!chatStore.showChat" @click="chatStore.showChat = true"
         class="opacity-80 chatButtonForStreamPage w-20 h-20 rounded-full bg-orange-400 text-orange-100
@@ -18,10 +18,12 @@
 <script setup>
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useChatStore } from "@/Stores/ChatStore.js"
-import ChatForStreamPage from "@/Components/Chat/ChatForStreamPage"
+import ChatForStreamPageV2 from "@/Components/Chat/ChatForStreamPageV2"
+import ChatContainer from "@/Components/Chat/ChatContainer"
 import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/NavigationMenu"
 import {onMounted} from "vue";
+import ChatForStreamPage from "@/Components/Chat/ChatForStreamPage";
 
 let videoPlayer = useVideoPlayerStore()
 let chatStore = useChatStore()

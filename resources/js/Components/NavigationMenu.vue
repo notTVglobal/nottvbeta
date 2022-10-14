@@ -59,6 +59,9 @@
                         <JetNavLink @click="videoPlayer.makeVideoTopRight()" :href="route('shop')" :active="route().current('shop')">
                             Shop
                         </JetNavLink>
+                        <JetNavLink v-if="$page.props.user.isAdmin === 1" @click="videoPlayer.makeVideoTopRight()" :href="route('chat')" :active="route().current('chat')">
+                            Chat
+                        </JetNavLink>
 <!--                        <ChatToggle v-model:checked="chat.toggleShowChatOn" label="Chat" />-->
 
                     </div>

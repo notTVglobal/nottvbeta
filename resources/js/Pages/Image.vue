@@ -129,6 +129,7 @@ let props = defineProps({
 </script>
 
 <script>
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import vueFilePond, { setOptions } from 'vue-filepond';
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size';
@@ -136,6 +137,8 @@ import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import 'filepond/dist/filepond.min.css';
 import {Inertia} from "@inertiajs/inertia";
 import {onMounted} from "vue";
+
+let videoPlayer = useVideoPlayerStore()
 
 onMounted(() => {
     videoPlayer.makeVideoTopRight();

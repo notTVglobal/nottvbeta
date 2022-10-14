@@ -3,6 +3,7 @@
                 <div v-for="(message, index) in messages" :key="index">
                     <message-item :message="message"/>
                 </div>
+                Message Container
                 <div ref="scrollToMe"></div>
             </div>
 </template>

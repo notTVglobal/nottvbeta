@@ -124,6 +124,7 @@ import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
 import {useStreamStore} from "@/Stores/StreamStore";
 import Login from "@/Components/Login.vue"
 import { ref } from 'vue'
+// import videoPlayer from "@/Components/VideoPlayer/VideoPlayer";
 
 let videoPlayerStore = useVideoPlayerStore()
 let streamStore = useStreamStore()
@@ -204,6 +205,19 @@ function loadVideo5() {
 //             }
 //         ]
 //     }
+// })
+
+
+
+// let videoOptions = reactive({
+//     autoplay: true,
+//     muted: true,
+//     controls: true,
+//     sources: [{
+//         src: 'https://mist.nottv.io/hls/spring/index.m3u8',
+//     // 'ws://mist.nottv.io:8080/ctd1984.mp4',
+//         type: 'application/x-mpegURL'
+//         }]
 // })
 
 </script>

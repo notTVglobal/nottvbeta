@@ -81,14 +81,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @inertiajs/inertia-vue3 */ "./node_modules/@inertiajs/inertia-vue3/dist/index.js");
+/* harmony import */ var _Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Stores/VideoPlayerStore.js */ "./resources/js/Stores/VideoPlayerStore.js");
+
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   __name: 'InputMessage',
+  props: {
+    channel: Object
+  },
   emits: ['messagesent'],
   setup: function setup(__props, _ref) {
     var expose = _ref.expose,
       emit = _ref.emit;
     expose();
+    var props = __props;
+    var videoPlayer = (0,_Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_1__.useVideoPlayerStore)();
     var form = (0,_inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_0__.useForm)({
       message: ''
     });
@@ -101,8 +108,9 @@ __webpack_require__.r(__webpack_exports__);
       //Pushes it to the messages array
       // newMessage.push(getMessages)
       //POST request to the messages route with the message data in order for our Laravel server to broadcast it.
-      axios.post('/messages', {
-        message: form.message
+      axios.post('/chat/channel/' + videoPlayer.currentChannel.id + '/message', {
+        message: form.message,
+        channel_id: videoPlayer.currentChannel.id
       }).then(function (response) {
         if (response.status == 201) {
           form.message = '';
@@ -112,24 +120,14 @@ __webpack_require__.r(__webpack_exports__);
         console.log(error);
       });
     }
-
-    // function sendMessage() {
-    //     emit('messagesent', ['user','message'])
-    //     //Emit a "messagesent" event including the user who sent the message along with the message content
-    //     // this.$emit("messagesent", {
-    //     //     user: user,
-    //     //     //newMessage is bound to the earlier "btn-input" input field
-    //     //     message: newMessage,
-    //     // });
-    //     //Clear the input
-    //
-    // }
-
     var __returned__ = {
+      videoPlayer: videoPlayer,
       form: form,
+      props: props,
       emit: emit,
       sendMessage: sendMessage,
-      useForm: _inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_0__.useForm
+      useForm: _inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_0__.useForm,
+      useVideoPlayerStore: _Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_1__.useVideoPlayerStore
     };
     Object.defineProperty(__returned__, '__isScriptSetup', {
       enumerable: false,
@@ -327,12 +325,32 @@ var __default__ = {
 };
 
 
+// import videojs from 'video.js';
+// import {onMounted, ref, reactive} from "vue";
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (/*#__PURE__*/Object.assign(__default__, {
   setup: function setup(__props, _ref) {
     var expose = _ref.expose;
     expose();
     var videoPlayerStore = (0,_Stores_VideoPlayerStore_js__WEBPACK_IMPORTED_MODULE_1__.useVideoPlayerStore)();
     var streamStore = (0,_Stores_StreamStore_js__WEBPACK_IMPORTED_MODULE_2__.useStreamStore)();
+
+    // defineProps({
+    //     options: Object,
+    // })
+    //
+    // let video = videojs
+    //
+    // let player = videojs(videoPlayer.options())
+    //
+    // function loadPlayer() {
+    //
+    // }
+    //
+    // onMounted(() => {
+    //         console.log('onPlayerReady', player)
+    // })
+
     var __returned__ = {
       videoPlayerStore: videoPlayerStore,
       streamStore: streamStore,
@@ -390,6 +408,8 @@ var __default__ = {
 
 
 
+
+// import videoPlayer from "@/Components/VideoPlayer/VideoPlayer";
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (/*#__PURE__*/Object.assign(__default__, {
   setup: function setup(__props, _ref) {
@@ -468,6 +488,17 @@ var __default__ = {
     //             }
     //         ]
     //     }
+    // })
+
+    // let videoOptions = reactive({
+    //     autoplay: true,
+    //     muted: true,
+    //     controls: true,
+    //     sources: [{
+    //         src: 'https://mist.nottv.io/hls/spring/index.m3u8',
+    //     // 'ws://mist.nottv.io:8080/ctd1984.mp4',
+    //         type: 'application/x-mpegURL'
+    //         }]
     // })
 
     var __returned__ = {
@@ -893,15 +924,22 @@ var _hoisted_1 = {
 };
 var _hoisted_2 = ["onKeyup"];
 var _hoisted_3 = {
+  key: 1,
   "class": "input-group-btn px-3"
 };
+var _hoisted_4 = {
+  key: 2,
+  "class": "fixed bottom-0 flex flex-row mb-10 w-fit"
+};
+var _hoisted_5 = ["onKeyup"];
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_font_awesome_icon = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("font-awesome-icon");
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", {
-    onSubmit: _cache[1] || (_cache[1] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function () {
+    onSubmit: _cache[2] || (_cache[2] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function () {
       return _ctx.submit && _ctx.submit.apply(_ctx, arguments);
     }, ["prevent"]))
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            <input"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                id=\"btn-input\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                type=\"text\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                name=\"message\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                class=\"form-control input-sm text-gray-800\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                placeholder=\"Type your message here...\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                v-model=\"form.message\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            />"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            <input"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                id=\"btn-input\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                type=\"text\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                name=\"message\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                class=\"form-control input-sm text-gray-800\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                placeholder=\"Type your message here...\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                v-model=\"form.message\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("            />"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" If the current page view is NOT the /chat page "), $setup.videoPlayer.currentView != 'chat' ? (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)(((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("input", {
+    key: 0,
     "class": "fixed bottom-0 right-10 p-2 m-2 mb-10 w-fit text-black form-control border-2 border-gray-800 hover:border-blue-800 focus:outline-none",
     type: "text",
     placeholder: "Write a message...",
@@ -909,13 +947,28 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return $setup.form.message = $event;
     }),
     onKeyup: (0,vue__WEBPACK_IMPORTED_MODULE_0__.withKeys)($setup.sendMessage, ["enter"])
-  }, null, 40 /* PROPS, HYDRATE_EVENTS */, _hoisted_2), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $setup.form.message]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  }, null, 40 /* PROPS, HYDRATE_EVENTS */, _hoisted_2)), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $setup.form.message]]) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $setup.videoPlayer.currentView != 'chat' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     onClick: $setup.sendMessage,
     "class": "fixed bottom-0 right-0 p-2 m-2 mb-10 w-fit text-black form-control cursor-pointer"
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_font_awesome_icon, {
     icon: "fa-paper-plane",
     "class": "hover:text-blue-800 text-xl"
-  })]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("              <button class=\"fixed bottom-0 right-0 p-2 m-2 mb-10 w-fit text-black form-control cursor-pointer\""), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                   id=\"btn-chat\" @click=\"sendMessage\">"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                Send"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("              </button>")])], 32 /* HYDRATE_EVENTS */)]);
+  })])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" If the current page view is the /chat page "), $setup.videoPlayer.currentView === 'chat' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_4, [$setup.videoPlayer.currentView === 'chat' ? (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)(((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("input", {
+    key: 0,
+    "class": "p-2 m-2 text-black form-control border-2 border-gray-800 hover:border-blue-800 focus:outline-none",
+    type: "text",
+    placeholder: "Write a message...",
+    "onUpdate:modelValue": _cache[1] || (_cache[1] = function ($event) {
+      return $setup.form.message = $event;
+    }),
+    onKeyup: (0,vue__WEBPACK_IMPORTED_MODULE_0__.withKeys)($setup.sendMessage, ["enter"])
+  }, null, 40 /* PROPS, HYDRATE_EVENTS */, _hoisted_5)), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $setup.form.message]]) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+    onClick: $setup.sendMessage,
+    "class": "px-4 pt-4 bg-gray-300 align-content-center hover:bg-blue-600 hover:text-white rounded text-black form-control cursor-pointer"
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_font_awesome_icon, {
+    icon: "fa-paper-plane",
+    "class": "text-xl"
+  })])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)], 32 /* HYDRATE_EVENTS */)]);
 }
 
 /***/ }),
@@ -984,7 +1037,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["MessageItem"], {
       message: message
     }, null, 8 /* PROPS */, ["message"])]);
-  }), 128 /* KEYED_FRAGMENT */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, null, 512 /* NEED_PATCH */)]);
+  }), 128 /* KEYED_FRAGMENT */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Message Container "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, null, 512 /* NEED_PATCH */)]);
 }
 
 /***/ }),
@@ -1734,6 +1787,8 @@ var useVideoPlayerStore = (0,pinia__WEBPACK_IMPORTED_MODULE_1__.defineStore)('vi
       videoSourceTypeSrc3: [],
       key: [0],
       videoName: [],
+      currentView: String,
+      currentChannel: [],
       fullPage: Boolean,
       loggedIn: Boolean,
       muted: Boolean,
