@@ -20,12 +20,13 @@ window.axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-url
 window.axios.defaults.headers.common.crossDomain = true;
 window.axios.defaults.baseURL = '/api';
 
-
-if (token) {
-    window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
-} else {
-    console.error('CSRF token not found: https://adonisjs.com/docs/4.1/csrf');
-}
+// let token = document.head.querySelector('meta[name="csrf-token"]');
+//
+// if (token) {
+//     window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
+// } else {
+//     console.error('CSRF token not found: https://adonisjs.com/docs/4.1/csrf');
+// }
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
