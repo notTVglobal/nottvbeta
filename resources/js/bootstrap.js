@@ -20,7 +20,6 @@ window.axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-url
 window.axios.defaults.headers.common.crossDomain = true;
 window.axios.defaults.baseURL = '/api';
 
-let token = csrf_token();
 
 if (token) {
     window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
