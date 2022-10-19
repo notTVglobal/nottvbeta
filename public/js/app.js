@@ -108,7 +108,7 @@ __webpack_require__.r(__webpack_exports__);
       //Pushes it to the messages array
       // newMessage.push(getMessages)
       //POST request to the messages route with the message data in order for our Laravel server to broadcast it.
-      axios.post('/api/chat/channel/' + videoPlayer.currentChannel.id + '/message', {
+      axios.post('/chat/channel/' + videoPlayer.currentChannel.id + '/message', {
         message: form.message,
         channel_id: videoPlayer.currentChannel.id
       }).then(function (response) {
@@ -2012,15 +2012,16 @@ _inertiajs_progress__WEBPACK_IMPORTED_MODULE_3__.InertiaProgress.init({
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var laravel_echo__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! laravel-echo */ "./node_modules/laravel-echo/dist/echo.js");
-/* harmony import */ var pusher_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/dist/web/pusher.js");
-/* harmony import */ var pusher_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(pusher_js__WEBPACK_IMPORTED_MODULE_3__);
-
-window._ = (lodash__WEBPACK_IMPORTED_MODULE_0___default());
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var laravel_echo__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! laravel-echo */ "./node_modules/laravel-echo/dist/echo.js");
+/* harmony import */ var pusher_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/dist/web/pusher.js");
+/* harmony import */ var pusher_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(pusher_js__WEBPACK_IMPORTED_MODULE_2__);
+// import _ from 'lodash';
+// window._ = _;
+window._ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+// window.moment = require('moment');
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
@@ -2029,8 +2030,19 @@ window._ = (lodash__WEBPACK_IMPORTED_MODULE_0___default());
  */
 
 
-window.axios = (axios__WEBPACK_IMPORTED_MODULE_1___default());
+window.axios = (axios__WEBPACK_IMPORTED_MODULE_0___default());
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+window.axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+window.axios.defaults.headers.common.crossDomain = true;
+window.axios.defaults.baseURL = '/api';
+
+// let token = document.head.querySelector('meta[name="csrf-token"]');
+//
+// if (token) {
+//     window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
+// } else {
+//     console.error('CSRF token not found: https://adonisjs.com/docs/4.1/csrf');
+// }
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
@@ -2040,8 +2052,8 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 
 
-window.Pusher = (pusher_js__WEBPACK_IMPORTED_MODULE_3___default());
-window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_2__["default"]({
+window.Pusher = (pusher_js__WEBPACK_IMPORTED_MODULE_2___default());
+window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_1__["default"]({
   broadcaster: 'pusher',
   key: "679608fe1b2e6a2bf76b",
   cluster: "us3",

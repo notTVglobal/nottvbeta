@@ -37,7 +37,6 @@ __webpack_require__.r(__webpack_exports__);
     var currentChannel = (0,vue__WEBPACK_IMPORTED_MODULE_2__.ref)([]);
     var messages = (0,vue__WEBPACK_IMPORTED_MODULE_2__.ref)([]);
     var newMessage = (0,vue__WEBPACK_IMPORTED_MODULE_2__.ref)([]);
-    listenForMessages();
     (0,vue__WEBPACK_IMPORTED_MODULE_2__.onBeforeMount)(function () {
       getChannels();
 
@@ -48,6 +47,7 @@ __webpack_require__.r(__webpack_exports__);
 
       window.Echo["private"]('chat.1').listen('.message.new', function (e) {
         console.log('MESSAGE RECEIVED !!.');
+        console.log(e);
         console.log(e.chatMessage);
         getMessages();
       });
@@ -73,7 +73,7 @@ __webpack_require__.r(__webpack_exports__);
       console.log('STREAM CHAT CONNECTED');
     }
     function getChannels() {
-      axios.get('/api/chat/channels').then(function (response) {
+      axios.get('/chat/channels').then(function (response) {
         channels = response;
         setChannel(channels.data[0]);
         console.log('CURRENT CHANNEL: ' + currentChannel.name);
@@ -90,7 +90,7 @@ __webpack_require__.r(__webpack_exports__);
       console.log('RETRIEVE MESSAGES');
     }
     function getMessages() {
-      axios.get('/api/chat/channel/' + videoPlayer.currentChannel.id + '/messages').then(function (response) {
+      axios.get('/chat/channel/' + videoPlayer.currentChannel.id + '/messages').then(function (response) {
         messages.value = response.data;
       })["catch"](function (error) {
         console.log(error);

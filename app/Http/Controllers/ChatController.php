@@ -51,7 +51,7 @@ class ChatController extends Controller
     {
         $newMessage = new ChatMessage;
         $newMessage->user_id = Auth::id();
-        $newMessage->channel_id = $channelId;
+//        $newMessage->channel_id = $channelId;
         $newMessage->channel_id = $request->channel_id;
         $newMessage->message = $request->message;
         $newMessage->save();

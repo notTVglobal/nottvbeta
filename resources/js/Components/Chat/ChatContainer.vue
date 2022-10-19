@@ -32,8 +32,6 @@ let currentChannel = ref([])
 let messages = ref([])
 let newMessage = ref([])
 
-listenForMessages()
-
 onBeforeMount(() => {
     getChannels();
 
@@ -45,6 +43,7 @@ onBeforeMount(() => {
     window.Echo.private('chat.1')
         .listen('.message.new', e => {
             console.log('MESSAGE RECEIVED !!.');
+            console.log(e);
             console.log(e.chatMessage);
             getMessages()
         });
@@ -73,7 +72,7 @@ function connect() {
 }
 
 function getChannels() {
-    axios.get('/api/chat/channels')
+    axios.get('/chat/channels')
         .then(response => {
             channels = response;
             setChannel(channels.data[0]);
@@ -94,7 +93,7 @@ function setChannel ( channel ){
 }
 
 function getMessages() {
-    axios.get('/api/chat/channel/' + videoPlayer.currentChannel.id + '/messages')
+    axios.get('/chat/channel/' + videoPlayer.currentChannel.id + '/messages')
         .then( response => {
             messages.value = response.data;
         })
