@@ -56,7 +56,7 @@ class ChatController extends Controller
         $newMessage->message = $request->message;
         $newMessage->save();
 
-        event(new NewChatMessage( $newMessage ))->toOthers();
+        broadcast(new NewChatMessage( $newMessage ))->toOthers();
         return $newMessage->toJson('ok');
     }
 
