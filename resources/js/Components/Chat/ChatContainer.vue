@@ -32,6 +32,8 @@ let currentChannel = ref([])
 let messages = ref([])
 let newMessage = ref([])
 
+listenForMessages()
+
 onBeforeMount(() => {
     getChannels();
 

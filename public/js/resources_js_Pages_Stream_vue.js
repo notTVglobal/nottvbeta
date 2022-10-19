@@ -37,6 +37,7 @@ __webpack_require__.r(__webpack_exports__);
     var currentChannel = (0,vue__WEBPACK_IMPORTED_MODULE_2__.ref)([]);
     var messages = (0,vue__WEBPACK_IMPORTED_MODULE_2__.ref)([]);
     var newMessage = (0,vue__WEBPACK_IMPORTED_MODULE_2__.ref)([]);
+    listenForMessages();
     (0,vue__WEBPACK_IMPORTED_MODULE_2__.onBeforeMount)(function () {
       getChannels();
 
