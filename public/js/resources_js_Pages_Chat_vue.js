@@ -47,18 +47,18 @@ __webpack_require__.r(__webpack_exports__);
 
       window.Echo["private"]('chat.1').listen('.message.new', function (e) {
         console.log('MESSAGE RECEIVED !!.');
-        console.log(e);
         console.log(e.chatMessage);
-        getMessages();
+        // getMessages()
       });
     });
 
     // connect();
-    window.Echo["private"]('chat.' + currentChannel.id).listen('.message.new', function (e) {
-      getMessages();
-      console.log('MESSAGE RECEIVED (connect)');
-      console.log(e);
-    });
+    // window.Echo.private('chat.' + currentChannel.id)
+    //     .listen('.message.new', e => {
+    //         getMessages();
+    //         console.log('MESSAGE RECEIVED (connect)');
+    //         console.log(e);
+    //     })
     // function connect() {
     //     if( currentChannel.id === 1) {
     //         Echo.private("chat." + currentChannel.id)

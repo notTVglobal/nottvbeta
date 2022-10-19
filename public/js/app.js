@@ -2063,7 +2063,8 @@ window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_2__["default"]({
 });
 window.Echo["private"]('chat.1').listen('.message.new', function (e) {
   console.log('BOOTSTRAP MESSAGE CONNECT TO ECHO AND LISTEN.');
-  console.log(e.chatMessage.message);
+  console.log(e);
+  // console.log(e.chatMessage.message);
 });
 
 /***/ }),

@@ -47,5 +47,6 @@ window.Echo = new Echo({
 window.Echo.private('chat.1')
 .listen('.message.new', e => {
    console.log('BOOTSTRAP MESSAGE CONNECT TO ECHO AND LISTEN.');
-   console.log(e.chatMessage.message);
+   console.log(e);
+   // console.log(e.chatMessage.message);
 });
