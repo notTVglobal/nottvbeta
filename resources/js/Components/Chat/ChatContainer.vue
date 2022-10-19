@@ -44,7 +44,7 @@ onBeforeMount(() => {
         .listen('.message.new', e => {
             console.log('MESSAGE RECEIVED !!.');
             console.log(e.chatMessage);
-            // getMessages()
+            getMessages()
         });
 
 });

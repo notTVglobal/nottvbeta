@@ -30,6 +30,7 @@ mix.js('resources/js/app.js', 'public/js')
     .postCss('resources/css/app.css', 'public/css', [
         require('tailwindcss'),
     ])
+    .sourceMaps()
     .alias({
         // if the @ path changes update the webpack.config.js file too!
         '@': 'resources/js',

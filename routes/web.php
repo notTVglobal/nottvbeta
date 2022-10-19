@@ -338,23 +338,9 @@ Route::middleware([
 
 // Chat
 ///////////
-
-    class chatMessage
-    {
-        public $id;
-
-        public function __construct($id)
-        {
-            $this->id = $id;
-        }
-    }
-
     Route::get('/chat', [ChatController::class, 'index'])->name('chat');
     Route::get('/api/chat/channels', [ChatController::class, 'channels']);
     Route::get('/api/chat/channel/{channelId}/messages', [ChatController::class, 'messages']);
     Route::post('/api/chat/channel/{channelId}/message', [ChatController::class, 'newMessage']);
-    Route::get('/api/update', function () {
-        NewChatMessage::dispatch(new \App\Models\ChatMessage());
-    });
 
 });

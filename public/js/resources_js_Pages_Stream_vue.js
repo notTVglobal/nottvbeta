@@ -48,7 +48,7 @@ __webpack_require__.r(__webpack_exports__);
       window.Echo["private"]('chat.1').listen('.message.new', function (e) {
         console.log('MESSAGE RECEIVED !!.');
         console.log(e.chatMessage);
-        // getMessages()
+        getMessages();
       });
     });
 

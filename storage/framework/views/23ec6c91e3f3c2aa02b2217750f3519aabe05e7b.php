@@ -13,7 +13,7 @@
         <link rel="stylesheet" href="<?php echo e(mix('css/app.css')); ?>">
 
         <?php echo app('Tightenco\Ziggy\BladeRouteGenerator')->generate(); ?>
-        <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
+
         <script src="<?php echo e(mix('js/manifest.js')); ?>" defer></script>
         <script src="<?php echo e(mix('js/vendor.js')); ?>" defer></script>
         <script src="<?php echo e(mix('js/app.js')); ?>" defer></script>
