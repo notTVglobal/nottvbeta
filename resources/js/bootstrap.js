@@ -36,6 +36,9 @@ if (token) {
 
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
+// import {useChatStore} from "@/Stores/ChatStore";
+// let chatStore = useChatStore()
+
 window.Pusher = Pusher;
 window.Echo = new Echo({
     broadcaster: 'pusher',
@@ -48,5 +51,6 @@ window.Echo.private('chat.1')
 .listen('.message.new', e => {
    console.log('BOOTSTRAP MESSAGE CONNECT TO ECHO AND LISTEN.');
    console.log(e);
+    // chatStore.messages = e.data;
    // console.log(e.chatMessage.message);
 });

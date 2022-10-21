@@ -5,7 +5,8 @@ export let useChatStore = defineStore('chat', {
         return {
             showChat: Boolean,
             class: '',
-            comments: [],
+            messages: [],
+            message: ''
         };
     },
 

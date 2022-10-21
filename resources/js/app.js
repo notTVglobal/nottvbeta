@@ -1,4 +1,4 @@
-import './bootstrap';
+import './bootstrap.js';
 
 import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/inertia-vue3';
@@ -53,3 +53,4 @@ createInertiaApp({
 library.add(faUserSecret, faPlay, faQuestion, faStar, faUsers, faHandsHelping, faRocket, faEye, faComments, faPaperPlane);
 
 InertiaProgress.init({ delay: 250, color: '#FCEF5B', includeCSS: true, showSpinner: true, });
+

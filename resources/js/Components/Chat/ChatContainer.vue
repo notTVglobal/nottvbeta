@@ -16,8 +16,10 @@ import InputMessage from "@/Components/Chat/InputMessage"
 import ChatMessages from "@/Components/Chat/MessagesContainer"
 import {ref, onMounted, watch, onBeforeUnmount, onBeforeMount} from "vue";
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore";
+import {useChatStore} from "@/Stores/ChatStore";
 
 let videoPlayer = useVideoPlayerStore()
+let chatStore = useChatStore()
 
 let props = defineProps({
     channels: Object,
@@ -95,6 +97,7 @@ function getMessages() {
     axios.get('/chat/channel/' + videoPlayer.currentChannel.id + '/messages')
         .then( response => {
             messages.value = response.data;
+            chatStore.messages = response.data;
         })
         .catch(error => {
             console.log(error);
@@ -114,7 +117,14 @@ function disconnect() {
      console.log('MESSAGE LOADED');
  }
 
-// watch(messages, getNewMessage);
+function watchForNewMessage() {
+    window.Echo.private("chat." + currentChannel.id)
+        .listen('.message.new', e => {
+        });
+    console.log('MESSAGE FOUND');
+}
+
+watch(watchForNewMessage, getNewMessage);
 
 onBeforeUnmount(() => {
     disconnect();
