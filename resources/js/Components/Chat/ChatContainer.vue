@@ -147,20 +147,15 @@ function disconnect() {
  // }
 
 
-function getNewMessage() {
-
-    console.log('NEW MESSAGE');
-}
-
 watchEffect(() => {
-    window.Echo = new Echo({
-        broadcaster: 'pusher',
-        key: process.env.MIX_PUSHER_APP_KEY,
-        cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-        encrypted: true,
-        forceTLS: true
-    });
-    let videoPlayer = useVideoPlayerStore();
+    // window.Echo = new Echo({
+    //     broadcaster: 'pusher',
+    //     key: process.env.MIX_PUSHER_APP_KEY,
+    //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
+    //     encrypted: true,
+    //     forceTLS: true
+    // });
+    // let videoPlayer = useVideoPlayerStore();
     window.Echo.private('chat.1')
         .listen('.message.new', e => {
             console.log('PINIA NEW MESSAGE.');
@@ -176,6 +171,8 @@ watchEffect(() => {
                 })
         });
 });
+
+
 
 onBeforeUnmount(() => {
     disconnect();

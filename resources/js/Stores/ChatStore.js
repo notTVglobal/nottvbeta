@@ -65,31 +65,31 @@ export let useChatStore = defineStore('chat', {
 
     },
 
-    getters: {
-        getNewMessages() {
-            this.echo = new Echo({
-                broadcaster: 'pusher',
-                key: process.env.MIX_PUSHER_APP_KEY,
-                cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-                encrypted: true,
-                forceTLS: true
-            });
-            let videoPlayer = useVideoPlayerStore();
-        this.echo.private('chat.1')
-            .listen('.message.new', e => {
-                console.log('PINIA NEW MESSAGE.');
-                console.log(e.chatMessage);
-                // this.messages.value = e.chatMessage;
-                axios.get('/chat/channel/' + videoPlayer.currentChannel.id + '/messages')
-                    .then( response => {
-                        this.messages = response.data;
-                        // chatStore.messages = response.data;
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    })
-            });
-        }
-    }
+    // getters: {
+    //     getNewMessages() {
+    //         this.echo = new Echo({
+    //             broadcaster: 'pusher',
+    //             key: process.env.MIX_PUSHER_APP_KEY,
+    //             cluster: process.env.MIX_PUSHER_APP_CLUSTER,
+    //             encrypted: true,
+    //             forceTLS: true
+    //         });
+    //         let videoPlayer = useVideoPlayerStore();
+    //     this.echo.private('chat.1')
+    //         .listen('.message.new', e => {
+    //             console.log('PINIA NEW MESSAGE.');
+    //             console.log(e.chatMessage);
+    //             // this.messages.value = e.chatMessage;
+    //             axios.get('/chat/channel/' + videoPlayer.currentChannel.id + '/messages')
+    //                 .then( response => {
+    //                     this.messages = response.data;
+    //                     // chatStore.messages = response.data;
+    //                 })
+    //                 .catch(error => {
+    //                     console.log(error);
+    //                 })
+    //         });
+    //     }
+    // }
 
 })
