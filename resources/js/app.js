@@ -53,11 +53,3 @@ createInertiaApp({
 library.add(faUserSecret, faPlay, faQuestion, faStar, faUsers, faHandsHelping, faRocket, faEye, faComments, faPaperPlane);
 
 InertiaProgress.init({ delay: 250, color: '#FCEF5B', includeCSS: true, showSpinner: true, });
-
-Echo.private('chat.1')
-    .listen('.message.new', (e) => {
-        this.messages.push({
-            message: e.data,
-        });
-        console.log('MESSAGE LOADED FROM APP.js');
-    });
