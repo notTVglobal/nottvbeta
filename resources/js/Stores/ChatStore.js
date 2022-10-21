@@ -38,7 +38,8 @@ export let useChatStore = defineStore('chat', {
                 broadcaster: 'pusher',
                 key: process.env.MIX_PUSHER_APP_KEY,
                 cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-                encrypted: true
+                encrypted: true,
+                forceTLS: true
             });
             let videoPlayer = useVideoPlayerStore();
             // window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
