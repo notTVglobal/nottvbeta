@@ -14,9 +14,10 @@
 <script setup>
 import InputMessage from "@/Components/Chat/InputMessage"
 import ChatMessages from "@/Components/Chat/MessagesContainer"
-import {ref, onMounted, watch, onBeforeUnmount, onBeforeMount, watchEffect} from "vue";
+import {ref, onMounted, watch, onBeforeUnmount, onBeforeMount, watchEffect, effect} from "vue";
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore";
 import {useChatStore} from "@/Stores/ChatStore";
+import {default as Echo} from "laravel-echo";
 
 let videoPlayer = useVideoPlayerStore()
 let chatStore = useChatStore()
@@ -145,12 +146,36 @@ function disconnect() {
  //         });
  // }
 
+
 function getNewMessage() {
 
     console.log('NEW MESSAGE');
 }
 
-watch(chatStore.getNewMessages, getNewMessage);
+watchEffect(() => {
+    window.Echo = new Echo({
+        broadcaster: 'pusher',
+        key: process.env.MIX_PUSHER_APP_KEY,
+        cluster: process.env.MIX_PUSHER_APP_CLUSTER,
+        encrypted: true,
+        forceTLS: true
+    });
+    let videoPlayer = useVideoPlayerStore();
+    window.Echo.private('chat.1')
+        .listen('.message.new', e => {
+            console.log('PINIA NEW MESSAGE.');
+            console.log(e.chatMessage);
+            // this.messages.value = e.chatMessage;
+            axios.get('/chat/channel/' + videoPlayer.currentChannel.id + '/messages')
+                .then( response => {
+                    chatStore.messages = response.data;
+                    // chatStore.messages = response.data;
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+        });
+});
 
 onBeforeUnmount(() => {
     disconnect();
