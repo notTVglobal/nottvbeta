@@ -34,23 +34,19 @@ if (token) {
  * allows your team to easily build robust real-time web applications.
  */
 
-import Echo from 'laravel-echo';
+// import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
-// import {useChatStore} from "@/Stores/ChatStore";
-// let chatStore = useChatStore()
 
 window.Pusher = Pusher;
-window.Echo = new Echo({
-    broadcaster: 'pusher',
-    key: process.env.MIX_PUSHER_APP_KEY,
-    cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-    forceTLS: true
-});
-
-window.Echo.private('chat.1')
-.listen('.message.new', e => {
-   console.log('BOOTSTRAP MESSAGE CONNECT TO ECHO AND LISTEN.');
-   console.log(e);
-    // chatStore.messages = e.data;
-   // console.log(e.chatMessage.message);
-});
+// window.Echo = new Echo({
+//     broadcaster: 'pusher',
+//     key: process.env.MIX_PUSHER_APP_KEY,
+//     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
+//     encrypted: true
+// });
+//
+// window.Echo.private('chat.1')
+// .listen('.message.new', e => {
+//    console.log('BOOTSTRAP MESSAGE CONNECT TO ECHO AND LISTEN. NEW MESSAGE RECEIVED.');
+//    console.log(e.chatMessage);
+// });

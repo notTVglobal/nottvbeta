@@ -4,7 +4,7 @@
         <div class="text-xl">Please scroll to the bottom. We are in the process of building an auto-scroll function.</div>
     </div>
     <div>
-        <chat-messages :messages="messages"></chat-messages>
+        <chat-messages :messages="chatStore.messages"></chat-messages>
     </div>
     <div>
         <input-message :channel="currentChannel" v-on:messagesent="getMessages"></input-message>
@@ -22,11 +22,11 @@ let videoPlayer = useVideoPlayerStore()
 let chatStore = useChatStore()
 
 let props = defineProps({
-    channels: Object,
-    currentChannel: ref([]),
-    messages: ref([]),
-    message: ref([]),
-    newMessage: ref([]),
+    // channels: Object,
+    // currentChannel: ref([]),
+    // messages: ref([]),
+    // message: ref([]),
+    // newMessage: ref([]),
 })
 
 let channels = ref([])
@@ -35,21 +35,48 @@ let messages = ref([])
 let newMessage = ref([])
 
 onBeforeMount(() => {
-    getChannels();
+    connect();
 
     // window.Echo.private('chat.1').listen('.message.new', ({ chatMessage }) => {
     //     // messages.value = newMessage.data;
     //     console.log(chatMessage.data);
     // })
 
-    window.Echo.private('chat.1')
-        .listen('.message.new', e => {
-            console.log('MESSAGE RECEIVED !!.');
-            console.log(e.chatMessage);
-            getNewMessage()
-        });
+    // window.Echo.private("chat." + currentChannel.id)
+    //     .listen('.message.new', e => {
+    //         getMessages();
+    //     });
+    // console.log('MESSAGE LOADED');
 
 });
+
+onMounted(() => {
+    // window.Echo.private('chat.1')
+    //     .listen('.message.new', e => {
+    //         console.log('NEW ECHO ' + e.chatMessage.message)
+    //         messages.value = e.data;
+    //     });
+
+})
+
+// window.Echo.private("chat." + currentChannel.id)
+//     .listen('.message.new', e => {
+//         messages.value = e;
+//         console.log('KEEP LISTENING??');
+//     });
+
+
+// window.Echo.private("chat." + currentChannel.id)
+//     .listen('.message.new', e => {
+//         messages.push(e);
+//     });
+
+// window.Echo.private("chat." + currentChannel.id)
+//     .listen('.message.new', (e) => {
+//         console.log('NEW MESSAGE RECEIVED');
+//         console.log(e.chatMessage);
+//         getNewMessage()
+//     });
 
 // connect();
 // window.Echo.private('chat.' + currentChannel.id)
@@ -70,38 +97,39 @@ onBeforeMount(() => {
 
 function connect() {
     console.log('STREAM CHAT CONNECTED');
+    getChannels();
 }
 
 function getChannels() {
+    console.log('GET CHANNELS');
     axios.get('/chat/channels')
         .then(response => {
             channels = response;
             setChannel(channels.data[0]);
-            console.log('CURRENT CHANNEL: ' + currentChannel.name);
         })
         .catch(error => {
             console.log(error);
         })
-    console.log('GET CHANNELS');
 }
 
 function setChannel ( channel ){
     currentChannel = channel;
     videoPlayer.currentChannel = channel;
     console.log('SET CHANNEL');
+    console.log('CURRENT CHANNEL: ' + currentChannel.name);
     getMessages();
-    console.log('RETRIEVE MESSAGES');
 }
 
 function getMessages() {
     axios.get('/chat/channel/' + videoPlayer.currentChannel.id + '/messages')
         .then( response => {
-            messages.value = response.data;
             chatStore.messages = response.data;
+            // chatStore.messages = response.data;
         })
         .catch(error => {
             console.log(error);
         })
+        console.log('GET MESSAGES');
 }
 
 function disconnect() {
@@ -109,22 +137,19 @@ function disconnect() {
     console.log('STREAM CHAT DISCONNECTED');
 }
 
- function getNewMessage() {
-     window.Echo.private("chat." + currentChannel.id)
-         .listen('.message.new', e => {
-             getMessages();
-         });
-     console.log('MESSAGE LOADED');
- }
+ // function listenForNewMessage() {
+ //     window.Echo.private("chat." + currentChannel.id)
+ //         .listen('.message.new', e => {
+ //             getMessages();
+ //         });
+ // }
 
-function watchForNewMessage() {
-    window.Echo.private("chat." + currentChannel.id)
-        .listen('.message.new', e => {
-        });
-    console.log('MESSAGE FOUND');
+function getNewMessage() {
+
+    console.log('NEW MESSAGE');
 }
 
-watch(messages, getNewMessage);
+watch(chatStore.getNewMessages, getMessages);
 
 onBeforeUnmount(() => {
     disconnect();

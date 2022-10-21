@@ -1,4 +1,4 @@
-import './bootstrap.js';
+import './bootstrap';
 
 import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/inertia-vue3';
@@ -24,6 +24,7 @@ import Popper from "vue3-popper";
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'notTV';
 
+
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: async name => {
@@ -47,10 +48,11 @@ createInertiaApp({
             .component("Popper", Popper)
             .mount(el);
 
-    }
+    },
 });
 
 library.add(faUserSecret, faPlay, faQuestion, faStar, faUsers, faHandsHelping, faRocket, faEye, faComments, faPaperPlane);
 
 InertiaProgress.init({ delay: 250, color: '#FCEF5B', includeCSS: true, showSpinner: true, });
+
 

@@ -26,6 +26,6 @@ class SendChatMessageNotification
      */
     public function handle(NewChatMessage $event)
     {
-        //
+
     }
 }
