@@ -14,7 +14,7 @@
 <script setup>
 import InputMessage from "@/Components/Chat/InputMessage"
 import ChatMessages from "@/Components/Chat/MessagesContainer"
-import {ref, onMounted, watch, onBeforeUnmount, onBeforeMount} from "vue";
+import {ref, onMounted, watch, onBeforeUnmount, onBeforeMount, watchEffect} from "vue";
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore";
 import {useChatStore} from "@/Stores/ChatStore";
 
@@ -31,8 +31,9 @@ let props = defineProps({
 
 let channels = ref([])
 let currentChannel = ref([])
-let messages = ref([])
+// let messages = ref([])
 let newMessage = ref([])
+let messages = ref(chatStore.messages)
 
 onBeforeMount(() => {
     connect();
@@ -149,7 +150,7 @@ function getNewMessage() {
     console.log('NEW MESSAGE');
 }
 
-watch(chatStore.getNewMessages, getMessages);
+watch(chatStore.getNewMessages, getNewMessage);
 
 onBeforeUnmount(() => {
     disconnect();

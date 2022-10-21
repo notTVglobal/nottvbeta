@@ -33,15 +33,7 @@ export let useChatStore = defineStore('chat', {
             this.class = 'chatHidden';
             this.showChat = false;
         },
-        getNewMessages() {
-            this.echo = new Echo({
-                broadcaster: 'pusher',
-                key: process.env.MIX_PUSHER_APP_KEY,
-                cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-                encrypted: true,
-                forceTLS: true
-            });
-            let videoPlayer = useVideoPlayerStore();
+
             // window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
             //
             // window.axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
@@ -53,21 +45,51 @@ export let useChatStore = defineStore('chat', {
             // } else {
             //     console.error('CSRF token not found.');
             // }
-            this.echo.private('chat.1')
-                .listen('.message.new', e => {
-                    console.log('PINIA NEW MESSAGE.');
-                    console.log(e.chatMessage);
-                    // this.messages.value = e.chatMessage;
-                    axios.get('/chat/channel/' + videoPlayer.currentChannel.id + '/messages')
-                        .then( response => {
-                            this.messages = response.data;
-                            // chatStore.messages = response.data;
-                        })
-                        .catch(error => {
-                            console.log(error);
-                        })
-                });
-        }
+
+            // tec21: This code works on the development system, but not on the staging server.
+            // this.echo.private('chat.1')
+            //     .listen('.message.new', e => {
+            //         console.log('PINIA NEW MESSAGE.');
+            //         console.log(e.chatMessage);
+            //         // this.messages.value = e.chatMessage;
+            //         axios.get('/chat/channel/' + videoPlayer.currentChannel.id + '/messages')
+            //             .then( response => {
+            //                 this.messages = response.data;
+            //                 // chatStore.messages = response.data;
+            //             })
+            //             .catch(error => {
+            //                 console.log(error);
+            //             })
+            //     });
+
+
     },
+
+    getters: {
+        getNewMessages() {
+            this.echo = new Echo({
+                broadcaster: 'pusher',
+                key: process.env.MIX_PUSHER_APP_KEY,
+                cluster: process.env.MIX_PUSHER_APP_CLUSTER,
+                encrypted: true,
+                forceTLS: true
+            });
+            let videoPlayer = useVideoPlayerStore();
+        this.echo.private('chat.1')
+            .listen('.message.new', e => {
+                console.log('PINIA NEW MESSAGE.');
+                console.log(e.chatMessage);
+                // this.messages.value = e.chatMessage;
+                axios.get('/chat/channel/' + videoPlayer.currentChannel.id + '/messages')
+                    .then( response => {
+                        this.messages = response.data;
+                        // chatStore.messages = response.data;
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    })
+            });
+        }
+    }
 
 })
