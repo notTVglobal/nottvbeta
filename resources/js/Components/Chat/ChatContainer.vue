@@ -44,7 +44,7 @@ onBeforeMount(() => {
         .listen('.message.new', e => {
             console.log('MESSAGE RECEIVED !!.');
             console.log(e.chatMessage);
-            getMessages()
+            getNewMessage()
         });
 
 });
@@ -106,16 +106,15 @@ function disconnect() {
     console.log('STREAM CHAT DISCONNECTED');
 }
 
- function listenForMessages() {
+ function getNewMessage() {
      window.Echo.private("chat." + currentChannel.id)
          .listen('.message.new', e => {
              getMessages();
          });
-     console.log('MESSAGE RECEIVED');
+     console.log('MESSAGE LOADED');
  }
 
-// watch(messages, listenForMessages);
-// watch(messages, listenForMessages);
+// watch(messages, getNewMessage);
 
 onBeforeUnmount(() => {
     disconnect();
