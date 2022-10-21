@@ -1154,9 +1154,21 @@ select {
 .nav-mask {
     z-index:300;
 }
+.welcomeOverlay {
+    z-index: 500;
+}
 .videoBgFull {
     position:static;
     bottom:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index:1;
+    background-color: black;
+}
+.videoBgWelcome {
+    position:static;
+    top:0;
     left:0;
     width:100%;
     height:100%;
@@ -1184,10 +1196,9 @@ select {
     height:14rem;
     background-color: black;
 }
-.videoContainerWelcomePage {
-    position: static;
+.videoContainerWelcome {
+    position: absolute;
     top:0px;
-    bottom:-4rem;
     left: 0px;
     right:0px;
     width:100vw;
@@ -2588,6 +2599,10 @@ select {
 
 .bg-opacity-0 {
   --tw-bg-opacity: 0;
+}
+
+.bg-opacity-5 {
+  --tw-bg-opacity: 0.05;
 }
 
 .bg-opacity-30 {

@@ -38,8 +38,8 @@ export let useVideoPlayerStore = defineStore('videoPlayer', {
             useChatStore().makeSmall();
         },
         makeVideoWelcomePage() {
-            this.videoContainerClass = 'videoContainerWelcomePage';
-            this.class = 'videoBgFull';
+            this.videoContainerClass = 'videoContainerWelcome';
+            this.class = 'videoBgWelcome';
             this.fullPage = false;
             this.loggedIn = false;
             useChatStore().chatHidden();

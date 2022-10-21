@@ -2,25 +2,27 @@
     <Head title="Beta" />
         <div class="bg-green-800 bg-opacity-10 min-h-screen text-gray-200 z-50">
 
+<header class="headerContainer">
+    <div class="welcomeOverlay px-6 py-4 sm:block sm:items-center sm:pt-2">
+        <div class="flex justify-end pt-4 pr-6">
+            <Button class="bg-opacity-0 hover:bg-opacity-0 text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md" v-if="!$page.props.user" @click="showLogin = true" >
+                Log in
+            </Button>
+            <Button class="bg-opacity-0 hover:bg-opacity-0"><Link v-if="!$page.props.user" :href="route('register')" class="text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md">
+                Register
+            </Link></Button>
+            <Button class="bg-opacity-0 hover:bg-opacity-0"><Link v-if="$page.props.user" :href="route('stream')" class="text-2xl text-gray-200 underline">
+                Return to stream
+            </Link></Button>
+        </div>
+    </div>
+</header>
 
 
-            <div class="px-6 py-4 sm:block sm:items-center sm:pt-2">
-                <div class="flex justify-end pt-4 pr-6">
-                    <Button class="bg-opacity-0 hover:bg-opacity-0 text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md" v-if="!$page.props.user" @click="showLogin = true" >
-                        Log in
-                    </Button>
-                    <Button class="bg-opacity-0 hover:bg-opacity-0"><Link v-if="!$page.props.user" :href="route('register')" class="text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md">
-                        Register
-                    </Link></Button>
-                        <Button class="bg-opacity-0 hover:bg-opacity-0"><Link v-if="$page.props.user" :href="route('stream')" class="text-2xl text-gray-200 underline">
-                        Return to stream
-                    </Link></Button>
-                </div>
-            </div>
+<div class="welcomeOverlay">
 
 
-
-            <div class="relative flex items-top justify-center min-h-screen text-gray-200">
+            <div class="bg-opacity-5 relative flex items-top justify-center min-h-screen text-gray-200">
                 <div class="flex justify-center items-center h-screen">
                     <div class="grid md:grid-cols-1 grid-cols-1 align-items-center -mt-32">
                         <JetApplicationLogo class="block md:w-auto p-10"/>
@@ -36,6 +38,10 @@
                 </div>
 
             </div>
+
+
+</div>
+
             <section class="flex flex-col justify-center items-center h-screen bg-white text-black p-5">
 
                     <div class="text-center font-semibold text-3xl">Welcome to notTV</div>
@@ -107,8 +113,8 @@ let chat = useChatStore()
 // keep these here.
 // videoPlayer.fullPage = false
 // videoPlayer.loggedIn = false
-videoPlayer.class = "videoBgFull"
-videoPlayer.videoContainerClass = "videoContainerHomePage"
+videoPlayer.class = "videoBgWelcome"
+videoPlayer.videoContainerClass = "videoContainerWelcome"
 // videoPlayer.videoContainerClass = "videoContainerHomePage"
 // chat.show = false
 // chat.class = 'chatHidden'
@@ -160,5 +166,7 @@ function scrollToElement(){
 
 
 <style scoped>
-
+.headerContainer {
+    z-index:500;
+}
 </style>

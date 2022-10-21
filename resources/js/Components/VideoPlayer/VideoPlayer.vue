@@ -72,7 +72,7 @@
             </div>
 
 
-            <div v-if="!videoPlayerStore.loggedIn" class="z-50">
+            <div v-if="!videoPlayerStore.loggedIn" class="welcomeOverlay">
                 <div class="landscape:hidden">
                 <div class="absolute top-0 right-0 p-5 drop-shadow">
                     <div class="grid grid-rows-1 place-content-end pt-2">

@@ -24,6 +24,7 @@
             <main>
                 <slot />
             </main>
+
             <div class="relative w-full h-full top-0">
                 <VideoPlayer :class="videoPlayerStore.class" class="videoContainer" />
             </div>
@@ -54,5 +55,8 @@ defineProps({
 <style>
 .videoContainer {
     z-index:50;
+}
+.headerContainer {
+    z-index:100;
 }
 </style>
