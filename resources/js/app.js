@@ -55,9 +55,9 @@ library.add(faUserSecret, faPlay, faQuestion, faStar, faUsers, faHandsHelping, f
 InertiaProgress.init({ delay: 250, color: '#FCEF5B', includeCSS: true, showSpinner: true, });
 
 Echo.private('chat.1')
-    .listen('MessageSent', (e) => {
+    .listen('.message.new', (e) => {
         this.messages.push({
-            message: e.message.message,
-            user: e.user
+            message: e.data,
         });
+        console.log('MESSAGE LOADED FROM APP.js');
     });
