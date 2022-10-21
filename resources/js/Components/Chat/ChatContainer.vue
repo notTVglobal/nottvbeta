@@ -124,7 +124,7 @@ function watchForNewMessage() {
     console.log('MESSAGE FOUND');
 }
 
-watch(watchForNewMessage, getNewMessage);
+watch(chatStore.messages, getNewMessage);
 
 onBeforeUnmount(() => {
     disconnect();
