@@ -67,6 +67,12 @@ function handleProcessedFile(error, file) {
         return;
     }
 
+    setTimeout(function () {
+        showStore.posterName = props.images.data[0].name;
+        showStore.posterId = props.images.data[0].id;
+        console.log("wait 1 milisecond");
+    }, 100);
+
     // add the file to our images array
 
     Inertia.reload({
@@ -78,11 +84,7 @@ function handleProcessedFile(error, file) {
     // longer than 1-ms will the image still load
     // on the page?
 
-    setTimeout(function () {
-        showStore.posterName = props.images.data[0].name;
-        showStore.posterId = props.images.data[0].id;
-        console.log("wait 1 milisecond");
-    }, 100);
+
 
 }
 
