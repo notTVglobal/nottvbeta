@@ -105,7 +105,9 @@ let props = defineProps({
     },
 });
 
-
+Inertia.reload({
+    only: ['images'],
+});
 
 showStore.posterName = props.poster;
 
