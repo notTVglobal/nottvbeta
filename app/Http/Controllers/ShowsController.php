@@ -275,7 +275,7 @@ class ShowsController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function uploadPoster(Request $request)
+    public function uploadPoster(HttpRequest $request)
     {
         $request->file('image')->store('images');
 
@@ -292,7 +292,7 @@ class ShowsController extends Controller
         $poster = $uploadedFile->hashName();
         // create image model
         // NEED TO PROTECT THESE
-        Image::create([
+        $image = Image::create([
             'name' => $poster,
             'extension' => $uploadedFile->extension(),
             'size' => $uploadedFile->getSize(),
@@ -310,8 +310,8 @@ class ShowsController extends Controller
 //            'poster' => $poster,
 //        ]);
 
-//        return $poster;
-        return Inertia::render('Shows/{$id}/Edit');
+        return $image;
+//        return Inertia::render('Shows/{$id}/Edit');
 
     }
 

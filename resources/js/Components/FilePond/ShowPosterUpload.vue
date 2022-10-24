@@ -18,7 +18,7 @@
                 ref="pond"
                 label-idle="Click to choose image, or drag here..."
                 @init="filepondInitialized"
-                server="/upload"
+                server="/showsUploadPoster"
                 accepted-file-types="image/jpg, image/jpeg, image/png"
                 @processfile="handleProcessedFile"
                 max-file-size="10MB"
@@ -66,6 +66,7 @@ function handleProcessedFile(error, file) {
         console.log(file);
         return;
     }
+
 
     setTimeout(function () {
         showStore.posterName = props.images.data[0].name;
