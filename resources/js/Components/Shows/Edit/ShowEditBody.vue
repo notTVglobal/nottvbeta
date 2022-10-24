@@ -88,6 +88,7 @@ import {useForm} from "@inertiajs/inertia-vue3";
 import TabbableTextarea from "@/Components/TabbableTextarea"
 import ShowPosterUpload from "@/Components/FilePond/ShowPosterUpload";
 import { ref } from 'vue'
+import {Inertia} from "@inertiajs/inertia";
 
 let showStore = useShowStore()
 
@@ -103,6 +104,8 @@ let props = defineProps({
         },
     },
 });
+
+
 
 showStore.posterName = props.poster;
 

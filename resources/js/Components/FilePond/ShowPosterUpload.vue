@@ -47,6 +47,8 @@ let props = defineProps({
     images: Object,
 });
 
+let emit = defineEmits(['images'])
+
 const FilePond = vueFilePond(
     FilePondPluginFileValidateType,
     FilePondPluginFileValidateSize,
@@ -67,6 +69,7 @@ function handleProcessedFile(error, file) {
         return;
     }
 
+    emit('images')
 
     setTimeout(function () {
         showStore.posterName = props.images.data[0].name;
@@ -79,6 +82,8 @@ function handleProcessedFile(error, file) {
     Inertia.reload({
         only: ['images'],
     });
+
+
 
     // tec21: this works, but is a 1-ms delay
     // the best way? if the database is delayed
