@@ -175,6 +175,17 @@ Route::middleware([
     })->can('viewCreator', 'App\Models\User')
         ->name('golive');
 
+// Invite
+///////////
+/// We'll make a public version of this page where a creator
+/// enters a code they receive in their email to start the
+/// sign up process.
+
+    Route::get('/invite', function () {
+        return Inertia::render('Invite');
+    })->can('viewCreator', 'App\Models\User')
+        ->name('invite');
+
 // For Testing
 ///////////
 

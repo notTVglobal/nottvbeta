@@ -6,17 +6,30 @@
     </div>
 
     <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
-        <div class="bg-white text-black p-5 mb-10">
 
-
+        <div class="bg-white rounded text-black p-5 mb-10">
 
             <div class="flex justify-between mb-3">
+
+
                 <h1 class="text-3xl font-semibold pb-3">Dashboard</h1>
-                <Link :href="`/golive`"><button
-                    class="bg-red-600 hover:bg-red-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
-                >Go Live</button>
-                </Link>
+
+
             </div>
+
+                <div class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4 mb-4">
+                    <Link
+                        :href="`/invite`"><button
+                        class="bg-orange-600 hover:bg-orange-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
+                    >Invite Creator</button>
+                    </Link>
+                    <Link :href="`/golive`"><button
+                        class="bg-red-600 hover:bg-red-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
+                    >Go Live</button>
+                    </Link>
+                </div>
+
+
 
             <div
                 class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"

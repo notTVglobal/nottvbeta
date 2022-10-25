@@ -1360,6 +1360,14 @@ var map = {
 		"/js/vendor",
 		"resources_js_Pages_Image_vue"
 	],
+	"./Invite": [
+		"./resources/js/Pages/Invite.vue",
+		"resources_js_Pages_Invite_vue"
+	],
+	"./Invite.vue": [
+		"./resources/js/Pages/Invite.vue",
+		"resources_js_Pages_Invite_vue"
+	],
 	"./Movies": [
 		"./resources/js/Pages/Movies.vue",
 		"resources_js_Pages_Movies_vue"
