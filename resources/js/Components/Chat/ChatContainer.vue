@@ -52,6 +52,21 @@ onBeforeMount(async() => {
 
     // window.Echo.private('chat.' + `${chatStore.currentChannel.id}`)
 
+    window.Echo.private('chat.' + chatStore.currentChannel.id)
+        .listen('.message.new', e => {
+            console.log('PINIA NEW MESSAGE.');
+            console.log(e.chatMessage);
+            // chatStore.messages.push(e.chatMessage);
+            axios.get('/chat/channel/' + chatStore.currentChannel.id + '/messages')
+                .then( response => {
+                    chatStore.messages = response.data;
+                    // chatStore.messages = response.data;
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+        });
+
 });
 
 onMounted(async () => {
@@ -127,20 +142,6 @@ function setChannel ( channel ){
     console.log('CURRENT CHANNEL: ' + chatStore.currentChannel.name);
     getMessages();
     console.log('test2: ' + chatStore.currentChannel.id);
-    window.Echo.private('chat.' + chatStore.currentChannel.id)
-        .listen('.message.new', e => {
-            console.log('PINIA NEW MESSAGE.');
-            console.log(e.chatMessage);
-            // chatStore.messages.push(e.chatMessage);
-            axios.get('/chat/channel/' + chatStore.currentChannel.id + '/messages')
-                .then( response => {
-                    chatStore.messages = response.data;
-                    // chatStore.messages = response.data;
-                })
-                .catch(error => {
-                    console.log(error);
-                })
-        });
 }
 
 function getMessages() {
