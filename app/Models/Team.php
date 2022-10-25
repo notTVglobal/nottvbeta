@@ -17,4 +17,8 @@ class Team extends Model
         'user_id',
         'slug',
     ];
+
+    protected $attributes = [
+        'isBeingEditedByUser_id' => null,
+    ];
 }

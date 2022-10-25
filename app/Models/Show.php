@@ -23,5 +23,9 @@ class Show extends Model
         'slug',
     ];
 
+    protected $attributes = [
+        'isBeingEditedByUser_id' => null,
+    ];
+
 }
 

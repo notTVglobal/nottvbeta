@@ -83,7 +83,11 @@ class User extends Authenticatable implements MustVerifyEmail
         'profile_photo_url',
     ];
 
-    protected $attributes = array( 'isEditingShow_id' => null, );
+    protected $attributes = [
+        'isEditingShow_id' => null,
+        'isEditingTeam_id' => null,
+        'isEditingEpisode_id' => null,
+    ];
 
     /**
      * Chat messages.

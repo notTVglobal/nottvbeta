@@ -27,4 +27,8 @@ class Episode extends Model
         'isPublished',
         'episodeStatus_id',
     ];
+
+    protected $attributes = [
+        'isBeingEditedByUser_id' => null,
+    ];
 }
