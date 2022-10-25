@@ -42,7 +42,6 @@
                     placeholder="Write a message..."
                     v-model="form.message"
                     @keyup.enter="sendMessage"
-                    @blur="sendMessage"
                 />
                 <div @click="sendMessage" class="px-4 pt-4 bg-gray-300 align-content-center hover:bg-blue-600 hover:text-white rounded text-black form-control cursor-pointer">
                     <font-awesome-icon icon="fa-paper-plane" class="text-xl"/>
@@ -86,7 +85,7 @@ function sendMessage() {
     //Pushes it to the messages array
     // newMessage.push(getMessages)
     //POST request to the messages route with the message data in order for our Laravel server to broadcast it.
-    axios.post('/chat/channel/' + chatStore.currentChannel.id + '/message', {
+    axios.post('/chat/message', {
         message: form.message,
         channel_id: chatStore.currentChannel.id,
         user_name: form.user_name,

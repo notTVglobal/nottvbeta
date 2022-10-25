@@ -55,11 +55,10 @@ class ChatController extends Controller
 //            ->get();
 //    }
 
-    public function newMessage(HttpRequest $request, $channelId)
+    public function newMessage(HttpRequest $request)
     {
         $newMessage = new ChatMessage;
         $newMessage->user_id = Auth::id();
-//        $newMessage->channel_id = $channelId;
         $newMessage->channel_id = $request->channel_id;
         $newMessage->message = $request->message;
         $newMessage->user_name = $request->user_name;

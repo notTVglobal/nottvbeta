@@ -7,7 +7,7 @@
         <chat-messages :messages="chatStore.messages"></chat-messages>
     </div>
     <div>
-        <input-message :channel="currentChannel" :user="props.user"></input-message>
+        <input-message :channel="currentChannel" v-on:messagesent="getMessages" :user="props.user"></input-message>
     </div>
 </template>
 
@@ -53,20 +53,8 @@ onBeforeMount(() => {
     // console.log('MESSAGE LOADED');
 
     // window.Echo.private('chat.' + `${chatStore.currentChannel.id}`)
-    window.Echo.private(currentChannel)
-        .listen('.message.new', e => {
-            console.log('PINIA NEW MESSAGE.');
-            console.log(e.chatMessage);
-            chatStore.messages.value = e.chatMessage;
-            // axios.get('/chat/channel/' + chatStore.currentChannel.id + '/messages')
-            //     .then( response => {
-            //         chatStore.messages = response.data;
-            //         // chatStore.messages = response.data;
-            //     })
-            //     .catch(error => {
-            //         console.log(error);
-            //     })
-        });
+
+
 
 });
 
@@ -77,7 +65,21 @@ onMounted(() => {
     //         messages.value = e.data;
     //     });
 
-
+    window.Echo.private(currentChannel)
+        .listen('.message.new', e => {
+            console.log('PINIA NEW MESSAGE.');
+            console.log(e.chatMessage);
+            // chatStore.messages.push(e.chatMessage);
+            axios.get('/chat/channel/' + chatStore.currentChannel.id + '/messages')
+                .then( response => {
+                    chatStore.messages = response.data;
+                    // chatStore.messages = response.data;
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+        });
+    console.log('test');
 })
 
 // window.Echo.private("chat." + currentChannel.id)

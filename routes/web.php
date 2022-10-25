@@ -363,7 +363,7 @@ Route::middleware([
     Route::get('/chat', [ChatController::class, 'index'])->name('chat');
     Route::get('/chat/channels', [ChatController::class, 'channels']);
     Route::get('/chat/channel/{channelId}/messages', [ChatController::class, 'messages']);
-    Route::post('/chat/channel/{channelId}/message', [ChatController::class, 'newMessage']);
+    Route::post('/chat/message', [ChatController::class, 'newMessage']);
 //    Route::post('/chat/channel/{channelId}/message', function() {
 //        ChatMessage::forceCreate(request(['body']));
 //    });
