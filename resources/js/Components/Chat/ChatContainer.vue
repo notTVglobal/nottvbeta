@@ -32,14 +32,12 @@ let props = defineProps({
 })
 
 let channels = ref([])
-// let currentChannel = ref([])
-let currentChannel = "chat.1"
 let messages = ref([])
 let newMessage = ref([])
 // let messages = ref(chatStore.messages)
 
-onBeforeMount(() => {
-    connect();
+onBeforeMount(async() => {
+    await connect();
 
     // window.Echo.private('chat.1').listen('.message.new', ({ chatMessage }) => {
     //     // messages.value = newMessage.data;
@@ -54,32 +52,18 @@ onBeforeMount(() => {
 
     // window.Echo.private('chat.' + `${chatStore.currentChannel.id}`)
 
-
-
 });
 
-onMounted(() => {
+onMounted(async () => {
     // window.Echo.private('chat.1')
     //     .listen('.message.new', e => {
     //         console.log('NEW ECHO ' + e.chatMessage.message)
     //         messages.value = e.data;
     //     });
+    await console.log('test1: ' + chatStore.currentChannel.id);
 
-    window.Echo.private(currentChannel)
-        .listen('.message.new', e => {
-            console.log('PINIA NEW MESSAGE.');
-            console.log(e.chatMessage);
-            // chatStore.messages.push(e.chatMessage);
-            axios.get('/chat/channel/' + chatStore.currentChannel.id + '/messages')
-                .then( response => {
-                    chatStore.messages = response.data;
-                    // chatStore.messages = response.data;
-                })
-                .catch(error => {
-                    console.log(error);
-                })
-        });
-    console.log('test');
+
+
 })
 
 // window.Echo.private("chat." + currentChannel.id)
@@ -118,6 +102,8 @@ onMounted(() => {
 //     }
 // }
 
+
+
 function connect() {
     console.log('STREAM CHAT CONNECTED');
     getChannels();
@@ -140,6 +126,21 @@ function setChannel ( channel ){
     console.log('SET CHANNEL');
     console.log('CURRENT CHANNEL: ' + chatStore.currentChannel.name);
     getMessages();
+    console.log('test2: ' + chatStore.currentChannel.id);
+    window.Echo.private('chat.' + chatStore.currentChannel.id)
+        .listen('.message.new', e => {
+            console.log('PINIA NEW MESSAGE.');
+            console.log(e.chatMessage);
+            // chatStore.messages.push(e.chatMessage);
+            axios.get('/chat/channel/' + chatStore.currentChannel.id + '/messages')
+                .then( response => {
+                    chatStore.messages = response.data;
+                    // chatStore.messages = response.data;
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+        });
 }
 
 function getMessages() {
@@ -165,6 +166,7 @@ function disconnect() {
  //             getMessages();
  //         });
  // }
+
 
 
 watchEffect(() => {
