@@ -58,6 +58,20 @@ onMounted(() => {
     //         console.log('NEW ECHO ' + e.chatMessage.message)
     //         messages.value = e.data;
     //     });
+    window.Echo.private('chat.1')
+        .listen('.message.new', e => {
+            console.log('PINIA NEW MESSAGE.');
+            console.log(e.chatMessage);
+            // this.messages.value = e.chatMessage;
+            axios.get('/chat/channel/' + videoPlayer.currentChannel.id + '/messages')
+                .then( response => {
+                    chatStore.messages = response.data;
+                    // chatStore.messages = response.data;
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+        });
 
 })
 
@@ -156,20 +170,20 @@ watchEffect(() => {
     //     forceTLS: true
     // });
     // let videoPlayer = useVideoPlayerStore();
-    window.Echo.private('chat.1')
-        .listen('.message.new', e => {
-            console.log('PINIA NEW MESSAGE.');
-            console.log(e.chatMessage);
-            // this.messages.value = e.chatMessage;
-            axios.get('/chat/channel/' + videoPlayer.currentChannel.id + '/messages')
-                .then( response => {
-                    chatStore.messages = response.data;
-                    // chatStore.messages = response.data;
-                })
-                .catch(error => {
-                    console.log(error);
-                })
-        });
+    // window.Echo.private('chat.1')
+    //     .listen('.message.new', e => {
+    //         console.log('PINIA NEW MESSAGE.');
+    //         console.log(e.chatMessage);
+    //         // this.messages.value = e.chatMessage;
+    //         axios.get('/chat/channel/' + videoPlayer.currentChannel.id + '/messages')
+    //             .then( response => {
+    //                 chatStore.messages = response.data;
+    //                 // chatStore.messages = response.data;
+    //             })
+    //             .catch(error => {
+    //                 console.log(error);
+    //             })
+    //     });
 });
 
 
