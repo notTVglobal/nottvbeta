@@ -13,7 +13,7 @@
             <div class="flex space-y-3">
                 <div class="mb-6">
                     <img :src="'/storage/images/' + showStore.posterName"
-                         :key="images" />
+                         :key="poster" />
                 </div>
             </div>
         </div>
@@ -27,6 +27,24 @@
 
             <form @submit.prevent="submit">
                 <div class="mb-6">
+                </div>
+
+                <div class="mb-6">
+                    <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
+                           for="name"
+                    >
+                        Image ID
+                    </label>
+
+                    <input v-model="form.image_id"
+                           class="border border-gray-400 p-2 w-full rounded-lg"
+                           type="text"
+                           name="image_id"
+                           id="image_id"
+                           required
+                    >
+                    <div v-if="form.errors.image_id" v-text="form.errors.image_id"
+                         class="text-xs text-red-600 mt-1"></div>
                 </div>
 
                 <div class="mb-6">
@@ -94,22 +112,11 @@ let showStore = useShowStore()
 
 let props = defineProps({
     show: Object,
-    poster: String,
-    images: {
-        data: {
-            0: {
-                name: String,
-                id: Number,
-            },
-        },
-    },
+    poster: ref(Object),
 });
 
-Inertia.reload({
-    only: ['images'],
-});
 
-showStore.posterName = props.poster;
+showStore.posterName = props.poster[0].name;
 
 let form = useForm({
     id: props.show.id,

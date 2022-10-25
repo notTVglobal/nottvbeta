@@ -21,14 +21,9 @@
                 </div>
                 <div class="flex flex-wrap-reverse justify-end gap-2">
                     <Link
-                        v-if="props.can.manageTeam" :href="`/teams/${props.team.id}/manage`"><button
+                        v-if="props.can.editTeam" :href="`/teams/${props.team.id}/manage`"><button
                         class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                     >Manage</button>
-                    </Link>
-                    <Link
-                        v-if="props.can.editTeam" :href="`/teams/${props.team.id}/edit`"><button
-                        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                    >Edit</button>
                     </Link>
                     <Link v-if="props.user.role_id === 4" :href="`/dashboard`"><button
                         class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"

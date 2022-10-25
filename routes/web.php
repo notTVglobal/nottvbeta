@@ -3,6 +3,8 @@
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\CreatorsController;
 use App\Http\Controllers\ShowsController;
+use App\Http\Controllers\ShowsPosterController;
+use App\Http\Controllers\TeamsLogoController;
 use App\Http\Controllers\EpisodesController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\UsersAdminCreateEditController;
@@ -265,9 +267,13 @@ Route::middleware([
     // uploaded image on the shows/edit page after upload.
     // this is my solution. Copy the ImageController.store
     // code to a new ShowController.uploadPoster function.
-    Route::post('/showsUploadPoster', [ShowsController::class, 'uploadPoster'])
+    Route::post('/showsUploadPoster', [ShowsPosterController::class, 'uploadPoster'])
         ->can('viewCreator', 'App\Models\User')
         ->name('shows.uploadPoster');
+
+    Route::post('/teamsUploadLogo', [TeamsLogoController::class, 'uploadLogo'])
+        ->can('viewCreator', 'App\Models\User')
+        ->name('teams.uploadLogo');
 
     // List all shows
 //    Route::get('/shows', [ShowsController::class, 'index'])->name('shows');

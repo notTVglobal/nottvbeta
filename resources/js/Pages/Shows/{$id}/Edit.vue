@@ -19,13 +19,122 @@
 
                             <!--            <div class="max-w-lg mx-auto mt-8">-->
 
-                            <ShowEditBody
-                                :show="props.show"
-                                :poster="props.poster"
-                                :images="props.images"
-                            />
+<!--                            <ShowEditBody-->
+<!--                                :show="props.show"-->
+<!--                                :poster="props.poster"-->
+<!--                            />-->
 
+
+                            <div v-if="form.errors.name" v-text="form.errors.name"
+                                 class="bg-red-600 p-2 w-full text-white font-semibold mt-1"></div>
+                            <div v-if="form.errors.description" v-text="form.errors.description"
+                                 class="bg-red-600 p-2 w-full text-white font-semibold mt-1"></div>
+
+                            <!-- Begin grid 2-col -->
+                            <div class="grid grid-cols-1 sm:grid-cols-2 space-x-6 p-6">
+
+                                <!--Left Column-->
+                                <div>
+                                    <div class="flex space-y-3">
+                                        <div class="mb-6">
+                                            <img :src="'/storage/images/' + props.poster"
+                                                 :key="poster" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!--Right Column-->
+                                <div>
+<!--                                    <ShowPosterUpload-->
+<!--                                        :team="props.show"-->
+<!--                                        :images="props.images"-->
+<!--                                    />-->
+
+                                    <div>
+
+                                        <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
+                                               for="name"
+                                        >
+                                            Change Show Poster
+                                        </label>
+                                        <div class="max-full mx-auto mt-2 mb-6 bg-gray-200 p-6">
+                                            <h2 class="text-xl font-semibold">Upload Show Poster</h2>
+
+                                            <ul class="pb-4">
+                                                <li>Max File Size: <span class="text-orange-400">10MB</span></li>
+                                                <li>File Types accepted: <span class="text-orange-400">jpg, jpeg, png</span></li>
+                                            </ul>
+                                            <file-pond
+                                                name="poster"
+                                                ref="pond"
+                                                label-idle="Click to choose image, or drag here..."
+                                                @init="filepondInitialized"
+                                                server="/showsUploadPoster"
+                                                accepted-file-types="image/jpg, image/jpeg, image/png"
+                                                @processfile="handleProcessedFile"
+                                                max-file-size="10MB"
+                                            />
+                                        </div>
+
+                                    </div>
+
+                                    <form @submit.prevent="submit">
+                                        <div class="mb-6">
+                                        </div>
+
+                                        <div class="mb-6">
+                                            <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
+                                                   for="name"
+                                            >
+                                                Show Name
+                                            </label>
+
+                                            <input v-model="form.name"
+                                                   class="border border-gray-400 p-2 w-full rounded-lg"
+                                                   type="text"
+                                                   name="name"
+                                                   id="name"
+                                                   required
+                                            >
+                                            <div v-if="form.errors.name" v-text="form.errors.name"
+                                                 class="text-xs text-red-600 mt-1"></div>
+                                        </div>
+
+                                        <div class="mb-6">
+                                            <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
+                                                   for="description"
+                                            >
+                                                Description
+                                            </label>
+                                            <TabbableTextarea v-model="form.description"
+                                                              class="border border-gray-400 p-2 w-full rounded-lg"
+                                                              name="description"
+                                                              id="description"
+                                                              rows="10" cols="30"
+                                                              required
+                                            />
+                                            <div v-if="form.errors.description" v-text="form.errors.description"
+                                                 class="text-xs text-red-600 mt-1"></div>
+                                        </div>
+
+                                        <div class="flex justify-between mb-6">
+                                             <button
+                                                type="submit"
+                                                class="bg-blue-600 hover:bg-blue-500 text-white rounded py-2 px-4"
+                                                :disabled="form.processing"
+                                            >
+                                                Save
+                                            </button>
+                                        </div>
+                                    </form>
+
+                                </div>
+                                <!-- End Right Column -->
                             </div>
+                            <!-- End grid 2-col -->
+
+
+                        </div>
                         </div>
                     </div>
                 </div>
@@ -44,8 +153,20 @@ import {useShowStore} from "@/Stores/ShowStore.js"
 import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/NavigationMenu"
 import ShowEditHeader from "@/Components/Shows/Edit/ShowEditHeader";
-import ShowEditBody from "@/Components/Shows/Edit/ShowEditBody";
-import {onMounted} from "vue";
+// import ShowEditBody from "@/Components/Shows/Edit/ShowEditBody";
+import { onMounted } from "vue";
+import {Inertia} from "@inertiajs/inertia";
+import {useForm} from "@inertiajs/inertia-vue3";
+import TabbableTextarea from "@/Components/TabbableTextarea"
+import ShowPosterUpload from "@/Components/FilePond/ShowPosterUpload";
+import vueFilePond, { setOptions } from 'vue-filepond';
+import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
+import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size";
+import FilePondPluginImagePreview from "filepond-plugin-image-preview";
+import FilePondPluginFileMetadata from "filepond-plugin-file-metadata";
+import 'filepond/dist/filepond.min.css';
+import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css';
+
 
 let videoPlayer = useVideoPlayerStore()
 let chat = useChatStore()
@@ -58,22 +179,54 @@ onMounted(() => {
 let props = defineProps({
     user: Object,
     show: Object,
-    poster: String,
     teamName: String,
-    images: {
-        data: {
-            0: {
-                name: String,
-                id: Number,
-            },
-        },
+    poster: String,
+});
+
+const FilePond = vueFilePond(
+    FilePondPluginFileValidateType,
+    FilePondPluginFileValidateSize,
+    FilePondPluginImagePreview,
+    FilePondPluginFileMetadata
+);
+
+FilePond.setOptions = ({
+    fileMetadataObject: {
+        show_id: '1',
     },
 });
 
-// showStore.posterName = props.posterName;
-// showStore.posterId = props.show.image_id;
+function filepondInitialized() {
+    console.log("Filepond is ready!");
+    console.log('Filepond object:', FilePond);
+}
+
+function handleProcessedFile(error, file) {
+    if (error) {
+        console.log("Filepond processed file");
+        console.log(error);
+        console.log(file);
+        return;
+    }
+
+    Inertia.reload({
+        only: ['poster'],
+    });
+
+}
+
+showStore.posterName = props.poster[0].name;
+
+let form = useForm({
+    id: props.show.id,
+    name: props.show.name,
+    description: props.show.description,
+});
+
+let submit = () => {
+    form.put(route('shows.update', props.show.id));
+};
 
 let title = "Edit > " + props.show.name;
-
 
 </script>

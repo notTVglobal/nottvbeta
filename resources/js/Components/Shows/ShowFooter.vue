@@ -14,8 +14,8 @@ import {useShowStore} from "@/Stores/ShowStore";
 let showStore = useShowStore();
 
 defineProps({
-    teamName: String,
     teamId: Number,
+    teamName: String,
 })
 
 </script>

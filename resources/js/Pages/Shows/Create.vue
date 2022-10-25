@@ -90,7 +90,7 @@
                 <div class="flex justify-between mb-6">
                     <button
                         type="submit"
-                        class="bg-blue-400 text-white rounded py-2 px-4 hover:bg-blue-500"
+                        class="bg-blue-600 hover:bg-blue-500 text-white rounded py-2 px-4"
                         :disabled="form.processing"
                     >
                         Submit

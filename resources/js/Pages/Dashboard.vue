@@ -13,7 +13,7 @@
             <div class="flex justify-between mb-3">
                 <h1 class="text-3xl font-semibold pb-3">Dashboard</h1>
                 <Link :href="`/golive`"><button
-                    class="bg-red-500 hover:bg-red-600 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
+                    class="bg-red-600 hover:bg-red-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
                 >Go Live</button>
                 </Link>
             </div>
@@ -33,29 +33,29 @@
                 <div class="flex flex-wrap md:flex-row justify-items-start gap-2">
                     <!--disable button if ! admin-->
                     <Link :href="`/users`"><button
-                        class="bg-blue-500 hover:bg-blue-600 text-white mt-1 p-2 col-span-1 rounded disabled:bg-gray-400"
+                        class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 col-span-1 rounded disabled:bg-gray-400"
                     >All Users</button>
                     </Link>
                     <!--disable button if ! admin-->
                     <Link :href="`/admin/channels`"><button
-                        class="bg-blue-500 hover:bg-blue-600 text-white mt-1 p-2 rounded disabled:bg-gray-400"
+                        class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"
                     >All Channels</button>
                     </Link>
                     <!--disable button if ! admin-->
                     <Link :href="`/teams`"><button
-                        class="bg-blue-500 hover:bg-blue-600 text-white mt-1 p-2 rounded disabled:bg-gray-400"
+                        class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"
                     >All Teams</button>
                     </Link>
 
                     <!--disable button if ! admin-->
                     <Link :href="`/video`"><button
-                        class="bg-blue-500 hover:bg-blue-600 text-white mt-1 p-2 rounded disabled:bg-gray-400"
+                        class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"
                     >MistServer API</button>
                     </Link>
 
                     <!--disable button if ! admin-->
                     <Link :href="`/image`"><button
-                        class="bg-blue-500 hover:bg-blue-600 text-white mt-1 p-2 rounded disabled:bg-gray-400"
+                        class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"
                     >Image Uploader</button>
                     </Link>
                 </div>
@@ -82,7 +82,7 @@
                         <div class="mb-1 font-semibold text-xl">My Teams</div>
                         <div class="">
                             <Link :href="`/teams/create`"><button
-                                class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 text-xs rounded disabled:bg-gray-400"
+                                class="bg-green-600 hover:bg-green-500 text-white px-4 py-2 text-xs rounded disabled:bg-gray-400"
                             >New Team</button>
                             </Link>
                         </div>

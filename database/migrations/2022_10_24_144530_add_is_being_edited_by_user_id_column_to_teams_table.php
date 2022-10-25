@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('shows', function (Blueprint $table) {
-            $table->foreignId('image_id')->default(4)->constrained();
+        Schema::table('teams', function (Blueprint $table) {
+            $table->foreignId('isBeingEditedByUser_id')->nullable()->constrained()->references('id')->on('users');
         });
     }
 
@@ -25,9 +25,9 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('shows', function (Blueprint $table) {
-            $table->dropForeign(['image_id']);
-            $table->dropColumn('image_id');
+        Schema::table('teams', function (Blueprint $table) {
+            $table->dropForeign(['isBeingEditedByUser_id']);
+            $table->dropColumn('isBeingEditedByUser_id');
         });
     }
 };

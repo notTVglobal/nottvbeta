@@ -78,6 +78,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('episodeStatus');
+        Schema::dropIfExists('episodeStatuses');
     }
 };

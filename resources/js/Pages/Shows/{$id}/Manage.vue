@@ -11,9 +11,9 @@
 
             <ShowHeader
                 :show="props.show"
-                :team="props.team"
+                :teamName="props.teamName"
                 :showRunnerName="props.showRunnerName"
-                :posterName="props.posterName"
+                :poster="props.poster"
             />
 
             <div class="flex flex-col">
@@ -65,7 +65,7 @@
                     </div>
                 </div>
             </div>
-            <ShowFooter :team="props.team"/>
+            <ShowFooter :teamName="props.teamName" :teamId="props.show.team_id"/>
         </div>
     </div>
 
@@ -96,9 +96,9 @@ onMounted(() => {
 
 let props = defineProps({
     show: Object,
-    team: Object,
+    teamName: String,
     episodes: Object,
-    posterName: String,
+    poster: String,
     showRunnerName: String,
     // filters: Object,
     message: String

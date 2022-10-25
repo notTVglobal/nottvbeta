@@ -17,11 +17,6 @@
                     class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                 >Manage</button>
                 </Link>
-                <Link
-                    v-if="props.can.editShow" :href="`/shows/${props.show.id}/edit`"><button
-                    class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                >Edit</button>
-                </Link>
                 <Link v-if="props.can.viewCreator" :href="`/dashboard`"><button
                     class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                 >Dashboard</button>
@@ -37,13 +32,13 @@
                 </div>
                 <div v-if="!props.can.viewCreator">
                     <h3>
-                        <Link :href="`/teams/${teamId}`" class="text-blue-500 ml-2"> {{ teamName }} </Link>
+                        <Link :href="`/teams/${props.show.team_id}`" class="text-blue-500 ml-2"> {{ props.teamName }} </Link>
                     </h3>
                 </div>
 
             </header>
             <div class="flex justify-center w-full bg-black py-0">
-                <img :src="'/storage/images/' + props.posterName" alt="" class="w-1/2 mx-2">
+                <img :src="'/storage/images/' + props.poster" alt="" class="w-1/2 mx-2">
             </div>
 
 
@@ -68,7 +63,7 @@
                             <div class="w-full bg-gray-300 text-2xl p-4 mb-8">POSTS</div>
                         </div>
 
-                        <ShowFooter :teamName="props.teamName" :teamId="props.teamId"/>
+                        <ShowFooter :teamName="props.teamName" :teamId="props.show.team_id"/>
                     </div>
                 </div>
             </div>
@@ -103,8 +98,7 @@ onMounted(() => {
 let props = defineProps({
     // user: Object,
     show: Object,
-    posterName: ref(String),
-    teamId: Number,
+    poster: String,
     teamName: String,
     showRunner: String,
     // episodes: Object,

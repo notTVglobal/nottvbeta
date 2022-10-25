@@ -9,6 +9,7 @@ use App\Models\Team;
 use App\Models\User;
 use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 
@@ -95,13 +96,31 @@ class EpisodesController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int  $episode
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Episode $episode)
     {
-        //
+        DB::table('users')->where('id', Auth::user()->id)->update([
+            'isEditingEpisode_id' => $episode->id,
+        ]);
+
+        DB::table('shows')->where('id', $episode->id)->update([
+            'isBeingEditedByUser_id' => Auth::user()->id,
+        ]);
+
+        return Inertia::render('Episodes/{$id}/Edit', [
+            'episode' => $episode,
+            'can' => [
+                'viewShows' => Auth::user()->can('view', Show::class),
+                'editShows' => Auth::user()->can('edit', Show::class),
+                'viewCreator' => Auth::user()->can('viewCreator', User::class),
+            ]
+        ]);
+
     }
+
+
 
     /**
      * Update the specified resource in storage.

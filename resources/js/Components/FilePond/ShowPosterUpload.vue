@@ -14,7 +14,7 @@
                 <li>File Types accepted: <span class="text-orange-400">jpg, jpeg, png</span></li>
             </ul>
             <file-pond
-                name="image"
+                name="poster"
                 ref="pond"
                 label-idle="Click to choose image, or drag here..."
                 @init="filepondInitialized"
@@ -31,7 +31,8 @@
 
 <script setup>
 import {useShowStore} from "@/Stores/ShowStore";
-import vueFilePond, {setOptions} from 'vue-filepond';
+import { ref } from 'vue';
+import vueFilePond, { setOptions } from 'vue-filepond';
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size';
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
@@ -44,10 +45,11 @@ let showStore = useShowStore()
 
 let props = defineProps({
     show: Object,
-    images: Object,
+    poster: ref(Object),
+    newPoster: ref(Object),
 });
 
-let emit = defineEmits(['images'])
+let emit = defineEmits(['poster'])
 
 const FilePond = vueFilePond(
     FilePondPluginFileValidateType,
@@ -55,6 +57,13 @@ const FilePond = vueFilePond(
     FilePondPluginImagePreview,
     FilePondPluginFileMetadata
 );
+
+FilePond.setOptions = ({
+    fileMetadataObject: {
+        show_id: '1',
+        },
+    });
+
 
 function filepondInitialized() {
     console.log("Filepond is ready!");
@@ -69,29 +78,27 @@ function handleProcessedFile(error, file) {
         return;
     }
 
-    emit('images')
-
-    setTimeout(function () {
-        showStore.posterName = props.images.data[0].name;
-        showStore.posterId = props.images.data[0].id;
-        console.log("wait 1 milisecond");
-    }, 100);
-
-    // add the file to our images array
+    emit('poster')
 
     Inertia.reload({
-        only: ['images'],
+        only: ['newPoster'],
     });
 
+    console.log(props.newPoster.data)
 
+    // setTimeout(function () {
+    //     showStore.posterName = props.poster[0].name;
+    //     showStore.posterId = props.poster[0].id;
+    //     console.log("wait 1 milisecond");
+    // }, 100);
 
+    // add the file to our images array
     // tec21: this works, but is a 1-ms delay
     // the best way? if the database is delayed
     // longer than 1-ms will the image still load
     // on the page?
 
-
-
 }
+
 
 </script>

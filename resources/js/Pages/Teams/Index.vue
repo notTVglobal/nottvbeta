@@ -12,7 +12,7 @@
             <div v-if="props.can.viewCreator" class="flex justify-end flex-wrap-reverse gap-x-2">
 
                 <Link v-if="can.createTeam" :href="`/teams/create`"><button
-                    class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded disabled:bg-gray-400"
+                    class="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded disabled:bg-gray-400"
                 >Add Team</button>
                 </Link>
                 <Link :href="`/dashboard`"><button

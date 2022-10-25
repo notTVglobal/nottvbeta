@@ -26,7 +26,8 @@ return new class extends Migration
     public function down()
     {
         Schema::table('episodes', function (Blueprint $table) {
-            $table->dropForeign('image_id');
+            $table->dropForeign(['image_id']);
+            $table->dropColumn('image_id');
         });
     }
 };

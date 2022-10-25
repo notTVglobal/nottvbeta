@@ -11,7 +11,7 @@
 
             <div v-if="props.can.viewCreator" class="flex justify-end flex-wrap-reverse gap-x-2">
                 <Link :href="`/shows/create`"><button
-                    class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded disabled:bg-gray-400"
+                    class="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded disabled:bg-gray-400"
                 >Add Show</button>
                 </Link>
                 <Link :href="`/dashboard`"><button
@@ -90,7 +90,7 @@
                                                 >
 <!--                                                    <img :src="`/storage/images/${show.poster}`" class="rounded-full h-20 w-20 object-cover">-->
                                                     <Link :href="`/shows/${show.id}`" class="text-blue-800 hover:text-blue-600">
-                                                    <img :src="'/storage/images/' + show.posterName" class="rounded-full h-20 w-20 object-cover"></Link>
+                                                    <img :src="'/storage/images/' + show.poster" class="rounded-full h-20 w-20 object-cover"></Link>
                                                 </th>
                                                 <th
                                                     scope="row"
@@ -108,7 +108,7 @@
                                                     scope="row"
                                                     class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                                                 >
-                                                    <Link :href="`/teams/${show.teamId}`" class="text-blue-800 hover:text-blue-600">{{ show.teamName }}</Link>
+                                                    <Link :href="`/teams/${show.team_id}`" class="text-blue-800 hover:text-blue-600">{{ show.teamName }}</Link>
                                                 </th>
                                                 <td class="px-6 py-4">
 
@@ -162,9 +162,8 @@ onMounted(() => {
 
 let props = defineProps({
     shows: Object,
-    teamId: Number,
     teamName: String,
-    posterName: String,
+    poster: String,
     filters: Object,
     can: Object,
     message: String,

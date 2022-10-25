@@ -110,14 +110,6 @@ let teamStore = useTeamStore()
 let props = defineProps({
     team: Object,
     logo: String,
-    images: {
-        data: {
-            0: {
-                name: String,
-                id: Number,
-            },
-        },
-    },
 });
 
 teamStore.logoName = props.logo;
@@ -127,7 +119,6 @@ let form = useForm({
     name: props.team.name,
     description: props.team.description,
     totalSpots: props.team.totalSpots,
-    image_id: ref(props.team.image_id),
 });
 
 // function updatePosterId () {
@@ -135,7 +126,6 @@ let form = useForm({
 // }
 
 let submit = () => {
-    form.image_id = teamStore.logoId;
     form.put(route('teams.update', props.team.id));
 };
 
