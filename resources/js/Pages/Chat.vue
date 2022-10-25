@@ -10,7 +10,7 @@
             <div class="text-3xl font-semibold">Chat</div>
         </div>
             <div class="mt-28 pl-32 pb-32">
-                <ChatContainer />
+                <ChatContainer :user="props.user"/>
             </div>
 
     </div>
@@ -33,7 +33,9 @@ let chat = useChatStore()
 
 videoPlayer.currentView = 'chat'
 
-
+let props = defineProps ({
+    user: Object,
+})
 
 onMounted(() => {
     videoPlayer.makeVideoTopRight();

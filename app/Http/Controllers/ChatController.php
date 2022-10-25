@@ -62,6 +62,8 @@ class ChatController extends Controller
 //        $newMessage->channel_id = $channelId;
         $newMessage->channel_id = $request->channel_id;
         $newMessage->message = $request->message;
+        $newMessage->user_name = $request->user_name;
+        $newMessage->user_profile_photo_path = $request->user_profile_photo_path;
         $newMessage->save();
 //
 //        $broadcastMessage = $newMessage;

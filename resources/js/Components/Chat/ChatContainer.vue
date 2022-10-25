@@ -7,7 +7,7 @@
         <chat-messages :messages="chatStore.messages"></chat-messages>
     </div>
     <div>
-        <input-message :channel="currentChannel" v-on:messagesent="getMessages"></input-message>
+        <input-message :channel="currentChannel" :user="props.user"></input-message>
     </div>
 </template>
 
@@ -23,6 +23,7 @@ let videoPlayer = useVideoPlayerStore()
 let chatStore = useChatStore()
 
 let props = defineProps({
+    user: Object,
     // channels: Object,
     // currentChannel: ref([]),
     // messages: ref([]),
@@ -31,7 +32,8 @@ let props = defineProps({
 })
 
 let channels = ref([])
-let currentChannel = ref([])
+// let currentChannel = ref([])
+let currentChannel = "chat.1"
 let messages = ref([])
 let newMessage = ref([])
 // let messages = ref(chatStore.messages)
@@ -50,6 +52,22 @@ onBeforeMount(() => {
     //     });
     // console.log('MESSAGE LOADED');
 
+    // window.Echo.private('chat.' + `${chatStore.currentChannel.id}`)
+    window.Echo.private(currentChannel)
+        .listen('.message.new', e => {
+            console.log('PINIA NEW MESSAGE.');
+            console.log(e.chatMessage);
+            chatStore.messages.value = e.chatMessage;
+            // axios.get('/chat/channel/' + chatStore.currentChannel.id + '/messages')
+            //     .then( response => {
+            //         chatStore.messages = response.data;
+            //         // chatStore.messages = response.data;
+            //     })
+            //     .catch(error => {
+            //         console.log(error);
+            //     })
+        });
+
 });
 
 onMounted(() => {
@@ -58,20 +76,7 @@ onMounted(() => {
     //         console.log('NEW ECHO ' + e.chatMessage.message)
     //         messages.value = e.data;
     //     });
-    window.Echo.private('chat.1')
-        .listen('.message.new', e => {
-            console.log('PINIA NEW MESSAGE.');
-            console.log(e.chatMessage);
-            // this.messages.value = e.chatMessage;
-            axios.get('/chat/channel/' + videoPlayer.currentChannel.id + '/messages')
-                .then( response => {
-                    chatStore.messages = response.data;
-                    // chatStore.messages = response.data;
-                })
-                .catch(error => {
-                    console.log(error);
-                })
-        });
+
 
 })
 
@@ -129,15 +134,14 @@ function getChannels() {
 }
 
 function setChannel ( channel ){
-    currentChannel = channel;
-    videoPlayer.currentChannel = channel;
+    chatStore.currentChannel = channel;
     console.log('SET CHANNEL');
-    console.log('CURRENT CHANNEL: ' + currentChannel.name);
+    console.log('CURRENT CHANNEL: ' + chatStore.currentChannel.name);
     getMessages();
 }
 
 function getMessages() {
-    axios.get('/chat/channel/' + videoPlayer.currentChannel.id + '/messages')
+    axios.get('/chat/channel/' + chatStore.currentChannel.id + '/messages')
         .then( response => {
             chatStore.messages = response.data;
             // chatStore.messages = response.data;
@@ -149,7 +153,7 @@ function getMessages() {
 }
 
 function disconnect() {
-    window.Echo.leave("chat." + currentChannel.id );
+    window.Echo.leave("chat." + chatStore.currentChannel.id );
     console.log('STREAM CHAT DISCONNECTED');
 }
 
