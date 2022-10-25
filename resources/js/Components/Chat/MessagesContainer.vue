@@ -13,7 +13,7 @@
 
             <div class="chatChrome w-full h-full py-2 flex flex-col-reverse overflow-y-scroll overflow-x-clip break-words messages">
                 <div id="scrollToMe"></div>
-                <div v-for="(message, index) in messages" :key="index">
+                <div v-for="(message, index) in chatStore.messages" :key="index">
                     <message-item :message="message"/>
                 </div>
                 The newest message is at the bottom.

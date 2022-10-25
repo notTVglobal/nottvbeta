@@ -6,16 +6,18 @@ use App\Models\Channel;
 use App\Models\ChatMessage;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Request;
 use App\Events\Message;
-use Illuminate\Http\Request;
+use Illuminate\Http\Request as HttpRequest;
 use Inertia\Inertia;
 use App\Events\NewChatMessage;
+use function Termwind\render;
 
 
 class ChatController extends Controller
 {
 
-    public function channels( Request $request ){
+    public function channels( HttpRequest $request ){
         return Channel::all();
     }
     public function __construct()
@@ -23,19 +25,25 @@ class ChatController extends Controller
         $this->middleware('auth');
     }
 
-    public function messages( Request $request, $channelId ) {
-        // this needs to be protected -> only return the user.name and profile_photo_path.
-        return ChatMessage::where('channel_id', $channelId)
-            ->with('user')
+    public function messages( HttpRequest $request, $channelId ) {
+
+        return ChatMessage::query()
+            ->where('channel_id', $channelId)
+            ->with(['user' => function ($query) {
+                $query->select('id', 'name', 'profile_photo_path');
+            }])
+            ->latest()
             ->orderBy('created_at', 'DESC')
-            ->limit(50)
             ->get();
     }
 
     public function index()
     {
         return Inertia::render('Chat');
+//        return view('chat');
+
     }
+
 
 //    public function fetchMessages(Request $request)
 //    {
@@ -47,7 +55,7 @@ class ChatController extends Controller
 //            ->get();
 //    }
 
-    public function newMessage(Request $request, $channelId)
+    public function newMessage(HttpRequest $request, $channelId)
     {
         $newMessage = new ChatMessage;
         $newMessage->user_id = Auth::id();
@@ -55,9 +63,14 @@ class ChatController extends Controller
         $newMessage->channel_id = $request->channel_id;
         $newMessage->message = $request->message;
         $newMessage->save();
+//
+//        $broadcastMessage = $newMessage;
+//        $broadcastMessage->user_profile_pic =
 
         broadcast(new NewChatMessage( $newMessage ))->toOthers();
+//        broadcast(new NewChatMessage($request->input('username'), $request->input('message')));
         return $newMessage;
+
     }
 
 //    public function message(Request $request)

@@ -10,15 +10,15 @@
 
 </head>
 <body class="font-sans antialiased bg-black">
-<?php if (!isset($__inertiaSsr)) { $__inertiaSsr = app(\Inertia\Ssr\Gateway::class)->dispatch($page); }  if ($__inertiaSsr instanceof \Inertia\Ssr\Response) { echo $__inertiaSsr->body; } else { ?><div id="app" data-page="<?php echo e(json_encode($page)); ?>"></div><?php } ?>
+
 <div class="container">
     <div class="card">
-        <div class="card-header">Conversation</div>
+        <div class="card-header">Conversation 77</div>
         <div class="card-body">
-            <chat-messages :messages="messages"></chat-messages>
+            <chat-container></chat-container>
         </div>
         <div class="card-footer">
-            <chat-form v-on:messagesent="addMessage" :user="<?php echo e(Auth::user()); ?>"></chat-form>
+
         </div>
     </div>
 </div>

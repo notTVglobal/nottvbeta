@@ -32,9 +32,9 @@ let props = defineProps({
 
 let channels = ref([])
 let currentChannel = ref([])
-// let messages = ref([])
+let messages = ref([])
 let newMessage = ref([])
-let messages = ref(chatStore.messages)
+// let messages = ref(chatStore.messages)
 
 onBeforeMount(() => {
     connect();

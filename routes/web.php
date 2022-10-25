@@ -23,6 +23,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Models\User;
+use App\Models\ChatMessage;
 use App\Http\Middleware\PusherEvent;
 use Illuminate\Support\Facades\Auth;
 use App\Events\NewChatMessage;
@@ -355,9 +356,16 @@ Route::middleware([
 
 // Chat
 ///////////
+///
+    Route::get('/chat1', function () {
+        return view('chat');
+    });
     Route::get('/chat', [ChatController::class, 'index'])->name('chat');
     Route::get('/chat/channels', [ChatController::class, 'channels']);
     Route::get('/chat/channel/{channelId}/messages', [ChatController::class, 'messages']);
     Route::post('/chat/channel/{channelId}/message', [ChatController::class, 'newMessage']);
+//    Route::post('/chat/channel/{channelId}/message', function() {
+//        ChatMessage::forceCreate(request(['body']));
+//    });
 
 });
