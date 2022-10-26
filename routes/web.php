@@ -242,7 +242,7 @@ Route::middleware([
     // Display shows index page
     Route::get('/shows', [ShowsController::class, 'index'])
         ->can('viewPremium', 'App\Models\User')
-        ->name('shows.index');
+        ->name('shows');
     // Display shows manage page
     Route::get('/shows/{show}/manage', [ShowsController::class, 'manage'])
         ->middleware('can:manage,show')
@@ -270,7 +270,7 @@ Route::middleware([
     // Display episodes index page
     Route::get('/shows/{show}/episodes', [ShowEpisodeController::class, 'index'])
         ->can('viewPremium', 'App\Models\User')
-        ->name('showEpisodes.index');
+        ->name('showEpisodes');
     // Display shows episode page
     Route::get('/shows/{show}/episode/{episode}', [ShowEpisodeController::class, 'show'])
         ->can('viewPremium', 'App\Models\User')
