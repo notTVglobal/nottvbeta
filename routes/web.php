@@ -274,7 +274,7 @@ Route::middleware([
     // Display shows episode page
     Route::get('/shows/{show}/episode/{episode}', [ShowEpisodeController::class, 'show'])
         ->can('viewPremium', 'App\Models\User')
-        ->name('showEpisodes.show');
+        ->name('shows.showEpisodes.show');
 
 
 
