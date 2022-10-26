@@ -10,15 +10,14 @@ class Team extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
+        'image_id',
         'name',
         'description',
-        'logo',
+        'memberSpots',
         'totalSpots',
-        'user_id',
         'slug',
+        'isBeingEditedByUser_id',
     ];
 
-    protected $attributes = [
-        'isBeingEditedByUser_id' => null,
-    ];
 }

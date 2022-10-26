@@ -17,15 +17,11 @@ class Show extends Model
     protected $fillable = [
         'name',
         'description',
-        'poster',
         'user_id',
         'team_id',
         'slug',
+        'isBeingEditedByUser_id',
+        'image_id'
     ];
-
-    protected $attributes = [
-        'isBeingEditedByUser_id' => null,
-    ];
-
 }
 

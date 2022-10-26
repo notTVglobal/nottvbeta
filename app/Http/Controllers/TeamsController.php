@@ -100,7 +100,7 @@ class TeamsController extends Controller
 //        Team::create($attributes);
 //        // redirect
 //        return redirect('/teams')->with('message', 'Team Created Successfully');
-
+git a
         $request->validate([
             'name' => 'unique:teams|required|max:255',
             'description' => 'required|string|max:5000',
@@ -113,6 +113,8 @@ class TeamsController extends Controller
             'user_id' => $request->user_id,
             'totalSpots' => $request->totalSpots,
             'slug' => \Str::slug($request->name),
+            'image_id' => null,
+            'isBeingEditedByUser_id' => $request->user_id,
         ]);
 
         $teamId = Team::query()->where('name', $request->name)->firstOrFail();

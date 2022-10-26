@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Image;
 use App\Models\Post;
 use App\Models\Show;
-use App\Models\Episode;
+use App\Models\ShowEpisode;
 use App\Models\Team;
 use App\Models\User;
 //use http\QueryString;
@@ -133,6 +133,8 @@ class ShowsController extends Controller
             'user_id' => $request->user_id,
             'team_id' => $request->team_id,
             'slug' => \Str::slug($request->name),
+            'isBeingEditedByUser_id' => $request->user_id,
+            'image_id' => null,
         ]);
 
         // Use this route to return
@@ -216,7 +218,7 @@ class ShowsController extends Controller
             'teamName' => $teamName,
             'poster' => getPoster($show),
             'showRunnerName' => $showRunner,
-            'episodes' => Episode::query()->where('show_id', $show->id)->get(),
+            'episodes' => ShowEpisode::query()->where('show_id', $show->id)->get(),
 //            'episodes' => Episode::query()
 //                ->when(Request::input('search'), function ($query, $search) {
 //                    $query->where('name', 'like', "%{$search}%");

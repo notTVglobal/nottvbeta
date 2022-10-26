@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('teams', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained();
-            $table->foreignId('image_id')->constrained();
+            $table->foreignId('image_id')->nullable()->constrained();
             $table->string('name');
             $table->longtext('description');
             $table->timestamps();

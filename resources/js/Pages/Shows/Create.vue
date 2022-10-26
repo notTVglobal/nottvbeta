@@ -80,12 +80,6 @@
                     <div v-if="form.errors.description" v-text="form.errors.description" class="text-xs text-red-600 mt-1"></div>
                 </div>
 
-                <input v-model="form.poster"
-                       class="border border-gray-400 p-2 w-full rounded-lg"
-                       type="hidden"
-                       name="poster"
-                       id="poster"
-                >
                 <input v-model="form.user_id" hidden>
                 <div class="flex justify-between mb-6">
                     <button
@@ -129,7 +123,6 @@ let props = defineProps({
 let form = useForm({
     name: '',
     description: '',
-    poster: '',
     user_id: props.userId,
     team_id: teamStore.activeTeam,
 });

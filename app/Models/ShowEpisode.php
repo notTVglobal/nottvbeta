@@ -17,7 +17,6 @@ class ShowEpisode extends Model
     protected $fillable = [
         'name',
         'description',
-        'image_id',
         'user_id',
         'show_id',
         'slug',
@@ -28,6 +27,7 @@ class ShowEpisode extends Model
 
     protected $attributes = [
         'isBeingEditedByUser_id' => null,
+        'image_id',
     ];
 
 }
