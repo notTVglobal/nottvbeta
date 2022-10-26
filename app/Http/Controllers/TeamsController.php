@@ -100,7 +100,7 @@ class TeamsController extends Controller
 //        Team::create($attributes);
 //        // redirect
 //        return redirect('/teams')->with('message', 'Team Created Successfully');
-git a
+
         $request->validate([
             'name' => 'unique:teams|required|max:255',
             'description' => 'required|string|max:5000',
