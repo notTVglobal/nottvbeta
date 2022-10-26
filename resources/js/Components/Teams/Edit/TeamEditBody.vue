@@ -36,6 +36,8 @@
                         Team Name
                     </label>
 
+                    {{props.team.slug}}
+
                     <input v-model="form.name"
                            class="border border-gray-400 p-2 w-full rounded-lg"
                            type="text"
@@ -126,7 +128,7 @@ let form = useForm({
 // }
 
 let submit = () => {
-    form.put(route('teams.update', props.team.id));
+    form.put(route('teams.update', props.team.slug));
 };
 
 </script>

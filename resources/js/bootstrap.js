@@ -1,9 +1,5 @@
 import _ from 'lodash';
 window._ = _;
-// window._ = require('lodash');
-
-// window.axios = require('axios');
-// window.moment = require('moment');
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
@@ -13,20 +9,6 @@ window._ = _;
 
 import axios from 'axios';
 window.axios = axios;
-
-// window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-//
-// window.axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
-// window.axios.defaults.headers.common.crossDomain = true;
-// window.axios.defaults.baseURL = '/api';
-
-// let token = document.head.querySelector('meta[name="csrf-token"]');
-//
-// if (token) {
-//     window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
-// } else {
-//     console.error('CSRF token not found.');
-// }
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
@@ -45,7 +27,7 @@ window.Echo = new Echo({
     encrypted: true,
     forceTLS: true
 });
-//
+
 // window.Echo.private('chat.1')
 // .listen('.message.new', e => {
 //    console.log('BOOTSTRAP MESSAGE CONNECT TO ECHO AND LISTEN. NEW MESSAGE RECEIVED.');

@@ -21,7 +21,7 @@
                 </div>
                 <div class="flex flex-wrap-reverse justify-end gap-2">
                     <Link
-                        v-if="props.can.editTeam" :href="`/teams/${props.team.id}/manage`"><button
+                        v-if="props.can.editTeam" :href="`/teams/${props.team.slug}/manage`"><button
                         class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                     >Manage</button>
                     </Link>
@@ -55,13 +55,13 @@
                                     class="min-w-[8rem] px-6 py-4 font-medium text-gray-900 dark:text-white"
                                 >
                                     <!--                                                    <img :src="`/storage/images/${show.poster}`" class="rounded-full h-20 w-20 object-cover">-->
-                                    <Link :href="`/shows/${show.id}`" class="text-blue-800 hover:text-blue-600">
+                                    <Link :href="`/shows/${show.slug}`" class="text-blue-800 hover:text-blue-600">
                                     <img :src="'/storage/images/' + show.poster" class="rounded-full h-32 w-32 object-cover"></Link>
                                 </div>
                                 <div
                                     class="px-6 py-4 font-medium text-gray-900 dark:text-white break-words grow-0 w-32"
                                 >
-                                    <Link :href="`/shows/${show.id}`" class="text-blue-800 hover:text-blue-600">{{ show.name }}</Link>
+                                    <Link :href="`/shows/${show.slug}`" class="text-blue-800 hover:text-blue-600">{{ show.name }}</Link>
                                 </div>
                             </div>
 </div>
@@ -84,28 +84,18 @@
 
 <script setup>
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import { useChatStore } from "@/Stores/ChatStore.js"
 import { useTeamStore } from "@/Stores/TeamStore.js"
-import TeamHeader from "@/Components/Teams/TeamHeader"
-import TeamMembersList from "@/Components/Teams/TeamMembersList"
-import TeamFooter from "@/Components/Teams/TeamFooter"
-import Modal from "@/Components/Modal"
-import {ref, reactive, computed, onMounted} from 'vue'
+import { onMounted } from "vue"
 import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/NavigationMenu"
-import TeamShowsList from "@/Components/Teams/TeamShowsList";
-import TeamAssignmentsList from "@/Components/Teams/TeamAssignmentsList";
-import Pagination from "@/Components/Pagination";
+import Pagination from "@/Components/Pagination"
 
-let videoPlayer = useVideoPlayerStore()
-let chat = useChatStore()
+let videoPlayerStore = useVideoPlayerStore();
+let teamStore = useTeamStore();
 
 onMounted(() => {
-    videoPlayer.makeVideoTopRight();
+    videoPlayerStore.makeVideoTopRight();
 });
-
-let teamStore = useTeamStore();
-// team.fill();
 
 let props = defineProps({
     user: Object,
@@ -116,6 +106,8 @@ let props = defineProps({
     filters: Object,
     can: Object,
 });
+
+teamStore.setActiveTeam(props.team);
 
 
 </script>

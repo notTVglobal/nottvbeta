@@ -11,11 +11,11 @@
             <div class="flex justify-between mt-3 mb-6">
                 <div class="text-3xl">Create Show</div>
                 <div>
-                    <Link v-if="teamStore.activeTeam" :href="`/teams/${teamStore.activeTeam}/manage`"><button
+                    <Link v-if="teamStore.slug" :href="`/teams/${teamStore.slug}/manage`"><button
                         class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
                     >Cancel</button>
                     </Link>
-                    <Link v-if="!teamStore.activeTeam" :href="`/dashboard`"><button
+                    <Link v-if="!teamStore.slug" :href="`/dashboard`"><button
                         class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
                     >Cancel</button>
                     </Link>
@@ -99,20 +99,18 @@
 </template>
 
 <script setup>
-import { useForm } from "@inertiajs/inertia-vue3"
-import {onMounted, ref} from 'vue'
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import { useTeamStore } from "@/Stores/TeamStore.js"
-import { useChatStore } from "@/Stores/ChatStore.js"
 import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/NavigationMenu"
+import { onMounted } from 'vue'
+import { useForm } from "@inertiajs/inertia-vue3"
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+import { useTeamStore } from "@/Stores/TeamStore.js"
 
-let videoPlayer = useVideoPlayerStore()
+let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore()
-let chat = useChatStore()
 
 onMounted(() => {
-    videoPlayer.makeVideoTopRight();
+    videoPlayerStore.makeVideoTopRight();
 });
 
 let props = defineProps({
@@ -124,7 +122,7 @@ let form = useForm({
     name: '',
     description: '',
     user_id: props.userId,
-    team_id: teamStore.activeTeam,
+    team_id: teamStore.id,
 });
 
 

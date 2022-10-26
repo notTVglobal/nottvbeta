@@ -13,7 +13,7 @@
 
             <div class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4">
                 <Link
-                    v-if="props.can.manageShow" :href="`/shows/${props.show.id}/manage`"><button
+                    v-if="props.can.manageShow" :href="`/shows/${props.show.slug}/manage`"><button
                     class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                 >Manage</button>
                 </Link>

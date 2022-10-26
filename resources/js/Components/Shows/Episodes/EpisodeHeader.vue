@@ -10,7 +10,7 @@
         </div>
         <div class="">
             <Link
-                :href="`/shows/${teamStore.activeShow.slug}/edit`"><button
+                :href="`/shows/${teamStore.activeShow.id}/edit`"><button
                 class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
             >Edit</button>
             </Link>
@@ -25,7 +25,7 @@
     <header class="flex justify-between mb-3">
             <h3 class="inline-flex items-center text-3xl font-semibold relative">
                 <img :src="'/storage/images/' + poster" alt="" class="w-20 mr-2">
-                <Link :href="`/shows/${teamStore.activeShow.slug}`" class="">{{ teamStore.activeShow.name }}</Link>
+                <Link :href="`/shows/${teamStore.activeShow.id}`" class="">{{ teamStore.activeShow.name }}</Link>
             </h3>
     </header>
 
@@ -35,7 +35,7 @@
 
     <div class="flex justify-end mt-6">
         <div class="flex flex-col">
-            <div><span class="text-xs capitalize font-semibold">Team: </span><Link :href="`/teams/${teamStore.slug}/manage`" class="text-blue-500 ml-2"> {{ teamStore.name }} </Link></div>
+            <div><span class="text-xs capitalize font-semibold">Team: </span><Link :href="`/teams/${teamStore.id}/manage`" class="text-blue-500 ml-2"> {{ teamStore.name }} </Link></div>
             <div><span class="text-xs capitalize font-semibold mr-2">Show Runner: </span> {{ showRunnerName }} </div>
         </div>
     </div>

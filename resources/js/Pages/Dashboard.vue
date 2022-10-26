@@ -107,7 +107,7 @@
                     >
                         <p class=""><Link
                             @click="videoPlayer.makeVideoTopRight()"
-                            :href="`/teams/${team.id}/manage`"
+                            :href="`/teams/${team.slug}/manage`"
                             class="text-blue-800 hover:text-blue-400">
                             {{ team.name }}
                         </Link></p>
@@ -126,10 +126,10 @@
                                 <p class="">even if you're a solo creator</p>
 
                             </template>
-                            <Button><font-awesome-icon
+                            <button><font-awesome-icon
                                 icon="fa-solid fa-question"
                                 class="mt-6 absolute bottom-0 text-right pr-4 py-2 "
-                            /></Button>
+                            /></button>
                         </Popper>
                         </div>
 
@@ -149,7 +149,7 @@
                     >
                         <p class=""><Link
                             @click="videoPlayer.makeVideoTopRight()"
-                            :href="`/shows/${show.id}/manage`"
+                            :href="`/shows/${show.slug}/manage`"
                             class="text-blue-800 hover:text-blue-400">
                             {{ show.name }}
                         </Link></p>
@@ -165,10 +165,10 @@
                             <p class="text-xl font-semibold mb-2">🍿 These are your shows </p>
                             <p class="">Join or create a team to start a show.</p>
                         </template>
-                            <Button><font-awesome-icon
+                            <button><font-awesome-icon
                                 icon="fa-solid fa-question"
                                 class="mt-6 absolute bottom-0 text-right pr-4 py-2 "
-                            /></Button>
+                            /></button>
                         </Popper>
                         </div>
                     </div>
@@ -248,7 +248,6 @@ onMounted(() => {
 });
 
 videoPlayer.loggedIn = true
-// onload(videoPlayer.class = "videoTopRight")
 
 let props = defineProps({
     shows: Object,

@@ -79,28 +79,23 @@
 
 
 <script setup>
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import { useChatStore } from "@/Stores/ChatStore.js"
-import { useTeamStore } from "@/Stores/TeamStore.js"
-import TeamHeader from "@/Components/Teams/TeamHeader"
-import TeamMembersList from "@/Components/Teams/TeamMembersList"
-import TeamFooter from "@/Components/Teams/TeamFooter"
-import Modal from "@/Components/Modal"
-import {ref, reactive, computed, onMounted} from 'vue'
 import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/NavigationMenu"
-import TeamShowsList from "@/Components/Teams/TeamShowsList";
-import TeamAssignmentsList from "@/Components/Teams/TeamAssignmentsList";
-import Pagination from "@/Components/Pagination";
-import TeamManageHeader from "@/Components/Teams/Manage/TeamManageHeader";
+import { ref, computed, onMounted } from "vue"
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+import { useTeamStore } from "@/Stores/TeamStore.js"
+import Modal from "@/Components/Modal"
+import Pagination from "@/Components/Pagination"
+import TeamManageHeader from "@/Components/Teams/Manage/TeamManageHeader"
+import TeamMembersList from "@/Components/Teams/TeamMembersList"
+import TeamShowsList from "@/Components/Teams/TeamShowsList"
+import TeamAssignmentsList from "@/Components/Teams/TeamAssignmentsList"
 
-let videoPlayer = useVideoPlayerStore()
-let chat = useChatStore()
+let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore();
-// team.fill();
 
 onMounted(() => {
-    videoPlayer.makeVideoTopRight();
+    videoPlayerStore.makeVideoTopRight();
 });
 
 let props = defineProps({
@@ -113,8 +108,7 @@ let props = defineProps({
     can: Object,
 });
 
-// let team_id = ref(props.filters.team_id)
-teamStore.setActiveTeam(props.team.id);
+teamStore.setActiveTeam(props.team);
 
 let showModal = ref(false);
 let a = ref(props.team.memberSpots);

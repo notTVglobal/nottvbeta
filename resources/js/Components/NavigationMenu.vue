@@ -6,7 +6,7 @@
                 <div class="flex">
                     <!-- Logo -->
                     <div class="shrink-0 flex items-center">
-                        <Link @click="videoPlayer.makeVideoTopRight()" :href="route('stream')">
+                        <Link @click="videoPlayerStore.makeVideoTopRight()" :href="route('stream')">
                             <JetApplicationMark class="block h-9 w-auto"/>
                         </Link>
                     </div>
@@ -14,7 +14,7 @@
                     <!-- Navigation Links -->
                     <div class="hidden space-x-8 lg:-my-px lg:ml-10 lg:flex">
                         <h3 class="inline-flex items-center relative">
-                        <JetNavLink @click="videoPlayer.makeVideoFullPage() && videoPlayer.videoContainerClassFullPage()" :href="route('stream')" :active="route().current('stream')">
+                        <JetNavLink @click="videoPlayerStore.makeVideoFullPage() && videoPlayerStore.videoContainerClassFullPage()" :href="route('stream')" :active="route().current('stream')">
                             Stream
 
                             <div v-if="streamStore.isLive"
@@ -24,42 +24,42 @@
                             </div>
                         </JetNavLink>
                         </h3>
-                        <JetNavLink @click="videoPlayer.makeVideoTopRight()" :href="route('schedule')" :active="route().current('schedule')">
+                        <JetNavLink @click="videoPlayerStore.makeVideoTopRight()" :href="route('schedule')" :active="route().current('schedule')">
                             Schedule
 
                         </JetNavLink>
                         <JetNavLink
                             v-if="$page.props.user.role_id === 2 || $page.props.user.role_id === 3 || $page.props.user.role_id === 4"
-                            @click="videoPlayer.makeVideoTopRight()"
+                            @click="videoPlayerStore.makeVideoTopRight()"
                             :href="route('posts')"
                             :active="route().current('posts')">
                                 Posts
                         </JetNavLink>
                         <JetNavLink
                             v-if="$page.props.user.role_id === 3 || $page.props.user.role_id === 4"
-                            @click="videoPlayer.makeVideoFullPage()"
+                            @click="videoPlayerStore.makeVideoFullPage()"
                             :href="route('channels')"
                             :active="route().current('channels')">
                             Channels
                         </JetNavLink>
                         <JetNavLink
                             v-if="$page.props.user.role_id === 3 || $page.props.user.role_id === 4"
-                            @click="videoPlayer.makeVideoTopRight()"
+                            @click="videoPlayerStore.makeVideoTopRight()"
                             :href="route('movies')"
                             :active="route().current('movies')">
                             Movies
                         </JetNavLink>
                         <JetNavLink
                             v-if="$page.props.user.role_id === 2 || $page.props.user.role_id === 3 || $page.props.user.role_id === 4"
-                            @click="videoPlayer.makeVideoTopRight()"
-                            :href="route('shows')"
-                            :active="route().current('shows')">
+                            @click="videoPlayerStore.makeVideoTopRight()"
+                            :href="route('shows.index')"
+                            :active="route().current('shows.index')">
                             Shows
                         </JetNavLink>
-                        <JetNavLink @click="videoPlayer.makeVideoTopRight()" :href="route('shop')" :active="route().current('shop')">
+                        <JetNavLink @click="videoPlayerStore.makeVideoTopRight()" :href="route('shop')" :active="route().current('shop')">
                             Shop
                         </JetNavLink>
-                        <JetNavLink v-if="$page.props.user.isAdmin === 1" @click="videoPlayer.makeVideoTopRight()" :href="route('chat')" :active="route().current('chat')">
+                        <JetNavLink v-if="$page.props.user.isAdmin === 1" @click="videoPlayerStore.makeVideoTopRight()" :href="route('chat')" :active="route().current('chat')">
                             Chat
                         </JetNavLink>
 <!--                        <ChatToggle v-model:checked="chat.toggleShowChatOn" label="Chat" />-->
@@ -76,7 +76,7 @@
                         </div>
                         <div>
                             <div v-if="$page.props.user.role_id === 1">
-                                <JetNavLink @click="videoPlayer.makeVideoTopRight()" :href="route('upgrade')" :active="route().current('upgrade')">
+                                <JetNavLink @click="videoPlayerStore.makeVideoTopRight()" :href="route('upgrade')" :active="route().current('upgrade')">
                                     <div class="text-fuchsia-700 hover:text-fuchsia-500">CLICK HERE TO UPGRADE YOUR ACCOUNT</div>
                                 </JetNavLink>
                             </div>
@@ -118,19 +118,7 @@
 
                             <template #content>
                                 <div class="divide-y">
-<!--                                    <div class="pb-3">-->
-<!--                                        &lt;!&ndash; Teams Links &ndash;&gt;-->
-<!--                                        &lt;!&ndash; Need to add v-if="$page.props.jetstream.hasTeamFeatures in a template tag &ndash;&gt;-->
-<!--                                        <div class="block px-4 py-2 text-xs text-gray-400">-->
-<!--                                            My Teams-->
-<!--                                        </div>-->
 
-<!--                                        <JetDropdownLink-->
-<!--                                            @click="videoPlayer.makeVideoTopRight()"-->
-<!--                                            :href="`/teams/1`">-->
-<!--                                                  notTV Founders-->
-<!--                                        </JetDropdownLink>-->
-<!--                                    </div>-->
                                     <div class="pt-2 pb-3">
                                         <!-- Account Management -->
                                         <div class="block px-4 py-2 text-xs text-gray-400">
@@ -139,20 +127,20 @@
 
                                         <JetDropdownLink
                                             v-if="$page.props.user.role_id === 4"
-                                            @click="videoPlayer.makeVideoTopRight()"
+                                            @click="videoPlayerStore.makeVideoTopRight()"
                                             :href="route('dashboard')">
                                             Dashboard
                                         </JetDropdownLink>
 
                                         <JetDropdownLink
                                             v-if="$page.props.user.role_id === 4"
-                                            @click="videoPlayer.makeVideoTopRight()"
+                                            @click="videoPlayerStore.makeVideoTopRight()"
                                             :href="route('training')">
                                             Training
                                         </JetDropdownLink>
 
                                         <JetDropdownLink
-                                            @click="videoPlayer.makeVideoTopRight()"
+                                            @click="videoPlayerStore.makeVideoTopRight()"
                                             :href="route('profile.show')">
                                             Settings
                                         </JetDropdownLink>
@@ -191,8 +179,8 @@ import JetNavLink from '@/Jetstream/NavLink.vue';
 import {Inertia} from "@inertiajs/inertia";
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
 import { useChatStore } from "@/Stores/ChatStore.js";
-import {useStreamStore} from "@/Stores/StreamStore";
-import {useWelcomeStore} from "@/Stores/WelcomeStore";
+import { useStreamStore } from "@/Stores/StreamStore";
+import { useWelcomeStore } from "@/Stores/WelcomeStore";
 
 let chat = useChatStore();
 let videoPlayerStore = useVideoPlayerStore();

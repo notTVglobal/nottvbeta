@@ -1,5 +1,5 @@
 <template>
-    <Head title="Create Episode"/>
+    <Head  title="Create Episode"/>
     <div class="sticky top-0 w-full nav-mask">
         <ResponsiveNavigationMenu/>
         <NavigationMenu />
@@ -11,11 +11,11 @@
             <div class="flex justify-between mt-3 mb-6">
                 <div class="text-3xl">Create Episode</div>
                 <div>
-                    <Link v-if="teamStore.activeShow.id" :href="`/shows/${teamStore.activeShow.id}/manage`"><button
+                    <Link v-if="teamStore.activeShow.slug" :href="route('shows.manage', {show: teamStore.activeShow.slug})"><button
                         class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
                     >Cancel</button>
                     </Link>
-                    <Link v-if="!teamStore.activeShow.id" :href="`/dashboard`"><button
+                    <Link v-if="!teamStore.activeShow.slug" :href="`/dashboard`"><button
                         class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
                     >Cancel</button>
                     </Link>
@@ -31,7 +31,7 @@
                     </label>
                     <div>{{props.show.name}}</div>
 
-                    <div v-if="form.errors.team_id" v-text="form.errors.team_id" class="text-xs text-red-600 mt-1"></div>
+                    <div v-if="form.errors.show_id" v-text="form.errors.show_id" class="text-xs text-red-600 mt-1"></div>
                 </div>
                 <div class="mb-6">
                     <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
@@ -66,7 +66,6 @@
                     <div v-if="form.errors.description" v-text="form.errors.description" class="text-xs text-red-600 mt-1"></div>
                 </div>
 
-                <input v-model="form.user_id" hidden>
                 <div class="flex justify-between mb-6">
                     <button
                         type="submit"
@@ -81,7 +80,7 @@
             </form>
 
             <div class="flex justify-end mt-6">
-                <Link :href="`/teams/${teamStore.id}`" class="text-blue-500 ml-2"> {{ teamStore.name }} © 2022 </Link>
+                <Link :href="`/teams/${props.team.slug}`" class="text-blue-500 ml-2"> {{ props.team.name }} © 2022 </Link>
             </div>
 
         </div>
@@ -91,24 +90,24 @@
 </template>
 
 <script setup>
-import { useForm } from "@inertiajs/inertia-vue3"
-import {onMounted, ref} from 'vue'
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import { useTeamStore } from "@/Stores/TeamStore.js"
-import { useChatStore } from "@/Stores/ChatStore.js"
 import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/NavigationMenu"
+import { useForm } from "@inertiajs/inertia-vue3"
+import { onMounted } from "vue"
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+import { useTeamStore } from "@/Stores/TeamStore.js"
 
-let videoPlayer = useVideoPlayerStore()
+let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore()
-let chat = useChatStore()
 
 onMounted(() => {
-    videoPlayer.makeVideoTopRight();
+    videoPlayerStore.makeVideoTopRight();
 });
 
 let props = defineProps({
     user: Object,
+    show: Object,
+    team: Object,
 })
 
 let form = useForm({
@@ -116,6 +115,7 @@ let form = useForm({
     description: '',
     user_id: props.user.id,
     show_id: props.show.id,
+    show_slug: props.show.slug,
 });
 
 teamStore.setActiveShow(props.show);
@@ -125,12 +125,12 @@ function reset() {
     form.reset();
 };
 //
-// let submit = () => {
-//     form.post('/shows');
-// };
-
 let submit = () => {
-    form.put(route('episode.store'));
+    form.post(route('showEpisodes.store', props.show.slug));
 };
+
+// let submit = () => {
+//     form.put(route('shows.showEpisodes.store'));
+// };
 
 </script>

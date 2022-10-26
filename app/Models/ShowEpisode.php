@@ -22,12 +22,18 @@ class ShowEpisode extends Model
         'slug',
         'notes',
         'isPublished',
-
-    ];
-
-    protected $attributes = [
-        'isBeingEditedByUser_id' => null,
+        'isBeingEditedByUser_id',
         'image_id',
+
     ];
+
+    public function show()
+    {
+        return $this->belongsTo(Show::class);
+    }
+
+    public function getRouteKeyName() {
+        return 'slug';
+    }
 
 }

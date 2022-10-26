@@ -7,9 +7,7 @@ use App\Http\Controllers\ShowsPosterController;
 use App\Http\Controllers\TeamsLogoController;
 use App\Http\Controllers\ShowEpisodeController;
 use App\Http\Controllers\UsersController;
-use App\Http\Controllers\UsersAdminCreateEditController;
 use App\Http\Controllers\ImageController;
-use App\Http\Controllers\ImageUploadController;
 use App\Http\Controllers\TeamsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ScheduleController;
@@ -17,16 +15,13 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\ChatController;
-//use Illuminate\Support\Facades\Request;
-use Illuminate\Foundation\Application;
+use App\Models\User;
+use App\Models\Show;
+use App\Models\ShowEpisode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Models\User;
-use App\Models\ChatMessage;
-use App\Http\Middleware\PusherEvent;
 use Illuminate\Support\Facades\Auth;
-use App\Events\NewChatMessage;
 
 
 /*
@@ -243,11 +238,11 @@ Route::middleware([
 // Shows
 ///////////
     // Shows resource
-    Route::resource('shows',ShowsController::class);
+    Route::resource('shows', ShowsController::class);
     // Display shows index page
     Route::get('/shows', [ShowsController::class, 'index'])
         ->can('viewPremium', 'App\Models\User')
-        ->name('shows');
+        ->name('shows.index');
     // Display shows manage page
     Route::get('/shows/{show}/manage', [ShowsController::class, 'manage'])
         ->middleware('can:manage,show')
@@ -260,27 +255,28 @@ Route::middleware([
     Route::get('/shows/create', [ShowsController::class, 'create'])
         ->can('viewCreator', 'App\Models\User')
         ->name('shows.create');
+    // Display episode create page
+    Route::get('/shows/{show}/episode/create', [ShowsController::class, 'createEpisode'])
+        ->name('shows.createEpisode');
+    // Display episode manage page
+    Route::get('/shows/{show}/episode/{showEpisode}/manage', [ShowsController::class, 'manageEpisode'])
+        ->middleware('can:manage,show')
+        ->name('shows.showEpisodes.manageEpisode');
 
 // Show Episodes
 ///////////
     // Shows resource
-    Route::resource('episode', ShowEpisodeController::class);
+    Route::resource('showEpisodes', ShowEpisodeController::class);
     // Display episodes index page
     Route::get('/shows/{show}/episodes', [ShowEpisodeController::class, 'index'])
         ->can('viewPremium', 'App\Models\User')
-        ->name('episode');
+        ->name('showEpisodes.index');
     // Display shows episode page
     Route::get('/shows/{show}/episode/{episode}', [ShowEpisodeController::class, 'show'])
         ->can('viewPremium', 'App\Models\User')
-        ->name('episode.show');
-    // Display shows manage page
-    Route::get('/shows/{id}/episode/{slug}/manage', [ShowEpisodeController::class, 'manage'])
-        ->middleware('can:manage,show')
-        ->name('episode.manage');
-    // Display episode create page
-    Route::get('/shows/{show}/episode/create', [ShowEpisodeController::class, 'create'])
-        ->can('viewCreator', 'App\Models\User')
-        ->name('episode.create');
+        ->name('showEpisodes.show');
+
+
 
 
     // tec21: This is probably not the best way to do this

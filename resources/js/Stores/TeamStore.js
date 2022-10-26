@@ -5,9 +5,11 @@ export let useTeamStore = defineStore('teamStore', {
         id: 0,
         name: '',
         description: '',
+        slug: '',
         totalSpots: 0,
         members: [],
         activeShow: [],
+        activeEpisode: [],
         logoId: [0],
         logoName: [],
     }),
@@ -21,10 +23,14 @@ export let useTeamStore = defineStore('teamStore', {
             this.id = team.id;
             this.name = team.name;
             this.description = team.description;
+            this.slug = team.slug;
             this.totalSpots = team.totalSpots;
         },
         setActiveShow(show) {
             this.activeShow = show;
+        },
+        setActiveEpisode(episode) {
+            this.activeShow = episode;
         }
     },
 

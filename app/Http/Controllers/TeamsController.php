@@ -175,6 +175,7 @@ class TeamsController extends Controller
                     'showRunner' => showRunner($show->user_id),
                     'team_id' => $show->team_id,
                     'poster' => getPoster($show),
+                    'slug' => $show->slug,
                 ]),
             'filters' => Request::only(['team_id']),
             'can' => [
@@ -239,6 +240,7 @@ class TeamsController extends Controller
                     'showRunnerName' => User::query()->where('id', $show->user_id)->pluck('name')->first(),
                     'team_id' => $show->team_id,
                     'poster' => getPoster($show),
+                    'slug' => $show->slug,
                 ]),
             'filters' => Request::only(['team_id']),
             'can' => [
@@ -318,6 +320,8 @@ class TeamsController extends Controller
         $team->save();
         sleep(1);
 
+        $teamSlug = $team->slug;
+
         // gather the data needed to render the Manage page
         // this is all redundant. It's all contained in the
         // teams.manage route above. But I (tec21) don't know
@@ -325,7 +329,7 @@ class TeamsController extends Controller
 
 
         // redirect
-        return redirect(route('teams.manage', [$team->id]))->with('message', 'Team Updated Successfully');
+        return redirect(route('teams.manage', [$teamSlug]))->with('message', 'Team Updated Successfully');
 //        return redirect('/teams/{$team->id}/manage');
 
 //        return Inertia::render('Teams/{$id}/Manage', [

@@ -95,6 +95,7 @@ onMounted(() => {
 });
 
 let props = defineProps({
+    user:Object,
     show: Object,
     team: Object,
     episodes: Object,

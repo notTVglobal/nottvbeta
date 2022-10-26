@@ -228,7 +228,7 @@ function handleProcessedFile(error, file) {
     });
 
 }
-
+teamStore.setActiveTeam(props.team);
 teamStore.logoName = props.logo[0].name;
 
 let form = useForm({
@@ -239,7 +239,7 @@ let form = useForm({
 });
 
 let submit = () => {
-    form.put(route('teams.update', props.team.id));
+    form.put(route('teams.update', props.team.slug));
 };
 
 let title = "Edit > " + props.team.name;

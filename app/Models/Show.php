@@ -23,5 +23,15 @@ class Show extends Model
         'isBeingEditedByUser_id',
         'image_id'
     ];
+
+    public function showEpisodes()
+    {
+        return $this->hasMany(ShowEpisode::class);
+    }
+
+    public function getRouteKeyName() {
+        return 'slug';
+    }
+
 }
 

@@ -27,6 +27,7 @@ class DashboardController extends Controller
                 ->through(fn($show) => [
                     'id' => $show->id,
                     'name' => $show->name,
+                    'slug' => $show->slug,
                     'can' => [
                         'manageShow' => Auth::user()->can('manage', $show)
                     ]
@@ -38,6 +39,7 @@ class DashboardController extends Controller
                 ->through(fn($team) => [
                     'id' => $team->id,
                     'name' => $team->name,
+                    'slug' => $team->slug,
                     'can' => [
                         'manageTeam' => Auth::user()->can('manage', $team)
                     ]

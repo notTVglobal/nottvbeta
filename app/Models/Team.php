@@ -20,4 +20,8 @@ class Team extends Model
         'isBeingEditedByUser_id',
     ];
 
+    public function getRouteKeyName() {
+        return 'slug';
+    }
+
 }

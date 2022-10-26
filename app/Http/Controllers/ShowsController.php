@@ -55,6 +55,7 @@ class ShowsController extends Controller
                     'showRunnerId' => $show->user_id,
                     'showRunnerName' => User::query()->where('id', $show->user_id)->pluck('name')->first(),
                     'poster' => getPoster($show),
+                    'slug' => $show->slug,
 //                    'poster' => Image::query()
 //                        ->where('show_id', $show->id)
 //                        ->pluck('name'),
@@ -89,6 +90,7 @@ class ShowsController extends Controller
                      ->through(fn($team) => [
                          'id' => $team->id,
                          'name' => $team->name,
+                         'slug' => $team->slug,
                          'can' => [
                              'manageTeam' => Auth::user()->can('manage', $team)
                          ]
@@ -272,7 +274,7 @@ class ShowsController extends Controller
 
         return Inertia::render('Shows/{$id}/Edit', [
             'show' => $show,
-            'teamName' => Team::query()->where('id', $show->team_id)->pluck('name')->firstOrFail(),
+            'team' => Team::query()->where('id', $show->team_id)->firstOrFail(),
             'showRunner' => User::query()->where('id', $show->user_id)->pluck('id','name')->firstOrFail(),
             'poster' => getPoster($show),
 //            'can' => [
@@ -311,7 +313,7 @@ class ShowsController extends Controller
         // how to simplify this *frustrated*.
 
         // redirect
-        return redirect(route('shows.manage', [$show->id]))->with('message', 'Show Updated Successfully');;
+        return redirect(route('shows.manage', [$show->slug]))->with('message', 'Show Updated Successfully');;
 
 //        return Inertia::render('Shows/{$id}/Manage', [
 //            // responses need to be limited to only
@@ -338,6 +340,61 @@ class ShowsController extends Controller
 
         // redirect
         return redirect()->route('shows')->with('message', 'Show Deleted Successfully');
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @param  int  $show
+     * @return \Illuminate\Http\Response
+     */
+    public function createEpisode(Show $show)
+    {
+
+        return Inertia::render('Shows/{$id}/Episode/Create', [
+            'show' => $show,
+            'team' => Team::query()->where('id', $show->team_id)->first(),
+        ]);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $show
+     * @param  int  $showEpisode
+     * @return \Illuminate\Http\Response
+     */
+    // URL path is currently set to show.id
+    // change show($id) to show($slug) to
+    // make URL path = slug.
+    public function manageEpisode(Show $show, ShowEpisode $showEpisode) {
+
+        function getPoster($showEpisode) {
+            $getPoster = Image::query()
+                ->where('show_episode_id', $showEpisode->id)
+                ->pluck('name')
+                ->first();
+            if (!empty($getPoster)) {
+                $poster = $getPoster;
+            } else {
+                $poster = 'EBU_Colorbars.svg.png';
+            }
+
+            return $poster;
+        }
+
+        $team = Team::query()->where('id', $showEpisode->team_id)->firstOrFail();
+        $showRunner = User::query()->where('id', $show->user_id)->pluck('name')->first();
+
+        {
+            return Inertia::render('Shows/{$id}/Episode/{$id}/Manage', [
+                'show'           => $show,
+                'episode'        => $showEpisode,
+                'team'           => $team,
+                'poster'         => getPoster($showEpisode),
+                'showRunnerName' => $showRunner,
+            ]);
+        }
     }
 
 

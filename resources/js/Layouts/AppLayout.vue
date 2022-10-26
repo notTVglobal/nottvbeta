@@ -2,16 +2,7 @@
     <div>
         <JetBanner/>
 
-
-
         <div class="relative top-0 bg-gray-800 text-gray-200 h-full w-full ">
-
-
-
-
-
-
-
 
             <!-- Page Heading -->
                         <header v-if="$slots.header" class="bg-white shadow">
@@ -29,7 +20,6 @@
                 <VideoPlayer :class="videoPlayerStore.class" class="videoContainer" />
             </div>
 
-
         </div>
 
     </div>
@@ -38,17 +28,14 @@
 
 <script setup>
 import VideoPlayer from "@/Components/VideoPlayer/VideoPlayer.vue"
-import Chat from "@/Components/Chat/Chat"
 import JetBanner from '@/Jetstream/Banner.vue'
-import { useChatStore } from "@/Stores/ChatStore"
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
-let videoPlayerStore = useVideoPlayerStore()
 
+let videoPlayerStore = useVideoPlayerStore()
 
 defineProps({
     user: Object,
 });
-
 
 </script>
 

@@ -35,11 +35,7 @@
 
         <TeamShow
             v-for="show in shows"
-            :id="show.id"
-            :name="show.name"
-            :description="show.description"
-            :poster="show.poster"
-            :showRunnerName="show.showRunnerName"
+            :show="show"
         />
 
         </tbody>

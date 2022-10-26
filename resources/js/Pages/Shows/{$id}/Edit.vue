@@ -9,7 +9,7 @@
     <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
         <div class="bg-white text-black p-5 mb-10">
 
-            <ShowEditHeader :show="props.show" :teamId="props.teamId" :teamName="props.teamName"/>
+            <ShowEditHeader :show="props.show" :team="props.team"/>
 
             <div class="flex flex-col">
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -147,39 +147,39 @@
 </template>
 
 <script setup>
-import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
-import {useChatStore} from "@/Stores/ChatStore.js"
-import {useShowStore} from "@/Stores/ShowStore.js"
 import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/NavigationMenu"
-import ShowEditHeader from "@/Components/Shows/Edit/ShowEditHeader";
-// import ShowEditBody from "@/Components/Shows/Edit/ShowEditBody";
-import { onMounted } from "vue";
-import {Inertia} from "@inertiajs/inertia";
-import {useForm} from "@inertiajs/inertia-vue3";
+import { onMounted } from "vue"
+import {useForm} from "@inertiajs/inertia-vue3"
 import TabbableTextarea from "@/Components/TabbableTextarea"
-import ShowPosterUpload from "@/Components/FilePond/ShowPosterUpload";
-import vueFilePond, { setOptions } from 'vue-filepond';
-import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
-import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size";
-import FilePondPluginImagePreview from "filepond-plugin-image-preview";
-import FilePondPluginFileMetadata from "filepond-plugin-file-metadata";
-import 'filepond/dist/filepond.min.css';
-import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css';
 
+import { Inertia } from "@inertiajs/inertia"
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+import { useTeamStore } from "@/Stores/TeamStore.js"
+import { useShowStore } from "@/Stores/ShowStore.js"
 
-let videoPlayer = useVideoPlayerStore()
-let chat = useChatStore()
+import vueFilePond, { setOptions } from 'vue-filepond'
+import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type"
+import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size"
+import FilePondPluginImagePreview from "filepond-plugin-image-preview"
+import FilePondPluginFileMetadata from "filepond-plugin-file-metadata"
+import 'filepond/dist/filepond.min.css'
+import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css'
+
+import ShowEditHeader from "@/Components/Shows/Edit/ShowEditHeader"
+
+let videoPlayerStore = useVideoPlayerStore()
+let teamStore = useTeamStore()
 let showStore = useShowStore()
 
 onMounted(() => {
-    videoPlayer.makeVideoTopRight();
+    videoPlayerStore.makeVideoTopRight();
 });
 
 let props = defineProps({
     user: Object,
     show: Object,
-    teamName: String,
+    team: Object,
     poster: String,
 });
 
@@ -215,6 +215,8 @@ function handleProcessedFile(error, file) {
 
 }
 
+teamStore.setActiveTeam(props.team);
+teamStore.setActiveShow(props.show);
 showStore.posterName = props.poster[0].name;
 
 let form = useForm({
@@ -224,7 +226,7 @@ let form = useForm({
 });
 
 let submit = () => {
-    form.put(route('shows.update', props.show.id));
+    form.put(route('shows.update', props.show.slug));
 };
 
 let title = "Edit > " + props.show.name;
