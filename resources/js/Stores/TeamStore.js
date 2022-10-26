@@ -7,7 +7,7 @@ export let useTeamStore = defineStore('teamStore', {
         description: '',
         totalSpots: 0,
         members: [],
-        activeTeam: '',
+        activeShow: [],
         logoId: [0],
         logoName: [],
     }),
@@ -17,8 +17,14 @@ export let useTeamStore = defineStore('teamStore', {
             let r = await import('@/Json/team.json');
             this.$state = r.default;
         },
-        setActiveTeam(id) {
-            this.activeTeam = id;
+        setActiveTeam(team) {
+            this.id = team.id;
+            this.name = team.name;
+            this.description = team.description;
+            this.totalSpots = team.totalSpots;
+        },
+        setActiveShow(show) {
+            this.activeShow = show;
         }
     },
 

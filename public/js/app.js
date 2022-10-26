@@ -1526,41 +1526,53 @@ var map = {
 		"/js/vendor",
 		"resources_js_Pages_Shows_id_Edit_vue"
 	],
-	"./Shows/{$id}/Episodes/Create": [
-		"./resources/js/Pages/Shows/{$id}/Episodes/Create.vue",
-		"resources_js_Pages_Shows_id_Episodes_Create_vue"
+	"./Shows/{$id}/Episode/Create": [
+		"./resources/js/Pages/Shows/{$id}/Episode/Create.vue",
+		"resources_js_Pages_Shows_id_Episode_Create_vue"
 	],
-	"./Shows/{$id}/Episodes/Create.vue": [
-		"./resources/js/Pages/Shows/{$id}/Episodes/Create.vue",
-		"resources_js_Pages_Shows_id_Episodes_Create_vue"
+	"./Shows/{$id}/Episode/Create.vue": [
+		"./resources/js/Pages/Shows/{$id}/Episode/Create.vue",
+		"resources_js_Pages_Shows_id_Episode_Create_vue"
 	],
-	"./Shows/{$id}/Episodes/Index": [
-		"./resources/js/Pages/Shows/{$id}/Episodes/Index.vue",
-		"/js/vendor",
-		"resources_js_Pages_Shows_id_Episodes_Index_vue"
+	"./Shows/{$id}/Episode/Index": [
+		"./resources/js/Pages/Shows/{$id}/Episode/Index.vue",
+		"resources_js_Pages_Shows_id_Episode_Index_vue"
 	],
-	"./Shows/{$id}/Episodes/Index.vue": [
-		"./resources/js/Pages/Shows/{$id}/Episodes/Index.vue",
-		"/js/vendor",
-		"resources_js_Pages_Shows_id_Episodes_Index_vue"
+	"./Shows/{$id}/Episode/Index.vue": [
+		"./resources/js/Pages/Shows/{$id}/Episode/Index.vue",
+		"resources_js_Pages_Shows_id_Episode_Index_vue"
 	],
-	"./Shows/{$id}/Episodes/{$id}/Edit": [
-		"./resources/js/Pages/Shows/{$id}/Episodes/{$id}/Edit.vue",
-		"/js/vendor",
-		"resources_js_Pages_Shows_id_Episodes_id_Edit_vue"
+	"./Shows/{$id}/Episode/{$slug}/Edit": [
+		"./resources/js/Pages/Shows/{$id}/Episode/{$slug}/Edit.vue",
+		"resources_js_Pages_Shows_id_Episode_slug_Edit_vue"
 	],
-	"./Shows/{$id}/Episodes/{$id}/Edit.vue": [
-		"./resources/js/Pages/Shows/{$id}/Episodes/{$id}/Edit.vue",
-		"/js/vendor",
-		"resources_js_Pages_Shows_id_Episodes_id_Edit_vue"
+	"./Shows/{$id}/Episode/{$slug}/Edit.vue": [
+		"./resources/js/Pages/Shows/{$id}/Episode/{$slug}/Edit.vue",
+		"resources_js_Pages_Shows_id_Episode_slug_Edit_vue"
 	],
-	"./Shows/{$id}/Episodes/{$id}/Index": [
-		"./resources/js/Pages/Shows/{$id}/Episodes/{$id}/Index.vue",
-		"resources_js_Pages_Shows_id_Episodes_id_Index_vue"
+	"./Shows/{$id}/Episode/{$slug}/Index": [
+		"./resources/js/Pages/Shows/{$id}/Episode/{$slug}/Index.vue",
+		"resources_js_Pages_Shows_id_Episode_slug_Index_vue"
 	],
-	"./Shows/{$id}/Episodes/{$id}/Index.vue": [
-		"./resources/js/Pages/Shows/{$id}/Episodes/{$id}/Index.vue",
-		"resources_js_Pages_Shows_id_Episodes_id_Index_vue"
+	"./Shows/{$id}/Episode/{$slug}/Index.vue": [
+		"./resources/js/Pages/Shows/{$id}/Episode/{$slug}/Index.vue",
+		"resources_js_Pages_Shows_id_Episode_slug_Index_vue"
+	],
+	"./Shows/{$id}/Episode/{$slug}/Manage": [
+		"./resources/js/Pages/Shows/{$id}/Episode/{$slug}/Manage.vue",
+		"resources_js_Pages_Shows_id_Episode_slug_Manage_vue"
+	],
+	"./Shows/{$id}/Episode/{$slug}/Manage.vue": [
+		"./resources/js/Pages/Shows/{$id}/Episode/{$slug}/Manage.vue",
+		"resources_js_Pages_Shows_id_Episode_slug_Manage_vue"
+	],
+	"./Shows/{$id}/Episodes": [
+		"./resources/js/Pages/Shows/{$id}/Episodes.vue",
+		"resources_js_Pages_Shows_id_Episodes_vue"
+	],
+	"./Shows/{$id}/Episodes.vue": [
+		"./resources/js/Pages/Shows/{$id}/Episodes.vue",
+		"resources_js_Pages_Shows_id_Episodes_vue"
 	],
 	"./Shows/{$id}/Index": [
 		"./resources/js/Pages/Shows/{$id}/Index.vue",

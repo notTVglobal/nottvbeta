@@ -211,11 +211,11 @@ class ShowsController extends Controller
             }
             return $poster;
         }
-        $teamName = Team::query()->where('id', $show->team_id)->pluck('name')->firstOrFail();
+        $team = Team::query()->where('id', $show->team_id)->firstOrFail();
         $showRunner = User::query()->where('id', $show->user_id)->pluck('name')->first();
         return Inertia::render('Shows/{$id}/Manage', [
             'show' => $show,
-            'teamName' => $teamName,
+            'team' => $team,
             'poster' => getPoster($show),
             'showRunnerName' => $showRunner,
             'episodes' => ShowEpisode::query()->where('show_id', $show->id)->get(),
@@ -339,4 +339,6 @@ class ShowsController extends Controller
         // redirect
         return redirect()->route('shows')->with('message', 'Show Deleted Successfully');
     }
+
+
 }

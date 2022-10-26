@@ -5,7 +5,7 @@ use App\Http\Controllers\CreatorsController;
 use App\Http\Controllers\ShowsController;
 use App\Http\Controllers\ShowsPosterController;
 use App\Http\Controllers\TeamsLogoController;
-use App\Http\Controllers\EpisodesController;
+use App\Http\Controllers\ShowEpisodeController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\UsersAdminCreateEditController;
 use App\Http\Controllers\ImageController;
@@ -240,19 +240,6 @@ Route::middleware([
     })->can('viewCreator', 'App\Models\User')
         ->name('training');
 
-// Episodes
-///////////
-    // Episodes resource
-    Route::resource('episodes',EpisodesController::class);
-    // Display episodes index page
-    Route::get('/shows/{show}/episodes', [EpisodesController::class, 'index'])
-        ->can('viewPremium', 'App\Models\User')
-        ->name('episodes');
-    // Display shows episode page
-    Route::get('/shows/{show}/episodes/{episode}', [EpisodesController::class, 'show'])
-        ->can('viewPremium', 'App\Models\User')
-        ->name('episodes.show');
-
 // Shows
 ///////////
     // Shows resource
@@ -273,6 +260,28 @@ Route::middleware([
     Route::get('/shows/create', [ShowsController::class, 'create'])
         ->can('viewCreator', 'App\Models\User')
         ->name('shows.create');
+
+// Show Episodes
+///////////
+    // Shows resource
+    Route::resource('episode', ShowEpisodeController::class);
+    // Display episodes index page
+    Route::get('/shows/{show}/episodes', [ShowEpisodeController::class, 'index'])
+        ->can('viewPremium', 'App\Models\User')
+        ->name('episode');
+    // Display shows episode page
+    Route::get('/shows/{show}/episode/{episode}', [ShowEpisodeController::class, 'show'])
+        ->can('viewPremium', 'App\Models\User')
+        ->name('episode.show');
+    // Display shows manage page
+    Route::get('/shows/{id}/episode/{slug}/manage', [ShowEpisodeController::class, 'manage'])
+        ->middleware('can:manage,show')
+        ->name('episode.manage');
+    // Display episode create page
+    Route::get('/shows/{show}/episode/create', [ShowEpisodeController::class, 'create'])
+        ->can('viewCreator', 'App\Models\User')
+        ->name('episode.create');
+
 
     // tec21: This is probably not the best way to do this
     // I'm unable to get the FilePond uploader to show the

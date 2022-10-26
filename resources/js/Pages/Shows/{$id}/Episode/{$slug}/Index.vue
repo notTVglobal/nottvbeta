@@ -108,7 +108,9 @@ onMounted(() => {
 });
 
 let props = defineProps({
-    user: Object,
+    // show: Object,
+    // team: Object,
+    // userId: Number,
 })
 
 let form = useForm({

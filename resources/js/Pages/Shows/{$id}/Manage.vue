@@ -10,8 +10,6 @@
         <div class="bg-white rounded text-black p-5 mb-10">
 
             <ShowHeader
-                :show="props.show"
-                :teamName="props.teamName"
                 :showRunnerName="props.showRunnerName"
                 :poster="props.poster"
             />
@@ -31,7 +29,7 @@
                                 </span>
                             </div>
 
-                            <ShowEpisodesList :episodes="props.episodes"/>
+                            <ShowEpisodesList :episodes="props.episodes" :show="props.show"/>
 
                             <!--                            <table class="min-w-full divide-y divide-gray-200">-->
                             <!--                                <tbody class="bg-white divide-y divide-gray-200">-->
@@ -65,7 +63,7 @@
                     </div>
                 </div>
             </div>
-            <ShowFooter :teamName="props.teamName" :teamId="props.show.team_id"/>
+            <ShowFooter />
         </div>
     </div>
 
@@ -75,6 +73,7 @@
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useChatStore } from "@/Stores/ChatStore.js"
 import { useShowStore } from "@/Stores/ShowStore.js"
+import { useTeamStore } from "@/Stores/TeamStore.js"
 import ShowHeader from "@/Components/Shows/ShowHeader"
 import ShowEpisodesList from "@/Components/Shows/ShowEpisodesList"
 import ShowFooter from "@/Components/Shows/ShowFooter"
@@ -88,6 +87,7 @@ import {Inertia} from "@inertiajs/inertia";
 let videoPlayer = useVideoPlayerStore()
 let chat = useChatStore()
 let showStore = useShowStore();
+let teamStore = useTeamStore();
 // showStore.fill();
 
 onMounted(() => {
@@ -96,13 +96,16 @@ onMounted(() => {
 
 let props = defineProps({
     show: Object,
-    teamName: String,
+    team: Object,
     episodes: Object,
     poster: String,
     showRunnerName: String,
     // filters: Object,
     message: String
 });
+
+teamStore.setActiveTeam(props.team);
+teamStore.setActiveShow(props.show);
 
 // let search = ref(props.filters.search);
 //
