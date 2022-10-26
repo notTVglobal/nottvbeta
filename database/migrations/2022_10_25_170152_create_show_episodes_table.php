@@ -13,12 +13,18 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('teams', function (Blueprint $table) {
+        Schema::create('show_episodes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained();
+            $table->foreignId('show_id')->constrained();
             $table->foreignId('image_id')->constrained();
+            $table->foreignId('show_episode_status_id')->default(1)->constrained()->references('id')->on('show_episode_status');
+            $table->foreignId('isBeingEditedByUser_id')->nullable()->constrained()->references('id')->on('users');
             $table->string('name');
             $table->longtext('description');
+            $table->string('slug');
+            $table->longtext('notes');
+            $table->boolean('isPublished')->default(false);
             $table->timestamps();
         });
     }
@@ -30,6 +36,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('teams');
+        Schema::dropIfExists('show_episodes');
     }
 };

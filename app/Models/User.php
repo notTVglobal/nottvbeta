@@ -86,7 +86,7 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $attributes = [
         'isEditingShow_id' => null,
         'isEditingTeam_id' => null,
-        'isEditingEpisode_id' => null,
+        'isEditingShowEpisode_id' => null,
     ];
 
     /**

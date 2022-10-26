@@ -13,8 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('shows', function (Blueprint $table) {
-            $table->foreignId('team_id')->constrained();
+        Schema::table('teams', function (Blueprint $table) {
+            $table->integer('memberSpots')->default(1);
+            $table->integer('totalSpots')->default(1);
         });
     }
 
@@ -25,9 +26,9 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('shows', function (Blueprint $table) {
-            $table->dropForeign(['team_id']);
-            $table->dropColumn('team_id');
+        Schema::table('teams', function (Blueprint $table) {
+            $table->dropColumn('memberSpots');
+            $table->dropColumn('totalSpots');
         });
     }
 };

@@ -13,58 +13,58 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('episodeStatuses', function (Blueprint $table) {
+        Schema::create('show_episode_status', function (Blueprint $table) {
             $table->id();
             $table->string('status');
             $table->timestamps();
         });
 
-        DB::table('episodeStatuses')->insert(
+        DB::table('show_episode_status')->insert(
             array(
                 'status' => 'Development'
             )
         );
-        DB::table('episodeStatuses')->insert(
+        DB::table('show_episode_status')->insert(
             array(
                 'status' => 'PreProduction'
             )
         );
-        DB::table('episodeStatuses')->insert(
+        DB::table('show_episode_status')->insert(
             array(
                 'status' => 'Production'
             )
         );
-        DB::table('episodeStatuses')->insert(
+        DB::table('show_episode_status')->insert(
             array(
                 'status' => 'Post-Production'
             )
         );
-        DB::table('episodeStatuses')->insert(
+        DB::table('show_episode_status')->insert(
             array(
                 'status' => 'Review'
             )
         );
-        DB::table('episodeStatuses')->insert(
+        DB::table('show_episode_status')->insert(
             array(
                 'status' => 'Scheduled'
             )
         );
-        DB::table('episodeStatuses')->insert(
+        DB::table('show_episode_status')->insert(
             array(
                 'status' => 'Published'
             )
         );
-        DB::table('episodeStatuses')->insert(
+        DB::table('show_episode_status')->insert(
             array(
                 'status' => 'Archived'
             )
         );
-        DB::table('episodeStatuses')->insert(
+        DB::table('show_episode_status')->insert(
             array(
                 'status' => 'Frozen'
             )
         );
-        DB::table('episodeStatuses')->insert(
+        DB::table('show_episode_status')->insert(
             array(
                 'status' => 'Restricted'
             )
@@ -78,6 +78,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('episodeStatuses');
+        Schema::dropIfExists('show_episode_status');
     }
 };

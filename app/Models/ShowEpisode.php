@@ -5,30 +5,29 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Episode extends Model
+class ShowEpisode extends Model
 {
     use HasFactory;
 
     /**
-     * The attributes that should be cast.
+     * The attributes that are mass assignable.
      *
-     * @var array
+     * @var string[]
      */
-    protected $casts = [
+    protected $fillable = [
         'name',
-        'poster',
         'description',
         'image_id',
-        'team_id',
         'user_id',
         'show_id',
         'slug',
         'notes',
         'isPublished',
-        'episodeStatus_id',
+
     ];
 
     protected $attributes = [
         'isBeingEditedByUser_id' => null,
     ];
+
 }

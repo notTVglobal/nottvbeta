@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('episodes', function (Blueprint $table) {
-            $table->foreignId('image_id')->default(4)->constrained();
+        Schema::table('users', function (Blueprint $table) {
+            $table->foreignId('isEditingShowEpisode_id')->nullable()->constrained()->references('id')->on('show_episodes');
         });
     }
 
@@ -25,9 +25,9 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('episodes', function (Blueprint $table) {
-            $table->dropForeign(['image_id']);
-            $table->dropColumn('image_id');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropForeign(['isEditingShowEpisode_id']);
+            $table->dropColumn('isEditingShowEpisode_id');
         });
     }
 };

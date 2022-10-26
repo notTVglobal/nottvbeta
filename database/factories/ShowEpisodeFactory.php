@@ -2,15 +2,15 @@
 
 namespace Database\Factories;
 
-use App\Models\Episode;
+use App\Models\ShowEpisode;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use Laravel\Jetstream\Features;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Episode>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ShowEpisode>
  */
-class EpisodeFactory extends Factory
+class ShowEpisodeFactory extends Factory
 {
 
     /**
@@ -18,7 +18,7 @@ class EpisodeFactory extends Factory
      *
      * @var string
      */
-    protected $model = Episode::class;
+    protected $model = ShowEpisode::class;
 
     /**
      * Define the model's default state.
@@ -32,7 +32,6 @@ class EpisodeFactory extends Factory
             'description' => $this->faker->sentence(5),
             'image_id' => '4',
             'user_id' => \App\Models\User::all()->random()->id,
-            'team_id' => \App\Models\Team::all()->random()->id,
             'show_id' => \App\Models\Show::all()->random()->id,
             'slug' => \Str::slug($name),
             'notes' => ['', ''],

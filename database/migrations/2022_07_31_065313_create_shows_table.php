@@ -15,9 +15,11 @@ return new class extends Migration
     {
         Schema::create('shows', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('team_id')->constrained();
+            $table->foreignId('user_id')->constrained();
+            $table->foreignId('image_id')->constrained();
             $table->string('name');
             $table->longtext('description');
-            $table->foreignId('user_id')->constrained();
             $table->timestamps();
         });
     }

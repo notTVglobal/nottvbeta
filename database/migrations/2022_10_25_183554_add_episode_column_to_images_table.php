@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('shows', function (Blueprint $table) {
-            $table->foreignId('image_id')->default(4)->constrained();
+        Schema::table('images', function (Blueprint $table) {
+            $table->foreignId('show_episode_id')->nullable()->constrained();
         });
     }
 
@@ -25,9 +25,9 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('shows', function (Blueprint $table) {
-            $table->dropForeign(['image_id']);
-            $table->dropColumn('image_id');
+        Schema::table('images', function (Blueprint $table) {
+            $table->dropForeign(['showEpisode_id']);
+            $table->dropColumn('showEpisode_id');
         });
     }
 };
