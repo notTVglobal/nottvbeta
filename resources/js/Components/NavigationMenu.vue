@@ -52,8 +52,8 @@
                         <JetNavLink
                             v-if="$page.props.user.role_id === 2 || $page.props.user.role_id === 3 || $page.props.user.role_id === 4"
                             @click="videoPlayerStore.makeVideoTopRight()"
-                            :href="route('shows.index')"
-                            :active="route().current('shows.index')">
+                            :href="route('shows')"
+                            :active="route().current('shows')">
                             Shows
                         </JetNavLink>
                         <JetNavLink @click="videoPlayerStore.makeVideoTopRight()" :href="route('shop')" :active="route().current('shop')">
