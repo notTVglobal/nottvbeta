@@ -21,7 +21,7 @@ class TeamFactory extends Factory
             'name' => $name = $this->faker->sentence($nbWords = 2, $variableNbWords = true),
             'description' => $this->faker->paragraph,
             'user_id' => \App\Models\User::all()->random()->id,
-            'image_id' => '4',
+            'image_id' => '3',
             'slug' => \Str::slug($name)
         ];
     }

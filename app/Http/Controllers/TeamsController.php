@@ -24,10 +24,6 @@ class TeamsController extends Controller
 
     public function index()
     {
-        function teamOwner($userId) {
-            $teamOwner = User::query()->where('id', $userId)->first();
-            return $teamOwner->name;
-        }
 
         function getLogo($team){
             $getLogo = Image::query()
@@ -43,18 +39,20 @@ class TeamsController extends Controller
         }
 
         return Inertia::render('Teams/Index', [
-            'teams' => Team::query()
+            'teams' => Team::with('user', 'image', 'shows')
                 ->when(Request::input('search'), function ($query, $search) {
                     $query->where('name', 'like', "%{$search}%");
                 })
+                ->latest()
                 ->paginate(10)
                 ->withQueryString()
                 ->through(fn($team) => [
                     'id' => $team->id,
                     'name' => $team->name,
-                    'logo' => getLogo($team),
-                    'teamOwner' => teamOwner($team->user_id),
-                    'team_id' => $team->team_id,
+                    'logo' => $team->image->name,
+                    'teamOwner' => $team->user->name,
+                    'slug' => $team->slug,
+                    'totalShows' => $team->shows->count(),
                     'memberSpots' => $team->memberSpots,
                     'totalSpots' => $team->totalSpots,
                     'can' => [
@@ -113,7 +111,6 @@ class TeamsController extends Controller
             'user_id' => $request->user_id,
             'totalSpots' => $request->totalSpots,
             'slug' => \Str::slug($request->name),
-            'image_id' => null,
             'isBeingEditedByUser_id' => $request->user_id,
         ]);
 

@@ -29,6 +29,7 @@ class ShowFactory extends Factory
             'image_id' => '4',
             'user_id' => \App\Models\User::all()->random()->id,
             'team_id' => \App\Models\Team::all()->random()->id,
+            'show_status_id' => \App\Models\ShowStatus::all()->random()->id,
             'slug' => \Str::slug($name)
         ];
     }

@@ -5,13 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Role extends Model
+class ShowEpisodeStatus extends Model
 {
     use HasFactory;
 
-    public function users()
+    public function showEpisodes()
     {
-        return $this->hasMany(Users::class);
+        return $this->hasMany(ShowEpisodes::class);
     }
-
 }

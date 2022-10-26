@@ -27,38 +27,28 @@ class ShowsController extends Controller
      */
     public function index()
     {
-        function getPoster($show){
-            $getPoster = Image::query()
-                ->where('show_id', $show->id)
-                ->pluck('name')
-                ->first();
-            if(!empty($getPoster)){
-                $poster = $getPoster;
-            } else {
-                $poster = 'EBU_Colorbars.svg.png';
-            }
-            return $poster;
-        }
 
         return Inertia::render('Shows/Index', [
-            'shows' => Show::query()
+            'shows' => Show::with('team', 'user', 'image', 'episodes', 'showStatus')
                 ->when(Request::input('search'), function ($query, $search) {
                     $query->where('name', 'like', "%{$search}%");
                 })
+                ->latest()
                 ->paginate(10)
                 ->withQueryString()
                 ->through(fn($show) => [
                     'id' => $show->id,
                     'name' => $show->name,
                     'team_id' => $show->team_id,
-                    'teamName' => Team::query()->where('id', $show->team_id)->pluck('name')->first(),
+                    'teamName' => $show->team->name,
+                    'teamSlug' => $show->team->slug,
                     'showRunnerId' => $show->user_id,
-                    'showRunnerName' => User::query()->where('id', $show->user_id)->pluck('name')->first(),
-                    'poster' => getPoster($show),
+                    'showRunnerName' => $show->user->name,
+                    'poster' => $show->image->name,
                     'slug' => $show->slug,
-//                    'poster' => Image::query()
-//                        ->where('show_id', $show->id)
-//                        ->pluck('name'),
+                    'totalEpisodes' => $show->episodes->count(),
+                    'status' => $show->showStatus->name,
+                    'statusId' => $show->showStatus->id,
                     'can' => [
                         'editShow' => Auth::user()->can('edit', $show)
                     ]
@@ -136,7 +126,6 @@ class ShowsController extends Controller
             'team_id' => $request->team_id,
             'slug' => \Str::slug($request->name),
             'isBeingEditedByUser_id' => $request->user_id,
-            'image_id' => null,
         ]);
 
         // Use this route to return

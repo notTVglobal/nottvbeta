@@ -32,6 +32,22 @@ class ShowEpisode extends Model
         return $this->belongsTo(Show::class);
     }
 
+    public function showEpisodeStatus()
+    {
+        return $this->hasOne(ShowEpisodeStatus::class);
+    }
+
+    public function users()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function images()
+    {
+        return $this->hasOne(Image::class);
+    }
+
+
     public function getRouteKeyName() {
         return 'slug';
     }

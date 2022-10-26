@@ -73,6 +73,9 @@
                                             <th scope="col" class="px-6 py-3">
                                                 # of Members
                                             </th>
+                                            <th scope="col" class="px-6 py-3">
+                                                # of Shows
+                                            </th>
                                             <th v-if="props.can.viewCreator" scope="col" class="px-6 py-3">
                                                 Edit
                                             </th>
@@ -95,7 +98,7 @@
                                                 scope="row"
                                                 class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                                             >
-                                                <Link :href="`/teams/${team.id}`" class="text-blue-800 hover:text-blue-600">{{ team.name }}</Link>
+                                                <Link :href="`/teams/${team.slug}`" class="text-blue-800 hover:text-blue-600">{{ team.name }}</Link>
                                             </th>
                                             <th
                                                 scope="row"
@@ -109,8 +112,14 @@
                                             >
                                                 {{ team.memberSpots }}
                                             </td>
+                                            <td
+                                                scope="row"
+                                                class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
+                                            >
+                                                {{ team.totalShows }}
+                                            </td>
                                             <td v-if="team.can.editTeam" class="px-6 py-4">
-                                                <Link :href="`/teams/${team.id}/edit`"><button
+                                                <Link :href="`/teams/${team.slug}/edit`"><button
                                                     class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                                                 >Edit</button>
                                                 </Link>

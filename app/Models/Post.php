@@ -12,6 +12,12 @@ class Post extends Model
     protected $fillable = [
       'title',
       'slug',
-      'content'
+      'content',
+      'post_categories_id'
     ];
+
+    public function category()
+    {
+        return $this->belongsTo(PostCategory::class);
+    }
 }

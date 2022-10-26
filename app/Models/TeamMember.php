@@ -13,4 +13,14 @@ class TeamMember extends Model
         'team_id',
         'user_id',
     ];
+
+    public function teams()
+    {
+        return $this->belongsToMany(Teams::class);
+    }
+
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
 }

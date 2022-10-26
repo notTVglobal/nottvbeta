@@ -16,4 +16,10 @@ class ShowNote extends Model
         'title',
         'body',
     ];
+
+    public function shows()
+    {
+        return $this->belongsTo(Shows::class);
+    }
+
 }

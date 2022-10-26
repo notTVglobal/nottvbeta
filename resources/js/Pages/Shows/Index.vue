@@ -65,10 +65,13 @@
                                                     Show Name
                                                 </th>
                                                 <th scope="col" class="px-6 py-3">
-                                                    Creator
+                                                    Show Runner
                                                 </th>
                                                 <th scope="col" class="px-6 py-3">
                                                     Team
+                                                </th>
+                                                <th scope="col" class="px-6 py-3">
+                                                    # of Episodes
                                                 </th>
                                                 <th scope="col" class="px-6 py-3">
                                                     Status
@@ -108,11 +111,40 @@
                                                     scope="row"
                                                     class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                                                 >
-                                                    <Link :href="`/teams/${show.team_id}`" class="text-blue-800 hover:text-blue-600">{{ show.teamName }}</Link>
+                                                    <Link :href="`/teams/${show.teamSlug}`" class="text-blue-800 hover:text-blue-600">{{ show.teamName }}</Link>
                                                 </th>
-                                                <td class="px-6 py-4">
-
-                                                </td>
+                                                <th
+                                                    scope="row"
+                                                    class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
+                                                >
+                                                    {{ show.totalEpisodes }}
+                                                </th>
+                                                <th
+                                                    scope="row"
+                                                    class="px-6 py-4 whitespace-nowrap"
+                                                >
+                                                    <div v-if="show.statusId===1" class="font-semibold text-pink-500">
+                                                        {{ show.status }}
+                                                    </div>
+                                                    <div v-if="show.statusId===2" class="font-semibold text-green-600">
+                                                        {{ show.status }}
+                                                    </div>
+                                                    <div v-if="show.statusId===3" class="font-medium text-orange-400">
+                                                        {{ show.status }}
+                                                    </div>
+                                                    <div v-if="show.statusId===4" class="text-gray-500">
+                                                        {{ show.status }}
+                                                    </div>
+                                                    <div v-if="show.statusId===5" class="font-semibold text-gray-900">
+                                                        {{ show.status }}
+                                                    </div>
+                                                    <div v-if="show.statusId===6" class="font-italic text-gray-500">
+                                                        {{ show.status }}
+                                                    </div>
+                                                    <div v-if="show.statusId===7" class="font-medium font-italic text-red-600">
+                                                        {{ show.status }}
+                                                    </div>
+                                                </th>
                                                 <td v-if="show.can.editShow" class="px-6 py-4">
                                                     <Link :href="`/shows/${show.id}/edit`"><button
                                                         class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"

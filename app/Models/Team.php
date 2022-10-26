@@ -24,4 +24,26 @@ class Team extends Model
         return 'slug';
     }
 
+    public function shows()
+    {
+        return $this->hasMany(Show::class);
+    }
+
+    public function teamMembers()
+    {
+        return $this->hasMany(TeamMember::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function image()
+    {
+        return $this->belongsTo(Image::class);
+    }
+
+
+
 }

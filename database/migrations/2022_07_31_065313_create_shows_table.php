@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('team_id')->constrained();
             $table->foreignId('user_id')->constrained();
-            $table->foreignId('image_id')->nullable()->constrained();
+            $table->foreignId('image_id')->default(4)->constrained();
             $table->string('name');
             $table->longtext('description');
             $table->timestamps();

@@ -24,14 +24,42 @@ class Show extends Model
         'image_id'
     ];
 
-    public function showEpisodes()
+    public function getRouteKeyName() {
+        return 'slug';
+    }
+
+    public function episodes()
     {
         return $this->hasMany(ShowEpisode::class);
     }
 
-    public function getRouteKeyName() {
-        return 'slug';
+    public function showStatus()
+    {
+        return $this->belongsTo(ShowStatus::class);
     }
+
+    public function team()
+    {
+        return $this->belongsTo(Team::class);
+    }
+
+    public function image()
+    {
+        return $this->belongsTo(Image::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function showNotes()
+    {
+        return $this->hasMany(ShowNote::class);
+    }
+
+
+
 
 }
 

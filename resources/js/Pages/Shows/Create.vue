@@ -30,7 +30,7 @@
                             Team Name
                         </label>
                         <select class="border border-gray-400 p-2 w-full rounded-lg block mb-2 uppercase font-bold text-xs text-gray-700"
-                                v-model="form.team_id"
+                                v-model="teamStore.id"
                         >
                             <option
                                 v-for="team in props.teams.data"
@@ -101,7 +101,7 @@
 <script setup>
 import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/NavigationMenu"
-import { onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useForm } from "@inertiajs/inertia-vue3"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useTeamStore } from "@/Stores/TeamStore.js"
@@ -124,7 +124,6 @@ let form = useForm({
     user_id: props.userId,
     team_id: teamStore.id,
 });
-
 
 function reset() {
     form.reset();

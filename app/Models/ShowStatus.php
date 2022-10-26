@@ -5,13 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Role extends Model
+class ShowStatus extends Model
 {
     use HasFactory;
 
-    public function users()
+    public function shows()
     {
-        return $this->hasMany(Users::class);
+        return $this->hasMany(Show::class);
     }
-
 }
