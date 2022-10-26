@@ -63,7 +63,7 @@
                             <div class="w-full bg-gray-300 text-2xl p-4 mb-8">POSTS</div>
                         </div>
 
-                        <ShowFooter :teamName="props.teamName" :teamId="props.show.team_id"/>
+                        <ShowFooter />
                     </div>
                 </div>
             </div>
@@ -75,21 +75,20 @@
 
 
 <script setup>
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import { useChatStore } from "@/Stores/ChatStore.js"
-import { useShowStore } from "@/Stores/ShowStore.js"
-import {onMounted, ref} from 'vue'
-import ShowHeader from "@/Components/Shows/ShowHeader"
-import ShowEpisodesList from "@/Components/Shows/ShowEpisodesList"
-import ShowFooter from "@/Components/Shows/ShowFooter"
 import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/NavigationMenu"
+import {onMounted, ref} from 'vue'
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+import { useTeamStore } from "@/Stores/TeamStore.js"
+import { useShowStore } from "@/Stores/ShowStore.js"
+import ShowHeader from "@/Components/Shows/ShowHeader"
+import ShowEpisodesList from "@/Components/Shows/ShowEpisodesList"
 import ShowCreditsList from "@/Components/Shows/ShowCreditsList";
+import ShowFooter from "@/Components/Shows/ShowFooter"
 
 let videoPlayer = useVideoPlayerStore()
-let chat = useChatStore()
+let teamStore = useTeamStore();
 let showStore = useShowStore();
-// showStore.fill();
 
 onMounted(() => {
     videoPlayer.makeVideoTopRight();
@@ -100,11 +99,15 @@ let props = defineProps({
     show: Object,
     poster: String,
     teamName: String,
+    teamSlug: String,
     showRunner: String,
     // episodes: Object,
     message: String,
     can: Object,
 });
+
+teamStore.slug = props.teamSlug;
+teamStore.name = props.teamName;
 
 </script>
 

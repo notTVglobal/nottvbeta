@@ -170,6 +170,7 @@ class ShowsController extends Controller
             'show' => $show,
             'poster' => getPoster($show),
             'teamName' => Team::query()->where('id', $show->team_id)->pluck('name')->firstOrFail(),
+            'teamSlug' =>Team::query()->where('id', $show->team_id)->pluck('slug')->firstOrFail(),
             'showRunner' => User::query()->where('id', $show->user_id)->pluck('name')->firstOrFail(),
             'can' => [
                 'manageShow' => Auth::user()->can('manage', $show),
