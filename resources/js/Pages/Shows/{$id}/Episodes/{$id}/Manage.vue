@@ -24,45 +24,45 @@
                     <div class="gap-2">
                         <div class="font-bold mb-4 text-orange-400">MANAGE EPISODE</div>
                         <div>
-                        <EpisodeHeader
-                            :episode="props.episode"
-                            :show="props.show"
-                            :team="props.team"
-                        />
+                            <EpisodeHeader
+                                :episode="props.episode"
+                                :show="props.show"
+                                :team="props.team"
+                            />
                         </div>
                     </div>
 
 
                     <div>
-                    <div class="flex flex-wrap-reverse justify-end gap-2">
+                        <div class="flex flex-wrap-reverse justify-end gap-2">
 
-                        <div class="">
-                            <Link
-                                :href="`/golive`">
-                                <button
-                                    class="px-4 py-2 text-white bg-red-600 hover:bg-red-500 rounded-lg disabled:bg-gray-400"
-                                >Go Live
-                                </button>
-                            </Link>
+                            <div class="">
+                                <Link
+                                    :href="`/golive`">
+                                    <button
+                                        class="px-4 py-2 text-white bg-red-600 hover:bg-red-500 rounded-lg disabled:bg-gray-400"
+                                    >Go Live
+                                    </button>
+                                </Link>
+                            </div>
+                            <div class="">
+                                <Link
+                                    :href="`/shows/${show.slug}/episode/${episode.slug}/edit`">
+                                    <button
+                                        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                                    >Edit
+                                    </button>
+                                </Link>
+                            </div>
+                            <div>
+                                <Link :href="`/dashboard`">
+                                    <button
+                                        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                                    >Dashboard
+                                    </button>
+                                </Link>
+                            </div>
                         </div>
-                        <div class="">
-                            <Link
-                                :href="`/shows/${show.slug}/episode/${episode.slug}/edit`">
-                                <button
-                                    class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                                >Edit
-                                </button>
-                            </Link>
-                        </div>
-                        <div>
-                            <Link :href="`/dashboard`">
-                                <button
-                                    class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                                >Dashboard
-                                </button>
-                            </Link>
-                        </div>
-                    </div>
 
 
                         <div class="flex justify-end mt-6">
@@ -89,12 +89,19 @@
                 </div>
             </header>
 
+            <div class="my-6 ml-10 md:w-3/4">
+                <div class="text-sm font-semibold uppercase mb-2">Episode Description</div>
+                {{ episode.description }}
+            </div>
+
+
 
             <div class="flex flex-col">
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                     <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
 
-                        <div class="shadow overflow-hidden border-b border-gray-200 w-full bg-black text-light text-2xl sm:rounded-lg p-5">
+                        <div
+                            class="shadow overflow-hidden border-b border-gray-200 w-full bg-black text-light text-2xl sm:rounded-lg p-5">
 
 
                             <img :src="`/storage/images/EBU_Colorbars.svg.png`" class="max-h-32">
@@ -107,7 +114,9 @@
                     <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg p-5">
 
                         <div class="my-6 ml-10 md:w-3/4">
-                            <div class="text-sm font-semibold uppercase mb-2">Episode Notes (only team members see these)</div>
+                            <div class="text-sm font-semibold uppercase mb-2">Episode Notes (only team members see
+                                these)
+                            </div>
                             {{ episode.notes }}
                         </div>
 

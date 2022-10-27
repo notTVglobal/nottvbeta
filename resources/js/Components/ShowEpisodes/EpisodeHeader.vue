@@ -6,10 +6,6 @@
         <Link :href="`/shows/${show.slug}/episode/${episode.slug}`" class="pl-5">{{ episode.name }}</Link>
     </h3>
 
-    <div class="my-6 ml-10 md:w-3/4">
-        <div class="text-sm font-semibold uppercase mb-2">Episode Description</div>
-        {{ episode.description }}
-    </div>
 
 
 

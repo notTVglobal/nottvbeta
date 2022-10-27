@@ -1,9 +1,9 @@
 <template>
 
-    <Head :title="`Manage Team: ${props.team.name}`" />
+    <Head :title="`Manage Team: ${props.team.name}`"/>
     <div class="sticky top-0 w-full nav-mask">
         <ResponsiveNavigationMenu/>
-        <NavigationMenu />
+        <NavigationMenu/>
     </div>
 
 
@@ -11,15 +11,67 @@
 
         <div class="bg-white rounded text-black p-5 mb-10">
 
+            <div
+                class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
+                role="alert"
+                v-if="message"
+            >
+        <span class="font-medium">
+            {{ message }}
+        </span>
+            </div>
+
             <!--            <TeamHeader v-bind="team" :memberSpots="props.team.memberSpots"/>-->
 
-            <TeamManageHeader
-                :team="props.team"
-                :teamLeader="props.teamLeader"
-                :logo="props.logo"
-                :can="props.can"
-                :message="props.message"
-            />
+            <header>
+                <div class="flex justify-between mb-3">
+                    <div class="gap-2">
+                        <div class="font-bold mb-4 text-orange-400">MANAGE TEAM</div>
+                        <div>
+                            <TeamManageHeader
+                                :team="props.team"
+                                :teamLeader="props.teamLeader"
+                                :logo="props.logo"
+                                :can="props.can"
+                                :message="props.message"
+                            />
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex flex-wrap-reverse justify-end gap-2">
+                            <Link
+                                v-if="can.editTeam" :href="`/teams/${team.slug}/edit`">
+                                <button
+                                    class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                                >Edit
+                                </button>
+                            </Link>
+                            <Link :href="`/dashboard`">
+                                <button
+                                    class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                                >Dashboard
+                                </button>
+                            </Link>
+                        </div>
+
+
+                        <div class="flex justify-end mt-6">
+                            <div class="flex flex-col">
+                                <div><span class="text-xs capitalize font-semibold mr-2">Team Leader: </span>
+                                    {{ teamLeader }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </header>
+
+            <p class="mb-6 p-5">
+                {{ team.description }}
+            </p>
+
 
             <div class="flex flex-col">
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -36,7 +88,7 @@
                         </div>
 
                         <div class="mt-4 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                            <TeamAssignmentsList />
+                            <TeamAssignmentsList/>
                         </div>
 
                         <!--  <TeamFooter />  -->
@@ -81,9 +133,9 @@
 <script setup>
 import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/NavigationMenu"
-import { ref, computed, onMounted } from "vue"
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import { useTeamStore } from "@/Stores/TeamStore.js"
+import {ref, computed, onMounted} from "vue"
+import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
+import {useTeamStore} from "@/Stores/TeamStore.js"
 import Modal from "@/Components/Modal"
 import Pagination from "@/Components/Pagination"
 import TeamManageHeader from "@/Components/Teams/Manage/TeamManageHeader"
