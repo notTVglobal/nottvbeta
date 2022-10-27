@@ -9,6 +9,7 @@ export let useShowStore = defineStore('showStore', {
         posterId: [0],
         episodes: [],
         team_id: 'team id',
+        episodePoster: '',
     }),
 
     actions: {

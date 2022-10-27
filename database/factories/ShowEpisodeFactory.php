@@ -7,12 +7,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use Laravel\Jetstream\Features;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ShowEpisode>
- */
 class ShowEpisodeFactory extends Factory
 {
-
     /**
      * The name of the factory's corresponding model.
      *
@@ -23,7 +19,7 @@ class ShowEpisodeFactory extends Factory
     /**
      * Define the model's default state.
      *
-     * @return array<string, mixed>
+     * @return array
      */
     public function definition()
     {
@@ -33,9 +29,9 @@ class ShowEpisodeFactory extends Factory
             'image_id' => '4',
             'user_id' => \App\Models\User::all()->random()->id,
             'show_id' => \App\Models\Show::all()->random()->id,
-            'slug' => \Str::slug($name),
-            'notes' => ['', ''],
+            'notes' => $this->faker->sentence(5),
             'isPublished' => '0',
+            'slug' => \Str::slug($name)
         ];
     }
 }

@@ -52,6 +52,23 @@
 
                 <div class="mb-6">
                     <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
+                           for="episode_number"
+                    >
+                        Episode Number
+                    </label>
+
+                    <input v-model="form.episode_number"
+                           class="bg-gray-50 border border-gray-400 text-gray-900 text-sm p-2 w-1/2 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                           type="text"
+                           name="episode_number"
+                           id="episode_number"
+                           required
+                    >
+                    <div v-if="form.errors.episode_number" v-text="form.errors.episode_number" class="text-xs text-red-600 mt-1"></div>
+                </div>
+
+                <div class="mb-6">
+                    <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
                            for="description"
                     >
                         Description
@@ -116,6 +133,7 @@ let form = useForm({
     user_id: props.user.id,
     show_id: props.show.id,
     show_slug: props.show.slug,
+    episode_number: ''
 });
 
 teamStore.setActiveShow(props.show);

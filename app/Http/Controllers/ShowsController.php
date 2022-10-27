@@ -29,7 +29,7 @@ class ShowsController extends Controller
     {
 
         return Inertia::render('Shows/Index', [
-            'shows' => Show::with('team', 'user', 'image', 'episodes', 'showStatus')
+            'shows' => Show::with('team', 'user', 'image', 'showEpisodes', 'showStatus')
                 ->when(Request::input('search'), function ($query, $search) {
                     $query->where('name', 'like', "%{$search}%");
                 })
@@ -46,7 +46,7 @@ class ShowsController extends Controller
                     'showRunnerName' => $show->user->name,
                     'poster' => $show->image->name,
                     'slug' => $show->slug,
-                    'totalEpisodes' => $show->episodes->count(),
+                    'totalEpisodes' => $show->showEpisodes->count(),
                     'status' => $show->showStatus->name,
                     'statusId' => $show->showStatus->id,
                     'can' => [
@@ -153,25 +153,49 @@ class ShowsController extends Controller
     // make URL path = slug.
     public function show(Show $show)
     {
-        function getPoster($show){
-            $getPoster = Image::query()
-                ->where('show_id', $show->id)
-                ->pluck('name')
-                ->first();
-            if(!empty($getPoster)){
-                $poster = $getPoster;
-            } else {
-                $poster = 'EBU_Colorbars.svg.png';
-            }
-            return $poster;
-        }
 
         return Inertia::render('Shows/{$id}/Index', [
-            'show' => $show,
-            'poster' => getPoster($show),
-            'teamName' => Team::query()->where('id', $show->team_id)->pluck('name')->firstOrFail(),
-            'teamSlug' =>Team::query()->where('id', $show->team_id)->pluck('slug')->firstOrFail(),
-            'showRunner' => User::query()->where('id', $show->user_id)->pluck('name')->firstOrFail(),
+            'show' => [
+                'name' => $show->name,
+                'description' => $show->description,
+                'showRunner' => $show->user->name,
+                'slug' => $show->slug,
+                'poster' => $show->image->name,
+            ],
+
+            ////////////////
+            // tec21: this returns all columns from the showEpisode and image table
+            // find a way to limit the query to only what we need (see my previous
+            // attempt below)
+            //
+            'episodes' => ShowEpisode::with('image')->where('show_id', $show->id)->get(),
+
+//            'episodes' => ShowEpisode::with('show', 'image')
+//                ->where('show_id', $show->id)
+//                ->when(Request::input('search'), function ($query, $search) {
+//                    $query->where('name', 'like', "%{$search}%");
+//                })
+//                ->latest()
+//                ->paginate(5)
+//                ->withQueryString()
+//                ->through(fn($showEpisode) => [
+//                    'id' => $showEpisode->id,
+//                    'name' => $showEpisode->name,
+//                    'description' => $showEpisode->description,
+//                    'slug' => $showEpisode->slug,
+//                    'poster' => $showEpisode->image->name,
+//                    'show' => [
+//                        'name' => $showEpisode->show->name,
+//                        'slug' => $showEpisode->show->slug,
+//                        'poster' => $showEpisode->show->image->name,
+//                    ],
+//                ]),
+
+            'team' => [
+                'name' => $show->team->name,
+                'slug' => $show->team->slug,
+                'poster' => $show->team->image->name,
+            ],
             'can' => [
                 'manageShow' => Auth::user()->can('manage', $show),
                 'editShow' => Auth::user()->can('edit', $show),
@@ -191,27 +215,23 @@ class ShowsController extends Controller
     // make URL path = slug.
     public function manage(Show $show)
     {
-        function getPoster($show){
-            $getPoster = Image::query()
-                ->where('show_id', $show->id)
-                ->pluck('name')
-                ->first();
-            if(!empty($getPoster)){
-                $poster = $getPoster;
-            } else {
-                $poster = 'EBU_Colorbars.svg.png';
-            }
-            return $poster;
-        }
-        $team = Team::query()->where('id', $show->team_id)->firstOrFail();
-        $showRunner = User::query()->where('id', $show->user_id)->pluck('name')->first();
+
         return Inertia::render('Shows/{$id}/Manage', [
-            'show' => $show,
-            'team' => $team,
-            'poster' => getPoster($show),
-            'showRunnerName' => $showRunner,
+            'show' => [
+                'name' => $show->name,
+                'description' => $show->description,
+                'showRunner' => $show->user->name,
+                'slug' => $show->slug,
+                'poster' => $show->image->name,
+            ],
+            'team' => [
+                'name' => $show->team->name,
+                'slug' => $show->team->slug,
+            ],
+
             'episodes' => ShowEpisode::query()->where('show_id', $show->id)->get(),
-//            'episodes' => Episode::query()
+//            'episodes' => ShowEpisode::with('showEpisodeStatus', 'image')
+//                ->where('show_id', $show->id)
 //                ->when(Request::input('search'), function ($query, $search) {
 //                    $query->where('name', 'like', "%{$search}%");
 //                })
@@ -222,7 +242,8 @@ class ShowsController extends Controller
 //                    'name' => $episode->name,
 //                    'description' => $episode->description,
 //                    'notes' => $episode->notes,
-//                    'poster' => Image::query()->where('id', $episode->image_id)->pluck('name')->first(),
+//                    'poster' => $episode->image->name,
+//                    'status' => $episode->showEpisodeStatus->name,
 //                ]),
 
         ]);
@@ -341,7 +362,7 @@ class ShowsController extends Controller
     public function createEpisode(Show $show)
     {
 
-        return Inertia::render('Shows/{$id}/Episode/Create', [
+        return Inertia::render('Shows/{$id}/Episodes/Create', [
             'show' => $show,
             'team' => Team::query()->where('id', $show->team_id)->first(),
         ]);
@@ -359,32 +380,28 @@ class ShowsController extends Controller
     // make URL path = slug.
     public function manageEpisode(Show $show, ShowEpisode $showEpisode) {
 
-        function getPoster($showEpisode) {
-            $getPoster = Image::query()
-                ->where('show_episode_id', $showEpisode->id)
-                ->pluck('name')
-                ->first();
-            if (!empty($getPoster)) {
-                $poster = $getPoster;
-            } else {
-                $poster = 'EBU_Colorbars.svg.png';
-            }
+        return Inertia::render('Shows/{$id}/Episodes/{$id}/Manage', [
+            'show' => [
+                'name' => $show->name,
+                'slug' => $show->slug,
+                'showRunner' => $show->user->name,
+                'poster' => $show->image->name,
+            ],
+            'team' => [
+                'name' => $show->team->name,
+                'slug' => $show->team->slug,
+            ],
+            'episode' => [
+                'id' => $showEpisode->id,
+                'name' => $showEpisode->name,
+                'description' => $showEpisode->description,
+                'slug' => $showEpisode->slug,
+                'poster' => $showEpisode->image->name,
+                'episode_number' => $showEpisode->episode_number,
+            ],
 
-            return $poster;
-        }
+        ]);
 
-        $team = Team::query()->where('id', $showEpisode->team_id)->firstOrFail();
-        $showRunner = User::query()->where('id', $show->user_id)->pluck('name')->first();
-
-        {
-            return Inertia::render('Shows/{$id}/Episode/{$id}/Manage', [
-                'show'           => $show,
-                'episode'        => $showEpisode,
-                'team'           => $team,
-                'poster'         => getPoster($showEpisode),
-                'showRunnerName' => $showRunner,
-            ]);
-        }
     }
 
 

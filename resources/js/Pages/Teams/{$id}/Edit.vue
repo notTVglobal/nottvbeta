@@ -1,6 +1,6 @@
 <template>
 
-    <Head :title="title"/>
+    <Head :title="`Edit Team: ${props.team.name}`"/>
     <div class="sticky top-0 w-full nav-mask">
         <ResponsiveNavigationMenu/>
         <NavigationMenu/>
@@ -241,8 +241,6 @@ let form = useForm({
 let submit = () => {
     form.put(route('teams.update', props.team.slug));
 };
-
-let title = "Edit > " + props.team.name;
 
 </script>
 

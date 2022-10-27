@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             ImageSeeder::class,
             TeamSeeder::class,
             ShowSeeder::class,
+            ShowEpisodeSeeder::class,
         ]);
     }
 }

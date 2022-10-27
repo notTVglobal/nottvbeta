@@ -14,6 +14,6 @@ class ShowEpisodeSeeder extends Seeder
      */
     public function run()
     {
-        //
+        \App\Models\ShowEpisode::factory(99)->create();
     }
 }

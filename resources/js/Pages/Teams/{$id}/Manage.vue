@@ -1,6 +1,6 @@
 <template>
 
-    <Head :title="props.team.name" />
+    <Head :title="`Manage Team: ${props.team.name}`" />
     <div class="sticky top-0 w-full nav-mask">
         <ResponsiveNavigationMenu/>
         <NavigationMenu />

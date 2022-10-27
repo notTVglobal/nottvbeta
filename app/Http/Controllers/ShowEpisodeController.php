@@ -24,12 +24,10 @@ class ShowEpisodeController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Shows/{$id}/Episode/{$id}/Index', [
+        return Inertia::render('Shows/{$id}/Episodes/Index', [
 
         ]);
     }
-
-
 
     /**
      * Store a newly created resource in storage.
@@ -44,12 +42,14 @@ class ShowEpisodeController extends Controller
             'description' => 'required',
             'user_id' => 'required',
             'show_id' => 'required',
+            'episode_number' => 'max:10'
         ]);
         $showEpisode = new ShowEpisode();
         $showEpisode->name = $request->name;
         $showEpisode->description = $request->description;
         $showEpisode->user_id = Auth::user()->id;
         $showEpisode->show_id = $request->show_id;
+        $showEpisode->episode_number = $request->episode_number;
         $showEpisode->slug = \Str::slug($request->name);
         $showEpisode->isBeingEditedByUser_id = Auth::user()->id;
         $showEpisode->save();
@@ -72,45 +72,145 @@ class ShowEpisodeController extends Controller
 
     }
 
+
     /**
      * Display the specified resource.
      *
      * @param  int  $show
+     * @param  int  $showEpisode
      * @return \Illuminate\Http\Response
      */
     // URL path is currently set to show.id
     // change show($id) to show($slug) to
     // make URL path = slug.
-    public function show(Show $show, ShowEpisode $showEpisode)
-    {
-        echo $show.' - '.$showEpisode;
-            {
-            function getPoster($show){
-                $getPoster = Image::query()
-                    ->where('show_id', $show->id)
-                    ->pluck('name')
-                    ->first();
-                if(!empty($getPoster)){
-                    $poster = $getPoster;
-                } else {
-                    $poster = 'EBU_Colorbars.svg.png';
-                }
-                return $poster;
-            }
+    public function show(Show $show, ShowEpisode $showEpisode) {
 
-            return Inertia::render('Shows/{$id}/Episode/{$id}/Index', [
-                'show' => $show,
-                'episode' => $showEpisode,
-                'poster' => getPoster($show),
-                'teamName' => Team::query()->where('id', $show->team_id)->pluck('name')->firstOrFail(),
-                'showRunner' => User::query()->where('id', $show->user_id)->pluck('name')->firstOrFail(),
-                'can' => [
-                    'manageShow' => Auth::user()->can('manage', $show),
-                    'editShow' => Auth::user()->can('edit', $show),
-                    'viewCreator' => Auth::user()->can('viewCreator', User::class),
-                ]
-            ]);
-        }
+        return Inertia::render('Shows/{$id}/Episodes/{$id}/Index', [
+            'show' => [
+                'name' => $show->name,
+                'slug' => $show->slug,
+                'showRunner' => $show->user->name,
+                'poster' => $show->image->name,
+            ],
+            'team' => [
+                'name' => $show->team->name,
+                'slug' => $show->team->slug,
+            ],
+            'episode' => [
+                'name' => $showEpisode->name,
+                'description' => $showEpisode->description,
+                'slug' => $showEpisode->slug,
+                'poster' => $showEpisode->image->name,
+                'number' => $showEpisode->episode_number,
+            ],
+            'can' => [
+                'manageShow' => Auth::user()->can('manage', $show),
+                'editShow' => Auth::user()->can('edit', $show),
+                'viewCreator' => Auth::user()->can('viewCreator', User::class),
+            ]
+
+        ]);
+
+    }
+
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $show
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Show $show, ShowEpisode $showEpisode)
+    {
+//        $team = Show::query()->where('id', $show->id)->pluck('team_id')->firstOrFail();
+
+        // Currently this queries all images in the database
+        // this needs to be changed to limit the query.
+        //
+        DB::table('users')->where('id', Auth::user()->id)->update([
+            'isEditingShowEpisode_id' => $showEpisode->id,
+        ]);
+
+        DB::table('show_episodes')->where('id', $showEpisode->id)->update([
+            'isBeingEditedByUser_id' => Auth::user()->id,
+        ]);
+
+        return Inertia::render('Shows/{$id}/Episodes/{$id}/Edit', [
+            'poster' => $showEpisode->image->name,
+            'show' => [
+                'name' => $show->name,
+                'slug' => $show->slug,
+                'showRunner' => $show->user->name,
+                'poster' => $show->image->name,
+            ],
+            'team' => [
+                'name' => $show->team->name,
+                'slug' => $show->team->slug,
+            ],
+            'episode' => [
+                'id' => $showEpisode->id,
+                'name' => $showEpisode->name,
+                'description' => $showEpisode->description,
+                'slug' => $showEpisode->slug,
+                'poster' => $showEpisode->image->name,
+                'episode_number' => $showEpisode->episode_number,
+            ],
+            'can' => [
+                'manageShow' => Auth::user()->can('manage', $show),
+                'editShow' => Auth::user()->can('edit', $show),
+                'viewCreator' => Auth::user()->can('viewCreator', User::class),
+            ]
+        ]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(HttpRequest $request, Show $show, ShowEpisode $showEpisode)
+    {
+
+        // validate the request
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'episode_number' => 'max:10',
+            'description' => 'required',
+        ]);
+
+        // update the show
+        $showEpisode->name = $request->name;
+        $showEpisode->description = $request->description;
+        $showEpisode->episode_number = $request->episode_number;
+        $showEpisode->slug = \Str::slug($request->name);
+        $showEpisode->save();
+        sleep(1);
+
+        $showSlug = Show::query()->where('id', $showEpisode->show_id)->pluck('slug')->first();
+        $showEpisodeSlug = $showEpisode->slug;
+
+        // gather the data needed to render the Manage page
+        // this is all redundant. It's all contained in the
+        // teams.manage route above. But I (tec21) don't know
+        // how to simplify this *frustrated*.
+
+        // redirect
+        return redirect()
+            ->route('shows.showEpisodes.manageEpisode',
+                [$showSlug,$showEpisodeSlug])
+            ->with('message', 'Episode Updated Successfully');
+
+//        return Inertia::render('Shows/{$id}/Manage', [
+//            // responses need to be limited to only
+//            // the information required with ->only()
+//            // https://inertiajs.com/responses
+//            'show' => $show,
+//            'posterName' => Image::query()->where('id', $show->image_id)->pluck('name')->firstOrFail(),
+//            'team' => Team::query()->where('id', $show->team_id)->firstOrFail(),
+//            'showRunnerName' => User::query()->where('id', $show->user_id)->pluck('name')->firstOrFail(),
+//        ])->with('message', 'Show Updated Successfully');
     }
 
 

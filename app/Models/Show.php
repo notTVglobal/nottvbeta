@@ -28,7 +28,7 @@ class Show extends Model
         return 'slug';
     }
 
-    public function episodes()
+    public function showEpisodes()
     {
         return $this->hasMany(ShowEpisode::class);
     }

@@ -34,7 +34,7 @@ class ShowEpisode extends Model
 
     public function showEpisodeStatus()
     {
-        return $this->hasOne(ShowEpisodeStatus::class);
+        return $this->belongsTo(ShowEpisodeStatus::class);
     }
 
     public function users()
@@ -42,9 +42,9 @@ class ShowEpisode extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function images()
+    public function image()
     {
-        return $this->hasOne(Image::class);
+        return $this->belongsTo(Image::class);
     }
 
 

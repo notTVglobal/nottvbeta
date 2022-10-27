@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\CreatorsController;
 use App\Http\Controllers\ShowsController;
+use App\Http\Controllers\ShowEpisodesPosterController;
 use App\Http\Controllers\ShowsPosterController;
 use App\Http\Controllers\TeamsLogoController;
 use App\Http\Controllers\ShowEpisodeController;
@@ -255,13 +256,17 @@ Route::middleware([
     Route::get('/shows/create', [ShowsController::class, 'create'])
         ->can('viewCreator', 'App\Models\User')
         ->name('shows.create');
+
+    ///////////////
+    // tec21: move these into the ShowEpisodeController section below.
     // Display episode create page
     Route::get('/shows/{show}/episode/create', [ShowsController::class, 'createEpisode'])
         ->name('shows.createEpisode');
     // Display episode manage page
     Route::get('/shows/{show}/episode/{showEpisode}/manage', [ShowsController::class, 'manageEpisode'])
-        ->middleware('can:manage,show')
-        ->name('shows.showEpisodes.manageEpisode');
+        ->name('shows.showEpisodes.manageEpisode')
+        ->scopeBindings();
+
 
 // Show Episodes
 ///////////
@@ -271,10 +276,23 @@ Route::middleware([
     Route::get('/shows/{show}/episodes', [ShowEpisodeController::class, 'index'])
         ->can('viewPremium', 'App\Models\User')
         ->name('showEpisodes');
-    // Display shows episode page
-    Route::get('/shows/{show}/episode/{episode}', [ShowEpisodeController::class, 'show'])
+    // Display episode page
+    Route::get('/shows/{show}/episode/{showEpisode}', [ShowEpisodeController::class, 'show'])
         ->can('viewPremium', 'App\Models\User')
-        ->name('shows.showEpisodes.show');
+        ->name('shows.showEpisodes.show')
+        ->scopeBindings();
+    // Display episode edit page
+    Route::get('/shows/{show}/episode/{showEpisode}/edit', [ShowEpisodeController::class, 'edit'])
+        ->middleware('can:edit,show')
+        ->name('shows.showEpisodes.edit')
+        ->scopeBindings();
+    // Update episode
+//    Route::get('/shows/{show}/episode/{showEpisode}/edit', [ShowEpisodeController::class, 'update'])
+//        ->middleware('can:edit,show')
+//        ->name('shows.showEpisodes.update')
+//        ->scopeBindings();
+
+
 
 
 
@@ -284,6 +302,11 @@ Route::middleware([
     // uploaded image on the shows/edit page after upload.
     // this is my solution. Copy the ImageController.store
     // code to a new ShowController.uploadPoster function.
+    Route::post('/showEpisodesUploadPoster', [ShowEpisodesPosterController::class, 'uploadPoster'])
+        ->can('viewCreator', 'App\Models\User')
+        ->name('showEpisodes.uploadPoster')
+    ;
+
     Route::post('/showsUploadPoster', [ShowsPosterController::class, 'uploadPoster'])
         ->can('viewCreator', 'App\Models\User')
         ->name('shows.uploadPoster');

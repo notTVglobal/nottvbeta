@@ -1,6 +1,6 @@
 <template>
 
-    <Head :title="props.show.name" />
+    <Head :title="`Manage Show: ${props.show.name}`" />
     <div class="sticky top-0 w-full nav-mask">
         <ResponsiveNavigationMenu/>
         <NavigationMenu />
@@ -10,8 +10,8 @@
         <div class="bg-white rounded text-black p-5 mb-10">
 
             <ShowHeader
-                :showRunnerName="props.showRunnerName"
-                :poster="props.poster"
+                :show="props.show"
+                :team="props.team"
             />
 
             <div class="flex flex-col">
@@ -29,7 +29,15 @@
                                 </span>
                             </div>
 
+                            <button class="bg-orange-300 p-2 font-bold w-full text-left" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">Episodes</button>
+                            <div class="collapse" id="collapseExample">
+                                <Link
+                                    :href="route('shows.createEpisode',{show: props.show.slug})"><button
+                                    class="bg-green-500 hover:bg-green-600 text-white ml-2 my-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
+                                >Create Episode</button></Link>
+
                             <ShowEpisodesList :episodes="props.episodes" :show="props.show"/>
+                            </div>
 
                             <!--                            <table class="min-w-full divide-y divide-gray-200">-->
                             <!--                                <tbody class="bg-white divide-y divide-gray-200">-->
@@ -57,13 +65,22 @@
                         </div>
 
                         <div class="mt-4 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                            <div class="bg-orange-300 p-2 font-bold">Credits</div>
+                            <Link
+                                :href="`#`"><button
+                                class="bg-green-500 hover:bg-green-600 text-white ml-2 my-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
+                                disabled
+                            >Create Assignment</button></Link>
+                            <div class="p-2">This section is in development.</div>
+
                             <ShowCreditsList />
+
                         </div>
 
                     </div>
                 </div>
             </div>
-            <ShowFooter />
+            <ShowFooter :team="props.team"/>
         </div>
     </div>
 
@@ -75,11 +92,11 @@ import { useChatStore } from "@/Stores/ChatStore.js"
 import { useShowStore } from "@/Stores/ShowStore.js"
 import { useTeamStore } from "@/Stores/TeamStore.js"
 import ShowHeader from "@/Components/Shows/ShowHeader"
-import ShowEpisodesList from "@/Components/Shows/ShowEpisodesList"
+import ShowEpisodesList from "@/Components/Shows/Manage/ShowEpisodesList"
 import ShowFooter from "@/Components/Shows/ShowFooter"
 import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/NavigationMenu"
-import ShowCreditsList from "@/Components/Shows/ShowCreditsList";
+import ShowCreditsList from "@/Components/Shows/Manage/ShowCreditsList";
 import {onMounted, ref, watch} from "vue";
 import throttle from "lodash/throttle";
 import {Inertia} from "@inertiajs/inertia";
@@ -95,12 +112,9 @@ onMounted(() => {
 });
 
 let props = defineProps({
-    user:Object,
     show: Object,
     team: Object,
     episodes: Object,
-    poster: String,
-    showRunnerName: String,
     // filters: Object,
     message: String
 });

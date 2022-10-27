@@ -13,21 +13,21 @@ class Image extends Model
 
     public function shows()
     {
-        return $this->hasOne(Shows::class);
+        return $this->hasMany(Shows::class);
     }
 
     public function teams()
     {
-        return $this->hasOne(Teams::class);
+        return $this->hasMany(Teams::class);
     }
 
     public function showEpisodes()
     {
-        return $this->hasOne(ShowEpisode::class);
+        return $this->hasMany(ShowEpisode::class);
     }
 
     public function users()
     {
-        return $this->hasOne(User::class);
+        return $this->hasMany(User::class);
     }
 }

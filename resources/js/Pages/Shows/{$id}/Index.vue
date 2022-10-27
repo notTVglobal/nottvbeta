@@ -32,13 +32,15 @@
                 </div>
                 <div v-if="!props.can.viewCreator">
                     <h3>
-                        <Link :href="`/teams/${props.show.team_id}`" class="text-blue-500 ml-2"> {{ props.teamName }} </Link>
+                        <Link :href="`/teams/${props.team.slug}`" class="text-blue-500 ml-2"> {{ props.team.name }} </Link>
                     </h3>
                 </div>
 
             </header>
+
+
             <div class="flex justify-center w-full bg-black py-0">
-                <img :src="'/storage/images/' + props.poster" alt="" class="w-1/2 mx-2">
+                <img :src="'/storage/images/' + props.show.poster" alt="" class="w-1/2 mx-2">
             </div>
 
 
@@ -56,14 +58,21 @@
                         </div>
 
                         <div class="mb-6 p-5">
-                            <div class="w-full bg-gray-300 text-2xl p-4 mb-8">EPISODES</div>
+                            <div class="w-full bg-gray-300 text-2xl p-4 mb-4">EPISODES</div>
+                            <ShowEpisodesList :episodes="props.episodes" :show="props.show"/>
 
-                            <div class="w-full bg-gray-300 text-2xl p-4 mb-8">CREDITS</div>
+                            <div class="w-full bg-gray-300 text-2xl p-4 my-8">CREATORS</div>
+
+<!--                            We will add this when we have our Creators model setup
+                                and creators attached to the credits table for this
+                                show.                                                       -->
+
+<!--                            <ShowCreatorsList />-->
 
                             <div class="w-full bg-gray-300 text-2xl p-4 mb-8">POSTS</div>
                         </div>
 
-                        <ShowFooter />
+                        <ShowFooter :team="props.team" />
                     </div>
                 </div>
             </div>
@@ -77,13 +86,12 @@
 <script setup>
 import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/NavigationMenu"
-import {onMounted, ref} from 'vue'
+import { onMounted } from 'vue'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useTeamStore } from "@/Stores/TeamStore.js"
 import { useShowStore } from "@/Stores/ShowStore.js"
-import ShowHeader from "@/Components/Shows/ShowHeader"
 import ShowEpisodesList from "@/Components/Shows/ShowEpisodesList"
-import ShowCreditsList from "@/Components/Shows/ShowCreditsList";
+// import ShowCreatorsList from "@/Components/Shows/ShowCreatorsList";
 import ShowFooter from "@/Components/Shows/ShowFooter"
 
 let videoPlayer = useVideoPlayerStore()
@@ -95,19 +103,15 @@ onMounted(() => {
 });
 
 let props = defineProps({
-    // user: Object,
     show: Object,
-    poster: String,
-    teamName: String,
-    teamSlug: String,
-    showRunner: String,
-    // episodes: Object,
+    team: Object,
+    episodes: Object,
     message: String,
     can: Object,
 });
 
-teamStore.slug = props.teamSlug;
-teamStore.name = props.teamName;
+teamStore.slug = props.team.slug;
+teamStore.name = props.team.name;
 
 </script>
 

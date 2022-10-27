@@ -1,6 +1,6 @@
 <template>
 
-    <Head :title="title"/>
+    <Head :title="`Edit Show: ${props.show.name}`"/>
     <div class="sticky top-0 w-full nav-mask">
         <ResponsiveNavigationMenu/>
         <NavigationMenu/>
@@ -220,7 +220,6 @@ teamStore.setActiveShow(props.show);
 showStore.posterName = props.poster[0].name;
 
 let form = useForm({
-    id: props.show.id,
     name: props.show.name,
     description: props.show.description,
 });
@@ -228,7 +227,5 @@ let form = useForm({
 let submit = () => {
     form.put(route('shows.update', props.show.slug));
 };
-
-let title = "Edit > " + props.show.name;
 
 </script>

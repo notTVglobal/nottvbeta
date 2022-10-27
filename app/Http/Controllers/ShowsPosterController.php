@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Facades\DB;
+use App\Models\Show;
 
 class ShowsPosterController extends Controller
 {
@@ -28,24 +29,23 @@ class ShowsPosterController extends Controller
 //        if (!$path) {
 //            return response()->json(['error' => 'The file could not be saved.'], 500);
 //        }
+
         $user = auth()->user()->id;
+        $showId = auth()->user()->isEditingShow_id;
         $uploadedFile = $request->file('poster');
-        // create image model
-        // NEED TO PROTECT THESE
-//        $image = Image::create([
-//            'name' => $poster,
-//            'extension' => $uploadedFile->extension(),
-//            'size' => $uploadedFile->getSize(),
-//            'user_id' => $user,
-//        ]);
 
-        // create image model
+        // tec21: this was my first way of doing this.
+        // now we just change the image id on the show table
+        // the images table can keep the show id for any image
+        // uploaded to a show.
+        //
         // remove previous image from show
-        DB::table('images')->where('show_id', Auth::user()->isEditingShow_id)->update([
-                    'show_id' => null,
-                ]);
+//        DB::table('images')->where('show_id', $showId)->update([
+//                    'show_id' => null,
+//                ]);
 
-        // update image model with new image
+        // NEED TO PROTECT THESE
+        // create image model
         $id = DB::table('images')->insertGetId([
             'name' => $uploadedFile->hashName(),
             'extension' => $uploadedFile->extension(),
@@ -55,8 +55,10 @@ class ShowsPosterController extends Controller
         ]);
 
         // store image_id to Shows table
+        $show = Show::find($showId);
+        $show->image_id = $id;
+        $show->save();
 
-        // update Image on frontend
         // return that image model back to the frontend
         $poster = DB::table('images')->where('id', $id)->pluck('name')->first();
 

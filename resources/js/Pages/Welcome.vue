@@ -26,14 +26,15 @@
                 <div class="flex justify-center items-center h-screen">
                     <div class="grid md:grid-cols-1 grid-cols-1 align-items-center -mt-32">
                         <JetApplicationLogo class="block md:w-auto p-10"/>
-                        <div class="text-center text-bold text-3xl">SCROLL DOWN</div>
-                        <div class="mt-2 text-xs text-center">OR</div>
-                        <div class="mt-4 text-center">
+                        <div class="my-4 text-center">
                             <button
-                                class="text-2xl bg-green-500 hover:bg-green-600 text-white px-5 py-3 rounded disabled:bg-gray-400"
+                                class="text-2xl font-semibold bg-green-500 hover:bg-green-600 text-white px-5 py-3 rounded disabled:bg-gray-400"
                                 @click="scrollToElement"
                             ><font-awesome-icon icon="fa-solid fa-play" /> Watch Now  </button>
+
                         </div>
+                        <div class="my-2 text-center">OR</div>
+                        <div class="text-center font-semibold text-2xl px-5 py-3">SCROLL DOWN</div>
                     </div>
                 </div>
 

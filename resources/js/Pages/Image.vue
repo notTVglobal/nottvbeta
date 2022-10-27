@@ -64,6 +64,8 @@
 
 
 <script setup>
+import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
+import NavigationMenu from "@/Components/NavigationMenu"
 import Pagination from "@/Components/Pagination"
 import {Head, Link} from '@inertiajs/inertia-vue3'
 // import {ref, onMounted } from 'vue'
@@ -72,11 +74,7 @@ import "filepond/dist/filepond.min.css"
 // import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useChatStore } from "@/Stores/ChatStore.js"
-import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
-import NavigationMenu from "@/Components/NavigationMenu"
 import {Inertia} from "@inertiajs/inertia";
-import {ref, watch} from "vue";
-import throttle from "lodash/throttle";
 
 let videoPlayer = useVideoPlayerStore()
 let chat = useChatStore()
@@ -136,7 +134,7 @@ import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size';
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import 'filepond/dist/filepond.min.css';
 import {Inertia} from "@inertiajs/inertia";
-import {onMounted} from "vue";
+import { onMounted } from "vue";
 
 let videoPlayer = useVideoPlayerStore()
 
