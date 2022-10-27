@@ -68,7 +68,7 @@
 
             </header>
 
-            <p class="mb-6 p-5">
+            <p class="mb-6 p-5 w-3/4">
                 {{ team.description }}
             </p>
 

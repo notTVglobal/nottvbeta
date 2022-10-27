@@ -6,6 +6,8 @@
         <NavigationMenu/>
     </div>
 
+
+
     <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
         <div class="bg-white rounded text-black p-5 mb-10">
 
@@ -19,6 +21,7 @@
                                 </span>
             </div>
 
+            <header>
             <div class="flex justify-between mb-3">
                 <div class="gap-2">
                     <div class="font-bold mb-4 text-orange-400">MANAGE SHOW</div>
@@ -74,10 +77,10 @@
                 </div>
 
             </div>
+            </header>
 
 
-
-            <div class="my-6 ml-10 md:w-3/4">
+            <div class="my-6 ml-10 w-3/4">
                 {{ teamStore.activeShow.description }}
             </div>
 
