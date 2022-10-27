@@ -93,11 +93,22 @@
             <div class="flex flex-col">
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                     <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-                        <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg p-5">
+
+                        <div class="shadow overflow-hidden border-b border-gray-200 w-full bg-black text-light text-2xl sm:rounded-lg p-5">
 
 
-                            CONTENT GOES HERE
+                            <img :src="`/storage/images/EBU_Colorbars.svg.png`" class="max-h-32">
+                            <span> The VIDEO will go here.</span>
 
+                        </div>
+
+                    </div>
+
+                    <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg p-5">
+
+                        <div class="my-6 ml-10 md:w-3/4">
+                            <div class="text-sm font-semibold uppercase mb-2">Episode Notes (only team members see these)</div>
+                            {{ episode.notes }}
                         </div>
 
                     </div>

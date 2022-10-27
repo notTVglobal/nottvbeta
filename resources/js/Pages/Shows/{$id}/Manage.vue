@@ -105,7 +105,6 @@ let videoPlayer = useVideoPlayerStore()
 let chat = useChatStore()
 let showStore = useShowStore();
 let teamStore = useTeamStore();
-// showStore.fill();
 
 onMounted(() => {
     videoPlayer.makeVideoTopRight();

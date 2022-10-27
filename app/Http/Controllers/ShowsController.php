@@ -168,7 +168,8 @@ class ShowsController extends Controller
             // find a way to limit the query to only what we need (see my previous
             // attempt below)
             //
-            'episodes' => ShowEpisode::with('image')->where('show_id', $show->id)->get(),
+//            'episodes' => ShowEpisode::latest()->where('show_id', $show->id)->get(),
+//            'episodes' => ShowEpisode::latest()->paginate(5),
 
 //            'episodes' => ShowEpisode::with('show', 'image')
 //                ->where('show_id', $show->id)
@@ -177,19 +178,24 @@ class ShowsController extends Controller
 //                })
 //                ->latest()
 //                ->paginate(5)
-//                ->withQueryString()
-//                ->through(fn($showEpisode) => [
-//                    'id' => $showEpisode->id,
-//                    'name' => $showEpisode->name,
-//                    'description' => $showEpisode->description,
-//                    'slug' => $showEpisode->slug,
-//                    'poster' => $showEpisode->image->name,
-//                    'show' => [
-//                        'name' => $showEpisode->show->name,
-//                        'slug' => $showEpisode->show->slug,
-//                        'poster' => $showEpisode->show->image->name,
-//                    ],
-//                ]),
+//                ->when(Request::input('search'), function ($query, $search) {
+//                    $query->where('name', 'like', "%{$search}%");
+//                }),
+
+            'episodes' => ShowEpisode::with('image', 'show', 'showEpisodeStatus')
+                ->where('show_id', $show->id)
+                ->when(Request::input('search'), function ($query, $search) {
+                    $query->where('name', 'like', "%{$search}%");
+                })
+                ->latest()
+                ->paginate(5)
+                ->withQueryString()
+                ->through(fn($showEpisode) => [
+                    'id' => $showEpisode->id,
+                    'name' => $showEpisode->name,
+                    'poster' => $showEpisode->image->name,
+                    'slug' => $showEpisode->slug,
+                ]),
 
             'team' => [
                 'name' => $show->team->name,
@@ -229,7 +235,30 @@ class ShowsController extends Controller
                 'slug' => $show->team->slug,
             ],
 
-            'episodes' => ShowEpisode::query()->where('show_id', $show->id)->get(),
+//            'episodes' => ShowEpisode::latest()->where('show_id', $show->id)->get(),
+
+            'episodes' => ShowEpisode::with('image', 'show', 'showEpisodeStatus')
+                ->where('show_id', $show->id)
+                ->when(Request::input('search'), function ($query, $search) {
+                    $query->where('name', 'like', "%{$search}%");
+                })
+                ->latest()
+                ->paginate(5)
+                ->withQueryString()
+                ->through(fn($showEpisode) => [
+                    'id' => $showEpisode->id,
+                    'name' => $showEpisode->name,
+                    'poster' => $showEpisode->image->name,
+                    'slug' => $showEpisode->slug,
+                    'episodeNumber' => $showEpisode->episode_number,
+                    'notes' => $showEpisode->notes,
+                    'episodeStatus' => $showEpisode->showEpisodeStatus->name,
+                    'episodeStatusId' => $showEpisode->showEpisodeStatus->id,
+                ]),
+
+
+
+
 //            'episodes' => ShowEpisode::with('showEpisodeStatus', 'image')
 //                ->where('show_id', $show->id)
 //                ->when(Request::input('search'), function ($query, $search) {
@@ -398,6 +427,7 @@ class ShowsController extends Controller
                 'slug' => $showEpisode->slug,
                 'poster' => $showEpisode->image->name,
                 'episode_number' => $showEpisode->episode_number,
+                'notes' => $showEpisode->notes,
             ],
 
         ]);

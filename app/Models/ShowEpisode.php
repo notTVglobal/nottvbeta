@@ -27,6 +27,8 @@ class ShowEpisode extends Model
 
     ];
 
+    protected $with = ['show', 'image'];
+
     public function show()
     {
         return $this->belongsTo(Show::class);

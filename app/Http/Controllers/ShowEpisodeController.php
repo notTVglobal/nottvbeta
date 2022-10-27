@@ -154,6 +154,7 @@ class ShowEpisodeController extends Controller
                 'slug' => $showEpisode->slug,
                 'poster' => $showEpisode->image->name,
                 'episode_number' => $showEpisode->episode_number,
+                'notes' => $showEpisode->notes,
             ],
             'can' => [
                 'manageShow' => Auth::user()->can('manage', $show),
@@ -185,6 +186,7 @@ class ShowEpisodeController extends Controller
         $showEpisode->description = $request->description;
         $showEpisode->episode_number = $request->episode_number;
         $showEpisode->slug = \Str::slug($request->name);
+        $showEpisode->notes = $request->notes;
         $showEpisode->save();
         sleep(1);
 

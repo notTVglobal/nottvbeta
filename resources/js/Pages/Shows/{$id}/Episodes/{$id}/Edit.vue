@@ -9,7 +9,7 @@
     <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
         <div class="bg-dark text-light p-5 mb-10">
 
-            <ShowEditHeader :show="props.show" :team="props.team" :episode="props.episode"/>
+            <ShowEpisodeEditHeader :show="props.show" :team="props.team" :episode="props.episode"/>
 
             <div class="flex flex-col">
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -120,6 +120,22 @@
                                                  class="text-xs text-red-600 mt-1"></div>
                                         </div>
 
+                                        <div class="mb-6">
+                                            <label class="block mb-2 uppercase font-bold text-xs text-light"
+                                                   for="notes"
+                                            >
+                                                Notes (only the team members see the notes)
+                                            </label>
+                                            <TabbableTextarea v-model="form.notes"
+                                                              class="border border-gray-400 text-gray-800 p-2 w-full rounded-lg"
+                                                              name="notes"
+                                                              id="notes"
+                                                              rows="10" cols="30"
+                                            />
+                                            <div v-if="form.errors.notes" v-text="form.errors.notes"
+                                                 class="text-xs text-red-600 mt-1"></div>
+                                        </div>
+
                                         <div class="flex justify-between mb-6">
                                             <button
                                                 type="submit"
@@ -155,6 +171,7 @@ import NavigationMenu from "@/Components/NavigationMenu"
 import { onMounted } from "vue"
 import {useForm} from "@inertiajs/inertia-vue3"
 import TabbableTextarea from "@/Components/TabbableTextarea"
+import ShowEpisodeEditHeader from "@/Components/ShowEpisodes/Edit/ShowEpisodeEditHeader"
 
 import { Inertia } from "@inertiajs/inertia"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
@@ -168,8 +185,6 @@ import FilePondPluginImagePreview from "filepond-plugin-image-preview"
 import FilePondPluginFileMetadata from "filepond-plugin-file-metadata"
 import 'filepond/dist/filepond.min.css'
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css'
-
-import ShowEditHeader from "@/Components/Shows/Edit/ShowEditHeader"
 
 let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore()
@@ -232,6 +247,7 @@ let form = useForm({
     name: props.episode.name,
     episode_number: props.episode.episode_number,
     description: props.episode.description,
+    notes: props.episode.notes,
 });
 
 let submit = () => {

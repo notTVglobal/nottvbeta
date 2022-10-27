@@ -29,13 +29,13 @@
 
         <tbody class="bg-white divide-y divide-gray-200">
 
-            <ShowEpisode v-for="episode in props.episodes" :episode="episode" :showSlug="props.show.slug"/>
+            <ShowEpisode v-for="episode in props.episodes.data" :episode="episode" :showSlug="props.show.slug"/>
 
         </tbody>
     </table>
 
     <!-- Paginator -->
-<!--    <Pagination :links="episodes.links" class="mb-6"/>-->
+    <Pagination :links="episodes.links" class="mb-6"/>
 
 </template>
 
