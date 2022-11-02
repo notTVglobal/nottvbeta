@@ -11,25 +11,31 @@
 
         <div class="bg-white text-black dark:bg-gray-900 dark:text-white rounded py-5 mb-10">
 
-            <div class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4">
-                <Link
-                    v-if="props.can.manageShow" :href="`/shows/${props.show.slug}/manage`"><button
-                    class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                >Manage</button>
-                </Link>
-                <Link v-if="props.can.viewCreator" :href="`/dashboard`"><button
-                    class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                >Dashboard</button>
-                </Link>
-            </div>
-            <header class="flex justify-between mb-3 px-5">
+            <div class="flex justify-between">
                 <div>
-                    <h3 class="inline-flex items-center text-3xl font-semibold relative">
+                    <h3 class="inline-flex items-center text-3xl font-semibold relative px-5">
 
                         {{ props.show.name }}
                     </h3>
 
                 </div>
+
+                <div class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4">
+                    <Link
+                        v-if="props.can.manageShow" :href="`/shows/${props.show.slug}/manage`"><button
+                        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                    >Manage</button>
+                    </Link>
+                    <Link v-if="props.can.viewCreator" :href="`/dashboard`"><button
+                        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                    >Dashboard</button>
+                    </Link>
+                </div>
+
+            </div>
+
+
+            <header class="flex justify-between mb-3 px-5">
                 <div v-if="!props.can.viewCreator">
                     <h3>
                         <Link :href="`/teams/${props.team.slug}`" class="text-blue-500 ml-2"> {{ props.team.name }} </Link>
@@ -39,7 +45,7 @@
             </header>
 
 
-            <div class="flex justify-center w-full bg-black py-0">
+            <div class="flex justify-center w-full bg-black py-0 hidden">
                 <img :src="'/storage/images/' + props.show.poster" alt="" class="w-1/2 mx-2">
             </div>
 

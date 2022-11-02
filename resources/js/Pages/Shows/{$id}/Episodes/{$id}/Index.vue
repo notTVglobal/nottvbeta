@@ -1,61 +1,83 @@
-
 <template>
 
-    <Head :title="`${props.show.name}: ${props.episode.name}`" />
+    <Head :title="`${props.show.name}: ${props.episode.name}`"/>
     <div class="sticky top-0 w-full nav-mask">
         <ResponsiveNavigationMenu/>
-        <NavigationMenu />
+        <NavigationMenu/>
     </div>
 
     <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
 
-        <div class="bg-dark rounded text-light py-5 mb-10">
+        <div class="bg-dark rounded text-light ">
 
-            <div class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4">
-                <Link
-                    v-if="props.can.manageShow" :href="`/shows/${props.show.slug}/episode/${props.episode.slug}/manage`"><button
-                    class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                >Manage</button>
-                </Link>
-                <Link v-if="props.can.viewCreator" :href="`/dashboard`"><button
-                    class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                >Dashboard</button>
-                </Link>
-            </div>
-            <header class="flex justify-between mb-3 px-5">
-                <div>
-                    <h3 class="inline-flex items-center text-3xl font-semibold relative">
+            <div class="flex justify-between">
 
-                        {{ props.episode.name }}
-                    </h3>
-
+                <div class="p-5">
+                    <div>
+                        <span class="font-semibold text-xs uppercase">SHOW: </span>
+                        <Link :href="`/shows/${props.show.slug}/`"
+                              class="text-blue-400 hover:text-blue-600">
+                            {{ props.show.name }}
+                        </Link>
+                    </div>
+                    <div>
+                        <h3 class="inline-flex items-center text-3xl font-semibold relative">
+                            {{ props.episode.name }}
+                        </h3>
+                    </div>
                 </div>
+
+                <div class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4 py-5 mb-10">
+                    <Link
+                        v-if="props.can.manageShow"
+                        :href="`/shows/${props.show.slug}/episode/${props.episode.slug}/manage`">
+                        <button
+                            class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                        >Manage
+                        </button>
+                    </Link>
+                    <Link v-if="props.can.viewCreator" :href="`/dashboard`">
+                        <button
+                            class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                        >Dashboard
+                        </button>
+                    </Link>
+                </div>
+
+
+            </div>
+
+
+            <header class="flex justify-between mb-3 px-5">
+
                 <div v-if="!props.can.viewCreator">
                     <h3>
-                        <Link :href="`/teams/${props.team.slug}`" class="text-blue-500 ml-2"> {{ props.team.name }} </Link>
+                        <Link :href="`/teams/${props.team.slug}`" class="text-blue-500 ml-2"> {{
+                                props.team.name
+                            }}
+                        </Link>
                     </h3>
                 </div>
 
             </header>
             <div class="flex justify-center w-full bg-black py-0">
-                <img :src="'/storage/images/' + props.episode.poster" alt="" class="w-1/2 mx-2">
-            </div>
+                <!--                <img :src="'/storage/images/' + props.episode.poster" alt="" class="w-1/2 mx-2">-->
 
+                <!--                TEST VIDEO EMBED FROM RUMBLE             -->
+
+
+                <div id="rumble_v1nf3s7" class="w-1/2"></div>
+
+
+            </div>
 
 
             <div class="flex flex-col px-5">
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                     <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
 
-                        <div class="p-5">
-                            <span class="font-semibold text-xs uppercase">SHOW: </span>
-                            <Link :href="`/shows/${props.show.slug}/`"
-                                    class="text-blue-400 hover:text-blue-600">
-                                {{ props.show.name }}</Link>
-                        </div>
 
                         <div class="flex space-x-6 mt-3">
-
 
 
                             <div class="mb-6 p-5">
@@ -84,10 +106,10 @@
 <script setup>
 import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/NavigationMenu"
-import { onMounted } from 'vue'
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import { useTeamStore } from "@/Stores/TeamStore.js"
-import { useShowStore } from "@/Stores/ShowStore.js"
+import {onMounted} from 'vue'
+import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
+import {useTeamStore} from "@/Stores/TeamStore.js"
+import {useShowStore} from "@/Stores/ShowStore.js"
 // import EpisodeHeader from "@/Components/ShowEpisodes/EpisodeHeader"
 // import EpisodesList from "@/Components/ShowEpisodes/EpisodesList"
 // import EpisodeCreditsList from "@/ComponentShows/Episodes/EpisodeCreditsList";
@@ -111,6 +133,21 @@ let props = defineProps({
 
 teamStore.slug = props.team.slug;
 teamStore.name = props.team.name;
+
+</script>
+
+<script>
+
+!function (r, u, m, b, l, e) {
+    r._Rumble = b, r[b] || (r[b] = function () {
+        (r[b]._ = r[b]._ || []).push(arguments);
+        if (r[b]._.length == 1) {
+            l = u.createElement(m), e = u.getElementsByTagName(m)[0], l.async = 1, l.src = "https://rumble.com/embedJS/u4" + (arguments[1].video ? '.' + arguments[1].video : '') + "/?url=" + encodeURIComponent(location.href) + "&args=" + encodeURIComponent(JSON.stringify([].slice.apply(arguments))), e.parentNode.insertBefore(l, e)
+        }
+    })
+}(window, document, "script", "Rumble");
+
+Rumble("play", {"video": "v1nf3s7", "div": "rumble_v1nf3s7"});
 
 </script>
 
