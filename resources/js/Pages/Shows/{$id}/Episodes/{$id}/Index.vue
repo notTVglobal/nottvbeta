@@ -66,7 +66,7 @@
                 <!--                TEST VIDEO EMBED FROM RUMBLE             -->
 
 
-                <div id="rumble_v1nf3s7" class="w-1/2"></div>
+                <iframe class="rumble" width="640" height="360" src="https://rumble.com/embed/v1nf3s7/?pub=4" frameborder="0" allowfullscreen></iframe>
 
 
             </div>
@@ -107,6 +107,7 @@
 import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/NavigationMenu"
 import {onMounted} from 'vue'
+import {Inertia} from "@inertiajs/inertia";
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
 import {useTeamStore} from "@/Stores/TeamStore.js"
 import {useShowStore} from "@/Stores/ShowStore.js"
@@ -134,21 +135,7 @@ let props = defineProps({
 teamStore.slug = props.team.slug;
 teamStore.name = props.team.name;
 
-</script>
+Inertia.reload({ only: ['video']})
 
-<script>
-
-!function (r, u, m, b, l, e) {
-    r._Rumble = b, r[b] || (r[b] = function () {
-        (r[b]._ = r[b]._ || []).push(arguments);
-        if (r[b]._.length == 1) {
-            l = u.createElement(m), e = u.getElementsByTagName(m)[0], l.async = 1, l.src = "https://rumble.com/embedJS/u4" + (arguments[1].video ? '.' + arguments[1].video : '') + "/?url=" + encodeURIComponent(location.href) + "&args=" + encodeURIComponent(JSON.stringify([].slice.apply(arguments))), e.parentNode.insertBefore(l, e)
-        }
-    })
-}(window, document, "script", "Rumble");
-
-Rumble("play", {"video": "v1nf3s7", "div": "rumble_v1nf3s7"});
 
 </script>
-
-
