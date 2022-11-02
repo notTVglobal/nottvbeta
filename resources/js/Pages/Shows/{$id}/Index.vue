@@ -9,7 +9,7 @@
 
     <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
 
-        <div class="bg-white rounded text-black py-5 mb-10">
+        <div class="bg-white text-black dark:bg-gray-900 dark:text-white rounded py-5 mb-10">
 
             <div class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4">
                 <Link
@@ -58,10 +58,10 @@
                         </div>
 
                         <div class="mb-6 p-5">
-                            <div class="w-full bg-gray-300 text-2xl p-4 mb-4">EPISODES</div>
+                            <div class="w-full bg-gray-300 dark:bg-gray-800 text-2xl p-4 mb-4">EPISODES</div>
                             <ShowEpisodesList :episodes="props.episodes" :show="props.show"/>
 
-                            <div class="w-full bg-gray-300 text-2xl p-4 my-8">CREATORS</div>
+                            <div class="w-full bg-gray-300 dark:bg-gray-800 text-2xl p-4 my-8">CREATORS</div>
 
 <!--                            We will add this when we have our Creators model setup
                                 and creators attached to the credits table for this
@@ -69,7 +69,7 @@
 
 <!--                            <ShowCreatorsList />-->
 
-                            <div class="w-full bg-gray-300 text-2xl p-4 mb-8">POSTS</div>
+                            <div class="w-full bg-gray-300 dark:bg-gray-800 text-2xl p-4 mb-8">POSTS</div>
                         </div>
 
                         <ShowFooter :team="props.team" />

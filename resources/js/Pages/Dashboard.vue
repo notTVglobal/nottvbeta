@@ -103,14 +103,14 @@
                     <div
                         v-for="team in teams.data"
                         :key="team.id"
-                        class="bg-white border-b dark:bg-gray-600 dark:border-gray-700 inset-x-0 bottom-0"
+                        class="border-b bg-white hover:bg-blue-300 dark:bg-gray-600 dark:border-gray-700 dark:hover:bg-blue-800 inset-x-0 bottom-0"
                     >
-                        <p class="px-2 py-1"><Link
+                        <Link
                             @click="videoPlayer.makeVideoTopRight()"
                             :href="`/teams/${team.slug}/manage`"
-                            class="text-blue-800 hover:text-blue-400 dark:text-blue-100 dark:hover:text-blue-400">
+                            class="text-blue-800 hover:text-blue-900 dark:text-blue-100 dark:hover:text-white"><p class="px-2 py-1">
                             {{ team.name }}
-                        </Link></p>
+                        </p></Link>
                     </div>
                     <div class="flex flex-row justify-between bottom-0 align-items-bottom py-2 px-2">
                         <!-- Paginator -->
@@ -128,7 +128,7 @@
                             </template>
                             <button><font-awesome-icon
                                 icon="fa-solid fa-question"
-                                class="dark:text-white mt-6 absolute bottom-0 text-right pr-4 py-2 "
+                                class="dark:text-white dark:hover:text-blue-400 hover:text-blue-400 mt-6 absolute bottom-0 text-right pr-4 py-2 "
                             /></button>
                         </Popper>
                         </div>
@@ -145,14 +145,14 @@
                     <div
                         v-for="show in shows.data"
                         :key="show.id"
-                        class="bg-white border-b dark:bg-gray-600 dark:border-gray-700 inset-x-0 bottom-0"
+                        class="border-b bg-white hover:bg-blue-300 dark:bg-gray-600 dark:border-gray-700 dark:hover:bg-blue-800 inset-x-0 bottom-0"
                     >
-                        <p class="px-2 py-1"><Link
+                        <Link
                             @click="videoPlayer.makeVideoTopRight()"
                             :href="`/shows/${show.slug}/manage`"
-                            class="text-blue-800 hover:text-blue-400 dark:text-blue-100 dark:hover:text-blue-400">
+                            class="text-blue-800 hover:text-blue-900 dark:text-blue-100 dark:hover:text-white"><p class="px-2 py-1">
                             {{ show.name }}
-                        </Link></p>
+                        </p></Link>
                     </div>
                     <div class="flex flex-row justify-between bottom-0 align-items-bottom py-2 px-2">
                         <!-- Paginator -->
@@ -167,7 +167,7 @@
                         </template>
                             <button><font-awesome-icon
                                 icon="fa-solid fa-question"
-                                class="dark:text-white mt-6 absolute bottom-0 text-right pr-4 py-2 "
+                                class="dark:text-white dark:hover:text-blue-400 hover:text-blue-400 mt-6 absolute bottom-0 text-right pr-4 py-2 "
                             /></button>
                         </Popper>
                         </div>
@@ -186,38 +186,38 @@
 
                 <div class="p-2 text-red-600">This section is in development. Not currently working.</div>
 
-                <div class="border-2 pb-3">
+                <div class="border-2">
                     <div class="grid justify-items-stretch grid-cols-3 ">
                         <div class="bg-gray-800 text-white text-sm p-2 col-span-3">Membership: 000000</div>
                     </div>
-                    <table class="w-full mb-2">
+                    <table class="w-full">
                         <thead class="">
                         <td class="bg-blue-400 font-semibold text-sm text-black px-2 mb-3">Account Name</td>
                         <td class="bg-blue-400 px-2 mb-3 text-right font-semibold text-sm text-black">Balance</td>
                         </thead>
-                        <tr class="border-b border-1 border-gray-100 py-2">
-                            <td class="px-2 col-span-2">Chequing</td>
+                        <tr class="border-b border-1 border-gray-100">
+                            <td class="px-2 col-span-2 py-2">Chequing</td>
                             <td class="px-2 text-right">0.00</td>
                         </tr>
-                        <tr class="border-b border-1 border-gray-100 py-2">
-                            <td class="px-2 col-span-2">Equity Shares</td>
+                        <tr class="border-b border-1 border-gray-100">
+                            <td class="px-2 col-span-2 py-2">Equity Shares</td>
                             <td class="px-2 text-right">10.00</td>
                         </tr>
-                        <tr class="border-b border-1 border-gray-100 py-2">
-                            <td class="px-2 col-span-2">Team Account Example</td>
+                        <tr class="border-b border-1 border-gray-100">
+                            <td class="px-2 col-span-2 py-2">Team Account Example</td>
                             <td class="px-2 text-right">0.00</td>
                         </tr>
                     </table>
 
                         <table class="w-full">
                             <thead class="">
-                                <td class="bg-blue-400 font-semibold text-sm text-black px-2 mb-3">Team Shares</td>
-                                <td class="bg-blue-400 px-2 mb-3 text-right font-semibold text-sm text-black">Balance</td>
+                                <td class="bg-blue-400 font-semibold text-sm text-black px-2">Team Shares</td>
+                                <td class="bg-blue-400 px-2 text-right font-semibold text-sm text-black">Balance</td>
                             </thead>
                             <tr v-for="team in teams.data"
                                 :key="team.id"
-                                class="border-b border-1 border-gray-100 py-2">
-                                <td class="px-2">{{ team.name }}</td>
+                                class="border-b border-1 border-gray-100">
+                                <td class="px-2 py-2">{{ team.name }}</td>
                                 <td class="px-2 text-right">0.00</td>
                             </tr>
                         </table>

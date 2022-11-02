@@ -6,21 +6,24 @@
     </div>
 
     <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
-        <div class="bg-white text-black p-5 mb-10">
+        <div class="bg-white text-black dark:bg-gray-900 dark:text-white p-5 mb-10">
 
-
-            <div v-if="props.can.viewCreator" class="flex justify-end flex-wrap-reverse gap-x-2">
-                <Link :href="`/shows/create`"><button
-                    class="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded disabled:bg-gray-400"
-                >Add Show</button>
-                </Link>
-                <Link :href="`/dashboard`"><button
-                    class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                >Dashboard</button>
-                </Link>
+            <div class="flex justify-between mb-6">
+                <div>
+                    <h1 class="text-3xl font-semibold pb-3">Shows</h1>
+                </div>
+                <div v-if="props.can.viewCreator" class="flex justify-end flex-wrap-reverse gap-x-2">
+                    <Link :href="`/shows/create`"><button
+                        class="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded disabled:bg-gray-400"
+                    >Add Show</button>
+                    </Link>
+                    <Link :href="`/dashboard`"><button
+                        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                    >Dashboard</button>
+                    </Link>
+                </div>
             </div>
 
-            <h1 class="text-3xl font-semibold pb-3">Shows</h1>
 
             <div class="flex flex-col">
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -37,19 +40,21 @@
                                 </span>
                             </div>
 
-                            <div class="flex flex-row justify-end gap-x-4 mr-2">
-                                <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg" />
-                            </div>
-
-
 
                             <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-                                <div class="p-6 bg-white border-b border-gray-200">
+                                <div class="p-6 bg-white dark:bg-gray-800 border-b border-gray-200">
                                     <div
                                         class="relative overflow-x-auto shadow-md sm:rounded-lg"
                                     >
-                                        <!-- Paginator -->
-                                        <Pagination :links="props.shows.links" class="mb-6"/>
+                                        <div class="flex flex-row justify-between gap-x-4 mr-2">
+                                            <div>
+                                                <!-- Paginator -->
+                                                <Pagination :links="props.shows.links" class=""/>
+                                            </div>
+                                            <div>
+                                                <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg mb-6" />
+                                            </div>
+                                        </div>
 
                                         <table
                                             class="w-full text-sm text-left text-gray-500 dark:text-gray-400"
@@ -99,7 +104,7 @@
                                                     scope="row"
                                                     class="px-6 py-4 text-xl text-gray-900 dark:text-white whitespace-nowrap"
                                                 >
-                                                    <Link :href="`/shows/${show.slug}`" class="text-blue-800 hover:text-blue-600">{{ show.name }}</Link>
+                                                    <Link :href="`/shows/${show.slug}`" class="text-blue-800 hover:text-blue-600 dark:text-blue-200 dark:hover:text-blue-400">{{ show.name }}</Link>
                                                 </th>
                                                 <th
                                                     scope="row"
@@ -111,7 +116,7 @@
                                                     scope="row"
                                                     class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                                                 >
-                                                    <Link :href="`/teams/${show.teamSlug}`" class="text-blue-800 hover:text-blue-600">{{ show.teamName }}</Link>
+                                                    <Link :href="`/teams/${show.teamSlug}`" class="text-blue-800 hover:text-blue-600 dark:text-blue-200 dark:hover:text-blue-400">{{ show.teamName }}</Link>
                                                 </th>
                                                 <th
                                                     scope="row"
