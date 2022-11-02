@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use App\Rules\UniqueEpisodeName;
 use Inertia\Inertia;
 
 class ShowEpisodeController extends Controller
@@ -38,7 +39,13 @@ class ShowEpisodeController extends Controller
     public function store(HttpRequest $request)
     {
         $request->validate([
-            'name' => 'unique:shows|required|max:255',
+            'name' => [
+                'required',
+                'max:255',
+                'accepted_if:show_id,',
+                'distinct:ignore_case',
+                new UniqueEpisodeName($request->show_id)
+            ],
             'description' => 'required',
             'user_id' => 'required',
             'show_id' => 'required',

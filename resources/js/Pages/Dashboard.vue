@@ -7,7 +7,7 @@
 
     <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
 
-        <div class="bg-white rounded text-black p-5 mb-10">
+        <div class="bg-white rounded text-black dark:text-white dark:bg-gray-900 p-5 mb-10">
 
             <div class="flex justify-between mb-3">
 
@@ -41,7 +41,7 @@
                                 </span>
             </div>
 
-            <div v-show="can.viewAdmin" class="bg-gray-300 rounded pb-8 p-3 mb-6 mx-2 border-b border-2">
+            <div v-show="can.viewAdmin" class="bg-gray-300 dark:bg-gray-900 rounded pb-8 p-3 mb-6 mx-2 border-b border-2">
                 <div class="font-semibold text-xl pb-2">Administrator only links</div>
                 <div class="flex flex-wrap md:flex-row justify-items-start gap-2">
                     <!--disable button if ! admin-->
@@ -76,23 +76,23 @@
             </div>
 
             <section class="grid grid-cols-1 lg:grid-cols-3 gap-4 my-3 mx-2 m-auto text-black">
-                <div class="p-5 bg-gray-200 rounded">
+                <div class="p-5 bg-gray-200 dark:bg-gray-800 rounded">
                     <div class="mb-3 bg-orange-300 py-1 px-2 text-xs font-semibold text-red-800">
                         In development. Not currently working.
                     </div>
                     <div class="mb-3 grid grid-cols-1">
-                        <div class="mb-1 font-semibold text-xl justify-self-start">Open Assignments</div>
+                        <div class="mb-1 font-semibold text-xl justify-self-start dark:text-gray-50">Open Assignments</div>
                     </div>
                     <div class="ml-3">
-                        <li>
+                        <li class="text-blue-800 hover:text-blue-400 dark:text-blue-100 dark:hover:text-blue-400">
                             Assignments list goes here
                         </li>
                     </div>
                 </div>
 
-                <div class="p-5 bg-gray-200 rounded relative">
+                <div class="p-5 bg-gray-200 dark:bg-gray-800 rounded relative">
                     <div class="mb-3 flex justify-between">
-                        <div class="mb-1 font-semibold text-xl">My Teams</div>
+                        <div class="mb-1 font-semibold text-xl dark:text-gray-50">My Teams</div>
                         <div class="">
                             <Link :href="`/teams/create`"><button
                                 class="bg-green-600 hover:bg-green-500 text-white px-4 py-2 text-xs rounded disabled:bg-gray-400"
@@ -103,12 +103,12 @@
                     <div
                         v-for="team in teams.data"
                         :key="team.id"
-                        class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 inset-x-0 bottom-0"
+                        class="bg-white border-b dark:bg-gray-600 dark:border-gray-700 inset-x-0 bottom-0"
                     >
-                        <p class=""><Link
+                        <p class="px-2 py-1"><Link
                             @click="videoPlayer.makeVideoTopRight()"
                             :href="`/teams/${team.slug}/manage`"
-                            class="text-blue-800 hover:text-blue-400">
+                            class="text-blue-800 hover:text-blue-400 dark:text-blue-100 dark:hover:text-blue-400">
                             {{ team.name }}
                         </Link></p>
                     </div>
@@ -128,7 +128,7 @@
                             </template>
                             <button><font-awesome-icon
                                 icon="fa-solid fa-question"
-                                class="mt-6 absolute bottom-0 text-right pr-4 py-2 "
+                                class="dark:text-white mt-6 absolute bottom-0 text-right pr-4 py-2 "
                             /></button>
                         </Popper>
                         </div>
@@ -138,19 +138,19 @@
 
                 </div>
 
-                <div class="p-5 bg-gray-200 rounded relative">
+                <div class="p-5 bg-gray-200 dark:bg-gray-800 rounded relative">
                     <div class="mb-3 grid grid-cols-1">
-                        <div class="mb-1 font-semibold text-xl justify-self-start">My Shows</div>
+                        <div class="mb-1 font-semibold text-xl justify-self-start dark:text-gray-50">My Shows</div>
                     </div>
                     <div
                         v-for="show in shows.data"
                         :key="show.id"
-                        class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                        class="bg-white border-b dark:bg-gray-600 dark:border-gray-700 inset-x-0 bottom-0"
                     >
-                        <p class=""><Link
+                        <p class="px-2 py-1"><Link
                             @click="videoPlayer.makeVideoTopRight()"
                             :href="`/shows/${show.slug}/manage`"
-                            class="text-blue-800 hover:text-blue-400">
+                            class="text-blue-800 hover:text-blue-400 dark:text-blue-100 dark:hover:text-blue-400">
                             {{ show.name }}
                         </Link></p>
                     </div>
@@ -167,7 +167,7 @@
                         </template>
                             <button><font-awesome-icon
                                 icon="fa-solid fa-question"
-                                class="mt-6 absolute bottom-0 text-right pr-4 py-2 "
+                                class="dark:text-white mt-6 absolute bottom-0 text-right pr-4 py-2 "
                             /></button>
                         </Popper>
                         </div>
@@ -180,7 +180,7 @@
             <div class="mt-6 h-0.5 bg-gray-800"></div>
 
             <section class="grid grid-cols-1 mt-6 gap-2">
-                <div class="font-semibold text-2xl text-gray-800 px-2">
+                <div class="font-semibold text-2xl text-gray-800 dark:text-white px-2">
                     Account Summary
                 </div>
 

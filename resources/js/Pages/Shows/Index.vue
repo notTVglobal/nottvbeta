@@ -145,8 +145,9 @@
                                                         {{ show.status }}
                                                     </div>
                                                 </th>
-                                                <td v-if="show.can.editShow" class="px-6 py-4">
+                                                <td class="px-6 py-4">
                                                     <Link :href="`/shows/${show.slug}/edit`"><button
+                                                        v-if="show.can.editShow"
                                                         class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                                                     >Edit</button>
                                                     </Link>

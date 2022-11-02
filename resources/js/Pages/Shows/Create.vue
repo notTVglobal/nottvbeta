@@ -30,7 +30,9 @@
                             Team Name
                         </label>
                         <select class="border border-gray-400 p-2 w-full rounded-lg block mb-2 uppercase font-bold text-xs text-gray-700"
-                                v-model="teamStore.id"
+                                v-model="form.team_id"
+                                required
+
                         >
                             <option
                                 v-for="team in props.teams.data"
@@ -122,8 +124,10 @@ let form = useForm({
     name: '',
     description: '',
     user_id: props.userId,
-    team_id: teamStore.id,
+    team_id: '',
 });
+
+form.team_id = teamStore.id;
 
 function reset() {
     form.reset();

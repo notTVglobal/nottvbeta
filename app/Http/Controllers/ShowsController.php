@@ -117,8 +117,9 @@ class ShowsController extends Controller
 //            'name' => ['required', 'string', 'max:255', Rule::unique('shows')->ignore($show->id)],
             'description' => 'required',
             'user_id' => 'required',
-            'team_id' => 'required',
-        ]);
+            'team_id' => 'required|integer|min:1',
+        ],
+            [ 'team_id' => 'A team must be selected.']);
         Show::create([
             'name' => $request->name,
             'description' => $request->description,
