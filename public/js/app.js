@@ -983,6 +983,14 @@ var map = {
 		"/js/vendor",
 		"resources_js_Pages_Admin_Channels_Index_vue"
 	],
+	"./Admin/Settings": [
+		"./resources/js/Pages/Admin/Settings.vue",
+		"resources_js_Pages_Admin_Settings_vue"
+	],
+	"./Admin/Settings.vue": [
+		"./resources/js/Pages/Admin/Settings.vue",
+		"resources_js_Pages_Admin_Settings_vue"
+	],
 	"./Auth/ConfirmPassword": [
 		"./resources/js/Pages/Auth/ConfirmPassword.vue",
 		"resources_js_Pages_Auth_ConfirmPassword_vue"

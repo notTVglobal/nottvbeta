@@ -84,7 +84,7 @@
                         </div>
 
                         <div class="mt-4 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                            <TeamMembersList :memberSpots="props.team.memberSpots" :totalSpots="props.team.totalSpots"/>
+                            <TeamMembersList :memberSpots="props.team.memberSpots" :totalSpots="props.team.totalSpots" :members="props.members" :team="props.team"/>
                         </div>
 
                         <div class="mt-4 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
@@ -117,7 +117,7 @@
                             placeholder="Email Address..."
                             class="rounded flex-1"
                         >
-                        <button class="bg-gray-300 rounded-md w-20 p-2 hover:bg-gray-400 text-sm">Add</button>
+                        <button class="bg-green-300 rounded-md w-20 p-2 hover:bg-green-400 text-sm">Add</button>
                     </div>
                 </form>
             </template>
@@ -154,6 +154,7 @@ let props = defineProps({
     team: Object,
     logo: String,
     teamLeader: String,
+    members: Object,
     shows: Object,
     message: String,
     filters: Object,

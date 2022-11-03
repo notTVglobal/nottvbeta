@@ -14,10 +14,11 @@ return new class extends Migration
     public function up()
     {
         Schema::create('team_members', function (Blueprint $table) {
-            $table->id();
+            $table->primary(['user_id', 'team_id']);
+            $table->integer('team_id')->index();
+            $table->integer('user_id')->index();
+            $table->boolean('active');
             $table->timestamps();
-            $table->foreignId('team_id')->default(null)->constrained();
-            $table->foreignId('user_id')->default(null)->constrained();
         });
     }
 

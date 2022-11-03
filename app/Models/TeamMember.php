@@ -3,15 +3,29 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class TeamMember extends Model
+class TeamMember extends Pivot
 {
     use HasFactory;
+
+    /**
+     * Indicates if the IDs are auto-incrementing.
+     *
+     * @var bool
+     */
+
+    // tec21: I removed the id's from the TeamMember table.
+    // Put them back if that is necessary
+    // and uncomment this line:
+//    public $incrementing = true;
+
+    protected $table = 'team_members';
 
     protected $fillable = [
         'team_id',
         'user_id',
+        'active',
     ];
 
     public function teams()
@@ -19,8 +33,17 @@ class TeamMember extends Model
         return $this->belongsToMany(Teams::class);
     }
 
+    /**
+     * The users that belong to the team.
+     */
+
     public function users()
     {
-        return $this->hasMany(User::class);
+        return $this->belongsToMany(User::class);
     }
+
+//    public function users()
+//    {
+//        return $this->belongsToMany(User::class, 'team_members', 'team_id', 'user_id');
+//    }
 }

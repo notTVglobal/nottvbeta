@@ -103,14 +103,21 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasOne(Role::class);
     }
 
+//    public function teams()
+//    {
+//        return $this->belongsToMany(Team::class, 'team_members', 'user_id', 'team_id')
+//            ->as('teamMembers')
+//            ->withPivot('active', 'added_by')
+//            ->withTimestamps();
+//    }
+
     public function teams()
     {
-        return $this->hasMany(Teams::class);
-    }
-
-    public function teamMembers()
-    {
-        return $this->belongsTo(TeamMembers::class);
+        return $this->belongsToMany(Team::class, 'team_members')
+            ->using(TeamMember::class)
+            ->as('teamMember')
+            ->withPivot('active')
+            ->withTimestamps();
     }
 
     public function shows()

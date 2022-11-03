@@ -71,6 +71,12 @@
                         class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"
                     >Image Uploader</button>
                     </Link>
+
+                    <!--disable button if ! admin-->
+                    <Link :href="`/admin/settings`"><button
+                        class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"
+                    >Settings</button>
+                    </Link>
                 </div>
 
             </div>

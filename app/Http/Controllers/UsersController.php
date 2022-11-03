@@ -22,6 +22,13 @@ class UsersController extends Controller
             $role = Role::query()->where('id', $roleId)->first();
             return $role->role;
         }
+//        $teams = User::find(1)->teams()->orderBy('name')->get();
+//        dd($teams);
+
+//        foreach ($user->teams as $team) {
+//            return $team->pivot->created_at;
+//        }
+
         return Inertia::render('Users/Index', [
             'users' => User::query()
                 ->when(Request::input('search'), function ($query, $search) {
@@ -123,6 +130,7 @@ class UsersController extends Controller
         return Inertia::render('Users/{$id}/Index', [
             'userSelected' => $user,
             'role' => role($user->role_id),
+            'teams' => $user->teams,
             'can' => [
                 'viewAnyUser' => Auth::user()->can('viewAny', User::class),
                 'createUser' => Auth::user()->can('create', User::class),

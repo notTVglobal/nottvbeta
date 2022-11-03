@@ -29,15 +29,28 @@ class Team extends Model
         return $this->hasMany(Show::class);
     }
 
-    public function teamMembers()
-    {
-        return $this->hasMany(TeamMember::class);
-    }
-
     public function user()
     {
         return $this->belongsTo(User::class);
     }
+
+    public function members()
+    {
+        return $this->belongsToMany(User::class, 'team_members')->using(TeamMember::class)
+            ->as('teamMembers')
+            ->withPivot('active')
+            ->withTimestamps()
+            ->select('name', 'email', 'phone');
+    }
+
+//    public function members()
+//    {
+//        return $this->belongsToMany(User::class, 'team_members')->using(TeamMember::class)
+//            ->as('teamMembers')
+//            ->withPivot('active')
+//            ->withTimestamps()
+//        ->select('name', 'email');
+//    }
 
     public function image()
     {

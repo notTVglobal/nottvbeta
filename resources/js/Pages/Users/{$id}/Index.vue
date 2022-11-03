@@ -81,7 +81,15 @@
                     <span class="text-sm font-semibold capitalize">Postal Code: </span>{{ props.userSelected.postalCode }}
                 </div>
             </div>
-
+            <div class="p-6 bg-white border-b border-gray-200">
+                <div class="text-2xl pb-2">
+                    Teams this user belongs to:
+                </div>
+                <div v-for="team in props.teams"
+                :key="team.id">
+                    <Link :href="`/teams/${team.slug}`" class="text-blue-800 hover:text-blue-600">{{team.name}}</Link>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -107,6 +115,7 @@ onMounted(() => {
 let props = defineProps({
     userSelected: Object,
     role: String,
+    teams: Object,
     message: String,
 });
 </script>

@@ -226,6 +226,7 @@ class TeamsController extends Controller
             'team' => $team,
             'logo' => getLogo($team),
             'teamLeader' => $teamLeader,
+            'members' => $team->members,
             'shows' => DB::table('shows')->where('team_id', $team->id)
                 ->latest()
                 ->paginate(5)

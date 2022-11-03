@@ -10,6 +10,7 @@ use App\Http\Controllers\ShowEpisodeController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\TeamsController;
+use App\Http\Controllers\TeamMembersController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\PostController;
@@ -197,6 +198,20 @@ Route::middleware([
     })->can('viewAdmin', 'App\Models\User')
         ->name('quiz');
 
+// Admin Pages
+///////////
+
+    Route::get('/admin/settings', function () {
+        return Inertia::render('Admin/Settings');
+    })->can('viewAdmin', 'App\Models\User')
+        ->name('admin.settings');
+
+    // temp page to test Stores
+    Route::get('/quiz', function () {
+        return Inertia::render('QuizHome');
+    })->can('viewAdmin', 'App\Models\User')
+        ->name('quiz');
+
 // Teams
 ///////////
     Route::resource('teams',TeamsController::class);
@@ -220,6 +235,16 @@ Route::middleware([
     Route::get('/teams/{team}/edit', [TeamsController::class, 'edit'])
         ->middleware('can:edit,team')
         ->name('teams.edit');
+
+    Route::resource('teamMembers',TeamMembersController::class);
+    // Add team member
+    Route::get('/teams/addTeamMember', [TeamMembersController::class, 'attach'])
+        ->middleware('can:edit,team')
+        ->name('teams.addTeamMember');
+    // Remove team member
+    Route::post('/teams/removeTeamMember', [TeamMembersController::class, 'detach'])
+//        ->middleware('can:edit,team')
+        ->name('teams.removeTeamMember');
 
 // Creators
 ///////////
