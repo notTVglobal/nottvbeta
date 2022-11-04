@@ -4,7 +4,7 @@
     <button
         class="bg-green-500 hover:bg-green-600 text-white ml-2 my-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
         @click="openModal"
-        :disabled="teamStore.spotsRemaining < 1"
+        :disabled="!teamStore.spotsRemaining"
     >Add Member ({{ teamStore.spotsRemaining }} spots left)</button>
     <table class="min-w-full divide-y divide-gray-200">
         <thead class="bg-white divide-y divide-gray-200">
@@ -50,7 +50,7 @@
         </tbody>
     </table>
     <div class="text-right px-3 mt-2 text-gray-600 italic w-full"
-         v-show="teamStore.spotsRemaining < 1">
+         v-show="!teamStore.spotsRemaining">
         There are no remaining team spots. Edit the team to add more.
     </div>
 

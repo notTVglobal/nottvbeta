@@ -47,6 +47,9 @@ export let useTeamStore = defineStore('teamStore', {
 
     getters: {
         spotsRemaining() {
+            if (this.totalSpots - this.memberSpots < 1){
+                return 0
+            }
             return this.totalSpots - this.memberSpots;
         },
 
