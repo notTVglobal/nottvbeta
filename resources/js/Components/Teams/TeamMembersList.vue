@@ -50,7 +50,7 @@
         </tbody>
     </table>
     <div class="text-right px-3 mt-2 text-gray-600 italic w-full"
-         v-show="teamStore.memberSpots === teamStore.totalSpots">
+         v-show="teamStore.spotsRemaining < 1">
         There are no remaining team spots. Edit the team to add more.
     </div>
 
