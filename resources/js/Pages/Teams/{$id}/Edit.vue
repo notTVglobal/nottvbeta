@@ -133,7 +133,9 @@
                                             <div v-if="form.errors.totalSpots" v-text="form.errors.totalSpots"
                                                  class="text-xs text-red-600 mt-1"></div>
                                         </div>
-
+                                        <div v-if="props.message" class="text-sm text-red-600 mt-1 mb-2">
+                                            {{ props.message }}
+                                        </div>
                                         <div class="flex justify-between mb-6">
                                             <button
                                                 type="submit"
@@ -195,6 +197,7 @@ let props = defineProps({
     team: Object,
     teamLeaderName: String,
     logo: String,
+    message: String,
 });
 
 const FilePond = vueFilePond(

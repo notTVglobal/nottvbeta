@@ -345,6 +345,9 @@ class TeamsController extends Controller
      */
     public function update(HttpRequest $request, Team $team)
     {
+        if($request->totalSpots < $team->memberSpots) {
+            return redirect(route('teams.edit', [$team->slug]))->with('message', 'You already have the maximum. Please remove team members or increase the maximum # of team members.');
+        }
 
         // validate the request
         $request->validate([
