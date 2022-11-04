@@ -86,8 +86,8 @@
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useTeamStore } from "@/Stores/TeamStore.js"
 import { onMounted } from "vue"
-import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
-import NavigationMenu from "@/Components/NavigationMenu"
+import ResponsiveNavigationMenu from "@/Components/Navigation/ResponsiveNavigationMenu"
+import NavigationMenu from "@/Components/Navigation/NavigationMenu"
 import Pagination from "@/Components/Pagination"
 
 let videoPlayerStore = useVideoPlayerStore();

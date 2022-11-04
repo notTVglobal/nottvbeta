@@ -25,6 +25,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $fillable = [
         'name',
+        'role_id',
         'email',
         'password',
         'address1',
@@ -34,7 +35,6 @@ class User extends Authenticatable implements MustVerifyEmail
         'country',
         'postalCode',
         'phone',
-        'role_id',
         'subscriptionStatus',
     ];
 
@@ -101,6 +101,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function roles()
     {
         return $this->hasOne(Role::class);
+    }
+
+    public function creator()
+    {
+        return $this->hasOne(Creator::class);
     }
 
 //    public function teams()

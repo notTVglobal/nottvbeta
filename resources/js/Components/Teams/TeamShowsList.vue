@@ -11,14 +11,12 @@
     <table class="table-auto min-w-full divide-y divide-gray-200">
         <thead class="bg-white divide-y divide-gray-200">
         <tr>
-            <td class="px-6 py-4 whitespace-nowrap">
-                <div class="flex items-center">
-                    <div>
-                        <div class="text-sm font-medium text-gray-900 pl-14">
-                            Show Name
-                        </div>
-                    </div>
-                </div>
+            <td class="px-6 py-4">
+<!--                Poster-->
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium text-gray-900">
+                Show Name
+
             </td>
 
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">

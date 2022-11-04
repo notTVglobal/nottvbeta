@@ -17,7 +17,7 @@ return new class extends Migration
             $table->primary(['user_id', 'team_id']);
             $table->integer('team_id')->index();
             $table->integer('user_id')->index();
-            $table->boolean('active');
+            $table->boolean('active')->default(1);
             $table->timestamps();
         });
     }

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Request;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use App\Models\User;
+use App\Models\Creator;
 use Illuminate\Support\Facades\Auth;
 
 class UsersController extends Controller
@@ -110,8 +111,20 @@ class UsersController extends Controller
             'postalCode' => ['nullable', 'string', 'max:255'],
             'phone' => ['nullable', 'regex:/^([0-9\s\-\+\(\)]*)$/', 'min:10'],
         ]);
+
         // create the user
         User::create($attributes);
+
+        // Add user to Creators table, if the user has a creator role_id
+        if ($attributes['role_id'] == 4) {
+            $newUserName = $attributes['name'];
+            $newUser = User::query()->where('name', $newUserName)->firstOrFail();
+            Creator::create([
+                'user_id' => $newUser->id,
+            ]);
+        }
+
+        // redirect
         return redirect('/users')->with('message', 'User Created Successfully');
     }
 
@@ -161,6 +174,7 @@ class UsersController extends Controller
      */
     public function update(Request $request, User $user)
     {
+
         // validate the request
         $attributes = Request::validate([
             'address1' => ['nullable', 'string', 'max:255'],
@@ -174,13 +188,42 @@ class UsersController extends Controller
         ]);
 
         // update the user
-
         $user->update($attributes);
         sleep(1);
 
+
+        $userId = $user->id;
+        $checkCreator = Creator::where('user_id', $userId)->first();
+        // Check if the user is already on the creator table
+        if(!$checkCreator && $attributes['role_id'] == 4){
+            // if no, and the new role_id IS a creator
+            // add the user to the Creator table.
+            Creator::create([
+                'user_id' => $userId,
+            ]);
+
+        }
+        // Check if the user is already on the creator table
+        elseif ($checkCreator == !null && $attributes['role_id'] != 4 ) {
+            // if yes, and new role_id is NOT a creator, remove the user
+            // from the creator table
+            Creator::destroy($checkCreator->id);
+        }
+
         // redirect
+        function role($roleId) {
+            $role = Role::query()->where('id', $roleId)->first();
+            return $role->role;
+        }
         return Inertia::render('Users/{$id}/Index', [
-            'userSelected' => $user
+            'userSelected' => $user,
+            'role' => role($user->role_id),
+            'teams' => $user->teams,
+            'can' => [
+                'viewAnyUser' => Auth::user()->can('viewAny', User::class),
+                'createUser' => Auth::user()->can('create', User::class),
+                'editUser' => Auth::user()->can('edit', User::class)
+            ]
         ])->with('message', 'User Updated Successfully');
     }
 

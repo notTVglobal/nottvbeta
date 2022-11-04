@@ -21,6 +21,8 @@ class DatabaseSeeder extends Seeder
             TeamSeeder::class,
             ShowSeeder::class,
             ShowEpisodeSeeder::class,
+            CreatorSeeder::class,
+            TeamMemberSeeder::class,
         ]);
     }
 }

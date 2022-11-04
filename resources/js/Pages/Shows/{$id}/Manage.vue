@@ -167,8 +167,8 @@ import {useTeamStore} from "@/Stores/TeamStore.js"
 import ShowHeader from "@/Components/Shows/ShowHeader"
 import ShowEpisodesList from "@/Components/Shows/Manage/ShowEpisodesList"
 import ShowFooter from "@/Components/Shows/ShowFooter"
-import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
-import NavigationMenu from "@/Components/NavigationMenu"
+import ResponsiveNavigationMenu from "@/Components/Navigation/ResponsiveNavigationMenu"
+import NavigationMenu from "@/Components/Navigation/NavigationMenu"
 import ShowCreditsList from "@/Components/Shows/Manage/ShowCreditsList";
 import {onMounted, ref, watch} from "vue";
 import throttle from "lodash/throttle";

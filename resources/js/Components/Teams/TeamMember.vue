@@ -1,12 +1,10 @@
 <template>
     <tr>
         <td class="text-gray-500 px-6 py-4 text-sm">
-            <!--            <img :src="`https://i.pravatar.cc/50?u=${props.member.email}`" alt="" class="rounded-xl w-10">-->
             <img :src="`${props.member.profile_photo_url}`" alt="" class="rounded-full min-w-[4rem]">
         </td>
 
         <td class="text-xl font-medium px-6 py-4">
-            <!--                                                    <Link :href="`/admin/users/${episode.id}`" class="text-indigo-600 hover:text-indigo-900">{{ episode.name }}</Link>-->
             {{  props.member.name }}
         </td>
 
@@ -31,27 +29,59 @@
             <form @submit.prevent="submit" class="mt-6">
             <button class="bg-red-600 text-white hover:bg-red-500 text-xl font-semibold ml-2 my-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
                     type="submit"
-                    :disabled="form.processing">Remove</button>
+                    :disabled="form.processing"
+                    @click.prevent="deleteTeamMember(props.member.name)"
+                    >
+                Remove</button>
             </form>
         </td>
     </tr>
+
+    <ConfirmDialog :member="props.member" @confirmDelete="submit"/>
+
 </template>
 
 <script setup>
 import {useForm} from "@inertiajs/inertia-vue3";
+import {useTeamStore} from "@/Stores/TeamStore";
+import {Inertia} from "@inertiajs/inertia";
+import ConfirmDialog from "@/Components/Modals/ConfirmDialog";
+
+let teamStore = useTeamStore();
 
 let props = defineProps({
     member: Object,
-    team: Object,
 });
+
 
 let form = useForm({
     user_id: props.member.team_members.user_id,
     team_id: props.member.team_members.team_id,
-    team_slug: props.team.slug,
+    team_slug: teamStore.slug,
 })
 
-let submit = () => {
-    form.post('/teams/removeTeamMember');
+teamStore.confirmDialog = false;
+
+async function deleteTeamMember(memberName) {
+    teamStore.deleteMemberName = memberName;
+    teamStore.confirmDialog = true;
+}
+
+function submit() {
+    // alert('are you sure?');
+    form.post(route('teams.removeTeamMember'), {
+        preserveScroll: true,
+        onSuccess: () => {
+            form.reset();
+            Inertia.visit(route('teams.manage', [teamStore.slug]), {
+                method: 'get',
+                preserveScroll: true,
+            })
+        }
+    })
 };
+
+defineEmits ([
+    'removeMember'
+])
 </script>

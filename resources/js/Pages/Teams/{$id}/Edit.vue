@@ -165,8 +165,8 @@
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
 import {useChatStore} from "@/Stores/ChatStore.js"
 import {useTeamStore} from "@/Stores/TeamStore.js"
-import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
-import NavigationMenu from "@/Components/NavigationMenu"
+import ResponsiveNavigationMenu from "@/Components/Navigation/ResponsiveNavigationMenu"
+import NavigationMenu from "@/Components/Navigation/NavigationMenu"
 import TeamEditHeader from "@/Components/Teams/Edit/TeamEditHeader";
 import TeamEditBody from "@/Components/Teams/Edit/TeamEditBody";
 import { onMounted } from "vue";

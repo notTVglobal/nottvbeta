@@ -90,8 +90,8 @@
 
 
 <script setup>
-import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
-import NavigationMenu from "@/Components/NavigationMenu"
+import ResponsiveNavigationMenu from "@/Components/Navigation/ResponsiveNavigationMenu"
+import NavigationMenu from "@/Components/Navigation/NavigationMenu"
 import { onMounted } from 'vue'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useTeamStore } from "@/Stores/TeamStore.js"

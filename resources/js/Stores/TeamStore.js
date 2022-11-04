@@ -1,4 +1,5 @@
 import {defineStore} from "pinia";
+import {Inertia} from "@inertiajs/inertia";
 
 export let useTeamStore = defineStore('teamStore', {
     state: () => ({
@@ -6,38 +7,49 @@ export let useTeamStore = defineStore('teamStore', {
         name: '',
         description: '',
         slug: '',
-        totalSpots: 0,
+        totalSpots: '',
+        memberSpots: '',
         members: [],
         activeShow: [],
         activeEpisode: [],
-        logoId: [0],
-        logoName: [],
+        creators: Object,
+        showModal: Boolean,
+        confirmDialog: false,
+        deleteMemberName: '',
     }),
 
     actions: {
-        async fill() {
-            let r = await import('@/Json/team.json');
-            this.$state = r.default;
-        },
+        // async fill() {
+        //     let r = await import('@/Json/team.json');
+        //     this.$state = r.default;
+        // },
         setActiveTeam(team) {
             this.id = team.id;
             this.name = team.name;
             this.description = team.description;
             this.slug = team.slug;
             this.totalSpots = team.totalSpots;
+            this.memberSpots = team.memberSpots;
         },
         setActiveShow(show) {
             this.activeShow = show;
         },
         setActiveEpisode(episode) {
             this.activeShow = episode;
-        }
+        },
+        getCreators() {
+            Inertia.reload({ only: ['creators'] })
+        },
+        deleteTeamMemberCancel() {
+            this.confirmDialog = false;
+        },
     },
 
     getters: {
         spotsRemaining() {
-            return this.totalSpots - this.members.length;
-        }
+            return this.totalSpots - this.memberSpots;
+        },
+
     }
 });
 

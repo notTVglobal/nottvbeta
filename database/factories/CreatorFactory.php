@@ -24,8 +24,12 @@ class CreatorFactory extends Factory
      */
     public function definition()
     {
+        // Look at https://laravel.com/docs/9.x/eloquent-factories
+        // the TeamMember Pivot controller needs to be changed from
+        // Users to Creators.
+        //
         return [
-            'name' => $this->faker->name(),
+            'user_id' => \App\Models\User::factory(),
         ];
     }
 }

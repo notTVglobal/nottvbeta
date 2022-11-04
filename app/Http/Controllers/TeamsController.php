@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Team;
+use App\Models\TeamMember;
 use App\Models\User;
+use App\Models\Creator;
 use App\Models\Image;
 use App\Models\Show;
 use Illuminate\Support\Facades\Auth;
@@ -84,7 +86,7 @@ class TeamsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(HttpRequest $request)
+    public function store(HttpRequest $request, Team $team)
     {
 //        $attributes = Request::validate([
 //            'name' => 'unique:teams|required',
@@ -114,8 +116,11 @@ class TeamsController extends Controller
             'isBeingEditedByUser_id' => $request->user_id,
         ]);
 
-        $teamId = Team::query()->where('name', $request->name)->firstOrFail();
-        return redirect()->route('teams.manage', $teamId)->with('message', 'Team Created Successfully');
+        $newTeam = Team::query()->where('name', $request->name)->firstOrFail();
+        $team->id = $newTeam->id;
+        $team->members()->attach($request->user_id);
+
+        return redirect()->route('teams.manage', $newTeam)->with('message', 'Team Created Successfully');
 
     }
 
@@ -222,11 +227,47 @@ class TeamsController extends Controller
 
         $teamLeader = User::query()->where('id', $team->user_id)->pluck('name')->first();
 
+        // tec21: I am querying the database here because there is currently no
+        // pivot table between creators and teams.
+        //
+        function getTeams($userId) {
+            $teams = TeamMember::query()->where('user_id', $userId)->pluck('team_id');
+            return $teams;
+}
         return Inertia::render('Teams/{$id}/Manage', [
             'team' => $team,
             'logo' => getLogo($team),
             'teamLeader' => $teamLeader,
             'members' => $team->members,
+
+            'creators' => Creator::join('users AS user', 'creators.user_id', '=', 'user.id')
+                ->select('creators.*', 'user.name AS name')
+                ->when(Request::input('search'), function ($query, $search) {
+                    $query->where('name', 'like', "%{$search}%");
+                })
+                ->latest()
+                ->paginate(3)
+                ->withQueryString()
+                ->through(fn($creator) => [
+                    'id' => $creator->user->id,
+                    'name' => $creator->user->name,
+                    'profile_photo_url' => $creator->user->profile_photo_url,
+                    'teams' => getTeams($creator->user->id),
+                ]),
+
+//            'creators' => Creator::with('user')
+//                ->when(Request::input('search'), function ($query, $search) {
+//                    $query->where('name', 'like', "%{$search}%");
+//                        })
+//                ->latest()
+//                ->paginate(5)
+//                ->withQueryString()
+//                ->through(fn($creator) => [
+//                    'id' => $creator->user->id,
+//                    'name' => $creator->user->name,
+//            ]),
+//
+
             'shows' => DB::table('shows')->where('team_id', $team->id)
                 ->latest()
                 ->paginate(5)
@@ -241,6 +282,7 @@ class TeamsController extends Controller
                     'slug' => $show->slug,
                 ]),
             'filters' => Request::only(['team_id']),
+            'creatorFilters' => Request::only(['search']),
             'can' => [
                 'viewTeams' => Auth::user()->can('view', Team::class),
                 'manageTeam' => Auth::user()->can('manage', Team::class),

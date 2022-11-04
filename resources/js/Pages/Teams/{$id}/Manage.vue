@@ -69,7 +69,7 @@
             </header>
 
             <p class="mb-6 p-5 w-3/4">
-                {{ team.description }}
+                {{ teamStore.description }}
             </p>
 
 
@@ -84,7 +84,7 @@
                         </div>
 
                         <div class="mt-4 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                            <TeamMembersList :memberSpots="props.team.memberSpots" :totalSpots="props.team.totalSpots" :members="props.members" :team="props.team"/>
+                            <TeamMembersList :creatorFilters="props.creatorFilters" :creators="props.creators"/>
                         </div>
 
                         <div class="mt-4 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
@@ -100,48 +100,21 @@
         </div>
     </div>
 
-    <Teleport to="body">
-        <Modal :show="showModal" @close="showModal = false">
-
-            <template #header>
-                Add a new team member
-            </template>
-            <template #default>
-                <div class="pb-2">
-                    Send an email invitation to join your team.
-                </div>
-                <form>
-                    <div class="flex gap-2">
-                        <input
-                            type="email"
-                            placeholder="Email Address..."
-                            class="rounded flex-1"
-                        >
-                        <button class="bg-green-300 rounded-md w-20 p-2 hover:bg-green-400 text-sm">Add</button>
-                    </div>
-                </form>
-            </template>
-            <template #footer>
-                <button @click="showModal = false" class="text-blue-600 hover:text-gray-500">Cancel</button>
-            </template>
-        </Modal>
-    </Teleport>
-
 </template>
 
 
 <script setup>
-import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
-import NavigationMenu from "@/Components/NavigationMenu"
-import {ref, computed, onMounted} from "vue"
-import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
-import {useTeamStore} from "@/Stores/TeamStore.js"
-import Modal from "@/Components/Modal"
+import ResponsiveNavigationMenu from "@/Components/Navigation/ResponsiveNavigationMenu"
+import NavigationMenu from "@/Components/Navigation/NavigationMenu"
+import { onMounted, defineAsyncComponent } from "vue"
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+import { useTeamStore } from "@/Stores/TeamStore.js"
 import Pagination from "@/Components/Pagination"
 import TeamManageHeader from "@/Components/Teams/Manage/TeamManageHeader"
 import TeamMembersList from "@/Components/Teams/TeamMembersList"
 import TeamShowsList from "@/Components/Teams/TeamShowsList"
 import TeamAssignmentsList from "@/Components/Teams/TeamAssignmentsList"
+import {Inertia} from "@inertiajs/inertia";
 
 let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore();
@@ -156,16 +129,18 @@ let props = defineProps({
     teamLeader: String,
     members: Object,
     shows: Object,
+    creators: Object,
     message: String,
     filters: Object,
+    creatorFilters: Object,
     can: Object,
 });
 
 teamStore.setActiveTeam(props.team);
+teamStore.members = props.members;
 
-let showModal = ref(false);
-let a = ref(props.team.memberSpots);
-let b = ref(props.team.totalSpots);
-let spotsRemaining = computed(() => b - a);
+// const TeamMembersList = defineAsyncComponent(() => import(`@/Components/Teams/TeamMembersList`));
+
+// Inertia.reload({ only: ['members'] })
 
 </script>

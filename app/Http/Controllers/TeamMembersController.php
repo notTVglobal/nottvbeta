@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Team;
+use App\Models\TeamMember;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\DB;
 
 class TeamMembersController extends Controller
 {
@@ -14,13 +16,24 @@ class TeamMembersController extends Controller
 //        $user->member->toggle($team);
 //    }
 
-    public function attach(User $user, Team $team)
+    public function attach(Request $request)
     {
-        if ($user->member->team_id === $team->id) {
-            return message('This person is already on the team!');
-        }
+        $teamSlug = $request->team_slug;
+        $user = User::findOrFail($request->user_id);
+        $team = Team::findOrFail($request->team_id)->first();
+        $team->members()->attach($request->user_id);
+        DB::table('teams')->where('id', $team->id)->increment('memberSpots', 1);
+        return redirect(route('teams.manage', [$teamSlug]))->with('message', $user->name . ' has been successfully added to the team.');
+//        return inertia('',['message', $user->name . ' has been successfully added to the team.']);
 
-        $user->member->attach($team);
+//        $isUserOnTeam = TeamMember::query()
+//        ->where('user_id', $user)
+//        ->where('team_id', $team);
+//        if ($isUserOnTeam) {
+//            return ['message', 'This person is already on the team!'];
+//        }
+//dd($request->team_id);
+//        $user->member->attach($request->team_id);
     }
 
 //    public function detach(User $user, Team $team)
@@ -36,8 +49,15 @@ class TeamMembersController extends Controller
     {
         $teamSlug = $request->team_slug;
         $user = User::findOrFail($request->user_id);
-        $team = $request->team_id;
-        $user->teams()->detach($team);
-        return redirect(route('teams.manage', [$teamSlug]))->with('message', $user->name . ' has been successfully removed from the team.');
+        $team = Team::findOrFail($request->team_id);
+        DB::table('teams')->where('id', $team->id)->decrement('memberSpots', 1);
+        $user->teams()->detach($team->id);
+
+//        return Inertia::render('Teams/{$id}/Edit', [
+//            'members' => $team->members,
+//        ])->with('message', $user->name . ' has been successfully removed from the team.');
+
+        return redirect()->route('teams.manage', $teamSlug)->with('message', $user->name . ' has been successfully removed from the team.');
+//        return redirect(route('teams.manage', [$teamSlug]))->with('message', $user->name . ' has been successfully removed from the team.');
     }
 }

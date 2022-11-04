@@ -238,8 +238,8 @@ Route::middleware([
 
     Route::resource('teamMembers',TeamMembersController::class);
     // Add team member
-    Route::get('/teams/addTeamMember', [TeamMembersController::class, 'attach'])
-        ->middleware('can:edit,team')
+    Route::post('/teams/addTeamMember', [TeamMembersController::class, 'attach'])
+//        ->middleware('can:edit,team')
         ->name('teams.addTeamMember');
     // Remove team member
     Route::post('/teams/removeTeamMember', [TeamMembersController::class, 'detach'])
@@ -253,6 +253,10 @@ Route::middleware([
     // Display creator page
     Route::get('/creators/{creator}', [CreatorsController::class, 'show'])
         ->name('creators.show');
+    // Get list of creators
+    Route::get('/api/creators', [CreatorsController::class, 'getCreators'])
+        ->name('creators.getCreators');
+
 
 // Training
 ///////////

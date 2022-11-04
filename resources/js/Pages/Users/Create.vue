@@ -40,10 +40,10 @@
                         v-model="form.role_id"
                         required
                 >
-                    <option value="2">Standard User</option>
-                    <option value="3">Premium Subscriber</option>
-                    <option value="4">VIP</option>
-                    <option value="5">Creator</option>
+                    <option value="1">Standard User</option>
+                    <option value="2">Premium Subscriber</option>
+                    <option value="3">VIP</option>
+                    <option value="4">Creator</option>
                 </select>
 
                 <div v-if="form.errors.role_id" v-text="form.errors.role_id" class="text-xs text-red-600 mt-1"></div>
@@ -219,8 +219,8 @@ import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
 import {onMounted, ref} from "vue"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useChatStore } from "@/Stores/ChatStore.js"
-import ResponsiveNavigationMenu from "@/Components/ResponsiveNavigationMenu"
-import NavigationMenu from "@/Components/NavigationMenu"
+import ResponsiveNavigationMenu from "@/Components/Navigation/ResponsiveNavigationMenu"
+import NavigationMenu from "@/Components/Navigation/NavigationMenu"
 
 let videoPlayer = useVideoPlayerStore()
 let chat = useChatStore()

@@ -9,18 +9,16 @@ import { createPinia } from "pinia";
 import { ZiggyVue } from 'ziggy';
 
 import "../../resources/css/theme.css"; // Magic happens here
-
 // import the fontawesome core
 import { library } from '@fortawesome/fontawesome-svg-core'
-
 // import font awesome icon component
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-
 // import specific icons
 import { faUserSecret, faPlay, faQuestion, faStar, faUsers, faHandsHelping, faRocket, faEye, faComments, faPaperPlane } from '@fortawesome/free-solid-svg-icons'
-
 // import popper for pop-up tooltips
 import Popper from "vue3-popper";
+// import confirm dialog
+import ConfirmDialog from '@/Components/Modals/ConfirmDialog';
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'notTV';
 
@@ -46,6 +44,7 @@ createInertiaApp({
             .component("Head", Head)
             .component("font-awesome-icon", FontAwesomeIcon)
             .component("Popper", Popper)
+            .component("ConfirmDialog", ConfirmDialog)
             .mount(el);
 
     },
