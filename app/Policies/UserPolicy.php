@@ -18,7 +18,7 @@ class UserPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->isAdmin === 1;
+        return $user->isAdmin;
     }
 
     /**
@@ -41,7 +41,7 @@ class UserPolicy
      */
     public function viewCreator(User $user)
     {
-        return $user->role_id === 4;
+        return $user->creator;
     }
 
     /**
@@ -70,6 +70,8 @@ class UserPolicy
      */
     public function viewVip(User $user)
     {
+
+//        return $user->vip;
         if($user->role_id === 3)
             return $user->role_id === 3;
 

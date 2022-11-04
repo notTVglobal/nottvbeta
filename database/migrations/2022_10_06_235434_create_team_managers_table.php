@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('team_admins', function (Blueprint $table) {
+        Schema::create('team_managers', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
             $table->foreignId('team_id')->default(null)->constrained();
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('team_admins');
+        Schema::dropIfExists('team_managers');
     }
 };

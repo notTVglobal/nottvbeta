@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('show_episode_admins', function (Blueprint $table) {
+        Schema::create('show_episode_managers', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
             $table->foreignId('show_episode_id')->default(null)->constrained();
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('show_episode_admins');
+        Schema::dropIfExists('show_episode_managers');
     }
 };

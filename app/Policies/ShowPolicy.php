@@ -77,8 +77,8 @@ class ShowPolicy
         if ($user->id === $show->user_id)
             return $user->id === $show->user_id;
 
-        elseif($user->isAdmin === 1)
-            return $user->isAdmin === 1;
+        elseif($user->isAdmin)
+            return $user->isAdmin;
     }
 
     /**

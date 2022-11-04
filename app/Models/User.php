@@ -108,6 +108,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasOne(Creator::class);
     }
 
+    public function vip()
+    {
+        //
+    }
+
 //    public function teams()
 //    {
 //        return $this->belongsToMany(Team::class, 'team_members', 'user_id', 'team_id')
