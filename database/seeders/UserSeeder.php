@@ -70,7 +70,7 @@ class UserSeeder extends Seeder
             'role_id' => 3,
             'isAdmin' => 0,
         ]);
-        DB::table('users')->insert([
+        $creatorTestId = DB::table('users')->insertGetId([
             'name' => 'Creator TEST',
             'email' => 'creator@not.tv',
             'email_verified_at' => now(),
@@ -88,6 +88,10 @@ class UserSeeder extends Seeder
             'role_id' => 4,
             'isAdmin' => 0,
         ]);
+        DB::table('creators')->insert([
+            'user_id' => $creatorTestId,
+        ]);
+        
         \App\Models\User::factory(99)->create();
     }
 }

@@ -16,7 +16,7 @@ class AdminSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('users')->insert([
+        $adminId = DB::table('users')->insertGetId([
             'name' => 'Administrator',
             'email' => 'admin@not.tv',
             'email_verified_at' => now(),
@@ -33,6 +33,9 @@ class AdminSeeder extends Seeder
             'subscriptionStatus' => null,
             'role_id' => 4,
             'isAdmin' => 1,
+        ]);
+        DB::table('creators')->insert([
+            'user_id' => $adminId,
         ]);
     }
 }
