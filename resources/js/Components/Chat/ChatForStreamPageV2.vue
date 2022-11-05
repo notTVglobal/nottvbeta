@@ -12,7 +12,7 @@
         <div v-if="chatStore.showChat" class="chatForStreamPage w-100 bottom-0 sm:bottom-8 bg-opacity-30 bg-gray-600 text-sm text-white pb-12
             chat-mask overflow-y-auto scroll-smooth hover:scroll-auto break-words">
 
-            <ChatContainer />
+            <ChatContainer :user="user"/>
 
 
 <!--            <form @submit.prevent="submit">-->
@@ -41,6 +41,9 @@ import ChatContainer from "@/Components/Chat/ChatContainer";
 
 let chatStore = useChatStore();
 
+defineProps({
+    user: Object,
+})
 
 
 

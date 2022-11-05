@@ -9,6 +9,7 @@
     <div>
         <input-message :channel="currentChannel" v-on:messagesent="getMessages" :user="props.user"></input-message>
     </div>
+
 </template>
 
 <script setup>
@@ -25,7 +26,7 @@ let chatStore = useChatStore()
 let props = defineProps({
     user: Object,
     // channels: Object,
-    // currentChannel: ref([]),
+    currentChannel: ref([]),
     // messages: ref([]),
     // message: ref([]),
     // newMessage: ref([]),
@@ -75,6 +76,8 @@ onMounted(async () => {
     //         console.log('NEW ECHO ' + e.chatMessage.message)
     //         messages.value = e.data;
     //     });
+
+    // tec21: this is not happening. 11/05
     await console.log('test1: ' + chatStore.currentChannel.id);
 
 
@@ -118,12 +121,13 @@ onMounted(async () => {
 // }
 
 
-
+// tec21: all good. 11/05
 function connect() {
     console.log('STREAM CHAT CONNECTED');
     getChannels();
 }
 
+// tec21: all good. 11/05
 function getChannels() {
     console.log('GET CHANNELS');
     axios.get('/chat/channels')
@@ -136,14 +140,18 @@ function getChannels() {
         })
 }
 
+// tec21: all good. 11/05
 function setChannel ( channel ){
     chatStore.currentChannel = channel;
     console.log('SET CHANNEL');
     console.log('CURRENT CHANNEL: ' + chatStore.currentChannel.name);
     getMessages();
+
+    // tec21: all good. 11/05
     console.log('test2: ' + chatStore.currentChannel.id);
 }
 
+// tec21: all good. 11/05
 function getMessages() {
     axios.get('/chat/channel/' + chatStore.currentChannel.id + '/messages')
         .then( response => {
@@ -153,11 +161,16 @@ function getMessages() {
         .catch(error => {
             console.log(error);
         })
+
+    // tec21: all good. 11/05
         console.log('GET MESSAGES');
 }
 
+// tec21: all good. 11/05
 function disconnect() {
     window.Echo.leave("chat." + chatStore.currentChannel.id );
+
+    // tec21: all good. 11/05
     console.log('STREAM CHAT DISCONNECTED');
 }
 
@@ -195,7 +208,7 @@ watchEffect(() => {
     //     });
 });
 
-
+// tec21: all good. 11/05
 onBeforeUnmount(() => {
     disconnect();
 });
