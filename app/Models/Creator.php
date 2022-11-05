@@ -22,4 +22,14 @@ class Creator extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function teamLeader()
+    {
+        return $this->hasMany(Teams::class);
+    }
+
+    public function showRunner()
+    {
+        return $this->hasMany(Shows::class);
+    }
 }

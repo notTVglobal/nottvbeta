@@ -118,6 +118,23 @@
                                                  class="text-xs text-red-600 mt-1"></div>
                                         </div>
 
+<!--                                        tec21: this is to become a searchable list to select a team leader -->
+<!--                                        <div class="mb-6">-->
+<!--                                            <label class="block mb-2 uppercase font-bold text-xs text-gray-700"-->
+<!--                                                   for="teamLeader"-->
+<!--                                            >-->
+<!--                                                Team Leader-->
+<!--                                            </label>-->
+<!--                                            <input v-model="form.teamLeader"-->
+<!--                                                   class="border border-gray-400 p-2 w-full rounded-lg"-->
+<!--                                                   type="text"-->
+<!--                                                   name="teamLeader"-->
+<!--                                                   id="teamLeader"-->
+<!--                                            />-->
+<!--                                            <div v-if="form.errors.teamLeader" v-text="form.errors.teamLeader"-->
+<!--                                                 class="text-xs text-red-600 mt-1"></div>-->
+<!--                                        </div>-->
+
                                         <div class="mb-6">
                                             <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
                                                    for="description"
@@ -207,11 +224,11 @@ const FilePond = vueFilePond(
     FilePondPluginFileMetadata
 );
 
-FilePond.setOptions = ({
-    fileMetadataObject: {
-        team_id: '1',
-    },
-});
+// FilePond.setOptions = ({
+//     fileMetadataObject: {
+//         team_id: '1',
+//     },
+// });
 
 function filepondInitialized() {
     console.log("Filepond is ready!");

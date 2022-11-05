@@ -217,33 +217,33 @@ Route::middleware([
     Route::resource('teams',TeamsController::class);
     // List all teams
     Route::get('/teams', [TeamsController::class, 'index'])
-        ->middleware('can:viewAny,App\Models\User')
+//        ->middleware('can:viewAny,App\Models\User')
         ->name('teams.index');
     // Create a team
     Route::get('/teams/create', [TeamsController::class, 'create'])
-        ->can('viewCreator', 'App\Models\User')
+//        ->can('viewCreator', 'App\Models\User')
         ->name('teams.create');
     // Add new team to database
-//    Route::post('/teams', [TeamsController::class, 'store'])
+    Route::post('/teams', [TeamsController::class, 'store'])
 //        ->can('viewCreator', 'App\Models\User')
-//        ->name('teams.store');
+        ->name('teams.store');
     // Display teams manage page
     Route::get('/teams/{team}/manage', [TeamsController::class, 'manage'])
-        ->middleware('can:manage,team')
         ->name('teams.manage');
+//        ->middleware('can:manage,team')
+
     // Edit team
     Route::get('/teams/{team}/edit', [TeamsController::class, 'edit'])
-        ->middleware('can:edit,team')
+//        ->middleware('can:edit,team')
         ->name('teams.edit');
 
     Route::resource('teamMembers',TeamMembersController::class);
     // Add team member
     Route::post('/teams/addTeamMember', [TeamMembersController::class, 'attach'])
-//        ->middleware('can:edit,team')
         ->name('teams.addTeamMember');
+
     // Remove team member
     Route::post('/teams/removeTeamMember', [TeamMembersController::class, 'detach'])
-//        ->middleware('can:edit,team')
         ->name('teams.removeTeamMember');
 
 // Creators

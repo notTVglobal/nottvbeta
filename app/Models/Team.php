@@ -43,6 +43,11 @@ class Team extends Model
             ->select('name', 'email', 'phone');
     }
 
+    public function teamLeader()
+    {
+        return $this->belongsTo(Creator::class);
+    }
+
 //    public function members()
 //    {
 //        return $this->belongsToMany(User::class, 'team_members')->using(TeamMember::class)

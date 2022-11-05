@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\User;
 use App\Models\Team;
+use App\Models\Creator;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Auth\Access\Response;
 
@@ -15,40 +16,28 @@ class TeamPolicy
      * Determine whether the user can view the team.
      *
      * @param  \App\Models\User  $user
-     * @return \Illuminate\Auth\Access\Response|bool
+     * @param  \App\Models\Team  $team
+     * @return bool
      */
-    public function view(User $user)
+    public function manage(User $user, Team $team)
     {
-        return $user->role_id === 4;
+       if($user->id === $team->user_id){
+           return true;
+       } elseif ($user->isAdmin) {
+           return true;
+       }
+       return 404;
     }
 
     /**
      * Determine whether the user can create teams.
      *
      * @param  \App\Models\User  $user
-     * @return \Illuminate\Auth\Access\Response|bool
+     * @return bool
      */
-    public function create(User $user)
+    public function create(User $user): bool
     {
-        return $user->role_id === 4;
-    }
-
-    /**
-     * Determine whether the user can manage models.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Team  $team
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function manage(User $user)
-    {
-//        if ($user->id === $team->user_id)
-//            return $user->id === $team->user_id;
-//
-//        elseif($user->isAdmin === 1)
-//            return $user->isAdmin === 1;
-
-        return $user->role_id === 4;
+        return $user->id === 155;
     }
 
     /**

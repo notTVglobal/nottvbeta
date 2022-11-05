@@ -18,6 +18,15 @@ use Inertia\Inertia;
 
 class TeamsController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('can:manage,team')->only(['manage']);
+//        $this->middleware('can:create,team')->only(['create', 'store']);
+        $this->middleware('can:edit,team')->only(['edit', 'update']);
+    }
+
+
     /**
      * Display a listing of the resource.
      *
@@ -249,11 +258,12 @@ class TeamsController extends Controller
                 ->paginate(3)
                 ->withQueryString()
                 ->through(fn($creator) => [
-                    'id' => $creator->user->id,
+                    'id' => $creator->user_id,
                     'name' => $creator->user->name,
                     'profile_photo_url' => $creator->user->profile_photo_url,
                     'teams' => getTeams($creator->user->id),
                 ]),
+
 
 //            'creators' => Creator::with('user')
 //                ->when(Request::input('search'), function ($query, $search) {
@@ -285,7 +295,7 @@ class TeamsController extends Controller
             'creatorFilters' => Request::only(['search']),
             'can' => [
                 'viewTeams' => Auth::user()->can('view', Team::class),
-                'manageTeam' => Auth::user()->can('manage', Team::class),
+//                'manageTeam' => Auth::user()->can('manage', Team::class),
                 'editTeam' => Auth::user()->can('edit', Team::class),
                 'viewCreator' => Auth::user()->can('viewCreator', User::class),
             ]
@@ -328,6 +338,18 @@ class TeamsController extends Controller
             'team' => $team,
             'teamLeaderName' => User::query()->where('id', $team->user_id)->pluck('name')->first(),
             'logo' => getLogo($team),
+            'creators' => Creator::join('users AS user', 'creators.user_id', '=', 'user.id')
+                ->select('creators.*', 'user.name AS name')
+                ->when(Request::input('search'), function ($query, $search) {
+                    $query->where('name', 'like', "%{$search}%");
+                })
+                ->latest()
+                ->paginate(5)
+                ->withQueryString()
+                ->through(fn($creator) => [
+                    'id' => $creator->user->id,
+                    'name' => $creator->user->name,
+                ]),
             'can' => [
                 'viewTeams' => Auth::user()->can('view', Team::class),
                 'editTeam' => Auth::user()->can('edit', Team::class),
@@ -360,6 +382,7 @@ class TeamsController extends Controller
         $team->name = $request->name;
         $team->description = $request->description;
         $team->totalSpots = $request->totalSpots;
+        $team->slug = \Str::slug($request->name);
         $team->save();
         sleep(1);
 

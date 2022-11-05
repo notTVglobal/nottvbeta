@@ -19,8 +19,9 @@ class TeamMembersController extends Controller
     public function attach(Request $request)
     {
         $teamSlug = $request->team_slug;
+        $teamId = $request->team_id;
         $user = User::findOrFail($request->user_id);
-        $team = Team::findOrFail($request->team_id)->first();
+        $team = Team::findOrFail($teamId);
         $team->members()->attach($request->user_id);
         DB::table('teams')->where('id', $team->id)->increment('memberSpots', 1);
         return redirect(route('teams.manage', [$teamSlug]))->with('message', $user->name . ' has been successfully added to the team.');

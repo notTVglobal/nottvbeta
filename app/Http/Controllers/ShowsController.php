@@ -345,6 +345,7 @@ class ShowsController extends Controller
         // update the show
         $show->name = $request->name;
         $show->description = $request->description;
+        $show->slug = \Str::slug($request->name);
         $show->save();
         sleep(1);
 

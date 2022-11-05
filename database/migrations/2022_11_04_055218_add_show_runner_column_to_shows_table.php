@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('shows', function (Blueprint $table) {
-            $table->foreignId('show_runner')->nullable()->constrained()->references('id')->on('users');
+            $table->foreignId('show_runner')->nullable()->constrained()->references('user_id')->on('creators');
         });
     }
 

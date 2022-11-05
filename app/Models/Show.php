@@ -53,6 +53,11 @@ class Show extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function showRunner()
+    {
+        return $this->belongsTo(Creator::class);
+    }
+
     public function showNotes()
     {
         return $this->hasMany(ShowNote::class);

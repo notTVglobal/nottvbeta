@@ -114,6 +114,7 @@
                         <Link
                             @click="videoPlayer.makeVideoTopRight()"
                             :href="`/teams/${team.slug}/manage`"
+
                             class="text-blue-800 hover:text-blue-900 dark:text-blue-100 dark:hover:text-white"><p class="px-2 py-1">
                             {{ team.name }}
                         </p></Link>

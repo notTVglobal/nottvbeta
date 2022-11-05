@@ -106,7 +106,7 @@
 <script setup>
 import ResponsiveNavigationMenu from "@/Components/Navigation/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/Navigation/NavigationMenu"
-import { onMounted, defineAsyncComponent } from "vue"
+import { onMounted } from "vue"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useTeamStore } from "@/Stores/TeamStore.js"
 import Pagination from "@/Components/Pagination"
@@ -114,7 +114,6 @@ import TeamManageHeader from "@/Components/Teams/Manage/TeamManageHeader"
 import TeamMembersList from "@/Components/Teams/TeamMembersList"
 import TeamShowsList from "@/Components/Teams/TeamShowsList"
 import TeamAssignmentsList from "@/Components/Teams/TeamAssignmentsList"
-import {Inertia} from "@inertiajs/inertia";
 
 let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore();
@@ -138,9 +137,5 @@ let props = defineProps({
 
 teamStore.setActiveTeam(props.team);
 teamStore.members = props.members;
-
-// const TeamMembersList = defineAsyncComponent(() => import(`@/Components/Teams/TeamMembersList`));
-
-// Inertia.reload({ only: ['members'] })
 
 </script>
