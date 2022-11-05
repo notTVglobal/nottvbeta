@@ -1,7 +1,7 @@
 <template>
     <div class="input-group">
 
-        <form @submit.prevent="sendMessage">
+        <form >
 
 <!--            <input-->
 <!--                id="btn-input"-->

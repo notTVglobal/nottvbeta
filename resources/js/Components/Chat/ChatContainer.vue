@@ -53,20 +53,7 @@ onBeforeMount(async() => {
 
     // window.Echo.private('chat.' + `${chatStore.currentChannel.id}`)
 
-    window.Echo.private('chat.' + chatStore.currentChannel.id)
-        .listen('.message.new', e => {
-            console.log('PINIA NEW MESSAGE.');
-            console.log(e.chatMessage);
-            // chatStore.messages.push(e.chatMessage);
-            axios.get('/chat/channel/' + chatStore.currentChannel.id + '/messages')
-                .then( response => {
-                    chatStore.messages = response.data;
-                    // chatStore.messages = response.data;
-                })
-                .catch(error => {
-                    console.log(error);
-                })
-        });
+
 
 });
 
@@ -77,7 +64,7 @@ onMounted(async () => {
     //         messages.value = e.data;
     //     });
 
-    // tec21: this is not happening. 11/05
+    // tec21: this is undefined. 11/05
     await console.log('test1: ' + chatStore.currentChannel.id);
 
 
@@ -149,6 +136,20 @@ function setChannel ( channel ){
 
     // tec21: all good. 11/05
     console.log('test2: ' + chatStore.currentChannel.id);
+
+    window.Echo.private('chat.' + chatStore.currentChannel.id)
+        .listen('.message.new', e => {
+            console.log('PINIA NEW MESSAGE.');
+            console.log(e.chatMessage);
+            // chatStore.messages.push(e.chatMessage);
+            axios.get('/chat/channel/' + chatStore.currentChannel.id + '/messages')
+                .then( response => {
+                    chatStore.messages = response.data;
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+        });
 }
 
 // tec21: all good. 11/05
