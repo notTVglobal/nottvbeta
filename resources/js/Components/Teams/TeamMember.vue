@@ -1,7 +1,14 @@
 <template>
     <tr>
         <td class="text-gray-500 px-6 py-4 text-sm">
-            <img :src="`${props.member.profile_photo_url}`" alt="" class="rounded-full min-w-[4rem]">
+            <img v-if="props.member.profile_photo_path"
+                :src="`/storage/${props.member.profile_photo_path}`"
+                alt=""
+                class="rounded-full min-w-[4rem] max-w-[4rem]">
+            <img v-if="!props.member.profile_photo_path"
+                 :src="`${props.member.profile_photo_url}`"
+                 alt=""
+                 class="rounded-full min-w-[4rem] max-w-[4rem]">
         </td>
 
         <td class="text-xl font-medium px-6 py-4">
@@ -25,7 +32,7 @@
             <button v-if="props.member.team_members.active === 0" class="text-gray-400 text-xl font-semibold" disabled>Inactive</button>
         </td>
 
-        <td class="px-6 py-4">
+        <td v-if="teamStore.can.editTeam" class="px-6 py-4">
             <div>
 
                 <button class="bg-red-600 text-white hover:bg-red-500 text-xl font-semibold ml-2 my-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"

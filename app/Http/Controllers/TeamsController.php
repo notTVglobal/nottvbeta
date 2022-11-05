@@ -21,17 +21,32 @@ class TeamsController extends Controller
 
     public function __construct()
     {
-        $this->middleware('can:manage,team')->only(['manage']);
+        //tec21: this authorization works... but I'm having trouble
+        // with the other ones below. So they are in web.php
+        $this->middleware('can:viewTeamManagePage,team')->only(['manage']);
+        $this->middleware('can:editTeam,team')->only(['edit', 'update']);
+
+
+// If you are having troubles with the policies saying
+// "Too few arguments..."
+// then change the function name to something that
+// isn't duplicated in the controller.
+
+        //tec21: these would apply more to a resource like user generated
+        // posts and comments, photos and videos.
+        //
+        // To get this app started, I'm going to put the authorizations in
+        // the web.php file.
+        //
+//        $this->authorizeResource(Team::class, 'team')->only(['manage']);
 //        $this->middleware('can:create,team')->only(['create', 'store']);
-        $this->middleware('can:edit,team')->only(['edit', 'update']);
+//        $this->middleware('can:createTeam,team')->only(['create']);
+//        $this->middleware('can:create,team')->only(['store']);
+
     }
 
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+////////////  INDEX
+///////////////////
 
     public function index()
     {
@@ -72,43 +87,24 @@ class TeamsController extends Controller
                 ]),
             'filters' => Request::only(['search']),
             'can' => [
-                'viewTeams' => Auth::user()->can('view', Team::class),
-                'createTeam' => Auth::user()->can('create', Team::class),
+                'viewTeams' => Auth::user()->can('viewTeamManagePage', Team::class),
+                'editTeam' => Auth::user()->can('editTeam', Team::class),
                 'viewCreator' => Auth::user()->can('viewCreator', User::class),
             ]
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+////////////  CREATE AND STORE
+//////////////////////////////
+
     public function create()
     {
         return Inertia::render('Teams/Create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(HttpRequest $request, Team $team)
     {
-//        $attributes = Request::validate([
-//            'name' => 'unique:teams|required',
-//            'description' => 'required',
-//            'logo',
-//            'totalSpots',
-//            'user_id' => 'required',
-//            'slug' => 'required',
-//        ]);
-//        // create the team
-//        Team::create($attributes);
-//        // redirect
-//        return redirect('/teams')->with('message', 'Team Created Successfully');
 
         $request->validate([
             'name' => 'unique:teams|required|max:255',
@@ -116,6 +112,7 @@ class TeamsController extends Controller
             'user_id' => 'required',
             'totalSpots' => 'required|integer|min:1',
         ]);
+
         Team::create([
             'name' => $request->name,
             'description' => $request->description,
@@ -133,12 +130,9 @@ class TeamsController extends Controller
 
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+////////////  SHOW
+//////////////////
+
     public function show(team $team)
     {
         function getLogo($team){
@@ -190,23 +184,17 @@ class TeamsController extends Controller
                 ]),
             'filters' => Request::only(['team_id']),
             'can' => [
-                'viewTeams' => Auth::user()->can('view', Team::class),
-                'editTeam' => Auth::user()->can('edit', Team::class),
+                'viewTeam' => auth()->user()->can('viewTeamManagePage', $team),
+                'editTeam' => auth()->user()->can('editTeam', $team),
                 'viewCreator' => Auth::user()->can('viewCreator', User::class),
             ]
         ]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $team
-     * @return \Illuminate\Http\Response
-     */
-    // URL path is currently set to show.id
-    // change show($id) to show($slug) to
-    // make URL path = slug.
-    public function manage(Team $team)
+////////////  MANAGE
+////////////////////
+
+    public function manage(Team $team, Show $show)
     {
         function getLogo($team){
             $getLogo = Image::query()
@@ -280,22 +268,9 @@ class TeamsController extends Controller
                     'id' => $creator->user_id,
                     'name' => $creator->user->name,
                     'profile_photo_url' => $creator->user->profile_photo_url,
+                    'profile_photo_path' => $creator->user->profile_photo_path,
                     'teams' => getTeams($creator->user->id),
                 ]),
-
-
-//            'creators' => Creator::with('user')
-//                ->when(Request::input('search'), function ($query, $search) {
-//                    $query->where('name', 'like', "%{$search}%");
-//                        })
-//                ->latest()
-//                ->paginate(5)
-//                ->withQueryString()
-//                ->through(fn($creator) => [
-//                    'id' => $creator->user->id,
-//                    'name' => $creator->user->name,
-//            ]),
-//
 
             'shows' => DB::table('shows')->where('team_id', $team->id)
                 ->latest()
@@ -313,21 +288,16 @@ class TeamsController extends Controller
             'filters' => Request::only(['team_id']),
             'creatorFilters' => Request::only(['search']),
             'can' => [
-                'viewTeams' => Auth::user()->can('view', Team::class),
-//                'manageTeam' => Auth::user()->can('manage', Team::class),
-                'editTeam' => Auth::user()->can('edit', Team::class),
-                'viewCreator' => Auth::user()->can('viewCreator', User::class),
-            ]
+                'editTeam' => auth()->user()->can('editTeam', $team),
+        ]
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $team
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(team $team)
+
+////////////  EDIT
+//////////////////
+
+    public function edit(Team $team)
     {
         function getLogo($team){
             $getLogo = Image::query()
@@ -377,13 +347,10 @@ class TeamsController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
+////////////  UPDATE
+////////////////////
+
     public function update(HttpRequest $request, Team $team)
     {
         if($request->totalSpots < $team->memberSpots) {
@@ -407,50 +374,15 @@ class TeamsController extends Controller
 
         $teamSlug = $team->slug;
 
-        // gather the data needed to render the Manage page
-        // this is all redundant. It's all contained in the
-        // teams.manage route above. But I (tec21) don't know
-        // how to simplify this *frustrated*.
-
-
         // redirect
         return redirect(route('teams.manage', [$teamSlug]))->with('message', 'Team Updated Successfully');
-//        return redirect('/teams/{$team->id}/manage');
 
-//        return Inertia::render('Teams/{$id}/Manage', [
-//            // responses need to be limited to only
-//            // the information required with ->only()
-//            // https://inertiajs.com/responses
-//            'team' => $team,
-//            'logoName' => Image::query()->where('id', $team->image_id)->pluck('name')->first(),
-//            'shows' => DB::table('shows')->where('team_id', $team->id)
-//                ->latest()
-//                ->paginate(5)
-//                ->withQueryString()
-//                ->through(fn($show) => [
-//                    'id' => $show->id,
-//                    'name' => $show->name,
-//                    'description' => $show->description,
-//                    'team_id' => $show->team_id,
-//                    'poster' => $show->image_id,
-//                ]),
-//// tec21: this edit() policy for Teams is broken. Expecting 2 arguments,
-//        // only 1 is getting passed.
-//            'can' => [
-//                'viewTeams' => Auth::user()->can('view', Team::class),
-//                'createTeam' => Auth::user()->can('create', Team::class),
-//                'editTeam' => Auth::user()->can('edit', Team::class),
-//                'viewCreator' => Auth::user()->can('viewCreator', User::class),
-//            ]
-//        ])->with('message', 'Team Updated Successfully');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
+////////////  DESTROY
+/////////////////////
+
     public function destroy(Team $team)
     {
         $team->delete();

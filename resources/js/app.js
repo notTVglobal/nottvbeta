@@ -22,7 +22,6 @@ import ConfirmDialog from '@/Components/Modals/ConfirmDialog';
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'notTV';
 
-
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: async name => {
@@ -49,6 +48,8 @@ createInertiaApp({
 
     },
 });
+
+
 
 library.add(faUserSecret, faPlay, faQuestion, faStar, faUsers, faHandsHelping, faRocket, faEye, faComments, faPaperPlane);
 

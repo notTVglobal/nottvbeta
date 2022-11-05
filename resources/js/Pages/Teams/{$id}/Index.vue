@@ -108,6 +108,7 @@ let props = defineProps({
 });
 
 teamStore.setActiveTeam(props.team);
+teamStore.can = props.can;
 
 
 </script>

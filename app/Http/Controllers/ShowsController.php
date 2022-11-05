@@ -20,11 +20,21 @@ use Inertia\Inertia;
 class ShowsController extends Controller
 {
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function __construct()
+    {
+
+        $this->middleware('can:viewShowManagePage,show')->only(['manage']);
+        $this->middleware('can:editShow,show')->only(['edit']);
+        $this->middleware('can:createShow,show')->only(['store']);
+        $this->middleware('can:createEpisode,show')->only(['createEpisode']);
+        $this->middleware('can:viewEpisodeManagePage,show')->only(['manageEpisode']);
+
+    }
+
+
+////////////  INDEX
+///////////////////
+
     public function index()
     {
 
@@ -56,7 +66,6 @@ class ShowsController extends Controller
             'filters' => Request::only(['search']),
             'can' => [
                 'viewShows' => Auth::user()->can('view', Show::class),
-                'createShow' => Auth::user()->can('create', Show::class),
                 'viewCreator' => Auth::user()->can('viewCreator', User::class),
             ]
         ]);
@@ -64,12 +73,9 @@ class ShowsController extends Controller
 
 
 
+////////////  CREATE AND STORE
+//////////////////////////////
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
              return Inertia::render('Shows/Create', [
@@ -91,26 +97,8 @@ class ShowsController extends Controller
     }
 
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(HttpRequest $request)
     {
-//            // validate the request
-//            $attributes = Request::validate([
-//                'name' => 'unique:shows|required',
-//                'description' => 'required',
-//                'user_id' => 'required',
-//                'team_id' => 'required',
-//                'slug' => 'required',
-//            ]);
-//            // create the user
-//            Show::create($attributes);
-//            // redirect
-//            return redirect('/shows')->with('message', 'Show Created Successfully');
 
         $request->validate([
             'name' => 'unique:shows|required|max:255',
@@ -143,15 +131,11 @@ class ShowsController extends Controller
 //      return redirect()->route('teams.manage', $request->team_id)->with('message', 'Show Created Successfully');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $show
-     * @return \Illuminate\Http\Response
-     */
-    // URL path is currently set to show.id
-    // change show($id) to show($slug) to
-    // make URL path = slug.
+
+
+////////////  SHOW
+//////////////////
+
     public function show(Show $show)
     {
 
@@ -211,15 +195,10 @@ class ShowsController extends Controller
         ]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $show
-     * @return \Illuminate\Http\Response
-     */
-    // URL path is currently set to show.id
-    // change show($id) to show($slug) to
-    // make URL path = slug.
+
+////////////  MANAGE
+////////////////////
+
     public function manage(Show $show)
     {
 
@@ -235,9 +214,6 @@ class ShowsController extends Controller
                 'name' => $show->team->name,
                 'slug' => $show->team->slug,
             ],
-
-//            'episodes' => ShowEpisode::latest()->where('show_id', $show->id)->get(),
-
             'episodes' => ShowEpisode::with('image', 'show', 'showEpisodeStatus')
                 ->where('show_id', $show->id)
                 ->when(Request::input('search'), function ($query, $search) {
@@ -256,35 +232,20 @@ class ShowsController extends Controller
                     'episodeStatus' => $showEpisode->showEpisodeStatus->name,
                     'episodeStatusId' => $showEpisode->showEpisodeStatus->id,
                 ]),
-
-
-
-
-//            'episodes' => ShowEpisode::with('showEpisodeStatus', 'image')
-//                ->where('show_id', $show->id)
-//                ->when(Request::input('search'), function ($query, $search) {
-//                    $query->where('name', 'like', "%{$search}%");
-//                })
-//                ->paginate(10)
-//                ->withQueryString()
-//                ->through(fn($episode) => [
-//                    'id' => $episode->id,
-//                    'name' => $episode->name,
-//                    'description' => $episode->description,
-//                    'notes' => $episode->notes,
-//                    'poster' => $episode->image->name,
-//                    'status' => $episode->showEpisodeStatus->name,
-//                ]),
+            'can' => [
+                'editShow' => auth()->user()->can('editShow', $show),
+                'createEpisode' => auth()->user()->can('createEpisode', $show),
+                'createAssignment' => auth()->user()->can('editShow', $show),
+                'goLive' => auth()->user()->can('goLive', $show),
+            ]
 
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $show
-     * @return \Illuminate\Http\Response
-     */
+
+////////////  EDIT
+//////////////////
+
     public function edit(Show $show)
     {
 //        $team = Show::query()->where('id', $show->id)->pluck('team_id')->firstOrFail();
@@ -326,13 +287,10 @@ class ShowsController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
+////////////  UPDATE
+////////////////////
+
     public function update(HttpRequest $request, Show $show)
     {
 
@@ -369,12 +327,9 @@ class ShowsController extends Controller
     }
 
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+////////////  DESTROY
+/////////////////////
+
     public function destroy(Show $show)
     {
         $show->delete();
@@ -384,12 +339,18 @@ class ShowsController extends Controller
         return redirect()->route('shows')->with('message', 'Show Deleted Successfully');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @param  int  $show
-     * @return \Illuminate\Http\Response
-     */
+
+    ////////////////////////////////////////////////////////////////////////////////////
+    ///                                EPISODES                                     ///
+    ////////////////////////////////////////////////////////////////////////////////////
+
+
+////////////  CREATE EPISODE
+////////////////////////////
+///
+/// tec21: this might be better
+/// in the ShowEpisodes Controller.
+
     public function createEpisode(Show $show)
     {
 
@@ -399,16 +360,13 @@ class ShowsController extends Controller
         ]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $show
-     * @param  int  $showEpisode
-     * @return \Illuminate\Http\Response
-     */
-    // URL path is currently set to show.id
-    // change show($id) to show($slug) to
-    // make URL path = slug.
+
+////////////  MANAGE EPISODE
+////////////////////////////
+///
+/// tec21: this might be better
+/// in the ShowEpisodes Controller.
+
     public function manageEpisode(Show $show, ShowEpisode $showEpisode) {
 
         return Inertia::render('Shows/{$id}/Episodes/{$id}/Manage', [
@@ -431,10 +389,13 @@ class ShowsController extends Controller
                 'episode_number' => $showEpisode->episode_number,
                 'notes' => $showEpisode->notes,
             ],
+            'can' => [
+                'editEpisode' => auth()->user()->can('editEpisode', $show),
+                'goLive' => auth()->user()->can('goLive', $show),
+            ]
 
         ]);
 
     }
-
 
 }

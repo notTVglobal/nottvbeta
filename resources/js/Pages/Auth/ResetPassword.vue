@@ -33,7 +33,7 @@ export default {
 </script>
 
 <template>
-    <Head title="Reset Password" />
+    <Head :title="`Reset Password`" />
 
     <JetAuthenticationCard>
         <template #logo>

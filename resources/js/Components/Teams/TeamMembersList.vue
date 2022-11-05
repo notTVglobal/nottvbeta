@@ -4,6 +4,7 @@
         class="bg-green-500 hover:bg-green-600 text-white ml-2 my-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
         @click="openModal"
         :disabled="!teamStore.spotsRemaining"
+        v-if="teamStore.can.editTeam"
     >Add Member ({{ teamStore.spotsRemaining }} spots left)</button>
     <table class="min-w-full divide-y divide-gray-200">
         <thead class="bg-white divide-y divide-gray-200">
@@ -37,7 +38,7 @@
                 Status
             </td>
 
-            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+            <td v-if="teamStore.can.editTeam" class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                 <!-- Remove -->
             </td>
         </tr>

@@ -23,13 +23,18 @@ class Creator extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function teamLeader()
+    public function team()
     {
         return $this->hasMany(Teams::class);
     }
 
-    public function showRunner()
+    public function show()
     {
         return $this->hasMany(Shows::class);
+    }
+
+    public function status()
+    {
+        return $this->belongsTo(CreatorStatus::class);
     }
 }

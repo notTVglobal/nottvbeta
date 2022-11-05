@@ -177,6 +177,8 @@ class UsersController extends Controller
 
         // validate the request
         $attributes = Request::validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'address1' => ['nullable', 'string', 'max:255'],
             'address2' => ['nullable', 'string', 'max:255'],
             'city' => ['nullable', 'string', 'max:255'],

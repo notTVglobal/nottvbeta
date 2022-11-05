@@ -36,6 +36,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'postalCode',
         'phone',
         'subscriptionStatus',
+        'profile_photo_path',
     ];
 
     /**
@@ -71,7 +72,9 @@ class User extends Authenticatable implements MustVerifyEmail
     //
 //    public function toArray()
 //    {
-//        return ([]);
+//        return ([
+
+//        ]);
 //    }
 
     /**

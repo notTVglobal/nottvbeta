@@ -12,16 +12,6 @@
                 <div>
                     <h1 class="text-3xl font-semibold pb-3">Shows</h1>
                 </div>
-                <div v-if="props.can.viewCreator" class="flex justify-end flex-wrap-reverse gap-x-2">
-                    <Link :href="`/shows/create`"><button
-                        class="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded disabled:bg-gray-400"
-                    >Add Show</button>
-                    </Link>
-                    <Link :href="`/dashboard`"><button
-                        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                    >Dashboard</button>
-                    </Link>
-                </div>
             </div>
 
 

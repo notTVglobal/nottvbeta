@@ -7,6 +7,7 @@
         :href="`#`"><button
         class="bg-green-500 hover:bg-green-600 text-white ml-2 my-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
         disabled
+        v-if="teamStore.can.editTeam"
     >Create Assignment</button></Link>
     <table class="min-w-full divide-y divide-gray-200">
         <thead class="bg-white divide-y divide-gray-200">
@@ -52,7 +53,9 @@
 <script setup>
 import TeamAssignment from "@/Components/Teams/TeamAssignment.vue";
 import {useShowStore} from "@/Stores/ShowStore";
+import { useTeamStore } from "@/Stores/TeamStore.js"
 
 let show = useShowStore();
+let teamStore = useTeamStore();
 
 </script>

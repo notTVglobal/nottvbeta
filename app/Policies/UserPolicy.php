@@ -87,7 +87,7 @@ class UserPolicy
      */
     public function viewAdmin(User $user)
     {
-        return $user->isAdmin === 1;
+        return $user->isAdmin;
     }
 
     /**

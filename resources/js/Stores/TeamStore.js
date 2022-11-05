@@ -17,6 +17,7 @@ export let useTeamStore = defineStore('teamStore', {
         confirmDialog: false,
         deleteMemberName: '',
         deleteMemberId: 0,
+        can: [],
     }),
 
     actions: {

@@ -9,12 +9,6 @@
         <div class="flex justify-between p-5 mb-5">
 
                     <div class="text-3xl font-semibold">Schedule</div>
-                    <Link :href="`#`"><button
-                        v-if="can.addEvent"
-                        class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded disabled:bg-gray-400"
-                        disabled
-                    >Add Event</button></Link>
-
 
         </div>
         <div class="ml-5 mb-5 text-red-600">This section is in development. Not currently working.</div>

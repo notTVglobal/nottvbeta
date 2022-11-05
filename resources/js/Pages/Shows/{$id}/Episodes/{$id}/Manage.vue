@@ -38,7 +38,8 @@
 
                             <div class="">
                                 <Link
-                                    :href="`/golive`">
+                                    :href="`/golive`"
+                                v-if="teamStore.can.goLive">
                                     <button
                                         class="px-4 py-2 text-white bg-red-600 hover:bg-red-500 rounded-lg disabled:bg-gray-400"
                                     >Go Live
@@ -47,7 +48,8 @@
                             </div>
                             <div class="">
                                 <Link
-                                    :href="`/shows/${show.slug}/episode/${episode.slug}/edit`">
+                                    :href="`/shows/${show.slug}/episode/${episode.slug}/edit`"
+                                    v-if="teamStore.can.edit">
                                     <button
                                         class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                                     >Edit
@@ -158,8 +160,11 @@ let props = defineProps({
     show: Object,
     team: Object,
     episode: Object,
-    message: String
+    message: String,
+    can: Object,
 });
+
+teamStore.can = props.can;
 
 
 // let search = ref(props.filters.search);

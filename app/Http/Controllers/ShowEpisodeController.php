@@ -18,11 +18,23 @@ use Inertia\Inertia;
 
 class ShowEpisodeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
+
+    public function __construct()
+    {
+
+//        $this->middleware('can:viewShowManagePage,show')->only(['manage']);
+//        $this->middleware('can:editShow,show')->only(['edit']);
+//        $this->middleware('can:createShow,show')->only(['create']);
+//        $this->middleware('can:createEpisode,show')->only(['createEpisode']);
+//        $this->middleware('can:viewEpisodeManagePage,show')->only(['manageEpisode']);
+
+    }
+
+
+////////////  INDEX
+///////////////////
+
     public function index()
     {
         return Inertia::render('Shows/{$id}/Episodes/Index', [
@@ -30,12 +42,15 @@ class ShowEpisodeController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
+////////////  CREATE AND STORE
+//////////////////////////////
+///
+/// The ShowEpisode Create method
+/// is currently in the Shows
+/// Controller.
+///
+
     public function store(HttpRequest $request)
     {
         $request->validate([
@@ -80,16 +95,9 @@ class ShowEpisodeController extends Controller
     }
 
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $show
-     * @param  int  $showEpisode
-     * @return \Illuminate\Http\Response
-     */
-    // URL path is currently set to show.id
-    // change show($id) to show($slug) to
-    // make URL path = slug.
+////////////  SHOW
+//////////////////
+
     public function show(Show $show, ShowEpisode $showEpisode) {
 
         return Inertia::render('Shows/{$id}/Episodes/{$id}/Index', [
@@ -121,12 +129,19 @@ class ShowEpisodeController extends Controller
     }
 
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $show
-     * @return \Illuminate\Http\Response
-     */
+////////////  MANAGE
+////////////////////
+///
+/// The ShowEpisode Manage method
+/// is currently in the Shows
+/// Controller.
+///
+
+
+
+////////////  EDIT
+//////////////////
+
     public function edit(Show $show, ShowEpisode $showEpisode)
     {
 //        $team = Show::query()->where('id', $show->id)->pluck('team_id')->firstOrFail();
@@ -171,13 +186,10 @@ class ShowEpisodeController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
+////////////  UPDATE
+////////////////////
+
     public function update(HttpRequest $request, Show $show, ShowEpisode $showEpisode)
     {
 
@@ -223,5 +235,18 @@ class ShowEpisodeController extends Controller
     }
 
 
+////////////  DESTROY
+/////////////////////
+///
+///
+
+    public function destroy(ShowEpisode $showEpisode)
+    {
+        $showEpisode->delete();
+        sleep(1);
+
+        // redirect
+        return redirect()->route('showEpisode')->with('message', 'Episode Deleted Successfully');
+    }
 
 }

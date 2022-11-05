@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('shows', function (Blueprint $table) {
-            $table->foreignId('show_runner')->nullable()->constrained()->references('user_id')->on('creators');
+        Schema::table('creators', function (Blueprint $table) {
+            $table->foreignId('status_id')->default(1)->constrained()->references('id')->on('creator_status');
         });
     }
 
@@ -25,9 +25,9 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('shows', function (Blueprint $table) {
-            $table->dropForeign('show_runner');
-            $table->dropColumn('show_runner');
+        Schema::table('creators', function (Blueprint $table) {
+            $table->dropForeign('status_id');
+            $table->dropColumn('status_id');
         });
     }
 };

@@ -32,7 +32,6 @@
                                 :team="props.team"
                                 :teamLeader="props.teamLeader"
                                 :logo="props.logo"
-                                :can="props.can"
                                 :message="props.message"
                             />
                         </div>
@@ -78,7 +77,7 @@
                     <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
 
                         <div class="mt-4 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                            <TeamShowsList :shows="props.shows.data"/>
+                            <TeamShowsList :shows="props.shows.data" />
                             <!-- Paginator -->
                             <Pagination :links="props.shows.links" class="mt-6"/>
                         </div>
@@ -137,5 +136,6 @@ let props = defineProps({
 
 teamStore.setActiveTeam(props.team);
 teamStore.members = props.members;
+teamStore.can = props.can;
 
 </script>

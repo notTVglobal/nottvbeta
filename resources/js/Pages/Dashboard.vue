@@ -14,7 +14,6 @@
 
                 <h1 class="text-3xl font-semibold pb-3">Dashboard</h1>
 
-
             </div>
 
                 <div class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4 mb-4">
@@ -23,7 +22,7 @@
                         class="bg-orange-600 hover:bg-orange-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
                     >Invite Creator</button>
                     </Link>
-                    <Link :href="`/golive`"><button
+                    <Link :href="`/golive`" hidden><button
                         class="bg-red-600 hover:bg-red-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
                     >Go Live</button>
                     </Link>
@@ -83,11 +82,11 @@
 
             <section class="grid grid-cols-1 lg:grid-cols-3 gap-4 my-3 mx-2 m-auto text-black">
                 <div class="p-5 bg-gray-200 dark:bg-gray-800 rounded">
-                    <div class="mb-3 bg-orange-300 py-1 px-2 text-xs font-semibold text-red-800">
-                        In development. Not currently working.
-                    </div>
                     <div class="mb-3 grid grid-cols-1">
                         <div class="mb-1 font-semibold text-xl justify-self-start dark:text-gray-50">Open Assignments</div>
+                    </div>
+                    <div class="mb-3 bg-orange-300 py-1 px-2 text-xs font-semibold text-red-800">
+                        In development. Not currently working.
                     </div>
                     <div class="ml-3">
                         <li class="text-blue-800 hover:text-blue-400 dark:text-blue-100 dark:hover:text-blue-400">
@@ -99,13 +98,15 @@
                 <div class="p-5 bg-gray-200 dark:bg-gray-800 rounded relative">
                     <div class="mb-3 flex justify-between">
                         <div class="mb-1 font-semibold text-xl dark:text-gray-50">My Teams</div>
-                        <div class="">
+
+                        <div v-if="can.createTeam" class="">
                             <Link :href="`/teams/create`"><button
                                 class="bg-green-600 hover:bg-green-500 text-white px-4 py-2 text-xs rounded disabled:bg-gray-400"
                             >New Team</button>
                             </Link>
                         </div>
                     </div>
+                    <div v-if="props.teams.data == 0" class="italic"> You have no teams.</div>
                     <div
                         v-for="team in teams.data"
                         :key="team.id"
@@ -121,7 +122,7 @@
                     </div>
                     <div class="flex flex-row justify-between bottom-0 align-items-bottom py-2 px-2">
                         <!-- Paginator -->
-                        <div><Pagination :links="teams.links" class="mt-6 absolute inset-x-0 bottom-0 py-2 px-2 "/></div>
+                        <div><Pagination v-if="teams.links > 3" :links="teams.links" class="mt-6 absolute inset-x-0 bottom-0 py-2 px-2 "/></div>
 
                         <div>
                         <Popper
@@ -149,6 +150,7 @@
                     <div class="mb-3 grid grid-cols-1">
                         <div class="mb-1 font-semibold text-xl justify-self-start dark:text-gray-50">My Shows</div>
                     </div>
+                    <div v-if="props.shows.data == 0" class="italic"> You have no shows.</div>
                     <div
                         v-for="show in shows.data"
                         :key="show.id"
@@ -163,7 +165,7 @@
                     </div>
                     <div class="flex flex-row justify-between bottom-0 align-items-bottom py-2 px-2">
                         <!-- Paginator -->
-                        <div><Pagination :links="shows.links" class="mt-6 absolute inset-x-0 bottom-0 py-2 px-2 "/></div>
+                        <div><Pagination v-if="shows.links > 3" :links="shows.links" class="mt-6 absolute inset-x-0 bottom-0 py-2 px-2 "/></div>
                         <div>
                         <Popper
                             hover openDelay="50" closeDelay="50"
@@ -191,7 +193,9 @@
                     Account Summary
                 </div>
 
-                <div class="p-2 text-red-600">This section is in development. Not currently working.</div>
+                <div class="mb-3 bg-orange-300 py-1 px-2 text-xs font-semibold text-red-800">
+                    In development. Not currently working.
+                </div>
 
                 <div class="border-2">
                     <div class="grid justify-items-stretch grid-cols-3 ">
@@ -211,7 +215,15 @@
                             <td class="px-2 text-right">10.00</td>
                         </tr>
                         <tr class="border-b border-1 border-gray-100">
-                            <td class="px-2 col-span-2 py-2">Team Account Example</td>
+                            <td class="px-2 col-span-2 py-2">Public Good Fund</td>
+                            <td class="px-2 text-right">0.00</td>
+                        </tr>
+                        <tr class="border-b border-1 border-gray-100">
+                            <td class="px-2 col-span-2 py-2">Production Fund for Members</td>
+                            <td class="px-2 text-right">0.00</td>
+                        </tr>
+                        <tr class="border-b border-1 border-gray-100">
+                            <td class="px-2 col-span-2 py-2">News Fund</td>
                             <td class="px-2 text-right">0.00</td>
                         </tr>
                     </table>

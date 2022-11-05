@@ -43,6 +43,9 @@
                 <div class="pb-2">
                     Send an email invitation to join your team.
                 </div>
+                <div class="mb-3 bg-orange-300 py-1 px-2 text-xs font-semibold text-red-800">
+                    In development. Not currently working.
+                </div>
                 <div class="flex gap-2">
                     <input
                         type="email"
@@ -54,7 +57,8 @@
             </form>
         </template>
         <template #footer>
-            <button @click="closeModal" class="text-blue-600 hover:text-gray-500">Cancel</button>
+<!--            <button @click="closeModal" class="text-blue-600 hover:text-gray-500">Cancel</button>-->
+            <button @click="closeModal" class="bg-gray-500 hover:bg-gray-600 py-2 px-4 text-white rounded-lg mr-2">Cancel</button>
         </template>
     </Modal>
 

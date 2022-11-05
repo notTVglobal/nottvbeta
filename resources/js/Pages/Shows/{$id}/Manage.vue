@@ -38,7 +38,8 @@
                     <div class="flex flex-wrap-reverse justify-end gap-2">
                         <div class="">
                             <Link
-                                :href="`/golive`">
+                                :href="`/golive`"
+                                v-if="teamStore.can.goLive">
                                 <button
                                     class="px-4 py-2 text-white bg-red-600 hover:bg-red-500 rounded-lg disabled:bg-gray-400"
                                 >Go Live
@@ -47,7 +48,8 @@
                         </div>
                         <div class="">
                             <Link
-                                :href="`/shows/${show.slug}/edit`">
+                                :href="`/shows/${show.slug}/edit`"
+                                v-if="teamStore.can.editShow">
                                 <button
                                     class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                                 >Edit
@@ -99,7 +101,8 @@
                             </button>
                             <div class="collapse" id="collapseExample">
                                 <Link
-                                    :href="route('shows.createEpisode',{show: props.show.slug})">
+                                    :href="route('shows.createEpisode',{show: props.show.slug})"
+                                    v-if="teamStore.can.createEpisode">
                                     <button
                                         class="bg-green-500 hover:bg-green-600 text-white ml-2 my-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
                                     >Create Episode
@@ -137,7 +140,8 @@
                         <div class="mt-4 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
                             <div class="bg-orange-300 p-2 font-bold">Credits</div>
                             <Link
-                                :href="`#`">
+                                :href="`#`"
+                                v-if="teamStore.can.createAssignment">
                                 <button
                                     class="bg-green-500 hover:bg-green-600 text-white ml-2 my-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
                                     disabled
@@ -188,11 +192,13 @@ let props = defineProps({
     team: Object,
     episodes: Object,
     // filters: Object,
-    message: String
+    message: String,
+    can: Object,
 });
 
 teamStore.setActiveTeam(props.team);
 teamStore.setActiveShow(props.show);
+teamStore.can = props.can;
 
 // let search = ref(props.filters.search);
 //

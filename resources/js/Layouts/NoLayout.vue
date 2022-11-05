@@ -1,6 +1,6 @@
 <template>
     <div >
-       <Head :title="title"/>
+<!--       <Head :title="title"/>-->
     </div>
 
     <slot />

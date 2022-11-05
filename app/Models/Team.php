@@ -40,7 +40,7 @@ class Team extends Model
             ->as('teamMembers')
             ->withPivot('active')
             ->withTimestamps()
-            ->select('id', 'name', 'email', 'phone');
+            ->select('id', 'name', 'email', 'phone', 'profile_photo_path');
     }
 
     public function teamLeader()

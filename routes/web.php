@@ -96,7 +96,11 @@ Route::middleware([
 // Dashboard
 ///////////
     Route::get('/dashboard', [DashboardController::class, 'index'])
-        ->can('viewCreator', 'App\Models\User')
+        ->can('viewDashboard', 'App\Models\Creator')
+        // tec21: it doesn't like the ->middleware option.
+        // The ->can option works well.
+        //
+//        ->middleware('can:viewDashboard,creator')
         ->name('dashboard');
 
 
@@ -212,39 +216,59 @@ Route::middleware([
     })->can('viewAdmin', 'App\Models\User')
         ->name('quiz');
 
-// Teams
+
+
+// Creator Resources
+    // Begin middleware authorization
+    // allow creators access to the
+    // following pages.
 ///////////
-    Route::resource('teams',TeamsController::class);
-    // List all teams
-    Route::get('/teams', [TeamsController::class, 'index'])
-//        ->middleware('can:viewAny,App\Models\User')
-        ->name('teams.index');
-    // Create a team
-    Route::get('/teams/create', [TeamsController::class, 'create'])
-//        ->can('viewCreator', 'App\Models\User')
-        ->name('teams.create');
-    // Add new team to database
-    Route::post('/teams', [TeamsController::class, 'store'])
-//        ->can('viewCreator', 'App\Models\User')
-        ->name('teams.store');
-    // Display teams manage page
-    Route::get('/teams/{team}/manage', [TeamsController::class, 'manage'])
-        ->name('teams.manage');
-//        ->middleware('can:manage,team')
+    Route::middleware([
+        'can:viewAny, App\Models\Creator'
+    ])->group(function () {
 
-    // Edit team
-    Route::get('/teams/{team}/edit', [TeamsController::class, 'edit'])
-//        ->middleware('can:edit,team')
-        ->name('teams.edit');
 
-    Route::resource('teamMembers',TeamMembersController::class);
-    // Add team member
-    Route::post('/teams/addTeamMember', [TeamMembersController::class, 'attach'])
-        ->name('teams.addTeamMember');
+    // Teams
+    ///////////
+        Route::resource('teams',TeamsController::class);
 
-    // Remove team member
-    Route::post('/teams/removeTeamMember', [TeamMembersController::class, 'detach'])
-        ->name('teams.removeTeamMember');
+        // List all teams
+        Route::get('/teams', [TeamsController::class, 'index'])
+            //        ->middleware('can:viewAny,App\Models\User')
+            ->name('teams.index');
+
+        // Create a team
+        Route::get('/teams/create', [TeamsController::class, 'create'])
+            ->middleware('can:createTeam,App\Models\Team')
+            ->name('teams.create');
+
+        // Add new team to database
+        Route::post('/teams', [TeamsController::class, 'store'])
+            ->middleware('can:createTeam,App\Models\Team')
+            ->name('teams.store');
+
+        // Display teams manage page
+        Route::get('/teams/{team}/manage', [TeamsController::class, 'manage'])
+            ->middleware('can:viewTeamManagePage,team')
+            ->name('teams.manage');
+
+        // Edit team
+        Route::get('/teams/{team}/edit', [TeamsController::class, 'edit'])
+//            ->middleware('can:edit,team')
+            ->name('teams.edit');
+
+        // Team Members
+        Route::resource('teamMembers',TeamMembersController::class);
+
+            // Add team member
+            Route::post('/teams/addTeamMember', [TeamMembersController::class, 'attach'])
+                ->name('teams.addTeamMember');
+
+            // Remove team member
+            Route::post('/teams/removeTeamMember', [TeamMembersController::class, 'detach'])
+                ->name('teams.removeTeamMember');
+
+    });
 
 // Creators
 ///////////
@@ -275,11 +299,11 @@ Route::middleware([
         ->name('shows');
     // Display shows manage page
     Route::get('/shows/{show}/manage', [ShowsController::class, 'manage'])
-        ->middleware('can:manage,show')
+        ->middleware('can:viewShowManagePage,show')
         ->name('shows.manage');
     // Display shows edit page
     Route::get('/shows/{show}/edit', [ShowsController::class, 'edit'])
-        ->middleware('can:edit,show')
+        ->middleware('can:editShow,show')
         ->name('shows.edit');
     // Display shows create page
     Route::get('/shows/create', [ShowsController::class, 'create'])
