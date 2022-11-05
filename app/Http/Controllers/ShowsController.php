@@ -25,7 +25,7 @@ class ShowsController extends Controller
 
         $this->middleware('can:viewShowManagePage,show')->only(['manage']);
         $this->middleware('can:editShow,show')->only(['edit']);
-        $this->middleware('can:createShow,show')->only(['store']);
+//        $this->middleware('can:create,show')->only(['store']);
         $this->middleware('can:createEpisode,show')->only(['createEpisode']);
         $this->middleware('can:viewEpisodeManagePage,show')->only(['manageEpisode']);
 

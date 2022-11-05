@@ -93,9 +93,9 @@ class ShowPolicy
 //    }
 
 
-    public function createShow(User $user) {
-
-        $userId = Auth::user()->id;
+    public function create(User $user) {
+        dd($user);
+        $userId = $user->id;
         $checkUser = Creator::where('user_id', $userId)->pluck('status_id')->first();
 
         if ($checkUser === 1 || Auth::user()->isAdmin) {
