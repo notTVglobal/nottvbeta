@@ -17,6 +17,7 @@ class VerifyCsrfToken extends Middleware
         '/showsUploadPoster',
         '/teamsUploadLogo',
         '/image-upload',
-        '/chat/message'
+        '/chat/message',
+        '/api/message'
     ];
 }
