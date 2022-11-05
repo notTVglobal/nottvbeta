@@ -12,10 +12,11 @@ export let useTeamStore = defineStore('teamStore', {
         members: [],
         activeShow: [],
         activeEpisode: [],
-        creators: Object,
+        creators: [],
         showModal: Boolean,
         confirmDialog: false,
         deleteMemberName: '',
+        deleteMemberId: 0,
     }),
 
     actions: {
@@ -37,11 +38,24 @@ export let useTeamStore = defineStore('teamStore', {
         setActiveEpisode(episode) {
             this.activeShow = episode;
         },
-        getCreators() {
-            Inertia.reload({ only: ['creators'] })
-        },
+        // getCreators() {
+        //     Inertia.reload({ only: ['creators'] })
+        // },
         deleteTeamMemberCancel() {
             this.confirmDialog = false;
+        },
+        // loadTeamMembers(members){
+        //     this.members = members;
+        // }
+        deleteTeamMember() {
+            Inertia.visit(route('teams.removeTeamMember'), {
+                method: 'post',
+                data: {
+                    user_id: this.deleteMemberId,
+                    team_id: this.id,
+                    team_slug: this.slug
+                },
+            })
         },
     },
 
@@ -52,7 +66,6 @@ export let useTeamStore = defineStore('teamStore', {
             }
             return this.totalSpots - this.memberSpots;
         },
-
     }
 });
 

@@ -247,7 +247,26 @@ class TeamsController extends Controller
             'team' => $team,
             'logo' => getLogo($team),
             'teamLeader' => $teamLeader,
+
+        // tec21: 'members' will need to be returned with pagination and searchable.
+            // this will be for larger teams. But, at that point, all of this will
+            // probably be re-written.
+            //
             'members' => $team->members,
+//            'members' => TeamMember::join('users AS user', 'team_members.user_id', '=', 'user.id')
+//                ->select('team_members.*', 'user.name AS name')
+//                ->when(Request::input('search'), function ($query, $search) {
+//                    $query->where('name', 'like', "%{$search}%");
+//                })
+//                ->latest()
+//                ->paginate(3)
+//                ->withQueryString()
+//                ->through(fn($member) => [
+//                    'id' => $member->user_id,
+////                    'name' => $member->user->name,
+////                    'profile_photo_url' => $member->user->profile_photo_url,
+////                    'teams' => getTeams($member->user->id),
+//                ]),
 
             'creators' => Creator::join('users AS user', 'creators.user_id', '=', 'user.id')
                 ->select('creators.*', 'user.name AS name')

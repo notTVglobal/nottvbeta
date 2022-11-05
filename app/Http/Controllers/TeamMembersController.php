@@ -50,6 +50,7 @@ class TeamMembersController extends Controller
     {
         $teamSlug = $request->team_slug;
         $user = User::findOrFail($request->user_id);
+
         $team = Team::findOrFail($request->team_id);
         DB::table('teams')->where('id', $team->id)->decrement('memberSpots', 1);
         $user->teams()->detach($team->id);
