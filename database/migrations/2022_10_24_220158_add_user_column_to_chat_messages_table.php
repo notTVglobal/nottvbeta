@@ -14,8 +14,8 @@ return new class extends Migration
     public function up()
     {
         Schema::table('chat_messages', function (Blueprint $table) {
-            $table->string('user_name')->default(null);
-            $table->string('user_profile_photo_path')->default(null);
+            $table->string('user_name')->nullable()->default('');
+            $table->string('user_profile_photo_path')->nullable()->default('');
         });
     }
 
