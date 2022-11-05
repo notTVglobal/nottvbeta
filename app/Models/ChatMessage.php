@@ -9,7 +9,14 @@ class ChatMessage extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'channel_id', 'message', 'user_name', 'user_profile_photo_path'];
+    protected $fillable = [
+        'user_id',
+        'channel_id',
+        'message',
+        'user_name',
+        'user_profile_photo_path',
+        'user_profile_photo_url'
+    ];
 
     public function channel() {
         return $this->hasOne('App\Models\Channel', 'id', 'channel_id');

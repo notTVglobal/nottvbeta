@@ -70,6 +70,7 @@ let form = useForm({
     message: '',
     user_name: props.user.name,
     user_profile_photo_path: props.user.profile_photo_path,
+    user_profile_photo_url: props.user.profile_photo_url,
 
 });
 

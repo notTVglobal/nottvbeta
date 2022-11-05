@@ -1,10 +1,11 @@
 <template>
     <div class="flex flex-col p-5 mt-10 mb-5">
-        <div class="text-3xl font-semibold">Conversation</div> new message: {{ }}
+        <div class="text-3xl font-semibold">Conversation</div>
         <div class="text-xl">Please scroll to the bottom. We are in the process of building an auto-scroll function.</div>
     </div>
+    <div class="italic">The newest message is at the bottom.</div>
     <div>
-        <chat-messages :messages="chatStore.messages"></chat-messages>
+        <chat-messages />
     </div>
     <div>
         <input-message :channel="currentChannel" v-on:messagesent="getMessages" :user="props.user"></input-message>

@@ -63,6 +63,7 @@ class ChatController extends Controller
         $newMessage->message = $request->message;
         $newMessage->user_name = $request->user_name;
         $newMessage->user_profile_photo_path = $request->user_profile_photo_path;
+        $newMessage->user_profile_photo_url = $request->user_profile_photo_url;
         $newMessage->save();
 //
 //        $broadcastMessage = $newMessage;
