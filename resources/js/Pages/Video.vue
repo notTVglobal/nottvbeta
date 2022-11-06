@@ -187,7 +187,7 @@ async function getStatus() {
         // in production, this presents a problem
         // as not.tv needs to be served over HTTPS.
         //
-    // await axios.get('http://localhost:4242/api')
+    await axios.get('http://localhost:4242/api')
         .then(response => {
             videoPlayer.apiRequest = response.data;
             videoPlayer.challenge = videoPlayer.apiRequest.authorize.challenge;
