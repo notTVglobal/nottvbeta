@@ -131,7 +131,7 @@ console.log(md5('message'));
 
 async function getStatus() {
     // await axios.get('http://mist.nottv.io:4242/api')
-    await axios.get('http://mist.not.tv:4242/api')
+    await axios.get('http://10.124.0.4:4242/api')
         .then(response => {
             videoPlayer.apiRequest = response.data;
             videoPlayer.challenge = videoPlayer.apiRequest.authorize.challenge;
