@@ -24,11 +24,26 @@
                 </div>
             </div>
 
-            <p class="mb-8">
-                This is a temporary page. Created for testing purposes.
-            </p>
+            <div v-if="videoPlayer.status === 'CHALL'" class="mb-8">
+                <div  class="py-3 px-4 mb-4 bg-orange-800 text-white rounded">MistServer needs to be authenticated</div>
+            </div>
+
+            <div v-if="videoPlayer.status === 'OK'" class="mb-8">
+                <div  class="py-3 px-4 mb-4 bg-green-900 text-white rounded">MistServer is connected</div>
+
+                <button class="ml-2 py-2 px-4 text-white bg-blue-800 hover:bg-blue-500 mr-2 rounded-xl" @click="getMistStats">
+                    Get Server Stats
+                </button>
+
+            </div>
+
+
+
+
+
+
             <div class="bg-orange-300 px-2">
-            Display a MistServer API call here.
+           Connect to the MistServer API here.
             </div>
 
 <div class="my-3 text-sm w-1/2">If the MistServer Status will either be OK, CHALL, NOACC or ACC_MADE.
@@ -112,8 +127,6 @@ let props = defineProps({
 });
 
 
-
-
 // const challengeValue = ref(videoPlayer.challenge)
 // const statusValue = ref('')
 
@@ -127,11 +140,54 @@ const password = ref('');
 let md5 = require('md5');
 console.log(md5('message'));
 
+
+async function getMistStats() {
+    await axios.get('http://localhost:4242/api?command=', {"capabilities": true})
+        .then(response => {
+            videoPlayer.apiRequest = response.data;
+            videoPlayer.challenge = videoPlayer.apiRequest.authorize.challenge;
+            videoPlayer.status = videoPlayer.apiRequest.authorize.status;
+        })
+        .catch(error => {
+            console.log(error);
+        })
+    console.log('get API');
+}
+
+
 // axios.get('http://mist.nottv.io:4242/api').then(console.log);
 
+// tec21: Either we get one of these 3 options working,
+// or we create a web application that sits on top
+// of the MistServer and sends API responses to the
+// main server when new videos are created,
+// and it will need to receive a notification
+// to setup new streams when new shows are created
+// and when new creators register.
+
 async function getStatus() {
-    // await axios.get('http://mist.nottv.io:4242/api')
+        // this one sasys CORS Preflight did not succeed.
+        // Cross-Origin Request Blocked. The Same Origin
+        // Policy disallows reading the remote resource.
+        //
     await axios.get('https://mist.not.tv/mistserver/api')
+        //
+        //
+        // this one returns a challenge response and
+        // I haven't been able to get through the
+        // authorization with a JSON request.
+        // The mistserver just keeps returning
+        // a challenge response.
+        //
+    // await axios.get('http://mist.nottv.io:4242/api')
+        //
+        //
+        // this one works, but it has to be installed
+        // on the same machine as the webserver.
+        // in production, this presents a problem
+        // as not.tv needs to be served over HTTPS.
+        //
+    // await axios.get('http://localhost:4242/api')
         .then(response => {
             videoPlayer.apiRequest = response.data;
             videoPlayer.challenge = videoPlayer.apiRequest.authorize.challenge;
@@ -149,24 +205,6 @@ function submit(password) {
     Inertia.post(route('mistApi', {challenge: videoPlayer.challenge, password: hashedPassword}));
 }
 
-// let getApiAgain = ({
-//
-// });
-
-// let getApiAgain = ({
-//     command: {
-//         authorize: {
-//             password: props.message,
-//             username: videoPlayer.mistUsername,
-//         }
-//     }
-// })
-
-// command: [
-//     authorize: [
-//     username: 'nottvadmin',
-//     password: '2791d4458fc1701506f7138e9f2b50b74a123815ae40a943b4758e0902fbf41f',
-// ];
 
 
 
@@ -180,19 +218,22 @@ async function getApi() {
     await Inertia.get('http://mist.nottv.io:4242/api?command=%7B%22authorize%22%3A%7B%22username%22%3A%22nottvadmin%22%2C%22password%22%3A%222791d4458fc1701506f7138e9f2b50b74a123815ae40a943b4758e0902fbf41f%22%7D%7D', {
         preserveScroll: true
     })
-        // .then(response => {
-        //     console.log('response: ' + response);
-        //     // console.log('getApiAgain: ' + getApiAgain);
-        // })
-        // .catch(error => {
-        //     console.log(error);
-        // })
 
     console.log('send API Again' + videoPlayer.apiAgain);
-
-
-    // Inertia.post(route('mistApi', {authorization: {challenge: videoPlayer.challenge, status: videoPlayer.status}}));
 }
+// {
+//     "authorize":
+//     {
+// //Username to login as
+//         "username":
+//         "test",
+// //Hash of password to login with. Send empty value when no challenge for the hash is known yet.
+// //When the challenge is known, the value to be used here can be calculated as follows:
+// // MD5( MD5("secret") + challenge)
+// //Where "secret" is the plaintext password.
+//             "password": ""
+//     }
+// }
 
 
 // tec21: this returns the pattern that mistServer is apparently looking for.
@@ -208,19 +249,7 @@ async function getApi() {
 // }
 
 
-// {
-//     "authorize":
-//     {
-// //Username to login as
-//         "username":
-//         "test",
-// //Hash of password to login with. Send empty value when no challenge for the hash is known yet.
-// //When the challenge is known, the value to be used here can be calculated as follows:
-// // MD5( MD5("secret") + challenge)
-// //Where "secret" is the plaintext password.
-//             "password": ""
-//     }
-// }
+
 
 </script>
 
