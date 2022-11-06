@@ -11,7 +11,7 @@ export let useChatStore = defineStore('chat', {
             showChat: Boolean,
             class: '',
             messages: ref([]),
-            message: ref([]),
+            message: ref(''),
             echo: [],
             currentChannel: [],
         };

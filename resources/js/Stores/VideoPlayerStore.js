@@ -20,7 +20,13 @@ export let useVideoPlayerStore = defineStore('videoPlayer', {
             loggedIn: Boolean,
             muted: Boolean,
             paused: Boolean,
-        };
+            apiRequest: [],
+            challenge: [],
+            status: [],
+            apiAgain: [],
+            mistUsername: [],
+            mistPassword: [],
+        }
     },
 
     actions: {
@@ -110,5 +116,10 @@ export let useVideoPlayerStore = defineStore('videoPlayer', {
             this.videoName = "Liberty Talk Canada";
             this.paused = false;
         },
+
+    },
+
+    getters: {
+        //
     }
 })

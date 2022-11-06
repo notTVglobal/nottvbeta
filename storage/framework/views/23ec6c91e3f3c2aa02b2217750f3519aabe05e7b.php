@@ -10,12 +10,14 @@
 
         <!-- Styles -->
         <link rel="stylesheet" href="<?php echo e(mix('css/app.css')); ?>">
+        <link rel="stylesheet" href="css/emojionearea.min.css">
 
         <?php echo app('Tightenco\Ziggy\BladeRouteGenerator')->generate(); ?>
 
         <script src="<?php echo e(mix('js/manifest.js')); ?>" defer></script>
         <script src="<?php echo e(mix('js/vendor.js')); ?>" defer></script>
         <script src="<?php echo e(mix('js/app.js')); ?>" defer></script>
+        <script type="text/javascript" src="js/emojionearea.min.js"></script>
         <?php if (!isset($__inertiaSsr)) { $__inertiaSsr = app(\Inertia\Ssr\Gateway::class)->dispatch($page); }  if ($__inertiaSsr instanceof \Inertia\Ssr\Response) { echo $__inertiaSsr->head; } ?>
     </head>
     <body class="font-sans antialiased bg-black">

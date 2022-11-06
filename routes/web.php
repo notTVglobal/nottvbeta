@@ -17,6 +17,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\VideoController;
 use App\Models\User;
 use App\Models\Show;
 use App\Models\ShowEpisode;
@@ -448,5 +449,11 @@ Route::middleware([
 //    Route::post('/chat/channel/{channelId}/message', function() {
 //        ChatMessage::forceCreate(request(['body']));
 //    });
+
+// MistAPI
+///////////
+///
+
+    Route::post('/mistapi', [VideoController::class, 'mistApi'])->name('mistApi');
 
 });
