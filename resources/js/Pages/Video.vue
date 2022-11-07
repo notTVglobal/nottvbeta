@@ -166,11 +166,14 @@ async function getMistStats() {
 // and when new creators register.
 
 async function getStatus() {
+    // this one is the localhost for the staging server.
+    //
+    await axios.get('https://beta-staging.not.tv/mistserver/api')
         // this one sasys CORS Preflight did not succeed.
         // Cross-Origin Request Blocked. The Same Origin
         // Policy disallows reading the remote resource.
         //
-    await axios.get('https://mist.not.tv/mistserver/api')
+    // await axios.get('https://mist.not.tv/mistserver/api')
         //
         //
         // this one returns a challenge response and
@@ -187,7 +190,7 @@ async function getStatus() {
         // in production, this presents a problem
         // as not.tv needs to be served over HTTPS.
         //
-    await axios.get('http://localhost:4242/api')
+    // await axios.get('http://localhost:4242/api')
         .then(response => {
             videoPlayer.apiRequest = response.data;
             videoPlayer.challenge = videoPlayer.apiRequest.authorize.challenge;
