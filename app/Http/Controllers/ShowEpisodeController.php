@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Creator;
 use App\Models\Image;
 use App\Models\Show;
 use App\Models\ShowEpisode;
 use App\Models\Team;
+use App\Models\TeamMember;
 use App\Models\User;
 use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Facades\Auth;
@@ -105,6 +107,8 @@ class ShowEpisodeController extends Controller
 
     public function show(Show $show, ShowEpisode $showEpisode) {
 
+        $teamId = $show->team_id;
+
         return Inertia::render('Shows/{$id}/Episodes/{$id}/Index', [
             'show' => [
                 'name' => $show->name,
@@ -117,6 +121,17 @@ class ShowEpisodeController extends Controller
                 'slug' => $show->team->slug,
             ],
             'episode' => $showEpisode,
+            'creators' => TeamMember::where('team_id', $teamId)
+                ->join('users', 'team_members.user_id', '=', 'users.id')
+                ->select('users.*', 'team_members.user_id')
+                ->latest()
+                ->paginate(3)
+                ->withQueryString()
+                ->through(fn($user) => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'profile_photo_path' => $user->profile_photo_path,
+                ]),
             'can' => [
                 'manageShow' => Auth::user()->can('manage', $show),
                 'editShow' => Auth::user()->can('edit', $show),

@@ -18,7 +18,6 @@
         </div>
     </div>
 
-
     <!-- Paginator -->
     <Pagination :links="props.episodes.links" class="mb-6"/>
 

@@ -67,13 +67,29 @@
 
                             <div class="w-full bg-gray-300 dark:bg-gray-800 text-2xl p-4 my-8">CREATORS</div>
 
-<!--                            We will add this when we have our Creators model setup
+                            <div class="flex flex-row flex-wrap">
+                                <div v-for="creator in props.creators.data"
+                                     :key="creator.id"
+                                     class="pb-8 bg-light dark:bg-gray-800">
+
+                                    <div class="flex flex-col min-w-[8rem] px-6 py-4 font-medium break-words grow-0">
+                                        <img :src="'/storage/profile-photos/' + creator.profile_photo_path" class="pb-2 rounded-full h-32 w-32 object-cover mb-2">
+                                        <span class="light:text-gray-800 dark:text-gray-200">{{ creator.name }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+<!--                            For now, we are just displaying the team members here.
+                                This will make a good component that can be re-used across
+                                the Show and Episode Index pages. Just pass in the creators prop.
+
+                                We will add this when we have our Creators model setup
                                 and creators attached to the credits table for this
                                 show.                                                       -->
 
 <!--                            <ShowCreatorsList />-->
 
-                            <div class="w-full bg-gray-300 dark:bg-gray-800 text-2xl p-4 mb-8">POSTS</div>
+                            <div class="w-full bg-gray-300 dark:bg-gray-800 text-2xl p-4 mb-8">BONUS CONTENT</div>
                         </div>
 
                         <ShowFooter :team="props.team" />
@@ -110,6 +126,7 @@ let props = defineProps({
     show: Object,
     team: Object,
     episodes: Object,
+    creators: Object,
     message: String,
     can: Object,
 });

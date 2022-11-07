@@ -7,6 +7,7 @@ use App\Models\Post;
 use App\Models\Show;
 use App\Models\ShowEpisode;
 use App\Models\Team;
+use App\Models\TeamMember;
 use App\Models\User;
 //use http\QueryString;
 use Illuminate\Support\Facades\Auth;
@@ -140,6 +141,8 @@ class ShowsController extends Controller
     public function show(Show $show)
     {
 
+        $teamId = $show->team_id;
+
         return Inertia::render('Shows/{$id}/Index', [
             'show' => [
                 'name' => $show->name,
@@ -183,7 +186,17 @@ class ShowsController extends Controller
                     'slug' => $showEpisode->slug,
                     'created_at' => $showEpisode->created_at,
                 ]),
-
+            'creators' => TeamMember::where('team_id', $teamId)
+                ->join('users', 'team_members.user_id', '=', 'users.id')
+                ->select('users.*', 'team_members.user_id')
+                ->latest()
+                ->paginate(3)
+                ->withQueryString()
+                ->through(fn($user) => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'profile_photo_path' => $user->profile_photo_path,
+                ]),
             'team' => [
                 'name' => $show->team->name,
                 'slug' => $show->team->slug,
