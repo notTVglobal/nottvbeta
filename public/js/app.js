@@ -1659,6 +1659,14 @@ var map = {
 	"./Welcome_v1.vue": [
 		"./resources/js/Pages/Welcome_v1.vue",
 		"resources_js_Pages_Welcome_v1_vue"
+	],
+	"./Whitepaper": [
+		"./resources/js/Pages/Whitepaper.vue",
+		"resources_js_Pages_Whitepaper_vue"
+	],
+	"./Whitepaper.vue": [
+		"./resources/js/Pages/Whitepaper.vue",
+		"resources_js_Pages_Whitepaper_vue"
 	]
 };
 function webpackAsyncContext(req) {

@@ -113,11 +113,8 @@
                                     class="rumble" width="640" height="360" :src="`${episode.video_file_url}`" frameborder="0" allowfullscreen>
                             </iframe>
                             <div v-if="!episode.video_file_url && episode.video_file_embed_code" v-html="videoEmbedCode">
-                                VIDEO EMBED CODE GOES HERE
-
                             </div>
                             <div v-if="episode.video_file_url && episode.video_file_embed_code" v-html="videoEmbedCode">
-                                VIDEO EMBED CODE GOES HERE
                             </div>
                         </div>
 

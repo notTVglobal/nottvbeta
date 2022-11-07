@@ -18,6 +18,7 @@ use App\Http\Controllers\MovieController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\VideoController;
+use App\Http\Controllers\WhitepaperController;
 use App\Models\User;
 use App\Models\Show;
 use App\Models\ShowEpisode;
@@ -69,9 +70,12 @@ Route::get('/terms', function () {
     return redirect('/terms-of-service');
 })->name('terms');
 
+
 Route::get('/privacy', function () {
     return redirect('/privacy-policy');
 })->name('privacy');
+
+Route::get('/whitepaper', [WhitepaperController::class, 'show'])->name('whitepaper.show');
 
 
 // BEGIN ROUTES FOR

@@ -92,8 +92,11 @@ If it's "CHALL" then you need to re-authenticate with the username and password.
                 Get API
             </button>
 
-            <div class="mt-2">The next API response will go here:</div>
-                <textarea type="text" v-model="videoPlayer.apiResponse" class="" disabled />
+            <div class="mt-2">The API reply is:</div>
+            <textarea type="text" v-model="videoPlayer.apiResponse" class="" disabled />
+            <div class="">
+                {{videoPlayer.apiResponse}}
+            </div>
 
 
 
