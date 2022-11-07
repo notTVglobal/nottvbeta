@@ -2,7 +2,7 @@
 <template>
 
     <h3 class="inline-flex items-center text-3xl font-semibold relative">
-        <img :src="'/storage/images/' + episode.poster" alt="" class="rounded-full h-20 w-20 object-cover">
+        <img :src="'/storage/images/' + episode.image.name" alt="" class="rounded-full h-20 w-20 object-cover">
         <Link :href="`/shows/${show.slug}/episode/${episode.slug}`" class="pl-5">{{ episode.name }}</Link>
     </h3>
 

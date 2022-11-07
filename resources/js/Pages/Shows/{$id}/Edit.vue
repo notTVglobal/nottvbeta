@@ -190,11 +190,11 @@ const FilePond = vueFilePond(
     FilePondPluginFileMetadata
 );
 
-FilePond.setOptions = ({
-    fileMetadataObject: {
-        show_id: '1',
-    },
-});
+// FilePond.setOptions = ({
+//     fileMetadataObject: {
+//         show_id: '1',
+//     },
+// });
 
 function filepondInitialized() {
     console.log("Filepond is ready!");

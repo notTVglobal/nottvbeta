@@ -60,7 +60,8 @@ class ShowsController extends Controller
                     'status' => $show->showStatus->name,
                     'statusId' => $show->showStatus->id,
                     'can' => [
-                        'editShow' => Auth::user()->can('edit', $show)
+                        'editShow' => Auth::user()->can('editShow', $show),
+                        'viewShow' => Auth::user()->can('viewShowManagePage', $show)
                     ]
                 ]),
             'filters' => Request::only(['search']),
@@ -380,15 +381,7 @@ class ShowsController extends Controller
                 'name' => $show->team->name,
                 'slug' => $show->team->slug,
             ],
-            'episode' => [
-                'id' => $showEpisode->id,
-                'name' => $showEpisode->name,
-                'description' => $showEpisode->description,
-                'slug' => $showEpisode->slug,
-                'poster' => $showEpisode->image->name,
-                'episode_number' => $showEpisode->episode_number,
-                'notes' => $showEpisode->notes,
-            ],
+            'episode' => $showEpisode,
             'can' => [
                 'editEpisode' => auth()->user()->can('editEpisode', $show),
                 'goLive' => auth()->user()->can('goLive', $show),

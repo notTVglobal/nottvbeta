@@ -105,13 +105,13 @@ Route::middleware([
         ->name('dashboard');
 
 
-// Posts
+// News (formerly Posts)
 ///////////
     Route::resource('posts',PostController::class);
 
-    Route::get('/posts', [PostController::class, 'index'])
+    Route::get('/news', [PostController::class, 'index'])
         ->can('viewPremium', 'App\Models\User')
-        ->name('posts');
+        ->name('news');
 
 //    Route::get('/posts/create', [PostController::class, 'create'])
 //        ->can('viewPremium', 'App\Models\User')
@@ -337,7 +337,7 @@ Route::middleware([
         ->scopeBindings();
     // Display episode edit page
     Route::get('/shows/{show}/episode/{showEpisode}/edit', [ShowEpisodeController::class, 'edit'])
-        ->middleware('can:edit,show')
+//        ->middleware('can:edit,show')
         ->name('shows.showEpisodes.edit')
         ->scopeBindings();
     // Update episode

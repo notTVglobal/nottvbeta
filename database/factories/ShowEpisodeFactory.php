@@ -30,6 +30,9 @@ class ShowEpisodeFactory extends Factory
             'user_id' => \App\Models\User::all()->random()->id,
             'show_id' => \App\Models\Show::all()->random()->id,
             'notes' => $this->faker->sentence(5),
+            'video_thumbnail' => null,
+            'video_file_url' => null,
+            'video_file_embed_code' => null,
             'isPublished' => '0',
             'slug' => \Str::slug($name)
         ];

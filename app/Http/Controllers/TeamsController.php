@@ -82,13 +82,12 @@ class TeamsController extends Controller
                     'memberSpots' => $team->memberSpots,
                     'totalSpots' => $team->totalSpots,
                     'can' => [
-                        'editTeam' => Auth::user()->can('edit', $team)
+                        'editTeam' => Auth::user()->can('editTeam', $team),
+                        'viewTeam' => Auth::user()->can('viewTeamManagePage', $team)
                     ]
                 ]),
             'filters' => Request::only(['search']),
             'can' => [
-                'viewTeams' => Auth::user()->can('viewTeamManagePage', Team::class),
-                'editTeam' => Auth::user()->can('editTeam', Team::class),
                 'viewCreator' => Auth::user()->can('viewCreator', User::class),
             ]
         ]);

@@ -98,7 +98,8 @@
                                                     {{ user.email }}
                                                 </th>
                                                 <td class="px-6 py-4">
-                                                    {{ user.role }}
+                                                    <span v-if="user.isAdmin === 0">{{ user.role }}</span>
+                                                    <span v-if="user.isAdmin === 1">Administrator</span>
                                                 </td>
                                                 <td class="px-6 py-4">
                                                     <Link :href="`/users/${user.id}/edit`"><button

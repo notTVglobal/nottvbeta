@@ -139,6 +139,9 @@
 
                         <div class="mt-4 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
                             <div class="bg-orange-300 p-2 font-bold">Credits</div>
+                            <div class="border-1 border-t mb-3 bg-orange-300 py-1 px-2 text-xs font-semibold text-red-800">
+                                In development. Not currently working.
+                            </div>
                             <Link
                                 :href="`#`"
                                 v-if="teamStore.can.createAssignment">
@@ -148,7 +151,6 @@
                                 >Create Assignment
                                 </button>
                             </Link>
-                            <div class="p-2">This section is in development.</div>
 
                             <ShowCreditsList/>
 

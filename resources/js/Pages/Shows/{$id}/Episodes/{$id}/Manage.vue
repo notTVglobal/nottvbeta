@@ -49,7 +49,7 @@
                             <div class="">
                                 <Link
                                     :href="`/shows/${show.slug}/episode/${episode.slug}/edit`"
-                                    v-if="teamStore.can.edit">
+                                    v-if="teamStore.can.editEpisode">
                                     <button
                                         class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                                     >Edit
@@ -97,18 +97,25 @@
             </div>
 
 
-
             <div class="flex flex-col">
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                     <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
 
                         <div
-                            class="shadow overflow-hidden border-b border-gray-200 w-full bg-black text-light text-2xl sm:rounded-lg p-5">
+                            class="flex justify-center shadow overflow-hidden border-b border-gray-200 w-full bg-black text-light text-2xl sm:rounded-lg p-5">
 
 
-                            <img :src="`/storage/images/EBU_Colorbars.svg.png`" class="max-h-32">
-                            <span> The VIDEO will go here.</span>
+                            <img v-if="!episode.video_file_url && !episode.video_file_embed_code" :src="`/storage/images/EBU_Colorbars.svg.png`" class="max-h-32">
+                            <iframe v-if="episode.video_file_url && !episode.video_file_embed_code"
+                                    class="rumble" width="640" height="360" :src="`${episode.video_file_url}`" frameborder="0" allowfullscreen>
+                            </iframe>
+                            <div v-if="!episode.video_file_url && episode.video_file_embed_code" v-html="videoEmbedCode">
+                                VIDEO EMBED CODE GOES HERE
 
+                            </div>
+                            <div v-if="episode.video_file_url && episode.video_file_embed_code" v-html="videoEmbedCode">
+                                VIDEO EMBED CODE GOES HERE
+                            </div>
                         </div>
 
                     </div>
@@ -165,6 +172,9 @@ let props = defineProps({
 });
 
 teamStore.can = props.can;
+
+let videoEmbedCode = props.episode.video_file_embed_code;
+
 
 
 // let search = ref(props.filters.search);

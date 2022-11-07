@@ -111,9 +111,9 @@
                 <JetResponsiveNavLink
                     v-if="$page.props.user.role_id === 2 || $page.props.user.role_id === 3 || $page.props.user.role_id === 4"
                     @click="videoPlayer.makeVideoTopRight()"
-                    :href="route('posts')"
-                    :active="route().current('posts')">
-                        Posts
+                    :href="route('news')"
+                    :active="route().current('news')">
+                        News
                 </JetResponsiveNavLink>
 
                 <JetResponsiveNavLink

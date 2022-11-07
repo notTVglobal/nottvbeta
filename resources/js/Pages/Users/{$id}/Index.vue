@@ -46,7 +46,9 @@
 
             <div class="p-6 bg-white border-b border-gray-200 space-y-1">
                 <div>
-                    <span class="text-sm font-semibold capitalize">User Type: </span>{{props.role}}
+                    <span class="text-sm font-semibold capitalize">User Type: </span>
+                    <span v-if="props.userSelected.isAdmin === 0">{{ props.role }}</span>
+                    <span v-if="props.userSelected.isAdmin === 1">Administrator</span>
                 </div>
                 <div>
                     <span v-if="$page.props.userSelected.role_id === 4" class="text-sm font-semibold capitalize">Creator Number: </span>{{props.userSelected.creatorNumber}}

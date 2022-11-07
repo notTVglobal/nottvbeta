@@ -61,13 +61,28 @@
 
             </header>
             <div class="flex justify-center w-full bg-black py-0">
-                <!--                <img :src="'/storage/images/' + props.episode.poster" alt="" class="w-1/2 mx-2">-->
+<!--                                <img :src="'/storage/images/' + props.episode.poster" alt="" class="w-1/2 mx-2">-->
 
                 <!--                TEST VIDEO EMBED FROM RUMBLE             -->
+<!--                <iframe class="rumble" width="640" height="360" src="https://rumble.com/embed/v1nf3s7/?pub=4" frameborder="0" allowfullscreen></iframe>-->
 
+                <div
+                    class="flex justify-center shadow overflow-hidden border-b border-gray-200 w-full bg-black text-light text-2xl sm:rounded-lg p-5">
 
-                <iframe class="rumble" width="640" height="360" src="https://rumble.com/embed/v1nf3s7/?pub=4" frameborder="0" allowfullscreen></iframe>
+                    <img v-if="!props.episode.video_file_url && !props.episode.video_file_embed_code && props.episode.poster" :src="'/storage/images/' + props.episode.poster" alt="" class="w-1/2 mx-2">
+                    <img v-if="!props.episode.video_file_url && !props.episode.video_file_embed_code && !props.episode.poster" :src="`/storage/images/EBU_Colorbars.svg.png`" alt="" class="w-1/2 mx-2">
 
+                    <iframe v-if="props.episode.video_file_url && !props.episode.video_file_embed_code"
+                            class="rumble" width="640" height="360" :src="`${props.episode.video_file_url}`" frameborder="0" allowfullscreen>
+                    </iframe>
+                    <div v-if="!props.episode.video_file_url && props.episode.video_file_embed_code" v-html="props.episode.video_file_embed_code">
+                        VIDEO EMBED CODE GOES HERE
+
+                    </div>
+                    <div v-if="props.episode.video_file_url && props.episode.video_file_embed_code" v-html="props.episode.video_file_embed_code">
+                        VIDEO EMBED CODE GOES HERE
+                    </div>
+                </div>
 
             </div>
 

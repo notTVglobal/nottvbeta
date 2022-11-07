@@ -35,6 +35,7 @@ class UsersController extends Controller
                 ->when(Request::input('search'), function ($query, $search) {
                     $query->where('name', 'like', "%{$search}%");
                 })
+                ->latest()
                 ->paginate(10)
                 ->withQueryString()
                 ->through(fn($user) => [

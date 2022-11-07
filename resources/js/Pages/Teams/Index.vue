@@ -77,7 +77,7 @@
                                                 # of Shows
                                             </th>
                                             <th v-if="props.can.viewCreator" scope="col" class="px-6 py-3">
-                                                Edit
+                                                <!--Manage/Edit-->
                                             </th>
                                         </tr>
                                         </thead>
@@ -118,8 +118,12 @@
                                             >
                                                 {{ team.totalShows }}
                                             </td>
-                                            <td v-if="team.can.editTeam" class="px-6 py-4">
-                                                <Link :href="`/teams/${team.slug}/edit`"><button
+                                            <td  class="px-6 py-4 space-x-2">
+                                                <Link v-if="team.can.viewTeam" :href="`/teams/${team.slug}/manage`"><button
+                                                    class="px-4 py-2 text-white bg-purple-600 hover:bg-purple-500 rounded-lg"
+                                                >Manage</button>
+                                                </Link>
+                                                <Link v-if="team.can.editTeam" :href="`/teams/${team.slug}/edit`"><button
                                                     class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                                                 >Edit</button>
                                                 </Link>

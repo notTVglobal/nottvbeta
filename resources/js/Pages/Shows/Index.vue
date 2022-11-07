@@ -72,7 +72,7 @@
                                                     Status
                                                 </th>
                                                 <th v-if="props.can.viewCreator" scope="col" class="px-6 py-3">
-                                                    Edit
+                                                    <!--Manage/Edit-->
                                                 </th>
                                             </tr>
                                             </thead>
@@ -140,9 +140,12 @@
                                                         {{ show.status }}
                                                     </div>
                                                 </th>
-                                                <td class="px-6 py-4">
-                                                    <Link :href="`/shows/${show.slug}/edit`"><button
-                                                        v-if="show.can.editShow"
+                                                <td class="px-6 py-4 space-x-2">
+                                                    <Link v-if="show.can.viewShow" :href="`/shows/${show.slug}/manage`"><button
+                                                        class="px-4 py-2 text-white bg-purple-600 hover:bg-purple-500 rounded-lg"
+                                                    >Manage</button>
+                                                    </Link>
+                                                    <Link v-if="show.can.editShow" :href="`/shows/${show.slug}/edit`"><button
                                                         class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                                                     >Edit</button>
                                                     </Link>

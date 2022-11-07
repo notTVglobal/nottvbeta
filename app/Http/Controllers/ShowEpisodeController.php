@@ -28,6 +28,7 @@ class ShowEpisodeController extends Controller
 //        $this->middleware('can:createShow,show')->only(['create']);
 //        $this->middleware('can:createEpisode,show')->only(['createEpisode']);
 //        $this->middleware('can:viewEpisodeManagePage,show')->only(['manageEpisode']);
+          $this->middleware('can:editEpisode,show')->only(['editEpisode']);
 
     }
 
@@ -64,16 +65,20 @@ class ShowEpisodeController extends Controller
             'description' => 'required',
             'user_id' => 'required',
             'show_id' => 'required',
-            'episode_number' => 'max:10'
+            'episode_number' => 'nullable|max:10',
+            'notes' => 'nullable|string',
+            'video_file_url' => 'nullable|active_url',
+            'video_file_embed_code' => 'nullable|string',
         ]);
         $showEpisode = new ShowEpisode();
+        $showEpisode->isBeingEditedByUser_id = Auth::user()->id;
         $showEpisode->name = $request->name;
         $showEpisode->description = $request->description;
         $showEpisode->user_id = Auth::user()->id;
         $showEpisode->show_id = $request->show_id;
         $showEpisode->episode_number = $request->episode_number;
         $showEpisode->slug = \Str::slug($request->name);
-        $showEpisode->isBeingEditedByUser_id = Auth::user()->id;
+
         $showEpisode->save();
 
         $showSlug = $request->show_slug;
@@ -111,13 +116,7 @@ class ShowEpisodeController extends Controller
                 'name' => $show->team->name,
                 'slug' => $show->team->slug,
             ],
-            'episode' => [
-                'name' => $showEpisode->name,
-                'description' => $showEpisode->description,
-                'slug' => $showEpisode->slug,
-                'poster' => $showEpisode->image->name,
-                'number' => $showEpisode->episode_number,
-            ],
+            'episode' => $showEpisode,
             'can' => [
                 'manageShow' => Auth::user()->can('manage', $show),
                 'editShow' => Auth::user()->can('edit', $show),
@@ -169,15 +168,7 @@ class ShowEpisodeController extends Controller
                 'name' => $show->team->name,
                 'slug' => $show->team->slug,
             ],
-            'episode' => [
-                'id' => $showEpisode->id,
-                'name' => $showEpisode->name,
-                'description' => $showEpisode->description,
-                'slug' => $showEpisode->slug,
-                'poster' => $showEpisode->image->name,
-                'episode_number' => $showEpisode->episode_number,
-                'notes' => $showEpisode->notes,
-            ],
+            'episode' => $showEpisode,
             'can' => [
                 'manageShow' => Auth::user()->can('manage', $show),
                 'editShow' => Auth::user()->can('edit', $show),
@@ -195,9 +186,21 @@ class ShowEpisodeController extends Controller
 
         // validate the request
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
+//            'name' => ['required', 'string', 'max:255'],
+            'name' => [
+                Rule::excludeIf($request->name === $showEpisode->name),
+                'required',
+                'max:255',
+                'accepted_if:show_id,',
+                'distinct:ignore_case',
+                new UniqueEpisodeName($request->show_id)
+            ],
+            'show_id' => 'required',
             'episode_number' => 'max:10',
             'description' => 'required',
+            'notes' => 'nullable|string',
+            'video_file_url' => 'nullable|active_url',
+            'video_file_embed_code' => 'nullable|string',
         ]);
 
         // update the show
@@ -206,6 +209,8 @@ class ShowEpisodeController extends Controller
         $showEpisode->episode_number = $request->episode_number;
         $showEpisode->slug = \Str::slug($request->name);
         $showEpisode->notes = $request->notes;
+        $showEpisode->video_file_url = $request->video_file_url;
+        $showEpisode->video_file_embed_code = $request->video_file_embed_code;
         $showEpisode->save();
         sleep(1);
 
