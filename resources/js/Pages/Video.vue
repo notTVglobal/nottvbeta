@@ -220,7 +220,7 @@ async function getApi() {
     // await axios.get('http://mist.nottv.io:4242/api?command=', {authorize: {username: 'nottvadmin', password: '2791d4458fc1701506f7138e9f2b50b74a123815ae40a943b4758e0902fbf41f'}}, {
     //     preserveScroll: true
     // })
-    await axios.get('https://beta-staging.not.tv/mistserver/api?command=', {"authorize": {"username": "nottvadmin", "password": props.message}})
+    await axios.get('https://beta-staging.not.tv/mistserver/api?', {"command": {"authorize": {"username": "nottvadmin", "password": props.message}}})
         .then(response => {
             videoPlayer.apiResponse = response.data
         })
