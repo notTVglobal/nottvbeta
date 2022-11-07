@@ -64,7 +64,7 @@ If it's "CHALL" then you need to re-authenticate with the username and password.
             <form @submit.prevent class="mt-2">
                 <div class="">Status: </div>
                 <input type="text" name="status" v-model="videoPlayer.status" disabled/>
-                <button class="ml-2 py-2 px-4 text-white bg-orange-800 hover:bg-orange-500 mr-2 rounded-xl" @click="getStatus">
+                <button class="ml-2 py-2 px-4 text-white bg-orange-800 hover:bg-orange-500 mr-2 rounded-xl" @click.prevent="getStatus">
                     Get Status
                 </button>
                 <div class="mt-2">Challenge:</div>
@@ -73,7 +73,7 @@ If it's "CHALL" then you need to re-authenticate with the username and password.
                 <input class="mb-2" type="text" name="username" v-model="videoPlayer.mistUsername" />
                 <div class="font-semibold mt-2">MistServer Password:</div>
                 <input type="password" name="password" v-model="password" />
-                <button class="ml-2 py-2 px-4 text-white bg-green-800 hover:bg-green-500 rounded-xl" @click="submit(password)">
+                <button class="ml-2 py-2 px-4 text-white bg-green-800 hover:bg-green-500 rounded-xl" @click.prevent="submit(password)">
                     Submit
                 </button>
             </form>
@@ -88,7 +88,7 @@ If it's "CHALL" then you need to re-authenticate with the username and password.
             You can find the npm package <a href="https://www.npmjs.com/package/md5" target="_blank" class="text-blue-800 hover:text-gray-500">here.</a></div>
 
 
-            <button class="ml-2 py-2 px-4 text-white bg-blue-800 hover:bg-blue-500 rounded-xl" @click="getApi">
+            <button class="ml-2 py-2 px-4 text-white bg-blue-800 hover:bg-blue-500 rounded-xl" @click.prevent="getApi">
                 Get API
             </button>
 
