@@ -142,7 +142,7 @@ console.log(md5('message'));
 
 
 async function getMistStats() {
-    await axios.get('http://localhost:4242/api?command=', {"capabilities": true})
+    await axios.get('https://beta-staging.not.tv/mistserver/api?command=', {"capabilities": true})
         .then(response => {
             videoPlayer.apiRequest = response.data;
             videoPlayer.challenge = videoPlayer.apiRequest.authorize.challenge;
@@ -218,7 +218,7 @@ async function getApi() {
     // await axios.get('http://mist.nottv.io:4242/api?command=', {authorize: {username: 'nottvadmin', password: '2791d4458fc1701506f7138e9f2b50b74a123815ae40a943b4758e0902fbf41f'}}, {
     //     preserveScroll: true
     // })
-    await Inertia.get('http://mist.nottv.io:4242/api?command=%7B%22authorize%22%3A%7B%22username%22%3A%22nottvadmin%22%2C%22password%22%3A%222791d4458fc1701506f7138e9f2b50b74a123815ae40a943b4758e0902fbf41f%22%7D%7D', {
+    await Inertia.get('https://beta-staging.not.tv/mistserver/api?command=%7B%22authorize%22%3A%7B%22username%22%3A%22nottvadmin%22%2C%22password%22%3A%222791d4458fc1701506f7138e9f2b50b74a123815ae40a943b4758e0902fbf41f%22%7D%7D', {
         preserveScroll: true
     })
 
