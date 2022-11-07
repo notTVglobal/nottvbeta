@@ -181,6 +181,17 @@ class TeamsController extends Controller
                     'poster' => getPoster($show),
                     'slug' => $show->slug,
                 ]),
+            'creators' => TeamMember::where('team_id', $team->id)
+                ->join('users', 'team_members.user_id', '=', 'users.id')
+                ->select('users.*', 'team_members.user_id')
+                ->latest()
+                ->paginate(3)
+                ->withQueryString()
+                ->through(fn($user) => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'profile_photo_path' => $user->profile_photo_path,
+                ]),
             'filters' => Request::only(['team_id']),
             'can' => [
                 'viewTeam' => auth()->user()->can('viewTeamManagePage', $team),
