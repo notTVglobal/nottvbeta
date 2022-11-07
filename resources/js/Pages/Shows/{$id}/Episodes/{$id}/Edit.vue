@@ -243,10 +243,6 @@
                                         </li>
                                     </ul>
 
-                                    <iframe width="560" height="315" src="https://www.youtube.com/embed/TMcPXUmfp6Y" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
-                                    <iframe class="rumble" width="640" height="360" src="https://rumble.com/embed/v1ndpzf/?pub=4" frameborder="0" allowfullscreen></iframe>
-
                                     <div class="mb-6">
                                         <label class="block mb-2 uppercase font-bold text-xs text-light"
                                                for="video_file_url"
