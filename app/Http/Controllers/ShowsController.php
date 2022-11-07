@@ -181,6 +181,7 @@ class ShowsController extends Controller
                     'name' => $showEpisode->name,
                     'poster' => $showEpisode->image->name,
                     'slug' => $showEpisode->slug,
+                    'created_at' => $showEpisode->created_at,
                 ]),
 
             'team' => [

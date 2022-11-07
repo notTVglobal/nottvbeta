@@ -142,7 +142,7 @@
                                                 </th>
                                                 <td class="px-6 py-4 space-x-2">
                                                     <Link v-if="show.can.viewShow" :href="`/shows/${show.slug}/manage`"><button
-                                                        class="px-4 py-2 text-white bg-purple-600 hover:bg-purple-500 rounded-lg"
+                                                        class="px-4 py-2 mb-2 text-white bg-purple-600 hover:bg-purple-500 rounded-lg"
                                                     >Manage</button>
                                                     </Link>
                                                     <Link v-if="show.can.editShow" :href="`/shows/${show.slug}/edit`"><button

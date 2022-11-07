@@ -22,6 +22,19 @@ import ConfirmDialog from '@/Components/Modals/ConfirmDialog';
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'notTV';
 
+// formatting dates, helper plugins:
+// https://jerickson.net/how-to-format-dates-in-vue-3/
+
+const formatDate = () => ({
+    methods: {
+        formatDate: function (dateString) {
+            const date = new Date(dateString);
+            // Then specify how you want your dates to be formatted
+            return new Intl.DateTimeFormat('default', {dateStyle: 'long'}).format(date);
+        },
+    },
+})
+
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: async name => {
@@ -44,6 +57,7 @@ createInertiaApp({
             .component("font-awesome-icon", FontAwesomeIcon)
             .component("Popper", Popper)
             .component("ConfirmDialog", ConfirmDialog)
+            .mixin(formatDate())
             .mount(el);
 
     },

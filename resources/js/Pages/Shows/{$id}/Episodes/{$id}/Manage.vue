@@ -83,6 +83,9 @@
                                     <span v-if="episode.episode_number">{{ episode.episode_number }}</span>
                                     <span v-if="!episode.episode_number">{{ episode.id }}</span>
                                 </div>
+                                <div><span class="text-xs capitalize font-semibold mr-2">
+                                    {{ formatDate(props.episode.created_at) }}
+                                </span></div>
 
                             </div>
                         </div>

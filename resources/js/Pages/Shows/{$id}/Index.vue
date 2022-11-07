@@ -14,10 +14,8 @@
             <div class="flex justify-between">
                 <div>
                     <h3 class="inline-flex items-center text-3xl font-semibold relative px-5">
-
                         {{ props.show.name }}
                     </h3>
-
                 </div>
 
                 <div class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4">

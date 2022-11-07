@@ -25,6 +25,9 @@
                             {{ props.episode.name }}
                         </h3>
                     </div>
+                    <div>
+                        {{ formatDate(props.episode.created_at) }}
+                    </div>
                 </div>
 
                 <div class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4 py-5 mb-10">
