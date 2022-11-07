@@ -8,8 +8,8 @@
             <Link :href="`/shows/${props.show.slug}/episode/${episode.slug}`" class="hover:opacity-60 text-gray-900 dark:text-white">
                 <div class="flex flex-col min-w-[8rem] px-6 py-4 font-medium break-words grow-0">
                     <img :src="'/storage/images/' + episode.poster" class="rounded-full h-32 w-32 object-cover mb-2">
-                    <span>{{ episode.name }}</span>
-                    <span class="text-xs uppercase font-semibold text-gray-500">
+                    <span class="w-full text-center">{{ episode.name }}</span>
+                    <span class="text-xs uppercase font-semibold text-gray-500 w-full text-center">
                         {{ formatDate(episode.created_at) }}
                     </span>
                 </div>

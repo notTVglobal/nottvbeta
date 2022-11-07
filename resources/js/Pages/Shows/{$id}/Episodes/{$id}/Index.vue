@@ -115,7 +115,7 @@
 
                                     <div class="flex flex-col min-w-[8rem] px-6 py-4 font-medium break-words grow-0">
                                         <img :src="'/storage/' + creator.profile_photo_path" class="pb-2 rounded-full h-32 w-32 object-cover mb-2">
-                                        <span class="light:text-gray-800 dark:text-gray-200">{{ creator.name }}</span>
+                                        <span class="light:text-gray-800 dark:text-gray-200 w-full text-center">{{ creator.name }}</span>
                                     </div>
 
 <!--                            For now, we are just displaying the team members here.
