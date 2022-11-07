@@ -168,7 +168,7 @@ async function getMistStats() {
 async function getStatus() {
     // this one is the localhost for the staging server.
     //
-    await axios.get('https://localhost:4242/api')
+    await axios.get('https://beta-staging.not.tv/mistserver/api')
         // this one sasys CORS Preflight did not succeed.
         // Cross-Origin Request Blocked. The Same Origin
         // Policy disallows reading the remote resource.
