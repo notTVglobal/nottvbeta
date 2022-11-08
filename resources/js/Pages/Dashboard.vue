@@ -18,6 +18,18 @@
 
                 <div class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4 mb-4">
                     <Link
+                        :href="`/news/upload`"><button
+                        class="bg-green-600 hover:bg-green-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
+                        disabled
+                    >Share News</button>
+                    </Link>
+                    <Link
+                        :href="`/movies/upload`"><button
+                        class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
+                        disabled
+                    >Upload Movie</button>
+                    </Link>
+                    <Link
                         :href="`/invite`"><button
                         class="bg-orange-600 hover:bg-orange-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
                     >Invite Creator</button>
@@ -78,6 +90,68 @@
                     </Link>
                 </div>
 
+            </div>
+
+            <div class="bg-gray-300 dark:bg-gray-900 rounded pb-8 p-3 mb-6 mx-2 border-b border-2">
+                <div class="font-semibold text-xl pb-2">Stats</div>
+                <div class="flex flex-wrap md:flex-row justify-center gap-2">
+
+                    <div class="px-4 py-4 w-1/4 h-48 bg-gray-400 text-black rounded shadow-md text-center">
+                        <div class="font-semibold">
+                            Total Storage
+                        </div>
+                        <div class="">
+                            Graph here
+                        </div>
+                    </div>
+
+                    <div class="px-4 py-4 w-1/4 h-48 bg-gray-400 text-black rounded shadow-md text-center">
+                        <div class="font-semibold">
+                            Total Subscribers
+                        </div>
+                        <div>
+                            Graph here
+                        </div>
+                    </div>
+
+                    <div class="px-4 py-4 w-1/4 h-48 bg-gray-400 text-black rounded shadow-md text-center">
+                        <div class="font-semibold">
+                            Total Creators
+                        </div>
+                        <div>
+                            Graph here
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-wrap md:flex-row justify-center gap-2 mt-2">
+                    <div class="px-4 py-4 w-1/4 h-48 bg-gray-400 text-black rounded shadow-md text-center">
+                        <div class="font-semibold">
+                            Avg. View Time
+                        </div>
+                        <div>
+                            Graph here
+                        </div>
+                    </div>
+
+                    <div class="px-4 py-4 w-1/4 h-48 bg-gray-400 text-black rounded shadow-md text-center">
+                        <div class="font-semibold">
+                            Daily Peak Bandwidth
+                        </div>
+                        <div>
+                            Graph here
+                        </div>
+                    </div>
+
+                    <div class="px-4 py-4 w-1/4 h-48 bg-gray-400 text-black rounded shadow-md text-center">
+                        <div class="font-semibold">
+                            Today's Top Show
+                        </div>
+                        <div>
+                            Display poster here
+                        </div>
+                    </div>
+
+                </div>
             </div>
 
             <section class="grid grid-cols-1 lg:grid-cols-3 gap-4 my-3 mx-2 m-auto text-black">
