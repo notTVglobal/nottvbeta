@@ -34,8 +34,10 @@ class CreatorPolicy
             return true;
         } elseif ($user->creator && $user->creator->status_id === 2) {
             return true;
+        } elseif ($user->isAdmin) {
+        return true;
         }
-
+        return Response::deny('You must be a creator to view the Dashboard.');
     }
 
     public function createTeam(User $user)
