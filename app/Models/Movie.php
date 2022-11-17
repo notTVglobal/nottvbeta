@@ -2,9 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Database\Eloquent\Model;
 
-class Movie extends Pivot
+class Movie extends Model
 {
-    //
+//    protected $fillable = [
+//        'name',
+//        'description',
+//        'file_path',
+//        'file_url',
+//    ];
+    protected $guarded = [];
 }

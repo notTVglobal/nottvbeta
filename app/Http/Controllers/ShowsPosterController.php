@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Facades\DB;
 use App\Models\Show;
+use Illuminate\Support\Facades\Storage;
 
 class ShowsPosterController extends Controller
 {

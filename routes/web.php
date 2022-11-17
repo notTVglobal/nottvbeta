@@ -24,6 +24,7 @@ use App\Models\Show;
 use App\Models\ShowEpisode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 
@@ -150,19 +151,27 @@ Route::middleware([
 
 // Movies
 ///////////
-    Route::resource('movies',MovieController::class);
+//    Route::resource('movies',MovieController::class);
     // List all movies
     Route::get('/movies', [MovieController::class, 'index'])
         ->can('viewVip', 'App\Models\User')
         ->name('movies');
-
+    Route::get('/movies/movie', [MovieController::class, 'show'])
+        ->can('viewVip', 'App\Models\User')
+        ->name('movies.show');
+    Route::get('/movies/upload', [MovieController::class, 'upload'])
+        ->can('viewCreator', 'App\Models\User')
+        ->name('movies.upload');
+    Route::post('/movies/upload', [MovieController::class, 'store'])
+        ->can('viewCreator', 'App\Models\User')
+        ->name('movies.store');
 
 
 
 // Shop
 ///////////
     Route::resource('shop',ShopController::class);
-    // List all movies
+    // List all products
     Route::get('/shop', [ShopController::class, 'index'])
         ->name('shop');
 
