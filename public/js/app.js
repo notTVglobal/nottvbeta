@@ -1304,10 +1304,12 @@ var map = {
 	],
 	"./Movies": [
 		"./resources/js/Pages/Movies.vue",
+		"/js/vendor",
 		"resources_js_Pages_Movies_vue"
 	],
 	"./Movies.vue": [
 		"./resources/js/Pages/Movies.vue",
+		"/js/vendor",
 		"resources_js_Pages_Movies_vue"
 	],
 	"./Movies/Upload": [
@@ -1317,6 +1319,16 @@ var map = {
 	"./Movies/Upload.vue": [
 		"./resources/js/Pages/Movies/Upload.vue",
 		"resources_js_Pages_Movies_Upload_vue"
+	],
+	"./Movies/{$id}/Edit": [
+		"./resources/js/Pages/Movies/{$id}/Edit.vue",
+		"/js/vendor",
+		"resources_js_Pages_Movies_id_Edit_vue"
+	],
+	"./Movies/{$id}/Edit.vue": [
+		"./resources/js/Pages/Movies/{$id}/Edit.vue",
+		"/js/vendor",
+		"resources_js_Pages_Movies_id_Edit_vue"
 	],
 	"./Movies/{$id}/Index": [
 		"./resources/js/Pages/Movies/{$id}/Index.vue",

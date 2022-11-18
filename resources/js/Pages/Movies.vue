@@ -1,52 +1,221 @@
 <template>
 
-    <Head title="Movies" />
+    <Head title="Movies"/>
     <div class="sticky top-0 w-full nav-mask">
         <ResponsiveNavigationMenu/>
-        <NavigationMenu />
+        <NavigationMenu/>
     </div>
 
     <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
-        <div class="bg-white text-black p-5 mb-10">
+        <div class="bg-gray-900 text-white px-5">
 
-            <header class="flex justify-between mb-3">
-                <div>
-                    <h1 class="text-3xl font-semibold pb-3">Movies</h1>
+            <header class="flex justify-between mb-3 border-b border-gray-800">
+                <div class="container mx-auto flex flex-col lg:flex-row items-center justify-between px-4 py-6">
+                    <div class="flex flex-col lg:flex-row items-center">
+                        <h1 class="text-3xl font-semibold">Movies</h1>
+                        <ul class="flex ml-0 lg:ml-16 mt-6 lg:mt-0 space-x-8">
+                            <li>
+                                <Link :href="``" class="hover:text-blue-800">Movies</Link>
+                            </li>
+                            <li>
+                                <Link :href="``" class="hover:text-blue-800">Reviews</Link>
+                            </li>
+                            <li>
+                                <Link :href="``" class="hover:text-blue-800">Coming Soon</Link>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="flex items-center mt-6 lg:mt-0">
+                        <div class="relative">
+                            <input v-model="search" type="search" class="bg-gray-800 text-sm rounded-full
+                            focus:outline-none focus:shadow w-64 pl-8 px-3 py-1" placeholder="Search...">
+                            <div class="absolute top-0 flex items-center h-full ml-2">
+                                <svg class="fill-current text-gray-400 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M456.69 421.39 362.6 327.3a173.81 173.81 0 0 0 34.84-104.58C397.44 126.38 319.06 48 222.72 48S48 126.38 48 222.72s78.38 174.72 174.72 174.72A173.81 173.81 0 0 0 327.3 362.6l94.09 94.09a25 25 0 0 0 35.3-35.3ZM97.92 222.72a124.8 124.8 0 1 1 124.8 124.8 124.95 124.95 0 0 1-124.8-124.8Z"/></svg>
+
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
             </header>
 
+            <main class="py-8">
+
+                <div class="container mx-auto px-4">
+                    <h2 class="text-yellow-500 uppercase tracking-wide font-semibold">Popular Movies</h2>
+                    <div class="popular-movies text-sm grid grid-cols-1 md:grid-cols-2 space-x-6 lg:grid-cols-5 xl:grid-cols-6 gap-12 border-b border-gray-800 pb-16">
 
 
-            <div class="mb-4">
-                <div class="p-2 text-red-600">This section is in development. Not currently working.</div>
-                <p class="">
-                    Display a grid of movies and documentaries available for free, PPV and to purchase. Also search, and browse by category/date/popularity.
-                </p>
-                <Link :href="`/movies/${movie}`" class="font-semibold text-blue-800 hover:text-blue-600">Link to a movie</Link>
-            </div>
+                        <div class="movie mt-8">
+                            <div class="relative inline-block">
+                                <Link :href="`/movies/${movie}`">
+                                    <img src="http://beta.local:8081/storage/images/EBU_Colorbars.svg.png" alt="movie cover" class="h-48 min-w-[8rem] w-28 object-cover hover:opacity-75 transition ease-in-out duration-150">
+                                </Link>
+                                <div class="absolute bottom-0 right-0 w-12 h-12 bg-gray-800 rounded-full" style="right:-20px; bottom:-20px;">
+                                    <div class="font-semi-bold text-xs flex justify-center items-center h-full">80%</div>
+
+                                </div>
+                            </div>
+                            <Link :href="`/movies/${movie}`" class="block text-base font-semibold leading-tight hover:text-gray-400 mt-4">Sprite Fright</Link>
+                            <div class="text-gray-400 mt-1">Short Film (2021)</div>
+                            <div class="text-gray-400 mt-1">Animated</div>
+                        </div>
 
 
-            <div class="flex flex-row justify-end gap-x-4 mb-4">
 
-<!--                <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg" />-->
-            </div>
+                        <div v-for="movie in movies.data"
+                             :key="movie.id"
+                             class="movie mt-8">
+                            <div class="relative inline-block">
+                                <Link :href="`/movies/${movie.slug}`">
+                                    <img src="http://beta.local:8081/storage/images/EBU_Colorbars.svg.png" alt="movie cover" class="h-48 min-w-[8rem] w-28 object-cover hover:opacity-75 transition ease-in-out duration-150">
+                                </Link>
+                                <div class="absolute bottom-0 right-0 w-12 h-12 bg-gray-800 rounded-full" style="right:-20px; bottom:-20px;">
+                                    <div class="font-semi-bold text-xs flex justify-center items-center h-full">80%</div>
+
+                                </div>
+                            </div>
+                            <Link :href="`/movies/${movie.slug}`" class="block text-base font-semibold leading-tight hover:text-gray-400 mt-4">{{ movie.name }}</Link>
+                            <div class="text-gray-400 mt-1">Category (YYYY)</div>
+                            <div class="text-gray-400 mt-1">Sub-category</div>
+                        </div>
 
 
-<!--            <div-->
-<!--                class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"-->
-<!--                role="alert"-->
-<!--                v-if="props.message"-->
-<!--            >-->
-<!--                    <span class="font-medium">-->
-<!--                        {{props.message}}-->
-<!--                    </span>-->
-<!--            </div>-->
 
 
-            <div class="bg-orange-300 px-2">
-                Display movies here.
-            </div>
+                        <div class="movie mt-8">
+                            <div class="relative inline-block">
+                                <Link :href="`/movies/${movie}`">
+                                    <img src="http://beta.local:8081/storage/images/EBU_Colorbars.svg.png" alt="movie cover" class="h-48 min-w-[8rem] w-28 object-cover hover:opacity-75 transition ease-in-out duration-150">
+                                </Link>
+                                <div class="absolute bottom-0 right-0 w-12 h-12 bg-gray-800 rounded-full" style="right:-20px; bottom:-20px;">
+                                    <div class="font-semi-bold text-xs flex justify-center items-center h-full">80%</div>
+
+                                </div>
+                            </div>
+                            <Link :href="`/movies/${movie}`" class="block text-base font-semibold leading-tight hover:text-gray-400 mt-4">Sprite Fright</Link>
+                            <div class="text-gray-400 mt-1">Short Film (2021)</div>
+                            <div class="text-gray-400 mt-1">Animated</div>
+                        </div>
+
+                    </div>
+                    <!-- Paginator -->
+                    <Pagination :links="movies.links" class="mt-6"/>
+                </div>
+
+                <div class="flex flex-col lg:flex-row my-10">
+                    <div class="recently-reviewed w-full lg:w-3/4 mr-0 md:mr-16 lg:mr-32">
+                        <h2 class="text-yellow-500 uppercase tracking-wide font-semibold">Recently Reviewed</h2>
+                        <div class="recently-reviewed-container space-y-12 mt-8">
+                            <div class="movie bg-gray-800 rounded-lg shadow-md flex px-6 py-6">
+                                <div class="relative flex-none">
+                                    <Link :href="`/movies/${movie}`">
+                                        <img src="http://beta.local:8081/storage/images/EBU_Colorbars.svg.png" alt="movie cover" class="h-64 min-w-[8rem] w-48 object-cover hover:opacity-75 transition ease-in-out duration-150">
+                                    </Link>
+                                    <div class="absolute bottom-0 right-0 w-12 h-12 bg-gray-900 rounded-full" style="right:-20px; bottom:-20px;">
+                                        <div class="font-semi-bold text-xs flex justify-center items-center h-full">80%</div>
+                                    </div>
+                                </div>
+                                <div class="ml-12">
+                                    <Link :href="`/movies/${movie}`" class="block text-lg font-semibold leading-tight hover:text-gray-400 mt-4">Sprite Fright</Link>
+                                    <div class="text-gray-400 mt-1">Short Film</div>
+                                    <p class="mt-6 pr-4 text-gray-300 hidden lg:block">
+                                        Blender Studio’s 13th open movie is an 80’s-inspired horror comedy,
+                                        set in Britain: When a group of rowdy teenagers trek into an isolated forest,
+                                        they discover peaceful mushroom creatures that turn out to be an unexpected force of nature.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="movie bg-gray-800 rounded-lg shadow-md flex px-6 py-6">
+                                <div class="relative flex-none">
+                                    <Link :href="`/movies/${movie}`">
+                                        <img src="http://beta.local:8081/storage/images/EBU_Colorbars.svg.png" alt="movie cover" class="h-64 w-48 min-w-[8rem] object-cover hover:opacity-75 transition ease-in-out duration-150">
+                                    </Link>
+                                    <div class="absolute bottom-0 right-0 w-12 h-12 bg-gray-900 rounded-full" style="right:-20px; bottom:-20px;">
+                                        <div class="font-semi-bold text-xs flex justify-center items-center h-full">80%</div>
+                                    </div>
+                                </div>
+                                <div class="ml-12">
+                                    <Link :href="`/movies/${movie}`" class="block text-lg font-semibold leading-tight hover:text-gray-400 mt-4">Sprite Fright</Link>
+                                    <div class="text-gray-400 mt-1">Short Film</div>
+                                    <p class="mt-6 pr-4 text-gray-300 hidden lg:block">
+                                        Blender Studio’s 13th open movie is an 80’s-inspired horror comedy,
+                                        set in Britain: When a group of rowdy teenagers trek into an isolated forest,
+                                        they discover peaceful mushroom creatures that turn out to be an unexpected force of nature.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="movie bg-gray-800 rounded-lg shadow-md flex px-6 py-6">
+                                <div class="relative flex-none">
+                                    <Link :href="`/movies/${movie}`">
+                                        <img src="http://beta.local:8081/storage/images/EBU_Colorbars.svg.png" alt="movie cover" class="h-64 w-48 min-w-[8rem] object-cover hover:opacity-75 transition ease-in-out duration-150">
+                                    </Link>
+                                    <div class="absolute bottom-0 right-0 w-12 h-12 bg-gray-900 rounded-full" style="right:-20px; bottom:-20px;">
+                                        <div class="font-semi-bold text-xs flex justify-center items-center h-full">80%</div>
+                                    </div>
+                                </div>
+                                <div class="ml-12">
+                                    <Link :href="`/movies/${movie}`" class="block text-lg font-semibold leading-tight hover:text-gray-400 mt-4">Sprite Fright</Link>
+                                    <div class="text-gray-400 mt-1">Short Film</div>
+                                    <p class="mt-6 pr-4 text-gray-300 hidden lg:block">
+                                        Blender Studio’s 13th open movie is an 80’s-inspired horror comedy,
+                                        set in Britain: When a group of rowdy teenagers trek into an isolated forest,
+                                        they discover peaceful mushroom creatures that turn out to be an unexpected force of nature.
+                                    </p>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="most-anticipated lg:w-1/4 mt-12 lg:mt-0">
+                        <h2 class="text-yellow-500 uppercase tracking-wide font-semibold">Most Anticipated</h2>
+                        <div class="most-anticipated-container space-y-10 mt-8">
+                            <div class="game flex">
+                                <Link :href="`/movies/${movie}`">
+                                    <img src="http://beta.local:8081/storage/images/EBU_Colorbars.svg.png"
+                                         alt="movie cover"
+                                         class="h-24 min-w-[4rem] w-16 object-cover hover:opacity-75 transition ease-in-out duration-150">
+                                </Link>
+                                <div class="ml-4">
+                                    <Link :href="`/movies/${movie}`" class="hover:text-gray-300">Sprite Fright</Link>
+                                    <div class="text-gray-400 text-sm mt-1">October 8, 2021</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h2 class="text-yellow-500 uppercase tracking-wide font-semibold mt-16">Coming Soon</h2>
+                        <div class="most-anticipated-container space-y-10 mt-8">
+                            <div class="game flex">
+                                <Link :href="`/movies/${movie}`">
+                                    <img src="http://beta.local:8081/storage/images/EBU_Colorbars.svg.png"
+                                         alt="movie cover"
+                                         class="h-24 min-w-[4rem] w-16 object-cover hover:opacity-75 transition ease-in-out duration-150">
+                                </Link>
+                                <div class="ml-4">
+                                    <Link :href="`/movies/${movie}`" class="hover:text-gray-300">Sprite Fright</Link>
+                                    <div class="text-gray-400 text-sm mt-1">October 8, 2021</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+
+            </main>
+
+            <footer class="border-t border-gray-800">
+                <div class="container text-right text-gray-800 mx-auto px-4 py-6">
+                    Powered by not.tv
+                </div>
+
+            </footer>
+
+
+
 
         </div>
     </div>
@@ -54,11 +223,14 @@
 </template>
 
 <script setup>
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import { useChatStore } from "@/Stores/ChatStore.js"
+import Pagination from "@/Components/Pagination"
+import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
+import {useChatStore} from "@/Stores/ChatStore.js"
 import ResponsiveNavigationMenu from "@/Components/Navigation/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/Navigation/NavigationMenu"
-import { ref, onMounted } from "vue";
+import {ref, onMounted, watch} from "vue";
+import throttle from "lodash/throttle";
+import {Inertia} from "@inertiajs/inertia";
 
 let videoPlayer = useVideoPlayerStore()
 let chat = useChatStore()
@@ -69,11 +241,20 @@ onMounted(() => {
 
 let movie = 'test-movie-2'
 
-let props = defineProps ({
+let props = defineProps({
     can: Object,
-    movie: '',
-    search: String,
+    movies: Object,
+    filters: Object,
 })
+
+let search = ref(props.filters.search);
+
+watch(search, throttle(function (value) {
+    Inertia.get('/movies', { search: value }, {
+        preserveState: true,
+        replace: true
+    });
+}, 300));
 
 </script>
 

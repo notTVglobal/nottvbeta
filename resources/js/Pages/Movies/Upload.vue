@@ -21,13 +21,30 @@
 
     </header>
 
+
+
     <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
         <div class="bg-white text-black p-5 mb-10">
 
+            <div class="flex justify-between mb-3">
+                <div class="mb-4">
+                    <h1 class="text-3xl font-semibold">Movie Upload</h1>
+                </div>
+                <div>
+                    <div class="flex flex-wrap-reverse justify-end gap-2">
+                        <Link :href="`/dashboard`">
+                            <button
+                                class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                            >Dashboard
+                            </button>
+                        </Link>
+                    </div>
+                </div>
+            </div>
+
             <div>
                 <form @submit.prevent="submit" enctype="multipart/form-data">
-                    <label for="videoUpload" class="font-semibold block">Movie Upload</label>
-                    <div class="bg-orange-800 text-white p-4">Note: File uploads are limited to 2GB until we implement a chunk method.
+                    <div class="bg-orange-800 text-white p-4 mb-6"><span class="font-semibold">Note:</span> File uploads are limited to 2GB until we implement a chunk method.
                     This will require storing the uploaded file on the server in a temp directory, then we can process it and encrypt it using
                     FFMPEG and finally upload it to our destination(s), whether that is Digital Ocean Spaces, an attached volume, remote server,
                     or a Peer-to-peer distribution network. We also need to implement file validation and restrict the filetypes that can be uploaded.<br>
@@ -51,11 +68,21 @@
                         name="description"
                         id="description"
                         cols="30"
-                        row="10"
+                        row="20"
                         class="border border-gray-400 rounded w-full px-2 py-2 my-2"
                         placeholder="Description"
                     />
                     <div v-if="form.errors.description" v-text="form.errors.description"
+                         class="bg-red-600 p-2 w-full text-white font-semibold mt-1"></div>
+                    <input
+                        v-model="form.file_url"
+                        type="text"
+                        name="file_url"
+                        id="file_url"
+                        class="border border-gray-400 rounded w-full px-2 py-2 my-2"
+                        placeholder="Link to existing video file (optional)"
+                    />
+                    <div v-if="form.errors.file_url" v-text="form.errors.file_url"
                          class="bg-red-600 p-2 w-full text-white font-semibold mt-1"></div>
                     <div
                         @dragenter.prevent="toggleActive"
@@ -63,10 +90,10 @@
                         @dragover.prevent
                         @drop.prevent="drop"
                         :class="{ 'active-dropzone': active }"
-                        class="dropzone">
-                        <span>Drag or Drop File</span>
+                        class="dropzone mt-4">
+                        <span>Drag or Drop Video</span>
                         <span>OR</span>
-                        <label for="dropzoneFile">Select File</label>
+                        <label for="dropzoneFile" class="cursor-pointer hover:bg-gray-600">Select Video</label>
                         <input
                             type="file"
                             name="video"
@@ -159,6 +186,7 @@ let form = useForm({
     name: '',
     description: '',
     video: '',
+    file_url: '',
 });
 
 let submit = () => {

@@ -24,11 +24,6 @@
                     >Share News</button>
                     </Link>
                     <Link
-                        :href="`/movies/create`"><button
-                        class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
-                    >Upload Movie</button>
-                    </Link>
-                    <Link
                         :href="`/invite`"><button
                         class="bg-orange-600 hover:bg-orange-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
                     >Invite Creator</button>
@@ -86,6 +81,11 @@
                     <Link :href="`/admin/settings`"><button
                         class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"
                     >Settings</button>
+                    </Link>
+                    <Link
+                        :href="`/movies/create`"><button
+                        class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
+                    >Upload Movie</button>
                     </Link>
                 </div>
 

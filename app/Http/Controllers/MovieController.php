@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Image;
 use App\Models\Movie;
 use App\Models\User;
 use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Str;
@@ -17,7 +19,7 @@ class MovieController extends Controller
     public function __construct()
     {
 
-        //
+        $this->middleware('can:edit,movie')->only(['edit']);
 
     }
 
@@ -28,7 +30,28 @@ class MovieController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Movies');
+        return Inertia::render('Movies', [
+            'movies' => Movie::query()
+                ->when(Request::input('search'), function ($query, $search) {
+                    $query->where('name', 'like', "%{$search}%");
+                })
+                ->latest()
+                ->paginate(10)
+                ->withQueryString()
+                ->through(fn($movie) => [
+                    'id' => $movie->id,
+                    'name' => $movie->name,
+                    'teamId' => $movie->team_id,
+//                    'teamName' => $movie->team->name,
+//                    'teamSlug' => $movie->team->slug,
+                    'userId' => $movie->user_id,
+//                    'userName' => $movie->user->name,
+//                    'poster' => $movie->image->name,
+                    'slug' => $movie->slug,
+                    'copyrightYear' => $movie->created_at->format('Y'),
+                ]),
+            'filters' => Request::only(['search']),
+        ]);
     }
 
     /**
@@ -66,17 +89,25 @@ class MovieController extends Controller
         $request->validate([
             'name' => 'unique:movies|required|string|max:255',
             'description' => 'required|string',
-            'video' => 'file|max:10000000',
+            'file_url' => 'string|max:255',
         ]);
 
-        $video = $request->file('video');
-        $extension = $request->file('video')->extension();
-        $size = $request->file('video')->getSize();
-        $mimeTypes = $request->file('video')->getMimeType();
-        $fileName = $video->hashName();
+        $video = '';
+        $extension = '';
+        $size = 0;
+        $mimeTypes = '';
+        $fileName = '';
 
 //        dd($extension, $mimeTypes);
         if ($request->hasFile('video')) {
+            $request->validate([
+                'video' => 'file|max:10000000',
+            ]);
+            $video = $request->file('video');
+            $extension = $request->file('video')->extension();
+            $size = $request->file('video')->getSize();
+            $mimeTypes = $request->file('video')->getMimeType();
+            $fileName = $video->hashName();
             Storage::disk('do_spaces')->putFileAs('uploads/movies', $video, $fileName, 'public');
         }
 
@@ -88,6 +119,7 @@ class MovieController extends Controller
             'description' => $request->description,
             'slug' => $slug,
             'file_path' => $fileName,
+            'file_url' => $request->file_url,
             'extension' => $extension,
             'size' => $size,
             'user_id' => Auth::user()->id,
@@ -112,6 +144,7 @@ class MovieController extends Controller
                 'name' => $movie->name,
                 'description' => $movie->description,
                 'filePath' => $movie->file_path,
+                'fileUrl' => $movie->file_url,
                 // need to link the Movie and Team models.
                 // change team to $movie->team->name
                 // and add team->slug
@@ -134,7 +167,40 @@ class MovieController extends Controller
      */
     public function edit(Movie $movie)
     {
+//        $team = Show::query()->where('id', $show->id)->pluck('team_id')->firstOrFail();
 
+        // Currently this queries all images in the database
+        // this needs to be changed to limit the query.
+        //
+
+//        DB::table('movies')->where('id', $movie->id)->update([
+//            'isBeingEditedByUser_id' => Auth::user()->id,
+//        ]);
+
+//        function getPoster($show){
+//            $getPoster = Image::query()
+//                ->where('show_id', $show->id)
+//                ->pluck('name')
+//                ->first();
+//            if(!empty($getPoster)){
+//                $poster = $getPoster;
+//            } else {
+//                $poster = 'EBU_Colorbars.svg.png';
+//            }
+//            return $poster;
+//        }
+        $movie = Movie::query()->where('id', $movie->id)->firstOrFail();
+        return Inertia::render('Movies/{$id}/Edit', [
+            'movie' => $movie,
+//            'team' => Team::query()->where('id', $show->team_id)->firstOrFail(),
+//            'showRunner' => User::query()->where('id', $show->user_id)->pluck('id','name')->firstOrFail(),
+//            'poster' => getPoster($show),
+//            'can' => [
+//                'viewShows' => Auth::user()->can('view', Show::class),
+//                'editShow' => Auth::user()->can('edit', Show::class),
+//                'viewCreator' => Auth::user()->can('viewCreator', User::class),
+//            ]
+        ]);
     }
 
     /**
