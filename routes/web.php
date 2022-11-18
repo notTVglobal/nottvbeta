@@ -369,9 +369,6 @@ Route::middleware([
     Route::get('/movies', [MovieController::class, 'index'])
         ->can('viewVip', 'App\Models\User')
         ->name('movies');
-    Route::get('/movies/upload', [MovieController::class, 'create'])
-        ->can('viewCreator', 'App\Models\User')
-        ->name('movies.create');
     // Display movie edit page
     Route::get('/movies/{movie}/edit', [MovieController::class, 'edit'])
 //        ->middleware('can:edit,movie')
