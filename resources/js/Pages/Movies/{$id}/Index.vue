@@ -124,9 +124,7 @@
                         </div>
 
                         <p class="mt-12 pr-4 text-gray-300 hidden lg:block">
-                            Blender Studio’s 13th open movie is an 80’s-inspired horror comedy,
-                            set in Britain: When a group of rowdy teenagers trek into an isolated forest,
-                            they discover peaceful mushroom creatures that turn out to be an unexpected force of nature.
+                            {{ movie.description }}
                         </p>
 
                         <div class="flex mt-12">
