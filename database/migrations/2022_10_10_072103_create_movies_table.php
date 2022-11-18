@@ -25,7 +25,7 @@ return new class extends Migration
             $table->integer('size')->nullable();
             $table->string('file_path')->nullable();
             $table->string('file_url')->nullable();
-            $table->integer('release_year');
+            $table->integer('release_year')->nullable();
             $table->timestamps();
         });
     }
