@@ -149,25 +149,6 @@ Route::middleware([
         ->name('admin.channels.index');
 
 
-// Movies
-///////////
-//    Route::resource('movies',MovieController::class);
-    // List all movies
-    Route::get('/movies', [MovieController::class, 'index'])
-        ->can('viewVip', 'App\Models\User')
-        ->name('movies');
-    Route::get('/movies/movie', [MovieController::class, 'show'])
-        ->can('viewVip', 'App\Models\User')
-        ->name('movies.show');
-    Route::get('/movies/upload', [MovieController::class, 'upload'])
-        ->can('viewCreator', 'App\Models\User')
-        ->name('movies.upload');
-    Route::post('/movies/upload', [MovieController::class, 'store'])
-        ->can('viewCreator', 'App\Models\User')
-        ->name('movies.store');
-
-
-
 // Shop
 ///////////
     Route::resource('shop',ShopController::class);
@@ -360,10 +341,6 @@ Route::middleware([
 //        ->scopeBindings();
 
 
-
-
-
-
     // tec21: This is probably not the best way to do this
     // I'm unable to get the FilePond uploader to show the
     // uploaded image on the shows/edit page after upload.
@@ -382,22 +359,24 @@ Route::middleware([
         ->can('viewCreator', 'App\Models\User')
         ->name('teams.uploadLogo');
 
-    // List all shows
-//    Route::get('/shows', [ShowsController::class, 'index'])->name('shows');
-    // Create a show
-//    Route::get('/shows/create', [ShowsController::class, 'create'])
-//        ->can('viewCreator', 'App\Models\User')
-//        ->name('shows.create');
-    // Add new show to database
-//    Route::post('/shows', [ShowsController::class, 'store'])
-//        ->can('viewCreator', 'App\Models\User')
-//        ->name('shows.store');
-    // Single show page
-//    Route::get('/shows/{show}', [ShowsController::class, 'show'])->name('shows.show');
-    // Edit show
-//    Route::get('/shows/edit/{show}', [ShowsController::class, 'edit'])
-//        ->can('viewCreator', 'App\Models\User')
-//        ->name('shows.edit');
+// Movies
+///////////
+    Route::resource('movies',MovieController::class);
+    // List all movies
+    Route::get('/movies/{movie}', [MovieController::class, 'show'])
+        ->can('viewVip', 'App\Models\User')
+        ->name('movies.show');
+    Route::get('/movies', [MovieController::class, 'index'])
+        ->can('viewVip', 'App\Models\User')
+        ->name('movies');
+    Route::get('/movies/upload', [MovieController::class, 'create'])
+        ->can('viewCreator', 'App\Models\User')
+        ->name('movies.create');
+    Route::post('/movies/upload', [MovieController::class, 'store'])
+        ->can('viewCreator', 'App\Models\User')
+        ->name('movies.store');
+
+
 
 
 // Images + Upload

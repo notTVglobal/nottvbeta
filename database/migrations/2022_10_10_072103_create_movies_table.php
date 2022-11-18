@@ -18,12 +18,14 @@ return new class extends Migration
             $table->foreignId('user_id')->nullable()->constrained();
             $table->foreignId('team_id')->nullable()->constrained();
             $table->foreignId('image_id')->default(4)->constrained();
-            $table->string('name');
-            $table->longtext('description');
+            $table->string('name')->unique();
+            $table->longtext('description')->nullable();
+            $table->string('slug')->unique();
             $table->string('extension')->nullable();
             $table->integer('size')->nullable();
             $table->string('file_path')->nullable();
             $table->string('file_url')->nullable();
+            $table->integer('release_year');
             $table->timestamps();
         });
     }

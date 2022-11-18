@@ -60,6 +60,7 @@ class ShowsController extends Controller
                     'totalEpisodes' => $show->showEpisodes->count(),
                     'status' => $show->showStatus->name,
                     'statusId' => $show->showStatus->id,
+                    'copyrightYear' => $show->created_at->format('Y'),
                     'can' => [
                         'editShow' => Auth::user()->can('editShow', $show),
                         'viewShow' => Auth::user()->can('viewShowManagePage', $show)
@@ -103,9 +104,9 @@ class ShowsController extends Controller
     {
 
         $request->validate([
-            'name' => 'unique:shows|required|max:255',
+            'name' => 'unique:shows|required|string|max:255',
 //            'name' => ['required', 'string', 'max:255', Rule::unique('shows')->ignore($show->id)],
-            'description' => 'required',
+            'description' => 'required|string',
             'user_id' => 'required',
             'team_id' => 'required|integer|min:1',
         ],
@@ -150,6 +151,7 @@ class ShowsController extends Controller
                 'showRunner' => $show->user->name,
                 'slug' => $show->slug,
                 'poster' => $show->image->name,
+                'copyrightYear' => $show->created_at->format('Y'),
             ],
 
             ////////////////
@@ -224,6 +226,7 @@ class ShowsController extends Controller
                 'showRunner' => $show->user->name,
                 'slug' => $show->slug,
                 'poster' => $show->image->name,
+                'copyrightYear' => $show->created_at->format('Y'),
             ],
             'team' => [
                 'name' => $show->team->name,
@@ -390,6 +393,7 @@ class ShowsController extends Controller
                 'slug' => $show->slug,
                 'showRunner' => $show->user->name,
                 'poster' => $show->image->name,
+                'copyrightYear' => $show->created_at->format('Y'),
             ],
             'team' => [
                 'name' => $show->team->name,

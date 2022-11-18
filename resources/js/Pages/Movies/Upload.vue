@@ -27,13 +27,21 @@
             <div>
                 <form @submit.prevent="submit" enctype="multipart/form-data">
                     <label for="videoUpload" class="font-semibold block">Movie Upload</label>
+                    <div class="bg-orange-800 text-white p-4">Note: File uploads are limited to 2GB until we implement a chunk method.
+                    This will require storing the uploaded file on the server in a temp directory, then we can process it and encrypt it using
+                    FFMPEG and finally upload it to our destination(s), whether that is Digital Ocean Spaces, an attached volume, remote server,
+                    or a Peer-to-peer distribution network. We also need to implement file validation and restrict the filetypes that can be uploaded.<br>
+                    For more info about chunking go to:
+                        <a href="https://github.com/pionl/laravel-chunk-upload" class="text-blue-400 hover:text-blue-200" target="_blank">
+                            https://github.com/pionl/laravel-chunk-upload</a>
+                    </div>
                     <input
                         v-model="form.name"
                         type="text"
                         name="name"
                         id="name"
                         class="border border-gray-400 rounded w-full px-2 py-2 my-2"
-                        placeholder="Name"
+                        placeholder="Movie Title"
                     />
                     <div v-if="form.errors.name" v-text="form.errors.name"
                          class="bg-red-600 p-2 w-full text-white font-semibold mt-1"></div>
@@ -49,22 +57,36 @@
                     />
                     <div v-if="form.errors.description" v-text="form.errors.description"
                          class="bg-red-600 p-2 w-full text-white font-semibold mt-1"></div>
+                    <div
+                        @dragenter.prevent="toggleActive"
+                        @dragleave.prevent="toggleActive"
+                        @dragover.prevent
+                        @drop.prevent="drop"
+                        :class="{ 'active-dropzone': active }"
+                        class="dropzone">
+                        <span>Drag or Drop File</span>
+                        <span>OR</span>
+                        <label for="dropzoneFile">Select File</label>
+                        <input
+                            type="file"
+                            name="video"
+                            id="dropzoneFile"
+                            class="dropzoneFile border border-gray-400 rounded w-full px-2 py-2 my-2"
+                            @change="selectedFile"
+                            ref="fileInput"
+                            accept="video/*"
+                            @input="form.video = $event.target.files[0]"
+                            style="display: none"/>
+                    </div>
 
-                    <input
-                        type="file"
-                        name="video"
-                        id="video"
-                        class="border border-gray-400 rounded w-full px-2 py-2 my-2"
-                        ref="fileInput"
-                        accept="video/*"
-                        @input="form.video = $event.target.files[0]"
-                        @change="selectFile"/>
+                    <div class="mt-2">File: {{ dropzoneFile.name }}</div>
+
                     <div v-if="form.errors.video" v-text="form.errors.video"
                          class="bg-red-600 p-2 w-full text-white font-semibold mt-1"></div>
 
                     <button
                         @click="submit"
-                        class="bg-green-600 hover:bg-green-500 text-white rounded py-2 px-4"
+                        class="bg-green-600 hover:bg-green-500 text-white rounded py-2 px-4 mt-2"
                         :disabled="form.processing"
                     >
                         Upload
@@ -86,20 +108,10 @@ import Message from "@/Components/Modals/Messages"
 import { ref, onMounted } from "vue"
 import {useForm} from "@inertiajs/inertia-vue3"
 import TabbableTextarea from "@/Components/TabbableTextarea"
-
 import { Inertia } from "@inertiajs/inertia"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useTeamStore } from "@/Stores/TeamStore.js"
 import { useShowStore } from "@/Stores/ShowStore.js"
-
-import vueFilePond, { setOptions } from 'vue-filepond'
-import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type"
-import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size"
-import FilePondPluginImagePreview from "filepond-plugin-image-preview"
-import FilePondPluginFileMetadata from "filepond-plugin-file-metadata"
-import 'filepond/dist/filepond.min.css'
-import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css'
-
 
 let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore()
@@ -108,8 +120,6 @@ let showStore = useShowStore()
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
 });
-
-
 
 // let props = defineProps({
 //     user: Object,
@@ -120,6 +130,22 @@ onMounted(() => {
 let showMessage = ref(true);
 
 
+
+// Dropzone tutorial: https://www.youtube.com/watch?v=wWKhKPN_Pmw
+
+let dropzoneFile = ref([]);
+const active = ref(false);
+const toggleActive = () => {
+    active.value = !active.value;
+}
+const drop = (e) => {
+    dropzoneFile.value = e.dataTransfer.files[0];
+    active.value = !active.value;
+}
+const selectedFile = () => {
+    dropzoneFile.value = document.querySelector('.dropzoneFile').files[0];
+}
+
 let props = defineProps({
     message: ref(''),
     errors: ref(''),
@@ -127,69 +153,6 @@ let props = defineProps({
     // filters: Object,
 });
 
-const FilePond = vueFilePond(
-    FilePondPluginFileValidateType,
-    FilePondPluginFileValidateSize,
-    FilePondPluginImagePreview,
-    FilePondPluginFileMetadata
-);
-
-// FilePond.setOptions = ({
-//     fileMetadataObject: {
-//         show_id: '1',
-//     },
-// });
-
-// let s3 = new AWS.S3({
-//     accessKeyId: 'access-key',
-//     secretAccessKey: 'secret-access-key',
-//     region: 'eu-central-1'
-// });
-//
-// FilePond.setOptions({
-//     server: {
-//         process: function(fieldName, file, metadata, load, error, progress, abort) {
-//
-//             s3.upload({
-//                 Bucket: 'your-bucket-name',
-//                 Key: Date.now() + '_' + file.name,
-//                 Body: file,
-//                 ContentType: file.type,
-//                 ACL: 'public-read'
-//             }, function(err, data) {
-//
-//                 if (err) {
-//                     error('Something went wrong');
-//                     return;
-//                 }
-//
-//                 // pass file unique id back to filepond
-//                 load(data.Key);
-//
-//             });
-//
-//         }
-//     }
-// })
-
-function filepondInitialized() {
-    console.log("Filepond is ready!");
-    console.log('Filepond object:', FilePond);
-}
-
-function handleProcessedFile(error, file) {
-    if (error) {
-        console.log("Filepond processed file");
-        console.log(error);
-        console.log(file);
-        return;
-    }
-
-    Inertia.reload({
-        only: ['video'],
-    });
-
-}
 
 
 let form = useForm({
@@ -201,8 +164,42 @@ let form = useForm({
 let submit = () => {
     // form.append('form', json);
     // axios.post("/movies/upload", form.data);
-    form.post(route('movies.upload', form));
+    form.post(route('movies.store', form));
 };
 
 
 </script>
+
+<style scoped>
+.dropzone {
+    width: 400px;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    row-gap: 16px;
+    border: 2px dashed #6b7280;
+    transition: 0.3s ease all;
+}
+
+label {
+    padding: 8px 12px;
+    color: #fff;
+    background-color: #4bb1b1;
+    transition: 0.3s ease all;
+}
+
+.active-dropzone {
+    color: #fff;
+    border-color: #fff;
+    background-color: #4bb1b1;
+}
+
+.active-dropzone  label {
+        background-color: #fff;
+        color: #4bb1b1;
+    }
+
+
+</style>

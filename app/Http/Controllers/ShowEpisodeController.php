@@ -115,6 +115,7 @@ class ShowEpisodeController extends Controller
                 'slug' => $show->slug,
                 'showRunner' => $show->user->name,
                 'poster' => $show->image->name,
+                'copyrightYear' => $show->created_at->format('Y'),
             ],
             'team' => [
                 'name' => $show->team->name,

@@ -1310,25 +1310,23 @@ var map = {
 		"./resources/js/Pages/Movies.vue",
 		"resources_js_Pages_Movies_vue"
 	],
-	"./Movies/Index": [
-		"./resources/js/Pages/Movies/Index.vue",
-		"/js/vendor",
-		"resources_js_Pages_Movies_Index_vue"
-	],
-	"./Movies/Index.vue": [
-		"./resources/js/Pages/Movies/Index.vue",
-		"/js/vendor",
-		"resources_js_Pages_Movies_Index_vue"
-	],
 	"./Movies/Upload": [
 		"./resources/js/Pages/Movies/Upload.vue",
-		"/js/vendor",
 		"resources_js_Pages_Movies_Upload_vue"
 	],
 	"./Movies/Upload.vue": [
 		"./resources/js/Pages/Movies/Upload.vue",
-		"/js/vendor",
 		"resources_js_Pages_Movies_Upload_vue"
+	],
+	"./Movies/{$id}/Index": [
+		"./resources/js/Pages/Movies/{$id}/Index.vue",
+		"/js/vendor",
+		"resources_js_Pages_Movies_id_Index_vue"
+	],
+	"./Movies/{$id}/Index.vue": [
+		"./resources/js/Pages/Movies/{$id}/Index.vue",
+		"/js/vendor",
+		"resources_js_Pages_Movies_id_Index_vue"
 	],
 	"./Posts/Create": [
 		"./resources/js/Pages/Posts/Create.vue",

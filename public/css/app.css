@@ -1446,12 +1446,12 @@ select {
   margin: 0.5rem;
 }
 
-.m-6 {
-  margin: 1.5rem;
-}
-
 .m-4 {
   margin: 1rem;
+}
+
+.m-6 {
+  margin: 1.5rem;
 }
 
 .mx-auto {
@@ -1497,11 +1497,6 @@ select {
 .my-8 {
   margin-top: 2rem;
   margin-bottom: 2rem;
-}
-
-.my-28 {
-  margin-top: 7rem;
-  margin-bottom: 7rem;
 }
 
 .ml-3 {
@@ -1680,8 +1675,8 @@ select {
   margin-left: 2.5rem;
 }
 
-.mt-20 {
-  margin-top: 5rem;
+.mt-32 {
+  margin-top: 8rem;
 }
 
 .block {
@@ -1901,10 +1896,6 @@ select {
 
 .w-32 {
   width: 8rem;
-}
-
-.w-96 {
-  width: 24rem;
 }
 
 .min-w-0 {
@@ -3238,6 +3229,16 @@ select {
   color: rgb(194 65 12 / var(--tw-text-opacity));
 }
 
+.text-orange-200 {
+  --tw-text-opacity: 1;
+  color: rgb(254 215 170 / var(--tw-text-opacity));
+}
+
+.text-blue-200 {
+  --tw-text-opacity: 1;
+  color: rgb(191 219 254 / var(--tw-text-opacity));
+}
+
 .underline {
   text-decoration-line: underline;
 }
@@ -3800,6 +3801,11 @@ select {
     background-color: rgb(75 85 99 / var(--tw-bg-opacity));
   }
 
+  .dark\:bg-red-200 {
+    --tw-bg-opacity: 1;
+    background-color: rgb(254 202 202 / var(--tw-bg-opacity));
+  }
+
   .dark\:bg-gray-700 {
     --tw-bg-opacity: 1;
     background-color: rgb(55 65 81 / var(--tw-bg-opacity));
@@ -3808,11 +3814,6 @@ select {
   .dark\:bg-orange-200 {
     --tw-bg-opacity: 1;
     background-color: rgb(254 215 170 / var(--tw-bg-opacity));
-  }
-
-  .dark\:bg-red-200 {
-    --tw-bg-opacity: 1;
-    background-color: rgb(254 202 202 / var(--tw-bg-opacity));
   }
 
   .dark\:text-gray-50 {
@@ -3840,6 +3841,11 @@ select {
     color: rgb(219 234 254 / var(--tw-text-opacity));
   }
 
+  .dark\:text-red-800 {
+    --tw-text-opacity: 1;
+    color: rgb(153 27 27 / var(--tw-text-opacity));
+  }
+
   .dark\:text-gray-300 {
     --tw-text-opacity: 1;
     color: rgb(209 213 219 / var(--tw-text-opacity));
@@ -3863,11 +3869,6 @@ select {
   .dark\:text-gray-200 {
     --tw-text-opacity: 1;
     color: rgb(229 231 235 / var(--tw-text-opacity));
-  }
-
-  .dark\:text-red-800 {
-    --tw-text-opacity: 1;
-    color: rgb(153 27 27 / var(--tw-text-opacity));
   }
 
   .dark\:hover\:bg-blue-800:hover {

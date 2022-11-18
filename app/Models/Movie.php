@@ -13,4 +13,10 @@ class Movie extends Model
 //        'file_url',
 //    ];
     protected $guarded = [];
+
+    public function getRouteKeyName() {
+        return 'slug';
+    }
 }
+
+

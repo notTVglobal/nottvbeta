@@ -23,12 +23,13 @@
                 <p class="">
                     Display a grid of movies and documentaries available for free, PPV and to purchase. Also search, and browse by category/date/popularity.
                 </p>
+                <Link :href="`/movies/${movie}`" class="font-semibold text-blue-800 hover:text-blue-600">Link to a movie</Link>
             </div>
 
 
             <div class="flex flex-row justify-end gap-x-4 mb-4">
 
-                <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg" />
+<!--                <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg" />-->
             </div>
 
 
@@ -57,7 +58,7 @@ import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useChatStore } from "@/Stores/ChatStore.js"
 import ResponsiveNavigationMenu from "@/Components/Navigation/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/Navigation/NavigationMenu"
-import {onMounted} from "vue";
+import { ref, onMounted } from "vue";
 
 let videoPlayer = useVideoPlayerStore()
 let chat = useChatStore()
@@ -66,8 +67,12 @@ onMounted(() => {
     videoPlayer.makeVideoTopRight();
 });
 
+let movie = 'test-movie-2'
+
 let props = defineProps ({
     can: Object,
+    movie: '',
+    search: String,
 })
 
 </script>

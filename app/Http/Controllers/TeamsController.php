@@ -180,6 +180,7 @@ class TeamsController extends Controller
                     'team_id' => $show->team_id,
                     'poster' => getPoster($show),
                     'slug' => $show->slug,
+                    'copyrightYear' => $show->created_at->format('Y'),
                 ]),
             'creators' => TeamMember::where('team_id', $team->id)
                 ->join('users', 'team_members.user_id', '=', 'users.id')
@@ -294,6 +295,7 @@ class TeamsController extends Controller
                     'team_id' => $show->team_id,
                     'poster' => getPoster($show),
                     'slug' => $show->slug,
+                    'copyrightYear' => $show->created_at->format('Y'),
                 ]),
             'filters' => Request::only(['team_id']),
             'creatorFilters' => Request::only(['search']),

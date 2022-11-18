@@ -4,14 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Models\Movie;
 use App\Models\User;
-use Illuminate\Http\Request;
+use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Str;
 use Inertia\Inertia;
 
 class MovieController extends Controller
 {
+
+    public function __construct()
+    {
+
+        //
+
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -19,11 +28,7 @@ class MovieController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Movies', [
-            'can' => [
-                'viewCreator' => Auth::user()->can('viewCreator', User::class),
-            ]
-        ]);
+        return Inertia::render('Movies');
     }
 
     /**
@@ -31,7 +36,7 @@ class MovieController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function upload()
+    public function create()
     {
         return Inertia::render('Movies/Upload', [
             'can' => [
@@ -46,7 +51,7 @@ class MovieController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(HttpRequest $request)
     {
 //        $request->file('video')->store('videos');
 //        if(!$request->hasFile('video')) {
@@ -59,7 +64,7 @@ class MovieController extends Controller
         //video/webm
         //
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'unique:movies|required|string|max:255',
             'description' => 'required|string',
             'video' => 'file|max:10000000',
         ]);
@@ -68,25 +73,30 @@ class MovieController extends Controller
         $extension = $request->file('video')->extension();
         $size = $request->file('video')->getSize();
         $mimeTypes = $request->file('video')->getMimeType();
+        $fileName = $video->hashName();
 
 //        dd($extension, $mimeTypes);
         if ($request->hasFile('video')) {
-            Storage::disk('do_spaces')->putFileAs('uploads/movies', $video, time().'.'.$extension, 'public');
+            Storage::disk('do_spaces')->putFileAs('uploads/movies', $video, $fileName, 'public');
         }
 
+        $slug  = \Str::slug($request->name);
         // create image model
         // NEED TO PROTECT THESE
         Movie::create([
             'name' => $request->name,
             'description' => $request->description,
-            'file_path' => $video->hashName(),
+            'slug' => $slug,
+            'file_path' => $fileName,
             'extension' => $extension,
             'size' => $size,
             'user_id' => Auth::user()->id,
         ]);
 
-        // return that image model back to the frontend
-        return redirect()->route('movies.show')->with('message', 'Movie Uploaded Successfully');
+//        $movie = Movie::query()->where('name', $request->name)->firstOrFail();
+        // Use this route to return
+        // the user to the new movie page.
+        return redirect()->route('movies.show', [$slug])->with('message', 'Movie Added Successfully');
     }
 
     /**
@@ -97,8 +107,22 @@ class MovieController extends Controller
      */
     public function show(Movie $movie)
     {
-        return Inertia::render('Movies/Index', [
-            'video' => '1668721032.mp4',
+        return Inertia::render('Movies/{$id}/Index', [
+            'movie' => [
+                'name' => $movie->name,
+                'description' => $movie->description,
+                'filePath' => $movie->file_path,
+                // need to link the Movie and Team models.
+                // change team to $movie->team->name
+                // and add team->slug
+                'teamName' => $movie->team_id,
+                'teamSlug' => $movie->slug,
+                'copyrightYear' => $movie->created_at->format('Y'),
+                'created_at' => $movie->created_at,
+                // need to link the Movie and Images models.
+                // change poster to $movie->image->name
+                'poster' => $movie->image_id,
+            ],
         ]);
     }
 
@@ -134,5 +158,12 @@ class MovieController extends Controller
     public function destroy(Movie $movie)
     {
         //
+        ////Syntax:
+        //Storage::disk('s3')->delete('path/file.jpg');
+        //if(Storage::disk('s3')->exists($path)) {
+        //    Storage::disk('s3')->delete($path);
+        //}
+        ////For example your path to file or object key will look like this.
+        //$path = 'uploaded_files/d486cebd-746c-4533-a53f-a0f8e77e15e2.jpg';
     }
 }
