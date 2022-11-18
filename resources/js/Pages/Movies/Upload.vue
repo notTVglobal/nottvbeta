@@ -44,7 +44,7 @@
 
             <div>
                 <form @submit.prevent="submit" enctype="multipart/form-data">
-                    <div class="bg-orange-800 text-white p-4 mb-6"><span class="font-semibold">Note:</span> File uploads are limited to 2GB until we implement a chunk method.
+                    <div class="bg-orange-800 text-white p-4 mb-6"><span class="font-semibold">Note:</span> File uploads are limited to 500 MB until we implement a chunk method.
                     This will require storing the uploaded file on the server in a temp directory, then we can process it and encrypt it using
                     FFMPEG and finally upload it to our destination(s), whether that is Digital Ocean Spaces, an attached volume, remote server,
                     or a Peer-to-peer distribution network. We also need to implement file validation and restrict the filetypes that can be uploaded.<br>
