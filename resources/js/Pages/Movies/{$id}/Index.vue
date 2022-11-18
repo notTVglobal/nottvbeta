@@ -46,7 +46,7 @@
             <div class="container mx-auto px-4">
                 <div class="movie-details border-b border-gray-800 pb-12 flex">
                     <div class="flex-none">
-                        <img src="http://beta.local:8081/storage/images/EBU_Colorbars.svg.png" alt="movie cover" class="h-96 min-w-[8rem] w-64">
+                        <img src="https://beta-staging.not.tv/storage/images/EBU_Colorbars.svg.png" alt="movie cover" class="h-96 min-w-[8rem] w-64">
                     </div>
                     <div class="ml-12 mr-0 lg:mr-64">
                         <h2 class="font-semibold text-4xl">{{ movie.name }}</h2>

@@ -49,7 +49,7 @@
                         <div class="movie mt-8">
                             <div class="relative inline-block">
                                 <Link :href="`/movies/${movie}`">
-                                    <img src="http://beta.local:8081/storage/images/EBU_Colorbars.svg.png" alt="movie cover" class="h-48 min-w-[8rem] w-28 object-cover hover:opacity-75 transition ease-in-out duration-150">
+                                    <img src="https://beta-staging.not.tv/storage/images/EBU_Colorbars.svg.png" alt="movie cover" class="h-48 min-w-[8rem] w-28 object-cover hover:opacity-75 transition ease-in-out duration-150">
                                 </Link>
                                 <div class="absolute bottom-0 right-0 w-12 h-12 bg-gray-800 rounded-full" style="right:-20px; bottom:-20px;">
                                     <div class="font-semi-bold text-xs flex justify-center items-center h-full">80%</div>
@@ -68,7 +68,7 @@
                              class="movie mt-8">
                             <div class="relative inline-block">
                                 <Link :href="`/movies/${movie.slug}`">
-                                    <img src="http://beta.local:8081/storage/images/EBU_Colorbars.svg.png" alt="movie cover" class="h-48 min-w-[8rem] w-28 object-cover hover:opacity-75 transition ease-in-out duration-150">
+                                    <img src="https://beta-staging.not.tv/storage/images/EBU_Colorbars.svg.png" alt="movie cover" class="h-48 min-w-[8rem] w-28 object-cover hover:opacity-75 transition ease-in-out duration-150">
                                 </Link>
                                 <div class="absolute bottom-0 right-0 w-12 h-12 bg-gray-800 rounded-full" style="right:-20px; bottom:-20px;">
                                     <div class="font-semi-bold text-xs flex justify-center items-center h-full">80%</div>
@@ -86,7 +86,7 @@
                         <div class="movie mt-8">
                             <div class="relative inline-block">
                                 <Link :href="`/movies/${movie}`">
-                                    <img src="http://beta.local:8081/storage/images/EBU_Colorbars.svg.png" alt="movie cover" class="h-48 min-w-[8rem] w-28 object-cover hover:opacity-75 transition ease-in-out duration-150">
+                                    <img src="https://beta-staging.not.tv/storage/images/EBU_Colorbars.svg.png" alt="movie cover" class="h-48 min-w-[8rem] w-28 object-cover hover:opacity-75 transition ease-in-out duration-150">
                                 </Link>
                                 <div class="absolute bottom-0 right-0 w-12 h-12 bg-gray-800 rounded-full" style="right:-20px; bottom:-20px;">
                                     <div class="font-semi-bold text-xs flex justify-center items-center h-full">80%</div>
@@ -110,7 +110,7 @@
                             <div class="movie bg-gray-800 rounded-lg shadow-md flex px-6 py-6">
                                 <div class="relative flex-none">
                                     <Link :href="`/movies/${movie}`">
-                                        <img src="http://beta.local:8081/storage/images/EBU_Colorbars.svg.png" alt="movie cover" class="h-64 min-w-[8rem] w-48 object-cover hover:opacity-75 transition ease-in-out duration-150">
+                                        <img src="https://beta-staging.not.tv/storage/images/EBU_Colorbars.svg.png" alt="movie cover" class="h-64 min-w-[8rem] w-48 object-cover hover:opacity-75 transition ease-in-out duration-150">
                                     </Link>
                                     <div class="absolute bottom-0 right-0 w-12 h-12 bg-gray-900 rounded-full" style="right:-20px; bottom:-20px;">
                                         <div class="font-semi-bold text-xs flex justify-center items-center h-full">80%</div>
@@ -129,7 +129,7 @@
                             <div class="movie bg-gray-800 rounded-lg shadow-md flex px-6 py-6">
                                 <div class="relative flex-none">
                                     <Link :href="`/movies/${movie}`">
-                                        <img src="http://beta.local:8081/storage/images/EBU_Colorbars.svg.png" alt="movie cover" class="h-64 w-48 min-w-[8rem] object-cover hover:opacity-75 transition ease-in-out duration-150">
+                                        <img src="https://beta-staging.not.tv/storage/images/EBU_Colorbars.svg.png" alt="movie cover" class="h-64 w-48 min-w-[8rem] object-cover hover:opacity-75 transition ease-in-out duration-150">
                                     </Link>
                                     <div class="absolute bottom-0 right-0 w-12 h-12 bg-gray-900 rounded-full" style="right:-20px; bottom:-20px;">
                                         <div class="font-semi-bold text-xs flex justify-center items-center h-full">80%</div>
@@ -148,7 +148,7 @@
                             <div class="movie bg-gray-800 rounded-lg shadow-md flex px-6 py-6">
                                 <div class="relative flex-none">
                                     <Link :href="`/movies/${movie}`">
-                                        <img src="http://beta.local:8081/storage/images/EBU_Colorbars.svg.png" alt="movie cover" class="h-64 w-48 min-w-[8rem] object-cover hover:opacity-75 transition ease-in-out duration-150">
+                                        <img src="https://beta-staging.not.tv/storage/images/EBU_Colorbars.svg.png" alt="movie cover" class="h-64 w-48 min-w-[8rem] object-cover hover:opacity-75 transition ease-in-out duration-150">
                                     </Link>
                                     <div class="absolute bottom-0 right-0 w-12 h-12 bg-gray-900 rounded-full" style="right:-20px; bottom:-20px;">
                                         <div class="font-semi-bold text-xs flex justify-center items-center h-full">80%</div>
@@ -173,7 +173,7 @@
                         <div class="most-anticipated-container space-y-10 mt-8">
                             <div class="game flex">
                                 <Link :href="`/movies/${movie}`">
-                                    <img src="http://beta.local:8081/storage/images/EBU_Colorbars.svg.png"
+                                    <img src="https://beta-staging.not.tv/storage/images/EBU_Colorbars.svg.png"
                                          alt="movie cover"
                                          class="h-24 min-w-[4rem] w-16 object-cover hover:opacity-75 transition ease-in-out duration-150">
                                 </Link>
@@ -188,7 +188,7 @@
                         <div class="most-anticipated-container space-y-10 mt-8">
                             <div class="game flex">
                                 <Link :href="`/movies/${movie}`">
-                                    <img src="http://beta.local:8081/storage/images/EBU_Colorbars.svg.png"
+                                    <img src="https://beta-staging.not.tv/storage/images/EBU_Colorbars.svg.png"
                                          alt="movie cover"
                                          class="h-24 min-w-[4rem] w-16 object-cover hover:opacity-75 transition ease-in-out duration-150">
                                 </Link>
