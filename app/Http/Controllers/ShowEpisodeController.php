@@ -80,6 +80,9 @@ class ShowEpisodeController extends Controller
         $showEpisode->show_id = $request->show_id;
         $showEpisode->episode_number = $request->episode_number;
         $showEpisode->slug = \Str::slug($request->name);
+        $showEpisode->video_file_url = $request->video_file_url;
+        $showEpisode->video_file_embed_code = $request->video_file_embed_code;
+        $showEpisode->notes = $request->notes;
 
         $showEpisode->save();
 

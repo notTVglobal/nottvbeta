@@ -25,6 +25,11 @@
                             {{ props.episode.name }}
                         </h3>
                     </div>
+                    <div class="text-xs">
+                        <span class="uppercase">Episode Number: </span>
+                        <span v-if="!episode.episodeNumber">{{ episode.id }}</span>
+                        <span v-if="episode.episodeNumber">{{ episode.episodeNumber }}</span>
+                    </div>
                     <div>
                         {{ formatDate(props.episode.created_at) }}
                     </div>

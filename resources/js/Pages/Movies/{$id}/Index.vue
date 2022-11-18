@@ -172,7 +172,7 @@
 
                 <div class="flex justify-center mt-12">
                     <video class="w-full" controls>
-                        <!--                <source :src="`https://beta-staging-files.not.tv/uploads/movies/${movie.filePath}`">-->
+<!--                        https://beta-staging-files.not.tv/uploads/movies/${movie.filePath}-->
                         <source
                             v-if="!movie.fileUrl"
                             :src="`https://nottvbeta-staging.sfo3.cdn.digitaloceanspaces.com/uploads/movies/${movie.filePath}`">
