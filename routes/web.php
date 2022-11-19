@@ -7,6 +7,7 @@ use App\Http\Controllers\ShowEpisodesPosterController;
 use App\Http\Controllers\ShowsPosterController;
 use App\Http\Controllers\TeamsLogoController;
 use App\Http\Controllers\ShowEpisodeController;
+use App\Http\Controllers\MovieUploadController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\TeamsController;
@@ -373,6 +374,10 @@ Route::middleware([
     Route::get('/movies/{movie}/edit', [MovieController::class, 'edit'])
 //        ->middleware('can:edit,movie')
         ->name('movies.edit');
+//    // Upload movie
+//    Route::post('/movies/upload', [MovieUploadController::class, 'store'])
+//        ->can('viewCreator', 'App\Models\User')
+//        ->name('moviesUpload.store');
 
 
 

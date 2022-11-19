@@ -21,3 +21,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('messages', [ChatController::class, 'message']);
 //Route::get('prometheus', 'http://mist.nottv.io:4242/nottv');
+
+Route::get('movies/upload', [MovieUploadController::class, 'upload'])
+    ->name('moviesApi.upload');

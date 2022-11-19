@@ -1316,6 +1316,14 @@ var map = {
 		"./resources/js/Pages/Movies/Upload.vue",
 		"resources_js_Pages_Movies_Upload_vue"
 	],
+	"./Movies/Upload.backup": [
+		"./resources/js/Pages/Movies/Upload.backup.vue",
+		"resources_js_Pages_Movies_Upload_backup_vue"
+	],
+	"./Movies/Upload.backup.vue": [
+		"./resources/js/Pages/Movies/Upload.backup.vue",
+		"resources_js_Pages_Movies_Upload_backup_vue"
+	],
 	"./Movies/Upload.vue": [
 		"./resources/js/Pages/Movies/Upload.vue",
 		"resources_js_Pages_Movies_Upload_vue"
