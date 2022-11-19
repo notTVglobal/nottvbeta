@@ -1176,6 +1176,26 @@ var map = {
 		"./resources/js/Pages/Admin/Settings.vue",
 		"resources_js_Pages_Admin_Settings_vue"
 	],
+	"./Admin/Shows": [
+		"./resources/js/Pages/Admin/Shows.vue",
+		"/js/vendor",
+		"resources_js_Pages_Admin_Shows_vue"
+	],
+	"./Admin/Shows.vue": [
+		"./resources/js/Pages/Admin/Shows.vue",
+		"/js/vendor",
+		"resources_js_Pages_Admin_Shows_vue"
+	],
+	"./Admin/Teams": [
+		"./resources/js/Pages/Admin/Teams.vue",
+		"/js/vendor",
+		"resources_js_Pages_Admin_Teams_vue"
+	],
+	"./Admin/Teams.vue": [
+		"./resources/js/Pages/Admin/Teams.vue",
+		"/js/vendor",
+		"resources_js_Pages_Admin_Teams_vue"
+	],
 	"./Auth/ConfirmPassword": [
 		"./resources/js/Pages/Auth/ConfirmPassword.vue",
 		"resources_js_Pages_Auth_ConfirmPassword_vue"
@@ -1316,13 +1336,13 @@ var map = {
 		"./resources/js/Pages/Movies/Upload.vue",
 		"resources_js_Pages_Movies_Upload_vue"
 	],
-	"./Movies/Upload.backup": [
-		"./resources/js/Pages/Movies/Upload.backup.vue",
-		"resources_js_Pages_Movies_Upload_backup_vue"
+	"./Movies/Upload.chunk.notWorking": [
+		"./resources/js/Pages/Movies/Upload.chunk.notWorking.vue",
+		"resources_js_Pages_Movies_Upload_chunk_notWorking_vue"
 	],
-	"./Movies/Upload.backup.vue": [
-		"./resources/js/Pages/Movies/Upload.backup.vue",
-		"resources_js_Pages_Movies_Upload_backup_vue"
+	"./Movies/Upload.chunk.notWorking.vue": [
+		"./resources/js/Pages/Movies/Upload.chunk.notWorking.vue",
+		"resources_js_Pages_Movies_Upload_chunk_notWorking_vue"
 	],
 	"./Movies/Upload.vue": [
 		"./resources/js/Pages/Movies/Upload.vue",

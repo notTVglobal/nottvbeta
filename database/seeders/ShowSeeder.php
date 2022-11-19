@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use App\Models\Show;
 
 class ShowSeeder extends Seeder
 {
@@ -15,7 +15,7 @@ class ShowSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('shows')->insert([
+        Show::create([
             'name' => 'notTV News',
             'description' => 'The notTV flagship news show.',
             'user_id' => '1',
@@ -23,6 +23,7 @@ class ShowSeeder extends Seeder
             'slug' => 'nottv-news',
             'image_id' => '4'
         ]);
+
         \App\Models\Show::factory(99)->create();
     }
 }

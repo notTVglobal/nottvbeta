@@ -8,167 +8,145 @@
     <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
         <div class="bg-white text-black dark:bg-gray-900 dark:text-white p-5 mb-10">
 
-            <div class="flex justify-between mb-6">
-                <div>
-                    <h1 class="text-3xl font-semibold pb-3">Shows</h1>
-                </div>
-            </div>
+            <header class="flex justify-between mb-3 border-b border-gray-800">
+                <div class="container mx-auto flex flex-col lg:flex-row items-center justify-between px-4 py-6">
 
-
-            <div class="flex flex-col">
-                <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                    <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-                        <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-
-                            <div
-                                class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
-                                role="alert"
-                                v-if="props.message"
-                            >
+                    <div
+                        class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
+                        role="alert"
+                        v-if="props.message"
+                    >
                                 <span class="font-medium">
                                     {{props.message}}
                                 </span>
+                    </div>
+
+                    <div class="flex flex-col lg:flex-row items-center">
+                        <h1 class="text-3xl font-semibold">Shows</h1>
+                        <ul class="flex ml-0 lg:ml-16 mt-6 lg:mt-0 space-x-8">
+                            <li>
+                                <Link :href="``" class="hover:text-blue-800">Categories</Link>
+                            </li>
+                            <li>
+                                <Link :href="``" class="hover:text-blue-800">New Episodes</Link>
+                            </li>
+                            <li>
+                                <Link :href="``" class="hover:text-blue-800">Coming Soon</Link>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="flex items-center mt-6 lg:mt-0">
+                        <div class="relative">
+                            <input v-model="search" type="search" class="bg-gray-50 text-sm rounded-full
+                            focus:outline-none focus:shadow w-64 pl-8 px-3 py-1" placeholder="Search...">
+                            <div class="absolute top-0 flex items-center h-full ml-2">
+                                <svg class="fill-current text-gray-400 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M456.69 421.39 362.6 327.3a173.81 173.81 0 0 0 34.84-104.58C397.44 126.38 319.06 48 222.72 48S48 126.38 48 222.72s78.38 174.72 174.72 174.72A173.81 173.81 0 0 0 327.3 362.6l94.09 94.09a25 25 0 0 0 35.3-35.3ZM97.92 222.72a124.8 124.8 0 1 1 124.8 124.8 124.95 124.95 0 0 1-124.8-124.8Z"/></svg>
+
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+            </header>
+
+            <main class="py-8">
 
 
-                            <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-                                <div class="p-6 bg-white dark:bg-gray-800 border-b border-gray-200">
-                                    <div
-                                        class="relative overflow-x-auto shadow-md sm:rounded-lg"
-                                    >
-                                        <div class="flex flex-row justify-between gap-x-4 mr-2">
-                                            <div>
-                                                <!-- Paginator -->
-                                                <Pagination :links="props.shows.links" class=""/>
-                                            </div>
-                                            <div>
-                                                <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg mb-6" />
-                                            </div>
-                                        </div>
+                <div class="container mx-auto px-4 border-b border-gray-800 pb-16">
+                    <h2 class="text-purple-800 uppercase tracking-wide font-semibold">Popular Shows</h2>
+                    <div class="popular-shows text-sm grid grid-cols-1 md:grid-cols-2 space-x-6 lg:grid-cols-5 xl:grid-cols-6 gap-8 pb-12">
 
-                                        <table
-                                            class="w-full text-sm text-left text-gray-500 dark:text-gray-400"
-                                        >
-                                            <thead
-                                                class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
-                                            >
-                                            <tr class="">
-                                                <th scope="col" class="min-w-[8rem] px-6 py-3">
-                                                    Poster
-                                                </th>
-                                                <th scope="col" class="px-6 py-3">
-                                                    Show Name
-                                                </th>
-                                                <th scope="col" class="px-6 py-3">
-                                                    Show Runner
-                                                </th>
-                                                <th scope="col" class="px-6 py-3">
-                                                    Team
-                                                </th>
-                                                <th scope="col" class="px-6 py-3">
-                                                    # of Episodes
-                                                </th>
-                                                <th scope="col" class="px-6 py-3">
-                                                    Status
-                                                </th>
-                                                <th v-if="props.can.viewCreator" scope="col" class="px-6 py-3">
-                                                    <!--Manage/Edit-->
-                                                </th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <tr
-                                                v-for="show in props.shows.data"
-                                                :key="show.id"
-                                                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-                                            >
-                                                <th
-                                                    scope="row"
-                                                    class="min-w-[8rem] px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
-                                                >
-<!--                                                    <img :src="`/storage/images/${show.poster}`" class="rounded-full h-20 w-20 object-cover">-->
-                                                    <Link :href="`/shows/${show.slug}`" class="text-blue-800 hover:text-blue-600">
-                                                    <img :src="'/storage/images/' + show.poster" class="rounded-full h-20 w-20 object-cover"></Link>
-                                                </th>
-                                                <th
-                                                    scope="row"
-                                                    class="px-6 py-4 text-xl text-gray-900 dark:text-white whitespace-nowrap"
-                                                >
-                                                    <Link :href="`/shows/${show.slug}`" class="text-blue-800 hover:text-blue-600 dark:text-blue-200 dark:hover:text-blue-400">{{ show.name }}</Link>
-                                                </th>
-                                                <th
-                                                    scope="row"
-                                                    class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
-                                                    >
-                                                     {{ show.showRunnerName }}
-                                                </th>
-                                                <th
-                                                    scope="row"
-                                                    class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
-                                                >
-                                                    <Link :href="`/teams/${show.teamSlug}`" class="text-blue-800 hover:text-blue-600 dark:text-blue-200 dark:hover:text-blue-400">{{ show.teamName }}</Link>
-                                                </th>
-                                                <th
-                                                    scope="row"
-                                                    class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
-                                                >
-                                                    {{ show.totalEpisodes }}
-                                                </th>
-                                                <th
-                                                    scope="row"
-                                                    class="px-6 py-4 whitespace-nowrap"
-                                                >
-                                                    <div v-if="show.statusId===1" class="font-semibold text-pink-500">
-                                                        {{ show.status }}
-                                                    </div>
-                                                    <div v-if="show.statusId===2" class="font-semibold text-green-600">
-                                                        {{ show.status }}
-                                                    </div>
-                                                    <div v-if="show.statusId===3" class="font-medium text-orange-400">
-                                                        {{ show.status }}
-                                                    </div>
-                                                    <div v-if="show.statusId===4" class="text-gray-500">
-                                                        {{ show.status }}
-                                                    </div>
-                                                    <div v-if="show.statusId===5" class="font-semibold text-gray-900">
-                                                        {{ show.status }}
-                                                    </div>
-                                                    <div v-if="show.statusId===6" class="font-italic text-gray-500">
-                                                        {{ show.status }}
-                                                    </div>
-                                                    <div v-if="show.statusId===7" class="font-medium font-italic text-red-600">
-                                                        {{ show.status }}
-                                                    </div>
-                                                </th>
-                                                <td class="px-6 py-4 space-x-2">
-                                                    <Link v-if="show.can.viewShow" :href="`/shows/${show.slug}/manage`"><button
-                                                        class="px-4 py-2 mb-2 text-white bg-purple-600 hover:bg-purple-500 rounded-lg"
-                                                    >Manage</button>
-                                                    </Link>
-                                                    <Link v-if="show.can.editShow" :href="`/shows/${show.slug}/edit`"><button
-                                                        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                                                    >Edit</button>
-                                                    </Link>
-                                                </td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                        <!-- Paginator -->
-                                        <Pagination :links="shows.links" class="mt-6"/>
-                                    </div>
+                        <div v-for="show in shows.data"
+                             :key="show.id"
+                             class="show mt-8 max-w-[12rem]">
+                            <div class="relative inline-block">
+                                <Link :href="`/shows/${show.slug}`">
+                                    <img :src="'/storage/images/' + show.poster" alt="show cover" class="h-48 min-w-[8rem] w-28 object-cover hover:opacity-75 transition ease-in-out duration-150">
+                                </Link>
+                            </div>
+                            <Link :href="`/shows/${show.slug}`" class="block text-base font-semibold leading-tight hover:text-gray-400 mt-4">{{ show.name }}</Link>
+                            <div class="text-gray-400 mt-1">Category (YYYY)</div>
+                            <div class="text-gray-400 mt-1">Sub-category</div>
+                        </div>
+
+                    </div>
+                    <!-- Paginator -->
+                    <Pagination :links="shows.links" class="mt-6"/>
+                </div>
+
+                <div class="flex flex-col lg:flex-row my-10">
+                    <div class="recently-reviewed w-full lg:w-3/4 mr-0 md:mr-16 lg:mr-32">
+                        <h2 class="text-purple-800 uppercase tracking-wide font-semibold">Newest Shows</h2>
+                        <div class="recently-reviewed-container space-y-12 mt-8">
+
+                            <div v-for="show in shows.data"
+                                 :key="show.id"
+                                 class="show bg-gray-100 rounded-lg shadow-md flex px-6 py-6">
+                                <div class="relative flex-none">
+                                    <Link :href="`/shows/${show.slug}`">
+                                        <img :src="'/storage/images/' + show.poster" alt="show cover" class="h-64 min-w-[8rem] w-48 object-cover hover:opacity-75 transition ease-in-out duration-150">
+                                    </Link>
+                                </div>
+                                <div class="ml-12">
+                                    <Link :href="`/shows/${show.slug}`" class="block text-lg font-semibold leading-tight hover:text-gray-400 mt-4">
+                                        {{ show.name }}</Link>
+                                    <div class="text-gray-600 mt-1">Category</div>
+                                    <p class="mt-6 pr-4 text-gray-800 hidden lg:block">
+                                        {{ show.description}}
+                                    </p>
                                 </div>
                             </div>
 
                         </div>
                     </div>
+                    <div class="most-anticipated lg:w-1/4 mt-12 lg:mt-0">
+                        <h2 class="text-purple-800 uppercase tracking-wide font-semibold">Trending Now</h2>
+                        <div class="most-anticipated-container space-y-10 mt-8">
+
+                            <div v-for="show in shows.data"
+                                 :key="show.id"
+                                 class="show flex">
+                                <Link :href="`/shows/${show.slug}`">
+                                    <img :src="'/storage/images/' + show.poster"
+                                         alt="show cover"
+                                         class="h-24 min-w-[4rem] w-16 object-cover hover:opacity-75 transition ease-in-out duration-150">
+                                </Link>
+                                <div class="ml-4">
+                                    <Link :href="`/shows/${show.slug}`" class="hover:text-gray-300">{{ show.name }}</Link>
+                                    <div class="text-gray-400 text-sm mt-1">{{ show.copyrightYear }}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h2 class="text-purple-800 uppercase tracking-wide font-semibold mt-16">Coming Soon</h2>
+                        <div class="most-anticipated-container space-y-10 mt-8">
+
+                            <div v-for="show in shows.data"
+                                 :key="show.id"
+                                 class="show flex">
+                                <Link :href="`/shows/${show.slug}`">
+                                    <img :src="'/storage/images/' + show.poster"
+                                         alt="show cover"
+                                         class="h-24 min-w-[4rem] w-16 object-cover hover:opacity-75 transition ease-in-out duration-150">
+                                </Link>
+                                <div class="ml-4">
+                                    <Link :href="`/shows/${show.slug}`" class="hover:text-gray-300">{{ show.name }}</Link>
+                                    <div class="text-gray-400 text-sm mt-1">{{ show.copyrightYear }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
-            </div>
+            </main>
 
+            <footer class="border-t border-gray-800">
+                <div class="container text-right text-gray-800 mx-auto px-4 py-6">
+                    Powered by not.tv
+                </div>
 
-            <div class="flex items-center">
-<!--               <Link :href="`/shows/${show.id}`" class="text-indigo-600 hover:text-indigo-900">Link to a show</Link>-->
+            </footer>
 
-            </div>
         </div>
     </div>
 

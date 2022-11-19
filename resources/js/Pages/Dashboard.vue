@@ -54,17 +54,19 @@
                         class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 col-span-1 rounded disabled:bg-gray-400"
                     >All Users</button>
                     </Link>
+                    <Link :href="`/admin/shows`"><button
+                        class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 col-span-1 rounded disabled:bg-gray-400"
+                    >All Shows</button>
+                    </Link>
+                    <Link :href="`/admin/teams`"><button
+                        class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 col-span-1 rounded disabled:bg-gray-400"
+                    >All Teams</button>
+                    </Link>
                     <!--disable button if ! admin-->
                     <Link :href="`/admin/channels`"><button
                         class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"
                     >All Channels</button>
                     </Link>
-                    <!--disable button if ! admin-->
-                    <Link :href="`/teams`"><button
-                        class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"
-                    >All Teams</button>
-                    </Link>
-
                     <!--disable button if ! admin-->
                     <Link :href="`/video`"><button
                         class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"

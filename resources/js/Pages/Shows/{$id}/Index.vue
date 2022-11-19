@@ -8,7 +8,6 @@
     </div>
 
     <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
-
         <div class="bg-white text-black dark:bg-gray-900 dark:text-white rounded py-5 mb-10">
 
             <div class="flex justify-between">
@@ -42,8 +41,7 @@
 
             </header>
 
-
-            <div class="flex justify-center w-full bg-black py-0 hidden">
+            <div class="flex justify-center w-full bg-black py-0">
                 <img :src="'/storage/images/' + props.show.poster" alt="" class="w-1/2 mx-2">
             </div>
 
@@ -62,8 +60,11 @@
                         </div>
 
                         <div class="mb-6 p-5">
-                            <div class="w-full bg-gray-300 dark:bg-gray-800 text-2xl p-4 mb-4">EPISODES</div>
+
+
+
                             <ShowEpisodesList :episodes="props.episodes" :show="props.show"/>
+
 
                             <div class="w-full bg-gray-300 dark:bg-gray-800 text-2xl p-4 my-8">CREATORS</div>
 

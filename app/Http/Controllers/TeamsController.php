@@ -11,6 +11,7 @@ use App\Models\Show;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Str;
+use Illuminate\Support\Carbon;
 use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
@@ -180,7 +181,7 @@ class TeamsController extends Controller
                     'team_id' => $show->team_id,
                     'poster' => getPoster($show),
                     'slug' => $show->slug,
-                    'copyrightYear' => $show->created_at->format('Y'),
+                    'copyrightYear' => Carbon::parse($show->created_at)->format('Y'),
                 ]),
             'creators' => TeamMember::where('team_id', $team->id)
                 ->join('users', 'team_members.user_id', '=', 'users.id')
@@ -295,7 +296,7 @@ class TeamsController extends Controller
                     'team_id' => $show->team_id,
                     'poster' => getPoster($show),
                     'slug' => $show->slug,
-                    'copyrightYear' => $show->created_at->format('Y'),
+                    'copyrightYear' => Carbon::parse($show->created_at)->format('Y'),
                 ]),
             'filters' => Request::only(['team_id']),
             'creatorFilters' => Request::only(['search']),

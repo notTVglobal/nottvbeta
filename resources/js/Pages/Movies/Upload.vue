@@ -89,6 +89,18 @@
                     <div v-if="form.errors.file_url" v-text="form.errors.file_url"
                          class="bg-red-600 p-2 w-full text-white font-semibold mt-1"></div>
 
+                    <button
+                        @click="submit"
+                        class="bg-green-600 hover:bg-green-500 text-white rounded py-2 px-4 mt-2"
+                        :disabled="form.processing"
+                    >
+                        Save
+                    </button>
+
+                </form>
+
+                    <div class="border-t border-gray-800 py-8 mt-8">
+
                     <div
                         @dragenter.prevent="toggleActive"
                         @dragleave.prevent="toggleActive"
@@ -111,36 +123,14 @@
                             style="display: none"/>
                     </div>
 
-<!--                    <progress :value="progress"></progress>-->
-
                     <div class="mt-2">File: {{ dropzoneFile.name }}</div>
 
                     <div v-if="form.errors.video" v-text="form.errors.video"
                          class="bg-red-600 p-2 w-full text-white font-semibold mt-1"></div>
 
 
-                    <button
-                        @click="submit"
-                        class="bg-green-600 hover:bg-green-500 text-white rounded py-2 px-4 mt-2"
-                        :disabled="form.processing"
-                    >
-                        Upload
-                    </button>
+                    </div>
 
-                </form>
-
-                <div> New chunk uploader</div>
-                <input
-                    type="file"
-                    @change="select"
-                    name="videoChunk"
-                    class="dropzoneFile border border-gray-400 rounded w-full px-2 py-2 my-2"
-                    ref="fileInputChunk"
-                    accept="video/*"
-                    @input="form.video = $event.target.files[0]"
-                    />
-                >
-                <progress :value="progress" class="w-full"></progress>
 
             </div>
 
@@ -168,12 +158,28 @@ onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
 });
 
+
+let showMessage = ref(true);
+
+// Dropzone tutorial: https://www.youtube.com/watch?v=wWKhKPN_Pmw
+
+let dropzoneFile = ref([]);
+const active = ref(false);
+const toggleActive = () => {
+    active.value = !active.value;
+}
+const drop = (e) => {
+    dropzoneFile.value = e.dataTransfer.files[0];
+    active.value = !active.value;
+}
+const selectedFile = () => {
+    dropzoneFile.value = document.querySelector('.dropzoneFile').files[0];
+}
+
 let props = defineProps({
     message: ref(''),
     errors: ref(''),
     isHidden: ref(false),
-    file: null,
-    uploaded: 0,
     // filters: Object,
 });
 
@@ -184,124 +190,17 @@ let form = useForm({
     file_url: '',
 });
 
-let showMessage = ref(true);
-
-// Dropzone tutorial: https://www.youtube.com/watch?v=wWKhKPN_Pmw
-
-let dropzoneFile = ref([]);
-// let chunks = ref([]);
-//
-const active = ref(false);
-//
-const toggleActive = () => {
-    active.value = !active.value;
+let save = () => {
+    axios.post(route('movies.store', form.data));
 }
-//
-//
-//
-const drop = (e) => {
-    dropzoneFile.value = e.dataTransfer.files[0];
-    active.value = !active.value;
-}
-//
-const selectedFile = () => {
-    dropzoneFile.value = document.querySelector('.dropzoneFile').files[0];
-}
-//
-// const createChunks = (e) => {
-//     let size = 2048,
-//         chunks = Math.ceil(e.file.size / size);
-//
-//     for ( let i = 0; i < chunks; i++ ) {
-//         e.chunks.push(e.file.slice(
-//             i * size, Math.min(i * size + size, e.file.size), e.file.type
-//         ));
-//     }
-// }
-//
-// function upload() {
-//     axios(this.config).then(response => {
-//         this.chunks.shift();
-//     }).catch(error => {});
-// }
-//
 
-//
 let submit = () => {
     // form.append('form', json);
-    // axios.post("/movies/upload", form.data);
+    // axios.post("/api/movies/upload", form.data);
     form.post(route('movies.store', form));
 };
 
 
-</script>
-
-<script>
-// export default {
-//     watch: {
-//         chunks(n, o) {
-//             if (n.length > 0) {
-//                 this.upload();
-//             }
-//         }
-//     },
-//
-//     data() {
-//         return {
-//             file: null,
-//             chunks: [],
-//             uploaded: 0
-//         };
-//     },
-//
-//     computed: {
-//         progress() {
-//             return Math.floor((this.uploaded * 100) / this.file.size);
-//         },
-//         formData() {
-//             let formData = new FormData;
-//
-//             formData.set('is_last', this.chunks.length === 1);
-//             formData.set('file', this.chunks[0], `${this.file.name}.part`);
-//
-//             return formData;
-//         },
-//         config() {
-//             return {
-//                 method: 'POST',
-//                 data: this.formData,
-//                 url: 'api/movies/upload',
-//                 headers: {
-//                     'Content-Type': 'application/octet-stream'
-//                 },
-//                 onUploadProgress: event => {
-//                     this.uploaded += event.loaded;
-//                 }
-//             };
-//         }
-//     },
-//
-//     methods: {
-//         select(event) {
-//             this.file = event.target.files.item(0);
-//             this.createChunks();
-//         },
-//         upload() {
-//             axios(this.config).then(response => {
-//                 this.chunks.shift();
-//             }).catch(error => {});
-//         },
-//         createChunks() {
-//             let size = 2048, chunks = Math.ceil(this.file.size / size);
-//
-//             for (let i = 0; i < chunks; i++) {
-//                 this.chunks.push(this.file.slice(
-//                     i * size, Math.min(i * size + size, this.file.size), this.file.type
-//                 ));
-//             }
-//         }
-//     }
-// }
 </script>
 
 <style scoped>

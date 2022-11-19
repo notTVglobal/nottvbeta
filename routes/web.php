@@ -2,6 +2,7 @@
 
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\CreatorsController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ShowsController;
 use App\Http\Controllers\ShowEpisodesPosterController;
 use App\Http\Controllers\ShowsPosterController;
@@ -205,6 +206,14 @@ Route::middleware([
         return Inertia::render('Admin/Settings');
     })->can('viewAdmin', 'App\Models\User')
         ->name('admin.settings');
+
+    Route::get('/admin/shows', [AdminController::class, 'showsIndex'])
+        ->can('viewAdmin', 'App\Models\User')
+        ->name('admin.shows');
+
+    Route::get('/admin/teams', [AdminController::class, 'teamsIndex'])
+        ->can('viewAdmin', 'App\Models\User')
+        ->name('admin.teams');
 
     // temp page to test Stores
     Route::get('/quiz', function () {

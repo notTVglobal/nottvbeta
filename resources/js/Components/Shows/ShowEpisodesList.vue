@@ -1,25 +1,28 @@
 <template>
 
-    <div class="flex flex-row flex-wrap">
-        <div v-for="episode in props.episodes.data"
-             :key="episode.id"
-             class="pb-8 bg-white border-b dark:bg-gray-800 dark:border-gray-700">
 
-            <Link :href="`/shows/${props.show.slug}/episode/${episode.slug}`" class="hover:opacity-60 text-gray-900 dark:text-white">
-                <div class="flex flex-col min-w-[8rem] px-6 py-4 font-medium break-words grow-0">
-                    <img :src="'/storage/images/' + episode.poster" class="rounded-full h-32 w-32 object-cover mb-2">
-                    <span class="w-full text-center">{{ episode.name }}</span>
-                    <span class="text-xs uppercase font-semibold text-gray-500 w-full text-center">
-                        {{ formatDate(episode.created_at) }}
-                    </span>
-                </div>
+    <div class="container mx-auto px-4 pb-16">
+        <!--                                <h2 class="text-yellow-500 uppercase tracking-wide font-semibold">EPISODES</h2>-->
+        <div class="w-full bg-gray-300 dark:bg-gray-800 text-2xl p-4 mb-4">EPISODES</div>
+        <div class="popular-movies text-sm grid grid-cols-1 md:grid-cols-2 space-x-6 lg:grid-cols-5 xl:grid-cols-6 gap-8">
+
+    <div v-for="episode in episodes.data"
+         :key="episode.id"
+         class="movie mt-8 max-w-[12rem]">
+        <div class="relative inline-block">
+            <Link :href="`/shows/${props.show.slug}/episode/${episode.slug}`">
+                <img :src="'/storage/images/' + episode.poster" alt="episode cover" class="h-28 min-w-[12rem] w-28 object-cover hover:opacity-75 transition ease-in-out duration-150">
             </Link>
+        </div>
+        <Link :href="`/shows/${props.show.slug}/episode/${episode.slug}`" class="block text-base font-semibold leading-tight hover:text-gray-400 mt-4">{{ episode.name }}</Link>
+        <div class="text-gray-400 mt-1">{{ formatDate(episode.created_at) }}</div>
+    </div>
 
         </div>
     </div>
-
     <!-- Paginator -->
-    <Pagination :links="props.episodes.links" class="mb-6"/>
+    <Pagination :links="props.episodes.links" class="mb-6 pb-6 border-b border-gray-800"/>
+
 
 </template>
 

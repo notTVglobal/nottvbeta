@@ -2,9 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use App\Models\Creator;
 use Illuminate\Support\Str;
 
 class AdminSeeder extends Seeder
@@ -16,7 +17,7 @@ class AdminSeeder extends Seeder
      */
     public function run()
     {
-        $adminId = DB::table('users')->insertGetId([
+        $adminId = User::create([
             'name' => 'Administrator',
             'email' => 'admin@not.tv',
             'email_verified_at' => now(),
@@ -34,8 +35,8 @@ class AdminSeeder extends Seeder
             'role_id' => 4,
             'isAdmin' => 1,
         ]);
-        DB::table('creators')->insert([
-            'user_id' => $adminId,
+        Creator::create([
+            'user_id' => $adminId->id,
         ]);
     }
 }

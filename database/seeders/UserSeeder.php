@@ -4,7 +4,8 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use App\Models\User;
+use App\Models\Creator;
 use Illuminate\Support\Str;
 
 class UserSeeder extends Seeder
@@ -16,7 +17,7 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('users')->insert([
+        User::create([
             'name' => 'Standard User TEST',
             'email' => 'user@not.tv',
             'email_verified_at' => now(),
@@ -34,7 +35,7 @@ class UserSeeder extends Seeder
             'role_id' => 1,
             'isAdmin' => 0,
         ]);
-        DB::table('users')->insert([
+        User::create([
             'name' => 'Premium Subscriber TEST',
             'email' => 'subscriber@not.tv',
             'email_verified_at' => now(),
@@ -52,7 +53,7 @@ class UserSeeder extends Seeder
             'role_id' => 2,
             'isAdmin' => 0,
         ]);
-        DB::table('users')->insert([
+        User::create([
             'name' => 'VIP TEST',
             'email' => 'vip@not.tv',
             'email_verified_at' => now(),
@@ -70,7 +71,7 @@ class UserSeeder extends Seeder
             'role_id' => 3,
             'isAdmin' => 0,
         ]);
-        $creatorTestId = DB::table('users')->insertGetId([
+        $creatorTestId = User::create([
             'name' => 'Creator TEST',
             'email' => 'creator@not.tv',
             'email_verified_at' => now(),
@@ -88,10 +89,10 @@ class UserSeeder extends Seeder
             'role_id' => 4,
             'isAdmin' => 0,
         ]);
-        DB::table('creators')->insert([
-            'user_id' => $creatorTestId,
+        Creator::create([
+            'user_id' => $creatorTestId->id,
         ]);
-        
+
         \App\Models\User::factory(99)->create();
     }
 }

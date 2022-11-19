@@ -41,34 +41,16 @@
 
             <main class="py-8">
 
-                <div class="container mx-auto px-4">
+                <div class="container mx-auto px-4 border-b border-gray-800 pb-16">
                     <h2 class="text-yellow-500 uppercase tracking-wide font-semibold">Popular Movies</h2>
-                    <div class="popular-movies text-sm grid grid-cols-1 md:grid-cols-2 space-x-6 lg:grid-cols-5 xl:grid-cols-6 gap-12 border-b border-gray-800 pb-16">
-
-
-                        <div class="movie mt-8">
-                            <div class="relative inline-block">
-                                <Link :href="`/movies/${movie}`">
-                                    <img src="https://beta-staging.not.tv/storage/images/EBU_Colorbars.svg.png" alt="movie cover" class="h-48 min-w-[8rem] w-28 object-cover hover:opacity-75 transition ease-in-out duration-150">
-                                </Link>
-                                <div class="absolute bottom-0 right-0 w-12 h-12 bg-gray-800 rounded-full" style="right:-20px; bottom:-20px;">
-                                    <div class="font-semi-bold text-xs flex justify-center items-center h-full">80%</div>
-
-                                </div>
-                            </div>
-                            <Link :href="`/movies/${movie}`" class="block text-base font-semibold leading-tight hover:text-gray-400 mt-4">Sprite Fright</Link>
-                            <div class="text-gray-400 mt-1">Short Film (2021)</div>
-                            <div class="text-gray-400 mt-1">Animated</div>
-                        </div>
-
-
+                    <div class="popular-movies text-sm grid grid-cols-1 md:grid-cols-2 space-x-6 lg:grid-cols-5 xl:grid-cols-6 gap-12 pb-12">
 
                         <div v-for="movie in movies.data"
                              :key="movie.id"
                              class="movie mt-8">
                             <div class="relative inline-block">
                                 <Link :href="`/movies/${movie.slug}`">
-                                    <img src="https://beta-staging.not.tv/storage/images/EBU_Colorbars.svg.png" alt="movie cover" class="h-48 min-w-[8rem] w-28 object-cover hover:opacity-75 transition ease-in-out duration-150">
+                                    <img :src="`/storage/images/EBU_Colorbars.svg.png`" alt="movie cover" class="h-48 min-w-[8rem] w-28 object-cover hover:opacity-75 transition ease-in-out duration-150">
                                 </Link>
                                 <div class="absolute bottom-0 right-0 w-12 h-12 bg-gray-800 rounded-full" style="right:-20px; bottom:-20px;">
                                     <div class="font-semi-bold text-xs flex justify-center items-center h-full">80%</div>
@@ -80,27 +62,10 @@
                             <div class="text-gray-400 mt-1">Sub-category</div>
                         </div>
 
-
-
-
-                        <div class="movie mt-8">
-                            <div class="relative inline-block">
-                                <Link :href="`/movies/${movie}`">
-                                    <img src="https://beta-staging.not.tv/storage/images/EBU_Colorbars.svg.png" alt="movie cover" class="h-48 min-w-[8rem] w-28 object-cover hover:opacity-75 transition ease-in-out duration-150">
-                                </Link>
-                                <div class="absolute bottom-0 right-0 w-12 h-12 bg-gray-800 rounded-full" style="right:-20px; bottom:-20px;">
-                                    <div class="font-semi-bold text-xs flex justify-center items-center h-full">80%</div>
-
-                                </div>
-                            </div>
-                            <Link :href="`/movies/${movie}`" class="block text-base font-semibold leading-tight hover:text-gray-400 mt-4">Sprite Fright</Link>
-                            <div class="text-gray-400 mt-1">Short Film (2021)</div>
-                            <div class="text-gray-400 mt-1">Animated</div>
-                        </div>
-
                     </div>
                     <!-- Paginator -->
                     <Pagination :links="movies.links" class="mt-6"/>
+
                 </div>
 
                 <div class="flex flex-col lg:flex-row my-10">
@@ -110,7 +75,7 @@
                             <div class="movie bg-gray-800 rounded-lg shadow-md flex px-6 py-6">
                                 <div class="relative flex-none">
                                     <Link :href="`/movies/${movie}`">
-                                        <img src="https://beta-staging.not.tv/storage/images/EBU_Colorbars.svg.png" alt="movie cover" class="h-64 min-w-[8rem] w-48 object-cover hover:opacity-75 transition ease-in-out duration-150">
+                                        <img :src="`/storage/images/EBU_Colorbars.svg.png`" alt="movie cover" class="h-64 min-w-[8rem] w-48 object-cover hover:opacity-75 transition ease-in-out duration-150">
                                     </Link>
                                     <div class="absolute bottom-0 right-0 w-12 h-12 bg-gray-900 rounded-full" style="right:-20px; bottom:-20px;">
                                         <div class="font-semi-bold text-xs flex justify-center items-center h-full">80%</div>
@@ -129,7 +94,7 @@
                             <div class="movie bg-gray-800 rounded-lg shadow-md flex px-6 py-6">
                                 <div class="relative flex-none">
                                     <Link :href="`/movies/${movie}`">
-                                        <img src="https://beta-staging.not.tv/storage/images/EBU_Colorbars.svg.png" alt="movie cover" class="h-64 w-48 min-w-[8rem] object-cover hover:opacity-75 transition ease-in-out duration-150">
+                                        <img :src="`/storage/images/EBU_Colorbars.svg.png`" alt="movie cover" class="h-64 w-48 min-w-[8rem] object-cover hover:opacity-75 transition ease-in-out duration-150">
                                     </Link>
                                     <div class="absolute bottom-0 right-0 w-12 h-12 bg-gray-900 rounded-full" style="right:-20px; bottom:-20px;">
                                         <div class="font-semi-bold text-xs flex justify-center items-center h-full">80%</div>
@@ -148,7 +113,7 @@
                             <div class="movie bg-gray-800 rounded-lg shadow-md flex px-6 py-6">
                                 <div class="relative flex-none">
                                     <Link :href="`/movies/${movie}`">
-                                        <img src="https://beta-staging.not.tv/storage/images/EBU_Colorbars.svg.png" alt="movie cover" class="h-64 w-48 min-w-[8rem] object-cover hover:opacity-75 transition ease-in-out duration-150">
+                                        <img :src="`/storage/images/EBU_Colorbars.svg.png`" alt="movie cover" class="h-64 w-48 min-w-[8rem] object-cover hover:opacity-75 transition ease-in-out duration-150">
                                     </Link>
                                     <div class="absolute bottom-0 right-0 w-12 h-12 bg-gray-900 rounded-full" style="right:-20px; bottom:-20px;">
                                         <div class="font-semi-bold text-xs flex justify-center items-center h-full">80%</div>
@@ -173,7 +138,7 @@
                         <div class="most-anticipated-container space-y-10 mt-8">
                             <div class="game flex">
                                 <Link :href="`/movies/${movie}`">
-                                    <img src="https://beta-staging.not.tv/storage/images/EBU_Colorbars.svg.png"
+                                    <img :src="`/storage/images/EBU_Colorbars.svg.png`"
                                          alt="movie cover"
                                          class="h-24 min-w-[4rem] w-16 object-cover hover:opacity-75 transition ease-in-out duration-150">
                                 </Link>
@@ -188,7 +153,7 @@
                         <div class="most-anticipated-container space-y-10 mt-8">
                             <div class="game flex">
                                 <Link :href="`/movies/${movie}`">
-                                    <img src="https://beta-staging.not.tv/storage/images/EBU_Colorbars.svg.png"
+                                    <img :src="`/storage/images/EBU_Colorbars.svg.png`"
                                          alt="movie cover"
                                          class="h-24 min-w-[4rem] w-16 object-cover hover:opacity-75 transition ease-in-out duration-150">
                                 </Link>
@@ -223,7 +188,7 @@
 </template>
 
 <script setup>
-import Pagination from "@/Components/Pagination"
+import Pagination from "@/Components/PaginationDark"
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
 import {useChatStore} from "@/Stores/ChatStore.js"
 import ResponsiveNavigationMenu from "@/Components/Navigation/ResponsiveNavigationMenu"

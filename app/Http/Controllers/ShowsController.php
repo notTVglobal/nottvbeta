@@ -13,6 +13,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Str;
+use Illuminate\Support\Carbon;
 use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
@@ -50,6 +51,7 @@ class ShowsController extends Controller
                 ->through(fn($show) => [
                     'id' => $show->id,
                     'name' => $show->name,
+                    'description' => $show->description,
                     'team_id' => $show->team_id,
                     'teamName' => $show->team->name,
                     'teamSlug' => $show->team->slug,
