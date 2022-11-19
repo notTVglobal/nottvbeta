@@ -21,6 +21,9 @@ let props = defineProps({
     message: Object,
 })
 
+// add a WatchEffect here to update the time stamps
+// every few minutes.
+
 function time(e) {
     let formattedTime = dayjs().to(dayjs(e));
     return formattedTime;

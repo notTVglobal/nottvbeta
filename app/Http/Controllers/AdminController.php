@@ -85,7 +85,7 @@ class AdminController extends Controller
                 ->through(fn($team) => [
                     'id' => $team->id,
                     'name' => $team->name,
-                    'logo' => $team->image->name,
+                    'logo' => getLogo($team),
                     'teamOwner' => $team->user->name,
                     'slug' => $team->slug,
                     'totalShows' => $team->shows->count(),
