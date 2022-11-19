@@ -91,8 +91,9 @@
                                                 scope="row"
                                                 class="min-w-[8rem] px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                                             >
+                                                {{ team.logo }}
 <!--                                                <img :src="`/storage/${team.logo}`" class="rounded-full h-20 w-20 object-cover">-->
-                                                <img :src="'/storage/images/' + team.logo" class="rounded-full h-20 w-20 object-cover">
+                                                <img :src="`/storage/images/` + team.logo" class="rounded-full h-20 w-20 object-cover">
                                             </th>
                                             <th
                                                 scope="row"

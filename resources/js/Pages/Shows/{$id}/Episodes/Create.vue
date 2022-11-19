@@ -114,7 +114,6 @@
                               type="text"
                               name="video_file_embed_code"
                               id="video_file_embed_code"
-                              required
                     ></textarea>
                     <div v-if="form.errors.video_file_embed_code" v-text="form.errors.video_file_embed_code" class="text-xs text-red-600 mt-1"></div>
                 </div>
@@ -130,7 +129,6 @@
                               type="text"
                               name="notes"
                               id="notes"
-                              required
                     ></textarea>
                     <div v-if="form.errors.notes" v-text="form.errors.notes" class="text-xs text-red-600 mt-1"></div>
                 </div>
