@@ -169,7 +169,7 @@ class TeamsController extends Controller
         return Inertia::render('Teams/{$id}/Index', [
             'team' => $team,
             'logo' => getLogo($team),
-            'shows' => DB::table('shows')->where('team_id', $team->id)
+            'shows' => Show::where('team_id', $team->id)
                 ->latest()
                 ->paginate(5)
                 ->withQueryString()

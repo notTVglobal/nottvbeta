@@ -67,7 +67,6 @@
                            type="text"
                            name="episode_number"
                            id="episode_number"
-                           required
                     >
                     <div v-if="form.errors.episode_number" v-text="form.errors.episode_number" class="text-xs text-red-600 mt-1"></div>
                 </div>

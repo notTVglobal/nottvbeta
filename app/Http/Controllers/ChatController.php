@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Request;
 use App\Events\Message;
 use Illuminate\Http\Request as HttpRequest;
 use Inertia\Inertia;
+use Illuminate\Support\Carbon;
 use App\Events\NewChatMessage;
 use function Termwind\render;
 
@@ -27,14 +28,18 @@ class ChatController extends Controller
 
     public function messages( HttpRequest $request, $channelId ) {
 
-        return ChatMessage::query()
-            ->where('channel_id', $channelId)
+        return ChatMessage::where('channel_id', $channelId)
             ->with(['user' => function ($query) {
-                $query->select('id', 'name', 'profile_photo_path');
+                $query->select('id', 'name', 'profile_photo_path', 'created_at');
             }])
             ->latest()
             ->orderBy('created_at', 'DESC')
-            ->get();
+            ->through(fn($message) => [
+                'id' => $message->id,
+                'name' => $message->name,
+                'profile_photo_path' => $message->profile_photo_path,
+                'created_at' => $message->created_at,
+                ]);
     }
 
     public function index()

@@ -23,9 +23,9 @@
 
                     <div class="flex flex-col lg:flex-row items-center">
                         <h1 class="text-3xl font-semibold">Shows</h1>
-                        <ul class="flex ml-0 lg:ml-16 mt-6 lg:mt-0 space-x-8">
+                        <ul class="flex ml-0 lg:ml-16 mt-6 lg:mt-0 space-x-8 hidden" >
                             <li>
-                                <Link :href="``" class="hover:text-blue-800">Categories</Link>
+                                <Link :href="``" class="hover:text-blue-800">Popular Shows</Link>
                             </li>
                             <li>
                                 <Link :href="``" class="hover:text-blue-800">New Episodes</Link>
@@ -76,23 +76,23 @@
 
                 <div class="flex flex-col lg:flex-row my-10">
                     <div class="recently-reviewed w-full lg:w-3/4 mr-0 md:mr-16 lg:mr-32">
-                        <h2 class="text-purple-800 uppercase tracking-wide font-semibold">Newest Shows</h2>
+                        <h2 class="text-purple-800 uppercase tracking-wide font-semibold">Newest Episodes</h2>
                         <div class="recently-reviewed-container space-y-12 mt-8">
 
-                            <div v-for="show in shows.data"
-                                 :key="show.id"
+                            <div v-for="episode in episodes.data"
+                                 :key="episode.id"
                                  class="show bg-gray-100 rounded-lg shadow-md flex px-6 py-6">
                                 <div class="relative flex-none">
-                                    <Link :href="`/shows/${show.slug}`">
-                                        <img :src="'/storage/images/' + show.poster" alt="show cover" class="h-64 min-w-[8rem] w-48 object-cover hover:opacity-75 transition ease-in-out duration-150">
+                                    <Link :href="`/shows/${episode.showSlug}/episode/${episode.slug}`">
+                                        <img :src="'/storage/images/' + episode.poster" alt="show cover" class="h-64 min-w-[8rem] w-48 object-cover hover:opacity-75 transition ease-in-out duration-150">
                                     </Link>
                                 </div>
                                 <div class="ml-12">
-                                    <Link :href="`/shows/${show.slug}`" class="block text-lg font-semibold leading-tight hover:text-gray-400 mt-4">
-                                        {{ show.name }}</Link>
-                                    <div class="text-gray-600 mt-1">Category</div>
+                                    <Link :href="`/shows/${episode.showSlug}/episode/${episode.slug}`" class="block text-lg font-semibold leading-tight hover:text-gray-400 mt-4">
+                                        {{ episode.name }}</Link>
+                                    <div class="text-gray-600 mt-1"><Link :href="`/shows/${episode.showSlug}`">{{ episode.showName }}</Link></div>
                                     <p class="mt-6 pr-4 text-gray-800 hidden lg:block">
-                                        {{ show.description}}
+                                        {{ episode.description}}
                                     </p>
                                 </div>
                             </div>
@@ -103,7 +103,7 @@
                         <h2 class="text-purple-800 uppercase tracking-wide font-semibold">Trending Now</h2>
                         <div class="most-anticipated-container space-y-10 mt-8">
 
-                            <div v-for="show in shows.data"
+                            <div v-for="show in showsTrending.data"
                                  :key="show.id"
                                  class="show flex">
                                 <Link :href="`/shows/${show.slug}`">
@@ -121,7 +121,7 @@
                         <h2 class="text-purple-800 uppercase tracking-wide font-semibold mt-16">Coming Soon</h2>
                         <div class="most-anticipated-container space-y-10 mt-8">
 
-                            <div v-for="show in shows.data"
+                            <div v-for="show in showsComingSoon.data"
                                  :key="show.id"
                                  class="show flex">
                                 <Link :href="`/shows/${show.slug}`">
@@ -171,7 +171,9 @@ onMounted(() => {
 
 let props = defineProps({
     shows: Object,
-    teamName: String,
+    episodes: Object,
+    showsTrending: Object,
+    showsComingSoon: Object,
     poster: String,
     filters: Object,
     can: Object,

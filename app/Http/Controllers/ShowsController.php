@@ -68,6 +68,40 @@ class ShowsController extends Controller
                         'viewShow' => Auth::user()->can('viewShowManagePage', $show)
                     ]
                 ]),
+            'episodes' => ShowEpisode::with('show', 'image')
+                ->latest()
+                ->paginate(10)
+                ->through(fn($episode) => [
+                    'id' => $episode->id,
+                    'name' => $episode->name,
+                    'description' => $episode->description,
+                    'poster' => $episode->image->name,
+                    'slug' => $episode->slug,
+                    'showName' => $episode->show->name,
+                    'showSlug' => $episode->show->slug,
+                    'releaseDate' => $episode->created_at->format('M D, Y'),
+                ]),
+            'showsTrending' => Show::with('image')
+                ->paginate(10)
+                ->through(fn($show) => [
+                    'id' => $show->id,
+                    'name' => $show->name,
+                    'description' => $show->description,
+                    'poster' => $show->image->name,
+                    'slug' => $show->slug,
+                    'copyrightYear' => $show->created_at->format('Y'),
+                ]),
+            'showsComingSoon' => Show::with('image')
+                ->latest()
+                ->paginate(10)
+                ->through(fn($show) => [
+                    'id' => $show->id,
+                    'name' => $show->name,
+                    'description' => $show->description,
+                    'poster' => $show->image->name,
+                    'slug' => $show->slug,
+                    'copyrightYear' => $show->created_at->format('Y'),
+                ]),
             'filters' => Request::only(['search']),
             'can' => [
                 'viewShows' => Auth::user()->can('view', Show::class),
