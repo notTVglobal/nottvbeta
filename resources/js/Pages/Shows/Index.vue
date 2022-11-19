@@ -141,7 +141,7 @@
             </main>
 
             <footer class="border-t border-gray-800">
-                <div class="container text-right text-gray-800 mx-auto px-4 py-6">
+                <div class="container text-right text-gray-200 mx-auto px-4 py-6">
                     Powered by not.tv
                 </div>
 
