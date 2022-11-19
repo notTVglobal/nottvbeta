@@ -28,18 +28,16 @@ class ChatController extends Controller
 
     public function messages( HttpRequest $request, $channelId ) {
 
-        return ChatMessage::where('channel_id', $channelId)
+        return ChatMessage::query()
+            ->where('channel_id', $channelId)
+            ->where('created_at', '>=', Carbon::now()->subDay())
             ->with(['user' => function ($query) {
-                $query->select('id', 'name', 'profile_photo_path', 'created_at');
+                $query->select('id', 'name', 'profile_photo_path');
             }])
             ->latest()
+            ->limit(20)
             ->orderBy('created_at', 'DESC')
-            ->through(fn($message) => [
-                'id' => $message->id,
-                'name' => $message->name,
-                'profile_photo_path' => $message->profile_photo_path,
-                'created_at' => $message->created_at,
-                ]);
+            ->get();
     }
 
     public function index()
