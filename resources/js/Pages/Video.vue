@@ -24,11 +24,25 @@
                 </div>
             </div>
 
-            <div class="">Status: <span class="font-semibold">{{ videoPlayer.status }}</span></div>
+            <div class="flex justify-between">
+                <div>
+                    <div class="">Status: <span class="font-semibold">{{ videoPlayer.status }}</span></div>
 
-            <button class="ml-2 py-2 my-2 px-4 text-white bg-orange-800 hover:bg-orange-500 mr-2 rounded-xl" @click.prevent="getStatus">
-                Get Status
-            </button>
+                    <button class="ml-2 py-2 my-2 px-4 text-white bg-orange-800 hover:bg-orange-500 mr-2 rounded-xl" @click.prevent="getStatus">
+                        Get Status
+                    </button>
+
+                    <button v-if="videoPlayer.status === 'OK'"
+                            class="ml-2 py-2 my-2 px-4 text-white bg-green-800 hover:bg-green-500 mr-2 rounded-xl"
+                            @click.prevent="displayPushForm">
+                        Start Push
+                    </button>
+                </div>
+                <div v-if="videoPlayer.status === 'OK'" class="">
+
+                </div>
+
+            </div>
 
             <div v-if="videoPlayer.status === 'CHALL'" class="mb-8">
                 <div  class="py-3 px-4 mb-4 bg-orange-800 text-white rounded">MistServer needs to be authenticated</div>
@@ -65,24 +79,76 @@
             <div v-if="videoPlayer.status === 'OK'" class="mb-8">
                 <div  class="py-3 px-4 mb-4 bg-green-900 text-white rounded">MistServer is connected</div>
 
-                <div class="grid grid-cols-2">
-                    <div>
-                        <button class="ml-2 py-2 px-4 text-white bg-blue-800 hover:bg-blue-500 mr-2 rounded-xl" @click.prevent="getMistStats">
-                            Get Server Stats
+                <div class="grid grid-cols-1 md:grid-cols-2">
+                    <div class="flex flex-col w-1/2 space-y-2">
+
+                        <button class="ml-2 py-2 px-4 text-white bg-blue-800 hover:bg-blue-500 rounded-xl" @click.prevent="checkUpdates">
+                           Check for Updates
                         </button>
 
-                        <div v-if="videoPlayer.mistStatus">{{videoPlayer.apiRequest}}</div>
+                        <button class="ml-2 py-2 px-4 text-white bg-blue-800 hover:bg-blue-500 rounded-xl" @click.prevent="getCapabilities">
+                            Get Server Capabilities
+                        </button>
 
-                    </div>
-                    <div>
+                        <button class="ml-2 py-2 px-4 text-white bg-blue-800 hover:bg-blue-500 mr-2 rounded-xl" @click.prevent="getTotals">
+                            Get Totals
+                        </button>
+
+                        <button class="ml-2 py-2 px-4 text-white bg-blue-800 hover:bg-blue-500 mr-2 rounded-xl" @click.prevent="getClients">
+                            Get Clients
+                        </button>
+
                         <button class="ml-2 py-2 px-4 text-white bg-blue-800 hover:bg-blue-500 rounded-xl" @click.prevent="getActiveStreams">
                             Get Active Streams
                         </button>
 
-                        <div class="mt-2">Active Streams:</div>
-                        <div class="">
-                            {{videoPlayer.apiActiveStreams}}
+                        <button class="ml-2 py-2 px-4 text-white bg-blue-800 hover:bg-blue-500 rounded-xl" @click.prevent="getLog">
+                            Get Log
+                        </button>
+
+                        <button class="ml-2 py-2 px-4 text-white bg-orange-800 hover:bg-orange-500 rounded-xl" @click.prevent="clearLog">
+                            Clear Log
+                        </button>
+
+                        <button class="ml-2 py-2 px-4 text-white bg-blue-800 hover:bg-blue-500 rounded-xl" @click.prevent="browseRecordings">
+                            Recordings
+                        </button>
+
+                    </div>
+                    <div>
+                        <div v-if="videoPlayer.mistStatus">
+                            <div class="mt-2">Returned data:</div>
+                            <div class="">
+                                {{videoPlayer.apiResponse}}
+                            </div>
                         </div>
+                        <div v-if="videoPlayer.mistDisplayPushForm">
+                            <div class="font-semibold my-2">Push a Stream:</div>
+                            <div class="">
+                                <label for="streamName" class="mb-1">Choose stream:</label>
+                                <select
+                                    id="streamName"
+                                    v-model="streamName"
+                                    class="w-full mb-2" >
+                                    <option v-for="stream in videoPlayer.apiResponse.active_streams" :key=stream>
+                                        {{ stream }}
+                                    </option>
+                                </select>
+                                <label for="rtmpDestination" class="mb-1">Set destination:</label>
+                                <input type="text"
+                                       id="rtmpDestination"
+                                       v-model="rtmpDestination"
+                                       placeholder="RTMP destination..."
+                                       class="w-full my-2">
+                                <button @click.prevent="startPush"
+                                        class="ml-2 py-2 px-4 text-white bg-green-800 hover:bg-green-500 rounded-xl">
+                                    Push
+                                </button>
+                                <video src="https://streams.not.tv/vmixsource03.mp4" class="mt-20 w-96" controls></video>
+                                <br>Preview video is hardcoded to "vmixsource03"
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 
@@ -112,10 +178,13 @@ onMounted(() => {
     videoPlayer.makeVideoTopRight();
 });
 
+
 let props = defineProps({
     apiReturn: Object,
     message: ref(String),
     mistNewHashedPassword: ref(String),
+    streamName: ref(),
+    rtmpDestination: ref()
 });
 
 let form = reactive({
@@ -124,6 +193,9 @@ let form = reactive({
     username: '',
     password: '',
 })
+
+videoPlayer.mistUsername = 'nottvadmin';
+form.password = '20y$!PwX12S';
 
 const password = ref('');
 
@@ -135,7 +207,7 @@ let md5 = require('md5');
 //
 // let mistAddress = 'http://localhost:4242/api'
 // let mistAddress = 'https://beta-staging.not.tv/mistserver/api'
-let mistAddress = 'https://mist.not.tv/api'
+let mistAddress = 'https://mist.not.tv/'
 // let mistAddress = 'http://mist.nottv.io:4242/api'
 // let mistAddressWs = 'ws://mist.nottv.io:4242/ws'
 //
@@ -157,11 +229,13 @@ async function getStatus() {
 
 }
 
-// Create the header for the MistServer WS API Request
+// The Websocket connection will give us near real-time
+// info from the server.
 //
+// Create the header for the MistServer WS API Request
 // const mistWsHeader = {
 //     headers: {
-//         "Authorization": "Bearer "+videoPlayer.challenge,
+//         "Authorization": "json "+AuthenticationGoesHere,
 //     },
 // };
 
@@ -185,42 +259,93 @@ async function authenticateMistServer() {
 
 }
 
-async function getMistStats() {
-    // await axios.get(mistAddress+'?command=', {"capabilities": "true"})
-    await axios.get(mistAddress+'?command=%7B%0A%22authorize%22%3A%20%7B%0A%22username%22%3A%20%22'+videoPlayer.mistUsername+'%22,%0A%22password%22%3A%20%22'+videoPlayer.mistPassword+'%22%0A%7D%0A%7D')
-    // await axios.get(mistAddressWs, mistWsHeader)
-        .then(response => {
-            console.log(response.data);
-            videoPlayer.apiRequest = response.data;
-            videoPlayer.challenge = videoPlayer.apiRequest.authorize.challenge;
-            videoPlayer.status = videoPlayer.apiRequest.authorize.status;
-        })
-        .catch(error => {
-            console.log(error);
-        })
-    console.log('Get MistServer Stats');
+let checkUpdates = () => {
+    let request = "\"update\": true"
+    getApi(request)
+}
+
+let getCapabilities = () => {
+    let request = "%22capabilities%22%3A%20true"
+    getApi(request)
+}
+
+let getTotals = () => {
+    let request = "\"totals\": {}"
+    getApi(request)
+}
+
+let getActiveStreams = () => {
+    let request = "\"active_streams\": true"
+    getApi(request)
+}
+
+let getClients = () => {
+        // This request delivers information about each client connected
+        // to a specific stream name.
+        //
+    // let request = "\"clients\": [{\"streams\": [\"vmixsource03\"],},{}]}"
+
+    // This request delivers all clients
+    let request = "\"clients\": {}"
+    getApi(request)
+}
+
+let getLog = () => {
+    let request = "\"log\": {}"
+    getApi(request)
+}
+
+let clearLog = () => {
+    let request = "\"clearstatlog\": true"
+    getApi(request)
+}
+
+let browseRecordings = () => {
+    let request = "\"path\": \"/media/upload\""
+    getApi(request)
+}
+
+async function getApi(request) {
     videoPlayer.mistStatus = true
+    videoPlayer.mistDisplayPushForm = false
+    // let apiRequest = '%7B%20%22authorize%22%3A%20%7B%0A%20%20%20%20%22username%22%3A%20%22'+videoPlayer.mistUsername+'%22,%0A%20%20%20%20%22password%22%3A%20%22'+videoPlayer.mistPassword+'%22%0A%20%20%20%7D,%0A%20'+request+'%0A%7D'
+    let apiRequest = '%7B%20%22authorize%22%3A%20%7B%0A%20%20%20%20%22username%22%3A%20%22'+videoPlayer.mistUsername+'%22,%0A%20%20%20%20%22password%22%3A%20%22'+videoPlayer.mistPassword+'%22%0A%20%20%20%7D,%0A%20'+request+'%0A%0A%7D'
+        await axios.get(mistAddress+'?command='+apiRequest)
+            .then(response => {
+                videoPlayer.apiResponse = response.data;
+                videoPlayer.challenge = videoPlayer.apiResponse.authorize.challenge;
+                videoPlayer.status = videoPlayer.apiResponse.authorize.status;
+            })
+            .catch(error => {
+                console.log(error);
+            })
+    console.log('mistServer API request sent.');
+}
+
+// Create method to push a stream somewhere
+//
+
+videoPlayer.mistStatus = true
+videoPlayer.mistDisplayPushForm = false
+function displayPushForm() {
+    getActiveStreams()
+    videoPlayer.mistStatus = false
+    videoPlayer.mistDisplayPushForm = true
+}
+function startPush() {
+    // api call to mist server.
+    // "push_start":["STREAMNAME", "URI"]
+    // let request = "\"push_start\":[\""+props.streamName+", \""+props.rtmpDestination+"\"]"
+    let request = "{\"push_start\":{\"stream\":\""+props.streamName+",\"target\": \""+props.rtmpDestination+"\"}}"
+    // setTimeout(() => {  getApi(request); console.log("World!"); }, 2000);
+    getApi(request)
+    videoPlayer.mistStatus = false
+    videoPlayer.mistDisplayPushForm = true
+    // log output
+    console.log("stream push started: " + request)
 }
 //
-async function getActiveStreams() {
-    // https://beta-staging.not.tv/mistserver/api?command=%7B%0A%22authorize%22%3A%20%7B%0A%22username%22%3A%20%22USER%22,%0A%22password%22%3A%20%22PASSWORD%22%0A%7D,%0A%20%20%20%20%22minimal%22%3A%201,%0A%20%20%20%20%22active_streams%22%3A%20%7B%7D%0A%7D
-    // await axios.get(mistAddress+'?command=%7B%0A%22minimal%22%3A%20%221%22,%0A%22active_streams%22%3A%20%22true%22%0A%7D')
-    // https://beta-staging.not.tv/mistserver/api?command=%7B%20%22authorize%22%3A%20%7B%0A%20%20%20%20%22username%22%3A%20%22USERNAME%22,%0A%20%20%20%20%22password%22%3A%20%22PASSWORD%22%0A%20%20%20%20%7D%0A%7D,%0A%7B%20%22minimal%22%3A%201%20%7D,%0A%7B%20%22active_streams%22%3A%20true%20%7D
-    await axios.get(mistAddress+'?command=%7B%20%22authorize%22%3A%20%7B%0A%20%20%20%20%22username%22%3A%20%22'+videoPlayer.mistUsername+'%22,%0A%20%20%20%20%22password%22%3A%20%22'+videoPlayer.mistPassword+'%22%0A%20%20%20%20%7D%0A%7D,%0A%7B%20%22minimal%22%3A%201%20%7D,%0A%7B%20%22active_streams%22%3A%20true%20%7D')
-        // let hashedPassword = md5(form.password)
-    // let authReturn = md5(hashedPassword+videoPlayer.challenge)
-    // await axios.get(mistAddress+'?command=%7B%20%22authorize%22%3A%20%7B%0A%20%20%20%20%22'+form.username+'%22%3A%20%22USERNAME%22,%0A%20%20%20%20%22'+authReturn+'%22%3A%20%22PASSWORD%22%0A%20%20%20%20%7D%0A%7D,%0A%7B%20%22minimal%22%3A%201%20%7D,%0A%7B%20%22active_streams%22%3A%20true%20%7D')
-        .then(response => {
-            videoPlayer.apiActiveStreams = response.data
-            videoPlayer.apiResponse = response.data;
-            videoPlayer.challenge = videoPlayer.apiResponse.authorize.challenge;
-            videoPlayer.status = videoPlayer.apiResponse.authorize.status;
-        })
-        .catch(error => {
-            console.log(error);
-        })
-    console.log('mistServer API request sent. Get Active Streams.');
-}
+
 
 // let setMistHashedPassword = () => {
 //     if (props.message) {
@@ -296,7 +421,5 @@ async function getActiveStreams() {
 
 
 </script>
-
-
 
 

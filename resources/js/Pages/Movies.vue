@@ -13,7 +13,7 @@
                 <div class="container mx-auto flex flex-col lg:flex-row items-center justify-between px-4 py-6">
                     <div class="flex flex-col lg:flex-row items-center">
                         <h1 class="text-3xl font-semibold">Movies</h1>
-                        <ul class="flex ml-0 lg:ml-16 mt-6 lg:mt-0 space-x-8 hidden">
+                        <ul class="flex ml-0 lg:ml-16 mt-6 lg:mt-0 space-x-8">
                             <li>
                                 <Link :href="``" class="hover:text-blue-800">Movies</Link>
                             </li>
