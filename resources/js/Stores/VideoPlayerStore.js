@@ -54,11 +54,11 @@ export let useVideoPlayerStore = defineStore('videoPlayer', {
             useChatStore().chatHidden();
         },
         loadVideo1() {
-            this.videoSourceIdSrc1 = "http://mist.nottv.io:8080/spring.mp4";
+            this.videoSourceIdSrc1 = "https://mist.not.tv/spring.mp4";
             this.videoSourceTypeSrc1 = "video/mp4";
-            this.videoSourceIdSrc2 = "http://mist.nottv.io:8080/hls/spring/index.m3u8";
+            this.videoSourceIdSrc2 = "https://mist.not.tv/hls/spring/index.m3u8";
             this.videoSourceTypeSrc2 = "application/x-mpegURL";
-            this.videoSourceIdSrc3 = "ws://mist.nottv.io:8080/spring.mp4";
+            this.videoSourceIdSrc3 = "wss://mist.not.tv/spring.mp4";
             this.videoSourceTypeSrc3 = "video/mp4";
             this.key += 1;
             this.videoName = "Spring";
