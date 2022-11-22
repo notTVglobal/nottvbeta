@@ -136,8 +136,8 @@ async function getStatus() {
     await axios.get(mistAddress)
         .then(response => {
             videoPlayer.apiRequest = response.data;
-            videoPlayer.challenge = videoPlayer.apiRequest.authorize.challenge;
-            videoPlayer.status = videoPlayer.apiRequest.authorize.status;
+            videoPlayer.challenge = videoPlayer.apiRequest.challenge;
+            videoPlayer.status = videoPlayer.apiRequest.status;
         })
         .catch(error => {
             console.log(error);
@@ -172,8 +172,8 @@ async function authenticateMistServer() {
 }
 
 async function getMistStats() {
-    // await axios.get(mistAddress+'?command=', {"capabilities": "true"})
-    await axios.get(mistAddressWs, mistWsHeader)
+    await axios.get(mistAddress+'?command=', {"capabilities": "true"})
+    // await axios.get(mistAddressWs, mistWsHeader)
         .then(response => {
             console.log(response.data);
             videoPlayer.apiRequest = response.data;
