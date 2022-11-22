@@ -79,10 +79,15 @@ If it's "CHALL" then you need to re-authenticate with the username and password.
             </form>
 
             <div class="mt-2">The MD5 Hashed Password will go here:</div>
+            <div class="flex mb-2">
+                <input type="text" v-model="message" class="" disabled />
+            </div>
 
-        <div class="flex mb-2">
-            <input type="text" v-model="message" class="" disabled />
-        </div>
+            <div class="mt-2">The New Hashed Password for MistServer Authorization:</div>
+            <div class="flex mb-2">
+                <input type="text" v-model="videoPlayer.mistNewHashedPassword" class="" disabled />
+            </div>
+
         <div class="mt-4 mb-2 text-sm w-1/2 text-orange-600"><span class="font-semibold">NOTE:</span> The MD5 Hashed password is currently stored as a prop. This is not secure.</div>
         <div class="mb-4 w-1/2 text-sm"> Credit to Jeff Mott for his work on a pure JS implementation of the MD5 algorithm.
             You can find the npm package <a href="https://www.npmjs.com/package/md5" target="_blank" class="text-blue-800 hover:text-gray-500">here.</a></div>
@@ -97,6 +102,14 @@ If it's "CHALL" then you need to re-authenticate with the username and password.
                 {{videoPlayer.apiResponse}}
             </div>
 
+            <button class="ml-2 py-2 px-4 text-white bg-blue-800 hover:bg-blue-500 rounded-xl" @click.prevent="getActiveStreams">
+                Get Active Streams
+            </button>
+
+            <div class="mt-2">The API reply is:</div>
+            <div class="">
+                {{videoPlayer.apiActiveStreams}}
+            </div>
 
 
 
@@ -126,6 +139,7 @@ onMounted(() => {
 let props = defineProps({
     apiReturn: Object,
     message: ref(String),
+    mistNewHashedPassword: ref(String),
 });
 
 
@@ -140,11 +154,17 @@ let form = reactive({
 const password = ref('');
 
 let md5 = require('md5');
-console.log(md5('message'));
+// console.log(md5(props.message));
+
+
+let mistAddress = 'http://localhost:4242/api'
+// let mistAddress = 'https://beta-staging.not.tv/mistserver/api'
+// let mistAddress = 'http://mist.nottv.io:4242/api'
+
 
 
 async function getMistStats() {
-    await axios.get('https://beta-staging.not.tv/mistserver/api?command=', {"capabilities": "true"})
+    await axios.get(mistAddress+'?command=', {"capabilities": "true"})
         .then(response => {
             videoPlayer.apiRequest = response.data;
             videoPlayer.challenge = videoPlayer.apiRequest.authorize.challenge;
@@ -156,7 +176,13 @@ async function getMistStats() {
     console.log('get API');
 }
 
+let setMistHashedPassword = () => {
+    if (props.message) {
+        props.mistNewHashedPassword = md5(props.message);
+    }
+}
 
+setMistHashedPassword();
 // axios.get('http://mist.nottv.io:4242/api').then(console.log);
 
 // tec21: Either we get one of these 3 options working,
@@ -170,7 +196,7 @@ async function getMistStats() {
 async function getStatus() {
     // this one is the localhost for the staging server.
     //
-    await axios.get('https://beta-staging.not.tv/mistserver/api')
+    // await axios.get('https://beta-staging.not.tv/mistserver/api')
         // this one sasys CORS Preflight did not succeed.
         // Cross-Origin Request Blocked. The Same Origin
         // Policy disallows reading the remote resource.
@@ -184,7 +210,7 @@ async function getStatus() {
         // The mistserver just keeps returning
         // a challenge response.
         //
-    // await axios.get('http://mist.nottv.io:4242/api')
+    await axios.get(mistAddress)
         //
         //
         // this one works, but it has to be installed
@@ -211,16 +237,26 @@ function submit(password) {
 }
 
 
+// This is a properly formatted HTTP API call to the MistServer:
+//
+// {
+//     "addstream": {
+//     "streamname_here": {},
+// }
+// }{}
+
 
 
 // tec21: this returns the pattern that mistServer is apparently looking for.
 async function getApi() {
-    // await axios.post('http://mist.nottv.io:4242/api', {command: {authorize: {username: 'nottvadmin', password: '2791d4458fc1701506f7138e9f2b50b74a123815ae40a943b4758e0902fbf41f'}}})
-    // await axios.get('http://mist.nottv.io:4242/api', {authorize: {username: 'nottvadmin', password: '2791d4458fc1701506f7138e9f2b50b74a123815ae40a943b4758e0902fbf41f'}})
-    // await axios.get('http://mist.nottv.io:4242/api?command=', {authorize: {username: 'nottvadmin', password: '2791d4458fc1701506f7138e9f2b50b74a123815ae40a943b4758e0902fbf41f'}}, {
-    //     preserveScroll: true
-    // })
-    await axios.get('https://beta-staging.not.tv/mistserver/api?', {"command": {"authorize": {"username": "nottvadmin", "password": props.message}}})
+    await axios.get(mistAddress, {
+        "command": {
+            "authorize": {
+                "username": videoPlayer.mistUsername+',', "password": props.message
+            }
+        }
+    })
+
         .then(response => {
             videoPlayer.apiResponse = response.data
         })
@@ -228,6 +264,17 @@ async function getApi() {
             console.log(error);
         })
     console.log('mistServer API request sent.');
+}
+
+async function getActiveStreams() {
+    await axios.get("http://localhost:4242/api?command=%7B%0A%22minimal%22%3A%20%221%22,%0A%22active_streams%22%3A%20%22true%22%0A%7D")
+        .then(response => {
+            videoPlayer.apiActiveStreams = response.data
+        })
+        .catch(error => {
+            console.log(error);
+        })
+    console.log('mistServer API request sent. Get Active Streams.');
 }
 
 
