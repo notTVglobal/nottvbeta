@@ -267,7 +267,7 @@ async function getApi() {
 }
 
 async function getActiveStreams() {
-    await axios.get("http://localhost:4242/api?command=%7B%0A%22minimal%22%3A%20%221%22,%0A%22active_streams%22%3A%20%22true%22%0A%7D")
+    await axios.get(mistAddress+'?command=%7B%0A%22minimal%22%3A%20%221%22,%0A%22active_streams%22%3A%20%22true%22%0A%7D')
         .then(response => {
             videoPlayer.apiActiveStreams = response.data
         })

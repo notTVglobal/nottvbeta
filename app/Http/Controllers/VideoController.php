@@ -23,7 +23,7 @@ class VideoController extends Controller
 
         $newHashedPassword = ($password . '+' . $challenge);
         $x = hash('md5', $newHashedPassword);
-        dd($newHashedPassword);
+        dd($x);
         return redirect()->route('video')->with('message', $newHashedPassword);
 
     }
