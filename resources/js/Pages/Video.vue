@@ -30,6 +30,8 @@
                 Get Status
             </button>
 
+            <div v-if="videoPlayer.mistStatus">{{videoPlayer.apiRequest}}</div>
+
             <div v-if="videoPlayer.status === 'CHALL'" class="mb-8">
                 <div  class="py-3 px-4 mb-4 bg-orange-800 text-white rounded">MistServer needs to be authenticated</div>
 
@@ -46,7 +48,7 @@
                     <input type="text" name="challenge" id="challenge" v-model="videoPlayer.challenge" disabled/>
 
                     <div class="font-semibold mt-2">MistServer Username:</div>
-                    <input class="mb-2" type="text" name="username" v-model="form.username" />
+                    <input class="mb-2" type="text" name="username" v-model="videoPlayer.mistUsername" />
 
                     <div class="font-semibold mt-2">MistServer Password:</div>
                     <input type="password" name="password" v-model="form.password" />
@@ -97,7 +99,8 @@ import {Inertia} from "@inertiajs/inertia";
 let videoPlayer = useVideoPlayerStore()
 let chat = useChatStore()
 
-videoPlayer.apiActiveStreams = null;
+videoPlayer.apiActiveStreams = null
+videoPlayer.mistStatus = false
 
 onMounted(() => {
     videoPlayer.makeVideoTopRight();
@@ -125,24 +128,26 @@ let md5 = require('md5');
 // Keep this here to change which MistServer is used for testing purposes
 //
 // let mistAddress = 'http://localhost:4242/api'
-let mistAddress = 'https://beta-staging.not.tv/mistserver/'
+let mistAddress = 'https://beta-staging.not.tv/mistserver/api'
 // let mistAddress = 'http://mist.nottv.io:4242/api'
 // let mistAddressWs = 'ws://mist.nottv.io:4242/ws'
 //
 ///////////////////////////////////////////////////////////////////////
 
 
+
 async function getStatus() {
     await axios.get(mistAddress)
         .then(response => {
             videoPlayer.apiRequest = response.data;
-            videoPlayer.challenge = videoPlayer.apiRequest.challenge;
-            videoPlayer.status = videoPlayer.apiRequest.status;
+            videoPlayer.challenge = videoPlayer.apiRequest.authorize.challenge;
+            videoPlayer.status = videoPlayer.apiRequest.authorize.status;
         })
         .catch(error => {
             console.log(error);
         })
     console.log('get API');
+
 }
 
 // Create the header for the MistServer WS API Request
@@ -155,24 +160,27 @@ const mistWsHeader = {
 
 async function authenticateMistServer() {
     let hashedPassword = md5(form.password)
-    console.log("Hashed password: " + hashedPassword);
+    console.log("Hashed password: " + hashedPassword)
     let authReturn = md5(hashedPassword+videoPlayer.challenge)
+    videoPlayer.mistPassword = authReturn
     console.log("Final hashed password: " + authReturn)
-    await axios.get(mistAddress+'?command=%7B%0A%22authorize%22%3A%20%7B%0A%22username%22%3A%20%22'+form.username+'%22,%0A%22password%22%3A%20%22'+authReturn+'%22%0A%7D%0A%7D')
+    await axios.get(mistAddress+'?command=%7B%0A%22authorize%22%3A%20%7B%0A%22username%22%3A%20%22'+videoPlayer.mistUsername+'%22,%0A%22password%22%3A%20%22'+authReturn+'%22%0A%7D%0A%7D')
         .then(response => {
-            videoPlayer.apiRequest = response.data;
-            videoPlayer.challenge = videoPlayer.apiRequest.authorize.challenge;
-            videoPlayer.status = videoPlayer.apiRequest.authorize.status;
+            videoPlayer.apiRequest = response.data
+            videoPlayer.challenge = videoPlayer.apiRequest.authorize.challenge
+            videoPlayer.status = videoPlayer.apiRequest.authorize.status
             console.log(response.data);
         })
         .catch(error => {
-            console.log(error);
+            console.log(error)
         })
     console.log('mistServer API authorization sent.');
+
 }
 
 async function getMistStats() {
-    await axios.get(mistAddress+'?command=', {"capabilities": "true"})
+    // await axios.get(mistAddress+'?command=', {"capabilities": "true"})
+    await axios.get(mistAddress+'?command=%7B%0A%22authorize%22%3A%20%7B%0A%22username%22%3A%20%22'+videoPlayer.mistUsername+'%22,%0A%22password%22%3A%20%22'+videoPlayer.mistPassword+'%22%0A%7D%0A%7D')
     // await axios.get(mistAddressWs, mistWsHeader)
         .then(response => {
             console.log(response.data);
@@ -184,6 +192,7 @@ async function getMistStats() {
             console.log(error);
         })
     console.log('Get MistServer Stats');
+    videoPlayer.mistStatus = true
 }
 //
 async function getActiveStreams() {

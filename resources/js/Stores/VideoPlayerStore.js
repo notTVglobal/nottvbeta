@@ -27,6 +27,7 @@ export let useVideoPlayerStore = defineStore('videoPlayer', {
             apiActiveStreams: [],
             mistUsername: [],
             mistPassword: [],
+            mistStatus: Boolean,
             mistNewHashedPassword: [],
         }
     },
