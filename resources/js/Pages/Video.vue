@@ -135,8 +135,8 @@ let md5 = require('md5');
 //
 // let mistAddress = 'http://localhost:4242/api'
 // let mistAddress = 'https://beta-staging.not.tv/mistserver/api'
-let mistAddress = 'https://mist.not.tv/api'
-// let mistAddress = 'http://mist.nottv.io:4242/api'
+// let mistAddress = 'https://mist.not.tv/api'
+let mistAddress = 'http://mist.nottv.io:4242/api'
 // let mistAddressWs = 'ws://mist.nottv.io:4242/ws'
 //
 ///////////////////////////////////////////////////////////////////////
