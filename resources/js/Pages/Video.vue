@@ -24,7 +24,7 @@
                 </div>
             </div>
 
-            <div class="">Status: {{ videoPlayer.status }}</div>
+            <div class="">Status: <span class="font-semibold">{{ videoPlayer.status }}</span></div>
 
             <button class="ml-2 py-2 my-2 px-4 text-white bg-orange-800 hover:bg-orange-500 mr-2 rounded-xl" @click.prevent="getStatus">
                 Get Status
@@ -54,8 +54,8 @@
                     <div class="mb-4 w-1/2 text-sm"> Credit to Jeff Mott for his work on a pure JS implementation of the MD5 algorithm.
                         You can find the npm package <a href="https://www.npmjs.com/package/md5" target="_blank" class="text-blue-800 hover:text-gray-500">here.</a></div>
 
-                    <button class="ml-2 py-2 px-4 text-white bg-green-800 hover:bg-green-500 rounded-xl" @click.prevent="submit">
-                        Submit
+                    <button class="ml-2 py-2 px-4 text-white bg-green-800 hover:bg-green-500 rounded-xl" @click.prevent="authenticateMistServer">
+                        Authenticate
                     </button>
 
                 </form>
@@ -65,7 +65,7 @@
             <div v-if="videoPlayer.status === 'OK'" class="mb-8">
                 <div  class="py-3 px-4 mb-4 bg-green-900 text-white rounded">MistServer is connected</div>
 
-                <button class="ml-2 py-2 px-4 text-white bg-blue-800 hover:bg-blue-500 mr-2 rounded-xl" @click="getMistStats">
+                <button class="ml-2 py-2 px-4 text-white bg-blue-800 hover:bg-blue-500 mr-2 rounded-xl" @click.prevent="getMistStats">
                     Get Server Stats
                 </button>
 
@@ -97,6 +97,8 @@ import {Inertia} from "@inertiajs/inertia";
 let videoPlayer = useVideoPlayerStore()
 let chat = useChatStore()
 
+videoPlayer.apiActiveStreams = null;
+
 onMounted(() => {
     videoPlayer.makeVideoTopRight();
 });
@@ -106,10 +108,6 @@ let props = defineProps({
     message: ref(String),
     mistNewHashedPassword: ref(String),
 });
-
-
-// const challengeValue = ref(videoPlayer.challenge)
-// const statusValue = ref('')
 
 let form = reactive({
     challenge: videoPlayer.challenge,
@@ -121,71 +119,20 @@ let form = reactive({
 const password = ref('');
 
 let md5 = require('md5');
-// console.log(md5(props.message));
 
 
+////////////////////  MIST SERVER ADDRESS //////////////////////////////
+// Keep this here to change which MistServer is used for testing purposes
+//
 // let mistAddress = 'http://localhost:4242/api'
-// let mistAddress = 'https://beta-staging.not.tv/mistserver/api'
-let mistAddress = 'http://mist.nottv.io:4242/api'
+let mistAddress = 'https://beta-staging.not.tv/mistserver/api'
+// let mistAddress = 'http://mist.nottv.io:4242/api'
+//
+///////////////////////////////////////////////////////////////////////
 
-
-
-async function getMistStats() {
-    await axios.get(mistAddress+'?command=', {"capabilities": "true"})
-        .then(response => {
-            videoPlayer.apiRequest = response.data;
-            videoPlayer.challenge = videoPlayer.apiRequest.authorize.challenge;
-            videoPlayer.status = videoPlayer.apiRequest.authorize.status;
-        })
-        .catch(error => {
-            console.log(error);
-        })
-    console.log('get API');
-}
-
-let setMistHashedPassword = () => {
-    if (props.message) {
-        props.mistNewHashedPassword = md5(props.message);
-    }
-}
-
-setMistHashedPassword();
-// axios.get('http://mist.nottv.io:4242/api').then(console.log);
-
-// tec21: Either we get one of these 3 options working,
-// or we create a web application that sits on top
-// of the MistServer and sends API responses to the
-// main server when new videos are created,
-// and it will need to receive a notification
-// to setup new streams when new shows are created
-// and when new creators register.
 
 async function getStatus() {
-    // this one is the localhost for the staging server.
-    //
-    // await axios.get('https://beta-staging.not.tv/mistserver/api')
-        // this one sasys CORS Preflight did not succeed.
-        // Cross-Origin Request Blocked. The Same Origin
-        // Policy disallows reading the remote resource.
-        //
-    // await axios.get('https://mist.not.tv/mistserver/api')
-        //
-        //
-        // this one returns a challenge response and
-        // I haven't been able to get through the
-        // authorization with a JSON request.
-        // The mistserver just keeps returning
-        // a challenge response.
-        //
     await axios.get(mistAddress)
-        //
-        //
-        // this one works, but it has to be installed
-        // on the same machine as the webserver.
-        // in production, this presents a problem
-        // as not.tv needs to be served over HTTPS.
-        //
-    // await axios.get('http://localhost:4242/api')
         .then(response => {
             videoPlayer.apiRequest = response.data;
             videoPlayer.challenge = videoPlayer.apiRequest.authorize.challenge;
@@ -197,31 +144,12 @@ async function getStatus() {
     console.log('get API');
 }
 
-function submit() {
+async function authenticateMistServer() {
     let hashedPassword = md5(form.password)
     console.log("Hashed password: " + hashedPassword);
     let authReturn = md5(hashedPassword+videoPlayer.challenge)
     console.log("Final hashed password: " + authReturn)
-    authenticateMistServer(authReturn);
-
-    // Inertia.post(route('mistApi', {challenge: videoPlayer.challenge, password: password}));
-    // Inertia.post(route('mistApi', {challenge: videoPlayer.challenge, password: hashedPassword}));
-}
-
-
-// This is a properly formatted HTTP API call to the MistServer:
-//
-// {
-//     "addstream": {
-//     "streamname_here": {},
-// }
-// }{}
-
-videoPlayer.apiActiveStreams = null;
-
-// tec21: this returns the pattern that mistServer is apparently looking for.
-async function authenticateMistServer(password) {
-    await axios.get(mistAddress+'?command=%7B%0A%22authorize%22%3A%20%7B%0A%22username%22%3A%20%22'+form.username+'%22,%0A%22password%22%3A%20%22'+password+'%22%0A%7D%0A%7D')
+    await axios.get(mistAddress+'?command=%7B%0A%22authorize%22%3A%20%7B%0A%22username%22%3A%20%22'+form.username+'%22,%0A%22password%22%3A%20%22'+authReturn+'%22%0A%7D%0A%7D')
         .then(response => {
             videoPlayer.apiRequest = response.data;
             videoPlayer.challenge = videoPlayer.apiRequest.authorize.challenge;
@@ -234,16 +162,74 @@ async function authenticateMistServer(password) {
     console.log('mistServer API authorization sent.');
 }
 
-async function getActiveStreams() {
-    await axios.get(mistAddress+'?command=%7B%0A%22minimal%22%3A%20%221%22,%0A%22active_streams%22%3A%20%22true%22%0A%7D')
+async function getMistStats() {
+    await axios.get(mistAddress+'?command=', {"capabilities": "true"})
+        .then(response => {
+            videoPlayer.apiRequest = response.data;
+            videoPlayer.challenge = videoPlayer.apiRequest.authorize.challenge;
+            videoPlayer.status = videoPlayer.apiRequest.authorize.status;
+        })
+        .catch(error => {
+            console.log(error);
+        })
+    console.log('Get MistServer Stats');
+}
+
+async function getActiveStreams(password) {
+    // await axios.get(mistAddress+'?command=%7B%0A%22minimal%22%3A%20%221%22,%0A%22active_streams%22%3A%20%22true%22%0A%7D')
+    await axios.get(mistAddress+'?command=%7B%20%22authorize%22%3A%20%7B%0A%20%20%20%20%22'+form.username+'%22%3A%20%22USERNAME%22,%0A%20%20%20%20%22'+password+'%22%3A%20%22PASSWORD%22%0A%20%20%20%20%7D,%0A%7B%20%22minimal%22%3A%201%20%7D,%0A%7B%20%22active_streams%22%3A%20true%20%7D%0A%7D')
         .then(response => {
             videoPlayer.apiActiveStreams = response.data
+            videoPlayer.apiRequest = response.data;
+            videoPlayer.challenge = videoPlayer.apiRequest.authorize.challenge;
+            videoPlayer.status = videoPlayer.apiRequest.authorize.status;
         })
         .catch(error => {
             console.log(error);
         })
     console.log('mistServer API request sent. Get Active Streams.');
 }
+
+// let setMistHashedPassword = () => {
+//     if (props.message) {
+//         props.mistNewHashedPassword = md5(props.message);
+//     }
+// }
+//
+// setMistHashedPassword();
+
+
+
+/////////////// EXAMPLES OF MISTSERVER API CALLS ///////////////
+//
+// Keep these here. The MistServer API Call needs to be Url Encoded.
+//
+// This is a properly formatted HTTP API call to the MistServer:
+//
+// {
+//     "addstream": {
+//     "streamname_here": {},
+// }
+// }
+
+// { "authorize": {
+//     "username": "USERNAME",
+//     "password": "PASSWORD"
+//     },
+// { "minimal": 1 },
+// { "active_streams": true }
+// }
+
+// https://beta-staging.not.tv/mistserver/api?command=%7B%20%22authorize%22%3A%20%7B%0A%20%20%20%20%22username%22%3A%20%22USERNAME%22,%0A%20%20%20%20%22password%22%3A%20%22PASSWORD%22%0A%20%20%20%20%7D,%0A%7B%20%22minimal%22%3A%201%20%7D,%0A%7B%20%22active_streams%22%3A%20true%20%7D%0A%7D
+
+//
+///////////////////////////////////////////////////////////////
+
+
+
+
+
+
 
 
 // {
