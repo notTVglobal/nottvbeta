@@ -125,8 +125,9 @@ let md5 = require('md5');
 // Keep this here to change which MistServer is used for testing purposes
 //
 // let mistAddress = 'http://localhost:4242/api'
-// let mistAddress = 'https://beta-staging.not.tv/mistserver/api'
-let mistAddress = 'http://mist.nottv.io:4242/api'
+let mistAddress = 'https://beta-staging.not.tv/mistserver/'
+// let mistAddress = 'http://mist.nottv.io:4242/api'
+// let mistAddressWs = 'ws://mist.nottv.io:4242/ws'
 //
 ///////////////////////////////////////////////////////////////////////
 
@@ -143,6 +144,14 @@ async function getStatus() {
         })
     console.log('get API');
 }
+
+// Create the header for the MistServer WS API Request
+//
+const mistWsHeader = {
+    headers: {
+        "Authorization": "Bearer "+videoPlayer.challenge,
+    },
+};
 
 async function authenticateMistServer() {
     let hashedPassword = md5(form.password)
@@ -163,8 +172,10 @@ async function authenticateMistServer() {
 }
 
 async function getMistStats() {
-    await axios.get(mistAddress+'?command=', {"capabilities": "true"})
+    // await axios.get(mistAddress+'?command=', {"capabilities": "true"})
+    await axios.get(mistAddressWs, mistWsHeader)
         .then(response => {
+            console.log(response.data);
             videoPlayer.apiRequest = response.data;
             videoPlayer.challenge = videoPlayer.apiRequest.authorize.challenge;
             videoPlayer.status = videoPlayer.apiRequest.authorize.status;
