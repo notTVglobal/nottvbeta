@@ -21,10 +21,12 @@ class VideoController extends Controller
 
         // or do we concatenate them?
 
-        $newHashedPassword = ($password . '+' . $challenge);
+//        $newHashedPassword = ($password . '+' . $challenge);
+        $newHashedPassword = ($password . $challenge);
+
         $x = hash('md5', $newHashedPassword);
-        dd($x);
-        return redirect()->route('video')->with('message', $newHashedPassword);
+//        dd($x);
+        return redirect()->route('video')->with('message', $x);
 
     }
 }

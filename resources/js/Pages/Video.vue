@@ -24,8 +24,42 @@
                 </div>
             </div>
 
+            <div class="">Status: {{ videoPlayer.status }}</div>
+
+            <button class="ml-2 py-2 my-2 px-4 text-white bg-orange-800 hover:bg-orange-500 mr-2 rounded-xl" @click.prevent="getStatus">
+                Get Status
+            </button>
+
             <div v-if="videoPlayer.status === 'CHALL'" class="mb-8">
                 <div  class="py-3 px-4 mb-4 bg-orange-800 text-white rounded">MistServer needs to be authenticated</div>
+
+                <div class="font-semibold text-2xl px-2">
+                    Connect to the MistServer
+                </div>
+
+                <div class="my-3 pl-2 text-sm w-1/2">If the MistServer Status will either be OK, CHALL, NOACC or ACC_MADE.
+                    If it's "CHALL" then you need to re-authenticate with the username and password.</div>
+
+                <form @submit.prevent class="mt-2 pl-2">
+
+                    <div class="mt-2">Challenge:</div>
+                    <input type="text" name="challenge" id="challenge" v-model="videoPlayer.challenge" disabled/>
+
+                    <div class="font-semibold mt-2">MistServer Username:</div>
+                    <input class="mb-2" type="text" name="username" v-model="form.username" />
+
+                    <div class="font-semibold mt-2">MistServer Password:</div>
+                    <input type="password" name="password" v-model="form.password" />
+
+                    <div class="mb-4 w-1/2 text-sm"> Credit to Jeff Mott for his work on a pure JS implementation of the MD5 algorithm.
+                        You can find the npm package <a href="https://www.npmjs.com/package/md5" target="_blank" class="text-blue-800 hover:text-gray-500">here.</a></div>
+
+                    <button class="ml-2 py-2 px-4 text-white bg-green-800 hover:bg-green-500 rounded-xl" @click.prevent="submit">
+                        Submit
+                    </button>
+
+                </form>
+
             </div>
 
             <div v-if="videoPlayer.status === 'OK'" class="mb-8">
@@ -35,85 +69,16 @@
                     Get Server Stats
                 </button>
 
-            </div>
-
-
-
-
-
-
-            <div class="bg-orange-300 px-2">
-           Connect to the MistServer API here.
-            </div>
-
-<div class="my-3 text-sm w-1/2">If the MistServer Status will either be OK, CHALL, NOACC or ACC_MADE.
-If it's "CHALL" then you need to re-authenticate with the username and password.</div>
-
-
-
-
-
-
-<!--            if the response contains status: CHALL -->
-<!--            then make another request with the response -->
-<!--            and the md hashed sums together... this will -->
-<!--            have to be done in the controller. -->
-
-
-
-            <form @submit.prevent class="mt-2">
-                <div class="">Status: </div>
-                <input type="text" name="status" v-model="videoPlayer.status" disabled/>
-                <button class="ml-2 py-2 px-4 text-white bg-orange-800 hover:bg-orange-500 mr-2 rounded-xl" @click.prevent="getStatus">
-                    Get Status
+                <button class="ml-2 py-2 px-4 text-white bg-blue-800 hover:bg-blue-500 rounded-xl" @click.prevent="getActiveStreams">
+                    Get Active Streams
                 </button>
-                <div class="mt-2">Challenge:</div>
-                <input type="text" name="challenge" id="challenge" v-model="videoPlayer.challenge" disabled/>
-                <div class="font-semibold mt-2">MistServer Username:</div>
-                <input class="mb-2" type="text" name="username" v-model="videoPlayer.mistUsername" />
-                <div class="font-semibold mt-2">MistServer Password:</div>
-                <input type="password" name="password" v-model="password" />
-                <button class="ml-2 py-2 px-4 text-white bg-green-800 hover:bg-green-500 rounded-xl" @click.prevent="submit(password)">
-                    Submit
-                </button>
-            </form>
 
-            <div class="mt-2">The MD5 Hashed Password will go here:</div>
-            <div class="flex mb-2">
-                <input type="text" v-model="message" class="" disabled />
+                <div class="mt-2">Active Streams:</div>
+                <div class="">
+                    {{videoPlayer.apiActiveStreams}}
+                </div>
+
             </div>
-
-            <div class="mt-2">The New Hashed Password for MistServer Authorization:</div>
-            <div class="flex mb-2">
-                <input type="text" v-model="videoPlayer.mistNewHashedPassword" class="" disabled />
-            </div>
-
-        <div class="mt-4 mb-2 text-sm w-1/2 text-orange-600"><span class="font-semibold">NOTE:</span> The MD5 Hashed password is currently stored as a prop. This is not secure.</div>
-        <div class="mb-4 w-1/2 text-sm"> Credit to Jeff Mott for his work on a pure JS implementation of the MD5 algorithm.
-            You can find the npm package <a href="https://www.npmjs.com/package/md5" target="_blank" class="text-blue-800 hover:text-gray-500">here.</a></div>
-
-
-            <button class="ml-2 py-2 px-4 text-white bg-blue-800 hover:bg-blue-500 rounded-xl" @click.prevent="getApi">
-                Get API
-            </button>
-
-            <div class="mt-2">The API reply is:</div>
-            <div class="">
-                {{videoPlayer.apiResponse}}
-            </div>
-
-            <button class="ml-2 py-2 px-4 text-white bg-blue-800 hover:bg-blue-500 rounded-xl" @click.prevent="getActiveStreams">
-                Get Active Streams
-            </button>
-
-            <div class="mt-2">The API reply is:</div>
-            <div class="">
-                {{videoPlayer.apiActiveStreams}}
-            </div>
-
-
-
-
 
         </div>
     </div>
@@ -149,6 +114,8 @@ let props = defineProps({
 let form = reactive({
     challenge: videoPlayer.challenge,
     status: videoPlayer.status,
+    username: '',
+    password: '',
 })
 
 const password = ref('');
@@ -158,8 +125,8 @@ let md5 = require('md5');
 
 
 // let mistAddress = 'http://localhost:4242/api'
-let mistAddress = 'https://beta-staging.not.tv/mistserver/api'
-// let mistAddress = 'http://mist.nottv.io:4242/api'
+// let mistAddress = 'https://beta-staging.not.tv/mistserver/api'
+let mistAddress = 'http://mist.nottv.io:4242/api'
 
 
 
@@ -230,10 +197,15 @@ async function getStatus() {
     console.log('get API');
 }
 
-function submit(password) {
-    let hashedPassword = md5(password);
-    console.log('sent to backend');
-    Inertia.post(route('mistApi', {challenge: videoPlayer.challenge, password: hashedPassword}));
+function submit() {
+    let hashedPassword = md5(form.password)
+    console.log("Hashed password: " + hashedPassword);
+    let authReturn = md5(hashedPassword+videoPlayer.challenge)
+    console.log("Final hashed password: " + authReturn)
+    authenticateMistServer(authReturn);
+
+    // Inertia.post(route('mistApi', {challenge: videoPlayer.challenge, password: password}));
+    // Inertia.post(route('mistApi', {challenge: videoPlayer.challenge, password: hashedPassword}));
 }
 
 
@@ -248,22 +220,18 @@ function submit(password) {
 videoPlayer.apiActiveStreams = null;
 
 // tec21: this returns the pattern that mistServer is apparently looking for.
-async function getApi() {
-    await axios.get(mistAddress, {
-        "command": {
-            "authorize": {
-                "username": videoPlayer.mistUsername+',', "password": props.message
-            }
-        }
-    })
-
+async function authenticateMistServer(password) {
+    await axios.get(mistAddress+'?command=%7B%0A%22authorize%22%3A%20%7B%0A%22username%22%3A%20%22'+form.username+'%22,%0A%22password%22%3A%20%22'+password+'%22%0A%7D%0A%7D')
         .then(response => {
-            videoPlayer.apiResponse = response.data
+            videoPlayer.apiRequest = response.data;
+            videoPlayer.challenge = videoPlayer.apiRequest.authorize.challenge;
+            videoPlayer.status = videoPlayer.apiRequest.authorize.status;
+            console.log(response.data);
         })
         .catch(error => {
             console.log(error);
         })
-    console.log('mistServer API request sent.');
+    console.log('mistServer API authorization sent.');
 }
 
 async function getActiveStreams() {
