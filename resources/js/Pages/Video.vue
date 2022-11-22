@@ -157,8 +157,8 @@ let md5 = require('md5');
 // console.log(md5(props.message));
 
 
-let mistAddress = 'http://localhost:4242/api'
-// let mistAddress = 'https://beta-staging.not.tv/mistserver/api'
+// let mistAddress = 'http://localhost:4242/api'
+let mistAddress = 'https://beta-staging.not.tv/mistserver/api'
 // let mistAddress = 'http://mist.nottv.io:4242/api'
 
 
@@ -245,7 +245,7 @@ function submit(password) {
 // }
 // }{}
 
-
+videoPlayer.apiActiveStreams = null;
 
 // tec21: this returns the pattern that mistServer is apparently looking for.
 async function getApi() {
