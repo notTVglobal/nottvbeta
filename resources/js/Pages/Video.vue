@@ -125,8 +125,8 @@ let md5 = require('md5');
 // Keep this here to change which MistServer is used for testing purposes
 //
 // let mistAddress = 'http://localhost:4242/api'
-let mistAddress = 'https://beta-staging.not.tv/mistserver/api'
-// let mistAddress = 'http://mist.nottv.io:4242/api'
+// let mistAddress = 'https://beta-staging.not.tv/mistserver/api'
+let mistAddress = 'http://mist.nottv.io:4242/api'
 //
 ///////////////////////////////////////////////////////////////////////
 
@@ -174,15 +174,17 @@ async function getMistStats() {
         })
     console.log('Get MistServer Stats');
 }
-
-async function getActiveStreams(password) {
-    // await axios.get(mistAddress+'?command=%7B%0A%22minimal%22%3A%20%221%22,%0A%22active_streams%22%3A%20%22true%22%0A%7D')
-    await axios.get(mistAddress+'?command=%7B%20%22authorize%22%3A%20%7B%0A%20%20%20%20%22'+form.username+'%22%3A%20%22USERNAME%22,%0A%20%20%20%20%22'+password+'%22%3A%20%22PASSWORD%22%0A%20%20%20%20%7D,%0A%7B%20%22minimal%22%3A%201%20%7D,%0A%7B%20%22active_streams%22%3A%20true%20%7D%0A%7D')
+//
+async function getActiveStreams() {
+    await axios.get(mistAddress+'?command=%7B%0A%22minimal%22%3A%20%221%22,%0A%22active_streams%22%3A%20%22true%22%0A%7D')
+    // let hashedPassword = md5(form.password)
+    // let authReturn = md5(hashedPassword+videoPlayer.challenge)
+    // await axios.get(mistAddress+'?command=%7B%20%22authorize%22%3A%20%7B%0A%20%20%20%20%22'+form.username+'%22%3A%20%22USERNAME%22,%0A%20%20%20%20%22'+authReturn+'%22%3A%20%22PASSWORD%22%0A%20%20%20%20%7D%0A%7D,%0A%7B%20%22minimal%22%3A%201%20%7D,%0A%7B%20%22active_streams%22%3A%20true%20%7D')
         .then(response => {
             videoPlayer.apiActiveStreams = response.data
-            videoPlayer.apiRequest = response.data;
-            videoPlayer.challenge = videoPlayer.apiRequest.authorize.challenge;
-            videoPlayer.status = videoPlayer.apiRequest.authorize.status;
+            videoPlayer.apiResponse = response.data;
+            videoPlayer.challenge = videoPlayer.apiResponse.authorize.challenge;
+            videoPlayer.status = videoPlayer.apiResponse.authorize.status;
         })
         .catch(error => {
             console.log(error);
@@ -215,11 +217,12 @@ async function getActiveStreams(password) {
 // { "authorize": {
 //     "username": "USERNAME",
 //     "password": "PASSWORD"
-//     },
+//     }
+// },
 // { "minimal": 1 },
 // { "active_streams": true }
-// }
-
+//
+// https://beta-staging.not.tv/mistserver/api?command=%7B%20%22authorize%22%3A%20%7B%0A%20%20%20%20%22username%22%3A%20%22USERNAME%22,%0A%20%20%20%20%22password%22%3A%20%22PASSWORD%22%0A%20%20%20%20%7D%0A%7D,%0A%7B%20%22minimal%22%3A%201%20%7D,%0A%7B%20%22active_streams%22%3A%20true%20%7D
 // https://beta-staging.not.tv/mistserver/api?command=%7B%20%22authorize%22%3A%20%7B%0A%20%20%20%20%22username%22%3A%20%22USERNAME%22,%0A%20%20%20%20%22password%22%3A%20%22PASSWORD%22%0A%20%20%20%20%7D,%0A%7B%20%22minimal%22%3A%201%20%7D,%0A%7B%20%22active_streams%22%3A%20true%20%7D%0A%7D
 
 //
