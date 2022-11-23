@@ -36,6 +36,9 @@ mix.js('resources/js/app.js', 'public/js')
         // if the @ path changes update the webpack.config.js file too!
         '@': 'resources/js',
         ziggy: "vendor/tightenco/ziggy/dist/vue",
+    })
+    .browserSync({
+        proxy: 'beta.local:8081'
     });
 
 if (mix.inProduction()) {

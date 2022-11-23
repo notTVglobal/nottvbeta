@@ -11,7 +11,7 @@
 
             <div class="flex justify-between mb-6">
                 <div class="grid grid-cols-1 grid-rows-2">
-                    <h1 class="text-3xl font-semibold">MistServer API</h1>
+                    <h1 class="text-3xl font-semibold">MistServer API 2</h1>
                 </div>
                 <span class="text-xs font-semibold text-red-700">Admin Mode</span>
                 <div class="grid grid-cols-1 grid-rows-2">
