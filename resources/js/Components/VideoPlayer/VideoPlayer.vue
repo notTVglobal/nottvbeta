@@ -89,7 +89,7 @@
                         <span class="font-semibold"> AREA</span>
                     </div>
                     <div class="">
-                        MORE TEXT
+                        IS IT FIXED?
                     </div>
                     <img :src="`/storage/images/logo_white_512.png`" class="w-20 pt-2 pb-6 opacity-10">
                 </div>
