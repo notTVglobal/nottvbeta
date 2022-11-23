@@ -534,6 +534,7 @@ function startPush() {
 //
 // This works on my local system (which doesn't requiring authorization)
 function addStream() {
+    console.log("what is happening right now?")
     // api call to mist server.
     let request = "%7B%22addstream%22%3A%7B%22streamname%22%3A%7B%22source%22%3A%22push%3A%2F%2F%22%7D%7D%7D"
     getApi(request)
