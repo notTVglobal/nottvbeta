@@ -33,9 +33,15 @@
                     </button>
 
                     <button v-if="videoPlayer.status === 'OK'"
-                            class="ml-2 py-2 my-2 px-4 text-white bg-green-800 hover:bg-green-500 mr-2 rounded-xl"
+                            class="ml-2 py-2 my-2 px-4 text-white bg-blue-800 hover:bg-blue-500 mr-2 rounded-xl"
                             @click.prevent="displayPushForm">
                         Start Push
+                    </button>
+
+                    <button v-if="videoPlayer.status === 'OK'"
+                            class="ml-2 py-2 my-2 px-4 text-white bg-blue-800 hover:bg-blue-500 mr-2 rounded-xl"
+                            @click.prevent="addStream">
+                        Add Stream
                     </button>
                 </div>
                 <div v-if="videoPlayer.status === 'OK'" class="">
@@ -79,8 +85,9 @@
             <div v-if="videoPlayer.status === 'OK'" class="mb-8">
                 <div  class="py-3 px-4 mb-4 bg-green-900 text-white rounded">MistServer is connected</div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2">
-                    <div class="flex flex-col w-1/2 space-y-2">
+                <div class="grid grid-cols-1 md:grid-cols-3">
+                    <div class="col-span-1">
+                    <div class="flex flex-col space-y-2">
 
                         <button class="ml-2 py-2 px-4 text-white bg-blue-800 hover:bg-blue-500 rounded-xl" @click.prevent="checkUpdates">
                            Check for Updates
@@ -115,13 +122,163 @@
                         </button>
 
                     </div>
-                    <div>
-                        <div v-if="videoPlayer.mistStatus">
-                            <div class="mt-2">Returned data:</div>
-                            <div class="">
-                                {{videoPlayer.apiResponse}}
-                            </div>
+                    </div>
+
+
+                    <div class="md:col-span-2 pl-6">
+<!--                        <div v-if="videoPlayer.mistStatus">-->
+<!--                            <div class="mt-2">Returned data:</div>-->
+<!--                            <div class="">-->
+<!--                                {{videoPlayer.apiResponse}}-->
+<!--                            </div>-->
+<!--                        </div>-->
+                        <div class="mt-2 text-xs uppercase">Returned data:</div>
+
+                        <div v-if="videoPlayer.mistDisplay === 'updates'">
+                            <table>
+                                <thead>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                </thead>
+                                <tr v-for="update in videoPlayer.apiResponse.update" :key="update.item">
+                                    <td>{{ update[0] }}</td>
+                                    <td>{{ update[1] }}</td>
+                                    <td>{{ update[2] }}</td>
+                                    <td>{{ update[3] }}</td>
+                                    <td>{{ update[4] }}</td>
+                                </tr>
+                            </table>
                         </div>
+
+                        <div v-if="videoPlayer.mistDisplay === 'capabilities'">
+                            <div class="mt-2 font-semibold">CPU</div>
+                            <table>
+                                <tr v-for="(value, name) in videoPlayer.apiResponse.capabilities.cpu[0]" :key="name">
+                                    <td>{{name}}</td>
+                                    <td>{{value}}</td>
+                                </tr>
+                            </table>
+                            <div class="mt-2 font-semibold">Load</div>
+                            <table>
+                                <tr v-for="(value, name) in videoPlayer.apiResponse.capabilities.load" :key="name">
+                                    <td>{{name}}</td>
+                                    <td>{{value}}</td>
+                                </tr>
+                            </table>
+                            <div class="mt-2 font-semibold">Mem</div>
+                            <table>
+                                <tr v-for="(value, name) in videoPlayer.apiResponse.capabilities.mem" :key="name">
+                                    <td>{{name}}</td>
+                                    <td>{{value}}</td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div v-if="videoPlayer.mistDisplay === 'totals'">
+
+                            <table>
+                                <thead>
+                                <td>{{videoPlayer.apiResponse.totals.fields[0]}}</td>
+                                <td>{{videoPlayer.apiResponse.totals.fields[1]}}</td>
+                                <td>{{videoPlayer.apiResponse.totals.fields[2]}}</td>
+                                <td>{{videoPlayer.apiResponse.totals.fields[3]}}</td>
+                                <td>{{videoPlayer.apiResponse.totals.fields[4]}}</td>
+                                <td>{{videoPlayer.apiResponse.totals.fields[5]}}</td>
+                                <td>{{videoPlayer.apiResponse.totals.fields[6]}}</td>
+                                </thead>
+                                <tr v-for="total in videoPlayer.apiResponse.totals.data.slice().reverse()" :key="total.item">
+                                    <td>{{ total[0] }}</td>
+                                    <td>{{ total[1] }}</td>
+                                    <td>{{ total[2] }}</td>
+                                    <td>{{ total[3] }}</td>
+                                    <td>{{ total[4] }}</td>
+                                    <td>{{ total[5] }}</td>
+                                    <td>{{ total[6] }}</td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div v-if="videoPlayer.mistDisplay === 'clients'">
+
+                            <table>
+                                <thead>
+                                <td>{{videoPlayer.apiResponse.clients.fields[0]}}</td>
+                                <td>{{videoPlayer.apiResponse.clients.fields[1]}}</td>
+                                <td>{{videoPlayer.apiResponse.clients.fields[2]}}</td>
+                                <td>{{videoPlayer.apiResponse.clients.fields[3]}}</td>
+                                <td>{{videoPlayer.apiResponse.clients.fields[4]}}</td>
+                                <td>{{videoPlayer.apiResponse.clients.fields[5]}}</td>
+                                <td>{{videoPlayer.apiResponse.clients.fields[6]}}</td>
+                                <td>{{videoPlayer.apiResponse.clients.fields[7]}}</td>
+                                <td>{{videoPlayer.apiResponse.clients.fields[8]}}</td>
+                                <td>{{videoPlayer.apiResponse.clients.fields[9]}}</td>
+                                <td>{{videoPlayer.apiResponse.clients.fields[10]}}</td>
+                                <td>{{videoPlayer.apiResponse.clients.fields[11]}}</td>
+                                <td>{{videoPlayer.apiResponse.clients.fields[12]}}</td>
+                                <td>{{videoPlayer.apiResponse.clients.fields[13]}}</td>
+                                <td>time</td>
+                                </thead>
+                                <tr v-for="client in videoPlayer.apiResponse.clients.data" :key="client.item">
+                                    <td>{{ client[0] }}</td>
+                                    <td>{{ client[1] }}</td>
+                                    <td>{{ client[2] }}</td>
+                                    <td>{{ client[3] }}</td>
+                                    <td>{{ client[4] }}</td>
+                                    <td>{{ client[5] }}</td>
+                                    <td>{{ client[6] }}</td>
+                                    <td>{{ client[7] }}</td>
+                                    <td>{{ client[8] }}</td>
+                                    <td>{{ client[9] }}</td>
+                                    <td>{{ client[10] }}</td>
+                                    <td>{{ client[11] }}</td>
+                                    <td>{{ client[12] }}</td>
+                                    <td>{{ client[13] }}</td>
+                                    <td>{{ client[14] }}</td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div v-if="videoPlayer.mistDisplay === 'active_streams'">
+
+                            <table>
+                                <thead class="font-semibold mb-2">
+                                <td>Stream Name</td>
+                                </thead>
+                                <tr v-for="stream in videoPlayer.apiResponse.active_streams" :key="stream.item">
+                                    <td>{{ stream }}</td>
+
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div v-if="videoPlayer.mistDisplay === 'log'">
+
+                            <table>
+                                <tr v-for="log in videoPlayer.apiResponse.log" :key="log.item">
+                                    <td>{{ log[0] }}</td>
+                                    <td>{{ log[1] }}</td>
+                                    <td>{{ log[2] }}</td>
+                                    <td>{{ log[3] }}</td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div v-if="videoPlayer.mistDisplay === 'recordings'">
+
+                            <table>
+                                <tr v-for="log in videoPlayer.apiResponse.log" :key="log.item">
+                                    <td>{{ log[0] }}</td>
+                                    <td>{{ log[1] }}</td>
+                                    <td>{{ log[2] }}</td>
+                                    <td>{{ log[3] }}</td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!--                    Begin Push Form ... move this to its own component.           -->
                         <div v-if="videoPlayer.mistDisplayPushForm">
                             <div class="font-semibold my-2">Push a Stream:</div>
                             <div class="">
@@ -144,12 +301,14 @@
                                         class="ml-2 py-2 px-4 text-white bg-green-800 hover:bg-green-500 rounded-xl">
                                     Push
                                 </button>
-                                <video src="https://streams.not.tv/vmixsource03.mp4" class="mt-20 w-96" controls></video>
-                                <br>Preview video is hardcoded to "vmixsource03"
+                                <video src="http://localhost:8080/test_stream_2.mp4" class="mt-20 w-96" controls autoplay></video>
+                                <br>Preview video is hardcoded to "test_stream_2"
                             </div>
                         </div>
 
                     </div>
+
+
                 </div>
 
             </div>
@@ -208,6 +367,7 @@ let md5 = require('md5');
 // let mistAddress = 'http://localhost:4242/api'
 // let mistAddress = 'https://beta-staging.not.tv/mistserver/api'
 let mistAddress = 'https://mist.not.tv/'
+// let mistAddress = 'http://localhost:4242/api'
 // let mistAddress = 'http://mist.nottv.io:4242/api'
 // let mistAddressWs = 'ws://mist.nottv.io:4242/ws'
 //
@@ -260,26 +420,31 @@ async function authenticateMistServer() {
 }
 
 let checkUpdates = () => {
+    videoPlayer.mistDisplay = "updates"
     let request = "\"update\": true"
     getApi(request)
 }
 
 let getCapabilities = () => {
+    videoPlayer.mistDisplay = "capabilities"
     let request = "%22capabilities%22%3A%20true"
     getApi(request)
 }
 
 let getTotals = () => {
+    videoPlayer.mistDisplay = "totals"
     let request = "\"totals\": {}"
     getApi(request)
 }
 
 let getActiveStreams = () => {
+    videoPlayer.mistDisplay = "active_streams"
     let request = "\"active_streams\": true"
     getApi(request)
 }
 
 let getClients = () => {
+    videoPlayer.mistDisplay = "clients"
         // This request delivers information about each client connected
         // to a specific stream name.
         //
@@ -291,16 +456,19 @@ let getClients = () => {
 }
 
 let getLog = () => {
+    videoPlayer.mistDisplay = "log"
     let request = "\"log\": {}"
     getApi(request)
 }
 
 let clearLog = () => {
+    videoPlayer.mistDisplay = "log"
     let request = "\"clearstatlog\": true"
     getApi(request)
 }
 
 let browseRecordings = () => {
+    videoPlayer.mistDisplay = "recordings"
     let request = "\"path\": \"/media/upload\""
     getApi(request)
 }
@@ -322,6 +490,23 @@ async function getApi(request) {
     console.log('mistServer API request sent.');
 }
 
+async function getApiLocal(request) {
+    videoPlayer.mistStatus = true
+    videoPlayer.mistDisplayPushForm = false
+    // let apiRequest = '%7B%20%22authorize%22%3A%20%7B%0A%20%20%20%20%22username%22%3A%20%22'+videoPlayer.mistUsername+'%22,%0A%20%20%20%20%22password%22%3A%20%22'+videoPlayer.mistPassword+'%22%0A%20%20%20%7D,%0A%20'+request+'%0A%7D'
+    // let apiRequest = '%7B%20%22authorize%22%3A%20%7B%0A%20%20%20%20%22username%22%3A%20%22'+videoPlayer.mistUsername+'%22,%0A%20%20%20%20%22password%22%3A%20%22'+videoPlayer.mistPassword+'%22%0A%20%20%20%7D,%0A%20'+request+'%0A%0A%7D'
+    await axios.get(mistAddress+'?command='+request)
+        .then(response => {
+            videoPlayer.apiResponse = response.data;
+            videoPlayer.challenge = videoPlayer.apiResponse.authorize.challenge;
+            videoPlayer.status = videoPlayer.apiResponse.authorize.status;
+        })
+        .catch(error => {
+            console.log(error);
+        })
+    console.log('mistServer API request sent.');
+}
+
 // Create method to push a stream somewhere
 //
 
@@ -332,11 +517,13 @@ function displayPushForm() {
     videoPlayer.mistStatus = false
     videoPlayer.mistDisplayPushForm = true
 }
+// This works on my local system (which doesn't requiring authorization) - change getApi to getApiLocal
+// should work on development now
 function startPush() {
     // api call to mist server.
     // "push_start":["STREAMNAME", "URI"]
     // let request = "\"push_start\":[\""+props.streamName+", \""+props.rtmpDestination+"\"]"
-    let request = "{\"push_start\":{\"stream\":\""+props.streamName+",\"target\": \""+props.rtmpDestination+"\"}}"
+    let request = "%7B%20%22push_start%22%3A%20%7B%22stream%22%3A%22vmixsource03%22,%22target%22%3A%22rtmp%3A%2F%2Fmist.nottv.io%2Flive%2Fvmixsource02%22%7D%7D"
     // setTimeout(() => {  getApi(request); console.log("World!"); }, 2000);
     getApi(request)
     videoPlayer.mistStatus = false
@@ -345,6 +532,19 @@ function startPush() {
     console.log("stream push started: " + request)
 }
 //
+// This works on my local system (which doesn't requiring authorization)
+function addStream() {
+    // api call to mist server.
+    // "push_start":["STREAMNAME", "URI"]
+    // let request = "\"push_start\":[\""+props.streamName+", \""+props.rtmpDestination+"\"]"
+    let request = "%7B%20%22addstream%22%3A%20%7B%22streamname%22%3A%20%7B%7D,%7D%7D"
+    // setTimeout(() => {  getApi(request); console.log("World!"); }, 2000);
+    getApiLocal(request)
+    videoPlayer.mistStatus = false
+    videoPlayer.mistDisplayPushForm = true
+    // log output
+    console.log("stream push started: " + request)
+}
 
 
 // let setMistHashedPassword = () => {

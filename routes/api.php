@@ -25,3 +25,5 @@ Route::post('messages', [ChatController::class, 'message']);
 
 Route::post('movies/upload', [MovieUploadController::class, 'upload'])
     ->name('moviesApi.upload');
+
+Route::post('/mistTrigger', [\App\Http\Controllers\mistTriggerController::class, 'logTrigger'])->name('mistTrigger.logTrigger');

@@ -29,6 +29,7 @@ export let useVideoPlayerStore = defineStore('videoPlayer', {
             mistPassword: [],
             mistStatus: Boolean,
             mistDisplayPushForm: Boolean,
+            mistDisplay: String,
             mistNewHashedPassword: [],
         }
     },
