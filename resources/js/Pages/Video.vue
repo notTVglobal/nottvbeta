@@ -536,7 +536,8 @@ function startPush() {
 function addStream() {
     console.log("what is happening right now?!")
     // api call to mist server.
-    let request = "%7B%22addstream%22%3A%7B%22streamname%22%3A%7B%22source%22%3A%22push%3A%2F%2F%22%7D%7D%7D"
+    // let request = "%7B%22addstream%22%3A%7B%22streamname%22%3A%7B%22source%22%3A%22push%3A%2F%2F%22%7D%7D%7D"
+    let request = "bs"
     getApi(request)
     videoPlayer.mistStatus = true
     videoPlayer.mistDisplayPushForm = false
