@@ -537,10 +537,10 @@ function addStream() {
     // api call to mist server.
     let request = "%7B%22addstream%22%3A%7B%22streamname%22%3A%7B%22source%22%3A%22push%3A%2F%2F%22%7D%7D%7D"
     getApi(request)
-    videoPlayer.mistStatus = false
-    videoPlayer.mistDisplayPushForm = true
+    videoPlayer.mistStatus = true
+    videoPlayer.mistDisplayPushForm = false
     // log output
-    console.log("stream push started: " + request)
+    console.log("stream added: " + request)
 }
 
 
