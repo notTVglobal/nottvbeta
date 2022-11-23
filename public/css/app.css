@@ -3008,6 +3008,10 @@ select {
   padding-left: 0.5rem;
 }
 
+.pl-6 {
+  padding-left: 1.5rem;
+}
+
 .pr-6 {
   padding-right: 1.5rem;
 }
@@ -3042,10 +3046,6 @@ select {
 
 .pr-1 {
   padding-right: 0.25rem;
-}
-
-.pl-6 {
-  padding-left: 1.5rem;
 }
 
 .text-left {
