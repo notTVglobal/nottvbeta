@@ -539,7 +539,7 @@ function addStream() {
     // let request = "\"push_start\":[\""+props.streamName+", \""+props.rtmpDestination+"\"]"
     let request = "%7B%20%22addstream%22%3A%20%7B%22streamname%22%3A%20%7B%7D,%7D%7D"
     // setTimeout(() => {  getApi(request); console.log("World!"); }, 2000);
-    getApiLocal(request)
+    getApi(request)
     videoPlayer.mistStatus = false
     videoPlayer.mistDisplayPushForm = true
     // log output
