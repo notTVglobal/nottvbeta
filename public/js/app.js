@@ -1694,12 +1694,10 @@ var map = {
 	],
 	"./Video": [
 		"./resources/js/Pages/Video.vue",
-		"/js/vendor",
 		"resources_js_Pages_Video_vue"
 	],
 	"./Video.vue": [
 		"./resources/js/Pages/Video.vue",
-		"/js/vendor",
 		"resources_js_Pages_Video_vue"
 	],
 	"./Welcome": [
