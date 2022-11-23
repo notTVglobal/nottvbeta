@@ -535,10 +535,7 @@ function startPush() {
 // This works on my local system (which doesn't requiring authorization)
 function addStream() {
     // api call to mist server.
-    // "push_start":["STREAMNAME", "URI"]
-    // let request = "\"push_start\":[\""+props.streamName+", \""+props.rtmpDestination+"\"]"
-    let request = "%7B%20%22addstream%22%3A%20%7B%22streamname%22%3A%20%7B%7D,%7D%7D"
-    // setTimeout(() => {  getApi(request); console.log("World!"); }, 2000);
+    let request = "%7B%22addstream%22%3A%7B%22streamname%22%3A%7B%22source%22%3A%22push%3A%2F%2F%22%7D%7D%7D"
     getApi(request)
     videoPlayer.mistStatus = false
     videoPlayer.mistDisplayPushForm = true
