@@ -35,10 +35,16 @@ class MovieUploadController extends BaseController
      */
     public function store(HttpRequest $request)
     {
+        dd($request);
+        if ($request->file_url = '') {
+            $request->validate([
+                'file_url' => 'string|max:255',
+            ]);
+        }
         $request->validate([
             'name' => 'unique:movies|required|string|max:255',
             'description' => 'required|string',
-            'file_url' => 'string|max:255',
+
         ]);
 
 // create the Movie model here.

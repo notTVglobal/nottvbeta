@@ -9,7 +9,7 @@
 
     <header class="md:pageWidth pageWidthSmall">
 
-        <Message v-if="showMessage" @close="showMessage = false"/>
+        <Message v-if="message" @close="showMessage = false"/>
 
         <div class="flex justify-between p-4 m-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800"
              role="alert"
@@ -87,6 +87,9 @@
                         placeholder="Link to existing video file (optional)"
                     />
                     <div v-if="form.errors.file_url" v-text="form.errors.file_url"
+                         class="bg-red-600 p-2 w-full text-white font-semibold mt-1"></div>
+
+                    <div v-if="message" v-text="message"
                          class="bg-red-600 p-2 w-full text-white font-semibold mt-1"></div>
 
                     <button

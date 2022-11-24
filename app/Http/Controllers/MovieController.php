@@ -86,10 +86,18 @@ class MovieController extends Controller
         // video/mp4
         //video/webm
         //
+        if (!$request->hasFile('video') && $request->file_url == null) {
+            return redirect()->route('movies.create')->with('message', 'Please upload a video or enter a link to a video file.');
+
+        }
+        if ($request->file_url != null) {
+            $request->validate([
+                'file_url' => 'active_url',
+            ]);
+        }
         $request->validate([
             'name' => 'unique:movies|required|string|max:255',
             'description' => 'required|string',
-            'file_url' => 'string|max:255',
         ]);
 
         $video = '';
