@@ -15,7 +15,7 @@ The notTV project aims to deliver....
   * Journalism
     * Verification
   * Teams
-  * Decentralized
+  * Decentralized Decision Making
   * Blockchain, NFTs
   * DAO
   * SaaS
@@ -24,7 +24,7 @@ The notTV project aims to deliver....
   * Incentives for creators
   * Collaboration
   * Tokens
-  * Governance
+  * Founders' ROI
 * Attacks
   * Mitigation
 * Live Video Distribution

@@ -250,8 +250,9 @@ export default {
                 sources: [
                     {
                         src:
-                            'https://mist.nottv.io/hls/spring/index.m3u8',
+                            'https://streams.not.tv/hls/spring/index.m3u8',
                             // 'ws://mist.nottv.io:8080/ctd1984.mp4',
+                            // 'https://streams.not.tv/spring.mp4',
                         type: 'application/x-mpegURL'
                     }
                 ]
