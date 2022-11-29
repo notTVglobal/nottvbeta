@@ -37,9 +37,9 @@ mix.js('resources/js/app.js', 'public/js')
         '@': 'resources/js',
         ziggy: "vendor/tightenco/ziggy/dist/vue",
     })
-    .browserSync({
-        proxy: 'beta.local:8081'
-    });
+    // .browserSync({
+    //     proxy: 'beta.local:8081'
+    // });
 
 if (mix.inProduction()) {
     mix.version();

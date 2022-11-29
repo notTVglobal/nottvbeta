@@ -17,7 +17,7 @@
             </main>
 
             <div class="relative w-full h-full top-0">
-                <VideoPlayer :class="videoPlayerStore.class" class="videoContainer" />
+                <VideoPlayer :class="videoPlayerStore.class" class="videoContainer" :key="videoPlayerStore.key"/>
             </div>
 
         </div>
@@ -32,6 +32,7 @@ import JetBanner from '@/Jetstream/Banner.vue'
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
 
 let videoPlayerStore = useVideoPlayerStore()
+videoPlayerStore.videoSource = 'https://streams.not.tv/hls/naturalworld/index.m3u8'
 
 defineProps({
     user: Object,

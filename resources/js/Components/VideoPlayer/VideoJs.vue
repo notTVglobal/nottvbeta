@@ -1,6 +1,6 @@
 <template>
         <div>
-            <video ref="videoPlayer" class="w-full video-js vjs-big-play-centered" :class="videoPlayerStore.class" playsinline autoplay loop muted/>
+            <video ref="videoPlayer" id="main-player" class="w-full video-js vjs-big-play-centered" :class="videoPlayerStore.class" playsinline autoplay loop muted />
         </div>
 </template>
 
@@ -8,62 +8,61 @@
 <script setup>
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js";
 import {useStreamStore} from "@/Stores/StreamStore.js";
-// import videojs from 'video.js';
-// import {onMounted, ref, reactive} from "vue";
+import videojs from 'video.js';
+import {onMounted, ref, reactive} from "vue";
 
 let videoPlayerStore = useVideoPlayerStore();
 let streamStore = useStreamStore();
 
-// defineProps({
-//     options: Object,
-// })
-//
-// let video = videojs
-//
-// let player = videojs(videoPlayer.options())
-//
-// function loadPlayer() {
-//
-// }
-//
-// onMounted(() => {
-//         console.log('onPlayerReady', player)
-// })
+
+const props = defineProps({
+    options: Object,
+})
+
+
+
+onMounted(() => {
+    videojs('main-player', props.options)
+        console.log('onPlayerReady2')
+
+})
+
+
 
 
 </script>
 
-<script>
-import videojs from 'video.js';
+<!--<script>-->
+<!--import videojs from 'video.js';-->
 
-export default {
-    name: 'VideoPlayer',
-    props: {
-        options: {
-            type: Object,
-            default() {
-                return {};
-            }
-        }
-    },
-    data() {
-        return {
-            player: null
-        }
-    },
-    mounted() {
-        this.player = videojs(this.$refs.videoPlayer, this.options, () => {
-            this.player.log('onPlayerReady', this);
-        });
-    },
-    beforeDestroy() {
-        if (this.player) {
-            this.player.dispose();
-        }
-    }
-}
+<!--export default {-->
+<!--    name: 'VideoPlayer',-->
+<!--    props: {-->
+<!--        options: {-->
+<!--            type: Object,-->
+<!--            default() {-->
+<!--                return {};-->
+<!--            }-->
+<!--        }-->
+<!--    },-->
+<!--    data() {-->
+<!--        return {-->
+<!--            player: null-->
+<!--        }-->
+<!--    },-->
+<!--    mounted() {-->
+<!--        this.player = videojs(this.$refs.videoPlayer, this.options, () => {-->
+<!--            this.player.log('onPlayerReady', this);-->
+<!--        });-->
+<!--    },-->
+<!--    beforeDestroy() {-->
+<!--        if (this.player) {-->
+<!--            this.player.dispose();-->
+<!--        }-->
+<!--    }-->
+<!--}-->
 
-</script>
+<!--</script>-->
 
 <style>
 

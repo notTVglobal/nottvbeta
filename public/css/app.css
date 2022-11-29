@@ -1696,6 +1696,10 @@ select {
   margin-left: 2.5rem;
 }
 
+.-mb-10 {
+  margin-bottom: -2.5rem;
+}
+
 .block {
   display: block;
 }

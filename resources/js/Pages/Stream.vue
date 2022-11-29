@@ -34,6 +34,9 @@ let chatStore = useChatStore()
 
 onMounted(() => {
     videoPlayer.makeVideoFullPage();
+    videoPlayer.videoSource = 'https://streams.not.tv/hls/dune1984/index.m3u8';
+    videoPlayer.videoName = 'Dune';
+    videoPlayer.loadNewSource()
 });
 chatStore.showChat = false
 videoPlayer.loggedIn = true
@@ -43,6 +46,8 @@ let props = defineProps ({
     video: Object,
     user: Object,
 })
+
+
 
 </script>
 

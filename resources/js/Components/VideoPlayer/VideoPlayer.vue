@@ -4,39 +4,11 @@
         <div :class="videoPlayerStore.class">
 
 
-<!--                <video-->
-<!--                    controls-->
-<!--                    loop-->
-<!--                    autoplay-->
-<!--                    muted-->
-<!--                    preload="auto"-->
-<!--                    id="videoPlayer"-->
-<!--                    class="video-js vjs-big-play-centered object-contain w-full"-->
-<!--                >-->
-<!--                    <source id="src1" :src="`http://mist.nottv.io:8080/ctd1984.mp4`" type="`video/mp4`"/>-->
-<!--                    <source id="src2" :src="`http://mist.nottv.io:8080/hls/ctd1984/index.m3u8`"-->
-<!--                            type="`application/x-mpegURL`"/>-->
-<!--                    <source id="src3" :src="`ws://mist.nottv.io:8080/ctd1984.mp4`" type="`video/mp4`"/>-->
-<!--                </video>-->
-
-<!--                    <div-->
-<!--                        ref="player"-->
-<!--                        style="-->
-<!--                            position: absolute;-->
-<!--                            top:12px;-->
-<!--                            right:0;-->
-<!--                            left:0;-->
-<!--                            bottom:0;-->
-<!--                            min-width:24rem;-->
-<!--                            min-height:16rem;-->
-<!--                            "-->
-<!--                            class="shrink"-->
-<!--                    >TEST</div>-->
-
             <Teleport to="body">
                 <Login v-if="!videoPlayerStore.loggedIn" :show="showLogin" @close="showLogin = false" />
             </Teleport>
-            <video-player :options="videoOptions"/>
+
+            <video-player :options="videoOptions" @click="videoPlayerStore.makeVideoFullPage()"/>
 
             <div v-if="videoPlayerStore.fullPage">
                 <div class="absolute w-full flex justify-between top-16 left-0 p-5 drop-shadow z-50">
@@ -132,6 +104,7 @@ import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
 import {useStreamStore} from "@/Stores/StreamStore";
 import Login from "@/Components/Login.vue"
 import { ref } from 'vue'
+import videojs from "video.js";
 
 let videoPlayerStore = useVideoPlayerStore()
 let streamStore = useStreamStore()
@@ -141,8 +114,24 @@ videoPlayerStore.paused = false
 
 let showLogin = ref(false)
 
+// import VideoPlayer from '@/Components/VideoPlayer/VideoJs'
+// const videoPlayer = ref('VideoPlayer')
+
 let props = defineProps({
     src: String,
+    // videoOptions: {
+    //     autoplay: true,
+    //     muted: true,
+    //     controls: true,
+    //     sources: [
+    //         {
+    //             src:
+    //                 'https://streams.not.tv/hls/naturalworld/index.m3u8',
+    //
+    //             type: 'application/x-mpegURL'
+    //         }
+    //     ]
+    // }
 })
 
 function loadVideo1() {
@@ -156,52 +145,8 @@ function loadVideo1() {
     document.getElementById("VideoPlayer").load();
 }
 
-function loadVideo2() {
-    videoPlayerStore.loadVideo2()
-    document.getElementById("src1").src = videoPlayerStore.videoSourceIdSrc1;
-    document.getElementById("src1").type = videoPlayerStore.videoSourceTypeSrc1;
-    document.getElementById("src2").src = videoPlayerStore.videoSourceIdSrc2;
-    document.getElementById("src2").type = videoPlayerStore.videoSourceTypeSrc2;
-    document.getElementById("src3").src = videoPlayerStore.videoSourceIdSrc3;
-    document.getElementById("src3").type = videoPlayerStore.videoSourceTypeSrc3;
-    // my.load();
-}
 
-function loadVideo3() {
-    videoPlayerStore.loadVideo3()
-    document.getElementById("src1").src = videoPlayerStore.videoSourceIdSrc1;
-    document.getElementById("src1").type = videoPlayerStore.videoSourceTypeSrc1;
-    document.getElementById("src2").src = videoPlayerStore.videoSourceIdSrc2;
-    document.getElementById("src2").type = videoPlayerStore.videoSourceTypeSrc2;
-    document.getElementById("src3").src = videoPlayerStore.videoSourceIdSrc3;
-    document.getElementById("src3").type = videoPlayerStore.videoSourceTypeSrc3;
-    document.getElementById("videoPlayer").load();
-}
 
-function loadVideo4() {
-    videoPlayerStore.loadVideo4()
-    document.getElementById("src1").src = videoPlayerStore.videoSourceIdSrc1;
-    document.getElementById("src1").type = videoPlayerStore.videoSourceTypeSrc1;
-    document.getElementById("src2").src = videoPlayerStore.videoSourceIdSrc2;
-    document.getElementById("src2").type = videoPlayerStore.videoSourceTypeSrc2;
-    document.getElementById("src3").src = videoPlayerStore.videoSourceIdSrc3;
-    document.getElementById("src3").type = videoPlayerStore.videoSourceTypeSrc3;
-    document.getElementById("VideoPlayer").load();
-}
-
-function loadVideo5() {
-    videoPlayerStore.loadVideo5()
-    document.getElementById("src").src = videoPlayerStore.videoSourceIdSrc1;
-    document.getElementById("src1").type = videoPlayerStore.videoSourceTypeSrc1;
-    document.getElementById("src2").src = videoPlayerStore.videoSourceIdSrc2;
-    document.getElementById("src2").type = videoPlayerStore.videoSourceTypeSrc2;
-    document.getElementById("src3").src = videoPlayerStore.videoSourceIdSrc3;
-    document.getElementById("src3").type = videoPlayerStore.videoSourceTypeSrc3;
-    document.getElementById("VideoPlayer").load();
-}
-
-// import VideoPlayer from '@/Components/VideoPlayer/VideoJs'
-// // const vp = ref('VideoPlayer')
 // const props = defineProps({
 //     videoOptions: {
 //         autoplay: true,
@@ -219,7 +164,6 @@ function loadVideo5() {
 // })
 
 
-
 // let videoOptions = reactive({
 //     autoplay: true,
 //     muted: true,
@@ -234,7 +178,9 @@ function loadVideo5() {
 </script>
 
 <script>
+import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
 import VideoPlayer from '@/Components/VideoPlayer/VideoJs'
+import { ref } from 'vue'
 
 export default {
     name: 'VideoPlayer',
@@ -242,15 +188,21 @@ export default {
         VideoPlayer
     },
     data() {
+        const videoPlayerStore = useVideoPlayerStore()
+        // videoPlayerStore.videoSource = 'https://streams.not.tv/hls/naturalworld/index.m3u8'
+        const videoSource = videoPlayerStore.videoSource
         return {
             videoOptions: {
                 autoplay: true,
                 muted: true,
                 controls: true,
+                enableSourceset: true,
                 sources: [
                     {
                         src:
-                            'https://streams.not.tv/hls/spring/index.m3u8',
+                            // source,
+                            videoSource,
+                            // 'https://multiplatform-f.akamaihd.net/i/multi/will/bunny/big_buck_bunny_,640x360_400,640x360_700,640x360_1000,950x540_1500,.f4v.csmil/master.m3u8',
                             // 'ws://mist.nottv.io:8080/ctd1984.mp4',
                             // 'https://streams.not.tv/spring.mp4',
                         type: 'application/x-mpegURL'
