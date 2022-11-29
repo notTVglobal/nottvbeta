@@ -287,7 +287,7 @@
                                     id="streamName"
                                     v-model="streamName"
                                     class="w-full mb-2" >
-                                    <option v-for="stream in videoPlayer.apiResponse.active_streams" :key=stream>
+                                    <option v-for="stream in videoPlayer.apiResponse.active_streams" :key="stream">
                                         {{ stream }}
                                     </option>
                                 </select>
@@ -301,8 +301,8 @@
                                         class="ml-2 py-2 px-4 text-white bg-green-800 hover:bg-green-500 rounded-xl">
                                     Push
                                 </button>
-                                <video src="http://localhost:8080/test_stream_2.mp4" class="mt-20 w-96" controls autoplay></video>
-                                <br>Preview video is hardcoded to "test_stream_2"
+                                <video src="https://streams.not.tv/vmixsource01%2bspring.mp4" class="mt-20 w-96" controls autoplay></video>
+                                <br>Preview video is hardcoded to "vmixsource01+spring"
                             </div>
                         </div>
 
@@ -518,13 +518,12 @@ function displayPushForm() {
     videoPlayer.mistStatus = false
     videoPlayer.mistDisplayPushForm = true
 }
-// This works on my local system (which doesn't requiring authorization) - change getApi to getApiLocal
-// should work on development now
+
 function startPush() {
     // api call to mist server.
     // "push_start":["STREAMNAME", "URI"]
     // let request = "\"push_start\":[\""+props.streamName+", \""+props.rtmpDestination+"\"]"
-    let request = "%7B%20%22push_start%22%3A%20%7B%22stream%22%3A%22vmixsource03%22,%22target%22%3A%22rtmp%3A%2F%2Fmist.nottv.io%2Flive%2Fvmixsource02%22%7D%7D"
+    let request = '%7B%20%22push_start%22%3A%20%7B%22stream%22%3A%22'+props.streamName+'%22,%22target%22%3A%22'+props.rtmpDestination+'%22%7D%7D'
     // setTimeout(() => {  getApi(request); console.log("World!"); }, 2000);
     getApi(request)
     videoPlayer.mistStatus = false
@@ -532,8 +531,7 @@ function startPush() {
     // log output
     console.log("stream push started: " + request)
 }
-//
-// This works on my local system (which doesn't requiring authorization)
+
 function addStream() {
     console.log("adding new stream")
     // api call to mist server.
