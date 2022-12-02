@@ -344,6 +344,11 @@ Route::middleware([
 //        ->middleware('can:edit,show')
         ->name('shows.showEpisodes.edit')
         ->scopeBindings();
+    // Display episode upload page
+    Route::get('/shows/{show}/episode/{showEpisode}/upload', [ShowEpisodeController::class, 'upload'])
+//        ->middleware('can:edit,show')
+        ->name('shows.showEpisodes.upload')
+        ->scopeBindings();
     // Update episode
 //    Route::get('/shows/{show}/episode/{showEpisode}/edit', [ShowEpisodeController::class, 'update'])
 //        ->middleware('can:edit,show')

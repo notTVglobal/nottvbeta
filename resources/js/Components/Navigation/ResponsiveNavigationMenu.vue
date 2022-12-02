@@ -2,6 +2,10 @@
     <!-- Hamburger -->
     <div class="absolute top-3 right-4 hamburgerMask">
         <div class="-mr-2 flex items-center lg:hidden z-50">
+                <div class="text-yellow-600 uppercase">
+                    GOAL <span class="text-xl">100</span> viewers
+                </div>
+
                 <div class="-mt-16 mr-12">
                     <NotificationsButton class=""/>
                 </div>

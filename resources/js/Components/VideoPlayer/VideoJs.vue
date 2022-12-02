@@ -9,7 +9,7 @@
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js";
 import {useStreamStore} from "@/Stores/StreamStore.js";
 import videojs from 'video.js';
-import {onMounted, ref, reactive} from "vue";
+import {onMounted, ref, reactive, onBeforeUnmount} from "vue";
 
 let videoPlayerStore = useVideoPlayerStore();
 let streamStore = useStreamStore();
@@ -27,7 +27,10 @@ onMounted(() => {
 
 })
 
-
+onBeforeUnmount(() => {
+    let videoJs = videojs('main-player')
+    videoJs.dispose();
+})
 
 
 </script>

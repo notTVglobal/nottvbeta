@@ -50,6 +50,13 @@
                 <div>
                     Show Statuses
                 </div>
+                <div>
+                    Channels. Display list of channels. Click channel name to go to the channel playlist edit page.
+                    Grid style, 1 column mobile, 2 column tablet, 3 column lg, 4 column xl
+                        Rows: Times (next 24 hours) --> can scroll up to 72 hours ahead or 72 hours back.
+                        Columns: Days (next 7 days). Need new Pages folder: Channels/Index, Channels/Create, Channels/Edit, ch/channelId (e.g., ch/01).
+
+                </div>
             </div>
 
         </div>

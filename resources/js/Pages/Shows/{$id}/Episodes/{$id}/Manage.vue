@@ -38,13 +38,21 @@
 
                             <div class="">
                                 <Link
-                                    :href="`/golive`"
-                                v-if="teamStore.can.goLive">
+                                    :href="`/shows/${show.slug}/episode/${episode.slug}/upload`"
+                                    v-if="!episode.video_file_url">
                                     <button
+                                        class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg disabled:bg-gray-400"
+                                    >Upload
+                                    </button>
+                                </Link>
+                            </div>
+
+                            <div class="" v-if="teamStore.can.goLive && !episode.video_file_url">
+                                    <button
+                                        @click="showGoLive"
                                         class="px-4 py-2 text-white bg-red-600 hover:bg-red-500 rounded-lg disabled:bg-gray-400"
                                     >Go Live
                                     </button>
-                                </Link>
                             </div>
                             <div class="">
                                 <Link
@@ -93,6 +101,11 @@
                     </div>
                 </div>
             </header>
+
+            <div v-if="!showGoLive">
+                <div class="text-sm font-semibold uppercase mb-2">Go Live Instructions</div>
+                Put a preview window here. Display the RTMP Url with streamkey using episode UUID: rtmp://mist.nottv.io/live/episodes+UUID and fix the "golive" button showing this div
+            </div>
 
             <div class="my-6 ml-10 w-3/4">
                 <div class="text-sm font-semibold uppercase mb-2">Episode Description</div>
@@ -143,7 +156,7 @@
 <script setup>
 import ResponsiveNavigationMenu from "@/Components/Navigation/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/Navigation/NavigationMenu"
-import {onMounted} from "vue";
+import { ref, onMounted } from "vue";
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
 import {useShowStore} from "@/Stores/ShowStore.js"
 import {useTeamStore} from "@/Stores/TeamStore.js"
@@ -175,7 +188,7 @@ teamStore.can = props.can;
 
 let videoEmbedCode = props.episode.video_file_embed_code;
 
-
+let showGoLive = false
 
 // let search = ref(props.filters.search);
 //

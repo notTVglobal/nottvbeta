@@ -134,16 +134,16 @@ let props = defineProps({
     // }
 })
 
-function loadVideo1() {
-    videoPlayerStore.loadVideo1()
-    document.getElementById("src1").src = videoPlayerStore.videoSourceIdSrc1;
-    document.getElementById("src1").type = videoPlayerStore.videoSourceTypeSrc1;
-    document.getElementById("src2").src = videoPlayerStore.videoSourceIdSrc2;
-    document.getElementById("src2").type = videoPlayerStore.videoSourceTypeSrc2;
-    document.getElementById("src3").src = videoPlayerStore.videoSourceIdSrc3;
-    document.getElementById("src3").type = videoPlayerStore.videoSourceTypeSrc3;
-    document.getElementById("VideoPlayer").load();
-}
+// function loadVideo1() {
+//     videoPlayerStore.loadVideo1()
+//     document.getElementById("src1").src = videoPlayerStore.videoSourceIdSrc1;
+//     document.getElementById("src1").type = videoPlayerStore.videoSourceTypeSrc1;
+//     document.getElementById("src2").src = videoPlayerStore.videoSourceIdSrc2;
+//     document.getElementById("src2").type = videoPlayerStore.videoSourceTypeSrc2;
+//     document.getElementById("src3").src = videoPlayerStore.videoSourceIdSrc3;
+//     document.getElementById("src3").type = videoPlayerStore.videoSourceTypeSrc3;
+//     document.getElementById("VideoPlayer").load();
+// }
 
 
 

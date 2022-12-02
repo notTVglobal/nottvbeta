@@ -58,74 +58,13 @@
 
 
 
-                                        <div class="mb-6">
-                                            <label class="block mb-2 uppercase font-bold text-xs text-light"
-                                                   for="name"
-                                            >
-                                                Episode Name
-                                            </label>
 
-                                            <input v-model="form.name"
-                                                   class="border border-gray-400 text-gray-800 p-2 w-1/2 rounded-lg"
-                                                   type="text"
-                                                   name="name"
-                                                   id="name"
-                                                   required
-                                            >
-                                            <div v-if="form.errors.name" v-text="form.errors.name"
-                                                 class="text-xs text-red-600 mt-1"></div>
-                                        </div>
-
-                                        <div class="mb-6">
-                                            <label class="block mb-2 uppercase font-bold text-xs text-light"
-                                                   for="episode_number"
-                                            >
-                                                Episode Number
-                                            </label>
-
-                                            <input v-model="form.episode_number"
-                                                   class="border border-gray-400 text-gray-800 p-2 w-1/2 rounded-lg"
-                                                   type="text"
-                                                   name="episode_number"
-                                                   id="episode_number"
-                                            >
-                                            <div v-if="form.errors.episode_number" v-text="form.errors.episode_number"
-                                                 class="text-xs text-red-600 mt-1"></div>
-                                        </div>
-
-                                <div class="mb-6">
-                                    <label class="block mb-2 uppercase font-bold text-xs text-light"
-                                           for="description"
-                                    >
-                                        Description
-                                    </label>
-                                    <TabbableTextarea v-model="form.description"
-                                                      class="border border-gray-400 text-gray-800 p-2 w-full rounded-lg"
-                                                      name="description"
-                                                      id="description"
-                                                      rows="10" cols="30"
-                                                      required
-                                    />
-                                    <div v-if="form.errors.description" v-text="form.errors.description"
-                                         class="text-xs text-red-600 mt-1"></div>
-                                </div>
-
-                                <div class="flex justify-between">
-
-
-
-
-
-
-
-                                </div>
 
 <!-- Begin grid 2-col -->
                             <div class="grid grid-cols-1 sm:grid-cols-2 space-x-6 p-6">
 
 <!--Left Column-->
                                 <div>
-
 
 
                                     <div>
@@ -164,7 +103,76 @@
 
                                     </div>
 
+
+
+
+
+
+
+                                </div>
+
+
+<!--Right Column-->
+                                <div>
+
+
                                     <div class="mb-6">
+                                        <label class="block mb-2 uppercase font-bold text-xs text-light"
+                                               for="name"
+                                        >
+                                            Episode Name
+                                        </label>
+
+                                        <input v-model="form.name"
+                                               class="border border-gray-400 text-gray-800 p-2 w-1/2 rounded-lg"
+                                               type="text"
+                                               name="name"
+                                               id="name"
+                                               required
+                                        >
+                                        <div v-if="form.errors.name" v-text="form.errors.name"
+                                             class="text-xs text-red-600 mt-1"></div>
+                                    </div>
+
+                                    <div class="mb-6">
+                                        <label class="block mb-2 uppercase font-bold text-xs text-light"
+                                               for="episode_number"
+                                        >
+                                            Episode Number
+                                        </label>
+
+                                        <input v-model="form.episode_number"
+                                               class="border border-gray-400 text-gray-800 p-2 w-1/2 rounded-lg"
+                                               type="text"
+                                               name="episode_number"
+                                               id="episode_number"
+                                        >
+                                        <div v-if="form.errors.episode_number" v-text="form.errors.episode_number"
+                                             class="text-xs text-red-600 mt-1"></div>
+                                    </div>
+
+
+
+                                    <div class="mb-6 w-full">
+                                        <label class="block mb-2 uppercase font-bold text-xs text-light"
+                                               for="description"
+                                        >
+                                            Description
+                                        </label>
+                                        <TabbableTextarea v-model="form.description"
+                                                          class="border border-gray-400 text-gray-800 p-2 w-full rounded-lg"
+                                                          name="description"
+                                                          id="description"
+                                                          rows="10" cols="30"
+                                                          required
+                                        />
+                                        <div v-if="form.errors.description" v-text="form.errors.description"
+                                             class="text-xs text-red-600 mt-1"></div>
+                                    </div>
+
+
+
+                                    <div class="mb-6 w-full">
                                         <label class="block mb-2 uppercase font-bold text-xs text-light"
                                                for="notes"
                                         >
@@ -180,56 +188,9 @@
                                              class="text-xs text-red-600 mt-1"></div>
                                     </div>
 
-                                </div>
-
-
-<!--Right Column-->
-                                <div>
 
 
 
-
-                                    <div>
-                                        <label class="block mb-2 uppercase font-bold text-xs text-light"
-                                               for="name"
-                                        >
-                                            Change Episode Video
-                                        </label>
-                                        <div class="max-full mx-auto mt-2 mb-6 bg-gray-200 p-6 text-dark">
-                                            <div class="mb-3 bg-orange-300 py-1 px-2 text-xs font-semibold text-red-800">
-                                                In development. Not currently working.
-                                            </div>
-                                            <h2 class="text-xl font-semibold text-gray-800">Upload Video</h2>
-
-                                            <ul class="pb-4 text-gray-800">
-                                                <li>Max Video Length: <span class="text-orange-400">4 hours</span></li>
-                                                <li>File Types accepted: <span class="text-orange-400">mp4, webm, ogg</span></li>
-                                            </ul>
-                                            <div class="flex space-y-3">
-                                                <div class="mb-6">
-                                                    <img v-if="!props.episode.video_thumbnail"
-                                                         :src="'/storage/images/EBU_Colorbars.svg.png'"
-                                                         :key="video_thumbnail" />
-
-                                                    <img v-if="props.episode.video_thumbnail"
-                                                         :src="'/storage/images/' + props.episode.video_thumbnail"
-                                                         :key="video_thumbnail" />
-                                                </div>
-                                            </div>
-
-<!--                                            <file-pond-->
-<!--                                                name="poster"-->
-<!--                                                ref="pond"-->
-<!--                                                label-idle="Click to choose video, or drag here..."-->
-<!--                                                @init="filepondInitialized"-->
-<!--                                                server="/showEpisodesUploadPoster"-->
-<!--                                                accepted-file-types="image/jpg, image/jpeg, image/png"-->
-<!--                                                @processfile="handleProcessedFile"-->
-<!--                                                max-file-size="10MB"-->
-<!--                                            />-->
-                                        </div>
-
-                                    </div>
 
                                     <div class="block mb-2 uppercase font-bold text-xs text-light">
                                         Notes:
@@ -268,15 +229,16 @@
                                         </label>
 
                                         <TabbableTextarea v-model="form.video_file_embed_code"
-                                                  class="border border-gray-400 text-gray-800 p-2 w-full rounded-lg"
-                                                  type="text"
-                                                  name="video_file_embed_code"
-                                                  id="video_file_embed_code"
-                                                  rows="10" cols="30"
+                                                          class="border border-gray-400 text-gray-800 p-2 w-full rounded-lg"
+                                                          type="text"
+                                                          name="video_file_embed_code"
+                                                          id="video_file_embed_code"
+                                                          rows="10" cols="30"
                                         />
                                         <div v-if="form.errors.video_file_embed_code" v-text="form.errors.video_file_embed_code"
                                              class="text-xs text-red-600 mt-1"></div>
                                     </div>
+
 
 
 

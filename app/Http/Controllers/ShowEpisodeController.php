@@ -196,6 +196,45 @@ class ShowEpisodeController extends Controller
         ]);
     }
 
+////////////  UPLOAD
+////////////////////
+
+    public function upload(Show $show, ShowEpisode $showEpisode)
+    {
+//        $team = Show::query()->where('id', $show->id)->pluck('team_id')->firstOrFail();
+
+        // Currently this queries all images in the database
+        // this needs to be changed to limit the query.
+        //
+        DB::table('users')->where('id', Auth::user()->id)->update([
+            'isEditingShowEpisode_id' => $showEpisode->id,
+        ]);
+
+        DB::table('show_episodes')->where('id', $showEpisode->id)->update([
+            'isBeingEditedByUser_id' => Auth::user()->id,
+        ]);
+
+        return Inertia::render('Shows/{$id}/Episodes/{$id}/Upload', [
+            'poster' => $showEpisode->image->name,
+            'show' => [
+                'name' => $show->name,
+                'slug' => $show->slug,
+                'showRunner' => $show->user->name,
+                'poster' => $show->image->name,
+            ],
+            'team' => [
+                'name' => $show->team->name,
+                'slug' => $show->team->slug,
+            ],
+            'episode' => $showEpisode,
+            'can' => [
+                'manageShow' => Auth::user()->can('manage', $show),
+                'editShow' => Auth::user()->can('edit', $show),
+                'viewCreator' => Auth::user()->can('viewCreator', User::class),
+            ]
+        ]);
+    }
+
 
 ////////////  UPDATE
 ////////////////////

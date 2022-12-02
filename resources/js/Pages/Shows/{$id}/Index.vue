@@ -289,8 +289,10 @@ teamStore.name = props.team.name;
 
 
 let playVideo = () => {
-    videoPlayer.videoSource = 'https://streams.not.tv/hls/ctd1984/index.m3u8'
-    videoPlayer.videoName = 'Conan The Destroyer'
+    // videoPlayer.videoSource = 'https://streams.not.tv/hls/ctd1984/index.m3u8'
+    videoPlayer.videoSource = 'https://mist2.not.tv/hls/m3u8/index.m3u8'
+    // videoPlayer.videoSource = 'https://nottvmist.sfo3.digitaloceanspaces.com/recordings/channels_02.m3u8'
+    videoPlayer.videoName = 'testm3u8'
     videoPlayer.loadNewSource()
 }
 

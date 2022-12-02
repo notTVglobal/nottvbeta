@@ -63,8 +63,11 @@
                             Chat
                         </JetNavLink>
 <!--                        <ChatToggle v-model:checked="chat.toggleShowChatOn" label="Chat" />-->
-
+                        <div class="text-yellow-600 uppercase hidden md:block mt-5">
+                            GOAL <span class="text-xl font-semibold">100</span> viewers
+                        </div>
                     </div>
+
                 </div>
 
 

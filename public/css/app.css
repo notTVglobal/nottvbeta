@@ -3321,6 +3321,11 @@ select {
   color: rgb(126 34 206 / var(--tw-text-opacity));
 }
 
+.text-yellow-600 {
+  --tw-text-opacity: 1;
+  color: rgb(202 138 4 / var(--tw-text-opacity));
+}
+
 .text-fuchsia-700 {
   --tw-text-opacity: 1;
   color: rgb(162 28 175 / var(--tw-text-opacity));
@@ -4254,6 +4259,10 @@ select {
 
   .md\:mr-16 {
     margin-right: 4rem;
+  }
+
+  .md\:block {
+    display: block;
   }
 
   .md\:grid {
