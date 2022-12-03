@@ -11,7 +11,7 @@
             <video-player :options="videoOptions" @click="videoPlayerStore.makeVideoFullPage()"/>
 
             <div v-if="!videoPlayerStore.fullPage" class="absolute top-56 w-full">
-                <videoOTTButtons class="videoOTTButtons"/>
+                <videoOTTButtons class="videoOTT"/>
             </div>
 
             <div v-if="videoPlayerStore.fullPage">
@@ -67,7 +67,7 @@
                 </div>
             </div>
 
-            <VideoOTT :user="props.user"  class="absolute top-60 mt-2 w-full h-[calc(100vh-4rem)] overflow-y-scroll"/>
+            <VideoOTT :user="props.user"  class="videoOTT absolute top-60 mt-2 w-full h-[calc(100vh-4rem)] overflow-y-scroll"/>
 
 </div>
 

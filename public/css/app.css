@@ -1228,7 +1228,7 @@ select {
     top: 0rem;
     right: 0rem;
 }
-.videoOTTButtons {
+.videoOTT {
     z-index: 300;
 }
 /* this is the OPEN chat button */
@@ -1404,16 +1404,16 @@ select {
   bottom: 9rem;
 }
 
+.top-56 {
+  top: 14rem;
+}
+
 .top-16 {
   top: 4rem;
 }
 
 .bottom-16 {
   bottom: 4rem;
-}
-
-.top-56 {
-  top: 14rem;
 }
 
 .top-60 {
@@ -1702,10 +1702,6 @@ select {
   margin-left: 2.5rem;
 }
 
-.mt-16 {
-  margin-top: 4rem;
-}
-
 .ml-0 {
   margin-left: 0px;
 }
@@ -1714,12 +1710,12 @@ select {
   margin-right: 0px;
 }
 
-.-mb-10 {
-  margin-bottom: -2.5rem;
+.mt-16 {
+  margin-top: 4rem;
 }
 
-.mt-56 {
-  margin-top: 14rem;
+.-mb-10 {
+  margin-bottom: -2.5rem;
 }
 
 .block {
@@ -1843,6 +1839,10 @@ select {
   height: 7rem;
 }
 
+.h-\[calc\(100vh-4rem\)\] {
+  height: calc(100vh - 4rem);
+}
+
 .h-64 {
   height: 16rem;
 }
@@ -1857,10 +1857,6 @@ select {
 
 .h-96 {
   height: 24rem;
-}
-
-.h-\[calc\(100vh-4rem\)\] {
-  height: calc(100vh - 4rem);
 }
 
 .max-h-56 {
@@ -4209,10 +4205,6 @@ select {
     height: 2.5rem;
   }
 
-  .sm\:h-\[calc\(100vh-4rem\)\] {
-    height: calc(100vh - 4rem);
-  }
-
   .sm\:w-10 {
     width: 2.5rem;
   }
@@ -4467,10 +4459,6 @@ select {
     display: none;
   }
 
-  .lg\:h-\[calc\(100vh-4rem\)\] {
-    height: calc(100vh - 4rem);
-  }
-
   .lg\:w-3\/4 {
     width: 75%;
   }
@@ -4507,10 +4495,6 @@ select {
 }
 
 @media (min-width: 1280px) {
-
-  .xl\:h-\[calc\(100vh-4rem\)\] {
-    height: calc(100vh - 4rem);
-  }
 
   .xl\:grid-cols-6 {
     grid-template-columns: repeat(6, minmax(0, 1fr));
