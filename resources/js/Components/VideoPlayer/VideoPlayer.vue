@@ -47,7 +47,7 @@
 
             </div>
 
-<div v-if="!videoPlayerStore.fullPage" class="lg:h-[calc(100vh-4rem)] bg-black overflow-y-scroll ">
+<div v-if="!videoPlayerStore.fullPage" class="overflow-y-scroll ">
             <div class="absolute flex justify-between top-0 bg-gray-800 px-2 w-full z-50">
                 <div>
                     <span class="text-xs uppercase pr-2">Now playing: </span>
@@ -67,7 +67,7 @@
                 </div>
             </div>
 
-            <VideoOTT :user="props.user"  class="absolute top-60 mt-2 w-full"/>
+            <VideoOTT :user="props.user"  class="absolute top-60 mt-2 w-full h-[calc(100vh-4rem)] overflow-y-scroll"/>
 
 </div>
 

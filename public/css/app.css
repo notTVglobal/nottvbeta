@@ -1859,6 +1859,10 @@ select {
   height: 24rem;
 }
 
+.h-\[calc\(100vh-4rem\)\] {
+  height: calc(100vh - 4rem);
+}
+
 .max-h-56 {
   max-height: 14rem;
 }
@@ -4205,6 +4209,10 @@ select {
     height: 2.5rem;
   }
 
+  .sm\:h-\[calc\(100vh-4rem\)\] {
+    height: calc(100vh - 4rem);
+  }
+
   .sm\:w-10 {
     width: 2.5rem;
   }
@@ -4499,6 +4507,10 @@ select {
 }
 
 @media (min-width: 1280px) {
+
+  .xl\:h-\[calc\(100vh-4rem\)\] {
+    height: calc(100vh - 4rem);
+  }
 
   .xl\:grid-cols-6 {
     grid-template-columns: repeat(6, minmax(0, 1fr));
