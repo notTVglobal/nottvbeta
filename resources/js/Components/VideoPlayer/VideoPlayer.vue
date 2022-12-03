@@ -11,7 +11,7 @@
             <video-player :options="videoOptions" @click="videoPlayerStore.makeVideoFullPage()"/>
 
             <div v-if="!videoPlayerStore.fullPage">
-                <videoOTTButtons class="z-50"/>
+                <videoOTTButtons class="videoOTTButtons"/>
             </div>
 
             <div v-if="videoPlayerStore.fullPage">
