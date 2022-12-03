@@ -64,12 +64,18 @@
                 </div>
                 </div>
             </div>
+    TEST
             <div v-if="!videoPlayerStore.fullPage">
                 <videoOTTButtons class="videoOTTButtons"/>
             </div>
+    TEST
             <VideoOTT :user="props.user" class="z-50"/>
 
 </div>
+
+            <div v-if="!videoPlayerStore.fullPage">
+               TEST sdsd
+            </div>
 
 
 
