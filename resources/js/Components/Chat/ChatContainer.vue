@@ -1,16 +1,18 @@
 <template>
-    <div class="flex flex-col p-5 mt-10 mb-5">
-        <div class="text-3xl font-semibold">Conversation</div>
-        <div class="text-xl">Please scroll to the bottom. We are in the process of building an auto-scroll function.</div>
-    </div>
-    <div class="italic">The newest message is at the bottom.</div>
     <div>
-        <chat-messages />
+        <div class="flex flex-col p-5 mt-10 mb-5">
+            <div class="text-3xl font-semibold">Conversation</div>
+        </div>
+        <div class="italic">The newest message is at the bottom.</div>
+        <div class="absolute">
+            <div class="relative h-[calc(h-100%-16rem)] top-0 pb-4">
+                <chat-messages />
+            </div>
+            <div class="relative h-16">
+                <input-message :channel="currentChannel" v-on:messagesent="getMessages" :user="props.user" />
+            </div>
+        </div>
     </div>
-    <div>
-        <input-message :channel="currentChannel" v-on:messagesent="getMessages" :user="props.user"></input-message>
-    </div>
-
 </template>
 
 <script setup>
@@ -73,7 +75,7 @@ onMounted(async () => {
 })
 
 // window.Echo.private("chat." + currentChannel.id)
-//     .listen('.message.new', e => {
+//     .listen('.message.new', e </div>=> {
 //         messages.value = e;
 //         console.log('KEEP LISTENING??');
 //     });

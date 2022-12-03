@@ -17,7 +17,7 @@
             </main>
 
             <div class="relative w-full h-full top-0">
-                <VideoPlayer :class="videoPlayerStore.class" class="videoContainer" :key="videoPlayerStore.key"/>
+                <VideoPlayer :class="videoPlayerStore.class" class="videoContainer" :key="videoPlayerStore.key" :user="props.user"/>
             </div>
 
         </div>
@@ -34,7 +34,7 @@ import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
 let videoPlayerStore = useVideoPlayerStore()
 videoPlayerStore.videoSource = 'https://streams.not.tv/hls/naturalworld/index.m3u8'
 
-defineProps({
+let props = defineProps({
     user: Object,
 });
 

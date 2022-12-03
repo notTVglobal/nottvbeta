@@ -59,10 +59,6 @@
                         <JetNavLink @click="videoPlayerStore.makeVideoTopRight()" :href="route('shop')" :active="route().current('shop')">
                             Shop
                         </JetNavLink>
-                        <JetNavLink v-if="$page.props.user.isAdmin === 1" @click="videoPlayerStore.makeVideoTopRight()" :href="route('chat')" :active="route().current('chat')">
-                            Chat
-                        </JetNavLink>
-<!--                        <ChatToggle v-model:checked="chat.toggleShowChatOn" label="Chat" />-->
                         <div class="text-yellow-600 uppercase hidden md:block mt-5 text-xs w-20">
                             GOAL <span class="text-sm font-semibold">100</span> viewers
                         </div>

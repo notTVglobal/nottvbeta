@@ -1,5 +1,5 @@
 <template>
-    <Head title="Schedule" />
+    <Head title="Chat" />
     <div class="sticky top-0 w-full nav-mask">
         <ResponsiveNavigationMenu/>
         <NavigationMenu />
@@ -9,7 +9,7 @@
         <div class="fixed flex flex-col w-64 p-5 mb-10 bg-blue-400 ">
             <div class="text-3xl font-semibold">Chat</div>
         </div>
-            <div class="mt-28 pl-32 pb-32">
+            <div class="mt-28 pl-32">
                 <ChatContainer :user="props.user"/>
             </div>
 
