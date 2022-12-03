@@ -32,7 +32,7 @@ import JetBanner from '@/Jetstream/Banner.vue'
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
 
 let videoPlayerStore = useVideoPlayerStore()
-videoPlayerStore.videoSource = 'https://streams.not.tv/hls/naturalworld/index.m3u8'
+videoPlayerStore.videoSource = "https://streams.not.tv/hls/naturalworld/index.m3u8"
 
 let props = defineProps({
     user: Object,
