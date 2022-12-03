@@ -4468,12 +4468,20 @@ select {
     display: none;
   }
 
+  .lg\:h-\[calc\(100vh-4rem\)\] {
+    height: calc(100vh - 4rem);
+  }
+
   .lg\:w-3\/4 {
     width: 75%;
   }
 
   .lg\:w-1\/4 {
     width: 25%;
+  }
+
+  .lg\:w-full {
+    width: 100%;
   }
 
   .lg\:grid-cols-3 {
@@ -4507,6 +4515,10 @@ select {
 
   .xl\:mr-64 {
     margin-right: 16rem;
+  }
+
+  .xl\:h-\[calc\(100vh-4rem\)\] {
+    height: calc(100vh - 4rem);
   }
 
   .xl\:grid-cols-6 {
