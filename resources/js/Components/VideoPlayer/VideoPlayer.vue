@@ -67,7 +67,7 @@
                 </div>
             </div>
 
-            <VideoOTT :user="props.user" class="z-50"/>
+            <VideoOTT :user="props.user"  class="absolute top-60 mt-2 w-full"/>
 
 </div>
 
