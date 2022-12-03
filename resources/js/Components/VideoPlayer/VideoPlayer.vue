@@ -64,17 +64,17 @@
                 </div>
                 </div>
             </div>
-    TEST
+    TEST1
             <div v-if="!videoPlayerStore.fullPage">
                 <videoOTTButtons class="videoOTTButtons"/>
             </div>
-    TEST
+    TEST2
             <VideoOTT :user="props.user" class="z-50"/>
 
 </div>
 
             <div v-if="!videoPlayerStore.fullPage">
-               TEST sdsd
+               TEST3
             </div>
 
 
