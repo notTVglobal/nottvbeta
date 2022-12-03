@@ -10,9 +10,7 @@
 
             <video-player :options="videoOptions" @click="videoPlayerStore.makeVideoFullPage()"/>
 
-            <div v-if="!videoPlayerStore.fullPage">
-                <videoOTTButtons class="videoOTTButtons"/>
-            </div>
+
 
             <div v-if="videoPlayerStore.fullPage">
                 <div class="absolute w-full flex justify-between top-16 left-0 p-5 drop-shadow z-50">
@@ -66,7 +64,9 @@
                 </div>
                 </div>
             </div>
-
+            <div v-if="!videoPlayerStore.fullPage">
+                <videoOTTButtons class="videoOTTButtons"/>
+            </div>
             <VideoOTT :user="props.user" class="z-50"/>
 
 </div>
