@@ -30,7 +30,7 @@ class MovieController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Movies', [
+        return Inertia::render('Movies/Index', [
             'movies' => Movie::query()
                 ->when(Request::input('search'), function ($query, $search) {
                     $query->where('name', 'like', "%{$search}%");

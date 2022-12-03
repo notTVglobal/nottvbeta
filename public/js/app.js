@@ -1322,15 +1322,15 @@ var map = {
 		"./resources/js/Pages/Invite.vue",
 		"resources_js_Pages_Invite_vue"
 	],
-	"./Movies": [
-		"./resources/js/Pages/Movies.vue",
+	"./Movies/Index": [
+		"./resources/js/Pages/Movies/Index.vue",
 		"/js/vendor",
-		"resources_js_Pages_Movies_vue"
+		"resources_js_Pages_Movies_Index_vue"
 	],
-	"./Movies.vue": [
-		"./resources/js/Pages/Movies.vue",
+	"./Movies/Index.vue": [
+		"./resources/js/Pages/Movies/Index.vue",
 		"/js/vendor",
-		"resources_js_Pages_Movies_vue"
+		"resources_js_Pages_Movies_Index_vue"
 	],
 	"./Movies/Upload": [
 		"./resources/js/Pages/Movies/Upload.vue",

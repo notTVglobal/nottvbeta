@@ -54,7 +54,7 @@
 
                 <div class="container mx-auto px-4 border-b border-gray-800 pb-16">
                     <h2 class="text-purple-800 uppercase tracking-wide font-semibold">Popular Shows</h2>
-                    <div class="popular-shows text-sm grid grid-cols-1 md:grid-cols-2 space-x-6 lg:grid-cols-5 xl:grid-cols-6 gap-8 pb-12">
+                    <div class="popular-shows text-sm grid grid-cols-1 md:grid-cols-2 space-x-6 lg:grid-cols-3 xl:grid-cols-4 gap-8 pb-12">
 
                         <div v-for="show in shows.data"
                              :key="show.id"
