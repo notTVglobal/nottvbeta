@@ -28,8 +28,8 @@ let chatStore = useChatStore()
 
 onMounted(() => {
     videoPlayer.makeVideoFullPage();
-    if (videoPlayer.videoSource != 'https://streams.not.tv/hls/dune1984/index.m3u8') {
-        videoPlayer.videoSource = 'https://streams.not.tv/hls/dune1984/index.m3u8';
+    if (videoPlayer.videoSource != 'https://mist2.not.tv/hls/dunepull/index.m3u8') {
+        videoPlayer.videoSource = 'https://mist2.not.tv/hls/dunepull/index.m3u8';
         videoPlayer.videoName = 'Dune';
         videoPlayer.loadNewSource()
     }

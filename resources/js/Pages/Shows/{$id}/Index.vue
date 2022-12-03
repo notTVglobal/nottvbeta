@@ -292,9 +292,9 @@ teamStore.name = props.team.name;
 
 let playVideo = () => {
     // videoPlayer.videoSource = 'https://streams.not.tv/hls/ctd1984/index.m3u8'
-    videoPlayer.videoSource = 'https://mist2.not.tv/hls/stream_test/index.m3u8'
+    videoPlayer.videoSource = 'https://mist2.not.tv/hls/kids_1/index.m3u8'
     // videoPlayer.videoSource = 'https://nottvmist.sfo3.digitaloceanspaces.com/recordings/channels_02.m3u8'
-    videoPlayer.videoName = 'mist2 stream test'
+    videoPlayer.videoName = 'kids_1'
     videoPlayer.loadNewSource()
 }
 

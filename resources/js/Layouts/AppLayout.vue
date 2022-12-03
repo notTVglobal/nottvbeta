@@ -32,7 +32,8 @@ import JetBanner from '@/Jetstream/Banner.vue'
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
 
 let videoPlayerStore = useVideoPlayerStore()
-videoPlayerStore.videoSource = "https://mist2.not.tv/hls/stream_test/index.m3u8"
+videoPlayerStore.videoSource = "https://mist2.not.tv/hls/naturalworld/index.m3u8"
+videoPlayerStore.videoName = "Natural World"
 
 let props = defineProps({
     user: Object,
