@@ -82,7 +82,7 @@
     right: 0rem;
 }
 .videoOTTButtons {
-    z-index: 500;
+    z-index: 300;
 }
 /* this is the OPEN chat button */
 .chatButtonForStreamPage {

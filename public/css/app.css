@@ -1229,7 +1229,7 @@ select {
     right: 0rem;
 }
 .videoOTTButtons {
-    z-index: 500;
+    z-index: 300;
 }
 /* this is the OPEN chat button */
 .chatButtonForStreamPage {
@@ -1410,6 +1410,10 @@ select {
 
 .bottom-16 {
   bottom: 4rem;
+}
+
+.top-56 {
+  top: 14rem;
 }
 
 .z-0 {
@@ -1694,6 +1698,10 @@ select {
   margin-left: 2.5rem;
 }
 
+.mt-16 {
+  margin-top: 4rem;
+}
+
 .ml-0 {
   margin-left: 0px;
 }
@@ -1702,12 +1710,12 @@ select {
   margin-right: 0px;
 }
 
-.mt-16 {
-  margin-top: 4rem;
-}
-
 .-mb-10 {
   margin-bottom: -2.5rem;
+}
+
+.mt-56 {
+  margin-top: 14rem;
 }
 
 .block {
