@@ -200,6 +200,8 @@ import {Inertia} from "@inertiajs/inertia";
 let videoPlayer = useVideoPlayerStore()
 let chat = useChatStore()
 
+videoPlayer.currentPage = 'movies'
+
 onMounted(() => {
     videoPlayer.makeVideoTopRight();
 });

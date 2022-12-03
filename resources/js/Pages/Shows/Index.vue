@@ -165,6 +165,8 @@ import NavigationMenu from "@/Components/Navigation/NavigationMenu"
 let videoPlayer = useVideoPlayerStore()
 let chat = useChatStore()
 
+videoPlayer.currentPage = 'shows'
+
 onMounted(() => {
     videoPlayer.makeVideoTopRight();
 });

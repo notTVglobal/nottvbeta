@@ -34,6 +34,8 @@ import {onMounted} from "vue";
 let videoPlayer = useVideoPlayerStore()
 let chat = useChatStore()
 
+videoPlayer.currentPage = 'upgrade'
+
 onMounted(() => {
     videoPlayer.makeVideoTopRight();
 });

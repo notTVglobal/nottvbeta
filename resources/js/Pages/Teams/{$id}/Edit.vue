@@ -205,6 +205,8 @@ let videoPlayer = useVideoPlayerStore()
 let chat = useChatStore()
 let teamStore = useTeamStore()
 
+videoPlayer.currentPage = 'teams'
+
 onMounted(() => {
     videoPlayer.makeVideoTopRight();
 });

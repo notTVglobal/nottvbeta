@@ -60,6 +60,8 @@ import {onMounted} from "vue";
 let videoPlayer = useVideoPlayerStore()
 let chat = useChatStore()
 
+videoPlayer.currentPage = 'training'
+
 onMounted(() => {
     videoPlayer.makeVideoTopRight();
 });

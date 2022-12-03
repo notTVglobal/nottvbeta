@@ -56,6 +56,8 @@ import {onMounted} from "vue";
 let videoPlayer = useVideoPlayerStore()
 let chat = useChatStore()
 
+videoPlayer.currentPage = 'invite'
+
 onMounted(() => {
     videoPlayer.makeVideoTopRight();
 });

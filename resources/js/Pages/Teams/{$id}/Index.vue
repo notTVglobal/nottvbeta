@@ -113,6 +113,8 @@ import Pagination from "@/Components/Pagination"
 let videoPlayerStore = useVideoPlayerStore();
 let teamStore = useTeamStore();
 
+videoPlayerStore.currentPage = 'teams'
+
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
 });

@@ -171,6 +171,8 @@ let videoPlayer = useVideoPlayerStore()
 let showStore = useShowStore();
 let teamStore = useTeamStore();
 
+videoPlayer.currentPage = 'episodes'
+
 onMounted(async () => {
     videoPlayer.makeVideoTopRight();
 

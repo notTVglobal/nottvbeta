@@ -117,6 +117,8 @@ import TeamAssignmentsList from "@/Components/Teams/TeamAssignmentsList"
 let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore();
 
+videoPlayerStore.currentPage = 'teams'
+
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
 });

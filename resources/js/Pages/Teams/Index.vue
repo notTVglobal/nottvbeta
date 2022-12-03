@@ -160,6 +160,8 @@ import NavigationMenu from "@/Components/Navigation/NavigationMenu"
 let videoPlayer = useVideoPlayerStore()
 let chat = useChatStore()
 
+videoPlayer.currentPage = 'teams'
+
 onMounted(() => {
     videoPlayer.makeVideoTopRight();
 });

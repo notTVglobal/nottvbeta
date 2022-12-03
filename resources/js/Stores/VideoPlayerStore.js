@@ -18,6 +18,7 @@ export let useVideoPlayerStore = defineStore('videoPlayer', {
             videoSource: [],
             currentView: String,
             currentChannel: [],
+            currentPage: String,
             fullPage: Boolean,
             loggedIn: Boolean,
             muted: Boolean,
@@ -33,10 +34,18 @@ export let useVideoPlayerStore = defineStore('videoPlayer', {
             mistDisplayPushForm: Boolean,
             mistDisplay: String,
             mistNewHashedPassword: [],
+            ott: Number,
         }
     },
 
     actions: {
+        toggleOtt(num) {
+            if (this.ott === num) {
+                this.ott = 0;
+            } else {
+                this.ott = num;
+            }
+        },
         loadNewSource() {
             let videoJs = videojs('main-player')
             videoJs.src(this.videoSource)

@@ -73,6 +73,8 @@ import SectionTitle from "../../../../vendor/laravel/jetstream/stubs/inertia/res
 
 let videoPlayer = useVideoPlayerStore()
 
+videoPlayer.currentPage = 'admin'
+
 onMounted(async () => {
     videoPlayer.makeVideoTopRight();
 

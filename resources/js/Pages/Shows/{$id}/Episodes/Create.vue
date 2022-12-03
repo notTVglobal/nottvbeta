@@ -166,6 +166,8 @@ import { useTeamStore } from "@/Stores/TeamStore.js"
 let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore()
 
+videoPlayerStore.currentPage = 'episodes'
+
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
 });

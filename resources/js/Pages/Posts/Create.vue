@@ -109,6 +109,8 @@ import {onMounted} from "vue";
 let videoPlayer = useVideoPlayerStore()
 let chat = useChatStore()
 
+videoPlayer.currentPage = 'news'
+
 onMounted(() => {
     videoPlayer.makeVideoTopRight();
 });

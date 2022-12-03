@@ -25,6 +25,8 @@ import {onMounted} from "vue";
 let videoPlayer = useVideoPlayerStore()
 let chat = useChatStore()
 
+videoPlayer.currentPage = 'schedule'
+
 let props = defineProps({
     can: Object
 })

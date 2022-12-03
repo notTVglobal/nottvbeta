@@ -138,6 +138,8 @@ import { onMounted } from "vue";
 
 let videoPlayer = useVideoPlayerStore()
 
+videoPlayer.currentPage = 'image'
+
 onMounted(() => {
     videoPlayer.makeVideoTopRight();
 });

@@ -32,6 +32,7 @@ let videoPlayer = useVideoPlayerStore()
 let chat = useChatStore()
 
 videoPlayer.currentView = 'chat'
+videoPlayer.currentPage = 'chat'
 
 let props = defineProps ({
     user: Object,

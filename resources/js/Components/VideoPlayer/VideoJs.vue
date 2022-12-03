@@ -1,6 +1,6 @@
 <template>
         <div>
-            <video ref="videoPlayer" id="main-player" class="w-full video-js vjs-big-play-centered" :class="videoPlayerStore.class" playsinline autoplay loop muted />
+            <video ref="videoPlayer" id="main-player" class="w-full video-js vjs-big-play-centered max-h-56" :class="videoPlayerStore.class" playsinline autoplay loop muted />
         </div>
 </template>
 
@@ -9,7 +9,7 @@
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js";
 import {useStreamStore} from "@/Stores/StreamStore.js";
 import videojs from 'video.js';
-import {onMounted, ref, reactive, onBeforeUnmount} from "vue";
+import {onMounted, onBeforeUnmount} from "vue";
 
 let videoPlayerStore = useVideoPlayerStore();
 let streamStore = useStreamStore();

@@ -34,6 +34,8 @@ let videoPlayerStore = useVideoPlayerStore()
 let streamStore = useStreamStore()
 let chat = useChatStore()
 
+videoPlayerStore.currentPage = 'creators'
+
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
 });

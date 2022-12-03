@@ -8,8 +8,10 @@ export let useStreamStore = defineStore('streamStore', {
         description: '',
         posterName: [],
         posterId: [0],
+        posterUrl: '',
         episodes: [],
         team_id: 'team id',
+        teamName: '',
     }),
 
     actions: {
