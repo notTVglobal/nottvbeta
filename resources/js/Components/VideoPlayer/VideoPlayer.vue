@@ -67,7 +67,7 @@
                 </div>
             </div>
 
-            <VideoOTT :user="props.user"/>
+            <VideoOTT :user="props.user" class="top-96"/>
 
 </div>
 
