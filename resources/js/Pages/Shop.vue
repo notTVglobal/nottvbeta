@@ -43,6 +43,7 @@ let chat = useChatStore()
 videoPlayerStore.currentPage = 'shop'
 
 onMounted(() => {
+    videoPlayerStore.makeVideoFullPage();
     videoPlayerStore.makeVideoTopRight();
 });
 
