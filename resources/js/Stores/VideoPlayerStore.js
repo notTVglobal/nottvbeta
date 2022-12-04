@@ -23,6 +23,7 @@ export let useVideoPlayerStore = defineStore('videoPlayer', {
             currentPage: String,
             fullPage: Boolean,
             loggedIn: Boolean,
+            showControls: Boolean,
             muted: Boolean,
             paused: Boolean,
             apiRequest: [],
@@ -37,10 +38,17 @@ export let useVideoPlayerStore = defineStore('videoPlayer', {
             mistDisplay: String,
             mistNewHashedPassword: [],
             ott: Number,
+            blue: false,
         }
     },
 
     actions: {
+        makeBlue() {
+            this.blue = true
+        },
+        toggleControls() {
+          this.showControls = !this.showControls
+        },
         toggleOtt(num) {
             if (this.ott === num) {
                 this.ott = 0;

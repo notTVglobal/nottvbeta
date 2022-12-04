@@ -2,10 +2,10 @@
 
     <div :class="videoPlayerStore.videoContainerClass">
         <div :class="videoPlayerStore.class"
-             @mouseenter="showControls = true"
-             @mouseleave="showControls = false"
-             v-touch="showControlsTouch">
-<!--             @click="videoPlayerStore.makeVideoFullPage()">-->
+             @mouseenter="videoPlayerStore.showControls = true"
+             @mouseleave="videoPlayerStore.showControls = false"
+             v-touch="()=>videoPlayerStore.toggleControls()"
+             >
 
 
             <Teleport to="body">
@@ -47,7 +47,7 @@
                     <font-awesome-icon icon="fa-comments" class="text-3xl"/><div>CHAT</div>
                 </button>
 
-                <VideoControls :show="showControls"/>
+                <VideoControls :show="videoPlayerStore.showControls"/>
 
             </div>
 
@@ -73,18 +73,11 @@
                     </div>
                 </div>
 
-
-
-
-
-                <VideoControls :show="showControls"
-
-
+                
+                <VideoControls :show="videoPlayerStore.showControls"
                 />
 
             </div>
-
-
 
             <div v-if="!videoPlayerStore.loggedIn" class="welcomeOverlay">
                 <div class="landscape:hidden">
@@ -131,6 +124,7 @@ let chatStore = useChatStore()
 
 videoPlayerStore.paused = false
 chatStore.showChat = false
+videoPlayerStore.showControls = false
 
 let showLogin = ref(false)
 
@@ -152,9 +146,6 @@ export default {
     components: {
         VideoPlayer
     },
-    methods() {
-      showControlsTouch: { this.showControls = !this.showControls }
-    },
     data() {
         const videoPlayerStore = useVideoPlayerStore()
         const videoSource = videoPlayerStore.videoSource
@@ -171,8 +162,7 @@ export default {
                         type: 'application/x-mpegURL'
                     }
                 ]
-            },
-            showControls: false,
+            }
         };
     }
 };
@@ -180,23 +170,3 @@ export default {
 
 
 </script>
-
-<style scoped>
-
-.videoControls {
-    display: none;
-    opacity: 0;
-    transition: opacity 1s ease-in-out;
-    -moz-transition: opacity 1s ease-in-out;
-    -webkit-transition: opacity 1s ease-in-out;
-}
-
-.videoControls-hover {
-    display: block;
-    opacity: 1.0;
-    transition: opacity .55s ease-in-out;
-    -moz-transition: opacity .55s ease-in-out;
-    -webkit-transition: opacity .55s ease-in-out;
-}
-
-</style>

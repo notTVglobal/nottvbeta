@@ -1422,6 +1422,10 @@ select {
   bottom: 4rem;
 }
 
+.bottom-10 {
+  bottom: 2.5rem;
+}
+
 .z-0 {
   z-index: 0;
 }
