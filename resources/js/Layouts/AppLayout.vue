@@ -13,15 +13,15 @@
         </main>
 
         <div>
-            <VideoPlayer :class="videoPlayerStore.class" class="videoContainer" :key="videoPlayerStore.key" :user="props.user"/>
+<!--            <VideoPlayer :class="videoPlayerStore.class" class="videoContainer" :key="videoPlayerStore.key" :user="props.user"/>-->
 
         </div>
 
-        <div v-if="!videoPlayerStore.fullPage" class="fixed top-72 right-0 w-96">
-            <videoOTTButtons class="videoOTT"/>
-        </div>
+<!--        <div v-if="!videoPlayerStore.fullPage" class="fixed top-72 right-0 w-96">-->
+<!--            <videoOTTButtons class="videoOTT"/>-->
+<!--        </div>-->
 
-        <VideoOTT :user="props.user"  class="fixed top-76 right-0 mt-2 w-96 h-[calc(100vh-4rem)] overflow-y-scroll"/>
+<!--        <VideoOTT :user="props.user"  class="fixed top-76 right-0 mt-2 w-96 h-[calc(100vh-4rem)] overflow-y-scroll"/>-->
 
 
     </div>
