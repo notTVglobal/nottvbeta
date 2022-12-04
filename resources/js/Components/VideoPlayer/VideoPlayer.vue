@@ -4,7 +4,7 @@
         <div :class="videoPlayerStore.class"
              @mouseenter="videoPlayerStore.showControls = true"
              @mouseleave="videoPlayerStore.showControls = false"
-             v-touch="()=>videoPlayerStore.toggleControls()"
+
              >
 
 
@@ -73,7 +73,7 @@
                     </div>
                 </div>
 
-                
+
                 <VideoControls :show="videoPlayerStore.showControls"
                 />
 
