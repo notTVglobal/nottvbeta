@@ -16,6 +16,8 @@ export let useVideoPlayerStore = defineStore('videoPlayer', {
             key: [],
             videoName: [],
             videoSource: [],
+            nextSource: [],
+            previousSource: [],
             currentView: String,
             currentChannel: [],
             currentPage: String,
@@ -49,6 +51,22 @@ export let useVideoPlayerStore = defineStore('videoPlayer', {
         unmute() {
             let videoJs = videojs('main-player')
             videoJs.muted(false)
+        },
+        pause() {
+            let videoJs = videojs('main-player')
+            videoJs.pause()
+        },
+        play() {
+            let videoJs = videojs('main-player')
+            videoJs.play()
+        },
+        next() {
+            let videoJs = videojs('main-player')
+            videoJs.src(this.nextSource)
+        },
+        back() {
+            let videoJs = videojs('main-player')
+            videoJs.src(this.previousSource)
         },
         loadNewSource() {
             let videoJs = videojs('main-player')

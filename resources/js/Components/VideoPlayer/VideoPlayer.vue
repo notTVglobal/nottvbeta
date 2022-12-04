@@ -1,14 +1,19 @@
 <template>
 
     <div :class="videoPlayerStore.videoContainerClass">
-        <div :class="videoPlayerStore.class">
+        <div :class="videoPlayerStore.class"
+             @mouseenter="showControls = true"
+             @mouseleave="showControls = false"
+             @click="showControls = !showControls">
+<!--             @click="videoPlayerStore.makeVideoFullPage()">-->
 
 
             <Teleport to="body">
                 <Login v-if="!videoPlayerStore.loggedIn" :show="showLogin" @close="showLogin = false" />
             </Teleport>
 
-            <video-player :options="videoOptions" @click="videoPlayerStore.makeVideoFullPage()"/>
+
+            <video-player :options="videoOptions"/>
 
             <div v-if="videoPlayerStore.fullPage">
                 <div class="absolute w-full flex justify-between top-16 left-0 p-5 drop-shadow z-50">
@@ -42,14 +47,12 @@
                     <font-awesome-icon icon="fa-comments" class="text-3xl"/><div>CHAT</div>
                 </button>
 
-                <div class="absolute flex justify-between bottom-0 bg-red-800 px-2 w-full z-50">
-                    PLAYER CONTROLS GO HERE
-                    <button class="bg-gray-500 rounded-full p-2" @click="videoPlayerStore.unmute()">UNMUTE</button>
-                </div>
+                <VideoControls :show="showControls"/>
 
             </div>
 
-            <div v-if="!videoPlayerStore.fullPage" class="overflow-y-scroll ">
+            <div v-if="!videoPlayerStore.fullPage">
+
 
                 <div class="absolute flex justify-between top-0 bg-gray-800 px-2 w-full z-50">
                     <div>
@@ -69,10 +72,15 @@
                     </div>
                     </div>
                 </div>
-                <div class="absolute flex justify-between bottom-0 bg-red-800 px-2 w-full z-50">
-                    PLAYER CONTROLS GO HERE
-                    <button class="bg-gray-500 rounded-full p-2" @click="videoPlayerStore.unmute()">UNMUTE</button>
-                </div>
+
+
+
+
+
+                <VideoControls :show="showControls"
+
+
+                />
 
             </div>
 
@@ -115,6 +123,7 @@ import { ref } from 'vue'
 import VideoOTTButtons from "@/Components/VideoPlayer/VideoOTTButtons.vue";
 import VideoOTT from "@/Components/VideoPlayer/VideoOTT.vue";
 import {useChatStore} from "@/Stores/ChatStore";
+import VideoControls from "@/Components/VideoPlayer/VideoControls";
 
 let videoPlayerStore = useVideoPlayerStore()
 let streamStore = useStreamStore()
@@ -124,7 +133,6 @@ videoPlayerStore.paused = false
 chatStore.showChat = false
 
 let showLogin = ref(false)
-
 
 let props = defineProps({
     src: String,
@@ -160,7 +168,8 @@ export default {
                         type: 'application/x-mpegURL'
                     }
                 ]
-            }
+            },
+            showControls: false,
         };
     }
 };
@@ -168,3 +177,23 @@ export default {
 
 
 </script>
+
+<style scoped>
+
+.videoControls {
+    display: none;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+    -moz-transition: opacity 1s ease-in-out;
+    -webkit-transition: opacity 1s ease-in-out;
+}
+
+.videoControls-hover {
+    display: block;
+    opacity: 1.0;
+    transition: opacity .55s ease-in-out;
+    -moz-transition: opacity .55s ease-in-out;
+    -webkit-transition: opacity .55s ease-in-out;
+}
+
+</style>
