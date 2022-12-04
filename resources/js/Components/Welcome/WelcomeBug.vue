@@ -8,7 +8,7 @@
         leave-to-class="opacity-0 scale-125"
     >
         <div v-if="welcomeStore.showOverlay===false">
-            <div class="absolute top-4 left-20">
+            <div class="absolute top-6 md:top-4 left-5 md:left-20">
                 <img :src="`/storage/images/logo_white_512.png`" class="w-20 md:w-40 pt-2">
             </div>
         </div>

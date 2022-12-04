@@ -1451,6 +1451,14 @@ select {
   top: 1rem;
 }
 
+.left-5 {
+  left: 1.25rem;
+}
+
+.top-6 {
+  top: 1.5rem;
+}
+
 .z-0 {
   z-index: 0;
 }
@@ -4417,6 +4425,14 @@ select {
 }
 
 @media (min-width: 768px) {
+
+  .md\:left-20 {
+    left: 5rem;
+  }
+
+  .md\:top-4 {
+    top: 1rem;
+  }
 
   .md\:col-span-2 {
     grid-column: span 2 / span 2;
