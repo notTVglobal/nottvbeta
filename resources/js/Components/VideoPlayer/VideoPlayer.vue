@@ -10,8 +10,6 @@
 
             <video-player :options="videoOptions" @click="videoPlayerStore.makeVideoFullPage()"/>
 
-
-
             <div v-if="videoPlayerStore.fullPage">
                 <div class="absolute w-full flex justify-between top-16 left-0 p-5 drop-shadow z-50">
                     <div>
@@ -37,36 +35,44 @@
                 </div>
 
                 <ChatForStreamPageV2 :user="props.user"/>
+
                 <button v-if="!chatStore.showChat" @click="chatStore.showChat = true"
                         class="opacity-80 chatButtonForStreamPage w-20 h-20 rounded-full bg-orange-400 text-orange-100
-        hover:bg-orange-600 hover:text-orange-300 cursor-pointer grid justify-center content-center">
+                               hover:bg-orange-600 hover:text-orange-300 cursor-pointer grid justify-center content-center">
                     <font-awesome-icon icon="fa-comments" class="text-3xl"/><div>CHAT</div>
                 </button>
 
+                <div class="absolute flex justify-between bottom-0 bg-red-800 px-2 w-full z-50">
+                    PLAYER CONTROLS GO HERE
+                </div>
+
             </div>
 
-<div v-if="!videoPlayerStore.fullPage" class="overflow-y-scroll ">
-            <div class="absolute flex justify-between top-0 bg-gray-800 px-2 w-full z-50">
-                <div>
-                    <span class="text-xs uppercase pr-2">Now playing: </span>
-                    <span class="font-semibold text-xs">{{ videoPlayerStore.videoName }}</span>
-                </div>
-                <div v-if="streamStore.isLive" class="absolute py-6 left-0 pl-2 drop-shadow z-50 w-full">
-                    <div class="flex justify-between">
+            <div v-if="!videoPlayerStore.fullPage" class="overflow-y-scroll ">
+
+                <div class="absolute flex justify-between top-0 bg-gray-800 px-2 w-full z-50">
                     <div>
-                        <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-white bg-opacity-80 bg-red-800 uppercase last:mr-0 mr-1">
-                        live
-                        </span>
+                        <span class="text-xs uppercase pr-2">Now playing: </span>
+                        <span class="font-semibold text-xs">{{ videoPlayerStore.videoName }}</span>
                     </div>
-                    <div class="opacity-10">
-                        <img :src="`/storage/images/logo_white_512.png`" class="w-10 pt-2 mr-4">
+                    <div v-if="streamStore.isLive" class="absolute py-6 left-0 pl-2 drop-shadow z-50 w-full">
+                        <div class="flex justify-between">
+                        <div>
+                            <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-white bg-opacity-80 bg-red-800 uppercase last:mr-0 mr-1">
+                            live
+                            </span>
+                        </div>
+                        <div class="opacity-10">
+                            <img :src="`/storage/images/logo_white_512.png`" class="w-10 pt-2 mr-4">
+                        </div>
+                    </div>
                     </div>
                 </div>
+                <div class="absolute flex justify-between bottom-0 bg-red-800 px-2 w-full z-50">
+                    PLAYER CONTROLS GO HERE
                 </div>
+
             </div>
-
-
-</div>
 
 
 
