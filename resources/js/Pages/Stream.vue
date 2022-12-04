@@ -13,26 +13,28 @@
 
 <script setup>
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+import { useStreamStore } from "@/Stores/StreamStore.js"
 import { useChatStore } from "@/Stores/ChatStore.js"
 import ChatForStreamPageV2 from "@/Components/Chat/ChatForStreamPageV2"
 import {onMounted} from "vue";
 
-let videoPlayer = useVideoPlayerStore()
+let videoPlayerStore = useVideoPlayerStore()
+let streamStore = useStreamStore()
 let chatStore = useChatStore()
 
 onMounted(() => {
-    videoPlayer.makeVideoFullPage();
-    if (videoPlayer.videoSource != 'https://mist2.not.tv/hls/dunepull/index.m3u8') {
-        videoPlayer.videoSource = 'https://mist2.not.tv/hls/dunepull/index.m3u8';
-        videoPlayer.videoName = 'Dune';
-        videoPlayer.loadNewSource()
+    videoPlayerStore.makeVideoFullPage();
+    if (streamStore.currentChannel != 'Stream') {
+        videoPlayerStore.videoSource = 'https://mist2.not.tv/hls/dunepull/index.m3u8';
+        videoPlayerStore.videoName = 'Dune';
+        videoPlayerStore.loadNewSource()
     }
 
 });
 chatStore.showChat = false
-videoPlayer.loggedIn = true
-videoPlayer.currentView = 'stream'
-videoPlayer.currentPage = 'stream'
+videoPlayerStore.loggedIn = true
+videoPlayerStore.currentView = 'stream'
+videoPlayerStore.currentPage = 'stream'
 
 let props = defineProps ({
     video: Object,

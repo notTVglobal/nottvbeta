@@ -40,12 +40,16 @@ import ResponsiveNavigationMenu from "@/Components/Navigation/ResponsiveNavigati
 import NavigationMenu from "@/Components/Navigation/NavigationMenu"
 import VideoPlayer from "@/Components/VideoPlayer/VideoPlayer.vue"
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
+import {useStreamStore} from "@/Stores/StreamStore.js"
 import VideoOTT from '@/Components/VideoPlayer/VideoOTT'
 import VideoOTTButtons from '@/Components/VideoPlayer/VideoOTTButtons'
 
 let videoPlayerStore = useVideoPlayerStore()
+let streamStore = useStreamStore()
+
 videoPlayerStore.videoSource = "https://mist2.not.tv/hls/naturalworld/index.m3u8"
-videoPlayerStore.videoName = "Natural World"
+videoPlayerStore.videoName = "Main Stream"
+streamStore.currentChannel = "Stream"
 
 let props = defineProps({
     user: Object,

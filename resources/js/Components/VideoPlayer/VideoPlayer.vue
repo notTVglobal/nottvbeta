@@ -13,7 +13,7 @@
 
             <video-player :options="videoOptions" v-touch="()=>videoPlayerStore.toggleControls()"/>
 
-            <div v-show="$page.props.user!=null" class="absolute top-16 p-5 right-4 opacity-10 z-50">
+            <div v-show="$page.props.user!=null && videoPlayerStore.fullPage===true" class="absolute top-16 p-5 right-4 opacity-10 z-50">
                 <img :src="`/storage/images/logo_white_512.png`" class="w-20 pt-2">
             </div>
 
@@ -33,9 +33,9 @@
                         </span>
                     </div>
                 </div>
-                <div v-if="videoPlayerStore.currentPage!='stream' && $page.props.user!=null" class="absolute w-full flex justify-between bottom-6 left-0 p-5 drop-shadow z-50 hidden md:block">
+                <div v-if="videoPlayerStore.currentPage!='stream' && $page.props.user!=null" @click="videoPlayerStore.makeVideoTopRight()" class="absolute w-full flex justify-between mb-6 left-0 p-5 drop-shadow z-50 hidden md:block">
                     <div>
-                        <button class="p-2 bg-gray-800 text-white hover:bg-gray-600" @click="videoPlayerStore.makeVideoTopRight()">Back to Page</button>
+                        <button class="p-2 bg-gray-800 text-white hover:bg-gray-600" >Back to Page</button>
                     </div>
                 </div>
 
@@ -88,8 +88,6 @@ import {useStreamStore} from "@/Stores/StreamStore";
 import ChatForStreamPageV2 from "@/Components/Chat/ChatForStreamPageV2"
 import Login from "@/Components/Welcome/Login.vue"
 import { ref } from 'vue'
-import VideoOTTButtons from "@/Components/VideoPlayer/VideoOTTButtons.vue";
-import VideoOTT from "@/Components/VideoPlayer/VideoOTT.vue";
 import {useChatStore} from "@/Stores/ChatStore";
 import VideoControls from "@/Components/VideoPlayer/VideoControls";
 
