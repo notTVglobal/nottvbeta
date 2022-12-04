@@ -66,4 +66,19 @@ let props = defineProps({
     user: Object,
 });
 
+const loadVideoCSS = async () => {
+    await videoPlayerStore.makeVideoFullPage();
+    // await videoPlayerStore.makeVideoTopRight();
+}
+
+onMounted(() => {
+    loadVideoCSS();
+    if (videoPlayerStore.currentPage!='stream'){
+        videoPlayerStore.makeVideoTopRight();
+    } else {
+        videoPlayerStore.makeVideoFullPage();
+    }
+});
+
+
 </script>
