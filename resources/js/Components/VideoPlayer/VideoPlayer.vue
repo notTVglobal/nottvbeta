@@ -1,8 +1,5 @@
 <template>
 
-    <VideoControls v-if="$page.props.user!=null" :show="videoPlayerStore.showControls===true" class="fixed top-69 right-24 w-96 bg-red-500 z-50"
-    />
-
     <div :class="videoPlayerStore.videoContainerClass">
         <div :class="videoPlayerStore.class"
              @mouseenter="videoPlayerStore.showControls = true"
@@ -73,7 +70,8 @@
                     </div>
                 </div>
 
-
+                <VideoControls v-if="$page.props.user!=null" :show="videoPlayerStore.showControls===true" class="z-50"
+                />
 
 
             </div>
