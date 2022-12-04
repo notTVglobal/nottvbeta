@@ -14,11 +14,11 @@
 
                 <div v-if="videoPlayerStore.fullPage">
 
-                    <div class="absolute flex justify-between bottom-0 px-2 w-full z-50">
-                        <button class="bg-gray-500 rounded-full p-2" @click="videoPlayerStore.unmute()">UNMUTE</button>
-                        <button class="bg-gray-500 rounded-full p-2" @click="videoPlayerStore.back()">BACK</button>
-                        <button class="bg-gray-500 rounded-full p-2" @click="videoPlayerStore.next()">NEXT</button>
-                        <button class="bg-gray-500 rounded-full p-2" @click="videoPlayerStore.pause()">PAUSE</button>
+                    <div class="absolute flex justify-center space-x-4 bottom-6 px-2 w-full z-50">
+                        <button class="bg-gray-800 rounded-full p-2 hover:bg-gray-600" @click="videoPlayerStore.unmute()">UNMUTE</button>
+                        <button class="bg-gray-800 rounded-full p-2 hover:bg-gray-600" @click="videoPlayerStore.back()">BACK</button>
+                        <button class="bg-gray-800 rounded-full p-2 hover:bg-gray-600" @click="videoPlayerStore.pause()">PAUSE</button>
+                        <button class="bg-gray-800 rounded-full p-2 hover:bg-gray-600" @click="videoPlayerStore.next()">NEXT</button>
                     </div>
 
                 </div>
@@ -26,12 +26,12 @@
 
                 <div v-if="!videoPlayerStore.fullPage">
 
-                    <div class="absolute flex justify-between bottom-0 px-2 w-full z-50">
-                        <button class="bg-gray-500 rounded-full p-2" @click="videoPlayerStore.makeVideoFullPage()">BIG</button>
-                        <button class="bg-gray-500 rounded-full p-2" @click="videoPlayerStore.unmute()">UNMUTE</button>
-                        <button class="bg-gray-500 rounded-full p-2" @click="videoPlayerStore.back()">BACK</button>
-                        <button class="bg-gray-500 rounded-full p-2" @click="videoPlayerStore.next()">NEXT</button>
-                        <button class="bg-gray-500 rounded-full p-2" @click="videoPlayerStore.pause()">PAUSE</button>
+                    <div class="absolute flex justify-between bottom-2 px-2 w-full z-50">
+                        <button class="bg-gray-800 rounded-full p-2 hover:bg-gray-600" @click="videoPlayerStore.makeVideoFullPage()">BIG</button>
+                        <button class="bg-gray-800 rounded-full p-2 hover:bg-gray-600" @click="videoPlayerStore.unmute()">UNMUTE</button>
+                        <button class="bg-gray-800 rounded-full p-2 hover:bg-gray-600" @click="videoPlayerStore.back()">BACK</button>
+                        <button class="bg-gray-800 rounded-full p-2 hover:bg-gray-600" @click="videoPlayerStore.pause()">PAUSE</button>
+                        <button class="bg-gray-800 rounded-full p-2 hover:bg-gray-600" @click="videoPlayerStore.next()">NEXT</button>
 
                     </div>
                 </div>

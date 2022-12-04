@@ -1447,6 +1447,14 @@ select {
   right: 6rem;
 }
 
+.bottom-2 {
+  bottom: 0.5rem;
+}
+
+.bottom-6 {
+  bottom: 1.5rem;
+}
+
 .z-0 {
   z-index: 0;
 }
