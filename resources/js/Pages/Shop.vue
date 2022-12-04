@@ -44,11 +44,16 @@ videoPlayerStore.currentPage = 'shop'
 
 
 onBeforeMount(() => {
-    videoPlayerStore.makeVideoFullPage();
+
 })
 
+const loadVideoCSS = async () => {
+    await videoPlayerStore.makeVideoFullPage();
+    await videoPlayerStore.makeVideoTopRight();
+}
+
 onMounted(() => {
-    videoPlayerStore.makeVideoTopRight();
+    loadVideoCSS();
 });
 
 
