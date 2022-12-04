@@ -38,12 +38,12 @@
 <script setup>
 import ResponsiveNavigationMenu from "@/Components/Navigation/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/Navigation/NavigationMenu"
-import VideoPlayer from "@/Components/VideoPlayer/VideoPlayer.vue"
-import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
-import {useStreamStore} from "@/Stores/StreamStore.js"
+import VideoPlayer from "@/Components/VideoPlayer/VideoPlayer"
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
+import { useStreamStore } from "@/Stores/StreamStore"
 import VideoOTT from '@/Components/VideoPlayer/VideoOTT'
 import VideoOTTButtons from '@/Components/VideoPlayer/VideoOTTButtons'
-import {onMounted} from "vue";
+import { onMounted } from "vue";
 
 let videoPlayerStore = useVideoPlayerStore()
 let streamStore = useStreamStore()
@@ -52,11 +52,15 @@ videoPlayerStore.videoSource = "https://mist2.not.tv/hls/naturalworld/index.m3u8
 videoPlayerStore.videoName = "Main Stream"
 streamStore.currentChannel = "Stream"
 
-videoPlayerStore.makeVideoFullPage();
-onMounted(() => {
-
-
-});
+// tec21: this fixes the video size issue when
+// a user reloads a page with the video in
+// the top right. But, it keeps the video
+// in fullPage until they click "back to page"
+//
+// onMounted(() => {
+//     videoPlayerStore.makeVideoFullPage();
+//
+// });
 
 let props = defineProps({
     user: Object,

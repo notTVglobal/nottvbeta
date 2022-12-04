@@ -42,9 +42,13 @@ let chat = useChatStore()
 
 videoPlayerStore.currentPage = 'shop'
 
-onMounted(() => {
-    videoPlayerStore.makeVideoTopRight();
+async function loadFullPage() {
+    await videoPlayerStore.makeVideoFullPage();
+}
 
+onMounted(() => {
+    loadFullPage();
+    videoPlayerStore.makeVideoTopRight();
 });
 
 
