@@ -10,15 +10,15 @@
         <div v-if="welcomeStore.showOverlay===true">
                     <div class="grid md:grid-cols-1 grid-cols-1 align-items-center -mt-32">
                         <JetApplicationLogo class="block md:w-auto p-10"/>
-                        <div class="my-4 text-center">
-                            <button
-                                class="text-2xl font-semibold bg-green-500 hover:bg-green-600 text-white px-5 py-3 rounded disabled:bg-gray-400"
-                                @click="watchNow"
-                            ><font-awesome-icon icon="fa-solid fa-play" /> Watch Now  </button>
+                            <div class="my-4 text-center">
+                                <button
+                                    class="text-2xl font-semibold bg-green-500 hover:bg-green-600 text-white px-5 py-3 rounded disabled:bg-gray-400"
+                                    @click="watchNow"
+                                ><font-awesome-icon icon="fa-solid fa-play" /> Watch Now  </button>
 
-                        </div>
-                        <div class="my-2 text-center">OR</div>
-                        <div class="text-center font-semibold text-2xl px-5 py-3">SCROLL DOWN</div>
+                            </div>
+                            <div class="my-2 text-center">OR</div>
+                            <div class="text-center font-semibold text-2xl px-5 py-3">SCROLL DOWN</div>
                     </div>
                 </div>
 
