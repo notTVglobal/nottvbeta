@@ -13,7 +13,7 @@
 
             <video-player :options="videoOptions" v-touch="()=>videoPlayerStore.toggleControls()"/>
 
-            <div class="absolute top-16 p-5 right-4 opacity-10 z-50">
+            <div v-show="$page.props.user!=null" class="absolute top-16 p-5 right-4 opacity-10 z-50">
                 <img :src="`/storage/images/logo_white_512.png`" class="w-20 pt-2">
             </div>
 
