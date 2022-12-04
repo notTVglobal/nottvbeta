@@ -2856,14 +2856,6 @@ var map = {
 		"./resources/js/Pages/Welcome.vue",
 		"resources_js_Pages_Welcome_vue"
 	],
-	"./Welcome_v1": [
-		"./resources/js/Pages/Welcome_v1.vue",
-		"resources_js_Pages_Welcome_v1_vue"
-	],
-	"./Welcome_v1.vue": [
-		"./resources/js/Pages/Welcome_v1.vue",
-		"resources_js_Pages_Welcome_v1_vue"
-	],
 	"./Whitepaper": [
 		"./resources/js/Pages/Whitepaper.vue",
 		"resources_js_Pages_Whitepaper_vue"
