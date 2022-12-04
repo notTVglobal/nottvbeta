@@ -71,14 +71,9 @@ const loadVideoCSS = async () => {
     // await videoPlayerStore.makeVideoTopRight();
 }
 
-onMounted(() => {
-    loadVideoCSS();
-    if (videoPlayerStore.currentPage!='stream'){
-        videoPlayerStore.makeVideoTopRight();
-    } else {
-        videoPlayerStore.makeVideoFullPage();
-    }
-});
+// onMounted(() => {
+//     loadVideoCSS();
+// });
 
 
 </script>
