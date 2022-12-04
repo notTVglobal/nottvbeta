@@ -100,6 +100,13 @@
 
                 <JetResponsiveNavLink
                     @click="videoPlayer.makeVideoTopRight()"
+                    :href="route('library')"
+                    :active="route().current('library')">
+                    My Library
+                </JetResponsiveNavLink>
+
+                <JetResponsiveNavLink
+                    @click="videoPlayer.makeVideoTopRight()"
                     :href="route('stream')"
                     :active="route().current('stream')">
                         Stream
