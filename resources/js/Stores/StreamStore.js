@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { useChatStore } from "@/Stores/ChatStore";
 
 export let useStreamStore = defineStore('streamStore', {
     state: () => ({
@@ -12,10 +13,19 @@ export let useStreamStore = defineStore('streamStore', {
         episodes: [],
         team_id: 'team id',
         teamName: '',
+        showOSD: Boolean,
+        showChannels: Boolean,
     }),
 
     actions: {
-        //
+        toggleChat() {
+            this.showOSD = !this.showOSD;
+            useChatStore().toggleChat();
+        },
+        toggleChannels() {
+            this.showOSD = !this.showOSD;
+            this.showChannels = !this.showChannels;
+        }
     },
 
     getters: {

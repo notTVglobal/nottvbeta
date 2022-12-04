@@ -159,6 +159,14 @@ Route::middleware([
         ->name('shop');
 
 
+// Library
+///////////
+    Route::get('/library', function () {
+        return Inertia::render('Library');
+    })->can('viewVip', 'App\Models\User')
+        ->name('library');
+
+
 // Schedule
 ///////////
 

@@ -39,7 +39,13 @@
                     </div>
                 </div>
 
-                <button v-if="!chatStore.showChat && $page.props.user!=null" @click="chatStore.showChat = true"
+                <button v-if="!streamStore.showOSD && $page.props.user!=null" @click="streamStore.toggleChannels()"
+                        class="opacity-80 chatButtonForStreamPage w-20 h-20 bottom-6 mr-24 rounded-full bg-green-400 text-green-100
+                               hover:bg-green-600 hover:text-green-300 cursor-pointer grid justify-center content-center text-xs">
+                    <font-awesome-icon icon="fa-rocket" class="ml-3 text-3xl"/><div>CHANNELS</div>
+                </button>
+
+                <button v-if="!streamStore.showOSD && $page.props.user!=null"  @click="streamStore.toggleChat()"
                         class="opacity-80 chatButtonForStreamPage w-20 h-20 bottom-6 rounded-full bg-orange-400 text-orange-100
                                hover:bg-orange-600 hover:text-orange-300 cursor-pointer grid justify-center content-center">
                     <font-awesome-icon icon="fa-comments" class="text-3xl"/><div>CHAT</div>
@@ -50,6 +56,8 @@
             </div>
 
             <ChatForStreamPageV2 v-if="$page.props.user!=null" :user="props.user"/>
+            <ChannelsForStreamPage v-if="$page.props.user!=null" />
+
 
             <div v-if="!videoPlayerStore.fullPage && $page.props.user!=null">
 
@@ -90,6 +98,7 @@ import Login from "@/Components/Welcome/Login.vue"
 import { ref } from 'vue'
 import {useChatStore} from "@/Stores/ChatStore";
 import VideoControls from "@/Components/VideoPlayer/VideoControls";
+import ChannelsForStreamPage from "@/Components/Channels/ChannelsForStreamPage.vue";
 
 let videoPlayerStore = useVideoPlayerStore()
 let streamStore = useStreamStore()
@@ -97,6 +106,8 @@ let chatStore = useChatStore()
 
 videoPlayerStore.paused = false
 chatStore.showChat = false
+streamStore.showChannels = false
+streamStore.showOSD = false
 videoPlayerStore.showControls = false
 
 let showLogin = ref(false)
@@ -104,6 +115,7 @@ let showLogin = ref(false)
 let props = defineProps({
     src: String,
     user: Object,
+    can: Object,
 })
 
 </script>

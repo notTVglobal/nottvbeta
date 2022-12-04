@@ -24,6 +24,9 @@ export let useChatStore = defineStore('chat', {
         toggleChatOff() {
             this.showChat = false
         },
+        toggleChat() {
+            this.showChat = !this.showChat;
+        },
         makeBig() {
             this.class = 'chatBig';
         },
