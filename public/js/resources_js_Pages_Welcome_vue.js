@@ -39,16 +39,6 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 
 /***/ }),
 
-/***/ "./resources/js/Stores/WelcomeStore.js":
-/*!*********************************************!*\
-  !*** ./resources/js/Stores/WelcomeStore.js ***!
-  \*********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"useWelcomeStore\": () => (/* binding */ useWelcomeStore)\n/* harmony export */ });\n/* harmony import */ var pinia__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! pinia */ \"./node_modules/pinia/dist/pinia.mjs\");\n\nvar useWelcomeStore = (0,pinia__WEBPACK_IMPORTED_MODULE_0__.defineStore)('welcomeStore', {\n  state: function state() {\n    return {\n      showLogin: Boolean\n    };\n  },\n  actions: {}\n});//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9yZXNvdXJjZXMvanMvU3RvcmVzL1dlbGNvbWVTdG9yZS5qcy5qcyIsIm1hcHBpbmdzIjoiOzs7OztBQUFvQztBQUU3QixJQUFJQyxlQUFlLEdBQUdELGtEQUFXLENBQUMsY0FBYyxFQUFFO0VBQ3JERSxLQUFLLG1CQUFHO0lBQ0osT0FBTztNQUNIQyxTQUFTLEVBQUVDO0lBQ2YsQ0FBQztFQUNMLENBQUM7RUFFREMsT0FBTyxFQUFFLENBRVQ7QUFDSixDQUFDLENBQUMiLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9yZXNvdXJjZXMvanMvU3RvcmVzL1dlbGNvbWVTdG9yZS5qcz9lNzI2Il0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IGRlZmluZVN0b3JlIH0gZnJvbSBcInBpbmlhXCI7XG5cbmV4cG9ydCBsZXQgdXNlV2VsY29tZVN0b3JlID0gZGVmaW5lU3RvcmUoJ3dlbGNvbWVTdG9yZScsIHtcbiAgICBzdGF0ZSgpIHtcbiAgICAgICAgcmV0dXJuIHtcbiAgICAgICAgICAgIHNob3dMb2dpbjogQm9vbGVhbixcbiAgICAgICAgfTtcbiAgICB9LFxuXG4gICAgYWN0aW9uczoge1xuXG4gICAgfVxufSlcbiJdLCJuYW1lcyI6WyJkZWZpbmVTdG9yZSIsInVzZVdlbGNvbWVTdG9yZSIsInN0YXRlIiwic2hvd0xvZ2luIiwiQm9vbGVhbiIsImFjdGlvbnMiXSwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///./resources/js/Stores/WelcomeStore.js\n");
-
-/***/ }),
-
 /***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Pages/Welcome.vue?vue&type=style&index=0&id=317d1a6e&scoped=true&lang=css":
 /*!*********************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Pages/Welcome.vue?vue&type=style&index=0&id=317d1a6e&scoped=true&lang=css ***!

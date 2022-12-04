@@ -10,9 +10,7 @@
 
             <video-player :options="videoOptions" @click="videoPlayerStore.makeVideoFullPage()"/>
 
-            <div v-if="!videoPlayerStore.fullPage" class="absolute top-56 w-full">
-                <videoOTTButtons class="videoOTT"/>
-            </div>
+
 
             <div v-if="videoPlayerStore.fullPage">
                 <div class="absolute w-full flex justify-between top-16 left-0 p-5 drop-shadow z-50">
@@ -67,7 +65,6 @@
                 </div>
             </div>
 
-            <VideoOTT :user="props.user"  class="videoOTT absolute top-60 mt-2 w-full h-[calc(100vh-4rem)] overflow-y-scroll"/>
 
 </div>
 
@@ -132,8 +129,7 @@ let props = defineProps({
 <script>
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
 import VideoPlayer from '@/Components/VideoPlayer/VideoJs'
-import VideoOtt from '@/Components/VideoPlayer/VideoOTT'
-import VideoOttButtons from '@/Components/VideoPlayer/VideoOTTButtons'
+
 import { ref } from 'vue'
 
 export default {

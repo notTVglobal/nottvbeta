@@ -1,35 +1,40 @@
 <template>
-    <div>
-        <JetBanner/>
+    <div class="top-0 left-0 bg-gray-800 text-gray-200 h-screen w-screen">
 
-        <div class="relative top-0 bg-gray-800 text-gray-200 h-full w-full ">
+        <!-- Navbar -->
+        <div class="fixed top-0 w-full nav-mask">
+            <ResponsiveNavigationMenu/>
+            <NavigationMenu />
+        </div>
 
-            <!-- Page Heading -->
-                        <header v-if="$slots.header" class="bg-white shadow">
-                            <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                                <slot name="header" />
-                            </div>
-                        </header>
+        <!-- Page Content -->
+        <main class="fixed top-16 w-[calc(100vw-24rem)] h-[calc(100vh-4rem)] overflow-y-scroll">
+            <slot />
+        </main>
 
-            <!-- Page Content -->
-            <main>
-                <slot />
-            </main>
-
-            <div class="relative w-full h-full top-0">
-                <VideoPlayer :class="videoPlayerStore.class" class="videoContainer" :key="videoPlayerStore.key" :user="props.user"/>
-            </div>
+        <div >
+            <VideoPlayer :class="videoPlayerStore.class" class="videoContainer" :key="videoPlayerStore.key" :user="props.user"/>
 
         </div>
+
+        <div v-if="!videoPlayerStore.fullPage" class="fixed top-72 right-0 w-96">
+            <videoOTTButtons class="videoOTT"/>
+        </div>
+
+        <VideoOTT :user="props.user"  class="fixed top-76 right-0 mt-2 w-96 h-[calc(100vh-4rem)] overflow-y-scroll"/>
+
 
     </div>
 
 </template>
 
 <script setup>
+import ResponsiveNavigationMenu from "@/Components/Navigation/ResponsiveNavigationMenu"
+import NavigationMenu from "@/Components/Navigation/NavigationMenu"
 import VideoPlayer from "@/Components/VideoPlayer/VideoPlayer.vue"
-import JetBanner from '@/Jetstream/Banner.vue'
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
+import VideoOTT from '@/Components/VideoPlayer/VideoOTT'
+import VideoOTTButtons from '@/Components/VideoPlayer/VideoOTTButtons'
 
 let videoPlayerStore = useVideoPlayerStore()
 videoPlayerStore.videoSource = "https://mist2.not.tv/hls/naturalworld/index.m3u8"
@@ -44,8 +49,5 @@ let props = defineProps({
 <style>
 .videoContainer {
     z-index:50;
-}
-.headerContainer {
-    z-index:100;
 }
 </style>

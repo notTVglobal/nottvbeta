@@ -1,12 +1,14 @@
 <template>
 
     <Head title="Posts" />
-    <div class="sticky top-0 w-full nav-mask">
-        <ResponsiveNavigationMenu/>
-        <NavigationMenu />
-    </div>
+<!--    <div class="sticky top-0 w-full nav-mask">-->
+<!--        <ResponsiveNavigationMenu/>-->
+<!--        <NavigationMenu />-->
+<!--    </div>-->
 
-    <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
+<!--    <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">-->
+    <div class="place-self-center flex flex-col gap-y-3">
+
         <div class="bg-white text-black p-5 mb-10">
 
             <h1 class="text-3xl font-semibold pb-3">News</h1>
