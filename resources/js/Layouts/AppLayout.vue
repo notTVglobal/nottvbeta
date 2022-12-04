@@ -52,8 +52,9 @@ videoPlayerStore.videoSource = "https://mist2.not.tv/hls/naturalworld/index.m3u8
 videoPlayerStore.videoName = "Main Stream"
 streamStore.currentChannel = "Stream"
 
+videoPlayerStore.makeVideoFullPage();
 onMounted(() => {
-    videoPlayerStore.makeVideoFullPage();
+
 
 });
 
