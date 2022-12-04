@@ -2,7 +2,7 @@
 
     <Head title="Channels" />
 
-        <div class="fixed bg-black bg-opacity-90 text-white p-5 pt-16 h-screen w-full channels-mask z-50">
+        <div class="channelsSelectMenu absolute top-16 left-0 bg-black bg-opacity-90 text-white p-5 pt-16 h-screen w-full">
 
             <h1 class="text-3xl font-semibold text-center">Channels</h1>
             <h2 class="bg-red-800 col-span-3 mt-8 mb-4 py-1 text-center">
@@ -46,7 +46,7 @@ onMounted(() => {
 
 <style>
 .channels-mask {
-    z-index:90;
+    z-index:500;
 }
 </style>
 

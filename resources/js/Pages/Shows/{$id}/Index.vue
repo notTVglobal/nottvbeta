@@ -16,7 +16,7 @@
                         <h1 class="text-3xl font-semibold">Shows</h1>
                         <ul class="flex ml-0 lg:ml-16 mt-6 lg:mt-0 space-x-8">
                             <li>
-                                <Link :href="``" class="hover:text-blue-800">Shows</Link>
+                                <Link :href="``" class="hover:text-blue-800">Categories</Link>
                             </li>
                             <li>
                                 <Link :href="``" class="hover:text-blue-800">New Episodes</Link>
@@ -66,7 +66,7 @@
                         <div class="flex-none">
                             <img :src="'/storage/images/' + props.show.poster" alt="show cover" class="h-96 min-w-[8rem] w-64">
                         </div>
-                        <div class="ml-12 mr-0 lg:mr-64">
+                        <div class="ml-12 mr-0 ">
                             <h2 class="font-semibold text-4xl">{{ show.name }}</h2>
                             <div class="text-gray-400">
                                 <span>Talk Show</span>

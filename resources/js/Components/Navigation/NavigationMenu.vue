@@ -37,13 +37,6 @@
                         </JetNavLink>
                         <JetNavLink
                             v-if="$page.props.user.role_id === 3 || $page.props.user.role_id === 4"
-                            @click="videoPlayerStore.makeVideoFullPage()"
-                            :href="route('channels')"
-                            :active="route().current('channels')">
-                            Channels
-                        </JetNavLink>
-                        <JetNavLink
-                            v-if="$page.props.user.role_id === 3 || $page.props.user.role_id === 4"
                             @click="videoPlayerStore.makeVideoTopRight()"
                             :href="route('movies')"
                             :active="route().current('movies')">

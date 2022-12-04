@@ -21,7 +21,7 @@
                         <h1 class="text-3xl font-semibold">Shows</h1>
                         <ul class="flex ml-0 lg:ml-16 mt-6 lg:mt-0 space-x-8" >
                             <li>
-                                <Link :href="``" class="hover:text-blue-800">Shows</Link>
+                                <Link :href="``" class="hover:text-blue-800">Categories</Link>
                             </li>
                             <li>
                                 <Link :href="``" class="hover:text-blue-800">New Episodes</Link>
