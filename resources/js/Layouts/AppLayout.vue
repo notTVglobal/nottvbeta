@@ -3,8 +3,8 @@
 
         <!-- Navbar -->
         <div class="fixed top-0 w-full nav-mask">
-            <ResponsiveNavigationMenu/>
-            <NavigationMenu />
+<!--            <ResponsiveNavigationMenu/>-->
+<!--            <NavigationMenu />-->
         </div>
 
         <!-- Page Content -->
