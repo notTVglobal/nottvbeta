@@ -1,11 +1,7 @@
 <template>
     <Head title="Shows" />
-    <div class="sticky top-0 w-full nav-mask">
-        <ResponsiveNavigationMenu/>
-        <NavigationMenu />
-    </div>
 
-    <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
+    <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white text-black dark:bg-gray-900 dark:text-white p-5 mb-10">
 
             <header class="flex justify-between mb-3 border-b border-gray-800">
@@ -159,16 +155,14 @@ import {Inertia} from "@inertiajs/inertia"
 import throttle from "lodash/throttle"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useChatStore } from "@/Stores/ChatStore.js"
-import ResponsiveNavigationMenu from "@/Components/Navigation/ResponsiveNavigationMenu"
-import NavigationMenu from "@/Components/Navigation/NavigationMenu"
 
-let videoPlayer = useVideoPlayerStore()
+let videoPlayerStore = useVideoPlayerStore()
 let chat = useChatStore()
 
-videoPlayer.currentPage = 'shows'
+videoPlayerStore.currentPage = 'shows'
 
 onMounted(() => {
-    videoPlayer.makeVideoTopRight();
+    videoPlayerStore.makeVideoTopRight();
 });
 
 let props = defineProps({

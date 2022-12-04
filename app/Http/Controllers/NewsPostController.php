@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Str;
 use Inertia\Inertia;
 
-class PostController extends Controller
+class NewsPostController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -28,8 +28,8 @@ class PostController extends Controller
 //            ]
 //    );
 
-                    return Inertia::render('Posts/Index', [
-                        'posts' => Post::query()
+                    return Inertia::render('News/Index', [
+                        'news' => Post::query()
                             ->when(Request::input('search'), function ($query, $search) {
                                 $query->where('title', 'like', "%{$search}%");
                             })
@@ -62,7 +62,7 @@ class PostController extends Controller
     public function create()
     {
         return Inertia::render(
-            'Posts/Create'
+            'News/Create'
         );
     }
 
@@ -84,7 +84,7 @@ class PostController extends Controller
            'slug' => \Str::slug($request->slug),
            'content' => $request->content,
         ]);
-        return redirect()->route('posts')->with('message', 'Post Created Successfully');
+        return redirect()->route('news')->with('message', 'News Post Created Successfully');
 
 //        $attributes = Request::validate([
 //            'title' => 'required|string|max:255',
@@ -112,9 +112,9 @@ class PostController extends Controller
         $post = Post::query()->where('slug', $slug)->firstOrFail();
 
         return Inertia::render(
-            'Posts/{$id}/Index',
+            'News/{$id}/Index',
             [
-                'post' => $post,
+                'news' => $post,
             ]);
     }
 
@@ -127,9 +127,9 @@ class PostController extends Controller
     public function edit(Post $post)
     {
         return Inertia::render(
-            'Posts/{$id}/Edit',
+            'News/{$id}/Edit',
         [
-            'post' => $post
+            'news' => $post
         ]);
     }
 
@@ -154,7 +154,7 @@ class PostController extends Controller
         $post->save();
         sleep(1);
 
-        return redirect()->route('posts')->with('message', 'Post Updated Successfully');
+        return redirect()->route('news')->with('message', 'News Post Updated Successfully');
 
 //        // validate the request
 //        $attributes = Request::validate([
@@ -182,6 +182,6 @@ class PostController extends Controller
         $post->delete();
         sleep(1);
 
-        return redirect()->route('posts')->with('message', 'Post Deleted Successfully');
+        return redirect()->route('news')->with('message', 'News Post Deleted Successfully');
     }
 }

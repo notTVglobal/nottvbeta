@@ -1,19 +1,13 @@
 <template>
     <Head title="Settings" />
     <AppLayout>
-        <div class="sticky top-0 w-full nav-mask">
-            <ResponsiveNavigationMenu/>
-            <NavigationMenu />
-        </div>
-
-
 
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 Profile
             </h2>
         </template>
-        <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
+        <div class="place-self-center flex flex-col gap-y-3">
             <div class="text-black p-5 mb-10">
 
         <div class="text-black">
@@ -58,7 +52,6 @@
 </template>
 
 <script setup>
-// import AppLayout from '@/Layouts/AppLayout.vue';
 import DeleteUserForm from '@/Pages/Profile/Partials/DeleteUserForm.vue'
 import JetSectionBorder from '@/Jetstream/SectionBorder.vue'
 import LogoutOtherBrowserSessionsForm from '@/Pages/Profile/Partials/LogoutOtherBrowserSessionsForm.vue'
@@ -68,17 +61,15 @@ import UpdateProfileInformationForm from '@/Pages/Profile/Partials/UpdateProfile
 import UpdateContactInformationForm from '@/Pages/Profile/Partials/UpdateContactInformationForm.vue'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useChatStore } from "@/Stores/ChatStore.js"
-import ResponsiveNavigationMenu from "@/Components/Navigation/ResponsiveNavigationMenu"
-import NavigationMenu from "@/Components/Navigation/NavigationMenu"
 import {onMounted} from "vue";
 
-let videoPlayer = useVideoPlayerStore()
+let videoPlayerStore = useVideoPlayerStore()
 let chat = useChatStore()
 
-videoPlayer.currentPage = 'profile'
+videoPlayerStore.currentPage = 'profile'
 
 onMounted(() => {
-    videoPlayer.makeVideoTopRight();
+    videoPlayerStore.makeVideoTopRight();
 });
 
 defineProps({

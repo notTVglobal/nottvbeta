@@ -1,6 +1,6 @@
 <template>
 
-    <Head title="Posts" />
+    <Head title="News" />
 <!--    <div class="sticky top-0 w-full nav-mask">-->
 <!--        <ResponsiveNavigationMenu/>-->
 <!--        <NavigationMenu />-->
@@ -58,7 +58,7 @@
                             </thead>
                             <tbody>
                             <tr
-                                v-for="post in posts.data"
+                                v-for="post in news.data"
                                 :key="post.id"
                                 class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
                             >
@@ -72,10 +72,10 @@
                                     scope="row"
                                     class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                                 >
-                                    <Link :href="`/posts/${post.slug}`" class="text-blue-800 hover:text-blue-600">{{ post.title }}</Link>
+                                    <Link :href="`/news/${post.slug}`" class="text-blue-800 hover:text-blue-600">{{ post.title }}</Link>
                                 </td>
                                 <td v-if="post.can.editPost" class="px-6 py-4">
-                                    <Link :href="`/posts/${post.id}/edit`"><button
+                                    <Link :href="`/news/${post.id}/edit`"><button
                                         class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                                     >Edit</button>
                                     </Link>
@@ -92,7 +92,7 @@
                             </tbody>
                         </table>
                         <!-- Paginator -->
-                        <Pagination :links="posts.links" class="mt-6"/>
+                        <Pagination :links="news.links" class="mt-6"/>
                     </div>
                 </div>
             </div>
@@ -108,26 +108,24 @@
 import Pagination from "@/Components/Pagination"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useChatStore } from "@/Stores/ChatStore.js"
-import ResponsiveNavigationMenu from "@/Components/Navigation/ResponsiveNavigationMenu"
-import NavigationMenu from "@/Components/Navigation/NavigationMenu"
 import { useForm } from '@inertiajs/inertia-vue3'
 import {onMounted, ref, watch} from "vue";
 import throttle from "lodash/throttle";
 import {Inertia} from "@inertiajs/inertia";
 
-let videoPlayer = useVideoPlayerStore()
+let videoPlayerStore = useVideoPlayerStore()
 let chat = useChatStore()
 
-videoPlayer.currentPage = 'news'
+videoPlayerStore.currentPage = 'news'
 
 onMounted(() => {
-    videoPlayer.makeVideoTopRight();
+    videoPlayerStore.makeVideoTopRight();
 });
 
 let props = defineProps({
     filters: Object,
     can: Object,
-    posts: {
+    news: {
         type: Object,
         default: () => ({}),
     },
@@ -144,7 +142,7 @@ let form = useForm({
 
 
 watch(search, throttle(function (value) {
-    Inertia.get('/posts', { search: value }, {
+    Inertia.get('/news', { search: value }, {
         preserveState: true,
         replace: true
     });
@@ -152,7 +150,7 @@ watch(search, throttle(function (value) {
 
 function destroy(id) {
     if (confirm("Are you sure you want to Delete")) {
-        form.delete(route('posts.destroy', id));
+        form.delete(route('news.destroy', id));
 
     }
 }

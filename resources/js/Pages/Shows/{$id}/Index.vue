@@ -2,12 +2,8 @@
 <template>
 
     <Head :title="props.show.name" />
-    <div class="sticky top-0 w-full nav-mask">
-        <ResponsiveNavigationMenu/>
-        <NavigationMenu />
-    </div>
 
-    <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
+    <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white text-black dark:bg-gray-900 dark:text-white rounded py-5 mb-10">
 
 
@@ -267,14 +263,14 @@ import ShowEpisodesList from "@/Components/Shows/ShowEpisodesList"
 // import ShowCreatorsList from "@/Components/Shows/ShowCreatorsList";
 import ShowFooter from "@/Components/Shows/ShowFooter"
 
-let videoPlayer = useVideoPlayerStore()
+let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore();
 let showStore = useShowStore();
 
-videoPlayer.currentPage = 'shows'
+videoPlayerStore.currentPage = 'shows'
 
 onMounted(() => {
-    videoPlayer.makeVideoTopRight();
+    videoPlayerStore.makeVideoTopRight();
 });
 
 let props = defineProps({
@@ -292,10 +288,10 @@ teamStore.name = props.team.name;
 
 let playVideo = () => {
     // videoPlayer.videoSource = 'https://streams.not.tv/hls/ctd1984/index.m3u8'
-    videoPlayer.videoSource = 'https://mist2.not.tv/hls/kids_1/index.m3u8'
+    videoPlayerStore.videoSource = 'https://mist2.not.tv/hls/kids_1/index.m3u8'
     // videoPlayer.videoSource = 'https://nottvmist.sfo3.digitaloceanspaces.com/recordings/channels_02.m3u8'
-    videoPlayer.videoName = 'kids_1'
-    videoPlayer.loadNewSource()
+    videoPlayerStore.videoName = 'kids_1'
+    videoPlayerStore.loadNewSource()
 }
 
 </script>

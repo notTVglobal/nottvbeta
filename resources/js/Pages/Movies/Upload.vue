@@ -1,13 +1,8 @@
 <template>
 
     <Head :title="`Upload Movie`"/>
-    <div class="sticky top-0 w-full nav-mask">
-        <ResponsiveNavigationMenu/>
-        <NavigationMenu/>
-    </div>
 
-
-    <header class="md:pageWidth pageWidthSmall">
+    <header class="">
 
         <Message v-if="message" @close="showMessage = false"/>
 
@@ -23,7 +18,7 @@
 
 
 
-    <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
+    <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white text-black p-5 mb-10">
 
             <div class="flex justify-between mb-3">
@@ -143,13 +138,9 @@
 </template>
 
 <script setup>
-import ResponsiveNavigationMenu from "@/Components/Navigation/ResponsiveNavigationMenu"
-import NavigationMenu from "@/Components/Navigation/NavigationMenu"
 import Message from "@/Components/Modals/Messages"
 import { ref, onMounted, watch, computed } from "vue"
 import {useForm} from "@inertiajs/inertia-vue3"
-import TabbableTextarea from "@/Components/TabbableTextarea"
-import { Inertia } from "@inertiajs/inertia"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useTeamStore } from "@/Stores/TeamStore.js"
 import { useShowStore } from "@/Stores/ShowStore.js"

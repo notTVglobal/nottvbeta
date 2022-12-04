@@ -1,20 +1,16 @@
 <template>
 
-    <Head :title="props.user.name" />
-    <div class="sticky top-0 w-full nav-mask">
-        <ResponsiveNavigationMenu/>
-        <NavigationMenu />
-    </div>
+    <Head :title="props.creator.name" />
 
-    <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
+    <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white text-black p-5 mb-10">
 
             <div class="flex justify-between mb-6">
-                <h1 class="text-2xl pb-3">{{props.user.name}}</h1>
+                <h1 class="text-2xl pb-3">{{props.creator.name}}</h1>
                 <Link href="/shows" class="text-blue-500 text-sm ml-2">Go back</Link>
             </div>
             <p>
-                <img :src="props.user.profile_photo_url" />
+                <img :src="props.creator.profile_photo_url" />
             </p>
 
         </div>
@@ -26,8 +22,6 @@
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useStreamStore } from "@/Stores/StreamStore.js"
 import { useChatStore } from "@/Stores/ChatStore.js"
-import ResponsiveNavigationMenu from "@/Components/Navigation/ResponsiveNavigationMenu"
-import NavigationMenu from "@/Components/Navigation/NavigationMenu"
 import {onMounted} from "vue";
 
 let videoPlayerStore = useVideoPlayerStore()
@@ -41,6 +35,6 @@ onMounted(() => {
 });
 
 let props = defineProps({
-    user: Object
+    creator: Object
 });
 </script>

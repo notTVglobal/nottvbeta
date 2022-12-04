@@ -1,12 +1,8 @@
 <template>
 
     <Head :title="`Edit Episode: ${props.episode.name}`"/>
-    <div class="sticky top-0 w-full nav-mask">
-        <ResponsiveNavigationMenu/>
-        <NavigationMenu/>
-    </div>
 
-    <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
+    <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-dark text-light p-5 mb-10">
 
 

@@ -1,12 +1,8 @@
 <template>
 
     <Head title="Movies"/>
-    <div class="sticky top-0 w-full nav-mask">
-        <ResponsiveNavigationMenu/>
-        <NavigationMenu/>
-    </div>
 
-    <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
+    <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-gray-900 text-white px-5">
 
             <header class="flex justify-between mb-3 border-b border-gray-800">
@@ -191,19 +187,17 @@
 import Pagination from "@/Components/PaginationDark"
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
 import {useChatStore} from "@/Stores/ChatStore.js"
-import ResponsiveNavigationMenu from "@/Components/Navigation/ResponsiveNavigationMenu"
-import NavigationMenu from "@/Components/Navigation/NavigationMenu"
 import {ref, onMounted, watch} from "vue";
 import throttle from "lodash/throttle";
 import {Inertia} from "@inertiajs/inertia";
 
-let videoPlayer = useVideoPlayerStore()
+let videoPlayerStore = useVideoPlayerStore()
 let chat = useChatStore()
 
-videoPlayer.currentPage = 'movies'
+videoPlayerStore.currentPage = 'movies'
 
 onMounted(() => {
-    videoPlayer.makeVideoTopRight();
+    videoPlayerStore.makeVideoTopRight();
 });
 
 let movie = 'test-movie-2'

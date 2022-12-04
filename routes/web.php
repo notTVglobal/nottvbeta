@@ -15,7 +15,7 @@ use App\Http\Controllers\TeamsController;
 use App\Http\Controllers\TeamMembersController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ScheduleController;
-use App\Http\Controllers\PostController;
+use App\Http\Controllers\NewsPostController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\ChatController;
@@ -114,9 +114,9 @@ Route::middleware([
 
 // News (formerly Posts)
 ///////////
-    Route::resource('posts',PostController::class);
+    Route::resource('news',NewsPostController::class);
 
-    Route::get('/news', [PostController::class, 'index'])
+    Route::get('/news', [NewsPostController::class, 'index'])
         ->can('viewPremium', 'App\Models\User')
         ->name('news');
 

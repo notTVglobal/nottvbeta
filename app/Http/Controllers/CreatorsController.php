@@ -18,15 +18,16 @@ class CreatorsController extends Controller
     public function index()
     {
         return Inertia::render('Creators/Index', [
-            'creators' => Creator::query()
+            'creators' => Creator::join('users AS user', 'creators.user_id', '=', 'user.id')
+                ->select('creators.*', 'user.name AS name')
                 ->when(Request::input('search'), function ($query, $search) {
                     $query->where('name', 'like', "%{$search}%");
                 })
                 ->paginate(10)
                 ->withQueryString()
-                ->through(fn($show) => [
-                    'id' => $show->id,
-                    'name' => $show->name
+                ->through(fn($creator) => [
+                    'id' => $creator->id,
+                    'name' => $creator->name
                 ]),
             'filters' => Request::only(['search'])
         ]);
@@ -95,7 +96,7 @@ class CreatorsController extends Controller
      */
     public function show($id)
     {
-        $creator = Creator::query()->where('id', $id)->firstOrFail();
+        $creator = Creator::query()->where('user_id', $id)->firstOrFail();
 
         return Inertia::render('Creators/{$id}/Index', [
             'creator' => $creator,

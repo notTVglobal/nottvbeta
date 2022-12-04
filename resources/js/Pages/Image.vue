@@ -1,11 +1,7 @@
 <template>
     <Head title="Image uploading"/>
-    <div class="sticky top-0 w-full nav-mask">
-        <ResponsiveNavigationMenu/>
-        <NavigationMenu />
-    </div>
 
-    <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
+    <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white text-black p-5 mb-10">
 
             <div class="flex justify-between mb-6">
@@ -22,6 +18,7 @@
                     </div>
                 </div>
             </div>
+            <div class="w-full bg-orange-800 text-white p-2">NOTE: This page will crash if reloaded (F5)</div>
 
     <div class="max-w-lg mx-auto mt-2 bg-gray-200 p-6">
         <div class="pt-3 pb-4">
@@ -64,8 +61,6 @@
 
 
 <script setup>
-import ResponsiveNavigationMenu from "@/Components/Navigation/ResponsiveNavigationMenu"
-import NavigationMenu from "@/Components/Navigation/NavigationMenu"
 import Pagination from "@/Components/Pagination"
 import {Head, Link} from '@inertiajs/inertia-vue3'
 // import {ref, onMounted } from 'vue'
@@ -76,12 +71,13 @@ import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useChatStore } from "@/Stores/ChatStore.js"
 import {Inertia} from "@inertiajs/inertia";
 
-let videoPlayer = useVideoPlayerStore()
+let videoPlayerStore = useVideoPlayerStore()
 let chat = useChatStore()
 
-videoPlayer.class = "videoTopRight"
-videoPlayer.videoContainerClass = "videoContainerTopRight"
-videoPlayer.fullPage = false
+videoPlayerStore.class = "videoTopRight"
+videoPlayerStore.videoContainerClass = "videoContainerTopRight"
+videoPlayerStore.fullPage = false
+videoPlayerStore.currentPage = 'image'
 chat.class = "chatSmall"
 
 let props = defineProps({
@@ -136,12 +132,12 @@ import 'filepond/dist/filepond.min.css';
 import {Inertia} from "@inertiajs/inertia";
 import { onMounted } from "vue";
 
-let videoPlayer = useVideoPlayerStore()
+let videoPlayerStore = useVideoPlayerStore()
 
-videoPlayer.currentPage = 'image'
+
 
 onMounted(() => {
-    videoPlayer.makeVideoTopRight();
+    videoPlayerStore.makeVideoTopRight();
 });
 
 const FilePond = vueFilePond(

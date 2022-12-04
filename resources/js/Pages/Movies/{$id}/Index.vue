@@ -1,12 +1,8 @@
 <template>
 
     <Head :title="`Movie`"/>
-    <div class="sticky top-0 w-full nav-mask">
-        <ResponsiveNavigationMenu/>
-        <NavigationMenu/>
-    </div>
 
-    <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
+    <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-gray-900 text-white px-5">
 
             <header class="flex justify-between mb-3 border-b border-gray-800">
@@ -241,11 +237,8 @@
 </template>
 
 <script setup>
-import ResponsiveNavigationMenu from "@/Components/Navigation/ResponsiveNavigationMenu"
-import NavigationMenu from "@/Components/Navigation/NavigationMenu"
 import {ref, onMounted} from "vue"
 import Message from "@/Components/Modals/Messages"
-import {Inertia} from "@inertiajs/inertia"
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
 import {useTeamStore} from "@/Stores/TeamStore.js"
 import {useShowStore} from "@/Stores/ShowStore.js"

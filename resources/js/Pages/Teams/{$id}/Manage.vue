@@ -1,13 +1,8 @@
 <template>
 
     <Head :title="`Manage Team: ${props.team.name}`"/>
-    <div class="sticky top-0 w-full nav-mask">
-        <ResponsiveNavigationMenu/>
-        <NavigationMenu/>
-    </div>
 
-
-    <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
+    <div class="place-self-center flex flex-col gap-y-3">
 
         <div class="bg-white rounded text-black p-5 mb-10">
 
@@ -103,8 +98,6 @@
 
 
 <script setup>
-import ResponsiveNavigationMenu from "@/Components/Navigation/ResponsiveNavigationMenu"
-import NavigationMenu from "@/Components/Navigation/NavigationMenu"
 import { onMounted } from "vue"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useTeamStore } from "@/Stores/TeamStore.js"

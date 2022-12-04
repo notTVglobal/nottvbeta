@@ -1,12 +1,8 @@
 <template>
-    <div class="sticky top-0 w-full nav-mask">
-        <ResponsiveNavigationMenu/>
-        <NavigationMenu />
-    </div>
 
     <Head title="Channels" />
 
-        <div class="fixed bg-black bg-opacity-90 text-white p-5 pt-16 h-screen w-full channels-mask">
+        <div class="fixed bg-black bg-opacity-90 text-white p-5 pt-16 h-screen w-full channels-mask z-50">
 
             <h1 class="text-3xl font-semibold text-center">Channels</h1>
             <h2 class="bg-red-800 col-span-3 mt-8 mb-4 py-1 text-center">
@@ -35,17 +31,15 @@
 <script setup>
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useChatStore } from "@/Stores/ChatStore.js"
-import ResponsiveNavigationMenu from "@/Components/Navigation/ResponsiveNavigationMenu"
-import NavigationMenu from "@/Components/Navigation/NavigationMenu"
 import {onMounted} from "vue";
 
-let videoPlayer = useVideoPlayerStore()
+let videoPlayerStore = useVideoPlayerStore()
 let chat = useChatStore()
 
-videoPlayer.currentPage = 'channels'
+videoPlayerStore.currentPage = 'channels'
 
 onMounted(() => {
-    videoPlayer.makeVideoFullPage();
+    videoPlayerStore.makeVideoFullPage();
 });
 
 </script>

@@ -1,9 +1,5 @@
 <template>
     <Head title="Stream" />
-    <div class="sticky top-0 w-full nav-mask">
-        <ResponsiveNavigationMenu/>
-        <NavigationMenu />
-    </div>
 
     <ChatForStreamPageV2 :user="props.user"/>
     <button v-if="!chatStore.showChat" @click="chatStore.showChat = true"
@@ -19,8 +15,6 @@
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useChatStore } from "@/Stores/ChatStore.js"
 import ChatForStreamPageV2 from "@/Components/Chat/ChatForStreamPageV2"
-import ResponsiveNavigationMenu from "@/Components/Navigation/ResponsiveNavigationMenu"
-import NavigationMenu from "@/Components/Navigation/NavigationMenu"
 import {onMounted} from "vue";
 
 let videoPlayer = useVideoPlayerStore()

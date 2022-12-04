@@ -112,7 +112,6 @@ let videoPlayerStore = useVideoPlayerStore()
 let streamStore = useStreamStore()
 let chatStore = useChatStore()
 
-videoPlayerStore.videoName = "Spring"
 videoPlayerStore.paused = false
 chatStore.showChat = false
 

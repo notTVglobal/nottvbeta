@@ -12,7 +12,7 @@
             <slot />
         </main>
 
-        <div >
+        <div>
             <VideoPlayer :class="videoPlayerStore.class" class="videoContainer" :key="videoPlayerStore.key" :user="props.user"/>
 
         </div>

@@ -1,15 +1,9 @@
 <template>
 
     <Head :title="props.userSelected.name" />
-    <div class="sticky top-0 w-full nav-mask">
-        <ResponsiveNavigationMenu/>
-        <NavigationMenu />
-    </div>
 
-    <div class="flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
+    <div class="flex flex-col gap-y-3">
         <div class="bg-white text-black p-5 mb-10">
-
-
 
             <div class="flex justify-end mb-3 gap-2">
                 <Link v-if="$page.props.user.isAdmin === 1" :href="`/users`"><button
@@ -103,17 +97,15 @@
 <script setup>
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useChatStore } from "@/Stores/ChatStore.js"
-import ResponsiveNavigationMenu from "@/Components/Navigation/ResponsiveNavigationMenu"
-import NavigationMenu from "@/Components/Navigation/NavigationMenu"
 import {onMounted} from "vue";
 
-let videoPlayer = useVideoPlayerStore()
+let videoPlayerStore = useVideoPlayerStore()
 let chat = useChatStore()
 
-videoPlayer.currentPage = 'users'
+videoPlayerStore.currentPage = 'users'
 
 onMounted(() => {
-    videoPlayer.makeVideoTopRight();
+    videoPlayerStore.makeVideoTopRight();
 });
 
 let props = defineProps({

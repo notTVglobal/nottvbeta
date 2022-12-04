@@ -1,14 +1,8 @@
 <template>
 
     <Head :title="`Administrative Settings`"/>
-    <div class="sticky top-0 w-full nav-mask">
-        <ResponsiveNavigationMenu/>
-        <NavigationMenu/>
-    </div>
 
-
-
-    <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
+    <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-dark rounded text-light p-5">
 
             <div
@@ -64,19 +58,17 @@
 </template>
 
 <script setup>
-import ResponsiveNavigationMenu from "@/Components/Navigation/ResponsiveNavigationMenu"
-import NavigationMenu from "@/Components/Navigation/NavigationMenu"
 import {onMounted} from "vue";
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
 
 import SectionTitle from "../../../../vendor/laravel/jetstream/stubs/inertia/resources/js/Components/SectionTitle";
 
-let videoPlayer = useVideoPlayerStore()
+let videoPlayerStore = useVideoPlayerStore()
 
-videoPlayer.currentPage = 'admin'
+videoPlayerStore.currentPage = 'admin'
 
 onMounted(async () => {
-    videoPlayer.makeVideoTopRight();
+    videoPlayerStore.makeVideoTopRight();
 
 });
 

@@ -1,12 +1,8 @@
 <template>
 
     <Head :title="`${props.show.name}: ${props.episode.name}`"/>
-    <div class="sticky top-0 w-full nav-mask">
-        <ResponsiveNavigationMenu/>
-        <NavigationMenu/>
-    </div>
 
-    <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
+    <div class="place-self-center flex flex-col gap-y-3">
 
         <div class="bg-dark rounded text-light ">
 
@@ -160,14 +156,14 @@ import {useShowStore} from "@/Stores/ShowStore.js"
 // import EpisodeCreditsList from "@/ComponentShows/Episodes/EpisodeCreditsList";
 import EpisodeFooter from "@/Components/ShowEpisodes/EpisodeFooter"
 
-let videoPlayer = useVideoPlayerStore()
+let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore();
 let showStore = useShowStore();
 
-videoPlayer.currentPage = 'episodes'
+videoPlayerStore.currentPage = 'episodes'
 
 onMounted(() => {
-    videoPlayer.makeVideoTopRight();
+    videoPlayerStore.makeVideoTopRight();
 });
 
 let props = defineProps({

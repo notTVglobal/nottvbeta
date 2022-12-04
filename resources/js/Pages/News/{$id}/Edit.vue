@@ -1,15 +1,11 @@
 <template>
 
-    <Head title="Posts" />
-    <div class="sticky top-0 w-full nav-mask">
-        <ResponsiveNavigationMenu/>
-        <NavigationMenu />
-    </div>
+    <Head title="Edit News Post" />
 
-    <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
+    <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white text-black p-5 mb-10">
             <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                Edit Post
+                Edit News Post
             </h2>
 
             <div class="p-6 bg-white border-b border-gray-200">
@@ -83,7 +79,7 @@
                     >
                         Submit
                     </button>
-                    <Link :href="`/posts/${post.id}`"><button
+                    <Link :href="`/news/${news.id}`"><button
                         class="ml-2 px-4 py-2 text-white bg-blue-500 hover:bg-blue-300 rounded-lg"
                     >Cancel</button>
                     </Link>
@@ -99,36 +95,34 @@
 <script setup>
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useChatStore } from "@/Stores/ChatStore.js"
-import ResponsiveNavigationMenu from "@/Components/Navigation/ResponsiveNavigationMenu"
-import NavigationMenu from "@/Components/Navigation/NavigationMenu"
 import { useForm } from '@inertiajs/inertia-vue3'
 import {onMounted} from "vue";
 
-let videoPlayer = useVideoPlayerStore()
+let videoPlayerStore = useVideoPlayerStore()
 let chat = useChatStore()
 
-videoPlayer.currentPage = 'news'
+videoPlayerStore.currentPage = 'news'
 
 onMounted(() => {
-    videoPlayer.makeVideoTopRight();
+    videoPlayerStore.makeVideoTopRight();
 });
 
 const props = defineProps({
-    post: {
+    news: {
         type: Object,
         default: () => ({}),
     },
 });
 
 const form = useForm({
-    id: props.post.id,
-    title: props.post.title,
-    slug: props.post.slug,
-    content: props.post.content,
+    id: props.news.id,
+    title: props.news.title,
+    slug: props.news.slug,
+    content: props.news.content,
 });
 
 const submit = () => {
-    form.put(route("posts.update", props.post.id));
+    form.put(route("news.update", props.news.id));
 };
 
 </script>

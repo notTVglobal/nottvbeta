@@ -1,9 +1,5 @@
 <template>
     <Head title="Chat" />
-    <div class="sticky top-0 w-full nav-mask">
-        <ResponsiveNavigationMenu/>
-        <NavigationMenu />
-    </div>
 
     <div class="place-self-start flex flex-col justify-start w-50 h-screen w-3/4 px-10 break-words overflow-y-scroll ">
         <div class="fixed flex flex-col w-64 p-5 mb-10 bg-blue-400 ">
@@ -19,27 +15,21 @@
 <script setup>
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useChatStore } from "@/Stores/ChatStore.js"
-import ResponsiveNavigationMenu from "@/Components/Navigation/ResponsiveNavigationMenu"
-import NavigationMenu from "@/Components/Navigation/NavigationMenu"
-import {onMounted, ref, watch} from "vue";
-import InputMessage from "@/Components/Chat/InputMessage"
-import ChatMessages from "@/Components/Chat/MessagesContainer"
+import { onMounted } from "vue";
 import ChatContainer from "@/Components/Chat/ChatContainer"
-import throttle from "lodash/throttle";
-import {Inertia} from "@inertiajs/inertia";
 
-let videoPlayer = useVideoPlayerStore()
+let videoPlayerStore = useVideoPlayerStore()
 let chat = useChatStore()
 
-videoPlayer.currentView = 'chat'
-videoPlayer.currentPage = 'chat'
+videoPlayerStore.currentView = 'chat'
+videoPlayerStore.currentPage = 'chat'
 
 let props = defineProps ({
     user: Object,
 })
 
 onMounted(() => {
-    videoPlayer.makeVideoTopRight();
+    videoPlayerStore.makeVideoTopRight();
 });
 
 

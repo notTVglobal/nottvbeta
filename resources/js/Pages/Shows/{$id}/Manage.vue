@@ -1,14 +1,8 @@
 <template>
 
     <Head :title="`Manage Show: ${props.show.name}`"/>
-    <div class="sticky top-0 w-full nav-mask">
-        <ResponsiveNavigationMenu/>
-        <NavigationMenu/>
-    </div>
 
-
-
-    <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">
+    <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white rounded text-black p-5 mb-10">
 
             <div
@@ -180,15 +174,15 @@ import {onMounted, ref, watch} from "vue";
 import throttle from "lodash/throttle";
 import {Inertia} from "@inertiajs/inertia";
 
-let videoPlayer = useVideoPlayerStore()
+let videoPlayerStore = useVideoPlayerStore()
 let chat = useChatStore()
 let showStore = useShowStore();
 let teamStore = useTeamStore();
 
-videoPlayer.currentPage = 'shows'
+videoPlayerStore.currentPage = 'shows'
 
 onMounted(() => {
-    videoPlayer.makeVideoTopRight();
+    videoPlayerStore.makeVideoTopRight();
 });
 
 let props = defineProps({
