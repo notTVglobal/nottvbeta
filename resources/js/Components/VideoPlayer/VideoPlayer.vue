@@ -1,10 +1,12 @@
 <template>
 
+    <VideoControls v-if="$page.props.user!=null" :show="videoPlayerStore.showControls===true" class="fixed top-69 right-24 w-96 bg-red-500 z-50"
+    />
+
     <div :class="videoPlayerStore.videoContainerClass">
         <div :class="videoPlayerStore.class"
              @mouseenter="videoPlayerStore.showControls = true"
              @mouseleave="videoPlayerStore.showControls = false"
-             v-touch="()=>videoPlayerStore.toggleControls()"
              >
 
 
@@ -12,7 +14,7 @@
                 <Login v-if="$page.props.user===null" :show="showLogin" @close="showLogin = false" />
             </Teleport>
 
-            <video-player :options="videoOptions"/>
+            <video-player :options="videoOptions" v-touch="()=>videoPlayerStore.toggleControls()"/>
 
             <div v-if="videoPlayerStore.fullPage && $page.props.user!=null">
                 <div class="absolute w-full flex justify-between top-16 left-0 p-5 drop-shadow z-50">
@@ -72,8 +74,7 @@
                 </div>
 
 
-                <VideoControls v-if="$page.props.user!=null" :show="videoPlayerStore.showControls===true" class="z-50"
-                />
+
 
             </div>
 
