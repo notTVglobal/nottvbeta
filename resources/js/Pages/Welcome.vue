@@ -34,14 +34,14 @@
             </div>
 
 
-            <section class="flex flex-col justify-center items-center h-screen bg-white text-black p-5">
+            <section class="flex flex-col justify-center items-center min-h-screen bg-white text-black p-5">
 
                     <div class="text-center font-semibold text-3xl">Welcome to notTV</div>
                     <div class="text-center text-2xl">Where artists own the platform.</div>
                     <div class="mt-32 text-center italic">(Log in to chat)</div>
 
             </section>
-            <section class="grid md:grid-cols-2 h-screen content-center gap-10 bg-gray-300 text-white p-10">
+            <section class="grid md:grid-cols-2 min-h-screen content-center gap-10 bg-gray-300 text-white p-10">
                 <div class="px-6 py-20 bg-fuchsia-600 rounded">
                     <div class="font-bold text-4xl text-center pb-3 space-x-2">
                         <font-awesome-icon icon="fa-solid fa-star" />
@@ -72,7 +72,7 @@
                     <p class="text-center text-2xl">Register your content as your very own NFT on a blockchain that you own.</p>
                 </div>
             </section>
-            <section class="flex justify-center items-center h-screen bg-green-800">
+            <section class="flex justify-center items-center min-h-screen bg-green-800">
                 <div class="text-2xl">#mediaforabetterworld</div>
             </section>
         </div>
