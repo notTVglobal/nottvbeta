@@ -43,6 +43,7 @@ import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
 import {useStreamStore} from "@/Stores/StreamStore.js"
 import VideoOTT from '@/Components/VideoPlayer/VideoOTT'
 import VideoOTTButtons from '@/Components/VideoPlayer/VideoOTTButtons'
+import {onMounted} from "vue";
 
 let videoPlayerStore = useVideoPlayerStore()
 let streamStore = useStreamStore()
@@ -50,6 +51,11 @@ let streamStore = useStreamStore()
 videoPlayerStore.videoSource = "https://mist2.not.tv/hls/naturalworld/index.m3u8"
 videoPlayerStore.videoName = "Main Stream"
 streamStore.currentChannel = "Stream"
+
+onMounted(() => {
+    videoPlayerStore.makeVideoFullPage();
+
+});
 
 let props = defineProps({
     user: Object,
