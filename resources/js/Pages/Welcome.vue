@@ -5,16 +5,16 @@
 <header class="headerContainer">
     <div class="welcomeOverlay px-6 py-4 sm:block sm:items-center sm:pt-2">
         <WelcomeBug />
-        <div class="flex justify-end pt-4 pr-6 space-x-4">
-            <Button class="bg-opacity-50 hover:bg-opacity-75 text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md" v-if="!$page.props.user" @click="welcomeStore.showLogin = true" >
+        <div class="flex justify-between md:justify-end pt-4 pr-6 space-x-4">
+            <Button class="bg-opacity-50 hover:bg-opacity-75 text-sm md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md" v-if="!$page.props.user" @click="welcomeStore.showLogin = true" >
                 Log in
             </Button>
-            <Button class="bg-opacity-50 hover:bg-opacity-75 text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md" v-if="!$page.props.user" @click="welcomeStore.showRegister = true" >
+            <Button class="bg-opacity-50 hover:bg-opacity-75 text-sm md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md" v-if="!$page.props.user" @click="welcomeStore.showRegister = true" >
 <!--           <Button class="bg-opacity-0 hover:bg-opacity-0"><Link v-if="!$page.props.user" :href="route('register')" class="text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md">-->
 
                 Register
             </Button>
-            <Button class="bg-opacity-0 hover:bg-opacity-0"><Link v-if="$page.props.user" :href="route('stream')" class="text-2xl top-20 text-gray-200 underline">
+            <Button class="bg-opacity-0 hover:bg-opacity-0"><Link v-if="$page.props.user" :href="route('stream')" class="text-sm md:text-2xl top-20 text-gray-200 underline">
                 Return to stream
             </Link></Button>
         </div>
