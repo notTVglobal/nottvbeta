@@ -7,6 +7,7 @@ import { Head, Link } from '@inertiajs/inertia-vue3';
 import AppLayout from "./Layouts/AppLayout";
 import { createPinia } from "pinia";
 import { ZiggyVue } from 'ziggy';
+import Vue3TouchEvents from "vue3-touch-events";
 
 import "../../resources/css/theme.css"; // Magic happens here
 // import the fontawesome core
@@ -52,6 +53,7 @@ createInertiaApp({
             .use(plugin)
             .use(ZiggyVue, Ziggy)
             .use(createPinia())
+            .use(Vue3TouchEvents)
             .component("Link", Link)
             .component("Head", Head)
             .component("font-awesome-icon", FontAwesomeIcon)

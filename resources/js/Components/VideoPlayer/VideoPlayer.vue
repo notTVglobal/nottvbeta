@@ -4,7 +4,7 @@
         <div :class="videoPlayerStore.class"
              @mouseenter="showControls = true"
              @mouseleave="showControls = false"
-             @click="showControls = !showControls">
+             v-touch="showControlsTouch">
 <!--             @click="videoPlayerStore.makeVideoFullPage()">-->
 
 
@@ -151,6 +151,9 @@ export default {
     name: 'VideoPlayer',
     components: {
         VideoPlayer
+    },
+    methods() {
+      showControlsTouch: { this.showControls = !this.showControls }
     },
     data() {
         const videoPlayerStore = useVideoPlayerStore()
