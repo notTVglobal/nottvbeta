@@ -2,8 +2,8 @@
     <Head title="Beta" />
         <div class="bg-green-800 bg-opacity-10 min-h-screen text-gray-200 z-50">
 
-<header class="headerContainer">
-    <div class="welcomeOverlay flex flex-row px-6 py-4 w-full">
+<header class="headerContainer w-full">
+    <div class="welcomeOverlay flex flex-row md:px-6 py-4 w-full">
         <WelcomeBug />
         <div class="flex justify-end pt-4 md:pr-6 space-x-4 w-full">
                 <Button class="bg-opacity-50 hover:bg-opacity-75 text-sm md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md" v-if="!$page.props.user" @click="welcomeStore.showLogin = true" >

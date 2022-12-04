@@ -9,7 +9,7 @@
     >
         <div v-if="welcomeStore.showOverlay===false">
             <div class="absolute top-4 left-20">
-                <img :src="`/storage/images/logo_white_512.png`" class="w-40 pt-2">
+                <img :src="`/storage/images/logo_white_512.png`" class="w-20 md:w-40 pt-2">
             </div>
         </div>
     </Transition>
