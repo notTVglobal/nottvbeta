@@ -56,14 +56,14 @@
                             </Link>
                         </div>
                         <div class="ml-3">
-                            <div class="font-medium text-base text-gray-100">
+                            <div class="font-medium text-base text-gray-100 w-full">
                                 <Link @click="videoPlayer.makeVideoTopRight()"
                                       :href="route('profile.show')"
                                       :active="route().current('profile.show')">
                                     {{ $page.props.user.name }}
                                 </Link>
                             </div>
-                            <div class="font-medium text-sm text-gray-100">
+                            <div class="font-medium text-sm text-gray-100 w-full">
                                 <Link @click="videoPlayer.makeVideoTopRight()"
                                       :href="route('profile.show')"
                                       :active="route().current('profile.show')">

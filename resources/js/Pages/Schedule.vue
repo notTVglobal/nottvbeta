@@ -8,6 +8,10 @@
 
         </div>
         <div class="ml-5 mb-5 text-red-600">This section is in development. Not currently working.</div>
+        <ul class="ml-12">
+            <li>Scheduled new releases</li>
+            <li>Scheduled live events</li>
+        </ul>
     </div>
 </template>
 
