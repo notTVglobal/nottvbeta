@@ -35,19 +35,19 @@
 <script setup>
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useChatStore } from "@/Stores/ChatStore.js"
-import { onMounted } from "vue"
+import { onBeforeMount, onMounted } from "vue"
 
 let videoPlayerStore = useVideoPlayerStore()
 let chat = useChatStore()
 
 videoPlayerStore.currentPage = 'shop'
 
-async function loadFullPage() {
-    await videoPlayerStore.makeVideoFullPage();
-}
+
+onBeforeMount(() => {
+    videoPlayerStore.makeVideoFullPage();
+})
 
 onMounted(() => {
-    loadFullPage();
     videoPlayerStore.makeVideoTopRight();
 });
 
