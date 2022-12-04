@@ -46,7 +46,7 @@
                     <font-awesome-icon icon="fa-comments" class="text-3xl"/><div>CHAT</div>
                 </button>
 
-                <VideoControls v-if="$page.props.user!=null" :show="videoPlayerStore.showControls"/>
+                <VideoControls v-if="$page.props.user!=null" :show="videoPlayerStore.showControls===true"/>
 
             </div>
 
@@ -72,7 +72,7 @@
                 </div>
 
 
-                <VideoControls v-if="$page.props.user!=null" :show="videoPlayerStore.showControls"
+                <VideoControls v-if="$page.props.user!=null" :show="videoPlayerStore.showControls===true" class="z-50"
                 />
 
             </div>
