@@ -55,7 +55,7 @@
                                      :src="$page.props.user.profile_photo_url" :alt="$page.props.user.name">
                             </Link>
                         </div>
-                        <div class="ml-3">
+                        <div class="ml-3 w-full">
                             <div class="font-medium text-base text-gray-100 w-full">
                                 <Link @click="videoPlayer.makeVideoTopRight()"
                                       :href="route('profile.show')"
