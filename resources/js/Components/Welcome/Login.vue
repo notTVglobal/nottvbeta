@@ -19,7 +19,7 @@
 
                 <div class="py-3 text-gray-600">
                     Please log in to watch notTV and chat.<br>
-                    Need to <Link href="/register" class="text-blue-800 hover:text-blue-600">register</Link> for an account?
+                    Need to <button @click="showRegister" class="text-blue-800 hover:text-blue-600">register</button> for an account?
                 </div>
                 <div class="py-3">
                         <form @submit.prevent="submit">
@@ -80,6 +80,7 @@
 </template>
 
 <script setup>
+import { useWelcomeStore } from "@/Stores/WelcomeStore";
 import { useForm } from '@inertiajs/inertia-vue3';
 import JetAuthenticationCard from '@/Jetstream/AuthenticationCard.vue';
 import JetAuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo.vue';
@@ -88,6 +89,8 @@ import JetInput from '@/Jetstream/Input.vue';
 import JetCheckbox from '@/Jetstream/Checkbox.vue';
 import JetLabel from '@/Jetstream/Label.vue';
 import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
+
+let welcomeStore = useWelcomeStore()
 
 defineProps({
     canResetPassword: Boolean,
@@ -110,9 +113,14 @@ const submit = () => {
     });
 };
 
+function showRegister() {
+    welcomeStore.showLogin = false;
+    welcomeStore.showRegister = true;
+}
+
 </script>
 
-<style>
+<style scoped>
 .modal-mask {
     position: fixed;
     inset: 0;

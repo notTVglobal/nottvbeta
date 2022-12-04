@@ -1431,6 +1431,18 @@ select {
   top: 5rem;
 }
 
+.top-10 {
+  top: 2.5rem;
+}
+
+.left-10 {
+  left: 2.5rem;
+}
+
+.left-20 {
+  left: 5rem;
+}
+
 .z-0 {
   z-index: 0;
 }
@@ -3763,6 +3775,10 @@ select {
 
 .hover\:bg-opacity-0:hover {
   --tw-bg-opacity: 0;
+}
+
+.hover\:bg-opacity-75:hover {
+  --tw-bg-opacity: 0.75;
 }
 
 .hover\:text-gray-500:hover {

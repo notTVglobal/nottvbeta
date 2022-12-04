@@ -85,7 +85,7 @@
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
 import {useStreamStore} from "@/Stores/StreamStore";
 import ChatForStreamPageV2 from "@/Components/Chat/ChatForStreamPageV2"
-import Login from "@/Components/Login.vue"
+import Login from "@/Components/Welcome/Login.vue"
 import { ref } from 'vue'
 import VideoOTTButtons from "@/Components/VideoPlayer/VideoOTTButtons.vue";
 import VideoOTT from "@/Components/VideoPlayer/VideoOTT.vue";

@@ -4,13 +4,16 @@
 
 <header class="headerContainer">
     <div class="welcomeOverlay px-6 py-4 sm:block sm:items-center sm:pt-2">
-        <div class="flex justify-end pt-4 pr-6">
-            <Button class="bg-opacity-0 hover:bg-opacity-0 text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md" v-if="!$page.props.user" @click="showLogin = true" >
+        <WelcomeBug />
+        <div class="flex justify-end pt-4 pr-6 space-x-4">
+            <Button class="bg-opacity-50 hover:bg-opacity-75 text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md" v-if="!$page.props.user" @click="welcomeStore.showLogin = true" >
                 Log in
             </Button>
-            <Button class="bg-opacity-0 hover:bg-opacity-0"><Link v-if="!$page.props.user" :href="route('register')" class="text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md">
+            <Button class="bg-opacity-50 hover:bg-opacity-75 text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md" v-if="!$page.props.user" @click="welcomeStore.showRegister = true" >
+<!--           <Button class="bg-opacity-0 hover:bg-opacity-0"><Link v-if="!$page.props.user" :href="route('register')" class="text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md">-->
+
                 Register
-            </Link></Button>
+            </Button>
             <Button class="bg-opacity-0 hover:bg-opacity-0"><Link v-if="$page.props.user" :href="route('stream')" class="text-2xl top-20 text-gray-200 underline">
                 Return to stream
             </Link></Button>
@@ -20,6 +23,7 @@
 
             <div class="welcomeOverlay">
                 <div class="bg-opacity-5 relative flex items-top justify-center min-h-screen text-gray-200">
+
                     <div class="flex justify-center items-center h-screen">
 
                         <WelcomeOverlay :show="true"/>
@@ -36,7 +40,7 @@
                     <div class="mt-32 text-center italic">(Log in to chat)</div>
 
             </section>
-            <section class="grid md:grid-cols-2 content-center gap-10 bg-gray-300 text-white p-10">
+            <section class="grid md:grid-cols-2 h-screen content-center gap-10 bg-gray-300 text-white p-10">
                 <div class="px-6 py-20 bg-fuchsia-600 rounded">
                     <div class="font-bold text-4xl text-center pb-3 space-x-2">
                         <font-awesome-icon icon="fa-solid fa-star" />
@@ -67,28 +71,28 @@
                     <p class="text-center text-2xl">Register your content as your very own NFT on a blockchain that you own.</p>
                 </div>
             </section>
-            <section class="flex justify-center items-center h-screen">
+            <section class="flex justify-center items-center h-screen bg-green-800">
                 <div class="text-2xl">#mediaforabetterworld</div>
             </section>
         </div>
 
     <Teleport to="body">
-<!--        <Login :show="showLogin" :userType="userType" @close="showLogin = false" />-->
-        <Login :show="showLogin" :userType="userType" @close="showLogin = false" />
-
+        <Login :show="welcomeStore.showLogin===true" :userType="userType" @close="welcomeStore.showLogin = false" />
+        <Register :show="welcomeStore.showRegister===true" :userType="userType" @close="welcomeStore.showRegister = false" />
     </Teleport>
 </template>
 
 <script setup>
-
-import Login from "@/Components/Login.vue"
-import {onMounted, ref} from 'vue'
+import Login from "@/Components/Welcome/Login.vue"
+import Register from "@/Components/Welcome/Register.vue"
+import { onMounted, ref } from 'vue'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import {useChatStore} from "@/Stores/ChatStore";
-import {useWelcomeStore} from "@/Stores/WelcomeStore";
-import {Inertia} from "@inertiajs/inertia";
+import { useChatStore } from "@/Stores/ChatStore";
+import { useWelcomeStore } from "@/Stores/WelcomeStore";
+import { Inertia } from "@inertiajs/inertia";
 import Button from "@/Jetstream/Button";
 import WelcomeOverlay from "@/Components/Welcome/WelcomeOverlay";
+import WelcomeBug from "@/Components/Welcome/WelcomeBug.vue";
 
 let welcomeStore = useWelcomeStore()
 let videoPlayerStore = useVideoPlayerStore()
@@ -120,10 +124,14 @@ let props = defineProps({
     phpVersion: String,
     userType: Number,
     showLogin: Boolean,
+    showRegister: Boolean,
     user: Object,
 });
 
 let showLogin = ref(false)
+let showRegister = ref(false)
+welcomeStore.showLogin = false
+welcomeStore.showRegister = false
 
 function ifLoggedIn() {
     if (props.user != null) {
