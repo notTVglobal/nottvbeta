@@ -52,8 +52,8 @@
                         <JetNavLink @click="videoPlayerStore.makeVideoTopRight()" :href="route('shop')" :active="route().current('shop')">
                             Shop
                         </JetNavLink>
-                        <div class="text-yellow-600 uppercase hidden md:block mt-5 text-xs w-20">
-                            GOAL <span class="text-sm font-semibold">100</span> viewers
+                        <div v-if="$page.props.user.role_id === 4" class="text-yellow-600 uppercase hidden md:block mt-5 text-xs w-full">
+                            GOAL <span class="text-sm font-semibold">100</span> subscribers
                         </div>
                     </div>
 

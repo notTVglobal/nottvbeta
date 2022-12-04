@@ -2,8 +2,8 @@
     <!-- Hamburger -->
     <div class="absolute top-3 right-4 hamburgerMask">
         <div class="-mr-2 flex items-center lg:hidden z-50">
-                <div class="text-yellow-600 uppercase">
-                    GOAL <span class="text-xl">100</span> viewers
+                <div v-if="$page.props.user.role_id === 4" class="text-yellow-600 uppercase hidden md:block w-full">
+                    GOAL <span class="text-xl">100</span> subscribers
                 </div>
 
                 <div class="-mt-16 mr-12">
