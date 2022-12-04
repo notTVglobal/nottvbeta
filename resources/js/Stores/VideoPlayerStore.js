@@ -46,6 +46,10 @@ export let useVideoPlayerStore = defineStore('videoPlayer', {
                 this.ott = num;
             }
         },
+        unmute() {
+            let videoJs = videojs('main-player')
+            videoJs.muted(false)
+        },
         loadNewSource() {
             let videoJs = videojs('main-player')
             videoJs.src(this.videoSource)

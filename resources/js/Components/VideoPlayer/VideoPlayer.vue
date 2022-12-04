@@ -44,6 +44,7 @@
 
                 <div class="absolute flex justify-between bottom-0 bg-red-800 px-2 w-full z-50">
                     PLAYER CONTROLS GO HERE
+                    <button class="bg-gray-500 rounded-full p-2" @click="videoPlayerStore.unmute()">UNMUTE</button>
                 </div>
 
             </div>
@@ -70,6 +71,7 @@
                 </div>
                 <div class="absolute flex justify-between bottom-0 bg-red-800 px-2 w-full z-50">
                     PLAYER CONTROLS GO HERE
+                    <button class="bg-gray-500 rounded-full p-2" @click="videoPlayerStore.unmute()">UNMUTE</button>
                 </div>
 
             </div>
