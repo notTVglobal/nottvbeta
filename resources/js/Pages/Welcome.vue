@@ -11,42 +11,29 @@
             <Button class="bg-opacity-0 hover:bg-opacity-0"><Link v-if="!$page.props.user" :href="route('register')" class="text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md">
                 Register
             </Link></Button>
-            <Button class="bg-opacity-0 hover:bg-opacity-0"><Link v-if="$page.props.user" :href="route('stream')" class="text-2xl text-gray-200 underline">
+            <Button class="bg-opacity-0 hover:bg-opacity-0"><Link v-if="$page.props.user" :href="route('stream')" class="text-2xl top-20 text-gray-200 underline">
                 Return to stream
             </Link></Button>
         </div>
     </div>
 </header>
 
+            <div class="welcomeOverlay">
+                <div class="bg-opacity-5 relative flex items-top justify-center min-h-screen text-gray-200">
+                    <div class="flex justify-center items-center h-screen">
 
-<div class="welcomeOverlay">
+                        <WelcomeOverlay :show="true"/>
 
-
-            <div class="bg-opacity-5 relative flex items-top justify-center min-h-screen text-gray-200">
-                <div class="flex justify-center items-center h-screen">
-                    <div class="grid md:grid-cols-1 grid-cols-1 align-items-center -mt-32">
-                        <JetApplicationLogo class="block md:w-auto p-10"/>
-                        <div class="my-4 text-center">
-                            <button
-                                class="text-2xl font-semibold bg-green-500 hover:bg-green-600 text-white px-5 py-3 rounded disabled:bg-gray-400"
-                                @click="scrollToElement"
-                            ><font-awesome-icon icon="fa-solid fa-play" /> Watch Now  </button>
-
-                        </div>
-                        <div class="my-2 text-center">OR</div>
-                        <div class="text-center font-semibold text-2xl px-5 py-3">SCROLL DOWN</div>
                     </div>
                 </div>
-
             </div>
 
-
-</div>
 
             <section class="flex flex-col justify-center items-center h-screen bg-white text-black p-5">
 
                     <div class="text-center font-semibold text-3xl">Welcome to notTV</div>
                     <div class="text-center text-2xl">Where artists own the platform.</div>
+                    <div class="mt-32 text-center italic">(Log in to chat)</div>
 
             </section>
             <section class="grid md:grid-cols-2 content-center gap-10 bg-gray-300 text-white p-10">
@@ -83,9 +70,6 @@
             <section class="flex justify-center items-center h-screen">
                 <div class="text-2xl">#mediaforabetterworld</div>
             </section>
-            <section class="flex flex-col justify-center items-center h-screen p-5 bg-green-900" ref="scrollToMe" v-if="!showDiv">
-                <div class="text-2xl text-center"><font-awesome-icon icon="fa-solid fa-rocket" /></div>
-            </section>
         </div>
 
     <Teleport to="body">
@@ -96,7 +80,7 @@
 </template>
 
 <script setup>
-import JetApplicationLogo from '@/Jetstream/ApplicationLogo.vue';
+
 import Login from "@/Components/Login.vue"
 import {onMounted, ref} from 'vue'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
@@ -104,46 +88,50 @@ import {useChatStore} from "@/Stores/ChatStore";
 import {useWelcomeStore} from "@/Stores/WelcomeStore";
 import {Inertia} from "@inertiajs/inertia";
 import Button from "@/Jetstream/Button";
+import WelcomeOverlay from "@/Components/Welcome/WelcomeOverlay";
 
 let welcomeStore = useWelcomeStore()
-let videoPlayer = useVideoPlayerStore()
+let videoPlayerStore = useVideoPlayerStore()
 let chat = useChatStore()
+
+welcomeStore.showOverlay = true;
 
 // This page loads properly calling these stores here
 // instead of calling the store action .makeVideoWelcomePage()
 // keep these here.
 // videoPlayer.fullPage = false
 // videoPlayer.loggedIn = false
-videoPlayer.class = "videoBgWelcome"
-videoPlayer.videoContainerClass = "videoContainerWelcome"
+videoPlayerStore.class = "videoBgWelcome"
+videoPlayerStore.videoContainerClass = "videoContainerWelcome"
 // videoPlayer.videoContainerClass = "videoContainerHomePage"
 // chat.show = false
 // chat.class = 'chatHidden'
 
 
 onMounted(() => {
-    videoPlayer.makeVideoWelcomePage();
+    videoPlayerStore.makeVideoWelcomePage();
 });
 //------------------------//
 
-defineProps({
+let props = defineProps({
     canLogin: Boolean,
     canRegister: Boolean,
     laravelVersion: String,
     phpVersion: String,
     userType: Number,
     showLogin: Boolean,
+    user: Object,
 });
 
 let showLogin = ref(false)
-let showDiv = ref(null)
-const scrollToMe = ref(null)
 
-function scrollToElement(){
-    scrollToMe.value.scrollIntoView({behavior: "smooth"})
-    setTimeout(() => {
-    showDiv.value = true}, 10);
+function ifLoggedIn() {
+    if (props.user != null) {
+        Inertia.visit('stream')
+    } else
+    { return }
 }
+ifLoggedIn();
 
 
 </script>

@@ -9,13 +9,12 @@
 
 
             <Teleport to="body">
-                <Login v-if="!videoPlayerStore.loggedIn" :show="showLogin" @close="showLogin = false" />
+                <Login v-if="$page.props.user===null" :show="showLogin" @close="showLogin = false" />
             </Teleport>
-
 
             <video-player :options="videoOptions"/>
 
-            <div v-if="videoPlayerStore.fullPage">
+            <div v-if="videoPlayerStore.fullPage && $page.props.user!=null">
                 <div class="absolute w-full flex justify-between top-16 left-0 p-5 drop-shadow z-50">
                     <div>
                         <span class="text-xs uppercase pr-2">Now playing: </span>
@@ -33,26 +32,25 @@
                     </span>
                     </div>
                 </div>
-                <div v-if="videoPlayerStore.currentPage!='stream'" class="absolute w-full flex justify-between bottom-16 left-0 p-5 drop-shadow z-50 hidden md:block">
+                <div v-if="videoPlayerStore.currentPage!='stream' && $page.props.user!=null" class="absolute w-full flex justify-between bottom-16 left-0 p-5 drop-shadow z-50 hidden md:block">
                     <div>
                         <button class="p-2 bg-gray-800 text-white" @click="videoPlayerStore.makeVideoTopRight()">Back to Page</button>
                     </div>
                 </div>
 
-                <ChatForStreamPageV2 :user="props.user"/>
+                <ChatForStreamPageV2 v-if="$page.props.user!=null" :user="props.user"/>
 
-                <button v-if="!chatStore.showChat" @click="chatStore.showChat = true"
+                <button v-if="!chatStore.showChat && $page.props.user!=null" @click="chatStore.showChat = true"
                         class="opacity-80 chatButtonForStreamPage w-20 h-20 rounded-full bg-orange-400 text-orange-100
                                hover:bg-orange-600 hover:text-orange-300 cursor-pointer grid justify-center content-center">
                     <font-awesome-icon icon="fa-comments" class="text-3xl"/><div>CHAT</div>
                 </button>
 
-                <VideoControls :show="videoPlayerStore.showControls"/>
+                <VideoControls v-if="$page.props.user!=null" :show="videoPlayerStore.showControls"/>
 
             </div>
 
-            <div v-if="!videoPlayerStore.fullPage">
-
+            <div v-if="!videoPlayerStore.fullPage && $page.props.user!=null">
 
                 <div class="absolute flex justify-between top-0 bg-gray-800 px-2 w-full z-50">
                     <div>
@@ -74,32 +72,8 @@
                 </div>
 
 
-                <VideoControls :show="videoPlayerStore.showControls"
+                <VideoControls v-if="$page.props.user!=null" :show="videoPlayerStore.showControls"
                 />
-
-            </div>
-
-            <div v-if="!videoPlayerStore.loggedIn" class="welcomeOverlay">
-                <div class="landscape:hidden">
-                <div class="absolute top-0 right-0 p-5 drop-shadow">
-                    <div class="grid grid-rows-1 place-content-end pt-2">
-                        <img :src="`/storage/images/logo_white_512.png`" class="w-20 pt-2">
-                    </div>
-                    <button @click="showLogin = true" class="text-2xl uppercase p-2">
-                    <span class="underline text-blue-400 hover:text-blue-600">Log in</span> to chat</button>
-                </div>
-                </div>
-                <div class="portrait:hidden">
-                    <div class="absolute top-0 right-0 p-5 drop-shadow">
-                        <div class="grid grid-rows-1 place-content-end pt-2">
-                            <img :src="`/storage/images/logo_white_512.png`" class="w-20 pt-2">
-                        </div>
-                    </div>
-                    <div class="absolute bottom-0 right-0 py-8 px-5 drop-shadow">
-                        <button @click="showLogin = true" class="text-2xl uppercase p-2">
-                            <span class="underline text-blue-400 hover:text-blue-600">Log in</span> to chat</button>
-                    </div>
-                </div>
 
             </div>
 
