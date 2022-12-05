@@ -47,7 +47,7 @@
          class="lg:hidden bg-gray-800 text-white fixed top-9 w-full h-full">
         <!-- Responsive Settings Options -->
         <!--   Fix Menu height e.g., h-[calc(h-100%-16rem)]      -->
-        <div class="pt-7 pb-4 h-5/6 overflow-y-auto">
+        <div class="pt-7 pb-0 h-[calc(100vh-6rem)] overflow-y-auto">
             <div class="fixed px-4 bg-gray-800 border-b border-1 border-white w-full h-100%">
 
                 <div class="flex justify-between pt-2">
@@ -178,7 +178,7 @@
                 </form>
 
             </div>
-        </div> <div class="w-full absolute bottom-20 text-center">Scroll the menu.</div>
+        </div> <div class="fixed w-full bottom-4 text-center">Scroll the menu.</div>
     </div>
 
 </template>

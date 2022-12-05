@@ -1459,6 +1459,10 @@ select {
   left: 1.25rem;
 }
 
+.bottom-4 {
+  bottom: 1rem;
+}
+
 .z-0 {
   z-index: 0;
 }
@@ -1912,6 +1916,18 @@ select {
 
 .h-96 {
   height: 24rem;
+}
+
+.h-\[calc\(100vh-3rem\)\] {
+  height: calc(100vh - 3rem);
+}
+
+.h-\[calc\(100vh-6rem\)\] {
+  height: calc(100vh - 6rem);
+}
+
+.h-\[calc\(100vh-5rem\)\] {
+  height: calc(100vh - 5rem);
 }
 
 .max-h-32 {
@@ -3169,6 +3185,10 @@ select {
 
 .pl-8 {
   padding-left: 2rem;
+}
+
+.pb-0 {
+  padding-bottom: 0px;
 }
 
 .text-left {
