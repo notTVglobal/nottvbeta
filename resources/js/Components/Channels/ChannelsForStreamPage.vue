@@ -9,10 +9,10 @@
     >
 
 
-        <div v-if="streamStore.showChannels===true" class="chatForStreamPage w-100 bottom-0 sm:bottom-8 bg-opacity-30 bg-gray-600 text-sm text-white pb-12
+        <div v-if="streamStore.showChannels===true" class="channelsForStreamPageStandard max-w-screen h-screen left-0 bottom-0 sm:bottom-8 bg-opacity-100 bg-blue-600 text-sm text-white pb-12
             chat-mask overflow-y-auto scroll-smooth hover:scroll-auto break-words">
+<div class=" top-60">CHANNELS HERE</div>
 
-CHANNELS HERE
 
             <!--            <form @submit.prevent="submit">-->
             <!--                    <input-->
@@ -24,9 +24,9 @@ CHANNELS HERE
             <!--            </form>-->
 
             <button @click="streamStore.toggleChannels()"
-                    v-if="streamStore.showChannels===true" class="opacity-80 w-15 h-15 p-4 rounded-full bg-orange-800
+                    v-if="streamStore.showChannels===true" class="fixed top-20 right-6 opacity-100 w-15 h-15 p-4 rounded-full bg-orange-800
                     text-gray-50 hover:bg-blue-800 hover:text-blue-200 grid justify-center content-center
-                    right-36 cursor-pointer font-semibold text-xs">
+                    cursor-pointer font-semibold text-xs">
                 CLOSE CHANNELS
             </button>
         </div>

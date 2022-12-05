@@ -25,7 +25,7 @@ export let useVideoPlayerStore = defineStore('videoPlayer', {
             fullPage: Boolean,
             loggedIn: Boolean,
             showControls: Boolean,
-            muted: Boolean,
+            muted: true,
             paused: Boolean,
             apiRequest: [],
             challenge: [],
@@ -62,14 +62,22 @@ export let useVideoPlayerStore = defineStore('videoPlayer', {
         unmute() {
             let videoJs = videojs('main-player')
             videoJs.muted(false)
+            this.muted = false
+        },
+        mute() {
+            let videoJs = videojs('main-player')
+            videoJs.muted(true)
+            this.muted = true
         },
         pause() {
             let videoJs = videojs('main-player')
             videoJs.pause()
+            this.paused = true
         },
         play() {
             let videoJs = videojs('main-player')
             videoJs.play()
+            this.paused = false
         },
         next() {
             let videoJs = videojs('main-player')

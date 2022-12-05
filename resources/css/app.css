@@ -110,7 +110,18 @@
     bottom:3rem;
     right:1.5rem;
 }
-.chatForStreamPage {
+.channelsForStreamPageStandard {
+    z-index: 200;
+    position: fixed;
+    top:4rem;
+    /*bottom:2rem;*/
+    right:0rem;
+    padding: 1rem;
+    min-width: 100vw;
+    max-width: 100vw;
+    max-height: 96rem;
+}
+.chatForStreamPageStandard {
     z-index: 200;
     position: fixed;
     top:4rem;
@@ -119,6 +130,17 @@
     padding: 1rem;
     min-width: 24rem;
     max-width: 24rem;
+    max-height: 96rem;
+}
+.chatForStreamPageMobile {
+    z-index: 200;
+    position: fixed;
+    top:4rem;
+    /*bottom:2rem;*/
+    right:0rem;
+    padding: 1rem;
+    min-width: 100vw;
+    max-width: 100vw;
     max-height: 96rem;
 }
 /* this is the CLOSE chat button */

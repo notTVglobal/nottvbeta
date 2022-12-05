@@ -50,7 +50,7 @@ let videoPlayerStore = useVideoPlayerStore()
 let streamStore = useStreamStore()
 let userStore = useUserStore()
 
-videoPlayerStore.videoSource = "https://mist2.not.tv/hls/naturalworld/index.m3u8"
+videoPlayerStore.videoSource = "https://mist2.not.tv/hls/threestooges/index.m3u8"
 videoPlayerStore.videoName = "Main Stream"
 streamStore.currentChannel = "Stream"
 userStore.showNavDropdown = false;

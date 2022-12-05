@@ -1257,7 +1257,18 @@ select {
     bottom:3rem;
     right:1.5rem;
 }
-.chatForStreamPage {
+.channelsForStreamPageStandard {
+    z-index: 200;
+    position: fixed;
+    top:4rem;
+    /*bottom:2rem;*/
+    right:0rem;
+    padding: 1rem;
+    min-width: 100vw;
+    max-width: 100vw;
+    max-height: 96rem;
+}
+.chatForStreamPageStandard {
     z-index: 200;
     position: fixed;
     top:4rem;
@@ -1266,6 +1277,17 @@ select {
     padding: 1rem;
     min-width: 24rem;
     max-width: 24rem;
+    max-height: 96rem;
+}
+.chatForStreamPageMobile {
+    z-index: 200;
+    position: fixed;
+    top:4rem;
+    /*bottom:2rem;*/
+    right:0rem;
+    padding: 1rem;
+    min-width: 100vw;
+    max-width: 100vw;
     max-height: 96rem;
 }
 /* this is the CLOSE chat button */
@@ -1379,12 +1401,24 @@ select {
   top: 5rem;
 }
 
+.top-60 {
+  top: 15rem;
+}
+
 .right-10 {
   right: 2.5rem;
 }
 
+.right-6 {
+  right: 1.5rem;
+}
+
 .right-36 {
   right: 9rem;
+}
+
+.right-5 {
+  right: 1.25rem;
 }
 
 .right-96 {
@@ -1423,8 +1457,8 @@ select {
   top: 2.25rem;
 }
 
-.bottom-20 {
-  bottom: 5rem;
+.bottom-4 {
+  bottom: 1rem;
 }
 
 .-top-0\.5 {
@@ -1435,8 +1469,8 @@ select {
   top: -0px;
 }
 
-.bottom-6 {
-  bottom: 1.5rem;
+.bottom-32 {
+  bottom: 8rem;
 }
 
 .bottom-2 {
@@ -1451,6 +1485,10 @@ select {
   top: 8rem;
 }
 
+.bottom-6 {
+  bottom: 1.5rem;
+}
+
 .top-6 {
   top: 1.5rem;
 }
@@ -1459,8 +1497,8 @@ select {
   left: 1.25rem;
 }
 
-.bottom-4 {
-  bottom: 1rem;
+.right-44 {
+  right: 11rem;
 }
 
 .z-0 {
@@ -1475,16 +1513,16 @@ select {
   z-index: 40;
 }
 
+.z-30 {
+  z-index: 30;
+}
+
 .z-20 {
   z-index: 20;
 }
 
 .z-10 {
   z-index: 10;
-}
-
-.z-30 {
-  z-index: 30;
 }
 
 .col-span-6 {
@@ -1725,10 +1763,6 @@ select {
   margin-right: 3rem;
 }
 
-.mr-32 {
-  margin-right: 8rem;
-}
-
 .mr-1 {
   margin-right: 0.25rem;
 }
@@ -1747,6 +1781,10 @@ select {
 
 .ml-10 {
   margin-left: 2.5rem;
+}
+
+.mr-32 {
+  margin-right: 8rem;
 }
 
 .mr-24 {
@@ -1771,6 +1809,10 @@ select {
 
 .-mb-10 {
   margin-bottom: -2.5rem;
+}
+
+.mr-96 {
+  margin-right: 24rem;
 }
 
 .block {
@@ -1885,8 +1927,8 @@ select {
   height: 0.5rem;
 }
 
-.h-5\/6 {
-  height: 83.333333%;
+.h-\[calc\(100vh-6rem\)\] {
+  height: calc(100vh - 6rem);
 }
 
 .h-max {
@@ -1916,18 +1958,6 @@ select {
 
 .h-96 {
   height: 24rem;
-}
-
-.h-\[calc\(100vh-3rem\)\] {
-  height: calc(100vh - 3rem);
-}
-
-.h-\[calc\(100vh-6rem\)\] {
-  height: calc(100vh - 6rem);
-}
-
-.h-\[calc\(100vh-5rem\)\] {
-  height: calc(100vh - 5rem);
 }
 
 .max-h-32 {
@@ -2053,6 +2083,10 @@ select {
   min-width: 2rem;
 }
 
+.min-w-\[2\.5rem\] {
+  min-width: 2.5rem;
+}
+
 .min-w-full {
   min-width: 100%;
 }
@@ -2067,15 +2101,6 @@ select {
 
 .min-w-\[4rem\] {
   min-width: 4rem;
-}
-
-.min-w-min {
-  min-width: -moz-min-content;
-  min-width: min-content;
-}
-
-.min-w-\[2\.5rem\] {
-  min-width: 2.5rem;
 }
 
 .max-w-screen-xl {
@@ -2229,6 +2254,10 @@ select {
 
 .cursor-pointer {
   cursor: pointer;
+}
+
+.cursor-not-allowed {
+  cursor: not-allowed;
 }
 
 .list-inside {
@@ -2902,6 +2931,10 @@ select {
   --tw-bg-opacity: 0.05;
 }
 
+.bg-opacity-100 {
+  --tw-bg-opacity: 1;
+}
+
 .bg-opacity-30 {
   --tw-bg-opacity: 0.3;
 }
@@ -3164,6 +3197,10 @@ select {
   padding-top: 1.75rem;
 }
 
+.pb-0 {
+  padding-bottom: 0px;
+}
+
 .pl-14 {
   padding-left: 3.5rem;
 }
@@ -3194,10 +3231,6 @@ select {
 
 .pl-8 {
   padding-left: 2rem;
-}
-
-.pb-0 {
-  padding-bottom: 0px;
 }
 
 .text-left {
@@ -4466,6 +4499,10 @@ select {
 
   .md\:grid {
     display: grid;
+  }
+
+  .md\:hidden {
+    display: none;
   }
 
   .md\:h-\[calc\(100vh-4rem\)\] {

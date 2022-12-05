@@ -13,29 +13,57 @@
 
             <video-player :options="videoOptions" v-touch="()=>videoPlayerStore.toggleControls()"/>
 
-            <div v-show="$page.props.user!=null && videoPlayerStore.fullPage===true" class="absolute top-16 p-5 right-4 opacity-10 z-50">
+
+<!-- Video OSD (on screen display) when video is FullPage and the user is logged in. -->
+            <div v-show="videoPlayerStore.fullPage===true && $page.props.user!=null" class="absolute h-screen top-16 p-5 right-4 opacity-10 z-50">
                 <img :src="`/storage/images/logo_white_512.png`" class="w-20 pt-2">
             </div>
 
             <div v-show="videoPlayerStore.showControls===true" v-if="videoPlayerStore.fullPage && $page.props.user!=null">
-                <div class="absolute w-full flex justify-between top-16 left-0 p-5 drop-shadow z-50">
-                    <div>
-                        <span class="text-xs uppercase pr-2">Now playing: </span>
-                        <span class="font-semibold">{{ videoPlayerStore.videoName }}</span>
-                    </div>
 
-                    <div v-if="streamStore.isLive" class="absolute py-6 left-0 px-5 drop-shadow z-50">
-                        <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-white bg-opacity-80 bg-red-800 uppercase last:mr-0 mr-1">
-                            live
-                        </span>
-                            <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-white bg-opacity-50 bg-black uppercase last:mr-0 mr-1">
-                            <font-awesome-icon icon="fa-solid fa-eye" class="pr-1" /> 88
-                        </span>
+                <div class="block md:hidden" v-if="! chatStore.showChat">
+                    <div class="absolute w-full flex justify-between top-16 left-0 p-5 drop-shadow z-50">
+                        <div>
+                            <span class="text-xs uppercase pr-2">Now playing: </span>
+                            <span class="font-semibold">{{ videoPlayerStore.videoName }}</span>
+                        </div>
+
+                        <div v-if="streamStore.isLive" class="absolute py-6 left-0 px-5 drop-shadow z-50">
+                            <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-white bg-opacity-80 bg-red-800 uppercase last:mr-0 mr-1">
+                                live
+                            </span>
+                                <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-white bg-opacity-50 bg-black uppercase last:mr-0 mr-1">
+                                <font-awesome-icon icon="fa-solid fa-eye" class="pr-1" /> 88
+                            </span>
+                        </div>
+                    </div>
+                    <div v-if="videoPlayerStore.currentPage!='stream' && $page.props.user!=null" @click="videoPlayerStore.makeVideoTopRight()" class="absolute w-full flex justify-between mb-6 top-32 left-0 p-5 drop-shadow z-50">
+                        <div>
+                            <button class="p-2 bg-gray-800 text-white hover:bg-gray-600" >Back to Page</button>
+                        </div>
                     </div>
                 </div>
-                <div v-if="videoPlayerStore.currentPage!='stream' && $page.props.user!=null" @click="videoPlayerStore.makeVideoTopRight()" class="absolute w-full flex justify-between mb-6 top-32 left-0 p-5 drop-shadow z-50">
-                    <div>
-                        <button class="p-2 bg-gray-800 text-white hover:bg-gray-600" >Back to Page</button>
+
+                <div class="hidden md:block">
+                    <div class="absolute w-full flex justify-between top-16 left-0 p-5 drop-shadow z-50">
+                        <div>
+                            <span class="text-xs uppercase pr-2">Now playing: </span>
+                            <span class="font-semibold">{{ videoPlayerStore.videoName }}</span>
+                        </div>
+
+                        <div v-if="streamStore.isLive" class="absolute py-6 left-0 px-5 drop-shadow z-50">
+                            <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-white bg-opacity-80 bg-red-800 uppercase last:mr-0 mr-1">
+                                live
+                            </span>
+                            <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-white bg-opacity-50 bg-black uppercase last:mr-0 mr-1">
+                                <font-awesome-icon icon="fa-solid fa-eye" class="pr-1" /> 88
+                            </span>
+                        </div>
+                    </div>
+                    <div v-if="videoPlayerStore.currentPage!='stream' && $page.props.user!=null" @click="backToPage" class="absolute w-full flex justify-between mb-6 top-32 left-0 p-5 drop-shadow z-50">
+                        <div>
+                            <button class="p-2 bg-gray-800 text-white hover:bg-gray-600" >Back to Page</button>
+                        </div>
                     </div>
                 </div>
 
@@ -51,14 +79,25 @@
                     <font-awesome-icon icon="fa-comments" class="text-3xl"/><div>CHAT</div>
                 </button>
 
-                <VideoControls v-if="$page.props.user!=null" :show="true"/>
+                <div class="block md:hidden">
+                    <VideoControls v-if="$page.props.user!=null && ! chatStore.showChat" :show="true"/>
+                </div>
+                <div class="hidden md:block">
+                    <VideoControls v-if="$page.props.user!=null" :show="true"/>
+                </div>
 
             </div>
 
-            <ChatForStreamPageV2 v-if="$page.props.user!=null" :user="props.user"/>
+            <div class="block md:hidden">
+                <ChatForStreamPageMobile v-if="$page.props.user!=null" :user="props.user"/>
+            </div>
+            <div class="hidden md:block">
+                <ChatForStreamPageStandard v-if="$page.props.user!=null" :user="props.user"/>
+            </div>
+
             <ChannelsForStreamPage v-if="$page.props.user!=null" />
 
-
+<!-- Video OSD (on screen display) when video is TopRight and the user is logged in. -->
             <div v-if="!videoPlayerStore.fullPage && $page.props.user!=null">
 
                 <div class="absolute flex justify-between top-0 bg-gray-800 px-2 w-full z-50">
@@ -93,7 +132,8 @@
 <script setup>
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
 import {useStreamStore} from "@/Stores/StreamStore";
-import ChatForStreamPageV2 from "@/Components/Chat/ChatForStreamPageV2"
+import ChatForStreamPageStandard from "@/Components/Chat/ChatForStreamPageStandard"
+import ChatForStreamPageMobile from "@/Components/Chat/ChatForStreamPageMobile"
 import Login from "@/Components/Welcome/Login.vue"
 import { ref } from 'vue'
 import {useChatStore} from "@/Stores/ChatStore";
@@ -117,6 +157,12 @@ let props = defineProps({
     user: Object,
     can: Object,
 })
+
+function backToPage() {
+    videoPlayerStore.makeVideoTopRight();
+    chatStore.showChat = false;
+    streamStore.showOSD = false;
+}
 
 </script>
 
@@ -155,6 +201,7 @@ export default {
                 autoplay: true,
                 muted: true,
                 controls: false,
+                loop: true,
                 enableSourceset: true,
                 sources: [
                     {
