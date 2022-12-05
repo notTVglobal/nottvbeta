@@ -77,7 +77,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="justify-end text-right w-full">
+                    <div class="justify-end text-right w-12">
                         <div v-if="$page.props.user.role_id === 2" class="text-xs font-semibold text-fuchsia-700">PREMIUM SUBSCRIBER</div>
                         <div v-if="$page.props.user.role_id === 3" class="text-xs font-semibold text-fuchsia-700">VIP</div>
                         <div v-if="$page.props.user.role_id === 4" class="text-xs font-semibold text-fuchsia-700">CREATOR</div>
