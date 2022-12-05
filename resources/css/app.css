@@ -32,8 +32,8 @@
 /*}*/
 .fullPageVideoClass {
     position:fixed;
-    top:0;
-    left:0;
+    top: 0px;
+    left: 0px;
     min-width:100vw;
     min-height:100vh;
     z-index:40;
@@ -41,10 +41,10 @@
 }
 .fullPageVideoContainer {
     position: fixed;
-    top: 0;
-    right: 0;
-    left:0;
-    bottom:0;
+    top: 0px;
+    right: 0px;
+    left:0px;
+    bottom:0px;
     min-width:100vw;
     min-height:100vh;
     background-color: blue;
@@ -52,7 +52,7 @@
 .topRightVideoClass {
     position:fixed;
     top: 4rem;
-    right:0;
+    right: 0px;
     width:100%;
     max-width:24rem;
     height:14rem;
@@ -61,8 +61,8 @@
 }
 .topRightVideoContainer {
     position: fixed;
-    top: 0rem;
-    right: 0rem;
+    top: 0px;
+    right: 0px;
     width:24rem;
     background-color: purple;
 }
