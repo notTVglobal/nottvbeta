@@ -1160,46 +1160,30 @@ select {
 .channelsSelectMenu {
     z-index: 500;
 }
-/*.videoBgFull {*/
-/*    position:static;*/
-/*    bottom:0;*/
-/*    left:0;*/
-/*    width:100%;*/
-/*    height:100%;*/
-/*    z-index:1;*/
-/*    background-color: black;*/
-/*}*/
-
-/* FULL PAGE VIDEO */
+.videoBgFull {
+    position:static;
+    bottom:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index:1;
+    background-color: black;
+}
 .videoFullPage {
-    position:absolute;
+    position:fixed;
     top:0;
     left:0;
     right:0;
     bottom:0;
-    width:100%;
-    height:100%;
-    min-height:100%;
-    max-height:100%;
+    width:100vw;
+    height:100vh;
+    min-height:100vh;
+    max-height:100vh;
     z-index:40;
     background-color: black;
 }
-.videoContainerFullPage {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right:0;
-    bottom:0;
-    width:100vw;
-    height:100vh;
-/* calc height minus navbar */
-    min-height: 100vh;
-    z-index:1;
-}
-
-/* TOP RIGHT VIDEO */
 .videoTopRight {
-    position:absolute;
+    position:fixed;
     top: 4rem;
     right:0;
     max-width:24rem;
@@ -1208,20 +1192,8 @@ select {
     max-height:14rem;
     background-color: black;
 }
-.videoContainerTopRight {
-    position: absolute;
-    top: 4rem;
-    right:0;
-
-    max-width:24rem;
-    width:100%;
-    height:14rem;
-    max-height:14rem;
-}
-
-/* WELCOME PAGE VIDEO*/
 .videoBgWelcome {
-    position:fixed;
+    position:absolute;
     top:0;
     left:0;
     right:0;
@@ -1233,7 +1205,7 @@ select {
     background-color: black;
 }
 .videoContainerWelcome {
-    position:fixed;
+    position: absolute;
     top:0;
     left: 0;
     right:0;
@@ -1243,17 +1215,26 @@ select {
     min-height: 100vh;
     z-index:1;
 }
-
-/*.videoContainerBgFull {*/
-/*    position: static;*/
-/*    top: 0px;*/
-/*    left: 0px;*/
-/*    width:100vw;*/
-/*    height:100vh;*/
-/*    z-index:1;*/
-/*}*/
-
-
+.videoContainerBgFull {
+    position: static;
+    top: 0px;
+    left: 0px;
+    width:100vw;
+    height:100vh;
+    z-index:1;
+}
+.videoContainerFullPage {
+    position: fixed;
+    top: 0rem;
+    right: 0rem;
+    width:100%;
+    height:100%;
+}
+.videoContainerTopRight {
+    position: fixed;
+    top: 0rem;
+    right: 0rem;
+}
 .videoOTT {
     z-index: 300;
 }
