@@ -10,8 +10,10 @@
                     <NotificationsButton class=""/>
                 </div>
             <button
-                class="inline-flex items-center justify-center p-2 rounded-md text-gray-100 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition"
-                @click="showingNavigationDropdown = ! showingNavigationDropdown">
+                class="inline-flex items-center justify-center p-2 rounded-md text-gray-100 hover:text-white hover:bg-blue-600 transition"
+                @click="userStore.toggleNavDropdown()">
+<!--                @click="chatStore.showNavDropdown = ! chatStore.showNavDropdown">-->
+
                 <span class="pr-2">MENU</span>
                 <svg
                     class="h-6 w-6"
@@ -20,14 +22,14 @@
                     viewBox="0 0 24 24"
                 >
                     <path
-                        :class="{'hidden': showingNavigationDropdown, 'inline-flex': ! showingNavigationDropdown }"
+                        :class="{'hidden': userStore.showNavDropdown, 'inline-flex': ! userStore.showNavDropdown }"
                         stroke-linecap="round"
                         stroke-linejoin="round"
                         stroke-width="2"
                         d="M4 6h16M4 12h16M4 18h16"
                     />
                     <path
-                        :class="{'hidden': ! showingNavigationDropdown, 'inline-flex': showingNavigationDropdown }"
+                        :class="{'hidden': ! userStore.showNavDropdown, 'inline-flex': userStore.showNavDropdown }"
                         stroke-linecap="round"
                         stroke-linejoin="round"
                         stroke-width="2"
@@ -38,7 +40,8 @@
         </div>
     </div>
     <!-- Responsive Navigation Menu -->
-    <div :class="{'block': showingNavigationDropdown, 'hidden': ! showingNavigationDropdown}"
+<!--    <div :class="{'block': showingNavigationDropdown, 'hidden': ! showingNavigationDropdown}"-->
+    <div :class="{'block': userStore.showNavDropdown, 'hidden': ! userStore.showNavDropdown}"
          class="lg:hidden bg-gray-800 text-white fixed top-9 w-full h-full">
         <!-- Responsive Settings Options -->
         <!--   Fix Menu height e.g., h-[calc(h-100%-16rem)]      -->
@@ -183,21 +186,23 @@ import JetResponsiveNavLink from '@/Jetstream/ResponsiveNavLink.vue'
 import NotificationsButton from '@/Components/Navigation/NotificationsButton.vue'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useChatStore } from "@/Stores/ChatStore"
+import { useUserStore } from "@/Stores/UserStore"
 import { ref } from "vue"
 import {Inertia} from "@inertiajs/inertia"
 
 const showingNavigationDropdown = ref(false);
 
-let videoPlayer = useVideoPlayerStore();
-let chat = useChatStore();
+let videoPlayerStore = useVideoPlayerStore();
+let chatStore = useChatStore();
+let userStore = useUserStore();
 
 const logout = () => {
-    videoPlayer.fullPage = true;
-    videoPlayer.loggedIn = false;
-    videoPlayer.class = "videoBgFull";
-    videoPlayer.videoContainerClass = "videoContainerBgFull";
-    chat.class = "chatHidden";
-    chat.show = false;
+    videoPlayerStore.fullPage = true;
+    videoPlayerStore.loggedIn = false;
+    videoPlayerStore.class = "welcomeVideoClass";
+    videoPlayerStore.videoContainerClass = "welcomeVideoContainer";
+    chatStore.class = "chatHidden";
+    chatStore.show = false;
     Inertia.post(route('logout'));
 };
 
