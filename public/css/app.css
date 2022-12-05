@@ -1200,7 +1200,7 @@ select {
     position:fixed;
     top: 4rem;
     right:0;
-    width:100%;
+    min-width:10rem;
     max-width:24rem;
     height:14rem;
     max-height:14rem;
