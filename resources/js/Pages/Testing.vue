@@ -1,8 +1,8 @@
 <template>
 
     <div class="divZ space-x-4">
-        <button class="bg-blue-800 text-white" @click="makeVideoTopRight">VIDEO TOP RIGHT</button>
-        <button class="bg-blue-800 text-white" @click="makeVideoFullPage">VIDEO FULL PAGE</button>
+        <button class="bg-blue-800 text-white" @click="videoPlayerStore.makeVideoTopRight()">VIDEO TOP RIGHT</button>
+        <button class="bg-blue-800 text-white" @click="videoPlayerStore.makeVideoFullPage()">VIDEO FULL PAGE</button>
 
     </div>
 
