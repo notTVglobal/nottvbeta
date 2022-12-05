@@ -10,7 +10,9 @@
                     <NotificationsButton class=""/>
                 </div>
             <button
-                class="inline-flex items-center justify-center p-2 rounded-md text-gray-100 hover:text-white hover:bg-blue-600 transition"
+                class="inline-flex items-center justify-center p-2 rounded-md text-gray-100 transition"
+                :class="{ 'hover:text-white hover:bg-blue-600': userStore.showNavDropdown}"
+
                 @click="userStore.toggleNavDropdown()">
 <!--                @click="chatStore.showNavDropdown = ! chatStore.showNavDropdown">-->
 
