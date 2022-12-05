@@ -1200,7 +1200,7 @@ select {
     position:fixed;
     top: 4rem;
     right:0;
-    min-width:10rem;
+    width:100%;
     max-width:24rem;
     height:14rem;
     max-height:14rem;
@@ -1210,6 +1210,7 @@ select {
     position: fixed;
     top: 0rem;
     right: 0rem;
+    width:24rem;
     background-color: purple;
 }
 .welcomeVideoClass {
