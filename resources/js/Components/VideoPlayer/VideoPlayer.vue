@@ -120,6 +120,22 @@ let props = defineProps({
 
 </script>
 
+<!-- A note about audio Tracks. -->
+<!-- https://github.com/videojs/http-streaming/blob/main/docs/multiple-alternative-audio-tracks.md -->
+<!--The other property that does not have a mapping in the m3u8 is AudioTrack.kind.
+It was decided that we would set the kind to main when default is set to true and
+in other cases we set it to alternative unless the track has characteristics which
+include public.accessibility.describes-video, in which case we set it to main-desc
+(note that this kind indicates that the track is a mix of the main track and description,
+so it can be played instead of the main track; a track with kind description only has
+the description, not the main track).-->
+
+<!-- Goal: see if we can play 2 audio tracks at the same time. And build a pop-up audio
+mixer. This will lead into a feature that allows you to record directly through notTV
+whatever it is you are watching/clicking through. A web3 video editor. -->
+<!-- -tec21 Dec.4, 2022 -->
+
+
 <script>
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
 import VideoPlayer from '@/Components/VideoPlayer/VideoJs'
