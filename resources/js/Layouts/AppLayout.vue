@@ -66,7 +66,7 @@ userStore.showNavDropdown = false;
 // });
 
 onMounted(() => {
-    videoPlayerStore.makeVideoFullPage()
+    // videoPlayerStore.makeVideoFullPage()
 })
 
 let props = defineProps({
