@@ -1172,7 +1172,7 @@ select {
 
 /* FULL PAGE VIDEO */
 .videoFullPage {
-    position:fixed;
+    position:absolute;
     top:0;
     left:0;
     right:0;
@@ -1185,7 +1185,7 @@ select {
     background-color: black;
 }
 .videoContainerFullPage {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     right:0;
@@ -1199,7 +1199,7 @@ select {
 
 /* TOP RIGHT VIDEO */
 .videoTopRight {
-    position:fixed;
+    position:absolute;
     top: 4rem;
     right:0;
     max-width:24rem;
@@ -1209,7 +1209,7 @@ select {
     background-color: black;
 }
 .videoContainerTopRight {
-    position: fixed;
+    position: absolute;
     top: 4rem;
     right:0;
 
