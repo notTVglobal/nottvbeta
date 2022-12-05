@@ -52,15 +52,15 @@
 
                 <div class="flex justify-between pt-2">
                     <div class="flex justify-start pb-3">
-                        <div v-if="$page.props.jetstream.managesProfilePhotos" class="w-10 min-w-10">
+                        <div v-if="$page.props.jetstream.managesProfilePhotos" class="mt-2 min-w-[2.5rem]">
                             <Link @click="videoPlayer.makeVideoTopRight()"
                                   :href="route('profile.show')"
                                   :active="route().current('profile.show')">
-                                <img class="h-10 w-10 min-w-10 rounded-full object-cover"
+                                <img class="h-10 min-w-[2.5rem] rounded-full object-cover"
                                      :src="$page.props.user.profile_photo_url" :alt="$page.props.user.name">
                             </Link>
                         </div>
-                        <div class="ml-3 w-full">
+                        <div class="mt-1 ml-3 w-full">
                             <div class="font-medium text-base text-gray-100 w-full">
                                 <Link @click="videoPlayer.makeVideoTopRight()"
                                       :href="route('profile.show')"
@@ -78,10 +78,10 @@
                         </div>
                     </div>
                     <div class="justify-end text-right w-full">
-                        <div v-if="$page.props.user.role_id === 2" class="text-xl text-fuchsia-700">PREMIUM SUBSCRIBER</div>
-                        <div v-if="$page.props.user.role_id === 3" class="text-xl text-fuchsia-700">VIP</div>
-                        <div v-if="$page.props.user.role_id === 4" class="text-xl text-fuchsia-700">CREATOR</div>
-                        <div v-if="$page.props.user.isAdmin === 1" class="text-lg text-red-700">ADMIN</div>
+                        <div v-if="$page.props.user.role_id === 2" class="text-xs font-semibold text-fuchsia-700">PREMIUM SUBSCRIBER</div>
+                        <div v-if="$page.props.user.role_id === 3" class="text-xs font-semibold text-fuchsia-700">VIP</div>
+                        <div v-if="$page.props.user.role_id === 4" class="text-xs font-semibold text-fuchsia-700">CREATOR</div>
+                        <div v-if="$page.props.user.isAdmin === 1" class="text-xs font-semibold text-red-700">ADMIN</div>
                         <div v-if="$page.props.user.role_id === 1" class="align-self-end text-lg font-semibold text-fuchsia-700 hover:text-fuchsia-500">
                             <Link @click="videoPlayer.makeVideoTopRight()" :href="route('upgrade')" :active="route().current('upgrade')">
                                 CLICK HERE TO UPGRADE YOUR ACCOUNT
