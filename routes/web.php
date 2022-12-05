@@ -401,8 +401,12 @@ Route::middleware([
 //        ->can('viewCreator', 'App\Models\User')
 //        ->name('moviesUpload.store');
 
-
-
+// Testing
+///////////
+    Route::get('/testing', function () {
+        return Inertia::render('Testing');
+    })  ->can('viewAdmin', 'App\Models\User')
+        ->name('testing');
 
 // Images + Upload
 ///////////

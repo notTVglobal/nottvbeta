@@ -4,6 +4,9 @@
 .videoZ {
     z-index:1;
 }
+.z-fivehundred {
+    z-index: 500;
+}
 .nav-mask {
     z-index:300;
 }

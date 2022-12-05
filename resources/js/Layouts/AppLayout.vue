@@ -7,30 +7,31 @@
             <NavigationMenu />
         </div>
 
+        <div class="flex flex-col md:flex-row flex-wrap-reverse">
+            <div>
+                <VideoPlayer :class="videoPlayerStore.class" class="z-50" :key="videoPlayerStore.key" :user="props.user"/>
 
-        <div>
-            <VideoPlayer :class="videoPlayerStore.class" class="" :key="videoPlayerStore.key" :user="props.user"/>
+            </div>
+
+            <div class="md:top-76 md:w-[calc(100vw-24rem)]">
+                <div v-if="!videoPlayerStore.fullPage" class="fixed top-72 right-0 w-full">
+                    <videoOTTButtons class="videoOTT z-fivehundred"  v-if="$page.props.user!=null"/>
+                </div>
+
+                <VideoOTT v-if="$page.props.user!=null" :user="props.user"  class="fixed top-76 right-0 mt-2 w-full overflow-y-scroll z-50"/>
+
+
+                <!-- Page Content -->
+                <main v-if="$page.props.user===null" class="fixed top-0 h-screen w-screen overflow-y-scroll z-10">
+                    <slot />
+                </main>
+
+                <main v-if="$page.props.user!=null" class="mt-76 md:mt-16 overflow-y-scroll">
+                    <slot />
+                </main>
+            </div>
 
         </div>
-
-
-        <div v-if="!videoPlayerStore.fullPage" class="fixed top-72 right-0 w-96">
-            <videoOTTButtons class="videoOTT"  v-if="$page.props.user!=null"/>
-        </div>
-
-        <VideoOTT v-if="$page.props.user!=null" :user="props.user"  class="fixed top-76 right-0 mt-2 w-96 h-[calc(100vh-4rem)] overflow-y-scroll"/>
-
-
-        <!-- Page Content -->
-        <main v-if="$page.props.user===null" class="fixed top-0 h-screen w-screen overflow-y-scroll z-10">
-            <slot />
-        </main>
-
-        <main v-if="$page.props.user!=null" class="fixed top-16 w-[calc(100vw-24rem)] h-[calc(100vh-4rem)] overflow-y-scroll">
-            <slot />
-        </main>
-
-
     </div>
 
 </template>
