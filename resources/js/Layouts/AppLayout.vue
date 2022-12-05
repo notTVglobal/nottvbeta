@@ -7,18 +7,18 @@
             <NavigationMenu />
         </div>
 
-        <div class="flex flex-col md:flex-row flex-wrap-reverse">
+
             <div>
                 <VideoPlayer :class="videoPlayerStore.class" class="z-50" :key="videoPlayerStore.key" :user="props.user"/>
 
             </div>
 
-            <div class="md:top-76 md:w-[calc(100vw-24rem)]">
-                <div v-if="!videoPlayerStore.fullPage" class="fixed top-72 right-0 w-full">
+<div>
+                <div v-if="!videoPlayerStore.fullPage" class="fixed top-72 w-full md:w-96 right-0 z-30">
                     <videoOTTButtons class="videoOTT z-fivehundred"  v-if="$page.props.user!=null"/>
                 </div>
 
-                <VideoOTT v-if="$page.props.user!=null" :user="props.user"  class="fixed top-76 right-0 mt-2 w-full overflow-y-scroll z-50"/>
+                <VideoOTT v-if="$page.props.user!=null" :user="props.user" class="fixed top-76 h-screen right-0 w-full md:w-96 mt-2 overflow-y-scroll" :class="videoPlayerStore.ottClass"/>
 
 
                 <!-- Page Content -->
@@ -26,14 +26,12 @@
                     <slot />
                 </main>
 
-                <main v-if="$page.props.user!=null" class="mt-76 md:mt-16 overflow-y-scroll">
+                <main v-if="$page.props.user!=null" class="fixed top-76 md:top-16 md:w-[calc(100vw-24rem)] h-[calc(100vh-19rem)] md:h-[calc(100vh-4rem)] overflow-y-scroll z-20">
                     <slot />
                 </main>
-            </div>
+</div>h-[calc(h-100vh-19rem)] fixed top-76 h-screen md:top-16 md:w-[calc(100vw-24rem)] overflow-y-scroll z-10
 
-        </div>
     </div>
-
 </template>
 
 <script setup>
@@ -44,7 +42,7 @@ import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useStreamStore } from "@/Stores/StreamStore"
 import VideoOTT from '@/Components/VideoPlayer/VideoOTT'
 import VideoOTTButtons from '@/Components/VideoPlayer/VideoOTTButtons'
-import { onMounted } from "vue";
+import { onMounted, onBeforeMount } from "vue";
 
 let videoPlayerStore = useVideoPlayerStore()
 let streamStore = useStreamStore()
@@ -63,6 +61,10 @@ streamStore.currentChannel = "Stream"
 //
 // });
 
+onMounted(() => {
+    videoPlayerStore.makeVideoFullPage()
+})
+
 let props = defineProps({
     user: Object,
 });
@@ -78,3 +80,10 @@ let props = defineProps({
 
 
 </script>
+<style scoped>
+.divZ {
+    z-index: 900;
+
+}
+
+</style>

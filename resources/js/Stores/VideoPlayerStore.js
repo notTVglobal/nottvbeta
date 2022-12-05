@@ -7,6 +7,7 @@ export let useVideoPlayerStore = defineStore('videoPlayer', {
         return {
             class: [],
             videoContainerClass: [],
+            ottClass: [],
             videoSourceIdSrc1: [],
             videoSourceIdSrc2: [],
             videoSourceIdSrc3: [],
@@ -52,8 +53,10 @@ export let useVideoPlayerStore = defineStore('videoPlayer', {
         toggleOtt(num) {
             if (this.ott === num) {
                 this.ott = 0;
+                this.ottClass = 'OttClose';
             } else {
                 this.ott = num;
+                this.ottClass = 'OttOpen';
             }
         },
         unmute() {
@@ -102,6 +105,21 @@ export let useVideoPlayerStore = defineStore('videoPlayer', {
             this.loggedIn = false;
             useChatStore().chatHidden();
         },
+        toggleOttChannels() {
+            this.toggleOtt(1);
+        },
+        toggleOttInfo() {
+            this.toggleOtt(2);
+        },
+        toggleOttPlaylist() {
+            this.toggleOtt(3);
+        },
+        toggleOttChat() {
+            this.toggleOtt(4);
+        },
+        toggleOttFilters() {
+            this.toggleOtt(5);
+        }
     },
 
     getters: {

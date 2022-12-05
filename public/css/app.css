@@ -1244,6 +1244,12 @@ select {
 .videoOTT {
     z-index: 300;
 }
+.OttOpen {
+    z-index: 30;
+}
+.OttClose {
+    z-index: 10;
+}
 /* this is the OPEN chat button */
 .chatButtonForStreamPage {
     z-index: 200;
@@ -1465,6 +1471,10 @@ select {
   z-index: 40;
 }
 
+.z-20 {
+  z-index: 20;
+}
+
 .z-10 {
   z-index: 10;
 }
@@ -1659,10 +1669,6 @@ select {
   margin-bottom: 0.5rem;
 }
 
-.mt-76 {
-  margin-top: 19rem;
-}
-
 .mt-28 {
   margin-top: 7rem;
 }
@@ -1837,6 +1843,14 @@ select {
 
 .h-screen {
   height: 100vh;
+}
+
+.h-\[calc\(100vh-19rem\)\] {
+  height: calc(100vh - 19rem);
+}
+
+.h-\[calc\(h-100vh-19rem\)\] {
+  height: calc(h-100vh - 19rem);
 }
 
 .h-3\/4 {
@@ -4389,8 +4403,8 @@ select {
 
 @media (min-width: 768px) {
 
-  .md\:top-76 {
-    top: 19rem;
+  .md\:top-16 {
+    top: 4rem;
   }
 
   .md\:top-4 {
@@ -4413,10 +4427,6 @@ select {
     margin-top: 0px;
   }
 
-  .md\:mt-16 {
-    margin-top: 4rem;
-  }
-
   .md\:mr-16 {
     margin-right: 4rem;
   }
@@ -4427,6 +4437,14 @@ select {
 
   .md\:grid {
     display: grid;
+  }
+
+  .md\:h-\[calc\(100vh-4rem\)\] {
+    height: calc(100vh - 4rem);
+  }
+
+  .md\:w-96 {
+    width: 24rem;
   }
 
   .md\:w-\[calc\(100vw-24rem\)\] {
