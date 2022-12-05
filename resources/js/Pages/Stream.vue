@@ -16,14 +16,15 @@ import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useStreamStore } from "@/Stores/StreamStore.js"
 import { useChatStore } from "@/Stores/ChatStore.js"
 import ChatForStreamPageV2 from "@/Components/Chat/ChatForStreamPageV2"
-import {onMounted} from "vue";
+import {onBeforeMount} from "vue";
 
 let videoPlayerStore = useVideoPlayerStore()
 let streamStore = useStreamStore()
 let chatStore = useChatStore()
 
-onMounted(() => {
+onBeforeMount(() => {
     videoPlayerStore.makeVideoFullPage();
+
     if (streamStore.currentChannel != 'Stream') {
         videoPlayerStore.videoSource = 'https://mist2.not.tv/hls/dunepull/index.m3u8';
         videoPlayerStore.videoName = 'Dune';
