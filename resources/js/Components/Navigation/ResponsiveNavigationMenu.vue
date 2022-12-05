@@ -97,28 +97,28 @@
 
                 <JetResponsiveNavLink
                     v-if="$page.props.user.role_id === 4"
-                    @click="videoPlayer.makeVideoTopRight()"
+                    @click="userStore.closeNavDropdown()"
                     :href="route('dashboard')"
                     :active="route().current('dashboard')">
                     Dashboard
                 </JetResponsiveNavLink>
 
                 <JetResponsiveNavLink
-                    @click="videoPlayer.makeVideoTopRight()"
+                    @click="userStore.closeNavDropdown()"
                     :href="route('library')"
                     :active="route().current('library')">
                     My Library
                 </JetResponsiveNavLink>
 
                 <JetResponsiveNavLink
-                    @click="videoPlayer.makeVideoTopRight()"
+                    @click="userStore.closeNavDropdown()"
                     :href="route('stream')"
                     :active="route().current('stream')">
                         Stream
                 </JetResponsiveNavLink>
 
                 <JetResponsiveNavLink
-                    @click="videoPlayer.makeVideoTopRight()"
+                    @click="userStore.closeNavDropdown()"
                     :href="route('schedule')"
                     :active="route().current('schedule')">
                         Schedule
@@ -126,7 +126,7 @@
 
                 <JetResponsiveNavLink
                     v-if="$page.props.user.role_id === 2 || $page.props.user.role_id === 3 || $page.props.user.role_id === 4"
-                    @click="videoPlayer.makeVideoTopRight()"
+                    @click="userStore.closeNavDropdown()"
                     :href="route('news')"
                     :active="route().current('news')">
                         News
@@ -134,7 +134,7 @@
 
                 <JetResponsiveNavLink
                     v-if="$page.props.user.role_id === 3 || $page.props.user.role_id === 4"
-                    @click="videoPlayer.makeVideoTopRight()"
+                    @click="userStore.closeNavDropdown()"
                     :href="route('movies')"
                     :active="route().current('movies')">
                         Movies
@@ -142,21 +142,21 @@
 
                 <JetResponsiveNavLink
                     v-if="$page.props.user.role_id === 2 || $page.props.user.role_id === 3 || $page.props.user.role_id === 4"
-                    @click="videoPlayer.makeVideoTopRight()"
+                    @click="userStore.closeNavDropdown()"
                     :href="route('shows')"
                     :active="route().current('shows')">
                         Shows
                 </JetResponsiveNavLink>
 
                 <JetResponsiveNavLink
-                    @click="videoPlayer.makeVideoTopRight()"
+                    @click="userStore.closeNavDropdown()"
                     :href="route('shop')"
                     :active="route().current('shop')">
                         Shop
                 </JetResponsiveNavLink>
 
                 <JetResponsiveNavLink
-                    @click="videoPlayer.makeVideoTopRight()"
+                    @click="userStore.closeNavDropdown()"
                     :href="route('profile.show')"
                     :active="route().current('profile.show')">
                         Settings
@@ -164,7 +164,7 @@
 
                 <JetResponsiveNavLink
                     v-if="$page.props.user.role_id === 4"
-                    @click="videoPlayer.makeVideoTopRight()"
+                    @click="userStore.closeNavDropdown()"
                     :href="route('training')"
                     :active="route().current('training')">
                         Training

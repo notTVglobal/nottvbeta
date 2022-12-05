@@ -10,6 +10,9 @@ export let useUserStore = defineStore('userStore', {
         toggleNavDropdown() {
             this.showNavDropdown = ! this.showNavDropdown;
 
+        },
+        closeNavDropdown() {
+            this.showNavDropdown = false;
         }
     },
 
