@@ -22,7 +22,7 @@
 
 
                 <!-- Page Content -->
-                <main v-if="$page.props.user===null" class="fixed top-0 h-screen w-screen overflow-y-scroll z-10">
+                <main v-if="$page.props.user===null" class="fixed top-0 h-screen w-screen overflow-y-scroll z-50">
                     <slot />
                 </main>
 

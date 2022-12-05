@@ -106,8 +106,8 @@ welcomeStore.showOverlay = true;
 // keep these here.
 // videoPlayer.fullPage = false
 // videoPlayer.loggedIn = false
-videoPlayerStore.class = "videoBgWelcome"
-videoPlayerStore.videoContainerClass = "videoContainerWelcome"
+videoPlayerStore.class = "welcomeVideoClass"
+videoPlayerStore.videoContainerClass = "welcomeVideoContainer"
 // videoPlayer.videoContainerClass = "videoContainerHomePage"
 // chat.show = false
 // chat.class = 'chatHidden'
