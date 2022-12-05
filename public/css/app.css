@@ -1189,7 +1189,7 @@ select {
     max-width:24rem;
     height:14rem;
     max-height:14rem;
-    background-color: black;
+    background-color: green;
 }
 .videoBgWelcome {
     position:absolute;
@@ -1889,10 +1889,6 @@ select {
 
 .h-96 {
   height: 24rem;
-}
-
-.max-h-56 {
-  max-height: 14rem;
 }
 
 .max-h-32 {
@@ -3172,10 +3168,6 @@ select {
 
 .text-right {
   text-align: right;
-}
-
-.align-top {
-  vertical-align: top;
 }
 
 .align-middle {
