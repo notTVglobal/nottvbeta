@@ -18,7 +18,7 @@ let chat = useChatStore()
 
 videoPlayerStore.currentPage = 'testing'
 
-onBeforeMount(() => {
+onMounted(() => {
 videoPlayerStore.makeVideoFullPage()
 })
 

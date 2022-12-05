@@ -28,6 +28,7 @@ let chatStore = useChatStore()
 // });
 
 onMounted(() => {
+    videoPlayerStore.makeVideoFullPage()
     if (streamStore.currentChannel != 'Stream') {
         videoPlayerStore.videoSource = 'https://mist2.not.tv/hls/dunepull/index.m3u8';
         videoPlayerStore.videoName = 'Dune';
