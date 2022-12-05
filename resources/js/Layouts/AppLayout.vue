@@ -29,7 +29,8 @@
                 <main v-if="$page.props.user!=null" class="fixed top-76 md:top-16 md:w-[calc(100vw-24rem)] h-[calc(100vh-19rem)] md:h-[calc(100vh-4rem)] overflow-y-scroll z-20">
                     <slot />
                 </main>
-</div>h-[calc(h-100vh-19rem)] fixed top-76 h-screen md:top-16 md:w-[calc(100vw-24rem)] overflow-y-scroll z-10
+</div>
+<!--        h-[calc(h-100vh-19rem)] fixed top-76 h-screen md:top-16 md:w-[calc(100vw-24rem)] overflow-y-scroll z-10-->
 
     </div>
 </template>
@@ -40,16 +41,19 @@ import NavigationMenu from "@/Components/Navigation/NavigationMenu"
 import VideoPlayer from "@/Components/VideoPlayer/VideoPlayer"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useStreamStore } from "@/Stores/StreamStore"
+import { useUserStore } from "@/Stores/UserStore"
 import VideoOTT from '@/Components/VideoPlayer/VideoOTT'
 import VideoOTTButtons from '@/Components/VideoPlayer/VideoOTTButtons'
 import { onMounted, onBeforeMount } from "vue";
 
 let videoPlayerStore = useVideoPlayerStore()
 let streamStore = useStreamStore()
+let userStore = useUserStore()
 
 videoPlayerStore.videoSource = "https://mist2.not.tv/hls/naturalworld/index.m3u8"
 videoPlayerStore.videoName = "Main Stream"
 streamStore.currentChannel = "Stream"
+userStore.showNavDropdown = false;
 
 // tec21: this fixes the video size issue when
 // a user reloads a page with the video in

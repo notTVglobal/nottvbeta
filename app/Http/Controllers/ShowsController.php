@@ -46,7 +46,7 @@ class ShowsController extends Controller
                     $query->where('name', 'like', "%{$search}%");
                 })
                 ->latest()
-                ->paginate(10)
+                ->paginate(3)
                 ->withQueryString()
                 ->through(fn($show) => [
                     'id' => $show->id,
@@ -70,7 +70,7 @@ class ShowsController extends Controller
                 ]),
             'episodes' => ShowEpisode::with('show', 'image')
                 ->latest()
-                ->paginate(10)
+                ->paginate(3)
                 ->through(fn($episode) => [
                     'id' => $episode->id,
                     'name' => $episode->name,
@@ -82,7 +82,7 @@ class ShowsController extends Controller
                     'releaseDate' => $episode->created_at->format('M D, Y'),
                 ]),
             'showsTrending' => Show::with('image')
-                ->paginate(10)
+                ->paginate(3)
                 ->through(fn($show) => [
                     'id' => $show->id,
                     'name' => $show->name,
@@ -93,7 +93,7 @@ class ShowsController extends Controller
                 ]),
             'showsComingSoon' => Show::with('image')
                 ->latest()
-                ->paginate(10)
+                ->paginate(3)
                 ->through(fn($show) => [
                     'id' => $show->id,
                     'name' => $show->name,
