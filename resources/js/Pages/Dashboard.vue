@@ -91,7 +91,7 @@
 
             <div class="bg-gray-300 dark:bg-gray-900 rounded pb-8 p-3 mb-6 mx-2 border-b border-2">
                 <div class="font-semibold text-xl pb-2">Stats</div>
-                <div class="grid grid-cols-2 lg:grid-cols-3 justify-center gap-2">
+                <div class="grid grid-cols-2 xl:grid-cols-3 justify-center gap-2">
 
                     <div class="px-4 py-4 w-100 h-48 bg-gray-400 text-black rounded shadow-md text-center">
                         <div class="font-semibold">
