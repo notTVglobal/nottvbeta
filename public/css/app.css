@@ -1181,10 +1181,9 @@ select {
     position:fixed;
     top:0;
     left:0;
-    width:100vw;
+    width:100%;
     max-width:100vw;
-    height:100vh;
-    min-height:100vh;
+    height:100%;
     max-height:100vh;
     z-index:40;
     background-color: orange;
@@ -1193,8 +1192,8 @@ select {
     position: fixed;
     top: 0;
     right: 0;
-    width:100vw;
-    height:100vh;
+    width:100%;
+    height:100%;
     background-color: blue;
 }
 .topRightVideoClass {
@@ -1438,16 +1437,16 @@ select {
   bottom: 9rem;
 }
 
+.top-32 {
+  top: 8rem;
+}
+
 .top-6 {
   top: 1.5rem;
 }
 
 .left-5 {
   left: 1.25rem;
-}
-
-.top-32 {
-  top: 8rem;
 }
 
 .z-0 {
