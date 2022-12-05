@@ -33,7 +33,7 @@
                         </span>
                     </div>
                 </div>
-                <div v-if="videoPlayerStore.currentPage!='stream' && $page.props.user!=null" @click="videoPlayerStore.makeVideoTopRight()" class="absolute w-full flex justify-between mb-6 left-0 p-5 drop-shadow z-50 hidden md:block">
+                <div v-if="videoPlayerStore.currentPage!='stream' && $page.props.user!=null" @click="videoPlayerStore.makeVideoTopRight()" class="absolute w-full flex justify-between mb-6 left-0 p-5 drop-shadow z-50">
                     <div>
                         <button class="p-2 bg-gray-800 text-white hover:bg-gray-600" >Back to Page</button>
                     </div>

@@ -1167,7 +1167,7 @@ select {
     width:100%;
     height:100%;
     z-index:1;
-    background-color: black;
+    background-color: yellow;
 }
 .videoFullPage {
     position:fixed;
@@ -1179,7 +1179,7 @@ select {
     min-height:100vh;
     max-height:100vh;
     z-index:40;
-    background-color: black;
+    background-color: orange;
 }
 .videoTopRight {
     position:fixed;
@@ -1228,13 +1228,13 @@ select {
     right: 0;
     width:100vw;
     height:100vh;
+    background-color: blue;
 }
 .videoContainerTopRight {
     position: fixed;
     top: 0rem;
     right: 0rem;
-    width:100%;
-    height:100%;
+    background-color: purple;
 }
 .videoOTT {
     z-index: 300;
@@ -3172,6 +3172,10 @@ select {
 
 .text-right {
   text-align: right;
+}
+
+.align-top {
+  vertical-align: top;
 }
 
 .align-middle {

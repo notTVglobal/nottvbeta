@@ -1,6 +1,6 @@
 <template>
-        <div>
-            <video ref="videoPlayer" id="main-player" class="w-full video-js vjs-big-play-centered max-h-56" :class="videoPlayerStore.class" playsinline autoplay loop muted />
+        <div class="">
+            <video ref="videoPlayer" id="main-player" class="w-full video-js vjs-big-play-centered bg-pink-700" :class="videoPlayerStore.class" playsinline autoplay loop muted />
         </div>
 </template>
 
@@ -38,7 +38,7 @@ onBeforeUnmount(() => {
 <!--<script>-->
 <!--import videojs from 'video.js';-->
 
-<!--export default {-->
+<!--export default {-->hj
 <!--    name: 'VideoPlayer',-->
 <!--    props: {-->
 <!--        options: {-->

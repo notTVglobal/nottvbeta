@@ -9,7 +9,7 @@
 
 
         <div>
-            <VideoPlayer :class="videoPlayerStore.class" :key="videoPlayerStore.key" :user="props.user"/>
+            <VideoPlayer :class="videoPlayerStore.class" class="w-full h-full" :key="videoPlayerStore.key" :user="props.user"/>
 
         </div>
 
