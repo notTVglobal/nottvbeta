@@ -22,15 +22,15 @@ onBeforeMount(() => {
 videoPlayerStore.makeVideoFullPage()
 })
 
-function makeVideoFullPage() {
-    videoPlayerStore.class = 'fullPageVideoClass'
-    videoPlayerStore.videoContainerClass = 'fullPageVideoContainer'
-}
-
-function makeVideoTopRight() {
-    videoPlayerStore.class = 'topRightVideoClass'
-    videoPlayerStore.videoContainerClass = 'topRightVideoContainer'
-}
+// function makeVideoFullPage() {
+//     videoPlayerStore.class = 'fullPageVideoClass'
+//     videoPlayerStore.videoContainerClass = 'fullPageVideoContainer'
+// }
+//
+// function makeVideoTopRight() {
+//     videoPlayerStore.class = 'topRightVideoClass'
+//     videoPlayerStore.videoContainerClass = 'topRightVideoContainer'
+// }
 
 </script>
 
