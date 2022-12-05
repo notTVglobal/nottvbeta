@@ -1160,16 +1160,24 @@ select {
 .channelsSelectMenu {
     z-index: 500;
 }
-.videoBgFull {
-    position:static;
-    bottom:0;
-    left:0;
-    width:100%;
-    height:100%;
-    z-index:1;
-    background-color: yellow;
-}
-.videoFullPage {
+/*.videoBgFull {*/
+/*    position:static;*/
+/*    bottom:0;*/
+/*    left:0;*/
+/*    width:100%;*/
+/*    height:100%;*/
+/*    z-index:1;*/
+/*    background-color: yellow;*/
+/*}*/
+/*.videoContainerBgFull {*/
+/*    position: static;*/
+/*    top: 0px;*/
+/*    left: 0px;*/
+/*    width:100vw;*/
+/*    height:100vh;*/
+/*    z-index:1;*/
+/*}*/
+.fullPageVideoClass {
     position:fixed;
     top:0;
     left:0;
@@ -1181,7 +1189,15 @@ select {
     z-index:40;
     background-color: orange;
 }
-.videoTopRight {
+.fullPageVideoContainer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width:100vw;
+    height:100vh;
+    background-color: blue;
+}
+.topRightVideoClass {
     position:fixed;
     top: 4rem;
     right:0;
@@ -1191,7 +1207,13 @@ select {
     max-height:14rem;
     background-color: green;
 }
-.videoBgWelcome {
+.topRightVideoContainer {
+    position: fixed;
+    top: 0rem;
+    right: 0rem;
+    background-color: purple;
+}
+.welcomeVideoClass {
     position:absolute;
     top:0;
     left:0;
@@ -1203,7 +1225,7 @@ select {
     z-index:1;
     background-color: black;
 }
-.videoContainerWelcome {
+.welcomeVideoContainer {
     position: absolute;
     top:0;
     left: 0;
@@ -1214,28 +1236,8 @@ select {
     min-height: 100vh;
     z-index:1;
 }
-.videoContainerBgFull {
-    position: static;
-    top: 0px;
-    left: 0px;
-    width:100vw;
-    height:100vh;
-    z-index:1;
-}
-.videoContainerFullPage {
-    position: fixed;
-    top: 0;
-    right: 0;
-    width:100vw;
-    height:100vh;
-    background-color: blue;
-}
-.videoContainerTopRight {
-    position: fixed;
-    top: 0rem;
-    right: 0rem;
-    background-color: purple;
-}
+
+
 .videoOTT {
     z-index: 300;
 }
@@ -1408,8 +1410,8 @@ select {
   right: 1rem;
 }
 
-.top-12 {
-  top: 3rem;
+.top-9 {
+  top: 2.25rem;
 }
 
 .bottom-20 {
@@ -1444,12 +1446,8 @@ select {
   left: 1.25rem;
 }
 
-.top-10 {
-  top: 2.5rem;
-}
-
-.top-9 {
-  top: 2.25rem;
+.top-32 {
+  top: 8rem;
 }
 
 .z-0 {
@@ -1756,10 +1754,6 @@ select {
 
 .-mb-10 {
   margin-bottom: -2.5rem;
-}
-
-.mt-64 {
-  margin-top: 16rem;
 }
 
 .block {
@@ -2104,12 +2098,6 @@ select {
 
 .table-auto {
   table-layout: auto;
-}
-
-.border-spacing-4 {
-  --tw-border-spacing-x: 1rem;
-  --tw-border-spacing-y: 1rem;
-  border-spacing: var(--tw-border-spacing-x) var(--tw-border-spacing-y);
 }
 
 .origin-top-left {

@@ -81,23 +81,23 @@ export let useVideoPlayerStore = defineStore('videoPlayer', {
             videoJs.src(this.videoSource)
         },
         makeVideoFullPage() {
-            this.videoContainerClass = 'videoContainerFullPage';
-            this.class = 'videoFullPage';
+            this.videoContainerClass = 'fullPageVideoContainer';
+            this.class = 'fullPageVideoClass';
             this.fullPage = true;
             useChatStore().makeBig();
             let videoJs = videojs('main-player')
             videoJs.play()
         },
         makeVideoTopRight() {
-            this.videoContainerClass = 'videoContainerTopRight';
-            this.class = 'videoTopRight';
+            this.videoContainerClass = 'topRightVideoContainer';
+            this.class = 'topRightVideoClass';
             this.fullPage = false;
             this.loggedIn = true;
             useChatStore().makeSmall();
         },
         makeVideoWelcomePage() {
-            this.videoContainerClass = 'videoContainerWelcome';
-            this.class = 'videoBgWelcome';
+            this.videoContainerClass = 'welcomeVideoContainer';
+            this.class = 'welcomeVideoClass';
             this.fullPage = false;
             this.loggedIn = false;
             useChatStore().chatHidden();
