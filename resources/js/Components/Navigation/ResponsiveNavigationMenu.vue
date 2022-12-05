@@ -39,13 +39,13 @@
     </div>
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': showingNavigationDropdown, 'hidden': ! showingNavigationDropdown}"
-         class="lg:hidden bg-gray-800 text-white fixed top-12 w-full h-full">
+         class="lg:hidden bg-gray-800 text-white fixed top-9 w-full h-full">
         <!-- Responsive Settings Options -->
         <!--   Fix Menu height e.g., h-[calc(h-100%-16rem)]      -->
         <div class="pt-7 pb-4 h-5/6 overflow-y-auto">
-            <div class="px-4 bg-gray-800 border-b border-spacing-4 border-1 border-white">
+            <div class="fixed px-4 bg-gray-800 border-b border-1 border-white w-full h-100%">
 
-                <div class="flex justify-between">
+                <div class="flex justify-between pt-2">
                     <div class="flex justify-start pb-3">
                         <div v-if="$page.props.jetstream.managesProfilePhotos" class="w-10 min-w-10">
                             <Link @click="videoPlayer.makeVideoTopRight()"
@@ -88,7 +88,7 @@
             </div>
 
 
-            <div class="pt-3 space-y-1 z-50 bg-gray-900">
+            <div class="mt-12 pt-3 space-y-1 z-50 bg-gray-900">
 
                 <JetResponsiveNavLink
                     v-if="$page.props.user.role_id === 4"
