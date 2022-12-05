@@ -13,17 +13,19 @@
 .channelsSelectMenu {
     z-index: 500;
 }
-.videoBgFull {
-    position:static;
-    bottom:0;
-    left:0;
-    width:100%;
-    height:100%;
-    z-index:1;
-    background-color: black;
-}
+/*.videoBgFull {*/
+/*    position:static;*/
+/*    bottom:0;*/
+/*    left:0;*/
+/*    width:100%;*/
+/*    height:100%;*/
+/*    z-index:1;*/
+/*    background-color: black;*/
+/*}*/
+
+/* FULL PAGE VIDEO */
 .videoFullPage {
-    position:absolute;
+    position:fixed;
     top:0;
     left:0;
     right:0;
@@ -35,6 +37,20 @@
     z-index:40;
     background-color: black;
 }
+.videoContainerFullPage {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right:0;
+    bottom:0;
+    width:100vw;
+    height:100vh;
+/* calc height minus navbar */
+    min-height: 100vh;
+    z-index:1;
+}
+
+/* TOP RIGHT VIDEO */
 .videoTopRight {
     position:fixed;
     top: 4rem;
@@ -45,8 +61,19 @@
     max-height:14rem;
     background-color: black;
 }
+.videoContainerTopRight {
+    position: fixed;
+    top: 4rem;
+    right: 0rem;
+    max-width:24rem;
+    width:100%;
+    height:14rem;
+    max-height:14rem;
+}
+
+/* WELCOME PAGE VIDEO*/
 .videoBgWelcome {
-    position:absolute;
+    position:fixed;
     top:0;
     left:0;
     right:0;
@@ -58,7 +85,7 @@
     background-color: black;
 }
 .videoContainerWelcome {
-    position: absolute;
+    position:fixed;
     top:0;
     left: 0;
     right:0;
@@ -68,26 +95,17 @@
     min-height: 100vh;
     z-index:1;
 }
-.videoContainerBgFull {
-    position: static;
-    top: 0px;
-    left: 0px;
-    width:100vw;
-    height:100vh;
-    z-index:1;
-}
-.videoContainerFullPage {
-    position: fixed;
-    top: 0rem;
-    right: 0rem;
-    width:100%;
-    height:100%;
-}
-.videoContainerTopRight {
-    position: fixed;
-    top: 0rem;
-    right: 0rem;
-}
+
+/*.videoContainerBgFull {*/
+/*    position: static;*/
+/*    top: 0px;*/
+/*    left: 0px;*/
+/*    width:100vw;*/
+/*    height:100vh;*/
+/*    z-index:1;*/
+/*}*/
+
+
 .videoOTT {
     z-index: 300;
 }
