@@ -1511,6 +1511,26 @@ select {
   bottom: 16rem;
 }
 
+.bottom-20 {
+  bottom: 5rem;
+}
+
+.bottom-96 {
+  bottom: 24rem;
+}
+
+.bottom-72 {
+  bottom: 18rem;
+}
+
+.bottom-48 {
+  bottom: 12rem;
+}
+
+.bottom-28 {
+  bottom: 7rem;
+}
+
 .z-0 {
   z-index: 0;
 }
@@ -3250,6 +3270,10 @@ select {
 
 .pl-8 {
   padding-left: 2rem;
+}
+
+.pb-24 {
+  padding-bottom: 6rem;
 }
 
 .text-left {

@@ -2,7 +2,7 @@
     <Head title="Shows" />
 
     <div class="place-self-center flex flex-col gap-y-3">
-        <div class="bg-white text-black dark:bg-gray-900 dark:text-white p-5 mb-10">
+        <div class="bg-gray-900 text-white p-5 mb-10">
 
             <header class="flex justify-between mb-3 border-b border-gray-800">
                 <div class="container mx-auto flex flex-col lg:flex-row items-center justify-between px-4 py-6">
@@ -77,7 +77,7 @@
 
                             <div v-for="episode in episodes.data"
                                  :key="episode.id"
-                                 class="show bg-gray-100 rounded-lg shadow-md flex px-6 py-6">
+                                 class="show bg-gray-800 rounded-lg shadow-md flex px-6 py-6">
                                 <div class="relative flex-none">
                                     <Link :href="`/shows/${episode.showSlug}/episode/${episode.slug}`">
                                         <img :src="'/storage/images/' + episode.poster" alt="show cover" class="h-64 min-w-[8rem] w-48 object-cover hover:opacity-75 transition ease-in-out duration-150">
@@ -86,8 +86,8 @@
                                 <div class="ml-12">
                                     <Link :href="`/shows/${episode.showSlug}/episode/${episode.slug}`" class="block text-lg font-semibold leading-tight hover:text-gray-400 mt-4">
                                         {{ episode.name }}</Link>
-                                    <div class="text-gray-600 mt-1"><Link :href="`/shows/${episode.showSlug}`">{{ episode.showName }}</Link></div>
-                                    <p class="mt-6 pr-4 text-gray-800 hidden lg:block">
+                                    <div class="text-gray-400 mt-1"><Link :href="`/shows/${episode.showSlug}`">{{ episode.showName }}</Link></div>
+                                    <p class="mt-6 pr-4 text-gray-300 hidden lg:block">
                                         {{ episode.description}}
                                     </p>
                                 </div>

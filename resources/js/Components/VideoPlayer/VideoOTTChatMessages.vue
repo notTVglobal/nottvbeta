@@ -1,10 +1,10 @@
 <template>
     <div class="pb-64">
-        <button @click.prevent="scrollTo('#scrollToMe')" class="bottom-0 mr-32 h-12 bg-blue-800 hover:bg-blue-600 w-56 rounded-lg">CLICK HERE TO SCROLL TO BOTTOM</button>
+        <button @click.prevent="scrollTo('#scrollToMe')" class="bottom-0 mr-32 h-12 bg-blue-800 hover:bg-blue-600 w-56 rounded-lg hidden">CLICK HERE TO SCROLL TO BOTTOM</button>
         <div class="chatChrome w-full h-full pb-36 pt-5 bottom-36 flex flex-col-reverse overflow-y-scroll overflow-x-clip break-words messages">
             <div id="scrollToMe"></div>
-            <div id="messages" v-for="(message, index) in chatStore.messages.slice()" :key="index">
-                <message-item :message="message" :time="time(message.created_at)"/>
+            <div v-for="(message, index) in chatStore.messages.slice()" :key="index">
+                <message-item :id="message.id" :message="message" :time="time(message.created_at)" />
             </div>
         </div>
     </div>
@@ -12,14 +12,16 @@
 
 <script setup>
 import MessageItem from "@/Components/Chat/Message"
-import {useChatStore} from "@/Stores/ChatStore";
+import { useChatStore } from "@/Stores/ChatStore";
 import dayjs from 'dayjs';
 import relativeTime from "dayjs/plugin/relativeTime";
+import { onUpdated } from "vue";
 dayjs.extend(relativeTime)
 
 let props = defineProps({
     message: Object,
 })
+
 
 // add a WatchEffect here to update the time stamps
 // every few minutes.
@@ -34,6 +36,22 @@ let chatStore = useChatStore()
 function scrollTo(selector) {
     document.querySelector(selector).scrollIntoView({ behavior: 'smooth'});
 }
+
+// get the newest message ID from the database.
+// and
+
+onUpdated(() => {
+    document.getElementById(chatStore.messages[0].id).scrollIntoView({ behavior: "smooth" })
+})
+
+
+    //
+
+
+// onMounted(() => {
+//
+// })
+
 
 </script>
 
