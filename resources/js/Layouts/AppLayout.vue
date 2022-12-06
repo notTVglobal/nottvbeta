@@ -50,10 +50,13 @@ let videoPlayerStore = useVideoPlayerStore()
 let streamStore = useStreamStore()
 let userStore = useUserStore()
 
-videoPlayerStore.videoSource = "https://mist2.not.tv/hls/threestooges/index.m3u8"
-videoPlayerStore.videoName = "Main Stream"
+// videoPlayerStore.videoSource = "https://mist2.not.tv/threestooges.mp4"
+videoPlayerStore.videoSource = "https://mist2.not.tv/hls/dunepull/index.m3u8"
+// videoPlayerStore.videoSourceType = "video/mp4"
+videoPlayerStore.videoSourceType = "application/x-mpegURL"
+videoPlayerStore.videoName = "Dune"
 streamStore.currentChannel = "Stream"
-userStore.showNavDropdown = false;
+userStore.showNavDropdown = false
 
 // tec21: this fixes the video size issue when
 // a user reloads a page with the video in
@@ -65,6 +68,8 @@ userStore.showNavDropdown = false;
 //
 // });
 
+
+userStore.checkIsMobile()
 onMounted(() => {
     // videoPlayerStore.makeVideoFullPage()
 })

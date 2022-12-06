@@ -16,7 +16,7 @@ import { ref, onMounted, onBeforeUnmount, onBeforeMount, watchEffect } from "vue
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore";
 import { useChatStore } from "@/Stores/ChatStore";
 
-let videoPlayer = useVideoPlayerStore()
+let videoPlayerStore = useVideoPlayerStore()
 let chatStore = useChatStore()
 
 let props = defineProps({

@@ -8,7 +8,7 @@
         leave-to-class="opacity-0"
     >
 
-            <div v-if="chatStore.showChat" class="chatForStreamPageStandard w-100 bottom-0 sm:bottom-8 bg-opacity-30 bg-gray-600 text-sm text-white pb-12
+            <div v-if="chatStore.showChat" class="chatForStreamPageStandard w-96 max-w-[12rem] bottom-0  bg-opacity-30 bg-gray-600 text-sm text-white pb-12
                 chat-mask overflow-y-auto scroll-smooth hover:scroll-auto break-words">
 
                 <ChatContainer :user="user"/>
@@ -24,7 +24,7 @@
                 <!--            </form>-->
 
                 <button @click="streamStore.toggleChat()"
-                        v-if="chatStore.showChat" class="fixed top-20 right-5 opacity-80 w-15 h-15 p-4 rounded-full bg-orange-800
+                        v-if="chatStore.showChat" class="fixed top-20 right-5 opacity-80 w-15 h-15 p-4 rounded-full bg-purple-800
                         text-gray-50 hover:bg-blue-800 hover:text-blue-200 grid justify-center content-center
                         right-36 cursor-pointer font-semibold text-xs">
                     CLOSE CHAT

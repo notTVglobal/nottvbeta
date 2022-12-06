@@ -4,7 +4,7 @@ import { useChatStore } from "@/Stores/ChatStore";
 export let useStreamStore = defineStore('streamStore', {
     state: () => ({
         isLive: Boolean,
-        currentChannel: [],
+        currentChannel: String,
         name: '',
         description: '',
         posterName: [],

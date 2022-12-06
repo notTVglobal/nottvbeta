@@ -1,7 +1,9 @@
 import { defineStore } from "pinia";
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore";
 
 export let useUserStore = defineStore('userStore', {
     state: () => ({
+        isMobile: Boolean,
         showNavDropdown: Boolean,
 
     }),
@@ -13,6 +15,14 @@ export let useUserStore = defineStore('userStore', {
         },
         closeNavDropdown() {
             this.showNavDropdown = false;
+            useVideoPlayerStore().closeOtt()
+        },
+        checkIsMobile() {
+            let screenWidth = screen.width
+            if (screenWidth <= 760) {
+                this.isMobile = true
+            } else
+                this.isMobile = false
         }
     },
 

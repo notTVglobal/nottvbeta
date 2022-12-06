@@ -21,7 +21,7 @@
 
             <div v-show="videoPlayerStore.showControls===true" v-if="videoPlayerStore.fullPage && $page.props.user!=null">
 
-                <div class="block md:hidden" v-if="! chatStore.showChat">
+                <div v-if="! chatStore.showChat && userStore.isMobile">
                     <div class="absolute w-full flex justify-between top-16 left-0 p-5 drop-shadow z-50">
                         <div>
                             <span class="text-xs uppercase pr-2">Now playing: </span>
@@ -33,7 +33,7 @@
                                 live
                             </span>
                                 <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-white bg-opacity-50 bg-black uppercase last:mr-0 mr-1">
-                                <font-awesome-icon icon="fa-solid fa-eye" class="pr-1" /> 88
+                                <font-awesome-icon icon="fa-solid fa-user" class="pr-1" /> 88
                             </span>
                         </div>
                     </div>
@@ -44,7 +44,7 @@
                     </div>
                 </div>
 
-                <div class="hidden md:block">
+                <div v-if="!userStore.isMobile">
                     <div class="absolute w-full flex justify-between top-16 left-0 p-5 drop-shadow z-50">
                         <div>
                             <span class="text-xs uppercase pr-2">Now playing: </span>
@@ -56,7 +56,7 @@
                                 live
                             </span>
                             <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-white bg-opacity-50 bg-black uppercase last:mr-0 mr-1">
-                                <font-awesome-icon icon="fa-solid fa-eye" class="pr-1" /> 88
+                                <font-awesome-icon icon="fa-solid fa-user" class="pr-1" /> 88
                             </span>
                         </div>
                     </div>
@@ -76,26 +76,27 @@
                 <button v-if="!streamStore.showOSD && $page.props.user!=null"  @click="streamStore.toggleChat()"
                         class="opacity-80 chatButtonForStreamPage w-20 h-20 bottom-6 rounded-full bg-orange-400 text-orange-100
                                hover:bg-orange-600 hover:text-orange-300 cursor-pointer grid justify-center content-center">
-                    <font-awesome-icon icon="fa-comments" class="text-3xl"/><div>CHAT</div>
+                    <font-awesome-icon icon="fa-comments" class="text-3xl"/><div>CHAT1</div>
                 </button>
 
-                <div class="block md:hidden">
+                <div v-if="userStore.isMobile">
                     <VideoControls v-if="$page.props.user!=null && ! chatStore.showChat" :show="true"/>
                 </div>
-                <div class="hidden md:block">
+                <div  v-if="!userStore.isMobile">
                     <VideoControls v-if="$page.props.user!=null" :show="true"/>
                 </div>
 
             </div>
 
-            <div class="block md:hidden">
+            <div v-if="userStore.isMobile">
                 <ChatForStreamPageMobile v-if="$page.props.user!=null" :user="props.user"/>
             </div>
-            <div class="hidden md:block">
+            <div v-if="!userStore.isMobile">
                 <ChatForStreamPageStandard v-if="$page.props.user!=null" :user="props.user"/>
             </div>
 
             <ChannelsForStreamPage v-if="$page.props.user!=null" />
+
 
 <!-- Video OSD (on screen display) when video is TopRight and the user is logged in. -->
             <div v-if="!videoPlayerStore.fullPage && $page.props.user!=null">
@@ -130,19 +131,22 @@
 </template>
 
 <script setup>
-import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
-import {useStreamStore} from "@/Stores/StreamStore";
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
+import { useStreamStore } from "@/Stores/StreamStore"
+import { useChatStore } from "@/Stores/ChatStore"
+import { useUserStore } from "@/Stores/UserStore"
+import { ref } from 'vue'
+
+import ChannelsForStreamPage from "@/Components/Channels/ChannelsForStreamPage"
 import ChatForStreamPageStandard from "@/Components/Chat/ChatForStreamPageStandard"
 import ChatForStreamPageMobile from "@/Components/Chat/ChatForStreamPageMobile"
-import Login from "@/Components/Welcome/Login.vue"
-import { ref } from 'vue'
-import {useChatStore} from "@/Stores/ChatStore";
-import VideoControls from "@/Components/VideoPlayer/VideoControls";
-import ChannelsForStreamPage from "@/Components/Channels/ChannelsForStreamPage.vue";
+import Login from "@/Components/Welcome/Login"
+import VideoControls from "@/Components/VideoPlayer/VideoControls"
 
 let videoPlayerStore = useVideoPlayerStore()
 let streamStore = useStreamStore()
 let chatStore = useChatStore()
+let userStore = useUserStore()
 
 videoPlayerStore.paused = false
 chatStore.showChat = false
@@ -183,7 +187,7 @@ whatever it is you are watching/clicking through. A web3 video editor. -->
 
 
 <script>
-import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
+import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore"
 import VideoPlayer from '@/Components/VideoPlayer/VideoJs'
 
 import { ref } from 'vue'
@@ -196,18 +200,18 @@ export default {
     data() {
         const videoPlayerStore = useVideoPlayerStore()
         const videoSource = videoPlayerStore.videoSource
+        const videoSourceType = videoPlayerStore.videoSourceType
         return {
             videoOptions: {
                 autoplay: true,
                 muted: true,
                 controls: false,
-                loop: true,
                 enableSourceset: true,
                 sources: [
                     {
                         src:
                             videoSource,
-                        type: 'application/x-mpegURL'
+                        type: videoSourceType
                     }
                 ]
             }

@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { useChatStore } from "@/Stores/ChatStore";
 import videojs from 'video.js';
 
-export let useVideoPlayerStore = defineStore('videoPlayer', {
+export let useVideoPlayerStore = defineStore('videoPlayerStore', {
     state() {
         return {
             class: [],
@@ -15,10 +15,11 @@ export let useVideoPlayerStore = defineStore('videoPlayer', {
             videoSourceTypeSrc2: [],
             videoSourceTypeSrc3: [],
             key: [],
-            videoName: [],
-            videoSource: [],
-            nextSource: [],
-            previousSource: [],
+            videoName: String,
+            videoSource: String,
+            videoSourceType: String,
+            nextSource: String,
+            previousSource: String,
             currentView: String,
             currentChannel: [],
             currentPage: String,
@@ -127,6 +128,9 @@ export let useVideoPlayerStore = defineStore('videoPlayer', {
         },
         toggleOttFilters() {
             this.toggleOtt(5);
+        },
+        closeOtt() {
+            this.toggleOtt(0);
         }
     },
 

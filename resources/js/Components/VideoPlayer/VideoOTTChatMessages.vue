@@ -1,5 +1,5 @@
 <template>
-    <div class="pb-56">
+    <div class="pb-64">
         <button @click.prevent="scrollTo('#scrollToMe')" class="bottom-0 mr-32 h-12 bg-blue-800 hover:bg-blue-600 w-56 rounded-lg">CLICK HERE TO SCROLL TO BOTTOM</button>
         <div class="chatChrome w-full h-full pb-36 pt-5 bottom-36 flex flex-col-reverse overflow-y-scroll overflow-x-clip break-words messages">
             <div id="scrollToMe"></div>

@@ -1,7 +1,10 @@
 <template>
     <div>
     <div class="fixed mt-96 bottom-0 mr-12">
-        <button @click.prevent="scrollTo('#scrollToMe')" class="fixed top-20 right-36 h-12 bg-blue-800 hover:bg-blue-600 w-56">CLICK HERE TO SCROLL TO BOTTOM</button>
+        <button @click.prevent="scrollTo('#scrollToMe')"
+                class="fixed top-20 h-12 right-36 bg-blue-800 hover:bg-blue-600 w-56"
+                :class="{ isMobile: userStore.isMobile}"
+            >CLICK HERE TO SCROLL TO BOTTOM</button>
     </div>
             <div class="chatChrome w-full h-full pb-2 py-2 flex flex-col-reverse overflow-y-scroll overflow-x-clip break-words messages">
                 <div id="scrollToMe"></div>
@@ -14,9 +17,14 @@
 
 <script setup>
 import MessageItem from "@/Components/Chat/Message"
-import {useChatStore} from "@/Stores/ChatStore";
-import dayjs from 'dayjs';
-import relativeTime from "dayjs/plugin/relativeTime";
+import { useChatStore } from "@/Stores/ChatStore"
+import { useUserStore } from "@/Stores/UserStore"
+import dayjs from 'dayjs'
+import relativeTime from "dayjs/plugin/relativeTime"
+
+let chatStore = useChatStore()
+let userStore = useUserStore()
+
 dayjs.extend(relativeTime)
 
 let props = defineProps({
@@ -31,7 +39,7 @@ function time(e) {
     return formattedTime;
 }
 
-let chatStore = useChatStore()
+
 
 function scrollTo(selector) {
     document.querySelector(selector).scrollIntoView({ behavior: 'smooth'});
@@ -65,3 +73,9 @@ export default {
 }
 </script>
 
+<style scoped>
+.isMobile {
+    left: 1rem;
+    width: 10rem;
+}
+</style>
