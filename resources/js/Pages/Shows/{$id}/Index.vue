@@ -205,7 +205,7 @@
 
 
             <div class="flex flex-col px-5">
-                <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                <div class="-my-2 overflow-x-hidden sm:-mx-6 lg:-mx-8">
                     <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
 
 
@@ -221,7 +221,7 @@
                             <div class="flex flex-row flex-wrap">
                                 <div v-for="creator in props.creators.data"
                                      :key="creator.id"
-                                     class="pb-8 mx-auto">
+                                     class="pb-8 mx-auto lg:mx-0">
 
                                     <div class="flex flex-col min-w-[8rem] px-6 py-4 font-medium break-words grow-0">
                                         <img :src="'/storage/' + creator.profile_photo_path" class="pb-2 rounded-full h-32 w-32 object-cover mb-2">
