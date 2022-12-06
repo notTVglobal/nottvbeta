@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { useChatStore } from "@/Stores/ChatStore";
+import { useStreamStore } from "@/Stores/StreamStore";
 import videojs from 'video.js';
 
 export let useVideoPlayerStore = defineStore('videoPlayerStore', {
@@ -97,6 +98,7 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
             this.class = 'fullPageVideoClass';
             this.fullPage = true;
             useChatStore().makeBig();
+            useStreamStore().showOSD = false;
             let videoJs = videojs('main-player')
             videoJs.play()
         },
