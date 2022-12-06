@@ -67,6 +67,7 @@
                     </div>
                 </div>
 
+
                 <button v-if="!streamStore.showOSD && $page.props.user!=null" @click="streamStore.toggleChannels()"
                         class="opacity-80 chatButtonForStreamPage w-20 h-20 bottom-6 mr-24 rounded-full bg-green-400 text-green-100
                                hover:bg-green-600 hover:text-green-300 cursor-pointer grid justify-center content-center text-xs">
@@ -79,7 +80,8 @@
                     <font-awesome-icon icon="fa-comments" class="text-3xl"/><div>CHAT</div>
                 </button>
 
-                <div v-if="userStore.isMobile">
+
+                <div v-if="userStore.isMobile" class="mb-36">
                     <VideoControls v-if="$page.props.user!=null && ! chatStore.showChat" :show="true"/>
                 </div>
                 <div  v-if="!userStore.isMobile">
@@ -142,6 +144,7 @@ import ChatForStreamPageStandard from "@/Components/Chat/ChatForStreamPageStanda
 import ChatForStreamPageMobile from "@/Components/Chat/ChatForStreamPageMobile"
 import Login from "@/Components/Welcome/Login"
 import VideoControls from "@/Components/VideoPlayer/VideoControls"
+import Stream from "@/Pages/Stream.vue";
 
 let videoPlayerStore = useVideoPlayerStore()
 let streamStore = useStreamStore()
@@ -222,3 +225,9 @@ export default {
 
 
 </script>
+
+<style scoped>
+.isMobile {
+
+}
+</style>

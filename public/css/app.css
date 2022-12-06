@@ -1821,6 +1821,10 @@ select {
   margin-bottom: -2.5rem;
 }
 
+.mb-36 {
+  margin-bottom: 9rem;
+}
+
 .block {
   display: block;
 }
