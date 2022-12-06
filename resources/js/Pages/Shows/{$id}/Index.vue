@@ -6,7 +6,7 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="text-white bg-gray-900 rounded py-5 mb-10">
 
-            <header class="flex justify-between mb-3 border-b border-gray-800">
+            <header id="topDiv" class="flex justify-between mb-3 border-b border-gray-800">
                 <div class="container mx-auto flex flex-col lg:flex-row items-center justify-between px-4 py-6">
 
                     <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
@@ -259,7 +259,7 @@
 <script setup>
 import ResponsiveNavigationMenu from "@/Components/Navigation/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/Navigation/NavigationMenu"
-import { onMounted } from 'vue'
+import {onMounted, onUpdated} from 'vue'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useTeamStore } from "@/Stores/TeamStore.js"
 import { useShowStore } from "@/Stores/ShowStore.js"
@@ -276,6 +276,7 @@ videoPlayerStore.currentPage = 'shows'
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
+    document.getElementById("topDiv").scrollIntoView()
 });
 
 let props = defineProps({
@@ -298,6 +299,13 @@ let playVideo = () => {
     videoPlayerStore.videoName = 'kids_1'
     videoPlayerStore.loadNewSource()
 }
+function scrollToTop() {
+
+}
+
+onUpdated(() => {
+
+})
 
 </script>
 

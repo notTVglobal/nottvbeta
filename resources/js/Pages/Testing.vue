@@ -1,6 +1,6 @@
 <template>
 
-    <div class="divZ space-x-4">
+    <div id="topDiv" class="divZ space-x-4">
         <button class="bg-blue-800 text-white" @click="videoPlayerStore.makeVideoTopRight()">VIDEO TOP RIGHT</button>
         <button class="bg-blue-800 text-white" @click="videoPlayerStore.makeVideoFullPage()">VIDEO FULL PAGE</button>
 
@@ -19,7 +19,8 @@ let chat = useChatStore()
 videoPlayerStore.currentPage = 'testing'
 
 onMounted(() => {
-videoPlayerStore.makeVideoFullPage()
+    videoPlayerStore.makeVideoFullPage()
+    document.getElementById("topDiv").scrollIntoView()
 })
 
 // function makeVideoFullPage() {

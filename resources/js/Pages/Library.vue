@@ -6,7 +6,7 @@
         <div class="bg-white text-black p-5 mb-10">
 
             <header class="flex justify-between mb-3">
-                <div>
+                <div id="topDiv" class="pt-4">
                     <h1 class="text-3xl font-semibold pb-3">My Library</h1>
                 </div>
             </header>
@@ -43,7 +43,8 @@ let chat = useChatStore()
 videoPlayerStore.currentPage = 'library'
 
 onMounted(() => {
-    videoPlayerStore.makeVideoTopRight();
+    videoPlayerStore.makeVideoTopRight()
+    document.getElementById("topDiv").scrollIntoView()
 });
 
 let props = defineProps({

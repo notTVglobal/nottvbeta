@@ -5,7 +5,7 @@
         <div class="bg-white text-black p-5 mb-10">
 
             <div class="flex justify-between">
-                <div class="grid grid-cols-1 grid-rows-2">
+                <div id="topDiv" class="grid grid-cols-1 grid-rows-2">
                     <h1 class="text-3xl font-semibold">Training</h1>
                 </div>
                 <div><span class="text-xs font-semibold text-purple-700">Creator Mode</span></div>
@@ -48,7 +48,8 @@ let chat = useChatStore()
 videoPlayerStore.currentPage = 'training'
 
 onMounted(() => {
-    videoPlayerStore.makeVideoTopRight();
+    videoPlayerStore.makeVideoTopRight()
+    document.getElementById("topDiv").scrollIntoView()
 });
 
 </script>

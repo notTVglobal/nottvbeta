@@ -4,7 +4,7 @@
     <div class="place-self-center flex flex-col">
         <div class="flex justify-between p-5 mb-5">
 
-                    <div class="text-3xl font-semibold">Schedule</div>
+                    <div id="topDiv" class="text-3xl font-semibold pt-4">Schedule</div>
 
         </div>
         <div class="ml-5 mb-5 text-red-600">This section is in development. Not currently working.</div>
@@ -30,7 +30,8 @@ let props = defineProps({
 })
 
 onMounted(() => {
-    videoPlayerStore.makeVideoTopRight();
+    videoPlayerStore.makeVideoTopRight()
+    document.getElementById("topDiv").scrollIntoView()
 });
 
 // chat.class = "chatSmall"

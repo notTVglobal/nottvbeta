@@ -4,7 +4,7 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white text-black p-5 mb-10">
 
-            <div class="flex justify-between">
+            <div id="topDiv" class="flex justify-between pt-4">
                 <h1 class="text-3xl font-semibold pb-3">Users</h1>
                 <Link :href="`/dashboard`"><button
                     class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
@@ -136,7 +136,8 @@ let chat = useChatStore()
 videoPlayerStore.currentPage = 'users'
 
 onMounted(() => {
-    videoPlayerStore.makeVideoTopRight();
+    videoPlayerStore.makeVideoTopRight()
+    document.getElementById("topDiv").scrollIntoView()
 });
 
 let props = defineProps({

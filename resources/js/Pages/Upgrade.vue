@@ -5,7 +5,7 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white text-black p-5 mb-10">
 
-            <h1 class="text-3xl font-semibold pb-3">Become a notTV Premium Subscriber</h1>
+            <h1 id="topDiv" class="text-3xl font-semibold pb-3">Become a notTV Premium Subscriber</h1>
             <p class="mb-8">
             </p>
             <div class="bg-orange-300 px-2 text-2xl p-10 text-center font-semibold">
@@ -32,6 +32,7 @@ videoPlayerStore.currentPage = 'upgrade'
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
+    document.getElementById("topDiv").scrollIntoView()
 });
 
 </script>

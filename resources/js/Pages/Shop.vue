@@ -6,7 +6,7 @@
         <div class="bg-white text-black p-5 mb-10">
 
             <header class="flex justify-between mb-3">
-                <div>
+                <div id="topDiv">
                     <h1 class="text-3xl font-semibold pb-3">Shop</h1>
                 </div>
             </header>
@@ -54,6 +54,7 @@ const loadVideoCSS = async () => {
 
 onMounted(() => {
     loadVideoCSS();
+    document.getElementById("topDiv").scrollIntoView()
 });
 
 

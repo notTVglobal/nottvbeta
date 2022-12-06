@@ -5,7 +5,7 @@
 
         <div class="bg-white rounded text-black dark:text-white dark:bg-gray-900 p-5 mb-10">
 
-            <div class="flex justify-between mb-3">
+            <div id="topDiv" class="flex justify-between mb-3 pt-4">
 
 
                 <h1 class="text-3xl font-semibold pb-3">Dashboard</h1>
@@ -334,6 +334,7 @@ videoPlayerStore.currentPage = 'dashboard'
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
+    document.getElementById("topDiv").scrollIntoView()
 });
 
 videoPlayerStore.loggedIn = true
