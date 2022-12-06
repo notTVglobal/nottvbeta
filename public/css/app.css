@@ -1994,6 +1994,10 @@ select {
   height: 24rem;
 }
 
+.h-7 {
+  height: 1.75rem;
+}
+
 .max-h-32 {
   max-height: 8rem;
 }

@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-row justify-around h-6 bg-red-500 w-full text-xs uppercase font-semibold">
+    <div class="flex flex-row justify-around h-7 bg-red-500 w-full text-xs uppercase font-semibold">
 
         <button class="h-full w-full"
                 :class="{ 'bg-green-900': videoPlayerStore.ott != 1, 'bg-green-700': videoPlayerStore.ott === 1, 'hover:bg-green-700':videoPlayerStore.ott != 1 }"
