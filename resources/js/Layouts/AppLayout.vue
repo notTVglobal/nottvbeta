@@ -18,7 +18,7 @@
                     <videoOTTButtons class="videoOTT z-fivehundred"  v-if="$page.props.user!=null"/>
                 </div>
 
-                <VideoOTT v-if="$page.props.user!=null" :user="props.user" class="fixed top-76 h-screen right-0 w-full md:w-96 mt-2 overflow-y-scroll" :class="videoPlayerStore.ottClass"/>
+                <VideoOTT v-if="$page.props.user!=null" :user="props.user" class="fixed top-78 h-screen right-0 w-full md:w-96 mt-2 overflow-y-scroll" :class="videoPlayerStore.ottClass"/>
 
 
                 <!-- Page Content -->

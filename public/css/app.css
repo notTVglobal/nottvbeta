@@ -1475,8 +1475,8 @@ select {
   top: -0px;
 }
 
-.bottom-32 {
-  bottom: 8rem;
+.bottom-20 {
+  bottom: 5rem;
 }
 
 .right-44 {
@@ -1507,28 +1507,8 @@ select {
   left: 1.25rem;
 }
 
-.bottom-64 {
-  bottom: 16rem;
-}
-
-.bottom-20 {
-  bottom: 5rem;
-}
-
-.bottom-96 {
-  bottom: 24rem;
-}
-
-.bottom-72 {
-  bottom: 18rem;
-}
-
-.bottom-48 {
-  bottom: 12rem;
-}
-
-.bottom-28 {
-  bottom: 7rem;
+.top-78 {
+  top: 19.25rem;
 }
 
 .z-0 {
@@ -1845,10 +1825,6 @@ select {
   margin-bottom: -2.5rem;
 }
 
-.mb-36 {
-  margin-bottom: 9rem;
-}
-
 .block {
   display: block;
 }
@@ -1978,6 +1954,10 @@ select {
   height: 7rem;
 }
 
+.h-7 {
+  height: 1.75rem;
+}
+
 .h-64 {
   height: 16rem;
 }
@@ -1992,10 +1972,6 @@ select {
 
 .h-96 {
   height: 24rem;
-}
-
-.h-7 {
-  height: 1.75rem;
 }
 
 .max-h-32 {
@@ -3188,6 +3164,10 @@ select {
   padding-top: 0.75rem;
 }
 
+.pb-24 {
+  padding-bottom: 6rem;
+}
+
 .pt-16 {
   padding-top: 4rem;
 }
@@ -3274,10 +3254,6 @@ select {
 
 .pl-8 {
   padding-left: 2rem;
-}
-
-.pb-24 {
-  padding-bottom: 6rem;
 }
 
 .text-left {
@@ -4733,18 +4709,6 @@ select {
 }
 
 @media (min-width: 1536px) {
-
-  .\32xl\:h-32 {
-    height: 8rem;
-  }
-
-  .\32xl\:h-20 {
-    height: 5rem;
-  }
-
-  .\32xl\:h-24 {
-    height: 6rem;
-  }
 
   .\32xl\:pt-0 {
     padding-top: 0px;
