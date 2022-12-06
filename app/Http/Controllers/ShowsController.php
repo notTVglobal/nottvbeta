@@ -228,7 +228,7 @@ class ShowsController extends Controller
                 ->join('users', 'team_members.user_id', '=', 'users.id')
                 ->select('users.*', 'team_members.user_id')
                 ->latest()
-                ->paginate(3)
+                ->paginate(10)
                 ->withQueryString()
                 ->through(fn($user) => [
                     'id' => $user->id,

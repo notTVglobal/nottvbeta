@@ -44,7 +44,7 @@
 
                 </div>
 
-                <div class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4">
+                <div class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4 mb-2">
                     <Link
                         v-if="props.can.manageShow" :href="`/shows/${props.show.slug}/manage`"><button
                         class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
@@ -61,32 +61,35 @@
 
             <main class="mt-12">
                 <div class="container mx-auto px-4">
-                    <div class="show-details border-b border-gray-800 pb-12 flex">
-                        <div class="flex-none">
-                            <img :src="'/storage/images/' + props.show.poster" alt="show cover" class="h-96 min-w-[8rem] w-64">
+                    <div class="show-details border-b border-gray-800 pb-12 flex flex-col lg:flex-row">
+                        <div class="items-center">
+                            <img :src="'/storage/images/' + props.show.poster" alt="show cover" class="h-96 min-w-[16rem] w-64 mb-6 lg:mb-0 m-auto lg:m-0">
                         </div>
-                        <div class="ml-12 mr-0 ">
-                            <h2 class="font-semibold text-4xl">{{ show.name }}</h2>
-                            <div class="text-gray-400">
+                        <div class="lg:ml-12 lg:mr-0">
+                            <h2 class="font-semibold text-4xl text-center lg:text-left ">{{ show.name }}</h2>
+                            <div class="text-gray-400 text-center lg:text-left">
                                 <span>Talk Show</span>
                                 &middot;
                                 <span>2022</span>
                             </div>
 
-                            <div class="flex flex-wrap items-center mt-4">
-                                <div class="flex items-center">
+                            <div class="flex flex-wrap justify-center lg:justify-start mt-4 m-auto lg:mx-0">
+
+                                <div class="flex items-center ml-4">
                                     <div class="w-16 h-16 bg-gray-800 rounded-full">
                                         <div class="font-semibold text-xs flex justify-center items-center h-full">90%</div>
                                     </div>
                                     <div class="ml-4 text-xs">Member <br> Rating</div>
                                 </div>
-                                <div class="flex items-center ml-12">
+
+                                <div class="flex items-center ml-4 lg:mr-0 lg:ml-12">
                                     <div class="w-16 h-16 bg-gray-800 rounded-full">
                                         <div class="font-semibold text-xs flex justify-center items-center h-full">92%</div>
                                     </div>
                                     <div class="ml-4 text-xs">Audience <br> Rating</div>
                                 </div>
-                                <div class="flex items-center space-x-4 ml-12 pt-6 mt-2 2xl:pt-0">
+
+                                <div class="flex m-auto space-x-4 lg:ml-12 pt-6 lg:mt-2 2xl:pt-0">
                                     <div class="w-8 h-8 bg-gray-800 rounded-full flex justify-center items-center">
                                         <Link :href="`#`" class="hover:text-gray-400">
                                             <svg class="w-5 h-5 fill-current" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
@@ -140,11 +143,11 @@
 
                             </div>
 
-                            <p class="mt-12 pr-4 text-gray-300 hidden lg:block">
+                            <p class="mt-12 pr-6 text-gray-300 mr-1 lg:mr-36 w-full text-center lg:text-left">
                                 {{ show.description }}
                             </p>
 
-                            <div class="flex mt-12">
+                            <div class="flex mt-12 m-auto lg:mx-0 justify-center lg:justify-start">
 
                                 <button class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
                                         @click="playVideo">
@@ -218,7 +221,7 @@
                             <div class="flex flex-row flex-wrap">
                                 <div v-for="creator in props.creators.data"
                                      :key="creator.id"
-                                     class="pb-8">
+                                     class="pb-8 mx-auto">
 
                                     <div class="flex flex-col min-w-[8rem] px-6 py-4 font-medium break-words grow-0">
                                         <img :src="'/storage/' + creator.profile_photo_path" class="pb-2 rounded-full h-32 w-32 object-cover mb-2">
@@ -226,6 +229,8 @@
                                     </div>
                                 </div>
                             </div>
+                            <!-- Paginator -->
+                            <Pagination :links="props.creators.links" class="mb-6 pb-6 border-b border-gray-800"/>
 
 <!--                            For now, we are just displaying the team members here.
                                 This will make a good component that can be re-used across
@@ -261,6 +266,7 @@ import { useShowStore } from "@/Stores/ShowStore.js"
 import ShowEpisodesList from "@/Components/Shows/ShowEpisodesList"
 // import ShowCreatorsList from "@/Components/Shows/ShowCreatorsList";
 import ShowFooter from "@/Components/Shows/ShowFooter"
+import Pagination from "@/Components/Pagination";
 
 let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore();
