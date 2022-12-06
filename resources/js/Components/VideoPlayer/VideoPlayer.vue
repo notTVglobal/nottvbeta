@@ -81,7 +81,7 @@
                 </button>
 
 
-                <div v-if="userStore.isMobile" class="pb-36">
+                <div v-if="userStore.isMobile">
                     <VideoControls v-if="$page.props.user!=null && ! chatStore.showChat" :show="true"/>
                 </div>
                 <div  v-if="!userStore.isMobile">

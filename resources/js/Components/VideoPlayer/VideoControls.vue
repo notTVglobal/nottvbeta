@@ -14,7 +14,7 @@
 <!-- Video FullPage Controls -->
                 <div v-if="videoPlayerStore.fullPage">
                     <div class="absolute flex justify-center space-x-4 bottom-32 right-px-2 w-full z-50"
-                        :class="{'right-44': chatStore.showChat}">
+                        :class="{'right-44': chatStore.showChat, 'bottom-64': userStore.isMobile}">
 
                         <button v-if="videoPlayerStore.muted===true"
                                 class="text-xs md:text-md  md:text-md bg-gray-800 rounded-full p-2 hover:bg-gray-600"
@@ -106,9 +106,11 @@
 <script setup>
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
 import {useChatStore} from "@/Stores/ChatStore"
+import {useUserStore} from "@/Stores/UserStore"
 
 let videoPlayerStore = useVideoPlayerStore()
 let chatStore = useChatStore()
+let userStore = useUserStore()
 
 defineProps({
     show: Boolean
