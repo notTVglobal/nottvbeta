@@ -1,6 +1,6 @@
 <template>
-        <div class="">
-            <video ref="videoPlayer" id="main-player" class="video-js vjs-big-play-centered vjs-fill bg-pink-700" :class="videoPlayerStore.class" playsinline autoplay loop muted />
+        <div :class="videoPlayerStore.class">
+            <video ref="videoPlayer" id="main-player" class="video-js vjs-big-play-centered vjs-fill bg-pink-700" playsinline autoplay muted />
         </div>
 </template>
 
