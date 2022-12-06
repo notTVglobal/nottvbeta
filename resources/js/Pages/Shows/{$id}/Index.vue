@@ -4,8 +4,7 @@
     <Head :title="props.show.name" />
 
     <div class="place-self-center flex flex-col gap-y-3">
-        <div class="bg-white text-black dark:bg-gray-900 dark:text-white rounded py-5 mb-10">
-
+        <div class="text-white bg-gray-900 rounded py-5 mb-10">
 
             <header class="flex justify-between mb-3 border-b border-gray-800">
                 <div class="container mx-auto flex flex-col lg:flex-row items-center justify-between px-4 py-6">
@@ -28,7 +27,7 @@
                     </div>
                     <div class="flex items-center mt-6 lg:mt-0">
                         <div class="relative">
-                            <input type="text" class="bg-gray-200 text-sm rounded-full
+                            <input type="text" class="bg-gray-800 text-sm rounded-full
                             focus:outline-none focus:shadow w-64 pl-8 px-3 py-1" placeholder="Search...">
                             <div class="absolute top-0 flex items-center h-full ml-2">
                                 <svg class="fill-current text-gray-400 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M456.69 421.39 362.6 327.3a173.81 173.81 0 0 0 34.84-104.58C397.44 126.38 319.06 48 222.72 48S48 126.38 48 222.72s78.38 174.72 174.72 174.72A173.81 173.81 0 0 0 327.3 362.6l94.09 94.09a25 25 0 0 0 35.3-35.3ZM97.92 222.72a124.8 124.8 0 1 1 124.8 124.8 124.95 124.95 0 0 1-124.8-124.8Z"/></svg>
@@ -76,26 +75,26 @@
 
                             <div class="flex flex-wrap items-center mt-4">
                                 <div class="flex items-center">
-                                    <div class="w-16 h-16 bg-gray-200 rounded-full">
+                                    <div class="w-16 h-16 bg-gray-800 rounded-full">
                                         <div class="font-semibold text-xs flex justify-center items-center h-full">90%</div>
                                     </div>
                                     <div class="ml-4 text-xs">Member <br> Rating</div>
                                 </div>
                                 <div class="flex items-center ml-12">
-                                    <div class="w-16 h-16 bg-gray-200 rounded-full">
+                                    <div class="w-16 h-16 bg-gray-800 rounded-full">
                                         <div class="font-semibold text-xs flex justify-center items-center h-full">92%</div>
                                     </div>
                                     <div class="ml-4 text-xs">Audience <br> Rating</div>
                                 </div>
                                 <div class="flex items-center space-x-4 ml-12 pt-6 mt-2 2xl:pt-0">
-                                    <div class="w-8 h-8 bg-gray-200 rounded-full flex justify-center items-center">
+                                    <div class="w-8 h-8 bg-gray-800 rounded-full flex justify-center items-center">
                                         <Link :href="`#`" class="hover:text-gray-400">
                                             <svg class="w-5 h-5 fill-current" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm7.5-6.923c-.67.204-1.335.82-1.887 1.855A7.97 7.97 0 0 0 5.145 4H7.5V1.077zM4.09 4a9.267 9.267 0 0 1 .64-1.539 6.7 6.7 0 0 1 .597-.933A7.025 7.025 0 0 0 2.255 4H4.09zm-.582 3.5c.03-.877.138-1.718.312-2.5H1.674a6.958 6.958 0 0 0-.656 2.5h2.49zM4.847 5a12.5 12.5 0 0 0-.338 2.5H7.5V5H4.847zM8.5 5v2.5h2.99a12.495 12.495 0 0 0-.337-2.5H8.5zM4.51 8.5a12.5 12.5 0 0 0 .337 2.5H7.5V8.5H4.51zm3.99 0V11h2.653c.187-.765.306-1.608.338-2.5H8.5zM5.145 12c.138.386.295.744.468 1.068.552 1.035 1.218 1.65 1.887 1.855V12H5.145zm.182 2.472a6.696 6.696 0 0 1-.597-.933A9.268 9.268 0 0 1 4.09 12H2.255a7.024 7.024 0 0 0 3.072 2.472zM3.82 11a13.652 13.652 0 0 1-.312-2.5h-2.49c.062.89.291 1.733.656 2.5H3.82zm6.853 3.472A7.024 7.024 0 0 0 13.745 12H11.91a9.27 9.27 0 0 1-.64 1.539 6.688 6.688 0 0 1-.597.933zM8.5 12v2.923c.67-.204 1.335-.82 1.887-1.855.173-.324.33-.682.468-1.068H8.5zm3.68-1h2.146c.365-.767.594-1.61.656-2.5h-2.49a13.65 13.65 0 0 1-.312 2.5zm2.802-3.5a6.959 6.959 0 0 0-.656-2.5H12.18c.174.782.282 1.623.312 2.5h2.49zM11.27 2.461c.247.464.462.98.64 1.539h1.835a7.024 7.024 0 0 0-3.072-2.472c.218.284.418.598.597.933zM10.855 4a7.966 7.966 0 0 0-.468-1.068C9.835 1.897 9.17 1.282 8.5 1.077V4h2.355z"/>
                                             </svg>
                                         </Link>
                                     </div>
-                                    <div class="w-8 h-8 bg-gray-200 rounded-full flex justify-center items-center">
+                                    <div class="w-8 h-8 bg-gray-800 rounded-full flex justify-center items-center">
                                         <Link :href="`#`" class="hover:text-gray-400">
                                             <svg class="w-4 h-4 fill-current" xmlns="http://www.w3.org/2000/svg"
                                                  viewBox="0 0 300 300">
@@ -110,14 +109,14 @@
                                             </svg>
                                         </Link>
                                     </div>
-                                    <div class="w-8 h-8 bg-gray-200 rounded-full flex justify-center items-center">
+                                    <div class="w-8 h-8 bg-gray-800 rounded-full flex justify-center items-center">
                                         <Link :href="`#`" class="hover:text-gray-400">
                                             <svg class="w-5 h-5 fill-current pr-1" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M41.4193 7.30899C41.4193 7.30899 45.3046 5.79399 44.9808 9.47328C44.8729 10.9883 43.9016 16.2908 43.1461 22.0262L40.5559 39.0159C40.5559 39.0159 40.3401 41.5048 38.3974 41.9377C36.4547 42.3705 33.5408 40.4227 33.0011 39.9898C32.5694 39.6652 24.9068 34.7955 22.2086 32.4148C21.4531 31.7655 20.5897 30.4669 22.3165 28.9519L33.6487 18.1305C34.9438 16.8319 36.2389 13.8019 30.8426 17.4812L15.7331 27.7616C15.7331 27.7616 14.0063 28.8437 10.7686 27.8698L3.75342 25.7055C3.75342 25.7055 1.16321 24.0823 5.58815 22.459C16.3807 17.3729 29.6555 12.1786 41.4193 7.30899Z"/>
                                             </svg>
                                         </Link>
                                     </div>
-                                    <div class="w-8 h-8 bg-gray-200 rounded-full flex justify-center items-center">
+                                    <div class="w-8 h-8 bg-gray-800 rounded-full flex justify-center items-center">
                                         <Link :href="`#`" class="hover:text-gray-400">
                                             <svg class="w-4 h-4 fill-current" xmlns="http://www.w3.org/2000/svg"
                                                  viewBox="0 0 310 310">
@@ -141,7 +140,7 @@
 
                             </div>
 
-                            <p class="mt-12 pr-4 text-gray-800 hidden lg:block">
+                            <p class="mt-12 pr-4 text-gray-300 hidden lg:block">
                                 {{ show.description }}
                             </p>
 
@@ -214,16 +213,16 @@
                             <ShowEpisodesList :episodes="props.episodes" :show="props.show"/>
 
 
-                            <div class="w-full bg-gray-300 dark:bg-gray-800 text-2xl p-4 my-8">CREATORS</div>
+                            <div class="w-full bg-gray-800 text-2xl p-4 my-8">CREATORS</div>
 
                             <div class="flex flex-row flex-wrap">
                                 <div v-for="creator in props.creators.data"
                                      :key="creator.id"
-                                     class="pb-8 bg-light dark:bg-gray-800">
+                                     class="pb-8">
 
                                     <div class="flex flex-col min-w-[8rem] px-6 py-4 font-medium break-words grow-0">
                                         <img :src="'/storage/' + creator.profile_photo_path" class="pb-2 rounded-full h-32 w-32 object-cover mb-2">
-                                        <span class="light:text-gray-800 dark:text-gray-200 w-full text-center">{{ creator.name }}</span>
+                                        <span class="text-gray-200 w-full text-center">{{ creator.name }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -238,7 +237,7 @@
 
 <!--                            <ShowCreatorsList />-->
 
-                            <div class="w-full bg-gray-300 dark:bg-gray-800 text-2xl p-4 mb-8">BONUS CONTENT</div>
+                            <div class="w-full bg-gray-800 text-2xl p-4 mb-8">BONUS CONTENT</div>
                         </div>
 
                         <ShowFooter :team="props.team" />

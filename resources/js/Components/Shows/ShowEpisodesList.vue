@@ -3,7 +3,7 @@
 
     <div class="container mx-auto px-4 pb-16">
         <!--                                <h2 class="text-yellow-500 uppercase tracking-wide font-semibold">EPISODES</h2>-->
-        <div class="w-full bg-gray-300 dark:bg-gray-800 text-2xl p-4 mb-4">EPISODES</div>
+        <div class="w-full bg-gray-800 text-2xl p-4 mb-4">EPISODES</div>
         <div class="popular-movies text-sm grid grid-cols-1 md:grid-cols-2 space-x-6 lg:grid-cols-5 xl:grid-cols-6 gap-8">
 
     <div v-for="episode in episodes.data"

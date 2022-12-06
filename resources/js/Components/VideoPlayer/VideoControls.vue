@@ -13,7 +13,7 @@
 
 <!-- Video FullPage Controls -->
                 <div v-if="videoPlayerStore.fullPage">
-                    <div class="absolute flex justify-center space-x-4 bottom-20 right-px-2 bottom-w-full z-50"
+                    <div class="videoControlsStandard absolute flex justify-center space-x-4 bottom-20 right-px-2 bottom-w-full z-50"
                         :class="{'right-44': chatStore.showChat, videoControlsMobile: userStore.isMobile}">
 
                         <button v-if="videoPlayerStore.muted===true"
@@ -124,6 +124,12 @@ defineProps({
     margin-left: 0;
     margin-right: 0;
     padding-bottom: 7rem;
+    width: 100%;
+    justify-content: center;
+}
+.videoControlsStandard {
+    margin-left: 0;
+    margin-right: 0;
     width: 100%;
     justify-content: center;
 }
