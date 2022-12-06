@@ -21,6 +21,7 @@ use App\Http\Controllers\ShopController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\WhitepaperController;
+use App\Http\Controllers\DeviceController;
 use App\Models\User;
 use App\Models\Show;
 use App\Models\ShowEpisode;
@@ -41,6 +42,9 @@ use Illuminate\Support\Facades\Auth;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('/device', [DeviceController::class, 'detectDevice']);
+Route::get('/devices', [DeviceController::class, 'detectDevices']);
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
