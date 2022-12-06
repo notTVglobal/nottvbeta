@@ -1187,6 +1187,9 @@ select {
     min-width:100vw;
     min-height:100vh;
     z-index:40;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
     background-color: orange;
 }
 .fullPageVideoContainer {
@@ -1197,6 +1200,9 @@ select {
     bottom:0px;
     min-width:100vw;
     min-height:100vh;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
     background-color: blue;
 }
 .topRightVideoClass {
@@ -1747,6 +1753,10 @@ select {
   margin-top: 5rem;
 }
 
+.-mr-4 {
+  margin-right: -1rem;
+}
+
 .mt-32 {
   margin-top: 8rem;
 }
@@ -1809,14 +1819,6 @@ select {
 
 .-mb-10 {
   margin-bottom: -2.5rem;
-}
-
-.-mr-4 {
-  margin-right: -1rem;
-}
-
-.-mr-8 {
-  margin-right: -2rem;
 }
 
 .block {
@@ -3242,10 +3244,6 @@ select {
   padding-left: 2rem;
 }
 
-.pr-0 {
-  padding-right: 0px;
-}
-
 .text-left {
   text-align: left;
 }
@@ -4506,12 +4504,12 @@ select {
     margin-top: 0px;
   }
 
-  .md\:mr-16 {
-    margin-right: 4rem;
-  }
-
   .md\:mr-0 {
     margin-right: 0px;
+  }
+
+  .md\:mr-16 {
+    margin-right: 4rem;
   }
 
   .md\:block {

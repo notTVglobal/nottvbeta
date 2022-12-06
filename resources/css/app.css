@@ -40,6 +40,9 @@
     min-width:100vw;
     min-height:100vh;
     z-index:40;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
     background-color: orange;
 }
 .fullPageVideoContainer {
@@ -50,6 +53,9 @@
     bottom:0px;
     min-width:100vw;
     min-height:100vh;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
     background-color: blue;
 }
 .topRightVideoClass {
