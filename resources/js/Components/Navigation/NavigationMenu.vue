@@ -141,7 +141,7 @@
 
                                         <JetDropdownLink
                                             @click="videoPlayerStore.makeVideoTopRight()"
-                                            :href="route('profile.show')">
+                                            :href="route('settings')">
                                             Settings
                                         </JetDropdownLink>
 

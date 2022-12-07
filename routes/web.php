@@ -96,6 +96,10 @@ Route::middleware([
 ])->group(function () {
 
 
+    Route::get('/settings', function () {
+        return Inertia::render('Settings');
+    })->name('settings');
+
     Route::get('/stream', function () {
         return Inertia::render('Stream');
     })->name('stream');

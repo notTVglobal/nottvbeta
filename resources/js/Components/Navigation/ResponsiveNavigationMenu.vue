@@ -157,8 +157,8 @@
 
                 <JetResponsiveNavLink
                     @click="userStore.closeNavDropdown()"
-                    :href="route('profile.show')"
-                    :active="route().current('profile.show')">
+                    :href="route('settings')"
+                    :active="route().current('settings')">
                         Settings
                 </JetResponsiveNavLink>
 
