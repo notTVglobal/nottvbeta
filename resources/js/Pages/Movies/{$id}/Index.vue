@@ -5,7 +5,7 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-gray-900 text-white px-5">
 
-            <header id="topDiv" class="flex justify-between mb-3 border-b border-gray-800">
+            <header class="flex justify-between mb-3 border-b border-gray-800">
                 <div class="container mx-auto flex flex-col lg:flex-row items-center justify-between px-4 py-6">
 
                     <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
@@ -40,32 +40,32 @@
 
 <main class="mt-12">
             <div class="container mx-auto px-4">
-                <div class="movie-details border-b border-gray-800 pb-12 flex">
-                    <div class="flex-none">
-                        <img :src="`/storage/images/EBU_Colorbars.svg.png`" alt="movie cover" class="h-96 min-w-[8rem] w-64">
+                <div class="movie-details border-b border-gray-800 pb-12 flex flex-col lg:flex-row">
+                    <div id="topDiv" class="items-center">
+                        <img :src="`/storage/images/EBU_Colorbars.svg.png`" alt="movie cover" class="h-96 min-w-[16rem] w-64 mb-6 lg:mb-0 m-auto lg:m-0">
                     </div>
-                    <div class="ml-12 mr-0 ">
-                        <h2 class="font-semibold text-4xl">{{ movie.name }}</h2>
-                        <div class="text-gray-400">
+                    <div class="lg:ml-12 lg:mr-0">
+                        <h2 class="font-semibold text-4xl text-center lg:text-left">{{ movie.name }}</h2>
+                        <div class="text-gray-400 text-center lg:text-left">
                             <span>Short Film, Animated</span>
                             &middot;
                             <span>2022</span>
                         </div>
 
-                        <div class="flex flex-wrap items-center mt-4">
-                            <div class="flex items-center">
+                        <div class="flex flex-wrap justify-center lg:justify-start mt-4 m-auto lg:mx-0">
+                            <div class="flex items-center ml-4">
                                 <div class="w-16 h-16 bg-gray-800 rounded-full">
                                     <div class="font-semibold text-xs flex justify-center items-center h-full">90%</div>
                                 </div>
                                 <div class="ml-4 text-xs">Member <br> Rating</div>
                             </div>
-                            <div class="flex items-center ml-12">
+                            <div class="flex items-center ml-4 lg:mr-0 lg:ml-12">
                                 <div class="w-16 h-16 bg-gray-800 rounded-full">
                                     <div class="font-semibold text-xs flex justify-center items-center h-full">92%</div>
                                 </div>
                                 <div class="ml-4 text-xs">Audience <br> Rating</div>
                             </div>
-                            <div class="flex items-center space-x-4 ml-12 pt-6 mt-2 2xl:pt-0">
+                            <div class="flex m-auto space-x-4 lg:ml-12 pt-6 lg:mt-2 2xl:pt-0">
                                 <div class="website-url w-8 h-8 bg-gray-800 rounded-full flex justify-center items-center">
                                     <Link :href="`#`" class="hover:text-gray-400">
                                         <svg class="w-5 h-5 fill-current" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
@@ -119,11 +119,11 @@
 
                         </div>
 
-                        <p class="mt-12 pr-4 text-gray-300 hidden lg:block">
+                        <p class="mt-12 pr-6 text-gray-300 mr-1 lg:mr-36 w-full text-center lg:text-left">
                             {{ movie.description }}
                         </p>
 
-                        <div class="flex mt-12">
+                        <div class="flex mt-12 m-auto lg:mx-0 justify-center lg:justify-start">
                             <button disabled class="flex bg-blue-500 text-white font-semibold px-4 py-2 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed">
                                 <svg class="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg"
                                      viewBox="0 0 485 485">
