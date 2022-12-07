@@ -2661,6 +2661,10 @@ select {
   overflow-y: scroll;
 }
 
+.overscroll-x-none {
+  overscroll-behavior-x: none;
+}
+
 .scroll-smooth {
   scroll-behavior: smooth;
 }

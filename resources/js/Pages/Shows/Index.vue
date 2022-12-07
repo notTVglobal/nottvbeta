@@ -1,7 +1,7 @@
 <template>
     <Head title="Shows" />
 
-    <div class="place-self-center flex flex-col gap-y-3">
+    <div class="place-self-center flex flex-col gap-y-3 overscroll-x-none">
         <div class="bg-gray-900 text-white p-5 mb-10">
 
             <header class="flex justify-between mb-3 border-b border-gray-800">
