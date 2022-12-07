@@ -12,7 +12,7 @@ use Illuminate\Http\Request as HttpRequest;
 use Inertia\Inertia;
 use Illuminate\Support\Carbon;
 use App\Events\NewChatMessage;
-use function Termwind\render;
+//use function Termwind\render;
 
 
 class ChatController extends Controller
