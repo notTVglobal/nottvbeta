@@ -2,7 +2,7 @@
 
     <Head :title="`Manage Team: ${props.team.name}`"/>
 
-    <div class="place-self-center flex flex-col gap-y-3">
+    <div class="place-self-center flex flex-col gap-y-3" v-touch="()=>(console.log('tapped'))">
 
         <div class="bg-white rounded text-black p-5 mb-10">
 
