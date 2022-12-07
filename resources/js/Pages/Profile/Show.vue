@@ -1,7 +1,7 @@
 <template>
     <Head title="Settings" />
 <!--    <AppLayout>-->
-    <div class="">
+    <div class="overflow-y-scroll z-10">
 
 <!--        <template #header>-->
             <h2 id="topDiv" class="font-semibold text-4xl text-gray-200 text-center leading-tight">
