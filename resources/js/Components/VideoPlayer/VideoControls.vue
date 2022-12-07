@@ -12,7 +12,7 @@
             <div v-if="videoPlayerStore.loggedIn">
 
 <!-- Video FullPage Controls -->
-                <div v-if="videoPlayerStore.fullPage">
+                <div v-if="videoPlayerStore.fullPage && ! chatStore.showChat">
                     <div class="videoControlsStandard absolute flex justify-center space-x-4 bottom-12 right-px-2 w-full z-50"
                         :class="{'right-44': chatStore.showChat, videoControlsMobile: userStore.isMobile}">
 
