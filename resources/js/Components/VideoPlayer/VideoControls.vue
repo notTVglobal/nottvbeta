@@ -121,7 +121,7 @@ defineProps({
 
 <style scoped>
 .videoControlsMobile {
-    bottom-top: 10rem !important;
+    bottom-top: 12rem !important;
     margin-left: 0;
     margin-right: 0;
     padding-bottom: 0rem;
