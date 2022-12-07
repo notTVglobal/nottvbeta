@@ -181,7 +181,7 @@ let props = defineProps({
 teamStore.slug = props.team.slug;
 teamStore.name = props.team.name;
 
-Inertia.reload({ only: ['video']})
+// Inertia.reload({ only: ['video']})
 
 
 </script>
