@@ -1,14 +1,14 @@
 <template>
     <Head title="Settings" />
 <!--    <AppLayout>-->
-    <div class="overscroll-y-none">
+    <div class="">
 
 <!--        <template #header>-->
             <h2 id="topDiv" class="font-semibold text-4xl text-gray-200 text-center leading-tight">
                 Profile
             </h2>
 <!--        </template>-->
-        <div class="place-self-center flex flex-col gap-y-3 overflow-y-scroll">
+        <div class="place-self-center flex flex-col gap-y-3">
             <div class="text-black p-5 mb-10">
 
         <div class="text-black">
