@@ -14,6 +14,9 @@
             <video-player :options="videoOptions" v-touch="()=>videoPlayerStore.toggleControls()"/>
 
 
+            <div v-if="! videoPlayerStore.showControls && ! userStore.isMobile" class="absolute h-screen top-0 h-16 p-5 px-4 left-16 opacity-10 z-50">
+                <img :src="`/storage/images/logo_white_512.png`" class="h-9 w-auto shrink-0">
+            </div>
 <!-- Video OSD (on screen display) when video is FullPage and the user is logged in. -->
             <div v-show="videoPlayerStore.fullPage===true && $page.props.user!=null" class="flex justify-between h-screen top-0 h-16 p-5 px-4 left-4 opacity-10 z-50">
                 <img :src="`/storage/images/logo_white_512.png`" class="block h-9 w-auto shrink-0 flex items-center">
@@ -37,15 +40,16 @@
                             </span>
                         </div>
                     </div>
-                </div>
-                    <div v-if="videoPlayerStore.currentPage!='stream' && $page.props.user!=null" @click="videoPlayerStore.makeVideoTopRight()" class="fixed w-full flex justify-between mb-6 bottom-0 left-0 p-5 drop-shadow z-50">
+                    <div v-if="videoPlayerStore.currentPage!='stream' && $page.props.user!=null" @click="backToPage" class="absolute w-full flex justify-between mb-6 bottom-12 left-0 p-5 drop-shadow z-50">
                         <div>
                             <button class="p-2 bg-gray-800 text-white hover:bg-gray-600" >Back to Page</button>
                         </div>
                     </div>
 
+                </div>
 
                 <div v-if="!userStore.isMobile">
+
                     <div class="absolute w-full flex justify-between top-16 left-0 p-5 drop-shadow z-50">
                         <div>
                             <span class="text-xs uppercase pr-2">Now playing: </span>
