@@ -93,7 +93,7 @@
             </div>
 
 
-            <div class="space-y-1 z-50 bg-gray-900">
+            <div class="space-y-1 z-50 bg-gray-900 pb-20 border-b border-1 border-white">
 
                 <JetResponsiveNavLink
                     v-if="$page.props.user.role_id === 4"
@@ -176,7 +176,12 @@
                         Log Out
                     </JetResponsiveNavLink>
                 </form>
-
+                <div class="flex flex-col w-full space-y-1 text-gray-600 text-sm">
+                    <div class="flex pt-12 justify-center">Web application concept and design</div>
+                    <div class="flex justify-center">not&#174;TV &#169; 2010 - {{new Date().getFullYear()}}</div>
+                    <div class="flex justify-center">notTV Beta v0.4</div>
+                    <div class="flex pt-4 justify-center">Please send us comments and questions <a href="https://help.not.tv/" target="_blank" class="text-blue-600 hover:text-blue-40">&nbsp; here</a>.</div>
+                </div>
             </div>
         </div> <div class="fixed w-full bottom-4 text-center hidden">Scroll the menu.</div>
     </div>

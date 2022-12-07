@@ -8,18 +8,18 @@
         </div>
 
 
-            <div>
+            <div class="w-full">
                 <VideoPlayer class="z-50" :key="videoPlayerStore.key" :user="props.user"/>
 <!--                <VideoPlayer :class="videoPlayerStore.class" class="z-50" :key="videoPlayerStore.key" :user="props.user"/>-->
 
             </div>
 
 <div>
-                <div v-if="!videoPlayerStore.fullPage" class="fixed top-72 w-full md:w-96 right-0 z-30">
+                <div v-if="!videoPlayerStore.fullPage" class="fixed top-72 w-full sm:w-96 right-0 z-30">
                     <videoOTTButtons class="videoOTT z-fivehundred"  v-if="$page.props.user!=null"/>
                 </div>
 
-                <VideoOTT v-if="$page.props.user!=null" :user="props.user" class="fixed top-78 h-screen right-0 w-full md:w-96 mt-2 overflow-y-scroll" :class="videoPlayerStore.ottClass"/>
+                <VideoOTT v-if="$page.props.user!=null" :user="props.user" class="fixed top-78 h-screen right-0 w-full sm:w-96 mt-2 overflow-y-scroll" :class="videoPlayerStore.ottClass"/>
 
 
                 <!-- Page Content -->
@@ -27,7 +27,7 @@
                     <slot />
                 </main>
 
-                <main v-if="$page.props.user!=null" class="fixed top-76 pb-24 md:top-16 md:w-[calc(100vw-24rem)] h-[calc(100vh-19rem)] md:h-[calc(100vh-4rem)] overflow-y-scroll z-20">
+                <main v-if="$page.props.user!=null" class="fixed top-80 pb-24 sm:top-16 sm:w-[calc(100vw-24rem)] h-[calc(100vh-19rem)] sm:h-[calc(100vh-4rem)] overflow-y-scroll z-20">
                     <slot />
                 </main>
 </div>

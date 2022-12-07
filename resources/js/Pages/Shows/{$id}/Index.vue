@@ -263,6 +263,7 @@ import {onMounted, onUpdated} from 'vue'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useTeamStore } from "@/Stores/TeamStore.js"
 import { useShowStore } from "@/Stores/ShowStore.js"
+import { useStreamStore } from "@/Stores/StreamStore.js"
 import ShowEpisodesList from "@/Components/Shows/ShowEpisodesList"
 // import ShowCreatorsList from "@/Components/Shows/ShowCreatorsList";
 import ShowFooter from "@/Components/Shows/ShowFooter"
@@ -271,6 +272,7 @@ import Pagination from "@/Components/Pagination";
 let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore();
 let showStore = useShowStore();
+let streamStore = useStreamStore();
 
 videoPlayerStore.currentPage = 'shows'
 
@@ -296,11 +298,12 @@ let playVideo = () => {
     // videoPlayer.videoSource = 'https://streams.not.tv/hls/ctd1984/index.m3u8'
     // videoPlayerStore.videoSource = 'https://mist2.not.tv/hls/kids_1/index.m3u8'
     // videoPlayer.videoSource = 'https://nottvmist.sfo3.digitaloceanspaces.com/recordings/channels_02.m3u8'
-    videoPlayerStore.videoSource = "https://mist2.not.tv/hls/vmixlive/index.m3u8"
+    videoPlayerStore.videoSource = "https://mist2.not.tv/hls/dunepull/index.m3u8"
 // videoPlayerStore.videoSourceType = "video/mp4"
     videoPlayerStore.videoSourceType = "application/x-mpegURL"
-    videoPlayerStore.videoName = 'vMix Live'
     videoPlayerStore.loadNewSource()
+    videoPlayerStore.videoName = 'Dune'
+    streamStore.currentChannel = 'On Demand'
 }
 function scrollToTop() {
 

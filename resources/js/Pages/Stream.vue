@@ -19,14 +19,15 @@ videoPlayerStore.currentPageIsStream = true;
 
 onMounted(() => {
     videoPlayerStore.makeVideoFullPage()
-    if (streamStore.currentChannel != 'Stream') {
-        videoPlayerStore.videoSource = 'https://mist2.not.tv/hls/dunepull/index.m3u8';
-        videoPlayerStore.videoSourceType = "application/x-mpegURL"
-        videoPlayerStore.videoName = 'Dune';
-        videoPlayerStore.loadNewSource()
-    }
+
 
 })
+if (streamStore.currentChannel != "Stream") {
+    videoPlayerStore.videoSource = "https://mist2.not.tv/hls/tmr1984pull/index.m3u8";
+    videoPlayerStore.videoSourceType = "application/x-mpegURL"
+    videoPlayerStore.videoName = "The Terminator";
+    videoPlayerStore.loadNewSource()
+}
 
 onBeforeUnmount(() => {
     chatStore.showChat = false
