@@ -14,7 +14,7 @@
             <video-player :options="videoOptions" v-touch="()=>videoPlayerStore.toggleControls()"/>
 
 
-            <div v-if="! videoPlayerStore.showControls && ! userStore.isMobile" class="absolute h-screen top-0 h-16 p-5 px-4 left-16 opacity-10 z-50">
+            <div v-if="videoPlayerStore.fullPage===true && ! videoPlayerStore.showControls && ! userStore.isMobile" class="absolute h-screen top-0 h-16 p-5 px-4 left-16 opacity-10 z-50">
                 <img :src="`/storage/images/logo_white_512.png`" class="h-9 w-auto shrink-0">
             </div>
 <!-- Video OSD (on screen display) when video is FullPage and the user is logged in. -->
@@ -107,6 +107,9 @@
 
 <!-- Video OSD (on screen display) when video is TopRight and the user is logged in. -->
             <div v-if="!videoPlayerStore.fullPage && $page.props.user!=null">
+                <div class="opacity-10">
+                    <img :src="`/storage/images/logo_white_512.png`" class="absolute right-2 top-5 w-10 mr-4">
+                </div>
                 <div v-show="videoPlayerStore.showControls===true">
                     <div class="absolute flex justify-between top-0 drop-shadow px-2 w-full z-50">
                         <div>
@@ -120,9 +123,7 @@
                                 live
                                 </span>
                             </div>
-                            <div class="opacity-10">
-                                <img :src="`/storage/images/logo_white_512.png`" class="w-10 mr-4">
-                            </div>
+
                         </div>
                         </div>
                     </div>
