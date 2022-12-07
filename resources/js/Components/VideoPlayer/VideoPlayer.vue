@@ -80,13 +80,13 @@
                     <font-awesome-icon icon="fa-comments" class="text-3xl"/><div>CHAT</div>
                 </button>
 
-
-                <div v-if="userStore.isMobile">
-                    <VideoControls v-if="$page.props.user!=null && ! chatStore.showChat" :show="true" />
-                </div>
-                <div v-if="!userStore.isMobile">
-                    <VideoControls v-if="$page.props.user!=null" :show="true"/>
-                </div>
+                <VideoControls :show="true" />
+<!--                <div v-if="userStore.isMobile">-->
+<!--                    <VideoControls v-if="$page.props.user!=null && ! chatStore.showChat" :show="true" />-->
+<!--                </div>-->
+<!--                <div v-if="!userStore.isMobile">-->
+<!--                    <VideoControls v-if="$page.props.user!=null" :show="true"/>-->
+<!--                </div>-->
 
             </div>
 
