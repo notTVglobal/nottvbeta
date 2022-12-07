@@ -1,5 +1,5 @@
 <template>
-    <div class="top-0 left-0 bg-gray-800 text-gray-200 h-screen w-screen">
+    <div class="top-0 left-0 bg-gray-800 text-gray-200 h-screen w-screen scrollbar-hidden-y">
 
         <!-- Navbar -->
         <div v-if="$page.props.user!=null" class="fixed top-0 w-full nav-mask">
@@ -27,7 +27,7 @@
                     <slot />
                 </main>
 
-                <main v-if="$page.props.user!=null" class="absolute top-80 pb-24 sm:top-16 w-full sm:w-[calc(100vw-24rem)] h-[calc(100vh-19rem)] sm:h-[calc(100vh-4rem)] overflow-y-scroll z-20">
+                <main v-if="$page.props.user!=null" class="absolute top-80 pb-24 sm:top-16 w-full sm:w-[calc(100vw-24rem)] h-[calc(100vh-19rem)] sm:h-[calc(100vh-4rem)] z-20 overflow-y-scroll">
                         <slot />
                 </main>
 </div>

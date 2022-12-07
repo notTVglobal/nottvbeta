@@ -2621,6 +2621,10 @@ select {
   overflow: hidden;
 }
 
+.overflow-clip {
+  overflow: clip;
+}
+
 .overflow-x-auto {
   overflow-x: auto;
 }
@@ -3851,6 +3855,10 @@ select {
 
 .last\:mr-0:last-child {
   margin-right: 0px;
+}
+
+.hover\:overflow-y-scroll:hover {
+  overflow-y: scroll;
 }
 
 .hover\:scroll-auto:hover {
