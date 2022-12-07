@@ -19,6 +19,7 @@ videoPlayerStore.currentPageIsStream = true;
 
 onMounted(() => {
     videoPlayerStore.makeVideoFullPage()
+    videoPlayerStore.showControls = true
 
 
 })
