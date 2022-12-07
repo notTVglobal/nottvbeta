@@ -8,7 +8,7 @@
 
             <div class="flex justify-between">
 
-                <div class="p-5">
+                <header class="p-5">
                     <div id="topDiv" class="pt-4">
                         <span class="font-semibold text-xs uppercase">SHOW: </span>
                         <Link :href="`/shows/${props.show.slug}/`"
@@ -29,7 +29,7 @@
                     <div>
                         {{ formatDate(props.episode.created_at) }}
                     </div>
-                </div>
+                </header>
 
                 <div class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4 py-5 mb-10">
                     <Link
@@ -52,7 +52,7 @@
             </div>
 
 
-            <header class="flex justify-between mb-3 px-5">
+            <div class="flex justify-between mb-3 px-5">
 
                 <div v-if="!props.can.viewCreator">
                     <h3>
@@ -63,7 +63,7 @@
                     </h3>
                 </div>
 
-            </header>
+            </div>
             <div class="flex justify-center w-full bg-black py-0">
 <!--                                <img :src="'/storage/images/' + props.episode.poster" alt="" class="w-1/2 mx-2">-->
 
