@@ -14,6 +14,7 @@ export let useStreamStore = defineStore('streamStore', {
         team_id: 'team id',
         teamName: '',
         showOSD: Boolean,
+        showNav: Boolean,
         showChannels: Boolean,
     }),
 

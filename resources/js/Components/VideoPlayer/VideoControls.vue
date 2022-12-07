@@ -125,6 +125,7 @@ defineProps({
     margin-left: 0;
     margin-right: 0;
     padding-bottom: 0rem;
+    right:0px;
     width: 100%;
     justify-content: center;
 }

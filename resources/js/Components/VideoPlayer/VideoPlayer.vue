@@ -2,8 +2,8 @@
 
     <div :class="videoPlayerStore.videoContainerClass">
         <div :class="videoPlayerStore.class"
-             @mouseenter="videoPlayerStore.showControls = true"
-             @mouseleave="videoPlayerStore.showControls = false"
+             @mouseenter="showOSD"
+             @mouseleave="hideOSD"
              >
 
 
@@ -15,8 +15,8 @@
 
 
 <!-- Video OSD (on screen display) when video is FullPage and the user is logged in. -->
-            <div v-show="videoPlayerStore.fullPage===true && $page.props.user!=null" class="absolute h-screen top-16 p-5 right-4 opacity-10 z-50">
-                <img :src="`/storage/images/logo_white_512.png`" class="w-20">
+            <div v-show="videoPlayerStore.fullPage===true && $page.props.user!=null" class="flex justify-between h-screen top-0 h-16 p-5 px-4 left-4 opacity-10 z-50">
+                <img :src="`/storage/images/logo_white_512.png`" class="block h-9 w-auto shrink-0 flex items-center">
             </div>
 
             <div v-show="videoPlayerStore.showControls===true" v-if="videoPlayerStore.fullPage && $page.props.user!=null">
@@ -169,6 +169,16 @@ function backToPage() {
     videoPlayerStore.makeVideoTopRight();
     chatStore.showChat = false;
     streamStore.showOSD = false;
+}
+
+let hideOSD = () => {
+    videoPlayerStore.showControls = false;
+    videoPlayerStore.showNav = false;
+}
+
+let showOSD = () => {
+    videoPlayerStore.showControls = true;
+    videoPlayerStore.showNav = true
 }
 
 // let videoPlayerClass = null

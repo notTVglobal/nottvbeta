@@ -30,6 +30,7 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
             fullPage: Boolean,
             loggedIn: Boolean,
             showControls: Boolean,
+            showNav: true,
             muted: true,
             paused: Boolean,
             apiRequest: [],
@@ -53,7 +54,10 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
             this.blue = true
         },
         toggleControls() {
-          this.showControls = !this.showControls
+          this.showControls = !this.showControls;
+          if (this.fullPage) {
+              this.showNav = !this.showNav;
+          }
         },
         toggleOtt(num) {
             if (this.ott === num) {

@@ -2,7 +2,7 @@
     <div class="top-0 left-0 bg-gray-800 text-gray-200 h-screen w-screen scrollbar-hidden-y">
 
         <!-- Navbar -->
-        <div v-if="$page.props.user!=null" class="fixed top-0 w-full nav-mask">
+        <div v-if="$page.props.user!=null" v-show="videoPlayerStore.showNav" class="fixed top-0 w-full nav-mask">
             <ResponsiveNavigationMenu/>
             <NavigationMenu />
         </div>

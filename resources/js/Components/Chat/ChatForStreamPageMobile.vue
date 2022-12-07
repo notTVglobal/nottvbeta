@@ -24,7 +24,7 @@
     <!--            </form>-->
 
                 <button @click="streamStore.toggleChat()"
-                        v-if="chatStore.showChat" class="fixed top-20 right-5 opacity-80 w-15 h-15 p-4 rounded-full bg-orange-800
+                        v-if="chatStore.showChat" class="chatCloseButtonMobile fixed right-5 opacity-80 w-15 h-15 p-4 rounded-full bg-orange-800
                         text-gray-50 hover:bg-blue-800 hover:text-blue-200 grid justify-center content-center
                         right-36 cursor-pointer font-semibold text-xs">
                     CLOSE CHAT

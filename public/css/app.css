@@ -1417,6 +1417,18 @@ select {
     top:5rem;
     right:1rem;
 }
+
+@media (orientation: landscape) {
+    .chatCloseButtonMobile {
+        top: 6rem;
+    }
+}
+@media (orientation: portrait) {
+    .chatCloseButtonMobile {
+        top: 24rem;
+    }
+}
+
 /* this is for the chat scrollbar in chrome */
 .chatChrome::-webkit-scrollbar {
     width:3px;
@@ -1545,6 +1557,10 @@ select {
   right: 9rem;
 }
 
+.top-96 {
+  top: 24rem;
+}
+
 .right-5 {
   right: 1.25rem;
 }
@@ -1607,6 +1623,10 @@ select {
 
 .bottom-48 {
   bottom: 12rem;
+}
+
+.left-4 {
+  left: 1rem;
 }
 
 .bottom-6 {
@@ -2619,10 +2639,6 @@ select {
 
 .overflow-hidden {
   overflow: hidden;
-}
-
-.overflow-clip {
-  overflow: clip;
 }
 
 .overflow-x-auto {
@@ -3855,10 +3871,6 @@ select {
 
 .last\:mr-0:last-child {
   margin-right: 0px;
-}
-
-.hover\:overflow-y-scroll:hover {
-  overflow-y: scroll;
 }
 
 .hover\:scroll-auto:hover {
