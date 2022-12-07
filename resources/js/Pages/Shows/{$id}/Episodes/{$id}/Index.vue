@@ -8,8 +8,8 @@
 
             <div class="flex justify-between">
 
-                <div id="topDiv" class="p-5">
-                    <div>
+                <div class="p-5">
+                    <div id="topDiv">
                         <span class="font-semibold text-xs uppercase">SHOW: </span>
                         <Link :href="`/shows/${props.show.slug}/`"
                               class="text-blue-400 hover:text-blue-600">
