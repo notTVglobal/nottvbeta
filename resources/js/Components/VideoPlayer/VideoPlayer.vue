@@ -21,8 +21,8 @@
 
             <div v-show="videoPlayerStore.showControls===true" v-if="videoPlayerStore.fullPage && $page.props.user!=null">
 
-                <div v-if="! chatStore.showChat && userStore.isMobile">
-                    <div class="absolute w-full flex justify-between top-16 left-0 p-5 drop-shadow z-50">
+                <div v-if="! chatStore.showChat && userStore.isMobile" class="">
+                    <div class="absolute w-full fullPageVideoOSD flex justify-between left-0 p-5 drop-shadow z-50">
                         <div>
                             <span class="text-xs uppercase pr-2">Now playing: </span>
                             <span class="font-semibold">{{ videoPlayerStore.videoName }}</span>
@@ -37,7 +37,7 @@
                             </span>
                         </div>
                     </div>
-                    <div v-if="videoPlayerStore.currentPage!='stream' && $page.props.user!=null" @click="videoPlayerStore.makeVideoTopRight()" class="absolute w-full flex justify-between mb-6 top-32 left-0 p-5 drop-shadow z-50">
+                    <div v-if="videoPlayerStore.currentPage!='stream' && $page.props.user!=null" @click="videoPlayerStore.makeVideoTopRight()" class="fixed w-full flex justify-between mb-6 bottom-0 left-0 p-5 drop-shadow z-50">
                         <div>
                             <button class="p-2 bg-gray-800 text-white hover:bg-gray-600" >Back to Page</button>
                         </div>
@@ -60,9 +60,9 @@
                             </span>
                         </div>
                     </div>
-                    <div v-if="videoPlayerStore.currentPage!='stream' && $page.props.user!=null" @click="backToPage" class="absolute w-full flex justify-between mb-6 top-32 left-0 p-5 drop-shadow z-50">
+                    <div v-if="videoPlayerStore.currentPage!='stream' && $page.props.user!=null" @click="backToPage" class="absolute w-full flex justify-between mb-6 bottom-12 left-0 p-5 drop-shadow z-50">
                         <div>
-                            <button class="p-2 bg-gray-800 text-white hover:bg-gray-600" >Back to Page</button>
+                            <button class="p-2 bg-gray-800 text-white hover:bg-gray-600">Back to Page</button>
                         </div>
                     </div>
                 </div>
@@ -81,10 +81,10 @@
                 </button>
 
 
-                <div v-if="userStore.isMobile" >
+                <div v-if="userStore.isMobile">
                     <VideoControls v-if="$page.props.user!=null && ! chatStore.showChat" :show="true" />
                 </div>
-                <div v-if="!userStore.isMobile" class="bottom-20 bg-green-500">
+                <div v-if="!userStore.isMobile">
                     <VideoControls v-if="$page.props.user!=null" :show="true"/>
                 </div>
 

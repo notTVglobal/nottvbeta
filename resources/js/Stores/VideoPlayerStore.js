@@ -20,6 +20,7 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
             videoName: String,
             videoSource: String,
             videoSourceType: String,
+            videoPoster: String,
             nextSource: String,
             previousSource: String,
             currentView: String,
