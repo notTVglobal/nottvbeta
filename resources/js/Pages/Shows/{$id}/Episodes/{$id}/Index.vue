@@ -162,7 +162,9 @@ let showStore = useShowStore();
 
 videoPlayerStore.currentPage = 'episodes'
 
-
+function scrollTo(selector) {
+    document.querySelector(selector).scrollIntoView({ behavior: 'smooth'});
+}
 
 onBeforeMount(async () => {
 
@@ -171,8 +173,8 @@ onBeforeMount(async () => {
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
 
-    document.getElementById('topDiv').scrollIntoView()
-
+    // document.getElementById('topDiv').scrollIntoView()
+    scrollTo('#topDiv')
 });
 
 let props = defineProps({
