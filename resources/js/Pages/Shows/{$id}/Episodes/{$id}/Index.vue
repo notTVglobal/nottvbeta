@@ -146,7 +146,7 @@
 <script setup>
 import ResponsiveNavigationMenu from "@/Components/Navigation/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/Navigation/NavigationMenu"
-import {onMounted} from 'vue'
+import {onBeforeMount, onMounted} from 'vue'
 import {Inertia} from "@inertiajs/inertia";
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
 import {useTeamStore} from "@/Stores/TeamStore.js"
@@ -162,10 +162,14 @@ let showStore = useShowStore();
 
 videoPlayerStore.currentPage = 'episodes'
 
-document.getElementById("topDiv").scrollIntoView()
+
+onBeforeMount(async () => {
+    document.getElementById("topDiv").scrollIntoView()
+})
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
+
 
 });
 
