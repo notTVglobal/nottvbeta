@@ -1316,7 +1316,7 @@ select {
 }
 @media (orientation: portrait) {
     .videoControlsMobile {
-        bottom: 8rem;
+        bottom: 9rem;
         margin-left: 0;
         margin-right: 0;
         padding-bottom: 0rem;
