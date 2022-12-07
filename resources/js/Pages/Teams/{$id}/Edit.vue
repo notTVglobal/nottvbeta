@@ -5,7 +5,7 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white text-black p-5 mb-10">
 
-            <TeamEditHeader :team="props.team" :teamLeaderName="props.teamLeaderName" />
+            <TeamEditHeader id="topDiv" :team="props.team" :teamLeaderName="props.teamLeaderName" />
 
 
             <div class="flex flex-col">
@@ -32,7 +32,7 @@
 
                                 <!--Left Column-->
                                 <div>
-                                    <div id="topDiv" class="flex space-y-3">
+                                    <div class="flex space-y-3">
                                         <div class="mb-6"><img :src="'/storage/images/' + props.logo" :key="logo"/></div>
                                     </div>
                                 </div>

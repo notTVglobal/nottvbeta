@@ -5,7 +5,7 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white text-black p-5 mb-10">
 
-            <ShowEditHeader :show="props.show" :team="props.team"/>
+            <ShowEditHeader id="topDiv" :show="props.show" :team="props.team"/>
 
             <div class="flex flex-col">
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -30,7 +30,7 @@
                             <div class="grid grid-cols-1 sm:grid-cols-2 space-x-6 p-6">
 
                                 <!--Left Column-->
-                                <div id="topDiv">
+                                <div>
                                     <div class="flex space-y-3">
                                         <div class="mb-6">
                                             <img :src="'/storage/images/' + props.poster"
