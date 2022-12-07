@@ -22,7 +22,7 @@
             <div v-show="videoPlayerStore.showControls===true" v-if="videoPlayerStore.fullPage && $page.props.user!=null">
 
                 <div v-if="! chatStore.showChat && userStore.isMobile" class="">
-                    <div class="absolute w-full fullPageVideoOSD flex justify-between left-0 p-5 drop-shadow z-50">
+                    <div class="absolute w-full fullPageVideoOSD videoFullPageMobileOSD flex justify-between left-0 p-5 drop-shadow z-50">
                         <div>
                             <span class="text-xs uppercase pr-2">Now playing: </span>
                             <span class="font-semibold">{{ videoPlayerStore.videoName }}</span>
@@ -37,12 +37,13 @@
                             </span>
                         </div>
                     </div>
+                </div>
                     <div v-if="videoPlayerStore.currentPage!='stream' && $page.props.user!=null" @click="videoPlayerStore.makeVideoTopRight()" class="fixed w-full flex justify-between mb-6 bottom-0 left-0 p-5 drop-shadow z-50">
                         <div>
                             <button class="p-2 bg-gray-800 text-white hover:bg-gray-600" >Back to Page</button>
                         </div>
                     </div>
-                </div>
+
 
                 <div v-if="!userStore.isMobile">
                     <div class="absolute w-full flex justify-between top-16 left-0 p-5 drop-shadow z-50">
@@ -102,30 +103,29 @@
 
 <!-- Video OSD (on screen display) when video is TopRight and the user is logged in. -->
             <div v-if="!videoPlayerStore.fullPage && $page.props.user!=null">
-
-                <div class="absolute flex justify-between top-0 drop-shadow px-2 w-full z-50">
-                    <div>
-                        <span class="text-xs uppercase pr-2">Now playing: </span>
-                        <span class="font-semibold text-xs">{{ videoPlayerStore.videoName }}</span>
-                    </div>
-                    <div v-if="streamStore.isLive" class="absolute py-6 left-0 pl-2 drop-shadow z-50 w-full">
-                        <div class="flex justify-between">
+                <div v-show="videoPlayerStore.showControls===true">
+                    <div class="absolute flex justify-between top-0 drop-shadow px-2 w-full z-50">
                         <div>
-                            <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-white bg-opacity-80 bg-red-800 uppercase last:mr-0 mr-1">
-                            live
-                            </span>
+                            <span class="text-xs uppercase pr-2">Now playing: </span>
+                            <span class="font-semibold text-xs">{{ videoPlayerStore.videoName }}</span>
                         </div>
-                        <div class="opacity-10">
-                            <img :src="`/storage/images/logo_white_512.png`" class="w-10 mr-4">
+                        <div v-if="streamStore.isLive" class="absolute py-6 left-0 pl-2 drop-shadow z-50 w-full">
+                            <div class="flex justify-between">
+                            <div>
+                                <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-white bg-opacity-80 bg-red-800 uppercase last:mr-0 mr-1">
+                                live
+                                </span>
+                            </div>
+                            <div class="opacity-10">
+                                <img :src="`/storage/images/logo_white_512.png`" class="w-10 mr-4">
+                            </div>
+                        </div>
                         </div>
                     </div>
-                    </div>
+
+                    <VideoControls class="z-50" :show="true" />
+
                 </div>
-
-                <VideoControls v-if="$page.props.user!=null" :show="videoPlayerStore.showControls===true" class="z-50"
-                />
-
-
             </div>
 
             </div>

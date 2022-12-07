@@ -143,7 +143,7 @@
 
 @media (max-width:844px) {
     .fullPageVideoOSD {
-        top: 4rem;
+
         /*right: 0px;*/
         /*width:100%;*/
         /*!*max-width:24rem;*!*/
@@ -169,7 +169,7 @@
 }
 @media (orientation: portrait) {
     .videoControlsMobile {
-        bottom: 9rem;
+        bottom: 9rem !important;
         margin-left: 0;
         margin-right: 0;
         padding-bottom: 0rem;
@@ -188,7 +188,7 @@
 }
 @media (orientation: landscape) {
     .videoControlsMobile {
-        bottom: 2rem;
+        bottom: 3rem !important;
         margin-left: 0;
         margin-right: 0;
         padding-bottom: 0rem;
@@ -203,6 +203,16 @@
         /*height:14rem;*/
         /*max-height:14rem;*/
         /*background-color: green;*/
+    }
+}
+@media (orientation: portrait) {
+    .videoFullPageMobileOSD {
+        top: 20rem;
+    }
+}
+@media (orientation: landscape) {
+    .videoFullPageMobileOSD {
+        top: 4rem;
     }
 }
 .welcomeVideoClass {
