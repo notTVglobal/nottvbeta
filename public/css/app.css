@@ -1506,7 +1506,7 @@ select {
 }
 
 .top-78 {
-  top: 19.25rem;
+  top: 19.75rem;
 }
 
 .top-80 {
@@ -1609,16 +1609,8 @@ select {
   bottom: 12rem;
 }
 
-.top-32 {
-  top: 8rem;
-}
-
 .bottom-6 {
   bottom: 1.5rem;
-}
-
-.bottom-20 {
-  bottom: 5rem;
 }
 
 .top-6 {
@@ -1627,22 +1619,6 @@ select {
 
 .left-5 {
   left: 1.25rem;
-}
-
-.bottom-32 {
-  bottom: 8rem;
-}
-
-.bottom-56 {
-  bottom: 14rem;
-}
-
-.bottom-16 {
-  bottom: 4rem;
-}
-
-.bottom-10 {
-  bottom: 2.5rem;
 }
 
 .z-0 {
@@ -1957,10 +1933,6 @@ select {
 
 .-mb-10 {
   margin-bottom: -2.5rem;
-}
-
-.mb-12 {
-  margin-bottom: 3rem;
 }
 
 .block {
@@ -3148,10 +3120,6 @@ select {
   padding: 0.625rem;
 }
 
-.p-64 {
-  padding: 16rem;
-}
-
 .px-4 {
   padding-left: 1rem;
   padding-right: 1rem;
@@ -3399,10 +3367,6 @@ select {
 
 .pr-6 {
   padding-right: 1.5rem;
-}
-
-.pt-64 {
-  padding-top: 16rem;
 }
 
 .text-left {
