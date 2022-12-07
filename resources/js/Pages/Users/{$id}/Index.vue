@@ -5,7 +5,7 @@
     <div class="flex flex-col gap-y-3">
         <div class="bg-white text-black p-5 mb-10">
 
-            <div class="flex justify-end mb-3 gap-2">
+            <div id="topDiv" class="flex justify-end mb-3 gap-2">
                 <Link v-if="$page.props.user.isAdmin === 1" :href="`/users`"><button
                     class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                 >All Users</button>
@@ -106,6 +106,7 @@ videoPlayerStore.currentPage = 'users'
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
+    document.getElementById("topDiv").scrollIntoView()
 });
 
 let props = defineProps({

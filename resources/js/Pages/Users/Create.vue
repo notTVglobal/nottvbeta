@@ -5,7 +5,7 @@
         <div class="bg-white text-black p-5 mb-10">
 
             <div class="flex justify-between mt-3 mb-6">
-                <div class="text-3xl">Create New User</div>
+                <div id="topDiv" class="text-3xl">Create New User</div>
                 <div>
                     <Link :href="`/users`"><button
                         class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
@@ -222,6 +222,7 @@ videoPlayerStore.currentPage = 'users'
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
+    document.getElementById("topDiv").scrollIntoView()
 });
 
 let form = useForm({

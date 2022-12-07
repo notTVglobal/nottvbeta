@@ -16,7 +16,7 @@
             </div>
 
             <header>
-            <div class="flex justify-between mb-3">
+            <div id="topDiv" class="flex justify-between mb-3">
                 <div class="gap-2">
                     <div class="font-bold mb-4 text-orange-400">MANAGE SHOW</div>
                     <div>
@@ -183,6 +183,7 @@ videoPlayerStore.currentPage = 'shows'
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
+    document.getElementById("topDiv").scrollIntoView()
 });
 
 let props = defineProps({

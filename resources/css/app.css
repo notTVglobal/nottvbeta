@@ -1,6 +1,9 @@
 @tailwind base;
 @tailwind components;
 
+#topDiv {
+    padding-top: 4px;
+}
 .videoZ {
     z-index:1;
 }

@@ -15,7 +15,7 @@
                                 </span>
             </div>
 
-            <header>
+            <header id="topDiv">
                 <div class="flex justify-between mb-3">
                     <div class="mb-4">
                         <h1 class="text-3xl font-semibold">Administrative Settings</h1>
@@ -69,6 +69,7 @@ videoPlayerStore.currentPage = 'admin'
 
 onMounted(async () => {
     videoPlayerStore.makeVideoTopRight();
+    document.getElementById("topDiv").scrollIntoView()
 
 });
 

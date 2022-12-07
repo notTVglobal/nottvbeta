@@ -32,7 +32,7 @@
 
                                 <!--Left Column-->
                                 <div>
-                                    <div class="flex space-y-3">
+                                    <div id="topDiv" class="flex space-y-3">
                                         <div class="mb-6"><img :src="'/storage/images/' + props.logo" :key="logo"/></div>
                                     </div>
                                 </div>
@@ -203,6 +203,7 @@ videoPlayerStore.currentPage = 'teams'
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
+    document.getElementById("topDiv").scrollIntoView()
 });
 
 let props = defineProps({

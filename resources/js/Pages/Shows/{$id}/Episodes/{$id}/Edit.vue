@@ -6,7 +6,7 @@
         <div class="bg-dark text-light p-5 mb-10">
 
 
-            <header>
+            <header id="topDiv">
                 <div class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
                 role="alert"
                 v-if="props.message">
@@ -298,6 +298,7 @@ videoPlayerStore.currentPage = 'episodes'
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
+    document.getElementById("topDiv").scrollIntoView()
 });
 
 let props = defineProps({

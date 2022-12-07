@@ -6,7 +6,7 @@
 
         <div class="bg-white rounded text-black p-5 mb-10">
 
-            <header class="flex justify-between mb-3">
+            <header id="topDiv" class="flex justify-between mb-3">
                 <div>
                     <h3 class="inline-flex items-center text-3xl font-semibold relative">
                         <img :src="'/storage/images/' + props.logo" alt="" class="w-20 mr-2">
@@ -110,6 +110,7 @@ videoPlayerStore.currentPage = 'teams'
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
+    document.getElementById("topDiv").scrollIntoView()
 });
 
 let props = defineProps({

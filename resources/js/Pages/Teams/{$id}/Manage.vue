@@ -19,7 +19,7 @@
             <!--            <TeamHeader v-bind="team" :memberSpots="props.team.memberSpots"/>-->
 
             <header>
-                <div class="flex justify-between mb-3">
+                <div id="topDiv" class="flex justify-between mb-3">
                     <div class="gap-2">
                         <div class="font-bold mb-4 text-orange-400">MANAGE TEAM</div>
                         <div>
@@ -114,6 +114,7 @@ videoPlayerStore.currentPage = 'teams'
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
+    document.getElementById("topDiv").scrollIntoView()
 });
 
 let props = defineProps({

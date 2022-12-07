@@ -5,7 +5,7 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-gray-900 text-white px-5">
 
-            <header class="flex justify-between mb-3 border-b border-gray-800">
+            <header id="topDiv" class="flex justify-between mb-3 border-b border-gray-800">
                 <div class="container mx-auto flex flex-col lg:flex-row items-center justify-between px-4 py-6">
                     <div class="flex flex-col lg:flex-row items-center">
                         <h1 class="text-3xl font-semibold">Movies</h1>
@@ -198,6 +198,7 @@ videoPlayerStore.currentPage = 'movies'
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
+    document.getElementById("topDiv").scrollIntoView()
 });
 
 let movie = 'test-movie-2'

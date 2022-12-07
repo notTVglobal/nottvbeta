@@ -17,7 +17,7 @@
                                 </span>
                     </div>
 
-                    <div class="flex flex-col lg:flex-row items-center">
+                    <div id="topDiv" class="flex flex-col lg:flex-row items-center">
                         <h1 class="text-3xl font-semibold">Shows</h1>
                         <ul class="flex ml-0 lg:ml-16 mt-6 lg:mt-0 space-x-8" >
                             <li>
@@ -163,6 +163,7 @@ videoPlayerStore.currentPage = 'shows'
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
+    document.getElementById("topDiv").scrollIntoView()
 });
 
 let props = defineProps({

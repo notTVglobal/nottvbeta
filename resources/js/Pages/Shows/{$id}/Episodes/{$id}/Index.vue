@@ -8,7 +8,7 @@
 
             <div class="flex justify-between">
 
-                <div class="p-5">
+                <div id="topDiv" class="p-5">
                     <div>
                         <span class="font-semibold text-xs uppercase">SHOW: </span>
                         <Link :href="`/shows/${props.show.slug}/`"
@@ -164,6 +164,7 @@ videoPlayerStore.currentPage = 'episodes'
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
+    document.getElementById("topDiv").scrollIntoView()
 });
 
 let props = defineProps({

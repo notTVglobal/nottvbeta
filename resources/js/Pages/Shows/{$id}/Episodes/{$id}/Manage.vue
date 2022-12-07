@@ -15,7 +15,7 @@
                                 </span>
             </div>
 
-            <header>
+            <header id="topDiv">
                 <div class="flex justify-between mb-3">
                     <div class="gap-2">
                         <div class="font-bold mb-4 text-orange-400">MANAGE EPISODE</div>
@@ -171,6 +171,7 @@ videoPlayerStore.currentPage = 'episodes'
 
 onMounted(async () => {
     videoPlayerStore.makeVideoTopRight();
+    document.getElementById("topDiv").scrollIntoView()
 
 });
 

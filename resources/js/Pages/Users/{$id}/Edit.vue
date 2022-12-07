@@ -4,7 +4,7 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white text-black p-5 mb-10">
 
-            <div class="flex justify-between mb-6">
+            <div id="topDiv" class="flex justify-between mb-6">
                 <h1 class="text-3xl"><Link :href="`/users/${props.userEdit.id}`" class="text-indigo-600">{{props.userEdit.name}}</Link></h1>
                 <span class="text-xs font-semibold text-red-700">Edit Mode</span>
                 <div>
@@ -210,6 +210,7 @@ videoPlayerStore.currentPage = 'users'
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
+    document.getElementById("topDiv").scrollIntoView()
 });
 
 let props = defineProps({

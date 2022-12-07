@@ -5,7 +5,7 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-gray-900 text-white px-5">
 
-            <header class="flex justify-between mb-3 border-b border-gray-800">
+            <header id="topDiv" class="flex justify-between mb-3 border-b border-gray-800">
                 <div class="container mx-auto flex flex-col lg:flex-row items-center justify-between px-4 py-6">
 
                     <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
@@ -255,6 +255,7 @@ videoPlayerStore.currentPage = 'movies'
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
+    document.getElementById("topDiv").scrollIntoView()
 });
 
 let props = defineProps({

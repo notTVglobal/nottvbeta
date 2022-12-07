@@ -16,7 +16,7 @@
                 </Link>
             </div>
 
-            <h1 class="text-3xl font-semibold pb-3">Teams</h1>
+            <h1 id="topDiv" class="text-3xl font-semibold pb-3">Teams</h1>
 
             <div class="flex flex-row justify-end gap-x-4">
                 <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg" />
@@ -157,6 +157,7 @@ videoPlayerStore.currentPage = 'admin'
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
+    document.getElementById("topDiv").scrollIntoView()
 });
 
 let props = defineProps({

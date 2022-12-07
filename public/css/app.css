@@ -1148,6 +1148,9 @@ select {
   margin-bottom: 0;
 }
 
+#topDiv {
+    padding-top: 4px;
+}
 .videoZ {
     z-index:1;
 }
@@ -2134,12 +2137,12 @@ select {
   width: 100vw;
 }
 
-.w-96 {
-  width: 24rem;
-}
-
 .w-64 {
   width: 16rem;
+}
+
+.w-96 {
+  width: 24rem;
 }
 
 .w-fit {

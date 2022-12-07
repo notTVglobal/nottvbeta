@@ -5,7 +5,7 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white text-black p-5 mb-10">
 
-            <div class="flex justify-between mb-3">
+            <div id="topDiv" class="flex justify-between mb-3">
                 <h2 class="text-xl font-semibold leading-tight text-gray-800">
                     {{ props.news.title }}
                 </h2>
@@ -52,6 +52,7 @@ videoPlayerStore.currentPage = 'news'
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
+    document.getElementById("topDiv").scrollIntoView()
 });
 
 const props = defineProps({

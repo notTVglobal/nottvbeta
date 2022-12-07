@@ -4,7 +4,7 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white text-black dark:bg-gray-900 dark:text-white p-5 mb-10">
 
-            <div class="flex justify-between mb-6">
+            <div id="topDiv" class="flex justify-between mb-6">
                 <div>
                     <h1 class="text-3xl font-semibold pb-3">Shows</h1>
                 </div>
@@ -189,6 +189,7 @@ videoPlayerStore.currentPage = 'admin'
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
+    document.getElementById("topDiv").scrollIntoView()
 });
 
 let props = defineProps({

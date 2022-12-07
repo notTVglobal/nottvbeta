@@ -2,7 +2,7 @@
 
     <Head :title="`Upload Movie`"/>
 
-    <header class="">
+    <header id="topDiv" class="">
 
         <Message v-if="message" @close="showMessage = false"/>
 
@@ -152,6 +152,7 @@ videoPlayerStore.currentPage = 'movies'
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
+    document.getElementById("topDiv").scrollIntoView()
 });
 
 

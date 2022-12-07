@@ -3,7 +3,7 @@
     <AppLayout>
 
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            <h2 id="topDiv" class="font-semibold text-xl text-gray-800 leading-tight">
                 Profile
             </h2>
         </template>
@@ -70,6 +70,7 @@ videoPlayerStore.currentPage = 'profile'
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
+    document.getElementById("topDiv").scrollIntoView()
 });
 
 defineProps({

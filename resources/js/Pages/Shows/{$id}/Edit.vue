@@ -30,7 +30,7 @@
                             <div class="grid grid-cols-1 sm:grid-cols-2 space-x-6 p-6">
 
                                 <!--Left Column-->
-                                <div>
+                                <div id="topDiv">
                                     <div class="flex space-y-3">
                                         <div class="mb-6">
                                             <img :src="'/storage/images/' + props.poster"
@@ -172,6 +172,7 @@ videoPlayerStore.currentPage = 'shows'
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
+    document.getElementById("topDiv").scrollIntoView()
 });
 
 let props = defineProps({

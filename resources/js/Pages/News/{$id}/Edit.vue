@@ -4,7 +4,7 @@
 
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white text-black p-5 mb-10">
-            <h2 class="text-xl font-semibold leading-tight text-gray-800">
+            <h2 id="topDiv" class="text-xl font-semibold leading-tight text-gray-800">
                 Edit News Post
             </h2>
 
@@ -105,6 +105,7 @@ videoPlayerStore.currentPage = 'news'
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
+    document.getElementById("topDiv").scrollIntoView()
 });
 
 const props = defineProps({

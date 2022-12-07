@@ -4,7 +4,7 @@
 
         <div class="channelsSelectMenu absolute top-16 left-0 bg-black bg-opacity-90 text-white p-5 pt-16 h-screen w-full">
 
-            <h1 class="text-3xl font-semibold text-center">Channels</h1>
+            <h1 id="topDiv" class="text-3xl font-semibold text-center">Channels</h1>
             <h2 class="bg-red-800 col-span-3 mt-8 mb-4 py-1 text-center">
                 Channels are not currently enabled.
             </h2>
@@ -40,6 +40,7 @@ videoPlayerStore.currentPage = 'channels'
 
 onMounted(() => {
     videoPlayerStore.makeVideoFullPage();
+    document.getElementById("topDiv").scrollIntoView()
 });
 
 </script>

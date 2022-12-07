@@ -4,7 +4,7 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white text-black p-5 mb-10">
 
-        <div class="flex justify-between mt-3 mb-6">
+        <div id="topDiv" class="flex justify-between mt-3 mb-6">
             <div class="text-3xl">Create New Team</div>
             <div>
                 <Link :href="`/dashboard`"><button
@@ -94,6 +94,7 @@ videoPlayerStore.currentPage = 'teams'
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
+    document.getElementById("topDiv").scrollIntoView()
 });
 
 let props = defineProps({

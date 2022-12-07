@@ -2,7 +2,7 @@
 
     <Head :title="`Upload Movie`"/>
 
-    <header class="md:pageWidth pageWidthSmall">
+    <header id="topDiv" class="md:pageWidth pageWidthSmall">
 
         <Message v-if="showMessage" @close="showMessage = false"/>
 
@@ -161,6 +161,7 @@ videoPlayerStore.currentPage = 'movies'
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
+    document.getElementById("topDiv").scrollIntoView()
 });
 
 let props = defineProps({

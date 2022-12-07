@@ -11,7 +11,7 @@
 
         <div class="bg-white text-black p-5 mb-10">
 
-            <h1 class="text-3xl font-semibold pb-3">News</h1>
+            <h1 id="topDiv" class="text-3xl font-semibold pb-3">News</h1>
 
             <div class="mb-4">
                 Events, shows, episodes, movies, news, channel updates, announcements, etc.
@@ -120,6 +120,7 @@ videoPlayerStore.currentPage = 'news'
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
+    document.getElementById("topDiv").scrollIntoView()
 });
 
 let props = defineProps({
