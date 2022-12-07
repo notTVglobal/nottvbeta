@@ -19,7 +19,7 @@ export let useUserStore = defineStore('userStore', {
         },
         checkIsMobile() {
             let screenWidth = screen.width
-            if (screenWidth <= 760) {
+            if (screenWidth <= 926) {
                 this.isMobile = true
             } else
                 this.isMobile = false

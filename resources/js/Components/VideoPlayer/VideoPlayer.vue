@@ -16,7 +16,7 @@
 
 <!-- Video OSD (on screen display) when video is FullPage and the user is logged in. -->
             <div v-show="videoPlayerStore.fullPage===true && $page.props.user!=null" class="absolute h-screen top-16 p-5 right-4 opacity-10 z-50">
-                <img :src="`/storage/images/logo_white_512.png`" class="w-20 pt-2">
+                <img :src="`/storage/images/logo_white_512.png`" class="w-20">
             </div>
 
             <div v-show="videoPlayerStore.showControls===true" v-if="videoPlayerStore.fullPage && $page.props.user!=null">
@@ -81,10 +81,10 @@
                 </button>
 
 
-                <div v-if="userStore.isMobile">
-                    <VideoControls v-if="$page.props.user!=null && ! chatStore.showChat" :show="true"/>
+                <div v-if="userStore.isMobile" >
+                    <VideoControls v-if="$page.props.user!=null && ! chatStore.showChat" :show="true" />
                 </div>
-                <div  v-if="!userStore.isMobile">
+                <div v-if="!userStore.isMobile" class="bottom-20 bg-green-500">
                     <VideoControls v-if="$page.props.user!=null" :show="true"/>
                 </div>
 
@@ -103,7 +103,7 @@
 <!-- Video OSD (on screen display) when video is TopRight and the user is logged in. -->
             <div v-if="!videoPlayerStore.fullPage && $page.props.user!=null">
 
-                <div class="absolute flex justify-between top-0 bg-gray-800 px-2 w-full z-50">
+                <div class="absolute flex justify-between top-0 drop-shadow px-2 w-full z-50">
                     <div>
                         <span class="text-xs uppercase pr-2">Now playing: </span>
                         <span class="font-semibold text-xs">{{ videoPlayerStore.videoName }}</span>
@@ -116,7 +116,7 @@
                             </span>
                         </div>
                         <div class="opacity-10">
-                            <img :src="`/storage/images/logo_white_512.png`" class="w-10 pt-2 mr-4">
+                            <img :src="`/storage/images/logo_white_512.png`" class="w-10 mr-4">
                         </div>
                     </div>
                     </div>
@@ -170,6 +170,21 @@ function backToPage() {
     chatStore.showChat = false;
     streamStore.showOSD = false;
 }
+
+// let videoPlayerClass = null
+// let videoClass = videoPlayerStore.class
+// let isMobile = userStore.isMobile
+//
+// function setVideoPlayerClass() {
+//     if (videoClass = 'fullPageVideoClass') {
+//         if (isMobile) {
+//             videoPlayerClass = 'fullPageVideoClass mobile-portrait'
+//         } else if (!isMobile) {
+//             videoPlayerClass = 'fullPageVideoClass mobile-landscape'
+//         }
+//     }
+// }
+// setVideoPlayerClass()
 
 </script>
 

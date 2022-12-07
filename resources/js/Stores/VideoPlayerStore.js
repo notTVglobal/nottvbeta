@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { useChatStore } from "@/Stores/ChatStore";
 import { useStreamStore } from "@/Stores/StreamStore";
+import { useUserStore } from "@/Stores/UserStore";
 import videojs from 'video.js';
 
 export let useVideoPlayerStore = defineStore('videoPlayerStore', {
@@ -24,6 +25,7 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
             currentView: String,
             currentChannel: [],
             currentPage: String,
+            currentPageIsStream: Boolean,
             fullPage: Boolean,
             loggedIn: Boolean,
             showControls: Boolean,
@@ -94,8 +96,14 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
             videoJs.src(this.videoSource)
         },
         makeVideoFullPage() {
+            if (useUserStore().isMobile) {
+                this.class = 'fullPageVideoClassMobile';
+            } else {
+                this.class = 'fullPageVideoClass';
+            }
+            this.currentPageIsStream = true;
+            // this.class = 'fullPageVideoClass';
             this.videoContainerClass = 'fullPageVideoContainer';
-            this.class = 'fullPageVideoClass';
             this.fullPage = true;
             useChatStore().makeBig();
             useStreamStore().showOSD = false;
@@ -103,6 +111,7 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
             videoJs.play()
         },
         makeVideoTopRight() {
+            this.currentPageIsStream = false;
             this.videoContainerClass = 'topRightVideoContainer';
             this.class = 'topRightVideoClass';
             this.fullPage = false;

@@ -1,5 +1,5 @@
 <template>
-    <nav class="sticky top-0 bg-black border-b border-gray-100 z-50">
+    <nav class="sticky top-0 bg-black border-b border-gray-100 z-50" :class="{ isStreamPageCss: videoPlayerStore.currentPageIsStream }">
         <!-- Primary Navigation Menu -->
         <div class="max-w-7xl mx-auto px-4 lg:px-6 xl:px-8 z-50">
             <div class="flex justify-between h-16">
@@ -189,6 +189,10 @@ let welcomeStore = useWelcomeStore()
 
 streamStore.isLive(true)
 
+let props = defineProps({
+
+})
+
 const logout = () => {
     videoPlayerStore.fullPage = true;
     videoPlayerStore.loggedIn = false;
@@ -199,4 +203,23 @@ const logout = () => {
     Inertia.post(route('logout'));
 };
 
+let isStreamPage = false
+
+function setPage() {
+    if (videoPlayerStore.currentPage = "stream") {
+        videoPlayerStore.currentPageIsStream = true;
+    } else
+        videoPlayerStore.currentPageIsStream = false;
+}
+
+setPage()
+
 </script>
+<style>
+
+.isStreamPageCss {
+    background: rgba(0, 0, 0, 0.3);
+    /*background: yellow;*/
+}
+
+</style>

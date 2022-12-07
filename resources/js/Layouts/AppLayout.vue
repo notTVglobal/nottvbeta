@@ -9,7 +9,8 @@
 
 
             <div>
-                <VideoPlayer :class="videoPlayerStore.class" class="z-50" :key="videoPlayerStore.key" :user="props.user"/>
+                <VideoPlayer class="z-50" :key="videoPlayerStore.key" :user="props.user"/>
+<!--                <VideoPlayer :class="videoPlayerStore.class" class="z-50" :key="videoPlayerStore.key" :user="props.user"/>-->
 
             </div>
 
@@ -51,12 +52,25 @@ let streamStore = useStreamStore()
 let userStore = useUserStore()
 
 // videoPlayerStore.videoSource = "https://mist2.not.tv/threestooges.mp4"
-videoPlayerStore.videoSource = "https://mist2.not.tv/hls/dunepull/index.m3u8"
+// videoPlayerStore.videoSource = "https://mist2.not.tv/hls/dunepull/index.m3u8"
+videoPlayerStore.videoSource = "https://mist2.not.tv/hls/tmr1984pull/index.m3u8"
+// videoPlayerStore.videoSource = "https://mist2.not.tv/hls/vmixlive/index.m3u8"
 // videoPlayerStore.videoSourceType = "video/mp4"
 videoPlayerStore.videoSourceType = "application/x-mpegURL"
-videoPlayerStore.videoName = "Dune"
+videoPlayerStore.videoName = "The Terminator"
 streamStore.currentChannel = "Stream"
 userStore.showNavDropdown = false
+
+let isStreamPage = null
+
+function setPage() {
+    if (videoPlayerStore.currentPage === "stream") {
+        isStreamPage = true;
+    } else
+        isStreamPage = false;
+}
+
+setPage()
 
 // tec21: this fixes the video size issue when
 // a user reloads a page with the video in

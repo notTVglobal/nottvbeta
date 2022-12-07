@@ -44,11 +44,11 @@
     <!-- Responsive Navigation Menu -->
 <!--    <div :class="{'block': showingNavigationDropdown, 'hidden': ! showingNavigationDropdown}"-->
     <div :class="{'block': userStore.showNavDropdown, 'hidden': ! userStore.showNavDropdown}"
-         class="lg:hidden bg-gray-800 text-white fixed top-9 w-full h-full">
+         class="lg:hidden bg-gray-800 text-white fixed w-full h-full">
         <!-- Responsive Settings Options -->
         <!--   Fix Menu height e.g., h-[calc(h-100%-16rem)]      -->
-        <div class="pt-7 pb-0 h-[calc(100vh-6rem)] overflow-y-auto">
-            <div class="fixed px-4 bg-gray-800 border-b border-1 border-white w-full h-100%">
+        <div class="pt-16 pb-0 h-[calc(100vh)] overflow-y-auto">
+            <div class="px-4 bg-gray-800 border-b border-1 border-white w-full h-100%">
 
                 <div class="flex justify-between pt-2">
                     <div class="flex justify-start pb-3">
@@ -93,7 +93,7 @@
             </div>
 
 
-            <div class="mt-12 pt-3 space-y-1 z-50 bg-gray-900">
+            <div class="space-y-1 z-50 bg-gray-900">
 
                 <JetResponsiveNavLink
                     v-if="$page.props.user.role_id === 4"
@@ -178,7 +178,7 @@
                 </form>
 
             </div>
-        </div> <div class="fixed w-full bottom-4 text-center">Scroll the menu.</div>
+        </div> <div class="fixed w-full bottom-4 text-center hidden">Scroll the menu.</div>
     </div>
 
 </template>

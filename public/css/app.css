@@ -1185,25 +1185,67 @@ select {
     top: 0px;
     left: 0px;
     min-width:100vw;
+    max-width:100vw;
     min-height:100vh;
+    max-height:100vh;
     z-index:40;
-    display: flex;
-    flex-wrap: wrap;
-    align-content: flex-start;
+    /*display: flex;*/
+    /*flex-wrap: wrap;*/
+    /*align-content: flex-start;*/
     background-color: black;
 }
+
+@media (orientation: landscape) {
+    .fullPageVideoClassMobile {
+        position:fixed;
+        top: 0px;
+        left: 0px;
+        right:0px;
+        min-width:100vw;
+        min-height:100vh;
+        max-height:calc(100vh - 4rem);
+        z-index:40;
+        display: flex;
+        flex-wrap: wrap;
+        align-content: flex-start;
+        background-color: black;
+
+    }
+}
+@media (orientation: portrait) {
+    .fullPageVideoClassMobile {
+        position:fixed;
+        top: 0px;
+        left: 0px;
+        /*padding-top:56.25%;*/
+        min-height:calc(50vh - 5.5rem);
+        /*min-height:calc(56.25% - 4rem);*/
+        min-width:100vw;
+        max-height:calc(100vh - 8rem);
+        display: flex;
+        flex-wrap: wrap;
+        align-content: flex-start;
+        background-color: black;
+    }
+}
+
+.fullPageVideoClass.desktop {
+    min-height:100vh;
+    max-height:100vh;
+}
+
 .fullPageVideoContainer {
     position: fixed;
     top: 0px;
     right: 0px;
     left:0px;
-    bottom:0px;
     min-width:100vw;
+    max-width:100vw;
     min-height:100vh;
-    display: flex;
-    flex-wrap: wrap;
-    align-content: flex-start;
-    background-color: blue;
+    /*display: flex;*/
+    /*flex-wrap: wrap;*/
+    /*align-content: flex-start;*/
+    background-color: black;
 }
 .topRightVideoClass {
     position:fixed;
@@ -1285,16 +1327,37 @@ select {
     max-width: 24rem;
     max-height: 96rem;
 }
-.chatForStreamPageMobile {
-    z-index: 200;
-    position: fixed;
-    top:4rem;
-    /*bottom:2rem;*/
-    right:0rem;
-    padding: 1rem;
-    min-width: 100vw;
-    max-width: 100vw;
-    max-height: 96rem;
+
+@media (orientation: landscape) {
+    .chatForStreamPageMobile {
+        z-index: 200;
+        position: fixed;
+        /*top:4rem;*/
+        /*bottom:2rem;*/
+        bottom: 4rem;
+        right: 0rem;
+        padding-left:4rem;
+        min-width: 100vw;
+        max-width: 100vw;
+        min-height: 100vh;
+        max-height: 100vh;
+    }
+}
+
+@media (orientation: portrait) {
+    .chatForStreamPageMobile {
+        z-index: 200;
+        position: fixed;
+        /*top:4rem;*/
+        /*bottom:2rem;*/
+        bottom: 0rem;
+        right: 0rem;
+        min-width: 100vw;
+        max-width: 100vw;
+        /*min-height: calc(50vh);*/
+        min-height:calc(50vh + 5.5rem);
+        max-height:calc(100vh - 8rem);
+    }
 }
 /* this is the CLOSE chat button */
 .chatForStreamPage button {
@@ -1324,7 +1387,7 @@ select {
     padding: 2px;
     min-width: 24rem;
     max-width: 24rem;
-    background-color: rgba(45, 45, 45, 0.6);
+    background-color: black;
 }
 .chatSmall {
     z-index: 0;
@@ -1337,7 +1400,7 @@ select {
     padding-top: 18rem;
     min-width: 26rem;
     max-width: 26rem;
-    background-color: #2d2d2d;
+    background-color: black;
 }
 .chatHidden {
     display: none;
@@ -1389,6 +1452,10 @@ select {
 
 .top-72 {
   top: 18rem;
+}
+
+.top-78 {
+  top: 19.25rem;
 }
 
 .top-76 {
@@ -1459,10 +1526,6 @@ select {
   right: 1rem;
 }
 
-.top-9 {
-  top: 2.25rem;
-}
-
 .bottom-4 {
   bottom: 1rem;
 }
@@ -1499,6 +1562,10 @@ select {
   bottom: 1.5rem;
 }
 
+.bottom-10 {
+  bottom: 2.5rem;
+}
+
 .top-6 {
   top: 1.5rem;
 }
@@ -1507,8 +1574,16 @@ select {
   left: 1.25rem;
 }
 
-.top-78 {
-  top: 19.25rem;
+.bottom-24 {
+  bottom: 6rem;
+}
+
+.bottom-28 {
+  bottom: 7rem;
+}
+
+.bottom-12 {
+  bottom: 3rem;
 }
 
 .z-0 {
@@ -1937,8 +2012,8 @@ select {
   height: 0.5rem;
 }
 
-.h-\[calc\(100vh-6rem\)\] {
-  height: calc(100vh - 6rem);
+.h-\[calc\(100vh\)\] {
+  height: calc(100vh);
 }
 
 .h-max {
@@ -1972,6 +2047,11 @@ select {
 
 .h-96 {
   height: 24rem;
+}
+
+.h-fit {
+  height: -moz-fit-content;
+  height: fit-content;
 }
 
 .max-h-32 {
@@ -2153,10 +2233,6 @@ select {
   max-width: 28rem;
 }
 
-.max-w-\[24rem\] {
-  max-width: 24rem;
-}
-
 .flex-1 {
   flex: 1 1 0%;
 }
@@ -2334,10 +2410,6 @@ select {
   flex-wrap: wrap-reverse;
 }
 
-.place-items-center {
-  place-items: center;
-}
-
 .content-center {
   align-content: center;
 }
@@ -2513,10 +2585,6 @@ select {
 
 .justify-self-end {
   justify-self: end;
-}
-
-.justify-self-center {
-  justify-self: center;
 }
 
 .overflow-hidden {
@@ -2829,11 +2897,6 @@ select {
 .bg-gray-600 {
   --tw-bg-opacity: 1;
   background-color: rgb(75 85 99 / var(--tw-bg-opacity));
-}
-
-.bg-yellow-600 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(202 138 4 / var(--tw-bg-opacity));
 }
 
 .bg-purple-800 {
@@ -3236,10 +3299,6 @@ select {
   padding-right: 0.5rem;
 }
 
-.pt-7 {
-  padding-top: 1.75rem;
-}
-
 .pb-0 {
   padding-bottom: 0px;
 }
@@ -3274,10 +3333,6 @@ select {
 
 .pl-8 {
   padding-left: 2rem;
-}
-
-.pr-0 {
-  padding-right: 0px;
 }
 
 .pr-6 {
@@ -4540,15 +4595,6 @@ select {
     grid-column: span 1 / span 1;
   }
 
-  .md\:m-0 {
-    margin: 0px;
-  }
-
-  .md\:mx-0 {
-    margin-left: 0px;
-    margin-right: 0px;
-  }
-
   .md\:mt-0 {
     margin-top: 0px;
   }
@@ -4559,22 +4605,6 @@ select {
 
   .md\:mr-16 {
     margin-right: 4rem;
-  }
-
-  .md\:mb-0 {
-    margin-bottom: 0px;
-  }
-
-  .md\:ml-12 {
-    margin-left: 3rem;
-  }
-
-  .md\:mr-32 {
-    margin-right: 8rem;
-  }
-
-  .md\:mr-36 {
-    margin-right: 9rem;
   }
 
   .md\:block {
@@ -4627,10 +4657,6 @@ select {
 
   .md\:gap-6 {
     gap: 1.5rem;
-  }
-
-  .md\:gap-8 {
-    gap: 2rem;
   }
 
   .md\:border-t-0 {
@@ -4707,6 +4733,10 @@ select {
     margin-right: 8rem;
   }
 
+  .lg\:mb-0 {
+    margin-bottom: 0px;
+  }
+
   .lg\:ml-12 {
     margin-left: 3rem;
   }
@@ -4715,16 +4745,12 @@ select {
     margin-right: 0px;
   }
 
-  .lg\:mr-36 {
-    margin-right: 9rem;
-  }
-
-  .lg\:mb-0 {
-    margin-bottom: 0px;
-  }
-
   .lg\:mt-2 {
     margin-top: 0.5rem;
+  }
+
+  .lg\:mr-36 {
+    margin-right: 9rem;
   }
 
   .lg\:block {
@@ -4751,10 +4777,6 @@ select {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  .lg\:grid-cols-5 {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-  }
-
   .lg\:grid-cols-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -4771,10 +4793,6 @@ select {
     justify-content: flex-start;
   }
 
-  .lg\:gap-8 {
-    gap: 2rem;
-  }
-
   .lg\:px-8 {
     padding-left: 2rem;
     padding-right: 2rem;
@@ -4783,10 +4801,6 @@ select {
   .lg\:px-6 {
     padding-left: 1.5rem;
     padding-right: 1.5rem;
-  }
-
-  .lg\:pr-4 {
-    padding-right: 1rem;
   }
 
   .lg\:text-left {
@@ -4798,10 +4812,6 @@ select {
 
   .xl\:grid-cols-3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .xl\:grid-cols-6 {
-    grid-template-columns: repeat(6, minmax(0, 1fr));
   }
 
   .xl\:grid-cols-4 {
