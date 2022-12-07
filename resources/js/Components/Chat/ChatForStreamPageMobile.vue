@@ -8,7 +8,7 @@
         leave-to-class="opacity-0"
     >
 
-            <div v-if="chatStore.showChat" class="chatForStreamPageMobile w-100 bottom-0 sm:bottom-2 bg-opacity-30 bg-black text-sm text-white pl-6 pb-12
+            <div v-if="chatStore.showChat" class="chatForStreamPageMobile w-100 bottom-0 sm:bottom-2 text-sm text-white pl-6 pb-12
                 chat-mask overflow-y-auto scroll-smooth hover:scroll-auto break-words z-50">
 
                 <ChatContainer :user="user"/>

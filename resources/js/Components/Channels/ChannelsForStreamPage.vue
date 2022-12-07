@@ -9,7 +9,7 @@
     >
 
 
-        <div v-if="streamStore.showChannels===true" class="channelsForStreamPageStandard max-w-screen h-screen left-0 bottom-0 sm:bottom-8 bg-opacity-100 bg-blue-600 text-sm text-white pb-12
+        <div v-if="streamStore.showChannels===true" class="channelsForStreamPageStandard max-w-screen h-screen left-0 bottom-0 sm:bottom-8 bg-opacity-80 bg-blue-600 text-sm text-white pb-12
             chat-mask overflow-y-auto scroll-smooth hover:scroll-auto break-words">
 <div class=" top-60">CHANNELS HERE</div>
 
