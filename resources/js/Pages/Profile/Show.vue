@@ -1,23 +1,24 @@
 <template>
     <Head title="Settings" />
-    <AppLayout>
+<!--    <AppLayout>-->
+    <div class="overscroll-y-none">
 
-        <template #header>
-            <h2 id="topDiv" class="font-semibold text-xl text-gray-800 leading-tight">
+<!--        <template #header>-->
+            <h2 id="topDiv" class="font-semibold text-4xl text-gray-200 text-center leading-tight">
                 Profile
             </h2>
-        </template>
-        <div class="place-self-center flex flex-col gap-y-3">
+<!--        </template>-->
+        <div class="place-self-center flex flex-col gap-y-3 overflow-y-scroll">
             <div class="text-black p-5 mb-10">
 
         <div class="text-black">
-            <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto pb-10 sm:px-6 lg:px-8">
                 <div v-if="$page.props.jetstream.canUpdateProfileInformation">
                     <UpdateProfileInformationForm :user="$page.props.user" />
 
                     <JetSectionBorder />
 
-                    <UpdateContactInformationForm :user="$page.props.user" />
+                    <UpdateContactInformationForm :user="$page.props.user" class="pt-10"/>
 
                     <JetSectionBorder />
                 </div>
@@ -48,7 +49,8 @@
         </div>
             </div>
         </div>
-    </AppLayout>
+    </div>
+<!--    </AppLayout>-->
 </template>
 
 <script setup>
