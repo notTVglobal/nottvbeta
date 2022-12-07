@@ -176,7 +176,7 @@
                         Log Out
                     </JetResponsiveNavLink>
                 </form>
-                <div class="flex flex-col w-full space-y-1 text-gray-600 text-sm">
+                <div class="flex flex-col w-full space-y-1 text-gray-600 text-sm mb-6">
                     <div class="flex pt-12 justify-center">Web application concept and design</div>
                     <div class="flex justify-center">not&#174;TV &#169; 2010 - {{new Date().getFullYear()}}</div>
                     <div class="flex justify-center">notTV Beta v0.4</div>
