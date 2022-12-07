@@ -162,9 +162,11 @@ let showStore = useShowStore();
 
 videoPlayerStore.currentPage = 'episodes'
 
+document.getElementById("topDiv").scrollIntoView()
+
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
-    document.getElementById("topDiv").scrollIntoView()
+
 });
 
 let props = defineProps({
