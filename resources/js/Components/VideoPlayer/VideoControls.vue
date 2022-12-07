@@ -120,15 +120,15 @@ defineProps({
 </script>
 
 <style scoped>
-.videoControlsMobile {
-    bottom-top: 12rem !important;
-    margin-left: 0;
-    margin-right: 0;
-    padding-bottom: 0rem;
-    right:0px;
-    width: 100%;
-    justify-content: center;
-}
+/*.videoControlsMobile {*/
+/*    bottom: 12rem !important;*/
+/*    margin-left: 0;*/
+/*    margin-right: 0;*/
+/*    padding-bottom: 0rem;*/
+/*    right:0px;*/
+/*    width: 100%;*/
+/*    justify-content: center;*/
+/*}*/
 .videoControlsStandard {
     margin-left: 0;
     margin-right: 0;

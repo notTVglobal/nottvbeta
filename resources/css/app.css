@@ -167,6 +167,44 @@
         /*background-color: green;*/
     }
 }
+@media (orientation: portrait) {
+    .videoControlsMobile {
+        bottom: 8rem;
+        margin-left: 0;
+        margin-right: 0;
+        padding-bottom: 0rem;
+        right:0px;
+        width: 100%;
+        justify-content: center;
+        /*right: 0px;*/
+        /*width:100%;*/
+        /*!*max-width:24rem;*!*/
+        /*min-width:100vw;*/
+        /*!*max-width: 100vw;*!*/
+        /*height:14rem;*/
+        /*max-height:14rem;*/
+        /*background-color: green;*/
+    }
+}
+@media (orientation: landscape) {
+    .videoControlsMobile {
+        bottom: 2rem;
+        margin-left: 0;
+        margin-right: 0;
+        padding-bottom: 0rem;
+        right:0px;
+        width: 100%;
+        justify-content: center;
+        /*right: 0px;*/
+        /*width:100%;*/
+        /*!*max-width:24rem;*!*/
+        /*min-width:100vw;*/
+        /*!*max-width: 100vw;*!*/
+        /*height:14rem;*/
+        /*max-height:14rem;*/
+        /*background-color: green;*/
+    }
+}
 .welcomeVideoClass {
     position:absolute;
     top:0;
