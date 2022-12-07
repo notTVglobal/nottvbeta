@@ -28,9 +28,7 @@
                 </main>
 
                 <main v-if="$page.props.user!=null" class="absolute top-80 pb-24 sm:top-16 w-full sm:w-[calc(100vw-24rem)] h-[calc(100vh-19rem)] sm:h-[calc(100vh-4rem)] overflow-y-scroll z-20">
-                    <div v-show="userStore.isMobile && videoPlayerStore.ott === 0 ">
                         <slot />
-                    </div>
                 </main>
 </div>
 <!--        h-[calc(h-100vh-19rem)] fixed top-76 h-screen md:top-16 md:w-[calc(100vw-24rem)] overflow-y-scroll z-10-->
