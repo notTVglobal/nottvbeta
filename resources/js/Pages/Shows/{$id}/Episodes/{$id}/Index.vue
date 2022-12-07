@@ -4,9 +4,9 @@
 
     <div class="place-self-center flex flex-col gap-y-3">
 
-        <div class="bg-dark rounded text-light ">
+        <div class="text-white bg-gray-900 rounded py-5 mb-10">
 
-            <div class="flex justify-between">
+            <div class="flex justify-between -mb-10">
 
                 <header id="topDiv" class="p-5">
                     <div class="pt-4">

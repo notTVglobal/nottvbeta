@@ -6,7 +6,7 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="text-white bg-gray-900 rounded py-5 mb-10">
 
-            <header id="topDiv" class="flex justify-between mb-3 border-b border-gray-800">
+            <header class="flex justify-between mb-3 border-b border-gray-800">
                 <div class="container mx-auto flex flex-col lg:flex-row items-center justify-between px-4 py-6">
 
                     <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
@@ -62,7 +62,7 @@
             <main class="mt-12">
                 <div class="container mx-auto px-4">
                     <div class="show-details border-b border-gray-800 pb-12 flex flex-col lg:flex-row">
-                        <div class="items-center">
+                        <div id="topDiv" class="items-center">
                             <img :src="'/storage/images/' + props.show.poster" alt="show cover" class="h-96 min-w-[16rem] w-64 mb-6 lg:mb-0 m-auto lg:m-0">
                         </div>
                         <div class="lg:ml-12 lg:mr-0">
