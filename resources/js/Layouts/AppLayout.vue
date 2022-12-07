@@ -27,7 +27,7 @@
                     <slot />
                 </main>
 
-                <main v-if="$page.props.user!=null" class="fixed top-80 pb-24 sm:top-16 w-full sm:w-[calc(100vw-24rem)] h-[calc(100vh-19rem)] sm:h-[calc(100vh-4rem)] overflow-y-scroll z-20">
+                <main v-if="$page.props.user!=null" class="absolute top-80 pb-24 sm:top-16 w-full sm:w-[calc(100vw-24rem)] h-[calc(100vh-19rem)] sm:h-[calc(100vh-4rem)] overflow-y-scroll z-20">
                     <slot />
                 </main>
 </div>
