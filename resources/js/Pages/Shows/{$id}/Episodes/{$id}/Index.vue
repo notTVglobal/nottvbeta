@@ -8,9 +8,8 @@
 
             <div class="flex justify-between">
 
-                <header class="p-5">
-                    <input :ref="inputRef" hidden>
-                    <div id="topDiv" class="pt-4">
+                <header id="topDiv" class="p-5">
+                    <div class="pt-4">
                         <span class="font-semibold text-xs uppercase">SHOW: </span>
                         <Link :href="`/shows/${props.show.slug}/`"
                               class="text-blue-400 hover:text-blue-600">
@@ -156,7 +155,6 @@ import {useShowStore} from "@/Stores/ShowStore.js"
 // import EpisodesList from "@/Components/ShowEpisodes/EpisodesList"
 // import EpisodeCreditsList from "@/ComponentShows/Episodes/EpisodeCreditsList";
 import EpisodeFooter from "@/Components/ShowEpisodes/EpisodeFooter"
-import { ref } from "vue";
 
 let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore();
@@ -165,25 +163,15 @@ let showStore = useShowStore();
 videoPlayerStore.currentPage = 'episodes'
 
 
-const refArr = ref([]);
-const inputRef = (el) => {
-    refArr.value.push(el);
-};
-
-const handleFocus = () => {
-    inputRef.value.focus();
-};
-
-
-const topDiv = ref(null)
 
 onBeforeMount(async () => {
-    document.getElementByRef("topDiv").scrollIntoView()
+
 })
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
-    handleFocus()
+
+    document.getElementById('topDiv').scrollIntoView()
 
 });
 
