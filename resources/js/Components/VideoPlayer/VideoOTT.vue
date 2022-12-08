@@ -40,7 +40,7 @@
         </div>
         <div v-if="videoPlayerStore.ott === 4" class="now-playing w-full bg-indigo-800 px-2 pt-2 overflow-y-scroll ">
             <h1 class="text-xs font-semibold uppercase">CHAT</h1>
-            <div class="h-full w-full overflow-y-scroll">
+            <div class="h-[calc(100vh-19rem)] w-full overflow-y-scroll">
                 <VideoOTTChat :user="props.user"/>
             </div>
         </div>
