@@ -46,7 +46,7 @@ class ShowsController extends Controller
                     $query->where('name', 'like', "%{$search}%");
                 })
                 ->latest()
-                ->paginate(4)
+                ->paginate(8)
                 ->withQueryString()
                 ->through(fn($show) => [
                     'id' => $show->id,

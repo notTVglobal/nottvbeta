@@ -11,13 +11,13 @@
                         <h1 class="text-3xl font-semibold">Movies</h1>
                         <ul class="flex ml-0 lg:ml-16 mt-6 lg:mt-0 space-x-8">
                             <li>
-                                <Link :href="``" class="hover:text-blue-800">Movies</Link>
+                                <Link :href="``" class="text-gray-700 cursor-not-allowed">Categories</Link>
                             </li>
                             <li>
-                                <Link :href="``" class="hover:text-blue-800">Reviews</Link>
+                                <Link :href="``" @click.prevent="scrollToReview" class="hover:text-blue-800">Reviews</Link>
                             </li>
                             <li>
-                                <Link :href="``" class="hover:text-blue-800">Coming Soon</Link>
+                                <Link :href="``" @click.prevent="scrollToComingSoon" class="hover:text-blue-800">Coming Soon</Link>
                             </li>
                         </ul>
                     </div>
@@ -66,7 +66,7 @@
 
                 <div class="flex flex-col lg:flex-row my-10">
                     <div class="recently-reviewed w-full lg:w-3/4 mr-0 md:mr-16 lg:mr-32">
-                        <h2 class="text-yellow-500 uppercase tracking-wide font-semibold">Recently Reviewed</h2>
+                        <h2 id="review" class="text-yellow-500 uppercase tracking-wide font-semibold">Recently Reviewed</h2>
                         <div class="recently-reviewed-container space-y-12 mt-8">
                             <div class="movie bg-gray-800 rounded-lg shadow-md flex px-6 py-6">
                                 <div class="relative flex-none">
@@ -145,7 +145,7 @@
                             </div>
                         </div>
 
-                        <h2 class="text-yellow-500 uppercase tracking-wide font-semibold mt-16">Coming Soon</h2>
+                        <h2 id="coming-soon" class="text-yellow-500 uppercase tracking-wide font-semibold mt-16">Coming Soon</h2>
                         <div class="most-anticipated-container space-y-10 mt-8">
                             <div class="game flex">
                                 <Link :href="`/movies/${movie}`">
@@ -196,9 +196,25 @@ let chat = useChatStore()
 
 videoPlayerStore.currentPage = 'movies'
 
+let scrollToTopDivCounter = 0
+
+function scrollToTopDiv() {
+    if (scrollToTopDivCounter = 0 ) {
+        document.getElementById("topDiv").scrollIntoView()
+        scrollToTopDivCounter ++;
+    }
+}
+
+function scrollToReview() {
+    document.getElementById("review").scrollIntoView({behavior: "smooth"})
+}
+function scrollToComingSoon() {
+    document.getElementById("coming-soon").scrollIntoView({behavior: "smooth"})
+}
+
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
-    document.getElementById("topDiv").scrollIntoView()
+    scrollToTopDiv()
 });
 
 let movie = 'test-movie-2'
@@ -217,6 +233,8 @@ watch(search, throttle(function (value) {
         replace: true
     });
 }, 300));
+
+
 
 </script>
 

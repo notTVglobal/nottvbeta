@@ -2007,6 +2007,10 @@ select {
   margin-bottom: -2.5rem;
 }
 
+.-mt-px {
+  margin-top: -1px;
+}
+
 .block {
   display: block;
 }
@@ -2331,6 +2335,10 @@ select {
   max-width: 28rem;
 }
 
+.max-w-6xl {
+  max-width: 72rem;
+}
+
 .flex-1 {
   flex: 1 1 0%;
 }
@@ -2454,6 +2462,10 @@ select {
 
 .cursor-not-allowed {
   cursor: not-allowed;
+}
+
+.cursor-none {
+  cursor: none;
 }
 
 .list-inside {
@@ -2811,6 +2823,10 @@ select {
 
 .border-t-0 {
   border-top-width: 0px;
+}
+
+.border-r {
+  border-right-width: 1px;
 }
 
 .border-gray-300 {
@@ -3441,6 +3457,10 @@ select {
   padding-right: 1.5rem;
 }
 
+.pt-8 {
+  padding-top: 2rem;
+}
+
 .text-left {
   text-align: left;
 }
@@ -3563,6 +3583,10 @@ select {
 
 .tracking-wide {
   letter-spacing: 0.025em;
+}
+
+.tracking-wider {
+  letter-spacing: 0.05em;
 }
 
 .text-gray-500 {
@@ -4619,6 +4643,10 @@ select {
     align-items: center;
   }
 
+  .sm\:justify-start {
+    justify-content: flex-start;
+  }
+
   .sm\:justify-center {
     justify-content: center;
   }
@@ -4781,6 +4809,11 @@ select {
   .md\:text-2xl {
     font-size: 1.5rem;
     line-height: 2rem;
+  }
+
+  .md\:text-lg {
+    font-size: 1.125rem;
+    line-height: 1.75rem;
   }
     .md\:pageWidth {
         margin-right: 26vw;

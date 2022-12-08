@@ -18,4 +18,8 @@ class Channel extends Model
         return $this->hasMany('App\Models\User', 'id', 'user_id');
 //        return $this->belongsTo(User::class);
     }
+
+    public function playlist() {
+        return $this->hasMany('App\Models\ChannelPlaylist');
+    }
 }

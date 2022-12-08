@@ -30,4 +30,9 @@ class Image extends Model
     {
         return $this->hasMany(User::class);
     }
+
+    public function newsPosts()
+    {
+        return $this->hasMany(NewsPost::class);
+    }
 }

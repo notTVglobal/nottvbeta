@@ -4,17 +4,17 @@
 
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-gray-900 text-white px-5">
-
+            <div id="topDiv" v-if="!userStore.isMobile"></div>
             <header class="flex justify-between mb-3 border-b border-gray-800">
                 <div class="container mx-auto flex flex-col lg:flex-row items-center justify-between px-4 py-6">
 
                     <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
 
                     <div class="flex flex-col lg:flex-row items-center">
-                        <h1 class="text-3xl font-semibold">Movies</h1>
+                        <h1 class="text-3xl font-semibold"><Link :href="route('movies')" class="hover:text-blue-800">Movies</Link></h1>
                         <ul class="flex ml-0 lg:ml-16 mt-6 lg:mt-0 space-x-8">
                             <li>
-                                <Link :href="``" class="hover:text-blue-800">Movies</Link>
+                                <Link :href="``" class="hover:text-blue-800">Categories</Link>
                             </li>
                             <li>
                                 <Link :href="``" class="hover:text-blue-800">Reviews</Link>
@@ -24,16 +24,6 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="flex items-center mt-6 lg:mt-0">
-                        <div class="relative">
-                            <input type="text" class="bg-gray-800 text-sm rounded-full
-                            focus:outline-none focus:shadow w-64 pl-8 px-3 py-1" placeholder="Search...">
-                            <div class="absolute top-0 flex items-center h-full ml-2">
-                                <svg class="fill-current text-gray-400 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M456.69 421.39 362.6 327.3a173.81 173.81 0 0 0 34.84-104.58C397.44 126.38 319.06 48 222.72 48S48 126.38 48 222.72s78.38 174.72 174.72 174.72A173.81 173.81 0 0 0 327.3 362.6l94.09 94.09a25 25 0 0 0 35.3-35.3ZM97.92 222.72a124.8 124.8 0 1 1 124.8 124.8 124.95 124.95 0 0 1-124.8-124.8Z"/></svg>
-
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
             </header>
@@ -41,9 +31,10 @@
 <main class="mt-12">
             <div class="container mx-auto px-4">
                 <div class="movie-details border-b border-gray-800 pb-12 flex flex-col lg:flex-row">
-                    <div id="topDiv" class="items-center">
+                    <div class="items-center">
                         <img :src="`/storage/images/EBU_Colorbars.svg.png`" alt="movie cover" class="h-96 min-w-[16rem] w-64 mb-6 lg:mb-0 m-auto lg:m-0">
                     </div>
+                    <div id="topDiv" v-if="userStore.isMobile"></div>
                     <div class="lg:ml-12 lg:mr-0">
                         <h2 class="font-semibold text-4xl text-center lg:text-left">{{ movie.name }}</h2>
                         <div class="text-gray-400 text-center lg:text-left">
@@ -124,7 +115,7 @@
                         </p>
 
                         <div class="flex mt-12 m-auto lg:mx-0 justify-center lg:justify-start">
-                            <button disabled class="flex bg-blue-500 text-white font-semibold px-4 py-2 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed">
+                            <button disabled class="flex bg-blue-500 text-white font-semibold px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed">
                                 <svg class="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg"
                                      viewBox="0 0 485 485">
                                     <path d="M413.974,71.026C368.171,25.225,307.274,0,242.5,0S116.829,25.225,71.026,71.026C25.225,116.829,0,177.726,0,242.5
@@ -133,10 +124,10 @@
 		S125.327,30,242.5,30S455,125.327,455,242.5S359.673,455,242.5,455z"/>
                                     <polygon points="181.062,336.575 343.938,242.5 181.062,148.425 	"/>
                                 </svg>
-                                <span class="ml-2">Play Trailer</span>
+                                <span class="ml-2 text-sm md:text-md">Play Trailer</span>
                             </button>
 
-                            <button disabled class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-2 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed">
+                            <button disabled class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed">
                                 <svg class="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg"
                                      viewBox="0 0 485 485">
                                     <path d="M413.974,71.026C368.171,25.225,307.274,0,242.5,0S116.829,25.225,71.026,71.026C25.225,116.829,0,177.726,0,242.5
@@ -145,13 +136,13 @@
 		S125.327,30,242.5,30S455,125.327,455,242.5S359.673,455,242.5,455z"/>
                                     <polygon points="181.062,336.575 343.938,242.5 181.062,148.425 	"/>
                                 </svg>
-                                <span class="ml-2">Watch Now</span>
+                                <span class="ml-2 text-sm md:text-md">Watch Now</span>
                             </button>
 
 
 
-                            <button disabled class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-2 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed">
-                                <span class="">Save For Later</span>
+                            <button disabled class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed">
+                                <span class="text-sm md:text-md">Save For Later</span>
                             </button>
                         </div>
                     </div>
@@ -242,6 +233,7 @@ import Message from "@/Components/Modals/Messages"
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
 import {useTeamStore} from "@/Stores/TeamStore.js"
 import {useShowStore} from "@/Stores/ShowStore.js"
+import {useUserStore} from "@/Stores/UserStore.js"
 
 import 'filepond/dist/filepond.min.css'
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css'
@@ -250,6 +242,7 @@ import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css
 let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore()
 let showStore = useShowStore()
+let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'movies'
 

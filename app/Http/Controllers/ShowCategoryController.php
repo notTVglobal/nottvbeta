@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\NewsPost;
+use App\Models\ShowCategory;
 use Illuminate\Http\Request;
 
-class NewsPostController extends Controller
+class ShowCategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -41,10 +41,10 @@ class NewsPostController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  NewsPost $newsPost
+     * @param  \App\Models\ShowCategory  $showCategory
      * @return \Illuminate\Http\Response
      */
-    public function show(NewsPost $newsPost)
+    public function show(ShowCategory $showCategory)
     {
         //
     }
@@ -52,10 +52,10 @@ class NewsPostController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  NewsPost $newsPost
+     * @param  \App\Models\ShowCategory  $showCategory
      * @return \Illuminate\Http\Response
      */
-    public function edit(NewsPost $newsPost)
+    public function edit(ShowCategory $showCategory)
     {
         //
     }
@@ -64,10 +64,10 @@ class NewsPostController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  NewsPost $newsPost
+     * @param  \App\Models\ShowCategory  $showCategory
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, NewsPost $newsPost)
+    public function update(Request $request, ShowCategory $showCategory)
     {
         //
     }
@@ -75,10 +75,10 @@ class NewsPostController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  NewsPost $newsPost
+     * @param  \App\Models\ShowCategory  $showCategory
      * @return \Illuminate\Http\Response
      */
-    public function destroy(NewsPost $newsPost)
+    public function destroy(ShowCategory $showCategory)
     {
         //
     }

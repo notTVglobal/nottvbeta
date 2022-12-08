@@ -5,7 +5,7 @@
 
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="text-white bg-gray-900 rounded py-5 mb-10">
-
+            <div id="topDiv" v-if="!userStore.isMobile"></div>
             <header class="flex justify-between mb-3 border-b border-gray-800">
                 <div class="container mx-auto flex flex-col lg:flex-row items-center justify-between px-4 py-6">
 
@@ -43,14 +43,14 @@
                 <div>
 
                 </div>
-
-                <div class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4 mb-2">
+                <div id="topDiv" v-if="userStore.isMobile && props.can.viewCreator"></div>
+                <div v-if="props.can.viewCreator" class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4 mb-2">
                     <Link
                         v-if="props.can.manageShow" :href="`/shows/${props.show.slug}/manage`"><button
                         class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                     >Manage</button>
                     </Link>
-                    <Link v-if="props.can.viewCreator" :href="`/dashboard`"><button
+                    <Link :href="`/dashboard`"><button
                         class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                     >Dashboard</button>
                     </Link>
@@ -62,9 +62,10 @@
             <main class="mt-12">
                 <div class="container mx-auto px-4">
                     <div class="show-details border-b border-gray-800 pb-12 flex flex-col lg:flex-row">
-                        <div id="topDiv" class="items-center">
+                        <div class="items-center">
                             <img :src="'/storage/images/' + props.show.poster" alt="show cover" class="h-96 min-w-[16rem] w-64 mb-6 lg:mb-0 m-auto lg:m-0">
                         </div>
+                        <div v-if="!props.can.viewCreator && userStore.isMobile" id="topDiv"></div>
                         <div class="lg:ml-12 lg:mr-0">
                             <h2 class="font-semibold text-4xl text-center lg:text-left">{{ show.name }}</h2>
                             <div class="text-gray-400 text-center lg:text-left">
@@ -178,32 +179,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             <div class="flex flex-col px-5">
                 <div class="-my-2 overflow-x-hidden sm:-mx-6 lg:-mx-8">
                     <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
@@ -264,6 +239,7 @@ import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useTeamStore } from "@/Stores/TeamStore.js"
 import { useShowStore } from "@/Stores/ShowStore.js"
 import { useStreamStore } from "@/Stores/StreamStore.js"
+import { useUserStore } from "@/Stores/UserStore.js"
 import ShowEpisodesList from "@/Components/Shows/ShowEpisodesList"
 // import ShowCreatorsList from "@/Components/Shows/ShowCreatorsList";
 import ShowFooter from "@/Components/Shows/ShowFooter"
@@ -273,8 +249,10 @@ let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore();
 let showStore = useShowStore();
 let streamStore = useStreamStore();
+let userStore = useUserStore();
 
 videoPlayerStore.currentPage = 'shows'
+
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();

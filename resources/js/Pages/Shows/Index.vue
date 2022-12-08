@@ -21,13 +21,13 @@
                         <h1 class="text-3xl font-semibold">Shows</h1>
                         <ul class="flex ml-0 lg:ml-16 mt-6 lg:mt-0 space-x-8" >
                             <li>
-                                <Link :href="``" class="hover:text-blue-800">Categories</Link>
+                                <Link :href="``" class="text-gray-700 cursor-not-allowed">Categories</Link>
                             </li>
                             <li>
-                                <Link :href="``" class="hover:text-blue-800">New Episodes</Link>
+                                <Link :href="``" @click.prevent="scrollToNewEpisodes" class="hover:text-blue-800">New Episodes</Link>
                             </li>
                             <li>
-                                <Link :href="``" class="hover:text-blue-800">Coming Soon</Link>
+                                <Link :href="``" @click.prevent="scrollToComingSoon" class="hover:text-blue-800">Coming Soon</Link>
                             </li>
                         </ul>
                     </div>
@@ -72,7 +72,7 @@
 
                 <div class="flex flex-col lg:flex-row my-10">
                     <div class="recently-reviewed w-full lg:w-3/4 mr-0 md:mr-16 lg:mr-32">
-                        <h2 class="text-purple-800 uppercase tracking-wide font-semibold">Newest Episodes</h2>
+                        <h2 id="new-episodes" class="text-purple-800 uppercase tracking-wide font-semibold">Newest Episodes</h2>
                         <div class="recently-reviewed-container space-y-12 mt-8">
 
                             <div v-for="episode in episodes.data"
@@ -114,7 +114,7 @@
                             </div>
                         </div>
 
-                        <h2 class="text-purple-800 uppercase tracking-wide font-semibold mt-16">Coming Soon</h2>
+                        <h2 id="coming-soon" class="text-purple-800 uppercase tracking-wide font-semibold mt-16">Coming Soon</h2>
                         <div class="most-anticipated-container space-y-10 mt-8">
 
                             <div v-for="show in showsComingSoon.data"
@@ -137,7 +137,7 @@
             </main>
 
             <footer class="border-t border-gray-800">
-                <div class="container text-right text-gray-200 mx-auto px-4 py-6">
+                <div class="container text-right text-gray-800 mx-auto px-4 py-6">
                     Powered by not.tv
                 </div>
 
@@ -161,9 +161,25 @@ let chat = useChatStore()
 
 videoPlayerStore.currentPage = 'shows'
 
+let scrollToTopDivCounter = 0
+
+function scrollToTopDiv() {
+    if (scrollToTopDivCounter = 0 ) {
+        document.getElementById("topDiv").scrollIntoView()
+        scrollToTopDivCounter ++;
+    }
+}
+
+function scrollToNewEpisodes() {
+    document.getElementById("new-episodes").scrollIntoView({behavior: "smooth"})
+}
+function scrollToComingSoon() {
+    document.getElementById("coming-soon").scrollIntoView({behavior: "smooth"})
+}
+
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
-    document.getElementById("topDiv").scrollIntoView()
+    scrollToTopDiv()
 });
 
 let props = defineProps({
