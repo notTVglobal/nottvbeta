@@ -79,7 +79,7 @@
                         </div>
                         <div>
                             <div v-if="$page.props.user.role_id === 1">
-                                <JetNavLink v-touch="()=>(route('stream'))" @click="videoPlayerStore.makeVideoTopRight()" :href="route('upgrade')" :active="route().current('upgrade')">
+                                <JetNavLink v-touch="()=>(route('upgrade'))" @click="videoPlayerStore.makeVideoTopRight()" :href="route('upgrade')" :active="route().current('upgrade')">
                                     <div class="text-fuchsia-700 hover:text-fuchsia-500">CLICK HERE TO UPGRADE YOUR ACCOUNT</div>
                                 </JetNavLink>
                             </div>
