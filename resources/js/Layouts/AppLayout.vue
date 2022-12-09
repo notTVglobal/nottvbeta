@@ -4,17 +4,22 @@
         <!-- Navbar -->
 <!--        tec21: On a desktop computer we need the mouse enter and leave functions to allow the user to click the links properly
                     but, on a tablet it makes it so you need to tap the nav links twice. -->
-<!--        <div v-if="$page.props.user!=null" v-show="videoPlayerStore.showNav || ! videoPlayerStore.fullPage" class="fixed top-0 w-full nav-mask"-->
-<!--             @mouseenter="showOSD"-->
-<!--             @mouseleave="hideOSD"-->
-<!--        >-->
 
-        <div v-if="$page.props.user!=null" v-show="videoPlayerStore.showNav || ! videoPlayerStore.fullPage" class="fixed top-0 w-full nav-mask"
+        <div v-if="$page.props.user!=null">
+        <div v-show="videoPlayerStore.showNav" class="fixed top-0 w-full nav-mask"
+             @mouseenter="showOSD"
+             @mouseleave="hideOSD"
         >
             <ResponsiveNavigationMenu/>
             <NavigationMenu />
         </div>
 
+        <div v-if="! videoPlayerStore.fullPage" class="fixed top-0 w-full nav-mask"
+        >
+            <ResponsiveNavigationMenu/>
+            <NavigationMenu />
+        </div>
+        </div>
 
             <div class="w-full"
                  @mouseenter="showOSD"

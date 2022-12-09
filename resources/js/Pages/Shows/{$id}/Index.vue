@@ -29,12 +29,9 @@
                 </div>
 
             </header>
-
+            <div id="topDiv" v-if="userStore.isMobile && props.can.viewCreator"></div>
             <div class="flex justify-between -mb-10">
-                <div>
 
-                </div>
-                <div id="topDiv" v-if="userStore.isMobile && props.can.viewCreator"></div>
                 <div v-if="props.can.viewCreator" class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4 mb-2">
                     <Link
                         v-if="props.can.manageShow" :href="`/shows/${props.show.slug}/manage`"><button
