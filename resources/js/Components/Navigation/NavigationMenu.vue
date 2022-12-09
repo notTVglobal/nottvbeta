@@ -14,7 +14,7 @@
                     <!-- Navigation Links -->
                     <div class="hidden space-x-8 lg:-my-px lg:ml-10 lg:flex">
                         <h3 class="inline-flex items-center relative">
-                        <JetNavLink @click="videoPlayerStore.makeVideoFullPage() && videoPlayerStore.videoContainerClassFullPage()" :href="route('stream')" :active="route().current('stream')">
+                        <JetNavLink v-touch="()=>(route('stream'))" @click="videoPlayerStore.makeVideoFullPage() && videoPlayerStore.videoContainerClassFullPage()" :href="route('stream')" :active="route().current('stream')">
                             Stream
 
                             <div v-if="streamStore.isLive"
@@ -24,12 +24,13 @@
                             </div>
                         </JetNavLink>
                         </h3>
-                        <JetNavLink @click="videoPlayerStore.makeVideoTopRight()" :href="route('schedule')" :active="route().current('schedule')">
+                        <JetNavLink v-touch="()=>(route('schedule'))" @click="videoPlayerStore.makeVideoTopRight()" :href="route('schedule')" :active="route().current('schedule')">
                             Schedule
 
                         </JetNavLink>
                         <JetNavLink
                             v-if="$page.props.user.role_id === 2 || $page.props.user.role_id === 3 || $page.props.user.role_id === 4"
+                            v-touch="()=>(route('news'))"
                             @click="videoPlayerStore.makeVideoTopRight()"
                             :href="route('news')"
                             :active="route().current('news')">
@@ -37,6 +38,7 @@
                         </JetNavLink>
                         <JetNavLink
                             v-if="$page.props.user.role_id === 3 || $page.props.user.role_id === 4"
+                            v-touch="()=>(route('movies'))"
                             @click="videoPlayerStore.makeVideoTopRight()"
                             :href="route('movies')"
                             :active="route().current('movies')">
@@ -44,15 +46,16 @@
                         </JetNavLink>
                         <JetNavLink
                             v-if="$page.props.user.role_id === 2 || $page.props.user.role_id === 3 || $page.props.user.role_id === 4"
+                            v-touch="()=>(route('shows'))"
                             @click="videoPlayerStore.makeVideoTopRight()"
                             :href="route('shows')"
                             :active="route().current('shows')">
                             Shows
                         </JetNavLink>
-                        <JetNavLink @click="videoPlayerStore.makeVideoTopRight()" :href="route('shop')" :active="route().current('shop')">
+                        <JetNavLink v-touch="()=>(route('shop'))" @click="videoPlayerStore.makeVideoTopRight()" :href="route('shop')" :active="route().current('shop')">
                             Shop
                         </JetNavLink>
-                        <JetNavLink @click="videoPlayerStore.makeVideoTopRight()" :href="route('library')" :active="route().current('library')">
+                        <JetNavLink v-touch="()=>(route('library'))" @click="videoPlayerStore.makeVideoTopRight()" :href="route('library')" :active="route().current('library')">
                             My Library
 
                             <div class="text-xs text-white bg-yellow-800 uppercase flex justify-center items-center ml-1 -right-4 top-1.5
@@ -76,7 +79,7 @@
                         </div>
                         <div>
                             <div v-if="$page.props.user.role_id === 1">
-                                <JetNavLink @click="videoPlayerStore.makeVideoTopRight()" :href="route('upgrade')" :active="route().current('upgrade')">
+                                <JetNavLink v-touch="()=>(route('stream'))" @click="videoPlayerStore.makeVideoTopRight()" :href="route('upgrade')" :active="route().current('upgrade')">
                                     <div class="text-fuchsia-700 hover:text-fuchsia-500">CLICK HERE TO UPGRADE YOUR ACCOUNT</div>
                                 </JetNavLink>
                             </div>

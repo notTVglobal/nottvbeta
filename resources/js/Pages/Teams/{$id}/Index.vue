@@ -3,7 +3,7 @@
     <Head :title="props.team.name" />
 
     <div id="topDiv"></div>
-    <div class="place-self-center flex flex-col gap-y-3">
+    <div class="place-self-center flex flex-col gap-y-3 overflow-x-hidden">
 
         <div class="bg-white rounded text-black p-5 mb-10">
 

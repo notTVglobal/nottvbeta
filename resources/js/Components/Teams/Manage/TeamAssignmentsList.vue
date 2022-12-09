@@ -51,7 +51,7 @@
 </template>
 
 <script setup>
-import TeamAssignment from "@/Components/Teams/TeamAssignment.vue";
+// import TeamAssignment from "@/Components/Teams/TeamAssignment.vue";
 import {useShowStore} from "@/Stores/ShowStore";
 import { useTeamStore } from "@/Stores/TeamStore.js"
 
