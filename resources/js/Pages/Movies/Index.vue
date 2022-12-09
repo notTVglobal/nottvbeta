@@ -39,7 +39,7 @@
 
                 <div class="container mx-auto px-4 border-b border-gray-800 pb-16">
                     <h2 class="text-yellow-500 uppercase tracking-wide font-semibold">Popular Movies</h2>
-                    <div class="popular-movies text-sm grid grid-cols-1 md:grid-cols-2 space-x-6 lg:grid-cols-3 xl:grid-cols-4 gap-12 pb-12">
+                    <div class="popular-movies text-sm grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-12 pb-12 justify-items-center">
 
                         <div v-for="movie in movies.data"
                              :key="movie.id"
@@ -71,7 +71,7 @@
                             <div class="movie bg-gray-800 rounded-lg shadow-md flex px-6 py-6">
                                 <div class="relative flex-none">
                                     <Link :href="`/movies/${movie}`">
-                                        <img :src="`/storage/images/EBU_Colorbars.svg.png`" alt="movie cover" class="h-64 min-w-[8rem] w-48 object-cover hover:opacity-75 transition ease-in-out duration-150">
+                                        <img :src="`/storage/images/EBU_Colorbars.svg.png`" alt="movie cover" class="h-32 md:h-64 md:min-w-[8rem] w-24 md:w-48 object-cover hover:opacity-75 transition ease-in-out duration-150">
                                     </Link>
                                     <div class="absolute bottom-0 right-0 w-12 h-12 bg-gray-900 rounded-full" style="right:-20px; bottom:-20px;">
                                         <div class="font-semi-bold text-xs flex justify-center items-center h-full">80%</div>
@@ -90,7 +90,7 @@
                             <div class="movie bg-gray-800 rounded-lg shadow-md flex px-6 py-6">
                                 <div class="relative flex-none">
                                     <Link :href="`/movies/${movie}`">
-                                        <img :src="`/storage/images/EBU_Colorbars.svg.png`" alt="movie cover" class="h-64 w-48 min-w-[8rem] object-cover hover:opacity-75 transition ease-in-out duration-150">
+                                        <img :src="`/storage/images/EBU_Colorbars.svg.png`" alt="movie cover" class="h-32 md:h-64 md:min-w-[8rem] w-24 md:w-48 object-cover hover:opacity-75 transition ease-in-out duration-150">
                                     </Link>
                                     <div class="absolute bottom-0 right-0 w-12 h-12 bg-gray-900 rounded-full" style="right:-20px; bottom:-20px;">
                                         <div class="font-semi-bold text-xs flex justify-center items-center h-full">80%</div>
@@ -109,7 +109,7 @@
                             <div class="movie bg-gray-800 rounded-lg shadow-md flex px-6 py-6">
                                 <div class="relative flex-none">
                                     <Link :href="`/movies/${movie}`">
-                                        <img :src="`/storage/images/EBU_Colorbars.svg.png`" alt="movie cover" class="h-64 w-48 min-w-[8rem] object-cover hover:opacity-75 transition ease-in-out duration-150">
+                                        <img :src="`/storage/images/EBU_Colorbars.svg.png`" alt="movie cover" class="h-32 md:h-64 md:min-w-[8rem] w-24 md:w-48 object-cover hover:opacity-75 transition ease-in-out duration-150">
                                     </Link>
                                     <div class="absolute bottom-0 right-0 w-12 h-12 bg-gray-900 rounded-full" style="right:-20px; bottom:-20px;">
                                         <div class="font-semi-bold text-xs flex justify-center items-center h-full">80%</div>

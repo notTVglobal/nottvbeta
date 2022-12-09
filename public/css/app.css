@@ -2290,6 +2290,10 @@ select {
   width: 25%;
 }
 
+.w-24 {
+  width: 6rem;
+}
+
 .min-w-0 {
   min-width: 0px;
 }
@@ -2692,6 +2696,12 @@ select {
   --tw-space-y-reverse: 0;
   margin-top: calc(2.5rem * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(2.5rem * var(--tw-space-y-reverse));
+}
+
+.space-x-1 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0;
+  margin-right: calc(0.25rem * var(--tw-space-x-reverse));
+  margin-left: calc(0.25rem * calc(1 - var(--tw-space-x-reverse)));
 }
 
 .divide-y > :not([hidden]) ~ :not([hidden]) {
@@ -4822,6 +4832,10 @@ select {
     display: grid;
   }
 
+  .md\:h-64 {
+    height: 16rem;
+  }
+
   .md\:w-\[calc\(100vw-24rem\)\] {
     width: calc(100vw - 24rem);
   }
@@ -4836,6 +4850,14 @@ select {
 
   .md\:w-auto {
     width: auto;
+  }
+
+  .md\:w-48 {
+    width: 12rem;
+  }
+
+  .md\:min-w-\[8rem\] {
+    min-width: 8rem;
   }
 
   .md\:max-w-sm {

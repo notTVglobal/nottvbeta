@@ -50,7 +50,7 @@
 
                 <div class="container mx-auto px-4 border-b border-gray-800 pb-16">
                     <h2 class="text-purple-800 uppercase tracking-wide font-semibold">Popular Shows</h2>
-                    <div class="popular-shows text-sm grid grid-cols-1 md:grid-cols-2 space-x-6 lg:grid-cols-3 xl:grid-cols-4 gap-8 pb-12">
+                    <div class="popular-shows text-sm grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-12 pb-12 justify-items-center">
 
                         <div v-for="show in shows.data"
                              :key="show.id"
@@ -80,7 +80,7 @@
                                  class="show bg-gray-800 rounded-lg shadow-md flex px-6 py-6">
                                 <div class="relative flex-none">
                                     <Link :href="`/shows/${episode.showSlug}/episode/${episode.slug}`">
-                                        <img :src="'/storage/images/' + episode.poster" alt="show cover" class="h-64 min-w-[8rem] w-48 object-cover hover:opacity-75 transition ease-in-out duration-150">
+                                        <img :src="'/storage/images/' + episode.poster" alt="show cover" class="h-32 md:h-64 md:min-w-[8rem] w-24 md:w-48 object-cover hover:opacity-75 transition ease-in-out duration-150">
                                     </Link>
                                 </div>
                                 <div class="ml-12">
