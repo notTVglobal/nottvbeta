@@ -71,8 +71,8 @@ let props = defineProps ({
 
 function changeChannel(name) {
     if (name==='live') {
-        let source = 'vmixlive'
-        videoPlayerStore.videoName = 'vMix Live'
+        let source = 'vmixsource03pull'
+        videoPlayerStore.videoName = 'vMix Source 03 Pull'
         streamStore.currentChannel = 'Live'
         playVideo(source)
     }
