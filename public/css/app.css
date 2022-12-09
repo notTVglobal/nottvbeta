@@ -1895,6 +1895,10 @@ select {
   margin-bottom: 1rem;
 }
 
+.-mt-px {
+  margin-top: -1px;
+}
+
 .mb-10 {
   margin-bottom: 2.5rem;
 }
@@ -2003,12 +2007,12 @@ select {
   margin-top: 4rem;
 }
 
-.-mb-10 {
-  margin-bottom: -2.5rem;
+.mr-6 {
+  margin-right: 1.5rem;
 }
 
-.-mt-px {
-  margin-top: -1px;
+.-mb-10 {
+  margin-bottom: -2.5rem;
 }
 
 .block {
@@ -2033,6 +2037,22 @@ select {
 
 .table {
   display: table;
+}
+
+.table-cell {
+  display: table-cell;
+}
+
+.table-header-group {
+  display: table-header-group;
+}
+
+.table-row-group {
+  display: table-row-group;
+}
+
+.table-row {
+  display: table-row;
 }
 
 .grid {
@@ -2274,6 +2294,10 @@ select {
   min-width: 0px;
 }
 
+.min-w-\[8rem\] {
+  min-width: 8rem;
+}
+
 .min-w-fit {
   min-width: -moz-fit-content;
   min-width: fit-content;
@@ -2289,10 +2313,6 @@ select {
 
 .min-w-full {
   min-width: 100%;
-}
-
-.min-w-\[8rem\] {
-  min-width: 8rem;
 }
 
 .min-w-\[12rem\] {
@@ -2319,6 +2339,10 @@ select {
   max-width: 36rem;
 }
 
+.max-w-6xl {
+  max-width: 72rem;
+}
+
 .max-w-lg {
   max-width: 32rem;
 }
@@ -2331,12 +2355,12 @@ select {
   max-width: 4rem;
 }
 
-.max-w-md {
-  max-width: 28rem;
+.max-w-\[6rem\] {
+  max-width: 6rem;
 }
 
-.max-w-6xl {
-  max-width: 72rem;
+.max-w-md {
+  max-width: 28rem;
 }
 
 .flex-1 {
@@ -2464,10 +2488,6 @@ select {
   cursor: not-allowed;
 }
 
-.cursor-none {
-  cursor: none;
-}
-
 .list-inside {
   list-style-position: inside;
 }
@@ -2522,6 +2542,10 @@ select {
 
 .content-center {
   align-content: center;
+}
+
+.items-start {
+  align-items: flex-start;
 }
 
 .items-center {
@@ -2743,6 +2767,10 @@ select {
   white-space: nowrap;
 }
 
+.whitespace-pre-wrap {
+  white-space: pre-wrap;
+}
+
 .break-words {
   overflow-wrap: break-word;
 }
@@ -2821,12 +2849,12 @@ select {
   border-bottom-width: 1px;
 }
 
-.border-t-0 {
-  border-top-width: 0px;
-}
-
 .border-r {
   border-right-width: 1px;
+}
+
+.border-t-0 {
+  border-top-width: 0px;
 }
 
 .border-gray-300 {
@@ -2853,6 +2881,11 @@ select {
   border-color: rgb(243 244 246 / var(--tw-border-opacity));
 }
 
+.border-gray-400 {
+  --tw-border-opacity: 1;
+  border-color: rgb(156 163 175 / var(--tw-border-opacity));
+}
+
 .border-gray-800 {
   --tw-border-opacity: 1;
   border-color: rgb(31 41 55 / var(--tw-border-opacity));
@@ -2861,11 +2894,6 @@ select {
 .border-white {
   --tw-border-opacity: 1;
   border-color: rgb(255 255 255 / var(--tw-border-opacity));
-}
-
-.border-gray-400 {
-  --tw-border-opacity: 1;
-  border-color: rgb(156 163 175 / var(--tw-border-opacity));
 }
 
 .bg-white {
@@ -2951,6 +2979,11 @@ select {
 .bg-blue-400 {
   --tw-bg-opacity: 1;
   background-color: rgb(96 165 250 / var(--tw-bg-opacity));
+}
+
+.bg-yellow-600 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(202 138 4 / var(--tw-bg-opacity));
 }
 
 .bg-green-600 {
@@ -3123,6 +3156,11 @@ select {
   background-color: rgb(255 237 213 / var(--tw-bg-opacity));
 }
 
+.bg-gray-700 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(55 65 81 / var(--tw-bg-opacity));
+}
+
 .bg-opacity-25 {
   --tw-bg-opacity: 0.25;
 }
@@ -3174,6 +3212,11 @@ select {
 .object-cover {
   -o-object-fit: cover;
      object-fit: cover;
+}
+
+.object-scale-down {
+  -o-object-fit: scale-down;
+     object-fit: scale-down;
 }
 
 .p-2 {
@@ -3349,6 +3392,10 @@ select {
   padding-bottom: 0.25rem;
 }
 
+.pt-8 {
+  padding-top: 2rem;
+}
+
 .pt-3 {
   padding-top: 0.75rem;
 }
@@ -3457,10 +3504,6 @@ select {
   padding-right: 1.5rem;
 }
 
-.pt-8 {
-  padding-top: 2rem;
-}
-
 .text-left {
   text-align: left;
 }
@@ -3475,6 +3518,10 @@ select {
 
 .align-middle {
   vertical-align: middle;
+}
+
+.align-bottom {
+  vertical-align: bottom;
 }
 
 .align-text-top {
@@ -3581,12 +3628,12 @@ select {
   letter-spacing: 0.1em;
 }
 
-.tracking-wide {
-  letter-spacing: 0.025em;
-}
-
 .tracking-wider {
   letter-spacing: 0.05em;
+}
+
+.tracking-wide {
+  letter-spacing: 0.025em;
 }
 
 .text-gray-500 {
@@ -3664,6 +3711,16 @@ select {
   color: rgb(34 197 94 / var(--tw-text-opacity));
 }
 
+.text-gray-200 {
+  --tw-text-opacity: 1;
+  color: rgb(229 231 235 / var(--tw-text-opacity));
+}
+
+.text-gray-300 {
+  --tw-text-opacity: 1;
+  color: rgb(209 213 219 / var(--tw-text-opacity));
+}
+
 .text-black {
   --tw-text-opacity: 1;
   color: rgb(0 0 0 / var(--tw-text-opacity));
@@ -3674,19 +3731,9 @@ select {
   color: rgb(251 146 60 / var(--tw-text-opacity));
 }
 
-.text-gray-300 {
-  --tw-text-opacity: 1;
-  color: rgb(209 213 219 / var(--tw-text-opacity));
-}
-
 .text-yellow-800 {
   --tw-text-opacity: 1;
   color: rgb(133 77 14 / var(--tw-text-opacity));
-}
-
-.text-gray-200 {
-  --tw-text-opacity: 1;
-  color: rgb(229 231 235 / var(--tw-text-opacity));
 }
 
 .text-gray-50 {
@@ -4002,6 +4049,11 @@ select {
 .hover\:bg-blue-500:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(59 130 246 / var(--tw-bg-opacity));
+}
+
+.hover\:bg-yellow-500:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(234 179 8 / var(--tw-bg-opacity));
 }
 
 .hover\:bg-green-500:hover {
@@ -4745,8 +4797,16 @@ select {
     margin-right: 4rem;
   }
 
+  .md\:mb-3 {
+    margin-bottom: 0.75rem;
+  }
+
   .md\:block {
     display: block;
+  }
+
+  .md\:table-cell {
+    display: table-cell;
   }
 
   .md\:grid {
@@ -4767,6 +4827,10 @@ select {
 
   .md\:w-auto {
     width: auto;
+  }
+
+  .md\:max-w-sm {
+    max-width: 24rem;
   }
 
   .md\:grid-cols-3 {
@@ -4809,11 +4873,6 @@ select {
   .md\:text-2xl {
     font-size: 1.5rem;
     line-height: 2rem;
-  }
-
-  .md\:text-lg {
-    font-size: 1.125rem;
-    line-height: 1.75rem;
   }
     .md\:pageWidth {
         margin-right: 26vw;
@@ -4896,6 +4955,10 @@ select {
     display: flex;
   }
 
+  .lg\:table-cell {
+    display: table-cell;
+  }
+
   .lg\:hidden {
     display: none;
   }
@@ -4945,6 +5008,10 @@ select {
 
 @media (min-width: 1280px) {
 
+  .xl\:table-cell {
+    display: table-cell;
+  }
+
   .xl\:grid-cols-3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -4960,6 +5027,10 @@ select {
 }
 
 @media (min-width: 1536px) {
+
+  .\32xl\:table-cell {
+    display: table-cell;
+  }
 
   .\32xl\:grid-cols-4 {
     grid-template-columns: repeat(4, minmax(0, 1fr));
