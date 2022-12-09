@@ -35,7 +35,7 @@ class ChatController extends Controller
                 $query->select('id', 'name', 'profile_photo_path');
             }])
             ->latest()
-            ->limit(0)
+            ->limit(20)
             ->orderBy('created_at', 'DESC')
             ->get();
 

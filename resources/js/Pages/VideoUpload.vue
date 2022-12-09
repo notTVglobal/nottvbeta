@@ -38,20 +38,11 @@
                         <progress max="100" :value="userStore.uploadPercentage" class="w-full mb-4" />
 
 
-                        <form id="videoUploadForm" action="/videoupload" class="dropzone dropzoneFile border border-gray-400 rounded w-full px-2 py-2 mb-6">
+                        <form id="videoUploadForm" action="/videoupload" class="dropzone dropzoneFile border border-gray-400 rounded w-full h-48 max-w-md px-2 py-2 mb-6">
 <!--                            add input fields and a submit button to send data back to Laravel -->
 
 
                         </form>
-
-
-
-                        <div v-if="done" class="p-2 mb-6">{{ done }}</div>
-
-
-
-
-
 
 
                         <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -62,10 +53,10 @@
                                     class="table-header-group text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
                                 >
                                     <div class="table-row">
-                                        <div scope="col" class="hidden md:table-cell min-w-[8rem] px-6 py-3">
+                                        <div scope="col" class="table-cell px-6 py-3">
                                             Filename
                                         </div>
-                                        <div scope="col" class="table-cell px-6 py-3">
+                                        <div scope="col" class="hidden md:table-cell px-6 py-3">
                                             ID
                                         </div>
                                         <div scope="col" class="hidden xl:table-cell px-6 py-3">
@@ -176,7 +167,6 @@ onMounted(() => {
 
     myDropzone.on("addedfile", file => {
         console.log(`File added: ${file.name}`);
-        onUploadProgress(file);
 
     });
 
@@ -188,25 +178,7 @@ onMounted(() => {
         });
     });
 
-
-
-
-
-
-
-
-
-
 })
-
-
-function onUploadProgress( progressEvent ) {
-    // this.uploadPercentage = parseInt( Math.round( ( progressEvent.loaded / progressEvent.total ) * 100 ) );
-}
-
-
-
-
 
 let props = defineProps({
     filters: Object,
@@ -219,28 +191,8 @@ let props = defineProps({
 });
 
 
-// Dropzone tutorial: https://www.youtube.com/watch?v=wWKhKPN_Pmw
-
-// let dropzoneFile = ref([]);
-// const active = ref(false);
-// const toggleActive = () => {
-//     active.value = !active.value;
-// }
-// const drop = (e) => {
-//     dropzoneFile.value = e.dataTransfer.files[0];
-//     active.value = !active.value;
-// }
-// const selectedFile = () => {
-//     dropzoneFile.value = document.querySelector('.dropzoneFile').files[0];
-// }
-
-
 let form = useForm({
-    // name: '',
-    // description: '',
     file: [],
-    // file_url: '',
-    // video: '',
 });
 
 
@@ -251,8 +203,6 @@ let form = useForm({
 <style scoped>
 
 .dropzone {
-    width: 400px;
-    height: 200px;
     display: flex;
     flex-direction: column;
     justify-content: center;
