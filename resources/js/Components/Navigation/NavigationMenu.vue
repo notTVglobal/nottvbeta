@@ -174,6 +174,17 @@
                                             </JetDropdownLink>
                                         </form>
                                     </div>
+
+                                    <div class="grid grid-col-1 w-full text-gray-400 text-xs mb-6 py-2">
+                                        <div class="flex pt-6 justify-center ">Web application</div>
+                                        <div class="flex justify-center">concept and design</div>
+                                        <div class="flex justify-center pt-2">not&#174;TV &#169; 2010 - {{new Date().getFullYear()}}</div>
+                                        <div class="flex justify-center pb-2">notTV Beta v0.4</div>
+                                        <div class="flex justify-center">Please send us</div>
+                                        <div class="flex justify-center">comments and questions</div>
+                                        <div class="flex justify-center"><a href="https://help.not.tv/" target="_blank" class="text-blue-600 hover:text-blue-40">here</a>.</div>
+                                    </div>
+
                                 </div>
                             </template>
                         </JetDropdown>
