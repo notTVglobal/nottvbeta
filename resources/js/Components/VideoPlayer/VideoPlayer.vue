@@ -9,7 +9,7 @@
                 <Login v-if="$page.props.user===null" :show="showLogin" @close="showLogin = false" />
             </Teleport>
 
-            <video-player :options="videoOptions" v-touch="()=>videoPlayerStore.toggleControls()"/>
+            <video-player :id="playerName" :options="videoOptions" v-touch="()=>videoPlayerStore.toggleControls()"/>
 
 
             <div v-if="videoPlayerStore.fullPage===true && ! videoPlayerStore.showControls && ! userStore.isMobile" class="absolute h-screen top-0 h-16 p-5 px-4 left-16 opacity-10 z-50">
@@ -161,6 +161,8 @@ streamStore.showOSD = false
 videoPlayerStore.showControls = false
 
 let showLogin = ref(false)
+
+let playerName = 'main-player';
 
 let props = defineProps({
     src: String,

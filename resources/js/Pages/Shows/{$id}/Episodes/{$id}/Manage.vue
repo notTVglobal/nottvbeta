@@ -38,6 +38,7 @@
                                     :href="`/shows/${show.slug}/episode/${episode.slug}/upload`"
                                     v-if="!episode.video_file_url">
                                     <button
+                                        :disabled="teamStore.goLiveDisplay"
                                         class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg disabled:bg-gray-400"
                                     >Upload
                                     </button>
@@ -45,18 +46,27 @@
                             </div>
 
                             <div class="" v-if="teamStore.can.goLive && !episode.video_file_url">
-                                    <button
-                                        @click="showGoLive"
-                                        class="px-4 py-2 text-white bg-red-600 hover:bg-red-500 rounded-lg disabled:bg-gray-400"
-                                    >Go Live
-                                    </button>
+                                <button
+                                    v-if="!teamStore.goLiveDisplay"
+                                    @click="teamStore.toggleGoLiveDisplay()"
+                                    class="px-4 py-2 text-white bg-red-600 hover:bg-red-500 rounded-lg disabled:bg-gray-400"
+                                >Go Live
+                                </button>
+                                <button
+                                    v-if="teamStore.goLiveDisplay"
+                                    @click="teamStore.toggleGoLiveDisplay()"
+                                    class="px-4 py-2 text-white bg-red-600 hover:bg-red-500 rounded-lg disabled:bg-gray-400"
+                                >Cancel
+                                </button>
                             </div>
                             <div class="">
                                 <Link
                                     :href="`/shows/${show.slug}/episode/${episode.slug}/edit`"
+
                                     v-if="teamStore.can.editEpisode">
                                     <button
-                                        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                                        :disabled="teamStore.goLiveDisplay"
+                                        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg disabled:bg-gray-400"
                                     >Edit
                                     </button>
                                 </Link>
@@ -64,7 +74,8 @@
                             <div>
                                 <Link :href="`/dashboard`">
                                     <button
-                                        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                                        :disabled="teamStore.goLiveDisplay"
+                                        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg disabled:bg-gray-400"
                                     >Dashboard
                                     </button>
                                 </Link>
@@ -99,8 +110,9 @@
                 </div>
             </header>
 
-            <div v-if="!showGoLive">
+            <div v-if="teamStore.goLiveDisplay" class="">
                 <div class="text-sm font-semibold uppercase mb-2">Go Live Instructions</div>
+                <video-player-aux />
                 Put a preview window here. Display the RTMP Url with streamkey using episode UUID: rtmp://mist.nottv.io/live/episodes+UUID and fix the "golive" button showing this div
             </div>
 
@@ -151,13 +163,14 @@
 </template>
 
 <script setup>
-import {onBeforeMount, onMounted} from "vue";
+import {ref, onBeforeMount, onMounted} from "vue";
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
 import {useShowStore} from "@/Stores/ShowStore.js"
 import {useTeamStore} from "@/Stores/TeamStore.js"
 import EpisodeFooter from "@/Components/ShowEpisodes/EpisodeFooter";
 import EpisodeHeader from "@/Components/ShowEpisodes/EpisodeHeader";
 import {useUserStore} from "@/Stores/UserStore";
+import VideoPlayerAux from "@/Components/VideoPlayer/VideoPlayerAux.vue";
 // import EpisodeHeader from "@/Components/ShowEpisodes/EpisodeHeader"
 // import Episode from "@/Components/ShowEpisodes/Episode"
 // import EpisodeCreditsList from "@/Components/ShowEpisodes/EpisodeCreditsList";
@@ -169,6 +182,8 @@ let teamStore = useTeamStore();
 let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'episodes'
+
+let playerName = 'aux-player';
 
 onBeforeMount(() => {
     userStore.scrollToTopCounter = 0;

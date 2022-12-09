@@ -2367,6 +2367,14 @@ select {
   max-width: 28rem;
 }
 
+.max-w-sm {
+  max-width: 24rem;
+}
+
+.max-w-\[3rem\] {
+  max-width: 3rem;
+}
+
 .flex-1 {
   flex: 1 1 0%;
 }

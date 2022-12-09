@@ -30,7 +30,7 @@
 
             </header>
             <div id="topDiv" v-if="userStore.isMobile && props.can.viewCreator"></div>
-            <div class="flex justify-between -mb-10">
+            <div class="flex justify-end -mb-10">
 
                 <div v-if="props.can.viewCreator" class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4 mb-2">
                     <Link
@@ -51,7 +51,7 @@
                 <div class="container mx-auto px-4">
                     <div class="show-details border-b border-gray-800 pb-12 flex flex-col lg:flex-row">
                         <div class="items-center">
-                            <img :src="'/storage/images/' + props.show.poster" alt="show cover" class="h-96 min-w-[16rem] w-64 mb-6 lg:mb-0 m-auto lg:m-0">
+                            <img :src="'/storage/images/' + props.show.poster" alt="show cover" class="h-96 min-w-[16rem] w-64 object-cover mb-6 lg:mb-0 m-auto lg:m-0">
                         </div>
                         <div v-if="!props.can.viewCreator && userStore.isMobile" id="topDiv"></div>
                         <div class="lg:ml-12 lg:mr-0">

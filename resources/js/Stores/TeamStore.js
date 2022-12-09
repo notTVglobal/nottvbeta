@@ -17,6 +17,9 @@ export let useTeamStore = defineStore('teamStore', {
         confirmDialog: false,
         deleteMemberName: '',
         deleteMemberId: 0,
+            // on the show episode manage page
+            // turn on the go live div
+            goLiveDisplay: false,
         can: [],
     }),
 
@@ -58,6 +61,9 @@ export let useTeamStore = defineStore('teamStore', {
                 },
             })
         },
+        toggleGoLiveDisplay() {
+            this.goLiveDisplay = ! this.goLiveDisplay;
+        }
     },
 
     getters: {

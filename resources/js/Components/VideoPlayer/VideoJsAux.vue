@@ -1,6 +1,6 @@
 <template>
-        <div :class="videoPlayerStore.class">
-            <video ref="videoPlayer" :id="props.id" class="video-js vjs-big-play-centered vjs-fill bg-pink-700" playsinline autoplay muted />
+        <div class="max-w-[12rem]">
+            <video ref="videoPlayerAux" id="aux-player" class="vjs-layout-tiny max-w-[12rem]" playsinline controls autoplay muted />
         </div>
 </template>
 
