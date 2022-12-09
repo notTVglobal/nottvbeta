@@ -2,14 +2,14 @@
 
     <Head :title="`${props.show.name}: ${props.episode.name}`"/>
 
-    <div class="place-self-center flex flex-col gap-y-3">
+    <div class="place-self-center flex flex-col gap-y-3 overflow-x-hidden">
 
         <div class="text-white bg-gray-900 rounded py-5 mb-10">
 
             <div class="flex justify-between -mb-10">
 
-                <header id="topDiv" class="p-5">
-                    <div class="pt-4">
+                <header id="topDiv" class="p-5 mb-6">
+                    <div class="py-4">
                         <span class="font-semibold text-xs uppercase">SHOW: </span>
                         <Link :href="`/shows/${props.show.slug}/`"
                               class="text-blue-400 hover:text-blue-600">
