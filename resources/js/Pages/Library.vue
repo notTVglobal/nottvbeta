@@ -2,11 +2,12 @@
 
     <Head title="My Library" />
 
+    <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white text-black p-5 mb-10">
 
             <header class="flex justify-between mb-3">
-                <div id="topDiv" class="pt-4">
+                <div class="pt-4">
                     <h1 class="text-3xl font-semibold pb-3">My Library</h1>
                 </div>
             </header>
@@ -34,17 +35,24 @@
 
 <script setup>
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import { useChatStore } from "@/Stores/ChatStore.js"
-import { onMounted } from "vue"
+import {onBeforeMount, onMounted} from "vue"
+import {useUserStore} from "@/Stores/UserStore";
 
 let videoPlayerStore = useVideoPlayerStore()
-let chat = useChatStore()
+let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'library'
 
+onBeforeMount(() => {
+    userStore.scrollToTopCounter = 0;
+})
+
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight()
-    document.getElementById("topDiv").scrollIntoView()
+    if (userStore.scrollToTopCounter === 0 ) {
+        document.getElementById("topDiv").scrollIntoView()
+        userStore.scrollToTopCounter ++;
+    }
 });
 
 let props = defineProps({

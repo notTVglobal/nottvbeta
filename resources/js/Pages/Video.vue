@@ -316,20 +316,25 @@
 
 <script setup>
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
-import {useChatStore} from "@/Stores/ChatStore";
-import { onMounted, ref, watch, reactive } from "vue";
-import {useForm} from "@inertiajs/inertia-vue3";
-import {Inertia} from "@inertiajs/inertia";
+import {onMounted, ref, reactive, onBeforeMount} from "vue";
+import {useUserStore} from "@/Stores/UserStore";
 
 let videoPlayerStore = useVideoPlayerStore()
-let chat = useChatStore()
+let userStore = useUserStore()
 
 videoPlayerStore.apiActiveStreams = null
 videoPlayerStore.mistStatus = false
 
+onBeforeMount(() => {
+    userStore.scrollToTopCounter = 0;
+})
+
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight()
-    document.getElementById("topDiv").scrollIntoView()
+    if (userStore.scrollToTopCounter === 0 ) {
+        document.getElementById("topDiv").scrollIntoView()
+        userStore.scrollToTopCounter ++;
+    }
 });
 
 

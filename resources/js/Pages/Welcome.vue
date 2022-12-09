@@ -1,26 +1,26 @@
 <template>
     <Head title="Beta" />
         <div class="bg-green-800 bg-opacity-10 min-h-screen text-gray-200 z-50">
+        <div id="topDiv"></div>
+            <header class="headerContainer w-full">
+                <div class="welcomeOverlay flex flex-row md:px-6 py-4 w-full">
+                    <WelcomeBug />
+                    <div class="flex justify-end pt-4 md:pr-6 w-full">
+                            <Button class="bg-opacity-50 hover:bg-opacity-75 text-sm md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md" v-if="!$page.props.user" @click="welcomeStore.showLogin = true" >
+                                Log in
+                            </Button>
+                            <Button class="bg-opacity-50 hover:bg-opacity-75 text-sm -mr-4 md:mr-0 ml-2 md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md" v-if="!$page.props.user" @click="welcomeStore.showRegister = true" >
+                                <!--           <Button class="bg-opacity-0 hover:bg-opacity-0"><Link v-if="!$page.props.user" :href="route('register')" class="text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md">-->
 
-<header class="headerContainer w-full">
-    <div id="topDiv" class="welcomeOverlay flex flex-row md:px-6 py-4 w-full">
-        <WelcomeBug />
-        <div class="flex justify-end pt-4 md:pr-6 w-full">
-                <Button class="bg-opacity-50 hover:bg-opacity-75 text-sm md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md" v-if="!$page.props.user" @click="welcomeStore.showLogin = true" >
-                    Log in
-                </Button>
-                <Button class="bg-opacity-50 hover:bg-opacity-75 text-sm -mr-4 md:mr-0 ml-2 md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md" v-if="!$page.props.user" @click="welcomeStore.showRegister = true" >
-                    <!--           <Button class="bg-opacity-0 hover:bg-opacity-0"><Link v-if="!$page.props.user" :href="route('register')" class="text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md">-->
+                                Register
+                            </Button>
+                            <Button class="bg-opacity-0 hover:bg-opacity-0"><Link v-if="$page.props.user" :href="route('stream')" class="text-sm md:text-2xl top-20 text-gray-200 underline">
+                                Return to stream
+                            </Link></Button>
 
-                    Register
-                </Button>
-                <Button class="bg-opacity-0 hover:bg-opacity-0"><Link v-if="$page.props.user" :href="route('stream')" class="text-sm md:text-2xl top-20 text-gray-200 underline">
-                    Return to stream
-                </Link></Button>
-
-        </div>
-    </div>
-</header>
+                    </div>
+                </div>
+            </header>
 
             <div class="welcomeOverlay">
                 <div class="bg-opacity-5 relative flex items-top justify-center min-h-screen text-gray-200">
@@ -86,18 +86,18 @@
 <script setup>
 import Login from "@/Components/Welcome/Login.vue"
 import Register from "@/Components/Welcome/Register.vue"
-import { onMounted, ref } from 'vue'
+import {onBeforeMount, onMounted, ref} from 'vue'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import { useChatStore } from "@/Stores/ChatStore";
 import { useWelcomeStore } from "@/Stores/WelcomeStore";
+import { useUserStore } from "@/Stores/UserStore";
 import { Inertia } from "@inertiajs/inertia";
 import Button from "@/Jetstream/Button";
 import WelcomeOverlay from "@/Components/Welcome/WelcomeOverlay";
 import WelcomeBug from "@/Components/Welcome/WelcomeBug.vue";
 
-let welcomeStore = useWelcomeStore()
 let videoPlayerStore = useVideoPlayerStore()
-let chat = useChatStore()
+let welcomeStore = useWelcomeStore()
+let userStore = useUserStore()
 
 welcomeStore.showOverlay = true;
 
@@ -112,10 +112,16 @@ videoPlayerStore.videoContainerClass = "welcomeVideoContainer"
 // chat.show = false
 // chat.class = 'chatHidden'
 
+onBeforeMount(() => {
+    userStore.scrollToTopCounter = 0;
+})
 
 onMounted(() => {
     videoPlayerStore.makeVideoWelcomePage();
-    document.getElementById("topDiv").scrollIntoView()
+    if (userStore.scrollToTopCounter === 0 ) {
+        document.getElementById("topDiv").scrollIntoView()
+        userStore.scrollToTopCounter ++;
+    }
 });
 //------------------------//
 

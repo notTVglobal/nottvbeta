@@ -6,6 +6,7 @@ export let useUserStore = defineStore('userStore', {
         isMobile: Boolean,
         showNavDropdown: Boolean,
         uploadPercentage: 0,
+        scrollToTopCounter: 0,
 
     }),
 

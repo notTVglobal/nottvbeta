@@ -1,11 +1,11 @@
 <template>
 
     <Head title="Upgrade Account" />
-
+    <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white text-black p-5 mb-10">
 
-            <h1 id="topDiv" class="text-3xl font-semibold pb-3">Become a notTV Premium Subscriber</h1>
+            <h1 class="text-3xl font-semibold pb-3">Become a notTV Premium Subscriber</h1>
             <p class="mb-8">
             </p>
             <div class="bg-orange-300 px-2 text-2xl p-10 text-center font-semibold">
@@ -22,17 +22,24 @@
 
 <script setup>
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import { useChatStore } from "@/Stores/ChatStore.js"
-import {onMounted} from "vue";
+import {onBeforeMount, onMounted} from "vue";
+import {useUserStore} from "@/Stores/UserStore";
 
 let videoPlayerStore = useVideoPlayerStore()
-let chat = useChatStore()
+let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'upgrade'
 
+onBeforeMount(() => {
+    userStore.scrollToTopCounter = 0;
+})
+
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
-    document.getElementById("topDiv").scrollIntoView()
+    if (userStore.scrollToTopCounter === 0 ) {
+        document.getElementById("topDiv").scrollIntoView()
+        userStore.scrollToTopCounter ++;
+    }
 });
 
 </script>

@@ -1,11 +1,11 @@
 <template>
     <Head title="Training" />
-
+    <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white text-black p-5 mb-10">
 
             <div class="flex justify-between">
-                <div id="topDiv" class="grid grid-cols-1 grid-rows-2">
+                <div class="grid grid-cols-1 grid-rows-2">
                     <h1 class="text-3xl font-semibold">Training</h1>
                 </div>
                 <div><span class="text-xs font-semibold text-purple-700">Creator Mode</span></div>
@@ -39,17 +39,24 @@
 
 <script setup>
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import { useChatStore } from "@/Stores/ChatStore.js"
-import {onMounted} from "vue";
+import {onBeforeMount, onMounted} from "vue";
+import {useUserStore} from "@/Stores/UserStore";
 
 let videoPlayerStore = useVideoPlayerStore()
-let chat = useChatStore()
+let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'training'
 
+onBeforeMount(() => {
+    userStore.scrollToTopCounter = 0;
+})
+
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight()
-    document.getElementById("topDiv").scrollIntoView()
+    if (userStore.scrollToTopCounter === 0 ) {
+        document.getElementById("topDiv").scrollIntoView()
+        userStore.scrollToTopCounter ++;
+    }
 });
 
 </script>

@@ -2,10 +2,11 @@
 
     <Head :title="props.userSelected.name" />
 
+    <div id="topDiv"></div>
     <div class="flex flex-col gap-y-3">
         <div class="bg-white text-black p-5 mb-10">
 
-            <div id="topDiv" class="flex justify-end mb-3 gap-2">
+            <div class="flex justify-end mb-3 gap-2">
                 <Link v-if="$page.props.user.isAdmin === 1" :href="`/users`"><button
                     class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                 >All Users</button>
@@ -96,17 +97,24 @@
 
 <script setup>
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import { useChatStore } from "@/Stores/ChatStore.js"
-import {onMounted} from "vue";
+import {onBeforeMount, onMounted} from "vue";
+import {useUserStore} from "@/Stores/UserStore";
 
 let videoPlayerStore = useVideoPlayerStore()
-let chat = useChatStore()
+let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'users'
 
+onBeforeMount(() => {
+    userStore.scrollToTopCounter = 0;
+})
+
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
-    document.getElementById("topDiv").scrollIntoView()
+    if (userStore.scrollToTopCounter === 0 ) {
+        document.getElementById("topDiv").scrollIntoView()
+        userStore.scrollToTopCounter ++;
+    }
 });
 
 let props = defineProps({

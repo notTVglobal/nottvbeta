@@ -2,6 +2,7 @@
 
     <Head title="Shop" />
 
+    <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white text-black p-5 mb-10">
 
@@ -34,29 +35,25 @@
 
 <script setup>
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import { useChatStore } from "@/Stores/ChatStore.js"
 import { onBeforeMount, onMounted } from "vue"
+import {useUserStore} from "@/Stores/UserStore";
 
 let videoPlayerStore = useVideoPlayerStore()
-let chat = useChatStore()
+let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'shop'
 
-
 onBeforeMount(() => {
-
+    userStore.scrollToTopCounter = 0;
 })
 
-const loadVideoCSS = async () => {
-    await videoPlayerStore.makeVideoFullPage();
-    await videoPlayerStore.makeVideoTopRight();
-}
-
 onMounted(() => {
-    loadVideoCSS();
-    document.getElementById("topDiv").scrollIntoView()
+    videoPlayerStore.makeVideoTopRight();
+    if (userStore.scrollToTopCounter === 0 ) {
+        document.getElementById("topDiv").scrollIntoView()
+        userStore.scrollToTopCounter ++;
+    }
 });
-
 
 let props = defineProps({
     can: Object,

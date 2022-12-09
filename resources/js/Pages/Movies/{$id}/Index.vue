@@ -2,9 +2,10 @@
 
     <Head :title="`Movie`"/>
 
+    <div id="topDiv" v-if="!userStore.isMobile"></div>
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-gray-900 text-white px-5">
-            <div id="topDiv" v-if="!userStore.isMobile"></div>
+
             <header class="flex justify-between mb-3 border-b border-gray-800">
                 <div class="container mx-auto flex flex-col lg:flex-row items-center justify-between px-4 py-6">
 
@@ -228,7 +229,7 @@
 </template>
 
 <script setup>
-import {ref, onMounted} from "vue"
+import {ref, onMounted, onBeforeMount} from "vue"
 import Message from "@/Components/Modals/Messages"
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
 import {useTeamStore} from "@/Stores/TeamStore.js"
@@ -238,7 +239,6 @@ import {useUserStore} from "@/Stores/UserStore.js"
 import 'filepond/dist/filepond.min.css'
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css'
 
-
 let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore()
 let showStore = useShowStore()
@@ -246,9 +246,16 @@ let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'movies'
 
+onBeforeMount(() => {
+    userStore.scrollToTopCounter = 0;
+})
+
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
-    document.getElementById("topDiv").scrollIntoView()
+    if (userStore.scrollToTopCounter === 0 ) {
+        document.getElementById("topDiv").scrollIntoView()
+        userStore.scrollToTopCounter ++;
+    }
 });
 
 let props = defineProps({

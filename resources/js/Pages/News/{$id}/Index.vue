@@ -2,10 +2,10 @@
 
     <Head title="News Post" />
 
+    <div id="topDiv"></div>
     <div class="place-self-center flex flex-col ">
         <div class="bg-white text-black p-5 mb-10">
 
-<div id="topDiv"></div>
             <header class="mb-5 border-b border-gray-800">
                 <div class="container mx-auto flex flex-col lg:flex-row items-center justify-between px-4 py-6">
 
@@ -95,18 +95,25 @@
 
 <script setup>
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import { useChatStore } from "@/Stores/ChatStore.js"
-import {onMounted} from "vue";
+import {onBeforeMount, onMounted} from "vue";
 import {useForm} from "@inertiajs/inertia-vue3";
+import {useUserStore} from "@/Stores/UserStore";
 
 let videoPlayerStore = useVideoPlayerStore()
-let chat = useChatStore()
+let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'news'
 
+onBeforeMount(() => {
+    userStore.scrollToTopCounter = 0;
+})
+
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
-    document.getElementById("topDiv").scrollIntoView()
+    if (userStore.scrollToTopCounter === 0 ) {
+        document.getElementById("topDiv").scrollIntoView()
+        userStore.scrollToTopCounter ++;
+    }
 });
 
 const props = defineProps({

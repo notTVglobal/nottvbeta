@@ -10,11 +10,12 @@
 <!--            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">-->
 <!--                <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">-->
 
+    <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white text-black p-5 mb-10">
 
             <div class="flex justify-between">
-                <div id="topDiv" class="grid grid-cols-1 grid-rows-2">
+                <div class="grid grid-cols-1 grid-rows-2">
                     <h1 class="text-3xl font-semibold">Go Live</h1>
                 </div>
                 <div class="grid grid-cols-1 grid-rows-2">
@@ -53,17 +54,24 @@
 
 <script setup>
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import { useChatStore } from "@/Stores/ChatStore.js"
-import {onMounted} from "vue";
+import {onBeforeMount, onMounted} from "vue";
+import {useUserStore} from "@/Stores/UserStore";
 
 let videoPlayerStore = useVideoPlayerStore()
-let chat = useChatStore()
+let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'goLive'
 
+onBeforeMount(() => {
+    userStore.scrollToTopCounter = 0;
+})
+
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight()
-    document.getElementById("topDiv").scrollIntoView()
+    if (userStore.scrollToTopCounter === 0 ) {
+        document.getElementById("topDiv").scrollIntoView()
+        userStore.scrollToTopCounter ++;
+    }
 });
 
 </script>

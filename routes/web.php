@@ -465,10 +465,6 @@ Route::middleware([
 // Chat
 ///////////
 ///
-    Route::get('/chat1', function () {
-        return view('chat');
-    });
-    Route::get('/chat', [ChatController::class, 'index'])->name('chat');
     Route::get('/chat/channels', [ChatController::class, 'channels']);
     Route::get('/chat/channel/{channelId}/messages', [ChatController::class, 'messages']);
     Route::post('/chat/message', [ChatController::class, 'newMessage']);

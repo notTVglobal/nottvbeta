@@ -2,10 +2,11 @@
 
     <Head :title="`Edit Team: ${props.team.name}`"/>
 
+    <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white text-black p-5 mb-10">
 
-            <TeamEditHeader id="topDiv" :team="props.team" :teamLeaderName="props.teamLeaderName" />
+            <TeamEditHeader :team="props.team" :teamLeaderName="props.teamLeaderName" />
 
 
             <div class="flex flex-col">
@@ -178,11 +179,10 @@
 
 <script setup>
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
-import {useChatStore} from "@/Stores/ChatStore.js"
 import {useTeamStore} from "@/Stores/TeamStore.js"
 import TeamEditHeader from "@/Components/Teams/Edit/TeamEditHeader";
 import TeamEditBody from "@/Components/Teams/Edit/TeamEditBody";
-import { onMounted } from "vue";
+import {onBeforeMount, onMounted} from "vue";
 import {Inertia} from "@inertiajs/inertia";
 import {useForm} from "@inertiajs/inertia-vue3";
 import TabbableTextarea from "@/Components/TabbableTextarea"
@@ -194,25 +194,24 @@ import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import FilePondPluginFileMetadata from "filepond-plugin-file-metadata";
 import 'filepond/dist/filepond.min.css';
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css';
+import {useUserStore} from "@/Stores/UserStore";
 
 let videoPlayerStore = useVideoPlayerStore()
-let chat = useChatStore()
 let teamStore = useTeamStore()
+let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'teams'
 
-let scrollToTopDivCounter = 0
-
-function scrollToTopDiv() {
-    if (scrollToTopDivCounter = 0 ) {
-        document.getElementById("topDiv").scrollIntoView()
-        scrollToTopDivCounter ++;
-    }
-}
+onBeforeMount(() => {
+    userStore.scrollToTopCounter = 0;
+})
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
-    scrollToTopDiv()
+    if (userStore.scrollToTopCounter === 0 ) {
+        document.getElementById("topDiv").scrollIntoView()
+        userStore.scrollToTopCounter ++;
+    }
 });
 
 let props = defineProps({

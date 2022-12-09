@@ -1,10 +1,11 @@
 <template>
     <Head title="Shows" />
 
+    <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white text-black dark:bg-gray-900 dark:text-white p-5 mb-10">
 
-            <div id="topDiv" class="flex justify-between mb-6">
+            <div class="flex justify-between mb-6">
                 <div>
                     <h1 class="text-3xl font-semibold pb-3">Shows</h1>
                 </div>
@@ -176,20 +177,27 @@
 
 <script setup>
 import Pagination from "@/Components/Pagination"
-import {onMounted, ref, watch} from "vue"
+import {onBeforeMount, onMounted, ref, watch} from "vue"
 import {Inertia} from "@inertiajs/inertia"
 import throttle from "lodash/throttle"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import { useChatStore } from "@/Stores/ChatStore.js"
+import {useUserStore} from "@/Stores/UserStore";
 
 let videoPlayerStore = useVideoPlayerStore()
-let chat = useChatStore()
+let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'admin'
 
+onBeforeMount(() => {
+    userStore.scrollToTopCounter = 0;
+})
+
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
-    document.getElementById("topDiv").scrollIntoView()
+    if (userStore.scrollToTopCounter === 0 ) {
+        document.getElementById("topDiv").scrollIntoView()
+        userStore.scrollToTopCounter ++;
+    }
 });
 
 let props = defineProps({

@@ -2,6 +2,7 @@
 
     <Head :title="`Manage Show: ${props.show.name}`"/>
 
+    <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white rounded text-black p-5 mb-10">
 
@@ -16,7 +17,7 @@
             </div>
 
             <header>
-            <div id="topDiv" class="flex justify-between mb-3">
+            <div class="flex justify-between mb-3">
                 <div class="gap-2">
                     <div class="font-bold mb-4 text-orange-400">MANAGE SHOW</div>
                     <div>
@@ -161,7 +162,6 @@
 
 <script setup>
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
-import {useChatStore} from "@/Stores/ChatStore.js"
 import {useShowStore} from "@/Stores/ShowStore.js"
 import {useTeamStore} from "@/Stores/TeamStore.js"
 import ShowHeader from "@/Components/Shows/ShowHeader"
@@ -170,20 +170,28 @@ import ShowFooter from "@/Components/Shows/ShowFooter"
 import ResponsiveNavigationMenu from "@/Components/Navigation/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/Navigation/NavigationMenu"
 import ShowCreditsList from "@/Components/Shows/Manage/ShowCreditsList";
-import {onMounted, ref, watch} from "vue";
+import {onBeforeMount, onMounted, ref, watch} from "vue";
 import throttle from "lodash/throttle";
 import {Inertia} from "@inertiajs/inertia";
+import {useUserStore} from "@/Stores/UserStore";
 
 let videoPlayerStore = useVideoPlayerStore()
-let chat = useChatStore()
 let showStore = useShowStore();
 let teamStore = useTeamStore();
+let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'shows'
 
+onBeforeMount(() => {
+    userStore.scrollToTopCounter = 0;
+})
+
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
-    document.getElementById("topDiv").scrollIntoView()
+    if (userStore.scrollToTopCounter === 0 ) {
+        document.getElementById("topDiv").scrollIntoView()
+        userStore.scrollToTopCounter ++;
+    }
 });
 
 let props = defineProps({

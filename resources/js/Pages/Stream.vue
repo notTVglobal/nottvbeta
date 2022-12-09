@@ -24,10 +24,10 @@ onMounted(() => {
 
 })
 if (streamStore.currentChannel != "Stream") {
-    videoPlayerStore.videoSource = "https://mist2.not.tv/hls/tmr1984pull/index.m3u8";
-    videoPlayerStore.videoSourceType = "application/x-mpegURL"
+    let source = "tmr1984pull";
     videoPlayerStore.videoName = "The Terminator";
-    videoPlayerStore.loadNewSource()
+    streamStore.currentChannel = "Stream";
+    videoPlayerStore.loadNewSourceFromMist(source);
 }
 
 onBeforeUnmount(() => {

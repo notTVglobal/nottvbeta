@@ -1,10 +1,11 @@
 <template>
     <Head title="Settings" />
 <!--    <AppLayout>-->
+    <div id="topDiv"></div>
     <div class="overflow-y-scroll z-10">
 
 <!--        <template #header>-->
-            <h2 id="topDiv" class="font-semibold text-4xl text-gray-200 text-center leading-tight">
+            <h2 class="font-semibold text-4xl text-gray-200 text-center leading-tight">
                 Profile
             </h2>
 <!--        </template>-->
@@ -62,17 +63,24 @@ import UpdatePasswordForm from '@/Pages/Profile/Partials/UpdatePasswordForm.vue'
 import UpdateProfileInformationForm from '@/Pages/Profile/Partials/UpdateProfileInformationForm.vue'
 import UpdateContactInformationForm from '@/Pages/Profile/Partials/UpdateContactInformationForm.vue'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import { useChatStore } from "@/Stores/ChatStore.js"
-import {onMounted} from "vue";
+import {onBeforeMount, onMounted} from "vue";
+import {useUserStore} from "@/Stores/UserStore";
 
 let videoPlayerStore = useVideoPlayerStore()
-let chat = useChatStore()
+let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'profile'
 
+onBeforeMount(() => {
+    userStore.scrollToTopCounter = 0;
+})
+
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
-    document.getElementById("topDiv").scrollIntoView()
+    if (userStore.scrollToTopCounter === 0 ) {
+        document.getElementById("topDiv").scrollIntoView()
+        userStore.scrollToTopCounter ++;
+    }
 });
 
 defineProps({

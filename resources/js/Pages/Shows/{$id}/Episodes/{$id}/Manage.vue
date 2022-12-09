@@ -2,6 +2,7 @@
 
     <Head :title="`Manage Episode: ${props.episode.name}`"/>
 
+    <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-dark rounded text-light p-5">
 
@@ -15,7 +16,7 @@
                                 </span>
             </div>
 
-            <header id="topDiv">
+            <header>
                 <div class="flex justify-between mb-3">
                     <div class="gap-2">
                         <div class="font-bold mb-4 text-orange-400">MANAGE EPISODE</div>
@@ -150,14 +151,13 @@
 </template>
 
 <script setup>
-import ResponsiveNavigationMenu from "@/Components/Navigation/ResponsiveNavigationMenu"
-import NavigationMenu from "@/Components/Navigation/NavigationMenu"
-import { ref, onMounted } from "vue";
+import {onBeforeMount, onMounted} from "vue";
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
 import {useShowStore} from "@/Stores/ShowStore.js"
 import {useTeamStore} from "@/Stores/TeamStore.js"
 import EpisodeFooter from "@/Components/ShowEpisodes/EpisodeFooter";
 import EpisodeHeader from "@/Components/ShowEpisodes/EpisodeHeader";
+import {useUserStore} from "@/Stores/UserStore";
 // import EpisodeHeader from "@/Components/ShowEpisodes/EpisodeHeader"
 // import Episode from "@/Components/ShowEpisodes/Episode"
 // import EpisodeCreditsList from "@/Components/ShowEpisodes/EpisodeCreditsList";
@@ -166,12 +166,20 @@ import EpisodeHeader from "@/Components/ShowEpisodes/EpisodeHeader";
 let videoPlayerStore = useVideoPlayerStore()
 let showStore = useShowStore();
 let teamStore = useTeamStore();
+let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'episodes'
 
+onBeforeMount(() => {
+    userStore.scrollToTopCounter = 0;
+})
+
 onMounted(async () => {
     videoPlayerStore.makeVideoTopRight();
-    document.getElementById("topDiv").scrollIntoView()
+    if (userStore.scrollToTopCounter === 0 ) {
+        document.getElementById("topDiv").scrollIntoView()
+        userStore.scrollToTopCounter ++;
+    }
 
 });
 

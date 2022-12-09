@@ -1,10 +1,11 @@
 <template>
     <Head title="Schedule" />
 
+    <div id="topDiv"></div>
     <div class="place-self-center flex flex-col">
         <div class="flex justify-between p-5 mb-5">
 
-                    <div id="topDiv" class="text-3xl font-semibold pt-4">Schedule</div>
+            <div class="text-3xl font-semibold pt-4">Schedule</div>
 
         </div>
         <div class="ml-5 mb-5 text-red-600">This section is in development. Not currently working.</div>
@@ -17,22 +18,29 @@
 
 <script setup>
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import { useChatStore } from "@/Stores/ChatStore.js"
-import {onMounted} from "vue";
+import { useUserStore } from "@/Stores/UserStore.js"
+import { onBeforeMount, onMounted } from "vue";
 
 let videoPlayerStore = useVideoPlayerStore()
-let chat = useChatStore()
+let userStore = useUserStore()
 
-videoPlayerStore.currentPage = 'schedule'
+videoPlayerStore.currentPage = 'schedule';
+
+onBeforeMount(() => {
+    userStore.scrollToTopCounter = 0;
+})
+
+onMounted(() => {
+    videoPlayerStore.makeVideoTopRight();
+    if (userStore.scrollToTopCounter === 0 ) {
+        document.getElementById("topDiv").scrollIntoView()
+        userStore.scrollToTopCounter ++;
+    }
+});
 
 let props = defineProps({
     can: Object
 })
-
-onMounted(() => {
-    videoPlayerStore.makeVideoTopRight()
-    document.getElementById("topDiv").scrollIntoView()
-});
 
 // chat.class = "chatSmall"
 

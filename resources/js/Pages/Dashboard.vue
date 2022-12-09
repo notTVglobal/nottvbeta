@@ -1,11 +1,11 @@
 <template>
     <Head title="Dashboard" />
-
+    <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
 
         <div class="bg-white rounded text-black dark:text-white dark:bg-gray-900 p-5 mb-10">
 
-            <div id="topDiv" class="flex justify-between mb-3 pt-4">
+            <div class="flex justify-between mb-3 pt-4">
 
 
                 <h1 class="text-3xl font-semibold pb-3">Dashboard</h1>
@@ -336,17 +336,24 @@
 <script setup>
 import Pagination from "@/Components/Pagination"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import { useChatStore } from "@/Stores/ChatStore.js"
-import {onMounted} from "vue";
+import {onBeforeMount, onMounted} from "vue";
+import {useUserStore} from "@/Stores/UserStore";
 
 let videoPlayerStore = useVideoPlayerStore()
-let chat = useChatStore()
+let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'dashboard'
 
+onBeforeMount(() => {
+    userStore.scrollToTopCounter = 0;
+})
+
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
-    document.getElementById("topDiv").scrollIntoView()
+    if (userStore.scrollToTopCounter === 0 ) {
+        document.getElementById("topDiv").scrollIntoView()
+        userStore.scrollToTopCounter ++;
+    }
 });
 
 videoPlayerStore.loggedIn = true

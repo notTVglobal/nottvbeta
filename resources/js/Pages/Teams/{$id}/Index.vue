@@ -2,11 +2,12 @@
 
     <Head :title="props.team.name" />
 
+    <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
 
         <div class="bg-white rounded text-black p-5 mb-10">
 
-            <header id="topDiv" class="flex justify-between mb-3">
+            <header class="flex justify-between mb-3">
                 <div>
                     <h3 class="inline-flex items-center text-3xl font-semibold relative">
                         <img :src="'/storage/images/' + props.logo" alt="" class="w-20 mr-2">
@@ -100,17 +101,26 @@
 <script setup>
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useTeamStore } from "@/Stores/TeamStore.js"
-import { onMounted } from "vue"
+import {onBeforeMount, onMounted} from "vue"
 import Pagination from "@/Components/Pagination"
+import {useUserStore} from "@/Stores/UserStore";
 
 let videoPlayerStore = useVideoPlayerStore();
 let teamStore = useTeamStore();
+let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'teams'
 
+onBeforeMount(() => {
+    userStore.scrollToTopCounter = 0;
+})
+
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
-    document.getElementById("topDiv").scrollIntoView()
+    if (userStore.scrollToTopCounter === 0 ) {
+        document.getElementById("topDiv").scrollIntoView()
+        userStore.scrollToTopCounter ++;
+    }
 });
 
 let props = defineProps({

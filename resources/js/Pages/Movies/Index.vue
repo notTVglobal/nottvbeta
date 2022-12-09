@@ -2,10 +2,11 @@
 
     <Head title="Movies"/>
 
+    <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-gray-900 text-white px-5">
 
-            <header id="topDiv" class="flex justify-between mb-3 border-b border-gray-800">
+            <header class="flex justify-between mb-3 border-b border-gray-800">
                 <div class="container mx-auto flex flex-col lg:flex-row items-center justify-between px-4 py-6">
                     <div class="flex flex-col lg:flex-row items-center">
                         <h1 class="text-3xl font-semibold">Movies</h1>
@@ -185,25 +186,16 @@
 
 <script setup>
 import Pagination from "@/Components/PaginationDark"
-import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
-import {useChatStore} from "@/Stores/ChatStore.js"
-import {ref, onMounted, watch} from "vue";
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+import { useUserStore } from "@/Stores/UserStore.js"
+import { ref, onMounted, watch, onBeforeMount } from "vue";
 import throttle from "lodash/throttle";
-import {Inertia} from "@inertiajs/inertia";
+import { Inertia } from "@inertiajs/inertia";
 
 let videoPlayerStore = useVideoPlayerStore()
-let chat = useChatStore()
+let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'movies'
-
-let scrollToTopDivCounter = 0
-
-function scrollToTopDiv() {
-    if (scrollToTopDivCounter = 0 ) {
-        document.getElementById("topDiv").scrollIntoView()
-        scrollToTopDivCounter ++;
-    }
-}
 
 function scrollToReview() {
     document.getElementById("review").scrollIntoView({behavior: "smooth"})
@@ -212,9 +204,16 @@ function scrollToComingSoon() {
     document.getElementById("coming-soon").scrollIntoView({behavior: "smooth"})
 }
 
+onBeforeMount(() => {
+    userStore.scrollToTopCounter = 0;
+})
+
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
-    scrollToTopDiv()
+    if (userStore.scrollToTopCounter === 0 ) {
+        document.getElementById("topDiv").scrollIntoView()
+        userStore.scrollToTopCounter ++;
+    }
 });
 
 let movie = 'test-movie-2'

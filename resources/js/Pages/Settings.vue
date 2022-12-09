@@ -1,6 +1,7 @@
 <template>
     <Head title="Settings" />
 
+    <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-dark text-light p-5 mb-10">
 
@@ -20,22 +21,30 @@
 
 <script setup>
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import { useChatStore } from "@/Stores/ChatStore.js"
-import { onMounted } from "vue"
+import {onBeforeMount, onMounted} from "vue"
+import {useUserStore} from "@/Stores/UserStore";
 
 let videoPlayerStore = useVideoPlayerStore()
-let chat = useChatStore()
+let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'settings'
+
+onBeforeMount(() => {
+    userStore.scrollToTopCounter = 0;
+})
+
+onMounted(() => {
+    videoPlayerStore.makeVideoTopRight()
+    if (userStore.scrollToTopCounter === 0 ) {
+        document.getElementById("topDiv").scrollIntoView()
+        userStore.scrollToTopCounter ++;
+    }
+});
 
 let props = defineProps({
     can: Object,
 })
 
-onMounted(() => {
-    videoPlayerStore.makeVideoTopRight()
-    document.getElementById("topDiv").scrollIntoView()
-});
 
 </script>
 

@@ -2,6 +2,7 @@
 
     <Head :title="`Manage Team: ${props.team.name}`"/>
 
+    <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3" v-touch="()=>(console.log('tapped'))">
 
         <div class="bg-white rounded text-black p-5 mb-10">
@@ -19,7 +20,7 @@
             <!--            <TeamHeader v-bind="team" :memberSpots="props.team.memberSpots"/>-->
 
             <header>
-                <div id="topDiv" class="flex justify-between mb-3">
+                <div class="flex justify-between mb-3">
                     <div class="gap-2">
                         <div class="font-bold mb-4 text-orange-400">MANAGE TEAM</div>
                         <div>
@@ -98,7 +99,7 @@
 
 
 <script setup>
-import { onMounted } from "vue"
+import {onBeforeMount, onMounted} from "vue"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useTeamStore } from "@/Stores/TeamStore.js"
 import Pagination from "@/Components/Pagination"
@@ -106,15 +107,24 @@ import TeamManageHeader from "@/Components/Teams/Manage/TeamManageHeader"
 import TeamMembersList from "@/Components/Teams/TeamMembersList"
 import TeamShowsList from "@/Components/Teams/TeamShowsList"
 import TeamAssignmentsList from "@/Components/Teams/TeamAssignmentsList"
+import {useUserStore} from "@/Stores/UserStore";
 
 let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore();
+let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'teams'
 
+onBeforeMount(() => {
+    userStore.scrollToTopCounter = 0;
+})
+
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
-    document.getElementById("topDiv").scrollIntoView()
+    if (userStore.scrollToTopCounter === 0 ) {
+        document.getElementById("topDiv").scrollIntoView()
+        userStore.scrollToTopCounter ++;
+    }
 });
 
 let props = defineProps({

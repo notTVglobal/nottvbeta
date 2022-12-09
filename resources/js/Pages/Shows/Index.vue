@@ -1,6 +1,7 @@
 <template>
     <Head title="Shows" />
 
+    <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-gray-900 text-white p-5 mb-10">
 
@@ -17,7 +18,7 @@
                                 </span>
                     </div>
 
-                    <div id="topDiv" class="flex flex-col lg:flex-row items-center">
+                    <div class="flex flex-col lg:flex-row items-center">
                         <h1 class="text-3xl font-semibold">Shows</h1>
                         <ul class="flex ml-0 lg:ml-16 mt-6 lg:mt-0 space-x-8" >
                             <li>
@@ -150,25 +151,16 @@
 
 <script setup>
 import Pagination from "@/Components/Pagination"
-import {onMounted, ref, watch} from "vue"
+import {onBeforeMount, onMounted, ref, watch} from "vue"
 import {Inertia} from "@inertiajs/inertia"
 import throttle from "lodash/throttle"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import { useChatStore } from "@/Stores/ChatStore.js"
+import {useUserStore} from "@/Stores/UserStore.js"
 
 let videoPlayerStore = useVideoPlayerStore()
-let chat = useChatStore()
+let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'shows'
-
-let scrollToTopDivCounter = 0
-
-function scrollToTopDiv() {
-    if (scrollToTopDivCounter = 0 ) {
-        document.getElementById("topDiv").scrollIntoView()
-        scrollToTopDivCounter ++;
-    }
-}
 
 function scrollToNewEpisodes() {
     document.getElementById("new-episodes").scrollIntoView({behavior: "smooth"})
@@ -177,9 +169,16 @@ function scrollToComingSoon() {
     document.getElementById("coming-soon").scrollIntoView({behavior: "smooth"})
 }
 
+onBeforeMount(() => {
+    userStore.scrollToTopCounter = 0;
+})
+
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
-    scrollToTopDiv()
+    if (userStore.scrollToTopCounter === 0 ) {
+        document.getElementById("topDiv").scrollIntoView()
+        userStore.scrollToTopCounter ++;
+    }
 });
 
 let props = defineProps({

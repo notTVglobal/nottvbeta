@@ -2,6 +2,7 @@
 
     <Head :title="`Administrative Settings`"/>
 
+    <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-dark rounded text-light p-5">
 
@@ -15,7 +16,7 @@
                                 </span>
             </div>
 
-            <header id="topDiv">
+            <header>
                 <div class="flex justify-between mb-3">
                     <div class="mb-4">
                         <h1 class="text-3xl font-semibold">Administrative Settings</h1>
@@ -58,19 +59,25 @@
 </template>
 
 <script setup>
-import {onMounted} from "vue";
+import {onBeforeMount, onMounted} from "vue";
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
-
-import SectionTitle from "../../../../vendor/laravel/jetstream/stubs/inertia/resources/js/Components/SectionTitle";
+import {useUserStore} from "@/Stores/UserStore";
 
 let videoPlayerStore = useVideoPlayerStore()
+let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'admin'
 
+onBeforeMount(() => {
+    userStore.scrollToTopCounter = 0;
+})
+
 onMounted(async () => {
     videoPlayerStore.makeVideoTopRight();
-    document.getElementById("topDiv").scrollIntoView()
-
+    if (userStore.scrollToTopCounter === 0 ) {
+        document.getElementById("topDiv").scrollIntoView()
+        userStore.scrollToTopCounter ++;
+    }
 });
 
 let props = defineProps({

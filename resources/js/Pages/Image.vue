@@ -1,11 +1,12 @@
 <template>
     <Head title="Image uploading"/>
 
+    <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white text-black p-5 mb-10">
 
             <div class="flex justify-between mb-6">
-                <div id="topDiv" class="grid grid-cols-1 grid-rows-2 pt-4">
+                <div class="grid grid-cols-1 grid-rows-2 pt-4">
                     <h1 class="text-3xl font-semibold">Image Uploader</h1>
                 </div>
                 <span class="text-xs font-semibold text-red-700">Admin Mode</span>
@@ -18,7 +19,6 @@
                     </div>
                 </div>
             </div>
-            <div class="w-full bg-orange-800 text-white p-2">NOTE: This page will crash if reloaded (F5)</div>
 
     <div class="max-w-lg mx-auto mt-2 bg-gray-200 p-6">
         <div class="pt-3 pb-4">
@@ -68,17 +68,26 @@ import {Head, Link} from '@inertiajs/inertia-vue3'
 import "filepond/dist/filepond.min.css"
 // import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import { useChatStore } from "@/Stores/ChatStore.js"
 import {Inertia} from "@inertiajs/inertia";
+import {useUserStore} from "@/Stores/UserStore";
+import {onBeforeMount, onMounted} from "vue";
 
 let videoPlayerStore = useVideoPlayerStore()
-let chat = useChatStore()
+let userStore = useUserStore()
 
-videoPlayerStore.class = "videoTopRight"
-videoPlayerStore.videoContainerClass = "videoContainerTopRight"
-videoPlayerStore.fullPage = false
-videoPlayerStore.currentPage = 'image'
-chat.class = "chatSmall"
+videoPlayerStore.currentPage = 'imageUploader';
+
+onBeforeMount(() => {
+    userStore.scrollToTopCounter = 0;
+})
+
+onMounted(() => {
+    videoPlayerStore.makeVideoTopRight();
+    if (userStore.scrollToTopCounter === 0 ) {
+        document.getElementById("topDiv").scrollIntoView()
+        userStore.scrollToTopCounter ++;
+    }
+});
 
 let props = defineProps({
     images: Object,
@@ -118,28 +127,15 @@ let props = defineProps({
 // }))
 
 </script>
-<script>
-
-</script>
 
 <script>
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import vueFilePond, { setOptions } from 'vue-filepond';
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size';
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import 'filepond/dist/filepond.min.css';
 import {Inertia} from "@inertiajs/inertia";
-import { onMounted } from "vue";
 
-let videoPlayerStore = useVideoPlayerStore()
-
-
-
-onMounted(() => {
-    videoPlayerStore.makeVideoTopRight()
-    document.getElementById("topDiv").scrollIntoView()
-});
 
 const FilePond = vueFilePond(
     FilePondPluginFileValidateType,

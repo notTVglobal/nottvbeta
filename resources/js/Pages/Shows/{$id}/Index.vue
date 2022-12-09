@@ -3,9 +3,10 @@
 
     <Head :title="props.show.name" />
 
+    <div id="topDiv" v-if="!userStore.isMobile"></div>
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="text-white bg-gray-900 rounded py-5 mb-10">
-            <div id="topDiv" v-if="!userStore.isMobile"></div>
+
             <header class="flex justify-between mb-3 border-b border-gray-800">
                 <div class="container mx-auto flex flex-col lg:flex-row items-center justify-between px-4 py-6">
 
@@ -234,7 +235,7 @@
 <script setup>
 import ResponsiveNavigationMenu from "@/Components/Navigation/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/Navigation/NavigationMenu"
-import {onMounted, onUpdated, ref} from 'vue'
+import {onBeforeMount, onMounted, onUpdated, ref} from 'vue'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useTeamStore } from "@/Stores/TeamStore.js"
 import { useShowStore } from "@/Stores/ShowStore.js"
@@ -253,10 +254,16 @@ let userStore = useUserStore();
 
 videoPlayerStore.currentPage = 'shows'
 
+onBeforeMount(() => {
+    userStore.scrollToTopCounter = 0;
+})
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
-    document.getElementById("topDiv").scrollIntoView()
+    if (userStore.scrollToTopCounter === 0 ) {
+        document.getElementById("topDiv").scrollIntoView()
+        userStore.scrollToTopCounter ++;
+    }
 });
 
 let props = defineProps({

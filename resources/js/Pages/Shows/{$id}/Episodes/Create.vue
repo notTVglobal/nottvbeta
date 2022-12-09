@@ -1,10 +1,11 @@
 <template>
     <Head  title="Create Episode"/>
 
+    <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white text-black p-5 mb-10">
 
-            <div id="topDiv" class="flex justify-between mt-3 mb-6">
+            <div class="flex justify-between mt-3 mb-6">
                 <div class="text-3xl">Create Episode</div>
                 <div>
                     <Link v-if="teamStore.activeShow.slug" :href="route('shows.manage', {show: teamStore.activeShow.slug})"><button
@@ -152,21 +153,28 @@
 </template>
 
 <script setup>
-import ResponsiveNavigationMenu from "@/Components/Navigation/ResponsiveNavigationMenu"
-import NavigationMenu from "@/Components/Navigation/NavigationMenu"
 import { useForm } from "@inertiajs/inertia-vue3"
-import { onMounted } from "vue"
+import {onBeforeMount, onMounted} from "vue"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useTeamStore } from "@/Stores/TeamStore.js"
+import {useUserStore} from "@/Stores/UserStore";
 
 let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore()
+let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'episodes'
 
+onBeforeMount(() => {
+    userStore.scrollToTopCounter = 0;
+})
+
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
-    document.getElementById("topDiv").scrollIntoView()
+    if (userStore.scrollToTopCounter === 0 ) {
+        document.getElementById("topDiv").scrollIntoView()
+        userStore.scrollToTopCounter ++;
+    }
 });
 
 let props = defineProps({

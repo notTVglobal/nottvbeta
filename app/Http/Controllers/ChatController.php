@@ -41,13 +41,6 @@ class ChatController extends Controller
 
     }
 
-    public function index()
-    {
-        return Inertia::render('Chat');
-//        return view('chat');
-
-    }
-
 
 //    public function fetchMessages(Request $request)
 //    {

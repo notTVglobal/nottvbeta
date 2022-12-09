@@ -2,7 +2,8 @@
 
     <Head :title="`Upload Movie`"/>
 
-    <header id="topDiv" class="md:pageWidth pageWidthSmall">
+    <div id="topDiv"></div>
+    <header class="md:pageWidth pageWidthSmall">
 
         <Message v-if="showMessage" @close="showMessage = false"/>
 
@@ -15,7 +16,6 @@
         </div>
 
     </header>
-
 
 
     <div class="place-self-center flex flex-col gap-y-3">
@@ -146,22 +146,30 @@
 
 <script setup>
 import Message from "@/Components/Modals/Messages"
-import { ref, onMounted, watch, computed } from "vue"
-import {useForm} from "@inertiajs/inertia-vue3"
-import TabbableTextarea from "@/Components/TabbableTextarea"
-import { Inertia } from "@inertiajs/inertia"
+import {ref, onMounted, onBeforeMount} from "vue"
+
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useTeamStore } from "@/Stores/TeamStore.js"
 import { useShowStore } from "@/Stores/ShowStore.js"
+import {useUserStore} from "@/Stores/UserStore";
+
 let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore()
 let showStore = useShowStore()
+let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'movies'
 
+onBeforeMount(() => {
+    userStore.scrollToTopCounter = 0;
+})
+
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
-    document.getElementById("topDiv").scrollIntoView()
+    if (userStore.scrollToTopCounter === 0 ) {
+        document.getElementById("topDiv").scrollIntoView()
+        userStore.scrollToTopCounter ++;
+    }
 });
 
 let props = defineProps({

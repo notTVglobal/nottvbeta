@@ -1,6 +1,7 @@
 <template>
     <Head title="Teams" />
 
+    <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white text-black p-5 mb-10">
 
@@ -16,7 +17,7 @@
                 </Link>
             </div>
 
-            <h1 id="topDiv" class="text-3xl font-semibold pb-3">Teams</h1>
+            <h1 class="text-3xl font-semibold pb-3">Teams</h1>
 
             <div class="flex flex-row justify-end gap-x-4">
                 <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg" />
@@ -144,20 +145,27 @@
 
 <script setup>
 import Pagination from "@/Components/Pagination"
-import {onMounted, ref, watch} from "vue"
+import {onBeforeMount, onMounted, ref, watch} from "vue"
 import {Inertia} from "@inertiajs/inertia"
 import throttle from "lodash/throttle"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import { useChatStore } from "@/Stores/ChatStore.js"
+import {useUserStore} from "@/Stores/UserStore";
 
 let videoPlayerStore = useVideoPlayerStore()
-let chat = useChatStore()
+let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'teams'
 
+onBeforeMount(() => {
+    userStore.scrollToTopCounter = 0;
+})
+
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
-    document.getElementById("topDiv").scrollIntoView()
+    if (userStore.scrollToTopCounter === 0 ) {
+        document.getElementById("topDiv").scrollIntoView()
+        userStore.scrollToTopCounter ++;
+    }
 });
 
 let props = defineProps({

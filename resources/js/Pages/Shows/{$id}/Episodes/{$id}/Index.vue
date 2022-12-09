@@ -2,13 +2,15 @@
 
     <Head :title="`${props.show.name}: ${props.episode.name}`"/>
 
+
+    <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3 overflow-x-hidden">
 
         <div class="text-white bg-gray-900 rounded py-5 mb-10">
 
             <div class="flex justify-between -mb-10">
 
-                <header id="topDiv" class="p-5 mb-6">
+                <header class="p-5 mb-6">
                     <div class="py-4">
                         <span class="font-semibold text-xs uppercase">SHOW: </span>
                         <Link :href="`/shows/${props.show.slug}/`"
@@ -144,10 +146,7 @@
 
 
 <script setup>
-import ResponsiveNavigationMenu from "@/Components/Navigation/ResponsiveNavigationMenu"
-import NavigationMenu from "@/Components/Navigation/NavigationMenu"
 import {onBeforeMount, onMounted} from 'vue'
-import {Inertia} from "@inertiajs/inertia";
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
 import {useTeamStore} from "@/Stores/TeamStore.js"
 import {useShowStore} from "@/Stores/ShowStore.js"
@@ -155,10 +154,12 @@ import {useShowStore} from "@/Stores/ShowStore.js"
 // import EpisodesList from "@/Components/ShowEpisodes/EpisodesList"
 // import EpisodeCreditsList from "@/ComponentShows/Episodes/EpisodeCreditsList";
 import EpisodeFooter from "@/Components/ShowEpisodes/EpisodeFooter"
+import {useUserStore} from "@/Stores/UserStore";
 
 let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore();
 let showStore = useShowStore();
+let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'episodes'
 
@@ -166,15 +167,16 @@ function scrollTo(selector) {
     document.querySelector(selector).scrollIntoView({ behavior: 'smooth'});
 }
 
-onBeforeMount(async () => {
-
+onBeforeMount(() => {
+    userStore.scrollToTopCounter = 0;
 })
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
-
-    // document.getElementById('topDiv').scrollIntoView()
-    scrollTo('#topDiv')
+    if (userStore.scrollToTopCounter === 0 ) {
+        document.getElementById("topDiv").scrollIntoView()
+        userStore.scrollToTopCounter ++;
+    }
 });
 
 let props = defineProps({

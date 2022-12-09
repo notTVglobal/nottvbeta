@@ -7,6 +7,7 @@
 <!--    </div>-->
 
 <!--    <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">-->
+    <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white text-black p-5 mb-10">
 
@@ -25,7 +26,7 @@
                                 </span>
                     </div>
 
-                    <div id="topDiv" class="flex flex-col lg:flex-row items-center">
+                    <div class="flex flex-col lg:flex-row items-center">
                         <h1 class="text-3xl font-semibold">News</h1>
                         <ul class="flex ml-0 lg:ml-16 mt-6 lg:mt-0 space-x-8" >
                             <li>
@@ -128,25 +129,20 @@
 <script setup>
 import Pagination from "@/Components/Pagination"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import { useChatStore } from "@/Stores/ChatStore.js"
 import { useForm } from '@inertiajs/inertia-vue3'
-import {onMounted, ref, watch} from "vue";
+import {onBeforeMount, onMounted, ref, watch} from "vue";
 import throttle from "lodash/throttle";
 import {Inertia} from "@inertiajs/inertia";
+import {useUserStore} from "@/Stores/UserStore";
 
 let videoPlayerStore = useVideoPlayerStore()
-let chat = useChatStore()
+let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'news'
 
-let scrollToTopDivCounter = 0
-
-function scrollToTopDiv() {
-    if (scrollToTopDivCounter = 0 ) {
-        document.getElementById("topDiv").scrollIntoView()
-        scrollToTopDivCounter ++;
-    }
-}
+onBeforeMount(() => {
+    userStore.scrollToTopCounter = 0;
+})
 
 function scrollToCities() {
     document.getElementById("cities").scrollIntoView({behavior: "smooth"})
@@ -154,7 +150,10 @@ function scrollToCities() {
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
-    scrollToTopDiv()
+    if (userStore.scrollToTopCounter === 0 ) {
+        document.getElementById("topDiv").scrollIntoView()
+        userStore.scrollToTopCounter ++;
+    }
 });
 
 let props = defineProps({

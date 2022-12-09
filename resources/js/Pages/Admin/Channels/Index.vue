@@ -1,6 +1,7 @@
 <template>
     <Head title="Channels Admin" />
 
+    <div id="topDiv"></div>
     <div class="place-self-center flex flex-col">
         <div class="bg-white text-black p-5 mb-10">
 
@@ -44,17 +45,25 @@
 
 
 <script setup>
-import { onMounted } from "vue"
+import {onBeforeMount, onMounted} from "vue"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import { useChatStore } from "@/Stores/ChatStore.js"
+import {useUserStore} from "@/Stores/UserStore";
 
 let videoPlayerStore = useVideoPlayerStore()
-let chat = useChatStore()
+let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'admin'
 
+onBeforeMount(() => {
+    userStore.scrollToTopCounter = 0;
+})
+
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
+    if (userStore.scrollToTopCounter === 0 ) {
+        document.getElementById("topDiv").scrollIntoView()
+        userStore.scrollToTopCounter ++;
+    }
 });
 
 

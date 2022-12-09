@@ -114,30 +114,29 @@
 <script setup>
 import Pagination from "@/Components/Pagination"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import { useUserStore } from "@/Stores/UserStore.js"
-import { onMounted, ref } from "vue";
+import {onBeforeMount, onMounted, ref} from "vue";
 import { Dropzone } from "dropzone";
 import { useForm } from "@inertiajs/inertia-vue3"
 import {Inertia} from "@inertiajs/inertia";
+import {useUserStore} from "@/Stores/UserStore";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'videoUpload'
 
-let scrollToTopDivCounter = 0
-
-function scrollToTopDiv() {
-    if (scrollToTopDivCounter = 0 ) {
-        document.getElementById("topDiv").scrollIntoView()
-        scrollToTopDivCounter ++;
-    }
-}
 let uploadPercentage = ref(0);
+
+onBeforeMount(() => {
+    userStore.scrollToTopCounter = 0;
+})
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
-    scrollToTopDiv()
+    if (userStore.scrollToTopCounter === 0 ) {
+        document.getElementById("topDiv").scrollIntoView()
+        userStore.scrollToTopCounter ++;
+    }
 
 // see options for Dropzone here: https://github.com/dropzone/dropzone/blob/main/src/options.js
     let myDropzone = new Dropzone("#videoUploadForm", {

@@ -2,10 +2,11 @@
 
     <Head :title="`Edit Show: ${props.show.name}`"/>
 
+    <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white text-black p-5 mb-10">
 
-            <ShowEditHeader id="topDiv" :show="props.show" :team="props.team"/>
+            <ShowEditHeader :show="props.show" :team="props.team"/>
 
             <div class="flex flex-col">
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -143,7 +144,7 @@
 </template>
 
 <script setup>
-import { onMounted } from "vue"
+import {onBeforeMount, onMounted} from "vue"
 import {useForm} from "@inertiajs/inertia-vue3"
 import TabbableTextarea from "@/Components/TabbableTextarea"
 
@@ -151,6 +152,7 @@ import { Inertia } from "@inertiajs/inertia"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useTeamStore } from "@/Stores/TeamStore.js"
 import { useShowStore } from "@/Stores/ShowStore.js"
+import {useUserStore} from "@/Stores/UserStore";
 
 import vueFilePond, { setOptions } from 'vue-filepond'
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type"
@@ -162,24 +164,24 @@ import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css
 
 import ShowEditHeader from "@/Components/Shows/Edit/ShowEditHeader"
 
+
 let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore()
 let showStore = useShowStore()
+let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'shows'
 
-let scrollToTopDivCounter = 0
-
-function scrollToTopDiv() {
-    if (scrollToTopDivCounter = 0 ) {
-        document.getElementById("topDiv").scrollIntoView()
-        scrollToTopDivCounter ++;
-    }
-}
+onBeforeMount(() => {
+    userStore.scrollToTopCounter = 0;
+})
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
-    scrollToTopDiv()
+    if (userStore.scrollToTopCounter === 0 ) {
+        document.getElementById("topDiv").scrollIntoView()
+        userStore.scrollToTopCounter ++;
+    }
 });
 
 let props = defineProps({
