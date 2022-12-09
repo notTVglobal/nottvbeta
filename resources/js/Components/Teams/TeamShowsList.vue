@@ -1,57 +1,35 @@
 <template>
-    <div class="bg-orange-300 p-2 font-bold">Shows</div>
-    <Link
-        :href="`/shows/create`"
-        v-if="teamStore.can.editTeam">
-        <button
-            class="bg-green-500 hover:bg-green-600 text-white ml-2 mt-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
-        >Create Show
-        </button>
-    </Link>
+    <div>
+        <!-- Paginator -->
+        <Pagination :links="shows.links" :id="showLinks" class="mb-6"/>
 
-    <table class="table-auto min-w-full divide-y divide-gray-200">
-        <thead class="bg-white divide-y divide-gray-200">
-        <tr>
-            <td class="px-6 py-4">
-<!--                Poster-->
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium text-gray-900">
-                Show Name
-
-            </td>
-
-            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                Notes
-            </td>
-
-            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-right">
-                Show Runner
-            </td>
-
-        </tr>
-        </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
-
-        <TeamShow
-            v-for="show in shows"
-            :show="show"
-        />
-
-        </tbody>
-    </table>
-
+        <div class="flex flex-row flex-wrap pb-12">
+            <div
+                v-for="show in shows.data"
+                :key="show.id"
+                class="bg-white dark:bg-gray-800 dark:border-gray-700"
+            >
+                <div
+                    class="min-w-[8rem] px-6 py-4 font-medium text-gray-900 dark:text-white"
+                >
+                    <!--                                                    <img :src="`/storage/images/${show.poster}`" class="rounded-full h-20 w-20 object-cover">-->
+                    <Link :href="`/shows/${show.slug}`" class="text-blue-800 hover:text-blue-600">
+                        <img :src="'/storage/images/' + show.poster" class="h-64 min-w-[8rem] w-48 object-cover hover:opacity-75 transition ease-in-out duration-150"></Link>
+                </div>
+                <div
+                    class="px-6 py-4 font-medium text-gray-900 dark:text-white break-words grow-0 w-full text-center"
+                >
+                    <Link :href="`/shows/${show.slug}`" class="text-blue-800 hover:text-blue-600">{{ show.name }}</Link>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script setup>
-import {useShowStore} from "@/Stores/ShowStore";
-import {useTeamStore} from "@/Stores/TeamStore";
-import TeamShow from "@/Components/Teams/TeamShow";
-
-let showStore = useShowStore();
-let teamStore = useTeamStore();
+import Pagination from "@/Components/Pagination"
 
 defineProps({
     shows: Object,
 })
-
 </script>

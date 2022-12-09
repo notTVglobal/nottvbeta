@@ -5,15 +5,15 @@
 
     <div id="topDiv" v-if="!userStore.isMobile"></div>
     <div class="place-self-center flex flex-col gap-y-3">
-        <div class="text-white bg-gray-900 rounded py-5 mb-10">
+        <div class="bg-gray-900 text-white px-5">
 
-            <header class="flex justify-between mb-3 border-b border-gray-800">
-                <div class="container mx-auto flex flex-col lg:flex-row items-center justify-between px-4 py-6">
+            <header class="flex mb-3 border-b border-gray-800">
+                <div class="container mx-auto flex flex-col lg:flex-row items-center justify-start  px-4 py-6">
 
                     <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
 
                     <div class="flex flex-col lg:flex-row items-center">
-                        <h1 class="text-3xl font-semibold">Shows</h1>
+                        <h1 class="text-3xl font-semibold"><Link :href="route('shows')" class="hover:text-blue-800">Shows</Link></h1>
                         <ul class="flex ml-0 lg:ml-16 mt-6 lg:mt-0 space-x-8">
                             <li>
                                 <Link :href="``" class="text-gray-700 cursor-not-allowed">Categories</Link>
@@ -25,16 +25,6 @@
                                 <Link :href="`/shows#coming-soon`" class="hover:text-blue-800">Coming Soon</Link>
                             </li>
                         </ul>
-                    </div>
-                    <div class="flex items-center mt-6 lg:mt-0">
-                        <div class="relative">
-                            <input type="text" class="bg-gray-800 text-sm rounded-full
-                            focus:outline-none focus:shadow w-64 pl-8 px-3 py-1" placeholder="Search...">
-                            <div class="absolute top-0 flex items-center h-full ml-2">
-                                <svg class="fill-current text-gray-400 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M456.69 421.39 362.6 327.3a173.81 173.81 0 0 0 34.84-104.58C397.44 126.38 319.06 48 222.72 48S48 126.38 48 222.72s78.38 174.72 174.72 174.72A173.81 173.81 0 0 0 327.3 362.6l94.09 94.09a25 25 0 0 0 35.3-35.3ZM97.92 222.72a124.8 124.8 0 1 1 124.8 124.8 124.95 124.95 0 0 1-124.8-124.8Z"/></svg>
-
-                            </div>
-                        </div>
                     </div>
                 </div>
 

@@ -104,9 +104,9 @@ import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useTeamStore } from "@/Stores/TeamStore.js"
 import Pagination from "@/Components/Pagination"
 import TeamManageHeader from "@/Components/Teams/Manage/TeamManageHeader"
-import TeamMembersList from "@/Components/Teams/TeamMembersList"
-import TeamShowsList from "@/Components/Teams/TeamShowsList"
-import TeamAssignmentsList from "@/Components/Teams/TeamAssignmentsList"
+import TeamMembersList from "@/Components/Teams/Manage/TeamMembersList"
+import TeamShowsList from "@/Components/Teams/Manage/TeamShowsList"
+import TeamAssignmentsList from "@/Components/Teams/Manage/TeamAssignmentsList"
 import {useUserStore} from "@/Stores/UserStore";
 
 let videoPlayerStore = useVideoPlayerStore()

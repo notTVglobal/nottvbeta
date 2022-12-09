@@ -22,13 +22,13 @@
                         <h1 class="text-3xl font-semibold">Shows</h1>
                         <ul class="flex ml-0 lg:ml-16 mt-6 lg:mt-0 space-x-8" >
                             <li>
-                                <Link :href="``" class="text-gray-700 cursor-not-allowed">Categories</Link>
+                                <button :href="``" class="text-gray-700 cursor-not-allowed">Categories</button>
                             </li>
                             <li>
-                                <Link :href="``" @click.prevent="scrollToNewEpisodes" class="hover:text-blue-800">New Episodes</Link>
+                                <button :href="``" @click.prevent="scrollToNewEpisodes" class="hover:text-blue-800">New Episodes</button>
                             </li>
                             <li>
-                                <Link :href="``" @click.prevent="scrollToComingSoon" class="hover:text-blue-800">Coming Soon</Link>
+                                <button :href="``" @click.prevent="scrollToComingSoon" class="hover:text-blue-800">Coming Soon</button>
                             </li>
                         </ul>
                     </div>

@@ -61,7 +61,7 @@
 
 <script setup>
 import { onBeforeMount } from "vue"
-import TeamMember from "@/Components/Teams/TeamMember.vue";
+import TeamMember from "@/Components/Teams/Manage/TeamMember.vue";
 import TeamAddMember from "@/Components/Teams/Manage/TeamAddMember.vue";
 import { useTeamStore } from "@/Stores/TeamStore";
 
