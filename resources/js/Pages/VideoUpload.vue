@@ -75,13 +75,13 @@
                                     >
                                         <div
                                             scope="row"
-                                            class="hidden md:table-cell min-w-[8rem] px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
+                                            class="table-cell min-w-[8rem] px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                                         >
                                             <button @click.prevent="videoPlayerStore.loadNewSourceFromFile(video)">{{ video.file_name }}</button>
                                         </div>
                                         <div
                                             scope="row"
-                                            class="table-cell px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
+                                            class="hidden md:table-cell px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                                         >
                                             <span>{{ video.id }}</span>
                                         </div>
