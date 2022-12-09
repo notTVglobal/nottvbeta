@@ -35,7 +35,7 @@
 
 
 
-                        <progress max="100" :value="userStore.uploadPercentage" class="w-full mb-4" />
+                        <progress v-show="userStore.uploadPercentage != 0" max="100" :value="userStore.uploadPercentage" class="w-full mb-4" />
 
 
                         <form id="videoUploadForm" action="/videoupload" class="dropzone dropzoneFile border border-gray-400 rounded w-full h-48 max-w-md px-2 py-2 mb-6">
@@ -149,7 +149,6 @@ onMounted(() => {
         retryChunks: false,
         retryChunksLimit: 10,
         acceptedFiles: 'video/mp4',
-        capture: 'camera',
         uploadprogress: function(file, progress, bytesSent) {
             userStore.uploadPercentage = progress;
             console.log(userStore.uploadPercentage);
