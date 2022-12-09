@@ -18,6 +18,10 @@ class NewsPost extends Model
         'status'
     ];
 
+    public function getRouteKeyName() {
+        return 'slug';
+    }
+
     public function category()
     {
         return $this->belongsTo(NewsCategory::class);
@@ -25,11 +29,21 @@ class NewsPost extends Model
 
     public function status()
     {
-        return $this->hasOne(NewsStatus::class);
+        return $this->belongsTo(NewsStatus::class);
     }
 
     public function image()
     {
-        return $this->hasOne(Image::class);
+        return $this->belongsTo(Image::class);
+    }
+
+    public function video()
+    {
+        return $this->belongsTo(Video::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

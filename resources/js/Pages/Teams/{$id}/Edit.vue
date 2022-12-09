@@ -201,9 +201,18 @@ let teamStore = useTeamStore()
 
 videoPlayerStore.currentPage = 'teams'
 
+let scrollToTopDivCounter = 0
+
+function scrollToTopDiv() {
+    if (scrollToTopDivCounter = 0 ) {
+        document.getElementById("topDiv").scrollIntoView()
+        scrollToTopDivCounter ++;
+    }
+}
+
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
-    document.getElementById("topDiv").scrollIntoView()
+    scrollToTopDiv()
 });
 
 let props = defineProps({

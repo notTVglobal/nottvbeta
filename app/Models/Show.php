@@ -63,8 +63,5 @@ class Show extends Model
         return $this->hasMany(ShowNote::class);
     }
 
-
-
-
 }
 

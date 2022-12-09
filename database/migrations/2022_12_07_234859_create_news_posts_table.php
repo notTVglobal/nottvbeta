@@ -15,12 +15,15 @@ return new class extends Migration
     {
         Schema::create('news_posts', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->nullable()->constrained();
             $table->string('title')->unique();
             $table->string('slug')->unique();
-            $table->text('content')->nullable();
+            $table->longText('content')->nullable();
+            $table->foreignId('image_id')->default(4)->constrained();
             $table->string('city')->nullable();
             $table->foreignId('category')->nullable()->constrained()->references('id')->on('news_categories');
             $table->foreignId('status')->nullable()->constrained()->references('id')->on('news_statuses');
+            $table->dateTime('published_at')->nullable();
             $table->timestamps();
         });
     }

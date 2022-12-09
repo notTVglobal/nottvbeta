@@ -148,7 +148,7 @@ let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore()
 let showStore = useShowStore()
 
-videoPlayerStore.currentPage = 'movies'
+videoPlayerStore.currentPage = 'moviesUpload'
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();

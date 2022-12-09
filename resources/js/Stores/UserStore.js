@@ -5,6 +5,7 @@ export let useUserStore = defineStore('userStore', {
     state: () => ({
         isMobile: Boolean,
         showNavDropdown: Boolean,
+        uploadPercentage: 0,
 
     }),
 
@@ -23,7 +24,8 @@ export let useUserStore = defineStore('userStore', {
                 this.isMobile = true
             } else
                 this.isMobile = false
-        }
+        },
+
     },
 
     getters: {

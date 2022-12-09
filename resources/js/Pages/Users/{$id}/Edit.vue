@@ -16,10 +16,17 @@
             </div>
 
         <div class="max-w-md mx-auto mt-8">
-            <div class="mb-6"><img :src="props.userEdit.profile_photo_url" class="rounded-full h-20 w-20 object-cover"/></div>
-            <div class=""><span class="text-xs uppercase">User ID: </span><span class="font-semibold">{{props.userEdit.id}}</span></div>
-            <div class=""><span class="text-xs uppercase">Subscription Status: </span><span class="font-semibold">{{props.userEdit.subscriptionStatus}}</span></div>
-            <div class="" v-if="props.userEdit.role_id == 4"><span class="text-xs uppercase">Creator #: </span><span class="font-semibold">{{props.userEdit.creatorNumber}}</span></div>
+            <div class="flex flex-row justify-between">
+                <div>
+                    <div class="mb-6"><img :src="props.userEdit.profile_photo_url" class="rounded-full h-20 w-20 object-cover"/></div>
+                    <div class=""><span class="text-xs uppercase">User ID: </span><span class="font-semibold">{{props.userEdit.id}}</span></div>
+                    <div class=""><span class="text-xs uppercase">Subscription Status: </span><span class="font-semibold">{{props.userEdit.subscriptionStatus}}</span></div>
+                    <div class="" v-if="props.userEdit.role_id == 4"><span class="text-xs uppercase">Creator #: </span><span class="font-semibold">{{props.userEdit.creatorNumber}}</span></div>
+                </div>
+                <div class="flex align-bottom">
+                    <button @click="addUserToNewsroom" class="text-white bg-blue-600 hover:bg-blue-400 rounded px-4 py-2 w-fit h-12">Add User to Newsroom</button>
+                </div>
+            </div>
 
             <form @submit.prevent="submit" class="mt-6">
                 <div class="mb-6">
@@ -202,6 +209,7 @@ import { useForm } from "@inertiajs/inertia-vue3"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useChatStore } from "@/Stores/ChatStore.js"
 import {onMounted} from "vue";
+import {Inertia} from "@inertiajs/inertia";
 
 let videoPlayerStore = useVideoPlayerStore()
 let chat = useChatStore()
@@ -238,6 +246,16 @@ function reset() {
 let submit = () => {
     form.put(route('users.update', props.userEdit.id));
 };
+
+function addUserToNewsroom() {
+    Inertia.visit('/newsroom/newsperson', {
+        method: 'post',
+        data: {
+            id: props.userEdit.id,
+            name: props.userEdit.name
+        },
+    })
+}
 // let submit = () => {
 //     form.put('/admin/users');
 // };

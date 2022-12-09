@@ -12,6 +12,7 @@
         <link rel="stylesheet" href="<?php echo e(mix('css/app.css')); ?>">
 
 
+
         <?php echo app('Tightenco\Ziggy\BladeRouteGenerator')->generate(); ?>
 
         <script src="<?php echo e(mix('js/manifest.js')); ?>" defer></script>

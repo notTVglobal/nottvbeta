@@ -111,6 +111,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasOne(Creator::class);
     }
 
+    public function newsPerson()
+    {
+        return $this->hasOne(NewsPerson::class);
+    }
+
     public function vip()
     {
         //
@@ -141,6 +146,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function showEpisodes()
     {
         return $this->hasMany(ShowEpisode::class);
+    }
+
+    public function newsPosts()
+    {
+        return $this->hasMany(NewsPost::class);
     }
 
 }

@@ -1,12 +1,12 @@
 <template>
 
     <Head title="MistServer API" />
-
+    <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white text-black p-5 mb-10">
 
             <div class="flex justify-between mb-6">
-                <div id="topDiv" class="grid grid-cols-1 grid-rows-2 pt-4">
+                <div class="grid grid-cols-1 grid-rows-2 pt-4">
                     <h1 class="text-3xl font-semibold">MistServer API 2</h1>
                 </div>
                 <span class="text-xs font-semibold text-red-700">Admin Mode</span>

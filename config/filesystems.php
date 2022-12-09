@@ -36,6 +36,12 @@ return [
             'throw' => false,
         ],
 
+        'local-video-chunks' => [
+            'driver' => 'scoped',
+            'disk' => 'local',
+            'prefix' => 'chunks',
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
@@ -82,6 +88,7 @@ return [
     'links' => [
         public_path('storage') => storage_path('app/public'),
         public_path('images') => storage_path('app/images'),
+        public_path('videos') => storage_path('app/videos'),
         public_path('profile-photos') => storage_path('app/profile-photos'),
     ],
 

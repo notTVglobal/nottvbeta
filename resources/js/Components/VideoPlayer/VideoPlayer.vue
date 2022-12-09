@@ -2,8 +2,6 @@
 
     <div :class="videoPlayerStore.videoContainerClass">
         <div :class="videoPlayerStore.class"
-             @mouseenter="showOSD"
-             @mouseleave="hideOSD"
              >
 
 
@@ -176,15 +174,6 @@ function backToPage() {
     streamStore.showOSD = false;
 }
 
-let hideOSD = () => {
-    videoPlayerStore.showControls = false;
-    videoPlayerStore.showNav = false;
-}
-
-let showOSD = () => {
-    videoPlayerStore.showControls = true;
-    videoPlayerStore.showNav = true
-}
 
 // let videoPlayerClass = null
 // let videoClass = videoPlayerStore.class

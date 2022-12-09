@@ -5,9 +5,17 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white text-black p-5 mb-10">
 
-            <h2 id="topDiv" class="text-xl font-semibold leading-tight text-gray-800">
-                Create News Post
-            </h2>
+            <div class="flex flex-row justify-between">
+                <h2 id="topDiv" class="text-xl font-semibold leading-tight text-gray-800">
+                    Create News Post
+                </h2>
+                <Link
+                    :href="`/newsroom`"><button
+                    class="bg-yellow-600 hover:bg-yellow-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
+                    v-if="props.can.viewNewsroom"
+                >Newsroom</button>
+                </Link>
+            </div>
 
             <div class="p-6 bg-white border-b border-gray-200">
                 <form @submit.prevent="submit">
@@ -33,26 +41,6 @@
                     </div>
                     <div class="mb-6">
                         <label
-                            for="Slug"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                        >Slug</label
-                        >
-                        <input
-                            type="text"
-                            v-model="form.slug"
-                            name="title"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                            placeholder=""
-                        />
-                        <div
-                            v-if="form.errors.slug"
-                            class="text-sm text-red-600"
-                        >
-                            {{ form.errors.slug }}
-                        </div>
-                    </div>
-                    <div class="mb-6">
-                        <label
                             for="slug"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                         >Content</label
@@ -62,6 +50,7 @@
                             v-model="form.content"
                             name="content"
                             id=""
+                            rows=10
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                         ></textarea>
 
@@ -115,11 +104,11 @@ const props = defineProps({
         type: Object,
         default: () => ({}),
     },
+    can: Object,
 });
 
 const form = useForm({
     title: '',
-    slug: '',
     content: '',
 });
 

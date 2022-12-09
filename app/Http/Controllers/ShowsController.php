@@ -367,7 +367,7 @@ class ShowsController extends Controller
         // how to simplify this *frustrated*.
 
         // redirect
-        return redirect(route('shows.manage', [$show->slug]))->with('message', 'Show Updated Successfully');;
+        return redirect(route('shows.manage', [$show->slug]))->with('message', 'Show Updated Successfully');
 
 //        return Inertia::render('Shows/{$id}/Manage', [
 //            // responses need to be limited to only

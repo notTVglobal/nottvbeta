@@ -96,9 +96,21 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
             let videoJs = videojs('main-player')
             videoJs.src(this.previousSource)
         },
-        loadNewSource() {
+        loadNewSourceFromFile(source) {
             let videoJs = videojs('main-player')
-            videoJs.src(this.videoSource)
+            let filePath = '/storage/videos/'
+            this.videoSource = source.file_name;
+            this.videoSourceType = source.type;
+            videoJs.src({'src': filePath+this.videoSource, 'type': this.videoSourceType});
+            this.unmute()
+        },
+        loadNewSourceFromMist(source) {
+            let videoJs = videojs('main-player')
+            let filePath = 'https://mist2.not.tv/hls/'
+            this.videoSource = filePath+source+'/index.m3u8';
+            this.videoSourceType = "application/x-mpegURL";
+            videoJs.src({'src': this.videoSource, 'type': this.videoSourceType});
+            this.unmute()
         },
         makeVideoFullPage() {
             if (useUserStore().isMobile) {

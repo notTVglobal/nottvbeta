@@ -12,6 +12,7 @@
         <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 {{--        <link rel="stylesheet" href="css/emojionearea.min.css">--}}
 
+
         @routes
 {{--        <script src="https://js.pusher.com/7.2/pusher.min.js"></script>--}}
         <script src="{{ mix('js/manifest.js') }}" defer></script>

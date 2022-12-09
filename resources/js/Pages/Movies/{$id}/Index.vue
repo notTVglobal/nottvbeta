@@ -157,18 +157,18 @@
 
 
 
-                <div class="flex justify-center mt-12">
-                    <video class="w-full" controls>
-<!--                        https://beta-staging-files.not.tv/uploads/movies/${movie.filePath}-->
-                        <source
-                            v-if="!movie.fileUrl"
-                            :src="`https://nottvbeta-staging.sfo3.cdn.digitaloceanspaces.com/uploads/movies/${movie.filePath}`">
-                        <source
-                            v-if="movie.fileUrl"
-                            :src="`${movie.fileUrl}`">
-                    </video>
+<!--                <div class="flex justify-center mt-12">-->
+<!--                    <video class="w-full" controls>-->
+<!--&lt;!&ndash;                        https://beta-staging-files.not.tv/uploads/movies/${movie.filePath}&ndash;&gt;-->
+<!--                        <source-->
+<!--                            v-if="!movie.fileUrl"-->
+<!--                            :src="`https://nottvbeta-staging.sfo3.cdn.digitaloceanspaces.com/uploads/movies/${movie.filePath}`">-->
+<!--                        <source-->
+<!--                            v-if="movie.fileUrl"-->
+<!--                            :src="`${movie.fileUrl}`">-->
+<!--                    </video>-->
 
-                </div>
+<!--                </div>-->
 
                 <div class="flex space-x-6 mt-3">
 

@@ -143,8 +143,6 @@
 </template>
 
 <script setup>
-import ResponsiveNavigationMenu from "@/Components/Navigation/ResponsiveNavigationMenu"
-import NavigationMenu from "@/Components/Navigation/NavigationMenu"
 import { onMounted } from "vue"
 import {useForm} from "@inertiajs/inertia-vue3"
 import TabbableTextarea from "@/Components/TabbableTextarea"
@@ -170,9 +168,18 @@ let showStore = useShowStore()
 
 videoPlayerStore.currentPage = 'shows'
 
+let scrollToTopDivCounter = 0
+
+function scrollToTopDiv() {
+    if (scrollToTopDivCounter = 0 ) {
+        document.getElementById("topDiv").scrollIntoView()
+        scrollToTopDivCounter ++;
+    }
+}
+
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
-    document.getElementById("topDiv").scrollIntoView()
+    scrollToTopDiv()
 });
 
 let props = defineProps({

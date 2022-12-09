@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('size')->nullable();
             $table->string('type')->nullable();
             $table->string('full_url')->nullable();
+            $table->foreignId('poster')->default(4)->constrained()->references('id')->on('images');
             $table->string('sprite_path')->nullable();
             $table->string('sprite_full_url')->nullable();
             $table->integer('live_count')->nullable();

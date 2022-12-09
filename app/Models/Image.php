@@ -35,4 +35,9 @@ class Image extends Model
     {
         return $this->hasMany(NewsPost::class);
     }
+
+    public function videos()
+    {
+        return $this->hasMany(Video::class);
+    }
 }

@@ -16,11 +16,13 @@ use App\Http\Controllers\TeamMembersController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\NewsPostController;
+use App\Http\Controllers\NewsroomController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\VideoController;
+use App\Http\Controllers\VideoUploadController;
 use App\Http\Controllers\WhitepaperController;
 use App\Models\User;
 use App\Models\Show;
@@ -117,29 +119,29 @@ Route::middleware([
         ->name('dashboard');
 
 
-// News (formerly Posts)
+// Newsroom
 ///////////
-    Route::resource('news',NewsPostController::class);
+
+    Route::get('/newsroom', [\App\Http\Controllers\NewsroomController::class, 'index'])
+        ->middleware('can:viewAny,App\Models\NewsPerson')
+        ->name('newsroom');
+
+    Route::post('/newsroom/newsperson', [\App\Http\Controllers\NewsPersonController::class, 'store'])
+//        ->middleware('can:create,App\Models\NewsPerson')
+        ->name('newsperson.store');
+
+// News
+////////
+    Route::resource('news', NewsPostController::class);
 
     Route::get('/news', [NewsPostController::class, 'index'])
-        ->can('viewPremium', 'App\Models\User')
+//        ->can('view', 'App\Models\NewsPerson')
         ->name('news');
 
-//    Route::get('/posts/create', [PostController::class, 'create'])
-//        ->can('viewPremium', 'App\Models\User')
-//        ->name('posts.create');
-//
-//    Route::get('/posts/edit', [PostController::class, 'edit'])
-//        ->can('viewPremium', 'App\Models\User')
-//        ->name('posts.edit');
-//
-//    Route::post('/posts', [PostController::class, 'store'])
-//        ->name('posts.store');
+    Route::put('/newsroom/publish', [NewsroomController::class, 'publish'])
+//        ->can('view', 'App\Models\NewsPerson')
+        ->name('newsroom.publish');
 
-//    Route::get('/posts', function () {
-//        return Inertia::render('Posts/Index');
-//    })->can('viewPremium', 'App\Models\User')
-//        ->name('posts');
 
 // Channels
 ///////////
@@ -158,7 +160,7 @@ Route::middleware([
 
 // Shop
 ///////////
-    Route::resource('shop',ShopController::class);
+    Route::resource('shop', ShopController::class);
     // List all products
     Route::get('/shop', [ShopController::class, 'index'])
         ->name('shop');
@@ -235,7 +237,6 @@ Route::middleware([
         ->name('quiz');
 
 
-
 // Creator Resources
     // Begin middleware authorization
     // allow creators access to the
@@ -246,9 +247,9 @@ Route::middleware([
     ])->group(function () {
 
 
-    // Teams
-    ///////////
-        Route::resource('teams',TeamsController::class);
+        // Teams
+        ///////////
+        Route::resource('teams', TeamsController::class);
 
         // List all teams
         Route::get('/teams', [TeamsController::class, 'index'])
@@ -276,22 +277,22 @@ Route::middleware([
             ->name('teams.edit');
 
         // Team Members
-        Route::resource('teamMembers',TeamMembersController::class);
+        Route::resource('teamMembers', TeamMembersController::class);
 
-            // Add team member
-            Route::post('/teams/addTeamMember', [TeamMembersController::class, 'attach'])
-                ->name('teams.addTeamMember');
+        // Add team member
+        Route::post('/teams/addTeamMember', [TeamMembersController::class, 'attach'])
+            ->name('teams.addTeamMember');
 
-            // Remove team member
-            Route::post('/teams/removeTeamMember', [TeamMembersController::class, 'detach'])
-                ->name('teams.removeTeamMember');
+        // Remove team member
+        Route::post('/teams/removeTeamMember', [TeamMembersController::class, 'detach'])
+            ->name('teams.removeTeamMember');
 
     });
 
 // Creators
 ///////////
     // Creators resource
-    Route::resource('creators',CreatorsController::class);
+    Route::resource('creators', CreatorsController::class);
     // Display creator page
     Route::get('/creators/{creator}', [CreatorsController::class, 'show'])
         ->name('creators.show');
@@ -376,8 +377,7 @@ Route::middleware([
     // code to a new ShowController.uploadPoster function.
     Route::post('/showEpisodesUploadPoster', [ShowEpisodesPosterController::class, 'uploadPoster'])
         ->can('viewCreator', 'App\Models\User')
-        ->name('showEpisodes.uploadPoster')
-    ;
+        ->name('showEpisodes.uploadPoster');
 
     Route::post('/showsUploadPoster', [ShowsPosterController::class, 'uploadPoster'])
         ->can('viewCreator', 'App\Models\User')
@@ -389,7 +389,7 @@ Route::middleware([
 
 // Movies
 ///////////
-    Route::resource('movies',MovieController::class);
+    Route::resource('movies', MovieController::class);
     // List all movies
     Route::get('/movies/{movie}', [MovieController::class, 'show'])
         ->can('viewVip', 'App\Models\User')
@@ -410,7 +410,7 @@ Route::middleware([
 ///////////
     Route::get('/testing', function () {
         return Inertia::render('Testing');
-    })  ->can('viewAdmin', 'App\Models\User')
+    })->can('viewAdmin', 'App\Models\User')
         ->name('testing');
 
 // Images + Upload
@@ -433,7 +433,7 @@ Route::middleware([
 // Users
 ///////////
     // Users resource for admin to create/edit users
-    Route::resource('users',UsersController::class);
+    Route::resource('users', UsersController::class);
 
     // List all users -- this has to be a different controller than the UsersAdminCreateEditController
     // because it uses a different resource class for the search function.
@@ -475,6 +475,26 @@ Route::middleware([
 //    Route::post('/chat/channel/{channelId}/message', function() {
 //        ChatMessage::forceCreate(request(['body']));
 //    });
+
+// Video Upload (temp page)
+///////////////////////////
+///
+
+//    Route::get('/videoupload', function () {
+//        return Inertia::render('VideoUpload');
+//    })->can('viewAdmin', 'App\Models\User')
+//        ->name('videoupload');
+
+    Route::get('/videoupload', [VideoUploadController::class, 'index'])
+        ->can('viewAdmin', 'App\Models\User')
+        ->name('videoupload');
+
+    Route::post('/videoupload', [VideoUploadController::class, 'upload'])
+    ->can('viewAdmin', 'App\Models\User')
+    ->name('videoupload.upload');
+
+
+
 
 // MistAPI
 ///////////

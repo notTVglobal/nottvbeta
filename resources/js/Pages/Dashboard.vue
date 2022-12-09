@@ -14,6 +14,12 @@
 
                 <div class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4 mb-4">
                     <Link
+                        :href="`/newsroom`"><button
+                        class="bg-yellow-600 hover:bg-yellow-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
+                        v-if="props.can.viewNewsroom"
+                    >Newsroom</button>
+                    </Link>
+                    <Link
                         :href="`/news/upload`"><button
                         class="bg-green-600 hover:bg-green-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
                         disabled
@@ -73,6 +79,12 @@
                     <Link :href="`/image`"><button
                         class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"
                     >Image Uploader</button>
+                    </Link>
+
+                    <!--disable button if ! admin-->
+                    <Link :href="`/videoupload`"><button
+                        class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"
+                    >Video Upload</button>
                     </Link>
 
                     <!--disable button if ! admin-->

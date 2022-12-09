@@ -2,13 +2,19 @@
     <div class="top-0 left-0 bg-gray-800 text-gray-200 h-screen w-screen scrollbar-hidden-y overscroll-x-none">
 
         <!-- Navbar -->
-        <div v-if="$page.props.user!=null" v-show="videoPlayerStore.showNav || ! videoPlayerStore.fullPage" class="fixed top-0 w-full nav-mask">
+        <div v-if="$page.props.user!=null" v-show="videoPlayerStore.showNav || ! videoPlayerStore.fullPage" class="fixed top-0 w-full nav-mask"
+             @mouseenter="showOSD"
+             @mouseleave="hideOSD"
+        >
             <ResponsiveNavigationMenu/>
             <NavigationMenu />
         </div>
 
 
-            <div class="w-full">
+            <div class="w-full"
+                 @mouseenter="showOSD"
+                 @mouseleave="hideOSD"
+            >
                 <VideoPlayer class="z-50" :key="videoPlayerStore.key" :user="props.user"/>
 <!--                <VideoPlayer :class="videoPlayerStore.class" class="z-50" :key="videoPlayerStore.key" :user="props.user"/>-->
 
@@ -53,11 +59,11 @@ let userStore = useUserStore()
 
 // videoPlayerStore.videoSource = "https://mist2.not.tv/threestooges.mp4"
 // videoPlayerStore.videoSource = "https://mist2.not.tv/hls/dunepull/index.m3u8"
-videoPlayerStore.videoSource = "https://mist2.not.tv/hls/tmr1984pull/index.m3u8"
+videoPlayerStore.videoSource = "https://mist2.not.tv/hls/labyrinth/index.m3u8"
 // videoPlayerStore.videoSource = "https://mist2.not.tv/hls/vmixlive/index.m3u8"
 // videoPlayerStore.videoSourceType = "video/mp4"
 videoPlayerStore.videoSourceType = "application/x-mpegURL"
-videoPlayerStore.videoName = "The Terminator"
+videoPlayerStore.videoName = "Labyrinth"
 streamStore.currentChannel = "Stream"
 userStore.showNavDropdown = false
 
@@ -91,6 +97,16 @@ onMounted(() => {
 let props = defineProps({
     user: Object,
 });
+
+let hideOSD = () => {
+    videoPlayerStore.showControls = false;
+    videoPlayerStore.showNav = false;
+}
+
+let showOSD = () => {
+    videoPlayerStore.showControls = true;
+    videoPlayerStore.showNav = true
+}
 
 // const loadVideoCSS = async () => {
 //     await videoPlayerStore.makeVideoFullPage();

@@ -145,6 +145,25 @@
                                             Settings
                                         </JetDropdownLink>
 
+                                        <!-- Admin Only Links -->
+                                        <div v-if="$page.props.user.isAdmin === 1">
+                                            <div class="border-t border-1 mt-3 border-gray-300 block px-4 py-2 text-xs text-gray-400">
+                                                Admin Only Links
+                                            </div>
+
+                                            <JetDropdownLink
+                                                @click="videoPlayerStore.makeVideoTopRight()"
+                                                :href="route('videoupload')">
+                                                Video Upload
+                                            </JetDropdownLink>
+
+                                            <JetDropdownLink
+                                                @click="videoPlayerStore.makeVideoTopRight()"
+                                                :href="route('video')">
+                                                MistServer API
+                                            </JetDropdownLink>
+                                        </div>
+
                                     </div>
                                     <div class="border-t border-gray-100">
                                         <!-- Authentication -->
@@ -190,7 +209,7 @@ let welcomeStore = useWelcomeStore()
 streamStore.isLive(true)
 
 let props = defineProps({
-
+    user: Object,
 })
 
 const logout = () => {

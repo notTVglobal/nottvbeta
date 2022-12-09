@@ -176,6 +176,31 @@
                         Log Out
                     </JetResponsiveNavLink>
                 </form>
+
+                <!-- Admin Only Links -->
+                    <div class="border-t border-1 mt-3 border-gray-300 bg-black block px-4 py-2 text-xs text-gray-400">
+                        Admin Only Links
+                    </div>
+
+                    <JetResponsiveNavLink
+                        v-if="$page.props.user.isAdmin === 1"
+                        @click="userStore.closeNavDropdown()"
+                        :href="route('videoupload')"
+                        :active="route().current('videoupload')"
+                        class="bg-black">>
+                        Video Upload
+                    </JetResponsiveNavLink>
+
+                    <JetResponsiveNavLink
+                        v-if="$page.props.user.isAdmin === 1"
+                        @click="userStore.closeNavDropdown()"
+                        :href="route('video')"
+                        :active="route().current('video')"
+                        class="bg-black">>
+                        MistServer API
+                    </JetResponsiveNavLink>
+
+
                 <div class="flex flex-col w-full space-y-1 text-gray-600 text-sm mb-6">
                     <div class="flex pt-12 justify-center">Web application concept and design</div>
                     <div class="flex justify-center">not&#174;TV &#169; 2010 - {{new Date().getFullYear()}}</div>

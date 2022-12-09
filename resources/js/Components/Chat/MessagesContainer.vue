@@ -47,7 +47,7 @@ function scrollTo(selector) {
 }
 
 onUpdated(() => {
-    if (chatStore.messages != null) {
+    if (chatStore.messages[0]) {
         document.getElementById(chatStore.messages[0].id).scrollIntoView({behavior: "smooth"})
     }
 
