@@ -112,8 +112,8 @@
 
             <div v-if="teamStore.goLiveDisplay" class="">
                 <div class="text-sm font-semibold uppercase mb-2">Go Live Instructions</div>
+                Display the RTMP Url with streamkey using episode UUID: rtmp://mist.nottv.io/live/showName+UUID
                 <video-player-aux />
-                Put a preview window here. Display the RTMP Url with streamkey using episode UUID: rtmp://mist.nottv.io/live/episodes+UUID and fix the "golive" button showing this div
             </div>
 
             <div class="my-6 ml-10 w-3/4">
