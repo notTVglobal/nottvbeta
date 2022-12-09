@@ -276,10 +276,8 @@ let playVideo = () => {
     // videoPlayer.videoSource = 'https://streams.not.tv/hls/ctd1984/index.m3u8'
     // videoPlayerStore.videoSource = 'https://mist2.not.tv/hls/kids_1/index.m3u8'
     // videoPlayer.videoSource = 'https://nottvmist.sfo3.digitaloceanspaces.com/recordings/channels_02.m3u8'
-    videoPlayerStore.videoSource = "https://mist2.not.tv/hls/dunepull/index.m3u8"
-// videoPlayerStore.videoSourceType = "video/mp4"
-    videoPlayerStore.videoSourceType = "application/x-mpegURL"
-    videoPlayerStore.loadNewSource()
+    let source = "dunepull"
+    videoPlayerStore.loadNewSourceFromMist(source)
     videoPlayerStore.videoName = 'Dune'
     streamStore.currentChannel = 'On Demand'
 }
