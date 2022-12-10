@@ -236,16 +236,16 @@ const logout = () => {
     Inertia.post(route('logout'));
 };
 
-let isStreamPage = false
-
-function setPage() {
-    if (videoPlayerStore.currentPage = "stream") {
-        videoPlayerStore.currentPageIsStream = true;
-    } else
-        videoPlayerStore.currentPageIsStream = false;
-}
-
-setPage()
+// let isStreamPage = false
+//
+// function setPage() {
+//     if (videoPlayerStore.currentPage = "stream") {
+//         videoPlayerStore.currentPageIsStream = true;
+//     } else
+//         videoPlayerStore.currentPageIsStream = false;
+// }
+//
+// setPage()
 
 </script>
 <style>

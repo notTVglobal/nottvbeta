@@ -77,16 +77,16 @@ videoPlayerStore.videoName = "Labyrinth"
 streamStore.currentChannel = "Stream"
 userStore.showNavDropdown = false
 
-let isStreamPage = null
+// let isStreamPage = null
 
-function setPage() {
-    if (videoPlayerStore.currentPage === "stream") {
-        isStreamPage = true;
-    } else
-        isStreamPage = false;
-}
-
-setPage()
+// function setPage() {
+//     if (videoPlayerStore.currentPage === "stream") {
+//         isStreamPage = true;
+//     } else
+//         isStreamPage = false;
+// }
+//
+// setPage()
 
 // tec21: this fixes the video size issue when
 // a user reloads a page with the video in

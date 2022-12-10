@@ -26,11 +26,13 @@ let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'schedule';
 
+
 onBeforeMount(() => {
     userStore.scrollToTopCounter = 0;
 })
 
 onMounted(() => {
+
     videoPlayerStore.makeVideoTopRight();
     if (userStore.scrollToTopCounter === 0 ) {
         document.getElementById("topDiv").scrollIntoView()
