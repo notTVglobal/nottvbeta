@@ -1,7 +1,7 @@
 <template>
 
-    <div v-touch="()=>videoPlayerStore.toggleOSDMobile()">
-        <video ref="videoPlayer" :id="props.id" class="video-js vjs-big-play-centered vjs-fill bg-pink-700" playsinline autoplay muted />
+    <div>
+        <video v-touch="()=>videoPlayerStore.toggleOSD()" ref="videoPlayer" :id="props.id" class="video-js vjs-big-play-centered vjs-fill bg-pink-700" playsinline autoplay muted />
     </div>
 
 </template>
@@ -24,8 +24,6 @@ const props = defineProps({
     options: Object,
     id: String,
 })
-
-
 
 onMounted(() => {
     videojs(props.id, props.options)

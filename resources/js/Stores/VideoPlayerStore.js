@@ -67,15 +67,6 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
           //     this.showNav = !this.showNav;
           // }
         },
-        toggleOSDMobile() {
-            if(!useChatStore().showChat && useUserStore().isMobile) {
-                this.showOSD = !this.showOSD;
-                this.showNav = !this.showNav;
-            }
-            // if (this.fullPage) {
-            //     this.showNav = !this.showNav;
-            // }
-        },
         toggleOtt(num) {
             if (this.ott === num) {
                 this.ott = 0;
