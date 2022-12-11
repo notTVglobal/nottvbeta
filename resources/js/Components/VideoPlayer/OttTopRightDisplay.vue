@@ -7,7 +7,7 @@
                 Display the channels list here.
             </div>
             <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-white cursor-pointer border-b border-0.2 border-green-800" @click="changeChannel('live')">LIVE</div>
-            <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-white cursor-pointer border-b border-0.2 border-green-800" @click="changeChannel('stream')">STREAM</div>
+            <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-white cursor-pointer border-b border-0.2 border-green-800" @click="changeChannel('stream2')">SECOND STREAM</div>
             <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-white cursor-pointer border-b border-0.2 border-green-800" @click="changeChannel('vmixsource03')">VMIX SOURCE 03</div>
             <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-white cursor-pointer border-b border-0.2 border-green-800" @click="changeChannel('vmixsource04')">VMIX SOURCE 04</div>
             <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-white cursor-pointer border-b border-0.2 border-green-800" @click="changeChannel('notnowpilotpull')">NOT NOW</div>
@@ -91,10 +91,10 @@ function changeChannel(name) {
         streamStore.currentChannel = 'vMix Source 04'
         videoPlayerStore.loadNewSourceFromMist(source)
     }
-    if (name==='stream') {
+    if (name==='stream2') {
         let source = 'labyrinth'
         videoPlayerStore.videoName = 'Labyrinth'
-        streamStore.currentChannel = 'Stream'
+        streamStore.currentChannel = 'Stream2'
         videoPlayerStore.loadNewSourceFromMist(source)
     }
     if (name==='notnowpilotpull') {
