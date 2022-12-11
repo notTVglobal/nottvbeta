@@ -10,7 +10,7 @@
 
 
 <!--        FIX THIS ON MOBILE DISPLAY (VIDEO NEEDS TO BE AT THE TOP, NOT THE MIDDLE). -->
-            <video-player :id="playerName" :options="videoOptions" v-touch="()=>videoPlayerStore.toggleOSD()"/>
+            <video-player :id="playerName" :options="videoOptions"/>
 
 
     <!-- TopRight Video -->
