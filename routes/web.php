@@ -142,6 +142,9 @@ Route::middleware([
 //        ->can('view', 'App\Models\NewsPerson')
         ->name('newsroom.publish');
 
+    Route::post('/news/save', [NewsPostController::class, 'save'])
+        ->name('news.save');;
+
 
 // Channels
 ///////////

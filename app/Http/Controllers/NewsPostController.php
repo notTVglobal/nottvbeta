@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Str;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Stringable;
 
 class NewsPostController extends Controller
 {
@@ -41,7 +42,7 @@ class NewsPostController extends Controller
                 ->withQueryString()
                 ->through(fn($newsPost) => [
                     'slug' => $newsPost->slug,
-                    'title' => $newsPost->title,
+                    'title' => html_entity_decode($newsPost->title),
                     'image' =>$newsPost->image->name,
                     'can' => [
                         'editNewsPost' => Auth::user()->can('edit', NewsPost::class),
@@ -82,12 +83,12 @@ class NewsPostController extends Controller
     {
         $request->validate([
             'title' => 'unique:news_posts|required|string|max:255',
-            'content' => 'required',
+            'content' => 'required|string',
         ]);
 
         $newsPost = new NewsPost();
-        $newsPost->title = $request->title;
-        $newsPost->content = $request->content;
+        $newsPost->title = htmlentities($request->title);
+        $newsPost->content = htmlentities($request->content);
         $newsPost->slug = \Str::slug($request->title);
         $newsPost->user_id = Auth::user()->id;
 
@@ -112,6 +113,7 @@ class NewsPostController extends Controller
             ->with('message', 'News Post Created Successfully');
     }
 
+
     /**
      * Display the specified resource.
      *
@@ -125,7 +127,12 @@ class NewsPostController extends Controller
         return Inertia::render(
             'News/{$id}/Index',
             [
-                'news' => $newsPost,
+                'news' => [
+                    'id' => $newsPost->id,
+                    'slug' => $newsPost->slug,
+                    'title' => html_entity_decode($newsPost->title),
+                    'content' => html_entity_decode($newsPost->content),
+                ],
                 'image' =>$newsPost->image->name,
                 'can' => [
                     'editNewsPost' => Auth::user()->can('edit', NewsPost::class),
@@ -148,7 +155,12 @@ class NewsPostController extends Controller
         return Inertia::render(
             'News/{$id}/Edit',
             [
-                'news' => $post,
+                'news' => [
+                    'id' => $post->id,
+                    'slug' => $post->slug,
+                    'title' => html_entity_decode($post->title),
+                    'content' => html_entity_decode($post->content),
+                ],
                 'can' => [
                     'viewNewsroom' => Auth::user()->can('viewAny', NewsPerson::class)
                 ]
@@ -168,12 +180,10 @@ class NewsPostController extends Controller
         $newsPost = NewsPost::find($request->id);
         $request->validate([
             'title' => ['required', 'string', 'max:255', Rule::unique('news_posts')->ignore($newsPost->id)],
-            'content' => 'required',
         ]);
 
         $newsPost->title = $request->title;
         $newsPost->slug = \Str::slug($request->title);
-        $newsPost->content = $request->content;
         $newsPost->save();
         sleep(1);
 
@@ -186,6 +196,27 @@ class NewsPostController extends Controller
             ->route('news.show',
                 [$newsPost->slug])
             ->with('message', 'News Post Updated Successfully');
+
+    }
+
+    // Content is saved through this method, it uses Tiptap
+    // on the front end to save the file as the user types.
+    // The title is saved through the update method.
+    public function save(HttpRequest $request)
+    {
+//        $newsPost = NewsPost::find($request->id);
+
+        $request->validate([
+//            'title' => ['required', 'string', 'max:255', Rule::unique('news_posts')->ignore($newsPost->id)],
+            'content' => 'required|string',
+        ]);
+
+        $id = $request->id;
+        $content = htmlentities($request->content);
+
+        $newsPost = NewsPost::find($id);
+        $newsPost->content = $content;
+        $newsPost->save();
 
     }
 

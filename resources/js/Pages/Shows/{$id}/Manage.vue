@@ -89,12 +89,15 @@
                     <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
 
+<!-- This code doesn't work .. it's meant to become a header button that collapses/expands each section -->
+<!--                            <button class="bg-orange-300 p-2 font-bold w-full text-left" type="button"-->
+<!--                                    data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="true"-->
+<!--                                    aria-controls="collapseExample">Episodes-->
+<!--                            </button>-->
 
-                            <button class="bg-orange-300 p-2 font-bold w-full text-left" type="button"
-                                    data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false"
-                                    aria-controls="collapseExample">Episodes
-                            </button>
-                            <div class="collapse" id="collapseExample">
+<!--                            <div class="collapse" id="collapseExample">-->
+                            <div>
+
                                 <Link
                                     :href="route('shows.createEpisode',{show: props.show.slug})"
                                     v-if="teamStore.can.createEpisode">
@@ -167,12 +170,8 @@ import {useTeamStore} from "@/Stores/TeamStore.js"
 import ShowHeader from "@/Components/Shows/ShowHeader"
 import ShowEpisodesList from "@/Components/Shows/Manage/ShowEpisodesList"
 import ShowFooter from "@/Components/Shows/ShowFooter"
-import ResponsiveNavigationMenu from "@/Components/Navigation/ResponsiveNavigationMenu"
-import NavigationMenu from "@/Components/Navigation/NavigationMenu"
 import ShowCreditsList from "@/Components/Shows/Manage/ShowCreditsList";
-import {onBeforeMount, onMounted, ref, watch} from "vue";
-import throttle from "lodash/throttle";
-import {Inertia} from "@inertiajs/inertia";
+import {onBeforeMount, onMounted} from "vue";
 import {useUserStore} from "@/Stores/UserStore";
 
 let videoPlayerStore = useVideoPlayerStore()

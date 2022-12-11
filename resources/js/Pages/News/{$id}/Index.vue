@@ -68,7 +68,7 @@
             <div class="flex justify-between flex-wrap-reverse md:mb-3">
                 <div class="text-center lg:text-left w-full mb-4 lg:ml-6">
                     <h2 class="text-3xl font-semibold leading-tight text-gray-800">
-                        {{ props.news.title }}
+                        {{ news.title }}
                     </h2>
                 </div>
 
@@ -81,8 +81,7 @@
                 </div>
 
                 <div class="px-6 bg-white border-b border-gray-200">
-                        <div class="text-left mb-6 whitespace-pre-wrap">
-                            {{ props.news.content }}
+                        <div v-html="props.news.content" class="text-left mb-6 whitespace-pre-wrap">
                         </div>
                 </div>
             </div>
@@ -117,10 +116,7 @@ onMounted(() => {
 });
 
 const props = defineProps({
-    news: {
-        type: Object,
-        default: () => ({}),
-    },
+    news: Object,
     image: String,
     message: String,
     can: Object,

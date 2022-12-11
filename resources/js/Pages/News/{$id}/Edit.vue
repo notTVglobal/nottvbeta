@@ -43,16 +43,16 @@
                         <label
                             for="slug"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                        >Content</label
-                        >
-                        <tabbable-textarea
-                            type="text"
-                            v-model="form.content"
-                            name="content"
-                            id=""
-                            rows=10
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                        ></tabbable-textarea>
+                        >Content</label>
+                        <tiptap v-if="videoPlayerStore.currentPage === 'newsEdit'" name="content" />
+<!--                        <tabbable-textarea-->
+<!--                            type="text"-->
+<!--                            v-model="form.content"-->
+<!--                            name="content"-->
+<!--                            id=""-->
+<!--                            rows=10-->
+<!--                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"-->
+<!--                        ></tabbable-textarea>-->
 
                         <div
                             v-if="form.errors.content"
@@ -67,12 +67,16 @@
                         :disabled="form.processing"
                         :class="{ 'opacity-25': form.processing }"
                     >
-                        Submit
+                        Save
                     </button>
-                    <Link :href="`/news/${news.slug}`"><button
-                        class="ml-2 px-4 py-2 text-white bg-blue-500 hover:bg-blue-300 rounded-lg"
-                    >Cancel</button>
-                    </Link>
+<!--                    <Link :href="`/news/${news.slug}`"><button-->
+<!--                        class="ml-2 px-4 py-2 text-white bg-blue-500 hover:bg-blue-300 rounded-lg"-->
+<!--                    >Cancel</button>-->
+<!--                    </Link>-->
+<!--                    <Link :href="`/news/${news.slug}`"><button-->
+<!--                        class="text-white bg-blue-700 hover:bg-blue-500 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 "-->
+<!--                    >Save</button>-->
+<!--                    </Link>-->
                 </form>
             </div>
 
@@ -84,20 +88,23 @@
 
 <script setup>
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+import {useUserStore} from "@/Stores/UserStore";
+import {useNewsStore} from "@/Stores/NewsStore"
 import { useForm } from '@inertiajs/inertia-vue3'
 import {onBeforeMount, onMounted} from "vue";
 import TabbableTextarea from "@/Components/TabbableTextarea.vue";
-import {useUserStore} from "@/Stores/UserStore";
+import Tiptap from "@/Components/TextEditor/TiptapNewsPostEdit.vue";
+import {Inertia} from "@inertiajs/inertia";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
+let newsStore = useNewsStore()
 
-videoPlayerStore.currentPage = 'news'
+videoPlayerStore.currentPage = 'newsEdit'
 
 onBeforeMount(() => {
     userStore.scrollToTopCounter = 0;
 })
-
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
@@ -108,20 +115,24 @@ onMounted(() => {
 });
 
 const props = defineProps({
-    news: {
-        type: Object,
-        default: () => ({}),
-    },
+    news: Object,
     can: Object,
 });
+
+newsStore.newsArticleIdTiptop = props.news.id;
+newsStore.newsArticleTitleTiptop = props.news.title;
+newsStore.newsArticleContentTiptop = props.news.content;
 
 const form = useForm({
     id: props.news.id,
     title: props.news.title,
-    content: props.news.content,
+    content: newsStore.newsArticleContentTiptop,
 });
 
+form.content = newsStore.newsArticleContentTiptop;
+
 const submit = () => {
+    // form.put(route("news.update", form));
     form.put(route("news.update", props.news.id));
 };
 

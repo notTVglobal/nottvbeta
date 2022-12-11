@@ -20,6 +20,7 @@ class VerifyCsrfToken extends Middleware
         '/chat/message',
         '/api/message',
         '/mistTrigger',
-        '/videoupload'
+        '/videoupload',
+        '/news/save',
     ];
 }

@@ -9,10 +9,187 @@
 
         </div>
         <div class="ml-5 mb-5 text-red-600">This section is in development. Not currently working.</div>
-        <ul class="ml-12">
-            <li>Scheduled new releases</li>
-            <li>Scheduled live events</li>
+        <ul class="w-64 ml-12 mb-8">
+            <li class="p-2 bg-green-800">Scheduled Shows</li>
+            <li class="p-2 bg-purple-800">New Releases</li>
+            <li class="p-2 bg-blue-800">Live Events</li>
+            <li class="p-2 bg-yellow-800">News</li>
+            <li class="p-2"><font-awesome-icon icon="fa-leaf" class="text-red-600 text-3xl pr-2"/> Canadian Content</li>
+            <li class="p-2"><font-awesome-icon icon="fa-flag-usa" class="text-red-600 text-3xl pr-2"/> American Content</li>
+
         </ul>
+
+        <table class="table-fixed mx-5">
+            <thead class="bg-gray-900">
+                <tr class="border-b border-0.5 border-white">
+                    <th class="p-2">CHANNEL</th>
+                    <th class="p-2 border-x border-0.5 border-white">10:00</th>
+                    <th class="p-2 border-x border-0.5 border-white">10:30</th>
+                    <th class="p-2 border-x border-0.5 border-white">11:00</th>
+                    <th class="p-2 hidden lg:table-cell border-x border-0.5 border-white">11:30</th>
+                    <th class="p-2 hidden xl:table-cell border-x border-0.5 border-white">12:00</th>
+                    <th class="p-2 hidden xl:table-cell">12:30</th>
+                    <th class="p-2 hidden 2xl:table-cell border-x border-0.5 border-white">1:00</th>
+                    <th class="p-2 hidden 2xl:table-cell">1:30</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="border-b border-0.5 border-white">
+                    <td class="p-2 bg-gray-900">VMIX LIVE</td>
+                    <td class="p-2 bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
+                        <div class="flex flex-col">
+                            <span>Scheduled Show</span>
+                            <span class="text-right"><font-awesome-icon icon="fa-leaf" class="text-red-600 text-xs text-right"/></span>
+                        </div>
+                    </td>
+                    <td colspan="2" class="p-2 mx-4 bg-yellow-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-yellow-600 hover:border-blue-500 cursor-pointer">
+                        <div class="flex flex-col">
+                            <span>News Program</span>
+                            <span class="text-right"><font-awesome-icon icon="fa-leaf" class="text-red-600 text-xs text-right"/></span>
+                        </div>
+                    </td>
+
+                    <td class="p-2 hidden lg:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
+                        <div class="flex flex-col">
+                            <span>Scheduled Show</span>
+                            <span class="text-right"><font-awesome-icon icon="fa-leaf" class="text-red-600 text-xs text-right"/></span>
+                        </div>
+                    </td>
+                    <td class="p-2 hidden xl:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
+                        <div class="flex flex-col">
+                            <span>Scheduled Show</span>
+                            <span class="text-right"><font-awesome-icon icon="fa-leaf" class="text-red-600 text-xs text-right"/></span>
+                        </div>
+                    </td>
+                    <td class="p-2 hidden xl:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
+                        <div class="flex flex-col">
+                            <span>Scheduled Show</span>
+                            <span class="text-right"><font-awesome-icon icon="fa-leaf" class="text-red-600 text-xs text-right"/></span>
+                        </div>
+                    </td>
+                    <td class="p-2 hidden 2xl:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
+                        <div class="flex flex-col">
+                            <span>Scheduled Show</span>
+                            <span class="text-right"><font-awesome-icon icon="fa-leaf" class="text-red-600 text-xs text-right hidden"/></span>
+                        </div>
+                    </td>
+                    <td class="p-2 hidden 2xl:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
+                        <div class="flex flex-col">
+                            <span>Scheduled Show</span>
+                            <span class="text-right"><font-awesome-icon icon="fa-leaf" class="text-red-600 text-xs text-right"/></span>
+                        </div>
+                    </td>
+
+                </tr>
+                <tr class="border-b border-0.5 border-white">
+                    <td class="p-2 bg-gray-900">STREAM</td>
+                    <td class="p-2 bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
+                        <div class="flex flex-col">
+                        <span>Scheduled Show</span>
+                        <span class="text-right"><font-awesome-icon icon="fa-leaf" class="text-red-600 text-xs text-right"/></span>
+                        </div>
+                    </td>
+                    <td class="p-2 bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
+                        <div class="flex flex-col">
+                        <span>Scheduled Show</span>
+                        <span class="text-right"><font-awesome-icon icon="fa-leaf" class="text-red-600 text-xs text-right"/></span>
+                        </div>
+                    </td>
+                    <td class="p-2 bg-purple-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
+                        <div class="flex flex-col">
+                        <span>New Show</span>
+                        <span class="text-right"><font-awesome-icon icon="fa-leaf" class="text-red-600 text-xs text-right"/></span>
+                        </div>
+                    </td>
+                    <td class="p-2 hidden lg:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
+                        <div class="flex flex-col">
+                        <span>Scheduled Show</span>
+                        <span class="text-right"><font-awesome-icon icon="fa-leaf" class="text-red-600 text-xs text-right"/></span>
+                        </div>
+                    </td>
+                    <td class="p-2 hidden xl:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
+                        <div class="flex flex-col">
+                        <span>Scheduled Show</span>
+                        <span class="text-right"><font-awesome-icon icon="fa-leaf" class="text-red-600 text-xs text-right"/></span>
+                        </div>
+                    </td>
+                    <td class="p-2 hidden xl:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
+                        <div class="flex flex-col">
+                        <span>Scheduled Show</span>
+                        <span class="text-right"><font-awesome-icon icon="fa-leaf" class="text-red-600 text-xs text-right"/></span>
+                        </div>
+                    </td>
+                    <td class="p-2 hidden 2xl:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
+                        <div class="flex flex-col">
+                        <span>Scheduled Show</span>
+                        <span class="text-right"><font-awesome-icon icon="fa-leaf" class="text-red-600 text-xs text-right"/></span>
+                        </div>
+                    </td>
+                    <td class="p-2 hidden 2xl:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
+                        <div class="flex flex-col">
+                        <span>Scheduled Show</span>
+                        <span class="text-right"><font-awesome-icon icon="fa-leaf" class="text-red-600 text-xs text-right"/></span>
+                        </div>
+                    </td>
+
+                </tr>
+                <tr class="border-b border-0.5 border-white">
+                    <td class="p-2 bg-gray-900">VMIX SOURCE 03</td>
+                    <td class="p-2 bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
+                        <div class="flex flex-col">
+                        <span>Scheduled Show</span>
+                        <span class="text-right"><font-awesome-icon icon="fa-flag-usa" class="text-red-600 text-xs text-right"/></span>
+                        </div>
+                    </td>
+                    <td class="p-2 bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
+                        <div class="flex flex-col">
+                        <span>Scheduled Show</span>
+                        <span class="text-right"><font-awesome-icon icon="fa-leaf" class="text-red-600 text-xs text-right"/></span>
+                        </div>
+                    </td>
+                    <td class="p-2 bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
+                        <div class="flex flex-col">
+                        <span>Scheduled Show</span>
+                        <span class="text-right"><font-awesome-icon icon="fa-leaf" class="text-red-600 text-xs text-right"/></span>
+                        </div>
+                    </td>
+                    <td class="p-2 hidden lg:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
+                        <div class="flex flex-col">
+                        <span>Scheduled Show</span>
+                        <span class="text-right"><font-awesome-icon icon="fa-leaf" class="text-red-600 text-xs text-right"/></span>
+                        </div>
+                    </td>
+                    <td class="p-2 hidden xl:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
+                        <div class="flex flex-col">
+                        <span>Scheduled Show</span>
+                        <span class="text-right"><font-awesome-icon icon="fa-leaf" class="text-red-600 text-xs text-right"/></span>
+                        </div>
+                    </td>
+                    <td class="p-2 hidden xl:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
+                        <div class="flex flex-col">
+                        <span>Scheduled Show</span>
+                        <span class="text-right"><font-awesome-icon icon="fa-leaf" class="text-red-600 text-xs text-right"/></span>
+                        </div>
+                    </td>
+                    <td class="p-2 hidden 2xl:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
+                        <div class="flex flex-col">
+                        <span>Scheduled Show</span>
+                        <span class="text-right"><font-awesome-icon icon="fa-leaf" class="text-red-600 text-xs text-right"/></span>
+                        </div>
+                    </td>
+                    <td class="p-2 hidden 2xl:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
+                        <div class="flex flex-col">
+                        <span>Scheduled Show</span>
+                        <span class="text-right"><font-awesome-icon icon="fa-leaf" class="text-red-600 text-xs text-right"/></span>
+                        </div>
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
     </div>
 </template>
 
