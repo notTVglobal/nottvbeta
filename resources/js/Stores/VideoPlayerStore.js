@@ -25,12 +25,19 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
             previousSource: String,
             currentView: String,
             currentChannel: [],
+
+            // move currentPage from here to userStore.
             currentPage: String,
+
             currentPageIsStream: Boolean,
             fullPage: Boolean,
             loggedIn: Boolean,
-            showControls: Boolean,
+
+            showOSD: true,
             showNav: true,
+            showOttButtons: true,
+            showChannels: false,
+
             muted: true,
             paused: Boolean,
             apiRequest: [],
@@ -53,11 +60,11 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
         makeBlue() {
             this.blue = true
         },
-        toggleControls() {
-          this.showControls = !this.showControls;
-          if (this.fullPage) {
-              this.showNav = !this.showNav;
-          }
+        toggleOSD() {
+          this.showOSD = !this.showOSD;
+          // if (this.fullPage) {
+          //     this.showNav = !this.showNav;
+          // }
         },
         toggleOtt(num) {
             if (this.ott === num) {
@@ -67,6 +74,14 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
                 this.ott = num;
                 this.ottClass = 'OttOpen';
             }
+        },
+        toggleChannels() {
+            this.showOttButtons = !this.showOttButtons;
+            this.showChannels = !this.showChannels;
+        },
+        toggleChat() {
+            this.showOttButtons = !this.showOttButtons;
+            useChatStore().toggleChat();
         },
         unmute() {
             let videoJs = videojs('main-player')
@@ -134,15 +149,13 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
             this.videoContainerClass = 'topRightVideoContainer';
             this.class = 'topRightVideoClass';
             this.fullPage = false;
-            this.loggedIn = true;
-            // useChatStore().makeSmall();
         },
         makeVideoWelcomePage() {
             this.videoContainerClass = 'welcomeVideoContainer';
             this.class = 'welcomeVideoClass';
-            this.fullPage = false;
+            this.fullPage = true;
             this.loggedIn = false;
-            useChatStore().chatHidden();
+            // useChatStore().chatHidden();
         },
         toggleOttChannels() {
             this.toggleOtt(1);

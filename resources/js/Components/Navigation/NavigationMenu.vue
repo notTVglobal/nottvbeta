@@ -1,5 +1,5 @@
 <template>
-    <nav class="sticky top-0 bg-black border-b border-gray-100 z-50" :class="{ isStreamPageCss: videoPlayerStore.currentPageIsStream }">
+    <nav class="sticky top-0 bg-black border-b border-gray-100 z-50" :class="{ isFullPageCss: videoPlayerStore.fullPage }">
         <!-- Primary Navigation Menu -->
         <div class="max-w-7xl mx-auto px-4 lg:px-6 xl:px-8 z-50">
             <div class="flex justify-between h-16">
@@ -14,7 +14,7 @@
                     <!-- Navigation Links -->
                     <div class="hidden space-x-8 lg:-my-px lg:ml-10 lg:flex">
                         <h3 class="inline-flex items-center relative">
-                        <JetNavLink v-touch="()=>(route('stream'))" @click="videoPlayerStore.makeVideoFullPage() && videoPlayerStore.videoContainerClassFullPage()" :href="route('stream')" :active="route().current('stream')">
+                        <JetNavLink v-touch="()=>(route('stream'))" @click="videoPlayerStore.makeVideoFullPage()" :href="route('stream')" :active="route().current('stream')">
                             Stream
 
                             <div v-if="streamStore.isLive"
@@ -205,7 +205,6 @@
 import JetApplicationMark from '@/Jetstream/ApplicationMark.vue';
 import JetDropdownLink from '@/Jetstream/DropdownLink.vue';
 import { Link } from '@inertiajs/inertia-vue3';
-import ChatToggle from "@/Components/Chat/ChatToggle.vue";
 import NotificationsButton from "@/Components/Navigation/NotificationsButton.vue";
 import JetDropdown from '@/Jetstream/Dropdown.vue';
 import JetNavLink from '@/Jetstream/NavLink.vue';
@@ -213,11 +212,13 @@ import {Inertia} from "@inertiajs/inertia";
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
 import { useChatStore } from "@/Stores/ChatStore.js";
 import { useStreamStore } from "@/Stores/StreamStore";
+import { useUserStore } from "@/Stores/UserStore";
 import { useWelcomeStore } from "@/Stores/WelcomeStore";
 
 let chat = useChatStore();
 let videoPlayerStore = useVideoPlayerStore();
 let streamStore = useStreamStore()
+let userStore = useUserStore()
 let welcomeStore = useWelcomeStore()
 
 streamStore.isLive(true)
@@ -244,13 +245,13 @@ const logout = () => {
 //     } else
 //         videoPlayerStore.currentPageIsStream = false;
 // }
-//
+
 // setPage()
 
 </script>
 <style>
 
-.isStreamPageCss {
+.isFullPageCss {
     background: rgba(0, 0, 0, 0.3);
     /*background: yellow;*/
 }

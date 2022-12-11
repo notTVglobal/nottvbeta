@@ -281,7 +281,7 @@
                                 <label for="streamName" class="mb-1">Choose stream:</label>
                                 <select
                                     id="streamName"
-                                    v-model="streamName"
+                                    v-model="streamStore.streamName"
                                     class="w-full mb-2" >
                                     <option v-for="stream in videoPlayerStore.apiResponse.active_streams" :key="stream">
                                         {{ stream }}
@@ -290,7 +290,7 @@
                                 <label for="rtmpDestination" class="mb-1">Set destination:</label>
                                 <input type="text"
                                        id="rtmpDestination"
-                                       v-model="rtmpDestination"
+                                       v-model="streamStore.rtmpDestination"
                                        placeholder="RTMP destination..."
                                        class="w-full my-2">
                                 <button @click.prevent="startPush"
@@ -315,11 +315,13 @@
 </template>
 
 <script setup>
+import { onMounted, ref, reactive, onBeforeMount } from "vue";
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
-import {onMounted, ref, reactive, onBeforeMount} from "vue";
+import {useStreamStore} from "@/Stores/StreamStore";
 import {useUserStore} from "@/Stores/UserStore";
 
 let videoPlayerStore = useVideoPlayerStore()
+let streamStore = useStreamStore()
 let userStore = useUserStore()
 
 videoPlayerStore.apiActiveStreams = null
@@ -337,13 +339,10 @@ onMounted(() => {
     }
 });
 
-
 let props = defineProps({
     apiReturn: Object,
     message: ref(String),
     mistNewHashedPassword: ref(String),
-    streamName: ref(),
-    rtmpDestination: ref()
 });
 
 let form = reactive({
@@ -522,8 +521,8 @@ function displayPushForm() {
 function startPush() {
     // api call to mist server.
     // "push_start":["STREAMNAME", "URI"]
-    // let request = "\"push_start\":[\""+props.streamName+", \""+props.rtmpDestination+"\"]"
-    let request = '%7B%20%22push_start%22%3A%20%7B%22stream%22%3A%22'+props.streamName+'%22,%22target%22%3A%22'+props.rtmpDestination+'%22%7D%7D'
+    // let request = "\"push_start\":[\""+streamStore.streamName+", \""+streamStore.rtmpDestination+"\"]"
+    let request = '%7B%20%22push_start%22%3A%20%7B%22stream%22%3A%22'+streamStore.streamName+'%22,%22target%22%3A%22'+streamStore.rtmpDestination+'%22%7D%7D'
     // setTimeout(() => {  getApi(request); console.log("World!"); }, 2000);
     getApi(request)
     videoPlayerStore.mistStatus = false
