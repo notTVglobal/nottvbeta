@@ -180,8 +180,7 @@
                     <JetResponsiveNavLink
                         @click="userStore.closeNavDropdown()"
                         :href="route('videoupload')"
-                        :active="route().current('videoupload')"
-                        class="bg-black">>
+                        :active="route().current('videoupload')">
                         Video Upload
                     </JetResponsiveNavLink>
 
