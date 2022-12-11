@@ -1,7 +1,7 @@
 <template>
 
     <div>
-        <video v-touch="()=>videoPlayerStore.toggleOSD()" ref="videoPlayer" :id="props.id" class="video-js vjs-big-play-centered vjs-fill bg-pink-700" playsinline autoplay muted />
+        <video ref="videoPlayer" :id="props.id" class="video-js vjs-big-play-centered vjs-fill bg-pink-700" playsinline autoplay muted />
     </div>
 
 </template>
