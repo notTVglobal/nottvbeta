@@ -44,7 +44,7 @@
                                     class="fixed top-78 h-screen right-0 w-full sm:w-96 mt-2 overflow-y-scroll"
                                     :class="videoPlayerStore.ottClass"/>
 
-                <VideoPlayerMain class="z-50" :key="videoPlayerStore.key" :user="user" v-touch="()=>videoPlayerStore.toggleOSD()"/>
+                <VideoPlayerMain class="z-50" :key="videoPlayerStore.key" :user="user" />
 
 
 

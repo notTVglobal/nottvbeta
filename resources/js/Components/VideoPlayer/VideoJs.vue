@@ -1,6 +1,8 @@
 <template>
 
-            <video ref="videoPlayer" :id="props.id" class="video-js vjs-big-play-centered vjs-fill bg-pink-700" playsinline autoplay muted />
+    <div v-touch="()=>videoPlayerStore.toggleOSD()">
+        <video ref="videoPlayer" :id="props.id" class="video-js vjs-big-play-centered vjs-fill bg-pink-700" playsinline autoplay muted />
+    </div>
 
 </template>
 
