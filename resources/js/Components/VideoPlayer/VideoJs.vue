@@ -1,6 +1,6 @@
 <template>
 
-    <div v-touch="()=>videoPlayerStore.toggleOSD()">
+    <div v-touch="()=>videoPlayerStore.toggleOSDMobile()">
         <video ref="videoPlayer" :id="props.id" class="video-js vjs-big-play-centered vjs-fill bg-pink-700" playsinline autoplay muted />
     </div>
 
@@ -10,14 +10,15 @@
 <script setup>
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js";
 import {useStreamStore} from "@/Stores/StreamStore.js";
+import {useChatStore} from "@/Stores/ChatStore.js";
 import {useUserStore} from "@/Stores/UserStore.js";
 import videojs from 'video.js';
 import {onMounted, onBeforeUnmount} from "vue";
 
 let videoPlayerStore = useVideoPlayerStore();
 let streamStore = useStreamStore();
+let chatStore = useChatStore();
 let userStore = useUserStore();
-
 
 const props = defineProps({
     options: Object,
