@@ -36,15 +36,17 @@
                  @mouseenter="showOSD"
                  @mouseleave="hideOSD">
 
-                <VideoPlayerMain class="z-50" :key="videoPlayerStore.key" :user="user" v-touch="()=>videoPlayerStore.toggleOSD()"/>
-
                 <div v-if="! videoPlayerStore.fullPage" class="fixed top-72 w-full sm:w-96 right-0 z-30">
                     <OttTopRightButtons class="videoOTT" v-if="user"/></div>
 
                 <OttTopRightDisplay v-show="user"
-                          :user="user"
-                          class="fixed top-78 h-screen right-0 w-full sm:w-96 mt-2 overflow-y-scroll"
-                          :class="videoPlayerStore.ottClass"/>
+                                    :user="user"
+                                    class="fixed top-78 h-screen right-0 w-full sm:w-96 mt-2 overflow-y-scroll"
+                                    :class="videoPlayerStore.ottClass"/>
+
+                <VideoPlayerMain class="z-50" :key="videoPlayerStore.key" :user="user" v-touch="()=>videoPlayerStore.toggleOSD()"/>
+
+
 
             </div>
 
