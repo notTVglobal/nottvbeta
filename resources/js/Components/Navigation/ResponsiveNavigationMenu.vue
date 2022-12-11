@@ -173,7 +173,7 @@
 
                 <!-- Creator Only Links -->
                 <div v-if="$page.props.user.role_id === 4">
-                    <div class="border-t border-1 mt-3 border-gray-300 bg-indigo-900 block px-4 py-2 text-xs text-gray-400">
+                    <div class="border-t border-1 mt-3 border-gray-300 bg-indigo-900 block px-4 py-2 text-xs text-white">
                         Creator Only Links
                     </div>
 
