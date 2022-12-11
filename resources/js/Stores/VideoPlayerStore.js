@@ -62,6 +62,7 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
         },
         toggleOSD() {
           this.showOSD = !this.showOSD;
+          this.showNav = ! this.showNav;
           // if (this.fullPage) {
           //     this.showNav = !this.showNav;
           // }
@@ -81,6 +82,8 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
         },
         toggleChat() {
             this.showOttButtons = !this.showOttButtons;
+            this.showOSD = !this.showOSD;
+            this.showNav = ! this.showNav;
             useChatStore().toggleChat();
         },
         unmute() {
@@ -130,15 +133,17 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
             this.unmute()
         },
         makeVideoFullPage() {
+            this.fullPage = true;
             if (useUserStore().isMobile) {
+                this.videoContainerClass = 'fullPageVideoContainerMobile';
                 this.class = 'fullPageVideoClassMobile';
             } else {
+                this.videoContainerClass = 'fullPageVideoContainer';
                 this.class = 'fullPageVideoClass';
             }
             // this.currentPageIsStream = true;
-            this.class = 'fullPageVideoClass';
-            this.videoContainerClass = 'fullPageVideoContainer';
-            this.fullPage = true;
+
+
             // useChatStore().makeBig();
             // useStreamStore().showOSD = false;
             let videoJs = videojs('main-player')

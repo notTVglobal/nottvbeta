@@ -41,7 +41,7 @@ class NewsPostPolicy
      */
     public function create(User $user)
     {
-        return $user->isAdmin;
+        return $user->newsPerson;
     }
 
     /**
@@ -54,13 +54,13 @@ class NewsPostPolicy
 
     public function edit(User $user)
     {
-        return $user->isAdmin;
+        return $user->newsPerson;
     }
 
 
     public function update(User $user, NewsPost $newsPost)
     {
-        return $user->isAdmin;
+        return $user->newsPerson;
     }
 
     public function publish(User $user)

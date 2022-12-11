@@ -485,11 +485,11 @@ Route::middleware([
 //        ->name('videoupload');
 
     Route::get('/videoupload', [VideoUploadController::class, 'index'])
-        ->can('viewAdmin', 'App\Models\User')
+        ->can('viewCreator', 'App\Models\User')
         ->name('videoupload');
 
     Route::post('/videoupload', [VideoUploadController::class, 'upload'])
-    ->can('viewAdmin', 'App\Models\User')
+    ->can('viewCreator', 'App\Models\User')
     ->name('videoupload.upload');
 
 

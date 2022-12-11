@@ -162,13 +162,7 @@
                         Settings
                 </JetResponsiveNavLink>
 
-                <JetResponsiveNavLink
-                    v-if="$page.props.user.role_id === 4"
-                    @click="userStore.closeNavDropdown()"
-                    :href="route('training')"
-                    :active="route().current('training')">
-                        Training
-                </JetResponsiveNavLink>
+
 
                 <!-- Authentication -->
                 <form method="POST" @submit.prevent="logout">
@@ -177,13 +171,13 @@
                     </JetResponsiveNavLink>
                 </form>
 
-                <!-- Admin Only Links -->
-                    <div class="border-t border-1 mt-3 border-gray-300 bg-black block px-4 py-2 text-xs text-gray-400">
-                        Admin Only Links
+                <!-- Creator Only Links -->
+                <div v-if="$page.props.user.role_id === 4">
+                    <div class="border-t border-1 mt-3 border-gray-300 bg-indigo-900 block px-4 py-2 text-xs text-gray-400">
+                        Creator Only Links
                     </div>
 
                     <JetResponsiveNavLink
-                        v-if="$page.props.user.isAdmin === 1"
                         @click="userStore.closeNavDropdown()"
                         :href="route('videoupload')"
                         :active="route().current('videoupload')"
@@ -192,13 +186,28 @@
                     </JetResponsiveNavLink>
 
                     <JetResponsiveNavLink
-                        v-if="$page.props.user.isAdmin === 1"
                         @click="userStore.closeNavDropdown()"
-                        :href="route('video')"
-                        :active="route().current('video')"
-                        class="bg-black">>
-                        MistServer API
+                        :href="route('training')"
+                        :active="route().current('training')">
+                        Training
                     </JetResponsiveNavLink>
+
+                </div>
+
+                <!-- Admin Only Links -->
+                    <div v-if="$page.props.user.isAdmin === 1">
+                        <div class="border-t border-1 mt-3 border-gray-300 bg-black block px-4 py-2 text-xs text-gray-400">
+                            Admin Only Links
+                        </div>
+
+                        <JetResponsiveNavLink
+                            @click="userStore.closeNavDropdown()"
+                            :href="route('video')"
+                            :active="route().current('video')"
+                            class="bg-black">>
+                            MistServer API
+                        </JetResponsiveNavLink>
+                    </div>
 
 
                 <div class="flex flex-col w-full space-y-1 text-gray-600 text-sm mb-6">

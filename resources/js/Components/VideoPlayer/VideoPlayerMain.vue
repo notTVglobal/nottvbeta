@@ -40,13 +40,13 @@
                         <img :src="`/storage/images/logo_white_512.png`" class="block h-9 w-auto shrink-0"></div>
 
                     <!-- Video Player Controls -->
-                    <VideoControlsFullPageMobile :show="videoPlayerStore.showOSD" />
+                    <VideoControlsFullPageMobile v-show="videoPlayerStore.showOSD" />
 
                     <!-- On Screen Display (OSD) -->
-                    <OsdFullPageMobile v-show="! chatStore.showChat && videoPlayerStore.showOSD" />
+                    <OsdFullPageMobile v-show="videoPlayerStore.showOSD" />
 
                     <!-- Over The Top (OTT) -->
-                    <OttFullPageButtons />
+                    <OttFullPageButtons v-show="videoPlayerStore.showOSD" />
                     <OttFullPageDisplayChannels />
                     <OttFullPageDisplayChatMobile :user="user"/>
 
@@ -182,3 +182,4 @@ export default {
 
 
 </script>
+

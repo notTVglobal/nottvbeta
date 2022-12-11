@@ -10,7 +10,7 @@
             <!--        I think this is fixed now -->
 
             <!-- When video is TopRight -->
-            <div v-if="! videoPlayerStore.fullPage" class="fixed top-0 w-full nav-mask"
+            <div v-show="! videoPlayerStore.fullPage" class="fixed top-0 w-full nav-mask"
                  @mouseenter="showOSD"
                  @mouseleave="hideOSD">
 
@@ -19,13 +19,14 @@
 
 
             <!-- When video is FullPage -->
-            <div v-if="videoPlayerStore.fullPage && videoPlayerStore.showNav"
+            <div v-show="videoPlayerStore.fullPage"
                  class="fixed top-0 w-full nav-mask"
                  @mouseenter="showOSD"
                  @mouseleave="hideOSD">
-
-                <ResponsiveNavigationMenu/>
-                <NavigationMenu /></div>
+                <div v-show="videoPlayerStore.showNav">
+                    <ResponsiveNavigationMenu/>
+                    <NavigationMenu /></div>
+                </div>
 
         </div>
 
@@ -100,7 +101,6 @@ function setPage() {
 }
 
 setPage()
-
 
 userStore.checkIsMobile()
 

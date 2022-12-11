@@ -129,24 +129,36 @@
                                         </div>
 
                                         <JetDropdownLink
-                                            v-if="$page.props.user.role_id === 4"
-                                            @click="videoPlayerStore.makeVideoTopRight()"
-                                            :href="route('dashboard')">
-                                            Dashboard
-                                        </JetDropdownLink>
-
-                                        <JetDropdownLink
-                                            v-if="$page.props.user.role_id === 4"
-                                            @click="videoPlayerStore.makeVideoTopRight()"
-                                            :href="route('training')">
-                                            Training
-                                        </JetDropdownLink>
-
-                                        <JetDropdownLink
                                             @click="videoPlayerStore.makeVideoTopRight()"
                                             :href="route('settings')">
                                             Settings
                                         </JetDropdownLink>
+
+                                        <!-- Creator Only Links -->
+                                        <div v-if="$page.props.user.role_id === 4">
+                                            <div class="border-t border-1 mt-3 border-gray-300 block px-4 py-2 text-xs text-gray-400">
+                                                Creator Only Links
+                                            </div>
+
+                                            <JetDropdownLink
+                                                @click="videoPlayerStore.makeVideoTopRight()"
+                                                :href="route('dashboard')">
+                                                Dashboard
+                                            </JetDropdownLink>
+
+                                            <JetDropdownLink
+                                                @click="videoPlayerStore.makeVideoTopRight()"
+                                                :href="route('training')">
+                                                Training
+                                            </JetDropdownLink>
+
+                                            <JetDropdownLink
+                                                @click="videoPlayerStore.makeVideoTopRight()"
+                                                :href="route('videoupload')">
+                                                Video Upload
+                                            </JetDropdownLink>
+
+                                        </div>
 
                                         <!-- Admin Only Links -->
                                         <div v-if="$page.props.user.isAdmin === 1">
@@ -154,11 +166,7 @@
                                                 Admin Only Links
                                             </div>
 
-                                            <JetDropdownLink
-                                                @click="videoPlayerStore.makeVideoTopRight()"
-                                                :href="route('videoupload')">
-                                                Video Upload
-                                            </JetDropdownLink>
+
 
                                             <JetDropdownLink
                                                 @click="videoPlayerStore.makeVideoTopRight()"

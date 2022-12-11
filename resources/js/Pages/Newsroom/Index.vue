@@ -117,7 +117,7 @@
                                 <div class="hidden lg:table-cell px-6 py-4">
                                     <button
                                         class="bg-green-600 hover:bg-green-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
-                                        v-if="props.can.createNewsPost && !news.published_at"
+                                        v-if="props.can.publishNewsPost && !news.published_at"
                                         @click="publish(news.id)"
                                     >Publish</button>
                                     <span v-if="news.published_at">{{ formatDate(news.published_at) }}</span>

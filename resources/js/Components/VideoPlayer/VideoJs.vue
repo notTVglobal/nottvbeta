@@ -1,18 +1,20 @@
 <template>
-        <div :class="videoPlayerStore.class">
+
             <video ref="videoPlayer" :id="props.id" class="video-js vjs-big-play-centered vjs-fill bg-pink-700" playsinline autoplay muted />
-        </div>
+
 </template>
 
 
 <script setup>
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js";
 import {useStreamStore} from "@/Stores/StreamStore.js";
+import {useUserStore} from "@/Stores/UserStore.js";
 import videojs from 'video.js';
 import {onMounted, onBeforeUnmount} from "vue";
 
 let videoPlayerStore = useVideoPlayerStore();
 let streamStore = useStreamStore();
+let userStore = useUserStore();
 
 
 const props = defineProps({
@@ -69,6 +71,7 @@ onBeforeUnmount(() => {
 <!--</script>-->
 
 <style>
+
 
 .vjs-default-skin .vjs-resume-modal .vjs-resume-modal-buttons {
     position: relative;

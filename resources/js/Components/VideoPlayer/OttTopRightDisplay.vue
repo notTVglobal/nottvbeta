@@ -1,7 +1,7 @@
 <template>
     <div>
 
-        <div v-if="videoPlayerStore.ott === 1" class="channels w-full h-full bg-green-800 p-2">
+        <div v-if="videoPlayerStore.ott === 1" class="channels w-full h-full bg-green-800 p-2 overflow-y-scroll">
             <h1 class="text-xs font-semibold uppercase">CHANNELS</h1>
             <div>
                 Display the channels list here.

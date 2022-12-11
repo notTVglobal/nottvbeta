@@ -1,12 +1,12 @@
 <template>
 <div>
-    <div class="absolute w-full fullPageVideoOSD videoFullPageMobileOSD flex justify-between left-0 p-5 drop-shadow z-50">
+    <div class="videoFullPageMobileOSD absolute w-full  left-0 p-5 drop-shadow z-50">
         <div>
             <span class="text-xs uppercase pr-2">Now playing: </span>
-            <span class="font-semibold">{{ videoPlayerStore.videoName }}</span>
+            <span class="font-semibold">{{ videoName }}</span>
         </div>
 
-        <div v-if="streamStore.isLive" class="absolute py-6 left-0 px-5 drop-shadow z-50">
+        <div v-if="isLive" class="absolute pt-1 left-0 px-5 drop-shadow z-50">
                                     <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-white bg-opacity-80 bg-red-800 uppercase last:mr-0 mr-1">
                                         live
                                     </span>
@@ -15,7 +15,7 @@
                                     </span>
         </div>
     </div>
-    <div v-if="videoPlayerStore.currentPage!='stream'" class="absolute w-full flex justify-between mb-6 bottom-12 left-0 p-5 drop-shadow z-50">
+    <div v-if="currentPage!='stream'" class="absolute w-fit top-80 left-0 p-5 drop-shadow z-50">
         <button @click="backToPage" class="p-2 bg-gray-800 text-white hover:bg-gray-600" >Back to Page</button>
     </div>
 </div>
@@ -24,14 +24,21 @@
 <script setup>
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useStreamStore } from "@/Stores/StreamStore"
+import { useUserStore } from "@/Stores/UserStore"
 
 let videoPlayerStore = useVideoPlayerStore()
 let streamStore = useStreamStore()
+let userStore = useUserStore()
 
 function backToPage() {
     videoPlayerStore.makeVideoTopRight();
     chatStore.showChat = false;
     streamStore.showOSD = false;
 }
+
+let isMobile = userStore.isMobile;
+let videoName = videoPlayerStore.videoName;
+let isLive = streamStore.isLive;
+let currentPage = videoPlayerStore.currentPage;
 
 </script>
