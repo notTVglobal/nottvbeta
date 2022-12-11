@@ -79,6 +79,7 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
         toggleChannels() {
             this.showOttButtons = !this.showOttButtons;
             this.showChannels = !this.showChannels;
+            this.showOSD = !this.showOSD;
         },
         toggleChat() {
             this.showOttButtons = !this.showOttButtons;
