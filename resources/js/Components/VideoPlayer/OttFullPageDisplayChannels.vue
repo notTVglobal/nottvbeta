@@ -15,7 +15,7 @@
         <div class=" top-60">CHANNELS HERE</div>
 
 
-            <button @click="videoPlayerStore.toggleChannels()"
+            <button v-touch="()=>videoPlayerStore.toggleChannels()"
                     v-if="videoPlayerStore.showChannels" class="fixed top-20 right-6 opacity-100 w-15 h-15 p-4 rounded-full bg-orange-800
                     text-gray-50 hover:bg-blue-800 hover:text-blue-200 grid justify-center content-center
                     cursor-pointer font-semibold text-xs">
