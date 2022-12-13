@@ -31,6 +31,7 @@ class VideoUploadController extends Controller
                 'id' => $video->id,
                 'file_name' => $video->file_name,
                 'category' => $video->category,
+                'type' => $video->type,
                 'created_at' => $video->created_at,
             ]),
             ]);
@@ -71,10 +72,10 @@ class VideoUploadController extends Controller
         /** @var AbstractHandler $handler */
         $handler = $save->handler();
 //
-//        return response()->json([
-//            "done" => $handler->getPercentageDone(),
-//            'status' => true
-//        ]);
+        return response()->json([
+            "done" => $handler->getPercentageDone(),
+            'status' => true
+        ]);
 
     }
 

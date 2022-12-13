@@ -33,16 +33,10 @@
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="p-6 bg-white border-b border-gray-200">
 
-
-
-                        <progress v-show="userStore.uploadPercentage != 0" max="100" :value="userStore.uploadPercentage" class="w-full mb-4" />
-
-
-                        <form id="videoUploadForm" action="/videoupload" class="dropzone dropzoneFile border border-gray-400 rounded w-full h-48 max-w-md px-2 py-2 mb-6">
-<!--                            add input fields and a submit button to send data back to Laravel -->
-
-
-                        </form>
+<div class="flex justify-between">
+                        <VideoUpload />
+                        <MobileVideoRecord />
+</div>
 
 
                         <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -60,7 +54,7 @@
                                             ID
                                         </div>
                                         <div scope="col" class="hidden xl:table-cell px-6 py-3">
-                                            Category
+                                            Type
                                         </div>
                                         <div scope="col" class="hidden 2xl:table-cell px-6 py-3">
                                             Created On
@@ -89,7 +83,7 @@
                                             scope="row"
                                             class="hidden xl:table-cell px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                                         >
-                                            <span>{{ video.category }}</span>
+                                            <span>{{ video.type }}</span>
                                         </div>
                                         <div class="hidden 2xl:table-cell px-6 py-4">
                                             <span >{{ formatDate(video.created_at) }}</span>
@@ -114,18 +108,20 @@
 <script setup>
 import Pagination from "@/Components/Pagination"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import {onBeforeMount, onMounted, ref} from "vue";
-import { Dropzone } from "dropzone";
+import {onBeforeMount, onMounted, ref} from "vue"
+import { Dropzone } from "dropzone"
 import { useForm } from "@inertiajs/inertia-vue3"
-import {Inertia} from "@inertiajs/inertia";
-import {useUserStore} from "@/Stores/UserStore";
+import {Inertia} from "@inertiajs/inertia"
+import {useUserStore} from "@/Stores/UserStore"
+import VideoUpload from "@/Components/Uploaders/VideoUpload"
+import MobileVideoRecord from "@/Components/Uploaders/MobileVideoRecord"
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'videoUpload'
 
-let uploadPercentage = ref(0);
+// let uploadPercentage = ref(0);
 
 onBeforeMount(() => {
     userStore.scrollToTopCounter = 0;
@@ -133,50 +129,51 @@ onBeforeMount(() => {
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
-    if (userStore.scrollToTopCounter === 0 ) {
+    if (userStore.scrollToTopCounter === 0) {
         document.getElementById("topDiv").scrollIntoView()
-        userStore.scrollToTopCounter ++;
+        userStore.scrollToTopCounter++;
     }
+});
 
 // see options for Dropzone here: https://github.com/dropzone/dropzone/blob/main/src/options.js
-    let myDropzone = new Dropzone("#videoUploadForm", {
-        url: "/videoupload",
-        paramName: "file", // The name that will be used to transfer the file
-        maxFilesize: '50 GB', // MB
-        chunking: true,
-        chunkSize: 2 * 1024 * 1024,
-        parallelChunkUploads: false,
-        retryChunks: false,
-        retryChunksLimit: 10,
-        acceptedFiles: 'video/mp4',
-        uploadprogress: function(file, progress, bytesSent) {
-            userStore.uploadPercentage = progress;
-            console.log(userStore.uploadPercentage);
-        },
-        dictDefaultMessage: "Click here or Drop files here to upload",
-        forceFallback: false, // for testing, set to true.
-        accept: function(file, done) {
-            if (file.name == "justinbieber.jpg") {
-                done("Naha, you don't.");
-            }
-            else { done(); }
-        }
-    });
+//     let myDropzone = new Dropzone("#videoUploadForm", {
+//         url: "/videoupload",
+//         paramName: "file", // The name that will be used to transfer the file
+//         maxFilesize: '50 GB', // MB
+//         chunking: true,
+//         chunkSize: 2 * 1024 * 1024,
+//         parallelChunkUploads: false,
+//         retryChunks: false,
+//         retryChunksLimit: 10,
+//         acceptedFiles: 'video/*, audio/*',
+//         uploadprogress: function(file, progress, bytesSent) {
+//             userStore.uploadPercentage = progress;
+//             console.log(userStore.uploadPercentage);
+//         },
+//         dictDefaultMessage: "Click here or Drop files here to upload",
+//         forceFallback: false, // for testing, set to true.
+//         accept: function(file, done) {
+//             if (file.name == "justinbieber.jpg") {
+//                 done("Naha, you don't.");
+//             }
+//             else { done(); }
+//         }
+//     });
+//
+//     myDropzone.on("addedfile", file => {
+//         console.log(`File added: ${file.name}`);
+//
+//     });
+//
+//     myDropzone.on("complete", function(file) {
+//         myDropzone.removeFile(file);
+//         userStore.uploadPercentage = 0;
+//         Inertia.reload({
+//             only: ["videos"],
+//         });
+//     });
 
-    myDropzone.on("addedfile", file => {
-        console.log(`File added: ${file.name}`);
 
-    });
-
-    myDropzone.on("complete", function(file) {
-        myDropzone.removeFile(file);
-        userStore.uploadPercentage = 0;
-        Inertia.reload({
-            only: ["videos"],
-        });
-    });
-
-})
 
 let props = defineProps({
     filters: Object,
@@ -185,13 +182,13 @@ let props = defineProps({
     message: String,
     errors: ref(''),
     isHidden: ref(false),
-    done: ref(),
+    // done: ref(),
 });
 
 
-let form = useForm({
-    file: [],
-});
+// let form = useForm({
+//     file: [],
+// });
 
 
 
@@ -200,33 +197,33 @@ let form = useForm({
 
 <style scoped>
 
-.dropzone {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    row-gap: 16px;
-    border: 2px dashed #6b7280;
-    transition: 0.3s ease all;
-}
+/*.dropzone {*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    justify-content: center;*/
+/*    align-items: center;*/
+/*    row-gap: 16px;*/
+/*    border: 2px dashed #6b7280;*/
+/*    transition: 0.3s ease all;*/
+/*}*/
 
-label {
-    padding: 8px 12px;
-    color: #fff;
-    background-color: #4bb1b1;
-    transition: 0.3s ease all;
-}
+/*label {*/
+/*    padding: 8px 12px;*/
+/*    color: #fff;*/
+/*    background-color: #4bb1b1;*/
+/*    transition: 0.3s ease all;*/
+/*}*/
 
-.active-dropzone {
-    color: #fff;
-    border-color: #fff;
-    background-color: #4bb1b1;
-}
+/*.active-dropzone {*/
+/*    color: #fff;*/
+/*    border-color: #fff;*/
+/*    background-color: #4bb1b1;*/
+/*}*/
 
-.active-dropzone  label {
-    background-color: #fff;
-    color: #4bb1b1;
-}
+/*.active-dropzone  label {*/
+/*    background-color: #fff;*/
+/*    color: #4bb1b1;*/
+/*}*/
 
 
 </style>
