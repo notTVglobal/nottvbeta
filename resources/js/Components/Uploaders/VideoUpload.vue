@@ -34,7 +34,7 @@ let myDropzone = new Dropzone("#videoUploadForm", {
     parallelChunkUploads: false,
     retryChunks: false,
     retryChunksLimit: 10,
-    capture: "camcorder",
+    capture: 'camcorder',
     acceptedFiles: 'video/*, audio/*',
     uploadprogress: function(file, progress, bytesSent) {
         userStore.uploadPercentage = progress;

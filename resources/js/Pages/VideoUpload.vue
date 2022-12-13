@@ -35,7 +35,10 @@
 
 <div class="flex justify-between">
                         <VideoUpload />
-                        <MobileVideoRecord />
+
+                            <!-- doesn't work .. breaks the CSS -->
+                            <!--    <MobileVideoRecord />-->
+
 </div>
 
 

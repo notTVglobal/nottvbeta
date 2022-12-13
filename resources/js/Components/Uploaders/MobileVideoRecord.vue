@@ -57,16 +57,16 @@ myDropzoneMobile.on("addedfile", file => {
 myDropzoneMobile.on("complete", function(file) {
     myDropzoneMobile.removeFile(file);
     userStore.uploadPercentage = 0;
-    Inertia.reload({
-        only: ["videos"],
-    });
+    // Inertia.reload({
+    //     only: ["videos"],
+    // });
 });
 
 })
 
-// let form2 = useForm({
-//     file: [],
-// });
+let form = useForm({
+    file: [],
+});
 
 
 </script>
