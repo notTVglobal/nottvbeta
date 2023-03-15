@@ -1,0 +1,24 @@
+gh repo clone notTVglobal/nottvbeta
+
+
+-> put images in a zip in the zip.
+  1. Unzip these images to 	/storage/app/public/images
+	     "logo_black_311.png"
+	     "logo_white_512.png"
+	     "EBU_Colorbars.svg.png"
+	     "Ping.png"
+-> install PHP 8.1
+-> PHP Extensions, curl, mbstring, ...
+-> install composer
+-> Composer update
+-> create .env file
+	(modify .env.example)
+	APP_NAME
+	DB
+	PUSHER LOCAL DEV
+
+-> sail up
+-> sail artisan migrate
+-> sail artisan db:seed
+
+

@@ -24,8 +24,8 @@ onMounted(() => {
 
 })
 if (streamStore.currentChannel != "Stream") {
-    let source = "tmr1984pull";
-    videoPlayerStore.videoName = "The Terminator";
+    let source = "mist1pull1";
+    videoPlayerStore.videoName = "notTV One";
     streamStore.currentChannel = "Stream";
     videoPlayerStore.loadNewSourceFromMist(source);
 }

@@ -87,10 +87,10 @@ let videoPlayerStore = useVideoPlayerStore()
 let streamStore = useStreamStore()
 let userStore = useUserStore()
 
-videoPlayerStore.videoSource = "https://mist2.not.tv/hls/notnowpilotpull/index.m3u8"
+videoPlayerStore.videoSource = "https://mist2.not.tv/hls/mist1pull1/index.m3u8"
 videoPlayerStore.videoSourceType = "application/x-mpegURL"
-videoPlayerStore.videoName = "NotNow Pilot"
-streamStore.currentChannel = "Preview"
+videoPlayerStore.videoName = "notTV One"
+streamStore.currentChannel = "Stream"
 userStore.showNavDropdown = false
 
 let isStreamPage = null

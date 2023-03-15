@@ -2,15 +2,15 @@
     <div>
 
         <div v-if="videoPlayerStore.ott === 1" class="channels w-full h-full bg-green-800 p-2 overflow-y-scroll">
-            <h1 class="text-xs font-semibold uppercase">CHANNELS</h1>
-            <div>
-                Display the channels list here.
-            </div>
-            <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-white cursor-pointer border-b border-0.2 border-green-800" @click="changeChannel('live')">LIVE</div>
-            <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-white cursor-pointer border-b border-0.2 border-green-800" @click="changeChannel('stream2')">SECOND STREAM</div>
-            <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-white cursor-pointer border-b border-0.2 border-green-800" @click="changeChannel('vmixsource03')">VMIX SOURCE 03</div>
-            <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-white cursor-pointer border-b border-0.2 border-green-800" @click="changeChannel('vmixsource04')">VMIX SOURCE 04</div>
-            <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-white cursor-pointer border-b border-0.2 border-green-800" @click="changeChannel('notnowpilotpull')">NOT NOW</div>
+
+            <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-white cursor-pointer border-b border-0.2 border-green-800" @click="changeChannel('one')">ONE</div>
+            <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-white cursor-pointer border-b border-0.2 border-green-800" @click="changeChannel('pacific')">PACIFIC</div>
+            <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-white cursor-pointer border-b border-0.2 border-green-800" @click="changeChannel('west')">WEST</div>
+            <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-white cursor-pointer border-b border-0.2 border-green-800" @click="changeChannel('central')">CENTRAL</div>
+            <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-white cursor-pointer border-b border-0.2 border-green-800" @click="changeChannel('ontario')">ONTARIO</div>
+            <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-white cursor-pointer border-b border-0.2 border-green-800" @click="changeChannel('east')">EAST</div>
+            <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-white cursor-pointer border-b border-0.2 border-green-800" @click="changeChannel('usa')">U.S.A</div>
+            <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-white cursor-pointer border-b border-0.2 border-green-800" @click="changeChannel('world')">WORLD</div>
         </div>
 
         <div v-if="videoPlayerStore.ott === 2" class="now-playing w-full h-full bg-purple-800 p-2">
@@ -73,34 +73,52 @@ let props = defineProps ({
 })
 
 function changeChannel(name) {
-    if (name==='live') {
-        let source = 'vmixlive'
-        videoPlayerStore.videoName = 'vMix Live'
-        streamStore.currentChannel = 'vMix Live'
+    if (name==='one') {
+        let source = 'mist1pull1'
+        videoPlayerStore.videoName = 'notTV One'
+        streamStore.currentChannel = 'notTV One'
         playVideo(source)
     }
-    if (name==='vmixsource03') {
-        let source = 'vmixsource03pull'
-        videoPlayerStore.videoName = 'vMix Source 03 Pull'
-        streamStore.currentChannel = 'vMix Source 03'
+    if (name==='pacific') {
+        let source = 'mist1pull2'
+        videoPlayerStore.videoName = 'notTV Pacific'
+        streamStore.currentChannel = 'notTV Pacific'
         playVideo(source)
     }
-    if (name==='vmixsource04') {
-        let source = 'vmixsource04pull'
-        videoPlayerStore.videoName = 'vMix Source 04 Pull'
-        streamStore.currentChannel = 'vMix Source 04'
+    if (name==='west') {
+        let source = 'mist1pull3'
+        videoPlayerStore.videoName = 'notTV West'
+        streamStore.currentChannel = 'notTV West'
         videoPlayerStore.loadNewSourceFromMist(source)
     }
-    if (name==='stream2') {
-        let source = 'labyrinth'
-        videoPlayerStore.videoName = 'Labyrinth'
-        streamStore.currentChannel = 'Stream2'
+    if (name==='central') {
+        let source = 'mist1pull4'
+        videoPlayerStore.videoName = 'notTV Central'
+        streamStore.currentChannel = 'notTV Central'
         videoPlayerStore.loadNewSourceFromMist(source)
     }
-    if (name==='notnowpilotpull') {
-        let source = 'notnowpilotpull'
-        videoPlayerStore.videoName = 'NotNow.tv Pilot'
-        streamStore.currentChannel = 'NotNow'
+    if (name==='ontario') {
+        let source = 'mist1pull5'
+        videoPlayerStore.videoName = 'notTV Ontario'
+        streamStore.currentChannel = 'notTV Ontario'
+        videoPlayerStore.loadNewSourceFromMist(source)
+    }
+    if (name==='east') {
+        let source = 'mist1pull6'
+        videoPlayerStore.videoName = 'notTV East'
+        streamStore.currentChannel = 'notTV East'
+        videoPlayerStore.loadNewSourceFromMist(source)
+    }
+    if (name==='usa') {
+        let source = 'mist1pull7'
+        videoPlayerStore.videoName = 'notTV U.S.A.'
+        streamStore.currentChannel = 'notTV U.S.A.'
+        videoPlayerStore.loadNewSourceFromMist(source)
+    }
+    if (name==='world') {
+        let source = 'mist1pull8'
+        videoPlayerStore.videoName = 'notTV World'
+        streamStore.currentChannel = 'notTV World'
         videoPlayerStore.loadNewSourceFromMist(source)
     }
     // if (name==='live') {
