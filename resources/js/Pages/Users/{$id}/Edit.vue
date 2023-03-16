@@ -6,14 +6,19 @@
         <div class="light:bg-white light:text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 
             <div class="flex justify-between mb-6">
-                <h1 class="text-3xl"><Link :href="`/users/${props.userEdit.id}`" class="text-indigo-600">{{props.userEdit.name}}</Link></h1>
-                <span class="text-xs font-semibold text-red-700">Edit Mode</span>
+
+
+                <div>
+                    <div class="font-bold mb-4 text-red-700">EDIT USER</div>
+                    <h1 class="text-3xl"><Link :href="`/users/${props.userEdit.id}`" class="text-red-700 font-bold uppercase">{{props.userEdit.name}}</Link></h1>
+                </div>
                 <div>
                     <Link :href="`/users/${props.userEdit.id}`"><button
                         class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
                     >Cancel</button>
                     </Link>
                 </div>
+
             </div>
 
         <div class="max-w-md mx-auto mt-8">
@@ -25,7 +30,7 @@
                     <div class="" v-if="props.userEdit.role_id == 4"><span class="text-xs uppercase">Creator #: </span><span class="font-semibold">{{props.userEdit.creatorNumber}}</span></div>
                 </div>
                 <div class="flex align-bottom">
-                    <button @click="addUserToNewsroom" class="text-white bg-blue-600 hover:bg-blue-400 rounded px-4 py-2 w-fit h-12">Add User to Newsroom</button>
+                    <button @click="addUserToNewsroom" class="text-white bg-yellow-600 hover:bg-yellow-800 hover:text-gray-100 rounded px-4 py-2 w-fit h-12">Add User to Newsroom</button>
                 </div>
             </div>
 
@@ -55,7 +60,7 @@
                     </label>
 
                     <input v-model="form.name"
-                           class="border border-gray-400 p-2 w-full rounded-lg"
+                           class="border border-gray-400 p-2 w-full rounded-lg text-black"
                            type="text"
                            name="name"
                            id="name"
@@ -71,7 +76,7 @@
                     </label>
 
                     <input v-model="form.email"
-                           class="border border-gray-400 p-2 w-full rounded-lg"
+                           class="border border-gray-400 p-2 w-full rounded-lg text-black"
                            type="email"
                            name="email"
                            id="email"
@@ -88,7 +93,7 @@
                     </label>
 
                     <input v-model="form.phone"
-                           class="border border-gray-400 p-2 w-full rounded-lg"
+                           class="border border-gray-400 p-2 w-full rounded-lg text-black"
                            type="text"
                            name="phone"
                            id="phone"
@@ -104,7 +109,7 @@
                     </label>
 
                     <input v-model="form.address1"
-                           class="border border-gray-400 p-2 mb-2 w-full rounded-lg"
+                           class="border border-gray-400 p-2 mb-2 w-full rounded-lg text-black"
                            type="text"
                            name="address1"
                            id="address1"
@@ -119,7 +124,7 @@
                         </label>
 
                     <input v-model="form.address2"
-                           class="border border-gray-400 p-2 w-full rounded-lg"
+                           class="border border-gray-400 p-2 w-full rounded-lg text-black"
                            type="text"
                            name="address2"
                            id="address2"
@@ -135,7 +140,7 @@
                     </label>
 
                     <input v-model="form.city"
-                           class="border border-gray-400 p-2 w-full rounded-lg"
+                           class="border border-gray-400 p-2 w-full rounded-lg text-black"
                            type="text"
                            name="city"
                            id="city"
@@ -150,7 +155,7 @@
                     </label>
 
                     <input v-model="form.province"
-                           class="border border-gray-400 p-2 w-full rounded-lg"
+                           class="border border-gray-400 p-2 w-full rounded-lg text-black"
                            type="text"
                            name="province"
                            id="province"
@@ -165,7 +170,7 @@
                     </label>
 
                     <input v-model="form.country"
-                           class="border border-gray-400 p-2 w-full rounded-lg"
+                           class="border border-gray-400 p-2 w-full rounded-lg text-black"
                            type="text"
                            name="country"
                            id="country"
@@ -181,7 +186,7 @@
                     </label>
 
                     <input v-model="form.postalCode"
-                           class="border border-gray-400 p-2 w-full rounded-lg"
+                           class="border border-gray-400 p-2 w-full rounded-lg text-black"
                            type="text"
                            name="postalCode"
                            id="postalCode"
@@ -197,6 +202,7 @@
                     >
                         Submit
                     </button>
+                    <div v-if="form.errors" v-text="form.errors" class="text-xs text-red-600 mt-1"></div>
                 </div>
             </form>
         </div>

@@ -29,7 +29,7 @@
                             </div>
 
                             <div v-if="$page.props.jetstream.canUpdateProfileInformation">
-                                <UpdateContactInformationForm :user="$page.props.user" class="pt-10"/>
+                                <UserUpdateContactForm :user="$page.props.user" class="pt-10"/>
 
                                 <JetSectionBorder />
                             </div>
@@ -79,7 +79,7 @@ import LogoutOtherBrowserSessionsForm from '@/Pages/Profile/Partials/LogoutOther
 import TwoFactorAuthenticationForm from '@/Pages/Profile/Partials/TwoFactorAuthenticationForm.vue'
 import UpdatePasswordForm from '@/Pages/Profile/Partials/UpdatePasswordForm.vue'
 import UpdateProfileInformationForm from '@/Pages/Profile/Partials/UpdateProfileInformationForm.vue'
-import UpdateContactInformationForm from '@/Pages/Profile/Partials/UpdateContactInformationForm.vue'
+import UserUpdateContactForm from "@/Components/Users/UserUpdateContactForm.vue";
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import {onBeforeMount, onMounted} from "vue";
 import {useUserStore} from "@/Stores/UserStore";

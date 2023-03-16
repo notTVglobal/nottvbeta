@@ -3,19 +3,24 @@
 namespace App\Http\Controllers;
 
 use App\Models\Role;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use App\Models\User;
 use App\Models\Creator;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Response;
 
 class UsersController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -62,7 +67,7 @@ class UsersController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -72,8 +77,8 @@ class UsersController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param HttpRequest $request
+     * @return Application|RedirectResponse|Redirector
      */
     public function store(User $user, Request $request)
     {
@@ -133,10 +138,9 @@ class UsersController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
-    public function show(User $user)
-    {
+    public function show(User $user): Response {
         function role($roleId) {
             $role = Role::query()->where('id', $roleId)->first();
             return $role->role;
@@ -169,9 +173,9 @@ class UsersController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param HttpRequest $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
 
     // NOTE: This is how the Admin updates the user details.
@@ -226,6 +230,7 @@ class UsersController extends Controller
             $role = Role::query()->where('id', $roleId)->first();
             return $role->role;
         }
+
         return Inertia::render('Users/{$id}/Index', [
             'userSelected' => $user,
             'role' => role($user->role_id),
@@ -244,18 +249,12 @@ class UsersController extends Controller
     // This is the user update contact information method
     // for the user's settings page.
     //
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function updateUser(Request $request, User $user)
+    public function updateContact(HttpRequest $request, User $user)
     {
-
+        $id = $request->id;
+        $user = User::find($id);
         // validate the request
-        $attributes = Request::validate([
+        $request->validate([
             'address1' => ['nullable', 'string', 'max:255'],
             'address2' => ['nullable', 'string', 'max:255'],
             'city' => ['nullable', 'string', 'max:255'],
@@ -266,8 +265,36 @@ class UsersController extends Controller
         ]);
 
         // update the user
-        $user->update($attributes);
+        $user->address1 = $request->address1;
+        $user->address2 = $request->address2;
+        $user->city = $request->city;
+        $user->province = $request->province;
+        $user->country = $request->country;
+        $user->postalCode = $request->postalCode;
+        $user->phone = $request->phone;
+        $user->save();
         sleep(1);
+
+        // redirect
+        return redirect(route('settings'))->with('message', 'Contact Info Updated Successfully');
+//        return Inertia::render('Settings')->with('message', 'Contact Info Updated Successfully');
+
+
+
+//        // validate the request
+//        $attributes = Request::validate([
+//            'address1' => ['nullable', 'string', 'max:255'],
+//            'address2' => ['nullable', 'string', 'max:255'],
+//            'city' => ['nullable', 'string', 'max:255'],
+//            'province' => ['nullable', 'string', 'max:255'],
+//            'country' => ['nullable', 'string', 'max:255'],
+//            'postalCode' => ['nullable', 'string', 'max:255'],
+//            'phone' => ['nullable', 'regex:/^([0-9\s\-\+\(\)]*)$/', 'min:10'],
+//        ]);
+
+//        // update the user
+//        $user->update($attributes);
+//        sleep(1);
     }
 
     /**
