@@ -14,7 +14,7 @@
                     <div class="py-4">
                         <span class="font-semibold text-xs uppercase">SHOW: </span>
                         <Link :href="`/shows/${props.show.slug}/`"
-                              class="text-blue-400 hover:text-blue-600">
+                              class="text-blue-400 hover:text-blue-600 text-sm uppercase">
                             {{ props.show.name }}
                         </Link>
                     </div>

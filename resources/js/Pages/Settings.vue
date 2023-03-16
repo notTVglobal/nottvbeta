@@ -85,10 +85,6 @@ import {onBeforeMount, onMounted} from "vue";
 import {useUserStore} from "@/Stores/UserStore";
 
 
-
-
-
-
 // import {vue} from "laravel-mix";
 
 let videoPlayerStore = useVideoPlayerStore()

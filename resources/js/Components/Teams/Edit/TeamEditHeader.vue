@@ -1,10 +1,13 @@
 <template>
     <header>
     <div class="flex justify-between mb-6">
-        <h1 class="text-3xl">
-            <Link :href="`/teams/${team.slug}`" class="text-indigo-600">{{ team.name }}</Link>
-        </h1>
-        <span class="text-xs font-semibold text-red-700">Edit Mode</span>
+
+        <div>
+            <div class="font-bold mb-4 text-red-700">EDIT TEAM</div>
+            <h1 class="text-3xl">
+                <Link :href="`/teams/${team.slug}`" class="text-red-700 font-bold uppercase">{{ team.name }}</Link>
+            </h1>
+        </div>
         <div>
             <Link :href="`/teams/${team.slug}/manage`">
                 <button
@@ -12,8 +15,8 @@
                 >Cancel
                 </button>
             </Link>
-
         </div>
+
     </div>
     </header>
 

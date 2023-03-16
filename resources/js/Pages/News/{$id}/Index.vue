@@ -4,7 +4,7 @@
 
     <div id="topDiv"></div>
     <div class="place-self-center flex flex-col ">
-        <div class="bg-white text-black p-5 mb-10">
+        <div class="light:bg-white light:text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 
             <header class="mb-5 border-b border-gray-800">
                 <div class="container mx-auto flex flex-col lg:flex-row items-center justify-between px-4 py-6">
@@ -67,7 +67,7 @@
 
             <div class="flex justify-between flex-wrap-reverse md:mb-3">
                 <div class="text-center lg:text-left w-full mb-4 lg:ml-6">
-                    <h2 class="text-3xl font-semibold leading-tight text-gray-800">
+                    <h2 class="text-3xl font-semibold leading-tight">
                         {{ news.title }}
                     </h2>
                 </div>
@@ -80,7 +80,7 @@
                     <img :src="`/storage/images/${props.image}`" class="object-scale-down md:max-w-sm px-6 mb-4 mx-auto">
                 </div>
 
-                <div class="px-6 bg-white border-b border-gray-200">
+                <div class="px-6 border-b border-gray-200">
                         <div v-html="props.news.content" class="text-left mb-6 whitespace-pre-wrap">
                         </div>
                 </div>

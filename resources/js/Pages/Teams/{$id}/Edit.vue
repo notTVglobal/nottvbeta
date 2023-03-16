@@ -4,7 +4,7 @@
 
     <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
-        <div class="bg-white text-black p-5 mb-10">
+        <div class="light:bg-white light:text-black dark:bg-gray-800 p-5 mb-10">
 
             <TeamEditHeader :team="props.team" :teamLeaderName="props.teamLeaderName" />
 
@@ -48,12 +48,12 @@
 
                                     <div>
 
-                                        <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
+                                        <label class="block mb-2 uppercase font-bold text-xs text-gray-300"
                                                for="name"
                                         >
                                             Change Team Logo
                                         </label>
-                                        <div class="max-full mx-auto mt-2 mb-6 bg-gray-200 p-6">
+                                        <div class="max-full mx-auto mt-2 mb-6 bg-gray-200 text-black p-6">
                                             <h2 class="text-xl font-semibold">Upload Team Logo</h2>
 
                                             <ul class="pb-4">
@@ -81,14 +81,14 @@
                                         </div>
 
                                         <div class="mb-6">
-                                            <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
+                                            <label class="block mb-2 uppercase font-bold text-xs light:text-gray-700 text-gray-300"
                                                    for="name"
                                             >
                                                 Team Name
                                             </label>
 
                                             <input v-model="form.name"
-                                                   class="border border-gray-400 p-2 w-full rounded-lg"
+                                                   class="border border-gray-400 p-2 w-full rounded-lg text-black"
                                                    type="text"
                                                    name="name"
                                                    id="name"
@@ -99,13 +99,13 @@
                                         </div>
 
                                         <div class="mb-6">
-                                            <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
+                                            <label class="block mb-2 uppercase font-bold text-xs light:text-gray-700 dark:text-gray-300"
                                                    for="description"
                                             >
                                                 Description
                                             </label>
                                             <TabbableTextarea v-model="form.description"
-                                                              class="border border-gray-400 p-2 w-full rounded-lg"
+                                                              class="border border-gray-400 p-2 w-full rounded-lg text-black"
                                                               name="description"
                                                               id="description"
                                                               rows="10" cols="30"
@@ -133,13 +133,13 @@
 <!--                                        </div>-->
 
                                         <div class="mb-6">
-                                            <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
+                                            <label class="block mb-2 uppercase font-bold text-xs light:text-gray-700 dark:text-gray-300"
                                                    for="description"
                                             >
                                                 Maximum # of Team Members
                                             </label>
                                             <input v-model="form.totalSpots"
-                                                   class="border border-gray-400 p-2 w-full rounded-lg"
+                                                   class="border border-gray-400 p-2 w-full rounded-lg text-black"
                                                    type="text"
                                                    name="totalSpots"
                                                    id="totalSpots"

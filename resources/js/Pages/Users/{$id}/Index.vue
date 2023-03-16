@@ -4,7 +4,7 @@
 
     <div id="topDiv"></div>
     <div class="flex flex-col gap-y-3">
-        <div class="bg-white text-black p-5 mb-10">
+        <div class="light:bg-white dark:bg-gray-800 light:text-black dark:text-gray-50 p-5 mb-10">
 
             <div class="flex justify-end mb-3 gap-2">
                 <Link v-if="$page.props.user.isAdmin === 1" :href="`/users`"><button
@@ -39,7 +39,7 @@
                 {{ props.userSelected.name }}
             </h2>
 
-            <div class="p-6 bg-white border-b border-gray-200 space-y-1">
+            <div class="p-6 light:bg-white dark:bg-gray-800 border-b border-gray-200 space-y-1">
                 <div>
                     <span class="text-sm font-semibold capitalize">User Type: </span>
                     <span v-if="props.userSelected.isAdmin === 0">{{ props.role }}</span>
@@ -52,7 +52,7 @@
                     <span class="text-sm font-semibold capitalize">Subscription Status: </span>{{props.userSelected.subscriptionStatus}}
                 </div>
             </div>
-            <div class="p-6 bg-white border-b border-gray-200">
+            <div class="p-6 light:bg-white dark:bg-gray-800 border-b border-gray-200">
                 <div class="">
                     <span class="text-sm font-semibold capitalize">Email: </span>{{ props.userSelected.email }}
                 </div>
@@ -78,13 +78,13 @@
                     <span class="text-sm font-semibold capitalize">Postal Code: </span>{{ props.userSelected.postalCode }}
                 </div>
             </div>
-            <div class="p-6 bg-white border-b border-gray-200">
+            <div class="p-6 light:bg-white dark:bg-gray-800 border-b border-gray-200">
                 <div class="text-2xl pb-2">
                     Teams this user belongs to:
                 </div>
                 <div v-for="team in props.teams"
                 :key="team.id">
-                    <Link :href="`/teams/${team.slug}`" class="text-blue-800 hover:text-blue-600">{{team.name}}</Link>
+                    <Link :href="`/teams/${team.slug}`" class="light:text-blue-800 light:hover:text-blue-600 dark:text-blue-200 dark:hover:text-blue-400">{{team.name}}</Link>
                 </div>
             </div>
         </div>

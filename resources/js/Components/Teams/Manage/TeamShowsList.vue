@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-orange-300 p-2 font-bold">Shows</div>
+    <div class="bg-orange-300 text-black p-2 font-bold">Shows</div>
     <Link
         :href="`/shows/create`"
         v-if="teamStore.can.editTeam">
@@ -10,12 +10,12 @@
     </Link>
 
     <table class="table-auto min-w-full divide-y divide-gray-200">
-        <thead class="bg-white divide-y divide-gray-200">
+        <thead class="divide-y divide-gray-200">
         <tr>
             <td class="px-6 py-4">
 <!--                Poster-->
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium text-gray-900">
+            <td class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium">
                 Show Name
 
             </td>
@@ -30,7 +30,7 @@
 
         </tr>
         </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
+        <tbody class="divide-y divide-gray-200">
 
         <TeamShow
             v-for="show in shows"

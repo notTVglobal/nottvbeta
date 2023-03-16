@@ -48,16 +48,16 @@ const form = useForm({
 //     });
 // };
 
-// const updateContactInformation = () => {
-//     form.post(route('users.updateUser', props.user.id), {
-//         errorBag: 'updateContactInformation',
-//         preserveScroll: true,
-//     });
-// };
-
-let submit = () => {
-    form.post(route('users.updateUser', props.user.id));
+const updateProfileInformation = () => {
+    form.post(route('user-profile-information.update'), {
+        errorBag: 'updateProfileInformation',
+        preserveScroll: true,
+    });
 };
+
+// let submit = () => {
+//     form.post(route('users.updateUser', props.user.id));
+// };
 
 // const sendEmailVerification = () => {
 //     verificationLinkSent.value = true;
@@ -66,7 +66,7 @@ let submit = () => {
 </script>
 
 <template>
-    <JetFormSection @submitted="updateContactInformation">
+    <JetFormSection @submitted="updateProfileInformation">
         <template #title>
             Contact Information
         </template>
@@ -88,7 +88,6 @@ let submit = () => {
                 <JetLabel for="address1" value="Address 1" />
                 <JetInput
                     id="address1"
-                    name="address1"
                     v-model="form.address1"
                     type="text"
                     class="mt-1 block w-full"
@@ -100,7 +99,6 @@ let submit = () => {
                 <JetLabel for="address2" value="Address 2" />
                 <JetInput
                     id="address2"
-                    name="address2"
                     v-model="form.address2"
                     type="text"
                     class="mt-1 block w-full"
@@ -112,7 +110,6 @@ let submit = () => {
                 <JetLabel for="city" value="City" />
                 <JetInput
                     id="city"
-                    name="city"
                     v-model="form.city"
                     type="text"
                     class="mt-1 block w-full"
@@ -124,7 +121,6 @@ let submit = () => {
                 <JetLabel for="province" value="Province/State" />
                 <JetInput
                     id="province"
-                    name="province"
                     v-model="form.province"
                     type="text"
                     class="mt-1 block w-full"
@@ -136,7 +132,6 @@ let submit = () => {
                 <JetLabel for="country" value="Country" />
                 <JetInput
                     id="country"
-                    name="country"
                     v-model="form.country"
                     type="text"
                     class="mt-1 block w-full"
@@ -148,7 +143,6 @@ let submit = () => {
                 <JetLabel for="postal_code" value="Postal Code/Zip" />
                 <JetInput
                     id="postalCode"
-                    name="postalCode"
                     v-model="form.postalCode"
                     type="text"
                     class="mt-1 block w-full"
@@ -160,7 +154,6 @@ let submit = () => {
                 <JetLabel for="phone" value="Phone Number" />
                 <JetInput
                     id="phone"
-                    name="phone"
                     v-model="form.phone"
                     type="text"
                     class="mt-1 block w-full"

@@ -4,7 +4,7 @@
 
     <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
-        <div class="bg-white text-black p-5 mb-10">
+        <div class="light:bg-white light:text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 
             <header class="flex justify-between mb-3">
                 <div id="topDiv">
@@ -13,7 +13,7 @@
             </header>
 
             <div class="mb-4">
-                <div class="p-2 font-semibold text-2xl bg-orange-300">Coming Soon!</div>
+                <div class="p-2 font-semibold text-2xl bg-orange-300 text-black">Coming Soon!</div>
                 <p class="mt-4">
                     This is the home for our notTV Shop... Our sponsors and content creators will be able to add commercials for products, services and events.
                 </p>

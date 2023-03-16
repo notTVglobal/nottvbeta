@@ -1,5 +1,5 @@
 <template>
-<div class="bg-orange-300 p-2 font-bold">Team Members</div>
+<div class="bg-orange-300 text-black p-2 font-bold">Team Members</div>
     <button
         class="bg-green-500 hover:bg-green-600 text-white ml-2 my-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
         @click="openModal"
@@ -7,7 +7,7 @@
         v-if="teamStore.can.editTeam"
     >Add Member ({{ teamStore.spotsRemaining }} spots left)</button>
     <table class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-white divide-y divide-gray-200">
+        <thead class="divide-y divide-gray-200">
         <tr>
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                 <!-- Avatar -->
@@ -15,7 +15,7 @@
             <td class="px-6 py-4 whitespace-nowrap">
                 <div class="flex items-center">
 
-                        <div class="text-sm font-medium text-gray-900">
+                        <div class="text-sm font-medium">
                             Name
                         </div>
 
@@ -43,7 +43,7 @@
             </td>
         </tr>
         </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
+        <tbody class="divide-y divide-gray-200">
             <TeamMember v-for="member in teamStore.members" :member="member" :key="member.id"/>
         </tbody>
     </table>

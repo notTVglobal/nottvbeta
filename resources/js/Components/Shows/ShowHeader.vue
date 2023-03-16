@@ -4,7 +4,7 @@
 
             <h3 class="inline-flex items-center text-3xl font-semibold relative">
                 <img :src="'/storage/images/' + show.poster" alt="" class="w-20 mr-2">
-                <Link :href="`/shows/${show.slug}`" class="">{{ show.name }}</Link>
+                <Link :href="`/shows/${show.slug}`" class="uppercase">{{ show.name }}</Link>
             </h3>
 
 

@@ -3,7 +3,7 @@
 
     <div id="topDiv"></div>
     <div class="place-self-center flex flex-col">
-        <div class="bg-white text-black p-5 mb-10">
+        <div class="light:bg-white light:text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 
             <div class="flex justify-between">
                 <h1 class="text-3xl font-semibold pb-3">Channels</h1>

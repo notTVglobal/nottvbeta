@@ -3,7 +3,7 @@
 
     <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
-        <div class="bg-white text-black p-5 mb-10">
+        <div class="light:bg-white light:text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 
             <div class="flex justify-between mb-6">
                 <h1 class="text-3xl"><Link :href="`/users/${props.userEdit.id}`" class="text-indigo-600">{{props.userEdit.name}}</Link></h1>
@@ -31,7 +31,7 @@
 
             <form @submit.prevent="submit" class="mt-6">
                 <div class="mb-6">
-                    <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
+                    <label class="block mb-2 uppercase font-bold text-xs light:text-gray-700 dark:text-gray-200"
                            for="name"
                     >
                         User Role
@@ -48,7 +48,7 @@
                     <div v-if="form.errors.roleId" v-text="form.errors.roleId" class="text-xs text-red-600 mt-1"></div>
                 </div>
                 <div class="my-6">
-                    <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
+                    <label class="block mb-2 uppercase font-bold text-xs light:text-gray-700 dark:text-gray-200"
                            for="name"
                     >
                         Name
@@ -64,7 +64,7 @@
                     <div v-if="form.errors.name" v-text="form.errors.name" class="text-xs text-red-600 mt-1"></div>
                 </div>
                 <div class="mb-6">
-                    <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
+                    <label class="block mb-2 uppercase font-bold text-xs light:text-gray-700 dark:text-gray-200"
                            for="email"
                     >
                         Email
@@ -81,7 +81,7 @@
                 </div>
 
                 <div class="mb-6">
-                    <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
+                    <label class="block mb-2 uppercase font-bold text-xs light:text-gray-700 dark:text-gray-200"
                            for="phone"
                     >
                         Phone Number
@@ -97,7 +97,7 @@
                 </div>
 
                 <div class="mb-6">
-                    <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
+                    <label class="block mb-2 uppercase font-bold text-xs light:text-gray-700 dark:text-gray-200"
                            for="address1"
                     >
                         Address 1
@@ -112,7 +112,7 @@
                 </div>
 
                     <div class="mb-6">
-                        <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
+                        <label class="block mb-2 uppercase font-bold text-xs light:text-gray-700 dark:text-gray-200"
                                for="address2"
                         >
                             Address 2
@@ -128,7 +128,7 @@
                     <div v-if="form.errors.address2" v-text="form.errors.address2" class="text-xs text-red-600 mt-1"></div>
                 </div>
                 <div class="mb-6">
-                    <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
+                    <label class="block mb-2 uppercase font-bold text-xs light:text-gray-700 dark:text-gray-200"
                            for="city"
                     >
                         City
@@ -143,7 +143,7 @@
                     <div v-if="form.errors.city" v-text="form.errors.city" class="text-xs text-red-600 mt-1"></div>
                 </div>
                 <div class="mb-6">
-                    <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
+                    <label class="block mb-2 uppercase font-bold text-xs light:text-gray-700 dark:text-gray-200"
                            for="province"
                     >
                         Province
@@ -158,7 +158,7 @@
                     <div v-if="form.errors.province" v-text="form.errors.province" class="text-xs text-red-600 mt-1"></div>
                 </div>
                 <div class="mb-6">
-                    <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
+                    <label class="block mb-2 uppercase font-bold text-xs light:text-gray-700 dark:text-gray-200"
                            for="country"
                     >
                         Country
@@ -174,7 +174,7 @@
                 </div>
 
                 <div class="mb-6">
-                    <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
+                    <label class="block mb-2 uppercase font-bold text-xs light:text-gray-700 dark:text-gray-200"
                            for="postal_code"
                     >
                         Postal Code

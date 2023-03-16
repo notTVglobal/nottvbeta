@@ -4,7 +4,7 @@
 
     <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
-        <div class="bg-white text-black p-5 mb-10">
+        <div class="light:bg-white light:text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 
             <header class="flex justify-between mb-3 border-b border-gray-800">
                 <div class="container mx-auto flex flex-col lg:flex-row items-center justify-between px-4 py-6">
@@ -44,11 +44,15 @@
 
             </header>
 
+            <div class="pl-4 w-3/5">
+                This page is only visible to members of the newsroom. Create news articles, share resources, edit stories, and when they are ready publish them!
+            </div>
 
 
 
-            <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-                <div class="p-6 bg-white border-b border-gray-200">
+
+            <div class="overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 border-b border-gray-200">
                     <div
                         class="relative overflow-x-auto shadow-md sm:rounded-lg"
                     >
@@ -91,7 +95,7 @@
                             <div
                                 v-for="news in news.data"
                                 :key="news.id"
-                                class="table-row bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                                class="table-row bg-white border-b dark:bg-gray-600 dark:border-gray-700 "
                             >
                                 <div
                                     scope="row"
@@ -101,20 +105,20 @@
                                 </div>
                                 <div
                                     scope="row"
-                                    class="table-cell px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
+                                    class="table-cell px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap align-middle"
                                 >
-                                    <Link :href="`/news/${news.slug}`" class="text-lg text-blue-800 hover:text-blue-600">{{ news.title }}</Link>
+                                    <Link :href="`/news/${news.slug}`" class="text-lg font-semibold light:text-blue-800 light:hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-200">{{ news.title }}</Link>
                                 </div>
                                 <div
                                     scope="row"
-                                    class="hidden xl:table-cell px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
+                                    class="hidden xl:table-cell px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap align-middle"
                                 >
                                     {{ formatDate(news.created_at) }}
                                 </div>
                                 <div class="hidden 2xl:table-cell px-6 py-4">
                                     <span >{{ news.status }}</span>
                                 </div>
-                                <div class="hidden lg:table-cell px-6 py-4">
+                                <div class="hidden lg:table-cell px-6 py-4 align-middle">
                                     <button
                                         class="bg-green-600 hover:bg-green-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
                                         v-if="props.can.publishNewsPost && !news.published_at"

@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-orange-300 p-2 font-bold">Team Assignments</div>
+    <div class="bg-orange-300 text-black p-2 font-bold">Team Assignments</div>
     <div class="border-1 border-t mb-3 bg-orange-300 py-1 px-2 text-xs font-semibold text-red-800">
         In development. Not currently working.
     </div>
@@ -10,13 +10,13 @@
         v-if="teamStore.can.editTeam"
     >Create Assignment</button></Link>
     <table class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-white divide-y divide-gray-200">
+        <thead class="divide-y divide-gray-200">
         <!--                                <tr v-for="episode in episodes.data" :key="episode.id">-->
         <tr>
             <td class="px-6 py-4 whitespace-nowrap">
                 <div class="flex items-center">
                     <div>
-                        <div class="text-sm font-medium text-gray-900 pl-14">
+                        <div class="text-sm font-medium pl-14">
                             <!--                                                    <Link :href="`/admin/users/${episode.id}`" class="text-indigo-600 hover:text-indigo-900">{{ episode.name }}</Link>-->
                             Assignment
                         </div>
@@ -41,7 +41,7 @@
             </td>
         </tr>
         </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
+        <tbody class="divide-y divide-gray-200">
         <!--                                <tr v-for="episode in episodes.data" :key="episode.id">-->
 <!--        <TeamAssignment v-for="episode in show.episodes" :name="episode.name" :description="episode.description" :poster="episode.poster" />-->
         </tbody>

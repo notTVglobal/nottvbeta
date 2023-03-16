@@ -15,15 +15,15 @@
             {{  props.member.name }}
         </td>
 
-        <td class="text-gray-500 px-6 py-4 text-sm">
+        <td class="light:text-gray-600 dark:text-gray-200 px-6 py-4 text-sm">
             {{  props.member.position }}
         </td>
 
-        <td class="text-gray-500 px-6 py-4 text-sm">
+        <td class="light:text-gray-600 dark:text-gray-200 px-6 py-4 text-sm">
             {{  props.member.phone }}
         </td>
 
-        <td class="text-gray-500 px-6 py-4 text-sm">
+        <td class="light:text-gray-600 dark:text-gray-200 px-6 py-4 text-sm">
             {{  props.member.email }}
         </td>
 

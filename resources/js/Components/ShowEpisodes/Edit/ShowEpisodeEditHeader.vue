@@ -4,7 +4,7 @@
         <div>
             <div class="font-bold mb-4 text-red-700">EDIT EPISODE</div>
             <h1 class="text-3xl">
-                <Link :href="`/shows/${show.slug}/episode/${episode.slug}`" class="text-red-700 font-bold">{{ episode.name }}</Link>
+                <Link :href="`/shows/${show.slug}/episode/${episode.slug}`" class="text-red-700 font-bold uppercase">{{ episode.name }}</Link>
             </h1>
         </div>
         <div>

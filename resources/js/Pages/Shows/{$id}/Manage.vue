@@ -4,7 +4,7 @@
 
     <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
-        <div class="bg-white rounded text-black p-5 mb-10">
+        <div class="light:bg-white light:text-black dark:bg-gray-800 dark:text-gray-50 rounded p-5 mb-10">
 
             <div
                 class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
@@ -65,8 +65,8 @@
 
                 <div class="flex justify-end mt-6">
                     <div class="flex flex-col">
-                        <div><span class="text-xs capitalize font-semibold">Team: </span><Link :href="`/teams/${team.slug}/manage`" class="text-blue-500 ml-2"> {{ team.name }} </Link></div>
-                        <div><span class="text-xs capitalize font-semibold mr-2">Show Runner: </span> {{ show.showRunner }} </div>
+                        <div><span class="text-xs  font-semibold uppercase">Team: </span><Link :href="`/teams/${team.slug}/manage`" class="text-blue-500 ml-2 uppercase"> {{ team.name }} </Link></div>
+                        <div><span class="text-xs  font-semibold mr-2 uppercase">Show Runner: </span> {{ show.showRunner }} </div>
                     </div>
                 </div>
 
@@ -136,7 +136,7 @@
                         </div>
 
                         <div class="mt-4 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                            <div class="bg-orange-300 p-2 font-bold">Credits</div>
+                            <div class="bg-orange-300 p-2 font-bold text-black">Credits</div>
                             <div class="border-1 border-t mb-3 bg-orange-300 py-1 px-2 text-xs font-semibold text-red-800">
                                 In development. Not currently working.
                             </div>

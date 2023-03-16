@@ -86,7 +86,7 @@
                         <div class="flex justify-end mt-6">
                             <div class="flex flex-col">
                                 <div><span class="text-xs capitalize font-semibold">Show: </span>
-                                    <Link :href="`/shows/${show.slug}/manage`" class="text-blue-500 ml-2"> {{
+                                    <Link :href="`/shows/${show.slug}/manage`" class="text-blue-500 ml-2 uppercase"> {{
                                             show.name
                                         }}
                                     </Link>

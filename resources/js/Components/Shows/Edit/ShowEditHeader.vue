@@ -1,19 +1,22 @@
 <template>
     <header>
     <div class="flex justify-between mb-6">
-        <h1 class="text-3xl">
-            <Link :href="`/shows/${show.slug}`" class="text-indigo-600">{{ show.name }}</Link>
-        </h1>
-        <span class="text-xs font-semibold text-red-700">Edit Mode</span>
-        <div>
-            <Link :href="`/shows/${show.slug}/manage`">
-                <button
-                    class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
-                >Cancel
-                </button>
-            </Link>
 
-        </div>
+            <div>
+                <div class="font-bold mb-4 text-red-700">EDIT SHOW</div>
+                <h1 class="text-3xl">
+                    <Link :href="`/shows/${show.slug}`" class="text-red-700 font-bold uppercase">{{ show.name }}</Link>
+                </h1>
+            </div>
+            <div>
+                <Link :href="`/shows/${show.slug}/manage`">
+                    <button
+                        class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
+                    >Cancel
+                    </button>
+                </Link>
+            </div>
+
     </div>
     </header>
 

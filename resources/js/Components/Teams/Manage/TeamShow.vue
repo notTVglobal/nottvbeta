@@ -5,14 +5,14 @@
         </td>
 
         <td class="px-6 py-4 whitespace-nowrap">
-            <Link :href="`/shows/${show.slug}/manage`" class="text-indigo-600 hover:text-indigo-900">{{ show.name }}</Link>
+            <Link :href="`/shows/${show.slug}/manage`" class="uppercase text-xl light:text-blue-600 light:hover:text-blue-900 dark:text-blue-200 dark:hover:text-blue-400">{{ show.name }}</Link>
         </td>
 
-        <td class="text-gray-500 px-6 py-4 text-sm">
+        <td class="light:text-gray-600 dark:text-gray-100 px-6 py-4 text-sm">
             {{  show.notes }} NOTES GO HERE
         </td>
 
-        <td class="text-gray-500 px-6 py-4 text-sm text-right">
+        <td class="light:text-gray-600 dark:text-gray-100 px-6 py-4 text-sm text-right">
             {{  show.showRunnerName }}
         </td>
 

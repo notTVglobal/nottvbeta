@@ -4,9 +4,9 @@
 
     <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
-        <div class="bg-white text-black p-5 mb-10">
+        <div class="light:bg-white light:text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
             <div class="flex flex-row justify-between">
-                <h2 class="text-xl font-semibold leading-tight text-gray-800">
+                <h2 class="text-xl font-semibold leading-tight">
                     Edit News Post
                 </h2>
                 <Link
@@ -17,7 +17,7 @@
                 </Link>
             </div>
 
-            <div class="p-6 bg-white border-b border-gray-200">
+            <div class="p-6 border-b border-gray-200">
                 <form @submit.prevent="submit">
                     <div class="mb-6">
                         <label

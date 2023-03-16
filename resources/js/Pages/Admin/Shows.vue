@@ -43,7 +43,7 @@
                                                 <Pagination :links="props.shows.links" class=""/>
                                             </div>
                                             <div>
-                                                <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg mb-6" />
+                                                <input v-model="search" type="search" placeholder="Search..." class="text-black border px-2 rounded-lg mb-6" />
                                             </div>
                                         </div>
 
@@ -213,7 +213,7 @@ let props = defineProps({
 let search = ref(props.filters.search);
 
 watch(search, throttle(function (value) {
-    Inertia.get('/shows', { search: value }, {
+    Inertia.get('/admin/shows', { search: value }, {
         preserveState: true,
         replace: true
     });

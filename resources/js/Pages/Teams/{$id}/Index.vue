@@ -9,7 +9,7 @@
 
             <header class="flex justify-between mb-3">
                 <div>
-                    <h3 class="inline-flex items-center text-3xl font-semibold relative">
+                    <h3 class="inline-flex items-center text-3xl font-semibold relative uppercase">
                         <img :src="'/storage/images/' + props.logo" alt="" class="w-20 mr-2">
                         {{ props.team.name }}
                     </h3>
@@ -49,7 +49,7 @@
 
                                 <div class="flex flex-col min-w-[8rem] px-6 py-4 font-medium break-words grow-0">
                                     <img :src="'/storage/' + creator.profile_photo_path" class="pb-2 rounded-full h-32 w-32 object-cover mb-2">
-                                    <span class="dark:text-gray-800 light:text-gray-200 w-full text-center">{{ creator.name }}</span>
+                                    <span class="dark:text-gray-50 light:text-gray-800 w-full text-center">{{ creator.name }}</span>
                                 </div>
                             </div>
                         </div>

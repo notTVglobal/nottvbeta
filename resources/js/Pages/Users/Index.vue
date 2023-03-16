@@ -3,7 +3,7 @@
 
     <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
-        <div class="bg-white text-black p-5 mb-10">
+        <div class="light:bg-white dark:bg-gray-800 light:text-black dark:text-gray-50 p-5 mb-10">
 
             <div class="flex justify-between pt-4">
                 <h1 class="text-3xl font-semibold pb-3">Users</h1>
@@ -18,7 +18,7 @@
                     class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded disabled:bg-gray-400"
                 >Add User</button>
                 </Link>
-                <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg" />
+                <input v-model="search" type="search" placeholder="Search..." class="text-black border px-2 rounded-lg" />
             </div>
 
 
@@ -37,8 +37,8 @@
                             </div>
                             {{ props.users.teams }}
 
-                            <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-                                <div class="p-6 bg-white border-b border-gray-200">
+                            <div class="overflow-hidden light:bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg">
+                                <div class="p-6 light:bg-white dark:bg-gray-800 border-b border-gray-200">
                                     <div
                                         class="relative overflow-x-auto shadow-md sm:rounded-lg"
                                     >
@@ -79,14 +79,16 @@
                                                     scope="row"
                                                     class="min-w-[8rem] px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                                                 >
-                                                    <img v-if="!user.profile_photo_path" :src="user.userSelected.profile_photo_url" class="rounded-full h-20 w-20 object-cover">
-                                                    <img v-if="user.profile_photo_path" :src="`/storage/${user.profile_photo_path}`" class="rounded-full h-20 w-20 object-cover">
+                                                    <Link :href="`/users/${user.id}`" class="">
+                                                        <img v-if="!user.profile_photo_path" :src="user.userSelected.profile_photo_url" class="rounded-full h-20 w-20 object-cover">
+                                                        <img v-if="user.profile_photo_path" :src="`/storage/${user.profile_photo_path}`" class="rounded-full h-20 w-20 object-cover">
+                                                    </Link>
                                                 </th>
                                                 <th
                                                     scope="row"
                                                     class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                                                 >
-                                                    <Link :href="`/users/${user.id}`" class="text-blue-800 hover:text-blue-600">{{ user.name }}</Link>
+                                                    <Link :href="`/users/${user.id}`" class="text-blue-200 hover:text-blue-400">{{ user.name }}</Link>
                                                 </th>
                                                 <th
                                                     scope="row"
