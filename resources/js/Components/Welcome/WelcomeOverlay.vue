@@ -19,8 +19,9 @@
 
                             </div>
 <!--                            <div class="my-2 text-center">OR</div>-->
-<!--                            <div class="text-center font-semibold text-2xl px-5 py-3">SCROLL DOWN</div>-->
+
                             <div class="text-center font-semibold text-2xl px-5 py-3">Returning Soon!</div>
+                                                    <div class="text-center font-semibold text-2xl px-5 py-3">SCROLL DOWN</div>
 
                     </div>
                 </div>
