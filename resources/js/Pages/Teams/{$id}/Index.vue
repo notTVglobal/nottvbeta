@@ -5,7 +5,7 @@
     <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3 overflow-x-hidden">
 
-        <div class="bg-white rounded text-black p-5 mb-10">
+        <div class="light:bg-light dark:bg-gray-800 rounded light:text-black dark:text-gray-50 p-5 mb-10">
 
             <header class="flex justify-between mb-3">
                 <div>
@@ -36,20 +36,20 @@
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                     <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
 
-                    <div class="w-full bg-gray-300 text-2xl p-4 mb-8">SHOWS</div>
+                    <div class="w-full light:bg-gray-300 dark:bg-gray-900 light:text-black dark:text-gray-50 text-2xl p-4 mb-8">SHOWS</div>
 
                         <TeamShowsList :shows="props.shows" />
 
-                    <div class="w-full bg-gray-300 text-2xl p-4 mb-8">CREATORS</div>
+                    <div class="w-full light:bg-gray-300 dark:bg-gray-900 light:text-black dark:text-gray-50  text-2xl p-4 mb-8">CREATORS</div>
 
                         <div class="flex flex-row flex-wrap">
                             <div v-for="creator in props.creators.data"
                                  :key="creator.id"
-                                 class="pb-8 bg-light dark:bg-gray-800">
+                                 class="pb-8 dark:bg-light light:bg-gray-800">
 
                                 <div class="flex flex-col min-w-[8rem] px-6 py-4 font-medium break-words grow-0">
                                     <img :src="'/storage/' + creator.profile_photo_path" class="pb-2 rounded-full h-32 w-32 object-cover mb-2">
-                                    <span class="light:text-gray-800 dark:text-gray-200 w-full text-center">{{ creator.name }}</span>
+                                    <span class="dark:text-gray-800 light:text-gray-200 w-full text-center">{{ creator.name }}</span>
                                 </div>
                             </div>
                         </div>

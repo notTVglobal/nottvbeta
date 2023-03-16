@@ -25,23 +25,48 @@ const form = useForm({
     phone: props.user.phone,
 });
 
-const verificationLinkSent = ref(null);
+// let form = useForm({
+//     id: props.userEdit.id,
+//     name: props.userEdit.name,
+//     email: props.userEdit.email,
+//     role_id: props.userEdit.role_id,
+//     address1: props.userEdit.address1,
+//     address2: props.userEdit.address2,
+//     city: props.userEdit.city,
+//     province: props.userEdit.province,
+//     country: props.userEdit.country,
+//     postalCode: props.userEdit.postalCode,
+//     phone: props.userEdit.phone,
+// });
 
-const updateProfileInformation = () => {
-    form.post(route('user-profile-information.update'), {
-        errorBag: 'updateProfileInformation',
-        preserveScroll: true,
-    });
+// const verificationLinkSent = ref(null);
+
+// const updateContactInformation = () => {
+//     form.post(route('user-profile-information.update'), {
+//         errorBag: 'updateContactInformation',
+//         preserveScroll: true,
+//     });
+// };
+
+// const updateContactInformation = () => {
+//     form.post(route('users.updateUser', props.user.id), {
+//         errorBag: 'updateContactInformation',
+//         preserveScroll: true,
+//     });
+// };
+
+let submit = () => {
+    form.post(route('users.updateUser', props.user.id));
 };
 
-const sendEmailVerification = () => {
-    verificationLinkSent.value = true;
-};
+// const sendEmailVerification = () => {
+//     verificationLinkSent.value = true;
+// };
 
 </script>
 
 <template>
-    <JetFormSection @submitted="updateProfileInformation">
+    <JetFormSection @submitted="updateContactInformation">
         <template #title>
             Contact Information
         </template>
@@ -56,11 +81,14 @@ const sendEmailVerification = () => {
 
         <template #form>
 
+<!--            <form @submit.prevent="submit" class="mt-6">-->
+
             <!-- Address -->
             <div class="col-span-6 sm:col-span-4">
                 <JetLabel for="address1" value="Address 1" />
                 <JetInput
                     id="address1"
+                    name="address1"
                     v-model="form.address1"
                     type="text"
                     class="mt-1 block w-full"
@@ -72,6 +100,7 @@ const sendEmailVerification = () => {
                 <JetLabel for="address2" value="Address 2" />
                 <JetInput
                     id="address2"
+                    name="address2"
                     v-model="form.address2"
                     type="text"
                     class="mt-1 block w-full"
@@ -83,6 +112,7 @@ const sendEmailVerification = () => {
                 <JetLabel for="city" value="City" />
                 <JetInput
                     id="city"
+                    name="city"
                     v-model="form.city"
                     type="text"
                     class="mt-1 block w-full"
@@ -94,6 +124,7 @@ const sendEmailVerification = () => {
                 <JetLabel for="province" value="Province/State" />
                 <JetInput
                     id="province"
+                    name="province"
                     v-model="form.province"
                     type="text"
                     class="mt-1 block w-full"
@@ -105,6 +136,7 @@ const sendEmailVerification = () => {
                 <JetLabel for="country" value="Country" />
                 <JetInput
                     id="country"
+                    name="country"
                     v-model="form.country"
                     type="text"
                     class="mt-1 block w-full"
@@ -113,9 +145,10 @@ const sendEmailVerification = () => {
                 <JetInputError :message="form.errors.country" class="mt-2" />
             </div>
             <div class="col-span-6 sm:col-span-4">
-                <JetLabel for="postalCode" value="Postal Code/Zip" />
+                <JetLabel for="postal_code" value="Postal Code/Zip" />
                 <JetInput
-                    id="postal_code"
+                    id="postalCode"
+                    name="postalCode"
                     v-model="form.postalCode"
                     type="text"
                     class="mt-1 block w-full"
@@ -127,6 +160,7 @@ const sendEmailVerification = () => {
                 <JetLabel for="phone" value="Phone Number" />
                 <JetInput
                     id="phone"
+                    name="phone"
                     v-model="form.phone"
                     type="text"
                     class="mt-1 block w-full"
@@ -134,6 +168,24 @@ const sendEmailVerification = () => {
                 />
                 <JetInputError :message="form.errors.phone" class="mt-2" />
             </div>
+
+<!--                <div class="flex justify-between mb-6">-->
+<!--                    <button-->
+<!--                        type="submit"-->
+<!--                        class="bg-blue-400 text-white rounded py-2 px-4 hover:bg-blue-500"-->
+<!--                        :class="{ 'opacity-25': form.processing }"-->
+<!--                        :disabled="form.processing"-->
+<!--                    >-->
+<!--                        Save-->
+<!--                    </button>-->
+<!--                </div>-->
+
+<!--            <JetActionMessage :on="form.recentlySuccessful" class="mr-3">-->
+<!--                Saved.-->
+<!--            </JetActionMessage>-->
+<!--            </form>-->
+
+
         </template>
 
         <template #actions>

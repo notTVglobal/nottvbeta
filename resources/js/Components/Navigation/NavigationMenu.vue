@@ -17,11 +17,11 @@
                         <JetNavLink v-touch="()=>(route('stream'))" @click="videoPlayerStore.makeVideoFullPage()" :href="route('stream')" :active="route().current('stream')">
                             Stream
 
-                            <div v-if="streamStore.isLive"
-                                class="text-xs text-white bg-red-800 uppercase flex justify-center items-center absolute -right-4 top-1.5
-                                    font-semibold inline-block py-0.5 px-1 rounded last:mr-0 mr-1">
-                               live
-                            </div>
+<!--                            <div v-if="streamStore.isLive"-->
+<!--                                class="text-xs text-white bg-red-800 uppercase flex justify-center items-center absolute -right-4 top-1.5-->
+<!--                                    font-semibold inline-block py-0.5 px-1 rounded last:mr-0 mr-1">-->
+<!--                               live-->
+<!--                            </div>-->
                         </JetNavLink>
                         </h3>
                         <JetNavLink v-touch="()=>(route('schedule'))" @click="videoPlayerStore.makeVideoTopRight()" :href="route('schedule')" :active="route().current('schedule')">
@@ -55,7 +55,13 @@
                         <JetNavLink v-touch="()=>(route('shop'))" @click="videoPlayerStore.makeVideoTopRight()" :href="route('shop')" :active="route().current('shop')">
                             Shop
                         </JetNavLink>
-                        <JetNavLink v-touch="()=>(route('library'))" @click="videoPlayerStore.makeVideoTopRight()" :href="route('library')" :active="route().current('library')">
+                        <JetNavLink
+                            v-if="$page.props.user.role_id >= 3"
+                            v-touch="()=>(route('library'))"
+                            @click="videoPlayerStore.makeVideoTopRight()"
+                            :href="route('library')"
+                            :active="route().current('library')"
+                        >
                             My Library
 
                             <div class="text-xs text-white bg-yellow-800 uppercase flex justify-center items-center ml-1 -right-4 top-1.5
@@ -80,7 +86,7 @@
                         <div>
                             <div v-if="$page.props.user.role_id === 1">
                                 <JetNavLink v-touch="()=>(route('upgrade'))" @click="videoPlayerStore.makeVideoTopRight()" :href="route('upgrade')" :active="route().current('upgrade')">
-                                    <div class="text-fuchsia-700 hover:text-fuchsia-500">CLICK HERE TO UPGRADE YOUR ACCOUNT</div>
+                                    <div class="rounded-lg p-2 bg-gray-100 text-black hover:bg-gray-300 hover:text-green-900">CLICK HERE TO UPGRADE YOUR ACCOUNT</div>
                                 </JetNavLink>
                             </div>
                             <div v-if="$page.props.user.role_id === 2" class="text-fuchsia-700">PREMIUM SUBSCRIBER</div>
@@ -129,36 +135,29 @@
                                         </div>
 
                                         <JetDropdownLink
+                                            v-if="$page.props.user.role_id === 4"
+                                            @click="videoPlayerStore.makeVideoTopRight()"
+                                            :href="route('dashboard')">
+                                            Dashboard
+                                        </JetDropdownLink>
+
+                                        <JetDropdownLink
                                             @click="videoPlayerStore.makeVideoTopRight()"
                                             :href="route('settings')">
                                             Settings
                                         </JetDropdownLink>
 
-                                        <!-- Creator Only Links -->
-                                        <div v-if="$page.props.user.role_id === 4">
-                                            <div class="border-t border-1 mt-3 border-gray-300 block px-4 py-2 text-xs text-gray-400">
-                                                Creator Only Links
-                                            </div>
+<!--                                        &lt;!&ndash; Creator Only Links &ndash;&gt;-->
+<!--                                        <div v-if="$page.props.user.role_id === 4">-->
+<!--                                            <div class="border-t border-1 mt-3 border-gray-300 block px-4 py-2 text-xs text-gray-400">-->
+<!--                                                Creator Only Links-->
+<!--                                            </div>-->
 
-                                            <JetDropdownLink
-                                                @click="videoPlayerStore.makeVideoTopRight()"
-                                                :href="route('dashboard')">
-                                                Dashboard
-                                            </JetDropdownLink>
 
-                                            <JetDropdownLink
-                                                @click="videoPlayerStore.makeVideoTopRight()"
-                                                :href="route('training')">
-                                                Training
-                                            </JetDropdownLink>
 
-                                            <JetDropdownLink
-                                                @click="videoPlayerStore.makeVideoTopRight()"
-                                                :href="route('videoupload')">
-                                                Video Upload
-                                            </JetDropdownLink>
 
-                                        </div>
+
+<!--                                        </div>-->
 
                                         <!-- Admin Only Links -->
                                         <div v-if="$page.props.user.isAdmin === 1">
@@ -166,17 +165,27 @@
                                                 Admin Only Links
                                             </div>
 
+                                            <JetDropdownLink
+                                                v-if="$page.props.user.isAdmin === 1"
+                                                @click="videoPlayerStore.makeVideoTopRight()"
+                                                :href="route('training')">
+                                                Training
+                                            </JetDropdownLink>
 
+                                            <JetDropdownLink
+                                                v-if="$page.props.user.isAdmin === 1"
+                                                @click="videoPlayerStore.makeVideoTopRight()"
+                                                :href="route('videoupload')">
+                                                Video Upload
+                                            </JetDropdownLink>
 
                                             <JetDropdownLink
                                                 @click="videoPlayerStore.makeVideoTopRight()"
                                                 :href="route('video')">
                                                 MistServer API
                                             </JetDropdownLink>
-                                        </div>
 
-                                    </div>
-                                    <div class="border-t border-gray-100">
+                                        </div>
                                         <!-- Authentication -->
                                         <form @submit.prevent="logout">
 
@@ -184,16 +193,20 @@
                                                 Log Out
                                             </JetDropdownLink>
                                         </form>
+
+                                    </div>
+                                    <div class="border-t border-gray-100">
+
                                     </div>
 
-                                    <div class="grid grid-col-1 w-full text-gray-400 text-xs mb-6 py-2">
-                                        <div class="flex pt-6 justify-center ">Web application</div>
-                                        <div class="flex justify-center">concept and design</div>
-                                        <div class="flex justify-center pt-2">not&#174;TV &#169; 2010 - {{new Date().getFullYear()}}</div>
-                                        <div class="flex justify-center pb-2">notTV Beta v0.4</div>
-                                        <div class="flex justify-center">Please send us</div>
-                                        <div class="flex justify-center">comments and questions</div>
-                                        <div class="flex justify-center"><a href="https://help.not.tv/" target="_blank" class="text-blue-600 hover:text-blue-40">here</a>.</div>
+                                    <div class="grid grid-col-1 w-full text-gray-400 text-sm py-2">
+<!--                                        <div class="flex pt-6 justify-center ">Web application</div>-->
+<!--                                        <div class="flex justify-center">concept and design</div>-->
+                                        <div class="flex justify-center">not<span class="text-xs">&#174;</span>TV &#169;2010-{{new Date().getFullYear()}}</div>
+                                        <div class="flex justify-center">Beta v0.5</div>
+<!--                                        <div class="flex justify-center">Please send us</div>-->
+<!--                                        <div class="flex justify-center">comments and questions</div>-->
+<!--                                        <div class="flex justify-center"><a href="https://help.not.tv/" target="_blank" class="text-blue-600 hover:text-blue-40">here</a>.</div>-->
                                     </div>
 
                                 </div>
@@ -260,7 +273,7 @@ const logout = () => {
 <style>
 
 .isFullPageCss {
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.8);
     /*background: yellow;*/
 }
 

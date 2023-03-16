@@ -13,19 +13,19 @@
             </header>
 
             <div class="mb-4">
-                <div class="p-2 text-red-600">This section is in development. Not currently working.</div>
-                <p class="">
-                    Our notTV Shop... Add sponsors, who add commercials for products, services and events.
+                <div class="p-2 font-semibold text-2xl bg-orange-300">Coming Soon!</div>
+                <p class="mt-4">
+                    This is the home for our notTV Shop... Our sponsors and content creators will be able to add commercials for products, services and events.
                 </p>
             </div>
 
-            <div class="flex flex-row justify-end gap-x-4 mb-4">
+<!--            <div class="flex flex-row justify-end gap-x-4 mb-4">-->
 
-                <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg" />
-            </div>
+<!--                <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg" />-->
+<!--            </div>-->
 
-            <div class="bg-orange-300 px-2">
-                Display items, services and events here.
+            <div class="px-2">
+<!--                Display items, services and events here.-->
             </div>
 
         </div>

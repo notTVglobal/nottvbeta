@@ -82,11 +82,6 @@
                         <div v-if="$page.props.user.role_id === 3" class="text-xs font-semibold text-fuchsia-700">VIP</div>
                         <div v-if="$page.props.user.role_id === 4" class="text-xs font-semibold text-fuchsia-700">CREATOR</div>
                         <div v-if="$page.props.user.isAdmin === 1" class="text-xs font-semibold text-red-700">ADMIN</div>
-                        <div v-if="$page.props.user.role_id === 1" class="align-self-end text-lg font-semibold text-fuchsia-700 hover:text-fuchsia-500">
-                            <Link @click="videoPlayer.makeVideoTopRight()" :href="route('upgrade')" :active="route().current('upgrade')">
-                                CLICK HERE TO UPGRADE YOUR ACCOUNT
-                            </Link>
-                        </div>
                     </div>
 
                 </div>
@@ -94,6 +89,17 @@
 
 
             <div class="space-y-1 z-50 bg-gray-900 pb-20 border-b border-1 border-white">
+
+                <JetResponsiveNavLink
+                    v-if="$page.props.user.role_id === 1"
+                    @click="userStore.closeNavDropdown()"
+                    :href="route('upgrade')"
+                    :active="route().current('upgrade')"
+                >
+                    <div class="rounded-lg p-2 bg-gray-100 text-black hover:bg-gray-300 hover:text-green-900">
+                        CLICK HERE TO UPGRADE YOUR ACCOUNT
+                    </div>
+                </JetResponsiveNavLink>
 
                 <JetResponsiveNavLink
                     v-if="$page.props.user.role_id === 4"
@@ -104,6 +110,7 @@
                 </JetResponsiveNavLink>
 
                 <JetResponsiveNavLink
+                    v-if="$page.props.user.role_id === 3"
                     @click="userStore.closeNavDropdown()"
                     :href="route('library')"
                     :active="route().current('library')">
@@ -162,8 +169,6 @@
                         Settings
                 </JetResponsiveNavLink>
 
-
-
                 <!-- Authentication -->
                 <form method="POST" @submit.prevent="logout">
                     <JetResponsiveNavLink as="button" class="border-t-0">
@@ -171,27 +176,17 @@
                     </JetResponsiveNavLink>
                 </form>
 
-                <!-- Creator Only Links -->
-                <div v-if="$page.props.user.role_id === 4">
-                    <div class="border-t border-1 mt-3 border-gray-300 bg-indigo-900 block px-4 py-2 text-xs text-white">
-                        Creator Only Links
-                    </div>
 
-                    <JetResponsiveNavLink
-                        @click="userStore.closeNavDropdown()"
-                        :href="route('videoupload')"
-                        :active="route().current('videoupload')">
-                        Video Upload
-                    </JetResponsiveNavLink>
 
-                    <JetResponsiveNavLink
-                        @click="userStore.closeNavDropdown()"
-                        :href="route('training')"
-                        :active="route().current('training')">
-                        Training
-                    </JetResponsiveNavLink>
+<!--                &lt;!&ndash; Creator Only Links &ndash;&gt;-->
+<!--                <div v-if="$page.props.user.role_id === 4">-->
+<!--                    <div class="border-t border-1 mt-3 border-gray-300 bg-indigo-900 block px-4 py-2 text-xs text-white">-->
+<!--                        Creator Only Links-->
+<!--                    </div>-->
 
-                </div>
+
+
+<!--                </div>-->
 
                 <!-- Admin Only Links -->
                     <div v-if="$page.props.user.isAdmin === 1">
@@ -201,19 +196,34 @@
 
                         <JetResponsiveNavLink
                             @click="userStore.closeNavDropdown()"
+                            :href="route('videoupload')"
+                            :active="route().current('videoupload')">
+                            Video Upload
+                        </JetResponsiveNavLink>
+
+                        <JetResponsiveNavLink
+                            @click="userStore.closeNavDropdown()"
+                            :href="route('training')"
+                            :active="route().current('training')">
+                            Training
+                        </JetResponsiveNavLink>
+
+                        <JetResponsiveNavLink
+                            @click="userStore.closeNavDropdown()"
                             :href="route('video')"
-                            :active="route().current('video')"
-                            class="bg-black">>
+                            :active="route().current('video')">
                             MistServer API
                         </JetResponsiveNavLink>
                     </div>
 
 
-                <div class="flex flex-col w-full space-y-1 text-gray-600 text-sm mb-6">
-                    <div class="flex pt-12 justify-center">Web application concept and design</div>
-                    <div class="flex justify-center">not&#174;TV &#169; 2010 - {{new Date().getFullYear()}}</div>
-                    <div class="flex justify-center">notTV Beta v0.4</div>
-                    <div class="flex pt-4 justify-center">Please send us comments and questions <a href="https://help.not.tv/" target="_blank" class="text-blue-600 hover:text-blue-40">&nbsp; here</a>.</div>
+
+
+                <div class="flex flex-col w-full space-y-1 text-gray-600 text-sm">
+<!--                    <div class="flex pt-12 justify-center">Web application concept and design</div>-->
+                    <div class="flex justify-center">not<span class="text-xs">&#174;</span>TV &#169;2010-{{new Date().getFullYear()}}</div>
+                    <div class="flex justify-center">Beta v0.5</div>
+<!--                    <div class="flex pt-4 justify-center">Please send us comments and questions <a href="https://help.not.tv/" target="_blank" class="text-blue-600 hover:text-blue-40">&nbsp; here</a>.</div>-->
                 </div>
             </div>
         </div> <div class="fixed w-full bottom-4 text-center hidden">Scroll the menu.</div>

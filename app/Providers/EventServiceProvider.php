@@ -18,6 +18,11 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        'Illuminate\Auth\Events\Registered' => [
+            // TASK: Create a notification to admin
+            // that a new user is registered.
+            'App\Listeners\LogRegisteredUser',
+        ],
         'App\Events\NewChatMessage' => [
             // Add events here, e.g., when
             // a new chat message happens

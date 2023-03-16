@@ -53,9 +53,9 @@ Route::get('/', function () {
 });
 
 Route::get('/home', function () {
-    if (Auth::user()->role_id != 4) {
-        return redirect('/stream');
-    } return redirect('/dashboard');
+    if (Auth::user()->role_id === 4) {
+        return redirect('/dashboard');
+    } return redirect('/');
 });
 
 Route::get('/email/verify', function () {
@@ -64,7 +64,7 @@ Route::get('/email/verify', function () {
 
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
     $request->fulfill();
-    return redirect('/stream');
+    return redirect('/');
 })->middleware(['auth', 'signed'])->name('verification.verify');
 
 Route::post('/email/verification-notification', function (Request $request) {
@@ -463,7 +463,7 @@ Route::middleware([
         ->name('users.edit');
 
     // Update user
-//    Route::put('/users', [UsersController::class, 'update'])->name('users.update');
+    Route::put('/users', [UsersController::class, 'updateUser'])->name('users.updateUser');
 
 // Chat
 ///////////

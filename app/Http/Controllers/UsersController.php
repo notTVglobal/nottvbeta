@@ -173,6 +173,14 @@ class UsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+
+    // NOTE: This is how the Admin updates the user details.
+    // this is probably better moved to a different controller.
+    // tec21: I was tring to use the same action controller that
+    // Fortify/Jetstream built to update user profile information.
+    // to no avail. The new user settings updateContactInformationForm
+    // update method is below this first update method.
+    //
     public function update(Request $request, User $user)
     {
 
@@ -228,6 +236,38 @@ class UsersController extends Controller
                 'editUser' => Auth::user()->can('edit', User::class)
             ]
         ])->with('message', 'User Updated Successfully');
+    }
+
+
+
+
+    // This is the user update contact information method
+    // for the user's settings page.
+    //
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function updateUser(Request $request, User $user)
+    {
+
+        // validate the request
+        $attributes = Request::validate([
+            'address1' => ['nullable', 'string', 'max:255'],
+            'address2' => ['nullable', 'string', 'max:255'],
+            'city' => ['nullable', 'string', 'max:255'],
+            'province' => ['nullable', 'string', 'max:255'],
+            'country' => ['nullable', 'string', 'max:255'],
+            'postalCode' => ['nullable', 'string', 'max:255'],
+            'phone' => ['nullable', 'regex:/^([0-9\s\-\+\(\)]*)$/', 'min:10'],
+        ]);
+
+        // update the user
+        $user->update($attributes);
+        sleep(1);
     }
 
     /**

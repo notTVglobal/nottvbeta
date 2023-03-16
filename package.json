@@ -52,6 +52,8 @@
         "imagemin": "^8.0.1",
         "laravel-echo": "^1.14.0",
         "md5": "^2.3.0",
+        "node-polyfill-webpack-plugin": "^2.0.1",
+        "path-browserify": "^1.0.1",
         "pinia": "^2.0.17",
         "pusher-js": "^7.3.0",
         "video.js": "^7.20.3",
@@ -59,6 +61,7 @@
         "vue3-emoji-picker": "^1.1.5",
         "vue3-popper": "^1.5.0",
         "vue3-touch-events": "^4.1.0",
+        "webpack": "^5.76.1",
         "yargs": "^17.5.1",
         "yargs-parser": "^21.0.1"
     }

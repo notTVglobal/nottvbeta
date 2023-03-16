@@ -221,7 +221,7 @@ const disableTwoFactorAuthentication = () => {
                     <JetConfirmsPassword @confirmed="showRecoveryCodes">
                         <JetSecondaryButton
                             v-if="recoveryCodes.length === 0 && ! confirming"
-                            class="mr-3"
+                            class="mr-3 mb-2"
                         >
                             Show Recovery Codes
                         </JetSecondaryButton>

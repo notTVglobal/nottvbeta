@@ -22,7 +22,7 @@
 
                     <div class="flex flex-col lg:flex-row justify-between items-center w-full">
                         <div class="">
-                            <h1 class="text-xl font-semibold"><Link :href="`/news`" class="hover:text-blue-800">&lt; Back to News</Link></h1>
+                            <h1 class="text-xl font-semibold"><Link :href="`/news`" class="hover:text-blue-800">&lt; Back</Link></h1>
                             <ul class="flex ml-0 lg:ml-16 mt-6 lg:mt-0 space-x-8" >
                                 <li>
                                     <Link :href="``" class="text-gray-700 cursor-not-allowed hidden">Categories</Link>

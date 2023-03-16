@@ -105,13 +105,13 @@
                         </div>
 
                         <div class="mb-6 p-5">
-                            <div class="w-full bg-gray-900 text-2xl p-4 mb-8">CREATORS</div>
+                            <div class="w-full bg-gray-800 text-2xl p-4 mb-8">CREATORS</div>
 
 
                             <div class="flex flex-row flex-wrap">
                                 <div v-for="creator in props.creators.data"
                                      :key="creator.id"
-                                     class="pb-8 bg-light dark:bg-gray-800">
+                                     class="pb-8 light:bg-light dark:bg-gray-900">
 
                                     <div class="flex flex-col min-w-[8rem] px-6 py-4 font-medium break-words grow-0">
                                         <img :src="'/storage/' + creator.profile_photo_path" class="pb-2 rounded-full h-32 w-32 object-cover mb-2">
@@ -131,7 +131,7 @@
                                 </div>
                             </div>
 
-                            <div class="w-full bg-gray-900 text-2xl p-4 mb-8">BONUS CONTENT</div>
+                            <div class="w-full bg-gray-800 text-2xl p-4 mb-8">BONUS CONTENT</div>
                         </div>
 
                         <EpisodeFooter :team="props.team"/>

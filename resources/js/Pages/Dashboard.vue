@@ -188,7 +188,7 @@
                             </Link>
                         </div>
                     </div>
-                    <div v-if="props.teams.data == 0" class="italic"> You have no teams.</div>
+                    <div v-if="props.teams.data == 0" class="italic dark:text-gray-50 light:text-black"> You have no teams.</div>
                     <div
                         v-for="team in teams.data"
                         :key="team.id"

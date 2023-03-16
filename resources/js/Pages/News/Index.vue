@@ -9,11 +9,11 @@
 <!--    <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">-->
     <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
-        <div class="bg-white text-black p-5 mb-10">
+        <div class="light:bg-light dark:bg-gray-800 light:text-black dark:text-gray-50 p-5 mb-10">
 
 
 
-            <header class="flex justify-between mb-3 border-b border-gray-800">
+            <header class="flex justify-between mb-3 border-b border-gray-500">
                 <div class="container mx-auto flex flex-col lg:flex-row items-center justify-between px-4 py-6">
 
                     <div
@@ -33,13 +33,13 @@
                                 <Link :href="``" class="text-gray-700 cursor-not-allowed">Categories</Link>
                             </li>
                             <li>
-                                <Link :href="``" @click.prevent="scrollToCities" class="hover:text-blue-800">Cities</Link>
+                                <Link :href="``" @click.prevent="scrollToCities" class="hover:text-blue-500">Cities</Link>
                             </li>
                         </ul>
                     </div>
                     <div class="flex items-center mt-6 lg:mt-0">
                         <div class="relative">
-                            <input v-model="search" type="search" class="bg-gray-50 text-sm rounded-full
+                            <input v-model="search" type="search" class="bg-gray-50 text-black text-sm rounded-full
                             focus:outline-none focus:shadow w-64 pl-8 px-3 py-1" placeholder="Search...">
                             <div class="absolute top-0 flex items-center h-full ml-2">
                                 <svg class="fill-current text-gray-400 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M456.69 421.39 362.6 327.3a173.81 173.81 0 0 0 34.84-104.58C397.44 126.38 319.06 48 222.72 48S48 126.38 48 222.72s78.38 174.72 174.72 174.72A173.81 173.81 0 0 0 327.3 362.6l94.09 94.09a25 25 0 0 0 35.3-35.3ZM97.92 222.72a124.8 124.8 0 1 1 124.8 124.8 124.95 124.95 0 0 1-124.8-124.8Z"/></svg>
@@ -51,8 +51,8 @@
 
             </header>
 
-            <div class="flex flex-row justify-between">
-                <div class="mb-4">
+            <div class="flex flex-row justify-between mb-4">
+                <div class="mt-4">
                     Events, shows, episodes, movies, news, channel updates, announcements, etc.
                 </div>
                 <Link
@@ -66,7 +66,7 @@
 
 
             <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-                <div class="p-6 bg-white border-b border-gray-200">
+                <div class="p-6 light:bg-white dark:bg-gray-900 border-b border-gray-200">
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                         <table
                             class="w-full text-sm text-left text-gray-500 dark:text-gray-400"
@@ -75,10 +75,10 @@
                                 class="w-full text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
                             >
                             <tr>
-                                <th scope="col" class="px-6 py-3">
+                                <th scope="col" class="w-full px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                                     News Posts
                                 </th>
-                                <th v-if="props.can.editPost" scope="col" class="text-right px-6">
+                                <th scope="col" class="text-right px-6 py-2 space-x-2 space-y-2">
 
                                 </th>
                             </tr>
@@ -87,17 +87,20 @@
                             <tr
                                 v-for="post in news.data"
                                 :key="post.id"
-                                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                                class="bg-white border-b dark:bg-gray-300 dark:border-gray-700"
                             >
 
                                 <td
                                     scope="row"
-                                    class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
+                                    class="px-6 py-4 text-gray-900 dark:text-white whitespace-nowrap"
                                 >
-                                    <div class="flex flex-row"><img :src="'/storage/images/' + post.image" alt="news cover" class="pr-4 h-6 max-w-[6rem] object-cover hover:opacity-75 transition ease-in-out duration-150"><Link :href="`/news/${post.slug}`" class="text-blue-800 hover:text-blue-600">{{ post.title }}</Link></div>
+                                    <Link :href="`/news/${post.slug}`" class="text-blue-800 uppercase font-semibold text-md hover:text-blue-600 hover:opacity-75 transition ease-in-out duration-150">
+                                    <div class="flex flex-row"><img :src="'/storage/images/' + post.image" alt="news cover" class="pr-4 h-6 max-w-[6rem] object-cover ">
+                                        {{ post.title }}</div></Link>
                                 </td>
                                 <td class="text-right px-6 py-2 space-x-2 space-y-2">
-                                    <Link :href="`/news/${post.slug}/edit`"><button
+                                    <div class="flex flex-row space-x-2">
+                                        <Link :href="`/news/${post.slug}/edit`"><button
                                         class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                                         v-if="post.can.editNewsPost"
                                     >Edit</button>
@@ -109,6 +112,7 @@
                                     >
                                         Delete
                                     </Button>
+                                    </div>
                                 </td>
                             </tr>
                             </tbody>

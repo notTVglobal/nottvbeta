@@ -131,7 +131,7 @@
                                                     <div v-if="show.statusId===4" class="text-gray-500">
                                                         {{ show.status }}
                                                     </div>
-                                                    <div v-if="show.statusId===5" class="font-semibold text-gray-900">
+                                                    <div v-if="show.statusId===5" class="font-semibold py-1 px-2 w-fit rounded-md bg-black text-gray-50">
                                                         {{ show.status }}
                                                     </div>
                                                     <div v-if="show.statusId===6" class="font-italic text-gray-500">

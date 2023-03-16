@@ -23,12 +23,12 @@ onMounted(() => {
 
 
 })
-if (streamStore.currentChannel != "Stream") {
-    let source = "mist1pull1";
-    videoPlayerStore.videoName = "notTV One";
-    streamStore.currentChannel = "Stream";
-    videoPlayerStore.loadNewSourceFromMist(source);
-}
+// if (streamStore.currentChannel != "Stream") {
+//     let source = "mist1pull1";
+//     videoPlayerStore.videoName = "notTV One";
+//     streamStore.currentChannel = "notTV One";
+//     videoPlayerStore.loadNewSourceFromMist(source);
+// }
 
 onBeforeUnmount(() => {
     chatStore.showChat = false
@@ -45,7 +45,7 @@ streamStore.showOSD = false
 videoPlayerStore.loggedIn = true
 videoPlayerStore.currentView = 'stream'
 videoPlayerStore.currentPage = 'stream'
-streamStore.currentChannel = 'Stream'
+streamStore.currentChannel = 'notTV One'
 
 let props = defineProps ({
     video: Object,
