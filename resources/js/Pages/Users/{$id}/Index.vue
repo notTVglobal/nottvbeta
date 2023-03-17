@@ -40,10 +40,12 @@
             </h2>
 
             <div class="p-6 light:bg-white dark:bg-gray-800 border-b border-gray-200 space-y-1">
+                <div v-if="props.userSelected.isAdmin === 1">
+                    <span class="font-bold text-red-600">Administrator</span>
+                </div>
                 <div>
                     <span class="text-sm font-semibold capitalize">User Type: </span>
-                    <span v-if="props.userSelected.isAdmin === 0">{{ props.role }}</span>
-                    <span v-if="props.userSelected.isAdmin === 1">Administrator</span>
+                    {{ props.role }}
                 </div>
                 <div>
                     <span v-if="$page.props.userSelected.role_id === 4" class="text-sm font-semibold capitalize">Creator Number: </span>{{props.userSelected.creatorNumber}}
