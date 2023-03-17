@@ -21,7 +21,7 @@
                     </Link>
                     <Link
                         :href="`/news/upload`"><button
-                        class="bg-green-600 hover:bg-green-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
+                        class="bg-green-600 hover:bg-green-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400 cursor-not-allowed"
                         disabled
                     >Share News</button>
                     </Link>
@@ -30,9 +30,13 @@
                         class="bg-orange-600 hover:bg-orange-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
                     >Invite Creator</button>
                     </Link>
-                    <Link :href="`/golive`" hidden><button
+                    <Link :href="`/golive`"><button
                         class="bg-red-600 hover:bg-red-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
                     >Go Live</button>
+                    </Link>
+                    <Link :href="`/videoupload`"><button
+                        class="bg-green-600 hover:bg-green-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
+                    >Upload</button>
                     </Link>
                 </div>
 
@@ -232,7 +236,7 @@
                     <div class="mb-3 grid grid-cols-1">
                         <div class="mb-1 font-semibold text-xl justify-self-start dark:text-gray-50">My Shows</div>
                     </div>
-                    <div v-if="props.shows.data == 0" class="italic"> You have no shows.</div>
+                    <div v-if="props.shows.data == 0" class="italic dark:text-gray-50 light:text-black"> You have no shows.</div>
                     <div
                         v-for="show in shows.data"
                         :key="show.id"
