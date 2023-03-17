@@ -35,16 +35,22 @@
 
                 <div class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4 py-5 mb-10">
                     <Link
-                        v-if="props.can.manageShow"
-                        :href="`/shows/${props.show.slug}/episode/${props.episode.slug}/manage`">
+                        v-if="props.can.editShow"
+                        :href="`/shows/${props.show.slug}/episode/${props.episode.slug}/edit`">
                         <button
                             class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                        >Manage
+                        >Edit
                         </button>
+                    </Link>
+                    <Link
+                        v-if="props.can.manageShow" :href="`/shows/${props.show.slug}/manage`"><button
+                        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                    >Manage Show</button>
                     </Link>
                     <Link v-if="props.can.viewCreator" :href="`/dashboard`">
                         <button
                             class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                            hidden
                         >Dashboard
                         </button>
                     </Link>
@@ -105,7 +111,7 @@
                         </div>
 
                         <div class="mb-6 p-5">
-                            <div class="w-full bg-gray-800 text-2xl p-4 mb-8">CREATORS</div>
+                            <div class="w-full bg-gray-800 text-2xl p-4 mb-8">CREDITS</div>
 
 
                             <div class="flex flex-row flex-wrap">

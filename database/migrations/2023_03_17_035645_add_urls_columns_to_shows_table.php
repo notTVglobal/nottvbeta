@@ -1,0 +1,38 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::table('shows', function (Blueprint $table) {
+            $table->string('www_url')->nullable()->default(null);
+            $table->string('instagram_name')->nullable()->default(null);
+            $table->string('telegram_url')->nullable()->default(null);
+            $table->string('twitter_handle')->nullable()->default(null);
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::table('shows', function (Blueprint $table) {
+            $table->dropColumn('www_url');
+            $table->dropColumn('instagram_name');
+            $table->dropColumn('telegram_url');
+            $table->dropColumn('twitter_handle');
+        });
+    }
+};

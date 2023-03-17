@@ -18,14 +18,21 @@
                 <div class="grid grid-cols-1 grid-rows-2">
                     <h1 class="text-3xl font-semibold">Go Live</h1>
                 </div>
-                <div class="grid grid-cols-1 grid-rows-2">
-                    <div class="justify-self-end">
-                        <Link :href="`/dashboard`"><button
-                            class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                        >Dashboard</button>
-                        </Link>
-                    </div>
+                <div>
+                    <button
+                        @click="back"
+                        class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
+                    >Cancel
+                    </button>
                 </div>
+<!--                <div class="grid grid-cols-1 grid-rows-2">-->
+<!--                    <div class="justify-self-end">-->
+<!--                        <Link :href="`/dashboard`"><button-->
+<!--                            class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"-->
+<!--                        >Dashboard</button>-->
+<!--                        </Link>-->
+<!--                    </div>-->
+<!--                </div>-->
             </div>
                             <p>
                                 Here we will place instructions on how to go live..
@@ -73,6 +80,11 @@ onMounted(() => {
         userStore.scrollToTopCounter ++;
     }
 });
+
+function back() {
+    window.history.back()
+}
+
 
 </script>
 

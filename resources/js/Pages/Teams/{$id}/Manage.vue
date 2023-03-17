@@ -35,15 +35,30 @@
                     <div>
                         <div class="flex flex-wrap-reverse justify-end gap-2">
                             <Link
+                                :href="`/shows/create`"
+                                v-if="teamStore.can.editTeam">
+                                <button
+                                    class="bg-green-500 hover:bg-green-600 text-white font-semibold ml-2 mt-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
+                                >Create Show
+                                </button>
+                            </Link>
+                            <button
+                                class="bg-green-500 hover:bg-green-600 text-white font-semibold ml-2 my-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
+                                @click="openModal"
+                                :disabled="!teamStore.spotsRemaining"
+                                v-if="teamStore.can.editTeam"
+                            >Add Member ({{ teamStore.spotsRemaining }} spots left)</button>
+                            <Link
                                 v-if="can.editTeam" :href="`/teams/${team.slug}/edit`">
                                 <button
-                                    class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                                    class="bg-blue-500 hover:bg-blue-600 text-white font-semibold ml-2 my-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
                                 >Edit
                                 </button>
                             </Link>
                             <Link :href="`/dashboard`">
                                 <button
                                     class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                                    hidden
                                 >Dashboard
                                 </button>
                             </Link>
@@ -63,26 +78,26 @@
 
             </header>
 
-            <p class="mb-6 p-5 w-3/4">
-                {{ teamStore.description }}
-            </p>
+<!--            <p class="mb-6 p-5 w-3/4">-->
+<!--                {{ teamStore.description }}-->
+<!--            </p>-->
 
 
             <div class="flex flex-col">
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                     <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
 
-                        <div class="mt-4 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                        <div class="mt-4 mb-12 pb-6 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
                             <TeamShowsList :shows="props.shows.data" />
                             <!-- Paginator -->
                             <Pagination :links="props.shows.links" class="mt-6"/>
                         </div>
 
-                        <div class="mt-4 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                        <div class="mt-4 mb-12 pb-6 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
                             <TeamMembersList :creatorFilters="props.creatorFilters" :creators="props.creators"/>
                         </div>
 
-                        <div class="mt-4 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                        <div class="mt-4 pb-6 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
                             <TeamAssignmentsList/>
                         </div>
 
@@ -143,5 +158,9 @@ let props = defineProps({
 teamStore.setActiveTeam(props.team);
 teamStore.members = props.members;
 teamStore.can = props.can;
+
+function openModal() {
+    teamStore.showModal = true;
+}
 
 </script>

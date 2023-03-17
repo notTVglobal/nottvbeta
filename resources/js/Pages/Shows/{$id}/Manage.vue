@@ -36,22 +36,33 @@
                                 :href="`/golive`"
                                 v-if="teamStore.can.goLive">
                                 <button
-                                    class="px-4 py-2 text-white bg-red-600 hover:bg-red-500 rounded-lg disabled:bg-gray-400"
+                                    class="px-4 py-2 text-white font-semibold bg-red-500 hover:bg-red-600 rounded-lg disabled:bg-gray-400"
                                 >Go Live
                                 </button>
                             </Link>
+                        </div>
+                        <div class="">
+                        <Link
+                            :href="route('shows.createEpisode',{show: props.show.slug})"
+                            v-if="teamStore.can.createEpisode">
+                            <button
+                                class="px-4 py-2 text-white font-semibold bg-green-500 hover:bg-green-600 rounded-lg disabled:bg-gray-400"
+
+                            >Create Episode
+                            </button>
+                        </Link>
                         </div>
                         <div class="">
                             <Link
                                 :href="`/shows/${show.slug}/edit`"
                                 v-if="teamStore.can.editShow">
                                 <button
-                                    class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                                    class="px-4 py-2 text-white font-semibold bg-blue-500 hover:bg-blue-600 rounded-lg"
                                 >Edit
                                 </button>
                             </Link>
                         </div>
-                        <div>
+                        <div hidden>
                             <Link :href="`/dashboard`">
                                 <button
                                     class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
@@ -77,11 +88,13 @@
             </header>
 
 
-            <div class="my-6 ml-10 w-3/4">
-                {{ teamStore.activeShow.description }}
+<!--            <div class="my-6 ml-10 w-3/4">-->
+<!--                {{ teamStore.activeShow.description }}-->
+<!--            </div>-->
+
+            <div class="p-5 text-gray-100">
+                <span class="uppercase text-xs font-semibold text-orange-300">SHOW NOTES: </span> {{ props.show.notes }}
             </div>
-
-
 
 
             <div class="flex flex-col">
@@ -97,15 +110,7 @@
 
 <!--                            <div class="collapse" id="collapseExample">-->
                             <div>
-
-                                <Link
-                                    :href="route('shows.createEpisode',{show: props.show.slug})"
-                                    v-if="teamStore.can.createEpisode">
-                                    <button
-                                        class="bg-green-500 hover:bg-green-600 text-white ml-2 my-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
-                                    >Create Episode
-                                    </button>
-                                </Link>
+                                <div class="bg-orange-300 p-2 font-bold text-black">Episodes</div>
 
                                 <ShowEpisodesList :episodes="props.episodes" :show="props.show"/>
                             </div>

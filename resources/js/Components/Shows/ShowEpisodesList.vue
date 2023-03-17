@@ -1,7 +1,7 @@
 <template>
 
+    <div class="container mx-auto px-4 mb-12">
 
-    <div class="container mx-auto px-4 pb-16">
         <!--                                <h2 class="text-yellow-500 uppercase tracking-wide font-semibold">EPISODES</h2>-->
         <div class="w-full bg-gray-800 text-2xl p-4 mb-4">EPISODES</div>
 
@@ -21,9 +21,11 @@
                 </div>
 
         </div>
-    </div>
+
     <!-- Paginator -->
-    <Pagination :links="props.episodes.links" class="mb-6 pb-6 border-b border-gray-800"/>
+    <Pagination :links="props.episodes.links" class="mt-12 mb-6 pb-6 border-b border-gray-800"/>
+    </div>
+
 
 
 </template>

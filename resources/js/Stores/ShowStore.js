@@ -10,6 +10,9 @@ export let useShowStore = defineStore('showStore', {
         episodes: [],
         team_id: 'team id',
         episodePoster: '',
+        noteEdit: 0,
+        note: '',
+        saveNoteProcessing: Boolean,
     }),
 
     actions: {

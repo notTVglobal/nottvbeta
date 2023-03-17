@@ -17,6 +17,9 @@ export let useTeamStore = defineStore('teamStore', {
         confirmDialog: false,
         deleteMemberName: '',
         deleteMemberId: 0,
+        noteEdit: 0,
+        note: '',
+        saveNoteProcessing: Boolean,
             // on the show episode manage page
             // turn on the go live div
             goLiveDisplay: false,

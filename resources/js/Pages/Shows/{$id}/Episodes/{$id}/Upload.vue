@@ -6,8 +6,12 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-dark text-light p-5 mb-10">
 
+            <div class="bg-black text-red-600 font-bold text-xl p-4 mb-4 w-full text-center">
+                This page will be removed.
+            </div>
 
             <header>
+
                 <div class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
                 role="alert"
                 v-if="props.message">

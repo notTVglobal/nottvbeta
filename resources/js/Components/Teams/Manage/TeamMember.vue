@@ -35,7 +35,7 @@
         <td v-if="teamStore.can.editTeam" class="px-6 py-4">
             <div>
 
-                <button class="bg-red-600 text-white hover:bg-red-500 text-xl font-semibold ml-2 my-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
+                <button class="bg-red-600 text-white hover:bg-red-500 ml-2 my-2 px-2 py-1 rounded disabled:bg-gray-400 h-max w-max"
                         @click.prevent="deleteTeamMember(props.member)"
                         >
                     Remove</button>

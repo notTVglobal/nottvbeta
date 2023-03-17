@@ -8,20 +8,29 @@
             <div v-if="episode.episodeNumber">{{ episode.episodeNumber }}</div>
 
         </td>
-        <td class="text-xl font-medium flex items-center gap-x-4 px-6 py-4 uppercase">
+        <td class="text-xl font-medium flex items-center gap-x-4 px-6 py-4 uppercase w-fit">
 <!--            <img :src="`/storage/images/${episode.poster}`" alt="" class="rounded-xl w-10">-->
             <!--                                                    <Link :href="`/admin/users/${episode.id}`" class="text-indigo-600 hover:text-indigo-900">{{ episode.name }}</Link>-->
-            <Link :href="`/shows/${showSlug}/episode/${episode.slug}/manage`" class="font-semibold light:text-blue-800 light:hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-200">
+            <Link :href="`/shows/${showSlug}/episode/${episode.slug}/`" class="font-semibold light:text-blue-800 light:hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-200">
 
                 {{  episode.name }}
 
             </Link>
         </td>
 
-        <td class="text-gray-500 px-6 py-4 text-sm">
-            {{episode.notes}}
-        </td>
+<!--        <td class="text-gray-500 px-6 py-4 text-sm">-->
+<!--            {{episode.notes}}-->
+<!--        </td>-->
+        <td class="light:text-gray-600 dark:text-gray-100 px-6 py-4 text-sm w-full min-w-[16rem]" @click="editNote">
+            <span v-if="!episode.notes" v-show="showStore.noteEdit !== props.episode.id" class="italic">Click here to add/edit a note.</span>
+            <span v-if="episode.notes" v-show="showStore.noteEdit !== props.episode.id" :key="componentKey">{{ episode.notes }}</span>
+            <div v-show="showStore.noteEdit === props.episode.id">
 
+                <EpisodeNoteEdit :episode="props.episode" v-on:saveNoteProcessing="reloadNote" />
+                <div v-show="showStore.saveNoteProcessing">Saving...</div>
+            </div>
+
+        </td>
         <td class="px-6 py-4 text-right">
             <button v-if="episode.episodeStatusId===1" class="font-semibold text-xl text-orange-400">
                 {{ episode.episodeStatus }}
@@ -56,12 +65,51 @@
 
 
         </td>
+        <td>
+            <div class="">
+                <Link
+                    :href="`/shows/${showSlug}/episode/${episode.slug}/edit`"
+                    v-if="teamStore.can.editShow">
+                    <button
+                        class="px-4 py-2 text-white font-semibold bg-blue-500 hover:bg-blue-600 rounded-lg"
+                    >Edit
+                    </button>
+                </Link>
+            </div>
+        </td>
     </tr>
 </template>
 
 <script setup>
-defineProps({
+import { useTeamStore } from "@/Stores/TeamStore";
+import { useShowStore } from "@/Stores/ShowStore";
+import {ref} from "vue";
+import {useForm} from "@inertiajs/inertia-vue3";
+import EpisodeNoteEdit from "@/Components/Shows/Manage/EpisodeNoteEdit";
+
+let teamStore = useTeamStore();
+let showStore = useShowStore();
+
+let props = defineProps({
     episode: Object,
     showSlug: String,
 });
+
+showStore.noteEdit = 0
+const componentKey = ref(0);
+
+function reloadNote () {
+    props.episode.notes = showStore.note;
+    componentKey.value += 1;
+}
+
+let form = useForm({
+    note: '',
+});
+
+function editNote() {
+    showStore.noteEdit = props.episode.id
+}
+
+
 </script>

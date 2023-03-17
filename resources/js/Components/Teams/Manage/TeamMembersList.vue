@@ -1,11 +1,12 @@
 <template>
 <div class="bg-orange-300 text-black p-2 font-bold">Team Members</div>
-    <button
-        class="bg-green-500 hover:bg-green-600 text-white ml-2 my-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
-        @click="openModal"
-        :disabled="!teamStore.spotsRemaining"
-        v-if="teamStore.can.editTeam"
-    >Add Member ({{ teamStore.spotsRemaining }} spots left)</button>
+<!--    moved this button to the header of the Manage Team page -->
+<!--    <button-->
+<!--        class="bg-green-500 hover:bg-green-600 text-white ml-2 my-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"-->
+<!--        @click="openModal"-->
+<!--        :disabled="!teamStore.spotsRemaining"-->
+<!--        v-if="teamStore.can.editTeam"-->
+<!--    >Add Member ({{ teamStore.spotsRemaining }} spots left)</button>-->
     <table class="min-w-full divide-y divide-gray-200">
         <thead class="divide-y divide-gray-200">
         <tr>

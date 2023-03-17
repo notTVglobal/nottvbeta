@@ -8,9 +8,9 @@
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                 Ep.#
             </td>
-            <td class="px-6 py-4 whitespace-nowrap">
-                <div class="flex items-center">
-                        <div class="text-sm font-medium pl-14">
+            <td class="px-6 py-4 whitespace-nowrap w-1/3">
+                <div class="flex items-start">
+                        <div class="text-sm font-medium">
                             <!--                                                    <Link :href="`/admin/users/${episode.id}`" class="text-indigo-600 hover:text-indigo-900">{{ episode.name }}</Link>-->
                             Name
                         </div>
@@ -23,6 +23,9 @@
 
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-right">
                 Status
+            </td>
+            <td>
+                <!--edit button goes in this column-->
             </td>
         </tr>
         </thead>

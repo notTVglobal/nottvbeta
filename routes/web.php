@@ -53,9 +53,9 @@ Route::get('/', function () {
 });
 
 Route::get('/home', function () {
-    if (Auth::user()->role_id === 4) {
-        return redirect('/dashboard');
-    } return redirect('/');
+    if (Auth::user()->role_id != 4) {
+        return redirect('/');
+    } return redirect('/dashboard');
 });
 
 Route::get('/email/verify', function () {
@@ -321,16 +321,17 @@ Route::middleware([
         ->name('shows');
     // Display shows manage page
     Route::get('/shows/{show}/manage', [ShowsController::class, 'manage'])
-        ->middleware('can:viewShowManagePage,show')
+//        ->middleware('can:viewShowManagePage,show')
         ->name('shows.manage');
     // Display shows edit page
     Route::get('/shows/{show}/edit', [ShowsController::class, 'edit'])
-        ->middleware('can:editShow,show')
         ->name('shows.edit');
     // Display shows create page
     Route::get('/shows/create', [ShowsController::class, 'create'])
         ->can('viewCreator', 'App\Models\User')
         ->name('shows.create');
+    // Update show notes
+    Route::post('/shows/notes', [ShowsController::class, 'updateNotes']);
 
     ///////////////
     // tec21: move these into the ShowEpisodeController section below.
@@ -366,6 +367,8 @@ Route::middleware([
 //        ->middleware('can:edit,show')
         ->name('shows.showEpisodes.upload')
         ->scopeBindings();
+    // Update episode notes
+    Route::post('/shows/episode/notes', [ShowEpisodeController::class, 'updateNotes']);
     // Update episode
 //    Route::get('/shows/{show}/episode/{showEpisode}/edit', [ShowEpisodeController::class, 'update'])
 //        ->middleware('can:edit,show')

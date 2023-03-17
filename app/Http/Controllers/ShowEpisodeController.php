@@ -98,7 +98,7 @@ class ShowEpisodeController extends Controller
 //            ->firstOrFail();
 
         return redirect()
-            ->route('shows.showEpisodes.manageEpisode',
+            ->route('shows.manage',
                 [$showSlug,$showEpisodeSlug])
             ->with('message', 'Episode Created Successfully');
 
@@ -282,7 +282,7 @@ class ShowEpisodeController extends Controller
 
         // redirect
         return redirect()
-            ->route('shows.showEpisodes.manageEpisode',
+            ->route('shows.showEpisodes.show',
                 [$showSlug,$showEpisodeSlug])
             ->with('message', 'Episode Updated Successfully');
 
@@ -295,6 +295,25 @@ class ShowEpisodeController extends Controller
 //            'team' => Team::query()->where('id', $show->team_id)->firstOrFail(),
 //            'showRunnerName' => User::query()->where('id', $show->user_id)->pluck('name')->firstOrFail(),
 //        ])->with('message', 'Show Updated Successfully');
+    }
+
+    public function updateNotes(HttpRequest $request)
+    {
+        // get the show
+        $id = $request->episodeId;
+        $episode = ShowEpisode::find($id);
+
+        // validate the request
+        $request->validate([
+            'notes' => 'nullable|string|max:1024',
+        ]);
+
+        // update the show notes
+        $episode->notes = $request->notes;
+        $episode->save();
+        sleep(1);
+
+        return $episode;
     }
 
 

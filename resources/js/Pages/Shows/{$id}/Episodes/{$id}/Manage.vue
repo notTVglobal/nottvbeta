@@ -2,6 +2,10 @@
 
     <Head :title="`Manage Episode: ${props.episode.name}`"/>
 
+    <div class="bg-black text-red-600 font-bold text-xl p-4 my-4 w-full text-center">
+        This page will be removed.
+    </div>
+
     <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-dark rounded text-light p-5">

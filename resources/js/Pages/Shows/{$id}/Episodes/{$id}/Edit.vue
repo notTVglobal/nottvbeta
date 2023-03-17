@@ -6,7 +6,6 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-dark text-light p-5 mb-10">
 
-
             <header>
                 <div class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
                 role="alert"
@@ -43,22 +42,22 @@
 
 
                             <form @submit.prevent="submit">
-                                <div class="flex justify-end mr-2 mb-6">
-                                    <button
-                                        @click="submit"
-                                        class="bg-blue-600 hover:bg-blue-500 text-white rounded py-2 px-4"
-                                        :disabled="form.processing"
-                                    >
-                                        Save
-                                    </button>
-                                </div>
+<!--                                <div class="flex justify-end mr-2 mb-6">-->
+<!--                                    <button-->
+<!--                                        @click="submit"-->
+<!--                                        class="bg-blue-600 hover:bg-blue-500 text-white rounded py-2 px-4"-->
+<!--                                        :disabled="form.processing"-->
+<!--                                    >-->
+<!--                                        Save-->
+<!--                                    </button>-->
+<!--                                </div>-->
 
 
 
 
 
 <!-- Begin grid 2-col -->
-                            <div class="grid grid-cols-1 sm:grid-cols-2 space-x-6 p-6">
+                            <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 space-x-6 p-6">
 
 <!--Left Column-->
                                 <div>
@@ -100,7 +99,34 @@
 
                                     </div>
 
+                                    <label class="block mb-2 uppercase font-bold text-xs text-light"
+                                           for="name"
+                                    >
+                                        Episode Video
+                                    </label>
 
+                                    <div class="flex justify-center w-full bg-black py-0">
+                                        <!--                                <img :src="'/storage/images/' + props.episode.poster" alt="" class="w-1/2 mx-2">-->
+
+                                        <!--                TEST VIDEO EMBED FROM RUMBLE             -->
+                                        <!--                <iframe class="rumble" width="640" height="360" src="https://rumble.com/embed/v1nf3s7/?pub=4" frameborder="0" allowfullscreen></iframe>-->
+
+                                        <div
+                                            class="flex justify-center shadow overflow-hidden border-b border-gray-200 w-full bg-black text-light text-2xl sm:rounded-lg p-5">
+
+                                            <img v-if="!props.episode.video_file_url && !props.episode.video_file_embed_code && props.episode.poster" :src="'/storage/images/' + props.episode.poster" alt="" class="w-1/2 mx-2">
+                                            <img v-if="!props.episode.video_file_url && !props.episode.video_file_embed_code && !props.episode.poster" :src="`/storage/images/EBU_Colorbars.svg.png`" alt="" class="w-1/2 mx-2">
+
+                                            <iframe v-if="props.episode.video_file_url && !props.episode.video_file_embed_code"
+                                                    class="rumble" width="640" height="360" :src="`${props.episode.video_file_url}`" frameborder="0" allowfullscreen>
+                                            </iframe>
+                                            <div v-if="!props.episode.video_file_url && props.episode.video_file_embed_code" v-html="props.episode.video_file_embed_code">
+                                            </div>
+                                            <div v-if="props.episode.video_file_url && props.episode.video_file_embed_code" v-html="props.episode.video_file_embed_code">
+                                            </div>
+                                        </div>
+
+                                    </div>
 
 
 
@@ -110,7 +136,25 @@
 
 
 <!--Right Column-->
-                                <div>
+                                <div class="xl:col-span-2">
+
+                                    <div class="mb-6">
+                                        <label class="block mb-2 uppercase font-bold text-xs light:text-gray-700 text-gray-300"
+                                               for="name"
+                                        >
+                                            Episode Notes (only the team members see the notes)
+                                        </label>
+
+                                        <input v-model="form.notes"
+                                               class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                                               type="text"
+                                               name="notes"
+                                               id="notes"
+                                               required
+                                        >
+                                        <div v-if="form.errors.notes" v-text="form.errors.notes"
+                                             class="text-xs text-red-600 mt-1"></div>
+                                    </div>
 
 
                                     <div class="mb-6">
@@ -168,29 +212,8 @@
                                     </div>
 
 
-
-                                    <div class="mb-6 w-full">
-                                        <label class="block mb-2 uppercase font-bold text-xs text-light"
-                                               for="notes"
-                                        >
-                                            Notes (only the team members see the notes)
-                                        </label>
-                                        <TabbableTextarea v-model="form.notes"
-                                                          class="border border-gray-400 text-gray-800 p-2 w-full rounded-lg"
-                                                          name="notes"
-                                                          id="notes"
-                                                          rows="10" cols="30"
-                                        />
-                                        <div v-if="form.errors.notes" v-text="form.errors.notes"
-                                             class="text-xs text-red-600 mt-1"></div>
-                                    </div>
-
-
-
-
-
-                                    <div class="block mb-2 uppercase font-bold text-xs text-light">
-                                        Notes:
+                                    <div class="block mt-12 mb-2 uppercase font-bold text-xs text-light">
+                                        Notes about video embedding:
                                     </div>
                                     <ul class="list-decimal pb-2 ml-2 mb-4 border-b">
                                         <li>
@@ -205,7 +228,7 @@
                                         <label class="block mb-2 uppercase font-bold text-xs text-light"
                                                for="video_file_url"
                                         >
-                                            Change Episode Video URL (if hosted externally)
+                                            Episode Video URL (if hosted externally)
                                         </label>
 
                                         <input v-model="form.video_file_url"
@@ -222,7 +245,7 @@
                                         <label class="block mb-2 uppercase font-bold text-xs text-light"
                                                for="video_file_embed_code"
                                         >
-                                            Change Episode Video Embed Code (if hosted externally)
+                                            Episode Video Embed Code (if hosted externally)
                                         </label>
 
                                         <TabbableTextarea v-model="form.video_file_embed_code"
@@ -237,7 +260,14 @@
                                     </div>
 
 
-
+                                    <div class="mb-6">
+                                        <label class="block mb-2 uppercase font-bold text-xs text-light"
+                                               for="video_file_embed_code"
+                                        >
+                                            Add a video that has been uploaded to not.tv
+                                        </label>
+                                        <span class="italic">This feature is coming soon.</span>
+                                    </div>
 
 
 

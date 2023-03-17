@@ -10,12 +10,14 @@ use App\Models\Team;
 use App\Models\TeamMember;
 use App\Models\User;
 //use http\QueryString;
+use http\Message;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Str;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
@@ -26,7 +28,7 @@ class ShowsController extends Controller
     {
 
         $this->middleware('can:viewShowManagePage,show')->only(['manage']);
-        $this->middleware('can:editShow,show')->only(['edit']);
+        $this->middleware('can:edit,show')->only(['edit']);
 //        $this->middleware('can:create,show')->only(['store']);
         $this->middleware('can:createEpisode,show')->only(['createEpisode']);
         $this->middleware('can:viewEpisodeManagePage,show')->only(['manageEpisode']);
@@ -188,6 +190,10 @@ class ShowsController extends Controller
                 'slug' => $show->slug,
                 'poster' => $show->image->name,
                 'copyrightYear' => $show->created_at->format('Y'),
+                'www_url' => $show->www_url,
+                'instagram_name' => $show->instagram_name,
+                'telegram_url' => $show->telegram_url,
+                'twitter_handle' => $show->twitter_handle,
             ],
 
             ////////////////
@@ -263,6 +269,7 @@ class ShowsController extends Controller
                 'slug' => $show->slug,
                 'poster' => $show->image->name,
                 'copyrightYear' => $show->created_at->format('Y'),
+                'notes' => $show->notes,
             ],
             'team' => [
                 'name' => $show->team->name,
@@ -287,7 +294,7 @@ class ShowsController extends Controller
                     'episodeStatusId' => $showEpisode->showEpisodeStatus->id,
                 ]),
             'can' => [
-                'editShow' => auth()->user()->can('editShow', $show),
+                'editShow' => auth()->user()->can('edit', $show),
                 'createEpisode' => auth()->user()->can('createEpisode', $show),
                 'createAssignment' => auth()->user()->can('editShow', $show),
                 'goLive' => auth()->user()->can('goLive', $show),
@@ -345,21 +352,34 @@ class ShowsController extends Controller
 ////////////  UPDATE
 ////////////////////
 
+
     public function update(HttpRequest $request, Show $show)
     {
-
-        // validate the request
+         // validate the request
         $request->validate([
             'name' => ['required', 'string', 'max:255', Rule::unique('shows')->ignore($show->id)],
             'description' => 'required',
+            'www_url' => 'nullable|active_url',
+            'instagram_name' => 'nullable|string|max:30',
+            'telegram_url' => 'nullable|active_url',
+            'twitter_handle' => 'nullable|string|min:4|max:15',
+            'notes' => 'nullable|string|max:1024',
         ]);
+
 
         // update the show
         $show->name = $request->name;
         $show->description = $request->description;
         $show->slug = \Str::slug($request->name);
+        $show->www_url = $request->www_url;
+        $show->instagram_name = $request->instagram_name;
+        $show->telegram_url = $request->telegram_url;
+        $show->twitter_handle = $request->twitter_handle;
+        $show->notes = $request->notes;
         $show->save();
         sleep(1);
+
+
 
         // gather the data needed to render the Manage page
         // this is all redundant. It's all contained in the
@@ -379,6 +399,27 @@ class ShowsController extends Controller
 //            'showRunnerName' => User::query()->where('id', $show->user_id)->pluck('name')->firstOrFail(),
 //        ])->with('message', 'Show Updated Successfully');
     }
+
+    public function updateNotes(HttpRequest $request)
+    {
+        // get the show
+        $id = $request->showId;
+        $show = Show::find($id);
+
+        // validate the request
+        $request->validate([
+            'notes' => 'nullable|string|max:1024',
+        ]);
+
+        // update the show notes
+        $show->notes = $request->notes;
+        $show->save();
+        sleep(1);
+
+        return $show;
+    }
+
+
 
 
 ////////////  DESTROY

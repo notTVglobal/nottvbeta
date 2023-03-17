@@ -8,12 +8,11 @@
             </h1>
         </div>
         <div>
-            <Link :href="`/shows/${show.slug}/episode/${episode.slug}/manage`">
-                <button
-                    class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
-                >Cancel
-                </button>
-            </Link>
+            <button
+                @click="back"
+                class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
+            >Cancel
+            </button>
 
         </div>
     </div>
@@ -45,5 +44,9 @@ defineProps({
     team: Object,
     episode: Object,
 })
+
+function back() {
+    window.history.back()
+}
 
 </script>

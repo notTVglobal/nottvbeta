@@ -296,6 +296,7 @@ class TeamsController extends Controller
                     'team_id' => $show->team_id,
                     'poster' => getPoster($show),
                     'slug' => $show->slug,
+                    'notes' => $show->notes,
                     'copyrightYear' => Carbon::parse($show->created_at)->format('Y'),
                 ]),
             'filters' => Request::only(['team_id']),

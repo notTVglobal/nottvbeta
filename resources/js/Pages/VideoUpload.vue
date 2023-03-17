@@ -5,24 +5,28 @@
         <div class="place-self-center flex flex-col gap-y-3">
             <div class="bg-white text-black p-5 mb-10">
 
+                <div
+                    class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
+                    role="alert"
+                    v-if="props.message">
+                    <span class="font-medium">
+                        {{props.message}}</span>
+                </div>
+
                 <header class="flex justify-between mb-3 border-b border-gray-800">
                     <div class="container mx-auto flex flex-col lg:flex-row items-center justify-between px-4 py-6">
-
-                        <div
-                            class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
-                            role="alert"
-                            v-if="props.message"
-                        >
-                                                <span class="font-medium">
-                                                    {{props.message}}
-                                                </span>
-                        </div>
-
                         <div id="topDiv" class="flex flex-col lg:flex-row items-center">
                             <h1 class="text-3xl font-semibold text-center lg:text-left">Video Upload</h1>
 
                         </div>
+                    </div>
 
+                    <div>
+                        <button
+                            @click="back"
+                            class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
+                        >Cancel
+                        </button>
                     </div>
 
                 </header>
@@ -193,7 +197,9 @@ let props = defineProps({
 //     file: [],
 // });
 
-
+function back() {
+    window.history.back()
+}
 
 </script>
 

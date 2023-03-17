@@ -112,7 +112,7 @@ class ShowPolicy
         return Response::deny('There\'s been a problem. Please let not.TV know.');
     }
 
-    public function editShow(User $user, Show $show)
+    public function edit(User $user, Show $show)
     {
         $teamId = $show->team_id;
         $userId = Auth::user()->id;

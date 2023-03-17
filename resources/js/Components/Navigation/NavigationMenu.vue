@@ -128,6 +128,8 @@
                             <template #content>
                                 <div class="divide-y">
 
+                                    <div class="text-xs text-gray-800 py-2 ml-4">Hello, {{ $page.props.user.name }}</div>
+
                                     <div class="pt-2 pb-3">
                                         <!-- Account Management -->
                                         <div class="block px-4 py-2 text-xs text-gray-400">

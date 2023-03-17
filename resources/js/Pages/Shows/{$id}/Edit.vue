@@ -47,6 +47,24 @@
 <!--                                        :images="props.images"-->
 <!--                                    />-->
 
+                                    <div class="mb-6">
+                                        <label class="block mb-2 uppercase font-bold text-xs light:text-gray-700 text-gray-300"
+                                               for="name"
+                                        >
+                                            Show Notes
+                                        </label>
+
+                                        <input v-model="form.notes"
+                                               class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                                               type="text"
+                                               name="notes"
+                                               id="notes"
+                                               required
+                                        >
+                                        <div v-if="form.errors.notes" v-text="form.errors.notes"
+                                             class="text-xs text-red-600 mt-1"></div>
+                                    </div>
+
                                     <div>
 
                                         <label class="block mb-2 uppercase font-bold text-xs light:text-gray-700 text-gray-300"
@@ -111,6 +129,74 @@
                                                               required
                                             />
                                             <div v-if="form.errors.description" v-text="form.errors.description"
+                                                 class="text-xs text-red-600 mt-1"></div>
+                                        </div>
+
+                                        <div class="mb-6">
+                                            <label class="block mb-2 uppercase font-bold text-xs light:text-gray-700 text-gray-300"
+                                                   for="name"
+                                            >
+                                                Website URL
+                                            </label>
+
+                                            <input v-model="form.www_url"
+                                                   class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                                                   type="text"
+                                                   name="www_url"
+                                                   id="www_url"
+                                            >
+                                            <div v-if="form.errors.www_url" v-text="form.errors.www_url"
+                                                 class="text-xs text-red-600 mt-1"></div>
+                                        </div>
+
+                                        <div class="mb-6">
+                                            <label class="block mb-2 uppercase font-bold text-xs light:text-gray-700 text-gray-300"
+                                                   for="name"
+                                            >
+                                                Instagram @
+                                            </label>
+
+                                            <input v-model="form.instagram_name"
+                                                   class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                                                   type="text"
+                                                   name="instagram_name handle"
+                                                   id="instagram_name"
+                                            >
+                                            <div v-if="form.errors.instagram_name" v-text="form.errors.instagram_name"
+                                                 class="text-xs text-red-600 mt-1"></div>
+                                        </div>
+
+                                        <div class="mb-6">
+                                            <label class="block mb-2 uppercase font-bold text-xs light:text-gray-700 text-gray-300"
+                                                   for="name"
+                                            >
+                                                Telegram URL
+                                            </label>
+
+                                            <input v-model="form.telegram_url"
+                                                   class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                                                   type="text"
+                                                   name="telegram_url"
+                                                   id="telegram_url"
+                                            >
+                                            <div v-if="form.errors.telegram_url" v-text="form.errors.telegram_url"
+                                                 class="text-xs text-red-600 mt-1"></div>
+                                        </div>
+
+                                        <div class="mb-6">
+                                            <label class="block mb-2 uppercase font-bold text-xs light:text-gray-700 text-gray-300"
+                                                   for="name"
+                                            >
+                                                Twitter @
+                                            </label>
+
+                                            <input v-model="form.twitter_handle"
+                                                   class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                                                   type="text"
+                                                   name="twitter_handle"
+                                                   id="twitter_handle"
+                                            >
+                                            <div v-if="form.errors.twitter_handle" v-text="form.errors.twitter_handle"
                                                  class="text-xs text-red-600 mt-1"></div>
                                         </div>
 
@@ -230,6 +316,11 @@ showStore.posterName = props.poster[0].name;
 let form = useForm({
     name: props.show.name,
     description: props.show.description,
+    www_url: props.show.www_url,
+    instagram_name: props.show.instagram_name,
+    telegram_url: props.show.telegram_url,
+    twitter_handle: props.show.twitter_handle,
+    notes: props.show.notes,
 });
 
 let submit = () => {

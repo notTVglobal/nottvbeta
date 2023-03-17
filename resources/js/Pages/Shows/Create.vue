@@ -3,7 +3,7 @@
 
     <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
-        <div class="bg-white text-black p-5 mb-10">
+        <div class="light:bg-white light:text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 
             <div class="flex justify-between mt-3 mb-6">
                 <div class="text-3xl">Create Show</div>
@@ -21,12 +21,12 @@
 
             <form @submit.prevent="submit" class="max-w-md mx-auto mt-8">
                     <div class="mb-6">
-                        <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
+                        <label class="block mb-2 uppercase font-bold text-xs text-gray-200"
                                for="name"
                         >
                             Team Name
                         </label>
-                        <select class="border border-gray-400 p-2 w-full rounded-lg block mb-2 uppercase font-bold text-xs text-gray-700"
+                        <select class="border border-gray-400 p-2 w-full rounded-lg block mb-2 uppercase font-bold text-xs text-gray-800"
                                 v-model="form.team_id"
                                 required
 
@@ -35,7 +35,7 @@
                                 v-for="team in props.teams.data"
                                 :key="team.id"
                                 :value="team.id"
-                                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                                class="light:bg-white light:text-black border-b dark:text-gray-50 dark:bg-gray-800 dark:border-gray-600"
 
                             >
                                 {{ team.name }}
@@ -47,7 +47,7 @@
                         <div v-if="form.errors.team_id" v-text="form.errors.team_id" class="text-xs text-red-600 mt-1"></div>
                     </div>
                 <div class="mb-6">
-                    <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
+                    <label class="block mb-2 uppercase font-bold text-xs text-gray-200"
                            for="name"
                     >
                         Show Name
@@ -64,7 +64,7 @@
                 </div>
 
                 <div class="mb-6">
-                    <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
+                    <label class="block mb-2 uppercase font-bold text-xs text-gray-200"
                            for="description"
                     >
                         Description
@@ -88,7 +88,6 @@
                     >
                         Submit
                     </button>
-                    <div @click="reset" class="text-blue-600 text-sm cursor-pointer">Reset</div>
                 </div>
 
             </form>

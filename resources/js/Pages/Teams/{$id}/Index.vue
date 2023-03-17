@@ -17,12 +17,18 @@
                 </div>
                 <div class="flex flex-wrap-reverse justify-end gap-2">
                     <Link
-                        v-if="props.can.editTeam" :href="`/teams/${props.team.slug}/manage`"><button
+                        v-if="props.can.editTeam" :href="`/teams/${props.team.slug}/edit`"><button
                         class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                    >Manage</button>
+                    >Edit</button>
+                    </Link>
+                    <Link
+                        v-if="props.can.viewTeam" :href="`/teams/${props.team.slug}/manage`"><button
+                        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                    >Manage Team</button>
                     </Link>
                     <Link v-if="props.user.role_id === 4" :href="`/dashboard`"><button
                         class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                        hidden
                     >Dashboard</button>
                     </Link>
                 </div>
