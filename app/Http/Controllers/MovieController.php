@@ -5,13 +5,16 @@ namespace App\Http\Controllers;
 use App\Models\Image;
 use App\Models\Movie;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Str;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class MovieController extends Controller
 {
@@ -26,10 +29,9 @@ class MovieController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
-    public function index()
-    {
+    public function index(): Response {
         return Inertia::render('Movies/Index', [
             'movies' => Movie::query()
                 ->when(Request::input('search'), function ($query, $search) {
@@ -57,7 +59,7 @@ class MovieController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -71,8 +73,8 @@ class MovieController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param HttpRequest $request
+     * @return RedirectResponse
      */
     public function store(HttpRequest $request)
     {
@@ -142,13 +144,15 @@ class MovieController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Movie  $movie
-     * @return \Illuminate\Http\Response
+     * @param Movie $movie
+     * @return Response
      */
     public function show(Movie $movie)
     {
+
         return Inertia::render('Movies/{$id}/Index', [
             'movie' => [
+                'slug' => $movie->slug,
                 'name' => $movie->name,
                 'description' => $movie->description,
                 'filePath' => $movie->file_path,
@@ -159,19 +163,27 @@ class MovieController extends Controller
                 'teamName' => $movie->team_id,
                 'teamSlug' => $movie->slug,
                 'copyrightYear' => $movie->created_at->format('Y'),
+                'release_year' => $movie->release_year,
                 'created_at' => $movie->created_at,
                 // need to link the Movie and Images models.
                 // change poster to $movie->image->name
                 'poster' => $movie->image_id,
+                'www_url' => $movie->www_url,
+                'instagram_name' => $movie->instagram_name,
+                'telegram_url' => $movie->telegram_url,
+                'twitter_handle' => $movie->twitter_handle,
             ],
+            'can' => [
+                'editMovie' => Auth::user()->can('edit', $movie),
+            ]
         ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Movie  $movie
-     * @return \Illuminate\Http\Response
+     * @param Movie $movie
+     * @return Response
      */
     public function edit(Movie $movie)
     {
@@ -214,20 +226,50 @@ class MovieController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Movie  $movie
-     * @return \Illuminate\Http\Response
+     * @param HttpRequest $request
+     * @param Movie $movie
+     * @return void
      */
-    public function update(Request $request, Movie $movie)
+    public function update(HttpRequest $request, Movie $movie)
     {
-        //
+        // validate the request
+        $request->validate([
+            'name' => ['required', 'string', 'max:255', Rule::unique('movies')->ignore($movie->id)],
+            'description' => 'required',
+            'release_year' => 'integer|min:1900|max:2300',
+            'file_url' => 'nullable|active_url',
+            'www_url' => 'nullable|active_url',
+            'instagram_name' => 'nullable|string|max:30',
+            'telegram_url' => 'nullable|active_url',
+            'twitter_handle' => 'nullable|string|min:4|max:15',
+            'notes' => 'nullable|string|max:1024',
+        ]);
+
+
+        // update the show
+        $movie->name = $request->name;
+        $movie->description = $request->description;
+        $movie->release_year = $request->release_year;
+        $movie->slug = \Str::slug($request->name);
+        $movie->file_url = $request->file_url;
+        $movie->www_url = $request->www_url;
+        $movie->instagram_name = $request->instagram_name;
+        $movie->telegram_url = $request->telegram_url;
+        $movie->twitter_handle = $request->twitter_handle;
+        $movie->save();
+        sleep(1);
+
+
+        // redirect
+        return redirect(route('movies.show', [$movie->slug]))->with('message', 'Movie Updated Successfully');
+
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Movie  $movie
-     * @return \Illuminate\Http\Response
+     * @param Movie $movie
+     * @return void
      */
     public function destroy(Movie $movie)
     {

@@ -133,6 +133,13 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
             videoJs.src({'src': this.videoSource, 'type': this.videoSourceType});
             this.unmute()
         },
+        loadNewSourceFromUrl(source) {
+            let videoJs = videojs('main-player')
+            this.videoSource = source;
+            this.videoSourceType = "video/mp4";
+            videoJs.src({'src': this.videoSource, 'type': this.videoSourceType});
+            this.unmute()
+        },
         makeVideoFullPage() {
             this.fullPage = true;
             if (useUserStore().isMobile) {

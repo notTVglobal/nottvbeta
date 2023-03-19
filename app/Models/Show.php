@@ -21,7 +21,9 @@ class Show extends Model
         'team_id',
         'slug',
         'isBeingEditedByUser_id',
-        'image_id'
+        'image_id',
+        'first_release_year',
+        'last_release_year',
     ];
 
     public function getRouteKeyName() {

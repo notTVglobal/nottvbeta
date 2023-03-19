@@ -5,7 +5,7 @@
                 <span class="font-medium">
                     {{ message }}
                 </span>
-        <button class="text-xs" @click="$emit('close')"> Close</button>
+        <button class="text-xs ml-12" @click="$emit('close')"> Close</button>
     </div>
 </template>
 

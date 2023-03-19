@@ -6,10 +6,12 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-gray-900 text-white px-5">
 
+            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+
             <header class="flex justify-between mb-3 border-b border-gray-800">
                 <div class="container mx-auto flex flex-col lg:flex-row items-center justify-between px-4 py-6">
 
-                    <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+
 
                     <div class="flex flex-col lg:flex-row items-center">
                         <h1 class="text-3xl font-semibold"><Link :href="route('movies')" class="hover:text-blue-800">Movies</Link></h1>
@@ -26,6 +28,13 @@
                         </ul>
                     </div>
                 </div>
+                <div class="flex flex-end flex-wrap-reverse justify-end gap-2 mt-6 mr-4">
+                <Link
+                    v-if="props.can.editMovie" :href="`/movies/${props.movie.slug}/edit`"><button
+                    class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                >Edit</button>
+                </Link>
+                </div>
 
             </header>
 
@@ -41,7 +50,8 @@
                         <div class="text-gray-400 text-center lg:text-left">
                             <span>Short Film, Animated</span>
                             &middot;
-                            <span>{{ movie.copyrightYear }}</span>
+                            <span v-if="!movie.release_year">{{ movie.copyrightYear }}</span>
+                            <span v-if="movie.release_year">{{ movie.release_year }}</span>
                         </div>
 
                         <div class="flex flex-wrap justify-center lg:justify-start mt-4 m-auto lg:mx-0">
@@ -116,7 +126,8 @@
                         </p>
 
                         <div class="flex mt-12 m-auto lg:mx-0 justify-center lg:justify-start">
-                            <button disabled class="flex bg-blue-500 text-white font-semibold px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed">
+                            <button disabled class="flex bg-blue-500 text-white font-semibold px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
+                                    @click="playTrailer">
                                 <svg class="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg"
                                      viewBox="0 0 485 485">
                                     <path d="M413.974,71.026C368.171,25.225,307.274,0,242.5,0S116.829,25.225,71.026,71.026C25.225,116.829,0,177.726,0,242.5
@@ -128,7 +139,8 @@
                                 <span class="ml-2 text-sm md:text-md">Play Trailer</span>
                             </button>
 
-                            <button disabled class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed">
+                            <button class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
+                                    @click="playMovie">
                                 <svg class="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg"
                                      viewBox="0 0 485 485">
                                     <path d="M413.974,71.026C368.171,25.225,307.274,0,242.5,0S116.829,25.225,71.026,71.026C25.225,116.829,0,177.726,0,242.5
@@ -222,8 +234,9 @@
                 <div class="flex justify-end mt-6 pr-2 pb-4">
                     <!-- Paginator -->
                     <!--                            <Pagination :links="`#`" class="mt-6"/>-->
-                    <Link :href="`/teams/${movie.teamSlug}`" class="text-blue-500 ml-2"> {{ movie.teamName }} ©
-                        {{ movie.copyrightYear }}
+                    <Link :href="`#`" class="text-blue-500 ml-2"> {{ movie.name }} ©
+                        <span v-if="!movie.release_year">{{ movie.copyrightYear }}</span>
+                        <span v-if="movie.release_year">{{ movie.release_year }}</span>
                     </Link>
                 </div>
             </footer>
@@ -271,8 +284,30 @@ let props = defineProps({
     message: ref(''),
     errors: ref(''),
     video: ref(''),
+    can: Object,
     // filters: Object,
 });
+
+let playTrailer = () => {
+    // videoPlayer.videoSource = 'https://streams.not.tv/hls/ctd1984/index.m3u8'
+    // videoPlayerStore.videoSource = 'https://mist2.not.tv/hls/kids_1/index.m3u8'
+    // videoPlayer.videoSource = 'https://nottvmist.sfo3.digitaloceanspaces.com/recordings/channels_02.m3u8'
+    let source = "dunepull"
+    videoPlayerStore.loadNewSourceFromMist(source)
+    videoPlayerStore.videoName = 'Dune'
+    streamStore.currentChannel = 'On Demand'
+}
+
+let playMovie = () => {
+    // videoPlayer.videoSource = 'https://streams.not.tv/hls/ctd1984/index.m3u8'
+    // videoPlayerStore.videoSource = 'https://mist2.not.tv/hls/kids_1/index.m3u8'
+    // videoPlayer.videoSource = 'https://nottvmist.sfo3.digitaloceanspaces.com/recordings/channels_02.m3u8'
+    // let source = "dunepull"
+    let source = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
+    videoPlayerStore.loadNewSourceFromUrl(source)
+    videoPlayerStore.videoName = 'Elephant\'s Dream'
+    streamStore.currentChannel = 'On Demand'
+}
 
 let showMessage = ref(true);
 

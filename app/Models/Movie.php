@@ -17,6 +17,11 @@ class Movie extends Model
     public function getRouteKeyName() {
         return 'slug';
     }
+
+    public function newsPerson()
+    {
+        return $this->hasMany(MovieTrailer::class);
+    }
 }
 
 

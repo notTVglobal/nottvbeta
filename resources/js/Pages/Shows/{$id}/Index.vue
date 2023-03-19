@@ -50,8 +50,8 @@
                             <div class="text-gray-400 text-center lg:text-left">
                                 <span>Talk Show</span>
                                 &middot;
-                                <span v-if="show.copyrightYear != thisYear">{{ show.copyrightYear }}-{{thisYear}}</span>
-                                <span v-if="show.copyrightYear == thisYear">{{thisYear}}</span>
+                                <span v-if="show.last_release_year" >{{ show.first_release_year }}-{{show.last_release_year}}</span>
+                                <span v-if="!show.last_release_year">{{show.first_release_year}}</span>
 <!--                                This will need a change in the database to allow the creator to update
                                     the year(s) if they are incorrect. It can automatically set the first release year
                                     to the same year that the show is created. And the final release year to the year that

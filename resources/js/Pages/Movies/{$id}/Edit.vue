@@ -6,19 +6,25 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-dark text-light p-5 mb-10">
 
-
-            <header>
-                <div
-                    class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
-                    role="alert"
-                    v-if="props.message">
+            <div
+                class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
+                role="alert"
+                v-if="props.message">
                 <span class="font-medium">
                                     {{ props.message }}
                                 </span>
-                </div>
+            </div>
+            <header>
+
 
                 <!--                <ShowEpisodeEditHeader :show="props.show" :team="props.team" :episode="props.episode"/>-->
-
+                <div class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4">
+                    <button
+                        @click="back"
+                        class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
+                    >Cancel
+                    </button>
+                </div>
             </header>
 
 
@@ -39,16 +45,6 @@
 
 
                             <form @submit.prevent="submit">
-                                <div class="flex justify-end mr-2 mb-6">
-                                    <button
-                                        @click="submit"
-                                        class="bg-blue-600 hover:bg-blue-500 text-white rounded py-2 px-4"
-                                        :disabled="form.processing"
-                                    >
-                                        Save
-                                    </button>
-                                </div>
-
 
                                 <div class="mb-6">
                                     <label class="block mb-2 uppercase font-bold text-xs text-light"
@@ -68,21 +64,25 @@
                                          class="text-xs text-red-600 mt-1"></div>
                                 </div>
 
-                                <div class="mb-6">
+                                <div class="mb-6 w-64">
                                     <label class="block mb-2 uppercase font-bold text-xs text-light"
                                            for="release_date"
                                     >
-                                        Date Released
+                                        Release Year
                                     </label>
 
-                                    <!--                                    <input v-model="form.episode_number"-->
-                                    <!--                                           class="border border-gray-400 text-gray-800 p-2 w-1/2 rounded-lg"-->
-                                    <!--                                           type="text"-->
-                                    <!--                                           name="release_date"-->
-                                    <!--                                           id="release_date"-->
-                                    <!--                                    >-->
-                                    <!--                                    <div v-if="form.errors.episode_number" v-text="form.errors.episode_number"-->
-                                    <!--                                         class="text-xs text-red-600 mt-1"></div>-->
+                                    <input v-model="form.release_year"
+                                           class="border border-gray-400 text-gray-800 p-2 w-1/2 rounded-lg"
+                                           type="number"
+                                           :placeholder="props.movie.release_year"
+                                           name="release_year"
+                                           id="release_year"
+                                           minlength="4"
+                                           maxlength="4"
+
+                                    >
+                                    <div v-if="form.errors.release_year" v-text="form.errors.release_year"
+                                         class="text-xs text-red-600 mt-1"></div>
                                 </div>
 
                                 <div class="mb-6">
@@ -226,21 +226,91 @@
                                              class="text-xs text-red-600 mt-1"></div>
                                     </div>
 
+                                    <div class="mb-6">
+                                        <label class="block mb-2 uppercase font-bold text-xs light:text-gray-700 text-gray-300"
+                                               for="name"
+                                        >
+                                            Website URL
+                                        </label>
+
+                                        <input v-model="form.www_url"
+                                               class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                                               type="text"
+                                               name="www_url"
+                                               id="www_url"
+                                        >
+                                        <div v-if="form.errors.www_url" v-text="form.errors.www_url"
+                                             class="text-xs text-red-600 mt-1"></div>
+                                    </div>
+
+                                    <div class="mb-6">
+                                        <label class="block mb-2 uppercase font-bold text-xs light:text-gray-700 text-gray-300"
+                                               for="name"
+                                        >
+                                            Instagram @
+                                        </label>
+
+                                        <input v-model="form.instagram_name"
+                                               class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                                               type="text"
+                                               name="instagram_name handle"
+                                               id="instagram_name"
+                                        >
+                                        <div v-if="form.errors.instagram_name" v-text="form.errors.instagram_name"
+                                             class="text-xs text-red-600 mt-1"></div>
+                                    </div>
+
+                                    <div class="mb-6">
+                                        <label class="block mb-2 uppercase font-bold text-xs light:text-gray-700 text-gray-300"
+                                               for="name"
+                                        >
+                                            Telegram URL
+                                        </label>
+
+                                        <input v-model="form.telegram_url"
+                                               class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                                               type="text"
+                                               name="telegram_url"
+                                               id="telegram_url"
+                                        >
+                                        <div v-if="form.errors.telegram_url" v-text="form.errors.telegram_url"
+                                             class="text-xs text-red-600 mt-1"></div>
+                                    </div>
+
+                                    <div class="mb-6">
+                                        <label class="block mb-2 uppercase font-bold text-xs light:text-gray-700 text-gray-300"
+                                               for="name"
+                                        >
+                                            Twitter @
+                                        </label>
+
+                                        <input v-model="form.twitter_handle"
+                                               class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                                               type="text"
+                                               name="twitter_handle"
+                                               id="twitter_handle"
+                                        >
+                                        <div v-if="form.errors.twitter_handle" v-text="form.errors.twitter_handle"
+                                             class="text-xs text-red-600 mt-1"></div>
+                                    </div>
+
 
                                 </div>
                             </form>
                                 <!-- End Right Column -->
+
+                            <div class="flex justify-end my-6 mr-6">
+                                <button
+                                    @click="submit"
+                                    class="bg-blue-600 hover:bg-blue-500 text-white rounded py-2 px-4"
+                                    :disabled="form.processing"
+                                >
+                                    Save
+                                </button>
                         </div>
                         <!-- End grid 2-col -->
 
-                        <div class="flex justify-end mb-6">
-                            <button
-                                @click="submit"
-                                class="bg-blue-600 hover:bg-blue-500 text-white rounded py-2 px-4"
-                                :disabled="form.processing"
-                            >
-                                Save
-                            </button>
+
                         </div>
 
 
@@ -341,16 +411,25 @@ function handleProcessedFile(error, file) {
 let form = useForm({
     id: props.movie.id,
     name: props.movie.name,
+    release_year: props.release_year,
     description: props.movie.description,
     user_id: props.movie.user_id,
     team_id: props.movie.team_id,
     poster: props.movie.poster,
     file_url: props.movie.file_url,
+    www_url: props.movie.www_url,
+    instagram_name: props.movie.instagram_name,
+    telegram_url: props.movie.telegram_url,
+    twitter_handle: props.movie.twitter_handle,
 });
 
 let submit = () => {
     form.put(route('movies.update', props.movie.slug));
 };
+
+function back() {
+    window.history.back()
+}
 
 
 </script>

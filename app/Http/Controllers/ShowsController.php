@@ -65,6 +65,8 @@ class ShowsController extends Controller
                     'status' => $show->showStatus->name,
                     'statusId' => $show->showStatus->id,
                     'copyrightYear' => $show->created_at->format('Y'),
+                    'first_release_year' => $show->first_release_year,
+                    'last_release_year' => $show->last_release_year,
                     'can' => [
                         'editShow' => Auth::user()->can('editShow', $show),
                         'viewShow' => Auth::user()->can('viewShowManagePage', $show)
@@ -156,13 +158,14 @@ class ShowsController extends Controller
             'team_id' => $request->team_id,
             'slug' => \Str::slug($request->name),
             'isBeingEditedByUser_id' => $request->user_id,
+            'first_release_year' => \Carbon\Carbon::now()->format('Y'),
         ]);
 
         // Use this route to return
         // the user to the new show page.
 
         $show = Show::query()->where('name', $request->name)->firstOrFail();
-        return redirect()->route('shows.manage', $show)->with('message', 'Show Created Successfully');
+        return redirect()->route('shows.show', $show)->with('message', 'Show Created Successfully');
 //        return Inertia::render('Shows/{$id}/Manage', $show)->with('message', 'Show Created Successfully');
 
         // Use this route to return the
@@ -190,6 +193,8 @@ class ShowsController extends Controller
                 'slug' => $show->slug,
                 'poster' => $show->image->name,
                 'copyrightYear' => $show->created_at->format('Y'),
+                'first_release_year' => $show->first_release_year,
+                'last_release_year' => $show->last_release_year,
                 'www_url' => $show->www_url,
                 'instagram_name' => $show->instagram_name,
                 'telegram_url' => $show->telegram_url,

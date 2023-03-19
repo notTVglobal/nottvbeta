@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('shows', function (Blueprint $table) {
-            $table->integer('first_release_year');
+            $table->integer('first_release_year')->default(0);
         });
     }
 

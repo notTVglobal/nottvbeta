@@ -62,7 +62,10 @@
                                 </Link>
                             </div>
                             <Link :href="`/shows/${show.slug}`" class="block text-base font-semibold leading-tight hover:text-gray-400 mt-4">{{ show.name }}</Link>
-                            <div class="text-gray-400 mt-1">Category (YYYY)</div>
+                            <div class="text-gray-400 mt-1">Category
+                                <span v-if="show.last_release_year">({{show.last_release_year}})</span>
+                                <span v-if="!show.last_release_year">({{show.first_release_year}})</span>
+                            </div>
                             <div class="text-gray-400 mt-1">Sub-category</div>
                         </div>
 
