@@ -2879,6 +2879,14 @@ var map = {
 		"./resources/js/Pages/Admin/Channels/Index.vue",
 		"resources_js_Pages_Admin_Channels_Index_vue"
 	],
+	"./Admin/InviteCodes": [
+		"./resources/js/Pages/Admin/InviteCodes.vue",
+		"resources_js_Pages_Admin_InviteCodes_vue"
+	],
+	"./Admin/InviteCodes.vue": [
+		"./resources/js/Pages/Admin/InviteCodes.vue",
+		"resources_js_Pages_Admin_InviteCodes_vue"
+	],
 	"./Admin/Settings": [
 		"./resources/js/Pages/Admin/Settings.vue",
 		"resources_js_Pages_Admin_Settings_vue"

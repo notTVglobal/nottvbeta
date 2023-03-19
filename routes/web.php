@@ -239,6 +239,12 @@ Route::middleware([
     })->can('viewAdmin', 'App\Models\User')
         ->name('quiz');
 
+    // temp page to test Stores
+    Route::get('/admin/invite_codes', function () {
+        return Inertia::render('Admin/InviteCodes');
+    })->can('viewAdmin', 'App\Models\User')
+        ->name('admin.inviteCodes');
+
 
 // Creator Resources
     // Begin middleware authorization

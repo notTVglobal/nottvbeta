@@ -103,6 +103,11 @@
                         class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
                     >Add a Movie</button>
                     </Link>
+                    <Link
+                        :href="`/admin/invite_codes`"><button
+                        class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
+                    >Invite Codes</button>
+                    </Link>
                 </div>
 
             </div>
