@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Show extends Model
 {
@@ -15,15 +16,25 @@ class Show extends Model
      * @var string[]
      */
     protected $fillable = [
-        'name',
-        'description',
+
         'user_id',
         'team_id',
+        'image_id',
+        'name',
+        'description',
         'slug',
         'isBeingEditedByUser_id',
-        'image_id',
+        'show_status_id',
+        'show_runner',
+        'www_url',
+        'instagram_name',
+        'telegram_url',
+        'twitter_handle',
+        'notes',
         'first_release_year',
         'last_release_year',
+        'category_id',
+        'sub_category_id',
     ];
 
     public function getRouteKeyName() {
@@ -58,6 +69,19 @@ class Show extends Model
     public function showRunner()
     {
         return $this->belongsTo(Creator::class);
+    }
+
+    public function showCategory(): BelongsTo
+    {
+        return $this->belongsTo(ShowCategory::class)->withDefault([
+            'name' => 'no category',
+            'description' => 'no description'
+        ]);
+    }
+
+    public function showSubCategory()
+    {
+        return $this->belongsTo(ShowCategory::class);
     }
 
     public function showNotes()

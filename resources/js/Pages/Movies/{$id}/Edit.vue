@@ -104,9 +104,9 @@
 <!--                                    <select>-->
 <!--                                        <option v-for="option in options" :value="option.value">{{option.text}}</option>-->
 <!--                                    </select>-->
-                                    <div v-model="category"></div>{{movieStore.category_description}}
+                                    ></div>{{movieStore.category_description}}
                                     <div v-if="form.errors.category" v-text="form.errors.category"
-                                         class="text-xs text-red-600 mt-1"></div>
+                                         class="text-xs text-red-600 mt-1">
                                 </div>
 
                                 <div class="mb-6">

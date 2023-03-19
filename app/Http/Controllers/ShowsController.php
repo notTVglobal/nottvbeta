@@ -351,6 +351,9 @@ class ShowsController extends Controller
             'showRunner' => User::query()->where('id', $show->user_id)->pluck('id','name')->firstOrFail(),
             'poster' => getPoster($show),
             'categories' => $categories,
+            'showCategoryId' => $show->showCategory->id,
+            'showCategoryName' => $show->showCategory->name,
+            'showCategoryDescription' => $show->showCategory->description,
             'sub_categories' => $sub_categories,
 //            'can' => [
 //                'viewShows' => Auth::user()->can('view', Show::class),
@@ -384,8 +387,8 @@ class ShowsController extends Controller
         // update the show
         $show->name = $request->name;
         $show->description = $request->description;
-        $show->show_categories_id = $request->category;
-        $show->show_category_subs_id = $request->sub_category;
+        $show->show_category_id = $request->category;
+        $show->show_category_sub_id = $request->sub_category;
         $show->slug = \Str::slug($request->name);
         $show->www_url = $request->www_url;
         $show->instagram_name = $request->instagram_name;

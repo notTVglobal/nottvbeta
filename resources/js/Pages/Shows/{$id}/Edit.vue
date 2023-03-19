@@ -128,11 +128,12 @@
                                                 Category
                                             </label>
 
+
                                             <select class="border border-gray-400 text-gray-800 p-2 w-full rounded-lg block mb-2 uppercase font-bold text-xs "
-                                                    v-model="4" @change="chooseCategory($event)"
+                                                    v-model="form.category" @change="chooseCategory($event)"
                                             >
                                                 <option v-for="category in props.categories"
-                                                        :key="category.id" :value="category.id">{{category.name}} {{category.id}}</option>
+                                                        :key="category.id" :value="category.id">{{category.name}}</option>
 
 
                                             </select>
@@ -140,17 +141,22 @@
                                             <!--                                    <select>-->
                                             <!--                                        <option v-for="option in options" :value="option.value">{{option.text}}</option>-->
                                             <!--                                    </select>-->
-                                            <div v-model="category"></div>{{showStore.category_description}}
                                             <div v-if="form.errors.category" v-text="form.errors.category"
                                                  class="text-xs text-red-600 mt-1"></div>
+
+                                            {{showCategoryDescription}}
                                         </div>
 
+
+
                                         <div class="mb-6">
+                                            <div class="text-sm text-orange-600">Sub-categories are coming soon!</div>
                                             <label class="block mb-2 text-gray-600 uppercase font-bold text-xs text-light"
                                                    for="sub_category"
                                             >
                                                 Sub-category
                                             </label>
+
 
                                             <select disabled class="border border-gray-400 text-gray-800 disabled:bg-gray-600 disabled:cursor-not-allowed p-2 w-full rounded-lg block mb-2 uppercase font-bold text-xs"
                                                     v-model="form.sub_category"
@@ -314,6 +320,7 @@ onMounted(() => {
         document.getElementById("topDiv").scrollIntoView()
         userStore.scrollToTopCounter ++;
     }
+
 });
 
 let props = defineProps({
@@ -323,10 +330,15 @@ let props = defineProps({
     poster: String,
     categories: Object,
     sub_categories: Object,
+    showCategoryId: Object,
+    showCategoryName: Object,
+    showCategoryDescription: Object,
 });
 
+let showCategoryDescription = props.showCategoryDescription;
+
 function chooseCategory(event) {
-    showStore.category_description = props.categories[event.target.selectedIndex].description;
+    showCategoryDescription = props.categories[event.target.selectedIndex].description;
 }
 
 const FilePond = vueFilePond(
@@ -368,7 +380,7 @@ showStore.posterName = props.poster[0].name;
 let form = useForm({
     name: props.show.name,
     description: props.show.description,
-    category: showStore.category_id,
+    category: props.showCategoryId,
     sub_category: props.show.sub_category,
     www_url: props.show.www_url,
     instagram_name: props.show.instagram_name,
@@ -377,10 +389,10 @@ let form = useForm({
     notes: props.show.notes,
 });
 
-let getCategory = ref(null);
-onBeforeMount(async () => {
-    getCategory.value = await props.show.category;
-})
+// let getCategory = ref(null);
+// onBeforeMount(async () => {
+//     getCategory.value = await props.show.category;
+// })
 
 
 let submit = () => {

@@ -14,8 +14,8 @@ return new class extends Migration
     public function up()
     {
         Schema::table('shows', function (Blueprint $table) {
-            $table->foreignId('show_categories_id')->nullable()->constrained();
-            $table->foreignId('show_category_subs_id')->nullable()->constrained();
+            $table->foreignId('show_category_id')->nullable()->constrained();
+            $table->foreignId('show_category_sub_id')->nullable()->constrained();
         });
     }
 
@@ -27,10 +27,10 @@ return new class extends Migration
     public function down()
     {
         Schema::table('shows', function (Blueprint $table) {
-            $table->dropForeign(['show_categories_id']);
-            $table->dropColumn(['show_categories_id']);
-            $table->dropForeign(['show_category_subs_id']);
-            $table->dropColumn(['show_category_subs_id']);
+            $table->dropForeign(['category_id']);
+            $table->dropColumn(['category_id']);
+            $table->dropForeign(['sub_category_id']);
+            $table->dropColumn(['sub_category_id']);
         });
     }
 };

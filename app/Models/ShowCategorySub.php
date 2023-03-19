@@ -20,7 +20,7 @@ class ShowCategorySub extends Model
     }
     public function showCategory()
     {
-        return $this->hasOne(ShowCategory::class);
+        return $this->belongsTo(ShowCategory::class);
     }
 
 }

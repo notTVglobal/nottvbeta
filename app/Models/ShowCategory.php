@@ -21,6 +21,6 @@ class ShowCategory extends Model
 
     public function showCategorySub()
     {
-        return $this->belongsTo(ShowCategorySub::class);
+        return $this->hasMany(ShowCategorySub::class);
     }
 }
