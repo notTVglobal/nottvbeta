@@ -20,6 +20,10 @@
         </td>
 
         <td class="light:text-gray-600 dark:text-gray-100 px-6 py-4 text-sm text-right">
+            {{ show.status }}
+        </td>
+
+        <td class="light:text-gray-600 dark:text-gray-100 px-6 py-4 text-sm text-right">
             {{  show.showRunnerName }}
         </td>
 

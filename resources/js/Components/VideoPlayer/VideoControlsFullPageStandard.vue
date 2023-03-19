@@ -12,7 +12,7 @@
     <div>
 <!-- Video FullPage Controls -->
 
-                    <div class="videoControlsStandard absolute flex justify-center space-x-4 bottom-12 right-px-2 w-full z-50"
+                    <div class="videoControlsStandard absolute flex justify-center space-x-4 bottom-12 pb-24 right-px-2 w-full z-50"
                         :class="{'right-44': chatStore.showChat, videoControlsMobile: userStore.isMobile}">
 
                         <button v-if="videoPlayerStore.muted===true"

@@ -14,7 +14,11 @@
             </td>
 
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                Notes
+                Show Notes
+            </td>
+
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                Show Status
             </td>
 
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-right">

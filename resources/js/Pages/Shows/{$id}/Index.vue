@@ -7,14 +7,16 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-gray-900 text-white px-5">
 
-        <header>
-
             <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
 
-            <div id="topDiv" v-if="userStore.isMobile && props.can.viewCreator"></div>
-            <div class="flex justify-end mt-10 ">
+        <header>
 
-                <div v-if="props.can.viewCreator" class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4 mb-2">
+
+
+            <div id="topDiv" v-if="userStore.isMobile && props.can.viewCreator"></div>
+            <div v-if="props.can.viewCreator" class="flex justify-end mt-10">
+
+                <div class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4">
                     <Link
                         v-if="props.can.editShow" :href="`/shows/${props.show.slug}/edit`"><button
                         class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
@@ -48,7 +50,14 @@
                             <div class="text-gray-400 text-center lg:text-left">
                                 <span>Talk Show</span>
                                 &middot;
-                                <span>2022</span>
+                                <span v-if="show.copyrightYear != thisYear">{{ show.copyrightYear }}-{{thisYear}}</span>
+                                <span v-if="show.copyrightYear == thisYear">{{thisYear}}</span>
+<!--                                This will need a change in the database to allow the creator to update
+                                    the year(s) if they are incorrect. It can automatically set the first release year
+                                    to the same year that the show is created. And the final release year to the year that
+                                    the show was last updated (created_at and updated_at timestamps) -->
+<!--                                <span>{{show.copyrightYear}}-{{new Date().getFullYear()}}</span>-->
+
                             </div>
 
                             <div class="flex flex-wrap justify-center lg:justify-start mt-4 m-auto lg:mx-0">
@@ -68,14 +77,14 @@
                                 </div>
 
                                 <div class="flex m-auto space-x-4 lg:ml-12 pt-6 lg:mt-2 2xl:pt-0">
-                                    <div class="website-url w-8 h-8 bg-gray-800 rounded-full flex justify-center items-center">
+                                    <div v-if="props.show.www_url" class="website-url w-8 h-8 bg-gray-800 rounded-full flex justify-center items-center">
                                         <a :href="props.show.www_url" class="hover:text-gray-400" target="_blank">
                                             <svg class="w-5 h-5 fill-current" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm7.5-6.923c-.67.204-1.335.82-1.887 1.855A7.97 7.97 0 0 0 5.145 4H7.5V1.077zM4.09 4a9.267 9.267 0 0 1 .64-1.539 6.7 6.7 0 0 1 .597-.933A7.025 7.025 0 0 0 2.255 4H4.09zm-.582 3.5c.03-.877.138-1.718.312-2.5H1.674a6.958 6.958 0 0 0-.656 2.5h2.49zM4.847 5a12.5 12.5 0 0 0-.338 2.5H7.5V5H4.847zM8.5 5v2.5h2.99a12.495 12.495 0 0 0-.337-2.5H8.5zM4.51 8.5a12.5 12.5 0 0 0 .337 2.5H7.5V8.5H4.51zm3.99 0V11h2.653c.187-.765.306-1.608.338-2.5H8.5zM5.145 12c.138.386.295.744.468 1.068.552 1.035 1.218 1.65 1.887 1.855V12H5.145zm.182 2.472a6.696 6.696 0 0 1-.597-.933A9.268 9.268 0 0 1 4.09 12H2.255a7.024 7.024 0 0 0 3.072 2.472zM3.82 11a13.652 13.652 0 0 1-.312-2.5h-2.49c.062.89.291 1.733.656 2.5H3.82zm6.853 3.472A7.024 7.024 0 0 0 13.745 12H11.91a9.27 9.27 0 0 1-.64 1.539 6.688 6.688 0 0 1-.597.933zM8.5 12v2.923c.67-.204 1.335-.82 1.887-1.855.173-.324.33-.682.468-1.068H8.5zm3.68-1h2.146c.365-.767.594-1.61.656-2.5h-2.49a13.65 13.65 0 0 1-.312 2.5zm2.802-3.5a6.959 6.959 0 0 0-.656-2.5H12.18c.174.782.282 1.623.312 2.5h2.49zM11.27 2.461c.247.464.462.98.64 1.539h1.835a7.024 7.024 0 0 0-3.072-2.472c.218.284.418.598.597.933zM10.855 4a7.966 7.966 0 0 0-.468-1.068C9.835 1.897 9.17 1.282 8.5 1.077V4h2.355z"/>
                                             </svg>
                                         </a>
                                     </div>
-                                    <div class="instagram-url w-8 h-8 bg-gray-800 rounded-full flex justify-center items-center">
+                                    <div v-if="props.show.instagram_name" class="instagram-url w-8 h-8 bg-gray-800 rounded-full flex justify-center items-center">
                                         <a :href="'https://www.instagram.com/' + props.show.instagram_name" class="hover:text-gray-400" target="_blank">
                                             <svg class="w-4 h-4 fill-current" xmlns="http://www.w3.org/2000/svg"
                                                  viewBox="0 0 300 300">
@@ -90,14 +99,14 @@
                                             </svg>
                                         </a>
                                     </div>
-                                    <div class="telegram-url w-8 h-8 bg-gray-800 rounded-full flex justify-center items-center">
+                                    <div v-if="props.show.telegram_url" class="telegram-url w-8 h-8 bg-gray-800 rounded-full flex justify-center items-center">
                                         <a :href="props.show.telegram_url" class="hover:text-gray-400" target="_blank">
                                             <svg class="w-5 h-5 fill-current pr-1" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M41.4193 7.30899C41.4193 7.30899 45.3046 5.79399 44.9808 9.47328C44.8729 10.9883 43.9016 16.2908 43.1461 22.0262L40.5559 39.0159C40.5559 39.0159 40.3401 41.5048 38.3974 41.9377C36.4547 42.3705 33.5408 40.4227 33.0011 39.9898C32.5694 39.6652 24.9068 34.7955 22.2086 32.4148C21.4531 31.7655 20.5897 30.4669 22.3165 28.9519L33.6487 18.1305C34.9438 16.8319 36.2389 13.8019 30.8426 17.4812L15.7331 27.7616C15.7331 27.7616 14.0063 28.8437 10.7686 27.8698L3.75342 25.7055C3.75342 25.7055 1.16321 24.0823 5.58815 22.459C16.3807 17.3729 29.6555 12.1786 41.4193 7.30899Z"/>
                                             </svg>
                                         </a>
                                     </div>
-                                    <div class="twitter-url w-8 h-8 bg-gray-800 rounded-full flex justify-center items-center">
+                                    <div v-if="props.show.twitter_handle" class="twitter-url w-8 h-8 bg-gray-800 rounded-full flex justify-center items-center">
                                         <a :href="'https://www.twitter.com/' + props.show.twitter_handle" class="hover:text-gray-400" target="_blank">
                                             <svg class="w-4 h-4 fill-current" xmlns="http://www.w3.org/2000/svg"
                                                  viewBox="0 0 310 310">
@@ -127,7 +136,7 @@
 
                             <div class="flex mt-12 m-auto lg:mx-0 justify-center lg:justify-start">
 
-                                <button class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
+                                <button disabled class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
                                         @click="playVideo">
                                     <svg class="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg"
                                          viewBox="0 0 485 485">
@@ -140,11 +149,14 @@
                                     <span class="ml-2">Watch Now</span>
                                 </button>
 
-
+                                <button disabled class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed">
+                                    <span class=""><font-awesome-icon icon="fa-circle-down" class="mr-2"/>Save For Later</span>
+                                </button>
 
                                 <button disabled class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed">
-                                    <span class="">Save For Later</span>
+                                    <span class=""><font-awesome-icon icon="fa-share" class="mr-2"/>Share</span>
                                 </button>
+
                             </div>
                         </div>
                     </div>
@@ -202,7 +214,7 @@
 
                         </div>
 
-                        <ShowFooter :team="props.team" />
+                        <ShowFooter :team="props.team" :show="props.show"/>
                     </div>
                 </div>
             </div>
@@ -278,6 +290,8 @@ onUpdated(() => {
 })
 
 let showMessage = ref(true);
+
+let thisYear = new Date().getFullYear()
 
 </script>
 

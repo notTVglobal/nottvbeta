@@ -13,10 +13,9 @@
 <!-- Video TopRight Controls -->
                     <div class="absolute flex justify-between bottom-2 px-2 w-full z-50">
 
-                        <button
-                                class="text-xs md:text-md bg-gray-800 rounded-full p-2 hover:bg-gray-600"
-                                @click="videoPlayerStore.makeVideoFullPage()">
-                            BIG</button>
+                        <Link v-touch="()=>(route('stream'))" @click="videoPlayerStore.makeVideoFullPage()" :href="route('stream')" :active="route().current('stream')">
+                        <button class="text-xs md:text-md bg-gray-800 rounded-full p-2 hover:bg-gray-600">
+                            BIG</button></Link>
 
                         <button v-if="videoPlayerStore.muted"
                                 class="text-xs md:text-md bg-gray-800 rounded-full p-2 hover:bg-gray-600"

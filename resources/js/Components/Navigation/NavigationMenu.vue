@@ -24,10 +24,13 @@
 <!--                            </div>-->
                         </JetNavLink>
                         </h3>
+                        <h3 class="inline-flex items-center relative">
                         <JetNavLink v-touch="()=>(route('schedule'))" @click="videoPlayerStore.makeVideoTopRight()" :href="route('schedule')" :active="route().current('schedule')">
                             Schedule
 
                         </JetNavLink>
+                        </h3>
+                        <h3 class="inline-flex items-center relative">
                         <JetNavLink
                             v-if="$page.props.user.role_id === 2 || $page.props.user.role_id === 3 || $page.props.user.role_id === 4"
                             v-touch="()=>(route('news'))"
@@ -36,6 +39,8 @@
                             :active="route().current('news')">
                                 News
                         </JetNavLink>
+                        </h3>
+                        <h3 class="inline-flex items-center relative">
                         <JetNavLink
                             v-if="$page.props.user.role_id === 3 || $page.props.user.role_id === 4"
                             v-touch="()=>(route('movies'))"
@@ -44,6 +49,8 @@
                             :active="route().current('movies')">
                             Movies
                         </JetNavLink>
+                        </h3>
+                        <h3 class="inline-flex items-center relative">
                         <JetNavLink
                             v-if="$page.props.user.role_id === 2 || $page.props.user.role_id === 3 || $page.props.user.role_id === 4"
                             v-touch="()=>(route('shows'))"
@@ -52,9 +59,13 @@
                             :active="route().current('shows')">
                             Shows
                         </JetNavLink>
+                        </h3>
+                        <h3 class="inline-flex items-center relative">
                         <JetNavLink v-touch="()=>(route('shop'))" @click="videoPlayerStore.makeVideoTopRight()" :href="route('shop')" :active="route().current('shop')">
                             Shop
                         </JetNavLink>
+                        </h3>
+                        <h3 class="inline-flex items-center relative">
                         <JetNavLink
                             v-if="$page.props.user.role_id >= 3"
                             v-touch="()=>(route('library'))"
@@ -69,6 +80,7 @@
                                 coming soon
                             </div>
                         </JetNavLink>
+                        </h3>
                         <div v-if="$page.props.user.role_id === 4" class="text-yellow-600 uppercase hidden md:block mt-5 text-xs w-full">
                             GOAL <span class="text-sm font-semibold">100</span> subscribers
                         </div>
@@ -205,7 +217,7 @@
 <!--                                        <div class="flex pt-6 justify-center ">Web application</div>-->
 <!--                                        <div class="flex justify-center">concept and design</div>-->
                                         <div class="flex justify-center">not<span class="text-xs">&#174;</span>TV &#169;2010-{{new Date().getFullYear()}}</div>
-                                        <div class="flex justify-center">Beta v0.5</div>
+                                        <div class="flex justify-center">Beta Preview v0.5</div>
 <!--                                        <div class="flex justify-center">Please send us</div>-->
 <!--                                        <div class="flex justify-center">comments and questions</div>-->
 <!--                                        <div class="flex justify-center"><a href="https://help.not.tv/" target="_blank" class="text-blue-600 hover:text-blue-40">here</a>.</div>-->

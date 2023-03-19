@@ -20,8 +20,6 @@
     </header>
 
     <div>
-        <div class=""><span class="text-xs uppercase font-semibold">Team ID: </span>{{ team.id }}
-        </div>
         <div class="mb-6"><span class="text-xs uppercase font-semibold">Team Leader: </span>{{ teamLeaderName }}
 <!--     Insert into span when ready:       -->
         </div>
