@@ -69,7 +69,7 @@
                 <footer>
                     <div class="modal-footer">
                             <button
-                                @click="$emit('close')"
+                                @click="clearForm"
                                 class="bg-gray-300 p-2 rounded-md hover:bg-gray-400 hover:text-gray-800"
                             >Cancel</button>
                     </div>
@@ -113,7 +113,12 @@ const submit = () => {
     });
 };
 
+function clearForm() {
+    form.reset();
+    welcomeStore.showLogin = false;
+}
 function showRegister() {
+    form.reset();
     welcomeStore.showLogin = false;
     welcomeStore.showRegister = true;
 }

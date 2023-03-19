@@ -51,6 +51,7 @@ createInertiaApp({
     setup({ el, app, props, plugin }) {
         createApp({ render: () => h(app, props) })
             .use(plugin)
+            // .use(VueReCaptcha, { siteKey: captchaKey } )
             .use(ZiggyVue, Ziggy)
             .use(createPinia())
             .use(Vue3TouchEvents)
@@ -61,7 +62,6 @@ createInertiaApp({
             .component("ConfirmDialog", ConfirmDialog)
             .mixin(formatDate())
             .mount(el);
-
     },
 });
 

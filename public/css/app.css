@@ -2087,6 +2087,10 @@ select {
   height: 24rem;
 }
 
+.h-14 {
+  height: 3.5rem;
+}
+
 .max-h-\[13rem\] {
   max-height: 13rem;
 }
@@ -2851,6 +2855,11 @@ select {
 .border-gray-500 {
   --tw-border-opacity: 1;
   border-color: rgb(107 114 128 / var(--tw-border-opacity));
+}
+
+.border-black {
+  --tw-border-opacity: 1;
+  border-color: rgb(0 0 0 / var(--tw-border-opacity));
 }
 
 .bg-white {
@@ -3785,6 +3794,11 @@ select {
 .text-orange-300 {
   --tw-text-opacity: 1;
   color: rgb(253 186 116 / var(--tw-text-opacity));
+}
+
+.text-green-800 {
+  --tw-text-opacity: 1;
+  color: rgb(22 101 52 / var(--tw-text-opacity));
 }
 
 .underline {

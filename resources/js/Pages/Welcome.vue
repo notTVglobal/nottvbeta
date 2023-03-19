@@ -5,20 +5,20 @@
             <header class="headerContainer w-full">
                 <div class="welcomeOverlay flex flex-row md:px-6 py-4 w-full">
                     <WelcomeBug />
-<!--                    <div class="flex justify-end pt-4 md:pr-6 w-full">-->
-<!--                            <Button class="bg-opacity-50 hover:bg-opacity-75 text-sm md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md" v-if="!$page.props.user" @click="welcomeStore.showLogin = true" >-->
-<!--                                Log in-->
-<!--                            </Button>-->
-<!--                            <Button class="bg-opacity-50 hover:bg-opacity-75 text-sm -mr-4 md:mr-0 ml-2 md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md" v-if="!$page.props.user" @click="welcomeStore.showRegister = true" >-->
-<!--                                &lt;!&ndash;           <Button class="bg-opacity-0 hover:bg-opacity-0"><Link v-if="!$page.props.user" :href="route('register')" class="text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md">&ndash;&gt;-->
+                    <div class="flex justify-end pt-4 md:pr-6 w-full">
+                            <Button class="bg-opacity-50 hover:bg-opacity-75 text-sm md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md" v-if="!$page.props.user" @click="welcomeStore.showLogin = true" >
+                                Log in
+                            </Button>
+                            <Button class="bg-opacity-50 hover:bg-opacity-75 text-sm -mr-4 md:mr-0 ml-2 md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md" v-if="!$page.props.user" @click="welcomeStore.showRegister = true" >
+                                <!--           <Button class="bg-opacity-0 hover:bg-opacity-0"><Link v-if="!$page.props.user" :href="route('register')" class="text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md">-->
 
-<!--                                Register-->
-<!--                            </Button>-->
-<!--                            <Button class="bg-opacity-0 hover:bg-opacity-0"><Link v-if="$page.props.user" :href="route('stream')" class="text-sm md:text-2xl top-20 text-gray-200 underline">-->
-<!--                                Return to stream-->
-<!--                            </Link></Button>-->
+                                Register
+                            </Button>
+                            <Button class="bg-opacity-0 hover:bg-opacity-0"><Link v-if="$page.props.user" :href="route('stream')" class="text-sm md:text-2xl top-20 text-gray-200 underline">
+                                Return to stream
+                            </Link></Button>
 
-<!--                    </div>-->
+                    </div>
                 </div>
             </header>
 

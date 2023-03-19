@@ -14,6 +14,7 @@ const form = useForm({
     password: '',
     password_confirmation: '',
     terms: true,
+    invite_code: '',
 });
 
 const submit = () => {
@@ -21,12 +22,20 @@ const submit = () => {
         onFinish: () => form.reset('password', 'password_confirmation'),
     });
 };
+
+// function submit() {
+//     form.post(route('contact-us.store'), {
+//         preserveScroll: true,
+//         onSuccess: () => console.log('success'),
+//     })
+// }
 </script>
 <script>
 import NoLayout from '../../Layouts/NoLayout';
 export default {
     layout: NoLayout,
 }
+
 </script>
 
 <template>
@@ -44,6 +53,7 @@ export default {
         </div>
 
         <form @submit.prevent="submit">
+
             <div>
                 <JetLabel for="name" value="Name" />
                 <JetInput
@@ -92,6 +102,17 @@ export default {
                 />
             </div>
 
+            <div class="mt-4">
+                <JetLabel for="invite_code" value="Invite Code" />
+                <JetInput
+                    id="invite_code"
+                    v-model="form.invite_code"
+                    type="password"
+                    class="mt-1 block w-full"
+                    required
+                />
+            </div>
+
             <!--            Jetstream/Fortify Multi-Auth: Roles, Permissions and Guards-->
             <!--            https://www.youtube.com/watch?v=NiQSNjWKLfU-->
 
@@ -120,13 +141,15 @@ export default {
                 <JetLabel for="terms">
                     <div class="flex items-center">
                         <JetCheckbox id="terms" v-model="form.terms" name="terms" required />
-
                         <div class="ml-2">
                             I agree to the <a :href="route('terms.show')" class="underline text-sm text-gray-600 hover:text-gray-900">Terms of Service</a> and <a :href="route('policy.show')" class="underline text-sm text-gray-600 hover:text-gray-900">Privacy Policy</a>
                         </div>
                     </div>
                 </JetLabel>
             </div>
+
+            <!-- Google Recaptcha -->
+<!--            <div class="g-recaptcha mt-4" data-sitekey={config('services.recaptcha.key')}></div>-->
 
             <div class="flex items-center justify-end mt-4">
                 <Link :href="route('login')" class="underline text-sm text-gray-600 hover:text-gray-900">

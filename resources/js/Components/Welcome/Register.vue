@@ -21,7 +21,7 @@
                     Please register for an account to watch notTV.
                 </div>
                 <div class="py-3">
-                <form @submit.prevent="submit">
+                <form @submit.prevent="submit" ref="registrationForm">
                     <div>
                         <JetLabel for="name" value="Name" />
                         <JetInput
@@ -67,6 +67,17 @@
                             class="mt-1 block w-full"
                             required
                             autocomplete="new-password"
+                        />
+                    </div>
+
+                    <div class="mt-4">
+                        <JetLabel for="invite_code" value="Invite Code" class="text-green-800" />
+                        <JetInput
+                            id="invite_code"
+                            v-model="form.invite_code"
+                            type="invite_code"
+                            class="mt-1 block w-full text-black text-xl border-2 border-green-800 h-14 px-4"
+                            required
                         />
                     </div>
 
@@ -121,7 +132,7 @@
             <footer>
                 <div class="modal-footer">
                     <button
-                        @click="$emit('close')"
+                        @click="clearForm"
                         class="bg-gray-300 p-2 rounded-md hover:bg-gray-400 hover:text-gray-800"
                     >Cancel</button>
                 </div>
@@ -154,8 +165,13 @@ const form = useForm({
     password: '',
     password_confirmation: '',
     terms: true,
+    invite_code: '',
 });
 
+function clearForm() {
+    form.reset();
+    welcomeStore.showRegister = false;
+}
 const submit = () => {
     form.post(route('register'), {
         onFinish: () => form.reset('password', 'password_confirmation'),
@@ -163,6 +179,7 @@ const submit = () => {
 };
 
 function showLogin() {
+    form.reset();
     welcomeStore.showLogin = true;
     welcomeStore.showRegister = false;
 }

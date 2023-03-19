@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fbaab831c787cb8b316ccbb5b02ab01c",
+    "content-hash": "a9b59988119a3ed8a77d07af304eb0f8",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -58,16 +58,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.261.12",
+            "version": "3.261.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "9816402afa9ad9fe8ff7ff8131ea1dca2c6b7700"
+                "reference": "121638bb7e62ee2f71838c52e79884f4301a9400"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/9816402afa9ad9fe8ff7ff8131ea1dca2c6b7700",
-                "reference": "9816402afa9ad9fe8ff7ff8131ea1dca2c6b7700",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/121638bb7e62ee2f71838c52e79884f4301a9400",
+                "reference": "121638bb7e62ee2f71838c52e79884f4301a9400",
                 "shasum": ""
             },
             "require": {
@@ -146,9 +146,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.261.12"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.261.14"
             },
-            "time": "2023-03-15T18:20:10+00:00"
+            "time": "2023-03-17T18:21:00+00:00"
         },
         {
             "name": "bacon/bacon-qr-code",
@@ -3596,29 +3596,29 @@
         },
         {
             "name": "pion/laravel-chunk-upload",
-            "version": "v1.5.1",
+            "version": "v1.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pionl/laravel-chunk-upload.git",
-                "reference": "e1ffe87e8a50a6a8cf8204c6afd46f6df99083e6"
+                "reference": "dcf5cf42059910242c31fc34d0ea147d07478473"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pionl/laravel-chunk-upload/zipball/e1ffe87e8a50a6a8cf8204c6afd46f6df99083e6",
-                "reference": "e1ffe87e8a50a6a8cf8204c6afd46f6df99083e6",
+                "url": "https://api.github.com/repos/pionl/laravel-chunk-upload/zipball/dcf5cf42059910242c31fc34d0ea147d07478473",
+                "reference": "dcf5cf42059910242c31fc34d0ea147d07478473",
                 "shasum": ""
             },
             "require": {
-                "illuminate/console": "5.2 - 5.8 | ^6.0 | ^7.0 | ^8.0 | ^9.0",
-                "illuminate/filesystem": "5.2 - 5.8 | ^6.0 | ^7.0 | ^8.0 | ^9.0",
-                "illuminate/http": "5.2 - 5.8 | ^6.0 | ^7.0 | ^8.0 | ^9.0",
-                "illuminate/support": "5.2 - 5.8 | ^6.0 | ^7.0 | ^8.0 | ^9.0"
+                "illuminate/console": "5.2 - 5.8 | ^6.0 | ^7.0 | ^8.0 | ^9.0 | ^10.0",
+                "illuminate/filesystem": "5.2 - 5.8 | ^6.0 | ^7.0 | ^8.0 | ^9.0 | ^10.0",
+                "illuminate/http": "5.2 - 5.8 | ^6.0 | ^7.0 | ^8.0 | ^9.0 | ^10.0",
+                "illuminate/support": "5.2 - 5.8 | ^6.0 | ^7.0 | ^8.0 | ^9.0 | ^10.0"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^2.16.0",
                 "mockery/mockery": "^1.1.0 | ^1.3.0",
                 "overtrue/phplint": "^1.1 | ^2.0",
-                "phpunit/phpunit": "5.7 | 6.0 | 7.0 | 7.5 | 8.4 | ^8.5 | ^9.3"
+                "phpunit/phpunit": "5.7 | 6.0 | 7.0 | 7.5 | 8.4 | ^8.5 | ^9.3 | ^10.0"
             },
             "type": "library",
             "extra": {
@@ -3646,7 +3646,7 @@
             "description": "Service for chunked upload with several js providers",
             "support": {
                 "issues": "https://github.com/pionl/laravel-chunk-upload/issues",
-                "source": "https://github.com/pionl/laravel-chunk-upload/tree/v1.5.1"
+                "source": "https://github.com/pionl/laravel-chunk-upload/tree/v1.5.2"
             },
             "funding": [
                 {
@@ -3658,7 +3658,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-08-31T07:30:45+00:00"
+            "time": "2023-03-15T21:02:42+00:00"
         },
         {
             "name": "pragmarx/google2fa",
@@ -9851,7 +9851,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^8.0.2"
+        "php": "^8.1.16"
     },
     "platform-dev": [],
     "plugin-api-version": "2.3.0"
