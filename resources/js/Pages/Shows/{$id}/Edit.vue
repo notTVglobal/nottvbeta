@@ -41,7 +41,7 @@
 
                                     <div>
 
-                                        <label class="block mb-2 uppercase font-bold text-xs light:text-gray-700 text-gray-300"
+                                        <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
                                                for="name"
                                         >
                                             Change Show Poster
@@ -82,7 +82,7 @@
 <!--                                    />-->
 
                                     <div class="mb-6">
-                                        <label class="block mb-2 uppercase font-bold text-xs light:text-gray-700 text-gray-300"
+                                        <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
                                                for="name"
                                         >
                                             Show Notes (only visible to team members)
@@ -104,7 +104,7 @@
                                         </div>
 
                                         <div class="mb-6">
-                                            <label class="block mb-2 uppercase font-bold text-xs light:text-gray-700 text-gray-300"
+                                            <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
                                                    for="name"
                                             >
                                                 Show Name
@@ -122,7 +122,7 @@
                                         </div>
 
                                         <div class="mb-6">
-                                            <label class="block mb-2 uppercase font-bold text-xs text-light"
+                                            <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
                                                    for="category"
                                             >
                                                 Category
@@ -151,7 +151,7 @@
 
                                         <div class="mb-6">
                                             <div class="text-sm text-orange-600">Sub-categories are coming soon!</div>
-                                            <label class="block mb-2 text-gray-600 uppercase font-bold text-xs text-light"
+                                            <label class="block mb-2 text-gray-600 uppercase font-bold text-xs text-light text-gray-600"
                                                    for="sub_category"
                                             >
                                                 Sub-category
@@ -168,7 +168,7 @@
                                         </div>
 
                                         <div class="mb-6">
-                                            <label class="block mb-2 uppercase font-bold text-xs light:text-gray-700 text-gray-300"
+                                            <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
                                                    for="description"
                                             >
                                                 Description
@@ -185,7 +185,7 @@
                                         </div>
 
                                         <div class="mb-6">
-                                            <label class="block mb-2 uppercase font-bold text-xs light:text-gray-700 text-gray-300"
+                                            <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
                                                    for="name"
                                             >
                                                 Website URL
@@ -202,10 +202,10 @@
                                         </div>
 
                                         <div class="mb-6">
-                                            <label class="block mb-2 uppercase font-bold text-xs light:text-gray-700 text-gray-300"
+                                            <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
                                                    for="name"
                                             >
-                                                Instagram @
+                                                Instagram Handle
                                             </label>
 
                                             <input v-model="form.instagram_name"
@@ -219,7 +219,7 @@
                                         </div>
 
                                         <div class="mb-6">
-                                            <label class="block mb-2 uppercase font-bold text-xs light:text-gray-700 text-gray-300"
+                                            <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
                                                    for="name"
                                             >
                                                 Telegram URL
@@ -236,7 +236,7 @@
                                         </div>
 
                                         <div class="mb-6">
-                                            <label class="block mb-2 uppercase font-bold text-xs light:text-gray-700 text-gray-300"
+                                            <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
                                                    for="name"
                                             >
                                                 Twitter @

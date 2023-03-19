@@ -11,19 +11,29 @@
             <div class="flex justify-between -mb-10">
 
                 <header class="p-5 mb-6">
-                    <div class="py-4">
-                        <span class="font-semibold text-xs uppercase">SHOW: </span>
+                    <div class="">
+                        <span class="font-semibold text-xs uppercase">Show: </span>
                         <Link :href="`/shows/${props.show.slug}/`"
                               class="text-blue-400 hover:text-blue-600 text-sm uppercase">
                             {{ props.show.name }}
                         </Link>
                     </div>
-                    <div>
+                    <div class="">
+                        <span class="font-semibold text-xs uppercase">Category: </span>
+                              <span class="text-sm uppercase">
+                                  {{ props.show.showCategoryName }} </span>
+                    </div>
+                    <div class="pb-4">
+                        <span class="font-semibold text-xs uppercase">Sub-category: </span>
+                        <span class="text-sm uppercase">
+                                  {{ props.show.subCategoryName }} </span>
+                    </div>
+                    <div class="mb-4">
                         <h3 class="inline-flex items-center text-3xl font-semibold relative">
                             {{ props.episode.name }}
                         </h3>
                     </div>
-                    <div class="text-xs">
+                    <div class="text-xs space-y-1">
                         <span class="uppercase">Episode Number: </span>
                         <span v-if="!episode.episodeNumber">{{ episode.id }}</span>
                         <span v-if="episode.episodeNumber">{{ episode.episodeNumber }}</span>

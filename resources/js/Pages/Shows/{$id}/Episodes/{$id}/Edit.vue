@@ -64,7 +64,7 @@
 
 
                                     <div>
-                                        <label class="block mb-2 uppercase font-bold text-xs text-light"
+                                        <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
                                                for="name"
                                         >
                                             Change Episode Poster
@@ -99,7 +99,7 @@
 
                                     </div>
 
-                                    <label class="block mb-2 uppercase font-bold text-xs text-light"
+                                    <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
                                            for="name"
                                     >
                                         Episode Video
@@ -139,7 +139,7 @@
                                 <div class="xl:col-span-2">
 
                                     <div class="mb-6">
-                                        <label class="block mb-2 uppercase font-bold text-xs light:text-gray-700 text-gray-300"
+                                        <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
                                                for="name"
                                         >
                                             Episode Notes (only the team members see the notes)
@@ -158,7 +158,7 @@
 
 
                                     <div class="mb-6">
-                                        <label class="block mb-2 uppercase font-bold text-xs text-light"
+                                        <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
                                                for="name"
                                         >
                                             Episode Name
@@ -176,7 +176,7 @@
                                     </div>
 
                                     <div class="mb-6">
-                                        <label class="block mb-2 uppercase font-bold text-xs text-light"
+                                        <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
                                                for="episode_number"
                                         >
                                             Episode Number
@@ -195,7 +195,7 @@
 
 
                                     <div class="mb-6 w-full">
-                                        <label class="block mb-2 uppercase font-bold text-xs text-light"
+                                        <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
                                                for="description"
                                         >
                                             Description
@@ -212,7 +212,7 @@
                                     </div>
 
 
-                                    <div class="block mt-12 mb-2 uppercase font-bold text-xs text-light">
+                                    <div class="block mt-12 mb-2 uppercase font-bold text-xs text-light text-red-700">
                                         Notes about video embedding:
                                     </div>
                                     <ul class="list-decimal pb-2 ml-2 mb-4 border-b">
@@ -225,7 +225,7 @@
                                     </ul>
 
                                     <div class="mb-6">
-                                        <label class="block mb-2 uppercase font-bold text-xs text-light"
+                                        <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
                                                for="video_file_url"
                                         >
                                             Episode Video URL (if hosted externally)
@@ -242,7 +242,7 @@
                                     </div>
 
                                     <div class="mb-6">
-                                        <label class="block mb-2 uppercase font-bold text-xs text-light"
+                                        <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
                                                for="video_file_embed_code"
                                         >
                                             Episode Video Embed Code (if hosted externally)
@@ -261,7 +261,7 @@
 
 
                                     <div class="mb-6">
-                                        <label class="block mb-2 uppercase font-bold text-xs text-light"
+                                        <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
                                                for="video_file_embed_code"
                                         >
                                             Add a video that has been uploaded to not.tv

@@ -1,6 +1,6 @@
 <template>
     <tr>
-        <td class="text-gray-500 px-6 py-4 text-sm">
+        <td class="px-6 py-4 text-sm">
 
             <!-- If there is no episode number set by the user
                    the episode number defaults to the episode id           -->

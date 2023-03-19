@@ -469,7 +469,13 @@ class ShowsController extends Controller
     {
 
         return Inertia::render('Shows/{$id}/Episodes/Create', [
-            'show' => $show,
+            'show' => [
+                'name' => $show->name,
+                'showRunner' => $show->user->name,
+                'poster' => $show->image->name,
+                'showCategoryName' => $show->showCategory->name,
+                'subCategoryName' => $show->showSubCategory->name,
+            ],
             'team' => Team::query()->where('id', $show->team_id)->first(),
         ]);
     }

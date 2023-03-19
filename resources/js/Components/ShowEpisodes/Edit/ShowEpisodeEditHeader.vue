@@ -18,21 +18,30 @@
     </div>
 
 
-    <div>
+    <div class="space-y-1">
+        <div class="mb-6"><span class="text-xs uppercase font-semibold">Episode #: </span>
+            <span v-if="episode.episode_number" class="font-bold uppercase">{{ episode.episode_number }}</span>
+            <span v-if="!episode.episode_number" class="font-bold uppercase">{{ episode.id }}</span>
+        </div>
         <div class=""><span class="text-xs uppercase font-semibold">Show: </span>
             <Link :href="`/shows/${show.slug}/manage`">
-            {{ show.name }}
+                <span class="font-bold uppercase text-blue-300 hover:text-blue-500">{{ show.name }}</span>
             </Link>
+        </div>
+        <div class=""><span class="text-xs uppercase font-semibold">Category: </span>
+                <span class="font-bold uppercase">{{ show.showCategoryName }}</span>
+            <span class="text-xs"> (change the category on the
+                <Link :href="`/shows/${show.slug}/edit`" class="text-blue-300 hover:text-blue-500">show edit page</Link>)</span>
+        </div>
+        <div class=""><span class="text-xs uppercase font-semibold">Sub-category: </span>
+                <span class="font-bold uppercase">{{ show.subCategoryName }}</span>
         </div>
         <div class=""><span class="text-xs uppercase font-semibold">Team: </span>
             <Link :href="`/teams/${team.slug}/manage`">
-            {{ team.name }}
+            <span class="font-bold uppercase text-blue-300 hover:text-blue-500">{{ team.name }}</span>
             </Link>
         </div>
-        <div class="mb-6"><span class="text-xs uppercase font-semibold">Episode #: </span>
-                <span v-if="episode.episode_number">{{ episode.episode_number }}</span>
-                <span v-if="!episode.episode_number">{{ episode.id }}</span>
-        </div>
+
     </div>
 
 

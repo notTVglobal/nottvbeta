@@ -8,32 +8,45 @@
             <div class="flex justify-between mt-3 mb-6">
                 <div class="text-3xl">Create Episode</div>
                 <div>
-                    <Link v-if="teamStore.activeShow.slug" :href="route('shows.manage', {show: teamStore.activeShow.slug})"><button
+                    <button
+                        @click="back"
                         class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
-                    >Cancel</button>
-                    </Link>
-                    <Link v-if="!teamStore.activeShow.slug" :href="`/dashboard`"><button
-                        class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
-                    >Cancel</button>
-                    </Link>
+                    >Cancel
+                    </button>
                 </div>
             </div>
 
             <div class="bg-orange-700 text-white w-full p-6"><span class="font-semibold">NOTE: </span>
             We are working on an episode poster and video uploader for this page. For the time being, please
-                go to the episode EDIT page after you create the episode to upload a video and add a poster.
+                go to the episode EDIT page after you create the episode to add a video and a poster.
             </div>
 
             <form @submit.prevent="submit" class="max-w-md mx-auto mt-8">
                 <div class="mb-6">
                     <label class="block mb-2 uppercase font-bold text-xs text-gray-200"
-                           for="name"
+                           for="showName"
                     >
-                        Show
+                        Show Name
                     </label>
-                    <div>{{props.show.name}}</div>
+                    <div class="font-bold">{{props.show.name}}</div>
 
                     <div v-if="form.errors.show_id" v-text="form.errors.show_id" class="text-xs text-red-600 mt-1"></div>
+                </div>
+                <div class="mb-6">
+                    <label class="block mb-2 uppercase font-bold text-xs text-gray-200"
+                           for="showCategory"
+                    >
+                        Category
+                    </label>
+                    <div class="font-bold">{{props.show.showCategoryName}}</div>
+                </div>
+                <div class="mb-6">
+                    <label class="block mb-2 uppercase font-bold text-xs text-gray-200"
+                           for="showCategory"
+                    >
+                        Sub-category
+                    </label>
+                    <div class="font-bold">{{props.show.subCategoryName}}</div>
                 </div>
                 <div class="mb-6">
                     <label class="block mb-2 uppercase font-bold text-xs text-gray-200"
@@ -208,5 +221,9 @@ let submit = () => {
 // let submit = () => {
 //     form.put(route('shows.showEpisodes.store'));
 // };
+
+function back() {
+    window.history.back()
+}
 
 </script>

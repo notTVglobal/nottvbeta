@@ -75,13 +75,16 @@ class Show extends Model
     {
         return $this->belongsTo(ShowCategory::class)->withDefault([
             'name' => 'no category',
-            'description' => 'no description'
+            'description' => 'no category description'
         ]);
     }
 
-    public function showSubCategory()
+    public function showSubCategory(): BelongsTo
     {
-        return $this->belongsTo(ShowCategory::class);
+        return $this->belongsTo(ShowCategory::class)->withDefault([
+            'name' => 'no sub category',
+            'description' => 'no sub category description'
+            ]);
     }
 
     public function showNotes()

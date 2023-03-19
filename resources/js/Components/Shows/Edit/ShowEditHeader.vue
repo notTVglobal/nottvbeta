@@ -22,7 +22,7 @@
     <div>
         <div class="mb-6"><span class="text-xs uppercase font-semibold">Team: </span>
             <Link :href="`/teams/${team.slug}`">
-            {{ team.name }}
+            <span class="font-bold uppercase text-blue-300 hover:text-blue-500">{{ team.name }}</span>
             </Link>
         </div>
     </div>

@@ -12,17 +12,17 @@
                 <div class="flex items-start">
                         <div class="text-sm font-medium">
                             <!--                                                    <Link :href="`/admin/users/${episode.id}`" class="text-indigo-600 hover:text-indigo-900">{{ episode.name }}</Link>-->
-                            Name
+                            Episode Name
                         </div>
                 </div>
             </td>
 
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                Notes
+                Episode Notes
             </td>
 
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-right">
-                Status
+                Episode Status
             </td>
             <td>
                 <!--edit button goes in this column-->
