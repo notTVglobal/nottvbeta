@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Image;
 use App\Models\Post;
 use App\Models\Show;
+use App\Models\ShowCategory;
+use App\Models\ShowCategorySub;
 use App\Models\ShowEpisode;
 use App\Models\Team;
 use App\Models\TeamMember;
@@ -165,7 +167,7 @@ class ShowsController extends Controller
         // the user to the new show page.
 
         $show = Show::query()->where('name', $request->name)->firstOrFail();
-        return redirect()->route('shows.show', $show)->with('message', 'Show Created Successfully');
+        return redirect()->route('shows.manage', $show)->with('message', 'Show Created Successfully');
 //        return Inertia::render('Shows/{$id}/Manage', $show)->with('message', 'Show Created Successfully');
 
         // Use this route to return the
@@ -340,11 +342,16 @@ class ShowsController extends Controller
             return $poster;
         }
 
+        $categories = ShowCategory::all();
+        $sub_categories = ShowCategorySub::all();
+
         return Inertia::render('Shows/{$id}/Edit', [
             'show' => $show,
             'team' => Team::query()->where('id', $show->team_id)->firstOrFail(),
             'showRunner' => User::query()->where('id', $show->user_id)->pluck('id','name')->firstOrFail(),
             'poster' => getPoster($show),
+            'categories' => $categories,
+            'sub_categories' => $sub_categories,
 //            'can' => [
 //                'viewShows' => Auth::user()->can('view', Show::class),
 //                'editShow' => Auth::user()->can('edit', Show::class),
@@ -364,6 +371,8 @@ class ShowsController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255', Rule::unique('shows')->ignore($show->id)],
             'description' => 'required',
+            'category' => 'required',
+            'sub_category' => 'nullable',
             'www_url' => 'nullable|active_url',
             'instagram_name' => 'nullable|string|max:30',
             'telegram_url' => 'nullable|active_url',
@@ -375,6 +384,8 @@ class ShowsController extends Controller
         // update the show
         $show->name = $request->name;
         $show->description = $request->description;
+        $show->show_categories_id = $request->category;
+        $show->show_category_subs_id = $request->sub_category;
         $show->slug = \Str::slug($request->name);
         $show->www_url = $request->www_url;
         $show->instagram_name = $request->instagram_name;

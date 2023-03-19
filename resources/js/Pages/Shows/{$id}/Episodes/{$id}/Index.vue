@@ -140,7 +140,7 @@
                             <div class="w-full bg-gray-800 text-2xl p-4 mb-8">BONUS CONTENT</div>
                         </div>
 
-                        <EpisodeFooter :team="props.team"/>
+                        <EpisodeFooter :team="props.team" :epsiode="props.episode"/>
                     </div>
                 </div>
             </div>

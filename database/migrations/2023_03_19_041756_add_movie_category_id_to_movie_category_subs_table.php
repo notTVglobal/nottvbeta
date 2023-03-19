@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('show_episodes', function (Blueprint $table) {
-            $table->integer('release_year')->nullable();
+        Schema::table('movie_category_subs', function (Blueprint $table) {
+            $table->foreignId('movie_categories_id')->nullable()->constrained();
         });
     }
 
@@ -25,8 +25,9 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('show_episodes', function (Blueprint $table) {
-            $table->dropColumn('release_year');
+        Schema::table('movie_category_subs', function (Blueprint $table) {
+            $table->dropForeign(['movie_categories_id']);
+            $table->dropColumn(['movie_categories_id']);
         });
     }
 };

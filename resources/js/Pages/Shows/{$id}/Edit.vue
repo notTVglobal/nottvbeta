@@ -38,32 +38,6 @@
                                                  :key="poster" />
                                         </div>
                                     </div>
-                                </div>
-
-                                <!--Right Column-->
-                                <div>
-<!--                                    <ShowPosterUpload-->
-<!--                                        :team="props.show"-->
-<!--                                        :images="props.images"-->
-<!--                                    />-->
-
-                                    <div class="mb-6">
-                                        <label class="block mb-2 uppercase font-bold text-xs light:text-gray-700 text-gray-300"
-                                               for="name"
-                                        >
-                                            Show Notes
-                                        </label>
-
-                                        <input v-model="form.notes"
-                                               class="border border-gray-400 p-2 w-full rounded-lg text-black"
-                                               type="text"
-                                               name="notes"
-                                               id="notes"
-                                               required
-                                        >
-                                        <div v-if="form.errors.notes" v-text="form.errors.notes"
-                                             class="text-xs text-red-600 mt-1"></div>
-                                    </div>
 
                                     <div>
 
@@ -93,6 +67,38 @@
 
                                     </div>
 
+
+
+
+                                </div>
+
+
+
+                                <!--Right Column-->
+                                <div>
+<!--                                    <ShowPosterUpload-->
+<!--                                        :team="props.show"-->
+<!--                                        :images="props.images"-->
+<!--                                    />-->
+
+                                    <div class="mb-6">
+                                        <label class="block mb-2 uppercase font-bold text-xs light:text-gray-700 text-gray-300"
+                                               for="name"
+                                        >
+                                            Show Notes (only visible to team members)
+                                        </label>
+
+                                        <input v-model="form.notes"
+                                               class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                                               type="text"
+                                               name="notes"
+                                               id="notes"
+                                               required
+                                        >
+                                        <div v-if="form.errors.notes" v-text="form.errors.notes"
+                                             class="text-xs text-red-600 mt-1"></div>
+                                    </div>
+
                                     <form @submit.prevent="submit">
                                         <div class="mb-6">
                                         </div>
@@ -112,6 +118,46 @@
                                                    required
                                             >
                                             <div v-if="form.errors.name" v-text="form.errors.name"
+                                                 class="text-xs text-red-600 mt-1"></div>
+                                        </div>
+
+                                        <div class="mb-6">
+                                            <label class="block mb-2 uppercase font-bold text-xs text-light"
+                                                   for="category"
+                                            >
+                                                Category
+                                            </label>
+
+                                            <select class="border border-gray-400 text-gray-800 p-2 w-full rounded-lg block mb-2 uppercase font-bold text-xs "
+                                                    v-model="4" @change="chooseCategory($event)"
+                                            >
+                                                <option v-for="category in props.categories"
+                                                        :key="category.id" :value="category.id">{{category.name}} {{category.id}}</option>
+
+
+                                            </select>
+                                            <!--    This was for practice... the next step is to loop over the sub-categories that belongTo the category selected. -->
+                                            <!--                                    <select>-->
+                                            <!--                                        <option v-for="option in options" :value="option.value">{{option.text}}</option>-->
+                                            <!--                                    </select>-->
+                                            <div v-model="category"></div>{{showStore.category_description}}
+                                            <div v-if="form.errors.category" v-text="form.errors.category"
+                                                 class="text-xs text-red-600 mt-1"></div>
+                                        </div>
+
+                                        <div class="mb-6">
+                                            <label class="block mb-2 text-gray-600 uppercase font-bold text-xs text-light"
+                                                   for="sub_category"
+                                            >
+                                                Sub-category
+                                            </label>
+
+                                            <select disabled class="border border-gray-400 text-gray-800 disabled:bg-gray-600 disabled:cursor-not-allowed p-2 w-full rounded-lg block mb-2 uppercase font-bold text-xs"
+                                                    v-model="form.sub_category"
+                                            >
+                                                <option value="1">Option</option>
+                                            </select>
+                                            <div v-if="form.errors.sub_category" v-text="form.errors.sub_category"
                                                  class="text-xs text-red-600 mt-1"></div>
                                         </div>
 
@@ -200,7 +246,7 @@
                                                  class="text-xs text-red-600 mt-1"></div>
                                         </div>
 
-                                        <div class="flex justify-between mb-6">
+                                        <div class="flex justify-end mb-6">
                                              <button
                                                 type="submit"
                                                 class="bg-blue-600 hover:bg-blue-500 text-white rounded py-2 px-4"
@@ -230,7 +276,7 @@
 </template>
 
 <script setup>
-import {onBeforeMount, onMounted} from "vue"
+import {ref, onBeforeMount, onMounted} from "vue"
 import {useForm} from "@inertiajs/inertia-vue3"
 import TabbableTextarea from "@/Components/TabbableTextarea"
 
@@ -275,7 +321,13 @@ let props = defineProps({
     show: Object,
     team: Object,
     poster: String,
+    categories: Object,
+    sub_categories: Object,
 });
+
+function chooseCategory(event) {
+    showStore.category_description = props.categories[event.target.selectedIndex].description;
+}
 
 const FilePond = vueFilePond(
     FilePondPluginFileValidateType,
@@ -316,12 +368,20 @@ showStore.posterName = props.poster[0].name;
 let form = useForm({
     name: props.show.name,
     description: props.show.description,
+    category: showStore.category_id,
+    sub_category: props.show.sub_category,
     www_url: props.show.www_url,
     instagram_name: props.show.instagram_name,
     telegram_url: props.show.telegram_url,
     twitter_handle: props.show.twitter_handle,
     notes: props.show.notes,
 });
+
+let getCategory = ref(null);
+onBeforeMount(async () => {
+    getCategory.value = await props.show.category;
+})
+
 
 let submit = () => {
     form.put(route('shows.update', props.show.slug));

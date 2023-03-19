@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('show_episodes', function (Blueprint $table) {
-            $table->integer('release_year')->nullable();
+            $table->dateTime('release_dateTime')->nullable();
         });
     }
 
@@ -26,7 +26,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('show_episodes', function (Blueprint $table) {
-            $table->dropColumn('release_year');
+            $table->dropColumn(['release_dateTime']);
         });
     }
 };

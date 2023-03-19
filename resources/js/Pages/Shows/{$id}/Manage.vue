@@ -162,7 +162,7 @@
                     </div>
                 </div>
             </div>
-            <ShowFooter :team="props.team"/>
+            <ShowFooter :team="props.team" :show="props.show"/>
         </div>
     </div>
 

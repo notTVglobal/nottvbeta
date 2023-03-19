@@ -119,6 +119,8 @@ class ShowEpisodeController extends Controller
                 'showRunner' => $show->user->name,
                 'poster' => $show->image->name,
                 'copyrightYear' => $show->created_at->format('Y'),
+                'first_release_year' => $show->first_release_year,
+                'last_release_year' => $show->last_release_year,
             ],
             'team' => [
                 'name' => $show->team->name,
@@ -182,6 +184,8 @@ class ShowEpisodeController extends Controller
                 'slug' => $show->slug,
                 'showRunner' => $show->user->name,
                 'poster' => $show->image->name,
+                'first_release_year' => $show->first_release_year,
+                'last_release_year' => $show->last_release_year,
             ],
             'team' => [
                 'name' => $show->team->name,
@@ -259,6 +263,7 @@ class ShowEpisodeController extends Controller
             'notes' => 'nullable|string',
             'video_file_url' => 'nullable|active_url',
             'video_file_embed_code' => 'nullable|string',
+            'release_date' => 'nullable|string',
         ]);
 
         // update the show

@@ -49,9 +49,7 @@
                         <h2 class="font-semibold text-4xl text-center lg:text-left">{{ movie.name }}</h2>
                         <div class="text-gray-400 text-center lg:text-left">
                             <span>Short Film, Animated</span>
-                            &middot;
-                            <span v-if="!movie.release_year">{{ movie.copyrightYear }}</span>
-                            <span v-if="movie.release_year">{{ movie.release_year }}</span>
+                            <span v-if="movie.release_year"> &middot; {{movie.release_year}}</span>
                         </div>
 
                         <div class="flex flex-wrap justify-center lg:justify-start mt-4 m-auto lg:mx-0">
@@ -234,9 +232,8 @@
                 <div class="flex justify-end mt-6 pr-2 pb-4">
                     <!-- Paginator -->
                     <!--                            <Pagination :links="`#`" class="mt-6"/>-->
-                    <Link :href="`#`" class="text-blue-500 ml-2"> {{ movie.name }} ©
-                        <span v-if="!movie.release_year">{{ movie.copyrightYear }}</span>
-                        <span v-if="movie.release_year">{{ movie.release_year }}</span>
+                    <Link :href="`#`" class="text-blue-500 ml-2"> {{ movie.name }}
+                        <span v-if="movie.release_year"> © {{movie.release_year}}</span>
                     </Link>
                 </div>
             </footer>

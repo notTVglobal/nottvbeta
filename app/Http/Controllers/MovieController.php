@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Image;
 use App\Models\Movie;
+use App\Models\MovieCategory;
+use App\Models\MovieCategorySub;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request as HttpRequest;
@@ -51,6 +53,7 @@ class MovieController extends Controller
 //                    'poster' => $movie->image->name,
                     'slug' => $movie->slug,
                     'copyrightYear' => $movie->created_at->format('Y'),
+                    'release_year' => $movie->release_year,
                 ]),
             'filters' => Request::only(['search']),
         ]);
@@ -209,9 +212,14 @@ class MovieController extends Controller
 //            }
 //            return $poster;
 //        }
+        $categories = MovieCategory::all();
+        $sub_categories = MovieCategorySub::all();
         $movie = Movie::query()->where('id', $movie->id)->firstOrFail();
+
         return Inertia::render('Movies/{$id}/Edit', [
             'movie' => $movie,
+            'categories' => $categories,
+            'sub_categories' => $sub_categories,
 //            'team' => Team::query()->where('id', $show->team_id)->firstOrFail(),
 //            'showRunner' => User::query()->where('id', $show->user_id)->pluck('id','name')->firstOrFail(),
 //            'poster' => getPoster($show),

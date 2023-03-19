@@ -12,6 +12,7 @@
 
 defineProps({
     team: Object,
+    episode: Object
 })
 
 </script>

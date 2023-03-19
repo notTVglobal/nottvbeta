@@ -13,9 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('show_episodes', function (Blueprint $table) {
-            $table->integer('release_year')->nullable();
-        });
+        // Insert movie categories
+        Artisan::call( 'db:seed', [
+                '--class' => 'MovieCategorySeeder',
+                '--force' => true ]
+        );
     }
 
     /**
@@ -25,8 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('show_episodes', function (Blueprint $table) {
-            $table->dropColumn('release_year');
-        });
+        //
     }
 };

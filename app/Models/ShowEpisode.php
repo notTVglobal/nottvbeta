@@ -27,7 +27,7 @@ class ShowEpisode extends Model
         'isPublished',
         'isBeingEditedByUser_id',
         'image_id',
-
+        'release_date'
     ];
 
     protected $with = ['show', 'image'];

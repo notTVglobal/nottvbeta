@@ -4,6 +4,10 @@ export let useShowStore = defineStore('showStore', {
     state: () => ({
         id: 0,
         name: '',
+        category_id: 0,
+        category_sub_id: 0,
+        category_description: '',
+        sub_categories: [],
         description: '',
         posterName: [],
         posterId: [0],
@@ -13,6 +17,7 @@ export let useShowStore = defineStore('showStore', {
         noteEdit: 0,
         note: '',
         saveNoteProcessing: Boolean,
+
     }),
 
     actions: {

@@ -338,6 +338,27 @@
 
 
             </section>
+            <section class="mt-16 space-y-4">
+                <div class="text-sm uppercase mb-4 border-b border-blue-500">
+                    Links
+                </div>
+                <a href="https://www.cbsc.ca/" target="_blank">
+                    <div class="hover:bg-blue-500 p-2">
+                    Canadian Broadcast Standards Council</div></a>
+
+                <a href="https://rtdnacanada.com/" target="_blank">
+                    <div class="hover:bg-blue-500 p-2">
+                        RTNDA</div></a>
+
+                <a href="https://adstandards.ca/" target="_blank">
+                    <div class="hover:bg-blue-500 p-2">
+                    Ad Standards</div></a>
+
+                <a href="https://www.cybertip.ca/en/" target="_blank">
+                    <div class="hover:bg-blue-500 p-2">
+                    Cybertip</div></a>
+
+            </section>
 
         </div>
     </div>

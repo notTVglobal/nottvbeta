@@ -55,7 +55,8 @@
                                 </div>
                             </div>
                             <Link :href="`/movies/${movie.slug}`" class="block text-base font-semibold leading-tight hover:text-gray-400 mt-4">{{ movie.name }}</Link>
-                            <div class="text-gray-400 mt-1">Category (YYYY)</div>
+                            <div class="text-gray-400 mt-1">Category
+                                <span v-if="movie.release_year">({{movie.release_year}})</span></div>
                             <div class="text-gray-400 mt-1">Sub-category</div>
                         </div>
 

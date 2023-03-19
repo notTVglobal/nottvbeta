@@ -87,6 +87,46 @@
 
                                 <div class="mb-6">
                                     <label class="block mb-2 uppercase font-bold text-xs text-light"
+                                           for="category"
+                                    >
+                                        Category
+                                    </label>
+
+                                    <select class="border border-gray-400 text-gray-800 p-2 w-1/2 rounded-lg block mb-2 uppercase font-bold text-xs "
+                                            v-model="form.category" @change="chooseCategory($event)"
+                                    >
+                                        <option v-for="category in props.categories"
+                                                :key="category.key" :value="category.id">{{category.name}}</option>
+
+
+                                    </select>
+<!--    This was for practice... the next step is to loop over the sub-categories that belongTo the category selected. -->
+<!--                                    <select>-->
+<!--                                        <option v-for="option in options" :value="option.value">{{option.text}}</option>-->
+<!--                                    </select>-->
+                                    <div v-model="category"></div>{{movieStore.category_description}}
+                                    <div v-if="form.errors.category" v-text="form.errors.category"
+                                         class="text-xs text-red-600 mt-1"></div>
+                                </div>
+
+                                <div class="mb-6">
+                                    <label class="block mb-2 text-gray-600 uppercase font-bold text-xs text-light"
+                                           for="sub_category"
+                                    >
+                                        Sub-category
+                                    </label>
+
+                                    <select disabled class="border border-gray-400 text-gray-800 disabled:bg-gray-600 disabled:cursor-not-allowed p-2 w-1/2 rounded-lg block mb-2 uppercase font-bold text-xs"
+                                            v-model="form.sub_category"
+                                    >
+                                        <option value="1">Option</option>
+                                    </select>
+                                    <div v-if="form.errors.sub_category" v-text="form.errors.sub_category"
+                                         class="text-xs text-red-600 mt-1"></div>
+                                </div>
+
+                                <div class="mb-6">
+                                    <label class="block mb-2 uppercase font-bold text-xs text-light"
                                            for="description"
                                     >
                                         Description
@@ -326,8 +366,8 @@
 </template>
 
 <script setup>
-import {onBeforeMount, onMounted} from "vue"
-import {useForm} from "@inertiajs/inertia-vue3"
+import { ref, onBeforeMount, onMounted } from "vue"
+import { useForm } from "@inertiajs/inertia-vue3"
 import TabbableTextarea from "@/Components/TabbableTextarea"
 import ShowEpisodeEditHeader from "@/Components/ShowEpisodes/Edit/ShowEpisodeEditHeader"
 
@@ -335,6 +375,8 @@ import {Inertia} from "@inertiajs/inertia"
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
 import {useTeamStore} from "@/Stores/TeamStore.js"
 import {useShowStore} from "@/Stores/ShowStore.js"
+import {useUserStore} from "@/Stores/UserStore";
+import {useMovieStore} from "@/Stores/MovieStore";
 
 import vueFilePond, {setOptions} from 'vue-filepond'
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type"
@@ -343,12 +385,13 @@ import FilePondPluginImagePreview from "filepond-plugin-image-preview"
 import FilePondPluginFileMetadata from "filepond-plugin-file-metadata"
 import 'filepond/dist/filepond.min.css'
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css'
-import {useUserStore} from "@/Stores/UserStore";
+
 
 let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore()
 let showStore = useShowStore()
 let userStore = useUserStore()
+let movieStore = useMovieStore()
 
 videoPlayerStore.currentPage = 'movies'
 
@@ -367,7 +410,11 @@ onMounted(() => {
 let props = defineProps({
     movie: Object,
     poster: String,
+    categories: Object,
+    sub_categories: Object,
 });
+
+// let category = ref();
 
 const FilePond = vueFilePond(
     FilePondPluginFileValidateType,
@@ -375,6 +422,21 @@ const FilePond = vueFilePond(
     FilePondPluginImagePreview,
     FilePondPluginFileMetadata
 );
+
+function chooseCategory(event) {
+movieStore.category_description =  props.categories[event.target.selectedIndex].description;
+// next step is to add sub-categories and loop over them based on the selected category.
+// this was for practice:
+// const options = []
+//     Array.from(event.target.selectedOptions).forEach(item => {
+//         options.push({
+//             value: item.value,
+//             text: `You have selected ${item.text}`
+//         })
+//     })
+//     this.options = options
+//     console.log(event.target.selectedOptions);
+}
 
 ////////
 // tec21: this isn't working...
@@ -412,6 +474,8 @@ let form = useForm({
     id: props.movie.id,
     name: props.movie.name,
     release_year: props.release_year,
+    category: props.movie.category,
+    sub_category: props.movie.sub_category,
     description: props.movie.description,
     user_id: props.movie.user_id,
     team_id: props.movie.team_id,
