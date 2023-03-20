@@ -21,6 +21,9 @@
 <!--                    class="px-6 py-4 font-medium text-gray-900 dark:text-white break-words grow-0 w-full text-center"-->
                 {{ show.name }}
 <!--                    <Link :href="`/shows/${show.slug}`" class="light:text-blue-800 light:hover:text-blue-600 dark:text-gray-50 dark:hover:text-blue-500"></Link>-->
+
+                    <div class="text-xs uppercase text-gray-500">{{ show.categoryName[0] }}</div>
+                    <div class="text-xs uppercase text-gray-500">{{ show.categorySubName[0] }}</div>
                 </div>
                 </Link>
             </div>

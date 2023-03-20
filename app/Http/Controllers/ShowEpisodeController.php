@@ -121,8 +121,8 @@ class ShowEpisodeController extends Controller
                 'copyrightYear' => $show->created_at->format('Y'),
                 'first_release_year' => $show->first_release_year,
                 'last_release_year' => $show->last_release_year,
-                'showCategoryName' => $show->showCategory->name,
-                'subCategoryName' => $show->showSubCategory->name,
+                'categoryName' => $show->showCategory->name,
+                'categorySubName' => $show->showCategorySub->name,
             ],
             'team' => [
                 'name' => $show->team->name,
@@ -188,8 +188,8 @@ class ShowEpisodeController extends Controller
                 'poster' => $show->image->name,
                 'first_release_year' => $show->first_release_year,
                 'last_release_year' => $show->last_release_year,
-                'showCategoryName' => $show->showCategory->name,
-                'subCategoryName' => $show->showSubCategory->name,
+                'categoryName' => $show->showCategory->name,
+                'categorySubName' => $show->showCategorySub->name,
             ],
             'team' => [
                 'name' => $show->team->name,

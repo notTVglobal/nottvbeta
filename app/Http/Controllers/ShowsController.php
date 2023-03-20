@@ -69,6 +69,8 @@ class ShowsController extends Controller
                     'copyrightYear' => $show->created_at->format('Y'),
                     'first_release_year' => $show->first_release_year,
                     'last_release_year' => $show->last_release_year,
+                    'categoryName' => $show->showCategory->name,
+                    'categorySubName' => $show->showCategorySub->name,
                     'can' => [
                         'editShow' => Auth::user()->can('editShow', $show),
                         'viewShow' => Auth::user()->can('viewShowManagePage', $show)
@@ -80,12 +82,15 @@ class ShowsController extends Controller
                 ->through(fn($episode) => [
                     'id' => $episode->id,
                     'name' => $episode->name,
-                    'description' => $episode->description,
+                    'description' => \Str::limit($episode->description, 100, ' ...'),
                     'poster' => $episode->image->name,
                     'slug' => $episode->slug,
                     'showName' => $episode->show->name,
                     'showSlug' => $episode->show->slug,
                     'releaseDate' => $episode->created_at->format('M D, Y'),
+                    'categoryName' => $episode->show->showCategory->name,
+                    'categorySubName' => $episode->show->showCategorySub->name,
+                    'release_date' => $episode->release_dateTime,
                 ]),
             'showsTrending' => Show::with('image')
                 ->paginate(3)
@@ -96,6 +101,8 @@ class ShowsController extends Controller
                     'poster' => $show->image->name,
                     'slug' => $show->slug,
                     'copyrightYear' => $show->created_at->format('Y'),
+                    'categoryName' => $show->showCategory->name,
+                    'categorySubName' => $show->showCategorySub->name,
                 ]),
             'showsComingSoon' => Show::with('image')
                 ->latest()
@@ -107,6 +114,8 @@ class ShowsController extends Controller
                     'poster' => $show->image->name,
                     'slug' => $show->slug,
                     'copyrightYear' => $show->created_at->format('Y'),
+                    'categoryName' => $show->showCategory->name,
+                    'categorySubName' => $show->showCategorySub->name,
                 ]),
             'filters' => Request::only(['search']),
             'can' => [
@@ -123,6 +132,9 @@ class ShowsController extends Controller
 
     public function create()
     {
+        $categories = ShowCategory::all();
+        $sub_categories = ShowCategorySub::all();
+
              return Inertia::render('Shows/Create', [
                  'teams' => Team::query()
                      ->where('user_id', Auth::user()->id)
@@ -137,6 +149,8 @@ class ShowsController extends Controller
                          ]
                      ]),
                  'userId' => Auth::user()->id,
+                 'categories' => $categories,
+                 'subCategories' => $sub_categories,
         ]);
 
     }
@@ -144,13 +158,18 @@ class ShowsController extends Controller
 
     public function store(HttpRequest $request)
     {
-
         $request->validate([
             'name' => 'unique:shows|required|string|max:255',
 //            'name' => ['required', 'string', 'max:255', Rule::unique('shows')->ignore($show->id)],
             'description' => 'required|string',
             'user_id' => 'required',
             'team_id' => 'required|integer|min:1',
+            'category' => 'required',
+            'sub_category' => 'nullable',
+            'instagram_name' => 'nullable|string|max:30',
+            'telegram_url' => 'nullable|active_url',
+            'twitter_handle' => 'nullable|string|min:4|max:15',
+            'notes' => 'nullable|string|max:1024',
         ],
             [ 'team_id' => 'A team must be selected.']);
         Show::create([
@@ -158,7 +177,14 @@ class ShowsController extends Controller
             'description' => $request->description,
             'user_id' => $request->user_id,
             'team_id' => $request->team_id,
+            'show_category_id' => $request->category,
+            'show_category_sub_id' => $request->sub_category,
             'slug' => \Str::slug($request->name),
+            'www_url' => $request->www_url,
+            'instagram_name' => $request->instagram_name,
+            'telegram_url' => $request->telegram_url,
+            'twitter_handle' => $request->twitter_handle,
+            'notes' => $request->notes,
             'isBeingEditedByUser_id' => $request->user_id,
             'first_release_year' => \Carbon\Carbon::now()->format('Y'),
         ]);
@@ -201,6 +227,8 @@ class ShowsController extends Controller
                 'instagram_name' => $show->instagram_name,
                 'telegram_url' => $show->telegram_url,
                 'twitter_handle' => $show->twitter_handle,
+                'categoryName' => $show->showCategory->name,
+                'categorySubName' => $show->showCategorySub->name,
             ],
 
             ////////////////
@@ -276,6 +304,12 @@ class ShowsController extends Controller
                 'slug' => $show->slug,
                 'poster' => $show->image->name,
                 'copyrightYear' => $show->created_at->format('Y'),
+                'categoryId' => $show->showCategory->id,
+                'categoryName' => $show->showCategory->name,
+                'categoryDescription' => $show->showCategory->description,
+                'subCategoryId' => $show->showCategorySub->id,
+                'subCategoryName' => $show->showCategorySub->name,
+                'subCategoryDescription' => $show->showCategorySub->description,
                 'notes' => $show->notes,
             ],
             'team' => [
@@ -351,10 +385,11 @@ class ShowsController extends Controller
             'showRunner' => User::query()->where('id', $show->user_id)->pluck('id','name')->firstOrFail(),
             'poster' => getPoster($show),
             'categories' => $categories,
+            'subCategories' => $sub_categories,
             'showCategoryId' => $show->showCategory->id,
             'showCategoryName' => $show->showCategory->name,
             'showCategoryDescription' => $show->showCategory->description,
-            'sub_categories' => $sub_categories,
+
 //            'can' => [
 //                'viewShows' => Auth::user()->can('view', Show::class),
 //                'editShow' => Auth::user()->can('edit', Show::class),
@@ -474,7 +509,7 @@ class ShowsController extends Controller
                 'showRunner' => $show->user->name,
                 'poster' => $show->image->name,
                 'showCategoryName' => $show->showCategory->name,
-                'subCategoryName' => $show->showSubCategory->name,
+                'categorySubName' => $show->showCategorySub->name,
             ],
             'team' => Team::query()->where('id', $show->team_id)->first(),
         ]);

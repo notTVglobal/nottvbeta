@@ -192,6 +192,21 @@
                          class="text-xs text-red-600 mt-1"></div>
                 </div>
 
+                <div class="mb-6">
+                    <label class="block mb-2 uppercase font-bold text-xs text-gray-200"
+                           for="notes"
+                    >
+                        Notes (Only your team members see these notes, they are not public)
+                    </label>
+                    <textarea v-model="form.notes"
+                              class="bg-gray-50 border border-gray-400 text-gray-900 text-sm p-2 w-full rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                              type="text"
+                              name="notes"
+                              id="notes"
+                    ></textarea>
+                    <div v-if="form.errors.notes" v-text="form.errors.notes" class="text-xs text-red-600 mt-1"></div>
+                </div>
+
                 <input v-model="form.user_id" hidden>
                 <div class="flex justify-between mb-6">
                     <button
@@ -237,6 +252,8 @@ onMounted(() => {
 let props = defineProps({
     teams: Object,
     userId: Number,
+    categories: Object,
+    subCategories: Object,
 })
 
 let form = useForm({
@@ -255,17 +272,17 @@ let form = useForm({
 
 form.team_id = teamStore.id;
 
-function reset() {
-    form.reset();
-};
+let showCategoryDescription = ref(null);
+function chooseCategory(event) {
+    showCategoryDescription = props.categories[event.target.selectedIndex].description;
+}
 
 let submit = () => {
     form.post('/shows');
 };
 
-let showCategoryDescription = ref(null);
-function chooseCategory(event) {
-    showCategoryDescription = props.categories[event.target.selectedIndex].description;
-}
+function reset() {
+    form.reset();
+};
 
 </script>

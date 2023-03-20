@@ -14,8 +14,8 @@ return new class extends Migration
     public function up()
     {
         Schema::table('movies', function (Blueprint $table) {
-            $table->foreignId('category_id')->nullable()->constrained()->references('id')->on('movie_categories');
-            $table->foreignId('sub_category_id')->nullable()->constrained()->references('id')->on('movie_category_subs');
+            $table->foreignId('movie_category_id')->nullable()->constrained();
+            $table->foreignId('movie_category_sub_id')->nullable()->constrained();
         });
     }
 
@@ -27,10 +27,10 @@ return new class extends Migration
     public function down()
     {
         Schema::table('movies', function (Blueprint $table) {
-            $table->dropForeign(['category_id']);
-            $table->dropColumn(['category_id']);
-            $table->dropForeign(['sub_category_id']);
-            $table->dropColumn(['sub_category_id']);
+            $table->dropForeign(['movie_category_id']);
+            $table->dropColumn(['movie_category_id']);
+            $table->dropForeign(['movie_category_sub_id']);
+            $table->dropColumn(['movie_category_sub_id']);
         });
     }
 };

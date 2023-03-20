@@ -14,19 +14,19 @@
                     <div class="">
                         <span class="font-semibold text-xs uppercase">Show: </span>
                         <Link :href="`/shows/${props.show.slug}/`"
-                              class="text-blue-400 hover:text-blue-600 text-sm uppercase">
+                              class="text-blue-400 hover:text-blue-600 text-sm uppercase font-bold">
                             {{ props.show.name }}
                         </Link>
                     </div>
                     <div class="">
                         <span class="font-semibold text-xs uppercase">Category: </span>
-                              <span class="text-sm uppercase">
-                                  {{ props.show.showCategoryName }} </span>
+                              <span class="text-sm uppercase font-bold">
+                                  {{ props.show.categoryName }} </span>
                     </div>
                     <div class="pb-4">
                         <span class="font-semibold text-xs uppercase">Sub-category: </span>
-                        <span class="text-sm uppercase">
-                                  {{ props.show.subCategoryName }} </span>
+                        <span class="text-sm uppercase font-bold">
+                                  {{ props.show.categorySubName }} </span>
                     </div>
                     <div class="mb-4">
                         <h3 class="inline-flex items-center text-3xl font-semibold relative">

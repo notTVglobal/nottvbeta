@@ -27,10 +27,10 @@ return new class extends Migration
     public function down()
     {
         Schema::table('shows', function (Blueprint $table) {
-            $table->dropForeign(['category_id']);
-            $table->dropColumn(['category_id']);
-            $table->dropForeign(['sub_category_id']);
-            $table->dropColumn(['sub_category_id']);
+            $table->dropForeign(['show_category_id']);
+            $table->dropColumn(['show_category_id']);
+            $table->dropForeign(['show_category_sub_id']);
+            $table->dropColumn(['show_category_sub_id']);
         });
     }
 };

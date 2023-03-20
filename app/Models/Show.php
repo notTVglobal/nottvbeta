@@ -33,8 +33,8 @@ class Show extends Model
         'notes',
         'first_release_year',
         'last_release_year',
-        'category_id',
-        'sub_category_id',
+        'show_category_id',
+        'show_category_sub_id',
     ];
 
     public function getRouteKeyName() {
@@ -74,16 +74,16 @@ class Show extends Model
     public function showCategory(): BelongsTo
     {
         return $this->belongsTo(ShowCategory::class)->withDefault([
-            'name' => 'no category',
-            'description' => 'no category description'
+            'name' => 'category',
+            'description' => 'category description'
         ]);
     }
 
-    public function showSubCategory(): BelongsTo
+    public function showCategorySub(): BelongsTo
     {
-        return $this->belongsTo(ShowCategory::class)->withDefault([
-            'name' => 'no sub category',
-            'description' => 'no sub category description'
+        return $this->belongsTo(ShowCategorySub::class)->withDefault([
+            'name' => 'sub category',
+            'description' => 'sub category description'
             ]);
     }
 

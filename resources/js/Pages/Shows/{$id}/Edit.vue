@@ -329,7 +329,7 @@ let props = defineProps({
     team: Object,
     poster: String,
     categories: Object,
-    sub_categories: Object,
+    subCategories: Object,
     showCategoryId: Object,
     showCategoryName: Object,
     showCategoryDescription: Object,

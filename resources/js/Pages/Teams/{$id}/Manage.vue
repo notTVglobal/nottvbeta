@@ -68,7 +68,7 @@
                         <div class="flex justify-end mt-6">
                             <div class="flex flex-col">
                                 <div><span class="text-xs font-semibold mr-2 uppercase">Team Leader: </span>
-                                    {{ teamLeader }}
+                                    <span class="font-bold">{{ teamLeader }}</span>
                                 </div>
                             </div>
                         </div>

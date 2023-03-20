@@ -48,7 +48,7 @@
 
                                     <div>
 
-                                        <label class="block mb-2 uppercase font-bold text-xs text-gray-300"
+                                        <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
                                                for="name"
                                         >
                                             Change Team Logo
@@ -81,7 +81,7 @@
                                         </div>
 
                                         <div class="mb-6">
-                                            <label class="block mb-2 uppercase font-bold text-xs light:text-gray-700 text-gray-300"
+                                            <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
                                                    for="name"
                                             >
                                                 Team Name
@@ -99,7 +99,7 @@
                                         </div>
 
                                         <div class="mb-6">
-                                            <label class="block mb-2 uppercase font-bold text-xs light:text-gray-700 dark:text-gray-300"
+                                            <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
                                                    for="description"
                                             >
                                                 Description
@@ -133,7 +133,7 @@
 <!--                                        </div>-->
 
                                         <div class="mb-6">
-                                            <label class="block mb-2 uppercase font-bold text-xs light:text-gray-700 dark:text-gray-300"
+                                            <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
                                                    for="description"
                                             >
                                                 Maximum # of Team Members

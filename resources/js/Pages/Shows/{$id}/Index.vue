@@ -48,7 +48,9 @@
                         <div class="lg:ml-12 lg:mr-0">
                             <h2 class="font-semibold text-4xl text-center lg:text-left">{{ show.name }}</h2>
                             <div class="text-gray-400 text-center lg:text-left">
-                                <span>Talk Show</span>
+                                <span>{{ show.categoryName }}</span>
+                                &middot;
+                                <span>{{ show.categorySubName }}</span>
                                 &middot;
                                 <span v-if="show.last_release_year" >{{ show.first_release_year }}-{{show.last_release_year}}</span>
                                 <span v-if="!show.last_release_year">{{show.first_release_year}}</span>

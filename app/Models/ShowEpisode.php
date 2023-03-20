@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 class ShowEpisode extends Model
 {
@@ -51,6 +52,16 @@ class ShowEpisode extends Model
     {
         return $this->belongsTo(Image::class);
     }
+
+//    public function showCategory(): HasOneThrough
+//    {
+//        return $this->hasOneThrough(Show::class, ShowCategory::class);
+//    }
+//
+//    public function showCategorySub(): HasOneThrough
+//    {
+//        return $this->hasOneThrough(ShowCategorySub::class, Show::class);
+//    }
 
 
     public function getRouteKeyName() {

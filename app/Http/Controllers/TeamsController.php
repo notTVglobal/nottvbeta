@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ShowCategory;
+use App\Models\ShowCategorySub;
 use App\Models\Team;
 use App\Models\TeamMember;
 use App\Models\User;
@@ -166,6 +168,16 @@ class TeamsController extends Controller
             return $poster;
         }
 
+        function showCategoryName($id) {
+            $showCategoryName = ShowCategory::query()->where('id', $id)->pluck('name');
+            return $showCategoryName->toArray();
+        }
+
+        function showCategorySubName($id) {
+            $showCategorySubName = ShowCategorySub::query()->where('id', $id)->pluck('name');
+            return $showCategorySubName->toArray();
+        }
+
         return Inertia::render('Teams/{$id}/Index', [
             'team' => $team,
             'logo' => getLogo($team),
@@ -182,6 +194,8 @@ class TeamsController extends Controller
                     'poster' => getPoster($show),
                     'slug' => $show->slug,
                     'copyrightYear' => Carbon::parse($show->created_at)->format('Y'),
+                    'categoryName' => showCategoryName($show->show_category_id),
+                    'categorySubName' => showCategorySubName($show->show_category_sub_id),
                 ]),
             'creators' => TeamMember::where('team_id', $team->id)
                 ->join('users', 'team_members.user_id', '=', 'users.id')
@@ -243,6 +257,12 @@ class TeamsController extends Controller
             $teams = TeamMember::query()->where('user_id', $userId)->pluck('team_id');
             return $teams;
 }
+
+        function showCategoryName($id) {
+            $showCategoryName = ShowCategory::query()->where('id', $id)->pluck('name');
+            return $showCategoryName->toArray();
+        }
+
         return Inertia::render('Teams/{$id}/Manage', [
             'team' => $team,
             'logo' => getLogo($team),
@@ -298,6 +318,7 @@ class TeamsController extends Controller
                     'slug' => $show->slug,
                     'notes' => $show->notes,
                     'copyrightYear' => Carbon::parse($show->created_at)->format('Y'),
+                    'categoryName' => showCategoryName($show->show_category_id),
                 ]),
             'filters' => Request::only(['team_id']),
             'creatorFilters' => Request::only(['search']),

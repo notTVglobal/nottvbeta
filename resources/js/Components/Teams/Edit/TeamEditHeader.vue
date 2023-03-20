@@ -20,8 +20,8 @@
     </header>
 
     <div>
-        <div class="mb-6"><span class="text-xs uppercase font-semibold">Team Leader: </span>{{ teamLeaderName }}
-<!--     Insert into span when ready:       -->
+        <div class="mb-6"><span class="text-xs uppercase font-semibold">Team Leader: </span>
+            <span class="font-bold">{{ teamLeaderName }}</span>
         </div>
     </div>
 

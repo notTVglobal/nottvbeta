@@ -56,17 +56,16 @@
                         <div v-for="show in shows.data"
                              :key="show.id"
                              class="show mt-8 max-w-[12rem]">
-                            <div class="relative inline-block">
-                                <Link :href="`/shows/${show.slug}`">
-                                    <img :src="'/storage/images/' + show.poster" alt="show cover" class="h-48 min-w-[8rem] w-28 object-cover hover:opacity-75 transition ease-in-out duration-150">
-                                </Link>
-                            </div>
-                            <Link :href="`/shows/${show.slug}`" class="block text-base font-semibold leading-tight hover:text-gray-400 mt-4">{{ show.name }}</Link>
-                            <div class="text-gray-400 mt-1">Category
-                                <span v-if="show.last_release_year">({{show.last_release_year}})</span>
-                                <span v-if="!show.last_release_year">({{show.first_release_year}})</span>
-                            </div>
-                            <div class="text-gray-400 mt-1">Sub-category</div>
+                            <Link :href="`/shows/${show.slug}`" class="hover:text-blue-400 hover:opacity-75 transition ease-in-out duration-150">
+                                <div class="relative inline-block">
+                                    <img :src="'/storage/images/' + show.poster" alt="show cover" class="h-48 min-w-[8rem] w-28 object-cover">
+                                </div>
+                                <div class="block text-base font-semibold leading-tight mt-4">{{ show.name }}</div>
+                                <div class="text-gray-400 mt-1">{{ show.categoryName }} &middot;
+                                    <span v-if="show.last_release_year">({{show.last_release_year}})</span>
+                                    <span v-if="!show.last_release_year">({{show.first_release_year}})</span></div>
+                                <div class="text-gray-400 mt-1 font-thin">{{ show.categorySubName }}</div>
+                            </Link>
                         </div>
 
                     </div>
@@ -75,34 +74,43 @@
                 </div>
 
                 <div class="flex flex-col lg:flex-row my-10">
-                    <div class="recently-reviewed w-full lg:w-3/4 mr-0 md:mr-16 lg:mr-32">
+
+                    <div class="newest-episodes w-full lg:w-3/4 mr-0 md:mr-16 lg:mr-32">
                         <h2 id="new-episodes" class="text-purple-800 uppercase tracking-wide font-semibold">Newest Episodes</h2>
                         <div class="recently-reviewed-container space-y-12 mt-8">
-
                             <div v-for="episode in episodes.data"
                                  :key="episode.id"
                                  class="show bg-gray-800 rounded-lg shadow-md flex px-6 py-6">
-                                <div class="relative flex-none">
-                                    <Link :href="`/shows/${episode.showSlug}/episode/${episode.slug}`">
-                                        <img :src="'/storage/images/' + episode.poster" alt="show cover" class="h-32 md:h-64 md:min-w-[8rem] w-24 md:w-48 object-cover hover:opacity-75 transition ease-in-out duration-150">
-                                    </Link>
-                                </div>
-                                <div class="ml-12">
-                                    <Link :href="`/shows/${episode.showSlug}/episode/${episode.slug}`" class="block text-lg font-semibold leading-tight hover:text-gray-400 mt-4">
-                                        {{ episode.name }}</Link>
-                                    <div class="text-gray-400 mt-1"><Link :href="`/shows/${episode.showSlug}`">{{ episode.showName }}</Link></div>
-                                    <p class="mt-6 pr-4 text-gray-300 hidden lg:block">
-                                        {{ episode.description}}
-                                    </p>
-                                </div>
+                                <Link :href="`/shows/${episode.showSlug}/episode/${episode.slug}`" class="hover:text-blue-400 hover:opacity-75 transition ease-in-out duration-150">
+                                    <div class="relative flex flex-row">
+                                        <img :src="'/storage/images/' + episode.poster" alt="show cover" class="h-32 md:h-64 md:min-w-[8rem] w-24 md:w-48 object-cover">
+
+                                        <div class="ml-12 block text-lg font-semibold leading-tight mt-4">
+                                            <div class="text-gray-400 font-light text-xs mt-1">Released on {{ episode.release_date }}</div>
+        <!--                                    <Link :href="`/shows/${episode.showSlug}/episode/${episode.slug}`" class="block text-lg font-semibold leading-tight hover:text-gray-400 mt-4">-->
+                                                {{ episode.name }}
+        <!--                                </Link>-->
+
+                                            <div class="text-gray-400 font-light text-sm">{{ episode.showName }}</div>
+
+                                            <p class="mt-4 pr-4 text-gray-300 lg:block">
+                                                {{ episode.description}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="mt-4 w-full justify-end text-yellow-300">{{episode.categoryName}}</div>
+                                    <div class="w-full justify-end text-yellow-500 font-thin">{{episode.categorySubName}}</div>
+                                </Link>
+
+
                             </div>
 
                         </div>
                     </div>
-                    <div class="most-anticipated lg:w-1/4 mt-12 lg:mt-0">
-                        <h2 class="text-purple-800 uppercase tracking-wide font-semibold">Trending Now</h2>
-                        <div class="most-anticipated-container space-y-10 mt-8">
 
+                    <div class="most-anticipated lg:w-1/4 mt-12 lg:mt-0">
+                        <h2 class="text-purple-800 uppercase tracking-wide font-semibold">Most Anticipated</h2>
+                        <div class="most-anticipated-container space-y-10 mt-8">
                             <div v-for="show in showsTrending.data"
                                  :key="show.id"
                                  class="show flex">
@@ -113,7 +121,8 @@
                                 </Link>
                                 <div class="ml-4">
                                     <Link :href="`/shows/${show.slug}`" class="hover:text-gray-300">{{ show.name }}</Link>
-                                    <div class="text-gray-400 text-sm mt-1">{{ show.copyrightYear }}</div>
+                                    <div class="text-gray-400 text-sm mt-1">{{ show.categoryName }}</div>
+                                    <div class="text-gray-400 text-sm font-thin mt-1">{{ show.categorySubName }}</div>
                                 </div>
                             </div>
                         </div>
@@ -131,7 +140,8 @@
                                 </Link>
                                 <div class="ml-4">
                                     <Link :href="`/shows/${show.slug}`" class="hover:text-gray-300">{{ show.name }}</Link>
-                                    <div class="text-gray-400 text-sm mt-1">{{ show.copyrightYear }}</div>
+                                    <div class="text-gray-400 text-sm mt-1">{{ show.categoryName }}</div>
+                                    <div class="text-gray-400 text-sm font-thin mt-1">{{ show.categorySubName }}</div>
                                 </div>
                             </div>
                         </div>

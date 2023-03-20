@@ -78,6 +78,8 @@
                     <div class="flex flex-col">
                         <div><span class="text-xs  font-semibold uppercase">Team: </span><Link :href="`/teams/${team.slug}/manage`" class="text-blue-500 ml-2 uppercase font-bold"> {{ team.name }} </Link></div>
                         <div><span class="text-xs  font-semibold mr-2 uppercase">Show Runner: </span><span class="font-bold"> {{ show.showRunner }} </span></div>
+                        <div><span class="text-xs  font-semibold mr-2 uppercase">Category: </span><span class="font-bold"> {{ show.categoryName }} </span></div>
+                        <div><span class="text-xs  font-semibold mr-2 uppercase">Sub-category: </span><span class="font-bold"> {{ show.subCategoryName }} </span></div>
                     </div>
                 </div>
 
