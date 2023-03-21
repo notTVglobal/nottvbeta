@@ -4,14 +4,30 @@
         <div v-if="videoPlayerStore.ott === 2" class="channels w-full h-full bg-green-800 p-2 overflow-y-scroll scrollbar-hide mb-64">
 
             <h1 class="text-xs font-semibold uppercase mb-3 w-full bg-green-900 text-white p-2">CHANNELS</h1>
-            <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-white cursor-pointer border-b border-0.2 border-green-800" @click="changeChannel('one')">ONE</div>
-            <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-white cursor-pointer border-b border-0.2 border-green-800" @click="changeChannel('pacific')">PACIFIC</div>
-            <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-white cursor-pointer border-b border-0.2 border-green-800" @click="changeChannel('west')">WEST</div>
-            <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-white cursor-pointer border-b border-0.2 border-green-800" @click="changeChannel('central')">CENTRAL</div>
-            <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-white cursor-pointer border-b border-0.2 border-green-800" @click="changeChannel('ontario')">ONTARIO</div>
-            <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-white cursor-pointer border-b border-0.2 border-green-800" @click="changeChannel('east')">EAST</div>
-            <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-white cursor-pointer border-b border-0.2 border-green-800" @click="changeChannel('usa')">U.S.A</div>
-            <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-white cursor-pointer border-b border-0.2 border-green-800" @click="changeChannel('world')">WORLD</div>
+            <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-white cursor-pointer border-b border-0.2 border-green-800"
+                 :class="{ activeChannel:videoPlayerStore.currentChannelName==='one' }"
+                 @click="videoPlayerStore.changeChannel('one')">ONE</div>
+            <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-white cursor-pointer border-b border-0.2 border-green-800"
+                 :class="{ activeChannel:videoPlayerStore.currentChannelName==='pacific' }"
+                 @click="videoPlayerStore.changeChannel('pacific')">PACIFIC</div>
+            <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-white cursor-pointer border-b border-0.2 border-green-800"
+                 :class="{ activeChannel:videoPlayerStore.currentChannelName==='west' }"
+                 @click="videoPlayerStore.changeChannel('west')">WEST</div>
+            <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-white cursor-pointer border-b border-0.2 border-green-800"
+                 :class="{ activeChannel:videoPlayerStore.currentChannelName==='central' }"
+                 @click="videoPlayerStore.changeChannel('central')">CENTRAL</div>
+            <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-white cursor-pointer border-b border-0.2 border-green-800"
+                 :class="{ activeChannel:videoPlayerStore.currentChannelName==='ontario' }"
+                 @click="videoPlayerStore.changeChannel('ontario')">ONTARIO</div>
+            <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-white cursor-pointer border-b border-0.2 border-green-800"
+                 :class="{ activeChannel:videoPlayerStore.currentChannelName==='east' }"
+                 @click="videoPlayerStore.changeChannel('east')">EAST</div>
+            <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-white cursor-pointer border-b border-0.2 border-green-800"
+                 :class="{ activeChannel:videoPlayerStore.currentChannelName==='usa' }"
+                 @click="videoPlayerStore.changeChannel('usa')">U.S.A</div>
+            <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-white cursor-pointer border-b border-0.2 border-green-800"
+                 :class="{ activeChannel:videoPlayerStore.currentChannelName==='world' }"
+                 @click="videoPlayerStore.changeChannel('world')">WORLD</div>
 
             <div class="mt-4">The channels above are our live channels, designed to best serve Canadians living across 5 different timezones.</div>
 
@@ -92,73 +108,15 @@ let props = defineProps ({
     user: Object,
 })
 
-function changeChannel(name) {
-    if (name==='one') {
-        let source = 'mist1pull1'
-        videoPlayerStore.videoName = 'notTV One'
-        streamStore.currentChannel = 'notTV One'
-        playVideo(source)
-    }
-    if (name==='pacific') {
-        let source = 'mist1pull2'
-        videoPlayerStore.videoName = 'notTV Pacific'
-        streamStore.currentChannel = 'notTV Pacific'
-        playVideo(source)
-    }
-    if (name==='west') {
-        let source = 'mist1pull3'
-        videoPlayerStore.videoName = 'notTV West'
-        streamStore.currentChannel = 'notTV West'
-        videoPlayerStore.loadNewSourceFromMist(source)
-    }
-    if (name==='central') {
-        let source = 'mist1pull4'
-        videoPlayerStore.videoName = 'notTV Central'
-        streamStore.currentChannel = 'notTV Central'
-        videoPlayerStore.loadNewSourceFromMist(source)
-    }
-    if (name==='ontario') {
-        let source = 'mist1pull5'
-        videoPlayerStore.videoName = 'notTV Ontario'
-        streamStore.currentChannel = 'notTV Ontario'
-        videoPlayerStore.loadNewSourceFromMist(source)
-    }
-    if (name==='east') {
-        let source = 'mist1pull6'
-        videoPlayerStore.videoName = 'notTV East'
-        streamStore.currentChannel = 'notTV East'
-        videoPlayerStore.loadNewSourceFromMist(source)
-    }
-    if (name==='usa') {
-        let source = 'mist1pull7'
-        videoPlayerStore.videoName = 'notTV U.S.A.'
-        streamStore.currentChannel = 'notTV U.S.A.'
-        videoPlayerStore.loadNewSourceFromMist(source)
-    }
-    if (name==='world') {
-        let source = 'mist1pull8'
-        videoPlayerStore.videoName = 'notTV World'
-        streamStore.currentChannel = 'notTV World'
-        videoPlayerStore.loadNewSourceFromMist(source)
-    }
-    // if (name==='live') {
-    //     videoPlayerStore.videoSource = "https://mist2.not.tv/hls/vmixlive/index.m3u8"
-    //     videoPlayerStore.videoSourceType = "application/x-mpegURL"
-    //     videoPlayerStore.videoName = 'vMix Live'
-    //     streamStore.currentChannel = 'Live'
-    //     playVideo()
-    // }
-    // if (name==='stream') {
-    //     videoPlayerStore.videoSource = "https://mist2.not.tv/hls/labyrinth/index.m3u8"
-    //     videoPlayerStore.videoSourceType = "application/x-mpegURL"
-    //     videoPlayerStore.videoName = 'Labyrinth'
-    //     streamStore.currentChannel = 'Stream'
-    //     videoPlayerStore.loadNewSource()
-    // }
-}
-
 let playVideo = (source) => {
     videoPlayerStore.loadNewSourceFromMist(source)
 }
 
 </script>
+
+<style scoped>
+.activeChannel {
+    background-color: darkgreen;
+}
+
+</style>

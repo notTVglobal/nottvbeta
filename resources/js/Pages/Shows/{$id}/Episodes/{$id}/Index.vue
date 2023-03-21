@@ -8,80 +8,76 @@
 
         <div class="text-white bg-gray-900 rounded py-5 mb-10">
 
-            <div class="flex justify-between -mb-10">
+            <div v-if="props.can.editShow || props.can.manageShow" class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4 py-5 mb-10">
+                <Link
+                    v-if="props.can.editShow"
+                    :href="`/shows/${props.show.slug}/episode/${props.episode.slug}/edit`">
+                    <button
+                        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                    >Edit
+                    </button>
+                </Link>
+                <Link
+                    v-if="props.can.manageShow" :href="`/shows/${props.show.slug}/manage`"><button
+                    class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                >Manage Show</button>
+                </Link>
+            </div>
+
+
+
+
+
+
+
+
 
                 <header class="p-5 mb-6">
-                    <div class="">
-                        <span class="font-semibold text-xs uppercase">Show: </span>
-                        <Link :href="`/shows/${props.show.slug}/`"
-                              class="text-blue-400 hover:text-blue-600 text-sm uppercase font-bold">
-                            {{ props.show.name }}
-                        </Link>
-                    </div>
-                    <div class="">
-                        <span class="font-semibold text-xs uppercase">Category: </span>
-                              <span class="text-sm uppercase font-bold">
-                                  {{ props.show.categoryName }} </span>
-                    </div>
-                    <div class="pb-4">
-                        <span class="font-semibold text-xs uppercase">Sub-category: </span>
-                        <span class="text-sm uppercase font-bold">
-                                  {{ props.show.categorySubName }} </span>
-                    </div>
-                    <div class="mb-4">
-                        <h3 class="inline-flex items-center text-3xl font-semibold relative">
-                            {{ props.episode.name }}
-                        </h3>
-                    </div>
-                    <div class="text-xs space-y-1">
-                        <span class="uppercase">Episode Number: </span>
-                        <span v-if="!episode.episodeNumber">{{ episode.id }}</span>
-                        <span v-if="episode.episodeNumber">{{ episode.episodeNumber }}</span>
-                    </div>
-                    <div>
-                        {{ formatDate(props.episode.created_at) }}
+                    <div class="flex justify-between mb-3 px-5">
+                        <div class="">
+                            <div class="mb-4">
+                                <h3 class="inline-flex items-center text-3xl font-semibold relative">
+                                    {{ props.episode.name }}
+                                </h3>
+                            </div>
+                            <div class="text-xs space-y-1">
+                                <span class="uppercase">Episode Number: </span>
+                                <span v-if="!episode.episodeNumber">{{ episode.id }}</span>
+                                <span v-if="episode.episodeNumber">{{ episode.episodeNumber }}</span>
+                            </div>
+                            <div>
+                                {{ formatDate(props.episode.created_at) }}
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col justify-end">
+                            <div class="">
+                                <span class="text-xs uppercase">Show: </span>
+                                <Link :href="`/shows/${props.show.slug}/`"
+                                      class="text-blue-400 hover:text-blue-600 text-sm uppercase font-semibold">
+                                    {{ props.show.name }}</Link>
+                            </div>
+                            <div class="">
+                                <span class="text-xs uppercase">Category: </span>
+                                <span class="text-sm uppercase font-semibold">{{ props.show.categoryName }}</span>
+                            </div>
+                            <div class="pb-4">
+                                <span class="text-xs uppercase">Sub-category: </span>
+                                <span class="text-sm uppercase font-semibold">{{ props.show.categorySubName }}</span>
+                            </div>
+                            <div v-if="props.can.viewCreator">
+                                <span class="text-xs uppercase">Team:</span><Link :href="`/teams/${props.team.slug}`" class="text-blue-500 ml-2"> <span class="text-sm uppercase font-semibold">{{ props.team.name }}</span></Link>
+                            </div>
+                        </div>
+
                     </div>
                 </header>
 
-                <div class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4 py-5 mb-10">
-                    <Link
-                        v-if="props.can.editShow"
-                        :href="`/shows/${props.show.slug}/episode/${props.episode.slug}/edit`">
-                        <button
-                            class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                        >Edit
-                        </button>
-                    </Link>
-                    <Link
-                        v-if="props.can.manageShow" :href="`/shows/${props.show.slug}/manage`"><button
-                        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                    >Manage Show</button>
-                    </Link>
-                    <Link v-if="props.can.viewCreator" :href="`/dashboard`">
-                        <button
-                            class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                            hidden
-                        >Dashboard
-                        </button>
-                    </Link>
-                </div>
 
 
-            </div>
 
 
-            <div class="flex justify-between mb-3 px-5">
 
-                <div v-if="!props.can.viewCreator">
-                    <h3>
-                        <Link :href="`/teams/${props.team.slug}`" class="text-blue-500 ml-2"> {{
-                                props.team.name
-                            }}
-                        </Link>
-                    </h3>
-                </div>
-
-            </div>
             <div class="flex justify-center w-full bg-black py-0">
 <!--                                <img :src="'/storage/images/' + props.episode.poster" alt="" class="w-1/2 mx-2">-->
 

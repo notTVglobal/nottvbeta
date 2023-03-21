@@ -25,28 +25,28 @@
                     <div class="relative h-[calc(h-100%-16rem)] top-0 pr-5 space-y-2">
 
                             <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-0.2 border-green-800 shadow-md"
-                                 :class="{ active:videoPlayerStore.currentChannelName==='one' }"
+                                 :class="{ activeChannel:videoPlayerStore.currentChannelName==='one' }"
                                  @click="videoPlayerStore.changeChannel('one')">ONE</div>
                             <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-0.2 border-green-800 shadow-md"
-                                 :class="{ active:videoPlayerStore.currentChannelName==='pacific' }"
+                                 :class="{ activeChannel:videoPlayerStore.currentChannelName==='pacific' }"
                                  @click="videoPlayerStore.changeChannel('pacific')">PACIFIC</div>
                             <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-0.2 border-green-800 shadow-md"
-                                 :class="{ active:videoPlayerStore.currentChannelName==='west' }"
+                                 :class="{ activeChannel:videoPlayerStore.currentChannelName==='west' }"
                                  @click="videoPlayerStore.changeChannel('west')">WEST</div>
                             <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-0.2 border-green-800 shadow-md"
-                                 :class="{ active:videoPlayerStore.currentChannelName==='central' }"
+                                 :class="{ activeChannel:videoPlayerStore.currentChannelName==='central' }"
                                  @click="videoPlayerStore.changeChannel('central')">CENTRAL</div>
                             <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-0.2 border-green-800 shadow-md"
-                                 :class="{ active:videoPlayerStore.currentChannelName==='ontario' }"
+                                 :class="{ activeChannel:videoPlayerStore.currentChannelName==='ontario' }"
                                  @click="videoPlayerStore.changeChannel('ontario')">ONTARIO</div>
                             <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-0.2 border-green-800 shadow-md"
-                                 :class="{ active:videoPlayerStore.currentChannelName==='east' }"
+                                 :class="{ activeChannel:videoPlayerStore.currentChannelName==='east' }"
                                  @click="videoPlayerStore.changeChannel('east')">EAST</div>
                             <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-0.2 border-green-800 shadow-md"
-                                 :class="{ active:videoPlayerStore.currentChannelName==='usa' }"
+                                 :class="{ activeChannel:videoPlayerStore.currentChannelName==='usa' }"
                                  @click="videoPlayerStore.changeChannel('usa')">U.S.A</div>
                             <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-0.2 border-green-800 shadow-md"
-                                 :class="{ active:videoPlayerStore.currentChannelName==='world' }"
+                                 :class="{ activeChannel:videoPlayerStore.currentChannelName==='world' }"
                                  @click="videoPlayerStore.changeChannel('world')">WORLD</div>
 
                         <div class="px-4 py-2 bg-green-700 border-b border-0.2 border-green-800 shadow-md space-y-2">
@@ -91,7 +91,7 @@ defineProps({
 </script>
 
 <style scoped>
-.active {
+.activeChannel {
     background-color: darkgreen;
 }
 
