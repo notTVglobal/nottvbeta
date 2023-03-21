@@ -3,7 +3,7 @@
 
     <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
-        <div class="light:bg-white light:text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
+        <div class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 
             <div v-if="props.can.viewCreator" class="flex justify-end flex-wrap-reverse gap-x-2">
 
@@ -41,8 +41,8 @@
 
 
 
-                        <div class="overflow-hidden light:bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg">
-                            <div class="p-6 light:bg-white dark:bg-gray-800 border-b border-gray-200">
+                        <div class="overflow-hidden bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg">
+                            <div class="p-6 bg-white dark:bg-gray-800 border-b border-gray-200">
                                 <!-- Paginator -->
                                 <Pagination :links="teams.links" class="mb-6"/>
                                 <div
@@ -96,7 +96,7 @@
                                                 scope="row"
                                                 class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                                             >
-                                                <Link :href="`/teams/${team.slug}`" class="light:text-blue-800 light:hover:text-blue-600 dark:text-blue-200 dark:hover:text-blue-400">{{ team.name }}</Link>
+                                                <Link :href="`/teams/${team.slug}`" class="text-blue-800 hover:text-blue-600 dark:text-blue-200 dark:hover:text-blue-400">{{ team.name }}</Link>
                                             </th>
                                             <th
                                                 scope="row"

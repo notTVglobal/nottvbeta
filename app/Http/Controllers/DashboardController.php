@@ -11,13 +11,14 @@ use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Response;
 
 class DashboardController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -26,7 +27,7 @@ class DashboardController extends Controller
         return Inertia::render('Dashboard', [
             'shows' => Show::query()
                 ->where('user_id', Auth::user()->id)
-                ->paginate(5, ['*'], 'shows_per_page')
+                ->paginate(5, ['*'], 'shows')
                 ->withQueryString()
                 ->through(fn($show) => [
                     'id' => $show->id,
@@ -38,7 +39,7 @@ class DashboardController extends Controller
                 ]),
 
             'teams' => $user->teams()->where('active', 1)
-                ->paginate(5, ['*'], 'teams_per_page')
+                ->paginate(5, ['*'], 'teams')
                 ->withQueryString()
                 ->through(fn($team) => [
                     'id' => $team->id,

@@ -130,6 +130,13 @@ Route::middleware([
 //        ->middleware('can:create,App\Models\NewsPerson')
         ->name('newsperson.store');
 
+    Route::post('/newsroom/newsperson/destroy', [\App\Http\Controllers\NewsPersonController::class, 'destroy'])
+//        ->middleware('can:create,App\Models\NewsPerson')
+        ->name('newsperson.destroy');
+
+    // News Person Resource
+//    Route::resource('newsPerson', \App\Http\Controllers\NewsPersonController::class);
+
 // News
 ////////
     Route::resource('news', NewsPostController::class);
@@ -246,6 +253,16 @@ Route::middleware([
         ->name('admin.inviteCodes');
 
 
+    // Teams - Part 1 (part 2 is in the Creator Resources below)
+    ///////////
+
+    // Public view .. Teams/{team}/Index
+    Route::resource('teams', TeamsController::class);
+//         Show a team
+    Route::get('/teams/{team}', [TeamsController::class, 'show'])
+        ->middleware('can:view,team')
+        ->name('teams.show');
+
 // Creator Resources
     // Begin middleware authorization
     // allow creators access to the
@@ -256,9 +273,8 @@ Route::middleware([
     ])->group(function () {
 
 
-        // Teams
+        // Teams - Part 2 (part 1 is outside the Creator Resources above)
         ///////////
-        Route::resource('teams', TeamsController::class);
 
         // List all teams
         Route::get('/teams', [TeamsController::class, 'index'])
@@ -282,7 +298,6 @@ Route::middleware([
 
         // Edit team
         Route::get('/teams/{team}/edit', [TeamsController::class, 'edit'])
-//            ->middleware('can:edit,team')
             ->name('teams.edit');
 
         // Team Members
@@ -451,7 +466,7 @@ Route::middleware([
     // because it uses a different resource class for the search function.
     Route::get('/users', [UsersController::class, 'index'])
         ->can('viewAny', 'App\Models\User')
-        ->name('users');
+        ->name('users.index');
 
 //    // Create a user
     Route::get('/users/create', [UsersController::class, 'create'])

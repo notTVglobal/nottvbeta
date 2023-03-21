@@ -14,23 +14,28 @@ class TeamPolicy
 {
     use HandlesAuthorization;
 
-    public function viewTeamManagePage(User $user, Team $team)
+    public function view(User $user)
     {
-        $teamId = $team->id;
-        $userId = $user->id;
-        $checkUser = TeamMember::where('team_id', '=', $teamId)
-                                ->where('user_id', '=', $userId)->pluck('active')->first();
-
-        if($checkUser === 1 || $user->isAdmin){
+        if($user->role_id > 1){
             return true;
         }
-        elseif($checkUser === 0){
+    }
+
+
+    public function viewTeamManagePage(User $user, Team $team)
+    {
+//        $teamId = $team->id;
+//        $userId = $user->id;
+        $userIsActiveTeamMember = TeamMember::where('team_id', '=', $team->id)
+                                ->where('user_id', '=', $user->id)->pluck('active')->first();
+
+        if($userIsActiveTeamMember === 1 || $user->isAdmin){
+            return true;
+        } elseif($userIsActiveTeamMember === 0){
             return Response::deny('You are not active on this team.');
-        }
-        elseif($checkUser === null){
+        } elseif($userIsActiveTeamMember === null){
             return Response::deny('You are not a member of this team.');
-        }
-        return Response::deny('There\'s been a problem. Please let not.TV know.');
+        } return Response::deny('There\'s been a problem. Please let not.tv know.');
     }
 
 //return $user->id === 1
@@ -47,60 +52,52 @@ class TeamPolicy
 
     public function createTeam(User $user)
     {
-        $userId = $user->id;
-        $checkUser = Creator::where('user_id', $userId)->pluck('status_id')->first();
+        $userIsActiveCreator = Creator::where('user_id', $user->id)->pluck('status_id')->first();
 
-        if($checkUser === 1 || $user->isAdmin){
+        if($userIsActiveCreator === 1 || $user->isAdmin){
             return true;
-        }
-        elseif($checkUser === 2){
+        } elseif($userIsActiveCreator === 2){
             return Response::deny('You\'re creator account has been frozen.');
-        }
-        elseif($checkUser === 3){
+        } elseif($userIsActiveCreator === 3){
             return Response::deny('You\'re creator account has been suspended.');
-        }
-        elseif($checkUser === null){
+        } elseif($userIsActiveCreator === null){
             return Response::deny('Please register as a creator to use this feature.');
-        }
-        return Response::deny('There\'s been a problem. Please let not.TV know.');
+        } return Response::deny('There\'s been a problem. Please let not.tv know.');
     }
 
-
-    public function editTeam(User $user, Team $team)
-    {
-        $userId = $user->id;
-        $checkUser = Creator::where('user_id', $userId)->pluck('status_id')->first();
-
-        if($checkUser === 2){
-            return Response::deny('You\'re creator account has been frozen.');
-        }
-        elseif($checkUser === 3){
-            return Response::deny('You\'re creator account has been suspended.');
-        }
-        elseif($checkUser === null){
-            return Response::deny('Please register as a creator to use this feature.');
-        } elseif($team->user_id === $user->id || $user->isAdmin){
-            return true;
-        }
-        return Response::deny('There\'s been a problem. Please let not.TV know.');
-    }
+// Formerly Edit.
+//    public function update(User $user, Team $team)
+//    {
+//        $userId = $user->id;
+//        $checkUser = Creator::where('user_id', $userId)->pluck('status_id')->first();
+//
+//        if($checkUser === 2){
+//            return Response::deny('You\'re creator account has been frozen.');
+//        }
+//        elseif($checkUser === 3){
+//            return Response::deny('You\'re creator account has been suspended.');
+//        }
+//        elseif($checkUser === null){
+//            return Response::deny('Please register as a creator to use this feature.');
+//        } elseif($team->user_id === $user->id || $user->isAdmin){
+//            return true;
+//        }
+//        return Response::deny('There\'s been a problem. Please let not.TV know.');
+//    }
 
     public function createShow(User $user, Team $team) {
 
-        $userId = $user->id;
-        $checkUser = Creator::where('user_id', $userId)->pluck('status_id')->first();
+        $userIsActiveCreator = Creator::where('user_id', $user->id)->pluck('status_id')->first();
 
-        if ($checkUser === 2) {
-            return Response::deny('You\'re creator account has been frozen.');
-        } elseif ($checkUser === 3) {
-            return Response::deny('You\'re creator account has been suspended.');
-        } elseif ($checkUser === null) {
-            return Response::deny('Please register as a creator to use this feature.');
-        } elseif ($team->user_id === $user->id || $user->isAdmin) {
+        if ($team->user_id === $user->id || $user->isAdmin) {
             return true;
-        }
-
-        return Response::deny('There\'s been a problem. Please let not.TV know.');
+        } elseif ($userIsActiveCreator === 2) {
+            return Response::deny('You\'re creator account has been frozen.');
+        } elseif ($userIsActiveCreator === 3) {
+            return Response::deny('You\'re creator account has been suspended.');
+        } elseif ($userIsActiveCreator === null) {
+            return Response::deny('Please register as a creator to use this feature.');
+        } return Response::deny('There\'s been a problem. Please let not.tv know.');
     }
 
     /**
@@ -110,19 +107,22 @@ class TeamPolicy
      * @param  \App\Models\Team  $team
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user)
+    public function update(User $user, Team $team)
     {
-//        if ($team->user_id === $user->id)
-//            return $team->user_id === $user->id
-//                ? Response::allow()
-//                : Response::deny('You do not own this team.');
-//
-//        elseif($user->isAdmin === 1)
-//            return $user->isAdmin === 1
-//                ? Response::allow()
-//                : Response::deny('You do not own this team.');
+        $userId = $user->id;
+        $checkUser = Creator::where('user_id', $userId)->pluck('status_id')->first();
 
-        return $user->role_id === 4;
+        if($team->user_id === $user->id || $user->isAdmin) {
+            return true;
+        } elseif($checkUser === 2){
+            return Response::deny('You\'re creator account has been frozen.');
+        } elseif($checkUser === 3){
+            return Response::deny('You\'re creator account has been suspended.');
+        } elseif($checkUser === null){
+            return Response::deny('Please register as a creator to use this feature.');
+        } elseif ($userId != $team->user_id) {
+            return Response::deny('You\'re not the owner of this team.');
+        } return Response::deny('There\'s been a problem. Please let not.tv know.');
     }
 
     /**

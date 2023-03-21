@@ -9,31 +9,29 @@
 <!--    <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">-->
     <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
-        <div class="light:bg-light dark:bg-gray-800 light:text-black dark:text-gray-50 p-5 mb-10">
+        <div class="bg-white dark:bg-gray-800 text-black dark:text-gray-50 p-5 mb-10">
 
-
-
-            <header class="flex justify-between mb-3 border-b border-gray-500">
-                <div class="container mx-auto flex flex-col lg:flex-row items-center justify-between px-4 py-6">
-
-                    <div
-                        class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
-                        role="alert"
-                        v-if="props.message"
-                    >
+            <div
+                class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
+                role="alert"
+                v-if="props.message"
+            >
                                 <span class="font-medium">
                                     {{props.message}}
                                 </span>
-                    </div>
+            </div>
+
+            <header class="flex justify-between mb-3 border-b border-gray-500">
+                <div class="container mx-auto flex flex-col lg:flex-row items-center justify-between px-4 py-6">
 
                     <div class="flex flex-col lg:flex-row items-center">
                         <h1 class="text-3xl font-semibold">News</h1>
                         <ul class="flex ml-0 lg:ml-16 mt-6 lg:mt-0 space-x-8" >
                             <li>
-                                <Link :href="``" class="text-gray-700 cursor-not-allowed">Categories</Link>
+                                <Link :href="``" class="text-gray-700 cursor-not-allowed hover:text-blue-500">Categories</Link>
                             </li>
                             <li>
-                                <Link :href="``" @click.prevent="scrollToCities" class="hover:text-blue-500">Cities</Link>
+                                <Link :href="``" @click.prevent="scrollToCities" class="text-gray-700 cursor-not-allowed hover:text-blue-500">Cities</Link>
                             </li>
                         </ul>
                     </div>
@@ -55,18 +53,26 @@
                 <div class="mt-4">
                     Events, shows, episodes, movies, news, channel updates, announcements, etc.
                 </div>
+                <div class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4 mb-4">
                 <Link
                     :href="`/newsroom`"><button
                     class="bg-yellow-600 hover:bg-yellow-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
                     v-if="props.can.viewNewsroom"
                 >Newsroom</button>
                 </Link>
+                <Link
+                    :href="`/news/create`"><button
+                    class="bg-green-600 hover:bg-green-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
+                    v-if="props.can.createNewsPost"
+                >Create News</button>
+                </Link>
+                </div>
             </div>
 
 
 
             <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-                <div class="p-6 light:bg-white dark:bg-gray-900 border-b border-gray-200">
+                <div class="p-6 bg-white dark:bg-gray-900 border-b border-gray-200">
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                         <table
                             class="w-full text-sm text-left text-gray-500 dark:text-gray-400"
@@ -77,6 +83,9 @@
                             <tr>
                                 <th scope="col" class="w-full px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                                     News Posts
+                                </th>
+                                <th scope="col" class="text-left px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
+                                    Published on
                                 </th>
                                 <th scope="col" class="text-right px-6 py-2 space-x-2 space-y-2">
 
@@ -98,6 +107,9 @@
                                     <div class="flex flex-row"><img :src="'/storage/images/' + post.image" alt="news cover" class="pr-4 h-6 max-w-[6rem] object-cover ">
                                         {{ post.title }}</div></Link>
                                 </td>
+                                <td>
+                                    {{ post.published_at }}
+                                </td>
                                 <td class="text-right px-6 py-2 space-x-2 space-y-2">
                                     <div class="flex flex-row space-x-2">
                                         <Link :href="`/news/${post.slug}/edit`"><button
@@ -105,13 +117,13 @@
                                         v-if="post.can.editNewsPost"
                                     >Edit</button>
                                     </Link>
-                                    <Button
+                                    <button
                                         class="px-4 py-2 text-white bg-red-600 hover:bg-red-500 rounded-lg"
                                         @click="destroy(post.id)"
                                         v-if="post.can.deleteNewsPost"
                                     >
                                         Delete
-                                    </Button>
+                                    </button>
                                     </div>
                                 </td>
                             </tr>

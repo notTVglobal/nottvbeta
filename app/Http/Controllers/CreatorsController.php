@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Http\Request as HttpRequest;
 use Inertia\Inertia;
 use App\Models\Creator;
+use Inertia\Response;
 use function MongoDB\BSON\toJSON;
 
 class CreatorsController extends Controller
@@ -13,7 +16,7 @@ class CreatorsController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -23,7 +26,7 @@ class CreatorsController extends Controller
                 ->when(Request::input('search'), function ($query, $search) {
                     $query->where('name', 'like', "%{$search}%");
                 })
-                ->paginate(10)
+                ->paginate(10, ['*'], 'creators')
                 ->withQueryString()
                 ->through(fn($creator) => [
                     'id' => $creator->id,
@@ -36,7 +39,7 @@ class CreatorsController extends Controller
     /**
      * Display API listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Builder[]|Collection
      */
     public function getCreators(HttpRequest $request)
     {
@@ -70,7 +73,7 @@ class CreatorsController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -80,8 +83,8 @@ class CreatorsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param HttpRequest $request
+     * @return void
      */
     public function store(Request $request)
     {
@@ -92,7 +95,7 @@ class CreatorsController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show($id)
     {
@@ -107,7 +110,7 @@ class CreatorsController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return void
      */
     public function edit($id)
     {
@@ -117,9 +120,9 @@ class CreatorsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param int $id
+     * @return void
      */
     public function update(Request $request, $id)
     {
@@ -130,7 +133,7 @@ class CreatorsController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return void
      */
     public function destroy($id)
     {

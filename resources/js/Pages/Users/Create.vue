@@ -3,15 +3,16 @@
 
     <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
-        <div class="bg-white text-black p-5 mb-10">
+        <div class="bg-white dark:bg-gray-800 text-black dark:text-gray-50 p-5 mb-10">
 
             <div class="flex justify-between mt-3 mb-6">
                 <div class="text-3xl">Create New User</div>
                 <div>
-                    <Link :href="`/users`"><button
+                    <button
+                        @click="back"
                         class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
-                    >Cancel</button>
-                    </Link>
+                    >Cancel
+                    </button>
                 </div>
             </div>
 
@@ -26,7 +27,7 @@
 
         <form @submit.prevent="submit" class="max-w-md mx-auto mt-8">
             <div class="mb-6">
-                <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
+                <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-50"
                        for="name"
                 >
                     User Role
@@ -46,7 +47,7 @@
                 <div v-if="form.errors.role_id" v-text="form.errors.role_id" class="text-xs text-red-600 mt-1"></div>
             </div>
             <div class="mb-6">
-                <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
+                <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-50"
                        for="name"
                 >
                     Name
@@ -62,7 +63,7 @@
                 <div v-if="form.errors.name" v-text="form.errors.name" class="text-xs text-red-600 mt-1"></div>
             </div>
             <div class="mb-6">
-                <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
+                <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-50"
                        for="email"
                 >
                     Email
@@ -78,7 +79,7 @@
                 <div v-if="form.errors.email" v-text="form.errors.email" class="text-xs text-red-600 mt-1"></div>
             </div>
             <div class="mb-6 hidden">
-                <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
+                <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-50"
                        for="password"
                 >
                     Password
@@ -94,7 +95,7 @@
                 <div v-if="form.errors.password" v-text="form.errors.password" class="text-xs text-red-600 mt-1"></div>
             </div>
             <div class="mb-6">
-                <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
+                <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-50"
                        for="email"
                 >
                     Phone Number
@@ -110,7 +111,7 @@
             </div>
 
             <div class="mb-6">
-                <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
+                <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-50"
                        for="email"
                 >
                     Address
@@ -133,7 +134,7 @@
                 <div v-if="form.errors.address2" v-text="form.errors.address2" class="text-xs text-red-600 mt-1"></div>
             </div>
             <div class="mb-6">
-                <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
+                <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-50"
                        for="email"
                 >
                     City
@@ -148,7 +149,7 @@
                 <div v-if="form.errors.city" v-text="form.errors.city" class="text-xs text-red-600 mt-1"></div>
             </div>
             <div class="mb-6">
-                <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
+                <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-50"
                        for="email"
                 >
                     Province
@@ -163,7 +164,7 @@
                 <div v-if="form.errors.province" v-text="form.errors.province" class="text-xs text-red-600 mt-1"></div>
             </div>
             <div class="mb-6">
-                <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
+                <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-50"
                        for="email"
                 >
                     Country
@@ -179,7 +180,7 @@
             </div>
 
             <div class="mb-6">
-                <label class="block mb-2 uppercase font-bold text-xs text-gray-700"
+                <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-50"
                        for="email"
                 >
                     Postal Code
@@ -196,7 +197,7 @@
             <div class="flex justify-between mb-6">
                 <button
                     type="submit"
-                    class="bg-blue-400 text-white rounded py-2 px-4 hover:bg-blue-500"
+                    class="bg-blue-600 text-white rounded py-2 px-4 hover:bg-blue-400"
                     :disabled="form.processing"
                 >
                     Submit
@@ -256,5 +257,9 @@ function reset() {
 const submit = () => {
     form.post(route("users.store"));
 };
+
+function back() {
+    window.history.back()
+}
 
 </script>

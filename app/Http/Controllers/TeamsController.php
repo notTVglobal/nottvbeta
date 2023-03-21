@@ -27,7 +27,8 @@ class TeamsController extends Controller
         //tec21: this authorization works... but I'm having trouble
         // with the other ones below. So they are in web.php
         $this->middleware('can:viewTeamManagePage,team')->only(['manage']);
-        $this->middleware('can:editTeam,team')->only(['edit', 'update']);
+        $this->middleware('can:update,team')->only(['edit']);
+        $this->middleware('can:view,team')->only(['show']);
 
 
 // If you are having troubles with the policies saying
@@ -183,7 +184,7 @@ class TeamsController extends Controller
             'logo' => getLogo($team),
             'shows' => Show::where('team_id', $team->id)
                 ->latest()
-                ->paginate(5)
+                ->paginate(5, ['*'], 'shows')
                 ->withQueryString()
                 ->through(fn($show) => [
                     'id' => $show->id,
@@ -201,8 +202,8 @@ class TeamsController extends Controller
                 ->join('users', 'team_members.user_id', '=', 'users.id')
                 ->select('users.*', 'team_members.user_id')
                 ->latest()
-                ->paginate(3)
-                ->withQueryString()
+                ->paginate(5, ['*'], 'creator')
+//                ->withQueryString()
                 ->through(fn($user) => [
                     'id' => $user->id,
                     'name' => $user->name,
@@ -210,9 +211,9 @@ class TeamsController extends Controller
                 ]),
             'filters' => Request::only(['team_id']),
             'can' => [
-                'viewTeam' => auth()->user()->can('viewTeamManagePage', $team),
-                'editTeam' => auth()->user()->can('editTeam', $team),
-                'viewCreator' => Auth::user()->can('viewCreator', User::class),
+                'viewTeam' => auth()->user()->can('view', $team),
+                'manageTeam' => auth()->user()->can('viewTeamManagePage', $team),
+                'editTeam' => auth()->user()->can('update', $team),
             ]
         ]);
     }
@@ -323,7 +324,7 @@ class TeamsController extends Controller
             'filters' => Request::only(['team_id']),
             'creatorFilters' => Request::only(['search']),
             'can' => [
-                'editTeam' => auth()->user()->can('editTeam', $team),
+                'editTeam' => auth()->user()->can('update', $team),
         ]
         ]);
     }
@@ -377,7 +378,7 @@ class TeamsController extends Controller
             'can' => [
                 'viewTeams' => Auth::user()->can('view', Team::class),
                 'editTeam' => Auth::user()->can('edit', Team::class),
-                'viewCreator' => Auth::user()->can('viewCreator', User::class),
+//                'viewCreator' => Auth::user()->can('viewCreator', User::class),
             ]
         ]);
     }

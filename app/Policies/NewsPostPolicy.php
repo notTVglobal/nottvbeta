@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Models\NewsPost;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Auth\Access\Response;
 
 class NewsPostPolicy
 {
@@ -14,7 +15,7 @@ class NewsPostPolicy
      * Determine whether the user can view any models.
      *
      * @param  \App\Models\User  $user
-     * @return \Illuminate\Auth\Access\Response|bool
+     * @return Response|bool
      */
     public function viewAny(User $user)
     {
@@ -26,7 +27,7 @@ class NewsPostPolicy
      *
      * @param  \App\Models\User  $user
      * @param  \App\Models\NewsPost  $newsPost
-     * @return \Illuminate\Auth\Access\Response|bool
+     * @return Response|bool
      */
     public function view(User $user)
     {
@@ -37,11 +38,13 @@ class NewsPostPolicy
      * Determine whether the user can create models.
      *
      * @param  \App\Models\User  $user
-     * @return \Illuminate\Auth\Access\Response|bool
+     * @return bool
      */
     public function create(User $user)
     {
-        return $user->newsPerson;
+      return $user->newsPerson  || $user->isAdmin
+          ? Response::allow()
+          : Response::deny('You are not a member of the news team.');
     }
 
     /**
@@ -49,23 +52,21 @@ class NewsPostPolicy
      *
      * @param  \App\Models\User  $user
      * @param  \App\Models\NewsPost  $newsPost
-     * @return \Illuminate\Auth\Access\Response|bool
+     * @return Response|bool
      */
 
-    public function edit(User $user)
+    public function update(User $user)
     {
-        return $user->newsPerson;
-    }
-
-
-    public function update(User $user, NewsPost $newsPost)
-    {
-        return $user->newsPerson;
+        return $user->newsPerson || $user->isAdmin
+            ? Response::allow()
+            : Response::deny('You are not allowed to edit.');
     }
 
     public function publish(User $user)
     {
-        return $user->isAdmin;
+        return $user->isAdmin
+            ? Response::allow()
+            : Response::deny('You are not allowed to publish.');
     }
 
 //    /**
@@ -89,7 +90,7 @@ class NewsPostPolicy
      *
      * @param  \App\Models\User  $user
      * @param  \App\Models\NewsPost  $newsPost
-     * @return \Illuminate\Auth\Access\Response|bool
+     * @return Response|bool
      */
     public function restore(User $user, NewsPost $newsPost)
     {
@@ -98,6 +99,7 @@ class NewsPostPolicy
 
     public function delete(User $user)
     {
+//        return false;
         return $user->isAdmin;
     }
 
@@ -106,7 +108,7 @@ class NewsPostPolicy
      *
      * @param  \App\Models\User  $user
      * @param  \App\Models\NewsPost  $newsPost
-     * @return \Illuminate\Auth\Access\Response|bool
+     * @return Response|bool
      */
     public function forceDelete(User $user, NewsPost $newsPost)
     {

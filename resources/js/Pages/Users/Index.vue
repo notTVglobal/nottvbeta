@@ -3,7 +3,17 @@
 
     <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
-        <div class="light:bg-white dark:bg-gray-800 light:text-black dark:text-gray-50 p-5 mb-10">
+        <div class="bg-white dark:bg-gray-800 text-black dark:text-gray-50 p-5 mb-10">
+
+            <div
+                class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
+                role="alert"
+                v-if="props.message"
+            >
+                    <span class="font-medium">
+                        {{props.message}}
+                    </span>
+            </div>
 
             <div class="flex justify-between pt-4">
                 <h1 class="text-3xl font-semibold pb-3">Users</h1>
@@ -26,19 +36,11 @@
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                     <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                            <div
-                                class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
-                                role="alert"
-                                v-if="props.message"
-                            >
-                    <span class="font-medium">
-                        {{props.message}}
-                    </span>
-                            </div>
+
                             {{ props.users.teams }}
 
-                            <div class="overflow-hidden light:bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg">
-                                <div class="p-6 light:bg-white dark:bg-gray-800 border-b border-gray-200">
+                            <div class="overflow-hidden bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg">
+                                <div class="p-6 bg-white dark:bg-gray-800 border-b border-gray-200">
                                     <div
                                         class="relative overflow-x-auto shadow-md sm:rounded-lg"
                                     >
@@ -88,7 +90,9 @@
                                                     scope="row"
                                                     class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                                                 >
-                                                    <Link :href="`/users/${user.id}`" class="text-blue-200 hover:text-blue-400">{{ user.name }}</Link>
+                                                    <Link :href="`/users/${user.id}`" class="text-blue-800 dark:text-blue-200 hover:text-blue-600 dark:hover:text-blue-400">{{ user.name }}</Link>
+                                                    <span v-if="user.isAdmin" class="ml-2 bg-red-800 text-white text-xs font-bold rounded-lg py-1 px-2">Admin</span>
+                                                    <span v-if="user.isNewsPerson" class="ml-2 bg-orange-600 text-white text-xs font-bold rounded-lg py-1 px-2">News Team</span>
                                                 </th>
                                                 <th
                                                     scope="row"
@@ -97,8 +101,7 @@
                                                     {{ user.email }}
                                                 </th>
                                                 <td class="px-6 py-4">
-                                                    <span v-if="user.isAdmin === 0">{{ user.role }}</span>
-                                                    <span v-if="user.isAdmin === 1">Administrator</span>
+                                                    <span>{{ user.role }}</span>
                                                 </td>
                                                 <td class="px-6 py-4">
                                                     <Link :href="`/users/${user.id}/edit`"><button

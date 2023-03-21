@@ -1,24 +1,17 @@
 <template>
     <div>
         <!-- Paginator -->
-        <Pagination :links="shows.links" :id="showLinks" class="mb-6"/>
+        <Pagination :links="shows.links" class="mb-6"/>
 
         <div class="flex flex-row flex-wrap pb-12">
             <div
-                v-for="show in shows.data"
+                v-for="(show, key) in shows.data"
                 :key="show.id"
                 class="bg-white dark:bg-gray-800 dark:border-gray-700"
             >
                 <Link :href="`/shows/${show.slug}`" class="text-gray-50 dark:hover:text-blue-50">
-                <div
-                    class=" min-w-[8rem] max-w-[14rem] px-6 py-4 font-medium break-words grow-0 w-full text-center light:text-blue-800 light:hover:text-blue-600 dark:text-gray-50 dark:hover:text-blue-500"
-                >
-                    <!--                                                    <img :src="`/storage/images/${show.poster}`" class="rounded-full h-20 w-20 object-cover">-->
-
+                <div class=" min-w-[8rem] max-w-[14rem] px-6 py-4 font-medium break-words grow-0 w-full text-center text-blue-800 hover:text-blue-600 dark:text-gray-50 dark:hover:text-blue-500">
                         <img :src="'/storage/images/' + show.poster" class="h-64 min-w-[8rem] mb-4 object-cover hover:opacity-75 transition ease-in-out duration-150">
-<!--                </div>-->
-<!--                <div-->
-<!--                    class="px-6 py-4 font-medium text-gray-900 dark:text-white break-words grow-0 w-full text-center"-->
                 {{ show.name }}
 <!--                    <Link :href="`/shows/${show.slug}`" class="light:text-blue-800 light:hover:text-blue-600 dark:text-gray-50 dark:hover:text-blue-500"></Link>-->
 

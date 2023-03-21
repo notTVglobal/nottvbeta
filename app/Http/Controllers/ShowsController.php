@@ -50,7 +50,7 @@ class ShowsController extends Controller
                     $query->where('name', 'like', "%{$search}%");
                 })
                 ->latest()
-                ->paginate(8)
+                ->paginate(8, ['*'], 'shows')
                 ->withQueryString()
                 ->through(fn($show) => [
                     'id' => $show->id,
@@ -78,7 +78,7 @@ class ShowsController extends Controller
                 ]),
             'episodes' => ShowEpisode::with('show', 'image')
                 ->latest()
-                ->paginate(3)
+                ->paginate(5, ['*'], 'episodes')
                 ->through(fn($episode) => [
                     'id' => $episode->id,
                     'name' => $episode->name,
@@ -93,7 +93,7 @@ class ShowsController extends Controller
                     'release_date' => $episode->release_dateTime,
                 ]),
             'showsTrending' => Show::with('image')
-                ->paginate(3)
+                ->paginate(3, ['*'], 'shows')
                 ->through(fn($show) => [
                     'id' => $show->id,
                     'name' => $show->name,
@@ -106,7 +106,7 @@ class ShowsController extends Controller
                 ]),
             'showsComingSoon' => Show::with('image')
                 ->latest()
-                ->paginate(3)
+                ->paginate(3, ['*'], 'shows')
                 ->through(fn($show) => [
                     'id' => $show->id,
                     'name' => $show->name,
@@ -138,7 +138,7 @@ class ShowsController extends Controller
              return Inertia::render('Shows/Create', [
                  'teams' => Team::query()
                      ->where('user_id', Auth::user()->id)
-                     ->paginate(10)
+                     ->paginate(5, ['*'], 'teams')
                      ->withQueryString()
                      ->through(fn($team) => [
                          'id' => $team->id,
@@ -256,7 +256,7 @@ class ShowsController extends Controller
                     $query->where('name', 'like', "%{$search}%");
                 })
                 ->latest()
-                ->paginate(5)
+                ->paginate(5, ['*'], 'episodes')
                 ->withQueryString()
                 ->through(fn($showEpisode) => [
                     'id' => $showEpisode->id,
@@ -269,7 +269,7 @@ class ShowsController extends Controller
                 ->join('users', 'team_members.user_id', '=', 'users.id')
                 ->select('users.*', 'team_members.user_id')
                 ->latest()
-                ->paginate(10)
+                ->paginate(10, ['*'], 'creators')
                 ->withQueryString()
                 ->through(fn($user) => [
                     'id' => $user->id,
@@ -322,7 +322,7 @@ class ShowsController extends Controller
                     $query->where('name', 'like', "%{$search}%");
                 })
                 ->latest()
-                ->paginate(5)
+                ->paginate(5, ['*'], 'shows')
                 ->withQueryString()
                 ->through(fn($showEpisode) => [
                     'id' => $showEpisode->id,

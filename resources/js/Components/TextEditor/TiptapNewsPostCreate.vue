@@ -58,20 +58,13 @@ const editor = new Editor({
     content: newsStore.newsArticleContentTiptop,
     extensions: [
         StarterKit,
+        ListItem,
     ],
-
-
-
+    // triggered on every change
     onUpdate: ({ editor }) => {
         newsStore.newsArticleContentTiptop = editor.getHTML()
         // const value = editor.getJSON()
-
-        // Auto-save -> triggered on every change,
-        // currently disabled. Needs to be throttled.
-        //
-        // axios.post('/news/save', { id: newsStore.newsArticleIdTiptop, body:newsStore.newsArticleContentTiptop, title:newsStore.newsArticleTitleTiptop })
     },
-
     autofocus: true,
     editorProps: {
         attributes: {

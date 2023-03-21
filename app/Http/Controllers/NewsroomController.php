@@ -21,7 +21,7 @@ class NewsroomController extends Controller
                     $query->where('title', 'like', "%{$search}%");
                 })
                 ->latest()
-                ->paginate(10)
+                ->paginate(10, ['*'], 'news')
                 ->withQueryString()
                 ->through(fn($newsPost) => [
                     'id' => $newsPost->id,
@@ -31,13 +31,14 @@ class NewsroomController extends Controller
                     'created_at' => $newsPost->created_at,
                     'published_at' => $newsPost->published_at,
                     'can' => [
-                        'editNewsPost' => Auth::user()->can('edit', NewsPost::class),
+                        'editNewsPost' => Auth::user()->can('update', NewsPost::class),
                         'deleteNewsPost' => Auth::user()->can('delete', NewsPost::class),
                     ]
                 ]),
             'filters' => Request::only(['search']),
             'can' => [
                 'createNewsPost' => Auth::user()->can('create', NewsPost::class),
+                'editNewsPost' => Auth::user()->can('update', NewsPost::class),
                 'publishNewsPost' => Auth::user()->can('publish', NewsPost::class)
             ]
         ]);

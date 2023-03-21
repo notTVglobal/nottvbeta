@@ -40,7 +40,7 @@ class MovieController extends Controller
                     $query->where('name', 'like', "%{$search}%");
                 })
                 ->latest()
-                ->paginate(10)
+                ->paginate(10, ['*'], 'movies')
                 ->withQueryString()
                 ->through(fn($movie) => [
                     'id' => $movie->id,

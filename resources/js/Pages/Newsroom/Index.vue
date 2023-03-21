@@ -4,20 +4,22 @@
 
     <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
-        <div class="light:bg-white light:text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
+        <div class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
+
+            <div
+                class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
+                role="alert"
+                v-if="props.message"
+            >
+                                                <span class="font-medium">
+                                                    {{props.message}}
+                                                </span>
+            </div>
 
             <header class="flex justify-between mb-3 border-b border-gray-800">
                 <div class="container mx-auto flex flex-col lg:flex-row items-center justify-between px-4 py-6">
 
-                    <div
-                        class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
-                        role="alert"
-                        v-if="props.message"
-                    >
-                                                <span class="font-medium">
-                                                    {{props.message}}
-                                                </span>
-                    </div>
+
 
                     <div class="flex flex-col lg:flex-row items-center">
                         <h1 class="text-3xl font-semibold text-center lg:text-left">Welcome to the Newsroom</h1>
@@ -44,8 +46,8 @@
 
             </header>
 
-            <div class="pl-4 w-3/5">
-                This page is only visible to members of the newsroom. Create news articles, share resources, edit stories, and when they are ready publish them!
+            <div class="px-4 w-full">
+                This page is only visible to members of the newsroom. Create news articles, share resources, edit stories, and when they are ready the News Producer(s) can publish them!
             </div>
 
 
@@ -89,6 +91,9 @@
                                 <div scope="col" class="hidden lg:table-cell px-6 py-3">
                                     Published On
                                 </div>
+                                <div scope="col" class="hidden lg:table-cell px-6 py-3">
+
+                                </div>
                             </div>
                             </div>
                             <div class="table-row-group">
@@ -107,24 +112,39 @@
                                     scope="row"
                                     class="table-cell px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap align-middle"
                                 >
-                                    <Link :href="`/news/${news.slug}`" class="text-lg font-semibold light:text-blue-800 light:hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-200">{{ news.title }}</Link>
+                                    <Link :href="`/news/${news.slug}`" class="text-lg font-semibold text-blue-800 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-200">{{ news.title }}</Link>
                                 </div>
                                 <div
                                     scope="row"
                                     class="hidden xl:table-cell px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap align-middle"
                                 >
-                                    {{ formatDate(news.created_at) }}
+                                    <span :class="{'text-gray-500':news.published_at, 'italic':news.published_at}">{{ formatDate(news.created_at) }}</span>
                                 </div>
                                 <div class="hidden 2xl:table-cell px-6 py-4">
                                     <span >{{ news.status }}</span>
                                 </div>
-                                <div class="hidden lg:table-cell px-6 py-4 align-middle">
+                                <div class="hidden lg:table-cell px-6 py-4 align-middle space-x-2">
                                     <button
                                         class="bg-green-600 hover:bg-green-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
                                         v-if="props.can.publishNewsPost && !news.published_at"
                                         @click="publish(news.id)"
                                     >Publish</button>
-                                    <span v-if="news.published_at">{{ formatDate(news.published_at) }}</span>
+                                    <span v-if="!props.can.publishNewsPost && !news.published_at" class="mr-6 text-gray-500 italic"> not yet published</span>
+                                    <span v-if="news.published_at" class="mr-6 text-gray-800 dark:text-white font-semibold">{{ formatDate(news.published_at) }}</span>
+                                </div>
+                                <div class="hidden lg:table-cell px-6 py-4 align-middle space-x-2">
+                                    <Link :href="`/news/${news.slug}/edit`"><button
+                                        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                                        v-if="news.can.editNewsPost"
+                                    >Edit</button>
+                                    </Link>
+                                    <button
+                                        class="px-4 py-2 text-white bg-red-600 hover:bg-red-500 rounded-lg"
+                                        @click="destroy(news.id)"
+                                        v-if="news.can.deleteNewsPost"
+                                    >
+                                        Delete
+                                    </button>
                                 </div>
 
                             </div>
@@ -201,7 +221,7 @@ let form = useForm({
 
 
 watch(search, throttle(function (value) {
-    Inertia.get('/news', { search: value }, {
+    Inertia.get('/newsroom', { search: value }, {
         preserveState: true,
         replace: true
     });
@@ -213,6 +233,13 @@ function publish(id) {
     if (confirm("Are you sure you want to Publish")) {
         // form.put(route('news.publish', id));
         Inertia.put(route('newsroom.publish', { id: id }));
+
+    }
+}
+
+function destroy(id) {
+    if (confirm("Are you sure you want to Delete")) {
+        form.delete(route('news.destroy', id));
 
     }
 }

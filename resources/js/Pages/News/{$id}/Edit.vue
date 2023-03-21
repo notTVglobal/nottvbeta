@@ -4,17 +4,26 @@
 
     <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
-        <div class="light:bg-white light:text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
+        <div class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
             <div class="flex flex-row justify-between">
                 <h2 class="text-xl font-semibold leading-tight">
                     Edit News Post
                 </h2>
-                <Link
-                    :href="`/newsroom`"><button
-                    class="bg-yellow-600 hover:bg-yellow-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
-                    v-if="props.can.viewNewsroom"
-                >Newsroom</button>
-                </Link>
+                <div class="flex justify-end space-x-2">
+                    <Link
+                        :href="`/newsroom`"><button
+                        class="px-4 py-2 text-white bg-yellow-600 hover:bg-yellow-500 rounded-lg disabled:bg-gray-400"
+                        v-if="props.can.viewNewsroom"
+                    >Newsroom</button>
+                    </Link>
+                    <div>
+                        <button
+                            @click="back"
+                            class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
+                        >Cancel
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <div class="p-6 border-b border-gray-200">
@@ -22,7 +31,7 @@
                     <div class="mb-6">
                         <label
                             for="Title"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                            class="block mb-2 text-sm font-bold text-gray-900 dark:text-gray-300"
                         >Title</label
                         >
                         <input
@@ -42,7 +51,7 @@
                     <div class="mb-6">
                         <label
                             for="slug"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                            class="block mb-2 text-sm font-bold text-gray-900 dark:text-gray-300"
                         >Content</label>
                         <tiptap v-if="videoPlayerStore.currentPage === 'newsEdit'" name="content" />
 <!--                        <tabbable-textarea-->
@@ -92,9 +101,8 @@ import {useUserStore} from "@/Stores/UserStore";
 import {useNewsStore} from "@/Stores/NewsStore"
 import { useForm } from '@inertiajs/inertia-vue3'
 import {onBeforeMount, onMounted} from "vue";
-import TabbableTextarea from "@/Components/TabbableTextarea.vue";
+// import TabbableTextarea from "@/Components/TabbableTextarea.vue";
 import Tiptap from "@/Components/TextEditor/TiptapNewsPostEdit.vue";
-import {Inertia} from "@inertiajs/inertia";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -123,18 +131,28 @@ newsStore.newsArticleIdTiptop = props.news.id;
 newsStore.newsArticleTitleTiptop = props.news.title;
 newsStore.newsArticleContentTiptop = props.news.content;
 
+// note: as of March 2023 the form submission cannot use "content" as
+// a form field name. It conflicts with the HTMLRequest content item.
+// Our news post content is called content in the database, but it is
+// now called body in our form submission back to Laravel.
+//
 const form = useForm({
     id: props.news.id,
     title: props.news.title,
-    content: newsStore.newsArticleContentTiptop,
+    body: newsStore.newsArticleContentTiptop,
 });
 
-form.content = newsStore.newsArticleContentTiptop;
+form.body = newsStore.newsArticleContentTiptop;
 
 const submit = () => {
-    // form.put(route("news.update", form));
+    form.body = newsStore.newsArticleContentTiptop;
     form.put(route("news.update", props.news.id));
 };
+
+function back() {
+    newsStore.newsArticleContentTiptop = '';
+    window.history.back()
+}
 
 
 </script>

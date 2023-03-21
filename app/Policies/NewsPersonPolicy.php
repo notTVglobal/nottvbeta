@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Models\NewsPerson;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Auth\Access\Response;
 use Illuminate\Support\Facades\Auth;
 
 class NewsPersonPolicy
@@ -65,9 +66,11 @@ class NewsPersonPolicy
      * @param  \App\Models\NewsPerson  $newsPerson
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, NewsPerson $newsPerson)
+    public function delete(User $user)
     {
-        //
+        return $user->isAdmin
+            ? Response::allow()
+            : Response::deny('You are not allowed to remove someone from the news team.');
     }
 
     /**

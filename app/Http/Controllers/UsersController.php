@@ -41,7 +41,7 @@ class UsersController extends Controller
                     $query->where('name', 'like', "%{$search}%");
                 })
                 ->latest()
-                ->paginate(10)
+                ->paginate(10, ['*'], 'users')
                 ->withQueryString()
                 ->through(fn($user) => [
                     'id' => $user->id,
@@ -50,6 +50,7 @@ class UsersController extends Controller
                     'profile_photo_path' => $user->profile_photo_path,
                     'role' => role($user->role_id),
                     'isAdmin' => $user->isAdmin,
+                    'isNewsPerson' => $user->newsPerson,
                     'can' => [
                         'edit' => Auth::user()->can('edit', $user)
                     ],
@@ -77,7 +78,8 @@ class UsersController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param HttpRequest $request
+     * @param User $user
+     * @param Request $request
      * @return Application|RedirectResponse|Redirector
      */
     public function store(User $user, Request $request)
@@ -137,7 +139,7 @@ class UsersController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param User $user
      * @return Response
      */
     public function show(User $user): Response {
@@ -160,21 +162,27 @@ class UsersController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param User $user
+     * @return Response
      */
     public function edit(User $user)
     {
+        $isNewsPerson = null;
+        if ($user->newsPerson != null) {
+            $isNewsPerson = true;
+        } else $newsPerson = false;
+
         return Inertia::render('Users/{$id}/Edit', [
             'userEdit' => $user,
+            'isNewsPerson' => $isNewsPerson,
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param HttpRequest $request
-     * @param  int  $id
+     * @param Request $request
+     * @param User $user
      * @return Response
      */
 

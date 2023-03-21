@@ -3,59 +3,56 @@
     <Head title="News Post" />
 
     <div id="topDiv"></div>
-    <div class="place-self-center flex flex-col ">
-        <div class="light:bg-white light:text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
+    <div class="place-self-center flex flex-col">
+        <div class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-1 w-full">
 
-            <header class="mb-5 border-b border-gray-800">
-                <div class="container mx-auto flex flex-col lg:flex-row items-center justify-between px-4 py-6">
-
-                    <div
-                        class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
-                        role="alert"
-                        v-if="props.message"
-                    >
+            <div
+                class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
+                role="alert"
+                v-if="props.message"
+            >
                                 <span class="font-medium">
                                     {{props.message}}
                                 </span>
-                    </div>
+            </div>
+
+            <header class="mb-5 border-b border-gray-800">
+                <div class="container mx-auto flex flex-col lg:flex-row justify-between items-center px-4 py-6">
 
 
-                    <div class="flex flex-col lg:flex-row justify-between items-center w-full">
-                        <div class="">
-                            <h1 class="text-xl font-semibold"><Link :href="`/news`" class="hover:text-blue-800">&lt; Back</Link></h1>
-                            <ul class="flex ml-0 lg:ml-16 mt-6 lg:mt-0 space-x-8" >
-                                <li>
-                                    <Link :href="``" class="text-gray-700 cursor-not-allowed hidden">Categories</Link>
-                                </li>
-                                <li>
-                                    <Link :href="`/news#cities`" class="hover:text-blue-800 hidden">Cities</Link>
-                                </li>
-                            </ul>
+                        <div class="text-center lg:text-left mb-4 lg:ml-6">
+                            <h2 class="text-3xl font-semibold leading-tight">
+                                {{ news.title }}
+                            </h2>
                         </div>
 
 
-                            <div class="space-x-2 space-y-2 justify-end">
-                                <Link
-                                    :href="`/newsroom`"><button
-                                    class="bg-yellow-600 hover:bg-yellow-500 text-white mt-1 px-4 py-2 rounded disabled:bg-gray-400"
-                                    v-if="props.can.viewNewsroom"
-                                >Newsroom</button>
-                                </Link>
-                                <Link :href="`/news/${props.news.slug}/edit`"><button
-                                    class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                                    v-if="can.editNewsPost"
-                                >Edit</button>
-                                </Link>
-                                <Button
-                                    class="px-4 py-2 text-white bg-red-600 hover:bg-red-500 rounded-lg"
-                                    @click="destroy(news.id)"
-                                    v-if="can.deleteNewsPost"
-                                >
-                                    Delete
-                                </Button>
-                            </div>
-
+                        <div class="space-x-2 space-y-2 justify-end">
+                            <Link
+                                :href="`/newsroom`"><button
+                                class="bg-yellow-600 hover:bg-yellow-500 text-white mt-1 px-4 py-2 rounded disabled:bg-gray-400"
+                                v-if="props.can.viewNewsroom"
+                            >Newsroom</button>
+                            </Link>
+                            <Link :href="`/news/${props.news.slug}/edit`"><button
+                                class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                                v-if="can.editNewsPost"
+                            >Edit</button>
+                            </Link>
+                            <Button
+                                class="px-4 py-2 text-white bg-red-600 hover:bg-red-500 rounded-lg"
+                                @click="destroy(news.id)"
+                                v-if="can.deleteNewsPost"
+                            >
+                                Delete
+                            </Button>
+                                <button
+                                    @click="back"
+                                    class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
+                                >Back
+                                </button>
                         </div>
+
 
 
                 </div>
@@ -64,15 +61,13 @@
 
 
 
-
-            <div class="flex justify-between flex-wrap-reverse md:mb-3">
-                <div class="text-center lg:text-left w-full mb-4 lg:ml-6">
-                    <h2 class="text-3xl font-semibold leading-tight">
-                        {{ news.title }}
-                    </h2>
+            <div class="flex justify-end md:mb-3">
+                <div class="flex-col text-right md:mb-3">
+                    <div>{{ news.author }}</div>
+                    <div>{{ news.published_at }}</div>
                 </div>
-
             </div>
+
 
 
             <div class="flex flex-col lg:flex-row items-start justify-items-center">
@@ -81,7 +76,7 @@
                 </div>
 
                 <div class="px-6 border-b border-gray-200">
-                        <div v-html="props.news.content" class="text-left mb-6 whitespace-pre-wrap">
+                        <div v-html="news.content" class="text-left mb-6 whitespace-pre-wrap">
                         </div>
                 </div>
             </div>
@@ -131,6 +126,10 @@ function destroy(id) {
         form.delete(route('news.destroy', id));
 
     }
+}
+
+function back() {
+    window.history.back()
 }
 
 </script>

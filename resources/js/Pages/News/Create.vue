@@ -4,18 +4,27 @@
 
     <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
-        <div class="light:bg-white light:text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
+        <div class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 
             <div class="flex flex-row justify-between">
                 <h2 class="text-xl font-semibold leading-tight">
                     Create News Post
                 </h2>
-                <Link
-                    :href="`/newsroom`"><button
-                    class="bg-yellow-600 hover:bg-yellow-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
-                    v-if="props.can.viewNewsroom"
-                >Newsroom</button>
-                </Link>
+                <div class="flex justify-end space-x-2">
+                    <Link
+                        :href="`/newsroom`"><button
+                        class="px-4 py-2 text-white bg-yellow-600 hover:bg-yellow-500 rounded-lg disabled:bg-gray-400"
+                        v-if="props.can.viewNewsroom"
+                    >Newsroom</button>
+                    </Link>
+                    <div>
+                        <button
+                            @click="back"
+                            class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
+                        >Cancel
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <div class="p-6 border-b border-gray-200">
@@ -42,18 +51,18 @@
                     </div>
                     <div class="mb-6">
                         <label
-                            for="slug"
+                            for="content"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                        >Content</label
-                        >
-                        <textarea
-                            type="text"
-                            v-model="form.content"
-                            name="content"
-                            id=""
-                            rows=10
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                        ></textarea>
+                        >Content</label>
+                        <tiptap v-if="videoPlayerStore.currentPage === 'newsCreate'" name="content" />
+<!--                        <textarea-->
+<!--                            type="text"-->
+<!--                            v-model="form.content"-->
+<!--                            id=""-->
+<!--                            name="content"-->
+<!--                            rows=10-->
+<!--                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"-->
+<!--                        ></textarea>-->
 
                         <div
                             v-if="form.errors.content"
@@ -89,14 +98,19 @@ import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useForm } from '@inertiajs/inertia-vue3'
 import {onBeforeMount, onMounted} from "vue";
 import {useUserStore} from "@/Stores/UserStore";
+import {useNewsStore} from "@/Stores/NewsStore"
+// import TabbableTextarea from "@/Components/TabbableTextarea.vue";
+import Tiptap from "@/Components/TextEditor/TiptapNewsPostCreate.vue";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
+let newsStore = useNewsStore()
 
-videoPlayerStore.currentPage = 'news'
+videoPlayerStore.currentPage = 'newsCreate'
 
 onBeforeMount(() => {
     userStore.scrollToTopCounter = 0;
+    newsStore.newsArticleContentTiptop = '';
 })
 
 onMounted(() => {
@@ -108,20 +122,22 @@ onMounted(() => {
 });
 
 const props = defineProps({
-    news: {
-        type: Object,
-        default: () => ({}),
-    },
     can: Object,
 });
 
-const form = useForm({
+let form = useForm({
     title: '',
-    content: '',
+    body: '',
 });
 
-const submit = () => {
+let submit = () => {
+    form.body = newsStore.newsArticleContentTiptop;
     form.post(route("news.store"));
 };
+
+function back() {
+    newsStore.newsArticleContentTiptop = '';
+    window.history.back()
+}
 
 </script>

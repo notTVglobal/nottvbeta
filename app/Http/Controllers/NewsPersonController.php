@@ -3,14 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Models\NewsPerson;
+use App\Models\User;
+use Illuminate\Http\Request as HttpRequest;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Inertia\Inertia;
 
 class NewsPersonController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return void
      */
     public function index()
     {
@@ -20,7 +26,7 @@ class NewsPersonController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return void
      */
     public function create()
     {
@@ -30,10 +36,10 @@ class NewsPersonController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Routing\Redirector|RedirectResponse
      */
-    public function store(Request $request)
+    public function store(Request $request, User $user)
     {
         $request->validate([
             'id' => 'required',
@@ -41,14 +47,17 @@ class NewsPersonController extends Controller
         NewsPerson::create([
             'user_id' => $request->id,
         ]);
-        return redirect()->route('newsroom')->with('message', $request->name . ' has successfully been added to the Newsroom.');
+
+//        return redirect()->route('newsroom')->with('message', $request->name . ' has successfully been added to the Newsroom.');
+        return to_route('users.index')->with('message', $request->name . ' has successfully been added to the Newsroom.');
+
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\NewsPerson  $newsPerson
-     * @return \Illuminate\Http\Response
+     * @param NewsPerson $newsPerson
+     * @return void
      */
     public function show(NewsPerson $newsPerson)
     {
@@ -58,8 +67,8 @@ class NewsPersonController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\NewsPerson  $newsPerson
-     * @return \Illuminate\Http\Response
+     * @param NewsPerson $newsPerson
+     * @return void
      */
     public function edit(NewsPerson $newsPerson)
     {
@@ -69,23 +78,32 @@ class NewsPersonController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\NewsPerson  $newsPerson
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param NewsPerson $newsPerson
+     * @return Response
      */
-    public function update(Request $request, NewsPerson $newsPerson)
-    {
+    public function update(Request $request, NewsPerson $newsPerson): Response {
         //
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\NewsPerson  $newsPerson
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return \Inertia\Response
+     * @throws AuthorizationException
      */
-    public function destroy(NewsPerson $newsPerson)
+    public function destroy(HttpRequest $request)
     {
-        //
+//        dd($request);
+        $this->authorize('delete', NewsPerson::class);
+        $id = NewsPerson::query()->where('user_id', $request->id)->pluck('id');
+        NewsPerson::destroy($id);
+
+        $user = User::where('id', $request->id);
+
+        return to_route('users.index')->with('message', 'User Removed From News Team Successfully');
+
+
     }
 }

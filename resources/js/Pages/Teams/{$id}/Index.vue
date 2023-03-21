@@ -5,11 +5,11 @@
     <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3 overflow-x-hidden">
 
-        <div class="light:bg-light dark:bg-gray-800 rounded light:text-black dark:text-gray-50 p-5 mb-10">
+        <div class="bg-white dark:bg-gray-800 rounded text-black dark:text-gray-50 p-5 mb-10">
 
             <header class="flex justify-between mb-3">
                 <div>
-                    <h3 class="inline-flex items-center text-3xl font-semibold relative uppercase">
+                    <h3 class="dark:text-gray-50 inline-flex items-center text-3xl font-semibold relative uppercase">
                         <img :src="'/storage/images/' + props.logo" alt="" class="w-20 mr-2">
                         {{ props.team.name }}
                     </h3>
@@ -22,7 +22,7 @@
                     >Edit</button>
                     </Link>
                     <Link
-                        v-if="props.can.viewTeam" :href="`/teams/${props.team.slug}/manage`"><button
+                        v-if="props.can.manageTeam" :href="`/teams/${props.team.slug}/manage`"><button
                         class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                     >Manage Team</button>
                     </Link>
@@ -42,20 +42,20 @@
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                     <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
 
-                    <div class="w-full light:bg-gray-300 dark:bg-gray-900 light:text-black dark:text-gray-50 text-2xl p-4 mb-8">SHOWS</div>
+                    <div class="w-full bg-gray-300 dark:bg-gray-900 text-black dark:text-gray-50 text-2xl p-4 mb-8">SHOWS</div>
 
                         <TeamShowsList :shows="props.shows" />
 
-                    <div class="w-full light:bg-gray-300 dark:bg-gray-900 light:text-black dark:text-gray-50  text-2xl p-4 mb-8">CREATORS</div>
+                    <div class="w-full bg-gray-300 dark:bg-gray-900 text-black dark:text-gray-50 text-2xl p-4 mb-8">CREATORS</div>
 
                         <div class="flex flex-row flex-wrap">
                             <div v-for="creator in props.creators.data"
                                  :key="creator.id"
-                                 class="pb-8 dark:bg-light light:bg-gray-800">
+                                 class="pb-8 dark:bg-gray-800 bg-white">
 
                                 <div class="flex flex-col min-w-[8rem] px-6 py-4 font-medium break-words grow-0">
                                     <img :src="'/storage/' + creator.profile_photo_path" class="pb-2 rounded-full h-32 w-32 object-cover mb-2">
-                                    <span class="dark:text-gray-50 light:text-gray-800 w-full text-center">{{ creator.name }}</span>
+                                    <span class="text-gray-800 dark:text-gray-50 w-full text-center">{{ creator.name }}</span>
                                 </div>
                             </div>
                         </div>

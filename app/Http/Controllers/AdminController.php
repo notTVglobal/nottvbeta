@@ -26,7 +26,7 @@ class AdminController extends Controller
                     $query->where('name', 'like', "%{$search}%");
                 })
                 ->latest()
-                ->paginate(10)
+                ->paginate(10, ['*'], 'shows')
                 ->withQueryString()
                 ->through(fn($show) => [
                     'id' => $show->id,
@@ -80,7 +80,7 @@ class AdminController extends Controller
                     $query->where('name', 'like', "%{$search}%");
                 })
                 ->latest()
-                ->paginate(10)
+                ->paginate(10, ['*'], 'teams')
                 ->withQueryString()
                 ->through(fn($team) => [
                     'id' => $team->id,
