@@ -33,6 +33,10 @@ onMounted(() => {
 onBeforeUnmount(() => {
     chatStore.showChat = false
     streamStore.showOSD = true
+    videoPlayerStore.showOttButtons = true
+    videoPlayerStore.showChannels = false
+    videoPlayerStore.showPlaylist = false
+    videoPlayerStore.showFilters = false
 
 })
 
@@ -42,6 +46,10 @@ onUnmounted(() => {
 
 chatStore.showChat = false
 streamStore.showOSD = false
+videoPlayerStore.showOttButtons = true
+videoPlayerStore.showChannels = false
+videoPlayerStore.showPlaylist = false
+videoPlayerStore.showFilters = false
 videoPlayerStore.loggedIn = true
 videoPlayerStore.currentView = 'stream'
 videoPlayerStore.currentPage = 'stream'

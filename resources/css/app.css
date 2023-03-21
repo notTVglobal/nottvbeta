@@ -268,24 +268,66 @@
 .channelsForStreamPageStandard {
     z-index: 200;
     position: fixed;
-    top:4rem;
+    top:0rem;
     /*bottom:2rem;*/
     right:0rem;
     padding: 1rem;
-    min-width: 100vw;
-    max-width: 100vw;
+    min-width: 24rem;
+    max-width: 24rem;
+    /*old setting was full page layout... */
+    /*min-width: 100vw;*/
+    /*max-width: 100vw;*/
+    max-height: 96rem;
+}
+.playlistForStreamPageStandard {
+    z-index: 200;
+    position: fixed;
+    top:0rem;
+    /*bottom:2rem;*/
+    right:0rem;
+    padding: 1rem;
+    min-width: 24rem;
+    max-width: 24rem;
+    /*old setting was full page layout... */
+    /*min-width: 100vw;*/
+    /*max-width: 100vw;*/
     max-height: 96rem;
 }
 .chatForStreamPageStandard {
     z-index: 200;
     position: fixed;
-    top:4rem;
+    top:0rem;
     /*bottom:2rem;*/
     right:0rem;
     padding: 1rem;
     min-width: 24rem;
     max-width: 24rem;
     max-height: 96rem;
+}
+.filtersForStreamPageStandard {
+    z-index: 200;
+    position: fixed;
+    top:0rem;
+    /*bottom:2rem;*/
+    right:0rem;
+    padding: 1rem;
+    min-width: 24rem;
+    max-width: 24rem;
+    /*old setting was full page layout... */
+    /*min-width: 100vw;*/
+    /*max-width: 100vw;*/
+    max-height: 96rem;
+}
+
+/* For Webkit-based browsers (Chrome, Safari and Opera) */
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
+/* For IE, Edge and Firefox */
+.scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
 }
 
 @media (orientation: landscape) {

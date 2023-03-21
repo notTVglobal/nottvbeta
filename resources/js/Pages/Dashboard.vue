@@ -340,7 +340,7 @@
             </section>
             <section class="mt-16 space-y-4">
                 <div class="text-sm uppercase mb-4 border-b border-blue-500">
-                    Links
+                    External Links
                 </div>
                 <a href="https://www.cbsc.ca/" target="_blank">
                     <div class="hover:bg-blue-500 p-2">

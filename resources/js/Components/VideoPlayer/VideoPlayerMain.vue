@@ -48,7 +48,9 @@
                     <!-- Over The Top (OTT) -->
                     <OttFullPageButtons v-show="videoPlayerStore.showOSD" />
                     <OttFullPageDisplayChannels />
+                    <OttFullPageDisplayPlaylist />
                     <OttFullPageDisplayChatMobile :user="user"/>
+                    <OttFullPageDisplayFilters />
 
                 </div>
 
@@ -69,7 +71,9 @@
                     <!-- Over The Top (OTT) -->
                     <OttFullPageButtons v-show="videoPlayerStore.showOSD" />
                     <OttFullPageDisplayChannels />
+                    <OttFullPageDisplayPlaylist />
                     <OttFullPageDisplayChatStandard :user="user" />
+                    <OttFullPageDisplayFilters />
 
                 </div>
             </div>
@@ -88,8 +92,10 @@ import { ref } from 'vue'
 
 import OttFullPageButtons from "@/Components/VideoPlayer/OttFullPageButtons.vue";
 import OttFullPageDisplayChannels from "@/Components/VideoPlayer/OttFullPageDisplayChannels"
+import OttFullPageDisplayPlaylist from "@/Components/VideoPlayer/OttFullPageDisplayPlaylist"
 import OttFullPageDisplayChatStandard from "@/Components/VideoPlayer/OttFullPageDisplayChatStandard"
 import OttFullPageDisplayChatMobile from "@/Components/VideoPlayer/OttFullPageDisplayChatMobile"
+import OttFullPageDisplayFilters from "@/Components/VideoPlayer/OttFullPageDisplayFilters"
 import Login from "@/Components/Welcome/Login"
 import VideoControlsFullPageStandard from "@/Components/VideoPlayer/VideoControlsFullPageStandard"
 import VideoControlsFullPageMobile from "@/Components/VideoPlayer/VideoControlsFullPageMobile"

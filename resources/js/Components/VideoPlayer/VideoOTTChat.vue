@@ -1,6 +1,6 @@
 <template>
-    <div class="">
-        <div class="">
+    <div class="scrollbar-hide">
+        <div class="scrollbar-hide">
             <VideoOTTChatMessages />
         </div>
         <div>

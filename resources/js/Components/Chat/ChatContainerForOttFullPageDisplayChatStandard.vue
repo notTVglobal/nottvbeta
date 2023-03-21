@@ -1,11 +1,11 @@
 <template>
     <div>
-        <div class="flex flex-col p-5 mt-10">
+        <div class="flex flex-col py-5 mt-10">
             <div class="text-3xl font-semibold">Conversation</div>
         </div>
         <div class="italic">The newest message is at the bottom.</div>
         <div class="absolute">
-            <div class="relative h-[calc(h-100%-16rem)] top-0 scrollbar-hide">
+            <div class="relative h-[calc(h-100%-16rem)] top-0">
                 <chat-messages />
             </div>
             <div class="relative h-16">
