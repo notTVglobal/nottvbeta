@@ -1,7 +1,7 @@
 <template>
     <div>
 
-        <div v-if="videoPlayerStore.ott === 1" class="channels w-full h-full bg-green-800 p-2 overflow-y-scroll scrollbar-hide mb-64">
+        <div v-if="videoPlayerStore.ott === 2" class="channels w-full h-full bg-green-800 p-2 overflow-y-scroll scrollbar-hide mb-64">
 
             <h1 class="text-xs font-semibold uppercase mb-3 w-full bg-green-900 text-white p-2">CHANNELS</h1>
             <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-white cursor-pointer border-b border-0.2 border-green-800" @click="changeChannel('one')">ONE</div>
@@ -20,7 +20,7 @@
             <div class="mt-4">Categories will be turned into channels when more creators join notTV. E.g., News, Music, Talk, Education, etc.</div>
         </div>
 
-        <div v-if="videoPlayerStore.ott === 2" class="now-playing w-full h-full bg-purple-800 p-2 overflow-y-scroll scrollbar-hide mb-64">
+        <div v-if="videoPlayerStore.ott === 1" class="now-playing w-full h-full bg-purple-800 p-2 overflow-y-scroll scrollbar-hide mb-64">
             <h1 class="text-xs font-semibold uppercase mb-3 w-full bg-purple-900 text-white p-2">NOW PLAYING INFO</h1>
             <div class="flex justify-between">
                 <div>

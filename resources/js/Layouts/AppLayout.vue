@@ -91,6 +91,7 @@ videoPlayerStore.videoSource = "https://mist2.not.tv/hls/mist1pull1/index.m3u8"
 videoPlayerStore.videoSourceType = "application/x-mpegURL"
 videoPlayerStore.videoName = "notTV One"
 streamStore.currentChannel = "Stream"
+videoPlayerStore.currentChannelName = "one"
 userStore.showNavDropdown = false
 
 let isStreamPage = null

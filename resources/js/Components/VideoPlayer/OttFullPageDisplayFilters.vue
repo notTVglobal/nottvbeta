@@ -35,8 +35,8 @@
 
 
             <button v-touch="()=>videoPlayerStore.toggleFilters()"
-                    v-if="videoPlayerStore.showFilters" class="fixed bottom-5 right-32 opacity-100 w-15 h-15 p-4 rounded-full bg-orange-800
-                    text-gray-50 hover:bg-blue-800 hover:text-blue-200 grid justify-center content-center
+                    v-if="videoPlayerStore.showFilters" class="fixed bottom-5 right-32 opacity-100 w-15 h-15 p-4 rounded-full
+                    text-gray-900 bg-yellow-600 hover:bg-yellow-500 grid justify-center content-center
                     cursor-pointer font-semibold text-xs">
                 CLOSE FILTERS
             </button>

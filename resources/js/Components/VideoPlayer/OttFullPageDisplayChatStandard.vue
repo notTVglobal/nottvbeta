@@ -30,8 +30,8 @@
 <!--                    CLOSE CHAT-->
 <!--                </button>-->
                 <button v-touch="()=>videoPlayerStore.toggleChat()"
-                        v-if="chatStore.showChat" class="fixed bottom-5 right-32 opacity-100 w-15 h-15 p-4 rounded-full bg-orange-800
-                    text-gray-50 hover:bg-blue-800 hover:text-blue-200 grid justify-center content-center
+                        v-if="chatStore.showChat" class="fixed bottom-5 right-32 opacity-100 w-15 h-15 p-4 rounded-full
+                    text-gray-50 bg-blue-800 hover:bg-blue-600 grid justify-center content-center
                     cursor-pointer font-semibold text-xs">
                     CLOSE CHAT
                 </button>

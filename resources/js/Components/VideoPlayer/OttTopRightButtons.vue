@@ -2,13 +2,13 @@
     <div class="flex flex-row justify-around h-7 bg-red-500 w-full text-xs uppercase font-semibold">
 
         <button class="h-full w-full"
-                :class="{ 'bg-green-900': videoPlayerStore.ott != 1, 'bg-green-700': videoPlayerStore.ott === 1, 'hover:bg-green-700':videoPlayerStore.ott != 1 }"
-                @click="videoPlayerStore.toggleOttChannels()">
-            CHANNELS </button>
-        <button class="h-full w-full"
-                :class="{ 'bg-purple-900': videoPlayerStore.ott != 2, 'bg-purple-700': videoPlayerStore.ott === 2, 'hover:bg-purple-700':videoPlayerStore.ott != 2 }"
+                :class="{ 'bg-purple-900': videoPlayerStore.ott != 1, 'bg-purple-700': videoPlayerStore.ott === 1, 'hover:bg-purple-700':videoPlayerStore.ott != 1 }"
                 @click="videoPlayerStore.toggleOttInfo()">
             INFO </button>
+        <button class="h-full w-full"
+                :class="{ 'bg-green-900': videoPlayerStore.ott != 2, 'bg-green-700': videoPlayerStore.ott === 2, 'hover:bg-green-700':videoPlayerStore.ott != 2 }"
+                @click="videoPlayerStore.toggleOttChannels()">
+            CHANNELS </button>
         <button class="h-full w-full"
                 :class="{ 'bg-orange-900': videoPlayerStore.ott != 3, 'bg-orange-700': videoPlayerStore.ott === 3, 'hover:bg-orange-700':videoPlayerStore.ott != 3 }"
                 @click="videoPlayerStore.toggleOttPlaylist()">

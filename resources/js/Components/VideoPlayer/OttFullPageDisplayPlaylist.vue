@@ -18,7 +18,7 @@
 
             <div>
                 <div class="flex flex-col p-5 mt-10">
-                    <div class="text-3xl text-center font-semibold uppercase mb-3 w-full bg-orange-900 text-white p-2">PLAYLIST</div>
+                    <div class="text-3xl text-center font-semibold uppercase mb-3 w-full bg-orange-800 text-white p-2">PLAYLIST</div>
                 </div>
 
                 <div class="absolute">
@@ -39,8 +39,8 @@
 
 
             <button v-touch="()=>videoPlayerStore.togglePlaylist()"
-                    v-if="videoPlayerStore.showPlaylist" class="fixed bottom-5 right-32 opacity-100 w-15 h-15 p-4 rounded-full bg-orange-800
-                    text-gray-50 hover:bg-blue-800 hover:text-blue-200 grid justify-center content-center
+                    v-if="videoPlayerStore.showPlaylist" class="fixed bottom-5 right-32 opacity-100 w-15 h-15 p-4 rounded-full
+                    text-gray-50 bg-orange-900 hover:bg-orange-800 grid justify-center content-center
                     cursor-pointer font-semibold text-xs">
                 CLOSE PLAYLIST
             </button>
