@@ -36,7 +36,7 @@
                  @mouseenter="showOSD"
                  @mouseleave="hideOSD">
 
-                <div v-if="! videoPlayerStore.fullPage" class="fixed top-72 w-full sm:w-96 right-0 z-30">
+                <div v-if="!videoPlayerStore.fullPage" class="fixed top-72 w-full sm:w-96 right-0 z-30">
                     <OttTopRightButtons class="videoOTT" v-if="user"/></div>
 
                 <OttTopRightDisplay v-show="user"
