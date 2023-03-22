@@ -9,21 +9,21 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class VerifyMail extends Mailable
+class VerifyMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
-    public $user, $url;
+//    public $user, $url;
+//    public $user;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($user, $url)
+    public function __construct()
     {
-        $this->user = $user;
-        $this->url = $url;
+        //
     }
 
     /**
@@ -33,7 +33,10 @@ class VerifyMail extends Mailable
      */
     public function build()
     {
-        return $this->markdown('mail.verify')->to($this->user->email);
+//        return $this->attachFromStorageDisk('public', 'filename.png', 'another_name.png')->subject($subject)->markdown('mail.verify')->to($this->user->email);
+        return $this->markdown('mail.verify', [
+            'url' => route('stream'),
+    ]);
     }
 
     /**
@@ -44,7 +47,7 @@ class VerifyMail extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'Verify Mail',
+            subject: 'Test Mail',
         );
     }
 

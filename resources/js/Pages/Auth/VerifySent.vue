@@ -36,35 +36,20 @@ export default {
 <!--            Verification email re-sent!-->
 <!--        </div>-->
 
-        <div class="mb-4 font-medium text-sm text-green-600">
-            A new verification link has been sent to the email address you provided in your profile settings.
+        <div class="my-4 font-medium text-center text-sm text-green-600">
+            A new verification link has been sent to your email!
         </div>
 
-        <div>Please check your email to confirm your account.<br />
-            <span style="font-size:small; font-style:italic;">Check your junk mail folder as well</span></div>
-
         <form @submit.prevent="submit">
-            <div class="mt-4 flex items-center justify-between">
-                <JetButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Resend Verification Email
-                </JetButton>
-
-                <div>
-                    <Link
-                        :href="route('profile.show')"
-                        class="underline text-sm text-gray-600 hover:text-gray-900"
-                    >
-                        Edit Profile</Link>
-
-                    <Link
-                        :href="route('logout')"
-                        method="post"
-                        as="button"
-                        class="underline text-sm text-gray-600 hover:text-gray-900 ml-2"
-                    >
-                        Log Out
-                    </Link>
-                </div>
+            <div class="mt-4 flex items-center justify-center">
+                <Link
+                    :href="route('logout')"
+                    method="post"
+                    as="button"
+                    class="underline text-sm text-gray-600 hover:text-gray-900 ml-2"
+                >
+                    Log Out
+                </Link>
             </div>
         </form>
     </JetAuthenticationCard>

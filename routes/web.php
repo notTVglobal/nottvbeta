@@ -1,5 +1,6 @@
 <?php
 
+use App\Mail\VerifyMail;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\CreatorsController;
 use App\Http\Controllers\AdminController;
@@ -28,6 +29,7 @@ use App\Models\User;
 use App\Models\Show;
 use App\Models\ShowEpisode;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -50,6 +52,10 @@ Route::get('/', function () {
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
     ]);
+});
+
+Route::get('/send-mail', function () {
+   Mail::to('test@test.com')->queue(new VerifyMail());
 });
 
 Route::get('/home', function () {

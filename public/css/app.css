@@ -1988,6 +1988,10 @@ select {
   margin-right: 1.5rem;
 }
 
+.-mt-px {
+  margin-top: -1px;
+}
+
 .block {
   display: block;
 }
@@ -2362,6 +2366,10 @@ select {
 
 .max-w-\[4rem\] {
   max-width: 4rem;
+}
+
+.max-w-6xl {
+  max-width: 72rem;
 }
 
 .flex-1 {
@@ -2861,6 +2869,10 @@ select {
 
 .border-t-0 {
   border-top-width: 0px;
+}
+
+.border-r {
+  border-right-width: 1px;
 }
 
 .border-none {
@@ -3525,6 +3537,10 @@ select {
   padding-right: 1.5rem;
 }
 
+.pt-8 {
+  padding-top: 2rem;
+}
+
 .text-left {
   text-align: left;
 }
@@ -3659,6 +3675,10 @@ select {
 
 .tracking-wide {
   letter-spacing: 0.025em;
+}
+
+.tracking-wider {
+  letter-spacing: 0.05em;
 }
 
 .text-gray-500 {
@@ -4856,6 +4876,10 @@ select {
 
   .sm\:items-center {
     align-items: center;
+  }
+
+  .sm\:justify-start {
+    justify-content: flex-start;
   }
 
   .sm\:justify-center {
