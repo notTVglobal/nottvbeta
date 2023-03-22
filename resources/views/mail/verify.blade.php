@@ -1,8 +1,6 @@
 @component("mail::message")
 
-    #OIIIII
-
-
-    ## Click the silly link [here]({{$url}})
+    # A custom email here
+    ## Click the link [here]({{$url}})
 
 @endcomponent

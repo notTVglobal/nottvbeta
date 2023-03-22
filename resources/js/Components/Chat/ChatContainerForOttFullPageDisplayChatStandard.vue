@@ -5,7 +5,7 @@
         </div>
         <div class="italic">The newest message is at the bottom.</div>
         <div class="absolute">
-            <div class="relative h-[calc(h-100%-16rem)] top-0">
+            <div class="relative h-[calc(h-100%-16rem)] pb-24 top-0">
                 <chat-messages />
             </div>
             <div class="relative h-16">

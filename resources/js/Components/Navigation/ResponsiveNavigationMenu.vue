@@ -247,6 +247,8 @@ let chatStore = useChatStore();
 let userStore = useUserStore();
 
 const logout = () => {
+    videoPlayerStore.changeChannel('one');
+    videoPlayerStore.mute();
     videoPlayerStore.fullPage = true;
     videoPlayerStore.loggedIn = false;
     videoPlayerStore.class = "welcomeVideoClass";

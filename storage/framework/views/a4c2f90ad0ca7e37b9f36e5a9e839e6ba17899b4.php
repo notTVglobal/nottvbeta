@@ -12,22 +12,24 @@
     <!-- Styles -->
 
 </head>
-<body>
-
-
 <body bgcolor="#d3d3d3">
 <div style="margin-left:20px; margin-top:20px; text-align: center; position: absolute; top: 50%; left:50%; transform: translate(-50%, -50%);">
     <img style="margin-bottom:38px;" src="../storage/images/logo_black_311.png">
     <div style="margin-bottom:38px; font-size:large; line-height:1.5; font-family: Arial, Helvetica, sans-serif;">
 
-        <h1 style="font:bold;">Verification email re-sent!</h1>
+        !!!!!Before continuing, will you please verify your email address by clicking on the link we just emailed to you?<br />
+        If you didn't receive the email, we will gladly send you another.
 
-        <p>Please check your email to confirm your account.<br />
-            <span style="font-size:small; font-style:italic;">Check your junk mail folder as well</span></p>
+        <form action="/email/verification-notification" method="POST">
+            <?php echo csrf_field(); ?>
+            <button type="submit" value="Submit" style="margin-top:10px; padding:10px; font-size:large; cursor:pointer;">Re-send verification</button>
+        </form>
+
+        <p style="font-size:large;">If you need help, please send us a message <a href="https://help.not.tv/">here</a>.</p>
 
     </div>
 </div>
 
 </body>
 </html>
-<?php /**PATH /var/www/html/resources/views/auth/verify-sent.blade.php ENDPATH**/ ?>
+<?php /**PATH /var/www/nottvbeta/resources/views/auth/verify-email.blade.php ENDPATH**/ ?>

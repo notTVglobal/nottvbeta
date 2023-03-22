@@ -14,12 +14,11 @@
                                 <button
                                     class="text-2xl font-semibold bg-green-500 hover:bg-green-600 text-white px-5 py-3 rounded disabled:bg-gray-400"
                                     @click="watchNow"
-                                ><font-awesome-icon icon="fa-solid fa-play" /> Watch Now<br /><span class="text-sm italic">Log in for more features!</span></button>
+                                ><font-awesome-icon icon="fa-solid fa-play" /> Watch Now</button>
 
 
                             </div>
                             <div class="my-2 text-center">OR</div>
-
 <!--                            <div class="text-center font-semibold text-2xl px-5 py-3">Returning Soon!</div>-->
   <div class="text-center font-semibold text-2xl px-5 py-3">SCROLL DOWN</div>
 <!--                                                    <div class="my-2 text-center">OR</div>-->

@@ -79,8 +79,11 @@ Route::post('/email/verify', function (Request $request) {
 // Another route has already been assigned name
 // [verification.send] ~ tec21 (March 21, 2023)
 
+//Route::get('/terms', function () {
+//    return redirect('/terms-of-service');
+//})->name('terms');
 Route::get('/terms', function () {
-    return redirect('/terms-of-service');
+    return route('/terms-of-service');
 })->name('terms');
 
 
@@ -337,6 +340,7 @@ Route::middleware([
     Route::get('/training', function () {
         return Inertia::render('Training');
     })->can('viewCreator', 'App\Models\User')
+        ->name('training')
         ->name('training');
 
 // Shows

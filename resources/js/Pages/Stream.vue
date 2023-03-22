@@ -45,7 +45,7 @@ onUnmounted(() => {
 })
 
 chatStore.showChat = false
-streamStore.showOSD = false
+streamStore.showOSD = true
 videoPlayerStore.showOttButtons = true
 videoPlayerStore.showChannels = false
 videoPlayerStore.showPlaylist = false

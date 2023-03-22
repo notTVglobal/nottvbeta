@@ -38,6 +38,7 @@
 
                     <div class="text-center font-semibold text-3xl">Welcome to notTV</div>
                     <div class="text-center text-2xl">Where artists own the platform.</div>
+                <span class="text-sm italic mt-12">Log in for more features!</span>
 <!--                    <div class="mt-32 text-center italic">(Log in to chat)</div>-->
 
             </section>
@@ -62,7 +63,7 @@
                     </div>
                     <h2 class="font-bold text-4xl text-center pb-3">Public good</h2>
                     <p class="text-center text-2xl">Help fund the public good, free speech and free press automatically as part of the business model to keep
-                a free democracy.</p>
+                an open and accountable democracy.</p>
                 </div>
                 <div class="px-6 py-20  bg-purple-600 rounded">
                     <div class="font-bold text-4xl text-center pb-3 space-x-2">

@@ -267,6 +267,8 @@ let props = defineProps({
 })
 
 const logout = () => {
+    videoPlayerStore.changeChannel('one');
+    videoPlayerStore.mute();
     videoPlayerStore.fullPage = true;
     videoPlayerStore.loggedIn = false;
     videoPlayerStore.class = "videoBgFull";
