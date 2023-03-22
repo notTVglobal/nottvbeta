@@ -47,29 +47,29 @@
                         <font-awesome-icon icon="fa-solid fa-star" />
                     </div>
                     <h2 class="font-bold text-4xl text-center pb-3">Rewards</h2>
-                    <p class="text-center text-2xl">Reap the rewards of a cooperative blockchain media distribution platform and streaming service.</p>
+                    <p class="text-center text-2xl">Reap the rewards of an artist owned cooperative blockchain media distribution platform and streaming service.</p>
                 </div>
                 <div class="px-6 py-20 bg-green-600 rounded">
                     <div class="font-bold text-4xl text-center pb-3 space-x-2">
                         <font-awesome-icon icon="fa-solid fa-users" />
                     </div>
-                    <h2 class="font-bold text-4xl text-center pb-3">New audiences</h2>
-                    <p class="text-center text-2xl">Share your audience with other creators.. which means they also share their audience with you!</p>
+                    <h2 class="font-bold text-4xl text-center pb-3">Community</h2>
+                    <p class="text-center text-2xl">Discover new content creators and get engaged with your local community through this new Internet Broadcasting project.</p>
                 </div>
                 <div class="px-6 py-20  bg-blue-600 rounded">
                     <div class="font-bold text-4xl text-center pb-3 space-x-2">
                         <font-awesome-icon icon="fa-solid fa-hands-helping" />
                     </div>
                     <h2 class="font-bold text-4xl text-center pb-3">Public good</h2>
-                    <p class="text-center text-2xl">Help fund the public good, free speech and free press automatically as part of the business model and original concept to keep
-                a free democracy and make the world a better place.</p>
+                    <p class="text-center text-2xl">Help fund the public good, free speech and free press automatically as part of the business model to keep
+                a free democracy.</p>
                 </div>
                 <div class="px-6 py-20  bg-purple-600 rounded">
                     <div class="font-bold text-4xl text-center pb-3 space-x-2">
                         <font-awesome-icon icon="fa-solid fa-rocket" />
                     </div>
                     <h2 class="font-bold text-4xl text-center pb-3">Join now</h2>
-                    <p class="text-center text-2xl">Register your content as your very own NFT on a blockchain that you own.</p>
+                    <p class="text-center text-2xl">Watch live streams, local content, and chat with other viewers. Creators register content as your very own NFT on a blockchain that you own.</p>
                 </div>
             </section>
             <section class="flex justify-center items-center min-h-screen bg-green-800">
