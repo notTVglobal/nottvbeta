@@ -25,9 +25,10 @@ class InviteCodeFactory extends Factory
      */
     public function definition()
     {
+
         return [
             'created_by' => '1',
-            'code' => Str::random(8),
+            'code' => '',
         ];
     }
 }

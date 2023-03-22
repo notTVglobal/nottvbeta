@@ -23,7 +23,7 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         Registered::class => [
             // this first sendEmail is from Fortify
-            SendEmailVerificationNotification::class,
+//            SendEmailVerificationNotification::class,
             //this second sendEmail is our custom listener
             SendEmailVerification::class,
             LogRegisteredUser::class,
