@@ -340,7 +340,6 @@ Route::middleware([
     Route::get('/training', function () {
         return Inertia::render('Training');
     })->can('viewCreator', 'App\Models\User')
-        ->name('training')
         ->name('training');
 
 // Shows
