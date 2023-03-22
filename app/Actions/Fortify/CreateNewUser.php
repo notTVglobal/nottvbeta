@@ -42,6 +42,7 @@ class CreateNewUser implements CreatesNewUsers
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => $this->passwordRules(),
+            'password_confirmation' => 'required|same:password',
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
 //            'invite_code' => ['required', 'exists:invite_codes,code',]
             'invite_code' => ['required', 'exists:invite_codes,code', new UnclaimedInviteCode],

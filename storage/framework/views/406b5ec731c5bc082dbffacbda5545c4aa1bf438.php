@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="<?php echo e(str_replace('_', '-', app()->getLocale())); ?>">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf_token" content="{{ csrf_token() }}">
+    <meta name="csrf_token" content="<?php echo e(csrf_token()); ?>">
 
-    <title inertia>{{ config('app.name', 'Laravel') }}</title>
+    <title inertia><?php echo e(config('app.name', 'Laravel')); ?></title>
 
     <!-- Fonts -->
 
@@ -21,7 +21,7 @@
         If you didn't receive the email, we will gladly send you another.
 
         <form action="/email/verification-notification" method="POST">
-            @csrf
+            <?php echo csrf_field(); ?>
             <button type="submit" value="Submit" style="margin-top:10px; padding:10px; font-size:large; cursor:pointer;">Re-send verification</button>
         </form>
 
@@ -32,3 +32,4 @@
 
 </body>
 </html>
+<?php /**PATH /var/www/html/resources/views/auth/verify-email.blade.php ENDPATH**/ ?>

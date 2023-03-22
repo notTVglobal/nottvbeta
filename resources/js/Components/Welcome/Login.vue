@@ -10,7 +10,7 @@
         <div v-if="show" class="modal-mask">
             <div class="modal-container">
                 <header class="flex uppercase text-sm font-semibold mb-2 text-center">
-                    <JetAuthenticationCardLogo class="w-1/4"/>
+                    <JetAuthenticationCardLogo class="max-w-[8rem]"/>
                     <JetValidationErrors class="mb-4" />
                     <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
                         {{ status }}

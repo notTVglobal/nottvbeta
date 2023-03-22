@@ -4,6 +4,7 @@ namespace App\Rules;
 
 use Illuminate\Support\Str;
 use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Validation\Rules\Password;
 
 class IsValidPassword implements Rule
 {
@@ -36,6 +37,13 @@ class IsValidPassword implements Rule
     public $specialCharacterPasses = true;
 
     /**
+     * Determine if the password has been involved in a data breach.
+     *
+     * @var boolean
+     */
+    public $uncompromised = true;
+
+    /**
      * Determine if the validation rule passes.
      *
      * @param  string  $attribute
@@ -44,6 +52,7 @@ class IsValidPassword implements Rule
      */
     public function passes($attribute, $value)
     {
+        $this->uncompromised = Password::min(10)->uncompromised();
         $this->lengthPasses = (Str::length($value) >= 10);
         $this->uppercasePasses = (Str::lower($value) !== $value);
         $this->numericPasses = ((bool) preg_match('/[0-9]/', $value));

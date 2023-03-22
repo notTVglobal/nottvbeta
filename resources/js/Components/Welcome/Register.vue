@@ -10,7 +10,7 @@
         <div v-if="show" class="modal-mask">
             <div class="modal-container">
                 <header class="flex uppercase text-sm font-semibold mb-2 text-center">
-                    <JetAuthenticationCardLogo />
+                    <JetAuthenticationCardLogo class="max-w-[8rem]"/>
                     <JetValidationErrors class="mb-4" />
                     <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
                         {{ status }}
@@ -118,11 +118,11 @@
                     </div>
 
                     <div class="flex items-center justify-end mt-4">
-                        <button @click="showLogin" class="underline text-sm text-gray-600 hover:text-gray-900">
-                            Already registered?
-                        </button>
+<!--                        <button @click="showLogin" class="underline text-sm text-gray-600 hover:text-gray-900">-->
+<!--                            Already registered?-->
+<!--                        </button>-->
 
-                        <JetButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                        <JetButton class="ml-4"  v-on:keyup.enter="submit" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                             Register
                         </JetButton>
                     </div>

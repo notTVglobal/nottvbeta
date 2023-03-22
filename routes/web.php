@@ -59,7 +59,7 @@ Route::get('/home', function () {
 });
 
 Route::get('/email/verify', function () {
-    return view('auth.verify-email');
+    return Inertia::render('Auth/VerifyEmail');
 })->middleware('auth')->name('verification.notice');
 
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
@@ -67,9 +67,9 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
     return redirect('/');
 })->middleware(['auth', 'signed'])->name('verification.verify');
 
-Route::post('/email/verification-notification', function (Request $request) {
+Route::post('/email/verify', function (Request $request) {
     $request->user()->sendEmailVerificationNotification();
-    return view('auth.verify-sent');
+    return Inertia::render('Auth/VerifySent');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
 Route::get('/terms', function () {
