@@ -132,10 +132,10 @@ class UserPolicy
      * @param  \App\Models\User  $model
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, User $model)
+    public function delete(User $user)
     {
         // tec21: I entered a bad value on purpose so no one can delete a user right now
-        return $user->isAdmin === 2;
+        return $user->isAdmin === 1;
     }
 
     /**

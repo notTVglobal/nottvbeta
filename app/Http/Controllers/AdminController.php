@@ -103,5 +103,17 @@ class AdminController extends Controller
         ]);
     }
 
+    public function deleteUser(HttpRequest $request)
+    {
+        $user = User::query()->where('id', $request->userId)->first();
+
+        $user->deleteProfilePhoto();
+        $user->tokens->each->delete();
+        $user->delete();
+
+        // redirect
+        return redirect('/users')->with('message', $user->name.' Deleted Successfully');
+    }
+
 
 }

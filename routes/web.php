@@ -268,6 +268,11 @@ Route::middleware([
     })->can('viewAdmin', 'App\Models\User')
         ->name('admin.inviteCodes');
 
+    // delete user
+    Route::post('/admin/user/delete', [AdminController::class, 'deleteUser'])
+        ->can('delete', 'App\Models\User')
+        ->name('admin.deleteUser');
+
 
     // Teams - Part 1 (part 2 is in the Creator Resources below)
     ///////////

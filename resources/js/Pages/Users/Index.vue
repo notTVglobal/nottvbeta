@@ -103,10 +103,15 @@
                                                 <td class="px-6 py-4">
                                                     <span>{{ user.role }}</span>
                                                 </td>
-                                                <td class="px-6 py-4">
+                                                <td class="px-6 py-4 space-x-2">
                                                     <Link :href="`/users/${user.id}/edit`"><button
-                                                        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                                                        class="px-4 py-2 mb-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                                                     >Edit</button>
+                                                    </Link>
+                                                    <Link :href="`#`"><button
+                                                        @click.prevent="deleteUser(user)"
+                                                        class="px-4 py-2 mb-2 text-white bg-red-600 hover:bg-red-500 rounded-lg"
+                                                    >Delete</button>
                                                     </Link>
                                                 </td>
                                             </tr>
@@ -135,6 +140,7 @@ import {Inertia} from "@inertiajs/inertia"
 import throttle from "lodash/throttle"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import {useUserStore} from "@/Stores/UserStore";
+import {useForm} from "@inertiajs/inertia-vue3";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -160,6 +166,10 @@ let props = defineProps({
     message: String
 });
 
+const form = useForm({
+    userId: '',
+})
+
 let search = ref(props.filters.search);
 
 watch(search, throttle(function (value) {
@@ -168,4 +178,12 @@ watch(search, throttle(function (value) {
         replace: true
     });
 }, 300));
+
+function deleteUser($user) {
+    if(confirm('Are you sure you want to delete ' + $user.name +'? This action is not reversible and may have' +
+        ' devastating effects on the database.')) {
+        Inertia.post('/admin/user/delete', {'userId': $user.id});
+    }
+}
+
 </script>
