@@ -67,7 +67,11 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
     return redirect('/');
 })->middleware(['auth', 'signed'])->name('verification.verify');
 
-Route::post('/email/verify', function (Request $request) {
+Route::get('/email/notificationsent', function () {
+    return Inertia::render('Auth/VerifySent');
+});
+
+Route::post('/email/notificationsent', function (Request $request) {
     $request->user()->sendEmailVerificationNotification();
     return Inertia::render('Auth/VerifySent');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
