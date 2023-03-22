@@ -2,11 +2,10 @@
 
 namespace App\Listeners;
 
-use App\Events\NewChatMessage;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
-class SendChatMessageNotification
+class LogVerifiedUser
 {
     /**
      * Create the event listener.
@@ -21,14 +20,15 @@ class SendChatMessageNotification
     /**
      * Handle the event.
      *
-     * @param  \App\Events\NewChatMessage  $event
+     * @param  object  $event
      * @return void
      */
-    public function handle(NewChatMessage $event)
+    public function handle($event)
     {
-        // Add events here, e.g., when
-        // a new chat message happens
-        // send a notification to the
-        // admin or show owner.
+        // TASK: Create a notification to admin
+        // that a new user is verified.
+
+        // TASK: Send a welcome email to the
+        // verified user.
     }
 }

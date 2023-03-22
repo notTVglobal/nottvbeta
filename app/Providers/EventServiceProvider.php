@@ -2,7 +2,13 @@
 
 namespace App\Providers;
 
+use App\Listeners\LogRegisteredUser;
+use App\Listeners\LogVerifiedUser;
+use App\Listeners\SendChatMessageNotification;
+use App\Listeners\SendEmailVerification;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Auth\Events\Verified;
+use App\Events\NewChatMessage;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
@@ -16,21 +22,18 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
         Registered::class => [
+            // this first sendEmail is from Fortify
             SendEmailVerificationNotification::class,
-
+            //this second sendEmail is our custom listener
+            SendEmailVerification::class,
+            LogRegisteredUser::class,
         ],
-        'Illuminate\Auth\Events\Registered' => [
-            // TASK: Create a notification to admin
-            // that a new user is registered.
-            'App\Listeners\LogRegisteredUser',
+        Verified::class => [
+            LogVerifiedUser::class,
         ],
-        'App\Events\NewChatMessage' => [
-            // Add events here, e.g., when
-            // a new chat message happens
-            // send a notification to the
-            // admin or show owner.
-            'App\Listeners\SendChatMessageNotification'
-        ]
+        NewChatMessage::class => [
+            SendChatMessageNotification::class,
+        ],
     ];
 
     /**

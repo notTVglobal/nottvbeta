@@ -26,6 +26,7 @@ class LogRegisteredUser
      */
     public function handle(Registered $event)
     {
-        //
+        // TASK: Create a notification to admin
+        // that a new user is registered.
     }
 }
