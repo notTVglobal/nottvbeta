@@ -17,6 +17,7 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         Registered::class => [
             SendEmailVerificationNotification::class,
+
         ],
         'Illuminate\Auth\Events\Registered' => [
             // TASK: Create a notification to admin
