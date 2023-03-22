@@ -52,7 +52,7 @@
                             </div>
 
 
-    <!--                        <LogoutOtherBrowserSessionsForm :sessions="sessions" class="mt-10 sm:mt-0" />-->
+<!--                            <LogoutOtherBrowserSessionsForm :sessions="sessions" class="mt-10 sm:mt-0" />-->
 
                             <template v-if="$page.props.jetstream.hasAccountDeletionFeatures">
                                 <JetSectionBorder />
