@@ -67,14 +67,17 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
     return redirect('/');
 })->middleware(['auth', 'signed'])->name('verification.verify');
 
-Route::get('/email/notificationsent', function () {
-    return Inertia::render('Auth/VerifySent');
-});
-
-Route::post('/email/notificationsent', function (Request $request) {
+Route::post('/email/verify', function (Request $request) {
     $request->user()->sendEmailVerificationNotification();
     return Inertia::render('Auth/VerifySent');
-})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+})->middleware(['auth', 'throttle:6,1'])->name('verification.send2');
+// Jetstream/Fortify came with an email verification method, but
+// I can't figure out where the verification.send route is. And
+// when I created this form.post to verification.send I got an
+// error when running "php artisan route:cache" -> Unable to
+// process route [email/notificationsent] for serialization.
+// Another route has already been assigned name
+// [verification.send] ~ tec21 (March 21, 2023)
 
 Route::get('/terms', function () {
     return redirect('/terms-of-service');
