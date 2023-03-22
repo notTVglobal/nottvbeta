@@ -261,9 +261,7 @@ class TeamsController extends Controller
 
         function showCategoryName($id) {
             $showCategoryName = ShowCategory::query()->where('id', $id)->pluck('name');
-            if ($showCategoryName === null) {
-                return 'no category';
-            } return $showCategoryName->toArray();
+            return $showCategoryName->toArray();
         }
 
         return Inertia::render('Teams/{$id}/Manage', [
