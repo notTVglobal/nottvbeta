@@ -520,7 +520,7 @@ Route::middleware([
 //        ChatMessage::forceCreate(request(['body']));
 //    });
 
-// Video Upload (temp page)
+// Videos
 ///////////////////////////
 ///
 
@@ -537,7 +537,10 @@ Route::middleware([
     ->can('viewCreator', 'App\Models\User')
     ->name('videoupload.upload');
 
-
+    // delete video
+    Route::post('/video/delete', [VideoUploadController::class, 'destroy'])
+        ->can('delete', 'App\Models\Video')
+        ->name('video.destroy');
 
 
 // MistAPI

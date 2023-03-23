@@ -3,18 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Models\Video;
+use App\Models\User;
 
 use Illuminate\Http\UploadedFile;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Pion\Laravel\ChunkUpload\Exceptions\UploadFailedException;
-use Illuminate\Http\Request;
+use Illuminate\Http\Request as HttpRequest;
 use Pion\Laravel\ChunkUpload\Exceptions\UploadMissingFileException;
 use Pion\Laravel\ChunkUpload\Handler\AbstractHandler;
 use Pion\Laravel\ChunkUpload\Handler\HandlerFactory;
 use Pion\Laravel\ChunkUpload\Receiver\FileReceiver;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 
 class VideoUploadController extends Controller
@@ -22,19 +25,85 @@ class VideoUploadController extends Controller
 
 
     public function index() {
+
+        // tec21: can either of these query builders be used to grab the
+        // newest 20 videos from the database (allVideos) for the admin
+        // then if the admin searches it searches the whole database and
+        // updates the results?
+        //
+//        $allVideos = DB::table('videos')->get()->chunk(500, function($rows) {
+//            // process $rows
+//        });
+//
+//        $subQuery = DB::table('videos')->where(...);
+//        DB::query()->fromSub($subQuery, 'alias')->orderBy('alias.id')->chunk(200, function ($chunk) {
+//            // Do something
+//        });
+
+        function getCreator($user){
+            return $name = User::query()
+                ->where('id', $user)
+                ->pluck('name')
+                ->first();
+        }
+
+        function formatBytes($bytes, $precision = 2) {
+            $unit = ["B", "KB", "MB", "GB"];
+            $exp = floor(log($bytes, 1024)) | 0;
+            return round($bytes / (pow(1024, $exp)), $precision).$unit[$exp];
+        }
+
         return Inertia::render('VideoUpload', [
             'videos' => fn () => Video::query()->where('user_id', auth()->user()->id)
                 ->latest()
-                ->paginate(10)
-                ->withQueryString()
+                ->paginate(10, ['*'], 'videos')
                 ->through(fn($video) => [
                     'id' => $video->id,
                     'file_name' => $video->file_name,
                     'category' => $video->category,
                     'type' => $video->type,
+                    'size' => formatBytes($video->size),
                     'created_at' => $video->created_at,
+                    'can' => [
+                        'viewAny' => auth()->user()->can('viewAny', $video),
+                        'view' => auth()->user()->can('view', $video),
+                        'create' => auth()->user()->can('create', $video),
+                        'edit' => auth()->user()->can('update', $video),
+                        'delete' => auth()->user()->can('delete', $video),
+                    ]
                 ]),
 
+            // this is a temporary query... use chunking or lazy loading
+            // to reduce load on the server ... replace it with a more
+            // efficient query.
+            //
+            'allVideos' => Video::query()
+                ->when(Request::input('search'), function ($query, $search) {
+                    $query->where('file_name', 'like', "%{$search}%");
+                })
+                ->latest()
+                ->paginate(10, ['*'], 'allVideos')
+                ->withQueryString()
+                ->through(fn($video) => [
+                    'id' => $video->id,
+                    'user_id' => getCreator($video->user_id),
+                    'file_name' => $video->file_name,
+                    'category' => $video->category,
+                    'type' => $video->type,
+                    'size' => formatBytes($video->size),
+                    'created_at' => $video->created_at,
+                    'can' => [
+                        'viewAny' => auth()->user()->can('viewAny', $video),
+                        'view' => auth()->user()->can('view', $video),
+                        'create' => auth()->user()->can('create', $video),
+                        'edit' => auth()->user()->can('update', $video),
+                        'delete' => auth()->user()->can('delete', $video),
+                    ]
+                ]),
+            'filters' => \Illuminate\Support\Facades\Request::only(['search']),
+            'can' => [
+                'viewAny' => auth()->user()->can('viewAny', Video::class)
+            ]
         ]);
     }
 
@@ -244,8 +313,15 @@ return $video;
      * @param  \App\Models\Video  $video
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Video $video)
+    public function destroy(HttpRequest $request)
     {
-        //
+        $video = Video::query()->where('id', $request->videoId)->first();
+
+//        $user->deleteProfilePhoto();
+//        $user->tokens->each->delete();
+        $video->delete();
+
+        // redirect
+        return redirect('/videoupload')->with('message', $video->file_name.' Deleted Successfully');
     }
 }

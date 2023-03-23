@@ -51,6 +51,11 @@ class Video extends Model
         return $this->hasMany(Movie::class);
     }
 
+    public function users()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function video()
     {
         return $this->belongsTo(Image::class);
