@@ -23,18 +23,19 @@ class VideoUploadController extends Controller
 
     public function index() {
         return Inertia::render('VideoUpload', [
-        'videos' => fn () => Video::query()->where('user_id', auth()->user()->id)
-            ->latest()
-            ->paginate(10)
-            ->withQueryString()
-            ->through(fn($video) => [
-                'id' => $video->id,
-                'file_name' => $video->file_name,
-                'category' => $video->category,
-                'type' => $video->type,
-                'created_at' => $video->created_at,
-            ]),
-            ]);
+            'videos' => fn () => Video::query()->where('user_id', auth()->user()->id)
+                ->latest()
+                ->paginate(10)
+                ->withQueryString()
+                ->through(fn($video) => [
+                    'id' => $video->id,
+                    'file_name' => $video->file_name,
+                    'category' => $video->category,
+                    'type' => $video->type,
+                    'created_at' => $video->created_at,
+                ]),
+
+        ]);
     }
 
 

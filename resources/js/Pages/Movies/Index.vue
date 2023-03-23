@@ -62,7 +62,7 @@
 
                     </div>
                     <!-- Paginator -->
-                    <Pagination :links="movies.links" class="mt-6"/>
+                    <Pagination :data="movies" class=""/>
 
                 </div>
 

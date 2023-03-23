@@ -4,7 +4,7 @@
 
     <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
-        <div class="light:bg-white light:text-black dark:bg-gray-800 p-5 mb-10">
+        <div class="bg-white text-black dark:bg-gray-800 p-5 mb-10">
 
             <TeamEditHeader :team="props.team" :teamLeaderName="props.teamLeaderName" />
 

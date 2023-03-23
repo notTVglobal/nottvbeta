@@ -44,7 +44,7 @@
                         <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                             <div class="p-6 bg-white border-b border-gray-200">
                                 <!-- Paginator -->
-                                <Pagination :links="teams.links" class="mb-6"/>
+                                <Pagination :data="teams" class=""/>
                                 <div
                                     class="relative overflow-x-auto shadow-md sm:rounded-lg"
                                 >
@@ -128,7 +128,7 @@
                                         </tbody>
                                     </table>
                                     <!-- Paginator -->
-                                    <Pagination :links="teams.links" class="mt-6"/>
+                                    <Pagination :data="teams" class=""/>
                                 </div>
                             </div>
                         </div>

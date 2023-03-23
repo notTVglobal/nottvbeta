@@ -14,6 +14,11 @@
                 >Dashboard</button>
                 </Link>
             </div>
+            <div class="flex justify-end mb-6">
+                <div>
+                    <input v-model="search" type="search" placeholder="Search..." class="text-black border px-2 rounded-lg mb-6" />
+                </div>
+            </div>
 
 
             <div class="flex flex-col">
@@ -35,20 +40,17 @@
                             <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                                 <div class="p-6 bg-white dark:bg-gray-800 border-b border-gray-200">
                                     <div
-                                        class="relative overflow-x-auto shadow-md sm:rounded-lg"
+                                        class="relative shadow-md sm:rounded-lg"
                                     >
-                                        <div class="flex flex-row justify-between gap-x-4 mr-2">
+
                                             <div>
                                                 <!-- Paginator -->
-                                                <Pagination :links="props.shows.links" class=""/>
+                                                <Pagination :data="shows" class=""/>
                                             </div>
-                                            <div>
-                                                <input v-model="search" type="search" placeholder="Search..." class="text-black border px-2 rounded-lg mb-6" />
-                                            </div>
-                                        </div>
+
 
                                         <table
-                                            class="w-full text-sm text-left text-gray-500 dark:text-gray-400"
+                                            class="w-full text-sm text-left text-gray-500 dark:text-gray-400 overflow-x-auto"
                                         >
                                             <thead
                                                 class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
@@ -155,7 +157,7 @@
                                             </tbody>
                                         </table>
                                         <!-- Paginator -->
-                                        <Pagination :links="shows.links" class="mt-6"/>
+                                        <Pagination :data="shows" class="pb-6"/>
                                     </div>
                                 </div>
                             </div>

@@ -5,7 +5,7 @@
     <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3 overflow-x-hidden">
 
-        <div class="light:bg-white light:text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
+        <div class="bg-white text-black dark:bg-gray-900 dark:text-gray-50 p-5 mb-10">
 
             <div
                 class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
@@ -90,7 +90,7 @@
                         <div class="mt-4 mb-12 pb-6 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
                             <TeamShowsList :shows="props.shows.data" />
                             <!-- Paginator -->
-                            <Pagination :links="props.shows.links" class="mt-6"/>
+                            <Pagination :data="props.shows" class="mt-6"/>
                         </div>
 
                         <div class="mt-4 mb-12 pb-6 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">

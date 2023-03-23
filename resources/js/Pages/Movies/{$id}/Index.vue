@@ -231,7 +231,7 @@
 
                 <div class="flex justify-end mt-6 pr-2 pb-4">
                     <!-- Paginator -->
-                    <!--                            <Pagination :links="`#`" class="mt-6"/>-->
+                    <!--                            <Pagination :data="`#`" class=""/>-->
                     <Link :href="`#`" class="text-blue-500 ml-2"> {{ movie.name }}
                         <span v-if="movie.release_year"> © {{movie.release_year}}</span>
                     </Link>

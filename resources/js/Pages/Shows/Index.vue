@@ -70,7 +70,7 @@
 
                     </div>
                     <!-- Paginator -->
-                    <Pagination :links="shows.links" class="mt-6"/>
+                    <Pagination :data="shows" class=""/>
                 </div>
 
                 <div class="flex flex-col lg:flex-row my-10">
@@ -163,7 +163,7 @@
 </template>
 
 <script setup>
-import Pagination from "@/Components/Pagination"
+import Pagination from "@/Components/PaginationDark"
 import {onBeforeMount, onMounted, ref, watch} from "vue"
 import {Inertia} from "@inertiajs/inertia"
 import throttle from "lodash/throttle"

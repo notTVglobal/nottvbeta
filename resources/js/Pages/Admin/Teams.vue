@@ -5,19 +5,27 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 
-            <div v-if="props.can.viewCreator" class="flex justify-end flex-wrap-reverse gap-x-2">
+            <div class="flex justify-between mb-6">
 
-                <Link v-if="can.createTeam" :href="`/teams/create`"><button
-                    class="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded disabled:bg-gray-400"
-                >Add Team</button>
-                </Link>
-                <Link :href="`/dashboard`"><button
-                    class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                >Dashboard</button>
-                </Link>
+                <div>
+                    <h1 class="text-3xl font-semibold pb-3">Teams</h1>
+                </div>
+
+                <div v-if="props.can.viewCreator" class="flex justify-end flex-wrap-reverse gap-x-2">
+
+                    <Link v-if="can.createTeam" :href="`/teams/create`"><button
+                        class="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded disabled:bg-gray-400"
+                    >Add Team</button>
+                    </Link>
+                    <Link :href="`/dashboard`"><button
+                        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                    >Dashboard</button>
+                    </Link>
+                </div>
+
             </div>
 
-            <h1 class="text-3xl font-semibold pb-3">Teams</h1>
+
 
             <div class="flex flex-row justify-end gap-x-4">
                 <input v-model="search" type="search" placeholder="Search..." class="text-black border px-2 rounded-lg" />
@@ -44,14 +52,14 @@
                         <div class="overflow-hidden bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg">
                             <div class="p-6 bg-white dark:bg-gray-800 border-b border-gray-200">
                                 <!-- Paginator -->
-                                <Pagination :links="teams.links" class="mb-6"/>
+                                <Pagination :data="teams" class="mb-6"/>
                                 <div
                                     class="relative overflow-x-auto shadow-md sm:rounded-lg"
                                 >
 
 
                                     <table
-                                        class="w-full text-sm text-left text-gray-500 dark:text-gray-400"
+                                        class="w-full text-sm text-left text-gray-500 dark:text-gray-400 overflow-x-auto"
                                     >
                                         <thead
                                             class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
@@ -130,7 +138,7 @@
                                         </tbody>
                                     </table>
                                     <!-- Paginator -->
-                                    <Pagination :links="teams.links" class="mt-6"/>
+                                    <Pagination :data="teams" class="pb-6"/>
                                 </div>
                             </div>
                         </div>

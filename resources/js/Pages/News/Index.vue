@@ -130,7 +130,7 @@
                             </tbody>
                         </table>
                         <!-- Paginator -->
-                        <Pagination :links="news.links" class="mt-6"/>
+                        <Pagination :data="news" class="mt-6"/>
                     </div>
                 </div>
             </div>
@@ -156,9 +156,9 @@ let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'news'
 
-onBeforeMount(() => {
-    userStore.scrollToTopCounter = 0;
-})
+// onBeforeMount(() => {
+//     userStore.scrollToTopCounter = 0;
+// })
 
 function scrollToCities() {
     document.getElementById("cities").scrollIntoView({behavior: "smooth"})
@@ -166,19 +166,16 @@ function scrollToCities() {
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
-    if (userStore.scrollToTopCounter === 0 ) {
-        document.getElementById("topDiv").scrollIntoView()
-        userStore.scrollToTopCounter ++;
-    }
+    // if (userStore.scrollToTopCounter === 0 ) {
+    //     document.getElementById("topDiv").scrollIntoView()
+    //     userStore.scrollToTopCounter ++;
+    // }
 });
 
 let props = defineProps({
     filters: Object,
     can: Object,
-    news: {
-        type: Object,
-        default: () => ({}),
-    },
+    news: Object,
     message: String,
 });
 

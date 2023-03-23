@@ -196,7 +196,7 @@
                                     </div>
                                 </div>
                                 <!-- Paginator -->
-                                <Pagination :links="props.creators.links" class="mb-6 pb-6 border-b border-gray-800"/>
+                                <Pagination :data="props.creators" class="mb-6 pb-6 border-b border-gray-800"/>
                             </div>
 
 
@@ -239,8 +239,8 @@ import { useUserStore } from "@/Stores/UserStore.js"
 import ShowEpisodesList from "@/Components/Shows/ShowEpisodesList"
 // import ShowCreatorsList from "@/Components/Shows/ShowCreatorsList";
 import ShowFooter from "@/Components/Shows/ShowFooter"
-import Pagination from "@/Components/Pagination";
-
+import Pagination from "@/Components/PaginationDark";
+import Message from "@/Components/Modals/Messages.vue";
 let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore();
 let showStore = useShowStore();

@@ -1,7 +1,7 @@
 <template>
     <div>
         <!-- Paginator -->
-        <Pagination :links="shows.links" class="mb-6"/>
+        <Pagination :data="shows" class="mb-6"/>
 
         <div class="flex flex-row flex-wrap pb-12">
             <div

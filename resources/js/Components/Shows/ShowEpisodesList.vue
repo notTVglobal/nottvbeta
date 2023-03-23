@@ -1,4 +1,4 @@
-<template>
+<template preserve-scroll>
 
     <div class="container mx-auto px-4 mb-12">
 
@@ -23,17 +23,15 @@
         </div>
 
     <!-- Paginator -->
-    <Pagination :links="props.episodes.links" class="mt-12 mb-6 pb-6 border-b border-gray-800"/>
+    <Pagination :data="props.episodes" class="mt-12 mb-6 pb-6 border-b border-gray-800"/>
     </div>
-
-
 
 </template>
 
 <script setup>
 // import ShowEpisode from "@/Components/Shows/Manage/ShowEpisode.vue";
 // import {useShowStore} from "@/Stores/ShowStore";
-import Pagination from "@/Components/Pagination";
+import Pagination from "@/Components/PaginationDark";
 
 // let showStore = useShowStore();
 

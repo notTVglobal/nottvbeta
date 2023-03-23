@@ -215,7 +215,7 @@
                     </div>
                     <div class="flex flex-row justify-between bottom-0 align-items-bottom py-2 px-2">
                         <!-- Paginator -->
-                        <div><Pagination v-if="teams.links > 3" :links="teams.links" class="mt-6 absolute inset-x-0 bottom-0 py-2 px-2 "/></div>
+                        <div><Pagination v-if="teams.links > 3" :data="teams" class="mt-6 absolute inset-x-0 bottom-0 py-2 px-2 "/></div>
 
                         <div>
                         <Popper
@@ -258,7 +258,7 @@
                     </div>
                     <div class="flex flex-row justify-between bottom-0 align-items-bottom py-2 px-2">
                         <!-- Paginator -->
-                        <div><Pagination v-if="shows.links > 3" :links="shows.links" class="mt-6 absolute inset-x-0 bottom-0 py-2 px-2 "/></div>
+                        <div><Pagination v-if="shows.links > 3" :data="shows" class="mt-6 absolute inset-x-0 bottom-0 py-2 px-2 "/></div>
                         <div>
                         <Popper
                             hover openDelay="50" closeDelay="50"

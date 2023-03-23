@@ -3,19 +3,16 @@
 
     <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
-        <div class="light:bg-white light:text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
+        <div class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 
             <div class="flex justify-between mt-3 mb-6">
                 <div class="text-3xl">Create Show</div>
                 <div>
-                    <Link v-if="teamStore.slug" :href="`/teams/${teamStore.slug}/manage`"><button
+                    <button
+                        @click="back"
                         class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
-                    >Cancel</button>
-                    </Link>
-                    <Link v-if="!teamStore.slug" :href="`/dashboard`"><button
-                        class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
-                    >Cancel</button>
-                    </Link>
+                    >Cancel
+                    </button>
                 </div>
             </div>
 
@@ -26,7 +23,7 @@
 
             <form @submit.prevent="submit" class="max-w-md mx-auto mt-8">
                     <div class="mb-6">
-                        <label class="block mb-2 uppercase font-bold text-xs text-gray-200"
+                        <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"
                                for="name"
                         >
                             Team
@@ -40,7 +37,7 @@
                                 v-for="team in props.teams.data"
                                 :key="team.id"
                                 :value="team.id"
-                                class="light:bg-white light:text-black border-b dark:text-gray-50 dark:bg-gray-800 dark:border-gray-600"
+                                class="bg-white text-black border-b dark:text-gray-50 dark:bg-gray-800 dark:border-gray-600"
 
                             >
                                 {{ team.name }}
@@ -52,7 +49,7 @@
                         <div v-if="form.errors.team_id" v-text="form.errors.team_id" class="text-xs text-red-600 mt-1"></div>
                     </div>
                 <div class="mb-6">
-                    <label class="block mb-2 uppercase font-bold text-xs text-gray-200"
+                    <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"
                            for="name"
                     >
                         Show Name
@@ -69,7 +66,7 @@
                 </div>
 
                 <div class="mb-6">
-                    <label class="block mb-2 uppercase font-bold text-xs text-gray-200"
+                    <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"
                            for="category"
                     >
                         Category
@@ -91,15 +88,15 @@
                 </div>
 
                 <div class="mb-6">
-                    <div class="text-sm text-orange-600">Sub-categories are coming soon!</div>
-                    <label class="block mb-2 uppercase font-bold text-xs text-gray-200"
+                    <label class="block mb-1 uppercase font-bold text-xs dark:text-gray-200"
                            for="sub_category"
                     >
                         Sub-category
                     </label>
+                    <div class="mb-2 text-sm text-orange-600">Sub-categories are coming soon!</div>
 
 
-                    <select disabled class="border border-gray-400 text-gray-800 disabled:bg-gray-600 disabled:cursor-not-allowed p-2 w-full rounded-lg block mb-2 uppercase font-bold text-xs"
+                    <select disabled class="border border-gray-400 text-gray-800 disabled:bg-gray-300 dark:disabled:bg-gray-600 disabled:cursor-not-allowed p-2 w-full rounded-lg block mb-2 uppercase font-bold text-xs"
                             v-model="form.sub_category"
                     >
                         <option value="1">Option</option>
@@ -109,7 +106,7 @@
                 </div>
 
                 <div class="mb-6">
-                    <label class="block mb-2 uppercase font-bold text-xs text-gray-200"
+                    <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"
                            for="description"
                     >
                         Description
@@ -125,7 +122,7 @@
                 </div>
 
                 <div class="mb-6">
-                    <label class="block mb-2 uppercase font-bold text-xs text-gray-200"
+                    <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"
                            for="name"
                     >
                         Website URL
@@ -142,7 +139,7 @@
                 </div>
 
                 <div class="mb-6">
-                    <label class="block mb-2 uppercase font-bold text-xs text-gray-200"
+                    <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"
                            for="name"
                     >
                         Instagram Handle
@@ -159,7 +156,7 @@
                 </div>
 
                 <div class="mb-6">
-                    <label class="block mb-2 uppercase font-bold text-xs text-gray-200"
+                    <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"
                            for="name"
                     >
                         Telegram URL
@@ -176,7 +173,7 @@
                 </div>
 
                 <div class="mb-6">
-                    <label class="block mb-2 uppercase font-bold text-xs text-gray-200"
+                    <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"
                            for="name"
                     >
                         Twitter @
@@ -193,7 +190,7 @@
                 </div>
 
                 <div class="mb-6">
-                    <label class="block mb-2 uppercase font-bold text-xs text-gray-200"
+                    <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"
                            for="notes"
                     >
                         Notes (Only your team members see these notes, they are not public)
@@ -279,10 +276,15 @@ function chooseCategory(event) {
 
 let submit = () => {
     form.post('/shows');
-};
+}
 
 function reset() {
     form.reset();
-};
+}
+
+function back() {
+    window.history.back()
+}
+
 
 </script>

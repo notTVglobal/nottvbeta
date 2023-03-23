@@ -3,7 +3,7 @@
 
     <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
-        <div class="light:bg-white light:text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
+        <div class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 
             <div class="flex justify-between mt-3 mb-6">
                 <div class="text-3xl">Create Episode</div>
@@ -23,7 +23,7 @@
 
             <form @submit.prevent="submit" class="max-w-md mx-auto mt-8">
                 <div class="mb-6">
-                    <label class="block mb-2 uppercase font-bold text-xs text-gray-200"
+                    <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"
                            for="showName"
                     >
                         Show Name
@@ -33,7 +33,7 @@
                     <div v-if="form.errors.show_id" v-text="form.errors.show_id" class="text-xs text-red-600 mt-1"></div>
                 </div>
                 <div class="mb-6">
-                    <label class="block mb-2 uppercase font-bold text-xs text-gray-200"
+                    <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"
                            for="showCategory"
                     >
                         Category
@@ -41,15 +41,16 @@
                     <div class="font-bold">{{props.show.showCategoryName}}</div>
                 </div>
                 <div class="mb-6">
-                    <label class="block mb-2 uppercase font-bold text-xs text-gray-200"
+                    <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"
                            for="showCategory"
                     >
                         Sub-category
                     </label>
+                    <div class="mb-2 text-sm text-orange-600">Sub-categories are coming soon!</div>
                     <div class="font-bold">{{props.show.subCategoryName}}</div>
                 </div>
                 <div class="mb-6">
-                    <label class="block mb-2 uppercase font-bold text-xs text-gray-200"
+                    <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"
                            for="name"
                     >
                         Episode Name
@@ -66,7 +67,7 @@
                 </div>
 
                 <div class="mb-6">
-                    <label class="block mb-2 uppercase font-bold text-xs text-gray-200"
+                    <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"
                            for="episode_number"
                     >
                         Episode Number
@@ -82,7 +83,7 @@
                 </div>
 
                 <div class="mb-6">
-                    <label class="block mb-2 uppercase font-bold text-xs text-gray-200"
+                    <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"
                            for="description"
                     >
                         Description
@@ -98,7 +99,7 @@
                 </div>
 
                 <div class="mb-6">
-                    <label class="block mb-2 uppercase font-bold text-xs text-gray-200"
+                    <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"
                            for="video_file_url"
                     >
                         Video URL (if hosted externally, must be a url that ends in .mp4)
@@ -113,7 +114,7 @@
                 </div>
 
                 <div class="mb-6">
-                    <label class="block mb-2 uppercase font-bold text-xs text-gray-200"
+                    <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"
                            for="video_file_embed_code"
                     >
                         Video Embed Code (IFRAME only)
@@ -128,7 +129,7 @@
                 </div>
 
                 <div class="mb-6">
-                    <label class="block mb-2 uppercase font-bold text-xs text-gray-200"
+                    <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"
                            for="notes"
                     >
                         Notes (Only your team members see these notes, they are not public)

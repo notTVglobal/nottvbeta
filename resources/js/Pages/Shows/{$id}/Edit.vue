@@ -4,7 +4,7 @@
 
     <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
-        <div class="light:bg-white light:text-black dark:bg-gray-800 p-5 mb-10">
+        <div class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 
             <ShowEditHeader :show="props.show" :team="props.team"/>
 
@@ -144,21 +144,20 @@
                                             <div v-if="form.errors.category" v-text="form.errors.category"
                                                  class="text-xs text-red-600 mt-1"></div>
 
-                                            {{showCategoryDescription}}
+                                           <span class="dark:text-gray-50">{{showCategoryDescription}}</span>
                                         </div>
 
 
 
                                         <div class="mb-6">
-                                            <div class="text-sm text-orange-600">Sub-categories are coming soon!</div>
-                                            <label class="block mb-2 text-gray-600 uppercase font-bold text-xs text-light text-gray-600"
+                                            <label class="block mb-1 text-gray-600 uppercase font-bold text-xs text-light text-gray-600"
                                                    for="sub_category"
                                             >
                                                 Sub-category
                                             </label>
+                                            <div class="mb-2 text-sm text-orange-600">Sub-categories are coming soon!</div>
 
-
-                                            <select disabled class="border border-gray-400 text-gray-800 disabled:bg-gray-600 disabled:cursor-not-allowed p-2 w-full rounded-lg block mb-2 uppercase font-bold text-xs"
+                                            <select disabled class="border border-gray-400 text-gray-800 disabled:bg-gray-300 dark:disabled:bg-gray-600 disabled:cursor-not-allowed p-2 w-full rounded-lg block mb-2 uppercase font-bold text-xs"
                                                     v-model="form.sub_category"
                                             >
                                                 <option value="1">Option</option>

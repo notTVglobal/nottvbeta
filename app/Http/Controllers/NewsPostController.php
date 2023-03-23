@@ -42,7 +42,7 @@ class NewsPostController extends Controller
                     $query->where('title', 'like', "%{$search}%");
                 })
                 ->where('published_at', '!=', null)
-                ->paginate(10, ['*'], 'news')
+                ->paginate(5, ['*'], 'news')
                 ->withQueryString()
                 ->through(fn($newsPost) => [
                     'slug' => $newsPost->slug,

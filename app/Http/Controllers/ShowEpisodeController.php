@@ -98,8 +98,8 @@ class ShowEpisodeController extends Controller
 //            ->firstOrFail();
 
         return redirect()
-            ->route('shows.manage',
-                [$showSlug,$showEpisodeSlug])
+            ->route('shows.showEpisodes.show',
+                ['show' => $showSlug, 'showEpisode' => $showEpisodeSlug])
             ->with('message', 'Episode Created Successfully');
 
     }

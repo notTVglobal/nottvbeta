@@ -506,6 +506,8 @@ class ShowsController extends Controller
         return Inertia::render('Shows/{$id}/Episodes/Create', [
             'show' => [
                 'name' => $show->name,
+                'id' => $show->id,
+                'slug' => $show->slug,
                 'showRunner' => $show->user->name,
                 'poster' => $show->image->name,
                 'showCategoryName' => $show->showCategory->name,

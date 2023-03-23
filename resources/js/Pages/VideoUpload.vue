@@ -100,7 +100,7 @@
                                 </div>
                             </div>
                             <!-- Paginator -->
-                            <Pagination :links="videos.links" class="mt-6"/>
+                            <Pagination :data="videos" class="pb-6"/>
                         </div>
                     </div>
                 </div>

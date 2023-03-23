@@ -3,12 +3,9 @@
 
     <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
-        <div class="bg-white text-black p-5 mb-10">
+        <div class="bg-white text-black dark:bg-gray-900 dark:text-gray-50 p-5 mb-10">
 
-            <div class="flex justify-between mb-6">
-                <div class="grid grid-cols-1 grid-rows-2 pt-4">
-                    <h1 class="text-3xl font-semibold">Image Uploader</h1>
-                </div>
+            <div class="flex justify-between">
                 <span class="text-xs font-semibold text-red-700">Admin Mode</span>
                 <div class="grid grid-cols-1 grid-rows-2">
                     <div class="justify-self-end mb-4">
@@ -21,6 +18,7 @@
             </div>
 
     <div class="max-w-lg mx-auto mt-2 bg-gray-200 p-6">
+        <h3 class="text-2xl font-bold text-center dark:text-white">Image Uploader</h3>
         <div class="pt-3 pb-4">
             <ul>
                 <li>Max File Size: <span class="text-orange-400">20MB</span></li>
@@ -42,18 +40,18 @@
 
     </div>
 
-    <div class="mt-8 mb-24 mx-auto">
-        <h3 class="text-2xl font-medium text-center">Image Gallery</h3>
+    <div class="mt-8 mb-24 mx-auto w-[calc(100%-96)] py-10">
+        <h3 class="text-2xl font-bold text-center dark:text-white">Image Gallery</h3>
 <!--        <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg" />-->
         <!-- Paginator -->
-        <Pagination :links="images.links" class="mt-6"/>
-        <div class="grid grid-cols-3 gap-2 justify-evenly mt-4">
+        <Pagination :data="images" class="mt-6"/>
+        <div class="w-full p-4 flex flex-initial flex-wrap gap-6 justify-center mt-4">
             <div v-for="image in images.data" :key="image.id">
-                <img :src="'/storage/images/' + image.name">
+                <img :src="'/storage/images/' + image.name" class="max-w-xs">
             </div>
         </div>
         <!-- Paginator -->
-        <Pagination :links="images.links" class="mt-6"/>
+        <Pagination :data="images" class="mt-6"/>
     </div>
         </div>
     </div>

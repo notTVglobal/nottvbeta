@@ -38,7 +38,7 @@
     </table>
 
     <!-- Paginator -->
-    <Pagination :links="episodes.links" class="mb-6"/>
+    <Pagination :data="episodes" class=""/>
 
 </template>
 

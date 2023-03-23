@@ -4,7 +4,7 @@
 
     <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
-        <div class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
+        <div class="bg-white text-black dark:bg-gray-900 dark:text-gray-50 p-5 mb-10">
 
             <div
                 class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
@@ -66,8 +66,6 @@
                             >Create News</button>
                             </Link>
                         </div>
-                        <!-- Paginator -->
-                        <Pagination :links="news.links" class="mb-6"/>
 
                         <div
                             class="table w-full text-sm text-left text-gray-500 dark:text-gray-400"
@@ -100,7 +98,7 @@
                             <div
                                 v-for="news in news.data"
                                 :key="news.id"
-                                class="table-row bg-white border-b dark:bg-gray-600 dark:border-gray-700 "
+                                class="table-row bg-white border-b dark:bg-gray-900 dark:border-gray-700 "
                             >
                                 <div
                                     scope="row"
@@ -110,7 +108,7 @@
                                 </div>
                                 <div
                                     scope="row"
-                                    class="table-cell px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap align-middle"
+                                    class="table-cell px-6 py-4 font-medium text-gray-900 dark:text-gray-50 whitespace-nowrap align-middle"
                                 >
                                     <Link :href="`/news/${news.slug}`" class="text-lg font-semibold text-blue-800 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-200">{{ news.title }}</Link>
                                 </div>
@@ -151,7 +149,7 @@
                             </div>
                         </div>
                         <!-- Paginator -->
-                        <Pagination :links="news.links" class="mt-6"/>
+                        <Pagination :data="news" class=""/>
                     </div>
                 </div>
             </div>
