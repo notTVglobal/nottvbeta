@@ -6,25 +6,16 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-dark text-light p-5 mb-10">
 
+            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+
             <header>
-                <div class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
-                role="alert"
-                v-if="props.message">
-                <span class="font-medium">
-                                    {{ props.message }}
-                                </span>
-                </div>
-
                 <ShowEpisodeEditHeader :show="props.show" :team="props.team" :episode="props.episode"/>
-
             </header>
-
 
             <div class="flex flex-col">
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                     <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-
 
                             <div v-if="form.errors.name" v-text="form.errors.name"
                                  class="bg-red-600 p-2 w-full text-white font-semibold mt-1"></div>
@@ -40,7 +31,6 @@
                                  class="bg-red-600 p-2 w-full text-white font-semibold mt-1"></div>
 
 
-
                             <form @submit.prevent="submit">
 <!--                                <div class="flex justify-end mr-2 mb-6">-->
 <!--                                    <button-->
@@ -51,8 +41,6 @@
 <!--                                        Save-->
 <!--                                    </button>-->
 <!--                                </div>-->
-
-
 
 
 
@@ -127,9 +115,6 @@
                                         </div>
 
                                     </div>
-
-
-
 
 
                                 </div>
@@ -301,16 +286,14 @@
 </template>
 
 <script setup>
-import {onBeforeMount, onMounted} from "vue"
-import {useForm} from "@inertiajs/inertia-vue3"
-import TabbableTextarea from "@/Components/TabbableTextarea"
-import ShowEpisodeEditHeader from "@/Components/ShowEpisodes/Edit/ShowEpisodeEditHeader"
-
+import { onBeforeMount, onMounted, ref } from "vue"
 import { Inertia } from "@inertiajs/inertia"
+import { useForm } from "@inertiajs/inertia-vue3"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useTeamStore } from "@/Stores/TeamStore.js"
 import { useShowStore } from "@/Stores/ShowStore.js"
-
+import { useUserStore } from "@/Stores/UserStore";
+import TabbableTextarea from "@/Components/TabbableTextarea"
 import vueFilePond, { setOptions } from 'vue-filepond'
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type"
 import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size"
@@ -318,7 +301,8 @@ import FilePondPluginImagePreview from "filepond-plugin-image-preview"
 import FilePondPluginFileMetadata from "filepond-plugin-file-metadata"
 import 'filepond/dist/filepond.min.css'
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css'
-import {useUserStore} from "@/Stores/UserStore";
+import ShowEpisodeEditHeader from "@/Components/ShowEpisodes/Edit/ShowEpisodeEditHeader"
+import Message from "@/Components/Modals/Messages";
 
 let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore()
@@ -326,6 +310,9 @@ let showStore = useShowStore()
 let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'episodes'
+teamStore.setActiveTeam(props.team);
+teamStore.setActiveShow(props.show);
+showStore.episodePoster = props.poster;
 
 onBeforeMount(() => {
     userStore.scrollToTopCounter = 0;
@@ -344,6 +331,18 @@ let props = defineProps({
     show: Object,
     team: Object,
     poster: String,
+});
+
+let form = useForm({
+    id: props.episode.id,
+    name: props.episode.name,
+    episode_number: props.episode.episode_number,
+    description: props.episode.description,
+    notes: props.episode.notes,
+    show_id: props.episode.show_id,
+    video_thumbnail: props.episode.video_thumbnail,
+    video_file_url: props.episode.video_file_url,
+    video_file_embed_code: props.episode.video_file_embed_code,
 });
 
 const FilePond = vueFilePond(
@@ -376,32 +375,15 @@ function handleProcessedFile(error, file) {
         console.log(file);
         return;
     }
-
     Inertia.reload({
         only: ['poster'],
     });
-
 }
-
-teamStore.setActiveTeam(props.team);
-teamStore.setActiveShow(props.show);
-showStore.episodePoster = props.poster;
-
-let form = useForm({
-    id: props.episode.id,
-    name: props.episode.name,
-    episode_number: props.episode.episode_number,
-    description: props.episode.description,
-    notes: props.episode.notes,
-    show_id: props.episode.show_id,
-    video_thumbnail: props.episode.video_thumbnail,
-    video_file_url: props.episode.video_file_url,
-    video_file_embed_code: props.episode.video_file_embed_code,
-});
 
 let submit = () => {
     form.put(route('showEpisodes.update', props.episode.slug));
 };
 
+let showMessage = ref(true);
 
 </script>

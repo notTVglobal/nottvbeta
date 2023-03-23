@@ -5,6 +5,8 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white dark:bg-gray-800 text-black dark:text-gray-50 p-5 mb-10">
 
+            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+
             <div class="flex justify-between mt-3 mb-6">
                 <div class="text-3xl">Create New User</div>
                 <div>
@@ -212,10 +214,11 @@
 </template>
 
 <script setup>
+import { onBeforeMount, onMounted, ref } from "vue"
 import { useForm } from "@inertiajs/inertia-vue3"
-import {onBeforeMount, onMounted} from "vue"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import {useUserStore} from "@/Stores/UserStore";
+import { useUserStore } from "@/Stores/UserStore";
+import Message from "@/Components/Modals/Messages";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -232,7 +235,11 @@ onMounted(() => {
         document.getElementById("topDiv").scrollIntoView()
         userStore.scrollToTopCounter ++;
     }
-});
+})
+
+let props = defineProps({
+    message: String,
+})
 
 let form = useForm({
     name: '',
@@ -252,11 +259,13 @@ let form = useForm({
 
 function reset() {
     form.reset();
-};
+}
 
 const submit = () => {
     form.post(route("users.store"));
-};
+}
+
+let showMessage = ref(true);
 
 function back() {
     window.history.back()

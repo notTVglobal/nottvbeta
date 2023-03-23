@@ -6,6 +6,8 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-gray-900 text-white px-5">
 
+            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+
             <header class="flex justify-between mb-3 border-b border-gray-800">
                 <div class="container mx-auto flex flex-col lg:flex-row items-center justify-between px-4 py-6">
                     <div class="flex flex-col lg:flex-row items-center">
@@ -186,12 +188,13 @@
 </template>
 
 <script setup>
-import Pagination from "@/Components/PaginationDark"
+import { onMounted, watch, onBeforeMount, ref } from "vue";
+import { Inertia } from "@inertiajs/inertia";
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useUserStore } from "@/Stores/UserStore.js"
-import { ref, onMounted, watch, onBeforeMount } from "vue";
+import Pagination from "@/Components/PaginationDark"
 import throttle from "lodash/throttle";
-import { Inertia } from "@inertiajs/inertia";
+import Message from "@/Components/Modals/Messages";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -223,6 +226,7 @@ let props = defineProps({
     can: Object,
     movies: Object,
     filters: Object,
+    message: String,
 })
 
 let search = ref(props.filters.search);
@@ -234,7 +238,7 @@ watch(search, throttle(function (value) {
     });
 }, 300));
 
-
+let showMessage = ref(true);
 
 </script>
 

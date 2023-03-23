@@ -4,18 +4,9 @@
 
     <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3 overflow-x-hidden">
-
         <div class="bg-white text-black dark:bg-gray-900 dark:text-gray-50 p-5 mb-10">
 
-            <div
-                class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
-                role="alert"
-                v-if="message"
-            >
-        <span class="font-medium">
-            {{ message }}
-        </span>
-            </div>
+            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
 
             <!--            <TeamHeader v-bind="team" :memberSpots="props.team.memberSpots"/>-->
 
@@ -114,15 +105,16 @@
 
 
 <script setup>
-import {onBeforeMount, onMounted} from "vue"
+import { onBeforeMount, onMounted, ref } from "vue"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useTeamStore } from "@/Stores/TeamStore.js"
-import Pagination from "@/Components/Pagination"
+import { useUserStore } from "@/Stores/UserStore";
 import TeamManageHeader from "@/Components/Teams/Manage/TeamManageHeader"
 import TeamMembersList from "@/Components/Teams/Manage/TeamMembersList"
 import TeamShowsList from "@/Components/Teams/Manage/TeamShowsList"
 import TeamAssignmentsList from "@/Components/Teams/Manage/TeamAssignmentsList"
-import {useUserStore} from "@/Stores/UserStore";
+import Pagination from "@/Components/Pagination"
+import Message from "@/Components/Modals/Messages";
 
 let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore();
@@ -162,5 +154,7 @@ teamStore.can = props.can;
 function openModal() {
     teamStore.showModal = true;
 }
+
+let showMessage = ref(true);
 
 </script>

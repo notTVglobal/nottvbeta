@@ -10,9 +10,6 @@
             <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
 
         <header>
-
-
-
             <div id="topDiv" v-if="userStore.isMobile && props.can.viewCreator"></div>
             <div v-if="props.can.viewCreator" class="flex justify-end mt-10">
 
@@ -33,9 +30,7 @@
                     >Dashboard</button>
                     </Link>
                 </div>
-
             </div>
-
         </header>
 
             <main class="mt-12">

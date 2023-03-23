@@ -6,6 +6,8 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 
+            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+
             <div class="flex flex-row justify-between">
                 <h2 class="text-xl font-semibold leading-tight">
                     Create News Post
@@ -94,13 +96,14 @@
 </template>
 
 <script setup>
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+import { onBeforeMount, onMounted, ref } from "vue";
 import { useForm } from '@inertiajs/inertia-vue3'
-import {onBeforeMount, onMounted} from "vue";
-import {useUserStore} from "@/Stores/UserStore";
-import {useNewsStore} from "@/Stores/NewsStore"
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+import { useUserStore } from "@/Stores/UserStore";
+import { useNewsStore } from "@/Stores/NewsStore"
 // import TabbableTextarea from "@/Components/TabbableTextarea.vue";
 import Tiptap from "@/Components/TextEditor/TiptapNewsPostCreate.vue";
+import Message from "@/Components/Modals/Messages";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -123,6 +126,7 @@ onMounted(() => {
 
 const props = defineProps({
     can: Object,
+    message: String,
 });
 
 let form = useForm({
@@ -134,6 +138,8 @@ let submit = () => {
     form.body = newsStore.newsArticleContentTiptop;
     form.post(route("news.store"));
 };
+
+let showMessage = ref(true);
 
 function back() {
     newsStore.newsArticleContentTiptop = '';

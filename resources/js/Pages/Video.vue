@@ -5,6 +5,8 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white text-black p-5 mb-10">
 
+            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+
             <div class="flex justify-between mb-6">
                 <div class="grid grid-cols-1 grid-rows-2 pt-4">
                     <h1 class="text-3xl font-semibold">MistServer API 2</h1>
@@ -319,6 +321,7 @@ import { onMounted, ref, reactive, onBeforeMount } from "vue";
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
 import {useStreamStore} from "@/Stores/StreamStore";
 import {useUserStore} from "@/Stores/UserStore";
+import Message from "@/Components/Modals/Messages";
 
 let videoPlayerStore = useVideoPlayerStore()
 let streamStore = useStreamStore()
@@ -614,7 +617,7 @@ function addStream() {
 // }
 
 
-
+let showMessage = ref(true);
 
 </script>
 

@@ -5,6 +5,8 @@
     <div class="place-self-center flex flex-col">
         <div class="flex justify-between p-5 mb-5">
 
+            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+
             <div class="text-3xl font-semibold pt-4">Schedule</div>
 
         </div>
@@ -397,15 +399,15 @@
 </template>
 
 <script setup>
+import { onBeforeMount, onMounted, ref } from "vue";
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useUserStore } from "@/Stores/UserStore.js"
-import { onBeforeMount, onMounted } from "vue";
+import Message from "@/Components/Modals/Messages";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'schedule';
-
 
 onBeforeMount(() => {
     userStore.scrollToTopCounter = 0;
@@ -421,10 +423,13 @@ onMounted(() => {
 });
 
 let props = defineProps({
-    can: Object
+    can: Object,
+    message: String,
 })
 
 // chat.class = "chatSmall"
+
+let showMessage = ref(true);
 
 </script>
 

@@ -5,18 +5,10 @@
     <div class="place-self-center flex flex-col gap-y-3 w-full overscroll-x-none">
         <div class="bg-gray-900 text-white p-5 mb-10">
 
+            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+
             <header class="flex justify-between mb-3 border-b border-gray-800">
                 <div class="container mx-auto flex flex-col lg:flex-row items-center justify-between px-4 py-6">
-
-                    <div
-                        class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
-                        role="alert"
-                        v-if="props.message"
-                    >
-                                <span class="font-medium">
-                                    {{props.message}}
-                                </span>
-                    </div>
 
                     <div class="flex flex-col lg:flex-row items-center">
                         <h1 class="text-3xl font-semibold">Shows</h1>
@@ -163,12 +155,13 @@
 </template>
 
 <script setup>
-import Pagination from "@/Components/PaginationDark"
-import {onBeforeMount, onMounted, ref, watch} from "vue"
-import {Inertia} from "@inertiajs/inertia"
-import throttle from "lodash/throttle"
+import { onBeforeMount, onMounted, ref, watch } from "vue"
+import { Inertia } from "@inertiajs/inertia"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import {useUserStore} from "@/Stores/UserStore.js"
+import { useUserStore } from "@/Stores/UserStore.js"
+import Pagination from "@/Components/PaginationDark"
+import throttle from "lodash/throttle"
+import Message from "@/Components/Modals/Messages";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -214,6 +207,8 @@ watch(search, throttle(function (value) {
         replace: true
     });
 }, 300));
+
+let showMessage = ref(true);
 
 </script>
 

@@ -6,15 +6,7 @@
     <div class="place-self-center flex flex-col">
         <div class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-1 w-full">
 
-            <div
-                class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
-                role="alert"
-                v-if="props.message"
-            >
-                                <span class="font-medium">
-                                    {{props.message}}
-                                </span>
-            </div>
+            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
 
             <header class="mb-5 border-b border-gray-800">
                 <div class="container mx-auto flex flex-col lg:flex-row justify-between items-center px-4 py-6">
@@ -88,10 +80,11 @@
 </template>
 
 <script setup>
+import { onBeforeMount, onMounted, ref } from "vue";
+import { useForm } from "@inertiajs/inertia-vue3";
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import {onBeforeMount, onMounted} from "vue";
-import {useForm} from "@inertiajs/inertia-vue3";
-import {useUserStore} from "@/Stores/UserStore";
+import { useUserStore } from "@/Stores/UserStore";
+import Message from "@/Components/Modals/Messages";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -127,6 +120,8 @@ function destroy(id) {
 
     }
 }
+
+let showMessage = ref(true);
 
 function back() {
     window.history.back()

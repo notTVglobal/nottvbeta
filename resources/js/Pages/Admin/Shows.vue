@@ -5,6 +5,8 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white text-black dark:bg-gray-900 dark:text-white p-5 mb-10">
 
+            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+
             <div class="flex justify-between mb-6">
                 <div>
                     <h1 class="text-3xl font-semibold pb-3">Shows</h1>
@@ -26,17 +28,6 @@
                     <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
 
-                            <div
-                                class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
-                                role="alert"
-                                v-if="props.message"
-                            >
-                                <span class="font-medium">
-                                    {{props.message}}
-                                </span>
-                            </div>
-
-
                             <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                                 <div class="p-6 bg-white dark:bg-gray-800 border-b border-gray-200">
                                     <div
@@ -47,7 +38,6 @@
                                                 <!-- Paginator -->
                                                 <Pagination :data="shows" class=""/>
                                             </div>
-
 
                                         <table
                                             class="w-full text-sm text-left text-gray-500 dark:text-gray-400 overflow-x-auto"
@@ -178,12 +168,13 @@
 </template>
 
 <script setup>
-import Pagination from "@/Components/Pagination"
-import {onBeforeMount, onMounted, ref, watch} from "vue"
-import {Inertia} from "@inertiajs/inertia"
-import throttle from "lodash/throttle"
+import { onBeforeMount, onMounted, ref, watch } from "vue"
+import { Inertia } from "@inertiajs/inertia"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import {useUserStore} from "@/Stores/UserStore";
+import { useUserStore } from "@/Stores/UserStore";
+import Pagination from "@/Components/Pagination"
+import throttle from "lodash/throttle"
+import Message from "@/Components/Modals/Messages";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -209,7 +200,6 @@ let props = defineProps({
     filters: Object,
     can: Object,
     message: String,
-
 });
 
 let search = ref(props.filters.search);
@@ -220,6 +210,8 @@ watch(search, throttle(function (value) {
         replace: true
     });
 }, 300));
+
+let showMessage = ref(true);
 
 </script>
 

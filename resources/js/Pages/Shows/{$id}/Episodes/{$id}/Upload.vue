@@ -6,20 +6,13 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-dark text-light p-5 mb-10">
 
+            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+
             <div class="bg-black text-red-600 font-bold text-xl p-4 mb-4 w-full text-center">
                 This page will be removed.
             </div>
 
             <header>
-
-                <div class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
-                role="alert"
-                v-if="props.message">
-                <span class="font-medium">
-                                    {{ props.message }}
-                                </span>
-                </div>
-
                 <div class="flex justify-between mb-6">
                     <div>
                         <div class="font-bold mb-4 text-orange-700">UPLOAD VIDEO</div>
@@ -37,8 +30,6 @@
 
                     </div>
                 </div>
-
-
                 <div>
                     <div class=""><span class="text-xs uppercase font-semibold">Show: </span>
                         <Link :href="`/shows/${show.slug}/manage`">
@@ -55,8 +46,6 @@
                         <span v-if="!episode.episode_number">{{ episode.id }}</span>
                     </div>
                 </div>
-
-
             </header>
 
 
@@ -78,7 +67,6 @@
                                  class="bg-red-600 p-2 w-full text-white font-semibold mt-1"></div>
                             <div v-if="form.errors.video_file_embed_code" v-text="form.errors.video_file_embed_code"
                                  class="bg-red-600 p-2 w-full text-white font-semibold mt-1"></div>
-
 
 
 
@@ -143,13 +131,13 @@
 </template>
 
 <script setup>
-import {onBeforeMount, onMounted} from "vue"
-import {useForm} from "@inertiajs/inertia-vue3"
-
+import { onBeforeMount, onMounted, ref } from "vue"
 import { Inertia } from "@inertiajs/inertia"
+import { useForm } from "@inertiajs/inertia-vue3"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useTeamStore } from "@/Stores/TeamStore.js"
 import { useShowStore } from "@/Stores/ShowStore.js"
+import { useUserStore } from "@/Stores/UserStore";
 
 import vueFilePond, { setOptions } from 'vue-filepond'
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type"
@@ -158,7 +146,8 @@ import FilePondPluginImagePreview from "filepond-plugin-image-preview"
 import FilePondPluginFileMetadata from "filepond-plugin-file-metadata"
 import 'filepond/dist/filepond.min.css'
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css'
-import {useUserStore} from "@/Stores/UserStore";
+
+import Message from "@/Components/Modals/Messages";
 
 let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore()
@@ -166,6 +155,9 @@ let showStore = useShowStore()
 let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'episodes'
+teamStore.setActiveTeam(props.team);
+teamStore.setActiveShow(props.show);
+showStore.episodePoster = props.poster;
 
 onBeforeMount(() => {
     userStore.scrollToTopCounter = 0;
@@ -184,7 +176,21 @@ let props = defineProps({
     show: Object,
     team: Object,
     poster: String,
+    message: String,
 });
+
+let form = useForm({
+    id: props.episode.id,
+    name: props.episode.name,
+    episode_number: props.episode.episode_number,
+    description: props.episode.description,
+    notes: props.episode.notes,
+    show_id: props.episode.show_id,
+    video_thumbnail: props.episode.video_thumbnail,
+    video_file_url: props.episode.video_file_url,
+    video_file_embed_code: props.episode.video_file_embed_code,
+});
+
 
 const FilePond = vueFilePond(
     FilePondPluginFileValidateType,
@@ -216,32 +222,16 @@ function handleProcessedFile(error, file) {
         console.log(file);
         return;
     }
-
     Inertia.reload({
         only: ['poster'],
     });
-
 }
 
-teamStore.setActiveTeam(props.team);
-teamStore.setActiveShow(props.show);
-showStore.episodePoster = props.poster;
-
-let form = useForm({
-    id: props.episode.id,
-    name: props.episode.name,
-    episode_number: props.episode.episode_number,
-    description: props.episode.description,
-    notes: props.episode.notes,
-    show_id: props.episode.show_id,
-    video_thumbnail: props.episode.video_thumbnail,
-    video_file_url: props.episode.video_file_url,
-    video_file_embed_code: props.episode.video_file_embed_code,
-});
 
 let submit = () => {
     form.put(route('showEpisodes.update', props.episode.slug));
 };
 
+let showMessage = ref(true);
 
 </script>

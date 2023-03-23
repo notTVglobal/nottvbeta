@@ -5,6 +5,8 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 
+            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+
             <div class="flex justify-between mt-3 mb-6">
                 <div class="text-3xl">Create Show</div>
                 <div>
@@ -222,11 +224,12 @@
 </template>
 
 <script setup>
-import { ref, onBeforeMount, onMounted } from 'vue'
+import { onBeforeMount, onMounted, ref } from 'vue'
 import { useForm } from "@inertiajs/inertia-vue3"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useTeamStore } from "@/Stores/TeamStore.js"
-import {useUserStore} from "@/Stores/UserStore";
+import { useUserStore } from "@/Stores/UserStore";
+import Message from "@/Components/Modals/Messages";
 
 let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore()
@@ -251,6 +254,7 @@ let props = defineProps({
     userId: Number,
     categories: Object,
     subCategories: Object,
+    message:String,
 })
 
 let form = useForm({
@@ -282,9 +286,10 @@ function reset() {
     form.reset();
 }
 
+let showMessage = ref(true);
+
 function back() {
     window.history.back()
 }
-
 
 </script>

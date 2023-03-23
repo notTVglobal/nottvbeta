@@ -11,8 +11,6 @@
             <header class="flex justify-between mb-3 border-b border-gray-800">
                 <div class="container mx-auto flex flex-col lg:flex-row items-center justify-between px-4 py-6">
 
-
-
                     <div class="flex flex-col lg:flex-row items-center">
                         <h1 class="text-3xl font-semibold"><Link :href="route('movies')" class="hover:text-blue-800">Movies</Link></h1>
                         <ul class="flex ml-0 lg:ml-16 mt-6 lg:mt-0 space-x-8">
@@ -244,12 +242,12 @@
 </template>
 
 <script setup>
-import {ref, onMounted, onBeforeMount} from "vue"
+import { onMounted, onBeforeMount, ref } from "vue"
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+import { useTeamStore } from "@/Stores/TeamStore.js"
+import { useShowStore } from "@/Stores/ShowStore.js"
+import { useUserStore } from "@/Stores/UserStore.js"
 import Message from "@/Components/Modals/Messages"
-import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
-import {useTeamStore} from "@/Stores/TeamStore.js"
-import {useShowStore} from "@/Stores/ShowStore.js"
-import {useUserStore} from "@/Stores/UserStore.js"
 
 import 'filepond/dist/filepond.min.css'
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css'
@@ -278,7 +276,7 @@ let props = defineProps({
     teamName: String,
     teamSlug: String,
     creators: Object,
-    message: ref(''),
+    message: String,
     errors: ref(''),
     video: ref(''),
     can: Object,
@@ -306,9 +304,8 @@ let playMovie = () => {
     streamStore.currentChannel = 'On Demand'
 }
 
-let showMessage = ref(true);
 
 let thisYear = new Date().getFullYear()
-
+let showMessage = ref(true);
 
 </script>

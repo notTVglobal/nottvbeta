@@ -5,6 +5,8 @@
     <div class="place-self-center flex flex-col">
         <div class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 
+            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+
             <div class="flex justify-between">
                 <h1 class="text-3xl font-semibold pb-3">Channels</h1>
                 <Link :href="`/dashboard`"><button
@@ -45,9 +47,10 @@
 
 
 <script setup>
-import {onBeforeMount, onMounted} from "vue"
+import { onBeforeMount, onMounted, ref } from "vue"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import {useUserStore} from "@/Stores/UserStore";
+import { useUserStore } from "@/Stores/UserStore";
+import Message from "@/Components/Modals/Messages";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -65,6 +68,12 @@ onMounted(() => {
         userStore.scrollToTopCounter ++;
     }
 });
+
+let props = defineProps({
+    message: String,
+})
+
+let showMessage = ref(true);
 
 
 </script>

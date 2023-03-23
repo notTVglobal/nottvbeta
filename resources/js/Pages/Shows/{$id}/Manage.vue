@@ -6,15 +6,7 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white text-black dark:bg-gray-900 dark:text-gray-50 rounded p-5 mb-10">
 
-            <div
-                class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
-                role="alert"
-                v-if="props.message"
-            >
-                                <span class="font-medium">
-                                    {{ props.message }}
-                                </span>
-            </div>
+            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
 
             <header>
             <div class="flex justify-between mb-3">
@@ -174,12 +166,14 @@
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
 import {useShowStore} from "@/Stores/ShowStore.js"
 import {useTeamStore} from "@/Stores/TeamStore.js"
+import {useUserStore} from "@/Stores/UserStore";
 import ShowHeader from "@/Components/Shows/ShowHeader"
 import ShowEpisodesList from "@/Components/Shows/Manage/ShowEpisodesList"
 import ShowFooter from "@/Components/Shows/ShowFooter"
 import ShowCreditsList from "@/Components/Shows/Manage/ShowCreditsList";
-import {onBeforeMount, onMounted} from "vue";
-import {useUserStore} from "@/Stores/UserStore";
+import Message from "@/Components/Modals/Messages";
+import {onBeforeMount, onMounted, ref} from "vue";
+
 
 let videoPlayerStore = useVideoPlayerStore()
 let showStore = useShowStore();
@@ -221,6 +215,8 @@ teamStore.can = props.can;
 //         replace: true
 //     });
 // }, 300));
+
+let showMessage = ref(true);
 
 
 </script>

@@ -5,6 +5,8 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 
+            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+
             <div class="flex justify-between mb-6">
 
                 <div>
@@ -26,7 +28,6 @@
             </div>
 
 
-
             <div class="flex flex-row justify-end gap-x-4">
                 <input v-model="search" type="search" placeholder="Search..." class="text-black border px-2 rounded-lg" />
             </div>
@@ -36,17 +37,6 @@
             <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                     <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-
-                        <div
-                            class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
-                            role="alert"
-                            v-if="props.message"
-                        >
-                                <span class="font-medium">
-                                    {{props.message}}
-                                </span>
-                        </div>
-
 
 
                         <div class="overflow-hidden bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg">
@@ -154,12 +144,13 @@
 </template>
 
 <script setup>
-import Pagination from "@/Components/Pagination"
-import {onBeforeMount, onMounted, ref, watch} from "vue"
-import {Inertia} from "@inertiajs/inertia"
-import throttle from "lodash/throttle"
+import { onBeforeMount, onMounted, ref, watch } from "vue"
+import { Inertia } from "@inertiajs/inertia"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import {useUserStore} from "@/Stores/UserStore";
+import { useUserStore } from "@/Stores/UserStore";
+import Pagination from "@/Components/Pagination"
+import throttle from "lodash/throttle"
+import Message from "@/Components/Modals/Messages";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -193,6 +184,10 @@ watch(search, throttle(function (value) {
         replace: true
     });
 }, 300));
+
+let showMessage = ref(true);
+
+
 </script>
 
 

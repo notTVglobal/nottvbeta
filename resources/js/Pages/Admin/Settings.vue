@@ -6,15 +6,7 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white dark:bg-gray-800 rounded text-black dark:text-gray-50 p-5">
 
-            <div
-                class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
-                role="alert"
-                v-if="props.message"
-            >
-                                <span class="font-medium">
-                                    {{ props.message }}
-                                </span>
-            </div>
+            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
 
             <header>
                 <div class="flex justify-between mb-3">
@@ -33,7 +25,6 @@
                     </div>
                 </div>
             </header>
-
 
             <div>
                 <form @submit.prevent="submit">
@@ -89,10 +80,11 @@
 </template>
 
 <script setup>
-import {onBeforeMount, onMounted} from "vue";
-import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
-import {useUserStore} from "@/Stores/UserStore";
-import {useForm} from "@inertiajs/inertia-vue3";
+import { onBeforeMount, onMounted, ref } from "vue";
+import { useForm } from "@inertiajs/inertia-vue3";
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+import { useUserStore } from "@/Stores/UserStore";
+import Message from "@/Components/Modals/Messages";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -123,5 +115,7 @@ let form = useForm({
 let submit = () => {
     form.post(route('admin.settings'));
 };
+
+let showMessage = ref(true);
 
 </script>

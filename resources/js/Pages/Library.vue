@@ -6,6 +6,8 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 
+            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+
             <header class="flex justify-between mb-3">
                 <div class="pt-4">
                     <h1 class="text-3xl font-semibold pb-3">My Library</h1>
@@ -36,9 +38,10 @@
 </template>
 
 <script setup>
+import { onBeforeMount, onMounted, ref } from "vue"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import {onBeforeMount, onMounted} from "vue"
 import {useUserStore} from "@/Stores/UserStore";
+import Message from "@/Components/Modals/Messages";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -59,7 +62,10 @@ onMounted(() => {
 
 let props = defineProps({
     can: Object,
+    message: String,
 })
+
+let showMessage = ref(true);
 
 </script>
 

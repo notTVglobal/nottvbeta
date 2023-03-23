@@ -5,6 +5,8 @@
         <div class="place-self-center flex flex-col gap-y-3">
             <div class="bg-white text-black p-5 mb-10">
 
+                <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+
                 <div
                     class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
                     role="alert"
@@ -75,17 +77,18 @@ FOOTER
 </template>
 
 <script setup>
-import Pagination from "@/Components/Pagination"
-import VideoTable from "@/Components/Tables/VideoTable"
+import { onBeforeMount, onMounted, ref, watch } from "vue"
+import { Inertia } from "@inertiajs/inertia"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import {onBeforeMount, onMounted, ref, watch} from "vue"
+import { useUserStore } from "@/Stores/UserStore"
 import { Dropzone } from "dropzone"
 import { useForm } from "@inertiajs/inertia-vue3"
-import {Inertia} from "@inertiajs/inertia"
-import {useUserStore} from "@/Stores/UserStore"
+import Pagination from "@/Components/Pagination"
+import VideoTable from "@/Components/Tables/VideoTable"
 import VideoUpload from "@/Components/Uploaders/VideoUpload"
 import MobileVideoRecord from "@/Components/Uploaders/MobileVideoRecord"
 import throttle from "lodash/throttle";
+import Message from "@/Components/Modals/Messages";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -170,7 +173,7 @@ watch(search, throttle(function (value) {
 // let form = useForm({
 //     file: [],
 // });
-
+let showMessage = ref(true);
 function back() {
     window.history.back()
 }

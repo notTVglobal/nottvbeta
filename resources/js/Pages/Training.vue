@@ -4,6 +4,8 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white text-black p-5 mb-10">
 
+            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+
             <div class="flex justify-between">
                 <div class="grid grid-cols-1 grid-rows-2">
                     <h1 class="text-3xl font-semibold">Training</h1>
@@ -38,9 +40,10 @@
 </template>
 
 <script setup>
+import { onBeforeMount, onMounted, ref } from "vue";
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import {onBeforeMount, onMounted} from "vue";
-import {useUserStore} from "@/Stores/UserStore";
+import { useUserStore } from "@/Stores/UserStore";
+import Message from "@/Components/Modals/Messages";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -58,6 +61,12 @@ onMounted(() => {
         userStore.scrollToTopCounter ++;
     }
 });
+
+let props = defineProps({
+    message: String,
+})
+
+let showMessage = ref(true);
 
 </script>
 

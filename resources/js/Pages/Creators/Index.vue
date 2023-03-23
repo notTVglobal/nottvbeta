@@ -5,6 +5,8 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white text-black p-5 mb-10">
 
+            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+
         <div class="flex justify-between mb-6">
             <div class="flex items-center">
                 <h1 class="text-3xl font-semibold">Creators</h1>
@@ -59,12 +61,13 @@
 </template>
 
 <script setup>
-import Pagination from "@/Components/Pagination"
-import {onBeforeMount, onMounted, ref, watch} from "vue"
+import { onBeforeMount, onMounted, ref, watch } from "vue"
 import {Inertia} from "@inertiajs/inertia"
-import throttle from "lodash/throttle"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import {useUserStore} from "@/Stores/UserStore";
+import Pagination from "@/Components/Pagination"
+import throttle from "lodash/throttle"
+import Message from "@/Components/Modals/Messages";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -86,6 +89,7 @@ onMounted(() => {
 let props = defineProps({
     creators: Object,
     filters: Object,
+    message: String,
 });
 
 let search = ref(props.filters.search);
@@ -96,6 +100,9 @@ watch(search, throttle(function (value) {
         replace: true
     });
 }, 300));
+
+let showMessage = ref(true);
+
 </script>
 
 

@@ -6,6 +6,8 @@
     <div class="flex flex-col gap-y-3">
         <div class="light:bg-white dark:bg-gray-800 light:text-black dark:text-gray-50 p-5 mb-10">
 
+            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+
             <div class="flex justify-end mb-3 gap-2">
                 <Link v-if="$page.props.user.isAdmin === 1" :href="`/users`"><button
                     class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
@@ -19,16 +21,6 @@
                     class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                 >Dashboard</button>
                 </Link>
-            </div>
-
-            <div
-                class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
-                role="alert"
-                v-if="props.message"
-            >
-                                <span class="font-medium">
-                                    {{props.message}}
-                                </span>
             </div>
 
             <p class="mb-6">
@@ -98,9 +90,10 @@
 </template>
 
 <script setup>
+import { onBeforeMount, onMounted, ref } from "vue";
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import {onBeforeMount, onMounted} from "vue";
-import {useUserStore} from "@/Stores/UserStore";
+import { useUserStore } from "@/Stores/UserStore";
+import Message from "@/Components/Modals/Messages";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -125,4 +118,7 @@ let props = defineProps({
     teams: Object,
     message: String,
 });
+
+let showMessage = ref(true);
+
 </script>

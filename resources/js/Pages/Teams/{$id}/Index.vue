@@ -4,8 +4,9 @@
 
     <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3 overflow-x-hidden">
-
         <div class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 rounded p-5 mb-10">
+
+            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
 
             <header class="flex justify-between mb-3">
                 <div>
@@ -83,12 +84,12 @@
 
 
 <script setup>
+import { onBeforeMount, onMounted, ref } from "vue"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useTeamStore } from "@/Stores/TeamStore.js"
-import {onBeforeMount, onMounted} from "vue"
-
-import {useUserStore} from "@/Stores/UserStore";
+import { useUserStore } from "@/Stores/UserStore";
 import TeamShowsList from "@/Components/Teams/TeamShowsList.vue";
+import Message from "@/Components/Modals/Messages";
 
 let videoPlayerStore = useVideoPlayerStore();
 let teamStore = useTeamStore();
@@ -122,5 +123,6 @@ let props = defineProps({
 teamStore.setActiveTeam(props.team);
 teamStore.can = props.can;
 
+let showMessage = ref(true);
 
 </script>

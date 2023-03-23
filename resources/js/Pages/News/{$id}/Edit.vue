@@ -5,6 +5,9 @@
     <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
+
+            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+
             <div class="flex flex-row justify-between">
                 <h2 class="text-xl font-semibold leading-tight">
                     Edit News Post
@@ -96,13 +99,14 @@
 </template>
 
 <script setup>
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import {useUserStore} from "@/Stores/UserStore";
-import {useNewsStore} from "@/Stores/NewsStore"
+import { onBeforeMount, onMounted, ref } from "vue";
 import { useForm } from '@inertiajs/inertia-vue3'
-import {onBeforeMount, onMounted} from "vue";
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+import { useUserStore } from "@/Stores/UserStore";
+import { useNewsStore } from "@/Stores/NewsStore"
 // import TabbableTextarea from "@/Components/TabbableTextarea.vue";
 import Tiptap from "@/Components/TextEditor/TiptapNewsPostEdit.vue";
+import Message from "@/Components/Modals/Messages";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -149,10 +153,11 @@ const submit = () => {
     form.put(route("news.update", props.news.id));
 };
 
+let showMessage = ref(true);
+
 function back() {
     newsStore.newsArticleContentTiptop = '';
     window.history.back()
 }
-
 
 </script>

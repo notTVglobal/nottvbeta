@@ -18,7 +18,6 @@
     </header>
 
 
-
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white text-black p-5 mb-10">
 
@@ -139,13 +138,13 @@
 </template>
 
 <script setup>
-import Message from "@/Components/Modals/Messages"
-import {ref, onMounted, onBeforeMount} from "vue"
-import {useForm} from "@inertiajs/inertia-vue3"
+import { onMounted, onBeforeMount, ref } from "vue"
+import { useForm } from "@inertiajs/inertia-vue3"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useTeamStore } from "@/Stores/TeamStore.js"
 import { useShowStore } from "@/Stores/ShowStore.js"
-import {useUserStore} from "@/Stores/UserStore";
+import { useUserStore } from "@/Stores/UserStore";
+import Message from "@/Components/Modals/Messages"
 
 let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore()
@@ -167,7 +166,7 @@ onMounted(() => {
 });
 
 
-let showMessage = ref(true);
+
 
 // Dropzone tutorial: https://www.youtube.com/watch?v=wWKhKPN_Pmw
 
@@ -185,7 +184,7 @@ const selectedFile = () => {
 }
 
 let props = defineProps({
-    message: ref(''),
+    message: String,
     errors: ref(''),
     isHidden: ref(false),
     // filters: Object,
@@ -208,6 +207,7 @@ let submit = () => {
     form.post(route('movies.store', form));
 };
 
+let showMessage = ref(true);
 
 </script>
 

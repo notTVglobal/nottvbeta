@@ -10,6 +10,8 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-dark rounded text-light p-5">
 
+            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+
             <div
                 class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
                 role="alert"
@@ -167,18 +169,19 @@
 </template>
 
 <script setup>
-import {ref, onBeforeMount, onMounted} from "vue";
-import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
-import {useShowStore} from "@/Stores/ShowStore.js"
-import {useTeamStore} from "@/Stores/TeamStore.js"
+import { onBeforeMount, onMounted, ref } from "vue";
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+import { useShowStore } from "@/Stores/ShowStore.js"
+import { useTeamStore } from "@/Stores/TeamStore.js"
+import { useUserStore } from "@/Stores/UserStore";
 import EpisodeFooter from "@/Components/ShowEpisodes/EpisodeFooter";
 import EpisodeHeader from "@/Components/ShowEpisodes/EpisodeHeader";
-import {useUserStore} from "@/Stores/UserStore";
 import VideoPlayerAux from "@/Components/VideoPlayer/VideoPlayerAux.vue";
 // import EpisodeHeader from "@/Components/ShowEpisodes/EpisodeHeader"
 // import Episode from "@/Components/ShowEpisodes/Episode"
 // import EpisodeCreditsList from "@/Components/ShowEpisodes/EpisodeCreditsList";
 // import EpisodeFooter from "@/Components/ShowEpisodes/EpisodeFooter"
+import Message from "@/Components/Modals/Messages";
 
 let videoPlayerStore = useVideoPlayerStore()
 let showStore = useShowStore();
@@ -225,6 +228,7 @@ let showGoLive = false
 //     });
 // }, 300));
 
+let showMessage = ref(true);
 
 </script>
 

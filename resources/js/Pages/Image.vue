@@ -5,6 +5,8 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white text-black dark:bg-gray-900 dark:text-gray-50 p-5 mb-10">
 
+            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+
             <div class="flex justify-between">
                 <span class="text-xs font-semibold text-red-700">Admin Mode</span>
                 <div class="grid grid-cols-1 grid-rows-2">
@@ -59,16 +61,17 @@
 
 
 <script setup>
+import { onBeforeMount, onMounted, ref } from "vue";
+import { Inertia } from "@inertiajs/inertia";
+import { Head, Link } from '@inertiajs/inertia-vue3'
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+import { useUserStore } from "@/Stores/UserStore";
 import Pagination from "@/Components/Pagination"
-import {Head, Link} from '@inertiajs/inertia-vue3'
+import Message from "@/Components/Modals/Messages";
 // import {ref, onMounted } from 'vue'
 // import vueFilePond, { setOptions } from 'vue-filepond'
 import "filepond/dist/filepond.min.css"
 // import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type'
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import {Inertia} from "@inertiajs/inertia";
-import {useUserStore} from "@/Stores/UserStore";
-import {onBeforeMount, onMounted} from "vue";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -89,10 +92,11 @@ onMounted(() => {
 
 let props = defineProps({
     images: Object,
+    message: String,
     // filters: Object,
 });
 
-
+let showMessage = ref(true);
 
 // let search = ref(props.filters.search);
 //

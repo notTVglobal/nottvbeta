@@ -11,15 +11,7 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white dark:bg-gray-800 text-black dark:text-gray-50 p-5 mb-10">
 
-            <div
-                class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
-                role="alert"
-                v-if="props.message"
-            >
-                                <span class="font-medium">
-                                    {{props.message}}
-                                </span>
-            </div>
+            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
 
             <header class="flex justify-between mb-3 border-b border-gray-500">
                 <div class="container mx-auto flex flex-col lg:flex-row items-center justify-between px-4 py-6">
@@ -68,8 +60,6 @@
                 </Link>
                 </div>
             </div>
-
-
 
             <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white dark:bg-gray-900 border-b border-gray-200">
@@ -143,13 +133,14 @@
 </template>
 
 <script setup>
-import Pagination from "@/Components/Pagination"
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+import { onBeforeMount, onMounted, ref, watch } from "vue";
+import { Inertia } from "@inertiajs/inertia";
 import { useForm } from '@inertiajs/inertia-vue3'
-import {onBeforeMount, onMounted, ref, watch} from "vue";
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+import { useUserStore } from "@/Stores/UserStore";
 import throttle from "lodash/throttle";
-import {Inertia} from "@inertiajs/inertia";
-import {useUserStore} from "@/Stores/UserStore";
+import Pagination from "@/Components/Pagination"
+import Message from "@/Components/Modals/Messages";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -179,14 +170,11 @@ let props = defineProps({
     message: String,
 });
 
-let search = ref(props.filters.search);
-
 let form = useForm({
 
 });
 
-
-
+let search = ref(props.filters.search);
 
 watch(search, throttle(function (value) {
     Inertia.get('/news', { search: value }, {
@@ -201,5 +189,7 @@ function destroy(id) {
 
     }
 }
+
+let showMessage = ref(true);
 
 </script>

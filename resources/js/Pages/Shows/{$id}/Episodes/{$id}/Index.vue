@@ -5,8 +5,9 @@
 
     <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3 overflow-x-hidden">
-
         <div class="text-white bg-gray-900 rounded py-5 mb-10">
+
+            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
 
             <div v-if="props.can.editShow || props.can.manageShow" class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4 py-5 mb-10">
                 <Link
@@ -158,15 +159,16 @@
 
 
 <script setup>
-import {onBeforeMount, onMounted} from 'vue'
-import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
-import {useTeamStore} from "@/Stores/TeamStore.js"
-import {useShowStore} from "@/Stores/ShowStore.js"
+import { onBeforeMount, onMounted, ref } from 'vue'
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+import { useTeamStore } from "@/Stores/TeamStore.js"
+import { useShowStore } from "@/Stores/ShowStore.js"
+import { useUserStore } from "@/Stores/UserStore";
 // import EpisodeHeader from "@/Components/ShowEpisodes/EpisodeHeader"
 // import EpisodesList from "@/Components/ShowEpisodes/EpisodesList"
 // import EpisodeCreditsList from "@/ComponentShows/Episodes/EpisodeCreditsList";
 import EpisodeFooter from "@/Components/ShowEpisodes/EpisodeFooter"
-import {useUserStore} from "@/Stores/UserStore";
+import Message from "@/Components/Modals/Messages";
 
 let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore();
@@ -205,5 +207,6 @@ teamStore.name = props.team.name;
 
 // Inertia.reload({ only: ['video']})
 
+let showMessage = ref(true);
 
 </script>

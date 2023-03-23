@@ -6,17 +6,9 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-dark text-light p-5 mb-10">
 
-            <div
-                class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
-                role="alert"
-                v-if="props.message">
-                <span class="font-medium">
-                                    {{ props.message }}
-                                </span>
-            </div>
+            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+
             <header>
-
-
                 <!--                <ShowEpisodeEditHeader :show="props.show" :team="props.team" :episode="props.episode"/>-->
                 <div class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4">
                     <button
@@ -26,7 +18,6 @@
                     </button>
                 </div>
             </header>
-
 
             <div class="flex flex-col">
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -357,8 +348,6 @@
 
                         </div>
 
-
-
                     </div>
                 </div>
             </div>
@@ -370,26 +359,23 @@
 </template>
 
 <script setup>
-import { ref, onBeforeMount, onMounted } from "vue"
+import { onBeforeMount, onMounted, ref } from "vue"
+import { Inertia } from "@inertiajs/inertia"
 import { useForm } from "@inertiajs/inertia-vue3"
-import TabbableTextarea from "@/Components/TabbableTextarea"
-import ShowEpisodeEditHeader from "@/Components/ShowEpisodes/Edit/ShowEpisodeEditHeader"
-
-import {Inertia} from "@inertiajs/inertia"
-import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
-import {useTeamStore} from "@/Stores/TeamStore.js"
-import {useShowStore} from "@/Stores/ShowStore.js"
-import {useUserStore} from "@/Stores/UserStore";
-import {useMovieStore} from "@/Stores/MovieStore";
-
-import vueFilePond, {setOptions} from 'vue-filepond'
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+import { useTeamStore } from "@/Stores/TeamStore.js"
+import { useShowStore } from "@/Stores/ShowStore.js"
+import { useUserStore } from "@/Stores/UserStore";
+import { useMovieStore } from "@/Stores/MovieStore";
+import vueFilePond, { setOptions } from 'vue-filepond'
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type"
 import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size"
 import FilePondPluginImagePreview from "filepond-plugin-image-preview"
 import FilePondPluginFileMetadata from "filepond-plugin-file-metadata"
 import 'filepond/dist/filepond.min.css'
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css'
-
+import TabbableTextarea from "@/Components/TabbableTextarea"
+import ShowEpisodeEditHeader from "@/Components/ShowEpisodes/Edit/ShowEpisodeEditHeader"
 
 let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore()
@@ -417,6 +403,24 @@ let props = defineProps({
     movieCategory: String,
     categories: Object,
     sub_categories: Object,
+    message: String,
+});
+
+let form = useForm({
+    id: props.movie.id,
+    name: props.movie.name,
+    release_year: props.release_year,
+    category: props.movie.movie_category_id,
+    sub_category: props.movie.movie_category_sub_id,
+    description: props.movie.description,
+    user_id: props.movie.user_id,
+    team_id: props.movie.team_id,
+    poster: props.movie.poster,
+    file_url: props.movie.file_url,
+    www_url: props.movie.www_url,
+    instagram_name: props.movie.instagram_name,
+    telegram_url: props.movie.telegram_url,
+    twitter_handle: props.movie.twitter_handle,
 });
 
 // let category = ref();
@@ -466,39 +470,21 @@ function handleProcessedFile(error, file) {
         console.log(file);
         return;
     }
-
     Inertia.reload({
         only: ['poster'],
     });
-
 }
 
 // showStore.episodePoster = props.poster;
-
-let form = useForm({
-    id: props.movie.id,
-    name: props.movie.name,
-    release_year: props.release_year,
-    category: props.movie.movie_category_id,
-    sub_category: props.movie.movie_category_sub_id,
-    description: props.movie.description,
-    user_id: props.movie.user_id,
-    team_id: props.movie.team_id,
-    poster: props.movie.poster,
-    file_url: props.movie.file_url,
-    www_url: props.movie.www_url,
-    instagram_name: props.movie.instagram_name,
-    telegram_url: props.movie.telegram_url,
-    twitter_handle: props.movie.twitter_handle,
-});
 
 let submit = () => {
     form.put(route('movies.update', props.movie.slug));
 };
 
+let showMessage = ref(true);
+
 function back() {
     window.history.back()
 }
-
 
 </script>

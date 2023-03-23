@@ -5,15 +5,7 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 
-            <div
-                class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
-                role="alert"
-                v-if="props.message"
-            >
-                    <span class="font-medium">
-                        {{props.message}}
-                    </span>
-            </div>
+            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
 
             <div class="flex justify-between pt-4">
                 <h1 class="text-3xl font-semibold pb-3">Users</h1>
@@ -134,13 +126,14 @@
 
 
 <script setup>
-import Pagination from "@/Components/Pagination"
-import {onBeforeMount, onMounted, ref, watch} from "vue"
-import {Inertia} from "@inertiajs/inertia"
-import throttle from "lodash/throttle"
+import { onBeforeMount, onMounted, ref, watch } from "vue"
+import { Inertia } from "@inertiajs/inertia"
+import { useForm } from "@inertiajs/inertia-vue3";
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import {useUserStore} from "@/Stores/UserStore";
-import {useForm} from "@inertiajs/inertia-vue3";
+import { useUserStore } from "@/Stores/UserStore";
+import Pagination from "@/Components/Pagination"
+import throttle from "lodash/throttle"
+import Message from "@/Components/Modals/Messages";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -185,5 +178,7 @@ function deleteUser($user) {
         Inertia.post('/admin/user/delete', {'userId': $user.id});
     }
 }
+
+let showMessage = ref(true);
 
 </script>

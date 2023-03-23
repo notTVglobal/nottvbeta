@@ -5,6 +5,8 @@
 
         <div class="bg-white rounded text-black dark:text-white dark:bg-gray-900 p-5 mb-10">
 
+            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+
             <div class="flex justify-between mb-3 pt-4">
 
 
@@ -41,18 +43,6 @@
                     </Link>
 
                 </div>
-
-
-
-            <div
-                class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
-                role="alert"
-                v-if="props.message"
-            >
-                                <span class="font-medium">
-                                    {{props.message}}
-                                </span>
-            </div>
 
             <div v-show="can.viewAdmin" class="bg-gray-300 dark:bg-gray-900 rounded pb-8 p-3 mb-6 mx-2 border-b border-2">
                 <div class="font-semibold text-xl pb-2">Administrator only links</div>
@@ -366,10 +356,11 @@
 </template>
 
 <script setup>
-import Pagination from "@/Components/Pagination"
+import { onBeforeMount, onMounted, ref } from "vue";
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import {onBeforeMount, onMounted} from "vue";
-import {useUserStore} from "@/Stores/UserStore";
+import { useUserStore } from "@/Stores/UserStore";
+import Pagination from "@/Components/Pagination"
+import Message from "@/Components/Modals/Messages";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -396,6 +387,9 @@ let props = defineProps({
     can: Object,
     message: String
 });
+
+let showMessage = ref(true);
+
 </script>
 
 

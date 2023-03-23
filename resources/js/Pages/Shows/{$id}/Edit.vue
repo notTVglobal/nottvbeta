@@ -6,6 +6,8 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 
+            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+
             <ShowEditHeader :show="props.show" :team="props.team"/>
 
             <div class="flex flex-col">
@@ -284,14 +286,14 @@
 
 <script setup>
 import {ref, onBeforeMount, onMounted} from "vue"
-import {useForm} from "@inertiajs/inertia-vue3"
-import TabbableTextarea from "@/Components/TabbableTextarea"
-
 import { Inertia } from "@inertiajs/inertia"
+import { useForm } from "@inertiajs/inertia-vue3"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useTeamStore } from "@/Stores/TeamStore.js"
 import { useShowStore } from "@/Stores/ShowStore.js"
-import {useUserStore} from "@/Stores/UserStore";
+import { useUserStore } from "@/Stores/UserStore";
+
+import TabbableTextarea from "@/Components/TabbableTextarea"
 
 import vueFilePond, { setOptions } from 'vue-filepond'
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type"
@@ -303,7 +305,7 @@ import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css
 
 import ShowEditHeader from "@/Components/Shows/Edit/ShowEditHeader"
 import SingleImage from "@/Components/Multimedia/SingleImage";
-
+import Message from "@/Components/Modals/Messages";
 
 let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore()
@@ -311,6 +313,10 @@ let showStore = useShowStore()
 let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'shows'
+
+teamStore.setActiveTeam(props.team);
+teamStore.setActiveShow(props.show);
+showStore.posterName = props.poster[0].name;
 
 onBeforeMount(() => {
     userStore.scrollToTopCounter = 0;
@@ -334,7 +340,21 @@ let props = defineProps({
     categories: Object,
     subCategories: Object,
     showCategory: Object,
+    message: String,
 });
+
+let form = useForm({
+    name: props.show.name,
+    description: props.show.description,
+    category: props.show.show_category_id,
+    sub_category: props.show.show_category_sub_id,
+    www_url: props.show.www_url,
+    instagram_name: props.show.instagram_name,
+    telegram_url: props.show.telegram_url,
+    twitter_handle: props.show.twitter_handle,
+    notes: props.show.notes,
+});
+
 
 let showCategoryDescription = props.showCategory.Description;
 
@@ -367,28 +387,10 @@ function handleProcessedFile(error, file) {
         console.log(file);
         return;
     }
-
     Inertia.reload({
         only: ['poster'],
     });
-
 }
-
-teamStore.setActiveTeam(props.team);
-teamStore.setActiveShow(props.show);
-showStore.posterName = props.poster[0].name;
-
-let form = useForm({
-    name: props.show.name,
-    description: props.show.description,
-    category: props.show.show_category_id,
-    sub_category: props.show.show_category_sub_id,
-    www_url: props.show.www_url,
-    instagram_name: props.show.instagram_name,
-    telegram_url: props.show.telegram_url,
-    twitter_handle: props.show.twitter_handle,
-    notes: props.show.notes,
-});
 
 // let getCategory = ref(null);
 // onBeforeMount(async () => {
@@ -399,5 +401,7 @@ let form = useForm({
 let submit = () => {
     form.put(route('shows.update', props.show.slug));
 };
+
+let showMessage = ref(true);
 
 </script>

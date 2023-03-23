@@ -6,6 +6,8 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white text-black dark:bg-gray-800 p-5 mb-10">
 
+            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+
             <TeamEditHeader :team="props.team" :teamLeaderName="props.teamLeaderName" />
 
 
@@ -178,15 +180,20 @@
 </template>
 
 <script setup>
-import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
-import {useTeamStore} from "@/Stores/TeamStore.js"
+import { onBeforeMount, onMounted, ref } from "vue";
+import { Inertia } from "@inertiajs/inertia";
+import { useForm } from "@inertiajs/inertia-vue3";
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+import { useTeamStore } from "@/Stores/TeamStore.js"
+import { useUserStore } from "@/Stores/UserStore";
+import Message from "@/Components/Modals/Messages";
+
 import TeamEditHeader from "@/Components/Teams/Edit/TeamEditHeader";
 import TeamEditBody from "@/Components/Teams/Edit/TeamEditBody";
-import {onBeforeMount, onMounted} from "vue";
-import {Inertia} from "@inertiajs/inertia";
-import {useForm} from "@inertiajs/inertia-vue3";
-import TabbableTextarea from "@/Components/TabbableTextarea"
 import TeamLogoUpload from "@/Components/FilePond/TeamLogoUpload";
+
+import TabbableTextarea from "@/Components/TabbableTextarea"
+
 import vueFilePond, { setOptions } from 'vue-filepond';
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
 import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size";
@@ -194,13 +201,15 @@ import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import FilePondPluginFileMetadata from "filepond-plugin-file-metadata";
 import 'filepond/dist/filepond.min.css';
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css';
-import {useUserStore} from "@/Stores/UserStore";
+
 
 let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore()
 let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'teams'
+teamStore.setActiveTeam(props.team);
+teamStore.logoName = props.logo[0].name;
 
 onBeforeMount(() => {
     userStore.scrollToTopCounter = 0;
@@ -220,6 +229,13 @@ let props = defineProps({
     teamLeaderName: String,
     logo: String,
     message: String,
+});
+
+let form = useForm({
+    id: props.team.id,
+    name: props.team.name,
+    description: props.team.description,
+    totalSpots: props.team.totalSpots,
 });
 
 const FilePond = vueFilePond(
@@ -247,25 +263,16 @@ function handleProcessedFile(error, file) {
         console.log(file);
         return;
     }
-
     Inertia.reload({
         only: ['logo'],
     });
-
 }
-teamStore.setActiveTeam(props.team);
-teamStore.logoName = props.logo[0].name;
-
-let form = useForm({
-    id: props.team.id,
-    name: props.team.name,
-    description: props.team.description,
-    totalSpots: props.team.totalSpots,
-});
 
 let submit = () => {
     form.put(route('teams.update', props.team.slug));
 };
+
+let showMessage = ref(true);
 
 </script>
 

@@ -5,6 +5,8 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white text-black p-5 mb-10">
 
+            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+
         <div class="flex justify-between mt-3 mb-6">
             <div class="text-3xl">Create New Team</div>
             <div>
@@ -83,10 +85,11 @@
 </template>
 
 <script setup>
+import { onBeforeMount, onMounted, ref } from 'vue';
 import { useForm } from "@inertiajs/inertia-vue3"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import {onBeforeMount, onMounted} from 'vue';
-import {useUserStore} from "@/Stores/UserStore";
+import { useUserStore } from "@/Stores/UserStore";
+import Message from "@/Components/Modals/Messages";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -103,7 +106,7 @@ onMounted(() => {
         document.getElementById("topDiv").scrollIntoView()
         userStore.scrollToTopCounter ++;
     }
-});
+})
 
 let props = defineProps({
     user: Object,
@@ -114,14 +117,16 @@ let form = useForm({
     description: '',
     user_id: props.user.id,
     totalSpots: '1',
-});
+})
 
 function reset() {
     form.reset();
-};
+}
 
 let submit = () => {
     form.post('/teams');
-};
+}
+
+let showMessage = ref(true);
 
 </script>

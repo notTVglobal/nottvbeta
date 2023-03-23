@@ -5,8 +5,9 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="light:bg-white light:text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 
-            <div class="flex justify-between mb-6">
+            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
 
+            <div class="flex justify-between mb-6">
 
                 <div>
                     <div class="font-bold mb-4 text-red-700">EDIT USER</div>
@@ -214,11 +215,12 @@
 </template>
 
 <script setup>
+import { onBeforeMount, onMounted, ref } from "vue";
 import { useForm } from "@inertiajs/inertia-vue3"
+import { Inertia } from "@inertiajs/inertia";
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import {onBeforeMount, onMounted} from "vue";
-import {Inertia} from "@inertiajs/inertia";
-import {useUserStore} from "@/Stores/UserStore";
+import { useUserStore } from "@/Stores/UserStore";
+import Message from "@/Components/Modals/Messages";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -240,6 +242,7 @@ onMounted(() => {
 let props = defineProps({
     userEdit: Object,
     isNewsPerson: Boolean,
+    message: String,
 });
 
 let form = useForm({
@@ -295,6 +298,8 @@ function removeUserFromNewsroom() {
 // let submit = () => {
 //     form.put('/admin/users');
 // };
+
+let showMessage = ref(true);
 
 function back() {
     window.history.back()
