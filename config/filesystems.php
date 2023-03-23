@@ -13,7 +13,9 @@ return [
     |
     */
 
-    'default' => env('FILESYSTEM_DISK', 'public'),
+    'default' => env('FILESYSTEM_DISK', 'spaces'),
+    'cloud' => env('FILESYSTEM_CLOUD', 'spaces'),
+    'endpoint' => env('DO_SPACES_ENDPOINT', 'spaces'),
 
     /*
     |--------------------------------------------------------------------------
@@ -38,9 +40,22 @@ return [
 
         'local-video-chunks' => [
             'driver' => 'scoped',
-            'disk' => 'local',
+            'disk' => 'public',
             'prefix' => 'chunks',
         ],
+
+//        's3-do-test' => [
+//            'driver' => 'scoped',
+//            'disk' => 'spaces',
+//            'prefix' => 's3-do',
+//        ],
+
+        'media' => [
+            'driver' => 'spaces',
+            'root'   => public_path(env('DO_SPACES_FOLDER')),
+            'url'    => env('DO_SPACES_CDN_ENDPOINT').'/'.env('DO_SPACES_FOLDER'),
+        ],
+
 
         'public' => [
             'driver' => 'local',
@@ -70,6 +85,8 @@ return [
          'folder' => env('DO_SPACES_FOLDER'),
          'region' => env('DO_SPACES_REGION'),
          'bucket' => env('DO_SPACES_BUCKET'),
+         'bucket_endpoint' => true,
+         'visibility' => 'public'
         ],
 
     ],

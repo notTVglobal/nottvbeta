@@ -118,7 +118,7 @@ class VideoUploadController extends Controller
      * @throws UploadMissingFileException
      * @throws UploadFailedException
      */
-    public function upload(Request $request) {
+    public function upload(HttpRequest $request) {
         // create the file receiver
         $receiver = new FileReceiver('file', $request, HandlerFactory::classFromRequest($request));
 

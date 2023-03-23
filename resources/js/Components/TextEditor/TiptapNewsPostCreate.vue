@@ -39,13 +39,7 @@
 import {useNewsStore} from "@/Stores/NewsStore"
 import { Editor, EditorContent } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
-import Document from '@tiptap/extension-document'
-import Paragraph from '@tiptap/extension-paragraph'
-import Text from '@tiptap/extension-text'
-import HardBreak from '@tiptap/extension-hard-break'
-// import {History} from "@tiptap/extension-history";
-// import {BulletList} from "@tiptap/extension-bullet-list";
-import {ListItem} from "@tiptap/extension-list-item";
+
 // import {onBeforeUnmount} from "vue";
 import {Inertia} from "@inertiajs/inertia";
 import throttle from "lodash/throttle"
@@ -58,7 +52,6 @@ const editor = new Editor({
     content: newsStore.newsArticleContentTiptop,
     extensions: [
         StarterKit,
-        ListItem,
     ],
     // triggered on every change
     onUpdate: ({ editor }) => {

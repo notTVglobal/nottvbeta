@@ -11,7 +11,7 @@
                     <div scope="col" class="table-cell px-6 py-3">
                         Filename
                     </div>
-                    <div scope="col" class="table-cell px-6 py-3">
+                    <div v-if="can.viewAny" scope="col" class="table-cell px-6 py-3">
                         Creator
                     </div>
                     <div scope="col" class="hidden md:table-cell px-6 py-3">
@@ -45,6 +45,7 @@
                         <span v-if="!video.can.view" class="font-semibold text-red-700">You are currently unable to view this video. Please check with the admin.</span>
                     </div>
                     <div
+                        v-if="can.viewAny"
                         scope="row"
                         class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                     >
@@ -97,6 +98,7 @@ let videoPlayerStore = useVideoPlayerStore()
 
 defineProps({
     videos: Object,
+    can: Object,
 })
 
 function deleteVideo($video) {

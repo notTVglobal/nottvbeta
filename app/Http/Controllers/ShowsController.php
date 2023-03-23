@@ -220,6 +220,7 @@ class ShowsController extends Controller
                 'showRunner' => $show->user->name,
                 'slug' => $show->slug,
                 'poster' => $show->image->name,
+                'image' => $show->image,
                 'copyrightYear' => $show->created_at->format('Y'),
                 'first_release_year' => $show->first_release_year,
                 'last_release_year' => $show->last_release_year,
@@ -303,6 +304,7 @@ class ShowsController extends Controller
                 'showRunner' => $show->user->name,
                 'slug' => $show->slug,
                 'poster' => $show->image->name,
+                'image' => $show->image,
                 'copyrightYear' => $show->created_at->format('Y'),
                 'categoryId' => $show->showCategory->id,
                 'categoryName' => $show->showCategory->name,
@@ -379,16 +381,33 @@ class ShowsController extends Controller
         $categories = ShowCategory::all();
         $sub_categories = ShowCategorySub::all();
 
+//        return Inertia::render('Shows/{$id}/Edit', [
+//            'show' => $show,
+//            'team' => Team::query()->where('id', $show->team_id)->firstOrFail(),
+//            'showRunner' => User::query()->where('id', $show->user_id)->pluck('id','name')->firstOrFail(),
+//            'poster' => getPoster($show),
+//            'categories' => $categories,
+//            'subCategories' => $sub_categories,
+//            'showCategoryId' => $show->showCategory->id,
+//            'showCategoryName' => $show->showCategory->name,
+//            'showCategoryDescription' => $show->showCategory->description,
+//
+////            'can' => [
+////                'viewShows' => Auth::user()->can('view', Show::class),
+////                'editShow' => Auth::user()->can('edit', Show::class),
+////                'viewCreator' => Auth::user()->can('viewCreator', User::class),
+////            ]
+//        ]);
+
         return Inertia::render('Shows/{$id}/Edit', [
             'show' => $show,
             'team' => Team::query()->where('id', $show->team_id)->firstOrFail(),
             'showRunner' => User::query()->where('id', $show->user_id)->pluck('id','name')->firstOrFail(),
             'poster' => getPoster($show),
+            'image' => $show->image,
             'categories' => $categories,
             'subCategories' => $sub_categories,
-            'showCategoryId' => $show->showCategory->id,
-            'showCategoryName' => $show->showCategory->name,
-            'showCategoryDescription' => $show->showCategory->description,
+            'showCategory' => $show->showCategory,
 
 //            'can' => [
 //                'viewShows' => Auth::user()->can('view', Show::class),

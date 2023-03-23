@@ -34,8 +34,10 @@
                                 <div>
                                     <div class="flex space-y-3">
                                         <div class="mb-6">
-                                            <img :src="'/storage/images/' + props.poster"
-                                                 :key="poster" />
+<!--                                            <img :src="'/storage/images/' + props.poster"-->
+<!--                                                 :key="props.poster" />-->
+<!--&lt;!&ndash;                                            <img :src="'https://development-nottv.sfo3.cdn.digitaloceanspaces.com/' local-GCM-EDITOR-1-public%2Fnoosphere_b6a2de92d9c202c710c99c8fe540dcb2.jpg'">&ndash;&gt;-->
+                                        <SingleImage :image="props.image" :key="props.poster"/>
                                         </div>
                                     </div>
 
@@ -300,6 +302,7 @@ import 'filepond/dist/filepond.min.css'
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css'
 
 import ShowEditHeader from "@/Components/Shows/Edit/ShowEditHeader"
+import SingleImage from "@/Components/Multimedia/SingleImage";
 
 
 let videoPlayerStore = useVideoPlayerStore()
@@ -327,14 +330,13 @@ let props = defineProps({
     show: Object,
     team: Object,
     poster: String,
+    image: Object,
     categories: Object,
     subCategories: Object,
-    showCategoryId: Object,
-    showCategoryName: Object,
-    showCategoryDescription: Object,
+    showCategory: Object,
 });
 
-let showCategoryDescription = props.showCategoryDescription;
+let showCategoryDescription = props.showCategory.Description;
 
 function chooseCategory(event) {
     showCategoryDescription = props.categories[event.target.selectedIndex].description;

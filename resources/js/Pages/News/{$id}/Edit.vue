@@ -53,7 +53,7 @@
                             for="slug"
                             class="block mb-2 text-sm font-bold text-gray-900 dark:text-gray-300"
                         >Content</label>
-                        <tiptap v-if="videoPlayerStore.currentPage === 'newsEdit'" name="content" />
+                        <tiptap v-if="videoPlayerStore.currentPage === 'newsEdit'" />
 <!--                        <tabbable-textarea-->
 <!--                            type="text"-->
 <!--                            v-model="form.content"-->

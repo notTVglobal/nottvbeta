@@ -56,7 +56,15 @@ class ImageController extends Controller
 //
 //        // save the file in storage
 //        $path = $request->file('image')->store('images');
+        dd($request);
           $request->file('image')->store('images');
+
+          if ($request->hasFile('image')) {
+              $file = $request->file('image');
+              $filename = $file->getClientOriginalName();
+              $file->storeAs('imagesNew/' . auth()->user()->id, $filename, 'spaces');
+              dd($file);
+          }
 
 ////        $files = Storage::disk('spaces')->files('uploads');
 ////        function() {

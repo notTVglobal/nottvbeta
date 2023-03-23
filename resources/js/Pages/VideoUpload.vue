@@ -45,61 +45,7 @@
 
 
                         <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                            <div
-                                class="table w-full text-sm text-left text-gray-500 dark:text-gray-400"
-                            >
-                                <div
-                                    class="table-header-group text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
-                                >
-                                    <div class="table-row">
-                                        <div scope="col" class="table-cell px-6 py-3">
-                                            Filename
-                                        </div>
-                                        <div scope="col" class="hidden md:table-cell px-6 py-3">
-                                            ID
-                                        </div>
-                                        <div scope="col" class="hidden xl:table-cell px-6 py-3">
-                                            Type
-                                        </div>
-                                        <div scope="col" class="hidden 2xl:table-cell px-6 py-3">
-                                            Created On
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="table-row-group">
-                                    <div
-                                        v-for="video in videos.data"
-                                        :key="video.id"
-                                        class="table-row bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-                                    >
-                                        <div
-                                            scope="row"
-                                            class="table-cell min-w-[8rem] px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
-                                        >
-                                            <button v-if="video.can.view" @click.prevent="videoPlayerStore.loadNewSourceFromFile(video)">{{ video.file_name }}</button>
-                                            <span v-if="!video.can.view" class="font-semibold text-red-700">You are currently unable to view this video. Please check with the admin.</span>
-                                        </div>
-                                        <div
-                                            scope="row"
-                                            class="hidden md:table-cell px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
-                                        >
-                                            <span>{{ video.id }}</span>
-                                        </div>
-                                        <div
-                                            scope="row"
-                                            class="hidden xl:table-cell px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
-                                        >
-                                            <span>{{ video.type }}</span>
-                                        </div>
-                                        <div class="hidden 2xl:table-cell px-6 py-4">
-                                            <span>{{ formatDate(video.created_at) }}</span>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Paginator -->
-                            <Pagination :data="videos" class="pb-6"/>
+                            <VideoTable :videos="videos" :can="can"  class=""/>
                         </div>
                         <div v-if="can.viewAny" class="mt-6 p-2 rounded-xl bg-gray-300 border-2 border-gray-500">
 
@@ -110,14 +56,13 @@
                                 <div class="relative">
                                     <input v-model="search" type="search" class="bg-gray-50 text-black text-sm rounded-full
                                         focus:outline-none focus:shadow w-64 pl-8 px-3 py-1" placeholder="Search...">
-                                    <div class="text-orange-600 py-2">Search is not working right now.</div>
                                     <div class="absolute top-0 flex items-center h-full ml-2">
-                                        <svg class="fill-current text-gray-400 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M456.69 421.39 362.6 327.3a173.81 173.81 0 0 0 34.84-104.58C397.44 126.38 319.06 48 222.72 48S48 126.38 48 222.72s78.38 174.72 174.72 174.72A173.81 173.81 0 0 0 327.3 362.6l94.09 94.09a25 25 0 0 0 35.3-35.3ZM97.92 222.72a124.8 124.8 0 1 1 124.8 124.8 124.95 124.95 0 0 1-124.8-124.8Z"/></svg>
+                                        <svg class="fill-current text-gray-400 w-4 pb-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M456.69 421.39 362.6 327.3a173.81 173.81 0 0 0 34.84-104.58C397.44 126.38 319.06 48 222.72 48S48 126.38 48 222.72s78.38 174.72 174.72 174.72A173.81 173.81 0 0 0 327.3 362.6l94.09 94.09a25 25 0 0 0 35.3-35.3ZM97.92 222.72a124.8 124.8 0 1 1 124.8 124.8 124.95 124.95 0 0 1-124.8-124.8Z"/></svg>
 
                                     </div>
                                 </div>
                             </div>
-                            <VideoTable :videos="allVideos" class=""/>
+                            <VideoTable :videos="allVideos" :can="can" class=""/>
                         </div>
                     </div>
                 </div>

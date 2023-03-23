@@ -54,7 +54,7 @@
                             for="content"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                         >Content</label>
-                        <tiptap v-if="videoPlayerStore.currentPage === 'newsCreate'" name="content" />
+                        <tiptap v-if="videoPlayerStore.currentPage === 'newsCreate'" />
 <!--                        <textarea-->
 <!--                            type="text"-->
 <!--                            v-model="form.content"-->
