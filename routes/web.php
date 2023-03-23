@@ -243,10 +243,13 @@ Route::middleware([
 // Admin Pages
 ///////////
 
-    Route::get('/admin/settings', function () {
-        return Inertia::render('Admin/Settings');
-    })->can('viewAdmin', 'App\Models\User')
+    Route::get('/admin/settings', [AdminController::class, 'settings'])
+        ->can('viewAdmin', 'App\Models\User')
         ->name('admin.settings');
+
+    Route::post('/admin/settings', [AdminController::class, 'saveSettings'])
+        ->can('viewAdmin', 'App\Models\User')
+        ->name('admin.saveSettings');
 
     Route::get('/admin/shows', [AdminController::class, 'showsIndex'])
         ->can('viewAdmin', 'App\Models\User')

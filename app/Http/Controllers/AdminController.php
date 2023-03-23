@@ -10,9 +10,35 @@ use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
+
+////////////  SETTINGS
+//////////////////////
+
+    public function settings()
+    {
+        return Inertia::render('Admin/Settings', [
+            'cdn_endpoint' => DB::table('app_settings')->where('id', 1)->pluck('cdn_endpoint'),
+        ]);
+    }
+
+    public function saveSettings(HttpRequest $request)
+    {
+        $settings = $request->validate([
+            'cdn_endpoint' => 'string',
+        ]);
+
+        $db = DB::table('app_settings')
+            ->where('id', 1)
+            ->update(['cdn_endpoint'=> $request->cdn_endpoint]);
+
+        // redirect
+        return redirect()->route('admin.settings')->with('message', 'Settings Saved Successfully');
+
+    }
 
 ////////////  SHOWS INDEX
 /////////////////////////

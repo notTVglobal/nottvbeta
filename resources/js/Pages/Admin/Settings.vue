@@ -36,6 +36,36 @@
 
 
             <div>
+                <form @submit.prevent="submit">
+                <div class="mb-6">
+                    <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"
+                           for="name"
+                    >
+                        CDN ENDPOINT
+                    </label>
+
+                    <input v-model="form.cdn_endpoint"
+                           class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                           type="text"
+                           name="cdn_endpoint"
+                           id="cdn_endpoint"
+                    >
+                    <div v-if="form.errors.cdn_endpoint" v-text="form.errors.cdn_endpoint"
+                         class="text-xs text-red-600 mt-1"></div>
+                </div>
+                    <div class="flex justify-end my-6 mr-6">
+                        <button
+                            @click="submit"
+                            class="bg-blue-600 hover:bg-blue-500 text-white rounded py-2 px-4"
+                            :disabled="form.processing"
+                        >
+                            Save
+                        </button>
+                    </div>
+
+                </form>
+
+
                 <div>
                     Content licenses
                 </div>
@@ -62,6 +92,7 @@
 import {onBeforeMount, onMounted} from "vue";
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
 import {useUserStore} from "@/Stores/UserStore";
+import {useForm} from "@inertiajs/inertia-vue3";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -81,6 +112,16 @@ onMounted(async () => {
 });
 
 let props = defineProps({
+    cdn_endpoint: Array,
     message: String
 });
+
+let form = useForm({
+    cdn_endpoint: props.cdn_endpoint[0],
+})
+
+let submit = () => {
+    form.post(route('admin.settings'));
+};
+
 </script>

@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'default' => env('FILESYSTEM_DISK', 'spaces'),
+    'default' => env('FILESYSTEM_DISK', 'public'),
     'cloud' => env('FILESYSTEM_CLOUD', 'spaces'),
     'endpoint' => env('DO_SPACES_ENDPOINT', 'spaces'),
 

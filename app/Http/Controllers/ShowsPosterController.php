@@ -31,14 +31,12 @@ class ShowsPosterController extends Controller
             $showId = auth()->user()->isEditingShow_id;
             $uploadedFile = $request->file('poster');
             $folder = config('filesystems.disks.spaces.folder');
-            $cdn = env('DO_SPACES_CDN_ENDPOINT');
 
             // create image model
             $id = DB::table('images')->insertGetId([
                 'name' => $uploadedFile->hashName(),
                 'extension' => $uploadedFile->extension(),
                 'folder' => $folder,
-                'cdn_endpoint' => $cdn,
                 'size' => $uploadedFile->getSize(),
                 'user_id' => $user,
                 'show_id' => Auth::user()->isEditingShow_id,

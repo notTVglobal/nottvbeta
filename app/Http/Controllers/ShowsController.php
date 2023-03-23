@@ -11,6 +11,7 @@ use App\Models\ShowEpisode;
 use App\Models\Team;
 use App\Models\TeamMember;
 use App\Models\User;
+use App\Models\AppSetting;
 //use http\QueryString;
 use http\Message;
 use Illuminate\Support\Facades\Auth;
@@ -404,7 +405,12 @@ class ShowsController extends Controller
             'team' => Team::query()->where('id', $show->team_id)->firstOrFail(),
             'showRunner' => User::query()->where('id', $show->user_id)->pluck('id','name')->firstOrFail(),
             'poster' => getPoster($show),
-            'image' => $show->image,
+            'image' => [
+                'id' => $show->image->id,
+                'name' => $show->image->name,
+                'folder' => $show->image->folder,
+                'cdn_endpoint' => $show->appSetting->cdn_endpoint,
+            ],
             'categories' => $categories,
             'subCategories' => $sub_categories,
             'showCategory' => $show->showCategory,

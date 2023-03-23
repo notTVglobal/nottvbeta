@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 class Show extends Model
 {
@@ -85,6 +86,13 @@ class Show extends Model
             'name' => 'sub category',
             'description' => 'sub category description'
             ]);
+    }
+
+    public function appSetting(): BelongsTo
+    {
+        return $this->belongsTo(AppSetting::class)->withDefault([
+            'cdn_endpoint' => 'https://development-nottv.sfo3.cdn.digitaloceanspaces.com',
+        ]);
     }
 
     public function showNotes()

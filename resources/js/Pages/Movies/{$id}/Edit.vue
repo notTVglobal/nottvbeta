@@ -92,6 +92,8 @@
                                         Category
                                     </label>
 
+                                    <span class="font-semibold uppercase">{{movieCategory.name}}</span>
+
                                     <select class="border border-gray-400 text-gray-800 p-2 w-1/2 rounded-lg block mb-2 uppercase font-bold text-xs "
                                             v-model="form.category" @change="chooseCategory($event)"
                                     >
@@ -412,6 +414,7 @@ onMounted(() => {
 let props = defineProps({
     movie: Object,
     poster: String,
+    movieCategory: String,
     categories: Object,
     sub_categories: Object,
 });
@@ -476,8 +479,8 @@ let form = useForm({
     id: props.movie.id,
     name: props.movie.name,
     release_year: props.release_year,
-    category: props.movie.category,
-    sub_category: props.movie.sub_category,
+    category: props.movie.movie_category_id,
+    sub_category: props.movie.movie_category_sub_id,
     description: props.movie.description,
     user_id: props.movie.user_id,
     team_id: props.movie.team_id,

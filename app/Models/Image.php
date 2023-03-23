@@ -40,4 +40,9 @@ class Image extends Model
     {
         return $this->hasMany(Video::class);
     }
+
+    public function appSetting()
+    {
+        return $this->belongsTo(AppSetting::class);
+    }
 }

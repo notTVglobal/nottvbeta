@@ -220,6 +220,8 @@ class MovieController extends Controller
             'movie' => $movie,
             'categories' => $categories,
             'sub_categories' => $sub_categories,
+            'movieCategory' => $movie->movieCategory->name,
+            'movieCategorySub' => $movie->movieCategorySub->name,
 //            'team' => Team::query()->where('id', $show->team_id)->firstOrFail(),
 //            'showRunner' => User::query()->where('id', $show->user_id)->pluck('id','name')->firstOrFail(),
 //            'poster' => getPoster($show),
@@ -245,6 +247,8 @@ class MovieController extends Controller
             'name' => ['required', 'string', 'max:255', Rule::unique('movies')->ignore($movie->id)],
             'description' => 'required',
             'release_year' => 'integer|min:1900|max:2300',
+            'category' => 'required',
+            'sub_category' => 'nullable',
             'file_url' => 'nullable|active_url',
             'www_url' => 'nullable|active_url',
             'instagram_name' => 'nullable|string|max:30',
@@ -258,6 +262,8 @@ class MovieController extends Controller
         $movie->name = $request->name;
         $movie->description = $request->description;
         $movie->release_year = $request->release_year;
+        $movie->movie_category_id = $request->category;
+        $movie->movie_category_sub_id = $request->sub_category;
         $movie->slug = \Str::slug($request->name);
         $movie->file_url = $request->file_url;
         $movie->www_url = $request->www_url;

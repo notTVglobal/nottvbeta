@@ -130,10 +130,10 @@
                                                 Category
                                             </label>
 
-
-                                            <select class="border border-gray-400 text-gray-800 p-2 w-full rounded-lg block mb-2 uppercase font-bold text-xs "
+                                            <select class="border border-gray-400 text-gray-800 p-2 w-full rounded-lg block my-2 uppercase font-bold text-xs "
                                                     v-model="form.category" @change="chooseCategory($event)"
                                             >
+
                                                 <option v-for="category in props.categories"
                                                         :key="category.id" :value="category.id">{{category.name}}</option>
 
@@ -381,8 +381,8 @@ showStore.posterName = props.poster[0].name;
 let form = useForm({
     name: props.show.name,
     description: props.show.description,
-    category: props.showCategoryId,
-    sub_category: props.show.sub_category,
+    category: props.show.show_category_id,
+    sub_category: props.show.show_category_sub_id,
     www_url: props.show.www_url,
     instagram_name: props.show.instagram_name,
     telegram_url: props.show.telegram_url,

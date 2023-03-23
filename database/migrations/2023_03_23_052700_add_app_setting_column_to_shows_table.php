@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('images', function (Blueprint $table) {
-            $table->string('cdn_endpoint')->nullable()->default(null);
+        Schema::table('shows', function (Blueprint $table) {
+            $table->foreignId('app_settings_id')->nullable()->default(1)->constrained();
         });
     }
 
@@ -25,8 +25,9 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('images', function (Blueprint $table) {
-            $table->dropColumn('cdn_endpoint');
+        Schema::table('shows', function (Blueprint $table) {
+            $table->dropForeign(['app_settings_id']);
+            $table->dropColumn('app_settings_id');
         });
     }
 };
