@@ -128,7 +128,19 @@ class ShowEpisodeController extends Controller
                 'name' => $show->team->name,
                 'slug' => $show->team->slug,
             ],
-            'episode' => $showEpisode,
+            'episode' => [
+                'name' => $showEpisode->name,
+                'slug' => $showEpisode->slug,
+                'description' => $showEpisode->description,
+                'episode_number' => $showEpisode->episode_number,
+                'created_at' => $showEpisode->created_at,
+                'release_year' => $showEpisode->release_year,
+                'release_dateTime' => $showEpisode->release_dateTime,
+                'video_file_url' => $showEpisode->video_file_url,
+                'video_file_embed_code' => $showEpisode->video_file_embed_code,
+                'release_dateTime' => $showEpisode->release_dateTime,
+                'poster' => $showEpisode->image->name,
+            ],
             'creators' => TeamMember::where('team_id', $teamId)
                 ->join('users', 'team_members.user_id', '=', 'users.id')
                 ->select('users.*', 'team_members.user_id')

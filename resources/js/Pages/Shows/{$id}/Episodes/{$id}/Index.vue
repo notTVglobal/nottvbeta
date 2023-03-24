@@ -26,30 +26,32 @@
             </div>
 
                 <header class="p-5 mb-6">
-                    <div class="flex justify-between mb-3 px-5">
+                    <div class="flex justify-between px-5">
                         <div class="">
                             <div class="mb-4">
-                                <h3 class="inline-flex items-center text-3xl font-semibold relative">
-                                    {{ props.episode.name }}
+                                <h3 class="mb-1 inline-flex items-center text-3xl font-semibold relative">
+                                    <Link :href="`/shows/${props.show.slug}/`"
+                                          class="">
+                                    {{ props.show.name }}
+                                    </Link>
                                 </h3>
-                            </div>
-                            <div class="text-xs space-y-1">
-                                <span class="uppercase">Episode Number: </span>
-                                <span v-if="!episode.episode_number">{{ episode.id }}</span>
-                                <span v-if="props.episode.episode_number">{{ props.episode.episode_number }}</span>
+                                <div class="mb-1">
+                                    <span class="font-semibold">
+                                    {{ props.episode.name }}</span>
+                                </div>
+                                <div class="text-xs space-y-1">
+                                    <span class="uppercase">Episode Number: </span>
+                                    <span v-if="!episode.episode_number">{{ episode.id }}</span>
+                                    <span v-if="props.episode.episode_number">{{ props.episode.episode_number }}</span>
+                                </div>
                             </div>
                             <div>
                                 {{ formatDate(props.episode.created_at) }}
                             </div>
+
                         </div>
 
                         <div class="flex flex-col justify-end">
-                            <div class="">
-                                <span class="text-xs uppercase">Show: </span>
-                                <Link :href="`/shows/${props.show.slug}/`"
-                                      class="text-blue-400 hover:text-blue-600 text-sm uppercase font-semibold">
-                                    {{ props.show.name }}</Link>
-                            </div>
                             <div class="">
                                 <span class="text-xs uppercase">Category: </span>
                                 <span class="text-sm uppercase font-semibold">{{ props.show.categoryName }}</span>
@@ -64,7 +66,35 @@
                         </div>
 
                     </div>
+
+                    <div class="flex mt-12 m-auto lg:mx-0 justify-center lg:justify-start">
+
+                        <button disabled class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
+                                @click="playVideo">
+                            <svg class="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg"
+                                 viewBox="0 0 485 485">
+                                <path d="M413.974,71.026C368.171,25.225,307.274,0,242.5,0S116.829,25.225,71.026,71.026C25.225,116.829,0,177.726,0,242.5
+		s25.225,125.671,71.026,171.474C116.829,459.775,177.726,485,242.5,485s125.671-25.225,171.474-71.026
+		C459.775,368.171,485,307.274,485,242.5S459.775,116.829,413.974,71.026z M242.5,455C125.327,455,30,359.673,30,242.5
+		S125.327,30,242.5,30S455,125.327,455,242.5S359.673,455,242.5,455z"/>
+                                <polygon points="181.062,336.575 343.938,242.5 181.062,148.425 	"/>
+                            </svg>
+                            <span class="ml-2">Watch Episode</span>
+                        </button>
+
+                        <button disabled class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed">
+                            <span class=""><font-awesome-icon icon="fa-circle-down" class="mr-2"/>Save For Later</span>
+                        </button>
+
+                        <button disabled class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed">
+                            <span class=""><font-awesome-icon icon="fa-share" class="mr-2"/>Share</span>
+                        </button>
+
+                    </div>
+
                 </header>
+
+
 
 
 
@@ -80,8 +110,9 @@
                 <div
                     class="flex justify-center shadow overflow-hidden border-b border-gray-200 w-full bg-black text-light text-2xl sm:rounded-lg p-5">
 
-                    <img v-if="!props.episode.video_file_url && !props.episode.video_file_embed_code && props.episode.poster" :src="'/storage/images/' + props.episode.poster" alt="" class="w-1/2 mx-2">
-                    <img v-if="!props.episode.video_file_url && !props.episode.video_file_embed_code && !props.episode.poster" :src="`/storage/images/EBU_Colorbars.svg.png`" alt="" class="w-1/2 mx-2">
+<!--                    <img v-if="!props.episode.video_file_url && !props.episode.video_file_embed_code && props.episode.poster" :src="'/storage/images/' + props.episode.poster" alt="episode poster" class="w-1/2 mx-2">-->
+                    <img v-if="props.episode.poster" :src="'/storage/images/' + props.episode.poster" alt="episode poster" class="w-1/2 mx-2">
+                    <img v-if="!props.episode.video_file_url && !props.episode.video_file_embed_code && !props.episode.poster" :src="`/storage/images/EBU_Colorbars.svg.png`" alt="episode poster" class="w-1/2 mx-2">
 
                     <iframe v-if="props.episode.video_file_url && !props.episode.video_file_embed_code"
                             class="rumble" width="640" height="360" :src="`${props.episode.video_file_url}`" frameborder="0" allowfullscreen>
