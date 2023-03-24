@@ -136,9 +136,10 @@ class ShowEpisodeController extends Controller
                 'created_at' => $showEpisode->created_at,
                 'release_year' => $showEpisode->release_year,
                 'release_dateTime' => $showEpisode->release_dateTime,
-                'video_file_url' => $showEpisode->video_file_url,
-                'video_file_embed_code' => $showEpisode->video_file_embed_code,
-                'release_dateTime' => $showEpisode->release_dateTime,
+                'mist_stream_id' => $showEpisode->mist_stream_id,
+                'video_id' => $showEpisode->video_id,
+                'video_url' => $showEpisode->video_url,
+                'video_embed_code' => $showEpisode->video_embed_code,
                 'poster' => $showEpisode->image->name,
             ],
             'creators' => TeamMember::where('team_id', $teamId)
@@ -207,7 +208,21 @@ class ShowEpisodeController extends Controller
                 'name' => $show->team->name,
                 'slug' => $show->team->slug,
             ],
-            'episode' => $showEpisode,
+            'episode' => [
+                'name' => $showEpisode->name,
+                'slug' => $showEpisode->slug,
+                'description' => $showEpisode->description,
+                'episode_number' => $showEpisode->episode_number,
+                'created_at' => $showEpisode->created_at,
+                'release_year' => $showEpisode->release_year,
+                'release_dateTime' => $showEpisode->release_dateTime,
+                'mist_stream_id' => $showEpisode->mist_stream_id,
+                'video_id' => $showEpisode->video_id,
+                'video_url' => $showEpisode->video_url,
+                'video_embed_code' => $showEpisode->video_embed_code,
+                'poster' => $showEpisode->image->name,
+                'show_id' => $showEpisode->show_id,
+            ],
             'can' => [
                 'manageShow' => Auth::user()->can('manage', $show),
                 'editShow' => Auth::user()->can('edit', $show),
@@ -277,8 +292,8 @@ class ShowEpisodeController extends Controller
             'episode_number' => 'max:10',
             'description' => 'required',
             'notes' => 'nullable|string',
-            'video_file_url' => 'nullable|active_url',
-            'video_file_embed_code' => 'nullable|string',
+            'video_url' => 'nullable|active_url',
+            'video_embed_code' => 'nullable|string',
             'release_date' => 'nullable|string',
         ]);
 
@@ -288,8 +303,8 @@ class ShowEpisodeController extends Controller
         $showEpisode->episode_number = $request->episode_number;
         $showEpisode->slug = \Str::slug($request->name);
         $showEpisode->notes = $request->notes;
-        $showEpisode->video_file_url = $request->video_file_url;
-        $showEpisode->video_file_embed_code = $request->video_file_embed_code;
+        $showEpisode->video_url = $request->video_url;
+        $showEpisode->video_embed_code = $request->video_embed_code;
         $showEpisode->save();
         sleep(1);
 

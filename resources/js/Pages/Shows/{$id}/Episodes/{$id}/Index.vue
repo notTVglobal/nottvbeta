@@ -69,8 +69,9 @@
 
                     <div class="flex mt-12 m-auto lg:mx-0 justify-center lg:justify-start">
 
-                        <button disabled class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
-                                @click="playVideo">
+                        <button :disabled="!videoPlayerStore.checkForVideo(props.episode)"
+                                class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
+                                @click="videoPlayerStore.playVideo(props.episode)">
                             <svg class="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg"
                                  viewBox="0 0 485 485">
                                 <path d="M413.974,71.026C368.171,25.225,307.274,0,242.5,0S116.829,25.225,71.026,71.026C25.225,116.829,0,177.726,0,242.5
@@ -100,29 +101,35 @@
 
 
 
+            <div class="flex flex-wrap justify-center shadow overflow-hidden border-y border-gray-200 w-full bg-black text-light text-2xl sm:rounded-lg p-5">
+<!--            <div class="flex flex-wrap items-start ml-5 py-0">-->
+                <div class="max-w-[50%] ml-5 py-0">
+                    <img v-if="props.episode.poster" :src="'/storage/images/' + props.episode.poster" alt="episode poster" class="mx-2">
+                    <img v-if="!props.episode.video_file_url && !props.episode.video_file_embed_code && !props.episode.poster" :src="`/storage/images/EBU_Colorbars.svg.png`" alt="episode poster" class="w-1/2 mx-2">
+                </div>
 
-            <div class="flex justify-center w-full bg-black py-0">
-<!--                                <img :src="'/storage/images/' + props.episode.poster" alt="" class="w-1/2 mx-2">-->
+                <!--                                <img :src="'/storage/images/' + props.episode.poster" alt="" class="w-1/2 mx-2">-->
 
                 <!--                TEST VIDEO EMBED FROM RUMBLE             -->
 <!--                <iframe class="rumble" width="640" height="360" src="https://rumble.com/embed/v1nf3s7/?pub=4" frameborder="0" allowfullscreen></iframe>-->
 
-                <div
-                    class="flex justify-center shadow overflow-hidden border-b border-gray-200 w-full bg-black text-light text-2xl sm:rounded-lg p-5">
+
 
 <!--                    <img v-if="!props.episode.video_file_url && !props.episode.video_file_embed_code && props.episode.poster" :src="'/storage/images/' + props.episode.poster" alt="episode poster" class="w-1/2 mx-2">-->
-                    <img v-if="props.episode.poster" :src="'/storage/images/' + props.episode.poster" alt="episode poster" class="w-1/2 mx-2">
-                    <img v-if="!props.episode.video_file_url && !props.episode.video_file_embed_code && !props.episode.poster" :src="`/storage/images/EBU_Colorbars.svg.png`" alt="episode poster" class="w-1/2 mx-2">
 
-                    <iframe v-if="props.episode.video_file_url && !props.episode.video_file_embed_code"
-                            class="rumble" width="640" height="360" :src="`${props.episode.video_file_url}`" frameborder="0" allowfullscreen>
-                    </iframe>
-                    <div v-if="!props.episode.video_file_url && props.episode.video_file_embed_code" v-html="props.episode.video_file_embed_code">
-                    </div>
-                    <div v-if="props.episode.video_file_url && props.episode.video_file_embed_code" v-html="props.episode.video_file_embed_code">
-                    </div>
+
+<!--                </div>-->
+
+            </div>
+
+            <div v-if="props.episode.video_embed_code" class="w-full flex justify-center my-10 px-5">
+            <div
+                 class="flex flex-col w-fit border border-white">
+                <span class="text-white text-3xl p-3">Embedded video</span>
+                <span class="text-white p-3">We are currently working on the video playback for embedded videos. What you see here is temporary. </span>
+                <div v-html="props.episode.video_embed_code">
                 </div>
-
+            </div>
             </div>
 
 
@@ -130,14 +137,9 @@
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                     <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
 
-
-                        <div class="flex space-x-6 mt-3">
-
-
-                            <div class="mb-6 p-5">
-                                <div class="font-semibold text-xs uppercase mb-3">EPISODE DESCRIPTION</div>
-                                <div>{{ props.episode.description }}</div>
-                            </div>
+                        <div class="my-6 p-5">
+                            <div class="font-semibold text-xs uppercase mb-3">EPISODE DESCRIPTION</div>
+                            <div>{{ props.episode.description }}</div>
                         </div>
 
                         <div class="mb-6 p-5">

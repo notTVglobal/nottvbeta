@@ -53,6 +53,11 @@ class ShowEpisode extends Model
         return $this->belongsTo(Image::class);
     }
 
+    public function video()
+    {
+        return $this->belongsTo(Video::class);
+    }
+
 //    public function showCategory(): HasOneThrough
 //    {
 //        return $this->hasOneThrough(Show::class, ShowCategory::class);

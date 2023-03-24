@@ -135,7 +135,6 @@
                                                type="text"
                                                name="notes"
                                                id="notes"
-                                               required
                                         >
                                         <div v-if="form.errors.notes" v-text="form.errors.notes"
                                              class="text-xs text-red-600 mt-1"></div>
@@ -204,13 +203,13 @@
                                             Episode Video URL (external)
                                         </label>
 
-                                        <input v-model="form.video_file_url"
+                                        <input v-model="form.video_url"
                                                class="border border-gray-400 text-gray-800 p-2 w-full rounded-lg"
                                                type="text"
                                                name="video_file_url"
                                                id="video_file_url"
                                         >
-                                        <div v-if="form.errors.video_file_url" v-text="form.errors.video_file_url"
+                                        <div v-if="form.errors.video_url" v-text="form.errors.video_url"
                                              class="text-xs text-red-600 mt-1"></div>
                                     </div>
 
@@ -221,14 +220,14 @@
                                             Episode Video Embed Code (external) <span class="text-white">*</span>
                                         </label>
 
-                                        <TabbableTextarea v-model="form.video_file_embed_code"
+                                        <TabbableTextarea v-model="form.video_embed_code"
                                                           class="border border-gray-400 text-gray-800 p-2 w-full rounded-lg"
                                                           type="text"
-                                                          name="video_file_embed_code"
-                                                          id="video_file_embed_code"
+                                                          name="video_embed_code"
+                                                          id="video_embed_code"
                                                           rows="10" cols="30"
                                         />
-                                        <div v-if="form.errors.video_file_embed_code" v-text="form.errors.video_file_embed_code"
+                                        <div v-if="form.errors.video_embed_code" v-text="form.errors.video_embed_code"
                                              class="text-xs text-red-600 mt-1"></div>
                                     </div>
 
@@ -344,9 +343,8 @@ let form = useForm({
     description: props.episode.description,
     notes: props.episode.notes,
     show_id: props.episode.show_id,
-    video_thumbnail: props.episode.video_thumbnail,
-    video_file_url: props.episode.video_file_url,
-    video_file_embed_code: props.episode.video_file_embed_code,
+    video_url: props.episode.video_url,
+    video_embed_code: props.episode.video_embed_code,
 });
 
 const FilePond = vueFilePond(

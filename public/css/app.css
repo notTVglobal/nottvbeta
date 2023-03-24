@@ -1705,6 +1705,10 @@ select {
   margin: 1.5rem;
 }
 
+.m-10 {
+  margin: 2.5rem;
+}
+
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
@@ -1758,6 +1762,11 @@ select {
 .my-10 {
   margin-top: 2.5rem;
   margin-bottom: 2.5rem;
+}
+
+.mx-0 {
+  margin-left: 0px;
+  margin-right: 0px;
 }
 
 .ml-3 {
@@ -2393,6 +2402,14 @@ select {
   max-width: 4rem;
 }
 
+.max-w-\[50\%\] {
+  max-width: 50%;
+}
+
+.max-w-\[10\%\] {
+  max-width: 10%;
+}
+
 .flex-1 {
   flex: 1 1 0%;
 }
@@ -2870,6 +2887,11 @@ select {
 .border-x {
   border-left-width: 1px;
   border-right-width: 1px;
+}
+
+.border-y {
+  border-top-width: 1px;
+  border-bottom-width: 1px;
 }
 
 .border-b-2 {
