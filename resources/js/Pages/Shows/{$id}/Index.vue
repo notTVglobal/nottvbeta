@@ -38,7 +38,7 @@
                     <div class="show-details border-b border-gray-800 pb-12 flex flex-col lg:flex-row">
                         <div class="items-center">
 <!--                            <img :src="'/storage/images/' + props.show.poster" alt="show cover" class="h-96 min-w-[16rem] w-64 object-cover mb-6 lg:mb-0 m-auto lg:m-0">-->
-                        <SingleImage :image="props.show.image" :alt="'show cover'" class="h-96 min-w-[16rem] w-64 object-cover mb-6 lg:mb-0 m-auto lg:m-0"/>
+                        <SingleImage :image="props.show.image" :poster="props.show.poster" :alt="'show cover'" class="h-96 min-w-[16rem] w-64 object-cover mb-6 lg:mb-0 m-auto lg:m-0"/>
                         </div>
                         <div v-if="!props.can.viewCreator && userStore.isMobile" id="topDiv"></div>
                         <div class="lg:ml-12 lg:mr-0">
@@ -238,6 +238,7 @@ import ShowFooter from "@/Components/Shows/ShowFooter"
 import Pagination from "@/Components/PaginationDark";
 import Message from "@/Components/Modals/Messages.vue";
 import SingleImage from "@/Components/Multimedia/SingleImage";
+
 let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore();
 let showStore = useShowStore();

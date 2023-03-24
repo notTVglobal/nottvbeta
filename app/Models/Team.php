@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Team extends Model
 {
@@ -60,6 +61,19 @@ class Team extends Model
     public function image()
     {
         return $this->belongsTo(Image::class);
+    }
+
+//    public function appSetting()
+//    {
+//        return $this->belongsTo(AppSetting::class);
+//    }
+
+
+    public function appSetting(): BelongsTo
+    {
+        return $this->belongsTo(AppSetting::class)->withDefault([
+            'cdn_endpoint' => 'https://development-nottv.sfo3.cdn.digitaloceanspaces.com',
+        ]);
     }
 
 

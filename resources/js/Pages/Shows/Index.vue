@@ -50,7 +50,10 @@
                              class="show mt-8 max-w-[12rem]">
                             <Link :href="`/shows/${show.slug}`" class="hover:text-blue-400 hover:opacity-75 transition ease-in-out duration-150">
                                 <div class="relative inline-block">
-                                    <img :src="'/storage/images/' + show.poster" alt="show cover" class="h-48 min-w-[8rem] w-28 object-cover">
+
+<!--                                    <img :src="'/storage/images/' + show.poster" alt="show cover" class="h-48 min-w-[8rem] w-28 object-cover">-->
+
+                                    <SingleImage :image="show.image" :poster="show.poster" :alt="'show cover'" class="h-48 min-w-[8rem] w-28 object-cover"/>
                                 </div>
                                 <div class="block text-base font-semibold leading-tight mt-4">{{ show.name }}</div>
                                 <div class="text-gray-400 mt-1">{{ show.categoryName }} &middot;
@@ -162,6 +165,7 @@ import { useUserStore } from "@/Stores/UserStore.js"
 import Pagination from "@/Components/PaginationDark"
 import throttle from "lodash/throttle"
 import Message from "@/Components/Modals/Messages";
+import SingleImage from "@/Components/Multimedia/SingleImage";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()

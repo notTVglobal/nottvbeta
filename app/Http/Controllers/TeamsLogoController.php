@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Team;
 use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class TeamsLogoController extends Controller
 {
@@ -15,51 +17,55 @@ class TeamsLogoController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function uploadLogo(HttpRequest $request) {
-        $request->file('logo')->store('images');
+    public function uploadLogo(HttpRequest $request)
+    {
+        // Store image locally
+//        $request->file('logo')->store('images');
 
-////        $files = Storage::disk('spaces')->files('uploads');
-////        function() {
-////            Storage::disk('spaces')->putFile('uploads', request()->file, 'public');
-////        };
-//
-//        if (!$path) {
-//            return response()->json(['error' => 'The file could not be saved.'], 500);
-//        }
-        $user = auth()->user()->id;
-        $uploadedFile = $request->file('logo');
-        // create image model
-        // NEED TO PROTECT THESE
-//        $image = Image::create([
-//            'name' => $poster,
-//            'extension' => $uploadedFile->extension(),
-//            'size' => $uploadedFile->getSize(),
-//            'user_id' => $user,
-//        ]);
+        // Store image on DO_SPACES
+        if ($request->hasFile('logo')) {
 
-        // create image model
-        // remove previous image from show
-        DB::table('images')->where('team_id', Auth::user()->isEditingTeam_id)->update([
-            'team_id' => null,
-        ]);
+            // Need to validate/sanitize the image upload.
+            // strip the metadata and convert the image file.
+            // don't save the original! HACKER WARNING!!
 
-        // update image model with new image
-        $id = DB::table('images')->insertGetId([
-            'name'      => $uploadedFile->hashName(),
-            'extension' => $uploadedFile->extension(),
-            'size'      => $uploadedFile->getSize(),
-            'user_id'   => $user,
-            'team_id'   => Auth::user()->isEditingTeam_id,
-        ]);
+            $user = auth()->user()->id;
+            $teamId = auth()->user()->isEditingTeam_id;
+            $uploadedFile = $request->file('logo');
+            $folder = config('filesystems.disks.spaces.folder');
 
-        // store image_id to Shows table
+            // create image model
+            // 1. remove previous image from show
+            DB::table('images')->where('team_id', Auth::user()->isEditingTeam_id)->update([
+                'team_id' => null,
+            ]);
 
-        // update Image on frontend
-        // return that image model back to the frontend
-        $logo = DB::table('images')->where('id', $id)->pluck('name')->first();
+            // 2. update image model with new image
+            $id = DB::table('images')->insertGetId([
+                'name'      => $uploadedFile->hashName(),
+                'extension' => $uploadedFile->extension(),
+                'folder'    => $folder,
+                'size'      => $uploadedFile->getSize(),
+                'user_id'   => $user,
+                'team_id'   => Auth::user()->isEditingTeam_id,
+            ]);
 
-        return $logo;
+            // store image_id to Shows table
+            $team = Team::find($teamId);
+            $team->image_id = $id;
+            $team->save();
+
+            // update Image on frontend
+            // return that image model back to the frontend
+            $logo = DB::table('images')->where('id', $id)->first();
+
+            Storage::disk('spaces')->put(
+                "{$folder}/{$logo->name}",
+                file_get_contents($request->file('logo'))
+            );
+
+            return $logo;
 //        return Inertia::render('Shows/{$id}/Edit');
-
+        }
     }
 }

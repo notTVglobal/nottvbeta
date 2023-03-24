@@ -36,7 +36,10 @@
                                 <!--Left Column-->
                                 <div>
                                     <div class="flex space-y-3">
-                                        <div class="mb-6"><img :src="'/storage/images/' + props.logo" :key="logo"/></div>
+                                        <div class="mb-6">
+                                            <SingleImage :image="props.image" :poster="props.logo" :key="logo" :alt="'show cover'" class=""/>
+<!--                                            <img :src="'/storage/images/' + props.logo" :key="logo"/>-->
+                                        </div>
                                     </div>
                                 </div>
 
@@ -153,9 +156,10 @@
                                             {{ props.message }}
                                         </div>
                                         <div class="flex justify-between mb-6">
+                                            <JetValidationErrors class="mr-4" />
                                             <button
                                                 type="submit"
-                                                class="bg-blue-600 hover:bg-blue-500 text-white rounded py-2 px-4 "
+                                                class="h-fit bg-blue-600 hover:bg-blue-500 text-white rounded py-2 px-4 "
                                                 :disabled="form.processing"
                                             >
                                                 Save
@@ -187,13 +191,12 @@ import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useTeamStore } from "@/Stores/TeamStore.js"
 import { useUserStore } from "@/Stores/UserStore";
 import Message from "@/Components/Modals/Messages";
-
+import SingleImage from "@/Components/Multimedia/SingleImage";
+import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
 import TeamEditHeader from "@/Components/Teams/Edit/TeamEditHeader";
 import TeamEditBody from "@/Components/Teams/Edit/TeamEditBody";
 import TeamLogoUpload from "@/Components/FilePond/TeamLogoUpload";
-
 import TabbableTextarea from "@/Components/TabbableTextarea"
-
 import vueFilePond, { setOptions } from 'vue-filepond';
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
 import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size";
@@ -228,6 +231,7 @@ let props = defineProps({
     team: Object,
     teamLeaderName: String,
     logo: String,
+    image: Object,
     message: String,
 });
 
@@ -264,7 +268,7 @@ function handleProcessedFile(error, file) {
         return;
     }
     Inertia.reload({
-        only: ['logo'],
+        only: ['image'],
     });
 }
 

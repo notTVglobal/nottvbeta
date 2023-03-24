@@ -12,6 +12,9 @@
         <link rel="stylesheet" href="<?php echo e(mix('css/app.css')); ?>">
 
 
+        <!-- Favicon -->
+        < link rel="shortcut icon" href="<?php echo e(asset('Ping-favicon.ico')); ?>" >
+
 
         <?php echo app('Tightenco\Ziggy\BladeRouteGenerator')->generate(); ?>
 

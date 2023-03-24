@@ -87,13 +87,16 @@
                     <div v-if="message" v-text="message"
                          class="bg-red-600 p-2 w-full text-white font-semibold mt-1"></div>
 
-                    <button
-                        @click="submit"
-                        class="bg-green-600 hover:bg-green-500 text-white rounded py-2 px-4 mt-2"
-                        :disabled="form.processing"
-                    >
-                        Save
-                    </button>
+                    <div class=" flex justify-start">
+                        <button
+                            @click="submit"
+                            class="bg-green-600 hover:bg-green-500 text-white rounded py-2 px-4 mt-2"
+                            :disabled="form.processing"
+                        >
+                            Save
+                        </button>
+                        <JetValidationErrors class="ml-4" />
+                    </div>
 
                 </form>
 
@@ -145,6 +148,7 @@ import { useTeamStore } from "@/Stores/TeamStore.js"
 import { useShowStore } from "@/Stores/ShowStore.js"
 import { useUserStore } from "@/Stores/UserStore";
 import Message from "@/Components/Modals/Messages"
+import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
 
 let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore()

@@ -39,7 +39,7 @@
 <!--                                            <img :src="'/storage/images/' + props.poster"-->
 <!--                                                 :key="props.poster" />-->
 <!--&lt;!&ndash;                                            <img :src="'https://development-nottv.sfo3.cdn.digitaloceanspaces.com/' local-GCM-EDITOR-1-public%2Fnoosphere_b6a2de92d9c202c710c99c8fe540dcb2.jpg'">&ndash;&gt;-->
-                                        <SingleImage :image="props.image" :key="props.poster"/>
+                                        <SingleImage :image="props.image" :key="props.image"/>
                                         </div>
                                     </div>
 
@@ -256,9 +256,10 @@
                                         </div>
 
                                         <div class="flex justify-end mb-6">
+                                            <JetValidationErrors class="mr-4" />
                                              <button
                                                 type="submit"
-                                                class="bg-blue-600 hover:bg-blue-500 text-white rounded py-2 px-4"
+                                                class="h-fit bg-blue-600 hover:bg-blue-500 text-white rounded py-2 px-4"
                                                 :disabled="form.processing"
                                             >
                                                 Save
@@ -292,9 +293,8 @@ import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useTeamStore } from "@/Stores/TeamStore.js"
 import { useShowStore } from "@/Stores/ShowStore.js"
 import { useUserStore } from "@/Stores/UserStore";
-
+import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
 import TabbableTextarea from "@/Components/TabbableTextarea"
-
 import vueFilePond, { setOptions } from 'vue-filepond'
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type"
 import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size"
@@ -302,7 +302,6 @@ import FilePondPluginImagePreview from "filepond-plugin-image-preview"
 import FilePondPluginFileMetadata from "filepond-plugin-file-metadata"
 import 'filepond/dist/filepond.min.css'
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css'
-
 import ShowEditHeader from "@/Components/Shows/Edit/ShowEditHeader"
 import SingleImage from "@/Components/Multimedia/SingleImage";
 import Message from "@/Components/Modals/Messages";
@@ -388,7 +387,7 @@ function handleProcessedFile(error, file) {
         return;
     }
     Inertia.reload({
-        only: ['poster'],
+        only: ['image'],
     });
 }
 

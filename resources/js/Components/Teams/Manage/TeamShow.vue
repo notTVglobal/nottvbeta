@@ -1,7 +1,10 @@
 <template>
     <tr>
         <td class="px-6 py-4 whitespace-nowrap">
-            <img :src="'/storage/images/' + show.poster" class="h-20 w-20 object-cover">
+<!--            <img :src="'/storage/images/' + show.poster" class="h-20 w-20 object-cover">-->
+
+            <SingleImage :image="show.image" :poster="show.poster" :alt="'show cover'" class="h-20 w-20 object-cover"/>
+
         </td>
 
         <td class="px-6 py-4 whitespace-nowrap">
@@ -35,10 +38,12 @@
 </template>
 
 <script setup>
+import { ref } from "vue";
+import { useForm } from "@inertiajs/inertia-vue3";
 import { useTeamStore } from "@/Stores/TeamStore";
 import ShowNoteEdit from "@/Components/Teams/Manage/ShowNoteEdit";
-import { useForm } from "@inertiajs/inertia-vue3";
-import { ref } from "vue";
+
+import SingleImage from "@/Components/Multimedia/SingleImage";
 
 let teamStore = useTeamStore();
 

@@ -1,5 +1,5 @@
 <template>
-    <div v-if="data.links.length > 4" class="flex flex-wrap justify-center my-4 space-x-4 space-y-2">
+    <div v-if="data.last_page > 1" class="flex flex-wrap justify-center my-4 space-x-4 space-y-2">
         <Component
             :is="link.url ? 'Link' : 'span'"
             :id="id"
@@ -17,6 +17,7 @@
 
 
 <script setup>
+import { ref } from 'vue';
 defineProps({
     data: Object,
     id: String,

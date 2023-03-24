@@ -63,6 +63,12 @@ class ShowsController extends Controller
                     'showRunnerId' => $show->user_id,
                     'showRunnerName' => $show->user->name,
                     'poster' => $show->image->name,
+                    'image' => [
+                        'id' => $show->image->id,
+                        'name' => $show->image->name,
+                        'folder' => $show->image->folder,
+                        'cdn_endpoint' => $show->appSetting->cdn_endpoint,
+                    ],
                     'slug' => $show->slug,
                     'totalEpisodes' => $show->showEpisodes->count(),
                     'status' => $show->showStatus->name,
@@ -221,7 +227,12 @@ class ShowsController extends Controller
                 'showRunner' => $show->user->name,
                 'slug' => $show->slug,
                 'poster' => $show->image->name,
-                'image' => $show->image,
+                'image' => [
+                    'id' => $show->image->id,
+                    'name' => $show->image->name,
+                    'folder' => $show->image->folder,
+                    'cdn_endpoint' => $show->appSetting->cdn_endpoint,
+                ],
                 'copyrightYear' => $show->created_at->format('Y'),
                 'first_release_year' => $show->first_release_year,
                 'last_release_year' => $show->last_release_year,
@@ -258,7 +269,7 @@ class ShowsController extends Controller
                     $query->where('name', 'like', "%{$search}%");
                 })
                 ->latest()
-                ->paginate(5, ['*'], 'episodes')
+                ->paginate(8, ['*'], 'episodes')
                 ->withQueryString()
                 ->through(fn($showEpisode) => [
                     'id' => $showEpisode->id,
@@ -305,7 +316,12 @@ class ShowsController extends Controller
                 'showRunner' => $show->user->name,
                 'slug' => $show->slug,
                 'poster' => $show->image->name,
-                'image' => $show->image,
+                'image' => [
+                    'id' => $show->image->id,
+                    'name' => $show->image->name,
+                    'folder' => $show->image->folder,
+                    'cdn_endpoint' => $show->appSetting->cdn_endpoint,
+                ],
                 'copyrightYear' => $show->created_at->format('Y'),
                 'categoryId' => $show->showCategory->id,
                 'categoryName' => $show->showCategory->name,

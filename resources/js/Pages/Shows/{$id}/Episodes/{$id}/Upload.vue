@@ -4,12 +4,13 @@
 
     <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
-        <div class="bg-dark text-light p-5 mb-10">
+        <div class="bg-white text-gray-800 dark:bg-gray-800 dark:text-white p-5 mb-10">
 
             <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
 
             <div class="bg-black text-red-600 font-bold text-xl p-4 mb-4 w-full text-center">
-                This page will be removed.
+                This page needs updating.. attach a video that is already uploaded or upload a new video for this episode.<br>
+                Also, upload bonus content?
             </div>
 
             <header>
@@ -21,13 +22,11 @@
                         </h1>
                     </div>
                     <div>
-                        <Link :href="`/shows/${show.slug}/episode/${episode.slug}/manage`">
-                            <button
-                                class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
-                            >Cancel
-                            </button>
-                        </Link>
-
+                        <button
+                            @click="back"
+                            class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
+                        >Cancel
+                        </button>
                     </div>
                 </div>
                 <div>
@@ -112,6 +111,8 @@
 
                                     </div>
 
+                                    <JetValidationErrors class="mr-4" />
+
                                 </div>
 <!-- End Right Column -->
                             </div>
@@ -138,7 +139,6 @@ import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useTeamStore } from "@/Stores/TeamStore.js"
 import { useShowStore } from "@/Stores/ShowStore.js"
 import { useUserStore } from "@/Stores/UserStore";
-
 import vueFilePond, { setOptions } from 'vue-filepond'
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type"
 import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size"
@@ -146,8 +146,8 @@ import FilePondPluginImagePreview from "filepond-plugin-image-preview"
 import FilePondPluginFileMetadata from "filepond-plugin-file-metadata"
 import 'filepond/dist/filepond.min.css'
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css'
-
 import Message from "@/Components/Modals/Messages";
+import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
 
 let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore()
@@ -233,5 +233,9 @@ let submit = () => {
 };
 
 let showMessage = ref(true);
+
+function back() {
+    window.history.back()
+}
 
 </script>

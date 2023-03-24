@@ -11,9 +11,9 @@
             >
                 <Link :href="`/shows/${show.slug}`" class="text-gray-50 dark:hover:text-blue-50">
                 <div class=" min-w-[8rem] max-w-[14rem] px-6 py-4 font-medium break-words grow-0 w-full text-center text-blue-800 hover:text-blue-600 dark:text-gray-50 dark:hover:text-blue-500">
-                        <img :src="'/storage/images/' + show.poster" class="h-64 min-w-[8rem] mb-4 object-cover hover:opacity-75 transition ease-in-out duration-150">
-                {{ show.name }}
-<!--                    <Link :href="`/shows/${show.slug}`" class="light:text-blue-800 light:hover:text-blue-600 dark:text-gray-50 dark:hover:text-blue-500"></Link>-->
+
+                    <SingleImage :image="show.image" :poster="show.poster" :alt="'show cover'" class="h-64 min-w-[8rem] mb-4 object-cover hover:opacity-75 transition ease-in-out duration-150"/>
+                    {{ show.name }}
 
                     <div class="text-xs uppercase text-gray-500">{{ show.categoryName[0] }}</div>
                     <div class="text-xs uppercase text-gray-500">{{ show.categorySubName[0] }}</div>
@@ -26,6 +26,7 @@
 
 <script setup>
 import Pagination from "@/Components/Pagination"
+import SingleImage from "@/Components/Multimedia/SingleImage";
 
 defineProps({
     shows: Object,

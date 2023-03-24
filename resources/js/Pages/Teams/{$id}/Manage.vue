@@ -19,6 +19,7 @@
                                 :team="props.team"
                                 :teamLeader="props.teamLeader"
                                 :logo="props.logo"
+                                :image="props.image"
                                 :message="props.message"
                             />
                         </div>
@@ -137,6 +138,7 @@ onMounted(() => {
 let props = defineProps({
     team: Object,
     logo: String,
+    image: Object,
     teamLeader: String,
     members: Object,
     shows: Object,

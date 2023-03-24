@@ -80,6 +80,12 @@ class TeamsController extends Controller
                     'id' => $team->id,
                     'name' => $team->name,
                     'logo' => $team->image->name,
+                    'image' => [
+                        'id' => $team->image->id,
+                        'name' => $team->image->name,
+                        'folder' => $team->image->folder,
+                        'cdn_endpoint' => $team->appSetting->cdn_endpoint,
+                    ],
                     'teamOwner' => $team->user->name,
                     'slug' => $team->slug,
                     'totalShows' => $team->shows->count(),
@@ -182,9 +188,15 @@ class TeamsController extends Controller
         return Inertia::render('Teams/{$id}/Index', [
             'team' => $team,
             'logo' => getLogo($team),
-            'shows' => Show::where('team_id', $team->id)
+            'image' => [
+                'id' => $team->image->id,
+                'name' => $team->image->name,
+                'folder' => $team->image->folder,
+                'cdn_endpoint' => $team->appSetting->cdn_endpoint,
+            ],
+            'shows' => Show::with('team', 'image')->where('team_id', $team->id)
                 ->latest()
-                ->paginate(5, ['*'], 'shows')
+                ->paginate(6, ['*'], 'shows')
                 ->withQueryString()
                 ->through(fn($show) => [
                     'id' => $show->id,
@@ -193,6 +205,12 @@ class TeamsController extends Controller
                     'showRunner' => showRunner($show->user_id),
                     'team_id' => $show->team_id,
                     'poster' => getPoster($show),
+                    'image' => [
+                        'id' => $show->image->id,
+                        'name' => $show->image->name,
+                        'folder' => $show->image->folder,
+                        'cdn_endpoint' => $show->appSetting->cdn_endpoint,
+                    ],
                     'slug' => $show->slug,
                     'copyrightYear' => Carbon::parse($show->created_at)->format('Y'),
                     'categoryName' => showCategoryName($show->show_category_id),
@@ -267,6 +285,12 @@ class TeamsController extends Controller
         return Inertia::render('Teams/{$id}/Manage', [
             'team' => $team,
             'logo' => getLogo($team),
+            'image' => [
+                'id' => $team->image->id,
+                'name' => $team->image->name,
+                'folder' => $team->image->folder,
+                'cdn_endpoint' => $team->appSetting->cdn_endpoint,
+            ],
             'teamLeader' => $teamLeader,
 
         // tec21: 'members' will need to be returned with pagination and searchable.
@@ -305,7 +329,8 @@ class TeamsController extends Controller
                     'teams' => getTeams($creator->user->id),
                 ]),
 
-            'shows' => DB::table('shows')->where('team_id', $team->id)
+//            'shows' => DB::table('shows')->where('team_id', $team->id)
+            'shows' => Show::with('team', 'image')->where('team_id', $team->id)
                 ->latest()
                 ->paginate(5)
                 ->withQueryString()
@@ -316,6 +341,12 @@ class TeamsController extends Controller
                     'showRunnerName' => User::query()->where('id', $show->user_id)->pluck('name')->first(),
                     'team_id' => $show->team_id,
                     'poster' => getPoster($show),
+                    'image' => [
+                        'id' => $show->image->id,
+                        'name' => $show->image->name,
+                        'folder' => $show->image->folder,
+                        'cdn_endpoint' => $show->appSetting->cdn_endpoint,
+                    ],
                     'slug' => $show->slug,
                     'notes' => $show->notes,
                     'copyrightYear' => Carbon::parse($show->created_at)->format('Y'),
@@ -363,6 +394,12 @@ class TeamsController extends Controller
             'team' => $team,
             'teamLeaderName' => User::query()->where('id', $team->user_id)->pluck('name')->first(),
             'logo' => getLogo($team),
+            'image' => [
+                'id' => $team->image->id,
+                'name' => $team->image->name,
+                'folder' => $team->image->folder,
+                'cdn_endpoint' => $team->appSetting->cdn_endpoint,
+            ],
             'creators' => Creator::join('users AS user', 'creators.user_id', '=', 'user.id')
                 ->select('creators.*', 'user.name AS name')
                 ->when(Request::input('search'), function ($query, $search) {

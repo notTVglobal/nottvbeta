@@ -112,6 +112,12 @@ class AdminController extends Controller
                     'id' => $team->id,
                     'name' => $team->name,
                     'logo' => getLogo($team),
+                    'image' => [
+                        'id' => $team->image->id,
+                        'name' => $team->image->name,
+                        'folder' => $team->image->folder,
+                        'cdn_endpoint' => $team->appSetting->cdn_endpoint,
+                    ],
                     'teamOwner' => $team->user->name,
                     'slug' => $team->slug,
                     'totalShows' => $team->shows->count(),

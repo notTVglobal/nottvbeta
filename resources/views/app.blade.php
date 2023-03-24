@@ -12,6 +12,9 @@
         <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 {{--        <link rel="stylesheet" href="css/emojionearea.min.css">--}}
 
+        <!-- Favicon -->
+        < link rel="shortcut icon" href="{{ asset('Ping-favicon.ico') }}" >
+
 
         @routes
 {{--        <script src="https://js.pusher.com/7.2/pusher.min.js"></script>--}}

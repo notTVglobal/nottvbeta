@@ -101,7 +101,7 @@
                                     </div>
 
                                     <div v-if="form.errors.category" v-text="form.errors.category"
-                                         class="text-xs text-red-600 mt-1">
+                                         class="text-xs text-red-600 mb-2">
                                 </div>
 
                                 <div class="mb-6">
@@ -335,6 +335,7 @@
                                 <!-- End Right Column -->
 
                             <div class="flex justify-end my-6 mr-6">
+                                <JetValidationErrors class="mr-4" />
                                 <button
                                     @click="submit"
                                     class="bg-blue-600 hover:bg-blue-500 text-white rounded py-2 px-4"
@@ -374,6 +375,7 @@ import FilePondPluginImagePreview from "filepond-plugin-image-preview"
 import FilePondPluginFileMetadata from "filepond-plugin-file-metadata"
 import 'filepond/dist/filepond.min.css'
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css'
+import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
 import TabbableTextarea from "@/Components/TabbableTextarea"
 import ShowEpisodeEditHeader from "@/Components/ShowEpisodes/Edit/ShowEpisodeEditHeader"
 

@@ -9,7 +9,7 @@
 
             <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
 
-            <div v-if="props.can.editShow || props.can.manageShow" class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4 py-5 mb-10">
+            <div v-if="props.can.editShow || props.can.manageShow" class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4 py-5">
                 <Link
                     v-if="props.can.editShow"
                     :href="`/shows/${props.show.slug}/episode/${props.episode.slug}/edit`">
@@ -24,14 +24,6 @@
                 >Manage Show</button>
                 </Link>
             </div>
-
-
-
-
-
-
-
-
 
                 <header class="p-5 mb-6">
                     <div class="flex justify-between mb-3 px-5">

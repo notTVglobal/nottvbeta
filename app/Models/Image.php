@@ -11,7 +11,7 @@ class Image extends Model
 
     protected $guarded = [];
 
-    public function shows()
+    public function show()
     {
         return $this->hasMany(Shows::class);
     }
@@ -44,5 +44,9 @@ class Image extends Model
     public function appSetting()
     {
         return $this->belongsTo(AppSetting::class);
+    }
+
+    public function showImage(): \Illuminate\Database\Eloquent\Relations\HasManyThrough {
+        return $this->hasManyThrough(Image::class, Show::class);
     }
 }

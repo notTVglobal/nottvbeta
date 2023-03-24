@@ -73,18 +73,21 @@
                             {{ form.errors.content }}
                         </div>
                     </div>
+                    <div class=" flex justify-start">
                     <button
                         type="submit"
-                        class="text-white bg-blue-700  focus:outline-none  font-medium rounded-lg text-sm px-5 py-2.5 "
+                        class="h-fit text-white bg-blue-700  focus:outline-none  font-medium rounded-lg text-sm px-5 py-2.5 "
                         :disabled="form.processing"
                         :class="{ 'opacity-25': form.processing }"
                     >
                         Submit
                     </button>
                     <Link :href="`/news`"><button
-                        class="ml-2 px-4 py-2 text-white bg-blue-500 hover:bg-blue-300 rounded-lg"
+                        class="h-fit ml-2 px-4 py-2 text-white bg-blue-500 hover:bg-blue-300 rounded-lg"
                     >Cancel</button>
                     </Link>
+                    <JetValidationErrors class="ml-4" />
+                    </div>
                 </form>
             </div>
 
@@ -101,6 +104,7 @@ import { useForm } from '@inertiajs/inertia-vue3'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useUserStore } from "@/Stores/UserStore";
 import { useNewsStore } from "@/Stores/NewsStore"
+import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
 // import TabbableTextarea from "@/Components/TabbableTextarea.vue";
 import Tiptap from "@/Components/TextEditor/TiptapNewsPostCreate.vue";
 import Message from "@/Components/Modals/Messages";

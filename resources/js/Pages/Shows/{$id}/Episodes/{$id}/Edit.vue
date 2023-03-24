@@ -262,9 +262,10 @@
 <!-- End grid 2-col -->
 
                                 <div class="flex justify-end mb-6">
+                                    <JetValidationErrors class="mr-4" />
                                     <button
                                         @click="submit"
-                                        class="bg-blue-600 hover:bg-blue-500 text-white rounded py-2 px-4"
+                                        class="h-fit bg-blue-600 hover:bg-blue-500 text-white rounded py-2 px-4"
                                         :disabled="form.processing"
                                     >
                                         Save
@@ -293,6 +294,7 @@ import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useTeamStore } from "@/Stores/TeamStore.js"
 import { useShowStore } from "@/Stores/ShowStore.js"
 import { useUserStore } from "@/Stores/UserStore";
+import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
 import TabbableTextarea from "@/Components/TabbableTextarea"
 import vueFilePond, { setOptions } from 'vue-filepond'
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type"

@@ -85,9 +85,9 @@
                                                 scope="row"
                                                 class="min-w-[8rem] px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                                             >
-<!--                                                <img :src="`/storage/${team.logo}`" class="rounded-full h-20 w-20 object-cover">-->
+
                                                 <Link :href="`/teams/${team.slug}`" class="">
-                                                    <img :src="`/storage/images/` + team.logo" class="rounded-full h-20 w-20 object-cover">
+                                                    <SingleImage :image="team.image" :poster="team.logo" :alt="'show cover'" class="rounded-full h-20 w-20 object-cover"/>
                                                 </Link>
                                             </th>
                                             <th
@@ -151,6 +151,7 @@ import { useUserStore } from "@/Stores/UserStore";
 import Pagination from "@/Components/Pagination"
 import throttle from "lodash/throttle"
 import Message from "@/Components/Modals/Messages";
+import SingleImage from "@/Components/Multimedia/SingleImage.vue";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()

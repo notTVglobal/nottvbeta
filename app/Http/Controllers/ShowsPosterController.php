@@ -27,6 +27,10 @@ class ShowsPosterController extends Controller
         // Store image on DO_SPACES
         if ($request->hasFile('poster')) {
 
+            // Need to validate/sanitize the image upload.
+            // strip the metadata and convert the image file.
+            // don't save the original! HACKER WARNING!!
+
             $user = auth()->user()->id;
             $showId = auth()->user()->isEditingShow_id;
             $uploadedFile = $request->file('poster');
@@ -48,10 +52,10 @@ class ShowsPosterController extends Controller
             $show->save();
 
             // return that image model back to the frontend
-            $poster = DB::table('images')->where('id', $id)->pluck('name')->first();
+            $poster = DB::table('images')->where('id', $id)->first();
 
             Storage::disk('spaces')->put(
-                "{$folder}/{$poster}",
+                "{$folder}/{$poster->name}",
                 file_get_contents($request->file('poster'))
             );
 

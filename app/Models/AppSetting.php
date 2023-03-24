@@ -20,4 +20,9 @@ class AppSetting extends Model
     {
         return $this->hasMany(Show::class);
     }
+
+    public function team()
+    {
+        return $this->hasMany(Team::class);
+    }
 }

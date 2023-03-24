@@ -5,8 +5,6 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div class="bg-dark text-light p-5 mb-10">
 
-            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
-
             <header class="flex justify-between mb-3">
                 <div id="topDiv">
                     <h2 class="font-semibold text-4xl text-gray-200 text-center leading-tight">
@@ -85,7 +83,6 @@ import TwoFactorAuthenticationForm from '@/Pages/Profile/Partials/TwoFactorAuthe
 import UpdatePasswordForm from '@/Pages/Profile/Partials/UpdatePasswordForm.vue'
 import UpdateProfileInformationForm from '@/Pages/Profile/Partials/UpdateProfileInformationForm.vue'
 import UserUpdateContactForm from "@/Components/Users/UserUpdateContactForm.vue";
-import Message from "@/Components/Modals/Messages";
 
 // import {vue} from "laravel-mix";
 
@@ -114,10 +111,7 @@ defineProps({
     // can: Object,
     confirmsTwoFactorAuthentication: Boolean,
     sessions: Array,
-    message: String,
 });
-
-let showMessage = ref(true);
 
 
 </script>

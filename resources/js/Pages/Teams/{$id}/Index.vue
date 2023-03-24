@@ -11,8 +11,10 @@
             <header class="flex justify-between mb-3">
                 <div>
                     <h3 class="dark:text-gray-50 inline-flex items-center text-3xl font-semibold relative uppercase">
-                        <img :src="'/storage/images/' + props.logo" alt="" class="w-20 mr-2">
+
+                        <SingleImage :image="image" :poster="logo" :alt="'team logo'" class="w-20 mr-2"/>
                         {{ props.team.name }}
+
                     </h3>
 
                 </div>
@@ -90,6 +92,7 @@ import { useTeamStore } from "@/Stores/TeamStore.js"
 import { useUserStore } from "@/Stores/UserStore";
 import TeamShowsList from "@/Components/Teams/TeamShowsList.vue";
 import Message from "@/Components/Modals/Messages";
+import SingleImage from "@/Components/Multimedia/SingleImage";
 
 let videoPlayerStore = useVideoPlayerStore();
 let teamStore = useTeamStore();
@@ -113,6 +116,7 @@ let props = defineProps({
     user: Object,
     team: Object,
     logo: String,
+    image: Object,
     shows: Object,
     creators: Object,
     message: String,

@@ -68,9 +68,10 @@
             </div>
             <input v-model="form.user_id" hidden>
             <div class="flex justify-between mb-6">
+                <JetValidationErrors class="mr-4" />
                 <button
                     type="submit"
-                    class="bg-blue-600 hover:bg-blue-500 text-white rounded py-2 px-4"
+                    class="h-fit bg-blue-600 hover:bg-blue-500 text-white rounded py-2 px-4"
                     :disabled="form.processing"
                 >
                     Submit
@@ -90,6 +91,7 @@ import { useForm } from "@inertiajs/inertia-vue3"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useUserStore } from "@/Stores/UserStore";
 import Message from "@/Components/Modals/Messages";
+import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
