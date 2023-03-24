@@ -35,8 +35,8 @@
                             </div>
                             <div class="text-xs space-y-1">
                                 <span class="uppercase">Episode Number: </span>
-                                <span v-if="!episode.episodeNumber">{{ episode.id }}</span>
-                                <span v-if="episode.episodeNumber">{{ episode.episodeNumber }}</span>
+                                <span v-if="!episode.episode_number">{{ episode.id }}</span>
+                                <span v-if="props.episode.episode_number">{{ props.episode.episode_number }}</span>
                             </div>
                             <div>
                                 {{ formatDate(props.episode.created_at) }}

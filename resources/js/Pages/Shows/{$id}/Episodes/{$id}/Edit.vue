@@ -4,7 +4,7 @@
 
     <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
-        <div class="bg-dark text-light p-5 mb-10">
+        <div class="bg-dark text-gray-50 p-5 mb-10">
 
             <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
 
@@ -52,7 +52,7 @@
 
 
                                     <div>
-                                        <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
+                                        <label class="block mb-2 uppercase font-bold text-xs text-red-700"
                                                for="name"
                                         >
                                             Change Episode Poster
@@ -87,7 +87,7 @@
 
                                     </div>
 
-                                    <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
+                                    <label class="block mb-2 uppercase font-bold text-xs text-red-700"
                                            for="name"
                                     >
                                         Episode Video
@@ -124,7 +124,7 @@
                                 <div class="xl:col-span-2">
 
                                     <div class="mb-6">
-                                        <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
+                                        <label class="block mb-2 uppercase font-bold text-xs text-red-700"
                                                for="name"
                                         >
                                             Episode Notes (only the team members see the notes)
@@ -143,7 +143,7 @@
 
 
                                     <div class="mb-6">
-                                        <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
+                                        <label class="block mb-2 uppercase font-bold text-xs text-red-700"
                                                for="name"
                                         >
                                             Episode Name
@@ -161,7 +161,7 @@
                                     </div>
 
                                     <div class="mb-6">
-                                        <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
+                                        <label class="block mb-2 uppercase font-bold text-xs text-red-700"
                                                for="episode_number"
                                         >
                                             Episode Number
@@ -170,6 +170,7 @@
                                         <input v-model="form.episode_number"
                                                class="border border-gray-400 text-gray-800 p-2 w-1/2 rounded-lg"
                                                type="text"
+                                               :placeholder="props.episode.id"
                                                name="episode_number"
                                                id="episode_number"
                                         >
@@ -196,24 +197,11 @@
                                              class="text-xs text-red-600 mt-1"></div>
                                     </div>
 
-
-                                    <div class="block mt-12 mb-2 uppercase font-bold text-xs text-light text-red-700">
-                                        Notes about video embedding:
-                                    </div>
-                                    <ul class="list-decimal pb-2 ml-2 mb-4 border-b">
-                                        <li>
-                                            The system will use the embed code if both URL and Embed code are provided.
-                                        </li>
-                                        <li>
-                                            We have not enabled the use of Facebook videos for security purposes.
-                                        </li>
-                                    </ul>
-
                                     <div class="mb-6">
-                                        <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
+                                        <label class="block mb-2 uppercase font-bold text-xs text-red-700"
                                                for="video_file_url"
                                         >
-                                            Episode Video URL (if hosted externally)
+                                            Episode Video URL (external)
                                         </label>
 
                                         <input v-model="form.video_file_url"
@@ -227,10 +215,10 @@
                                     </div>
 
                                     <div class="mb-6">
-                                        <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
+                                        <label class="block mb-2 uppercase font-bold text-xs text-red-700"
                                                for="video_file_embed_code"
                                         >
-                                            Episode Video Embed Code (if hosted externally)
+                                            Episode Video Embed Code (external) <span class="text-white">*</span>
                                         </label>
 
                                         <TabbableTextarea v-model="form.video_file_embed_code"
@@ -244,12 +232,26 @@
                                              class="text-xs text-red-600 mt-1"></div>
                                     </div>
 
+                                    <div class="mt-2 mb-6 pb-4 border-b">
+                                        <div class="mb-2 block uppercase font-bold text-xs text-white">
+                                            * Notes about video embedding:
+                                        </div>
+                                        <ul class="list-decimal pb-2 ml-2">
+                                            <li>
+                                                If both URL and Embed Code are provided the system will use the Embed Code.
+                                            </li>
+                                            <li>
+                                                We have <span class="font-bold">not</span> enabled the use of Facebook videos for security purposes.
+                                            </li>
+                                        </ul>
+                                    </div>
+
 
                                     <div class="mb-6">
-                                        <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
+                                        <label class="block mb-2 uppercase font-bold text-xs text-red-700"
                                                for="video_file_embed_code"
                                         >
-                                            Add a video that has been uploaded to not.tv
+                                            Upload video
                                         </label>
                                         <span class="italic">This feature is coming soon.</span>
                                     </div>

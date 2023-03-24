@@ -9,13 +9,20 @@
             <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
 
             <header>
-                <!--                <ShowEpisodeEditHeader :show="props.show" :team="props.team" :episode="props.episode"/>-->
-                <div class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4">
-                    <button
-                        @click="back"
-                        class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
-                    >Cancel
-                    </button>
+                <div class="flex justify-between mb-6">
+                    <div>
+                        <div class="font-bold mb-4 text-red-700">EDIT MOVIE</div>
+                        <h1 class="text-3xl">
+                            <Link :href="`/movies/${movie.slug}`" class="text-red-700 font-bold uppercase">{{ movie.name }}</Link>
+                        </h1>
+                    </div>
+                    <div>
+                        <button
+                            @click="back"
+                            class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
+                        >Cancel
+                        </button>
+                    </div>
                 </div>
             </header>
 
@@ -38,7 +45,7 @@
                             <form @submit.prevent="submit">
 
                                 <div class="mb-6">
-                                    <label class="block mb-2 uppercase font-bold text-xs text-light"
+                                    <label class="block mb-2 uppercase font-bold text-xs text-red-700"
                                            for="name"
                                     >
                                         Movie Name
@@ -56,7 +63,7 @@
                                 </div>
 
                                 <div class="mb-6 w-64">
-                                    <label class="block mb-2 uppercase font-bold text-xs text-light"
+                                    <label class="block mb-2 uppercase font-bold text-xs text-red-700"
                                            for="release_date"
                                     >
                                         Release Year
@@ -65,7 +72,6 @@
                                     <input v-model="form.release_year"
                                            class="border border-gray-400 text-gray-800 p-2 w-1/2 rounded-lg"
                                            type="number"
-                                           :placeholder="props.movie.release_year"
                                            name="release_year"
                                            id="release_year"
                                            minlength="4"
@@ -77,7 +83,7 @@
                                 </div>
 
                                 <div class="mb-6">
-                                    <label class="block mb-2 uppercase font-bold text-xs text-light"
+                                    <label class="block mb-2 uppercase font-bold text-xs text-red-700"
                                            for="category"
                                     >
                                         Category
@@ -105,7 +111,7 @@
                                 </div>
 
                                 <div class="mb-6">
-                                    <label class="block mb-2 text-gray-600 uppercase font-bold text-xs text-light"
+                                    <label class="block mb-2 text-gray-600 uppercase font-bold text-xs text-red-700"
                                            for="sub_category"
                                     >
                                         Sub-category
@@ -121,7 +127,7 @@
                                 </div>
 
                                 <div class="mb-6">
-                                    <label class="block mb-2 uppercase font-bold text-xs text-light"
+                                    <label class="block mb-2 uppercase font-bold text-xs text-red-700"
                                            for="description"
                                     >
                                         Description
@@ -143,14 +149,14 @@
                                 </div>
 
                                 <!-- Begin grid 2-col -->
-                                <div class="grid grid-cols-1 sm:grid-cols-2 space-x-6 p-6">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 space-x-6 p-6 ">
 
                                     <!--Left Column-->
                                     <div>
 
 
                                         <div>
-                                            <label class="block mb-2 uppercase font-bold text-xs text-light"
+                                            <label class="block mb-2 uppercase font-bold text-xs text-red-700"
                                                    for="name"
                                             >
                                                 Change Movie Poster
@@ -195,7 +201,7 @@
 
 
                                         <div>
-                                            <label class="block mb-2 uppercase font-bold text-xs text-light"
+                                            <label class="block mb-2 uppercase font-bold text-xs text-red-700"
                                                    for="name"
                                             >
                                                 Upload Video
@@ -233,36 +239,37 @@
                                             <!--                                            />-->
                                         </div>
 
-                                    </div>
+                                        <div class="mb-6">
+                                            <label class="block mb-2 uppercase font-bold text-xs text-red-700"
+                                                   for="file_url"
+                                            >
+                                                Change Video URL (if hosted externally) <span class="text-white dark:text-black">*</span>
+                                            </label>
 
-                                    <div class="block mb-2 uppercase font-bold text-xs text-light">
-                                        Notes:
+                                            <input v-model="form.file_url"
+                                                   class="border border-gray-400 text-gray-800 p-2 w-full rounded-lg"
+                                                   type="text"
+                                                   name="file_url"
+                                                   id="file_url"
+                                            >
+                                            <div v-if="form.errors.file_url" v-text="form.errors.file_url"
+                                                 class="text-xs text-red-600 mt-1"></div>
+                                        </div>
+
+                                        <div class="block mb-6 uppercase font-bold text-xs text-light">
+                                            <div class="mb-2">* Notes:</div>
+
+                                            <ul class="list-decimal pb-2 ml-2 mb-4 border-b">
+                                                <li>
+                                                    We have not enabled the use of Facebook videos for security purposes.
+                                                </li>
+                                            </ul>
+                                        </div>
+
                                     </div>
-                                    <ul class="list-decimal pb-2 ml-2 mb-4 border-b">
-                                        <li>
-                                            We have not enabled the use of Facebook videos for security purposes.
-                                        </li>
-                                    </ul>
 
                                     <div class="mb-6">
-                                        <label class="block mb-2 uppercase font-bold text-xs text-light"
-                                               for="file_url"
-                                        >
-                                            Change Video URL (if hosted externally)
-                                        </label>
-
-                                        <input v-model="form.file_url"
-                                               class="border border-gray-400 text-gray-800 p-2 w-full rounded-lg"
-                                               type="text"
-                                               name="file_url"
-                                               id="file_url"
-                                        >
-                                        <div v-if="form.errors.file_url" v-text="form.errors.file_url"
-                                             class="text-xs text-red-600 mt-1"></div>
-                                    </div>
-
-                                    <div class="mb-6">
-                                        <label class="block mb-2 uppercase font-bold text-xs light:text-gray-700 text-gray-300"
+                                        <label class="block mb-2 uppercase font-bold text-xs text-red-700"
                                                for="name"
                                         >
                                             Website URL
@@ -279,7 +286,7 @@
                                     </div>
 
                                     <div class="mb-6">
-                                        <label class="block mb-2 uppercase font-bold text-xs light:text-gray-700 text-gray-300"
+                                        <label class="block mb-2 uppercase font-bold text-xs text-red-700"
                                                for="name"
                                         >
                                             Instagram @
@@ -296,7 +303,7 @@
                                     </div>
 
                                     <div class="mb-6">
-                                        <label class="block mb-2 uppercase font-bold text-xs light:text-gray-700 text-gray-300"
+                                        <label class="block mb-2 uppercase font-bold text-xs text-red-700"
                                                for="name"
                                         >
                                             Telegram URL
@@ -313,7 +320,7 @@
                                     </div>
 
                                     <div class="mb-6">
-                                        <label class="block mb-2 uppercase font-bold text-xs light:text-gray-700 text-gray-300"
+                                        <label class="block mb-2 uppercase font-bold text-xs text-red-700"
                                                for="name"
                                         >
                                             Twitter @
@@ -377,6 +384,7 @@ import 'filepond/dist/filepond.min.css'
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css'
 import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
 import TabbableTextarea from "@/Components/TabbableTextarea"
+import Message from "@/Components/Modals/Messages";
 import ShowEpisodeEditHeader from "@/Components/ShowEpisodes/Edit/ShowEpisodeEditHeader"
 
 let videoPlayerStore = useVideoPlayerStore()
@@ -411,7 +419,7 @@ let props = defineProps({
 let form = useForm({
     id: props.movie.id,
     name: props.movie.name,
-    release_year: props.release_year,
+    release_year: props.movie.release_year,
     category: props.movie.movie_category_id,
     sub_category: props.movie.movie_category_sub_id,
     description: props.movie.description,
