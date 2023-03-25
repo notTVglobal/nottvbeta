@@ -16,7 +16,7 @@ class FirstRunSeeder extends Seeder
     {
         $this->call([
             AdminSeeder::class,
-            AppSettingSeeder::class,
+            AppSettingsSeeder::class,
             ImageSeeder::class,
             MovieCategorySeeder::class,
             ShowCategorySeeder::class,
