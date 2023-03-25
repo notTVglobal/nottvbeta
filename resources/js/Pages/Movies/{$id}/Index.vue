@@ -40,13 +40,13 @@
             <div class="container mx-auto px-4">
                 <div class="movie-details border-b border-gray-800 pb-12 flex flex-col lg:flex-row">
                     <div class="items-center">
-                        <img :src="`/storage/images/EBU_Colorbars.svg.png`" alt="movie cover" class="h-96 min-w-[16rem] w-64 mb-6 lg:mb-0 m-auto lg:m-0">
+                        <SingleImage :image="movie.image" :alt="'movie cover'" :class="'h-96 min-w-[16rem] w-64 object-cover mb-6 lg:mb-0 m-auto lg:m-0'"/>
                     </div>
                     <div id="topDiv" v-if="userStore.isMobile"></div>
                     <div class="lg:ml-12 lg:mr-0">
                         <h2 class="font-semibold text-4xl text-center lg:text-left">{{ movie.name }}</h2>
                         <div class="text-gray-400 text-center lg:text-left">
-                            <span>Short Film, Animated</span>
+                            <span>{{ movie.category }}, {{ movie.subCategory }}</span>
                             <span v-if="movie.release_year"> &middot; {{movie.release_year}}</span>
                         </div>
 
@@ -118,7 +118,7 @@
                         </div>
 
                         <p class="mt-12 pr-6 text-gray-300 mr-1 lg:mr-36 w-full text-center lg:text-left">
-                            {{ movie.description }}
+                            {{ movie.logline }}
                         </p>
 
                         <div class="flex mt-12 m-auto lg:mx-0 justify-center lg:justify-start">
@@ -248,6 +248,7 @@ import { useTeamStore } from "@/Stores/TeamStore.js"
 import { useShowStore } from "@/Stores/ShowStore.js"
 import { useUserStore } from "@/Stores/UserStore.js"
 import Message from "@/Components/Modals/Messages"
+import SingleImage from "@/Components/Multimedia/SingleImage";
 
 import 'filepond/dist/filepond.min.css'
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css'
@@ -273,12 +274,8 @@ onMounted(() => {
 
 let props = defineProps({
     movie: Object,
-    teamName: String,
-    teamSlug: String,
     creators: Object,
     message: String,
-    errors: ref(''),
-    video: ref(''),
     can: Object,
     // filters: Object,
 });

@@ -22,10 +22,10 @@
                 <div class="opacity-10">
                     <img :src="`/storage/images/logo_white_512.png`" class="absolute right-2 top-5 w-10 mr-4"></div>
 
-                 On Screen Display (OSD)
+<!--                 On Screen Display (OSD)-->
                 <OsdTopRight :show="videoPlayerStore.showOSD" />
 
-                 Video Player Controls
+<!--                 Video Player Controls-->
                 <VideoControlsTopRight :show="videoPlayerStore.showOSD" />
 
             </div>

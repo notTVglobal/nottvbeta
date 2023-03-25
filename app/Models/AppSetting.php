@@ -20,6 +20,10 @@ class AppSetting extends Model
     {
         return $this->hasMany(Show::class);
     }
+    public function movie()
+    {
+        return $this->hasMany(Movie::class);
+    }
 
     public function team()
     {

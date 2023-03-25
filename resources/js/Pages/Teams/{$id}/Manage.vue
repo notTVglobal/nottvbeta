@@ -4,7 +4,7 @@
 
     <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3 overflow-x-hidden">
-        <div class="bg-white text-black dark:bg-gray-900 dark:text-gray-50 p-5 mb-10">
+        <div class="min-h-screen bg-white text-black dark:bg-gray-900 dark:text-gray-50 p-5 pb-36">
 
             <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
 

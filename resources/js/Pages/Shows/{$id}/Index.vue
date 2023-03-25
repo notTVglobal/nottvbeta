@@ -38,7 +38,7 @@
                     <div class="show-details border-b border-gray-800 pb-12 flex flex-col lg:flex-row">
                         <div class="items-center">
 <!--                        <SingleImage :image="props.show.image" :poster="props.show.poster" :alt="'show cover'" class="h-96 min-w-[16rem] w-64 object-cover mb-6 lg:mb-0 m-auto lg:m-0"/>-->
-                        <SingleImage :image="props.show.image" :poster="props.show.poster" :alt="'show cover'" class="h-96 min-w-[16rem] w-64 object-cover mb-6 lg:mb-0 m-auto lg:m-0"/>
+                        <SingleImage :image="props.show.image" :alt="'show cover'" class="h-96 min-w-[16rem] w-64 object-cover mb-6 lg:mb-0 m-auto lg:m-0"/>
                         </div>
                         <div v-if="!props.can.viewCreator && userStore.isMobile" id="topDiv"></div>
                         <div class="lg:ml-12 lg:mr-0">
@@ -224,8 +224,6 @@
 
 
 <script setup>
-import ResponsiveNavigationMenu from "@/Components/Navigation/ResponsiveNavigationMenu"
-import NavigationMenu from "@/Components/Navigation/NavigationMenu"
 import {onBeforeMount, onMounted, onUpdated, ref} from 'vue'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useTeamStore } from "@/Stores/TeamStore.js"
@@ -233,11 +231,11 @@ import { useShowStore } from "@/Stores/ShowStore.js"
 import { useStreamStore } from "@/Stores/StreamStore.js"
 import { useUserStore } from "@/Stores/UserStore.js"
 import ShowEpisodesList from "@/Components/Shows/ShowEpisodesList"
-// import ShowCreatorsList from "@/Components/Shows/ShowCreatorsList";
 import ShowFooter from "@/Components/Shows/ShowFooter"
 import Pagination from "@/Components/PaginationDark";
 import Message from "@/Components/Modals/Messages.vue";
 import SingleImage from "@/Components/Multimedia/SingleImage";
+// import ShowCreatorsList from "@/Components/Shows/ShowCreatorsList";
 
 let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore();

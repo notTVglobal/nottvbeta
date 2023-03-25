@@ -4,7 +4,7 @@
 
     <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
-        <div class="bg-dark text-gray-50 p-5 mb-10">
+        <div class="bg-white dark:bg-gray-800 text-black dark:text-white p-5 mb-10">
 
             <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
 
@@ -90,14 +90,14 @@
                                         Episode Video
                                     </label>
 
-                                    <div class="flex justify-center w-full bg-black mb-6 py-0">
-                                        <!--                                <img :src="'/storage/images/' + props.episode.poster" alt="" class="w-1/2 mx-2">-->
+                                    <div class="flex justify-center w-full bg-white dark:bg-black mb-6 py-0">
+
 
                                         <!--                TEST VIDEO EMBED FROM RUMBLE             -->
                                         <!--                <iframe class="rumble" width="640" height="360" src="https://rumble.com/embed/v1nf3s7/?pub=4" frameborder="0" allowfullscreen></iframe>-->
 
                                         <div
-                                            class="flex justify-center shadow overflow-hidden border-b border-gray-200 w-full bg-black text-light text-2xl sm:rounded-lg p-5">
+                                            class="flex justify-center shadow overflow-hidden border-b border-gray-200 w-full bg-white dark:bg-black text-2xl sm:rounded-lg p-5">
 
                                             <iframe v-if="props.episode.video_file_url && !props.episode.video_file_embed_code"
                                                     class="rumble" width="640" height="360" :src="`${props.episode.video_file_url}`" frameborder="0" allowfullscreen>
@@ -248,7 +248,7 @@
                                     </div>
 
                                     <div class="mt-2 mb-6 pb-4 border-b">
-                                        <div class="mb-2 block uppercase font-bold text-xs text-white">
+                                        <div class="mb-2 block uppercase font-bold text-xs">
                                             * Notes about video embedding:
                                         </div>
                                         <ul class="list-decimal pb-2 ml-2">
@@ -282,7 +282,7 @@
                                     <JetValidationErrors class="mr-4" />
                                     <button
                                         @click="submit"
-                                        class="h-fit bg-blue-600 hover:bg-blue-500 text-white rounded py-2 px-4"
+                                        class="h-fit bg-blue-600 hover:bg-blue-500 text-white rounded py-2 px-4 mr-5"
                                         :disabled="form.processing"
                                     >
                                         Save

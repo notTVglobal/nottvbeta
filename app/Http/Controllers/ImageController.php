@@ -283,7 +283,6 @@ class ImageController extends Controller
         $cloud_folder = DB::table('app_settings')->where('id', 1)->pluck('cdn_folder')->first();
         $folder = '/images';
         $file = $request->file('image');
-//        dd($file);
         $filename = $file->getClientOriginalName();
 
         // Store the file to DO_SPACES

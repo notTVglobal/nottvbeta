@@ -49,7 +49,9 @@
                              class="movie mt-8">
                             <div class="relative inline-block">
                                 <Link :href="`/movies/${movie.slug}`">
-                                    <img :src="`/storage/images/EBU_Colorbars.svg.png`" alt="movie cover" class="h-48 min-w-[8rem] w-28 object-cover hover:opacity-75 transition ease-in-out duration-150">
+<!--                                    <img :src="`/storage/images/EBU_Colorbars.svg.png`" alt="movie cover" class="h-48 min-w-[8rem] w-28 object-cover hover:opacity-75 transition ease-in-out duration-150">-->
+                                    <SingleImage :image="movie.image" :alt="'movie cover'" :class="'h-48 min-w-[8rem] w-28 object-cover hover:opacity-75 transition ease-in-out duration-150'"/>
+
                                 </Link>
                                 <div class="absolute bottom-0 right-0 w-12 h-12 bg-gray-800 rounded-full" style="right:-20px; bottom:-20px;">
                                     <div class="font-semi-bold text-xs flex justify-center items-center h-full">80%</div>
@@ -57,9 +59,9 @@
                                 </div>
                             </div>
                             <Link :href="`/movies/${movie.slug}`" class="block text-base font-semibold leading-tight max-w-[8rem] hover:text-gray-400 mt-4 mb-2">{{ movie.name }}</Link>
-                            <div class="text-gray-400 mt-1">Category
+                            <div class="text-gray-400 mt-1">{{ movie.category }}
                                 <span v-if="movie.release_year">({{movie.release_year}})</span></div>
-                            <div class="text-gray-400 mt-1">Sub-category</div>
+                            <div class="text-gray-400 mt-1">{{ movie.subCategory }}</div>
                         </div>
 
                     </div>
@@ -72,94 +74,59 @@
                     <div class="recently-reviewed w-full lg:w-3/4 mr-0 md:mr-16 lg:mr-32">
                         <h2 id="review" class="text-yellow-500 uppercase tracking-wide font-semibold text-2xl">Recently Reviewed</h2>
                         <div class="recently-reviewed-container space-y-12 mt-8">
-                            <div class="movie bg-gray-800 rounded-lg shadow-md flex px-6 py-6">
-                                <div class="relative flex-none">
-                                    <Link :href="`/movies/${movie}`">
-                                        <img :src="`/storage/images/EBU_Colorbars.svg.png`" alt="movie cover" class="h-32 md:h-64 md:min-w-[8rem] w-24 md:w-48 object-cover hover:opacity-75 transition ease-in-out duration-150">
-                                    </Link>
-                                    <div class="absolute bottom-0 right-0 w-12 h-12 bg-gray-900 rounded-full" style="right:-20px; bottom:-20px;">
-                                        <div class="font-semi-bold text-xs flex justify-center items-center h-full">80%</div>
-                                    </div>
-                                </div>
-                                <div class="ml-12">
-                                    <Link :href="`/movies/${movie}`" class="block text-lg font-semibold leading-tight max-w-[8rem] hover:text-gray-400 mt-4">Sprite Fright</Link>
-                                    <div class="text-gray-400 mt-1">Short Film</div>
-                                    <p class="mt-6 pr-4 text-gray-300 hidden lg:block">
-                                        Blender Studio’s 13th open movie is an 80’s-inspired horror comedy,
-                                        set in Britain: When a group of rowdy teenagers trek into an isolated forest,
-                                        they discover peaceful mushroom creatures that turn out to be an unexpected force of nature.
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="movie bg-gray-800 rounded-lg shadow-md flex px-6 py-6">
-                                <div class="relative flex-none">
-                                    <Link :href="`/movies/${movie}`">
-                                        <img :src="`/storage/images/EBU_Colorbars.svg.png`" alt="movie cover" class="h-32 md:h-64 md:min-w-[8rem] w-24 md:w-48 object-cover hover:opacity-75 transition ease-in-out duration-150">
-                                    </Link>
-                                    <div class="absolute bottom-0 right-0 w-12 h-12 bg-gray-900 rounded-full" style="right:-20px; bottom:-20px;">
-                                        <div class="font-semi-bold text-xs flex justify-center items-center h-full">80%</div>
-                                    </div>
-                                </div>
-                                <div class="ml-12">
-                                    <Link :href="`/movies/${movie}`" class="block text-lg font-semibold leading-tight max-w-[8rem] hover:text-gray-400 mt-4">Sprite Fright</Link>
-                                    <div class="text-gray-400 mt-1">Short Film</div>
-                                    <p class="mt-6 pr-4 text-gray-300 hidden lg:block">
-                                        Blender Studio’s 13th open movie is an 80’s-inspired horror comedy,
-                                        set in Britain: When a group of rowdy teenagers trek into an isolated forest,
-                                        they discover peaceful mushroom creatures that turn out to be an unexpected force of nature.
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="movie bg-gray-800 rounded-lg shadow-md flex px-6 py-6">
-                                <div class="relative flex-none">
-                                    <Link :href="`/movies/${movie}`">
-                                        <img :src="`/storage/images/EBU_Colorbars.svg.png`" alt="movie cover" class="h-32 md:h-64 md:min-w-[8rem] w-24 md:w-48 object-cover hover:opacity-75 transition ease-in-out duration-150">
-                                    </Link>
-                                    <div class="absolute bottom-0 right-0 w-12 h-12 bg-gray-900 rounded-full" style="right:-20px; bottom:-20px;">
-                                        <div class="font-semi-bold text-xs flex justify-center items-center h-full">80%</div>
-                                    </div>
-                                </div>
-                                <div class="ml-12">
-                                    <Link :href="`/movies/${movie}`" class="block text-lg font-semibold leading-tight max-w-[8rem] hover:text-gray-400 mt-4">Sprite Fright</Link>
-                                    <div class="text-gray-400 mt-1">Short Film</div>
-                                    <p class="mt-6 pr-4 text-gray-300 hidden lg:block">
-                                        Blender Studio’s 13th open movie is an 80’s-inspired horror comedy,
-                                        set in Britain: When a group of rowdy teenagers trek into an isolated forest,
-                                        they discover peaceful mushroom creatures that turn out to be an unexpected force of nature.
-                                    </p>
-                                </div>
-                            </div>
+                            <div v-for="movie in recentlyReviewed.data"
+                                 :key="movie.id"
+                                 class="movie bg-gray-800 rounded-lg shadow-md flex px-6 py-6">
 
+                                <div class="relative flex-none">
+                                    <Link :href="`/movies/${movie.slug}`" class="hover:text-blue-400 hover:opacity-75 transition ease-in-out duration-150">
+                                    <SingleImage :image="movie.image" :alt="'movie cover'" class="h-32 md:h-64 md:min-w-[8rem] w-24 md:w-48 object-cover hover:opacity-75 transition ease-in-out duration-150"/>
+<!--                                        <img :src="`/storage/images/EBU_Colorbars.svg.png`" alt="movie cover" class="h-32 md:h-64 md:min-w-[8rem] w-24 md:w-48 object-cover hover:opacity-75 transition ease-in-out duration-150">-->
+                                    </Link>
+                                    <div class="absolute bottom-0 right-0 w-12 h-12 bg-gray-900 rounded-full" style="right:-20px; bottom:-20px;">
+                                        <div class="font-semi-bold text-xs flex justify-center items-center h-full">80%</div>
+                                    </div>
+                                </div>
+
+                                <div class="ml-12">
+                                    <Link :href="`/movies/${movie}`" class="block text-lg font-semibold leading-tight max-w-[8rem] hover:text-gray-400 mt-4">
+                                        {{ movie.name }}</Link>
+                                    <div class="text-gray-400 mt-1">{{ movie.category }}, {{ movie.subCategory }}</div>
+                                    <p class="mt-6 pr-4 text-gray-300 hidden lg:block">
+                                        {{ movie.logline }}
+                                    </p>
+                                </div>
+                            </div>
 
                         </div>
                     </div>
                     <div class="most-anticipated lg:w-1/4 mt-12 lg:mt-0">
                         <h2 class="text-yellow-500 uppercase tracking-wide font-semibold text-2xl">Most Anticipated</h2>
                         <div class="most-anticipated-container space-y-10 mt-8">
-                            <div class="game flex">
+                            <div v-for="movie in mostAnticipated.data"
+                                 :key="movie.id"
+                                 class="movie flex">
                                 <Link :href="`/movies/${movie}`">
-                                    <img :src="`/storage/images/EBU_Colorbars.svg.png`"
-                                         alt="movie cover"
-                                         class="h-24 min-w-[4rem] w-16 object-cover hover:opacity-75 transition ease-in-out duration-150">
+                                    <SingleImage :image="movie.image" :alt="'movie cover'" class="h-24 min-w-[4rem] w-16 object-cover hover:opacity-75 transition ease-in-out duration-150"/>
                                 </Link>
                                 <div class="ml-4">
-                                    <Link :href="`/movies/${movie}`" class="hover:text-gray-300">Sprite Fright</Link>
-                                    <div class="text-gray-400 text-sm mt-1">October 8, 2021</div>
+                                    <Link :href="`/movies/${movie.slug}`" class="hover:text-gray-300">{{ movie.name }}</Link>
+                                    <div class="text-gray-400 text-sm mt-1">{{ movie.category }}, {{ movie.subCategory }}</div>
                                 </div>
                             </div>
                         </div>
 
                         <h2 id="coming-soon" class="text-yellow-500 uppercase tracking-wide font-semibold mt-16 text-2xl">Coming Soon</h2>
                         <div class="most-anticipated-container space-y-10 mt-8">
-                            <div class="game flex">
+                            <div v-for="movie in comingSoon.data"
+                                 :key="movie.id"
+                                 class="movie flex">
                                 <Link :href="`/movies/${movie}`">
-                                    <img :src="`/storage/images/EBU_Colorbars.svg.png`"
-                                         alt="movie cover"
-                                         class="h-24 min-w-[4rem] w-16 object-cover hover:opacity-75 transition ease-in-out duration-150">
+                                    <SingleImage :image="movie.image" :alt="'movie cover'" class="h-24 min-w-[4rem] w-16 object-cover hover:opacity-75 transition ease-in-out duration-150"/>
                                 </Link>
                                 <div class="ml-4">
-                                    <Link :href="`/movies/${movie}`" class="hover:text-gray-300">Sprite Fright</Link>
-                                    <div class="text-gray-400 text-sm mt-1">October 8, 2021</div>
+                                    <Link :href="`/movies/${movie}`" class="hover:text-gray-300">{{ movie.name }}</Link>
+                                    <div class="text-gray-400 text-sm mt-1">{{ movie.category }}, {{ movie.subCategory }}</div>
                                 </div>
                             </div>
                         </div>
@@ -195,18 +162,12 @@ import { useUserStore } from "@/Stores/UserStore.js"
 import Pagination from "@/Components/PaginationDark"
 import throttle from "lodash/throttle";
 import Message from "@/Components/Modals/Messages";
+import SingleImage from "@/Components/Multimedia/SingleImage";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'movies'
-
-function scrollToReview() {
-    document.getElementById("review").scrollIntoView({behavior: "smooth"})
-}
-function scrollToComingSoon() {
-    document.getElementById("coming-soon").scrollIntoView({behavior: "smooth"})
-}
 
 onBeforeMount(() => {
     userStore.scrollToTopCounter = 0;
@@ -223,11 +184,21 @@ onMounted(() => {
 let movie = 'test-movie-2'
 
 let props = defineProps({
-    can: Object,
     movies: Object,
+    recentlyReviewed: Object,
+    mostAnticipated: Object,
+    comingSoon: Object,
     filters: Object,
+    can: Object,
     message: String,
 })
+
+function scrollToReview() {
+    document.getElementById("review").scrollIntoView({behavior: "smooth"})
+}
+function scrollToComingSoon() {
+    document.getElementById("coming-soon").scrollIntoView({behavior: "smooth"})
+}
 
 let search = ref(props.filters.search);
 

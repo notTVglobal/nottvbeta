@@ -83,7 +83,7 @@ class ShowsController extends Controller
                         'viewShow' => Auth::user()->can('viewShowManagePage', $show)
                     ]
                 ]),
-            'episodes' => ShowEpisode::with('show', 'image')
+            'newestEpisodes' => ShowEpisode::with('show', 'image')
                 ->latest()
                 ->paginate(5, ['*'], 'episodes')
                 ->through(fn($showEpisode) => [
@@ -105,8 +105,8 @@ class ShowsController extends Controller
                     'categorySubName' => $showEpisode->show->showCategorySub->name,
                     'release_date' => $showEpisode->release_dateTime,
                 ]),
-            'showsTrending' => Show::with('image')
-                ->paginate(3, ['*'], 'shows')
+            'mostAnticipated' => Show::with('image')
+                ->paginate(3, ['*'], 'trending')
                 ->through(fn($show) => [
                     'id' => $show->id,
                     'name' => $show->name,
@@ -123,9 +123,9 @@ class ShowsController extends Controller
                     'categoryName' => $show->showCategory->name,
                     'categorySubName' => $show->showCategorySub->name,
                 ]),
-            'showsComingSoon' => Show::with('image')
+            'comingSoon' => Show::with('image')
                 ->latest()
-                ->paginate(3, ['*'], 'shows')
+                ->paginate(3, ['*'], 'comingSoon')
                 ->through(fn($show) => [
                     'id' => $show->id,
                     'name' => $show->name,
@@ -407,18 +407,18 @@ class ShowsController extends Controller
             'isBeingEditedByUser_id' => Auth::user()->id,
         ]);
 
-        function getPoster($show){
-            $getPoster = Image::query()
-                ->where('show_id', $show->id)
-                ->pluck('name')
-                ->first();
-            if(!empty($getPoster)){
-                $poster = $getPoster;
-            } else {
-                $poster = 'EBU_Colorbars.svg.png';
-            }
-            return $poster;
-        }
+//        function getPoster($show){
+//            $getPoster = Image::query()
+//                ->where('show_id', $show->id)
+//                ->pluck('name')
+//                ->first();
+//            if(!empty($getPoster)){
+//                $poster = $getPoster;
+//            } else {
+//                $poster = 'EBU_Colorbars.svg.png';
+//            }
+//            return $poster;
+//        }
 
         $categories = ShowCategory::all();
         $sub_categories = ShowCategorySub::all();
@@ -445,7 +445,6 @@ class ShowsController extends Controller
             'show' => $show,
             'team' => Team::query()->where('id', $show->team_id)->firstOrFail(),
             'showRunner' => User::query()->where('id', $show->user_id)->pluck('id','name')->firstOrFail(),
-            'poster' => getPoster($show),
             'image' => [
                 'id' => $show->image->id,
                 'name' => $show->image->name,

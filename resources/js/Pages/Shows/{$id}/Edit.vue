@@ -15,15 +15,6 @@
                     <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
 
-
-                            <!--            <div class="max-w-lg mx-auto mt-8">-->
-
-<!--                            <ShowEditBody-->
-<!--                                :show="props.show"-->
-<!--                                :poster="props.poster"-->
-<!--                            />-->
-
-
                             <div v-if="form.errors.name" v-text="form.errors.name"
                                  class="bg-red-600 p-2 w-full text-white font-semibold mt-1 mb-6"></div>
                             <div v-if="form.errors.description" v-text="form.errors.description"
@@ -293,7 +284,6 @@ videoPlayerStore.currentPage = 'shows'
 
 teamStore.setActiveTeam(props.team);
 teamStore.setActiveShow(props.show);
-showStore.posterName = props.poster[0].name;
 
 onBeforeMount(() => {
     userStore.scrollToTopCounter = 0;

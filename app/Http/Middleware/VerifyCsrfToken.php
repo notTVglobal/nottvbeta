@@ -16,6 +16,7 @@ class VerifyCsrfToken extends Middleware
         '/showEpisodesUploadPoster',
         '/showsUploadPoster',
         '/teamsUploadLogo',
+        '/moviesUploadPoster',
         '/image-upload',
         '/chat/message',
         '/api/message',

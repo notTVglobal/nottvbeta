@@ -46,14 +46,83 @@ class MovieController extends Controller
                     'id' => $movie->id,
                     'name' => $movie->name,
                     'teamId' => $movie->team_id,
-//                    'teamName' => $movie->team->name,
-//                    'teamSlug' => $movie->team->slug,
+//                    teamSlug' => $movie->team->slug,
+                    'description' => $movie->description,
+
                     'userId' => $movie->user_id,
 //                    'userName' => $movie->user->name,
-//                    'poster' => $movie->image->name,
+                    'image' => [
+                        'id' => $movie->image->id,
+                        'name' => $movie->image->name,
+                        'folder' => $movie->image->folder,
+                        'cdn_endpoint' => $movie->appSetting->cdn_endpoint,
+                        'cdn_folder' => $movie->appSetting->cdn_folder,
+                    ],
                     'slug' => $movie->slug,
                     'copyrightYear' => $movie->created_at->format('Y'),
                     'release_year' => $movie->release_year,
+                    'category' => $movie->movieCategory->name,
+                    'subCategory' => $movie->movieCategorySub->name,
+                ]),
+            'recentlyReviewed' => Movie::with('image')
+                ->paginate(3, ['*'], 'recentlyReviewed')
+                ->through(fn($movie) => [
+                    'id' => $movie->id,
+                    'name' => $movie->name,
+                    'description' => $movie->description,
+                    'logline' => $movie->logline,
+                    'image' => [
+                        'id' => $movie->image->id,
+                        'name' => $movie->image->name,
+                        'folder' => $movie->image->folder,
+                        'cdn_endpoint' => $movie->appSetting->cdn_endpoint,
+                        'cdn_folder' => $movie->appSetting->cdn_folder,
+                    ],
+                    'slug' => $movie->slug,
+                    'copyrightYear' => $movie->created_at->format('Y'),
+                    'release_year' => $movie->release_year,
+                    'category' => $movie->movieCategory->name,
+                    'subCategory' => $movie->movieCategorySub->name,
+                ]),
+            'mostAnticipated' => Movie::with('image')
+                ->paginate(3, ['*'], 'anticipated')
+                ->through(fn($movie) => [
+                    'id' => $movie->id,
+                    'name' => $movie->name,
+                    'description' => $movie->description,
+                    'logline' => $movie->logline,
+                    'image' => [
+                        'id' => $movie->image->id,
+                        'name' => $movie->image->name,
+                        'folder' => $movie->image->folder,
+                        'cdn_endpoint' => $movie->appSetting->cdn_endpoint,
+                        'cdn_folder' => $movie->appSetting->cdn_folder,
+                    ],
+                    'slug' => $movie->slug,
+                    'copyrightYear' => $movie->created_at->format('Y'),
+                    'release_year' => $movie->release_year,
+                    'category' => $movie->movieCategory->name,
+                    'subCategory' => $movie->movieCategorySub->name,
+                ]),
+            'comingSoon' => Movie::with('image')
+                ->paginate(3, ['*'], 'comingSoon')
+                ->through(fn($movie) => [
+                    'id' => $movie->id,
+                    'name' => $movie->name,
+                    'description' => $movie->description,
+                    'logline' => $movie->logline,
+                    'image' => [
+                        'id' => $movie->image->id,
+                        'name' => $movie->image->name,
+                        'folder' => $movie->image->folder,
+                        'cdn_endpoint' => $movie->appSetting->cdn_endpoint,
+                        'cdn_folder' => $movie->appSetting->cdn_folder,
+                    ],
+                    'slug' => $movie->slug,
+                    'copyrightYear' => $movie->created_at->format('Y'),
+                    'release_year' => $movie->release_year,
+                    'category' => $movie->movieCategory->name,
+                    'subCategory' => $movie->movieCategorySub->name,
                 ]),
             'filters' => Request::only(['search']),
         ]);
@@ -103,6 +172,8 @@ class MovieController extends Controller
         $request->validate([
             'name' => 'unique:movies|required|string|max:255',
             'description' => 'required|string',
+            'logline' => 'required|string',
+
         ]);
 
         $video = '';
@@ -130,6 +201,7 @@ class MovieController extends Controller
         Movie::create([
             'name' => $request->name,
             'description' => $request->description,
+            'logline' => $request->logline,
             'slug' => $slug,
             'file_path' => $fileName,
             'file_url' => $request->file_url,
@@ -158,27 +230,34 @@ class MovieController extends Controller
                 'slug' => $movie->slug,
                 'name' => $movie->name,
                 'description' => $movie->description,
+                'logline' => $movie->logline,
                 'filePath' => $movie->file_path,
                 'fileUrl' => $movie->file_url,
+                'teamName' => $movie->team_id,
+                'teamSlug' => $movie->slug,
+                'image' => [
+                    'id' => $movie->image->id,
+                    'name' => $movie->image->name,
+                    'folder' => $movie->image->folder,
+                    'cdn_endpoint' => $movie->appSetting->cdn_endpoint,
+                    'cdn_folder' => $movie->appSetting->cdn_folder,
+                    ],
                 // need to link the Movie and Team models.
                 // change team to $movie->team->name
                 // and add team->slug
-                'teamName' => $movie->team_id,
-                'teamSlug' => $movie->slug,
                 'copyrightYear' => $movie->created_at->format('Y'),
                 'release_year' => $movie->release_year,
                 'created_at' => $movie->created_at,
-                // need to link the Movie and Images models.
-                // change poster to $movie->image->name
-                'poster' => $movie->image_id,
                 'www_url' => $movie->www_url,
                 'instagram_name' => $movie->instagram_name,
                 'telegram_url' => $movie->telegram_url,
                 'twitter_handle' => $movie->twitter_handle,
-            ],
+                'category' => $movie->movieCategory->name,
+                'subCategory' => $movie->movieCategorySub->name,
+                ],
             'can' => [
                 'editMovie' => Auth::user()->can('edit', $movie),
-            ]
+                ]
         ]);
     }
 
@@ -212,6 +291,15 @@ class MovieController extends Controller
 //            }
 //            return $poster;
 //        }
+
+        DB::table('users')->where('id', Auth::user()->id)->update([
+            'isEditingMovie_id' => $movie->id,
+        ]);
+
+        DB::table('shows')->where('id', $movie->id)->update([
+            'isBeingEditedByUser_id' => Auth::user()->id,
+        ]);
+
         $categories = MovieCategory::all();
         $sub_categories = MovieCategorySub::all();
         $movie = Movie::query()->where('id', $movie->id)->firstOrFail();
@@ -255,6 +343,7 @@ class MovieController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255', Rule::unique('movies')->ignore($movie->id)],
             'description' => 'required',
+            'logline' => 'required|string',
             'release_year' => 'integer|min:1900|max:2300',
             'category' => 'required',
             'sub_category' => 'nullable',
@@ -270,6 +359,7 @@ class MovieController extends Controller
         // update the show
         $movie->name = $request->name;
         $movie->description = $request->description;
+        $movie->logline = $request->logline;
         $movie->release_year = $request->release_year;
         $movie->movie_category_id = $request->category;
         $movie->movie_category_sub_id = $request->sub_category;

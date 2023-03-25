@@ -18,14 +18,14 @@
     </div>
 
 
-    <div class="space-y-1">
+    <div class="space-y-1 text-black dark:text-white">
         <div class="mb-6"><span class="text-xs uppercase font-semibold">Episode #: </span>
             <span v-if="episode.episode_number" class="font-bold uppercase">{{ episode.episode_number }}</span>
             <span v-if="!episode.episode_number" class="font-bold uppercase">{{ episode.id }}</span>
         </div>
         <div class=""><span class="text-xs uppercase font-semibold">Show: </span>
             <Link :href="`/shows/${show.slug}/manage`">
-                <span class="font-bold uppercase text-blue-300 hover:text-blue-500">{{ show.name }}</span>
+                <span class="font-bold uppercase text-blue-600 hover:text-blue-800 dark:text-blue-300 dark:hover:text-blue-500">{{ show.name }}</span>
             </Link>
         </div>
         <div class=""><span class="text-xs uppercase font-semibold">Category: </span>
@@ -33,7 +33,7 @@
                 <span class="text-xs">
                     (change the category on the
                     <Link :href="`/shows/${show.slug}/edit`"
-                          class="text-blue-300 hover:text-blue-500">
+                          class="text-blue-600 hover:text-blue-800 dark:text-blue-300 dark:hover:text-blue-500">
                         show edit page</Link>)
                 </span>
         </div>
@@ -42,13 +42,13 @@
             <span class="text-xs">
                     (change the sub-category on the
                     <Link :href="`/shows/${show.slug}/edit`"
-                          class="text-blue-300 hover:text-blue-500">
+                          class="text-blue-600 hover:text-blue-800 dark:text-blue-300 dark:hover:text-blue-500">
                         show edit page</Link>)
                 </span>
         </div>
         <div class=""><span class="text-xs uppercase font-semibold">Team: </span>
             <Link :href="`/teams/${team.slug}/manage`">
-            <span class="font-bold uppercase text-blue-300 hover:text-blue-500">{{ team.name }}</span>
+            <span class="dark:font-bold uppercase text-blue-600 hover:text-blue-800 dark:text-blue-300 dark:hover:text-blue-500">{{ team.name }}</span>
             </Link>
         </div>
 

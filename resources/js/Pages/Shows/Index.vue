@@ -72,21 +72,24 @@
                     <div class="newest-episodes w-full lg:w-3/4 mr-0 md:mr-16 lg:mr-32">
                         <h2 id="new-episodes" class="text-purple-500 uppercase tracking-wide font-semibold text-2xl">Newest Episodes</h2>
                         <div class="recently-reviewed-container space-y-12 mt-8">
-                            <div v-for="episode in episodes.data"
+                            <div v-for="episode in newestEpisodes.data"
                                  :key="episode.id"
                                  class="show bg-gray-800 rounded-lg shadow-md flex px-6 py-6">
+
                                 <Link :href="`/shows/${episode.showSlug}/episode/${episode.slug}`" class="hover:text-blue-400 hover:opacity-75 transition ease-in-out duration-150">
+
+
                                     <div class="relative flex flex-row">
 <!--                                        <img :src="'/storage/images/' + episode.poster" alt="show cover" class="h-32 md:h-64 md:min-w-[8rem] w-24 md:w-48 object-cover">-->
                                         <SingleImage :image="episode.image" :alt="'episode cover'" class="h-32 md:h-64 md:min-w-[16rem] w-24 md:w-48 object-cover"/>
 
                                         <div class="ml-12 block text-lg font-semibold leading-tight mt-4 ">
-                                            <div class="text-gray-400 font-light text-xs mt-1 ">Released on {{ episode.release_date }}</div>
+<!--                                            <div class="text-gray-400 font-light text-xs mt-1 ">Released on {{ episode.release_date }}</div>-->
         <!--                                    <Link :href="`/shows/${episode.showSlug}/episode/${episode.slug}`" class="block text-lg font-semibold leading-tight hover:text-gray-400 mt-4">-->
-                                                {{ episode.name }}
+                                                {{ episode.showName }}
         <!--                                </Link>-->
 
-                                            <div class="text-gray-400 font-light text-sm">{{ episode.showName }}</div>
+                                            <div class="text-gray-400 font-light text-sm">{{ episode.name }}</div>
 
                                             <p class="mt-4 pr-4 text-gray-300 lg:block">
                                                 {{ episode.description}}
@@ -106,7 +109,7 @@
                     <div class="most-anticipated lg:w-1/4 mt-12 lg:mt-0">
                         <h2 class="text-purple-500 uppercase tracking-wide font-semibold text-2xl">Most Anticipated</h2>
                         <div class="most-anticipated-container space-y-10 mt-8">
-                            <div v-for="show in showsTrending.data"
+                            <div v-for="show in mostAnticipated.data"
                                  :key="show.id"
                                  class="show flex">
                                 <Link :href="`/shows/${show.slug}`">
@@ -123,7 +126,7 @@
                         <h2 id="coming-soon" class="text-purple-500 uppercase tracking-wide font-semibold mt-16 text-2xl">Coming Soon</h2>
                         <div class="most-anticipated-container space-y-10 mt-8">
 
-                            <div v-for="show in showsComingSoon.data"
+                            <div v-for="show in comingSoon.data"
                                  :key="show.id"
                                  class="show flex">
                                 <Link :href="`/shows/${show.slug}`">
@@ -189,10 +192,9 @@ onMounted(() => {
 
 let props = defineProps({
     shows: Object,
-    episodes: Object,
-    showsTrending: Object,
-    showsComingSoon: Object,
-    poster: String,
+    newestEpisodes: Object,
+    mostAnticipated: Object,
+    comingSoon: Object,
     filters: Object,
     can: Object,
     message: String,

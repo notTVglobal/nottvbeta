@@ -222,6 +222,24 @@
 
                                         <div class="mb-6">
                                             <label class="block mb-2 uppercase font-bold text-xs text-red-700"
+                                                   for="name"
+                                            >
+                                                Logline
+                                            </label>
+
+                                            <input v-model="form.logline"
+                                                   class="border border-gray-400 text-gray-800 p-2 w-1/2 rounded-lg"
+                                                   type="text"
+                                                   name="logline"
+                                                   id="logline"
+                                                   required
+                                            >
+                                            <div v-if="form.errors.logline" v-text="form.errors.logline"
+                                                 class="text-xs text-red-600 mt-1"></div>
+                                        </div>
+
+                                        <div class="mb-6">
+                                            <label class="block mb-2 uppercase font-bold text-xs text-red-700"
                                                    for="description"
                                             >
                                                 Description
@@ -235,11 +253,6 @@
                                             />
                                             <div v-if="form.errors.description" v-text="form.errors.description"
                                                  class="text-xs text-red-600 mt-1"></div>
-                                        </div>
-
-                                        <div class="flex justify-between">
-
-
                                         </div>
 
                                         <div class="mb-6">
@@ -421,6 +434,7 @@ let form = useForm({
     category: props.movie.movie_category_id,
     sub_category: props.movie.movie_category_sub_id,
     description: props.movie.description,
+    logline: props.movie.logline,
     user_id: props.movie.user_id,
     team_id: props.movie.team_id,
     file_url: props.movie.file_url,
