@@ -23,13 +23,13 @@ class ShowEpisode extends Model
         'show_id',
         'slug',
         'notes',
-        'video_thumbnail',
-        'video_file_url',
-        'video_file_embed_code',
+        'video_url',
+        'video_embed_code',
         'isPublished',
         'isBeingEditedByUser_id',
         'image_id',
-        'release_date'
+        'release_year',
+        'release_dateTime'
     ];
 
     protected $with = ['show', 'image'];
