@@ -218,10 +218,19 @@ class MovieController extends Controller
 
         return Inertia::render('Movies/{$id}/Edit', [
             'movie' => $movie,
+            'image' => [
+                'id' => $movie->image->id,
+                'name' => $movie->image->name,
+                'folder' => $movie->image->folder,
+                'cdn_endpoint' => $movie->appSetting->cdn_endpoint,
+                'cdn_folder' => $movie->appSetting->cdn_folder,
+            ],
             'categories' => $categories,
             'sub_categories' => $sub_categories,
             'movieCategory' => $movie->movieCategory->name,
-            'movieCategorySub' => $movie->movieCategorySub->name,
+//            'movieCategorySub' => $movie->movieCategorySub->name,
+            // ^^^ sub-categories not enabled yet...
+
 //            'team' => Team::query()->where('id', $show->team_id)->firstOrFail(),
 //            'showRunner' => User::query()->where('id', $show->user_id)->pluck('id','name')->firstOrFail(),
 //            'poster' => getPoster($show),

@@ -10,20 +10,22 @@
 
 
 <!--        FIX THIS ON MOBILE DISPLAY (VIDEO NEEDS TO BE AT THE TOP, NOT THE MIDDLE). -->
-            <video-player :id="playerName" :options="videoOptions" v-touch="()=>videoPlayerStore.toggleOSD()" />
+
+<!--            <video-player :id="playerName" :options="videoOptions" v-touch="()=>videoPlayerStore.toggleOSD()" />-->
+            <video-player :id="playerName" :options="videoOptions" v-touch="()=>clickOnVideoAction()" />
 
 
     <!-- TopRight Video -->
-            <div v-if="! videoPlayerStore.fullPage && user">
+            <div v-if="! videoPlayerStore.fullPage && user" >
 
                 <!-- notTV Bug -->
                 <div class="opacity-10">
                     <img :src="`/storage/images/logo_white_512.png`" class="absolute right-2 top-5 w-10 mr-4"></div>
 
-                <!-- On Screen Display (OSD) -->
+                 On Screen Display (OSD)
                 <OsdTopRight :show="videoPlayerStore.showOSD" />
 
-                <!-- Video Player Controls -->
+                 Video Player Controls
                 <VideoControlsTopRight :show="videoPlayerStore.showOSD" />
 
             </div>
@@ -84,13 +86,15 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
+import { Inertia } from "@inertiajs/inertia"
+// import { router } from '@inertiajs/inertia'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useStreamStore } from "@/Stores/StreamStore"
 import { useChatStore } from "@/Stores/ChatStore"
 import { useUserStore } from "@/Stores/UserStore"
-import { ref } from 'vue'
 
-import OttFullPageButtons from "@/Components/VideoPlayer/OttFullPageButtons.vue";
+import OttFullPageButtons from "@/Components/VideoPlayer/OttFullPageButtons.vue"
 import OttFullPageDisplayChannels from "@/Components/VideoPlayer/OttFullPageDisplayChannels"
 import OttFullPageDisplayPlaylist from "@/Components/VideoPlayer/OttFullPageDisplayPlaylist"
 import OttFullPageDisplayChatStandard from "@/Components/VideoPlayer/OttFullPageDisplayChatStandard"
@@ -100,9 +104,9 @@ import Login from "@/Components/Welcome/Login"
 import VideoControlsFullPageStandard from "@/Components/VideoPlayer/VideoControlsFullPageStandard"
 import VideoControlsFullPageMobile from "@/Components/VideoPlayer/VideoControlsFullPageMobile"
 import VideoControlsTopRight from "@/Components/VideoPlayer/VideoControlsTopRight"
-import OsdTopRight from "@/Components/VideoPlayer/OsdTopRight.vue";
-import OsdFullPageStandard from "@/Components/VideoPlayer/OsdFullPageStandard.vue";
-import OsdFullPageMobile from "@/Components/VideoPlayer/OsdFullPageMobile.vue";
+import OsdTopRight from "@/Components/VideoPlayer/OsdTopRight.vue"
+import OsdFullPageStandard from "@/Components/VideoPlayer/OsdFullPageStandard.vue"
+import OsdFullPageMobile from "@/Components/VideoPlayer/OsdFullPageMobile.vue"
 
 
 let videoPlayerStore = useVideoPlayerStore()
@@ -130,6 +134,14 @@ function backToPage() {
     videoPlayerStore.makeVideoTopRight();
     chatStore.showChat = false;
     streamStore.showOSD = false;
+}
+
+function clickOnVideoAction() {
+    if (videoPlayerStore.currentPageIsStream === true) {
+        videoPlayerStore.toggleOSD()
+    } else {
+        Inertia.visit('/stream')
+    }
 }
 
 

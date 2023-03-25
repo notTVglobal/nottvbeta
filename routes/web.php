@@ -426,17 +426,21 @@ Route::middleware([
     // uploaded image on the shows/edit page after upload.
     // this is my solution. Copy the ImageController.store
     // code to a new ShowController.uploadPoster function.
-    Route::post('/showEpisodesUploadPoster', [ShowEpisodesPosterController::class, 'uploadPoster'])
+    Route::post('/showEpisodesUploadPoster', [ImageController::class, 'uploadShowEpisodePoster'])
         ->can('viewCreator', 'App\Models\User')
         ->name('showEpisodes.uploadPoster');
 
-    Route::post('/showsUploadPoster', [ShowsPosterController::class, 'uploadPoster'])
+    Route::post('/showsUploadPoster', [ImageController::class, 'uploadShowPoster'])
         ->can('viewCreator', 'App\Models\User')
         ->name('shows.uploadPoster');
 
-    Route::post('/teamsUploadLogo', [TeamsLogoController::class, 'uploadLogo'])
+    Route::post('/teamsUploadLogo', [ImageController::class, 'uploadTeamLogo'])
         ->can('viewCreator', 'App\Models\User')
         ->name('teams.uploadLogo');
+
+    Route::post('/moviesUploadPoster', [ImageController::class, 'uploadMoviePoster'])
+        ->can('viewCreator', 'App\Models\User')
+        ->name('movies.uploadPoster');
 
 // Movies
 ///////////

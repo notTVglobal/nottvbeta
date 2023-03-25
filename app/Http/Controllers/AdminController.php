@@ -20,20 +20,29 @@ class AdminController extends Controller
 
     public function settings()
     {
+        $settings = DB::table('app_settings')->where('id', 1)->first();
         return Inertia::render('Admin/Settings', [
-            'cdn_endpoint' => DB::table('app_settings')->where('id', 1)->pluck('cdn_endpoint'),
+            'cdn_endpoint' => $settings->cdn_endpoint,
+            'cdn_folder' => str_replace('/', '',$settings->cdn_folder),
         ]);
     }
 
     public function saveSettings(HttpRequest $request)
     {
         $settings = $request->validate([
-            'cdn_endpoint' => 'string',
+            'cdn_endpoint' => 'nullable|string',
+            'cdn_folder' => 'nullable|string',
         ]);
 
         $db = DB::table('app_settings')
             ->where('id', 1)
-            ->update(['cdn_endpoint'=> $request->cdn_endpoint]);
+            ->update(['cdn_endpoint'=> $request->cdn_endpoint])
+        ;
+
+        $db = DB::table('app_settings')
+            ->where('id', 1)
+            ->update(['cdn_folder'=> '/'.$request->cdn_folder])
+        ;
 
         // redirect
         return redirect()->route('admin.settings')->with('message', 'Settings Saved Successfully');
@@ -62,14 +71,20 @@ class AdminController extends Controller
                     'teamSlug' => $show->team->slug,
                     'showRunnerId' => $show->user_id,
                     'showRunnerName' => $show->user->name,
-                    'poster' => $show->image->name,
+                    'image' => [
+                        'id' => $show->image->id,
+                        'name' => $show->image->name,
+                        'folder' => $show->image->folder,
+                        'cdn_endpoint' => $show->appSetting->cdn_endpoint,
+                        'cdn_folder' => $show->appSetting->cdn_folder,
+                    ],
                     'slug' => $show->slug,
                     'totalEpisodes' => $show->showEpisodes->count(),
                     'status' => $show->showStatus->name,
                     'statusId' => $show->showStatus->id,
                     'copyrightYear' => $show->created_at->format('Y'),
                     'can' => [
-                        'editShow' => Auth::user()->can('editShow', $show),
+                        'editShow' => Auth::user()->can('edit', $show),
                         'viewShow' => Auth::user()->can('viewShowManagePage', $show)
                     ]
                 ]),
@@ -117,6 +132,7 @@ class AdminController extends Controller
                         'name' => $team->image->name,
                         'folder' => $team->image->folder,
                         'cdn_endpoint' => $team->appSetting->cdn_endpoint,
+                        'cdn_folder' => $team->appSetting->cdn_folder,
                     ],
                     'teamOwner' => $team->user->name,
                     'slug' => $team->slug,

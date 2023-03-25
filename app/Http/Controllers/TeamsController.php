@@ -85,6 +85,7 @@ class TeamsController extends Controller
                         'name' => $team->image->name,
                         'folder' => $team->image->folder,
                         'cdn_endpoint' => $team->appSetting->cdn_endpoint,
+                        'cdn_folder' => $team->appSetting->cdn_folder,
                     ],
                     'teamOwner' => $team->user->name,
                     'slug' => $team->slug,
@@ -193,6 +194,7 @@ class TeamsController extends Controller
                 'name' => $team->image->name,
                 'folder' => $team->image->folder,
                 'cdn_endpoint' => $team->appSetting->cdn_endpoint,
+                'cdn_folder' => $team->appSetting->cdn_folder,
             ],
             'shows' => Show::with('team', 'image')->where('team_id', $team->id)
                 ->latest()
@@ -210,6 +212,7 @@ class TeamsController extends Controller
                         'name' => $show->image->name,
                         'folder' => $show->image->folder,
                         'cdn_endpoint' => $show->appSetting->cdn_endpoint,
+                        'cdn_folder' => $show->appSetting->cdn_folder,
                     ],
                     'slug' => $show->slug,
                     'copyrightYear' => Carbon::parse($show->created_at)->format('Y'),
@@ -290,6 +293,7 @@ class TeamsController extends Controller
                 'name' => $team->image->name,
                 'folder' => $team->image->folder,
                 'cdn_endpoint' => $team->appSetting->cdn_endpoint,
+                'cdn_folder' => $team->appSetting->cdn_folder,
             ],
             'teamLeader' => $teamLeader,
 
@@ -346,6 +350,7 @@ class TeamsController extends Controller
                         'name' => $show->image->name,
                         'folder' => $show->image->folder,
                         'cdn_endpoint' => $show->appSetting->cdn_endpoint,
+                        'cdn_folder' => $show->appSetting->cdn_folder,
                     ],
                     'slug' => $show->slug,
                     'notes' => $show->notes,
@@ -399,6 +404,7 @@ class TeamsController extends Controller
                 'name' => $team->image->name,
                 'folder' => $team->image->folder,
                 'cdn_endpoint' => $team->appSetting->cdn_endpoint,
+                'cdn_folder' => $team->appSetting->cdn_folder,
             ],
             'creators' => Creator::join('users AS user', 'creators.user_id', '=', 'user.id')
                 ->select('creators.*', 'user.name AS name')

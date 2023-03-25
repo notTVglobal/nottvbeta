@@ -81,7 +81,10 @@
                                                 >
 <!--                                                    <img :src="`/storage/images/${show.poster}`" class="rounded-full h-20 w-20 object-cover">-->
                                                     <Link :href="`/shows/${show.slug}`" class="text-blue-800 hover:text-blue-600">
-                                                    <img :src="'/storage/images/' + show.poster" class="rounded-full h-20 w-20 object-cover"></Link>
+                                                        <SingleImage :image="show.image" :alt="'show cover'" :class="'rounded-full h-20 w-20 object-cover'"/>
+                                                    </Link>
+
+
                                                 </th>
                                                 <th
                                                     scope="row"
@@ -175,6 +178,7 @@ import { useUserStore } from "@/Stores/UserStore";
 import Pagination from "@/Components/Pagination"
 import throttle from "lodash/throttle"
 import Message from "@/Components/Modals/Messages";
+import SingleImage from "@/Components/Multimedia/SingleImage";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()

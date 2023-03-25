@@ -290,7 +290,7 @@ let playTrailer = () => {
     let source = "dunepull"
     videoPlayerStore.loadNewSourceFromMist(source)
     videoPlayerStore.videoName = 'Dune'
-    streamStore.currentChannel = 'On Demand'
+    videoPlayerStore.currentChannelName = 'On Demand (Movie)'
 }
 
 let playMovie = () => {
@@ -301,7 +301,7 @@ let playMovie = () => {
     let source = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
     videoPlayerStore.loadNewSourceFromUrl(source)
     videoPlayerStore.videoName = 'Elephant\'s Dream'
-    streamStore.currentChannel = 'On Demand'
+    videoPlayerStore.currentChannelName = 'On Demand (Movie)'
 }
 
 

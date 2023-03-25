@@ -19,9 +19,19 @@ class Movie extends Model
         return 'slug';
     }
 
-    public function newsPerson()
+    public function user()
     {
-        return $this->hasMany(MovieTrailer::class);
+        return $this->belongsTo(User::class);
+    }
+
+    public function team()
+    {
+        return $this->belongsTo(Team::class);
+    }
+
+    public function image()
+    {
+        return $this->belongsTo(Image::class);
     }
 
     public function movieCategory(): BelongsTo
@@ -37,6 +47,13 @@ class Movie extends Model
         return $this->belongsTo(MovieCategorySub::class)->withDefault([
             'name' => 'sub category',
             'description' => 'sub category description'
+        ]);
+    }
+
+    public function appSetting(): BelongsTo
+    {
+        return $this->belongsTo(AppSetting::class)->withDefault([
+//            'cdn_endpoint' => 'https://development-nottv.sfo3.cdn.digitaloceanspaces.com',
         ]);
     }
 }

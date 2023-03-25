@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Facades\DB;
@@ -15,8 +17,8 @@ class ShowsPosterController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param HttpRequest $request
+     * @return Model|Builder|object
      */
 
     public function uploadPoster(HttpRequest $request)
@@ -71,68 +73,8 @@ class ShowsPosterController extends Controller
 //            );
 
 
-
-
-            // NEED TO PROTECT THESE
-
-
-
-
-            // return that image model back to the frontend
-            $poster = DB::table('images')->where('id', $id)->pluck('name')->first();
-
-            return $poster;
-
         } return response()->json(['error' => 'The file could not be saved.'], 500);
 
-
-
-
-
-
-
-
-//        Storage::disk('spaces')->put('example2.txt', 'Contents');
-
-//        $file = $request->hasFile('poster');
-//        $fileName = $this->createFilename($request->file('poster'));
-//        $folder = config('filesystems.disks.spaces.folder');
-//
-//        Storage::disk('spaces')->put(
-//            "{$folder}/{$filename}",
-//            file_get_contents($request->file('poster'))
-//        );
-//        return response()->json(['message' => 'File uploaded'], 200);
-
-//        $files = Storage::disk('spaces')->files('uploads');
-//        function() {
-//            Storage::disk('spaces')->putFile('uploads', request()->file, 'public');
-//        };
-//
-//        if (!$path) {
-//            return response()->json(['error' => 'The file could not be saved.'], 500);
-//        }
-
-
-
-        // tec21: this was my first way of doing this.
-        // now we just change the image id on the show table
-        // the images table can keep the show id for any image
-        // uploaded to a show.
-        //
-        // remove previous image from show
-//        DB::table('images')->where('show_id', $showId)->update([
-//                    'show_id' => null,
-//                ]);
-
-
-
-
-
-
-
-
-//        return Inertia::render('Shows/{$id}/Edit');
 
     }
 
@@ -147,6 +89,9 @@ class ShowsPosterController extends Controller
 
         return $filename;
     }
+
+
+
 
 
 }

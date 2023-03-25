@@ -80,8 +80,8 @@ class ShowEpisodeController extends Controller
         $showEpisode->show_id = $request->show_id;
         $showEpisode->episode_number = $request->episode_number;
         $showEpisode->slug = \Str::slug($request->name);
-        $showEpisode->video_file_url = $request->video_file_url;
-        $showEpisode->video_file_embed_code = $request->video_file_embed_code;
+        $showEpisode->video_url = $request->video_url;
+        $showEpisode->video_embed_code = $request->video_embed_code;
         $showEpisode->notes = $request->notes;
 
         $showEpisode->save();
@@ -140,7 +140,13 @@ class ShowEpisodeController extends Controller
                 'video_id' => $showEpisode->video_id,
                 'video_url' => $showEpisode->video_url,
                 'video_embed_code' => $showEpisode->video_embed_code,
-                'poster' => $showEpisode->image->name,
+            ],
+            'image' => [
+                'id' => $showEpisode->image->id,
+                'name' => $showEpisode->image->name,
+                'folder' => $showEpisode->image->folder,
+                'cdn_endpoint' => $showEpisode->appSetting->cdn_endpoint,
+                'cdn_folder' => $showEpisode->appSetting->cdn_folder,
             ],
             'creators' => TeamMember::where('team_id', $teamId)
                 ->join('users', 'team_members.user_id', '=', 'users.id')
@@ -193,7 +199,6 @@ class ShowEpisodeController extends Controller
         ]);
 
         return Inertia::render('Shows/{$id}/Episodes/{$id}/Edit', [
-            'poster' => $showEpisode->image->name,
             'show' => [
                 'name' => $show->name,
                 'slug' => $show->slug,
@@ -222,6 +227,13 @@ class ShowEpisodeController extends Controller
                 'video_embed_code' => $showEpisode->video_embed_code,
                 'poster' => $showEpisode->image->name,
                 'show_id' => $showEpisode->show_id,
+            ],
+            'image' => [
+                'id' => $showEpisode->image->id,
+                'name' => $showEpisode->image->name,
+                'folder' => $showEpisode->image->folder,
+                'cdn_endpoint' => $showEpisode->appSetting->cdn_endpoint,
+                'cdn_folder' => $showEpisode->appSetting->cdn_folder,
             ],
             'can' => [
                 'manageShow' => Auth::user()->can('manage', $show),

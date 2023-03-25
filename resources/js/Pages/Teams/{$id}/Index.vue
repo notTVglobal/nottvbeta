@@ -12,7 +12,7 @@
                 <div>
                     <h3 class="dark:text-gray-50 inline-flex items-center text-3xl font-semibold relative uppercase">
 
-                        <SingleImage :image="image" :poster="logo" :alt="'team logo'" class="w-20 mr-2"/>
+                        <SingleImage :image="image" :alt="'team logo'" :class="'w-20 mr-2'"/>
                         {{ props.team.name }}
 
                     </h3>

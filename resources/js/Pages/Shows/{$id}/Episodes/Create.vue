@@ -171,7 +171,7 @@
 </template>
 
 <script setup>
-import { onBeforeMount, onMounted } from "vue"
+import { onBeforeMount, onMounted, ref } from "vue"
 import { useForm } from "@inertiajs/inertia-vue3"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useTeamStore } from "@/Stores/TeamStore.js"

@@ -41,7 +41,7 @@
             <main class="py-8">
 
                 <div class="container mx-auto px-4 border-b border-gray-800 pb-16">
-                    <h2 class="text-yellow-500 uppercase tracking-wide font-semibold">Popular Movies</h2>
+                    <h2 class="text-yellow-500 uppercase tracking-wide font-semibold text-2xl">Popular Movies</h2>
                     <div class="popular-movies text-sm grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-12 pb-12 justify-items-center">
 
                         <div v-for="movie in movies.data"
@@ -56,7 +56,7 @@
 
                                 </div>
                             </div>
-                            <Link :href="`/movies/${movie.slug}`" class="block text-base font-semibold leading-tight hover:text-gray-400 mt-4">{{ movie.name }}</Link>
+                            <Link :href="`/movies/${movie.slug}`" class="block text-base font-semibold leading-tight max-w-[8rem] hover:text-gray-400 mt-4 mb-2">{{ movie.name }}</Link>
                             <div class="text-gray-400 mt-1">Category
                                 <span v-if="movie.release_year">({{movie.release_year}})</span></div>
                             <div class="text-gray-400 mt-1">Sub-category</div>
@@ -70,7 +70,7 @@
 
                 <div class="flex flex-col lg:flex-row my-10">
                     <div class="recently-reviewed w-full lg:w-3/4 mr-0 md:mr-16 lg:mr-32">
-                        <h2 id="review" class="text-yellow-500 uppercase tracking-wide font-semibold">Recently Reviewed</h2>
+                        <h2 id="review" class="text-yellow-500 uppercase tracking-wide font-semibold text-2xl">Recently Reviewed</h2>
                         <div class="recently-reviewed-container space-y-12 mt-8">
                             <div class="movie bg-gray-800 rounded-lg shadow-md flex px-6 py-6">
                                 <div class="relative flex-none">
@@ -82,7 +82,7 @@
                                     </div>
                                 </div>
                                 <div class="ml-12">
-                                    <Link :href="`/movies/${movie}`" class="block text-lg font-semibold leading-tight hover:text-gray-400 mt-4">Sprite Fright</Link>
+                                    <Link :href="`/movies/${movie}`" class="block text-lg font-semibold leading-tight max-w-[8rem] hover:text-gray-400 mt-4">Sprite Fright</Link>
                                     <div class="text-gray-400 mt-1">Short Film</div>
                                     <p class="mt-6 pr-4 text-gray-300 hidden lg:block">
                                         Blender Studio’s 13th open movie is an 80’s-inspired horror comedy,
@@ -101,7 +101,7 @@
                                     </div>
                                 </div>
                                 <div class="ml-12">
-                                    <Link :href="`/movies/${movie}`" class="block text-lg font-semibold leading-tight hover:text-gray-400 mt-4">Sprite Fright</Link>
+                                    <Link :href="`/movies/${movie}`" class="block text-lg font-semibold leading-tight max-w-[8rem] hover:text-gray-400 mt-4">Sprite Fright</Link>
                                     <div class="text-gray-400 mt-1">Short Film</div>
                                     <p class="mt-6 pr-4 text-gray-300 hidden lg:block">
                                         Blender Studio’s 13th open movie is an 80’s-inspired horror comedy,
@@ -120,7 +120,7 @@
                                     </div>
                                 </div>
                                 <div class="ml-12">
-                                    <Link :href="`/movies/${movie}`" class="block text-lg font-semibold leading-tight hover:text-gray-400 mt-4">Sprite Fright</Link>
+                                    <Link :href="`/movies/${movie}`" class="block text-lg font-semibold leading-tight max-w-[8rem] hover:text-gray-400 mt-4">Sprite Fright</Link>
                                     <div class="text-gray-400 mt-1">Short Film</div>
                                     <p class="mt-6 pr-4 text-gray-300 hidden lg:block">
                                         Blender Studio’s 13th open movie is an 80’s-inspired horror comedy,
@@ -134,7 +134,7 @@
                         </div>
                     </div>
                     <div class="most-anticipated lg:w-1/4 mt-12 lg:mt-0">
-                        <h2 class="text-yellow-500 uppercase tracking-wide font-semibold">Most Anticipated</h2>
+                        <h2 class="text-yellow-500 uppercase tracking-wide font-semibold text-2xl">Most Anticipated</h2>
                         <div class="most-anticipated-container space-y-10 mt-8">
                             <div class="game flex">
                                 <Link :href="`/movies/${movie}`">
@@ -149,7 +149,7 @@
                             </div>
                         </div>
 
-                        <h2 id="coming-soon" class="text-yellow-500 uppercase tracking-wide font-semibold mt-16">Coming Soon</h2>
+                        <h2 id="coming-soon" class="text-yellow-500 uppercase tracking-wide font-semibold mt-16 text-2xl">Coming Soon</h2>
                         <div class="most-anticipated-container space-y-10 mt-8">
                             <div class="game flex">
                                 <Link :href="`/movies/${movie}`">

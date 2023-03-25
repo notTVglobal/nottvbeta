@@ -4,11 +4,11 @@
             <img v-if="props.member.profile_photo_path"
                 :src="`/storage/${props.member.profile_photo_path}`"
                 alt=""
-                class="rounded-full min-w-[4rem] max-w-[4rem]">
+                class="h-16 w-16 rounded-full object-cover">
             <img v-if="!props.member.profile_photo_path"
                  :src="`${props.member.profile_photo_url}`"
                  alt=""
-                 class="rounded-full min-w-[4rem] max-w-[4rem]">
+                 class="h-16 w-16 rounded-full object-cover">
         </td>
 
         <td class="text-xl font-medium px-6 py-4">

@@ -37,10 +37,28 @@
                                 <div>
                                     <div class="flex space-y-3">
                                         <div class="mb-6">
-                                            <SingleImage :image="props.image" :poster="props.logo" :key="logo" :alt="'show cover'" class=""/>
+                                            <SingleImage :image="props.image" :key="props.image" :alt="'team logo'" class=""/>
 <!--                                            <img :src="'/storage/images/' + props.logo" :key="logo"/>-->
                                         </div>
                                     </div>
+
+                                    <div>
+
+                                        <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
+                                               for="name"
+                                        >
+                                            Change Team Logo
+                                        </label>
+                                        <ImageUpload :image="props.image"
+                                                     :server="'/teamsUploadLogo'"
+                                                     :name="'Upload Team Logo'"
+                                                     :maxSize="'10MB'"
+                                                     :fileTypes="'image/jpg, image/jpeg, image/png'"
+                                                     @reloadImage="reloadImage"
+                                        />
+
+                                    </div>
+
                                 </div>
 
                                 <!--Right Column-->
@@ -51,33 +69,7 @@
 <!--                                        :images="props.images"-->
 <!--                                    />-->
 
-                                    <div>
 
-                                        <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
-                                               for="name"
-                                        >
-                                            Change Team Logo
-                                        </label>
-                                        <div class="max-full mx-auto mt-2 mb-6 bg-gray-200 text-black p-6">
-                                            <h2 class="text-xl font-semibold">Upload Team Logo</h2>
-
-                                            <ul class="pb-4">
-                                                <li>Max File Size: <span class="text-orange-400">10MB</span></li>
-                                                <li>File Types accepted: <span class="text-orange-400">jpg, jpeg, png</span></li>
-                                            </ul>
-                                            <file-pond
-                                                name="logo"
-                                                ref="pond"
-                                                label-idle="Click to choose image, or drag here..."
-                                                @init="filepondInitialized"
-                                                server="/teamsUploadLogo"
-                                                accepted-file-types="image/jpg, image/jpeg, image/png"
-                                                @processfile="handleProcessedFile"
-                                                max-file-size="10MB"
-                                            />
-                                        </div>
-
-                                    </div>
 
 
 
@@ -197,13 +189,7 @@ import TeamEditHeader from "@/Components/Teams/Edit/TeamEditHeader";
 import TeamEditBody from "@/Components/Teams/Edit/TeamEditBody";
 import TeamLogoUpload from "@/Components/FilePond/TeamLogoUpload";
 import TabbableTextarea from "@/Components/TabbableTextarea"
-import vueFilePond, { setOptions } from 'vue-filepond';
-import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
-import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size";
-import FilePondPluginImagePreview from "filepond-plugin-image-preview";
-import FilePondPluginFileMetadata from "filepond-plugin-file-metadata";
-import 'filepond/dist/filepond.min.css';
-import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css';
+import ImageUpload from "@/Components/Uploaders/ImageUpload";
 
 
 let videoPlayerStore = useVideoPlayerStore()
@@ -212,7 +198,7 @@ let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'teams'
 teamStore.setActiveTeam(props.team);
-teamStore.logoName = props.logo[0].name;
+teamStore.logoName = props.image.name;
 
 onBeforeMount(() => {
     userStore.scrollToTopCounter = 0;
@@ -230,7 +216,6 @@ let props = defineProps({
     user: Object,
     team: Object,
     teamLeaderName: String,
-    logo: String,
     image: Object,
     message: String,
 });
@@ -242,35 +227,11 @@ let form = useForm({
     totalSpots: props.team.totalSpots,
 });
 
-const FilePond = vueFilePond(
-    FilePondPluginFileValidateType,
-    FilePondPluginFileValidateSize,
-    FilePondPluginImagePreview,
-    FilePondPluginFileMetadata
-);
-
-// FilePond.setOptions = ({
-//     fileMetadataObject: {
-//         team_id: '1',
-//     },
-// });
-
-function filepondInitialized() {
-    console.log("Filepond is ready!");
-    console.log('Filepond object:', FilePond);
-}
-
-function handleProcessedFile(error, file) {
-    if (error) {
-        console.log("Filepond processed file");
-        console.log(error);
-        console.log(file);
-        return;
-    }
+let reloadImage = () => {
     Inertia.reload({
         only: ['image'],
     });
-}
+};
 
 let submit = () => {
     form.put(route('teams.update', props.team.slug));

@@ -3,6 +3,7 @@ import { useChatStore } from "@/Stores/ChatStore";
 import { useStreamStore } from "@/Stores/StreamStore";
 import { useUserStore } from "@/Stores/UserStore";
 import videojs from 'video.js';
+import {Inertia} from "@inertiajs/inertia";
 
 export let useVideoPlayerStore = defineStore('videoPlayerStore', {
     state() {
@@ -186,6 +187,7 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
                 this.loadNewSourceFromUrl(source.video_url)
                 this.videoName = source.name
                 this.currentChannelName = 'On Demand (Url)'
+                Inertia.visit('/stream')
             }
             // if embed_code exists:
             else if (source.video_embed_code) {
@@ -212,6 +214,7 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
             this.videoSourceType = "video/mp4"
             videoJs.src({'src': this.videoSource, 'type': this.videoSourceType})
             this.unmute()
+            this.paused = false
         },
         loadNewSourceFromEmbedCode(source) {
             let videoJs = videojs('main-player')
@@ -219,6 +222,7 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
             this.videoSourceType = "video/mp4"
             videoJs.src({'src': this.videoSource, 'type': this.videoSourceType})
             this.unmute()
+            this.paused = false
         },
         loadNewSourceFromMist(source) {
             let videoJs = videojs('main-player')
@@ -227,6 +231,7 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
             this.videoSourceType = "application/x-mpegURL"
             videoJs.src({'src': this.videoSource, 'type': this.videoSourceType})
             this.unmute()
+            this.paused = false
         },
         loadNewSourceFromFile(source) {
             let videoJs = videojs('main-player')
@@ -237,6 +242,7 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
             this.videoSourceType = source.type
             videoJs.src({'src': filePath+this.videoSource, 'type': this.videoSourceType})
             this.unmute()
+            this.paused = false
         },
 
         // change video size/position and page layout

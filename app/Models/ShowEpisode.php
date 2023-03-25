@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 class ShowEpisode extends Model
@@ -56,6 +57,13 @@ class ShowEpisode extends Model
     public function video()
     {
         return $this->belongsTo(Video::class);
+    }
+
+    public function appSetting(): BelongsTo
+    {
+        return $this->belongsTo(AppSetting::class)->withDefault([
+//            'cdn_endpoint' => 'https://development-nottv.sfo3.cdn.digitaloceanspaces.com',
+        ]);
     }
 
 //    public function showCategory(): HasOneThrough

@@ -31,7 +31,7 @@
                             <div class="mb-4">
                                 <h3 class="mb-1 inline-flex items-center text-3xl font-semibold relative">
                                     <Link :href="`/shows/${props.show.slug}/`"
-                                          class="">
+                                          class="hover:text-blue-500">
                                     {{ props.show.name }}
                                     </Link>
                                 </h3>
@@ -61,7 +61,7 @@
                                 <span class="text-sm uppercase font-semibold">{{ props.show.categorySubName }}</span>
                             </div>
                             <div v-if="props.can.viewCreator">
-                                <span class="text-xs uppercase">Team:</span><Link :href="`/teams/${props.team.slug}`" class="text-blue-500 ml-2"> <span class="text-sm uppercase font-semibold">{{ props.team.name }}</span></Link>
+                                <span class="text-xs uppercase">Team:</span><Link :href="`/teams/${props.team.slug}`" class="text-blue-300 hover:text-blue-500 ml-2"> <span class="text-sm uppercase font-semibold">{{ props.team.name }}</span></Link>
                             </div>
                         </div>
 
@@ -70,7 +70,7 @@
                     <div class="flex mt-12 m-auto lg:mx-0 justify-center lg:justify-start">
 
                         <button :disabled="!videoPlayerStore.checkForVideo(props.episode)"
-                                class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
+                                class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-700 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
                                 @click="videoPlayerStore.playVideo(props.episode)">
                             <svg class="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg"
                                  viewBox="0 0 485 485">
@@ -104,8 +104,8 @@
             <div class="flex flex-wrap justify-center shadow overflow-hidden border-y border-gray-200 w-full bg-black text-light text-2xl sm:rounded-lg p-5">
 <!--            <div class="flex flex-wrap items-start ml-5 py-0">-->
                 <div class="max-w-[50%] ml-5 py-0">
-                    <img v-if="props.episode.poster" :src="'/storage/images/' + props.episode.poster" alt="episode poster" class="mx-2">
-                    <img v-if="!props.episode.video_file_url && !props.episode.video_file_embed_code && !props.episode.poster" :src="`/storage/images/EBU_Colorbars.svg.png`" alt="episode poster" class="w-1/2 mx-2">
+                    <SingleImage :image="image" :key="image" />
+
                 </div>
 
                 <!--                                <img :src="'/storage/images/' + props.episode.poster" alt="" class="w-1/2 mx-2">-->
@@ -194,6 +194,7 @@ import { useUserStore } from "@/Stores/UserStore";
 // import EpisodeCreditsList from "@/ComponentShows/Episodes/EpisodeCreditsList";
 import EpisodeFooter from "@/Components/ShowEpisodes/EpisodeFooter"
 import Message from "@/Components/Modals/Messages";
+import SingleImage from "@/Components/Multimedia/SingleImage"
 
 let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore();
@@ -220,11 +221,13 @@ onMounted(() => {
 
 let props = defineProps({
     show: Object,
-    episode: Object,
     team: Object,
+    episode: Object,
+    image: Object,
     creators: Object,
-    message: String,
     can: Object,
+    message: String,
+
 });
 
 teamStore.slug = props.team.slug;

@@ -169,6 +169,22 @@
                         Settings
                 </JetResponsiveNavLink>
 
+                <JetResponsiveNavLink
+                    v-if="$page.props.user.role_id === 4"
+                    @click="userStore.closeNavDropdown()"
+                    :href="route('training')"
+                    :active="route().current('training')">
+                    Training
+                </JetResponsiveNavLink>
+
+                <JetResponsiveNavLink
+                    v-if="$page.props.user.role_id === 4"
+                    @click="userStore.closeNavDropdown()"
+                    :href="route('videoupload')"
+                    :active="route().current('videoupload')">
+                    Video Upload
+                </JetResponsiveNavLink>
+
                 <!-- Authentication -->
                 <form method="POST" @submit.prevent="logout">
                     <JetResponsiveNavLink as="button" class="border-t-0">
@@ -194,19 +210,6 @@
                             Admin Only Links
                         </div>
 
-                        <JetResponsiveNavLink
-                            @click="userStore.closeNavDropdown()"
-                            :href="route('videoupload')"
-                            :active="route().current('videoupload')">
-                            Video Upload
-                        </JetResponsiveNavLink>
-
-                        <JetResponsiveNavLink
-                            @click="userStore.closeNavDropdown()"
-                            :href="route('training')"
-                            :active="route().current('training')">
-                            Training
-                        </JetResponsiveNavLink>
 
                         <JetResponsiveNavLink
                             @click="userStore.closeNavDropdown()"

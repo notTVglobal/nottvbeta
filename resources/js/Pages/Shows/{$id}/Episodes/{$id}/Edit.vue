@@ -68,21 +68,18 @@
 
                                             <div class="flex space-y-3">
                                                 <div class="mb-6">
-                                                    <img :src="'/storage/images/' + props.poster"
-                                                         :key="poster" />
+                                                    <SingleImage :image="props.image" :key="props.image"/>
                                                 </div>
                                             </div>
 
-                                            <file-pond
-                                                name="poster"
-                                                ref="pond"
-                                                label-idle="Click to choose image, or drag here..."
-                                                @init="filepondInitialized"
-                                                server="/showEpisodesUploadPoster"
-                                                accepted-file-types="image/jpg, image/jpeg, image/png"
-                                                @processfile="handleProcessedFile"
-                                                max-file-size="10MB"
+                                            <ImageUpload :image="props.image"
+                                                         :server="'/showEpisodesUploadPoster'"
+                                                         :name="'Upload Show Poster'"
+                                                         :maxSize="'20MB'"
+                                                         :fileTypes="'image/jpg, image/jpeg, image/png'"
+                                                         @reloadImage="reloadImage"
                                             />
+
                                         </div>
 
                                     </div>
@@ -93,7 +90,7 @@
                                         Episode Video
                                     </label>
 
-                                    <div class="flex justify-center w-full bg-black py-0">
+                                    <div class="flex justify-center w-full bg-black mb-6 py-0">
                                         <!--                                <img :src="'/storage/images/' + props.episode.poster" alt="" class="w-1/2 mx-2">-->
 
                                         <!--                TEST VIDEO EMBED FROM RUMBLE             -->
@@ -102,9 +99,6 @@
                                         <div
                                             class="flex justify-center shadow overflow-hidden border-b border-gray-200 w-full bg-black text-light text-2xl sm:rounded-lg p-5">
 
-                                            <img v-if="!props.episode.video_file_url && !props.episode.video_file_embed_code && props.episode.poster" :src="'/storage/images/' + props.episode.poster" alt="" class="w-1/2 mx-2">
-                                            <img v-if="!props.episode.video_file_url && !props.episode.video_file_embed_code && !props.episode.poster" :src="`/storage/images/EBU_Colorbars.svg.png`" alt="" class="w-1/2 mx-2">
-
                                             <iframe v-if="props.episode.video_file_url && !props.episode.video_file_embed_code"
                                                     class="rumble" width="640" height="360" :src="`${props.episode.video_file_url}`" frameborder="0" allowfullscreen>
                                             </iframe>
@@ -112,6 +106,28 @@
                                             </div>
                                             <div v-if="props.episode.video_file_url && props.episode.video_file_embed_code" v-html="props.episode.video_file_embed_code">
                                             </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div>
+                                        <label class="block mb-2 uppercase font-bold text-xs text-red-700"
+                                               for="episodeVideo"
+                                        >
+                                            Upload Episode
+                                        </label>
+                                        <div class="max-full mx-auto mt-2 mb-6 bg-gray-200 p-6 text-dark">
+                                            <h2 class="text-xl font-semibold text-gray-800">Upload Video</h2>
+
+                                            <ul class="pb-4 text-gray-800">
+                                                <li>Max Video Length: <span class="text-orange-400">4 hours</span>
+                                                </li>
+                                                <li>File Types accepted: <span class="text-orange-400">mp4, webm, ogg</span>
+                                                </li>
+                                            </ul>
+
+                                            <span class="text-xl font-bold text-gray-800">&lt;UPLOADER GOES HERE&gt; </span>
+
                                         </div>
 
                                     </div>
@@ -125,7 +141,7 @@
 
                                     <div class="mb-6">
                                         <label class="block mb-2 uppercase font-bold text-xs text-red-700"
-                                               for="name"
+                                               for="notes"
                                         >
                                             Episode Notes (only the team members see the notes)
                                         </label>
@@ -297,15 +313,10 @@ import { useShowStore } from "@/Stores/ShowStore.js"
 import { useUserStore } from "@/Stores/UserStore";
 import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
 import TabbableTextarea from "@/Components/TabbableTextarea"
-import vueFilePond, { setOptions } from 'vue-filepond'
-import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type"
-import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size"
-import FilePondPluginImagePreview from "filepond-plugin-image-preview"
-import FilePondPluginFileMetadata from "filepond-plugin-file-metadata"
-import 'filepond/dist/filepond.min.css'
-import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css'
 import ShowEpisodeEditHeader from "@/Components/ShowEpisodes/Edit/ShowEpisodeEditHeader"
 import Message from "@/Components/Modals/Messages";
+import ImageUpload from "@/Components/Uploaders/ImageUpload.vue";
+import SingleImage from "@/Components/Multimedia/SingleImage.vue";
 
 let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore()
@@ -315,7 +326,7 @@ let userStore = useUserStore()
 videoPlayerStore.currentPage = 'episodes'
 teamStore.setActiveTeam(props.team);
 teamStore.setActiveShow(props.show);
-showStore.episodePoster = props.poster;
+showStore.episodePoster = props.image.name;
 
 onBeforeMount(() => {
     userStore.scrollToTopCounter = 0;
@@ -330,10 +341,11 @@ onMounted(() => {
 });
 
 let props = defineProps({
-    episode: Object,
     show: Object,
     team: Object,
-    poster: String,
+    episode: Object,
+    image: Object,
+    can: Object,
 });
 
 let form = useForm({
@@ -347,40 +359,11 @@ let form = useForm({
     video_embed_code: props.episode.video_embed_code,
 });
 
-const FilePond = vueFilePond(
-    FilePondPluginFileValidateType,
-    FilePondPluginFileValidateSize,
-    FilePondPluginImagePreview,
-    FilePondPluginFileMetadata
-);
-
-////////
-// tec21: this isn't working...
-// I wasn't able to set metadata
-// or get metadata back from filepond.
-//
-// FilePond.setOptions = ({
-//     fileMetadataObject: {
-//         episode_id: '1',
-//     },
-// });
-
-function filepondInitialized() {
-    console.log("Filepond is ready!");
-    console.log('Filepond object:', FilePond);
-}
-
-function handleProcessedFile(error, file) {
-    if (error) {
-        console.log("Filepond processed file");
-        console.log(error);
-        console.log(file);
-        return;
-    }
+let reloadImage = () => {
     Inertia.reload({
-        only: ['poster'],
+        only: ['image'],
     });
-}
+};
 
 let submit = () => {
     form.put(route('showEpisodes.update', props.episode.slug));

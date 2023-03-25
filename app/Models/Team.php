@@ -72,7 +72,7 @@ class Team extends Model
     public function appSetting(): BelongsTo
     {
         return $this->belongsTo(AppSetting::class)->withDefault([
-            'cdn_endpoint' => 'https://development-nottv.sfo3.cdn.digitaloceanspaces.com',
+//            'cdn_endpoint' => 'https://development-nottv.sfo3.cdn.digitaloceanspaces.com',
         ]);
     }
 

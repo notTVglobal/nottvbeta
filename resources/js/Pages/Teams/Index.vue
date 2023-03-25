@@ -79,7 +79,7 @@
                                             >
 <!--                                                <img :src="`/storage/${team.logo}`" class="rounded-full h-20 w-20 object-cover">-->
 <!--                                                <img :src="'/storage/images/' + team.logo" class="rounded-full h-20 w-20 object-cover">-->
-                                                <SingleImage :image="team.image" :poster="team.logo" :alt="'show cover'" class="rounded-full h-20 w-20 object-cover"/>
+                                                <SingleImage :image="team.image" :alt="'team logo rounded full'" :key="props.image" :class="'rounded-full h-20 w-20 object-cover'"/>
 
 
                                             </th>

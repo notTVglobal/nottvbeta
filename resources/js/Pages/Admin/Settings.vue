@@ -28,23 +28,46 @@
 
             <div>
                 <form @submit.prevent="submit">
-                <div class="mb-6">
-                    <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"
-                           for="name"
-                    >
-                        CDN ENDPOINT
-                    </label>
+                    <div class="mb-6">
+                        <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"
+                               for="name"
+                        >
+                            CDN ENDPOINT
+                        </label>
 
-                    <input v-model="form.cdn_endpoint"
-                           class="border border-gray-400 p-2 w-full rounded-lg text-black"
-                           type="text"
-                           name="cdn_endpoint"
-                           id="cdn_endpoint"
-                    >
-                    <div v-if="form.errors.cdn_endpoint" v-text="form.errors.cdn_endpoint"
-                         class="text-xs text-red-600 mt-1"></div>
-                </div>
+                        <input v-model="form.cdn_endpoint"
+                               class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                               type="text"
+                               name="cdn_endpoint"
+                               id="cdn_endpoint"
+                        >
+                        <div v-if="form.errors.cdn_endpoint" v-text="form.errors.cdn_endpoint"
+                             class="text-xs text-red-600 mt-1"></div>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"
+                               for="name"
+                        >
+                            CDN FOLDER
+                        </label>
+
+                        <div class="flex flex-row">
+                            <span class="pt-2 mr-2">/ </span>
+                            <input v-model="form.cdn_folder"
+                                   class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                                   type="text"
+                                   name="cdn_folder"
+                                   id="cdn_folder"
+                            >
+                        </div>
+                        <span class="text-xs">NOTE: The forward slash is already entered in the backend. Just type the folder name.</span>
+
+                        <div v-if="form.errors.storage_folder" v-text="form.errors.storage_folder"
+                             class="text-xs text-red-600 mt-1"></div>
+                    </div>
+
                     <div class="flex justify-end my-6 mr-6">
+                        <JetValidationErrors class="mr-4" />
                         <button
                             @click="submit"
                             class="bg-blue-600 hover:bg-blue-500 text-white rounded py-2 px-4"
@@ -85,6 +108,7 @@ import { useForm } from "@inertiajs/inertia-vue3";
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useUserStore } from "@/Stores/UserStore";
 import Message from "@/Components/Modals/Messages";
+import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -104,12 +128,14 @@ onMounted(async () => {
 });
 
 let props = defineProps({
-    cdn_endpoint: Array,
+    cdn_endpoint: String,
+    cdn_folder: String,
     message: String
 });
 
 let form = useForm({
-    cdn_endpoint: props.cdn_endpoint[0],
+    cdn_endpoint: props.cdn_endpoint,
+    cdn_folder: props.cdn_folder,
 })
 
 let submit = () => {

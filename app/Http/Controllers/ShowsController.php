@@ -51,7 +51,7 @@ class ShowsController extends Controller
                     $query->where('name', 'like', "%{$search}%");
                 })
                 ->latest()
-                ->paginate(8, ['*'], 'shows')
+                ->paginate(6, ['*'], 'shows')
                 ->withQueryString()
                 ->through(fn($show) => [
                     'id' => $show->id,
@@ -62,12 +62,12 @@ class ShowsController extends Controller
                     'teamSlug' => $show->team->slug,
                     'showRunnerId' => $show->user_id,
                     'showRunnerName' => $show->user->name,
-                    'poster' => $show->image->name,
                     'image' => [
                         'id' => $show->image->id,
                         'name' => $show->image->name,
                         'folder' => $show->image->folder,
                         'cdn_endpoint' => $show->appSetting->cdn_endpoint,
+                        'cdn_folder' => $show->appSetting->cdn_folder,
                     ],
                     'slug' => $show->slug,
                     'totalEpisodes' => $show->showEpisodes->count(),
@@ -86,18 +86,24 @@ class ShowsController extends Controller
             'episodes' => ShowEpisode::with('show', 'image')
                 ->latest()
                 ->paginate(5, ['*'], 'episodes')
-                ->through(fn($episode) => [
-                    'id' => $episode->id,
-                    'name' => $episode->name,
-                    'description' => \Str::limit($episode->description, 100, ' ...'),
-                    'poster' => $episode->image->name,
-                    'slug' => $episode->slug,
-                    'showName' => $episode->show->name,
-                    'showSlug' => $episode->show->slug,
-                    'releaseDate' => $episode->created_at->format('M D, Y'),
-                    'categoryName' => $episode->show->showCategory->name,
-                    'categorySubName' => $episode->show->showCategorySub->name,
-                    'release_date' => $episode->release_dateTime,
+                ->through(fn($showEpisode) => [
+                    'id' => $showEpisode->id,
+                    'name' => $showEpisode->name,
+                    'description' => \Str::limit($showEpisode->description, 100, ' ...'),
+                    'image' => [
+                        'id' => $showEpisode->image->id,
+                        'name' => $showEpisode->image->name,
+                        'folder' => $showEpisode->image->folder,
+                        'cdn_endpoint' => $showEpisode->appSetting->cdn_endpoint,
+                        'cdn_folder' => $showEpisode->appSetting->cdn_folder,
+                    ],
+                    'slug' => $showEpisode->slug,
+                    'showName' => $showEpisode->show->name,
+                    'showSlug' => $showEpisode->show->slug,
+                    'releaseDate' => $showEpisode->created_at->format('M D, Y'),
+                    'categoryName' => $showEpisode->show->showCategory->name,
+                    'categorySubName' => $showEpisode->show->showCategorySub->name,
+                    'release_date' => $showEpisode->release_dateTime,
                 ]),
             'showsTrending' => Show::with('image')
                 ->paginate(3, ['*'], 'shows')
@@ -105,7 +111,13 @@ class ShowsController extends Controller
                     'id' => $show->id,
                     'name' => $show->name,
                     'description' => $show->description,
-                    'poster' => $show->image->name,
+                    'image' => [
+                        'id' => $show->image->id,
+                        'name' => $show->image->name,
+                        'folder' => $show->image->folder,
+                        'cdn_endpoint' => $show->appSetting->cdn_endpoint,
+                        'cdn_folder' => $show->appSetting->cdn_folder,
+                    ],
                     'slug' => $show->slug,
                     'copyrightYear' => $show->created_at->format('Y'),
                     'categoryName' => $show->showCategory->name,
@@ -118,7 +130,13 @@ class ShowsController extends Controller
                     'id' => $show->id,
                     'name' => $show->name,
                     'description' => $show->description,
-                    'poster' => $show->image->name,
+                    'image' => [
+                        'id' => $show->image->id,
+                        'name' => $show->image->name,
+                        'folder' => $show->image->folder,
+                        'cdn_endpoint' => $show->appSetting->cdn_endpoint,
+                        'cdn_folder' => $show->appSetting->cdn_folder,
+                    ],
                     'slug' => $show->slug,
                     'copyrightYear' => $show->created_at->format('Y'),
                     'categoryName' => $show->showCategory->name,
@@ -226,12 +244,13 @@ class ShowsController extends Controller
                 'description' => $show->description,
                 'showRunner' => $show->user->name,
                 'slug' => $show->slug,
-                'poster' => $show->image->name,
+//                'poster' => $show->image->name,
                 'image' => [
                     'id' => $show->image->id,
                     'name' => $show->image->name,
                     'folder' => $show->image->folder,
                     'cdn_endpoint' => $show->appSetting->cdn_endpoint,
+                    'cdn_folder' => $show->appSetting->cdn_folder,
                 ],
                 'copyrightYear' => $show->created_at->format('Y'),
                 'first_release_year' => $show->first_release_year,
@@ -274,9 +293,15 @@ class ShowsController extends Controller
                 ->through(fn($showEpisode) => [
                     'id' => $showEpisode->id,
                     'name' => $showEpisode->name,
-                    'poster' => $showEpisode->image->name,
                     'slug' => $showEpisode->slug,
                     'created_at' => $showEpisode->created_at,
+                    'image' => [
+                        'id' => $showEpisode->image->id,
+                        'name' => $showEpisode->image->name,
+                        'folder' => $showEpisode->image->folder,
+                        'cdn_endpoint' => $showEpisode->appSetting->cdn_endpoint,
+                        'cdn_folder' => $showEpisode->appSetting->cdn_folder,
+                    ],
                 ]),
             'creators' => TeamMember::where('team_id', $teamId)
                 ->join('users', 'team_members.user_id', '=', 'users.id')
@@ -315,12 +340,12 @@ class ShowsController extends Controller
                 'description' => $show->description,
                 'showRunner' => $show->user->name,
                 'slug' => $show->slug,
-                'poster' => $show->image->name,
                 'image' => [
                     'id' => $show->image->id,
                     'name' => $show->image->name,
                     'folder' => $show->image->folder,
                     'cdn_endpoint' => $show->appSetting->cdn_endpoint,
+                    'cdn_folder' => $show->appSetting->cdn_folder,
                 ],
                 'copyrightYear' => $show->created_at->format('Y'),
                 'categoryId' => $show->showCategory->id,
@@ -426,10 +451,13 @@ class ShowsController extends Controller
                 'name' => $show->image->name,
                 'folder' => $show->image->folder,
                 'cdn_endpoint' => $show->appSetting->cdn_endpoint,
+                'cdn_folder' => $show->appSetting->cdn_folder,
             ],
             'categories' => $categories,
             'subCategories' => $sub_categories,
             'showCategory' => $show->showCategory,
+            // sub-categories not enabled yet...
+//            'showCategorySub' => $show->showCategorySub,
 
 //            'can' => [
 //                'viewShows' => Auth::user()->can('view', Show::class),
@@ -550,7 +578,7 @@ class ShowsController extends Controller
                 'id' => $show->id,
                 'slug' => $show->slug,
                 'showRunner' => $show->user->name,
-                'poster' => $show->image->name,
+                'image' => $show->image->name,
                 'showCategoryName' => $show->showCategory->name,
                 'categorySubName' => $show->showCategorySub->name,
             ],
@@ -572,7 +600,13 @@ class ShowsController extends Controller
                 'name' => $show->name,
                 'slug' => $show->slug,
                 'showRunner' => $show->user->name,
-                'poster' => $show->image->name,
+                'image' => [
+                    'id' => $show->image->id,
+                    'name' => $show->image->name,
+                    'folder' => $show->image->folder,
+                    'cdn_endpoint' => $show->appSetting->cdn_endpoint,
+                    'cdn_folder' => $show->appSetting->cdn_folder,
+                ],
                 'copyrightYear' => $show->created_at->format('Y'),
             ],
             'team' => [

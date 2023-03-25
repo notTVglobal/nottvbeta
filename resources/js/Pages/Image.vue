@@ -21,23 +21,13 @@
 
     <div class="max-w-lg mx-auto mt-2 bg-gray-200 p-6">
         <h3 class="text-2xl font-bold text-center dark:text-white">Image Uploader</h3>
-        <div class="pt-3 pb-4">
-            <ul>
-                <li>Max File Size: <span class="text-orange-400">20MB</span></li>
-                <li>File Types accepted: <span class="text-orange-400">jpg, jpeg, png</span></li>
-            </ul>
-        </div>
-        <file-pond
-            name="image"
-            ref="pond"
-            label-idle="Click to choose image, or drag here..."
-            @init="filepondInitialized"
-            server="/upload"
-            accepted-file-types="image/jpg, image/jpeg, image/png"
-            @processfile="handleProcessedFile"
-            allow-multiple="true" max-files="10"
-            max-file-size="20MB"
 
+        <ImageUpload :image="images"
+                     :server="'/upload'"
+                     :name="''"
+                     :maxSize="'10MB'"
+                     :fileTypes="'image/jpg, image/jpeg, image/png'"
+                     @reloadImage="reloadImage"
         />
 
     </div>
@@ -48,8 +38,11 @@
         <!-- Paginator -->
         <Pagination :data="images" class="mt-6"/>
         <div class="w-full p-4 flex flex-initial flex-wrap gap-6 justify-center mt-4">
-            <div v-for="image in images.data" :key="image.id">
-                <img :src="'/storage/images/' + image.name" class="max-w-xs">
+            <div v-for="image in images.data" :key="image">
+<!--                <img :src="'/storage/images/' + image.name" class="max-w-xs">-->
+                <SingleImage :image="image" :alt="'show cover'" class="max-w-xs"/>
+
+
             </div>
         </div>
         <!-- Paginator -->
@@ -68,10 +61,8 @@ import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useUserStore } from "@/Stores/UserStore";
 import Pagination from "@/Components/Pagination"
 import Message from "@/Components/Modals/Messages";
-// import {ref, onMounted } from 'vue'
-// import vueFilePond, { setOptions } from 'vue-filepond'
-import "filepond/dist/filepond.min.css"
-// import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type'
+import SingleImage from "@/Components/Multimedia/SingleImage"
+import ImageUpload from "@/Components/Uploaders/ImageUpload"
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -96,6 +87,13 @@ let props = defineProps({
     // filters: Object,
 });
 
+function reloadImage() {
+    Inertia.reload({
+        only: ['images'],
+    });
+}
+
+
 let showMessage = ref(true);
 
 // let search = ref(props.filters.search);
@@ -109,105 +107,4 @@ let showMessage = ref(true);
 
 // config: { headers: function () { return {} } }
 
-
-
-// const FilePond = vueFilePond(FilePondPluginFileValidateType);
-// const pond = ref([]);
-// const FilePondInitialized = ref();
-// console.log(FilePondInitialized, "Filepond is ready!");
-// console.log("Filepond object:", pond);
-//
-// onMounted(() => setOptions({
-//     server: {
-//         process: {
-//             url: './upload',
-//             headers: {
-//                 "X-CSRF-TOKEN": document.head.querySelector('meta[name="csrf-token"]').content
-//             }
-//         }
-//     }
-// }))
-
-</script>
-
-<script>
-import vueFilePond, { setOptions } from 'vue-filepond';
-import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
-import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size';
-import FilePondPluginImagePreview from "filepond-plugin-image-preview";
-import 'filepond/dist/filepond.min.css';
-import {Inertia} from "@inertiajs/inertia";
-
-
-const FilePond = vueFilePond(
-    FilePondPluginFileValidateType,
-    FilePondPluginFileValidateSize,
-    FilePondPluginImagePreview
-);
-
-// The setOptions isn't working. It works in the Laracast Advanced Image Uploading Tutorial, but it isn't working here.
-// let serverMessage = {};
-// setOptions({
-//     server: {
-//         process: {
-//             // onerror: (response) => {
-//             //     serverMessage = JSON.parse(response);
-//             // },
-//             url: './upload',
-//             headers: {
-//                 'X-CSRF-TOKEN': '',
-//             },
-//         },
-//     },
-//     // labelFileProcessing: () => {
-//     //     return serverMessage.error;
-//     // }
-// });
-
-
-
-export default {
-    components: {
-        FilePond
-    },
-    methods: {
-
-        filepondInitialized: function () {
-            console.log("Filepond is ready!");
-            console.log('Filepond object:', this.$refs.pond);
-
-        },
-        handleProcessedFile(error, file) {
-            if (error) {
-                console.log("Filepond processed file");
-                console.log(error);
-                console.log(file);
-                return;
-            }
-
-            // add the file to our images array
-            Inertia.reload({
-                        only: ["images"],
-            });
-        }
-    },
-    props: {
-            images: Object
-    },
-    setup(props) {
-
-    }
-
-        // filepondProcessFile = (error, file) {
-        //     console.log("Filepond processed file");
-        //     console.log(error);
-        //     console.log(file);
-        //
-        //     Inertia.reload({
-        //         only: ["images"],
-        //     });
-        // };
-
-
-};
 </script>

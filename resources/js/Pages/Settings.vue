@@ -73,16 +73,16 @@
 </template>
 
 <script setup>
-import { onBeforeMount, onMounted, ref } from "vue";
+import { onBeforeMount, onMounted, ref } from "vue"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import { useUserStore } from "@/Stores/UserStore";
+import { useUserStore } from "@/Stores/UserStore"
 import DeleteUserForm from '@/Pages/Profile/Partials/DeleteUserForm.vue'
 import JetSectionBorder from '@/Jetstream/SectionBorder.vue'
 import LogoutOtherBrowserSessionsForm from '@/Pages/Profile/Partials/LogoutOtherBrowserSessionsForm.vue'
 import TwoFactorAuthenticationForm from '@/Pages/Profile/Partials/TwoFactorAuthenticationForm.vue'
 import UpdatePasswordForm from '@/Pages/Profile/Partials/UpdatePasswordForm.vue'
 import UpdateProfileInformationForm from '@/Pages/Profile/Partials/UpdateProfileInformationForm.vue'
-import UserUpdateContactForm from "@/Components/Users/UserUpdateContactForm.vue";
+import UserUpdateContactForm from "@/Components/Users/UserUpdateContactForm.vue"
 
 // import {vue} from "laravel-mix";
 
