@@ -21,7 +21,7 @@ class AdminSeeder extends Seeder
             'name' => 'Administrator',
             'email' => 'admin@not.tv',
             'email_verified_at' => now(),
-            'password' => bcrypt('nottv123'),
+            'password' => bcrypt('e?6EM^ym~^E8jcTBdx'),
             'remember_token' => Str::random(10),
             'address1' => null,
             'address2' => null,
