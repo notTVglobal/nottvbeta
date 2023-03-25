@@ -9,6 +9,7 @@ use App\Models\ShowEpisode;
 use App\Models\Team;
 use App\Models\TeamMember;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
@@ -83,6 +84,7 @@ class ShowEpisodeController extends Controller
         $showEpisode->video_url = $request->video_url;
         $showEpisode->video_embed_code = $request->video_embed_code;
         $showEpisode->notes = $request->notes;
+        $showEpisode->release_year = Carbon::now()->format('Y');
 
         $showEpisode->save();
 
