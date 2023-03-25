@@ -34,6 +34,6 @@ class TeamSeeder extends Seeder
             'image_id' => '3',
         ]);
 
-        \App\Models\Team::factory(5)->create();
+//        \App\Models\Team::factory(5)->create();
     }
 }
