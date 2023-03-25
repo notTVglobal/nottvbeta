@@ -243,6 +243,10 @@ Route::middleware([
 // Admin Pages
 ///////////
 
+    Route::get('/admin/phpmyinfo', function () {
+        phpinfo();
+    })->name('admin.phpmyinfo');
+
     Route::get('/admin/settings', [AdminController::class, 'settings'])
         ->can('viewAdmin', 'App\Models\User')
         ->name('admin.settings');
