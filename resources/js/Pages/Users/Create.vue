@@ -56,7 +56,7 @@
                 </label>
 
                 <input v-model="form.name"
-                       class="border border-gray-400 p-2 w-full rounded-lg"
+                       class="border border-gray-400 p-2 w-full rounded-lg text-black"
                        type="text"
                        name="name"
                        id="name"
@@ -72,7 +72,7 @@
                 </label>
 
                 <input v-model="form.email"
-                       class="border border-gray-400 p-2 w-full rounded-lg"
+                       class="border border-gray-400 p-2 w-full rounded-lg text-black"
                        type="email"
                        name="email"
                        id="email"
@@ -88,7 +88,7 @@
                 </label>
 
                 <input v-model="form.password"
-                       class="border border-gray-400 p-2 w-full rounded-lg"
+                       class="border border-gray-400 p-2 w-full rounded-lg text-black"
                        type="password"
                        name="password"
                        id="password"
@@ -104,7 +104,7 @@
                 </label>
 
                 <input v-model="form.phone"
-                       class="border border-gray-400 p-2 w-full rounded-lg"
+                       class="border border-gray-400 p-2 w-full rounded-lg text-black"
                        type="text"
                        name="phone"
                        id="phone"
@@ -120,14 +120,14 @@
                 </label>
 
                 <input v-model="form.address1"
-                       class="border border-gray-400 p-2 mb-2 w-full rounded-lg"
+                       class="border border-gray-400 p-2 mb-2 w-full rounded-lg text-black"
                        type="text"
                        name="address1"
                        id="address1"
                 >
 
                 <input v-model="form.address2"
-                       class="border border-gray-400 p-2 w-full rounded-lg"
+                       class="border border-gray-400 p-2 w-full rounded-lg text-black"
                        type="text"
                        name="address2"
                        id="address2"
@@ -143,7 +143,7 @@
                 </label>
 
                 <input v-model="form.city"
-                       class="border border-gray-400 p-2 w-full rounded-lg"
+                       class="border border-gray-400 p-2 w-full rounded-lg text-black"
                        type="text"
                        name="city"
                        id="city"
@@ -158,7 +158,7 @@
                 </label>
 
                 <input v-model="form.province"
-                       class="border border-gray-400 p-2 w-full rounded-lg"
+                       class="border border-gray-400 p-2 w-full rounded-lg text-black"
                        type="text"
                        name="province"
                        id="province"
@@ -173,7 +173,7 @@
                 </label>
 
                 <input v-model="form.country"
-                       class="border border-gray-400 p-2 w-full rounded-lg"
+                       class="border border-gray-400 p-2 w-full rounded-lg text-black"
                        type="text"
                        name="country"
                        id="country"
@@ -189,7 +189,7 @@
                 </label>
 
                 <input v-model="form.postalCode"
-                       class="border border-gray-400 p-2 w-full rounded-lg"
+                       class="border border-gray-400 p-2 w-full rounded-lg text-black"
                        type="text"
                        name="postalCode"
                        id="postalCode"
