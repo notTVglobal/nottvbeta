@@ -118,6 +118,12 @@
                         </div>
                         <div class="">
                             Graph here
+                            <div class="mt-4">
+                                <ul>
+                                    <li>Display Total s3 storage "available" which means "budgeted"</li>
+                                    <li>Show total used storage... get the total "sizes" of all videos and images as listed in the database </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
 
@@ -127,6 +133,11 @@
                         </div>
                         <div>
                             Graph here
+                            <div class="mt-4">
+                                <ul>
+                                    <li>Display total # of premium subscribers"</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
 
@@ -136,6 +147,11 @@
                         </div>
                         <div>
                             Graph here
+                            <div class="mt-4">
+                                <ul>
+                                    <li>Display total # of creators"</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
 
@@ -145,6 +161,12 @@
                         </div>
                         <div>
                             Graph here
+                            <div class="mt-4">
+                                <ul>
+                                    <li>Display total view time.</li>
+                                    <li>Will need a table to keep track of this.</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
 
@@ -154,6 +176,16 @@
                         </div>
                         <div>
                             Graph here
+                            <div class="mt-4">
+                                <ul>
+                                    <li>Display total peak bandwidth.</li>
+                                    <li>This can be captured from Mist logs</li>
+                                    <li>What about Digital Ocean</li>
+                                    <li><a href="https://www.digitalocean.com/blog/its-all-about-the-bandwidth-why-many-network-intensive-services-select-digitalocean-as-their-cloud" target="_blank">https://www.digitalocean.com/blog/its-all-about-the-bandwidth-why-many-network-intensive-services-select-digitalocean-as-their-cloud</a></li>
+
+
+                                </ul>
+                            </div>
                         </div>
                     </div>
 
@@ -163,6 +195,11 @@
                         </div>
                         <div>
                             Display poster here
+                            <div class="mt-4">
+                                <ul>
+                                    <li>Will need a table to track this.</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
 

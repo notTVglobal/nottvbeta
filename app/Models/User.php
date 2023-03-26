@@ -169,4 +169,8 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Videos::class);
     }
 
+    public function inviteCodes(): \Illuminate\Database\Eloquent\Relations\HasMany {
+        return $this->hasMany(InviteCode::class);
+    }
+
 }

@@ -3131,10 +3131,12 @@ var map = {
 	],
 	"./Admin/InviteCodes": [
 		"./resources/js/Pages/Admin/InviteCodes.vue",
+		"/js/vendor",
 		"resources_js_Pages_Admin_InviteCodes_vue"
 	],
 	"./Admin/InviteCodes.vue": [
 		"./resources/js/Pages/Admin/InviteCodes.vue",
+		"/js/vendor",
 		"resources_js_Pages_Admin_InviteCodes_vue"
 	],
 	"./Admin/Settings": [

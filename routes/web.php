@@ -243,39 +243,46 @@ Route::middleware([
 // Admin Pages
 ///////////
 
+    //// temp phpinfo page for testing and debugging on a new server.
     Route::get('/admin/phpmyinfo', function () {
         phpinfo();
     })->name('admin.phpmyinfo');
 
-    Route::get('/admin/settings', [AdminController::class, 'settings'])
-        ->can('viewAdmin', 'App\Models\User')
-        ->name('admin.settings');
-
-    Route::post('/admin/settings', [AdminController::class, 'saveSettings'])
-        ->can('viewAdmin', 'App\Models\User')
-        ->name('admin.saveSettings');
-
-    Route::get('/admin/shows', [AdminController::class, 'showsIndex'])
-        ->can('viewAdmin', 'App\Models\User')
-        ->name('admin.shows');
-
-    Route::get('/admin/teams', [AdminController::class, 'teamsIndex'])
-        ->can('viewAdmin', 'App\Models\User')
-        ->name('admin.teams');
-
-    // temp page to test Stores
+    //// temp page to test Stores
     Route::get('/quiz', function () {
         return Inertia::render('QuizHome');
     })->can('viewAdmin', 'App\Models\User')
         ->name('quiz');
 
-    // temp page to test Stores
-    Route::get('/admin/invite_codes', function () {
-        return Inertia::render('Admin/InviteCodes');
-    })->can('viewAdmin', 'App\Models\User')
-        ->name('admin.inviteCodes');
+    //// SETTINGS
+    Route::get('/admin/settings', [AdminController::class, 'settings'])
+        ->can('viewAdmin', 'App\Models\User')
+        ->name('admin.settings');
+    //// SETTINGS - SAVE
+    Route::post('/admin/settings', [AdminController::class, 'saveSettings'])
+        ->can('viewAdmin', 'App\Models\User')
+        ->name('admin.saveSettings');
 
-    // delete user
+    //// SHOWS - INDEX
+    Route::get('/admin/shows', [AdminController::class, 'showsIndex'])
+        ->can('viewAdmin', 'App\Models\User')
+        ->name('admin.shows');
+
+    //// TEAMS - INDEX
+    Route::get('/admin/teams', [AdminController::class, 'teamsIndex'])
+        ->can('viewAdmin', 'App\Models\User')
+        ->name('admin.teams');
+
+    //// INVITE CODES - INDEX
+    Route::get('/admin/invite_codes', [AdminController::class, 'inviteCodes'])
+        ->can('viewAdmin', 'App\Models\User')
+        ->name('admin.inviteCodes');
+    //// INVITE CODES - SAVE
+    Route::post('/admin/invite_codes', [AdminController::class, 'saveInviteCodes'])
+        ->can('viewAdmin', 'App\Models\User')
+        ->name('admin.saveInviteCodes');
+
+    //// DELETE USER
     Route::post('/admin/user/delete', [AdminController::class, 'deleteUser'])
         ->can('delete', 'App\Models\User')
         ->name('admin.deleteUser');
@@ -290,6 +297,10 @@ Route::middleware([
     Route::get('/teams/{team}', [TeamsController::class, 'show'])
         ->middleware('can:view,team')
         ->name('teams.show');
+
+
+    /////////////////  CREATOR RESOURCES ////////////////
+    /// //////////////////////////////////////////// ///
 
 // Creator Resources
     // Begin middleware authorization

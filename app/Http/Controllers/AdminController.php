@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Image;
+use App\Models\InviteCode;
 use App\Models\Show;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
 
@@ -46,6 +48,68 @@ class AdminController extends Controller
 
         // redirect
         return redirect()->route('admin.settings')->with('message', 'Settings Saved Successfully');
+
+    }
+
+////////////  INVITE CODES
+//////////////////////////
+
+    public function inviteCodes()
+    {
+        function getUserName($user){
+            return $name = User::query()
+                ->where('id', $user)
+                ->pluck('name')
+                ->first();
+        }
+
+
+        return Inertia::render('Admin/InviteCodes', [
+            'invite_codes' => InviteCode::query()
+                ->when(Request::input('search'), function ($query, $search) {
+                    $query->where('code', 'like', "%{$search}%");
+                })
+                ->latest()
+                ->paginate(10, ['*'], 'codes')
+                ->withQueryString()
+                ->through(fn($code) => [
+                    'claimed' => $code->claimed,
+                    'code' => $code->code,
+                    'created_by' => getUserName($code->created_by),
+                    'created_at' => $code->created_at,
+                    'claimed_by' => getUserName($code->claimed_by),
+                    'claimed_at' => $code->claimed_at,
+                    'notes' => $code->notes,
+                ]),
+            // need a pivot table to connect used codes to users.
+            'filters' => Request::only(['search']),
+// TO DO create a InviteCode Policy
+//            'can' => [
+//                'create' => Auth::user()->can('create', InviteCode::class),
+//                'edit' => Auth::user()->can('edit', InviteCode::class)
+//            ]
+        ]);
+    }
+
+    public function saveInviteCodes(HttpRequest $request)
+    {
+//        $inviteCodes = $request->validate([
+//            'cdn_endpoint' => 'nullable|string',
+//            'cloud_folder' => 'nullable|string',
+//        ]);
+
+        $validatedData = $request->validate([
+            'code' => ['required', 'unique:invite_codes', 'string', 'max:20'],
+        ]);
+
+        $invite_code = new InviteCode;
+        $invite_code->created_by = Auth::user()->id;
+        $invite_code->code = $request->code;
+        $invite_code->save();
+
+//        return $invite_code;
+        // redirect
+        return redirect()->route('admin.inviteCodes')->with('message', 'Code Added Successfully');
 
     }
 
