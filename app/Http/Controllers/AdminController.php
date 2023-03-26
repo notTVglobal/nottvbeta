@@ -116,7 +116,8 @@ class AdminController extends Controller
 
     public function exportInviteCodes() {
 
-        // tec21: I don't know how to do this.
+        // tec21: I don't know how to do this. this exports a file to the root of the project and creates a new
+        // public directory. But the formatting is all messed up.
 
         $data = InviteCode::query()->get()->all();
 
