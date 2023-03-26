@@ -68,7 +68,7 @@
                     <div class="text-gray-600"> The form is a bit buggy.. if you enter a code that is already claimed and then enter a new code sometimes the error message disappears and sometimes it does not.</div>
 
                 </form>
-                
+
 
                 <div class="flex justify-between mt-4">
 
