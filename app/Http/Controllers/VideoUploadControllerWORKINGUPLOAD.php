@@ -181,8 +181,6 @@ class VideoUploadController extends Controller
         $video->save();
         sleep(1);
 
-        dd($video);
-
         return response()->json([
             'path' => $disk->url($fileName),
             'name' => $fileName,

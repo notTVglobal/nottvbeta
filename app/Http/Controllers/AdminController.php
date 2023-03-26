@@ -116,18 +116,26 @@ class AdminController extends Controller
 
     public function exportInviteCodes() {
 
-        // tec21: I don't know how to do this. this exports a file to the root of the project and creates a new
-        // public directory. But the formatting is all messed up.
+        // tec21: this needs to
 
-        $data = InviteCode::query()->get()->all();
+        $codes = InviteCode::all()->toArray();
 
-        dd($data);
 
-        $handle = fopen('user.csv', 'w');
+//        dd($codes);
 
-        collect($data)->each(fn ($row) => fputcsv($handle, $data));
+        $handle = fopen('../storage/app/invite_codes.csv', 'w');
+//
+//        collect($data)->each(fn ($row) => fputcsv($handle, $data));
+//        fputcsv($handle, $data);
+
+//
+        foreach ($codes as $line) {
+            fputcsv($handle, $line);
+        }
 
         fclose($handle);
+//return $codes;
+        return redirect()->route('admin.inviteCodes')->with('message', 'exported successfully.');
     }
 
 ////////////  SHOWS INDEX

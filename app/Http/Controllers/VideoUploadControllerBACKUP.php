@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Video;
 use App\Models\User;
 
-use Carbon\Carbon;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\JsonResponse;
@@ -135,7 +134,8 @@ class VideoUploadController extends Controller
         if ($save->isFinished()) {
             // save the file and return any response you need, current example uses `move` function. If you are
             // not using move, you need to manually delete the file by unlink($save->getFile()->getPathname())
-            return $this->saveFileTos3($save->getFile());
+            return $this->saveFile($save->getFile());
+
         }
 
         // we are in chunk mode, lets send the current progress
@@ -149,26 +149,29 @@ class VideoUploadController extends Controller
 
     }
 
+    /////////// THE NEW SAVE FILE TO CLOUD METHOD //////////////
+    ///////////////////////////////////////////////////////////
+
     /**
-     * Saves the file to S3 server
+     * Saves the file
      *
      * @param UploadedFile $file
      *
-     * @return JsonResponse
+     * @return \Illuminate\Http\JsonResponse
      */
-    protected function saveFileToS3($file)
+    protected function saveFileToCloud(UploadedFile $file)
     {
         $fileName = $this->createFilename($file);
-
-        $cloud_folder = DB::table('app_settings')->where('id', 1)->pluck('cloud_folder')->first();
-        $folder = Carbon::now()->format('/Y/m').'/images';
-
-        $disk = Storage::disk('spaces')->putFileAs('oogabooga', $file, $fileName);
-
+        // Group files by mime type
         $mime = str_replace('/', '-', $file->getMimeType());
 
-        // We need to delete the file when uploaded to s3
-        unlink($file->getPathname());
+        // Group files by the date (week
+        $dateFolder = date("Y-m-W");
+
+        // Build the file path
+        $filePath = "upload/{$dateFolder}/{$mime}/";
+//        $filePath = "public/videos/";
+        $finalPath = storage_path("app/".$filePath);
 
         // Store the video in the database
         $video = new Video;
@@ -177,106 +180,9 @@ class VideoUploadController extends Controller
         $video->extension = $file->getClientOriginalExtension();
         $video->size = $file->getSize();
         $video->type = $file->getMimeType();
-        $video->full_url = $fileName;
+        $video->full_url = $finalPath;
         $video->save();
         sleep(1);
-
-        dd($video);
-
-        return response()->json([
-            'path' => $disk->url($fileName),
-            'name' => $fileName,
-            'mime_type' =>$mime
-        ]);
-    }
-
-//    /**
-//     * Saves the file
-//     *
-//     * @param UploadedFile $file
-//     *
-//     * @return \Illuminate\Http\JsonResponse
-//     */
-//    protected function saveFile(UploadedFile $file)
-//    {
-//        $fileName = $this->createFilename($file);
-//        // Group files by mime type
-//        $mime = str_replace('/', '-', $file->getMimeType());
-//        // Group files by the date (week
-//        $dateFolder = date("Y-m-W");
-//
-//        // Build the file path
-//        $filePath = "upload/{$mime}/{$dateFolder}/";
-//        $finalPath = storage_path("app/".$filePath);
-//
-//        // move the file name
-//        $file->move($finalPath, $fileName);
-//
-//        // Store the video in the database
-//        $video = new Video;
-//        $video->user_id = auth()->user()->id;
-//        $video->file_name = $fileName;
-//        $video->extension = $file->getClientOriginalExtension();
-//        $video->size = $file->getSize();
-//        $video->type = $file->getMimeType();
-//        $video->full_url = $finalPath;
-//        $video->save();
-//        sleep(1);
-//
-//        return response()->json([
-//            'path' => $filePath,
-//            'name' => $fileName,
-//            'mime_type' => $mime
-//        ]);
-
-
-
-//        $cloud_folder = DB::table('app_settings')->where('id', 1)->pluck('cloud_folder')->first();
-//        $folder = Carbon::now()->format('/Y/m').'/videos';
-//        Storage::disk('spaces')->putFile($cloud_folder.$folder, $file);
-//
-//        $fileName = $this->createFilename($file);
-//        // Group files by mime type
-//        $mime = str_replace('/', '-', $file->getMimeType());
-//
-//        // Store the video in the database
-//        $video = new Video;
-//        $video->user_id = auth()->user()->id;
-//        $video->file_name = $fileName;
-//        $video->extension = $file->getClientOriginalExtension();
-//        $video->size = $file->getSize();
-//        $video->type = $file->getMimeType();
-////            $video->full_url = $finalPath;
-//        $video->save();
-//        sleep(1);
-//
-//
-//
-//        return $video;
-
-
-
-
-
-
-        // Group files by the date (week
-//        $dateFolder = date("Y-m-W");
-
-        // Build the file path
-//        $filePath = "upload/{$mime}/{$dateFolder}/";
-//        $filePath = "public/videos/";
-//        $finalPath = storage_path("app/".$filePath);
-
-        // Store the video in the database
-//        $video = new Video;
-//        $video->user_id = auth()->user()->id;
-//        $video->file_name = $fileName;
-//        $video->extension = $file->getClientOriginalExtension();
-//        $video->size = $file->getSize();
-//        $video->type = $file->getMimeType();
-//        $video->full_url = $finalPath;
-//        $video->save();
-//        sleep(1);
 
 //        $video = Video::create([
 //            'user_id' => auth()->user()->id,
@@ -287,10 +193,10 @@ class VideoUploadController extends Controller
 //            'full_url' => $finalPath,
 //        ]);
 
-            // move the file name
-//        $file->move($finalPath, $fileName);
-//
-//return $video;
+        // move the file name
+        $file->move($finalPath, $fileName);
+
+        return $video;
 
 //        return Inertia::render('VideoUpload', [
 //            'videos' => Videos::get()
@@ -306,7 +212,76 @@ class VideoUploadController extends Controller
 //            'name' => $fileName,
 //            'mime_type' => $mime
 //        ]);
-//    }
+    }
+
+
+
+
+
+    //////////// THE ORIGINAL SAVE FILE METHOD ///////////////
+    ///  see above for the new SAVE FILE TO CLOUD METHOD  ///
+    /// vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv ///
+    /**
+     * Saves the file
+     *
+     * @param UploadedFile $file
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function saveFile(UploadedFile $file)
+    {
+        $fileName = $this->createFilename($file);
+        // Group files by mime type
+        $mime = str_replace('/', '-', $file->getMimeType());
+
+        // Group files by the date (week
+//        $dateFolder = date("Y-m-W");
+
+        // Build the file path
+//        $filePath = "upload/{$mime}/{$dateFolder}/";
+        $filePath = "public/videos/";
+        $finalPath = storage_path("app/".$filePath);
+
+        // Store the video in the database
+        $video = new Video;
+        $video->user_id = auth()->user()->id;
+        $video->file_name = $fileName;
+        $video->extension = $file->getClientOriginalExtension();
+        $video->size = $file->getSize();
+        $video->type = $file->getMimeType();
+        $video->full_url = $finalPath;
+        $video->save();
+        sleep(1);
+
+//        $video = Video::create([
+//            'user_id' => auth()->user()->id,
+//            'file_name' => $fileName,
+//            'extension' => $file->getClientOriginalExtension(),
+//            'size' => $file->getSize(),
+//            'type' => $file->getMimeType(),
+//            'full_url' => $finalPath,
+//        ]);
+
+            // move the file name
+        $file->move($finalPath, $fileName);
+
+return $video;
+
+//        return Inertia::render('VideoUpload', [
+//            'videos' => Videos::get()
+//        ]);
+
+//        return redirect()->route('videoupload')->with('message', 'Show Created Successfully');
+//        return $video;
+//        return response()->json([
+//            'video' => [
+//                'file_name' => $video->file_name
+//            ],
+//            'path' => $filePath,
+//            'name' => $fileName,
+//            'mime_type' => $mime
+//        ]);
+    }
 
     /**
      * Create unique filename for uploaded file

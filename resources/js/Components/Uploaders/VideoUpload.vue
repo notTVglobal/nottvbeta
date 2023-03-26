@@ -16,9 +16,9 @@
 <script setup>
 import { Dropzone } from "dropzone";
 import { useForm } from "@inertiajs/inertia-vue3"
-import {useUserStore} from "@/Stores/UserStore";
-import {onMounted, ref} from "vue";
-import {Inertia} from "@inertiajs/inertia";
+import { useUserStore } from "@/Stores/UserStore";
+import { onMounted, ref } from "vue";
+import { Inertia } from "@inertiajs/inertia";
 
 let userStore = useUserStore()
 let uploadPercentage = ref(0);
@@ -34,7 +34,10 @@ let myDropzone = new Dropzone("#videoUploadForm", {
     parallelChunkUploads: false,
     retryChunks: false,
     retryChunksLimit: 10,
-    capture: 'camcorder',
+    capture: null,
+    // can set the capture method as camera, microphone or video
+    // for mobile devices to skip the file selection and choose the
+    // recording device instead.
     acceptedFiles: 'video/*, audio/*',
     uploadprogress: function(file, progress, bytesSent) {
         userStore.uploadPercentage = progress;

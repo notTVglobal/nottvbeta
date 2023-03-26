@@ -36,7 +36,7 @@
                         </label>
 
                         <input v-model="form.code"
-                               class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                               class="border border-gray-400 p-2 w-1/4 rounded-lg text-black"
                                type="text"
                                name="code"
                                id="code"
@@ -47,7 +47,7 @@
 
                     <div class="flex justify-start my-6 mr-6">
                         <button
-                            @click="submit"
+                            @click.prevent="submit"
                             class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded disabled:bg-gray-400"
                             :disabled="form.processing"
                         >
@@ -55,23 +55,26 @@
                         </button>
 
                         <button
-                            @click="exportCode"
-                            class="bg-blue-500 hover:bg-blue-600 text-white ml-2 px-4 py-2 rounded disabled:bg-gray-400"
-                            :disabled="form.processing"
+                            @click.prevent="exportCode"
+                            class="bg-blue-500 hover:bg-blue-600 text-white ml-2 px-4 py-2 h-fit rounded disabled:bg-gray-400"
                         >
                             Export Codes
                         </button>
+
+
 <!--                        <JetValidationErrors class="ml-4" :key="props.messageKey"/>-->
                     </div>
-
-
 
                     <div class="text-gray-600"> The form is a bit buggy.. if you enter a code that is already claimed and then enter a new code sometimes the error message disappears and sometimes it does not.</div>
 
                 </form>
+                
 
-                <div class="flex flex-row justify-end gap-x-4 mb-6">
-                    <input v-model="search" type="search" placeholder="Search..." class="text-black border px-2 rounded-lg" />
+                <div class="flex justify-between mt-4">
+
+                    <div class="flex flex-row justify-end gap-x-4 mb-6">
+                        <input v-model="search" type="search" placeholder="Search..." class="text-black border px-2 rounded-lg" />
+                    </div>
                 </div>
 
                 <table
@@ -210,6 +213,7 @@ onMounted(async () => {
         document.getElementById("topDiv").scrollIntoView()
         userStore.scrollToTopCounter ++;
     }
+    props.message = '';
 });
 
 let props = defineProps({
@@ -233,15 +237,15 @@ watch(search, throttle(function (value) {
 }, 300));
 
 let submit = () => {
-    Inertia.reload({ only: ['error'] })
-    Inertia.reload({ only: ['message'] })
+    // Inertia.reload({ only: ['error'] })
+    // Inertia.reload({ only: ['message'] })
     form.post(route('admin.inviteCodes'));
     // props.message = '';
     // props.messageKey ++;
 };
 
 let exportCode = () => {
-    Inertia.visit('admin.exportInviteCodes');
+    Inertia.visit('/admin/export_invite_codes');
 }
 
 let showMessage = ref(true);

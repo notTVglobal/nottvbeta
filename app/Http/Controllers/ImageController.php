@@ -125,7 +125,7 @@ class ImageController extends Controller
         // edit or upload to a show at a time.
         //
         // Set up the file and folder
-        $cloud_folder = DB::table('app_settings')->where('id', 1)->pluck('cdn_folder')->first();
+        $cloud_folder = DB::table('app_settings')->where('id', 1)->pluck('cloud_folder')->first();
         $folder = Carbon::now()->format('/Y/m').'/images';
         $file = $request->file('image');
         $filename = $file->getClientOriginalName();
@@ -192,7 +192,7 @@ class ImageController extends Controller
         // edit or upload to a show at a time.
         //
         // Set up the file and folder
-        $cloud_folder = DB::table('app_settings')->where('id', 1)->pluck('cdn_folder')->first();
+        $cloud_folder = DB::table('app_settings')->where('id', 1)->pluck('cloud_folder')->first();
         $folder = Carbon::now()->format('/Y/m').'/images';
         $file = $request->file('image');
         $filename = $file->getClientOriginalName();
@@ -261,7 +261,7 @@ class ImageController extends Controller
         // edit or upload to a show at a time.
         //
         // Set up the file and folder
-        $cloud_folder = DB::table('app_settings')->where('id', 1)->pluck('cdn_folder')->first();
+        $cloud_folder = DB::table('app_settings')->where('id', 1)->pluck('cloud_folder')->first();
         $folder = Carbon::now()->format('/Y/m').'/images';
         $file = $request->file('image');
         $filename = $file->getClientOriginalName();
@@ -329,7 +329,7 @@ class ImageController extends Controller
         // edit or upload to a show at a time.
         //
         // Set up the file and folder
-        $cloud_folder = DB::table('app_settings')->where('id', 1)->pluck('cdn_folder')->first();
+        $cloud_folder = DB::table('app_settings')->where('id', 1)->pluck('cloud_folder')->first();
         $folder = Carbon::now()->format('/Y/m').'/images';
         $file = $request->file('image');
         $filename = $file->getClientOriginalName();

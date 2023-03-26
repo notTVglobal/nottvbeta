@@ -277,12 +277,14 @@ Route::middleware([
     Route::get('/admin/invite_codes', [AdminController::class, 'inviteCodes'])
         ->can('viewAdmin', 'App\Models\User')
         ->name('admin.inviteCodes');
+
     //// INVITE CODES - SAVE
     Route::post('/admin/invite_codes', [AdminController::class, 'saveInviteCodes'])
         ->can('viewAdmin', 'App\Models\User')
         ->name('admin.saveInviteCodes');
+
     //// INVITE CODES - EXPORT
-    Route::post('/admin/invite_codes', [AdminController::class, 'exportInviteCodes'])
+    Route::get('/admin/export_invite_codes', [AdminController::class, 'exportInviteCodes'])
         ->can('viewAdmin', 'App\Models\User')
         ->name('admin.exportInviteCodes');
 

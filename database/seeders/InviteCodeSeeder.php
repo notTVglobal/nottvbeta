@@ -19,7 +19,8 @@ class InviteCodeSeeder extends Seeder
         \App\Models\InviteCode::factory()
             ->count(100)
 //            ->sequence(fn ($sequence) => ['code' => $sequence->index + 13])
-            ->sequence(fn ($sequence) => ['code' => Str::random(5)])
+            ->sequence(fn ($sequence) => ['code' => $sequence->index + 0 . Str::random(5)])
+
             ->create();
     }
 }
