@@ -281,6 +281,10 @@ Route::middleware([
     Route::post('/admin/invite_codes', [AdminController::class, 'saveInviteCodes'])
         ->can('viewAdmin', 'App\Models\User')
         ->name('admin.saveInviteCodes');
+    //// INVITE CODES - EXPORT
+    Route::post('/admin/invite_codes', [AdminController::class, 'exportInviteCodes'])
+        ->can('viewAdmin', 'App\Models\User')
+        ->name('admin.exportInviteCodes');
 
     //// DELETE USER
     Route::post('/admin/user/delete', [AdminController::class, 'deleteUser'])

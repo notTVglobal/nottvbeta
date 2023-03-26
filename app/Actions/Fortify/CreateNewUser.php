@@ -3,6 +3,8 @@
 namespace App\Actions\Fortify;
 
 use App\Models\User;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Auth\Events\Registered;
@@ -49,18 +51,12 @@ class CreateNewUser implements CreatesNewUsers
             'invite_code' => ['required', 'exists:invite_codes,code', new UnclaimedInviteCode],
         ])->validate();
 
-                // get the invite code
+        // get the invite code
         $code = $input['invite_code'];
         $invite_code = InviteCode::where('code',$code)->first();
-        // claim the invite code
-        $invite_code->code = $code;
-        $invite_code->claimed = true;
-        $invite_code->save();
-
-
 
         // create the new user
-        return $userId  = User::create([
+        $userId  = User::create([
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
@@ -76,5 +72,14 @@ class CreateNewUser implements CreatesNewUsers
             'subscriptionStatus' => null,
             'invite_code' => $invite_code->id,
         ]);
+
+        // claim the invite code
+        $invite_code->code = $code;
+        $invite_code->claimed = true;
+        $invite_code->claimed_by = $userId->id;
+        $invite_code->claimed_at = Carbon::now();
+        $invite_code->save();
+
+        return $userId;
     }
 }

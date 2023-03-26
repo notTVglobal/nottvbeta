@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
+use function GuzzleHttp\Promise\all;
 
 class AdminController extends Controller
 {
@@ -111,6 +112,21 @@ class AdminController extends Controller
         // redirect
         return redirect()->route('admin.inviteCodes')->with('message', 'Code Added Successfully');
 
+    }
+
+    public function exportInviteCodes() {
+
+        // tec21: I don't know how to do this.
+
+        $data = InviteCode::query()->get()->all();
+
+        dd($data);
+
+        $handle = fopen('user.csv', 'w');
+
+        collect($data)->each(fn ($row) => fputcsv($handle, $data));
+
+        fclose($handle);
     }
 
 ////////////  SHOWS INDEX

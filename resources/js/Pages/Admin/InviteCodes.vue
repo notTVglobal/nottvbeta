@@ -53,8 +53,18 @@
                         >
                             Add Code
                         </button>
+
+                        <button
+                            @click="exportCode"
+                            class="bg-blue-500 hover:bg-blue-600 text-white ml-2 px-4 py-2 rounded disabled:bg-gray-400"
+                            :disabled="form.processing"
+                        >
+                            Export Codes
+                        </button>
 <!--                        <JetValidationErrors class="ml-4" :key="props.messageKey"/>-->
                     </div>
+
+
 
                     <div class="text-gray-600"> The form is a bit buggy.. if you enter a code that is already claimed and then enter a new code sometimes the error message disappears and sometimes it does not.</div>
 
@@ -139,11 +149,6 @@
                         <td class="px-6 py-4 space-x-2">
                             <Link :href="`#`"><button
                                 disabled
-                                class="px-4 py-2 mb-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg disabled:bg-gray-400"
-                            >Reset (if claimed)</button>
-                            </Link>
-                            <Link :href="`#`"><button
-                                disabled
                                 class="px-4 py-2 mb-2 text-white bg-red-600 hover:bg-red-500 rounded-lg disabled:bg-gray-400"
                             >Claim (if unclaimed)</button>
                             </Link>
@@ -157,16 +162,19 @@
 
 
                 <div>
-                    Display a table of invite codes. Searchable. With the status if it's been used or not. And a button to reset the code.
+                    TO DO's:
                 </div>
                 <div>
-                    Also which user created the code and which user used the code.
+                    * Update "Add Code" with an Invite Code creation form... create batches of invite codes for admin use, or assign them to creators.
                 </div>
                 <div>
-                    The date the code was created and the date the code was used.
+                    * Assign a user_role to the Invite codes, so they will automatically create that user type. Requires a pivot table invite_codes_roles
                 </div>
                 <div>
-                 Plus any notes about the code (this would be human readable to describe the promotional event which created the codes
+                    * Plus any notes about the code (this would be human readable to describe the promotional event which created the codes
+                </div>
+                <div>
+                    *
                 </div>
             </div>
 
@@ -231,6 +239,10 @@ let submit = () => {
     // props.message = '';
     // props.messageKey ++;
 };
+
+let exportCode = () => {
+    Inertia.visit('admin.exportInviteCodes');
+}
 
 let showMessage = ref(true);
 
