@@ -85,7 +85,7 @@ class TeamsController extends Controller
                         'name' => $team->image->name,
                         'folder' => $team->image->folder,
                         'cdn_endpoint' => $team->appSetting->cdn_endpoint,
-                        'cdn_folder' => $team->appSetting->cdn_folder,
+                        'cloud_folder' => $team->image->cloud_folder,
                     ],
                     'teamOwner' => $team->user->name,
                     'slug' => $team->slug,
@@ -194,7 +194,7 @@ class TeamsController extends Controller
                 'name' => $team->image->name,
                 'folder' => $team->image->folder,
                 'cdn_endpoint' => $team->appSetting->cdn_endpoint,
-                'cdn_folder' => $team->appSetting->cdn_folder,
+                'cloud_folder' => $team->image->cloud_folder,
             ],
             'shows' => Show::with('team', 'image')->where('team_id', $team->id)
                 ->latest()
@@ -212,7 +212,7 @@ class TeamsController extends Controller
                         'name' => $show->image->name,
                         'folder' => $show->image->folder,
                         'cdn_endpoint' => $show->appSetting->cdn_endpoint,
-                        'cdn_folder' => $show->appSetting->cdn_folder,
+                        'cloud_folder' => $show->image->cloud_folder,
                     ],
                     'slug' => $show->slug,
                     'copyrightYear' => Carbon::parse($show->created_at)->format('Y'),
@@ -293,7 +293,7 @@ class TeamsController extends Controller
                 'name' => $team->image->name,
                 'folder' => $team->image->folder,
                 'cdn_endpoint' => $team->appSetting->cdn_endpoint,
-                'cdn_folder' => $team->appSetting->cdn_folder,
+                'cloud_folder' => $team->image->cloud_folder,
             ],
             'teamLeader' => $teamLeader,
 
@@ -344,13 +344,12 @@ class TeamsController extends Controller
                     'description' => $show->description,
                     'showRunnerName' => User::query()->where('id', $show->user_id)->pluck('name')->first(),
                     'team_id' => $show->team_id,
-                    'poster' => getPoster($show),
                     'image' => [
-                        'id' => $show->image->id,
-                        'name' => $show->image->name,
-                        'folder' => $show->image->folder,
-                        'cdn_endpoint' => $show->appSetting->cdn_endpoint,
-                        'cdn_folder' => $show->appSetting->cdn_folder,
+                        'id' => $team->image->id,
+                        'name' => $team->image->name,
+                        'folder' => $team->image->folder,
+                        'cdn_endpoint' => $team->appSetting->cdn_endpoint,
+                        'cloud_folder' => $team->image->cloud_folder,
                     ],
                     'slug' => $show->slug,
                     'notes' => $show->notes,
@@ -404,7 +403,7 @@ class TeamsController extends Controller
                 'name' => $team->image->name,
                 'folder' => $team->image->folder,
                 'cdn_endpoint' => $team->appSetting->cdn_endpoint,
-                'cdn_folder' => $team->appSetting->cdn_folder,
+                'cloud_folder' => $team->image->cloud_folder,
             ],
             'creators' => Creator::join('users AS user', 'creators.user_id', '=', 'user.id')
                 ->select('creators.*', 'user.name AS name')

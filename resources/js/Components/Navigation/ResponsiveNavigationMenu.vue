@@ -210,6 +210,12 @@
                             Admin Only Links
                         </div>
 
+                        <JetResponsiveNavLink
+                            @click="userStore.closeNavDropdown()"
+                            :href="route('admin.settings')"
+                            :active="route().current('admin.settings')">
+                            Admin Settings
+                        </JetResponsiveNavLink>
 
                         <JetResponsiveNavLink
                             @click="userStore.closeNavDropdown()"

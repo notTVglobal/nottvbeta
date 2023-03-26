@@ -30,7 +30,7 @@
                 <form @submit.prevent="submit">
                     <div class="mb-6">
                         <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"
-                               for="name"
+                               for="cdn_endpoint"
                         >
                             CDN ENDPOINT
                         </label>
@@ -46,23 +46,23 @@
                     </div>
                     <div class="mb-6">
                         <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"
-                               for="name"
+                               for="cloud_folder"
                         >
-                            CDN FOLDER
+                            CLOUD FOLDER
                         </label>
 
                         <div class="flex flex-row">
                             <span class="pt-2 mr-2">/ </span>
-                            <input v-model="form.cdn_folder"
+                            <input v-model="form.cloud_folder"
                                    class="border border-gray-400 p-2 w-full rounded-lg text-black"
                                    type="text"
-                                   name="cdn_folder"
-                                   id="cdn_folder"
+                                   name="cloud_folder"
+                                   id="cloud_folder"
                             >
                         </div>
                         <span class="text-xs">NOTE: The forward slash is already entered in the backend. Just type the folder name.</span>
 
-                        <div v-if="form.errors.storage_folder" v-text="form.errors.storage_folder"
+                        <div v-if="form.errors.cloud_folder" v-text="form.errors.cloud_folder"
                              class="text-xs text-red-600 mt-1"></div>
                     </div>
 
@@ -129,13 +129,13 @@ onMounted(async () => {
 
 let props = defineProps({
     cdn_endpoint: String,
-    cdn_folder: String,
+    cloud_folder: String,
     message: String
 });
 
 let form = useForm({
     cdn_endpoint: props.cdn_endpoint,
-    cdn_folder: props.cdn_folder,
+    cloud_folder: props.cloud_folder,
 })
 
 let submit = () => {

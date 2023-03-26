@@ -6,7 +6,7 @@
              :class="class"/>
 
         <img v-if="image.folder"
-             :src="image.cdn_endpoint + image.cdn_folder + image.folder + '/' + image.name"
+             :src="image.cdn_endpoint + image.cloud_folder + image.folder + '/' + image.name"
              :alt="alt"
              :class="class"/>
     </div>

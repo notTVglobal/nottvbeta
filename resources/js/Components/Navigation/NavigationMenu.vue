@@ -195,6 +195,12 @@
 
                                             <JetDropdownLink
                                                 @click="videoPlayerStore.makeVideoTopRight()"
+                                                :href="route('admin.settings')">
+                                                Admin Settings
+                                            </JetDropdownLink>
+
+                                            <JetDropdownLink
+                                                @click="videoPlayerStore.makeVideoTopRight()"
                                                 :href="route('video')">
                                                 MistServer API
                                             </JetDropdownLink>

@@ -25,34 +25,39 @@ return new class extends Migration
                 'name' => 'New'
             )
         );
-
         DB::table('news_statuses')->insert(
             array(
                 'name' => 'Rejected'
             )
         );
-
         DB::table('news_statuses')->insert(
             array(
                 'name' => 'Accepted'
             )
         );
-
         DB::table('news_statuses')->insert(
             array(
                 'name' => 'Working on'
             )
         );
-
         DB::table('news_statuses')->insert(
             array(
                 'name' => 'Needs Review'
             )
         );
-
         DB::table('news_statuses')->insert(
             array(
                 'name' => 'Published'
+            )
+        );
+        DB::table('news_statuses')->insert(
+            array(
+                'name' => 'Hidden'
+            )
+        );
+        DB::table('news_statuses')->insert(
+            array(
+                'name' => 'Creators Only'
             )
         );
 

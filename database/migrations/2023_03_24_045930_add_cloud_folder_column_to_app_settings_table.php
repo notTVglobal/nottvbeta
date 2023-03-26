@@ -13,11 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        // Insert show categories
-        Artisan::call( 'db:seed', [
-                '--class' => 'AppSettingsSeeder',
-                '--force' => true ]
-        );
+        Schema::table('app_settings', function (Blueprint $table) {
+            $table->string('cloud_folder')->nullable();
+        });
     }
 
     /**
@@ -27,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('app_settings', function (Blueprint $table) {
+            $table->dropColumn('cloud_folder');
+        });
     }
 };

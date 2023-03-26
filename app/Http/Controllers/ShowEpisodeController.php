@@ -119,7 +119,13 @@ class ShowEpisodeController extends Controller
                 'name' => $show->name,
                 'slug' => $show->slug,
                 'showRunner' => $show->user->name,
-                'poster' => $show->image->name,
+                'image' => [
+                    'id' => $showEpisode->image->id,
+                    'name' => $showEpisode->image->name,
+                    'folder' => $showEpisode->image->folder,
+                    'cdn_endpoint' => $showEpisode->appSetting->cdn_endpoint,
+                    'cdn_folder' => $showEpisode->appSetting->cdn_folder,
+                ],
                 'copyrightYear' => $show->created_at->format('Y'),
                 'first_release_year' => $show->first_release_year,
                 'last_release_year' => $show->last_release_year,
@@ -148,7 +154,7 @@ class ShowEpisodeController extends Controller
                 'name' => $showEpisode->image->name,
                 'folder' => $showEpisode->image->folder,
                 'cdn_endpoint' => $showEpisode->appSetting->cdn_endpoint,
-                'cdn_folder' => $showEpisode->appSetting->cdn_folder,
+                'cloud_folder' => $showEpisode->image->cloud_folder,
             ],
             'creators' => TeamMember::where('team_id', $teamId)
                 ->join('users', 'team_members.user_id', '=', 'users.id')
@@ -205,7 +211,13 @@ class ShowEpisodeController extends Controller
                 'name' => $show->name,
                 'slug' => $show->slug,
                 'showRunner' => $show->user->name,
-                'poster' => $show->image->name,
+                'image' => [
+                    'id' => $show->image->id,
+                    'name' => $show->image->name,
+                    'folder' => $show->image->folder,
+                    'cdn_endpoint' => $show->appSetting->cdn_endpoint,
+                    'cloud_folder' => $show->image->cloud_folder,
+                ],
                 'first_release_year' => $show->first_release_year,
                 'last_release_year' => $show->last_release_year,
                 'categoryName' => $show->showCategory->name,
@@ -227,7 +239,13 @@ class ShowEpisodeController extends Controller
                 'video_id' => $showEpisode->video_id,
                 'video_url' => $showEpisode->video_url,
                 'video_embed_code' => $showEpisode->video_embed_code,
-                'poster' => $showEpisode->image->name,
+                'image' => [
+                    'id' => $showEpisode->image->id,
+                    'name' => $showEpisode->image->name,
+                    'folder' => $showEpisode->image->folder,
+                    'cdn_endpoint' => $showEpisode->appSetting->cdn_endpoint,
+                    'cloud_folder' => $showEpisode->image->cloud_folder,
+                ],
                 'show_id' => $showEpisode->show_id,
             ],
             'image' => [
@@ -235,7 +253,7 @@ class ShowEpisodeController extends Controller
                 'name' => $showEpisode->image->name,
                 'folder' => $showEpisode->image->folder,
                 'cdn_endpoint' => $showEpisode->appSetting->cdn_endpoint,
-                'cdn_folder' => $showEpisode->appSetting->cdn_folder,
+                'cloud_folder' => $showEpisode->image->cloud_folder,
             ],
             'can' => [
                 'manageShow' => Auth::user()->can('manage', $show),
@@ -269,7 +287,13 @@ class ShowEpisodeController extends Controller
                 'name' => $show->name,
                 'slug' => $show->slug,
                 'showRunner' => $show->user->name,
-                'poster' => $show->image->name,
+                'image' => [
+                    'id' => $show->image->id,
+                    'name' => $show->image->name,
+                    'folder' => $show->image->folder,
+                    'cdn_endpoint' => $show->appSetting->cdn_endpoint,
+                    'cloud_folder' => $show->image->cloud_folder,
+                ],
             ],
             'team' => [
                 'name' => $show->team->name,

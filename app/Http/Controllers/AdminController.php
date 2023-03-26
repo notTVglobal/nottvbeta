@@ -23,7 +23,7 @@ class AdminController extends Controller
         $settings = DB::table('app_settings')->where('id', 1)->first();
         return Inertia::render('Admin/Settings', [
             'cdn_endpoint' => $settings->cdn_endpoint,
-            'cdn_folder' => str_replace('/', '',$settings->cdn_folder),
+            'cloud_folder' => str_replace('/', '',$settings->cloud_folder),
         ]);
     }
 
@@ -31,7 +31,7 @@ class AdminController extends Controller
     {
         $settings = $request->validate([
             'cdn_endpoint' => 'nullable|string',
-            'cdn_folder' => 'nullable|string',
+            'cloud_folder' => 'nullable|string',
         ]);
 
         $db = DB::table('app_settings')
@@ -41,7 +41,7 @@ class AdminController extends Controller
 
         $db = DB::table('app_settings')
             ->where('id', 1)
-            ->update(['cdn_folder'=> '/'.$request->cdn_folder])
+            ->update(['cloud_folder'=> '/'.$request->cloud_folder])
         ;
 
         // redirect
@@ -76,7 +76,7 @@ class AdminController extends Controller
                         'name' => $show->image->name,
                         'folder' => $show->image->folder,
                         'cdn_endpoint' => $show->appSetting->cdn_endpoint,
-                        'cdn_folder' => $show->appSetting->cdn_folder,
+                        'cloud_folder' => $show->image->cloud_folder,
                     ],
                     'slug' => $show->slug,
                     'totalEpisodes' => $show->showEpisodes->count(),
@@ -132,7 +132,7 @@ class AdminController extends Controller
                         'name' => $team->image->name,
                         'folder' => $team->image->folder,
                         'cdn_endpoint' => $team->appSetting->cdn_endpoint,
-                        'cdn_folder' => $team->appSetting->cdn_folder,
+                        'cloud_folder' => $team->image->cloud_folder,
                     ],
                     'teamOwner' => $team->user->name,
                     'slug' => $team->slug,

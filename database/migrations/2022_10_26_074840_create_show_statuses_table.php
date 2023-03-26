@@ -54,6 +54,16 @@ return new class extends Migration
                 'name' => 'Restricted'
             )
         );
+        DB::table('show_statuses')->insert(
+            array(
+                'name' => 'Hidden'
+            )
+        );
+        DB::table('show_statuses')->insert(
+            array(
+                'name' => 'Creators Only'
+            )
+        );
     }
 
     /**

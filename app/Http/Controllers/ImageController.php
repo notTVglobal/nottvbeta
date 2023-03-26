@@ -6,6 +6,7 @@ use App\Models\Movie;
 use App\Models\Show;
 use App\Models\ShowEpisode;
 use App\Models\Team;
+use Carbon\Carbon;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -37,8 +38,8 @@ class ImageController extends Controller
                     'name' => $image->name,
                     'extension' => $image->extension,
                     'folder' => $image->folder,
-                    'cdn_folder' => $image->appSetting->cdn_folder,
                     'cdn_endpoint' => $image->appSetting->cdn_endpoint,
+                    'cloud_folder' => $image->cloud_folder,
                 ]),
 //            'filters' => Request::only(['search'])
         ]);
@@ -59,6 +60,11 @@ class ImageController extends Controller
     //////////////////////////////////
     public function store(HttpRequest $request)
     {
+
+        // Can we create a function createImage() --- started below
+        // to simplify these upload requests?
+
+
         // validate the incoming file
         // TO DO
         // Need to validate/sanitize the image upload.
@@ -66,12 +72,13 @@ class ImageController extends Controller
         // don't save the original! HACKER WARNING!!
         //
         // Set up the file and folder
-        $cloud_folder = DB::table('app_settings')->where('id', 1)->pluck('cdn_folder')->first();
-        $folder = '/images';
+        $cloud_folder = DB::table('app_settings')->where('id', 1)->pluck('cloud_folder')->first();
+        $folder = Carbon::now()->format('/Y/m').'/images';
         $file = $request->file('image');
         $filename = $file->getClientOriginalName();
 
         // Store the file to DO_SPACES
+        // Note: if this changes be sure to update the 'storage_location' below.
         Storage::disk('spaces')->putFile($cloud_folder.$folder, $request->file('image'));
 
         // create image model
@@ -81,6 +88,13 @@ class ImageController extends Controller
             'extension' => $file->extension(),
             'size' => $file->getSize(),
             'folder' => $folder,
+            'cloud_folder' => $cloud_folder,
+            // storage_location is hard-coded for now
+            // this will be either:
+            // - a storage provider (s3 like aws, digital ocean, wasabi)
+            // - torrent / p2p ( when we integrate this into the MediaBoxes)
+            // - local (maybe the file is only available locally)
+            'storage_location' => 'do_spaces',
         ])->insertGetId;
 
         // return that image model back to the frontend
@@ -93,6 +107,10 @@ class ImageController extends Controller
 
     public function uploadShowPoster(HttpRequest $request)
     {
+
+        // Can we create a function createImage() --- started below
+        // to simplify these upload requests?
+
 
         // validate the incoming file
         // TO DO
@@ -108,14 +126,13 @@ class ImageController extends Controller
         //
         // Set up the file and folder
         $cloud_folder = DB::table('app_settings')->where('id', 1)->pluck('cdn_folder')->first();
-        $folder = '/images';
+        $folder = Carbon::now()->format('/Y/m').'/images';
         $file = $request->file('image');
-//        dd($file);
         $filename = $file->getClientOriginalName();
 
         // Store the file to DO_SPACES
+        // Note: if this changes be sure to update the 'storage_location' below.
         Storage::disk('spaces')->putFile($cloud_folder.$folder, $request->file('image'));
-
         // Store image locally
         //  $request->file('poster')->store('images');
 
@@ -132,6 +149,13 @@ class ImageController extends Controller
             'extension' => $uploadedFile->extension(),
             'size' => $uploadedFile->getSize(),
             'folder' => $folder,
+            'cloud_folder' => $cloud_folder,
+            // storage_location is hard-coded for now
+            // this will be either:
+            // - a storage provider (s3 like aws, digital ocean, wasabi)
+            // - torrent / p2p ( when we integrate this into the MediaBoxes)
+            // - local (maybe the file is only available locally)
+            'storage_location' => 'do_spaces',
         ]);
 
         // store image_id to Shows table
@@ -151,6 +175,10 @@ class ImageController extends Controller
     public function uploadShowEpisodePoster(HttpRequest $request)
     {
 
+        // Can we create a function createImage() --- started below
+        // to simplify these upload requests?
+
+
         // validate the incoming file
         // TO DO
         // Need to validate/sanitize the image upload.
@@ -165,12 +193,12 @@ class ImageController extends Controller
         //
         // Set up the file and folder
         $cloud_folder = DB::table('app_settings')->where('id', 1)->pluck('cdn_folder')->first();
-        $folder = '/images';
+        $folder = Carbon::now()->format('/Y/m').'/images';
         $file = $request->file('image');
-//        dd($file);
         $filename = $file->getClientOriginalName();
 
         // Store the file to DO_SPACES
+        // Note: if this changes be sure to update the 'storage_location' below.
         Storage::disk('spaces')->putFile($cloud_folder.$folder, $request->file('image'));
         // Store image locally
         //  $request->file('poster')->store('images');
@@ -188,6 +216,13 @@ class ImageController extends Controller
             'extension' => $uploadedFile->extension(),
             'size' => $uploadedFile->getSize(),
             'folder' => $folder,
+            'cloud_folder' => $cloud_folder,
+            // storage_location is hard-coded for now
+            // this will be either:
+            // - a storage provider (s3 like aws, digital ocean, wasabi)
+            // - torrent / p2p ( when we integrate this into the MediaBoxes)
+            // - local (maybe the file is only available locally)
+            'storage_location' => 'do_spaces',
         ]);
 
 
@@ -209,6 +244,10 @@ class ImageController extends Controller
     public function uploadTeamLogo(HttpRequest $request)
     {
 
+        // Can we create a function createImage() --- started below
+        // to simplify these upload requests?
+
+
         // validate the incoming file
         // TO DO
         // Need to validate/sanitize the image upload.
@@ -223,14 +262,13 @@ class ImageController extends Controller
         //
         // Set up the file and folder
         $cloud_folder = DB::table('app_settings')->where('id', 1)->pluck('cdn_folder')->first();
-        $folder = '/images';
+        $folder = Carbon::now()->format('/Y/m').'/images';
         $file = $request->file('image');
-//        dd($file);
         $filename = $file->getClientOriginalName();
 
         // Store the file to DO_SPACES
+        // Note: if this changes be sure to update the 'storage_location' below.
         Storage::disk('spaces')->putFile($cloud_folder.$folder, $request->file('image'));
-
         // Store image locally
         //  $request->file('poster')->store('images');
 
@@ -247,6 +285,13 @@ class ImageController extends Controller
             'extension' => $uploadedFile->extension(),
             'size' => $uploadedFile->getSize(),
             'folder' => $folder,
+            'cloud_folder' => $cloud_folder,
+            // storage_location is hard-coded for now
+            // this will be either:
+            // - a storage provider (s3 like aws, digital ocean, wasabi)
+            // - torrent / p2p ( when we integrate this into the MediaBoxes)
+            // - local (maybe the file is only available locally)
+            'storage_location' => 'do_spaces',
         ]);
 
         // store image_id to Teams table
@@ -267,6 +312,10 @@ class ImageController extends Controller
     public function uploadMoviePoster(HttpRequest $request)
     {
 
+        // Can we create a function createImage() --- started below
+        // to simplify these upload requests?
+
+
         // validate the incoming file
         // TO DO
         // Need to validate/sanitize the image upload.
@@ -281,7 +330,7 @@ class ImageController extends Controller
         //
         // Set up the file and folder
         $cloud_folder = DB::table('app_settings')->where('id', 1)->pluck('cdn_folder')->first();
-        $folder = '/images';
+        $folder = Carbon::now()->format('/Y/m').'/images';
         $file = $request->file('image');
         $filename = $file->getClientOriginalName();
 
@@ -293,6 +342,10 @@ class ImageController extends Controller
 
         // Set up the info for the database model
         $user = auth()->user()->id;
+        // tec21: we use this 'isEditingNNNN_id' to get the
+        // model the image belongs to, because I couldn't
+        // find a way to send any custom data to the backend
+        // from filepond.
         $movieId = auth()->user()->isEditingMovie_id;
         $uploadedFile = $request->file('image');
 
@@ -318,7 +371,16 @@ class ImageController extends Controller
     }
 
 
+    ////////////// UPLOAD IMAGE AND ADD TO DATABASE
+    ///////////////////////////////////////////////
 
+    protected function createImage()
+    {
+        // can we create a function to simplify our image uploads?
+        // tec21: I tried, but got stuck at the uniqueness of each
+        // upload because they request a unique model and also
+        // update a unique column on the images table.
+    }
 
 
 

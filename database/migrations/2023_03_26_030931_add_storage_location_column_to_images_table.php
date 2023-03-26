@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('app_settings', function (Blueprint $table) {
-            $table->string('cdn_folder')->nullable();
+        Schema::table('images', function (Blueprint $table) {
+            $table->string('storage_location')->nullable()->default(null);
         });
     }
 
@@ -25,8 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('app_settings', function (Blueprint $table) {
-            $table->dropColumn('cdn_folder');
+        Schema::table('images', function (Blueprint $table) {
+            $table->dropColumn('storage_location');
         });
     }
 };
