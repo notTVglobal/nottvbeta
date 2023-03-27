@@ -34,6 +34,12 @@ class EventServiceProvider extends ServiceProvider
         NewChatMessage::class => [
             SendChatMessageNotification::class,
         ],
+        VideoUploaded::class => [
+          ProcessVideo::class,
+        ],
+        VideoProcessed::class => [
+            SendVideoProcessedNotification::class,
+        ],
     ];
 
     /**

@@ -135,6 +135,10 @@ class VideoUploadController extends Controller
         if ($save->isFinished()) {
             // save the file and return any response you need, current example uses `move` function. If you are
             // not using move, you need to manually delete the file by unlink($save->getFile()->getPathname())
+
+            // trigger an event here... VideoUploaded.
+
+            // the event will trigger a listener to run the rest of this code in a job/queue.
             return $this->saveFileTos3($save->getFile());
         }
 
