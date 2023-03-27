@@ -44,6 +44,12 @@ return [
             'prefix' => 'chunks',
         ],
 
+//        'temp-videos' => [
+//            'driver' => 'scoped',
+//            'root' => storage_path('app/public'),
+//            'prefix' => 'temp-videos',
+//        ],
+
 //        's3-do-test' => [
 //            'driver' => 'scoped',
 //            'disk' => 'spaces',

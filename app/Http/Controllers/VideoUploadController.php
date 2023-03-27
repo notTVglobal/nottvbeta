@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Video;
 use App\Models\User;
+use App\Jobs\UploadVideoToSpacesJob;
+use App\Models\VideoUploadJob;
 
 use Carbon\Carbon;
 use Illuminate\Http\UploadedFile;
@@ -20,6 +22,19 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
+
+
+
+
+
+use App\Models\Movie;
+use App\Models\Show;
+use App\Models\ShowEpisode;
+use App\Models\Team;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\File;
+use App\Models\Image;
+
 
 class VideoUploadController extends Controller
 {
@@ -41,13 +56,6 @@ class VideoUploadController extends Controller
 //            // Do something
 //        });
 
-        function getCreator($user){
-            return $name = User::query()
-                ->where('id', $user)
-                ->pluck('name')
-                ->first();
-        }
-
         function formatBytes($bytes, $precision = 2) {
             $unit = ["B", "KB", "MB", "GB"];
             $exp = floor(log($bytes, 1024)) | 0;
@@ -55,7 +63,8 @@ class VideoUploadController extends Controller
         }
 
         return Inertia::render('VideoUpload', [
-            'videos' => fn () => Video::query()->where('user_id', auth()->user()->id)
+//            'videos' => fn () => Video::query()->where('user_id', auth()->user()->id)
+            'videos' => Video::with('user')->where('user_id', auth()->user()->id)
                 ->latest()
                 ->paginate(10, ['*'], 'videos')
                 ->through(fn($video) => [
@@ -87,7 +96,7 @@ class VideoUploadController extends Controller
                 ->withQueryString()
                 ->through(fn($video) => [
                     'id' => $video->id,
-                    'user_id' => getCreator($video->user_id),
+                    'user_id' => $video->user->name,
                     'file_name' => $video->file_name,
                     'category' => $video->category,
                     'type' => $video->type,
@@ -112,14 +121,14 @@ class VideoUploadController extends Controller
     /**
      * Handles the file upload
      *
-     * @param Request $request
+     * @param HttpRequest $request
      *
      * @return JsonResponse
      *
-     * @throws UploadMissingFileException
      * @throws UploadFailedException
+     * @throws UploadMissingFileException
      */
-    public function upload(HttpRequest $request) {
+    public function upload(HttpRequest $request): JsonResponse {
         // create the file receiver
         $receiver = new FileReceiver('file', $request, HandlerFactory::classFromRequest($request));
 
@@ -135,103 +144,73 @@ class VideoUploadController extends Controller
         if ($save->isFinished()) {
             // save the file and return any response you need, current example uses `move` function. If you are
             // not using move, you need to manually delete the file by unlink($save->getFile()->getPathname())
+//            $video = $save->getFile();
+//            return $this->saveFile($save->getFile());
+            return $this->saveFile($save->getFile());
 
-            // trigger an event here... VideoUploaded.
-
-            // the event will trigger a listener to run the rest of this code in a job/queue.
-            return $this->saveFileTos3($save->getFile());
         }
 
         // we are in chunk mode, lets send the current progress
-        /** @var AbstractHandler $handler */
         $handler = $save->handler();
 //
         return response()->json([
             "done" => $handler->getPercentageDone(),
-            'status' => true
+            'status' => true,
+            'video' => 'Video Placeholder goes here... or we do a partial reload of the video and the database shows a processing video placeholder until the video is done the job.'
         ]);
-
     }
 
+
     /**
-     * Saves the file to S3 server
+     * Saves the file
      *
      * @param UploadedFile $file
      *
      * @return JsonResponse
      */
-    protected function saveFileToS3($file)
-    {
+    protected function saveFile(UploadedFile $file): JsonResponse {
+
+        $path = storage_path('app/temp-videos');
         $fileName = $this->createFilename($file);
-
         $cloud_folder = DB::table('app_settings')->where('id', 1)->pluck('cloud_folder')->first();
-        $folder = Carbon::now()->format('/Y/m').'/images';
-
-        $disk = Storage::disk('spaces')->putFileAs('oogabooga', $file, $fileName);
+        $folder = Carbon::now()->format('/Y/m').'/videos';
 
         $mime = str_replace('/', '-', $file->getMimeType());
 
-        // We need to delete the file when uploaded to s3
-        unlink($file->getPathname());
+        // Temporarily store the local media file
+        $videoFileForJob = VideoUploadJob::create([
+            'file_name' => $fileName,
+            'file_path' => $path,
+            'mime_type' => $file->getMimeType(),
+        ]);
+
+        // move the file to temp-videos
+        $contents = $file->move($path, $fileName);
 
         // Store the video in the database
         $video = new Video;
         $video->user_id = auth()->user()->id;
         $video->file_name = $fileName;
         $video->extension = $file->getClientOriginalExtension();
-        $video->size = $file->getSize();
-        $video->type = $file->getMimeType();
-        $video->full_url = $fileName;
+        $video->size = $contents->getSize();
+        $video->type = $mime;
+        $video->folder = $folder;
+        $video->cloud_folder = $cloud_folder;
         $video->save();
         sleep(1);
 
-        dd($video);
+        error_log('Video saved to database. Next up is the Job.');
 
+        // Dispatch Job
+        UploadVideoToSpacesJob::dispatch($videoFileForJob, $video);
+
+        error_log('The end of the saveFile method.');
         return response()->json([
-            'path' => $disk->url($fileName),
-            'name' => $fileName,
-            'mime_type' =>$mime
+            'path'      => $path,
+            'name'      => $fileName,
+            'mime_type' => $mime
         ]);
     }
-
-//    /**
-//     * Saves the file
-//     *
-//     * @param UploadedFile $file
-//     *
-//     * @return \Illuminate\Http\JsonResponse
-//     */
-//    protected function saveFile(UploadedFile $file)
-//    {
-//        $fileName = $this->createFilename($file);
-//        // Group files by mime type
-//        $mime = str_replace('/', '-', $file->getMimeType());
-//        // Group files by the date (week
-//        $dateFolder = date("Y-m-W");
-//
-//        // Build the file path
-//        $filePath = "upload/{$mime}/{$dateFolder}/";
-//        $finalPath = storage_path("app/".$filePath);
-//
-//        // move the file name
-//        $file->move($finalPath, $fileName);
-//
-//        // Store the video in the database
-//        $video = new Video;
-//        $video->user_id = auth()->user()->id;
-//        $video->file_name = $fileName;
-//        $video->extension = $file->getClientOriginalExtension();
-//        $video->size = $file->getSize();
-//        $video->type = $file->getMimeType();
-//        $video->full_url = $finalPath;
-//        $video->save();
-//        sleep(1);
-//
-//        return response()->json([
-//            'path' => $filePath,
-//            'name' => $fileName,
-//            'mime_type' => $mime
-//        ]);
 
 
 
@@ -312,12 +291,22 @@ class VideoUploadController extends Controller
 //        ]);
 //    }
 
+
+
+
+
+
+
+
+
+
+
     /**
      * Create unique filename for uploaded file
      * @param UploadedFile $file
      * @return string
      */
-    protected function createFilename(UploadedFile $file)
+    protected function createFilename(UploadedFile $file): string
     {
         $extension = $file->getClientOriginalExtension();
         $filename = str_replace(".".$extension, "", $file->getClientOriginalName()); // Filename without extension
@@ -327,15 +316,6 @@ class VideoUploadController extends Controller
 
         return $filename;
     }
-
-
-
-
-
-
-
-
-
 
 
 

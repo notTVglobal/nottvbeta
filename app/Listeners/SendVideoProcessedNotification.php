@@ -1,10 +1,8 @@
 <?php
 
-namespace App\Providers;
+namespace App\Listeners;
 
-use App\Providers\VideoProcessed;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
+use App\Events\VideoProcessed;
 
 class SendVideoProcessedNotification
 {
@@ -21,7 +19,7 @@ class SendVideoProcessedNotification
     /**
      * Handle the event.
      *
-     * @param  \App\Providers\VideoProcessed  $event
+     * @param  \App\Events\VideoProcessed  $event
      * @return void
      */
     public function handle(VideoProcessed $event)
