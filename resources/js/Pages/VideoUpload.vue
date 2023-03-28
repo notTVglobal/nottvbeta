@@ -171,7 +171,7 @@ watch(search, throttle(function (value) {
 // });
 let showMessage = ref(true);
 function back() {
-    window.history.back()
+    Inertia.visit('/dashboard');
 }
 
 </script>

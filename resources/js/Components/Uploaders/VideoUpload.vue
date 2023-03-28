@@ -3,7 +3,7 @@
 
         <progress v-show="userStore.uploadPercentage != 0" max="100" :value="userStore.uploadPercentage" class="w-full mb-4" />
 
-
+        <div v-show="uploadingMessage" class="mb-4 font-bold text-center">Please stay on this screen until upload is complete.</div>
         <form id="videoUploadForm" action="/videoupload" class="dropzone dropzoneFile border border-gray-400 rounded w-full h-48 max-w-md px-2 py-2 mb-6">
             <!--                            add input fields and a submit button to send data back to Laravel -->
 
@@ -22,6 +22,7 @@ import { Inertia } from "@inertiajs/inertia";
 
 let userStore = useUserStore()
 let uploadPercentage = ref(0);
+let uploadingMessage = ref(0);
 
 onMounted(() => {
 // see options for Dropzone here: https://github.com/dropzone/dropzone/blob/main/src/options.js
@@ -54,11 +55,13 @@ let myDropzone = new Dropzone("#videoUploadForm", {
 });
 
 myDropzone.on("addedfile", file => {
+    uploadingMessage = 1;
     console.log(`File added: ${file.name}`);
 
 });
 
 myDropzone.on("complete", function(file) {
+    uploadingMessage = 0;
     myDropzone.removeFile(file);
     userStore.uploadPercentage = 0;
     Inertia.reload({
