@@ -95,6 +95,7 @@
                                             </ul>
 
                                             <span class="text-xl font-bold text-gray-800">&lt;UPLOADER GOES HERE&gt; </span>
+                                            <VideoUpload />
 
                                         </div>
 
@@ -396,6 +397,7 @@ import Message from "@/Components/Modals/Messages"
 import ShowEpisodeEditHeader from "@/Components/ShowEpisodes/Edit/ShowEpisodeEditHeader"
 import SingleImage from "@/Components/Multimedia/SingleImage"
 import ImageUpload from "@/Components/Uploaders/ImageUpload"
+import VideoUpload from "@/Components/Uploaders/VideoUpload"
 
 let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore()
