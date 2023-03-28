@@ -31,7 +31,8 @@ class VideoPolicy
      */
     public function view(User $user, Video $video)
     {
-        return Auth::user()->isAdmin;
+//        return Auth::user()->isAdmin;
+        return $user->creator && $video->user->id === $user->id;
         // If a video becomes restricted a user
         // will not be able to view the video.
         // Also, some users may not be able to access
