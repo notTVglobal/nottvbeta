@@ -10,7 +10,7 @@
             <div class="flex justify-between mb-3 pt-4">
 
 
-                <h1 class="text-3xl font-semibold pb-3">Dashboard</h1>
+                <h1 class="text-3xl font-semibold pb-3">Dashboard (Creators only)</h1>
 
             </div>
 

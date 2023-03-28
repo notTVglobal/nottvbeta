@@ -55,7 +55,7 @@
                         </button>
 
                         <button
-                            @click.prevent="exportCode"
+                            @click.prevent="exportCodes"
                             class="bg-blue-500 hover:bg-blue-600 text-white ml-2 px-4 py-2 h-fit rounded disabled:bg-gray-400"
                         >
                             Export Codes
@@ -244,7 +244,7 @@ let submit = () => {
     // props.messageKey ++;
 };
 
-let exportCode = () => {
+let exportCodes = () => {
     Inertia.visit('/admin/export_invite_codes');
 }
 

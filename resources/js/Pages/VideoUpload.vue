@@ -33,7 +33,7 @@
                             <VideoUpload />
                             <!-- doesn't work .. breaks the CSS -->
                             <!--    <MobileVideoRecord />-->
-                            <div class="flex-wrap">
+                            <div class="flex-wrap ml-2 px-5 pb-6">
                                 <div class="">My total storage used: {{ myTotalStorageUsed }}</div>
                                 <div class="">not.TV total storage used: {{ notTvTotalStorageUsed }}</div>
                             </div>
