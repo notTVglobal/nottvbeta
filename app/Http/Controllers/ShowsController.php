@@ -297,6 +297,7 @@ class ShowsController extends Controller
                     'created_at' => $showEpisode->created_at,
                     'image' => [
                         'id' => $showEpisode->image->id,
+                        'episode_number' => $showEpisode->episode_number,
                         'name' => $showEpisode->image->name,
                         'folder' => $showEpisode->image->folder,
                         'cdn_endpoint' => $showEpisode->appSetting->cdn_endpoint,

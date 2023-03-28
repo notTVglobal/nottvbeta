@@ -129,8 +129,13 @@ class VideoUploadController extends Controller
      * @throws UploadMissingFileException
      */
     public function upload(HttpRequest $request): JsonResponse {
+
+         // validate the file
+//        ???
+
         // create the file receiver
         $receiver = new FileReceiver('file', $request, HandlerFactory::classFromRequest($request));
+//        $receiver = new FileReceiver('file', $request, HandlerFactory::classFromRequest($request));
 
         // check if the upload is success, throw exception or return response you need
         if ($receiver->isUploaded() === false) {

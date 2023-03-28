@@ -1,39 +1,93 @@
 <template>
     <div>
 
-        <div v-if="videoPlayerStore.ott === 2" class="channels w-full h-full bg-green-800 p-2 overflow-y-scroll scrollbar-hide mb-64">
+        <div v-if="videoPlayerStore.ott === 2" class="channels w-full h-full bg-green-800 p-2 overflow-y-scroll scrollbar-hide mb-32">
 
             <h1 class="text-xs font-semibold uppercase mb-3 w-full bg-green-900 text-white p-2">CHANNELS</h1>
-            <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-white cursor-pointer border-b border-0.2 border-green-800"
-                 :class="{ activeChannel:videoPlayerStore.currentChannelName==='one' }"
-                 @click="videoPlayerStore.changeChannel('one')">ONE</div>
-            <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-white cursor-pointer border-b border-0.2 border-green-800"
-                 :class="{ activeChannel:videoPlayerStore.currentChannelName==='pacific' }"
-                 @click="videoPlayerStore.changeChannel('pacific')">PACIFIC</div>
-            <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-white cursor-pointer border-b border-0.2 border-green-800"
-                 :class="{ activeChannel:videoPlayerStore.currentChannelName==='west' }"
-                 @click="videoPlayerStore.changeChannel('west')">WEST</div>
-            <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-white cursor-pointer border-b border-0.2 border-green-800"
-                 :class="{ activeChannel:videoPlayerStore.currentChannelName==='central' }"
-                 @click="videoPlayerStore.changeChannel('central')">CENTRAL</div>
-            <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-white cursor-pointer border-b border-0.2 border-green-800"
-                 :class="{ activeChannel:videoPlayerStore.currentChannelName==='ontario' }"
-                 @click="videoPlayerStore.changeChannel('ontario')">ONTARIO</div>
-            <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-white cursor-pointer border-b border-0.2 border-green-800"
-                 :class="{ activeChannel:videoPlayerStore.currentChannelName==='east' }"
-                 @click="videoPlayerStore.changeChannel('east')">EAST</div>
-            <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-white cursor-pointer border-b border-0.2 border-green-800"
-                 :class="{ activeChannel:videoPlayerStore.currentChannelName==='usa' }"
-                 @click="videoPlayerStore.changeChannel('usa')">U.S.A</div>
-            <div class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-white cursor-pointer border-b border-0.2 border-green-800"
-                 :class="{ activeChannel:videoPlayerStore.currentChannelName==='world' }"
-                 @click="videoPlayerStore.changeChannel('world')">WORLD</div>
 
-            <div class="mt-4">The channels above are our live channels, designed to best serve Canadians living across 5 different timezones.</div>
+            <button class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-0.2 border-green-800 shadow-md
+                    disabled:bg-gray-600 disabled:text-gray-300 disabled:cursor-not-allowed"
+                    :class="{ activeChannel:videoPlayerStore.currentChannelName==='one' }"
+                    @click="videoPlayerStore.changeChannel('one')">
+                ONE</button>
+            <button class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-0.2 border-green-800 shadow-md
+                    disabled:bg-gray-600 disabled:text-gray-300 disabled:cursor-not-allowed"
+                    :class="{ activeChannel:videoPlayerStore.currentChannelName==='ambient' }"
+                    @click="videoPlayerStore.changeChannel('ambient')">
+                AMBIENT</button>
+            <button class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-0.2 border-green-800 shadow-md
+                    disabled:bg-gray-600 disabled:text-gray-300 disabled:cursor-not-allowed"
+                    :class="{ activeChannel:videoPlayerStore.currentChannelName==='news' }"
+                    @click="videoPlayerStore.changeChannel('news')">
+                NEWS</button>
+            <button class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-0.2 border-green-800 shadow-md
+                    disabled:bg-gray-600 disabled:text-gray-300 disabled:cursor-not-allowed"
+                    :class="{ activeChannel:videoPlayerStore.currentChannelName==='talk' }"
+                    @click="videoPlayerStore.changeChannel('talk')">
+                TALK</button>
+            <button class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-0.2 border-green-800 shadow-md
+                    disabled:bg-gray-600 disabled:text-gray-300 disabled:cursor-not-allowed"
+                    :class="{ activeChannel:videoPlayerStore.currentChannelName==='documentary' }"
+                    @click="videoPlayerStore.changeChannel('documentary')">
+                DOCUMENTARY</button>
+            <button class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-0.2 border-green-800 shadow-md
+                    disabled:bg-gray-600 disabled:text-gray-300 disabled:cursor-not-allowed"
+                    :class="{ activeChannel:videoPlayerStore.currentChannelName==='music' }"
+                    @click="videoPlayerStore.changeChannel('music')">
+                MUSIC</button>
+            <button class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-0.2 border-green-800 shadow-md
+                    disabled:bg-gray-600 disabled:text-gray-300 disabled:cursor-not-allowed"
+                    :class="{ activeChannel:videoPlayerStore.currentChannelName==='drama' }"
+                    @click="videoPlayerStore.changeChannel('drama')">
+                DRAMA</button>
+            <button class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-0.2 border-green-800 shadow-md
+                    disabled:bg-gray-600 disabled:text-gray-300 disabled:cursor-not-allowed"
+                    :class="{ activeChannel:videoPlayerStore.currentChannelName==='comedy' }"
+                    @click="videoPlayerStore.changeChannel('comedy')">
+                COMEDY</button>
+            <button class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-0.2 border-green-800 shadow-md
+                    disabled:bg-gray-600 disabled:text-gray-300 disabled:cursor-not-allowed"
+                    :class="{ activeChannel:videoPlayerStore.currentChannelName==='education' }"
+                    @click="videoPlayerStore.changeChannel('education')">
+                EDUCATION</button>
+            <button class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-0.2 border-green-800 shadow-md
+                    disabled:bg-gray-600 disabled:text-gray-300 disabled:cursor-not-allowed"
+                    disabled
+                    :class="{ activeChannel:videoPlayerStore.currentChannelName==='reality' }"
+                    @click="videoPlayerStore.changeChannel('reality')">
+                REALITY</button>
+            <button class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-0.2 border-green-800 shadow-md
+                    disabled:bg-gray-600 disabled:text-gray-300 disabled:cursor-not-allowed"
+                    disabled
+                    :class="{ activeChannel:videoPlayerStore.currentChannelName==='variety' }"
+                    @click="videoPlayerStore.changeChannel('variety')">
+                VARIETY</button>
+            <button class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-0.2 border-green-800 shadow-md
+                    disabled:bg-gray-600 disabled:text-gray-300 disabled:cursor-not-allowed"
+                    disabled
+                    :class="{ activeChannel:videoPlayerStore.currentChannelName==='sports' }"
+                    @click="videoPlayerStore.changeChannel('sports')">
+                SPORTS</button>
+            <button class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-0.2 border-green-800 shadow-md
+                    disabled:bg-gray-600 disabled:text-gray-300 disabled:cursor-not-allowed"
+                    disabled
+                    :class="{ activeChannel:videoPlayerStore.currentChannelName==='kids' }"
+                    @click="videoPlayerStore.changeChannel('kids')">
+                KIDS</button>
+            <button class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-0.2 border-green-800 shadow-md
+                    disabled:bg-gray-600 disabled:text-gray-300 disabled:cursor-not-allowed"
+                    :class="{ activeChannel:videoPlayerStore.currentChannelName==='local' }"
+                    @click="videoPlayerStore.changeChannel('local')">
+                LOCAL</button>
+            <button class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-0.2 border-green-800 shadow-md
+                    disabled:bg-gray-600 disabled:text-gray-300 disabled:cursor-not-allowed"
+                    disabled
+                    :class="{ activeChannel:videoPlayerStore.currentChannelName==='world' }"
+                    @click="videoPlayerStore.changeChannel('world')">
+                WORLD</button>
 
-            <div class="mt-4">Channel one is our premiere promotional channel featuring handpicked content and creators from the notTV network.</div>
+            <div class="mt-4 pb-4">Channel One is our premiere promotional channel featuring handpicked content and creators from the notTV network.</div>
 
-            <div class="mt-4">Categories will be turned into channels when more creators join notTV. E.g., News, Music, Talk, Education, etc.</div>
         </div>
 
         <div v-if="videoPlayerStore.ott === 1" class="now-playing w-full h-full bg-purple-800 p-2 overflow-y-scroll scrollbar-hide mb-64">
@@ -117,6 +171,9 @@ let playVideo = (source) => {
 <style scoped>
 .activeChannel {
     background-color: darkgreen;
+    color: #ffcc66;
+    border-right-color: #ffcc66;
+    border-right-width: 2px;
 }
 
 </style>

@@ -283,40 +283,76 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
                 this.currentChannelName = 'one'
                 this.loadNewSourceFromMist(source)
             }
-            if (name==='pacific') {
+            if (name==='ambient') {
+                let source = ''
+                this.videoName = 'Ambient'
+                this.currentChannelName = 'ambient'
+                this.loadNewSourceFromMist(source)
+            }
+            if (name==='news') {
                 let source = 'mist1pull2'
-                this.videoName = 'notTV Pacific'
-                this.currentChannelName = 'pacific'
+                this.videoName = 'News'
+                this.currentChannelName = 'news'
                 this.loadNewSourceFromMist(source)
             }
-            if (name==='west') {
+            if (name==='talk') {
                 let source = 'mist1pull3'
-                this.videoName = 'notTV West'
-                this.currentChannelName = 'west'
+                this.videoName = 'Talk'
+                this.currentChannelName = 'talk'
                 this.loadNewSourceFromMist(source)
             }
-            if (name==='central') {
-                let source = 'mist1pull4'
-                this.videoName = 'notTV Central'
-                this.currentChannelName = 'central'
-                this.loadNewSourceFromMist(source)
-            }
-            if (name==='ontario') {
-                let source = 'mist1pull5'
-                this.videoName = 'notTV Ontario'
-                this.currentChannelName = 'ontario'
-                this.loadNewSourceFromMist(source)
-            }
-            if (name==='east') {
-                let source = 'mist1pull6'
-                this.videoName = 'notTV East'
-                this.currentChannelName = 'east'
-                this.loadNewSourceFromMist(source)
-            }
-            if (name==='usa') {
+            if (name==='documentary') {
                 let source = 'mist1pull7'
-                this.videoName = 'notTV U.S.A.'
-                this.currentChannelName = 'usa'
+                this.videoName = 'Documentary'
+                this.currentChannelName = 'documentary'
+                this.loadNewSourceFromMist(source)
+            }
+            if (name==='music') {
+                let source = 'mist1pull5'
+                this.videoName = 'Music'
+                this.currentChannelName = 'music'
+                this.loadNewSourceFromMist(source)
+            }
+            if (name==='drama') {
+                let source = 'mist1pull5'
+                this.videoName = 'Drama'
+                this.currentChannelName = 'drama'
+                this.loadNewSourceFromMist(source)
+            }
+            if (name==='comedy') {
+                let source = 'mist1pull5'
+                this.videoName = 'Comedy'
+                this.currentChannelName = 'comedy'
+                this.loadNewSourceFromMist(source)
+            }
+            if (name==='education') {
+                let source = 'mist1pull5'
+                this.videoName = 'Education'
+                this.currentChannelName = 'education'
+                this.loadNewSourceFromMist(source)
+            }
+            if (name==='reality') {
+                let source = 'mist1pull5'
+                this.videoName = 'Reality'
+                this.currentChannelName = 'reality'
+                this.loadNewSourceFromMist(source)
+            }
+            if (name==='variety') {
+                let source = 'mist1pull6'
+                this.videoName = 'Variety'
+                this.currentChannelName = 'variety'
+                this.loadNewSourceFromMist(source)
+            }
+            if (name==='sports') {
+                let source = 'mist1pull6'
+                this.videoName = 'Sports'
+                this.currentChannelName = 'sports'
+                this.loadNewSourceFromMist(source)
+            }
+            if (name==='local') {
+                let source = 'mist1pull4'
+                this.videoName = 'Local'
+                this.currentChannelName = 'local'
                 this.loadNewSourceFromMist(source)
             }
             if (name==='world') {

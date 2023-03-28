@@ -6,6 +6,7 @@ use App\Models\Video;
 use App\Models\VideoUploadJob;
 
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -22,8 +23,9 @@ class UploadVideoToSpacesJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $video;
-    protected $file;
+    protected Video $video;
+    protected VideoUploadJob $file;
+    public int $timeout = 3600;
 
     /**
      * UploadVideoToSpacesJob constructor.
@@ -39,38 +41,45 @@ class UploadVideoToSpacesJob implements ShouldQueue
 
     /**
      * @parm UploadedFile $file
-     * @throws \Exception
+     * @throws Exception
      */
     public function handle()
     {
-        error_log('Starting job.');
+//        error_log('Starting job.');
 
-//        Storage::disk('spaces')->putFile('oogabooga2', 'app/temp-videos', $this->file->file_name);
-        Storage::disk('spaces')->putFile('oogabooga2', new File(storage_path('app/temp-videos/'.$this->file->file_name)));
-//        $path = Storage::putFileAs('oogabooga2', new File('/path/to/photo'), 'photo.jpg');
+        // tec21: this works, just disabled for troubleshooting.
+//        error_log('Now attempting to upload to the cloud.');
+        // upload the file to the cloud
+//        $url = Storage::disk('spaces')->putFile($this->video->cloud_folder.$this->video->folder, 'storage/app/temp-videos/'.$this->file->file_name);
+//        $file = Storage::disk('spaces')->putFileAs($this->video->cloud_folder.$this->video->folder, 'storage/app/temp-videos/'.$this->file->file_name, 'file.mp4');
+//        error_log('upload to the cloud done.');
 
-//        $file = new UploadedFile(storage_path("app/temp-videos/{$this->file->file_path}"),
-//            $this->file->original_name,
-//            $this->file->mime_type,
-//            null,
-//            true
-//        );
+        // update the file_name on the model
+        DB::table('videos')->where('id', $this->video->id)->update(['full_url' => '$url']);
+//        $video = Video::query('id', $this->video->id);
+//        $video->file_url = $path;
+//        $video-save();
+//        error_log('Updated the Video model');
 
+        // delete the temporary file
+        Storage::disk('public')->delete(storage_path('app/temp-videos/').$this->file->file_name);
+//        unlink($this->file->getFile()->getPathname());
 
-//        Storage::disk('spaces')->putFileAs($this->video->cloud_folder.$this->video->folder, $this->path, $this->file->original_name);
-        Storage::disk('spaces')->putFileAs('oogabooga2', $this->file->path , $this->file->file_name);
-//        Storage::disk('spaces')->put(
-//            "$this->video->cloud_folder.$this->video->folder/$this->file->original_name",
-//            file_get_contents($this->file)
-//        );
-
-        error_log('Ending job for ' . $this->file->original_name);
-
-        error_log('Updated the Video model');
-        error_log('Now attempting to upload to the cloud.');
-
-        error_log('upload to the cloud done.');
-
+//        error_log('Ending job for ' . $this->file->original_name);
     }
+
+    /**
+     * @throws Exception
+     */
+    protected function getVideo(): Video
+    {
+        if($this->video instanceof Video){
+            return $this->video;
+        } else {
+            throw new Exception("Video not set on UploadVideoToSpacesJob");
+        }
+    }
+
+
 
 }

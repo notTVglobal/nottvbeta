@@ -20,6 +20,8 @@
                         </Link>
                     </div>
                     <Link :href="`/shows/${show.slug}/episode/${episode.slug}`" class="block text-base font-semibold leading-tight hover:text-gray-400 mt-4">{{ episode.name }}</Link>
+                    <div class="text-gray-400 mt-1" v-if="!episode.episode_number">Episode {{ episode.id }}</div>
+                    <div class="text-gray-400 mt-1" v-if="episode.episode_number">Episode {{ episode.episode_number }}</div>
                     <div class="text-gray-400 mt-1">{{ formatDate(episode.created_at) }}</div>
                 </div>
 
