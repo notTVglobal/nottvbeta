@@ -9,6 +9,7 @@
             >
                 <div class="table-row">
                     <div scope="col" class="table-cell px-6 py-3">
+                        <font-awesome-icon icon="fa-repeat" class="mr-2 cursor-pointer hover:text-blue-500" @click.prevent="reload()"/>
                         Filename
                     </div>
                     <div v-if="can.viewAny" scope="col" class="table-cell px-6 py-3">
@@ -41,8 +42,13 @@
                         scope="row"
                         class="table-cell min-w-[8rem] px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                     >
-                        <button v-if="video.can.view" @click.prevent="videoPlayerStore.loadNewSourceFromFile(video)">{{ video.file_name }}</button>
+                        <button
+                                v-if="video.can.view"
+                                @click.prevent="videoPlayerStore.loadNewSourceFromFile(video)"
+                                :disabled="video.upload_status === 'processing'"
+                                class="disabled:cursor-not-allowed disabled:text-gray-500 disabled:italic inline">{{ video.file_name }}</button>
                         <span v-if="!video.can.view" class="font-semibold text-red-700">You are currently unable to view this video. Please check with the admin.</span>
+                        <div v-show="video.upload_status === 'processing'" class="ml-2 mb-1 py-1 px-2 bg-gray-600 text-gray-50 text-xs w-fit rounded-lg inline">Processing</div>
                     </div>
                     <div
                         v-if="can.viewAny"
@@ -93,6 +99,7 @@
 import Pagination from "@/Components/Pagination.vue";
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore";
 import {Inertia} from "@inertiajs/inertia";
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 
 let videoPlayerStore = useVideoPlayerStore()
 
@@ -101,6 +108,11 @@ defineProps({
     can: Object,
 })
 
+function reload() {
+    Inertia.reload({
+        only: ['videos'],
+    });
+}
 function deleteVideo($video) {
     if(confirm('Are you sure you want to delete this video? This action is not reversible and may have' +
         ' devastating effects on the database.')) {

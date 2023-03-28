@@ -7,14 +7,6 @@
 
                 <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
 
-                <div
-                    class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
-                    role="alert"
-                    v-if="props.message">
-                    <span class="font-medium">
-                        {{props.message}}</span>
-                </div>
-
                 <header class="flex justify-between mb-3 border-b border-gray-800">
                     <div class="container mx-auto flex flex-col lg:flex-row items-center justify-between px-4 py-6">
                         <div id="topDiv" class="flex flex-col lg:flex-row items-center">
@@ -37,13 +29,15 @@
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="p-6 bg-white border-b border-gray-200">
 
-<div class="flex justify-between">
-                        <VideoUpload />
-
+                        <div class="flex justify-between">
+                            <VideoUpload />
                             <!-- doesn't work .. breaks the CSS -->
                             <!--    <MobileVideoRecord />-->
-
-</div>
+                            <div class="flex-wrap">
+                                <div class="">My total storage used: {{ myTotalStorageUsed }}</div>
+                                <div class="">not.TV total storage used: {{ notTvTotalStorageUsed }}</div>
+                            </div>
+                        </div>
 
 
                         <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -154,6 +148,8 @@ let props = defineProps({
     can: Object,
     videos: Object,
     allVideos: Object,
+    myTotalStorageUsed: String,
+    notTvTotalStorageUsed: String,
     message: String,
     errors: ref(''),
     isHidden: ref(false),

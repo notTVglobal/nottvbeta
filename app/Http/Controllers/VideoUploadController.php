@@ -64,12 +64,21 @@ class VideoUploadController extends Controller
 
         return Inertia::render('VideoUpload', [
 //            'videos' => fn () => Video::query()->where('user_id', auth()->user()->id)
+            'myTotalStorageUsed' => formatBytes(Video::where('user_id', auth()->user()->id)
+                ->sum('size')),
+            'notTvTotalStorageUsed' => formatBytes(Video::all()
+                ->sum('size')),
             'videos' => Video::with('user')->where('user_id', auth()->user()->id)
                 ->latest()
                 ->paginate(10, ['*'], 'videos')
                 ->through(fn($video) => [
                     'id' => $video->id,
                     'file_name' => $video->file_name,
+                    'extension' => $video->extension,
+                    'folder' => $video->folder,
+                    'cdn_endpoint' => $video->appSetting->cdn_endpoint,
+                    'cloud_folder' => $video->cloud_folder,
+                    'upload_status' => $video->upload_status,
                     'category' => $video->category,
                     'type' => $video->type,
                     'size' => formatBytes($video->size),
@@ -98,6 +107,11 @@ class VideoUploadController extends Controller
                     'id' => $video->id,
                     'user_id' => $video->user->name,
                     'file_name' => $video->file_name,
+                    'extension' => $video->extension,
+                    'folder' => $video->folder,
+                    'cdn_endpoint' => $video->appSetting->cdn_endpoint,
+                    'cloud_folder' => $video->cloud_folder,
+                    'upload_status' => $video->upload_status,
                     'category' => $video->category,
                     'type' => $video->type,
                     'size' => formatBytes($video->size),
@@ -165,7 +179,6 @@ class VideoUploadController extends Controller
         ]);
     }
 
-
     /**
      * Saves the file
      *
@@ -180,14 +193,17 @@ class VideoUploadController extends Controller
         $cloud_folder = DB::table('app_settings')->where('id', 1)->pluck('cloud_folder')->first();
         $folder = Carbon::now()->format('/Y/m').'/videos';
 
-        $mime = str_replace('/', '-', $file->getMimeType());
+//        $mime = str_replace('/', '-', $file->getMimeType());
+        $mime = $file->getMimeType();
 
-        // Temporarily store the local media file
-        $videoFileForJob = VideoUploadJob::create([
-            'file_name' => $fileName,
-            'file_path' => $path,
-            'mime_type' => $file->getMimeType(),
-        ]);
+//  tec21: this was used for testing/development. The model can be deleted if we
+//  don't have another use for it.
+//        // Temporarily store the local media file
+//        $videoFileForJob = VideoUploadJob::create([
+//            'file_name' => $fileName,
+//            'file_path' => $path,
+//            'mime_type' => $file->getMimeType(),
+//        ]);
 
         // move the file to temp-videos
         $contents = $file->move($path, $fileName);
@@ -195,6 +211,7 @@ class VideoUploadController extends Controller
         // Store the video in the database
         $video = new Video;
         $video->user_id = auth()->user()->id;
+        $video->upload_status = 'processing';
         $video->file_name = $fileName;
         $video->extension = $file->getClientOriginalExtension();
         $video->size = $contents->getSize();
@@ -204,107 +221,18 @@ class VideoUploadController extends Controller
         $video->save();
         sleep(1);
 
-        error_log('Video saved to database. Next up is the Job.');
+//        error_log('Video saved to database. Next up is the Job.');
 
         // Dispatch Job
-        UploadVideoToSpacesJob::dispatch($videoFileForJob, $video);
+        UploadVideoToSpacesJob::dispatch($video);
 
-        error_log('The end of the saveFile method.');
+//        error_log('The end of the saveFile method.');
         return response()->json([
             'path'      => $path,
             'name'      => $fileName,
             'mime_type' => $mime
         ]);
     }
-
-
-
-//        $cloud_folder = DB::table('app_settings')->where('id', 1)->pluck('cloud_folder')->first();
-//        $folder = Carbon::now()->format('/Y/m').'/videos';
-//        Storage::disk('spaces')->putFile($cloud_folder.$folder, $file);
-//
-//        $fileName = $this->createFilename($file);
-//        // Group files by mime type
-//        $mime = str_replace('/', '-', $file->getMimeType());
-//
-//        // Store the video in the database
-//        $video = new Video;
-//        $video->user_id = auth()->user()->id;
-//        $video->file_name = $fileName;
-//        $video->extension = $file->getClientOriginalExtension();
-//        $video->size = $file->getSize();
-//        $video->type = $file->getMimeType();
-////            $video->full_url = $finalPath;
-//        $video->save();
-//        sleep(1);
-//
-//
-//
-//        return $video;
-
-
-
-
-
-
-        // Group files by the date (week
-//        $dateFolder = date("Y-m-W");
-
-        // Build the file path
-//        $filePath = "upload/{$mime}/{$dateFolder}/";
-//        $filePath = "public/videos/";
-//        $finalPath = storage_path("app/".$filePath);
-
-        // Store the video in the database
-//        $video = new Video;
-//        $video->user_id = auth()->user()->id;
-//        $video->file_name = $fileName;
-//        $video->extension = $file->getClientOriginalExtension();
-//        $video->size = $file->getSize();
-//        $video->type = $file->getMimeType();
-//        $video->full_url = $finalPath;
-//        $video->save();
-//        sleep(1);
-
-//        $video = Video::create([
-//            'user_id' => auth()->user()->id,
-//            'file_name' => $fileName,
-//            'extension' => $file->getClientOriginalExtension(),
-//            'size' => $file->getSize(),
-//            'type' => $file->getMimeType(),
-//            'full_url' => $finalPath,
-//        ]);
-
-            // move the file name
-//        $file->move($finalPath, $fileName);
-//
-//return $video;
-
-//        return Inertia::render('VideoUpload', [
-//            'videos' => Videos::get()
-//        ]);
-
-//        return redirect()->route('videoupload')->with('message', 'Show Created Successfully');
-//        return $video;
-//        return response()->json([
-//            'video' => [
-//                'file_name' => $video->file_name
-//            ],
-//            'path' => $filePath,
-//            'name' => $fileName,
-//            'mime_type' => $mime
-//        ]);
-//    }
-
-
-
-
-
-
-
-
-
-
 
     /**
      * Create unique filename for uploaded file
@@ -315,25 +243,14 @@ class VideoUploadController extends Controller
     {
         $extension = $file->getClientOriginalExtension();
         $filename = str_replace(".".$extension, "", $file->getClientOriginalName()); // Filename without extension
+        $hashedFilename = md5($filename);
 
         // Add timestamp hash to name of the file
-        $filename .= "_" . md5(time()) . "." . $extension;
+//        $hashedFilename .= md5(date('r')) . "." . $extension;
+        $filename .= '_' . md5(time()) . "." . $extension;
 
         return $filename;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -402,6 +319,10 @@ class VideoUploadController extends Controller
     public function destroy(HttpRequest $request)
     {
         $video = Video::query()->where('id', $request->videoId)->first();
+//        Storage::disk('spaces')->delete('path/file.jpg');
+        Storage::disk('spaces')->delete($video->cloud_folder.$video->folder.'/'.$video->file_name);
+
+
 
 //        $user->deleteProfilePhoto();
 //        $user->tokens->each->delete();

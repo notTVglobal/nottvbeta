@@ -24,19 +24,15 @@ class UploadVideoToSpacesJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected Video $video;
-    protected VideoUploadJob $file;
     public int $timeout = 3600;
 
     /**
      * UploadVideoToSpacesJob constructor.
-     * @param VideoUploadJob $file
      * @param Video $video
      */
-    public function __construct(VideoUploadJob $file, Video $video)
+    public function __construct(Video $video)
     {
         $this->video = $video;
-        $this->file = $file;
-        error_log('constructor for job done.');
     }
 
     /**
@@ -47,23 +43,28 @@ class UploadVideoToSpacesJob implements ShouldQueue
     {
 //        error_log('Starting job.');
 
-        // tec21: this works, just disabled for troubleshooting.
 //        error_log('Now attempting to upload to the cloud.');
+
+        // get the file
+//        $file = Storage::get($this->file->file_path.$this->file->filename);
+
         // upload the file to the cloud
-//        $url = Storage::disk('spaces')->putFile($this->video->cloud_folder.$this->video->folder, 'storage/app/temp-videos/'.$this->file->file_name);
-//        $file = Storage::disk('spaces')->putFileAs($this->video->cloud_folder.$this->video->folder, 'storage/app/temp-videos/'.$this->file->file_name, 'file.mp4');
+        Storage::disk('spaces')->putFileAs($this->video->cloud_folder.$this->video->folder, storage_path('app/temp-videos/').$this->video->file_name, $this->video->file_name);
 //        error_log('upload to the cloud done.');
 
+        // delete the temporary file
+        // not working yet.
+        Storage::delete(storage_path('app/temp-videos/').$this->video->file_name);
+//        unlink($this->file->getFile()->getPathname());
+
         // update the file_name on the model
-        DB::table('videos')->where('id', $this->video->id)->update(['full_url' => '$url']);
-//        $video = Video::query('id', $this->video->id);
-//        $video->file_url = $path;
-//        $video-save();
+        $this->video->upload_status = 'Uploaded to Spaces via Job';
+        $this->video->storage_location = 'spaces';
+        $this->video->save();
+
 //        error_log('Updated the Video model');
 
-        // delete the temporary file
-        Storage::disk('public')->delete(storage_path('app/temp-videos/').$this->file->file_name);
-//        unlink($this->file->getFile()->getPathname());
+
 
 //        error_log('Ending job for ' . $this->file->original_name);
     }

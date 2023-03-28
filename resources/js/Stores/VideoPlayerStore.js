@@ -235,8 +235,8 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
         },
         loadNewSourceFromFile(source) {
             let videoJs = videojs('main-player')
-            let filePath = '/storage/videos/'
-            this.videoName = source.file_name
+            let filePath = source.cdn_endpoint+source.cloud_folder+source.folder+'/'
+            this.videoName = "Video File"
             useStreamStore().currentChannel = 'On Demand'
             this.videoSource = source.file_name
             this.videoSourceType = source.type

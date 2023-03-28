@@ -6,6 +6,7 @@ use App\Models\Image;
 use App\Models\Show;
 use App\Models\Team;
 use App\Models\TeamMember;
+use App\Models\Video;
 use App\Policies\AdminPolicy;
 use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
@@ -23,6 +24,12 @@ class DashboardController extends Controller
     public function index()
     {
         $user = User::find(Auth::user()->id);
+
+        function formatBytes($bytes, $precision = 2) {
+            $unit = ["B", "KB", "MB", "GB"];
+            $exp = floor(log($bytes, 1024)) | 0;
+            return round($bytes / (pow(1024, $exp)), $precision).$unit[$exp];
+        }
 
         return Inertia::render('Dashboard', [
             'shows' => Show::query()
@@ -59,6 +66,10 @@ class DashboardController extends Controller
 //                        'manageTeam' => Auth::user()->can('manage', $team)
 //                    ]
 //                ]),
+            'myTotalStorageUsed' => formatBytes(Video::where('user_id', auth()->user()->id)
+                ->sum('size')),
+            'notTvTotalStorageUsed' => formatBytes(Video::all()
+                ->sum('size')),
             'can' => [
                 'viewDashboard' => Auth::user()->can('viewDashboard', Creator::class),
                 'viewAdmin' => Auth::user()->can('viewAdmin', User::class),
