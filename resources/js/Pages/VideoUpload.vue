@@ -17,9 +17,16 @@
 
                     <div>
                         <button
+                            v-if="!videoPlayerStore.videoUploadComplete"
                             @click="back"
                             class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
                         >Cancel
+                        </button>
+                        <button
+                            v-if="videoPlayerStore.videoUploadComplete"
+                            @click="back"
+                            class="px-4 py-2 text-white bg-green-600 hover:bg-done-500 rounded-lg"
+                        >Done
                         </button>
                     </div>
 

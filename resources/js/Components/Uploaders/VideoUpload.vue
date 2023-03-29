@@ -20,16 +20,20 @@
 import { Dropzone } from "dropzone";
 import { useForm } from "@inertiajs/inertia-vue3"
 import { useUserStore } from "@/Stores/UserStore";
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore";
 import { onMounted, ref } from "vue";
 import { Inertia } from "@inertiajs/inertia";
 
 let userStore = useUserStore()
+let videoPlayerStore = useVideoPlayerStore()
+
 let uploadPercentage = ref(0);
 let uploadingMessage = ref(0);
 let uploadCompleteMessage = ref(0);
 // let isHidden = ref(false);
 
 onMounted(() => {
+    videoPlayerStore.videoUploadComplete = false;
 // see options for Dropzone here: https://github.com/dropzone/dropzone/blob/main/src/options.js
 let myDropzone = new Dropzone("#videoUploadForm", {
     url: "/videoupload",
@@ -66,6 +70,7 @@ let myDropzone = new Dropzone("#videoUploadForm", {
 myDropzone.on("addedfile", file => {
     uploadingMessage = 1;
     console.log(`File added: ${file.name}`);
+    videoPlayerStore.videoUploadComplete = false;
 
 });
 
@@ -78,6 +83,8 @@ myDropzone.on("complete", function(file) {
     Inertia.reload({
         only: ["videos"],
     });
+    videoPlayerStore.videoUploadComplete = true;
+
 });
 
 })

@@ -58,6 +58,8 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
             mistNewHashedPassword: [],
             ott: Number,
             blue: false,
+
+            videoUploadComplete: false,
         }
     },
 
