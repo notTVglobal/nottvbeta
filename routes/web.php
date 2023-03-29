@@ -293,6 +293,12 @@ Route::middleware([
         ->can('delete', 'App\Models\User')
         ->name('admin.deleteUser');
 
+    //// CALCULATIONS
+    Route::get('/calculations', function () {
+        return Inertia::render('Calculations');
+    })->can('viewAdmin', 'App\Models\User')
+        ->name('calculations');
+
 
     // Teams - Part 1 (part 2 is in the Creator Resources below)
     ///////////

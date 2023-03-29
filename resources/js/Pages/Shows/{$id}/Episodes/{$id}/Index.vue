@@ -67,11 +67,17 @@
 
                     </div>
 
+                    <p v-if="video.upload_status === 'processing'" class="mt-12 px-3 py-3 text-gray-50 mr-1 lg:mr-36 bg-black w-full text-center lg:text-left">
+                        The video is currently processing. <span v-if="episode.video_url">This video is available to play, but it may be slow to load.</span><span v-if="!episode.video_url"> check back later.</span>
+                    </p>
+                    <p v-if="video.upload_status !== 'processing' && !video.file_name" class="mt-12 px-3 py-3 text-gray-50 mr-1 lg:mr-36 bg-black w-full text-center lg:text-left">
+                        <span v-if="episode.video_url">This video is available to play, but it may be slow to load.</span>
+                    </p>
+
                     <div class="flex mt-12 m-auto lg:mx-0 justify-center lg:justify-start">
 
-                        <button :disabled="!videoPlayerStore.checkForVideo(props.episode)"
-                                class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-700 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
-                                @click="videoPlayerStore.playVideo(props.episode)">
+                        <button :disabled="!videoPlayerStore.hasVideo" class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-700 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
+                                @click="playEpisode">
                             <svg class="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg"
                                  viewBox="0 0 485 485">
                                 <path d="M413.974,71.026C368.171,25.225,307.274,0,242.5,0S116.829,25.225,71.026,71.026C25.225,116.829,0,177.726,0,242.5
@@ -195,6 +201,7 @@ import { useUserStore } from "@/Stores/UserStore";
 import EpisodeFooter from "@/Components/ShowEpisodes/EpisodeFooter"
 import Message from "@/Components/Modals/Messages";
 import SingleImage from "@/Components/Multimedia/SingleImage"
+import {Inertia} from "@inertiajs/inertia";
 
 let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore();
@@ -223,12 +230,48 @@ let props = defineProps({
     show: Object,
     team: Object,
     episode: Object,
+    video: Object,
     image: Object,
     creators: Object,
     can: Object,
     message: String,
 
 });
+
+function checkForVideo() {
+    if (props.video.file_name && props.video.upload_status !== 'processing') {
+        videoPlayerStore.hasVideo = true;
+    } else
+    if (props.episode.video_url) {
+        videoPlayerStore.hasVideo = true;
+    } else
+    if (!props.episode.video_url && props.video.upload_status === 'processing'){
+        videoPlayerStore.hasVideo = false;
+    } else if (!props.video.file_name && !props.episode.video_url) {
+        videoPlayerStore.hasVideo = false;
+    } return true;
+}
+
+checkForVideo()
+
+let playEpisode = () => {
+    // if file exists and is !processing, play file.
+    if (props.video.file_name !== '' && props.video.upload_status !== 'processing') {
+        videoPlayerStore.loadNewSourceFromFile(props.video)
+        videoPlayerStore.videoName = props.episode.name+' (file)'
+        videoPlayerStore.currentChannelName = 'On Demand ('+props.episode.name+') from file'
+        Inertia.visit('/stream')
+    } else
+    if
+        // else if url exists, play url
+    (props.episode.video_url) {
+        videoPlayerStore.loadNewSourceFromUrl(props.episode.video_url)
+        videoPlayerStore.videoName = props.episode.name+' (web)'
+        videoPlayerStore.currentChannelName = 'On Demand ('+props.episode.name+') from web'
+        Inertia.visit('/stream')
+    }
+
+}
 
 teamStore.slug = props.team.slug;
 teamStore.name = props.team.name;

@@ -121,6 +121,13 @@
                             {{ movie.logline }}
                         </p>
 
+                        <p v-if="video.upload_status === 'processing'" class="mt-12 px-3 py-3 text-gray-50 mr-1 lg:mr-36 bg-black w-full text-center lg:text-left">
+                            The video is currently processing. <span v-if="movie.file_url">This video is available to play, but it may be slow to load.</span><span v-if="!movie.file_url"> check back later.</span>
+                        </p>
+                        <p v-if="video.upload_status !== 'processing' && !video.file_name" class="mt-12 px-3 py-3 text-gray-50 mr-1 lg:mr-36 bg-black w-full text-center lg:text-left">
+                            <span v-if="movie.file_url">This video is available to play, but it may be slow to load.</span>
+                        </p>
+
                         <div class="flex mt-12 m-auto lg:mx-0 justify-center lg:justify-start">
                             <button disabled class="flex bg-blue-500 text-white font-semibold px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
                                     @click="playTrailer">
@@ -135,7 +142,7 @@
                                 <span class="ml-2 text-sm md:text-md">Play Trailer</span>
                             </button>
 
-                            <button class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
+                            <button :disabled="!videoPlayerStore.hasVideo" class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
                                     @click="playMovie">
                                 <svg class="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg"
                                      viewBox="0 0 485 485">
@@ -252,6 +259,7 @@ import SingleImage from "@/Components/Multimedia/SingleImage";
 
 import 'filepond/dist/filepond.min.css'
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css'
+import {Inertia} from "@inertiajs/inertia";
 
 let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore()
@@ -274,6 +282,8 @@ onMounted(() => {
 
 let props = defineProps({
     movie: Object,
+    video: Object,
+    trailer: Object,
     creators: Object,
     message: String,
     can: Object,
@@ -281,26 +291,43 @@ let props = defineProps({
 });
 
 let playTrailer = () => {
-    // videoPlayer.videoSource = 'https://streams.not.tv/hls/ctd1984/index.m3u8'
-    // videoPlayerStore.videoSource = 'https://mist2.not.tv/hls/kids_1/index.m3u8'
-    // videoPlayer.videoSource = 'https://nottvmist.sfo3.digitaloceanspaces.com/recordings/channels_02.m3u8'
-    let source = "dunepull"
-    videoPlayerStore.loadNewSourceFromMist(source)
-    videoPlayerStore.videoName = 'Dune'
-    videoPlayerStore.currentChannelName = 'On Demand (Movie)'
+    //
 }
+
+function checkForVideo() {
+    if (props.video.file_name) {
+        videoPlayerStore.hasVideo = true;
+    } else
+        if (props.movie.file_url) {
+        videoPlayerStore.hasVideo = true;
+    } else
+        if (!props.movie.file_url && props.video.upload_status === 'processing'){
+        videoPlayerStore.hasVideo = false;
+    } else if (!props.video.file_name && !props.movie.file_url) {
+        videoPlayerStore.hasVideo = false;
+    } return true;
+}
+
+checkForVideo()
 
 let playMovie = () => {
-    // videoPlayer.videoSource = 'https://streams.not.tv/hls/ctd1984/index.m3u8'
-    // videoPlayerStore.videoSource = 'https://mist2.not.tv/hls/kids_1/index.m3u8'
-    // videoPlayer.videoSource = 'https://nottvmist.sfo3.digitaloceanspaces.com/recordings/channels_02.m3u8'
-    // let source = "dunepull"
-    let source = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
-    videoPlayerStore.loadNewSourceFromUrl(source)
-    videoPlayerStore.videoName = 'Elephant\'s Dream'
-    videoPlayerStore.currentChannelName = 'On Demand (Movie)'
-}
+    // if file exists and is !processing, play file.
+    if (props.video.file_name !== '' && props.video.upload_status !== 'processing') {
+        videoPlayerStore.loadNewSourceFromFile(props.video)
+        videoPlayerStore.videoName = props.movie.name+' (file)'
+        videoPlayerStore.currentChannelName = 'On Demand ('+props.movie.name+') from file'
+        Inertia.visit('/stream')
+    } else
+        if
+    // else if url exists, play url
+      (props.movie.file_url) {
+        videoPlayerStore.loadNewSourceFromUrl(props.movie.file_url)
+        videoPlayerStore.videoName = props.movie.name+' (web)'
+        videoPlayerStore.currentChannelName = 'On Demand ('+props.movie.name+') from web'
+        Inertia.visit('/stream')
+    }
 
+}
 
 let thisYear = new Date().getFullYear()
 let showMessage = ref(true);

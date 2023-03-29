@@ -73,18 +73,21 @@
                                     </div>
 
                                     <div class="flex space-y-3">
-                                        <div class="mb-6">
-                                            <span class="text-3xl font-bold">&lt;MOVIE GOES HERE TO PLAY/PREVIEW&gt; </span>
+                                        <div class="mb-6 bg-black w-full p-6">
+                                            <span
+                                                v-if="video.upload_status === 'processing'"
+                                                class="text-center place-self-center text-white font-semibold text-xl">Video processing...</span>
+                                            <video v-if="video.upload_status !== 'processing'" :src="video.cdn_endpoint+video.cloud_folder+video.folder+'/'+video.file_name" controls></video>
                                         </div>
                                     </div>
 
-                                    <div>
+                                    <div class="">
                                         <label class="block mb-2 uppercase font-bold text-xs text-red-700"
                                                for="name"
                                         >
                                             Upload Movie
                                         </label>
-                                        <div class="max-full mx-auto mt-2 mb-6 bg-gray-200 p-6 text-dark">
+                                        <div class="max-full mx-auto mt-2 mb-6 bg-gray-200 px-6 pt-4 pb-2 text-dark">
                                             <h2 class="text-xl font-semibold text-gray-800">Upload Video</h2>
 
                                             <ul class="pb-4 text-gray-800">
@@ -94,17 +97,20 @@
                                                 </li>
                                             </ul>
 
-                                            <span class="text-xl font-bold text-gray-800">&lt;UPLOADER GOES HERE&gt; </span>
-                                            <VideoUpload />
+                                            <VideoUpload :movieId="movie.id" class="text-black"/>
 
                                         </div>
+
+
 
                                     </div>
 
 
+
+
                                     <div class="flex space-y-3">
-                                        <div class="mb-6">
-                                            <span class="text-3xl font-bold">&lt;MOVIE TRAILER GOES HERE TO PLAY/PREVIEW&gt; </span>
+                                        <div class="mb-6 bg-black w-full p-6">
+<!--                                            VIDEO HERE-->
                                         </div>
                                     </div>
 
@@ -114,7 +120,7 @@
                                         >
                                             Upload Movie Trailer
                                         </label>
-                                        <div class="max-full mx-auto mt-2 mb-6 bg-gray-200 p-6 text-dark">
+                                        <div class="max-full mx-auto mt-2 mb-6 bg-gray-200 px-6 pt-4 pb-2 text-dark">
                                             <h2 class="text-xl font-semibold text-gray-800">Upload Video</h2>
 
                                             <ul class="pb-4 text-gray-800">
@@ -124,7 +130,7 @@
                                                 </li>
                                             </ul>
 
-                                            <span class="text-xl font-bold text-gray-800">&lt;UPLOADER GOES HERE&gt; </span>
+<!--                                            <VideoUpload class="text-black"/>-->
 
                                         </div>
 
@@ -421,6 +427,8 @@ onMounted(() => {
 
 let props = defineProps({
     movie: Object,
+    video: Object,
+    trailer: Object,
     image: Object,
     categories: Object,
     sub_categories: Object,
@@ -473,6 +481,10 @@ let reloadImage = () => {
         only: ['image'],
     });
 };
+
+function muteMainVideo(){
+    videoPlayerStore.mute();
+}
 
 let submit = () => {
     form.put(route('movies.update', props.movie.slug));

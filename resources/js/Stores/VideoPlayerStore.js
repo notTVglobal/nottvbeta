@@ -30,6 +30,7 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
 
             // move currentPage from here to userStore.
             currentPage: String,
+            hasVideo: Boolean,
 
             currentPageIsStream: Boolean,
             fullPage: Boolean,
@@ -329,6 +330,12 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
                 let source = 'mist1pull5'
                 this.videoName = 'Education'
                 this.currentChannelName = 'education'
+                this.loadNewSourceFromMist(source)
+            }
+            if (name==='spirituality') {
+                let source = 'mist1pull5'
+                this.videoName = 'Spirituality'
+                this.currentChannelName = 'spirituality'
                 this.loadNewSourceFromMist(source)
             }
             if (name==='reality') {

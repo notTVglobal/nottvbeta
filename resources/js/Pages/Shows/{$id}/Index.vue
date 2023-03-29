@@ -134,8 +134,8 @@
 
                             <div class="flex mt-12 m-auto lg:mx-0 justify-center lg:justify-start">
 
-                                <button disabled class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
-                                        @click="playVideo">
+                                <button :disabled="!videoPlayerStore.hasVideo" class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
+                                        @click="playEpisode">
                                     <svg class="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg"
                                          viewBox="0 0 485 485">
                                         <path d="M413.974,71.026C368.171,25.225,307.274,0,242.5,0S116.829,25.225,71.026,71.026C25.225,116.829,0,177.726,0,242.5
@@ -235,6 +235,7 @@ import ShowFooter from "@/Components/Shows/ShowFooter"
 import Pagination from "@/Components/PaginationDark";
 import Message from "@/Components/Modals/Messages.vue";
 import SingleImage from "@/Components/Multimedia/SingleImage";
+import {Inertia} from "@inertiajs/inertia";
 // import ShowCreatorsList from "@/Components/Shows/ShowCreatorsList";
 
 let videoPlayerStore = useVideoPlayerStore()
@@ -269,15 +270,39 @@ let props = defineProps({
 teamStore.slug = props.team.slug;
 teamStore.name = props.team.name;
 
+function checkForVideo() {
+    if (props.show.firstPlay.file_name && props.show.firstPlay.upload_status !== 'processing') {
+        videoPlayerStore.hasVideo = true;
+    } else
+    if (props.show.firstPlay.video_url) {
+        videoPlayerStore.hasVideo = true;
+    } else
+    if (!props.show.firstPlay.video_url && props.show.firstPlay.upload_status === 'processing'){
+        videoPlayerStore.hasVideo = false;
+    } else if (!props.show.firstPlay.file_name && !props.show.firstPlay.video_url) {
+        videoPlayerStore.hasVideo = false;
+    } return true;
+}
 
-let playVideo = () => {
-    // videoPlayer.videoSource = 'https://streams.not.tv/hls/ctd1984/index.m3u8'
-    // videoPlayerStore.videoSource = 'https://mist2.not.tv/hls/kids_1/index.m3u8'
-    // videoPlayer.videoSource = 'https://nottvmist.sfo3.digitaloceanspaces.com/recordings/channels_02.m3u8'
-    let source = "dunepull"
-    videoPlayerStore.loadNewSourceFromMist(source)
-    videoPlayerStore.videoName = 'Dune'
-    streamStore.currentChannel = 'On Demand'
+checkForVideo()
+
+let playEpisode = () => {
+    // if file exists and is !processing, play file.
+    if (props.show.firstPlay.file_name !== '' && props.show.firstPlay.upload_status !== 'processing') {
+        videoPlayerStore.loadNewSourceFromFile(props.show.firstPlay)
+        videoPlayerStore.videoName = props.show.name+' (file)'
+        videoPlayerStore.currentChannelName = 'On Demand ('+props.show.name+') from file'
+        Inertia.visit('/stream')
+    } else
+    if
+        // else if url exists, play url
+    (props.episode.video_url) {
+        videoPlayerStore.loadNewSourceFromUrl(props.show.firstPlay.video_url)
+        videoPlayerStore.videoName = props.show.name+' (web)'
+        videoPlayerStore.currentChannelName = 'On Demand ('+props.show.name+') from web'
+        Inertia.visit('/stream')
+    }
+
 }
 function scrollToTop() {
 

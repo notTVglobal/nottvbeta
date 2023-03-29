@@ -40,16 +40,15 @@
             <div>
                 <form @submit.prevent="submit" enctype="multipart/form-data">
                     <div class="bg-orange-800 text-white p-4 mb-6"><span class="font-semibold">Note:</span> File uploads are limited to 500 MB until we implement a chunk method.
-                    This will require storing the uploaded file on the server in a temp directory, then we can process it and encrypt it using
-                    FFMPEG and finally upload it to our destination(s), whether that is Digital Ocean Spaces, an attached volume, remote server,
-                    or a Peer-to-peer distribution network. We also need to implement file validation and restrict the filetypes that can be uploaded.<br>
-                    For more info about chunking go to:
-                        <a href="https://github.com/pionl/laravel-chunk-upload" class="text-blue-400 hover:text-blue-200" target="_blank">
-                            https://github.com/pionl/laravel-chunk-upload</a>
-                        <br><br>
-                        Also look at: <a href="https://pineco.de/chunked-file-upload-with-laravel-and-vue/" class="text-blue-400 hover:text-blue-200" target="_blank">
-                            https://pineco.de/chunked-file-upload-with-laravel-and-vue/
-                        </a>
+                    TO DO: process video uploads (transcode and encrypt) using FFMPEG then upload it to our destination(s), whether that is a cloud service, an attached volume, remote server,
+                    or a peer-to-peer distribution network.<br>
+<!--                    For more info about chunking go to:-->
+<!--                        <a href="https://github.com/pionl/laravel-chunk-upload" class="text-blue-400 hover:text-blue-200" target="_blank">-->
+<!--                            https://github.com/pionl/laravel-chunk-upload</a>-->
+<!--                        <br><br>-->
+<!--                        Also look at: <a href="https://pineco.de/chunked-file-upload-with-laravel-and-vue/" class="text-blue-400 hover:text-blue-200" target="_blank">-->
+<!--                            https://pineco.de/chunked-file-upload-with-laravel-and-vue/-->
+<!--                        </a>-->
                     </div>
                     <input
                         v-model="form.name"
@@ -60,6 +59,16 @@
                         placeholder="Movie Title"
                     />
                     <div v-if="form.errors.name" v-text="form.errors.name"
+                         class="bg-red-600 p-2 w-full text-white font-semibold mt-1"></div>
+                    <input
+                        v-model="form.logline"
+                        type="text"
+                        name="logline"
+                        id="logline"
+                        class="border border-gray-400 rounded w-full px-2 py-2 my-2"
+                        placeholder="Logline"
+                    />
+                    <div v-if="form.errors.logline" v-text="form.errors.logline"
                          class="bg-red-600 p-2 w-full text-white font-semibold mt-1"></div>
                     <textarea
                         v-model="form.description"
@@ -100,37 +109,37 @@
 
                 </form>
 
-                    <div class="border-t border-gray-800 py-8 mt-8">
+<!--                    <div class="border-t border-gray-800 py-8 mt-8">-->
 
-                    <div
-                        @dragenter.prevent="toggleActive"
-                        @dragleave.prevent="toggleActive"
-                        @dragover.prevent
-                        @drop.prevent="drop"
-                        :class="{ 'active-dropzone': active }"
-                        class="dropzone mt-4">
-                        <span>Drag or Drop Video</span>
-                        <span>OR</span>
-                        <label for="dropzoneFile" class="cursor-pointer hover:bg-gray-600">Select Video</label>
-                        <input
-                            type="file"
-                            name="video"
-                            id="dropzoneFile"
-                            class="dropzoneFile border border-gray-400 rounded w-full px-2 py-2 my-2"
-                            @change="selectedFile"
-                            ref="fileInput"
-                            accept="video/*"
-                            @input="form.video = $event.target.files[0]"
-                            style="display: none"/>
-                    </div>
+<!--                    <div-->
+<!--                        @dragenter.prevent="toggleActive"-->
+<!--                        @dragleave.prevent="toggleActive"-->
+<!--                        @dragover.prevent-->
+<!--                        @drop.prevent="drop"-->
+<!--                        :class="{ 'active-dropzone': active }"-->
+<!--                        class="dropzone mt-4">-->
+<!--                        <span>Drag or Drop Video</span>-->
+<!--                        <span>OR</span>-->
+<!--                        <label for="dropzoneFile" class="cursor-pointer hover:bg-gray-600">Select Video</label>-->
+<!--                        <input-->
+<!--                            type="file"-->
+<!--                            name="video"-->
+<!--                            id="dropzoneFile"-->
+<!--                            class="dropzoneFile border border-gray-400 rounded w-full px-2 py-2 my-2"-->
+<!--                            @change="selectedFile"-->
+<!--                            ref="fileInput"-->
+<!--                            accept="video/*"-->
+<!--                            @input="form.video = $event.target.files[0]"-->
+<!--                            style="display: none"/>-->
+<!--                    </div>-->
 
-                    <div class="mt-2">File: {{ dropzoneFile.name }}</div>
+<!--                    <div class="mt-2">File: {{ dropzoneFile.name }}</div>-->
 
-                    <div v-if="form.errors.video" v-text="form.errors.video"
-                         class="bg-red-600 p-2 w-full text-white font-semibold mt-1"></div>
+<!--                    <div v-if="form.errors.video" v-text="form.errors.video"-->
+<!--                         class="bg-red-600 p-2 w-full text-white font-semibold mt-1"></div>-->
 
 
-                    </div>
+<!--                    </div>-->
 
 
             </div>

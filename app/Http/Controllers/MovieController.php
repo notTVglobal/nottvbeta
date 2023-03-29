@@ -7,6 +7,7 @@ use App\Models\Movie;
 use App\Models\MovieCategory;
 use App\Models\MovieCategorySub;
 use App\Models\User;
+use App\Models\Video;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Facades\Auth;
@@ -150,50 +151,12 @@ class MovieController extends Controller
      */
     public function store(HttpRequest $request)
     {
-//        $request->file('video')->store('videos');
-//        if(!$request->hasFile('video')) {
-//            return Redirect::back()->with(['message' => 'There is no video present.']);
-//        }
-
-        // see if you can add mimetypes to the validation.
-        // video/mov
-        // video/mp4
-        //video/webm
-        //
-        if (!$request->hasFile('video') && $request->file_url == null) {
-            return redirect()->route('movies.create')->with('message', 'Please upload a video or enter a link to a video file.');
-
-        }
-        if ($request->file_url != null) {
-            $request->validate([
-                'file_url' => 'active_url',
-            ]);
-        }
         $request->validate([
             'name' => 'unique:movies|required|string|max:255',
-            'description' => 'required|string',
             'logline' => 'required|string',
-
+            'description' => 'required|string',
+            'file_url' => 'nullable|active_url',
         ]);
-
-        $video = '';
-        $extension = '';
-        $size = 0;
-        $mimeTypes = '';
-        $fileName = '';
-
-//        dd($extension, $mimeTypes);
-        if ($request->hasFile('video')) {
-            $request->validate([
-                'video' => 'file|max:10000000',
-            ]);
-            $video = $request->file('video');
-            $extension = $request->file('video')->extension();
-            $size = $request->file('video')->getSize();
-            $mimeTypes = $request->file('video')->getMimeType();
-            $fileName = $video->hashName();
-            Storage::disk('do_spaces')->putFileAs('uploads/movies', $video, $fileName, 'public');
-        }
 
         $slug  = \Str::slug($request->name);
         // create image model
@@ -203,10 +166,7 @@ class MovieController extends Controller
             'description' => $request->description,
             'logline' => $request->logline,
             'slug' => $slug,
-            'file_path' => $fileName,
             'file_url' => $request->file_url,
-            'extension' => $extension,
-            'size' => $size,
             'user_id' => Auth::user()->id,
         ]);
 
@@ -225,14 +185,17 @@ class MovieController extends Controller
     public function show(Movie $movie)
     {
 
+        $video = Video::where('movies_id', $movie->id)->first();
+        $trailer = Video::where('movie_trailers_id', $movie->id)->first();
+
         return Inertia::render('Movies/{$id}/Index', [
             'movie' => [
                 'slug' => $movie->slug,
                 'name' => $movie->name,
                 'description' => $movie->description,
                 'logline' => $movie->logline,
-                'filePath' => $movie->file_path,
-                'fileUrl' => $movie->file_url,
+                'file_path' => $movie->file_path,
+                'file_url' => $movie->file_url,
                 'teamName' => $movie->team_id,
                 'teamSlug' => $movie->slug,
                 'image' => [
@@ -255,6 +218,20 @@ class MovieController extends Controller
                 'category' => $movie->movieCategory->name,
                 'subCategory' => $movie->movieCategorySub->name,
                 ],
+            'video' => [
+                'file_name' => $video->file_name ?? '',
+                'cdn_endpoint' => $video->appSetting->cdn_endpoint ?? '',
+                'folder' => $video->folder ?? '',
+                'cloud_folder' => $video->cloud_folder ?? '',
+                'upload_status' => $video->upload_status ?? '',
+            ],
+            'trailer' => [
+                'file_name' => $trailer->file_name ?? '',
+                'cdn_endpoint' => $trailer->appSetting->cdn_endpoint ?? '',
+                'folder' => $trailer->folder ?? '',
+                'cloud_folder' => $trailer->cloud_folder ?? '',
+                'upload_status' => $video->upload_status ?? '',
+            ],
             'can' => [
                 'editMovie' => Auth::user()->can('edit', $movie),
                 ]
@@ -302,10 +279,26 @@ class MovieController extends Controller
 
         $categories = MovieCategory::all();
         $sub_categories = MovieCategorySub::all();
-        $movie = Movie::query()->where('id', $movie->id)->firstOrFail();
+        $movie = Movie::query()->where('id', $movie->id)->first();
+        $video = Video::where('movies_id', $movie->id)->first();
+        $trailer = Video::where('movie_trailers_id', $movie->id)->first();
 
         return Inertia::render('Movies/{$id}/Edit', [
             'movie' => $movie,
+            'video' => [
+                'file_name' => $video->file_name ?? '',
+                'cdn_endpoint' => $video->appSetting->cdn_endpoint ?? '',
+                'folder' => $video->folder ?? '',
+                'cloud_folder' => $video->cloud_folder ?? '',
+                'upload_status' => $video->upload_status ?? '',
+             ],
+            'trailer' => [
+                'file_name' => $trailer->file_name ?? '',
+                'cdn_endpoint' => $trailer->appSetting->cdn_endpoint ?? '',
+                'folder' => $trailer->folder ?? '',
+                'cloud_folder' => $trailer->cloud_folder ?? '',
+                'upload_status' => $video->upload_status ?? '',
+            ],
             'image' => [
                 'id' => $movie->image->id,
                 'name' => $movie->image->name,

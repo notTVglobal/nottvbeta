@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\MovieTrailer;
 use App\Models\Video;
 use App\Models\User;
 use App\Jobs\UploadVideoToSpacesJob;
@@ -147,6 +148,29 @@ class VideoUploadController extends Controller
          // validate the file
 //        ???
 
+        $movieId = $request->movieId;
+        $movieTrailerId = $request->movieTrailerId;
+        $showEpisodeId = $request->showEpisodeId;
+
+        // remove the previous video
+        if ($showEpisodeId !== null) {
+//            $showEpisode = ShowEpisode::where('id', $showEpisodeId)->get();
+            Video::query()->where('show_episodes_id', $showEpisodeId)
+                ->update(['show_episodes_id' => null]);
+        }
+        if ($movieId !== null) {
+//            $movie = Movie::where('id', $movieId)->get();
+            Video::query()->where('movies_id', $movieId)
+                ->update(['movies_id' => null]);
+        }
+        if ($movieTrailerId !== null) {
+//            $movieTrailer = MovieTrailer::where('id', $movieTrailerId)->get();
+            Video::query()->where('movie_trailers_id', $movieTrailerId)
+                ->update(['movie_trailers_id' => null]);
+        }
+
+
+
         // create the file receiver
         $receiver = new FileReceiver('file', $request, HandlerFactory::classFromRequest($request));
 //        $receiver = new FileReceiver('file', $request, HandlerFactory::classFromRequest($request));
@@ -165,7 +189,7 @@ class VideoUploadController extends Controller
             // not using move, you need to manually delete the file by unlink($save->getFile()->getPathname())
 //            $video = $save->getFile();
 //            return $this->saveFile($save->getFile());
-            return $this->saveFile($save->getFile());
+            return $this->saveFile($save->getFile(), $movieId, $movieTrailerId, $showEpisodeId);
 
         }
 
@@ -175,7 +199,8 @@ class VideoUploadController extends Controller
         return response()->json([
             "done" => $handler->getPercentageDone(),
             'status' => true,
-            'video' => 'Video Placeholder goes here... or we do a partial reload of the video and the database shows a processing video placeholder until the video is done the job.'
+            'video' => 'processing',
+            'is_processing' => true,
         ]);
     }
 
@@ -186,7 +211,7 @@ class VideoUploadController extends Controller
      *
      * @return JsonResponse
      */
-    protected function saveFile(UploadedFile $file): JsonResponse {
+    protected function saveFile(UploadedFile $file, $movieId, $movieTrailerId, $showEpisodeId): JsonResponse {
 
         $path = storage_path('app/temp-videos');
         $fileName = $this->createFilename($file);
@@ -218,8 +243,21 @@ class VideoUploadController extends Controller
         $video->type = $mime;
         $video->folder = $folder;
         $video->cloud_folder = $cloud_folder;
+        $video->show_episodes_id = $showEpisodeId;
+        $video->movies_id = $movieId;
+        $video->movie_trailers_id = $movieTrailerId;
         $video->save();
         sleep(1);
+
+        $showEpisode = ShowEpisode::where('id', $showEpisodeId)
+            ->update(['video_id' => $video->id]);
+
+        $movie = Movie::where('id', $movieId)
+            ->update(['video_id' => $video->id]);
+
+        $movieTrailer = MovieTrailer::where('id', $movieTrailerId)
+            ->update(['video_id' => $video->id]);
+
 
 //        error_log('Video saved to database. Next up is the Job.');
 

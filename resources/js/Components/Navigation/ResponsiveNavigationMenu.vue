@@ -219,6 +219,13 @@
 
                         <JetResponsiveNavLink
                             @click="userStore.closeNavDropdown()"
+                            :href="route('calculations')"
+                            :active="route().current('calculations')">
+                            Calculations
+                        </JetResponsiveNavLink>
+
+                        <JetResponsiveNavLink
+                            @click="userStore.closeNavDropdown()"
                             :href="route('video')"
                             :active="route().current('video')">
                             MistServer API

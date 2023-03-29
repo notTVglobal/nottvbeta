@@ -201,6 +201,12 @@
 
                                             <JetDropdownLink
                                                 @click="videoPlayerStore.makeVideoTopRight()"
+                                                :href="route('calculations')">
+                                                Calculations
+                                            </JetDropdownLink>
+
+                                            <JetDropdownLink
+                                                @click="videoPlayerStore.makeVideoTopRight()"
                                                 :href="route('video')">
                                                 MistServer API
                                             </JetDropdownLink>

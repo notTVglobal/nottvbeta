@@ -13,6 +13,7 @@ use App\Models\TeamMember;
 use App\Models\User;
 use App\Models\AppSetting;
 //use http\QueryString;
+use App\Models\Video;
 use http\Message;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
@@ -238,6 +239,34 @@ class ShowsController extends Controller
 
         $teamId = $show->team_id;
 
+        $showEpisodes = $show->showEpisodes;
+
+//        $episode = ShowEpisode::where('show_id', $show->id)->first();
+        $episode = ShowEpisode::where('show_id', $show->id)->first();
+
+        $firstPlayFile = $episode->video_id ?? '';
+        $firstPlayUrl = $episode->video_url ?? '';
+
+        if ($firstPlayFile !== null) {
+            $firstPlay = $firstPlayFile;
+        } else $firstPlay = $firstPlayUrl;
+
+//        $firstPlay = Video::all()->reject(function (Video $video) {
+//        return $video->video_id === false;
+//    })->map(function (Video $video) {
+//        return $video;
+//    });
+
+
+        // get the first video with a video_id or video_url.
+        // this is hard coded for now. The creator/team will
+        // decide if they want the newest episode first, or
+        // episode 1 first. Later on, people who have already
+        // been watching the show will resume where they left
+        // off.
+//        $firstPlay = $showEpisode;
+        //
+
         return Inertia::render('Shows/{$id}/Index', [
             'show' => [
                 'name' => $show->name,
@@ -251,6 +280,13 @@ class ShowsController extends Controller
                     'folder' => $show->image->folder,
                     'cdn_endpoint' => $show->appSetting->cdn_endpoint,
                     'cloud_folder' => $show->image->cloud_folder,
+                ],
+                'firstPlay' => [
+                    'file_name' => $episode->video->file_name ?? '',
+                    'cdn_endpoint' => $episode->appSetting->cdn_endpoint ?? '',
+                    'folder' => $episode->video->folder ?? '',
+                    'cloud_folder' => $episode->video->cloud_folder ?? '',
+                    'upload_status' => $episode->video->upload_status ?? '',
                 ],
                 'copyrightYear' => $show->created_at->format('Y'),
                 'first_release_year' => $show->first_release_year,

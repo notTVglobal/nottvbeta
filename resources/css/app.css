@@ -16,6 +16,9 @@
 .channelsSelectMenu {
     z-index: 500;
 }
+.channelDisabled {
+    background-color: #48776e;
+}
 /*.videoBgFull {*/
 /*    position:static;*/
 /*    bottom:0;*/

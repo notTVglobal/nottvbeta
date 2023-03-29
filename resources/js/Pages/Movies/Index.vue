@@ -89,7 +89,7 @@
                                 </div>
 
                                 <div class="ml-12">
-                                    <Link :href="`/movies/${movie}`" class="block text-lg font-semibold leading-tight max-w-[8rem] hover:text-gray-400 mt-4">
+                                    <Link :href="`/movies/${movie.slug}`" class="block text-lg font-semibold leading-tight max-w-[8rem] hover:text-gray-400 mt-4">
                                         {{ movie.name }}</Link>
                                     <div class="text-gray-400 mt-1">{{ movie.category }}, {{ movie.subCategory }}</div>
                                     <p class="mt-6 pr-4 text-gray-300 hidden lg:block">
@@ -106,7 +106,7 @@
                             <div v-for="movie in mostAnticipated.data"
                                  :key="movie.id"
                                  class="movie flex">
-                                <Link :href="`/movies/${movie}`">
+                                <Link :href="`/movies/${movie.slug}`">
                                     <SingleImage :image="movie.image" :alt="'movie cover'" class="h-24 min-w-[4rem] w-16 object-cover hover:opacity-75 transition ease-in-out duration-150"/>
                                 </Link>
                                 <div class="ml-4">
@@ -121,11 +121,11 @@
                             <div v-for="movie in comingSoon.data"
                                  :key="movie.id"
                                  class="movie flex">
-                                <Link :href="`/movies/${movie}`">
+                                <Link :href="`/movies/${movie.slug}`">
                                     <SingleImage :image="movie.image" :alt="'movie cover'" class="h-24 min-w-[4rem] w-16 object-cover hover:opacity-75 transition ease-in-out duration-150"/>
                                 </Link>
                                 <div class="ml-4">
-                                    <Link :href="`/movies/${movie}`" class="hover:text-gray-300">{{ movie.name }}</Link>
+                                    <Link :href="`/movies/${movie.slug}`" class="hover:text-gray-300">{{ movie.name }}</Link>
                                     <div class="text-gray-400 text-sm mt-1">{{ movie.category }}, {{ movie.subCategory }}</div>
                                 </div>
                             </div>

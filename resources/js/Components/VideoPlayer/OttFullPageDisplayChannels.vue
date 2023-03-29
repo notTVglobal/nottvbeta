@@ -24,7 +24,7 @@
                     <div class="relative h-[calc(h-100%-16rem)] top-0 pr-5 space-y-2">
 
                         <button class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-0.2 border-green-800 shadow-md
-                                disabled:bg-gray-600 disabled:text-gray-300 disabled:cursor-not-allowed"
+                                disabled:disabledChannel disabled:text-gray-300 disabled:cursor-not-allowed"
                                 :class="{ activeChannel:videoPlayerStore.currentChannelName==='one' }"
                                 @click="videoPlayerStore.changeChannel('one')">
                             ONE</button>
@@ -68,6 +68,11 @@
                                 :class="{ activeChannel:videoPlayerStore.currentChannelName==='education' }"
                                 @click="videoPlayerStore.changeChannel('education')">
                             EDUCATION</button>
+                        <button class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-0.2 border-green-800 shadow-md
+                                disabled:bg-gray-600 disabled:text-gray-300 disabled:cursor-not-allowed"
+                                :class="{ activeChannel:videoPlayerStore.currentChannelName==='spirituality' }"
+                                @click="videoPlayerStore.changeChannel('spirituality')">
+                            SPIRITUALITY</button>
                         <button class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-0.2 border-green-800 shadow-md
                                 disabled:bg-gray-600 disabled:text-gray-300 disabled:cursor-not-allowed"
                                 disabled
@@ -150,5 +155,8 @@ defineProps({
     border-right-color: #ffcc66;
     border-right-width: 2px;
 }
+/* tec21: I set a disabledChannel class in the app.css file .. trying to get a specific colour of
+            green on the background of a disabled button. But this can wait until there is more logic
+            built in to the channelController to manage channels. */
 
 </style>

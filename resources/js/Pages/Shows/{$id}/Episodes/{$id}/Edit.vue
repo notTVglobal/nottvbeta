@@ -97,6 +97,7 @@
                                         <!--                <iframe class="rumble" width="640" height="360" src="https://rumble.com/embed/v1nf3s7/?pub=4" frameborder="0" allowfullscreen></iframe>-->
 
                                         <div
+                                            v-if="!episode.video.file_name"
                                             class="flex justify-center shadow overflow-hidden border-b border-gray-200 w-full bg-white dark:bg-black text-2xl sm:rounded-lg p-5">
 
                                             <iframe v-if="props.episode.video_file_url && !props.episode.video_file_embed_code"
@@ -106,6 +107,13 @@
                                             </div>
                                             <div v-if="props.episode.video_file_url && props.episode.video_file_embed_code" v-html="props.episode.video_file_embed_code">
                                             </div>
+                                        </div>
+
+                                        <div v-if="episode.video.file_name" class="mb-6 bg-black w-full p-6">
+                                            <span
+                                                v-if="episode.video.upload_status === 'processing'"
+                                                class="text-center place-self-center text-white font-semibold text-xl">Video processing...</span>
+                                            <video v-if="episode.video.upload_status !== 'processing'" :src="episode.video.cdn_endpoint+episode.video.cloud_folder+episode.video.folder+'/'+episode.video.file_name" controls></video>
                                         </div>
 
                                     </div>
@@ -126,7 +134,7 @@
                                                 </li>
                                             </ul>
 
-                                            <span class="text-xl font-bold text-gray-800">&lt;UPLOADER GOES HERE&gt; </span>
+                                            <VideoUpload :showEpisodeId="episode.id" class="text-black"/>
 
                                         </div>
 
@@ -317,6 +325,7 @@ import ShowEpisodeEditHeader from "@/Components/ShowEpisodes/Edit/ShowEpisodeEdi
 import Message from "@/Components/Modals/Messages";
 import ImageUpload from "@/Components/Uploaders/ImageUpload.vue";
 import SingleImage from "@/Components/Multimedia/SingleImage.vue";
+import VideoUpload from "@/Components/Uploaders/VideoUpload"
 
 let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore()

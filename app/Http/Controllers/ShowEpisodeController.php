@@ -9,6 +9,7 @@ use App\Models\ShowEpisode;
 use App\Models\Team;
 use App\Models\TeamMember;
 use App\Models\User;
+use App\Models\Video;
 use Carbon\Carbon;
 use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Facades\Auth;
@@ -113,6 +114,7 @@ class ShowEpisodeController extends Controller
     public function show(Show $show, ShowEpisode $showEpisode) {
 
         $teamId = $show->team_id;
+        $video = Video::where('show_episodes_id', $showEpisode->id)->first();
 
         return Inertia::render('Shows/{$id}/Episodes/{$id}/Index', [
             'show' => [
@@ -148,6 +150,13 @@ class ShowEpisodeController extends Controller
                 'video_id' => $showEpisode->video_id,
                 'video_url' => $showEpisode->video_url,
                 'video_embed_code' => $showEpisode->video_embed_code,
+            ],
+            'video' => [
+                'file_name' => $video->file_name ?? '',
+                'cdn_endpoint' => $video->appSetting->cdn_endpoint ?? '',
+                'folder' => $video->folder ?? '',
+                'cloud_folder' => $video->cloud_folder ?? '',
+                'upload_status' => $video->upload_status ?? '',
             ],
             'image' => [
                 'id' => $showEpisode->image->id,
@@ -206,6 +215,8 @@ class ShowEpisodeController extends Controller
             'isBeingEditedByUser_id' => Auth::user()->id,
         ]);
 
+        $videoForEpisode = Video::where('show_episodes_id', $showEpisode->id)->first();
+
         return Inertia::render('Shows/{$id}/Episodes/{$id}/Edit', [
             'show' => [
                 'name' => $show->name,
@@ -228,6 +239,7 @@ class ShowEpisodeController extends Controller
                 'slug' => $show->team->slug,
             ],
             'episode' => [
+                'id' => $showEpisode->id,
                 'name' => $showEpisode->name,
                 'slug' => $showEpisode->slug,
                 'description' => $showEpisode->description,
@@ -239,6 +251,13 @@ class ShowEpisodeController extends Controller
                 'video_id' => $showEpisode->video_id,
                 'video_url' => $showEpisode->video_url,
                 'video_embed_code' => $showEpisode->video_embed_code,
+                'video' => [
+                    'file_name' => $videoForEpisode->file_name ?? '',
+                    'cdn_endpoint' => $videoForEpisode->appSetting->cdn_endpoint ?? '',
+                    'folder' => $videoForEpisode->folder ?? '',
+                    'cloud_folder' => $videoForEpisode->cloud_folder ?? '',
+                    'upload_status' => $videoForEpisode->upload_status ?? '',
+                ],
                 'image' => [
                     'id' => $showEpisode->image->id,
                     'name' => $showEpisode->image->name,
