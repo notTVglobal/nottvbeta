@@ -35,6 +35,7 @@ let myDropzone = new Dropzone("#videoUploadForm", {
     paramName: "file", // The name that will be used to transfer the file
     maxFilesize: '50 GB', // MB
     chunking: true,
+    timeout: "2100",
     chunkSize: 2 * 1024 * 1024,
     parallelChunkUploads: false,
     retryChunks: false,
