@@ -7,7 +7,9 @@
         <div v-show="uploadCompleteMessage" class="mb-4 font-bold text-center">Upload is complete. The video is now processing.</div>
         <form v-show="!isHidden" id="videoUploadForm" action="/videoupload" class="dropzone dropzoneFile border border-black rounded w-full h-48 max-w-md px-2 py-2 mb-6">
             <!--                            add input fields and a submit button to send data back to Laravel -->
-        <input name="movieId" v-model="form.movieId">
+            <input hidden name="movieId" v-model="form.movieId">
+            <input hidden name="movieTrailerId" v-model="form.movieTrailerId">
+            <input hidden name="showEpisodeId" v-model="form.showEpisodeId">
         </form>
 
     </div>
@@ -35,7 +37,7 @@ let myDropzone = new Dropzone("#videoUploadForm", {
     chunking: true,
     chunkSize: 2 * 1024 * 1024,
     parallelChunkUploads: false,
-    retryChunks: false,
+    retryChunks: true,
     retryChunksLimit: 10,
     capture: null,
     // can set the capture method as camera, microphone or video
@@ -70,7 +72,7 @@ myDropzone.on("complete", function(file) {
     uploadCompleteMessage = 1;
     myDropzone.removeFile(file);
     userStore.uploadPercentage = 0;
-    isHidden = true;
+    isHidden = false;
     Inertia.reload({
         only: ["videos"],
     });
@@ -124,6 +126,7 @@ let form = useForm({
     align-items: center;
     row-gap: 16px;
     border: 2px dashed #000000;
+    background-color: #fce4bb;
     transition: 0.3s ease all;
 }
 
