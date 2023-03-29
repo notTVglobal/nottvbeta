@@ -1,10 +1,10 @@
 <template>
     <div>
 
-        <progress v-show="userStore.uploadPercentage != 0" max="100" :value="userStore.uploadPercentage" class="w-full mb-4" />
+        <progress v-show="userStore.uploadPercentage !== 0" max="100" :value="userStore.uploadPercentage" class="w-full mb-4" />
 
-        <div v-show="uploadingMessage" class="mb-4 font-bold text-center">Please stay on this screen until upload is complete.</div>
-        <div v-show="uploadCompleteMessage" class="mb-4 font-bold text-center">Upload is complete. The video is now processing.</div>
+        <div v-show="uploadingMessage !== 0" class="mb-4 font-bold text-center">Please stay on this screen until upload is complete.</div>
+        <div v-show="uploadCompleteMessage !== 0" class="mb-4 font-bold text-center">Upload is complete. The video is now processing.</div>
 <!--        <form v-show="!isHidden" id="videoUploadForm" action="/videoupload" class="dropzone dropzoneFile border border-black rounded w-full h-48 max-w-md px-2 py-2 mb-6">-->
         <form v-show="uploadingMessage === 0" id="videoUploadForm" action="/videoupload" class="dropzone dropzoneFile border border-black rounded w-full h-48 max-w-md px-2 py-2 mb-6">
             <!--                            add input fields and a submit button to send data back to Laravel -->
