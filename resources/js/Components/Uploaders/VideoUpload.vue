@@ -6,7 +6,7 @@
         <div v-show="uploadingMessage" class="mb-4 font-bold text-center">Please stay on this screen until upload is complete.</div>
         <div v-show="uploadCompleteMessage" class="mb-4 font-bold text-center">Upload is complete. The video is now processing.</div>
 <!--        <form v-show="!isHidden" id="videoUploadForm" action="/videoupload" class="dropzone dropzoneFile border border-black rounded w-full h-48 max-w-md px-2 py-2 mb-6">-->
-        <form id="videoUploadForm" action="/videoupload" class="dropzone dropzoneFile border border-black rounded w-full h-48 max-w-md px-2 py-2 mb-6">
+        <form v-show="uploadingMessage === 0" id="videoUploadForm" action="/videoupload" class="dropzone dropzoneFile border border-black rounded w-full h-48 max-w-md px-2 py-2 mb-6">
             <!--                            add input fields and a submit button to send data back to Laravel -->
             <input hidden name="movieId" v-model="form.movieId">
             <input hidden name="movieTrailerId" v-model="form.movieTrailerId">
@@ -53,9 +53,9 @@ let myDropzone = new Dropzone("#videoUploadForm", {
     uploadprogress: function(file, progress, bytesSent) {
         userStore.uploadPercentage = progress;
         console.log(userStore.uploadPercentage);
-        if(userStore.uploadPercentage !== 100){
-            // isHidden = true;
-        }
+        // if(userStore.uploadPercentage !== 100){
+        //     // isHidden = true;
+        // }
     },
     dictDefaultMessage: "Click here or Drop files here to upload",
     forceFallback: false, // for testing, set to true.
@@ -70,7 +70,6 @@ let myDropzone = new Dropzone("#videoUploadForm", {
 myDropzone.on("addedfile", file => {
     uploadingMessage = 1;
     console.log(`File added: ${file.name}`);
-    videoPlayerStore.videoUploadComplete = false;
 
 });
 
