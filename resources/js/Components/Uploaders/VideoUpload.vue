@@ -73,7 +73,7 @@ myDropzone.on("complete", function(file) {
     uploadCompleteMessage = 1;
     myDropzone.removeFile(file);
     userStore.uploadPercentage = 0;
-    isHidden = true;
+    isHidden = false;
     Inertia.reload({
         only: ["videos"],
     });
