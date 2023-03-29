@@ -7,27 +7,19 @@
 
                 <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
 
-                <header class="flex justify-between mb-3 border-b border-gray-800">
-                    <div class="container mx-auto flex flex-col lg:flex-row items-center justify-between px-4 py-6">
-                        <div id="topDiv" class="flex flex-col lg:flex-row items-center">
-                            <h1 class="text-3xl font-semibold text-center lg:text-left">Video Upload</h1>
+                <div id="topDiv"></div>
+                <header class="flex justify-between mb-3 border-b border-gray-800 pb-6">
 
-                        </div>
-                    </div>
+                        <h1 class="text-3xl font-semibold text-center lg:text-left">Video Upload</h1>
+
 
                     <div>
                         <button
-                            v-if="!videoPlayerStore.videoUploadComplete"
                             @click="back"
-                            class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
-                        >Cancel
+                            class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                        >Back
                         </button>
-                        <button
-                            v-if="videoPlayerStore.videoUploadComplete"
-                            @click="back"
-                            class="px-4 py-2 text-white bg-green-600 hover:bg-done-500 rounded-lg"
-                        >Done
-                        </button>
+
                     </div>
 
                 </header>
