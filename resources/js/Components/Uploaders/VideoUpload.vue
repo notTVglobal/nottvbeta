@@ -5,7 +5,8 @@
 
         <div v-show="uploadingMessage" class="mb-4 font-bold text-center">Please stay on this screen until upload is complete.</div>
         <div v-show="uploadCompleteMessage" class="mb-4 font-bold text-center">Upload is complete. The video is now processing.</div>
-        <form v-show="!isHidden" id="videoUploadForm" action="/videoupload" class="dropzone dropzoneFile border border-black rounded w-full h-48 max-w-md px-2 py-2 mb-6">
+<!--        <form v-show="!isHidden" id="videoUploadForm" action="/videoupload" class="dropzone dropzoneFile border border-black rounded w-full h-48 max-w-md px-2 py-2 mb-6">-->
+        <form id="videoUploadForm" action="/videoupload" class="dropzone dropzoneFile border border-black rounded w-full h-48 max-w-md px-2 py-2 mb-6">
             <!--                            add input fields and a submit button to send data back to Laravel -->
             <input hidden name="movieId" v-model="form.movieId">
             <input hidden name="movieTrailerId" v-model="form.movieTrailerId">
@@ -26,7 +27,7 @@ let userStore = useUserStore()
 let uploadPercentage = ref(0);
 let uploadingMessage = ref(0);
 let uploadCompleteMessage = ref(0);
-let isHidden = ref(false);
+// let isHidden = ref(false);
 
 onMounted(() => {
 // see options for Dropzone here: https://github.com/dropzone/dropzone/blob/main/src/options.js
@@ -49,7 +50,7 @@ let myDropzone = new Dropzone("#videoUploadForm", {
         userStore.uploadPercentage = progress;
         console.log(userStore.uploadPercentage);
         if(userStore.uploadPercentage !== 100){
-            isHidden = true;
+            // isHidden = true;
         }
     },
     dictDefaultMessage: "Click here or Drop files here to upload",
@@ -73,7 +74,7 @@ myDropzone.on("complete", function(file) {
     uploadCompleteMessage = 1;
     myDropzone.removeFile(file);
     userStore.uploadPercentage = 0;
-    isHidden = false;
+    // isHidden = false;
     Inertia.reload({
         only: ["videos"],
     });
