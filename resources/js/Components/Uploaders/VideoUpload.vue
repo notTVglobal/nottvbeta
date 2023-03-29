@@ -103,7 +103,7 @@ let form = useForm({
     // movieId: userStore.uploadMovieId,
     movieId: props.movieId,
     movieTrailerId: props.movieId,
-    showEpisodeId: props.uploadShowEpisodeId,
+    showEpisodeId: props.showEpisodeId,
 });
 
 // let props = defineProps({

@@ -70,7 +70,7 @@
                     <p v-if="video.upload_status === 'processing'" class="mt-12 px-3 py-3 text-gray-50 mr-1 lg:mr-36 bg-black w-full text-center lg:text-left">
                         The video is currently processing. <span v-if="episode.video_url">This video is available to play, but it may be slow to load.</span><span v-if="!episode.video_url"> check back later.</span>
                     </p>
-                    <p v-if="video.upload_status !== 'processing' && !video.file_name" class="mt-12 px-3 py-3 text-gray-50 mr-1 lg:mr-36 bg-black w-full text-center lg:text-left">
+                    <p v-if="video.upload_status !== 'processing' && !video.file_name && episode.video_url" class="mt-12 px-3 py-3 text-gray-50 mr-1 lg:mr-36 bg-black w-full text-center lg:text-left">
                         <span v-if="episode.video_url">This video is available to play, but it may be slow to load.</span>
                     </p>
 
