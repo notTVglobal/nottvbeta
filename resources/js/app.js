@@ -17,7 +17,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 // import specific icons
 import { faUserSecret, faPlay, faQuestion, faStar, faUsers, faHandsHelping,
         faRocket, faEye, faComments, faPaperPlane, faUser, faLeaf, faFlagUsa,
-        faList, faFilter, faShare, faCircleDown, faRepeat } from '@fortawesome/free-solid-svg-icons'
+        faList, faFilter, faShare, faCircleDown, faRepeat, faCheck } from '@fortawesome/free-solid-svg-icons'
 // import popper for pop-up tooltips
 import Popper from "vue3-popper";
 // import confirm dialog
@@ -71,7 +71,7 @@ createInertiaApp({
 
 library.add(faUserSecret, faPlay, faQuestion, faStar, faUsers, faHandsHelping, faRocket,
             faEye, faComments, faPaperPlane, faUser, faLeaf, faFlagUsa, faList, faFilter,
-            faShare, faCircleDown, faRepeat);
+            faShare, faCircleDown, faRepeat, faCheck);
 
 InertiaProgress.init({ delay: 250, color: '#FCEF5B', includeCSS: true, showSpinner: true, });
 

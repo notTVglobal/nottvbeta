@@ -22,7 +22,7 @@
                                     <div class="price">$25</div>
                                 </div>
                                 <div class="py-10">
-                                    IMAGE HERE
+                                    <font-awesome-icon icon="fa-star" class="upgradeIcon"/>
                                 </div>
                                 <div>
                                     Get full access to all features, shows, channels and movies!
@@ -30,8 +30,8 @@
                                 <div class="bg-gray-900 hover:bg-gray-800 rounded-lg w-5/6 mt-6 py-4 mb-4 mx-auto"
                                      @mouseover="hoverMonthly = true"
                                      @mouseleave="hoverMonthly = false">
-                                    <div class="inline mr-4 p-1 rounded-full bg-gray-700 hover:bg-white hover:text-blue-500"
-                                        :class="{active: hoverMonthly}"> OE</div> <span> Select Plan</span></div>
+                                    <span class="bg-gray-700 mr-4 py-1 px-2 w-fit rounded-full"
+                                        :class="{active: hoverMonthly}"><font-awesome-icon icon="fa-check" /></span> <span> Select Plan</span></div>
 
                             </div>
                         </Link>
@@ -42,16 +42,16 @@
                                 <div class="price">$250</div>
                             </div>
                             <div class="py-10">
-                                IMAGE HERE
+                                <font-awesome-icon icon="fa-star" class="upgradeIcon"/><font-awesome-icon icon="fa-star" class="upgradeIcon"/>
                             </div>
                             <div>
                                 Get full access to all features, shows, channels and movies!
                             </div>
                             <div class="bg-gray-900 hover:bg-gray-800 rounded-lg w-5/6 mt-6 py-4 mb-4 mx-auto"
-                                 @mouseover="hoverMonthly = true"
-                                 @mouseleave="hoverMonthly = false">
-                            <div class="bg-gray-900 hover:bg-gray-800 rounded-lg w-5/6 mt-6 py-4 mb-4 mx-auto">
-                                Select Plan</div>
+                                 @mouseover="hoverYearly = true"
+                                 @mouseleave="hoverYearly = false">
+                                <span class="bg-gray-700 mr-4 py-1 px-2 w-fit rounded-full"
+                                     :class="{active: hoverYearly}"><font-awesome-icon icon="fa-check" /></span> <span> Select Plan</span></div>
 
                         </div>
                         </Link>
@@ -62,13 +62,16 @@
                                 <div class="price">$999</div>
                             </div>
                             <div class="py-10">
-                                IMAGE HERE
+                                <font-awesome-icon icon="fa-star" class="upgradeIcon"/><font-awesome-icon icon="fa-star" class="upgradeIcon"/><font-awesome-icon icon="fa-star" class="upgradeIcon"/>
                             </div>
                             <div>
                                 Get full access to all features, shows, channels and movies!
                             </div>
-                            <div class="bg-gray-900 hover:bg-gray-800 rounded-lg w-5/6 mt-6 py-4 mb-4 mx-auto">
-                                Select Plan</div>
+                            <div class="bg-gray-900 hover:bg-gray-800 rounded-lg w-5/6 mt-6 py-4 mb-4 mx-auto"
+                                 @mouseover="hoverForever = true"
+                                 @mouseleave="hoverForever = false">
+                                <span class="bg-gray-700 mr-4 py-1 px-2 w-fit rounded-full"
+                                     :class="{active: hoverForever}"><font-awesome-icon icon="fa-check" /></span> <span> Select Plan</span></div>
 
                         </div>
                         </Link>
@@ -120,7 +123,12 @@ let showMessage = ref(true);
 
 <style scoped>
 
+.upgradeIcon {
+    font-size: xxx-large;
+}
+
 .productName {
+    font-size: large;
     font-weight: bold;
     padding-top: 1rem;
 }
