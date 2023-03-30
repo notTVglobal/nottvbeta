@@ -1,7 +1,9 @@
+<!--This file may not be in use.-->
+
 <template>
     <div>
         <div class="flex flex-col p-5 mt-10">
-            <div class="text-3xl font-semibold">Conversation</div>
+            <div class="text-3xl font-semibold">Conversation NNNN</div>
         </div>
         <div class="italic">The newest message is at the bottom.</div>
         <div class="absolute">
@@ -123,10 +125,13 @@ function getChannels() {
     axios.get('/chat/channels')
         .then(response => {
             channels = response;
+            console.log('WTF');
+            console.log('channels.data= '+channels.data[0]);
             setChannel(channels.data[0]);
+
         })
         .catch(error => {
-            console.log(error);
+            console.log('BUG1:' + error);
         })
 }
 
@@ -150,7 +155,7 @@ function setChannel ( channel ){
                     chatStore.messages = response.data;
                 })
                 .catch(error => {
-                    console.log(error);
+                    console.log('BUG2:' + error);
                 })
         });
 }

@@ -5,7 +5,7 @@ import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore";
 
 
 
-export let useChatStore = defineStore('chat', {
+export let useChatStore = defineStore('chatStore', {
     state() {
         return {
             showChat: Boolean,
@@ -13,7 +13,7 @@ export let useChatStore = defineStore('chat', {
             messages: ref([]),
             message: ref(''),
             echo: [],
-            currentChannel: [],
+            currentChannel: ref([]),
         };
     },
 

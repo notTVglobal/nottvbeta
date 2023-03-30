@@ -123,6 +123,7 @@ function getChannels() {
     axios.get('/chat/channels')
         .then(response => {
             channels = response;
+            // setChannel(channels.data[0]);
             setChannel(channels.data[0]);
         })
         .catch(error => {
