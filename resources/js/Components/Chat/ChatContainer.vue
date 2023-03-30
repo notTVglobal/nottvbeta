@@ -3,7 +3,7 @@
 <template>
     <div>
         <div class="flex flex-col p-5 mt-10">
-            <div class="text-3xl font-semibold">Conversation NNNN</div>
+            <div class="text-3xl font-semibold">Conversation</div>
         </div>
         <div class="italic">The newest message is at the bottom.</div>
         <div class="absolute">
