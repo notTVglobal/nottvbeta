@@ -3,6 +3,8 @@
 namespace App\Listeners;
 
 use App\Events\NewChatMessage;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
 
 class SendChatMessageNotification
 {
