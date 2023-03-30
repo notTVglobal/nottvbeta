@@ -9,11 +9,11 @@
             <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
 
             <header class="flex justify-between mb-3 border-b border-gray-800">
-                <div class="container mx-auto flex flex-col lg:flex-row items-center justify-between px-4 py-6">
+                <div class="container mx-auto flex flex-col xl:flex-row items-center justify-between px-4 py-6">
 
-                    <div class="flex flex-col lg:flex-row items-center">
+                    <div class="flex flex-col xl:flex-row items-center">
                         <h1 class="text-3xl font-semibold">Shows</h1>
-                        <ul class="flex ml-0 lg:ml-16 mt-6 lg:mt-0 space-x-8" >
+                        <ul class="flex ml-0 xl:ml-16 mt-6 xl:mt-0 space-x-8" >
                             <li>
                                 <button :href="``" class="text-gray-700 cursor-not-allowed">Categories</button>
                             </li>
@@ -25,7 +25,7 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="flex items-center mt-6 lg:mt-0">
+                    <div class="flex items-center mt-6 xl:mt-0">
                         <div class="relative">
                             <input v-model="search" type="search" class="bg-gray-50 text-black text-sm rounded-full
                             focus:outline-none focus:shadow w-64 pl-8 px-3 py-1" placeholder="Search...">
@@ -67,9 +67,9 @@
                     <Pagination :data="shows" class=""/>
                 </div>
 
-                <div class="flex flex-col lg:flex-row my-10">
+                <div class="flex flex-col xl:flex-row my-10">
 
-                    <div class="newest-episodes w-full lg:w-3/4 mr-0 md:mr-16 lg:mr-32">
+                    <div class="newest-episodes w-full xl:w-3/4 mr-0 md:mr-16 xl:mr-32">
                         <h2 id="new-episodes" class="text-purple-500 uppercase tracking-wide font-semibold text-2xl">Newest Episodes</h2>
                         <div class="recently-reviewed-container space-y-12 mt-8">
                             <div v-for="episode in newestEpisodes.data"
@@ -91,7 +91,7 @@
 
                                             <div class="text-gray-400 font-light text-sm">{{ episode.name }}</div>
 
-                                            <p class="mt-4 pr-4 text-gray-300 lg:block">
+                                            <p class="mt-4 pr-4 text-gray-300 xl:block">
                                                 {{ episode.description}}
                                             </p>
                                         </div>
@@ -106,7 +106,7 @@
                         </div>
                     </div>
 
-                    <div class="most-anticipated lg:w-1/4 mt-12 lg:mt-0">
+                    <div class="most-anticipated xl:w-1/4 mt-12 xl:mt-0">
                         <h2 class="text-purple-500 uppercase tracking-wide font-semibold text-2xl">Most Anticipated</h2>
                         <div class="most-anticipated-container space-y-10 mt-8">
                             <div v-for="show in mostAnticipated.data"

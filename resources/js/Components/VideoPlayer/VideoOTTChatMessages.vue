@@ -1,7 +1,7 @@
 <template>
-    <div class="pb-64 scrollbar-hide">
-        <button @click.prevent="scrollTo('#scrollToMe')" class="bottom-0 mr-32 h-12 bg-blue-800 hover:bg-blue-600 w-56 rounded-lg hidden">CLICK HERE TO SCROLL TO BOTTOM</button>
-        <div class="chatChrome w-full h-full pb-48 pt-5 bottom-48 flex flex-col-reverse overflow-y-scroll overflow-x-clip break-words messages scrollbar-hide">
+    <div class="pb-0 scrollbar-hide">
+        <button @click.prevent="scrollTo('#scrollToMe')" class="bottom-0 mr-32 h-12 bg-blue-800 hover:bg-blue-600 w-56 rounded-lg ">CLICK HERE TO SCROLL TO BOTTOM</button>
+        <div class="chatChrome w-full h-full pb-0 pt-5 bottom-0 flex flex-col-reverse overflow-y-scroll overflow-x-clip break-words messages scrollbar-hide">
             <div id="scrollToMe"></div>
             <div v-for="(message, index) in chatStore.messages.slice()" :key="index">
                 <message-item :id="message.id" :message="message" :time="time(message.created_at)" />

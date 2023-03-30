@@ -1,5 +1,5 @@
 <template>
-    <div class="top-0 left-0 bg-gray-800 text-gray-200 h-screen w-screen scrollbar-hidden-y overscroll-x-none">
+    <div class="absolute top-0 left-0 right-0 bottom-0 bg-gray-800 text-gray-200 h-screen max-w-screen overscroll-y-none overscroll-x-none">
 
 
     <!-- Navbar for logged in user -->
@@ -15,7 +15,8 @@
                  @mouseleave="hideOSD">
 
                 <ResponsiveNavigationMenu/>
-                <NavigationMenu /></div>
+                <NavigationMenu />
+            </div>
 
 
             <!-- When video is FullPage -->
@@ -23,12 +24,12 @@
                  class="fixed top-0 w-full nav-mask"
                  @mouseenter="showOSD"
                  @mouseleave="hideOSD">
+
                 <div v-show="videoPlayerStore.showNav">
                     <ResponsiveNavigationMenu/>
                     <NavigationMenu /></div>
                 </div>
-
-        </div>
+            </div>
 
 
     <!-- Video Player -->
@@ -36,18 +37,15 @@
                  @mouseenter="showOSD"
                  @mouseleave="hideOSD">
 
-                <div v-if="!videoPlayerStore.fullPage" class="fixed top-72 w-full sm:w-96 right-0 z-30">
+                <div v-if="!videoPlayerStore.fullPage" class="fixed top-72 w-full lg:w-96 right-0 z-30">
                     <OttTopRightButtons class="videoOTT" v-if="user"/></div>
 
                 <OttTopRightDisplay v-show="user"
                                     :user="user"
-                                    class="fixed top-78 h-screen right-0 w-full sm:w-96 mt-2 overflow-y-scroll"
+                                    class="fixed top-78 right-0 w-full lg:w-96 mt-2 overflow-y-none"
                                     :class="videoPlayerStore.ottClass"/>
 
                 <VideoPlayerMain class="z-50" :key="videoPlayerStore.key" :user="user" />
-
-
-
             </div>
 
 
@@ -61,12 +59,12 @@
 
                 <!-- Logged in view -->
                 <main v-if="user"
-                      class="absolute top-80 pb-24 sm:top-16
-                             w-full sm:w-[calc(100vw-24rem)] h-[calc(100vh-19rem)]
-                             sm:h-[calc(100vh-4rem)] z-20 overflow-y-scroll overscroll-x-none">
+                      class="absolute top-78 pb-24 lg:top-16
+                             w-fit lg:w-[calc(100vw-24rem)]
+                             h-[calc(100vh-19rem)] lg:h-[calc(100vh-4rem)]
+                             z-20  overflow-y-scroll overscroll-x-none">
 
                     <slot /></main>
-
             </div>
 
 

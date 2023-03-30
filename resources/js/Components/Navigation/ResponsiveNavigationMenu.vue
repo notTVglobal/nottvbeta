@@ -53,7 +53,7 @@
                 <div class="flex justify-between pt-2">
                     <div class="flex justify-start pb-3">
                         <div v-if="$page.props.jetstream.managesProfilePhotos" class="mt-2 min-w-[2.5rem]">
-                            <Link @click="videoPlayer.makeVideoTopRight()"
+                            <Link @click="userStore.closeNavDropdown()"
                                   :href="route('profile.show')"
                                   :active="route().current('profile.show')">
                                 <img class="h-10 min-w-[2.5rem] rounded-full object-cover"
@@ -62,14 +62,14 @@
                         </div>
                         <div class="mt-1 ml-3 w-full">
                             <div class="font-medium text-base text-gray-100 w-full">
-                                <Link @click="videoPlayer.makeVideoTopRight()"
+                                <Link @click="userStore.closeNavDropdown()"
                                       :href="route('profile.show')"
                                       :active="route().current('profile.show')">
                                     {{ $page.props.user.name }}
                                 </Link>
                             </div>
                             <div class="font-medium text-sm text-gray-100 w-full">
-                                <Link @click="videoPlayer.makeVideoTopRight()"
+                                <Link @click="userStore.closeNavDropdown()"
                                       :href="route('profile.show')"
                                       :active="route().current('profile.show')">
                                     {{ $page.props.user.email }}
@@ -164,8 +164,8 @@
 
                 <JetResponsiveNavLink
                     @click="userStore.closeNavDropdown()"
-                    :href="route('settings')"
-                    :active="route().current('settings')">
+                    :href="route('profile.show')"
+                    :active="route().current('profile.show')">
                         Settings
                 </JetResponsiveNavLink>
 

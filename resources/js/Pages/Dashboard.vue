@@ -1,7 +1,7 @@
 <template>
     <Head title="Dashboard" />
     <div id="topDiv"></div>
-    <div class="place-self-center flex flex-col gap-y-3">
+    <div class="place-self-center flex flex-col gap-y-3 bg-blue-500 w-full">
 
         <div class="bg-white rounded text-black dark:text-white dark:bg-gray-900 p-5 mb-10">
 

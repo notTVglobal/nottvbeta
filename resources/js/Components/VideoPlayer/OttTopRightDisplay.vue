@@ -1,7 +1,7 @@
 <template>
-    <div>
+    <div class="overflow-y-scroll scrollbar-hide h-full" >
 
-        <div v-if="videoPlayerStore.ott === 2" class="channels w-full h-full bg-green-800 p-2 overflow-y-scroll scrollbar-hide mb-32">
+        <div v-if="videoPlayerStore.ott === 2" class="channels w-full h-full bg-green-800 p-2 mb-64">
 
             <h1 class="text-xs font-semibold uppercase mb-3 w-full bg-green-900 text-white p-2">CHANNELS</h1>
 
@@ -138,9 +138,14 @@
                 the stream_playlist.
             </div>
         </div>
+<!--        <div v-if="videoPlayerStore.ott === 4" class="now-playing w-full bg-red-800 px-2 pt-2 overflow-y-scroll scrollbar-hide">-->
         <div v-if="videoPlayerStore.ott === 4" class="now-playing w-full bg-indigo-800 px-2 pt-2 overflow-y-scroll scrollbar-hide">
             <h1 class="text-xs font-semibold uppercase mb-3 w-full bg-indigo-900 text-white p-2">CHAT</h1>
-            <div class="h-[calc(100vh-19rem)] w-full overflow-y-scroll scrollbar-hide">
+
+            <!--            tec21: this one below works, 29MAR2023. The Ott divs need to be turned into pages on mobile devices so there is no scroll bar overlap. -->
+            <!--            <div class="h-[calc(100vh-28rem)] w-full overflow-y-scroll scrollbar-hide">-->
+            <div class="h-[calc(100vh-22rem)] pb-24 w-full overflow-y-scroll scrollbar-hide">
+
                 <VideoOTTChat :user="props.user"/>
             </div>
         </div>

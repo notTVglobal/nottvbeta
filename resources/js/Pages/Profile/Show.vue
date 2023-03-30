@@ -2,11 +2,11 @@
     <Head title="Settings" />
 <!--    <AppLayout>-->
     <div id="topDiv"></div>
-    <div class="overflow-y-scroll z-10">
+    <div class="mt-10 z-10">
 
 <!--        <template #header>-->
             <h2 class="font-semibold text-4xl text-gray-200 text-center leading-tight">
-                Profile
+                Settings
             </h2>
 <!--        </template>-->
         <div class="place-self-center flex flex-col gap-y-3">

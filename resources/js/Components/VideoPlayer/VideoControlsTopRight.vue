@@ -8,10 +8,10 @@
         leave-to-class="opacity-0"
     >
 
-        <div v-if="show">
+        <div v-if="show" class="flex justify-center">
 
 <!-- Video TopRight Controls -->
-                    <div class="absolute flex justify-between bottom-2 px-2 w-full z-50">
+                    <div class="absolute flex justify-between bottom-2 px-2 w-96 z-50">
 
                         <Link v-touch="()=>(route('stream'))" @click="videoPlayerStore.makeVideoFullPage()" :href="route('stream')" :active="route().current('stream')">
                         <button class="text-xs md:text-md bg-gray-800 rounded-full p-2 hover:bg-gray-600">
