@@ -33,10 +33,10 @@ onMounted(() => {
 let myDropzone = new Dropzone("#videoUploadForm", {
     url: "/videoupload",
     paramName: "file", // The name that will be used to transfer the file
-    maxFilesize: '50 GB', // MB
+    maxFilesize: '3 GB', // MB
     chunking: true,
     chunkSize: 2 * 1024 * 1024,
-    parallelChunkUploads: false,
+    parallelChunkUploads: true,
     retryChunks: true,
     retryChunksLimit: 10,
     capture: null,
@@ -71,8 +71,10 @@ myDropzone.on("complete", function(file) {
     uploadingMessage = 0;
     uploadCompleteMessage = 1;
     myDropzone.removeFile(file);
-    userStore.uploadPercentage = 0;
-    isHidden = false;
+    // userStore.uploadPercentage = 0;
+    if(userStore.uploadPercentage === 100){
+        isHidden = false;
+    }
     Inertia.reload({
         only: ["videos"],
     });

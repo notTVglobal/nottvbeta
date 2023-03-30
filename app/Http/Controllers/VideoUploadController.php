@@ -199,8 +199,7 @@ class VideoUploadController extends Controller
         return response()->json([
             "done" => $handler->getPercentageDone(),
             'status' => true,
-            'video' => 'processing',
-            'is_processing' => true,
+//            'video' => 'processing',
         ]);
     }
 
