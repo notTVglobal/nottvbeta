@@ -357,6 +357,8 @@ class ImageController extends Controller
             'extension' => $uploadedFile->extension(),
             'size' => $uploadedFile->getSize(),
             'folder' => $folder,
+            'cloud_folder' => $cloud_folder,
+            'storage_location' => 'do_spaces',
         ]);
 
         // store image_id to Movies table
