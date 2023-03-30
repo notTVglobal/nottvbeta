@@ -123,6 +123,17 @@ Route::middleware([
         return Inertia::render('Upgrade');
     })->name('upgrade');
 
+    Route::get('/subscribe', function () {
+        return Inertia::render('Subscribe', [
+            'intent' => auth()->user()->createSetupIntent(),
+        ]);
+    })->name('subscribe');
+
+    Route::post('/subscribe', function (Request $request) {
+        return Inertia::render('Subscribe', [
+        ]);
+    })->name('subscribe.post');
+
 
 // Dashboard
 ///////////

@@ -25,6 +25,7 @@ import ConfirmDialog from '@/Components/Modals/ConfirmDialog';
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'notTV';
 
+
 // formatting dates, helper plugins:
 // https://jerickson.net/how-to-format-dates-in-vue-3/
 

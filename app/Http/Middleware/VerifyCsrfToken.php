@@ -24,5 +24,6 @@ class VerifyCsrfToken extends Middleware
         '/videoupload',
         '/news/save',
         'logout',
+//        '/subscribe',
     ];
 }

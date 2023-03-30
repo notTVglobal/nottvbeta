@@ -17,10 +17,13 @@
 
 
         @routes
+
 {{--        <script src="https://js.pusher.com/7.2/pusher.min.js"></script>--}}
         <script src="{{ mix('js/manifest.js') }}" defer></script>
         <script src="{{ mix('js/vendor.js') }}" defer></script>
         <script src="{{ mix('js/app.js') }}" defer></script>
+
+
 {{--        <script type="text/javascript" src="js/emojionearea.min.js"></script>--}}
         @inertiaHead
     </head>

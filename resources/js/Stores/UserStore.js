@@ -23,6 +23,7 @@ export let useUserStore = defineStore('userStore', {
         scrollToTopCounter: 0,
         uploadMovieId: null,
         uploadShowEpisodeId: null,
+        upgradeSelection: '',
 
     }),
 

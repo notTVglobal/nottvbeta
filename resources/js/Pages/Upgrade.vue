@@ -10,12 +10,14 @@
 <!--            <h1 class="text-3xl font-semibold pb-3">Become a notTV Premium Subscriber</h1>-->
 
             <div class="flex justify-center w-full">
-                <div class="flex flex-col justify-center w-fit bg-gray-900 rounded-md py-10">
+                <div class="flex flex-col justify-center w-fit bg-gray-900 rounded-md py-10 mb-24">
 
                     <h2 class="text-3xl py-8 px-2 font-bold">Choose a Subscription</h2>
 
                     <div class="grid grid-cols-1 xl:grid-cols-3 justify-center xl:space-x-4 space-y-8 xl:space-y-0 px-8 mx-auto">
-                        <Link class="bg-gray-700 hover:bg-gray-600 rounded-lg">
+                        <Link class="bg-gray-700 hover:bg-gray-600 rounded-lg"
+                              @click="userStore.upgradeSelection = 'monthly'"
+                              :href="`/subscribe`">
                             <div class="card2 annually px-12 py-6">
                                 <div class="flex justify-between mb-2">
                                     <div class="productName">Monthly</div>
@@ -35,7 +37,9 @@
 
                             </div>
                         </Link>
-                        <Link class="bg-gray-700 hover:bg-gray-600 rounded-lg">
+                        <Link class="bg-gray-700 hover:bg-gray-600 rounded-lg"
+                              @click="userStore.upgradeSelection = 'yearly'"
+                              :href="`/subscribe`">
                         <div class="card2 annually px-12 py-6">
                             <div class="flex justify-between mb-2">
                                 <div class="productName">Yearly</div>
@@ -55,7 +59,9 @@
 
                         </div>
                         </Link>
-                        <Link class="bg-gray-700 hover:bg-gray-600 rounded-lg">
+                        <Link class="bg-gray-700 hover:bg-gray-600 rounded-lg"
+                              @click="userStore.upgradeSelection = 'forever'"
+                              :href="`/subscribe`">
                         <div class="card3 forever px-12 py-6">
                             <div class="flex justify-between mb-2">
                                 <div class="productName">Forever</div>

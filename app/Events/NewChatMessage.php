@@ -28,6 +28,13 @@ class NewChatMessage implements ShouldBroadcast
     }
 
     /**
+     * The name of the queue on which to place the broadcasting job.
+     *
+     * @var string
+     */
+    public string $queue = 'chat';
+
+    /**
      * Get the channels the event should broadcast on.
      *
      * @return \Illuminate\Broadcasting\Channel|array
