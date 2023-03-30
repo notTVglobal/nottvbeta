@@ -1,7 +1,7 @@
 <template>
     <div class="overflow-y-scroll scrollbar-hide h-full" >
 
-        <div v-if="videoPlayerStore.ott === 2" class="channels w-full h-full bg-green-800 p-2 mb-64">
+        <div v-if="videoPlayerStore.ott === 2" class="channels w-full h-fit bg-green-800 p-2 channelsForTopRightOtt">
 
             <h1 class="text-xs font-semibold uppercase mb-3 w-full bg-green-900 text-white p-2">CHANNELS</h1>
 

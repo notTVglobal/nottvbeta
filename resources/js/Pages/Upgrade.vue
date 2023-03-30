@@ -27,8 +27,11 @@
                                 <div>
                                     Get full access to all features, shows, channels and movies!
                                 </div>
-                                <div class="bg-gray-900 hover:bg-gray-800 rounded-lg w-5/6 mt-6 py-4 mb-4 mx-auto">
-                                    Select Plan</div>
+                                <div class="bg-gray-900 hover:bg-gray-800 rounded-lg w-5/6 mt-6 py-4 mb-4 mx-auto"
+                                     @mouseover="hoverMonthly = true"
+                                     @mouseleave="hoverMonthly = false">
+                                    <div class="inline mr-4 p-1 rounded-full bg-gray-700 hover:bg-white hover:text-blue-500"
+                                        :class="{active: hoverMonthly}"> OE</div> <span> Select Plan</span></div>
 
                             </div>
                         </Link>
@@ -44,6 +47,9 @@
                             <div>
                                 Get full access to all features, shows, channels and movies!
                             </div>
+                            <div class="bg-gray-900 hover:bg-gray-800 rounded-lg w-5/6 mt-6 py-4 mb-4 mx-auto"
+                                 @mouseover="hoverMonthly = true"
+                                 @mouseleave="hoverMonthly = false">
                             <div class="bg-gray-900 hover:bg-gray-800 rounded-lg w-5/6 mt-6 py-4 mb-4 mx-auto">
                                 Select Plan</div>
 
@@ -103,9 +109,10 @@ onMounted(() => {
 
 let props = defineProps({
     message: String,
+    hoverMonthly: false,
+    hoverYearly: false,
+    hoverForever: false,
 })
-
-
 
 let showMessage = ref(true);
 
@@ -122,6 +129,10 @@ let showMessage = ref(true);
     font-size: xxx-large;
     color: dodgerblue;
     vertical-align: top;
+}
+
+.active {
+    background-color: #0a59da;
 }
 
 </style>

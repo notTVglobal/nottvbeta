@@ -282,6 +282,9 @@
     /*max-width: 100vw;*/
     max-height: 96rem;
 }
+.channelsForTopRightOtt {
+    margin-bottom:100rem;
+}
 .playlistForStreamPageStandard {
     z-index: 200;
     position: fixed;
@@ -440,9 +443,6 @@
     }
     .specialPaddingRight {
         padding-right: 26rem;
-    }
-    .maxWidthTopRightLayout {
-        /*max-width: calc(100% - 20rem);*/
     }
 
 }
