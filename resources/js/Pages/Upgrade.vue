@@ -17,6 +17,8 @@
                     <div class="grid grid-cols-1 xl:grid-cols-3 justify-center xl:space-x-4 space-y-8 xl:space-y-0 px-8 mx-auto">
                         <Link class="bg-gray-700 hover:bg-gray-600 rounded-lg"
                               @click="userStore.upgradeSelection = 'monthly'"
+                              @mouseover="hoverMonthlyFull = true"
+                              @mouseleave="hoverMonthlyFull = false"
                               :href="`/subscribe`">
                             <div class="card2 annually px-12 py-6">
                                 <div class="flex justify-between mb-2">
@@ -24,7 +26,7 @@
                                     <div class="price">$25</div>
                                 </div>
                                 <div class="py-10">
-                                    <font-awesome-icon icon="fa-star" class="upgradeIcon"/>
+                                    <font-awesome-icon icon="fa-star" class="upgradeIcon" :class="{activeIcon: hoverMonthlyFull}"/>
                                 </div>
                                 <div>
                                     Get full access to all features, shows, channels and movies!
@@ -39,6 +41,8 @@
                         </Link>
                         <Link class="bg-gray-700 hover:bg-gray-600 rounded-lg"
                               @click="userStore.upgradeSelection = 'yearly'"
+                              @mouseover="hoverYearlyFull = true"
+                              @mouseleave="hoverYearlyFull = false"
                               :href="`/subscribe`">
                         <div class="card2 annually px-12 py-6">
                             <div class="flex justify-between mb-2">
@@ -46,7 +50,7 @@
                                 <div class="price">$250</div>
                             </div>
                             <div class="py-10">
-                                <font-awesome-icon icon="fa-star" class="upgradeIcon"/><font-awesome-icon icon="fa-star" class="upgradeIcon"/>
+                                <font-awesome-icon icon="fa-star" class="upgradeIcon" :class="{activeIcon: hoverYearlyFull}"/><font-awesome-icon icon="fa-star" class="upgradeIcon" :class="{activeIcon: hoverYearlyFull}"/>
                             </div>
                             <div>
                                 Get full access to all features, shows, channels and movies!
@@ -61,6 +65,8 @@
                         </Link>
                         <Link class="bg-gray-700 hover:bg-gray-600 rounded-lg"
                               @click="userStore.upgradeSelection = 'forever'"
+                              @mouseover="hoverForeverFull = true"
+                              @mouseleave="hoverForeverFull = false"
                               :href="`/subscribe`">
                         <div class="card3 forever px-12 py-6">
                             <div class="flex justify-between mb-2">
@@ -68,7 +74,7 @@
                                 <div class="price">$999</div>
                             </div>
                             <div class="py-10">
-                                <font-awesome-icon icon="fa-star" class="upgradeIcon"/><font-awesome-icon icon="fa-star" class="upgradeIcon"/><font-awesome-icon icon="fa-star" class="upgradeIcon"/>
+                                <font-awesome-icon icon="fa-star" class="upgradeIcon" :class="{activeIcon: hoverForeverFull}"/><font-awesome-icon icon="fa-star" class="upgradeIcon" :class="{activeIcon: hoverForeverFull}"/><font-awesome-icon icon="fa-star" class="upgradeIcon" :class="{activeIcon: hoverForeverFull}"/>
                             </div>
                             <div>
                                 Get full access to all features, shows, channels and movies!
@@ -121,6 +127,9 @@ let props = defineProps({
     hoverMonthly: false,
     hoverYearly: false,
     hoverForever: false,
+    hoverMonthlyFull: false,
+    hoverYearlyFull: false,
+    hoverForeverFull: false,
 })
 
 let showMessage = ref(true);
@@ -147,6 +156,10 @@ let showMessage = ref(true);
 
 .active {
     background-color: #0a59da;
+}
+
+.activeIcon {
+    color: #0a59da;
 }
 
 </style>

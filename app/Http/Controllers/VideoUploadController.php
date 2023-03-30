@@ -145,30 +145,9 @@ class VideoUploadController extends Controller
      */
     public function upload(HttpRequest $request): JsonResponse {
 
-         // validate the file
+
+        // validate the file
 //        ???
-
-        $movieId = $request->movieId;
-        $movieTrailerId = $request->movieTrailerId;
-        $showEpisodeId = $request->showEpisodeId;
-
-        // remove the previous video
-        if ($showEpisodeId !== null) {
-//            $showEpisode = ShowEpisode::where('id', $showEpisodeId)->get();
-            Video::query()->where('show_episodes_id', $showEpisodeId)
-                ->update(['show_episodes_id' => null]);
-        }
-        if ($movieId !== null) {
-//            $movie = Movie::where('id', $movieId)->get();
-            Video::query()->where('movies_id', $movieId)
-                ->update(['movies_id' => null]);
-        }
-        if ($movieTrailerId !== null) {
-//            $movieTrailer = MovieTrailer::where('id', $movieTrailerId)->get();
-            Video::query()->where('movie_trailers_id', $movieTrailerId)
-                ->update(['movie_trailers_id' => null]);
-        }
-
 
 
         // create the file receiver
@@ -189,6 +168,33 @@ class VideoUploadController extends Controller
             // not using move, you need to manually delete the file by unlink($save->getFile()->getPathname())
 //            $video = $save->getFile();
 //            return $this->saveFile($save->getFile());
+
+
+
+            $movieId = $request->movieId;
+            $movieTrailerId = $request->movieTrailerId;
+            $showEpisodeId = $request->showEpisodeId;
+
+            // remove the previous video
+            if ($showEpisodeId !== null) {
+//            $showEpisode = ShowEpisode::where('id', $showEpisodeId)->get();
+                Video::query()->where('show_episodes_id', $showEpisodeId)
+                    ->update(['show_episodes_id' => null]);
+            }
+            if ($movieId !== null) {
+//            $movie = Movie::where('id', $movieId)->get();
+                Video::query()->where('movies_id', $movieId)
+                    ->update(['movies_id' => null]);
+            }
+            if ($movieTrailerId !== null) {
+//            $movieTrailer = MovieTrailer::where('id', $movieTrailerId)->get();
+                Video::query()->where('movie_trailers_id', $movieTrailerId)
+                    ->update(['movie_trailers_id' => null]);
+            }
+
+
+
+
             return $this->saveFile($save->getFile(), $movieId, $movieTrailerId, $showEpisodeId);
 
         }
