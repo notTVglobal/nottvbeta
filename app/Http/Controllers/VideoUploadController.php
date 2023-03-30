@@ -211,11 +211,11 @@ class VideoUploadController extends Controller
             Video::query()->where('movies_id', $movieId)
                 ->update(['movies_id' => null]);
         }
-        else if ($movieTrailerId !== null) {
-//            $movieTrailer = MovieTrailer::where('id', $movieTrailerId)->get();
-            Video::query()->where('movie_trailers_id', $movieTrailerId)
-                ->update(['movie_trailers_id' => null]);
-        }
+//        else if ($movieTrailerId !== null) {
+////            $movieTrailer = MovieTrailer::where('id', $movieTrailerId)->get();
+//            Video::query()->where('movie_trailers_id', $movieTrailerId)
+//                ->update(['movie_trailers_id' => null]);
+//        }
 
         $path = storage_path('app/temp-videos');
         $fileName = $this->createFilename($file);
@@ -249,7 +249,7 @@ class VideoUploadController extends Controller
         $video->cloud_folder = $cloud_folder;
         $video->show_episodes_id = $showEpisodeId;
         $video->movies_id = $movieId;
-        $video->movie_trailers_id = $movieTrailerId;
+//        $video->movie_trailers_id = $movieTrailerId;
         $video->save();
         sleep(1);
 
@@ -259,8 +259,8 @@ class VideoUploadController extends Controller
         $movie = Movie::where('id', $movieId)
             ->update(['video_id' => $video->id]);
 
-        $movieTrailer = MovieTrailer::where('id', $movieTrailerId)
-            ->update(['video_id' => $video->id]);
+//        $movieTrailer = MovieTrailer::where('id', $movieTrailerId)
+//            ->update(['video_id' => $video->id]);
 
 
 //        error_log('Video saved to database. Next up is the Job.');
