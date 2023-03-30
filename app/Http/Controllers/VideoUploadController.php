@@ -181,12 +181,12 @@ class VideoUploadController extends Controller
                 Video::query()->where('show_episodes_id', $showEpisodeId)
                     ->update(['show_episodes_id' => null]);
             }
-            if ($movieId !== null) {
+            else if ($movieId !== null) {
 //            $movie = Movie::where('id', $movieId)->get();
                 Video::query()->where('movies_id', $movieId)
                     ->update(['movies_id' => null]);
             }
-            if ($movieTrailerId !== null) {
+            else if ($movieTrailerId !== null) {
 //            $movieTrailer = MovieTrailer::where('id', $movieTrailerId)->get();
                 Video::query()->where('movie_trailers_id', $movieTrailerId)
                     ->update(['movie_trailers_id' => null]);

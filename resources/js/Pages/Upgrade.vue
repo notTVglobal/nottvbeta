@@ -31,7 +31,7 @@
                                 <div>
                                     Get full access to all features, shows, channels and movies!
                                 </div>
-                                <div class="bg-gray-900 hover:bg-gray-800 rounded-lg w-5/6 mt-6 py-4 mb-4 mx-auto"
+                                <div class="flex no-wrap justify-center bg-gray-900 hover:bg-gray-800 rounded-lg w-full mt-6 px-4 py-4 mb-4 mx-auto"
                                      @mouseover="hoverMonthly = true"
                                      @mouseleave="hoverMonthly = false">
                                     <span class="bg-gray-700 mr-4 py-1 px-2 w-fit rounded-full"
@@ -55,11 +55,11 @@
                             <div>
                                 Get full access to all features, shows, channels and movies!
                             </div>
-                            <div class="bg-gray-900 hover:bg-gray-800 rounded-lg w-5/6 mt-6 py-4 mb-4 mx-auto"
+                            <div class="flex no-wrap justify-center bg-gray-900 hover:bg-gray-800 rounded-lg w-full mt-6 px-4 py-4 mb-4 mx-auto"
                                  @mouseover="hoverYearly = true"
                                  @mouseleave="hoverYearly = false">
                                 <span class="bg-gray-700 mr-4 py-1 px-2 w-fit rounded-full"
-                                     :class="{active: hoverYearly}"><font-awesome-icon icon="fa-check" /></span> <span> Select Plan</span></div>
+                                     :class="{active: hoverYearly}"><font-awesome-icon icon="fa-check" /></span> <span class=""> Select Plan</span></div>
 
                         </div>
                         </Link>
@@ -79,7 +79,7 @@
                             <div>
                                 Get full access to all features, shows, channels and movies!
                             </div>
-                            <div class="bg-gray-900 hover:bg-gray-800 rounded-lg w-5/6 mt-6 py-4 mb-4 mx-auto"
+                            <div class="flex no-wrap justify-center bg-gray-900 hover:bg-gray-800 rounded-lg w-full mt-6 px-4 py-4 mb-4 mx-auto"
                                  @mouseover="hoverForever = true"
                                  @mouseleave="hoverForever = false">
                                 <span class="bg-gray-700 mr-4 py-1 px-2 w-fit rounded-full"
