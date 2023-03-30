@@ -171,31 +171,32 @@ class VideoUploadController extends Controller
 
 
 
-            $movieId = $request->movieId;
-            $movieTrailerId = $request->movieTrailerId;
-            $showEpisodeId = $request->showEpisodeId;
-
-            // remove the previous video
-            if ($showEpisodeId !== null) {
-//            $showEpisode = ShowEpisode::where('id', $showEpisodeId)->get();
-                Video::query()->where('show_episodes_id', $showEpisodeId)
-                    ->update(['show_episodes_id' => null]);
-            }
-            else if ($movieId !== null) {
-//            $movie = Movie::where('id', $movieId)->get();
-                Video::query()->where('movies_id', $movieId)
-                    ->update(['movies_id' => null]);
-            }
-            else if ($movieTrailerId !== null) {
-//            $movieTrailer = MovieTrailer::where('id', $movieTrailerId)->get();
-                Video::query()->where('movie_trailers_id', $movieTrailerId)
-                    ->update(['movie_trailers_id' => null]);
-            }
-
-
+//            $movieId = $request->movieId;
+//            $movieTrailerId = $request->movieTrailerId;
+//            $showEpisodeId = $request->showEpisodeId;
+//
+//            // remove the previous video
+//            if ($showEpisodeId !== null) {
+////            $showEpisode = ShowEpisode::where('id', $showEpisodeId)->get();
+//                Video::query()->where('show_episodes_id', $showEpisodeId)
+//                    ->update(['show_episodes_id' => null]);
+//            }
+//            else if ($movieId !== null) {
+////            $movie = Movie::where('id', $movieId)->get();
+//                Video::query()->where('movies_id', $movieId)
+//                    ->update(['movies_id' => null]);
+//            }
+//            else if ($movieTrailerId !== null) {
+////            $movieTrailer = MovieTrailer::where('id', $movieTrailerId)->get();
+//                Video::query()->where('movie_trailers_id', $movieTrailerId)
+//                    ->update(['movie_trailers_id' => null]);
+//            }
 
 
-            return $this->saveFile($save->getFile(), $movieId, $movieTrailerId, $showEpisodeId);
+
+
+//            return $this->saveFile($save->getFile(), $movieId, $movieTrailerId, $showEpisodeId);
+            return $this->saveFile($save->getFile());
 
         }
 
@@ -216,7 +217,8 @@ class VideoUploadController extends Controller
      *
      * @return JsonResponse
      */
-    protected function saveFile(UploadedFile $file, $movieId, $movieTrailerId, $showEpisodeId): JsonResponse {
+//    protected function saveFile(UploadedFile $file, $movieId, $movieTrailerId, $showEpisodeId): JsonResponse {
+    protected function saveFile(UploadedFile $file): JsonResponse {
 
         $path = storage_path('app/temp-videos');
         $fileName = $this->createFilename($file);
