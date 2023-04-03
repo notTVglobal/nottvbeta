@@ -36,7 +36,7 @@ let myDropzone = new Dropzone("#videoUploadForm", {
     maxFilesize: '3 GB', // MB
     chunking: true,
     chunkSize: 2 * 1024 * 1024,
-    parallelChunkUploads: true,
+    parallelChunkUploads: false,
     retryChunks: true,
     retryChunksLimit: 10,
     capture: null,

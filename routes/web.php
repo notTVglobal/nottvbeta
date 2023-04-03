@@ -34,6 +34,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
+use Laravel\Cashier\Checkout;
 
 
 /*
@@ -201,6 +202,24 @@ Route::middleware([
     // List all products
     Route::get('/shop', [ShopController::class, 'index'])
         ->name('shop');
+
+    Route::get('/subscription-checkout', function (Request $request) {
+        return $request->user()
+            ->newSubscription('default', 'price_monthly')
+            ->checkout([
+                'success_url' => route('/stream'),
+                'cancel_url' => route('/stream'),
+            ]);
+    });
+
+    Route::get('/product-checkout', function (Request $request) {
+        return Checkout::guest()
+            ->withPromotionCode('promo-code')
+            ->create('price_tshirt', [
+                'success_url' => route('your-success-route'),
+                'cancel_url' => route('your-cancel-route'),
+            ]);
+    });
 
 
 // Library
