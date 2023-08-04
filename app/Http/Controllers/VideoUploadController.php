@@ -237,6 +237,9 @@ class VideoUploadController extends Controller
         // move the file to temp-videos
         $contents = $file->move($path, $fileName);
 
+        // create a method to delete any remaining .part files in the chunks folder
+        //
+
         // Store the video in the database
         $video = new Video;
         $video->user_id = auth()->user()->id;

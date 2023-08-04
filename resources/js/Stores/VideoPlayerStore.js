@@ -229,7 +229,7 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
         },
         loadNewSourceFromMist(source) {
             let videoJs = videojs('main-player')
-            let filePath = 'https://mist2.not.tv/hls/'
+            let filePath = 'https://mist.not.tv/hls/'
             this.videoSource = filePath+source+'/index.m3u8'
             this.videoSourceType = "application/x-mpegURL"
             videoJs.src({'src': this.videoSource, 'type': this.videoSourceType})

@@ -16,6 +16,7 @@ class AppSettingsSeeder extends Seeder
     public function run()
     {
         DB::table('app_settings')->insert([
+            'id' => 1,
             'cdn_endpoint' => '',
         ]);
     }
