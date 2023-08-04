@@ -22,7 +22,7 @@ class ProcessNewUploadedVideo implements ShouldQueue
      *
      * @var string|null
      */
-//    public $queue = 'listeners';
+    public $queue = 'listeners';
 
     /**
      * The time (seconds) before the job should be processed.
