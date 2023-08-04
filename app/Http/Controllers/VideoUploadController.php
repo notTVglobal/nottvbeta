@@ -238,7 +238,8 @@ class VideoUploadController extends Controller
         $contents = $file->move($path, $fileName);
 
         // create a method to delete any remaining .part files in the chunks folder
-        //
+        // $fileName+'.part'
+        // unlink($file->getFile()->getPathname());
 
         // Store the video in the database
         $video = new Video;

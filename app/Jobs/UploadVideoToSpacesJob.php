@@ -64,8 +64,9 @@ class UploadVideoToSpacesJob implements ShouldQueue
 
         // delete the temporary file
         // not working yet.
-        Storage::delete(storage_path('app/temp-videos/').$this->video->file_name);
+//        Storage::delete(storage_path('app/temp-videos/').$this->video->file_name);
 //        unlink($this->file->getFile()->getPathname());
+        unlink(storage_path('app/temp-videos/').$this->video->file_name);
 
         // update the file_name on the model
         $this->video->upload_status = 'Uploaded to Spaces via Job';
