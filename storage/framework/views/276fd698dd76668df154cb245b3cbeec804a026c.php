@@ -13,7 +13,7 @@
 
 
         <!-- Favicon -->
-        < link rel="shortcut icon" href="<?php echo e(asset('Ping-favicon.ico')); ?>" >
+        < link rel="shortcut icon" href="<?php echo e(asset('favicon.ico')); ?>" >
 
 
         <?php echo app('Tightenco\Ziggy\BladeRouteGenerator')->generate(); ?>
