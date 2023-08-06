@@ -12,7 +12,6 @@ use Illuminate\Http\Request as HttpRequest;
 use Inertia\Inertia;
 use Illuminate\Support\Carbon;
 use App\Events\NewChatMessage;
-use App\Events\MessageSent;
 //use function Termwind\render;
 
 
@@ -73,30 +72,22 @@ class ChatController extends Controller
 //
 //    }
 
-    public function newMessage(HttpRequest $request, User $user)
+    public function newMessage(HttpRequest $request)
     {
-        $message = new ChatMessage;
-        $message->user_id = Auth::id();
-        $message->channel_id = $request->channel_id;
-        $message->message = $request->message;
-        $message->user_name = $request->user_name;
-        $message->user_profile_photo_path = $request->user_profile_photo_path;
-        $message->user_profile_photo_url = $request->user_profile_photo_url;
-        $message->save();
-//
-//        $broadcastMessage = $newMessage;
-//        $broadcastMessage->user_profile_pic =
+        $chatMessage = new ChatMessage;
+        $chatMessage->user_id = Auth::id();
+        $chatMessage->channel_id = $request->channel_id;
+        $chatMessage->message = $request->message;
+        $chatMessage->user_name = $request->user_name;
+        $chatMessage->user_profile_photo_path = $request->user_profile_photo_path;
+        $chatMessage->user_profile_photo_url = $request->user_profile_photo_url;
+        $chatMessage->save();
 
 //        broadcast(new MessageSent( $user, $message ))->toOthers();
-        broadcast(new NewChatMessage($request->input('username'), $request->input('message')));
-        return $message;
+        broadcast(new NewChatMessage($chatMessage))->toOthers();
+
+        return $chatMessage;
 
     }
 
-//    public function message(Request $request)
-//    {
-//        event(new Message($request->input('username'), $request->input('message')));
-//
-//            return ['message'];
-//    }
 }

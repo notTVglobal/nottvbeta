@@ -29,13 +29,9 @@ let messages = ref([])
 let newMessage = ref([])
 
 onBeforeMount(async() => {
+    console.log('Load VideoOTTChat.vue');
     await connect();
 });
-
-onMounted(async () => {
-    // tec21: this is undefined. 11/05
-    await console.log('test1: ' + chatStore.currentChannel.id);
-})
 
 // tec21: all good. 11/05
 function connect() {
@@ -62,9 +58,6 @@ function setChannel ( channel ){
     console.log('SET CHANNEL');
     console.log('CURRENT CHANNEL: ' + chatStore.currentChannel.name);
     getMessages();
-
-    // tec21: all good. 11/05
-    console.log('test2: ' + chatStore.currentChannel.id);
 
     window.Echo.private('chat.' + chatStore.currentChannel.id)
         .listen('.message.new', e => {
@@ -93,7 +86,7 @@ function getMessages() {
         })
 
     // tec21: all good. 11/05
-    console.log('GET MESSAGES');
+    console.log('LOAD MESSAGES');
 }
 
 // tec21: all good. 11/05

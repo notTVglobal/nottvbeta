@@ -69,8 +69,7 @@ onMounted(async () => {
     //         messages.value = e.data;
     //     });
 
-    // tec21: this is undefined. 11/05
-    await console.log('test1: ' + chatStore.currentChannel.id);
+    await console.log('Load ChatContainer.vue');
 
 
 
@@ -142,9 +141,6 @@ function setChannel ( channel ){
     console.log('CURRENT CHANNEL: ' + chatStore.currentChannel.name);
     getMessages();
 
-    // tec21: all good. 11/05
-    console.log('test2: ' + chatStore.currentChannel.id);
-
     window.Echo.private('chat.' + chatStore.currentChannel.id)
         .listen('.message.new', e => {
             console.log('PINIA NEW MESSAGE.');
@@ -172,7 +168,7 @@ function getMessages() {
         })
 
     // tec21: all good. 11/05
-        console.log('GET MESSAGES');
+        console.log('LOAD MESSAGES');
 }
 
 // tec21: all good. 11/05
