@@ -13,7 +13,7 @@
 {{--        <link rel="stylesheet" href="css/emojionearea.min.css">--}}
 
         <!-- Favicon -->
-        < link rel="shortcut icon" href="{{ asset('Ping-favicon.ico') }}" >
+        < link rel="shortcut icon" href="{{ asset('favicon.ico') }}" >
 
 
         @routes

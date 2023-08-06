@@ -87,8 +87,8 @@ class ChatController extends Controller
 //        $broadcastMessage = $newMessage;
 //        $broadcastMessage->user_profile_pic =
 
-        broadcast(new MessageSent( $user, $message ))->toOthers();
-//        broadcast(new NewChatMessage($request->input('username'), $request->input('message')));
+//        broadcast(new MessageSent( $user, $message ))->toOthers();
+        broadcast(new NewChatMessage($request->input('username'), $request->input('message')));
         return $message;
 
     }
