@@ -12,6 +12,7 @@ use Illuminate\Http\Request as HttpRequest;
 use Inertia\Inertia;
 use Illuminate\Support\Carbon;
 use App\Events\NewChatMessage;
+use App\Events\MessageSent;
 //use function Termwind\render;
 
 
@@ -52,23 +53,43 @@ class ChatController extends Controller
 //            ->get();
 //    }
 
-    public function newMessage(HttpRequest $request)
+//    public function newMessage(HttpRequest $request)
+//    {
+//        $newMessage = new ChatMessage;
+//        $newMessage->user_id = Auth::id();
+//        $newMessage->channel_id = $request->channel_id;
+//        $newMessage->message = $request->message;
+//        $newMessage->user_name = $request->user_name;
+//        $newMessage->user_profile_photo_path = $request->user_profile_photo_path;
+//        $newMessage->user_profile_photo_url = $request->user_profile_photo_url;
+//        $newMessage->save();
+////
+////        $broadcastMessage = $newMessage;
+////        $broadcastMessage->user_profile_pic =
+//
+//        broadcast(new NewChatMessage( $newMessage ))->toOthers();
+////        broadcast(new NewChatMessage($request->input('username'), $request->input('message')));
+//        return $newMessage;
+//
+//    }
+
+    public function newMessage(HttpRequest $request, User $user)
     {
-        $newMessage = new ChatMessage;
-        $newMessage->user_id = Auth::id();
-        $newMessage->channel_id = $request->channel_id;
-        $newMessage->message = $request->message;
-        $newMessage->user_name = $request->user_name;
-        $newMessage->user_profile_photo_path = $request->user_profile_photo_path;
-        $newMessage->user_profile_photo_url = $request->user_profile_photo_url;
-        $newMessage->save();
+        $message = new ChatMessage;
+        $message->user_id = Auth::id();
+        $message->channel_id = $request->channel_id;
+        $message->message = $request->message;
+        $message->user_name = $request->user_name;
+        $message->user_profile_photo_path = $request->user_profile_photo_path;
+        $message->user_profile_photo_url = $request->user_profile_photo_url;
+        $message->save();
 //
 //        $broadcastMessage = $newMessage;
 //        $broadcastMessage->user_profile_pic =
 
-        broadcast(new NewChatMessage( $newMessage ))->toOthers();
+        broadcast(new MessageSent( $user, $message ))->toOthers();
 //        broadcast(new NewChatMessage($request->input('username'), $request->input('message')));
-        return $newMessage;
+        return $message;
 
     }
 
