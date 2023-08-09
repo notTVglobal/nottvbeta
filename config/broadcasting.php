@@ -42,9 +42,9 @@ return [
 //                'host' => env('WEBSOCKET_HOST'),
 //                'port' => env('WEBSOCKET_PORT'),
 //                'scheme' => env('WEBSOCKET_SCHEME')
-                'host' => 'nottv.local',
+                'host' => 'not.tv',
                 'port' => 6001,
-                'scheme' => 'http'
+                'scheme' => 'https'
 
             ],
             'client_options' => [
