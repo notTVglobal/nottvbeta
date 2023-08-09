@@ -1,5 +1,5 @@
 <template>
-    <Head title="Chat Test" />
+<!--    <Head title="Chat Test" />-->
     <div class="mt-10 ml-5">
 <!--        <div class="box">-->
 <!--            <p v-if="!messages.length">Start typing the first message</p>-->
@@ -107,49 +107,49 @@ function sendMessage() {
 
 </script>
 
-<script>
-import ChatTestMyMessage from "../Components/Chat/ChatTestMyMessage.vue";
-import ChatTestMessage from "../Components/Chat/ChatTestMessage.vue";
+<!--<script>-->
+<!--import ChatTestMyMessage from "../Components/Chat/ChatTestMyMessage.vue";-->
+<!--import ChatTestMessage from "../Components/Chat/ChatTestMessage.vue";-->
 
-export default {
-    components: {ChatTestMessage, ChatTestMyMessage},
-    data () {
-        return {
-            userId: Math.random().toString(36).slice(-5),
-            messages: [],
-            newMessage: ''
-        }
-    },
-    mounted () {
-        // Echo.channel('playground')
-        //     .listen('NewChatMessage', (e) => {
-        //         if(e.user !== this.userId) {
-        //             this.messages.push({
-        //                 text: e.message,
-        //                 user: e.user
-        //             });
-        //         }
-        //     });
-    },
-    methods: {
-        submit() {
-            axios.post(`/api/chatTestMessage`, {
-                user: this.userId,
-                message: this.newMessage
-            }).then((response) => {
-                this.messages.push({
-                    text: this.newMessage,
-                    user: this.userId
-                });
+<!--export default {-->
+<!--    components: {ChatTestMessage, ChatTestMyMessage},-->
+<!--    data () {-->
+<!--        return {-->
+<!--            userId: Math.random().toString(36).slice(-5),-->
+<!--            messages: [],-->
+<!--            newMessage: ''-->
+<!--        }-->
+<!--    },-->
+<!--    mounted () {-->
+<!--        // Echo.channel('playground')-->
+<!--        //     .listen('NewChatMessage', (e) => {-->
+<!--        //         if(e.user !== this.userId) {-->
+<!--        //             this.messages.push({-->
+<!--        //                 text: e.message,-->
+<!--        //                 user: e.user-->
+<!--        //             });-->
+<!--        //         }-->
+<!--        //     });-->
+<!--    },-->
+<!--    methods: {-->
+<!--        submit() {-->
+<!--            axios.post(`/api/chatTestMessage`, {-->
+<!--                user: this.userId,-->
+<!--                message: this.newMessage-->
+<!--            }).then((response) => {-->
+<!--                this.messages.push({-->
+<!--                    text: this.newMessage,-->
+<!--                    user: this.userId-->
+<!--                });-->
 
-                this.newMessage = '';
-            }, (error) => {
-                console.log(error);
-            });
+<!--                this.newMessage = '';-->
+<!--            }, (error) => {-->
+<!--                console.log(error);-->
+<!--            });-->
 
-        }
-    }
-}
-</script>
+<!--        }-->
+<!--    }-->
+<!--}-->
+<!--</script>-->
 
 

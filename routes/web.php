@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\TestMessageController;
 use App\Mail\VerifyMail;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\CreatorsController;
@@ -580,9 +581,7 @@ Route::middleware([
     Route::get('/chat/channels', [ChatController::class, 'channels']);
     Route::get('/chat/channel/{channelId}/messages', [ChatController::class, 'messages']);
     Route::post('/chat/message', [ChatController::class, 'newMessage']);
-    Route::get('/chatTest', function () {
-        return Inertia::render('ChatTest');
-    });
+    Route::get('/chatTest', [TestMessageController::class, 'index']);
 
 //    Route::get('/chatTest', function () {
 //        return Inertia::render('ChatTest');
