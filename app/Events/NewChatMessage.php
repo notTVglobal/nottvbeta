@@ -13,18 +13,18 @@ use Illuminate\Queue\SerializesModels;
 use App\Models\ChatMessage;
 use App\Models\User;
 
-class NewChatMessage implements ShouldBroadcast
+class NewChatMessage implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public ChatMessage $chatMessage;
+    public $chatMessage;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-//    public function __construct( ChatMessage $chatMessage )
     public function __construct( ChatMessage $chatMessage )
+//    public function __construct( $message )
     {
         $this->chatMessage = $chatMessage;
     }
@@ -41,12 +41,19 @@ class NewChatMessage implements ShouldBroadcast
         //
         // For more info see:
         // https://www.youtube.com/watch?v=CkRGJC0ytdU
-        return new PrivateChannel('private-chat.'. $this->chatMessage->channel_id);
+        return new PrivateChannel('chat.'. $this->chatMessage->channel_id);
 //        return new PrivateChannel('chat.'. 1);
     }
 
     public function broadcastAs(): string
     {
-            return 'newMessage';
+            return 'chat';
+    }
+    public function broadcastWith()
+    {
+        return [
+            'message' => $this->chatMessage
+            // TODO: add additional fields.
+        ];
     }
 }

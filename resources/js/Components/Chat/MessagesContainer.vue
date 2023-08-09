@@ -6,9 +6,9 @@
                 :class="{ isMobile: userStore.isMobile }"
             >CLICK HERE TO SCROLL TO BOTTOM</button>
     </div>
-            <div class="chatChrome w-full h-full pb-2 py-2 flex flex-col-reverse overflow-y-scroll overflow-x-clip break-words messages scrollbar-hide">
+            <div class="chatChrome w-full h-full pb-2 py-2 flex flex-col overflow-y-scroll overflow-x-clip break-words messages scrollbar-hide">
                 <div id="scrollToMe"></div>
-                <div id="messages" v-for="(message, index) in chatStore.messages" :key="index">
+                <div id="messages" v-for="(message, messages) in chatStore.messages" :key="messages">
                     <message-item :id="message.id" :message="message" :time="time(message.created_at)"/>
                 </div>
             </div>
@@ -35,6 +35,14 @@ dayjs.extend(relativeTime)
 
 let props = defineProps({
     message: Object,
+})
+
+const channel = Echo.private('chat.1')
+channel.subscribed(() => {
+    console.log('Joined Chat Channel: ' + 'chat')
+}).listen('.chat', (event) => {
+    console.log(event)
+    chatStore.messages.push(event.message)
 })
 
 // let channel = pusher.subscribe('1');

@@ -23,7 +23,7 @@ class VerifyCsrfToken extends Middleware
         '/mistTrigger',
         '/videoupload',
         '/news/save',
-        'broadcasting/auth',
+        '/broadcasting/auth',
         'logout',
 //        '/subscribe',
     ];

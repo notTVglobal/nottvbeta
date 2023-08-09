@@ -38,5 +38,7 @@ Route::post('/chatTestMessage', [TestMessageController::class, 'broadcast']);
 //});
 
 Route::post('/chatTest', [TestMessageController::class, 'broadcast'])
-    ->name('chatTestApi');;
+    ->name('chatTestApi');
+
+
 

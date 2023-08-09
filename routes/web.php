@@ -583,6 +583,9 @@ Route::middleware([
     Route::post('/chat/message', [ChatController::class, 'newMessage']);
     Route::get('/chatTest', [TestMessageController::class, 'index']);
 
+    Route::post('/chat/message', [ChatController::class, 'newMessage'])
+        ->name('chatMessage');
+
 //    Route::get('/chatTest', function () {
 //        return Inertia::render('ChatTest');
 //    })->can('viewVip', 'App\Models\User')

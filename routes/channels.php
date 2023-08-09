@@ -30,8 +30,11 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 //    return Auth::check();
 //});
 
-Broadcast::channel('private.chatTest.{id}', function ($user, $id) {
-    return true;
+Broadcast::channel('chat.{id}', function ($user, $id) {
+        if( Auth::check() ) {
+        return true;
+    }
+        return false;
 });
 
 

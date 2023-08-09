@@ -54,9 +54,9 @@
 </template>
 
 <script setup>
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import { useChatStore } from "@/Stores/ChatStore.js"
-import {onMounted, reactive} from "vue";
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
+import { useChatStore } from "@/Stores/ChatStore.js";
+import {onMounted} from "vue";
 import {useForm} from "@inertiajs/inertia-vue3";
 
 let videoPlayerStore = useVideoPlayerStore()
