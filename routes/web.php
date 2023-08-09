@@ -582,7 +582,7 @@ Route::middleware([
     Route::post('/chat/message', [ChatController::class, 'newMessage']);
     Route::get('/chatTest', function () {
         return Inertia::render('ChatTest');
-    })->name('chatTest');
+    });
 
 //    Route::get('/chatTest', function () {
 //        return Inertia::render('ChatTest');
