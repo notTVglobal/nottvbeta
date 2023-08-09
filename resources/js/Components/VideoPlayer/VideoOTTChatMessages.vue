@@ -40,6 +40,26 @@ function scrollTo(selector) {
 // get the newest message ID from the database.
 // and
 
+window.Echo.channel('private-chat.' + chatStore.currentChannel.id)
+    .listen('message.new', (e) => {
+        axios.get('/chat/channel/' + chatStore.currentChannel.id + '/messages')
+            .then( response => {
+                chatStore.messages = response.data;
+                // chatStore.messages = response.data;
+            })
+            .catch(error => {
+                console.log(error);
+            })
+
+        // tec21: all good. 11/05
+        console.log('LOAD NEW MESSAGES');
+        // if(e.user.id !== props.user.id) {
+        //     this.messages.push({
+        //         chatMessage: chatStore.messages
+        //     });
+        // }
+    });
+
 onUpdated(() => {
     if (chatStore.messages[0]) {
         document.getElementById(chatStore.messages[0].id).scrollIntoView({behavior: "smooth"})

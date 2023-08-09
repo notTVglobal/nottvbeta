@@ -60,7 +60,7 @@ function sendMessage() {
     }).then(response => {
         if( response.status == 201 ) {
             form.message = '';
-            emit('messagesent');
+            emit('messageSent');
         }
     })
         .catch( error => {

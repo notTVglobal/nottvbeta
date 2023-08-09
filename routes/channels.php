@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,8 +26,12 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 //});
 
 
-Broadcast::channel('chat.{channelId}', function ($user) {
-    return Auth::check();
+//Broadcast::channel('chat.{channelId}', function (User $user) {
+//    return Auth::check();
+//});
+
+Broadcast::channel('private.chatTest.{id}', function ($user, $id) {
+    return true;
 });
 
 

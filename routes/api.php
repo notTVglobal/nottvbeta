@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\MovieUploadController;
+use App\Http\Controllers\TestMessageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,3 +28,15 @@ Route::post('movies/upload', [MovieUploadController::class, 'upload'])
     ->name('moviesApi.upload');
 
 Route::post('/mistTrigger', [\App\Http\Controllers\mistTriggerController::class, 'logTrigger'])->name('mistTrigger.logTrigger');
+
+Route::post('/chatTestMessage', [TestMessageController::class, 'broadcast']);
+//Route::post('/chatTestMessage', '\App\Http\Controllers\TestMessageController@broadcast');
+
+//Route::post('/chatTest', function (){
+//    event(new \App\Events\NewChatTestMessage());
+//    return ('success');
+//});
+
+Route::post('/chatTest', [TestMessageController::class, 'broadcast'])
+    ->name('chatTestApi');;
+

@@ -37,8 +37,15 @@ return [
             'app_id' => env('PUSHER_APP_ID'),
             'options' => [
                 'cluster' => env('PUSHER_APP_CLUSTER'),
-//                'encrypted' => true,
-                'useTLS' => true
+                'encrypted' => env('PUSHER_APP_ENCRYPTED'),
+                'useTLS' => env('PUSHER_APP_TLS'),
+//                'host' => env('WEBSOCKET_HOST'),
+//                'port' => env('WEBSOCKET_PORT'),
+//                'scheme' => env('WEBSOCKET_SCHEME')
+                'host' => 'nottv.local',
+                'port' => 6001,
+                'scheme' => 'http'
+
             ],
             'client_options' => [
                 // Guzzle client options: https://docs.guzzlephp.org/en/stable/request-options.html

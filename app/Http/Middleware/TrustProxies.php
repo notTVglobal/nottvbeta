@@ -14,7 +14,9 @@ class TrustProxies extends Middleware
      */
     protected $proxies = [
         '10.124.0.4',
-        'streams.not.tv'
+        'streams.not.tv',
+        'mist.not.tv',
+        'mist2.not.tv'
     ];
 
     /**

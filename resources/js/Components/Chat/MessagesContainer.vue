@@ -22,15 +22,25 @@ import { useUserStore } from "@/Stores/UserStore"
 import dayjs from 'dayjs'
 import relativeTime from "dayjs/plugin/relativeTime"
 import { onUpdated } from "vue";
+import Pusher from "pusher-js";
 
 let chatStore = useChatStore()
 let userStore = useUserStore()
+
+// let pusher = new Pusher('f0b385d3a5994dca4741', {
+//     cluster: 'us3'
+// });
 
 dayjs.extend(relativeTime)
 
 let props = defineProps({
     message: Object,
 })
+
+// let channel = pusher.subscribe('1');
+// channel.bind('my-event', function(data) {
+//     props.message.push(JSON.stringify(data));
+// });
 
 // add a WatchEffect here to update the time stamps
 // every few minutes.

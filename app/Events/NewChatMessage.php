@@ -11,6 +11,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use App\Models\ChatMessage;
+use App\Models\User;
 
 class NewChatMessage implements ShouldBroadcast
 {
@@ -40,11 +41,12 @@ class NewChatMessage implements ShouldBroadcast
         //
         // For more info see:
         // https://www.youtube.com/watch?v=CkRGJC0ytdU
-        return new PrivateChannel('chat.'. $this->chatMessage->channel_id);
+        return new PrivateChannel('private-chat.'. $this->chatMessage->channel_id);
 //        return new PrivateChannel('chat.'. 1);
     }
 
-    public function broadcastAs() {
-            return 'message.new';
+    public function broadcastAs(): string
+    {
+            return 'newMessage';
     }
 }

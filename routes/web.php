@@ -580,6 +580,16 @@ Route::middleware([
     Route::get('/chat/channels', [ChatController::class, 'channels']);
     Route::get('/chat/channel/{channelId}/messages', [ChatController::class, 'messages']);
     Route::post('/chat/message', [ChatController::class, 'newMessage']);
+    Route::get('/chatTest', function () {
+        return Inertia::render('ChatTest');
+    })->name('chatTest');
+
+//    Route::get('/chatTest', function () {
+//        return Inertia::render('ChatTest');
+//    })->can('viewVip', 'App\Models\User')
+//        ->name('chatTest');
+//
+
 //    Route::post('/chat/channel/{channelId}/message', function() {
 //        ChatMessage::forceCreate(request(['body']));
 //    });

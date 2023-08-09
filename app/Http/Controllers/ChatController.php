@@ -18,7 +18,8 @@ use App\Events\NewChatMessage;
 class ChatController extends Controller
 {
 
-    public function channels( HttpRequest $request ){
+    public function channels( HttpRequest $request ): \Illuminate\Database\Eloquent\Collection
+    {
         return Channel::all();
     }
     public function __construct()
@@ -26,7 +27,8 @@ class ChatController extends Controller
         $this->middleware('auth');
     }
 
-    public function messages( HttpRequest $request, $channelId ) {
+    public function messages( HttpRequest $request, $channelId ): \Illuminate\Database\Eloquent\Collection|array
+    {
 
          return ChatMessage::query()
             ->where('channel_id', $channelId)
@@ -72,7 +74,7 @@ class ChatController extends Controller
 //
 //    }
 
-    public function newMessage(HttpRequest $request)
+    public function newMessage(HttpRequest $request): ChatMessage
     {
         $chatMessage = new ChatMessage;
         $chatMessage->user_id = Auth::id();
