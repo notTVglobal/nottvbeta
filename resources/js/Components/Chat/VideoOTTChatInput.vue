@@ -10,11 +10,10 @@
                 v-model="form.message"
                 @keyup.enter="sendMessage"
             />
-            <span>
-                <div @click="sendMessage" class="fixed right-10 p-2 m-2 mb-2 w-fit text-white form-control cursor-pointer">
-                    <font-awesome-icon icon="fa-paper-plane" class="hover:text-blue-800 text-xl"/>
-                </div>
-            </span>
+
+            <div @click="sendMessage" class="fixed right-10 p-2 m-2 mb-2 w-fit text-white form-control cursor-pointer">
+                <font-awesome-icon icon="fa-paper-plane" class="hover:text-blue-800 text-xl"/>
+            </div>
 
         </form>
     </div>
@@ -34,8 +33,6 @@ let props = defineProps({
     user: Object,
     input: ref(''),
 });
-
-
 
 let form = useForm({
     message: '',

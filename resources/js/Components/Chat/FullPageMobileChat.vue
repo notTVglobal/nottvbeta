@@ -1,5 +1,3 @@
-<!--This file may not be in use.-->
-
 <template>
     <div>
         <div class="flex flex-col p-5 mt-10">
@@ -20,7 +18,6 @@
 <script setup>
 import InputMessage from "@/Components/Chat/FullPageChatInput"
 import ChatMessages from "@/Components/Chat/FullPageChatMessages.vue"
-// import {ref, onMounted, watch, onBeforeUnmount, onBeforeMount, watchEffect, effect} from "vue";
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore";
 import { useChatStore } from "@/Stores/ChatStore";
 

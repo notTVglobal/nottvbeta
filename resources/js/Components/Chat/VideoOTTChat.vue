@@ -12,7 +12,6 @@
 <script setup>
 import VideoOTTChatInput from "@/Components/Chat/VideoOTTChatInput.vue";
 import VideoOTTChatMessages from "@/Components/Chat/VideoOTTChatMessages.vue";
-import { ref, onMounted, onBeforeUnmount, onBeforeMount, watchEffect } from "vue";
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore";
 import { useChatStore } from "@/Stores/ChatStore";
 
@@ -22,7 +21,5 @@ let chatStore = useChatStore()
 let props = defineProps({
     user: Object,
 })
-
-
 
 </script>

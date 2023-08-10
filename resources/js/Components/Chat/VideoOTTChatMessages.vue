@@ -16,11 +16,11 @@
 </template>
 
 <script setup>
+import { onBeforeMount, onBeforeUnmount, onUpdated, ref } from "vue";
 import MessageItem from "@/Components/Chat/ChatMessage.vue"
 import { useChatStore } from "@/Stores/ChatStore";
 import dayjs from 'dayjs';
 import relativeTime from "dayjs/plugin/relativeTime";
-import { onBeforeMount, onBeforeUnmount, onUpdated, ref } from "vue";
 
 let chatStore = useChatStore()
 
@@ -104,11 +104,6 @@ onUpdated(() => {
         document.getElementById(chatStore.newMessages[0].id).scrollIntoView({behavior: "smooth"})
     }
 })
-
-
-
-
-
 
 </script>
 
