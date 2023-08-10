@@ -25,10 +25,12 @@
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useStreamStore } from "@/Stores/StreamStore"
 import { useUserStore } from "@/Stores/UserStore"
+import { useChatStore } from "@/Stores/ChatStore"
 
 let videoPlayerStore = useVideoPlayerStore()
 let streamStore = useStreamStore()
 let userStore = useUserStore()
+let chatStore = useChatStore()
 
 function backToPage() {
     videoPlayerStore.makeVideoTopRight();
