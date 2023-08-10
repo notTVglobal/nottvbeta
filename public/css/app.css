@@ -1651,6 +1651,10 @@ select {
   top: 1.5rem;
 }
 
+.bottom-10 {
+  bottom: 2.5rem;
+}
+
 .z-0 {
   z-index: 0;
 }

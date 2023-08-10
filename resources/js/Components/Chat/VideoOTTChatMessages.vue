@@ -1,11 +1,16 @@
 <template>
     <div class="pb-0 scrollbar-hide">
-        <button @click.prevent="scrollTo('#scrollToMe')" class="bottom-0 mr-32 h-12 bg-blue-800 hover:bg-blue-600 w-56 rounded-lg ">CLICK HERE TO SCROLL TO BOTTOM</button>
+        <button @click.prevent="scrollTo('#scrollToMe')" class="bottom-0 mr-32 h-12 bg-blue-800 hover:bg-blue-600 w-56 rounded-lg hidden">CLICK HERE TO SCROLL TO BOTTOM</button>
         <div class="chatChrome w-full h-full pb-0 pt-5 bottom-0 flex flex-col-reverse overflow-y-scroll overflow-x-clip break-words messages scrollbar-hide">
             <div id="scrollToMe"></div>
-            <div v-for="(message, index) in chatStore.messages.slice()" :key="index">
-                <message-item :id="message.id" :message="message" :time="time(message.created_at)" />
+
+            <div id="messages" v-for="(message, messages) in chatStore.newMessages.slice().reverse()" :key="messages">
+                <message-item :id="message.id" :message="message" :time="time(message.created_at)"/>
             </div>
+            <div id="messages" v-for="(message, messages) in chatStore.oldMessages.slice()" :key="messages">
+                <message-item :id="message.id" :message="message" :time="time(message.created_at)"/>
+            </div>
+
         </div>
     </div>
 </template>
@@ -15,11 +20,68 @@ import MessageItem from "@/Components/Chat/ChatMessage.vue"
 import { useChatStore } from "@/Stores/ChatStore";
 import dayjs from 'dayjs';
 import relativeTime from "dayjs/plugin/relativeTime";
-import { onUpdated } from "vue";
+import { onBeforeMount, onBeforeUnmount, onUpdated, ref } from "vue";
+
+let chatStore = useChatStore()
+
 dayjs.extend(relativeTime)
 
 let props = defineProps({
     message: Object,
+})
+
+let channels = ref([])
+
+onBeforeMount(async() => {
+    await connect();
+});
+
+function connect() {
+    console.log('STREAM CHAT CONNECTED');
+    getChannels();
+}
+
+function getChannels() {
+    axios.get('/chat/channels')
+        .then(response => {
+            channels = response;
+            setChannel(channels.data[0]);
+        })
+        .catch(error => {
+            console.log(error);
+        })
+}
+
+function setChannel ( channel ){
+    chatStore.currentChannel = channel;
+    console.log('Joined Chat Channel: ' + chatStore.currentChannel.name);
+    getMessages();
+}
+
+function getMessages() {
+    axios.get('/chat/channel/' + chatStore.currentChannel.id + '/messages')
+        .then( response => {
+            chatStore.oldMessages = response.data;
+        })
+        .catch(error => {
+            console.log(error);
+        })
+    console.log('LOAD MESSAGES');
+}
+
+function disconnect() {
+    window.Echo.leave("chat." + chatStore.currentChannel.id );
+    console.log('STREAM CHAT DISCONNECTED');
+}
+
+onBeforeUnmount(() => {
+    disconnect();
+});
+
+const channel = Echo.private('chat.' + '1')
+channel.subscribed(() => {
+}).listen('.chat', (event) => {
+    chatStore.newMessages.push(event.message)
 })
 
 
@@ -31,48 +93,21 @@ function time(e) {
     return formattedTime;
 }
 
-let chatStore = useChatStore()
-
+// scrollToMe button:
 function scrollTo(selector) {
     document.querySelector(selector).scrollIntoView({ behavior: 'smooth'});
 }
 
-// get the newest message ID from the database.
-// and
-
-window.Echo.channel('private-chat.' + chatStore.currentChannel.id)
-    .listen('message.new', (e) => {
-        axios.get('/chat/channel/' + chatStore.currentChannel.id + '/messages')
-            .then( response => {
-                chatStore.messages = response.data;
-                // chatStore.messages = response.data;
-            })
-            .catch(error => {
-                console.log(error);
-            })
-
-        // tec21: all good. 11/05
-        console.log('LOAD NEW MESSAGES');
-        // if(e.user.id !== props.user.id) {
-        //     this.messages.push({
-        //         chatMessage: chatStore.messages
-        //     });
-        // }
-    });
-
 onUpdated(() => {
-    if (chatStore.messages[0]) {
-        document.getElementById(chatStore.messages[0].id).scrollIntoView({behavior: "smooth"})
+    scrollTo('#scrollToMe')
+    if (chatStore.newMessages[0]) {
+        document.getElementById(chatStore.newMessages[0].id).scrollIntoView({behavior: "smooth"})
     }
 })
 
 
-    //
 
 
-// onMounted(() => {
-//
-// })
 
 
 </script>

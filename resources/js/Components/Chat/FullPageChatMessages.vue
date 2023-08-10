@@ -9,15 +9,12 @@
             <div class="chatChrome w-full h-full pb-2 py-2 flex flex-col-reverse overflow-y-scroll overflow-x-clip break-words messages scrollbar-hide">
                 <div id="scrollToMe"></div>
 
-<!--                Make sure #scrollToMe goes to the bottom of the new messages. -->
-
                 <div id="messages" v-for="(message, messages) in chatStore.newMessages.slice().reverse()" :key="messages">
                     <message-item :id="message.id" :message="message" :time="time(message.created_at)"/>
                 </div>
                 <div id="messages" v-for="(message, messages) in chatStore.oldMessages.slice()" :key="messages">
                     <message-item :id="message.id" :message="message" :time="time(message.created_at)"/>
                 </div>
-
 
             </div>
     </div>
@@ -29,7 +26,7 @@ import { useChatStore } from "@/Stores/ChatStore"
 import { useUserStore } from "@/Stores/UserStore"
 import dayjs from 'dayjs'
 import relativeTime from "dayjs/plugin/relativeTime"
-import {onMounted, onUpdated} from "vue";
+import { onBeforeMount, onBeforeUnmount, onUpdated, ref } from "vue";
 
 let chatStore = useChatStore()
 let userStore = useUserStore()
@@ -39,6 +36,54 @@ dayjs.extend(relativeTime)
 let props = defineProps({
     message: Object,
 })
+
+let channels = ref([])
+
+onBeforeMount(async() => {
+    await connect();
+});
+
+function connect() {
+    console.log('STREAM CHAT CONNECTED');
+    getChannels();
+}
+
+function getChannels() {
+    axios.get('/chat/channels')
+        .then(response => {
+            channels = response;
+            setChannel(channels.data[0]);
+        })
+        .catch(error => {
+            console.log(error);
+        })
+}
+
+function setChannel ( channel ){
+    chatStore.currentChannel = channel;
+    console.log('Joined Chat Channel: ' + chatStore.currentChannel.name);
+    getMessages();
+}
+
+function getMessages() {
+    axios.get('/chat/channel/' + chatStore.currentChannel.id + '/messages')
+        .then( response => {
+            chatStore.oldMessages = response.data;
+        })
+        .catch(error => {
+            console.log(error);
+        })
+    console.log('LOAD MESSAGES');
+}
+
+function disconnect() {
+    window.Echo.leave("chat." + chatStore.currentChannel.id );
+    console.log('STREAM CHAT DISCONNECTED');
+}
+
+onBeforeUnmount(() => {
+    disconnect();
+});
 
 const channel = Echo.private('chat.' + '1')
 channel.subscribed(() => {
@@ -55,27 +100,16 @@ function time(e) {
     return formattedTime;
 }
 
-
-
 // scrollToMe button:
 function scrollTo(selector) {
     document.querySelector(selector).scrollIntoView({ behavior: 'smooth'});
 }
-
-// onMounted( () => {
-//     if (chatStore.oldMessages[0]) {
-//         document.getElementById(chatStore.oldMessages[0].id).scrollIntoView({behavior: "smooth"})
-//     }
-//
-// })
 
 onUpdated(() => {
     scrollTo('#scrollToMe')
     if (chatStore.newMessages[0]) {
         document.getElementById(chatStore.newMessages[0].id).scrollIntoView({behavior: "smooth"})
     }
-
-
 })
 
 </script>

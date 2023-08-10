@@ -4,14 +4,14 @@
         <form @submit.prevent="">
 
             <input
-                class="fixed bottom-20 right-20 p-2 m-2 mb-2 w-fit text-black form-control border-2 border-gray-800 hover:border-blue-800 focus:outline-none"
+                class="fixed right-20 p-2 m-2 mb-2 w-fit text-black form-control border-2 border-gray-800 hover:border-blue-800 focus:outline-none"
                 type="text"
                 placeholder="Write a message..."
                 v-model="form.message"
                 @keyup.enter="sendMessage"
             />
             <span>
-                <div @click="sendMessage" class="fixed bottom-20 right-10 p-2 m-2 mb-2 w-fit text-white form-control cursor-pointer">
+                <div @click="sendMessage" class="fixed right-10 p-2 m-2 mb-2 w-fit text-white form-control cursor-pointer">
                     <font-awesome-icon icon="fa-paper-plane" class="hover:text-blue-800 text-xl"/>
                 </div>
             </span>
