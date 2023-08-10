@@ -30,7 +30,7 @@ let videoPlayerStore = useVideoPlayerStore()
 let chatStore = useChatStore()
 
 let props = defineProps({
-    channel: Object,
+    // channel: Object,
     user: Object,
     // search: String,
     input: ref(''),
@@ -87,7 +87,7 @@ function sendMessage() {
         if( response.status === 201 ) {
             form.message = '';
             // emit('messagesent');
-            console.log( 'NEW MESSAGE SENT WITH AXIOS.POST' );
+            console.log( 'MESSAGE SENT' );
         }
     })
         .catch( error => {

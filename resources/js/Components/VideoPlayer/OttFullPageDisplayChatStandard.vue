@@ -11,7 +11,7 @@
             <div v-if="chatStore.showChat" class="chatForStreamPageStandard w-96 max-w-[12rem] bottom-0 bg-opacity-30 bg-blue-600 text-sm text-white pb-12
                 chat-mask overflow-y-auto scroll-smooth hover:scroll-auto break-words">
 
-                <ChatContainer :user="user"/>
+                <full-page-standard-chat :user="user"/>
 
 
                 <!--            <form @submit.prevent="submit">-->
@@ -43,7 +43,7 @@
 <script setup>
 import {useChatStore} from "@/Stores/ChatStore";
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore";
-import ChatContainer from "@/Components/Chat/ChatContainerForOttFullPageDisplayChatStandard";
+import FullPageStandardChat from "@/Components/Chat/FullPageStandardChat.vue";
 
 
 let chatStore = useChatStore();

@@ -41,12 +41,13 @@ class NewChatMessage implements ShouldBroadcastNow
         //
         // For more info see:
         // https://www.youtube.com/watch?v=CkRGJC0ytdU
-        return new PrivateChannel('chat.'. $this->chatMessage->channel_id);
-//        return new PrivateChannel('chat.'. 1);
+//        return new PrivateChannel('chat.'. $this->chatMessage->channel_id);
+        return new PrivateChannel('chat.'. 1);
     }
 
     public function broadcastAs(): string
     {
+//            return 'chat.'. $this->chatMessage->channel_id;
             return 'chat';
     }
     public function broadcastWith()

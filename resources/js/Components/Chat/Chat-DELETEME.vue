@@ -1,6 +1,6 @@
 <template>
     <div class="flex justify-between p-5 mb-5">
-        <div class="text-3xl font-semibold">Conversation</div>
+        <div class="text-3xl font-semibold">Conversation - DELETE ME</div>
     </div>
 
     <div>
@@ -16,8 +16,8 @@
 
 <script setup>
 import {onMounted, ref, watchEffect, watch} from "vue";
-import InputMessage from "@/Components/Chat/InputMessage"
-import MessagesContainer from "@/Components/Chat/MessagesContainer"
+import InputMessage from "@/Components/Chat/FullPageChatInput.vue"
+import MessagesContainer from "@/Components/Chat/FullPageChatMessages.vue"
 // import Pusher from "pusher-js";
 
 let messages = ref([])

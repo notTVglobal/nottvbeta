@@ -37,7 +37,7 @@
 <script setup>
 import {useChatStore} from "@/Stores/ChatStore";
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore";
-import ChatContainer from "@/Components/Chat/ChatContainer";
+import ChatContainer from "@/Components/Chat/FullPageMobileChat.vue";
 
 let chatStore = useChatStore();
 let videoPlayerStore = useVideoPlayerStore();

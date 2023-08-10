@@ -3,14 +3,13 @@ import {default as Echo} from "laravel-echo";
 import { ref } from "vue";
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore";
 
-
-
 export let useChatStore = defineStore('chatStore', {
     state() {
         return {
             showChat: Boolean,
             class: '',
-            messages: ref([]),
+            oldMessages: ref([]),
+            newMessages: ref([]),
             message: ref(''),
             echo: [],
             currentChannel: ref([]),

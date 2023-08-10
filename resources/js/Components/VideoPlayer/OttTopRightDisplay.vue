@@ -162,7 +162,7 @@
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
 import {useStreamStore} from "@/Stores/StreamStore";
 import { useChatStore } from "@/Stores/ChatStore.js"
-import VideoOTTChat from "@/Components/VideoPlayer/VideoOTTChat.vue";
+import VideoOTTChat from "@/Components/Chat/VideoOTTChat.vue";
 
 let videoPlayerStore = useVideoPlayerStore()
 let streamStore = useStreamStore()

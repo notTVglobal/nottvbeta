@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import MessageItem from "@/Components/Chat/Message"
+import MessageItem from "@/Components/Chat/ChatMessage.vue"
 import { useChatStore } from "@/Stores/ChatStore";
 import dayjs from 'dayjs';
 import relativeTime from "dayjs/plugin/relativeTime";

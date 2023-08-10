@@ -246,7 +246,7 @@
 import JetApplicationMark from '@/Jetstream/ApplicationMark.vue';
 import JetDropdownLink from '@/Jetstream/DropdownLink.vue';
 import { Link } from '@inertiajs/inertia-vue3';
-import ChatToggle from "@/Components/Chat/ChatToggle.vue";
+import ChatToggle from "@/Components/Chat/ChatToggle-TESTDELETE.vue";
 import JetDropdown from '@/Jetstream/Dropdown.vue';
 import JetNavLink from '@/Jetstream/NavLink.vue';
 import {Inertia} from "@inertiajs/inertia";

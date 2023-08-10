@@ -6,30 +6,33 @@
                 :class="{ isMobile: userStore.isMobile }"
             >CLICK HERE TO SCROLL TO BOTTOM</button>
     </div>
-            <div class="chatChrome w-full h-full pb-2 py-2 flex flex-col overflow-y-scroll overflow-x-clip break-words messages scrollbar-hide">
+            <div class="chatChrome w-full h-full pb-2 py-2 flex flex-col-reverse overflow-y-scroll overflow-x-clip break-words messages scrollbar-hide">
                 <div id="scrollToMe"></div>
-                <div id="messages" v-for="(message, messages) in chatStore.messages" :key="messages">
+
+<!--                Make sure #scrollToMe goes to the bottom of the new messages. -->
+
+                <div id="messages" v-for="(message, messages) in chatStore.newMessages.slice().reverse()" :key="messages">
                     <message-item :id="message.id" :message="message" :time="time(message.created_at)"/>
                 </div>
+                <div id="messages" v-for="(message, messages) in chatStore.oldMessages.slice()" :key="messages">
+                    <message-item :id="message.id" :message="message" :time="time(message.created_at)"/>
+                </div>
+
+
             </div>
     </div>
 </template>
 
 <script setup>
-import MessageItem from "@/Components/Chat/Message"
+import MessageItem from "@/Components/Chat/ChatMessage.vue"
 import { useChatStore } from "@/Stores/ChatStore"
 import { useUserStore } from "@/Stores/UserStore"
 import dayjs from 'dayjs'
 import relativeTime from "dayjs/plugin/relativeTime"
-import { onUpdated } from "vue";
-import Pusher from "pusher-js";
+import {onMounted, onUpdated} from "vue";
 
 let chatStore = useChatStore()
 let userStore = useUserStore()
-
-// let pusher = new Pusher('f0b385d3a5994dca4741', {
-//     cluster: 'us3'
-// });
 
 dayjs.extend(relativeTime)
 
@@ -37,18 +40,12 @@ let props = defineProps({
     message: Object,
 })
 
-const channel = Echo.private('chat.1')
+const channel = Echo.private('chat.' + '1')
 channel.subscribed(() => {
-    console.log('Joined Chat Channel: ' + 'chat')
 }).listen('.chat', (event) => {
-    console.log(event)
-    chatStore.messages.push(event.message)
+    chatStore.newMessages.push(event.message)
 })
 
-// let channel = pusher.subscribe('1');
-// channel.bind('my-event', function(data) {
-//     props.message.push(JSON.stringify(data));
-// });
 
 // add a WatchEffect here to update the time stamps
 // every few minutes.
@@ -60,14 +57,24 @@ function time(e) {
 
 
 
+// scrollToMe button:
 function scrollTo(selector) {
     document.querySelector(selector).scrollIntoView({ behavior: 'smooth'});
 }
 
+// onMounted( () => {
+//     if (chatStore.oldMessages[0]) {
+//         document.getElementById(chatStore.oldMessages[0].id).scrollIntoView({behavior: "smooth"})
+//     }
+//
+// })
+
 onUpdated(() => {
-    if (chatStore.messages[0]) {
-        document.getElementById(chatStore.messages[0].id).scrollIntoView({behavior: "smooth"})
+    scrollTo('#scrollToMe')
+    if (chatStore.newMessages[0]) {
+        document.getElementById(chatStore.newMessages[0].id).scrollIntoView({behavior: "smooth"})
     }
+
 
 })
 

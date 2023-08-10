@@ -14,7 +14,7 @@
 
 
             <div class="flex flex-col p-5 mb-5">
-                <div class="text-3xl font-semibold">Conversation</div>
+                <div class="text-3xl font-semibold">Conversation - DELETE ME</div>
                 <div class="text-xl">Please scroll to the bottom. We are in the process of building an auto-scroll function.</div>
             </div>
 
@@ -49,8 +49,8 @@
 <script setup>
 import {useChatStore} from "@/Stores/ChatStore";
 import {ref, onMounted, watch} from "vue"
-import InputMessage from "@/Components/Chat/InputMessage"
-import ChatMessages from "@/Components/Chat/MessagesContainer"
+import InputMessage from "@/Components/Chat/FullPageChatInput.vue"
+import ChatMessages from "@/Components/Chat/FullPageChatMessages.vue"
 
 let chatStore = useChatStore();
 

@@ -39,7 +39,7 @@ class ChatController extends Controller
             }])
             ->latest()
             ->limit(20)
-            ->orderBy('created_at', 'DESC')
+//            ->orderBy('created_at', 'ASC')
             ->get();
 
     }
