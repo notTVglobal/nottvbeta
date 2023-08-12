@@ -75,7 +75,7 @@ function disconnect() {
 }
 
 onBeforeUnmount(() => {
-    // chatStore.newMessages = [];
+    chatStore.newMessages = [];
     disconnect();
 });
 
