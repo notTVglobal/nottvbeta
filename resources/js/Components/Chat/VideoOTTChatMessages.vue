@@ -16,7 +16,7 @@
 </template>
 
 <script setup>
-import { onBeforeMount, onBeforeUnmount, onUpdated, ref } from "vue";
+import {onBeforeMount, onBeforeUnmount, onUnmounted, onUpdated, ref} from "vue";
 import MessageItem from "@/Components/Chat/ChatMessage.vue"
 import { useChatStore } from "@/Stores/ChatStore";
 import dayjs from 'dayjs';
@@ -89,6 +89,15 @@ channel.subscribed(() => {
 // add a WatchEffect here to update the time stamps
 // every few minutes.
 
+// tec21: this is an attempt to set a timer to update the timestamp on messages
+// function time(e) {
+//     let formattedTime = dayjs().to(dayjs(e));
+//     this.timer = setInterval( () => {
+//         formattedTime = dayjs().to(dayjs(e));
+//     }, 1000)
+//     return formattedTime;
+// }
+
 function time(e) {
     let formattedTime = dayjs().to(dayjs(e));
     return formattedTime;
@@ -105,6 +114,11 @@ onUpdated(() => {
     //     document.getElementById(chatStore.newMessages[0].id).scrollIntoView({behavior: "smooth"})
     // }
 })
+
+// tec21: this is for setting a timer to update the timestamps on the messages.
+// onUnmounted( () => {
+//     clearInterval(this.timer)
+// })
 
 </script>
 
