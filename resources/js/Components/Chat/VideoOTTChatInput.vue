@@ -29,7 +29,6 @@ let videoPlayerStore = useVideoPlayerStore()
 let chatStore = useChatStore()
 
 let props = defineProps({
-    channel: Object,
     user: Object,
     input: ref(''),
 });
@@ -40,8 +39,6 @@ let form = useForm({
     user_profile_photo_path: props.user.profile_photo_path,
     user_profile_photo_url: props.user.profile_photo_url,
 });
-
-const emit = defineEmits()
 
 function sendMessage() {
     //
@@ -57,7 +54,7 @@ function sendMessage() {
     }).then(response => {
         if( response.status == 201 ) {
             form.message = '';
-            emit('messageSent');
+            console.log( 'MESSAGE SENT' );
         }
     })
         .catch( error => {

@@ -1547,16 +1547,12 @@ select {
   right: 9rem;
 }
 
-.right-96 {
-  right: 24rem;
+.right-20 {
+  right: 5rem;
 }
 
 .bottom-20 {
   bottom: 5rem;
-}
-
-.right-20 {
-  right: 5rem;
 }
 
 .-right-4 {
@@ -1651,8 +1647,20 @@ select {
   top: 1.5rem;
 }
 
-.bottom-10 {
-  bottom: 2.5rem;
+.bottom-40 {
+  bottom: 10rem;
+}
+
+.bottom-24 {
+  bottom: 6rem;
+}
+
+.bottom-28 {
+  bottom: 7rem;
+}
+
+.bottom-32 {
+  bottom: 8rem;
 }
 
 .z-0 {
@@ -1943,16 +1951,16 @@ select {
   margin-top: 8rem;
 }
 
-.mr-28 {
-  margin-right: 7rem;
-}
-
 .mt-96 {
   margin-top: 24rem;
 }
 
 .mr-12 {
   margin-right: 3rem;
+}
+
+.mr-32 {
+  margin-right: 8rem;
 }
 
 .mr-1 {
@@ -1989,10 +1997,6 @@ select {
 
 .mb-64 {
   margin-bottom: 16rem;
-}
-
-.mr-32 {
-  margin-right: 8rem;
 }
 
 .-mt-32 {
@@ -3581,10 +3585,6 @@ select {
   padding-bottom: 3rem;
 }
 
-.pl-28 {
-  padding-left: 7rem;
-}
-
 .pr-5 {
   padding-right: 1.25rem;
 }
@@ -4089,11 +4089,6 @@ select {
 
 .ring-opacity-5 {
   --tw-ring-opacity: 0.05;
-}
-
-.blur {
-  --tw-blur: blur(8px);
-  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 
 .drop-shadow-md {

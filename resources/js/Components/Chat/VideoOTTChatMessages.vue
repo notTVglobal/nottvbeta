@@ -4,10 +4,10 @@
         <div class="chatChrome w-full h-full pb-0 pt-5 bottom-0 flex flex-col-reverse overflow-y-scroll overflow-x-clip break-words messages scrollbar-hide">
             <div id="scrollToMe"></div>
 
-            <div id="messages" v-for="(message, messages) in chatStore.newMessages.slice().reverse()" :key="messages">
+            <div id="newMessages" v-for="(message, messages) in chatStore.newMessages.slice().reverse()" :key="messages">
                 <message-item :id="message.id" :message="message" :time="time(message.created_at)"/>
             </div>
-            <div id="messages" v-for="(message, messages) in chatStore.oldMessages.slice()" :key="messages">
+            <div id="oldMessages" v-for="(message, messages) in chatStore.oldMessages.slice()" :key="messages">
                 <message-item :id="message.id" :message="message" :time="time(message.created_at)"/>
             </div>
 
@@ -75,6 +75,7 @@ function disconnect() {
 }
 
 onBeforeUnmount(() => {
+    // chatStore.newMessages = [];
     disconnect();
 });
 
@@ -100,9 +101,9 @@ function scrollTo(selector) {
 
 onUpdated(() => {
     scrollTo('#scrollToMe')
-    if (chatStore.newMessages[0]) {
-        document.getElementById(chatStore.newMessages[0].id).scrollIntoView({behavior: "smooth"})
-    }
+    // if (chatStore.newMessages[0]) {
+    //     document.getElementById(chatStore.newMessages[0].id).scrollIntoView({behavior: "smooth"})
+    // }
 })
 
 </script>

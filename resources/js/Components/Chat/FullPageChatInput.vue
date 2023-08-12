@@ -30,9 +30,7 @@ let videoPlayerStore = useVideoPlayerStore()
 let chatStore = useChatStore()
 
 let props = defineProps({
-    // channel: Object,
     user: Object,
-    // search: String,
     input: ref(''),
 });
 
@@ -43,34 +41,6 @@ let form = useForm({
     user_profile_photo_path: props.user.profile_photo_path,
     user_profile_photo_url: props.user.profile_photo_url,
 });
-
-
-const emit = defineEmits(['messagesent'])
-
-// function sendMessage() {
-//     //
-//     if (form.message === ""){
-//         return;
-//     }
-//     //POST request to the messages route with the message data in order for our Laravel server to broadcast it.
-//     axios.post('/chat/message', {
-//         message: form.message,
-//         channel_id: chatStore.currentChannel.id,
-//         // channel_id: 1,
-//         user_name: form.user_name,
-//         user_profile_photo_path: form.user_profile_photo_path,
-//     }).then(response => {
-//         if( response.status === 201 ) {
-//             form.message = '';
-//             emit('messagesent');
-//             console.log( 'NEW MESSAGE SENT WITH AXIOS.POST' );
-//         }
-//     })
-//         .catch( error => {
-//             console.log( error );
-//         })
-//
-// }
 
 function sendMessage() {
     //
@@ -86,7 +56,6 @@ function sendMessage() {
     }).then(response => {
         if( response.status === 201 ) {
             form.message = '';
-            // emit('messagesent');
             console.log( 'MESSAGE SENT' );
         }
     })
@@ -95,7 +64,5 @@ function sendMessage() {
         })
 
 }
-
-
 
 </script>
