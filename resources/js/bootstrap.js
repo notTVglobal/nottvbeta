@@ -30,7 +30,7 @@ window.Echo = new Echo({
     disableStats: true,
     // wsHost: window.location.hostname,
     wsHost: 'socket.not.tv',
-    wsPort: 6001,
+    wsPort: 443,
     encrypted: false,
     enabledTransports: ['ws', 'wss'],
 
