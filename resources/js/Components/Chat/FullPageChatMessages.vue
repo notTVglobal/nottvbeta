@@ -7,7 +7,7 @@
             >CLICK HERE TO SCROLL TO BOTTOM</button>
     </div>
             <div class="chatChrome w-full h-full pb-2 py-2 flex flex-col-reverse overflow-y-scroll overflow-x-clip break-words messages scrollbar-hide">
-                <div id="scrollToMe">SCROLL HERE</div>
+                <div id="scrollToMe"></div>
 
                 <div id="newMessages" v-for="(message, messages) in chatStore.newMessages.slice().reverse()" :key="messages">
                     <message-item :id="message.id" :message="message" :time="time(message.created_at)"/>
