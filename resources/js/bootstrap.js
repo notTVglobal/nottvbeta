@@ -30,9 +30,11 @@ window.Echo = new Echo({
     disableStats: true,
     // wsHost: window.location.hostname,
     wsHost: 'socket.not.tv',
-    wsPort: 443,
+    wsPort: 6001,
+    wssPort: 6001,
     encrypted: true,
     enabledTransports: ['ws', 'wss'],
+    // authEndpoint: process.env.CLIENT_URL + '/api/broadcasting/auth',
 
     // wsHost: process.env.MIX_WEBSOCKET_HOST,
     // wsPort: process.env.MIX_WEBSOCKET_PORT,

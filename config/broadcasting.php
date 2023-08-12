@@ -38,7 +38,7 @@ return [
             'options' => [
                 'cluster' => env('PUSHER_APP_CLUSTER'),
                 'encrypted' => env('PUSHER_APP_ENCRYPTED'),
-                'useTLS' => env('PUSHER_APP_TLS'),
+//                'useTLS' => env('PUSHER_APP_TLS'),
 //                'host' => env('WEBSOCKET_HOST'),
 //                'port' => env('WEBSOCKET_PORT'),
 //                'scheme' => env('WEBSOCKET_SCHEME')
