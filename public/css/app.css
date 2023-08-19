@@ -1555,6 +1555,10 @@ select {
   bottom: 5rem;
 }
 
+.bottom-32 {
+  bottom: 8rem;
+}
+
 .-right-4 {
   right: -1rem;
 }
@@ -1645,22 +1649,6 @@ select {
 
 .top-6 {
   top: 1.5rem;
-}
-
-.bottom-40 {
-  bottom: 10rem;
-}
-
-.bottom-24 {
-  bottom: 6rem;
-}
-
-.bottom-28 {
-  bottom: 7rem;
-}
-
-.bottom-32 {
-  bottom: 8rem;
 }
 
 .z-0 {

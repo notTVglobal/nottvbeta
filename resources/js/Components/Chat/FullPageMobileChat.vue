@@ -5,7 +5,7 @@
         </div>
         <div class="italic">The newest message is at the bottom.</div>
         <div class="absolute">
-            <div class="relative h-[calc(h-100%-16rem)] top-0 scrollbar-hide">
+            <div class="relative h-[calc(h-100%-16rem)] top-0">
                 <chat-messages />
             </div>
             <div class="relative h-16">
@@ -17,7 +17,7 @@
 
 <script setup>
 import InputMessage from "@/Components/Chat/FullPageChatInput"
-import ChatMessages from "@/Components/Chat/FullPageChatMessages.vue"
+import ChatMessages from "@/Components/Chat/FullPageChatMessages"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore";
 import { useChatStore } from "@/Stores/ChatStore";
 

@@ -16,8 +16,8 @@
 </template>
 
 <script setup>
-import InputMessage from "@/Components/Chat/FullPageChatInput.vue"
-import ChatMessages from "@/Components/Chat/FullPageChatMessages.vue"
+import InputMessage from "@/Components/Chat/FullPageChatInput"
+import ChatMessages from "@/Components/Chat/FullPageChatMessages"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore";
 import { useChatStore } from "@/Stores/ChatStore";
 

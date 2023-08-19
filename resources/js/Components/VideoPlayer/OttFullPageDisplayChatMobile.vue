@@ -11,17 +11,7 @@
             <div v-if="chatStore.showChat" class="chatForStreamPageMobile w-100 bottom-0 sm:bottom-2 text-sm text-white pl-6 pb-12
                 chat-mask overflow-y-auto scroll-smooth hover:scroll-auto break-words z-50">
 
-                <ChatContainer :user="user"/>
-
-
-    <!--            <form @submit.prevent="submit">-->
-    <!--                    <input-->
-    <!--                        class="fixed bottom-0 right-10 p-2 m-2 mb-10 w-fit text-black form-control border-2 border-gray-800 hover:border-indigo-300 focus:outline-none"-->
-    <!--                        placeholder="Write a message..." v-model="message"/>-->
-    <!--                <div @click="submit" class="fixed bottom-0 right-0 p-2 m-2 mb-10 w-fit text-black form-control cursor-pointer">-->
-    <!--                    <font-awesome-icon icon="fa-paper-plane" class="hover:text-indigo-300 text-xl"/>-->
-    <!--                </div>-->
-    <!--            </form>-->
+                <full-page-mobile-chat :user="user"/>
 
                 <button v-touch="()=>videoPlayerStore.toggleChat()"
                         v-if="chatStore.showChat" class="chatCloseButtonMobile fixed right-5 opacity-80 w-15 h-15 p-4 rounded-full bg-orange-800
@@ -35,9 +25,9 @@
 </template>
 
 <script setup>
-import {useChatStore} from "@/Stores/ChatStore";
-import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore";
-import ChatContainer from "@/Components/Chat/FullPageMobileChat.vue";
+import { useChatStore } from "@/Stores/ChatStore";
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore";
+import FullPageMobileChat from "@/Components/Chat/FullPageMobileChat.vue";
 
 let chatStore = useChatStore();
 let videoPlayerStore = useVideoPlayerStore();
@@ -45,7 +35,5 @@ let videoPlayerStore = useVideoPlayerStore();
 defineProps({
     user: Object,
 })
-
-
 
 </script>
