@@ -23,6 +23,7 @@ onMounted(() => {
     videoPlayerStore.showNav = true
     videoPlayerStore.showControls = true
     videoPlayerStore.ottClass = 'OttClose'
+    videoPlayerStore.ott = 0
 
 })
 // if (streamStore.currentChannel != "Stream") {
