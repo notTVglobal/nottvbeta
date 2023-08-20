@@ -19,8 +19,7 @@
             <!-- When video is FullPage -->
             <div v-show="videoPlayerStore.fullPage"
                  class="fixed top-0 w-full nav-mask"
-                 @mouseenter="showOSD"
-                 @mouseleave="hideOSD">
+            >
 
                 <div v-show="videoPlayerStore.showNav">
                     <ResponsiveNavigationMenu/>

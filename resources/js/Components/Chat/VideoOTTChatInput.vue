@@ -12,6 +12,8 @@
                 v-focus
                 v-on:blur="videoPlayerStore.makeVideoTopRight()"
                 v-on:focus="videoPlayerStore.makeVideoPiP()"
+                v-on-click-outside:blur="videoPlayerStore.makeVideoTopRight()"
+
             />
 
             <div @click="sendMessage" class="fixed right-10 p-2 m-2 mb-2 w-fit text-white form-control cursor-pointer">
@@ -27,6 +29,7 @@ import { useForm } from "@inertiajs/inertia-vue3"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useChatStore } from "@/Stores/ChatStore.js"
 import {ref, defineEmits, onMounted, onUnmounted} from 'vue'
+import { vOnClickOutside } from '@vueuse/components'
 
 let videoPlayerStore = useVideoPlayerStore()
 let chatStore = useChatStore()
