@@ -15,33 +15,33 @@
                     <div class="fixed z-50 w-50 videoControlsMobile">
                         <div class="flex justify-center space-x-4 ">
                             <button v-if="videoPlayerStore.muted===true"
-                                    class="text-xs md:text-md  md:text-md bg-gray-800 rounded-full p-2 hover:bg-gray-600"
+                                    class="text-xs md:text-md md:text-md bg-gray-600 rounded-full p-2"
                                     @click="videoPlayerStore.unmute()">
                                 UNMUTE</button>
 
                             <button v-if="videoPlayerStore.muted===false"
-                                    class="text-xs md:text-md  bg-gray-800 rounded-full p-2 hover:bg-gray-600"
+                                    class="text-xs md:text-md bg-gray-600 rounded-full p-2"
                                     @click="videoPlayerStore.mute()">
                                 MUTE</button>
 
                             <button
-                                class="text-xs md:text-md  bg-gray-800 rounded-full p-2 hover:bg-gray-600 cursor-not-allowed"
+                                class="text-xs md:text-md bg-gray-600 rounded-full p-2 cursor-not-allowed"
                                 @click="videoPlayerStore.back()"
                                 disabled >
                                 PREV</button>
 
                             <button v-if="!videoPlayerStore.paused"
-                                    class="text-xs md:text-md  bg-gray-800 rounded-full p-2 hover:bg-gray-600"
+                                    class="text-xs md:text-md bg-gray-600 rounded-full p-2"
                                     @click="videoPlayerStore.pause()">
                                 PAUSE</button>
 
                             <button v-if="videoPlayerStore.paused"
-                                    class="text-xs md:text-md  bg-gray-800 rounded-full p-2 hover:bg-gray-600"
+                                    class="text-xs md:text-md bg-gray-600 rounded-full p-2"
                                     @click="videoPlayerStore.play()">
                                 PLAY</button>
 
                             <button
-                                class="text-xs md:text-md  bg-gray-800 rounded-full p-2 hover:bg-gray-600 cursor-not-allowed"
+                                class="text-xs md:text-md bg-gray-600 rounded-full p-2 cursor-not-allowed"
                                 @click="videoPlayerStore.next()"
                                 disabled >
                                 NEXT</button>

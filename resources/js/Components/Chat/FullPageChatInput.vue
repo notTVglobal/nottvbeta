@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="z-50">
 
         <form @submit.prevent="">
             <input
@@ -8,7 +8,9 @@
                 placeholder="Write a message..."
                 v-model="form.message"
                 @keyup.enter="sendMessage"
-                v-focus
+
+                v-on:blur="videoPlayerStore.makeVideoFullPage()"
+                v-on:focus="focusInput"
             />
             <div @click="sendMessage" class="fixed right-10 p-2 m-2 mb-2 w-fit text-white form-control cursor-pointer">
                 <font-awesome-icon icon="fa-paper-plane" class="hover:text-blue-800 text-xl"/>
@@ -42,6 +44,12 @@ let form = useForm({
 
 const vFocus = {
     mounted: (el) => el.focus()
+}
+
+function focusInput() {
+    videoPlayerStore.makeVideoPiP()
+    videoPlayerStore.showOSD = false
+    videoPlayerStore.showOttButtons = false
 }
 
 function sendMessage() {

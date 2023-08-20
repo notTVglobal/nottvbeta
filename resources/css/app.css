@@ -71,17 +71,18 @@
 @media (orientation: portrait) {
     .fullPageVideoClassMobile {
         position:fixed;
-        top: 5.5rem;
+        top: 4rem;
         left: 0px;
         /*padding-top:56.25%;*/
-        min-height:calc(50vh - 5.5rem);
+        /*min-height:calc(50vh - 5.5rem);*/
         /*min-height:calc(56.25% - 4rem);*/
         min-width:100vw;
-        max-height:calc(100vh - 8rem);
+        /*max-height:calc(100vh - 8rem);*/
+        padding-top: 56.25%;
         display: flex;
         flex-wrap: wrap;
         align-content: flex-start;
-        background-color: black;
+        background-color: dodgerblue;
     }
 }
 
@@ -97,11 +98,12 @@
     left:0px;
     /*min-width:100vw;*/
     /*max-width:100vw;*/
-    min-height:100vh;
+    /*min-height:100vh;*/
+    padding-top: 56.25%;
     /*display: flex;*/
     /*flex-wrap: wrap;*/
     /*align-content: flex-start;*/
-    background-color: black;
+    background-color: lightseagreen;
 }
 @media (max-width:1024px) {
     .topRightVideoClass {
@@ -139,7 +141,7 @@
         height:6rem;
         max-height:6rem;
         background-color: purple;
-        z-index: 100;
+        z-index: 900;
 
     }
     .PiPVideoContainer {
@@ -153,7 +155,7 @@
         height:6rem;
         max-height:6rem;
         background-color: purple;
-        z-index: 100;
+        z-index: 900;
 
     }
 }
@@ -226,11 +228,12 @@
     left:0px;
     /*min-width:100vw;*/
     /*max-width:100vw;*/
-    min-height:100vh;
+    /*min-height:100vh;*/
+    padding-top: 56.25%;
     /*display: flex;*/
     /*flex-wrap: wrap;*/
     /*align-content: flex-start;*/
-    background-color: black;
+    background-color: purple;
 }
 @media (orientation: portrait) {
     .videoControlsMobile {
@@ -244,7 +247,7 @@
         /*height:14rem;*/
         /*max-height:100vh;*/
         /*background-color: green;*/
-        top: 16rem !important;
+        top: 18rem !important;
         left:0px;
         width: 100%;
 
@@ -271,7 +274,7 @@
 }
 @media (orientation: portrait) {
     .videoFullPageMobileOSD {
-        top: 18rem;
+        top: 15rem;
     }
 }
 @media (orientation: landscape) {
@@ -393,12 +396,12 @@
 
 @media (orientation: landscape) {
     .chatForStreamPageMobile {
-        z-index: 200;
+        z-index: 40;
         position: fixed;
         /*top:4rem;*/
         /*bottom:2rem;*/
         bottom: 4rem;
-        right: 0rem;
+        right: 0;
         padding-left:4rem;
         min-width: 100vw;
         max-width: 100vw;
@@ -409,13 +412,15 @@
 
 @media (orientation: portrait) {
     .chatForStreamPageMobile {
-        z-index: 200;
+        z-index: 40;
         position: fixed;
         /*top:4rem;*/
         /*bottom:2rem;*/
-        bottom: 0rem;
+        bottom: 0;
         background: linear-gradient(to bottom, rgba(255,0,0,0), rgba(255,0,0,1));
-        right: 0rem;
+        right: 0;
+        top: 17rem;
+        padding-bottom: 10rem;
         min-width: 100vw;
         max-width: 100vw;
         /*min-height: calc(50vh);*/
@@ -480,6 +485,10 @@
 }
 .chatHidden {
     display: none;
+}
+
+.OttButtonsMobile {
+    /*padding-left: 2em;*/
 }
 
 @tailwind utilities;

@@ -34,19 +34,20 @@
     <!-- Video Player -->
             <div class="w-full">
 
-
-
-
-
-                <VideoPlayerMain class="z-50"
+                <VideoPlayerMain class="z-50 vh-100"
                                  :key="videoPlayerStore.key"
                                  :user="user"
-                                 @mouseenter="showOSD"
-                                 @mouseleave="hideOSD"
-                                 v-touch="()=>toggleOSD()"/>
+                />
+
+<!-- tec21: 08/20/23 removed the following from VideoPlayerMain
+        to fix the bug with mobile users focusing input and
+        the OSD showing. It was messing up the input focus too. -->
+<!--                @mouseenter="showOSD"-->
+<!--                @mouseleave="hideOSD"-->
+<!--                v-touch="()=>toggleOSD()"-->
+
 
                 <!-- isMobile -->
-
                 <div v-if="userStore.isMobile">
                     <div v-if="!videoPlayerStore.fullPage" class="fixed top-40 w-full lg:w-96 right-0 z-30">
                         <OttTopRightButtons class="videoOTT"/></div>

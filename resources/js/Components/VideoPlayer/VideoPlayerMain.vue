@@ -36,40 +36,37 @@
                     <VideoControlsTopRight :show="videoPlayerStore.showOSD" />
 
                 </div>
-
-
             </div>
-
-
 
 
     <!-- FullPage Video -->
             <div v-if="videoPlayerStore.fullPage && user">
 
-<!--        Mobile FullPage -->
+        <!-- Mobile FullPage -->
                 <div v-if="userStore.isMobile">
 
-                    <!-- notTV Bug -->
-                    <div v-show="! videoPlayerStore.showOSD" class="fixed h-screen top-4 h-16 left-5 opacity-10 z-50">
-                        <img :src="`/storage/images/logo_white_512.png`" class="block h-9 w-auto shrink-0"></div>
-
-                    <!-- Video Player Controls -->
-                    <VideoControlsFullPageMobile v-show="videoPlayerStore.showOSD" />
-
-                    <!-- On Screen Display (OSD) -->
-                    <OsdFullPageMobile v-show="videoPlayerStore.showOSD" />
-
-                    <!-- Over The Top (OTT) -->
-                    <OttFullPageButtons v-show="videoPlayerStore.showOSD" />
                     <OttFullPageDisplayChannels />
                     <OttFullPageDisplayPlaylist />
                     <OttFullPageDisplayChatMobile :user="user"/>
                     <OttFullPageDisplayFilters />
 
+                    <!-- notTV Bug -->
+                    <div v-show="! videoPlayerStore.showOSD" class="fixed h-screen top-4 h-16 left-5 opacity-10 z-50">
+                        <img :src="`/storage/images/logo_white_512.png`" class="block h-9 w-auto shrink-0"></div>
+
+                    <div v-show="videoPlayerStore.showOSD">
+                        <!-- Video Player Controls -->
+                        <VideoControlsFullPageMobile/>
+                        <!-- On Screen Display (OSD) -->
+                        <OsdFullPageMobile/>
+                        <!-- Over The Top (OTT) -->
+                        <OttFullPageButtons/>
+                    </div>
+
                 </div>
 
 
-<!--        Standard FullPage -->
+        <!-- Standard FullPage -->
                 <div v-if="!userStore.isMobile">
 
                     <!-- notTV Bug -->
