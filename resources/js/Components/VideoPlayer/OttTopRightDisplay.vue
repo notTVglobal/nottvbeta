@@ -2,7 +2,7 @@
     <div class="overflow-y-scroll scrollbar-hide h-full"
          :class="{'top-96':userStore.isMobile}">
 
-        <div v-if="videoPlayerStore.ott === 2" class="channels w-full bg-green-800 p-2 channelsForTopRightOtt">
+        <div v-if="videoPlayerStore.ott === 2" class="channels w-full h-full bg-green-800 p-2 channelsForTopRightOtt">
 
             <h1 class="text-xs font-semibold uppercase mb-3 w-full bg-green-900 text-white p-2">CHANNELS</h1>
 
@@ -146,7 +146,7 @@
             </div>
         </div>
 <!--        <div v-if="videoPlayerStore.ott === 4" class="now-playing w-full bg-red-800 px-2 pt-2 overflow-y-scroll scrollbar-hide">-->
-        <div v-if="videoPlayerStore.ott === 4" class="now-playing w-full bg-indigo-800 px-2 pt-2 overflow-y-scroll scrollbar-hide">
+        <div v-if="videoPlayerStore.ott === 4" class="now-playing w-full h-full bg-indigo-800 px-2 pt-2 overflow-y-scroll scrollbar-hide">
             <h1 class="text-xs font-semibold uppercase mb-3 w-full bg-indigo-900 text-white p-2">CHAT</h1>
 
             <!--            tec21: this one below works, 29MAR2023. The Ott divs need to be turned into pages on mobile devices so there is no scroll bar overlap. -->

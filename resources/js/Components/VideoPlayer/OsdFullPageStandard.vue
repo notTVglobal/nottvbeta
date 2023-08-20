@@ -18,7 +18,7 @@
 <!--    <div v-if="videoPlayerStore.currentPage!='stream'" @click="backToPage" class="absolute w-full flex justify-between mb-6 bottom-12 left-0 p-5 drop-shadow z-50">-->
     <div class="absolute w-full flex justify-between mb-6 bottom-12 left-0 p-5 drop-shadow z-50">
         <div>
-            <button @click="back" class="p-2 bg-gray-800 text-white hover:bg-gray-600">Back to Page</button>
+            <button @click="backToPage" class="p-2 bg-gray-800 text-white hover:bg-gray-600">Back to Page</button>
         </div>
     </div>
 </div>
@@ -32,11 +32,9 @@ let videoPlayerStore = useVideoPlayerStore()
 let streamStore = useStreamStore()
 
 function backToPage() {
-    videoPlayerStore.makeVideoTopRight();
-    streamStore.showOSD = false;
-}
-
-function back() {
+    // videoPlayerStore.makeVideoTopRight();
+    // chatStore.showChat = false;
+    // streamStore.showOSD = false;
     window.history.back()
 }
 

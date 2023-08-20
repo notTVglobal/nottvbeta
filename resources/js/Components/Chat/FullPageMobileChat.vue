@@ -7,7 +7,7 @@
 <!--        <chat-messages />-->
 <!--        <input-message :user="props.user" class="fixed bottom-20 z-50" />-->
         <div class="absolute">
-            <div class="relative h-[calc(h-100%-20rem)] top-0 pb-20 z-40">
+            <div class="relative h-[calc(h-100%-20rem)] top-0 pb-6 z-40">
                 <chat-messages />
             </div>
             <div class="relative h-16">

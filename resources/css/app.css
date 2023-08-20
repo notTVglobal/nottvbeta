@@ -132,7 +132,7 @@
     }
     .PipVideoClass {
         position:fixed;
-        bottom: 18rem;
+        bottom: 6rem;
         right: 1rem;
         width:50vw;
         /*max-width:24rem;*/
@@ -146,8 +146,9 @@
     }
     .PiPVideoContainer {
         position:fixed;
-        bottom: 18rem;
+        bottom: 6rem;
         right: 1rem;
+        padding-top: 56.25%;
         width:50vw;
         /*max-width:24rem;*/
         min-width:50vw;
@@ -417,7 +418,8 @@
         /*top:4rem;*/
         /*bottom:2rem;*/
         bottom: 0;
-        background: linear-gradient(to bottom, rgba(255,0,0,0), rgba(255,0,0,1));
+        /*background: linear-gradient(to bottom, rgba(255,0,0,0), rgba(255,0,0,1));*/
+        background: linear-gradient(to bottom, rgba(0,0,0,1), rgba(255,0,255,0));
         right: 0;
         top: 17rem;
         padding-bottom: 10rem;
@@ -443,7 +445,7 @@
 }
 @media (orientation: portrait) {
     .chatCloseButtonMobile {
-        top: 24rem;
+        top: 18rem;
     }
 }
 

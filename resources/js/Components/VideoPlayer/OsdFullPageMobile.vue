@@ -33,9 +33,10 @@ let userStore = useUserStore()
 let chatStore = useChatStore()
 
 function backToPage() {
-    videoPlayerStore.makeVideoTopRight();
-    chatStore.showChat = false;
-    streamStore.showOSD = false;
+    // videoPlayerStore.makeVideoTopRight();
+    // chatStore.showChat = false;
+    // streamStore.showOSD = false;
+    window.history.back()
 }
 
 let isMobile = userStore.isMobile;
