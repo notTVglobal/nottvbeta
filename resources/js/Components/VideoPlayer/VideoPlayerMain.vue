@@ -154,6 +154,7 @@ function clickOnVideoAction() {
     //     videoPlayerStore.toggleOSD()
     // } else {
     if(userStore.isMobile) {
+        videoPlayerStore.ottClass = 'OttClose'
         Inertia.visit('/stream')
     }
     // }
