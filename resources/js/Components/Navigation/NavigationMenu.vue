@@ -276,6 +276,7 @@ let props = defineProps({
 
 function loadStreamPage() {
     videoPlayerStore.makeVideoFullPage()
+    videoPlayerStore.ottClass = 'OttClose'
     userStore.showNavDropdown = false
 }
 
