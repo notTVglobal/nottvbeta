@@ -1,5 +1,6 @@
 <template>
-    <div class="flex flex-row justify-around h-7 bg-red-500 w-full text-xs uppercase font-semibold">
+    <div class="flex flex-row justify-around bg-red-500 w-full text-xs uppercase font-semibold"
+         :class="[{'h-7':!userStore.isMobile}, { 'h-8':userStore.isMobile }]">
 
         <button class="h-full w-full"
                 :class="{ 'bg-purple-900': videoPlayerStore.ott != 1, 'bg-purple-700': videoPlayerStore.ott === 1, 'hover:bg-purple-700':videoPlayerStore.ott != 1 }"
@@ -26,8 +27,11 @@
 </template>
 
 <script setup>
-import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
+import { useUserStore } from "@/Stores/UserStore";
+
 let videoPlayerStore = useVideoPlayerStore()
+let userStore = useUserStore()
 
 
 </script>

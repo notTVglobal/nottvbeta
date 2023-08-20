@@ -13,7 +13,7 @@
 
                 <full-page-standard-chat :user="user"/>
 
-                <button v-touch="()=>videoPlayerStore.toggleChat()"
+                <button v-touch="()=>closeChat()"
                         v-if="chatStore.showChat" class="fixed bottom-5 right-32 opacity-100 w-15 h-15 p-4 rounded-full
                     text-gray-50 bg-blue-800 hover:bg-blue-600 grid justify-center content-center
                     cursor-pointer font-semibold text-xs">
@@ -35,5 +35,10 @@ let videoPlayerStore = useVideoPlayerStore();
 defineProps({
     user: Object,
 })
+
+function closeChat() {
+    videoPlayerStore.toggleChat()
+    videoPlayerStore.showOSD = true
+}
 
 </script>

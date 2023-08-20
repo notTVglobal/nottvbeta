@@ -10,10 +10,7 @@
             <!--        I think this is fixed now -->
 
             <!-- When video is TopRight -->
-            <div v-show="! videoPlayerStore.fullPage" class="fixed top-0 w-full nav-mask"
-                 @mouseenter="showOSD"
-                 @mouseleave="hideOSD">
-
+            <div v-show="! videoPlayerStore.fullPage" class="fixed top-0 w-full nav-mask">
                 <ResponsiveNavigationMenu/>
                 <NavigationMenu />
             </div>
@@ -31,25 +28,46 @@
                 </div>
             </div>
 
+    <!-- Chat -->
+
 
     <!-- Video Player -->
-            <div class="w-full"
-                 @mouseenter="showOSD"
-                 @mouseleave="hideOSD">
+            <div class="w-full">
 
-                <div v-if="!videoPlayerStore.fullPage" class="fixed top-72 w-full lg:w-96 right-0 z-30">
-                    <OttTopRightButtons class="videoOTT" v-if="user"/></div>
 
-                <OttTopRightDisplay v-show="user"
-                                    :user="user"
-                                    class="fixed top-78 right-0 w-full lg:w-96 mt-2 overflow-y-none"
-                                    :class="videoPlayerStore.ottClass"/>
 
-                <VideoPlayerMain class="z-50" :key="videoPlayerStore.key" :user="user" />
+
+
+                <VideoPlayerMain class="z-50"
+                                 :key="videoPlayerStore.key"
+                                 :user="user"
+                                 @mouseenter="showOSD"
+                                 @mouseleave="hideOSD"
+                                 v-touch="()=>toggleOSD()"/>
+
+                <!-- isMobile -->
+
+                <div v-if="userStore.isMobile">
+                    <div v-if="!videoPlayerStore.fullPage" class="fixed top-40 w-full lg:w-96 right-0 z-30">
+                        <OttTopRightButtons class="videoOTT"/></div>
+
+                    <OttTopRightDisplay :user="user"
+                                        class="fixed top-44 right-0 w-full lg:w-96 mt-2 overflow-y-none"
+                                        :class="[videoPlayerStore.ottClass, {mobile:userStore.isMobile}]"/>
+                </div>
+
+                <!-- !isMobile -->
+                <div v-if="!userStore.isMobile">
+                    <div v-if="!videoPlayerStore.fullPage" class="fixed top-72 w-full lg:w-96 right-0 z-30">
+                        <OttTopRightButtons class="videoOTT"/></div>
+
+                    <OttTopRightDisplay :user="user"
+                                        class="fixed top-78 right-0 w-full lg:w-96 mt-2 overflow-y-none"
+                                        :class="videoPlayerStore.ottClass"/>
+                </div>
             </div>
 
-
-    <!-- Page Content -->
+        <!-- Page Content -->
             <div>
                 <!-- Logged out view (Welcome) -->
                 <main v-if="! user"
@@ -61,8 +79,8 @@
                 <main v-if="user"
                       class="absolute top-78 pb-24 lg:top-16
                              w-fit lg:w-[calc(100vw-24rem)]
-                             h-[calc(100vh-19rem)] lg:h-[calc(100vh-4rem)]
-                             z-20  overflow-y-scroll overscroll-x-none">
+                             min-h-[calc(100vh-19rem)] lg:h-[calc(100vh-4rem)]
+                             z-20 overflow-y-scroll overscroll-x-none">
 
                     <slot /></main>
             </div>
@@ -72,18 +90,21 @@
 </template>
 
 <script setup>
+import { ref } from "vue";
 import ResponsiveNavigationMenu from "@/Components/Navigation/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/Navigation/NavigationMenu"
 import VideoPlayerMain from "@/Components/VideoPlayer/VideoPlayerMain"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useStreamStore } from "@/Stores/StreamStore"
 import { useUserStore } from "@/Stores/UserStore"
+import { useChatStore } from "@/Stores/ChatStore";
 import OttTopRightDisplay from '@/Components/VideoPlayer/OttTopRightDisplay'
 import OttTopRightButtons from '@/Components/VideoPlayer/OttTopRightButtons'
 
 let videoPlayerStore = useVideoPlayerStore()
 let streamStore = useStreamStore()
 let userStore = useUserStore()
+let chatStore = useChatStore()
 
 videoPlayerStore.videoSource = "https://mist2.not.tv/hls/mist1pull1/index.m3u8"
 videoPlayerStore.videoSourceType = "application/x-mpegURL"
@@ -121,6 +142,12 @@ function showOSD() {
     videoPlayerStore.showOSD = true;
     if (videoPlayerStore.fullPage) {
         videoPlayerStore.showNav = true;
+    }
+}
+
+function toggleOSD() {
+    if (!videoPlayerStore.fullPage) {
+        videoPlayerStore.toggleOSD()
     }
 }
 

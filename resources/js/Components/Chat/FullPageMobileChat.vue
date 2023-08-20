@@ -9,7 +9,7 @@
                 <chat-messages />
             </div>
             <div class="relative h-16">
-                <input-message :user="props.user" class="fixed bottom-20" />
+                <input-message :user="props.user" class="fixed bottom-20 z-50" />
             </div>
         </div>
     </div>

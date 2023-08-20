@@ -6,7 +6,7 @@
                 <div class="flex">
                     <!-- Logo -->
                     <div class="shrink-0 flex items-center">
-                        <Link @click="videoPlayerStore.makeVideoTopRight()" :href="route('stream')">
+                        <Link @click="loadStreamPage()" :href="route('stream')">
                             <JetApplicationMark class="block h-9 w-auto"/>
                         </Link>
                     </div>
@@ -273,6 +273,11 @@ streamStore.isLive(true)
 let props = defineProps({
     user: Object,
 })
+
+function loadStreamPage() {
+    videoPlayerStore.makeVideoFullPage()
+    userStore.showNavDropdown = false
+}
 
 const logout = () => {
     videoPlayerStore.changeChannel('one');

@@ -1,6 +1,6 @@
 <template>
 <div>
-    <div class="videoFullPageMobileOSD absolute w-full  left-0 p-5 drop-shadow z-50">
+    <div class="videoFullPageMobileOSD absolute w-full left-0 p-5 drop-shadow z-50">
         <div>
             <span class="text-xs uppercase pr-2">Now playing: </span>
             <span class="font-semibold">{{ videoName }}</span>
@@ -15,7 +15,7 @@
                                     </span>
         </div>
     </div>
-    <div v-if="currentPage!='stream'" class="absolute w-fit top-80 left-0 p-5 drop-shadow z-50">
+    <div class="absolute w-fit top-96 left-0 p-5 drop-shadow z-50">
         <button @click="backToPage" class="p-2 bg-gray-800 text-white hover:bg-gray-600" >Back to Page</button>
     </div>
 </div>

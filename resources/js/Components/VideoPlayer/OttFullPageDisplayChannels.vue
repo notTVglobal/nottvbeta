@@ -27,7 +27,7 @@
                                 disabled:disabledChannel disabled:text-gray-300 disabled:cursor-not-allowed"
                                 :class="{ activeChannel:videoPlayerStore.currentChannelName==='one' }"
                                 @click="videoPlayerStore.changeChannel('one')">
-                            ONE</button>
+                            LIVE NOW</button>
                         <button class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-0.2 border-green-800 shadow-md
                                 disabled:bg-gray-600 disabled:text-gray-300 disabled:cursor-not-allowed"
                                 :class="{ activeChannel:videoPlayerStore.currentChannelName==='ambient' }"

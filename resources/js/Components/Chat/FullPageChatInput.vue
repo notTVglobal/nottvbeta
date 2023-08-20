@@ -2,19 +2,17 @@
     <div>
 
         <form @submit.prevent="">
-
             <input
                 class="fixed right-20 p-2 m-2 mb-2 w-fit text-black form-control border-2 border-gray-800 hover:border-blue-800 focus:outline-none"
                 type="text"
                 placeholder="Write a message..."
                 v-model="form.message"
                 @keyup.enter="sendMessage"
+                v-focus
             />
-            <span>
-                <div @click="sendMessage" class="fixed right-10 p-2 m-2 mb-2 w-fit text-white form-control cursor-pointer">
-                    <font-awesome-icon icon="fa-paper-plane" class="hover:text-blue-800 text-xl"/>
-                </div>
-            </span>
+            <div @click="sendMessage" class="fixed right-10 p-2 m-2 mb-2 w-fit text-white form-control cursor-pointer">
+                <font-awesome-icon icon="fa-paper-plane" class="hover:text-blue-800 text-xl"/>
+            </div>
 
         </form>
     </div>
@@ -41,6 +39,10 @@ let form = useForm({
     user_profile_photo_path: props.user.profile_photo_path,
     user_profile_photo_url: props.user.profile_photo_url,
 });
+
+const vFocus = {
+    mounted: (el) => el.focus()
+}
 
 function sendMessage() {
     //

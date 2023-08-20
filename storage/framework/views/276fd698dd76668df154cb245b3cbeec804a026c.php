@@ -18,7 +18,6 @@
 
         <?php echo app('Tightenco\Ziggy\BladeRouteGenerator')->generate(); ?>
 
-
         <script src="<?php echo e(mix('js/manifest.js')); ?>" defer></script>
         <script src="<?php echo e(mix('js/vendor.js')); ?>" defer></script>
         <script src="<?php echo e(mix('js/app.js')); ?>" defer></script>

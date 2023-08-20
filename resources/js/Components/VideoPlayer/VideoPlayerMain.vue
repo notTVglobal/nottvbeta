@@ -1,7 +1,7 @@
 <template>
 
     <div :class="videoPlayerStore.videoContainerClass">
-        <div :class="videoPlayerStore.class">
+        <div :class="[videoPlayerStore.class, isMobile]">
 
 <!--        Login for Welcome Page (logged out) -->
             <Teleport to="body">
@@ -16,19 +16,31 @@
 
 
     <!-- TopRight Video -->
-            <div v-if="! videoPlayerStore.fullPage && user" >
+            <div v-if="!videoPlayerStore.fullPage && user">
+                <!-- isMobile -->
+                <div v-if="userStore.isMobile" >
+                    <!-- OSD and Controls hidden on mobile -->
+                </div>
 
-                <!-- notTV Bug -->
-                <div class="opacity-10">
-                    <img :src="`/storage/images/logo_white_512.png`" class="absolute right-2 top-5 w-10 mr-4"></div>
+                <!-- !isMobile -->
+                <div v-if="!userStore.isMobile" >
 
-<!--                 On Screen Display (OSD)-->
-                <OsdTopRight :show="videoPlayerStore.showOSD" />
+                    <!-- notTV Bug -->
+                    <div class="opacity-10">
+                        <img :src="`/storage/images/logo_white_512.png`" class="absolute right-2 top-5 w-10 mr-4"></div>
 
-<!--                 Video Player Controls-->
-                <VideoControlsTopRight :show="videoPlayerStore.showOSD" />
+                    <!--                 On Screen Display (OSD)-->
+                    <OsdTopRight :show="videoPlayerStore.showOSD" />
+
+                    <!--                 Video Player Controls-->
+                    <VideoControlsTopRight :show="videoPlayerStore.showOSD" />
+
+                </div>
+
 
             </div>
+
+
 
 
     <!-- FullPage Video -->
@@ -86,7 +98,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 import { Inertia } from "@inertiajs/inertia"
 // import { router } from '@inertiajs/inertia'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
@@ -120,6 +132,10 @@ streamStore.showChannels = false
 streamStore.showOSD = false
 videoPlayerStore.showControls = false
 
+const isMobile = ref({
+    mobile: userStore.isMobile,
+})
+
 let showLogin = ref(false)
 
 let playerName = 'main-player';
@@ -137,11 +153,13 @@ function backToPage() {
 }
 
 function clickOnVideoAction() {
-    if (videoPlayerStore.currentPageIsStream === true) {
-        videoPlayerStore.toggleOSD()
-    } else {
+    // if (videoPlayerStore.currentPageIsStream === true) {
+    //     videoPlayerStore.toggleOSD()
+    // } else {
+    if(userStore.isMobile) {
         Inertia.visit('/stream')
     }
+    // }
 }
 
 

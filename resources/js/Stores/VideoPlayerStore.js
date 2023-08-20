@@ -8,16 +8,16 @@ import {Inertia} from "@inertiajs/inertia";
 export let useVideoPlayerStore = defineStore('videoPlayerStore', {
     state() {
         return {
-            class: [],
-            videoContainerClass: [],
-            ottClass: [],
-            videoSourceIdSrc1: [],
-            videoSourceIdSrc2: [],
-            videoSourceIdSrc3: [],
-            videoSourceTypeSrc1: [],
-            videoSourceTypeSrc2: [],
-            videoSourceTypeSrc3: [],
-            key: [],
+            class: '',
+            videoContainerClass: '',
+            ottClass: '',
+            videoSourceIdSrc1: '',
+            videoSourceIdSrc2: '',
+            videoSourceIdSrc3: '',
+            videoSourceTypeSrc1: '',
+            videoSourceTypeSrc2: '',
+            videoSourceTypeSrc3: '',
+            key: '',
             videoName: String,
             videoSource: String,
             videoSourceType: String,
@@ -25,7 +25,7 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
             nextSource: String,
             previousSource: String,
             currentView: String,
-            currentChannel: [],
+            currentChannel: '',
             currentChannelName: '',
 
             // move currentPage from here to userStore.
@@ -70,6 +70,14 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
         },
 
         // toggles
+        togglePiP() {
+            if (this.class === 'topRightVideoClass' && useUserStore().isMobile) {
+                this.class = 'PipVideoClass'
+                this.videoContainerClass = 'PipVideoContainerClass'
+            } else
+                this.class = 'topRightVideoClass'
+                this.videoContainerClass = 'topRightVideoContainer'
+        },
         toggleOSD() {
           this.showOSD = !this.showOSD
           this.showNav = ! this.showNav
@@ -99,7 +107,7 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
         toggleChat() {
             this.showOttButtons = !this.showOttButtons
             this.showOSD = !this.showOSD
-            this.showNav = ! this.showNav
+            // this.showNav = ! this.showNav
             useChatStore().toggleChat()
         },
         toggleFilters() {
@@ -249,6 +257,12 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
         },
 
         // change video size/position and page layout
+        makeVideoPiP() {
+            if (useUserStore().isMobile) {
+                this.class = 'PipVideoClass'
+                this.videoContainerClass = 'PipVideoContainerClass'
+            }
+        },
         makeVideoFullPage() {
             this.fullPage = true;
             if (useUserStore().isMobile) {

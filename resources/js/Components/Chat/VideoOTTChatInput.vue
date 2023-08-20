@@ -9,6 +9,9 @@
                 placeholder="Write a message..."
                 v-model="form.message"
                 @keyup.enter="sendMessage"
+                v-focus
+                v-on:blur="videoPlayerStore.makeVideoTopRight()"
+                v-on:focus="videoPlayerStore.makeVideoPiP()"
             />
 
             <div @click="sendMessage" class="fixed right-10 p-2 m-2 mb-2 w-fit text-white form-control cursor-pointer">
@@ -23,7 +26,7 @@
 import { useForm } from "@inertiajs/inertia-vue3"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useChatStore } from "@/Stores/ChatStore.js"
-import { ref, defineEmits } from 'vue'
+import {ref, defineEmits, onMounted, onUnmounted} from 'vue'
 
 let videoPlayerStore = useVideoPlayerStore()
 let chatStore = useChatStore()
@@ -39,6 +42,18 @@ let form = useForm({
     user_profile_photo_path: props.user.profile_photo_path,
     user_profile_photo_url: props.user.profile_photo_url,
 });
+
+const vFocus = {
+    mounted: (el) => el.focus(),
+}
+
+// onMounted(() => {
+//     videoPlayerStore.makeVideoPiP();
+// })
+//
+// onUnmounted(() => {
+//     videoPlayerStore.makeVideoTopRight();
+// })
 
 function sendMessage() {
     //

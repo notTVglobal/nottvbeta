@@ -1115,7 +1115,7 @@ select {
 @media (orientation: portrait) {
     .fullPageVideoClassMobile {
         position:fixed;
-        top: 0px;
+        top: 5.5rem;
         left: 0px;
         /*padding-top:56.25%;*/
         min-height:calc(50vh - 5.5rem);
@@ -1160,6 +1160,46 @@ select {
         max-height:14rem;
         background-color: black;
     }
+    .topRightVideoClass.mobile {
+        position:fixed;
+        top: 4rem;
+        right: 0px;
+        width:100%;
+        /*max-width:24rem;*/
+        min-width:100vw;
+        /*max-width: 100vw;*/
+        height:6rem;
+        max-height:6rem;
+        background-color: black;
+    }
+    .PipVideoClass {
+        position:fixed;
+        bottom: 18rem;
+        right: 1rem;
+        width:50vw;
+        /*max-width:24rem;*/
+        min-width:50vw;
+        /*max-width: 100vw;*/
+        height:6rem;
+        max-height:6rem;
+        background-color: purple;
+        z-index: 100;
+
+    }
+    .PiPVideoContainer {
+        position:fixed;
+        bottom: 18rem;
+        right: 1rem;
+        width:50vw;
+        /*max-width:24rem;*/
+        min-width:50vw;
+        /*max-width: 100vw;*/
+        height:6rem;
+        max-height:6rem;
+        background-color: purple;
+        z-index: 100;
+
+    }
 }
 @media (min-width:1024px) {
     .topRightVideoClass {
@@ -1172,6 +1212,18 @@ select {
         /*max-width: 100vw;*/
         height:14rem;
         max-height:14rem;
+        background-color: black;
+    }
+    .topRightVideoClass.mobile {
+        position:fixed;
+        top: 4rem;
+        right: 0px;
+        width:100%;
+        /*max-width:24rem;*/
+        min-width:100vw;
+        /*max-width: 100vw;*/
+        height:6rem;
+        max-height:6rem;
         background-color: black;
     }
 }
@@ -1263,7 +1315,7 @@ select {
 }
 @media (orientation: portrait) {
     .videoFullPageMobileOSD {
-        top: 4rem;
+        top: 18rem;
     }
 }
 @media (orientation: landscape) {
@@ -1301,6 +1353,9 @@ select {
 }
 .OttOpen {
     z-index: 30;
+}
+.OttOpen.mobile {
+    top:11.5rem;
 }
 .OttClose {
     z-index: 10;
@@ -1523,6 +1578,14 @@ select {
   bottom: 0px;
 }
 
+.top-40 {
+  top: 10rem;
+}
+
+.top-44 {
+  top: 11rem;
+}
+
 .top-72 {
   top: 18rem;
 }
@@ -1599,8 +1662,8 @@ select {
   top: -0px;
 }
 
-.top-80 {
-  top: 20rem;
+.top-96 {
+  top: 24rem;
 }
 
 .bottom-12 {
@@ -2100,10 +2163,6 @@ select {
   height: 100vh;
 }
 
-.h-\[calc\(100vh-19rem\)\] {
-  height: calc(100vh - 19rem);
-}
-
 .h-3\/4 {
   height: 75%;
 }
@@ -2161,12 +2220,16 @@ select {
   height: 1.75rem;
 }
 
-.h-\[calc\(100vh-28rem\)\] {
-  height: calc(100vh - 28rem);
-}
-
 .h-\[calc\(100vh-22rem\)\] {
   height: calc(100vh - 22rem);
+}
+
+.h-\[calc\(100vh-20rem\)\] {
+  height: calc(100vh - 20rem);
+}
+
+.h-\[calc\(100vh-28rem\)\] {
+  height: calc(100vh - 28rem);
 }
 
 .h-14 {
@@ -2199,6 +2262,10 @@ select {
 
 .min-h-screen {
   min-height: 100vh;
+}
+
+.min-h-\[calc\(100vh-19rem\)\] {
+  min-height: calc(100vh - 19rem);
 }
 
 .min-h-\[13rem\] {

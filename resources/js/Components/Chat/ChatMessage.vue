@@ -1,5 +1,5 @@
 <template>
-    <div class="flex space-x-2 mb-2 pr-5 w-fit align-self-center">
+    <div class="flex space-x-2 mb-2 pr-5 w-full align-self-center">
        <div class="min-w-[2rem]">
            <img v-if="message.user_profile_photo_path"
                 :src="'/storage/' + message.user_profile_photo_path" class="rounded-full h-8 w-8 object-cover">

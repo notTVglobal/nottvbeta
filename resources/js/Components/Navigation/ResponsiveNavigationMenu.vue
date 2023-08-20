@@ -119,13 +119,6 @@
 
                 <JetResponsiveNavLink
                     @click="userStore.closeNavDropdown()"
-                    :href="route('stream')"
-                    :active="route().current('stream')">
-                        Stream
-                </JetResponsiveNavLink>
-
-                <JetResponsiveNavLink
-                    @click="userStore.closeNavDropdown()"
                     :href="route('schedule')"
                     :active="route().current('schedule')">
                         Schedule

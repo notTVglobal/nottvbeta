@@ -9,7 +9,7 @@
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useStreamStore } from "@/Stores/StreamStore.js"
 import { useChatStore } from "@/Stores/ChatStore.js"
-import {onBeforeUnmount, onMounted, onUnmounted} from "vue";
+import {onBeforeMount, onBeforeUnmount, onMounted, onUnmounted} from "vue";
 
 let videoPlayerStore = useVideoPlayerStore()
 let streamStore = useStreamStore()
@@ -19,8 +19,9 @@ videoPlayerStore.currentPageIsStream = true;
 
 onMounted(() => {
     videoPlayerStore.makeVideoFullPage()
+    videoPlayerStore.showOSD = true
+    videoPlayerStore.showNav = true
     videoPlayerStore.showControls = true
-
 
 })
 // if (streamStore.currentChannel != "Stream") {
