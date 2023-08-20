@@ -1218,16 +1218,16 @@ select {
         background-color: black;
     }
     .topRightVideoClass.mobile {
-        position:fixed;
-        top: 4rem;
-        right: 0px;
-        width:100%;
-        /*max-width:24rem;*/
-        min-width:100vw;
-        /*max-width: 100vw;*/
-        height:6rem;
-        max-height:6rem;
-        background-color: black;
+        /*position:fixed;*/
+        /*top: 4rem;*/
+        /*right: 0px;*/
+        /*width:100%;*/
+        /*!*max-width:24rem;*!*/
+        /*min-width:100vw;*/
+        /*!*max-width: 100vw;*!*/
+        /*height:6rem;*/
+        /*max-height:6rem;*/
+        /*background-color: black;*/
     }
 }
 
@@ -1251,6 +1251,18 @@ select {
         /*height:14rem;*/
         /*max-height:14rem;*/
         /*background-color: green;*/
+    }
+    .topRightVideoClass.mobile {
+        position:fixed;
+        top: 4rem;
+        right: 0px;
+        width:100%;
+        /*max-width:24rem;*/
+        min-width:100vw;
+        /*max-width: 100vw;*/
+        height:6rem;
+        max-height:6rem;
+        background-color: black;
     }
 }
 @media (min-width:844px) {
@@ -1603,6 +1615,10 @@ select {
 
 .top-78 {
   top: 19.25rem;
+}
+
+.top-48 {
+  top: 12rem;
 }
 
 .top-16 {

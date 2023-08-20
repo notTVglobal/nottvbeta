@@ -77,10 +77,11 @@
 
                 <!-- Logged in view -->
                 <main v-if="user"
-                      class="absolute top-78 pb-24 lg:top-16
+                      class="absolute pb-24 lg:top-16
                              w-fit lg:w-[calc(100vw-24rem)]
                              min-h-[calc(100vh-19rem)] lg:h-[calc(100vh-4rem)]
-                             z-20 overflow-y-scroll overscroll-x-none">
+                             z-20 overflow-y-scroll overscroll-x-none"
+                      :class="[{'top-48 h-full':userStore.isMobile}]">
 
                     <slot /></main>
             </div>
