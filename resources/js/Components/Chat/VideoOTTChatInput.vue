@@ -9,11 +9,8 @@
                 placeholder="Write a message..."
                 v-model="form.message"
                 @keyup.enter="sendMessage"
-                v-focus
                 v-on:blur="videoPlayerStore.makeVideoTopRight()"
                 v-on:focus="videoPlayerStore.makeVideoPiP()"
-
-
             />
 
             <div @click="sendMessage" class="fixed right-10 p-2 m-2 mb-2 w-fit text-white form-control cursor-pointer">
