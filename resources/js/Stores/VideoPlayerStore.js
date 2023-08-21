@@ -10,7 +10,7 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
         return {
             class: '',
             videoContainerClass: '',
-            ottClass: '',
+            ottClass: 'OttClose',
             videoSourceIdSrc1: '',
             videoSourceIdSrc2: '',
             videoSourceIdSrc3: '',
@@ -56,7 +56,7 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
             mistDisplayPushForm: Boolean,
             mistDisplay: String,
             mistNewHashedPassword: [],
-            ott: Number,
+            ott: 0,
             blue: false,
 
             videoUploadComplete: false,

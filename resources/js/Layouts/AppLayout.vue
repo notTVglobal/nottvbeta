@@ -39,9 +39,9 @@
                     <div v-if="!videoPlayerStore.fullPage" >
                         <OttTopRightButtons class="videoOTT fixed top-40 lg:top-72 w-full lg:w-96 right-0 z-30"/>
                         <OttTopRightDisplay :user="user"
-                                            class="fixed top-44 lg:top-78 right-0 w-full lg:w-96 mt-4 lg:mt-3 overflow-y-none z-40"
-                                            :class="ottDisplayShow"/>
-<!--                        <div class="ottTopRightDisplayBG fixed top-44 lg:top-78 right-0 w-full h-full lg:w-96 mt-4 lg:mt-2 z-20 bg-green-600"></div>-->
+                                            class="fixed top-44 lg:top-78 right-0 w-full lg:w-96 mt-4 overflow-y-none z-40"
+                                            :class="{'lg:mt-3':userStore.isMobile, 'lg:mt-2':!userStore.isMobile, ottDisplayShow}"/>
+                        <div v-if="!userStore.isMobile && videoPlayerStore.ott" class="ottTopRightDisplayBG fixed top-44 lg:top-78 right-0 w-full h-full lg:w-96 mt-4 lg:mt-2 z-20 bg-gray-900"></div>
                     </div>
 
 <!--                </div>-->

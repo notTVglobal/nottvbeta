@@ -5591,6 +5591,10 @@ html {
     padding-bottom: 16rem;
   }
 
+  .lg\:pb-12 {
+    padding-bottom: 3rem;
+  }
+
   .lg\:text-left {
     text-align: left;
   }
