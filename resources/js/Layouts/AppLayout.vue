@@ -47,24 +47,24 @@
 
 
                 <!-- isMobile -->
-                <div v-if="userStore.isMobile">
-                    <div v-if="!videoPlayerStore.fullPage" class="fixed top-40 w-full lg:w-96 right-0 z-30">
+<!--                <div v-if="userStore.isMobile">-->
+                    <div v-if="!videoPlayerStore.fullPage" class="fixed top-40 lg:top-72 w-full lg:w-96 right-0 z-50">
                         <OttTopRightButtons class="videoOTT"/></div>
 
                     <OttTopRightDisplay :user="user"
-                                        class="fixed top-44 right-0 w-full lg:w-96 mt-2 overflow-y-none"
-                                        :class="[videoPlayerStore.ottClass, {mobile:userStore.isMobile}]"/>
-                </div>
+                                        class="fixed top-44 lg:top-78 right-0 w-full lg:w-96 mt-2 overflow-y-none z-40"
+                                        />
+<!--                </div>-->
 
                 <!-- !isMobile -->
-                <div v-if="!userStore.isMobile">
-                    <div v-if="!videoPlayerStore.fullPage" class="fixed top-72 w-full lg:w-96 right-0 z-30">
-                        <OttTopRightButtons class="videoOTT"/></div>
+<!--                <div v-if="!userStore.isMobile">-->
+<!--                    <div v-if="!videoPlayerStore.fullPage" class="fixed top-72 w-full lg:w-96 right-0 z-30">-->
+<!--                        <OttTopRightButtons class="videoOTT"/></div>-->
 
-                    <OttTopRightDisplay :user="user"
-                                        class="fixed top-78 right-0 w-full lg:w-96 mt-2 overflow-y-none"
-                                        :class="videoPlayerStore.ottClass"/>
-                </div>
+<!--                    <OttTopRightDisplay :user="user"-->
+<!--                                        class="fixed top-78 right-0 w-full lg:w-96 mt-2 overflow-y-none"-->
+<!--                                        :class="videoPlayerStore.ottClass"/>-->
+<!--                </div>-->
             </div>
 
         <!-- Page Content -->

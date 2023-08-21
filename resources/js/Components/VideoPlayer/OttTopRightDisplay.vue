@@ -1,6 +1,7 @@
 <template>
     <div class="overflow-y-scroll scrollbar-hide h-full"
-         :class="{'top-96':userStore.isMobile}">
+         :class="{'top-96':userStore.isMobile}"
+    >
 
         <div v-if="videoPlayerStore.ott === 2" class="channels w-full h-full bg-green-800 p-2 channelsForTopRightOtt">
 

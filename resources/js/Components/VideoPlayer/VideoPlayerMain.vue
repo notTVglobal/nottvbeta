@@ -47,7 +47,7 @@
 
                     <OttFullPageDisplayChannels />
                     <OttFullPageDisplayPlaylist />
-                    <OttFullPageDisplayChatMobile :user="user"/>
+                    <OttFullPageDisplayChatMobile :user="user" />
                     <OttFullPageDisplayFilters />
 
                     <!-- notTV Bug -->
