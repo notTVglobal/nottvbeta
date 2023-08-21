@@ -2,8 +2,7 @@
 
     <Head :title="`Upload Movie`"/>
 
-    <div id="topDiv"></div>
-    <header class="md:pageWidth pageWidthSmall">
+    <header id="topDiv" class="md:pageWidth pageWidthSmall">
 
         <Message v-if="showMessage" @close="showMessage = false"/>
 
@@ -160,16 +159,21 @@ let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'movies'
 
-onBeforeMount(() => {
-    userStore.scrollToTopCounter = 0;
-})
+// onBeforeMount(() => {
+//     userStore.scrollToTopCounter = 0;
+// })
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
-    if (userStore.scrollToTopCounter === 0 ) {
-        document.getElementById("topDiv").scrollIntoView()
-        userStore.scrollToTopCounter ++;
+    if (userStore.isMobile) {
+        videoPlayerStore.ottClass = 'ottClose'
+        videoPlayerStore.ott = 0
     }
+    document.getElementById("topDiv").scrollIntoView()
+    // if (userStore.scrollToTopCounter === 0 ) {
+    //
+    //     userStore.scrollToTopCounter ++;
+    // }
 });
 
 let props = defineProps({

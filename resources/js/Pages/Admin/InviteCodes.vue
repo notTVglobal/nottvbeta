@@ -2,9 +2,8 @@
 
     <Head :title="`Invite Codes`"/>
 
-    <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
-        <div class="bg-white dark:bg-gray-800 rounded text-black dark:text-gray-50 p-5">
+        <div id="topDiv" class="bg-white dark:bg-gray-800 rounded text-black dark:text-gray-50 p-5">
 
             <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
 
@@ -203,16 +202,21 @@ let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'admin'
 
-onBeforeMount(() => {
-    userStore.scrollToTopCounter = 0;
-})
+// onBeforeMount(() => {
+//     userStore.scrollToTopCounter = 0;
+// })
 
 onMounted(async () => {
     videoPlayerStore.makeVideoTopRight();
-    if (userStore.scrollToTopCounter === 0 ) {
-        document.getElementById("topDiv").scrollIntoView()
-        userStore.scrollToTopCounter ++;
+    if (userStore.isMobile) {
+        videoPlayerStore.ottClass = 'ottClose'
+        videoPlayerStore.ott = 0
     }
+    document.getElementById("topDiv").scrollIntoView()
+    // if (userStore.scrollToTopCounter === 0 ) {
+    //
+    //     userStore.scrollToTopCounter ++;
+    // }
     props.message = '';
 });
 

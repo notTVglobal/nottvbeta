@@ -1,9 +1,8 @@
 <template>
     <Head title="Dashboard" />
-    <div id="topDiv"></div>
-    <div class="place-self-center flex flex-col gap-y-3 bg-blue-500 w-full">
 
-        <div class="bg-white rounded text-black dark:text-white dark:bg-gray-900 p-5 mb-10">
+    <div class="place-self-center flex flex-col gap-y-3 bg-blue-500 w-full">
+        <div id="topDiv" class="bg-white rounded text-black dark:text-white dark:bg-gray-900 p-5 mb-10">
 
             <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
 
@@ -417,16 +416,21 @@ let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'dashboard'
 
-onBeforeMount(() => {
-    userStore.scrollToTopCounter = 0;
-})
+// onBeforeMount(() => {
+//     userStore.scrollToTopCounter = 0;
+// })
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
-    if (userStore.scrollToTopCounter === 0 ) {
-        document.getElementById("topDiv").scrollIntoView()
-        userStore.scrollToTopCounter ++;
+    if (userStore.isMobile) {
+        videoPlayerStore.ottClass = 'ottClose'
+        videoPlayerStore.ott = 0
     }
+    document.getElementById("topDiv").scrollIntoView()
+    // if (userStore.scrollToTopCounter === 0 ) {
+    //
+    //     userStore.scrollToTopCounter ++;
+    // }
 });
 
 videoPlayerStore.loggedIn = true

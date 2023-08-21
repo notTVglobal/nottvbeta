@@ -2,9 +2,9 @@
 
     <Head title="Channels" />
 
-        <div class="channelsSelectMenu absolute top-16 left-0 bg-black bg-opacity-90 text-white p-5 pt-16 h-screen w-full">
+        <div id="topDiv" class="channelsSelectMenu absolute top-16 left-0 bg-black bg-opacity-90 text-white p-5 pt-16 h-screen w-full">
 
-            <h1 id="topDiv" class="text-3xl font-semibold text-center">Channels</h1>
+            <h1 class="text-3xl font-semibold text-center">Channels</h1>
             <h2 class="bg-red-800 col-span-3 mt-8 mb-4 py-1 text-center">
                 Channels are not currently enabled.
             </h2>
@@ -40,6 +40,10 @@ videoPlayerStore.currentPage = 'channels'
 
 onMounted(() => {
     videoPlayerStore.makeVideoFullPage();
+    if (userStore.isMobile) {
+        videoPlayerStore.ottClass = 'ottClose'
+        videoPlayerStore.ott = 0
+    }
     document.getElementById("topDiv").scrollIntoView()
 });
 

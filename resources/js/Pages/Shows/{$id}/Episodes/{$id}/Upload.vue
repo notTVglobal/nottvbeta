@@ -2,9 +2,8 @@
 
     <Head :title="`Upload Video for ${props.episode.name}`"/>
 
-    <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
-        <div class="bg-white text-gray-800 dark:bg-gray-800 dark:text-white p-5 mb-10">
+        <div id="topDiv" class="bg-white text-gray-800 dark:bg-gray-800 dark:text-white p-5 mb-10">
 
             <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
 
@@ -159,16 +158,21 @@ teamStore.setActiveTeam(props.team);
 teamStore.setActiveShow(props.show);
 showStore.episodePoster = props.poster;
 
-onBeforeMount(() => {
-    userStore.scrollToTopCounter = 0;
-})
+// onBeforeMount(() => {
+//     userStore.scrollToTopCounter = 0;
+// })
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
-    if (userStore.scrollToTopCounter === 0 ) {
-        document.getElementById("topDiv").scrollIntoView()
-        userStore.scrollToTopCounter ++;
+    if (userStore.isMobile) {
+        videoPlayerStore.ottClass = 'ottClose'
+        videoPlayerStore.ott = 0
     }
+    document.getElementById("topDiv").scrollIntoView()
+    // if (userStore.scrollToTopCounter === 0 ) {
+    //
+    //     userStore.scrollToTopCounter ++;
+    // }
 });
 
 let props = defineProps({

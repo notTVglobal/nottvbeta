@@ -1,9 +1,8 @@
 <template>
     <Head title="Settings" />
 
-    <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
-        <div class="bg-dark text-light p-5 mb-10">
+        <div id="topDiv" class="bg-dark text-light p-5 mb-10">
 
             <header class="flex justify-between mb-3">
                 <div id="topDiv">
@@ -91,16 +90,21 @@ let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'settings'
 
-onBeforeMount(() => {
-    userStore.scrollToTopCounter = 0;
-})
+// onBeforeMount(() => {
+//     userStore.scrollToTopCounter = 0;
+// })
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight()
-    if (userStore.scrollToTopCounter === 0 ) {
-        document.getElementById("topDiv").scrollIntoView()
-        userStore.scrollToTopCounter ++;
+    if (userStore.isMobile) {
+        videoPlayerStore.ottClass = 'ottClose'
+        videoPlayerStore.ott = 0
     }
+    document.getElementById("topDiv").scrollIntoView()
+    // if (userStore.scrollToTopCounter === 0 ) {
+    //
+    //     userStore.scrollToTopCounter ++;
+    // }
 });
 
 // let props = defineProps({

@@ -1,7 +1,6 @@
 <template>
     <Head title="Beta" />
-        <div class="bg-green-800 bg-opacity-10 min-h-screen text-gray-200 z-50">
-        <div id="topDiv"></div>
+        <div id="topDiv" class="bg-green-800 bg-opacity-10 min-h-screen text-gray-200 z-50">
             <header class="headerContainer w-full">
                 <div class="welcomeOverlay flex flex-row md:px-6 py-4 w-full">
                     <WelcomeBug />
@@ -113,16 +112,19 @@ videoPlayerStore.videoContainerClass = "welcomeVideoContainer"
 // chat.show = false
 // chat.class = 'chatHidden'
 
-onBeforeMount(() => {
-    userStore.scrollToTopCounter = 0;
-})
+// onBeforeMount(() => {
+//     userStore.scrollToTopCounter = 0;
+// })
 
 onMounted(() => {
     videoPlayerStore.makeVideoWelcomePage();
-    if (userStore.scrollToTopCounter === 0 ) {
-        document.getElementById("topDiv").scrollIntoView()
-        userStore.scrollToTopCounter ++;
-    }
+    videoPlayerStore.ottClass = 'ottClose'
+    videoPlayerStore.ott = 0
+    document.getElementById("topDiv").scrollIntoView()
+    // if (userStore.scrollToTopCounter === 0 ) {
+    //
+    //     userStore.scrollToTopCounter ++;
+    // }
 });
 //------------------------//
 

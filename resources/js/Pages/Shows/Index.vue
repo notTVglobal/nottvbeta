@@ -2,13 +2,11 @@
     <Head title="Shows" />
 
     <div class="place-self-center flex flex-col gap-y-3 w-full overscroll-x-none">
-        <div class="bg-gray-900 text-white px-5">
-<!--            <div id="topDiv" class="lg:pb-10"></div>-->
-
+        <div id="topDiv" class="bg-gray-900 text-white px-5">
 
             <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
 
-            <header id="topDiv" class="flex justify-between mb-3 border-b border-gray-800">
+            <header class="flex justify-between mb-3 border-b border-gray-800">
                 <div class="container mx-auto flex flex-col xl:flex-row items-center justify-between px-4 py-6">
 
                     <div class="flex flex-col xl:flex-row items-center">
@@ -178,19 +176,21 @@ function scrollToComingSoon() {
     document.getElementById("coming-soon").scrollIntoView({behavior: "smooth"})
 }
 
-onBeforeMount(() => {
-    userStore.scrollToTopCounter = 0;
-})
+// onBeforeMount(() => {
+//     userStore.scrollToTopCounter = 0;
+// })
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
     if (userStore.isMobile) {
         videoPlayerStore.ottClass = 'ottClose'
+        videoPlayerStore.ott = 0
     }
-    if (userStore.scrollToTopCounter === 0 ) {
-        document.getElementById("topDiv").scrollIntoView()
-        userStore.scrollToTopCounter ++;
-    }
+    document.getElementById("topDiv").scrollIntoView()
+    // if (userStore.scrollToTopCounter === 0 ) {
+    //     document.getElementById("topDiv").scrollIntoView()
+    //     userStore.scrollToTopCounter ++;
+    // }
 });
 
 let props = defineProps({

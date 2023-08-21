@@ -2,9 +2,8 @@
 
     <Head :title="`Movie`"/>
 
-    <div id="topDiv" v-if="!userStore.isMobile"></div>
     <div class="place-self-center flex flex-col gap-y-3">
-        <div class="bg-gray-900 text-white px-5">
+        <div id="topDiv" class="bg-gray-900 text-white px-5">
 
             <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
 
@@ -42,7 +41,6 @@
                     <div class="items-center">
                         <SingleImage :image="movie.image" :alt="'movie cover'" :class="'h-96 min-w-[16rem] w-64 object-cover mb-6 lg:mb-0 m-auto lg:m-0'"/>
                     </div>
-                    <div id="topDiv" v-if="userStore.isMobile"></div>
                     <div class="lg:ml-12 lg:mr-0">
                         <h2 class="font-semibold text-4xl text-center lg:text-left">{{ movie.name }}</h2>
                         <div class="text-gray-400 text-center lg:text-left">
@@ -268,16 +266,21 @@ let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'movies'
 
-onBeforeMount(() => {
-    userStore.scrollToTopCounter = 0;
-})
+// onBeforeMount(() => {
+//     userStore.scrollToTopCounter = 0;
+// })
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
-    if (userStore.scrollToTopCounter === 0 ) {
-        document.getElementById("topDiv").scrollIntoView()
-        userStore.scrollToTopCounter ++;
+    if (userStore.isMobile) {
+        videoPlayerStore.ottClass = 'ottClose'
+        videoPlayerStore.ott = 0
     }
+    document.getElementById("topDiv").scrollIntoView()
+    // if (userStore.scrollToTopCounter === 0 ) {
+    //
+    //     userStore.scrollToTopCounter ++;
+    // }
 });
 
 let props = defineProps({

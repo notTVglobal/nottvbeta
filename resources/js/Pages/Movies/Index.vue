@@ -2,9 +2,8 @@
 
     <Head title="Movies"/>
 
-    <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
-        <div class="bg-gray-900 text-white px-5">
+        <div id="topDiv" class="bg-gray-900 text-white px-5">
 
             <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
 
@@ -169,16 +168,21 @@ let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'movies'
 
-onBeforeMount(() => {
-    userStore.scrollToTopCounter = 0;
-})
+// onBeforeMount(() => {
+//     userStore.scrollToTopCounter = 0;
+// })
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
-    if (userStore.scrollToTopCounter === 0 ) {
-        document.getElementById("topDiv").scrollIntoView()
-        userStore.scrollToTopCounter ++;
+    if (userStore.isMobile) {
+        videoPlayerStore.ottClass = 'ottClose'
+        videoPlayerStore.ott = 0
     }
+    document.getElementById("topDiv").scrollIntoView()
+    // if (userStore.scrollToTopCounter === 0 ) {
+    //
+    //     userStore.scrollToTopCounter ++;
+    // }
 });
 
 let movie = 'test-movie-2'

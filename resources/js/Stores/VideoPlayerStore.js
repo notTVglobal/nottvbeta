@@ -132,6 +132,7 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
         },
         closeOtt() {
             this.toggleOtt(0)
+            this.ottClass = 'ottClose'
         },
 
         // video controls

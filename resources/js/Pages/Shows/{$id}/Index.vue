@@ -3,14 +3,12 @@
 
     <Head :title="props.show.name" />
 
-    <div id="topDiv" v-if="!userStore.isMobile"></div>
     <div class="place-self-center flex flex-col gap-y-3">
-        <div class="bg-gray-900 text-white px-5">
+        <div id="topDiv" class="bg-gray-900 text-white px-5">
 
             <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
 
         <header>
-            <div id="topDiv" v-if="userStore.isMobile && props.can.viewCreator"></div>
             <div v-if="props.can.viewCreator" class="flex justify-end mt-10">
 
                 <div class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4">
@@ -246,16 +244,21 @@ let userStore = useUserStore();
 
 videoPlayerStore.currentPage = 'shows'
 
-onBeforeMount(() => {
-    userStore.scrollToTopCounter = 0;
-})
+// onBeforeMount(() => {
+//     userStore.scrollToTopCounter = 0;
+// })
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
-    if (userStore.scrollToTopCounter === 0 ) {
-        document.getElementById("topDiv").scrollIntoView()
-        userStore.scrollToTopCounter ++;
+    if (userStore.isMobile) {
+        videoPlayerStore.ottClass = 'ottClose'
+        videoPlayerStore.ott = 0
     }
+    document.getElementById("topDiv").scrollIntoView()
+    // if (userStore.scrollToTopCounter === 0 ) {
+    //
+    //     userStore.scrollToTopCounter ++;
+    // }
 });
 
 let props = defineProps({

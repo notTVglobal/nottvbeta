@@ -7,9 +7,8 @@
 <!--    </div>-->
 
 <!--    <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">-->
-    <div id="topDiv"></div>
     <div class="place-self-center flex flex-col gap-y-3">
-        <div class="bg-white dark:bg-gray-800 text-black dark:text-gray-50 p-5 mb-10">
+        <div id="topDiv" class="bg-white dark:bg-gray-800 text-black dark:text-gray-50 p-5 mb-10">
 
             <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
 
@@ -147,18 +146,25 @@ let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'news'
 
-// onBeforeMount(() => {
-//     userStore.scrollToTopCounter = 0;
-// })
+
 
 function scrollToCities() {
     document.getElementById("cities").scrollIntoView({behavior: "smooth"})
 }
 
+// onBeforeMount(() => {
+//     userStore.scrollToTopCounter = 0;
+// })
+
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
+    if (userStore.isMobile) {
+        videoPlayerStore.ottClass = 'ottClose'
+        videoPlayerStore.ott = 0
+    }
+    document.getElementById("topDiv").scrollIntoView()
     // if (userStore.scrollToTopCounter === 0 ) {
-    //     document.getElementById("topDiv").scrollIntoView()
+
     //     userStore.scrollToTopCounter ++;
     // }
 });

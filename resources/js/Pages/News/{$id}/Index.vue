@@ -2,9 +2,8 @@
 
     <Head title="News Post" />
 
-    <div id="topDiv"></div>
     <div class="place-self-center flex flex-col">
-        <div class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-1 w-full">
+        <div id="topDiv" class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-1 w-full">
 
             <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
 
@@ -91,16 +90,21 @@ let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'news'
 
-onBeforeMount(() => {
-    userStore.scrollToTopCounter = 0;
-})
+// onBeforeMount(() => {
+//     userStore.scrollToTopCounter = 0;
+// })
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
-    if (userStore.scrollToTopCounter === 0 ) {
-        document.getElementById("topDiv").scrollIntoView()
-        userStore.scrollToTopCounter ++;
+    if (userStore.isMobile) {
+        videoPlayerStore.ottClass = 'ottClose'
+        videoPlayerStore.ott = 0
     }
+    document.getElementById("topDiv").scrollIntoView()
+    // if (userStore.scrollToTopCounter === 0 ) {
+    //
+    //     userStore.scrollToTopCounter ++;
+    // }
 });
 
 const props = defineProps({

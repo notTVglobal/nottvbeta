@@ -1,8 +1,7 @@
 <template>
     <Head title="Settings" />
 <!--    <AppLayout>-->
-    <div id="topDiv"></div>
-    <div class="mt-10 z-10">
+    <div id="topDiv" class="mt-10 z-10">
 
 <!--        <template #header>-->
             <h2 class="font-semibold text-4xl text-gray-200 text-center leading-tight">
@@ -71,16 +70,21 @@ let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'profile'
 
-onBeforeMount(() => {
-    userStore.scrollToTopCounter = 0;
-})
+// onBeforeMount(() => {
+//     userStore.scrollToTopCounter = 0;
+// })
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
-    if (userStore.scrollToTopCounter === 0 ) {
-        document.getElementById("topDiv").scrollIntoView()
-        userStore.scrollToTopCounter ++;
+    if (userStore.isMobile) {
+        videoPlayerStore.ottClass = 'ottClose'
+        videoPlayerStore.ott = 0
     }
+    document.getElementById("topDiv").scrollIntoView()
+    // if (userStore.scrollToTopCounter === 0 ) {
+    //
+    //     userStore.scrollToTopCounter ++;
+    // }
 });
 
 defineProps({

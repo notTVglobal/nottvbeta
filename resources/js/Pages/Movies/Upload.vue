@@ -2,8 +2,7 @@
 
     <Head :title="`Upload Movie`"/>
 
-    <div id="topDiv"></div>
-    <header class="">
+    <header id="topDiv" class="">
 
         <Message v-if="message" @close="showMessage = false"/>
 
@@ -166,16 +165,21 @@ let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'moviesUpload'
 
-onBeforeMount(() => {
-    userStore.scrollToTopCounter = 0;
-})
+// onBeforeMount(() => {
+//     userStore.scrollToTopCounter = 0;
+// })
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
-    if (userStore.scrollToTopCounter === 0 ) {
-        document.getElementById("topDiv").scrollIntoView()
-        userStore.scrollToTopCounter ++;
+    if (userStore.isMobile) {
+        videoPlayerStore.ottClass = 'ottClose'
+        videoPlayerStore.ott = 0
     }
+    document.getElementById("topDiv").scrollIntoView()
+    // if (userStore.scrollToTopCounter === 0 ) {
+    //
+    //     userStore.scrollToTopCounter ++;
+    // }
 });
 
 

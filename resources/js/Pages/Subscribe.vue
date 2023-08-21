@@ -1,11 +1,9 @@
 <template>
 
-    <Head title="Upgrade Account" >
+    <Head title="Upgrade Account" />
 <!--        <script src="https://js.stripe.com/v3/" defer></script>-->
-    </Head>
 
-    <div id="topDiv"></div>
-    <div class="h-[calc(100vh-16rem)] text-center bg-gray-800 text-white p-10">
+    <div id="topDiv" class="h-[calc(100vh-16rem)] text-center bg-gray-800 text-white p-10">
 
 
             <Message v-if="showMyMessage" @close="showMessage = false" :message="props.message"/>
@@ -88,17 +86,22 @@ let userStore = useUserStore()
 videoPlayerStore.currentPage = 'subscribe'
 
 
-onBeforeMount(() => {
-    userStore.scrollToTopCounter = 0;
-
-})
+// onBeforeMount(() => {
+//     userStore.scrollToTopCounter = 0;
+//
+// })
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
-    if (userStore.scrollToTopCounter === 0 ) {
-        document.getElementById("topDiv").scrollIntoView()
-        userStore.scrollToTopCounter ++;
+    if (userStore.isMobile) {
+        videoPlayerStore.ottClass = 'ottClose'
+        videoPlayerStore.ott = 0
     }
+    document.getElementById("topDiv").scrollIntoView()
+    // if (userStore.scrollToTopCounter === 0 ) {
+    //
+    //     userStore.scrollToTopCounter ++;
+    // }
 
 });
 

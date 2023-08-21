@@ -410,19 +410,22 @@ let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'schedule';
 
-onBeforeMount(() => {
-    userStore.scrollToTopCounter = 0;
-})
+// onBeforeMount(() => {
+//     userStore.scrollToTopCounter = 0;
+// })
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
     if (userStore.isMobile) {
         videoPlayerStore.ottClass = 'ottClose'
+        videoPlayerStore.ott = 0
     }
-    if (userStore.scrollToTopCounter === 0 ) {
-        document.getElementById("topDiv").scrollIntoView()
-        userStore.scrollToTopCounter ++;
-    }
+    document.getElementById("topDiv").scrollIntoView()
+    // if (userStore.scrollToTopCounter === 0 ) {
+    //
+    //     userStore.scrollToTopCounter ++;
+    // }
+
 });
 
 let props = defineProps({
