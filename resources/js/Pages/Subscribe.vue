@@ -79,6 +79,7 @@ import { useUserStore } from "@/Stores/UserStore";
 import Message from "@/Components/Modals/Messages";
 import {Inertia} from "@inertiajs/inertia";
 import {useForm} from "@inertiajs/inertia-vue3";
+import {loadStripe} from '@stripe/stripe-js';
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -124,16 +125,27 @@ let showMyMessage = ref(true);
 // // Initialize Stripe
 // let elements = stripe.elements();
 
+const stripe = loadStripe('pk_test_51KJwK5Kahp38LUVYOjg7h425exCr6UZmMm1M24d31ZaS0HTsgPWIZE9Hd2F0KnREVHuPm2VHesX3J5SQfFFg7fTC00DMNpq1Lj'
 
-const stripe = Stripe('pk_test_51KJwK5Kahp38LUVYOjg7h425exCr6UZmMm1M24d31ZaS0HTsgPWIZE9Hd2F0KnREVHuPm2VHesX3J5SQfFFg7fTC00DMNpq1Lj');
-const options = {
-    // passing the client secret obtained from the server
-    clientSecret: props.intent.client_secret,
-}
+);
 
-let elements;
+const appearance = { /* appearance */ };
+const options = { /* options */ };
+const elements = stripe.elements({ clientSecret
+    , appearance });
+const paymentElement = elements.create('payment', options);
+paymentElement.mount('#payment-element');
 
-initialize();
+
+// const stripe = Stripe('pk_test_51KJwK5Kahp38LUVYOjg7h425exCr6UZmMm1M24d31ZaS0HTsgPWIZE9Hd2F0KnREVHuPm2VHesX3J5SQfFFg7fTC00DMNpq1Lj');
+// const options = {
+//     // passing the client secret obtained from the server
+//     clientSecret: props.intent.client_secret,
+// }
+
+// let elements;
+
+// initialize();
 
 // let elements = stripe.elements({
 //     clientSecret: 'CLIENT_SECRET',
@@ -181,40 +193,40 @@ let submit = () => {
 
 
 // // Fetches a payment intent and captures the client secret
-async function initialize() {
-
-    // const stripeScript = await document.createElement("script");
-    // stripeScript.setAttribute(
-    //     "src",
-    //     "https://js.stripe.com/v3/s"
-    // );
-    // document.head.appendChild(stripeScript);
-
-    elements = stripe.elements({
-        clientSecret: props.intent.client_secret,
-    });
-
-
-    const paymentElement = elements.create("payment");
-    paymentElement.mount("#payment-element");
-
-    const appearance = {
-        theme: 'stripe',
-    };
-
-
-    const linkAuthenticationElement = elements.create("linkAuthentication");
-    linkAuthenticationElement.mount("#link-authentication-element");
-
-    linkAuthenticationElement.on('change', (event) => {
-
-    });
-
-    const paymentElementOptions = {
-        layout: "tabs",
-    };
-
-}
+// async function initialize() {
+//
+//     // const stripeScript = await document.createElement("script");
+//     // stripeScript.setAttribute(
+//     //     "src",
+//     //     "https://js.stripe.com/v3/s"
+//     // );
+//     // document.head.appendChild(stripeScript);
+//
+//     elements = stripe.elements({
+//         clientSecret: props.intent.client_secret,
+//     });
+//
+//
+//     const paymentElement = elements.create("payment");
+//     paymentElement.mount("#payment-element");
+//
+//     const appearance = {
+//         theme: 'stripe',
+//     };
+//
+//
+//     const linkAuthenticationElement = elements.create("linkAuthentication");
+//     linkAuthenticationElement.mount("#link-authentication-element");
+//
+//     linkAuthenticationElement.on('change', (event) => {
+//
+//     });
+//
+//     const paymentElementOptions = {
+//         layout: "tabs",
+//     };
+//
+// }
 
 
 </script>

@@ -30,6 +30,7 @@
         "@fortawesome/fontawesome-svg-core": "^6.2.0",
         "@fortawesome/free-solid-svg-icons": "^6.2.0",
         "@fortawesome/vue-fontawesome": "^3.0.1",
+        "@stripe/stripe-js": "^2.1.0",
         "@tiptap/extension-bullet-list": "^2.0.0-beta.207",
         "@tiptap/extension-hard-break": "^2.0.0-beta.207",
         "@tiptap/extension-history": "^2.0.0-beta.207",

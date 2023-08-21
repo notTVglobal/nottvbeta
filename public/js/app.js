@@ -3603,10 +3603,12 @@ var map = {
 	],
 	"./Subscribe": [
 		"./resources/js/Pages/Subscribe.vue",
+		"/js/vendor",
 		"resources_js_Pages_Subscribe_vue"
 	],
 	"./Subscribe.vue": [
 		"./resources/js/Pages/Subscribe.vue",
+		"/js/vendor",
 		"resources_js_Pages_Subscribe_vue"
 	],
 	"./Teams/Create": [
