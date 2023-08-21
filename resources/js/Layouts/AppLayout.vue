@@ -1,5 +1,5 @@
 <template>
-    <div class="absolute top-0 left-0 right-0 bottom-0 bg-gray-800 text-gray-200 h-screen max-w-screen overscroll-y-none overscroll-x-none">
+    <div class="absolute top-0 left-0 right-0 bottom-0 bg-gray-800 text-gray-200 vh-100 vw-100 overflow-hidden overscroll-y-none overscroll-x-none">
 
 
     <!-- Navbar for logged in user -->
@@ -9,23 +9,11 @@
                     but, on a tablet it makes it so you need to tap the nav links twice. -->
             <!--        I think this is fixed now -->
 
-            <!-- When video is TopRight -->
-            <div v-show="! videoPlayerStore.fullPage" class="fixed top-0 w-full nav-mask">
+            <div v-show="videoPlayerStore.showNav" class="fixed top-0 w-full nav-mask">
                 <ResponsiveNavigationMenu/>
-                <NavigationMenu />
-            </div>
+                <NavigationMenu /></div>
 
-
-            <!-- When video is FullPage -->
-            <div v-show="videoPlayerStore.fullPage"
-                 class="fixed top-0 w-full nav-mask"
-            >
-
-                <div v-show="videoPlayerStore.showNav">
-                    <ResponsiveNavigationMenu/>
-                    <NavigationMenu /></div>
-                </div>
-            </div>
+        </div>
 
     <!-- Chat -->
 
@@ -33,7 +21,7 @@
     <!-- Video Player -->
             <div class="w-full">
 
-                <VideoPlayerMain class="z-50 vh-100"
+                <VideoPlayerMain class="vh-100 z-20"
                                  :key="videoPlayerStore.key"
                                  :user="user"
                 />
@@ -48,22 +36,24 @@
 
                 <!-- isMobile -->
 <!--                <div v-if="userStore.isMobile">-->
-                    <div v-if="!videoPlayerStore.fullPage" class="fixed top-40 lg:top-72 w-full lg:w-96 right-0 z-50">
-                        <OttTopRightButtons class="videoOTT"/></div>
+                    <div v-if="!videoPlayerStore.fullPage" >
+                        <OttTopRightButtons class="videoOTT fixed top-40 lg:top-72 w-full lg:w-96 right-0 z-30"/>
+                        <OttTopRightDisplay :user="user"
+                                            class="fixed top-44 lg:top-78 right-0 w-full lg:w-96 mt-4 lg:mt-2 overflow-y-none z-40"
+                                            :class="ottDisplayShow"/>
+<!--                        <div class="ottTopRightDisplayBG fixed top-44 lg:top-78 right-0 w-full h-full lg:w-96 mt-4 lg:mt-2 z-20 bg-green-600"></div>-->
+                    </div>
 
-                    <OttTopRightDisplay :user="user"
-                                        class="fixed top-44 lg:top-78 right-0 w-full lg:w-96 mt-2 overflow-y-none z-40"
-                                        />
 <!--                </div>-->
 
-                <!-- !isMobile -->
+<!--                 !isMobile-->
 <!--                <div v-if="!userStore.isMobile">-->
 <!--                    <div v-if="!videoPlayerStore.fullPage" class="fixed top-72 w-full lg:w-96 right-0 z-30">-->
 <!--                        <OttTopRightButtons class="videoOTT"/></div>-->
 
 <!--                    <OttTopRightDisplay :user="user"-->
 <!--                                        class="fixed top-78 right-0 w-full lg:w-96 mt-2 overflow-y-none"-->
-<!--                                        :class="videoPlayerStore.ottClass"/>-->
+<!--                                        :class="ottDisplayShow"/>-->
 <!--                </div>-->
             </div>
 
@@ -76,12 +66,18 @@
                     <slot /></main>
 
                 <!-- Logged in view -->
-                <main v-if="user"
-                      class="absolute pb-24 lg:top-16
+<!--                <main v-if="user"-->
+<!--                      class="absolute pb-24 lg:top-16-->
+<!--                             w-fit lg:w-[calc(100vw-24rem)]-->
+<!--                             min-h-[calc(100vh-19rem)] lg:h-[calc(100vh-4rem)]-->
+<!--                             z-10 overflow-y-scroll overscroll-x-none"-->
+<!--                      :class="[{'top-48 h-full':userStore.isMobile}, pageHide]">-->
+                    <main v-if="user"
+                          class="absolute pt-40 pb-20 lg:pt-8 lg:top-16
                              w-fit lg:w-[calc(100vw-24rem)]
-                             min-h-[calc(100vh-19rem)] lg:h-[calc(100vh-4rem)]
-                             z-20 overflow-y-scroll overscroll-x-none"
-                      :class="[{'top-48 h-full':userStore.isMobile}]">
+                             h-full
+                             z-10 overflow-y-scroll overscroll-x-none"
+                          :class="[{'':userStore.isMobile}, pageHide]">
 
                     <slot /></main>
             </div>
@@ -91,7 +87,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import {computed, ref} from "vue";
 import ResponsiveNavigationMenu from "@/Components/Navigation/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/Navigation/NavigationMenu"
 import VideoPlayerMain from "@/Components/VideoPlayer/VideoPlayerMain"
@@ -130,6 +126,14 @@ userStore.checkIsMobile()
 let props = defineProps({
     user: Object,
 });
+
+const ottDisplayShow = computed(() => ({
+    'hidden': videoPlayerStore.ottClass !== 'OttOpen'
+}))
+
+const pageHide = computed(() => ({
+    'hidden lg:block': videoPlayerStore.ottClass === 'OttOpen' && userStore.isMobile
+}))
 
 function hideOSD() {
     videoPlayerStore.showOSD = false;

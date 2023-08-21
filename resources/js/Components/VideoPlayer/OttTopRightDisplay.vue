@@ -1,6 +1,6 @@
 <template>
-    <div class="overflow-y-scroll scrollbar-hide h-full"
-         :class="{'top-96':userStore.isMobile}"
+    <div v-if="videoPlayerStore.ott !== 0" class="overflow-y-scroll scrollbar-hide h-full"
+         :class="{'':userStore.isMobile}"
     >
 
         <div v-if="videoPlayerStore.ott === 2" class="channels w-full h-full bg-green-800 p-2 channelsForTopRightOtt">
@@ -147,18 +147,19 @@
             </div>
         </div>
 <!--        <div v-if="videoPlayerStore.ott === 4" class="now-playing w-full bg-red-800 px-2 pt-2 overflow-y-scroll scrollbar-hide">-->
-        <div v-if="videoPlayerStore.ott === 4" class="now-playing w-full h-full bg-indigo-800 px-2 pt-2 overflow-y-scroll scrollbar-hide">
-            <h1 class="text-xs font-semibold uppercase mb-3 w-full bg-indigo-900 text-white p-2">CHAT</h1>
+        <div v-if="videoPlayerStore.ott === 4" class="w-full h-full px-2 overflow-y-scroll scrollbar-hide">
+<!--            <h1 class="text-xs font-semibold uppercase mb-3 w-full bg-indigo-900 text-white p-2">CHAT</h1>-->
 
             <!--            tec21: this one below works, 29MAR2023. The Ott divs need to be turned into pages on mobile devices so there is no scroll bar overlap. -->
             <!--            <div class="h-[calc(100vh-28rem)] w-full overflow-y-scroll scrollbar-hide">-->
-            <div class="pb-24 w-full overflow-y-scroll scrollbar-hide"
+            <div class="w-full overflow-y-scroll scrollbar-hide"
                  :class="[{'h-[calc(100vh-22rem)]':!userStore.isMobile},{'h-[calc(100vh-20rem)]':userStore.isMobile}]">
 
                 <VideoOTTChat :user="props.user"/>
             </div>
         </div>
-        <div v-if="videoPlayerStore.ott === 5" class="now-playing w-full h-full bg-yellow-500 text-black p-2 overflow-y-scroll scrollbar-hide mb-64">
+        <div v-if="videoPlayerStore.ott === 5"
+             class="now-playing w-full h-full bg-yellow-500 text-black p-2 overflow-y-scroll scrollbar-hide mb-64">
             <h1 class="text-xs font-semibold uppercase mb-3 w-full bg-yellow-600 text-black p-2">FILTERS</h1>
             <div class="pb-24 w-full overflow-y-scroll scrollbar-hide"
                  :class="[{'h-[calc(100vh-22rem)]':!userStore.isMobile},{'h-[calc(100vh-20rem)]':userStore.isMobile}]">
@@ -174,6 +175,7 @@ import {useStreamStore} from "@/Stores/StreamStore";
 import { useChatStore } from "@/Stores/ChatStore.js"
 import { useUserStore } from "@/Stores/UserStore";
 import VideoOTTChat from "@/Components/Chat/VideoOTTChat.vue";
+import {onBeforeUnmount} from "vue";
 
 let videoPlayerStore = useVideoPlayerStore()
 let streamStore = useStreamStore()

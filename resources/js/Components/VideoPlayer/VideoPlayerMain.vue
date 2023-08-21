@@ -12,7 +12,7 @@
 <!--        FIX THIS ON MOBILE DISPLAY (VIDEO NEEDS TO BE AT THE TOP, NOT THE MIDDLE). -->
 
 <!--            <video-player :id="playerName" :options="videoOptions" v-touch="()=>videoPlayerStore.toggleOSD()" />-->
-            <video-player :id="playerName" :options="videoOptions" v-touch="()=>clickOnVideoAction()" />
+            <video-player :id="playerName" :options="videoOptions" v-touch="()=>clickOnVideoAction()"/>
 
 
     <!-- TopRight Video -->
@@ -47,7 +47,7 @@
 
                     <OttFullPageDisplayChannels />
                     <OttFullPageDisplayPlaylist />
-                    <OttFullPageDisplayChatMobile :user="user" />
+                    <OttFullPageDisplayChatMobile :user="user"/>
                     <OttFullPageDisplayFilters />
 
                     <!-- notTV Bug -->
@@ -83,7 +83,7 @@
                     <OttFullPageButtons v-show="videoPlayerStore.showOSD" />
                     <OttFullPageDisplayChannels />
                     <OttFullPageDisplayPlaylist />
-                    <OttFullPageDisplayChatStandard :user="user" />
+                    <OttFullPageDisplayChatStandard :user="user"/>
                     <OttFullPageDisplayFilters />
 
                 </div>

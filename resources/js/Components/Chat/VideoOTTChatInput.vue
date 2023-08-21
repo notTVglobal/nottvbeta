@@ -12,7 +12,7 @@
                 v-focus
                 v-on:blur="videoPlayerStore.makeVideoTopRight()"
                 v-on:focus="videoPlayerStore.makeVideoPiP()"
-                v-on-click-outside:blur="videoPlayerStore.makeVideoTopRight()"
+
 
             />
 

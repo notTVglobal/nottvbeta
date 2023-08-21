@@ -1,7 +1,7 @@
 <template>
-    <div class="scrollbar-hide">
+    <div class="scrollbar-hide chatMessages">
         <div class="scrollbar-hide">
-            <VideoOTTChatMessages />
+            <VideoOTTChatMessages/>
         </div>
         <div>
             <VideoOTTChatInput :user="props.user" class="fixed bottom-20"/>

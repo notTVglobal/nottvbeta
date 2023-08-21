@@ -414,8 +414,10 @@ onBeforeMount(() => {
 })
 
 onMounted(() => {
-
     videoPlayerStore.makeVideoTopRight();
+    if (userStore.isMobile) {
+        videoPlayerStore.ottClass = 'ottClose'
+    }
     if (userStore.scrollToTopCounter === 0 ) {
         document.getElementById("topDiv").scrollIntoView()
         userStore.scrollToTopCounter ++;
