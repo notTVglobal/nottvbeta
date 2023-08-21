@@ -1,9 +1,10 @@
 <template>
     <Head title="Schedule" />
 
-    <div id="topDiv"></div>
-    <div class="place-self-center flex flex-col">
-        <div class="flex justify-between p-5 mb-5">
+    <div class="place-self-center flex flex-col gap-y-3 w-full overscroll-x-none pb-8">
+        <div id="topDiv" class="flex justify-between p-5 mb-5">
+
+
 
             <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
 

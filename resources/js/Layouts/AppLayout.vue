@@ -72,14 +72,14 @@
 <!--                             min-h-[calc(100vh-19rem)] lg:h-[calc(100vh-4rem)]-->
 <!--                             z-10 overflow-y-scroll overscroll-x-none"-->
 <!--                      :class="[{'top-48 h-full':userStore.isMobile}, pageHide]">-->
-                    <main v-if="user"
-                          class="absolute pt-40 pb-20 lg:pt-8 lg:top-16
+                    <div v-if="user"
+                          class="fixed top-48 lg:top-16 lg:mt-0 pb-72 lg:pb-16
                              w-fit lg:w-[calc(100vw-24rem)]
                              h-full
                              z-10 overflow-y-scroll overscroll-x-none"
                           :class="[{'':userStore.isMobile}, pageHide]">
 
-                    <slot /></main>
+                    <slot /></div>
             </div>
 
 
