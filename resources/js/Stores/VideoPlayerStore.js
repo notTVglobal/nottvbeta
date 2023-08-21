@@ -80,7 +80,7 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
         },
         toggleOSD() {
           this.showOSD = !this.showOSD
-          this.showNav = ! this.showNav
+          // this.showNav = ! this.showNav
           // if (this.fullPage) {
           //     this.showNav = !this.showNav;
           // }

@@ -153,10 +153,12 @@ function clickOnVideoAction() {
     // if (videoPlayerStore.currentPageIsStream === true) {
     //     videoPlayerStore.toggleOSD()
     // } else {
-    videoPlayerStore.ottClass = 'OttClose'
-    videoPlayerStore.ott = 0
+    // videoPlayerStore.ottClass = 'OttClose'
+    // videoPlayerStore.ott = 0
     if(userStore.isMobile) {
         Inertia.visit('/stream')
+    } else {
+        videoPlayerStore.toggleOSD()
     }
     // }
 }
