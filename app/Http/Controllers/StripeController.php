@@ -10,6 +10,11 @@ use Stripe\Stripe as StripeGateway;
 
 class StripeController extends Controller
 {
+
+    public function createCheckoutSession(Request $request)
+    {
+
+    }
     public function initiatePayment(Request $request)
     {
         StripeGateway::setApiKey('STRIPE_SECRET_KEY');

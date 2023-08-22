@@ -3419,6 +3419,32 @@ var map = {
 		"/js/vendor",
 		"resources_js_Pages_Payment_vue"
 	],
+	"./Payment2": [
+		"./resources/js/Pages/Payment2.vue",
+		"/js/vendor",
+		"resources_js_Pages_Payment2_vue"
+	],
+	"./Payment2.vue": [
+		"./resources/js/Pages/Payment2.vue",
+		"/js/vendor",
+		"resources_js_Pages_Payment2_vue"
+	],
+	"./PaymentCancelled": [
+		"./resources/js/Pages/PaymentCancelled.vue",
+		"resources_js_Pages_PaymentCancelled_vue"
+	],
+	"./PaymentCancelled.vue": [
+		"./resources/js/Pages/PaymentCancelled.vue",
+		"resources_js_Pages_PaymentCancelled_vue"
+	],
+	"./PaymentSuccess": [
+		"./resources/js/Pages/PaymentSuccess.vue",
+		"resources_js_Pages_PaymentSuccess_vue"
+	],
+	"./PaymentSuccess.vue": [
+		"./resources/js/Pages/PaymentSuccess.vue",
+		"resources_js_Pages_PaymentSuccess_vue"
+	],
 	"./PrivacyPolicy": [
 		"./resources/js/Pages/PrivacyPolicy.vue",
 		"resources_js_Pages_PrivacyPolicy_vue"
