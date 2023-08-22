@@ -136,6 +136,22 @@ Route::middleware([
         ]);
     })->name('subscribe.post');
 
+    Route::get('/subscribe2', function () {
+        return Inertia::render('Subscribe2', [
+//            'intent' => auth()->user()->createSetupIntent(),
+        ]);
+    })->name('subscribe2');
+    Route::get('/srmessages', function () {
+        return Inertia::render('SrMessages', [
+//            'intent' => auth()->user()->createSetupIntent(),
+        ]);
+    })->name('srmessages');
+    Route::get('/srreturn', function () {
+        return Inertia::render('SrReturn', [
+//            'intent' => auth()->user()->createSetupIntent(),
+        ]);
+    })->name('srreturn');
+
 
 // Dashboard
 ///////////

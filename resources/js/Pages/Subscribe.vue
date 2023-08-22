@@ -38,9 +38,9 @@
 
                                         <div id="payment-element" data-options=paymentElementOptions>
 
-<Elements stripe="{{stripePromise}}" options="{{options}}">
-<!--    <CheckoutForm />-->
-</Elements>
+<!--<Elements stripe="{{stripePromise}}" options="{{options}}">-->
+<!--&lt;!&ndash;    <CheckoutForm />&ndash;&gt;-->
+<!--</Elements>-->
                                             form injected here
 
 
@@ -129,12 +129,22 @@ const stripe = loadStripe('pk_test_51KJwK5Kahp38LUVYOjg7h425exCr6UZmMm1M24d31ZaS
 
 );
 
-const appearance = { /* appearance */ };
-const options = { /* options */ };
-const elements = stripe.elements({ clientSecret
-    , appearance });
-const paymentElement = elements.create('payment', options);
-paymentElement.mount('#payment-element');
+// const appearance = { /* appearance */};
+// const options = {
+//     business: "notTV"
+// };
+// const clientSecret = {{CLIENT_SECRET}};
+// const elements = stripe.elements(appearance, clientSecret);
+// const paymentElement = elements.create('payment', options);
+// paymentElement.mount('#payment-element');
+
+const paymentIntent = await stripe.paymentIntents.create({
+    amount: 1099,
+    currency: 'cad',
+    automatic_payment_methods: {
+        enabled: true,
+    },
+})
 
 
 // const stripe = Stripe('pk_test_51KJwK5Kahp38LUVYOjg7h425exCr6UZmMm1M24d31ZaS0HTsgPWIZE9Hd2F0KnREVHuPm2VHesX3J5SQfFFg7fTC00DMNpq1Lj');
