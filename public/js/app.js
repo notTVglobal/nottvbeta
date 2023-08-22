@@ -3409,6 +3409,16 @@ var map = {
 		"/js/vendor",
 		"resources_js_Pages_Newsroom_Index_vue"
 	],
+	"./Payment": [
+		"./resources/js/Pages/Payment.vue",
+		"/js/vendor",
+		"resources_js_Pages_Payment_vue"
+	],
+	"./Payment.vue": [
+		"./resources/js/Pages/Payment.vue",
+		"/js/vendor",
+		"resources_js_Pages_Payment_vue"
+	],
 	"./PrivacyPolicy": [
 		"./resources/js/Pages/PrivacyPolicy.vue",
 		"resources_js_Pages_PrivacyPolicy_vue"

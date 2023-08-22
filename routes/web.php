@@ -36,6 +36,7 @@ use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Cashier\Checkout;
+use App\Http\Controllers\StripeController;
 
 
 /*
@@ -135,6 +136,14 @@ Route::middleware([
         return Inertia::render('Subscribe', [
         ]);
     })->name('subscribe.post');
+
+    Route::get('/payment', function (Request $request) {
+        return Inertia::render('Payment', [
+        ]);
+    })->name('payment');
+    Route::post('payment/initiate', [StripeController::class, 'initiatePayment']);
+    Route::post('payment/complete', [StripeController::class, 'completePayment']);
+    Route::post('payment/failure', [StripeController::class, 'failPayment']);
 
     Route::get('/subscribe2', function () {
         return Inertia::render('Subscribe2', [

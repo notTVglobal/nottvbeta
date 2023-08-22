@@ -8,11 +8,6 @@ const messages = ref([]);
 const clientSecret = ref('');
 
 
-const currentRoute = computed(() => {
-    return useRoute().query;
-});
-clientSecret.value = currentRoute.value?.payment_intent_client_secret;
-
 let stripe;
 
 onMounted(async () => {
