@@ -19,12 +19,12 @@ mix.js('resources/js/app.js', 'public/js')
         version: 3,
         options: {
             compilerOptions: {
-                isCustomElement: (tag) => ['video-js'].includes(tag),
-                isCustomElement: (tag) => ['AppLayout'].includes(tag),
-                isCustomElement: (tag) => ['button'].includes(tag),
-                isCustomElement: (tag) => ['NotificationsButton'].includes(tag),
-                isCustomElement: (tag) => ['VideoPlayer'].includes(tag),
-                isCustomElement: (tag) => ['Chat'].includes(tag),
+                isCustomElement: (tag) => ['video-js', 'AppLayout', 'button', 'NotificationsButton', 'VideoPlayer', 'Chat'].includes(tag),
+                // isCustomElement: (tag) => ['AppLayout'].includes(tag),
+                // isCustomElement: (tag) => ['button'].includes(tag),
+                // isCustomElement: (tag) => ['NotificationsButton'].includes(tag),
+                // isCustomElement: (tag) => ['VideoPlayer'].includes(tag),
+                // isCustomElement: (tag) => ['Chat'].includes(tag),
             },
         },
     })

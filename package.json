@@ -65,6 +65,7 @@
         "vue3-touch-events": "^4.1.0",
         "webpack": "^5.76.1",
         "yargs": "^17.5.1",
-        "yargs-parser": "^21.0.1"
+        "yargs-parser": "^21.0.1",
+        "ziggy": "^2.4.0"
     }
 }

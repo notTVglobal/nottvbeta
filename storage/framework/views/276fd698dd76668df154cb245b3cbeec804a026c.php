@@ -4,12 +4,14 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
+
         <title inertia><?php echo e(config('app.name', 'Laravel')); ?></title>
 
         <!-- Fonts -->
 
         <!-- Styles -->
         <link rel="stylesheet" href="<?php echo e(mix('css/app.css')); ?>">
+
 
 
         <!-- Favicon -->
@@ -21,6 +23,7 @@
         <script src="<?php echo e(mix('js/manifest.js')); ?>" defer></script>
         <script src="<?php echo e(mix('js/vendor.js')); ?>" defer></script>
         <script src="<?php echo e(mix('js/app.js')); ?>" defer></script>
+
 
 
 

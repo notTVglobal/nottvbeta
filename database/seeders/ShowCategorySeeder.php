@@ -81,7 +81,7 @@ class ShowCategorySeeder extends Seeder
         ]);
         ShowCategory::create([
             'name' => 'PSAs',
-            'description' => 'Messages of less than 5 minutes duration intended to educate the audience about issues of public concern, encourage public support and awareness of a worthy cause, or promote the work of a non-profit group or organization dedicated to enhancing the quality of life in local communities or in society or the world at large. These include community billboards. These messages are not intended to sell or promote goods or commercial services. No payment is exchanged between broadcasters and producers for the broadcast of these messages.',
+            'description' => 'Messages of less than 5 minutes duration intended to educate the audience about issues of public concern, encourage public Support and awareness of a worthy cause, or promote the work of a non-profit group or organization dedicated to enhancing the quality of life in local communities or in society or the world at large. These include community billboards. These messages are not intended to sell or promote goods or commercial services. No payment is exchanged between broadcasters and producers for the broadcast of these messages.',
         ]);
         ShowCategory::create([
             'name' => 'Promotional',

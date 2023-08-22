@@ -8,6 +8,7 @@ import AppLayout from "./Layouts/AppLayout";
 import { createPinia } from "pinia";
 import { ZiggyVue } from 'ziggy';
 import Vue3TouchEvents from "vue3-touch-events";
+// import helmet from "helmet";
 
 import "../../resources/css/theme.css"; // Magic happens here
 // import the fontawesome core
