@@ -87,14 +87,15 @@
 </template>
 
 <script setup>
-import {computed, ref} from "vue";
+import {computed, onMounted, ref} from "vue";
 import ResponsiveNavigationMenu from "@/Components/Navigation/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/Navigation/NavigationMenu"
 import VideoPlayerMain from "@/Components/VideoPlayer/VideoPlayerMain"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useStreamStore } from "@/Stores/StreamStore"
 import { useUserStore } from "@/Stores/UserStore"
-import { useChatStore } from "@/Stores/ChatStore";
+import { useChatStore } from "@/Stores/ChatStore"
+import { useShopStore } from "@/Stores/ShopStore"
 import OttTopRightDisplay from '@/Components/VideoPlayer/OttTopRightDisplay'
 import OttTopRightButtons from '@/Components/VideoPlayer/OttTopRightButtons'
 
@@ -102,6 +103,7 @@ let videoPlayerStore = useVideoPlayerStore()
 let streamStore = useStreamStore()
 let userStore = useUserStore()
 let chatStore = useChatStore()
+let shopStore = useShopStore()
 
 videoPlayerStore.videoSource = "https://mist2.not.tv/hls/mist1pull1/index.m3u8"
 videoPlayerStore.videoSourceType = "application/x-mpegURL"
@@ -126,6 +128,8 @@ userStore.checkIsMobile()
 let props = defineProps({
     user: Object,
 });
+
+
 
 const ottDisplayShow = computed(() => ({
     'hidden': videoPlayerStore.ottClass !== 'OttOpen'

@@ -1567,10 +1567,6 @@ html {
   visibility: collapse;
 }
 
-.static {
-  position: static;
-}
-
 .fixed {
   position: fixed;
 }
@@ -1814,11 +1810,6 @@ html {
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
-}
-
-.my-1 {
-  margin-top: 0.25rem;
-  margin-bottom: 0.25rem;
 }
 
 .my-4 {

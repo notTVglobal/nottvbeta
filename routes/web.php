@@ -21,11 +21,13 @@ use App\Http\Controllers\NewsPostController;
 use App\Http\Controllers\NewsroomController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\PostController;
-use App\Http\Controllers\ShopController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\VideoUploadController;
 use App\Http\Controllers\WhitepaperController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ShopController;
+use App\Http\Controllers\Api\StripeController;
 use App\Models\User;
 use App\Models\Show;
 use App\Models\ShowEpisode;
@@ -36,8 +38,6 @@ use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Cashier\Checkout;
-use App\Http\Controllers\StripeController;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -240,8 +240,21 @@ Route::middleware([
 ///////////
     Route::resource('shop', ShopController::class);
     // List all products
+
     Route::get('/shop', [ShopController::class, 'index'])
         ->name('shop');
+
+    Route::get('/checkout', function () {
+        return Inertia::render('Shop/Checkout');
+    })->name('checkout');
+
+    Route::resource('product', ProductController::class);
+
+//    Route::get('/api/products', [ProductController::class, 'index'])
+//        ->name('product');
+
+    Route::get('/product/{product}', [ProductController::class, 'show'])
+        ->name('product.show');
 
     Route::get('/subscription-checkout', function (Request $request) {
         return $request->user()
@@ -260,6 +273,8 @@ Route::middleware([
                 'cancel_url' => route('your-cancel-route'),
             ]);
     });
+
+
 
 
 // Library
@@ -665,3 +680,7 @@ Route::middleware([
     Route::post('/mistapi', [VideoController::class, 'mistApi'])->name('mistApi');
 
 });
+
+//Route::any('/{any}', function() {
+//    return view('app');
+//})->where('any', '.*');

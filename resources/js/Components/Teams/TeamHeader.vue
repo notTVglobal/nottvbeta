@@ -1,4 +1,4 @@
-<!-- tec21: This component is currently not being used... I moved the code directly into the Teams/{$id}/Index.vue page for testing/dev purposes -->
+<!-- tec21: This component is currently not being used... I moved the code directly into the Teams/{$id}/Checkout.vue page for testing/dev purposes -->
 <!--<template>-->
 <!--    <div class="flex justify-between mb-3">-->
 <!--        <div>-->

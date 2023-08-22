@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Shop;
 use App\Models\User;
-use Illuminate\Http\Request;
+use Illuminate\Http\Request as HttpRequest;
+use Inertia\Response;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
@@ -13,15 +14,11 @@ class ShopController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
-        return Inertia::render('Shop', [
-            'can' => [
-                'viewCreator' => Auth::user()->can('viewCreator', User::class),
-            ]
-        ]);
+        return Inertia::render('Shop/Index');
     }
 
     /**

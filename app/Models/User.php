@@ -11,6 +11,7 @@ use Laravel\Cashier\Billable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
+use Stripe\Order;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -26,22 +27,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @var string[]
      */
-    protected $fillable = [
-        'name',
-        'role_id',
-        'email',
-        'password',
-        'address1',
-        'address2',
-        'city',
-        'province',
-        'country',
-        'postalCode',
-        'phone',
-        'subscriptionStatus',
-        'profile_photo_path',
-        'invite_code'
-    ];
+    protected $guarded = [];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -173,6 +159,11 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function inviteCodes(): \Illuminate\Database\Eloquent\Relations\HasMany {
         return $this->hasMany(InviteCode::class);
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
     }
 
 }
