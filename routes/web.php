@@ -238,25 +238,33 @@ Route::middleware([
 
 // Shop
 ///////////
-    Route::resource('shop', ShopController::class);
+//    Route::resource('shop', ShopController::class);
     // List all products
 
     Route::get('/shop', [ShopController::class, 'index'])
         ->name('shop');
 
-    Route::get('/checkout', function () {
+    Route::get('shop/checkout', function () {
         return Inertia::render('Shop/Checkout');
     })->name('checkout');
 
+    Route::post('shop/purchase', [ShopController::class, 'purchase']);
+
+    Route::get('shop/summary', [ShopController::class, 'summary'])
+        ->name('shop.summary');
+
     Route::resource('product', ProductController::class);
 
-//    Route::get('/api/products', [ProductController::class, 'index'])
-//        ->name('product');
+    Route::get('/api/products', [\App\Http\Controllers\Api\ProductController::class, 'index'])
+        ->name('api.products');
 
-    Route::get('/product/{product}', [ProductController::class, 'show'])
-        ->name('product.show');
+    Route::get('/shop/products', [ProductController::class, 'index'])
+        ->name('products');
 
-    Route::get('/subscription-checkout', function (Request $request) {
+    Route::get('/shop/product/{product}', [ProductController::class, 'show'])
+    ->name('shop.product.show');
+
+    Route::get('shop/subscription-checkout', function (Request $request) {
         return $request->user()
             ->newSubscription('default', 'price_monthly')
             ->checkout([
@@ -265,7 +273,7 @@ Route::middleware([
             ]);
     });
 
-    Route::get('/product-checkout', function (Request $request) {
+    Route::get('shop/product-checkout', function (Request $request) {
         return Checkout::guest()
             ->withPromotionCode('promo-code')
             ->create('price_tshirt', [

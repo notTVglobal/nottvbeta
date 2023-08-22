@@ -1,6 +1,6 @@
 <template>
 
-    <Head title="`${props.product.name}`" />
+    <Head title="Order Summary" />
 
     <div class="place-self-center flex flex-col gap-y-3">
         <div id="topDiv" class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
@@ -9,13 +9,13 @@
 
             <header class="flex justify-between mb-3">
                 <div id="topDiv">
-                    <h1 class="text-3xl font-semibold pb-3">Product Page</h1>
+                    <h1 class="text-3xl font-semibold pb-3">Order Summary</h1>
                 </div>
             </header>
 
             <div class="mb-4">
                 <p class="mt-4">
-                    This is the product page.
+                    This is the order summary page.
                 </p>
             </div>
 
@@ -62,7 +62,6 @@ onMounted(() => {
 });
 
 let props = defineProps({
-    product: Object,
     can: Object,
     message: String,
 })

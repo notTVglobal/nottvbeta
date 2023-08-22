@@ -5,7 +5,7 @@ export let useShopStore = defineStore('shopStore', {
     state() {
         return {
             products: [],
-            cart: [],
+            cart: {},
             order: {}
         };
     },
@@ -25,19 +25,19 @@ export let useShopStore = defineStore('shopStore', {
         updateProducts(products) {
             this.products = products;
         },
-    },
-
-    getters: {
         addToCart(product) {
             let productInCartIndex = this.cart.findIndex(item => item.slug === product.slug);
             if (productInCartIndex !== -1) {
                 this.cart[productInCartIndex].quantity++;
                 return;
-            }
-
-            this.product.quantity = 1;
+            } else
+                this.product.quantity = 1;
             this.cart.push(product);
         },
+    },
+
+    getters: {
+
         removeFromCart(index) {
             this.cart.splice(index, 1);
         },

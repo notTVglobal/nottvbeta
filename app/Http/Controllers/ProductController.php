@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use App\Models\ProductOLD;
+use App\Models\Product;
 use Inertia\Response;
 
 class ProductController extends Controller
@@ -14,13 +14,11 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Builder[]|Collection
+     * @return Response
      */
     public function index()
     {
-        // return all products
-        return ProductOLD::with('categories')
-            ->get();
+        return Inertia::render('Shop/Products/Index');
     }
 
     /**
@@ -30,7 +28,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Shop/ProductOLD/Create');
+        return Inertia::render('Shop/Products/Create');
     }
 
     /**
@@ -47,12 +45,12 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param ProductOLD $product
+     * @param Product $product
      * @return Response
      */
-    public function show(ProductOLD $product)
+    public function show(Product $product)
     {
-        return Inertia::render('Shop/ProductOLD/{$id}/Index', [
+        return Inertia::render('Shop/Products/{$id}/Index', [
             'product' => [
                 'name' => $product->name,
                 'description' => $product->description,
@@ -65,10 +63,10 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param ProductOLD $product
+     * @param Product $product
      * @return void
      */
-    public function edit(ProductOLD $product)
+    public function edit(Product $product)
     {
         //
     }
@@ -77,10 +75,10 @@ class ProductController extends Controller
      * Update the specified resource in storage.
      *
      * @param Request $request
-     * @param ProductOLD $product
+     * @param Product $product
      * @return void
      */
-    public function update(Request $request, ProductOLD $product)
+    public function update(Request $request, Product $product)
     {
         //
     }
@@ -88,10 +86,10 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param ProductOLD $product
+     * @param Product $product
      * @return void
      */
-    public function destroy(ProductOLD $product)
+    public function destroy(Product $product)
     {
         //
     }

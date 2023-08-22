@@ -11,6 +11,22 @@ use Inertia\Inertia;
 
 class ShopController extends Controller
 {
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function purchase()
+    {
+        //
+    }
+
+    public function summary()
+    {
+        return Inertia::render('Shop/Summary');
+    }
+
     /**
      * Display a listing of the resource.
      *

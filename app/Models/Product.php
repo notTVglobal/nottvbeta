@@ -16,4 +16,8 @@ class Product extends Model
         return $this->belongsToMany(ProductCategory::class, 'product_category_product', 'product_id', 'category_id', 'id')
             ->as('categories');
     }
+
+    public function getRouteKeyName() {
+        return 'slug';
+    }
 }

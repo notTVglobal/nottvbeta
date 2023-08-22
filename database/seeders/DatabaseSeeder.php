@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
 
         ]);
 
-//        Product::factory()->count(20)->create();
+        Product::factory()->count(5)->create();
 //        ProductCategory::factory()->count(50)->create();
 
         $categories = ProductCategory::all();
