@@ -1,6 +1,5 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
-import { useRoute } from "vue-router";
 import { loadStripe } from "@stripe/stripe-js";
 
 import SrMessages from "./SrMessages.vue";
