@@ -37,8 +37,6 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Cashier\Checkout;
 use App\Http\Controllers\StripeController;
-use Spatie\Csp\AddCspHeaders;
-use Spatie\Csp;
 
 
 /*
