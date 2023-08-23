@@ -11,9 +11,11 @@
             <div
                 class="min-w-[8rem] px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
             >
-                <Link :href="`/users/${$page.props.newsPerson.id}`" class="">
-                    <img v-if="$page.props.newsPerson.profile_photo_path" :src="`/storage/${$page.props.newsPerson.profile_photo_path}`" class="rounded-full h-20 w-20 object-cover">
-                </Link>
+                    <img alt="News Reporter Profile Picture"
+                         v-if="$page.props.newsPerson.profile_photo_path"
+                         :src="`/storage/${$page.props.newsPerson.profile_photo_path}`"
+                         class="rounded-full h-20 w-20 object-cover">
+
             </div>
             <div class="text2xl">{{$page.props.newsPerson.name}}</div>
         </div>
