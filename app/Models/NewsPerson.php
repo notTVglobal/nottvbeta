@@ -22,4 +22,8 @@ class NewsPerson extends Model
     {
         return $this->belongsTo(NewsPersonRole::class);
     }
+
+    public function getRouteKeyName() {
+        return 'user_id';
+    }
 }
