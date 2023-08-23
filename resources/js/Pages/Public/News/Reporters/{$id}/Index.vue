@@ -1,5 +1,7 @@
 <template>
 
+    <Head :title="$page.props.newsPerson.name" />
+
     <div>
         <PublicNavigationMenu class="fixed top-0 w-full nav-mask" />
     </div>

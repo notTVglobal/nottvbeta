@@ -1,5 +1,7 @@
 <template>
 
+    <Head title="News" />
+
     <div>
         <PublicNavigationMenu class="fixed top-0 w-full nav-mask" />
     </div>
