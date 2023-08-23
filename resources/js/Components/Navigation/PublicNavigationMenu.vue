@@ -12,11 +12,20 @@
                     </div>
 
                     <!-- Navigation Links -->
-                    <div class="space-x-8 py-6 pt-6 ml-8 lg:flex text-gray-200">
+                    <div class="space-x-4 py-6 pt-6 ml-8 lg:flex text-gray-200">
                         <h3 class="inline-flex items-center relative">
+                            <Link
+                                :href="`/`"
+                                class="text-gray-200 hover:text-blue-500">
+                                Watch Now
+                            </Link>
+                        </h3>
+                        <h3 v-show="route().current() !== 'public.news.index'"
+                            class="inline-flex items-center relative">
                         <Link
+
                             :href="`/public/news`"
-                            class="hover:text-blue-500">
+                            class="text-gray-200 hover:text-blue-500">
                                 News
 <!--                            <div v-if="streamStore.isLive"-->
 <!--                                class="text-xs text-white bg-red-800 uppercase flex justify-center items-center absolute -right-4 top-1.5-->
@@ -25,25 +34,12 @@
 <!--                            </div>-->
                         </Link>
                         </h3>
-                        <h3 class="inline-flex items-center relative">
-                        <Link
-                            :href="`/`"
-                            class="hover:text-blue-500">
-                                Watch Now
-                        </Link>
-                        </h3>
-                        <h3 class="inline-flex items-center relative">
+                        <h3 v-if="route().current('public.news.index')"
+                            class="inline-flex items-center relative">
                             <Link
                                 :href="`/login`"
                                 class="hover:text-blue-500">
                                 Login
-                            </Link>
-                        </h3>
-                        <h3 class="inline-flex items-center relative">
-                            <Link
-                                :href="`/register`"
-                                class="hover:text-blue-500">
-                                Register
                             </Link>
                         </h3>
                     </div>

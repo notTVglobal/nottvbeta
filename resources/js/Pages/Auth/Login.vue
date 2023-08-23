@@ -1,5 +1,5 @@
 <script setup>
-import { useForm } from '@inertiajs/inertia-vue3';
+import {Link, useForm} from '@inertiajs/inertia-vue3';
 import JetAuthenticationCard from '@/Jetstream/AuthenticationCard.vue';
 import JetAuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo.vue';
 import JetButton from '@/Jetstream/Button.vue';
@@ -52,6 +52,14 @@ export default {
         </div>
 
         <form @submit.prevent="submit">
+            <div class="pb-6 flex flex-col">
+                <div>Please log in to watch notTV and chat.</div>
+                <div>Need to <Link
+                :href="`/register`"
+                class="text-blue-800 hover:text-blue-500">
+                register
+            </Link>for an account?</div>
+            </div>
             <div>
                 <JetLabel for="email" value="Email" />
                 <JetInput
