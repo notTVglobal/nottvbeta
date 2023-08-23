@@ -3520,6 +3520,22 @@ var map = {
 		"./resources/js/Pages/Profile/Show.vue",
 		"resources_js_Pages_Profile_Show_vue"
 	],
+	"./Public/News/Index": [
+		"./resources/js/Pages/Public/News/Index.vue",
+		"resources_js_Pages_Public_News_Index_vue"
+	],
+	"./Public/News/Index.vue": [
+		"./resources/js/Pages/Public/News/Index.vue",
+		"resources_js_Pages_Public_News_Index_vue"
+	],
+	"./Public/News/Reporters/{$id}/Index": [
+		"./resources/js/Pages/Public/News/Reporters/{$id}/Index.vue",
+		"resources_js_Pages_Public_News_Reporters_id_Index_vue"
+	],
+	"./Public/News/Reporters/{$id}/Index.vue": [
+		"./resources/js/Pages/Public/News/Reporters/{$id}/Index.vue",
+		"resources_js_Pages_Public_News_Reporters_id_Index_vue"
+	],
 	"./Schedule": [
 		"./resources/js/Pages/Schedule.vue",
 		"resources_js_Pages_Schedule_vue"

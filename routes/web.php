@@ -17,6 +17,8 @@ use App\Http\Controllers\TeamsController;
 use App\Http\Controllers\TeamMembersController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ScheduleController;
+use App\Http\Controllers\NewsController;
+use App\Http\Controllers\NewsPersonController;
 use App\Http\Controllers\NewsPostController;
 use App\Http\Controllers\NewsroomController;
 use App\Http\Controllers\MovieController;
@@ -55,17 +57,25 @@ Route::get('/', function () {
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
     ]);
-});
+})->name('home');
 
 Route::get('/send-mail', function () {
    Mail::to('test@test.com')->queue(new VerifyMail());
 });
 
 Route::get('/home', function () {
-    if (Auth::user()->role_id != 4) {
+    if (Auth::user()) {
         return redirect('/');
     } return redirect('/dashboard');
 });
+
+//Route::get('/register', function () {
+//    return redirect('/register');
+//})->name('register');
+//
+//Route::get('/login', function () {
+//    return redirect('/login');
+//})->name('login');
 
 Route::get('/email/verify', function () {
     return Inertia::render('Auth/VerifyEmail');
@@ -102,6 +112,16 @@ Route::get('/privacy', function () {
 
 Route::get('/whitepaper', [WhitepaperController::class, 'show'])->name('whitepaper.show');
 
+// Public Pages
+
+// News
+Route::get('public/news', [NewsController::class, 'index'])
+//        ->middleware('can:create,App\Models\NewsPerson')
+    ->name('public.news.index');
+
+Route::get('public/news/reporter/{newsPerson}', [NewsPersonController::class, 'show'])
+//        ->middleware('can:create,App\Models\NewsPerson')
+    ->name('public.newsPerson.show');
 
 // BEGIN ROUTES FOR
 // Logged In Users
