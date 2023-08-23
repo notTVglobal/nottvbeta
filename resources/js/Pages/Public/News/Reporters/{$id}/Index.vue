@@ -29,13 +29,7 @@
 
 <script setup>
 import PublicNavigationMenu from "@/Components/Navigation/PublicNavigationMenu.vue";
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
-import { useUserStore } from "@/Stores/UserStore";
 
-let videoPlayerStore = useVideoPlayerStore()
-let userStore = useUserStore()
-
-userStore.showNavDropdown = false
 </script>
 
 <script>
