@@ -11,6 +11,7 @@ export let useChatStore = defineStore('chatStore', {
             oldMessages: ref([]),
             newMessages: ref([]),
             message: ref(''),
+            input: ref(''),
             echo: [],
             currentChannel: ref([]),
         };

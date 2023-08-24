@@ -7,11 +7,10 @@
                 src="" class="rounded-full h-8 w-8 object-cover bg-gray-300">
        </div>
         <div class="flex flex-col bg-gray-600 rounded-l-xl rounded-r-xl px-2 pb-1 bg-opacity-50 break-words">
-            <div :key=timeKey>
-                <span class="text-xs font-semibold text-gray-100">{{  message.user_name }}</span>
+                <span class="text-xs font-semibold text-gray-100 pt-1">{{ message.user_name }}</span>
 <!--                <span class="text-xs text-gray-200"> &middot; {{ time }}</span>-->
-            </div>
-            <div><span class="text-white break-words">{{ message.message }}</span></div>
+<!--            <div><span class="text-white break-words">{{ message.message }}</span></div>-->
+            <span v-html="message.message"></span>
         </div>
 
     </div>
@@ -33,11 +32,11 @@ let props = defineProps({
     time: reactive(String),
 })
 
-let timeKey = 1;
+// let timeKey = 1;
 
-watchEffect(() => {
-    timeKey = timeKey + 1
-})
+// watchEffect(() => {
+//     timeKey = timeKey + 1
+// })
 
 
 //

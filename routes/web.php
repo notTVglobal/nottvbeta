@@ -133,6 +133,9 @@ Route::middleware([
     'verified',
 ])->group(function () {
 
+    Route::get('/externalLink', function () {
+        return Inertia::render('ExternalLink');
+    })->name('externalLink');
 
     Route::get('/settings', function () {
         return Inertia::render('Settings');

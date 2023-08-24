@@ -12,6 +12,7 @@
                 v-on:blur="videoPlayerStore.makeVideoFullPage()"
                 v-on:focus="focusInput"
             />
+            <div class="fixed mt-12 pt-2 right-20 p-2 m-2 mb-2 font-thin text-xs">{{form.message.length}}</div>
             <div @click="sendMessage" class="fixed right-10 p-2 m-2 mb-2 w-fit text-white form-control cursor-pointer">
                 <font-awesome-icon icon="fa-paper-plane" class="hover:text-blue-800 text-xl"/>
             </div>
@@ -24,7 +25,7 @@
 import { useForm } from "@inertiajs/inertia-vue3"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useChatStore } from "@/Stores/ChatStore.js"
-import {ref} from 'vue'
+import { ref } from 'vue'
 
 let videoPlayerStore = useVideoPlayerStore()
 let chatStore = useChatStore()
@@ -33,7 +34,6 @@ let props = defineProps({
     user: Object,
     input: ref(''),
 });
-
 
 let form = useForm({
     message: '',
@@ -55,6 +55,10 @@ function focusInput() {
 function sendMessage() {
     //
     if (form.message === ""){
+        return;
+    }
+    if (form.message.length > 300) {
+        alert('Message must be 300 characters or shorter.');
         return;
     }
     //POST request to the messages route with the message data in order for our Laravel server to broadcast it.
