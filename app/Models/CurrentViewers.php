@@ -9,5 +9,10 @@ class CurrentViewers extends Model
 {
     use HasFactory;
 
-    public mixed $channel_id;
+    protected $fillable = [
+        'user_id',
+        'channel_id'
+    ];
+
+//    public mixed $channel_id;
 }

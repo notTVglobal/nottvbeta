@@ -87,7 +87,7 @@
 </template>
 
 <script setup>
-import {computed, onMounted, ref} from "vue";
+import {computed, onBeforeMount, onBeforeUnmount, onMounted, ref} from "vue";
 import ResponsiveNavigationMenu from "@/Components/Navigation/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/Navigation/NavigationMenu"
 import VideoPlayerMain from "@/Components/VideoPlayer/VideoPlayerMain"
@@ -105,12 +105,7 @@ let userStore = useUserStore()
 let chatStore = useChatStore()
 let shopStore = useShopStore()
 
-videoPlayerStore.videoSource = "https://mist2.not.tv/hls/mist1pull1/index.m3u8"
-videoPlayerStore.videoSourceType = "application/x-mpegURL"
-videoPlayerStore.videoName = "notTV One"
-streamStore.currentChannel = "Stream"
-videoPlayerStore.currentChannelName = "one"
-userStore.showNavDropdown = false
+
 
 let isStreamPage = null
 
@@ -121,6 +116,8 @@ function setPage() {
         isStreamPage = false;
 }
 
+
+
 setPage()
 
 userStore.checkIsMobile()
@@ -129,7 +126,22 @@ let props = defineProps({
     user: Object,
 });
 
+onBeforeMount(() => {
+    userStore.id = props.user.id;
+    videoPlayerStore.videoSource = "https://mist2.not.tv/hls/mist1pull1/index.m3u8"
+    videoPlayerStore.videoSourceType = "application/x-mpegURL"
+    videoPlayerStore.videoName = "notTV One"
+    streamStore.currentChannel = "Stream"
+    videoPlayerStore.currentChannelName = "one"
+    videoPlayerStore.currentChannelId = 1
+    userStore.showNavDropdown = false
+    videoPlayerStore.addViewerToChannel();
+    videoPlayerStore.getViewerCount();
+})
 
+onBeforeUnmount(() => {
+    videoPlayerStore.disconnectViewerFromChannel();
+})
 
 const ottDisplayShow = computed(() => ({
     'hidden': videoPlayerStore.ottClass !== 'OttOpen'
@@ -159,6 +171,16 @@ function toggleOSD() {
         videoPlayerStore.toggleOSD()
     }
 }
+
+function disconnect() {
+    window.Echo.leave("channel." + videoPlayerStore.currentChannelId);
+    console.log('CHANNEL DISCONNECTED');
+}
+
+onBeforeUnmount(() => {
+    videoPlayerStore.viewerCount = null
+    disconnect();
+});
 
 
 </script>

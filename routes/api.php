@@ -47,7 +47,7 @@ Route::get('/products', [ProductController::class, 'index']);
 
 Route::post('/purchase', [StripeController::class, 'purchase']);
 
-Route::get('/getCurrentViewers', [CurrentViewersController::class, 'getCurrentViewers']);
+Route::post('/getCurrentViewers', [CurrentViewersController::class, 'getCurrentViewers']);
 Route::post('/addCurrentViewer', [CurrentViewersController::class, 'addCurrentViewer']);
 Route::post('/removeCurrentViewer', [CurrentViewersController::class, 'removeCurrentViewer']);
 

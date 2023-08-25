@@ -4,6 +4,7 @@ import { useStreamStore } from "@/Stores/StreamStore";
 import { useUserStore } from "@/Stores/UserStore";
 import videojs from 'video.js';
 import {Inertia} from "@inertiajs/inertia";
+import {ref} from "vue";
 
 export let useVideoPlayerStore = defineStore('videoPlayerStore', {
     state() {
@@ -25,9 +26,9 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
             nextSource: String,
             previousSource: String,
             currentView: String,
-            currentChannelId: Number,
+            currentChannelId: 0,
             currentChannelName: String,
-            viewerCount: Number,
+            viewerCount: 0,
 
             // move currentPage from here to userStore.
             currentPage: String,
@@ -294,102 +295,213 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
             // useChatStore().chatHidden();
         },
 
+        getViewerCount() {
+            axios.post('/api/getCurrentViewers', {'channel_id': this.currentChannelId})
+                .then(response => {
+                    this.viewerCount = response.data[0];
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+        },
+        //
+        // connect() {
+        //     console.log('GET VIEWER COUNT');
+        //     this.getViewerCount();
+        // },
+        //
+        // const channel = Echo.private('channel.' + videoPlayerStore.currentChannelId)
+        // channel.subscribed(() => {
+        // }).listen('channel.' + videoPlayerStore.currentChannelId, (event) => {
+        //     if (event.channel_id === videoPlayerStore.currentChannelId) {
+        //         videoPlayerStore.viewerCount = videoPlayerStore.viewerCount + event.viewerCount;
+        //     }
+        // })
+
+        addViewerToChannel() {
+            axios.post('/api/addCurrentViewer', {'channel_id': this.currentChannelId, 'user_id': useUserStore().id})
+                .then(response => {
+                    console.log(response);
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+        },
+
+        disconnectViewerFromChannel() {
+            window.Echo.leave("channel." + this.currentChannelId);
+            axios.post('/api/removeCurrentViewer', {'channel_id': this.currentChannelId, 'user_id': useUserStore().id})
+                .then(response => {
+                    //
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+            console.log('channel disconnected');
+        },
+
         // change channel\
         changeChannel(name) {
             if (name==='one') {
+                this.disconnectViewerFromChannel()
                 let source = 'mist1pull1'
                 this.videoName = 'notTV One'
                 this.currentChannelName = 'one'
+                this.currentChannelId = 1
                 this.loadNewSourceFromMist(source)
+                this.getViewerCount()
+                this.addViewerToChannel()
             }
             if (name==='ambient') {
-                let source = ''
+                this.disconnectViewerFromChannel()
+                let source = 'mist1pull2'
                 this.videoName = 'Ambient'
                 this.currentChannelName = 'ambient'
+                this.currentChannelId = 2
                 this.loadNewSourceFromMist(source)
+                this.getViewerCount()
+                this.addViewerToChannel()
             }
             if (name==='news') {
-                let source = 'mist1pull2'
+                this.disconnectViewerFromChannel()
+                let source = 'mist1pull3'
                 this.videoName = 'News'
                 this.currentChannelName = 'news'
+                this.currentChannelId = 3
                 this.loadNewSourceFromMist(source)
+                this.getViewerCount()
+                this.addViewerToChannel()
             }
             if (name==='talk') {
-                let source = 'mist1pull3'
+                this.disconnectViewerFromChannel()
+                let source = 'mist1pull4'
                 this.videoName = 'Talk'
                 this.currentChannelName = 'talk'
+                this.currentChannelId = 4
                 this.loadNewSourceFromMist(source)
+                this.getViewerCount()
             }
             if (name==='documentary') {
-                let source = 'mist1pull7'
+                this.disconnectViewerFromChannel()
+                let source = 'mist1pull5'
                 this.videoName = 'Documentary'
                 this.currentChannelName = 'documentary'
+                this.currentChannelId = 5
                 this.loadNewSourceFromMist(source)
+                this.getViewerCount()
             }
             if (name==='music') {
-                let source = 'mist1pull5'
+                this.disconnectViewerFromChannel()
+                let source = 'mist1pull6'
                 this.videoName = 'Music'
                 this.currentChannelName = 'music'
+                this.currentChannelId = 6
                 this.loadNewSourceFromMist(source)
+                this.getViewerCount()
             }
             if (name==='drama') {
-                let source = 'mist1pull5'
+                this.disconnectViewerFromChannel()
+                let source = 'mist1pull7'
                 this.videoName = 'Drama'
                 this.currentChannelName = 'drama'
+                this.currentChannelId = 7
                 this.loadNewSourceFromMist(source)
+                this.getViewerCount()
             }
             if (name==='comedy') {
-                let source = 'mist1pull5'
+                this.disconnectViewerFromChannel()
+                let source = 'mist1pull8'
                 this.videoName = 'Comedy'
                 this.currentChannelName = 'comedy'
+                this.currentChannelId = 8
                 this.loadNewSourceFromMist(source)
+                this.getViewerCount()
             }
             if (name==='education') {
-                let source = 'mist1pull5'
+                this.disconnectViewerFromChannel()
+                let source = 'mist1pull9'
                 this.videoName = 'Education'
                 this.currentChannelName = 'education'
+                this.currentChannelId = 9
                 this.loadNewSourceFromMist(source)
+                this.getViewerCount()
             }
             if (name==='spirituality') {
-                let source = 'mist1pull5'
+                this.disconnectViewerFromChannel()
+                let source = 'mist1pull10'
                 this.videoName = 'Spirituality'
                 this.currentChannelName = 'spirituality'
+                this.currentChannelId = 10
                 this.loadNewSourceFromMist(source)
+                this.getViewerCount()
             }
             if (name==='reality') {
-                let source = 'mist1pull5'
+                this.disconnectViewerFromChannel()
+                let source = 'mist1pull11'
                 this.videoName = 'Reality'
                 this.currentChannelName = 'reality'
+                this.currentChannelId = 11
                 this.loadNewSourceFromMist(source)
+                this.getViewerCount()
             }
             if (name==='variety') {
-                let source = 'mist1pull6'
+                this.disconnectViewerFromChannel()
+                let source = 'mist1pull12'
                 this.videoName = 'Variety'
                 this.currentChannelName = 'variety'
+                this.currentChannelId = 12
                 this.loadNewSourceFromMist(source)
+                this.getViewerCount()
             }
             if (name==='sports') {
-                let source = 'mist1pull6'
+                this.disconnectViewerFromChannel()
+                let source = 'mist1pull13'
                 this.videoName = 'Sports'
                 this.currentChannelName = 'sports'
+                this.currentChannelId = 13
                 this.loadNewSourceFromMist(source)
+                this.getViewerCount()
             }
             if (name==='local') {
-                let source = 'mist1pull4'
+                this.disconnectViewerFromChannel()
+                let source = 'mist1pull14'
                 this.videoName = 'Local'
                 this.currentChannelName = 'local'
+                this.currentChannelId = 14
                 this.loadNewSourceFromMist(source)
+                this.getViewerCount()
             }
             if (name==='world') {
-                let source = 'mist1pull8'
+                this.disconnectViewerFromChannel()
+                let source = 'mist1pull15'
                 this.videoName = 'notTV World'
                 this.currentChannelName = 'world'
+                this.currentChannelId = 15
                 this.loadNewSourceFromMist(source)
+                this.getViewerCount()
             }
         },
     },
 
     getters: {
-        //
+        updateViewerCount() {
+            const channel = Echo.private('channel.' + this.currentChannelId)
+            channel.subscribed(() => {
+            }).listen('channel.' + this.currentChannelId, (event) => {
+                if (event.channel_id === this.currentChannelId) {
+                    this.viewerCount = this.viewerCount + event.viewerCount;
+                }
+                console.log('channel connected')
+            })
+        }
+
+        // addViewer() {
+        //     axios.post('/api/addCurrentViewer', {'channel_id': this.currentChannelId, 'user_id': useUserStore().id})
+        //     .then(response => {
+        //         console.log(response);
+        //     })
+        //     .catch(error => {
+        //         console.log(error);
+        //     })
     }
 })

@@ -118,12 +118,6 @@
 
                 </div>
 
-
-
-
-
-
-
             <button v-touch="()=>videoPlayerStore.toggleChannels()"
                     v-if="videoPlayerStore.showChannels" class="fixed bottom-5 right-32 opacity-100 w-15 h-15 p-4 rounded-full
                     text-gray-50 bg-green-900 hover:bg-green-800 grid justify-center content-center
@@ -137,13 +131,40 @@
 
 <script setup>
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore";
+import {onBeforeMount, onBeforeUnmount} from "vue";
 
 let videoPlayerStore = useVideoPlayerStore();
 
-defineProps({
+let props = defineProps({
     user: Object,
 })
 
+// onBeforeMount(async() => {
+//     await connect();
+// });
+//
+// function connect() {
+//     console.log('GET VIEWER COUNT');
+//     getViewerCount();
+// }
+//
+// function getViewerCount() {
+//     axios.post('/api/getCurrentViewers', {'channel_id': videoPlayerStore.currentChannelId})
+//         .then(response => {
+//             videoPlayerStore.viewerCount = response.data[0];
+//         })
+//         .catch(error => {
+//             console.log(error);
+//         })
+// }
+
+// const channel = Echo.private('channel.' + videoPlayerStore.currentChannelId)
+// channel.subscribed(() => {
+// }).listen('channel.' + videoPlayerStore.currentChannelId, (event) => {
+//     if (event.channel_id === videoPlayerStore.currentChannelId) {
+//         videoPlayerStore.viewerCount = videoPlayerStore.viewerCount + event.viewerCount;
+//     }
+// })
 
 
 </script>

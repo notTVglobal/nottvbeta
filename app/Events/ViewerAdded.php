@@ -38,11 +38,18 @@ class ViewerAdded implements ShouldBroadcastNow
         return new PrivateChannel('channel.'. $this->currentViewers->channel_id);
     }
 
+//    public function broadcastAs(): string
+//    {
+//            return 'chat.'. $this->currentViewers->channel_id;
+////        return 'chat'+'';
+//    }
+
     public function broadcastWith(): array
     {
         return [
-            'channel_id' => $this->currentViewers->channel_id,
-            'viewer_count' => 1
+            1
+//            'channel_id' => $this->currentViewers->channel_id,
+//            'viewerCount' => 1
         ];
     }
 }

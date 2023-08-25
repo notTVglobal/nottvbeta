@@ -16,7 +16,7 @@ class ViewerRemoved implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public CurrentViewers $currentViewers;
+    public $currentViewers;
 
     /**
      * Create a new event instance.
@@ -42,7 +42,7 @@ class ViewerRemoved implements ShouldBroadcastNow
     {
         return [
             'channel_id' => $this->currentViewers->channel_id,
-            'viewer_count' => -1
+            'viewerCount' => -1
         ];
     }
 }
