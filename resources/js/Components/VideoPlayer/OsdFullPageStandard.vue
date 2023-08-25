@@ -7,12 +7,10 @@
         </div>
 
         <div v-if="streamStore.isLive" class="absolute py-6 left-0 px-5 drop-shadow z-50">
-                        <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-white bg-opacity-80 bg-red-800 uppercase last:mr-0 mr-1">
-                            live
-                        </span>
-            <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-white bg-opacity-50 bg-black uppercase last:mr-0 mr-1">
-                            <font-awesome-icon icon="fa-solid fa-user" class="pr-1" /> 88
-                        </span>
+            <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-white bg-opacity-80 bg-red-800 uppercase last:mr-0 mr-1">
+                live
+            </span>
+            <CurrentViewers />
         </div>
     </div>
 <!--    <div v-if="videoPlayerStore.currentPage!='stream'" @click="backToPage" class="absolute w-full flex justify-between mb-6 bottom-12 left-0 p-5 drop-shadow z-50">-->
@@ -27,6 +25,7 @@
 <script setup>
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useStreamStore } from "@/Stores/StreamStore"
+import CurrentViewers from "@/Components/VideoPlayer/CurrentViewers.vue";
 
 let videoPlayerStore = useVideoPlayerStore()
 let streamStore = useStreamStore()

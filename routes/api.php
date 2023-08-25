@@ -7,6 +7,7 @@ use App\Http\Controllers\MovieUploadController;
 use App\Http\Controllers\TestMessageController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Api\StripeController;
+use App\Http\Controllers\Api\CurrentViewersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,6 +46,10 @@ Route::post('/chatTest', [TestMessageController::class, 'broadcast'])
 Route::get('/products', [ProductController::class, 'index']);
 
 Route::post('/purchase', [StripeController::class, 'purchase']);
+
+Route::get('/getCurrentViewers', [CurrentViewersController::class, 'getCurrentViewers']);
+Route::post('/addCurrentViewer', [CurrentViewersController::class, 'addCurrentViewer']);
+Route::post('/removeCurrentViewer', [CurrentViewersController::class, 'removeCurrentViewer']);
 
 
 

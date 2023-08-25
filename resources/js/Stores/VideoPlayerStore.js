@@ -25,8 +25,9 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
             nextSource: String,
             previousSource: String,
             currentView: String,
-            currentChannel: '',
-            currentChannelName: '',
+            currentChannelId: Number,
+            currentChannelName: String,
+            viewerCount: Number,
 
             // move currentPage from here to userStore.
             currentPage: String,

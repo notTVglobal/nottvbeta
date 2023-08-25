@@ -245,19 +245,20 @@ export default {
             // send the payment information to Laravel + Stripe
             shopStore.paymentProcessing = true;
 
-            const {paymentMethod, error} = await this.stripe.createPaymentMethod(
-                paymentMethodData: 'card', this.cardElement, {
-                    billing_details: {
-                        name: this.props.user.name,
-                        email: this.props.user.email,
-                        address: {
-                            line1: this.props.user.address1,
-                            line2: this.props.user.address2,
-                            city: this.props.user.city,
-                            province: this.props.user.province,
-                            postal_code: this.props.user.postalCode,
-                        }
+            const {paymentMethod, error} = await this.stripe.createPaymentMethod({
+                type: 'card',
+                card: this.cardElement,
+                billing_details: {
+                    name: this.props.user.name,
+                    email: this.props.user.email,
+                    address: {
+                        line1: this.props.user.address1,
+                        line2: this.props.user.address2,
+                        city: this.props.user.city,
+                        province: this.props.user.province,
+                        postal_code: this.props.user.postalCode,
                     }
+                }
             }
             );
 

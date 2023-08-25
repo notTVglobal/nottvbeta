@@ -30,11 +30,20 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 //    return Auth::check();
 //});
 
+// This channel is for the chat.
 Broadcast::channel('chat.{id}', function ($user, $id) {
         if( Auth::check() ) {
         return true;
     }
         return false;
+});
+
+// This channel is for viewers being added/removed from a channel for the viewer count.
+Broadcast::channel('channel.{id}', function ($user, $id) {
+    if( Auth::check() ) {
+        return true;
+    }
+    return false;
 });
 
 

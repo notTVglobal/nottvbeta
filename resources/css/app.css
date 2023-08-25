@@ -492,7 +492,7 @@ html {
     padding: 2px;
     min-width: 24rem;
     max-width: 24rem;
-    background-color: black;
+    /*background-color: black;*/
 }
 .chatSmall {
     z-index: 0;
@@ -505,7 +505,7 @@ html {
     padding-top: 18rem;
     min-width: 26rem;
     max-width: 26rem;
-    background-color: black;
+    /*background-color: black;*/
 }
 .chatHidden {
     display: none;
