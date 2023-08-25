@@ -6,7 +6,8 @@ export let useShopStore = defineStore('shopStore', {
         return {
             products: [],
             cart: [],
-            order: {}
+            order: {},
+            paymentProcessing: ref(false)
         };
     },
 

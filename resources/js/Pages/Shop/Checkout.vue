@@ -65,7 +65,7 @@
                                     name="name"
                                     v-model="form.name"
                                     class="w-full bg-gray-100 rounded border border-gray-300 focus:border-indigo-500 text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                                    :disabled="paymentProcessing"
+                                    :disabled="!shopStore.paymentProcessing"
                                 >
                             </div>
                         </div>
@@ -78,7 +78,7 @@
                                     name="address1"
                                     v-model="form.address1"
                                     class="w-full bg-gray-100 rounded border border-gray-300 focus:border-indigo-500 text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                                    :disabled="paymentProcessing"
+                                    :disabled="!shopStore.paymentProcessing"
                                 >
                             </div>
                         </div>
@@ -91,7 +91,7 @@
                                     name="address2"
                                     v-model="form.address2"
                                     class="w-full bg-gray-100 rounded border border-gray-300 focus:border-indigo-500 text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                                    :disabled="paymentProcessing"
+                                    :disabled="!shopStore.paymentProcessing"
                                 >
                             </div>
                         </div>
@@ -104,7 +104,7 @@
                                     name="city"
                                     v-model="form.city"
                                     class="w-full bg-gray-100 rounded border border-gray-300 focus:border-indigo-500 text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                                    :disabled="paymentProcessing"
+                                    :disabled="!shopStore.paymentProcessing"
                                 >
                             </div>
                         </div>
@@ -117,7 +117,7 @@
                                     name="province"
                                     v-model="form.province"
                                     class="w-full bg-gray-100 rounded border border-gray-300 focus:border-indigo-500 text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                                    :disabled="paymentProcessing"
+                                    :disabled="!shopStore.paymentProcessing"
                                 >
                             </div>
                         </div>
@@ -130,7 +130,7 @@
                                     name="postalCode"
                                     v-model="form.postalCode"
                                     class="w-full bg-gray-100 rounded border border-gray-300 focus:border-indigo-500 text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                                    :disabled="paymentProcessing"
+                                    :disabled="!shopStore.paymentProcessing"
                                 >
                             </div>
                         </div>
@@ -147,8 +147,8 @@
                         <button
                             class="flex mx-auto text-white bg-blue-600 border-0 py-2 px-8 focus:outline-none hover:bg-blue-700 rounded"
                             @click.prevent="processPayment"
-                            :disabled="paymentProcessing"
-                            v-text="paymentProcessing ? 'Processing' : 'Pay Now'"
+                            :disabled="!shopStore.paymentProcessing"
+                            v-text="!shopStore.paymentProcessing ? 'Processing' : 'Pay Now'"
                         ></button>
                     </div>
                 </div>
@@ -201,7 +201,6 @@ let props = defineProps({
     user: Object,
     can: Object,
     message: String,
-    paymentProcessing: ref(false)
 })
 
 let form = useForm({
@@ -213,11 +212,6 @@ let form = useForm({
     postalCode: props.user.postalCode,
 });
 
-function processPayment() {
-    // send the payment information to Laravel + Stripe
-}
-
-
 let showMessage = ref(true);
 
 </script>
@@ -225,6 +219,9 @@ let showMessage = ref(true);
 <script>
 import { loadStripe } from '@stripe/stripe-js';
 export default {
+    props: {
+        user: Object,
+    },
     data() {
         return {
             stripe: {},
@@ -242,6 +239,51 @@ export default {
         });
 
         this.cardElement.mount('#card-element');
+    },
+    methods: {
+        async processPayment() {
+            // send the payment information to Laravel + Stripe
+            shopStore.paymentProcessing = true;
+
+            const {paymentMethod, error} = await this.stripe.createPaymentMethod(
+                paymentMethodData: 'card', this.cardElement, {
+                    billing_details: {
+                        name: this.props.user.name,
+                        email: this.props.user.email,
+                        address: {
+                            line1: this.props.user.address1,
+                            line2: this.props.user.address2,
+                            city: this.props.user.city,
+                            province: this.props.user.province,
+                            postal_code: this.props.user.postalCode,
+                        }
+                    }
+            }
+            );
+
+            if (error) {
+                shopStore.paymentProcessing = false;
+                alert(error);
+            } else {
+                this.customer.payment_method_id = paymentMethod.id;
+                this.customer.amount = shopStore.cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+                this.customer.cart = JSON.stringify(shopStore.cart);
+
+                axios.post('/api/purchase', this.customer)
+                    .then((response) => {
+                        shopStore.paymentProcessing = false;
+
+                        shopStore.updateOrder(response.data);
+                        shopStore.clearCart();
+
+                        return route('shop.summary');
+                    })
+                    .catch((error) => {
+                        shopStore.paymentProcessing = false;
+                        alert(error);
+                    });
+            }
+        }
     }
 }
 </script>
