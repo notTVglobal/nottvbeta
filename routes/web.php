@@ -267,9 +267,8 @@ Route::middleware([
     Route::get('/shop', [ShopController::class, 'index'])
         ->name('shop');
 
-    Route::get('shop/checkout', function () {
-        return Inertia::render('Shop/Checkout');
-    })->name('checkout');
+    Route::get('/shop/checkout', [ShopController::class, 'checkout'])
+        ->name('checkout');
 
     Route::post('shop/purchase', [ShopController::class, 'purchase']);
 

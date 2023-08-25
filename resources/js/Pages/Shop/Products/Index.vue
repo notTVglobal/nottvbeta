@@ -13,6 +13,8 @@
                 </div>
             </header>
 
+            <ShopHeader />
+
             <div class="flex flex-wrap -m-4" v-if="!shopStore.products.length">
                 <div class="lg:w-1/4 md:w-1/2 p-4 w-full mb-4">
                     <a class="block relative h-48 rounded overflow-hidden">
@@ -72,6 +74,7 @@ import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useUserStore } from "@/Stores/UserStore"
 import { useShopStore } from "@/Stores/ShopStore"
 import Message from "@/Components/Modals/Messages"
+import ShopHeader from "@/Components/Shop/ShopHeader"
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()

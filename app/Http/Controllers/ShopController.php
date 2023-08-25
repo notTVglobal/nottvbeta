@@ -38,6 +38,17 @@ class ShopController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
+    public function checkout()
+    {
+        return Inertia::render('Shop/Checkout', [
+        ]);
+    }
+
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response

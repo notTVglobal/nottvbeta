@@ -51,7 +51,6 @@ import { useUserStore } from "@/Stores/UserStore";
 import Message from "@/Components/Modals/Messages";
 import {useForm} from "@inertiajs/inertia-vue3";
 import {loadStripe} from '@stripe/stripe-js';
-import {Stripe} from "stripe";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -162,21 +161,21 @@ const stripe = loadStripe('pk_test_51KJwK5Kahp38LUVYOjg7h425exCr6UZmMm1M24d31ZaS
 //
 let submit = () => {
     // form.post(route('subscribe.post'));
-    axios.post('/upgrade', async (req, res) => {
-        const session = await stripe.checkout.sessions.create({
-            line_items: [
-                {
-                    // Provide the exact Price ID (for example, pr_1234) of the product you want to sell
-                    price: 'plan_LyCOYZAqzVdFpz',
-                    quantity: 1,
-                },
-            ],
-            mode: 'subscription',
-            success_url: `${YOUR_DOMAIN}/payment_success`,
-            cancel_url: `${YOUR_DOMAIN}/payment_cancelled`,
-        });
-        res.redirect(303, session.url);
-    });
+    // axios.post('/upgrade', async (req, res) => {
+    //     const session = await stripe.checkout.sessions.create({
+    //         line_items: [
+    //             {
+    //                 // Provide the exact Price ID (for example, pr_1234) of the product you want to sell
+    //                 price: 'plan_LyCOYZAqzVdFpz',
+    //                 quantity: 1,
+    //             },
+    //         ],
+    //         mode: 'subscription',
+    //         success_url: `${YOUR_DOMAIN}/payment_success`,
+    //         cancel_url: `${YOUR_DOMAIN}/payment_cancelled`,
+    //     });
+    //     res.redirect(303, session.url);
+    // });
 };
 
 // let submit = null

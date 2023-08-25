@@ -13,6 +13,8 @@
                     </div>
                 </header>
 
+            <ShopHeader />
+
                 <div class="lg:w-5/6 2xl:w-3/5 mx-auto flex flex-wrap">
                     <img alt="ecommerce placeholder" class="lg:w-1/2 2xl:w-1/2 w-full lg:h-auto 2xl:h-auto h-64 object-cover object-center rounded"
                          src="https://dummyimage.com/640x640">
@@ -56,7 +58,9 @@ import { onBeforeMount, onMounted, ref } from "vue"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useUserStore } from "@/Stores/UserStore"
 import { useShopStore } from "@/Stores/ShopStore"
+import { storeToRefs } from 'pinia'
 import Message from "@/Components/Modals/Messages"
+import ShopHeader from "@/Components/Shop/ShopHeader"
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -84,6 +88,8 @@ let props = defineProps({
     can: Object,
     message: String,
 })
+
+// const { addToCart } = storeToRefs(shopStore)
 
 function formatCurrency(price) {
     price = (price / 100)

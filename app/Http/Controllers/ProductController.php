@@ -53,6 +53,7 @@ class ProductController extends Controller
         return Inertia::render('Shop/Products/{$id}/Index', [
             'product' => [
                 'name' => $product->name,
+                'slug' => $product->slug,
                 'description' => $product->description,
                 'price' => $product->price,
                 'categories' => $product->categories,

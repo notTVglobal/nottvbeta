@@ -20,6 +20,9 @@
                 </p>
             </div>
 
+            <ShopHeader />
+
+
             <!--            <div class="flex flex-row justify-end gap-x-4 mb-4">-->
 
             <!--                <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg" />-->
@@ -40,6 +43,7 @@ import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useUserStore } from "@/Stores/UserStore"
 import { useShopStore } from "@/Stores/ShopStore"
 import Message from "@/Components/Modals/Messages"
+import ShopHeader from "@/Components/Shop/ShopHeader"
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()

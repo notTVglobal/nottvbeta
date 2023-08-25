@@ -23,7 +23,6 @@
         "pion/laravel-chunk-upload": "^1.5",
         "predis/predis": "^2.1",
         "pusher/pusher-php-server": "^7.0",
-        "stripe/stripe-php": "^9.9",
         "tightenco/ziggy": "^1.0"
     },
     "require-dev": {
