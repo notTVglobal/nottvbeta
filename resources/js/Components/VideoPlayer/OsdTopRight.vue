@@ -17,11 +17,11 @@
                 </div>
                 <div>
                     <div class="absolute flex justify-between top-0 drop-shadow pt-3 px-10 lg:px-2 w-full z-50">
-                        <div>
+                        <div v-if="channelStore.currentVideoName !== ''">
                             <span class="text-xs uppercase pr-2">Now playing: </span>
-                            <span class="font-semibold text-xs">{{ videoPlayerStore.videoName }}</span>
+                            <span class="font-semibold text-xs">{{ channelStore.currentVideoName }}</span>
                         </div>
-                        <div v-if="streamStore.isLive" class="absolute pt-6 left-0 pl-10 lg:pl-2 drop-shadow z-50 w-full">
+                        <div v-if="channelStore.isLive" class="absolute pt-6 left-0 pl-10 lg:pl-2 drop-shadow z-50 w-full">
                             <div class="flex justify-between">
                                 <div>
                                         <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-white bg-opacity-80 bg-red-800 uppercase last:mr-0 mr-1">
@@ -44,9 +44,11 @@
 <script setup>
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useStreamStore } from "@/Stores/StreamStore"
+import { useChannelStore } from "@/Stores/ChannelStore"
 
 let videoPlayerStore = useVideoPlayerStore()
 let streamStore = useStreamStore()
+let channelStore = useChannelStore()
 
 defineProps({
     show: Boolean,
