@@ -12,7 +12,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class ViewerRemoved implements ShouldBroadcastNow
+class ViewerCountDecrement implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -23,7 +23,7 @@ class ViewerRemoved implements ShouldBroadcastNow
      *
      * @return void
      */
-    public function __construct(CurrentViewers $currentViewers)
+    public function __construct($currentViewers)
     {
         $this->currentViewers = $currentViewers;
     }
@@ -31,18 +31,17 @@ class ViewerRemoved implements ShouldBroadcastNow
     /**
      * Get the channels the event should broadcast on.
      *
-     * @return Channel|PrivateChannel|array
+     * @return \Illuminate\Broadcasting\Channel|array
      */
-    public function broadcastOn(): Channel|PrivateChannel|array
+    public function broadcastOn()
     {
-        return new PrivateChannel('channel.'. $this->currentViewers->channel_id);
+        return new Channel('viewerCount');
     }
 
     public function broadcastWith(): array
     {
         return [
             'channel_id' => $this->currentViewers->channel_id,
-            'viewerCount' => -1
         ];
     }
 }

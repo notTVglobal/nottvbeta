@@ -18,7 +18,8 @@ export let useUserStore = defineStore('userStore', {
         // move currentPage from VideoPlayerStore to here.
         currentPage: String,
 
-        id: Number,
+        id: '',
+        oldLoggedOutId: null,
         uploadPercentage: 0,
         scrollToTopCounter: 0,
         uploadMovieId: null,

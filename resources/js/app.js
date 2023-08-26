@@ -43,6 +43,7 @@ const formatDate = () => ({
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: async name => {
+
         let page = await import(`./Pages/${name}`);
 
         page = page.default;
@@ -76,5 +77,6 @@ library.add(faUserSecret, faPlay, faQuestion, faStar, faUsers, faHandsHelping, f
             faShare, faCircleDown, faRepeat, faCheck);
 
 InertiaProgress.init({ delay: 250, color: '#FCEF5B', includeCSS: true, showSpinner: true, });
+
 
 

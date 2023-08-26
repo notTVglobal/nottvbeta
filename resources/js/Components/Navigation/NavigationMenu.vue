@@ -229,7 +229,7 @@
 <!--                                        <div class="flex pt-6 justify-center ">Web application</div>-->
 <!--                                        <div class="flex justify-center">concept and design</div>-->
                                         <div class="flex justify-center">not<span class="text-xs">&#174;</span>TV &#169;2010-{{new Date().getFullYear()}}</div>
-                                        <div class="flex justify-center">Beta Preview v0.6</div>
+                                        <div class="flex justify-center">Beta Preview v0.7</div>
 <!--                                        <div class="flex justify-center">Please send us</div>-->
 <!--                                        <div class="flex justify-center">comments and questions</div>-->
 <!--                                        <div class="flex justify-center"><a href="https://help.not.tv/" target="_blank" class="text-blue-600 hover:text-blue-40">here</a>.</div>-->
@@ -267,8 +267,6 @@ let videoPlayerStore = useVideoPlayerStore();
 let streamStore = useStreamStore()
 let userStore = useUserStore()
 let welcomeStore = useWelcomeStore()
-
-streamStore.isLive(true)
 
 let props = defineProps({
     user: Object,

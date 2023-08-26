@@ -4,6 +4,7 @@ namespace App\Events;
 
 use App\Models\CurrentViewers;
 use Illuminate\Broadcasting\Channel;
+use Illuminate\Broadcasting\InteractsWithBroadcasting;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -12,20 +13,22 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class ViewerAdded implements ShouldBroadcastNow
+class ViewerCountIncrement implements ShouldBroadcastNow
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable, InteractsWithSockets, SerializesModels, InteractsWithBroadcasting;
 
-    public CurrentViewers $currentViewers;
+    public $currentViewers;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(CurrentViewers $currentViewers)
+    public function __construct($currentViewers)
     {
+//        $this->broadcastVia('redis');
         $this->currentViewers = $currentViewers;
+
     }
 
     /**
@@ -35,21 +38,13 @@ class ViewerAdded implements ShouldBroadcastNow
      */
     public function broadcastOn(): Channel|PrivateChannel
     {
-        return new PrivateChannel('channel.'. $this->currentViewers->channel_id);
+        return new Channel('viewerCount');
     }
-
-//    public function broadcastAs(): string
-//    {
-//            return 'chat.'. $this->currentViewers->channel_id;
-////        return 'chat'+'';
-//    }
 
     public function broadcastWith(): array
     {
         return [
-            1
-//            'channel_id' => $this->currentViewers->channel_id,
-//            'viewerCount' => 1
+            'channel_id' => $this->currentViewers->channel_id,
         ];
     }
 }

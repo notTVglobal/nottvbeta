@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\TestMessageController;
+use App\Http\Controllers\WelcomeController;
 use App\Mail\VerifyMail;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\CreatorsController;
@@ -52,12 +53,15 @@ use Laravel\Cashier\Checkout;
 |
 */
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-    ]);
-})->name('home');
+//Route::get('/', function () {
+//    return Inertia::render('Welcome', [
+//        'canLogin' => Route::has('login'),
+//        'canRegister' => Route::has('register'),
+//    ]);
+//})->name('home');
+
+Route::get('/', [WelcomeController::class, 'index'])->name('home');
+
 
 Route::get('/send-mail', function () {
    Mail::to('test@test.com')->queue(new VerifyMail());

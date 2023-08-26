@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('current_viewers', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id');
+            $table->string('user_id')->unique();
             $table->integer('channel_id');
             $table->timestamps();
         });

@@ -5,16 +5,15 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Channel;
 use App\Models\User;
-use http\Env\Request;
 use Illuminate\Http\Request as HttpRequest;
 use App\Models\CurrentViewers;
 use Illuminate\Support\Facades\Auth;
-use App\Events\ViewerAdded;
-use App\Events\ViewerRemoved;
+use App\Events\ViewerCountIncrement;
+use App\Events\ViewerCountDecrement;
 
 class CurrentViewersController extends Controller
 {
-    function addCurrentViewer(HttpRequest $request): \Illuminate\Http\JsonResponse
+    function addCurrentViewer(HttpRequest $request, User $user): \Illuminate\Http\JsonResponse
     {
         // Search for the current user_id, and if exists in CurrentViewers table
         // update the row with the current channel_id.
@@ -23,18 +22,17 @@ class CurrentViewersController extends Controller
                 'channel_id' => 'No channel selected!'
             ], 422);
         }
-
-        $currentViewers = new CurrentViewers;
-
-        $currentViewers->user_id = $request->user_id;
-        $currentViewers->channel_id = $request->channel_id;
-//        $currentViewers = CurrentViewers::firstOrNew(
-//            ['user_id' => $request->user_id],
-//            ['channel_id' => $request->channel_id]
-//        );
-        event(new ViewerAdded($currentViewers));
-        $currentViewers->save();
-
+        $alreadyViewing = CurrentViewers::where('user_id', $request->user_id)->first();
+        if ($alreadyViewing !== null) {
+            $alreadyViewing->update([$request->channel_id]);
+            event(new ViewerCountIncrement($alreadyViewing));
+        } else {
+            $currentViewers = new CurrentViewers;
+            $currentViewers->user_id = $request->user_id;
+            $currentViewers->channel_id = $request->channel_id;
+            event(new ViewerCountIncrement($currentViewers));
+            $currentViewers->save();
+        }
         return response()->json(['success'], 201);
 
     }
@@ -42,16 +40,22 @@ class CurrentViewersController extends Controller
     function removeCurrentViewer(HttpRequest $request): \Illuminate\Http\JsonResponse
     {
         // Remove the user_id from the CurrentViewers table.
-        $currentViewers = CurrentViewers::where('user_id', $request->user_id)->first();;
-        event(new ViewerRemoved($currentViewers));
-        $currentViewers->delete();
-        return response()->json(['success'], 201);
+        if ($request->old_logged_out_id !== null){
+            $oldViewer = CurrentViewers::where('user_id', $request->old_logged_out_id)->firstOrFail();
+            $oldViewer?->delete();
+        }
+        if ($request->channel_id !==null){
+            $currentViewers = CurrentViewers::where('user_id', $request->user_id)->first();
+            event(new ViewerCountDecrement($currentViewers));
+            $currentViewers->delete();
+            return response()->json(['success'], 201);
+        }
+        return response()->json(['no channel'], 304);
 
     }
 
     function getCurrentViewers(HttpRequest $request): \Illuminate\Http\JsonResponse
     {
-//        return $request;
         $currentViewers = CurrentViewers::where('channel_id', $request->channel_id)->count();
         return response()->json([$currentViewers], 201);
     }

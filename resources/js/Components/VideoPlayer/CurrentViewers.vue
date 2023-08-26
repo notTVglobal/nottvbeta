@@ -1,40 +1,50 @@
 <template>
     <div class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-white bg-opacity-50 bg-black last:mr-0 mr-1">
-        <font-awesome-icon icon="fa-solid fa-user" class="pr-1" /> <span v-text="viewerCount" />
+        <font-awesome-icon icon="fa-solid fa-user" class="pr-1" /> {{props.currentViewers}}<span v-text="videoPlayerStore.viewerCount" :key="videoPlayerStore.viewerCount"/>
     </div>
 
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { onBeforeUnmount, onUpdated, onMounted, computed, ref, reactive } from "vue";
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore";
+import { useUserStore } from "@/Stores/UserStore";
 
 let videoPlayerStore = useVideoPlayerStore()
+let userStore = useUserStore()
 
-const viewerCount = computed(() => videoPlayerStore.viewerCount)
+let props = defineProps({
+    user: Object,
+    currentViewers: Object
+})
 
-// const channel = Echo.private('channel.' + '1')
-// channel.subscribed(() => {
-// }).listen('channel.' + '1', (event) => {
-//     videoPlayerStore.viewerCount + event
-// })
+// Echo.private(`channel.${videoPlayerStore.currentChannelId}`)
+//     .listen('ViewerCountIncrement', (event) => {
+//         videoPlayerStore.viewerCount = videoPlayerStore.viewerCount + 1;
+//     })
+//     .listen('ViewerCountDecrement', (event) => {
+//         videoPlayerStore.viewerCount = videoPlayerStore.viewerCount - 1;
+//     })
 
-function connectToViewerCount() {
-    console.log('channel connected 2')
-    const channel = Echo.private('channel.' + videoPlayerStore.currentChannelId)
-    channel.subscribed(() => {
-    }).listen('channel.' + videoPlayerStore.currentChannelId, (event) => {
-        computed(() => videoPlayerStore.viewerCount + event)
-        // videoPlayerStore.viewerCount = videoPlayerStore.viewerCount + event;
-        // if (event.channel_id === videoPlayerStore.currentChannelId) {
-        //     videoPlayerStore.viewerCount = videoPlayerStore.viewerCount + event.viewerCount;
-        // }
-        // console.log('channel connected4')
-        // console.log(event);
+
+
+onUpdated(() => {
+    Echo.channel('viewerCount')
+        .listen('ViewerCountIncrement', (event) => {
+        if (event.data.channel_id === videoPlayerStore.currentChannelId) {
+            videoPlayerStore.viewerCount = videoPlayerStore.viewerCount + 1;}
+    }).listen('ViewerCountDecrement', (event) => {
+        if (event.data.channel_id === videoPlayerStore.currentChannelId) {
+            videoPlayerStore.viewerCount = videoPlayerStore.viewerCount - 1;}
     })
-}
-connectToViewerCount()
-console.log('channel connected 3')
+})
+
+onBeforeUnmount(() => {
+    // Echo.private(`channel.${videoPlayerStore.currentChannelId}`)
+    Echo.channel('viewerCount')
+        .stopListening('ViewerCountIncrement')
+        .stopListening('ViewerCountDecrement')
+})
 
 
 </script>

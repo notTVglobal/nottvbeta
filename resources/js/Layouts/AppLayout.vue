@@ -87,7 +87,7 @@
 </template>
 
 <script setup>
-import {computed, onBeforeMount, onBeforeUnmount, onMounted, ref} from "vue";
+import {computed, onBeforeMount, onBeforeUnmount, onUpdated} from "vue";
 import ResponsiveNavigationMenu from "@/Components/Navigation/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/Navigation/NavigationMenu"
 import VideoPlayerMain from "@/Components/VideoPlayer/VideoPlayerMain"
@@ -100,12 +100,10 @@ import OttTopRightDisplay from '@/Components/VideoPlayer/OttTopRightDisplay'
 import OttTopRightButtons from '@/Components/VideoPlayer/OttTopRightButtons'
 
 let videoPlayerStore = useVideoPlayerStore()
-let streamStore = useStreamStore()
 let userStore = useUserStore()
+let streamStore = useStreamStore()
 let chatStore = useChatStore()
 let shopStore = useShopStore()
-
-
 
 let isStreamPage = null
 
@@ -124,23 +122,48 @@ userStore.checkIsMobile()
 
 let props = defineProps({
     user: Object,
+    user_id: '',
+    logged_out_id: ''
 });
 
+const oldLoggedOutId = props.logged_out_id
+
+function getUser() {
+    if (props.user === null) {userStore.id = props.user_id; userStore.oldLoggedOutId = props.user_id;}
+    else {
+        userStore.id = props.user.id
+    }
+}
+
 onBeforeMount(() => {
-    userStore.id = props.user.id;
-    videoPlayerStore.videoSource = "https://mist2.not.tv/hls/mist1pull1/index.m3u8"
+    getUser()
+    videoPlayerStore.videoSource = "https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4"
     videoPlayerStore.videoSourceType = "application/x-mpegURL"
-    videoPlayerStore.videoName = "notTV One"
-    streamStore.currentChannel = "Stream"
-    videoPlayerStore.currentChannelName = "one"
-    videoPlayerStore.currentChannelId = 1
+    videoPlayerStore.videoName = "Big Buck Bunny"
+    streamStore.currentChannel = "Video On Demand"
+    videoPlayerStore.currentChannelName = "VOD"
+    videoPlayerStore.currentChannelId = 0
     userStore.showNavDropdown = false
-    videoPlayerStore.addViewerToChannel();
-    videoPlayerStore.getViewerCount();
+    videoPlayerStore.addViewerToChannel()
+})
+
+onUpdated(() => {
+    if (userStore.id !== props.user_id && userStore.id === null) {
+        videoPlayerStore.disconnectLoggedOutUserFromChannel(oldLoggedOutId)
+        userStore.oldLoggedOutId = null
+    }
+    getUser()
 })
 
 onBeforeUnmount(() => {
-    videoPlayerStore.disconnectViewerFromChannel();
+    // if sessions_id is removed and the user_logged_out_id remains
+    // we'll need to purge the viewer from the ViewerCount.
+    // this doesn't seem to get removed when I close the browser
+    if (userStore.id !== props.user_id && userStore.id === null) {
+        videoPlayerStore.disconnectLoggedOutUserFromChannel(oldLoggedOutId)
+        userStore.oldLoggedOutId = null
+    }
+    videoPlayerStore.disconnectLoggedOutUserFromChannel(oldLoggedOutId)
 })
 
 const ottDisplayShow = computed(() => ({

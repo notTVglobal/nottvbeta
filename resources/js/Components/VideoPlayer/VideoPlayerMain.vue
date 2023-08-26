@@ -95,7 +95,7 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
+import {onUpdated, reactive, ref} from 'vue'
 import { Inertia } from "@inertiajs/inertia"
 // import { router } from '@inertiajs/inertia'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"

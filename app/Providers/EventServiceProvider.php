@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Events\NewChatMessage;
 use App\Events\NewVideoUploaded;
 use App\Events\VideoProcessed;
+use App\Events\ViewerCountIncrement;
 use App\Listeners\LogRegisteredUser;
 use App\Listeners\LogVerifiedUser;
 use App\Listeners\ProcessNewUploadedVideo;
@@ -41,6 +42,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         VideoProcessed::class => [
             SendVideoProcessedNotification::class,
+        ],
+        ViewerCountIncrement::class => [
+            // add a listener, if needed.
         ],
     ];
 

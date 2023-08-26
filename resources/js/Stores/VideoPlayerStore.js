@@ -6,9 +6,8 @@ import videojs from 'video.js';
 import {Inertia} from "@inertiajs/inertia";
 import {ref} from "vue";
 
-export let useVideoPlayerStore = defineStore('videoPlayerStore', {
-    state() {
-        return {
+export const useVideoPlayerStore = defineStore('videoPlayerStore', {
+    state: () => ({
             class: '',
             videoContainerClass: '',
             ottClass: 'OttClose',
@@ -28,7 +27,7 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
             currentView: String,
             currentChannelId: 0,
             currentChannelName: String,
-            viewerCount: 0,
+            viewerCount: ref(0),
 
             // move currentPage from here to userStore.
             currentPage: String,
@@ -62,8 +61,7 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
             blue: false,
 
             videoUploadComplete: false,
-        }
-    },
+        }),
 
     actions: {
         // for testing
@@ -321,16 +319,17 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
         addViewerToChannel() {
             axios.post('/api/addCurrentViewer', {'channel_id': this.currentChannelId, 'user_id': useUserStore().id})
                 .then(response => {
-                    console.log(response);
                 })
                 .catch(error => {
                     console.log(error);
                 })
+            console.log('channel connected');
+
         },
 
         disconnectViewerFromChannel() {
-            window.Echo.leave("channel." + this.currentChannelId);
-            axios.post('/api/removeCurrentViewer', {'channel_id': this.currentChannelId, 'user_id': useUserStore().id})
+            window.Echo.leave(`channel.${this.currentChannelId}`);
+            axios.post('/api/removeCurrentViewer', {'channel_id': this.currentChannelId, 'user_id': useUserStore().id, 'old_logged_out_id': useUserStore().oldLoggedOutId})
                 .then(response => {
                     //
                 })
@@ -338,6 +337,16 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
                     console.log(error);
                 })
             console.log('channel disconnected');
+        },
+
+        disconnectLoggedOutUserFromChannel($id) {
+            axios.post('/api/removeCurrentViewer', {'channel_id': this.currentChannelId, 'user_id': $id})
+                .then(response => {
+                    //
+                })
+                .catch(error => {
+                    console.log(error);
+                })
         },
 
         // change channel\
@@ -349,8 +358,8 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
                 this.currentChannelName = 'one'
                 this.currentChannelId = 1
                 this.loadNewSourceFromMist(source)
-                this.getViewerCount()
                 this.addViewerToChannel()
+                this.getViewerCount()
             }
             if (name==='ambient') {
                 this.disconnectViewerFromChannel()
@@ -359,8 +368,8 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
                 this.currentChannelName = 'ambient'
                 this.currentChannelId = 2
                 this.loadNewSourceFromMist(source)
-                this.getViewerCount()
                 this.addViewerToChannel()
+                this.getViewerCount()
             }
             if (name==='news') {
                 this.disconnectViewerFromChannel()
@@ -369,8 +378,8 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
                 this.currentChannelName = 'news'
                 this.currentChannelId = 3
                 this.loadNewSourceFromMist(source)
-                this.getViewerCount()
                 this.addViewerToChannel()
+                this.getViewerCount()
             }
             if (name==='talk') {
                 this.disconnectViewerFromChannel()
@@ -379,6 +388,7 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
                 this.currentChannelName = 'talk'
                 this.currentChannelId = 4
                 this.loadNewSourceFromMist(source)
+                this.addViewerToChannel()
                 this.getViewerCount()
             }
             if (name==='documentary') {
@@ -388,6 +398,7 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
                 this.currentChannelName = 'documentary'
                 this.currentChannelId = 5
                 this.loadNewSourceFromMist(source)
+                this.addViewerToChannel()
                 this.getViewerCount()
             }
             if (name==='music') {
@@ -397,6 +408,7 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
                 this.currentChannelName = 'music'
                 this.currentChannelId = 6
                 this.loadNewSourceFromMist(source)
+                this.addViewerToChannel()
                 this.getViewerCount()
             }
             if (name==='drama') {
@@ -406,6 +418,7 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
                 this.currentChannelName = 'drama'
                 this.currentChannelId = 7
                 this.loadNewSourceFromMist(source)
+                this.addViewerToChannel()
                 this.getViewerCount()
             }
             if (name==='comedy') {
@@ -415,6 +428,7 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
                 this.currentChannelName = 'comedy'
                 this.currentChannelId = 8
                 this.loadNewSourceFromMist(source)
+                this.addViewerToChannel()
                 this.getViewerCount()
             }
             if (name==='education') {
@@ -424,6 +438,7 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
                 this.currentChannelName = 'education'
                 this.currentChannelId = 9
                 this.loadNewSourceFromMist(source)
+                this.addViewerToChannel()
                 this.getViewerCount()
             }
             if (name==='spirituality') {
@@ -433,6 +448,7 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
                 this.currentChannelName = 'spirituality'
                 this.currentChannelId = 10
                 this.loadNewSourceFromMist(source)
+                this.addViewerToChannel()
                 this.getViewerCount()
             }
             if (name==='reality') {
@@ -442,6 +458,7 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
                 this.currentChannelName = 'reality'
                 this.currentChannelId = 11
                 this.loadNewSourceFromMist(source)
+                this.addViewerToChannel()
                 this.getViewerCount()
             }
             if (name==='variety') {
@@ -451,6 +468,7 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
                 this.currentChannelName = 'variety'
                 this.currentChannelId = 12
                 this.loadNewSourceFromMist(source)
+                this.addViewerToChannel()
                 this.getViewerCount()
             }
             if (name==='sports') {
@@ -460,6 +478,7 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
                 this.currentChannelName = 'sports'
                 this.currentChannelId = 13
                 this.loadNewSourceFromMist(source)
+                this.addViewerToChannel()
                 this.getViewerCount()
             }
             if (name==='local') {
@@ -469,6 +488,7 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
                 this.currentChannelName = 'local'
                 this.currentChannelId = 14
                 this.loadNewSourceFromMist(source)
+                this.addViewerToChannel()
                 this.getViewerCount()
             }
             if (name==='world') {
@@ -478,22 +498,37 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
                 this.currentChannelName = 'world'
                 this.currentChannelId = 15
                 this.loadNewSourceFromMist(source)
+                this.addViewerToChannel()
                 this.getViewerCount()
             }
         },
     },
 
     getters: {
-        updateViewerCount() {
-            const channel = Echo.private('channel.' + this.currentChannelId)
-            channel.subscribed(() => {
-            }).listen('channel.' + this.currentChannelId, (event) => {
-                if (event.channel_id === this.currentChannelId) {
-                    this.viewerCount = this.viewerCount + event.viewerCount;
-                }
-                console.log('channel connected')
-            })
-        }
+        // incrementViewerCount() {
+        //     this.viewerCount++
+        // },
+        // decrementViewerCount() {
+        //     this.viewerCount++
+        // },
+        // incrementViewerCount: (state) => this.state.viewerCount++,
+        // decrementViewerCount: (state) => this.state.viewerCount--,
+        // incrementViewerCount(state) {
+        //     return state.viewerCount++
+        // },
+        // decrementViewerCount(state) {
+        //     return state.viewerCount--
+        // },
+        // updateViewerCount() {
+        //     const channel = Echo.private('channel.' + this.currentChannelId)
+        //     channel.subscribed(() => {
+        //     }).listen('channel.' + this.currentChannelId, (event) => {
+        //         if (event.channel_id === this.currentChannelId) {
+        //             this.viewerCount = this.viewerCount + event.viewerCount;
+        //         }
+        //         console.log('channel connected')
+        //     })
+        // }
 
         // addViewer() {
         //     axios.post('/api/addCurrentViewer', {'channel_id': this.currentChannelId, 'user_id': useUserStore().id})
@@ -503,5 +538,5 @@ export let useVideoPlayerStore = defineStore('videoPlayerStore', {
         //     .catch(error => {
         //         console.log(error);
         //     })
-    }
+    },
 })
