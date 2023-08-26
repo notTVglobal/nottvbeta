@@ -87,7 +87,7 @@
 </template>
 
 <script setup>
-import {computed, onBeforeMount, onBeforeUnmount, onUpdated} from "vue";
+import {computed, onServerPrefetch, onBeforeMount, onBeforeUnmount, onUpdated, onMounted} from "vue";
 import ResponsiveNavigationMenu from "@/Components/Navigation/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/Navigation/NavigationMenu"
 import VideoPlayerMain from "@/Components/VideoPlayer/VideoPlayerMain"
@@ -96,6 +96,7 @@ import { useStreamStore } from "@/Stores/StreamStore"
 import { useUserStore } from "@/Stores/UserStore"
 import { useChatStore } from "@/Stores/ChatStore"
 import { useShopStore } from "@/Stores/ShopStore"
+import { useChannelStore } from "@/Stores/ChannelStore"
 import OttTopRightDisplay from '@/Components/VideoPlayer/OttTopRightDisplay'
 import OttTopRightButtons from '@/Components/VideoPlayer/OttTopRightButtons'
 
@@ -104,6 +105,7 @@ let userStore = useUserStore()
 let streamStore = useStreamStore()
 let chatStore = useChatStore()
 let shopStore = useShopStore()
+let channelStore = useChannelStore()
 
 let isStreamPage = null
 
@@ -135,7 +137,30 @@ function getUser() {
     }
 }
 
+// onServerPrefetch(async () => {
+//     data.value = await fetchOnServer(
+//         // get current channel
+//     )
+// })
+console.log('TEST POINT 1')
+window.Echo.channel('viewerCount.' + channelStore.currentChannelId)
+    .listen('ViewerJoinChannel', (e) => {
+        console.log('test count up')
+        channelStore.viewerCount = channelStore.viewerCount + 1
+        // channelStore.viewerIncrement()
+    })
+    .listen('ViewerLeaveChannel', (e) => {
+        console.log('test count down')
+        channelStore.viewerCount = channelStore.viewerCount - 1
+        // channelStore.viewerDecrement()
+    })
+
+onMounted(() => {
+    console.log('TEST POINT 3')
+})
+
 onBeforeMount(() => {
+    console.log('TEST POINT 2')
     getUser()
     videoPlayerStore.videoSource = "https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4"
     videoPlayerStore.videoSourceType = "application/x-mpegURL"
@@ -144,12 +169,22 @@ onBeforeMount(() => {
     videoPlayerStore.currentChannelName = "VOD"
     videoPlayerStore.currentChannelId = 0
     userStore.showNavDropdown = false
-    videoPlayerStore.addViewerToChannel()
+
+    // Echo.channel('viewerCount')
+    //     .listen('ViewerCountIncrement', (event) => {
+    //         if (event.data.channel_id === videoPlayerStore.currentChannelId) {
+    //             videoPlayerStore.viewerCount = videoPlayerStore.viewerCount + 1;}
+    //     }).listen('ViewerCountDecrement', (event) => {
+    //     if (event.data.channel_id === videoPlayerStore.currentChannelId) {
+    //         videoPlayerStore.viewerCount = videoPlayerStore.viewerCount - 1;}
+    // })
+
+    channelStore.addViewerToChannel()
 })
 
 onUpdated(() => {
     if (userStore.id !== props.user_id && userStore.id === null) {
-        videoPlayerStore.disconnectLoggedOutUserFromChannel(oldLoggedOutId)
+        channelStore.disconnectLoggedOutUserFromChannel(oldLoggedOutId)
         userStore.oldLoggedOutId = null
     }
     getUser()
@@ -160,10 +195,10 @@ onBeforeUnmount(() => {
     // we'll need to purge the viewer from the ViewerCount.
     // this doesn't seem to get removed when I close the browser
     if (userStore.id !== props.user_id && userStore.id === null) {
-        videoPlayerStore.disconnectLoggedOutUserFromChannel(oldLoggedOutId)
+        channelStore.disconnectLoggedOutUserFromChannel(oldLoggedOutId)
         userStore.oldLoggedOutId = null
     }
-    videoPlayerStore.disconnectLoggedOutUserFromChannel(oldLoggedOutId)
+    channelStore.disconnectLoggedOutUserFromChannel(oldLoggedOutId)
 })
 
 const ottDisplayShow = computed(() => ({
@@ -196,7 +231,7 @@ function toggleOSD() {
 }
 
 function disconnect() {
-    window.Echo.leave("channel." + videoPlayerStore.currentChannelId);
+    window.Echo.leave("channel." + channelStore.currentChannelId);
     console.log('CHANNEL DISCONNECTED');
 }
 

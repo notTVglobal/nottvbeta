@@ -13,10 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('current_viewers', function (Blueprint $table) {
-            $table->string('user_id')->unique();
-            $table->integer('channel_id');
-            $table->timestamps();
+        Schema::table('channels', function (Blueprint $table) {
+            $table->foreignId('current_video_id')->nullable()->default(null)->constrained()->references('id')->on('videos');
+
         });
     }
 
@@ -27,6 +26,9 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('current_viewers');
+        Schema::table('channels', function (Blueprint $table) {
+            $table->dropForeign(['current_video_id']);
+            $table->dropColumn('current_video_id');
+        });
     }
 };

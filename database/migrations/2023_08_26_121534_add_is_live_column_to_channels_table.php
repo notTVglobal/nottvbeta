@@ -13,10 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('current_viewers', function (Blueprint $table) {
-            $table->string('user_id')->unique();
-            $table->integer('channel_id');
-            $table->timestamps();
+        Schema::table('channels', function (Blueprint $table) {
+            $table->boolean('isLive')->nullable()->default(null);
         });
     }
 
@@ -27,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('current_viewers');
+        Schema::table('channels', function (Blueprint $table) {
+            $table->dropColumn('name');
+        });
     }
 };

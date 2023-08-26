@@ -25,10 +25,17 @@ export let useUserStore = defineStore('userStore', {
         uploadMovieId: null,
         uploadShowEpisodeId: null,
         upgradeSelection: '',
+        testNum: 0,
 
     }),
 
     actions: {
+        updateStore() {
+            this.testNum++;
+        },
+        substractStore() {
+            this.testNum--;
+        },
         toggleNavDropdown() {
             this.showNavDropdown = ! this.showNavDropdown;
 

@@ -22,4 +22,14 @@ class Channel extends Model
     public function playlist() {
         return $this->hasMany('App\Models\ChannelPlaylist');
     }
+
+    public function video()
+    {
+        return $this->belongsTo(Video::class);
+    }
+
+    public function source()
+    {
+        return $this->belongsTo(ChannelSource::class);
+    }
 }

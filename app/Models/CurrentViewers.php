@@ -9,6 +9,8 @@ class CurrentViewers extends Model
 {
     use HasFactory;
 
+    protected $primaryKey = 'user_id';
+
     protected $fillable = [
         'user_id',
         'channel_id'

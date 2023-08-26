@@ -1,4 +1,4 @@
-<template>
+    <template>
     <div>
 <!--        <div class="fixed mt-96 bottom-0 mr-12">-->
 <!--            <button @click.prevent="scrollTo('#scrollToMe')"-->

@@ -10,8 +10,6 @@ window._ = _;
 import axios from 'axios';
 window.axios = axios;
 
-// window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting
@@ -23,28 +21,20 @@ import Echo from 'laravel-echo';
 window.Pusher = require('pusher-js');
 
 window.Echo = new Echo({
+    // broadcaster: 'pusher',
+    // key: process.env.MIX_PUSHER_APP_KEY,
+    // forceTLS: true,
+    // disableStats: true,
+    // wsHost: 'socket.not.tv',
+    // wsPort: 443,
+    // wssPort: 443,
+    // encrypted: true,
+    // enabledTransports: ['ws', 'wss'],
+
     broadcaster: 'pusher',
     key: process.env.MIX_PUSHER_APP_KEY,
-    // cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-    forceTLS: true,
+    wsHost: 'nottv.local',
+    wsPort: 6001,
+    forceTLS: false,
     disableStats: true,
-    // wsHost: window.location.hostname,
-    wsHost: 'socket.not.tv',
-    wsPort: 443,
-    wssPort: 443,
-    encrypted: true,
-    enabledTransports: ['ws', 'wss'],
-    // authEndpoint: process.env.CLIENT_URL + '/api/broadcasting/auth',
-
-    // wsHost: process.env.MIX_WEBSOCKET_HOST,
-    // wsPort: process.env.MIX_WEBSOCKET_PORT,
-    // // wssPort: process.env.MIX_WEBSOCKET_SECURE_PORT,
-    // disableStats: true,
-
 });
-
-// window.Echo.private('chat.1')
-// .listen('.message.new', e => {
-//    console.log('BOOTSTRAP MESSAGE CONNECT TO ECHO AND LISTEN. NEW MESSAGE RECEIVED.');
-//    console.log(e.chatMessage);
-// });

@@ -293,66 +293,17 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             // useChatStore().chatHidden();
         },
 
-        getViewerCount() {
-            axios.post('/api/getCurrentViewers', {'channel_id': this.currentChannelId})
-                .then(response => {
-                    this.viewerCount = response.data[0];
-                })
-                .catch(error => {
-                    console.log(error);
-                })
-        },
-        //
-        // connect() {
-        //     console.log('GET VIEWER COUNT');
-        //     this.getViewerCount();
-        // },
-        //
-        // const channel = Echo.private('channel.' + videoPlayerStore.currentChannelId)
-        // channel.subscribed(() => {
-        // }).listen('channel.' + videoPlayerStore.currentChannelId, (event) => {
-        //     if (event.channel_id === videoPlayerStore.currentChannelId) {
-        //         videoPlayerStore.viewerCount = videoPlayerStore.viewerCount + event.viewerCount;
-        //     }
-        // })
 
-        addViewerToChannel() {
-            axios.post('/api/addCurrentViewer', {'channel_id': this.currentChannelId, 'user_id': useUserStore().id})
-                .then(response => {
-                })
-                .catch(error => {
-                    console.log(error);
-                })
-            console.log('channel connected');
 
-        },
 
-        disconnectViewerFromChannel() {
-            window.Echo.leave(`channel.${this.currentChannelId}`);
-            axios.post('/api/removeCurrentViewer', {'channel_id': this.currentChannelId, 'user_id': useUserStore().id, 'old_logged_out_id': useUserStore().oldLoggedOutId})
-                .then(response => {
-                    //
-                })
-                .catch(error => {
-                    console.log(error);
-                })
-            console.log('channel disconnected');
-        },
 
-        disconnectLoggedOutUserFromChannel($id) {
-            axios.post('/api/removeCurrentViewer', {'channel_id': this.currentChannelId, 'user_id': $id})
-                .then(response => {
-                    //
-                })
-                .catch(error => {
-                    console.log(error);
-                })
-        },
 
-        // change channel\
+
+
+
+        // change channel
         changeChannel(name) {
             if (name==='one') {
-                this.disconnectViewerFromChannel()
                 let source = 'mist1pull1'
                 this.videoName = 'notTV One'
                 this.currentChannelName = 'one'
@@ -362,7 +313,6 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                 this.getViewerCount()
             }
             if (name==='ambient') {
-                this.disconnectViewerFromChannel()
                 let source = 'mist1pull2'
                 this.videoName = 'Ambient'
                 this.currentChannelName = 'ambient'
@@ -372,7 +322,6 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                 this.getViewerCount()
             }
             if (name==='news') {
-                this.disconnectViewerFromChannel()
                 let source = 'mist1pull3'
                 this.videoName = 'News'
                 this.currentChannelName = 'news'
@@ -382,7 +331,6 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                 this.getViewerCount()
             }
             if (name==='talk') {
-                this.disconnectViewerFromChannel()
                 let source = 'mist1pull4'
                 this.videoName = 'Talk'
                 this.currentChannelName = 'talk'
@@ -392,7 +340,6 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                 this.getViewerCount()
             }
             if (name==='documentary') {
-                this.disconnectViewerFromChannel()
                 let source = 'mist1pull5'
                 this.videoName = 'Documentary'
                 this.currentChannelName = 'documentary'
@@ -402,7 +349,6 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                 this.getViewerCount()
             }
             if (name==='music') {
-                this.disconnectViewerFromChannel()
                 let source = 'mist1pull6'
                 this.videoName = 'Music'
                 this.currentChannelName = 'music'
@@ -412,7 +358,6 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                 this.getViewerCount()
             }
             if (name==='drama') {
-                this.disconnectViewerFromChannel()
                 let source = 'mist1pull7'
                 this.videoName = 'Drama'
                 this.currentChannelName = 'drama'
@@ -422,7 +367,6 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                 this.getViewerCount()
             }
             if (name==='comedy') {
-                this.disconnectViewerFromChannel()
                 let source = 'mist1pull8'
                 this.videoName = 'Comedy'
                 this.currentChannelName = 'comedy'
@@ -432,7 +376,6 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                 this.getViewerCount()
             }
             if (name==='education') {
-                this.disconnectViewerFromChannel()
                 let source = 'mist1pull9'
                 this.videoName = 'Education'
                 this.currentChannelName = 'education'
@@ -442,7 +385,6 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                 this.getViewerCount()
             }
             if (name==='spirituality') {
-                this.disconnectViewerFromChannel()
                 let source = 'mist1pull10'
                 this.videoName = 'Spirituality'
                 this.currentChannelName = 'spirituality'
@@ -452,7 +394,6 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                 this.getViewerCount()
             }
             if (name==='reality') {
-                this.disconnectViewerFromChannel()
                 let source = 'mist1pull11'
                 this.videoName = 'Reality'
                 this.currentChannelName = 'reality'

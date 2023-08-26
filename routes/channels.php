@@ -39,12 +39,9 @@ Broadcast::channel('chat.{id}', function ($user, $id) {
 });
 
 // This channel is for viewers being added/removed from a channel for the viewer count.
-Broadcast::channel('channel.{id}', function ($user, $id) {
-    if( Auth::check() ) {
-        return true;
-    }
-    return false;
-});
+//Broadcast::channel('viewerCount', function ($user, $id) {
+//    return (int) $user->id === (int) $id;
+//});
 
 
 //Broadcast::channel('chat.{channelId}', function () {

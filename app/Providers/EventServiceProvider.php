@@ -4,14 +4,17 @@ namespace App\Providers;
 
 use App\Events\NewChatMessage;
 use App\Events\NewVideoUploaded;
+use App\Events\ViewerJoinChannel;
+use App\Events\ViewerLeaveChannel;
 use App\Events\VideoProcessed;
-use App\Events\ViewerCountIncrement;
 use App\Listeners\LogRegisteredUser;
 use App\Listeners\LogVerifiedUser;
 use App\Listeners\ProcessNewUploadedVideo;
 use App\Listeners\SendChatMessageNotification;
 use App\Listeners\SendEmailVerification;
 use App\Listeners\SendVideoProcessedNotification;
+use App\Listeners\ViewerJoinChannelListener;
+use App\Listeners\ViewerLeaveChannelListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -43,8 +46,11 @@ class EventServiceProvider extends ServiceProvider
         VideoProcessed::class => [
             SendVideoProcessedNotification::class,
         ],
-        ViewerCountIncrement::class => [
-            // add a listener, if needed.
+        ViewerJoinChannel::class => [
+            ViewerJoinChannelListener::class,
+        ],
+        ViewerLeaveChannel::class => [
+            ViewerLeaveChannelListener::class,
         ],
     ];
 
@@ -63,7 +69,7 @@ class EventServiceProvider extends ServiceProvider
      *
      * @return bool
      */
-    public function shouldDiscoverEvents()
+    public function shouldDiscoverEvents(): bool
     {
         return false;
     }

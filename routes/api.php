@@ -8,6 +8,7 @@ use App\Http\Controllers\TestMessageController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Api\StripeController;
 use App\Http\Controllers\Api\CurrentViewersController;
+use App\Http\Controllers\Api\ChannelController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,5 +52,5 @@ Route::post('/getCurrentViewers', [CurrentViewersController::class, 'getCurrentV
 Route::post('/addCurrentViewer', [CurrentViewersController::class, 'addCurrentViewer']);
 Route::post('/removeCurrentViewer', [CurrentViewersController::class, 'removeCurrentViewer']);
 
-
+Route::get('/channel_list', [ChannelController::class, 'index']);
 

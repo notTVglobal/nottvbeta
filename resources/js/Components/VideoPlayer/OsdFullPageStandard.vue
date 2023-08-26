@@ -1,13 +1,17 @@
 <template>
 <div>
     <div class="absolute w-full flex justify-between top-16 left-0 p-5 drop-shadow z-50">
-        <div>
+        <div v-if="channelStore.currentVideoName !== ''">
             <span class="text-xs uppercase pr-2">Now playing: </span>
-            <span class="font-semibold">{{ videoPlayerStore.videoName }}</span>
+            <span class="font-semibold">{{ channelStore.currentVideoName }}</span>
+        </div>
+        <div>
+            <span class="text-xs uppercase pr-2">Channel: </span>
+            <span class="text-xs font-semibold">{{ channelStore.currentChannelName }}</span>
         </div>
 
-        <div v-if="streamStore.isLive" class="absolute py-6 left-0 px-5 drop-shadow z-50">
-            <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-white bg-opacity-80 bg-red-800 uppercase last:mr-0 mr-1">
+        <div class="absolute py-6 left-0 px-5 drop-shadow z-50">
+            <span v-if="channelStore.isLive" class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-white bg-opacity-80 bg-red-800 uppercase last:mr-0 mr-1">
                 live
             </span>
             <CurrentViewers />
@@ -25,10 +29,12 @@
 <script setup>
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useStreamStore } from "@/Stores/StreamStore"
+import { useChannelStore } from "@/Stores/ChannelStore"
 import CurrentViewers from "@/Components/VideoPlayer/CurrentViewers.vue";
 
 let videoPlayerStore = useVideoPlayerStore()
 let streamStore = useStreamStore()
+let channelStore = useChannelStore()
 
 function backToPage() {
     // videoPlayerStore.makeVideoTopRight();

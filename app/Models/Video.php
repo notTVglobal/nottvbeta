@@ -65,4 +65,9 @@ class Video extends Model
     {
         return $this->belongsTo(AppSetting::class);
     }
+
+    public function channels()
+    {
+        return $this->hasMany(Channel::class);
+    }
 }
