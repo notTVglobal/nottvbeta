@@ -56,7 +56,6 @@ videoPlayerStore.showFilters = false
 videoPlayerStore.loggedIn = true
 videoPlayerStore.currentView = 'stream'
 videoPlayerStore.currentPage = 'stream'
-streamStore.currentChannel = 'notTV One'
 
 let props = defineProps ({
     video: Object,

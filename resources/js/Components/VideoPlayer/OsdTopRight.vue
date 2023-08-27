@@ -21,6 +21,10 @@
                             <span class="text-xs uppercase pr-2">Now playing: </span>
                             <span class="font-semibold text-xs">{{ channelStore.currentVideoName }}</span>
                         </div>
+                        <div v-if="channelStore.currentChannelName !== ''">
+                            <span class="text-xs uppercase pr-2">Channel: </span>
+                            <span class="text-xs font-semibold">{{ channelStore.currentChannelName }}</span>
+                        </div>
                         <div v-if="channelStore.isLive" class="absolute pt-6 left-0 pl-10 lg:pl-2 drop-shadow z-50 w-full">
                             <div class="flex justify-between">
                                 <div>

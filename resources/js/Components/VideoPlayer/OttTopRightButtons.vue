@@ -1,4 +1,5 @@
 <template>
+    <div class="videoOTT fixed top-40 lg:top-72 w-full lg:w-96 right-0 z-30">
     <div class="flex flex-row justify-around bg-red-500 w-full text-xs uppercase font-semibold"
          :class="[{'h-7':!userStore.isMobile}, { 'h-8':userStore.isMobile }]">
 
@@ -23,6 +24,7 @@
                 @click="videoPlayerStore.toggleOttFilters()">
             FILTERS </button>
 
+    </div>
     </div>
 </template>
 

@@ -5,16 +5,18 @@
             <span class="text-xs uppercase pr-2">Now playing: </span>
             <span class="font-semibold">{{ channelStore.currentVideoName }}</span>
         </div>
-        <div>
+        <div v-if="channelStore.currentChannelName !== null">
             <span class="text-xs uppercase pr-2">Channel: </span>
             <span class="text-xs font-semibold">{{ channelStore.currentChannelName }}</span>
         </div>
 
         <div class="absolute py-6 left-0 px-5 drop-shadow z-50">
-            <span v-if="channelStore.isLive" class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-white bg-opacity-80 bg-red-800 uppercase last:mr-0 mr-1">
+            <span v-if="channelStore.isLive" class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-white bg-opacity-80 bg-red-800 last:mr-0 mr-1">
                 live
             </span>
-            <CurrentViewers />
+            <div v-if="channelStore.currentChannelId !== null">
+                <CurrentViewers />
+            </div>
         </div>
     </div>
 <!--    <div v-if="videoPlayerStore.currentPage!='stream'" @click="backToPage" class="absolute w-full flex justify-between mb-6 bottom-12 left-0 p-5 drop-shadow z-50">-->

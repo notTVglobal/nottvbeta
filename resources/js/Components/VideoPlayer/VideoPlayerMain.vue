@@ -1,6 +1,6 @@
 <template>
 
-    <div :class="videoPlayerStore.videoContainerClass">
+    <div class="vh-100 z-20" :class="videoPlayerStore.videoContainerClass">
         <div :class="[videoPlayerStore.class, isMobile]">
 
 <!--        Login for Welcome Page (logged out) -->
@@ -51,7 +51,7 @@
                     <OttFullPageDisplayFilters />
 
                     <!-- notTV Bug -->
-                    <div v-show="! videoPlayerStore.showOSD" class="fixed h-screen top-4 h-16 left-5 opacity-10 z-50">
+                    <div v-show="! videoPlayerStore.showOSD" class="fixed h-screen top-4 left-5 opacity-10 z-50">
                         <img :src="`/storage/images/logo_white_512.png`" class="block h-9 w-auto shrink-0"></div>
 
                     <div v-show="videoPlayerStore.showOSD">
@@ -70,7 +70,7 @@
                 <div v-if="!userStore.isMobile">
 
                     <!-- notTV Bug -->
-                    <div v-show="! videoPlayerStore.showOSD" class="fixed h-screen top-4 h-16 left-5 opacity-10 z-50">
+                    <div v-show="! videoPlayerStore.showOSD" class="fixed h-screen top-4 left-5 opacity-10 z-50">
                         <img :src="`/storage/images/logo_white_512.png`" class="block h-9 w-auto shrink-0"></div>
 
                     <!-- Video Player Controls -->

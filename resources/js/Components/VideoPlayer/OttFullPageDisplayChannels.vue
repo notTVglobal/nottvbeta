@@ -21,9 +21,8 @@
                     <div class="text-3xl text-center font-semibold uppercase mb-3 w-full bg-green-900 text-white p-2">CHANNELS</div>
                 </div>
                 <div class="absolute">
-                    <div class="relative h-[calc(h-100%-16rem)] top-0 pr-5 space-y-2">
+                    <div class="relative h-[calc(h-100%-16rem)] top-0 pr-5 space-y-2 pb-24">
 
-<!--                      <Channels :channelClasses="props.channelClasses"/>-->
                       <Channels/>
 
                     </div>
@@ -49,15 +48,15 @@ let videoPlayerStore = useVideoPlayerStore();
 
 let props = defineProps({
     user: Object,
-    channelClasses: 'w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-0.2 border-green-800 shadow-md disabled:disabledChannel disabled:text-gray-300 disabled:cursor-not-allowed',
+    // channelClasses: 'w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-0.2 border-green-800 shadow-md disabled:disabledChannel disabled:text-gray-300 disabled:cursor-not-allowed',
 })
 
-function changeChannel(name) {
-    videoPlayerStore.disconnectViewerFromChannel()
-    window.Echo.leaveChannel('viewerCount.' + videoPlayerStore.currentChannelId)
-    videoPlayerStore.changeChannel(name)
-    window.Echo.channel('viewerCount.' + videoPlayerStore.currentChannelId)
-}
+// function changeChannel(name) {
+//     videoPlayerStore.disconnectViewerFromChannel()
+//     window.Echo.leaveChannel('viewerCount.' + videoPlayerStore.currentChannelId)
+//     videoPlayerStore.changeChannel(name)
+//     window.Echo.channel('viewerCount.' + videoPlayerStore.currentChannelId)
+// }
 
 // onBeforeMount(async() => {
 //     await connect();
@@ -89,15 +88,4 @@ function changeChannel(name) {
 
 </script>
 
-<style scoped>
-.activeChannelFullPage {
-    background-color: darkgreen;
-    color: #ffcc66;
-    border-right-color: #ffcc66;
-    border-right-width: 2px;
-}
-/* tec21: I set a disabledChannel class in the app.css file .. trying to get a specific colour of
-            green on the background of a disabled button. But this can wait until there is more logic
-            built in to the channelController to manage channels. */
 
-</style>

@@ -1,101 +1,17 @@
 <template>
-    <div v-if="videoPlayerStore.ott !== 0" class="overflow-y-scroll scrollbar-hide h-full"
-         :class="{'':userStore.isMobile}"
-    >
+    <div v-if="videoPlayerStore.ott !== 0" class="fixed top-44 lg:top-78 right-0 w-full h-full lg:w-96 mt-4 overflow-y-none z-40"
+    :class="{'lg:mt-3':userStore.isMobile, 'lg:mt-2':!userStore.isMobile}">
+    <div class="h-full w-full overflow-y-scroll scrollbar-hide"
+         :class="{'':userStore.isMobile}">
 
-        <div v-if="videoPlayerStore.ott === 2" class="channels w-full h-full bg-green-800 p-2 channelsForTopRightOtt">
-
+        <div v-if="videoPlayerStore.ott === 2" class="channels w-full bg-gray-800 overflow-y-scroll p-2"
+             :class="ottChannels">
             <h1 class="text-xs font-semibold uppercase mb-3 w-full bg-green-900 text-white p-2">CHANNELS</h1>
 
             <div class="pb-24 w-full overflow-y-scroll scrollbar-hide"
-                 :class="[{'h-[calc(100vh-22rem)]':!userStore.isMobile},{'h-[calc(100vh-20rem)]':userStore.isMobile}]">
-                <button class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-0.2 border-green-800 shadow-md
-                        disabled:bg-gray-600 disabled:text-gray-300 disabled:cursor-not-allowed"
-                        :class="{ activeChannel:videoPlayerStore.currentChannelName==='one' }"
-                        @click="videoPlayerStore.changeChannel('one')">
-                    LIVE NOW</button>
-                <button class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-0.2 border-green-800 shadow-md
-                        disabled:bg-gray-600 disabled:text-gray-300 disabled:cursor-not-allowed"
-                        :class="{ activeChannel:videoPlayerStore.currentChannelName==='ambient' }"
-                        @click="videoPlayerStore.changeChannel('ambient')">
-                    AMBIENT</button>
-                <button class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-0.2 border-green-800 shadow-md
-                        disabled:bg-gray-600 disabled:text-gray-300 disabled:cursor-not-allowed"
-                        :class="{ activeChannel:videoPlayerStore.currentChannelName==='news' }"
-                        @click="videoPlayerStore.changeChannel('news')">
-                    NEWS</button>
-                <button class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-0.2 border-green-800 shadow-md
-                        disabled:bg-gray-600 disabled:text-gray-300 disabled:cursor-not-allowed"
-                        :class="{ activeChannel:videoPlayerStore.currentChannelName==='talk' }"
-                        @click="videoPlayerStore.changeChannel('talk')">
-                    TALK</button>
-                <button class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-0.2 border-green-800 shadow-md
-                        disabled:bg-gray-600 disabled:text-gray-300 disabled:cursor-not-allowed"
-                        :class="{ activeChannel:videoPlayerStore.currentChannelName==='documentary' }"
-                        @click="videoPlayerStore.changeChannel('documentary')">
-                    DOCUMENTARY</button>
-                <button class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-0.2 border-green-800 shadow-md
-                        disabled:bg-gray-600 disabled:text-gray-300 disabled:cursor-not-allowed"
-                        :class="{ activeChannel:videoPlayerStore.currentChannelName==='music' }"
-                        @click="videoPlayerStore.changeChannel('music')">
-                    MUSIC</button>
-                <button class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-0.2 border-green-800 shadow-md
-                        disabled:bg-gray-600 disabled:text-gray-300 disabled:cursor-not-allowed"
-                        :class="{ activeChannel:videoPlayerStore.currentChannelName==='drama' }"
-                        @click="videoPlayerStore.changeChannel('drama')">
-                    DRAMA</button>
-                <button class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-0.2 border-green-800 shadow-md
-                        disabled:bg-gray-600 disabled:text-gray-300 disabled:cursor-not-allowed"
-                        :class="{ activeChannel:videoPlayerStore.currentChannelName==='comedy' }"
-                        @click="videoPlayerStore.changeChannel('comedy')">
-                    COMEDY</button>
-                <button class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-0.2 border-green-800 shadow-md
-                        disabled:bg-gray-600 disabled:text-gray-300 disabled:cursor-not-allowed"
-                        :class="{ activeChannel:videoPlayerStore.currentChannelName==='education' }"
-                        @click="videoPlayerStore.changeChannel('education')">
-                    EDUCATION</button>
-                <button class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-0.2 border-green-800 shadow-md
-                                    disabled:bg-gray-600 disabled:text-gray-300 disabled:cursor-not-allowed"
-                        :class="{ activeChannel:videoPlayerStore.currentChannelName==='spirituality' }"
-                        @click="videoPlayerStore.changeChannel('spirituality')">
-                    SPIRITUALITY</button>
-                <button class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-0.2 border-green-800 shadow-md
-                        disabled:bg-gray-600 disabled:text-gray-300 disabled:cursor-not-allowed"
-                        disabled
-                        :class="{ activeChannel:videoPlayerStore.currentChannelName==='reality' }"
-                        @click="videoPlayerStore.changeChannel('reality')">
-                    REALITY</button>
-                <button class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-0.2 border-green-800 shadow-md
-                        disabled:bg-gray-600 disabled:text-gray-300 disabled:cursor-not-allowed"
-                        disabled
-                        :class="{ activeChannel:videoPlayerStore.currentChannelName==='variety' }"
-                        @click="videoPlayerStore.changeChannel('variety')">
-                    VARIETY</button>
-                <button class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-0.2 border-green-800 shadow-md
-                        disabled:bg-gray-600 disabled:text-gray-300 disabled:cursor-not-allowed"
-                        disabled
-                        :class="{ activeChannel:videoPlayerStore.currentChannelName==='sports' }"
-                        @click="videoPlayerStore.changeChannel('sports')">
-                    SPORTS</button>
-                <button class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-0.2 border-green-800 shadow-md
-                        disabled:bg-gray-600 disabled:text-gray-300 disabled:cursor-not-allowed"
-                        disabled
-                        :class="{ activeChannel:videoPlayerStore.currentChannelName==='kids' }"
-                        @click="videoPlayerStore.changeChannel('kids')">
-                    KIDS</button>
-                <button class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-0.2 border-green-800 shadow-md
-                        disabled:bg-gray-600 disabled:text-gray-300 disabled:cursor-not-allowed"
-                        :class="{ activeChannel:videoPlayerStore.currentChannelName==='local' }"
-                        @click="videoPlayerStore.changeChannel('local')">
-                    LOCAL</button>
-                <button class="w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-0.2 border-green-800 shadow-md
-                        disabled:bg-gray-600 disabled:text-gray-300 disabled:cursor-not-allowed"
-                        disabled
-                        :class="{ activeChannel:videoPlayerStore.currentChannelName==='world' }"
-                        @click="videoPlayerStore.changeChannel('world')">
-                    WORLD</button>
+                 >
 
-                <div class="mt-4 pb-4">Channel One is our premiere promotional channel featuring handpicked content and creators from the notTV network.</div>
+                <Channels/>
             </div>
         </div>
 
@@ -167,15 +83,19 @@
             </div>
         </div>
     </div>
+    </div>
+    <div v-if="!userStore.isMobile && videoPlayerStore.ott" class="ottTopRightDisplayBG fixed top-44 lg:top-78 right-0 w-full h-full lg:w-96 mt-4 lg:mt-2 z-20 bg-gray-900"></div>
 </template>
 
 <script setup>
-import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
-import {useStreamStore} from "@/Stores/StreamStore";
+import { computed } from "vue";
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+import { useStreamStore } from "@/Stores/StreamStore"
 import { useChatStore } from "@/Stores/ChatStore.js"
-import { useUserStore } from "@/Stores/UserStore";
-import VideoOTTChat from "@/Components/Chat/VideoOTTChat.vue";
-import {onBeforeUnmount} from "vue";
+import { useUserStore } from "@/Stores/UserStore"
+import VideoOTTChat from "@/Components/Chat/VideoOTTChat"
+import Channels from "@/Components/VideoPlayer/Channels/Channels"
+import ChannelFooter from "@/Components/VideoPlayer/Channels/ChannelFooter.vue";
 
 let videoPlayerStore = useVideoPlayerStore()
 let streamStore = useStreamStore()
@@ -190,14 +110,18 @@ let playVideo = (source) => {
     videoPlayerStore.loadNewSourceFromMist(source)
 }
 
+const ottDisplayShow = computed(() => ({
+    'hidden': videoPlayerStore.ottClass !== 'OttOpen'
+}))
+
+const ottChannels = computed(() => ({
+    channelsOttMobile: userStore.isMobile,
+    channelsOttDesktop: !userStore.isMobile
+}))
+
 </script>
 
 <style scoped>
-.activeChannel {
-    background-color: darkgreen;
-    color: #ffcc66;
-    border-right-color: #ffcc66;
-    border-right-width: 2px;
-}
+
 
 </style>

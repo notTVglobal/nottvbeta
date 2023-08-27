@@ -40,42 +40,54 @@ export let useChannelStore = defineStore('channelStore', {
             this.getViewerCount()
         },
         getViewerCount() {
-            axios.post('/api/getCurrentViewers', {'channel_id': this.currentChannelId})
-                .then(response => {
-                    this.viewerCount = response.data[0];
-                })
-                .catch(error => {
-                    console.log(error);
-                })
+            if(this.currentChannelId !== null) {
+                axios.post('/api/getCurrentViewers', {'channel_id': this.currentChannelId})
+                    .then(response => {
+                        this.viewerCount = response.data[0];
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    })
+            }
         },
         addViewerToChannel() {
-            axios.post('/api/addCurrentViewer', {'channel_id': this.currentChannelId, 'user_id': useUserStore().id})
-                .then(response => {
-                    this.viewerCount++
-                })
-                .catch(error => {
-                    console.log(error);
-                })
-            console.log('channel connected');
+            if(this.currentChannelId !== null) {
+                axios.post('/api/addCurrentViewer', {'channel_id': this.currentChannelId, 'user_id': useUserStore().id})
+                    .then(response => {
+                        this.viewerCount++
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    })
+                console.log('channel connected');
+            }
         },
         disconnectViewerFromChannel() {
-            axios.post('/api/removeCurrentViewer', {'channel_id': this.currentChannelId, 'user_id': useUserStore().id, 'old_logged_out_id': useUserStore().oldLoggedOutId})
-                .then(response => {
-                    //
+            if(this.currentChannelId !== null) {
+                axios.post('/api/removeCurrentViewer', {
+                    'channel_id': this.currentChannelId,
+                    'user_id': useUserStore().id,
+                    'old_logged_out_id': useUserStore().oldLoggedOutId
                 })
-                .catch(error => {
-                    console.log(error);
-                })
-            console.log('channel disconnected');
+                    .then(response => {
+                        //
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    })
+                console.log('channel disconnected');
+            }
         },
         disconnectLoggedOutUserFromChannel($id) {
-            axios.post('/api/removeCurrentViewer', {'channel_id': this.currentChannelId, 'user_id': $id})
-                .then(response => {
-                    //
-                })
-                .catch(error => {
-                    console.log(error);
-                })
+            if(this.currentChannelId !== null) {
+                axios.post('/api/removeCurrentViewer', {'channel_id': this.currentChannelId, 'user_id': $id})
+                    .then(response => {
+                        //
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    })
+            }
         },
         increaseViewerCount(){
             this.viewerCount++

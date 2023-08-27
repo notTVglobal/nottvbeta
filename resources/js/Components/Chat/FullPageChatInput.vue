@@ -5,10 +5,10 @@
             <input
                 class="fixed right-20 p-2 m-2 mb-2 w-fit text-black form-control border-2 border-gray-800 hover:border-blue-800 focus:outline-none"
                 type="text"
+                maxlength=”300″
                 placeholder="Write a message..."
                 v-model="form.message"
                 @keyup.enter="sendMessage"
-
                 v-on:blur="videoPlayerStore.makeVideoFullPage()"
                 v-on:focus="focusInput"
             />

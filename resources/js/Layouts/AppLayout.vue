@@ -1,13 +1,8 @@
 <template>
     <div class="absolute top-0 left-0 right-0 bottom-0 bg-gray-800 text-gray-200 vh-100 vw-100 overflow-hidden overscroll-y-none overscroll-x-none">
 
-
     <!-- Navbar for logged in user -->
         <div v-if="user">
-
-            <!--        tec21: On a desktop computer we need the mouse enter and leave functions to allow the user to click the links properly
-                    but, on a tablet it makes it so you need to tap the nav links twice. -->
-            <!--        I think this is fixed now -->
 
             <div v-show="videoPlayerStore.showNav" class="fixed top-0 w-full nav-mask">
                 <ResponsiveNavigationMenu/>
@@ -15,46 +10,19 @@
 
         </div>
 
-    <!-- Chat -->
-
-
     <!-- Video Player -->
             <div class="w-full">
 
-                <VideoPlayerMain class="vh-100 z-20"
+                <VideoPlayerMain
                                  :key="videoPlayerStore.key"
                                  :user="user"
                 />
 
-<!-- tec21: 08/20/23 removed the following from VideoPlayerMain
-        to fix the bug with mobile users focusing input and
-        the OSD showing. It was messing up the input focus too. -->
-<!--                @mouseenter="showOSD"-->
-<!--                @mouseleave="hideOSD"-->
-<!--                v-touch="()=>toggleOSD()"-->
-
-
-                <!-- isMobile -->
-<!--                <div v-if="userStore.isMobile">-->
                     <div v-if="!videoPlayerStore.fullPage" >
-                        <OttTopRightButtons class="videoOTT fixed top-40 lg:top-72 w-full lg:w-96 right-0 z-30"/>
-                        <OttTopRightDisplay :user="user"
-                                            class="fixed top-44 lg:top-78 right-0 w-full lg:w-96 mt-4 overflow-y-none z-40"
-                                            :class="{'lg:mt-3':userStore.isMobile, 'lg:mt-2':!userStore.isMobile, ottDisplayShow}"/>
-                        <div v-if="!userStore.isMobile && videoPlayerStore.ott" class="ottTopRightDisplayBG fixed top-44 lg:top-78 right-0 w-full h-full lg:w-96 mt-4 lg:mt-2 z-20 bg-gray-900"></div>
+                        <OttTopRightButtons />
+                        <OttTopRightDisplay :user="user"/>
                     </div>
 
-<!--                </div>-->
-
-<!--                 !isMobile-->
-<!--                <div v-if="!userStore.isMobile">-->
-<!--                    <div v-if="!videoPlayerStore.fullPage" class="fixed top-72 w-full lg:w-96 right-0 z-30">-->
-<!--                        <OttTopRightButtons class="videoOTT"/></div>-->
-
-<!--                    <OttTopRightDisplay :user="user"-->
-<!--                                        class="fixed top-78 right-0 w-full lg:w-96 mt-2 overflow-y-none"-->
-<!--                                        :class="ottDisplayShow"/>-->
-<!--                </div>-->
             </div>
 
         <!-- Page Content -->
@@ -66,12 +34,6 @@
                     <slot /></main>
 
                 <!-- Logged in view -->
-<!--                <main v-if="user"-->
-<!--                      class="absolute pb-24 lg:top-16-->
-<!--                             w-fit lg:w-[calc(100vw-24rem)]-->
-<!--                             min-h-[calc(100vh-19rem)] lg:h-[calc(100vh-4rem)]-->
-<!--                             z-10 overflow-y-scroll overscroll-x-none"-->
-<!--                      :class="[{'top-48 h-full':userStore.isMobile}, pageHide]">-->
                     <div v-if="user"
                           class="fixed top-48 lg:top-16 lg:mt-0 pb-72 lg:pb-16
                              w-fit lg:w-[calc(100vw-24rem)]
@@ -81,7 +43,6 @@
 
                     <slot /></div>
             </div>
-
 
     </div>
 </template>
@@ -137,11 +98,6 @@ function getUser() {
     }
 }
 
-// onServerPrefetch(async () => {
-//     data.value = await fetchOnServer(
-//         // get current channel
-//     )
-// })
 console.log('TEST POINT 1')
 window.Echo.channel('viewerCount.' + channelStore.currentChannelId)
     .listen('ViewerJoinChannel', (e) => {
@@ -155,19 +111,13 @@ window.Echo.channel('viewerCount.' + channelStore.currentChannelId)
         // channelStore.viewerDecrement()
     })
 
-onMounted(() => {
-    console.log('TEST POINT 3')
-})
-
 onBeforeMount(() => {
-    console.log('TEST POINT 2')
     getUser()
     videoPlayerStore.videoSource = "https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4"
     videoPlayerStore.videoSourceType = "application/x-mpegURL"
-    videoPlayerStore.videoName = "Big Buck Bunny"
-    streamStore.currentChannel = "Video On Demand"
-    videoPlayerStore.currentChannelName = "VOD"
-    videoPlayerStore.currentChannelId = 0
+    channelStore.currentVideoName = "Big Buck Bunny"
+    channelStore.currentChannelName = null
+    channelStore.currentChannelId = null
     userStore.showNavDropdown = false
 
     // Echo.channel('viewerCount')
@@ -200,10 +150,6 @@ onBeforeUnmount(() => {
     }
     channelStore.disconnectLoggedOutUserFromChannel(oldLoggedOutId)
 })
-
-const ottDisplayShow = computed(() => ({
-    'hidden': videoPlayerStore.ottClass !== 'OttOpen'
-}))
 
 const pageHide = computed(() => ({
     'hidden lg:block': videoPlayerStore.ottClass === 'OttOpen' && userStore.isMobile

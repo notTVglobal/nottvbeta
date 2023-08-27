@@ -279,7 +279,7 @@ function loadStreamPage() {
 }
 
 const logout = () => {
-    videoPlayerStore.changeChannel('one');
+    // videoPlayerStore.changeChannel('one');
     videoPlayerStore.mute();
     videoPlayerStore.fullPage = true;
     videoPlayerStore.loggedIn = false;

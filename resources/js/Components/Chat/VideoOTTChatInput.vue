@@ -43,14 +43,6 @@ let props = defineProps({
     input: ref(''),
 });
 
-function validateForm() {
-    let x = form.message.value;
-    if (x == null || x === '' || x.length > 30) {
-        alert('Message must be shorter than 300 characters.');
-        return false;
-    }
-}
-
 const vFocus = {
     mounted: (el) => el.focus(),
 }
