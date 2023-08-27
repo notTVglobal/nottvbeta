@@ -1209,7 +1209,7 @@ html {
         max-height:6rem;
         background-color: purple;
         z-index: 40;
-        opacity: 50%;
+        opacity: 100%;
 
     }
     .PiPVideoContainer {
@@ -1225,7 +1225,7 @@ html {
         max-height:6rem;
         background-color: purple;
         z-index: 40;
-        opacity: 50%;
+        opacity: 100%;
 
     }
     .chatMessages {
