@@ -16,26 +16,25 @@ window.axios = axios;
  * allows your team to easily build robust real-time web applications.
  */
 
-// import Echo from 'laravel-echo';
-//
-// window.Pusher = require('pusher-js');
-//
-// window.Echo = new Echo({
-//     broadcaster: 'pusher',
-//     key: process.env.MIX_PUSHER_APP_KEY,
-//     forceTLS: process.env.MIX_PUSHER_APP_TLS,
-//     // forceTLS: false,
-//     encrypted: process.env.MIX_PUSHER_APP_ENCRYPTED,
-//     // encrypted: false,
-//     enabledTransports: ['ws'],
-//     disableStats: process.env.MIX_WEBSOCKET_STATS,
-//     wsHost: process.env.MIX_WEBSOCKET_HOST,
-//     wsPort: process.env.MIX_WEBSOCKET_PORT,
-//
-//     // broadcaster: 'pusher',
-//     // key: process.env.MIX_PUSHER_APP_KEY,
-//     // wsHost: 'nottv.local',
-//     // wsPort: 6001,
-//     // forceTLS: false,
-//     // disableStats: true,
-// });
+import Echo from 'laravel-echo';
+
+window.Pusher = require('pusher-js');
+
+window.Echo = new Echo({
+    broadcaster: 'pusher',
+    key: process.env.MIX_PUSHER_APP_KEY,
+    forceTLS: true,
+    disableStats: true,
+    wsHost: 'socket.not.tv',
+    wsPort: 443,
+    wssPort: 443,
+    encrypted: true,
+    enabledTransports: ['ws', 'wss'],
+
+    // broadcaster: 'pusher',
+    // key: process.env.MIX_PUSHER_APP_KEY,
+    // wsHost: 'nottv.local',
+    // wsPort: 6001,
+    // forceTLS: false,
+    // disableStats: true,
+});

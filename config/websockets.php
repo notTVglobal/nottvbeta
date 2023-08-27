@@ -30,8 +30,9 @@ return [
 //            'path' => env('PUSHER_APP_PATH'),
             'capacity' => null,
             'enable_client_messages' => false,
-            'enable_statistics' => env('WEBSOCKET_STATS'),
+            'enable_statistics' => true,
         ],
+
     ],
 
     /*

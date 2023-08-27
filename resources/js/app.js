@@ -70,32 +70,6 @@ createInertiaApp({
     },
 });
 
-import Echo from 'laravel-echo';
-
-window.Pusher = require('pusher-js');
-
-window.Echo = new Echo({
-    broadcaster: 'pusher',
-    key: process.env.MIX_PUSHER_APP_KEY,
-    // forceTLS: process.env.PUSHER_APP_TLS,
-    forceTLS: true,
-    // encrypted: process.env.MIX_PUSHER_APP_ENCRYPTED,
-    encrypted: true,
-    enabledTransports: ['ws', 'wss'],
-    disableStats: process.env.MIX_WEBSOCKET_STATS,
-    wsHost: process.env.MIX_WEBSOCKET_HOST,
-    wsPort: process.env.MIX_WEBSOCKET_PORT,
-
-    // broadcaster: 'pusher',
-    // key: process.env.MIX_PUSHER_APP_KEY,
-    // wsHost: 'nottv.local',
-    // wsPort: 6001,
-    // forceTLS: false,
-    // disableStats: true,
-});
-
-
-
 library.add(faUserSecret, faPlay, faQuestion, faStar, faUsers, faHandsHelping, faRocket,
             faEye, faComments, faPaperPlane, faUser, faLeaf, faFlagUsa, faList, faFilter,
             faShare, faCircleDown, faRepeat, faCheck);
