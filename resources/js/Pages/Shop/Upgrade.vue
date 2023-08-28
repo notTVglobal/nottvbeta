@@ -14,12 +14,11 @@
                     <h2 class="text-3xl py-8 px-2 font-bold">Choose a Subscription</h2>
 
                     <div class="grid grid-cols-1 xl:grid-cols-3 justify-center xl:space-x-4 space-y-8 xl:space-y-0 px-8 mx-auto">
-                        <Link class="bg-gray-700 hover:bg-gray-600 rounded-lg"
-                              @click="shopStore.upgradeMonthly"
-                              @mouseover="hoverMonthlyFull = true"
-                              @mouseleave="hoverMonthlyFull = false"
-                              :href="`/shop/subscribe`">
-                            <div class="card2 annually px-12 py-6">
+
+                            <div class="card monthly bg-gray-700 hover:bg-gray-600 hover:cursor-pointer rounded-lg px-12 py-6"
+                                 @mouseover="hoverMonthlyFull = true"
+                                 @mouseleave="hoverMonthlyFull = false"
+                                 @click="payNow('plan_LyCOYZAqzVdFpz')">
                                 <div class="flex justify-between mb-2">
                                     <div class="productName">Monthly</div>
                                     <div class="price">$25</div>
@@ -37,13 +36,11 @@
                                         :class="{active: hoverMonthly}"><font-awesome-icon icon="fa-check" /></span> <span> Select Plan</span></div>
 
                             </div>
-                        </Link>
-                        <Link class="bg-gray-700 hover:bg-gray-600 rounded-lg"
-                              @click="shopStore.upgradeYearly"
-                              @mouseover="hoverYearlyFull = true"
-                              @mouseleave="hoverYearlyFull = false"
-                              :href="`/shop/subscribe`">
-                        <div class="card2 annually px-12 py-6">
+
+                        <div class="card annually bg-gray-700 hover:bg-gray-600 hover:cursor-pointer rounded-lg px-12 py-6"
+                             @mouseover="hoverYearlyFull = true"
+                             @mouseleave="hoverYearlyFull = false"
+                             @click="payNow('price_1NhgZTKahp38LUVY8n9Skgwf')">
                             <div class="flex justify-between mb-2">
                                 <div class="productName">Yearly</div>
                                 <div class="price">$250</div>
@@ -54,20 +51,19 @@
                             <div>
                                 Get full access to all features, shows, channels and movies!
                             </div>
-                            <div class="flex no-wrap justify-center bg-gray-900 hover:bg-gray-800 rounded-lg w-full mt-6 px-4 py-4 mb-4 mx-auto"
+                            <div class="flex no-wrap justify-center bg-gray-900 hover:bg-gray-800 hover:cursor-pointer rounded-lg w-full mt-6 px-4 py-4 mb-4 mx-auto"
                                  @mouseover="hoverYearly = true"
                                  @mouseleave="hoverYearly = false">
+
                                 <span class="bg-gray-700 mr-4 py-1 px-2 w-fit rounded-full"
                                      :class="{active: hoverYearly}"><font-awesome-icon icon="fa-check" /></span> <span class=""> Select Plan</span></div>
 
                         </div>
-                        </Link>
-                        <Link class="bg-gray-700 hover:bg-gray-600 rounded-lg"
-                              @click="shopStore.upgradeForever"
-                              @mouseover="hoverForeverFull = true"
-                              @mouseleave="hoverForeverFull = false"
-                              :href="`/shop/subscribe`">
-                        <div class="card3 forever px-12 py-6">
+
+                        <div class="card forever bg-gray-700 hover:bg-gray-600 rounded-lg  px-12 py-6"
+                             @mouseover="hoverForeverFull = true"
+                             @mouseleave="hoverForeverFull = false"
+                             @click="payNow('price_1NhgZyKahp38LUVY1MOhE5L5')">
                             <div class="flex justify-between mb-2">
                                 <div class="productName">Forever</div>
                                 <div class="price">$999</div>
@@ -85,7 +81,6 @@
                                      :class="{active: hoverForever}"><font-awesome-icon icon="fa-check" /></span> <span> Select Plan</span></div>
 
                         </div>
-                        </Link>
                     </div>
 
 
@@ -99,11 +94,12 @@
 </template>
 
 <script setup>
-import { onBeforeMount, onMounted, ref } from "vue";
+import { onBeforeMount, onMounted, ref } from "vue"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
-import { useUserStore } from "@/Stores/UserStore";
-import { useShopStore } from "@/Stores/ShopStore";
-import Message from "@/Components/Modals/Messages";
+import { useUserStore } from "@/Stores/UserStore"
+import { useShopStore } from "@/Stores/ShopStore"
+import Message from "@/Components/Modals/Messages"
+import { loadStripe } from "@stripe/stripe-js"
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -115,7 +111,23 @@ videoPlayerStore.currentPage = 'upgrade'
 //     userStore.scrollToTopCounter = 0;
 // })
 
-onMounted(() => {
+let props = defineProps({
+    user: Object,
+    intent: Object,
+    stripe: {},
+    cardElement: {},
+    paymentProcessing: false,
+    selectedSubscription: null,
+    message: String,
+    hoverMonthly: false,
+    hoverYearly: false,
+    hoverForever: false,
+    hoverMonthlyFull: false,
+    hoverYearlyFull: false,
+    hoverForeverFull: false,
+})
+
+onMounted(async() => {
     videoPlayerStore.makeVideoTopRight();
     if (userStore.isMobile) {
         videoPlayerStore.ottClass = 'ottClose'
@@ -126,23 +138,53 @@ onMounted(() => {
     //
     //     userStore.scrollToTopCounter ++;
     // }
+    shopStore.stripe = await loadStripe(process.env.MIX_STRIPE_KEY);
+    const elements = shopStore.stripe.elements('paymentRequestButton')
+    shopStore.cardElement = elements.create()
+    // shopStore.cardElement.mount('#card-element');
+
 });
 
-let props = defineProps({
-    message: String,
-    hoverMonthly: false,
-    hoverYearly: false,
-    hoverForever: false,
-    hoverMonthlyFull: false,
-    hoverYearlyFull: false,
-    hoverForeverFull: false,
-})
+
 
 let showMessage = ref(true);
 
+async function payNow(subscription) {
 
+    shopStore.paymentProcessing = true;
+
+    const {setupIntent, error} = await shopStore.stripe.confirmCardSetup(
+        props.intent.client_secret, {
+            payment_method: {
+                card: shopStore.cardElement,
+                billing_details: {name: props.user.name}
+            }
+        }
+    );
+
+    if (error) {
+        this.paymentProcessing = false;
+        alert(error);
+        console.log('ERROR');
+        console.log(error);
+    } else {
+        console.log('you arrived here.');
+        axios.post('subscription-checkout', {monthly_price:subscription,setupIntent:setupIntent.payment_method})
+            .then((response) => {
+                this.paymentProcessing = false;
+                console.log('success: subscription created.');
+            })
+            .catch((error) => {
+                this.paymentProcessing = false;
+                alert("Error2: "+error);
+                console.log('Error 2');
+            });
+    }
+}
 
 </script>
+
+
 
 <style scoped>
 

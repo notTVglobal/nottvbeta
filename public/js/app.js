@@ -3757,6 +3757,16 @@ var map = {
 		"./resources/js/Pages/Shop/Summary.vue",
 		"resources_js_Pages_Shop_Summary_vue"
 	],
+	"./Shop/Upgrade": [
+		"./resources/js/Pages/Shop/Upgrade.vue",
+		"/js/vendor",
+		"resources_js_Pages_Shop_Upgrade_vue"
+	],
+	"./Shop/Upgrade.vue": [
+		"./resources/js/Pages/Shop/Upgrade.vue",
+		"/js/vendor",
+		"resources_js_Pages_Shop_Upgrade_vue"
+	],
 	"./Shows/Create": [
 		"./resources/js/Pages/Shows/Create.vue",
 		"resources_js_Pages_Shows_Create_vue"
@@ -3958,14 +3968,6 @@ var map = {
 	"./Training.vue": [
 		"./resources/js/Pages/Training.vue",
 		"resources_js_Pages_Training_vue"
-	],
-	"./Upgrade": [
-		"./resources/js/Pages/Upgrade.vue",
-		"resources_js_Pages_Upgrade_vue"
-	],
-	"./Upgrade.vue": [
-		"./resources/js/Pages/Upgrade.vue",
-		"resources_js_Pages_Upgrade_vue"
 	],
 	"./Users/Create": [
 		"./resources/js/Pages/Users/Create.vue",

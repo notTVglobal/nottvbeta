@@ -288,7 +288,9 @@ Route::middleware([
     ->name('shop.product.show');
 
     Route::get('/upgrade', function () {
-        return Inertia::render('Upgrade');
+        return Inertia::render('Shop/Upgrade', [
+            'intent' => auth()->user()->createSetupIntent(),
+        ]);
     })->name('upgrade');
 
     Route::post('/upgrade', [StripeController::class, 'createCheckoutSession'])

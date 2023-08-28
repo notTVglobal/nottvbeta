@@ -333,6 +333,7 @@ export default {
                 alert("Please select a subscription!");
             } else {
                 console.log('you arrived here.');
+                console.log(this.cardElement);
                 axios.post('subscription-checkout', {monthly_price:this.selectedSubscriptionPrice,setupIntent:setupIntent.payment_method})
                     .then((response) => {
                         this.paymentProcessing = false;
