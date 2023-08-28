@@ -43,6 +43,12 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Cashier\Checkout;
 
+header('Access-Control-Allow-Origin: https://checkout.stripe.com');
+header('Access-Control-Allow-Origin: https://ia800300.us.archive.org');
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: PUT, GET, POST, DELETE, OPTIONS");
+header("Access-Control-Allow-Headers: *");
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -294,12 +300,12 @@ Route::middleware([
         ]);
     })->name('shop.subscribe');
 
-    Route::get('shop/subscription-checkout', function (Request $request) {
+    Route::post('shop/subscription-checkout', function (Request $request) {
         return $request->user()
-            ->newSubscription('default', 'price_monthly')
+            ->newSubscription('default', $request->monthly_price)
             ->checkout([
                 'success_url' => route('stream'),
-                'cancel_url' => route('stream'),
+                'cancel_url' => route('upgrade'),
             ]);
     });
 

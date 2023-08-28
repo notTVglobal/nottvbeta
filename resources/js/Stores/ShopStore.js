@@ -13,6 +13,7 @@ export let useShopStore = defineStore('shopStore', {
             cardElement: {},
             upgradeSelection: '',
             upgradeStripeId: '',
+            selectedSubscriptionPrice: null,
         };
     },
 
@@ -62,14 +63,18 @@ export let useShopStore = defineStore('shopStore', {
         upgradeMonthly() {
             this.upgradeSelection = 'monthly'
             this.upgradeStripeId = 'plan_LyCOYZAqzVdFpz'
+            this.selectedSubscriptionPrice = 2500
+
         },
         upgradeYearly() {
             this.upgradeSelection = 'yearly'
             this.upgradeStripeId = 'price_1NhgZTKahp38LUVY8n9Skgwf'
+            this.selectedSubscriptionPrice = 25000
         },
         upgradeForever() {
             this.upgradeSelection = 'forever'
             this.upgradeStripeId = 'price_1NhgZyKahp38LUVY1MOhE5L5'
+            this.selectedSubscriptionPrice = 99900
         },
         changeUpgradeSelection() {
             this.upgradeSelection = ''
@@ -94,7 +99,7 @@ export let useShopStore = defineStore('shopStore', {
             let price = this.order.total;
             price = (price / 100);
             return price.toLocaleString('en-CA', {style: 'currency', currency: 'CAD'});
-        }
+        },
 
         // updateQuantity(state) {
         //     let productInCartIndex = item.findIndex(item => item.slug === state.products.slug);

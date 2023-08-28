@@ -11,28 +11,34 @@
             </header>
 
 
-                <div v-if="shopStore.upgradeSelection===''" class="flex flex-col">
-                    <div class="mt-2">
-                        <input type="radio" name="plan" id="standard"
-                           value="plan_LyCOYZAqzVdFpz"
-                           @click="shopStore.upgradeMonthly()"
-                           class="px-2" />
-                        <label for="standard">Premium Monthly - $25 / month</label>
-                    </div>
-                    <div class="mt-2">
-                        <input type="radio" name="plan" id="standard"
-                               value="price_1NhgZTKahp38LUVY8n9Skgwf"
-                               @click="shopStore.upgradeYearly()"
-                               class="px-2" />
-                        <label for="standard">Premium Yearly - $250 / year</label>
-                    </div>
-                    <div class="mt-2">
-                        <input type="radio" name="plan" id="standard"
-                               value="price_1NhgZyKahp38LUVY1MOhE5L5"
-                               @click="shopStore.upgradeForever()"
-                               class="px-2" />
-                        <label for="standard">Premium Forever - $999 / one time</label>
-                    </div>
+                <div v-if="shopStore.upgradeSelection===''" class="w-full flex flex-col">
+                        <div class="mt-2">
+                            <input type="radio"
+                                   name="plan"
+                                   value="plan_LyCOYZAqzVdFpz"
+                                   @click="shopStore.upgradeMonthly()"
+                                   v-model="selectedSubscriptionPrice"
+                                   class="pr-2" />
+                            <label for="standard" class="ml-2">Premium Monthly - $25 / month</label>
+                        </div>
+                        <div class="mt-2">
+                            <input type="radio"
+                                   name="plan"
+                                   value="price_1NhgZTKahp38LUVY8n9Skgwf"
+                                   @click="shopStore.upgradeYearly()"
+                                   v-model="selectedSubscriptionPrice"
+                                   class="pr-2" />
+                            <label for="standard" class="ml-2">Premium Yearly - $250 / year</label>
+                        </div>
+                        <div class="mt-2">
+                            <input type="radio"
+                                   name="plan"
+                                   value="price_1NhgZyKahp38LUVY1MOhE5L5"
+                                   @click="shopStore.upgradeForever()"
+                                   v-model="props.selectedSubscriptionPrice"
+                                   class="pr-2" />
+                            <label for="standard" class="ml-2">Premium Forever - $999 / one time</label>
+                        </div>
                 </div>
 
             <div class="flex flex-row mt-4 px-8">
@@ -52,7 +58,7 @@
                      @click="shopStore.changeUpgradeSelection()">(change)</div>
             </div>
 
-            <div class="lg:w-2/3 mx-auto mt-8 px-12">
+            <div class="mx-auto mt-8 px-12">
                 <h2 class="text-2xl font-semibold text-black dark:text-gray-100">Payment</h2>
                 <div class="relative">
                     <label for="name" class="leading-7 text-sm text-black dark:text-gray-200">Cardholder Name</label>
@@ -64,6 +70,7 @@
                         class="w-full bg-gray-100 rounded border border-gray-300 focus:border-indigo-500 text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                         :disabled="paymentProcessing"
                     >
+                    <input hidden id="subscriptionSelectedPrice" v-text="shopStore.selectedSubscriptionPrice">
                 </div>
                 <!-- Stripe Elements Placeholder -->
                 <div class="mt-4">
@@ -72,13 +79,13 @@
                 </div>
                 <div class="mt-4">
                     <button id="checkout-button"
-                            type="submit"
+                            @click="payNow"
                             class="h-fit bg-blue-600 hover:bg-blue-500 text-white rounded py-2 px-4"
-                            :disabled="form.processing">
-                        <span v-if="isLoading" class="spinner" id="spinner" />
-                        <span v-if="!isLoading" id="button-text">
-                      Pay now
-                    </span>
+                            :disabled="paymentProcessing">
+                        <span v-if="paymentProcessing" class="spinner" id="spinner">Processing...</span>
+                        <span v-if="!paymentProcessing" id="button-text">
+                          Pay now
+                        </span>
                     </button>
                 </div>
                 <!-- {/* Show any error or success messages */}-->
@@ -273,30 +280,29 @@ let submit = () => {
 import { loadStripe } from '@stripe/stripe-js';
 import { useShopStore } from '@/Stores/ShopStore'
 import { Inertia } from "@inertiajs/inertia";
+// import {defineStore, mapStores} from "pinia";
+// const shopStore = defineStore('useShopStore', {
+//     // ...
+// })
 export default {
     setup() {
 
     },
     props: {
         user: Object,
+        intent: String,
+        selectedSubscription: null
     },
     data() {
-        const shopStore = useShopStore()
-        shopStore.customer = this.user
         return {
             stripe: {},
             cardElement: {},
-            customer: shopStore.customer,
-            cart: shopStore.cart,
-            order: [],
             paymentProcessing: false,
-            country: shopStore.customer.country,
-            region: shopStore.customer.province
+            selectedSubscription: null,
         }
     },
     async mounted() {
         this.stripe = await loadStripe(process.env.MIX_STRIPE_KEY);
-
         const elements = this.stripe.elements();
         this.cardElement = elements.create('card', {
             classes: {
@@ -305,70 +311,43 @@ export default {
         });
 
         this.cardElement.mount('#card-element');
+
     },
     methods: {
-        updateOrder(order) {
-            this.order = order;
-        },
-        updateCart(cart) {
-            this.cart = cart;
-        },
-        clearCart() {
-            this.updateCart = [];
-        },
-        async processPayment() {
-            // send the payment information to Laravel + Stripe
+        async payNow() {
             this.paymentProcessing = true;
+            // const clientSecret = this.props.intent
+            const cardHolderName = document.getElementById('card-holder-name');
 
-            const {paymentMethod, error} = await this.stripe.createPaymentMethod({
-                    type: 'card',
-                    card: this.cardElement,
-                    billing_details: {
-                        name: this.customer.name,
-                        email: this.customer.email,
-                        phone: this.customer.phone,
-                        address: {
-                            line1: this.customer.address1,
-                            line2: this.customer.address2,
-                            city: this.customer.city,
-                            state: this.customer.province,
-                            postal_code: this.customer.postalCode,
-                            country: this.customer.country,
-                        }
+            const {setupIntent, error} = await this.stripe.confirmCardSetup(
+                this.intent.client_secret, {
+                    payment_method: {
+                        card: this.cardElement,
+                        billing_details: {name: cardHolderName.value}
                     }
                 }
             );
 
             if (error) {
                 this.paymentProcessing = false;
-                alert(error);
+                alert("Please select a subscription!");
             } else {
-                this.customer.payment_method_id = paymentMethod.id;
-                this.customer.amount = this.cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
-                this.customer.cart = JSON.stringify(this.cart);
                 console.log('you arrived here.');
-
-                axios.post('/api/purchase', this.customer)
+                axios.post('subscription-checkout', {monthly_price:this.selectedSubscriptionPrice,setupIntent:setupIntent.payment_method})
                     .then((response) => {
                         this.paymentProcessing = false;
-
-                        // this.updateOrder(response.data);
-                        this.order = this.cart;
-                        this.cart = [];
-                        console.log('you arrived at the second here.');
-                        Inertia.post('/shop/summary', {
-                            order: response.data
-                        })
+                        console.log('success: subscription created.');
                     })
                     .catch((error) => {
                         this.paymentProcessing = false;
-                        alert(error);
+                        alert("Error2: "+error);
+                        console.log('Error 2');
                     });
             }
-        }
+        },
     },
     computed: {
-        // ...mapState(useShopStore, ['cart']),
+        // ...mapStores(useShopStore),
         // ...mapState(useShopStore, ['paymentProcessing']),
         // ...mapState(useShopStore, ['order']),
     },
