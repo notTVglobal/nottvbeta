@@ -15,10 +15,10 @@
 
                     <div class="grid grid-cols-1 xl:grid-cols-3 justify-center xl:space-x-4 space-y-8 xl:space-y-0 px-8 mx-auto">
                         <Link class="bg-gray-700 hover:bg-gray-600 rounded-lg"
-                              @click="userStore.upgradeSelection = 'monthly'"
+                              @click="shopStore.upgradeMonthly"
                               @mouseover="hoverMonthlyFull = true"
                               @mouseleave="hoverMonthlyFull = false"
-                              :href="`/subscribe`">
+                              :href="`/shop/subscribe`">
                             <div class="card2 annually px-12 py-6">
                                 <div class="flex justify-between mb-2">
                                     <div class="productName">Monthly</div>
@@ -39,10 +39,10 @@
                             </div>
                         </Link>
                         <Link class="bg-gray-700 hover:bg-gray-600 rounded-lg"
-                              @click="userStore.upgradeSelection = 'yearly'"
+                              @click="shopStore.upgradeYearly"
                               @mouseover="hoverYearlyFull = true"
                               @mouseleave="hoverYearlyFull = false"
-                              :href="`/subscribe`">
+                              :href="`/shop/subscribe`">
                         <div class="card2 annually px-12 py-6">
                             <div class="flex justify-between mb-2">
                                 <div class="productName">Yearly</div>
@@ -63,10 +63,10 @@
                         </div>
                         </Link>
                         <Link class="bg-gray-700 hover:bg-gray-600 rounded-lg"
-                              @click="userStore.upgradeSelection = 'forever'"
+                              @click="shopStore.upgradeForever"
                               @mouseover="hoverForeverFull = true"
                               @mouseleave="hoverForeverFull = false"
-                              :href="`/subscribe`">
+                              :href="`/shop/subscribe`">
                         <div class="card3 forever px-12 py-6">
                             <div class="flex justify-between mb-2">
                                 <div class="productName">Forever</div>
@@ -100,12 +100,14 @@
 
 <script setup>
 import { onBeforeMount, onMounted, ref } from "vue";
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useUserStore } from "@/Stores/UserStore";
+import { useShopStore } from "@/Stores/ShopStore";
 import Message from "@/Components/Modals/Messages";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
+let shopStore = useShopStore()
 
 videoPlayerStore.currentPage = 'upgrade'
 
@@ -137,6 +139,8 @@ let props = defineProps({
 })
 
 let showMessage = ref(true);
+
+
 
 </script>
 

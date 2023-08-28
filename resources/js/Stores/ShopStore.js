@@ -10,7 +10,9 @@ export let useShopStore = defineStore('shopStore', {
             paymentProcessing: ref(false),
             customer: {},
             stripe: {},
-            cardElement: {}
+            cardElement: {},
+            upgradeSelection: '',
+            upgradeStripeId: '',
         };
     },
 
@@ -57,6 +59,22 @@ export let useShopStore = defineStore('shopStore', {
 
             return price.toLocaleString('en-CA', {style: 'currency', currency: 'CAD'});
         },
+        upgradeMonthly() {
+            this.upgradeSelection = 'monthly'
+            this.upgradeStripeId = 'plan_LyCOYZAqzVdFpz'
+        },
+        upgradeYearly() {
+            this.upgradeSelection = 'yearly'
+            this.upgradeStripeId = 'price_1NhgZTKahp38LUVY8n9Skgwf'
+        },
+        upgradeForever() {
+            this.upgradeSelection = 'forever'
+            this.upgradeStripeId = 'price_1NhgZyKahp38LUVY1MOhE5L5'
+        },
+        changeUpgradeSelection() {
+            this.upgradeSelection = ''
+            this.upgradeStripeId = ''
+        }
 
     },
 
