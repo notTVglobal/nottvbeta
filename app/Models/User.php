@@ -139,7 +139,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function shows()
     {
-        return $this->hasMany(Shows::class);
+        return $this->hasMany(Show::class);
     }
 
     public function showEpisodes()
@@ -154,7 +154,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function videos()
     {
-        return $this->hasMany(Videos::class);
+        return $this->hasMany(Video::class);
     }
 
     public function inviteCodes(): \Illuminate\Database\Eloquent\Relations\HasMany {
@@ -163,7 +163,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function orders()
     {
-        return $this->hasMany(Order::class);
+        return $this->hasMany(ProductOrder::class);
     }
 
 }

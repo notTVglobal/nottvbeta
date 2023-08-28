@@ -14,9 +14,30 @@
             </header>
 
             <div class="mb-4">
-                <p class="mt-4">
-                    This is the order summary page.
-                </p>
+                <div class="lg:w-2/3 w-full mx-auto mt-8 overflow-auto">
+                    <table class="table-auto w-full text-left whitespace-no-wrap">
+                        <thead>
+                        <tr>
+                            <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-200 rounded-tl rounded-bl">Item</th>
+                            <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-200">Quantity</th>
+                            <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-200">Price</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="(item, index) in props.order.products" :key="item.id">
+                            <td class="p-4" v-text="item.name"></td>
+                            <td class="p-4" v-text="item.products.quantity"></td>
+                            <td class="p-4" v-text="shopStore.orderLineTotal(item)"></td>
+                        </tr>
+                        <tr>
+                            <td class="p-4 font-bold">Total Amount</td>
+                            <td class="p-4 font-bold" v-text="shopStore.orderQuantity"></td>
+                            <td class="p-4 font-bold" v-text="shopStore.orderTotal"></td>
+                            <td class="w-10 text-right"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <!--            <div class="flex flex-row justify-end gap-x-4 mb-4">-->
@@ -25,7 +46,7 @@
             <!--            </div>-->
 
             <div class="px-2">
-                <!--                Display items, services and events here.-->
+                Thank you for your order!
             </div>
 
         </div>
@@ -50,7 +71,7 @@ videoPlayerStore.currentPage = 'shop'
 //     userStore.scrollToTopCounter = 0;
 // })
 
-onMounted(() => {
+onMounted(async() => {
     videoPlayerStore.makeVideoTopRight();
     if (userStore.isMobile) {
         videoPlayerStore.ottClass = 'ottClose'
@@ -58,13 +79,22 @@ onMounted(() => {
     }
     document.getElementById("topDiv").scrollIntoView()
 
-    shopStore.getProducts()
+    shopStore.cart = [];
+    shopStore.products = [];
+    await loadOrder()
 });
 
 let props = defineProps({
+    order: Object,
     can: Object,
     message: String,
 })
+
+function loadOrder() {
+    shopStore.order = props.order
+}
+
+
 
 
 let showMessage = ref(true);

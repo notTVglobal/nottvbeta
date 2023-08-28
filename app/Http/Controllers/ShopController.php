@@ -22,11 +22,13 @@ class ShopController extends Controller
         //
     }
 
-    public function summary()
+    public function summary(HttpRequest $request)
     {
-        return Inertia::render('Shop/Summary');
+        // get order from the database.
+        return Inertia::render('Shop/Summary', [
+            'order' => $request['order'],
+        ]);
     }
-
     /**
      * Display a listing of the resource.
      *

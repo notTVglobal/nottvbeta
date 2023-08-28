@@ -63,9 +63,9 @@
                                     type="text"
                                     id="name"
                                     name="name"
-                                    v-model="form.name"
+                                    v-model="shopStore.customer.name"
                                     class="w-full bg-gray-100 rounded border border-gray-300 focus:border-indigo-500 text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                                    :disabled="!shopStore.paymentProcessing"
+                                    :disabled="paymentProcessing"
                                 >
                             </div>
                         </div>
@@ -76,9 +76,9 @@
                                     type="text"
                                     id="address1"
                                     name="address1"
-                                    v-model="form.address1"
+                                    v-model="shopStore.customer.address1"
                                     class="w-full bg-gray-100 rounded border border-gray-300 focus:border-indigo-500 text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                                    :disabled="!shopStore.paymentProcessing"
+                                    :disabled="paymentProcessing"
                                 >
                             </div>
                         </div>
@@ -89,9 +89,9 @@
                                     type="text"
                                     id="address2"
                                     name="address2"
-                                    v-model="form.address2"
+                                    v-model="shopStore.customer.address2"
                                     class="w-full bg-gray-100 rounded border border-gray-300 focus:border-indigo-500 text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                                    :disabled="!shopStore.paymentProcessing"
+                                    :disabled="paymentProcessing"
                                 >
                             </div>
                         </div>
@@ -102,35 +102,49 @@
                                     type="text"
                                     id="city"
                                     name="city"
-                                    v-model="form.city"
+                                    v-model="shopStore.customer.city"
                                     class="w-full bg-gray-100 rounded border border-gray-300 focus:border-indigo-500 text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                                    :disabled="!shopStore.paymentProcessing"
+                                    :disabled="paymentProcessing"
                                 >
                             </div>
                         </div>
                         <div class="p-2">
                             <div class="relative">
                                 <label for="province" class="leading-7 text-sm text-black dark:text-gray-200">Province</label>
-                                <input
-                                    type="text"
+                                <region-select
                                     id="province"
                                     name="province"
-                                    v-model="form.province"
+                                    v-model="shopStore.customer.province"
+                                    :country="shopStore.customer.country"
+                                    :region="shopStore.customer.province"
                                     class="w-full bg-gray-100 rounded border border-gray-300 focus:border-indigo-500 text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                                    :disabled="!shopStore.paymentProcessing"
-                                >
+                                    :disabled="paymentProcessing"
+                                />
+                            </div>
+                        </div>
+                        <div class="p-2">
+                            <div class="relative">
+                                <label for="country" class="leading-7 text-sm text-black dark:text-gray-200">Country</label>
+                                <country-select
+                                    id="country"
+                                    name="country"
+                                    v-model="shopStore.customer.country"
+                                    :country="shopStore.customer.country"
+                                    topCountry="CA"
+                                    class="w-full bg-gray-100 rounded border border-gray-300 focus:border-indigo-500 text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                                    :disabled="paymentProcessing"
+                                />
                             </div>
                         </div>
                         <div class="p-2">
                             <div class="relative">
                                 <label for="postalCode" class="leading-7 text-sm text-black dark:text-gray-200">Postal Code</label>
                                 <input
-                                    type="text"
                                     id="postalCode"
                                     name="postalCode"
-                                    v-model="form.postalCode"
+                                    v-model="shopStore.customer.postalCode"
                                     class="w-full bg-gray-100 rounded border border-gray-300 focus:border-indigo-500 text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                                    :disabled="!shopStore.paymentProcessing"
+                                    :disabled="paymentProcessing"
                                 >
                             </div>
                         </div>
@@ -147,8 +161,8 @@
                         <button
                             class="flex mx-auto text-white bg-blue-600 border-0 py-2 px-8 focus:outline-none hover:bg-blue-700 rounded"
                             @click.prevent="processPayment"
-                            :disabled="!shopStore.paymentProcessing"
-                            v-text="!shopStore.paymentProcessing ? 'Processing' : 'Pay Now'"
+                            :disabled="paymentProcessing"
+                            v-text="paymentProcessing ? 'Processing' : 'Pay Now'"
                         ></button>
                     </div>
                 </div>
@@ -175,6 +189,9 @@ import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useUserStore } from "@/Stores/UserStore"
 import { useShopStore } from "@/Stores/ShopStore"
 import Message from "@/Components/Modals/Messages"
+import {loadStripe} from "@stripe/stripe-js";
+// import CountrySelect from "@/Components/Forms/CountrySelect.vue";
+// import RegionSelect from "@/Components/Forms/RegionSelect.vue";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -186,7 +203,14 @@ videoPlayerStore.currentPage = 'shop'
 //     userStore.scrollToTopCounter = 0;
 // })
 
-onMounted(() => {
+let props = defineProps({
+    user: Object,
+    can: Object,
+    message: String,
+
+})
+
+onMounted(async () => {
     videoPlayerStore.makeVideoTopRight();
     if (userStore.isMobile) {
         videoPlayerStore.ottClass = 'ottClose'
@@ -195,13 +219,8 @@ onMounted(() => {
     document.getElementById("topDiv").scrollIntoView()
 
     shopStore.getProducts()
+    shopStore.customer = props.user
 });
-
-let props = defineProps({
-    user: Object,
-    can: Object,
-    message: String,
-})
 
 let form = useForm({
     name: props.user.name,
@@ -209,23 +228,40 @@ let form = useForm({
     address2: props.user.address2,
     city: props.user.city,
     province: props.user.province,
+    country: props.user.country,
     postalCode: props.user.postalCode,
 });
 
 let showMessage = ref(true);
 
+
+
 </script>
 
 <script>
 import { loadStripe } from '@stripe/stripe-js';
+import { useShopStore } from '@/Stores/ShopStore'
+import { Inertia } from "@inertiajs/inertia";
 export default {
+    setup() {
+        // const shopStore = useShopStore()
+
+    },
     props: {
         user: Object,
     },
     data() {
+        const shopStore = useShopStore()
+        shopStore.customer = this.user
         return {
             stripe: {},
             cardElement: {},
+            customer: shopStore.customer,
+            cart: shopStore.cart,
+            order: [],
+            paymentProcessing: false,
+            country: shopStore.customer.country,
+            region: shopStore.customer.province
         }
     },
     async mounted() {
@@ -241,51 +277,72 @@ export default {
         this.cardElement.mount('#card-element');
     },
     methods: {
+        updateOrder(order) {
+            this.order = order;
+        },
+        updateCart(cart) {
+            this.cart = cart;
+        },
+        clearCart() {
+            this.updateCart = [];
+        },
         async processPayment() {
             // send the payment information to Laravel + Stripe
-            shopStore.paymentProcessing = true;
+            this.paymentProcessing = true;
 
             const {paymentMethod, error} = await this.stripe.createPaymentMethod({
-                type: 'card',
-                card: this.cardElement,
-                billing_details: {
-                    name: this.props.user.name,
-                    email: this.props.user.email,
-                    address: {
-                        line1: this.props.user.address1,
-                        line2: this.props.user.address2,
-                        city: this.props.user.city,
-                        province: this.props.user.province,
-                        postal_code: this.props.user.postalCode,
+                    type: 'card',
+                    card: this.cardElement,
+                    billing_details: {
+                        name: this.customer.name,
+                        email: this.customer.email,
+                        phone: this.customer.phone,
+                        address: {
+                            line1: this.customer.address1,
+                            line2: this.customer.address2,
+                            city: this.customer.city,
+                            state: this.customer.province,
+                            postal_code: this.customer.postalCode,
+                            country: this.customer.country,
+                        }
                     }
                 }
-            }
             );
 
             if (error) {
-                shopStore.paymentProcessing = false;
+                this.paymentProcessing = false;
                 alert(error);
             } else {
                 this.customer.payment_method_id = paymentMethod.id;
-                this.customer.amount = shopStore.cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
-                this.customer.cart = JSON.stringify(shopStore.cart);
+                this.customer.amount = this.cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+                this.customer.cart = JSON.stringify(this.cart);
+                console.log('you arrived here.');
 
                 axios.post('/api/purchase', this.customer)
                     .then((response) => {
-                        shopStore.paymentProcessing = false;
+                        this.paymentProcessing = false;
 
-                        shopStore.updateOrder(response.data);
-                        shopStore.clearCart();
-
-                        return route('shop.summary');
+                        // this.updateOrder(response.data);
+                        this.order = this.cart;
+                        this.cart = [];
+                        console.log('you arrived at the second here.');
+                        Inertia.post('/shop/summary', {
+                                order: response.data
+                        })
                     })
                     .catch((error) => {
-                        shopStore.paymentProcessing = false;
+                        this.paymentProcessing = false;
                         alert(error);
                     });
             }
         }
-    }
+    },
+    computed: {
+        // ...mapState(useShopStore, ['cart']),
+        // ...mapState(useShopStore, ['paymentProcessing']),
+        // ...mapState(useShopStore, ['order']),
+    },
 }
+
 </script>
 

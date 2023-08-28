@@ -277,8 +277,10 @@ Route::middleware([
 
     Route::post('shop/purchase', [ShopController::class, 'purchase']);
 
-    Route::get('shop/summary', [ShopController::class, 'summary'])
+    Route::post('shop/summary', [ShopController::class, 'summary'])
         ->name('shop.summary');
+
+    Route::redirect('shop/summary', '/shop');
 
     Route::resource('product', ProductController::class);
 
@@ -307,6 +309,10 @@ Route::middleware([
                 'success_url' => route('your-success-route'),
                 'cancel_url' => route('your-cancel-route'),
             ]);
+    });
+
+    Route::get('/billing-portal', function (Request $request) {
+        return $request->user()->redirectToBillingPortal(route('stream'));
     });
 
 

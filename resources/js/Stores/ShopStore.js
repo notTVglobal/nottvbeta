@@ -6,8 +6,11 @@ export let useShopStore = defineStore('shopStore', {
         return {
             products: [],
             cart: [],
-            order: {},
-            paymentProcessing: ref(false)
+            order: [],
+            paymentProcessing: ref(false),
+            customer: {},
+            stripe: {},
+            cardElement: {}
         };
     },
 
@@ -27,6 +30,7 @@ export let useShopStore = defineStore('shopStore', {
                         return;
                     }
             product.quantity = 1;
+            product.id = product.categories[0].categories.product_id;
             this.cart.push({ ... product });
         },
         removeFromCart(index) {
@@ -47,6 +51,12 @@ export let useShopStore = defineStore('shopStore', {
 
             return price.toLocaleString('en-CA', {style: 'currency', currency: 'CAD'});
         },
+        orderLineTotal(item) {
+            let price = (item.price * item.products.quantity);
+            price = (price / 100);
+
+            return price.toLocaleString('en-CA', {style: 'currency', currency: 'CAD'});
+        },
 
     },
 
@@ -54,9 +64,16 @@ export let useShopStore = defineStore('shopStore', {
         cartQuantity() {
             return this.cart.reduce((acc, item) => acc + item.quantity, 0);
         },
-
+        orderQuantity() {
+            return this.order.products.length;
+        },
         cartTotal() {
             let price = this.cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+            price = (price / 100);
+            return price.toLocaleString('en-CA', {style: 'currency', currency: 'CAD'});
+        },
+        orderTotal() {
+            let price = this.order.total;
             price = (price / 100);
             return price.toLocaleString('en-CA', {style: 'currency', currency: 'CAD'});
         }

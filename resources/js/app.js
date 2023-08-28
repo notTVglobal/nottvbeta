@@ -23,6 +23,7 @@ import { faUserSecret, faPlay, faQuestion, faStar, faUsers, faHandsHelping,
 import Popper from "vue3-popper";
 // import confirm dialog
 import ConfirmDialog from '@/Components/Modals/ConfirmDialog';
+import vueCountryRegionSelect from 'vue3-country-region-select';
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'notTV';
 
@@ -60,6 +61,7 @@ createInertiaApp({
             .use(ZiggyVue, Ziggy)
             .use(createPinia())
             .use(Vue3TouchEvents)
+            .use(vueCountryRegionSelect)
             .component("Link", Link)
             .component("Head", Head)
             .component("font-awesome-icon", FontAwesomeIcon)
