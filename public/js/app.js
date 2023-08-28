@@ -3739,6 +3739,16 @@ var map = {
 		"./resources/js/Pages/Shop/Products/{$id}/Index.vue",
 		"resources_js_Pages_Shop_Products_id_Index_vue"
 	],
+	"./Shop/Subscribe": [
+		"./resources/js/Pages/Shop/Subscribe.vue",
+		"/js/vendor",
+		"resources_js_Pages_Shop_Subscribe_vue"
+	],
+	"./Shop/Subscribe.vue": [
+		"./resources/js/Pages/Shop/Subscribe.vue",
+		"/js/vendor",
+		"resources_js_Pages_Shop_Subscribe_vue"
+	],
 	"./Shop/Summary": [
 		"./resources/js/Pages/Shop/Summary.vue",
 		"resources_js_Pages_Shop_Summary_vue"
@@ -3868,16 +3878,6 @@ var map = {
 	"./Stream.vue": [
 		"./resources/js/Pages/Stream.vue",
 		"resources_js_Pages_Stream_vue"
-	],
-	"./Subscribe": [
-		"./resources/js/Pages/Subscribe.vue",
-		"/js/vendor",
-		"resources_js_Pages_Subscribe_vue"
-	],
-	"./Subscribe.vue": [
-		"./resources/js/Pages/Subscribe.vue",
-		"/js/vendor",
-		"resources_js_Pages_Subscribe_vue"
 	],
 	"./Subscribe2": [
 		"./resources/js/Pages/Subscribe2.vue",

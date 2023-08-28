@@ -150,18 +150,6 @@ Route::middleware([
         return Inertia::render('Stream');
     })->name('stream');
 
-    Route::get('/upgrade', function () {
-        return Inertia::render('Upgrade');
-    })->name('upgrade');
-    Route::post('upgrade', [StripeController::class, 'createCheckoutSession'])
-        ->name('createCheckoutSession');
-
-    Route::get('/subscribe', function () {
-        return Inertia::render('Subscribe', [
-            'intent' => auth()->user()->createSetupIntent(),
-        ]);
-    })->name('subscribe');
-
     Route::post('/subscribe', function (Request $request) {
         return Inertia::render('Subscribe', [
         ]);
@@ -293,12 +281,25 @@ Route::middleware([
     Route::get('/shop/product/{product}', [ProductController::class, 'show'])
     ->name('shop.product.show');
 
+    Route::get('/upgrade', function () {
+        return Inertia::render('Upgrade');
+    })->name('upgrade');
+
+    Route::post('/upgrade', [StripeController::class, 'createCheckoutSession'])
+        ->name('createCheckoutSession');
+
+    Route::get('/shop/subscribe', function () {
+        return Inertia::render('Shop/Subscribe', [
+            'intent' => auth()->user()->createSetupIntent(),
+        ]);
+    })->name('shop.subscribe');
+
     Route::get('shop/subscription-checkout', function (Request $request) {
         return $request->user()
             ->newSubscription('default', 'price_monthly')
             ->checkout([
-                'success_url' => route('/stream'),
-                'cancel_url' => route('/stream'),
+                'success_url' => route('stream'),
+                'cancel_url' => route('stream'),
             ]);
     });
 
