@@ -119,6 +119,9 @@ let stripe
 let elements
 let emailAddress
 
+let StripeAPIKey = ''
+StripeAPIKey = process.env.MIX_STRIPE_KEY
+
 onMounted(async() => {
     videoPlayerStore.makeVideoTopRight();
     if (userStore.isMobile) {
@@ -128,7 +131,7 @@ onMounted(async() => {
     document.getElementById("topDiv").scrollIntoView()
     shopStore.customer = props.user
 
-    stripe = await loadStripe(process.env.MIX_STRIPE_KEY);
+    stripe = await loadStripe(StripeAPIKey);
 
     initialize()
 
