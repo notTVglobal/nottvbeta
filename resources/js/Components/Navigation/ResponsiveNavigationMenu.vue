@@ -269,7 +269,7 @@ let chatStore = useChatStore();
 let userStore = useUserStore();
 
 let props = defineProps({
-    user: Object
+    user: Object,
 })
 
 const logout = () => {

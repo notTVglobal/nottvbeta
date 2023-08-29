@@ -77,8 +77,6 @@ function setPage() {
         isStreamPage = false;
 }
 
-
-
 setPage()
 
 userStore.checkIsMobile()
