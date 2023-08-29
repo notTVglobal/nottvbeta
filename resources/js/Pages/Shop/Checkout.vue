@@ -318,7 +318,7 @@ export default {
                 this.customer.cart = JSON.stringify(this.cart);
                 console.log('you arrived here.');
 
-                axios.post('/api/purchase', this.customer)
+                axios.post('/shop/purchase', this.customer)
                     .then((response) => {
                         this.paymentProcessing = false;
 

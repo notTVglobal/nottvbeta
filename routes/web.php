@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\ChannelController;
+use App\Http\Controllers\Api\ChannelController;
 use App\Http\Controllers\TestMessageController;
 use App\Http\Controllers\WelcomeController;
 use App\Mail\VerifyMail;
@@ -31,7 +31,7 @@ use App\Http\Controllers\VideoUploadController;
 use App\Http\Controllers\WhitepaperController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ShopController;
-use App\Http\Controllers\Api\StripeController;
+use App\Http\Controllers\StripeController;
 use App\Models\User;
 use App\Models\Show;
 use App\Models\ShowEpisode;
@@ -269,8 +269,6 @@ Route::middleware([
     Route::get('/shop/checkout', [ShopController::class, 'checkout'])
         ->name('checkout');
 
-    Route::post('shop/purchase', [ShopController::class, 'purchase']);
-
     Route::post('shop/summary', [ShopController::class, 'summary'])
         ->name('shop.summary');
 
@@ -286,6 +284,8 @@ Route::middleware([
 
     Route::get('/shop/product/{product}', [ProductController::class, 'show'])
     ->name('shop.product.show');
+
+    Route::post('/shop/purchase', [StripeController::class, 'purchase']);
 
     Route::get('/upgrade', function () {
         return Inertia::render('Shop/Upgrade', [
@@ -307,19 +307,14 @@ Route::middleware([
 //            ->newSubscription('default', $request->monthly_price);
 //    });
 
-    Route::get('/shop/subscription_success', function (Request $request) {
+    Route::get('shop/subscription_success', function (Request $request) {
         return $request->user()
             ->newSubscription('default', $request->monthly_price);
     });
 
-    Route::post('shop/subscription-checkout', function (Request $request) {
-        return Inertia::render('Shop/Upgrade')->$request->user()
-            ->newSubscription('default', $request->monthly_price);
-//            ->checkout([
-//                'success_url' => route('stream'),
-//                'cancel_url' => route('upgrade'),
-//            ]);
-    });
+    Route::post('shop/subscribe', [StripeController::class, 'subscribe'])
+        ->name('shop.subscribe.post');
+
 
     Route::get('shop/product-checkout', function (Request $request) {
         return Checkout::guest()

@@ -3,8 +3,8 @@
     <Head title="Upgrade Account" />
 
     <div class="w-full lace-self-center flex flex-col gap-y-3 bg-orange-400">
-        <div id="topDiv" class="w-full bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
-            <Message v-if="showMyMessage" @close="showMessage = false" :message="props.message"/>
+        <div id="topDiv" class="w-full bg-gray-800 text-gray-50 dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
+<!--            <Message v-if="showMyMessage" @close="showMessage = false" :message="props.message"/>-->
 
             <header class="flex justify-between pt-4">
                 <h1 class="text-3xl font-semibold pb-3">Subscription</h1>
@@ -17,7 +17,7 @@
                                    name="plan"
                                    value="plan_LyCOYZAqzVdFpz"
                                    @click="shopStore.upgradeMonthly()"
-                                   v-model="shopStore.selectedSubscriptionPrice"
+                                   v-model="shopStore.upgradeStripeId"
                                    class="pr-2" />
                             <label for="standard" class="ml-2">Premium Monthly - $25 / month</label>
                         </div>
@@ -26,7 +26,7 @@
                                    name="plan"
                                    value="price_1NhgZTKahp38LUVY8n9Skgwf"
                                    @click="shopStore.upgradeYearly()"
-                                   v-model="shopStore.selectedSubscriptionPrice"
+                                   v-model="shopStore.upgradeStripeId"
                                    class="pr-2" />
                             <label for="standard" class="ml-2">Premium Yearly - $250 / year</label>
                         </div>
@@ -35,7 +35,7 @@
                                    name="plan"
                                    value="price_1NhgZyKahp38LUVY1MOhE5L5"
                                    @click="shopStore.upgradeForever()"
-                                   v-model="props.selectedSubscriptionPrice"
+                                   v-model="props.upgradeStripeId"
                                    class="pr-2" />
                             <label for="standard" class="ml-2">Premium Forever - $999 / one time</label>
                         </div>
@@ -58,61 +58,27 @@
                      @click="shopStore.changeUpgradeSelection()">(change)</div>
             </div>
 
+            <div v-show="!shopStore.showPaymentForm" class="mx-auto mt-8 px-12">
+                <h2 class="mt-6 mx-auto text-xl font-semibold text-black dark:text-gray-100">Payment form is loading...</h2>
+            </div>
+
             <div class="mx-auto mt-8 px-12">
                 <h2 class="text-2xl font-semibold text-black dark:text-gray-100">Payment</h2>
 
                 <form id="payment-form">
-                    <div id="link-authentication-element">
+                    <div id="link-authentication-element" class="mb-2">
                         <!--Stripe.js injects the Link Authentication Element-->
                     </div>
                     <div id="payment-element">
                         <!--Stripe.js injects the Payment Element-->
                     </div>
-                    <button id="btnSubmit" class="h-fit bg-blue-600 hover:bg-blue-500 text-white rounded py-2 px-4">
+                    <button id="submit" class="h-fit bg-blue-600 hover:bg-blue-500 text-white rounded py-2 px-4">
                         <div class="spinner hidden" id="spinner"></div>
                         <span id="button-text">Pay now</span>
                     </button>
                     <div id="payment-message" class="hidden"></div>
                 </form>
 
-
-
-
-
-
-
-
-
-<!--                <form id="payment_form">-->
-<!--                <div class="relative">-->
-<!--                    <label for="name" class="leading-7 text-sm text-black dark:text-gray-200">Cardholder Name</label>-->
-<!--                    <input-->
-<!--                        type="text"-->
-<!--                        id="card-holder-name"-->
-<!--                        name="name"-->
-<!--                        v-model="shopStore.customer.name"-->
-<!--                        class="w-full bg-gray-100 rounded border border-gray-300 focus:border-indigo-500 text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"-->
-<!--                        :disabled="shopStore.paymentProcessing"-->
-<!--                    >-->
-<!--                    <input hidden id="subscriptionSelectedPrice" v-text="shopStore.selectedSubscriptionPrice">-->
-<!--                </div>-->
-<!--                &lt;!&ndash; Stripe Elements Placeholder &ndash;&gt;-->
-<!--                <div class="mt-4">-->
-<!--                    <label for="payment" class="leading-7 text-sm text-black dark:text-gray-200">Label</label>-->
-<!--                    <div id="payment-element"></div>-->
-<!--                </div>-->
-<!--                <div class="mt-4">-->
-<!--                    <button id="submit"-->
-<!--                            @click="payNow"-->
-<!--                            class="h-fit bg-blue-600 hover:bg-blue-500 text-white rounded py-2 px-4"-->
-<!--                            :disabled="shopStore.paymentProcessing">-->
-<!--                        <span v-if="shopStore.paymentProcessing" class="spinner" id="spinner">Processing...</span>-->
-<!--                        <span v-if="!shopStore.paymentProcessing" id="button-text">-->
-<!--                          Pay now-->
-<!--                        </span>-->
-<!--                    </button>-->
-<!--                </div>-->
-<!--                </form>-->
                 <!-- {/* Show any error or success messages */}-->
                 <div v-if="message" id="payment-message" class="mt-4">{{message}}</div>
             </div>
@@ -124,13 +90,12 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted } from "vue";
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useUserStore } from "@/Stores/UserStore";
 import { useShopStore } from "@/Stores/ShopStore";
-import Message from "@/Components/Modals/Messages";
-import {useForm} from "@inertiajs/inertia-vue3";
-import {loadStripe} from '@stripe/stripe-js';
+import { useForm } from "@inertiajs/inertia-vue3";
+import { loadStripe } from '@stripe/stripe-js';
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -152,9 +117,7 @@ const options = {
 
 let stripe
 let elements
-let paymentElement
-let clientSecret = props.intent.client_secret;
-let emailAddress = props.user.email
+let emailAddress
 
 onMounted(async() => {
     videoPlayerStore.makeVideoTopRight();
@@ -166,327 +129,153 @@ onMounted(async() => {
     shopStore.customer = props.user
 
     stripe = await loadStripe(process.env.MIX_STRIPE_KEY);
-    elements = stripe.elements(options)
 
     initialize()
 
-    function initialize() {
+    showPaymentForm()
 
-        elements = stripe.elements({
-            clientSecret: props.intent.client_secret
+    document
+        .querySelector("#payment-form")
+        .addEventListener("submit", handleSubmit);
+
+
+});
+
+function showPaymentForm() {
+    shopStore.showPaymentForm = true;
+}
+
+function initialize() {
+
+    const clientSecret = props.intent.client_secret
+    const appearance = {
+        theme: 'stripe',
+        variables: {
+            colorPrimary: '#0570de',
+            colorBackground: '#ffffff',
+            colorBackgroundText: '#ffffff',
+            colorText: '#222222',
+            colorDanger: '#df1b41',
+            fontFamily: 'Ideal Sans, system-ui, sans-serif',
+            spacingUnit: '4px',
+        },
+        rules: {
+            '.Label': {
+                color: 'var(--colorBackgroundText)',
+            },
+        }
+    };
+
+    elements = stripe.elements({appearance, clientSecret});
+
+    const linkAuthenticationElement = elements.create("linkAuthentication");
+    linkAuthenticationElement.mount("#link-authentication-element");
+
+    linkAuthenticationElement.on('change', (event) => {
+        emailAddress = event.value.email;
+    });
+
+    const paymentElementOptions = {
+        layout: "tabs",
+    };
+
+    const paymentElement = elements.create("payment", paymentElementOptions);
+    paymentElement.mount("#payment-element");
+
+}
+
+async function handleSubmit(e) {
+    e.preventDefault();
+    setLoading(true);
+
+    const { setupIntent, error } = await stripe.confirmSetup({
+        elements,
+        confirmParams: {
+            // Make sure to change this to your payment completion page
+            return_url: "http://localhost:4242/checkout.html",
+            // receipt_email: emailAddress,
+        },
+        redirect: 'if_required'
+    });
+
+    // This point will only be reached if there is an immediate error when
+    // confirming the payment. Otherwise, your customer will be redirected to
+    // your `return_url`. For some payment methods like iDEAL, your customer will
+    // be redirected to an intermediate site first to authorize the payment, then
+    // redirected to the `return_url`.
+
+    if (error) {
+        if (error.type === "card_error" || error.type === "validation_error") {
+            showMessage(error.message);
+        } else {
+            showMessage("An unexpected error occurred.");
+        }
+    } else {
+        // console.log(setupIntent)
+        let form = useForm({
+            paymentMethod: setupIntent.payment_method,
+            plan: shopStore.upgradeStripeId
         });
 
-        const linkAuthenticationElement = elements.create("linkAuthentication");
-        linkAuthenticationElement.mount("#link-authentication-element");
+        //Submit the form
+        form.post('/shop/subscribe');
 
-        linkAuthenticationElement.on('change', (event) => {
-            emailAddress = event.value.email;
-        });
 
-        const paymentElementOptions = {
-            layout: "tabs",
-        };
-
-        const paymentElement = elements.create("payment", paymentElementOptions);
-        paymentElement.mount("#payment-element");
     }
 
+    setLoading(false);
+}
+function submit() {
 
-    // shopStore.stripe = stripe
-
-    // const appearance = {
-    //     classes: {
-    //         base: 'bg-gray-100 py-3 px-2 rounded border border-gray-300 focus:border-indigo-500 text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out'
-    //     }
-    // }
+}
 
 
-    //  paymentElement = elements.create('payment', {
-    //      layout: {
-    //          type: 'tabs',
-    //          defaultCollapsed: false,
-    //      },
-    //
-    //     // shopStore.cardElement.mount('#card-element');
-    // });
-    // paymentElement.mount('#payment-element');
-});
+// ------- UI helpers -------
 
-// async function payNow() {
-//
-//     shopStore.paymentProcessing = true;
-//
-//     // const paymentIntent = await stripe.setupIntents.create({
-//     //     customer: props.user.stripe_id,
-//     //     // In the latest version of the API, specifying the `automatic_payment_methods` parameter is optional because Stripe enables its functionality by default.
-//     //     automatic_payment_methods: {
-//     //         enabled: true,
-//     //     },
-//     // });
-//
-//     const {setupIntent, error} = await stripe.confirmSetup(
-//         elements,
-//         props.intent.client_secret, {
-//             automatic_payment_methods: {
-//                 enabled: true,
-//             },
-//         // confirmParams: {
-//         //     return_url: '/shop/subscription_success',
-//         // },
-//         }
-//     );
-//
-//     if (error) {
-//         this.paymentProcessing = false;
-//         alert(error);
-//         console.log('ERROR');
-//         console.log(error);
-//     } else {
-//         console.log('you arrived here.');
-//         // axios.post('subscription_success', {monthly_price: shopStore.selectedSubscriptionPrice, setupIntent: setupIntent})
-//         //     .then((response) => {
-//         //         this.paymentProcessing = false;
-//         //         console.log('success: subscription created.');
-//         //     })
-//         //     .catch((error) => {
-//         //         this.paymentProcessing = false;
-//         //         alert("Error2: " + error);
-//         //         console.log('Error 2');
-//         //     });
-//     }
-// }
+function showMessage(messageText) {
+    const messageContainer = document.querySelector("#payment-message");
 
-let form = useForm({
-    name: '',
-});
+    messageContainer.classList.remove("hidden");
+    messageContainer.textContent = messageText;
 
-let isLoading = ref(false)
-let showMessage = ref(false)
+    setTimeout(function () {
+        messageContainer.classList.add("hidden");
+        messageContainer.textContent = "";
+    }, 4000);
+}
 
-
-let showMyMessage = ref(true);
-
-// Stripe.js
-////////////
-
-// // Initialize Stripe
-// let elements = stripe.elements();
-
-
-// const elements = Stripe.elements()
-
-// const appearance = { /* appearance */};
-// const options = {
-//     business: "notTV"
-// };
-// const clientSecret = {{CLIENT_SECRET}};
-// const elements = stripe.elements(appearance, clientSecret);
-// const paymentElement = elements.create('payment', options);
-// paymentElement.mount('#payment-element');
-
-// const paymentIntent = await stripe.paymentIntents.create({
-//     amount: 1099,
-//     currency: 'cad',
-//     automatic_payment_methods: {
-//         enabled: true,
-//     },
-// })
-
-
-// const stripe = Stripe('pk_test_51KJwK5Kahp38LUVYOjg7h425exCr6UZmMm1M24d31ZaS0HTsgPWIZE9Hd2F0KnREVHuPm2VHesX3J5SQfFFg7fTC00DMNpq1Lj');
-// const options = {
-//     // passing the client secret obtained from the server
-//     clientSecret: props.intent.client_secret,
-// }
-
-// let elements;
-
-// initialize();
-
-// let elements = stripe.elements({
-//     clientSecret: 'CLIENT_SECRET',
-//     // mode is "payment" for the 'forever' product
-//     mode: 'subscription',
-//     currency: 'usd',
-//     amount: 1099,
-// });
-
-// // Initialize Stripe
-// let elements = stripe.elements();
-//
-// // Handle form submission
-//
-// let form = document.getElementById('payment-form');
-// form.addEventListener('submit', function(event) {
-//     event.preventDefault();
-//
-//     stripe.createToken(card).then(function(result) {
-//         if(result.error) {
-//             // Inform the user if there was an error.
-//             let errorElement = document.getElementById('card-errors');
-//             errorElement.textContent = result.error.message;
-//         } else {
-//             // Send the token to your server.
-//             stripeTokenHandler(result.token);
-//         }
-//     });
-// });
-//
-// function stripeTokenHandler(token) {
-//     let hiddenInput = document.createElement('input');
-//     hiddenInput.setAttribute('type', 'hidden');
-//     hiddenInput.setAttribute('name', 'stripeToken');
-//     hiddenInput.setAttribute('value', 'token.id');
-//     form.appendChild(hiddenInput);
-//
-//     form.submit();
-//
-// }
-//
-let submit = () => {
-    // form.post(route('subscribe.post'));
-    // axios.post('/upgrade', async (req, res) => {
-    //     const session = await stripe.checkout.sessions.create({
-    //         line_items: [
-    //             {
-    //                 // Provide the exact Price ID (for example, pr_1234) of the product you want to sell
-    //                 price: 'plan_LyCOYZAqzVdFpz',
-    //                 quantity: 1,
-    //             },
-    //         ],
-    //         mode: 'subscription',
-    //         success_url: `${YOUR_DOMAIN}/payment_success`,
-    //         cancel_url: `${YOUR_DOMAIN}/payment_cancelled`,
-    //     });
-    //     res.redirect(303, session.url);
-    // });
-};
-
-// let submit = null
-
-// // Fetches a payment intent and captures the client secret
-// async function initialize() {
-//
-//     // const stripeScript = await document.createElement("script");
-//     // stripeScript.setAttribute(
-//     //     "src",
-//     //     "https://js.stripe.com/v3/s"
-//     // );
-//     // document.head.appendChild(stripeScript);
-//
-//     elements = stripe.elements({
-//         clientSecret: props.intent.client_secret,
-//     });
-//
-//
-//     const paymentElement = elements.create("payment");
-//     paymentElement.mount("#payment-element");
-//
-//     const appearance = {
-//         theme: 'stripe',
-//     };
-//
-//
-//     const linkAuthenticationElement = elements.create("linkAuthentication");
-//     linkAuthenticationElement.mount("#link-authentication-element");
-//
-//     linkAuthenticationElement.on('change', (event) => {
-//
-//     });
-//
-//     const paymentElementOptions = {
-//         layout: "tabs",
-//     };
-//
-// }
-
+// Show a spinner on payment submission
+function setLoading(isLoading) {
+    if (isLoading) {
+        // Disable the button and show a spinner
+        document.querySelector("#submit").disabled = true;
+        document.querySelector("#spinner").classList.remove("hidden");
+        document.querySelector("#button-text").classList.add("hidden");
+    } else {
+        document.querySelector("#submit").disabled = false;
+        document.querySelector("#spinner").classList.add("hidden");
+        document.querySelector("#button-text").classList.remove("hidden");
+    }
+}
 
 </script>
 
-<!--<script>-->
-<!--import { loadStripe } from '@stripe/stripe-js';-->
-<!--import { useShopStore } from '@/Stores/ShopStore'-->
-<!--import { Inertia } from "@inertiajs/inertia";-->
-<!--// import {defineStore, mapStores} from "pinia";-->
-<!--// const shopStore = defineStore('useShopStore', {-->
-<!--//     // ...-->
-<!--// })-->
-<!--export default {-->
-<!--    setup() {-->
-
-<!--    },-->
-<!--    props: {-->
-<!--        user: Object,-->
-<!--        intent: String,-->
-<!--        selectedSubscription: null-->
-<!--    },-->
-<!--    data() {-->
-<!--        return {-->
-<!--            stripe: {},-->
-<!--            cardElement: {},-->
-<!--            paymentProcessing: false,-->
-<!--            selectedSubscription: null,-->
-<!--        }-->
-<!--    },-->
-<!--    async mounted() {-->
-<!--        this.stripe = await loadStripe(process.env.MIX_STRIPE_KEY);-->
-<!--        const elements = this.stripe.elements();-->
-<!--        this.cardElement = elements.create('card', {-->
-<!--            classes: {-->
-<!--                base: 'bg-gray-100 py-3 px-2 rounded border border-gray-300 focus:border-indigo-500 text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out'-->
-<!--            }-->
-<!--        });-->
-
-<!--        this.cardElement.mount('#card-element');-->
-
-<!--    },-->
-<!--    methods: {-->
-<!--        async payNow() {-->
-<!--            this.paymentProcessing = true;-->
-<!--            // const clientSecret = this.props.intent-->
-<!--            const cardHolderName = document.getElementById('card-holder-name');-->
-
-<!--            const {setupIntent, error} = await this.stripe.confirmCardSetup(-->
-<!--                this.intent.client_secret, {-->
-<!--                    payment_method: {-->
-<!--                        card: this.cardElement,-->
-<!--                        billing_details: {name: cardHolderName.value}-->
-<!--                    }-->
-<!--                }-->
-<!--            );-->
-
-<!--            if (error) {-->
-<!--                this.paymentProcessing = false;-->
-<!--                alert("Please select a subscription!");-->
-<!--            } else {-->
-<!--                console.log('you arrived here.');-->
-<!--                console.log(this.cardElement);-->
-<!--                axios.post('subscription-checkout', {monthly_price:this.selectedSubscriptionPrice,setupIntent:setupIntent.payment_method})-->
-<!--                    .then((response) => {-->
-<!--                        this.paymentProcessing = false;-->
-<!--                        console.log('success: subscription created.');-->
-<!--                    })-->
-<!--                    .catch((error) => {-->
-<!--                        this.paymentProcessing = false;-->
-<!--                        alert("Error2: "+error);-->
-<!--                        console.log('Error 2');-->
-<!--                    });-->
-<!--            }-->
-<!--        },-->
-<!--    },-->
-<!--    computed: {-->
-<!--        // ...mapStores(useShopStore),-->
-<!--        // ...mapState(useShopStore, ['paymentProcessing']),-->
-<!--        // ...mapState(useShopStore, ['order']),-->
-<!--    },-->
-<!--}-->
-
-<!--</script>-->
-
 <style scoped>
+
 /* Variables */
 * {
     box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    height: 100vh;
+    width: 100vw;
 }
 
 form {
@@ -617,5 +406,8 @@ button:disabled {
 }
 
 </style>
+
+
+
 
 

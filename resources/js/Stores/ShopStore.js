@@ -14,6 +14,7 @@ export let useShopStore = defineStore('shopStore', {
             upgradeSelection: '',
             upgradeStripeId: '',
             selectedSubscriptionPrice: null,
+            showPaymentForm: ref(false)
         };
     },
 

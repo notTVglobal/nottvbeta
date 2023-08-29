@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use Inertia\Inertia;
 use Stripe\StripeClient;
 use Stripe\PaymentIntent;
 use Illuminate\Http\Request;
@@ -10,6 +12,72 @@ use Stripe\Stripe as StripeGateway;
 
 class StripeController extends Controller
 {
+
+    public function purchase(Request $request)
+    {
+//        dd($request);
+        // make a purchase
+
+        // get the user
+        $user_id = auth()->user()->id;
+        $user = User::find($user_id);
+
+        // validate the request
+        $attributes = \Illuminate\Support\Facades\Request::validate([
+            'name' => ['required', 'string', 'max:255'],
+//            'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+            'address1' => ['nullable', 'string', 'max:255'],
+            'address2' => ['nullable', 'string', 'max:255'],
+            'city' => ['nullable', 'string', 'max:255'],
+            'province' => ['nullable', 'string', 'max:255'],
+            'country' => ['nullable', 'string', 'max:255'],
+            'postalCode' => ['nullable', 'string', 'max:255'],
+            'phone' => ['nullable', 'regex:/^([0-9\s\-\+\(\)]*)$/', 'min:10'],
+        ]);
+
+        // update the user
+        $user->update($attributes);
+
+        try {
+            $payment = $user->charge(
+                $request->input('amount'),
+                $request->input('payment_method_id')
+            );
+
+            $payment = $payment->asStripePaymentIntent();
+
+            $order = $user->orders()
+                ->create([
+                    'transaction_id' => $payment->charges->data[0]->id,
+                    'total' => $payment->charges->data[0]->amount
+                ]);
+
+            foreach (json_decode($request->input('cart'), true) as $item) {
+                $order->products()
+                    ->attach($item['id'], ['quantity' => $item['quantity']]);
+            }
+
+            $order->load('products');
+
+            return $order;
+        } catch(\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function subscribe(Request $request) {
+        $user_id = auth()->user()->id;
+        $user = User::find($user_id);
+        $user->role_id = 2;
+        $user->save();
+
+        auth()->user()->newSubscription('cashier', $request->plan)->create($request->paymentMethod);
+
+        return Inertia::render('Shop/SubscriptionSuccess', [
+            'order' => $request['order'],
+        ]);
+
+    }
 
     public function createCheckoutSession(Request $request)
     {

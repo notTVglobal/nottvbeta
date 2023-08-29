@@ -96,9 +96,16 @@
                     :href="route('upgrade')"
                     :active="route().current('upgrade')"
                 >
-                    <div class="rounded-lg p-2 bg-gray-100 text-black hover:bg-gray-300 hover:text-green-900">
+                    <div class="rounded-lg p-2 bg-gray-100 text-black hover:text-green-900">
                         CLICK HERE TO UPGRADE YOUR ACCOUNT
                     </div>
+                </JetResponsiveNavLink>
+
+                <JetResponsiveNavLink
+                    @click="userStore.closeNavDropdown()"
+                    :href="route('stream')"
+                    :active="route().current('stream')">
+                    Stream
                 </JetResponsiveNavLink>
 
                 <JetResponsiveNavLink
