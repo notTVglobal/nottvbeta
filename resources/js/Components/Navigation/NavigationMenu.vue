@@ -308,11 +308,7 @@ const logout = () => {
 // setPage()
 
 function billingPortal() {
-    userStore.closeNavDropdown()
-    axios.get('billing-portal-access').then(function (response) {
-        console.log(response);
-        window.location = response.data
-    })
+    location.href = ('https://not.tv/billing-portal')
 }
 
 </script>
