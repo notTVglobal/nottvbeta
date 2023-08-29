@@ -73,7 +73,11 @@ class StripeController extends Controller
 
         auth()->user()->newSubscription('cashier', $request->plan)->create($request->paymentMethod);
         return to_route('subscriptionSuccess');
+    }
 
+    public function getBillingPortalAccessUrl(Request $request) {
+        return $request->user()->billingPortalUrl(route('stream'));
+//        return $request->user()->redirectToBillingPortal(route('stream'));
     }
 
     public function createCheckoutSession(Request $request)

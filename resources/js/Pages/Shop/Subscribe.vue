@@ -188,6 +188,10 @@ function initialize() {
 }
 
 async function handleSubmit(e) {
+    if (shopStore.upgradeStripeId === '' || null) {
+        alert('Please select a subscription.')
+        return
+    }
     e.preventDefault();
     setLoading(true);
 

@@ -170,6 +170,12 @@
                 </JetResponsiveNavLink>
 
                 <JetResponsiveNavLink
+                    v-if="$page.props.user.role_id >= 2"
+                    @click="billingPortal">
+                    Account
+                </JetResponsiveNavLink>
+
+                <JetResponsiveNavLink
                     v-if="$page.props.user.role_id === 4"
                     @click="userStore.closeNavDropdown()"
                     :href="route('training')"
@@ -262,6 +268,10 @@ let videoPlayerStore = useVideoPlayerStore();
 let chatStore = useChatStore();
 let userStore = useUserStore();
 
+let props = defineProps({
+    user: Object
+})
+
 const logout = () => {
     // videoPlayerStore.changeChannel('one');
     videoPlayerStore.mute();
@@ -273,6 +283,14 @@ const logout = () => {
     chatStore.show = false;
     Inertia.post(route('logout'));
 };
+
+function billingPortal() {
+    userStore.closeNavDropdown()
+    axios.get('billing-portal-access').then(function (response) {
+        console.log(response);
+        window.location = response.data
+    })
+}
 
 </script>
 

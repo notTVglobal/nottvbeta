@@ -166,6 +166,12 @@
                                         </JetDropdownLink>
 
                                         <JetDropdownLink
+                                            v-if="$page.props.user.role_id >= 2"
+                                            @click="billingPortal">
+                                            Account
+                                        </JetDropdownLink>
+
+                                        <JetDropdownLink
                                             v-if="$page.props.user.role_id === 4"
                                             @click="videoPlayerStore.makeVideoTopRight()"
                                             :href="route('training')">
@@ -300,6 +306,14 @@ const logout = () => {
 // }
 
 // setPage()
+
+function billingPortal() {
+    userStore.closeNavDropdown()
+    axios.get('billing-portal-access').then(function (response) {
+        console.log(response);
+        window.location = response.data
+    })
+}
 
 </script>
 <style>

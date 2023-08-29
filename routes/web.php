@@ -43,11 +43,12 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Cashier\Checkout;
 
-header('Access-Control-Allow-Origin: https://checkout.stripe.com');
-header('Access-Control-Allow-Origin: https://ia800300.us.archive.org');
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: PUT, GET, POST, DELETE, OPTIONS");
-header("Access-Control-Allow-Headers: *");
+//header('Access-Control-Allow-Origin: https://checkout.stripe.com');
+//header('Access-Control-Allow-Origin: https://billing.stripe.com');
+//header('Access-Control-Allow-Origin: https://ia800300.us.archive.org');
+//header("Access-Control-Allow-Origin: *");
+//header("Access-Control-Allow-Methods: PUT, GET, POST, DELETE, OPTIONS");
+//header("Access-Control-Allow-Headers: *");
 
 /*
 |--------------------------------------------------------------------------
@@ -302,32 +303,35 @@ Route::middleware([
         ]);
     })->name('shop.subscribe');
 
-//    Route::get('/shop/subscription_success', function (Request $request) {
-//        return Inertia::render('Shop/SubscriptionSuccess')->$request->user()
-//            ->newSubscription('default', $request->monthly_price);
-//    });
-
-    Route::get('shop/subscription_success', function (Request $request) {
-        return $request->user()
-            ->newSubscription('default', $request->monthly_price);
-    })->name('subscriptionSuccess');
-
     Route::post('shop/subscribe', [StripeController::class, 'subscribe'])
         ->name('shop.subscribe.post');
 
+    Route::get('/shop/subscription_success', function () {
+        return Inertia::render('Shop/SubscriptionSuccess');
+    })->name('subscriptionSuccess');
 
-    Route::get('shop/product-checkout', function (Request $request) {
-        return Checkout::guest()
-            ->withPromotionCode('promo-code')
-            ->create('price_tshirt', [
-                'success_url' => route('your-success-route'),
-                'cancel_url' => route('your-cancel-route'),
-            ]);
-    });
+    // tec21: this route isn't used yet. This uses Stripe Checkout.
+//    Route::get('shop/product-checkout', function (Request $request) {
+//        return Checkout::guest()
+//            ->withPromotionCode('promo-code')
+//            ->create('price_tshirt', [
+//                'success_url' => route('your-success-route'),
+//                'cancel_url' => route('your-cancel-route'),
+//            ]);
+//    });
 
-    Route::get('/billing-portal', function (Request $request) {
-        return $request->user()->redirectToBillingPortal(route('stream'));
-    });
+    Route::get('/billing', function () {
+        return Inertia::render('Shop/Billing', [
+
+        ]);
+    })->name('billing');
+
+        Route::get('billing-portal', function (Request $request) {
+            return $request->user()->redirectToBillingPortal(route('stream'));
+        })->name('billingPortal');
+
+    Route::get('billing-portal-access', [StripeController::class, 'getBillingPortalAccessUrl']);
+
 
 
 
