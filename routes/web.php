@@ -310,7 +310,7 @@ Route::middleware([
     Route::get('shop/subscription_success', function (Request $request) {
         return $request->user()
             ->newSubscription('default', $request->monthly_price);
-    });
+    })->name('subscriptionSuccess');
 
     Route::post('shop/subscribe', [StripeController::class, 'subscribe'])
         ->name('shop.subscribe.post');

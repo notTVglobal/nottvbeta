@@ -72,10 +72,7 @@ class StripeController extends Controller
         $user->save();
 
         auth()->user()->newSubscription('cashier', $request->plan)->create($request->paymentMethod);
-
-        return Inertia::render('Shop/SubscriptionSuccess', [
-            'order' => $request['order'],
-        ]);
+        return to_route('subscriptionSuccess');
 
     }
 
