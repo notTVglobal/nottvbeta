@@ -302,13 +302,23 @@ Route::middleware([
         ]);
     })->name('shop.subscribe');
 
-    Route::post('shop/subscription-checkout', function (Request $request) {
+//    Route::get('/shop/subscription_success', function (Request $request) {
+//        return Inertia::render('Shop/SubscriptionSuccess')->$request->user()
+//            ->newSubscription('default', $request->monthly_price);
+//    });
+
+    Route::get('/shop/subscription_success', function (Request $request) {
         return $request->user()
-            ->newSubscription('default', $request->monthly_price)
-            ->checkout([
-                'success_url' => route('stream'),
-                'cancel_url' => route('upgrade'),
-            ]);
+            ->newSubscription('default', $request->monthly_price);
+    });
+
+    Route::post('shop/subscription-checkout', function (Request $request) {
+        return Inertia::render('Shop/Upgrade')->$request->user()
+            ->newSubscription('default', $request->monthly_price);
+//            ->checkout([
+//                'success_url' => route('stream'),
+//                'cancel_url' => route('upgrade'),
+//            ]);
     });
 
     Route::get('shop/product-checkout', function (Request $request) {

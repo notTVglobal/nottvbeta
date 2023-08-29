@@ -36,7 +36,7 @@
                 <!-- Logged in view -->
                     <div v-if="user"
                           class="fixed top-48 lg:top-16 lg:mt-0 pb-72 lg:pb-16
-                             w-fit lg:w-[calc(100vw-24rem)]
+                             w-full lg:w-[calc(100vw-24rem)]
                              h-full
                              z-10 overflow-y-scroll overscroll-x-none"
                           :class="[{'':userStore.isMobile}, pageHide]">

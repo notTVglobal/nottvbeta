@@ -18,7 +18,7 @@
                             <div class="card monthly bg-gray-700 hover:bg-gray-600 hover:cursor-pointer rounded-lg px-12 py-6"
                                  @mouseover="hoverMonthlyFull = true"
                                  @mouseleave="hoverMonthlyFull = false"
-                                 @click="payNow('plan_LyCOYZAqzVdFpz')">
+                                 @click="payNow('monthly')">
                                 <div class="flex justify-between mb-2">
                                     <div class="productName">Monthly</div>
                                     <div class="price">$25</div>
@@ -29,7 +29,7 @@
                                 <div>
                                     Get full access to all features, shows, channels and movies!
                                 </div>
-                                <div class="flex no-wrap justify-center bg-gray-900 hover:bg-gray-800 rounded-lg w-full mt-6 px-4 py-4 mb-4 mx-auto"
+                                <div class="flex no-wrap justify-center bg-gray-900 hover:bg-gray-800 hover:cursor-pointer rounded-lg w-full mt-6 px-4 py-4 mb-4 mx-auto"
                                      @mouseover="hoverMonthly = true"
                                      @mouseleave="hoverMonthly = false">
                                     <span class="bg-gray-700 mr-4 py-1 px-2 w-fit rounded-full"
@@ -40,7 +40,7 @@
                         <div class="card annually bg-gray-700 hover:bg-gray-600 hover:cursor-pointer rounded-lg px-12 py-6"
                              @mouseover="hoverYearlyFull = true"
                              @mouseleave="hoverYearlyFull = false"
-                             @click="payNow('price_1NhgZTKahp38LUVY8n9Skgwf')">
+                             @click="payNow('yearly')">
                             <div class="flex justify-between mb-2">
                                 <div class="productName">Yearly</div>
                                 <div class="price">$250</div>
@@ -60,10 +60,10 @@
 
                         </div>
 
-                        <div class="card forever bg-gray-700 hover:bg-gray-600 rounded-lg  px-12 py-6"
+                        <div class="card forever bg-gray-700 hover:bg-gray-600 hover:cursor-pointer rounded-lg  px-12 py-6"
                              @mouseover="hoverForeverFull = true"
                              @mouseleave="hoverForeverFull = false"
-                             @click="payNow('price_1NhgZyKahp38LUVY1MOhE5L5')">
+                             @click="payNow('forever')">
                             <div class="flex justify-between mb-2">
                                 <div class="productName">Forever</div>
                                 <div class="price">$999</div>
@@ -74,7 +74,7 @@
                             <div>
                                 Get full access to all features, shows, channels and movies!
                             </div>
-                            <div class="flex no-wrap justify-center bg-gray-900 hover:bg-gray-800 rounded-lg w-full mt-6 px-4 py-4 mb-4 mx-auto"
+                            <div class="flex no-wrap justify-center bg-gray-900 hover:bg-gray-800 hover:cursor-pointer rounded-lg w-full mt-6 px-4 py-4 mb-4 mx-auto"
                                  @mouseover="hoverForever = true"
                                  @mouseleave="hoverForever = false">
                                 <span class="bg-gray-700 mr-4 py-1 px-2 w-fit rounded-full"
@@ -83,6 +83,40 @@
                         </div>
                     </div>
 
+
+<!--                    <div class="mx-auto mt-8 px-12">-->
+<!--                        <h2 class="text-2xl font-semibold text-black dark:text-gray-100">Payment</h2>-->
+<!--                        <div class="relative">-->
+<!--                            <label for="name" class="leading-7 text-sm text-black dark:text-gray-200">Cardholder Name</label>-->
+<!--                            <input-->
+<!--                                type="text"-->
+<!--                                id="card-holder-name"-->
+<!--                                name="name"-->
+<!--                                v-model="shopStore.customer.name"-->
+<!--                                class="w-full bg-gray-100 rounded border border-gray-300 focus:border-indigo-500 text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"-->
+<!--                                :disabled="paymentProcessing"-->
+<!--                            >-->
+<!--                            <input hidden id="subscriptionSelectedPrice" v-text="shopStore.selectedSubscriptionPrice">-->
+<!--                        </div>-->
+<!--                        &lt;!&ndash; Stripe Elements Placeholder &ndash;&gt;-->
+<!--                        <div class="mt-4">-->
+<!--                            <label for="card" class="leading-7 text-sm text-black dark:text-gray-200">Credit Card</label>-->
+<!--                            <div id="card-element"></div>-->
+<!--                        </div>-->
+<!--                        <div class="mt-4">-->
+<!--                            <button id="checkout-button"-->
+<!--                                    @click="payNow"-->
+<!--                                    class="h-fit bg-blue-600 hover:bg-blue-500 text-white rounded py-2 px-4"-->
+<!--                                    :disabled="paymentProcessing">-->
+<!--                                <span v-if="paymentProcessing" class="spinner" id="spinner">Processing...</span>-->
+<!--                                <span v-if="!paymentProcessing" id="button-text">-->
+<!--                                  Pay now-->
+<!--                                </span>-->
+<!--                            </button>-->
+<!--                        </div>-->
+<!--                        &lt;!&ndash; {/* Show any error or success messages */}&ndash;&gt;-->
+<!--                        <div v-if="message" id="payment-message" class="mt-4">{{message}}</div>-->
+<!--                    </div>-->
 
 
             </div>
@@ -99,7 +133,8 @@ import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useUserStore } from "@/Stores/UserStore"
 import { useShopStore } from "@/Stores/ShopStore"
 import Message from "@/Components/Modals/Messages"
-import { loadStripe } from "@stripe/stripe-js"
+// import { loadStripe } from "@stripe/stripe-js"
+import { Inertia } from "@inertiajs/inertia";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -113,10 +148,9 @@ videoPlayerStore.currentPage = 'upgrade'
 
 let props = defineProps({
     user: Object,
-    intent: Object,
-    stripe: {},
-    cardElement: {},
-    paymentProcessing: false,
+    // intent: Object,
+    // cardElement: ref({}),
+    // paymentProcessing: false,
     selectedSubscription: null,
     message: String,
     hoverMonthly: false,
@@ -126,6 +160,8 @@ let props = defineProps({
     hoverYearlyFull: false,
     hoverForeverFull: false,
 })
+
+let showMessage = ref(false);
 
 onMounted(async() => {
     videoPlayerStore.makeVideoTopRight();
@@ -138,49 +174,64 @@ onMounted(async() => {
     //
     //     userStore.scrollToTopCounter ++;
     // }
-    shopStore.stripe = await loadStripe(process.env.MIX_STRIPE_KEY);
-    const elements = shopStore.stripe.elements('paymentRequestButton')
-    shopStore.cardElement = elements.create()
-    // shopStore.cardElement.mount('#card-element');
 
-});
+    // shopStore.stripe = await loadStripe(process.env.MIX_STRIPE_KEY);
+    // // shopStore.stripe = stripe
+    // let elements = shopStore.stripe.elements()
+    // const cardElement = elements.create('card', {
+    //     classes: {
+    //         base: 'bg-gray-100 py-3 px-2 rounded border border-gray-300 focus:border-indigo-500 text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out'
+    //     }
+    //     // shopStore.cardElement.mount('#card-element');
+    // });
+    // cardElement.mount('#card-element');
 
+})
 
-
-let showMessage = ref(true);
-
-async function payNow(subscription) {
-
-    shopStore.paymentProcessing = true;
-
-    const {setupIntent, error} = await shopStore.stripe.confirmCardSetup(
-        props.intent.client_secret, {
-            payment_method: {
-                card: shopStore.cardElement,
-                billing_details: {name: props.user.name}
-            }
-        }
-    );
-
-    if (error) {
-        this.paymentProcessing = false;
-        alert(error);
-        console.log('ERROR');
-        console.log(error);
-    } else {
-        console.log('you arrived here.');
-        axios.post('subscription-checkout', {monthly_price:subscription,setupIntent:setupIntent.payment_method})
-            .then((response) => {
-                this.paymentProcessing = false;
-                console.log('success: subscription created.');
-            })
-            .catch((error) => {
-                this.paymentProcessing = false;
-                alert("Error2: "+error);
-                console.log('Error 2');
-            });
+function payNow(subscription) {
+    if (subscription === 'monthly') {
+        shopStore.upgradeMonthly()
+        Inertia.get('/shop/subscribe')
+    } if (subscription === 'yearly') {
+        shopStore.upgradeYearly()
+        Inertia.get('/shop/subscribe')
+    } if (subscription === 'forever') {
+        shopStore.upgradeForever()
+        Inertia.get('/shop/subscribe')
     }
 }
+//  function payNow(subscription) {
+//
+//     shopStore.paymentProcessing = true;
+//
+//     const {setupIntent, error} = await shopStore.stripe.confirmCardSetup(
+//         props.intent.client_secret, {
+//             payment_method: {
+//                 card: shopStore.cardElement,
+//                 billing_details: {name: props.user.name}
+//             }
+//         }
+//     );
+//
+//     if (error) {
+//         this.paymentProcessing = false;
+//         alert(error);
+//         console.log('ERROR');
+//         console.log(error);
+//     } else {
+//         console.log('you arrived here.');
+//         axios.post('subscription-checkout', {monthly_price: subscription, setupIntent: setupIntent.payment_method})
+//             .then((response) => {
+//                 this.paymentProcessing = false;
+//                 console.log('success: subscription created.');
+//             })
+//             .catch((error) => {
+//                 this.paymentProcessing = false;
+//                 alert("Error2: " + error);
+//                 console.log('Error 2');
+//             });
+//     }
+// }
 
 </script>
 
