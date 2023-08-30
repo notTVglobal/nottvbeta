@@ -4,11 +4,11 @@
     <div class="h-full w-full overflow-y-scroll scrollbar-hide"
          :class="{'':userStore.isMobile}">
 
-        <div v-if="videoPlayerStore.ott === 2" class="channels w-full bg-gray-800 overflow-y-scroll p-2"
+        <div v-if="videoPlayerStore.ott === 2" class="channels w-full h-full bg-gray-800 p-2 mb-64"
              :class="ottChannels">
             <h1 class="text-xs font-semibold uppercase mb-3 w-full bg-green-900 text-white p-2">CHANNELS</h1>
 
-            <div class="pb-24 w-full overflow-y-scroll scrollbar-hide"
+            <div class="overflow-y-scroll scrollbar-hide pb-24 w-full "
                  >
 
                 <Channels/>

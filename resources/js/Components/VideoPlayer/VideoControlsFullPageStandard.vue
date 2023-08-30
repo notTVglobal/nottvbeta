@@ -15,6 +15,11 @@
                     <div class="videoControlsStandard absolute flex justify-center space-x-4 bottom-12 pb-24 right-px-2 w-full z-50"
                         :class="{'right-44': chatStore.showChat, videoControlsMobile: userStore.isMobile}">
 
+                        <button
+                            class="text-xs md:text-md  md:text-md bg-gray-800 rounded-full p-2 hover:bg-gray-600"
+                            @click="videoPlayerStore.fullscreen()">
+                            FULLSCREEN</button>
+
                         <button v-if="videoPlayerStore.muted===true"
                                 class="text-xs md:text-md  md:text-md bg-gray-800 rounded-full p-2 hover:bg-gray-600"
                                 @click="videoPlayerStore.unmute()">

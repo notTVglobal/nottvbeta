@@ -1,7 +1,7 @@
 <template>
 
     <div class="vh-100 z-20" :class="videoPlayerStore.videoContainerClass">
-        <div :class="[videoPlayerStore.class, isMobile]">
+        <div :class="[videoPlayerStore.class, isMobile]" @mouseenter="mouseEnter" @mousemove="mouseMove" @mouseleave="mouseLeave" >
 
 <!--        Login for Welcome Page (logged out) -->
             <Teleport to="body">
@@ -33,7 +33,7 @@
                     <OsdTopRight :show="videoPlayerStore.showOSD" />
 
                     <!--                 Video Player Controls-->
-                    <VideoControlsTopRight :show="videoPlayerStore.showOSD" />
+                    <VideoControlsTopRight :show="videoPlayerStore.showControls" />
 
                 </div>
             </div>
@@ -54,13 +54,13 @@
                     <div v-show="! videoPlayerStore.showOSD" class="fixed h-screen top-4 left-5 opacity-10 z-50">
                         <img :src="`/storage/images/logo_white_512.png`" class="block h-9 w-auto shrink-0"></div>
 
-                    <div v-show="videoPlayerStore.showOSD">
+                    <div>
                         <!-- Video Player Controls -->
-                        <VideoControlsFullPageMobile/>
+                        <VideoControlsFullPageMobile v-show="videoPlayerStore.showControls" />
                         <!-- On Screen Display (OSD) -->
-                        <OsdFullPageMobile/>
+                        <OsdFullPageMobile v-show="videoPlayerStore.showOSD"/>
                         <!-- Over The Top (OTT) -->
-                        <OttFullPageButtons/>
+                        <OttFullPageButtons v-show="videoPlayerStore.showOttButtons" />
                     </div>
 
                 </div>
@@ -74,7 +74,7 @@
                         <img :src="`/storage/images/logo_white_512.png`" class="block h-9 w-auto shrink-0"></div>
 
                     <!-- Video Player Controls -->
-                    <VideoControlsFullPageStandard v-show="videoPlayerStore.showOSD" />
+                    <VideoControlsFullPageStandard v-show="videoPlayerStore.showControls" />
 
                     <!-- On Screen Display (OSD) -->
                     <OsdFullPageStandard v-show="videoPlayerStore.showOSD"/>
@@ -95,7 +95,7 @@
 </template>
 
 <script setup>
-import {onUpdated, reactive, ref} from 'vue'
+import { watch, onMounted, onUpdated, reactive, ref } from 'vue'
 import { Inertia } from "@inertiajs/inertia"
 // import { router } from '@inertiajs/inertia'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
@@ -116,6 +116,7 @@ import VideoControlsTopRight from "@/Components/VideoPlayer/VideoControlsTopRigh
 import OsdTopRight from "@/Components/VideoPlayer/OsdTopRight.vue"
 import OsdFullPageStandard from "@/Components/VideoPlayer/OsdFullPageStandard.vue"
 import OsdFullPageMobile from "@/Components/VideoPlayer/OsdFullPageMobile.vue"
+import throttle from "lodash/throttle";
 
 
 let videoPlayerStore = useVideoPlayerStore()
@@ -127,7 +128,6 @@ videoPlayerStore.paused = false
 chatStore.showChat = false
 streamStore.showChannels = false
 streamStore.showOSD = false
-videoPlayerStore.showControls = false
 
 const isMobile = ref({
     mobile: userStore.isMobile,
@@ -158,9 +158,52 @@ function clickOnVideoAction() {
     if(userStore.isMobile) {
         Inertia.visit('/stream')
     } else {
-        videoPlayerStore.toggleOSD()
+        // videoPlayerStore.toggleOsdAndControls()
     }
     // }
+}
+
+onMounted( () => {
+    // document.getElementById("elementId").addEventListener('mousemove', function(event){
+    //     console.log(event.screenX + '-' + event.screenY);
+    //     // change the position of popup here by changing top and left property -
+    //     // document.getElementById('popup').style.top = event.screenY+'px';
+    //     // document.getElementById('popup').style.left = event.screenX+'px';
+    // });
+})
+
+let mouseActive = false
+
+function mouseEnter(event) {
+    mouseActive = true
+    console.log(mouseActive);
+    // videoPlayerStore.showOsdControlsOnly()
+    // document.addEventListener('mousemove', mouseMove, true);
+    // setInterval(function() {
+    //     videoPlayerStore.hideOsdAndControls()
+    // }, 3000);
+    // setInterval(function() {
+    //     mouseActive = false
+    //     videoPlayerStore.hideOsdControlsOnly()
+    // }, 3000);
+}
+function mouseLeave(event) {
+    mouseActive = false
+    console.log(mouseActive);
+
+    // videoPlayerStore.hideOsdControlsOnly()
+    // this.popup = false;
+    // document.addEventListener('mousemove', mouseMove, false);
+
+}
+function mouseMove(event) {
+    mouseActive = true
+    // videoPlayerStore.showOsdControlsOnly()
+    // console.log(event.clientX, event.clientY);
+    // setInterval(function() {
+    //     mouseActive = false
+    //     videoPlayerStore.hideOsdAndControls()
+    // }, 3000);
 }
 
 

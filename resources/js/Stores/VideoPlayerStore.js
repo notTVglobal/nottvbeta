@@ -39,6 +39,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             loggedIn: Boolean,
 
             showOSD: true,
+            showControls: true,
             showNav: true,
             showOttButtons: true,
             showChannels: false,
@@ -70,6 +71,30 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             this.blue = true
         },
 
+        // show
+        showOsdAndControls() {
+            this.showOSD = true
+            this.showControls = true
+        },
+        showOsd() {
+            this.showOSD = true
+        },
+        showOsdControlsOnly() {
+            this.showControls = true
+        },
+
+        // hide
+        hideOsdAndControls() {
+            this.showOSD = false
+            this.showControls = false
+        },
+        hideOsd() {
+            this.showOSD = false
+        },
+        hideOsdControlsOnly() {
+            this.showControls = false
+        },
+
         // toggles
         togglePiP() {
             if (this.class === 'topRightVideoClass' && useUserStore().isMobile) {
@@ -79,8 +104,9 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                 this.class = 'topRightVideoClass'
                 this.videoContainerClass = 'topRightVideoContainer'
         },
-        toggleOSD() {
-          this.showOSD = !this.showOSD
+        toggleOsdAndControls() {
+            this.showOSD = !this.showOSD
+            this.showControls = !this.showControls
           // this.showNav = ! this.showNav
           // if (this.fullPage) {
           //     this.showNav = !this.showNav;
@@ -97,24 +123,27 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
         },
         toggleChannels() {
             this.showOttButtons = !this.showOttButtons
+            this.showControls = !this.showControls
             this.showChannels = !this.showChannels
-            this.showOSD = !this.showOSD
         },
         togglePlaylist() {
             this.showOttButtons = !this.showOttButtons
+            this.showControls = !this.showControls
             this.showPlaylist = !this.showPlaylist
-            this.showOSD = !this.showOSD
+            // this.showOSD = !this.showOSD
         },
         toggleChat() {
             this.showOttButtons = !this.showOttButtons
-            this.showOSD = !this.showOSD
+            this.showControls = !this.showControls
+            // this.showOSD = !this.showOSD
             // this.showNav = ! this.showNav
             useChatStore().toggleChat()
         },
         toggleFilters() {
             this.showOttButtons = !this.showOttButtons
+            this.showControls = !this.showControls
             this.showFilters = !this.showFilters
-            this.showOSD = !this.showOSD
+            // this.showOSD = !this.showOSD
         },
         toggleOttInfo() {
             this.toggleOtt(1)
@@ -166,6 +195,11 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
         back() {
             let videoJs = videojs('main-player')
             videoJs.src(this.previousSource)
+        },
+        fullscreen() {
+            let videoJs = videojs('main-player')
+            // videoJs.fullscreen(this.previousSource)
+            videoJs.requestFullscreen()
         },
 
         // check if episode has a video

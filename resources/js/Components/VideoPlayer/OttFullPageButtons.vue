@@ -38,19 +38,22 @@ let userStore = useUserStore()
 
 function openChannels() {
     videoPlayerStore.toggleChannels()
+    videoPlayerStore.showControls = false
 }
 
 function openPlaylist() {
     videoPlayerStore.togglePlaylist()
+    videoPlayerStore.showControls = false
 }
 function openChat() {
     chatStore.toggleChatOn()
     videoPlayerStore.showOttButtons = false
-    videoPlayerStore.showOSD = false
+    videoPlayerStore.showControls = false
 }
 
 function openFilters() {
     videoPlayerStore.toggleFilters()
+    videoPlayerStore.showControls = false
 }
 const ottButtons = computed(() => ({
     OttButtonsMobile: userStore.isMobile,
