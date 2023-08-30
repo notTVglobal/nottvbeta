@@ -5,6 +5,7 @@ import { useUserStore } from "@/Stores/UserStore";
 import videojs from 'video.js';
 import {Inertia} from "@inertiajs/inertia";
 import {ref} from "vue";
+import {useChannelStore} from "@/Stores/ChannelStore";
 
 export const useVideoPlayerStore = defineStore('videoPlayerStore', {
     state: () => ({
@@ -59,7 +60,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             mistNewHashedPassword: [],
             ott: 0,
             blue: false,
-
+            videoIsYoutube: false,
             videoUploadComplete: false,
         }),
 
@@ -217,10 +218,23 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
 
         // load video from different types of sources:
             // Url
+            // YouTube
             // EmbedCode
             // Mist
             // File
+        loadNewSourceFromYouTube(source) {
+            this.videoIsYoutube = true
+            useChannelStore().clearChannel()
+            let videoJs = videojs('main-player')
+            this.videoSource = source
+            this.videoSourceType = "video/youtube"
+            videoJs.src({'src': this.videoSource, 'type': this.videoSourceType})
+            this.unmute()
+            this.paused = false
+        },
         loadNewSourceFromUrl(source) {
+            this.videoIsYoutube = false
+            useChannelStore().clearChannel()
             let videoJs = videojs('main-player')
             this.videoSource = source
             this.videoSourceType = "video/mp4"
@@ -229,6 +243,8 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             this.paused = false
         },
         loadNewSourceFromEmbedCode(source) {
+            this.videoIsYoutube = false
+            useChannelStore().clearChannel()
             let videoJs = videojs('main-player')
             this.videoSource = source
             this.videoSourceType = "video/mp4"
@@ -237,6 +253,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             this.paused = false
         },
         loadNewSourceFromMist(source) {
+            this.videoIsYoutube = false
             let videoJs = videojs('main-player')
             let filePath = 'https://mist.not.tv/hls/'
             this.videoSource = filePath+source+'/index.m3u8'
@@ -246,6 +263,8 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             this.paused = false
         },
         loadNewSourceFromFile(source) {
+            this.videoIsYoutube = false
+            useChannelStore().clearChannel()
             let videoJs = videojs('main-player')
             let filePath = source.cdn_endpoint+source.cloud_folder+source.folder+'/'
             this.videoName = "Video File"
@@ -294,13 +313,6 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
         },
 
 
-
-
-
-
-
-
-
         // change channel
         changeChannel(name) {
             if (name==='one') {
@@ -308,99 +320,109 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                 this.videoName = 'notTV One'
                 this.currentChannelName = 'one'
                 this.currentChannelId = 1
-                this.loadNewSourceFromMist(source)
                 this.addViewerToChannel()
                 this.getViewerCount()
+                this.loadNewSourceFromMist(source)
             }
             if (name==='ambient') {
                 let source = 'mist1pull2'
                 this.videoName = 'Ambient'
                 this.currentChannelName = 'ambient'
                 this.currentChannelId = 2
-                this.loadNewSourceFromMist(source)
                 this.addViewerToChannel()
                 this.getViewerCount()
+                this.loadNewSourceFromMist(source)
+
             }
             if (name==='news') {
                 let source = 'mist1pull3'
                 this.videoName = 'News'
                 this.currentChannelName = 'news'
                 this.currentChannelId = 3
-                this.loadNewSourceFromMist(source)
                 this.addViewerToChannel()
                 this.getViewerCount()
+                this.loadNewSourceFromMist(source)
+
             }
             if (name==='talk') {
                 let source = 'mist1pull4'
                 this.videoName = 'Talk'
                 this.currentChannelName = 'talk'
                 this.currentChannelId = 4
-                this.loadNewSourceFromMist(source)
                 this.addViewerToChannel()
                 this.getViewerCount()
+                this.loadNewSourceFromMist(source)
+
             }
             if (name==='documentary') {
                 let source = 'mist1pull5'
                 this.videoName = 'Documentary'
                 this.currentChannelName = 'documentary'
                 this.currentChannelId = 5
-                this.loadNewSourceFromMist(source)
                 this.addViewerToChannel()
                 this.getViewerCount()
+                this.loadNewSourceFromMist(source)
+
             }
             if (name==='music') {
                 let source = 'mist1pull6'
                 this.videoName = 'Music'
                 this.currentChannelName = 'music'
                 this.currentChannelId = 6
-                this.loadNewSourceFromMist(source)
                 this.addViewerToChannel()
                 this.getViewerCount()
+                this.loadNewSourceFromMist(source)
+
             }
             if (name==='drama') {
                 let source = 'mist1pull7'
                 this.videoName = 'Drama'
                 this.currentChannelName = 'drama'
                 this.currentChannelId = 7
-                this.loadNewSourceFromMist(source)
                 this.addViewerToChannel()
                 this.getViewerCount()
+                this.loadNewSourceFromMist(source)
+
             }
             if (name==='comedy') {
                 let source = 'mist1pull8'
                 this.videoName = 'Comedy'
                 this.currentChannelName = 'comedy'
                 this.currentChannelId = 8
-                this.loadNewSourceFromMist(source)
                 this.addViewerToChannel()
                 this.getViewerCount()
+                this.loadNewSourceFromMist(source)
+
             }
             if (name==='education') {
                 let source = 'mist1pull9'
                 this.videoName = 'Education'
                 this.currentChannelName = 'education'
                 this.currentChannelId = 9
-                this.loadNewSourceFromMist(source)
                 this.addViewerToChannel()
                 this.getViewerCount()
+                this.loadNewSourceFromMist(source)
+
             }
             if (name==='spirituality') {
                 let source = 'mist1pull10'
                 this.videoName = 'Spirituality'
                 this.currentChannelName = 'spirituality'
                 this.currentChannelId = 10
-                this.loadNewSourceFromMist(source)
                 this.addViewerToChannel()
                 this.getViewerCount()
+                this.loadNewSourceFromMist(source)
+
             }
             if (name==='reality') {
                 let source = 'mist1pull11'
                 this.videoName = 'Reality'
                 this.currentChannelName = 'reality'
                 this.currentChannelId = 11
-                this.loadNewSourceFromMist(source)
                 this.addViewerToChannel()
                 this.getViewerCount()
+                this.loadNewSourceFromMist(source)
+
             }
             if (name==='variety') {
                 this.disconnectViewerFromChannel()
@@ -408,9 +430,10 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                 this.videoName = 'Variety'
                 this.currentChannelName = 'variety'
                 this.currentChannelId = 12
-                this.loadNewSourceFromMist(source)
                 this.addViewerToChannel()
                 this.getViewerCount()
+                this.loadNewSourceFromMist(source)
+
             }
             if (name==='sports') {
                 this.disconnectViewerFromChannel()
@@ -418,9 +441,10 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                 this.videoName = 'Sports'
                 this.currentChannelName = 'sports'
                 this.currentChannelId = 13
-                this.loadNewSourceFromMist(source)
                 this.addViewerToChannel()
                 this.getViewerCount()
+                this.loadNewSourceFromMist(source)
+
             }
             if (name==='local') {
                 this.disconnectViewerFromChannel()
@@ -428,9 +452,10 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                 this.videoName = 'Local'
                 this.currentChannelName = 'local'
                 this.currentChannelId = 14
-                this.loadNewSourceFromMist(source)
                 this.addViewerToChannel()
                 this.getViewerCount()
+                this.loadNewSourceFromMist(source)
+
             }
             if (name==='world') {
                 this.disconnectViewerFromChannel()
@@ -438,9 +463,10 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                 this.videoName = 'notTV World'
                 this.currentChannelName = 'world'
                 this.currentChannelId = 15
-                this.loadNewSourceFromMist(source)
                 this.addViewerToChannel()
                 this.getViewerCount()
+                this.loadNewSourceFromMist(source)
+
             }
         },
     },

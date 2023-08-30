@@ -24,6 +24,7 @@ class ShowEpisode extends Model
         'slug',
         'notes',
         'video_url',
+        'youtube_url',
         'video_embed_code',
         'isPublished',
         'isBeingEditedByUser_id',

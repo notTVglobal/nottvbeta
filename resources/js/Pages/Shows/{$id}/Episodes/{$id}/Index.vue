@@ -245,6 +245,8 @@ let props = defineProps({
 function checkForVideo() {
     if (props.video.file_name && props.video.upload_status !== 'processing') {
         videoPlayerStore.hasVideo = true;
+    } if (props.episode.youtube_url) {
+        videoPlayerStore.hasVideo = true;
     } else
     if (props.episode.video_url) {
         videoPlayerStore.hasVideo = true;
@@ -273,7 +275,14 @@ let playEpisode = () => {
         videoPlayerStore.videoName = props.episode.name+' (web)'
         videoPlayerStore.currentChannelName = 'On Demand ('+props.episode.name+') from web'
         Inertia.visit('/stream')
-    }
+    } else
+        // else if youtube_url exists, play youtube_url
+        if (props.episode.youtube_url) {
+            videoPlayerStore.loadNewSourceFromYouTube(props.episode.youtube_url)
+            videoPlayerStore.videoName = props.episode.name+' (web)'
+            videoPlayerStore.currentChannelName = 'On Demand ('+props.episode.name+') from YouTube'
+            Inertia.visit('/stream')
+        }
 
 }
 

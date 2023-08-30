@@ -17,11 +17,11 @@
                 </div>
                 <div>
                     <div class="absolute flex justify-between top-0 drop-shadow pt-3 px-10 lg:px-2 w-full z-50">
-                        <div v-if="channelStore.currentVideoName !== ''">
+                        <div v-if="videoPlayerStore.videoName !== ''">
                             <span class="text-xs uppercase pr-2">Now playing: </span>
-                            <span class="font-semibold text-xs">{{ channelStore.currentVideoName }}</span>
+                            <span class="font-semibold text-xs">{{ videoPlayerStore.videoName }}</span>
                         </div>
-                        <div v-if="channelStore.currentChannelName !== ''">
+                        <div v-if="channelStore.currentChannelName !== null">
                             <span class="text-xs uppercase pr-2">Channel: </span>
                             <span class="text-xs font-semibold">{{ channelStore.currentChannelName }}</span>
                         </div>

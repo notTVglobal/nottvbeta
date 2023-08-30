@@ -77,7 +77,7 @@
                     <VideoControlsFullPageStandard v-show="videoPlayerStore.showOSD" />
 
                     <!-- On Screen Display (OSD) -->
-                    <OsdFullPageStandard v-show="videoPlayerStore.showOSD" />
+                    <OsdFullPageStandard v-show="videoPlayerStore.showOSD"/>
 
                     <!-- Over The Top (OTT) -->
                     <OttFullPageButtons v-show="videoPlayerStore.showOSD" />

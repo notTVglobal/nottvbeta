@@ -105,6 +105,21 @@
                     <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"
                            for="video_file_url"
                     >
+                        YouTube URL
+                    </label>
+                    <input v-model="form.youtube_url"
+                           class="bg-gray-50 border border-gray-400 text-gray-900 text-sm p-2 w-full rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                           type="text"
+                           name="youtube_url"
+                           id="youtube_url"
+                    >
+                    <div v-if="form.errors.youtube_url" v-text="form.errors.youtube_url" class="text-xs text-red-600 mt-1"></div>
+                </div>
+
+                <div class="mb-6">
+                    <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"
+                           for="video_file_url"
+                    >
                         Video URL (if hosted externally, must be a url that ends in .mp4)
                     </label>
                     <input v-model="form.video_file_url"
@@ -218,6 +233,7 @@ let form = useForm({
     show_slug: props.show.slug,
     episode_number: '',
     video_file_url: '',
+    youtube_url: '',
     video_file_embed_code: '',
     notes: '',
 });

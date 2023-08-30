@@ -39,21 +39,9 @@ let userStore = useChannelStore();
 
 channelStore.getChannels()
 
-function changeChannel(channel) {
-    channelStore.disconnectViewerFromChannel()
-    window.Echo.leaveChannel('viewerCount.' + channelStore.currentChannelId)
-    channelStore.changeChannel(channel)
-    window.Echo.channel('viewerCount.' + channelStore.currentChannelId)
-        .listen('ViewerJoinChannel', (e) => {
-            console.log('test count up')
-            channelStore.viewerCount = channelStore.viewerCount + 1
-            // channelStore.viewerIncrement()
-        })
-        .listen('ViewerLeaveChannel', (e) => {
-            console.log('test count down')
-            channelStore.viewerCount = channelStore.viewerCount - 1
-            // channelStore.viewerDecrement()
-        })
+async function changeChannel(channel) {
+    await channelStore.disconnectViewerFromChannel()
+    await channelStore.changeChannel(channel)
     videoPlayerStore.toggleChannels()
     videoPlayerStore.toggleOttChannels()
     videoPlayerStore.ott = 0

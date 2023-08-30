@@ -35,7 +35,7 @@ class ViewerLeaveChannel implements ShouldBroadcastNow
      */
     public function broadcastOn()
     {
-        return new Channel('viewerCount'. $this->currentViewers->channel_id);
+        return new Channel('viewerCount.'. $this->currentViewers->channel_id);
     }
 
     /**

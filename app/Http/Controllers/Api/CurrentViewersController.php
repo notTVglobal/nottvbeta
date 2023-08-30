@@ -29,17 +29,13 @@ class CurrentViewersController extends Controller
                 'channel_id' => 'No channel selected!'
             ], 422);
         }
-        $alreadyViewing = CurrentViewers::where('user_id', '=', $request->user_id)->first();
-        if ($alreadyViewing !== null) {
-//            event(new ViewerJoinChannel($alreadyViewing));
-//            UpdateCurrentViewersCount::dispatch($alreadyViewing);
-            $alreadyViewing->update([$request->channel_id]);
+        $currentViewers = CurrentViewers::where('user_id', $request->user_id)->first();
+        if ($currentViewers !== null) {
+            $currentViewers->update([$request->channel_id]);
         } else {
             $currentViewers = new CurrentViewers;
             $currentViewers->user_id = $request->user_id;
             $currentViewers->channel_id = $request->channel_id;
-
-//            UpdateCurrentViewersCount::dispatch($currentViewers);
             $currentViewers->save();
         }
 //        $currentViewers = CurrentViewers::where('channel_id', '=', $request->channel_id)->get();
@@ -48,8 +44,8 @@ class CurrentViewersController extends Controller
 //            'channel_id' => $request->channel_id,
 //        ];
 //        Broadcast(new UpdateCurrentViewersCount($currentViewersCount));
-
-        return response()->json(['success'], 201);
+        $currentViewers = CurrentViewers::where('channel_id', $request->channel_id)->count();
+        return response()->json([$currentViewers], 201);
     }
 
     function removeCurrentViewer(HttpRequest $request): \Illuminate\Http\JsonResponse

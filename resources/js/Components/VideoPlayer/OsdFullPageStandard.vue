@@ -1,9 +1,9 @@
 <template>
 <div>
     <div class="absolute w-full flex justify-between top-16 left-0 p-5 drop-shadow z-50">
-        <div v-if="channelStore.currentVideoName !== ''">
+        <div v-if="videoPlayerStore.videoName !== ''">
             <span class="text-xs uppercase pr-2">Now playing: </span>
-            <span class="font-semibold">{{ channelStore.currentVideoName }}</span>
+            <span class="font-semibold">{{ videoPlayerStore.videoName }}</span>
         </div>
         <div v-if="channelStore.currentChannelName !== null">
             <span class="text-xs uppercase pr-2">Channel: </span>

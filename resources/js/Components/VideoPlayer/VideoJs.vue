@@ -1,9 +1,15 @@
 <template>
-
+<div>
     <div>
-        <video ref="videoPlayer" :id="props.id" class="video-js vjs-big-play-centered vjs-fill bg-pink-700" playsinline autoplay muted />
+        <video ref="videoPlayer"
+               :id="props.id"
+               class="video-js vjs-big-play-centered vjs-fill bg-pink-700"
+               playsinline
+               autoplay
+               muted
+        />
     </div>
-
+</div>
 </template>
 
 
@@ -13,6 +19,7 @@ import {useStreamStore} from "@/Stores/StreamStore.js";
 import {useChatStore} from "@/Stores/ChatStore.js";
 import {useUserStore} from "@/Stores/UserStore.js";
 import videojs from 'video.js';
+import Youtube from 'videojs-youtube';
 import {onMounted, onBeforeUnmount} from "vue";
 
 let videoPlayerStore = useVideoPlayerStore();

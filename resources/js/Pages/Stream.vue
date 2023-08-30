@@ -10,6 +10,7 @@ import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useStreamStore } from "@/Stores/StreamStore.js"
 import { useChatStore } from "@/Stores/ChatStore.js"
 import {onBeforeMount, onBeforeUnmount, onMounted, onUnmounted} from "vue";
+import videojs from 'video.js';
 
 let videoPlayerStore = useVideoPlayerStore()
 let streamStore = useStreamStore()
@@ -24,6 +25,10 @@ onMounted(() => {
     videoPlayerStore.showControls = true
     videoPlayerStore.ottClass = 'OttClose'
     videoPlayerStore.ott = 0
+    let videoJs = videojs('main-player')
+    if (videoJs.muted(false)) {
+        videoPlayerStore.unmute()
+    }
 
 })
 // if (streamStore.currentChannel != "Stream") {

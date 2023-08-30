@@ -72,6 +72,7 @@ class ShowEpisodeController extends Controller
             'episode_number' => 'nullable|max:10',
             'notes' => 'nullable|string',
             'video_file_url' => 'nullable|active_url',
+            'youtube_url' => 'nullable|active_url',
             'video_file_embed_code' => 'nullable|string',
         ]);
         $showEpisode = new ShowEpisode();
@@ -83,6 +84,7 @@ class ShowEpisodeController extends Controller
         $showEpisode->episode_number = $request->episode_number;
         $showEpisode->slug = \Str::slug($request->name);
         $showEpisode->video_url = $request->video_url;
+        $showEpisode->youtube_url = $request->youtube_url;
         $showEpisode->video_embed_code = $request->video_embed_code;
         $showEpisode->notes = $request->notes;
         $showEpisode->release_year = Carbon::now()->format('Y');
@@ -149,6 +151,7 @@ class ShowEpisodeController extends Controller
                 'mist_stream_id' => $showEpisode->mist_stream_id,
                 'video_id' => $showEpisode->video_id,
                 'video_url' => $showEpisode->video_url,
+                'youtube_url' => $showEpisode->youtube_url,
                 'video_embed_code' => $showEpisode->video_embed_code,
             ],
             'video' => [
@@ -250,6 +253,7 @@ class ShowEpisodeController extends Controller
                 'mist_stream_id' => $showEpisode->mist_stream_id,
                 'video_id' => $showEpisode->video_id,
                 'video_url' => $showEpisode->video_url,
+                'youtube_url' => $showEpisode->youtube_url,
                 'video_embed_code' => $showEpisode->video_embed_code,
                 'video' => [
                     'file_name' => $videoForEpisode->file_name ?? '',
@@ -350,6 +354,7 @@ class ShowEpisodeController extends Controller
             'description' => 'required',
             'notes' => 'nullable|string',
             'video_url' => 'nullable|active_url',
+            'youtube_url' => 'nullable|active_url',
             'video_embed_code' => 'nullable|string',
             'release_date' => 'nullable|string',
         ]);
@@ -361,6 +366,7 @@ class ShowEpisodeController extends Controller
         $showEpisode->slug = \Str::slug($request->name);
         $showEpisode->notes = $request->notes;
         $showEpisode->video_url = $request->video_url;
+        $showEpisode->youtube_url = $request->youtube_url;
         $showEpisode->video_embed_code = $request->video_embed_code;
         $showEpisode->save();
         sleep(1);

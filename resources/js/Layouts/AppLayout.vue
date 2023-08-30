@@ -48,7 +48,7 @@
 </template>
 
 <script setup>
-import {computed, onServerPrefetch, onBeforeMount, onBeforeUnmount, onUpdated, onMounted} from "vue";
+import {ref, watch, computed, onServerPrefetch, onBeforeMount, onBeforeUnmount, onUpdated, onMounted} from "vue";
 import ResponsiveNavigationMenu from "@/Components/Navigation/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/Navigation/NavigationMenu"
 import VideoPlayerMain from "@/Components/VideoPlayer/VideoPlayerMain"
@@ -87,7 +87,7 @@ let props = defineProps({
     logged_out_id: ''
 });
 
-const oldLoggedOutId = props.logged_out_id
+userStore.oldLoggedOutId = props.logged_out_id
 
 function getUser() {
     if (props.user === null) {userStore.id = props.user_id; userStore.oldLoggedOutId = props.user_id;}
@@ -97,25 +97,49 @@ function getUser() {
 }
 
 console.log('TEST POINT 1')
-window.Echo.channel('viewerCount.' + channelStore.currentChannelId)
-    .listen('ViewerJoinChannel', (e) => {
-        console.log('test count up')
-        channelStore.viewerCount = channelStore.viewerCount + 1
-        // channelStore.viewerIncrement()
-    })
-    .listen('ViewerLeaveChannel', (e) => {
-        console.log('test count down')
-        channelStore.viewerCount = channelStore.viewerCount - 1
-        // channelStore.viewerDecrement()
-    })
+// window.Echo.channel('viewerCount.' + channelStore.currentChannelId)
+//     .listen('ViewerJoinChannel', (e) => {
+//         console.log('test count up')
+//         channelStore.viewerCount = channelStore.viewerCount + 1
+//         // channelStore.viewerIncrement()
+//     })
+//     .listen('ViewerLeaveChannel', (e) => {
+//         console.log('test count down')
+//         channelStore.viewerCount = channelStore.viewerCount - 1
+//         // channelStore.viewerDecrement()
+//     })
+// single ref
+// watch(x, (newX) => {
+//     console.log(`x is ${newX}`)
+// })
+
+// watch(channelStore.currentChannelId, (newX) => {
+//     console.log(`x is ${newX}`)
+// })
+
+// Echo.channel('viewerCount.' + 1)
+//     .listen('ViewerJoinChannel', (e) => {
+//         console.log(e)
+//         // channelStore.viewerCount = channelStore.viewerCount + 1
+//         channelStore.increaseViewerCount()
+//     })
+//     .listen('ViewerLeaveChannel', (e) => {
+//         console.log(e)
+//         // this.viewerCount = this.viewerCount - 1
+//         channelStore.decreaseViewerCount()
+//     })
 
 onBeforeMount(() => {
     getUser()
-    videoPlayerStore.videoSource = "https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4"
-    videoPlayerStore.videoSourceType = "application/x-mpegURL"
-    channelStore.currentVideoName = "Big Buck Bunny"
-    channelStore.currentChannelName = null
-    channelStore.currentChannelId = null
+    let channel = {
+        'id': 1,
+        'name': 'Stream',
+        'isLive': true,
+    }
+    channelStore.changeChannel(channel)
+    // videoPlayerStore.videoSource = "https://ia800300.us.archive.org/17/items/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4"
+    // videoPlayerStore.videoSourceType = "application/x-mpegURL"
+    // videoPlayerStore.videoName = "Big Buck Bunny"
     userStore.showNavDropdown = false
 
     // Echo.channel('viewerCount')
@@ -126,28 +150,28 @@ onBeforeMount(() => {
     //     if (event.data.channel_id === videoPlayerStore.currentChannelId) {
     //         videoPlayerStore.viewerCount = videoPlayerStore.viewerCount - 1;}
     // })
-
-    channelStore.addViewerToChannel()
 })
 
 onUpdated(() => {
     if (userStore.id !== props.user_id && userStore.id === null) {
-        channelStore.disconnectLoggedOutUserFromChannel(oldLoggedOutId)
+        channelStore.disconnectLoggedOutUserFromChannel(userStore.oldLoggedOutId)
         userStore.oldLoggedOutId = null
     }
     getUser()
 })
 
-onBeforeUnmount(() => {
+onBeforeUnmount( () => {
     // if sessions_id is removed and the user_logged_out_id remains
     // we'll need to purge the viewer from the ViewerCount.
     // this doesn't seem to get removed when I close the browser
     if (userStore.id !== props.user_id && userStore.id === null) {
-        channelStore.disconnectLoggedOutUserFromChannel(oldLoggedOutId)
+        channelStore.disconnectLoggedOutUserFromChannel(userStore.oldLoggedOutId)
         userStore.oldLoggedOutId = null
     }
-    channelStore.disconnectLoggedOutUserFromChannel(oldLoggedOutId)
+    // await channelStore.disconnectViewerFromChannel()
 })
+
+
 
 const pageHide = computed(() => ({
     'hidden lg:block': videoPlayerStore.ottClass === 'OttOpen' && userStore.isMobile
