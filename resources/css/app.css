@@ -269,6 +269,7 @@ html {
 @media (orientation: portrait) and (min-width: 800px) {
     .videoFullPageMobileOSD {
         top: 33rem;
+        @apply fixed
     }
     .videoControlsMobile {
         top: 35rem !important;
@@ -278,18 +279,18 @@ html {
 }
 @media (orientation: portrait) and (max-width: 800px) {
     .videoFullPageMobileOSD {
-        top: 17rem;
+        top: 20rem;
+        @apply fixed left-3
     }
     .videoControlsMobile {
-        top: 15rem !important;
-        left:0;
+        top: 17rem !important;
         z-index: 200;
-        @apply fixed w-50 mx-auto
+        @apply fixed mx-auto flex left-3 justify-center space-x-4
     }
     .backToPage {
         position: fixed;
-        bottom: 0;
-        left:0;
+        bottom: 2rem;
+        left: 1rem;
     }
 }
 @media (orientation: landscape) and (max-width:800px) {

@@ -13,7 +13,6 @@
 <!-- Video FullPage Controls -->
 <!--    <div class="absolute flex justify-center space-x-4 bottom-12 right-px-2 w-full z-50"-->
                     <div class="videoControlsMobile">
-                        <div class="flex justify-center space-x-4 ">
                             <button
                                 class="text-xs md:text-md md:text-md bg-gray-600 rounded-full p-2 hover:bg-gray-600"
                                 @click="videoPlayerStore.fullscreen()">
@@ -50,7 +49,6 @@
                                 @click="videoPlayerStore.next()"
                                 disabled >
                                 NEXT</button>
-                        </div>
                     </div>
 
                     <div class="backToPage drop-shadow">

@@ -1,6 +1,6 @@
 <template>
 <div>
-    <div class="videoFullPageMobileOSD absolute w-full left-0 p-5 drop-shadow z-50">
+    <div class="videoFullPageMobileOSD">
         <div v-if="videoPlayerStore.videoName !== null">
             <span class="text-xs uppercase pr-2">Now playing: </span>
             <span class="font-semibold">{{ videoPlayerStore.videoName }}</span>
