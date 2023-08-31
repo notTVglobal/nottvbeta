@@ -1388,12 +1388,34 @@ html {
 @media (orientation: landscape) and (max-width:800px) {
     .videoFullPageMobileOSD {
         top: 4rem;
-    }
+        position: fixed;
+        bottom: 0.5rem;
+        left: 0.5rem}
+    .backToPage {
+    position: fixed;
+    bottom: 1.25rem;
+    left: 0.5rem;
+  }
+    .videoControlsMobile {
+        z-index: 200;
+        position: fixed;
+        bottom: 0.5rem;
+        left: 0.75rem;
+        margin-left: auto;
+        margin-right: auto;
+        display: flex;
+        justify-content: center}
+    .videoControlsMobile > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-x-reverse: 0;
+    margin-right: calc(1rem * var(--tw-space-x-reverse));
+    margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
+  }
 }
 @media (orientation: landscape) and (min-width:800px) {
     .videoFullPageMobileOSD {
         top: 4rem;
     }
+
 }
 @media (orientation: landscape) {
     .videoControlsMobile {

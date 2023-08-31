@@ -296,12 +296,21 @@ html {
 @media (orientation: landscape) and (max-width:800px) {
     .videoFullPageMobileOSD {
         top: 4rem;
+        @apply fixed bottom-2 left-2
+    }
+    .backToPage {
+        @apply fixed bottom-5 left-2
+    }
+    .videoControlsMobile {
+        z-index: 200;
+        @apply fixed bottom-2 mx-auto flex left-3 justify-center space-x-4
     }
 }
 @media (orientation: landscape) and (min-width:800px) {
     .videoFullPageMobileOSD {
         top: 4rem;
     }
+
 }
 @media (orientation: landscape) {
     .videoControlsMobile {
