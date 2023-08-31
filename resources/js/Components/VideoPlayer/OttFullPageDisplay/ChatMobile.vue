@@ -43,6 +43,7 @@ function closeChat() {
     videoPlayerStore.makeVideoFullPage()
     videoPlayerStore.showOSD = true
     videoPlayerStore.showOttButtons = true
+    videoPlayerStore.showControls = true
 }
 
 onBeforeUnmount(() => {

@@ -48,6 +48,10 @@
                         </div>
                     </div>
 
+                    <div class="backToPage drop-shadow">
+                        <button @click="backToPage" class="p-2 bg-gray-600 hover:bg-gray-800 text-white" >Back to Page</button>
+                    </div>
+
 
         </div>
 
@@ -70,13 +74,13 @@ defineProps({
 let showChat = chatStore.showChat;
 let isMobile = userStore.isMobile;
 
+function backToPage() {
+    window.history.back()
+}
 
 </script>
 
 <style scoped>
-.videoControlsMobile {
-
-}
 .videoControlsStandard {
     margin-left: 0;
     margin-right: 0;

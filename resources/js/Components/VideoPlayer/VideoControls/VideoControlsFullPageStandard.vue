@@ -54,6 +54,12 @@
 
                     </div>
 
+                    <div class="absolute w-full flex justify-between mb-6 bottom-4 left-0 p-5 drop-shadow z-50">
+                        <div>
+                            <button @click="backToPage" class="p-2 bg-gray-800 text-white hover:bg-gray-600">Back to Page</button>
+                        </div>
+                    </div>
+
 
 
         </div>
@@ -73,6 +79,13 @@ let userStore = useUserStore()
 defineProps({
     show: Boolean
 });
+
+function backToPage() {
+    // videoPlayerStore.makeVideoTopRight();
+    // chatStore.showChat = false;
+    // streamStore.showOSD = false;
+    window.history.back()
+}
 
 
 </script>

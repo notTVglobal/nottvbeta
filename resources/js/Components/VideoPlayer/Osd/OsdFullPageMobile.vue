@@ -10,18 +10,16 @@
             <span class="text-xs font-semibold">{{ channelStore.currentChannelName }}</span>
         </div>
 
-        <div class="absolute pt-1 left-0 px-5 drop-shadow z-50">
-            <span v-if="channelStore.isLive" class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-white bg-opacity-80 bg-red-800 uppercase last:mr-0 mr-1">
+        <div class="flex flex-row space-x-1 absolute pt-1 left-0 pl-5 drop-shadow z-50">
+            <div v-if="channelStore.isLive" class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-white bg-opacity-80 bg-red-800 uppercase last:mr-0 mr-1">
                 live
-            </span>
+            </div>
             <div v-if="channelStore.currentChannelId !== null">
                 <CurrentViewers />
             </div>
         </div>
     </div>
-    <div class="fixed w-fit bottom-24 lg:bottom-8 left-0 p-5 drop-shadow z-50">
-        <button @click="backToPage" class="p-2 bg-gray-600 text-white" >Back to Page</button>
-    </div>
+
 </div>
 </template>
 
@@ -38,13 +36,6 @@ let streamStore = useStreamStore()
 let userStore = useUserStore()
 let chatStore = useChatStore()
 let channelStore = useChannelStore()
-
-function backToPage() {
-    // videoPlayerStore.makeVideoTopRight();
-    // chatStore.showChat = false;
-    // streamStore.showOSD = false;
-    window.history.back()
-}
 
 let isMobile = userStore.isMobile;
 let videoName = videoPlayerStore.videoName;
