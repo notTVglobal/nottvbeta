@@ -1324,11 +1324,12 @@ html {
     z-index: 200;
     position: fixed;
     bottom: 1rem;
-    left: 0px;
-    width: 100%;
+    left: 0.5rem;
+    width: -moz-fit-content;
+    width: fit-content;
     --tw-bg-opacity: 1;
     background-color: rgb(31 41 55 / var(--tw-bg-opacity));
-    padding: 1.25rem;
+    padding: 0.5rem;
     --tw-text-opacity: 1;
     color: rgb(255 255 255 / var(--tw-text-opacity));
     --tw-drop-shadow: drop-shadow(0 1px 2px rgb(0 0 0 / 0.1)) drop-shadow(0 1px 1px rgb(0 0 0 / 0.06));
