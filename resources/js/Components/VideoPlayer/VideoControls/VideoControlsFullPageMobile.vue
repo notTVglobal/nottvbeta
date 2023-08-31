@@ -12,8 +12,13 @@
 <div>
 <!-- Video FullPage Controls -->
 <!--    <div class="absolute flex justify-center space-x-4 bottom-12 right-px-2 w-full z-50"-->
-                    <div class="fixed z-50 w-50 videoControlsMobile">
+                    <div class="videoControlsMobile">
                         <div class="flex justify-center space-x-4 ">
+                            <button
+                                class="text-xs md:text-md md:text-md bg-gray-600 rounded-full p-2 hover:bg-gray-600"
+                                @click="videoPlayerStore.fullscreen()">
+                                FULLSCREEN</button>
+
                             <button v-if="videoPlayerStore.muted===true"
                                     class="text-xs md:text-md md:text-md bg-gray-600 rounded-full p-2"
                                     @click="videoPlayerStore.unmute()">

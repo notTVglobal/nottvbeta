@@ -283,7 +283,8 @@ html {
     .videoControlsMobile {
         top: 15rem !important;
         left:0;
-        width: 100%;
+        z-index: 200;
+        @apply fixed w-50 mx-auto
     }
     .backToPage {
         position: fixed;
