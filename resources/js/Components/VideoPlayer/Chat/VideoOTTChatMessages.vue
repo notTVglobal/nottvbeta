@@ -1,7 +1,7 @@
 <template>
     <div class="scrollbar-hide">
         <button @click.prevent="scrollTo('#scrollToMe')" class="bottom-0 mr-32 h-12 bg-blue-800 hover:bg-blue-600 w-56 rounded-lg hidden">CLICK HERE TO SCROLL TO BOTTOM</button>
-        <div class="chatChrome w-full h-full pb-6 pt-5 bottom-0 flex flex-col-reverse overflow-y-scroll overflow-x-clip break-words messages scrollbar-hide"
+        <div class="chatChrome w-full h-full pb-60 pt-5 bottom-0 flex flex-col-reverse overflow-y-scroll overflow-x-clip break-words messages scrollbar-hide"
              :class="{'lg:pb-12':!userStore.isMobile, 'lg:pb-36':userStore.isMobile}">
             <div id="scrollToMe"></div>
 

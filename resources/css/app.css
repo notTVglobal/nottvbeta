@@ -258,6 +258,10 @@ html {
     /*align-content: flex-start;*/
     background-color: purple;
 }
+.ottDisplayDesktop {
+    z-index: 200;
+    @apply h-[calc(100vh-16rem)] lg:mt-3
+}
 .backToPageStandard {
     z-index: 200;
     @apply fixed w-fit bottom-4 left-2 p-2 drop-shadow bg-gray-800 text-white hover:bg-gray-600
@@ -276,6 +280,13 @@ html {
         left:0;
         width: 100%;
     }
+    .ottDisplayMobile {
+        z-index: 200;
+        @apply h-[calc(100vh-18rem)] lg:mt-3
+    }
+    .OttButtonsMobile {
+        bottom:3rem;
+    }
 }
 @media (orientation: portrait) and (max-width: 800px) {
     .videoFullPageMobileOSD {
@@ -292,6 +303,14 @@ html {
         bottom: 2rem;
         left: 1rem;
     }
+    .ottDisplayMobile {
+        z-index: 200;
+        @apply h-[calc(100vh-10rem)] lg:mt-3
+    }
+    .OttButtonsMobile {
+        z-index:200;
+        bottom:1rem;
+    }
 }
 @media (orientation: landscape) and (max-width:800px) {
     .videoFullPageMobileOSD {
@@ -305,10 +324,16 @@ html {
         z-index: 200;
         @apply fixed bottom-2 mx-auto flex left-3 justify-center space-x-4
     }
+    .OttButtonsMobile {
+        bottom:3rem;
+    }
 }
 @media (orientation: landscape) and (min-width:800px) {
     .videoFullPageMobileOSD {
         top: 4rem;
+    }
+    .OttButtonsMobile {
+        bottom:3rem;
     }
 
 }
@@ -368,26 +393,6 @@ html {
 .ottButton {
     @apply opacity-80 w-20 h-20 rounded-full cursor-pointer grid justify-center content-center text-xs
 }
-@media (orientation: portrait) and (max-width:800px) {
-    .OttButtonsMobile {
-        bottom:1rem;
-    }
-}
-@media (orientation: portrait) and (min-width:800px) {
-    .OttButtonsMobile {
-        bottom:3rem;
-    }
-}
-@media (orientation: landscape) and (max-width:800px) {
-    .OttButtonsMobile {
-        bottom:3rem;
-    }
-}
-@media (orientation: landscape) and (min-width:800px) {
-    .OttButtonsMobile {
-        bottom:3rem;
-    }
-}
 .OttButtonsDesktop {
     bottom:3rem;
 }
@@ -413,22 +418,7 @@ html {
     /*max-width: 100vw;*/
     max-height: 96rem;
 }
-@media (min-width:1024px) {
-    .ottDisplayMobile {
-        z-index: 200;
-        @apply h-[calc(100vh-18rem)] lg:mt-3
-    }
-}
-@media (max-width:1024px) {
-    .ottDisplayMobile {
-        z-index: 200;
-        @apply h-[calc(100vh-10rem)] lg:mt-3
-    }
-}
-.ottDisplayDesktop {
-    z-index: 200;
-    @apply h-[calc(100vh-16rem)] lg:mt-3
-}
+
 .channelsFullPage{
     @apply w-full px-4 py-2 mt-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-2 border-green-800 shadow-md disabled:bg-gray-600 disabled:text-gray-300 disabled:cursor-not-allowed
 }

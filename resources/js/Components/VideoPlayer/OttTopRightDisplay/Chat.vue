@@ -7,8 +7,10 @@
 <!--            <div class="w-full overflow-y-scroll scrollbar-hide"-->
 <!--                 :class="[{'h-[calc(100vh-22rem)]':!userStore.isMobile},{'h-[calc(100vh-20rem)]':userStore.isMobile}]">-->
                 <div v-if="videoPlayerStore.ott === 4"
-                     class="fixed bottom-0 right-0 w-full lg:w-96 pb-24 px-2 overflow-y-scroll scrollbar-hide bg-gray-900"
+                     class="fixed top-44 lg:top-78 right-0 h-full w-full lg:w-96 mt-4 pb-12 px-2 overflow-y-scroll scrollbar-hide bg-gray-800"
                      :class="ottDisplay">
+    <!--                     class="fixed bottom-0 right-0 w-full lg:w-96 pb-24 px-2 overflow-y-scroll scrollbar-hide bg-gray-900"-->
+
 
 
                             <VideoOTTChatMessages/>
