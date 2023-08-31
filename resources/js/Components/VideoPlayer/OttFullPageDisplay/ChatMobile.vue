@@ -28,7 +28,7 @@
 <script setup>
 import { useChatStore } from "@/Stores/ChatStore";
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore";
-import FullPageMobileChat from "@/Components/Chat/FullPageMobileChat.vue";
+import FullPageMobileChat from "@/Components/VideoPlayer/Chat/FullPageMobileChat.vue";
 import {onBeforeUnmount} from "vue";
 
 let chatStore = useChatStore();

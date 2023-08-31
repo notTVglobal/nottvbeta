@@ -5,8 +5,6 @@
 <!--             class="">-->
 <!--            <div>{{channel.name}}</div>-->
 
-
-
             <div v-for="channel in channelStore.channel_list"
                  :key="channel.id"
                  class="show">

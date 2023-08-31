@@ -63,7 +63,7 @@
             </div>
 
             <div class="mx-auto mt-8 px-12">
-                <h2 class="text-2xl font-semibold text-black dark:text-gray-100">Payment</h2>
+                <h2 class="text-2xl font-semibold text-gray-100 dark:text-gray-100">Payment</h2>
 
                 <form id="payment-form">
                     <div id="link-authentication-element" class="mb-2">

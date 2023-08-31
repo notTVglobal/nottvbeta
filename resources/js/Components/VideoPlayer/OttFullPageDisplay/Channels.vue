@@ -44,7 +44,7 @@
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore"
 import Channels from "@/Components/VideoPlayer/Channels/Channels"
 
-let videoPlayerStore = useVideoPlayerStore();
+let videoPlayerStore = useVideoPlayerStore()
 
 let props = defineProps({
     user: Object,

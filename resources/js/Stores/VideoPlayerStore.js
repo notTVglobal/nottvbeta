@@ -19,7 +19,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             videoSourceTypeSrc2: '',
             videoSourceTypeSrc3: '',
             key: '',
-            videoName: String,
+            videoName: null,
             videoSource: String,
             videoSourceType: String,
             videoPoster: String,

@@ -22,7 +22,7 @@
 </template>
 
 <script setup>
-import MessageItem from "@/Components/Chat/ChatMessage.vue"
+import MessageItem from "@/Components/VideoPlayer/Chat/ChatMessage.vue"
 import { useChatStore } from "@/Stores/ChatStore"
 import { useUserStore } from "@/Stores/UserStore"
 import dayjs from 'dayjs'

@@ -10,9 +10,8 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Broadcasting\InteractsWithBroadcasting;
 
-class ViewerLeaveChannel implements ShouldBroadcastNow
+class ViewerPresenceChannel implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -35,19 +34,6 @@ class ViewerLeaveChannel implements ShouldBroadcastNow
      */
     public function broadcastOn()
     {
-        return new Channel('viewerCount.'. $this->currentViewers->channel_id);
-    }
-
-    /**
-     * Get the data to broadcast for the model.
-     *
-     * @param  string  $event
-     * @return array
-     */
-    public function broadcastWith(): array
-    {
-        return [
-            'viewer_count' => 1,
-        ];
+        return new PresenceChannel('viewerCount.'. $this->currentViewers->channel_id);
     }
 }

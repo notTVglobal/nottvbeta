@@ -17,10 +17,10 @@
 </template>
 
 <script setup>
-import {onBeforeMount, onBeforeUnmount, onUnmounted, onUpdated, ref} from "vue";
+import {onBeforeMount, onBeforeUnmount, onUpdated, ref} from "vue";
 
-import MessageItem from "@/Components/Chat/ChatMessage.vue"
-import { useChatStore } from "@/Stores/ChatStore";
+import MessageItem from "@/Components/VideoPlayer/Chat/ChatMessage.vue"
+import {useChatStore} from "@/Stores/ChatStore";
 import {useUserStore} from "@/Stores/UserStore";
 import dayjs from 'dayjs';
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -103,8 +103,7 @@ channel.subscribed(() => {
 // }
 
 function time(e) {
-    let formattedTime = dayjs().to(dayjs(e));
-    return formattedTime;
+    return dayjs().to(dayjs(e));
 }
 
 // scrollToMe button:

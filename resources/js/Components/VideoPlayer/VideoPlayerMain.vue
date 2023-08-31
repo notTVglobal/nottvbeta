@@ -3,15 +3,12 @@
     <div class="vh-100 z-20" :class="videoPlayerStore.videoContainerClass">
         <div :class="[videoPlayerStore.class, isMobile]" @mouseenter="mouseEnter" @mousemove="mouseMove" @mouseleave="mouseLeave" >
 
-<!--        Login for Welcome Page (logged out) -->
+    <!-- Login for Welcome Page (logged out) -->
             <Teleport to="body">
                 <Login v-if="!user" :show="showLogin" @close="showLogin = false" />
             </Teleport>
 
-
-<!--        FIX THIS ON MOBILE DISPLAY (VIDEO NEEDS TO BE AT THE TOP, NOT THE MIDDLE). -->
-
-<!--            <video-player :id="playerName" :options="videoOptions" v-touch="()=>videoPlayerStore.toggleOSD()" />-->
+    <!-- Video Player -->
             <video-player :id="playerName" :options="videoOptions" v-touch="()=>clickOnVideoAction()"/>
 
 
@@ -29,39 +26,37 @@
                     <div class="opacity-10">
                         <img :src="`/storage/images/logo_white_512.png`" class="absolute right-2 top-5 w-10 mr-4"></div>
 
-                    <!--                 On Screen Display (OSD)-->
+                    <!-- On Screen Display (OSD)-->
                     <OsdTopRight :show="videoPlayerStore.showOSD" />
 
-                    <!--                 Video Player Controls-->
+                    <!-- Video Player Controls-->
                     <VideoControlsTopRight :show="videoPlayerStore.showControls" />
 
                 </div>
             </div>
 
-
-    <!-- FullPage Video -->
             <div v-if="videoPlayerStore.fullPage && user">
+
 
         <!-- Mobile FullPage -->
                 <div v-if="userStore.isMobile">
-
-                    <OttFullPageDisplayChannels />
-                    <OttFullPageDisplayPlaylist />
-                    <OttFullPageDisplayChatMobile :user="user"/>
-                    <OttFullPageDisplayFilters />
 
                     <!-- notTV Bug -->
                     <div v-show="! videoPlayerStore.showOSD" class="fixed h-screen top-4 left-5 opacity-10 z-50">
                         <img :src="`/storage/images/logo_white_512.png`" class="block h-9 w-auto shrink-0"></div>
 
-                    <div>
-                        <!-- Video Player Controls -->
-                        <VideoControlsFullPageMobile v-show="videoPlayerStore.showControls" />
-                        <!-- On Screen Display (OSD) -->
-                        <OsdFullPageMobile v-show="videoPlayerStore.showOSD"/>
-                        <!-- Over The Top (OTT) -->
-                        <OttFullPageButtons v-show="videoPlayerStore.showOttButtons" />
-                    </div>
+                    <!-- On Screen Display (OSD) -->
+                    <OsdFullPageMobile v-show="videoPlayerStore.showOSD"/>
+
+                    <!-- Video Player Controls -->
+                    <VideoControlsFullPageMobile v-show="videoPlayerStore.showControls" />
+
+                    <!-- Over The Top (OTT) -->
+                    <OttFullPageButtons v-show="videoPlayerStore.showOttButtons" />
+                    <OttFullPageDisplayChannels />
+                    <OttFullPageDisplayPlaylist />
+                    <OttFullPageDisplayChatMobile :user="user"/>
+                    <OttFullPageDisplayFilters />
 
                 </div>
 
@@ -73,11 +68,11 @@
                     <div v-show="! videoPlayerStore.showOSD" class="fixed h-screen top-4 left-5 opacity-10 z-50">
                         <img :src="`/storage/images/logo_white_512.png`" class="block h-9 w-auto shrink-0"></div>
 
-                    <!-- Video Player Controls -->
-                    <VideoControlsFullPageStandard v-show="videoPlayerStore.showControls" />
-
                     <!-- On Screen Display (OSD) -->
                     <OsdFullPageStandard v-show="videoPlayerStore.showOSD"/>
+
+                    <!-- Video Player Controls -->
+                    <VideoControlsFullPageStandard v-show="videoPlayerStore.showControls" />
 
                     <!-- Over The Top (OTT) -->
                     <OttFullPageButtons v-show="videoPlayerStore.showOSD" />
@@ -95,29 +90,26 @@
 </template>
 
 <script setup>
-import { watch, onMounted, onUpdated, reactive, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { Inertia } from "@inertiajs/inertia"
-// import { router } from '@inertiajs/inertia'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useStreamStore } from "@/Stores/StreamStore"
 import { useChatStore } from "@/Stores/ChatStore"
 import { useUserStore } from "@/Stores/UserStore"
 
-import OttFullPageButtons from "@/Components/VideoPlayer/OttFullPageButtons.vue"
-import OttFullPageDisplayChannels from "@/Components/VideoPlayer/OttFullPageDisplayChannels"
-import OttFullPageDisplayPlaylist from "@/Components/VideoPlayer/OttFullPageDisplayPlaylist"
-import OttFullPageDisplayChatStandard from "@/Components/VideoPlayer/OttFullPageDisplayChatStandard"
-import OttFullPageDisplayChatMobile from "@/Components/VideoPlayer/OttFullPageDisplayChatMobile"
-import OttFullPageDisplayFilters from "@/Components/VideoPlayer/OttFullPageDisplayFilters"
+import OttFullPageButtons from "@/Components/VideoPlayer/OttButtons/OttFullPageButtons.vue"
+import OttFullPageDisplayChannels from "@/Components/VideoPlayer/OttFullPageDisplay/Channels"
+import OttFullPageDisplayPlaylist from "@/Components/VideoPlayer/OttFullPageDisplay/Playlist"
+import OttFullPageDisplayChatStandard from "@/Components/VideoPlayer/OttFullPageDisplay/ChatStandard"
+import OttFullPageDisplayChatMobile from "@/Components/VideoPlayer/OttFullPageDisplay/ChatMobile"
+import OttFullPageDisplayFilters from "@/Components/VideoPlayer/OttFullPageDisplay/Filters"
 import Login from "@/Components/Welcome/Login"
-import VideoControlsFullPageStandard from "@/Components/VideoPlayer/VideoControlsFullPageStandard"
-import VideoControlsFullPageMobile from "@/Components/VideoPlayer/VideoControlsFullPageMobile"
-import VideoControlsTopRight from "@/Components/VideoPlayer/VideoControlsTopRight"
-import OsdTopRight from "@/Components/VideoPlayer/OsdTopRight.vue"
-import OsdFullPageStandard from "@/Components/VideoPlayer/OsdFullPageStandard.vue"
-import OsdFullPageMobile from "@/Components/VideoPlayer/OsdFullPageMobile.vue"
-import throttle from "lodash/throttle";
-
+import VideoControlsFullPageStandard from "@/Components/VideoPlayer/VideoControls/VideoControlsFullPageStandard"
+import VideoControlsFullPageMobile from "@/Components/VideoPlayer/VideoControls/VideoControlsFullPageMobile"
+import VideoControlsTopRight from "@/Components/VideoPlayer/VideoControls/VideoControlsTopRight"
+import OsdTopRight from "@/Components/VideoPlayer/Osd/OsdTopRight.vue"
+import OsdFullPageStandard from "@/Components/VideoPlayer/Osd/OsdFullPageStandard.vue"
+import OsdFullPageMobile from "@/Components/VideoPlayer/Osd/OsdFullPageMobile.vue"
 
 let videoPlayerStore = useVideoPlayerStore()
 let streamStore = useStreamStore()
@@ -176,7 +168,7 @@ let mouseActive = false
 
 function mouseEnter(event) {
     mouseActive = true
-    console.log(mouseActive);
+    // console.log(mouseActive);
     // videoPlayerStore.showOsdControlsOnly()
     // document.addEventListener('mousemove', mouseMove, true);
     // setInterval(function() {
@@ -189,7 +181,7 @@ function mouseEnter(event) {
 }
 function mouseLeave(event) {
     mouseActive = false
-    console.log(mouseActive);
+    // console.log(mouseActive);
 
     // videoPlayerStore.hideOsdControlsOnly()
     // this.popup = false;

@@ -45,9 +45,5 @@ Route::post('/chatTest', [TestMessageController::class, 'broadcast'])
 
 Route::get('/products', [ProductController::class, 'index']);
 
-Route::post('/getCurrentViewers', [CurrentViewersController::class, 'getCurrentViewers']);
-Route::post('/addCurrentViewer', [CurrentViewersController::class, 'addCurrentViewer']);
-Route::post('/removeCurrentViewer', [CurrentViewersController::class, 'removeCurrentViewer']);
-
 Route::get('/channel_list', [ChannelController::class, 'index']);
 

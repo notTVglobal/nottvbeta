@@ -10,7 +10,7 @@ export let useChannelStore = defineStore('channelStore', {
         isLive: false,
         viewerCount: 0,
         channel_list: {},
-
+        userAddedToChannels: false,
     }),
 
     actions: {
@@ -27,24 +27,18 @@ export let useChannelStore = defineStore('channelStore', {
             this.currentChannelName = channel.name
             this.currentChannelId = channel.id
             this.isLive = channel.isLive
-            await this.addViewerToChannel()
+            console.log('Change Channel')
+            console.log(this.currentChannelId)
+            console.log(this.currentChannelName)
+            if (this.isLive) {
+                console.log('Channel is live.')
+            }
+            if (useUserStore().id !== null) {
+                this.userAddedToChannels = true
+                await this.disconnectViewerFromChannel()
+                await this.addViewerToChannel()
+            }
             // await this.getViewerCount()
-
-
-            // window.Echo.channel('viewerCount.' + channel.id)
-            //     .listen('ViewerJoinChannel', (e) => {
-            //         console.log(e);
-            //         // channelStore.viewerCount = channelStore.viewerCount + 1
-            //         this.increaseViewerCount();
-            //     })
-            //     .listen('ViewerLeaveChannel', (e) => {
-            //         console.log(e);
-            //         // this.viewerCount = this.viewerCount - 1;
-            //         this.decreaseViewerCount();
-            //     })
-            // useVideoPlayerStore().toggleChannels()
-            // useVideoPlayerStore().toggleOttChannels()
-            // useVideoPlayerStore().ott = 0
 
             // for streaming to mistServer we need:
             // streamName = channel.source.name (this is the mistServer stream name)
@@ -56,80 +50,88 @@ export let useChannelStore = defineStore('channelStore', {
             this.currentChannelName = null;
             this.currentChannelId = null;
             await this.disconnectViewerFromChannel();
-            if (useUserStore().oldLoggedOutId !== null) {
-                await this.disconnectLoggedOutUserFromChannel();
-            }
+            // if (useUserStore().oldLoggedOutId !== null) {
+            //     await this.disconnectLoggedOutUserFromChannel();
+            // }
         },
         async getViewerCount() {
-            await axios.post('/api/getCurrentViewers', {'channel_id': this.currentChannelId})
-                .then(response => {
-                    this.viewerCount = response.data[0];
-                    console.log('number of viewers: ' + response.data[0]);
-                    return response.data[0];
-                })
-                .catch(error => {
-                    console.log(error);
-                })
+            // await axios.post('/api/getCurrentViewers', {'channel_id': this.currentChannelId})
+            //     .then(response => {
+            //         this.viewerCount = response.data[0];
+            //         console.log('number of viewers: ' + response.data[0]);
+            //         return response.data[0];
+            //     })
+            //     .catch(error => {
+            //         console.log(error);
+            //     })
         },
         async addViewerToChannel() {
-            console.log(this.currentChannelId)
-            console.log('Channel: ' + this.currentChannelName)
-            useVideoPlayerStore().videoName = ''
-                await axios.post('/api/addCurrentViewer', {'channel_id': this.currentChannelId, 'user_id': useUserStore().id})
-                    .then(response => {
-                        this.viewerCount = response.data[0]
-                        console.log('Number of viewers: ' + response.data[0])
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    })
-                console.log('channel connected');
+            useVideoPlayerStore().videoName = null
+            Echo.join('viewerCount.' + this.currentChannelId)
+                .here((users) => {
+                    this.userAddedToChannels = true
+                    this.viewerCount = users.length
+                    console.log('User added to channel')
+                    console.log('# of users: ' + users.length)
+                })
+                .joining((users) => {
+                    console.log("Someone entered");
+                    this.viewerCount++
+                    // this.increaseViewerCount()
+                })
+                .leaving((users) => {
+                    console.log("Someone left");
+                    this.viewerCount--
+                    // this.decreaseViewerCount()
+                })
+                // await axios.post('/api/addCurrentViewer', {'channel_id': this.currentChannelId, 'user_id': useUserStore().id})
+                //     .then(response => {
+                //         this.viewerCount = response.data[0]
+                //         console.log('Number of viewers: ' + response.data[0])
+                //     })
+                //     .catch(error => {
+                //         console.log(error);
+                //     })
+                console.log('Channel connected');
 
-            Echo.channel('viewerCount.' + this.currentChannelId)
-                .listen('ViewerJoinChannel', (e) => {
-                    console.log('viewer joined')
-                    // channelStore.viewerCount = channelStore.viewerCount + 1
-                    this.increaseViewerCount()
-                })
-                .listen('ViewerLeaveChannel', (e) => {
-                    console.log('viewer left')
-                    // this.viewerCount = this.viewerCount - 1
-                    this.decreaseViewerCount()
-                })
+            // Echo.channel('viewerCount.' + this.currentChannelId)
+            //     .listen('ViewerJoinChannel', (e) => {
+            //         console.log('viewer joined')
+            //         // channelStore.viewerCount = channelStore.viewerCount + 1
+            //         // this.increaseViewerCount()
+            //     })
+            //     .listen('ViewerLeaveChannel', (e) => {
+            //         console.log('viewer left')
+            //         // this.viewerCount = this.viewerCount - 1
+            //         // this.decreaseViewerCount()
+            //     })
 
         },
         async disconnectViewerFromChannel() {
-            window.Echo.leaveChannel('viewerCount.' + this.currentChannelId)
-            this.viewerCount = 0
-            await axios.post('/api/removeCurrentViewer', {
-                'channel_id': this.currentChannelId,
-                'user_id': useUserStore().id,
-                'old_logged_out_id': useUserStore().oldLoggedOutId
-            })
-                .then(response => {
-                    console.log('channel disconnected');
-                })
-                .catch(error => {
-                    console.log(error);
-                })
+            Echo.leaveAllChannels('viewerCount.' + this.currentChannelId)
+            // await axios.post('/api/removeCurrentViewer', {
+            //     'channel_id': this.currentChannelId,
+            //     'user_id': useUserStore().id,
+            //     'old_logged_out_id': useUserStore().oldLoggedOutId
+            // })
+            //     .then(response => {
+            //         console.log('channel disconnected');
+            //     })
+            //     .catch(error => {
+            //         console.log(error);
+            //     })
         },
-        async disconnectLoggedOutUserFromChannel($id) {
-            Echo.leaveChannel('viewerCount.' + this.currentChannelId)
-            this.viewerCount = 0
-            await axios.post('/api/removeCurrentViewer', {'channel_id': this.currentChannelId, 'user_id': $id})
-                .then(response => {
-                    //
-                })
-                .catch(error => {
-                    console.log(error);
-                })
-        },
-        increaseViewerCount(){
-            this.viewerCount++;
-        },
-        decreaseViewerCount(){
-            this.viewerCount--;
-        }
+        // async disconnectLoggedOutUserFromChannel($id) {
+        //     Echo.leaveChannel('viewerCount.' + this.currentChannelId)
+        //     this.viewerCount = 0
+        //     await axios.post('/api/removeCurrentViewer', {'channel_id': this.currentChannelId, 'user_id': $id})
+        //         .then(response => {
+        //             //
+        //         })
+        //         .catch(error => {
+        //             console.log(error);
+        //         })
+        // },
     },
 
     // getters: {

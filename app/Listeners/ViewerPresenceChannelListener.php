@@ -2,12 +2,12 @@
 
 namespace App\Listeners;
 
-use App\Events\ViewerLeaveChannel;
+use App\Events\ViewerPresenceChannel;
 use App\Models\CurrentViewers;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
-class ViewerLeaveChannelListener
+class ViewerPresenceChannelListener
 {
     /**
      * Create the event listener.

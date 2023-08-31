@@ -395,17 +395,20 @@ html {
     max-height: 96rem;
 }
 @media (min-width:1024px) {
-    .channelsOttMobile {
-    @apply h-[calc(100vh-18rem)]
+    .ottDisplayMobile {
+        z-index: 200;
+        @apply h-[calc(100vh-18rem)] lg:mt-3
     }
 }
 @media (max-width:1024px) {
-    .channelsOttMobile {
-        @apply h-[calc(100vh-10rem)]
+    .ottDisplayMobile {
+        z-index: 200;
+        @apply h-[calc(100vh-10rem)] lg:mt-3
     }
 }
-.channelsOttDesktop {
-    @apply h-[calc(100vh-16rem)]
+.ottDisplayDesktop {
+    z-index: 200;
+    @apply h-[calc(100vh-16rem)] lg:mt-3
 }
 .channelsFullPage{
     @apply w-full px-4 py-2 mt-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-2 border-green-800 shadow-md disabled:bg-gray-600 disabled:text-gray-300 disabled:cursor-not-allowed
