@@ -12,9 +12,7 @@
     <div>
 <!-- Video FullPage Controls -->
 
-                    <div class="videoControlsStandard absolute flex justify-center space-x-4 bottom-12 pb-24 right-px-2 w-full z-50"
-                        :class="{'right-44': chatStore.showChat, videoControlsMobile: userStore.isMobile}">
-
+                    <div class="videoControlsStandard">
                         <button
                             class="text-xs md:text-md  md:text-md bg-gray-800 rounded-full p-2 hover:bg-gray-600"
                             @click="videoPlayerStore.fullscreen()">
@@ -54,11 +52,10 @@
 
                     </div>
 
-                    <div class="absolute w-full flex justify-between mb-6 bottom-4 left-0 p-5 drop-shadow z-50">
-                        <div>
-                            <button @click="backToPage" class="p-2 bg-gray-800 text-white hover:bg-gray-600">Back to Page</button>
-                        </div>
+                    <div class="backToPageStandard">
+                        <button @click="backToPage">Back to Page</button>
                     </div>
+
 
 
 
@@ -100,11 +97,6 @@ function backToPage() {
     width: 100%;
     justify-content: center;
 }
-.videoControlsStandard {
-    margin-left: 0;
-    margin-right: 0;
-    width: 100%;
-    justify-content: center;
-}
+
 
 </style>
