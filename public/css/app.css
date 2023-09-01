@@ -1085,6 +1085,9 @@ html {
 .channelDisabled {
     background-color: #48776e;
 }
+.specialVideoPlayerClass {
+    z-index: 999;
+}
 
 /*.videoBgFull {*/
 /*    position:static;*/
@@ -1107,17 +1110,35 @@ html {
     position:fixed;
     top: 0;
     left: 0;
-    min-width:100vw;
-    max-width:100vw;
+    /*min-width:100vw;*/
+    /*max-width:100vw;*/
     min-height:100vh;
-    max-height:100vh;
+    /*max-height:100vh;*/
     z-index:40;
     /*display: flex;*/
     /*flex-wrap: wrap;*/
     /*align-content: flex-start;*/
     background-color: black;
 }
-
+.fullPageVideoClass.desktop {
+    min-height:100vh;
+    max-height:100vh;
+}
+.fullPageVideoContainer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left:0;
+    z-index: 50;
+    /*min-width:100vw;*/
+    /*max-width:100vw;*/
+    min-height:100vh;
+    /*padding-top: 56.25%;*/
+    /*display: flex;*/
+    /*flex-wrap: wrap;*/
+    /*align-content: flex-start;*/
+    background-color: lightseagreen;
+}
 @media (orientation: landscape) {
     .fullPageVideoClassMobile {
         position:fixed;
@@ -1135,13 +1156,30 @@ html {
 
     }
 }
-@media (orientation: portrait) {
+@media (orientation: portrait) and (max-width: 800px) {
+    .fullPageVideoClassMobile {
+        position: fixed;
+        top: 4rem;
+        left: 0;
+        /*padding-top:56.25%;*/
+        /*min-height:calc(50vh - 5.5rem);*/
+        /*min-height:calc(56.25% - 4rem);*/
+        min-width: 100vw;
+        /*max-height:calc(100vh - 8rem);*/
+        /*padding-top: 56.25%;*/
+        display: flex;
+        flex-wrap: wrap;
+        align-content: flex-start;
+        background-color: dodgerblue;
+    }
+}
+@media (orientation: portrait) and (min-width: 800px) {
     .fullPageVideoClassMobile {
         position:fixed;
         top: 4rem;
         left: 0;
         /*padding-top:56.25%;*/
-        /*min-height:calc(50vh - 5.5rem);*/
+        min-height:calc(50vh - 5.5rem);
         /*min-height:calc(56.25% - 4rem);*/
         min-width:100vw;
         /*max-height:calc(100vh - 8rem);*/
@@ -1151,26 +1189,6 @@ html {
         align-content: flex-start;
         background-color: dodgerblue;
     }
-}
-
-.fullPageVideoClass.desktop {
-    min-height:100vh;
-    max-height:100vh;
-}
-
-.fullPageVideoContainer {
-    position: fixed;
-    top: 0;
-    right: 0;
-    left:0;
-    /*min-width:100vw;*/
-    /*max-width:100vw;*/
-    /*min-height:100vh;*/
-    /*padding-top: 56.25%;*/
-    /*display: flex;*/
-    /*flex-wrap: wrap;*/
-    /*align-content: flex-start;*/
-    background-color: lightseagreen;
 }
 @media (max-width:1024px) {
     .topRightVideoClass {
@@ -1359,14 +1377,52 @@ html {
   margin-right: calc(1rem * var(--tw-space-x-reverse));
   margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
 }
+.videoControlsWelcomeStandard {
+    z-index: 200;
+    position: absolute;
+    bottom: 9rem;
+    display: flex;
+    width: 100%;
+    justify-content: center}
+.videoControlsWelcomeStandard > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0;
+  margin-right: calc(1rem * var(--tw-space-x-reverse));
+  margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
+}
 @media (orientation: portrait) and (min-width: 800px) {
     .videoFullPageMobileOSD {
         top: 33rem;
+        left: 2rem;
         position: fixed}
     .videoControlsMobile {
-        top: 35rem !important;
-        left:0;
+        top: 33rem;
+        position: fixed;
+        margin-left: auto;
+        margin-right: auto;
         width: 100%;
+        align-items: center}
+    .videoControlsMobile > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-x-reverse: 0;
+    margin-right: calc(0.5rem * var(--tw-space-x-reverse));
+    margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
+  }
+    .videoControlsWelcomeMobile {
+        bottom: 12rem;
+        left: 3rem;
+        position: absolute;
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%;
+        align-items: center}
+    .videoControlsWelcomeMobile > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-x-reverse: 0;
+    margin-right: calc(0.5rem * var(--tw-space-x-reverse));
+    margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
+  }
+    .backToPage {
+        position: fixed;
+        bottom: 2rem;
+        left: 1rem;
     }
     .ottDisplayMobile {
         z-index: 200;
@@ -1400,13 +1456,27 @@ html {
     margin-right: calc(1rem * var(--tw-space-x-reverse));
     margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
   }
+    .videoControlsWelcomeMobile {
+        bottom: 12rem;
+        z-index: 200;
+        position: absolute;
+        left: 0.75rem;
+        margin-left: auto;
+        margin-right: auto;
+        display: flex;
+        justify-content: center}
+    .videoControlsWelcomeMobile > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-x-reverse: 0;
+    margin-right: calc(1rem * var(--tw-space-x-reverse));
+    margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
+  }
     .backToPage {
         position: fixed;
         bottom: 2rem;
         left: 1rem;
     }
     .ottDisplayMobile {
-        z-index: 200;
+        z-index: 199;
         height: calc(100vh - 10rem)}
     @media (min-width: 1024px) {
 
@@ -1419,7 +1489,7 @@ html {
         bottom:1rem;
     }
 }
-@media (orientation: landscape) and (max-width:800px) {
+@media (orientation: landscape) and (max-height:800px) {
     .videoFullPageMobileOSD {
         top: 4rem;
         position: fixed;
@@ -1444,17 +1514,45 @@ html {
     margin-right: calc(1rem * var(--tw-space-x-reverse));
     margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
   }
+    .videoControlsWelcomeMobile {
+        z-index: 200;
+        position: absolute;
+        bottom: 9rem;
+        left: 0.75rem;
+        margin-left: auto;
+        margin-right: auto;
+        display: flex;
+        justify-content: center}
+    .videoControlsWelcomeMobile > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-x-reverse: 0;
+    margin-right: calc(1rem * var(--tw-space-x-reverse));
+    margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
+  }
     .OttButtonsMobile {
         bottom:3rem;
     }
 }
-@media (orientation: landscape) and (min-width:800px) {
+@media (orientation: landscape) and (min-height:800px) {
     .videoFullPageMobileOSD {
         top: 4rem;
     }
     .OttButtonsMobile {
         bottom:3rem;
     }
+    .videoControlsWelcomeMobile {
+        z-index: 200;
+        bottom: 12rem;
+        left: 3rem;
+        position: absolute;
+        margin-left: auto;
+        margin-right: auto;
+        display: flex;
+        justify-content: center}
+    .videoControlsWelcomeMobile > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-x-reverse: 0;
+    margin-right: calc(1rem * var(--tw-space-x-reverse));
+    margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
+  }
 
 }
 @media (orientation: landscape) {
@@ -1705,58 +1803,94 @@ html {
 @media (orientation: landscape) {
     .chatForStreamPageMobile {
         z-index: 40;
-        position: fixed;
-        /*top:4rem;*/
-        /*bottom:2rem;*/
-        bottom: 4rem;
-        right: 0;
-        padding-left:4rem;
-        min-width: 100vw;
-        max-width: 100vw;
         min-height: 100vh;
         max-height: 100vh;
+        position: fixed;
+        bottom: 0px;
+        right: 0px;
+        left: 0px;
+        width: 100%;
+        overflow-y: auto;
+        scroll-behavior: smooth;
+        overflow-wrap: break-word;
+        padding-left: 1.5rem;
+        padding-bottom: 3rem;
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+        --tw-text-opacity: 1;
+        color: rgb(255 255 255 / var(--tw-text-opacity))}
+    .chatForStreamPageMobile:hover {
+    scroll-behavior: auto;
+  }
+    @media (min-width: 640px) {
+
+    .chatForStreamPageMobile {
+      bottom: 0.5rem;
     }
+  }
 }
 
 @media (orientation: portrait) and (min-width:800px) {
     .chatForStreamPageMobile {
         z-index: 60;
-        position: fixed;
-        /*top:4rem;*/
-        /*bottom:2rem;*/
-        bottom: 0;
-        /*background: linear-gradient(to bottom, rgba(255,0,0,0), rgba(255,0,0,1));*/
         background: linear-gradient(to bottom, rgba(0,0,0,1), rgba(255,0,255,0));
-        right: 0;
-        left:0;
-        top: 33rem;
-        padding-bottom: 18rem;
-        min-width: 100%;
-        max-width: 100%;
-        /*min-height: calc(50vh);*/
+        top: 32rem;
         min-height:calc(50vh + 5.5rem);
         max-height:calc(100vh - 8rem);
+        position: fixed;
+        bottom: 0px;
+        right: 0px;
+        left: 0px;
+        width: 100%;
+        overflow-y: auto;
+        scroll-behavior: smooth;
+        overflow-wrap: break-word;
+        padding-left: 1.5rem;
+        padding-bottom: 3rem;
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+        --tw-text-opacity: 1;
+        color: rgb(255 255 255 / var(--tw-text-opacity))}
+    .chatForStreamPageMobile:hover {
+    scroll-behavior: auto;
+  }
+    @media (min-width: 640px) {
+
+    .chatForStreamPageMobile {
+      bottom: 0.5rem;
     }
+  }
 }
 @media (orientation: portrait) and (max-width:800px) {
     .chatForStreamPageMobile {
         z-index: 60;
-        position: fixed;
-        /*top:4rem;*/
-        /*bottom:2rem;*/
-        bottom: 0;
-        /*background: linear-gradient(to bottom, rgba(255,0,0,0), rgba(255,0,0,1));*/
         background: linear-gradient(to bottom, rgba(0,0,0,1), rgba(255,0,255,0));
-        right: 0;
-        left:0;
-        top: 17rem;
-        padding-bottom: 16rem;
-        min-width: 100%;
-        max-width: 100%;
-        /*min-height: calc(50vh);*/
-        min-height:calc(50vh + 5.5rem);
+        top: 15rem;
+        min-height:calc(50vh + 2.5rem);
         max-height:calc(100vh - 8rem);
+        position: fixed;
+        bottom: 0px;
+        right: 0px;
+        left: 0px;
+        width: 100%;
+        overflow-y: auto;
+        scroll-behavior: smooth;
+        overflow-wrap: break-word;
+        padding-left: 1.5rem;
+        padding-bottom: 3rem;
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+        --tw-text-opacity: 1;
+        color: rgb(255 255 255 / var(--tw-text-opacity))}
+    .chatForStreamPageMobile:hover {
+    scroll-behavior: auto;
+  }
+    @media (min-width: 640px) {
+
+    .chatForStreamPageMobile {
+      bottom: 0.5rem;
     }
+  }
 }
 /* this is the CLOSE chat button */
 .chatForStreamPage button {
@@ -1994,10 +2128,6 @@ html {
 
 .z-10 {
   z-index: 10;
-}
-
-.z-20 {
-  z-index: 20;
 }
 
 .z-30 {
@@ -3899,6 +4029,10 @@ html {
   padding-bottom: 1.5rem;
 }
 
+.pb-60 {
+  padding-bottom: 15rem;
+}
+
 .pb-72 {
   padding-bottom: 18rem;
 }
@@ -3993,18 +4127,6 @@ html {
 
 .pt-8 {
   padding-top: 2rem;
-}
-
-.pb-48 {
-  padding-bottom: 12rem;
-}
-
-.pb-64 {
-  padding-bottom: 16rem;
-}
-
-.pb-60 {
-  padding-bottom: 15rem;
 }
 
 .text-left {

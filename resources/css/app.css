@@ -304,7 +304,7 @@ html {
         left: 1rem;
     }
     .ottDisplayMobile {
-        z-index: 200;
+        z-index: 199;
         @apply h-[calc(100vh-10rem)] lg:mt-3
     }
     .OttButtonsMobile {
