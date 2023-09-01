@@ -59,7 +59,6 @@
         "pinia": "^2.0.17",
         "pusher-js": "^7.3.0",
         "video.js": "^7.20.3",
-        "videojs-youtube": "^3.0.1",
         "vue-filepond": "^7.0.3",
         "vue3-country-region-select": "^1.0.0",
         "vue3-emoji-picker": "^1.1.5",

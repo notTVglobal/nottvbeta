@@ -1,16 +1,26 @@
 <template>
 
-    <div class="vh-100 z-20" :class="videoPlayerStore.videoContainerClass">
-        <div :class="[videoPlayerStore.class, isMobile]" @mouseenter="mouseEnter" @mousemove="mouseMove" @mouseleave="mouseLeave" >
+    <div :class="videoPlayerStore.videoContainerClass">
+        <div @mouseenter="mouseEnter" @mousemove="mouseMove" @mouseleave="mouseLeave" >
 
     <!-- Login for Welcome Page (logged out) -->
             <Teleport to="body">
                 <Login v-if="!user" :show="showLogin" @close="showLogin = false" />
             </Teleport>
 
-    <!-- Video Player -->
-            <video-player :id="playerName" :options="videoOptions" v-touch="()=>clickOnVideoAction()"/>
-
+            <!-- Video Player -->
+<!--            <video-player :id="playerName" :options="videoOptions" />-->
+            <video id="main-player"
+                   :class="videoPlayerStore.class"
+                   class="video-js vjs-big-play-centered vjs-fill bg-pink-700"
+                   playsinline
+                   autoplay
+                   muted
+                   preload="auto"
+                   v-touch="()=>clickOnVideoAction()"
+            >
+                <source src="/ThirdEyeSpies.mp4" type="video/mp4">
+            </video>
 
     <!-- TopRight Video -->
             <div v-if="!videoPlayerStore.fullPage && user">
@@ -84,13 +94,12 @@
                 </div>
             </div>
 
-
         </div>
     </div>
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import {onBeforeMount, onMounted, ref} from 'vue'
 import { Inertia } from "@inertiajs/inertia"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useStreamStore } from "@/Stores/StreamStore"
@@ -110,6 +119,7 @@ import VideoControlsTopRight from "@/Components/VideoPlayer/VideoControls/VideoC
 import OsdTopRight from "@/Components/VideoPlayer/Osd/OsdTopRight.vue"
 import OsdFullPageStandard from "@/Components/VideoPlayer/Osd/OsdFullPageStandard.vue"
 import OsdFullPageMobile from "@/Components/VideoPlayer/Osd/OsdFullPageMobile.vue"
+import VideoPlayer from '@/Components/VideoPlayer/VideoJs'
 
 let videoPlayerStore = useVideoPlayerStore()
 let streamStore = useStreamStore()
@@ -127,13 +137,29 @@ const isMobile = ref({
 
 let showLogin = ref(false)
 
-let playerName = 'main-player';
+console.log('check point 1 VideoPlayerMain')
+
+onBeforeMount(() => {
+    console.log('check point 2 VideoPlayerMain')
+})
+
+onMounted(() => {
+    console.log('check point 3 VideoPlayerMain')
+
+})
 
 let props = defineProps({
     src: String,
     user: Object,
     can: Object,
+    // this prop 'main-player' is not getting
+    // loaded before the VideoPlayer is mounted.
+    // the player name will determine if it's
+    // the main-player or the aux-player.
+    // playerName: 'main-player'
 })
+
+let playerName = 'main-player'
 
 function backToPage() {
     videoPlayerStore.makeVideoTopRight();
@@ -142,27 +168,20 @@ function backToPage() {
 }
 
 function clickOnVideoAction() {
-    // if (videoPlayerStore.currentPageIsStream === true) {
-    //     videoPlayerStore.toggleOSD()
-    // } else {
+    if (videoPlayerStore.currentPageIsStream === true) {
+        videoPlayerStore.toggleOSD()
+    } else {
+        Inertia.visit('/stream')
+    }
     // videoPlayerStore.ottClass = 'OttClose'
     // videoPlayerStore.ott = 0
-    if(userStore.isMobile) {
-        Inertia.visit('/stream')
-    } else {
-        // videoPlayerStore.toggleOsdAndControls()
-    }
+    // if(userStore.isMobile) {
+    //
+    // } else {
+    //     // videoPlayerStore.toggleOsdAndControls()
+    // }
     // }
 }
-
-onMounted( () => {
-    // document.getElementById("elementId").addEventListener('mousemove', function(event){
-    //     console.log(event.screenX + '-' + event.screenY);
-    //     // change the position of popup here by changing top and left property -
-    //     // document.getElementById('popup').style.top = event.screenY+'px';
-    //     // document.getElementById('popup').style.left = event.screenX+'px';
-    // });
-})
 
 let mouseActive = false
 
@@ -223,7 +242,7 @@ import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore"
 import VideoPlayer from '@/Components/VideoPlayer/VideoJs'
 
 import { ref } from 'vue'
-
+console.log('check point A VideoPlayerMain')
 export default {
     name: 'VideoPlayer',
     components: {
@@ -231,6 +250,9 @@ export default {
     },
     data() {
         const videoPlayerStore = useVideoPlayerStore()
+        videoPlayerStore.videoSource = "https://ia800307.us.archive.org/28/items/BigBuckBunnyFULLHD60FPS/Big%20Buck%20Bunny%20-%20FULL%20HD%2060FPS.mp4"
+        videoPlayerStore.videoSourceType = "video/mp4"
+        videoPlayerStore.videoName = "Third Eye Spies"
         const videoSource = videoPlayerStore.videoSource
         const videoSourceType = videoPlayerStore.videoSourceType
         return {

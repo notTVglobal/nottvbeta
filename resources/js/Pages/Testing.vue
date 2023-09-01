@@ -19,7 +19,7 @@ import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import {onBeforeMount, onBeforeUnmount, onMounted} from "vue"
 import {useUserStore} from "@/Stores/UserStore";
 import videojs from 'video.js';
-import Youtube from 'videojs-youtube';
+// import Youtube from 'videojs-youtube';
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()

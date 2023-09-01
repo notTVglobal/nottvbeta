@@ -1,6 +1,6 @@
 <template>
     <Head title="Beta" />
-        <div id="topDiv" class="bg-green-800 bg-opacity-10 min-h-screen text-gray-200 z-50">
+        <div id="topDiv" class="bg-green-800 w-full bg-opacity-10 min-h-screen text-gray-200 z-50">
             <header class="headerContainer w-full">
                 <div class="welcomeOverlay flex flex-row md:px-6 py-4 w-full">
                     <WelcomeBug />
@@ -24,9 +24,10 @@
             <div class="welcomeOverlay">
                 <div class="bg-opacity-5 relative flex items-top justify-center min-h-screen text-gray-200">
 
-                    <div class="flex justify-center items-center h-screen">
+                    <div class="w-full flex justify-center items-center h-screen">
 
                         <WelcomeOverlay :show="true"/>
+                        <VideoControlsWelcome v-if="welcomeStore.showOverlay === false" />
 
                     </div>
                 </div>
@@ -94,6 +95,7 @@ import { Inertia } from "@inertiajs/inertia";
 import Button from "@/Jetstream/Button";
 import WelcomeOverlay from "@/Components/Welcome/WelcomeOverlay";
 import WelcomeBug from "@/Components/Welcome/WelcomeBug.vue";
+import VideoControlsWelcome from "@/Components/VideoPlayer/VideoControls/VideoControlsWelcome.vue";
 
 let videoPlayerStore = useVideoPlayerStore()
 let welcomeStore = useWelcomeStore()

@@ -1,15 +1,9 @@
 <template>
-<div>
     <div>
-        <video ref="videoPlayer"
-               :id="props.id"
-               class="video-js vjs-big-play-centered vjs-fill bg-pink-700"
-               playsinline
-               autoplay
-               muted
-        />
+        <video ref="videoPlayer" id="main-player" class="video-js vjs-big-play-centered vjs-fill bg-pink-700" playsinline autoplay muted>
+<!--            <source src="https://ia800307.us.archive.org/28/items/BigBuckBunnyFULLHD60FPS/Big%20Buck%20Bunny%20-%20FULL%20HD%2060FPS.mp4" type="video/mp4">-->
+        </video>
     </div>
-</div>
 </template>
 
 
@@ -19,7 +13,6 @@ import {useStreamStore} from "@/Stores/StreamStore.js";
 import {useChatStore} from "@/Stores/ChatStore.js";
 import {useUserStore} from "@/Stores/UserStore.js";
 import videojs from 'video.js';
-import Youtube from 'videojs-youtube';
 import {onMounted, onBeforeUnmount} from "vue";
 
 let videoPlayerStore = useVideoPlayerStore();
@@ -33,14 +26,17 @@ const props = defineProps({
 })
 
 onMounted(() => {
+    console.log('check point VideoJS')
     videojs(props.id, props.options)
-        console.log('onPlayerReady2')
+    console.log('onPlayerReady2')
 
 })
+console.log('Check point VideoJS before mount')
 
 onBeforeUnmount(() => {
-    let videoJs = videojs(props.id)
+    let videoJs = videojs('main-player')
     videoJs.dispose();
+    console.log('Check point VideoJS unmounted')
 })
 
 

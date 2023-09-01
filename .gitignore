@@ -1,6 +1,7 @@
 /node_modules
 /public/hot
 /public/storage
+/public/ThirdEyeSpies.mp4
 /storage/*.key
 /storage/app
 /storage/logs

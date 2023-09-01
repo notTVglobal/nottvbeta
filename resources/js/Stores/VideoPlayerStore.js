@@ -4,7 +4,6 @@ import { useStreamStore } from "@/Stores/StreamStore";
 import { useUserStore } from "@/Stores/UserStore";
 import videojs from 'video.js';
 import {Inertia} from "@inertiajs/inertia";
-import {ref} from "vue";
 import {useChannelStore} from "@/Stores/ChannelStore";
 
 export const useVideoPlayerStore = defineStore('videoPlayerStore', {
@@ -19,7 +18,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             videoSourceTypeSrc2: '',
             videoSourceTypeSrc3: '',
             key: '',
-            videoName: null,
+            videoName: '',
             videoSource: String,
             videoSourceType: String,
             videoPoster: String,
@@ -28,7 +27,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             currentView: String,
             currentChannelId: 0,
             currentChannelName: String,
-            viewerCount: ref(0),
+            viewerCount: 0,
 
             // move currentPage from here to userStore.
             currentPage: String,
@@ -103,6 +102,14 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             } else
                 this.class = 'topRightVideoClass'
                 this.videoContainerClass = 'topRightVideoContainer'
+        },
+        toggleOSD() {
+            this.showOSD = !this.showOSD
+            this.showControls = !this.showControls
+            this.showNav = ! this.showNav
+            // if (this.fullPage) {
+            //     this.showNav = !this.showNav;
+            // }
         },
         toggleOsdAndControls() {
             this.showOSD = !this.showOSD
@@ -256,23 +263,24 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             // EmbedCode
             // Mist
             // File
-        loadNewSourceFromYouTube(source) {
-            this.videoIsYoutube = true
-            useChannelStore().clearChannel()
-            let videoJs = videojs('main-player')
-            this.videoSource = source
-            this.videoSourceType = "video/youtube"
-            videoJs.src({'src': this.videoSource, 'type': this.videoSourceType})
-            this.unmute()
-            this.paused = false
-        },
+        // loadNewSourceFromYouTube(source) {
+        //     this.videoIsYoutube = true
+        //     useChannelStore().clearChannel()
+        //     let videoJs = videojs('main-player')
+        //     this.videoSource = source
+        //     this.videoSourceType = "video/youtube"
+        //     videoJs.src({'src': this.videoSource, 'type': this.videoSourceType})
+        //     this.unmute()
+        //     this.paused = false
+        // },
         loadNewSourceFromUrl(source) {
             this.videoIsYoutube = false
-            useChannelStore().clearChannel()
+            // useChannelStore().clearChannel()
             let videoJs = videojs('main-player')
             this.videoSource = source
             this.videoSourceType = "video/mp4"
             videoJs.src({'src': this.videoSource, 'type': this.videoSourceType})
+            // this.play()
             this.unmute()
             this.paused = false
         },
@@ -329,8 +337,11 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             // this.currentPageIsStream = true;
             // useChatStore().makeBig();
             // useStreamStore().showOSD = false;
-            let videoJs = videojs('main-player')
-            videoJs.play()
+
+            // tec21: this lets the video start playing when the stream page is loaded.
+            // but it's preventing the videoPlayer from mounting.
+            // let videoJs = videojs.getPlayer('main-player')
+            // videoJs.play()
         },
         makeVideoTopRight() {
             this.currentPageIsStream = false

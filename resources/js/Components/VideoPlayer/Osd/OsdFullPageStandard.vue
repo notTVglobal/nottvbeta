@@ -1,11 +1,11 @@
 <template>
 <div>
     <div class="absolute w-full flex justify-between top-16 left-0 p-5 drop-shadow z-50">
-        <div v-if="videoPlayerStore.videoName !== null">
+        <div v-if="videoPlayerStore.videoName !== ''">
             <span class="text-xs uppercase pr-2">Now playing: </span>
             <span class="font-semibold">{{ videoPlayerStore.videoName }}</span>
         </div>
-        <div v-if="channelStore.currentChannelName !== null">
+        <div v-if="channelStore.currentChannelName !== ''">
             <span class="text-xs uppercase pr-2">Channel: </span>
             <span class="text-xs font-semibold">{{ channelStore.currentChannelName }}</span>
         </div>
@@ -14,7 +14,7 @@
             <span v-if="channelStore.isLive" class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-white bg-opacity-80 bg-red-800 last:mr-0 mr-1">
                 live
             </span>
-            <div v-if="channelStore.currentChannelId !== null">
+            <div v-if="channelStore.currentChannelId !== 0">
                 <CurrentViewers />
             </div>
         </div>
