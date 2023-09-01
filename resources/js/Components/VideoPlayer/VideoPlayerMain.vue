@@ -19,7 +19,7 @@
                    preload="auto"
                    v-touch="()=>clickOnVideoAction()"
             >
-                <source src="/ThirdEyeSpies.mp4" type="video/mp4">
+                <source :src="`/storage/videos/ThirdEyeSpies.mp4`" type="video/mp4">
             </video>
 
     <!-- TopRight Video -->

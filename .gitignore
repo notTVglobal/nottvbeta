@@ -2,6 +2,8 @@
 /public/hot
 /public/storage
 /public/ThirdEyeSpies.mp4
+/storage/app/public/images/logo_black_311.png
+/storage/app/public/images/logo_white_512.png
 /storage/*.key
 /storage/app
 /storage/logs
