@@ -144,8 +144,10 @@ let props = defineProps({
     videoSourceType: '',
 })
 
+// First Play
 videoPlayerStore.videoSource = "/storage/videos/BigBuckBunny.mp4"
 videoPlayerStore.videoSourceType = "video/mp4"
+videoPlayerStore.videoName = "Big Buck Bunny (4K)"
 
 let videoOptions = {
     autoplay: true,
