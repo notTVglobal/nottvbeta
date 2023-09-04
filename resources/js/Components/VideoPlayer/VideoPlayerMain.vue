@@ -8,19 +8,17 @@
                 <Login v-if="!user" :show="showLogin" @close="showLogin = false" />
             </Teleport>
 
-            <!-- Video Player -->
-<!--            <video-player :options="videoOptions"/>-->
-            <video id="main-player" class="video-js vjs-big-play-centered vjs-fill"></video>
-<!--                <video-player :id="playerName" :options="videoOptions"/>-->
+<!--            <div class="z-50 text-black fixed top-0 bottom-0 left-0 right-0 item-center mx-auto my-auto pt-36 bg-purple-300">{{orientation}}</div>-->
 
-<!--            <video ref="videoPlayer"-->
-<!--                   id="main-player"-->
-<!--                   :class="videoPlayerStore.class"-->
-<!--                   class="video-js vjs-big-play-centered vjs-fill"-->
-<!--                   v-touch="() => {clickOnVideoAction()}"-->
-<!--            />-->
-<!--&lt;!&ndash;                <source :src="videoPlayerStore.videoSource" :type="videoPlayerStore.videoSourceType">&ndash;&gt;-->
-<!--            </video>-->
+            <!-- Video Player -->
+            <div v-touch="() => {clickOnVideoAction()}">
+                <video id="main-player"
+                       class="video-js vjs-big-play-centered vjs-fill"
+                />
+            </div>
+
+
+
     <!-- TopRight Video -->
             <div v-if="!videoPlayerStore.fullPage && user">
                 <!-- isMobile -->
@@ -98,7 +96,7 @@
 </template>
 
 <script setup>
-import {onBeforeMount, onMounted, onUnmounted, ref} from 'vue'
+import { onMounted, onUnmounted, onUpdated, ref, watch } from 'vue'
 import { Inertia } from "@inertiajs/inertia"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useStreamStore } from "@/Stores/StreamStore"
@@ -120,6 +118,7 @@ import OsdFullPageStandard from "@/Components/VideoPlayer/Osd/OsdFullPageStandar
 import OsdFullPageMobile from "@/Components/VideoPlayer/Osd/OsdFullPageMobile.vue"
 import VideoPlayer from "@/Components/VideoPlayer/VideoJs"
 import videojs from 'video.js'
+import { useScreenOrientation } from '@vueuse/core'
 
 let videoPlayerStore = useVideoPlayerStore()
 let streamStore = useStreamStore()
@@ -137,28 +136,17 @@ const isMobile = ref({
 
 let showLogin = ref(false)
 
-console.log('check point 1 VideoPlayerMain')
-
 let props = defineProps({
     src: String,
     user: Object,
     can: Object,
     videoSource: '',
     videoSourceType: '',
-    // this prop 'main-player' is not getting
-    // loaded before the VideoPlayer is mounted.
-    // the player name will determine if it's
-    // the main-player or the aux-player.
-    // playerName: 'main-player'
-})
-
-onBeforeMount(() => {
-    console.log('check point 2 VideoPlayerMain')
 })
 
 videoPlayerStore.videoSource = "/storage/videos/BigBuckBunny.mp4"
 videoPlayerStore.videoSourceType = "video/mp4"
-// let videoPlayer = ref(null)
+
 let videoOptions = {
     autoplay: true,
     playsinline: true,
@@ -173,11 +161,25 @@ let videoOptions = {
         }
     ]
 }
-//
-onMounted(() => {
 
-    console.log('check point 3 VideoPlayerMain')
+const {
+    isSupported,
+    orientation,
+    angle,
+    lockOrientation,
+    unlockOrientation,
+} = useScreenOrientation()
+
+onMounted(() => {
     let videoJs = videojs('main-player', videoOptions)
+
+    // if (userStore.isMobile) {
+    //     if (orientation==='landscape-secondary' || orientation==='landscape-primary') {
+    //         videoPlayerStore.hideOsdAndControlsAndNav()
+    //     } else if (orientation==='portrait-secondary' || orientation==='portrait-primary') {
+    //         videoPlayerStore.showOsdAndControlsAndNav()
+    //     }
+    // }
 
 })
 //
@@ -188,6 +190,22 @@ onMounted(() => {
 // })
 
 
+// tec21 (03/03/23): this doesn't seem to be working :-(
+watch(orientation, (newOrientation) => {
+    if (userStore.isMobile) {
+        if (newOrientation==='landscape-primary' ) {
+            videoPlayerStore.hideOsdAndControlsAndNav()
+        } else if (newOrientation==='landscape-secondary') {
+            videoPlayerStore.hideOsdAndControlsAndNav()
+        } else if (newOrientation==='portrait-primary') {
+            videoPlayerStore.showOsdAndControlsAndNav()
+        } else if (newOrientation==='portrait-secondary') {
+            videoPlayerStore.showOsdAndControlsAndNav()
+        }
+    }
+})
+
+
 
 function backToPage() {
     videoPlayerStore.makeVideoTopRight();
@@ -195,12 +213,31 @@ function backToPage() {
     streamStore.showOSD = false;
 }
 
+let screenWidth = ref(screen.width)
+console.log(screenWidth)
+
 function clickOnVideoAction() {
-    if (videoPlayerStore.currentPageIsStream === true) {
-        videoPlayerStore.toggleOSD()
-    } else {
+
+    if (!userStore.isMobile && !videoPlayerStore.currentPageIsStream) {
+        videoPlayerStore.toggleOsdAndControls()
+    }
+    if (userStore.isMobile && !videoPlayerStore.currentPageIsStream) {
         Inertia.visit('/stream')
     }
+    if(videoPlayerStore.currentPageIsStream) {
+        videoPlayerStore.toggleOsdAndControlsAndNav()
+
+    }
+    // if (videoPlayerStore.currentPageIsStream === true) {
+    //     // if (userStore.isMobile && orientation.value === 'landscape-primary') {
+    //     //         videoPlayerStore.toggleOsdAndControlsAndNav()
+    //     // } else if (!userStore.isMobile) {
+    //     //     videoPlayerStore.toggleOsdAndControls()
+    //     // }
+    //     // videoPlayerStore.toggleOsdAndControlsAndNav()
+    // } else {
+    //     Inertia.visit('/stream')
+    // }
     // videoPlayerStore.ottClass = 'OttClose'
     // videoPlayerStore.ott = 0
     // if(userStore.isMobile) {

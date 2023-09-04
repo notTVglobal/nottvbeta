@@ -75,6 +75,12 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             this.showOSD = true
             this.showControls = true
         },
+        showOsdAndControlsAndNav() {
+            this.showOSD = true
+            this.showControls = true
+            this.showNav = true
+            this.showOttButtons = true
+        },
         showOsd() {
             this.showOSD = true
         },
@@ -86,6 +92,12 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
         hideOsdAndControls() {
             this.showOSD = false
             this.showControls = false
+        },
+        hideOsdAndControlsAndNav() {
+            this.showOSD = false
+            this.showControls = false
+            this.showNav = false
+            this.showOttButtons = false
         },
         hideOsd() {
             this.showOSD = false
@@ -118,6 +130,15 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
           // if (this.fullPage) {
           //     this.showNav = !this.showNav;
           // }
+        },
+        toggleOsdAndControlsAndNav() {
+            this.showOSD = !this.showOSD
+            this.showControls = !this.showControls
+            this.showNav = !this.showNav
+            this.showOttButtons = !this.showOttButtons
+            // if (this.fullPage) {
+            //     this.showNav = !this.showNav;
+            // }
         },
         toggleOtt(num) {
             if (this.ott === num) {

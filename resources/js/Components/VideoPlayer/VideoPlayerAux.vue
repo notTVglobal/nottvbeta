@@ -1,7 +1,7 @@
 <template>
 <div class="max-w-[12rem]">
     <div class="max-w-[12rem]">
-        <video-player :id="`aux-player`" :options="videoOptions" />
+<!--        <video-player :id="`aux-player`" :options="videoOptions" />-->
     </div>
 </div>
 
@@ -23,41 +23,41 @@ let playerName = 'aux-player';
 
 
 <script>
-import VideoPlayer from '@/Components/VideoPlayer/VideoJsAux'
+// import VideoPlayer from '@/Components/VideoPlayer/VideoJsAux.vue'
 
 let videoSource = 'https://mist2.not.tv/hls/dunepull/index.m3u8';
 let videoSourceType = 'application/x-mpegURL';
 
-export default {
-    name: 'VideoPlayer',
-    components: {
-        VideoPlayer
-    },
-    data() {
-        return {
-            videoOptions: {
-                autoplay: true,
-                muted: true,
-                controls: true,
-                fill: true,
-                sources: [
-                    {
-                        src: videoSource,
-                        type: videoSourceType,
-                    }
-                ]
-            }
-        };
-    },
-    props: {
-        id: String,
-        src: String,
-        type: String,
-    },
-    setup(props) {
-
-    }
-};
+// export default {
+//     name: 'VideoPlayer',
+//     components: {
+//         VideoPlayer
+//     },
+//     data() {
+//         return {
+//             videoOptions: {
+//                 autoplay: true,
+//                 muted: true,
+//                 controls: true,
+//                 fill: true,
+//                 sources: [
+//                     {
+//                         src: videoSource,
+//                         type: videoSourceType,
+//                     }
+//                 ]
+//             }
+//         };
+//     },
+//     props: {
+//         id: String,
+//         src: String,
+//         type: String,
+//     },
+//     setup(props) {
+//
+//     }
+// };
 
 
 

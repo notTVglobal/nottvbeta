@@ -3,7 +3,8 @@
     :class="{'lg:mt-3':userStore.isMobile, 'lg:mt-2':!userStore.isMobile}">
     <div class="h-full w-full overflow-y-scroll scrollbar-hide">
 
-        <div v-if="videoPlayerStore.ott === 5"
+        <upgrade v-if="videoPlayerStore.ott === 5 && (!userStore.userIsSubscriber || !userStore.userIsVip)"/>
+        <div v-if="videoPlayerStore.ott === 5 && (userStore.userIsSubscriber || userStore.userIsVip)"
              class="now-playing w-full h-full bg-yellow-500 text-black p-2 overflow-y-scroll scrollbar-hide mb-64">
             <h1 class="text-xs font-semibold uppercase mb-3 w-full bg-yellow-600 text-black p-2">FILTERS</h1>
             <div class="pb-24 w-full overflow-y-scroll scrollbar-hide"
@@ -25,6 +26,7 @@ import { useUserStore } from "@/Stores/UserStore"
 import VideoOTTChat from "@/Components/VideoPlayer/Chat/VideoOTTChat"
 import Channels from "@/Components/VideoPlayer/Channels/Channels"
 import ChannelFooter from "@/Components/VideoPlayer/Channels/ChannelFooter.vue";
+import Upgrade from "@/Components/VideoPlayer/OttTopRightDisplay/Upgrade.vue";
 
 let videoPlayerStore = useVideoPlayerStore()
 let streamStore = useStreamStore()
