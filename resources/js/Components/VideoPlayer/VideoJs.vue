@@ -1,9 +1,14 @@
 <template>
     <div>
-        <video ref="videoPlayer" id="main-player" class="video-js vjs-big-play-centered vjs-fill bg-pink-700" playsinline autoplay muted>
-<!--            <source src="https://ia800307.us.archive.org/28/items/BigBuckBunnyFULLHD60FPS/Big%20Buck%20Bunny%20-%20FULL%20HD%2060FPS.mp4" type="video/mp4">-->
-        </video>
+<!--        <video ref="videoPlayer" id="main-player" class="video-js vjs-big-play-centered vjs-fill bg-pink-700" playsinline autoplay muted>-->
+<!--        <video ref="videoPlayer" id="main-player" class="video-js"></video>-->
+        <video ref="videoPlayer"
+               id="main-player"
+               class="video-js vjs-big-play-centered vjs-fill"
+               v-touch="() => {clickOnVideoAction()}"
+        />
     </div>
+
 </template>
 
 
@@ -12,8 +17,9 @@ import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js";
 import {useStreamStore} from "@/Stores/StreamStore.js";
 import {useChatStore} from "@/Stores/ChatStore.js";
 import {useUserStore} from "@/Stores/UserStore.js";
-import videojs from 'video.js';
-import {onMounted, onBeforeUnmount} from "vue";
+import {ref, onMounted, onBeforeUnmount, onUnmounted} from "vue";
+import videojs from "video.js";
+import {Inertia} from "@inertiajs/inertia";
 
 let videoPlayerStore = useVideoPlayerStore();
 let streamStore = useStreamStore();
@@ -25,19 +31,53 @@ const props = defineProps({
     id: String,
 })
 
+// let playerName = 'main-player'
+
+let videoOptions = {
+    autoplay: true,
+    muted: true,
+    controls: false,
+    enableSourceset: true,
+    sources: [
+        {
+            src:
+            props.videoSource,
+            type: props.videoSourceType
+        }
+    ]
+}
+
 onMounted(() => {
-    console.log('check point VideoJS')
-    videojs(props.id, props.options)
-    console.log('onPlayerReady2')
+    let videoPlayer = videojs('main-player', videoOptions)
+    videoPlayer.ready(function() {
+    })
+    videoPlayerStore.videoSource = "/storage/videos/BigBuckBunny.mp4"
+    videoPlayerStore.videoSourceType = "video/mp4"
+    console.log('check point 3 VideoPlayerMain')
 
 })
-console.log('Check point VideoJS before mount')
 
-onBeforeUnmount(() => {
-    let videoJs = videojs('main-player')
-    videoJs.dispose();
-    console.log('Check point VideoJS unmounted')
+onUnmounted(() => {
+    if (videoPlayer) {
+        videoPlayer.dispose()
+    }
 })
+
+function clickOnVideoAction() {
+    if (videoPlayerStore.currentPageIsStream === true) {
+        videoPlayerStore.toggleOSD()
+    } else {
+        Inertia.visit('/stream')
+    }
+    // videoPlayerStore.ottClass = 'OttClose'
+    // videoPlayerStore.ott = 0
+    // if(userStore.isMobile) {
+    //
+    // } else {
+    //     // videoPlayerStore.toggleOsdAndControls()
+    // }
+    // }
+}
 
 
 </script>

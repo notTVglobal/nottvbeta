@@ -7,13 +7,13 @@
         leave-from-class="opacity-100 scale-100"
         leave-to-class="opacity-0 scale-125"
     >
-        <div v-if="welcomeStore.showOverlay===true">
+<!--        <div v-if="welcomeStore.showOverlay===true">-->
                     <div class="grid md:grid-cols-1 grid-cols-1 align-items-center -mt-32">
                         <JetApplicationLogo class="block md:w-auto p-10"/>
                             <div class="my-4 text-center">
                                 <button
                                     class="text-2xl font-semibold bg-green-500 hover:bg-green-600 text-white px-5 py-3 rounded disabled:bg-gray-400"
-                                    @click="watchNow"
+                                    @click="$emit('watchNow')"
                                 ><font-awesome-icon icon="fa-solid fa-play" />
                                     Watch Now
                                 </button>
@@ -32,7 +32,7 @@
 
 
                     </div>
-                </div>
+<!--                </div>-->
 
     </Transition>
 
@@ -49,14 +49,5 @@ let videoPlayerStore = useVideoPlayerStore()
 defineProps({
     show: Boolean
 });
-
-function watchNow(){
-    welcomeStore.showOverlay = false;
-    // videoPlayerStore.play();
-    videoPlayerStore.unmute();
-    // transition out welcomeOverlay
-    // unmute video
-    // play video
-}
 
 </script>

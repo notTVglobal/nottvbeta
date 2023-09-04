@@ -1,7 +1,7 @@
 <template>
 
     <div :class="videoPlayerStore.videoContainerClass">
-        <div @mouseenter="mouseEnter" @mousemove="mouseMove" @mouseleave="mouseLeave" >
+        <div :class="videoPlayerStore.class">
 
     <!-- Login for Welcome Page (logged out) -->
             <Teleport to="body">
@@ -9,19 +9,18 @@
             </Teleport>
 
             <!-- Video Player -->
-<!--            <video-player :id="playerName" :options="videoOptions" />-->
-            <video id="main-player"
-                   :class="videoPlayerStore.class"
-                   class="video-js vjs-big-play-centered vjs-fill bg-pink-700"
-                   playsinline
-                   autoplay
-                   muted
-                   preload="auto"
-                   v-touch="()=>clickOnVideoAction()"
-            >
-                <source :src="`/storage/videos/ThirdEyeSpies.mp4`" type="video/mp4">
-            </video>
+<!--            <video-player :options="videoOptions"/>-->
+            <video id="main-player" class="video-js vjs-big-play-centered vjs-fill"></video>
+<!--                <video-player :id="playerName" :options="videoOptions"/>-->
 
+<!--            <video ref="videoPlayer"-->
+<!--                   id="main-player"-->
+<!--                   :class="videoPlayerStore.class"-->
+<!--                   class="video-js vjs-big-play-centered vjs-fill"-->
+<!--                   v-touch="() => {clickOnVideoAction()}"-->
+<!--            />-->
+<!--&lt;!&ndash;                <source :src="videoPlayerStore.videoSource" :type="videoPlayerStore.videoSourceType">&ndash;&gt;-->
+<!--            </video>-->
     <!-- TopRight Video -->
             <div v-if="!videoPlayerStore.fullPage && user">
                 <!-- isMobile -->
@@ -99,7 +98,7 @@
 </template>
 
 <script setup>
-import {onBeforeMount, onMounted, ref} from 'vue'
+import {onBeforeMount, onMounted, onUnmounted, ref} from 'vue'
 import { Inertia } from "@inertiajs/inertia"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useStreamStore } from "@/Stores/StreamStore"
@@ -119,7 +118,8 @@ import VideoControlsTopRight from "@/Components/VideoPlayer/VideoControls/VideoC
 import OsdTopRight from "@/Components/VideoPlayer/Osd/OsdTopRight.vue"
 import OsdFullPageStandard from "@/Components/VideoPlayer/Osd/OsdFullPageStandard.vue"
 import OsdFullPageMobile from "@/Components/VideoPlayer/Osd/OsdFullPageMobile.vue"
-import VideoPlayer from '@/Components/VideoPlayer/VideoJs'
+import VideoPlayer from "@/Components/VideoPlayer/VideoJs"
+import videojs from 'video.js'
 
 let videoPlayerStore = useVideoPlayerStore()
 let streamStore = useStreamStore()
@@ -139,19 +139,12 @@ let showLogin = ref(false)
 
 console.log('check point 1 VideoPlayerMain')
 
-onBeforeMount(() => {
-    console.log('check point 2 VideoPlayerMain')
-})
-
-onMounted(() => {
-    console.log('check point 3 VideoPlayerMain')
-
-})
-
 let props = defineProps({
     src: String,
     user: Object,
     can: Object,
+    videoSource: '',
+    videoSourceType: '',
     // this prop 'main-player' is not getting
     // loaded before the VideoPlayer is mounted.
     // the player name will determine if it's
@@ -159,7 +152,42 @@ let props = defineProps({
     // playerName: 'main-player'
 })
 
-let playerName = 'main-player'
+onBeforeMount(() => {
+    console.log('check point 2 VideoPlayerMain')
+})
+
+videoPlayerStore.videoSource = "/storage/videos/BigBuckBunny.mp4"
+videoPlayerStore.videoSourceType = "video/mp4"
+// let videoPlayer = ref(null)
+let videoOptions = {
+    autoplay: true,
+    playsinline: true,
+    muted: true,
+    controls: false,
+    enableSourceset: true,
+    sources: [
+        {
+            src:
+            videoPlayerStore.videoSource,
+            type: videoPlayerStore.videoSourceType
+        }
+    ]
+}
+//
+onMounted(() => {
+
+    console.log('check point 3 VideoPlayerMain')
+    let videoJs = videojs('main-player', videoOptions)
+
+})
+//
+// onUnmounted(() => {
+//     if (videoPlayer) {
+//         videoPlayer.dispose()
+//     }
+// })
+
+
 
 function backToPage() {
     videoPlayerStore.makeVideoTopRight();
@@ -237,43 +265,48 @@ whatever it is you are watching/clicking through. A web3 video editor. -->
 <!-- -tec21 Dec.4, 2022 -->
 
 
-<script>
-import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore"
-import VideoPlayer from '@/Components/VideoPlayer/VideoJs'
+<!--<script>-->
+<!--import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore"-->
+<!--import VideoPlayer from '@/Components/VideoPlayer/VideoJs'-->
 
-import { ref } from 'vue'
-console.log('check point A VideoPlayerMain')
-export default {
-    name: 'VideoPlayer',
-    components: {
-        VideoPlayer
-    },
-    data() {
-        const videoPlayerStore = useVideoPlayerStore()
-        videoPlayerStore.videoSource = "https://ia800307.us.archive.org/28/items/BigBuckBunnyFULLHD60FPS/Big%20Buck%20Bunny%20-%20FULL%20HD%2060FPS.mp4"
-        videoPlayerStore.videoSourceType = "video/mp4"
-        videoPlayerStore.videoName = "Third Eye Spies"
-        const videoSource = videoPlayerStore.videoSource
-        const videoSourceType = videoPlayerStore.videoSourceType
-        return {
-            videoOptions: {
-                autoplay: true,
-                muted: true,
-                controls: false,
-                enableSourceset: true,
-                sources: [
-                    {
-                        src:
-                            videoSource,
-                        type: videoSourceType
-                    }
-                ]
-            }
-        };
-    }
-};
+<!--import { ref } from 'vue'-->
+<!--console.log('check point A VideoPlayerMain')-->
+<!--export default {-->
+<!--    name: 'VideoPlayer',-->
+<!--    components: {-->
+<!--        VideoPlayer-->
+<!--    },-->
+<!--    data() {-->
+<!--        const videoPlayerStore = useVideoPlayerStore()-->
+<!--        videoPlayerStore.videoSource = "/storage/videos/BigBuckBunny.mp4"-->
+<!--        videoPlayerStore.videoSourceType = "video/mp4"-->
+<!--        const videoSource = videoPlayerStore.videoSource-->
+<!--        const videoSourceType = videoPlayerStore.videoSourceType-->
+<!--        return {-->
+<!--            videoOptions: {-->
+<!--                autoplay: true,-->
+<!--                playsinline: true,-->
+<!--                muted: true,-->
+<!--                controls: false,-->
+<!--                enableSourceset: true,-->
+<!--                sources: [-->
+<!--                    {-->
+<!--                        src:-->
+<!--                            videoSource,-->
+<!--                        type: videoSourceType-->
+<!--                    }-->
+<!--                ]-->
+<!--            }-->
+<!--        };-->
+<!--    },-->
+<!--    methods: {-->
+<!--        playVideo(){-->
+<!--            this.play()-->
+<!--        }-->
+<!--    }-->
+<!--};-->
 
 
 
-</script>
+<!--</script>-->
 

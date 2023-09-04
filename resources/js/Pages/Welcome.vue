@@ -13,10 +13,6 @@
 
                                 Register
                             </Button>
-                            <Button class="bg-opacity-0 hover:bg-opacity-0"><Link v-if="$page.props.user" :href="route('stream')" class="text-sm md:text-2xl top-20 text-gray-200 underline">
-                                Return to stream
-                            </Link></Button>
-
                     </div>
                 </div>
             </header>
@@ -26,8 +22,10 @@
 
                     <div class="w-full flex justify-center items-center h-screen">
 
-                        <WelcomeOverlay :show="true"/>
-                        <VideoControlsWelcome v-if="welcomeStore.showOverlay === false" />
+<!--                        <WelcomeOverlay :show="true"/>-->
+                        <WelcomeOverlay v-show="welcomeStore.showOverlay === true"
+                                        @watchNow="watchNow"/>
+                        <VideoControlsWelcome v-show="welcomeStore.showOverlay === false" />
 
                     </div>
                 </div>
@@ -87,7 +85,7 @@
 <script setup>
 import Login from "@/Components/Welcome/Login.vue"
 import Register from "@/Components/Welcome/Register.vue"
-import {onBeforeMount, onMounted, ref} from 'vue'
+import { onMounted, ref } from 'vue'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useWelcomeStore } from "@/Stores/WelcomeStore";
 import { useUserStore } from "@/Stores/UserStore";
@@ -110,25 +108,13 @@ welcomeStore.showOverlay = true;
 // videoPlayer.loggedIn = false
 videoPlayerStore.class = "welcomeVideoClass"
 videoPlayerStore.videoContainerClass = "welcomeVideoContainer"
-// videoPlayer.videoContainerClass = "videoContainerHomePage"
-// chat.show = false
-// chat.class = 'chatHidden'
-
-// onBeforeMount(() => {
-//     userStore.scrollToTopCounter = 0;
-// })
 
 onMounted(() => {
     videoPlayerStore.makeVideoWelcomePage();
     videoPlayerStore.ottClass = 'ottClose'
     videoPlayerStore.ott = 0
-    document.getElementById("topDiv").scrollIntoView()
-    // if (userStore.scrollToTopCounter === 0 ) {
-    //
-    //     userStore.scrollToTopCounter ++;
-    // }
+
 });
-//------------------------//
 
 let props = defineProps({
     canLogin: Boolean,
@@ -149,27 +135,19 @@ welcomeStore.showRegister = false
 function ifLoggedIn() {
     if (props.user != null) {
         Inertia.visit('stream')
-    } else
-    { return }
+    }
 }
 ifLoggedIn();
 
-
-</script>
-
-<script>
-// import AppLayout from '../Layouts/AppLayout';
-// export default {
-//     layout: AppLayout
-//     // methods: {
-//     //     scrollToElement() {
-//     //         const el = this.$refs.scrollToMe;
-//     //         if (el) {
-//     //             el.scrollIntoView({ behavior: "smooth" });
-//     //         }
-//     //     },
-//     // },
-// }
+function watchNow(){
+    welcomeStore.showOverlay = false;
+    // let player = videojs.getPlayer('main-player').unmute
+    // videoPlayerStore.play();
+    videoPlayerStore.unmute();
+    // transition out welcomeOverlay
+    // unmute video
+    // play video
+}
 
 
 </script>

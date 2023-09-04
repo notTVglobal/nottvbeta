@@ -10,10 +10,11 @@
 
         </div>
 
+        <!-- Video Player -->
+        <VideoPlayerMain
+            :user="user" />
 
         <div class="w-full">
-
-
 
             <!-- OTT Buttons and Displays -->
             <div v-if="!videoPlayerStore.fullPage" >
@@ -31,10 +32,10 @@
     <!-- Page Content -->
         <div>
     <!-- Logged out view (Welcome) -->
-            <main v-if="! user"
+            <div v-if="! user"
                   class="fixed top-0 h-screen w-screen overflow-y-scroll z-50">
 
-                <slot /></main>
+                <slot /></div>
 
     <!-- Logged in view -->
                 <div v-if="user"
@@ -46,10 +47,6 @@
 
                 <slot /></div>
         </div>
-
-        <!-- Video Player -->
-        <VideoPlayerMain
-            :user="user" />
 
     </div>
 </template>
@@ -70,6 +67,7 @@ import OttTopRightDisplayChat from '@/Components/VideoPlayer/OttTopRightDisplay/
 import OttTopRightDisplayFilters from '@/Components/VideoPlayer/OttTopRightDisplay/Filters'
 import OttTopRightDisplayNowPlayingInfo from '@/Components/VideoPlayer/OttTopRightDisplay/NowPlayingInfo'
 import OttTopRightDisplayPlaylist from '@/Components/VideoPlayer/OttTopRightDisplay/Playlist'
+// import VideoPlayerMain from "@/Components/VideoPlayer/VideoPlayerMain"
 const VideoPlayerMain = defineAsyncComponent(() =>
     import('@/Components/VideoPlayer/VideoPlayerMain')
 )
@@ -84,10 +82,7 @@ let channelStore = useChannelStore()
 let isStreamPage = ref()
 
 function setPage() {
-    if (videoPlayerStore.currentPage === "stream") {
-        isStreamPage = true;
-    } else
-        isStreamPage = false;
+    isStreamPage = videoPlayerStore.currentPage === "stream";
 }
 
 setPage()
