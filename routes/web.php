@@ -686,7 +686,7 @@ Route::middleware([
         ->name('users.edit');
 
     // Update user
-    Route::put('/users', [UsersController::class, 'updateContact'])->name('users.updateContact');
+    Route::post('/users', [UsersController::class, 'updateContact'])->name('users.updateContact');
 
 // Chat
 ///////////

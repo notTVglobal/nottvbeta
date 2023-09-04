@@ -30,6 +30,29 @@
 <!--            <div v-if="form.errors.phone" v-text="form.errors.phone" class="text-xs text-red-600 mt-1"></div>-->
 <!--        </div>-->
 
+                <div class="col-span-6 sm:col-span-4 hidden">
+                    <JetLabel for="name" value="Name" />
+                    <JetInput
+                        id="name"
+                        v-model="form.name"
+                        type="text"
+                        class="mt-1 block w-full"
+                        autocomplete="name"
+                    />
+                    <JetInputError :message="form.errors.name" class="mt-2" />
+                </div>
+
+                <div class="col-span-6 sm:col-span-4 hidden">
+                    <JetLabel for="email" value="Email" />
+                    <JetInput
+                        id="email"
+                        v-model="form.email"
+                        type="email"
+                        class="mt-1 block w-full"
+                        autocomplete="email"
+                    />
+                    <JetInputError :message="form.errors.email" class="mt-2" />
+                </div>
 
                 <div class="col-span-6 sm:col-span-4">
                     <JetLabel for="phone" value="Phone Number" />
@@ -255,6 +278,8 @@ let props = defineProps({
 
 let form = useForm({
     id: props.user.id,
+    name: props.user.name,
+    email: props.user.email,
     address1: props.user.address1,
     address2: props.user.address2,
     city: props.user.city,
@@ -266,7 +291,7 @@ let form = useForm({
 
 const updateContactInformation = () => {
 
-    form.put(route('users.updateContact'), {
+    form.post(route('users.updateContact'), {
         errorBag: 'updateProfileInformation',
         preserveScroll: true,
     });

@@ -1352,7 +1352,7 @@ html {
 .backToPageStandard {
     z-index: 200;
     position: fixed;
-    bottom: 1rem;
+    bottom: 3rem;
     left: 0.5rem;
     width: -moz-fit-content;
     width: fit-content;
@@ -1369,10 +1369,15 @@ html {
 }
 .videoControlsStandard {
     z-index: 200;
+    left: 0;
+    right: 0;
     position: fixed;
-    bottom: 3rem;
+    bottom: 0.25rem;
+    margin-left: auto;
+    margin-right: auto;
     display: flex;
-    width: 100%;
+    width: -moz-fit-content;
+    width: fit-content;
     justify-content: center}
 .videoControlsStandard > :not([hidden]) ~ :not([hidden]) {
   --tw-space-x-reverse: 0;
@@ -4142,6 +4147,10 @@ html {
   padding-top: 0.75rem;
 }
 
+.pt-36 {
+  padding-top: 9rem;
+}
+
 .pt-4 {
   padding-top: 1rem;
 }
@@ -4156,10 +4165,6 @@ html {
 
 .pt-8 {
   padding-top: 2rem;
-}
-
-.pt-36 {
-  padding-top: 9rem;
 }
 
 .text-left {

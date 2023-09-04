@@ -259,6 +259,7 @@ class UsersController extends Controller
     //
     public function updateContact(HttpRequest $request, User $user)
     {
+
         $id = $request->id;
         $user = User::find($id);
         // validate the request
@@ -280,7 +281,7 @@ class UsersController extends Controller
         $user->country = $request->country;
         $user->postalCode = $request->postalCode;
         $user->phone = $request->phone;
-        $user->save();
+        $user->update();
         sleep(1);
 
         // redirect

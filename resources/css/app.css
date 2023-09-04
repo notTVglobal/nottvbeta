@@ -284,11 +284,13 @@ html {
 }
 .backToPageStandard {
     z-index: 200;
-    @apply fixed w-fit bottom-4 left-2 p-2 drop-shadow bg-gray-800 text-white hover:bg-gray-600
+    @apply fixed w-fit bottom-12 left-2 p-2 drop-shadow bg-gray-800 text-white hover:bg-gray-600
 }
 .videoControlsStandard {
     z-index: 200;
-    @apply fixed flex justify-center space-x-4 bottom-12 w-full
+    left: 0;
+    right: 0;
+    @apply fixed flex justify-center mx-auto space-x-4 bottom-1 w-fit
 }
 .videoControlsWelcomeStandard {
     z-index: 200;
