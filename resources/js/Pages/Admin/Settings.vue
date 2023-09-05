@@ -159,16 +159,24 @@
                 </form>
 
 
-                <div>
+                <div class="w-full flex flex-wrap mb-4 p-2 bg-amber-800 text-white">
+                    <span>Change Max Video Upload Size. convert Bytes to KB, MB, GB, TB.</span>
+                    <span>Update Video Uploader with the size.</span>
+                </div>
+
+                <div class="w-full flex flex-wrap mb-4 p-2 bg-amber-800 text-white">
                     Content licenses
                 </div>
-                <div>
+
+                <div class="w-full flex flex-wrap mb-4 p-2 bg-amber-800 text-white">
                     Episode Statuses
                 </div>
-                <div>
+
+                <div class="w-full flex flex-wrap mb-4 p-2 bg-amber-800 text-white">
                     Show Statuses
                 </div>
-                <div>
+
+                <div class="w-full flex flex-wrap mb-4 p-2 bg-amber-800 text-white">
                     Channels. Display list of channels. Click channel name to go to the channel playlist edit page.
                     Grid style, 1 column mobile, 2 column tablet, 3 column lg, 4 column xl
                         Rows: Times (next 24 hours) --> can scroll up to 72 hours ahead or 72 hours back.
