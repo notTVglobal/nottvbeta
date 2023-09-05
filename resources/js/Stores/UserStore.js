@@ -70,6 +70,10 @@ export let useUserStore = defineStore('userStore', {
     },
 
     getters: {
-        //
+        uploadPercentageRounded(state) {
+            if (this.uploadPercentage !== 0) {
+                return Math.round(state.uploadPercentage * 10) / 10
+            }
+        },
     }
 });

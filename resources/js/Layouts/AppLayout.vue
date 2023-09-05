@@ -117,17 +117,20 @@ function getUser() {
     // videoPlayerStore.videoSourceType = "video/mp4"
     // videoPlayerStore.videoName = "Third Eye Spies"
 
-
+// First Play
+// videoPlayerStore.videoSource = "/storage/videos/BigBuckBunny.mp4"
+// videoPlayerStore.videoSourceType = "video/mp4"
+// videoPlayerStore.videoName = "Big Buck Bunny (4K)"
 
 
 userStore.showNavDropdown = false
 onBeforeMount(async () => {
     getUser()
-    videoPlayerStore.videoSource = "https://ia800307.us.archive.org/28/items/BigBuckBunnyFULLHD60FPS/Big%20Buck%20Bunny%20-%20FULL%20HD%2060FPS.mp4"
-    videoPlayerStore.videoSourceType = "video/mp4"
-    videoPlayerStore.videoName = "Third Eye Spies"
-    streamStore.streamName = "TEST"
-    videoPlayerStore.currentChannelName = "TEST"
+    // videoPlayerStore.videoSource = "https://ia800307.us.archive.org/28/items/BigBuckBunnyFULLHD60FPS/Big%20Buck%20Bunny%20-%20FULL%20HD%2060FPS.mp4"
+    // videoPlayerStore.videoSourceType = "video/mp4"
+    // videoPlayerStore.videoName = "Big Buck Bunny"
+    // streamStore.streamName = "TEST"
+    // videoPlayerStore.currentChannelName = "TEST"
 
 
 })

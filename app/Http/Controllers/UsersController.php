@@ -281,11 +281,11 @@ class UsersController extends Controller
         $user->country = $request->country;
         $user->postalCode = $request->postalCode;
         $user->phone = $request->phone;
-        $user->update();
+        $user->save();
         sleep(1);
 
         // redirect
-        return redirect(route('settings'))->with('message', 'Contact Info Updated Successfully');
+        return redirect(route('profile.show'))->with('message', 'Contact Info Updated Successfully');
 //        return Inertia::render('Settings')->with('message', 'Contact Info Updated Successfully');
 
 

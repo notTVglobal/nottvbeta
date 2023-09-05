@@ -47,6 +47,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
 
             muted: true,
             paused: Boolean,
+            videoCurrentTime: '',
             apiRequest: [],
             challenge: [],
             status: [],
@@ -228,6 +229,10 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             let videoJs = videojs('main-player')
             // videoJs.fullscreen(this.previousSource)
             videoJs.requestFullscreen()
+        },
+        getVideoCurrentTime() {
+            let videoJs = videojs('main-player')
+            this.videoCurrentTime = videoJs.currentTime
         },
 
         // check if episode has a video

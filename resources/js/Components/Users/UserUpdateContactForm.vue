@@ -1,5 +1,9 @@
 <template>
 
+<!--    THIS FILE MAY NOT DO ANYTHING.
+        YOU ARE PROBABLY LOOKING FOR:
+        resources/js/Pages/Profile/Partials/UpdateContactInformationForm.vue -->
+
     <JetFormSection @submitted="updateContactInformation">
         <template #title>
             Contact Information

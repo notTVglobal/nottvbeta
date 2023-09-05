@@ -29,4 +29,11 @@ class AppSetting extends Model
     {
         return $this->hasMany(Team::class);
     }
+
+    public function channel()
+    {
+        return $this->belongsTo(Channel::class)->withDefault([
+            'name' => 'channel name',
+        ]);
+    }
 }

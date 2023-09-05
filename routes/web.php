@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\ChannelController;
+use App\Http\Controllers\AppSettingController;
 use App\Http\Controllers\TestMessageController;
 use App\Http\Controllers\WelcomeController;
 use App\Mail\VerifyMail;
@@ -403,7 +404,7 @@ Route::middleware([
         ->can('viewAdmin', 'App\Models\User')
         ->name('admin.settings');
     //// SETTINGS - SAVE
-    Route::post('/admin/settings', [AdminController::class, 'saveSettings'])
+    Route::put('/admin/settings', [AdminController::class, 'saveSettings'])
         ->can('viewAdmin', 'App\Models\User')
         ->name('admin.saveSettings');
 
@@ -686,7 +687,7 @@ Route::middleware([
         ->name('users.edit');
 
     // Update user
-    Route::post('/users', [UsersController::class, 'updateContact'])->name('users.updateContact');
+    Route::put('/users', [UsersController::class, 'updateContact'])->name('users.updateContact');
 
 // Chat
 ///////////

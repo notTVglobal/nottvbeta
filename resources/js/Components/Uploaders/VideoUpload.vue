@@ -1,7 +1,8 @@
 <template>
     <div>
 
-        <progress v-show="userStore.uploadPercentage != 0" max="100" :value="userStore.uploadPercentage" class="w-full mb-4" />
+        <progress v-show="userStore.uploadPercentage != 0" max="100" :value="userStore.uploadPercentage" class="w-full" />
+        <div v-show="userStore.uploadPercentage != 0" class="w-full mb-4">{{userStore.uploadPercentageRounded}}%</div>
 
         <div v-show="uploadingMessage" class="mb-4 font-bold text-center">Please stay on this screen until upload is complete.</div>
         <div v-show="uploadCompleteMessage" class="mb-4 font-bold text-center">Upload is complete. The video is now processing.</div>
@@ -33,7 +34,7 @@ onMounted(() => {
 let myDropzone = new Dropzone("#videoUploadForm", {
     url: "/videoupload",
     paramName: "file", // The name that will be used to transfer the file
-    maxFilesize: '3 GB', // MB
+    maxFilesize: '25 GB', // MB
     chunking: true,
     chunkSize: 2 * 1024 * 1024,
     parallelChunkUploads: false,
@@ -51,11 +52,15 @@ let myDropzone = new Dropzone("#videoUploadForm", {
             isHidden = true;
         }
     },
-    dictDefaultMessage: "Click here or Drop files here to upload",
+    dictDefaultMessage: "Click here or Drop video here to upload <br>(Max video file size is 25GB)",
     forceFallback: false, // for testing, set to true.
     accept: function(file, done) {
-        if (file.name == "") {
+        if (file.name === "") {
             done("Need a file.");
+        } else if (file.size > 25000000000) {
+            console.log(file.size)
+            done("Video file too big.");
+            alert('Video file must be smaller than 25GB');
         }
         else { done(); }
     }

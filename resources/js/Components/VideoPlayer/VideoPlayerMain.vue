@@ -96,7 +96,7 @@
 </template>
 
 <script setup>
-import { onMounted, onUnmounted, onUpdated, ref, watch } from 'vue'
+import { onMounted, onUnmounted, onUpdated, ref, reactive, watch } from 'vue'
 import { Inertia } from "@inertiajs/inertia"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useStreamStore } from "@/Stores/StreamStore"
@@ -119,6 +119,7 @@ import OsdFullPageMobile from "@/Components/VideoPlayer/Osd/OsdFullPageMobile.vu
 import VideoPlayer from "@/Components/VideoPlayer/VideoJs"
 import videojs from 'video.js'
 import { useScreenOrientation } from '@vueuse/core'
+import axios, {Axios} from "axios";
 
 let videoPlayerStore = useVideoPlayerStore()
 let streamStore = useStreamStore()
@@ -144,25 +145,59 @@ let props = defineProps({
     videoSourceType: '',
 })
 
-// First Play
-videoPlayerStore.videoSource = "/storage/videos/BigBuckBunny.mp4"
-videoPlayerStore.videoSourceType = "video/mp4"
-videoPlayerStore.videoName = "Big Buck Bunny (4K)"
+let videoOptions = ref()
 
-let videoOptions = {
-    autoplay: true,
-    playsinline: true,
-    muted: true,
-    controls: false,
-    enableSourceset: true,
-    sources: [
-        {
-            src:
-            videoPlayerStore.videoSource,
-            type: videoPlayerStore.videoSourceType
-        }
-    ]
+function setVideoOptions() {
+    videoOptions = {
+        autoplay: true,
+        playsinline: true,
+        muted: true,
+        controls: false,
+        enableSourceset: true,
+        sources: [
+            {
+                src:
+                videoPlayerStore.videoSource,
+                type: videoPlayerStore.videoSourceType
+            }
+        ]
+    }
+
 }
+let videoJs = ref()
+async function getFirstPlaySettings() {
+    await axios.get('/api/app_settings')
+        .then(response => {
+            videoPlayerStore.videoSource = response.data[0].first_play_video_source
+            videoPlayerStore.videoSourceType = response.data[0].first_play_video_source_type
+            videoPlayerStore.videoName = response.data[0].first_play_video_name
+            console.log('app settings retrieved.');
+
+        })
+        .catch(error => {
+            console.log(error)
+        })
+    setVideoOptions()
+    videoJs = videojs('main-player', videoOptions)
+}
+
+
+
+// let videoOptions = {
+//     autoplay: true,
+//     playsinline: true,
+//     muted: true,
+//     controls: false,
+//     enableSourceset: true,
+//     sources: [
+//         {
+//             src:
+//             videoPlayerStore.videoSource,
+//             type: videoPlayerStore.videoSourceType
+//         }
+//     ]
+// }
+getFirstPlaySettings()
 
 const {
     isSupported,
@@ -173,8 +208,7 @@ const {
 } = useScreenOrientation()
 
 onMounted(() => {
-    let videoJs = videojs('main-player', videoOptions)
-
+    // let videoJs = videojs('main-player', videoOptions)
     // if (userStore.isMobile) {
     //     if (orientation==='landscape-secondary' || orientation==='landscape-primary') {
     //         videoPlayerStore.hideOsdAndControlsAndNav()
@@ -216,7 +250,6 @@ function backToPage() {
 }
 
 let screenWidth = ref(screen.width)
-console.log(screenWidth)
 
 function clickOnVideoAction() {
 

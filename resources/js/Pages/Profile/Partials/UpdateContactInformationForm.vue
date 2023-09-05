@@ -16,6 +16,9 @@ const props = defineProps({
 
 const form = useForm({
     _method: 'PUT',
+    id: props.user.id,
+    name: props.user.name,
+    email: props.user.email,
     address1: props.user.address1,
     address2: props.user.address2,
     city: props.user.city,
@@ -49,7 +52,7 @@ const form = useForm({
 // };
 
 const updateProfileInformation = () => {
-    form.post(route('user-profile-information.update'), {
+    form.put(route('users.updateContact'), {
         errorBag: 'updateProfileInformation',
         preserveScroll: true,
     });
@@ -73,15 +76,36 @@ const updateProfileInformation = () => {
 
         <template #description>
             Update your account's contact information.
-            <div class="bg-orange-300 font-semibold text-orange-700">
-                Contact form will not save. We are working on this bug.
-            </div>
         </template>
 
 
         <template #form>
 
 <!--            <form @submit.prevent="submit" class="mt-6">-->
+
+<!--            <div class="col-span-6 sm:col-span-4 hidden">-->
+<!--                <JetLabel for="name" value="Name" />-->
+<!--                <JetInput-->
+<!--                    id="name"-->
+<!--                    v-model="form.name"-->
+<!--                    type="text"-->
+<!--                    class="mt-1 block w-full"-->
+<!--                    autocomplete="name"-->
+<!--                />-->
+<!--                <JetInputError :message="form.errors.name" class="mt-2" />-->
+<!--            </div>-->
+
+<!--            <div class="col-span-6 sm:col-span-4 hidden">-->
+<!--                <JetLabel for="email" value="Email" />-->
+<!--                <JetInput-->
+<!--                    id="email"-->
+<!--                    v-model="form.email"-->
+<!--                    type="email"-->
+<!--                    class="mt-1 block w-full"-->
+<!--                    autocomplete="email"-->
+<!--                />-->
+<!--                <JetInputError :message="form.errors.email" class="mt-2" />-->
+<!--            </div>-->
 
             <!-- Address -->
             <div class="col-span-6 sm:col-span-4">

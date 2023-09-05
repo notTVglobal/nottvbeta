@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AppSetting;
 use App\Models\Image;
 use App\Models\InviteCode;
 use App\Models\Show;
@@ -15,7 +16,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
-use function GuzzleHttp\Promise\all;
+//use function GuzzleHttp\Promise\all;
 
 class AdminController extends Controller
 {
@@ -25,32 +26,55 @@ class AdminController extends Controller
 
     public function settings()
     {
-        $settings = DB::table('app_settings')->where('id', 1)->first();
+//        $settings = DB::table('app_settings')->where('id', 1)->first();
+        $settings = AppSetting::find(1);
         return Inertia::render('Admin/Settings', [
+            'id' => $settings->id,
             'cdn_endpoint' => $settings->cdn_endpoint,
             'cloud_folder' => str_replace('/', '',$settings->cloud_folder),
+            'first_play_video_source' => $settings->first_play_video_source,
+            'first_play_video_source_type' => $settings->first_play_video_source_type,
+            'first_play_video_name' => $settings->first_play_video_name,
+            'first_play_channel_id' => $settings->first_play_channel_id,
+            'first_play_channel_name' => $settings->channel->name,
         ]);
     }
 
     public function saveSettings(HttpRequest $request)
     {
-        $settings = $request->validate([
+        $request->validate([
             'cdn_endpoint' => 'nullable|string',
             'cloud_folder' => 'nullable|string',
+            'first_play_video_source' => 'nullable|string',
+            'first_play_video_source_type' => 'nullable|string',
+            'first_play_video_name' => 'nullable|string',
+            'first_play_channel_id' => 'nullable|integer',
         ]);
 
-        $db = DB::table('app_settings')
-            ->where('id', 1)
-            ->update(['cdn_endpoint'=> $request->cdn_endpoint])
-        ;
+        $settings = AppSetting::find($request->id);
+        $settings->cdn_endpoint = $request->cdn_endpoint;
+        $settings->cloud_folder = $request->cloud_folder;
+        $settings->first_play_video_source = $request->first_play_video_source;
+        $settings->first_play_video_source_type = $request->first_play_video_source_type;
+        $settings->first_play_video_name = $request->first_play_video_name;
+        $settings->first_play_channel_id = $request->first_play_channel_id;
+        $settings->save();
+        sleep(1);
 
-        $db = DB::table('app_settings')
-            ->where('id', 1)
-            ->update(['cloud_folder'=> '/'.$request->cloud_folder])
-        ;
-
-        // redirect
-        return redirect()->route('admin.settings')->with('message', 'Settings Saved Successfully');
+        return redirect(route('admin.settings'))->with('message', 'Settings Saved Successfully');
+//
+//        $db = DB::table('app_settings')
+//            ->where('id', 1)
+//            ->update(['cdn_endpoint'=> $request->cdn_endpoint])
+//        ;
+//
+//        $db = DB::table('app_settings')
+//            ->where('id', 1)
+//            ->update(['cloud_folder'=> '/'.$request->cloud_folder])
+//        ;
+//
+//        // redirect
+//        return redirect()->route('admin.settings')->with('message', 'Settings Saved Successfully');
 
     }
 

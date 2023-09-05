@@ -32,4 +32,9 @@ class Channel extends Model
     {
         return $this->belongsTo(ChannelSource::class);
     }
+
+    public function setting()
+    {
+        return $this->hasMany(AppSetting::class);
+    }
 }

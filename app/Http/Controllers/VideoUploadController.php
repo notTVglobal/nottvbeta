@@ -9,6 +9,7 @@ use App\Jobs\UploadVideoToSpacesJob;
 use App\Models\VideoUploadJob;
 
 use Carbon\Carbon;
+use Dotenv\Exception\InvalidFileException;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\JsonResponse;
@@ -35,6 +36,7 @@ use App\Models\Team;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\File;
 use App\Models\Image;
+use function MongoDB\BSON\toJSON;
 
 
 class VideoUploadController extends Controller
@@ -145,7 +147,6 @@ class VideoUploadController extends Controller
      */
     public function upload(HttpRequest $request): JsonResponse {
 
-
         // validate the file
 //        ???
 
@@ -153,6 +154,7 @@ class VideoUploadController extends Controller
         // create the file receiver
         $receiver = new FileReceiver('file', $request, HandlerFactory::classFromRequest($request));
 //        $receiver = new FileReceiver('file', $request, HandlerFactory::classFromRequest($request));
+
 
         // check if the upload is success, throw exception or return response you need
         if ($receiver->isUploaded() === false) {

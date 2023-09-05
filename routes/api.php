@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AppSettingController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ChatController;
@@ -33,6 +34,10 @@ Route::post('movies/upload', [MovieUploadController::class, 'upload'])
 Route::post('/mistTrigger', [\App\Http\Controllers\mistTriggerController::class, 'logTrigger'])->name('mistTrigger.logTrigger');
 
 Route::post('/chatTestMessage', [TestMessageController::class, 'broadcast']);
+
+// get app_settings is to load first play on the VideoPlayerMain component.
+Route::get('/app_settings', [AppSettingController::class, 'getAppSettings']);
+
 //Route::post('/chatTestMessage', '\App\Http\Controllers\TestMessageController@broadcast');
 
 //Route::post('/chatTest', function (){

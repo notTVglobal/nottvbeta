@@ -2,8 +2,8 @@
 
     <Head :title="`Administrative Settings`"/>
 
-    <div class="place-self-center flex flex-col gap-y-3">
-        <div id="topDiv" class="bg-white dark:bg-gray-800 rounded text-black dark:text-gray-50 p-5">
+    <div id="topDiv" class="place-self-center flex flex-col gap-y-3">
+        <div class="w-fit lg:w-3/4 left-0 right-0 mx-auto bg-white dark:bg-gray-800 rounded text-black dark:text-gray-50 mt-6 p-5">
 
             <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
 
@@ -62,6 +62,86 @@
                         <span class="text-xs">NOTE: The forward slash is already entered in the backend. Just type the folder name.</span>
 
                         <div v-if="form.errors.cloud_folder" v-text="form.errors.cloud_folder"
+                             class="text-xs text-red-600 mt-1"></div>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"
+                               for="cloud_folder"
+                        >
+                            FIRST PLAY VIDEO SOURCE
+                        </label>
+
+                        <div class="flex flex-row">
+                            <input v-model="form.first_play_video_source"
+                                   class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                                   type="text"
+                                   name="first_play_video_source"
+                                   id="first_play_video_source"
+                            >
+                        </div>
+                        <span class="text-xs"></span>
+
+                        <div v-if="form.errors.first_play_video_source" v-text="form.errors.first_play_video_source"
+                             class="text-xs text-red-600 mt-1"></div>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"
+                               for="cloud_folder"
+                        >
+                            FIRST PLAY VIDEO SOURCE TYPE
+                        </label>
+
+                        <div class="flex flex-row">
+                            <input v-model="form.first_play_video_source_type"
+                                   class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                                   type="text"
+                                   name="first_play_video_source"
+                                   id="first_play_video_source"
+                            >
+                        </div>
+                        <span class="text-xs">e.g., video/mp4 or application/x-mpegURL</span>
+
+                        <div v-if="form.errors.first_play_video_source" v-text="form.errors.first_play_video_source"
+                             class="text-xs text-red-600 mt-1"></div>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"
+                               for="cloud_folder"
+                        >
+                            VIDEO NAME
+                        </label>
+
+                        <div class="flex flex-row">
+                            <input v-model="form.first_play_video_name"
+                                   class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                                   type="text"
+                                   name="first_play_video_name"
+                                   id="first_play_video_name"
+                            >
+                        </div>
+                        <span class="text-xs"></span>
+
+                        <div v-if="form.errors.first_play_video_name" v-text="form.errors.first_play_video_name"
+                             class="text-xs text-red-600 mt-1"></div>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"
+                               for="cloud_folder"
+                        >
+                            CHANNEL ID
+                        </label>
+
+                        <div class="flex flex-row">
+                            <input v-model="form.first_play_channel_id"
+                                   class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                                   type="text"
+                                   name="first_play_channel_id"
+                                   id="first_play_channel_id"
+                            >
+                        </div>
+                        <span class="text-xs text-orange-500">This needs to become a dropdown of channels to select.</span>
+
+                        <div v-if="form.errors.first_play_channel_id" v-text="form.errors.first_play_channel_id"
                              class="text-xs text-red-600 mt-1"></div>
                     </div>
 
@@ -132,18 +212,28 @@ onMounted(async () => {
 });
 
 let props = defineProps({
+    id: BigInt,
     cdn_endpoint: String,
     cloud_folder: String,
+    first_play_video_source: String,
+    first_play_video_source_type: String,
+    first_play_video_name: String,
+    first_play_channel_id: String,
     message: String
 });
 
 let form = useForm({
+    id: props.id,
     cdn_endpoint: props.cdn_endpoint,
     cloud_folder: props.cloud_folder,
+    first_play_video_source: props.first_play_video_source,
+    first_play_video_source_type: props.first_play_video_source_type,
+    first_play_video_name: props.first_play_video_name,
+    first_play_channel_id: props.first_play_channel_id,
 })
 
 let submit = () => {
-    form.post(route('admin.settings'));
+    form.put(route('admin.settings'));
 };
 
 let showMessage = ref(true);

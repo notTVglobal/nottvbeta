@@ -4,9 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Models\AppSetting;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class AppSettingController extends Controller
 {
+
+    public function getAppSettings()
+    {
+        return AppSetting::with('channel:name')
+            ->get();
+    }
+
+
     /**
      * Display a listing of the resource.
      *
