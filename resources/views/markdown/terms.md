@@ -167,7 +167,7 @@ You agree that all matters relating to these Terms of Use, including the use of 
 
 ## 15. Privacy
 
-Any of Your personal information which **notTV** collects via the Website is subject to **notTV**’s Website Privacy Policy which is available at www.not.tv/privacy-policy and is incorporated by reference into these Terms of Use.
+Any of Your personal information which **notTV** collects via the Website is subject to **notTV**’s Website Privacy Policy which is available at https://not.tv/privacy-policy and is incorporated by reference into these Terms of Use.
 
 ## 16. Language
 
