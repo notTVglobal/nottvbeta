@@ -268,7 +268,6 @@ class VideoUploadController extends Controller
 //        $movieTrailer = MovieTrailer::where('id', $movieTrailerId)
 //            ->update(['video_id' => $video->id]);
 
-
 //        error_log('Video saved to database. Next up is the Job.');
 
         // Dispatch Job
