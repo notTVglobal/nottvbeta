@@ -3,7 +3,9 @@
 <!--       <Head :title="title"/>-->
     </div>
 
-    <slot />
+    <div class="h-full w-full overflow-scroll">
+        <slot />
+    </div>
 </template>
 
 <script setup>
