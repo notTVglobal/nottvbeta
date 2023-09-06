@@ -1,12 +1,12 @@
 # not.tv Privacy Policy
 
-Last Updated: June 24, 2017
+Last Updated: September 6, 2023
 
-notTV Ltd. respects the privacy of our users and has developed this Privacy Policy to demonstrate its commitment to protecting your privacy. These privacy policies (the “Privacy Policy”) are intended to describe for you, as an individual who is a user of not.tv or any of our related sites, mobile and connected TV applications, or other online services, the information we collect, how that information may be used, with whom it may be shared, and your choices about such uses and disclosures.We encourage you to read this Privacy Policy carefully when using our website or services or transacting business with us. By using our websites or any of our applications, you are accepting the practices described in this Privacy Policy.If you have any questions about our privacy practices, please refer to the end of this Privacy Policy for information on how to contact us.
+notTV Ltd. respects the privacy of our users and has developed this Privacy Policy to demonstrate its commitment to protecting your privacy. These privacy policies (the “Privacy Policy”) are intended to describe for you, as an individual who is a user of not.tv or any of our related sites, mobile and connected TV applications, or other online services, the information we collect, how that information may be used, with whom it may be shared, and your choices about such uses and disclosures. We encourage you to read this Privacy Policy carefully when using our website or services or transacting business with us. By using our websites or any of our applications, you are accepting the practices described in this Privacy Policy. If you have any questions about our privacy practices, please refer to the end of this Privacy Policy for information on how to contact us.
 
 ## Information We Collect About You
 
-_In General._ We may collect personal information that can identify you, such as your name and email address, and other information that does not identify you. When you provide personal information through our website, the information may be sent to servers located in the Canada and other countries around the world.
+_In General._ We may collect personal information that can identify you, such as your name and email address, and other information that does not identify you. When you provide personal information through our website, the information may be sent to servers located in the United States of America and other countries around the world.
 
 * **Information you provide.** We may collect and store any personal information you enter on our website or provide to us in some other manner, including personal information that may be contained in any video, comment or other submission you upload or post to the website. This includes identifying information, such as your name, address, e-mail address, and telephone number; your likeness; and, if you transact business with us, financial information such as your payment method (valid credit card number, type, expiration date or other financial information). We also may request information about your interests and activities, your gender and age, and other demographic information.
 * **Information from other sources.** We may also periodically obtain both personal and non-personal information about you from other notTV businesses, business partners, contractors and other third parties. Examples of information that we may receive include: updated delivery and address information, purchase history, and additional demographic information.
@@ -85,9 +85,9 @@ We may provide areas on our websites where you can post information about yourse
 
 Our website is a general audience site, and we do not knowingly collect personal information from children under the age of 13.
 
-## Visiting Our Websites from Outside Canada
+## Visiting Our Websites from Outside North America
 
-This Privacy Policy is intended to cover collection of information on or via our website from residents of Canada. If you are visiting our website from outside Canada, please be aware that your information may be transferred to, stored, and processed in Canada where our servers are located and our central database is operated. The data protection and other laws of Canada and other countries might not be as comprehensive as those in your country. Please be assured that we seek to take reasonable steps to ensure that your privacy is protected. By using our services, you understand that your information may be transferred to our facilities and those third parties with whom we share it as described in this privacy policy.
+This Privacy Policy is intended to cover collection of information on or via our website from residents of North America. If you are visiting our website from outside North America, please be aware that your information may be transferred to, stored, and processed in the United States of America where our servers are located and our central database is operated. The data protection and other laws of Canada and the United States of America and other countries might not be as comprehensive as those in your country. Please be assured that we seek to take reasonable steps to ensure that your privacy is protected. By using our services, you understand that your information may be transferred to our facilities and those third parties with whom we share it as described in this privacy policy.
 
 ## No Rights of Third Parties
 

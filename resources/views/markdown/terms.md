@@ -19,7 +19,7 @@ To access the Services on the Website, including purchasing rights to Content, Y
 
 **3.1 create an account with the Website;**
 
-**3.2 make purchases using a major credit card or through a PayPal account and adhere to the terms of the applicable PayPal User Agreement and PayPal Acceptable Use Policy; and**
+**3.2 make purchases using a major credit card or through an Apple account and adhere to the terms of the applicable Apple User Agreement and Apple Acceptable Use Policy; and**
 
 **3.3 keep Your account profile information up-to-date and accurate at all times, including but not limited to, a valid email address.**
 
@@ -167,7 +167,7 @@ You agree that all matters relating to these Terms of Use, including the use of 
 
 ## 15. Privacy
 
-Any of Your personal information which **notTV** collects via the Website is subject to **notTV**’s Website Privacy Policy which is available at www.not.tv/privacy and is incorporated by reference into these Terms of Use.
+Any of Your personal information which **notTV** collects via the Website is subject to **notTV**’s Website Privacy Policy which is available at www.not.tv/privacy-policy and is incorporated by reference into these Terms of Use.
 
 ## 16. Language
 
