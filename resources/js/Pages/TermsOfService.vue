@@ -8,8 +8,10 @@
                     <JetAuthenticationCardLogo/>
                 </div>
 
-                <div class="w-full sm:max-w-2xl mt-6 p-6 bg-white shadow-md overflow-hidden sm:rounded-lg prose"
-                     v-html="terms"/>
+                <div class="h-screen mb-56 mt-10 pb-56 overflow-scroll">
+                    <div class="w-full sm:max-w-2xl mt-6 p-6 bg-white shadow-md overflow-hidden sm:rounded-lg prose"
+                        v-html="terms"/>
+                </div>
 
 
 
@@ -21,11 +23,6 @@
 <script setup>
 import {Head} from '@inertiajs/inertia-vue3';
 import JetAuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo.vue';
-import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js";
-
-let videoPlayer = useVideoPlayerStore();
-videoPlayer.class = "videoTopRight"
-videoPlayer.fullPage = false
 
 defineProps({
     terms: String,

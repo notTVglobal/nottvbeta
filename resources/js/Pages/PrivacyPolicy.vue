@@ -1,16 +1,17 @@
 <template>
     <Head title="Privacy Policy"/>
 
-    <div class="font-sans text-gray-900 antialiased">
+    <div class="font-sans text-gray-900 antialiased ">
         <div class="pt-4 bg-gray-100">
             <div class="min-h-screen flex flex-col items-center pt-6 sm:pt-0">
                 <div>
                     <JetAuthenticationCardLogo/>
                 </div>
 
-                <div class="w-full sm:max-w-2xl mt-6 p-6 bg-white shadow-md overflow-hidden sm:rounded-lg prose"
-                     v-html="policy"/>
-
+                <div class="h-screen mb-56 mt-10 pb-56 overflow-scroll">
+                    <div class="w-full sm:max-w-2xl mt-6 p-6 bg-white shadow-md sm:rounded-lg prose"
+                         v-html="policy"/>
+                </div>
 
             </div>
         </div>
@@ -21,11 +22,6 @@
 <script setup>
 import {Head} from '@inertiajs/inertia-vue3';
 import JetAuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo.vue';
-import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js";
-
-let videoPlayer = useVideoPlayerStore();
-videoPlayer.class = "videoTopRight"
-videoPlayer.fullPage = false
 
 defineProps({
     policy: String,

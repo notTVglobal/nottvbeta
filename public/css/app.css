@@ -2511,6 +2511,10 @@ html {
   margin-top: 24rem;
 }
 
+.mb-56 {
+  margin-bottom: 14rem;
+}
+
 .block {
   display: block;
 }
@@ -3294,6 +3298,10 @@ html {
   overflow: hidden;
 }
 
+.overflow-scroll {
+  overflow: scroll;
+}
+
 .overflow-x-auto {
   overflow-x: auto;
 }
@@ -3859,6 +3867,10 @@ html {
   background-size: cover;
 }
 
+.bg-scroll {
+  background-attachment: scroll;
+}
+
 .bg-center {
   background-position: center;
 }
@@ -4188,6 +4200,10 @@ html {
 
 .pl-1 {
   padding-left: 0.25rem;
+}
+
+.pb-56 {
+  padding-bottom: 14rem;
 }
 
 .text-left {

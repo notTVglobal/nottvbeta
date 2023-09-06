@@ -111,17 +111,17 @@ Route::post('/email/verify', function (Request $request) {
 // Another route has already been assigned name
 // [verification.send] ~ tec21 (March 21, 2023)
 
-//Route::get('/terms', function () {
-//    return redirect('/terms-of-service');
-//})->name('terms');
 Route::get('/terms', function () {
-    return route('/terms-of-service');
+    return redirect('/terms-of-service');
 })->name('terms');
-
 
 Route::get('/privacy', function () {
     return redirect('/privacy-policy');
 })->name('privacy');
+
+Route::get('/privacy-policy', [\App\Http\Controllers\PrivacyPolicyController::class, 'show'])->name('policy.show');
+Route::get('/terms-of-service', [\App\Http\Controllers\TermsOfServiceController::class, 'show'])->name('terms.show');
+
 
 Route::get('/whitepaper', [WhitepaperController::class, 'show'])->name('whitepaper.show');
 
