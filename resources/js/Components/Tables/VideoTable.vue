@@ -45,6 +45,7 @@
                                 <div>Size: {{ video.size }}</div>
                                 <div v-if="video.user_id">Owner: {{ video.user_id}}</div>
                                 <div v-if="video.showEpisode">Show: {{ video.showEpisode.show.name}}</div>
+                                <div v-if="video.showEpisode">Episode: {{ video.showEpisode.name}}</div>
                                 <div v-if="video.movie">Movie: {{ video.movie.name}}</div>
                                 <div v-if="video.movieTrailer">Trailer: {{ video.movieTrailer.name}}</div>
                                 <div v-if="video.newsPost">News Post: {{ video.newsPost.name}}</div>
