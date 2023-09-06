@@ -71,7 +71,7 @@ class VideoUploadController extends Controller
                 ->sum('size')),
             'notTvTotalStorageUsed' => formatBytes(Video::all()
                 ->sum('size')),
-            'videos' => Video::with('user')->where('user_id', auth()->user()->id)
+            'videos' => Video::with('showEpisode', 'movie', 'movieTrailer', 'newsPost' )->where('user_id', auth()->user()->id)
                 ->latest()
                 ->paginate(10, ['*'], 'videos')
                 ->through(fn($video) => [
@@ -86,6 +86,10 @@ class VideoUploadController extends Controller
                     'type' => $video->type,
                     'size' => formatBytes($video->size),
                     'created_at' => $video->created_at,
+                    'showEpisode' => $video->showEpisode,
+                    'movie' => $video->movie,
+                    'movieTrailer' => $video->movieTrailer,
+                    'newsPost' => $video->newsPost,
                     'can' => [
                         'viewAny' => auth()->user()->can('viewAny', $video),
                         'view' => auth()->user()->can('view', $video),
@@ -99,7 +103,7 @@ class VideoUploadController extends Controller
             // to reduce load on the server ... replace it with a more
             // efficient query.
             //
-            'allVideos' => Video::query()
+            'allVideos' => Video::with('showEpisode', 'movie', 'movieTrailer', 'newsPost')
                 ->when(Request::input('search'), function ($query, $search) {
                     $query->where('file_name', 'like', "%{$search}%");
                 })
@@ -119,6 +123,10 @@ class VideoUploadController extends Controller
                     'type' => $video->type,
                     'size' => formatBytes($video->size),
                     'created_at' => $video->created_at,
+                    'showEpisode' => $video->showEpisode,
+                    'movie' => $video->movie,
+                    'movieTrailer' => $video->movieTrailer,
+                    'newsPost' => $video->newsPost,
                     'can' => [
                         'viewAny' => auth()->user()->can('viewAny', $video),
                         'view' => auth()->user()->can('view', $video),

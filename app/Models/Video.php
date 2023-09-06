@@ -38,17 +38,22 @@ class Video extends Model
 
     public function newsPost()
     {
-        return $this->hasMany(NewsPost::class);
+        return $this->hasOne(NewsPost::class);
     }
 
     public function showEpisode()
     {
-        return $this->hasMany(ShowEpisode::class);
+        return $this->hasOne(ShowEpisode::class);
     }
 
     public function movie()
     {
-        return $this->hasMany(Movie::class);
+        return $this->hasOne(Movie::class);
+    }
+
+    public function movieTrailer()
+    {
+        return $this->hasOne(MovieTrailer::class);
     }
 
     public function user()

@@ -34,6 +34,11 @@ class Movie extends Model
         return $this->belongsTo(Image::class);
     }
 
+    public function video()
+    {
+        return $this->belongsTo(Video::class);
+    }
+
     public function movieCategory(): BelongsTo
     {
         return $this->belongsTo(MovieCategory::class)->withDefault([

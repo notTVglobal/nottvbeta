@@ -1,24 +1,40 @@
 import './bootstrap';
 
-import { createApp, h } from 'vue';
-import { createInertiaApp } from '@inertiajs/inertia-vue3';
-import { InertiaProgress } from '@inertiajs/progress';
-import { Head, Link } from '@inertiajs/inertia-vue3';
+import {createApp, h} from 'vue';
+import {createInertiaApp, Head, Link} from '@inertiajs/inertia-vue3';
+import {InertiaProgress} from '@inertiajs/progress';
 import AppLayout from "./Layouts/AppLayout";
-import { createPinia } from "pinia";
-import { ZiggyVue } from 'ziggy';
+import {createPinia} from "pinia";
+import {ZiggyVue} from 'ziggy';
 import Vue3TouchEvents from "vue3-touch-events";
 // import helmet from "helmet";
-
 import "../../resources/css/theme.css"; // Magic happens here
 // import the fontawesome core
-import { library } from '@fortawesome/fontawesome-svg-core'
+import {library} from '@fortawesome/fontawesome-svg-core'
 // import font awesome icon component
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 // import specific icons
-import { faUserSecret, faPlay, faQuestion, faStar, faUsers, faHandsHelping,
-        faRocket, faEye, faComments, faPaperPlane, faUser, faLeaf, faFlagUsa,
-        faList, faFilter, faShare, faCircleDown, faRepeat, faCheck } from '@fortawesome/free-solid-svg-icons'
+import {
+    faCheck,
+    faCircleDown,
+    faComments,
+    faEye,
+    faFilter,
+    faFlagUsa,
+    faHandsHelping,
+    faLeaf,
+    faList,
+    faPaperPlane,
+    faPlay,
+    faQuestion,
+    faRepeat,
+    faRocket,
+    faShare,
+    faStar,
+    faUser,
+    faUsers,
+    faUserSecret
+} from '@fortawesome/free-solid-svg-icons'
 // import popper for pop-up tooltips
 import Popper from "vue3-popper";
 // import confirm dialog

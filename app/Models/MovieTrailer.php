@@ -18,4 +18,9 @@ class MovieTrailer extends Model
     {
         return $this->belongsTo(Movie::class);
     }
+
+    public function video()
+    {
+        return $this->belongsTo(Video::class);
+    }
 }
