@@ -53,7 +53,7 @@ class AdminController extends Controller
 
         $settings = AppSetting::find($request->id);
         $settings->cdn_endpoint = $request->cdn_endpoint;
-        $settings->cloud_folder = $request->cloud_folder;
+        $settings->cloud_folder = '/'.$request->cloud_folder;
         $settings->first_play_video_source = $request->first_play_video_source;
         $settings->first_play_video_source_type = $request->first_play_video_source_type;
         $settings->first_play_video_name = $request->first_play_video_name;
