@@ -33,7 +33,7 @@
         <div>
     <!-- Logged out view (Welcome) -->
             <div v-if="! user"
-                  class="fixed top-0 h-screen w-screen overflow-y-scroll z-50">
+                  class="fixed h-screen w-full top-0 overflow-y-scroll z-50">
 
                 <slot /></div>
 

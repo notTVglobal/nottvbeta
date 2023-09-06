@@ -4186,6 +4186,10 @@ html {
   padding-top: 2rem;
 }
 
+.pl-1 {
+  padding-left: 0.25rem;
+}
+
 .text-left {
   text-align: left;
 }
@@ -4609,6 +4613,10 @@ html {
 
 .opacity-80 {
   opacity: 0.8;
+}
+
+.opacity-60 {
+  opacity: 0.6;
 }
 
 .shadow {

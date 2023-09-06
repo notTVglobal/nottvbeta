@@ -93,6 +93,7 @@ const channel = Echo.private('chat.' + '1')
 channel.subscribed(() => {
 }).listen('.chat', (event) => {
     chatStore.newMessages.push(event.message)
+    console.log(event)
 })
 
 

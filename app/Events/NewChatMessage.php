@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use Carbon\Carbon;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -52,9 +53,9 @@ class NewChatMessage implements ShouldBroadcastNow
     }
     public function broadcastWith()
     {
+        $this->chatMessage->setAttribute('created_at', Carbon::now());
         return [
-            'message' => $this->chatMessage
-            // TODO: add additional fields.
+            'message' => $this->chatMessage,
         ];
     }
 }

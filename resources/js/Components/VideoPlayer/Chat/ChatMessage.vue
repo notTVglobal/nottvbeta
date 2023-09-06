@@ -6,11 +6,13 @@
            <img v-if="!message.user_profile_photo_path"
                 src="" class="rounded-full h-8 w-8 object-cover bg-gray-300">
        </div>
-        <div class="flex flex-col bg-gray-600 rounded-l-xl rounded-r-xl px-2 pb-1 bg-opacity-50 break-words">
+        <div class="flex flex-col">
+            <div class="flex flex-col bg-gray-600 rounded-l-xl rounded-r-xl px-2 pb-1 bg-opacity-50 break-words">
                 <span class="text-xs font-semibold text-gray-100 pt-1">{{ message.user_name }}</span>
-<!--                <span class="text-xs text-gray-200"> &middot; {{ time }}</span>-->
-<!--            <div><span class="text-white break-words">{{ message.message }}</span></div>-->
-            <span v-html="message.message"></span>
+                <span class="text-white break-words" >{{ message.message }}</span>
+    <!--            <span v-html="message.message"></span>-->
+            </div>
+            <div class="text-xs text-gray-200 pl-2 opacity-60">{{ timeAgo }}</div>
         </div>
 
     </div>
@@ -21,6 +23,7 @@
 // import dayjs from 'dayjs';
 import {reactive, render, watchEffect} from "vue";
 import {useChatStore} from "@/Stores/ChatStore";
+import { useTimeAgo } from '@vueuse/core';
 
 let chatStore = useChatStore()
 
@@ -29,8 +32,11 @@ let chatStore = useChatStore()
 
 let props = defineProps({
     message: Object,
-    time: reactive(String),
+    // time: reactive(String),
+    time: String,
 })
+// const nowTime = current.getHours() + ":" + current.getMinutes() + ":" + current.getSeconds();
+const timeAgo = useTimeAgo(props.message.created_at)
 
 // let timeKey = 1;
 
