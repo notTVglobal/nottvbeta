@@ -33,7 +33,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             currentPage: String,
             hasVideo: Boolean,
 
-            currentPageIsStream: Boolean,
+            currentPageIsStream: false,
             fullPage: Boolean,
             loggedIn: Boolean,
 

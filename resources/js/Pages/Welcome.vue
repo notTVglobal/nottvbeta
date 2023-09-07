@@ -1,6 +1,8 @@
 <template>
     <Head title="Beta" />
-        <div id="topDiv" class="bg-green-800 w-full bg-opacity-10 min-h-screen text-gray-200 z-50">
+        <div id="topDiv"
+             class="bg-black w-full min-h-screen text-gray-200 z-50"
+             :class="welcomeOverlayBG">
             <header class="headerContainer w-full">
                 <div class="welcomeOverlay flex flex-row md:px-6 py-4 w-full">
                     <WelcomeBug />
@@ -18,14 +20,13 @@
             </header>
 
             <div class="welcomeOverlay">
-                <div class="bg-opacity-5 relative flex items-top justify-center min-h-screen text-gray-200">
+                <div class="relative flex items-top justify-center min-h-screen text-gray-200">
 
                     <div class="w-full flex justify-center items-center h-screen">
 
-<!--                        <WelcomeOverlay :show="true"/>-->
-                        <WelcomeOverlay v-show="welcomeStore.showOverlay === true"
+                        <WelcomeOverlay v-show="welcomeStore.showOverlay"
                                         @watchNow="watchNow"/>
-                        <VideoControlsWelcome v-show="welcomeStore.showOverlay === false" />
+                        <VideoControlsWelcome v-show="!welcomeStore.showOverlay" />
 
                     </div>
                 </div>
@@ -83,9 +84,9 @@
 </template>
 
 <script setup>
+import {onMounted, ref, computed, onBeforeUnmount} from 'vue'
 import Login from "@/Components/Welcome/Login.vue"
 import Register from "@/Components/Welcome/Register.vue"
-import { onMounted, ref } from 'vue'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useWelcomeStore } from "@/Stores/WelcomeStore";
 import { useUserStore } from "@/Stores/UserStore";
@@ -99,6 +100,7 @@ let videoPlayerStore = useVideoPlayerStore()
 let welcomeStore = useWelcomeStore()
 let userStore = useUserStore()
 
+userStore.currentPage = 'welcome'
 welcomeStore.showOverlay = true;
 
 // This page loads properly calling these stores here
@@ -115,6 +117,10 @@ onMounted(() => {
     videoPlayerStore.ott = 0
 
 });
+
+onBeforeUnmount( () => {
+    userStore.currentPage=''
+})
 
 let props = defineProps({
     canLogin: Boolean,
@@ -148,6 +154,11 @@ function watchNow(){
     // unmute video
     // play video
 }
+
+const welcomeOverlayBG = computed(() => ({
+    'bg-opacity-80': welcomeStore.showOverlay,
+    'bg-opacity-0': !welcomeStore.showOverlay
+}))
 
 
 </script>

@@ -3850,6 +3850,14 @@ html {
   --tw-bg-opacity: 0.9;
 }
 
+.bg-opacity-60 {
+  --tw-bg-opacity: 0.6;
+}
+
+.bg-opacity-20 {
+  --tw-bg-opacity: 0.2;
+}
+
 .bg-cover {
   background-size: cover;
 }
@@ -3911,6 +3919,10 @@ html {
 
 .p-6 {
   padding: 1.5rem;
+}
+
+.p-8 {
+  padding: 2rem;
 }
 
 .px-1 {
@@ -4567,6 +4579,10 @@ html {
 .text-yellow-600 {
   --tw-text-opacity: 1;
   color: rgb(202 138 4 / var(--tw-text-opacity));
+}
+
+.text-opacity-100 {
+  --tw-text-opacity: 1;
 }
 
 .underline {
