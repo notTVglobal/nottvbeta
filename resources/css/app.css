@@ -27,6 +27,15 @@ html {
     z-index: 999;
 }
 
+.layoutWelcome {
+    @apply fixed h-screen w-full top-0 overflow-y-scroll z-50
+}
+
+.layoutLoggedIn {
+    @apply fixed top-48 lg:top-16 lg:mt-0 pb-72 lg:pb-16 w-full lg:w-[calc(100vw-24rem)] h-full
+    z-10 overflow-y-scroll overscroll-x-none
+}
+
 /*.videoBgFull {*/
 /*    position:static;*/
 /*    bottom:0;*/

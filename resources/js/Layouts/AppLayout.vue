@@ -34,20 +34,20 @@
 
 
     <!-- Logged in view -->
-            <div v-if="user"
-                  class="fixed top-48 lg:top-16 lg:mt-0 pb-72 lg:pb-16
-                     w-full lg:w-[calc(100vw-24rem)]
-                     h-full
-                     z-10 overflow-y-scroll overscroll-x-none"
-                  :class="pageHide">
-
-            <slot /></div>
+<!--            <div v-if="user"-->
+<!--                  class="fixed top-48 lg:top-16 lg:mt-0 pb-72 lg:pb-16-->
+<!--                     w-full lg:w-[calc(100vw-24rem)]-->
+<!--                     h-full-->
+<!--                     z-10 overflow-y-scroll overscroll-x-none"-->
+<!--                  :class="pageHide">-->
+                <div :class="layoutClass">
+                    <slot /></div>
 
     <!-- Logged out view (Welcome) -->
-            <div v-if="userStore.currentPage='welcome'"
-                 class="fixed h-screen w-full top-0 overflow-y-scroll z-50">
+<!--            <div v-if="!user"-->
+<!--                 class="fixed h-screen w-full top-0 overflow-y-scroll z-50">-->
 
-                <slot /></div>
+<!--                <slot /></div>-->
 
 
     </div>
@@ -140,6 +140,12 @@ function disconnect() {
     window.Echo.leave("channel." + channelStore.currentChannelId);
     console.log('CHANNEL DISCONNECTED');
 }
+
+const layoutClass = computed(() => ({
+    layoutWelcome: !props.user,
+    layoutLoggedIn: props.user,
+    'hidden lg:block': videoPlayerStore.ottClass === 'OttOpen' && userStore.isMobile
+}))
 
 onBeforeUnmount(() => {
     videoPlayerStore.viewerCount = 0

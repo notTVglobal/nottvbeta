@@ -78,8 +78,10 @@ Route::get('/send-mail', function () {
 
 Route::get('/home', function () {
     if (Auth::user()) {
-        return redirect('/');
-    } return redirect('/dashboard');
+        if (auth()->user()->creator) {
+            return redirect('/dashboard');
+        } return redirect('/stream');
+    } return redirect('/');
 });
 
 //Route::get('/register', function () {

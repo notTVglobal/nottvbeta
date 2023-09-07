@@ -1089,6 +1089,36 @@ html {
     z-index: 999;
 }
 
+.layoutWelcome {
+  position: fixed;
+  top: 0px;
+  z-index: 50;
+  height: 100vh;
+  width: 100%;
+  overflow-y: scroll;
+}
+
+.layoutLoggedIn {
+  position: fixed;
+  top: 12rem;
+  z-index: 10;
+  height: 100%;
+  width: 100%;
+  overflow-y: scroll;
+  overscroll-behavior-x: none;
+  padding-bottom: 18rem;
+}
+
+@media (min-width: 1024px) {
+
+  .layoutLoggedIn {
+    top: 4rem;
+    margin-top: 0px;
+    width: calc(100vw - 24rem);
+    padding-bottom: 4rem;
+  }
+}
+
 /*.videoBgFull {*/
 /*    position:static;*/
 /*    bottom:0;*/
@@ -3822,20 +3852,12 @@ html {
   --tw-bg-opacity: 0;
 }
 
-.bg-opacity-10 {
-  --tw-bg-opacity: 0.1;
-}
-
 .bg-opacity-25 {
   --tw-bg-opacity: 0.25;
 }
 
 .bg-opacity-30 {
   --tw-bg-opacity: 0.3;
-}
-
-.bg-opacity-5 {
-  --tw-bg-opacity: 0.05;
 }
 
 .bg-opacity-50 {
@@ -3848,14 +3870,6 @@ html {
 
 .bg-opacity-90 {
   --tw-bg-opacity: 0.9;
-}
-
-.bg-opacity-60 {
-  --tw-bg-opacity: 0.6;
-}
-
-.bg-opacity-20 {
-  --tw-bg-opacity: 0.2;
 }
 
 .bg-cover {
@@ -3919,10 +3933,6 @@ html {
 
 .p-6 {
   padding: 1.5rem;
-}
-
-.p-8 {
-  padding: 2rem;
 }
 
 .px-1 {
@@ -4579,10 +4589,6 @@ html {
 .text-yellow-600 {
   --tw-text-opacity: 1;
   color: rgb(202 138 4 / var(--tw-text-opacity));
-}
-
-.text-opacity-100 {
-  --tw-text-opacity: 1;
 }
 
 .underline {

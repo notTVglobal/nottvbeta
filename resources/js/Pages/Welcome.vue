@@ -138,12 +138,12 @@ let showRegister = ref(false)
 welcomeStore.showLogin = false
 welcomeStore.showRegister = false
 
-function ifLoggedIn() {
-    if (props.user != null) {
-        Inertia.visit('stream')
-    }
-}
-ifLoggedIn();
+// function ifLoggedIn() {
+//     if (props.user != null) {
+//         Inertia.visit('stream')
+//     }
+// }
+// ifLoggedIn();
 
 function watchNow(){
     welcomeStore.showOverlay = false;
