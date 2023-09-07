@@ -186,7 +186,7 @@ class VideoUploadController extends Controller
             $showEpisodeId = $request->showEpisodeId;
 
 
-
+            // this needs to be setup as a new job to prevent timeouts on the frontend.
             return $this->saveFile($save->getFile(), $movieId, $movieTrailerId, $showEpisodeId);
 
         }

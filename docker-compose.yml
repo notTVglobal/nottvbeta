@@ -27,6 +27,7 @@ services:
             - redis
 #            - mariadb
             - meilisearch
+            - mistserver
     mysql:
         image: 'mysql/mysql-server:8.0'
         ports:
@@ -63,6 +64,18 @@ services:
         container_name: app_redis
         ports:
             - '6382:6379'
+        networks:
+            - sail
+    mistserver:
+        image: 'tec21/mistserver'
+        container_name: mistserver
+        ports:
+            - '4242:4242'
+            - '1935:1935'
+            - '8080:8080'
+            - '5554:5554'
+            - '4200:4200'
+            - '8889:8889'
         networks:
             - sail
 #    mariadb:
@@ -119,4 +132,6 @@ volumes:
     sail-mariadb:
         driver: local
     sail-meilisearch:
+        driver: local
+    sail-mistserver:
         driver: local

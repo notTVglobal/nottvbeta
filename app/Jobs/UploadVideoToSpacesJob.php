@@ -25,6 +25,8 @@ class UploadVideoToSpacesJob implements ShouldQueue
 
     protected Video $video;
     public int $timeout = 3600;
+    public int $tries = -1;
+    public int $backoff = 2;
 
     /**
      * UploadVideoToSpacesJob constructor.
@@ -90,6 +92,11 @@ class UploadVideoToSpacesJob implements ShouldQueue
         } else {
             throw new Exception("Video not set on UploadVideoToSpacesJob");
         }
+    }
+
+    public function retryUntil()
+    {
+        return now()->addMinute();
     }
 
 

@@ -111,6 +111,14 @@ Route::post('/email/verify', function (Request $request) {
 // Another route has already been assigned name
 // [verification.send] ~ tec21 (March 21, 2023)
 
+Route::get('/testJob', function () {
+    foreach (range(1,100) as $i) {
+        \App\Jobs\TestJob::dispatch()->onQueue('tests');
+    }
+
+    return Inertia::render('Testing');
+});
+
 Route::get('/terms', function () {
     return redirect('/terms-of-service');
 })->name('terms');
