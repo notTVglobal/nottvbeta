@@ -12,7 +12,7 @@
     <div>
 <!-- Video FullPage Controls -->
 
-                    <div class="videoControlsStandard">
+                    <div class="videoControls">
                         <button
                             class="text-xs md:text-md  md:text-md bg-gray-800 rounded-full p-2 hover:bg-gray-600"
                             @click="videoPlayerStore.fullscreen()">
@@ -52,7 +52,7 @@
 
                     </div>
 
-                    <div class="backToPageStandard">
+                    <div class="backToPage">
                         <button @click="backToPage">Back to Page</button>
                     </div>
 

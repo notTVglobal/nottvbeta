@@ -35,6 +35,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
 
             currentPageIsStream: false,
             fullPage: Boolean,
+            pip: false,
             loggedIn: Boolean,
 
             showOSD: true,
@@ -120,26 +121,19 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             this.showOSD = !this.showOSD
             this.showControls = !this.showControls
             this.showNav = ! this.showNav
-            // if (this.fullPage) {
-            //     this.showNav = !this.showNav;
-            // }
+        },
+        toggleControls() {
+            this.showControls = !this.showControls
         },
         toggleOsdAndControls() {
             this.showOSD = !this.showOSD
             this.showControls = !this.showControls
-          // this.showNav = ! this.showNav
-          // if (this.fullPage) {
-          //     this.showNav = !this.showNav;
-          // }
         },
         toggleOsdAndControlsAndNav() {
             this.showOSD = !this.showOSD
             this.showControls = !this.showControls
             this.showNav = !this.showNav
             this.showOttButtons = !this.showOttButtons
-            // if (this.fullPage) {
-            //     this.showNav = !this.showNav;
-            // }
         },
         toggleOtt(num) {
             if (this.ott === num) {
@@ -159,20 +153,16 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             this.showOttButtons = !this.showOttButtons
             this.showControls = !this.showControls
             this.showPlaylist = !this.showPlaylist
-            // this.showOSD = !this.showOSD
         },
         toggleChat() {
             this.showOttButtons = !this.showOttButtons
             this.showControls = !this.showControls
-            // this.showOSD = !this.showOSD
-            // this.showNav = ! this.showNav
             useChatStore().toggleChat()
         },
         toggleFilters() {
             this.showOttButtons = !this.showOttButtons
             this.showControls = !this.showControls
             this.showFilters = !this.showFilters
-            // this.showOSD = !this.showOSD
         },
         toggleOttInfo() {
             this.toggleOtt(1)

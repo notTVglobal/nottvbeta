@@ -1,102 +1,105 @@
 <template>
+    <div>
+<!--    <div :class="videoPlayerStore.videoContainerClass">-->
+<!--        <div :class="videoPlayerStore.class">-->
 
-    <div :class="videoPlayerStore.videoContainerClass">
-        <div :class="videoPlayerStore.class">
 
-    <!-- Login for Welcome Page (logged out) -->
-            <Teleport to="body">
-                <Login v-if="!user" :show="showLogin" @close="showLogin = false" />
-            </Teleport>
 
 <!--            <div class="z-50 text-black fixed top-0 bottom-0 left-0 right-0 item-center mx-auto my-auto pt-36 bg-purple-300">{{orientation}}</div>-->
 
             <!-- Video Player -->
-            <div v-touch="() => {clickOnVideoAction()}">
-                <video id="main-player"
-                       class="video-js vjs-big-play-centered vjs-fill"
-                />
+            <div v-touch="() => {clickOnVideoAction()}" :class="videoContainer">
+                <div :class="video">
+                    <video id="main-player"
+                           class="video-js vjs-big-play-centered vjs-fill" />
+                </div>
             </div>
 
 
 
     <!-- TopRight Video -->
             <div v-if="!videoPlayerStore.fullPage && user">
-                <!-- isMobile -->
-                <div v-if="userStore.isMobile" >
-                    <!-- OSD and Controls hidden on mobile -->
-                </div>
 
-                <!-- !isMobile -->
-                <div v-if="!userStore.isMobile" >
+<!--                &lt;!&ndash; !isMobile &ndash;&gt;-->
+<!--                <div v-if="!userStore.isMobile" >-->
 
-                    <!-- notTV Bug -->
-                    <div class="opacity-10">
-                        <img :src="`/storage/images/logo_white_512.png`" class="absolute right-2 top-5 w-10 mr-4"></div>
+                <!-- notTV Bug -->
+                <div class="bugTopRightContainer">
+                    <img :src="`/storage/images/logo_white_512.png`" class="bugTopRightClass"></div>
 
-                    <!-- On Screen Display (OSD)-->
-                    <OsdTopRight :show="videoPlayerStore.showOSD" />
+                <!-- On Screen Display (OSD)-->
+<!--                <OsdTopRight v-if="videoPlayerStore.showOSD" class="" />-->
 
-                    <!-- Video Player Controls-->
-                    <VideoControlsTopRight :show="videoPlayerStore.showControls" />
+                <!-- Video Player Controls-->
+                <VideoControlsTopRight v-if="videoPlayerStore.showControls" class="hidden lg:block" />
 
-                </div>
+<!--                </div>-->
+                <!-- OTT Buttons and Displays -->
+                <OttTopRightButtons />
+                <OttTopRightDisplayNowPlayingInfo :user="user"/>
+                <OttTopRightDisplayPlaylist :user="user"/>
+                <OttTopRightDisplayChannels :user="user"/>
+                <OttTopRightDisplayChat :user="user"/>
+                <OttTopRightDisplayFilters :user="user"/>
+
             </div>
 
-            <div v-if="videoPlayerStore.fullPage && user">
+
 
 
         <!-- Mobile FullPage -->
-                <div v-if="userStore.isMobile">
+<!--                <div v-if="userStore.isMobile">-->
 
-                    <!-- notTV Bug -->
-                    <div v-show="! videoPlayerStore.showOSD" class="fixed h-screen top-4 left-5 opacity-10 z-50">
-                        <img :src="`/storage/images/logo_white_512.png`" class="block h-9 w-auto shrink-0"></div>
+<!--                    &lt;!&ndash; notTV Bug &ndash;&gt;-->
+<!--                    <div v-show="! videoPlayerStore.showOSD" class="fixed h-screen top-4 left-5 opacity-10 z-50">-->
+<!--                        <img :src="`/storage/images/logo_white_512.png`" class="block h-9 w-auto shrink-0"></div>-->
 
-                    <!-- On Screen Display (OSD) -->
-                    <OsdFullPageMobile v-show="videoPlayerStore.showOSD"/>
+<!--                    &lt;!&ndash; On Screen Display (OSD) &ndash;&gt;-->
+<!--                    <OsdFullPageMobile v-show="videoPlayerStore.showOSD"/>-->
 
-                    <!-- Video Player Controls -->
-                    <VideoControlsFullPageMobile v-show="videoPlayerStore.showControls" />
+<!--                    &lt;!&ndash; Video Player Controls &ndash;&gt;-->
+<!--                    <VideoControlsFullPageMobile v-show="videoPlayerStore.showControls" />-->
 
-                    <!-- Over The Top (OTT) -->
-                    <OttFullPageButtons v-show="videoPlayerStore.showOttButtons" />
-                    <OttFullPageDisplayChannels />
-                    <OttFullPageDisplayPlaylist />
-                    <OttFullPageDisplayChatMobile :user="user"/>
-                    <OttFullPageDisplayFilters />
+<!--                    &lt;!&ndash; Over The Top (OTT) &ndash;&gt;-->
+<!--                    <OttFullPageButtons v-show="videoPlayerStore.showOttButtons" />-->
+<!--                    <OttFullPageDisplayChannels />-->
+<!--                    <OttFullPageDisplayPlaylist />-->
+<!--                    <OttFullPageDisplayChatMobile :user="user"/>-->
+<!--                    <OttFullPageDisplayFilters />-->
 
-                </div>
+<!--                </div>-->
 
 
-        <!-- Standard FullPage -->
-                <div v-if="!userStore.isMobile">
+        <!-- FullPage -->
+        <div v-if="videoPlayerStore.fullPage && user">
 
-                    <!-- notTV Bug -->
-                    <div v-show="! videoPlayerStore.showOSD" class="fixed h-screen top-4 left-5 opacity-10 z-50">
-                        <img :src="`/storage/images/logo_white_512.png`" class="block h-9 w-auto shrink-0"></div>
+                <!-- notTV Bug -->
+                <div v-if="! videoPlayerStore.showOSD" class="bugFullPageContainer">
+                    <img :src="`/storage/images/logo_white_512.png`" class="bugFullPageClass"></div>
 
-                    <!-- On Screen Display (OSD) -->
-                    <OsdFullPageStandard v-show="videoPlayerStore.showOSD"/>
+                <!-- On Screen Display (OSD) -->
+                <OsdFullPage v-if="videoPlayerStore.showOSD"/>
 
-                    <!-- Video Player Controls -->
-                    <VideoControlsFullPageStandard v-show="videoPlayerStore.showControls" />
+                <!-- Video Player Controls -->
+                <VideoControlsFullPage v-if="videoPlayerStore.showControls" />
 
-                    <!-- Over The Top (OTT) -->
-                    <OttFullPageButtons v-show="videoPlayerStore.showOSD" />
-                    <OttFullPageDisplayChannels />
-                    <OttFullPageDisplayPlaylist />
-                    <OttFullPageDisplayChatStandard :user="user"/>
-                    <OttFullPageDisplayFilters />
+                <!-- Over The Top (OTT) -->
+                <OttFullPageButtons v-if="videoPlayerStore.showOSD"/>
+                <OttFullPageDisplayChannels />
+                <OttFullPageDisplayPlaylist />
+                <OttFullPageDisplayChatStandard :user="user"/>
+                <OttFullPageDisplayFilters />
 
-                </div>
             </div>
+<!--        </div>-->
+<!--    </div>-->
+</div>
 
-        </div>
-    </div>
 </template>
 
+
 <script setup>
-import { onMounted, onUnmounted, onUpdated, ref, reactive, watch } from 'vue'
+import { onMounted, onUnmounted, computed, onUpdated, ref, reactive, watch } from 'vue'
 import { Inertia } from "@inertiajs/inertia"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useStreamStore } from "@/Stores/StreamStore"
@@ -109,17 +112,22 @@ import OttFullPageDisplayPlaylist from "@/Components/VideoPlayer/OttFullPageDisp
 import OttFullPageDisplayChatStandard from "@/Components/VideoPlayer/OttFullPageDisplay/ChatStandard"
 import OttFullPageDisplayChatMobile from "@/Components/VideoPlayer/OttFullPageDisplay/ChatMobile"
 import OttFullPageDisplayFilters from "@/Components/VideoPlayer/OttFullPageDisplay/Filters"
+import OttTopRightButtons from "@/Components/VideoPlayer/OttButtons/OttTopRightButtons.vue";
+import OttTopRightDisplayNowPlayingInfo from "@/Components/VideoPlayer/OttTopRightDisplay/NowPlayingInfo.vue";
+import OttTopRightDisplayFilters from "@/Components/VideoPlayer/OttTopRightDisplay/Filters.vue";
+import OttTopRightDisplayChat from "@/Components/VideoPlayer/OttTopRightDisplay/Chat.vue";
+import OttTopRightDisplayPlaylist from "@/Components/VideoPlayer/OttTopRightDisplay/Playlist.vue";
+import OttTopRightDisplayChannels from "@/Components/VideoPlayer/OttTopRightDisplay/Channels.vue";
 import Login from "@/Components/Welcome/Login"
-import VideoControlsFullPageStandard from "@/Components/VideoPlayer/VideoControls/VideoControlsFullPageStandard"
+import VideoControlsFullPage from "@/Components/VideoPlayer/VideoControls/VideoControlsFullPage"
 import VideoControlsFullPageMobile from "@/Components/VideoPlayer/VideoControls/VideoControlsFullPageMobile"
 import VideoControlsTopRight from "@/Components/VideoPlayer/VideoControls/VideoControlsTopRight"
 import OsdTopRight from "@/Components/VideoPlayer/Osd/OsdTopRight.vue"
-import OsdFullPageStandard from "@/Components/VideoPlayer/Osd/OsdFullPageStandard.vue"
+import OsdFullPage from "@/Components/VideoPlayer/Osd/OsdFullPage.vue"
 import OsdFullPageMobile from "@/Components/VideoPlayer/Osd/OsdFullPageMobile.vue"
-import VideoPlayer from "@/Components/VideoPlayer/VideoJs"
 import videojs from 'video.js'
 import { useScreenOrientation } from '@vueuse/core'
-import axios, {Axios} from "axios";
+
 
 let videoPlayerStore = useVideoPlayerStore()
 let streamStore = useStreamStore()
@@ -199,13 +207,13 @@ async function getFirstPlaySettings() {
 // }
 getFirstPlaySettings()
 
-const {
-    isSupported,
-    orientation,
-    angle,
-    lockOrientation,
-    unlockOrientation,
-} = useScreenOrientation()
+// const {
+//     isSupported,
+//     orientation,
+//     angle,
+//     lockOrientation,
+//     unlockOrientation,
+// } = useScreenOrientation()
 
 onMounted(() => {
     // let videoJs = videojs('main-player', videoOptions)
@@ -219,27 +227,28 @@ onMounted(() => {
 
 })
 //
-// onUnmounted(() => {
-//     if (videoPlayer) {
-//         videoPlayer.dispose()
-//     }
-// })
+onUnmounted(() => {
+    if (videoPlayer) {
+        videoPlayer.dispose()
+    }
+})
 
 
 // tec21 (03/03/23): this doesn't seem to be working :-(
-watch(orientation, (newOrientation) => {
-    if (userStore.isMobile) {
-        if (newOrientation==='landscape-primary' ) {
-            videoPlayerStore.hideOsdAndControlsAndNav()
-        } else if (newOrientation==='landscape-secondary') {
-            videoPlayerStore.hideOsdAndControlsAndNav()
-        } else if (newOrientation==='portrait-primary') {
-            videoPlayerStore.showOsdAndControlsAndNav()
-        } else if (newOrientation==='portrait-secondary') {
-            videoPlayerStore.showOsdAndControlsAndNav()
-        }
-    }
-})
+// I think this watch is breaking the app on iPhone.
+// watch(orientation, (newOrientation) => {
+//     if (userStore.isMobile) {
+//         if (newOrientation==='landscape-primary' ) {
+//             videoPlayerStore.hideOsdAndControlsAndNav()
+//         } else if (newOrientation==='landscape-secondary') {
+//             videoPlayerStore.hideOsdAndControlsAndNav()
+//         } else if (newOrientation==='portrait-primary') {
+//             videoPlayerStore.showOsdAndControlsAndNav()
+//         } else if (newOrientation==='portrait-secondary') {
+//             videoPlayerStore.showOsdAndControlsAndNav()
+//         }
+//     }
+// })
 
 
 
@@ -256,11 +265,11 @@ function clickOnVideoAction() {
     if (!userStore.isMobile && !videoPlayerStore.currentPageIsStream) {
         videoPlayerStore.toggleOsdAndControls()
     }
-    if (userStore.isMobile && !videoPlayerStore.currentPageIsStream) {
+    if (!videoPlayerStore.currentPageIsStream) {
         Inertia.visit('/stream')
     }
     if(videoPlayerStore.currentPageIsStream) {
-        videoPlayerStore.toggleOsdAndControlsAndNav()
+        videoPlayerStore.toggleControls()
 
     }
     // if (videoPlayerStore.currentPageIsStream === true) {
@@ -317,7 +326,25 @@ function mouseMove(event) {
     // }, 3000);
 }
 
+const videoContainer = computed(() => ({
+    fullPageVideoContainer: videoPlayerStore.fullPage && !videoPlayerStore.pip,
+    // fullPageVideoContainer: videoPlayerStore.fullPage && !userStore.isMobile,
+    // fullPageVideoContainerMobile: videoPlayerStore.fullPage && userStore.isMobile,
+    topRightVideoContainer: !videoPlayerStore.fullPage && !videoPlayerStore.pip,
+    // topRightVideoContainer: !videoPlayerStore.fullPage && !userStore.isMobile,
+    // topRightVideoContainerMobile: !videoPlayerStore.fullPage && userStore.isMobile,
+    pipVideoContainer: videoPlayerStore.pip,
+}))
 
+const video = computed(() => ({
+    fullPageVideoClass: videoPlayerStore.fullPage && !videoPlayerStore.pip,
+    // fullPageVideoClass: videoPlayerStore.fullPage && !userStore.isMobile,
+    // fullPageVideoClassMobile: videoPlayerStore.fullPage && userStore.isMobile,
+    topRightVideoClass: !videoPlayerStore.fullPage && !videoPlayerStore.pip,
+    // topRightVideoClass: !videoPlayerStore.fullPage && !userStore.isMobile,
+    // topRightVideoClassMobile: !videoPlayerStore.fullPage && userStore.isMobile,
+    pipVideoClass: videoPlayerStore.pip,
+}))
 
 </script>
 

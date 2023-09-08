@@ -9,8 +9,7 @@
     >
 
 
-        <div v-if="videoPlayerStore.showFilters" class="filtersForStreamPageStandard w-96 max-w-[12rem] bottom-0 bg-opacity-80 bg-yellow-600 text-sm text-white pb-12
-                chat-mask overflow-y-auto scroll-smooth hover:scroll-auto break-words">
+        <div v-if="videoPlayerStore.showFilters" class="filtersFullPageContainer">
 
 <!--        Previous version (full screen background for Ott) -->
 <!--        <div v-if="videoPlayerStore.showChannels" class="channelsForStreamPageStandard max-w-screen h-screen left-0 bottom-0 sm:bottom-8 bg-opacity-80 bg-green-600 text-sm text-white pb-12-->
@@ -29,15 +28,8 @@
                 </div>
             </div>
 
-
-
-
-
-
             <button v-touch="()=>videoPlayerStore.toggleFilters()"
-                    v-if="videoPlayerStore.showFilters" class="fixed bottom-5 right-32 opacity-100 w-15 h-15 p-4 rounded-full
-                    text-gray-900 bg-yellow-600 hover:bg-yellow-500 grid justify-center content-center
-                    cursor-pointer font-semibold text-xs">
+                    v-if="videoPlayerStore.showFilters" class="filtersCloseButton">
                 CLOSE FILTERS
             </button>
         </div>

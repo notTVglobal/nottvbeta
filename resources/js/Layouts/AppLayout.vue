@@ -1,60 +1,31 @@
-<template>
+z<template>
     <div class="absolute top-0 left-0 right-0 bottom-0 bg-gray-800 text-gray-200 vh-100 vw-100 overflow-hidden overscroll-y-none overscroll-x-none">
 
-    <!-- Navbar for logged in user -->
+        <!-- Navbar for logged in user -->
         <div v-if="user">
-
             <div v-show="videoPlayerStore.showNav" class="fixed top-0 w-full nav-mask">
                 <ResponsiveNavigationMenu/>
                 <NavigationMenu /></div>
-
         </div>
+
+        <!-- Login for Welcome Page (logged out) -->
+        <Teleport to="body">
+            <Login v-if="!user" :show="showLogin" @close="showLogin = false" />
+        </Teleport>
 
         <!-- Video Player -->
         <VideoPlayerMain
             :user="user" />
 
-        <div class="w-full">
-
-            <!-- OTT Buttons and Displays -->
-            <div v-if="!videoPlayerStore.fullPage" >
-                <OttTopRightButtons />
-                <OttTopRightDisplayNowPlayingInfo :user="user"/>
-                <OttTopRightDisplayPlaylist :user="user"/>
-                <OttTopRightDisplayChannels :user="user"/>
-                <OttTopRightDisplayChat :user="user"/>
-                <OttTopRightDisplayFilters :user="user"/>
-
-            </div>
-        </div>
-
-
-    <!-- Page Content -->
-
-
-
-    <!-- Logged in view -->
-<!--            <div v-if="user"-->
-<!--                  class="fixed top-48 lg:top-16 lg:mt-0 pb-72 lg:pb-16-->
-<!--                     w-full lg:w-[calc(100vw-24rem)]-->
-<!--                     h-full-->
-<!--                     z-10 overflow-y-scroll overscroll-x-none"-->
-<!--                  :class="pageHide">-->
-                <div :class="layoutClass">
-                    <slot /></div>
-
-    <!-- Logged out view (Welcome) -->
-<!--            <div v-if="!user"-->
-<!--                 class="fixed h-screen w-full top-0 overflow-y-scroll z-50">-->
-
-<!--                <slot /></div>-->
-
+        <!-- Page Content -->
+        <div :class="layoutClass">
+            <slot /></div>
 
     </div>
 </template>
 
 <script setup>
-import { ref, computed, onBeforeMount, onBeforeUnmount, onUpdated } from "vue"
+import { ref, computed, onBeforeMount, onBeforeUnmount, onUpdated, defineAsyncComponent } from "vue"
 import ResponsiveNavigationMenu from "@/Components/Navigation/ResponsiveNavigationMenu"
 import NavigationMenu from "@/Components/Navigation/NavigationMenu"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
@@ -63,16 +34,8 @@ import { useUserStore } from "@/Stores/UserStore"
 import { useChatStore } from "@/Stores/ChatStore"
 import { useShopStore } from "@/Stores/ShopStore"
 import { useChannelStore } from "@/Stores/ChannelStore"
-import OttTopRightButtons from '@/Components/VideoPlayer/OttButtons/OttTopRightButtons'
-import OttTopRightDisplayChannels from '@/Components/VideoPlayer/OttTopRightDisplay/Channels'
-import OttTopRightDisplayChat from '@/Components/VideoPlayer/OttTopRightDisplay/Chat'
-import OttTopRightDisplayFilters from '@/Components/VideoPlayer/OttTopRightDisplay/Filters'
-import OttTopRightDisplayNowPlayingInfo from '@/Components/VideoPlayer/OttTopRightDisplay/NowPlayingInfo'
-import OttTopRightDisplayPlaylist from '@/Components/VideoPlayer/OttTopRightDisplay/Playlist'
 import VideoPlayerMain from "@/Components/VideoPlayer/VideoPlayerMain"
-// const VideoPlayerMain = defineAsyncComponent(() =>
-//     import('@/Components/VideoPlayer/VideoPlayerMain')
-// )
+import Login from "@/Components/Welcome/Login"
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -82,6 +45,7 @@ let shopStore = useShopStore()
 let channelStore = useChannelStore()
 
 let isStreamPage = ref()
+let showLogin = ref(false)
 
 function setPage() {
     isStreamPage = videoPlayerStore.currentPage === "stream";

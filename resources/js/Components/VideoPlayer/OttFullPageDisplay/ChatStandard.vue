@@ -8,15 +8,12 @@
         leave-to-class="opacity-0"
     >
 
-            <div v-if="chatStore.showChat" class="chatForStreamPageStandard w-96 max-w-[12rem] bottom-0 bg-opacity-30 bg-blue-600 text-sm text-white pb-12
-                chat-mask overflow-y-auto scroll-smooth hover:scroll-auto break-words">
+            <div v-if="chatStore.showChat" class="chatFullPageContainer">
 
                 <full-page-standard-chat :user="user"/>
 
                 <button v-touch="()=>closeChat()"
-                        v-if="chatStore.showChat" class="fixed bottom-5 right-32 opacity-100 w-15 h-15 p-4 rounded-full
-                    text-gray-50 bg-blue-800 hover:bg-blue-600 grid justify-center content-center
-                    cursor-pointer font-semibold text-xs">
+                        v-if="chatStore.showChat" class="chatCloseButton">
                     CLOSE CHAT
                 </button>
             </div>

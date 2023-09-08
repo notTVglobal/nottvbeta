@@ -1,6 +1,6 @@
 <template>
-    <div v-if="videoPlayerStore.ott !== 0" class="fixed top-44 lg:top-78 right-0 w-full h-full lg:w-96 mt-4 overflow-y-none z-40"
-             :class="{'lg:mt-3':userStore.isMobile, 'lg:mt-2':!userStore.isMobile}">
+    <div v-if="videoPlayerStore.ott !== 0" class="fixed top-44 lg:top-78 right-0 w-full h-full lg:w-96 mt-3 lg:mt-2 overflow-y-none z-40 border-t border-gray-900"
+    >
         <div class="h-full w-full overflow-y-scroll scrollbar-hide">
             <upgrade v-if="videoPlayerStore.ott === 2 && (!userStore.userIsSubscriber || !userStore.userIsVip)"/>
             <div v-if="videoPlayerStore.ott === 2 && (userStore.userIsSubscriber || userStore.userIsVip)">

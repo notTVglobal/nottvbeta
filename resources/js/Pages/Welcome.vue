@@ -1,7 +1,8 @@
 <template>
     <Head title="Beta" />
         <div id="topDiv"
-             class="bg-black w-full min-h-screen text-gray-200 z-50"
+             class="w-full h-screen place-self-center flex flex-col overscroll-none bg-black text-gray-200 z-50"
+
              :class="welcomeOverlayBG">
             <header class="headerContainer w-full">
                 <div class="welcomeOverlay flex flex-row md:px-6 py-4 w-full">
@@ -84,35 +85,30 @@
 </template>
 
 <script setup>
-import {onMounted, ref, computed, onBeforeUnmount} from 'vue'
+import { onMounted, ref, computed, onBeforeUnmount } from 'vue'
 import Login from "@/Components/Welcome/Login.vue"
 import Register from "@/Components/Welcome/Register.vue"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import { useWelcomeStore } from "@/Stores/WelcomeStore";
-import { useUserStore } from "@/Stores/UserStore";
-import { Inertia } from "@inertiajs/inertia";
-import Button from "@/Jetstream/Button";
-import WelcomeOverlay from "@/Components/Welcome/WelcomeOverlay";
-import WelcomeBug from "@/Components/Welcome/WelcomeBug.vue";
-import VideoControlsWelcome from "@/Components/VideoPlayer/VideoControls/VideoControlsWelcome.vue";
+import { useWelcomeStore } from "@/Stores/WelcomeStore"
+import { useUserStore } from "@/Stores/UserStore"
+import Button from "@/Jetstream/Button"
+import WelcomeOverlay from "@/Components/Welcome/WelcomeOverlay"
+import WelcomeBug from "@/Components/Welcome/WelcomeBug.vue"
+import VideoControlsWelcome from "@/Components/VideoPlayer/VideoControls/VideoControlsWelcome.vue"
 
 let videoPlayerStore = useVideoPlayerStore()
 let welcomeStore = useWelcomeStore()
 let userStore = useUserStore()
 
 userStore.currentPage = 'welcome'
-welcomeStore.showOverlay = true;
-
-// This page loads properly calling these stores here
-// instead of calling the store action .makeVideoWelcomePage()
-// keep these here.
-// videoPlayer.fullPage = false
-// videoPlayer.loggedIn = false
+welcomeStore.showOverlay = true
+videoPlayerStore.fullPage = false
+videoPlayerStore.loggedIn = false
 videoPlayerStore.class = "welcomeVideoClass"
 videoPlayerStore.videoContainerClass = "welcomeVideoContainer"
 
 onMounted(() => {
-    videoPlayerStore.makeVideoWelcomePage();
+    videoPlayerStore.makeVideoWelcomePage()
     videoPlayerStore.ottClass = 'ottClose'
     videoPlayerStore.ott = 0
 
@@ -138,21 +134,9 @@ let showRegister = ref(false)
 welcomeStore.showLogin = false
 welcomeStore.showRegister = false
 
-// function ifLoggedIn() {
-//     if (props.user != null) {
-//         Inertia.visit('stream')
-//     }
-// }
-// ifLoggedIn();
-
 function watchNow(){
     welcomeStore.showOverlay = false;
-    // let player = videojs.getPlayer('main-player').unmute
-    // videoPlayerStore.play();
-    videoPlayerStore.unmute();
-    // transition out welcomeOverlay
-    // unmute video
-    // play video
+    videoPlayerStore.unmute()
 }
 
 const welcomeOverlayBG = computed(() => ({

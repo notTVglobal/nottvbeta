@@ -1,7 +1,7 @@
 <template>
     <div v-if="videoPlayerStore.showOttButtons">
 
-        <div class="ottButtonsContainer" :class="ottButtons">
+        <div class="ottButtonsContainer">
             <button v-if="userStore.userIsSubscriber"
                     @click="openChannels"
                     class="ottButton bg-green-400 text-green-100 hover:bg-green-600 hover:text-green-300">
@@ -58,8 +58,4 @@ function openFilters() {
     videoPlayerStore.toggleFilters()
     videoPlayerStore.showControls = false
 }
-const ottButtons = computed(() => ({
-    OttButtonsMobile: userStore.isMobile,
-    OttButtonsDesktop: !userStore.isMobile
-}))
 </script>
