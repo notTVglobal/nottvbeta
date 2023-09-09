@@ -1,6 +1,6 @@
 <template>
     <!-- Hamburger -->
-    <div class="absolute top-3 right-4 hamburgerMask">
+    <div class="fixed top-3 right-4 hamburgerMask">
         <div class="-mr-2 flex items-center lg:hidden z-50">
                 <div v-if="$page.props.user.role_id === 4" class="text-yellow-600 uppercase hidden sm:block w-full">
                     GOAL <span class="text-xl">100</span> subscribers

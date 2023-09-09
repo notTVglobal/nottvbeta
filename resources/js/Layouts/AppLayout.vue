@@ -1,9 +1,9 @@
-z<template>
+<template>
     <div class="fixed top-0 left-0 right-0 bottom-0 bg-gray-800 text-gray-200 vh-100 vw-100 overflow-hidden overscroll-y-none overscroll-x-none">
 
         <!-- Navbar for logged in user -->
         <div v-if="user">
-            <div v-show="videoPlayerStore.showNav" class="fixed top-0 w-full nav-mask">
+            <div v-if="videoPlayerStore.showNav" class="fixed top-0 w-full nav-mask">
                 <ResponsiveNavigationMenu/>
                 <NavigationMenu /></div>
         </div>
