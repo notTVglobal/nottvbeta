@@ -24,7 +24,7 @@
             </div>
 
             <div class="p-2 text-red-600">This section is in development. Not currently working.</div>
-            <div class="bg-orange-300 px-2">
+            <div class="bg-orange-300 px-2 text-black">
                 Add a channel: create playlist and add shows.
             </div>
 
@@ -33,7 +33,62 @@
                     <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
 
-                            CHANNELS GO HERE
+                            <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                                <div
+                                    class="table w-full text-sm text-left text-gray-500 dark:text-gray-400"
+                                >
+                                    <div
+                                        class="table-header-group text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+                                    >
+                                        <div class="table-row">
+                                            <div scope="col" class="table-cell px-6 py-3">
+                                                <font-awesome-icon icon="fa-repeat" class="mr-2 cursor-pointer hover:text-blue-500" @click.prevent="reload()"/>
+                                                Name
+                                            </div>
+                                            <div scope="col" class="hidden md:table-cell px-6 py-3">
+                                                Current Video
+                                            </div>
+                                            <div scope="col" class="table-cell px-6 py-3">
+                                                Source
+                                            </div>
+                                            <div scope="col" class="px-6 py-3">
+                                                Stream
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="table-row-group">
+                                        <div
+                                            v-for="channel in channels"
+                                            :key="channel.id"
+                                            class="table-row bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                                        >
+                                            <div
+                                                scope="row"
+                                                class="table-cell min-w-[8rem] px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
+                                            >
+                                                <span>{{ channel.name }}</span>
+
+                                            </div>
+                                            <div
+                                                scope="row"
+                                                class="md:table-cell px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
+                                            >
+                                                <span>{{ channel.video }}</span>
+                                            </div>
+                                            <div class="table-cell px-6 py-4">
+                                                <span>{{ channel.source }}</span>
+                                            </div>
+                                            <div class="table-cell px-6 py-4">
+                                                <span>{{ channel.stream }}</span>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Paginator -->
+                                <Pagination :data="channels" class="pb-6"/>
+                            </div>
+
 
                         </div>
                     </div>
@@ -50,6 +105,8 @@ import { onBeforeMount, onMounted, ref } from "vue"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useUserStore } from "@/Stores/UserStore";
 import Message from "@/Components/Modals/Messages";
+import Pagination from "@/Components/Pagination.vue";
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -74,6 +131,7 @@ onMounted(() => {
 });
 
 let props = defineProps({
+    channels: Object,
     message: String,
 })
 

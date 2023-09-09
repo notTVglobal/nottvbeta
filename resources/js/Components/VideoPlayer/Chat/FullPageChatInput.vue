@@ -2,8 +2,9 @@
     <div class="z-50">
 
         <form @submit.prevent="">
+            <div class="flex flex-row">
             <input
-                class="fixed right-20 p-2 m-2 mb-2 w-fit text-black form-control border-2 border-gray-800 hover:border-blue-800 focus:outline-none"
+                class="p-2 w-fit text-black form-control border-2 border-gray-800 hover:border-blue-800 focus:outline-none"
                 type="text"
                 maxlength=”300″
                 placeholder="Write a message..."
@@ -12,10 +13,11 @@
                 v-on:blur="videoPlayerStore.makeVideoFullPage()"
                 v-on:focus="focusInput"
             />
-            <div class="fixed mt-12 pt-2 right-20 p-2 m-2 mb-2 font-thin text-xs">{{form.message.length}}</div>
-            <div @click="sendMessage" class="fixed right-10 p-2 m-2 mb-2 w-fit text-white form-control cursor-pointer">
+            <div @click="sendMessage" class="ml-2 mt-2 w-fit text-white form-control cursor-pointer">
                 <font-awesome-icon icon="fa-paper-plane" class="hover:text-blue-800 text-xl"/>
             </div>
+            </div>
+            <div class="ml-2 mt-1 font-thin text-xs">{{form.message.length}}</div>
 
         </form>
     </div>
@@ -47,6 +49,7 @@ const vFocus = {
 }
 
 function focusInput() {
+    
     videoPlayerStore.makeVideoPiP()
     videoPlayerStore.showOSD = false
     videoPlayerStore.showOttButtons = false

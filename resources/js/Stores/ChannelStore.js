@@ -15,7 +15,7 @@ export let useChannelStore = defineStore('channelStore', {
 
     actions: {
         getChannels() {
-            axios.get('/api/channel_list')
+            axios.get('/api/channels_list')
                 .then(response => {
                     this.channel_list = response.data;
                 })
@@ -44,7 +44,7 @@ export let useChannelStore = defineStore('channelStore', {
             // streamName = channel.source.name (this is the mistServer stream name)
             // streamPath = channel.source.path (e.g. 'https://mist.not.tv/hls/')
             // streamType = channel.source.type (e.g. "application/x-mpegURL")
-            useVideoPlayerStore().loadNewSourceFromMist(channel.source)
+            useVideoPlayerStore().loadNewSourceFromMist(channel.stream)
         },
         async clearChannel() {
             this.currentChannelName = null;

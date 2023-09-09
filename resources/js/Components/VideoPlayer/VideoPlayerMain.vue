@@ -268,7 +268,7 @@ function clickOnVideoAction() {
         Inertia.visit('/stream')
     }
     if(videoPlayerStore.currentPageIsStream) {
-        videoPlayerStore.toggleControls()
+        videoPlayerStore.toggleOsdAndControls()
 
     }
     // if (videoPlayerStore.currentPageIsStream === true) {

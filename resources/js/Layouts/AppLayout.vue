@@ -40,7 +40,6 @@ const Login = defineAsyncComponent( () =>
     import('@/Components/Welcome/Login'))
 const VideoPlayerMain = defineAsyncComponent( () =>
     import('@/Components/VideoPlayer/VideoPlayerMain'))
-import videojs from "!video.js"
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()

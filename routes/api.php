@@ -7,8 +7,7 @@ use App\Http\Controllers\ChatController;
 use App\Http\Controllers\MovieUploadController;
 use App\Http\Controllers\TestMessageController;
 use App\Http\Controllers\ProductController;
-use App\Http\Controllers\Api\CurrentViewersController;
-use App\Http\Controllers\Api\ChannelController;
+use App\Http\Controllers\Api\ChannelApiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,5 +49,5 @@ Route::post('/chatTest', [TestMessageController::class, 'broadcast'])
 
 Route::get('/products', [ProductController::class, 'index']);
 
-Route::get('/channel_list', [ChannelController::class, 'index']);
+Route::get('/channels_list', [ChannelApiController::class, 'index']);
 

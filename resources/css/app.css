@@ -126,13 +126,13 @@ html {
         /*min-width:16rem;*/
         /*width:6rem;*/
         width:100vw;
-        min-height:4rem;
-        max-height:4rem;
+        min-height:6rem;
+        max-height:6rem;
         /*display: flex;*/
         /*flex-wrap: wrap;*/
         /*align-content: flex-start;*/
         /*justify-items: center;*/
-        background-color: purple;
+        background-color: black;
     }
     .topRightVideoClass {
         /*position: fixed;*/
@@ -193,25 +193,24 @@ html {
     }
     .videoControls {
         z-index: 200;
-        left: 0;
-        right: 0;
-        padding-top: 56.25%;
-        @apply fixed flex justify-center mx-auto space-x-4 top-20 w-fit
+        top: calc(100vh - 50%);
+        /*padding-top: 56.25%;*/
+        @apply fixed flex flex-row justify-center left-0 right-0 mx-auto space-x-4 w-full
     }
     .ottButtonsContainer {
         z-index: 200;
-        position: fixed;
-        @apply flex flex-row space-x-2 bottom-4 right-3
+        @apply fixed flex flex-row justify-center left-0 right-0 mx-auto space-x-4 bottom-4 w-full
     }
     .backToPage {
-        z-index: 900;
-        @apply fixed w-fit top-20 right-6 p-2 drop-shadow bg-gray-800 text-white hover:bg-gray-600
+        z-index: 200;
+        top: calc(100vh - 57%);
+        @apply fixed w-fit right-6 p-2 drop-shadow bg-gray-800 text-white hover:bg-gray-600
     }
     .channelsFullPageContainer {
         z-index: 200;
         height:calc(100vh - 4rem);
         top: 4rem;
-        @apply fixed w-full bottom-0 right-0 left-0 px-1 pb-12 bg-opacity-80 bg-green-600 text-sm text-white
+        @apply fixed w-full bottom-0 right-0 left-0 pb-12 bg-opacity-80 bg-green-600 text-sm text-white
         overflow-y-auto scroll-smooth hover:scroll-auto break-words
     }
     .channelsCloseButton {
@@ -232,14 +231,24 @@ html {
     }
     .chatFullPageContainer {
         z-index: 40;
-        min-height:calc(50vh - 4rem);
-        padding-top: 56.25%;
+        min-height:calc(50vh + 1rem);
+        /*padding-top: 56.25%;*/
         @apply absolute w-full bottom-0 right-0 px-6 pb-12 bg-opacity-80 text-sm text-white
         overflow-y-auto scroll-smooth hover:scroll-auto break-words
     }
+    .chatFullPageInput {
+        @apply fixed flex flex-row justify-center left-0 right-0 mx-auto p-2 mb-2 text-black border-2 border-gray-800 hover:border-blue-800 focus:outline-none
+    }
     .chatCloseButton {
-        @apply fixed bottom-5 left-0 right-0 mx-auto opacity-100 w-fit h-12 p-4 rounded-full
-        text-gray-50 bg-blue-900 hover:bg-blue-800 cursor-pointer font-semibold text-xs
+        top: 24rem;
+        right: 2rem;
+        z-index: 60;
+        @apply fixed opacity-80 w-16 px-4 py-4 w-fit rounded-full bg-orange-800
+        text-gray-50 hover:bg-blue-800 hover:text-blue-200
+        cursor-pointer font-semibold text-xs
+
+        /*@apply fixed bottom-5 left-0 mx-auto opacity-100 w-fit h-12 p-4 rounded-full*/
+        /*text-gray-50 bg-blue-900 hover:bg-blue-800 cursor-pointer font-semibold text-xs*/
     }
     .filtersFullPageContainer {
         z-index: 200;
@@ -370,9 +379,8 @@ html {
     }
     .videoControls {
         z-index: 200;
-        left: 0;
-        right: 0;
-        @apply fixed flex justify-center mx-auto space-x-4 bottom-10 w-fit
+        /*@apply fixed flex justify-center mx-auto space-x-4 bottom-10 w-fit*/
+        @apply fixed flex flex-row space-x-2 bottom-6 left-6
     }
     .ottButtonsContainer {
         z-index: 200;
@@ -381,7 +389,7 @@ html {
     }
     .backToPage {
         z-index: 900;
-        @apply fixed w-fit top-20 right-6 p-2 drop-shadow bg-gray-800 text-white hover:bg-gray-600
+        @apply fixed w-fit top-28 right-4 p-2 drop-shadow bg-gray-800 text-white hover:bg-gray-600
     }
     .channelsFullPageContainer {
         z-index: 200;
@@ -389,7 +397,7 @@ html {
         top: 4rem;
         right:0;
         max-height: 96rem;
-        @apply w-[24rem] bottom-0 bg-opacity-80 bg-green-600 text-sm text-white px-1 pb-12
+        @apply w-[24rem] bottom-0 bg-opacity-80 bg-green-600 text-sm text-white pb-12
         overflow-y-scroll scroll-smooth hover:scroll-auto break-words
     }
     .channelsCloseButton {
@@ -419,6 +427,9 @@ html {
         max-height: 96rem;
         @apply w-[24rem] bottom-0 bg-opacity-80 bg-blue-600 text-sm text-white px-6 pb-12
         overflow-y-scroll scroll-smooth hover:scroll-auto break-words
+    }
+    .chatFullPageInput {
+        @apply fixed right-20 p-2 m-2 mb-2 w-fit text-black border-2 border-gray-800 hover:border-blue-800 focus:outline-none
     }
     .chatCloseButton {
         @apply fixed bottom-5 right-32 opacity-100 w-fit h-12 p-4 rounded-full
@@ -503,11 +514,11 @@ html {
         @apply fixed w-full bottom-0 right-0 left-0 sm:bottom-2 text-sm text-white pl-6 pb-12
         overflow-y-auto scroll-smooth hover:scroll-auto break-words
     }
-    .chatCloseButtonMobile {
-        top: 34rem;
-        right: 2rem;
-        z-index: 60;
-    }
+    /*.chatCloseButtonMobile {*/
+    /*    top: 34rem;*/
+    /*    right: 2rem;*/
+    /*    z-index: 60;*/
+    /*}*/
     .videoOttChatMessages {
         padding-bottom: 22rem;
     }
@@ -661,13 +672,13 @@ html {
 
 
 .channelsFullPage{
-    @apply w-full px-4 py-2 mt-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-2 border-green-800 shadow-md disabled:bg-gray-600 disabled:text-gray-300 disabled:cursor-not-allowed
+    @apply w-full py-4 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-2 border-green-800 shadow-md disabled:bg-gray-600 disabled:text-gray-300 disabled:cursor-not-allowed
 }
 .channelsTopRight{
     @apply w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-r-2 border-green-800 shadow-md disabled:bg-gray-600 disabled:text-gray-300 disabled:cursor-not-allowed
 }
 .activeChannelFullPage {
-    @apply bg-green-500;
+    @apply bg-blue-500;
    /*background-color: darkgreen !important;*/
    /*color: #ffcc66 !important;*/
    /*border-right-color: #ffcc66 !important;*/
@@ -683,7 +694,7 @@ html {
     @apply px-4 py-4 pb-24 bg-green-700 shadow-md
 }
 .channelFooterTopRight {
-    @apply mt-4 pb-4
+    @apply mt-4 pb-4 px-2
 }
 .playlistForStreamPageStandard {
     z-index: 200;

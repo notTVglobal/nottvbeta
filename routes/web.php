@@ -1,7 +1,8 @@
 <?php
 
-use App\Http\Controllers\Api\ChannelController;
+use App\Http\Controllers\Api\ChannelApiController;
 use App\Http\Controllers\AppSettingController;
+use App\Http\Controllers\ChannelController;
 use App\Http\Controllers\TestMessageController;
 use App\Http\Controllers\WelcomeController;
 use App\Mail\VerifyMail;
@@ -264,10 +265,9 @@ Route::middleware([
         ->name('channels');
 
     // Admin manage the channels
-    Route::get('/admin/channels', function () {
-        return Inertia::render('Admin/Channels/Index');
-    })->can('viewAdmin', 'App\Models\User')
-        ->name('admin.channels.index');
+    Route::get('/admin/channels', [ChannelController::class, 'index'])
+        ->can('viewAdmin', 'App\Models\User')
+        ->name('admin.channels');
 
 
 // Shop

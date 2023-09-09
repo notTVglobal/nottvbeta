@@ -1200,13 +1200,13 @@ html {
         /*min-width:16rem;*/
         /*width:6rem;*/
         width:100vw;
-        min-height:4rem;
-        max-height:4rem;
+        min-height:6rem;
+        max-height:6rem;
         /*display: flex;*/
         /*flex-wrap: wrap;*/
         /*align-content: flex-start;*/
         /*justify-items: center;*/
-        background-color: purple;
+        background-color: black;
     }
     .topRightVideoClass {
         /*position: fixed;*/
@@ -1271,17 +1271,16 @@ html {
         width: 2.5rem}
     .videoControls {
         z-index: 200;
-        left: 0;
-        right: 0;
-        padding-top: 56.25%;
+        top: calc(100vh - 50%);
+        /*padding-top: 56.25%;*/
         position: fixed;
-        top: 5rem;
+        left: 0px;
+        right: 0px;
         margin-left: auto;
         margin-right: auto;
         display: flex;
-        width: -webkit-fit-content;
-        width: -moz-fit-content;
-        width: fit-content;
+        width: 100%;
+        flex-direction: row;
         justify-content: center}
     .videoControls > :not([hidden]) ~ :not([hidden]) {
     --tw-space-x-reverse: 0;
@@ -1291,19 +1290,24 @@ html {
     .ottButtonsContainer {
         z-index: 200;
         position: fixed;
+        left: 0px;
+        right: 0px;
         bottom: 1rem;
-        right: 0.75rem;
+        margin-left: auto;
+        margin-right: auto;
         display: flex;
-        flex-direction: row}
+        width: 100%;
+        flex-direction: row;
+        justify-content: center}
     .ottButtonsContainer > :not([hidden]) ~ :not([hidden]) {
     --tw-space-x-reverse: 0;
-    margin-right: calc(0.5rem * var(--tw-space-x-reverse));
-    margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
+    margin-right: calc(1rem * var(--tw-space-x-reverse));
+    margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
   }
     .backToPage {
-        z-index: 900;
+        z-index: 200;
+        top: calc(100vh - 57%);
         position: fixed;
-        top: 5rem;
         right: 1.5rem;
         width: -webkit-fit-content;
         width: -moz-fit-content;
@@ -1333,8 +1337,6 @@ html {
         overflow-wrap: break-word;
         background-color: rgb(22 163 74 / var(--tw-bg-opacity));
         --tw-bg-opacity: 0.8;
-        padding-left: 0.25rem;
-        padding-right: 0.25rem;
         padding-bottom: 3rem;
         font-size: 0.875rem;
         line-height: 1.25rem;
@@ -1423,8 +1425,8 @@ html {
   }
     .chatFullPageContainer {
         z-index: 40;
-        min-height:calc(50vh - 4rem);
-        padding-top: 56.25%;
+        min-height:calc(50vh + 1rem);
+        /*padding-top: 56.25%;*/
         position: absolute;
         bottom: 0px;
         right: 0px;
@@ -1443,32 +1445,59 @@ html {
     .chatFullPageContainer:hover {
     scroll-behavior: auto;
   }
-    .chatCloseButton {
+    .chatFullPageInput {
     position: fixed;
-    bottom: 1.25rem;
     left: 0px;
     right: 0px;
     margin-left: auto;
     margin-right: auto;
-    height: 3rem;
-    width: -webkit-fit-content;
-    width: -moz-fit-content;
-    width: fit-content;
-    cursor: pointer;
-    border-radius: 9999px;
-    --tw-bg-opacity: 1;
-    background-color: rgb(30 58 138 / var(--tw-bg-opacity));
-    padding: 1rem;
-    font-size: 0.75rem;
-    line-height: 1rem;
-    font-weight: 600;
+    margin-bottom: 0.5rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    border-width: 2px;
+    --tw-border-opacity: 1;
+    border-color: rgb(31 41 55 / var(--tw-border-opacity));
+    padding: 0.5rem;
     --tw-text-opacity: 1;
-    color: rgb(249 250 251 / var(--tw-text-opacity));
-    opacity: 1;
+    color: rgb(0 0 0 / var(--tw-text-opacity));
   }
+    .chatFullPageInput:hover {
+    --tw-border-opacity: 1;
+    border-color: rgb(30 64 175 / var(--tw-border-opacity));
+  }
+    .chatFullPageInput:focus {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+  }
+    .chatCloseButton {
+        top: 24rem;
+        right: 2rem;
+        z-index: 60;
+        position: fixed;
+        width: 4rem;
+        width: -webkit-fit-content;
+        width: -moz-fit-content;
+        width: fit-content;
+        cursor: pointer;
+        border-radius: 9999px;
+        --tw-bg-opacity: 1;
+        background-color: rgb(154 52 18 / var(--tw-bg-opacity));
+        padding-left: 1rem;
+        padding-right: 1rem;
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+        font-size: 0.75rem;
+        line-height: 1rem;
+        font-weight: 600;
+        --tw-text-opacity: 1;
+        color: rgb(249 250 251 / var(--tw-text-opacity));
+        opacity: 0.8}
     .chatCloseButton:hover {
     --tw-bg-opacity: 1;
     background-color: rgb(30 64 175 / var(--tw-bg-opacity));
+    --tw-text-opacity: 1;
+    color: rgb(191 219 254 / var(--tw-text-opacity));
   }
     .filtersFullPageContainer {
         z-index: 200;
@@ -1649,21 +1678,16 @@ html {
   }
     .videoControls {
         z-index: 200;
-        left: 0;
-        right: 0;
+        /*@apply fixed flex justify-center mx-auto space-x-4 bottom-10 w-fit*/
         position: fixed;
-        bottom: 2.5rem;
-        margin-left: auto;
-        margin-right: auto;
+        bottom: 1.5rem;
+        left: 1.5rem;
         display: flex;
-        width: -webkit-fit-content;
-        width: -moz-fit-content;
-        width: fit-content;
-        justify-content: center}
+        flex-direction: row}
     .videoControls > :not([hidden]) ~ :not([hidden]) {
     --tw-space-x-reverse: 0;
-    margin-right: calc(1rem * var(--tw-space-x-reverse));
-    margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
+    margin-right: calc(0.5rem * var(--tw-space-x-reverse));
+    margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
   }
     .ottButtonsContainer {
         z-index: 200;
@@ -1680,8 +1704,8 @@ html {
     .backToPage {
         z-index: 900;
         position: fixed;
-        top: 5rem;
-        right: 1.5rem;
+        top: 7rem;
+        right: 1rem;
         width: -webkit-fit-content;
         width: -moz-fit-content;
         width: fit-content;
@@ -1709,8 +1733,6 @@ html {
         overflow-wrap: break-word;
         background-color: rgb(22 163 74 / var(--tw-bg-opacity));
         --tw-bg-opacity: 0.8;
-        padding-left: 0.25rem;
-        padding-right: 0.25rem;
         padding-bottom: 3rem;
         font-size: 0.875rem;
         line-height: 1.25rem;
@@ -1815,6 +1837,29 @@ html {
         color: rgb(255 255 255 / var(--tw-text-opacity))}
     .chatFullPageContainer:hover {
     scroll-behavior: auto;
+  }
+    .chatFullPageInput {
+    position: fixed;
+    right: 5rem;
+    margin: 0.5rem;
+    margin-bottom: 0.5rem;
+    width: -webkit-fit-content;
+    width: -moz-fit-content;
+    width: fit-content;
+    border-width: 2px;
+    --tw-border-opacity: 1;
+    border-color: rgb(31 41 55 / var(--tw-border-opacity));
+    padding: 0.5rem;
+    --tw-text-opacity: 1;
+    color: rgb(0 0 0 / var(--tw-text-opacity));
+  }
+    .chatFullPageInput:hover {
+    --tw-border-opacity: 1;
+    border-color: rgb(30 64 175 / var(--tw-border-opacity));
+  }
+    .chatFullPageInput:focus {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
   }
     .chatCloseButton {
     position: fixed;
@@ -2014,11 +2059,11 @@ html {
       bottom: 0.5rem;
     }
   }
-    .chatCloseButtonMobile {
-        top: 34rem;
-        right: 2rem;
-        z-index: 60;
-    }
+    /*.chatCloseButtonMobile {*/
+    /*    top: 34rem;*/
+    /*    right: 2rem;*/
+    /*    z-index: 60;*/
+    /*}*/
     .videoOttChatMessages {
         padding-bottom: 22rem;
     }
@@ -2262,7 +2307,6 @@ html {
 
 
 .channelsFullPage {
-  margin-top: 0.5rem;
   width: 100%;
   cursor: pointer;
   border-width: 2px;
@@ -2271,10 +2315,8 @@ html {
   border-color: rgb(22 101 52 / var(--tw-border-opacity));
   --tw-bg-opacity: 1;
   background-color: rgb(21 128 61 / var(--tw-bg-opacity));
-  padding-left: 1rem;
-  padding-right: 1rem;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
   text-align: center;
   font-size: 1.25rem;
   line-height: 1.75rem;
@@ -2334,7 +2376,7 @@ html {
 }
 .activeChannelFullPage {
   --tw-bg-opacity: 1;
-  background-color: rgb(34 197 94 / var(--tw-bg-opacity));
+  background-color: rgb(59 130 246 / var(--tw-bg-opacity));
    /*background-color: darkgreen !important;*/
    /*color: #ffcc66 !important;*/
    /*border-right-color: #ffcc66 !important;*/
@@ -2359,6 +2401,8 @@ html {
 }
 .channelFooterTopRight {
   margin-top: 1rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
   padding-bottom: 1rem;
 }
 .playlistForStreamPageStandard {
@@ -2553,12 +2597,12 @@ html {
   bottom: 3rem;
 }
 
-.bottom-20 {
-  bottom: 5rem;
+.bottom-16 {
+  bottom: 4rem;
 }
 
-.bottom-32 {
-  bottom: 8rem;
+.bottom-20 {
+  bottom: 5rem;
 }
 
 .bottom-4 {
@@ -2651,6 +2695,10 @@ html {
 
 .top-60 {
   top: 15rem;
+}
+
+.bottom-2 {
+  bottom: 0.5rem;
 }
 
 .z-0 {
@@ -2803,6 +2851,10 @@ html {
 
 .-mt-5 {
   margin-top: -1.25rem;
+}
+
+.-mt-px {
+  margin-top: -1px;
 }
 
 .mb-1 {
@@ -3355,6 +3407,10 @@ html {
 
 .min-w-full {
   min-width: 100%;
+}
+
+.max-w-6xl {
+  max-width: 72rem;
 }
 
 .max-w-7xl {
@@ -3921,6 +3977,10 @@ html {
 
 .border-l-4 {
   border-left-width: 4px;
+}
+
+.border-r {
+  border-right-width: 1px;
 }
 
 .border-r-2 {
@@ -4635,6 +4695,10 @@ html {
 
 .pt-6 {
   padding-top: 1.5rem;
+}
+
+.pt-8 {
+  padding-top: 2rem;
 }
 
 .text-left {
@@ -6075,6 +6139,10 @@ html {
 
   .sm\:items-center {
     align-items: center;
+  }
+
+  .sm\:justify-start {
+    justify-content: flex-start;
   }
 
   .sm\:justify-center {

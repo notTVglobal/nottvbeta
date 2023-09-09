@@ -67,8 +67,7 @@ onMounted(async () => {
     videoPlayer.src({type: 'video/mp4', src: videoPlayerStore.videoSource});
 // let videoPlayer = videojs.getPlayer('main-player', videoOptions)
     videoPlayer.ready(function() {
-
-        videoPlayer.currentTime(36);
+        videoPlayer.currentTime(120);
         console.log('video player ready')
     })
     // videoPlayerStore.videoSource = "/storage/videos/BigBuckBunny.mp4"

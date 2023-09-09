@@ -102,13 +102,6 @@
                 </JetResponsiveNavLink>
 
                 <JetResponsiveNavLink
-                    @click="userStore.closeNavDropdown()"
-                    :href="route('stream')"
-                    :active="route().current('stream')">
-                    Stream
-                </JetResponsiveNavLink>
-
-                <JetResponsiveNavLink
                     v-if="$page.props.user.role_id === 4"
                     @click="userStore.closeNavDropdown()"
                     :href="route('dashboard')"
@@ -221,6 +214,13 @@
                             :href="route('admin.settings')"
                             :active="route().current('admin.settings')">
                             Admin Settings
+                        </JetResponsiveNavLink>
+
+                        <JetResponsiveNavLink
+                            @click="userStore.closeNavDropdown()"
+                            :href="route('admin.channels')"
+                            :active="route().current('admin.channels')">
+                            Channels
                         </JetResponsiveNavLink>
 
                         <JetResponsiveNavLink

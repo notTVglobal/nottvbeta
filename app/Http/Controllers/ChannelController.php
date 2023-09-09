@@ -1,17 +1,25 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
-use App\Models\Channel;
-use App\Http\Controllers\Controller;
+use App\Models\NewsPost;
 use Illuminate\Http\Request;
+use App\Models\Channel;
+use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class ChannelController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Inertia\Response
+     */
     public function index()
     {
-        return Channel::with('video:name')
-            ->get();
+        return Inertia::render('Admin/Channels/Index', [
+            'channels' => Channel::with('source', 'video')->get()
+        ]);
     }
 
     /**

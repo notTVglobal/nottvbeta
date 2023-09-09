@@ -31,9 +31,9 @@ let videoPlayerStore = useVideoPlayerStore();
 let channelStore = useChannelStore();
 let userStore = useChannelStore();
 
-// let props = defineProps({
-//     channelClasses: String,
-// })
+let props = defineProps({
+    channelClasses: String,
+})
 
 channelStore.getChannels()
 

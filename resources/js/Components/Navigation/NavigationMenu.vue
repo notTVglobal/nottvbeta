@@ -15,20 +15,6 @@
                     <div class="hidden space-x-8 lg:-my-px lg:ml-10 lg:flex">
                         <h3 class="inline-flex items-center relative">
                         <JetNavLink
-                            v-touch="()=>(route('stream'))"
-                            @click="videoPlayerStore.makeVideoFullPage()"
-                            :href="route('stream')"
-                            :active="route().current('stream')">
-                                Stream
-<!--                            <div v-if="streamStore.isLive"-->
-<!--                                class="text-xs text-white bg-red-800 uppercase flex justify-center items-center absolute -right-4 top-1.5-->
-<!--                                    font-semibold inline-block py-0.5 px-1 rounded last:mr-0 mr-1">-->
-<!--                               live-->
-<!--                            </div>-->
-                        </JetNavLink>
-                        </h3>
-                        <h3 class="inline-flex items-center relative">
-                        <JetNavLink
                             v-touch="()=>(route('schedule'))"
                             @click="videoPlayerStore.makeVideoTopRight()"
                             :href="route('schedule')"
@@ -203,6 +189,12 @@
                                                 @click="videoPlayerStore.makeVideoTopRight()"
                                                 :href="route('admin.settings')">
                                                 Admin Settings
+                                            </JetDropdownLink>
+
+                                            <JetDropdownLink
+                                                @click="videoPlayerStore.makeVideoTopRight()"
+                                                :href="route('admin.channels')">
+                                                Channels
                                             </JetDropdownLink>
 
                                             <JetDropdownLink
