@@ -197,7 +197,6 @@ streamStore.showChannels = false
 streamStore.showOSD = false
 
 
-
 onBeforeMount( () => {
     // getFirstPlaySettings()
 })

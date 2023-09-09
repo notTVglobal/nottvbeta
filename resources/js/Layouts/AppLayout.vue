@@ -72,10 +72,8 @@ userStore.showNavDropdown = false
 // getFirstPlaySettings()
 setPage()
 
-onBeforeMount(async () => {
+onBeforeMount( () => {
     getUser()
-    await getFirstPlaySettings()
-
 })
 
 // onUpdated(() => {
@@ -112,20 +110,6 @@ function getUser() {
     userStore.isCreator()
     userStore.isVip()
     userStore.isAdmin()
-}
-
-async function getFirstPlaySettings() {
-    await axios.get('/api/app_settings')
-        .then(response => {
-            videoPlayerStore.videoSource = response.data[0].first_play_video_source
-            videoPlayerStore.videoSourceType = response.data[0].first_play_video_source_type
-            videoPlayerStore.videoName = response.data[0].first_play_video_name
-            console.log('app settings retrieved.');
-
-        })
-        .catch(error => {
-            console.log(error)
-        })
 }
 
 function hideOSD() {

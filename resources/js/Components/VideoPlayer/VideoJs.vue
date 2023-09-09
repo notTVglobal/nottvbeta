@@ -7,16 +7,23 @@
 <!--               class="video-js vjs-big-play-centered vjs-fill"-->
 <!--               v-touch="() => {clickOnVideoAction()}"-->
 <!--        />-->
-        <video-js ref="videoPlayer"
-                  id="main-player"
+
+<!--        This one works... but we have the iPhone bug -->
+<!--        <video-js ref="videoPlayer"-->
+<!--                  id="main-player"-->
+<!--                  class="video-js vjs-big-play-centered vjs-fill"-->
+<!--                  data-setup='{"controls": false, "autoplay": true, "preload": "auto", "muted": true, "techOrder": ["html5"]}'-->
+<!--                  playsinline-->
+<!--        >-->
+<!--            &lt;!&ndash;                        <source :src='`/storage/videos/BigBuckBunny.mp4`' :type='`video/mp4`'>&ndash;&gt;-->
+<!--            <source :src='videoPlayerStore.videoSource' :type='videoPlayerStore.videoSourceType'>-->
+<!--            &lt;!&ndash;                        <source :src='src' :type='type'>&ndash;&gt;-->
+<!--        </video-js>-->
+
+        <video-js id="main-player"
                   class="video-js vjs-big-play-centered vjs-fill"
-                  data-setup='{"controls": false, "autoplay": true, "preload": "auto", "muted": true}'
-                  playsinline
-        >
-            <!--                        <source :src='`/storage/videos/BigBuckBunny.mp4`' :type='`video/mp4`'>-->
-            <source :src='videoPlayerStore.videoSource' :type='videoPlayerStore.videoSourceType'>
-            <!--                        <source :src='src' :type='type'>-->
-        </video-js>
+                  data-setup='{"controls": false, "autoplay": true, "preload": "auto", "muted": true, "techOrder": ["html5"]}'
+                  playsinline />
 
     </div>
 
@@ -42,30 +49,31 @@ const props = defineProps({
     // id: String,
 })
 
-// let playerName = 'main-player'
+let playerName = 'main-player'
 
-// let videoOptions = {
-//     autoplay: true,
-//     muted: true,
-//     controls: false,
-//     enableSourceset: true,
-//     sources: [
-//         {
-//             src:
-//             props.videoSource,
-//             type: props.videoSourceType
-//         }
-//     ]
-// }
+let videoOptions = {
+    autoplay: true,
+    muted: true,
+    controls: false,
+    enableSourceset: true,
+}
 
-onMounted(() => {
-    // let videoPlayer = videojs('main-player', videoOptions)
-    // videoPlayer.ready(function() {
-    // })
+
+onMounted(async () => {
+    await getFirstPlaySettings()
+    let videoPlayer = videojs(document.querySelector('.video-js'));
+    // videoPlayer.src({type: 'video/mp4', src: '/storage/videos/BigBuckBunny.mp4'});
+    console.log(videoPlayerStore.videoSource)
+    videoPlayer.src({type: 'video/mp4', src: videoPlayerStore.videoSource});
+// let videoPlayer = videojs.getPlayer('main-player', videoOptions)
+    videoPlayer.ready(function() {
+
+        videoPlayer.currentTime(36);
+        console.log('video player ready')
+    })
     // videoPlayerStore.videoSource = "/storage/videos/BigBuckBunny.mp4"
     // videoPlayerStore.videoSourceType = "video/mp4"
-    console.log('check point 3 VideoPlayerMain')
-
+    await videoPlayer.play()
 })
 
 onUnmounted(() => {
@@ -73,6 +81,22 @@ onUnmounted(() => {
     //     videoPlayer.dispose()
     // }
 })
+
+async function getFirstPlaySettings() {
+    await axios.get('/api/app_settings')
+        .then(response => {
+            videoPlayerStore.videoSource = response.data[0].first_play_video_source
+            videoPlayerStore.videoSourceType = response.data[0].first_play_video_source_type
+            videoPlayerStore.videoName = response.data[0].first_play_video_name
+            console.log('app settings retrieved.');
+
+        })
+        .catch(error => {
+            console.log(error)
+        })
+    // setVideoOptions()
+    // videoJs = videojs('main-player', videoOptions)
+}
 
 // function clickOnVideoAction() {
 //     if (videoPlayerStore.currentPageIsStream === true) {
