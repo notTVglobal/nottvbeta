@@ -1,5 +1,14 @@
 {
     "private": true,
+    "browserslist": [
+        ">0.2%",
+        "not dead",
+        "not op_mini all",
+        "not safari < 10",
+        "not chrome < 51",
+        "not android < 5",
+        "not ie < 12"
+    ],
     "scripts": {
         "dev": "npm run development",
         "development": "mix",
@@ -24,6 +33,7 @@
         "lodash": "^4.17.19",
         "postcss": "^8.1.14",
         "tailwindcss": "^3.1.0",
+        "video.js": "^8.5.2",
         "vue": "^3.2.31",
         "vue-loader": "^17.0.0"
     },
@@ -58,7 +68,6 @@
         "path-browserify": "^1.0.1",
         "pinia": "^2.0.17",
         "pusher-js": "^7.3.0",
-        "video.js": "^7.21.5",
         "vue-filepond": "^7.0.3",
         "vue3-country-region-select": "^1.0.0",
         "vue3-emoji-picker": "^1.1.5",

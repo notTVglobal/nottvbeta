@@ -25,7 +25,7 @@ z<template>
 </template>
 
 <script setup>
-import { ref, computed, onBeforeMount, onBeforeUnmount, onUpdated, defineAsyncComponent } from "vue"
+import {ref, computed, onBeforeMount, onBeforeUnmount, onUpdated, defineAsyncComponent, onMounted} from "vue"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useStreamStore } from "@/Stores/StreamStore"
 import { useUserStore } from "@/Stores/UserStore"
@@ -40,6 +40,7 @@ const Login = defineAsyncComponent( () =>
     import('@/Components/Welcome/Login'))
 const VideoPlayerMain = defineAsyncComponent( () =>
     import('@/Components/VideoPlayer/VideoPlayerMain'))
+import videojs from "!video.js"
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -81,6 +82,16 @@ onBeforeMount(async () => {
 //     userStore.showNavDropdown = false
 //     getUser()
 // })
+
+onMounted(() => {
+    console.log('we are here.')
+    // let videoJs = videojs('main-player');
+    // videoJs.src({type: 'video/mp4', src: '/storage/videos/ThirdEyeSpies.mp4'});
+    // videoJs.ready(function() {
+    //     // tech() will log warning without any argument
+    //     let tech = videoJs.tech(false);
+    // });
+})
 
 onBeforeUnmount(() => {
     videoPlayerStore.viewerCount = 0
