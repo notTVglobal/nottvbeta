@@ -107,37 +107,59 @@
 
 
 <script setup>
-import {onMounted, computed, ref, onBeforeMount, onUnmounted, defineAsyncComponent} from 'vue'
+import { computed, ref, onUnmounted, defineAsyncComponent } from 'vue'
 import { Inertia } from "@inertiajs/inertia"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useStreamStore } from "@/Stores/StreamStore"
 import { useChatStore } from "@/Stores/ChatStore"
 import { useUserStore } from "@/Stores/UserStore"
-
-import OttFullPageButtons from "@/Components/VideoPlayer/OttButtons/OttFullPageButtons.vue"
-import OttFullPageDisplayChannels from "@/Components/VideoPlayer/OttFullPageDisplay/Channels"
-import OttFullPageDisplayPlaylist from "@/Components/VideoPlayer/OttFullPageDisplay/Playlist"
-import OttFullPageDisplayChatStandard from "@/Components/VideoPlayer/OttFullPageDisplay/ChatStandard"
-import OttFullPageDisplayChatMobile from "@/Components/VideoPlayer/OttFullPageDisplay/ChatMobile"
-import OttFullPageDisplayFilters from "@/Components/VideoPlayer/OttFullPageDisplay/Filters"
-import OttTopRightButtons from "@/Components/VideoPlayer/OttButtons/OttTopRightButtons.vue";
-import OttTopRightDisplayNowPlayingInfo from "@/Components/VideoPlayer/OttTopRightDisplay/NowPlayingInfo.vue";
-import OttTopRightDisplayFilters from "@/Components/VideoPlayer/OttTopRightDisplay/Filters.vue";
-import OttTopRightDisplayChat from "@/Components/VideoPlayer/OttTopRightDisplay/Chat.vue";
-import OttTopRightDisplayPlaylist from "@/Components/VideoPlayer/OttTopRightDisplay/Playlist.vue";
-import OttTopRightDisplayChannels from "@/Components/VideoPlayer/OttTopRightDisplay/Channels.vue";
-import VideoControlsFullPage from "@/Components/VideoPlayer/VideoControls/VideoControlsFullPage"
-import VideoControlsFullPageMobile from "@/Components/VideoPlayer/VideoControls/VideoControlsFullPageMobile"
-import VideoControlsTopRight from "@/Components/VideoPlayer/VideoControls/VideoControlsTopRight"
-import OsdTopRight from "@/Components/VideoPlayer/Osd/OsdTopRight.vue"
-import OsdFullPage from "@/Components/VideoPlayer/Osd/OsdFullPage.vue"
-import OsdFullPageMobile from "@/Components/VideoPlayer/Osd/OsdFullPageMobile.vue"
 import videojs from 'video.js'
-import { tryOnBeforeMount, useScreenOrientation } from '@vueuse/core'
-// import VideoJs from "@/Components/VideoPlayer/VideoJs.vue";
+
+const OttFullPageButtons = defineAsyncComponent( () =>
+    import('@/Components/VideoPlayer/OttButtons/OttFullPageButtons'))
+const OttFullPageDisplayChannels = defineAsyncComponent( () =>
+    import('@/Components/VideoPlayer/OttFullPageDisplay/Channels'))
+const OttFullPageDisplayPlaylist = defineAsyncComponent( () =>
+    import('@/Components/VideoPlayer/OttFullPageDisplay/Playlist'))
+const OttFullPageDisplayChatStandard = defineAsyncComponent( () =>
+    import('@/Components/VideoPlayer/OttFullPageDisplay/ChatStandard'))
+const OttFullPageDisplayFilters = defineAsyncComponent( () =>
+    import('@/Components/VideoPlayer/OttFullPageDisplay/Filters'))
+const OttTopRightButtons = defineAsyncComponent( () =>
+    import('@/Components/VideoPlayer/OttButtons/OttTopRightButtons'))
+const OttTopRightDisplayNowPlayingInfo = defineAsyncComponent( () =>
+    import('@/Components/VideoPlayer/OttTopRightDisplay/NowPlayingInfo'))
+const OttTopRightDisplayFilters = defineAsyncComponent( () =>
+    import('@/Components/VideoPlayer/OttTopRightDisplay/Filters'))
+const OttTopRightDisplayChat = defineAsyncComponent( () =>
+    import('@/Components/VideoPlayer/OttTopRightDisplay/Chat'))
+const OttTopRightDisplayPlaylist = defineAsyncComponent( () =>
+    import('@/Components/VideoPlayer/OttTopRightDisplay/Playlist'))
+const OttTopRightDisplayChannels = defineAsyncComponent( () =>
+    import('@/Components/VideoPlayer/OttTopRightDisplay/Channels'))
+const VideoControlsFullPage = defineAsyncComponent( () =>
+    import('@/Components/VideoPlayer/VideoControls/VideoControlsFullPage'))
+const VideoControlsTopRight = defineAsyncComponent( () =>
+    import('@/Components/VideoPlayer/VideoControls/VideoControlsTopRight'))
+const OsdFullPage = defineAsyncComponent( () =>
+    import('@/Components/VideoPlayer/Osd/OsdFullPage'))
 const VideoJs = defineAsyncComponent( () =>
-    import('@/Components/VideoPlayer/VideoJs')
-)
+    import('@/Components/VideoPlayer/VideoJs'))
+
+// import OttFullPageButtons from "@/Components/VideoPlayer/OttButtons/OttFullPageButtons"
+// import OttFullPageDisplayChannels from "@/Components/VideoPlayer/OttFullPageDisplay/Channels"
+// import OttFullPageDisplayPlaylist from "@/Components/VideoPlayer/OttFullPageDisplay/Playlist"
+// import OttFullPageDisplayChatStandard from "@/Components/VideoPlayer/OttFullPageDisplay/ChatStandard"
+// import OttFullPageDisplayFilters from "@/Components/VideoPlayer/OttFullPageDisplay/Filters"
+// import OttTopRightButtons from "@/Components/VideoPlayer/OttButtons/OttTopRightButtons"
+// import OttTopRightDisplayNowPlayingInfo from "@/Components/VideoPlayer/OttTopRightDisplay/NowPlayingInfo"
+// import OttTopRightDisplayFilters from "@/Components/VideoPlayer/OttTopRightDisplay/Filters"
+// import OttTopRightDisplayChat from "@/Components/VideoPlayer/OttTopRightDisplay/Chat"
+// import OttTopRightDisplayPlaylist from "@/Components/VideoPlayer/OttTopRightDisplay/Playlist"
+// import OttTopRightDisplayChannels from "@/Components/VideoPlayer/OttTopRightDisplay/Channels"
+// import VideoControlsFullPage from "@/Components/VideoPlayer/VideoControls/VideoControlsFullPage"
+// import VideoControlsTopRight from "@/Components/VideoPlayer/VideoControls/VideoControlsTopRight"
+// import OsdFullPage from "@/Components/VideoPlayer/Osd/OsdFullPage"
 
 let videoPlayerStore = useVideoPlayerStore()
 let streamStore = useStreamStore()
@@ -164,22 +186,14 @@ const isMobile = ref({
 const videoContainer = computed(() => ({
     welcomeVideoContainer: userStore.currentPage === 'welcome',
     fullPageVideoContainer: videoPlayerStore.fullPage && !videoPlayerStore.pip && userStore.currentPage !== 'welcome',
-    // fullPageVideoContainer: videoPlayerStore.fullPage && !userStore.isMobile,
-    // fullPageVideoContainerMobile: videoPlayerStore.fullPage && userStore.isMobile,
     topRightVideoContainer: !videoPlayerStore.fullPage && !videoPlayerStore.pip && userStore.currentPage !== 'welcome',
-    // topRightVideoContainer: !videoPlayerStore.fullPage && !userStore.isMobile,
-    // topRightVideoContainerMobile: !videoPlayerStore.fullPage && userStore.isMobile,
     pipVideoContainer: videoPlayerStore.pip && userStore.currentPage !== 'welcome'
 }))
 
 const video = computed(() => ({
     welcomeVideoClass: userStore.currentPage === 'welcome',
     fullPageVideoClass: videoPlayerStore.fullPage && !videoPlayerStore.pip && userStore.currentPage !== 'welcome',
-    // fullPageVideoClass: videoPlayerStore.fullPage && !userStore.isMobile,
-    // fullPageVideoClassMobile: videoPlayerStore.fullPage && userStore.isMobile,
     topRightVideoClass: !videoPlayerStore.fullPage && !videoPlayerStore.pip && userStore.currentPage !== 'welcome',
-    // topRightVideoClass: !videoPlayerStore.fullPage && !userStore.isMobile,
-    // topRightVideoClassMobile: !videoPlayerStore.fullPage && userStore.isMobile,
     pipVideoClass: videoPlayerStore.pip && userStore.currentPage !== 'welcome'
 }))
 
@@ -195,22 +209,6 @@ videoPlayerStore.paused = false
 chatStore.showChat = false
 streamStore.showChannels = false
 streamStore.showOSD = false
-
-
-
-onBeforeMount( () => {
-    // getFirstPlaySettings()
-})
-
-onMounted(() => {
-    // if (userStore.isMobile) {
-    //     if (orientation==='landscape-secondary' || orientation==='landscape-primary') {
-    //         videoPlayerStore.hideOsdAndControlsAndNav()
-    //     } else if (orientation==='portrait-secondary' || orientation==='portrait-primary') {
-    //         videoPlayerStore.showOsdAndControlsAndNav()
-    //     }
-    // }
-})
 
 onUnmounted(() => {
     let player = videojs('main-player');
@@ -236,29 +234,11 @@ onUnmounted(() => {
 //     }
 // })
 
-// async function getFirstPlaySettings() {
-//     await axios.get('/api/app_settings')
-//         .then(response => {
-//             videoPlayerStore.videoSource = response.data[0].first_play_video_source
-//             videoPlayerStore.videoSourceType = response.data[0].first_play_video_source_type
-//             videoPlayerStore.videoName = response.data[0].first_play_video_name
-//             console.log('app settings retrieved.');
-//
-//         })
-//         .catch(error => {
-//             console.log(error)
-//         })
-//     // setVideoOptions()
-//     // videoJs = videojs('main-player', videoOptions)
-// }
-
 function backToPage() {
     videoPlayerStore.makeVideoTopRight();
     chatStore.showChat = false;
     streamStore.showOSD = false;
 }
-
-
 
 function clickOnVideoAction() {
 
@@ -326,6 +306,7 @@ function mouseMove(event) {
 
 </script>
 
+<!-- -tec21 Dec.4, 2022 -->
 <!-- A note about audio Tracks. -->
 <!-- https://github.com/videojs/http-streaming/blob/main/docs/multiple-alternative-audio-tracks.md -->
 <!--The other property that does not have a mapping in the m3u8 is AudioTrack.kind.
@@ -339,37 +320,5 @@ the description, not the main track).-->
 <!-- Goal: see if we can play 2 audio tracks at the same time. And build a pop-up audio
 mixer. This will lead into a feature that allows you to record directly through notTV
 whatever it is you are watching/clicking through. A web3 video editor. -->
-<!-- -tec21 Dec.4, 2022 -->
 
-
-<!--<script>-->
-<!--import videojs from 'video.js';-->
-
-<!--export default {-->
-<!--    name: 'VideoPlayer',-->
-<!--    props: {-->
-<!--        options: {-->
-<!--            type: Object,-->
-<!--            default() {-->
-<!--                return {};-->
-<!--            }-->
-<!--        }-->
-<!--    },-->
-<!--    data() {-->
-<!--        return {-->
-<!--            player: null-->
-<!--        }-->
-<!--    },-->
-<!--    mounted() {-->
-<!--        this.player = videojs(this.$refs.videoPlayer, this.options, () => {-->
-<!--            this.player.log('onPlayerReady', this);-->
-<!--        });-->
-<!--    },-->
-<!--    beforeDestroy() {-->
-<!--        if (this.player) {-->
-<!--            this.player.dispose();-->
-<!--        }-->
-<!--    }-->
-<!--}-->
-<!--</script>-->
 

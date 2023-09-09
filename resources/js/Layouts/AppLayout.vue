@@ -32,6 +32,7 @@ import { useUserStore } from "@/Stores/UserStore"
 import { useChatStore } from "@/Stores/ChatStore"
 import { useShopStore } from "@/Stores/ShopStore"
 import { useChannelStore } from "@/Stores/ChannelStore"
+
 const ResponsiveNavigationMenu = defineAsyncComponent( () =>
     import('@/Components/Navigation/ResponsiveNavigationMenu'))
 const NavigationMenu = defineAsyncComponent( () =>
