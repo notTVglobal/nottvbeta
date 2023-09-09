@@ -14,4 +14,4 @@ module.exports = {
             '@i': path.resolve('public/images'),
         },
     },
-}
+};
