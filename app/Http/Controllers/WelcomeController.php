@@ -13,6 +13,11 @@ class WelcomeController extends Controller
     {
         $session_id = session()->getId();
 
+        if (auth()->user()) {
+            return to_route('stream');
+//            return Inertia::render('Stream');
+        }
+
         return Inertia::render('Welcome', [
 //            'canLogin' => Route::has('login'),
 //            'canRegister' => Route::has('register'),

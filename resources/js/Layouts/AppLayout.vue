@@ -3,7 +3,7 @@ z<template>
 
         <!-- Navbar for logged in user -->
         <div v-if="user">
-            <div v-show="videoPlayerStore.showNav" class="fixed top-0 w-full nav-mask">
+            <div v-if="videoPlayerStore.showNav" class="fixed top-0 w-full nav-mask">
                 <ResponsiveNavigationMenu/>
                 <NavigationMenu /></div>
         </div>
@@ -77,10 +77,10 @@ onBeforeMount(async () => {
 
 })
 
-onUpdated(() => {
-    userStore.showNavDropdown = false
-    getUser()
-})
+// onUpdated(() => {
+//     userStore.showNavDropdown = false
+//     getUser()
+// })
 
 onBeforeUnmount(() => {
     videoPlayerStore.viewerCount = 0
