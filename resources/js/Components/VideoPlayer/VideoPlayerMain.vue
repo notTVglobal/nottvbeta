@@ -143,8 +143,8 @@ const VideoControlsTopRight = defineAsyncComponent( () =>
     import('@/Components/VideoPlayer/VideoControls/VideoControlsTopRight'))
 const OsdFullPage = defineAsyncComponent( () =>
     import('@/Components/VideoPlayer/Osd/OsdFullPage'))
-const VideoJs = defineAsyncComponent( () =>
-    import('@/Components/VideoPlayer/VideoJs'))
+// const VideoJs = defineAsyncComponent( () =>
+//     import('@/Components/VideoPlayer/VideoJs'))
 
 // import OttFullPageButtons from "@/Components/VideoPlayer/OttButtons/OttFullPageButtons"
 // import OttFullPageDisplayChannels from "@/Components/VideoPlayer/OttFullPageDisplay/Channels"
@@ -160,6 +160,7 @@ const VideoJs = defineAsyncComponent( () =>
 // import VideoControlsFullPage from "@/Components/VideoPlayer/VideoControls/VideoControlsFullPage"
 // import VideoControlsTopRight from "@/Components/VideoPlayer/VideoControls/VideoControlsTopRight"
 // import OsdFullPage from "@/Components/VideoPlayer/Osd/OsdFullPage"
+import VideoJs from "@/Components/VideoPlayer/VideoJs.vue";
 
 let videoPlayerStore = useVideoPlayerStore()
 let streamStore = useStreamStore()
