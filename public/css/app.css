@@ -1139,7 +1139,7 @@ html {
 /* Mobile and Tablet */
 @media (max-width:1024px) {
     .welcomeVideoContainer {
-        position: fixed;
+        position: absolute;
         top:0;
         left: 0;
         right:0;
@@ -1150,7 +1150,7 @@ html {
         z-index:1;
     }
     .welcomeVideoClass {
-        position: fixed;
+        position:absolute;
         top:0;
         left:0;
         right:0;
@@ -1436,7 +1436,7 @@ html {
         z-index: 40;
         min-height:calc(50vh - 4rem);
         padding-top: 56.25%;
-        position: fixed;
+        position: absolute;
         bottom: 0px;
         right: 0px;
         width: 100%;
@@ -1536,7 +1536,7 @@ html {
 /* Desktop and Standard (lg:) */
 @media (min-width:1024px) {
     .welcomeVideoContainer {
-        position: fixed;
+        position: absolute;
         top:0;
         left: 0;
         right:0;
@@ -1547,7 +1547,7 @@ html {
         z-index:1;
     }
     .welcomeVideoClass {
-        position: fixed;
+        position:absolute;
         top:0;
         left:0;
         right:0;
@@ -1929,7 +1929,7 @@ html {
 
 .videoControlsWelcomeStandard {
     z-index: 200;
-    position: fixed;
+    position: absolute;
     bottom: 9rem;
     display: flex;
     width: 100%;
@@ -1963,7 +1963,7 @@ html {
     .videoControlsWelcomeMobile {
         bottom: 12rem;
         left: 3rem;
-        position: fixed;
+        position: absolute;
         margin-left: auto;
         margin-right: auto;
         width: 100%;
@@ -2047,7 +2047,7 @@ html {
     .videoControlsWelcomeMobile {
         bottom: 12rem;
         z-index: 200;
-        position: fixed;
+        position: absolute;
         left: 0.75rem;
         margin-left: auto;
         margin-right: auto;
@@ -2138,7 +2138,7 @@ html {
   }
     .videoControlsWelcomeMobile {
         z-index: 200;
-        position: fixed;
+        position: absolute;
         bottom: 9rem;
         left: 0.75rem;
         margin-left: auto;
@@ -2185,7 +2185,7 @@ html {
         z-index: 200;
         bottom: 12rem;
         left: 3rem;
-        position: fixed;
+        position: absolute;
         margin-left: auto;
         margin-right: auto;
         display: flex;
@@ -2472,7 +2472,7 @@ html {
 }
 .chatBig {
     z-index: 200;
-    position: fixed;
+    position: absolute;
     top: 4rem;
     right:0;
     bottom:0;
@@ -2485,7 +2485,7 @@ html {
 }
 .chatSmall {
     z-index: 0;
-    position: fixed;
+    position: absolute;
     top: 0;
     right:0;
     bottom:0;

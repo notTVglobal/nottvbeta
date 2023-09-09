@@ -533,6 +533,38 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
     },
 
     getters: {
+        // incrementViewerCount() {
+        //     this.viewerCount++
+        // },
+        // decrementViewerCount() {
+        //     this.viewerCount++
+        // },
+        // incrementViewerCount: (state) => this.state.viewerCount++,
+        // decrementViewerCount: (state) => this.state.viewerCount--,
+        // incrementViewerCount(state) {
+        //     return state.viewerCount++
+        // },
+        // decrementViewerCount(state) {
+        //     return state.viewerCount--
+        // },
+        // updateViewerCount() {
+        //     const channel = Echo.private('channel.' + this.currentChannelId)
+        //     channel.subscribed(() => {
+        //     }).listen('channel.' + this.currentChannelId, (event) => {
+        //         if (event.channel_id === this.currentChannelId) {
+        //             this.viewerCount = this.viewerCount + event.viewerCount;
+        //         }
+        //         console.log('channel connected')
+        //     })
+        // }
 
+        // addViewer() {
+        //     axios.post('/api/addCurrentViewer', {'channel_id': this.currentChannelId, 'user_id': useUserStore().id})
+        //     .then(response => {
+        //         console.log(response);
+        //     })
+        //     .catch(error => {
+        //         console.log(error);
+        //     })
     },
 })

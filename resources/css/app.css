@@ -50,7 +50,7 @@ html {
 /* Mobile and Tablet */
 @media (max-width:1024px) {
     .welcomeVideoContainer {
-        position: fixed;
+        position: absolute;
         top:0;
         left: 0;
         right:0;
@@ -61,7 +61,7 @@ html {
         z-index:1;
     }
     .welcomeVideoClass {
-        position: fixed;
+        position:absolute;
         top:0;
         left:0;
         right:0;
@@ -234,7 +234,7 @@ html {
         z-index: 40;
         min-height:calc(50vh - 4rem);
         padding-top: 56.25%;
-        @apply fixed w-full bottom-0 right-0 px-6 pb-12 bg-opacity-80 text-sm text-white
+        @apply absolute w-full bottom-0 right-0 px-6 pb-12 bg-opacity-80 text-sm text-white
         overflow-y-auto scroll-smooth hover:scroll-auto break-words
     }
     .chatCloseButton {
@@ -258,7 +258,7 @@ html {
 /* Desktop and Standard (lg:) */
 @media (min-width:1024px) {
     .welcomeVideoContainer {
-        position: fixed;
+        position: absolute;
         top:0;
         left: 0;
         right:0;
@@ -269,7 +269,7 @@ html {
         z-index:1;
     }
     .welcomeVideoClass {
-        position: fixed;
+        position:absolute;
         top:0;
         left:0;
         right:0;
@@ -466,7 +466,7 @@ html {
 
 .videoControlsWelcomeStandard {
     z-index: 200;
-    @apply fixed flex justify-center space-x-4 bottom-36 w-full
+    @apply absolute flex justify-center space-x-4 bottom-36 w-full
 }
 @media (orientation: portrait) and (min-width: 800px) {
     .videoFullPageMobileOSD {
@@ -483,7 +483,7 @@ html {
     .videoControlsWelcomeMobile {
         bottom: 12rem;
         left: 3rem;
-        @apply fixed items-center mx-auto space-x-2 w-full
+        @apply absolute items-center mx-auto space-x-2 w-full
     }
     /*.backToPage {*/
     /*    position: fixed;*/
@@ -525,7 +525,7 @@ html {
     .videoControlsWelcomeMobile {
         bottom: 12rem;
         z-index: 200;
-        @apply fixed mx-auto flex left-3 justify-center space-x-4
+        @apply absolute mx-auto flex left-3 justify-center space-x-4
     }
     /*.backToPage {*/
     /*    position: fixed;*/
@@ -572,7 +572,7 @@ html {
     }
     .videoControlsWelcomeMobile {
         z-index: 200;
-        @apply fixed bottom-36 mx-auto flex left-3 justify-center space-x-4
+        @apply absolute bottom-36 mx-auto flex left-3 justify-center space-x-4
     }
     .OttButtonsMobile {
         bottom:3rem;
@@ -600,7 +600,7 @@ html {
         z-index: 200;
         bottom: 12rem;
         left: 3rem;
-        @apply fixed mx-auto flex justify-center space-x-4
+        @apply absolute mx-auto flex justify-center space-x-4
     }
     /*.backToPage {*/
     /*    @apply fixed bottom-5 left-2*/
@@ -775,7 +775,7 @@ html {
 }
 .chatBig {
     z-index: 200;
-    position: fixed;
+    position: absolute;
     top: 4rem;
     right:0;
     bottom:0;
@@ -788,7 +788,7 @@ html {
 }
 .chatSmall {
     z-index: 0;
-    position: fixed;
+    position: absolute;
     top: 0;
     right:0;
     bottom:0;

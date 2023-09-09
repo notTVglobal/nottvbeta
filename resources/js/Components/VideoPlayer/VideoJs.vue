@@ -1,28 +1,132 @@
 <template>
     <div>
+<!--        <video ref="videoPlayer" id="main-player" class="video-js vjs-big-play-centered vjs-fill bg-pink-700" playsinline autoplay muted>-->
+<!--        <video ref="videoPlayer" id="main-player" class="video-js"></video>-->
+<!--        <video ref="videoPlayer"-->
+<!--               id="main-player"-->
+<!--               class="video-js vjs-big-play-centered vjs-fill"-->
+<!--               v-touch="() => {clickOnVideoAction()}"-->
+<!--        />-->
         <video-js ref="videoPlayer"
                   id="main-player"
                   class="video-js vjs-big-play-centered vjs-fill"
-                  data-setup='{"controls": false, "autoplay": true, "preload": "auto", "muted": true, "playsinline": true}' >
+                  data-setup='{"controls": false, "autoplay": true, "preload": "auto", "muted": true}'
+                  playsinline
+        >
+            <!--                        <source :src='`/storage/videos/BigBuckBunny.mp4`' :type='`video/mp4`'>-->
+            <source :src='videoPlayerStore.videoSource' :type='videoPlayerStore.videoSourceType'>
+            <!--                        <source :src='src' :type='type'>-->
         </video-js>
+
     </div>
 
 </template>
+
 
 <script setup>
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js";
 import {useStreamStore} from "@/Stores/StreamStore.js";
 import {useChatStore} from "@/Stores/ChatStore.js";
 import {useUserStore} from "@/Stores/UserStore.js";
+import {ref, onMounted, onBeforeUnmount, onUnmounted} from "vue";
+import videojs from "video.js";
+import {Inertia} from "@inertiajs/inertia";
 
 let videoPlayerStore = useVideoPlayerStore();
 let streamStore = useStreamStore();
 let chatStore = useChatStore();
 let userStore = useUserStore();
 
+const props = defineProps({
+    // options: Object,
+    // id: String,
+})
+
+// let playerName = 'main-player'
+
+// let videoOptions = {
+//     autoplay: true,
+//     muted: true,
+//     controls: false,
+//     enableSourceset: true,
+//     sources: [
+//         {
+//             src:
+//             props.videoSource,
+//             type: props.videoSourceType
+//         }
+//     ]
+// }
+
+onMounted(() => {
+    // let videoPlayer = videojs('main-player', videoOptions)
+    // videoPlayer.ready(function() {
+    // })
+    // videoPlayerStore.videoSource = "/storage/videos/BigBuckBunny.mp4"
+    // videoPlayerStore.videoSourceType = "video/mp4"
+    console.log('check point 3 VideoPlayerMain')
+
+})
+
+onUnmounted(() => {
+    // if (videoPlayer) {
+    //     videoPlayer.dispose()
+    // }
+})
+
+// function clickOnVideoAction() {
+//     if (videoPlayerStore.currentPageIsStream === true) {
+//         videoPlayerStore.toggleOSD()
+//     } else {
+//         Inertia.visit('/stream')
+//     }
+//     // videoPlayerStore.ottClass = 'OttClose'
+//     // videoPlayerStore.ott = 0
+//     // if(userStore.isMobile) {
+//     //
+//     // } else {
+//     //     // videoPlayerStore.toggleOsdAndControls()
+//     // }
+//     // }
+// }
+
+
 </script>
 
-<style scoped>
+<!--<script>-->
+<!--import videojs from 'video.js';-->
+
+<!--export default {-->
+<!--    name: 'VideoPlayer',-->
+<!--    props: {-->
+<!--        options: {-->
+<!--            type: Object,-->
+<!--            default() {-->
+<!--                return {};-->
+<!--            }-->
+<!--        }-->
+<!--    },-->
+<!--    data() {-->
+<!--        return {-->
+<!--            player: null-->
+<!--        }-->
+<!--    },-->
+<!--    mounted() {-->
+<!--        this.player = videojs(this.$refs.videoPlayer, this.options, () => {-->
+<!--            this.player.log('onPlayerReady', this);-->
+<!--        });-->
+<!--    },-->
+<!--    beforeDestroy() {-->
+<!--        if (this.player) {-->
+<!--            this.player.dispose();-->
+<!--        }-->
+<!--    }-->
+<!--}-->
+
+<!--</script>-->
+
+<style>
+
 
 .vjs-default-skin .vjs-resume-modal .vjs-resume-modal-buttons {
     position: relative;
@@ -54,6 +158,14 @@ let userStore = useUserStore();
 
 .vjs-default-skin .vjs-resume-modal .vjs-resume-modal-buttons button:hover {
     background-color: #90caf9;
+}
+
+.videoPlayer {
+    width:10rem;
+    height:10rem;
+    top:0px;
+    left:0px;
+    position:absolute;
 }
 
 .vjs-modal-dialog .vjs-modal-dialog-content, .video-js .vjs-modal-dialog, .vjs-button > .vjs-icon-placeholder:before, .video-js .vjs-big-play-button .vjs-icon-placeholder:before {

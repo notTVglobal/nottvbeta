@@ -21,7 +21,7 @@
                             :active="route().current('stream')">
                                 Stream
 <!--                            <div v-if="streamStore.isLive"-->
-<!--                                class="text-xs text-white bg-red-800 uppercase flex justify-center items-center -right-4 top-1.5-->
+<!--                                class="text-xs text-white bg-red-800 uppercase flex justify-center items-center absolute -right-4 top-1.5-->
 <!--                                    font-semibold inline-block py-0.5 px-1 rounded last:mr-0 mr-1">-->
 <!--                               live-->
 <!--                            </div>-->

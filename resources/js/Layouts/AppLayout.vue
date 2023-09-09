@@ -1,9 +1,9 @@
-<template>
+z<template>
     <div class="fixed top-0 left-0 right-0 bottom-0 bg-gray-800 text-gray-200 vh-100 vw-100 overflow-hidden overscroll-y-none overscroll-x-none">
 
         <!-- Navbar for logged in user -->
         <div v-if="user">
-            <div v-if="videoPlayerStore.showNav" class="fixed top-0 w-full nav-mask">
+            <div v-show="videoPlayerStore.showNav" class="fixed top-0 w-full nav-mask">
                 <ResponsiveNavigationMenu/>
                 <NavigationMenu /></div>
         </div>
@@ -13,38 +13,33 @@
             <Login v-if="!user" :show="showLogin" @close="showLogin = false" />
         </Teleport>
 
-        <!-- Video Player -->
-        <VideoPlayerMain
-            :user="user" />
-
         <!-- Page Content -->
         <div :class="layoutClass">
             <slot /></div>
+
+        <!-- Video Player -->
+        <VideoPlayerMain
+            :user="user" />
 
     </div>
 </template>
 
 <script setup>
-import {ref, computed, onBeforeMount, onBeforeUnmount, onUpdated, defineAsyncComponent, onMounted} from "vue"
+import { ref, computed, onBeforeMount, onBeforeUnmount, onUpdated, defineAsyncComponent } from "vue"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useStreamStore } from "@/Stores/StreamStore"
 import { useUserStore } from "@/Stores/UserStore"
 import { useChatStore } from "@/Stores/ChatStore"
 import { useShopStore } from "@/Stores/ShopStore"
 import { useChannelStore } from "@/Stores/ChannelStore"
-
-import ResponsiveNavigationMenu from "@/Components/Navigation/ResponsiveNavigationMenu.vue";
-import NavigationMenu from "@/Components/Navigation/NavigationMenu.vue";
-// const ResponsiveNavigationMenu = defineAsyncComponent( () =>
-//     import('@/Components/Navigation/ResponsiveNavigationMenu'))
-// const NavigationMenu = defineAsyncComponent( () =>
-//     import('@/Components/Navigation/NavigationMenu'))
+const ResponsiveNavigationMenu = defineAsyncComponent( () =>
+    import('@/Components/Navigation/ResponsiveNavigationMenu'))
+const NavigationMenu = defineAsyncComponent( () =>
+    import('@/Components/Navigation/NavigationMenu'))
 const Login = defineAsyncComponent( () =>
     import('@/Components/Welcome/Login'))
 const VideoPlayerMain = defineAsyncComponent( () =>
     import('@/Components/VideoPlayer/VideoPlayerMain'))
-// import VideoPlayerMain from "@/Components/VideoPlayer/VideoPlayerMain.vue";
-import videojs from 'video.js'
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -55,7 +50,6 @@ let channelStore = useChannelStore()
 
 let isStreamPage = ref()
 let showLogin = ref(false)
-let videoJs = ref()
 
 let props = defineProps({
     user: Object,
@@ -71,30 +65,27 @@ const layoutClass = computed(() => ({
     'hidden lg:block': videoPlayerStore.ottClass === 'OttOpen' && userStore.isMobile
 }))
 
-// userStore.checkIsMobile()
+userStore.checkIsMobile()
 userStore.showNavDropdown = false
 
+// getFirstPlaySettings()
 setPage()
 
 onBeforeMount(async () => {
     getUser()
-})
-
-onMounted(async () => {
     await getFirstPlaySettings()
-    videoJs = videojs(document.querySelector('.video-js'));
-    videoJs.src({type: videoPlayerStore.videoSourceType, src: videoPlayerStore.videoSource});
+
 })
 
-// onUpdated(() => {
-//     userStore.showNavDropdown = false
-//     getUser()
-// })
+onUpdated(() => {
+    userStore.showNavDropdown = false
+    getUser()
+})
 
-// onBeforeUnmount(() => {
-//     videoPlayerStore.viewerCount = 0
-//     disconnect();
-// });
+onBeforeUnmount(() => {
+    videoPlayerStore.viewerCount = 0
+    disconnect();
+});
 
 function setPage() {
     isStreamPage = videoPlayerStore.currentPage === "stream";
@@ -141,8 +132,8 @@ function showOSD() {
     }
 }
 
-// function disconnect() {
-//     window.Echo.leave("channel." + channelStore.currentChannelId);
-//     console.log('CHANNEL DISCONNECTED');
-// }
+function disconnect() {
+    window.Echo.leave("channel." + channelStore.currentChannelId);
+    console.log('CHANNEL DISCONNECTED');
+}
 </script>
