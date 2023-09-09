@@ -25,7 +25,7 @@ z<template>
 </template>
 
 <script setup>
-import { ref, computed, onBeforeMount, onBeforeUnmount, onUpdated, defineAsyncComponent } from "vue"
+import {ref, computed, onBeforeMount, onBeforeUnmount, onUpdated, defineAsyncComponent, onMounted} from "vue"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useStreamStore } from "@/Stores/StreamStore"
 import { useUserStore } from "@/Stores/UserStore"
@@ -41,8 +41,10 @@ import NavigationMenu from "@/Components/Navigation/NavigationMenu.vue";
 //     import('@/Components/Navigation/NavigationMenu'))
 const Login = defineAsyncComponent( () =>
     import('@/Components/Welcome/Login'))
-const VideoPlayerMain = defineAsyncComponent( () =>
-    import('@/Components/VideoPlayer/VideoPlayerMain'))
+// const VideoPlayerMain = defineAsyncComponent( () =>
+//     import('@/Components/VideoPlayer/VideoPlayerMain'))
+import VideoPlayerMain from "@/Components/VideoPlayer/VideoPlayerMain.vue";
+import videojs from 'video.js'
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -53,6 +55,7 @@ let channelStore = useChannelStore()
 
 let isStreamPage = ref()
 let showLogin = ref(false)
+let videoJs = ref()
 
 let props = defineProps({
     user: Object,
@@ -71,13 +74,16 @@ const layoutClass = computed(() => ({
 userStore.checkIsMobile()
 userStore.showNavDropdown = false
 
-// getFirstPlaySettings()
 setPage()
 
 onBeforeMount(async () => {
     getUser()
-    await getFirstPlaySettings()
+})
 
+onMounted(async () => {
+    await getFirstPlaySettings()
+    videoJs = videojs(document.querySelector('.video-js'));
+    videoJs.src({type: videoPlayerStore.videoSourceType, src: videoPlayerStore.videoSource});
 })
 
 onUpdated(() => {

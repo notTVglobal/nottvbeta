@@ -5,7 +5,6 @@
                   class="video-js vjs-big-play-centered vjs-fill"
                   data-setup='{"controls": false, "autoplay": true, "preload": "auto", "muted": true}'
                   playsinline >
-            <source :src='videoPlayerStore.videoSource' :type='videoPlayerStore.videoSourceType'>
         </video-js>
     </div>
 
