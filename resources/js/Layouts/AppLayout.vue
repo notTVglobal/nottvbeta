@@ -86,10 +86,10 @@ onMounted(async () => {
     videoJs.src({type: videoPlayerStore.videoSourceType, src: videoPlayerStore.videoSource});
 })
 
-onUpdated(() => {
-    userStore.showNavDropdown = false
-    getUser()
-})
+// onUpdated(() => {
+//     userStore.showNavDropdown = false
+//     getUser()
+// })
 
 onBeforeUnmount(() => {
     videoPlayerStore.viewerCount = 0
