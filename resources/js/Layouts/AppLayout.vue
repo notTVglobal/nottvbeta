@@ -41,9 +41,9 @@ import NavigationMenu from "@/Components/Navigation/NavigationMenu.vue";
 //     import('@/Components/Navigation/NavigationMenu'))
 const Login = defineAsyncComponent( () =>
     import('@/Components/Welcome/Login'))
-// const VideoPlayerMain = defineAsyncComponent( () =>
-//     import('@/Components/VideoPlayer/VideoPlayerMain'))
-import VideoPlayerMain from "@/Components/VideoPlayer/VideoPlayerMain.vue";
+const VideoPlayerMain = defineAsyncComponent( () =>
+    import('@/Components/VideoPlayer/VideoPlayerMain'))
+// import VideoPlayerMain from "@/Components/VideoPlayer/VideoPlayerMain.vue";
 import videojs from 'video.js'
 
 let videoPlayerStore = useVideoPlayerStore()
