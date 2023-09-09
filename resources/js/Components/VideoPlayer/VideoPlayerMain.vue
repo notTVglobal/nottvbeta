@@ -1,24 +1,8 @@
 <template>
     <div>
-<!--    <div :class="videoPlayerStore.videoContainerClass">-->
-<!--        <div :class="videoPlayerStore.class">-->
-
-
-
-<!--            <div class="z-50 text-black fixed top-0 bottom-0 left-0 right-0 item-center mx-auto my-auto pt-36 bg-purple-300">{{orientation}}</div>-->
-
             <!-- Video Player -->
             <div v-touch="() => {clickOnVideoAction()}" :class="videoContainer">
                 <div :class="video">
-<!--                    <video-js ref="videoPlayer"-->
-<!--                           id="main-player"-->
-<!--                           class="video-js vjs-big-play-centered vjs-fill"-->
-<!--                           data-setup='{"controls": true, "autoplay": true, "preload": "auto", "muted": true, "playsline": true}'-->
-<!--                    >-->
-<!--&lt;!&ndash;                        <source :src='`/storage/videos/BigBuckBunny.mp4`' :type='`video/mp4`'>&ndash;&gt;-->
-<!--                        <source :src='videoPlayerStore.videoSource' :type='videoPlayerStore.videoSourceType'>-->
-<!--&lt;!&ndash;                        <source :src='src' :type='type'>&ndash;&gt;-->
-<!--                    </video-js>-->
                     <videoJs />
                 </div>
             </div>
@@ -26,94 +10,54 @@
 
 
     <!-- TopRight Video -->
-            <div v-if="!videoPlayerStore.fullPage && user">
-
-<!--                &lt;!&ndash; !isMobile &ndash;&gt;-->
-<!--                <div v-if="!userStore.isMobile" >-->
 
                 <!-- notTV Bug -->
-                <div class="bugTopRightContainer">
+                <div v-if="!videoPlayerStore.fullPage && user" class="bugTopRightContainer">
                     <img :src="`/storage/images/logo_white_512.png`" class="bugTopRightClass"></div>
 
-                <!-- On Screen Display (OSD)-->
-<!--                <OsdTopRight v-if="videoPlayerStore.showOSD" class="" />-->
-
                 <!-- Video Player Controls-->
-                <VideoControlsTopRight v-if="videoPlayerStore.showControls" class="hidden lg:block" />
+                <VideoControlsTopRight v-if="!videoPlayerStore.fullPage && user && videoPlayerStore.showControls" class="hidden lg:block" />
 
-<!--                </div>-->
                 <!-- OTT Buttons and Displays -->
-                <OttTopRightButtons />
-                <OttTopRightDisplayNowPlayingInfo :user="user"/>
-                <OttTopRightDisplayPlaylist :user="user"/>
-                <OttTopRightDisplayChannels :user="user"/>
-                <OttTopRightDisplayChat :user="user"/>
-                <OttTopRightDisplayFilters :user="user"/>
-
-            </div>
-
-
-
-
-        <!-- Mobile FullPage -->
-<!--                <div v-if="userStore.isMobile">-->
-
-<!--                    &lt;!&ndash; notTV Bug &ndash;&gt;-->
-<!--                    <div v-show="! videoPlayerStore.showOSD" class="fixed h-screen top-4 left-5 opacity-10 z-50">-->
-<!--                        <img :src="`/storage/images/logo_white_512.png`" class="block h-9 w-auto shrink-0"></div>-->
-
-<!--                    &lt;!&ndash; On Screen Display (OSD) &ndash;&gt;-->
-<!--                    <OsdFullPageMobile v-show="videoPlayerStore.showOSD"/>-->
-
-<!--                    &lt;!&ndash; Video Player Controls &ndash;&gt;-->
-<!--                    <VideoControlsFullPageMobile v-show="videoPlayerStore.showControls" />-->
-
-<!--                    &lt;!&ndash; Over The Top (OTT) &ndash;&gt;-->
-<!--                    <OttFullPageButtons v-show="videoPlayerStore.showOttButtons" />-->
-<!--                    <OttFullPageDisplayChannels />-->
-<!--                    <OttFullPageDisplayPlaylist />-->
-<!--                    <OttFullPageDisplayChatMobile :user="user"/>-->
-<!--                    <OttFullPageDisplayFilters />-->
-
-<!--                </div>-->
+                <OttTopRightButtons v-if="!videoPlayerStore.fullPage && user"/>
+                <OttTopRightDisplayNowPlayingInfo v-if="!videoPlayerStore.fullPage && user" :user="user"/>
+                <OttTopRightDisplayPlaylist v-if="!videoPlayerStore.fullPage && user" :user="user"/>
+                <OttTopRightDisplayChannels v-if="!videoPlayerStore.fullPage && user" :user="user"/>
+                <OttTopRightDisplayChat v-if="!videoPlayerStore.fullPage && user" :user="user"/>
+                <OttTopRightDisplayFilters v-if="!videoPlayerStore.fullPage && user" :user="user"/>
 
 
         <!-- FullPage -->
-        <div v-if="videoPlayerStore.fullPage && user">
 
                 <!-- notTV Bug -->
-                <div v-if="! videoPlayerStore.showOSD" class="bugFullPageContainer">
+                <div v-if="videoPlayerStore.fullPage && user && !videoPlayerStore.showOSD" class="bugFullPageContainer">
                     <img :src="`/storage/images/logo_white_512.png`" class="bugFullPageClass"></div>
 
                 <!-- On Screen Display (OSD) -->
-                <OsdFullPage v-if="videoPlayerStore.showOSD"/>
+                <OsdFullPage v-if="videoPlayerStore.fullPage && user && videoPlayerStore.showOSD"/>
 
                 <!-- Video Player Controls -->
-                <VideoControlsFullPage v-if="videoPlayerStore.showControls" />
+                <VideoControlsFullPage v-if="videoPlayerStore.fullPage && user && videoPlayerStore.showControls" />
 
                 <!-- Over The Top (OTT) -->
-                <OttFullPageButtons v-if="videoPlayerStore.showOSD"/>
-                <OttFullPageDisplayChannels />
-                <OttFullPageDisplayPlaylist />
-                <OttFullPageDisplayChatStandard :user="user"/>
-                <OttFullPageDisplayFilters />
+                <OttFullPageButtons v-if="videoPlayerStore.fullPage && user && videoPlayerStore.showOSD"/>
+                <OttFullPageDisplayChannels v-if="videoPlayerStore.fullPage && user" />
+                <OttFullPageDisplayPlaylist v-if="videoPlayerStore.fullPage && user"/>
+                <OttFullPageDisplayChatStandard v-if="videoPlayerStore.fullPage && user" :user="user"/>
+                <OttFullPageDisplayFilters v-if="videoPlayerStore.fullPage && user"/>
 
-            </div>
-<!--        </div>-->
-<!--    </div>-->
 </div>
 
 </template>
 
 
 <script setup>
-import { computed, ref, onUnmounted, defineAsyncComponent } from 'vue'
+import { computed, ref, defineAsyncComponent } from 'vue'
 import { Inertia } from "@inertiajs/inertia"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useStreamStore } from "@/Stores/StreamStore"
 import { useChatStore } from "@/Stores/ChatStore"
 import { useUserStore } from "@/Stores/UserStore"
-import videojs from 'video.js'
 
 const OttFullPageButtons = defineAsyncComponent( () =>
     import('@/Components/VideoPlayer/OttButtons/OttFullPageButtons'))
