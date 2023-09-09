@@ -211,12 +211,12 @@ chatStore.showChat = false
 streamStore.showChannels = false
 streamStore.showOSD = false
 
-onUnmounted(() => {
-    let player = videojs('main-player');
-    player.on('ended', function() {
-        this.dispose();
-    });
-})
+// onUnmounted(() => {
+//     let player = videojs('main-player');
+//     player.on('ended', function() {
+//         this.dispose();
+//     });
+// })
 
 
 // tec21 (03/03/23): this doesn't seem to be working :-(

@@ -13,13 +13,13 @@ z<template>
             <Login v-if="!user" :show="showLogin" @close="showLogin = false" />
         </Teleport>
 
-        <!-- Page Content -->
-        <div :class="layoutClass">
-            <slot /></div>
-
         <!-- Video Player -->
         <VideoPlayerMain
             :user="user" />
+
+        <!-- Page Content -->
+        <div :class="layoutClass">
+            <slot /></div>
 
     </div>
 </template>
@@ -71,7 +71,7 @@ const layoutClass = computed(() => ({
     'hidden lg:block': videoPlayerStore.ottClass === 'OttOpen' && userStore.isMobile
 }))
 
-userStore.checkIsMobile()
+// userStore.checkIsMobile()
 userStore.showNavDropdown = false
 
 setPage()
@@ -91,10 +91,10 @@ onMounted(async () => {
 //     getUser()
 // })
 
-onBeforeUnmount(() => {
-    videoPlayerStore.viewerCount = 0
-    disconnect();
-});
+// onBeforeUnmount(() => {
+//     videoPlayerStore.viewerCount = 0
+//     disconnect();
+// });
 
 function setPage() {
     isStreamPage = videoPlayerStore.currentPage === "stream";
@@ -141,8 +141,8 @@ function showOSD() {
     }
 }
 
-function disconnect() {
-    window.Echo.leave("channel." + channelStore.currentChannelId);
-    console.log('CHANNEL DISCONNECTED');
-}
+// function disconnect() {
+//     window.Echo.leave("channel." + channelStore.currentChannelId);
+//     console.log('CHANNEL DISCONNECTED');
+// }
 </script>

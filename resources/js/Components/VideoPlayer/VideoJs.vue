@@ -3,8 +3,7 @@
         <video-js ref="videoPlayer"
                   id="main-player"
                   class="video-js vjs-big-play-centered vjs-fill"
-                  data-setup='{"controls": false, "autoplay": true, "preload": "auto", "muted": true}'
-                  playsinline >
+                  data-setup='{"controls": false, "autoplay": true, "preload": "auto", "muted": true, "playsinline": true}' >
         </video-js>
     </div>
 
