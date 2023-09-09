@@ -1,5 +1,5 @@
 z<template>
-    <div class="absolute top-0 left-0 right-0 bottom-0 bg-gray-800 text-gray-200 vh-100 vw-100 overflow-hidden overscroll-y-none overscroll-x-none">
+    <div class="fixed top-0 left-0 right-0 bottom-0 bg-gray-800 text-gray-200 vh-100 vw-100 overflow-hidden overscroll-y-none overscroll-x-none">
 
         <!-- Navbar for logged in user -->
         <div v-if="user">
@@ -13,29 +13,33 @@ z<template>
             <Login v-if="!user" :show="showLogin" @close="showLogin = false" />
         </Teleport>
 
-        <!-- Video Player -->
-        <VideoPlayerMain
-            :user="user" />
-
         <!-- Page Content -->
         <div :class="layoutClass">
             <slot /></div>
+
+        <!-- Video Player -->
+        <VideoPlayerMain
+            :user="user" />
 
     </div>
 </template>
 
 <script setup>
 import { ref, computed, onBeforeMount, onBeforeUnmount, onUpdated, defineAsyncComponent } from "vue"
-import ResponsiveNavigationMenu from "@/Components/Navigation/ResponsiveNavigationMenu"
-import NavigationMenu from "@/Components/Navigation/NavigationMenu"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useStreamStore } from "@/Stores/StreamStore"
 import { useUserStore } from "@/Stores/UserStore"
 import { useChatStore } from "@/Stores/ChatStore"
 import { useShopStore } from "@/Stores/ShopStore"
 import { useChannelStore } from "@/Stores/ChannelStore"
-import VideoPlayerMain from "@/Components/VideoPlayer/VideoPlayerMain"
-import Login from "@/Components/Welcome/Login"
+const ResponsiveNavigationMenu = defineAsyncComponent( () =>
+    import('@/Components/Navigation/ResponsiveNavigationMenu'))
+const NavigationMenu = defineAsyncComponent( () =>
+    import('@/Components/Navigation/NavigationMenu'))
+const Login = defineAsyncComponent( () =>
+    import('@/Components/Welcome/Login'))
+const VideoPlayerMain = defineAsyncComponent( () =>
+    import('@/Components/VideoPlayer/VideoPlayerMain'))
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -47,17 +51,45 @@ let channelStore = useChannelStore()
 let isStreamPage = ref()
 let showLogin = ref(false)
 
-function setPage() {
-    isStreamPage = videoPlayerStore.currentPage === "stream";
-}
-
-setPage()
-
-userStore.checkIsMobile()
-
 let props = defineProps({
     user: Object,
 });
+
+const pageHide = computed(() => ({
+    'hidden lg:block': videoPlayerStore.ottClass === 'OttOpen' && userStore.isMobile
+}))
+
+const layoutClass = computed(() => ({
+    layoutWelcome: !props.user,
+    layoutLoggedIn: props.user,
+    'hidden lg:block': videoPlayerStore.ottClass === 'OttOpen' && userStore.isMobile
+}))
+
+userStore.checkIsMobile()
+userStore.showNavDropdown = false
+
+// getFirstPlaySettings()
+setPage()
+
+onBeforeMount(async () => {
+    getUser()
+    await getFirstPlaySettings()
+
+})
+
+onUpdated(() => {
+    userStore.showNavDropdown = false
+    getUser()
+})
+
+onBeforeUnmount(() => {
+    videoPlayerStore.viewerCount = 0
+    disconnect();
+});
+
+function setPage() {
+    isStreamPage = videoPlayerStore.currentPage === "stream";
+}
 
 function getUser() {
     if (props.user) {
@@ -71,19 +103,19 @@ function getUser() {
     userStore.isAdmin()
 }
 
-userStore.showNavDropdown = false
-onBeforeMount(async () => {
-    getUser()
-})
+async function getFirstPlaySettings() {
+    await axios.get('/api/app_settings')
+        .then(response => {
+            videoPlayerStore.videoSource = response.data[0].first_play_video_source
+            videoPlayerStore.videoSourceType = response.data[0].first_play_video_source_type
+            videoPlayerStore.videoName = response.data[0].first_play_video_name
+            console.log('app settings retrieved.');
 
-onUpdated(() => {
-    userStore.showNavDropdown = false
-    getUser()
-})
-
-const pageHide = computed(() => ({
-    'hidden lg:block': videoPlayerStore.ottClass === 'OttOpen' && userStore.isMobile
-}))
+        })
+        .catch(error => {
+            console.log(error)
+        })
+}
 
 function hideOSD() {
     videoPlayerStore.showOSD = false;
@@ -104,17 +136,4 @@ function disconnect() {
     window.Echo.leave("channel." + channelStore.currentChannelId);
     console.log('CHANNEL DISCONNECTED');
 }
-
-const layoutClass = computed(() => ({
-    layoutWelcome: !props.user,
-    layoutLoggedIn: props.user,
-    'hidden lg:block': videoPlayerStore.ottClass === 'OttOpen' && userStore.isMobile
-}))
-
-onBeforeUnmount(() => {
-    videoPlayerStore.viewerCount = 0
-    disconnect();
-});
-
-
 </script>

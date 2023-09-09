@@ -28,6 +28,16 @@
                                 @click="videoPlayerStore.mute()">
                             MUTE</button>
 
+                        <button v-if="!videoPlayerStore.paused"
+                                class="text-xs md:text-md bg-gray-800 rounded-full p-2 hover:bg-gray-600"
+                                @click="videoPlayerStore.pause()">
+                            PAUSE</button>
+
+                        <button v-if="videoPlayerStore.paused"
+                                class="text-xs md:text-md bg-gray-800 rounded-full p-2 hover:bg-gray-600"
+                                @click="videoPlayerStore.play()">
+                            PLAY</button>
+
                     </div>
 
     </Transition>

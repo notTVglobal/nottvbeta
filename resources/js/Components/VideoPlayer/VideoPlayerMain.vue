@@ -10,8 +10,16 @@
             <!-- Video Player -->
             <div v-touch="() => {clickOnVideoAction()}" :class="videoContainer">
                 <div :class="video">
-                    <video id="main-player"
-                           class="video-js vjs-big-play-centered vjs-fill" />
+<!--                    <video-js ref="videoPlayer"-->
+<!--                           id="main-player"-->
+<!--                           class="video-js vjs-big-play-centered vjs-fill"-->
+<!--                           data-setup='{"controls": true, "autoplay": true, "preload": "auto", "muted": true, "playsline": true}'-->
+<!--                    >-->
+<!--&lt;!&ndash;                        <source :src='`/storage/videos/BigBuckBunny.mp4`' :type='`video/mp4`'>&ndash;&gt;-->
+<!--                        <source :src='videoPlayerStore.videoSource' :type='videoPlayerStore.videoSourceType'>-->
+<!--&lt;!&ndash;                        <source :src='src' :type='type'>&ndash;&gt;-->
+<!--                    </video-js>-->
+                    <videoJs />
                 </div>
             </div>
 
@@ -99,7 +107,7 @@
 
 
 <script setup>
-import { onMounted, onUnmounted, computed, onUpdated, ref, reactive, watch } from 'vue'
+import {onMounted, computed, ref, onBeforeMount, onUnmounted, defineAsyncComponent} from 'vue'
 import { Inertia } from "@inertiajs/inertia"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useStreamStore } from "@/Stores/StreamStore"
@@ -118,7 +126,6 @@ import OttTopRightDisplayFilters from "@/Components/VideoPlayer/OttTopRightDispl
 import OttTopRightDisplayChat from "@/Components/VideoPlayer/OttTopRightDisplay/Chat.vue";
 import OttTopRightDisplayPlaylist from "@/Components/VideoPlayer/OttTopRightDisplay/Playlist.vue";
 import OttTopRightDisplayChannels from "@/Components/VideoPlayer/OttTopRightDisplay/Channels.vue";
-import Login from "@/Components/Welcome/Login"
 import VideoControlsFullPage from "@/Components/VideoPlayer/VideoControls/VideoControlsFullPage"
 import VideoControlsFullPageMobile from "@/Components/VideoPlayer/VideoControls/VideoControlsFullPageMobile"
 import VideoControlsTopRight from "@/Components/VideoPlayer/VideoControls/VideoControlsTopRight"
@@ -126,86 +133,55 @@ import OsdTopRight from "@/Components/VideoPlayer/Osd/OsdTopRight.vue"
 import OsdFullPage from "@/Components/VideoPlayer/Osd/OsdFullPage.vue"
 import OsdFullPageMobile from "@/Components/VideoPlayer/Osd/OsdFullPageMobile.vue"
 import videojs from 'video.js'
-import { useScreenOrientation } from '@vueuse/core'
-
+import { tryOnBeforeMount, useScreenOrientation } from '@vueuse/core'
+// import VideoJs from "@/Components/VideoPlayer/VideoJs.vue";
+const VideoJs = defineAsyncComponent( () =>
+    import('@/Components/VideoPlayer/VideoJs')
+)
 
 let videoPlayerStore = useVideoPlayerStore()
 let streamStore = useStreamStore()
 let chatStore = useChatStore()
 let userStore = useUserStore()
 
-videoPlayerStore.paused = false
-chatStore.showChat = false
-streamStore.showChannels = false
-streamStore.showOSD = false
-
-const isMobile = ref({
-    mobile: userStore.isMobile,
-})
-
 let showLogin = ref(false)
+let screenWidth = ref(screen.width)
+let mouseActive = false
 
 let props = defineProps({
-    src: String,
+    src: '',
+    type: '',
     user: Object,
     can: Object,
     videoSource: '',
     videoSourceType: '',
 })
 
-let videoOptions = ref()
+const isMobile = ref({
+    mobile: userStore.isMobile,
+})
 
-function setVideoOptions() {
-    videoOptions = {
-        autoplay: true,
-        playsinline: true,
-        muted: true,
-        controls: false,
-        enableSourceset: true,
-        sources: [
-            {
-                src:
-                videoPlayerStore.videoSource,
-                type: videoPlayerStore.videoSourceType
-            }
-        ]
-    }
+const videoContainer = computed(() => ({
+    welcomeVideoContainer: userStore.currentPage === 'welcome',
+    fullPageVideoContainer: videoPlayerStore.fullPage && !videoPlayerStore.pip && userStore.currentPage !== 'welcome',
+    // fullPageVideoContainer: videoPlayerStore.fullPage && !userStore.isMobile,
+    // fullPageVideoContainerMobile: videoPlayerStore.fullPage && userStore.isMobile,
+    topRightVideoContainer: !videoPlayerStore.fullPage && !videoPlayerStore.pip && userStore.currentPage !== 'welcome',
+    // topRightVideoContainer: !videoPlayerStore.fullPage && !userStore.isMobile,
+    // topRightVideoContainerMobile: !videoPlayerStore.fullPage && userStore.isMobile,
+    pipVideoContainer: videoPlayerStore.pip && userStore.currentPage !== 'welcome'
+}))
 
-}
-let videoJs = ref()
-async function getFirstPlaySettings() {
-    await axios.get('/api/app_settings')
-        .then(response => {
-            videoPlayerStore.videoSource = response.data[0].first_play_video_source
-            videoPlayerStore.videoSourceType = response.data[0].first_play_video_source_type
-            videoPlayerStore.videoName = response.data[0].first_play_video_name
-            console.log('app settings retrieved.');
-
-        })
-        .catch(error => {
-            console.log(error)
-        })
-    setVideoOptions()
-    videoJs = videojs('main-player', videoOptions)
-}
-
-
-
-// let videoOptions = {
-//     autoplay: true,
-//     playsinline: true,
-//     muted: true,
-//     controls: false,
-//     enableSourceset: true,
-//     sources: [
-//         {
-//             src:
-//             videoPlayerStore.videoSource,
-//             type: videoPlayerStore.videoSourceType
-//         }
-//     ]
-// }
-getFirstPlaySettings()
+const video = computed(() => ({
+    welcomeVideoClass: userStore.currentPage === 'welcome',
+    fullPageVideoClass: videoPlayerStore.fullPage && !videoPlayerStore.pip && userStore.currentPage !== 'welcome',
+    // fullPageVideoClass: videoPlayerStore.fullPage && !userStore.isMobile,
+    // fullPageVideoClassMobile: videoPlayerStore.fullPage && userStore.isMobile,
+    topRightVideoClass: !videoPlayerStore.fullPage && !videoPlayerStore.pip && userStore.currentPage !== 'welcome',
+    // topRightVideoClass: !videoPlayerStore.fullPage && !userStore.isMobile,
+    // topRightVideoClassMobile: !videoPlayerStore.fullPage && userStore.isMobile,
+    pipVideoClass: videoPlayerStore.pip && userStore.currentPage !== 'welcome'
+}))
 
 // const {
 //     isSupported,
@@ -215,8 +191,18 @@ getFirstPlaySettings()
 //     unlockOrientation,
 // } = useScreenOrientation()
 
+videoPlayerStore.paused = false
+chatStore.showChat = false
+streamStore.showChannels = false
+streamStore.showOSD = false
+
+
+
+onBeforeMount( () => {
+    // getFirstPlaySettings()
+})
+
 onMounted(() => {
-    // let videoJs = videojs('main-player', videoOptions)
     // if (userStore.isMobile) {
     //     if (orientation==='landscape-secondary' || orientation==='landscape-primary') {
     //         videoPlayerStore.hideOsdAndControlsAndNav()
@@ -224,13 +210,13 @@ onMounted(() => {
     //         videoPlayerStore.showOsdAndControlsAndNav()
     //     }
     // }
-
 })
-//
+
 onUnmounted(() => {
-    if (videoPlayer) {
-        videoPlayer.dispose()
-    }
+    let player = videojs('main-player');
+    player.on('ended', function() {
+        this.dispose();
+    });
 })
 
 
@@ -250,7 +236,21 @@ onUnmounted(() => {
 //     }
 // })
 
-
+// async function getFirstPlaySettings() {
+//     await axios.get('/api/app_settings')
+//         .then(response => {
+//             videoPlayerStore.videoSource = response.data[0].first_play_video_source
+//             videoPlayerStore.videoSourceType = response.data[0].first_play_video_source_type
+//             videoPlayerStore.videoName = response.data[0].first_play_video_name
+//             console.log('app settings retrieved.');
+//
+//         })
+//         .catch(error => {
+//             console.log(error)
+//         })
+//     // setVideoOptions()
+//     // videoJs = videojs('main-player', videoOptions)
+// }
 
 function backToPage() {
     videoPlayerStore.makeVideoTopRight();
@@ -258,7 +258,7 @@ function backToPage() {
     streamStore.showOSD = false;
 }
 
-let screenWidth = ref(screen.width)
+
 
 function clickOnVideoAction() {
 
@@ -292,8 +292,6 @@ function clickOnVideoAction() {
     // }
 }
 
-let mouseActive = false
-
 function mouseEnter(event) {
     mouseActive = true
     // console.log(mouseActive);
@@ -326,26 +324,6 @@ function mouseMove(event) {
     // }, 3000);
 }
 
-const videoContainer = computed(() => ({
-    fullPageVideoContainer: videoPlayerStore.fullPage && !videoPlayerStore.pip,
-    // fullPageVideoContainer: videoPlayerStore.fullPage && !userStore.isMobile,
-    // fullPageVideoContainerMobile: videoPlayerStore.fullPage && userStore.isMobile,
-    topRightVideoContainer: !videoPlayerStore.fullPage && !videoPlayerStore.pip,
-    // topRightVideoContainer: !videoPlayerStore.fullPage && !userStore.isMobile,
-    // topRightVideoContainerMobile: !videoPlayerStore.fullPage && userStore.isMobile,
-    pipVideoContainer: videoPlayerStore.pip,
-}))
-
-const video = computed(() => ({
-    fullPageVideoClass: videoPlayerStore.fullPage && !videoPlayerStore.pip,
-    // fullPageVideoClass: videoPlayerStore.fullPage && !userStore.isMobile,
-    // fullPageVideoClassMobile: videoPlayerStore.fullPage && userStore.isMobile,
-    topRightVideoClass: !videoPlayerStore.fullPage && !videoPlayerStore.pip,
-    // topRightVideoClass: !videoPlayerStore.fullPage && !userStore.isMobile,
-    // topRightVideoClassMobile: !videoPlayerStore.fullPage && userStore.isMobile,
-    pipVideoClass: videoPlayerStore.pip,
-}))
-
 </script>
 
 <!-- A note about audio Tracks. -->
@@ -365,47 +343,33 @@ whatever it is you are watching/clicking through. A web3 video editor. -->
 
 
 <!--<script>-->
-<!--import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore"-->
-<!--import VideoPlayer from '@/Components/VideoPlayer/VideoJs'-->
+<!--import videojs from 'video.js';-->
 
-<!--import { ref } from 'vue'-->
-<!--console.log('check point A VideoPlayerMain')-->
 <!--export default {-->
 <!--    name: 'VideoPlayer',-->
-<!--    components: {-->
-<!--        VideoPlayer-->
+<!--    props: {-->
+<!--        options: {-->
+<!--            type: Object,-->
+<!--            default() {-->
+<!--                return {};-->
+<!--            }-->
+<!--        }-->
 <!--    },-->
 <!--    data() {-->
-<!--        const videoPlayerStore = useVideoPlayerStore()-->
-<!--        videoPlayerStore.videoSource = "/storage/videos/BigBuckBunny.mp4"-->
-<!--        videoPlayerStore.videoSourceType = "video/mp4"-->
-<!--        const videoSource = videoPlayerStore.videoSource-->
-<!--        const videoSourceType = videoPlayerStore.videoSourceType-->
 <!--        return {-->
-<!--            videoOptions: {-->
-<!--                autoplay: true,-->
-<!--                playsinline: true,-->
-<!--                muted: true,-->
-<!--                controls: false,-->
-<!--                enableSourceset: true,-->
-<!--                sources: [-->
-<!--                    {-->
-<!--                        src:-->
-<!--                            videoSource,-->
-<!--                        type: videoSourceType-->
-<!--                    }-->
-<!--                ]-->
-<!--            }-->
-<!--        };-->
+<!--            player: null-->
+<!--        }-->
 <!--    },-->
-<!--    methods: {-->
-<!--        playVideo(){-->
-<!--            this.play()-->
+<!--    mounted() {-->
+<!--        this.player = videojs(this.$refs.videoPlayer, this.options, () => {-->
+<!--            this.player.log('onPlayerReady', this);-->
+<!--        });-->
+<!--    },-->
+<!--    beforeDestroy() {-->
+<!--        if (this.player) {-->
+<!--            this.player.dispose();-->
 <!--        }-->
 <!--    }-->
-<!--};-->
-
-
-
+<!--}-->
 <!--</script>-->
 
