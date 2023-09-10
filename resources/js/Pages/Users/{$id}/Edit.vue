@@ -30,9 +30,23 @@
                     <div class=""><span class="text-xs uppercase">Subscription Status: </span><span class="font-semibold">{{props.userEdit.subscriptionStatus}}</span></div>
                     <div class="" v-if="props.userEdit.role_id == 4"><span class="text-xs uppercase">Creator #: </span><span class="font-semibold">{{props.userEdit.creatorNumber}}</span></div>
                 </div>
-                <div class="flex align-bottom">
-                    <button v-if="!isNewsPerson" @click="addUserToNewsroom" class="text-white bg-yellow-600 hover:bg-yellow-800 hover:text-gray-100 rounded px-4 py-2 w-fit h-12">Add User to Newsroom</button>
-                    <button v-if="isNewsPerson" @click="removeUserFromNewsroom" class="text-white bg-yellow-600 hover:bg-yellow-800 hover:text-gray-100 rounded px-4 py-2 w-fit h-12">Remove User from Newsroom</button>
+                <div class="flex flex-col space-y-2 align-bottom">
+                    <button v-if="!isNewsPerson"
+                            @click="addUserToNewsroom"
+                            class="text-white font-semibold bg-yellow-600 hover:bg-yellow-800 hover:text-gray-100 rounded px-4 py-2 w-fit h-12">
+                        Add User to Newsroom</button>
+                    <button v-if="isNewsPerson"
+                            @click="removeUserFromNewsroom"
+                            class="text-white font-semibold bg-yellow-600 hover:bg-yellow-800 hover:text-gray-100 rounded px-4 py-2 w-fit h-12">
+                        Remove User from Newsroom</button>
+                    <button v-if="!isVip"
+                            @click="addUserToVip"
+                            class="text-white font-semibold bg-yellow-600 hover:bg-yellow-800 hover:text-gray-100 rounded px-4 py-2 w-fit h-12">
+                        Make User a VIP</button>
+                    <button v-if="isVip"
+                            @click="removeUserFromVip"
+                            class="text-white font-semibold bg-yellow-600 hover:bg-yellow-800 hover:text-gray-100 rounded px-4 py-2 w-fit h-12">
+                        Remove User from VIP</button>
                 </div>
             </div>
 
@@ -248,6 +262,9 @@ onMounted(() => {
 let props = defineProps({
     userEdit: Object,
     isNewsPerson: Boolean,
+    isVip: Boolean,
+    isSubscriber: Boolean,
+    subscriptionStatus: '',
     message: String,
 });
 
@@ -284,26 +301,25 @@ function addUserToNewsroom() {
 }
 
 function removeUserFromNewsroom() {
-
     if (confirm("Are you sure you want to remove this person from the news team?")) {
-        form.post(route('newsperson.destroy', props.userEdit.id));
-        // Inertia.route('/newsroom/newsperson/destroy', {
-        //     method: 'post',
-        //     data: {
-        //         id: props.userEdit.id,
-        //     },
-        // })
+        form.put(route('newsperson.destroy', props.userEdit.id));
     }
-    // Inertia.visit('/newsroom/newsperson/destroy', {
-    //     method: 'post',
-    //     data: {
-    //         id: props.userEdit.id,
-    //     },
+}
+
+function addUserToVip() {
+    if (confirm("Are you sure you want to add this person to VIP?")) {
+        form.put(route('user.vip.add', {'id': props.userEdit.id}));
+    }
+    // Inertia.reload({
+    //     only: ["userEdit", "isVip"],
     // })
 }
-// let submit = () => {
-//     form.put('/admin/users');
-// };
+
+function removeUserFromVip() {
+    if (confirm("Are you sure you want to remove this person from VIP?")) {
+        form.put(route('user.vip.remove', props.userEdit.id));
+    }
+}
 
 let showMessage = ref(true);
 

@@ -4434,6 +4434,11 @@ html {
   background-color: rgb(113 63 18 / var(--tw-bg-opacity));
 }
 
+.bg-purple-950 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(59 7 100 / var(--tw-bg-opacity));
+}
+
 .bg-opacity-0 {
   --tw-bg-opacity: 0;
 }

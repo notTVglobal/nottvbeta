@@ -84,6 +84,8 @@
                                                     <Link :href="`/users/${user.id}`" class="text-blue-800 dark:text-blue-200 hover:text-blue-600 dark:hover:text-blue-400">{{ user.name }}</Link>
                                                     <span v-if="user.isAdmin" class="ml-2 bg-red-800 text-white text-xs font-bold rounded-lg py-1 px-2">Admin</span>
                                                     <span v-if="user.isNewsPerson" class="ml-2 bg-orange-600 text-white text-xs font-bold rounded-lg py-1 px-2">News Team</span>
+                                                    <span v-if="user.isVip" class="ml-2 bg-purple-700 text-white text-xs font-bold rounded-lg py-1 px-2">VIP</span>
+
                                                 </th>
                                                 <th
                                                     scope="row"
@@ -162,6 +164,8 @@ let props = defineProps({
     can: Object,
     message: String
 });
+
+console.log(props.message)
 
 const form = useForm({
     userId: '',

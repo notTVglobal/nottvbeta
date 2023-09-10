@@ -51,6 +51,9 @@ class UsersController extends Controller
                     'role' => role($user->role_id),
                     'isAdmin' => $user->isAdmin,
                     'isNewsPerson' => $user->newsPerson,
+                    'isSubscriber' => $user->subscribed('default'),
+                    'subscriptionStatus' => $user->subscription('default'),
+                    'isVip' => $user->isVip,
                     'can' => [
                         'edit' => Auth::user()->can('edit', $user)
                     ],
@@ -175,6 +178,7 @@ class UsersController extends Controller
         return Inertia::render('Users/{$id}/Edit', [
             'userEdit' => $user,
             'isNewsPerson' => $isNewsPerson,
+            'isVip' => $user->isVip
         ]);
     }
 
@@ -313,6 +317,10 @@ class UsersController extends Controller
         } else
             $creator = false;
 
+        if (auth()->user()->stripe_id) {
+            $hasAccount = true;
+        } else
+            $hasAccount = false;
 
         return json_encode([
             'isAdmin' => auth()->user()->isAdmin,
@@ -320,7 +328,47 @@ class UsersController extends Controller
             'isNewsPerson' => auth()->user()->newsPerson,
             'isVip' => auth()->user()->isVip,
             'isSubscriber' => auth()->user()->subscribed('default'),
+            'hasAccount' => $hasAccount,
         ]);
+    }
+
+    public function vipAdd(HttpRequest $request, User $user) {
+        if (auth()->user()->isAdmin) {
+            $request->validate([
+                'id' => 'required',
+            ]);
+        } elseif (!auth()->user()->isAdmin)
+            return with('message', 'You are not authorized to perform this action.');
+
+            $user = User::find($request->id);
+            $user->isVip = true;
+            $user->role_id = 3;
+            $user->update();
+
+//        return redirect()->route('newsroom')->with('message', $request->name . ' has successfully been added to the Newsroom.');
+//        return with('message', 'You are not authorized to perform this action.');
+        return to_route('users.index')->with('message', $user->name . ' has successfully been added to VIP.');
+
+    }
+
+    public function vipRemove(HttpRequest $request)
+    {
+//        dd($request);
+        if (auth()->user()->isAdmin) {
+            $request->validate([
+                'id' => 'required',
+            ]);
+        } elseif (!auth()->user()->isAdmin)
+            return with('message', 'You are not authorized to perform this action.');
+
+        $user = User::find($request->id);
+        $user->isVip = false;
+        $user->role_id = 1;
+        $user->update();
+
+        return to_route('users.index')->with('message', $user->name . ' removed from VIP.');
+
+
     }
 
 

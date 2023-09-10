@@ -9,7 +9,7 @@
                 <div id="topDiv"></div>
                 <header class="flex justify-between mb-3 border-b border-gray-800 pb-6">
 
-                        <h1 class="text-3xl font-semibold text-center lg:text-left">Video Upload X</h1>
+                        <h1 class="text-3xl font-semibold text-center lg:text-left">Video Upload</h1>
 
 
                     <div>

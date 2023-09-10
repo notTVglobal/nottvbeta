@@ -31,6 +31,11 @@ class DashboardController extends Controller
             return round($bytes / (pow(1024, $exp)), $precision).$unit[$exp];
         }
 
+        if (auth()->user()->stripe_id) {
+            $hasAccount = true;
+        } else
+            $hasAccount = false;
+
         return Inertia::render('Dashboard', [
             // isCreator, isNewsPerson, isVip, isSubscriber
             // need to go in the UserStore. Inertia won't
@@ -49,6 +54,7 @@ class DashboardController extends Controller
             'isNewsPerson' => auth()->user()->newsPerson,
             'isVip' => auth()->user()->isVip,
             'isSubscriber' => auth()->user()->subscribed('default'),
+            'hasAccount' => $hasAccount,
             'shows' => Show::query()
                 ->where('user_id', Auth::user()->id)
                 ->paginate(5, ['*'], 'shows')

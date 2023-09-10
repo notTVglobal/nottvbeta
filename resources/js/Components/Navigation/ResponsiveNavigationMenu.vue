@@ -12,7 +12,7 @@
                 <!-- Hamburger -->
                 <div class="fixed top-3 right-4 hamburgerMask">
                     <div class="-mr-2 flex items-center">
-                            <div v-if="$page.props.user.role_id === 4" class="text-yellow-600 uppercase hidden sm:block w-full">
+                            <div v-if="userStore.isCreator" class="text-yellow-600 uppercase hidden sm:block w-full">
                                 GOAL <span class="text-xl">100</span> subscribers
                             </div>
 
@@ -90,10 +90,12 @@
                         </div>
                     </div>
                     <div class="justify-end text-right w-12">
-                        <div v-if="$page.props.user.role_id === 2" class="text-xs font-semibold text-fuchsia-700">PREMIUM SUBSCRIBER</div>
-                        <div v-if="$page.props.user.role_id === 3" class="text-xs font-semibold text-fuchsia-700">VIP</div>
-                        <div v-if="$page.props.user.role_id === 4" class="text-xs font-semibold text-fuchsia-700">CREATOR</div>
-                        <div v-if="$page.props.user.isAdmin === 1" class="text-xs font-semibold text-red-700">ADMIN</div>
+                        <div v-if="!userStore.isAdmin">
+                            <div v-if="userStore.isSubscriber" class="text-xs font-semibold text-fuchsia-700">PREMIUM SUBSCRIBER</div>
+                            <div v-if="userStore.isVip" class="text-xs font-semibold text-fuchsia-700">VIP</div>
+                            <div v-if="userStore.isCreator" class="text-xs font-semibold text-fuchsia-700">CREATOR</div>
+                        </div>
+                        <div v-if="userStore.isAdmin" class="text-xs font-semibold text-red-700">ADMIN</div>
                     </div>
 
                 </div>
@@ -103,7 +105,7 @@
             <div class="space-y-1 z-50 bg-gray-900 pb-20 border-b border-1 border-white">
 
                 <JetResponsiveNavLink
-                    v-if="$page.props.user.role_id === 1"
+                    v-if="!userStore.isSubscriber"
                     @click="userStore.closeNavDropdown()"
                     :href="route('upgrade')"
                     :active="route().current('upgrade')"
@@ -114,7 +116,7 @@
                 </JetResponsiveNavLink>
 
                 <JetResponsiveNavLink
-                    v-if="$page.props.user.role_id === 4"
+                    v-if="userStore.isCreator"
                     @click="userStore.closeNavDropdown()"
                     :href="route('dashboard')"
                     :active="route().current('dashboard')">
@@ -122,7 +124,7 @@
                 </JetResponsiveNavLink>
 
                 <JetResponsiveNavLink
-                    v-if="$page.props.user.role_id === 3"
+                    v-if="userStore.isVip"
                     @click="userStore.closeNavDropdown()"
                     :href="route('library')"
                     :active="route().current('library')">
@@ -137,7 +139,7 @@
                 </JetResponsiveNavLink>
 
                 <JetResponsiveNavLink
-                    v-if="$page.props.user.role_id === 2 || $page.props.user.role_id === 3 || $page.props.user.role_id === 4"
+                    v-if="userStore.isSubscriber || userStore.isVip || userStore.isCreator"
                     @click="userStore.closeNavDropdown()"
                     :href="route('news')"
                     :active="route().current('news')">
@@ -145,7 +147,7 @@
                 </JetResponsiveNavLink>
 
                 <JetResponsiveNavLink
-                    v-if="$page.props.user.role_id === 3 || $page.props.user.role_id === 4"
+                    v-if="userStore.isVip || userStore.isCreator"
                     @click="userStore.closeNavDropdown()"
                     :href="route('movies')"
                     :active="route().current('movies')">
@@ -153,7 +155,7 @@
                 </JetResponsiveNavLink>
 
                 <JetResponsiveNavLink
-                    v-if="$page.props.user.role_id === 2 || $page.props.user.role_id === 3 || $page.props.user.role_id === 4"
+                    v-if="userStore.isSubscriber || userStore.isVip || userStore.isCreator"
                     @click="userStore.closeNavDropdown()"
                     :href="route('shows')"
                     :active="route().current('shows')">
@@ -181,7 +183,7 @@
                 </JetResponsiveNavLink>
 
                 <JetResponsiveNavLink
-                    v-if="$page.props.user.role_id === 4"
+                    v-if="userStore.isCreator"
                     @click="userStore.closeNavDropdown()"
                     :href="route('training')"
                     :active="route().current('training')">
@@ -189,7 +191,7 @@
                 </JetResponsiveNavLink>
 
                 <JetResponsiveNavLink
-                    v-if="$page.props.user.role_id === 4"
+                    v-if="userStore.isCreator"
                     @click="userStore.closeNavDropdown()"
                     :href="route('videoupload')"
                     :active="route().current('videoupload')">
@@ -206,7 +208,7 @@
 
 
 <!--                &lt;!&ndash; Creator Only Links &ndash;&gt;-->
-<!--                <div v-if="$page.props.user.role_id === 4">-->
+<!--                <div v-if="userStore.isCreator">-->
 <!--                    <div class="border-t border-1 mt-3 border-gray-300 bg-indigo-900 block px-4 py-2 text-xs text-white">-->
 <!--                        Creator Only Links-->
 <!--                    </div>-->
@@ -216,7 +218,7 @@
 <!--                </div>-->
 
                 <!-- Admin Only Links -->
-                    <div v-if="$page.props.user.isAdmin === 1">
+                    <div v-if="userStore.isAdmin">
                         <div class="border-t border-1 mt-3 border-gray-300 bg-black block px-4 py-2 text-xs text-gray-400">
                             Admin Only Links
                         </div>
@@ -296,6 +298,7 @@ const logout = () => {
     videoPlayerStore.class = "welcomeVideoClass";
     videoPlayerStore.videoContainerClass = "welcomeVideoContainer";
     userStore.showNavDropdown = false;
+    userStore.clearUserData()
 };
 
 function loadStreamPage() {

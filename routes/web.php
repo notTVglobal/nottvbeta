@@ -244,6 +244,16 @@ Route::middleware([
     // News Person Resource
 //    Route::resource('newsPerson', \App\Http\Controllers\NewsPersonController::class);
 
+// VIP
+////////
+    Route::put('/userAddToVip', [\App\Http\Controllers\UsersController::class, 'vipAdd'])
+//        ->middleware('auth')->isAdmin
+        ->name('user.vip.add');
+
+    Route::put('/userRemoveFromVip', [\App\Http\Controllers\UsersController::class, 'vipRemove'])
+//        ->middleware('auth')->isAdmin
+        ->name('user.vip.remove');
+
 // News
 ////////
     Route::resource('news', NewsPostController::class);

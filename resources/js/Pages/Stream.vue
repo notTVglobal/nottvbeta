@@ -66,8 +66,9 @@ function updateUserStore() {
             userStore.isNewsPerson = response.data.isNewsPerson
             userStore.isVip = response.data.isVip
             userStore.isSubscriber = response.data.isSubscriber
+            userStore.hasAccount = response.data.hasAccount
             userStore.getUserDataCompleted = true
-            // console.log('get user data on Stream')
+            console.log('get user data on Stream')
         })
         .catch(error => {
             console.log(error);

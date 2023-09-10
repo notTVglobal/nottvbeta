@@ -20,6 +20,7 @@ export let useUserStore = defineStore('userStore', {
         id: null,
         roleId: null,
         getUserDataCompleted: null,
+        hasAccount: null,
         isAdmin: null,
         isCreator: null,
         isNewsPerson: null,
@@ -68,6 +69,27 @@ export let useUserStore = defineStore('userStore', {
         // checkIsAdmin() {
         //     this.isAdmin =  !!(this.isAdmin);
         // },
+        clearUserData() {
+            this.currentPage = ''
+            this.id = null
+            this.roleId = null
+            this.getUserDataCompleted = null
+            this.hasAccount = null
+            this.isAdmin = null
+            this.isCreator = null
+            this.isNewsPerson = null
+            this.isVip = null
+            this.isSubscriber = null
+            this.oldLoggedOutId = null
+            this.uploadPercentage = 0
+            this.scrollToTopCounter = 0
+            this.uploadMovieId = null
+            this.uploadShowEpisodeId = null
+            this.upgradeSelection = ''
+            this.testNum = 0
+            this.url = null
+            this.key = 0
+        }
     },
 
     getters: {

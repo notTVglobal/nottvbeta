@@ -24,7 +24,7 @@
                         </JetNavLink>
                         </h3>
                         <h3 class="inline-flex items-center relative"
-                            v-if="$page.props.user.role_id === 2 || $page.props.user.role_id === 3 || $page.props.user.role_id === 4">
+                            v-if="userStore.isSubscriber || userStore.isVip || userStore.isCreator">
                         <JetNavLink
                             v-touch="()=>(route('news'))"
                             @click="videoPlayerStore.makeVideoTopRight()"
@@ -34,7 +34,7 @@
                         </JetNavLink>
                         </h3>
                         <h3 class="inline-flex items-center relative"
-                            v-if="$page.props.user.role_id === 3 || $page.props.user.role_id === 4">
+                            v-if="userStore.isVip || userStore.isCreator">
                         <JetNavLink
                             v-touch="()=>(route('movies'))"
                             @click="videoPlayerStore.makeVideoTopRight()"
@@ -44,7 +44,7 @@
                         </JetNavLink>
                         </h3>
                         <h3 class="inline-flex items-center relative"
-                            v-if="$page.props.user.role_id === 2 || $page.props.user.role_id === 3 || $page.props.user.role_id === 4">
+                            v-if="userStore.isSubscriber || userStore.isVip || userStore.isCreator">
                         <JetNavLink
                             v-touch="()=>(route('shows'))"
                             @click="videoPlayerStore.makeVideoTopRight()"
@@ -76,7 +76,7 @@
                             </div>
                         </JetNavLink>
                         </h3>
-                        <div v-if="$page.props.user.role_id === 4" class="text-yellow-600 uppercase hidden md:block mt-5 text-xs w-full">
+                        <div v-if="userStore.isCreator" class="text-yellow-600 uppercase hidden md:block mt-5 text-xs w-full">
                             GOAL <span class="text-sm font-semibold">100</span> subscribers
                         </div>
                     </div>
@@ -91,15 +91,17 @@
                             <NotificationsButton class=""/>
                         </div>
                         <div>
-                            <div v-if="$page.props.user.role_id === 1">
+                            <div v-if="!userStore.isSubscriber">
                                 <JetNavLink v-touch="()=>(route('upgrade'))" @click="videoPlayerStore.makeVideoTopRight()" :href="route('upgrade')" :active="route().current('upgrade')" class="active:border-none hover:border-none focus:border-none border-none">
                                     <div class="rounded-lg p-2 bg-gray-100 text-black hover:bg-gray-300 hover:text-green-900">CLICK HERE TO UPGRADE YOUR ACCOUNT</div>
                                 </JetNavLink>
                             </div>
-                            <div v-if="$page.props.user.role_id === 2" class="text-fuchsia-700">PREMIUM SUBSCRIBER</div>
-                            <div v-if="$page.props.user.role_id === 3" class="text-fuchsia-700">VIP</div>
-                            <div v-if="$page.props.user.role_id === 4" class="text-fuchsia-700">CREATOR</div>
-                            <div v-if="$page.props.user.isAdmin === 1" class="text-sm text-red-700">ADMIN</div>
+                            <div v-if="!userStore.isAdmin">
+                                <div v-if="userStore.isSubscriber" class="text-fuchsia-700">PREMIUM SUBSCRIBER</div>
+                                <div v-if="userStore.isVip" class="text-fuchsia-700">VIP</div>
+                                <div v-if="userStore.isCreator" class="text-fuchsia-700">CREATOR</div>
+                            </div>
+                            <div v-if="userStore.isAdmin" class="text-red-700">ADMIN</div>
                         </div>
                     </div>
                     <!-- Settings Dropdown -->
@@ -140,10 +142,17 @@
                                     <div class="pt-2 pb-3">
 
                                         <JetDropdownLink
-                                            v-if="$page.props.user.role_id === 4"
+                                            v-if="userStore.isCreator"
                                             @click="videoPlayerStore.makeVideoTopRight()"
                                             :href="route('dashboard')">
                                             Dashboard
+                                        </JetDropdownLink>
+
+                                        <JetDropdownLink
+                                            v-if="userStore.isNewsPerson"
+                                            @click="videoPlayerStore.makeVideoTopRight()"
+                                            :href="route('newsroom')">
+                                            Newsroom
                                         </JetDropdownLink>
 
                                         <JetDropdownLink
@@ -159,21 +168,21 @@
                                         </JetDropdownLink>
 
                                         <JetDropdownLink
-                                            v-if="$page.props.user.role_id === 4"
+                                            v-if="userStore.isCreator"
                                             @click="videoPlayerStore.makeVideoTopRight()"
                                             :href="route('training')">
                                             Training
                                         </JetDropdownLink>
 
                                         <JetDropdownLink
-                                            v-if="$page.props.user.role_id === 4"
+                                            v-if="userStore.isCreator"
                                             @click="videoPlayerStore.makeVideoTopRight()"
                                             :href="route('videoupload')">
                                             Video Upload
                                         </JetDropdownLink>
 
 <!--                                        &lt;!&ndash; Creator Only Links &ndash;&gt;-->
-<!--                                        <div v-if="$page.props.user.role_id === 4">-->
+<!--                                        <div v-if="userStore.isCreator">-->
 <!--                                            <div class="border-t border-1 mt-3 border-gray-300 block px-4 py-2 text-xs text-gray-400">-->
 <!--                                                Creator Only Links-->
 <!--                                            </div>-->
@@ -181,7 +190,7 @@
 <!--                                        </div>-->
 
                                         <!-- Admin Only Links -->
-                                        <div v-if="$page.props.user.isAdmin === 1">
+                                        <div v-if="userStore.isAdmin">
                                             <div class="border-t border-1 mt-3 border-gray-300 block px-4 py-2 text-xs text-gray-400">
                                                 Admin Only Links
                                             </div>
@@ -289,6 +298,7 @@ const logout = () => {
     videoPlayerStore.class = "videoBgFull";
     videoPlayerStore.videoContainerClass = "videoContainerBgFull";
     userStore.showNavDropdown = false;
+    userStore.clearUserData()
 };
 
 // let isStreamPage = false

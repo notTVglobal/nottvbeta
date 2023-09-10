@@ -96,8 +96,9 @@ async function updateUserStore() {
             userStore.isNewsPerson = response.data.isNewsPerson
             userStore.isVip = response.data.isVip
             userStore.isSubscriber = response.data.isSubscriber
+            userStore.hasAccount = response.data.hasAccount
             userStore.getUserDataCompleted = true
-            // console.log('get user data on AppLayout')
+            console.log('get user data on AppLayout')
         })
         .catch(error => {
             console.log(error);

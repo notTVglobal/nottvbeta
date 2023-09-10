@@ -452,6 +452,7 @@ let props = defineProps({
     isCreator: null,
     isNewsPerson: null,
     isSubscriber: null,
+    hasAccount: null,
     isVip: null,
     shows: Object,
     teams: Object,
@@ -469,8 +470,9 @@ function updateUserStore() {
     userStore.isNewsPerson = props.isNewsPerson
     userStore.isVip = props.isVip
     userStore.isSubscriber = props.isSubscriber
+    userStore.hasAccount = props.hasAccount
     userStore.getUserDataCompleted = true
-    // console.log('get user data on Dashboard')
+    console.log('get user data on Dashboard')
 }
 
 </script>
