@@ -51,7 +51,7 @@ class MoviePolicy
 
     }
 
-    public function edit(User $user, Movie $movie) {
+    public function edit(User $user) {
 
         if ($user->isAdmin) {
             return true;
