@@ -44,24 +44,24 @@ const infoClass = computed(() => ({
 
 const channelsClass = computed(() => ({
     // user is !subscriber
-    'bg-gray-700': videoPlayerStore.ott === 2 && !userStore.userIsSubscriber,
-    'hover:bg-gray-700': videoPlayerStore.ott !== 2 && !userStore.userIsSubscriber,
-    'bg-gray-900': videoPlayerStore.ott !== 2 && !userStore.userIsSubscriber,
+    'bg-gray-700': videoPlayerStore.ott === 2 && userNeedsToUpgrade(),
+    'hover:bg-gray-700': videoPlayerStore.ott !== 2 && userNeedsToUpgrade(),
+    'bg-gray-900': videoPlayerStore.ott !== 2 && userNeedsToUpgrade(),
     // user is subscriber
-    'bg-green-700': videoPlayerStore.ott === 2 && userStore.userIsSubscriber,
-    'hover:bg-green-700': videoPlayerStore.ott !== 2 && userStore.userIsSubscriber,
-    'bg-green-900': videoPlayerStore.ott !== 2 && userStore.userIsSubscriber
+    'bg-green-700': videoPlayerStore.ott === 2 && userIsAllowed(),
+    'hover:bg-green-700': videoPlayerStore.ott !== 2 && userIsAllowed(),
+    'bg-green-900': videoPlayerStore.ott !== 2 && userIsAllowed()
 }))
 
 const playlistClass = computed(() => ({
     // user is !subscriber
-    'bg-gray-700': videoPlayerStore.ott === 3 && !userStore.userIsSubscriber,
-    'hover:bg-gray-700': videoPlayerStore.ott !== 3 && !userStore.userIsSubscriber,
-    'bg-gray-900': videoPlayerStore.ott !== 3 && !userStore.userIsSubscriber,
+    'bg-gray-700': videoPlayerStore.ott === 3 && userNeedsToUpgrade(),
+    'hover:bg-gray-700': videoPlayerStore.ott !== 3 && userNeedsToUpgrade(),
+    'bg-gray-900': videoPlayerStore.ott !== 3 && userNeedsToUpgrade(),
     // user is subscriber
-    'bg-orange-700': videoPlayerStore.ott === 3 && userStore.userIsSubscriber,
-    'hover:bg-orange-700': videoPlayerStore.ott !== 3 && userStore.userIsSubscriber,
-    'bg-orange-900': videoPlayerStore.ott !== 3 && userStore.userIsSubscriber
+    'bg-orange-700': videoPlayerStore.ott === 3 && userIsAllowed(),
+    'hover:bg-orange-700': videoPlayerStore.ott !== 3 && userIsAllowed(),
+    'bg-orange-900': videoPlayerStore.ott !== 3 && userIsAllowed()
 }))
 
 const chatClass = computed(() => ({
@@ -73,14 +73,21 @@ const chatClass = computed(() => ({
 
 const filtersClass = computed(() => ({
     // user is !subscriber
-    'bg-gray-700': videoPlayerStore.ott === 5 && !userStore.userIsSubscriber,
-    'hover:bg-gray-700': videoPlayerStore.ott !== 5 && !userStore.userIsSubscriber,
-    'bg-gray-900': videoPlayerStore.ott !== 5 && !userStore.userIsSubscriber,
+    'bg-gray-700': videoPlayerStore.ott === 5 && userNeedsToUpgrade(),
+    'hover:bg-gray-700': videoPlayerStore.ott !== 5 && userNeedsToUpgrade(),
+    'bg-gray-900': videoPlayerStore.ott !== 5 && userNeedsToUpgrade(),
     // user is subscriber
-    'bg-yellow-700': videoPlayerStore.ott === 5 && userStore.userIsSubscriber,
-    'hover:bg-yellow-700': videoPlayerStore.ott !== 5 && userStore.userIsSubscriber,
-    'bg-yellow-900': videoPlayerStore.ott !== 5 && userStore.userIsSubscriber
+    'bg-yellow-700': videoPlayerStore.ott === 5 && userIsAllowed(),
+    'hover:bg-yellow-700': videoPlayerStore.ott !== 5 && userIsAllowed(),
+    'bg-yellow-900': videoPlayerStore.ott !== 5 && userIsAllowed()
 }))
+
+function userNeedsToUpgrade() {
+    return !(userStore.isSubscriber || userStore.isVip || userStore.isAdmin);
+}
+function userIsAllowed() {
+    return (userStore.isSubscriber || userStore.isVip || userStore.isAdmin);
+}
 
 
 

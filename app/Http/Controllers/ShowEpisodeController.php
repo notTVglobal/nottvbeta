@@ -380,10 +380,8 @@ class ShowEpisodeController extends Controller
         // how to simplify this *frustrated*.
 
         // redirect
-        return redirect()
-            ->route('shows.showEpisodes.show',
-                [$showSlug,$showEpisodeSlug])
-            ->with('message', 'Episode Updated Successfully');
+        return redirect(route('shows.showEpisodes.show', [$showSlug, $showEpisodeSlug]))->with('message', 'Episode Updated Successfully');
+
 
 //        return Inertia::render('Shows/{$id}/Manage', [
 //            // responses need to be limited to only

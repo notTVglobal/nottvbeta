@@ -31,6 +31,7 @@ class ShowsController extends Controller
     public function __construct()
     {
 
+//        $this->middleware('can:viewAny,show')->only(['index']);
         $this->middleware('can:viewShowManagePage,show')->only(['manage']);
         $this->middleware('can:edit,show')->only(['edit']);
 //        $this->middleware('can:create,show')->only(['store']);

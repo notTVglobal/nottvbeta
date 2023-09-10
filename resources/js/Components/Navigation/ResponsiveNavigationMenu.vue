@@ -105,7 +105,7 @@
             <div class="space-y-1 z-50 bg-gray-900 pb-20 border-b border-1 border-white">
 
                 <JetResponsiveNavLink
-                    v-if="!userStore.isSubscriber"
+                    v-if="!userStore.isSubscriber || !userStore.isAdmin || !userStore.isVip"
                     @click="userStore.closeNavDropdown()"
                     :href="route('upgrade')"
                     :active="route().current('upgrade')"
@@ -177,7 +177,7 @@
                 </JetResponsiveNavLink>
 
                 <JetResponsiveNavLink
-                    v-if="$page.props.user.role_id >= 2"
+                    v-if="userStore.hasAccount"
                     @click="billingPortal">
                     Account
                 </JetResponsiveNavLink>

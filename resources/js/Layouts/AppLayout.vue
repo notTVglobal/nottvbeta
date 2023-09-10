@@ -2,8 +2,8 @@
     <div class="fixed top-0 left-0 right-0 bottom-0 bg-gray-800 text-gray-200 vh-100 vw-100 overflow-hidden overscroll-y-none overscroll-x-none">
 
         <!-- Navbar for logged in user -->
-        <ResponsiveNavigationMenu v-if="user" />
-        <NavigationMenu v-if="user" />
+        <ResponsiveNavigationMenu v-if="user" :key="reloadNav"/>
+        <NavigationMenu v-if="user" :key="reloadNav"/>
 
         <!-- Login for Welcome Page (logged out) -->
         <Teleport to="body">
@@ -48,6 +48,7 @@ let channelStore = useChannelStore()
 
 let isStreamPage = ref()
 let showLogin = ref(false)
+let reloadNav = 0
 
 let props = defineProps({
     user: Object,
@@ -99,6 +100,7 @@ async function updateUserStore() {
             userStore.hasAccount = response.data.hasAccount
             userStore.getUserDataCompleted = true
             console.log('get user data on AppLayout')
+            reloadNav++
         })
         .catch(error => {
             console.log(error);

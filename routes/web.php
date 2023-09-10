@@ -558,7 +558,7 @@ Route::middleware([
     Route::resource('shows', ShowsController::class);
     // Display shows index page
     Route::get('/shows', [ShowsController::class, 'index'])
-        ->can('viewPremium', 'App\Models\User')
+        ->can('viewAny', 'App\Models\Show')
         ->name('shows');
     // Display shows manage page
     Route::get('/shows/{show}/manage', [ShowsController::class, 'manage'])
@@ -643,14 +643,14 @@ Route::middleware([
     Route::resource('movies', MovieController::class);
     // List all movies
     Route::get('/movies/{movie}', [MovieController::class, 'show'])
-        ->can('viewVip', 'App\Models\User')
+        ->can('view', 'App\Models\Movie')
         ->name('movies.show');
     Route::get('/movies', [MovieController::class, 'index'])
-        ->can('viewVip', 'App\Models\User')
+        ->can('viewAny', 'App\Models\Movie')
         ->name('movies');
     // Display movie edit page
     Route::get('/movies/{movie}/edit', [MovieController::class, 'edit'])
-//        ->middleware('can:edit,movie')
+        ->can('edit', 'App\Models\Movie')
         ->name('movies.edit');
 //    // Upload movie
 //    Route::post('/movies/upload', [MovieUploadController::class, 'store'])

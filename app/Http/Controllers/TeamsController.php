@@ -360,6 +360,7 @@ class TeamsController extends Controller
             'creatorFilters' => Request::only(['search']),
             'can' => [
                 'editTeam' => auth()->user()->can('update', $team),
+                'manageTeam' => auth()->user()->can('viewTeamManagePage', $team),
         ]
         ]);
     }

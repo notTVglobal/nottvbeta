@@ -31,10 +31,25 @@ class DashboardController extends Controller
             return round($bytes / (pow(1024, $exp)), $precision).$unit[$exp];
         }
 
+        if (auth()->user()->creator) {
+            $isCreator = true;
+        } else $isCreator = false;
+
         if (auth()->user()->stripe_id) {
             $hasAccount = true;
-        } else
-            $hasAccount = false;
+        } else $hasAccount = false;
+
+        if (auth()->user()->isAdmin) {
+            $isAdmin = true;
+        } else $isAdmin = false;
+
+        if (auth()->user()->newsPerson) {
+            $isNewsPerson = true;
+        } else $isNewsPerson = false;
+
+        if (auth()->user()->isVip) {
+            $isVip = true;
+        } else $isVip = false;
 
         return Inertia::render('Dashboard', [
             // isCreator, isNewsPerson, isVip, isSubscriber
@@ -49,10 +64,10 @@ class DashboardController extends Controller
             // Only the Dashboard has a controller,
             // the others will use Axios to get the data
             // and save it in the UserStore.
-            'isAdmin' => auth()->user()->isAdmin,
-            'isCreator' => auth()->user()->creator->status_id,
-            'isNewsPerson' => auth()->user()->newsPerson,
-            'isVip' => auth()->user()->isVip,
+            'isAdmin' => $isAdmin,
+            'isCreator' => $isCreator,
+            'isNewsPerson' => $isNewsPerson,
+            'isVip' => $isVip,
             'isSubscriber' => auth()->user()->subscribed('default'),
             'hasAccount' => $hasAccount,
             'shows' => Show::query()

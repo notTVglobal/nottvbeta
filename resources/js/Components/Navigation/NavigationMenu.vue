@@ -2,7 +2,7 @@
     <div class="hidden lg:block fixed top-0 w-full nav-mask">
     <nav class="sticky top-0 bg-black border-b border-gray-100" :class="{ isFullPageCss: videoPlayerStore.fullPage }">
         <!-- Primary Navigation Menu -->
-        <div class="max-w-7xl mx-auto px-4 lg:px-6 xl:px-8">
+        <div class="mx-auto px-4 lg:px-6 xl:px-8">
             <div class="flex justify-between h-16">
                 <div class="flex">
                     <!-- Logo -->
@@ -24,7 +24,7 @@
                         </JetNavLink>
                         </h3>
                         <h3 class="inline-flex items-center relative"
-                            v-if="userStore.isSubscriber || userStore.isVip || userStore.isCreator">
+                            v-if="userStore.isSubscriber || userStore.isVip">
                         <JetNavLink
                             v-touch="()=>(route('news'))"
                             @click="videoPlayerStore.makeVideoTopRight()"
@@ -34,7 +34,7 @@
                         </JetNavLink>
                         </h3>
                         <h3 class="inline-flex items-center relative"
-                            v-if="userStore.isVip || userStore.isCreator">
+                            v-if="userStore.isSubscriber || userStore.isVip">
                         <JetNavLink
                             v-touch="()=>(route('movies'))"
                             @click="videoPlayerStore.makeVideoTopRight()"
@@ -44,7 +44,7 @@
                         </JetNavLink>
                         </h3>
                         <h3 class="inline-flex items-center relative"
-                            v-if="userStore.isSubscriber || userStore.isVip || userStore.isCreator">
+                            v-if="userStore.isSubscriber || userStore.isVip">
                         <JetNavLink
                             v-touch="()=>(route('shows'))"
                             @click="videoPlayerStore.makeVideoTopRight()"
@@ -63,7 +63,7 @@
                         </JetNavLink>
                         </h3>
                         <h3 class="inline-flex items-center relative"
-                            v-if="$page.props.user.role_id >= 3">
+                            v-if="userStore.isVip">
                         <JetNavLink
                             v-touch="()=>(route('library'))"
                             @click="videoPlayerStore.makeVideoTopRight()"
@@ -76,36 +76,34 @@
                             </div>
                         </JetNavLink>
                         </h3>
-                        <div v-if="userStore.isCreator" class="text-yellow-600 uppercase hidden md:block mt-5 text-xs w-full">
-                            GOAL <span class="text-sm font-semibold">100</span> subscribers
-                        </div>
                     </div>
 
                 </div>
 
 
-                <div class="hidden lg:flex lg:items-center lg:ml-6">
+                <div class="ml-20 lg:flex lg:items-center">
 
                     <div class="grid grid-cols-2 gap-4">
-                        <div class="align-text-top -mt-5">
+                        <div v-if="userStore.isCreator" class="text-yellow-600 uppercase hidden md:block text-xs w-full">
+                            GOAL <span class="text-sm font-semibold">100</span> subscribers
+                        </div>
+                        <div class="align-text-top -mt-5 hidden">
                             <NotificationsButton class=""/>
                         </div>
                         <div>
-                            <div v-if="!userStore.isSubscriber">
+                            <div v-if="!userStore.isAdmin && !userStore.isVip && !userStore.isSubscriber">
                                 <JetNavLink v-touch="()=>(route('upgrade'))" @click="videoPlayerStore.makeVideoTopRight()" :href="route('upgrade')" :active="route().current('upgrade')" class="active:border-none hover:border-none focus:border-none border-none">
-                                    <div class="rounded-lg p-2 bg-gray-100 text-black hover:bg-gray-300 hover:text-green-900">CLICK HERE TO UPGRADE YOUR ACCOUNT</div>
+                                    <div class="w-full rounded-lg p-2 bg-gray-100 text-black hover:bg-gray-300 hover:text-green-900">UPGRADE NOW</div>
                                 </JetNavLink>
                             </div>
-                            <div v-if="!userStore.isAdmin">
-                                <div v-if="userStore.isSubscriber" class="text-fuchsia-700">PREMIUM</div>
-                                <div v-if="userStore.isVip" class="text-fuchsia-700">VIP</div>
-                                <div v-if="userStore.isCreator" class="text-fuchsia-700">CREATOR</div>
-                            </div>
+                                <div v-if="userStore.isSubscriber && !userStore.isAdmin" class="text-fuchsia-700">PREMIUM</div>
+                                <div v-if="userStore.isVip && !userStore.isAdmin" class="text-fuchsia-700">VIP</div>
+                                <div v-if="userStore.isCreator && userStore.isSubscriber && !userStore.isAdmin" class="text-fuchsia-700">CREATOR</div>
                             <div v-if="userStore.isAdmin" class="text-red-700">ADMIN</div>
                         </div>
                     </div>
                     <!-- Settings Dropdown -->
-                    <div class="ml-3 relative menuMask">
+                    <div class="relative menuMask">
 
                         <JetDropdown align="right" width="48">
                             <template #trigger>
@@ -162,7 +160,7 @@
                                         </JetDropdownLink>
 
                                         <JetDropdownLink
-                                            v-if="$page.props.user.role_id >= 2"
+                                            v-if="userStore.hasAccount"
                                             @click="billingPortal">
                                             Account
                                         </JetDropdownLink>

@@ -313,20 +313,30 @@ class UsersController extends Controller
     public function getUserStoreData()
     {
         if (auth()->user()->creator) {
-            $creator = auth()->user()->creator->status_id;
-        } else
-            $creator = false;
+            $creator = true;
+        } else $creator = false;
 
         if (auth()->user()->stripe_id) {
             $hasAccount = true;
-        } else
-            $hasAccount = false;
+        } else $hasAccount = false;
+
+        if (auth()->user()->isAdmin) {
+            $isAdmin = true;
+        } else $isAdmin = false;
+
+        if (auth()->user()->newsPerson) {
+            $isNewsPerson = true;
+        } else $isNewsPerson = false;
+
+        if (auth()->user()->isVip) {
+            $isVip = true;
+        } else $isVip = false;
 
         return json_encode([
-            'isAdmin' => auth()->user()->isAdmin,
+            'isAdmin' => $isAdmin,
             'isCreator' => $creator,
-            'isNewsPerson' => auth()->user()->newsPerson,
-            'isVip' => auth()->user()->isVip,
+            'isNewsPerson' => $isNewsPerson,
+            'isVip' => $isVip,
             'isSubscriber' => auth()->user()->subscribed('default'),
             'hasAccount' => $hasAccount,
         ]);

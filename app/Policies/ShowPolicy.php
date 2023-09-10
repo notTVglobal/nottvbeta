@@ -23,7 +23,10 @@ class ShowPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        if ($user->subscribed('default') || $user->isVip || $user->isAdmin) {
+            return true;
+        }
+        return Response::deny('Please upgrade your account.');
     }
 
     /**
@@ -34,14 +37,11 @@ class ShowPolicy
      */
     public function view(User $user)
     {
-        if ($user->role_id === 2)
-            return $user->role_id === 2;
+        if ($user->subscribed('default') || $user->isVip || $user->creator || $user->isAdmin) {
+            return true;
+        }
+        return Response::deny('Please upgrade your account.');
 
-        elseif($user->role_id === 3)
-            return $user->role_id === 3;
-
-        elseif($user->role_id === 4)
-            return $user->role_id === 4;
     }
 
     public function viewShowManagePage(User $user, Show $show)
