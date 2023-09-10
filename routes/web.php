@@ -169,46 +169,50 @@ Route::middleware([
         return Inertia::render('Stream');
     })->name('stream');
 
-    Route::post('/subscribe', function (Request $request) {
-        return Inertia::render('Subscribe', [
-        ]);
-    })->name('subscribe.post');
-
-    Route::get('/payment', function (Request $request) {
-        return Inertia::render('Payment', [
-        ]);
-    })->name('payment');
-    Route::get('/payment2', function (Request $request) {
-        return Inertia::render('Payment2', [
-        ]);
-    })->name('payment2');
-    Route::get('/payment_success', function (Request $request) {
-        return Inertia::render('PaymentSuccess', [
-        ]);
-    })->name('paymentSuccess');
-    Route::get('/payment_cancelled', function (Request $request) {
-        return Inertia::render('PaymentCancelled', [
-        ]);
-    })->name('paymentCancelled');
-    Route::post('payment/initiate', [StripeController::class, 'initiatePayment']);
-    Route::post('payment/complete', [StripeController::class, 'completePayment']);
-    Route::post('payment/failure', [StripeController::class, 'failPayment']);
-
-    Route::get('/subscribe2', function () {
-        return Inertia::render('Subscribe2', [
-//            'intent' => auth()->user()->createSetupIntent(),
-        ]);
-    })->name('subscribe2');
-    Route::get('/srmessages', function () {
-        return Inertia::render('SrMessages', [
-//            'intent' => auth()->user()->createSetupIntent(),
-        ]);
-    })->name('srmessages');
-    Route::get('/srreturn', function () {
-        return Inertia::render('SrReturn', [
-//            'intent' => auth()->user()->createSetupIntent(),
-        ]);
-    })->name('srreturn');
+//    Route::post('/subscribe', function (Request $request) {
+//        return Inertia::render('Subscribe', [
+//        ]);
+//    })->name('subscribe.post');
+//
+//    Route::get('/payment', function (Request $request) {
+//        return Inertia::render('Payment', [
+//        ]);
+//    })->name('payment');
+//
+//    Route::get('/payment2', function (Request $request) {
+//        return Inertia::render('Payment2', [
+//        ]);
+//    })->name('payment2');
+//
+//    Route::get('/payment_success', function (Request $request) {
+//        return Inertia::render('PaymentSuccess', [
+//        ]);
+//    })->name('paymentSuccess');
+//
+//    Route::get('/payment_cancelled', function (Request $request) {
+//        return Inertia::render('PaymentCancelled', [
+//        ]);
+//    })->name('paymentCancelled');
+//
+//    Route::post('payment/initiate', [StripeController::class, 'initiatePayment']);
+//    Route::post('payment/complete', [StripeController::class, 'completePayment']);
+//    Route::post('payment/failure', [StripeController::class, 'failPayment']);
+//
+//    Route::get('/subscribe2', function () {
+//        return Inertia::render('Subscribe2', [
+////            'intent' => auth()->user()->createSetupIntent(),
+//        ]);
+//    })->name('subscribe2');
+//    Route::get('/srmessages', function () {
+//        return Inertia::render('SrMessages', [
+////            'intent' => auth()->user()->createSetupIntent(),
+//        ]);
+//    })->name('srmessages');
+//    Route::get('/srreturn', function () {
+//        return Inertia::render('SrReturn', [
+////            'intent' => auth()->user()->createSetupIntent(),
+//        ]);
+//    })->name('srreturn');
 
 
 // Dashboard

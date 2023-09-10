@@ -2,9 +2,14 @@
     <div>
 
     <!-- Video Player -->
-            <div v-touch="() => {clickOnVideoAction()}" :class="videoPlayerStore.videoContainerClass">
+            <div v-touch="() => {clickOnVideoAction()}"
+                 :class="videoPlayerStore.videoContainerClass"
+                 @mouseenter="mouseEnter"
+                 @mouseleave="mouseLeave">
+
                 <div :class="videoPlayerStore.class">
                   <videoJs /></div>
+
             </div>
 
 
@@ -242,6 +247,9 @@ function clickOnVideoAction() {
 
 function mouseEnter(event) {
     mouseActive = true
+    if (!videoPlayerStore.fullPage) {
+        videoPlayerStore.controls = true
+    }
     // console.log(mouseActive);
     // videoPlayerStore.showOsdControlsOnly()
     // document.addEventListener('mousemove', mouseMove, true);
@@ -255,6 +263,9 @@ function mouseEnter(event) {
 }
 function mouseLeave(event) {
     mouseActive = false
+    if (!videoPlayerStore.fullPage) {
+        videoPlayerStore.controls = false
+    }
     // console.log(mouseActive);
 
     // videoPlayerStore.hideOsdControlsOnly()

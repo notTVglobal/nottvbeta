@@ -25,6 +25,7 @@ class VerifyCsrfToken extends Middleware
         '/news/save',
         '/broadcasting/auth',
         'logout',
+        'stripe/*',
 //        '/subscribe',
     ];
 }
