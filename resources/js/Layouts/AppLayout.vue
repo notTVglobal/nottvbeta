@@ -29,11 +29,13 @@ import { useUserStore } from "@/Stores/UserStore"
 import { useChatStore } from "@/Stores/ChatStore"
 import { useShopStore } from "@/Stores/ShopStore"
 import { useChannelStore } from "@/Stores/ChannelStore"
+import ResponsiveNavigationMenu from '@/Components/Navigation/ResponsiveNavigationMenu'
+import NavigationMenu from '@/Components/Navigation/NavigationMenu'
 
-const ResponsiveNavigationMenu = defineAsyncComponent( () =>
-    import('@/Components/Navigation/ResponsiveNavigationMenu'))
-const NavigationMenu = defineAsyncComponent( () =>
-    import('@/Components/Navigation/NavigationMenu'))
+// const ResponsiveNavigationMenu = defineAsyncComponent( () =>
+//     import('@/Components/Navigation/ResponsiveNavigationMenu'))
+// const NavigationMenu = defineAsyncComponent( () =>
+//     import('@/Components/Navigation/NavigationMenu'))
 const Login = defineAsyncComponent( () =>
     import('@/Components/Welcome/Login'))
 const VideoPlayerMain = defineAsyncComponent( () =>

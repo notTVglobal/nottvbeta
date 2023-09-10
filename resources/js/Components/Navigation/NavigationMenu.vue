@@ -260,19 +260,20 @@
 </template>
 
 <script setup>
-import JetApplicationMark from '@/Jetstream/ApplicationMark.vue';
-import JetDropdownLink from '@/Jetstream/DropdownLink.vue';
-import { Link } from '@inertiajs/inertia-vue3';
-import NotificationsButton from "@/Components/Navigation/NotificationsButton.vue";
-import JetDropdown from '@/Jetstream/Dropdown.vue';
-import JetNavLink from '@/Jetstream/NavLink.vue';
-import {Inertia} from "@inertiajs/inertia";
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
-import { useChatStore } from "@/Stores/ChatStore.js";
-import { useStreamStore } from "@/Stores/StreamStore";
-import { useUserStore } from "@/Stores/UserStore";
-import { useWelcomeStore } from "@/Stores/WelcomeStore";
-import {onMounted} from "vue";
+import { computed } from "vue"
+import JetApplicationMark from '@/Jetstream/ApplicationMark'
+import JetDropdownLink from '@/Jetstream/DropdownLink'
+import { Link } from '@inertiajs/inertia-vue3'
+import NotificationsButton from "@/Components/Navigation/NotificationsButton"
+import JetDropdown from '@/Jetstream/Dropdown'
+import JetNavLink from '@/Jetstream/NavLink'
+import {Inertia} from "@inertiajs/inertia"
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
+import { useChatStore } from "@/Stores/ChatStore"
+import { useStreamStore } from "@/Stores/StreamStore"
+import { useUserStore } from "@/Stores/UserStore"
+import { useWelcomeStore } from "@/Stores/WelcomeStore"
+
 
 let chat = useChatStore();
 let videoPlayerStore = useVideoPlayerStore();
