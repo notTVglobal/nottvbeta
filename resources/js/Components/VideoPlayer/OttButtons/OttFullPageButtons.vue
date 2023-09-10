@@ -1,7 +1,7 @@
 <template>
     <div v-if="videoPlayerStore.ottButtons">
 
-        <div class="ottButtonsContainer">
+        <div class="ottButtonsContainer" id="ottButtons">
             <button v-if="userStore.userIsSubscriber"
                     @click="openChannels"
                     class="ottButton bg-green-400 text-green-100 hover:bg-green-600 hover:text-green-300">

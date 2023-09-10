@@ -23,7 +23,7 @@
 
 <!--                </div>-->
                 <!-- OTT Buttons and Displays -->
-                <OttTopRightButtons />
+                <OttTopRightButtons :key="userStore.key"/>
                 <OttTopRightDisplayNowPlayingInfo :user="user"/>
                 <OttTopRightDisplayPlaylist :user="user"/>
                 <OttTopRightDisplayChannels :user="user"/>

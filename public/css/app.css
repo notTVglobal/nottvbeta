@@ -3132,6 +3132,10 @@ html {
   margin-top: 24rem;
 }
 
+.-mt-px {
+  margin-top: -1px;
+}
+
 .block {
   display: block;
 }
@@ -3538,6 +3542,10 @@ html {
 
 .max-w-xs {
   max-width: 20rem;
+}
+
+.max-w-6xl {
+  max-width: 72rem;
 }
 
 .flex-1 {
@@ -4072,6 +4080,10 @@ html {
 
 .border-t-2 {
   border-top-width: 2px;
+}
+
+.border-r {
+  border-right-width: 1px;
 }
 
 .border-none {
@@ -4756,6 +4768,10 @@ html {
 
 .pt-6 {
   padding-top: 1.5rem;
+}
+
+.pt-8 {
+  padding-top: 2rem;
 }
 
 .text-left {
@@ -6192,6 +6208,10 @@ html {
 
   .sm\:items-center {
     align-items: center;
+  }
+
+  .sm\:justify-start {
+    justify-content: flex-start;
   }
 
   .sm\:justify-center {

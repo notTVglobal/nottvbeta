@@ -288,6 +288,7 @@ let props = defineProps({
 
 const logout = () => {
     // videoPlayerStore.changeChannel('one');
+    Inertia.post(route('logout'));
     videoPlayerStore.mute();
     videoPlayerStore.fullPage = true;
     videoPlayerStore.loggedIn = false;
@@ -295,9 +296,10 @@ const logout = () => {
     videoPlayerStore.ott = 0;
     videoPlayerStore.class = "welcomeVideoClass";
     videoPlayerStore.videoContainerClass = "welcomeVideoContainer";
+    userStore.showNavDropdown = false;
     // chatStore.class = "chatHidden";
     // chatStore.show = false;
-    Inertia.post(route('logout'));
+
 };
 
 onBeforeMount(() => {

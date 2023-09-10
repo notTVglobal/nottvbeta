@@ -280,6 +280,7 @@ function loadStreamPage() {
 }
 
 const logout = () => {
+    Inertia.post(route('logout'));
     // videoPlayerStore.changeChannel('one');
     videoPlayerStore.mute();
     videoPlayerStore.fullPage = true;
@@ -288,7 +289,8 @@ const logout = () => {
     videoPlayerStore.ott = 0;
     videoPlayerStore.class = "videoBgFull";
     videoPlayerStore.videoContainerClass = "videoContainerBgFull";
-    Inertia.post(route('logout'));
+    userStore.showNavDropdown = false;
+
 };
 
 // let isStreamPage = false

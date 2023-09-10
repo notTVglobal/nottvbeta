@@ -31,7 +31,8 @@ export let useUserStore = defineStore('userStore', {
         uploadShowEpisodeId: null,
         upgradeSelection: '',
         testNum: 0,
-        url: null
+        url: null,
+        key: 0,
 
     }),
 
