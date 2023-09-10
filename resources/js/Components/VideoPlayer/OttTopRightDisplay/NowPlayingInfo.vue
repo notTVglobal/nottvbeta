@@ -1,5 +1,5 @@
 <template>
-    <div v-if="videoPlayerStore.ott !== 0" class="fixed top-44 lg:top-78 right-0 w-full h-full lg:w-96 mt-3 lg:mt-2 overflow-y-none z-40 lg:border-t lg:border-gray-900">
+    <div v-if="videoPlayerStore.ott === 1" class="ottTopRightDisplay bg-purple-800">
     <div class="h-full w-full overflow-y-scroll scrollbar-hide">
 
         <div v-if="videoPlayerStore.ott === 1" class="now-playing w-full h-full bg-purple-800 p-2 overflow-y-scroll scrollbar-hide mb-64">
@@ -69,7 +69,7 @@ let playVideo = (source) => {
 }
 
 const ottDisplayShow = computed(() => ({
-    'hidden': videoPlayerStore.ottClass !== 'OttOpen'
+    'hidden': !videoPlayerStore.ott
 }))
 
 const ottChannels = computed(() => ({

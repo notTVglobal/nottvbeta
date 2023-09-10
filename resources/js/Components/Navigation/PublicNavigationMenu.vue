@@ -1,4 +1,5 @@
 <template>
+    <div class="fixed top-0 w-full nav-mask">
     <nav class="sticky top-0 bg-black border-b border-gray-100 z-50">
         <!-- Primary Navigation Menu -->
         <div class="max-w-7xl mx-auto px-4 lg:px-6 xl:px-8 z-50">
@@ -51,6 +52,7 @@
             </div>
         </div>
     </nav>
+    </div>
 </template>
 
 <script setup>
@@ -65,6 +67,7 @@ import { useChatStore } from "@/Stores/ChatStore.js";
 import { useStreamStore } from "@/Stores/StreamStore";
 import { useUserStore } from "@/Stores/UserStore";
 import { useWelcomeStore } from "@/Stores/WelcomeStore";
+import {onMounted} from "vue";
 
 let chat = useChatStore();
 let videoPlayerStore = useVideoPlayerStore();
@@ -87,6 +90,22 @@ let props = defineProps({
 // }
 
 // setPage()
+
+onMounted(() => {
+    getUser()
+})
+
+function getUser() {
+    if (props.user) {
+        userStore.id = props.user.id
+        userStore.roleId = props.user.role_id
+        userStore.userIsAdmin = props.user.isAdmin
+    }
+    userStore.isSubscriber()
+    userStore.isCreator()
+    userStore.isVip()
+    userStore.isAdmin()
+}
 
 </script>
 <style>

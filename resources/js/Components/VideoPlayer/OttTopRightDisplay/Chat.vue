@@ -11,8 +11,7 @@
 
     <!--                     class="fixed bottom-0 right-0 w-full lg:w-96 pb-24 px-2 overflow-y-scroll scrollbar-hide bg-gray-900"-->
 
-        <div v-if="videoPlayerStore.ott === 4" class="fixed top-44 lg:top-78 right-0 h-full w-full lg:w-96 mt-3 lg:mt-2 px-2 overflow-y-scroll scrollbar-hide z-50 border-t border-gray-900"
-             :class="{'lg:mt-3':userStore.isMobile, 'lg:mt-2 bg-indigo-700':!userStore.isMobile}">
+        <div v-if="videoPlayerStore.ott === 4" class="ottTopRightDisplay bg-gray-800">
 <!--                <div v-if=""-->
 <!--                     class="fixed top-44 lg:top-78 right-0 h-full w-full lg:w-96 mt-4 pb-12 px-2 overflow-y-scroll scrollbar-hide bg-gray-800"-->
 <!--                     :class="ottDisplay">-->
@@ -56,7 +55,7 @@ let playVideo = (source) => {
 }
 
 const ottDisplayShow = computed(() => ({
-    'hidden': videoPlayerStore.ottClass !== 'OttOpen'
+    'hidden': !videoPlayerStore.ott
 }))
 
 const ottDisplay = computed(() => ({

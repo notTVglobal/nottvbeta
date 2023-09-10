@@ -8,12 +8,12 @@
         leave-to-class="opacity-0"
     >
 
-            <div v-if="chatStore.showChat" class="chatFullPageContainer">
+            <div v-if="videoPlayerStore.ottChat" class="chatFullPageContainer">
 
-                <full-page-standard-chat :user="user"/>
+                <full-page-chat :user="user"/>
 
                 <button v-touch="()=>closeChat()"
-                        v-if="chatStore.showChat" class="chatCloseButton">
+                        v-if="videoPlayerStore.ottChat" class="chatCloseButton">
                     CLOSE CHAT
                 </button>
             </div>
@@ -22,11 +22,9 @@
 </template>
 
 <script setup>
-import { useChatStore } from "@/Stores/ChatStore";
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore";
-import FullPageStandardChat from "@/Components/VideoPlayer/Chat/FullPageStandardChat.vue";
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
+import FullPageChat from "@/Components/VideoPlayer/Chat/FullPageChat"
 
-let chatStore = useChatStore();
 let videoPlayerStore = useVideoPlayerStore();
 
 defineProps({
@@ -35,7 +33,8 @@ defineProps({
 
 function closeChat() {
     videoPlayerStore.toggleChat()
-    videoPlayerStore.showOSD = true
+    videoPlayerStore.osd = true
+    videoPlayerStore.makeVideoFullPage()
 }
 
 </script>

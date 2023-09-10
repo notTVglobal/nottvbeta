@@ -65,8 +65,7 @@ export let useUserStore = defineStore('userStore', {
         },
         isAdmin() {
             this.userIsAdmin =  !!(this.userIsAdmin);
-        }
-
+        },
     },
 
     getters: {

@@ -13,6 +13,12 @@ html {
 .nav-mask {
     z-index:300;
 }
+.hamburgerMask {
+    z-index: 300;
+}
+.menuMask {
+    z-index: 300;
+}
 .welcomeOverlay {
     z-index: 500;
 }
@@ -45,9 +51,13 @@ html {
 }
 
 /* VIDEO CONTAINERS AND CLASSES*/
-/* *************************** */
+/*****************************************/
+/*!**!  ---- THE NEW LAYOUT STYLING ---- */
+/*!**!        MOBILE AND TABLET          */
+/*!**!   :desktop and standard (below)   */
+/*****************************************/
 
-/* Mobile and Tablet */
+/* Begin Mobile and Tablet */
 @media (max-width:1024px) {
     .welcomeVideoContainer {
         position: absolute;
@@ -156,33 +166,52 @@ html {
         background-color: black;
     }
     .pipVideoContainer {
-        position:fixed;
-        bottom: 6rem;
-        right: 1rem;
-        padding-top: 56.25%;
+        position: fixed;
+        /*top: 24rem;*/
+        bottom: 4rem;
+        right: 2rem;
+        /*min-height:calc(50vh - 5.5rem);*/
+        /*min-height:calc(56.25% - 4rem);*/
+        /*min-height:calc(50vh - 50rem);*/
         width:50vw;
-        /*max-width:24rem;*/
-        min-width:50vw;
-        /*max-width: 100vw;*/
-        height:6rem;
-        max-height:6rem;
-        /*background-color: purple;*/
-        z-index: 40;
-        opacity: 100%;
+        padding-top:56.25%;
+        /*height:10rem;*/
+        /*min-height:100vh;*/
+        /*max-height:calc(100vh - 4rem);*/
+        /*z-index:900;*/
+        /*max-height:calc(100vh - 8rem);*/
+        /*padding-top: 56.25%;*/
+        /*display: flex;*/
+        /*flex-wrap: wrap;*/
+        /*display: flex;*/
+        /*flex-wrap: wrap;*/
+        /*align-content: flex-start;*/
+        background-color: dodgerblue;
     }
     .pipVideoClass {
-        position:fixed;
-        bottom: 6rem;
-        right: 1rem;
+        position: fixed;
+        /*top: 24rem;*/
+        bottom: 4rem;
+        right: 2rem;
+        /*right:0;*/
+        /*padding-top:56.25%;*/
+        /*min-height:calc(50vh - 5.5rem);*/
+        /*min-height:calc(56.25% - 4rem);*/
+        /*min-height:calc(50vh - 50rem);*/
         width:50vw;
-        /*max-width:24rem;*/
-        min-width:50vw;
-        /*max-width: 100vw;*/
-        height:6rem;
-        max-height:6rem;
-        /*background-color: purple;*/
-        z-index: 40;
-        opacity: 100%;
+        padding-top:56.25%;
+        /*height:10rem;*/
+        /*min-height:100vh;*/
+        /*max-height:calc(100vh - 4rem);*/
+        /*z-index:900;*/
+        /*max-height:calc(100vh - 8rem);*/
+        /*padding-top: 56.25%;*/
+        /*display: flex;*/
+        /*flex-wrap: wrap;*/
+        /*display: flex;*/
+        /*flex-wrap: wrap;*/
+        /*align-content: flex-start;*/
+        opacity: 0.8;
     }
     .bugTopRightContainer {
         @apply opacity-10
@@ -191,20 +220,23 @@ html {
         z-index: 900;
         @apply hidden fixed right-2 top-20 w-10 mr-4
     }
+    .osdFullPage {
+        @apply fixed flex flex-col bottom-24 left-0 p-5 drop-shadow z-50
+    }
     .videoControls {
         z-index: 200;
-        top: calc(100vh - 50%);
+        top: calc(100vh - 57%);
         /*padding-top: 56.25%;*/
         @apply fixed flex flex-row justify-center left-0 right-0 mx-auto space-x-4 w-full
+    }
+    .backToPage {
+        z-index: 200;
+        top: calc(100vh - 50%);
+        @apply fixed w-fit right-6 p-2 drop-shadow bg-gray-800 text-white hover:bg-gray-600
     }
     .ottButtonsContainer {
         z-index: 200;
         @apply fixed flex flex-row justify-center left-0 right-0 mx-auto space-x-4 bottom-4 w-full
-    }
-    .backToPage {
-        z-index: 200;
-        top: calc(100vh - 57%);
-        @apply fixed w-fit right-6 p-2 drop-shadow bg-gray-800 text-white hover:bg-gray-600
     }
     .channelsFullPageContainer {
         z-index: 200;
@@ -237,18 +269,13 @@ html {
         overflow-y-auto scroll-smooth hover:scroll-auto break-words
     }
     .chatFullPageInput {
-        @apply fixed flex flex-row justify-center left-0 right-0 mx-auto p-2 mb-2 text-black border-2 border-gray-800 hover:border-blue-800 focus:outline-none
+        @apply fixed w-full flex flex-row left-0 right-0 mx-auto p-2 mb-2 text-black border-2 border-gray-800 hover:border-blue-800 focus:outline-none
     }
     .chatCloseButton {
-        top: 24rem;
-        right: 2rem;
         z-index: 60;
-        @apply fixed opacity-80 w-16 px-4 py-4 w-fit rounded-full bg-orange-800
+        @apply fixed bottom-8 right-2 opacity-80 w-16 px-2 py-2 w-fit rounded-full bg-orange-800
         text-gray-50 hover:bg-blue-800 hover:text-blue-200
         cursor-pointer font-semibold text-xs
-
-        /*@apply fixed bottom-5 left-0 mx-auto opacity-100 w-fit h-12 p-4 rounded-full*/
-        /*text-gray-50 bg-blue-900 hover:bg-blue-800 cursor-pointer font-semibold text-xs*/
     }
     .filtersFullPageContainer {
         z-index: 200;
@@ -261,10 +288,20 @@ html {
         @apply fixed bottom-5 left-0 right-0 mx-auto opacity-100 w-fit h-12 p-4 rounded-full
         text-gray-50 bg-yellow-600 hover:bg-yellow-500 cursor-pointer font-semibold text-xs
     }
+    .ottTopRightDisplay {
+        @apply fixed top-40 right-0 h-full w-full mt-7 px-2 overflow-y-scroll scrollbar-hide z-50 border-t border-gray-900
+    }
 }
-/* End @media (max-width:1024px) */
+/* End Mobile and Tablet */
 
-/* Desktop and Standard (lg:) */
+
+/*!**!    ^^^^ mobile and tablet ^^^^    */
+/*****************************************/
+/*!**!  ---- THE NEW LAYOUT STYLING ---- */
+/*!**!        DESKTOP AND STANDARD       */
+/*****************************************/
+
+/* Begin Desktop and Standard (lg:) */
 @media (min-width:1024px) {
     .welcomeVideoContainer {
         position: absolute;
@@ -297,10 +334,6 @@ html {
         min-height:calc(100vh - 5rem);
         width:100vw;
         z-index: 50;
-        /*min-width:100vw;*/
-        /*max-width:100vw;*/
-        /*min-height:100vh;*/
-        /*padding-top: 56.25%;*/
         display: flex;
         flex-wrap: wrap;
         align-content: flex-start;
@@ -314,9 +347,7 @@ html {
         left: 0;
         right: 0;
         min-height:calc(100vh - 5rem);
-        /*min-width:100vw;*/
         width:100vw;
-        /*max-height:100vh;*/
         z-index:50;
         display: flex;
         flex-wrap: wrap;
@@ -339,37 +370,37 @@ html {
         top: 4rem;
         right: 0;
         width:24rem;
-        /*max-width:24rem;*/
-        /*min-width:100vw;*/
-        /*max-width: 100vw;*/
         min-height:14rem;
         display: flex;
         flex-wrap: wrap;
         align-content: flex-start;
-        /*max-height:14rem;*/
+        background-color: black;
+    }
+    .pipVideoContainer {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width:24rem;
+        min-height:14rem;
+        display: flex;
+        flex-wrap: wrap;
+        align-content: flex-start;
+        background-color: purple;
+    }
+    .pipVideoClass {
+        position:fixed;
+        top: 4rem;
+        right: 0;
+        width:24rem;
+        min-height:14rem;
+        display: flex;
+        flex-wrap: wrap;
+        align-content: flex-start;
         background-color: black;
     }
     .fullPageVideoOSD {
         top: 6rem;
-        /*right: 0px;*/
-        /*width:100%;*/
-        /*!*max-width:24rem;*!*/
-        /*min-width:100vw;*/
-        /*!*max-width: 100vw;*!*/
-        /*height:14rem;*/
-        /*max-height:14rem;*/
-        /*background-color: green;*/
     }
-    /*.topRightVideoClassMobile {*/
-    /*    position:fixed;*/
-    /*    top: 4rem;*/
-    /*    right: 0;*/
-    /*    !*max-width:24rem;*!*/
-    /*    width:24rem;*/
-    /*    !*max-width: 100vw;*!*/
-    /*    height:6rem;*/
-    /*    background-color: black;*/
-    /*}*/
     .bugTopRightContainer {
         @apply opacity-10
     }
@@ -377,19 +408,21 @@ html {
         z-index: 900;
         @apply fixed right-2 top-20 w-10 mr-4 hidden lg:block
     }
+    .osdFullPage {
+        @apply fixed w-full flex flex-col top-16 left-0 p-5 drop-shadow z-50
+    }
     .videoControls {
         z-index: 200;
-        /*@apply fixed flex justify-center mx-auto space-x-4 bottom-10 w-fit*/
         @apply fixed flex flex-row space-x-2 bottom-6 left-6
+    }
+    .backToPage {
+        z-index: 200;
+        @apply fixed w-fit top-20 right-4 p-2 drop-shadow bg-gray-800 text-white hover:bg-gray-600
     }
     .ottButtonsContainer {
         z-index: 200;
         position: fixed;
         @apply flex flex-row space-x-2 bottom-6 right-6
-    }
-    .backToPage {
-        z-index: 900;
-        @apply fixed w-fit top-28 right-4 p-2 drop-shadow bg-gray-800 text-white hover:bg-gray-600
     }
     .channelsFullPageContainer {
         z-index: 200;
@@ -432,8 +465,9 @@ html {
         @apply fixed right-20 p-2 m-2 mb-2 w-fit text-black border-2 border-gray-800 hover:border-blue-800 focus:outline-none
     }
     .chatCloseButton {
-        @apply fixed bottom-5 right-32 opacity-100 w-fit h-12 p-4 rounded-full
-        text-gray-50 bg-blue-900 hover:bg-blue-800 grid justify-center content-center
+        z-index: 60;
+        @apply fixed top-20 right-6 opacity-100 w-fit h-12 p-4 rounded-full
+        bg-orange-800 text-gray-50 hover:bg-blue-800 hover:text-blue-200 grid justify-center content-center
         cursor-pointer font-semibold text-xs
     }
     .filtersFullPageContainer {
@@ -450,24 +484,17 @@ html {
         text-gray-50 bg-yellow-600 hover:bg-yellow-500 grid justify-center content-center
         cursor-pointer font-semibold text-xs
     }
+    .ottTopRightDisplay {
+        @apply fixed top-72 right-0 h-full w-96 mt-7 px-2 overflow-y-scroll scrollbar-hide z-50 border-t border-gray-900
+    }
 
 }
-/* End @media (min-width:1024px) */
+/* End Desktop and Standard */
+/*****************************************/
+/*  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^  */
+/*!**!  THE NEW LAYOUT STYLING IS ABOVE  */
+/*****************************************/
 
-/*@media (max-width:844px) {*/
-/*    .topRightVideoClass.mobile {*/
-/*        position:relative;*/
-/*        top: 4rem;*/
-/*        right: 0;*/
-/*        width:100%;*/
-/*        !*max-width:24rem;*!*/
-/*        min-width:100vw;*/
-/*        !*max-width: 100vw;*!*/
-/*        height:6rem;*/
-/*        max-height:6rem;*/
-/*        background-color: black;*/
-/*    }*/
-/*}*/
 
 .ottDisplayDesktop {
     z-index: 200;
@@ -647,6 +674,7 @@ html {
 
 .videoOTT {
     z-index: 300;
+    @apply fixed top-40 lg:top-72 h-fit w-full lg:w-96 right-0 z-30
 }
 .OttOpen {
     z-index: 30;

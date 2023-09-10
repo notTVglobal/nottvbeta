@@ -24,26 +24,28 @@ onBeforeMount(() => {
 onMounted(() => {
     videoPlayerStore.makeVideoFullPage()
     videoPlayerStore.showOsdAndControlsAndNav()
-    videoPlayerStore.ottClass = 'OttClose'
-    videoPlayerStore.ott = 0
-
-    videoPlayerStore.showOttButtons = true
-    chatStore.showChat = false
-    videoPlayerStore.showChannels = false
-    videoPlayerStore.showPlaylist = false
-    videoPlayerStore.showFilters = false
     videoPlayerStore.loggedIn = true
+    videoPlayerStore.ott = 0
+    videoPlayerStore.osd = true
+
+    videoPlayerStore.ottButtons = true
+    videoPlayerStore.ottChannels = false
+    videoPlayerStore.ottChat = false
+    videoPlayerStore.ottPlaylist = false
+    videoPlayerStore.ottFilters = false
 
 })
 
 onUnmounted(() => {
     videoPlayerStore.currentPageIsStream = false;
-    chatStore.showChat = false
-    streamStore.showOSD = true
-    videoPlayerStore.showOttButtons = true
-    videoPlayerStore.showChannels = false
-    videoPlayerStore.showPlaylist = false
-    videoPlayerStore.showFilters = false
+    videoPlayerStore.ott = 0
+    videoPlayerStore.osd = true
+
+    videoPlayerStore.ottButtons = true
+    videoPlayerStore.ottChannels = false
+    videoPlayerStore.ottChat = false
+    videoPlayerStore.ottPlaylist = false
+    videoPlayerStore.ottFilters = false
 })
 
 let props = defineProps ({

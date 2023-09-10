@@ -1,13 +1,9 @@
 <template>
-    <div>
-<!--        <div v-for="channel in props.channels"-->
-<!--             :key="channel.id"-->
-<!--             class="">-->
-<!--            <div>{{channel.name}}</div>-->
+    <div class="overflow-y-scroll scrollbar-hide">
 
             <div v-for="channel in channelStore.channel_list"
                  :key="channel.id"
-                 class="show">
+                 class="channel">
 
                 <button :class="[ channelClass, {activeChannelFullPage:channelStore.currentChannelId===channel.id }]"
                         @click="changeChannel(channel)">

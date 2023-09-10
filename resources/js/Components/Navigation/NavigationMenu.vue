@@ -1,7 +1,8 @@
 <template>
-    <nav class="sticky top-0 bg-black border-b border-gray-100 z-50" :class="{ isFullPageCss: videoPlayerStore.fullPage }">
+    <div class="hidden lg:block fixed top-0 w-full nav-mask">
+    <nav class="sticky top-0 bg-black border-b border-gray-100" :class="{ isFullPageCss: videoPlayerStore.fullPage }">
         <!-- Primary Navigation Menu -->
-        <div class="max-w-7xl mx-auto px-4 lg:px-6 xl:px-8 z-50">
+        <div class="max-w-7xl mx-auto px-4 lg:px-6 xl:px-8">
             <div class="flex justify-between h-16">
                 <div class="flex">
                     <!-- Logo -->
@@ -83,7 +84,7 @@
                 </div>
 
 
-                <div class="hidden lg:flex lg:items-center lg:ml-6 z-50">
+                <div class="hidden lg:flex lg:items-center lg:ml-6">
 
                     <div class="grid grid-cols-2 gap-4">
                         <div class="align-text-top -mt-5">
@@ -102,7 +103,7 @@
                         </div>
                     </div>
                     <!-- Settings Dropdown -->
-                    <div class="ml-3 relative z-50">
+                    <div class="ml-3 relative menuMask">
 
                         <JetDropdown align="right" width="48">
                             <template #trigger>
@@ -244,6 +245,7 @@
             </div>
         </div>
     </nav>
+    </div>
 </template>
 
 <script setup>
@@ -259,6 +261,7 @@ import { useChatStore } from "@/Stores/ChatStore.js";
 import { useStreamStore } from "@/Stores/StreamStore";
 import { useUserStore } from "@/Stores/UserStore";
 import { useWelcomeStore } from "@/Stores/WelcomeStore";
+import {onMounted} from "vue";
 
 let chat = useChatStore();
 let videoPlayerStore = useVideoPlayerStore();
@@ -272,7 +275,7 @@ let props = defineProps({
 
 function loadStreamPage() {
     videoPlayerStore.makeVideoFullPage()
-    videoPlayerStore.ottClass = 'OttClose'
+    videoPlayerStore.ott = 0
     userStore.showNavDropdown = false
 }
 
@@ -281,10 +284,10 @@ const logout = () => {
     videoPlayerStore.mute();
     videoPlayerStore.fullPage = true;
     videoPlayerStore.loggedIn = false;
+    videoPlayerStore.ottChat = false;
+    videoPlayerStore.ott = 0;
     videoPlayerStore.class = "videoBgFull";
     videoPlayerStore.videoContainerClass = "videoContainerBgFull";
-    chat.class = "chatHidden";
-    chat.showChat = false;
     Inertia.post(route('logout'));
 };
 
@@ -299,8 +302,24 @@ const logout = () => {
 
 // setPage()
 
+onMounted(() => {
+    getUser()
+})
+
 function billingPortal() {
     location.href = ('https://not.tv/billing-portal')
+}
+
+function getUser() {
+    if (props.user) {
+        userStore.id = props.user.id
+        userStore.roleId = props.user.role_id
+        userStore.userIsAdmin = props.user.isAdmin
+    }
+    userStore.isSubscriber()
+    userStore.isCreator()
+    userStore.isVip()
+    userStore.isAdmin()
 }
 
 </script>

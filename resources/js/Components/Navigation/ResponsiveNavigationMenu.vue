@@ -1,53 +1,65 @@
 <template>
-    <!-- Hamburger -->
-    <div class="absolute top-3 right-4 hamburgerMask">
-        <div class="-mr-2 flex items-center lg:hidden z-50">
-                <div v-if="$page.props.user.role_id === 4" class="text-yellow-600 uppercase hidden sm:block w-full">
-                    GOAL <span class="text-xl">100</span> subscribers
+    <div class="lg:hidden fixed top-0 w-full nav-mask">
+        <div class="flex justify-between h-16 w-full border-b border-gray-100 bg-black">
+            <div class="flex">
+                <!-- Logo -->
+                <div class="shrink-0 flex items-center">
+                    <Link @click="loadStreamPage()" :href="route('stream')">
+                        <JetApplicationMark class="ml-5 block h-9 w-auto"/>
+                    </Link>
                 </div>
 
-                <div class="-mt-16 mr-12">
-                    <NotificationsButton class=""/>
+                <!-- Hamburger -->
+                <div class="fixed top-3 right-4 hamburgerMask">
+                    <div class="-mr-2 flex items-center">
+                            <div v-if="$page.props.user.role_id === 4" class="text-yellow-600 uppercase hidden sm:block w-full">
+                                GOAL <span class="text-xl">100</span> subscribers
+                            </div>
+
+                            <div class="-mt-16 mr-12">
+                                <NotificationsButton class=""/>
+                            </div>
+                        <button
+                            class="inline-flex items-center justify-center p-2 rounded-md text-gray-100 transition hamburgerMask"
+                            :class="{ 'hover:text-white hover:bg-blue-600': userStore.showNavDropdown}"
+
+                            @click="userStore.toggleNavDropdown()">
+            <!--                @click="chatStore.showNavDropdown = ! chatStore.showNavDropdown">-->
+
+                            <span class="pr-2">MENU</span>
+                            <svg
+                                class="h-6 w-6"
+                                stroke="currentColor"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    :class="{'hidden': userStore.showNavDropdown, 'inline-flex': ! userStore.showNavDropdown }"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M4 6h16M4 12h16M4 18h16"
+                                />
+                                <path
+                                    :class="{'hidden': ! userStore.showNavDropdown, 'inline-flex': userStore.showNavDropdown }"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12"
+                                />
+                            </svg>
+                        </button>
+                    </div>
                 </div>
-            <button
-                class="inline-flex items-center justify-center p-2 rounded-md text-gray-100 transition"
-                :class="{ 'hover:text-white hover:bg-blue-600': userStore.showNavDropdown}"
-
-                @click="userStore.toggleNavDropdown()">
-<!--                @click="chatStore.showNavDropdown = ! chatStore.showNavDropdown">-->
-
-                <span class="pr-2">MENU</span>
-                <svg
-                    class="h-6 w-6"
-                    stroke="currentColor"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                >
-                    <path
-                        :class="{'hidden': userStore.showNavDropdown, 'inline-flex': ! userStore.showNavDropdown }"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M4 6h16M4 12h16M4 18h16"
-                    />
-                    <path
-                        :class="{'hidden': ! userStore.showNavDropdown, 'inline-flex': userStore.showNavDropdown }"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M6 18L18 6M6 6l12 12"
-                    />
-                </svg>
-            </button>
+            </div>
         </div>
-    </div>
     <!-- Responsive Navigation Menu -->
 <!--    <div :class="{'block': showingNavigationDropdown, 'hidden': ! showingNavigationDropdown}"-->
     <div :class="{'block': userStore.showNavDropdown, 'hidden': ! userStore.showNavDropdown}"
          class="lg:hidden bg-gray-800 text-white fixed w-full h-full">
         <!-- Responsive Settings Options -->
         <!--   Fix Menu height e.g., h-[calc(h-100%-16rem)]      -->
-        <div class="pt-16 pb-0 h-[calc(100vh)] overflow-y-auto">
+        <div class="pb-0 h-[calc(100vh)] overflow-y-auto">
             <div class="px-4 bg-gray-800 border-b border-1 border-white w-full h-100%">
 
                 <div class="flex justify-between pt-2">
@@ -250,7 +262,7 @@
             </div>
         </div> <div class="fixed w-full bottom-4 text-center hidden">Scroll the menu.</div>
     </div>
-
+    </div>
 </template>
 
 <script setup>
@@ -259,8 +271,10 @@ import NotificationsButton from '@/Components/Navigation/NotificationsButton.vue
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useChatStore } from "@/Stores/ChatStore"
 import { useUserStore } from "@/Stores/UserStore"
-import { ref } from "vue"
+import { ref, onBeforeMount } from "vue"
 import {Inertia} from "@inertiajs/inertia"
+import JetApplicationMark from "@/Jetstream/ApplicationMark.vue";
+import {Link} from "@inertiajs/inertia-vue3";
 
 const showingNavigationDropdown = ref(false);
 
@@ -277,21 +291,39 @@ const logout = () => {
     videoPlayerStore.mute();
     videoPlayerStore.fullPage = true;
     videoPlayerStore.loggedIn = false;
+    videoPlayerStore.ottChat = false;
+    videoPlayerStore.ott = 0;
     videoPlayerStore.class = "welcomeVideoClass";
     videoPlayerStore.videoContainerClass = "welcomeVideoContainer";
-    chatStore.class = "chatHidden";
-    chatStore.show = false;
+    // chatStore.class = "chatHidden";
+    // chatStore.show = false;
     Inertia.post(route('logout'));
 };
+
+onBeforeMount(() => {
+    getUser()
+})
+
+function loadStreamPage() {
+    videoPlayerStore.makeVideoFullPage()
+    videoPlayerStore.ott = 0
+    userStore.showNavDropdown = false
+}
 
 function billingPortal() {
     location.href = ('https://not.tv/billing-portal')
 }
 
-</script>
-
-<style>
-.hamburgerMask {
-    z-index: 100;
+function getUser() {
+    if (props.user) {
+        userStore.id = props.user.id
+        userStore.roleId = props.user.role_id
+        userStore.userIsAdmin = props.user.isAdmin
+    }
+    userStore.isSubscriber()
+    userStore.isCreator()
+    userStore.isVip()
+    userStore.isAdmin()
 }
-</style>
+
+</script>

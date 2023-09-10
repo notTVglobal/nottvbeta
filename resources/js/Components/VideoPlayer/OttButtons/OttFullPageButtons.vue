@@ -1,5 +1,5 @@
 <template>
-    <div v-if="videoPlayerStore.showOttButtons">
+    <div v-if="videoPlayerStore.ottButtons">
 
         <div class="ottButtonsContainer">
             <button v-if="userStore.userIsSubscriber"
@@ -41,21 +41,21 @@ let userStore = useUserStore()
 
 function openChannels() {
     videoPlayerStore.toggleChannels()
-    videoPlayerStore.showControls = false
+    // videoPlayerStore.controls = false
 }
 
 function openPlaylist() {
     videoPlayerStore.togglePlaylist()
-    videoPlayerStore.showControls = false
+    // videoPlayerStore.controls = false
 }
 function openChat() {
-    chatStore.toggleChatOn()
-    videoPlayerStore.showOttButtons = false
-    videoPlayerStore.showControls = false
+    videoPlayerStore.toggleChat()
+    // videoPlayerStore.ottButtons = false
+    // videoPlayerStore.controls = false
 }
 
 function openFilters() {
     videoPlayerStore.toggleFilters()
-    videoPlayerStore.showControls = false
+    // videoPlayerStore.controls = false
 }
 </script>

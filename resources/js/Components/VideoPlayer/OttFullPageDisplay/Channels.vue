@@ -9,7 +9,7 @@
     >
 
 
-            <div v-if="videoPlayerStore.showChannels" class="channelsFullPageContainer">
+            <div v-if="videoPlayerStore.ottChannels" class="channelsFullPageContainer">
 
                 <div class="flex flex-col p-5 mt-2">
                     <div class="text-3xl text-center font-semibold uppercase mb-3 w-full bg-green-900 text-white p-2">CHANNELS</div>
@@ -20,7 +20,7 @@
                 </div>
 
                 <button v-touch="()=>videoPlayerStore.toggleChannels()"
-                        v-if="videoPlayerStore.showChannels" class="channelsCloseButton">
+                        v-if="videoPlayerStore.ottChannels" class="channelsCloseButton">
                     CLOSE CHANNELS
                 </button>
         </div>

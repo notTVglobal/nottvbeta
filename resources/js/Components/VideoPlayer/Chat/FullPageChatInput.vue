@@ -49,10 +49,9 @@ const vFocus = {
 }
 
 function focusInput() {
-    
     videoPlayerStore.makeVideoPiP()
-    videoPlayerStore.showOSD = false
-    videoPlayerStore.showOttButtons = false
+    videoPlayerStore.ott = false
+    videoPlayerStore.ottButtons = false
 }
 
 function sendMessage() {

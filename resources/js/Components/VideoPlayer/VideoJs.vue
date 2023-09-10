@@ -1,27 +1,8 @@
 <template>
     <div>
-<!--        <video ref="videoPlayer" id="main-player" class="video-js vjs-big-play-centered vjs-fill bg-pink-700" playsinline autoplay muted>-->
-<!--        <video ref="videoPlayer" id="main-player" class="video-js"></video>-->
-<!--        <video ref="videoPlayer"-->
-<!--               id="main-player"-->
-<!--               class="video-js vjs-big-play-centered vjs-fill"-->
-<!--               v-touch="() => {clickOnVideoAction()}"-->
-<!--        />-->
-
-<!--        This one works... but we have the iPhone bug -->
-<!--        <video-js ref="videoPlayer"-->
-<!--                  id="main-player"-->
-<!--                  class="video-js vjs-big-play-centered vjs-fill"-->
-<!--                  data-setup='{"controls": false, "autoplay": true, "preload": "auto", "muted": true, "techOrder": ["html5"]}'-->
-<!--                  playsinline-->
-<!--        >-->
-<!--            &lt;!&ndash;                        <source :src='`/storage/videos/BigBuckBunny.mp4`' :type='`video/mp4`'>&ndash;&gt;-->
-<!--            <source :src='videoPlayerStore.videoSource' :type='videoPlayerStore.videoSourceType'>-->
-<!--            &lt;!&ndash;                        <source :src='src' :type='type'>&ndash;&gt;-->
-<!--        </video-js>-->
 
         <video-js id="main-player"
-                  class="video-js vjs-big-play-centered vjs-fill"
+                  class="video-js vjs-big-play-centered vjs-fluid"
                   data-setup='{"controls": false, "autoplay": true, "preload": "auto", "muted": true, "techOrder": ["html5"]}'
                   playsinline />
 
@@ -35,7 +16,7 @@ import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js";
 import {useStreamStore} from "@/Stores/StreamStore.js";
 import {useChatStore} from "@/Stores/ChatStore.js";
 import {useUserStore} from "@/Stores/UserStore.js";
-import {ref, onMounted, onBeforeUnmount, onUnmounted} from "vue";
+import {computed, ref, onMounted, onBeforeUnmount, onUnmounted} from "vue";
 import videojs from "video.js";
 import {Inertia} from "@inertiajs/inertia";
 
@@ -43,11 +24,6 @@ let videoPlayerStore = useVideoPlayerStore();
 let streamStore = useStreamStore();
 let chatStore = useChatStore();
 let userStore = useUserStore();
-
-const props = defineProps({
-    // options: Object,
-    // id: String,
-})
 
 let playerName = 'main-player'
 
@@ -58,27 +34,16 @@ let videoOptions = {
     enableSourceset: true,
 }
 
-
 onMounted(async () => {
     await getFirstPlaySettings()
     let videoPlayer = videojs(document.querySelector('.video-js'));
-    // videoPlayer.src({type: 'video/mp4', src: '/storage/videos/BigBuckBunny.mp4'});
     console.log(videoPlayerStore.videoSource)
-    videoPlayer.src({type: 'video/mp4', src: videoPlayerStore.videoSource});
-// let videoPlayer = videojs.getPlayer('main-player', videoOptions)
+    videoPlayer.src({type: videoPlayerStore.videoSourceType, src: videoPlayerStore.videoSource});
     videoPlayer.ready(function() {
-        videoPlayer.currentTime(120);
+        // videoPlayer.currentTime(120);
         console.log('video player ready')
     })
-    // videoPlayerStore.videoSource = "/storage/videos/BigBuckBunny.mp4"
-    // videoPlayerStore.videoSourceType = "video/mp4"
     await videoPlayer.play()
-})
-
-onUnmounted(() => {
-    // if (videoPlayer) {
-    //     videoPlayer.dispose()
-    // }
 })
 
 async function getFirstPlaySettings() {
@@ -97,58 +62,51 @@ async function getFirstPlaySettings() {
     // videoJs = videojs('main-player', videoOptions)
 }
 
-// function clickOnVideoAction() {
-//     if (videoPlayerStore.currentPageIsStream === true) {
-//         videoPlayerStore.toggleOSD()
-//     } else {
-//         Inertia.visit('/stream')
-//     }
-//     // videoPlayerStore.ottClass = 'OttClose'
-//     // videoPlayerStore.ott = 0
-//     // if(userStore.isMobile) {
-//     //
-//     // } else {
-//     //     // videoPlayerStore.toggleOsdAndControls()
-//     // }
-//     // }
-// }
-
-
 </script>
 
-<!--<script>-->
-<!--import videojs from 'video.js';-->
-
-<!--export default {-->
-<!--    name: 'VideoPlayer',-->
-<!--    props: {-->
-<!--        options: {-->
-<!--            type: Object,-->
-<!--            default() {-->
-<!--                return {};-->
-<!--            }-->
-<!--        }-->
-<!--    },-->
-<!--    data() {-->
-<!--        return {-->
-<!--            player: null-->
-<!--        }-->
-<!--    },-->
-<!--    mounted() {-->
-<!--        this.player = videojs(this.$refs.videoPlayer, this.options, () => {-->
-<!--            this.player.log('onPlayerReady', this);-->
-<!--        });-->
-<!--    },-->
-<!--    beforeDestroy() {-->
-<!--        if (this.player) {-->
-<!--            this.player.dispose();-->
-<!--        }-->
-<!--    }-->
-<!--}-->
-
-<!--</script>-->
-
 <style>
+
+.video-js .vjs-tech {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.video-js {
+    /*display: block;*/
+    /*vertical-align: top;*/
+    /*box-sizing: border-box;*/
+    color: #fff;
+    background-color: #000;
+    //position: relative;
+    padding: 0;
+    font-size: 10px;
+    line-height: 1;
+    font-weight: normal;
+    font-style: normal;
+    font-family: Arial, Helvetica, sans-serif;
+    word-break: initial;
+}
+.video-js:-moz-full-screen {
+    position: absolute;
+}
+.video-js:-webkit-full-screen {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.video-js[tabindex="-1"] {
+    outline: none;
+}
+
+.video-js *,
+.video-js *:before,
+.video-js *:after {
+    box-sizing: inherit;
+}
+
 
 
 .vjs-default-skin .vjs-resume-modal .vjs-resume-modal-buttons {
@@ -525,39 +483,6 @@ async function getFirstPlaySettings() {
     content: "\f122";
 }
 
-.video-js {
-    /*display: block;*/
-    /*vertical-align: top;*/
-    /*box-sizing: border-box;*/
-    color: #fff;
-    background-color: #000;
-    /*position: relative;*/
-    padding: 0;
-    font-size: 10px;
-    line-height: 1;
-    font-weight: normal;
-    font-style: normal;
-    font-family: Arial, Helvetica, sans-serif;
-    word-break: initial;
-}
-.video-js:-moz-full-screen {
-    position: absolute;
-}
-.video-js:-webkit-full-screen {
-    width: 100% !important;
-    height: 100% !important;
-}
-
-.video-js[tabindex="-1"] {
-    outline: none;
-}
-
-.video-js *,
-.video-js *:before,
-.video-js *:after {
-    box-sizing: inherit;
-}
-
 .video-js ul {
     font-family: inherit;
     font-size: inherit;
@@ -574,8 +499,8 @@ async function getFirstPlaySettings() {
 .video-js.vjs-4-3,
 .video-js.vjs-9-16,
 .video-js.vjs-1-1 {
-    /*width: 100%;*/
-    /*max-width: 100%;*/
+    width: 100%;
+    max-width: 100%;
 }
 
 .video-js.vjs-fluid:not(.vjs-audio-only-mode),
@@ -603,14 +528,6 @@ async function getFirstPlaySettings() {
 }
 
 .video-js.vjs-fill:not(.vjs-audio-only-mode) {
-    width: 100%;
-    height: 100%;
-}
-
-.video-js .vjs-tech {
-    position: absolute;
-    top: 0;
-    left: 0;
     width: 100%;
     height: 100%;
 }

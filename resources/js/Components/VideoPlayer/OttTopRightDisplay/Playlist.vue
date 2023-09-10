@@ -1,5 +1,5 @@
 <template>
-    <div v-if="videoPlayerStore.ott !== 0" class="fixed top-44 lg:top-78 right-0 w-full h-full lg:w-96 mt-3 lg:mt-2 overflow-y-none z-40 border-t border-gray-900">
+    <div v-if="videoPlayerStore.ott === 3" class="ottTopRightDisplay bg-orange-800 ">
     <div class="h-full w-full overflow-y-scroll scrollbar-hide">
 
         <upgrade v-if="videoPlayerStore.ott === 3 && (!userStore.userIsSubscriber || !userStore.userIsVip)"/>
@@ -42,7 +42,7 @@ let playVideo = (source) => {
 }
 
 const ottDisplayShow = computed(() => ({
-    'hidden': videoPlayerStore.ottClass !== 'OttOpen'
+    'hidden': !videoPlayerStore.ott
 }))
 
 const ottChannels = computed(() => ({

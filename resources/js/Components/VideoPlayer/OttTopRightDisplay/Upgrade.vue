@@ -1,6 +1,6 @@
 <template>
 
-    <div class="fixed top-44 lg:top-78 right-0 w-full h-full lg:w-96 mt-3 lg:mt-2 mb-64 p-2 z-40 bg-gray-600 text-gray-50 overflow-y-none border-t border-gray-900">
+    <div class="ottTopRightDisplay bg-gray-600 text-gray-50">
 
         <h1 class="text-xs font-semibold uppercase mb-3 w-full bg-yellow-600 text-black p-2">UPGRADE</h1>
         <div class="pb-24 w-full overflow-y-scroll scrollbar-hide"

@@ -10,7 +10,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
     state: () => ({
             class: '',
             videoContainerClass: '',
-            ottClass: 'OttClose',
+            // ottClass: 'OttClose',
             videoSourceIdSrc1: '',
             videoSourceIdSrc2: '',
             videoSourceIdSrc3: '',
@@ -38,13 +38,13 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             pip: false,
             loggedIn: Boolean,
 
-            showOSD: true,
-            showControls: true,
-            showNav: true,
-            showOttButtons: true,
-            showChannels: false,
-            showPlaylist: false,
-            showFilters: false,
+            osd: true,
+            controls: true,
+            ottButtons: true,
+            ottChannels: false,
+            ottPlaylist: false,
+            ottFilters: false,
+            ottChat: false,
 
             muted: true,
             paused: Boolean,
@@ -74,38 +74,38 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
 
         // show
         showOsdAndControls() {
-            this.showOSD = true
-            this.showControls = true
+            this.osd = true
+            this.controls = true
         },
         showOsdAndControlsAndNav() {
-            this.showOSD = true
-            this.showControls = true
-            this.showNav = true
-            this.showOttButtons = true
+            this.osd = true
+            this.controls = true
+            // useUserStore().showNavDropdown = true
+            this.ottButtons = true
         },
         showOsd() {
-            this.showOSD = true
+            this.osd = true
         },
         showOsdControlsOnly() {
-            this.showControls = true
+            this.controls = true
         },
 
         // hide
         hideOsdAndControls() {
-            this.showOSD = false
-            this.showControls = false
+            this.osd = false
+            this.controls = false
         },
         hideOsdAndControlsAndNav() {
-            this.showOSD = false
-            this.showControls = false
-            this.showNav = false
-            this.showOttButtons = false
+            this.osd = false
+            this.controls = false
+            // useUserStore().showNavDropdown = false
+            this.ottButtons = false
         },
         hideOsd() {
-            this.showOSD = false
+            this.osd = false
         },
         hideOsdControlsOnly() {
-            this.showControls = false
+            this.controls = false
         },
 
         // toggles
@@ -118,51 +118,51 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                 this.videoContainerClass = 'topRightVideoContainer'
         },
         toggleOSD() {
-            this.showOSD = !this.showOSD
-            this.showControls = !this.showControls
-            this.showNav = ! this.showNav
+            this.osd = !this.osd
+            this.controls = !this.controls
         },
         toggleControls() {
-            this.showControls = !this.showControls
+            this.controls = !this.controls
         },
         toggleOsdAndControls() {
-            this.showOSD = !this.showOSD
-            this.showControls = !this.showControls
+            this.osd = !this.osd
+            this.controls = !this.controls
         },
         toggleOsdAndControlsAndNav() {
-            this.showOSD = !this.showOSD
-            this.showControls = !this.showControls
-            this.showNav = !this.showNav
-            this.showOttButtons = !this.showOttButtons
+            this.osd = !this.osd
+            this.controls = !this.controls
+            this.ottButtons = !this.ottButtons
         },
         toggleOtt(num) {
             if (this.ott === num) {
                 this.ott = 0
-                this.ottClass = 'OttClose'
             } else {
                 this.ott = num
-                this.ottClass = 'OttOpen'
             }
         },
         toggleChannels() {
-            this.showOttButtons = !this.showOttButtons
-            this.showControls = !this.showControls
-            this.showChannels = !this.showChannels
+            this.ottButtons = !this.ottButtons
+            this.osd = !this.osd
+            this.controls = !this.controls
+            this.ottChannels = !this.ottChannels
         },
         togglePlaylist() {
-            this.showOttButtons = !this.showOttButtons
-            this.showControls = !this.showControls
-            this.showPlaylist = !this.showPlaylist
+            this.ottButtons = !this.ottButtons
+            this.osd = !this.osd
+            this.controls = !this.controls
+            this.ottPlaylist = !this.ottPlaylist
         },
         toggleChat() {
-            this.showOttButtons = !this.showOttButtons
-            this.showControls = !this.showControls
-            useChatStore().toggleChat()
+            this.ottButtons = !this.ottButtons
+            this.osd = !this.osd
+            this.controls = !this.controls
+            this.ottChat = !this.ottChat
         },
         toggleFilters() {
-            this.showOttButtons = !this.showOttButtons
-            this.showControls = !this.showControls
-            this.showFilters = !this.showFilters
+            this.ottButtons = !this.ottButtons
+            this.osd = !this.osd
+            this.controls = !this.controls
+            this.ottFilters = !this.ottFilters
         },
         toggleOttInfo() {
             this.toggleOtt(1)
@@ -181,7 +181,6 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
         },
         closeOtt() {
             this.toggleOtt(0)
-            this.ottClass = 'ottClose'
         },
 
         // video controls
@@ -337,22 +336,25 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
         // change video size/position and page layout
         makeVideoPiP() {
             if (useUserStore().isMobile) {
-                this.class = 'PipVideoClass'
-                this.videoContainerClass = 'PipVideoContainerClass'
+                let videoJs = videojs('main-player')
+                this.class = 'pipVideoClass'
+                this.videoContainerClass = 'pipVideoContainerClass'
             }
         },
         makeVideoFullPage() {
             this.fullPage = true;
-            if (useUserStore().isMobile) {
-                this.videoContainerClass = 'fullPageVideoContainerMobile'
-                this.class = 'fullPageVideoClassMobile'
-            } else {
-                this.videoContainerClass = 'fullPageVideoContainer'
-                this.class = 'fullPageVideoClass'
-            }
+            this.videoContainerClass = 'fullPageVideoContainer'
+            this.class = 'fullPageVideoClass'
+            // if (useUserStore().isMobile) {
+            //     this.videoContainerClass = 'fullPageVideoContainerMobile'
+            //     this.class = 'fullPageVideoClassMobile'
+            // } else {
+            //     this.videoContainerClass = 'fullPageVideoContainer'
+            //     this.class = 'fullPageVideoClass'
+            // }
             // this.currentPageIsStream = true;
             // useChatStore().makeBig();
-            // useStreamStore().showOSD = false;
+            // useStreamStore().osd = false;
 
             // tec21: this lets the video start playing when the stream page is loaded.
             // but it's preventing the videoPlayer from mounting.
