@@ -91,7 +91,7 @@
                     </div>
                     <div class="justify-end text-right w-12">
                         <div v-if="!userStore.isAdmin">
-                            <div v-if="userStore.isSubscriber" class="text-xs font-semibold text-fuchsia-700">PREMIUM SUBSCRIBER</div>
+                            <div v-if="userStore.isSubscriber" class="text-xs font-semibold text-fuchsia-700">PREMIUM</div>
                             <div v-if="userStore.isVip" class="text-xs font-semibold text-fuchsia-700">VIP</div>
                             <div v-if="userStore.isCreator" class="text-xs font-semibold text-fuchsia-700">CREATOR</div>
                         </div>
@@ -255,9 +255,9 @@
 
 
 
-                <div class="flex flex-col w-full space-y-1 text-gray-600 text-sm">
+                <div class="flex flex-col w-full space-y-1 text-gray-600 text-sm pb-20">
 <!--                    <div class="flex pt-12 justify-center">Web application concept and design</div>-->
-                    <div class="flex justify-center">not<span class="text-xs">&#174;</span>TV &#169;2010-{{new Date().getFullYear()}}</div>
+                    <div class="flex justify-center">not<span class="text-xs">&#174;</span>TV &#169;2009-{{new Date().getFullYear()}}</div>
                     <div class="flex justify-center">Beta Preview v0.7</div>
 <!--                    <div class="flex pt-4 justify-center">Please send us comments and questions <a href="https://help.not.tv/" target="_blank" class="text-blue-600 hover:text-blue-40">&nbsp; here</a>.</div>-->
                 </div>
