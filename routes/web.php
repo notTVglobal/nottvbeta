@@ -237,7 +237,7 @@ Route::middleware([
 //        ->middleware('can:create,App\Models\NewsPerson')
         ->name('newsperson.store');
 
-    Route::post('/newsroom/newsperson/destroy', [\App\Http\Controllers\NewsPersonController::class, 'destroy'])
+    Route::put('/newsroom/newsperson/destroy', [\App\Http\Controllers\NewsPersonController::class, 'destroy'])
 //        ->middleware('can:create,App\Models\NewsPerson')
         ->name('newsperson.destroy');
 

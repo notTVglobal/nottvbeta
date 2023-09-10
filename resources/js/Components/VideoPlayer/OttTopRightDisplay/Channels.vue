@@ -1,8 +1,8 @@
 <template>
     <div v-if="videoPlayerStore.ott === 2" class="ottTopRightDisplay bg-green-900"
     >
-            <upgrade v-if="videoPlayerStore.ott === 2 && (!userStore.userIsSubscriber || !userStore.userIsVip)"/>
-            <div v-if="videoPlayerStore.ott === 2 && (userStore.userIsSubscriber || userStore.userIsVip)">
+            <upgrade v-if="videoPlayerStore.ott === 2 && !userStore.isSubscriber && !userStore.isVip && !userStore.isAdmin"/>
+            <div v-if="videoPlayerStore.ott === 2 && (userStore.isSubscriber || userStore.isVip || userStore.isAdmin)">
 
                     <h1 class="text-xs font-semibold uppercase mb-3 w-full bg-green-900 text-white p-2">
                         CHANNELS

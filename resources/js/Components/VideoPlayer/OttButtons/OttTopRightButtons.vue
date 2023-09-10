@@ -18,7 +18,8 @@
                 :class="chatClass"
                 @click="videoPlayerStore.toggleOttChat()">
             CHAT </button>
-        <button class="h-full w-full"
+        <button v-if="userStore.isVip || userStore.isAdmin"
+                class="h-full w-full"
                 :class="filtersClass"
                 @click="videoPlayerStore.toggleOttFilters()">
             FILTERS </button>

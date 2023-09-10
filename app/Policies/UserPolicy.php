@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Models\User;
 use GuzzleHttp\Psr7\Request;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Auth\Access\Response;
 
 class UserPolicy
 {
@@ -70,13 +71,10 @@ class UserPolicy
      */
     public function viewVip(User $user)
     {
-
-//        return $user->vip;
-        if($user->role_id === 3)
-            return $user->role_id === 3;
-
-        elseif($user->role_id === 4)
-            return $user->role_id === 4;
+        if ($user->isVip ||$user->isAdmin) {
+            return true;
+        }
+        return Response::deny('This feature is coming soon to premium subscribers.');
     }
 
     /**

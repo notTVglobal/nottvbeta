@@ -24,7 +24,7 @@
                         </JetNavLink>
                         </h3>
                         <h3 class="inline-flex items-center relative"
-                            v-if="userStore.isSubscriber || userStore.isVip">
+                            v-if="userStore.isSubscriber || userStore.isVip || userStore.isAdmin">
                         <JetNavLink
                             v-touch="()=>(route('news'))"
                             @click="videoPlayerStore.makeVideoTopRight()"
@@ -34,7 +34,7 @@
                         </JetNavLink>
                         </h3>
                         <h3 class="inline-flex items-center relative"
-                            v-if="userStore.isSubscriber || userStore.isVip">
+                            v-if="userStore.isSubscriber || userStore.isVip || userStore.isAdmin">
                         <JetNavLink
                             v-touch="()=>(route('movies'))"
                             @click="videoPlayerStore.makeVideoTopRight()"
@@ -44,7 +44,7 @@
                         </JetNavLink>
                         </h3>
                         <h3 class="inline-flex items-center relative"
-                            v-if="userStore.isSubscriber || userStore.isVip">
+                            v-if="userStore.isSubscriber || userStore.isVip || userStore.isAdmin">
                         <JetNavLink
                             v-touch="()=>(route('shows'))"
                             @click="videoPlayerStore.makeVideoTopRight()"
@@ -63,7 +63,7 @@
                         </JetNavLink>
                         </h3>
                         <h3 class="inline-flex items-center relative"
-                            v-if="userStore.isVip">
+                            v-if="userStore.isVip || userStore.isAdmin">
                         <JetNavLink
                             v-touch="()=>(route('library'))"
                             @click="videoPlayerStore.makeVideoTopRight()"
@@ -92,7 +92,11 @@
                         </div>
                         <div>
                             <div v-if="!userStore.isAdmin && !userStore.isVip && !userStore.isSubscriber">
-                                <JetNavLink v-touch="()=>(route('upgrade'))" @click="videoPlayerStore.makeVideoTopRight()" :href="route('upgrade')" :active="route().current('upgrade')" class="active:border-none hover:border-none focus:border-none border-none">
+                                <JetNavLink v-touch="()=>(route('upgrade'))"
+                                            @click="videoPlayerStore.makeVideoTopRight()"
+                                            :href="route('upgrade')"
+                                            :active="route().current('upgrade')"
+                                            class="active:border-none hover:border-none focus:border-none border-none">
                                     <div class="w-full rounded-lg p-2 bg-gray-100 text-black hover:bg-gray-300 hover:text-green-900">UPGRADE NOW</div>
                                 </JetNavLink>
                             </div>

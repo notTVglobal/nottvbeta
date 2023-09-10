@@ -105,7 +105,7 @@
             <div class="space-y-1 z-50 bg-gray-900 pb-20 border-b border-1 border-white">
 
                 <JetResponsiveNavLink
-                    v-if="!userStore.isSubscriber || !userStore.isAdmin || !userStore.isVip"
+                    v-if="!userStore.isSubscriber && !userStore.isAdmin && !userStore.isVip"
                     @click="userStore.closeNavDropdown()"
                     :href="route('upgrade')"
                     :active="route().current('upgrade')"
@@ -147,7 +147,7 @@
                 </JetResponsiveNavLink>
 
                 <JetResponsiveNavLink
-                    v-if="userStore.isVip || userStore.isCreator"
+                    v-if="userStore.isSubscriber || userStore.isVip || userStore.isCreator"
                     @click="userStore.closeNavDropdown()"
                     :href="route('movies')"
                     :active="route().current('movies')">

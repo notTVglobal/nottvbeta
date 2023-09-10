@@ -2,8 +2,8 @@
     <div v-if="videoPlayerStore.ott === 3" class="ottTopRightDisplay bg-orange-800 ">
     <div class="h-full w-full overflow-y-scroll scrollbar-hide">
 
-        <upgrade v-if="videoPlayerStore.ott === 3 && (!userStore.userIsSubscriber || !userStore.userIsVip)"/>
-        <div v-if="videoPlayerStore.ott === 3 && (userStore.userIsSubscriber || userStore.userIsVip)" class="now-playing w-full h-full bg-orange-800 p-2 overflow-y-scroll scrollbar-hide mb-64">
+        <upgrade v-if="videoPlayerStore.ott === 3 && !userStore.isSubscriber && !userStore.isVip && !userStore.isAdmin"/>
+        <div v-if="videoPlayerStore.ott === 3 && (userStore.isSubscriber || userStore.isVip || userStore.isAdmin)" class="now-playing w-full h-full bg-orange-800 p-2 overflow-y-scroll scrollbar-hide mb-64">
             <h1 class="text-xs font-semibold uppercase mb-3 w-full bg-orange-900 text-white p-2">PLAYLIST</h1>
             <div class="pb-24 w-full overflow-y-scroll scrollbar-hide"
                  :class="[{'h-[calc(100vh-22rem)]':!userStore.isMobile},{'h-[calc(100vh-20rem)]':userStore.isMobile}]">

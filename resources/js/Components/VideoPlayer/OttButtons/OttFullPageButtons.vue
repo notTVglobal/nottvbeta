@@ -19,7 +19,7 @@
                 <font-awesome-icon icon="fa-comments" class="text-3xl mb-1"/><div>CHAT</div>
             </button>
 
-            <button v-if="userStore.isSubscriber || userStore.isVip"
+            <button v-if="userStore.isVip || userStore.isAdmin"
                     @click="openFilters"
                     class="ottButton bg-yellow-400 text-yellow-100 hover:bg-yellow-600 hover:text-yellow-300">
                 <font-awesome-icon icon="fa-filter" class="ml-1 text-3xl mb-1"/><div>FILTERS</div>
