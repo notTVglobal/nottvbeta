@@ -306,6 +306,24 @@ class UsersController extends Controller
 //        sleep(1);
     }
 
+    public function getUserStoreData()
+    {
+        if (auth()->user()->creator) {
+            $creator = auth()->user()->creator->status_id;
+        } else
+            $creator = false;
+
+
+        return json_encode([
+            'isAdmin' => auth()->user()->isAdmin,
+            'isCreator' => $creator,
+            'isNewsPerson' => auth()->user()->newsPerson,
+            'isVip' => auth()->user()->isVip,
+            'isSubscriber' => auth()->user()->subscribed('default'),
+        ]);
+    }
+
+
     /**
      * Remove the specified resource from storage.
      *

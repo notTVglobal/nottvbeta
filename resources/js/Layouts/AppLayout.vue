@@ -2,10 +2,8 @@
     <div class="fixed top-0 left-0 right-0 bottom-0 bg-gray-800 text-gray-200 vh-100 vw-100 overflow-hidden overscroll-y-none overscroll-x-none">
 
         <!-- Navbar for logged in user -->
-<!--            <div class="fixed top-0 w-full nav-mask">-->
-                <ResponsiveNavigationMenu v-if="user" />
-                <NavigationMenu v-if="user" />
-<!--        </div>-->
+        <ResponsiveNavigationMenu v-if="user" />
+        <NavigationMenu v-if="user" />
 
         <!-- Login for Welcome Page (logged out) -->
         <Teleport to="body">
@@ -24,13 +22,14 @@
 </template>
 
 <script setup>
-import {ref, computed, onBeforeMount, onBeforeUnmount, onUpdated, defineAsyncComponent, onMounted} from "vue"
+import {ref, provide, computed, onBeforeMount, onBeforeUnmount, defineAsyncComponent, onMounted} from "vue"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useStreamStore } from "@/Stores/StreamStore"
 import { useUserStore } from "@/Stores/UserStore"
 import { useChatStore } from "@/Stores/ChatStore"
 import { useShopStore } from "@/Stores/ShopStore"
 import { useChannelStore } from "@/Stores/ChannelStore"
+
 const ResponsiveNavigationMenu = defineAsyncComponent( () =>
     import('@/Components/Navigation/ResponsiveNavigationMenu'))
 const NavigationMenu = defineAsyncComponent( () =>
@@ -67,26 +66,17 @@ const layoutClass = computed(() => ({
 userStore.checkIsMobile()
 userStore.showNavDropdown = false
 
-// getFirstPlaySettings()
 setPage()
 
 onBeforeMount( () => {
-    getUser()
+    if(props.user) {
+        updateUserStore()
+        provide(/* key */ 'getUserData', /* value */ true)
+    }
 })
 
-// onUpdated(() => {
-//     userStore.showNavDropdown = false
-//     getUser()
-// })
-
-onMounted(() => {
+onMounted( () => {
     console.log('we are here.')
-    // let videoJs = videojs('main-player');
-    // videoJs.src({type: 'video/mp4', src: '/storage/videos/ThirdEyeSpies.mp4'});
-    // videoJs.ready(function() {
-    //     // tech() will log warning without any argument
-    //     let tech = videoJs.tech(false);
-    // });
 })
 
 onBeforeUnmount(() => {
@@ -98,16 +88,20 @@ function setPage() {
     isStreamPage = videoPlayerStore.currentPage === "stream";
 }
 
-function getUser() {
-    if (props.user) {
-        userStore.id = props.user.id
-        userStore.roleId = props.user.role_id
-        userStore.userIsAdmin = props.user.isAdmin
-    }
-    userStore.isSubscriber()
-    userStore.isCreator()
-    userStore.isVip()
-    userStore.isAdmin()
+async function updateUserStore() {
+    await axios.post('/getUserStoreData')
+        .then(response => {
+            userStore.isAdmin = response.data.isAdmin
+            userStore.isCreator = response.data.isCreator
+            userStore.isNewsPerson = response.data.isNewsPerson
+            userStore.isVip = response.data.isVip
+            userStore.isSubscriber = response.data.isSubscriber
+            userStore.getUserDataCompleted = true
+            // console.log('get user data on AppLayout')
+        })
+        .catch(error => {
+            console.log(error);
+        })
 }
 
 function hideOSD() {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
@@ -15,7 +16,6 @@ class WelcomeController extends Controller
 
         if (auth()->user()) {
             return to_route('stream');
-//            return Inertia::render('Stream');
         }
 
         return Inertia::render('Welcome', [

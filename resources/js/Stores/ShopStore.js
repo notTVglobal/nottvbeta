@@ -14,7 +14,10 @@ export let useShopStore = defineStore('shopStore', {
             upgradeSelection: '',
             upgradeStripeId: '',
             selectedSubscriptionPrice: null,
-            showPaymentForm: ref(false)
+            showPaymentForm: ref(false),
+            premiumMonthlyStripeId: 'price_1NoiAOKahp38LUVYPWtzQ8f1',
+            premiumYearlyStripeId: 'price_1NhgZTKahp38LUVY8n9Skgwf',
+            premiumForeverStripeId: 'price_1NoiBDKahp38LUVY5OGjIrCM'
         };
     },
 
@@ -63,18 +66,18 @@ export let useShopStore = defineStore('shopStore', {
         },
         upgradeMonthly() {
             this.upgradeSelection = 'monthly'
-            this.upgradeStripeId = 'plan_LyCOYZAqzVdFpz'
+            this.upgradeStripeId = this.premiumMonthlyStripeId
             this.selectedSubscriptionPrice = 2500
 
         },
         upgradeYearly() {
             this.upgradeSelection = 'yearly'
-            this.upgradeStripeId = 'price_1NhgZTKahp38LUVY8n9Skgwf'
+            this.upgradeStripeId = this.premiumYearlyStripeId
             this.selectedSubscriptionPrice = 25000
         },
         upgradeForever() {
             this.upgradeSelection = 'forever'
-            this.upgradeStripeId = 'price_1NhgZyKahp38LUVY1MOhE5L5'
+            this.upgradeStripeId = this.premiumForeverStripeId
             this.selectedSubscriptionPrice = 99900
         },
         changeUpgradeSelection() {

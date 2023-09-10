@@ -416,9 +416,9 @@ let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'dashboard'
 
-// onBeforeMount(() => {
-//     userStore.scrollToTopCounter = 0;
-// })
+onBeforeMount(() => {
+    updateUserStore()
+})
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
@@ -435,7 +435,24 @@ onMounted(() => {
 
 videoPlayerStore.loggedIn = true
 
+// isCreator, isNewsPerson, isVip, isSubscriber
+// need to go in the UserStore. Inertia won't
+// update the initialPage.props, so the solution
+// is to send this data in 3 places the user
+// will land after logging in.
+// 1) The Dashboard
+// 2) Stream
+// 3) any other page from the /login page
+// (AppLayout will be our catch all.)
+// Only the Dashboard has a controller,
+// the others will use Axios to get the data
+// and save it in the UserStore.
 let props = defineProps({
+    isAdmin: null,
+    isCreator: null,
+    isNewsPerson: null,
+    isSubscriber: null,
+    isVip: null,
     shows: Object,
     teams: Object,
     myTotalStorageUsed: String,
@@ -445,6 +462,16 @@ let props = defineProps({
 });
 
 let showMessage = ref(true);
+
+function updateUserStore() {
+    userStore.isAdmin = props.isAdmin
+    userStore.isCreator = props.isCreator
+    userStore.isNewsPerson = props.isNewsPerson
+    userStore.isVip = props.isVip
+    userStore.isSubscriber = props.isSubscriber
+    userStore.getUserDataCompleted = true
+    // console.log('get user data on Dashboard')
+}
 
 </script>
 

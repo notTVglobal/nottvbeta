@@ -37,11 +37,10 @@ let videoOptions = {
 onMounted(async () => {
     await getFirstPlaySettings()
     let videoPlayer = videojs(document.querySelector('.video-js'));
-    console.log(videoPlayerStore.videoSource)
     videoPlayer.src({type: videoPlayerStore.videoSourceType, src: videoPlayerStore.videoSource});
     videoPlayer.ready(function() {
         // videoPlayer.currentTime(120);
-        console.log('video player ready')
+        console.log('video player loaded.')
     })
     await videoPlayer.play()
 })

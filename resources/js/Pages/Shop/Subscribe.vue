@@ -15,7 +15,7 @@
                         <div class="mt-2">
                             <input type="radio"
                                    name="plan"
-                                   value="plan_LyCOYZAqzVdFpz"
+                                   :value="shopStore.premiumMonthlyStripeId"
                                    @click="shopStore.upgradeMonthly()"
                                    v-model="shopStore.upgradeStripeId"
                                    class="pr-2" />
@@ -24,7 +24,7 @@
                         <div class="mt-2">
                             <input type="radio"
                                    name="plan"
-                                   value="price_1NhgZTKahp38LUVY8n9Skgwf"
+                                   :value="shopStore.premiumYearlyStripeId"
                                    @click="shopStore.upgradeYearly()"
                                    v-model="shopStore.upgradeStripeId"
                                    class="pr-2" />
@@ -33,7 +33,7 @@
                         <div class="mt-2">
                             <input type="radio"
                                    name="plan"
-                                   value="price_1NhgZyKahp38LUVY1MOhE5L5"
+                                   :value="shopStore.premiumForeverStripeId"
                                    @click="shopStore.upgradeForever()"
                                    v-model="props.upgradeStripeId"
                                    class="pr-2" />
@@ -216,6 +216,7 @@ async function handleSubmit(e) {
             showMessage(error.message);
         } else {
             showMessage("An unexpected error occurred.");
+            setLoading(false);
         }
     } else {
         // console.log(setupIntent)
@@ -227,10 +228,7 @@ async function handleSubmit(e) {
         //Submit the form
         form.post('/shop/subscribe');
 
-
     }
-
-    setLoading(false);
 }
 function submit() {
 

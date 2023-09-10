@@ -17,13 +17,14 @@ export let useUserStore = defineStore('userStore', {
 
         // move currentPage from VideoPlayerStore to here.
         currentPage: String,
-
         id: null,
         roleId: null,
-        userIsAdmin: false,
-        userIsSubscriber: false,
-        userIsVip: false,
-        userIsCreator: false,
+        getUserDataCompleted: null,
+        isAdmin: null,
+        isCreator: null,
+        isNewsPerson: null,
+        isVip: null,
+        isSubscriber: null,
         oldLoggedOutId: null,
         uploadPercentage: 0,
         scrollToTopCounter: 0,
@@ -55,18 +56,18 @@ export let useUserStore = defineStore('userStore', {
             let screenWidth = screen.width
             this.isMobile = screenWidth <= 926;
         },
-        isSubscriber() {
-            this.userIsSubscriber = !!(this.roleId === 2 || this.roleId === 3 || this.userIsAdmin);
-        },
-        isVip() {
-            this.userIsVip = !!(this.roleId === 3 || this.userIsAdmin);
-        },
-        isCreator() {
-            this.userIsCreator = !!(this.roleId === 4 || this.userIsAdmin);
-        },
-        isAdmin() {
-            this.userIsAdmin =  !!(this.userIsAdmin);
-        },
+        // checkIsSubscriber() {
+        //     this.isSubscriber = !!(this.roleId === 2 || this.roleId === 3 || this.isAdmin);
+        // },
+        // checkIsVip() {
+        //     this.userisVip = !!(this.roleId === 3 || this.isAdmin);
+        // },
+        // checkIsCreator() {
+        //     this.isCreator = !!(this.roleId === 4 || this.isAdmin);
+        // },
+        // checkIsAdmin() {
+        //     this.isAdmin =  !!(this.isAdmin);
+        // },
     },
 
     getters: {

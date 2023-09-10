@@ -676,6 +676,8 @@ Route::middleware([
     // Users resource for admin to create/edit users
     Route::resource('users', UsersController::class);
 
+    Route::post('/getUserStoreData', [UsersController::class, 'getUserStoreData']);
+
     // List all users -- this has to be a different controller than the UsersAdminCreateEditController
     // because it uses a different resource class for the search function.
     Route::get('/users', [UsersController::class, 'index'])

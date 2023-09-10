@@ -271,7 +271,7 @@ import NotificationsButton from '@/Components/Navigation/NotificationsButton.vue
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useChatStore } from "@/Stores/ChatStore"
 import { useUserStore } from "@/Stores/UserStore"
-import { ref, onBeforeMount } from "vue"
+import { ref } from "vue"
 import {Inertia} from "@inertiajs/inertia"
 import JetApplicationMark from "@/Jetstream/ApplicationMark.vue";
 import {Link} from "@inertiajs/inertia-vue3";
@@ -287,7 +287,6 @@ let props = defineProps({
 })
 
 const logout = () => {
-    // videoPlayerStore.changeChannel('one');
     Inertia.post(route('logout'));
     videoPlayerStore.mute();
     videoPlayerStore.fullPage = true;
@@ -297,14 +296,7 @@ const logout = () => {
     videoPlayerStore.class = "welcomeVideoClass";
     videoPlayerStore.videoContainerClass = "welcomeVideoContainer";
     userStore.showNavDropdown = false;
-    // chatStore.class = "chatHidden";
-    // chatStore.show = false;
-
 };
-
-onBeforeMount(() => {
-    getUser()
-})
 
 function loadStreamPage() {
     videoPlayerStore.makeVideoFullPage()
@@ -314,18 +306,6 @@ function loadStreamPage() {
 
 function billingPortal() {
     location.href = ('https://not.tv/billing-portal')
-}
-
-function getUser() {
-    if (props.user) {
-        userStore.id = props.user.id
-        userStore.roleId = props.user.role_id
-        userStore.userIsAdmin = props.user.isAdmin
-    }
-    userStore.isSubscriber()
-    userStore.isCreator()
-    userStore.isVip()
-    userStore.isAdmin()
 }
 
 </script>

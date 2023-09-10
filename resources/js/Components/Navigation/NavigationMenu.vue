@@ -281,7 +281,6 @@ function loadStreamPage() {
 
 const logout = () => {
     Inertia.post(route('logout'));
-    // videoPlayerStore.changeChannel('one');
     videoPlayerStore.mute();
     videoPlayerStore.fullPage = true;
     videoPlayerStore.loggedIn = false;
@@ -290,7 +289,6 @@ const logout = () => {
     videoPlayerStore.class = "videoBgFull";
     videoPlayerStore.videoContainerClass = "videoContainerBgFull";
     userStore.showNavDropdown = false;
-
 };
 
 // let isStreamPage = false
@@ -304,24 +302,8 @@ const logout = () => {
 
 // setPage()
 
-onMounted(() => {
-    getUser()
-})
-
 function billingPortal() {
     location.href = ('https://not.tv/billing-portal')
-}
-
-function getUser() {
-    if (props.user) {
-        userStore.id = props.user.id
-        userStore.roleId = props.user.role_id
-        userStore.userIsAdmin = props.user.isAdmin
-    }
-    userStore.isSubscriber()
-    userStore.isCreator()
-    userStore.isVip()
-    userStore.isAdmin()
 }
 
 </script>

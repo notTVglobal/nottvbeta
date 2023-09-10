@@ -71,7 +71,7 @@ class StripeController extends Controller
         $user->role_id = 2;
         $user->save();
 
-        auth()->user()->newSubscription('cashier', $request->plan)->create($request->paymentMethod);
+        auth()->user()->newSubscription('default', $request->plan)->create($request->paymentMethod);
         return to_route('subscriptionSuccess');
     }
 

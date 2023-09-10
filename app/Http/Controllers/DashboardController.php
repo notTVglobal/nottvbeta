@@ -32,6 +32,23 @@ class DashboardController extends Controller
         }
 
         return Inertia::render('Dashboard', [
+            // isCreator, isNewsPerson, isVip, isSubscriber
+            // need to go in the UserStore. Inertia won't
+            // update the initialPage.props, so the solution
+            // is to send this data in 3 places the user
+            // will land after logging in.
+            // 1) The Dashboard
+            // 2) Stream
+            // 3) any other page from the /login page
+            // (AppLayout will be our catch all.)
+            // Only the Dashboard has a controller,
+            // the others will use Axios to get the data
+            // and save it in the UserStore.
+            'isAdmin' => auth()->user()->isAdmin,
+            'isCreator' => auth()->user()->creator->status_id,
+            'isNewsPerson' => auth()->user()->newsPerson,
+            'isVip' => auth()->user()->isVip,
+            'isSubscriber' => auth()->user()->subscribed('default'),
             'shows' => Show::query()
                 ->where('user_id', Auth::user()->id)
                 ->paginate(5, ['*'], 'shows')
