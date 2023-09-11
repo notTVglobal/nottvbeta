@@ -1,7 +1,7 @@
 <template>
 <div>
     <div class="osdFullPage">
-        <div v-if="channelStore.currentChannelName !== ''">
+        <div v-if="channelStore.currentChannelName !== '' || channelStore.currentChannelName !== null">
             <span class="text-xs uppercase pr-2">Channel: </span>
             <span class="text-xs font-semibold">{{ channelStore.currentChannelName }}</span>
         </div>
