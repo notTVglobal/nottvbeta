@@ -1,6 +1,6 @@
 <template>
     <div :class="channelFooterClass">
-        <span>Live One is our premiere promotional channel featuring handpicked content and creators from the notTV network.</span>
+        <span>Live is our premiere channel featuring live streams and handpicked content from notTV creators.</span>
     </div>
 
 </template>
