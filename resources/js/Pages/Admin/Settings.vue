@@ -25,6 +25,70 @@
                 </div>
             </header>
 
+            <div class="bg-gray-300 dark:bg-gray-900 rounded pb-8 p-3 mb-6 mx-2 border-b border-2">
+                <div class="font-semibold text-xl pb-2">Administrator only links</div>
+                <div class="flex flex-wrap md:flex-row justify-items-start gap-2">
+                    <!--disable button if ! admin-->
+                    <Link :href="`/users`"><button
+                        class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 col-span-1 rounded disabled:bg-gray-400"
+                    >All Users</button>
+                    </Link>
+                    <Link :href="`/admin/shows`"><button
+                        class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 col-span-1 rounded disabled:bg-gray-400"
+                    >All Shows</button>
+                    </Link>
+                    <Link :href="`/admin/teams`"><button
+                        class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 col-span-1 rounded disabled:bg-gray-400"
+                    >All Teams</button>
+                    </Link>
+                    <!--disable button if ! admin-->
+                    <Link :href="`/admin/channels`"><button
+                        class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"
+                    >All Channels</button>
+                    </Link>
+                    <!--disable button if ! admin-->
+                    <Link :href="`/video`"><button
+                        class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"
+                    >MistServer API</button>
+                    </Link>
+
+                    <!--disable button if ! admin-->
+                    <Link :href="`/image`"><button
+                        class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"
+                    >Image Uploader</button>
+                    </Link>
+
+                    <!--disable button if ! admin-->
+                    <Link :href="`/videoupload`"><button
+                        class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"
+                    >Video Upload</button>
+                    </Link>
+
+                    <!--disable button if ! admin-->
+                    <Link :href="`/admin/settings`"><button
+                        class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"
+                    >Settings</button>
+                    </Link>
+                    <Link
+                        :href="`/movies/create`"><button
+                        class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
+                    >Add a Movie</button>
+                    </Link>
+                    <Link
+                        :href="`/admin/invite_codes`"><button
+                        class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
+                    >Invite Codes</button>
+                    </Link>
+                    <Link
+                        :href="`/admin/phpmyinfo`"><button
+                        class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
+                    >phpinfo()</button>
+                    </Link>
+
+                </div>
+
+            </div>
+
             <div>
                 <form @submit.prevent="submit">
                     <div class="mb-6">

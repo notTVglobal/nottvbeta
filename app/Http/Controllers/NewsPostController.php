@@ -38,6 +38,7 @@ class NewsPostController extends Controller
     {
         return Inertia::render('News/Index', [
             'news' => NewsPost::with('image')
+                ->orderBy('created_at', 'desc')
                 ->when(Request::input('search'), function ($query, $search) {
                     $query->where('title', 'like', "%{$search}%");
                 })
