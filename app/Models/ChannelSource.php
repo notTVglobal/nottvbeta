@@ -9,7 +9,9 @@ class ChannelSource extends Model
 {
     use HasFactory;
 
-    public function channels()
+    protected $guarded = [];
+
+    public function channel()
     {
         return $this->hasMany(Channel::class);
     }

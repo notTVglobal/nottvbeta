@@ -18,7 +18,7 @@ class ChannelController extends Controller
     public function index()
     {
         return Inertia::render('Admin/Channels/Index', [
-            'channels' => Channel::with('source', 'video')->get()
+            'channels' => Channel::with('channel_source', 'video')->get()
         ]);
     }
 

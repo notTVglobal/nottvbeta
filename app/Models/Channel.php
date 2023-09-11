@@ -9,6 +9,8 @@ class Channel extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     public function messages() {
         return $this->hasMany('App\Models\ChatMessage');
     }
@@ -28,7 +30,7 @@ class Channel extends Model
         return $this->belongsTo(Video::class);
     }
 
-    public function source()
+    public function channel_source()
     {
         return $this->belongsTo(ChannelSource::class);
     }

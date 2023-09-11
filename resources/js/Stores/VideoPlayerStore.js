@@ -278,16 +278,16 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             // EmbedCode
             // Mist
             // File
-        // loadNewSourceFromYouTube(source) {
-        //     this.videoIsYoutube = true
-        //     useChannelStore().clearChannel()
-        //     let videoJs = videojs('main-player')
-        //     this.videoSource = source
-        //     this.videoSourceType = "video/youtube"
-        //     videoJs.src({'src': this.videoSource, 'type': this.videoSourceType})
-        //     this.unmute()
-        //     this.paused = false
-        // },
+        loadNewSourceFromYouTube(source) {
+            this.videoIsYoutube = true
+            useChannelStore().clearChannel()
+            let videoJs = videojs('main-player')
+            this.videoSource = source
+            this.videoSourceType = "video/youtube"
+            videoJs.src({'src': this.videoSource, 'type': this.videoSourceType})
+            this.unmute()
+            this.paused = false
+        },
         loadNewSourceFromUrl(source) {
             this.videoIsYoutube = false
             // useChannelStore().clearChannel()

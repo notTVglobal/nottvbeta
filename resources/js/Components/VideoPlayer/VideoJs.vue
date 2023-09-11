@@ -8,6 +8,8 @@
                   playsinline
         >
             <source :type="$page.props.firstPlayVideoSourceType" :src="$page.props.firstPlayVideoSource">
+<!--            <source type="video/youtube" src="https://www.youtube.com/watch?v=fqaHrwOhihI">-->
+<!--            <source type="video/youtube" src="https://www.youtube.com/watch?v=xjS6SftYQaQ&list=SPA60DCEB33156E51F">-->
         </video-js>
     </div>
 
@@ -21,6 +23,7 @@ import { useChatStore } from "@/Stores/ChatStore"
 import { useUserStore } from "@/Stores/UserStore"
 import { onMounted } from "vue"
 import videojs from "video.js"
+import youtube from "videojs-youtube"
 
 let videoPlayerStore = useVideoPlayerStore()
 let streamStore = useStreamStore()
@@ -32,8 +35,14 @@ onMounted( () => {
         controls: false,
         muted: false,
         autoplay: true,
-        preload: 'auto'
+        preload: 'auto',
+        techOrder: ["html5", "youtube"],
+        youtube: {"customVars":
+                    {
+                    "wmode": "transparent"
+                    }}
     })
+    // let videoPlayer = videojs('main-player')
     videoPlayer.ready(function() {
         videoPlayer.muted(true)
         videoPlayer.play();

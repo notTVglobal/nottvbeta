@@ -76,7 +76,7 @@
                                                 <span>{{ channel.video }}</span>
                                             </div>
                                             <div class="table-cell px-6 py-4">
-                                                <span>{{ channel.source }}</span>
+                                                <span>{{ hasChannelSource(channel) }}</span>
                                             </div>
                                             <div class="table-cell px-6 py-4">
                                                 <span>{{ channel.stream }}</span>
@@ -137,5 +137,10 @@ let props = defineProps({
 
 let showMessage = ref(true);
 
+function hasChannelSource (channel) {
+    if (channel.channel_source !== null) {
+        return channel.channel_source.name
+    }
+}
 
 </script>

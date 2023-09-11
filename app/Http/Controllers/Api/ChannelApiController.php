@@ -4,14 +4,14 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\Channel;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use Illuminate\Http\Request as HttpRequest;
+use Illuminate\Support\Facades\Request;
 
 class ChannelApiController extends Controller
 {
     public function index()
     {
-        return Channel::with('video:name', 'source:name')
-            ->get();
+        return Channel::with(['channel_source'])->get();
     }
 
     /**

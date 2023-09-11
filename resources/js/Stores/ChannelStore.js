@@ -23,7 +23,7 @@ export let useChannelStore = defineStore('channelStore', {
                     console.log(error);
                 })
         },
-        async changeChannel(channel) {
+        changeChannel(channel) {
             this.currentChannelName = channel.name
             this.currentChannelId = channel.id
             this.isLive = channel.isLive
@@ -35,16 +35,25 @@ export let useChannelStore = defineStore('channelStore', {
             }
             if (useUserStore().id !== null) {
                 this.userAddedToChannels = true
-                await this.disconnectViewerFromChannel()
-                await this.addViewerToChannel()
+                 this.disconnectViewerFromChannel()
+                 this.addViewerToChannel()
             }
+
+            if (channel.channel_source !== null) {
+                useVideoPlayerStore().videoName = channel.channel_source.name
+                useVideoPlayerStore().loadNewSourceFromYouTube(channel.channel_source.path)
+
+            } else
+                useVideoPlayerStore().loadNewSourceFromMist(channel.stream)
+
+
             // await this.getViewerCount()
 
             // for streaming to mistServer we need:
             // streamName = channel.source.name (this is the mistServer stream name)
             // streamPath = channel.source.path (e.g. 'https://mist.not.tv/hls/')
             // streamType = channel.source.type (e.g. "application/x-mpegURL")
-            useVideoPlayerStore().loadNewSourceFromMist(channel.stream)
+
         },
         async clearChannel() {
             this.currentChannelName = null;

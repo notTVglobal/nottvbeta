@@ -24,7 +24,11 @@
 <!--                <OsdTopRight v-if="videoPlayerStore.showOSD" class="" />-->
 
                 <!-- Video Player Controls-->
-                <VideoControlsTopRight v-if="videoPlayerStore.controls" class="hidden lg:block" />
+                <VideoControlsTopRight
+                    v-if="videoPlayerStore.controls"
+                    class="hidden lg:block"
+                    @mouseenter="mouseEnter"
+                    @mouseleave="mouseLeave" />
 
 <!--                </div>-->
                 <!-- OTT Buttons and Displays -->
@@ -48,7 +52,10 @@
                 <OsdFullPage v-show="videoPlayerStore.osd"/>
 
                 <!-- Video Player Controls -->
-                <VideoControlsFullPage v-if="videoPlayerStore.controls" />
+                <VideoControlsFullPage
+                    v-if="videoPlayerStore.controls"
+                    @mouseenter="mouseEnter"
+                    @mouseleave="mouseLeave" />
 
                 <!-- Over The Top (OTT) -->
                 <OttFullPageButtons v-if="videoPlayerStore.osd"/>

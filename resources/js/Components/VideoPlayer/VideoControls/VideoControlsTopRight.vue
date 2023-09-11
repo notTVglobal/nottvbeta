@@ -30,7 +30,7 @@
                         <button
                             class="text-xs md:text-md bg-gray-800 rounded-full p-2 hover:bg-gray-600 cursor-not-allowed"
                             @click="videoPlayerStore.back()"
-                            disabled >
+                            disabled>
                             PREV</button>
 
                         <button v-if="!videoPlayerStore.paused"
