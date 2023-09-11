@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
 use Inertia\Middleware;
+use App\Models\AppSetting;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -36,9 +37,11 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-
+        $appSetting = AppSetting::find(1);
         return array_merge(parent::share($request), [
             'message' => fn () => $request->session()->get('message'),
+            'firstPlayVideoSource' => fn () => $appSetting->first_play_video_source,
+            'firstPlayVideoSourceType' => fn () => $appSetting->first_play_video_source_type
         ]);
     }
 }

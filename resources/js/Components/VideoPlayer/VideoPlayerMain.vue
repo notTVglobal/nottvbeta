@@ -64,7 +64,7 @@
 
 
 <script setup>
-import {onMounted, computed, ref, onBeforeMount, onUnmounted, defineAsyncComponent} from 'vue'
+import { ref, onUnmounted } from 'vue'
 import { Inertia } from "@inertiajs/inertia"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useStreamStore } from "@/Stores/StreamStore"
@@ -89,10 +89,11 @@ import OsdTopRight from "@/Components/VideoPlayer/Osd/OsdTopRight"
 import OsdFullPage from "@/Components/VideoPlayer/Osd/OsdFullPage"
 import videojs from 'video.js'
 import { tryOnBeforeMount, useScreenOrientation } from '@vueuse/core'
-const VideoJs = defineAsyncComponent( () =>
-    import('@/Components/VideoPlayer/VideoJs')
-)
-
+import videoJs from "@/Components/VideoPlayer/VideoJs"
+// const VideoJs = defineAsyncComponent( () =>
+//     import('@/Components/VideoPlayer/VideoJs')
+// )
+//
 let videoPlayerStore = useVideoPlayerStore()
 let streamStore = useStreamStore()
 let chatStore = useChatStore()
@@ -107,8 +108,6 @@ let props = defineProps({
     type: '',
     user: Object,
     can: Object,
-    videoSource: '',
-    videoSourceType: '',
 })
 
 const isMobile = ref({
@@ -151,20 +150,6 @@ videoPlayerStore.channels = false
 videoPlayerStore.ottChat = false
 videoPlayerStore.ottPlaylist = false
 videoPlayerStore.ottFilters = false
-
-onBeforeMount( () => {
-    // getFirstPlaySettings()
-})
-
-onMounted(() => {
-    // if (userStore.isMobile) {
-    //     if (orientation==='landscape-secondary' || orientation==='landscape-primary') {
-    //         videoPlayerStore.hideOsdAndControlsAndNav()
-    //     } else if (orientation==='portrait-secondary' || orientation==='portrait-primary') {
-    //         videoPlayerStore.showOsdAndControlsAndNav()
-    //     }
-    // }
-})
 
 onUnmounted(() => {
     let player = videojs('main-player');

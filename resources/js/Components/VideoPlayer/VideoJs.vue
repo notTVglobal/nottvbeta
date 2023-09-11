@@ -1,65 +1,60 @@
 <template>
     <div>
-
+<!-- iPhone needs the options loaded from the video tag here to autoplay. -->
         <video-js id="main-player"
-                  class="video-js vjs-big-play-centered vjs-fluid"
-                  data-setup='{"controls": false, "autoplay": true, "preload": "auto", "muted": true, "techOrder": ["html5"]}'
-                  playsinline />
-
+                  class="video-js vjs-big-play-centered vjs-fit"
+                  autoplay
+                  muted
+                  playsinline
+        >
+            <source :type="$page.props.firstPlayVideoSourceType" :src="$page.props.firstPlayVideoSource">
+        </video-js>
     </div>
 
 </template>
 
 
 <script setup>
-import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js";
-import {useStreamStore} from "@/Stores/StreamStore.js";
-import {useChatStore} from "@/Stores/ChatStore.js";
-import {useUserStore} from "@/Stores/UserStore.js";
-import {computed, ref, onMounted, onBeforeUnmount, onUnmounted} from "vue";
-import videojs from "video.js";
-import {Inertia} from "@inertiajs/inertia";
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
+import { useStreamStore } from "@/Stores/StreamStore"
+import { useChatStore } from "@/Stores/ChatStore"
+import { useUserStore } from "@/Stores/UserStore"
+import { onMounted } from "vue"
+import videojs from "video.js"
 
-let videoPlayerStore = useVideoPlayerStore();
-let streamStore = useStreamStore();
-let chatStore = useChatStore();
-let userStore = useUserStore();
+let videoPlayerStore = useVideoPlayerStore()
+let streamStore = useStreamStore()
+let chatStore = useChatStore()
+let userStore = useUserStore()
 
-let playerName = 'main-player'
-
-let videoOptions = {
-    autoplay: true,
-    muted: true,
-    controls: false,
-    enableSourceset: true,
-}
-
-onMounted(async () => {
-    await getFirstPlaySettings()
-    let videoPlayer = videojs(document.querySelector('.video-js'));
-    videoPlayer.src({type: videoPlayerStore.videoSourceType, src: videoPlayerStore.videoSource});
-    videoPlayer.ready(function() {
-        // videoPlayer.currentTime(120);
-        console.log('video player loaded.')
+onMounted( () => {
+    let videoPlayer = videojs('main-player', {
+        controls: false,
+        muted: false,
+        autoplay: true,
+        preload: 'auto'
     })
-    await videoPlayer.play()
+    videoPlayer.ready(function() {
+        videoPlayer.muted(true)
+        videoPlayer.play();
+    });
 })
 
-async function getFirstPlaySettings() {
-    await axios.get('/api/app_settings')
-        .then(response => {
-            videoPlayerStore.videoSource = response.data[0].first_play_video_source
-            videoPlayerStore.videoSourceType = response.data[0].first_play_video_source_type
-            videoPlayerStore.videoName = response.data[0].first_play_video_name
-            console.log('app settings retrieved.');
-
-        })
-        .catch(error => {
-            console.log(error)
-        })
-    // setVideoOptions()
-    // videoJs = videojs('main-player', videoOptions)
-}
+// async function getFirstPlaySettings() {
+//     await axios.get('/api/app_settings')
+//         .then(response => {
+//             videoPlayerStore.videoSource = response.data[0].first_play_video_source
+//             videoPlayerStore.videoSourceType = response.data[0].first_play_video_source_type
+//             videoPlayerStore.videoName = response.data[0].first_play_video_name
+//             console.log('app settings retrieved.');
+//
+//         })
+//         .catch(error => {
+//             console.log(error)
+//         })
+//     // setVideoOptions()
+//     // videoJs = videojs('main-player', videoOptions)
+// }
 
 </script>
 
