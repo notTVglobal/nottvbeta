@@ -14,7 +14,7 @@
                 <span class="text-xs uppercase pr-2">Now playing: </span>
                 <span class="font-semibold text-xs">{{ videoPlayerStore.videoName }}</span>
             </div>
-            <div v-if="channelStore.currentChannelName !== '' || channelStore.currentChannelName !== null">
+            <div v-if="channelStore.currentChannelName !== '' || null">
                 <span class="text-xs uppercase pr-2">Channel: </span>
                 <span class="text-xs font-semibold">{{ channelStore.currentChannelName }}</span>
             </div>

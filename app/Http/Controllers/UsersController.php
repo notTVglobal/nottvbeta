@@ -50,6 +50,7 @@ class UsersController extends Controller
                     'profile_photo_path' => $user->profile_photo_path,
                     'role' => role($user->role_id),
                     'isAdmin' => $user->isAdmin,
+                    'isCreator' => $user->creator,
                     'isNewsPerson' => $user->newsPerson,
                     'isSubscriber' => $user->subscribed('default'),
                     'subscriptionStatus' => $user->subscription('default'),
