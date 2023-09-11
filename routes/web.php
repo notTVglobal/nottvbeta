@@ -169,10 +169,6 @@ Route::middleware([
         return Inertia::render('Stream');
     })->name('stream');
 
-//    Route::post('/subscribe', function (Request $request) {
-//        return Inertia::render('Subscribe', [
-//        ]);
-//    })->name('subscribe.post');
 //
 //    Route::get('/payment', function (Request $request) {
 //        return Inertia::render('Payment', [
@@ -770,3 +766,10 @@ Route::middleware([
 //Route::any('/{any}', function() {
 //    return view('app');
 //})->where('any', '.*');
+
+// External Redirects
+/////////////////////
+
+Route::get('/subscribe', function () {
+    return Inertia::location('https://99fd701b.sibforms.com/serve/MUIFAAAMUBfnlUf5rgaD2zSTE_76pHldyCCXhQvz-CBNZwd9lLYST4jcuwwsudQEHOkX1isAFHV6iXvtIepJSh5RkVrZY1wUQ5yaf1j6kWyzMJ75s2FZfHOZMdO7mkE-pDv96yW4bekMX67ZevIlWsjQvdDgEXUEKqfAvvQieIM3WxRCFru3o3y3Z9K2_6N17EaTq5eAHP04AIgp');
+});
