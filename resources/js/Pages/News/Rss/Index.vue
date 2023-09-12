@@ -15,47 +15,18 @@
             <header class="flex justify-between mb-3 border-b border-gray-500">
                 <div class="container mx-auto flex flex-col lg:flex-row items-center justify-between px-4 py-6">
 
-                    <div class="flex flex-col lg:flex-row items-center">
-                        <h1 class="text-3xl font-semibold">News</h1>
-                        <ul class="flex ml-0 lg:ml-16 mt-6 lg:mt-0 space-x-8" >
-                            <li>
-                                <Link :href="``" class="text-gray-700 cursor-not-allowed hover:text-blue-500">Stories</Link>
-                            </li>
-                            <li>
-                                <Link :href="``" class="text-gray-700 cursor-not-allowed hover:text-blue-500">Categories</Link>
-                            </li>
-                            <li>
-                                <Link :href="``" @click.prevent="scrollToCities" class="text-gray-700 cursor-not-allowed hover:text-blue-500">Cities</Link>
-                            </li>
-                            <li>
-                                <Link :href="``" @click.prevent="scrollToCities" class="text-gray-700 cursor-not-allowed hover:text-blue-500">Provinces</Link>
-                            </li>
-                            <li>
-                                <Link :href="``" @click.prevent="scrollToCities" class="text-gray-700 cursor-not-allowed hover:text-blue-500">News Feeds</Link>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="flex items-center mt-6 lg:mt-0">
-                        <div class="relative">
-                            <input v-model="search" type="search" class="bg-gray-50 text-black text-sm rounded-full
-                            focus:outline-none focus:shadow w-64 pl-8 px-3 py-1" placeholder="Search...">
-                            <div class="absolute top-0 flex items-center h-full ml-2">
-                                <svg class="fill-current text-gray-400 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M456.69 421.39 362.6 327.3a173.81 173.81 0 0 0 34.84-104.58C397.44 126.38 319.06 48 222.72 48S48 126.38 48 222.72s78.38 174.72 174.72 174.72A173.81 173.81 0 0 0 327.3 362.6l94.09 94.09a25 25 0 0 0 35.3-35.3ZM97.92 222.72a124.8 124.8 0 1 1 124.8 124.8 124.95 124.95 0 0 1-124.8-124.8Z"/></svg>
+                    <NewsHeader>News Feeds</NewsHeader>
 
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
             </header>
 
-            <div class="w-full flex flex-row justify-between mb-4">
-                <div class="text-2xl mt-4">
-                    RSS Feeds
-                </div>
+            <div class="w-full flex flex-row justify-end mb-4">
+
                 <NewsHeaderButtons :can="can"/>
             </div>
-            <div class="bg-orange-500 px-2 py-1 text-black font-semibold">TODO: create special parser for <a href="https://www.canada.ca/en/news/web-feeds.html#a7" target="_blank">Government of Canada Feeds</a></div>
+            <div class="bg-orange-500 mb-1 px-2 py-1 text-black font-semibold">TODO: create special parser for <a href="https://www.canada.ca/en/news/web-feeds.html#a7" target="_blank">Government of Canada Feeds</a></div>
+            <div class="bg-orange-500 mb-2 px-2 py-1 text-black font-semibold">TODO: create edit page to change RSS Feed Url or Name</div>
 
 
             <div class="w-full overflow-hidden bg-white shadow-sm sm:rounded-lg">
@@ -67,15 +38,27 @@
                         >
                             <thead
                                 class="flex flex-justify text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                            <tr class="">
-                                <th scope="col" class=" px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                                    <span>RSS Feeds</span>
-                                    <Link
-                                        :href="`/feeds/create`"><button
-                                        class="bg-green-600 hover:bg-green-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
-                                        v-if="can.viewNewsroom"
-                                    >Add Feed</button>
-                                    </Link>
+                            <tr class="w-full">
+                                <th scope="col" class="w-full flex flex-row justify-between px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
+                                    <div>
+                                        <span class="text-lg">News Feeds</span>
+                                        <Link
+                                            :href="`/feeds/create`"><button
+                                            class="bg-green-600 hover:bg-green-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
+                                            v-if="can.viewNewsroom"
+                                        >Add Feed</button>
+                                        </Link>
+                                    </div>
+                                    <div class="flex items-center mt-6 lg:mt-0">
+                                        <div class="relative">
+                                            <input v-model="search" type="search" class="bg-gray-50 text-black text-sm rounded-full
+                            focus:outline-none focus:shadow w-64 pl-8 px-3 py-1" placeholder="Search...">
+                                            <div class="absolute top-0 flex items-center h-full ml-2">
+                                                <svg class="fill-current text-gray-400 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M456.69 421.39 362.6 327.3a173.81 173.81 0 0 0 34.84-104.58C397.44 126.38 319.06 48 222.72 48S48 126.38 48 222.72s78.38 174.72 174.72 174.72A173.81 173.81 0 0 0 327.3 362.6l94.09 94.09a25 25 0 0 0 35.3-35.3ZM97.92 222.72a124.8 124.8 0 1 1 124.8 124.8 124.95 124.95 0 0 1-124.8-124.8Z"/></svg>
+
+                                            </div>
+                                        </div>
+                                    </div>
                                 </th>
                                 <th scope="col" class="">
 
@@ -142,6 +125,7 @@ import throttle from "lodash/throttle";
 import Pagination from "@/Components/Pagination"
 import Message from "@/Components/Modals/Messages";
 import NewsHeaderButtons from "@/Components/News/NewsHeaderButtons.vue";
+import NewsHeader from "@/Components/News/NewsHeader.vue";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()

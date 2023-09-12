@@ -7,6 +7,13 @@
 
             <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
 
+            <div class="w-full flex flex-row justify-between mb-4">
+                <div class="text-2xl mt-4">
+                    Add RSS Feed
+                </div>
+                <NewsHeaderButtons :can="can"/>
+            </div>
+
             <div class="flex flex-row justify-between">
                 <h2 class="text-xl font-semibold leading-tight">
                     Add RSS Feed
@@ -74,7 +81,7 @@
                         >
                             Submit
                         </button>
-                        <Link :href="`/news`"><button
+                        <Link :href="`/feeds`"><button
                             class="h-fit ml-2 px-4 py-2 text-white bg-blue-700 hover:bg-blue-300 rounded-lg"
                         >Cancel</button>
                         </Link>
@@ -99,6 +106,7 @@ import { useNewsStore } from "@/Stores/NewsStore"
 import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
 import Button from "@/Jetstream/Button.vue";
 import Message from "@/Components/Modals/Messages";
+import NewsHeaderButtons from "@/Components/News/NewsHeaderButtons.vue";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
