@@ -23,8 +23,7 @@
                                 Schedule
                         </JetNavLink>
                         </h3>
-                        <h3 class="inline-flex items-center relative"
-                            v-if="userStore.isSubscriber || userStore.isVip || userStore.isAdmin">
+                        <h3 class="inline-flex items-center relative">
                         <JetNavLink
                             v-touch="()=>(route('news'))"
                             @click="videoPlayerStore.makeVideoTopRight()"

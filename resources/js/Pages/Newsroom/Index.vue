@@ -16,21 +16,10 @@
             </div>
 
             <header class="flex justify-between mb-3 border-b border-gray-800">
-                <div class="container mx-auto flex flex-col lg:flex-row items-center justify-between px-4 py-6">
+                <div class="container mx-auto flex flex-col lg:flex-row items-center justify-between">
 
+                    <NewsHeader>Welcome to the Newsroom</NewsHeader>
 
-
-                    <div class="flex flex-col lg:flex-row items-center">
-                        <h1 class="text-3xl font-semibold text-center lg:text-left">Welcome to the Newsroom</h1>
-                        <ul class="flex ml-0 lg:ml-16 mt-6 mr-6 lg:mt-0 space-x-8" >
-                            <li>
-                                <Link :href="``" class="text-gray-700 cursor-not-allowed">Categories</Link>
-                            </li>
-                            <li>
-                                <Link :href="``" @click.prevent="scrollToCities" class="text-gray-700 cursor-not-allowed">Cities</Link>
-                            </li>
-                        </ul>
-                    </div>
                     <div class="flex items-center mt-6 lg:mt-0">
                         <div class="relative">
                             <input v-model="search" type="search" class="bg-gray-50 text-sm rounded-full
@@ -178,6 +167,7 @@ import {onBeforeMount, onMounted, ref, watch} from "vue";
 import throttle from "lodash/throttle";
 import { Inertia } from "@inertiajs/inertia";
 import {useUserStore} from "@/Stores/UserStore";
+import NewsHeader from "@/Components/News/NewsHeader.vue";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()

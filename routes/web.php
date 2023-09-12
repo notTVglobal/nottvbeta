@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\ChannelApiController;
 use App\Http\Controllers\AppSettingController;
 use App\Http\Controllers\ChannelController;
+
 use App\Http\Controllers\TestMessageController;
 use App\Http\Controllers\WelcomeController;
 use App\Mail\VerifyMail;
@@ -25,6 +26,7 @@ use App\Http\Controllers\NewsController;
 use App\Http\Controllers\NewsPersonController;
 use App\Http\Controllers\NewsPostController;
 use App\Http\Controllers\NewsroomController;
+use App\Http\Controllers\NewsRssFeedController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ChatController;
@@ -240,15 +242,6 @@ Route::middleware([
     // News Person Resource
 //    Route::resource('newsPerson', \App\Http\Controllers\NewsPersonController::class);
 
-// VIP
-////////
-    Route::put('/userAddToVip', [\App\Http\Controllers\UsersController::class, 'vipAdd'])
-//        ->middleware('auth')->isAdmin
-        ->name('user.vip.add');
-
-    Route::put('/userRemoveFromVip', [\App\Http\Controllers\UsersController::class, 'vipRemove'])
-//        ->middleware('auth')->isAdmin
-        ->name('user.vip.remove');
 
 // News
 ////////
@@ -263,8 +256,32 @@ Route::middleware([
         ->name('newsroom.publish');
 
     Route::post('/news/save', [NewsPostController::class, 'save'])
-        ->name('news.save');;
+        ->name('news.save');
 
+//    Route::get('/news/rss', [NewsRssFeedController::class, 'index'])
+////        ->can('view', 'App\Models\NewsPerson')
+//        ->name('news.rss.index');
+
+    Route::resource('/feeds', NewsRssFeedController::class);
+
+    Route::get('/feeds', [NewsRssFeedController::class, 'index'])
+//        ->can('view', 'App\Models\NewsPerson')
+        ->name('feeds.index');
+
+//    Route::post('/feeds/save', [NewsRssFeedController::class, 'save'])
+//        ->name('feeds.save');
+
+
+
+// VIP
+////////
+    Route::put('/userAddToVip', [\App\Http\Controllers\UsersController::class, 'vipAdd'])
+//        ->middleware('auth')->isAdmin
+        ->name('user.vip.add');
+
+    Route::put('/userRemoveFromVip', [\App\Http\Controllers\UsersController::class, 'vipRemove'])
+//        ->middleware('auth')->isAdmin
+        ->name('user.vip.remove');
 
 // Channels
 ///////////

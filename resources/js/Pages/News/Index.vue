@@ -13,19 +13,7 @@
             <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
 
             <header class="flex justify-between mb-3 border-b border-gray-500">
-                <div class="container mx-auto flex flex-col lg:flex-row items-center justify-between px-4 py-6">
-
-                    <div class="flex flex-col lg:flex-row items-center">
-                        <h1 class="text-3xl font-semibold">News</h1>
-                        <ul class="flex ml-0 lg:ml-16 mt-6 lg:mt-0 space-x-8" >
-                            <li>
-                                <Link :href="``" class="text-gray-700 cursor-not-allowed hover:text-blue-500">Categories</Link>
-                            </li>
-                            <li>
-                                <Link :href="``" @click.prevent="scrollToCities" class="text-gray-700 cursor-not-allowed hover:text-blue-500">Cities</Link>
-                            </li>
-                        </ul>
-                    </div>
+                    <NewsHeader>News</NewsHeader>
                     <div class="flex items-center mt-6 lg:mt-0">
                         <div class="relative">
                             <input v-model="search" type="search" class="bg-gray-50 text-black text-sm rounded-full
@@ -36,7 +24,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
 
             </header>
 
@@ -44,20 +31,7 @@
                 <div class="mt-4">
                     Events, shows, episodes, movies, news, channel updates, announcements, etc.
                 </div>
-                <div class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4 mb-4">
-                <Link
-                    :href="`/newsroom`"><button
-                    class="bg-yellow-600 hover:bg-yellow-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
-                    v-if="props.can.viewNewsroom"
-                >Newsroom</button>
-                </Link>
-                <Link
-                    :href="`/news/create`"><button
-                    class="bg-green-600 hover:bg-green-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
-                    v-if="props.can.createNewsPost"
-                >Create News</button>
-                </Link>
-                </div>
+                <NewsHeaderButtons :can="can"/>
             </div>
 
             <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
@@ -140,6 +114,8 @@ import { useUserStore } from "@/Stores/UserStore";
 import throttle from "lodash/throttle";
 import Pagination from "@/Components/Pagination"
 import Message from "@/Components/Modals/Messages";
+import NewsHeader from "@/Components/News/NewsHeader.vue";
+import NewsHeaderButtons from "@/Components/News/NewsHeaderButtons.vue";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -177,7 +153,7 @@ let props = defineProps({
 });
 
 let form = useForm({
-
+    id: '',
 });
 
 let search = ref(props.filters.search);
@@ -191,7 +167,7 @@ watch(search, throttle(function (value) {
 
 function destroy(id) {
     if (confirm("Are you sure you want to Delete")) {
-        form.delete(route('news.destroy', id));
+        form.delete(route('news.destroy', ['news', id]));
 
     }
 }
