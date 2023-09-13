@@ -479,6 +479,11 @@ Route::middleware([
         ->name('calculations');
 
     //// MIST SERVER API
+    Route::get('/video', function () {
+        return Inertia::render('Admin/MistServerApi');
+    })->can('viewAdmin', 'App\Models\User')
+        ->name('video');
+
     Route::get('/admin/mistServerApi', function () {
         return Inertia::render('Admin/MistServerApi');
     })->can('viewAdmin', 'App\Models\User')
