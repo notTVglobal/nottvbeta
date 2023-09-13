@@ -30,13 +30,6 @@
                                     <div v-html="item.description"></div>
                                 </div>
 
-
-    <!--        <div>{{item.entry.title}}</div>-->
-    <!--        <div>{{item.entry.id}}</div>-->
-    <!--        <div>{{item.entry.summary}}</div>-->
-    <!--        <div>{{item.entry.author.name}}</div>-->
-    <!--        <div>{{item.entry.author.category}}</div>-->
-
                             </div>
                         </div>
                     </div>
@@ -62,7 +55,7 @@ let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 let newsStore = useNewsStore()
 
-videoPlayerStore.currentPage = 'newsRssCreate'
+videoPlayerStore.currentPage = 'newsRssIndex'
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
@@ -84,7 +77,6 @@ function newFormatDate(dateString) {
 }
 
 function back() {
-    newsStore.newsArticleContentTiptop = '';
     window.history.back()
 }
 

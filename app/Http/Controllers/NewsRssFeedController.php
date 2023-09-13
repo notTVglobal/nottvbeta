@@ -33,7 +33,7 @@ class NewsRssFeedController extends Controller
                     'id' => $newsRssFeed->id,
                     'slug' => $newsRssFeed->slug,
                     'name' => $newsRssFeed->name,
-                    'url' => $newsRssFeed->url
+                    'url' => html_entity_decode($newsRssFeed->url)
                 ]),
             'filters' => Request::only(['search']),
             'can' => [

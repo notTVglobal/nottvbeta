@@ -169,7 +169,7 @@ let form = useForm({
 let search = ref(props.filters.search);
 
 watch(search, throttle(function (value) {
-    Inertia.get('/news', { search: value }, {
+    Inertia.get('/news/feeds', { search: value }, {
         preserveState: true,
         replace: true
     });
