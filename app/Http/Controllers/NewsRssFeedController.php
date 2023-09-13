@@ -32,7 +32,7 @@ class NewsRssFeedController extends Controller
                 ->through(fn($newsRssFeed) => [
                     'id' => $newsRssFeed->id,
                     'slug' => $newsRssFeed->slug,
-                    'name' => html_entity_decode($newsRssFeed->name),
+                    'name' => $newsRssFeed->name,
                     'url' => $newsRssFeed->url
                 ]),
             'filters' => Request::only(['search']),
