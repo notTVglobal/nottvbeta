@@ -199,7 +199,7 @@ async function handleSubmit(e) {
         elements,
         confirmParams: {
             // Make sure to change this to your payment completion page
-            return_url: "http://localhost:4242/checkout.html",
+            return_url: "https://not.tv/subscription_success",
             // receipt_email: emailAddress,
         },
         redirect: 'if_required'

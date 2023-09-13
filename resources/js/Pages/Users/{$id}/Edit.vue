@@ -61,12 +61,10 @@
                             v-model="form.role_id"
                     >
                         <option value="1">Standard User</option>
-                        <option value="2">Premium Subscriber</option>
-                        <option value="3">VIP</option>
                         <option value="4">Creator</option>
                     </select>
 
-                    <div v-if="form.errors.roleId" v-text="form.errors.roleId" class="text-xs text-red-600 mt-1"></div>
+                    <div v-if="form.errors.role_id" v-text="form.errors.role_id" class="text-xs text-red-600 mt-1"></div>
                 </div>
                 <div class="my-6">
                     <label class="block mb-2 uppercase font-bold text-xs light:text-gray-700 dark:text-gray-200"

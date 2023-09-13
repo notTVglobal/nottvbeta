@@ -411,10 +411,7 @@ Route::middleware([
 // For Testing
 ///////////
 
-    Route::get('/video', function () {
-        return Inertia::render('Video');
-    })->can('viewAdmin', 'App\Models\User')
-        ->name('video');
+
 
     // temp page to test Stores
     Route::get('/quiz', function () {
@@ -426,9 +423,9 @@ Route::middleware([
 ///////////
 
     //// temp phpinfo page for testing and debugging on a new server.
-    Route::get('/admin/phpmyinfo', function () {
-        phpinfo();
-    })->name('admin.phpmyinfo');
+//    Route::get('/admin/phpmyinfo', function () {
+//        phpinfo();
+//    })->name('admin.phpmyinfo');
 
     //// temp page to test Stores
     Route::get('/quiz', function () {
@@ -480,6 +477,17 @@ Route::middleware([
         return Inertia::render('Calculations');
     })->can('viewAdmin', 'App\Models\User')
         ->name('calculations');
+
+    //// MIST SERVER API
+    Route::get('/admin/mistServerApi', function () {
+        return Inertia::render('Admin/MistServerApi');
+    })->can('viewAdmin', 'App\Models\User')
+        ->name('mistServerApi');
+
+    //// IMAGE GALLERY + UPLOAD
+    Route::get('/admin/images', [ImageController::class, 'index'])
+        ->can('viewAdmin', 'App\Models\User')
+        ->name('admin.image.index');
 
 
     // Teams - Part 1 (part 2 is in the Creator Resources below)
@@ -679,12 +687,11 @@ Route::middleware([
 
 // Images + Upload
 ///////////
-    Route::get('/image', [ImageController::class, 'index'])
-        ->can('viewCreator', 'App\Models\User')
-        ->name('image.index');
-    Route::get('/images', [ImageController::class, 'show'])
-        ->can('viewAdmin', 'App\Models\User')
-        ->name('image.show');
+
+    // this route needs to be refactored to display an image /image/{$id}
+//    Route::get('/images', [ImageController::class, 'show'])
+//        ->can('viewAdmin', 'App\Models\User')
+//        ->name('image.show');
 
     Route::post('/upload', [ImageController::class, 'store'])
         ->can('viewCreator', 'App\Models\User')

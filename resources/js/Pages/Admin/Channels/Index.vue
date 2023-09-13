@@ -6,15 +6,9 @@
 
             <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
 
-            <div class="flex justify-between">
-                <h1 class="text-3xl font-semibold pb-3">Channels</h1>
-                <Link :href="`/dashboard`"><button
-                    class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                >Dashboard</button>
-                </Link>
-            </div>
+            <AdminHeader>Channels</AdminHeader>
 
-            <div class="flex flex-row justify-between gap-x-4">
+            <div class="flex flex-row justify-between gap-x-4 mb-3">
                 <Link :href="`/users/create`"><button
                     class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded disabled:bg-gray-400"
                     disabled
@@ -23,8 +17,7 @@
                 <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg" />
             </div>
 
-            <div class="p-2 text-red-600">This section is in development. Not currently working.</div>
-            <div class="bg-orange-300 px-2 text-black">
+            <div class="bg-orange-300 px-2 text-black mb-3">
                 Add a channel: create playlist and add shows.
             </div>
 
@@ -107,6 +100,7 @@ import { useUserStore } from "@/Stores/UserStore";
 import Message from "@/Components/Modals/Messages";
 import Pagination from "@/Components/Pagination.vue";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+import AdminHeader from "@/Components/Admin/AdminHeader.vue";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()

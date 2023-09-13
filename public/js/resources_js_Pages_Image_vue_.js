@@ -10,7 +10,7 @@
 
 /***/ "./resources/js/Pages/Image.vue~":
 /*!***************************************!*\
-  !*** ./resources/js/Pages/Image.vue~ ***!
+  !*** ./resources/js/Pages/Images.vue~ ***!
   \***************************************/
 /***/ (() => {
 

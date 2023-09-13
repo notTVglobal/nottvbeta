@@ -26,12 +26,11 @@
                 </div>
                 <div>
                     <div class="flex flex-wrap-reverse justify-end gap-2">
-                        <Link :href="`/dashboard`">
-                            <button
-                                class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
-                            >Cancel
-                            </button>
-                        </Link>
+                        <button
+                            @click="back"
+                            class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
+                        >Cancel
+                        </button>
                     </div>
                 </div>
             </div>
@@ -183,7 +182,9 @@ onMounted(() => {
 });
 
 
-
+function back() {
+    window.history.back()
+}
 
 // Dropzone tutorial: https://www.youtube.com/watch?v=wWKhKPN_Pmw
 

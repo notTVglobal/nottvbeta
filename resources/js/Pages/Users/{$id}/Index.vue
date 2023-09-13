@@ -35,6 +35,8 @@
                     <span class="font-bold text-red-600">Administrator</span>
                 </div>
                 <div>
+                    <div class=""><span class="text-xs uppercase">User ID: </span><span class="font-semibold">{{props.userSelected.id}}</span></div>
+
                     <span class="text-sm font-semibold capitalize">User Type: </span>
                     {{ props.role }}
                 </div>

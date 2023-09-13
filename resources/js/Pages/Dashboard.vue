@@ -15,6 +15,12 @@
 
                 <div class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4 mb-4">
                     <Link
+                        :href="`/admin/settings`"><button
+                        class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
+                        v-if="props.can.viewAdmin"
+                    >Admin Settings</button>
+                    </Link>
+                    <Link
                         :href="`/newsroom`"><button
                         class="bg-yellow-600 hover:bg-yellow-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
                         v-if="props.can.viewNewsroom"

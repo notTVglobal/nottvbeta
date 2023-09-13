@@ -212,13 +212,12 @@ class UsersController extends Controller
             'country' => ['nullable', 'string', 'max:255'],
             'postalCode' => ['nullable', 'string', 'max:255'],
             'phone' => ['nullable', 'regex:/^([0-9\s\-\+\(\)]*)$/', 'min:10'],
-            'role_id' => 'integer',
+            'role_id' => 'integer'
         ]);
 
         // update the user
         $user->update($attributes);
         sleep(1);
-
 
         $userId = $user->id;
         $checkCreator = Creator::where('user_id', $userId)->first();
@@ -353,7 +352,6 @@ class UsersController extends Controller
 
             $user = User::find($request->id);
             $user->isVip = true;
-            $user->role_id = 3;
             $user->update();
 
 //        return redirect()->route('newsroom')->with('message', $request->name . ' has successfully been added to the Newsroom.');
@@ -374,7 +372,6 @@ class UsersController extends Controller
 
         $user = User::find($request->id);
         $user->isVip = false;
-        $user->role_id = 1;
         $user->update();
 
         return to_route('users.index')->with('message', $user->name . ' removed from VIP.');

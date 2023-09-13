@@ -2,7 +2,7 @@
     <div v-if="videoPlayerStore.ottButtons">
 
         <div class="ottButtonsContainer" id="ottButtons">
-            <button v-if="userStore.isSubscriber || userStore.isVip || userStore.isAdmin"
+            <button
                     @click="openChannels"
                     class="ottButton bg-green-400 text-green-100 hover:bg-green-600 hover:text-green-300">
                 <font-awesome-icon icon="fa-rocket" class="ml-3.5 text-3xl mb-1"/><div>CHANNELS</div>

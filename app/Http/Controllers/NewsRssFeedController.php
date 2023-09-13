@@ -97,9 +97,9 @@ class NewsRssFeedController extends Controller
     public function show($slug)
     {
         $newsRssFeed = NewsRssFeed::query()->where('slug', $slug)->firstOrFail();
-        $feed = file_get_contents($newsRssFeed->url);
-//        $data = fopen($newsRssFeed->url, 'r');
-//        $feed = stream_get_contents($data);
+//        $feed = file_get_contents($newsRssFeed->url);
+        $data = fopen($newsRssFeed->url, 'r');
+        $feed = stream_get_contents($data);
         $xml = simplexml_load_string($feed, 'SimpleXMLElement', LIBXML_NOCDATA);
 
 //        foreach ($inputs as $input) {

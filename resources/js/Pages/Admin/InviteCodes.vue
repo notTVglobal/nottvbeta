@@ -7,23 +7,7 @@
 
             <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
 
-            <header>
-                <div class="flex justify-between mb-3">
-                    <div class="mb-4">
-                        <h1 class="text-3xl font-semibold">Invite Codes</h1>
-                    </div>
-                    <div>
-                        <div class="flex flex-wrap-reverse justify-end gap-2">
-                            <Link :href="`/dashboard`">
-                                <button
-                                    class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                                >Dashboard
-                                </button>
-                            </Link>
-                        </div>
-                    </div>
-                </div>
-            </header>
+            <AdminHeader>Invite Codes</AdminHeader>
 
             <div>
                 <form @submit.prevent="submit">
@@ -194,6 +178,7 @@ import Message from "@/Components/Modals/Messages";
 import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
 import Pagination from "@/Components/Pagination"
 import throttle from "lodash/throttle"
+import AdminHeader from "@/Components/Admin/AdminHeader.vue";
 
 
 

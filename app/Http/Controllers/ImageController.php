@@ -25,7 +25,7 @@ class ImageController extends Controller
     public function index() {
         // tec21: this search functionality only works with Illuminate\Support\Facades\Request
         // which ends up breaking the filepond upload function which uses Illuminate\Http\Request
-        return Inertia::render('Image', [
+        return Inertia::render('Admin/Images', [
             'images' => Image::query()
 //                ->when(Request::input('search'), function ($query, $search) {
 //                    $query->where('name', 'like', "%{$search}%");
@@ -51,6 +51,7 @@ class ImageController extends Controller
         // to edit an image and manage its
         // versions.. thumb,small,medium, etc.
         //
+        // refactor this to /image/{$id}
         // return all images
         return Image::latest()->pluck('name')->toArray();
     }

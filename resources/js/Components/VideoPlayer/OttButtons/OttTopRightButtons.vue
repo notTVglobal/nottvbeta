@@ -45,13 +45,16 @@ const infoClass = computed(() => ({
 
 const channelsClass = computed(() => ({
     // user is !subscriber
-    'bg-gray-700': videoPlayerStore.ott === 2 && userNeedsToUpgrade(),
-    'hover:bg-gray-700': videoPlayerStore.ott !== 2 && userNeedsToUpgrade(),
-    'bg-gray-900': videoPlayerStore.ott !== 2 && userNeedsToUpgrade(),
+    // 'bg-gray-700': videoPlayerStore.ott === 2 && userNeedsToUpgrade(),
+    // 'hover:bg-gray-700': videoPlayerStore.ott !== 2 && userNeedsToUpgrade(),
+    // 'bg-gray-900': videoPlayerStore.ott !== 2 && userNeedsToUpgrade(),
     // user is subscriber
-    'bg-green-700': videoPlayerStore.ott === 2 && userIsAllowed(),
-    'hover:bg-green-700': videoPlayerStore.ott !== 2 && userIsAllowed(),
-    'bg-green-900': videoPlayerStore.ott !== 2 && userIsAllowed()
+    // 'bg-green-700': videoPlayerStore.ott === 2 && userIsAllowed(),
+    // 'hover:bg-green-700': videoPlayerStore.ott !== 2 && userIsAllowed(),
+    // 'bg-green-900': videoPlayerStore.ott !== 2 && userIsAllowed()
+    'bg-green-700': videoPlayerStore.ott === 2,
+    'hover:bg-green-700': videoPlayerStore.ott !== 2,
+    'bg-green-900': videoPlayerStore.ott !== 2
 }))
 
 const playlistClass = computed(() => ({

@@ -66,11 +66,6 @@ class StripeController extends Controller
     }
 
     public function subscribe(Request $request) {
-        $user_id = auth()->user()->id;
-        $user = User::find($user_id);
-        $user->role_id = 2;
-        $user->save();
-
         auth()->user()->newSubscription('default', $request->plan)->create($request->paymentMethod);
         return to_route('subscriptionSuccess');
     }

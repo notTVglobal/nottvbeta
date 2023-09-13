@@ -136,7 +136,7 @@ class MovieController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Movies/Upload', [
+        return Inertia::render('Movies/Create', [
             'can' => [
                 'viewCreator' => Auth::user()->can('viewCreator', User::class),
             ]

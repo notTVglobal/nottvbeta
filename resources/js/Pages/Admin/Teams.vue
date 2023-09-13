@@ -6,25 +6,12 @@
 
             <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
 
-            <div class="flex justify-between mb-6">
+            <AdminHeader>Teams</AdminHeader>
 
-                <div>
-                    <h1 class="text-3xl font-semibold pb-3">Teams</h1>
-                </div>
-
-                <div v-if="props.can.viewCreator" class="flex justify-end flex-wrap-reverse gap-x-2">
-
-                    <Link v-if="can.createTeam" :href="`/teams/create`"><button
-                        class="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded disabled:bg-gray-400"
-                    >Add Team</button>
-                    </Link>
-                    <Link :href="`/dashboard`"><button
-                        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                    >Dashboard</button>
-                    </Link>
-                </div>
-
-            </div>
+            <Link :href="`/teams/create`"><button
+                class="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded disabled:bg-gray-400"
+            >Create Team (needs to go to a new page: Admin/teams/create)</button>
+            </Link>
 
 
             <div class="flex flex-row justify-end gap-x-4">
@@ -151,6 +138,7 @@ import Pagination from "@/Components/Pagination"
 import throttle from "lodash/throttle"
 import Message from "@/Components/Modals/Messages";
 import SingleImage from "@/Components/Multimedia/SingleImage.vue";
+import AdminHeader from "@/Components/Admin/AdminHeader.vue";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()

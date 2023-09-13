@@ -173,8 +173,9 @@ watch(search, throttle(function (value) {
 //     file: [],
 // });
 let showMessage = ref(true);
+
 function back() {
-    Inertia.visit('/dashboard');
+    window.history.back()
 }
 
 </script>

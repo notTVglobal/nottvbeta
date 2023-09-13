@@ -47,15 +47,15 @@
                     >All Channels</button>
                     </Link>
                     <!--disable button if ! admin-->
-                    <Link :href="`/video`"><button
+                    <Link :href="`/admin/mistServerApi`"><button
                         class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"
                     >MistServer API</button>
                     </Link>
 
                     <!--disable button if ! admin-->
-                    <Link :href="`/image`"><button
+                    <Link :href="`/admin/images`"><button
                         class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"
-                    >Image Uploader</button>
+                    >Images</button>
                     </Link>
 
                     <!--disable button if ! admin-->
@@ -64,11 +64,6 @@
                     >Video Upload</button>
                     </Link>
 
-                    <!--disable button if ! admin-->
-                    <Link :href="`/admin/settings`"><button
-                        class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"
-                    >Settings</button>
-                    </Link>
                     <Link
                         :href="`/movies/create`"><button
                         class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
@@ -79,11 +74,11 @@
                         class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
                     >Invite Codes</button>
                     </Link>
-                    <Link
-                        :href="`/admin/phpmyinfo`"><button
-                        class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
-                    >phpinfo()</button>
-                    </Link>
+<!--                    <Link-->
+<!--                        :href="`/admin/phpmyinfo`"><button-->
+<!--                        class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"-->
+<!--                    >phpinfo()</button>-->
+<!--                    </Link>-->
 
                 </div>
 

@@ -10,11 +10,11 @@
 
 /***/ "./resources/js/Pages/Movies/Upload.vue~":
 /*!***********************************************!*\
-  !*** ./resources/js/Pages/Movies/Upload.vue~ ***!
+  !*** ./resources/js/Pages/Movies/Create.vue~ ***!
   \***********************************************/
 /***/ (() => {
 
-throw new Error("Module build failed: Error: ENOENT: no such file or directory, open '/var/www/nottvbeta/resources/js/Pages/Movies/Upload.vue~'");
+throw new Error("Module build failed: Error: ENOENT: no such file or directory, open '/var/www/nottvbeta/resources/js/Pages/Movies/Create.vue~'");
 
 /***/ })
 

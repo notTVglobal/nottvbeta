@@ -6,20 +6,7 @@
 
             <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
 
-            <div class="flex justify-between mb-6">
-                <div class="grid grid-cols-1 grid-rows-2 pt-4">
-                    <h1 class="text-3xl font-semibold">MistServer API 2</h1>
-                </div>
-                <span class="text-xs font-semibold text-red-700">Admin Mode</span>
-                <div class="grid grid-cols-1 grid-rows-2">
-                    <div class="justify-self-end mb-4">
-                        <Link :href="`/dashboard`"><button
-                            class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                        >Dashboard</button>
-                        </Link>
-                    </div>
-                </div>
-            </div>
+            <AdminHeader>MistServer API</AdminHeader>
 
             <div class="flex justify-between">
                 <div>
@@ -320,7 +307,8 @@ import { onMounted, ref, reactive, onBeforeMount } from "vue";
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js";
 import {useStreamStore} from "@/Stores/StreamStore";
 import {useUserStore} from "@/Stores/UserStore";
-import Message from "@/Components/Modals/Messages";
+import Message from "@/Components/Modals/Messages.vue";
+import AdminHeader from "@/Components/Admin/AdminHeader.vue";
 
 let videoPlayerStore = useVideoPlayerStore()
 let streamStore = useStreamStore()
