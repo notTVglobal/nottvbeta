@@ -67,6 +67,9 @@ class StripeController extends Controller
     }
 
     public function subscribe() {
+        if (auth()->user()->subscribed('default')) {
+            return redirect('/stream');
+        }
             return Inertia::render('Shop/Subscribe', [
                 // TODO: list customer's payment methods:
                 'payment_method' => auth()->user()->defaultPaymentMethod(),
@@ -90,10 +93,13 @@ class StripeController extends Controller
     }
 
     public function subscriptionSuccess() {
-        return Inertia::render('Shop/SubscriptionSuccess', [
-            // TODO: list customer's payment methods:
-            'userIsSubscriber' => auth()->user()->subscribed('default'),
-        ]);
+        if (auth()->user()->subscribed('default')) {
+            return Inertia::render('Shop/SubscriptionSuccess', [
+                // TODO: list customer's payment methods:
+                'userIsSubscriber' => auth()->user()->subscribed('default'),
+            ]);
+        }
+        return to_route('stream');
     }
 
     public function getBillingPortalAccessUrl(Request $request) {

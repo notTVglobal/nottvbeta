@@ -323,6 +323,9 @@ Route::middleware([
     Route::post('/shop/purchase', [StripeController::class, 'purchase']);
 
     Route::get('/upgrade', function () {
+        if (auth()->user()->subscribed('default')) {
+            return redirect('/stream');
+        }
         return Inertia::render('Shop/Upgrade', [
             'intent' => auth()->user()->createSetupIntent(),
         ]);
