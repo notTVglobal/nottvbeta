@@ -90,7 +90,7 @@ class StripeController extends Controller
     }
 
     public function subscriptionSuccess() {
-        return Inertia::render('Shop/Subscribe', [
+        return Inertia::render('Shop/SubscriptionSuccess', [
             // TODO: list customer's payment methods:
             'userIsSubscriber' => auth()->user()->subscribed('default'),
         ]);
