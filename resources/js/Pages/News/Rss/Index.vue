@@ -79,7 +79,7 @@
                                 >
                                     <div class="flex flex-row justify-between space-x-2">
                                         <div class="">
-                                            <Link :href="`/feeds/${feed.slug}`" class="text-blue-800 uppercase font-semibold text-md hover:text-blue-600 hover:opacity-75 transition ease-in-out duration-150">
+                                                <Link type="text/javascript" :href="`/feeds/${feed.slug}`" class="text-blue-800 uppercase font-semibold text-md hover:text-blue-600 hover:opacity-75 transition ease-in-out duration-150">
                                                 {{feed.name}}
                                             </Link>
                                         </div>
