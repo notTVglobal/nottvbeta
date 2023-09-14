@@ -2940,10 +2940,6 @@ html {
   margin-top: -1.25rem;
 }
 
-.-mt-px {
-  margin-top: -1px;
-}
-
 .mb-1 {
   margin-bottom: 0.25rem;
 }
@@ -3498,10 +3494,6 @@ html {
 
 .min-w-full {
   min-width: 100%;
-}
-
-.max-w-6xl {
-  max-width: 72rem;
 }
 
 .max-w-7xl {
@@ -4068,10 +4060,6 @@ html {
 
 .border-l-4 {
   border-left-width: 4px;
-}
-
-.border-r {
-  border-right-width: 1px;
 }
 
 .border-r-2 {
@@ -4777,10 +4765,6 @@ html {
 
 .pt-6 {
   padding-top: 1.5rem;
-}
-
-.pt-8 {
-  padding-top: 2rem;
 }
 
 .text-left {
@@ -6217,10 +6201,6 @@ html {
 
   .sm\:items-center {
     align-items: center;
-  }
-
-  .sm\:justify-start {
-    justify-content: flex-start;
   }
 
   .sm\:justify-center {

@@ -80,10 +80,7 @@ class StripeController extends Controller
         } catch(\Exception $e) {
             return Inertia::render('Shop/Subscribe', [
                 'error' => $e->getMessage(),
-                'payment_method' => auth()->user()->paymentMethods(),
-            ])
-                ->toResponse($request)
-                ->setStatusCode(500);
+            ]);
         }
         return to_route('subscriptionSuccess');
     }
