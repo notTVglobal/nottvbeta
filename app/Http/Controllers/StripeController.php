@@ -88,6 +88,13 @@ class StripeController extends Controller
         return to_route('subscriptionSuccess');
     }
 
+    public function subscriptionSuccess() {
+        return Inertia::render('Shop/Subscribe', [
+            // TODO: list customer's payment methods:
+            'userIsSubscriber' => auth()->user()->subscribed('default'),
+        ]);
+    }
+
     public function getBillingPortalAccessUrl(Request $request) {
         return $request->user()->billingPortalUrl(route('stream'));
 //        return $request->user()->redirectToBillingPortal(route('stream'));

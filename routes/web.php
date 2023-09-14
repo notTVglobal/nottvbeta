@@ -341,9 +341,8 @@ Route::middleware([
     Route::post('shop/subscribe', [StripeController::class, 'setupNewSubscription'])
         ->name('shop.subscribe.post');
 
-    Route::get('/shop/subscription_success', function () {
-        return Inertia::render('Shop/SubscriptionSuccess');
-    })->name('subscriptionSuccess');
+    Route::get('/shop/subscription_success', [StripeController::class, 'subscriptionSuccess'])
+        ->name('subscriptionSuccess');
 
     // tec21: this route isn't used yet. This uses Stripe Checkout.
 //    Route::get('shop/product-checkout', function (Request $request) {

@@ -30,6 +30,10 @@ let shopStore = useShopStore()
 
 videoPlayerStore.currentPage = 'subscriptionSuccess'
 
+let props = defineProps({
+    userIsSubscriber: null
+})
+
 onMounted(async() => {
     videoPlayerStore.makeVideoTopRight();
     if (userStore.isMobile) {
@@ -38,9 +42,10 @@ onMounted(async() => {
     }
     document.getElementById("topDiv").scrollIntoView()
 
-    shopStore.cart = [];
-    shopStore.products = [];
-    await loadOrder()
+    if(props.userIsSubscriber) {
+        userStore.isSubscriber = true
+    }
+
 });
 
 </script>

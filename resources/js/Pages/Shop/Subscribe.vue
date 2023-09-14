@@ -65,7 +65,7 @@
                 </form>
 
                 <!-- {/* Show any error or success messages */}-->
-                <div v-if="error" id="payment-error" class="text-red-600 font-semibold w-full my-2"> {{error}}}</div>
+                <div v-if="error" id="payment-error" class="text-red-600 font-semibold w-full my-2"> {{error}}</div>
                 <div v-if="message" id="payment-message" class="mt-1 text-white">{{message}}</div>
             </div>
 
