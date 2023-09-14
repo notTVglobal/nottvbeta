@@ -9,13 +9,13 @@
 <!--            <h1 class="text-3xl font-semibold pb-3">Become a notTV Premium Subscriber</h1>-->
 
             <div class="flex justify-center w-full">
-                <div class="flex flex-col justify-center w-fit bg-gray-900 rounded-md py-10 mb-24">
+                <div class="flex flex-col justify-center w-fit bg-gray-900 rounded-md py-10 pb-96">
 
                     <h2 class="text-3xl py-8 px-2 font-bold">Choose a Subscription</h2>
 
-                    <div class="grid grid-cols-1 xl:grid-cols-3 justify-center xl:space-x-4 space-y-8 xl:space-y-0 px-8 mx-auto">
+                    <div class="flex flex-wrap justify-center space-y-3 space-x-3 px-8 mx-auto">
 
-                            <div class="card monthly bg-gray-700 hover:bg-gray-600 hover:cursor-pointer rounded-lg px-12 py-6"
+                            <div class="card monthly bg-gray-700 hover:bg-gray-600 hover:cursor-pointer rounded-lg px-12 pt-6"
                                  @mouseover="hoverMonthlyFull = true"
                                  @mouseleave="hoverMonthlyFull = false"
                                  @click="payNow('monthly')">
@@ -23,8 +23,8 @@
                                     <div class="productName">Monthly</div>
                                     <div class="price">$25</div>
                                 </div>
-                                <div class="py-10">
-                                    <font-awesome-icon icon="fa-star" class="upgradeIcon" :class="{activeIcon: hoverMonthlyFull}"/>
+                                <div class="py-6">
+                                    <font-awesome-icon icon="fa-star" class="upgradeIcon"/>
                                 </div>
                                 <div>
                                     Get full access to all features, shows, channels and movies!
@@ -37,7 +37,7 @@
 
                             </div>
 
-                        <div class="card annually bg-gray-700 hover:bg-gray-600 hover:cursor-pointer rounded-lg px-12 py-6"
+                        <div class="card annually bg-gray-700 hover:bg-gray-600 hover:cursor-pointer rounded-lg px-12 pt-6"
                              @mouseover="hoverYearlyFull = true"
                              @mouseleave="hoverYearlyFull = false"
                              @click="payNow('yearly')">
@@ -45,8 +45,8 @@
                                 <div class="productName">Yearly</div>
                                 <div class="price">$250</div>
                             </div>
-                            <div class="py-10">
-                                <font-awesome-icon icon="fa-star" class="upgradeIcon" :class="{activeIcon: hoverYearlyFull}"/><font-awesome-icon icon="fa-star" class="upgradeIcon" :class="{activeIcon: hoverYearlyFull}"/>
+                            <div class="py-6">
+                                <font-awesome-icon icon="fa-star" class="upgradeIcon"/><font-awesome-icon icon="fa-star" class="upgradeIcon"/>
                             </div>
                             <div>
                                 Get full access to all features, shows, channels and movies!
@@ -60,7 +60,7 @@
 
                         </div>
 
-                        <div class="hidden card forever bg-gray-700 hover:bg-gray-600 hover:cursor-pointer rounded-lg  px-12 py-6"
+                        <div class="hidden card forever bg-gray-700 hover:bg-gray-600 hover:cursor-pointer rounded-lg px-12 py-6"
                              @mouseover="hoverForeverFull = true"
                              @mouseleave="hoverForeverFull = false"
                              @click="payNow('forever')">
