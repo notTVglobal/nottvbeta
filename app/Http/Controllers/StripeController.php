@@ -74,6 +74,10 @@ class StripeController extends Controller
             ]);
     }
 
+    public function createPaymentIntent() {
+
+    }
+
     public function setupNewSubscription(Request $request) {
         try {
             auth()->user()->newSubscription('default', $request->plan)->create($request->paymentMethod);
@@ -97,14 +101,15 @@ class StripeController extends Controller
 //        return $request->user()->redirectToBillingPortal(route('stream'));
     }
 
-//    public function getNewSetupIntent(Request) {
-//
-//    }
-
     public function createCheckoutSession(Request $request)
     {
 
     }
+
+    public function initiateSetup(Request $request) {
+        $intent = auth()->user()->createSetupIntent();
+    }
+
     public function initiatePayment(Request $request)
     {
         StripeGateway::setApiKey('STRIPE_SECRET_KEY');

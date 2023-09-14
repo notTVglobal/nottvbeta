@@ -18,7 +18,7 @@
                         <div class="mt-2 w-fit">
                             <button @click.prevent="shopStore.upgradeYearly()">Premium Yearly - $250 / year</button>
                         </div>
-                        <div class="mt-2 w-fit">
+                        <div class="mt-2 w-fit hidden">
                             <button @click.prevent="shopStore.upgradeForever()">Premium Forever - $999 / one time</button>
                         </div>
                 </div>
@@ -160,12 +160,13 @@ function initialize() {
 
     elements = stripe.elements({appearance, clientSecret});
 
-    const linkAuthenticationElement = elements.create("linkAuthentication");
-    linkAuthenticationElement.mount("#link-authentication-element");
-
-    linkAuthenticationElement.on('change', (event) => {
-        emailAddress = event.value.email;
-    });
+    // this is for linkPayments
+    // const linkAuthenticationElement = elements.create("linkAuthentication");
+    // linkAuthenticationElement.mount("#link-authentication-element");
+    //
+    // linkAuthenticationElement.on('change', (event) => {
+    //     emailAddress = event.value.email;
+    // });
 
     const paymentElementOptions = {
         layout: "tabs",

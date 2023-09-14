@@ -192,10 +192,6 @@ Route::middleware([
 //        ]);
 //    })->name('paymentCancelled');
 //
-//    Route::post('payment/initiate', [StripeController::class, 'initiatePayment']);
-//    Route::post('payment/complete', [StripeController::class, 'completePayment']);
-//    Route::post('payment/failure', [StripeController::class, 'failPayment']);
-//
 //    Route::get('/subscribe2', function () {
 //        return Inertia::render('Subscribe2', [
 ////            'intent' => auth()->user()->createSetupIntent(),
@@ -343,6 +339,11 @@ Route::middleware([
 
     Route::get('/shop/subscription_success', [StripeController::class, 'subscriptionSuccess'])
         ->name('subscriptionSuccess');
+
+    Route::post('payment/setup', [StripeController::class, 'initiateSetup']);
+    Route::post('payment/initiate', [StripeController::class, 'initiatePayment']);
+    Route::post('payment/complete', [StripeController::class, 'completePayment']);
+    Route::post('payment/failure', [StripeController::class, 'failPayment']);
 
     // tec21: this route isn't used yet. This uses Stripe Checkout.
 //    Route::get('shop/product-checkout', function (Request $request) {

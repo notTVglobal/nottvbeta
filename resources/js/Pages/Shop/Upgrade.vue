@@ -60,7 +60,7 @@
 
                         </div>
 
-                        <div class="card forever bg-gray-700 hover:bg-gray-600 hover:cursor-pointer rounded-lg  px-12 py-6"
+                        <div class="hidden card forever bg-gray-700 hover:bg-gray-600 hover:cursor-pointer rounded-lg  px-12 py-6"
                              @mouseover="hoverForeverFull = true"
                              @mouseleave="hoverForeverFull = false"
                              @click="payNow('forever')">
