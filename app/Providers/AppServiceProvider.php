@@ -25,6 +25,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Cashier::calculateTaxes();
+        //        This is disabled, because we don't store
+        //          a customer's billing information when
+        //          they set up a new subscription.
+        //          if we enable it we need to store
+        //          the billing info before they submit the payment.
+                Cashier::calculateTaxes();
     }
 }

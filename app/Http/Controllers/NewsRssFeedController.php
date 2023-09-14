@@ -33,7 +33,7 @@ class NewsRssFeedController extends Controller
                     'id' => $newsRssFeed->id,
                     'slug' => $newsRssFeed->slug,
                     'name' => $newsRssFeed->name,
-                    'url' => html_entity_decode($newsRssFeed->url)
+                    'url' => $newsRssFeed->url
                 ]),
             'filters' => Request::only(['search']),
             'can' => [
@@ -131,6 +131,11 @@ class NewsRssFeedController extends Controller
         collect($xml);
         $json = json_encode($xml->channel);
         $array = json_decode($json);
+
+        // Need to save the contents in the database, then return the database information
+        // to the frontend. Getting the contents needs to happen in a job set to run every hour.
+
+
         return Inertia::render(
             'News/Rss/{$id}/Index',
             [

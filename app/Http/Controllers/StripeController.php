@@ -9,6 +9,7 @@ use Stripe\PaymentIntent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Stripe\Stripe as StripeGateway;
+use Throwable;
 
 class StripeController extends Controller
 {
@@ -66,7 +67,19 @@ class StripeController extends Controller
     }
 
     public function subscribe(Request $request) {
-        auth()->user()->newSubscription('default', $request->plan)->create($request->paymentMethod);
+        try {
+            auth()->user()->newSubscription('default', $request->plan)->create($request->paymentMethod);
+        } catch(\Exception $e) {
+//            $response = parent::render($request, $e);
+            $newSetupIntent = auth()->user()->createSetupIntent();
+            return Inertia::render('Shop/Subscribe', [
+                'error' => $e->getMessage(),
+                'intent' => $newSetupIntent,
+            ])
+                ->toResponse($request)
+                ->setStatusCode(500);
+//            return response()->json(['message' => $e->getMessage()], 500);
+        }
         return to_route('subscriptionSuccess');
     }
 
@@ -74,6 +87,10 @@ class StripeController extends Controller
         return $request->user()->billingPortalUrl(route('stream'));
 //        return $request->user()->redirectToBillingPortal(route('stream'));
     }
+
+//    public function getNewSetupIntent(Request) {
+//
+//    }
 
     public function createCheckoutSession(Request $request)
     {

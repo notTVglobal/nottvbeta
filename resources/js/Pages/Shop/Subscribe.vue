@@ -10,51 +10,33 @@
                 <h1 class="text-3xl font-semibold pb-3">Subscription</h1>
             </header>
 
-
                 <div v-if="shopStore.upgradeSelection===''" class="w-full flex flex-col">
-                        <div class="mt-2">
-                            <input type="radio"
-                                   name="plan"
-                                   :value="shopStore.premiumMonthlyStripeId"
-                                   @click="shopStore.upgradeMonthly()"
-                                   v-model="shopStore.upgradeStripeId"
-                                   class="pr-2" />
-                            <label for="standard" class="ml-2">Premium Monthly - $25 / month</label>
+                        <div class="text-xl">Choose a subscription:</div>
+                        <div class="mt-2 w-fit">
+                            <button @click.prevent="shopStore.upgradeMonthly()">Premium Monthly - $25 / month</button>
                         </div>
-                        <div class="mt-2">
-                            <input type="radio"
-                                   name="plan"
-                                   :value="shopStore.premiumYearlyStripeId"
-                                   @click="shopStore.upgradeYearly()"
-                                   v-model="shopStore.upgradeStripeId"
-                                   class="pr-2" />
-                            <label for="standard" class="ml-2">Premium Yearly - $250 / year</label>
+                        <div class="mt-2 w-fit">
+                            <button @click.prevent="shopStore.upgradeYearly()">Premium Yearly - $250 / year</button>
                         </div>
-                        <div class="mt-2">
-                            <input type="radio"
-                                   name="plan"
-                                   :value="shopStore.premiumForeverStripeId"
-                                   @click="shopStore.upgradeForever()"
-                                   v-model="props.upgradeStripeId"
-                                   class="pr-2" />
-                            <label for="standard" class="ml-2">Premium Forever - $999 / one time</label>
+                        <div class="mt-2 w-fit">
+                            <button @click.prevent="shopStore.upgradeForever()">Premium Forever - $999 / one time</button>
                         </div>
                 </div>
 
             <div class="flex flex-row mt-4 px-8">
                 <div v-if="shopStore.upgradeSelection!==''" class="space-y-2 flex flex-col">
                     <div v-if="shopStore.upgradeSelection==='monthly'">
-                        <label for="standard">Premium Monthly - $25 / month</label>
+                        <label for="standard" class="font-semibold">Premium Monthly - $25 / month</label>
                     </div>
                     <div v-if="shopStore.upgradeSelection==='yearly'">
-                        <label for="standard">Premium Yearly - $250 / year</label>
+                        <label for="standard" class="font-semibold">Premium Yearly - $250 / year</label>
                     </div>
                     <div v-if="shopStore.upgradeSelection==='forever'">
-                        <label for="standard">Premium Forever - $999 / one time</label>
+                        <label for="standard" class="font-semibold">Premium Forever - $999 / one time</label>
                     </div>
                 </div>
                 <div v-if="shopStore.upgradeSelection!==''"
-                     class="px-2 text-blue-500 hover:text-blue-400 hover:underline hover:cursor-pointer"
+                     class="px-2 text-blue-500 hover:text-blue-400 font-semibold hover:underline hover:cursor-pointer"
                      @click="shopStore.changeUpgradeSelection()">(change)</div>
             </div>
 
@@ -72,7 +54,10 @@
                     <div id="payment-element">
                         <!--Stripe.js injects the Payment Element-->
                     </div>
-                    <button id="submit" class="h-fit bg-blue-600 hover:bg-blue-500 text-white rounded py-2 px-4">
+
+                    <button id="submit"
+                            class="h-fit bg-blue-600 hover:bg-blue-500 text-white rounded py-2 px-4"
+                            @click.prevent="submit()">
                         <div class="spinner hidden" id="spinner"></div>
                         <span id="button-text">Pay now</span>
                     </button>
@@ -80,7 +65,8 @@
                 </form>
 
                 <!-- {/* Show any error or success messages */}-->
-                <div v-if="message" id="payment-message" class="mt-4">{{message}}</div>
+                <div v-if="error" id="payment-error" class="text-red-600 font-semibold w-full my-2"> {{error}}}</div>
+                <div v-if="message" id="payment-message" class="mt-1 text-white">{{message}}</div>
             </div>
 
 
@@ -90,12 +76,14 @@
 </template>
 
 <script setup>
-import { onMounted } from "vue";
+import { onMounted, onUpdated } from "vue";
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useUserStore } from "@/Stores/UserStore";
 import { useShopStore } from "@/Stores/ShopStore";
 import { useForm } from "@inertiajs/inertia-vue3";
 import { loadStripe } from '@stripe/stripe-js';
+import Messages from "@/Components/VideoPlayer/Chat/VideoOTTChatMessages.vue";
+import {Inertia} from "@inertiajs/inertia";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -106,6 +94,7 @@ videoPlayerStore.currentPage = 'subscribe'
 let props = defineProps({
     user: Object,
     message: String,
+    error: String,
     intent: Object,
     elements: {}
 })
@@ -139,7 +128,9 @@ onMounted(async() => {
 
     document
         .querySelector("#payment-form")
-        .addEventListener("submit", handleSubmit);
+        // .addEventListener("submit", handleSubmit);
+
+
 
 
 });
@@ -187,15 +178,14 @@ function initialize() {
 
 }
 
-async function handleSubmit(e) {
+async function submit() {
     if (shopStore.upgradeStripeId === '' || null) {
         alert('Please select a subscription.')
         return
     }
-    e.preventDefault();
     setLoading(true);
 
-    const { setupIntent, error } = await stripe.confirmSetup({
+    const {setupIntent, error} = await stripe.confirmSetup({
         elements,
         confirmParams: {
             // Make sure to change this to your payment completion page
@@ -203,6 +193,8 @@ async function handleSubmit(e) {
             // receipt_email: emailAddress,
         },
         redirect: 'if_required'
+
+
     });
 
     // This point will only be reached if there is an immediate error when
@@ -222,17 +214,28 @@ async function handleSubmit(e) {
         // console.log(setupIntent)
         let form = useForm({
             paymentMethod: setupIntent.payment_method,
-            plan: shopStore.upgradeStripeId
+            plan: shopStore.upgradeStripeId,
         });
 
         //Submit the form
-        form.post('/shop/subscribe');
+        form.post('/shop/subscribe', {
+            onError: () => {
+                console.log('MTF!!!!!! 3')
+                // getNewSetupIntent()
+            }
+        })
 
     }
 }
-function submit() {
+// console.log('MTF!!!!!! 2');
 
-}
+// function getNewSetupIntent() {
+//     setLoading(false)
+//     console.log('MTF!!!!!!')
+//     Inertia.reload({
+//         only: ['intent'],
+//     });
+// }
 
 
 // ------- UI helpers -------
