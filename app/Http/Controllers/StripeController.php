@@ -66,19 +66,24 @@ class StripeController extends Controller
         }
     }
 
-    public function subscribe(Request $request) {
+    public function subscribe() {
+            return Inertia::render('Shop/Subscribe', [
+                // TODO: list customer's payment methods:
+                'payment_method' => auth()->user()->defaultPaymentMethod(),
+                'intent' => auth()->user()->createSetupIntent(),
+            ]);
+    }
+
+    public function setupNewSubscription(Request $request) {
         try {
             auth()->user()->newSubscription('default', $request->plan)->create($request->paymentMethod);
         } catch(\Exception $e) {
-//            $response = parent::render($request, $e);
-            $newSetupIntent = auth()->user()->createSetupIntent();
             return Inertia::render('Shop/Subscribe', [
                 'error' => $e->getMessage(),
-                'intent' => $newSetupIntent,
+                'payment_method' => auth()->user()->paymentMethods(),
             ])
                 ->toResponse($request)
                 ->setStatusCode(500);
-//            return response()->json(['message' => $e->getMessage()], 500);
         }
         return to_route('subscriptionSuccess');
     }

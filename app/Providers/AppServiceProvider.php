@@ -30,6 +30,6 @@ class AppServiceProvider extends ServiceProvider
         //          they set up a new subscription.
         //          if we enable it we need to store
         //          the billing info before they submit the payment.
-                Cashier::calculateTaxes();
+//                Cashier::calculateTaxes();
     }
 }

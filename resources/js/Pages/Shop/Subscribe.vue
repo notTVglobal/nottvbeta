@@ -131,8 +131,6 @@ onMounted(async() => {
         // .addEventListener("submit", handleSubmit);
 
 
-
-
 });
 
 function showPaymentForm() {
@@ -218,24 +216,10 @@ async function submit() {
         });
 
         //Submit the form
-        form.post('/shop/subscribe', {
-            onError: () => {
-                console.log('MTF!!!!!! 3')
-                // getNewSetupIntent()
-            }
-        })
+        form.post('/shop/subscribe')
 
     }
 }
-// console.log('MTF!!!!!! 2');
-
-// function getNewSetupIntent() {
-//     setLoading(false)
-//     console.log('MTF!!!!!!')
-//     Inertia.reload({
-//         only: ['intent'],
-//     });
-// }
 
 
 // ------- UI helpers -------

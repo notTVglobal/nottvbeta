@@ -335,13 +335,10 @@ Route::middleware([
     Route::post('/upgrade', [StripeController::class, 'createCheckoutSession'])
         ->name('createCheckoutSession');
 
-    Route::get('/shop/subscribe', function () {
-        return Inertia::render('Shop/Subscribe', [
-            'intent' => auth()->user()->createSetupIntent(),
-        ]);
-    })->name('shop.subscribe');
+    Route::get('/shop/subscribe', [StripeController::class, 'subscribe'])
+        ->name('shop.subscribe');
 
-    Route::post('shop/subscribe', [StripeController::class, 'subscribe'])
+    Route::post('shop/subscribe', [StripeController::class, 'setupNewSubscription'])
         ->name('shop.subscribe.post');
 
     Route::get('/shop/subscription_success', function () {
