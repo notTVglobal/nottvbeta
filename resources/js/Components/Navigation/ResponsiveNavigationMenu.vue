@@ -255,10 +255,7 @@
 
 
                 <div class="flex flex-col w-full space-y-1 text-gray-600 text-sm pb-20">
-<!--                    <div class="flex pt-12 justify-center">Web application concept and design</div>-->
-                    <div class="flex justify-center">not<span class="text-xs">&#174;</span>TV &#169;2009-{{new Date().getFullYear()}}</div>
-                    <div class="flex justify-center">Beta Preview v0.7</div>
-<!--                    <div class="flex pt-4 justify-center">Please send us comments and questions <a href="https://help.not.tv/" target="_blank" class="text-blue-600 hover:text-blue-40">&nbsp; here</a>.</div>-->
+                    <AppVersion />
                 </div>
             </div>
         </div> <div class="fixed w-full bottom-4 text-center hidden">Scroll the menu.</div>
@@ -276,6 +273,7 @@ import { ref } from "vue"
 import {Inertia} from "@inertiajs/inertia"
 import JetApplicationMark from "@/Jetstream/ApplicationMark.vue";
 import {Link} from "@inertiajs/inertia-vue3";
+import AppVersion from "@/Components/AppVersion/AppVersion.vue";
 
 const showingNavigationDropdown = ref(false);
 
