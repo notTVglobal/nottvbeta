@@ -103,6 +103,42 @@ class NewsRssFeedController extends Controller
             ]);
     }
 
+    public function rss2edit($id)
+    {
+        $NewsRssFeed = NewsRssFeed::where('slug', $id)->first();
+        $this->authorize('update', NewsPost::class);
+        return Inertia::render(
+            'News/Rss2/{$id}/Edit', [
+                'feed' => $NewsRssFeed,
+                'can' => [
+                    'viewNewsroom' => Auth::user()->can('viewAny', NewsPerson::class)
+                ]
+            ]
+        );
+    }
+
+    public function rss2update(HttpRequest $request)
+    {
+        $request->validate([
+            'name' => 'unique:news_rss_feeds|required|string|max:255',
+            'url' => 'required|active_url',
+        ]);
+
+        $newsRssFeed = NewsRssFeed::find($request->id);
+
+        $newsRssFeed->name = $request->name;
+        $newsRssFeed->slug = \Str::slug($request->name);
+        $newsRssFeed->url = $request->url;
+
+        $newsRssFeed->save();
+
+        return redirect()
+            ->route('rss2show',
+                [$newsRssFeed->slug])
+            ->with('message', 'RSS Feed Updated Successfully');
+
+    }
+
     /**
      * Show the form for creating a new resource.
      *

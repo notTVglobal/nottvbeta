@@ -12,14 +12,8 @@
 
             <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
 
-            <header class="flex justify-between mb-3 border-b border-gray-500">
-                <div class="container mx-auto flex flex-col lg:flex-row items-center justify-between px-4 py-6">
+            <NewsHeader>News Feeds</NewsHeader>
 
-                    <NewsHeader>News Feeds</NewsHeader>
-
-                </div>
-
-            </header>
 
             <div class="w-full flex flex-row justify-end mb-4">
 
@@ -84,7 +78,7 @@
                                             </Link>
                                         </div>
                                         <div class="space-x-1">
-                                            <Link :href="`/news/rss2/${feed.slug}/edit`"><button
+                                            <Link :href="`/rss2/${feed.slug}/edit`"><button
                                                 class="px-2 py-1 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                                                 v-if="userStore.isNewsPerson"
                                             >Edit</button>

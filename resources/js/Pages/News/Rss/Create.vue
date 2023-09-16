@@ -7,12 +7,7 @@
 
             <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
 
-            <div class="w-full flex flex-row justify-between mb-4">
-                <div class="text-2xl mt-4">
-                    Add RSS Feed
-                </div>
-                <NewsHeaderButtons :can="can"/>
-            </div>
+            <NewsHeaderButtons :can="can"/>
 
             <div class="flex flex-row justify-between">
                 <h2 class="text-xl font-semibold leading-tight">

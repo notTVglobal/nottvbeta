@@ -1245,12 +1245,10 @@ var map = {
 	],
 	"./News/Rss2/{$id}/Edit": [
 		"./resources/js/Pages/News/Rss2/{$id}/Edit.vue",
-		"/js/vendor",
 		"resources_js_Pages_News_Rss2_id_Edit_vue"
 	],
 	"./News/Rss2/{$id}/Edit.vue": [
 		"./resources/js/Pages/News/Rss2/{$id}/Edit.vue",
-		"/js/vendor",
 		"resources_js_Pages_News_Rss2_id_Edit_vue"
 	],
 	"./News/Rss2/{$id}/Index": [

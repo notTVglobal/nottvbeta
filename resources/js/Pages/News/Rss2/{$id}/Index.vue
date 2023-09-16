@@ -4,9 +4,10 @@
 
     <div id="topDiv" class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white dark:bg-gray-800 text-black dark:text-gray-50 p-5 mb-10">
-            <header class="flex justify-between mb-3 border-b border-gray-500">
-                <NewsHeader>News</NewsHeader>
-            </header>
+
+            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+
+            <NewsHeader>News</NewsHeader>
 
             <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white dark:bg-gray-900 border-b border-gray-200">
@@ -69,6 +70,7 @@ onMounted(() => {
 let props = defineProps({
     feed: Object,
     can: Object,
+    message: String,
 })
 
 function newFormatDate(dateString) {
