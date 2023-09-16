@@ -69,6 +69,66 @@ class NewsRssFeedController extends Controller
         ]);
     }
 
+    public function rss2show($slug)
+    {
+        $newsRssFeed = NewsRssFeed::query()->where('slug', $slug)->firstOrFail();
+        $feed = file_get_contents($newsRssFeed->url);
+//        $data = fopen($newsRssFeed->url, 'r');
+//        $feed = stream_get_contents($data);
+        $xml = simplexml_load_string($feed, 'SimpleXMLElement', LIBXML_NOCDATA);
+
+//        foreach ($inputs as $input) {
+//            $dataArray[] = [
+//                'title' => $input->channel->item[$input]->title,
+//                'author' => $input->channel->item[$input]->author,
+//                'category' => $input->channel->item[$input]->category,
+//                'link' => $input->channel->item[$input]->link,
+//                'description' => $input->channel->item[$input]->description,
+//                'pubDate' => $input->channel->item[$input]->pubDate,
+//            ];
+//
+//            dd($dataArray);
+
+
+//            echo "\nThe Title: " . $title . ".\n";
+//            echo "\nThe Author: " . $author . ".\n";
+//            echo "\nThe Category: " . $category . ".\n";
+//            echo "\nChannel Link: " . $link . ".\n";
+//            echo "\nChannel Description: " . $description . ".\n";
+//            echo "\nDate of Publication: " . $pubDate . ".\n";
+//        }
+
+
+//        $feed = htmlspecialchars_decode($feed);
+//        dd($feed);
+
+//        dd($xml);
+        collect($xml);
+        $json = json_encode($xml->channel);
+        $array = json_decode($json);
+
+        // Need to save the contents in the database, then return the database information
+        // to the frontend. Getting the contents needs to happen in a job set to run every hour.
+
+
+        return Inertia::render(
+            'News/Rss/{$id}/Index',
+            [
+                'feed' => [
+                    'id' => $newsRssFeed->id,
+                    'slug' => $newsRssFeed->slug,
+                    'name' => html_entity_decode($newsRssFeed->name),
+                    'url' => html_entity_decode($newsRssFeed->url),
+                    'items' => $array
+                ],
+                'can' => [
+                    'editNewsPost' => Auth::user()->can('update', NewsPost::class),
+                    'deleteNewsPost' => Auth::user()->can('delete', NewsPost::class),
+                    'viewNewsroom' => Auth::user()->can('viewAny', NewsPerson::class)
+                ]
+            ]);
+    }
+
     /**
      * Show the form for creating a new resource.
      *

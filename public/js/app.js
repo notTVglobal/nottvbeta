@@ -1243,6 +1243,26 @@ var map = {
 		"/js/vendor",
 		"resources_js_Pages_News_Rss2_Index_vue"
 	],
+	"./News/Rss2/{$id}/Edit": [
+		"./resources/js/Pages/News/Rss2/{$id}/Edit.vue",
+		"/js/vendor",
+		"resources_js_Pages_News_Rss2_id_Edit_vue"
+	],
+	"./News/Rss2/{$id}/Edit.vue": [
+		"./resources/js/Pages/News/Rss2/{$id}/Edit.vue",
+		"/js/vendor",
+		"resources_js_Pages_News_Rss2_id_Edit_vue"
+	],
+	"./News/Rss2/{$id}/Index": [
+		"./resources/js/Pages/News/Rss2/{$id}/Index.vue",
+		"/js/vendor",
+		"resources_js_Pages_News_Rss2_id_Index_vue"
+	],
+	"./News/Rss2/{$id}/Index.vue": [
+		"./resources/js/Pages/News/Rss2/{$id}/Index.vue",
+		"/js/vendor",
+		"resources_js_Pages_News_Rss2_id_Index_vue"
+	],
 	"./News/{$id}/Edit": [
 		"./resources/js/Pages/News/{$id}/Edit.vue",
 		"/js/vendor",

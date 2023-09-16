@@ -268,6 +268,9 @@ Route::middleware([
     Route::get('/rss2', [NewsRssFeedController::class, 'rss2'])
 //        ->can('view', 'App\Models\NewsPerson')
         ->name('rss2');
+    Route::get('/rss2/{id}', [NewsRssFeedController::class, 'rss2show'])
+//        ->can('view', 'App\Models\NewsPerson')
+        ->name('rss2show');
 
 //    Route::post('/feeds/save', [NewsRssFeedController::class, 'save'])
 //        ->name('feeds.save');

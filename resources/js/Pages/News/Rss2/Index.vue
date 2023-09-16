@@ -79,12 +79,12 @@
                                 >
                                     <div class="flex flex-row justify-between space-x-2">
                                         <div class="">
-                                                <Link type="text/javascript" :href="`/feeds/${feed.slug}`" class="text-blue-800 uppercase font-semibold text-md hover:text-blue-600 hover:opacity-75 transition ease-in-out duration-150">
+                                                <Link type="text/javascript" :href="`/rss2/${feed.slug}`" class="text-blue-800 uppercase font-semibold text-md hover:text-blue-600 hover:opacity-75 transition ease-in-out duration-150">
                                                 {{feed.name}}
                                             </Link>
                                         </div>
                                         <div class="space-x-1">
-                                            <Link :href="`/news/rss/${feed.slug}/edit`"><button
+                                            <Link :href="`/news/rss2/${feed.slug}/edit`"><button
                                                 class="px-2 py-1 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                                                 v-if="userStore.isNewsPerson"
                                             >Edit</button>
