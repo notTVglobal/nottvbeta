@@ -77,32 +77,6 @@ class NewsRssFeedController extends Controller
 //        $feed = stream_get_contents($data);
         $xml = simplexml_load_string($feed, 'SimpleXMLElement', LIBXML_NOCDATA);
 
-//        foreach ($inputs as $input) {
-//            $dataArray[] = [
-//                'title' => $input->channel->item[$input]->title,
-//                'author' => $input->channel->item[$input]->author,
-//                'category' => $input->channel->item[$input]->category,
-//                'link' => $input->channel->item[$input]->link,
-//                'description' => $input->channel->item[$input]->description,
-//                'pubDate' => $input->channel->item[$input]->pubDate,
-//            ];
-//
-//            dd($dataArray);
-
-
-//            echo "\nThe Title: " . $title . ".\n";
-//            echo "\nThe Author: " . $author . ".\n";
-//            echo "\nThe Category: " . $category . ".\n";
-//            echo "\nChannel Link: " . $link . ".\n";
-//            echo "\nChannel Description: " . $description . ".\n";
-//            echo "\nDate of Publication: " . $pubDate . ".\n";
-//        }
-
-
-//        $feed = htmlspecialchars_decode($feed);
-//        dd($feed);
-
-//        dd($xml);
         collect($xml);
         $json = json_encode($xml->channel);
         $array = json_decode($json);
@@ -112,7 +86,7 @@ class NewsRssFeedController extends Controller
 
 
         return Inertia::render(
-            'News/Rss/{$id}/Index',
+            'News/Rss2/{$id}/Index',
             [
                 'feed' => [
                     'id' => $newsRssFeed->id,
