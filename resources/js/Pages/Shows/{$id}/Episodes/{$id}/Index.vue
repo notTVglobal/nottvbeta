@@ -276,14 +276,14 @@ let playEpisode = () => {
         videoPlayerStore.currentChannelName = 'On Demand ('+props.episode.name+') from web'
         Inertia.visit('/stream')
     }
-    // else
-    //     // else if youtube_url exists, play youtube_url
-    //     if (props.episode.youtube_url) {
-    //         videoPlayerStore.loadNewSourceFromYouTube(props.episode.youtube_url)
-    //         videoPlayerStore.videoName = props.episode.name+' (web)'
-    //         videoPlayerStore.currentChannelName = 'On Demand ('+props.episode.name+') from YouTube'
-    //         Inertia.visit('/stream')
-    //     }
+    else
+        // else if youtube_url exists, play youtube_url
+        if (props.episode.youtube_url) {
+            videoPlayerStore.loadNewSourceFromYouTube(props.episode.youtube_url)
+            videoPlayerStore.videoName = props.episode.name+' (YouTube)'
+            videoPlayerStore.currentChannelName = 'On Demand ('+props.episode.name+') from YouTube'
+            Inertia.visit('/stream')
+        }
 
 }
 

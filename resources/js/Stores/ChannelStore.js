@@ -24,6 +24,7 @@ export let useChannelStore = defineStore('channelStore', {
                 })
         },
         changeChannel(channel) {
+            useVideoPlayerStore().currentChannelName = channel.name
             this.currentChannelName = channel.name
             this.currentChannelId = channel.id
             this.isLive = channel.isLive

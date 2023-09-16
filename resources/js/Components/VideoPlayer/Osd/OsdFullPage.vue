@@ -3,7 +3,7 @@
     <div class="osdFullPage">
         <div v-if="channelStore.currentChannelName !== '' || null">
             <span class="text-xs uppercase pr-2">Channel: </span>
-            <span class="text-xs font-semibold">{{ channelStore.currentChannelName }}</span>
+            <span class="text-xs font-semibold">{{ videoPlayerStore.currentChannelName }}</span>
         </div>
         <div v-if="videoPlayerStore.videoName !== ''">
             <span class="text-xs uppercase pr-2">Now playing: </span>
