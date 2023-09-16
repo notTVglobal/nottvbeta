@@ -20,8 +20,6 @@
                 <NewsHeaderButtons :can="can"/>
             </div>
             <div class="bg-orange-500 mb-1 px-2 py-1 text-black font-semibold">TODO: create special parser for <a href="https://www.canada.ca/en/news/web-feeds.html#a7" target="_blank">Government of Canada Feeds</a></div>
-            <div class="bg-orange-500 mb-2 px-2 py-1 text-black font-semibold">TODO: create edit page to change RSS Feed Url or Name</div>
-
 
             <div class="w-full overflow-hidden bg-white shadow-sm sm:rounded-lg">
                 <div class="w-full p-6 bg-white dark:bg-gray-900 border-b border-gray-200">
