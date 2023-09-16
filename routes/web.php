@@ -265,7 +265,7 @@ Route::middleware([
         ->name('feeds.index');
 
     // this is a test
-    Route::get('/rss2', [NewsRssFeedController::class, 'index'])
+    Route::get('/rss2', [NewsRssFeedController::class, 'rss2'])
 //        ->can('view', 'App\Models\NewsPerson')
         ->name('rss2');
 

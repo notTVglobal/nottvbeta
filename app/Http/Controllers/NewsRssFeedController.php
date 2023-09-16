@@ -44,6 +44,31 @@ class NewsRssFeedController extends Controller
         ]);
     }
 
+    public function rss2()
+    {
+        return Inertia::render('News/Rss2/Index', [
+            'feeds' => NewsRssFeed::query()
+                ->orderBy('name', 'asc')
+                ->when(\Illuminate\Support\Facades\Request::input('search'), function ($query, $search) {
+                    $query->where('name', 'like', "%{$search}%");
+                })
+                ->paginate(10, ['*'], 'news')
+                ->withQueryString()
+                ->through(fn($newsRssFeed) => [
+                    'id' => $newsRssFeed->id,
+                    'slug' => $newsRssFeed->slug,
+                    'name' => $newsRssFeed->name,
+                    'url' => $newsRssFeed->url
+                ]),
+            'filters' => Request::only(['search']),
+            'can' => [
+//                'editNewsPost' => Auth::user()->can('update', NewsPost::class),
+                'createNewsPost' => Auth::user()->can('create', NewsPost::class),
+                'viewNewsroom' => Auth::user()->can('viewAny', NewsPerson::class)
+            ]
+        ]);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
