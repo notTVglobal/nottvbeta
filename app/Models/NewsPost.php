@@ -18,6 +18,10 @@ class NewsPost extends Model
         'status'
     ];
 
+    protected $casts = [
+        'content_json' => 'array'
+    ];
+
     public function getRouteKeyName() {
         return 'slug';
     }

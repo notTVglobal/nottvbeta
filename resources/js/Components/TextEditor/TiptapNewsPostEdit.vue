@@ -58,12 +58,19 @@ const editor = new Editor({
     content: newsStore.newsArticleContentTiptop,
     extensions: [
         StarterKit,
+        Paragraph.configure({
+            HTMLAttributes: {
+                class: 'news-paragraph',
+            },
+        }),
     ],
+
 
 
 
     onUpdate: ({ editor }) => {
         newsStore.newsArticleContentTiptop = editor.getHTML()
+        // newsStore.newsArticleContentTiptop = editor.getJSON()
         // const value = editor.getJSON()
 
         // Auto-save -> triggered on every change,

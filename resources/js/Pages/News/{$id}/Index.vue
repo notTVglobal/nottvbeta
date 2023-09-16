@@ -66,8 +66,8 @@
                     <img :src="`/storage/images/${props.image}`" class="object-scale-down md:max-w-sm px-6 mb-4 mx-auto">
                 </div>
 
-                <div class="px-6 border-b border-gray-200">
-                        <div v-html="news.content" class="text-left mb-6 whitespace-pre-wrap">
+                <div class="flex flex-wrap px-6 border-b border-gray-200 news-content space-y-5 whitespace-pre-wrap">
+                        <div v-html="'<pre>'+news.content+'</pre>'" class="text-left mb-6">
                         </div>
                 </div>
             </div>

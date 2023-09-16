@@ -66,10 +66,10 @@
 <!--                        ></tabbable-textarea>-->
 
                         <div
-                            v-if="form.errors.content"
+                            v-if="form.errors.body"
                             class="text-sm text-red-600"
                         >
-                            {{ form.errors.content }}
+                            {{ form.errors.body }}
                         </div>
                     </div>
                     <div class=" flex justify-start">
@@ -152,9 +152,11 @@ const form = useForm({
     id: props.news.id,
     title: props.news.title,
     body: newsStore.newsArticleContentTiptop,
+    // content: newsStore.newsArticleContentTiptop,
 });
 
 form.body = newsStore.newsArticleContentTiptop;
+// form.content = newsStore.newsArticleContentTiptop;
 
 const submit = () => {
     form.body = newsStore.newsArticleContentTiptop;

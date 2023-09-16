@@ -7,7 +7,7 @@ export let useNewsStore = defineStore('newsStore', {
         return {
             newsArticleIdTiptop: '',
             newsArticleTitleTiptop: '',
-            newsArticleContentTiptop: '',
+            newsArticleContentTiptop: [],
         };
     },
 

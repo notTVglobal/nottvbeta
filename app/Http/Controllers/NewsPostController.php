@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\NewsPerson;
 use App\Models\NewsPost;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -98,7 +99,7 @@ class NewsPostController extends Controller
         $newsPost = new NewsPost();
         $newsPost->title = htmlentities($request->title);
         $newsPost->content = htmlentities($request->body);
-//        $newsPost->content = $request->content;
+//        $newsPost->content_json = $request->content_json;
         $newsPost->slug = \Str::slug($request->title);
         $newsPost->user_id = Auth::user()->id;
 
@@ -143,6 +144,7 @@ class NewsPostController extends Controller
                     'slug' => $newsPost->slug,
                     'title' => html_entity_decode($newsPost->title),
                     'content' => html_entity_decode($newsPost->content),
+//                    'content_json' => $newsPost->content_json,
                     'published_at' => $newsPost->published_at,
                     'author' => $newsPost->user->name,
                 ],
@@ -174,6 +176,7 @@ class NewsPostController extends Controller
                     'slug' => $post->slug,
                     'title' => html_entity_decode($post->title),
                     'content' => html_entity_decode($post->content),
+//                    'content_json' => $post->content_json,
                 ],
                 'can' => [
                     'viewNewsroom' => Auth::user()->can('viewAny', NewsPerson::class)
@@ -197,10 +200,14 @@ class NewsPostController extends Controller
         $request->validate([
             'title' => ['required', 'string', 'max:255', Rule::unique('news_posts')->ignore($newsPost->id)],
             'body' => 'required|string',
+//            'body' => 'required|array',
         ]);
 
         $newsPost->title = $request->title;
         $newsPost->content = $request->body;
+        // tec21: I don't know how to display the content of the array in html
+        // we'll just keep this here for now.
+//        $newsPost->content_json = $request->body;
         $newsPost->slug = \Str::slug($request->title);
         $newsPost->save();
         sleep(1);
@@ -222,17 +229,20 @@ class NewsPostController extends Controller
     // The title is saved through the update method.
     public function save(HttpRequest $request)
     {
-//        $newsPost = NewsPost::find($request->id);
+        $newsPost = NewsPost::find($request->id);
 
         $request->validate([
-//            'title' => ['required', 'string', 'max:255', Rule::unique('news_posts')->ignore($newsPost->id)],
+            'title' => ['required', 'string', 'max:255', Rule::unique('news_posts')->ignore($newsPost->id)],
             'body' => 'required|string',
+//            'content_json' => 'required|array',
         ]);
 
         $id = $request->id;
         $content = htmlentities($request->body);
+//        $content = $request->content_json;
 
         $newsPost = NewsPost::find($id);
+        $newsPost->content_json = $request->content_json;
         $newsPost->content = $content;
         $newsPost->save();
 

@@ -49,6 +49,15 @@ html {
 .bugFullPageClass {
     @apply block h-9 w-auto shrink-0
 }
+.news-paragraph p {
+    margin-top: 0.75rem;
+    margin-bottom: 10px;
+    padding-top: 2rem;
+}
+.news-paragraph ul,
+.news-paragraph ol {
+    padding: 0 1rem;
+}
 
 /* VIDEO CONTAINERS AND CLASSES*/
 /*****************************************/

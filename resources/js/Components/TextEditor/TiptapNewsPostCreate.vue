@@ -1,8 +1,8 @@
 <template>
-    <button @click.prevent="editor.chain().focus().toggleBold().run()" class="py-1 px-2 mb-2 text-black hover:text-white bg-gray-200 hover:bg-gray-400 rounded-lg font-bold">
+    <button @click.prevent="editor.chain().focus().toggleBold().run()" class="py-1 px-2 mb-2 text-black hover:text-white bg-gray-200 hover:bg-gray-600 rounded-lg font-bold" :class="{ 'bg-gray-600 text-white': editor.isActive('bold') }">
         B
     </button>
-    <button @click.prevent="editor.chain().focus().toggleItalic().run()" class="py-1 px-3 ml-2 mb-2 text-black hover:text-white bg-gray-200 hover:bg-gray-400 rounded-lg font-italic">
+    <button @click.prevent="editor.chain().focus().toggleItalic().run()" class="py-1 px-3 ml-2 mb-2 text-black hover:text-white bg-gray-200 hover:bg-gray-600 rounded-lg font-italic" :class="{ 'bg-gray-600 text-white': editor.isActive('italic') }">
         i
     </button>
 <!--    <button-->
