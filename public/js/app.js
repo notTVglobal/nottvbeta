@@ -1233,6 +1233,16 @@ var map = {
 		"/js/vendor",
 		"resources_js_Pages_News_Rss_id_Index_vue"
 	],
+	"./News/Rss2/Index": [
+		"./resources/js/Pages/News/Rss2/Index.vue",
+		"/js/vendor",
+		"resources_js_Pages_News_Rss2_Index_vue"
+	],
+	"./News/Rss2/Index.vue": [
+		"./resources/js/Pages/News/Rss2/Index.vue",
+		"/js/vendor",
+		"resources_js_Pages_News_Rss2_Index_vue"
+	],
 	"./News/{$id}/Edit": [
 		"./resources/js/Pages/News/{$id}/Edit.vue",
 		"/js/vendor",
