@@ -1,10 +1,5 @@
 <template>
-    <button @click.prevent="editor.chain().focus().toggleBold().run()" class="py-1 px-2 mb-2 text-black hover:text-white bg-gray-200 hover:bg-gray-400 rounded-lg font-bold">
-        B
-    </button>
-    <button @click.prevent="editor.chain().focus().toggleItalic().run()" class="py-1 px-3 ml-2 mb-2 text-black hover:text-white bg-gray-200 hover:bg-gray-400 rounded-lg font-italic">
-        i
-    </button>
+    <TiptapButtons :editor="editor"/>
 <!--    <button-->
 <!--        @click="editor.chain().focus().undo().run()"-->
 <!--        :disabled="!editor.can().undo()"-->
@@ -51,6 +46,7 @@ import {Inertia} from "@inertiajs/inertia";
 import throttle from "lodash/throttle"
 import axios from "axios";
 import TabbableTextarea from "@/Components/TabbableTextarea.vue";
+import TiptapButtons from "@/Components/News/TiptapButtons.vue";
 
 let newsStore = useNewsStore();
 

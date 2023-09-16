@@ -61,7 +61,7 @@
 
 
 
-            <div class="flex flex-col lg:flex-row items-start justify-items-center">
+            <div class="w-full flex flex-wrap items-start justify-items-center">
                 <div class="flex items-start">
                     <img :src="`/storage/images/${props.image}`" class="object-scale-down md:max-w-sm px-6 mb-4 mx-auto">
                 </div>
