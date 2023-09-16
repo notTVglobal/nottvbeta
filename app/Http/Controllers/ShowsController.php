@@ -243,7 +243,7 @@ class ShowsController extends Controller
         $showEpisodes = $show->showEpisodes;
 
 //        $episode = ShowEpisode::where('show_id', $show->id)->first();
-        $episode = ShowEpisode::where('show_id', $show->id)->first();
+//        $episode = ShowEpisode::where('show_id', $show->id)->first();
 
         $firstPlayFile = $episode->video_id ?? '';
         $firstPlayUrl = $episode->video_url ?? '';
@@ -331,10 +331,10 @@ class ShowsController extends Controller
                     'id' => $showEpisode->id,
                     'name' => $showEpisode->name,
                     'slug' => $showEpisode->slug,
+                    'episode_number' => $showEpisode->episode_number,
                     'created_at' => $showEpisode->created_at,
                     'image' => [
                         'id' => $showEpisode->image->id,
-                        'episode_number' => $showEpisode->episode_number,
                         'name' => $showEpisode->image->name,
                         'folder' => $showEpisode->image->folder,
                         'cdn_endpoint' => $showEpisode->appSetting->cdn_endpoint,

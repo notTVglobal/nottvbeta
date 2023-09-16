@@ -274,17 +274,18 @@ teamStore.slug = props.team.slug;
 teamStore.name = props.team.name;
 
 function checkForVideo() {
-    if (props.show.firstPlay.file_name && props.show.firstPlay.upload_status !== 'processing') {
-        videoPlayerStore.hasVideo = true;
-    } else
-    if (props.show.firstPlay.video_url) {
-        videoPlayerStore.hasVideo = true;
-    } else
-    if (!props.show.firstPlay.video_url && props.show.firstPlay.upload_status === 'processing'){
-        videoPlayerStore.hasVideo = false;
-    } else if (!props.show.firstPlay.file_name && !props.show.firstPlay.video_url) {
-        videoPlayerStore.hasVideo = false;
-    } return true;
+    if (props.show.firstPlay) {
+        if (props.show.firstPlay.file_name && props.show.firstPlay.upload_status !== 'processing') {
+            videoPlayerStore.hasVideo = true;
+        } else if (props.show.firstPlay.video_url) {
+            videoPlayerStore.hasVideo = true;
+        } else if (!props.show.firstPlay.video_url && props.show.firstPlay.upload_status === 'processing') {
+            videoPlayerStore.hasVideo = false;
+        } else if (!props.show.firstPlay.file_name && !props.show.firstPlay.video_url) {
+            videoPlayerStore.hasVideo = false;
+        }
+        return true;
+    }
 }
 
 checkForVideo()

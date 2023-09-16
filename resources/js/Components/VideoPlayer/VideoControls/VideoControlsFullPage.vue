@@ -52,9 +52,9 @@
 
                     </div>
 
-                    <div class="backToPage">
-                        <button @click="backToPage">Back to Page</button>
-                    </div>
+<!--                    <div class="backToPage">-->
+<!--                        <button @click="backToPage">Back to Page</button>-->
+<!--                    </div>-->
 
 
 
