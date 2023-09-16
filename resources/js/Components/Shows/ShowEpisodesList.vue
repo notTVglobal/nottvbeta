@@ -5,15 +5,15 @@
         <!--                                <h2 class="text-yellow-500 uppercase tracking-wide font-semibold">EPISODES</h2>-->
         <div class="w-full bg-gray-800 text-2xl p-4 mb-4">EPISODES</div>
 
-        <div class="popular-movies text-sm grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-8">
+        <div class="show-episodes w-full text-sm grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-8">
 
                 <div v-for="episode in episodes.data"
                      :key="episode.id"
-                     class="movie mt-8 max-w-[12rem] mx-auto">
+                     class="episode mt-8 w-full mx-auto">
 
                     <div class="relative inline-block">
                         <Link :href="`/shows/${show.slug}/episode/${episode.slug}`">
-                            <SingleImage :image="episode.image" :alt="'episode cover'" :class="'h-96 min-w-[16rem] w-28 object-cover hover:opacity-75 transition ease-in-out duration-150'"/>
+                            <SingleImage :image="episode.image" :alt="'episode cover'" :class="'w-full object-cover hover:opacity-75 transition ease-in-out duration-150'"/>
 <!--                            <SingleImage :image="episode.image" :alt="'episode cover'" :class="'h-96 min-w-[16rem] w-64 object-cover mb-6 lg:mb-0 m-auto lg:m-0'"/>-->
 
 

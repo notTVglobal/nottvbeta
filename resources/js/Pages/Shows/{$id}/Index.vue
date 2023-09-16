@@ -33,7 +33,7 @@
 
             <main class="mt-12">
                 <div class="container mx-auto px-4">
-                    <div class="show-details border-b border-gray-800 pb-12 flex flex-col lg:flex-row">
+                    <div class="show-details border-b border-gray-800 pb-12 flex flex-col md:flex-row">
                         <div class="items-center">
 <!--                        <SingleImage :image="props.show.image" :poster="props.show.poster" :alt="'show cover'" class="h-96 min-w-[16rem] w-64 object-cover mb-6 lg:mb-0 m-auto lg:m-0"/>-->
                         <SingleImage :image="props.show.image" :alt="'show cover'" class="h-96 min-w-[16rem] w-64 object-cover mb-6 lg:mb-0 m-auto lg:m-0"/>
@@ -56,20 +56,45 @@
 
                             </div>
 
+                            <div class="flex mt-12 m-auto lg:mx-0 justify-center lg:justify-start">
+
+                                <button :disabled="!videoPlayerStore.hasVideo" class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
+                                        @click="playEpisode">
+                                    <svg class="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg"
+                                         viewBox="0 0 485 485">
+                                        <path d="M413.974,71.026C368.171,25.225,307.274,0,242.5,0S116.829,25.225,71.026,71.026C25.225,116.829,0,177.726,0,242.5
+		s25.225,125.671,71.026,171.474C116.829,459.775,177.726,485,242.5,485s125.671-25.225,171.474-71.026
+		C459.775,368.171,485,307.274,485,242.5S459.775,116.829,413.974,71.026z M242.5,455C125.327,455,30,359.673,30,242.5
+		S125.327,30,242.5,30S455,125.327,455,242.5S359.673,455,242.5,455z"/>
+                                        <polygon points="181.062,336.575 343.938,242.5 181.062,148.425 	"/>
+                                    </svg>
+                                    <span class="ml-2">Watch Now</span>
+                                </button>
+
+                                <button disabled class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed">
+                                    <span class=""><font-awesome-icon icon="fa-circle-down" class="mr-2"/>Save For Later</span>
+                                </button>
+
+                                <button disabled class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed">
+                                    <span class=""><font-awesome-icon icon="fa-share" class="mr-2"/>Share</span>
+                                </button>
+
+                            </div>
+
                             <div class="flex flex-wrap justify-center lg:justify-start mt-4 m-auto lg:mx-0">
 
                                 <div class="flex items-center ml-4">
                                     <div class="w-16 h-16 bg-gray-800 rounded-full">
                                         <div class="font-semibold text-xs flex justify-center items-center h-full">90%</div>
                                     </div>
-                                    <div class="ml-4 text-xs">Member <br> Rating</div>
+                                    <div class="ml-4 text-xs">Member <br> Rating <br><span class="text-orange-500">(feature coming soon)</span></div>
                                 </div>
 
                                 <div class="flex items-center ml-4 lg:mr-0 lg:ml-12">
                                     <div class="w-16 h-16 bg-gray-800 rounded-full">
                                         <div class="font-semibold text-xs flex justify-center items-center h-full">92%</div>
                                     </div>
-                                    <div class="ml-4 text-xs">Audience <br> Rating</div>
+                                    <div class="ml-4 text-xs">Audience <br> Rating <br><span class="text-orange-500">(feature coming soon)</span></div>
                                 </div>
 
                                 <div class="flex m-auto space-x-4 lg:ml-12 pt-6 lg:mt-2 2xl:pt-0">
@@ -130,30 +155,6 @@
                                 {{ show.description }}
                             </p>
 
-                            <div class="flex mt-12 m-auto lg:mx-0 justify-center lg:justify-start">
-
-                                <button :disabled="!videoPlayerStore.hasVideo" class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
-                                        @click="playEpisode">
-                                    <svg class="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg"
-                                         viewBox="0 0 485 485">
-                                        <path d="M413.974,71.026C368.171,25.225,307.274,0,242.5,0S116.829,25.225,71.026,71.026C25.225,116.829,0,177.726,0,242.5
-		s25.225,125.671,71.026,171.474C116.829,459.775,177.726,485,242.5,485s125.671-25.225,171.474-71.026
-		C459.775,368.171,485,307.274,485,242.5S459.775,116.829,413.974,71.026z M242.5,455C125.327,455,30,359.673,30,242.5
-		S125.327,30,242.5,30S455,125.327,455,242.5S359.673,455,242.5,455z"/>
-                                        <polygon points="181.062,336.575 343.938,242.5 181.062,148.425 	"/>
-                                    </svg>
-                                    <span class="ml-2">Watch Now</span>
-                                </button>
-
-                                <button disabled class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed">
-                                    <span class=""><font-awesome-icon icon="fa-circle-down" class="mr-2"/>Save For Later</span>
-                                </button>
-
-                                <button disabled class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed">
-                                    <span class=""><font-awesome-icon icon="fa-share" class="mr-2"/>Share</span>
-                                </button>
-
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -183,7 +184,7 @@
                                          :key="creator.id"
                                          class="pb-8 mx-auto lg:mx-0">
 
-                                        <div class="flex flex-col min-w-[8rem] px-6 py-4 font-medium break-words grow-0">
+                                        <div class="flex flex-col max-w-[8rem] px-6 py-4 font-medium break-words grow-0">
                                             <img :src="'/storage/' + creator.profile_photo_path" class="pb-2 rounded-full h-32 w-32 object-cover mb-2">
                                             <span class="text-gray-200 w-full text-center">{{ creator.name }}</span>
                                         </div>

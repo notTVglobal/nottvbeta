@@ -16,7 +16,7 @@
                                 <button :href="``" class="text-gray-700 cursor-not-allowed">Categories</button>
                             </li>
                             <li>
-                                <button :href="``" @click.prevent="scrollToNewEpisodes" class="hover:text-blue-800">New Episodes</button>
+                                <button :href="``" @click.prevent="scrollToNewEpisodes" class="hover:text-blue-800">Newest Episodes</button>
                             </li>
                             <li>
                                 <button :href="``" @click.prevent="scrollToComingSoon" class="hover:text-blue-800">Coming Soon</button>
@@ -41,7 +41,7 @@
 
 
                 <div class="container mx-auto px-4 border-b border-gray-800 pb-16 max-w-calc[100%-96rem]">
-                    <h2 class="text-purple-500 uppercase tracking-wide font-semibold text-2xl">Popular Shows</h2>
+                    <h2 id="popular-shows" class="text-purple-500 uppercase tracking-wide font-semibold text-2xl">Popular Shows</h2>
                     <div class="popular-shows text-sm grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-12 pb-12 justify-items-center">
 
                         <div v-for="show in shows.data"
@@ -71,31 +71,34 @@
                         <h2 id="new-episodes" class="text-purple-500 uppercase tracking-wide font-semibold text-2xl">Newest Episodes</h2>
                         <div class="recently-reviewed-container space-y-12 mt-8">
                             <div v-for="episode in newestEpisodes.data"
-                                 :key="episode.id"
-                                 class="show bg-gray-800 rounded-lg shadow-md flex px-6 py-6">
+                                 :key="episode.id">
 
                                 <Link :href="`/shows/${episode.showSlug}/episode/${episode.slug}`" class="hover:text-blue-400 hover:opacity-75 transition ease-in-out duration-150">
+                                    <div class="flex flex-row bg-gray-800 rounded-lg shadow-md px-6 py-6">
 
-
-                                    <div class="relative flex flex-row">
+                                    <div class="relative w-48 min-w-[12rem]">
 <!--                                        <img :src="'/storage/images/' + episode.poster" alt="show cover" class="h-32 md:h-64 md:min-w-[8rem] w-24 md:w-48 object-cover">-->
-                                        <SingleImage :image="episode.image" :alt="'episode cover'" class="h-32 md:h-64 md:min-w-[16rem] w-24 md:w-48 object-cover"/>
-
-                                        <div class="ml-12 block text-lg font-semibold leading-tight mt-4 ">
-<!--                                            <div class="text-gray-400 font-light text-xs mt-1 ">Released on {{ episode.release_date }}</div>-->
-        <!--                                    <Link :href="`/shows/${episode.showSlug}/episode/${episode.slug}`" class="block text-lg font-semibold leading-tight hover:text-gray-400 mt-4">-->
-                                                {{ episode.showName }}
-        <!--                                </Link>-->
-
-                                            <div class="text-gray-400 font-light text-sm">{{ episode.name }}</div>
-
-                                            <p class="mt-4 pr-4 text-gray-300 xl:block">
-                                                {{ episode.description}}
-                                            </p>
+                                        <SingleImage :image="episode.image" :alt="'episode cover'" class="h-28 w-48 min-w-[12rem] object-scale-down"/>
+                                        <div>
+                                            <div class="mt-4 w-full justify-end text-yellow-300">{{episode.categoryName}}</div>
+                                            <div class="w-full justify-end text-yellow-500 font-thin">{{episode.categorySubName}}</div>
                                         </div>
                                     </div>
-                                    <div class="mt-4 w-full justify-end text-yellow-300">{{episode.categoryName}}</div>
-                                    <div class="w-full justify-end text-yellow-500 font-thin">{{episode.categorySubName}}</div>
+
+                                    <div class="ml-3 block">
+<!--                                            <div class="text-gray-400 font-light text-xs mt-1 ">Released on {{ episode.release_date }}</div>-->
+    <!--                                    <Link :href="`/shows/${episode.showSlug}/episode/${episode.slug}`" class="block text-lg font-semibold leading-tight hover:text-gray-400 mt-4">-->
+                                        <span class="text-lg font-semibold leading-tight">{{ episode.showName }}</span>
+    <!--                                </Link>-->
+
+                                        <div class="text-gray-400 font-light text-sm">{{ episode.name }}</div>
+
+                                        <p class="mt-2 pr-4 text-gray-300 xl:block">
+                                            {{ episode.description}}
+                                        </p>
+                                    </div>
+
+                                    </div>
                                 </Link>
 
 
@@ -174,6 +177,9 @@ function scrollToNewEpisodes() {
 }
 function scrollToComingSoon() {
     document.getElementById("coming-soon").scrollIntoView({behavior: "smooth"})
+}
+function scrollToPopularShows() {
+    document.getElementById("popular-shows").scrollIntoView({behavior: "smooth"})
 }
 
 // onBeforeMount(() => {
