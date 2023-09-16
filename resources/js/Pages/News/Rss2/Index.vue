@@ -35,7 +35,7 @@
                                     <div>
                                         <span class="text-lg">News Feeds</span>
                                         <Link
-                                            :href="`/feeds/create`"><button
+                                            :href="`/rss2/create`"><button
                                             class="bg-green-600 hover:bg-green-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
                                             v-if="can.viewNewsroom"
                                         >Add Feed</button>

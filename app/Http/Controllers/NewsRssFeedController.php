@@ -69,6 +69,39 @@ class NewsRssFeedController extends Controller
         ]);
     }
 
+    public function rss2create()
+    {
+        $this->authorize('create', NewsPost::class);
+        return Inertia::render(
+            'News/Rss2/Create', [
+                'can' => [
+                    'viewNewsroom' => Auth::user()->can('viewAny', NewsPerson::class)
+                ]
+            ]
+        );
+    }
+
+    public function rss2store(HttpRequest $request)
+    {
+        $request->validate([
+            'name' => 'unique:news_rss_feeds|required|string|max:255',
+            'url' => 'required|active_url',
+        ]);
+
+        $newsRssFeed = new NewsRssFeed();
+        $newsRssFeed->name = $request->name;
+        $newsRssFeed->slug = \Str::slug($request->name);
+        $newsRssFeed->url = $request->url;
+
+        $newsRssFeed->save();
+
+        return redirect()
+            ->route('rss2show',
+                [$newsRssFeed->slug])
+            ->with('message', 'RSS Feed Added Successfully');
+
+    }
+
     public function rss2show($slug)
     {
         $newsRssFeed = NewsRssFeed::query()->where('slug', $slug)->firstOrFail();

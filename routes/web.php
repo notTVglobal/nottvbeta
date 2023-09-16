@@ -267,6 +267,10 @@ Route::middleware([
     // this is a test
     Route::get('/rss2', [NewsRssFeedController::class, 'rss2'])
         ->name('rss2');
+    Route::get('/rss2/create', [NewsRssFeedController::class, 'rss2create'])
+        ->name('rss2create');
+    Route::post('/rss2/store', [NewsRssFeedController::class, 'rss2store'])
+        ->name('rss2store');
     Route::get('/rss2/{id}', [NewsRssFeedController::class, 'rss2show'])
         ->name('rss2show');
     Route::get('/rss2/{id}/edit', [NewsRssFeedController::class, 'rss2edit'])
