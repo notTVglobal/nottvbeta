@@ -471,8 +471,8 @@ class ShowEpisodeController extends Controller
             $firstMp4 = $matches[0][0];
 
             // Check if the data is null
-            if ($matches === null) {
-                throw new \Exception("The data is null.");
+            if (!array_key_exists(0, $matches)) {
+                throw new \Exception("The data is undefined.");
             }
 
             return str_replace('\\', '', $firstMp4);
