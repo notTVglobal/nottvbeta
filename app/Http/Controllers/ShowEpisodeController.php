@@ -444,7 +444,6 @@ class ShowEpisodeController extends Controller
 
 
     public function getVideoUrlFromEmbedCode($embedCode) {
-        $matches = [];
         try {
             // strip the url from the embed code
             $regex = '/https?\:\/\/[^\",]+/i';
@@ -452,9 +451,9 @@ class ShowEpisodeController extends Controller
             $url = implode(" ", $match);
 
             // get the page source from the url
-//            $proxy_address = 'https://scraperapi.autoparse=true:' . env('SCRAPER_API_KEY') . '@proxy-server.scraperapi.com:8001';
-            $proxy_address = 'https://api.scraperapi.com?api_key=' . env('SCRAPER_API_KEY') . '&autoparse=true&url=' . $url;
-            $response = file_get_contents($proxy_address);
+//            $proxy_address = 'http://scraperapi.autoparse=true:' . env('SCRAPER_API_KEY') . '@proxy-server.scraperapi.com:8001';
+////            $proxy_address = 'https://api.scraperapi.com?api_key=' . env('SCRAPER_API_KEY') . '&autoparse=true&url=' . $url;
+//            $response = file_get_contents($proxy_address);
 //            $ch = curl_init();
 //            curl_setopt($ch, CURLOPT_URL, $url);
 //            curl_setopt($ch, CURLOPT_PROXY, $proxy_address);
@@ -464,6 +463,24 @@ class ShowEpisodeController extends Controller
 //            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 //            $response = curl_exec($ch);
 //            curl_close($ch);
+
+
+            $url =
+                "https://api.scraperapi.com?api_key=" . env('SCRAPER_API_KEY') . "&url=" . $url . "&render=true&country_code=us";
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER,
+                TRUE);
+            curl_setopt($ch, CURLOPT_HEADER,
+                FALSE);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST,
+                0);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER,
+                0);
+            $response = curl_exec($ch);
+            curl_close($ch);
+//            print_r($response);
+
 
             // get the mp4 urls from the page.
             $pattern = '/https(.*?)mp4/';
