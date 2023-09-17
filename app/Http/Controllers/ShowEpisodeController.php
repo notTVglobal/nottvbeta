@@ -444,7 +444,7 @@ class ShowEpisodeController extends Controller
 
 
     public function getVideoUrlFromEmbedCode($embedCode) {
-
+        $matches = [];
         try {
             // strip the url from the embed code
             $regex = '/https?\:\/\/[^\",]+/i';
@@ -452,16 +452,18 @@ class ShowEpisodeController extends Controller
             $url = implode(" ", $match);
 
             // get the page source from the url
-            $proxy_address = 'http://scraperapi.autoparse=true:' . env('SCRAPER_API_KEY') . '@proxy-server.scraperapi.com:8001';
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_PROXY, $proxy_address);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-            curl_setopt($ch, CURLOPT_HEADER, FALSE);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-            $response = curl_exec($ch);
-            curl_close($ch);
+//            $proxy_address = 'https://scraperapi.autoparse=true:' . env('SCRAPER_API_KEY') . '@proxy-server.scraperapi.com:8001';
+            $proxy_address = 'https://api.scraperapi.com?api_key=' . env('SCRAPER_API_KEY') . '&autoparse=true&url=' . $url;
+            $response = file_get_contents($proxy_address);
+//            $ch = curl_init();
+//            curl_setopt($ch, CURLOPT_URL, $url);
+//            curl_setopt($ch, CURLOPT_PROXY, $proxy_address);
+//            curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+//            curl_setopt($ch, CURLOPT_HEADER, FALSE);
+//            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+//            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+//            $response = curl_exec($ch);
+//            curl_close($ch);
 
             // get the mp4 urls from the page.
             $pattern = '/https(.*?)mp4/';
@@ -471,7 +473,7 @@ class ShowEpisodeController extends Controller
             $firstMp4 = $matches[0][0];
 
             // Check if the data is null
-            if (!array_key_exists(0, $matches)) {
+            if ($matches[0] === []) {
                 throw new \Exception("The data is undefined.");
             }
 
@@ -481,6 +483,7 @@ class ShowEpisodeController extends Controller
         } catch (\Exception $e) {
             // Log the error using Laravel's logging system
             Log::channel('custom_error')->error($e->getMessage());
+            Log::channel('custom_error')->error($matches);
 
             // Optionally, return a response to the client
             return response()->json(['message' => 'The embed code could not get a video file.'], 500);
