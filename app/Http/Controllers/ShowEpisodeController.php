@@ -463,7 +463,6 @@ class ShowEpisodeController extends Controller
 //            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 //            $response = curl_exec($ch);
 //            curl_close($ch);
-            Log::channel('custom_error')->error($url);
 
             $url =
                 "https://api.scraperapi.com?api_key=" . env('SCRAPER_API_KEY') . "&url=" . $url . "&render=true&country_code=us";
@@ -479,9 +478,7 @@ class ShowEpisodeController extends Controller
                 0);
             $response = curl_exec($ch);
             curl_close($ch);
-//            print_r($response);
 
-            Log::channel('custom_error')->error($response);
             // get the mp4 urls from the page.
             $pattern = '/https(.*?)mp4/';
             preg_match_all($pattern, $response, $matches);
