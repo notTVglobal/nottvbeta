@@ -25,7 +25,8 @@
         "predis/predis": "^2.1",
         "pusher/pusher-php-server": "^7.0",
         "tightenco/ziggy": "^1.0",
-        "ext-simplexml": "*"
+        "ext-simplexml": "*",
+      "ext-curl": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

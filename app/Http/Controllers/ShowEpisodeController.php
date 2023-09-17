@@ -73,8 +73,15 @@ class ShowEpisodeController extends Controller
             'notes' => 'nullable|string',
             'video_file_url' => 'nullable|active_url',
             'youtube_url' => 'nullable|active_url',
-            'video_file_embed_code' => 'nullable|string',
+            'video_embed_code' => 'nullable|string',
         ]);
+
+        // get the *.mp4 video url from embed code
+        // save the *.mp4 url to the video_file_url
+        if (!$request->video_url) {
+            $videoUrl = $this->getVideoUrlFromEmbedCode($request->video_embed_code);
+        } else $videoUrl = $request->video_url;
+
         $showEpisode = new ShowEpisode();
         $showEpisode->isBeingEditedByUser_id = Auth::user()->id;
         $showEpisode->name = $request->name;
@@ -83,7 +90,7 @@ class ShowEpisodeController extends Controller
         $showEpisode->show_id = $request->show_id;
         $showEpisode->episode_number = $request->episode_number;
         $showEpisode->slug = \Str::slug($request->name);
-        $showEpisode->video_url = $request->video_url;
+        $showEpisode->video_url = $videoUrl;
         $showEpisode->youtube_url = $request->youtube_url;
         $showEpisode->video_embed_code = $request->video_embed_code;
         $showEpisode->notes = $request->notes;
@@ -359,13 +366,19 @@ class ShowEpisodeController extends Controller
             'release_date' => 'nullable|string',
         ]);
 
+        // get the *.mp4 video url from embed code
+        // save the *.mp4 url to the video_file_url
+        if (!$request->video_url) {
+            $videoUrl = $this->getVideoUrlFromEmbedCode($request->video_embed_code);
+        } else $videoUrl = $request->video_url;
+
         // update the show
         $showEpisode->name = $request->name;
         $showEpisode->description = $request->description;
         $showEpisode->episode_number = $request->episode_number;
         $showEpisode->slug = \Str::slug($request->name);
         $showEpisode->notes = $request->notes;
-        $showEpisode->video_url = $request->video_url;
+        $showEpisode->video_url = $videoUrl;
         $showEpisode->youtube_url = $request->youtube_url;
         $showEpisode->video_embed_code = $request->video_embed_code;
         $showEpisode->save();
@@ -426,6 +439,33 @@ class ShowEpisodeController extends Controller
 
         // redirect
         return redirect()->route('showEpisode')->with('message', 'Episode Deleted Successfully');
+    }
+
+
+    public function getVideoUrlFromEmbedCode($embedCode) {
+        // strip the url from the embed code
+        $regex = '/https?\:\/\/[^\",]+/i';
+        preg_match($regex, $embedCode, $match);
+        $url = implode(" ",$match);
+
+        // get the page source from the url
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_PROXY, "http://scraperapi.autoparse=true:ae2c324a3845eb602a6fa7f7cd87a1c8@proxy-server.scraperapi.com:8001");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($ch, CURLOPT_HEADER, FALSE);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        // get the mp4 urls from the page.
+        $pattern = '/https(.*?)mp4/';
+        preg_match_all($pattern, $response, $matches);
+
+        // start at the first "mp4" extract https: .... .mp4 and replace \ with "".
+        $firstMp4 = $matches[0][0];
+        return str_replace('\\', '', $firstMp4);
     }
 
 }

@@ -131,20 +131,20 @@
                     <div v-if="form.errors.video_url" v-text="form.errors.video_url" class="text-xs text-red-600 mt-1"></div>
                 </div>
 
-<!--                <div class="mb-6">-->
-<!--                    <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"-->
-<!--                           for="video_file_embed_code"-->
-<!--                    >-->
-<!--                        Video Embed Code (IFRAME only)-->
-<!--                    </label>-->
-<!--                    <textarea v-model="form.video_file_embed_code"-->
-<!--                              class="bg-gray-50 border border-gray-400 text-gray-900 text-sm p-2 w-full rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"-->
-<!--                              type="text"-->
-<!--                              name="video_file_embed_code"-->
-<!--                              id="video_file_embed_code"-->
-<!--                    ></textarea>-->
-<!--                    <div v-if="form.errors.video_file_embed_code" v-text="form.errors.video_file_embed_code" class="text-xs text-red-600 mt-1"></div>-->
-<!--                </div>-->
+                <div class="mb-6">
+                    <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"
+                           for="video_embed_code"
+                    >
+                        Video Embed Code (IFRAME only)
+                    </label>
+                    <textarea v-model="form.video_embed_code"
+                              class="bg-gray-50 border border-gray-400 text-gray-900 text-sm p-2 w-full rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                              type="text"
+                              name="video_embed_code"
+                              id="video_embed_code"
+                    ></textarea>
+                    <div v-if="form.errors.video_embed_code" v-text="form.errors.video_embed_code" class="text-xs text-red-600 mt-1"></div>
+                </div>
 
                 <div class="mb-6">
                     <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"
@@ -234,7 +234,7 @@ let form = useForm({
     episode_number: '',
     video_url: '',
     youtube_url: '',
-    video_file_embed_code: '',
+    video_embed_code: '',
     notes: '',
 });
 

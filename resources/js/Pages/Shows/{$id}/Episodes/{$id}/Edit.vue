@@ -28,7 +28,7 @@
                                  class="bg-red-600 p-2 w-full text-white font-semibold mt-1"></div>
                             <div v-if="form.errors.youtube_url" v-text="form.errors.youtube_url"
                                  class="bg-red-600 p-2 w-full text-white font-semibold mt-1"></div>
-                            <div v-if="form.errors.video_file_embed_code" v-text="form.errors.video_file_embed_code"
+                            <div v-if="form.errors.video_embed_code" v-text="form.errors.video_embed_code"
                                  class="bg-red-600 p-2 w-full text-white font-semibold mt-1"></div>
 
 
@@ -160,7 +160,7 @@
 
                                     <div class="mb-6">
                                         <label class="block mb-2 uppercase font-bold text-xs text-red-700"
-                                               for="video_file_embed_code"
+                                               for="video_embed_code"
                                         >
                                             Episode Video Embed Code (external) <span class="text-white">*</span>
                                         </label>
@@ -213,12 +213,12 @@
                                             v-if="!episode.video.file_name"
                                             class="flex justify-center shadow overflow-hidden border-b border-gray-200 w-full bg-white dark:bg-black text-2xl sm:rounded-lg p-5">
 NO VIDEO
-                                            <iframe v-if="props.episode.video_file_url && !props.episode.video_file_embed_code"
+                                            <iframe v-if="props.episode.video_file_url && !props.episode.video_embed_code"
                                                     class="rumble" width="640" height="360" :src="`${props.episode.video_file_url}`" frameborder="0" allowfullscreen>
                                             </iframe>
-                                            <div v-if="!props.episode.video_file_url && props.episode.video_file_embed_code" v-html="props.episode.video_file_embed_code">
+                                            <div v-if="!props.episode.video_file_url && props.episode.video_embed_code" v-html="props.episode.video_embed_code">
                                             </div>
-                                            <div v-if="props.episode.video_file_url && props.episode.video_file_embed_code" v-html="props.episode.video_file_embed_code">
+                                            <div v-if="props.episode.video_file_url && props.episode.video_embed_code" v-html="props.episode.video_embed_code">
                                             </div>
                                         </div>
 
