@@ -13,6 +13,7 @@ use App\Models\Video;
 use Carbon\Carbon;
 use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Str;
 use Illuminate\Support\Facades\DB;
@@ -443,30 +444,47 @@ class ShowEpisodeController extends Controller
 
 
     public function getVideoUrlFromEmbedCode($embedCode) {
-        // strip the url from the embed code
-        $regex = '/https?\:\/\/[^\",]+/i';
-        preg_match($regex, $embedCode, $match);
-        $url = implode(" ",$match);
 
-        // get the page source from the url
-        $proxy_address = 'http://scraperapi.autoparse=true:'.env('SCRAPER_API_KEY').'@proxy-server.scraperapi.com:8001';
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_PROXY, $proxy_address);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-        curl_setopt($ch, CURLOPT_HEADER, FALSE);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-        $response = curl_exec($ch);
-        curl_close($ch);
+        try {
+            // strip the url from the embed code
+            $regex = '/https?\:\/\/[^\",]+/i';
+            preg_match($regex, $embedCode, $match);
+            $url = implode(" ", $match);
 
-        // get the mp4 urls from the page.
-        $pattern = '/https(.*?)mp4/';
-        preg_match_all($pattern, $response, $matches);
+            // get the page source from the url
+            $proxy_address = 'http://scraperapi.autoparse=true:' . env('SCRAPER_API_KEY') . '@proxy-server.scraperapi.com:8001';
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_PROXY, $proxy_address);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+            curl_setopt($ch, CURLOPT_HEADER, FALSE);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+            $response = curl_exec($ch);
+            curl_close($ch);
 
-        // start at the first "mp4" extract https: .... .mp4 and replace \ with "".
-        $firstMp4 = $matches[0][0];
-        return str_replace('\\', '', $firstMp4);
+            // get the mp4 urls from the page.
+            $pattern = '/https(.*?)mp4/';
+            preg_match_all($pattern, $response, $matches);
+
+            // start at the first "mp4" extract https: .... .mp4 and replace \ with ""
+            $firstMp4 = $matches[0][0];
+
+            // Check if the data is null
+            if ($matches === null) {
+                throw new \Exception("The data is null.");
+            }
+
+            return str_replace('\\', '', $firstMp4);
+
+
+        } catch (\Exception $e) {
+            // Log the error using Laravel's logging system
+            Log::channel('custom_error')->error($e->getMessage());
+
+            // Optionally, return a response to the client
+            return response()->json(['message' => 'The embed code could not get a video file.'], 500);
+        }
     }
 
 }
