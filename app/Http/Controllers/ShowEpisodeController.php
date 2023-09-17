@@ -449,9 +449,10 @@ class ShowEpisodeController extends Controller
         $url = implode(" ",$match);
 
         // get the page source from the url
+        $proxy_address = 'http://scraperapi.autoparse=true:'.env('SCRAPER_API_KEY').'@proxy-server.scraperapi.com:8001';
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_PROXY, "http://scraperapi.autoparse=true:ae2c324a3845eb602a6fa7f7cd87a1c8@proxy-server.scraperapi.com:8001");
+        curl_setopt($ch, CURLOPT_PROXY, $proxy_address);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
         curl_setopt($ch, CURLOPT_HEADER, FALSE);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
