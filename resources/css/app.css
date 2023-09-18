@@ -53,6 +53,7 @@ html {
     margin-top: 0.75rem;
     margin-bottom: 10px;
     padding-top: 2rem;
+    @apply text-xl flex flex-wrap overscroll-x-none w-fit break-words;
 }
 .news-paragraph ul,
 .news-paragraph ol {
@@ -65,7 +66,7 @@ h2 {
     @apply text-3xl
 }
 h3 {
-    @apply text-xl
+    @apply text-2xl
 }
 
 /* VIDEO CONTAINERS AND CLASSES*/

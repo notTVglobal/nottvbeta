@@ -23,7 +23,7 @@ export let useChannelStore = defineStore('channelStore', {
                     console.log(error);
                 })
         },
-        changeChannel(channel) {
+        async changeChannel(channel) {
             useVideoPlayerStore().currentChannelName = channel.name
             this.currentChannelName = channel.name
             this.currentChannelId = channel.id
@@ -36,8 +36,8 @@ export let useChannelStore = defineStore('channelStore', {
             }
             if (useUserStore().id !== null) {
                 this.userAddedToChannels = true
-                 this.disconnectViewerFromChannel()
-                 this.addViewerToChannel()
+                 await this.disconnectViewerFromChannel()
+                 await this.addViewerToChannel()
             }
 
             if (channel.channel_source !== null) {

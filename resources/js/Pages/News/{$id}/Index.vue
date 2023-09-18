@@ -62,13 +62,14 @@
 
 
 
-            <div class="w-full flex flex-wrap items-start justify-items-center">
+            <div class="w-max-w-full flex flex-wrap items-start justify-items-center">
                 <div class="flex items-start">
                     <img :src="`/storage/images/${props.image}`" class="object-scale-down md:max-w-sm px-6 mb-4 mx-auto">
                 </div>
 
-                <div class="w-full md:w-fit flex flex-wrap px-6 border-b border-gray-200 news-content space-y-5 whitespace-pre-wrap">
-                        <div v-html="'<pre>'+news.content+'</pre>'" class="text-left mb-6">
+                <div class="vw-100 overflow-x-none break-words flex flex-wrap px-6 border-b border-gray-200 news-content space-y-5">
+<!--                        <div v-html="'<pre>'+news.content+'</pre>'" class="text-left mb-6 leading-loose font-['monospace']">-->
+                        <div v-html="news.content" class="text-left mb-6 leading-loose font-['monospace']">
                         </div>
                 </div>
             </div>
@@ -133,3 +134,11 @@ function back() {
 }
 
 </script>
+
+<style scoped>
+pre p {
+    white-space: break-spaces;
+    overflow-x: auto;
+}
+
+</style>
