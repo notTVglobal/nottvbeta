@@ -5,7 +5,7 @@
     <div id="topDiv" class="place-self-center flex flex-col gap-y-3">
         <div class="w-fit lg:w-3/4 left-0 right-0 mx-auto bg-white dark:bg-gray-800 rounded text-black dark:text-gray-50 mt-6 p-5">
 
-            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+            <Message v-if="showMessage" @close="showMessage = false" :message="props.message" :messageType="props.messageType"/>
 
             <header>
                 <div class="flex justify-between mb-3">
@@ -260,6 +260,7 @@ import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useUserStore } from "@/Stores/UserStore";
 import Message from "@/Components/Modals/Messages";
 import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
+import {Inertia} from "@inertiajs/inertia";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -291,7 +292,8 @@ let props = defineProps({
     first_play_video_source_type: String,
     first_play_video_name: String,
     first_play_channel_id: String,
-    message: String
+    message: String,
+    messageType: String,
 });
 
 let form = useForm({
@@ -311,7 +313,7 @@ let submit = () => {
 let showMessage = ref(true);
 
 function getEpisodesFromEmbedCodes() {
-    Inertia.post('')
+    Inertia.post('getVideosFromEmbedCodes')
 }
 
 </script>

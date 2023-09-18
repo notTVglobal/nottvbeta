@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\AddVideoUrlFromEmbedCodeJob;
 use App\Models\Creator;
 use App\Models\Image;
 use App\Models\Show;
@@ -79,9 +80,12 @@ class ShowEpisodeController extends Controller
             'video_embed_code' => 'nullable|string',
         ]);
 
+
+        // MOVE THIS TO A JOB... SEND THE showEpisode SLUG with it.
         // get the *.mp4 video url from embed code
         // save the *.mp4 url to the video_file_url
         if ($request->video_embed_code ) {
+//            AddVideoUrlFromEmbedCodeJob::dispatch($request->video_embed_code, $showEpisode->slug, auth()->user()->id)->onQueue('video_processing');
             $videoUrlFromEmbedCode = $this->getVideoUrlFromEmbedCode($request->video_embed_code);
             if ($videoUrlFromEmbedCode === false) {
                 $videoUrl = $request->video_url;
@@ -107,6 +111,7 @@ class ShowEpisodeController extends Controller
 
         $showSlug = $request->show_slug;
         $showEpisodeSlug = $showEpisode->slug;
+
 
         // Use this route to return
         // the user to the new episode page.

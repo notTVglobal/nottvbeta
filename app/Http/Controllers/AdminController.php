@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\AddVideoUrlFromEmbedCodeJob;
 use App\Models\AppSetting;
 use App\Models\Image;
 use App\Models\InviteCode;
 use App\Models\Show;
+use App\Models\ShowEpisode;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Http\Client\Response;
@@ -285,6 +287,15 @@ class AdminController extends Controller
 ////////////////////////////////////////////////////////////////////////
     public function getVideosFromEmbedCodes() {
         // update all episodes... create one job per episode where episode has embed code.
+        // get
+        foreach (ShowEpisode::all() as $showEpisode) {
+            AddVideoUrlFromEmbedCodeJob::dispatch($showEpisode)->onQueue('video_processing');
+        }
+
+        return redirect('/admin/settings')->with([
+            'message' => 'Job submitted to update videos from embed codes.',
+            'messageType' => 'message'
+        ]);
 
         // send notification on job completion.
     }
