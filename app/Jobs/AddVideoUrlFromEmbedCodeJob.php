@@ -108,9 +108,9 @@ class AddVideoUrlFromEmbedCodeJob implements ShouldQueue
 
 
                         // Check if the data is null
-                        if ($matches[0] == []) {
-                            throw new \Exception("The data is undefined.");
-                        }
+//                        if ($matches[0] == []) {
+//                            throw new \Exception("The data is undefined.");
+//                        }
 
                         // this poster save needs to be finished...
                         // get the jpg urls from the page.
