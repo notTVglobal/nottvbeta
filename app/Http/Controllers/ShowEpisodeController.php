@@ -369,10 +369,18 @@ class ShowEpisodeController extends Controller
             'release_date' => 'nullable|string',
         ]);
 
+        $showSlug = Show::query()->where('id', $showEpisode->show_id)->pluck('slug')->first();
+        $showEpisodeSlug = $showEpisode->slug;
+        $videoUrlFromEmbedCode = '';
+
         // get the *.mp4 video url from embed code
         // save the *.mp4 url to the video_file_url
         if (!$request->video_url) {
-            $videoUrl = $this->getVideoUrlFromEmbedCode($request->video_embed_code, $showEpisode->id);
+            $videoUrlFromEmbedCode = $this->getVideoUrlFromEmbedCode($request->video_embed_code, $showEpisode->id);
+            if ($videoUrlFromEmbedCode === false) {
+                $videoUrl = '';
+            } else
+                $videoUrl = $videoUrlFromEmbedCode;
         } else $videoUrl = $request->video_url;
 
         // update the show
@@ -387,8 +395,13 @@ class ShowEpisodeController extends Controller
         $showEpisode->save();
         sleep(1);
 
-        $showSlug = Show::query()->where('id', $showEpisode->show_id)->pluck('slug')->first();
-        $showEpisodeSlug = $showEpisode->slug;
+        if ($videoUrlFromEmbedCode === false) {
+//                return response()->json(['message' => 'The embed code could not get a video file.'], 500);
+            return redirect(route('shows.showEpisodes.show', [$showSlug, $showEpisodeSlug]))->with([
+                'message' => 'The embed code could not get a video file. Please check the embed code and the video url.',
+                'messageType' => 'warning',
+            ]);
+        }
 
         // gather the data needed to render the Manage page
         // this is all redundant. It's all contained in the
@@ -396,7 +409,7 @@ class ShowEpisodeController extends Controller
         // how to simplify this *frustrated*.
 
         // redirect
-        return redirect(route('shows.showEpisodes.show', [$showSlug, $showEpisodeSlug]))->with('message', 'Episode Updated Successfully');
+        return redirect(route('shows.showEpisodes.show', [$showSlug, $showEpisodeSlug]))->with(['message' => 'Episode Updated Successfully', 'messageType' => 'success']);
 
 
 //        return Inertia::render('Shows/{$id}/Manage', [
@@ -451,8 +464,8 @@ class ShowEpisodeController extends Controller
             $regex = '/https?\:\/\/[^\",]+/i';
             preg_match($regex, $embedCode, $match);
             $sourceUrl = implode(" ", $match);
-            $scraperApiKey =  env('SCRAPER_API_KEY');
-            Log::channel('custom_error')->warning($scraperApiKey);
+//            $scraperApiKey =  env('SCRAPER_API_KEY');
+//            Log::channel('custom_error')->warning($scraperApiKey);
 
             // get the page source from the url
 //            $proxy_address = 'http://scraperapi.autoparse=true:' . env('SCRAPER_API_KEY') . '@proxy-server.scraperapi.com:8001';
@@ -470,7 +483,7 @@ class ShowEpisodeController extends Controller
 
             $url =
                 "https://api.scraperapi.com?api_key=" . env('SCRAPER_API_KEY') . "&url=" . $sourceUrl . "&render=true&country_code=us";
-            Log::channel('custom_error')->warning($url);
+            Log::channel('custom_error')->error($url);
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER,
@@ -484,7 +497,7 @@ class ShowEpisodeController extends Controller
             $response = curl_exec($ch);
             curl_close($ch);
 
-            Log::channel('custom_error')->error($response);
+//            Log::channel('custom_error')->error($response);
 
             // get the mp4 urls from the page.
             $pattern = '/https(.*?)mp4/';
@@ -494,7 +507,7 @@ class ShowEpisodeController extends Controller
             $firstMp4 = $matches[0][0];
 
             // Check if the data is null
-            if ($matches[0] === []) {
+            if ($matches[0] == []) {
                 throw new \Exception("The data is undefined.");
             }
 
@@ -530,11 +543,12 @@ class ShowEpisodeController extends Controller
 
         } catch (\Exception $e) {
             // Log the error using Laravel's logging system
+            Log::channel('custom_error')->error($response);
             Log::channel('custom_error')->error($e->getMessage());
             Log::channel('custom_error')->error($matches);
 
             // Optionally, return a response to the client
-            return response()->json(['message' => 'The embed code could not get a video file.'], 500);
+            return false;
         }
     }
 

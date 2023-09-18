@@ -6,7 +6,7 @@
     <div class="place-self-center flex flex-col gap-y-3 overflow-x-hidden">
         <div id="topDiv" class="text-white bg-gray-900 rounded py-5 mb-10">
 
-            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+            <Message v-if="showMessage" @close="showMessage = false" :message="props.message" :messageType="props.messageType"/>
 
             <div v-if="props.can.editShow || props.can.manageShow" class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4 py-5">
                 <Link
@@ -239,6 +239,10 @@ let props = defineProps({
     creators: Object,
     can: Object,
     message: String,
+    messageType: String,
+    success: String,
+    warning: String,
+    error: String,
 
 });
 

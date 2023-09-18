@@ -1,5 +1,6 @@
 <template>
-    <div class="flex justify-between p-4 m-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
+    <div class="messageBox flex justify-between p-4 m-4 text-sm rounded-lg"
+         :class="messageType"
          role="alert"
          v-if="message">
                 <span class="font-medium">
@@ -10,7 +11,24 @@
 </template>
 
 <script setup>
-defineProps({
+import {computed} from "vue";
+
+let props = defineProps({
     message: String,
+    messageType: String,
 })
+
+const messageType = computed (() => ({
+    'text-green-700 bg-green-100 dark:bg-green-200 dark:text-green-800': props.messageType === "success",
+    'text-blue-700 bg-blue-100 dark:bg-blue-200 dark:text-blue-800': props.messageType === "message",
+    'text-orange-700 bg-orange-100 dark:bg-orange-200 dark:text-orange-800': props.messageType === "warning",
+    'text-red-700 bg-red-100 dark:bg-red-200 dark:text-red-800': props.messageType === "error",
+}))
 </script>
+
+<style scoped>
+
+.messageBox {
+    z-index: 999;
+}
+</style>

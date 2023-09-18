@@ -2,17 +2,21 @@
 
     <Head :title="`Edit Episode: ${props.episode.name}`"/>
 
-    <div class="place-self-center flex flex-col gap-y-3">
-        <div id="topDiv" class="bg-white dark:bg-gray-800 text-black dark:text-white p-5 mb-10">
 
-            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+<!--    <div class="place-self-center flex flex-col gap-y-3">-->
+<!--        <div id="topDiv" class="bg-gray-900 text-white px-5">-->
+
+    <div id="topDiv" class="place-self-center flex flex-col gap-y-3">
+        <div class="bg-white dark:bg-gray-800 text-black dark:text-white px-5 mb-10">
+
+            <Message v-if="showMessage" @close="showMessage = false" :message="props.message" :messageType="props.messageType"/>
 
             <header>
                 <ShowEpisodeEditHeader :show="props.show" :team="props.team" :episode="props.episode"/>
             </header>
 
             <div class="flex flex-col">
-                <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                <div class="-my-2 overflow-x-none sm:-mx-6 lg:-mx-8">
                     <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
 
@@ -361,6 +365,8 @@ onMounted(() => {
 });
 
 let props = defineProps({
+    message: String,
+    messageType: String,
     show: Object,
     team: Object,
     episode: Object,

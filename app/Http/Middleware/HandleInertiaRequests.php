@@ -40,6 +40,7 @@ class HandleInertiaRequests extends Middleware
         $appSetting = AppSetting::find(1);
         return array_merge(parent::share($request), [
             'message' => fn () => $request->session()->get('message'),
+            'messageType' => fn () => $request->session()->get('messageType'),
             'firstPlayVideoSource' => fn () => $appSetting->first_play_video_source,
             'firstPlayVideoSourceType' => fn () => $appSetting->first_play_video_source_type
         ]);
