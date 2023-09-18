@@ -450,7 +450,7 @@ class ShowEpisodeController extends Controller
             // strip the url from the embed code
             $regex = '/https?\:\/\/[^\",]+/i';
             preg_match($regex, $embedCode, $match);
-            $url = implode(" ", $match);
+            $sourceUrl = implode(" ", $match);
 
             // get the page source from the url
 //            $proxy_address = 'http://scraperapi.autoparse=true:' . env('SCRAPER_API_KEY') . '@proxy-server.scraperapi.com:8001';
@@ -467,7 +467,7 @@ class ShowEpisodeController extends Controller
 //            curl_close($ch);
 
             $url =
-                "https://api.scraperapi.com?api_key=" . env('SCRAPER_API_KEY') . "&url=" . $url . "&render=true&country_code=us";
+                "https://api.scraperapi.com?api_key=" . env('SCRAPER_API_KEY') . "&url=" . $sourceUrl . "&render=true&country_code=us";
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER,
@@ -480,6 +480,8 @@ class ShowEpisodeController extends Controller
                 0);
             $response = curl_exec($ch);
             curl_close($ch);
+
+            Log::channel('custom_error')->error($response);
 
             // get the mp4 urls from the page.
             $pattern = '/https(.*?)mp4/';
