@@ -81,7 +81,7 @@ class ShowEpisodeController extends Controller
 
         // get the *.mp4 video url from embed code
         // save the *.mp4 url to the video_file_url
-        if ($request->video_embed_code) {
+        if ($request->video_embed_code ) {
             $videoUrlFromEmbedCode = $this->getVideoUrlFromEmbedCode($request->video_embed_code);
             if ($videoUrlFromEmbedCode === false) {
                 $videoUrl = $request->video_url;
