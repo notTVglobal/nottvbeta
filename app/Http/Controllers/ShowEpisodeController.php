@@ -81,8 +81,12 @@ class ShowEpisodeController extends Controller
 
         // get the *.mp4 video url from embed code
         // save the *.mp4 url to the video_file_url
-        if (!$request->video_url) {
-            $videoUrl = $this->getVideoUrlFromEmbedCode($request->video_embed_code);
+        if ($request->video_embed_code) {
+            $videoUrlFromEmbedCode = $this->getVideoUrlFromEmbedCode($request->video_embed_code);
+            if ($videoUrlFromEmbedCode === false) {
+                $videoUrl = $request->video_url;
+            } else
+                $videoUrl = $videoUrlFromEmbedCode;
         } else $videoUrl = $request->video_url;
 
         $showEpisode = new ShowEpisode();
@@ -375,10 +379,10 @@ class ShowEpisodeController extends Controller
 
         // get the *.mp4 video url from embed code
         // save the *.mp4 url to the video_file_url
-        if (!$request->video_url) {
-            $videoUrlFromEmbedCode = $this->getVideoUrlFromEmbedCode($request->video_embed_code, $showEpisode->id);
+        if ($request->video_embed_code && $request->video_embed_code !== $showEpisode->video_embed_code) {
+            $videoUrlFromEmbedCode = $this->getVideoUrlFromEmbedCode($request->video_embed_code);
             if ($videoUrlFromEmbedCode === false) {
-                $videoUrl = '';
+                $videoUrl = $request->video_url;
             } else
                 $videoUrl = $videoUrlFromEmbedCode;
         } else $videoUrl = $request->video_url;
@@ -458,7 +462,12 @@ class ShowEpisodeController extends Controller
     }
 
 
-    public function getVideoUrlFromEmbedCode($embedCode, $episodeId) {
+    public function getVideoUrlFromEmbedCode($embedCode) {
+        $firstMp4 = '';
+        $matches = [];
+        $response = '';
+        $sourceIs = '';
+
         try {
             // strip the url from the embed code
             $regex = '/https?\:\/\/[^\",]+/i';
@@ -483,7 +492,7 @@ class ShowEpisodeController extends Controller
 
             $url =
                 "https://api.scraperapi.com?api_key=" . env('SCRAPER_API_KEY') . "&url=" . $sourceUrl . "&render=true&country_code=us";
-            Log::channel('custom_error')->error($url);
+//            Log::channel('custom_error')->error($url);
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER,
@@ -499,12 +508,26 @@ class ShowEpisodeController extends Controller
 
 //            Log::channel('custom_error')->error($response);
 
-            // get the mp4 urls from the page.
-            $pattern = '/https(.*?)mp4/';
-            preg_match_all($pattern, $response, $matches);
 
-            // start at the first "mp4" extract https: .... .mp4 and replace \ with ""
-            $firstMp4 = $matches[0][0];
+            // get the mp4 urls from the page.
+            if (str_contains($sourceUrl, 'rumble.com')) {
+                // if rumble ...
+                $sourceIs = 'rumble';
+                $pattern = '/https(.*?)mp4/';
+                preg_match_all($pattern, $response, $matches);
+                // start at the first "mp4" extract https: .... .mp4 and replace \ with ""
+                $firstMp4 = $matches[0][0];
+            } elseif (str_contains($sourceUrl, 'bitchute.com')) {
+                // if bitchute ...
+                $sourceIs = 'bitchute';
+                $pattern = '/<source src="https(.*?)mp4/';
+                preg_match_all($pattern, $response, $matches);
+                // start at the first "mp4" extract https: .... .mp4 and replace \ with ""
+                $firstMp4 = $matches[0][0];
+//                Log::channel('custom_error')->error('FIRST MP4: '.$firstMp4);
+            }
+
+
 
             // Check if the data is null
             if ($matches[0] == []) {
@@ -536,10 +559,14 @@ class ShowEpisodeController extends Controller
 //            $episode = ShowEpisode::find($episodeId);
 //            $episode->image_id = $id;
 //            $episode->save();
-
-
-            return str_replace('\\', '', $firstMp4);
-
+            if ($sourceIs === 'rumble') {
+                return str_replace('\\', '', $firstMp4);
+            } elseif ($sourceIs === 'bitchute') {
+                $url = str_replace('<source src="', '', $firstMp4);
+//                Log::channel('custom_error')->error('Bitchute Matches: '. $url);
+                return $url;
+            } else
+                return false;
 
         } catch (\Exception $e) {
             // Log the error using Laravel's logging system

@@ -69,9 +69,6 @@
                     <p v-if="video.upload_status === 'processing'" class="mt-12 px-3 py-3 text-gray-50 mr-1 lg:mr-36 bg-black w-full text-center lg:text-left">
                         The video is currently processing. <span v-if="episode.video_url">This video is available to play, but it may be slow to load.</span><span v-if="!episode.video_url"> check back later.</span>
                     </p>
-                    <p v-if="video.upload_status !== 'processing' && !video.file_name && episode.video_url" class="mt-12 px-3 py-3 text-gray-50 mr-1 lg:mr-36 bg-black w-full text-center lg:text-left">
-                        <span v-if="episode.video_url">This video is available to play, but it may be slow to load.</span>
-                    </p>
 
                     <div class="flex mt-12 m-auto lg:mx-0 justify-center lg:justify-start">
 
@@ -100,7 +97,10 @@
 
                 </header>
 
-
+            <div class="my-6 p-5">
+                <div class="font-semibold text-xs uppercase mb-3">EPISODE DESCRIPTION</div>
+                <div>{{ props.episode.description }}</div>
+            </div>
 
 
 
@@ -115,37 +115,12 @@
 
                 <!--                                <img :src="'/storage/images/' + props.episode.poster" alt="" class="w-1/2 mx-2">-->
 
-                <!--                TEST VIDEO EMBED FROM RUMBLE             -->
-<!--                <iframe class="rumble" width="640" height="360" src="https://rumble.com/embed/v1nf3s7/?pub=4" frameborder="0" allowfullscreen></iframe>-->
-
-
-
-<!--                    <img v-if="!props.episode.video_file_url && !props.episode.video_file_embed_code && props.episode.poster" :src="'/storage/images/' + props.episode.poster" alt="episode poster" class="w-1/2 mx-2">-->
-
-
-<!--                </div>-->
 
             </div>
-
-            <div v-if="props.episode.video_embed_code" class="w-full flex justify-center my-10 px-5">
-            <div
-                 class="flex flex-col w-fit border border-white">
-                <span class="text-white text-3xl p-3">Embedded video</span>
-                <span class="text-white p-3">We are currently working on the video playback for embedded videos. What you see here is temporary. </span>
-                <div v-html="props.episode.video_embed_code">
-                </div>
-            </div>
-            </div>
-
 
             <div class="flex flex-col px-5">
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                     <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-
-                        <div class="my-6 p-5">
-                            <div class="font-semibold text-xs uppercase mb-3">EPISODE DESCRIPTION</div>
-                            <div>{{ props.episode.description }}</div>
-                        </div>
 
                         <div class="mb-6 p-5">
                             <div class="w-full bg-gray-800 text-2xl p-4 mb-8">CREDITS</div>

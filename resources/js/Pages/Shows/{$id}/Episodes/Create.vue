@@ -240,9 +240,19 @@ let form = useForm({
 
 function reset() {
     form.reset();
-};
-//
+}
+
+function addEmbedCodeConfirm() {
+    if (confirm("Are you sure you want to add this embed code? It will override the video url.")) {
+        form.post(route('showEpisodes.store', props.show.slug));
+    }
+}
+
+
 let submit = () => {
+    if(form.video_embed_code && form.video_url) {
+        addEmbedCodeConfirm();
+    } else
     form.post(route('showEpisodes.store', props.show.slug));
 };
 

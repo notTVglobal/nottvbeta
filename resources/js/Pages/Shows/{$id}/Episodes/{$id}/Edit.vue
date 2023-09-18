@@ -149,24 +149,27 @@
                                         <label class="block mb-2 uppercase font-bold text-xs text-white"
                                                for="video_file_url"
                                         >
-                                            Episode Video URL of MP4 (External) - example: <span class="underline">https://domainname.com/filename.mp4</span>
+                                            Video URL (External MP4 only)
                                         </label>
 
                                         <input v-model="form.video_url"
                                                class="border border-gray-400 text-gray-800 p-2 w-full rounded-lg"
                                                type="text"
-                                               name="video_file_url"
-                                               id="video_file_url"
+                                               name="video_url"
+                                               id="video_url"
                                         >
+                                        <div class="text-xs mt-1">
+                                            Example: <span class="underline">https://domainname.com/filename.mp4</span>
+                                        </div>
                                         <div v-if="form.errors.video_url" v-text="form.errors.video_url"
                                              class="text-xs text-red-600 mt-1"></div>
                                     </div>
 
                                     <div class="mb-6">
-                                        <label class="block mb-2 uppercase font-bold text-xs text-red-700"
+                                        <label class="block mb-2 uppercase font-bold text-xs"
                                                for="video_embed_code"
                                         >
-                                            Episode Video Embed Code (external) <span class="text-white">*</span>
+                                            Embed Code (Rumble or Bitchute only) <span class="text-white">*</span>
                                         </label>
 
                                         <TabbableTextarea v-model="form.video_embed_code"
@@ -186,10 +189,13 @@
                                         </div>
                                         <ul class="list-decimal pb-2 ml-2">
                                             <li>
-                                                If both URL and Embed Code are provided the system will use the Embed Code.
+                                                If both URL and Embed Code are provided the system will attempt to get the Video Url from the Embed Code.
                                             </li>
                                             <li>
                                                 We have <span class="font-bold">not</span> enabled the use of Facebook videos for security purposes.
+                                            </li>
+                                            <li>
+                                                If you want to use YouTube, enter the YouTube video URL above in the YouTube URL field. This option is least preferrable, due to a lower quality user experience.
                                             </li>
                                         </ul>
                                     </div>
@@ -214,20 +220,15 @@
                                         <!--                <iframe class="rumble" width="640" height="360" src="https://rumble.com/embed/v1nf3s7/?pub=4" frameborder="0" allowfullscreen></iframe>-->
 
                                         <div
-                                            v-if="!episode.video.file_name"
+                                            v-if="!episode.video_id"
                                             class="flex justify-center shadow overflow-hidden border-b border-gray-200 w-full bg-white dark:bg-black text-2xl sm:rounded-lg p-5">
-NO VIDEO
-                                            <iframe v-if="props.episode.video_file_url && !props.episode.video_embed_code"
-                                                    class="rumble" width="640" height="360" :src="`${props.episode.video_file_url}`" frameborder="0" allowfullscreen>
+                                            <span v-if="!props.episode.video_url">NO VIDEO</span>
+                                            <iframe v-if="props.episode.video_url"
+                                                    class="rumble" width="w-full" height="" :src="`${props.episode.video_url}`" frameborder="0" allowfullscreen>
                                             </iframe>
-                                            <div v-if="!props.episode.video_file_url && props.episode.video_embed_code" v-html="props.episode.video_embed_code">
-                                            </div>
-                                            <div v-if="props.episode.video_file_url && props.episode.video_embed_code" v-html="props.episode.video_embed_code">
-                                            </div>
                                         </div>
 
-                                        <div v-if="episode.video.file_name" class="mb-6 bg-black w-full p-6">
-HAS VIDEO
+                                        <div v-if="episode.video_id" class="mb-6 bg-black w-full p-6">
                                             <span
                                                 v-if="episode.video.upload_status === 'processing'"
                                                 class="text-center place-self-center text-white font-semibold text-xl">Video processing...</span>
@@ -392,8 +393,17 @@ let reloadImage = () => {
     });
 };
 
+function addEmbedCodeConfirm() {
+    if (confirm("Are you sure you want to add this embed code? It will override the video url.")) {
+        form.put(route('showEpisodes.update', props.episode.slug));
+    }
+}
+
 let submit = () => {
-    form.put(route('showEpisodes.update', props.episode.slug));
+    if(form.video_embed_code !== props.episode.video_embed_code && form.video_url) {
+        addEmbedCodeConfirm();
+    } else
+        form.put(route('showEpisodes.update', props.episode.slug));
 };
 
 let showMessage = ref(true);
