@@ -451,6 +451,8 @@ class ShowEpisodeController extends Controller
             $regex = '/https?\:\/\/[^\",]+/i';
             preg_match($regex, $embedCode, $match);
             $sourceUrl = implode(" ", $match);
+            $scraperApiKey =  env('SCRAPER_API_KEY');
+            Log::channel('custom_error')->warning($scraperApiKey);
 
             // get the page source from the url
 //            $proxy_address = 'http://scraperapi.autoparse=true:' . env('SCRAPER_API_KEY') . '@proxy-server.scraperapi.com:8001';
@@ -468,6 +470,7 @@ class ShowEpisodeController extends Controller
 
             $url =
                 "https://api.scraperapi.com?api_key=" . env('SCRAPER_API_KEY') . "&url=" . $sourceUrl . "&render=true&country_code=us";
+            Log::channel('custom_error')->warning($url);
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER,
