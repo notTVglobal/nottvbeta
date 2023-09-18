@@ -13,7 +13,7 @@
             <div class="text-center w-full mt-6 pt-3">Thank you for supporting independent media and free press.<br>
                 <span class="pt-2">We value your subscription, if you have any questions or comments,</span><br>
                 Please email <a href="mailto:cathy@not.tv" class="text-blue-600 hover:text-blue-500">cathy@not.tv</a></div>
-            <div class="text-center w-full mt-6 pt-3">You need to refresh your page to see the changes.</div>
+            <div class="text-center w-full mt-6 pt-3">If you don't see the premium features you may need to refresh your browser page.</div>
         </div>
     </div>
 </template>

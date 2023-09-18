@@ -25,7 +25,7 @@
 
                         <div class="py-4 px-3 space-y-3">
                             <div v-for="item in props.feed.items.item">
-                                <div class="bg-gray-600 p-5 rounded-xl">
+                                <div class="bg-gray-600 text-white p-5 rounded-xl">
                                     <div class="text-xl font-semibold"><a :href="item.link" target="_blank">{{item.title}}</a></div>
                                     <div class="text-xs">{{newFormatDate(item.pubDate)}}</div>
                                     <div v-html="item.description"></div>

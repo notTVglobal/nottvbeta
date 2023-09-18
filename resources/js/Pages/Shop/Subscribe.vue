@@ -41,17 +41,17 @@
             </div>
 
             <div v-show="!shopStore.showPaymentForm" class="mx-auto mt-8 px-12">
-                <h2 class="mt-6 mx-auto text-xl font-semibold text-black dark:text-gray-100">Payment form is loading...</h2>
+                <h2 class="mt-6 mx-auto text-xl font-semibold text-white dark:text-gray-100">Payment form is loading...</h2>
             </div>
 
-            <div class="mx-auto mt-8 px-12">
+            <div class="w-full mx-auto mt-8">
                 <h2 class="text-2xl font-semibold text-gray-100 dark:text-gray-100">Payment</h2>
 
-                <form id="payment-form">
+                <form id="payment-form" class="w-full">
                     <div id="link-authentication-element" class="mb-2">
                         <!--Stripe.js injects the Link Authentication Element-->
                     </div>
-                    <div id="payment-element">
+                    <div id="payment-element" class="w-full">
                         <!--Stripe.js injects the Payment Element-->
                     </div>
 

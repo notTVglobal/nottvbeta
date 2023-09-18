@@ -281,4 +281,14 @@ class AdminController extends Controller
     }
 
 
+////////////  GET VIDEOS FROM EMBED CODES (created for a single purpose)
+////////////////////////////////////////////////////////////////////////
+    public function getVideosFromEmbedCodes() {
+        // update all episodes... create one job per episode where episode has embed code.
+
+        // send notification on job completion.
+    }
+
+
+
 }

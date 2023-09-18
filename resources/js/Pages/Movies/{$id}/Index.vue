@@ -7,32 +7,12 @@
 
             <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
 
-            <header class="flex justify-between mb-3 border-b border-gray-800">
-                <div class="container mx-auto flex flex-col lg:flex-row items-center justify-between px-4 py-6">
-
-                    <div class="flex flex-col lg:flex-row items-center">
-                        <h1 class="text-3xl font-semibold"><Link :href="route('movies')" class="hover:text-blue-800">Movies</Link></h1>
-                        <ul class="flex ml-0 lg:ml-16 mt-6 lg:mt-0 space-x-8">
-                            <li>
-                                <Link :href="``" class="text-gray-700 cursor-not-allowed">Categories</Link>
-                            </li>
-                            <li>
-                                <Link :href="`/movies#review`" class="hover:text-blue-800">Reviews</Link>
-                            </li>
-                            <li>
-                                <Link :href="`/movies#coming-soon`" class="hover:text-blue-800">Coming Soon</Link>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="flex flex-end flex-wrap-reverse justify-end gap-2 mt-6 mr-4">
+            <header v-if="props.can.editMovie" class="flex justify-end mt-6 mr-4 pb-3 border-b border-gray-800">
                 <Link
-                    v-if="props.can.editMovie" :href="`/movies/${props.movie.slug}/edit`"><button
+                    :href="`/movies/${props.movie.slug}/edit`"><button
                     class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                 >Edit</button>
                 </Link>
-                </div>
-
             </header>
 
 <main class="mt-12">
@@ -48,18 +28,23 @@
                             <span v-if="movie.release_year"> &middot; {{movie.release_year}}</span>
                         </div>
 
-                        <div class="flex flex-wrap justify-center lg:justify-start mt-4 m-auto lg:mx-0">
-                            <div class="flex items-center ml-4">
+                        <div class="mt-6 pr-6 text-gray-300 mr-1 lg:mr-36 w-full text-center lg:text-left">
+                            {{ movie.logline }}
+                        </div>
+
+                        <div class="w-full flex flex-wrap justify-center lg:justify-start my-3 lg:my-6 mx-auto space-x-4 lg:space-x-12 space-y-3">
+                            <div></div>
+                            <div class="flex items-center">
                                 <div class="w-16 h-16 bg-gray-800 rounded-full">
                                     <div class="font-semibold text-xs flex justify-center items-center h-full">90%</div>
                                 </div>
-                                <div class="ml-4 text-xs">Member <br> Rating</div>
+                                <div class="ml-4 text-xs">Member <br> Rating <br><span class="text-orange-500">(feature coming soon)</span></div>
                             </div>
-                            <div class="flex items-center ml-4 lg:mr-0 lg:ml-12">
+                            <div class="flex items-center">
                                 <div class="w-16 h-16 bg-gray-800 rounded-full">
                                     <div class="font-semibold text-xs flex justify-center items-center h-full">92%</div>
                                 </div>
-                                <div class="ml-4 text-xs">Audience <br> Rating</div>
+                                <div class="ml-4 text-xs">Audience <br> Rating <br><span class="text-orange-500">(feature coming soon)</span></div>
                             </div>
                             <div class="flex m-auto space-x-4 lg:ml-12 pt-6 lg:mt-2 2xl:pt-0">
                                 <div v-if="props.movie.www_url" class="website-url w-8 h-8 bg-gray-800 rounded-full flex justify-center items-center">
@@ -74,13 +59,13 @@
                                         <svg class="w-4 h-4 fill-current" xmlns="http://www.w3.org/2000/svg"
                                              viewBox="0 0 300 300">
                                             <path d="M38.52,0.012h222.978C282.682,0.012,300,17.336,300,38.52v222.978c0,21.178-17.318,38.49-38.502,38.49
-		H38.52c-21.184,0-38.52-17.313-38.52-38.49V38.52C0,17.336,17.336,0.012,38.52,0.012z M218.546,33.329
-		c-7.438,0-13.505,6.091-13.505,13.525v32.314c0,7.437,6.067,13.514,13.505,13.514h33.903c7.426,0,13.506-6.077,13.506-13.514
-		V46.854c0-7.434-6.08-13.525-13.506-13.525H218.546z M266.084,126.868h-26.396c2.503,8.175,3.86,16.796,3.86,25.759
-		c0,49.882-41.766,90.34-93.266,90.34c-51.487,0-93.254-40.458-93.254-90.34c0-8.963,1.37-17.584,3.861-25.759H33.35v126.732
-		c0,6.563,5.359,11.902,11.916,11.902h208.907c6.563,0,11.911-5.339,11.911-11.902V126.868z M150.283,90.978
-		c-33.26,0-60.24,26.128-60.24,58.388c0,32.227,26.98,58.375,60.24,58.375c33.278,0,60.259-26.148,60.259-58.375
-		C210.542,117.105,183.561,90.978,150.283,90.978z"/>
+                                                    H38.52c-21.184,0-38.52-17.313-38.52-38.49V38.52C0,17.336,17.336,0.012,38.52,0.012z M218.546,33.329
+                                                    c-7.438,0-13.505,6.091-13.505,13.525v32.314c0,7.437,6.067,13.514,13.505,13.514h33.903c7.426,0,13.506-6.077,13.506-13.514
+                                                    V46.854c0-7.434-6.08-13.525-13.506-13.525H218.546z M266.084,126.868h-26.396c2.503,8.175,3.86,16.796,3.86,25.759
+                                                    c0,49.882-41.766,90.34-93.266,90.34c-51.487,0-93.254-40.458-93.254-90.34c0-8.963,1.37-17.584,3.861-25.759H33.35v126.732
+                                                    c0,6.563,5.359,11.902,11.916,11.902h208.907c6.563,0,11.911-5.339,11.911-11.902V126.868z M150.283,90.978
+                                                    c-33.26,0-60.24,26.128-60.24,58.388c0,32.227,26.98,58.375,60.24,58.375c33.278,0,60.259-26.148,60.259-58.375
+                                                    C210.542,117.105,183.561,90.978,150.283,90.978z"/>
                                         </svg>
                                     </Link>
                                 </div>
@@ -96,17 +81,17 @@
                                         <svg class="w-4 h-4 fill-current" xmlns="http://www.w3.org/2000/svg"
                                              viewBox="0 0 310 310">
                                             <path id="XMLID_827_" d="M302.973,57.388c-4.87,2.16-9.877,3.983-14.993,5.463c6.057-6.85,10.675-14.91,13.494-23.73
-		c0.632-1.977-0.023-4.141-1.648-5.434c-1.623-1.294-3.878-1.449-5.665-0.39c-10.865,6.444-22.587,11.075-34.878,13.783
-		c-12.381-12.098-29.197-18.983-46.581-18.983c-36.695,0-66.549,29.853-66.549,66.547c0,2.89,0.183,5.764,0.545,8.598
-		C101.163,99.244,58.83,76.863,29.76,41.204c-1.036-1.271-2.632-1.956-4.266-1.825c-1.635,0.128-3.104,1.05-3.93,2.467
-		c-5.896,10.117-9.013,21.688-9.013,33.461c0,16.035,5.725,31.249,15.838,43.137c-3.075-1.065-6.059-2.396-8.907-3.977
-		c-1.529-0.851-3.395-0.838-4.914,0.033c-1.52,0.871-2.473,2.473-2.513,4.224c-0.007,0.295-0.007,0.59-0.007,0.889
-		c0,23.935,12.882,45.484,32.577,57.229c-1.692-0.169-3.383-0.414-5.063-0.735c-1.732-0.331-3.513,0.276-4.681,1.597
-		c-1.17,1.32-1.557,3.16-1.018,4.84c7.29,22.76,26.059,39.501,48.749,44.605c-18.819,11.787-40.34,17.961-62.932,17.961
-		c-4.714,0-9.455-0.277-14.095-0.826c-2.305-0.274-4.509,1.087-5.294,3.279c-0.785,2.193,0.047,4.638,2.008,5.895
-		c29.023,18.609,62.582,28.445,97.047,28.445c67.754,0,110.139-31.95,133.764-58.753c29.46-33.421,46.356-77.658,46.356-121.367
-		c0-1.826-0.028-3.67-0.084-5.508c11.623-8.757,21.63-19.355,29.773-31.536c1.237-1.85,1.103-4.295-0.33-5.998
-		C307.394,57.037,305.009,56.486,302.973,57.388z"/>
+                                                                    c0.632-1.977-0.023-4.141-1.648-5.434c-1.623-1.294-3.878-1.449-5.665-0.39c-10.865,6.444-22.587,11.075-34.878,13.783
+                                                                    c-12.381-12.098-29.197-18.983-46.581-18.983c-36.695,0-66.549,29.853-66.549,66.547c0,2.89,0.183,5.764,0.545,8.598
+                                                                    C101.163,99.244,58.83,76.863,29.76,41.204c-1.036-1.271-2.632-1.956-4.266-1.825c-1.635,0.128-3.104,1.05-3.93,2.467
+                                                                    c-5.896,10.117-9.013,21.688-9.013,33.461c0,16.035,5.725,31.249,15.838,43.137c-3.075-1.065-6.059-2.396-8.907-3.977
+                                                                    c-1.529-0.851-3.395-0.838-4.914,0.033c-1.52,0.871-2.473,2.473-2.513,4.224c-0.007,0.295-0.007,0.59-0.007,0.889
+                                                                    c0,23.935,12.882,45.484,32.577,57.229c-1.692-0.169-3.383-0.414-5.063-0.735c-1.732-0.331-3.513,0.276-4.681,1.597
+                                                                    c-1.17,1.32-1.557,3.16-1.018,4.84c7.29,22.76,26.059,39.501,48.749,44.605c-18.819,11.787-40.34,17.961-62.932,17.961
+                                                                    c-4.714,0-9.455-0.277-14.095-0.826c-2.305-0.274-4.509,1.087-5.294,3.279c-0.785,2.193,0.047,4.638,2.008,5.895
+                                                                    c29.023,18.609,62.582,28.445,97.047,28.445c67.754,0,110.139-31.95,133.764-58.753c29.46-33.421,46.356-77.658,46.356-121.367
+                                                                    c0-1.826-0.028-3.67-0.084-5.508c11.623-8.757,21.63-19.355,29.773-31.536c1.237-1.85,1.103-4.295-0.33-5.998
+                                                                    C307.394,57.037,305.009,56.486,302.973,57.388z"/>
 
                                         </svg>
                                     </Link>
@@ -115,10 +100,6 @@
 
                         </div>
 
-                        <p class="mt-12 pr-6 text-gray-300 mr-1 lg:mr-36 w-full text-center lg:text-left">
-                            {{ movie.logline }}
-                        </p>
-
                         <p v-if="video.upload_status === 'processing'" class="mt-12 px-3 py-3 text-gray-50 mr-1 lg:mr-36 bg-black w-full text-center lg:text-left">
                             The video is currently processing. <span v-if="movie.file_url">This video is available to play, but it may be slow to load.</span><span v-if="!movie.file_url"> check back later.</span>
                         </p>
@@ -126,42 +107,47 @@
                             <span v-if="movie.file_url">This video is available to play, but it may be slow to load.</span>
                         </p>
 
-                        <div class="flex mt-12 m-auto lg:mx-0 justify-center lg:justify-start">
-                            <button disabled class="flex bg-blue-500 text-white font-semibold px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
-                                    @click="playTrailer">
-                                <svg class="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg"
-                                     viewBox="0 0 485 485">
-                                    <path d="M413.974,71.026C368.171,25.225,307.274,0,242.5,0S116.829,25.225,71.026,71.026C25.225,116.829,0,177.726,0,242.5
-		s25.225,125.671,71.026,171.474C116.829,459.775,177.726,485,242.5,485s125.671-25.225,171.474-71.026
-		C459.775,368.171,485,307.274,485,242.5S459.775,116.829,413.974,71.026z M242.5,455C125.327,455,30,359.673,30,242.5
-		S125.327,30,242.5,30S455,125.327,455,242.5S359.673,455,242.5,455z"/>
-                                    <polygon points="181.062,336.575 343.938,242.5 181.062,148.425 	"/>
-                                </svg>
-                                <span class="ml-2 text-sm md:text-md">Play Trailer</span>
-                            </button>
+<!--                        <div class="grid grid-rows-2 md:grid-rows-1 mt-12 m-auto lg:mx-0 justify-center lg:justify-start">-->
+                        <div class="flex flex-wrap mt-12 m-auto lg:mx-0 justify-center lg:justify-start space-x-4 space-y-2">
+                                <div></div>
 
-                            <button :disabled="!videoPlayerStore.hasVideo" class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
-                                    @click="playMovie">
-                                <svg class="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg"
-                                     viewBox="0 0 485 485">
-                                    <path d="M413.974,71.026C368.171,25.225,307.274,0,242.5,0S116.829,25.225,71.026,71.026C25.225,116.829,0,177.726,0,242.5
-		s25.225,125.671,71.026,171.474C116.829,459.775,177.726,485,242.5,485s125.671-25.225,171.474-71.026
-		C459.775,368.171,485,307.274,485,242.5S459.775,116.829,413.974,71.026z M242.5,455C125.327,455,30,359.673,30,242.5
-		S125.327,30,242.5,30S455,125.327,455,242.5S359.673,455,242.5,455z"/>
-                                    <polygon points="181.062,336.575 343.938,242.5 181.062,148.425 	"/>
-                                </svg>
-                                <span class="ml-2 text-sm md:text-md">Watch Now</span>
-                            </button>
+                                <button :disabled="!videoPlayerStore.hasVideo" class="flex bg-blue-500 text-white font-semibold px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
+                                        @click="playMovie">
+                                    <svg class="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg"
+                                         viewBox="0 0 485 485">
+                                        <path d="M413.974,71.026C368.171,25.225,307.274,0,242.5,0S116.829,25.225,71.026,71.026C25.225,116.829,0,177.726,0,242.5
+                                                s25.225,125.671,71.026,171.474C116.829,459.775,177.726,485,242.5,485s125.671-25.225,171.474-71.026
+                                                C459.775,368.171,485,307.274,485,242.5S459.775,116.829,413.974,71.026z M242.5,455C125.327,455,30,359.673,30,242.5
+                                                S125.327,30,242.5,30S455,125.327,455,242.5S359.673,455,242.5,455z"/>
+                                        <polygon points="181.062,336.575 343.938,242.5 181.062,148.425 	"/>
+                                    </svg>
+                                    <span class="ml-2 text-sm md:text-md">Watch Now</span>
+                                </button>
+
+                                <button disabled class="h-fit flex bg-blue-500 text-white font-semibold px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
+                                        @click="playTrailer">
+                                    <svg class="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg"
+                                         viewBox="0 0 485 485">
+                                        <path d="M413.974,71.026C368.171,25.225,307.274,0,242.5,0S116.829,25.225,71.026,71.026C25.225,116.829,0,177.726,0,242.5
+                                                s25.225,125.671,71.026,171.474C116.829,459.775,177.726,485,242.5,485s125.671-25.225,171.474-71.026
+                                                C459.775,368.171,485,307.274,485,242.5S459.775,116.829,413.974,71.026z M242.5,455C125.327,455,30,359.673,30,242.5
+                                                S125.327,30,242.5,30S455,125.327,455,242.5S359.673,455,242.5,455z"/>
+                                        <polygon points="181.062,336.575 343.938,242.5 181.062,148.425 	"/>
+                                    </svg>
+                                    <span class="ml-2 text-sm md:text-md">Play Trailer</span>
+                                </button>
+
+                                <button disabled class="flex bg-blue-500 text-white font-semibold px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed">
+                                    <span class="text-sm md:text-md"><font-awesome-icon icon="fa-circle-down" class="mr-2"/>Save For Later</span>
+                                </button>
+
+                                <button disabled class="flex bg-blue-500 text-white font-semibold px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed">
+                                    <span class="text-sm md:text-md"><font-awesome-icon icon="fa-share" class="mr-2"/>Share</span>
+                                </button>
 
 
 
-                            <button disabled class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed">
-                                <span class="text-sm md:text-md"><font-awesome-icon icon="fa-circle-down" class="mr-2"/>Save For Later</span>
-                            </button>
 
-                            <button disabled class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed">
-                                <span class="text-sm md:text-md"><font-awesome-icon icon="fa-share" class="mr-2"/>Share</span>
-                            </button>
 
                         </div>
                     </div>

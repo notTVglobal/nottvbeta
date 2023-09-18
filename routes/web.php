@@ -441,6 +441,14 @@ Route::middleware([
 //        phpinfo();
 //    })->name('admin.phpmyinfo');
 
+    //// A one-time use function for
+    ///  getting video urls from embed
+    ///  codes for all episodes.
+    ///
+    Route::post('/admin/getVideosFromEmbedCodes', [AdminController::class, 'getVideosFromEmbedCodes'])
+        ->can('viewAdmin', 'App\Models\User')
+        ->name('getVideosFromEmbedCodes');
+
     //// temp page to test Stores
     Route::get('/quiz', function () {
         return Inertia::render('QuizHome');

@@ -25,7 +25,7 @@
             </div>
 
                 <header class="p-5 mb-6">
-                    <div class="flex justify-between px-5">
+                    <div class="flex flex-wrap justify-between px-5">
                         <div class="">
                             <div class="mb-4">
                                 <h3 class="mb-1 inline-flex items-center text-3xl font-semibold relative">
@@ -70,8 +70,8 @@
                         The video is currently processing. <span v-if="episode.video_url">This video is available to play, but it may be slow to load.</span><span v-if="!episode.video_url"> check back later.</span>
                     </p>
 
-                    <div class="flex mt-12 m-auto lg:mx-0 justify-center lg:justify-start">
-
+                    <div class="flex flex-wrap mt-12 m-auto lg:mx-0 justify-center lg:justify-start space-x-3 space-y-3">
+                        <div></div>
                         <button :disabled="!videoPlayerStore.hasVideo" class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-700 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
                                 @click="playEpisode">
                             <svg class="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg"
@@ -123,6 +123,12 @@
                     <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
 
                         <div class="mb-6 p-5">
+
+                            <div class="w-full bg-gray-800 text-2xl p-4 mb-8">BONUS CONTENT</div>
+                            <div class="mb-8 p-4">
+                                <span class="text-orange-500">Bonus content will go here. This includes content mentioned in an episode.</span>
+                            </div>
+
                             <div class="w-full bg-gray-800 text-2xl p-4 mb-8">CREDITS</div>
 
 
@@ -149,7 +155,6 @@
                                 </div>
                             </div>
 
-                            <div class="w-full bg-gray-800 text-2xl p-4 mb-8">BONUS CONTENT</div>
                         </div>
 
                         <EpisodeFooter :team="props.team" :epsiode="props.episode"/>

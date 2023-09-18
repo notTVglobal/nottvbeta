@@ -15,6 +15,8 @@
                             <h2 class="text-3xl font-semibold leading-tight">
                                 {{ news.title }}
                             </h2>
+                            <div class="">{{ news.author }}</div>
+                            <div class="font-light">{{ formatDate(news.published_at) }}</div>
                         </div>
 
 
@@ -52,10 +54,9 @@
 
 
 
-            <div class="flex justify-end md:mb-3">
-                <div class="flex-col text-right md:mb-3">
-                    <div>{{ news.author }}</div>
-                    <div>{{ news.published_at }}</div>
+            <div class="w-full flex flex-wrap justify-end md:mb-3">
+                <div class="text-right md:mb-3">
+
                 </div>
             </div>
 
@@ -66,7 +67,7 @@
                     <img :src="`/storage/images/${props.image}`" class="object-scale-down md:max-w-sm px-6 mb-4 mx-auto">
                 </div>
 
-                <div class="flex flex-wrap px-6 border-b border-gray-200 news-content space-y-5 whitespace-pre-wrap">
+                <div class="w-full md:w-fit flex flex-wrap px-6 border-b border-gray-200 news-content space-y-5 whitespace-pre-wrap">
                         <div v-html="'<pre>'+news.content+'</pre>'" class="text-left mb-6">
                         </div>
                 </div>

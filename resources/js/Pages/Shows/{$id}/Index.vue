@@ -3,15 +3,13 @@
 
     <Head :title="props.show.name" />
 
-    <div class="place-self-center flex flex-col gap-y-3">
+    <div class="place-self-center flex flex-col">
         <div id="topDiv" class="bg-gray-900 text-white px-5">
 
             <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
 
-        <header>
-            <div v-if="props.can.viewCreator" class="flex justify-end mt-10">
-
-                <div class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4">
+        <header v-if="props.can.editShow || props.can.manageShow" class="flex justify-end">
+                <div class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4 my-10">
                     <Link
                         v-if="props.can.editShow" :href="`/shows/${props.show.slug}/edit`"><button
                         class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
@@ -22,17 +20,11 @@
                         class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                     >Manage Show</button>
                     </Link>
-                    <Link :href="`/dashboard`"><button
-                        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                        hidden
-                    >Dashboard</button>
-                    </Link>
                 </div>
-            </div>
         </header>
 
-            <main class="mt-12">
-                <div class="container mx-auto px-4">
+            <main>
+                <div class="container mx-auto px-4 gap-y-3">
                     <div class="show-details border-b border-gray-800 pb-12 flex flex-col md:flex-row">
                         <div class="items-center">
 <!--                        <SingleImage :image="props.show.image" :poster="props.show.poster" :alt="'show cover'" class="h-96 min-w-[16rem] w-64 object-cover mb-6 lg:mb-0 m-auto lg:m-0"/>-->
@@ -56,16 +48,16 @@
 
                             </div>
 
-                            <div class="flex mt-12 m-auto lg:mx-0 justify-center lg:justify-start">
-
+                            <div class="flex flex-wrap my-12 m-auto lg:mx-0 justify-center lg:justify-start space-x-4 space-y-2">
+                                <div></div>
                                 <button :disabled="!videoPlayerStore.hasVideo" class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
                                         @click="playEpisode">
                                     <svg class="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg"
                                          viewBox="0 0 485 485">
                                         <path d="M413.974,71.026C368.171,25.225,307.274,0,242.5,0S116.829,25.225,71.026,71.026C25.225,116.829,0,177.726,0,242.5
-		s25.225,125.671,71.026,171.474C116.829,459.775,177.726,485,242.5,485s125.671-25.225,171.474-71.026
-		C459.775,368.171,485,307.274,485,242.5S459.775,116.829,413.974,71.026z M242.5,455C125.327,455,30,359.673,30,242.5
-		S125.327,30,242.5,30S455,125.327,455,242.5S359.673,455,242.5,455z"/>
+                                                s25.225,125.671,71.026,171.474C116.829,459.775,177.726,485,242.5,485s125.671-25.225,171.474-71.026
+                                                C459.775,368.171,485,307.274,485,242.5S459.775,116.829,413.974,71.026z M242.5,455C125.327,455,30,359.673,30,242.5
+                                                S125.327,30,242.5,30S455,125.327,455,242.5S359.673,455,242.5,455z"/>
                                         <polygon points="181.062,336.575 343.938,242.5 181.062,148.425 	"/>
                                     </svg>
                                     <span class="ml-2">Watch Now</span>
@@ -81,23 +73,24 @@
 
                             </div>
 
-                            <div class="flex flex-wrap justify-center lg:justify-start mt-4 m-auto lg:mx-0">
-
-                                <div class="flex items-center ml-4">
+                            <div class="flex flex-wrap justify-center lg:justify-start mt-4 m-auto lg:mx-0 space-x-4 space-y-2">
+                                <div></div>
+                                <div class="flex items-center">
                                     <div class="w-16 h-16 bg-gray-800 rounded-full">
                                         <div class="font-semibold text-xs flex justify-center items-center h-full">90%</div>
                                     </div>
                                     <div class="ml-4 text-xs">Member <br> Rating <br><span class="text-orange-500">(feature coming soon)</span></div>
                                 </div>
 
-                                <div class="flex items-center ml-4 lg:mr-0 lg:ml-12">
+                                <div class="flex items-center">
                                     <div class="w-16 h-16 bg-gray-800 rounded-full">
                                         <div class="font-semibold text-xs flex justify-center items-center h-full">92%</div>
                                     </div>
                                     <div class="ml-4 text-xs">Audience <br> Rating <br><span class="text-orange-500">(feature coming soon)</span></div>
                                 </div>
 
-                                <div class="flex m-auto space-x-4 lg:ml-12 pt-6 lg:mt-2 2xl:pt-0">
+                                <div class="flex flex-wrap m-auto space-x-4 space-y-2 lg:ml-12 pt-6 lg:mt-2 2xl:pt-0">
+                                    <div></div>
                                     <div v-if="props.show.www_url" class="website-url w-8 h-8 bg-gray-800 rounded-full flex justify-center items-center">
                                         <a :href="props.show.www_url" class="hover:text-gray-400" target="_blank">
                                             <svg class="w-5 h-5 fill-current" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">

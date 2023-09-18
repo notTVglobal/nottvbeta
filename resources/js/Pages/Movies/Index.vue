@@ -2,8 +2,8 @@
 
     <Head title="Movies"/>
 
-    <div class="place-self-center flex flex-col gap-y-3">
-        <div id="topDiv" class="bg-gray-900 text-white px-5">
+    <div id="topDiv" class="place-self-center flex flex-col gap-y-3">
+        <div class="bg-gray-900 text-white px-5">
 
             <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
 

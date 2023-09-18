@@ -2845,6 +2845,14 @@ h3 {
   grid-column: span 6 / span 6;
 }
 
+.row-start-1 {
+  grid-row-start: 1;
+}
+
+.row-start-2 {
+  grid-row-start: 2;
+}
+
 .-m-4 {
   margin: -1rem;
 }
@@ -2923,6 +2931,11 @@ h3 {
 .my-auto {
   margin-top: auto;
   margin-bottom: auto;
+}
+
+.my-12 {
+  margin-top: 3rem;
+  margin-bottom: 3rem;
 }
 
 .-ml-px {
@@ -3999,6 +4012,10 @@ h3 {
 
 .whitespace-nowrap {
   white-space: nowrap;
+}
+
+.whitespace-pre {
+  white-space: pre;
 }
 
 .whitespace-pre-wrap {
@@ -6344,6 +6361,10 @@ h3 {
     grid-column: span 2 / span 2;
   }
 
+  .md\:row-start-1 {
+    grid-row-start: 1;
+  }
+
   .md\:mb-3 {
     margin-bottom: 0.75rem;
   }
@@ -6396,6 +6417,12 @@ h3 {
     width: auto;
   }
 
+  .md\:w-fit {
+    width: -webkit-fit-content;
+    width: -moz-fit-content;
+    width: fit-content;
+  }
+
   .md\:min-w-\[8rem\] {
     min-width: 8rem;
   }
@@ -6414,6 +6441,10 @@ h3 {
 
   .md\:grid-cols-3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .md\:grid-rows-1 {
+    grid-template-rows: repeat(1, minmax(0, 1fr));
   }
 
   .md\:flex-row {
@@ -6480,6 +6511,16 @@ h3 {
   .lg\:mx-0 {
     margin-left: 0px;
     margin-right: 0px;
+  }
+
+  .lg\:mx-8 {
+    margin-left: 2rem;
+    margin-right: 2rem;
+  }
+
+  .lg\:my-6 {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
   }
 
   .lg\:mb-0 {
@@ -6588,6 +6629,12 @@ h3 {
 
   .lg\:justify-start {
     justify-content: flex-start;
+  }
+
+  .lg\:space-x-12 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-x-reverse: 0;
+    margin-right: calc(3rem * var(--tw-space-x-reverse));
+    margin-left: calc(3rem * calc(1 - var(--tw-space-x-reverse)));
   }
 
   .lg\:px-2 {

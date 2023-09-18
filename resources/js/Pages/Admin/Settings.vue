@@ -74,6 +74,11 @@
                         class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
                     >Invite Codes</button>
                     </Link>
+                    <Button
+                        @click="getEpisodesFromEmbedCodes"
+                        class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
+                    >Get All Episode Videos From Embed Codes
+                    </Button>
 <!--                    <Link-->
 <!--                        :href="`/admin/phpmyinfo`"><button-->
 <!--                        class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"-->
@@ -304,5 +309,9 @@ let submit = () => {
 };
 
 let showMessage = ref(true);
+
+function getEpisodesFromEmbedCodes() {
+    Inertia.post('')
+}
 
 </script>

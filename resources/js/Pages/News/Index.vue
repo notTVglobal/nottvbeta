@@ -12,9 +12,10 @@
 
             <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
 
-            <header class="flex justify-between mb-3 border-b border-gray-500">
+            <header class="w-full mx-auto flex flex-wrap justify-between mb-3 pb-3 border-b border-gray-500 space-x-2 space-y-3">
+                    <div></div>
                     <NewsHeader>News</NewsHeader>
-                    <div class="flex items-center mt-6 lg:mt-0">
+                    <div class="flex items-center">
                         <div class="relative">
                             <input v-model="search" type="search" class="bg-gray-50 text-black text-sm rounded-full
                             focus:outline-none focus:shadow w-64 pl-8 px-3 py-1" placeholder="Search...">
@@ -27,8 +28,8 @@
 
             </header>
 
-            <div class="flex flex-row justify-between mb-4">
-                <div class="mt-4">
+            <div class="flex flex-wrap justify-between mb-4">
+                <div class="my-4">
                     Events, shows, episodes, movies, news, channel updates, announcements, etc.
                 </div>
                 <NewsHeaderButtons :can="can"/>
@@ -70,8 +71,8 @@
                                     <div class="flex flex-row"><img :src="'/storage/images/' + post.image" alt="news cover" class="pr-4 h-6 max-w-[6rem] object-cover ">
                                         {{ post.title }}</div></Link>
                                 </td>
-                                <td>
-                                    {{ post.published_at }}
+                                <td class="text-gray-900">
+                                    {{ formatDate(post.published_at) }}
                                 </td>
                                 <td class="text-right px-6 py-2 space-x-2 space-y-2">
                                     <div class="flex flex-row space-x-2">
