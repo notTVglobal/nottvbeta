@@ -13,8 +13,10 @@ use App\Models\Video;
 use Carbon\Carbon;
 use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
@@ -370,7 +372,7 @@ class ShowEpisodeController extends Controller
         // get the *.mp4 video url from embed code
         // save the *.mp4 url to the video_file_url
         if (!$request->video_url) {
-            $videoUrl = $this->getVideoUrlFromEmbedCode($request->video_embed_code);
+            $videoUrl = $this->getVideoUrlFromEmbedCode($request->video_embed_code, $showEpisode->id);
         } else $videoUrl = $request->video_url;
 
         // update the show
@@ -443,7 +445,7 @@ class ShowEpisodeController extends Controller
     }
 
 
-    public function getVideoUrlFromEmbedCode($embedCode) {
+    public function getVideoUrlFromEmbedCode($embedCode, $episodeId) {
         try {
             // strip the url from the embed code
             $regex = '/https?\:\/\/[^\",]+/i';
@@ -491,6 +493,33 @@ class ShowEpisodeController extends Controller
                 throw new \Exception("The data is undefined.");
             }
 
+            // this poster save needs to be finished...
+            // get the jpg urls from the page.
+//            $pattern = '/poster="([^"]+)"/';
+//
+//            preg_match_all($pattern, $response, $imageMatches);
+            // start at the first "mp4" extract https: .... .mp4 and replace \ with ""
+//            $firstJpg = $imageMatches[0];
+//
+//            $image = str_replace('poster=', '', $firstJpg);
+//            $string = implode(', ', $image);
+//            $imageFilename = $this->saveImageFromInternet($string);
+//            // create image model
+//            $id = DB::table('images')->insertGetId([
+////                'name' => $uploadedFile->hashName(),
+//                'name' => $imageFilename,
+////                'extension' => $imageFilename->extension(),
+////                'size' => $imageFilename->getSize(),
+//                'user_id' => auth()->user()->id,
+//                'show_episode_id' => $episodeId,
+//            ]);
+//
+//            // store image_id to Shows table
+//            $episode = ShowEpisode::find($episodeId);
+//            $episode->image_id = $id;
+//            $episode->save();
+
+
             return str_replace('\\', '', $firstMp4);
 
 
@@ -501,6 +530,32 @@ class ShowEpisodeController extends Controller
 
             // Optionally, return a response to the client
             return response()->json(['message' => 'The embed code could not get a video file.'], 500);
+        }
+    }
+
+    public function saveImageFromInternet($imageUrl)
+    {
+        // Get the URL of the image from the request
+//        $imageUrl = $request->input('image_url');
+//        dd($imageUrl);
+        // Fetch the image content using Laravel HTTP Client
+        $response = Http::get($imageUrl);
+
+        if ($response->successful()) {
+            // Generate a unique filename for the saved image
+            $filename = 'image_' . time() . '.' . $response->extension();
+
+            // Save the image to the local storage (e.g., 'public' disk)
+//            Storage::disk('public')->put($filename, $response->body());
+            $response->file('poster')->store('images');
+
+            // Return a success response or perform further actions
+            return $filename;
+//            return response()->json(['message' => 'Image saved successfully']);
+
+        } else {
+            // Handle the case where the image retrieval was not successful
+            return response()->json(['message' => 'Failed to fetch the image'], 500);
         }
     }
 

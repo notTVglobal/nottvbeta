@@ -288,6 +288,16 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             this.unmute()
             this.paused = false
         },
+        loadNewLiveSourceFromRumble(source) {
+            this.videoIsYoutube = true
+            useChannelStore().clearChannel()
+            let videoJs = videojs('main-player')
+            this.videoSource = source
+            this.videoSourceType = "application/x-mpegURL"
+            videoJs.src({'src': this.videoSource, 'type': this.videoSourceType})
+            this.unmute()
+            this.paused = false
+        },
         loadNewSourceFromUrl(source) {
             this.videoIsYoutube = false
             // useChannelStore().clearChannel()

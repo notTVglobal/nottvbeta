@@ -42,7 +42,12 @@ export let useChannelStore = defineStore('channelStore', {
 
             if (channel.channel_source !== null) {
                 useVideoPlayerStore().videoName = channel.channel_source.name
-                useVideoPlayerStore().loadNewSourceFromYouTube(channel.channel_source.path)
+                if (channel.channel_source.provider === 'youtube'){
+                    useVideoPlayerStore().loadNewSourceFromYouTube(channel.channel_source.path)
+                } else if (channel.channel_source.provider === 'rumble') {
+                    useVideoPlayerStore().loadNewLiveSourceFromRumble(channel.channel_source.path)
+                }
+
 
             } else
                 useVideoPlayerStore().loadNewSourceFromMist(channel.stream)
