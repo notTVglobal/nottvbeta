@@ -53,7 +53,7 @@ class AddVideoUrlFromEmbedCodeJob implements ShouldQueue
                         preg_match($regex, $this->showEpisode->video_embed_code, $match);
                         $sourceUrl = implode(" ", $match);
 //            $scraperApiKey =  env('SCRAPER_API_KEY');
-//            Log::channel('custom_error')->warning($scraperApiKey);
+            Log::channel('custom_error')->error('source url: '.$sourceUrl);
 
                         // get the page source from the url
 //            $proxy_address = 'http://scraperapi.autoparse=true:' . env('SCRAPER_API_KEY') . '@proxy-server.scraperapi.com:8001';
@@ -84,6 +84,7 @@ class AddVideoUrlFromEmbedCodeJob implements ShouldQueue
                             0);
                         $response = curl_exec($ch);
                         curl_close($ch);
+        Log::channel('custom_error')->error('RESPONSE: '.$response);
 
 //            Log::channel('custom_error')->error($response);
 
@@ -96,6 +97,8 @@ class AddVideoUrlFromEmbedCodeJob implements ShouldQueue
                             preg_match_all($pattern, $response, $matches);
                             // start at the first "mp4" extract https: .... .mp4 and replace \ with ""
                             $firstMp4 = $matches[0][0];
+                            Log::channel('custom_error')->error('MATCHES: '.$matches[0]);
+                            Log::channel('custom_error')->error('FIRST MP4: '.$firstMp4);
                         } elseif (str_contains($sourceUrl, 'bitchute.com')) {
                             // if bitchute ...
                             $sourceIs = 'bitchute';
