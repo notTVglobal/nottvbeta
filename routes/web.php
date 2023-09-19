@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\ChannelApiController;
 use App\Http\Controllers\AppSettingController;
+use App\Http\Controllers\ChangelogController;
 use App\Http\Controllers\ChannelController;
 
 use App\Http\Controllers\TestMessageController;
@@ -137,6 +138,7 @@ Route::get('/terms-of-service', [\App\Http\Controllers\TermsOfServiceController:
 
 
 Route::get('/whitepaper', [WhitepaperController::class, 'show'])->name('whitepaper.show');
+Route::get('/changelog', [ChangelogController::class, 'show'])->name('changelog.show');
 
 // Public Pages
 
