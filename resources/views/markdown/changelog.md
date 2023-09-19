@@ -4,6 +4,10 @@
 Last Update: September 19, 2023\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.7.3
+* Fix Viewer Count not displaying correctly when watching a channel.
+* 
+
 ## v0.7.2
 * App loads bitchute and rumble videos from embed codes using ScraperAPI.
 * RSS Feeds work, the Feeds controller needs to be removed and replaced with the RSS2 controller.
