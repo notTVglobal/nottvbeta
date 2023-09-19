@@ -177,8 +177,8 @@ class ShowEpisodeController extends Controller
                     'cloud_folder' => $showEpisode->video->cloud_folder ?? '',
                     'upload_status' => $showEpisode->video->upload_status ?? '',
                 ],
-                'video_url' => $showEpisode->video_url,
-                'youtube_url' => $showEpisode->youtube_url,
+                'video_url' => $showEpisode->video_url ?? '',
+                'youtube_url' => $showEpisode->youtube_url ?? '',
                 'video_embed_code' => $showEpisode->video_embed_code,
             ],
 //            'video' => [

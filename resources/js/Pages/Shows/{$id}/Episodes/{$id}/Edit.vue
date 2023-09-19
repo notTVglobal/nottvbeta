@@ -26,8 +26,8 @@
                                  class="bg-red-600 p-2 w-full text-white font-semibold mt-1"></div>
                             <div v-if="form.errors.video_file_url" v-text="form.errors.video_file_url"
                                  class="bg-red-600 p-2 w-full text-white font-semibold mt-1"></div>
-                            <div v-if="form.errors.youtube_url" v-text="form.errors.youtube_url"
-                                 class="bg-red-600 p-2 w-full text-white font-semibold mt-1"></div>
+<!--                            <div v-if="form.errors.youtube_url" v-text="form.errors.youtube_url"-->
+<!--                                 class="bg-red-600 p-2 w-full text-white font-semibold mt-1"></div>-->
                             <div v-if="form.errors.video_embed_code" v-text="form.errors.video_embed_code"
                                  class="bg-red-600 p-2 w-full text-white font-semibold mt-1"></div>
 
@@ -124,22 +124,22 @@
                                              class="text-xs text-red-600 mt-1"></div>
                                     </div>
 
-                                    <div class="mb-6">
-                                        <label class="block mb-2 uppercase font-bold text-xs text-white"
-                                               for="video_file_url"
-                                        >
-                                            YouTube URL
-                                        </label>
+<!--                                    <div class="mb-6">-->
+<!--                                        <label class="block mb-2 uppercase font-bold text-xs text-white"-->
+<!--                                               for="video_file_url"-->
+<!--                                        >-->
+<!--                                            YouTube URL-->
+<!--                                        </label>-->
 
-                                        <input v-model="form.youtube_url"
-                                               class="border border-gray-400 text-gray-800 p-2 w-full rounded-lg"
-                                               type="text"
-                                               name="youtube_url"
-                                               id="youtube_url"
-                                        >
-                                        <div v-if="form.errors.youtube_url" v-text="form.errors.youtube_url"
-                                             class="text-xs text-red-600 mt-1"></div>
-                                    </div>
+<!--                                        <input v-model="form.youtube_url"-->
+<!--                                               class="border border-gray-400 text-gray-800 p-2 w-full rounded-lg"-->
+<!--                                               type="text"-->
+<!--                                               name="youtube_url"-->
+<!--                                               id="youtube_url"-->
+<!--                                        >-->
+<!--                                        <div v-if="form.errors.youtube_url" v-text="form.errors.youtube_url"-->
+<!--                                             class="text-xs text-red-600 mt-1"></div>-->
+<!--                                    </div>-->
 
                                     <div class="mb-6">
                                         <label class="block mb-2 uppercase font-bold text-xs text-white"

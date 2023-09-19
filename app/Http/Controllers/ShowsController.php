@@ -309,7 +309,7 @@ class ShowsController extends Controller
                     'cloud_folder' => $latestEpisodeWithVideo->video->cloud_folder ?? '',
                     'upload_status' => $latestEpisodeWithVideo->video->upload_status ?? '',
                 ],
-                'firstPlayVideoUrl' => $latestEpisodeWithVideoUrl->video_url,
+                'firstPlayVideoUrl' => $latestEpisodeWithVideoUrl->video_url ?? '',
                 'copyrightYear' => $show->created_at->format('Y'),
                 'first_release_year' => $show->first_release_year,
                 'last_release_year' => $show->last_release_year,

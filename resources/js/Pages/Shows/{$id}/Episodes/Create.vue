@@ -99,20 +99,20 @@
                     <div v-if="form.errors.description" v-text="form.errors.description" class="text-xs text-red-600 mt-1"></div>
                 </div>
 
-                <div class="mb-6">
-                    <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"
-                           for="youtube_url"
-                    >
-                        YouTube URL
-                    </label>
-                    <input v-model="form.youtube_url"
-                           class="bg-gray-50 border border-gray-400 text-gray-900 text-sm p-2 w-full rounded-lg focus:ring-blue-500 focus:border-blue-500"
-                           type="text"
-                           name="youtube_url"
-                           id="youtube_url"
-                    >
-                    <div v-if="form.errors.youtube_url" v-text="form.errors.youtube_url" class="text-xs text-red-600 mt-1"></div>
-                </div>
+<!--                <div class="mb-6">-->
+<!--                    <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"-->
+<!--                           for="youtube_url"-->
+<!--                    >-->
+<!--                        YouTube URL-->
+<!--                    </label>-->
+<!--                    <input v-model="form.youtube_url"-->
+<!--                           class="bg-gray-50 border border-gray-400 text-gray-900 text-sm p-2 w-full rounded-lg focus:ring-blue-500 focus:border-blue-500"-->
+<!--                           type="text"-->
+<!--                           name="youtube_url"-->
+<!--                           id="youtube_url"-->
+<!--                    >-->
+<!--                    <div v-if="form.errors.youtube_url" v-text="form.errors.youtube_url" class="text-xs text-red-600 mt-1"></div>-->
+<!--                </div>-->
 
                 <div class="mb-6">
                     <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"
