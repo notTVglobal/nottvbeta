@@ -4,7 +4,7 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div id="topDiv" class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 
-            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
             <AdminHeader>Teams</AdminHeader>
 
@@ -143,11 +143,16 @@ import AdminHeader from "@/Components/Admin/AdminHeader.vue";
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 
-videoPlayerStore.currentPage = 'admin'
+let props = defineProps({
+    teams: Object,
+    filters: Object,
+    can: Object,
+});
 
-// onBeforeMount(() => {
-//     userStore.scrollToTopCounter = 0;
-// })
+let search = ref(props.filters.search);
+
+videoPlayerStore.currentPage = 'admin'
+userStore.showFlashMessage = true;
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
@@ -156,20 +161,7 @@ onMounted(() => {
         videoPlayerStore.ott = 0
     }
     document.getElementById("topDiv").scrollIntoView()
-    // if (userStore.scrollToTopCounter === 0 ) {
-    //
-    //     userStore.scrollToTopCounter ++;
-    // }
 });
-
-let props = defineProps({
-    teams: Object,
-    filters: Object,
-    can: Object,
-    message: String,
-});
-
-let search = ref(props.filters.search);
 
 watch(search, throttle(function (value) {
     Inertia.get('/admin/teams', { search: value }, {
@@ -177,8 +169,6 @@ watch(search, throttle(function (value) {
         replace: true
     });
 }, 300));
-
-let showMessage = ref(true);
 
 
 </script>

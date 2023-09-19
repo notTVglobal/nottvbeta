@@ -5,7 +5,7 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div id="topDiv" class="bg-white text-black p-5 mb-10">
 
-            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
             <div class="flex justify-between mb-6">
                 <h1 class="text-2xl pb-3">{{props.creator.name}}</h1>
@@ -31,11 +31,12 @@ let videoPlayerStore = useVideoPlayerStore()
 let streamStore = useStreamStore()
 let userStore = useUserStore()
 
-videoPlayerStore.currentPage = 'creators'
+let props = defineProps({
+    creator: Object,
+});
 
-// onBeforeMount(() => {
-//     userStore.scrollToTopCounter = 0;
-// })
+videoPlayerStore.currentPage = 'creators'
+userStore.showFlashMessage = true;
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
@@ -44,17 +45,6 @@ onMounted(() => {
         videoPlayerStore.ott = 0
     }
     document.getElementById("topDiv").scrollIntoView()
-    // if (userStore.scrollToTopCounter === 0 ) {
-    //
-    //     userStore.scrollToTopCounter ++;
-    // }
 });
-
-let props = defineProps({
-    creator: Object,
-    message: String,
-});
-
-let showMessage = ref(true);
 
 </script>

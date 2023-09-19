@@ -5,7 +5,7 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div id="topDiv" class="bg-white text-gray-800 dark:bg-gray-800 dark:text-white p-5 mb-10">
 
-            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
             <div class="bg-black text-red-600 font-bold text-xl p-4 mb-4 w-full text-center">
                 This page needs updating.. attach a video that is already uploaded or upload a new video for this episode.<br>
@@ -133,7 +133,7 @@
 <script setup>
 import { onBeforeMount, onMounted, ref } from "vue"
 import { Inertia } from "@inertiajs/inertia"
-import { useForm } from "@inertiajs/inertia-vue3"
+import {useForm, usePage} from "@inertiajs/inertia-vue3"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useTeamStore } from "@/Stores/TeamStore.js"
 import { useShowStore } from "@/Stores/ShowStore.js"
@@ -154,13 +154,10 @@ let showStore = useShowStore()
 let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'episodes'
+userStore.showFlashMessage = true;
 teamStore.setActiveTeam(props.team);
 teamStore.setActiveShow(props.show);
 showStore.episodePoster = props.poster;
-
-// onBeforeMount(() => {
-//     userStore.scrollToTopCounter = 0;
-// })
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
@@ -169,10 +166,6 @@ onMounted(() => {
         videoPlayerStore.ott = 0
     }
     document.getElementById("topDiv").scrollIntoView()
-    // if (userStore.scrollToTopCounter === 0 ) {
-    //
-    //     userStore.scrollToTopCounter ++;
-    // }
 });
 
 let props = defineProps({
@@ -180,7 +173,6 @@ let props = defineProps({
     show: Object,
     team: Object,
     poster: String,
-    message: String,
 });
 
 let form = useForm({
@@ -236,10 +228,12 @@ let submit = () => {
     form.put(route('showEpisodes.update', props.episode.slug));
 };
 
-let showMessage = ref(true);
 
 function back() {
-    window.history.back()
+    let urlPrev = usePage().props.value.urlPrev
+    if (urlPrev !== 'empty') {
+        Inertia.visit(urlPrev)
+    }
 }
 
 </script>

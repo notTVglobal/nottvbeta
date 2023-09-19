@@ -4,9 +4,7 @@
     <div class="place-self-center flex flex-col gap-y-3 w-full overscroll-x-none pb-8">
         <div id="topDiv" class="flex justify-between p-5 mb-5">
 
-
-
-            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
             <div class="text-3xl font-semibold pt-4">Live Schedule</div>
 
@@ -365,10 +363,7 @@ let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'schedule';
-
-// onBeforeMount(() => {
-//     userStore.scrollToTopCounter = 0;
-// })
+userStore.showFlashMessage = true;
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
@@ -386,12 +381,10 @@ onMounted(() => {
 
 let props = defineProps({
     can: Object,
-    message: String,
 })
 
 // chat.class = "chatSmall"
 
-let showMessage = ref(true);
 
 </script>
 

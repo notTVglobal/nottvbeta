@@ -4,7 +4,7 @@
         <div class="place-self-center flex flex-col gap-y-3">
             <div id="topDiv" class="bg-white text-black p-5 mb-10">
 
-                <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+                <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
                 <div id="topDiv"></div>
                 <header class="flex justify-between mb-3 border-b border-gray-800 pb-6">
@@ -86,12 +86,7 @@ let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'videoUpload'
-
-// let uploadPercentage = ref(0);
-
-// onBeforeMount(() => {
-//     userStore.scrollToTopCounter = 0;
-// })
+userStore.showFlashMessage = true;
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
@@ -100,10 +95,6 @@ onMounted(() => {
         videoPlayerStore.ott = 0
     }
     document.getElementById("topDiv").scrollIntoView()
-    // if (userStore.scrollToTopCounter === 0) {
-    //
-    //     userStore.scrollToTopCounter++;
-    // }
 });
 
 // see options for Dropzone here: https://github.com/dropzone/dropzone/blob/main/src/options.js
@@ -153,7 +144,6 @@ let props = defineProps({
     allVideos: Object,
     myTotalStorageUsed: String,
     notTvTotalStorageUsed: String,
-    message: String,
     errors: ref(''),
     isHidden: ref(false),
     // done: ref(),
@@ -172,7 +162,6 @@ watch(search, throttle(function (value) {
 // let form = useForm({
 //     file: [],
 // });
-let showMessage = ref(true);
 
 function back() {
     window.history.back()

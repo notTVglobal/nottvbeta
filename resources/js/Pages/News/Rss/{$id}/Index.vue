@@ -50,12 +50,20 @@ import {formatDate} from "@vueuse/shared"
 import Message from "@/Components/Modals/Messages.vue"
 import dayjs from "dayjs"
 import NewsHeader from "@/Components/News/NewsHeader.vue";
+import {Inertia} from "@inertiajs/inertia";
+import {usePage} from "@inertiajs/inertia-vue3";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 let newsStore = useNewsStore()
 
+let props = defineProps({
+    feed: Object,
+    can: Object,
+})
+
 videoPlayerStore.currentPage = 'newsRssIndex'
+userStore.showFlashMessage = true;
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
@@ -66,19 +74,16 @@ onMounted(() => {
     document.getElementById("topDiv").scrollIntoView()
 });
 
-let props = defineProps({
-    feed: Object,
-    can: Object,
-})
-
 function newFormatDate(dateString) {
     const date = dayjs(dateString)
     return date.format('dddd MMMM D, YYYY')
 }
 
 function back() {
-    window.history.back()
+    let urlPrev = usePage().props.value.urlPrev
+    if (urlPrev !== 'empty') {
+        Inertia.visit(urlPrev)
+    }
 }
-
 
 </script>

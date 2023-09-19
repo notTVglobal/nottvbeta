@@ -5,7 +5,7 @@
     <div id="topDiv" class="place-self-center flex flex-col gap-y-3">
         <div class="bg-gray-900 text-white px-5">
 
-            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
             <header class="flex justify-between mb-3 border-b border-gray-800">
                 <div class="container mx-auto flex flex-col lg:flex-row items-center justify-between px-4 py-6">
@@ -166,11 +166,20 @@ import SingleImage from "@/Components/Multimedia/SingleImage";
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 
-videoPlayerStore.currentPage = 'movies'
+let props = defineProps({
+    movies: Object,
+    recentlyReviewed: Object,
+    mostAnticipated: Object,
+    comingSoon: Object,
+    filters: Object,
+    can: Object,
+})
 
-// onBeforeMount(() => {
-//     userStore.scrollToTopCounter = 0;
-// })
+let movie = 'test-movie-2'
+let search = ref(props.filters.search);
+
+videoPlayerStore.currentPage = 'movies'
+userStore.showFlashMessage = true;
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
@@ -179,32 +188,7 @@ onMounted(() => {
         videoPlayerStore.ott = 0
     }
     document.getElementById("topDiv").scrollIntoView()
-    // if (userStore.scrollToTopCounter === 0 ) {
-    //
-    //     userStore.scrollToTopCounter ++;
-    // }
 });
-
-let movie = 'test-movie-2'
-
-let props = defineProps({
-    movies: Object,
-    recentlyReviewed: Object,
-    mostAnticipated: Object,
-    comingSoon: Object,
-    filters: Object,
-    can: Object,
-    message: String,
-})
-
-function scrollToReview() {
-    document.getElementById("review").scrollIntoView({behavior: "smooth"})
-}
-function scrollToComingSoon() {
-    document.getElementById("coming-soon").scrollIntoView({behavior: "smooth"})
-}
-
-let search = ref(props.filters.search);
 
 watch(search, throttle(function (value) {
     Inertia.get('/movies', { search: value }, {
@@ -213,7 +197,13 @@ watch(search, throttle(function (value) {
     });
 }, 300));
 
-let showMessage = ref(true);
+function scrollToReview() {
+    document.getElementById("review").scrollIntoView({behavior: "smooth"})
+}
+
+function scrollToComingSoon() {
+    document.getElementById("coming-soon").scrollIntoView({behavior: "smooth"})
+}
 
 </script>
 

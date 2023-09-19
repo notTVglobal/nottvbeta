@@ -97,7 +97,7 @@ class AddVideoUrlFromEmbedCodeJob implements ShouldQueue
                             preg_match_all($pattern, $response, $matches);
                             // start at the first "mp4" extract https: .... .mp4 and replace \ with ""
                             $firstMp4 = $matches[0][0];
-                            Log::channel('custom_error')->error('MATCHES: '.$matches[0]);
+//                            Log::channel('custom_error')->error('MATCHES: '.$matches[0]);
                             Log::channel('custom_error')->error('FIRST MP4: '.$firstMp4);
                         } elseif (str_contains($sourceUrl, 'bitchute.com')) {
                             // if bitchute ...

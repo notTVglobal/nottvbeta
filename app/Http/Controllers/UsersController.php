@@ -6,6 +6,7 @@ use App\Models\Role;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Validation\Rule;
@@ -137,7 +138,7 @@ class UsersController extends Controller
         }
 
         // redirect
-        return redirect('/users')->with('message', 'User Created Successfully');
+        return redirect('/users')->with('success', 'User Created Successfully');
     }
 
     /**
@@ -188,7 +189,7 @@ class UsersController extends Controller
      *
      * @param Request $request
      * @param User $user
-     * @return Response
+     * @return RedirectResponse
      */
 
     // NOTE: This is how the Admin updates the user details.
@@ -243,7 +244,18 @@ class UsersController extends Controller
             return $role->role;
         }
 
-        return Inertia::render('Users/{$id}/Index', [
+//        return Inertia::render('Users/{$id}/Index', [
+//            'userSelected' => $user,
+//            'role' => role($user->role_id),
+//            'teams' => $user->teams,
+//            'can' => [
+//                'viewAnyUser' => Auth::user()->can('viewAny', User::class),
+//                'createUser' => Auth::user()->can('create', User::class),
+//                'editUser' => Auth::user()->can('edit', User::class)
+//            ]
+//        ])->with('message', 'User Updated Successfully');
+
+        return Redirect::route('users.index', [
             'userSelected' => $user,
             'role' => role($user->role_id),
             'teams' => $user->teams,

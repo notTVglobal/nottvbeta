@@ -5,7 +5,7 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div id="topDiv" class="bg-white text-black dark:bg-gray-800 p-5 mb-10">
 
-            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
             <TeamEditHeader :team="props.team" :teamLeaderName="props.teamLeaderName" />
 
@@ -196,12 +196,9 @@ let teamStore = useTeamStore()
 let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'teams'
+userStore.showFlashMessage = true;
 teamStore.setActiveTeam(props.team);
 teamStore.logoName = props.image.name;
-
-// onBeforeMount(() => {
-//     userStore.scrollToTopCounter = 0;
-// })
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
@@ -210,10 +207,6 @@ onMounted(() => {
         videoPlayerStore.ott = 0
     }
     document.getElementById("topDiv").scrollIntoView()
-    // if (userStore.scrollToTopCounter === 0 ) {
-    //
-    //     userStore.scrollToTopCounter ++;
-    // }
 });
 
 let props = defineProps({
@@ -221,7 +214,6 @@ let props = defineProps({
     team: Object,
     teamLeaderName: String,
     image: Object,
-    message: String,
 });
 
 let form = useForm({
@@ -240,8 +232,6 @@ let reloadImage = () => {
 let submit = () => {
     form.put(route('teams.update', props.team.slug));
 };
-
-let showMessage = ref(true);
 
 </script>
 

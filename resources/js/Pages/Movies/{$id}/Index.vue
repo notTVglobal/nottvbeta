@@ -5,7 +5,7 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div id="topDiv" class="bg-gray-900 text-white px-5">
 
-            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
             <header v-if="props.can.editMovie" class="flex justify-end mt-6 mr-4 pb-3 border-b border-gray-800">
                 <Link
@@ -250,11 +250,42 @@ let teamStore = useTeamStore()
 let showStore = useShowStore()
 let userStore = useUserStore()
 
-videoPlayerStore.currentPage = 'movies'
+let props = defineProps({
+    movie: Object,
+    video: Object,
+    trailer: Object,
+    creators: Object,
+    can: Object,
+    // filters: Object,
+});
 
-// onBeforeMount(() => {
-//     userStore.scrollToTopCounter = 0;
-// })
+let thisYear = new Date().getFullYear()
+
+let playTrailer = () => {
+    //
+}
+
+let playMovie = () => {
+    // if file exists and is !processing, play file.
+    if (props.video.file_name !== '' && props.video.upload_status !== 'processing') {
+        videoPlayerStore.loadNewSourceFromFile(props.video)
+        videoPlayerStore.videoName = props.movie.name+' (file)'
+        videoPlayerStore.currentChannelName = 'On Demand ('+props.movie.name+') from file'
+        Inertia.visit('/stream')
+    } else
+    if
+        // else if url exists, play url
+    (props.movie.file_url) {
+        videoPlayerStore.loadNewSourceFromUrl(props.movie.file_url)
+        videoPlayerStore.videoName = props.movie.name+' (web)'
+        videoPlayerStore.currentChannelName = 'On Demand ('+props.movie.name+') from web'
+        Inertia.visit('/stream')
+    }
+
+}
+
+videoPlayerStore.currentPage = 'movies'
+userStore.showFlashMessage = true;
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
@@ -263,25 +294,8 @@ onMounted(() => {
         videoPlayerStore.ott = 0
     }
     document.getElementById("topDiv").scrollIntoView()
-    // if (userStore.scrollToTopCounter === 0 ) {
-    //
-    //     userStore.scrollToTopCounter ++;
-    // }
 });
 
-let props = defineProps({
-    movie: Object,
-    video: Object,
-    trailer: Object,
-    creators: Object,
-    message: String,
-    can: Object,
-    // filters: Object,
-});
-
-let playTrailer = () => {
-    //
-}
 
 function checkForVideo() {
     if (props.video.file_name) {
@@ -299,26 +313,6 @@ function checkForVideo() {
 
 checkForVideo()
 
-let playMovie = () => {
-    // if file exists and is !processing, play file.
-    if (props.video.file_name !== '' && props.video.upload_status !== 'processing') {
-        videoPlayerStore.loadNewSourceFromFile(props.video)
-        videoPlayerStore.videoName = props.movie.name+' (file)'
-        videoPlayerStore.currentChannelName = 'On Demand ('+props.movie.name+') from file'
-        Inertia.visit('/stream')
-    } else
-        if
-    // else if url exists, play url
-      (props.movie.file_url) {
-        videoPlayerStore.loadNewSourceFromUrl(props.movie.file_url)
-        videoPlayerStore.videoName = props.movie.name+' (web)'
-        videoPlayerStore.currentChannelName = 'On Demand ('+props.movie.name+') from web'
-        Inertia.visit('/stream')
-    }
 
-}
-
-let thisYear = new Date().getFullYear()
-let showMessage = ref(true);
 
 </script>

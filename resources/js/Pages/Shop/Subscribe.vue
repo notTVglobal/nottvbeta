@@ -4,7 +4,8 @@
 
     <div class="w-full lace-self-center flex flex-col gap-y-3 bg-orange-400">
         <div id="topDiv" class="w-full bg-gray-800 text-gray-50 dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
-<!--            <Message v-if="showMyMessage" @close="showMessage = false" :message="props.message"/>-->
+
+            <!--            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>-->
 
             <header class="flex justify-between pt-4">
                 <h1 class="text-3xl font-semibold pb-3">Subscription</h1>
@@ -90,10 +91,10 @@ let userStore = useUserStore()
 let shopStore = useShopStore()
 
 videoPlayerStore.currentPage = 'subscribe'
+userStore.showFlashMessage = true;
 
 let props = defineProps({
     user: Object,
-    message: String,
     error: String,
     intent: Object,
     elements: {}

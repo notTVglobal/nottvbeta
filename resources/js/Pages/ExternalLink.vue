@@ -5,7 +5,7 @@
     <div class="place-self-center flex flex-col gap-y-3 w-full h-full">
         <div id="topDiv" class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10 w-full h-full">
 
-            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
             <header class="flex justify-between mb-3">
                 <div id="topDiv">
@@ -40,11 +40,12 @@ let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 let shopStore = useShopStore()
 
-videoPlayerStore.currentPage = 'ExternalLink'
+let props = defineProps({
+    can: Object,
+})
 
-// onBeforeMount(() => {
-//     userStore.scrollToTopCounter = 0;
-// })
+videoPlayerStore.currentPage = 'ExternalLink'
+userStore.showFlashMessage = true;
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
@@ -53,27 +54,11 @@ onMounted(() => {
         videoPlayerStore.ott = 0
     }
     document.getElementById("topDiv").scrollIntoView()
-
     shopStore.getProducts()
-
 });
-
 
 function getPathFromUrl(url) {
     return url.split("?url=")[1];
 }
 
-
-let props = defineProps({
-    can: Object,
-    message: String,
-})
-
-let showMessage = ref(true);
-
 </script>
-
-<script>
-
-</script>
-

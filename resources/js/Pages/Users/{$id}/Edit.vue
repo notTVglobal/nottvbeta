@@ -4,7 +4,7 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div id="topDiv" class="light:bg-white light:text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 
-            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
             <div class="flex justify-between mb-6">
 
@@ -228,7 +228,7 @@
 
 <script setup>
 import { onBeforeMount, onMounted, ref } from "vue";
-import { useForm } from "@inertiajs/inertia-vue3"
+import {useForm, usePage} from "@inertiajs/inertia-vue3"
 import { Inertia } from "@inertiajs/inertia";
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useUserStore } from "@/Stores/UserStore";
@@ -239,10 +239,7 @@ let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'users'
-
-// onBeforeMount(() => {
-//     userStore.scrollToTopCounter = 0;
-// })
+userStore.showFlashMessage = true;
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
@@ -251,10 +248,6 @@ onMounted(() => {
         videoPlayerStore.ott = 0
     }
     document.getElementById("topDiv").scrollIntoView()
-    // if (userStore.scrollToTopCounter === 0 ) {
-    //
-    //     userStore.scrollToTopCounter ++;
-    // }
 });
 
 let props = defineProps({
@@ -263,7 +256,6 @@ let props = defineProps({
     isVip: Boolean,
     isSubscriber: Boolean,
     subscriptionStatus: '',
-    message: String,
 });
 
 let form = useForm({
@@ -319,10 +311,11 @@ function removeUserFromVip() {
     }
 }
 
-let showMessage = ref(true);
-
 function back() {
-    window.history.back()
+    let urlPrev = usePage().props.value.urlPrev
+    if (urlPrev !== 'empty') {
+        Inertia.visit(urlPrev)
+    }
 }
 
 </script>

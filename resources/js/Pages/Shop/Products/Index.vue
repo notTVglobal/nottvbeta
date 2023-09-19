@@ -5,7 +5,7 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div id="topDiv" class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 
-            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
             <header class="flex justify-between mb-3">
                 <div id="topDiv">
@@ -81,10 +81,7 @@ let userStore = useUserStore()
 let shopStore = useShopStore()
 
 videoPlayerStore.currentPage = 'shop'
-
-// onBeforeMount(() => {
-//     userStore.scrollToTopCounter = 0;
-// })
+userStore.showFlashMessage = true;
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
@@ -100,16 +97,12 @@ onMounted(() => {
 let props = defineProps({
     product: Object,
     can: Object,
-    message: String,
 })
 
 function formatCurrency(price) {
     price = (price / 100)
     return price.toLocaleString('en-CA', {style: 'currency', currency: 'CAD'})
 }
-
-
-let showMessage = ref(true);
 
 </script>
 

@@ -49,7 +49,7 @@ class NewsPersonController extends Controller
         ]);
 
 //        return redirect()->route('newsroom')->with('message', $request->name . ' has successfully been added to the Newsroom.');
-        return to_route('users.index')->with('message', $request->name . ' has successfully been added to the Newsroom.');
+        return to_route('users.index')->with('success', $request->name . ' has successfully been added to the Newsroom.');
 
     }
 
@@ -110,7 +110,7 @@ class NewsPersonController extends Controller
 
         $user = User::where('id', $request->id);
 
-        return to_route('users.index')->with('message', 'User Removed From News Team Successfully');
+        return to_route('users.index')->with('warning', 'User Removed From News Team Successfully');
 
 
     }

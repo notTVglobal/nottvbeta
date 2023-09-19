@@ -4,7 +4,7 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div id="topDiv" class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 
-            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
             <AdminHeader>Users</AdminHeader>
 
@@ -136,11 +136,20 @@ import AdminHeader from "@/Components/Admin/AdminHeader.vue";
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 
-videoPlayerStore.currentPage = 'users'
+let props = defineProps({
+    users: Object,
+    filters: Object,
+    can: Object,
+});
 
-// onBeforeMount(() => {
-//     userStore.scrollToTopCounter = 0;
-// })
+let search = ref(props.filters.search);
+
+const form = useForm({
+    userId: '',
+})
+
+videoPlayerStore.currentPage = 'users'
+userStore.showFlashMessage = true;
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight()
@@ -149,26 +158,7 @@ onMounted(() => {
         videoPlayerStore.ott = 0
     }
     document.getElementById("topDiv").scrollIntoView()
-    // if (userStore.scrollToTopCounter === 0 ) {
-    //
-    //     userStore.scrollToTopCounter ++;
-    // }
 });
-
-let props = defineProps({
-    users: Object,
-    filters: Object,
-    can: Object,
-    message: String
-});
-
-console.log(props.message)
-
-const form = useForm({
-    userId: '',
-})
-
-let search = ref(props.filters.search);
 
 watch(search, throttle(function (value) {
     Inertia.get('/users', { search: value }, {
@@ -183,7 +173,5 @@ function deleteUser($user) {
         Inertia.post('/admin/user/delete', {'userId': $user.id});
     }
 }
-
-let showMessage = ref(true);
 
 </script>

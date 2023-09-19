@@ -5,7 +5,7 @@
     <div id="topDiv" class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white dark:bg-gray-800 text-black dark:text-gray-50 p-5 mb-10">
 
-            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
             <NewsHeader>News</NewsHeader>
 
@@ -51,12 +51,20 @@ import {formatDate} from "@vueuse/shared"
 import Message from "@/Components/Modals/Messages.vue"
 import dayjs from "dayjs"
 import NewsHeader from "@/Components/News/NewsHeader.vue";
+import {Inertia} from "@inertiajs/inertia";
+import {usePage} from "@inertiajs/inertia-vue3";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 let newsStore = useNewsStore()
 
+let props = defineProps({
+    feed: Object,
+    can: Object,
+})
+
 videoPlayerStore.currentPage = 'newsRssIndex'
+userStore.showFlashMessage = true;
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
@@ -67,19 +75,16 @@ onMounted(() => {
     document.getElementById("topDiv").scrollIntoView()
 });
 
-let props = defineProps({
-    feed: Object,
-    can: Object,
-    message: String,
-})
-
 function newFormatDate(dateString) {
     const date = dayjs(dateString)
     return date.format('dddd MMMM D, YYYY')
 }
 
 function back() {
-    window.history.back()
+    let urlPrev = usePage().props.value.urlPrev
+    if (urlPrev !== 'empty') {
+        Inertia.visit(urlPrev)
+    }
 }
 
 

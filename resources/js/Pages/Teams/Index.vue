@@ -4,7 +4,7 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div id="topDiv" class="light:bg-white light:text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 
-            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
             <div v-if="props.can.viewCreator" class="flex justify-end flex-wrap-reverse gap-x-2">
 
@@ -149,10 +149,7 @@ let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'teams'
-
-// onBeforeMount(() => {
-//     userStore.scrollToTopCounter = 0;
-// })
+userStore.showFlashMessage = true;
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
@@ -161,17 +158,12 @@ onMounted(() => {
         videoPlayerStore.ott = 0
     }
     document.getElementById("topDiv").scrollIntoView()
-    // if (userStore.scrollToTopCounter === 0 ) {
-    //
-    //     userStore.scrollToTopCounter ++;
-    // }
 });
 
 let props = defineProps({
     teams: Object,
     filters: Object,
     can: Object,
-    message: String,
 });
 
 let search = ref(props.filters.search);
@@ -182,8 +174,6 @@ watch(search, throttle(function (value) {
         replace: true
     });
 }, 300));
-
-let showMessage = ref(true);
 
 </script>
 

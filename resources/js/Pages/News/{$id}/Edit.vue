@@ -5,7 +5,7 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div id="topDiv" class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 
-            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
             <div class="flex flex-row justify-between">
                 <h2 class="text-xl font-semibold leading-tight">
@@ -102,7 +102,7 @@
 
 <script setup>
 import { onBeforeMount, onMounted, ref } from "vue";
-import { useForm } from '@inertiajs/inertia-vue3'
+import {useForm, usePage} from '@inertiajs/inertia-vue3'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useUserStore } from "@/Stores/UserStore";
 import { useNewsStore } from "@/Stores/NewsStore"
@@ -110,38 +110,16 @@ import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
 // import TabbableTextarea from "@/Components/TabbableTextarea.vue";
 import Tiptap from "@/Components/TextEditor/TiptapNewsPostEdit.vue";
 import Message from "@/Components/Modals/Messages";
+import {Inertia} from "@inertiajs/inertia";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 let newsStore = useNewsStore()
 
-videoPlayerStore.currentPage = 'newsEdit'
-
-// onBeforeMount(() => {
-//     userStore.scrollToTopCounter = 0;
-// })
-
-onMounted(() => {
-    videoPlayerStore.makeVideoTopRight();
-    if (userStore.isMobile) {
-        videoPlayerStore.ottClass = 'ottClose'
-        videoPlayerStore.ott = 0
-    }
-    document.getElementById("topDiv").scrollIntoView()
-    // if (userStore.scrollToTopCounter === 0 ) {
-    //
-    //     userStore.scrollToTopCounter ++;
-    // }
-});
-
 const props = defineProps({
     news: Object,
     can: Object,
 });
-
-newsStore.newsArticleIdTiptop = props.news.id;
-newsStore.newsArticleTitleTiptop = props.news.title;
-newsStore.newsArticleContentTiptop = props.news.content;
 
 // note: as of March 2023 the form submission cannot use "content" as
 // a form field name. It conflicts with the HTMLRequest content item.
@@ -155,19 +133,36 @@ const form = useForm({
     // content: newsStore.newsArticleContentTiptop,
 });
 
-form.body = newsStore.newsArticleContentTiptop;
-// form.content = newsStore.newsArticleContentTiptop;
-
 const submit = () => {
     form.body = newsStore.newsArticleContentTiptop;
     form.put(route("news.update", props.news.id));
 };
 
-let showMessage = ref(true);
+
+videoPlayerStore.currentPage = 'newsEdit'
+userStore.showFlashMessage = true;
+
+newsStore.newsArticleIdTiptop = props.news.id;
+newsStore.newsArticleTitleTiptop = props.news.title;
+newsStore.newsArticleContentTiptop = props.news.content;
+form.body = newsStore.newsArticleContentTiptop;
+// form.content = newsStore.newsArticleContentTiptop;
+
+onMounted(() => {
+    videoPlayerStore.makeVideoTopRight();
+    if (userStore.isMobile) {
+        videoPlayerStore.ottClass = 'ottClose'
+        videoPlayerStore.ott = 0
+    }
+    document.getElementById("topDiv").scrollIntoView()
+});
 
 function back() {
     newsStore.newsArticleContentTiptop = '';
-    window.history.back()
+    let urlPrev = usePage().props.value.urlPrev
+    if (urlPrev !== 'empty') {
+        Inertia.visit(urlPrev)
+    }
 }
 
 </script>

@@ -10,7 +10,7 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div id="topDiv" class="bg-white dark:bg-gray-800 text-black dark:text-gray-50 p-5 mb-10">
 
-            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
             <header class="flex justify-between mb-3 border-b border-gray-500">
                 <div class="container mx-auto flex flex-col lg:flex-row items-center justify-between px-4 py-6">
@@ -130,36 +130,10 @@ import NewsHeader from "@/Components/News/NewsHeader.vue";
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 
-videoPlayerStore.currentPage = 'newsRssFeeds'
-
-
-
-function scrollToCities() {
-    document.getElementById("cities").scrollIntoView({behavior: "smooth"})
-}
-
-// onBeforeMount(() => {
-//     userStore.scrollToTopCounter = 0;
-// })
-
-onMounted(() => {
-    videoPlayerStore.makeVideoTopRight();
-    if (userStore.isMobile) {
-        videoPlayerStore.ottClass = 'ottClose'
-        videoPlayerStore.ott = 0
-    }
-    document.getElementById("topDiv").scrollIntoView()
-    // if (userStore.scrollToTopCounter === 0 ) {
-
-    //     userStore.scrollToTopCounter ++;
-    // }
-});
-
 let props = defineProps({
     filters: Object,
     can: Object,
     feeds: Object,
-    message: String,
 });
 
 let form = useForm({
@@ -168,6 +142,18 @@ let form = useForm({
 
 let search = ref(props.filters.search);
 
+videoPlayerStore.currentPage = 'newsRssFeeds'
+userStore.showFlashMessage = true;
+
+onMounted(() => {
+    videoPlayerStore.makeVideoTopRight();
+    if (userStore.isMobile) {
+        videoPlayerStore.ottClass = 'ottClose'
+        videoPlayerStore.ott = 0
+    }
+    document.getElementById("topDiv").scrollIntoView()
+});
+
 watch(search, throttle(function (value) {
     Inertia.get('/news/feeds', { search: value }, {
         preserveState: true,
@@ -175,13 +161,16 @@ watch(search, throttle(function (value) {
     });
 }, 300));
 
+
+function scrollToCities() {
+    document.getElementById("cities").scrollIntoView({behavior: "smooth"})
+}
+
 function destroy(id) {
     if (confirm("Are you sure you want to Delete")) {
         form.delete(route('feeds.destroy', id));
 
     }
 }
-
-let showMessage = ref(true);
 
 </script>

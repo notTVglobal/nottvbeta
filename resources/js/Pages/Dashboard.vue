@@ -4,7 +4,7 @@
     <div class="place-self-center flex flex-col gap-y-3 bg-blue-500 w-full">
         <div id="topDiv" class="bg-white rounded text-black dark:text-white dark:bg-gray-900 p-5 mb-10">
 
-            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
             <div class="flex justify-between mb-3 pt-4">
 
@@ -357,6 +357,8 @@ let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'dashboard'
+videoPlayerStore.loggedIn = true
+userStore.showFlashMessage = true;
 
 onBeforeMount(() => {
     updateUserStore()
@@ -369,13 +371,9 @@ onMounted(() => {
         videoPlayerStore.ott = 0
     }
     document.getElementById("topDiv").scrollIntoView()
-    // if (userStore.scrollToTopCounter === 0 ) {
-    //
-    //     userStore.scrollToTopCounter ++;
-    // }
 });
 
-videoPlayerStore.loggedIn = true
+
 
 // isCreator, isNewsPerson, isVip, isSubscriber
 // need to go in the UserStore. Inertia won't
@@ -401,10 +399,7 @@ let props = defineProps({
     myTotalStorageUsed: String,
     notTvTotalStorageUsed: String,
     can: Object,
-    message: String
 });
-
-let showMessage = ref(true);
 
 function updateUserStore() {
     userStore.isAdmin = props.isAdmin

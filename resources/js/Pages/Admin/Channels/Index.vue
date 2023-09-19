@@ -4,7 +4,7 @@
     <div class="place-self-center flex flex-col">
         <div id="topDiv" class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 
-            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
             <AdminHeader>Channels</AdminHeader>
 
@@ -105,11 +105,12 @@ import AdminHeader from "@/Components/Admin/AdminHeader.vue";
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 
-videoPlayerStore.currentPage = 'admin'
+let props = defineProps({
+    channels: Object,
+})
 
-// onBeforeMount(() => {
-//     userStore.scrollToTopCounter = 0;
-// })
+videoPlayerStore.currentPage = 'admin'
+userStore.showFlashMessage = true;
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
@@ -118,18 +119,7 @@ onMounted(() => {
         videoPlayerStore.ott = 0
     }
     document.getElementById("topDiv").scrollIntoView()
-    // if (userStore.scrollToTopCounter === 0 ) {
-    //
-    //     userStore.scrollToTopCounter ++;
-    // }
 });
-
-let props = defineProps({
-    channels: Object,
-    message: String,
-})
-
-let showMessage = ref(true);
 
 function hasChannelSource (channel) {
     if (channel.channel_source !== null) {

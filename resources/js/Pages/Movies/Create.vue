@@ -4,7 +4,7 @@
 
     <header id="topDiv" class="">
 
-        <Message v-if="message" @close="showMessage = false"/>
+        <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
         <div class="flex justify-between p-4 m-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800"
              role="alert"
@@ -149,60 +149,21 @@
 
 <script setup>
 import { onMounted, onBeforeMount, ref } from "vue"
-import { useForm } from "@inertiajs/inertia-vue3"
+import {useForm, usePage} from "@inertiajs/inertia-vue3"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useTeamStore } from "@/Stores/TeamStore.js"
 import { useShowStore } from "@/Stores/ShowStore.js"
 import { useUserStore } from "@/Stores/UserStore";
 import Message from "@/Components/Modals/Messages"
 import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
+import {Inertia} from "@inertiajs/inertia";
 
 let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore()
 let showStore = useShowStore()
 let userStore = useUserStore()
 
-videoPlayerStore.currentPage = 'moviesUpload'
-
-// onBeforeMount(() => {
-//     userStore.scrollToTopCounter = 0;
-// })
-
-onMounted(() => {
-    videoPlayerStore.makeVideoTopRight();
-    if (userStore.isMobile) {
-        videoPlayerStore.ottClass = 'ottClose'
-        videoPlayerStore.ott = 0
-    }
-    document.getElementById("topDiv").scrollIntoView()
-    // if (userStore.scrollToTopCounter === 0 ) {
-    //
-    //     userStore.scrollToTopCounter ++;
-    // }
-});
-
-
-function back() {
-    window.history.back()
-}
-
-// Dropzone tutorial: https://www.youtube.com/watch?v=wWKhKPN_Pmw
-
-let dropzoneFile = ref([]);
-const active = ref(false);
-const toggleActive = () => {
-    active.value = !active.value;
-}
-const drop = (e) => {
-    dropzoneFile.value = e.dataTransfer.files[0];
-    active.value = !active.value;
-}
-const selectedFile = () => {
-    dropzoneFile.value = document.querySelector('.dropzoneFile').files[0];
-}
-
 let props = defineProps({
-    message: String,
     errors: ref(''),
     isHidden: ref(false),
     // filters: Object,
@@ -225,7 +186,48 @@ let submit = () => {
     form.post(route('movies.store', form));
 };
 
-let showMessage = ref(true);
+let dropzoneFile = ref([]);
+
+const active = ref(false);
+
+const toggleActive = () => {
+    active.value = !active.value;
+}
+
+const drop = (e) => {
+    dropzoneFile.value = e.dataTransfer.files[0];
+    active.value = !active.value;
+}
+
+const selectedFile = () => {
+    dropzoneFile.value = document.querySelector('.dropzoneFile').files[0];
+}
+
+videoPlayerStore.currentPage = 'moviesUpload'
+userStore.showFlashMessage = true;
+
+onMounted(() => {
+    videoPlayerStore.makeVideoTopRight();
+    if (userStore.isMobile) {
+        videoPlayerStore.ottClass = 'ottClose'
+        videoPlayerStore.ott = 0
+    }
+    document.getElementById("topDiv").scrollIntoView()
+});
+
+
+function back() {
+    let urlPrev = usePage().props.value.urlPrev
+    if (urlPrev !== 'empty') {
+        Inertia.visit(urlPrev)
+    }
+}
+
+// Dropzone tutorial: https://www.youtube.com/watch?v=wWKhKPN_Pmw
+
+
+
+
 
 </script>
 

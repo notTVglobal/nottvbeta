@@ -126,7 +126,7 @@ class ShowEpisodeController extends Controller
         return redirect()
             ->route('shows.showEpisodes.show',
                 ['show' => $showSlug, 'showEpisode' => $showEpisodeSlug])
-            ->with('message', 'Episode Created Successfully');
+            ->with('success', 'Episode Created Successfully');
 
     }
 

@@ -4,7 +4,7 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div id="topDiv" class="bg-white text-black p-5 mb-10">
 
-            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
             <AdminHeader>MistServer API</AdminHeader>
 
@@ -316,10 +316,7 @@ let userStore = useUserStore()
 
 videoPlayerStore.apiActiveStreams = null
 videoPlayerStore.mistStatus = false
-
-// onBeforeMount(() => {
-//     userStore.scrollToTopCounter = 0;
-// })
+userStore.showFlashMessage = true;
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight()
@@ -328,10 +325,6 @@ onMounted(() => {
         videoPlayerStore.ott = 0
     }
     document.getElementById("topDiv").scrollIntoView()
-    // if (userStore.scrollToTopCounter === 0 ) {
-    //
-    //     userStore.scrollToTopCounter ++;
-    // }
 });
 
 let props = defineProps({
@@ -349,6 +342,9 @@ let form = reactive({
 
 videoPlayerStore.mistUsername = 'nottvadmin';
 form.password = '20y$!PwX12S';
+
+videoPlayerStore.mistStatus = true
+videoPlayerStore.mistDisplayPushForm = false
 
 const password = ref('');
 
@@ -468,6 +464,8 @@ let browseRecordings = () => {
     getApi(request)
 }
 
+
+
 async function getApi(request) {
     videoPlayerStore.mistStatus = true
     videoPlayerStore.mistDisplayPushForm = false
@@ -505,8 +503,7 @@ async function getApiLocal(request) {
 // Create method to push a stream somewhere
 //
 
-videoPlayerStore.mistStatus = true
-videoPlayerStore.mistDisplayPushForm = false
+
 function displayPushForm() {
     getActiveStreams()
     videoPlayerStore.mistStatus = false
@@ -607,9 +604,6 @@ function addStream() {
 //     console.log('sent to backend');
 //     Inertia.post(route('mistApi', {challenge: videoPlayer.challenge, status: videoPlayer.status}));
 // }
-
-
-let showMessage = ref(true);
 
 </script>
 

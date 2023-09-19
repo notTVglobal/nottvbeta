@@ -220,7 +220,7 @@ class ShowsController extends Controller
         // the user to the new show page.
 
         $show = Show::query()->where('name', $request->name)->firstOrFail();
-        return redirect()->route('shows.manage', $show)->with('message', 'Show Created Successfully');
+        return redirect()->route('shows.manage', $show)->with('success', 'Show Created Successfully');
 //        return Inertia::render('Shows/{$id}/Manage', $show)->with('message', 'Show Created Successfully');
 
         // Use this route to return the
@@ -553,7 +553,7 @@ class ShowsController extends Controller
         // how to simplify this *frustrated*.
 
         // redirect
-        return redirect(route('shows.manage', [$show->slug]))->with('message', 'Show Updated Successfully');
+        return redirect(route('shows.manage', [$show->slug]))->with('success', 'Show Updated Successfully');
 
 //        return Inertia::render('Shows/{$id}/Manage', [
 //            // responses need to be limited to only

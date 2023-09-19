@@ -5,7 +5,7 @@
     <div class="flex flex-col gap-y-3">
         <div id="topDiv" class="light:bg-white dark:bg-gray-800 light:text-black dark:text-gray-50 p-5 mb-10">
 
-            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
             <div class="flex justify-end mb-3 gap-2">
                 <Link v-if="$page.props.user.isAdmin === 1" :href="`/users`"><button
@@ -100,10 +100,7 @@ let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'users'
-
-// onBeforeMount(() => {
-//     userStore.scrollToTopCounter = 0;
-// })
+userStore.showFlashMessage = true;
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
@@ -112,19 +109,12 @@ onMounted(() => {
         videoPlayerStore.ott = 0
     }
     document.getElementById("topDiv").scrollIntoView()
-    // if (userStore.scrollToTopCounter === 0 ) {
-    //
-    //     userStore.scrollToTopCounter ++;
-    // }
 });
 
 let props = defineProps({
     userSelected: Object,
     role: String,
     teams: Object,
-    message: String,
 });
-
-let showMessage = ref(true);
 
 </script>

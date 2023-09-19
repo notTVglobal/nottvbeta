@@ -5,15 +5,7 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div id="topDiv" class="bg-white text-black dark:bg-gray-900 dark:text-gray-50 p-5 mb-10">
 
-            <div
-                class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
-                role="alert"
-                v-if="props.message"
-            >
-                                                <span class="font-medium">
-                                                    {{props.message}}
-                                                </span>
-            </div>
+            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
             <header class="flex justify-between mb-3 border-b border-gray-800">
                 <div class="container mx-auto flex flex-col lg:flex-row items-center justify-between">
@@ -173,14 +165,11 @@ let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'newsroom'
+userStore.showFlashMessage = true;
 
 function scrollToCities() {
     document.getElementById("cities").scrollIntoView({behavior: "smooth"})
 }
-
-// onBeforeMount(() => {
-//     userStore.scrollToTopCounter = 0;
-// })
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
@@ -189,10 +178,6 @@ onMounted(() => {
         videoPlayerStore.ott = 0
     }
     document.getElementById("topDiv").scrollIntoView()
-    // if (userStore.scrollToTopCounter === 0 ) {
-    //
-    //     userStore.scrollToTopCounter ++;
-    // }
 });
 
 let props = defineProps({
@@ -202,7 +187,6 @@ let props = defineProps({
         type: Object,
         default: () => ({}),
     },
-    message: String,
 });
 
 let search = ref(props.filters.search);

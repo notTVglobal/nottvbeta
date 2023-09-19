@@ -173,7 +173,7 @@ class MovieController extends Controller
 //        $movie = Movie::query()->where('name', $request->name)->firstOrFail();
         // Use this route to return
         // the user to the new movie page.
-        return redirect()->route('movies.show', [$slug])->with('message', 'Movie Added Successfully');
+        return redirect()->route('movies.show', [$slug])->with('success', 'Movie Added Successfully');
     }
 
     /**
@@ -328,7 +328,7 @@ class MovieController extends Controller
      *
      * @param HttpRequest $request
      * @param Movie $movie
-     * @return void
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Routing\Redirector|RedirectResponse
      */
     public function update(HttpRequest $request, Movie $movie)
     {
@@ -367,7 +367,7 @@ class MovieController extends Controller
 
 
         // redirect
-        return redirect(route('movies.show', [$movie->slug]))->with('message', 'Movie Updated Successfully');
+        return redirect(route('movies.show', [$movie->slug]))->with('success', 'Movie Updated Successfully');
 
     }
 

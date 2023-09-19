@@ -5,9 +5,9 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div id="topDiv" class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 <!--            <div class="container px-12 py-24 mx-auto">-->
-                <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
-                <header class="flex justify-between mb-3">
+            <header class="flex justify-between mb-3">
                     <div id="topDiv">
                         <h1 class="text-3xl font-semibold pb-3">{{ props.product.name }}</h1>
                     </div>
@@ -67,10 +67,7 @@ let userStore = useUserStore()
 let shopStore = useShopStore()
 
 videoPlayerStore.currentPage = 'shop'
-
-// onBeforeMount(() => {
-//     userStore.scrollToTopCounter = 0;
-// })
+userStore.showFlashMessage = true;
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
@@ -86,7 +83,6 @@ onMounted(() => {
 let props = defineProps({
     product: Object,
     can: Object,
-    message: String,
 })
 
 // const { addToCart } = storeToRefs(shopStore)
@@ -95,8 +91,6 @@ function formatCurrency(price) {
     price = (price / 100)
     return price.toLocaleString('en-CA', {style: 'currency', currency: 'CAD'})
 }
-
-let showMessage = ref(true);
 
 </script>
 

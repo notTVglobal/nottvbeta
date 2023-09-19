@@ -4,7 +4,7 @@
 
     <header id="topDiv" class="md:pageWidth pageWidthSmall">
 
-        <Message v-if="showMessage" @close="showMessage = false"/>
+        <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
         <div class="flex justify-between p-4 m-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800"
              role="alert"
@@ -158,6 +158,7 @@ let showStore = useShowStore()
 let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'movies'
+userStore.showFlashMessage = true;
 
 // onBeforeMount(() => {
 //     userStore.scrollToTopCounter = 0;
@@ -177,7 +178,6 @@ onMounted(() => {
 });
 
 let props = defineProps({
-    message: ref(''),
     errors: ref(''),
     isHidden: ref(false),
     // filters: Object,
@@ -189,8 +189,6 @@ let props = defineProps({
 //     video: '',
 //     file_url: '',
 // });
-
-let showMessage = ref(true);
 
 // Dropzone tutorial: https://www.youtube.com/watch?v=wWKhKPN_Pmw
 

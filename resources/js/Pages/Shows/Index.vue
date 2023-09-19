@@ -4,7 +4,7 @@
     <div class="place-self-center flex flex-col gap-y-3 w-full overscroll-x-none">
         <div id="topDiv" class="bg-gray-900 text-white px-5">
 
-            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
             <header class="flex justify-between mb-3 border-b border-gray-800">
                 <div class="container mx-auto flex flex-col xl:flex-row items-center justify-between px-4 py-6">
@@ -171,6 +171,7 @@ let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'shows'
+userStore.showFlashMessage = true;
 
 function scrollToNewEpisodes() {
     document.getElementById("new-episodes").scrollIntoView({behavior: "smooth"})
@@ -182,10 +183,6 @@ function scrollToPopularShows() {
     document.getElementById("popular-shows").scrollIntoView({behavior: "smooth"})
 }
 
-// onBeforeMount(() => {
-//     userStore.scrollToTopCounter = 0;
-// })
-
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
     if (userStore.isMobile) {
@@ -193,10 +190,6 @@ onMounted(() => {
         videoPlayerStore.ott = 0
     }
     document.getElementById("topDiv").scrollIntoView()
-    // if (userStore.scrollToTopCounter === 0 ) {
-    //     document.getElementById("topDiv").scrollIntoView()
-    //     userStore.scrollToTopCounter ++;
-    // }
 });
 
 let props = defineProps({
@@ -206,7 +199,6 @@ let props = defineProps({
     comingSoon: Object,
     filters: Object,
     can: Object,
-    message: String,
 
 });
 
@@ -218,8 +210,6 @@ watch(search, throttle(function (value) {
         replace: true
     });
 }, 300));
-
-let showMessage = ref(true);
 
 </script>
 

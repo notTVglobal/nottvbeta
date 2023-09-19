@@ -6,7 +6,7 @@
     <div id="topDiv" class="h-[calc(100vh-16rem)] text-center bg-gray-800 text-white p-10">
 
 
-            <Message v-if="showMyMessage" @close="showMessage = false" :message="props.message"/>
+        <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
 <!--            <h1 class="text-3xl font-semibold pb-3">Become a notTV Premium Subscriber</h1>-->
 
@@ -64,6 +64,8 @@ const messages = ref([]);
 
 let stripe;
 let elements;
+
+userStore.showFlashMessage = true;
 
 onMounted(async () => {
     const { publishableKey } = await fetch("/api/config").then((res) => res.json());
@@ -125,7 +127,6 @@ onMounted(() => {
 });
 
 let props = defineProps({
-    message: String,
     intent: Object,
     card: ref(null)
 })
@@ -133,8 +134,6 @@ let props = defineProps({
 let form = useForm({
     name: '',
 });
-
-let showMyMessage = ref(true);
 
 
 </script>

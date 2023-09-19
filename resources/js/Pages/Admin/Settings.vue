@@ -5,7 +5,7 @@
     <div id="topDiv" class="place-self-center flex flex-col gap-y-3">
         <div class="w-fit lg:w-3/4 left-0 right-0 mx-auto bg-white dark:bg-gray-800 rounded text-black dark:text-gray-50 mt-6 p-5">
 
-            <Message v-if="showMessage" @close="showMessage = false" :message="props.message" :messageType="props.messageType"/>
+            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
             <header>
                 <div class="flex justify-between mb-3">
@@ -265,25 +265,6 @@ import {Inertia} from "@inertiajs/inertia";
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 
-videoPlayerStore.currentPage = 'admin'
-
-// onBeforeMount(() => {
-//     userStore.scrollToTopCounter = 0;
-// })
-
-onMounted(async () => {
-    videoPlayerStore.makeVideoTopRight();
-    if (userStore.isMobile) {
-        videoPlayerStore.ottClass = 'ottClose'
-        videoPlayerStore.ott = 0
-    }
-    document.getElementById("topDiv").scrollIntoView()
-    // if (userStore.scrollToTopCounter === 0 ) {
-    //
-    //     userStore.scrollToTopCounter ++;
-    // }
-});
-
 let props = defineProps({
     id: BigInt,
     cdn_endpoint: String,
@@ -292,7 +273,6 @@ let props = defineProps({
     first_play_video_source_type: String,
     first_play_video_name: String,
     first_play_channel_id: String,
-    message: String,
     messageType: String,
 });
 
@@ -310,7 +290,17 @@ let submit = () => {
     form.put(route('admin.settings'));
 };
 
-let showMessage = ref(true);
+videoPlayerStore.currentPage = 'admin'
+userStore.showFlashMessage = true;
+
+onMounted(async () => {
+    videoPlayerStore.makeVideoTopRight();
+    if (userStore.isMobile) {
+        videoPlayerStore.ottClass = 'ottClose'
+        videoPlayerStore.ott = 0
+    }
+    document.getElementById("topDiv").scrollIntoView()
+});
 
 function getEpisodesFromEmbedCodes() {
     Inertia.post('getVideosFromEmbedCodes')

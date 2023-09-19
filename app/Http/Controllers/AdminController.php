@@ -64,7 +64,7 @@ class AdminController extends Controller
         $settings->save();
         sleep(1);
 
-        return redirect(route('admin.settings'))->with('message', 'Settings Saved Successfully');
+        return redirect(route('admin.settings'))->with('success', 'Settings Saved Successfully');
 //
 //        $db = DB::table('app_settings')
 //            ->where('id', 1)
@@ -139,7 +139,7 @@ class AdminController extends Controller
 
 //        return $invite_code;
         // redirect
-        return redirect()->route('admin.inviteCodes')->with('message', 'Code Added Successfully');
+        return redirect()->route('admin.inviteCodes')->with('success', 'Code Added Successfully');
 
     }
 
@@ -164,7 +164,7 @@ class AdminController extends Controller
 
         fclose($handle);
 //return $codes;
-        return redirect()->route('admin.inviteCodes')->with('message', 'exported successfully.');
+        return redirect()->route('admin.inviteCodes')->with('success', 'exported successfully.');
     }
 
 
@@ -279,7 +279,7 @@ class AdminController extends Controller
         $user->delete();
 
         // redirect
-        return redirect('/users')->with('message', $user->name.' Deleted Successfully');
+        return redirect('/users')->with('warning', $user->name.' Deleted Successfully');
     }
 
 
@@ -292,10 +292,7 @@ class AdminController extends Controller
             AddVideoUrlFromEmbedCodeJob::dispatch($showEpisode)->onQueue('video_processing');
         }
 
-        return redirect('/admin/settings')->with([
-            'message' => 'Job submitted to update videos from embed codes.',
-            'messageType' => 'message'
-        ]);
+        return redirect('/admin/settings')->with('message', 'Job submitted to update videos from embed codes.',);
 
         // send notification on job completion.
     }

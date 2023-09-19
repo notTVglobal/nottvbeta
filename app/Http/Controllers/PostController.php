@@ -84,9 +84,9 @@ class PostController extends Controller
         Post::create([
            'title' => $request->title,
            'slug' => \Str::slug($request->slug),
-           'content' => $request->content,
+//           'content' => $request->content,
         ]);
-        return redirect()->route('news')->with('message', 'News Post Created Successfully');
+        return redirect()->route('news')->with('success', 'News Post Created Successfully');
 
 //        $attributes = Request::validate([
 //            'title' => 'required|string|max:255',
@@ -152,11 +152,11 @@ class PostController extends Controller
 
         $post->title = $request->title;
         $post->slug = \Str::slug($request->slug);
-        $post->content = $request->content;
+//        $post->content = $request->content;
         $post->save();
         sleep(1);
 
-        return redirect()->route('news')->with('message', 'News Post Updated Successfully');
+        return redirect()->route('news')->with('success', 'News Post Updated Successfully');
 
 //        // validate the request
 //        $attributes = Request::validate([

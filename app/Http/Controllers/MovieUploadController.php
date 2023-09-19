@@ -31,11 +31,10 @@ class MovieUploadController extends BaseController
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(HttpRequest $request)
     {
-        dd($request);
         if ($request->file_url = '') {
             $request->validate([
                 'file_url' => 'string|max:255',
@@ -88,7 +87,7 @@ class MovieUploadController extends BaseController
         }
 
         // Return the user to the new movie page.
-        return redirect()->route('movies.show', [$slug])->with('message', 'Movie Added Successfully');
+        return redirect()->route('movies.show', [$slug])->with('success', 'Movie Added Successfully');
     }
 
     /**

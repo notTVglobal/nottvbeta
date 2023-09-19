@@ -29,6 +29,7 @@ let userStore = useUserStore()
 let shopStore = useShopStore()
 
 videoPlayerStore.currentPage = 'subscriptionSuccess'
+userStore.showFlashMessage = true;
 
 let props = defineProps({
     userIsSubscriber: null

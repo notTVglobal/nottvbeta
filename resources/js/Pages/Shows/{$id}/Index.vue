@@ -6,9 +6,9 @@
     <div class="place-self-center flex flex-col">
         <div id="topDiv" class="bg-gray-900 text-white px-5">
 
-            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
-        <header v-if="props.can.editShow || props.can.manageShow" class="flex justify-end">
+            <header v-if="props.can.editShow || props.can.manageShow" class="flex justify-end">
                 <div class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4 my-10">
                     <Link
                         v-if="props.can.editShow" :href="`/shows/${props.show.slug}/edit`"><button
@@ -236,25 +236,6 @@ let showStore = useShowStore();
 let streamStore = useStreamStore();
 let userStore = useUserStore();
 
-videoPlayerStore.currentPage = 'shows'
-
-// onBeforeMount(() => {
-//     userStore.scrollToTopCounter = 0;
-// })
-
-onMounted(() => {
-    videoPlayerStore.makeVideoTopRight();
-    if (userStore.isMobile) {
-        videoPlayerStore.ottClass = 'ottClose'
-        videoPlayerStore.ott = 0
-    }
-    document.getElementById("topDiv").scrollIntoView()
-    // if (userStore.scrollToTopCounter === 0 ) {
-    //
-    //     userStore.scrollToTopCounter ++;
-    // }
-});
-
 let props = defineProps({
     show: Object,
     team: Object,
@@ -263,26 +244,6 @@ let props = defineProps({
     message: String,
     can: Object,
 });
-
-teamStore.slug = props.team.slug;
-teamStore.name = props.team.name;
-
-function checkForVideo() {
-    if (props.show.firstPlay) {
-        if (props.show.firstPlay.file_name && props.show.firstPlay.upload_status !== 'processing') {
-            videoPlayerStore.hasVideo = true;
-        } else if (props.show.firstPlay.video_url) {
-            videoPlayerStore.hasVideo = true;
-        } else if (!props.show.firstPlay.video_url && props.show.firstPlay.upload_status === 'processing') {
-            videoPlayerStore.hasVideo = false;
-        } else if (!props.show.firstPlay.file_name && !props.show.firstPlay.video_url) {
-            videoPlayerStore.hasVideo = false;
-        }
-        return true;
-    }
-}
-
-checkForVideo()
 
 let playEpisode = () => {
     // if file exists and is !processing, play file.
@@ -302,17 +263,41 @@ let playEpisode = () => {
     }
 
 }
-function scrollToTop() {
-
-}
-
-onUpdated(() => {
-
-})
-
-let showMessage = ref(true);
 
 let thisYear = new Date().getFullYear()
+
+videoPlayerStore.currentPage = 'shows'
+userStore.showFlashMessage = true;
+teamStore.slug = props.team.slug;
+teamStore.name = props.team.name;
+
+onMounted(() => {
+    videoPlayerStore.makeVideoTopRight();
+    if (userStore.isMobile) {
+        videoPlayerStore.ottClass = 'ottClose'
+        videoPlayerStore.ott = 0
+    }
+    document.getElementById("topDiv").scrollIntoView()
+});
+
+function checkForVideo() {
+    if (props.show.firstPlay) {
+        if (props.show.firstPlay.file_name && props.show.firstPlay.upload_status !== 'processing') {
+            videoPlayerStore.hasVideo = true;
+        } else if (props.show.firstPlay.video_url) {
+            videoPlayerStore.hasVideo = true;
+        } else if (!props.show.firstPlay.video_url && props.show.firstPlay.upload_status === 'processing') {
+            videoPlayerStore.hasVideo = false;
+        } else if (!props.show.firstPlay.file_name && !props.show.firstPlay.video_url) {
+            videoPlayerStore.hasVideo = false;
+        }
+        return true;
+    }
+}
+
+checkForVideo()
+
+
 
 </script>
 

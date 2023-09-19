@@ -5,7 +5,7 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div id="topDiv" class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 
-            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
             <ShowEditHeader :show="props.show" :team="props.team"/>
 
@@ -279,29 +279,6 @@ let teamStore = useTeamStore()
 let showStore = useShowStore()
 let userStore = useUserStore()
 
-videoPlayerStore.currentPage = 'shows'
-
-teamStore.setActiveTeam(props.team);
-teamStore.setActiveShow(props.show);
-
-// onBeforeMount(() => {
-//     userStore.scrollToTopCounter = 0;
-// })
-
-onMounted(() => {
-    videoPlayerStore.makeVideoTopRight();
-    if (userStore.isMobile) {
-        videoPlayerStore.ottClass = 'ottClose'
-        videoPlayerStore.ott = 0
-    }
-    document.getElementById("topDiv").scrollIntoView()
-    // if (userStore.scrollToTopCounter === 0 ) {
-    //
-    //     userStore.scrollToTopCounter ++;
-    // }
-
-});
-
 let props = defineProps({
     user: Object,
     show: Object,
@@ -328,15 +305,6 @@ let form = useForm({
 
 let showCategoryDescription = props.showCategory.Description;
 
-function chooseCategory(event) {
-    showCategoryDescription = props.categories[event.target.selectedIndex].description;
-}
-
-// let getCategory = ref(null);
-// onBeforeMount(async () => {
-//     getCategory.value = await props.show.category;
-// })
-
 let reloadImage = () => {
     Inertia.reload({
         only: ['image'],
@@ -347,6 +315,32 @@ let submit = () => {
     form.put(route('shows.update', props.show.slug));
 };
 
-let showMessage = ref(true);
+videoPlayerStore.currentPage = 'shows'
+userStore.showFlashMessage = true;
+teamStore.setActiveTeam(props.team);
+teamStore.setActiveShow(props.show);
+
+onMounted(() => {
+    videoPlayerStore.makeVideoTopRight();
+    if (userStore.isMobile) {
+        videoPlayerStore.ottClass = 'ottClose'
+        videoPlayerStore.ott = 0
+    }
+    document.getElementById("topDiv").scrollIntoView()
+
+});
+
+
+
+function chooseCategory(event) {
+    showCategoryDescription = props.categories[event.target.selectedIndex].description;
+}
+
+// let getCategory = ref(null);
+// onBeforeMount(async () => {
+//     getCategory.value = await props.show.category;
+// })
+
+
 
 </script>

@@ -5,7 +5,7 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div id="topDiv" class="bg-white dark:bg-gray-800 rounded text-black dark:text-gray-50 p-5">
 
-            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
             <AdminHeader>Invite Codes</AdminHeader>
 
@@ -180,35 +180,12 @@ import Pagination from "@/Components/Pagination"
 import throttle from "lodash/throttle"
 import AdminHeader from "@/Components/Admin/AdminHeader.vue";
 
-
-
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
-
-videoPlayerStore.currentPage = 'admin'
-
-// onBeforeMount(() => {
-//     userStore.scrollToTopCounter = 0;
-// })
-
-onMounted(async () => {
-    videoPlayerStore.makeVideoTopRight();
-    if (userStore.isMobile) {
-        videoPlayerStore.ottClass = 'ottClose'
-        videoPlayerStore.ott = 0
-    }
-    document.getElementById("topDiv").scrollIntoView()
-    // if (userStore.scrollToTopCounter === 0 ) {
-    //
-    //     userStore.scrollToTopCounter ++;
-    // }
-    props.message = '';
-});
 
 let props = defineProps({
     invite_codes: Object,
     filters: String,
-    message: String,
     messageKey: 1,
 })
 
@@ -217,13 +194,6 @@ let form = useForm({
 })
 
 let search = ref(props.filters.search);
-
-watch(search, throttle(function (value) {
-    Inertia.get('/admin/invite_codes', { search: value }, {
-        preserveState: true,
-        replace: true
-    });
-}, 300));
 
 let submit = () => {
     // Inertia.reload({ only: ['error'] })
@@ -237,6 +207,24 @@ let exportCodes = () => {
     Inertia.visit('/admin/export_invite_codes');
 }
 
-let showMessage = ref(true);
+videoPlayerStore.currentPage = 'admin'
+userStore.showFlashMessage = true;
+
+onMounted(async () => {
+    videoPlayerStore.makeVideoTopRight();
+    if (userStore.isMobile) {
+        videoPlayerStore.ottClass = 'ottClose'
+        videoPlayerStore.ott = 0
+    }
+    document.getElementById("topDiv").scrollIntoView()
+    props.message = '';
+});
+
+watch(search, throttle(function (value) {
+    Inertia.get('/admin/invite_codes', { search: value }, {
+        preserveState: true,
+        replace: true
+    });
+}, 300));
 
 </script>

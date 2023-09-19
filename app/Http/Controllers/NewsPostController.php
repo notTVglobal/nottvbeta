@@ -121,7 +121,7 @@ class NewsPostController extends Controller
         return redirect()
             ->route('news.show',
                 [$newsPost->slug])
-            ->with('message', 'News Post Created Successfully');
+            ->with('success', 'News Post Created Successfully');
 
     }
 
@@ -220,7 +220,7 @@ class NewsPostController extends Controller
         return redirect()
             ->route('news.show',
                 [$newsPost->slug])
-            ->with('message', 'News Post Updated Successfully');
+            ->with('success', 'News Post Updated Successfully');
 
     }
 

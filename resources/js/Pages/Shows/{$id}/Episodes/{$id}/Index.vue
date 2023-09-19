@@ -187,68 +187,6 @@ let teamStore = useTeamStore();
 let showStore = useShowStore();
 let userStore = useUserStore()
 
-videoPlayerStore.currentPage = 'episodes'
-
-function scrollTo(selector) {
-    document.querySelector(selector).scrollIntoView({ behavior: 'smooth'});
-}
-
-// onBeforeMount(() => {
-//     userStore.scrollToTopCounter = 0;
-// })
-// let showMessage = ref(true);
-userStore.showFlashMessage = true;
-
-onMounted(() => {
-    videoPlayerStore.makeVideoTopRight();
-    if (userStore.isMobile) {
-        videoPlayerStore.ottClass = 'ottClose'
-        videoPlayerStore.ott = 0
-    }
-    document.getElementById("topDiv").scrollIntoView()
-    // if (userStore.scrollToTopCounter === 0 ) {
-    //
-    //     userStore.scrollToTopCounter ++;
-    // }
-    // showMessage = true;
-    // showMessage = ref(true);
-
-});
-//
-
-let props = defineProps({
-    show: Object,
-    team: Object,
-    episode: Object,
-    video: Object,
-    image: Object,
-    creators: Object,
-    can: Object,
-    message: String,
-    success: String,
-    warning: String,
-    error: String,
-
-});
-
-function checkForVideo() {
-    if (props.video.file_name && props.video.upload_status !== 'processing') {
-        videoPlayerStore.hasVideo = true;
-    } if (props.episode.youtube_url) {
-        videoPlayerStore.hasVideo = true;
-    } else
-    if (props.episode.video_url) {
-        videoPlayerStore.hasVideo = true;
-    } else
-    if (!props.episode.video_url && props.video.upload_status === 'processing'){
-        videoPlayerStore.hasVideo = false;
-    } else if (!props.video.file_name && !props.episode.video_url) {
-        videoPlayerStore.hasVideo = false;
-    } return true;
-}
-
-checkForVideo()
-
 let playEpisode = () => {
     // if file exists and is !processing, play file.
     if (props.video.file_name !== '' && props.video.upload_status !== 'processing') {
@@ -267,20 +205,61 @@ let playEpisode = () => {
     }
     else
         // else if youtube_url exists, play youtube_url
-        if (props.episode.youtube_url) {
-            videoPlayerStore.loadNewSourceFromYouTube(props.episode.youtube_url)
-            videoPlayerStore.videoName = props.episode.name+' (YouTube)'
-            videoPlayerStore.currentChannelName = 'On Demand ('+props.episode.name+') from YouTube'
-            Inertia.visit('/stream')
-        }
+    if (props.episode.youtube_url) {
+        videoPlayerStore.loadNewSourceFromYouTube(props.episode.youtube_url)
+        videoPlayerStore.videoName = props.episode.name+' (YouTube)'
+        videoPlayerStore.currentChannelName = 'On Demand ('+props.episode.name+') from YouTube'
+        Inertia.visit('/stream')
+    }
 
 }
 
+let props = defineProps({
+    show: Object,
+    team: Object,
+    episode: Object,
+    video: Object,
+    image: Object,
+    creators: Object,
+    can: Object,
+
+});
+
+videoPlayerStore.currentPage = 'episodes'
+userStore.showFlashMessage = true;
 teamStore.slug = props.team.slug;
 teamStore.name = props.team.name;
 
-// Inertia.reload({ only: ['video']})
+onMounted(() => {
+    videoPlayerStore.makeVideoTopRight();
+    if (userStore.isMobile) {
+        videoPlayerStore.ottClass = 'ottClose'
+        videoPlayerStore.ott = 0
+    }
+    document.getElementById("topDiv").scrollIntoView()
 
+});
 
+function scrollTo(selector) {
+    document.querySelector(selector).scrollIntoView({ behavior: 'smooth'});
+}
+
+function checkForVideo() {
+    if (props.video.file_name && props.video.upload_status !== 'processing') {
+        videoPlayerStore.hasVideo = true;
+    } if (props.episode.youtube_url) {
+        videoPlayerStore.hasVideo = true;
+    } else
+    if (props.episode.video_url) {
+        videoPlayerStore.hasVideo = true;
+    } else
+    if (!props.episode.video_url && props.video.upload_status === 'processing'){
+        videoPlayerStore.hasVideo = false;
+    } else if (!props.video.file_name && !props.episode.video_url) {
+        videoPlayerStore.hasVideo = false;
+    } return true;
+}
+
+checkForVideo()
 
 </script>

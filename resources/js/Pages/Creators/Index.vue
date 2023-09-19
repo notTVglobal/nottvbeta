@@ -4,9 +4,9 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div id="topDiv" class="bg-white text-black p-5 mb-10">
 
-            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
-        <div class="flex justify-between mb-6">
+            <div class="flex justify-between mb-6">
             <div class="flex items-center">
                 <h1 class="text-3xl font-semibold">Creators</h1>
 
@@ -71,11 +71,15 @@ import Message from "@/Components/Modals/Messages";
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 
-videoPlayerStore.currentPage = 'creators'
+let props = defineProps({
+    creators: Object,
+    filters: Object,
+});
 
-// onBeforeMount(() => {
-//     userStore.scrollToTopCounter = 0;
-// })
+let search = ref(props.filters.search);
+
+videoPlayerStore.currentPage = 'creators'
+userStore.showFlashMessage = true;
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
@@ -84,19 +88,7 @@ onMounted(() => {
         videoPlayerStore.ott = 0
     }
     document.getElementById("topDiv").scrollIntoView()
-    // if (userStore.scrollToTopCounter === 0 ) {
-    //
-    //     userStore.scrollToTopCounter ++;
-    // }
 });
-
-let props = defineProps({
-    creators: Object,
-    filters: Object,
-    message: String,
-});
-
-let search = ref(props.filters.search);
 
 watch(search, throttle(function (value) {
     Inertia.get('/shows', { search: value }, {
@@ -105,7 +97,6 @@ watch(search, throttle(function (value) {
     });
 }, 300));
 
-let showMessage = ref(true);
 
 </script>
 

@@ -4,9 +4,9 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div id="topDiv" class="bg-white text-black p-5 mb-10">
 
-            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
-        <div class="flex justify-between mt-3 mb-6">
+            <div class="flex justify-between mt-3 mb-6">
             <div class="text-3xl">Create New Team</div>
             <div>
                 <Link :href="`/dashboard`"><button
@@ -96,10 +96,7 @@ let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'teams'
-
-// onBeforeMount(() => {
-//     userStore.scrollToTopCounter = 0;
-// })
+userStore.showFlashMessage = true;
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
@@ -108,10 +105,6 @@ onMounted(() => {
         videoPlayerStore.ott = 0
     }
     document.getElementById("topDiv").scrollIntoView()
-    // if (userStore.scrollToTopCounter === 0 ) {
-    //
-    //     userStore.scrollToTopCounter ++;
-    // }
 })
 
 let props = defineProps({
@@ -132,7 +125,5 @@ function reset() {
 let submit = () => {
     form.post('/teams');
 }
-
-let showMessage = ref(true);
 
 </script>

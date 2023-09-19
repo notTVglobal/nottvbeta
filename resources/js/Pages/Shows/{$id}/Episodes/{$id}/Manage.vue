@@ -9,7 +9,7 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div id="topDiv" class="bg-dark rounded text-light p-5">
 
-            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
             <div
                 class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
@@ -188,12 +188,9 @@ let teamStore = useTeamStore();
 let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'episodes'
+userStore.showFlashMessage = true;
 
 let playerName = 'aux-player';
-
-// onBeforeMount(() => {
-//     userStore.scrollToTopCounter = 0;
-// })
 
 onMounted(async () => {
     videoPlayerStore.makeVideoTopRight();
@@ -202,10 +199,6 @@ onMounted(async () => {
         videoPlayerStore.ott = 0
     }
     document.getElementById("topDiv").scrollIntoView()
-    // if (userStore.scrollToTopCounter === 0 ) {
-    //
-    //     userStore.scrollToTopCounter ++;
-    // }
 
 });
 
@@ -213,7 +206,6 @@ let props = defineProps({
     show: Object,
     team: Object,
     episode: Object,
-    message: String,
     can: Object,
 });
 
@@ -231,8 +223,6 @@ let showGoLive = false
 //         replace: true
 //     });
 // }, 300));
-
-let showMessage = ref(true);
 
 </script>
 

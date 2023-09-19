@@ -4,7 +4,7 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div id="topDiv" class="bg-white text-black dark:bg-gray-900 dark:text-gray-50 p-5 mb-10">
 
-            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
             <AdminHeader>Images</AdminHeader>
 
@@ -58,11 +58,14 @@ import AdminHeader from "@/Components/Admin/AdminHeader.vue";
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 
-videoPlayerStore.currentPage = 'imageUploader';
+let props = defineProps({
+    images: Object,
+    message: String,
+    // filters: Object,
+});
 
-// onBeforeMount(() => {
-//     userStore.scrollToTopCounter = 0;
-// })
+videoPlayerStore.currentPage = 'imageUploader';
+userStore.showFlashMessage = true;
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
@@ -71,16 +74,6 @@ onMounted(() => {
         videoPlayerStore.ott = 0
     }
     document.getElementById("topDiv").scrollIntoView()
-    // if (userStore.scrollToTopCounter === 0 ) {
-    //
-    //     userStore.scrollToTopCounter ++;
-    // }
-});
-
-let props = defineProps({
-    images: Object,
-    message: String,
-    // filters: Object,
 });
 
 function reloadImage() {
@@ -89,8 +82,6 @@ function reloadImage() {
     });
 }
 
-
-let showMessage = ref(true);
 
 // let search = ref(props.filters.search);
 //

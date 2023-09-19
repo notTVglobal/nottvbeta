@@ -3,10 +3,9 @@
     <Head title="Upgrade Account" />
     <div id="topDiv" class="h-[calc(100vh-16rem)] text-center bg-gray-800 text-white p-10">
 
+        <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
-            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
-
-<!--            <h1 class="text-3xl font-semibold pb-3">Become a notTV Premium Subscriber</h1>-->
+        <!--            <h1 class="text-3xl font-semibold pb-3">Become a notTV Premium Subscriber</h1>-->
 
             <div class="flex justify-center w-full">
                 <div class="flex flex-col justify-center w-fit bg-gray-900 rounded-md py-10 pb-96">
@@ -141,6 +140,7 @@ let userStore = useUserStore()
 let shopStore = useShopStore()
 
 videoPlayerStore.currentPage = 'upgrade'
+userStore.showFlashMessage = true;
 
 // onBeforeMount(() => {
 //     userStore.scrollToTopCounter = 0;
@@ -152,7 +152,6 @@ let props = defineProps({
     // cardElement: ref({}),
     // paymentProcessing: false,
     selectedSubscription: null,
-    message: String,
     hoverMonthly: false,
     hoverYearly: false,
     hoverForever: false,
@@ -160,8 +159,6 @@ let props = defineProps({
     hoverYearlyFull: false,
     hoverForeverFull: false,
 })
-
-let showMessage = ref(false);
 
 onMounted(async() => {
     videoPlayerStore.makeVideoTopRight();

@@ -5,7 +5,7 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div id="topDiv" class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 
-            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
             <div class="flex flex-row justify-between">
                 <h2 class="text-xl font-semibold leading-tight">
@@ -99,7 +99,7 @@
 
 <script setup>
 import { onBeforeMount, onMounted, ref } from "vue";
-import { useForm } from '@inertiajs/inertia-vue3'
+import {useForm, usePage} from '@inertiajs/inertia-vue3'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useUserStore } from "@/Stores/UserStore";
 import { useNewsStore } from "@/Stores/NewsStore"
@@ -107,12 +107,29 @@ import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
 // import TabbableTextarea from "@/Components/TabbableTextarea.vue";
 import Tiptap from "@/Components/TextEditor/TiptapNewsPostCreate.vue";
 import Message from "@/Components/Modals/Messages";
+import {Inertia} from "@inertiajs/inertia";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 let newsStore = useNewsStore()
 
+let props = defineProps({
+    can: Object,
+});
+
+let form = useForm({
+    title: '',
+    body: '',
+    content_json: [],
+});
+
+let submit = () => {
+    form.body = newsStore.newsArticleContentTiptop;
+    form.post(route("news.store"));
+};
+
 videoPlayerStore.currentPage = 'newsCreate'
+userStore.showFlashMessage = true;
 
 onBeforeMount(() => {
     // userStore.scrollToTopCounter = 0;
@@ -132,27 +149,13 @@ onMounted(() => {
     // }
 });
 
-const props = defineProps({
-    can: Object,
-    message: String,
-});
-
-let form = useForm({
-    title: '',
-    body: '',
-    content_json: [],
-});
-
-let submit = () => {
-    form.body = newsStore.newsArticleContentTiptop;
-    form.post(route("news.store"));
-};
-
-let showMessage = ref(true);
 
 function back() {
     newsStore.newsArticleContentTiptop = '';
-    window.history.back()
+    let urlPrev = usePage().props.value.urlPrev
+    if (urlPrev !== 'empty') {
+        Inertia.visit(urlPrev)
+    }
 }
 
 </script>

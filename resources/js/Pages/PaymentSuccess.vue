@@ -17,10 +17,6 @@ let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'library'
 
-// onBeforeMount(() => {
-//     userStore.scrollToTopCounter = 0;
-// })
-
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight()
     if (userStore.isMobile) {
@@ -28,17 +24,11 @@ onMounted(() => {
         videoPlayerStore.ott = 0
     }
     document.getElementById("topDiv").scrollIntoView()
-    // if (userStore.scrollToTopCounter === 0 ) {
-    //
-    //     userStore.scrollToTopCounter ++;
-    // }
+
 });
 
 let props = defineProps({
     can: Object,
-    message: String,
 })
-
-let showMessage = ref(true);
 
 </script>

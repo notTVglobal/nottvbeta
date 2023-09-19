@@ -10,7 +10,7 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div id="topDiv" class="bg-white dark:bg-gray-800 text-black dark:text-gray-50 p-5 mb-10">
 
-            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
             <header class="w-full mx-auto flex flex-wrap justify-between mb-3 pb-3 border-b border-gray-500 space-x-2 space-y-3">
                     <div></div>
@@ -122,16 +122,11 @@ let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'news'
-
-
+userStore.showFlashMessage = true;
 
 function scrollToCities() {
     document.getElementById("cities").scrollIntoView({behavior: "smooth"})
 }
-
-// onBeforeMount(() => {
-//     userStore.scrollToTopCounter = 0;
-// })
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
@@ -140,17 +135,12 @@ onMounted(() => {
         videoPlayerStore.ott = 0
     }
     document.getElementById("topDiv").scrollIntoView()
-    // if (userStore.scrollToTopCounter === 0 ) {
-
-    //     userStore.scrollToTopCounter ++;
-    // }
 });
 
 let props = defineProps({
     filters: Object,
     can: Object,
     news: Object,
-    message: String,
 });
 
 let form = useForm({
@@ -172,7 +162,5 @@ function destroy(id) {
 
     }
 }
-
-let showMessage = ref(true);
 
 </script>

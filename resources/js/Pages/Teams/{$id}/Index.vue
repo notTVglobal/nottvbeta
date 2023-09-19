@@ -5,7 +5,7 @@
     <div class="place-self-center flex flex-col gap-y-3 overflow-x-hidden">
         <div id="topDiv" class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 rounded p-5 mb-10">
 
-            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
+            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
             <header class="flex justify-between mb-3">
                 <div>
@@ -98,10 +98,7 @@ let teamStore = useTeamStore();
 let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'teams'
-
-// onBeforeMount(() => {
-//     userStore.scrollToTopCounter = 0;
-// })
+userStore.showFlashMessage = true;
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
@@ -110,10 +107,6 @@ onMounted(() => {
         videoPlayerStore.ott = 0
     }
     document.getElementById("topDiv").scrollIntoView()
-    // if (userStore.scrollToTopCounter === 0 ) {
-    //
-    //     userStore.scrollToTopCounter ++;
-    // }
 });
 
 let props = defineProps({
@@ -123,14 +116,11 @@ let props = defineProps({
     image: Object,
     shows: Object,
     creators: Object,
-    message: String,
     filters: Object,
     can: Object,
 });
 
 teamStore.setActiveTeam(props.team);
 teamStore.can = props.can;
-
-let showMessage = ref(true);
 
 </script>

@@ -4,9 +4,7 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div id="topDiv" class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 
-
-            <Message v-if="showMessage" @close="showMessage = false" :message="props.message"/>
-
+            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
             <div class="flex justify-between mt-3 mb-6">
                 <div class="text-3xl">Create Episode</div>
@@ -186,24 +184,22 @@
 
 <script setup>
 import { onBeforeMount, onMounted, ref } from "vue"
-import { useForm } from "@inertiajs/inertia-vue3"
+import {useForm, usePage} from "@inertiajs/inertia-vue3"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useTeamStore } from "@/Stores/TeamStore.js"
 import { useUserStore } from "@/Stores/UserStore";
 import Message from "@/Components/Modals/Messages";
 import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
+import {Inertia} from "@inertiajs/inertia";
 
 let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore()
 let userStore = useUserStore()
 
 videoPlayerStore.currentPage = 'episodes'
+userStore.showFlashMessage = true;
 teamStore.setActiveShow(props.show);
 teamStore.setActiveTeam(props.team);
-
-// onBeforeMount(() => {
-//     userStore.scrollToTopCounter = 0;
-// })
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
@@ -212,17 +208,12 @@ onMounted(() => {
         videoPlayerStore.ott = 0
     }
     document.getElementById("topDiv").scrollIntoView()
-    // if (userStore.scrollToTopCounter === 0 ) {
-    //
-    //     userStore.scrollToTopCounter ++;
-    // }
 });
 
 let props = defineProps({
     user: Object,
     show: Object,
     team: Object,
-    message: String,
 })
 
 let form = useForm({
@@ -248,7 +239,6 @@ function addEmbedCodeConfirm() {
     }
 }
 
-
 let submit = () => {
     if(form.video_embed_code && form.video_url) {
         addEmbedCodeConfirm();
@@ -263,7 +253,10 @@ let submit = () => {
 let showMessage = ref(true);
 
 function back() {
-    window.history.back()
+    let urlPrev = usePage().props.value.urlPrev
+    if (urlPrev !== 'empty') {
+        Inertia.visit(urlPrev)
+    }
 }
 
 </script>

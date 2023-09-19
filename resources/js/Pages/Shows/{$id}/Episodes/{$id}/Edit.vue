@@ -5,7 +5,7 @@
     <div id="topDiv" class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white dark:bg-gray-800 text-black dark:text-white px-5 mb-10">
 
-            <Message v-if="showMessage" @close="showMessage = false" :flash="$page.props.flash"/>
+            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
             <header>
                 <ShowEpisodeEditHeader :show="props.show" :team="props.team" :episode="props.episode"/>
@@ -310,7 +310,41 @@ let teamStore = useTeamStore()
 let showStore = useShowStore()
 let userStore = useUserStore()
 
+let props = defineProps({
+    show: Object,
+    team: Object,
+    episode: Object,
+    image: Object,
+    can: Object,
+});
+
+let form = useForm({
+    id: props.episode.id,
+    name: props.episode.name,
+    episode_number: props.episode.episode_number,
+    description: props.episode.description,
+    notes: props.episode.notes,
+    show_id: props.episode.show_id,
+    video_url: props.episode.video_url,
+    youtube_url: props.episode.youtube_url,
+    video_embed_code: props.episode.video_embed_code,
+});
+
+let reloadImage = () => {
+    Inertia.reload({
+        only: ['image'],
+    });
+};
+
+let submit = () => {
+    if(form.video_embed_code !== props.episode.video_embed_code && form.video_url) {
+        addEmbedCodeConfirm();
+    } else
+        form.put(route('showEpisodes.update', props.episode.slug));
+};
+
 videoPlayerStore.currentPage = 'episodes'
+userStore.showFlashMessage = true;
 teamStore.setActiveTeam(props.team);
 teamStore.setActiveShow(props.show);
 showStore.episodePoster = props.image.name;
@@ -348,45 +382,10 @@ onMounted(() => {
     // });
 });
 
-let props = defineProps({
-    show: Object,
-    team: Object,
-    episode: Object,
-    image: Object,
-    can: Object,
-});
-
-let form = useForm({
-    id: props.episode.id,
-    name: props.episode.name,
-    episode_number: props.episode.episode_number,
-    description: props.episode.description,
-    notes: props.episode.notes,
-    show_id: props.episode.show_id,
-    video_url: props.episode.video_url,
-    youtube_url: props.episode.youtube_url,
-    video_embed_code: props.episode.video_embed_code,
-});
-
-let reloadImage = () => {
-    Inertia.reload({
-        only: ['image'],
-    });
-};
-
 function addEmbedCodeConfirm() {
     if (confirm("Are you sure you want to add this embed code? It will override the video url.")) {
         form.put(route('showEpisodes.update', props.episode.slug));
     }
 }
-
-let submit = () => {
-    if(form.video_embed_code !== props.episode.video_embed_code && form.video_url) {
-        addEmbedCodeConfirm();
-    } else
-        form.put(route('showEpisodes.update', props.episode.slug));
-};
-
-let showMessage = ref(true);
 
 </script>
