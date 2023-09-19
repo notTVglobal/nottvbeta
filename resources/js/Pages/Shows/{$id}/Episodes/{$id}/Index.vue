@@ -6,7 +6,7 @@
     <div class="place-self-center flex flex-col gap-y-3 overflow-x-hidden">
         <div id="topDiv" class="text-white bg-gray-900 rounded py-5 mb-10">
 
-            <Message v-if="showMessage" @close="showMessage = false" :message="props.message" :messageType="props.messageType"/>
+            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
             <div v-if="props.can.editShow || props.can.manageShow" class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4 py-5">
                 <Link
@@ -169,7 +169,7 @@
 
 
 <script setup>
-import { onBeforeMount, onMounted, ref } from 'vue'
+import {onBeforeMount, onMounted, onUpdated, ref} from 'vue'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useTeamStore } from "@/Stores/TeamStore.js"
 import { useShowStore } from "@/Stores/ShowStore.js"
@@ -196,6 +196,8 @@ function scrollTo(selector) {
 // onBeforeMount(() => {
 //     userStore.scrollToTopCounter = 0;
 // })
+// let showMessage = ref(true);
+userStore.showFlashMessage = true;
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
@@ -208,7 +210,11 @@ onMounted(() => {
     //
     //     userStore.scrollToTopCounter ++;
     // }
+    // showMessage = true;
+    // showMessage = ref(true);
+
 });
+//
 
 let props = defineProps({
     show: Object,
@@ -219,7 +225,6 @@ let props = defineProps({
     creators: Object,
     can: Object,
     message: String,
-    messageType: String,
     success: String,
     warning: String,
     error: String,
@@ -276,6 +281,6 @@ teamStore.name = props.team.name;
 
 // Inertia.reload({ only: ['video']})
 
-let showMessage = ref(true);
+
 
 </script>

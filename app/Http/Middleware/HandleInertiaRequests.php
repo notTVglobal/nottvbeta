@@ -39,10 +39,21 @@ class HandleInertiaRequests extends Middleware
     {
         $appSetting = AppSetting::find(1);
         return array_merge(parent::share($request), [
-            'message' => fn () => $request->session()->get('message'),
-            'messageType' => fn () => $request->session()->get('messageType'),
+            'flash' => [
+                'message' => fn () => $request->session()->get('message'),
+                'success' => fn () => $request->session()->get('success'),
+                'warning' => fn () => $request->session()->get('warning'),
+                'error' => fn () => $request->session()->get('error'),
+            ],
             'firstPlayVideoSource' => fn () => $appSetting->first_play_video_source,
-            'firstPlayVideoSourceType' => fn () => $appSetting->first_play_video_source_type
+            'firstPlayVideoSourceType' => fn () => $appSetting->first_play_video_source_type,
+            'urlPrev'	=> function() {
+                if (url()->previous() !== route('login') && url()->previous() !== '' && url()->previous() !== url()->current()) {
+                    return url()->previous();
+                } else {
+                    return 'empty'; // used in javascript to disable back button behavior
+                }
+            },
         ]);
     }
 }

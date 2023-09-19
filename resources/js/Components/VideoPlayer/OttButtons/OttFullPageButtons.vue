@@ -39,13 +39,18 @@ import { computed } from "vue"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useChatStore } from "@/Stores/ChatStore"
 import { useUserStore } from "@/Stores/UserStore"
+import {usePage} from "@inertiajs/inertia-vue3";
+import {Inertia} from "@inertiajs/inertia";
 
 let videoPlayerStore = useVideoPlayerStore()
 let chatStore = useChatStore()
 let userStore = useUserStore()
 
 function back() {
-    window.history.back()
+    let urlPrev = usePage().props.value.urlPrev
+    if (urlPrev !== 'empty') {
+        Inertia.visit(urlPrev)
+    }
 }
 
 function openChannels() {

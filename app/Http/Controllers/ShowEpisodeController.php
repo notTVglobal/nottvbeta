@@ -84,14 +84,13 @@ class ShowEpisodeController extends Controller
         // MOVE THIS TO A JOB... SEND THE showEpisode SLUG with it.
         // get the *.mp4 video url from embed code
         // save the *.mp4 url to the video_file_url
-        if ($request->video_embed_code ) {
-//            AddVideoUrlFromEmbedCodeJob::dispatch($request->video_embed_code, $showEpisode->slug, auth()->user()->id)->onQueue('video_processing');
-            $videoUrlFromEmbedCode = $this->getVideoUrlFromEmbedCode($request->video_embed_code);
-            if ($videoUrlFromEmbedCode === false) {
-                $videoUrl = $request->video_url;
-            } else
-                $videoUrl = $videoUrlFromEmbedCode;
-        } else $videoUrl = $request->video_url;
+//        if ($request->video_embed_code) {
+//            $videoUrlFromEmbedCode = $this->getVideoUrlFromEmbedCode($request->video_embed_code);
+//            if ($videoUrlFromEmbedCode === false) {
+//                $videoUrl = $request->video_url;
+//            } else
+//                $videoUrl = $videoUrlFromEmbedCode;
+//        } else $videoUrl = $request->video_url;
 
         $showEpisode = new ShowEpisode();
         $showEpisode->isBeingEditedByUser_id = Auth::user()->id;
@@ -101,7 +100,7 @@ class ShowEpisodeController extends Controller
         $showEpisode->show_id = $request->show_id;
         $showEpisode->episode_number = $request->episode_number;
         $showEpisode->slug = \Str::slug($request->name);
-        $showEpisode->video_url = $videoUrl;
+        $showEpisode->video_url = $request->url;
         $showEpisode->youtube_url = $request->youtube_url;
         $showEpisode->video_embed_code = $request->video_embed_code;
         $showEpisode->notes = $request->notes;
@@ -112,6 +111,9 @@ class ShowEpisodeController extends Controller
         $showSlug = $request->show_slug;
         $showEpisodeSlug = $showEpisode->slug;
 
+        if ($request->video_embed_code && !$request->video_url) {
+            AddVideoUrlFromEmbedCodeJob::dispatch($showEpisode)->onQueue('video_processing');
+        }
 
         // Use this route to return
         // the user to the new episode page.
@@ -265,6 +267,7 @@ class ShowEpisodeController extends Controller
                 'name' => $showEpisode->name,
                 'slug' => $showEpisode->slug,
                 'description' => $showEpisode->description,
+                'notes' => $showEpisode->notes,
                 'episode_number' => $showEpisode->episode_number,
                 'created_at' => $showEpisode->created_at,
                 'release_year' => $showEpisode->release_year,
@@ -356,7 +359,6 @@ class ShowEpisodeController extends Controller
 
     public function update(HttpRequest $request, Show $show, ShowEpisode $showEpisode)
     {
-
         // validate the request
         $request->validate([
 //            'name' => ['required', 'string', 'max:255'],
@@ -384,13 +386,13 @@ class ShowEpisodeController extends Controller
 
         // get the *.mp4 video url from embed code
         // save the *.mp4 url to the video_file_url
-        if ($request->video_embed_code && $request->video_embed_code !== $showEpisode->video_embed_code) {
-            $videoUrlFromEmbedCode = $this->getVideoUrlFromEmbedCode($request->video_embed_code);
-            if ($videoUrlFromEmbedCode === false) {
-                $videoUrl = $request->video_url;
-            } else
-                $videoUrl = $videoUrlFromEmbedCode;
-        } else $videoUrl = $request->video_url;
+//        if ($request->video_embed_code && $request->video_embed_code !== $showEpisode->video_embed_code) {
+//            $videoUrlFromEmbedCode = $this->getVideoUrlFromEmbedCode($request->video_embed_code);
+//            if ($videoUrlFromEmbedCode === false) {
+//                $videoUrl = $request->video_url;
+//            } else
+//                $videoUrl = $videoUrlFromEmbedCode;
+//        } else $videoUrl = $request->video_url;
 
         // update the show
         $showEpisode->name = $request->name;
@@ -398,19 +400,22 @@ class ShowEpisodeController extends Controller
         $showEpisode->episode_number = $request->episode_number;
         $showEpisode->slug = \Str::slug($request->name);
         $showEpisode->notes = $request->notes;
-        $showEpisode->video_url = $videoUrl;
+        $showEpisode->video_url = $request->video_url;
         $showEpisode->youtube_url = $request->youtube_url;
         $showEpisode->video_embed_code = $request->video_embed_code;
         $showEpisode->save();
-        sleep(1);
 
-        if ($videoUrlFromEmbedCode === false) {
-//                return response()->json(['message' => 'The embed code could not get a video file.'], 500);
-            return redirect(route('shows.showEpisodes.show', [$showSlug, $showEpisodeSlug]))->with([
-                'message' => 'The embed code could not get a video file. Please check the embed code and the video url.',
-                'messageType' => 'warning',
-            ]);
+        if ($request->video_embed_code && !$request->video_url) {
+            AddVideoUrlFromEmbedCodeJob::dispatch($showEpisode)->onQueue('video_processing');
         }
+
+//        if ($videoUrlFromEmbedCode === false) {
+////                return response()->json(['message' => 'The embed code could not get a video file.'], 500);
+//            return redirect(route('shows.showEpisodes.show', [$showSlug, $showEpisodeSlug]))->with([
+//                'message' => 'The embed code could not get a video file. Please check the embed code and the video url.',
+//                'messageType' => 'warning',
+//            ]);
+//        }
 
         // gather the data needed to render the Manage page
         // this is all redundant. It's all contained in the
@@ -418,7 +423,8 @@ class ShowEpisodeController extends Controller
         // how to simplify this *frustrated*.
 
         // redirect
-        return redirect(route('shows.showEpisodes.show', [$showSlug, $showEpisodeSlug]))->with(['message' => 'Episode Updated Successfully', 'messageType' => 'success']);
+        return redirect(route('shows.showEpisodes.show', [$showSlug, $showEpisodeSlug]))
+            ->with('success', 'Episode Updated Successfully');
 
 
 //        return Inertia::render('Shows/{$id}/Manage', [

@@ -65,6 +65,8 @@
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
 import {useChatStore} from "@/Stores/ChatStore"
 import {useUserStore} from "@/Stores/UserStore"
+import {usePage} from "@inertiajs/inertia-vue3";
+import {Inertia} from "@inertiajs/inertia";
 
 let videoPlayerStore = useVideoPlayerStore()
 let chatStore = useChatStore()
@@ -78,7 +80,10 @@ let showChat = chatStore.showChat;
 let isMobile = userStore.isMobile;
 
 function backToPage() {
-    window.history.back()
+    let urlPrev = usePage().props.value.urlPrev
+    if (urlPrev !== 'empty') {
+        Inertia.visit(urlPrev)
+    }
 }
 
 </script>

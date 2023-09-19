@@ -12,7 +12,7 @@
 
         <!-- Page Content -->
         <div :class="layoutClass">
-            <slot /></div>
+                <slot /></div>
 
         <!-- Video Player -->
         <VideoPlayerMain
@@ -31,6 +31,8 @@ import { useShopStore } from "@/Stores/ShopStore"
 import { useChannelStore } from "@/Stores/ChannelStore"
 import ResponsiveNavigationMenu from '@/Components/Navigation/ResponsiveNavigationMenu'
 import NavigationMenu from '@/Components/Navigation/NavigationMenu'
+import Messages from "@/Components/VideoPlayer/Chat/VideoOTTChatMessages.vue";
+import Message from "@/Components/Modals/Messages.vue";
 
 // const ResponsiveNavigationMenu = defineAsyncComponent( () =>
 //     import('@/Components/Navigation/ResponsiveNavigationMenu'))

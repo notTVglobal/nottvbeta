@@ -2,21 +2,17 @@
 
     <Head :title="`Edit Episode: ${props.episode.name}`"/>
 
-
-<!--    <div class="place-self-center flex flex-col gap-y-3">-->
-<!--        <div id="topDiv" class="bg-gray-900 text-white px-5">-->
-
     <div id="topDiv" class="place-self-center flex flex-col gap-y-3">
         <div class="bg-white dark:bg-gray-800 text-black dark:text-white px-5 mb-10">
 
-            <Message v-if="showMessage" @close="showMessage = false" :message="props.message" :messageType="props.messageType"/>
+            <Message v-if="showMessage" @close="showMessage = false" :flash="$page.props.flash"/>
 
             <header>
                 <ShowEpisodeEditHeader :show="props.show" :team="props.team" :episode="props.episode"/>
             </header>
 
             <div class="flex flex-col">
-                <div class="-my-2 overflow-x-none sm:-mx-6 lg:-mx-8">
+                <div class="-my-2 overflow-x-none">
                     <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
 
@@ -207,36 +203,6 @@
 <!--Right Column-->
                                 <div>
 
-                                    <label class="block mb-2 uppercase font-bold text-xs text-white"
-                                           for="name"
-                                    >
-                                        Episode Video
-                                    </label>
-
-                                    <div class="flex justify-center w-full bg-white dark:bg-black mb-6 py-0">
-
-
-                                        <!--                TEST VIDEO EMBED FROM RUMBLE             -->
-                                        <!--                <iframe class="rumble" width="640" height="360" src="https://rumble.com/embed/v1nf3s7/?pub=4" frameborder="0" allowfullscreen></iframe>-->
-
-                                        <div
-                                            v-if="!episode.video_id"
-                                            class="flex justify-center shadow overflow-hidden border-b border-gray-200 w-full bg-white dark:bg-black text-2xl sm:rounded-lg p-5">
-                                            <span v-if="!props.episode.video_url">NO VIDEO</span>
-                                            <iframe v-if="props.episode.video_url"
-                                                    class="rumble" width="w-full" height="" :src="`${props.episode.video_url}`" frameborder="0" allowfullscreen>
-                                            </iframe>
-                                        </div>
-
-                                        <div v-if="episode.video_id" class="mb-6 bg-black w-full p-6">
-                                            <span
-                                                v-if="episode.video.upload_status === 'processing'"
-                                                class="text-center place-self-center text-white font-semibold text-xl">Video processing...</span>
-                                            <video v-if="episode.video.upload_status !== 'processing'" :src="episode.video.cdn_endpoint+episode.video.cloud_folder+episode.video.folder+'/'+episode.video.file_name" controls></video>
-                                        </div>
-
-                                    </div>
-
                                     <div>
                                         <label class="block mb-2 uppercase font-bold text-xs text-white"
                                                for="episodeVideo"
@@ -337,6 +303,7 @@ import Message from "@/Components/Modals/Messages";
 import ImageUpload from "@/Components/Uploaders/ImageUpload.vue";
 import SingleImage from "@/Components/Multimedia/SingleImage.vue";
 import VideoUpload from "@/Components/Uploaders/VideoUpload"
+import videojs from "video.js";
 
 let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore()
@@ -363,11 +330,25 @@ onMounted(() => {
     //
     //     userStore.scrollToTopCounter ++;
     // }
+
+    // let episodeVideoPlayer = videojs('episodeEditPlayer', {
+    //     controls: true,
+    //     muted: false,
+    //     autoplay: false,
+    //     preload: 'none',
+    //     techOrder: ["html5", "youtube"],
+    //     youtube: {"customVars":
+    //             {
+    //                 "wmode": "transparent"
+    //             }}
+    // })
+    // episodeVideoPlayer.ready(function() {
+    //     episodeVideoPlayer.muted(false)
+    //     episodeVideoPlayer.pause();
+    // });
 });
 
 let props = defineProps({
-    message: String,
-    messageType: String,
     show: Object,
     team: Object,
     episode: Object,

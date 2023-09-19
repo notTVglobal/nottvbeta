@@ -35,6 +35,7 @@ export let useUserStore = defineStore('userStore', {
         testNum: 0,
         url: null,
         key: 0,
+        showFlashMessage: false,
 
     }),
 
