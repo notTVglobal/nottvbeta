@@ -66,13 +66,13 @@
 
                     </div>
 
-                    <p v-if="video.upload_status === 'processing'" class="mt-12 px-3 py-3 text-gray-50 mr-1 lg:mr-36 bg-black w-full text-center lg:text-left">
-                        The video is currently processing. <span v-if="episode.video_url">This video is available to play, but it may be slow to load.</span><span v-if="!episode.video_url"> check back later.</span>
+                    <p v-if="episode.video.upload_status === 'processing'" class="mt-12 px-3 py-3 text-gray-50 mr-1 lg:mr-36 bg-black w-full text-center lg:text-left">
+                        The episode video is currently processing. Please check back later.
                     </p>
 
                     <div class="flex flex-wrap mt-12 m-auto lg:mx-0 justify-center lg:justify-start space-x-3 space-y-3">
                         <div></div>
-                        <button :disabled="!videoPlayerStore.hasVideo" class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-700 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
+                        <button v-if="episode.video.file_name || episode.video_url || episode.youtube_url" :disabled="episode.video.upload_status === 'processing'"  class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-700 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
                                 @click="playEpisode">
                             <svg class="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg"
                                  viewBox="0 0 485 485">
@@ -188,24 +188,23 @@ let showStore = useShowStore();
 let userStore = useUserStore()
 
 let playEpisode = () => {
-    // if file exists and is !processing, play file.
-    if (props.video.file_name !== '' && props.video.upload_status !== 'processing') {
-        videoPlayerStore.loadNewSourceFromFile(props.video)
+    // if video has a file and is !processing, play file.
+    if (props.episode.video.file_name !== '' && props.episode.video.upload_status !== 'processing') {
+        videoPlayerStore.loadNewSourceFromFile(props.episode.video)
         videoPlayerStore.videoName = props.episode.name+' (file)'
         videoPlayerStore.currentChannelName = 'On Demand ('+props.episode.name+') from file'
         Inertia.visit('/stream')
-    } else
-    if
-        // else if url exists, play url
-    (props.episode.video_url) {
+    } else if
+    // else if url exists, play url
+        (props.episode.video_url) {
         videoPlayerStore.loadNewSourceFromUrl(props.episode.video_url)
         videoPlayerStore.videoName = props.episode.name+' (web)'
         videoPlayerStore.currentChannelName = 'On Demand ('+props.episode.name+') from web'
         Inertia.visit('/stream')
     }
-    else
+    else if
         // else if youtube_url exists, play youtube_url
-    if (props.episode.youtube_url) {
+        (props.episode.youtube_url) {
         videoPlayerStore.loadNewSourceFromYouTube(props.episode.youtube_url)
         videoPlayerStore.videoName = props.episode.name+' (YouTube)'
         videoPlayerStore.currentChannelName = 'On Demand ('+props.episode.name+') from YouTube'
@@ -218,11 +217,9 @@ let props = defineProps({
     show: Object,
     team: Object,
     episode: Object,
-    video: Object,
     image: Object,
     creators: Object,
     can: Object,
-
 });
 
 videoPlayerStore.currentPage = 'episodes'
@@ -243,23 +240,23 @@ onMounted(() => {
 function scrollTo(selector) {
     document.querySelector(selector).scrollIntoView({ behavior: 'smooth'});
 }
-
-function checkForVideo() {
-    if (props.video.file_name && props.video.upload_status !== 'processing') {
-        videoPlayerStore.hasVideo = true;
-    } if (props.episode.youtube_url) {
-        videoPlayerStore.hasVideo = true;
-    } else
-    if (props.episode.video_url) {
-        videoPlayerStore.hasVideo = true;
-    } else
-    if (!props.episode.video_url && props.video.upload_status === 'processing'){
-        videoPlayerStore.hasVideo = false;
-    } else if (!props.video.file_name && !props.episode.video_url) {
-        videoPlayerStore.hasVideo = false;
-    } return true;
-}
-
-checkForVideo()
+//
+// function checkForVideo() {
+//     if (props.video.file_name && props.video.upload_status !== 'processing') {
+//         videoPlayerStore.hasVideo = true;
+//     } if (props.episode.youtube_url) {
+//         videoPlayerStore.hasVideo = true;
+//     } else
+//     if (props.episode.video_url) {
+//         videoPlayerStore.hasVideo = true;
+//     } else
+//     if (!props.episode.video_url && props.video.upload_status === 'processing'){
+//         videoPlayerStore.hasVideo = false;
+//     } else if (!props.video.file_name && !props.episode.video_url) {
+//         videoPlayerStore.hasVideo = false;
+//     } return true;
+// }
+//
+// checkForVideo()
 
 </script>

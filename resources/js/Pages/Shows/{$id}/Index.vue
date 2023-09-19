@@ -73,6 +73,10 @@
 
                             </div>
 
+                            <div v-if="props.show.firstPlayVideo.upload_status === 'processing'" class="mt-12 px-3 py-3 text-gray-50 mr-1 lg:mr-36 bg-black w-full text-center lg:text-left">
+                                The video is currently processing. Please check back later.
+                            </div>
+
                             <div class="flex flex-wrap justify-center lg:justify-start mt-4 m-auto lg:mx-0 space-x-4 space-y-2">
                                 <div></div>
                                 <div class="flex items-center">
@@ -246,14 +250,12 @@ let props = defineProps({
 
 let playEpisode = () => {
 
-    if (props.show.firstPlayVideo.file_name) {
+    if (props.show.firstPlayVideo.file_name && props.show.firstPlayVideo.upload_status !== 'processing') {
         // play video if !processing
-        if (props.show.firstPlayVideo.upload_status !== 'processing') {
-            videoPlayerStore.loadNewSourceFromFile(props.show.firstPlayVideo)
-            videoPlayerStore.videoName = props.show.name+' (file)'
-            videoPlayerStore.currentChannelName = 'On Demand ('+props.show.name+') from file'
-            Inertia.visit('/stream')
-        }
+        videoPlayerStore.loadNewSourceFromFile(props.show.firstPlayVideo)
+        videoPlayerStore.videoName = props.show.name+' (file)'
+        videoPlayerStore.currentChannelName = 'On Demand ('+props.show.name+') from file'
+        Inertia.visit('/stream')
     } else if (props.show.firstPlayVideoUrl) {
         videoPlayerStore.loadNewSourceFromUrl(props.show.firstPlayVideoUrl)
         videoPlayerStore.videoName = props.show.name+' (web)'
