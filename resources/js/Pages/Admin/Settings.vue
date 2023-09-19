@@ -76,7 +76,8 @@
                     </Link>
                     <Button
                         @click="getEpisodesFromEmbedCodes"
-                        class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
+                        class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400 disabled:no-cursor"
+                        :disabled="!getAllEpisodesButtonActive"
                     >Get All Episode Videos From Embed Codes
                     </Button>
 <!--                    <Link-->
@@ -290,6 +291,8 @@ let submit = () => {
     form.put(route('admin.settings'));
 };
 
+let getAllEpisodesButtonActive = ref(true);
+
 videoPlayerStore.currentPage = 'admin'
 userStore.showFlashMessage = true;
 
@@ -304,6 +307,7 @@ onMounted(async () => {
 
 function getEpisodesFromEmbedCodes() {
     Inertia.post('getVideosFromEmbedCodes')
+    getAllEpisodesButtonActive = false;
 }
 
 </script>

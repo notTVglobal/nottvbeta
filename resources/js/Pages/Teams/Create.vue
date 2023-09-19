@@ -9,10 +9,11 @@
             <div class="flex justify-between mt-3 mb-6">
             <div class="text-3xl">Create New Team</div>
             <div>
-                <Link :href="`/dashboard`"><button
+                <button
+                    @click="back"
                     class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
-                >Cancel</button>
-                </Link>
+                >Cancel
+                </button>
             </div>
         </div>
 
@@ -86,14 +87,30 @@
 
 <script setup>
 import { onBeforeMount, onMounted, ref } from 'vue';
-import { useForm } from "@inertiajs/inertia-vue3"
+import {useForm, usePage} from "@inertiajs/inertia-vue3"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useUserStore } from "@/Stores/UserStore";
 import Message from "@/Components/Modals/Messages";
 import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
+import {Inertia} from "@inertiajs/inertia";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
+
+let props = defineProps({
+    user: Object,
+})
+
+let form = useForm({
+    name: '',
+    description: '',
+    user_id: props.user.id,
+    totalSpots: '1',
+})
+
+let submit = () => {
+    form.post('/teams');
+}
 
 videoPlayerStore.currentPage = 'teams'
 userStore.showFlashMessage = true;
@@ -107,23 +124,15 @@ onMounted(() => {
     document.getElementById("topDiv").scrollIntoView()
 })
 
-let props = defineProps({
-    user: Object,
-})
-
-let form = useForm({
-    name: '',
-    description: '',
-    user_id: props.user.id,
-    totalSpots: '1',
-})
-
 function reset() {
     form.reset();
 }
 
-let submit = () => {
-    form.post('/teams');
+function back() {
+    let urlPrev = usePage().props.value.urlPrev
+    if (urlPrev !== 'empty') {
+        Inertia.visit(urlPrev)
+    }
 }
 
 </script>
