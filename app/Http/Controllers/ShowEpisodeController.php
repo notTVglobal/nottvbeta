@@ -137,7 +137,7 @@ class ShowEpisodeController extends Controller
     public function show(Show $show, ShowEpisode $showEpisode) {
 
         $teamId = $show->team_id;
-        $video = Video::where('show_episodes_id', $showEpisode->id)->first();
+//        $video = Video::where('show_episodes_id', $showEpisode->id)->first();
 
         return Inertia::render('Shows/{$id}/Episodes/{$id}/Index', [
             'show' => [
@@ -171,11 +171,11 @@ class ShowEpisodeController extends Controller
                 'release_dateTime' => $showEpisode->release_dateTime,
                 'mist_stream_id' => $showEpisode->mist_stream_id,
                 'video' => [
-                    'file_name' => $video->file_name ?? '',
-                    'cdn_endpoint' => $video->appSetting->cdn_endpoint ?? '',
-                    'folder' => $video->folder ?? '',
-                    'cloud_folder' => $video->cloud_folder ?? '',
-                    'upload_status' => $video->upload_status ?? '',
+                    'file_name' => $showEpisode->video->file_name ?? '',
+                    'cdn_endpoint' => $showEpisode->video->appSetting->cdn_endpoint ?? '',
+                    'folder' => $showEpisode->video->folder ?? '',
+                    'cloud_folder' => $showEpisode->video->cloud_folder ?? '',
+                    'upload_status' => $showEpisode->video->upload_status ?? '',
                 ],
                 'video_url' => $showEpisode->video_url,
                 'youtube_url' => $showEpisode->youtube_url,
