@@ -11,7 +11,7 @@
             TV &#169;2009-{{new Date().getFullYear()}}
         </div>
         <div class="flex justify-center">
-            Beta Preview v0.7.1
+            Beta Preview v0.7.2
         </div>
         <!--                                        <div class="flex justify-center">Please send us</div>-->
         <!--                                        <div class="flex justify-center">comments and questions</div>-->
