@@ -345,6 +345,7 @@ class UsersController extends Controller
         } else $isVip = false;
 
         return json_encode([
+            'id' => auth()->user()->id,
             'isAdmin' => $isAdmin,
             'isCreator' => $creator,
             'isNewsPerson' => $isNewsPerson,

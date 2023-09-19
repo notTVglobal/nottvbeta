@@ -96,6 +96,7 @@ function setPage() {
 async function updateUserStore() {
     await axios.post('/getUserStoreData')
         .then(response => {
+            userStore.id = response.data.id
             userStore.isAdmin = response.data.isAdmin
             userStore.isCreator = response.data.isCreator
             userStore.isNewsPerson = response.data.isNewsPerson
