@@ -159,20 +159,40 @@
 
             </section>
 
-            <div class="bg-gray-300 dark:bg-gray-900 rounded pb-8 p-3 mb-16 mx-2 border-b border-2">
+            <div class="w-full bg-gray-300 dark:bg-gray-900 rounded pb-8 p-3 mb-16 mx-2 border-b border-2">
+
                 <div class="font-semibold text-xl pb-2">Stats</div>
+
+                <div class="w-full mx-auto stats shadow stats-vertical lg:stats-horizontal">
+
+                    <div class="stat place-items-center">
+                        <div class="stat-title">Avg. Daily View Time</div>
+                        <div class="stat-value">31 minutes</div>
+                        <div class="stat-desc">From January 1st to February 1st</div>
+                    </div>
+
+                    <div class="stat place-items-center">
+                        <div class="stat-title">Total Users</div>
+                        <div class="stat-value text-secondary">4,200</div>
+                        <div class="stat-desc text-secondary">↗︎ 40 (2%)</div>
+                    </div>
+
+                    <div class="stat place-items-center">
+                        <div class="stat-title">New Creators</div>
+                        <div class="stat-value">1,200</div>
+                        <div class="stat-desc">↘︎ 90 (14%)</div>
+                    </div>
+
+                </div>
+
+
                 <div class="grid grid-cols-2 xl:grid-cols-3 justify-center gap-2">
 
-                    <div class="px-4 py-4 w-100 h-48 bg-gray-400 text-black rounded shadow-md text-center">
-                        <div class="font-semibold">
-                            Total Video Storage Used
-                        </div>
-                        <div class="">
-                            <div class="flex-wrap">
-                                <div class="mt-8 text-3xl text-yellow-400 font-bold">{{ notTvTotalStorageUsed }}</div>
-                                <div class="mt-10">My total: {{ myTotalStorageUsed }}</div>
-
-                            </div>
+                    <div class="px-4 pt-8 w-100 h-48 bg-gray-400 text-black rounded shadow-md text-center">
+                        <div class="stat place-items-center">
+                            <div class="stat-title text-black font-semibold">Total Video Storage Used</div>
+                            <div class="stat-value text-secondary">{{ notTvTotalStorageUsed }}</div>
+                            <div class="stat-desc text-black">My total: {{ myTotalStorageUsed }} (2%)</div>
                         </div>
                     </div>
 
@@ -266,6 +286,27 @@
                     In development. Not currently working.
                 </div>
 
+                <div class="w-1/2 mx-auto stats bg-primary text-primary-content">
+
+                    <div class="stat">
+                        <div class="stat-title">Total balance</div>
+                        <div class="stat-value">$89,410</div>
+                        <div class="stat-actions">
+                            <button class="btn btn-sm btn-success">Add funds</button>
+                        </div>
+                    </div>
+
+                    <div class="stat">
+                        <div class="stat-title">Available balance</div>
+                        <div class="stat-value">$89,400</div>
+                        <div class="stat-actions">
+                            <button class="btn btn-sm mr-2">Withdrawal</button>
+                            <button class="btn btn-sm">deposit</button>
+                        </div>
+                    </div>
+
+                </div>
+
                 <div class="border-2">
                     <div class="grid justify-items-stretch grid-cols-3 ">
                         <div class="bg-gray-800 text-white text-sm p-2 col-span-3">Membership: 000000</div>
@@ -277,7 +318,7 @@
                         </thead>
                         <tr class="border-b border-1 border-gray-100">
                             <td class="px-2 col-span-2 py-2">Chequing</td>
-                            <td class="px-2 text-right">0.00</td>
+                            <td class="px-2 text-right">89,400.00</td>
                         </tr>
                         <tr class="border-b border-1 border-gray-100">
                             <td class="px-2 col-span-2 py-2">Equity Shares</td>
