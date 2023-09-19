@@ -14,7 +14,7 @@
             Beta Preview v0.7.2
         </div>
         <div class="flex justify-center text-blue-600 hover:text-blue-400 underline">
-            <Link :href="route('changelog.show')">changelog</Link>
+            <Link @click="userStore.closeNavDropdown()" :href="route('changelog.show')">changelog</Link>
         </div>
         <!--                                        <div class="flex justify-center">Please send us</div>-->
         <!--                                        <div class="flex justify-center">comments and questions</div>-->
@@ -24,5 +24,8 @@
 </template>
 
 <script setup>
+import {useUserStore} from "@/Stores/UserStore";
+
+let userStore = useUserStore()
 
 </script>
