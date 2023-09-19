@@ -48,9 +48,12 @@
 
                             </div>
 
-                            <div class="flex flex-wrap my-12 m-auto lg:mx-0 justify-center lg:justify-start space-x-4 space-y-2">
+                            <div class="flex flex-wrap my-2 m-auto lg:mx-0 justify-center lg:justify-start space-x-4 space-y-2">
                                 <div></div>
-                                <button v-if="props.show.firstPlayVideo.file_name || props.show.firstPlayVideoUrl" :disabled="props.show.firstPlayVideo.upload_status === 'processing'" class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
+                                <div v-if="props.show.firstPlayVideo.upload_status === 'processing' && !props.show.firstPlayVideoUrl" class="ml-3 px-3 py-3 text-gray-50 bg-black w-full text-center lg:text-left">
+                                    The first episode is currently processing. <br>Please check back later.
+                                </div>
+                                <button v-if="props.show.firstPlayVideo.file_name || props.show.firstPlayVideoUrl" :disabled="props.show.firstPlayVideo.upload_status === 'processing' && !props.show.firstPlayVideoUrl" class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
                                         @click="playEpisode">
                                     <svg class="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg"
                                          viewBox="0 0 485 485">
@@ -71,10 +74,6 @@
                                     <span class=""><font-awesome-icon icon="fa-share" class="mr-2"/>Share</span>
                                 </button>
 
-                            </div>
-
-                            <div v-if="props.show.firstPlayVideo.upload_status === 'processing'" class="mt-12 px-3 py-3 text-gray-50 mr-1 lg:mr-36 bg-black w-full text-center lg:text-left">
-                                The video is currently processing. Please check back later.
                             </div>
 
                             <div class="flex flex-wrap justify-center lg:justify-start mt-4 m-auto lg:mx-0 space-x-4 space-y-2">
@@ -278,24 +277,24 @@ onMounted(() => {
         videoPlayerStore.ott = 0
     }
     document.getElementById("topDiv").scrollIntoView()
-});
+})
 
-function checkForVideo() {
-    if (props.show.firstPlay) {
-        if (props.show.firstPlay.file_name && props.show.firstPlay.upload_status !== 'processing') {
-            videoPlayerStore.hasVideo = true;
-        } else if (props.show.firstPlay.video_url) {
-            videoPlayerStore.hasVideo = true;
-        } else if (!props.show.firstPlay.video_url && props.show.firstPlay.upload_status === 'processing') {
-            videoPlayerStore.hasVideo = false;
-        } else if (!props.show.firstPlay.file_name && !props.show.firstPlay.video_url) {
-            videoPlayerStore.hasVideo = false;
-        }
-        return true;
-    }
-}
+// function checkForVideo() {
+//     if (props.show.firstPlay) {
+//         if (props.show.firstPlay.file_name && props.show.firstPlay.upload_status !== 'processing') {
+//             videoPlayerStore.hasVideo = true;
+//         } else if (props.show.firstPlay.video_url) {
+//             videoPlayerStore.hasVideo = true;
+//         } else if (!props.show.firstPlay.video_url && props.show.firstPlay.upload_status === 'processing') {
+//             videoPlayerStore.hasVideo = false;
+//         } else if (!props.show.firstPlay.file_name && !props.show.firstPlay.video_url) {
+//             videoPlayerStore.hasVideo = false;
+//         }
+//         return true;
+//     }
+// }
 
-checkForVideo()
+// checkForVideo()
 
 
 
