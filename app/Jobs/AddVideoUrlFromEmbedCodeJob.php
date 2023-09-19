@@ -40,6 +40,8 @@ class AddVideoUrlFromEmbedCodeJob implements ShouldQueue
     public function handle()
     {
 
+        Log::channel('custom_error')->error('job should be queued now.');
+
         if (!$this->showEpisode->video_embed_code) {
             return;
         } else
