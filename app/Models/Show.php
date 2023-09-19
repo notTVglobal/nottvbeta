@@ -42,6 +42,12 @@ class Show extends Model
         return 'slug';
     }
 
+    // tec21: I want to use episodes to make the Eloquent call easier to read.
+    public function episodes()
+    {
+        return $this->hasMany(ShowEpisode::class);
+    }
+    // showEpisodes is required for showEpisode.show to display
     public function showEpisodes()
     {
         return $this->hasMany(ShowEpisode::class);

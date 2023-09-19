@@ -48,7 +48,7 @@ class ShowsController extends Controller
     {
 
         return Inertia::render('Shows/Index', [
-            'shows' => Show::with('team', 'user', 'image', 'showEpisodes', 'showStatus')
+            'shows' => Show::with('team', 'user', 'image', 'episodes', 'showStatus')
                 ->when(Request::input('search'), function ($query, $search) {
                     $query->where('name', 'like', "%{$search}%");
                 })
@@ -72,7 +72,7 @@ class ShowsController extends Controller
                         'cloud_folder' => $show->image->cloud_folder,
                     ],
                     'slug' => $show->slug,
-                    'totalEpisodes' => $show->showEpisodes->count(),
+                    'totalEpisodes' => $show->episodes->count(),
                     'status' => $show->showStatus->name,
                     'statusId' => $show->showStatus->id,
                     'copyrightYear' => $show->created_at->format('Y'),
@@ -240,17 +240,29 @@ class ShowsController extends Controller
 
         $teamId = $show->team_id;
 
-        $showEpisodes = $show->showEpisodes;
+        $latestEpisodeWithVideo = $show->episodes->reverse()->first(function ($episode) {
+            return !empty($episode->video_id);
+        });
+//        dd($latestEpisodeWithVideo->video);
 
-//        $episode = ShowEpisode::where('show_id', $show->id)->first();
-//        $episode = ShowEpisode::where('show_id', $show->id)->first();
+        $latestEpisodeWithVideoUrl = $show->episodes->reverse()->first(function ($episode) {
+            return !empty($episode->video_url);
+        });
 
-        $firstPlayFile = $episode->video_id ?? '';
-        $firstPlayUrl = $episode->video_url ?? '';
+//        $firstPlayFile = $show->episodes->first(function ($episode) {
+//            return !empty($episode->video_id);
+//        });
+//
+//        $firstPlayUrl = $show->episodes->first(function ($episode) {
+//            return !empty($episode->video_id);
+//        });
 
-        if ($firstPlayFile !== null) {
-            $firstPlay = $firstPlayFile;
-        } else $firstPlay = $firstPlayUrl;
+//        $firstPlayFile = $episode->video_id ?? '';
+//        $firstPlayUrl = $episode->video_url ?? '';
+//
+//        if ($firstPlayFile !== null) {
+//            $firstPlay = $firstPlayFile;
+//        } else $firstPlay = $firstPlayUrl;
 
 //        $firstPlay = Video::all()->reject(function (Video $video) {
 //        return $video->video_id === false;
@@ -282,13 +294,22 @@ class ShowsController extends Controller
                     'cdn_endpoint' => $show->appSetting->cdn_endpoint,
                     'cloud_folder' => $show->image->cloud_folder,
                 ],
-                'firstPlay' => [
-                    'file_name' => $episode->video->file_name ?? '',
-                    'cdn_endpoint' => $episode->appSetting->cdn_endpoint ?? '',
-                    'folder' => $episode->video->folder ?? '',
-                    'cloud_folder' => $episode->video->cloud_folder ?? '',
-                    'upload_status' => $episode->video->upload_status ?? '',
+//                'firstPlay' => [
+//                    'file_name' => $episode->video->file_name ?? '',
+//                    'cdn_endpoint' => $episode->appSetting->cdn_endpoint ?? '',
+//                    'folder' => $episode->video->folder ?? '',
+//                    'cloud_folder' => $episode->video->cloud_folder ?? '',
+//                    'upload_status' => $episode->video->upload_status ?? '',
+//                ],
+                // TODO: firstPlay returns a single video... replace with a show_playlist which needs to be created.
+                'firstPlayVideo' => [
+                    'file_name' => $latestEpisodeWithVideo->video->file_name ?? '',
+                    'cdn_endpoint' => $latestEpisodeWithVideo->appSetting->cdn_endpoint ?? '',
+                    'folder' => $latestEpisodeWithVideo->video->folder ?? '',
+                    'cloud_folder' => $latestEpisodeWithVideo->video->cloud_folder ?? '',
+                    'upload_status' => $latestEpisodeWithVideo->video->upload_status ?? '',
                 ],
+                'firstPlayVideoUrl' => $latestEpisodeWithVideoUrl->video_url,
                 'copyrightYear' => $show->created_at->format('Y'),
                 'first_release_year' => $show->first_release_year,
                 'last_release_year' => $show->last_release_year,

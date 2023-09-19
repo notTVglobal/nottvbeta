@@ -50,7 +50,7 @@
 
                             <div class="flex flex-wrap my-12 m-auto lg:mx-0 justify-center lg:justify-start space-x-4 space-y-2">
                                 <div></div>
-                                <button :disabled="!videoPlayerStore.hasVideo" class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
+                                <button v-if="props.show.firstPlayVideo.file_name || props.show.firstPlayVideoUrl" :disabled="props.show.firstPlayVideo.upload_status === 'processing'" class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
                                         @click="playEpisode">
                                     <svg class="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg"
                                          viewBox="0 0 485 485">
@@ -144,9 +144,9 @@
 
                             </div>
 
-                            <p class="mt-12 pr-6 text-gray-300 mr-1 lg:mr-36 w-full text-center lg:text-left">
+                            <div class="mt-12 pr-6 text-gray-300 mr-1 lg:mr-36 w-full text-center lg:text-left">
                                 {{ show.description }}
-                            </p>
+                            </div>
 
                         </div>
                     </div>
@@ -241,27 +241,25 @@ let props = defineProps({
     team: Object,
     episodes: Object,
     creators: Object,
-    message: String,
     can: Object,
 });
 
 let playEpisode = () => {
-    // if file exists and is !processing, play file.
-    if (props.show.firstPlay.file_name !== '' && props.show.firstPlay.upload_status !== 'processing') {
-        videoPlayerStore.loadNewSourceFromFile(props.show.firstPlay)
-        videoPlayerStore.videoName = props.show.name+' (file)'
-        videoPlayerStore.currentChannelName = 'On Demand ('+props.show.name+') from file'
-        Inertia.visit('/stream')
-    } else
-    if
-        // else if url exists, play url
-    (props.episode.video_url) {
-        videoPlayerStore.loadNewSourceFromUrl(props.show.firstPlay.video_url)
+
+    if (props.show.firstPlayVideo.file_name) {
+        // play video if !processing
+        if (props.show.firstPlayVideo.upload_status !== 'processing') {
+            videoPlayerStore.loadNewSourceFromFile(props.show.firstPlayVideo)
+            videoPlayerStore.videoName = props.show.name+' (file)'
+            videoPlayerStore.currentChannelName = 'On Demand ('+props.show.name+') from file'
+            Inertia.visit('/stream')
+        }
+    } else if (props.show.firstPlayVideoUrl) {
+        videoPlayerStore.loadNewSourceFromUrl(props.show.firstPlayVideoUrl)
         videoPlayerStore.videoName = props.show.name+' (web)'
         videoPlayerStore.currentChannelName = 'On Demand ('+props.show.name+') from web'
         Inertia.visit('/stream')
     }
-
 }
 
 let thisYear = new Date().getFullYear()
