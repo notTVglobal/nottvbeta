@@ -362,7 +362,7 @@ import Message from "@/Components/Modals/Messages";
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 
-videoPlayerStore.currentPage = 'schedule';
+userStore.currentPage = 'schedule';
 userStore.showFlashMessage = true;
 
 onMounted(() => {

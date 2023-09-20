@@ -18,7 +18,7 @@ import {useUserStore} from "@/Stores/UserStore";
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 
-videoPlayerStore.currentPage = 'users'
+userStore.currentPage = 'episodes'
 userStore.showFlashMessage = true;
 
 onMounted(() => {

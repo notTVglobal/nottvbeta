@@ -109,7 +109,7 @@ let props = defineProps({
     channels: Object,
 })
 
-videoPlayerStore.currentPage = 'admin'
+userStore.currentPage = 'adminChannels'
 userStore.showFlashMessage = true;
 
 onMounted(() => {

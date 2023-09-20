@@ -316,6 +316,7 @@ let userStore = useUserStore()
 
 videoPlayerStore.apiActiveStreams = null
 videoPlayerStore.mistStatus = false
+userStore.currentPage = 'adminSettings'
 userStore.showFlashMessage = true;
 
 onMounted(() => {

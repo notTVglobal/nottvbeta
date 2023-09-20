@@ -36,7 +36,7 @@ import {onMounted} from "vue";
 let videoPlayerStore = useVideoPlayerStore()
 let chat = useChatStore()
 
-videoPlayerStore.currentPage = 'channels'
+userStore.currentPage = 'channels'
 
 onMounted(() => {
     videoPlayerStore.makeVideoFullPage();

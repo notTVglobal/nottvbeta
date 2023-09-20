@@ -32,17 +32,9 @@ let chatStore = useChatStore()
 
 let props = defineProps({
     message: Object,
-    // time: reactive(String),
-    time: String,
 })
 // const nowTime = current.getHours() + ":" + current.getMinutes() + ":" + current.getSeconds();
 let timeAgo = useTimeAgo(props.message.created_at)
-
-// let timeKey = 1;
-
-// watchEffect(() => {
-//     timeKey = timeKey + 1
-// })
 
 
 //

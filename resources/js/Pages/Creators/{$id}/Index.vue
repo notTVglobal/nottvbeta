@@ -35,7 +35,7 @@ let props = defineProps({
     creator: Object,
 });
 
-videoPlayerStore.currentPage = 'creators'
+userStore.currentPage = 'creator'
 userStore.showFlashMessage = true;
 
 onMounted(() => {

@@ -21,7 +21,7 @@ import { onMounted } from "vue";
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 
-videoPlayerStore.currentPage = 'subscribe'
+userStore.currentPage = 'payment2'
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();

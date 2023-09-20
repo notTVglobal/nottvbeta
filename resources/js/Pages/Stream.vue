@@ -22,7 +22,7 @@ const getUserData = inject('getUserData')
 onBeforeMount( () => {
     videoPlayerStore.currentPageIsStream = true;
     videoPlayerStore.currentView = 'stream'
-    videoPlayerStore.currentPage = 'stream'
+    userStore.currentPage = 'stream'
 })
 
 onMounted(async() => {

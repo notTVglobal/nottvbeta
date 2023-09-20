@@ -30,7 +30,7 @@ import { useUserStore } from "@/Stores/UserStore";
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 
-videoPlayerStore.currentPage = 'goLive'
+userStore.currentPage = 'changeLog'
 userStore.showFlashMessage = true;
 
 onMounted(() => {

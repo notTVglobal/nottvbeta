@@ -88,7 +88,7 @@ import UserUpdateContactForm from "@/Components/Users/UserUpdateContactForm.vue"
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 
-videoPlayerStore.currentPage = 'settings'
+userStore.currentPage = 'settings'
 
 // onBeforeMount(() => {
 //     userStore.scrollToTopCounter = 0;

@@ -315,7 +315,7 @@ let submit = () => {
     form.put(route('shows.update', props.show.slug));
 };
 
-videoPlayerStore.currentPage = 'shows'
+userStore.currentPage = 'shows'
 userStore.showFlashMessage = true;
 teamStore.setActiveTeam(props.team);
 teamStore.setActiveShow(props.show);

@@ -64,7 +64,7 @@ let props = defineProps({
     // filters: Object,
 });
 
-videoPlayerStore.currentPage = 'imageUploader';
+userStore.currentPage = 'adminImageUploader';
 userStore.showFlashMessage = true;
 
 onMounted(() => {

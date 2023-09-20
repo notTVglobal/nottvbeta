@@ -26,7 +26,7 @@ import videojs from 'video.js';
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 
-videoPlayerStore.currentPage = 'testing'
+userStore.currentPage = 'testing'
 
 // onBeforeMount(() => {
 //     userStore.scrollToTopCounter = 0;

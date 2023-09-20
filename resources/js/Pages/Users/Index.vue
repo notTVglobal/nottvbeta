@@ -148,7 +148,7 @@ const form = useForm({
     userId: '',
 })
 
-videoPlayerStore.currentPage = 'users'
+userStore.currentPage = 'users'
 userStore.showFlashMessage = true;
 
 onMounted(() => {

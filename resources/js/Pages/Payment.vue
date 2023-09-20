@@ -16,7 +16,7 @@ import { loadStripe } from "@stripe/stripe-js";
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 
-videoPlayerStore.currentPage = 'subscribe'
+userStore.currentPage = 'payment'
 
 
 onMounted(() => {

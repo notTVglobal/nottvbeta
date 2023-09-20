@@ -134,7 +134,7 @@ let form = useForm({
 
 let search = ref(props.filters.search);
 
-videoPlayerStore.currentPage = 'newsRssFeeds'
+userStore.currentPage = 'newsFeeds'
 userStore.showFlashMessage = true;
 
 onMounted(() => {

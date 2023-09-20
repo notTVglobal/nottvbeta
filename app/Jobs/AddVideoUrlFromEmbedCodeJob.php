@@ -39,25 +39,28 @@ class AddVideoUrlFromEmbedCodeJob implements ShouldQueue
      */
     public function handle()
     {
-
+        // make a notification for the user (event): Video Embed code for "showName: Episode #" is processing...
         Log::channel('custom_error')->error('job should be queued now.');
 
-        if (!$this->showEpisode->video_embed_code) {
-            return;
-        } else
-        $firstMp4 = '';
-        $matches = [];
-        $response = '';
-        $sourceIs = '';
+        try {
 
-                        // strip the url from the embed code
-                        $regex = '/https?\:\/\/[^\",]+/i';
-                        preg_match($regex, $this->showEpisode->video_embed_code, $match);
-                        $sourceUrl = implode(" ", $match);
+
+            if (!$this->showEpisode->video_embed_code) {
+                return;
+            } else
+                $firstMp4 = '';
+            $matches = [];
+            $response = '';
+            $sourceIs = '';
+
+            // strip the url from the embed code
+            $regex = '/https?\:\/\/[^\",]+/i';
+            preg_match($regex, $this->showEpisode->video_embed_code, $match);
+            $sourceUrl = implode(" ", $match);
 //            $scraperApiKey =  env('SCRAPER_API_KEY');
-            Log::channel('custom_error')->error('source url: '.$sourceUrl);
+            Log::channel('custom_error')->error('source url: ' . $sourceUrl);
 
-                        // get the page source from the url
+            // get the page source from the url
 //            $proxy_address = 'http://scraperapi.autoparse=true:' . env('SCRAPER_API_KEY') . '@proxy-server.scraperapi.com:8001';
 ////            $proxy_address = 'https://api.scraperapi.com?api_key=' . env('SCRAPER_API_KEY') . '&autoparse=true&url=' . $url;
 //            $response = file_get_contents($proxy_address);
@@ -71,58 +74,59 @@ class AddVideoUrlFromEmbedCodeJob implements ShouldQueue
 //            $response = curl_exec($ch);
 //            curl_close($ch);
 
-                        $url =
-                            "https://api.scraperapi.com?api_key=" . env('SCRAPER_API_KEY') . "&url=" . $sourceUrl . "&render=true&country_code=us";
+            $url =
+                "https://api.scraperapi.com?api_key=" . env('SCRAPER_API_KEY') . "&url=" . $sourceUrl . "&render=true&country_code=us";
 //            Log::channel('custom_error')->error($url);
-                        $ch = curl_init();
-                        curl_setopt($ch, CURLOPT_URL, $url);
-                        curl_setopt($ch, CURLOPT_RETURNTRANSFER,
-                            TRUE);
-                        curl_setopt($ch, CURLOPT_HEADER,
-                            FALSE);
-                        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST,
-                            0);
-                        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER,
-                            0);
-                        $response = curl_exec($ch);
-                        curl_close($ch);
-        Log::channel('custom_error')->error('RESPONSE: '.$response);
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER,
+                TRUE);
+            curl_setopt($ch, CURLOPT_HEADER,
+                FALSE);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST,
+                0);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER,
+                0);
+            $response = curl_exec($ch);
+            curl_close($ch);
+            Log::channel('custom_error')->error('RESPONSE: ' . $response);
 
 //            Log::channel('custom_error')->error($response);
 
 
-                        // get the mp4 urls from the page.
-                        if (str_contains($sourceUrl, 'rumble.com')) {
-                            // if rumble ...
-                            $sourceIs = 'rumble';
-                            $pattern = '/https(.*?)mp4/';
-                            preg_match_all($pattern, $response, $matches);
-                            // start at the first "mp4" extract https: .... .mp4 and replace \ with ""
-                            $firstMp4 = $matches[0][0];
+            // get the mp4 urls from the page.
+            if (str_contains($sourceUrl, 'rumble.com')) {
+                // if rumble ...
+                $sourceIs = 'rumble';
+                $pattern = '/https(.*?)mp4/';
+                preg_match_all($pattern, $response, $matches);
+                // start at the first "mp4" extract https: .... .mp4 and replace \ with ""
+                $firstMp4 = $matches[0][0];
 //                            Log::channel('custom_error')->error('MATCHES: '.$matches[0]);
-                            Log::channel('custom_error')->error('FIRST MP4: '.$firstMp4);
-                        } elseif (str_contains($sourceUrl, 'bitchute.com')) {
-                            // if bitchute ...
-                            $sourceIs = 'bitchute';
-                            $pattern = '/<source src="https(.*?)mp4/';
-                            preg_match_all($pattern, $response, $matches);
-                            // start at the first "mp4" extract https: .... .mp4 and replace \ with ""
-                            $firstMp4 = $matches[0][0];
-                Log::channel('custom_error')->error('FIRST MP4: '.$firstMp4);
-                        }
+                Log::channel('custom_error')->error('FIRST MP4: ' . $firstMp4);
+            } elseif (str_contains($sourceUrl, 'bitchute.com')) {
+                // if bitchute ...
+                $sourceIs = 'bitchute';
+                $pattern = '/<source src="https(.*?)mp4/';
+                preg_match_all($pattern, $response, $matches);
+                // start at the first "mp4" extract https: .... .mp4 and replace \ with ""
+                $firstMp4 = $matches[0][0];
+                Log::channel('custom_error')->error('FIRST MP4: ' . $firstMp4);
+            }
 
 
-                        // Check if the data is null
-//                        if ($matches[0] == []) {
-//                            throw new \Exception("The data is undefined.");
-//                        }
+            // Check if the data is null
+            if ($firstMp4 == []) {
+                throw new \Exception("There was an error importing the video embed code for ShowName: Episode #. Please check the embed code and try again.
+                                          if you continue to see this error please let Travis know.");
+            }
 
-                        // this poster save needs to be finished...
-                        // get the jpg urls from the page.
+            // this poster save needs to be finished...
+            // get the jpg urls from the page.
 //            $pattern = '/poster="([^"]+)"/';
 //
 //            preg_match_all($pattern, $response, $imageMatches);
-                        // start at the first "mp4" extract https: .... .mp4 and replace \ with ""
+            // start at the first "mp4" extract https: .... .mp4 and replace \ with ""
 //            $firstJpg = $imageMatches[0];
 //
 //            $image = str_replace('poster=', '', $firstJpg);
@@ -142,26 +146,35 @@ class AddVideoUrlFromEmbedCodeJob implements ShouldQueue
 //            $episode = ShowEpisode::find($episodeId);
 //            $episode->image_id = $id;
 //            $episode->save();
-                        if ($sourceIs === 'rumble') {
-                            $url = str_replace('\\', '', $firstMp4);
-                        } elseif ($sourceIs === 'bitchute') {
-                            $url = str_replace('<source src="', '', $firstMp4);
+            if ($sourceIs === 'rumble') {
+                $url = str_replace('\\', '', $firstMp4);
+            } elseif ($sourceIs === 'bitchute') {
+                $url = str_replace('<source src="', '', $firstMp4);
 //                Log::channel('custom_error')->error('Bitchute Matches: '. $url);
-                            // send notification, success.
+                // send notification, success.
 //                return $url;
-                        }
+            }
 
-                        // write firstMp4 to database.
-                        $updateShowEpisode = ShowEpisode::find($this->showEpisode->id);
-                        $updateShowEpisode->video_url = $url;
-                        $updateShowEpisode->save();
-                        Log::channel('custom_error')->error($url);
+            // write firstMp4 to database.
+            $updateShowEpisode = ShowEpisode::find($this->showEpisode->id);
+            $updateShowEpisode->video_url = $url;
+            $updateShowEpisode->save();
+            Log::channel('custom_error')->error($url);
 
 //            else
-                        // send notification, failed.
+            // send notification, failed.
 //            return false;
 
-                }
+        } catch (\Exception $e) {
+            echo "Exception Message: " . $e->getMessage();
+            echo "Exception Code: " . $e->getCode();
+            // Handle the exception here
+            // You can log it, send notifications, or take any appropriate action
+            // For example:
+            // \Log::error($e->getMessage());
+        }
+
+    }
 
 
 }

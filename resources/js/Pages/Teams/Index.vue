@@ -148,7 +148,7 @@ import SingleImage from "@/Components/Multimedia/SingleImage.vue";
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 
-videoPlayerStore.currentPage = 'teams'
+userStore.currentPage = 'teams'
 userStore.showFlashMessage = true;
 
 onMounted(() => {

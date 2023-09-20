@@ -222,7 +222,7 @@ let props = defineProps({
     can: Object,
 });
 
-videoPlayerStore.currentPage = 'episodes'
+userStore.currentPage = 'episodes'
 userStore.showFlashMessage = true;
 teamStore.slug = props.team.slug;
 teamStore.name = props.team.name;

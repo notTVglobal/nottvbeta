@@ -139,7 +139,7 @@ let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 let shopStore = useShopStore()
 
-videoPlayerStore.currentPage = 'upgrade'
+userStore.currentPage = 'upgrade'
 userStore.showFlashMessage = true;
 
 // onBeforeMount(() => {

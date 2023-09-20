@@ -63,7 +63,7 @@ let props = defineProps({
     can: Object,
 })
 
-videoPlayerStore.currentPage = 'newsRssIndex'
+userStore.currentPage = 'newsFeed'
 userStore.showFlashMessage = true;
 
 onMounted(() => {

@@ -343,7 +343,7 @@ let submit = () => {
         form.put(route('showEpisodes.update', props.episode.slug));
 };
 
-videoPlayerStore.currentPage = 'episodes'
+userStore.currentPage = 'episodes'
 userStore.showFlashMessage = true;
 teamStore.setActiveTeam(props.team);
 teamStore.setActiveShow(props.show);

@@ -90,7 +90,7 @@ let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 let shopStore = useShopStore()
 
-videoPlayerStore.currentPage = 'subscribe'
+userStore.currentPage = 'subscribe'
 userStore.showFlashMessage = true;
 
 let props = defineProps({

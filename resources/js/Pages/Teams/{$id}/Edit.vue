@@ -195,7 +195,7 @@ let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore()
 let userStore = useUserStore()
 
-videoPlayerStore.currentPage = 'teams'
+userStore.currentPage = 'teams'
 userStore.showFlashMessage = true;
 teamStore.setActiveTeam(props.team);
 teamStore.logoName = props.image.name;

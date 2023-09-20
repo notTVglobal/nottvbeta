@@ -121,7 +121,7 @@ let submit = () => {
     form.post(route("rss2store"));
 };
 
-videoPlayerStore.currentPage = 'newsRssCreate'
+userStore.currentPage = 'newsFeedCreate'
 userStore.showFlashMessage = true;
 
 onMounted(() => {

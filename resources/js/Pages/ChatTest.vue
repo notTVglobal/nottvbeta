@@ -66,7 +66,7 @@ let form = useForm({
     message: '',
 });
 
-videoPlayerStore.currentPage = 'chatTest'
+userStore.currentPage = 'chatTest'
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();

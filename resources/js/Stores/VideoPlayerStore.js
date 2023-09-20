@@ -239,30 +239,22 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
 
         // play video from source
         playVideo(source) {
+            // useChannelStore().clearChannel();
             // if mist_id exists:
             if (source.mist_stream_id) {
                 this.loadNewSourceFromMist(source.mist_stream_id)
                 this.videoName = source.name
-                this.currentChannelName = 'On Demand (Mist)'
             }
             // if video_id exists:
             else if (source.video_id) {
                 this.loadNewSourceFromFile(source.video_id)
                 this.videoName = source.name
-                this.currentChannelName = 'On Demand (File)'
             }
             // if url exists:
             else if (source.video_url) {
                 this.loadNewSourceFromUrl(source.video_url)
                 this.videoName = source.name
-                this.currentChannelName = 'On Demand (Url)'
                 Inertia.visit('/stream')
-            }
-            // if embed_code exists:
-            else if (source.video_embed_code) {
-                this.loadNewSourceFromEmbedCode(source.video_embed_code)
-                this.videoName = source.name
-                this.currentChannelName = 'On Demand (Embed Code)'
             }
             // else return... videoNotAvailable
             else {
@@ -300,22 +292,12 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
         },
         loadNewSourceFromUrl(source) {
             this.videoIsYoutube = false
-            // useChannelStore().clearChannel()
-            let videoJs = videojs('main-player')
-            this.videoSource = source
-            this.videoSourceType = "video/mp4"
-            videoJs.src({'src': this.videoSource, 'type': this.videoSourceType})
-            // this.play()
-            this.unmute()
-            this.paused = false
-        },
-        loadNewSourceFromEmbedCode(source) {
-            this.videoIsYoutube = false
             useChannelStore().clearChannel()
             let videoJs = videojs('main-player')
             this.videoSource = source
             this.videoSourceType = "video/mp4"
             videoJs.src({'src': this.videoSource, 'type': this.videoSourceType})
+            // this.play()
             this.unmute()
             this.paused = false
         },

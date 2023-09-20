@@ -164,7 +164,7 @@ import NewsHeader from "@/Components/News/NewsHeader.vue";
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 
-videoPlayerStore.currentPage = 'newsroom'
+userStore.currentPage = 'newsroom'
 userStore.showFlashMessage = true;
 
 function scrollToCities() {

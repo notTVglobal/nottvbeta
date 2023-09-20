@@ -121,7 +121,7 @@ import NewsHeaderButtons from "@/Components/News/NewsHeaderButtons.vue";
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 
-videoPlayerStore.currentPage = 'news'
+userStore.currentPage = 'news'
 userStore.showFlashMessage = true;
 
 function scrollToCities() {

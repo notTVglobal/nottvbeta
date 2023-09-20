@@ -112,7 +112,7 @@ let submit = () => {
     form.post('/teams');
 }
 
-videoPlayerStore.currentPage = 'teams'
+userStore.currentPage = 'teams'
 userStore.showFlashMessage = true;
 
 onMounted(() => {

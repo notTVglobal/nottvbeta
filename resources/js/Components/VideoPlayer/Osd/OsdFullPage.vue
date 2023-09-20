@@ -1,9 +1,9 @@
 <template>
 <div>
     <div class="osdFullPage">
-        <div v-if="channelStore.currentChannelName !== '' || null">
+        <div v-if="channelStore.currentChannelName">
             <span class="text-xs uppercase pr-2">Channel: </span>
-            <span class="text-xs font-semibold">{{ videoPlayerStore.currentChannelName }}</span>
+            <span class="text-xs font-semibold">{{ channelStore.currentChannelName }}</span>
         </div>
         <div v-if="videoPlayerStore.videoName !== ''">
             <span class="text-xs uppercase pr-2">Now playing: </span>
@@ -13,7 +13,7 @@
             <span v-if="channelStore.isLive" class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-white bg-opacity-80 bg-red-800 last:mr-0 mr-1">
                 live
             </span>
-            <div v-if="channelStore.currentChannelId !== 0">
+            <div v-if="channelStore.currentChannelId">
                 <CurrentViewers />
             </div>
         </div>

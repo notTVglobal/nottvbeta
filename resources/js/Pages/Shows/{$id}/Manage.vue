@@ -179,7 +179,7 @@ let showStore = useShowStore();
 let teamStore = useTeamStore();
 let userStore = useUserStore()
 
-videoPlayerStore.currentPage = 'shows'
+userStore.currentPage = 'shows'
 userStore.showFlashMessage = true;
 
 onMounted(() => {

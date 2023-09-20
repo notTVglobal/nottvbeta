@@ -293,7 +293,7 @@ let submit = () => {
 
 let getAllEpisodesButtonActive = ref(true);
 
-videoPlayerStore.currentPage = 'admin'
+userStore.currentPage = 'adminSettings'
 userStore.showFlashMessage = true;
 
 onMounted(async () => {

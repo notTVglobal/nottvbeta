@@ -14,7 +14,7 @@ import Message from "@/Components/Modals/Messages";
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 
-videoPlayerStore.currentPage = 'library'
+userStore.currentPage = 'paymentCancelled'
 
 // onBeforeMount(() => {
 //     userStore.scrollToTopCounter = 0;

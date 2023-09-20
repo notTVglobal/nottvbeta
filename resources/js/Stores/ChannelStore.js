@@ -5,7 +5,7 @@ import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore";
 
 export let useChannelStore = defineStore('channelStore', {
     state: () => ({
-        currentChannelId: ref(0),
+        currentChannelId: 0,
         currentChannelName: '',
         isLive: false,
         viewerCount: 0,
@@ -24,20 +24,22 @@ export let useChannelStore = defineStore('channelStore', {
                 })
         },
         async changeChannel(channel) {
+            let oldChannelId = 0
+            oldChannelId = this.currentChannelId
             useVideoPlayerStore().currentChannelName = channel.name
             this.currentChannelName = channel.name
             this.currentChannelId = channel.id
             this.isLive = channel.isLive
             console.log('Change Channel')
-            console.log(this.currentChannelId)
-            console.log(this.currentChannelName)
+            console.log(channel.id)
+            console.log(channel.name)
             if (this.isLive) {
                 console.log('Channel is live.')
             }
             if (useUserStore().id !== null) {
                 this.userAddedToChannels = true
-                 await this.disconnectViewerFromChannel()
-                 await this.addViewerToChannel()
+                this.disconnectViewerFromChannel(oldChannelId)
+                await this.addViewerToChannel(channel.id)
             }
 
             if (channel.channel_source !== null) {
@@ -61,10 +63,12 @@ export let useChannelStore = defineStore('channelStore', {
             // streamType = channel.source.type (e.g. "application/x-mpegURL")
 
         },
-        async clearChannel() {
+        clearChannel() {
+            this.disconnectViewerFromChannel(this.currentChannelId);
             this.currentChannelName = null;
             this.currentChannelId = null;
-            await this.disconnectViewerFromChannel();
+            this.userAddedToChannels = false;
+            this.viewerCount = 0;
             // if (useUserStore().oldLoggedOutId !== null) {
             //     await this.disconnectLoggedOutUserFromChannel();
             // }
@@ -80,9 +84,9 @@ export let useChannelStore = defineStore('channelStore', {
             //         console.log(error);
             //     })
         },
-        async addViewerToChannel() {
-            useVideoPlayerStore().videoName = null
-            Echo.join('viewerCount.' + this.currentChannelId)
+        async addViewerToChannel(id) {
+            useVideoPlayerStore().videoName = ''
+            Echo.join('viewerCount.' + id)
                 .here((users) => {
                     this.userAddedToChannels = true
                     this.viewerCount = users.length
@@ -122,8 +126,8 @@ export let useChannelStore = defineStore('channelStore', {
             //     })
 
         },
-        async disconnectViewerFromChannel() {
-            Echo.leaveAllChannels('viewerCount.' + this.currentChannelId)
+        disconnectViewerFromChannel(id) {
+            Echo.leave('viewerCount.' + id)
             // await axios.post('/api/removeCurrentViewer', {
             //     'channel_id': this.currentChannelId,
             //     'user_id': useUserStore().id,

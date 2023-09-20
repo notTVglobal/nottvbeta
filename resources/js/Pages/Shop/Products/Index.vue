@@ -80,7 +80,7 @@ let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 let shopStore = useShopStore()
 
-videoPlayerStore.currentPage = 'shop'
+userStore.currentPage = 'products'
 userStore.showFlashMessage = true;
 
 onMounted(() => {

@@ -15,7 +15,7 @@ import Message from "@/Components/Modals/Messages";
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 
-videoPlayerStore.currentPage = 'library'
+userStore.currentPage = 'paymentSuccess'
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight()

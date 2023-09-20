@@ -448,7 +448,7 @@ let submit = () => {
     form.put(route('movies.update', props.movie.slug));
 }
 
-videoPlayerStore.currentPage = 'movies'
+userStore.currentPage = 'movieEdit'
 userStore.showFlashMessage = true;
 
 onMounted(() => {

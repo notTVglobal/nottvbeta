@@ -207,7 +207,7 @@ let exportCodes = () => {
     Inertia.visit('/admin/export_invite_codes');
 }
 
-videoPlayerStore.currentPage = 'admin'
+userStore.currentPage = 'adminInviteCodes'
 userStore.showFlashMessage = true;
 
 onMounted(async () => {

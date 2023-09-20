@@ -170,7 +170,7 @@ import SingleImage from "@/Components/Multimedia/SingleImage";
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 
-videoPlayerStore.currentPage = 'shows'
+userStore.currentPage = 'shows'
 userStore.showFlashMessage = true;
 
 function scrollToNewEpisodes() {

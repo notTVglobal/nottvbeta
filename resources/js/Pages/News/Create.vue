@@ -128,7 +128,7 @@ let submit = () => {
     form.post(route("news.store"));
 };
 
-videoPlayerStore.currentPage = 'newsCreate'
+userStore.currentPage = 'newsCreate'
 userStore.showFlashMessage = true;
 
 onBeforeMount(() => {

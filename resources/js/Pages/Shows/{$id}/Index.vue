@@ -253,12 +253,10 @@ let playEpisode = () => {
         // play video if !processing
         videoPlayerStore.loadNewSourceFromFile(props.show.firstPlayVideo)
         videoPlayerStore.videoName = props.show.name+' (file)'
-        videoPlayerStore.currentChannelName = 'On Demand ('+props.show.name+') from file'
         Inertia.visit('/stream')
     } else if (props.show.firstPlayVideoUrl) {
         videoPlayerStore.loadNewSourceFromUrl(props.show.firstPlayVideoUrl)
         videoPlayerStore.videoName = props.show.name+' (web)'
-        videoPlayerStore.currentChannelName = 'On Demand ('+props.show.name+') from web'
         Inertia.visit('/stream')
     }
 }

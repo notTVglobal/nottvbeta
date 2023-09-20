@@ -356,8 +356,8 @@ import Message from "@/Components/Modals/Messages";
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 
-videoPlayerStore.currentPage = 'dashboard'
 videoPlayerStore.loggedIn = true
+userStore.currentPage = 'dashboard'
 userStore.showFlashMessage = true;
 
 onBeforeMount(() => {

@@ -97,7 +97,7 @@ let videoPlayerStore = useVideoPlayerStore();
 let teamStore = useTeamStore();
 let userStore = useUserStore()
 
-videoPlayerStore.currentPage = 'teams'
+userStore.currentPage = 'teams'
 userStore.showFlashMessage = true;
 
 onMounted(() => {

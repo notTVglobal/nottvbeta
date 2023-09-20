@@ -178,7 +178,7 @@ let props = defineProps({
 let movie = 'test-movie-2'
 let search = ref(props.filters.search);
 
-videoPlayerStore.currentPage = 'movies'
+userStore.currentPage = 'movies'
 userStore.showFlashMessage = true;
 
 onMounted(() => {

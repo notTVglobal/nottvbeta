@@ -284,7 +284,7 @@ let playMovie = () => {
 
 }
 
-videoPlayerStore.currentPage = 'movies'
+userStore.currentPage = 'movies'
 userStore.showFlashMessage = true;
 
 onMounted(() => {

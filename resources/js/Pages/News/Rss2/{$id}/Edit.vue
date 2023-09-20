@@ -126,7 +126,7 @@ let submit = () => {
 
 let showMessage = ref(true);
 
-videoPlayerStore.currentPage = 'newsRssCreate'
+userStore.currentPage = 'newsFeedEdit'
 userStore.showFlashMessage = true;
 
 onMounted(() => {

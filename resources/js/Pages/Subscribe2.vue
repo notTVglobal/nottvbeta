@@ -112,7 +112,7 @@ const handleSubmit = async () => {
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 
-videoPlayerStore.currentPage = 'subscribe'
+userStore.currentPage = 'subscribe'
 
 
 onMounted(() => {

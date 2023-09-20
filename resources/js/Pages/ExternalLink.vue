@@ -44,7 +44,7 @@ let props = defineProps({
     can: Object,
 })
 
-videoPlayerStore.currentPage = 'ExternalLink'
+userStore.currentPage = 'ExternalLink'
 userStore.showFlashMessage = true;
 
 onMounted(() => {

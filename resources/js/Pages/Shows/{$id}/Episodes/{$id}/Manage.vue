@@ -187,7 +187,7 @@ let showStore = useShowStore();
 let teamStore = useTeamStore();
 let userStore = useUserStore()
 
-videoPlayerStore.currentPage = 'episodes'
+userStore.currentPage = 'episodes'
 userStore.showFlashMessage = true;
 
 let playerName = 'aux-player';

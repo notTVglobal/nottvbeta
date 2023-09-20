@@ -203,7 +203,7 @@ const selectedFile = () => {
     dropzoneFile.value = document.querySelector('.dropzoneFile').files[0];
 }
 
-videoPlayerStore.currentPage = 'moviesUpload'
+userStore.currentPage = 'movieCreate'
 userStore.showFlashMessage = true;
 
 onMounted(() => {

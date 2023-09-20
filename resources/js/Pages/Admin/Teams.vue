@@ -151,7 +151,7 @@ let props = defineProps({
 
 let search = ref(props.filters.search);
 
-videoPlayerStore.currentPage = 'admin'
+userStore.currentPage = 'adminTeams'
 userStore.showFlashMessage = true;
 
 onMounted(() => {

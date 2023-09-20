@@ -47,7 +47,7 @@ import Message from "@/Components/Modals/Messages";
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 
-videoPlayerStore.currentPage = 'training'
+userStore.currentPage = 'training'
 userStore.showFlashMessage = true;
 
 onMounted(() => {

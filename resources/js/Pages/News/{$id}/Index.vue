@@ -91,7 +91,7 @@ import {Inertia} from "@inertiajs/inertia";
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 
-videoPlayerStore.currentPage = 'news'
+userStore.currentPage = 'news'
 userStore.showFlashMessage = true;
 
 onMounted(() => {

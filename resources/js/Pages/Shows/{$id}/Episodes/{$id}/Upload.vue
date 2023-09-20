@@ -153,7 +153,7 @@ let teamStore = useTeamStore()
 let showStore = useShowStore()
 let userStore = useUserStore()
 
-videoPlayerStore.currentPage = 'episodes'
+userStore.currentPage = 'episodes'
 userStore.showFlashMessage = true;
 teamStore.setActiveTeam(props.team);
 teamStore.setActiveShow(props.show);

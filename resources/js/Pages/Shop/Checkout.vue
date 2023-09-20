@@ -197,7 +197,7 @@ let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 let shopStore = useShopStore()
 
-videoPlayerStore.currentPage = 'shop'
+userStore.currentPage = 'checkout'
 userStore.showFlashMessage = true;
 
 let props = defineProps({
