@@ -36,7 +36,7 @@ let props = defineProps({
     time: String,
 })
 // const nowTime = current.getHours() + ":" + current.getMinutes() + ":" + current.getSeconds();
-const timeAgo = useTimeAgo(props.message.created_at)
+let timeAgo = useTimeAgo(props.message.created_at)
 
 // let timeKey = 1;
 

@@ -5,10 +5,10 @@
             <div id="scrollToMe"></div>
 
             <div id="newMessages" v-for="(message, messages) in chatStore.newMessages.slice().reverse()" :key="messages">
-                <message-item :id="message.id" :message="message" :time="time(message.created_at)"/>
+                <message-item :id="message.id" :message="message"/>
             </div>
             <div id="oldMessages" v-for="(message, messages) in chatStore.oldMessages.slice()" :key="messages">
-                <message-item :id="message.id" :message="message" :time="time(message.created_at)"/>
+                <message-item :id="message.id" :message="message"/>
             </div>
 
         </div>
@@ -27,17 +27,36 @@ import relativeTime from "dayjs/plugin/relativeTime";
 let chatStore = useChatStore()
 let userStore = useUserStore()
 
-dayjs.extend(relativeTime)
-
 let props = defineProps({
     message: Object,
 })
 
 let channels = ref([])
 
+const channel = Echo.private('chat.' + '1')
+channel.subscribed(() => {
+}).listen('.chat', (event) => {
+    chatStore.newMessages.push(event.message)
+})
+
+
 onBeforeMount(async() => {
     await connect();
 });
+
+onUpdated(() => {
+    scrollTo('#scrollToMe')
+    // if (chatStore.newMessages[0]) {
+    //     document.getElementById(chatStore.newMessages[0].id).scrollIntoView({behavior: "smooth"})
+    // }
+})
+
+onBeforeUnmount(() => {
+    chatStore.newMessages = [];
+    disconnect();
+});
+
+dayjs.extend(relativeTime)
 
 function connect() {
     console.log('STREAM CHAT CONNECTED');
@@ -77,45 +96,16 @@ function disconnect() {
     console.log('STREAM CHAT DISCONNECTED');
 }
 
-onBeforeUnmount(() => {
-    chatStore.newMessages = [];
-    disconnect();
-});
-
-const channel = Echo.private('chat.' + '1')
-channel.subscribed(() => {
-}).listen('.chat', (event) => {
-    chatStore.newMessages.push(event.message)
-})
-
 
 // add a WatchEffect here to update the time stamps
 // every few minutes.
-
-// tec21: this is an attempt to set a timer to update the timestamp on messages
-// function time(e) {
-//     let formattedTime = dayjs().to(dayjs(e));
-//     this.timer = setInterval( () => {
-//         formattedTime = dayjs().to(dayjs(e));
-//     }, 1000)
-//     return formattedTime;
-// }
-
-function time(e) {
-    return dayjs().to(dayjs(e));
-}
 
 // scrollToMe button:
 function scrollTo(selector) {
     document.querySelector(selector).scrollIntoView({ behavior: 'smooth'});
 }
 
-onUpdated(() => {
-    scrollTo('#scrollToMe')
-    // if (chatStore.newMessages[0]) {
-    //     document.getElementById(chatStore.newMessages[0].id).scrollIntoView({behavior: "smooth"})
-    // }
-})
+
 
 // tec21: this is for setting a timer to update the timestamps on the messages.
 // onUnmounted( () => {
