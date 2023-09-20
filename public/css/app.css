@@ -5590,6 +5590,10 @@ h3 {
   margin-top: -1px;
 }
 
+.mb-32 {
+  margin-bottom: 8rem;
+}
+
 .block {
   display: block;
 }
@@ -7263,6 +7267,10 @@ h3 {
 
 .pt-8 {
   padding-top: 2rem;
+}
+
+.pb-32 {
+  padding-bottom: 8rem;
 }
 
 .text-left {

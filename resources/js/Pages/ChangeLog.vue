@@ -1,15 +1,15 @@
 <template>
     <Head title="Privacy Policy"/>
 
-    <div id="topDiv" class="font-sans text-gray-900 antialiased ">
-        <div class="pt-4 bg-gray-100 rounded">
-            <div class="flex flex-col items-center pt-6 sm:pt-0">
+    <div id="topDiv" class="font-sans text-gray-900 antialiased">
+        <div class="pt-4 rounded">
+            <div class="flex flex-col items-center pt-6 sm:pt-0 pb-32">
                 <div>
-                    <JetAuthenticationCardLogo/>
+                    <img :src="`/storage/images/logo_white_512.png`" alt="image" class="w-1/2 justify-center">
                 </div>
 
-                <div class="changelog mb-5 mt-10 w-full px-4">
-                        <span class="mt-6 p-6 bg-white shadow-md sm:rounded-lg prose"
+                <div class="changelog w-full mt-10 mb-32 px-4">
+                        <span class="mt-6 p-6 bg-gray-800 text-gray-50 shadow-md sm:rounded-lg prose"
                          v-html="changelog"/>
                 </div>
 
