@@ -162,7 +162,7 @@
             <div class="w-full bg-gray-300 dark:bg-gray-900 rounded p-3 my-8 mx-2 border-b border-2">
                 <div class="stat place-items-center mb-4">
                     <div class="stat-title text-black dark:text-white mb-2">Yesterday's Top Show</div>
-                    <div class="stat-value text-accent">Down The Rabbit Hole</div>
+                    <div class="stat-value text-accent md:text-lg text-sm">Down The Rabbit Hole</div>
                     <div class="stat-desc">︎Episode 2</div>
                 </div>
             </div>
@@ -245,9 +245,9 @@
                     In development. Not currently working.
                 </div>
 
-                <div class="w-1/2 mx-auto stats bg-primary text-primary-content">
+                <div class="w-fit mx-auto stats stats-vertical sm:stats-horizontal bg-primary text-primary-content">
 
-                    <div class="stat">
+                    <div class="stat my-2">
                         <div class="stat-title">Total balance</div>
                         <div class="stat-value">$89,410</div>
                         <div class="stat-actions">
@@ -255,7 +255,7 @@
                         </div>
                     </div>
 
-                    <div class="stat">
+                    <div class="stat my-2">
                         <div class="stat-title">Available balance</div>
                         <div class="stat-value">$89,400</div>
                         <div class="stat-actions">

@@ -80,16 +80,34 @@
                 </div>
 
 
-                <div class="ml-20 lg:flex lg:items-center">
+                <div class="flex flex-row space-x-4 pt-2">
 
-                    <div class="grid grid-cols-2 gap-4">
-                        <div v-if="userStore.isCreator" class="text-yellow-600 uppercase hidden md:block text-xs w-full">
+                        <div class="flex-item align-text-top mt-2 mx-6">
+                            <div class="indicator">
+                                <span class="indicator-item badge badge-secondary">99+</span>
+                                <button class="btn btn-sm primary-content"
+                                @click="openNotifications()">
+                                                    <svg aria-hidden="false" focusable="false" data-prefix="fas" data-icon="bell" class="mx-auto text-white w-4 hover:text-blue-600 cursor-pointer" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                                                        <path fill="white" d="M224 512c35.32 0 63.97-28.65 63.97-64H160.03c0 35.35 28.65 64 63.97 64zm215.39-149.71c-19.32-20.76-55.47-51.99-55.47-154.29 0-77.7-54.48-139.9-127.94-155.16V32c0-17.67-14.32-32-31.98-32s-31.98 14.33-31.98 32v20.84C118.56 68.1 64.08 130.3 64.08 208c0 102.3-36.15 133.53-55.47 154.29-6 6.45-8.66 14.16-8.61 21.71.11 16.4 12.98 32 32.1 32h383.8c19.12 0 32-15.6 32.1-32 .05-7.55-2.61-15.27-8.61-21.71z"></path>
+                                                    </svg>
+                                </button>
+                            </div>
+                            <dialog id="my_modal_2" class="modal">
+                                <div class="modal-box">
+                                    <h3 class="font-bold text-lg">Hello!</h3>
+                                    <p class="py-4">Notifications will go here.</p>
+                                    <p class="py-4">Press ESC key or click outside to close</p>
+                                </div>
+                                <form method="dialog" class="modal-backdrop">
+                                    <button>close</button>
+                                </form>
+                            </dialog>
+                        </div>
+
+                        <div v-if="userStore.isCreator" class="flex-item pt-3 text-yellow-600 uppercase hidden md:block text-xs w-fit">
                             GOAL <span class="text-sm font-semibold">100</span> subscribers
                         </div>
-                        <div class="align-text-top -mt-5 hidden">
-                            <NotificationsButton class=""/>
-                        </div>
-                        <div>
+                        <div class="flex-item">
                             <div v-if="!userStore.isAdmin && !userStore.isVip && !userStore.isSubscriber">
                                 <JetNavLink v-touch="()=>(route('upgrade'))"
                                             @click="videoPlayerStore.makeVideoTopRight()"
@@ -104,9 +122,8 @@
                                 <div v-if="userStore.isCreator && userStore.isSubscriber && !userStore.isAdmin" class="text-fuchsia-700">CREATOR</div>
                             <div v-if="userStore.isAdmin" class="text-red-700">ADMIN</div>
                         </div>
-                    </div>
                     <!-- Settings Dropdown -->
-                    <div class="relative menuMask">
+                    <div class="relative menuMask w-fit">
 
                         <JetDropdown align="right" width="48">
                             <template #trigger>
@@ -311,6 +328,10 @@ const logout = () => {
 
 function billingPortal() {
     location.href = ('https://not.tv/billing-portal')
+}
+
+function openNotifications() {
+    document.getElementById('my_modal_2').showModal()
 }
 
 </script>

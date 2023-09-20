@@ -1,16 +1,29 @@
 # not.tv Changelog
 
 
-Last Update: September 19, 2023\
+Last Update: September 20, 2023\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.7.3.2
+September 20, 2023
+* Create notifications button.
+* Fix channel viewer count
+* Fix channel name and video name displaying incorrectly on Stream page.
+
+
 ## v0.7.3
+September 19, 2023
 * Fix Viewer Count not displaying correctly when watching a channel.
 * Fix Watch Now button on the Show page to play if any episode has a video or video_url.
 * Added a "The first episode is processing..." banner to the Show page if it has a video but the video is processing.
 * Updated the Stats on the Dashboard for Creators to show accurate numbers where available and changed the layout.
+* Create notifications button.
+* Fix channel viewer count
+* Fix channel name and video name displaying incorrectly on Stream page.
+* 
 
 ## v0.7.2
+September 19, 2023
 * App loads bitchute and rumble videos from embed codes using ScraperAPI.
 * RSS Feeds work, the Feeds controller needs to be removed and replaced with the RSS2 controller.
 * More notes will be provided for the next update... 

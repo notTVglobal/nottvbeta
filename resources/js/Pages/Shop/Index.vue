@@ -14,7 +14,7 @@
             </header>
 
             <div class="mb-4">
-                <div class="p-2 font-semibold text-2xl bg-orange-300 text-black">Now here!</div>
+                <div class="p-2 font-semibold text-2xl bg-orange-300 text-black">Now here! Products coming soon.</div>
                 <p class="mt-4">
                     This is the home for our notTV Shop... Our sponsors and content creators will be able to add commercials for products, services and events.
                 </p>
