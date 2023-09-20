@@ -5127,6 +5127,11 @@ h3 {
   margin-bottom: auto;
 }
 
+.my-8 {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
 .-ml-px {
   margin-left: -1px;
 }
@@ -7423,6 +7428,11 @@ h3 {
 .text-secondary {
   --tw-text-opacity: 1;
   color: hsl(var(--s) / var(--tw-text-opacity));
+}
+
+.text-accent {
+  --tw-text-opacity: 1;
+  color: hsl(var(--a) / var(--tw-text-opacity));
 }
 
 .underline {

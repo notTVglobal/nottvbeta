@@ -6,14 +6,14 @@
 
             <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
-            <div class="flex justify-between mb-3 pt-4">
+            <div class="flex justify-between mb-6 pt-4">
 
 
-                <h1 class="text-3xl font-semibold pb-3">Dashboard (Creators only)</h1>
+                <h1 class="text-3xl font-semibold">Dashboard for Creators</h1>
 
             </div>
 
-                <div class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4 mb-4">
+                <div class="w-full flex flex-wrap-reverse mx-auto gap-2 mb-6">
                     <Link
                         :href="`/admin/settings`"><button
                         class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
@@ -49,7 +49,7 @@
 
                 </div>
 
-            <section class="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-16 mb-8 mx-2 m-auto text-black">
+            <section class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-8 mx-2 m-auto text-black">
                 <div class="p-5 bg-gray-200 dark:bg-gray-800 rounded">
                     <div class="mb-3 grid grid-cols-1">
                         <div class="mb-1 font-semibold text-xl justify-self-start dark:text-gray-50">Open Assignments</div>
@@ -159,116 +159,75 @@
 
             </section>
 
+            <div class="w-full bg-gray-300 dark:bg-gray-900 rounded p-3 my-8 mx-2 border-b border-2">
+                <div class="stat place-items-center mb-4">
+                    <div class="stat-title text-black dark:text-white mb-2">Yesterday's Top Show</div>
+                    <div class="stat-value text-accent">Down The Rabbit Hole</div>
+                    <div class="stat-desc">︎Episode 2</div>
+                </div>
+            </div>
+
             <div class="w-full bg-gray-300 dark:bg-gray-900 rounded pb-8 p-3 mb-16 mx-2 border-b border-2">
 
                 <div class="font-semibold text-xl pb-2">Stats</div>
 
                 <div class="w-full mx-auto stats shadow stats-vertical lg:stats-horizontal">
 
+
+
                     <div class="stat place-items-center">
                         <div class="stat-title">Avg. Daily View Time</div>
-                        <div class="stat-value">31 minutes</div>
+                        <div class="stat-value">~ minutes</div>
                         <div class="stat-desc">From January 1st to February 1st</div>
                     </div>
 
                     <div class="stat place-items-center">
-                        <div class="stat-title">Total Users</div>
-                        <div class="stat-value text-secondary">4,200</div>
-                        <div class="stat-desc text-secondary">↗︎ 40 (2%)</div>
+                        <div class="stat-title">Premium subscribers</div>
+                        <div class="stat-value text-secondary">{{ subscriptionCount }}</div>
+                        <div class="stat-desc">↗︎ ~ (~%)</div>
                     </div>
 
                     <div class="stat place-items-center">
                         <div class="stat-title">New Creators</div>
-                        <div class="stat-value">1,200</div>
-                        <div class="stat-desc">↘︎ 90 (14%)</div>
+                        <div class="stat-value">~</div>
+                        <div class="stat-desc">↘︎ ~ (~%)</div>
                     </div>
 
                 </div>
 
-
-                <div class="grid grid-cols-2 xl:grid-cols-3 justify-center gap-2">
-
-                    <div class="px-4 pt-8 w-100 h-48 bg-gray-400 text-black rounded shadow-md text-center">
-                        <div class="stat place-items-center">
-                            <div class="stat-title text-black font-semibold">Total Video Storage Used</div>
-                            <div class="stat-value text-secondary">{{ notTvTotalStorageUsed }}</div>
-                            <div class="stat-desc text-black">My total: {{ myTotalStorageUsed }} (2%)</div>
-                        </div>
+                <div class="w-full mt-4 mx-auto stats shadow stats-vertical lg:stats-horizontal">
+                    <div class="stat place-items-center">
+                        <div class="stat-title">Total Shows</div>
+                        <div class="stat-value">{{ showCount }}</div>
+                        <div class="stat-desc">↗︎ ~ (~%)</div>
                     </div>
-
-                    <div class="px-4 py-4 w-100 h-48 bg-gray-400 text-black rounded shadow-md text-center">
-                        <div class="font-semibold">
-                            Total Subscribers
-                        </div>
-                        <div>
-                            Graph here
-                            <div class="mt-4">
-                                <ul>
-                                    <li>Display total # of premium subscribers"</li>
-                                </ul>
-                            </div>
-                        </div>
+                    <div class="stat place-items-center">
+                        <div class="stat-title">Total Users</div>
+                        <div class="stat-value">{{ userCount }}</div>
+                        <div class="stat-desc">↗︎ ~ (~%)</div>
                     </div>
-
-                    <div class="px-4 py-4 w-100 h-48 bg-gray-400 text-black rounded shadow-md text-center">
-                        <div class="font-semibold">
-                            Total Creators
-                        </div>
-                        <div>
-                            Graph here
-                            <div class="mt-4">
-                                <ul>
-                                    <li>Display total # of creators"</li>
-                                </ul>
-                            </div>
-                        </div>
+                    <div class="stat place-items-center">
+                        <div class="stat-title">Total Creators</div>
+                        <div class="stat-value">{{ creatorCount }}</div>
+                        <div class="stat-desc">︎↗︎ ~ (~%)</div>
                     </div>
+                </div>
 
-                    <div class="px-4 py-4 w-100 h-48 bg-gray-400 text-black rounded shadow-md text-center">
-                        <div class="font-semibold">
-                            Avg. View Time
-                        </div>
-                        <div>
-                            Graph here
-                            <div class="mt-4">
-                                <ul>
-                                    <li>Display total view time.</li>
-                                    <li>Will need a table to keep track of this.</li>
-                                </ul>
-                            </div>
-                        </div>
+                <div class="w-full mt-4 mx-auto stats shadow stats-vertical lg:stats-horizontal">
+                    <div class="stat place-items-center">
+                        <div class="stat-title">Total Video Storage Used</div>
+                        <div class="stat-value text-secondary">{{ notTvTotalStorageUsed }}</div>
+                        <div class="stat-desc">My total: {{ myTotalStorageUsed }} ({{ myTotalStoragePercentage }}%)</div>
                     </div>
-
-                    <div class="px-4 py-4 w-100 h-48 bg-gray-400 text-black rounded shadow-md text-center">
-                        <div class="font-semibold">
-                            Daily Peak Bandwidth
-                        </div>
-                        <div>
-                            Graph here
-                            <div class="mt-4">
-                                <ul>
-                                    <li>* Display total peak bandwidth.</li>
-                                    <li>* This can be captured from Mist logs</li>
-                                    <li>* What about <a href="https://www.digitalocean.com/blog/its-all-about-the-bandwidth-why-many-network-intensive-services-select-digitalocean-as-their-cloud" target="_blank" class="text-blue-800">Digital Ocean?</a></li>
-
-
-                                </ul>
-                            </div>
-                        </div>
+                    <div class="stat place-items-center">
+                        <div class="stat-title">Daily Peak Bandwidth</div>
+                        <div class="stat-value text-secondary">~ Gbps</div>
+                        <div class="stat-desc">︎↘︎ ~ (~%)</div>
                     </div>
-
-                    <div class="px-4 py-4 w-100 h-48 bg-gray-400 text-black rounded shadow-md text-center">
-                        <div class="font-semibold">
-                            Today's Top Show
-                        </div>
-                        <div>
-                            Display poster here
-                            <div class="mt-4">
-                                <ul>
-                                    <li>Will need a table to track this.</li>
-                                </ul>
-                            </div>
-                        </div>
+                    <div class="stat place-items-center">
+                        <div class="stat-title">Average Bandwidth per User</div>
+                        <div class="stat-value text-secondary">~ Mbps</div>
+                        <div class="stat-desc">︎↘︎ ~ (~%)</div>
                     </div>
 
                 </div>
@@ -388,7 +347,7 @@
 </template>
 
 <script setup>
-import { onBeforeMount, onMounted, ref } from "vue";
+import {computed, onBeforeMount, onMounted, ref} from "vue";
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useUserStore } from "@/Stores/UserStore";
 import Pagination from "@/Components/Pagination"
@@ -437,9 +396,34 @@ let props = defineProps({
     isVip: null,
     shows: Object,
     teams: Object,
-    myTotalStorageUsed: String,
-    notTvTotalStorageUsed: String,
+    myTotalStorageUsed: ref(String),
+    notTvTotalStorageUsed: ref(String),
+    showCount: Number,
+    userCount: Number,
+    creatorCount: Number,
+    subscriptionCount: Number,
     can: Object,
+});
+
+// Function to extract the numeric value from a string with "MB" suffix
+const extractNumericValue = (str) => {
+    const numericValue = parseFloat(str);
+    return isNaN(numericValue) ? 0 : numericValue;
+};
+
+// Convert x and n to numeric values
+const myTotalStorageUsedNumeric = extractNumericValue(props.myTotalStorageUsed);
+const notTvTotalStorageUsedNumeric = extractNumericValue(props.notTvTotalStorageUsed);
+
+// Create a computed property to calculate the percentage
+const myTotalStoragePercentage = computed(() => {
+    // return Math.round((myTotalStorageUsedNumeric / notTvTotalStorageUsedNumeric) * 100);
+    return ((myTotalStorageUsedNumeric / notTvTotalStorageUsedNumeric) * 100).toFixed(2);
+});
+
+// Round the percentage to have no decimal places
+const myTotalStorageRoundedPercentage = computed(() => {
+    return Math.round(myTotalStoragePercentage);
 });
 
 function updateUserStore() {

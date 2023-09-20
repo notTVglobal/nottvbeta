@@ -66,7 +66,7 @@ export default {
                     id="email"
                     v-model="form.email"
                     type="email"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full text-black"
                     required
                     autofocus
                 />
@@ -78,7 +78,7 @@ export default {
                     id="password"
                     v-model="form.password"
                     type="password"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full text-black"
                     required
                     autocomplete="current-password"
                 />

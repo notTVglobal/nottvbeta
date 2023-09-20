@@ -8,6 +8,7 @@ Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 * Fix Viewer Count not displaying correctly when watching a channel.
 * Fix Watch Now button on the Show page to play if any episode has a video or video_url.
 * Added a "The first episode is processing..." banner to the Show page if it has a video but the video is processing.
+* Updated the Stats on the Dashboard for Creators to show accurate numbers where available and changed the layout.
 
 ## v0.7.2
 * App loads bitchute and rumble videos from embed codes using ScraperAPI.

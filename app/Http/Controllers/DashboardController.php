@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Creator;
 use App\Models\Image;
+use App\Models\NewsPerson;
 use App\Models\Show;
 use App\Models\Team;
 use App\Models\TeamMember;
@@ -13,6 +15,7 @@ use Inertia\Inertia;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Response;
+use Laravel\Cashier\Subscription;
 
 class DashboardController extends Controller
 {
@@ -24,6 +27,12 @@ class DashboardController extends Controller
     public function index()
     {
         $user = User::find(Auth::user()->id);
+        $showCount = Show::count();
+        $userCount = User::count();
+        $creatorCount = Creator::count();
+        $activeSubscribersCount = User::whereHas('subscriptions', function ($query) {
+            $query->where('stripe_status', 'active');
+        })->count();
 
         function formatBytes($bytes, $precision = 2) {
             $unit = ["B", "KB", "MB", "GB"];
@@ -108,6 +117,10 @@ class DashboardController extends Controller
                 ->sum('size')),
             'notTvTotalStorageUsed' => formatBytes(Video::all()
                 ->sum('size')),
+            'showCount' => $showCount,
+            'userCount' => $userCount,
+            'creatorCount' => $creatorCount,
+            'subscriptionCount' => $activeSubscribersCount,
             'can' => [
                 'viewDashboard' => Auth::user()->can('viewDashboard', Creator::class),
                 'viewAdmin' => Auth::user()->can('viewAdmin', User::class),
