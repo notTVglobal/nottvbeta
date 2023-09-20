@@ -108,7 +108,7 @@
                     v-if="!userStore.isSubscriber && !userStore.isAdmin && !userStore.isVip"
                     @click="userStore.closeNavDropdown()"
                     :href="route('upgrade')"
-                    :active="route().current('upgrade')"
+                    :active="userStore.currentPage === 'upgrade'"
                 >
                     <div class="rounded-lg p-2 bg-gray-100 text-black hover:text-green-900">
                         CLICK HERE TO UPGRADE YOUR ACCOUNT
@@ -119,7 +119,7 @@
                     v-if="userStore.isCreator"
                     @click="userStore.closeNavDropdown()"
                     :href="route('dashboard')"
-                    :active="route().current('dashboard')">
+                    :active="userStore.currentPage === 'dashboard'">
                     Dashboard
                 </JetResponsiveNavLink>
 
@@ -127,21 +127,21 @@
                     v-if="userStore.isVip"
                     @click="userStore.closeNavDropdown()"
                     :href="route('library')"
-                    :active="route().current('library')">
+                    :active="userStore.currentPage === 'library'">
                     My Library
                 </JetResponsiveNavLink>
 
                 <JetResponsiveNavLink
                     @click="userStore.closeNavDropdown()"
                     :href="route('schedule')"
-                    :active="route().current('schedule')">
+                    :active="userStore.currentPage === 'schedule'">
                         Schedule
                 </JetResponsiveNavLink>
 
                 <JetResponsiveNavLink
                     @click="userStore.closeNavDropdown()"
                     :href="route('news')"
-                    :active="route().current('news')">
+                    :active="userStore.currentPage === 'news'">
                         News
                 </JetResponsiveNavLink>
 
@@ -149,7 +149,7 @@
                     v-if="userStore.isSubscriber || userStore.isVip || userStore.isCreator"
                     @click="userStore.closeNavDropdown()"
                     :href="route('movies')"
-                    :active="route().current('movies')">
+                    :active="userStore.currentPage === 'movies'">
                         Movies
                 </JetResponsiveNavLink>
 
@@ -157,14 +157,14 @@
                     v-if="userStore.isSubscriber || userStore.isVip || userStore.isCreator"
                     @click="userStore.closeNavDropdown()"
                     :href="route('shows')"
-                    :active="route().current('shows')">
+                    :active="userStore.currentPage === 'shows'">
                         Shows
                 </JetResponsiveNavLink>
 
                 <JetResponsiveNavLink
                     @click="userStore.closeNavDropdown()"
                     :href="route('shop')"
-                    :active="route().current('shop')">
+                    :active="userStore.currentPage === 'shop'">
                         Shop
                 </JetResponsiveNavLink>
 
@@ -185,7 +185,7 @@
                     v-if="userStore.isCreator"
                     @click="userStore.closeNavDropdown()"
                     :href="route('training')"
-                    :active="route().current('training')">
+                    :active="userStore.currentPage === 'training'">
                     Training
                 </JetResponsiveNavLink>
 
@@ -193,7 +193,7 @@
                     v-if="userStore.isCreator"
                     @click="userStore.closeNavDropdown()"
                     :href="route('videoupload')"
-                    :active="route().current('videoupload')">
+                    :active="userStore.currentPage === 'videoUpload'">
                     Video Upload
                 </JetResponsiveNavLink>
 

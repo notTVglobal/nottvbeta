@@ -19,7 +19,7 @@
                             v-touch="()=>(route('schedule'))"
                             @click="videoPlayerStore.makeVideoTopRight()"
                             :href="route('schedule')"
-                            :active="route().current('schedule')">
+                            :active="userStore.currentPage === 'schedule'">
                                 Schedule
                         </JetNavLink>
                         </h3>
@@ -28,7 +28,7 @@
                             v-touch="()=>(route('news'))"
                             @click="videoPlayerStore.makeVideoTopRight()"
                             :href="route('news')"
-                            :active="route().current('news')">
+                            :active="userStore.currentPage === 'news'">
                                 News
                         </JetNavLink>
                         </h3>
@@ -38,7 +38,7 @@
                             v-touch="()=>(route('movies'))"
                             @click="videoPlayerStore.makeVideoTopRight()"
                             :href="route('movies')"
-                            :active="route().current('movies')">
+                            :active="userStore.currentPage === 'movies'">
                                 Movies
                         </JetNavLink>
                         </h3>
@@ -48,7 +48,7 @@
                             v-touch="()=>(route('shows'))"
                             @click="videoPlayerStore.makeVideoTopRight()"
                             :href="route('shows')"
-                            :active="route().current('shows')">
+                            :active="userStore.currentPage === 'shows'">
                                 Shows
                         </JetNavLink>
                         </h3>
@@ -57,7 +57,7 @@
                             v-touch="()=>(route('shop'))"
                             @click="videoPlayerStore.makeVideoTopRight()"
                             :href="route('shop')"
-                            :active="route().current('shop')">
+                            :active="userStore.currentPage === 'shop'">
                                 Shop
                         </JetNavLink>
                         </h3>
@@ -67,7 +67,7 @@
                             v-touch="()=>(route('library'))"
                             @click="videoPlayerStore.makeVideoTopRight()"
                             :href="route('library')"
-                            :active="route().current('library')">
+                            :active="userStore.currentPage === 'library'">
                                 My Library
                             <div class="text-xs text-white bg-yellow-800 uppercase flex justify-center items-center ml-1 -right-4 top-1.5
                                     font-semibold inline-block py-0.5 px-1 rounded last:mr-0 mr-1">
@@ -94,7 +94,7 @@
                                 <JetNavLink v-touch="()=>(route('upgrade'))"
                                             @click="videoPlayerStore.makeVideoTopRight()"
                                             :href="route('upgrade')"
-                                            :active="route().current('upgrade')"
+                                            :active="userStore.currentPage === 'upgrade'"
                                             class="active:border-none hover:border-none focus:border-none border-none">
                                     <div class="w-full rounded-lg p-2 bg-gray-100 text-black hover:bg-gray-300 hover:text-green-900">UPGRADE NOW</div>
                                 </JetNavLink>
