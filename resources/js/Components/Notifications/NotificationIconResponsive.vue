@@ -9,7 +9,7 @@
                 </svg>
             </button>
         </div>
-        <dialog id="notifications" class="modal">
+        <dialog id="notificationsResponsive" class="modal">
             <div class="modal-box bg-gray-900">
                 <h3 class="font-bold text-lg">Hello!</h3>
                 <p class="py-4">Notifications will go here.</p>
@@ -25,7 +25,7 @@
 
 <script setup>
 function openNotifications() {
-    document.getElementById('notifications').showModal()
+    document.getElementById('notificationsResponsive').showModal()
 }
 
 </script>

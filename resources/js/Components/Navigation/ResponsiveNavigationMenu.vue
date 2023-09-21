@@ -17,7 +17,7 @@
                             </div>
 
                         <div class="mx-6">
-                            <NotificationIcon />
+                            <NotificationIconResponsive />
                         </div>
 
                         <button
@@ -276,6 +276,7 @@ import JetApplicationMark from "@/Jetstream/ApplicationMark.vue";
 import {Link} from "@inertiajs/inertia-vue3";
 import AppVersion from "@/Components/AppVersion/AppVersion.vue";
 import NotificationIcon from "@/Components/Notifications/NotificationIcon.vue";
+import NotificationIconResponsive from "@/Components/Notifications/NotificationIconResponsive.vue";
 
 const showingNavigationDropdown = ref(false);
 
