@@ -33,6 +33,8 @@ class ShowsController extends Controller
 
 //        $this->middleware('can:viewAny,show')->only(['index']);
         $this->middleware('can:viewShowManagePage,show')->only(['manage']);
+        // tec21: this policy isn't working vvv
+//        $this->middleware('can:editShowManagePage,show')->only(['changeEpisodeStatus']);
         $this->middleware('can:edit,show')->only(['edit']);
 //        $this->middleware('can:create,show')->only(['store']);
         $this->middleware('can:createEpisode,show')->only(['createEpisode']);
@@ -48,9 +50,18 @@ class ShowsController extends Controller
     {
 
         return Inertia::render('Shows/Index', [
+
             'shows' => Show::with('team', 'user', 'image', 'episodes', 'showStatus')
                 ->when(Request::input('search'), function ($query, $search) {
                     $query->where('name', 'like', "%{$search}%");
+                })
+                ->whereHas('episodes', function ($query) {
+                    // Filter episodes with episodeStatus of 7
+                    $query->where('show_episode_status_id', 7);
+                })
+                ->where(function ($query) {
+                    // Filter shows with showStatus of 1 or 2
+                    $query->where('show_status_id', 1)->orWhere('show_status_id', 2);
                 })
                 ->latest()
                 ->paginate(6, ['*'], 'shows')
@@ -86,6 +97,10 @@ class ShowsController extends Controller
                     ]
                 ]),
             'newestEpisodes' => ShowEpisode::with('show', 'image')
+                ->where(function ($query) {
+                    // Filter episodes with episodeStatus of 7
+                    $query->where('show_episode_status_id', 7);
+                })
                 ->latest()
                 ->paginate(5, ['*'], 'episodes')
                 ->through(fn($showEpisode) => [
@@ -107,25 +122,33 @@ class ShowsController extends Controller
                     'categorySubName' => $showEpisode->show->showCategorySub->name,
                     'release_date' => $showEpisode->release_dateTime,
                 ]),
-            'mostAnticipated' => Show::with('image')
-                ->paginate(3, ['*'], 'trending')
-                ->through(fn($show) => [
-                    'id' => $show->id,
-                    'name' => $show->name,
-                    'description' => $show->description,
-                    'image' => [
-                        'id' => $show->image->id,
-                        'name' => $show->image->name,
-                        'folder' => $show->image->folder,
-                        'cdn_endpoint' => $show->appSetting->cdn_endpoint,
-                        'cloud_folder' => $show->image->cloud_folder,
-                    ],
-                    'slug' => $show->slug,
-                    'copyrightYear' => $show->created_at->format('Y'),
-                    'categoryName' => $show->showCategory->name,
-                    'categorySubName' => $show->showCategorySub->name,
-                ]),
-            'comingSoon' => Show::with('image')
+//            'mostAnticipated' => Show::with('image')
+//                ->paginate(3, ['*'], 'trending')
+//                ->through(fn($show) => [
+//                    'id' => $show->id,
+//                    'name' => $show->name,
+//                    'description' => $show->description,
+//                    'image' => [
+//                        'id' => $show->image->id,
+//                        'name' => $show->image->name,
+//                        'folder' => $show->image->folder,
+//                        'cdn_endpoint' => $show->appSetting->cdn_endpoint,
+//                        'cloud_folder' => $show->image->cloud_folder,
+//                    ],
+//                    'slug' => $show->slug,
+//                    'copyrightYear' => $show->created_at->format('Y'),
+//                    'categoryName' => $show->showCategory->name,
+//                    'categorySubName' => $show->showCategorySub->name,
+//                ]),
+            'comingSoon' => Show::with('image', 'episodes')
+                ->whereHas('episodes', function ($query) {
+                    // Filter episodes with episodeStatus of 7
+                    $query->where('show_episode_status_id', 6);
+                })
+                ->where(function ($query) {
+                    // Filter shows with showStatus of 1 or 2
+                    $query->where('show_status_id', 1)->orWhere('show_status_id', 2);
+                })
                 ->latest()
                 ->paginate(3, ['*'], 'comingSoon')
                 ->through(fn($show) => [
@@ -345,6 +368,10 @@ class ShowsController extends Controller
                 ->when(Request::input('search'), function ($query, $search) {
                     $query->where('name', 'like', "%{$search}%");
                 })
+                ->where(function ($query) {
+                    // Filter episodes with episodeStatus of 7
+                    $query->where('show_episode_status_id', 7);
+                })
                 ->latest()
                 ->paginate(8, ['*'], 'episodes')
                 ->withQueryString()
@@ -392,6 +419,9 @@ class ShowsController extends Controller
 
     public function manage(Show $show)
     {
+
+        $episodeStatuses = DB::table('show_episode_statuses')->get()->toArray();
+        $filteredStatuses = array_slice($episodeStatuses, 0, -2);
 
         return Inertia::render('Shows/{$id}/Manage', [
             'show' => [
@@ -443,6 +473,7 @@ class ShowsController extends Controller
                     'episodeStatus' => $showEpisode->showEpisodeStatus->name,
                     'episodeStatusId' => $showEpisode->showEpisodeStatus->id,
                 ]),
+            'episodeStatuses' => $filteredStatuses,
             'can' => [
                 'editShow' => auth()->user()->can('edit', $show),
                 'createEpisode' => auth()->user()->can('createEpisode', $show),
@@ -690,6 +721,42 @@ class ShowsController extends Controller
             ]
 
         ]);
+
+    }
+////////////  CHANGE EPISODE STATUS
+////////////////////////////
+///
+
+    public function changeEpisodeStatus(HttpRequest $request, Show $show)
+    {
+
+        try {
+            // Get the episode ID and new status from the request
+            $episodeId = $request->input('episode_id');
+            $newStatusId = $request->input('new_status_id');
+
+            // Find the episode by ID
+            $episode = ShowEpisode::find($episodeId);
+
+            if (!$episode) {
+                return response()->json(['message' => 'Episode not found'], 404);
+            }
+
+            // Update the episode's status
+            $episode->show_episode_status_id = $newStatusId;
+            $episode->save();
+
+            // If successful, return a success response
+            return response()->json(['message' => 'Episode status updated successfully']);
+
+            // If successful, you can return a success message
+//            return Redirect::back()->with('success', 'Episode status changed successfully');
+        } catch (\Exception $e) {
+            // If an error occurs, return an error response
+            return response()->json(['error' => 'Error changing episode status: ' . $e->getMessage()], 500);
+        }
+
+
 
     }
 

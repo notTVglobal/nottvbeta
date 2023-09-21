@@ -94,4 +94,3 @@ library.add(faUserSecret, faPlay, faQuestion, faStar, faUsers, faHandsHelping, f
             faShare, faCircleDown, faRepeat, faCheck, faAngleLeft);
 
 InertiaProgress.init({ delay: 250, color: '#FCEF5B', includeCSS: true, showSpinner: true, });
-

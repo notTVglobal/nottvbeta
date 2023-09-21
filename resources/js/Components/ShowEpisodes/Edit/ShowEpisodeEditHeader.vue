@@ -117,6 +117,9 @@ function back() {
     if (urlPrev !== 'empty') {
         Inertia.visit(urlPrev)
     }
+    if (urlPrev === 'empty') {
+        Inertia.visit('/shows/'+props.show.slug+'/manage')
+    }
     // window.history.back()
 }
 

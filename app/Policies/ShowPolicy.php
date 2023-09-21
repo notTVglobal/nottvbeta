@@ -63,6 +63,15 @@ class ShowPolicy
         return Response::deny('There\'s been a problem. Please let not.TV know.');
     }
 
+    // tec21: this policy isn't working.
+    public function editShowManagePage(User $user, Show $show)
+    {
+        if($user->isAdmin || $show->user_id === $user->id){
+            return true;
+        }
+        return Response::deny('You must be the Show Runner to edit this show.');
+    }
+
 
         // This policy needs to receive a $team.id
         // to simplify things for now, all creators

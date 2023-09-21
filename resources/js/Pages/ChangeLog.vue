@@ -1,15 +1,15 @@
 <template>
-    <Head title="Privacy Policy"/>
+    <Head title="Change Log"/>
 
-    <div id="topDiv" class="font-sans text-gray-900 antialiased">
-        <div class="pt-4 rounded">
+    <div id="topDiv" class="font-sans antialiased">
+        <div class="pt-4 rounded bg-white">
             <div class="flex flex-col items-center pt-6 sm:pt-0 pb-32">
                 <div>
-                    <img :src="`/storage/images/logo_white_512.png`" alt="image" class="w-1/2 justify-center">
+                    <img :src="`/storage/images/logo_black_311.png`" alt="image" class="w-1/2 justify-center">
                 </div>
 
-                <div class="changelog w-full mt-10 mb-32 px-4">
-                        <span class="mt-6 p-6 bg-gray-800 text-gray-50 shadow-md sm:rounded-lg prose"
+                <div class="changelog w-full h-fit mt-10 mb-32 px-4 overflow-scroll">
+                        <span class="mt-6 p-6 text-gray-900 shadow-md sm:rounded-lg prose"
                          v-html="changelog"/>
                 </div>
 
@@ -62,4 +62,5 @@ pre {
     white-space: -o-pre-wrap;
     word-wrap: break-word;
 }
+
 </style>

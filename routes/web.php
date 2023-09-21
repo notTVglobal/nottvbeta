@@ -660,6 +660,9 @@ Route::middleware([
         ->scopeBindings();
     // Update episode notes
     Route::post('/shows/episode/notes', [ShowEpisodeController::class, 'updateNotes']);
+    // Route to change showEpisodeStatus
+    Route::post('/shows/episode/changeEpisodeStatus', [ShowsController::class, 'changeEpisodeStatus']);
+//        ->middleware('can:editShowManagePage,show');
     // Update episode
 //    Route::get('/shows/{show}/episode/{showEpisode}/edit', [ShowEpisodeController::class, 'update'])
 //        ->middleware('can:edit,show')

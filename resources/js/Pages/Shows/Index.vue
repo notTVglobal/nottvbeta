@@ -88,10 +88,10 @@
                                     <div class="ml-3 block">
 <!--                                            <div class="text-gray-400 font-light text-xs mt-1 ">Released on {{ episode.release_date }}</div>-->
     <!--                                    <Link :href="`/shows/${episode.showSlug}/episode/${episode.slug}`" class="block text-lg font-semibold leading-tight hover:text-gray-400 mt-4">-->
-                                        <span class="text-lg font-semibold leading-tight">{{ episode.showName }}</span>
+                                        <span class="text-lg font-semibold leading-tight">{{ episode.name }}</span>
     <!--                                </Link>-->
 
-                                        <div class="text-gray-400 font-light text-sm">{{ episode.name }}</div>
+                                        <div class="text-gray-400 font-light text-sm"><Link :href="`/shows/${episode.showSlug}`">{{ episode.showName }}</Link></div>
 
                                         <p class="mt-2 pr-4 text-gray-300 xl:block">
                                             {{ episode.description}}
@@ -107,23 +107,8 @@
                         </div>
                     </div>
 
-                    <div class="most-anticipated xl:w-1/4 mt-12 xl:mt-0">
-                        <h2 class="text-purple-500 uppercase tracking-wide font-semibold text-2xl">Most Anticipated</h2>
-                        <div class="most-anticipated-container space-y-10 mt-8">
-                            <div v-for="show in mostAnticipated.data"
-                                 :key="show.id"
-                                 class="show flex">
-                                <Link :href="`/shows/${show.slug}`">
-                                    <SingleImage :image="show.image" :alt="'show cover'" class="h-24 min-w-[4rem] w-16 object-cover hover:opacity-75 transition ease-in-out duration-150"/>
-                                </Link>
-                                <div class="ml-4">
-                                    <Link :href="`/shows/${show.slug}`" class="hover:text-gray-300">{{ show.name }}</Link>
-                                    <div class="text-gray-400 text-sm mt-1">{{ show.categoryName }}</div>
-                                    <div class="text-gray-400 text-sm font-thin mt-1">{{ show.categorySubName }}</div>
-                                </div>
-                            </div>
-                        </div>
-
+<!--                    <MostAnticipated :mostAnticipated="mostAnticipated"/>-->
+                    <div class="coming-soon xl:w-1/4 mt-12 xl:mt-0">
                         <h2 id="coming-soon" class="text-purple-500 uppercase tracking-wide font-semibold mt-16 text-2xl">Coming Soon</h2>
                         <div class="most-anticipated-container space-y-10 mt-8">
 
@@ -141,6 +126,7 @@
                             </div>
                         </div>
                     </div>
+
 
                 </div>
             </main>
@@ -166,6 +152,7 @@ import Pagination from "@/Components/PaginationDark"
 import throttle from "lodash/throttle"
 import Message from "@/Components/Modals/Messages";
 import SingleImage from "@/Components/Multimedia/SingleImage";
+import MostAnticipated from "@/Components/Shows/MostAnticipated.vue";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -195,7 +182,7 @@ onMounted(() => {
 let props = defineProps({
     shows: Object,
     newestEpisodes: Object,
-    mostAnticipated: Object,
+    // mostAnticipated: Object,
     comingSoon: Object,
     filters: Object,
     can: Object,

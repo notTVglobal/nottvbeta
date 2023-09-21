@@ -32,36 +32,43 @@
 
         </td>
         <td class="px-6 py-4 text-right">
-            <button v-if="episode.episodeStatusId===1" class="font-semibold text-xl text-orange-400">
-                {{ episode.episodeStatus }}
-            </button>
-            <button v-if="episode.episodeStatusId===2" class="text-xl text-green-400">
-                {{ episode.episodeStatus }}
-            </button>
-            <button v-if="episode.episodeStatusId===3" class="font-semibold text-xl text-green-600">
-                {{ episode.episodeStatus }}
-            </button>
-            <button v-if="episode.episodeStatusId===4" class="font-bold text-xl text-green-600">
-                {{ episode.episodeStatus }}
-            </button>
-            <button v-if="episode.episodeStatusId===5" class="font-semibold text-xl text-purple-700">
-                {{ episode.episodeStatus }}
-            </button>
-            <button v-if="episode.episodeStatusId===6" class="font-italic text-xl text-pink-500">
-                {{ episode.episodeStatus }}
-            </button>
-            <button v-if="episode.episodeStatusId===7" class="font-bold text-xl text-black">
-                {{ episode.episodeStatus }}
-            </button>
-            <button v-if="episode.episodeStatusId===8" class="font-medium text-xl text-gray-500">
-                {{ episode.episodeStatus }}
-            </button>
-            <button v-if="episode.episodeStatusId===9" class="font-semibold font-italic text-xl text-red-700">
-                {{ episode.episodeStatus }}
-            </button>
-            <button v-if="episode.episodeStatusId===10" class="font-bold text-xl text-red-800">
-                {{ episode.episodeStatus }}
-            </button>
+            <div class="dropdown dropdown-left">
+<!--                <button tabindex="0" :class="episodeStatus" @click="openEpisodeStatuses">{{ episode.episodeStatus }}</button>-->
+                <ShowEpisodeStatuses :episodeStatus="props.episode.episodeStatus"
+                                     :episodeStatusId="props.episode.episodeStatusId"
+                                     :episodeStatuses="props.episodeStatuses"
+                                     :episodeId="props.episode.id"/>
+            </div>
+<!--            <button v-if="episode.episodeStatusId===1" class="font-semibold text-xl text-orange-400">-->
+<!--                {{ episode.episodeStatus }}-->
+<!--            </button>-->
+<!--            <button v-if="episode.episodeStatusId===2" class="text-xl text-green-400">-->
+<!--                {{ episode.episodeStatus }}-->
+<!--            </button>-->
+<!--            <button v-if="episode.episodeStatusId===3" class="font-semibold text-xl text-green-600">-->
+<!--                {{ episode.episodeStatus }}-->
+<!--            </button>-->
+<!--            <button v-if="episode.episodeStatusId===4" class="font-bold text-xl text-green-600">-->
+<!--                {{ episode.episodeStatus }}-->
+<!--            </button>-->
+<!--            <button v-if="episode.episodeStatusId===5" class="font-semibold text-xl text-purple-700">-->
+<!--                {{ episode.episodeStatus }}-->
+<!--            </button>-->
+<!--            <button v-if="episode.episodeStatusId===6" class="font-italic text-xl text-pink-500">-->
+<!--                {{ episode.episodeStatus }}-->
+<!--            </button>-->
+<!--            <button v-if="episode.episodeStatusId===7" class="font-bold text-xl text-black">-->
+<!--                {{ episode.episodeStatus }}-->
+<!--            </button>-->
+<!--            <button v-if="episode.episodeStatusId===8" class="font-medium text-xl text-gray-500">-->
+<!--                {{ episode.episodeStatus }}-->
+<!--            </button>-->
+<!--            <button v-if="episode.episodeStatusId===9" class="font-semibold font-italic text-xl text-red-700">-->
+<!--                {{ episode.episodeStatus }}-->
+<!--            </button>-->
+<!--            <button v-if="episode.episodeStatusId===10" class="font-bold text-xl text-red-800">-->
+<!--                {{ episode.episodeStatus }}-->
+<!--            </button>-->
 
 
         </td>
@@ -83,18 +90,21 @@
 <script setup>
 import { useTeamStore } from "@/Stores/TeamStore";
 import { useShowStore } from "@/Stores/ShowStore";
-import {ref} from "vue";
+import {computed, ref} from "vue";
 import {useForm} from "@inertiajs/inertia-vue3";
 import EpisodeNoteEdit from "@/Components/Shows/Manage/EpisodeNoteEdit";
+import ShowEpisodeStatuses from "@/Components/Shows/Manage/ShowEpisodeStatuses.vue";
 
 let teamStore = useTeamStore();
 let showStore = useShowStore();
 
 let props = defineProps({
     episode: Object,
+    episodeStatuses: Object,
     showSlug: String,
 });
 
+let showEpisodeStatuses = ref(false)
 showStore.noteEdit = 0
 const componentKey = ref(0);
 
@@ -110,6 +120,14 @@ let form = useForm({
 function editNote() {
     showStore.noteEdit = props.episode.id
 }
+
+function openEpisodeStatuses() {
+    document.getElementById('episodeStatuses').showModal()
+}
+
+
+
+
 
 
 </script>

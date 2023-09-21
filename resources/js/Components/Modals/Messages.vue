@@ -1,14 +1,41 @@
 <template>
-    <div class="flex justify-between p-4 m-4 text-sm rounded-lg"
-         :class="messageType"
-         role="alert"
-         v-if="props.flash.success || props.flash.message || props.flash.warning || props.flash.error">
-                <span class="font-medium">
-                    {{ props.flash.success }} {{ props.flash.message }} {{ props.flash.warning }} {{ props.flash.error }}
-                </span>
-<!--        <button class="text-xs ml-12" @click="$emit('close')"> Close</button>-->
-        <button class="text-xs ml-12" @click="userStore.showFlashMessage = false"> Close</button>
+    <div class="mx-4">
+        <div class="alert alert-info mt-4"
+             v-if="props.flash.message">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <span>{{ props.flash.message }}</span>
+            <button class="text-xs ml-12" @click="userStore.showFlashMessage = false"> Close</button>
+        </div>
+        <div class="alert alert-success mt-4 mx-3"
+             v-if="props.flash.success">
+            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            <span>{{ props.flash.success }}</span>
+            <button class="text-xs ml-12" @click="userStore.showFlashMessage = false"> Close</button>
+        </div>
+        <div class="alert alert-warning mt-4 mx-3"
+             v-if="props.flash.warning">
+            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+            <span>{{ props.flash.warning }}</span>
+            <button class="text-xs ml-12" @click="userStore.showFlashMessage = false"> Close</button>
+        </div>
+        <div class="alert alert-error mt-4 mx-3"
+             v-if="props.flash.error">
+            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            <span>{{ props.flash.error }}</span>
+            <button class="text-xs ml-12" @click="userStore.showFlashMessage = false"> Close</button>
+        </div>
     </div>
+
+<!--    <div class="flex justify-between p-4 m-4"-->
+<!--         :class="messageType"-->
+<!--         role="alert"-->
+<!--         v-if="props.flash.success || props.flash.message || props.flash.warning || props.flash.error">-->
+<!--                <span class="font-medium">-->
+
+<!--                </span>-->
+<!--        <button class="text-xs ml-12" @click="$emit('close')"> Close</button>-->
+
+<!--    </div>-->
 </template>
 
 <script setup>

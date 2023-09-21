@@ -1,5 +1,6 @@
 <template>
     <div v-if="data.last_page > 1" class="flex flex-wrap justify-center my-4 space-x-4 space-y-2">
+        <div></div>
         <Component
             :is="link.url ? 'Link' : 'span'"
             :id="id"

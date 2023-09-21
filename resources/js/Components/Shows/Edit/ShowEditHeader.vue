@@ -1,6 +1,6 @@
 <template>
     <header>
-    <div class="flex justify-between mb-6">
+    <div class="flex justify-between pt-6 mb-6">
 
             <div>
                 <div class="font-bold mb-4 text-red-700">EDIT SHOW</div>
@@ -10,8 +10,16 @@
             </div>
             <div>
                 <button
+                    type="submit"
+                    class="h-fit bg-blue-600 hover:bg-blue-500 text-white rounded py-2 px-4"
+                    :disabled="form.processing"
+                    @click="$emit('submit')"
+                >
+                    Save
+                </button>
+                <button
                     @click="back"
-                    class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
+                    class="ml-2 px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
                 >Cancel
                 </button>
             </div>
@@ -34,6 +42,7 @@
 defineProps({
     show: Object,
     team: Object,
+    form: Object,
 })
 
 function back() {

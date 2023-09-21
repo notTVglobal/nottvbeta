@@ -2,13 +2,13 @@
 
     <Head :title="`Manage Show: ${props.show.name}`"/>
 
-    <div class="place-self-center flex flex-col gap-y-3">
-        <div id="topDiv" class="min-h-screen bg-white text-black dark:bg-gray-900 dark:text-gray-50 rounded p-5 pb-36">
+    <div id="topDiv" class="place-self-center flex flex-col">
+        <div class="min-h-screen bg-white text-black dark:bg-gray-900 dark:text-gray-50 rounded px-5 pb-36">
 
             <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
             <header>
-            <div class="flex justify-between mb-3">
+            <div class="flex justify-between mb-3 pt-6">
                 <div class="gap-2">
                     <div class="font-bold mb-4 text-orange-400">MANAGE SHOW</div>
                     <div>
@@ -105,7 +105,7 @@
                             <div>
                                 <div class="bg-orange-300 p-2 font-bold text-black">Episodes</div>
 
-                                <ShowEpisodesList :episodes="props.episodes" :show="props.show"/>
+                                <ShowEpisodesList :episodes="props.episodes" :show="props.show" :episodeStatuses="props.episodeStatuses"/>
                             </div>
 
                             <!--                            <table class="min-w-full divide-y divide-gray-200">-->
@@ -195,6 +195,7 @@ let props = defineProps({
     show: Object,
     team: Object,
     episodes: Object,
+    episodeStatuses: Object,
     // filters: Object,
     can: Object,
 });

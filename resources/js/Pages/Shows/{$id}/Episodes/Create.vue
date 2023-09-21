@@ -17,12 +17,32 @@
                 </div>
             </div>
 
-            <div class="bg-orange-700 text-white w-full p-6"><span class="font-semibold">NOTE: </span>
-            We are working on an episode poster and video uploader for this page. For the time being, please
-                go to the episode EDIT page after you create the episode to add a video and a poster.
+            <div class="mx-4">
+                <div class="alert alert-info mt-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span><span class="font-semibold">NOTE: </span>
+                    We are working on an episode poster and video uploader for this page. For the time being, please
+                    go to the episode EDIT page after you create the episode to add a video and a poster.</span>
+                </div>
             </div>
 
             <form @submit.prevent="submit" class="max-w-md mx-auto mt-8">
+
+                <div class="mb-6">
+                    <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"
+                           for="notes"
+                    >
+                        Notes <br>(Only your team members see these notes, they are not public)
+                    </label>
+                    <textarea v-model="form.notes"
+                              class="bg-gray-50 border border-gray-400 text-gray-900 text-sm p-2 w-full rounded-lg focus:ring-blue-500 focus:border-blue-500 block"
+                              type="text"
+                              name="notes"
+                              id="notes"
+                    ></textarea>
+                    <div v-if="form.errors.notes" v-text="form.errors.notes" class="text-xs text-red-600 mt-1"></div>
+                </div>
+
                 <div class="mb-6">
                     <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"
                            for="showName"
@@ -118,7 +138,7 @@
                     <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"
                            for="video_url"
                     >
-                        Video URL (if hosted externally, must be a url that ends in .mp4)
+                        Video URL (External MP4 only)
                     </label>
                     <input v-model="form.video_url"
                            class="bg-gray-50 border border-gray-400 text-gray-900 text-sm p-2 w-full rounded-lg focus:ring-blue-500 focus:border-blue-500"
@@ -126,6 +146,9 @@
                            name="video_url"
                            id="video_url"
                     >
+                    <div class="text-xs mt-1">
+                        Example: <span class="underline">https://domainname.com/filename.mp4</span>
+                    </div>
                     <div v-if="form.errors.video_url" v-text="form.errors.video_url" class="text-xs text-red-600 mt-1"></div>
                 </div>
 
@@ -133,7 +156,7 @@
                     <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"
                            for="video_embed_code"
                     >
-                        Video Embed Code (IFRAME only)
+                        Embed Code (Rumble or Bitchute only) <span class="text-white">*</span>
                     </label>
                     <textarea v-model="form.video_embed_code"
                               class="bg-gray-50 border border-gray-400 text-gray-900 text-sm p-2 w-full rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
@@ -144,19 +167,21 @@
                     <div v-if="form.errors.video_embed_code" v-text="form.errors.video_embed_code" class="text-xs text-red-600 mt-1"></div>
                 </div>
 
-                <div class="mb-6">
-                    <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"
-                           for="notes"
-                    >
-                        Notes (Only your team members see these notes, they are not public)
-                    </label>
-                    <textarea v-model="form.notes"
-                              class="bg-gray-50 border border-gray-400 text-gray-900 text-sm p-2 w-full rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                              type="text"
-                              name="notes"
-                              id="notes"
-                    ></textarea>
-                    <div v-if="form.errors.notes" v-text="form.errors.notes" class="text-xs text-red-600 mt-1"></div>
+                <div class="mt-2 mb-6 pb-4 border-b">
+                    <div class="mb-2 block uppercase font-bold text-xs">
+                        * Notes about video embedding:
+                    </div>
+                    <ul class="list-decimal pb-2 ml-2">
+                        <li>
+                            If both URL and Embed Code are provided the system will attempt to get the Video Url from the Embed Code.
+                        </li>
+                        <li>
+                            We have <span class="font-bold">not</span> enabled the use of Facebook videos for security purposes.
+                        </li>
+                        <li>
+                            If you want to use YouTube, enter the YouTube video URL above in the YouTube URL field. This option is least preferrable, due to a lower quality user experience.
+                        </li>
+                    </ul>
                 </div>
 
                 <div class="flex justify-between mb-6">
@@ -256,6 +281,9 @@ function back() {
     let urlPrev = usePage().props.value.urlPrev
     if (urlPrev !== 'empty') {
         Inertia.visit(urlPrev)
+    }
+    if (urlPrev === 'empty') {
+        Inertia.visit('/shows/'+props.show.slug+'/manage')
     }
 }
 

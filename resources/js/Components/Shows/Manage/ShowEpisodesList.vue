@@ -32,7 +32,10 @@
 
         <tbody class="divide-y divide-gray-200">
 
-            <ShowEpisode v-for="episode in props.episodes.data" :episode="episode" :showSlug="props.show.slug"/>
+            <ShowEpisode v-for="episode in props.episodes.data"
+                         :episode="episode"
+                         :showSlug="props.show.slug"
+                         :episodeStatuses="props.episodeStatuses"/>
 
         </tbody>
     </table>
@@ -46,14 +49,23 @@
 import ShowEpisode from "@/Components/Shows/Manage/ShowEpisode.vue";
 import {useShowStore} from "@/Stores/ShowStore";
 import Pagination from "@/Components/Pagination";
+import {ref} from "vue";
 
 // let showStore = useShowStore();
 
 let props = defineProps({
     show: Object,
     episodes: Object,
+    episodeStatuses: Object,
     filters: Object,
     can: Object,
 });
+
+// Access flashed messages from Inertia's props
+// const { success, error } = page.props;
+
+// Create refs to hold success and error messages
+// const successMessage = ref(success);
+// const errorMessage = ref(error);
 
 </script>

@@ -2,12 +2,12 @@
 
     <Head :title="`Edit Show: ${props.show.name}`"/>
 
-    <div class="place-self-center flex flex-col gap-y-3">
-        <div id="topDiv" class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
+    <div id="topDiv" class="place-self-center flex flex-col gap-y-3">
+        <div class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 px-5 mb-10">
 
             <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
-            <ShowEditHeader :show="props.show" :team="props.team"/>
+            <ShowEditHeader :show="props.show" :team="props.team" :form="form" @submit="submit"/>
 
             <div class="flex flex-col">
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">

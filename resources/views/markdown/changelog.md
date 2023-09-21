@@ -1,8 +1,15 @@
 # not.tv Changelog
 
 
-Last Update: September 20, 2023\
+Last Update: September 21, 2023\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.7.3.3
+September 21, 2023
+* Fix notifications button color in light/dark modes.
+* Episode statuses are now working. Episodes must be published to display them on the shows page.
+* Removed Most Anticipated from the Shows page.
+* Fix changelog css
 
 ## v0.7.3.2
 September 20, 2023
@@ -20,7 +27,6 @@ September 19, 2023
 * Create notifications button.
 * Fix channel viewer count
 * Fix channel name and video name displaying incorrectly on Stream page.
-* 
 
 ## v0.7.2
 September 19, 2023

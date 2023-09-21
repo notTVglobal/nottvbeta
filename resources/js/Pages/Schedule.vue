@@ -2,17 +2,17 @@
     <Head title="Live Schedule" />
 
     <div class="place-self-center flex flex-col gap-y-3 w-full overscroll-x-none pb-8">
-        <div id="topDiv" class="flex justify-between p-5 mb-5">
-
-            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
-
+        <div id="topDiv" class="flex justify-end px-5">
             <div class="text-3xl font-semibold pt-4">Live Schedule</div>
-
         </div>
-        <div class="ml-5 mb-5 text-red-600">This section is in development. Not currently working.<br>
-        <span class="text-white">You can time shift to watch different content across Canada and the U.S. <br>
-            All scheduled shows will stream on the <span class="font-semibold">Live Channel</span> (coming soon).</span></div>
-        <ul class="w-64 ml-12 mb-8">
+        <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+        <div class="mx-6">
+            <div class="alert alert-info">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <span>This section is in development. Not currently working.</span>
+            </div>
+        </div>
+        <ul class="w-64 ml-12 my-8">
             <li class="p-2 bg-green-800">Scheduled Shows</li>
             <li class="p-2 bg-purple-800">New Releases</li>
             <li class="p-2 bg-blue-800">Live Events</li>
@@ -23,8 +23,9 @@
         </ul>
 
         <div class="ml-5 mb-5 p-2">
-            <span class="text-sm uppercase">All times are listed in your timezone.</span><br>
-                <span>If you use a VPN you can set your preferred timezone in the settings menu (coming soon).</span>
+            <span class="text-sm uppercase text-purple-500">All times listed in your timezone.</span><br>
+                <span>If you use a VPN you can set your preferred timezone in the settings menu <span class="text-orange-500">(coming soon).</span></span><br>
+            <span class="text-white">All scheduled shows will stream on the <span class="font-semibold">Live Channel</span> <span class="text-orange-500">(coming soon).</span></span>
         </div>
 
         <table class="table-fixed mx-5">
@@ -148,7 +149,7 @@
                             <span>Scheduled Show</span>
                         </div>
                     </td>
-                    <td colspan="2" class="p-2 mx-4 bg-yellow-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-yellow-600 hover:border-blue-500 cursor-pointer">
+                    <td colspan="2" class="p-2 hidden lg:table-cell bg-yellow-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-yellow-600 hover:border-blue-500 cursor-pointer">
                         <div class="flex flex-col">
                             <span>News Program</span>
                         </div>
