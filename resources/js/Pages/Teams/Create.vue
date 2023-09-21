@@ -6,7 +6,7 @@
 
             <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
-            <div class="flex justify-between mt-3 mb-6">
+            <div class="flex justify-between mt-3 mb-6 pt-6">
             <div class="text-3xl">Create New Team</div>
             <div>
                 <button

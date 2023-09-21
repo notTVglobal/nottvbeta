@@ -10,7 +10,7 @@
             <!--            <TeamHeader v-bind="team" :memberSpots="props.team.memberSpots"/>-->
 
             <header>
-                <div class="flex justify-between mb-3">
+                <div class="flex justify-between mb-3 pt-6">
                     <div class="gap-2">
                         <div class="font-bold mb-4 text-orange-400">MANAGE TEAM</div>
                         <div>

@@ -6,7 +6,7 @@
 
             <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
-            <div v-if="props.can.viewCreator" class="flex justify-end flex-wrap-reverse gap-x-2">
+            <div v-if="props.can.viewCreator" class="flex justify-end flex-wrap-reverse gap-x-2 pt-6">
 
                 <Link v-if="can.createTeam" :href="`/teams/create`"><button
                     class="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded disabled:bg-gray-400"

@@ -7,7 +7,7 @@
 
             <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
-            <header class="flex justify-between mb-3">
+            <header class="flex justify-between mb-3 pt-6">
                 <div>
                     <h3 class="dark:text-gray-50 inline-flex items-center text-3xl font-semibold relative uppercase">
 

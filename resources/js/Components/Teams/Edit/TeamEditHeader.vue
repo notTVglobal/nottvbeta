@@ -1,6 +1,6 @@
 <template>
     <header>
-    <div class="flex justify-between mb-6">
+    <div class="flex justify-between mb-6 pt-6">
 
         <div>
             <div class="font-bold mb-4 text-red-700">EDIT TEAM</div>
