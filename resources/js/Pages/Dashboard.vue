@@ -248,7 +248,7 @@
                 <div class="w-fit mx-auto stats stats-vertical sm:stats-horizontal bg-primary text-primary-content">
 
                     <div class="stat my-2">
-                        <div class="stat-title">Total balance</div>
+                        <div class="stat-title text-white">Total balance</div>
                         <div class="stat-value">$89,410</div>
                         <div class="stat-actions">
                             <button class="btn btn-sm btn-success">Add funds</button>
@@ -256,7 +256,7 @@
                     </div>
 
                     <div class="stat my-2">
-                        <div class="stat-title">Available balance</div>
+                        <div class="stat-title text-white">Available balance</div>
                         <div class="stat-value">$89,400</div>
                         <div class="stat-actions">
                             <button class="btn btn-sm mr-2">Withdrawal</button>
