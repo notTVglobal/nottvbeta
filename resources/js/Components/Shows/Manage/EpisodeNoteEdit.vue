@@ -5,8 +5,10 @@
                 class="text-black p-1 w-3/4"
                 placeholder="Write a note..."
                 type="text"
+                ref="episodeNote"
                 v-model="form.note"
-                @keyup.enter="saveNote">
+                @keyup.enter="saveNote"
+                @focusout="closeNote">
         </form>
     </div>
 
@@ -15,6 +17,8 @@
 <script setup>
 import { useShowStore } from "@/Stores/ShowStore";
 import {useForm} from "@inertiajs/inertia-vue3";
+import {onMounted, ref} from "vue";
+import note from "lodash/seq";
 
 let showStore = useShowStore();
 
@@ -29,6 +33,18 @@ let form = useForm({
 });
 form.note = props.episode.notes;
 const emit = defineEmits(['saveNoteProcessing'])
+const episodeNote = ref(null);
+
+// Focus the input element when the component is mounted
+onMounted(() => {
+    episodeNote.value.focus();
+});
+
+function closeNote() {
+    if (form.note === props.episode.notes) {
+        showStore.noteEdit = 0;
+    } saveNote()
+}
 
 function saveNote() {
 

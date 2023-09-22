@@ -5,8 +5,10 @@
                 class="text-black p-1 w-3/4"
                 placeholder="Write a note..."
                 type="text"
+                ref="showNote"
                 v-model="form.note"
-                @keyup.enter="saveNote">
+                @keyup.enter="saveNote"
+                @focusout="closeNote">
         </form>
     </div>
 
@@ -15,6 +17,7 @@
 <script setup>
 import { useTeamStore } from "@/Stores/TeamStore";
 import {useForm} from "@inertiajs/inertia-vue3";
+import {onMounted, ref} from "vue";
 
 let teamStore = useTeamStore();
 
@@ -27,8 +30,21 @@ let props = defineProps({
 let form = useForm({
     note: '',
 });
+
 form.note = props.show.notes;
 const emit = defineEmits(['saveNoteProcessing'])
+const showNote = ref(null);
+
+// Focus the input element when the component is mounted
+onMounted(() => {
+    showNote.value.focus();
+});
+
+function closeNote() {
+    if (form.note === props.show.notes) {
+        teamStore.noteEdit = 0;
+    } saveNote()
+}
 
 function saveNote() {
 

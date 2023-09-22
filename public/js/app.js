@@ -2019,10 +2019,12 @@ var map = {
 	],
 	"./Shows/{$id}/Manage": [
 		"./resources/js/Pages/Shows/{$id}/Manage.vue",
+		"/js/vendor",
 		"resources_js_Pages_Shows_id_Manage_vue"
 	],
 	"./Shows/{$id}/Manage.vue": [
 		"./resources/js/Pages/Shows/{$id}/Manage.vue",
+		"/js/vendor",
 		"resources_js_Pages_Shows_id_Manage_vue"
 	],
 	"./SrMessages": [

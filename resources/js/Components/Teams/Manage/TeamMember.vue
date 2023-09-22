@@ -1,18 +1,20 @@
 <template>
     <tr>
-        <td class="text-gray-500 px-6 py-4 text-sm">
+        <td class="text-gray-500 px-6 py-4 min-w-[3rem] max-w-[3rem] text-sm">
             <img v-if="props.member.profile_photo_path"
                 :src="`/storage/${props.member.profile_photo_path}`"
                 alt=""
-                class="h-16 w-16 rounded-full object-cover">
+                class="min-h-[3rem] min-w-[3rem] max-w-[3rem] rounded-full object-cover">
             <img v-if="!props.member.profile_photo_path"
                  :src="`${props.member.profile_photo_url}`"
                  alt=""
-                 class="h-16 w-16 rounded-full object-cover">
+                 class="min-h-[3rem] min-w-[3rem] max-w-[3rem] rounded-full object-cover">
         </td>
 
         <td class="text-xl font-medium px-6 py-4">
-            {{  props.member.name }}
+            <div class="pl-3">
+                {{  props.member.name }}
+            </div>
         </td>
 
         <td class="light:text-gray-600 dark:text-gray-200 px-6 py-4 text-sm">

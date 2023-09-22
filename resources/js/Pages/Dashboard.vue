@@ -120,6 +120,30 @@
                 <div class="p-5 bg-gray-200 dark:bg-gray-800 rounded relative">
                     <div class="mb-3 flex justify-between">
                         <div class="mb-1 font-semibold text-xl dark:text-gray-50">My Shows</div>
+                        <div v-if="can.createShow" class="">
+
+                            <div v-if="props.teams.data.length > 0">
+                                <Link :href="`/shows/create`"><button
+                                    class="bg-green-600 hover:bg-green-500 text-white px-4 py-2 text-xs rounded disabled:bg-gray-400"
+                                >Create Show</button>
+                                </Link>
+                            </div>
+
+                            <div v-else>
+                                <button class="bg-green-600 hover:bg-green-500 text-white px-4 py-2 text-xs rounded disabled:bg-gray-400" @click="createShowWithNoTeamButton">Create Show</button>
+                                <dialog id="dashboardNoTeams" class="modal">
+                                    <div class="modal-box">
+                                        <h3 class="font-bold text-lg mb-3">You don't have any teams!</h3>
+                                        <button class="btn btn-primary" @click="navigateToCreateTeam">Create a Team</button>
+                                        <p class="py-4">Press ESC key or click outside to close</p>
+                                    </div>
+                                    <form method="dialog" class="modal-backdrop">
+                                        <button>close</button>
+                                    </form>
+                                </dialog>
+                            </div>
+
+                        </div>
                     </div>
 
                     <div v-if="props.shows.data == 0" class="italic dark:text-gray-50 light:text-black"> You have no shows.
@@ -352,6 +376,7 @@ import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useUserStore } from "@/Stores/UserStore";
 import Pagination from "@/Components/Pagination"
 import Message from "@/Components/Modals/Messages";
+import {Inertia} from "@inertiajs/inertia";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -405,6 +430,10 @@ let props = defineProps({
     can: Object,
 });
 
+const navigateToCreateTeam = () => {
+    Inertia.visit('teams/create');
+};
+
 // Function to extract the numeric value from a string with "MB" suffix
 const extractNumericValue = (str) => {
     const numericValue = parseFloat(str);
@@ -425,6 +454,10 @@ const myTotalStoragePercentage = computed(() => {
 const myTotalStorageRoundedPercentage = computed(() => {
     return Math.round(myTotalStoragePercentage);
 });
+
+function createShowWithNoTeamButton() {
+    document.getElementById('dashboardNoTeams').showModal()
+}
 
 function updateUserStore() {
     userStore.isAdmin = props.isAdmin

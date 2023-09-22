@@ -10,6 +10,8 @@ September 21, 2023
 * Episode statuses are now working. Episodes must be published to display them on the shows page.
 * Removed Most Anticipated from the Shows page.
 * Fix changelog css
+* Improve the way show notes and episode notes are displayed when clicked on in the team and show manage pages.
+* Fix Newest Episodes on Show Index Page, no longer displays episodes unless the show is Active.
 
 ## v0.7.3.2
 September 20, 2023

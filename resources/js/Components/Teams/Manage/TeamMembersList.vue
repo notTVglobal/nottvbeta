@@ -7,16 +7,23 @@
 <!--        :disabled="!teamStore.spotsRemaining"-->
 <!--        v-if="teamStore.can.editTeam"-->
 <!--    >Add Member ({{ teamStore.spotsRemaining }} spots left)</button>-->
-    <table class="min-w-full divide-y divide-gray-200">
+
+
+
+
+
+
+    <div class="overflow-x-auto">
+    <table class="table min-w-full divide-y divide-gray-200">
         <thead class="divide-y divide-gray-200">
         <tr>
-            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+            <td class="px-6 min-w-[3rem] max-w-[3rem] whitespace-nowrap text-sm font-medium">
                 <!-- Avatar -->
             </td>
             <td class="px-6 py-4 whitespace-nowrap">
                 <div class="flex items-center">
 
-                        <div class="text-sm font-medium">
+                        <div class="pl-3 text-sm font-medium">
                             Name
                         </div>
 
@@ -48,6 +55,7 @@
             <TeamMember v-for="member in teamStore.members" :member="member" :key="member.id"/>
         </tbody>
     </table>
+    </div>
     <div class="text-right px-3 mt-2 text-gray-600 italic w-full"
          v-show="!teamStore.spotsRemaining">
         There are no remaining team spots. Edit the team to add more.

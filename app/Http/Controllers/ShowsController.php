@@ -56,11 +56,11 @@ class ShowsController extends Controller
                     $query->where('name', 'like', "%{$search}%");
                 })
                 ->whereHas('episodes', function ($query) {
-                    // Filter episodes with episodeStatus of 7
+                    // Filter episodes with episodeStatus of 7 (Published)
                     $query->where('show_episode_status_id', 7);
                 })
                 ->where(function ($query) {
-                    // Filter shows with showStatus of 1 or 2
+                    // Filter shows with showStatus of 1 or 2 (New or Active)
                     $query->where('show_status_id', 1)->orWhere('show_status_id', 2);
                 })
                 ->latest()
@@ -98,8 +98,12 @@ class ShowsController extends Controller
                 ]),
             'newestEpisodes' => ShowEpisode::with('show', 'image')
                 ->where(function ($query) {
-                    // Filter episodes with episodeStatus of 7
+                    // Filter episodes with episodeStatus of 7 (Published)
                     $query->where('show_episode_status_id', 7);
+                })
+                ->whereHas('show', function ($query) {
+                    // Filter shows with showStatus of 1 or 2 (New or Active)
+                    $query->where('show_status_id', 1)->orWhere('show_status_id', 2);
                 })
                 ->latest()
                 ->paginate(5, ['*'], 'episodes')
@@ -142,11 +146,11 @@ class ShowsController extends Controller
 //                ]),
             'comingSoon' => Show::with('image', 'episodes')
                 ->whereHas('episodes', function ($query) {
-                    // Filter episodes with episodeStatus of 7
+                    // Filter episodes with episodeStatus of 7 (Published)
                     $query->where('show_episode_status_id', 6);
                 })
                 ->where(function ($query) {
-                    // Filter shows with showStatus of 1 or 2
+                    // Filter shows with showStatus of 1 or 2 (New or Active)
                     $query->where('show_status_id', 1)->orWhere('show_status_id', 2);
                 })
                 ->latest()

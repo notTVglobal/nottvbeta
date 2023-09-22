@@ -108,6 +108,13 @@ class ShowEpisodeController extends Controller
 
         $showEpisode->save();
 
+        if ($showEpisode->show->show_status_id === 1) {
+            $show = Show::find($showEpisode->show_id);
+            $show->show_status_id = 2;
+            $show->save();
+        }
+
+
         $showSlug = $request->show_slug;
         $showEpisodeSlug = $showEpisode->slug;
 

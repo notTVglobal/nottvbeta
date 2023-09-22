@@ -103,7 +103,6 @@ class ShowPolicy
 
 
     public function create(User $user) {
-        dd($user);
         $userId = $user->id;
         $checkUser = Creator::where('user_id', $userId)->pluck('status_id')->first();
 

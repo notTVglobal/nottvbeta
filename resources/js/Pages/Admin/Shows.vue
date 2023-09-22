@@ -127,6 +127,12 @@
                                                     <div v-if="show.statusId===7" class="font-medium font-italic text-red-600">
                                                         {{ show.status }}
                                                     </div>
+                                                    <div v-if="show.statusId===8" class="font-semibold font-italic text-gray-500">
+                                                        {{ show.status }}
+                                                    </div>
+                                                    <div v-if="show.statusId===9" class="font-semibold text-green-600">
+                                                        {{ show.status }}
+                                                    </div>
                                                 </th>
                                                 <td class="px-6 py-4 space-x-2">
                                                     <Link v-if="show.can.viewShow" :href="`/shows/${show.slug}/manage`"><button

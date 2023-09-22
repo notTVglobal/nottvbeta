@@ -11,13 +11,13 @@
             <Link :href="`/shows/${show.slug}/manage`" class="uppercase text-xl font-semibold text-blue-600 hover:text-blue-900 dark:text-blue-200 dark:hover:text-blue-400">{{ show.name }}</Link>
         </td>
 
-        <td class="text-gray-600 dark:text-gray-100 px-6 py-4 text-sm w-full min-w-[16rem]" @click="editNote">
-            <span v-if="!show.notes" v-show="teamStore.noteEdit !== props.show.id" class="italic">Click here to add/edit a note.</span>
-            <span v-if="show.notes" v-show="teamStore.noteEdit !== props.show.id" :key="componentKey">{{ show.notes }}</span>
-            <div v-show="teamStore.noteEdit === props.show.id">
+        <td class="text-gray-600 dark:text-gray-100 px-6 py-4 text-sm w-full min-w-[16rem]">
+            <button v-if="!show.notes" v-show="teamStore.noteEdit !== props.show.id" class="italic" @click="editNote">Click here to add/edit a note.</button>
+            <button v-if="show.notes" v-show="teamStore.noteEdit !== props.show.id" :key="componentKey" @click="editNote">{{ show.notes }}</button>
+            <div v-if="teamStore.noteEdit === props.show.id">
 
                 <ShowNoteEdit :show="props.show" v-on:saveNoteProcessing="reloadNote" />
-                <div v-show="teamStore.saveNoteProcessing">Saving...</div>
+                <div v-if="teamStore.saveNoteProcessing">Saving...</div>
             </div>
 
         </td>

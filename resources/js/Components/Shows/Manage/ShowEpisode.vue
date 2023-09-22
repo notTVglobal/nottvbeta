@@ -21,13 +21,13 @@
 <!--        <td class="text-gray-500 px-6 py-4 text-sm">-->
 <!--            {{episode.notes}}-->
 <!--        </td>-->
-        <td class="light:text-gray-600 dark:text-gray-100 px-6 py-4 text-sm w-full min-w-[16rem]" @click="editNote">
-            <span v-if="!episode.notes" v-show="showStore.noteEdit !== props.episode.id" class="italic">Click here to add/edit a note.</span>
-            <span v-if="episode.notes" v-show="showStore.noteEdit !== props.episode.id" :key="componentKey">{{ episode.notes }}</span>
-            <div v-show="showStore.noteEdit === props.episode.id">
+        <td class="light:text-gray-600 dark:text-gray-100 px-6 py-4 text-sm w-full min-w-[16rem]">
+            <span v-if="!episode.notes" v-show="showStore.noteEdit !== props.episode.id" class="italic" @click="editNote">Click here to add/edit a note.</span>
+            <span v-if="episode.notes" v-show="showStore.noteEdit !== props.episode.id" :key="componentKey" @click="editNote">{{ episode.notes }}</span>
+            <div v-if="showStore.noteEdit === props.episode.id">
 
                 <EpisodeNoteEdit :episode="props.episode" v-on:saveNoteProcessing="reloadNote" />
-                <div v-show="showStore.saveNoteProcessing">Saving...</div>
+                <div v-if="showStore.saveNoteProcessing">Saving...</div>
             </div>
 
         </td>

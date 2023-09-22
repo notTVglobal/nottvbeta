@@ -125,6 +125,7 @@ class DashboardController extends Controller
                 'viewDashboard' => Auth::user()->can('viewDashboard', Creator::class),
                 'viewAdmin' => Auth::user()->can('viewAdmin', User::class),
                 'createTeam' => Auth::user()->can('createTeam', Team::class),
+                'createShow' => Auth::user()->can('create', Show::class),
                 'viewNewsroom' => Auth::user()->can('viewAny', NewsPerson::class)
             ]
         ]);
