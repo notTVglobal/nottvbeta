@@ -41,6 +41,7 @@ import Popper from "vue3-popper";
 // import confirm dialog
 import ConfirmDialog from '@/Components/Modals/ConfirmDialog';
 // import vueCountryRegionSelect from 'vue3-country-region-select';
+// import { setupCalendar } from 'v-calendar';
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'notTV';
 
@@ -79,6 +80,7 @@ createInertiaApp({
             .use(createPinia())
             .use(Vue3TouchEvents)
             // .use(vueCountryRegionSelect)
+            // .use(setupCalendar, {})
             .component("Link", Link)
             .component("Head", Head)
             .component("font-awesome-icon", FontAwesomeIcon)

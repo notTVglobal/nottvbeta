@@ -3,7 +3,7 @@
     <Head :title="`Edit Episode: ${props.episode.name}`"/>
 
     <div id="topDiv" class="place-self-center flex flex-col gap-y-3">
-        <div class="bg-white dark:bg-gray-800 text-black dark:text-white px-5 mb-10">
+        <div class="bg-white dark:bg-gray-800 text-black light:text-black dark:text-white px-5 mb-10">
 
             <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
@@ -52,7 +52,7 @@
                                 <div class="xl:col-span-2">
 
                                     <div class="mb-6">
-                                        <label class="block mb-2 uppercase font-bold text-xs text-white"
+                                        <label class="block mb-2 uppercase font-bold text-xs"
                                                for="notes"
                                         >
                                             Episode Notes (only the team members see the notes)
@@ -69,8 +69,71 @@
                                     </div>
 
 
+
+                                    <div v-if="props.episode.status.id < 7" class="mb-6">
+                                        <label class="block mb-2 uppercase font-bold text-xs"
+                                               for="releaseDate"
+                                        >
+                                            <span v-if="props.episode.scheduled_release_dateTime">
+                                                Scheduled Release Date</span>
+                                            <span v-else>
+                                                Schedule Release</span>
+                                        </label>
+
+                                        <div v-if="!cancelScheduledReleaseDate">
+                                            <div v-if="props.episode.scheduled_release_dateTime && !selectedScheduledDateTime"
+                                                 class="mb-2">
+                                                {{ formatDate(props.episode.scheduled_release_dateTime)}}
+                                            </div>
+                                            <div v-if="selectedScheduledDateTime"
+                                                 class="mb-2">
+                                                {{ formatDate(selectedScheduledDateTime.date) }}
+                                            </div>
+                                        </div>
+                                        <div v-else class="mb-2">
+                                            <span class="italic">Scheduled release cancelled. Please save the changes.</span>
+                                        </div>
+
+                                        <div class="flex flex-row flex-wrap space-x-2">
+                                            <DateTimePicker @date-time-selected="handleScheduledDateTime" />
+                                            <!-- Display the selected date and time received from DateTimePicker -->
+                                            <Button v-if="props.episode.scheduled_release_dateTime"
+                                                    class="px-3 py-2 bg-blue-500 text-sm text-white font-semibold rounded-md"
+                                                    @click.prevent="cancelScheduledRelease">Cancel Release</Button>
+                                        </div>
+
+
+                                    </div>
+
+                                    <div v-if="props.episode.status.id === 7" class="mb-6">
+                                        <label class="block mb-2 uppercase font-bold text-xs"
+                                               for="releaseDate"
+                                        >
+                                            Release Date
+                                        </label>
+
+                                        <div v-if="props.episode.release_dateTime && !selectedReleaseDateTime"
+                                             class="mb-2">
+                                            {{ formatDate(props.episode.release_dateTime)}}
+                                        </div>
+                                        <div v-if="selectedReleaseDateTime"
+                                             class="mb-2">
+                                            {{ formatDate(selectedReleaseDateTime.date) }}
+                                        </div>
+
+                                        <DateTimePicker @date-time-selected="handleReleaseDateTime">
+                                            <template v-slot:buttonName>
+                                                Change date
+                                            </template>
+                                        </DateTimePicker>
+                                        <!-- Display the selected date and time received from DateTimePicker -->
+
+
+                                    </div>
+
+
                                     <div class="mb-6">
-                                        <label class="block mb-2 uppercase font-bold text-xs text-white"
+                                        <label class="block mb-2 uppercase font-bold text-xs"
                                                for="name"
                                         >
                                             Episode Name
@@ -88,7 +151,7 @@
                                     </div>
 
                                     <div class="mb-6">
-                                        <label class="block mb-2 uppercase font-bold text-xs text-white"
+                                        <label class="block mb-2 uppercase font-bold text-xs"
                                                for="episode_number"
                                         >
                                             Episode Number
@@ -108,7 +171,7 @@
 
 
                                     <div class="mb-6 w-full">
-                                        <label class="block mb-2 uppercase font-bold text-xs text-light text-white"
+                                        <label class="block mb-2 uppercase font-bold text-xs text-light"
                                                for="description"
                                         >
                                             Description
@@ -142,7 +205,7 @@
 <!--                                    </div>-->
 
                                     <div class="mb-6">
-                                        <label class="block mb-2 uppercase font-bold text-xs text-white"
+                                        <label class="block mb-2 uppercase font-bold text-xs"
                                                for="video_file_url"
                                         >
                                             Video URL (External MP4 only)
@@ -165,7 +228,7 @@
                                         <label class="block mb-2 uppercase font-bold text-xs"
                                                for="video_embed_code"
                                         >
-                                            Embed Code (Rumble or Bitchute only) <span class="text-white">*</span>
+                                            Embed Code (Rumble or Bitchute only) <span class="">*</span>
                                         </label>
 
                                         <TabbableTextarea v-model="form.video_embed_code"
@@ -176,7 +239,7 @@
                                                           rows="10" cols="30"
                                         />
                                         <div v-if="form.errors.video_embed_code" v-text="form.errors.video_embed_code"
-                                             class="text-xs text-white mt-1"></div>
+                                             class="text-xs mt-1"></div>
                                     </div>
 
                                     <div class="mt-2 mb-6 pb-4 border-b">
@@ -191,7 +254,7 @@
                                                 We have <span class="font-bold">not</span> enabled the use of Facebook videos for security purposes.
                                             </li>
                                             <li>
-                                                If you want to use YouTube, enter the YouTube video URL above in the YouTube URL field. This option is least preferrable, due to a lower quality user experience.
+                                                If you want to use YouTube, enter the YouTube video URL above in the YouTube URL field. This option is least preferable, due to a lower quality user experience.
                                             </li>
                                         </ul>
                                     </div>
@@ -204,12 +267,12 @@
                                 <div>
 
                                     <div>
-                                        <label class="block mb-2 uppercase font-bold text-xs text-white"
+                                        <label class="block mb-2 uppercase font-bold text-xs"
                                                for="episodeVideo"
                                         >
                                             Upload Episode
                                         </label>
-                                        <div class="max-full mx-auto mt-2 mb-6 bg-gray-200 p-6 text-dark">
+                                        <div class="max-full mx-auto mt-2 mb-6 bg-gray-200 p-6">
                                             <h2 class="text-xl font-semibold text-gray-800">Upload Video</h2>
 
                                             <ul class="pb-4 text-gray-800">
@@ -227,12 +290,12 @@
 
 
                                     <div>
-                                        <label class="block mb-2 uppercase font-bold text-xs text-white"
+                                        <label class="block mb-2 uppercase font-bold text-xs"
                                                for="name"
                                         >
                                             Change Episode Poster
                                         </label>
-                                        <div class="max-full mx-auto mt-2 mb-6 bg-gray-200 p-6 text-dark">
+                                        <div class="max-full mx-auto mt-2 mb-6 bg-gray-200 p-6">
 
                                             <ImageUpload :image="props.image"
                                                          :server="'/showEpisodesUploadPoster'"
@@ -266,7 +329,7 @@
                                 <div class="flex justify-end mb-6">
                                     <JetValidationErrors class="mr-4" />
                                     <button
-                                        @click="submit"
+                                        @click.prevent="submit"
                                         class="h-fit bg-blue-600 hover:bg-blue-500 text-white rounded py-2 px-4 mr-5"
                                         :disabled="form.processing"
                                     >
@@ -304,6 +367,9 @@ import ImageUpload from "@/Components/Uploaders/ImageUpload.vue";
 import SingleImage from "@/Components/Multimedia/SingleImage.vue";
 import VideoUpload from "@/Components/Uploaders/VideoUpload"
 import videojs from "video.js";
+import DateTimePicker from "@/Components/Calendar/DateTimePicker.vue";
+// import {DatePicker} from "v-calendar";
+// import 'v-calendar/style.css';
 
 let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore()
@@ -316,6 +382,7 @@ let props = defineProps({
     episode: Object,
     image: Object,
     can: Object,
+    // inputValue: String,
 });
 
 let form = useForm({
@@ -328,6 +395,8 @@ let form = useForm({
     video_url: props.episode.video_url,
     youtube_url: props.episode.youtube_url,
     video_embed_code: props.episode.video_embed_code,
+    release_date: props.episode.release_dateTime,
+    scheduled_release_dateTime: props.episode.scheduled_release_dateTime,
 });
 
 let reloadImage = () => {
@@ -340,8 +409,32 @@ let submit = () => {
     if(form.video_embed_code !== props.episode.video_embed_code && form.video_url) {
         addEmbedCodeConfirm();
     } else
-        form.put(route('showEpisodes.update', props.episode.slug));
+    form.put(route('showEpisodes.update', props.episode.slug));
 };
+
+// Define a ref to store selected date and time received from DateTimePicker
+const selectedReleaseDateTime = ref(null);
+const selectedScheduledDateTime = ref(null);
+let cancelScheduledReleaseDate = ref(false);
+// let date = ref(new Date());
+// const calendar = ref(null);
+// const inputValue = ref(props.inputValue || null);
+
+// Method to handle the selected date and time emitted from DateTimePicker
+function handleReleaseDateTime(data) {
+    selectedReleaseDateTime.value = data;
+    form.release_date = data.date
+}
+function handleScheduledDateTime(data) {
+    selectedScheduledDateTime.value = data;
+    form.scheduled_release_dateTime = data.date
+}
+
+function cancelScheduledRelease() {
+    cancelScheduledReleaseDate.value = true;
+    selectedScheduledDateTime.value = null;
+    form.scheduled_release_dateTime = null;
+}
 
 userStore.currentPage = 'episodes'
 userStore.showFlashMessage = true;

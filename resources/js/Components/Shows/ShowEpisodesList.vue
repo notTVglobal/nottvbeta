@@ -13,7 +13,7 @@
 
                     <div class="relative inline-block">
                         <Link :href="`/shows/${show.slug}/episode/${episode.slug}`">
-                            <SingleImage :image="episode.image" :alt="'episode cover'" :class="'w-full object-cover hover:opacity-75 transition ease-in-out duration-150'"/>
+                            <SingleImage :image="episode.image" :alt="'episode cover'" :class="'h-28 w-48 min-w-[12rem] object-cover hover:opacity-75 transition ease-in-out duration-150 bg-black'"/>
 <!--                            <SingleImage :image="episode.image" :alt="'episode cover'" :class="'h-96 min-w-[16rem] w-64 object-cover mb-6 lg:mb-0 m-auto lg:m-0'"/>-->
 
 

@@ -179,7 +179,6 @@ class ImageController extends Controller
         // Can we create a function createImage() --- started below
         // to simplify these upload requests?
 
-
         // validate the incoming file
         // TO DO
         // Need to validate/sanitize the image upload.
@@ -244,7 +243,8 @@ class ImageController extends Controller
 
     public function uploadTeamLogo(HttpRequest $request)
     {
-
+//        $metadata = $request->input('metadata');
+dd($request);
         // Can we create a function createImage() --- started below
         // to simplify these upload requests?
 

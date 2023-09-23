@@ -44,8 +44,8 @@
                                     <span v-if="props.episode.episode_number">{{ props.episode.episode_number }}</span>
                                 </div>
                             </div>
-                            <div>
-                                {{ formatDate(props.episode.created_at) }}
+                            <div v-if="props.episode.release_dateTime">
+                                {{ formatDate(props.episode.release_dateTime) }}
                             </div>
 
                         </div>

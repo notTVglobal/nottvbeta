@@ -199,6 +199,8 @@ let submit = () => {
     // Inertia.reload({ only: ['error'] })
     // Inertia.reload({ only: ['message'] })
     form.post(route('admin.inviteCodes'));
+    form.code = '';
+    // Inertia.reload();
     // props.message = '';
     // props.messageKey ++;
 };

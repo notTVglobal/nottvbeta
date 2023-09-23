@@ -41,6 +41,8 @@
                                         <ImageUpload :image="props.image"
                                                      :server="'/showsUploadPoster'"
                                                      :name="'Upload Show Poster'"
+                                                     :metadataKey="'foo2'"
+                                                     :metadataValue="'bar2'"
                                                      :maxSize="'30MB'"
                                                      :fileTypes="'image/jpg, image/jpeg, image/png'"
                                                      @reloadImage="reloadImage"

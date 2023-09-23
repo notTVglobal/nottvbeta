@@ -78,7 +78,7 @@
 
                                     <div class="relative w-48 min-w-[12rem]">
 <!--                                        <img :src="'/storage/images/' + episode.poster" alt="show cover" class="h-32 md:h-64 md:min-w-[8rem] w-24 md:w-48 object-cover">-->
-                                        <SingleImage :image="episode.image" :alt="'episode cover'" class="h-28 w-48 min-w-[12rem] object-scale-down"/>
+                                        <SingleImage :image="episode.image" :alt="'episode cover'" class="h-28 w-48 min-w-[12rem] object-cover bg-black"/>
                                         <div>
                                             <div class="mt-4 w-full justify-end text-yellow-300">{{episode.categoryName}}</div>
                                             <div class="w-full justify-end text-yellow-500 font-thin">{{episode.categorySubName}}</div>

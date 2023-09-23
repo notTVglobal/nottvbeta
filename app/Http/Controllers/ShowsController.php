@@ -733,11 +733,19 @@ class ShowsController extends Controller
 
     public function changeEpisodeStatus(HttpRequest $request, Show $show)
     {
+        // if publishing an episode... episode_status_id === 7
+        // set release year and dateTime
+        // Carbon::now();
 
         try {
             // Get the episode ID and new status from the request
             $episodeId = $request->input('episode_id');
             $newStatusId = $request->input('new_status_id');
+
+            if ($newStatusId === 7) {
+                $releaseDateTime = Carbon::now();
+                $releaseYear = Carbon::now()->year;
+            }
 
             // Find the episode by ID
             $episode = ShowEpisode::find($episodeId);
@@ -748,6 +756,8 @@ class ShowsController extends Controller
 
             // Update the episode's status
             $episode->show_episode_status_id = $newStatusId;
+            $episode->release_dateTime = $releaseDateTime ?? null;
+            $episode->release_year = $releaseYear ?? null;
             $episode->save();
 
             // If successful, return a success response

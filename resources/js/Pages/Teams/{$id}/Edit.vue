@@ -51,6 +51,8 @@
                                         <ImageUpload :image="props.image"
                                                      :server="'/teamsUploadLogo'"
                                                      :name="'Upload Team Logo'"
+                                                     :metadataKey="'foo2'"
+                                                     :metadataValue="'bar2'"
                                                      :maxSize="'10MB'"
                                                      :fileTypes="'image/jpg, image/jpeg, image/png'"
                                                      @reloadImage="reloadImage"

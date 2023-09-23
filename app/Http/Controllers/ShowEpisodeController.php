@@ -282,9 +282,10 @@ class ShowEpisodeController extends Controller
                 'description' => $showEpisode->description,
                 'notes' => $showEpisode->notes,
                 'episode_number' => $showEpisode->episode_number,
-                'created_at' => $showEpisode->created_at,
+                'status' => $showEpisode->showEpisodeStatus,
                 'release_year' => $showEpisode->release_year,
                 'release_dateTime' => $showEpisode->release_dateTime,
+                'scheduled_release_dateTime' => $showEpisode->scheduled_release_dateTime,
                 'mist_stream_id' => $showEpisode->mist_stream_id,
                 'video_id' => $showEpisode->video_id,
                 'video_url' => $showEpisode->video_url,
@@ -390,8 +391,40 @@ class ShowEpisodeController extends Controller
             'video_url' => 'nullable|active_url',
             'youtube_url' => 'nullable|active_url',
             'video_embed_code' => 'nullable|string',
-            'release_date' => 'nullable|string',
+            'release_date' => 'nullable|date',
+            'scheduled_release_dateTime' => 'nullable|date|after:now',
         ]);
+
+        $releaseYear = null;
+        $formattedReleaseDate = null;
+
+        function formatDateForMySQL($dateTimeString) {
+            // Parse the datetime string into a Carbon instance, assuming it's in ISO 8601 format
+            $carbonDateTime = Carbon::parse($dateTimeString);
+            // Convert the Carbon instance to the MySQL datetime format
+            return $carbonDateTime->format('Y-m-d H:i:s');
+        }
+
+        if ($request->release_date) {
+            // Create a Carbon instance from the DateTime string
+            $releaseDateTime = Carbon::parse($request->release_date);
+            // Get the year from the Carbon instance
+            $releaseYear = $releaseDateTime->year;
+
+            $formattedReleaseDate = formatDateForMySQL($request->release_date);
+        }
+
+        if ($request->scheduled_release_dateTime) {
+            $formattedScheduledReleaseDate = formatDateForMySQL($request->scheduled_release_dateTime);
+            $showEpisode->show_episode_status_id = 6;
+        }
+
+        if ($showEpisode->scheduled_release_dateTime && $request->scheduled_release_dateTime === null) {
+            $showEpisode->show_episode_status_id = 5;
+        }
+
+
+
 
         $showSlug = Show::query()->where('id', $showEpisode->show_id)->pluck('slug')->first();
         $showEpisodeSlug = $showEpisode->slug;
@@ -416,6 +449,9 @@ class ShowEpisodeController extends Controller
         $showEpisode->video_url = $request->video_url;
         $showEpisode->youtube_url = $request->youtube_url;
         $showEpisode->video_embed_code = $request->video_embed_code;
+        $showEpisode->release_dateTime = $formattedReleaseDate ?? null;
+        $showEpisode->release_year = $releaseYear ?? null;
+        $showEpisode->scheduled_release_dateTime = $formattedScheduledReleaseDate ?? null;
         $showEpisode->save();
 
         if ($request->video_embed_code && !$request->video_url) {

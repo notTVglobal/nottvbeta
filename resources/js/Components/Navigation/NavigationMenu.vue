@@ -86,7 +86,7 @@
                           <NotificationIcon />
                         </div>
 
-                        <div v-if="userStore.isCreator" class="flex-item pt-3 text-yellow-600 uppercase hidden md:block text-xs w-fit">
+                        <div v-if="userStore.isCreator" class="flex-item align-self-center text-yellow-600 uppercase hidden md:block text-xs w-fit">
                             GOAL <span class="text-sm font-semibold">100</span> subscribers
                         </div>
                         <div class="flex-item">
@@ -111,7 +111,7 @@
                             <template #trigger>
                                 <button v-if="$page.props.jetstream.managesProfilePhotos"
                                         class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition">
-                                    <img class="h-8 w-8 rounded-full object-cover"
+                                    <img class="min-h-[2.5rem] min-w-[2.5rem] max-w-[2.5rem] rounded-full object-cover"
                                          :src="$page.props.user.profile_photo_url" :alt="$page.props.user.name">
                                 </button>
 

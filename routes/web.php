@@ -5,6 +5,7 @@ use App\Http\Controllers\AppSettingController;
 use App\Http\Controllers\ChangelogController;
 use App\Http\Controllers\ChannelController;
 
+use App\Http\Controllers\FlashController;
 use App\Http\Controllers\TestMessageController;
 use App\Http\Controllers\WelcomeController;
 use App\Mail\VerifyMail;
@@ -818,6 +819,11 @@ Route::middleware([
     Route::post('/mistapi', [VideoController::class, 'mistApi'])->name('mistApi');
 
 });
+
+// Extra Functions
+//////////////////
+///
+    Route::post('/clear-flash', [\App\Http\Middleware\HandleInertiaRequests::class, 'clearFlash'])->name('flash.clear');
 
 //Route::any('/{any}', function() {
 //    return view('app');

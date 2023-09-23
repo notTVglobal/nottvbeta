@@ -1,8 +1,14 @@
 # not.tv Changelog
 
 
-Last Update: September 21, 2023\
+Last Update: September 23, 2023\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.7.3.4
+September 23, 2023
+* Added release date to Show Episodes
+* Added scheduled release date to Show Episodes. If a user cancels the scheduled release the episode status is changed to Review.
+
 
 ## v0.7.3.3
 September 21, 2023
@@ -12,6 +18,10 @@ September 21, 2023
 * Fix changelog css
 * Improve the way show notes and episode notes are displayed when clicked on in the team and show manage pages.
 * Fix Newest Episodes on Show Index Page, no longer displays episodes unless the show is Active.
+* Fix copyright year on bottom of Show page.
+* Fix Flash Message Modal to clear from the $page.props.flash when the user closes the message. This allows the messages to reappear on the same page if needed.
+* Added release date to Show Episodes
+* Added scheduled release date to Show Episodes. If a user cancels the scheduled release the episode status is changed to Review.
 
 ## v0.7.3.2
 September 20, 2023

@@ -5900,6 +5900,14 @@ h3 {
   max-height: 24rem;
 }
 
+.max-h-\[3rem\] {
+  max-height: 3rem;
+}
+
+.max-h-\[4rem\] {
+  max-height: 4rem;
+}
+
 .min-h-\[12rem\] {
   min-height: 12rem;
 }
@@ -5918,6 +5926,18 @@ h3 {
 
 .min-h-screen {
   min-height: 100vh;
+}
+
+.min-h-\[2rem\] {
+  min-height: 2rem;
+}
+
+.min-h-\[2\.5rem\] {
+  min-height: 2.5rem;
+}
+
+.min-h-\[4rem\] {
+  min-height: 4rem;
 }
 
 .w-0 {
@@ -6133,6 +6153,18 @@ h3 {
   max-width: 20rem;
 }
 
+.max-w-\[2rem\] {
+  max-width: 2rem;
+}
+
+.max-w-\[2\.5rem\] {
+  max-width: 2.5rem;
+}
+
+.max-w-\[4rem\] {
+  max-width: 4rem;
+}
+
 .flex-1 {
   flex: 1 1 0%;
 }
@@ -6147,6 +6179,10 @@ h3 {
 
 .shrink-0 {
   flex-shrink: 0;
+}
+
+.flex-grow {
+  flex-grow: 1;
 }
 
 .grow-0 {
@@ -7039,6 +7075,11 @@ h3 {
 .bg-yellow-900 {
   --tw-bg-opacity: 1;
   background-color: rgb(113 63 18 / var(--tw-bg-opacity));
+}
+
+.bg-yellow-200 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(254 240 138 / var(--tw-bg-opacity));
 }
 
 .bg-opacity-0 {

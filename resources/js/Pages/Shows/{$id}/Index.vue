@@ -180,9 +180,9 @@
                                          :key="creator.id"
                                          class="pb-8 mx-auto lg:mx-0">
 
-                                        <div class="flex flex-col max-w-[8rem] px-6 py-4 font-medium break-words grow-0">
-                                            <img :src="'/storage/' + creator.profile_photo_path" class="pb-2 rounded-full h-32 w-32 object-cover mb-2">
-                                            <span class="text-gray-200 w-full text-center">{{ creator.name }}</span>
+                                        <div class="flex flex-col max-w-[8rem] px-3 py-4 font-medium break-words grow-0">
+                                            <img :src="'/storage/' + creator.profile_photo_path" class="pb-2 rounded-full h-20 w-20 object-cover mb-2 justify-center">
+                                            <span class="text-gray-200 w-full text-center text-sm">{{ creator.name }}</span>
                                         </div>
                                     </div>
                                 </div>

@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 use Inertia\Middleware;
 use App\Models\AppSetting;
 
@@ -55,5 +56,14 @@ class HandleInertiaRequests extends Middleware
                 }
             },
         ]);
+    }
+
+    public function clearFlash(Request $request): void
+    {
+        $request->session()->forget('message');
+        $request->session()->forget('success');
+        $request->session()->forget('warning');
+        $request->session()->forget('error');
+
     }
 }
