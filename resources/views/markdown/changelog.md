@@ -4,10 +4,12 @@
 Last Update: September 24, 2023\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
-## v0.7.3.5
+## v0.7.3.5b
 September 24, 2023
 * Added notification, if a user gets added to a team.
 * Fixed how notifications are subscribed to and sent. This now works.
+* Added date to notifications, it displays as TimeAgo
+* Reversed the order of notifications.
 
 ## v0.7.3.4
 September 23, 2023

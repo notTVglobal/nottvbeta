@@ -6,7 +6,7 @@
             <font-awesome-icon icon="fa-trash-can" />
 
         </button>
-        <div class="flex flex-row py-6 border-b-2 border-accent border-opacity-25">
+        <div class="flex flex-row pb-6 pt-10 border-b-2 border-accent border-opacity-25">
 
             <div class="w-fit">
                 <img v-if="!notification.image.folder"
@@ -22,6 +22,7 @@
             <div class="ml-4 lg:ml-8 w-5/6">
                 <h3 class="font-bold text-lg"><button @click.prevent="visitUrl(notification.url)">{{ notification.title }}</button></h3>
                 <p class="py-4">{{ notification.message }}</p>
+                <p class="py-1 text-xs font-light">{{ timeAgo }}</p>
             </div>
         </div>
 
@@ -34,13 +35,15 @@ import {useUserStore} from "@/Stores/UserStore";
 import {ref} from "vue";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import {Inertia} from "@inertiajs/inertia";
+import { useTimeAgo } from '@vueuse/core';
 
-let userStore = useUserStore(
+let userStore = useUserStore()
 
-)
 let props = defineProps({
     notification: Object,
 })
+
+let timeAgo = useTimeAgo(props.notification.created_at)
 
 const notificationsDialog = ref(null);
 const emit = defineEmits('closeModal')

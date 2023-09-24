@@ -1,7 +1,7 @@
 <template>
     <div>
 
-        <div v-for="notification in userStore.notifications" :key="notification.id">
+        <div v-for="notification in userStore.notifications.slice().reverse()" :key="notification.id">
 
             <NotificationCard :notification="notification" @closeModal="closeModalFunction"/>
             <!--                    <button @click="markAsRead(notification.id)" v-if="!notification.read">Mark as Read</button>-->

@@ -20,7 +20,6 @@ class NotificationsController extends Controller
         $user = auth()->user()->id;
         $notifications = Notification::where('user_id', $user)
             ->with(['image.appSetting'])
-            ->latest()
             ->get();
 
         return response()->json(['notifications' => $notifications]);
