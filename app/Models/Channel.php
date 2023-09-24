@@ -9,7 +9,7 @@ class Channel extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $fillable = [];
 
     public function messages() {
         return $this->hasMany('App\Models\ChatMessage');

@@ -83,7 +83,7 @@
                 <div class="flex flex-row space-x-4 pt-2">
 
                         <div class="flex-item align-text-top mt-2 mx-6">
-                          <NotificationIcon />
+                          <NotificationButton />
                         </div>
 
                         <div v-if="userStore.isCreator" class="flex-item align-self-center text-yellow-600 uppercase hidden md:block text-xs w-fit">
@@ -266,7 +266,7 @@ import { useStreamStore } from "@/Stores/StreamStore"
 import { useUserStore } from "@/Stores/UserStore"
 import { useWelcomeStore } from "@/Stores/WelcomeStore"
 import AppVersion from "@/Components/AppVersion/AppVersion.vue";
-import NotificationIcon from "@/Components/Notifications/NotificationIcon.vue";
+import NotificationButton from "@/Components/Notifications/NotificationButton.vue";
 
 
 let chat = useChatStore();

@@ -10,7 +10,19 @@ class Image extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'user_id',
+        'name',
+        'extension',
+        'size',
+        'folder',
+        'cloud_folder',
+        'storage_location',
+        'show_id',
+        'show_episode_id',
+        'team_id',
+        'movie_id'
+    ];
 
     public function show()
     {
@@ -50,6 +62,11 @@ class Image extends Model
     public function appSetting()
     {
         return $this->belongsTo(AppSetting::class);
+    }
+
+    public function notification()
+    {
+        return $this->hasMany(Notification::class);
     }
 
 //    public function appSetting(): BelongsTo

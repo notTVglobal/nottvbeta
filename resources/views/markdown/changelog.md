@@ -8,6 +8,7 @@ Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 September 23, 2023
 * Added release date to Show Episodes
 * Added scheduled release date to Show Episodes. If a user cancels the scheduled release the episode status is changed to Review.
+* Setup Notifications System.
 
 
 ## v0.7.3.3

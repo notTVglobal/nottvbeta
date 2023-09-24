@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="indicator">
-            <span class="indicator-item badge badge-secondary">99+</span>
+            <span v-if="userStore.newNotifications > 0" class="indicator-item badge badge-secondary">{{userStore.newNotifications}}</span>
             <button class="btn btn-sm primary-content"
                     @click="openNotifications()">
                 <svg aria-hidden="false" focusable="false" data-prefix="fas" data-icon="bell" class="mx-auto dark:text-white w-4 hover:text-blue-600 cursor-pointer" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
@@ -9,25 +9,33 @@
                 </svg>
             </button>
         </div>
-        <dialog id="notificationsResponsive" class="modal">
-            <div class="modal-box bg-gray-900">
-                <h3 class="font-bold text-lg">Hello!</h3>
-                <p class="py-4">Notifications will go here.</p>
-                <p class="py-4">Press ESC key or click outside to close</p>
-            </div>
-            <form method="dialog" class="modal-backdrop">
-                <button>close</button>
-            </form>
-        </dialog>
     </div>
 
 </template>
 
 <script setup>
-function openNotifications() {
-    document.getElementById('notificationsResponsive').showModal()
-}
+import {onMounted, ref} from "vue";
+import {useUserStore} from "@/Stores/UserStore"
+import {Inertia} from "@inertiajs/inertia";
 
+let userStore = useUserStore();
+
+const notifications = ref([]);
+
+// Listen for the event when the component is mounted
+onMounted(() => {
+    Echo.private(`user.${userStore.id}`)
+        .listen('.NewNotificationEvent', (event) => {
+            // Add the new notification to the list
+            userStore.newNotifications++;
+            Inertia.reload();
+            // notifications.value.push(event.notification);
+        });
+});
+
+function openNotifications() {
+    document.getElementById('notifications').showModal()
+}
 </script>
 
 <style scoped>

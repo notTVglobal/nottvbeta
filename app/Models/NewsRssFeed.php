@@ -9,7 +9,11 @@ class NewsRssFeed extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'name',
+        'slug',
+        'url'
+    ];
 
     public function getRouteKeyName() {
         return 'slug';

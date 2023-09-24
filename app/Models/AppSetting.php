@@ -9,7 +9,14 @@ class AppSetting extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'cdn_endpoint',
+        'cloud_folder',
+        'first_play_video_source',
+        'first_play_video_source_type',
+        'first_play_video_name',
+        'first_play_channel_id'
+    ];
 
     public function image()
     {

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NewNotificationEvent;
 use App\Jobs\AddVideoUrlFromEmbedCodeJob;
 use App\Models\Creator;
 use App\Models\Image;
+use App\Models\Notification;
 use App\Models\Show;
 use App\Models\ShowEpisode;
 use App\Models\Team;
@@ -119,6 +121,18 @@ class ShowEpisodeController extends Controller
         $showEpisodeSlug = $showEpisode->slug;
 
         if ($request->video_embed_code && !$request->video_url) {
+            // Create and save the notification
+            $notification = new Notification;
+            $notification->user_id = auth()->user()->id;
+
+            // make the image the show_episode_poster
+            $notification->image_id = null;
+            $notification->title = 'new notification';
+            $notification->message = 'The video url is being generated from the embed code. You will be notified when it is done.';
+            $notification->save();
+
+            // Trigger the event to broadcast the new notification
+            event(new NewNotificationEvent(auth()->user(), $notification));
             AddVideoUrlFromEmbedCodeJob::dispatch($showEpisode)->onQueue('video_processing');
         }
 
@@ -455,6 +469,18 @@ class ShowEpisodeController extends Controller
         $showEpisode->save();
 
         if ($request->video_embed_code && !$request->video_url) {
+            // Create and save the notification
+            $notification = new Notification;
+            $notification->user_id = auth()->user()->id;
+
+            // make the image the show_episode_poster
+            $notification->image_id = null;
+            $notification->title = 'new notification';
+            $notification->message = 'The video url is being generated from the embed code. You will be notified when it is done.';
+            $notification->save();
+
+            // Trigger the event to broadcast the new notification
+            event(new NewNotificationEvent(auth()->user(), $notification));
             AddVideoUrlFromEmbedCodeJob::dispatch($showEpisode)->onQueue('video_processing');
         }
 

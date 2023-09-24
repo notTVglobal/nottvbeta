@@ -4,6 +4,7 @@
         <!-- Navbar for logged in user -->
         <ResponsiveNavigationMenu v-if="user"/>
         <NavigationMenu v-if="user"/>
+        <NotificationModal />
 
         <!-- Login for Welcome Page (logged out) -->
         <Teleport to="body">
@@ -33,6 +34,7 @@ import ResponsiveNavigationMenu from '@/Components/Navigation/ResponsiveNavigati
 import NavigationMenu from '@/Components/Navigation/NavigationMenu'
 import Messages from "@/Components/VideoPlayer/Chat/VideoOTTChatMessages.vue";
 import Message from "@/Components/Modals/Messages.vue";
+import NotificationModal from "@/Components/Notifications/NotificationModal.vue";
 
 // const ResponsiveNavigationMenu = defineAsyncComponent( () =>
 //     import('@/Components/Navigation/ResponsiveNavigationMenu'))

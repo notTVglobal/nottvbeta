@@ -36,6 +36,7 @@ export let useUserStore = defineStore('userStore', {
         url: null,
         key: 0,
         showFlashMessage: false,
+        newNotifications: 0,
 
     }),
 
@@ -99,5 +100,7 @@ export let useUserStore = defineStore('userStore', {
                 return Math.round(state.uploadPercentage * 10) / 10
             }
         },
+        notificationIncrement: () => this.newNotifications++,
+        notificationDecrement: () => this.newNotifications--,
     }
 });

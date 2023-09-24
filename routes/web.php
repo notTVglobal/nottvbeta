@@ -6,6 +6,7 @@ use App\Http\Controllers\ChangelogController;
 use App\Http\Controllers\ChannelController;
 
 use App\Http\Controllers\FlashController;
+use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\TestMessageController;
 use App\Http\Controllers\WelcomeController;
 use App\Mail\VerifyMail;
@@ -824,6 +825,11 @@ Route::middleware([
 //////////////////
 ///
     Route::post('/clear-flash', [\App\Http\Middleware\HandleInertiaRequests::class, 'clearFlash'])->name('flash.clear');
+
+    Route::get('/notifications', [NotificationsController::class, 'index']);
+    Route::put('/notifications/{id}/mark-as-read', [NotificationsController::class, 'markAsRead']);
+
+
 
 //Route::any('/{any}', function() {
 //    return view('app');

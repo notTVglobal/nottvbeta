@@ -7,13 +7,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Movie extends Model
 {
-//    protected $fillable = [
-//        'name',
-//        'description',
-//        'file_path',
-//        'file_url',
-//    ];
-    protected $guarded = [];
+    protected $fillable = [
+        'name',
+        'description',
+        'file_path',
+        'file_url',
+    ];
 
     public function getRouteKeyName() {
         return 'slug';

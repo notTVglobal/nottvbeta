@@ -37,6 +37,12 @@ class AuthServiceProvider extends ServiceProvider
                 ->action('Verify Email Address', $url);
         });
 
+        Gate::define('viewWebSocketsDashboard', function ($user = null) {
+            return in_array($user->email, [
+                'travis@not.tv',
+            ]);
+        });
+
         // this uses the Mail: VerifyMail method and the blade template to send an email.
 //        VerifyEmail::toMailUsing(function ($notifiable, $url) {
 //            return new VerifyMail($notifiable, $url);

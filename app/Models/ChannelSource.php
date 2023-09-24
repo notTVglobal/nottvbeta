@@ -9,7 +9,7 @@ class ChannelSource extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $fillable = [];
 
     public function channel()
     {

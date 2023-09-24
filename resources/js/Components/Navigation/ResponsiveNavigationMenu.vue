@@ -17,7 +17,7 @@
                             </div>
 
                         <div class="mx-6">
-                            <NotificationIconResponsive />
+                            <NotificationButton />
                         </div>
 
                         <button
@@ -275,9 +275,7 @@ import {Inertia} from "@inertiajs/inertia"
 import JetApplicationMark from "@/Jetstream/ApplicationMark.vue";
 import {Link} from "@inertiajs/inertia-vue3";
 import AppVersion from "@/Components/AppVersion/AppVersion.vue";
-import NotificationIcon from "@/Components/Notifications/NotificationIcon.vue";
-import NotificationIconResponsive from "@/Components/Notifications/NotificationIconResponsive.vue";
-
+import NotificationButton from "@/Components/Notifications/NotificationButton.vue";
 const showingNavigationDropdown = ref(false);
 
 let videoPlayerStore = useVideoPlayerStore();
