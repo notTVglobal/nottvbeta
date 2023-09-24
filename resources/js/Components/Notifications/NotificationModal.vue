@@ -32,16 +32,16 @@ const fetchNotifications = async () => {
     userStore.notifications = data.notifications;
 };
 
-const deleteNotification = async (notificationId) => {
-    // Make an API request to mark a notification as read
-    await fetch(`/notifications/${notificationId}/mark-as-read`, { method: 'PUT' });
-    // if there are more notifications, then go to the next notification page.
-    if (userStore.newNotifications > 0) {
-        userStore.newNotifications--;
-    }
-    // if this is the last notification then close the modal
-    closeModal.value.submit();
-};
+// const deleteNotification = async (notificationId) => {
+//     // Make an API request to mark a notification as read
+//     await fetch(`/notifications/${notificationId}/mark-as-read`, { method: 'PUT' });
+//     // if there are more notifications, then go to the next notification page.
+//     if (userStore.newNotifications > 0) {
+//         userStore.newNotifications--;
+//     }
+//     // if this is the last notification then close the modal
+//     closeModal.value.submit();
+// };
 
 function closeModalFunction() {
     // Handle the custom event

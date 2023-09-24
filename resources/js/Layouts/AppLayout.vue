@@ -107,13 +107,10 @@ async function updateUserStore() {
             userStore.hasAccount = response.data.hasAccount
             userStore.getUserDataCompleted = true
             console.log('get user data on AppLayout')
+            userStore.subscribeToUserNotifications(response.data.id)
             reloadNav++
-            Echo.private(`user.${response.data.id}`).subscribed(() => {
-            }).listen('.userNotifications', (event) => {
-                userStore.newNotifications++;
-                userStore.notifications.push(event.notification);
-                userStore.notificationsKey++;
-            })
+
+
         })
         .catch(error => {
             console.log(error);

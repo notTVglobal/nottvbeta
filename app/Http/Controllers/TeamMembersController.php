@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NewNotificationEvent;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Team;
@@ -29,16 +31,29 @@ class TeamMembersController extends Controller
         $team = Team::findOrFail($teamId);
 
         // If you are not the owner of the team, no way.
-        if ($team->user_id != auth()->user()->id) {
+        if ($team->user_id !== auth()->user()->id && !auth()->user()->isAdmin) {
             abort(403, 'You are not the owner of this team.');
         }
 
         // If the team is maxed out, no way.
         if ($team->memberSpots == $team->totalSpots) {
-            abort(403, 'Your team is maxed out.');
+            abort(403, 'Your team has reached the maximum number of team members.');
         }
 
         $team->members()->attach($request->user_id);
+
+        // notify new team member
+        $notification = new Notification;
+        $notification->user_id = $user->id;
+        // make the image the team_poster
+        $notification->image_id = $team->image_id;
+        $notification->url = '/teams/'.$team->slug;
+        $notification->title = $team->name;
+        $notification->message = 'You have been added to the team.';
+        $notification->save();
+        // Trigger the event to broadcast the new notification
+        event(new NewNotificationEvent($notification));
+
         DB::table('teams')->where('id', $team->id)->increment('memberSpots', 1);
         return redirect(route('teams.manage', [$teamSlug]))->with('message', $user->name . ' has been successfully added to the team.');
 //        return inertia('',['message', $user->name . ' has been successfully added to the team.']);

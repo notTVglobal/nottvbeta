@@ -21,22 +21,22 @@ import Echo from 'laravel-echo';
 window.Pusher = require('pusher-js');
 
 window.Echo = new Echo({
-    // broadcaster: 'pusher',
-    // key: process.env.MIX_PUSHER_APP_KEY,
-    // wsHost: 'socket.not.tv',
-    // wsPort: 443,
-    // wssPort: 443,
-    // forceTLS: true,
-    // disableStats: true,
-    // encrypted: true,
-    // enabledTransports: ['ws', 'wss'],
-
     broadcaster: 'pusher',
     key: process.env.MIX_PUSHER_APP_KEY,
-    wsHost: 'nottv.local',
-    wsPort: 6001,
-    forceTLS: false,
+    wsHost: 'socket.not.tv',
+    wsPort: 443,
+    wssPort: 443,
+    forceTLS: true,
     disableStats: true,
-    encrypted: false,
-    enabledTransports: ['ws'],
+    encrypted: true,
+    enabledTransports: ['ws', 'wss'],
+
+    // broadcaster: 'pusher',
+    // key: process.env.MIX_PUSHER_APP_KEY,
+    // wsHost: 'nottv.local',
+    // wsPort: 6001,
+    // forceTLS: false,
+    // disableStats: true,
+    // encrypted: false,
+    // enabledTransports: ['ws'],
 });

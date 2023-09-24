@@ -1,15 +1,21 @@
 # not.tv Changelog
 
 
-Last Update: September 23, 2023\
+Last Update: September 24, 2023\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.7.3.5
+September 24, 2023
+* Added notification, if a user gets added to a team.
+* Fixed how notifications are subscribed to and sent. This now works.
 
 ## v0.7.3.4
 September 23, 2023
 * Added release date to Show Episodes
 * Added scheduled release date to Show Episodes. If a user cancels the scheduled release the episode status is changed to Review.
 * Setup Notifications System.
-
+* Added notification, if a user gets added to a team.
+* Fixed how notifications are subscribed to and sent. This now works.
 
 ## v0.7.3.3
 September 21, 2023

@@ -128,6 +128,7 @@ class ShowEpisodeController extends Controller
 
             // make the image the show_episode_poster
             $notification->image_id = $showEpisode->image_id;
+            $notification->url = '/shows/'.$showEpisode->show->slug.'/episode/'.$showEpisode->slug;
             $notification->title = $showEpisode->name;
             $notification->message = 'The video url is being generated from the embed code. You will be notified when it is done.';
             $notification->save();

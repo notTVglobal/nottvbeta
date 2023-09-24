@@ -73,6 +73,7 @@ class DashboardController extends Controller
             // Only the Dashboard has a controller,
             // the others will use Axios to get the data
             // and save it in the UserStore.
+            'id' => auth()->user()->id,
             'isAdmin' => $isAdmin,
             'isCreator' => $isCreator,
             'isNewsPerson' => $isNewsPerson,

@@ -42,6 +42,7 @@ export let useUserStore = defineStore('userStore', {
         showNotifications: false,
         notifications: ref([]),
         notificationsKey: 0,
+        userSubscribedToNotifications: false,
 
     }),
 
@@ -99,6 +100,20 @@ export let useUserStore = defineStore('userStore', {
         },
         removeNotificationById(id) {
             this.notifications = this.notifications.filter(notification => notification.id !== id);
+        },
+        async subscribeToUserNotifications(userId) {
+            await this.fetchNotifications()
+            Echo.private(`user.${userId}`).subscribed(() => {
+            }).listen('.userNotifications', (event) => {
+                this.newNotifications++;
+                this.notifications.push(event.notification);
+            })
+            this.userSubscribedToNotifications = true;
+        },
+        async fetchNotifications() {
+            const response = await fetch(`/notifications`);
+            const data = await response.json();
+            this.notifications = data.notifications;
         }
     },
 

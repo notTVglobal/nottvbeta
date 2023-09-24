@@ -413,6 +413,7 @@ onMounted(() => {
 // the others will use Axios to get the data
 // and save it in the UserStore.
 let props = defineProps({
+    id: null,
     isAdmin: null,
     isCreator: null,
     isNewsPerson: null,
@@ -460,6 +461,7 @@ function createShowWithNoTeamButton() {
 }
 
 function updateUserStore() {
+    userStore.id = props.id
     userStore.isAdmin = props.isAdmin
     userStore.isCreator = props.isCreator
     userStore.isNewsPerson = props.isNewsPerson
@@ -468,6 +470,15 @@ function updateUserStore() {
     userStore.hasAccount = props.hasAccount
     userStore.getUserDataCompleted = true
     console.log('get user data on Dashboard')
+    if (!userStore.userSubscribedToNotifications) {
+        userStore.subscribeToUserNotifications(props.id)
+    }
+    // Echo.private(`user.${props.id}`).subscribed(() => {
+    // })
+    //     .listen('.userNotifications', (event) => {
+    //     userStore.newNotifications++;
+    //     userStore.notifications.push(event.notification);
+    // })
 }
 
 </script>
