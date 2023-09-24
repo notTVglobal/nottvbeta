@@ -121,7 +121,7 @@ return [
         'custom_error' => [
             'driver' => 'single',
             'path' => storage_path('logs/custom_error.log'),
-            'level' => 'error',
+            'level' => env('LOG_LEVEL', 'debug'),
         ]
     ],
 

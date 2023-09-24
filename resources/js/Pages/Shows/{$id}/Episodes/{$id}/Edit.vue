@@ -97,9 +97,9 @@
                                         <div class="flex flex-row flex-wrap space-x-2">
                                             <DateTimePicker @date-time-selected="handleScheduledDateTime" />
                                             <!-- Display the selected date and time received from DateTimePicker -->
-                                            <Button v-if="props.episode.scheduled_release_dateTime"
+                                            <button v-if="props.episode.scheduled_release_dateTime"
                                                     class="px-3 py-2 bg-blue-500 text-sm text-white font-semibold rounded-md"
-                                                    @click.prevent="cancelScheduledRelease">Cancel Release</Button>
+                                                    @click.prevent="cancelScheduledRelease">Cancel Release</button>
                                         </div>
 
 

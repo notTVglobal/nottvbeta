@@ -1,5 +1,7 @@
 import { defineStore } from "pinia";
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore";
+import {Inertia} from "@inertiajs/inertia";
+import {ref} from "vue";
 
 export let useUserStore = defineStore('userStore', {
     state: () => ({
@@ -37,6 +39,9 @@ export let useUserStore = defineStore('userStore', {
         key: 0,
         showFlashMessage: false,
         newNotifications: 0,
+        showNotifications: false,
+        notifications: ref([]),
+        notificationsKey: 0,
 
     }),
 
@@ -91,6 +96,9 @@ export let useUserStore = defineStore('userStore', {
             this.testNum = 0
             this.url = null
             this.key = 0
+        },
+        removeNotificationById(id) {
+            this.notifications = this.notifications.filter(notification => notification.id !== id);
         }
     },
 
@@ -100,7 +108,5 @@ export let useUserStore = defineStore('userStore', {
                 return Math.round(state.uploadPercentage * 10) / 10
             }
         },
-        notificationIncrement: () => this.newNotifications++,
-        notificationDecrement: () => this.newNotifications--,
     }
 });

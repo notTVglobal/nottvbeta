@@ -2,6 +2,8 @@
 
 namespace App\Jobs;
 
+use App\Events\NewNotificationEvent;
+use App\Models\Notification;
 use App\Models\ShowEpisode;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
@@ -12,12 +14,14 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
+use Mockery\Matcher\Not;
 
 class AddVideoUrlFromEmbedCodeJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected ShowEpisode $showEpisode;
+    protected Notification $notification;
     public int $timeout = 60;
     public int $tries = 3;
     public int $backoff = 2;
@@ -39,11 +43,10 @@ class AddVideoUrlFromEmbedCodeJob implements ShouldQueue
      */
     public function handle()
     {
-        // make a notification for the user (event): Video Embed code for "showName: Episode #" is processing...
-        Log::channel('custom_error')->error('job should be queued now.');
+
+        sleep(10);
 
         try {
-
 
             if (!$this->showEpisode->video_embed_code) {
                 return;
@@ -58,7 +61,6 @@ class AddVideoUrlFromEmbedCodeJob implements ShouldQueue
             preg_match($regex, $this->showEpisode->video_embed_code, $match);
             $sourceUrl = implode(" ", $match);
 //            $scraperApiKey =  env('SCRAPER_API_KEY');
-            Log::channel('custom_error')->error('source url: ' . $sourceUrl);
 
             // get the page source from the url
 //            $proxy_address = 'http://scraperapi.autoparse=true:' . env('SCRAPER_API_KEY') . '@proxy-server.scraperapi.com:8001';
@@ -89,7 +91,7 @@ class AddVideoUrlFromEmbedCodeJob implements ShouldQueue
                 0);
             $response = curl_exec($ch);
             curl_close($ch);
-            Log::channel('custom_error')->error('RESPONSE: ' . $response);
+            Log::channel('custom_error')->info('RESPONSE: ' . $response);
 
 //            Log::channel('custom_error')->error($response);
 
@@ -103,7 +105,7 @@ class AddVideoUrlFromEmbedCodeJob implements ShouldQueue
                 // start at the first "mp4" extract https: .... .mp4 and replace \ with ""
                 $firstMp4 = $matches[0][0];
 //                            Log::channel('custom_error')->error('MATCHES: '.$matches[0]);
-                Log::channel('custom_error')->error('FIRST MP4: ' . $firstMp4);
+                Log::channel('custom_error')->info('FIRST MP4: ' . $firstMp4);
             } elseif (str_contains($sourceUrl, 'bitchute.com')) {
                 // if bitchute ...
                 $sourceIs = 'bitchute';
@@ -111,7 +113,7 @@ class AddVideoUrlFromEmbedCodeJob implements ShouldQueue
                 preg_match_all($pattern, $response, $matches);
                 // start at the first "mp4" extract https: .... .mp4 and replace \ with ""
                 $firstMp4 = $matches[0][0];
-                Log::channel('custom_error')->error('FIRST MP4: ' . $firstMp4);
+                Log::channel('custom_error')->info('FIRST MP4: ' . $firstMp4);
             }
 
 
@@ -159,13 +161,57 @@ class AddVideoUrlFromEmbedCodeJob implements ShouldQueue
             $updateShowEpisode = ShowEpisode::find($this->showEpisode->id);
             $updateShowEpisode->video_url = $url;
             $updateShowEpisode->save();
-            Log::channel('custom_error')->error($url);
+
+            // Create and save the notification
+            $notification = new Notification;
+            $userId = $this->showEpisode->isBeingEditedByUser_id;
+//            $userId = 1;
+            $notification->user_id = $userId;
+
+            // make the image the show_episode_poster
+            $notification->image_id = $this->showEpisode->image_id;
+//            $notification->image_id = 1;
+//            $notification->title = $this->showEpisode->name;
+            $notification->url = '/shows/'.$this->showEpisode->show->slug.'/episode/'.$this->showEpisode->slug;
+            $notification->title = $this->showEpisode->show->name.': ' . $this->showEpisode->name;
+            $notification->message = 'The video is now ready.';
+            $notification->save();
+
+            // Trigger the event to broadcast the new notification
+            event(new NewNotificationEvent($notification));
+
+//            Log::channel('custom_error')->info('Finish broadcasting new notification.');
+
+            Log::channel('custom_error')->info($url);
 
 //            else
             // send notification, failed.
 //            return false;
 
         } catch (\Exception $e) {
+            Log::channel('custom_error')->error($e->getMessage());
+            Log::channel('custom_error')->error($e->getCode());
+
+
+            // Create and save the notification
+            $notification = new Notification;
+            $userId = $this->showEpisode->isBeingEditedByUser_id;
+//            $userId = 1;
+            $notification->user_id = $userId;
+
+            // make the image the show_episode_poster
+            $notification->image_id = $this->showEpisode->image_id;
+//            $notification->image_id = 1;
+//            $notification->title = $this->showEpisode->name;
+            $notification->url = '/shows/'.$this->showEpisode->show->slug.'/episode/'.$this->showEpisode->slug;
+            $notification->title = $this->showEpisode->show->name.': ' . $this->showEpisode->name;
+            $notification->message = 'There was a problem getting the video. ' . $response;
+            $notification->save();
+            $notification->image = $this->showEpisode->image;
+
+            // Trigger the event to broadcast the new notification
+            event(new NewNotificationEvent($notification));
+
             echo "Exception Message: " . $e->getMessage();
             echo "Exception Code: " . $e->getCode();
             // Handle the exception here

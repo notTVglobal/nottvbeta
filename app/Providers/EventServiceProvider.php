@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Events\NewChatMessage;
+use App\Events\NewNotificationEvent;
 use App\Events\NewVideoUploaded;
 use App\Events\ViewerPresenceChannel;
 use App\Events\VideoProcessed;
@@ -11,6 +12,7 @@ use App\Listeners\LogVerifiedUser;
 use App\Listeners\ProcessNewUploadedVideo;
 use App\Listeners\SendChatMessageNotification;
 use App\Listeners\SendEmailVerification;
+use App\Listeners\SendNewUserNotification;
 use App\Listeners\SendVideoProcessedNotification;
 use App\Listeners\ViewerPresenceChannelListener;
 use Illuminate\Auth\Events\Registered;
@@ -37,6 +39,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         NewChatMessage::class => [
             SendChatMessageNotification::class,
+        ],
+        NewNotificationEvent::class => [
+            SendNewUserNotification::class,
         ],
         NewVideoUploaded::class => [
           ProcessNewUploadedVideo::class,

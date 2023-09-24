@@ -4,7 +4,7 @@
         <!-- Navbar for logged in user -->
         <ResponsiveNavigationMenu v-if="user"/>
         <NavigationMenu v-if="user"/>
-        <NotificationModal />
+        <NotificationModal/>
 
         <!-- Login for Welcome Page (logged out) -->
         <Teleport to="body">
@@ -108,6 +108,12 @@ async function updateUserStore() {
             userStore.getUserDataCompleted = true
             console.log('get user data on AppLayout')
             reloadNav++
+            Echo.private(`user.${response.data.id}`).subscribed(() => {
+            }).listen('.userNotifications', (event) => {
+                userStore.newNotifications++;
+                userStore.notifications.push(event.notification);
+                userStore.notificationsKey++;
+            })
         })
         .catch(error => {
             console.log(error);

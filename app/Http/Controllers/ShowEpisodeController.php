@@ -123,16 +123,17 @@ class ShowEpisodeController extends Controller
         if ($request->video_embed_code && !$request->video_url) {
             // Create and save the notification
             $notification = new Notification;
-            $notification->user_id = auth()->user()->id;
+            $userId = auth()->user()->id;
+            $notification->user_id = $userId;
 
             // make the image the show_episode_poster
-            $notification->image_id = null;
-            $notification->title = 'new notification';
+            $notification->image_id = $showEpisode->image_id;
+            $notification->title = $showEpisode->name;
             $notification->message = 'The video url is being generated from the embed code. You will be notified when it is done.';
             $notification->save();
 
             // Trigger the event to broadcast the new notification
-            event(new NewNotificationEvent(auth()->user(), $notification));
+            event(new NewNotificationEvent($notification));
             AddVideoUrlFromEmbedCodeJob::dispatch($showEpisode)->onQueue('video_processing');
         }
 
@@ -441,7 +442,6 @@ class ShowEpisodeController extends Controller
 
 
         $showSlug = Show::query()->where('id', $showEpisode->show_id)->pluck('slug')->first();
-        $showEpisodeSlug = $showEpisode->slug;
         $videoUrlFromEmbedCode = '';
 
         // get the *.mp4 video url from embed code
@@ -471,16 +471,18 @@ class ShowEpisodeController extends Controller
         if ($request->video_embed_code && !$request->video_url) {
             // Create and save the notification
             $notification = new Notification;
-            $notification->user_id = auth()->user()->id;
+            $userId = auth()->user()->id;
+            $notification->user_id = $userId;
 
             // make the image the show_episode_poster
-            $notification->image_id = null;
-            $notification->title = 'new notification';
+            $notification->image_id = $showEpisode->image_id;
+            $notification->url = '/shows/'.$showEpisode->show->slug.'/episode/'.$showEpisode->slug;
+            $notification->title = $showEpisode->name;
             $notification->message = 'The video url is being generated from the embed code. You will be notified when it is done.';
             $notification->save();
 
             // Trigger the event to broadcast the new notification
-            event(new NewNotificationEvent(auth()->user(), $notification));
+            event(new NewNotificationEvent($notification));
             AddVideoUrlFromEmbedCodeJob::dispatch($showEpisode)->onQueue('video_processing');
         }
 
@@ -497,8 +499,11 @@ class ShowEpisodeController extends Controller
         // teams.manage route above. But I (tec21) don't know
         // how to simplify this *frustrated*.
 
+        // get new slug
+//        $showEpisodeSlug = $showEpisode->slug;
+
         // redirect
-        return redirect(route('shows.showEpisodes.show', [$showSlug, $showEpisodeSlug]))
+        return redirect(route('shows.showEpisodes.show', [$showSlug, $showEpisode->slug]))
             ->with('success', 'Episode Updated Successfully');
 
 

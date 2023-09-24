@@ -1,15 +1,14 @@
 <template>
     <div>
-        <dialog id="notifications" class="modal">
-            <div class="modal-box bg-gray-900">
-                <NotificationsContainer @closeModal="closeModalFunction" :key="userStore.notificationsKey" />
 
-            </div>
-            <form ref="closeModal" method="dialog" class="modal-backdrop">
-                <button>close</button>
-            </form>
-        </dialog>
+        <div v-for="notification in userStore.notifications" :key="notification.id">
+
+            <NotificationCard :notification="notification" @closeModal="closeModalFunction"/>
+            <!--                    <button @click="markAsRead(notification.id)" v-if="!notification.read">Mark as Read</button>-->
+        </div>
+        <span v-if="userStore.notifications.length === 0">No notifications.</span>
     </div>
+
 </template>
 
 <script setup>
@@ -23,7 +22,8 @@ let userStore = useUserStore();
 
 const notifications = ref([]);
 const closeModal = ref(null);
-const notificationsDialog = ref(null);
+
+const emit = defineEmits('closeModal')
 
 const fetchNotifications = async () => {
     // Make an API request to fetch notifications
@@ -32,27 +32,21 @@ const fetchNotifications = async () => {
     userStore.notifications = data.notifications;
 };
 
-const deleteNotification = async (notificationId) => {
-    // Make an API request to mark a notification as read
-    await fetch(`/notifications/${notificationId}/mark-as-read`, { method: 'PUT' });
-    // if there are more notifications, then go to the next notification page.
-    if (userStore.newNotifications > 0) {
-        userStore.newNotifications--;
-    }
-    // if this is the last notification then close the modal
-    closeModal.value.submit();
-};
-
-function closeModalFunction() {
-    // Handle the custom event
-    closeModal.value.submit();
-    // notificationsDialog.value = document.getElementById('notifications');
-    // notificationsDialog.value.removeAttribute('open');
-}
 
 onMounted(() => {
     fetchNotifications();
 });
+
+function closeModalFunction() {
+    // Handle the custom event
+    emit('closeModal')
+    // closeModal.value.submit();
+    // notificationsDialog.value = document.getElementById('notifications');
+    // notificationsDialog.value.removeAttribute('open');
+}
+
+
+
 
 // nextTick(() => {
 //     // This code runs after the DOM has been updated.
@@ -60,9 +54,3 @@ onMounted(() => {
 // });
 
 </script>
-
-<style scoped>
-.unread {
-    font-weight: bold;
-}
-</style>

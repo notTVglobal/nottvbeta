@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreignId('image_id')->nullable()->default(null);
             $table->text('title')->nullable()->default(null);
             $table->text('message');
+            $table->string('url')->nullable()->default(null);
             $table->boolean('read')->default(false);
             $table->timestamps();
         });

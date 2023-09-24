@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Mail\VerifyMail;
+use App\Models\Notification;
 use App\Models\User;
+use App\Policies\NotificationPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Auth\Notifications\VerifyEmail;
@@ -17,7 +19,8 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-         'App\Models\Model' => 'App\Policies\ModelPolicy',
+        'App\Models\Model' => 'App\Policies\ModelPolicy',
+        Notification::class => NotificationPolicy::class,
 //        NewsPost::class => NewsPostPolicy::class,
     ];
 
@@ -40,6 +43,7 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('viewWebSocketsDashboard', function ($user = null) {
             return in_array($user->email, [
                 'travis@not.tv',
+                'admin@not.tv'
             ]);
         });
 
