@@ -29,14 +29,17 @@
                         <div class="">
                             <div class="mb-4">
                                 <h3 class="mb-1 inline-flex items-center text-3xl font-semibold relative">
-                                    <Link :href="`/shows/${props.show.slug}/`"
-                                          class="hover:text-blue-500">
-                                    {{ props.show.name }}
-                                    </Link>
+
+                                    {{ props.episode.name }}
+
                                 </h3>
                                 <div class="mb-1">
-                                    <span class="font-semibold">
-                                    {{ props.episode.name }}</span>
+                                    <span class="font-semibold hover:text-blue-500 text-xl">
+                                        <Link :href="`/shows/${props.show.slug}/`">
+
+                                            {{ props.show.name }}
+
+                                        </Link></span>
                                 </div>
                                 <div class="text-xs space-y-1">
                                     <span class="uppercase">Episode Number: </span>
@@ -157,7 +160,7 @@
 
                         </div>
 
-                        <EpisodeFooter :team="props.team" :epsiode="props.episode"/>
+                        <EpisodeFooter :team="props.team" :epsiode="props.episode" :show="props.show"/>
                     </div>
                 </div>
             </div>

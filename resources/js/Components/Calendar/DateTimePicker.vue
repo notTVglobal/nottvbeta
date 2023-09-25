@@ -71,12 +71,14 @@ const props = defineProps({
     // initialDate: Date,
     // initialTime: String,
     inputValue: String,
+    date: String,
 });
 
 const emits = defineEmits();
 
 // let date = new Date();
-let date = ref(new Date());
+// let date = ref(new Date());
+let date = ref(props.date);
 const calendar = ref(null);
 const inputValue = ref(props.inputValue || null);
 

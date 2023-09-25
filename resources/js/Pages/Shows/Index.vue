@@ -91,7 +91,7 @@
                                         <span class="text-lg font-semibold leading-tight">{{ episode.name }}</span>
     <!--                                </Link>-->
 
-                                        <div class="text-gray-400 font-light text-sm"><Link :href="`/shows/${episode.showSlug}`">{{ episode.showName }}</Link></div>
+                                        <div class="text-gray-400 font-light text-sm"><Link :href="`/shows/${episode.showSlug}`">{{ episode.showName }} &bull; {{ useTimeAgo(episode.release_date) }} </Link></div>
 
                                         <p class="mt-2 pr-4 text-gray-300 xl:block">
                                             {{ episode.description}}
@@ -153,6 +153,7 @@ import throttle from "lodash/throttle"
 import Message from "@/Components/Modals/Messages";
 import SingleImage from "@/Components/Multimedia/SingleImage";
 import MostAnticipated from "@/Components/Shows/MostAnticipated.vue";
+import {useTimeAgo} from "@vueuse/core";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -169,6 +170,10 @@ function scrollToComingSoon() {
 function scrollToPopularShows() {
     document.getElementById("popular-shows").scrollIntoView({behavior: "smooth"})
 }
+
+// function getTimeAgoDate(date) {
+//     return TimeAgo(date).replace(/"/g, ''); // This will remove all double quotes from the string
+// }
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();

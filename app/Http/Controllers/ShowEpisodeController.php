@@ -389,6 +389,9 @@ class ShowEpisodeController extends Controller
 
     public function update(HttpRequest $request, Show $show, ShowEpisode $showEpisode)
     {
+        Log::channel('custom_error')->info('raw date in: '.$request->release_dateTime);
+        Log::channel('custom_error')->info('wtf: '.$request->new_date_test);
+
         // validate the request
         $request->validate([
 //            'name' => ['required', 'string', 'max:255'],
@@ -407,27 +410,33 @@ class ShowEpisodeController extends Controller
             'video_url' => 'nullable|active_url',
             'youtube_url' => 'nullable|active_url',
             'video_embed_code' => 'nullable|string',
-            'release_date' => 'nullable|date',
+            'release_dateTime' => 'nullable|date',
             'scheduled_release_dateTime' => 'nullable|date|after:now',
         ]);
 
         $releaseYear = null;
         $formattedReleaseDate = null;
+        Log::channel('custom_error')->info('release date in: '.$request->release_dateTime);
 
         function formatDateForMySQL($dateTimeString) {
             // Parse the datetime string into a Carbon instance, assuming it's in ISO 8601 format
             $carbonDateTime = Carbon::parse($dateTimeString);
+            Log::channel('custom_error')->info('carbon parsed date: '.$carbonDateTime);
+
             // Convert the Carbon instance to the MySQL datetime format
-            return $carbonDateTime->format('Y-m-d H:i:s');
+            $formattedDateTime = $carbonDateTime->format('Y-m-d H:i:s');
+            Log::channel('custom_error')->info('formatted date: '.$formattedDateTime);
+
+            return $formattedDateTime;
         }
 
-        if ($request->release_date) {
+        if ($request->release_dateTime) {
             // Create a Carbon instance from the DateTime string
-            $releaseDateTime = Carbon::parse($request->release_date);
+            $releaseDateTime = Carbon::parse($request->release_dateTime);
             // Get the year from the Carbon instance
             $releaseYear = $releaseDateTime->year;
 
-            $formattedReleaseDate = formatDateForMySQL($request->release_date);
+            $formattedReleaseDate = formatDateForMySQL($request->release_dateTime);
         }
 
         if ($request->scheduled_release_dateTime) {
@@ -469,7 +478,7 @@ class ShowEpisodeController extends Controller
         $showEpisode->scheduled_release_dateTime = $formattedScheduledReleaseDate ?? null;
         $showEpisode->save();
 
-        if ($request->video_embed_code && !$request->video_url) {
+        if ($request->video_embed_code !== $showEpisode->video_embed_code && !$request->video_url) {
             // Create and save the notification
             $notification = new Notification;
             $userId = auth()->user()->id;

@@ -3,7 +3,11 @@
     <div class="flex justify-end mt-6">
         <!-- Paginator -->
         <!--                            <Pagination :links="`#`" class="mt-6"/>-->
-        <Link :href="`/teams/${team.slug}`" class="text-blue-500 hover:text-blue-700 ml-2 uppercase"> {{ team.name }} © 2022 </Link>
+        <Link :href="`/teams/${team.slug}`" class="text-blue-500 hover:text-blue-700 ml-2 uppercase">{{ team.name }} ©
+            <span v-if="show.last_release_year > 0" >{{ show.first_release_year }}-{{show.last_release_year}}</span>
+            <span v-if="!show.last_release_year && show.first_release_year">{{show.first_release_year}}</span>
+            <span v-if="!show.last_release_year && !show.first_release_year">{{currentYear}}</span>
+        </Link>
     </div>
 
 </template>
@@ -12,7 +16,10 @@
 
 defineProps({
     team: Object,
-    episode: Object
+    episode: Object,
+    show: Object,
 })
+
+let currentYear = new Date().getFullYear()
 
 </script>

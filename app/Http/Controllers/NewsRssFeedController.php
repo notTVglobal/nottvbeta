@@ -49,10 +49,10 @@ class NewsRssFeedController extends Controller
         return Inertia::render('News/Rss2/Index', [
             'feeds' => NewsRssFeed::query()
                 ->orderBy('name', 'asc')
-                ->when(\Illuminate\Support\Facades\Request::input('search'), function ($query, $search) {
+                ->when(Request::input('search'), function ($query, $search) {
                     $query->where('name', 'like', "%{$search}%");
                 })
-                ->paginate(10, ['*'], 'news')
+                ->paginate(10, ['*'], 'rss2')
                 ->withQueryString()
                 ->through(fn($newsRssFeed) => [
                     'id' => $newsRssFeed->id,
@@ -104,10 +104,39 @@ class NewsRssFeedController extends Controller
 
     public function rss2show($slug)
     {
-        $newsRssFeed = NewsRssFeed::query()->where('slug', $slug)->firstOrFail();
-        $feed = file_get_contents($newsRssFeed->url);
 //        $data = fopen($newsRssFeed->url, 'r');
 //        $feed = stream_get_contents($data);
+
+            $newsRssFeed = NewsRssFeed::query()->where('slug', $slug)->firstOrFail();
+            $feed = file_get_contents($newsRssFeed->url);
+
+
+
+        try {
+            function isXML($data): bool
+            {
+                return preg_match('/<\?xml/', $data) === 1;
+            }
+
+            function isHTML($data): bool
+            {
+                return preg_match('/<!DOCTYPE HTML|<html/i', $data) === 1;
+            }
+
+            // Check if simplexml_load_string failed (returns false on failure)
+            if (!isXML($feed) || isHTML($feed)) {
+                throw new \Exception("XML parsing failed this is not a proper RSS Feed. Please check the URL.");
+            }
+
+        } catch (\Exception $e) {
+        // Handle the error here and return an error message
+            return redirect()
+                ->route('rss2')
+                ->with('error', $e->getMessage());
+
+//            return Inertia::render('News/Rss2/Error', ['error' => $e->getMessage()]);
+        }
+
         $xml = simplexml_load_string($feed, 'SimpleXMLElement', LIBXML_NOCDATA);
 
         collect($xml);
@@ -116,7 +145,6 @@ class NewsRssFeedController extends Controller
 
         // Need to save the contents in the database, then return the database information
         // to the frontend. Getting the contents needs to happen in a job set to run every hour.
-
 
         return Inertia::render(
             'News/Rss2/{$id}/Index',
@@ -134,6 +162,7 @@ class NewsRssFeedController extends Controller
                     'viewNewsroom' => Auth::user()->can('viewAny', NewsPerson::class)
                 ]
             ]);
+
     }
 
     public function rss2edit($id)
@@ -150,10 +179,15 @@ class NewsRssFeedController extends Controller
         );
     }
 
-    public function rss2update(HttpRequest $request)
+    public function rss2update(HttpRequest $request, NewsRssFeed $newsRssFeed)
     {
         $request->validate([
-            'name' => 'unique:news_rss_feeds|required|string|max:255',
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('news_rss_feeds')->ignore($newsRssFeed->id), // $newsRssFeed is the current model instance
+            ],
             'url' => 'required|active_url',
         ]);
 
@@ -170,6 +204,19 @@ class NewsRssFeedController extends Controller
                 [$newsRssFeed->slug])
             ->with('message', 'RSS Feed Updated Successfully');
 
+    }
+
+    public function rss2destroy($id)
+    {
+        $this->authorize('delete', NewsPost::class);
+        NewsRssFeed::destroy($id);
+
+        return redirect()->route('rss2')->with('message', 'RSS Feed Deleted Successfully');
+    }
+
+    public function rss2error()
+    {
+        return Inertia::render('News/Rss2/Index');
     }
 
     /**

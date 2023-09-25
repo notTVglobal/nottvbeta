@@ -32,7 +32,7 @@ import { onBeforeMount, onBeforeUnmount, onUpdated, ref } from "vue";
 let chatStore = useChatStore()
 let userStore = useUserStore()
 
-let formattedTime = '';
+// let formattedTime = '';
 
 let props = defineProps({
     message: Object,
@@ -44,7 +44,6 @@ const channel = Echo.private('chat.' + '1')
 channel.subscribed(() => {
 }).listen('.chat', (event) => {
     chatStore.newMessages.push(event.message)
-    console.log(event)
 })
 
 onBeforeMount(async() => {
@@ -63,7 +62,7 @@ onBeforeUnmount(() => {
     disconnect();
 });
 
-dayjs.extend(relativeTime)
+// dayjs.extend(relativeTime)
 
 function connect() {
     console.log('STREAM CHAT CONNECTED');

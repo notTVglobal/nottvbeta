@@ -4,6 +4,16 @@
 Last Update: September 24, 2023\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+
+## v0.7.3.5c
+September 24, 2023
+* Added loading spinner to channels list
+* Changed the layout of the notifications cards
+* Show Episode release dates and scheduled release dates are saving 7 hours in the future in the database. This is a bug that needs to be resolved.
+* Rss2 News Feeds direct to the wrong page when trying to edit. This needs to be fixed.
+* Fixed urls being shared in the chat, they now show up as clickable links, but the colour css style isn't showing  up.
+* Fixed the Show copyright year on the bottom of the Show page.
+
 ## v0.7.3.5b
 September 24, 2023
 * Added notification, if a user gets added to a team.

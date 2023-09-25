@@ -25,6 +25,8 @@
                 </div>
             </header>
 
+            <ServerTime />
+
             <div class="bg-gray-300 dark:bg-gray-900 rounded pb-8 p-3 mb-6 mx-2 border-b border-2">
                 <div class="font-semibold text-xl pb-2">Administrator only links</div>
                 <div class="flex flex-wrap md:flex-row justify-items-start gap-2">
@@ -262,6 +264,7 @@ import { useUserStore } from "@/Stores/UserStore";
 import Message from "@/Components/Modals/Messages";
 import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
 import {Inertia} from "@inertiajs/inertia";
+import ServerTime from "@/Components/Admin/ServerTime.vue";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()

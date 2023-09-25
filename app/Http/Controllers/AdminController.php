@@ -81,6 +81,19 @@ class AdminController extends Controller
 
     }
 
+
+////////////  SERVER TIME
+//////////////////////////
+
+    public function getServerTime(Request $request)
+    {
+        // Get the server's current time as a formatted string
+        $serverTime = now()->toIso8601String();
+
+        // Return the server time as JSON response
+        return response()->json(['serverTime' => $serverTime]);
+    }
+
 ////////////  INVITE CODES
 //////////////////////////
 

@@ -105,7 +105,7 @@ class ShowsController extends Controller
                     // Filter shows with showStatus of 1 or 2 (New or Active)
                     $query->where('show_status_id', 1)->orWhere('show_status_id', 2);
                 })
-                ->latest()
+                ->orderBy('release_dateTime', 'desc') // Sort by release_date in descending order
                 ->paginate(5, ['*'], 'episodes')
                 ->through(fn($showEpisode) => [
                     'id' => $showEpisode->id,
@@ -121,7 +121,7 @@ class ShowsController extends Controller
                     'slug' => $showEpisode->slug,
                     'showName' => $showEpisode->show->name,
                     'showSlug' => $showEpisode->show->slug,
-                    'releaseDate' => $showEpisode->created_at->format('M D, Y'),
+                    'releaseDate' => $showEpisode->release_dateTime,
                     'categoryName' => $showEpisode->show->showCategory->name,
                     'categorySubName' => $showEpisode->show->showCategorySub->name,
                     'release_date' => $showEpisode->release_dateTime,

@@ -56,7 +56,7 @@ onBeforeUnmount(() => {
     disconnect();
 });
 
-dayjs.extend(relativeTime)
+// dayjs.extend(relativeTime)
 
 function connect() {
     console.log('STREAM CHAT CONNECTED');

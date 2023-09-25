@@ -9,7 +9,7 @@
         <div class="flex flex-col">
             <div class="flex flex-col bg-gray-600 rounded-l-xl rounded-r-xl px-2 pb-1 bg-opacity-50 break-words">
                 <span class="text-xs font-semibold text-gray-100 pt-1">{{ message.user_name }}</span>
-                <span class="text-white break-words" >{{ message.message }}</span>
+                <span class="text-white break-words" v-html="message.message" />
     <!--            <span v-html="message.message"></span>-->
             </div>
             <div class="text-xs text-gray-200 pl-2 opacity-60">{{ timeAgo }}</div>

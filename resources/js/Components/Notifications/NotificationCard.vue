@@ -1,12 +1,12 @@
 <template>
     <div class="relative">
         <button v-if="userStore.notifications.length > 0"
-                class="absolute z-50 bg-accent/30 hover:bg-accent/50 flex justify-right w-fit px-4 py-2 rounded right-0 top-3"
+                class="absolute z-50 bg-accent/30 hover:bg-accent/50 flex justify-right w-fit mr-2 px-4 py-2 rounded right-0 bottom-3"
                 @click.prevent="deleteNotification(notification.id)">
             <font-awesome-icon icon="fa-trash-can" />
 
         </button>
-        <div class="flex flex-row pb-6 pt-10 border-b-2 border-accent border-opacity-25">
+        <div class="flex flex-row py-6 mb-3 border-b-2 border-accent border-opacity-25">
 
             <div class="w-fit">
                 <img v-if="!notification.image.folder"
@@ -19,8 +19,8 @@
                      :alt="notification.image.name"
                      class="w-20 h-20 object-cover"/>
             </div>
-            <div class="ml-4 lg:ml-8 w-5/6">
-                <h3 class="font-bold text-lg"><button @click.prevent="visitUrl(notification.url)">{{ notification.title }}</button></h3>
+            <div class="ml-4 lg:ml-8 pr-2 w-5/6 justify-left">
+                <button @click.prevent="visitUrl(notification.url)"><h3 class="font-bold text-lg text-left justify-left">{{ notification.title }}</h3></button>
                 <p class="py-4">{{ notification.message }}</p>
                 <p class="py-1 text-xs font-light">{{ timeAgo }}</p>
             </div>

@@ -134,7 +134,7 @@ let form = useForm({
 
 let search = ref(props.filters.search);
 
-userStore.currentPage = 'newsFeeds'
+userStore.currentPage = 'rss2'
 userStore.showFlashMessage = true;
 
 onMounted(() => {
@@ -147,7 +147,7 @@ onMounted(() => {
 });
 
 watch(search, throttle(function (value) {
-    Inertia.get('/news/feeds', { search: value }, {
+    Inertia.get('/rss2', { search: value }, {
         preserveState: true,
         replace: true
     });

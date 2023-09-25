@@ -26,7 +26,8 @@
         "pusher/pusher-php-server": "^7.0",
         "tightenco/ziggy": "^1.0",
         "ext-simplexml": "*",
-      "ext-curl": "*"
+      "ext-curl": "*",
+      "ext-libxml": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

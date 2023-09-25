@@ -1,6 +1,12 @@
 <template>
     <div class="overflow-y-scroll scrollbar-hide">
 
+        <div v-if="!channelStore.channelsLoaded"
+             :key="channelStore.channelsLoaded"
+             class="w-full h-full m-auto text-center align-middle">
+            <span class="loading loading-spinner text-accent"></span>
+        </div>
+
             <div v-for="channel in channelStore.channel_list"
                  :key="channel.id"
                  class="channel">

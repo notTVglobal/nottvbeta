@@ -281,6 +281,10 @@ Route::middleware([
         ->name('rss2edit');
     Route::post('/rss2/update', [NewsRssFeedController::class, 'rss2update'])
         ->name('rss2update');
+    Route::post('/rss2/destroy', [NewsRssFeedController::class, 'rss2destroy'])
+        ->name('rss2destroy');
+    Route::get('/rss2/error', [NewsRssFeedController::class, 'rss2error'])
+        ->name('rss2error');
 
 //    Route::post('/feeds/save', [NewsRssFeedController::class, 'save'])
 //        ->name('feeds.save');
@@ -520,6 +524,8 @@ Route::middleware([
         ->can('viewAdmin', 'App\Models\User')
         ->name('admin.image.index');
 
+    //// GET SERVER TIME
+    Route::get('/admin/server-time', [AdminController::class, 'getServerTime']);
 
     // Teams - Part 1 (part 2 is in the Creator Resources below)
     ///////////

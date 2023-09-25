@@ -11,6 +11,7 @@ export let useChannelStore = defineStore('channelStore', {
         viewerCount: 0,
         channel_list: {},
         userAddedToChannels: false,
+        channelsLoaded: false,
     }),
 
     actions: {
@@ -18,6 +19,7 @@ export let useChannelStore = defineStore('channelStore', {
             axios.get('/api/channels_list')
                 .then(response => {
                     this.channel_list = response.data;
+                    this.channelsLoaded = true;
                 })
                 .catch(error => {
                     console.log(error);

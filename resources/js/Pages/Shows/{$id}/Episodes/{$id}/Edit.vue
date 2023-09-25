@@ -95,7 +95,7 @@
                                         </div>
 
                                         <div class="flex flex-row flex-wrap space-x-2">
-                                            <DateTimePicker @date-time-selected="handleScheduledDateTime" />
+                                            <DateTimePicker :date="props.episode.scheduled_release_dateTime" @date-time-selected="handleScheduledDateTime" />
                                             <!-- Display the selected date and time received from DateTimePicker -->
                                             <button v-if="props.episode.scheduled_release_dateTime"
                                                     class="px-3 py-2 bg-blue-500 text-sm text-white font-semibold rounded-md"
@@ -121,7 +121,9 @@
                                             {{ formatDate(selectedReleaseDateTime.date) }}
                                         </div>
 
-                                        <DateTimePicker @date-time-selected="handleReleaseDateTime">
+
+
+                                        <DateTimePicker :date="props.episode.release_dateTime" @date-time-selected="handleReleaseDateTime">
                                             <template v-slot:buttonName>
                                                 Change date
                                             </template>
@@ -130,7 +132,6 @@
 
 
                                     </div>
-
 
                                     <div class="mb-6">
                                         <label class="block mb-2 uppercase font-bold text-xs"
@@ -368,6 +369,7 @@ import SingleImage from "@/Components/Multimedia/SingleImage.vue";
 import VideoUpload from "@/Components/Uploaders/VideoUpload"
 import videojs from "video.js";
 import DateTimePicker from "@/Components/Calendar/DateTimePicker.vue";
+import { format } from 'date-fns-tz';
 // import {DatePicker} from "v-calendar";
 // import 'v-calendar/style.css';
 
@@ -375,6 +377,9 @@ let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore()
 let showStore = useShowStore()
 let userStore = useUserStore()
+
+let scheduledDateTime = ref(''); // This will hold the selected date and time in ISO format
+let releaseDateTime = ref(''); // This will display the formatted date and time
 
 let props = defineProps({
     show: Object,
@@ -384,6 +389,11 @@ let props = defineProps({
     can: Object,
     // inputValue: String,
 });
+
+
+// TODO: convert this to the user's local time
+releaseDateTime = props.episode.release_dateTime
+scheduledDateTime = props.episode.scheduled_release_dateTime
 
 let form = useForm({
     id: props.episode.id,
@@ -395,8 +405,10 @@ let form = useForm({
     video_url: props.episode.video_url,
     youtube_url: props.episode.youtube_url,
     video_embed_code: props.episode.video_embed_code,
-    release_date: props.episode.release_dateTime,
-    scheduled_release_dateTime: props.episode.scheduled_release_dateTime,
+    release_dateTime: releaseDateTime,
+    scheduled_release_dateTime: scheduledDateTime,
+    // release_dateTime: props.episode.release_dateTime,
+    // scheduled_release_dateTime: props.episode.scheduled_release_dateTime,
 });
 
 let reloadImage = () => {
@@ -413,21 +425,32 @@ let submit = () => {
 };
 
 // Define a ref to store selected date and time received from DateTimePicker
-const selectedReleaseDateTime = ref(null);
-const selectedScheduledDateTime = ref(null);
+let selectedReleaseDateTime = ref('');
+let selectedScheduledDateTime = ref('');
 let cancelScheduledReleaseDate = ref(false);
 // let date = ref(new Date());
 // const calendar = ref(null);
 // const inputValue = ref(props.inputValue || null);
 
 // Method to handle the selected date and time emitted from DateTimePicker
-function handleReleaseDateTime(data) {
-    selectedReleaseDateTime.value = data;
-    form.release_date = data.date
+// function handleReleaseDateTime(data) {
+//     selectedReleaseDateTime.value = data;
+//     console.log(selectedReleaseDateTime)
+//     form.release_date = data.date
+// }
+const handleReleaseDateTime = (newDate) => {
+    selectedReleaseDateTime.value = newDate;
+    releaseDateTime = newDate.date;
+    console.log(releaseDateTime)
+    updateFormattedDateTime()
+    console.log(formattedDateTime)
+    form.release_dateTime = releaseDateTime
 }
-function handleScheduledDateTime(data) {
-    selectedScheduledDateTime.value = data;
-    form.scheduled_release_dateTime = data.date
+const handleScheduledDateTime = (newDate) => {
+    selectedScheduledDateTime.value = newDate;
+    scheduledDateTime = newDate.date;
+    console.log(scheduledDateTime)
+    form.scheduled_release_dateTime = scheduledDateTime
 }
 
 function cancelScheduledRelease() {
@@ -435,6 +458,30 @@ function cancelScheduledRelease() {
     selectedScheduledDateTime.value = null;
     form.scheduled_release_dateTime = null;
 }
+
+
+let dateTime = ref('')
+let timeZone = ref('')
+
+let selectedDateTime = ref(''); // This will hold the selected date and time in ISO format
+let formattedDateTime = ref(''); // This will display the formatted date and time
+
+const convertToTimeZone = (dateTime, timeZone) => {
+    return format(dateTime, 'yyyy-MM-dd HH:mm:ssXXX', { timeZone });
+};
+
+const updateFormattedDateTime = () => {
+    if (selectedReleaseDateTime.value) {
+        // Convert the selected date and time to the desired time zone
+        const timeZone = 'US/Pacific'; // Change this to your desired time zone
+        formattedDateTime.value = convertToTimeZone(
+            new Date(releaseDateTime),
+            timeZone
+        );
+    } else {
+        formattedDateTime.value = '';
+    }
+};
 
 userStore.currentPage = 'episodes'
 userStore.showFlashMessage = true;

@@ -47,7 +47,7 @@ class ChatController extends Controller
         // TODO: Sanitize input
         $request->message = strip_tags($request->input('message'));
         $url = '@(http(s)?)?(://)?(([a-zA-Z])([-\w]+\.)+([^\s\.]+[^\s]*)+[^,.\s])@';
-        $request->message = preg_replace($url, '<a href="http$2://$4" target="_blank" title="$0" class="text-blue-400 hover:text-blue-600">$0</a>', $request->message);
+        $request->message = preg_replace($url, '<a href="http$2://$4" target="_blank" title="$0" class="text-blue-100 hover:text-yellow-200">$0</a>', $request->message);
 
         $chatMessage = new ChatMessage;
 
