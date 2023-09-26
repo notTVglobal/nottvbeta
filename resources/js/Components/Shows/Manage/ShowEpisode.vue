@@ -37,39 +37,9 @@
                 <ShowEpisodeStatuses :episodeStatus="props.episode.episodeStatus"
                                      :episodeStatusId="props.episode.episodeStatusId"
                                      :episodeStatuses="props.episodeStatuses"
-                                     :episodeId="props.episode.id"/>
+                                     :episodeId="props.episode.id"
+                                     :scheduledDateTime="props.episode.scheduled_release_dateTime"/>
             </div>
-<!--            <button v-if="episode.episodeStatusId===1" class="font-semibold text-xl text-orange-400">-->
-<!--                {{ episode.episodeStatus }}-->
-<!--            </button>-->
-<!--            <button v-if="episode.episodeStatusId===2" class="text-xl text-green-400">-->
-<!--                {{ episode.episodeStatus }}-->
-<!--            </button>-->
-<!--            <button v-if="episode.episodeStatusId===3" class="font-semibold text-xl text-green-600">-->
-<!--                {{ episode.episodeStatus }}-->
-<!--            </button>-->
-<!--            <button v-if="episode.episodeStatusId===4" class="font-bold text-xl text-green-600">-->
-<!--                {{ episode.episodeStatus }}-->
-<!--            </button>-->
-<!--            <button v-if="episode.episodeStatusId===5" class="font-semibold text-xl text-purple-700">-->
-<!--                {{ episode.episodeStatus }}-->
-<!--            </button>-->
-<!--            <button v-if="episode.episodeStatusId===6" class="font-italic text-xl text-pink-500">-->
-<!--                {{ episode.episodeStatus }}-->
-<!--            </button>-->
-<!--            <button v-if="episode.episodeStatusId===7" class="font-bold text-xl text-black">-->
-<!--                {{ episode.episodeStatus }}-->
-<!--            </button>-->
-<!--            <button v-if="episode.episodeStatusId===8" class="font-medium text-xl text-gray-500">-->
-<!--                {{ episode.episodeStatus }}-->
-<!--            </button>-->
-<!--            <button v-if="episode.episodeStatusId===9" class="font-semibold font-italic text-xl text-red-700">-->
-<!--                {{ episode.episodeStatus }}-->
-<!--            </button>-->
-<!--            <button v-if="episode.episodeStatusId===10" class="font-bold text-xl text-red-800">-->
-<!--                {{ episode.episodeStatus }}-->
-<!--            </button>-->
-
 
         </td>
         <td>

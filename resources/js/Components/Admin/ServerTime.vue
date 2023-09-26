@@ -6,6 +6,9 @@
         <p class="mb-2">
             Local Time: {{localTime}}
         </p>
+        <p class="mb-2">
+            User's Timezone: {{userTimezone}}
+        </p>
     </div>
 </template>
 
@@ -35,6 +38,14 @@ async function fetchServerTime() {
 onMounted( () => {
     fetchServerTime();
     updateLocalTime();
+    getUserTimezone()
 })
+
+const userTimezone = ref('');
+
+const getUserTimezone = () => {
+    // Use the Intl object to get the user's timezone
+    userTimezone.value = Intl.DateTimeFormat().resolvedOptions().timeZone;
+};
 
 </script>

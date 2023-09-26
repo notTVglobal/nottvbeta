@@ -20,7 +20,12 @@ class NotificationsController extends Controller
         $user = auth()->user()->id;
         $notifications = Notification::where('user_id', $user)
             ->with(['image.appSetting'])
-            ->get();
+            ->get()
+            ->map(function ($notification) {
+                // Convert the created_at timestamp to the user's timezone
+                $notification->created_at = $notification->created_at->setTimezone(auth()->user()->timezone);
+                return $notification;
+            });
 
         return response()->json(['notifications' => $notifications]);
     }

@@ -270,6 +270,41 @@ class ShowEpisodeController extends Controller
 
         $videoForEpisode = Video::where('show_episodes_id', $showEpisode->id)->first();
 
+        // convert scheduled_release and release dateTime to user's timezone
+
+        // Get the user's timezone
+        $user = Auth::user();
+        $userTimezone = $user->timezone;
+
+        // release dateTime
+        if ($showEpisode->release_dateTime) {
+            $releaseDateTimeString = $showEpisode->release_dateTime;
+
+            // Create a Carbon instance from the datetime string
+            $releaseDateTime = Carbon::parse($releaseDateTimeString, 'UTC');
+
+            // Convert to the user's timezone
+            $releaseDateTime->setTimezone($userTimezone);
+
+            $formattedReleaseDateTime = $releaseDateTime->format('Y-m-d H:i:s');
+        }
+
+        // scheduled_release dateTime
+        if ($showEpisode->scheduled_release_dateTime) {
+            $scheduledDateTimeString = $showEpisode->scheduled_release_dateTime;
+
+            // Create a Carbon instance from the datetime string
+            $scheduledDateTime = Carbon::parse($scheduledDateTimeString, 'UTC');
+
+            // Convert to the user's timezone
+            $scheduledDateTime->setTimezone($userTimezone);
+
+            $formattedScheduledDateTime = $scheduledDateTime->format('Y-m-d H:i:s');
+        }
+
+
+        // convert scheduled_release dateTime to user's timezone
+
         return Inertia::render('Shows/{$id}/Episodes/{$id}/Edit', [
             'show' => [
                 'name' => $show->name,
@@ -299,9 +334,9 @@ class ShowEpisodeController extends Controller
                 'notes' => $showEpisode->notes,
                 'episode_number' => $showEpisode->episode_number,
                 'status' => $showEpisode->showEpisodeStatus,
-                'release_year' => $showEpisode->release_year,
-                'release_dateTime' => $showEpisode->release_dateTime,
-                'scheduled_release_dateTime' => $showEpisode->scheduled_release_dateTime,
+                'release_year' => $showEpisode->release_year ?? null,
+                'release_dateTime' => $formattedReleaseDateTime ?? null,
+                'scheduled_release_dateTime' => $formattedScheduledDateTime ?? null,
                 'mist_stream_id' => $showEpisode->mist_stream_id,
                 'video_id' => $showEpisode->video_id,
                 'video_url' => $showEpisode->video_url,
@@ -389,8 +424,8 @@ class ShowEpisodeController extends Controller
 
     public function update(HttpRequest $request, Show $show, ShowEpisode $showEpisode)
     {
-        Log::channel('custom_error')->info('raw date in: '.$request->release_dateTime);
-        Log::channel('custom_error')->info('wtf: '.$request->new_date_test);
+        Log::channel('custom_error')->info('release raw date in: '.$request->release_dateTime);
+        Log::channel('custom_error')->info('scheduled raw date in: '.$request->scheduled_release_dateTime);
 
         // validate the request
         $request->validate([
@@ -414,34 +449,70 @@ class ShowEpisodeController extends Controller
             'scheduled_release_dateTime' => 'nullable|date|after:now',
         ]);
 
+
+//        $scheduledDateTime = $request->input('scheduled_release_dateTime');
+//        $releaseDateTime = $request->input('release_dateTime');
+//
+//        // Create a Carbon instance from the datetime string
+//        $carbonScheduledDatetime = \Illuminate\Support\Carbon::parse($scheduledDateTime);
+//        $carbonReleaseDatetime = \Illuminate\Support\Carbon::parse($releaseDateTime);
+//
+//        // Convert to UTC
+//        $utcScheduledDatetime = $carbonScheduledDatetime->utc();
+//        $utcReleaseDatetime = $carbonReleaseDatetime->utc();
+//
+//        // Format $utcDatetime as a string in ISO 8601 format:
+//        $formattedScheduledUtcDatetime = $utcScheduledDatetime->toIso8601String();
+//        $formattedReleaseUtcDatetime = $utcReleaseDatetime->toIso8601String();
+
+        $formattedScheduledUtcDatetime = null;
+        $formattedReleaseUtcDatetime = null;
         $releaseYear = null;
-        $formattedReleaseDate = null;
+
+        Log::channel('custom_error')->info('episode name: '.$request->name);
         Log::channel('custom_error')->info('release date in: '.$request->release_dateTime);
+        Log::channel('custom_error')->info('scheduled date in: '.$request->scheduled_release_dateTime);
 
-        function formatDateForMySQL($dateTimeString) {
-            // Parse the datetime string into a Carbon instance, assuming it's in ISO 8601 format
-            $carbonDateTime = Carbon::parse($dateTimeString);
-            Log::channel('custom_error')->info('carbon parsed date: '.$carbonDateTime);
-
-            // Convert the Carbon instance to the MySQL datetime format
-            $formattedDateTime = $carbonDateTime->format('Y-m-d H:i:s');
-            Log::channel('custom_error')->info('formatted date: '.$formattedDateTime);
-
-            return $formattedDateTime;
-        }
+//        function formatDateForMySQL($dateTimeString) {
+//            // Parse the datetime string into a Carbon instance, assuming it's in ISO 8601 format
+//            $carbonDateTime = Carbon::parse($dateTimeString);
+//            Log::channel('custom_error')->info('carbon parsed date: '.$carbonDateTime);
+//
+//            // Convert the Carbon instance to the MySQL datetime format
+//            $formattedDateTime = $carbonDateTime->format('Y-m-d H:i:s');
+//            Log::channel('custom_error')->info('formatted date: '.$formattedDateTime);
+//
+//            return $formattedDateTime;
+//        }
 
         if ($request->release_dateTime) {
             // Create a Carbon instance from the DateTime string
             $releaseDateTime = Carbon::parse($request->release_dateTime);
+
             // Get the year from the Carbon instance
             $releaseYear = $releaseDateTime->year;
 
-            $formattedReleaseDate = formatDateForMySQL($request->release_dateTime);
+            // Convert to UTC
+            $utcReleaseDatetime = $releaseDateTime->utc();
+
+            // Format $utcDatetime as a string in ISO 8601 format:
+            $formattedReleaseUtcDatetime = $utcReleaseDatetime->toIso8601String();
+
         }
 
         if ($request->scheduled_release_dateTime) {
-            $formattedScheduledReleaseDate = formatDateForMySQL($request->scheduled_release_dateTime);
+//            $formattedScheduledReleaseDate = formatDateForMySQL($request->scheduled_release_dateTime);
             $showEpisode->show_episode_status_id = 6;
+            $releaseYear = null;
+
+            // Create a Carbon instance from the DateTime string
+            $scheduledDateTime = Carbon::parse($request->scheduled_release_dateTime);
+
+            // Convert to UTC
+            $utcScheduledDatetime = $scheduledDateTime->utc();
+
+            // Format $utcDatetime as a string in ISO 8601 format:
+            $formattedScheduledUtcDatetime = $utcScheduledDatetime->toIso8601String();
         }
 
         if ($showEpisode->scheduled_release_dateTime && $request->scheduled_release_dateTime === null) {
@@ -473,9 +544,9 @@ class ShowEpisodeController extends Controller
         $showEpisode->video_url = $request->video_url;
         $showEpisode->youtube_url = $request->youtube_url;
         $showEpisode->video_embed_code = $request->video_embed_code;
-        $showEpisode->release_dateTime = $formattedReleaseDate ?? null;
+        $showEpisode->release_dateTime = $formattedReleaseUtcDatetime ?? null;
         $showEpisode->release_year = $releaseYear ?? null;
-        $showEpisode->scheduled_release_dateTime = $formattedScheduledReleaseDate ?? null;
+        $showEpisode->scheduled_release_dateTime = $formattedScheduledUtcDatetime ?? null;
         $showEpisode->save();
 
         if ($request->video_embed_code !== $showEpisode->video_embed_code && !$request->video_url) {

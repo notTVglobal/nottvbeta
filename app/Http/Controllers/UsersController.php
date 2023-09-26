@@ -355,6 +355,27 @@ class UsersController extends Controller
         ]);
     }
 
+    public function updateTimezone(HttpRequest $request)
+    {
+        // Validate the request data (timezone)
+        $request->validate([
+            'timezone' => 'required|string', // You can add more validation rules if needed
+        ]);
+
+        // Get the authenticated user
+        $user = Auth::user();
+
+        if (!$user) {
+            return response()->json(['error' => 'User not authenticated'], 401);
+        }
+
+        // Update the user's timezone
+        $user->timezone = $request->input('timezone');
+        $user->save();
+
+        return response()->json(['message' => 'Timezone updated successfully']);
+    }
+
     public function vipAdd(HttpRequest $request, User $user) {
         if (auth()->user()->isAdmin) {
             $request->validate([

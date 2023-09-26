@@ -4,7 +4,7 @@
         <!-- Navbar for logged in user -->
         <ResponsiveNavigationMenu v-if="user"/>
         <NavigationMenu v-if="user"/>
-        <NotificationModal/>
+        <NotificationModal v-if="user"/>
 
         <!-- Login for Welcome Page (logged out) -->
         <Teleport to="body">
@@ -35,6 +35,7 @@ import NavigationMenu from '@/Components/Navigation/NavigationMenu'
 import Messages from "@/Components/VideoPlayer/Chat/VideoOTTChatMessages.vue";
 import Message from "@/Components/Modals/Messages.vue";
 import NotificationModal from "@/Components/Notifications/NotificationModal.vue";
+import {format} from "date-fns-tz";
 
 // const ResponsiveNavigationMenu = defineAsyncComponent( () =>
 //     import('@/Components/Navigation/ResponsiveNavigationMenu'))
@@ -76,10 +77,12 @@ userStore.showNavDropdown = false
 setPage()
 
 onBeforeMount( () => {
+    getUserTimezone()
     if(props.user) {
         updateUserStore()
         provide(/* key */ 'getUserData', /* value */ true)
-    }
+    } else
+        provide(/* key */ 'getUserData', /* value */ false)
 })
 
 onMounted( () => {
@@ -110,12 +113,40 @@ async function updateUserStore() {
             userStore.subscribeToUserNotifications(response.data.id)
             reloadNav++
 
-
         })
         .catch(error => {
             console.log(error);
         })
+    // save user Timezone
+    await updateUserTimezone()
+    userStore.timezone = userTimezone
+
 }
+
+const userTimezone = ref('');
+
+const getUserTimezone = () => {
+    // Use the Intl object to get the user's timezone
+    userTimezone.value = Intl.DateTimeFormat().resolvedOptions().timeZone;
+};
+
+const updateUserTimezone = async () => {
+    try {
+        const response = await axios.post('/users/update-timezone', { timezone: userTimezone.value });
+
+        // Handle success response as needed
+        console.log(response.data.message);
+    } catch (error) {
+        // Handle error response or network error
+        console.error(error);
+
+        if (error.response) {
+            // Handle specific error responses if needed
+            console.error(error.response.data);
+        }
+    }
+};
+
 
 function hideOSD() {
     videoPlayerStore.osd = false;

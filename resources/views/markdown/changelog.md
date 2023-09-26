@@ -1,9 +1,15 @@
 # not.tv Changelog
 
 
-Last Update: September 24, 2023\
+Last Update: September 25, 2023\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.7.3.5d
+September 25, 2023
+* Added user timezone
+* Updated the Show Episode edit page to display episode release date and scheduled date in the user's timezone.
+* Update the Newest episodes on the Shows page to display the time in the user's timezone.
+* Updated the notifications to show the timestamp in the user's timezone.
 
 ## v0.7.3.5c
 September 24, 2023

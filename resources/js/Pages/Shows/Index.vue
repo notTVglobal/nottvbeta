@@ -91,7 +91,8 @@
                                         <span class="text-lg font-semibold leading-tight">{{ episode.name }}</span>
     <!--                                </Link>-->
 
-                                        <div class="text-gray-400 font-light text-sm"><Link :href="`/shows/${episode.showSlug}`">{{ episode.showName }} &bull; {{ useTimeAgo(episode.release_date) }} </Link></div>
+                                        <div class="text-gray-400 font-light text-sm"><Link :href="`/shows/${episode.showSlug}`">{{ episode.showName }} &bull;
+                                            {{ useTimeAgo(episode.release_date) }} </Link></div>
 
                                         <p class="mt-2 pr-4 text-gray-300 xl:block">
                                             {{ episode.description}}

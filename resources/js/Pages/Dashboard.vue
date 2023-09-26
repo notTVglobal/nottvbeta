@@ -8,8 +8,8 @@
 
             <div class="flex justify-between mb-6 pt-4">
 
-
                 <h1 class="text-3xl font-semibold">Dashboard for Creators</h1>
+                <p>Your timezone: {{userStore.timezone}}</p>
 
             </div>
 
@@ -385,8 +385,11 @@ videoPlayerStore.loggedIn = true
 userStore.currentPage = 'dashboard'
 userStore.showFlashMessage = true;
 
-onBeforeMount(() => {
-    updateUserStore()
+onBeforeMount( () => {
+    if (!userStore.getUserDataCompleted) {
+        getUserTimezone()
+        updateUserStore()
+    }
 })
 
 onMounted(() => {
@@ -460,7 +463,7 @@ function createShowWithNoTeamButton() {
     document.getElementById('dashboardNoTeams').showModal()
 }
 
-function updateUserStore() {
+async function updateUserStore() {
     userStore.id = props.id
     userStore.isAdmin = props.isAdmin
     userStore.isCreator = props.isCreator
@@ -469,17 +472,39 @@ function updateUserStore() {
     userStore.isSubscriber = props.isSubscriber
     userStore.hasAccount = props.hasAccount
     userStore.getUserDataCompleted = true
+    userStore.timezone = userTimezone
     console.log('get user data on Dashboard')
     if (!userStore.userSubscribedToNotifications) {
         userStore.subscribeToUserNotifications(props.id)
     }
-    // Echo.private(`user.${props.id}`).subscribed(() => {
-    // })
-    //     .listen('.userNotifications', (event) => {
-    //     userStore.newNotifications++;
-    //     userStore.notifications.push(event.notification);
-    // })
+    // save user Timezone
+    await updateUserTimezone()
+
 }
+
+const userTimezone = ref('');
+
+const getUserTimezone = () => {
+    // Use the Intl object to get the user's timezone
+    userTimezone.value = Intl.DateTimeFormat().resolvedOptions().timeZone;
+};
+
+const updateUserTimezone = async () => {
+    try {
+        const response = await axios.post('/users/update-timezone', { timezone: userTimezone.value });
+
+        // Handle success response as needed
+        console.log(response.data.message);
+    } catch (error) {
+        // Handle error response or network error
+        console.error(error);
+
+        if (error.response) {
+            // Handle specific error responses if needed
+            console.error(error.response.data);
+        }
+    }
+};
 
 </script>
 

@@ -21,7 +21,7 @@
 
 <script setup>
 // import dayjs from 'dayjs';
-import {reactive, render, watchEffect} from "vue";
+import {onMounted, onUnmounted, reactive, ref, render, watchEffect} from "vue";
 import {useChatStore} from "@/Stores/ChatStore";
 import { useTimeAgo } from '@vueuse/core';
 
@@ -34,9 +34,12 @@ let props = defineProps({
     message: Object,
 })
 // const nowTime = current.getHours() + ":" + current.getMinutes() + ":" + current.getSeconds();
-let timeAgo = useTimeAgo(props.message.created_at)
+const timeAgo = useTimeAgo(props.message.created_at)
+// let timeAgo =
 
-
+// onUnmounted( () => {
+//     timeAgo = ''
+// })
 //
 // function formatDate(dateString) {
 //     const date = dayjs().to(dayjs(dateString))

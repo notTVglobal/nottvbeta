@@ -5,14 +5,23 @@
 
         <dialog :id="dialogId" class="modal">
             <div class="modal-box h-fit overflow-scroll">
-                <h2 class="text-center mb-2">Change the Episode Status:</h2>
-<!--                <ul tabindex="0" class="dropdown-content z-[1] p-2 shadow bg-base-100 rounded-box w-52">-->
+                <div v-if="!setDateTime">
+                    <h2 class="text-center mb-2">Change the Episode Status:</h2>
                     <div v-for="(status, key)  in episodeStatuses" :key="key" class="text-center">
-                        <button class="btn btn-wide my-1" @click="changeEpisodeStatus(episodeId, status.id)">{{ status.name }}</button>
+                        <div class="btn btn-wide my-1" @click="checkEpisodeStatus(episodeId, status.id)">{{ status.name }}</div>
                     </div>
+                </div>
+                <div v-if="setDateTime">
+                    <h3 class="text-center mb-2">Set the Scheduled Release Date and Time:</h3>
+                    <div class="text-center">
+                        <DateTimePicker :date="props.scheduled_release_dateTime" @date-time-selected="handleScheduledDateTime" />
+                        <button class="btn my-2" @click="changeEpisodeStatus(episodeId, 6)">Schedule it!</button>
+                        <button class="btn ml-2 my-2" @click="cancelScheduleEpisode">Cancel</button>
+                    </div>
+                </div>
 
-<!--                </ul>-->
             </div>
+
             <form method="dialog" class="modal-backdrop">
                 <button>close</button>
             </form>
@@ -27,38 +36,101 @@
 import {computed, ref} from "vue";
 import {Inertia} from "@inertiajs/inertia";
 import {useTeamStore} from "@/Stores/TeamStore";
+import {useShowStore} from "@/Stores/ShowStore";
+import DateTimePicker from "@/Components/Calendar/DateTimePicker.vue";
+import DateTimePickerSelect from "@/Components/Calendar/DateTimePickerSelect.vue";
+import {format} from "date-fns-tz";
 
 let teamStore = useTeamStore()
+let showStore = useShowStore()
 
 let props = defineProps({
     episodeId: '',
     episodeStatus: '',
     episodeStatusId: '',
     episodeStatuses: Object,
+    scheduledDateTime: '',
 })
 
 const errorMessage = ref('');
 const dialogId = props.episodeId+'episodeStatuses'
 
+let scheduledDateTime = ref(null)
+let setDateTime = ref(false)
+
 function openEpisodeStatuses() {
     document.getElementById(dialogId).showModal()
 }
 
-async function changeEpisodeStatus(episodeId, newStatusId) {
+// function checkEpisodeStatus(episodeId, newStatusId) {
+//     setDateTime = true;
+//     if (newStatusId === 6 && scheduledDateTime === null) {
+//         // open a model to set scheduled dateTime
+//
+//         Inertia.reload()
+//     }
+// }
+
+const checkEpisodeStatus = (episodeId, statusId) => {
+    if (statusId === 6) {
+        // update the modal to set scheduled dateTime
+        setDateTime.value = !setDateTime.value;
+    } else if (statusId !== 6) {
+        changeEpisodeStatus(episodeId, statusId)
+    }
+};
+
+const cancelScheduleEpisode = () => {
+    setDateTime.value = !setDateTime.value;
+};
+
+const handleScheduledDateTime = (newDate) => {
+    selectedScheduledDateTime.value = newDate;
+    scheduledDateTime = newDate.date;
+    console.log(scheduledDateTime)
+    updateScheduledDateTime()
+    console.log(formattedScheduledDateTime)
+}
+
+const userTimezone = ref('');
+
+const getUserTimezone = () => {
+    // Use the Intl object to get the user's timezone
+    userTimezone.value = Intl.DateTimeFormat().resolvedOptions().timeZone;
+};
+
+let selectedScheduledDateTime = ref('');
+let formattedScheduledDateTime = ref(''); // This will display the formatted date and time
+
+const convertToTimeZone = (dateTime, userTimezone) => {
+    return format(dateTime, 'yyyy-MM-dd HH:mm:ssXXX', { userTimezone });
+};
+
+const updateScheduledDateTime = () => {
+    if (selectedScheduledDateTime.value) {
+        // Convert the selected date and time to the desired time zone
+        // const timeZone = 'UTC'; // Change this to your desired time zone
+        formattedScheduledDateTime.value = convertToTimeZone(
+            new Date(scheduledDateTime),
+            userTimezone
+        );
+    } else {
+        formattedScheduledDateTime.value = '';
+    }
+};
+
+async function changeEpisodeStatus(episodeId, statusId) {
     try {
         const response = await axios.post('/shows/episode/changeEpisodeStatus', {
             episode_id: episodeId,
-            new_status_id: newStatusId,
+            new_status_id: statusId,
+            scheduled_release_dateTime: formattedScheduledDateTime.value
         });
         // Handle success response as needed
         // ...
     } catch (error) {
         if (error.response) {
-            // If there is an error response, set the error message
-            errorMessage.value = error.response.data.message;
-
-            // Console error the error message
-            console.error(errorMessage.value);
+            showStore.errorMessage = error.response.data.error
         } else {
             console.error(error);
         }

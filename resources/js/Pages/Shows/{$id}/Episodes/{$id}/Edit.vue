@@ -6,6 +6,12 @@
         <div class="bg-white dark:bg-gray-800 text-black light:text-black dark:text-white px-5 mb-10">
 
             <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+            <div class="alert alert-error mt-4 mx-3"
+                 v-if="showStore.errorMessage">
+                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                <span>{{ showStore.errorMessage }}</span>
+                <button class="text-xs ml-12" @click="showStore.errorMessage = ''"> Close</button>
+            </div>
 
             <header>
                 <ShowEpisodeEditHeader :show="props.show" :team="props.team" :episode="props.episode"/>
@@ -95,7 +101,7 @@
                                         </div>
 
                                         <div class="flex flex-row flex-wrap space-x-2">
-                                            <DateTimePicker :date="props.episode.scheduled_release_dateTime" @date-time-selected="handleScheduledDateTime" />
+                                            <DateTimePickerSelect :date="props.episode.scheduled_release_dateTime" @date-time-selected="handleScheduledDateTime" />
                                             <!-- Display the selected date and time received from DateTimePicker -->
                                             <button v-if="props.episode.scheduled_release_dateTime"
                                                     class="px-3 py-2 bg-blue-500 text-sm text-white font-semibold rounded-md"
@@ -123,11 +129,11 @@
 
 
 
-                                        <DateTimePicker :date="props.episode.release_dateTime" @date-time-selected="handleReleaseDateTime">
+                                        <DateTimePickerSelect :date="props.episode.release_dateTime" @date-time-selected="handleReleaseDateTime">
                                             <template v-slot:buttonName>
                                                 Change date
                                             </template>
-                                        </DateTimePicker>
+                                        </DateTimePickerSelect>
                                         <!-- Display the selected date and time received from DateTimePicker -->
 
 
@@ -353,7 +359,7 @@
 </template>
 
 <script setup>
-import { onBeforeMount, onMounted, ref } from "vue"
+import {onBeforeMount, onMounted, onUnmounted, ref} from "vue"
 import { Inertia } from "@inertiajs/inertia"
 import { useForm } from "@inertiajs/inertia-vue3"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
@@ -368,7 +374,7 @@ import ImageUpload from "@/Components/Uploaders/ImageUpload.vue";
 import SingleImage from "@/Components/Multimedia/SingleImage.vue";
 import VideoUpload from "@/Components/Uploaders/VideoUpload"
 import videojs from "video.js";
-import DateTimePicker from "@/Components/Calendar/DateTimePicker.vue";
+import DateTimePickerSelect from "@/Components/Calendar/DateTimePickerSelect";
 import { format } from 'date-fns-tz';
 // import {DatePicker} from "v-calendar";
 // import 'v-calendar/style.css';
@@ -378,22 +384,63 @@ let teamStore = useTeamStore()
 let showStore = useShowStore()
 let userStore = useUserStore()
 
-let scheduledDateTime = ref(''); // This will hold the selected date and time in ISO format
-let releaseDateTime = ref(''); // This will display the formatted date and time
-
 let props = defineProps({
     show: Object,
     team: Object,
     episode: Object,
     image: Object,
     can: Object,
-    // inputValue: String,
 });
 
+userStore.currentPage = 'episodes'
+userStore.showFlashMessage = true;
+teamStore.setActiveTeam(props.team);
+teamStore.setActiveShow(props.show);
+showStore.episodePoster = props.image.name;
+
+let scheduledDateTime = ref(''); // This will hold the selected date and time in ISO format
+let releaseDateTime = ref(''); // This will hold the selected date and time in ISO format
+
+// Define a ref to store selected date and time received from DateTimePicker
+let selectedReleaseDateTime = ref('');
+let selectedScheduledDateTime = ref('');
+let cancelScheduledReleaseDate = ref(false);
+
+let formattedReleaseDateTime = ref(''); // This will display the formatted date and time
+let formattedScheduledDateTime = ref(''); // This will display the formatted date and time
+
+let userReleaseDateTime = ref(''); // This will display the date and time in the user's timezone
+let userScheduledDateTime = ref(''); // This will display the date and time in the user's timezone
+
+const userTimezone = ref('');
 
 // TODO: convert this to the user's local time
 releaseDateTime = props.episode.release_dateTime
 scheduledDateTime = props.episode.scheduled_release_dateTime
+
+const getUserTimezone = () => {
+    // Use the Intl object to get the user's timezone
+    userTimezone.value = Intl.DateTimeFormat().resolvedOptions().timeZone;
+};
+
+const convertToTimeZone = (dateTime, userTimezone) => {
+    return format(dateTime, 'yyyy-MM-dd HH:mm:ssXXX', { userTimezone });
+};
+
+if (releaseDateTime) {
+    userReleaseDateTime.value = convertToTimeZone(
+        new Date(releaseDateTime),
+        userTimezone.value);
+    console.log('user release dateTime: ' + userReleaseDateTime.value)
+}
+
+if (scheduledDateTime) {
+    userScheduledDateTime.value = convertToTimeZone(
+        new Date(scheduledDateTime),
+        userTimezone.value);
+    console.log('user scheduled dateTime: ' + userScheduledDateTime.value)
+}
+
 
 let form = useForm({
     id: props.episode.id,
@@ -405,10 +452,8 @@ let form = useForm({
     video_url: props.episode.video_url,
     youtube_url: props.episode.youtube_url,
     video_embed_code: props.episode.video_embed_code,
-    release_dateTime: releaseDateTime,
-    scheduled_release_dateTime: scheduledDateTime,
-    // release_dateTime: props.episode.release_dateTime,
-    // scheduled_release_dateTime: props.episode.scheduled_release_dateTime,
+    release_dateTime: '',
+    scheduled_release_dateTime: '',
 });
 
 let reloadImage = () => {
@@ -424,33 +469,24 @@ let submit = () => {
     form.put(route('showEpisodes.update', props.episode.slug));
 };
 
-// Define a ref to store selected date and time received from DateTimePicker
-let selectedReleaseDateTime = ref('');
-let selectedScheduledDateTime = ref('');
-let cancelScheduledReleaseDate = ref(false);
-// let date = ref(new Date());
-// const calendar = ref(null);
-// const inputValue = ref(props.inputValue || null);
-
-// Method to handle the selected date and time emitted from DateTimePicker
-// function handleReleaseDateTime(data) {
-//     selectedReleaseDateTime.value = data;
-//     console.log(selectedReleaseDateTime)
-//     form.release_date = data.date
-// }
 const handleReleaseDateTime = (newDate) => {
     selectedReleaseDateTime.value = newDate;
     releaseDateTime = newDate.date;
-    console.log(releaseDateTime)
-    updateFormattedDateTime()
-    console.log(formattedDateTime)
-    form.release_dateTime = releaseDateTime
+    // console.log(releaseDateTime)
+    updateReleaseDateTime()
+    console.log(formattedReleaseDateTime.value)
+    form.release_dateTime = formattedReleaseDateTime
+    form.scheduled_release_dateTime = null
 }
 const handleScheduledDateTime = (newDate) => {
     selectedScheduledDateTime.value = newDate;
     scheduledDateTime = newDate.date;
-    console.log(scheduledDateTime)
-    form.scheduled_release_dateTime = scheduledDateTime
+    // console.log(scheduledDateTime)
+    updateScheduledDateTime()
+    console.log(formattedScheduledDateTime.value)
+
+    form.scheduled_release_dateTime = formattedScheduledDateTime
+    form.release_dateTime = null
 }
 
 function cancelScheduledRelease() {
@@ -459,39 +495,31 @@ function cancelScheduledRelease() {
     form.scheduled_release_dateTime = null;
 }
 
-
-let dateTime = ref('')
-let timeZone = ref('')
-
-let selectedDateTime = ref(''); // This will hold the selected date and time in ISO format
-let formattedDateTime = ref(''); // This will display the formatted date and time
-
-const convertToTimeZone = (dateTime, timeZone) => {
-    return format(dateTime, 'yyyy-MM-dd HH:mm:ssXXX', { timeZone });
-};
-
-const updateFormattedDateTime = () => {
+const updateReleaseDateTime = () => {
     if (selectedReleaseDateTime.value) {
         // Convert the selected date and time to the desired time zone
-        const timeZone = 'US/Pacific'; // Change this to your desired time zone
-        formattedDateTime.value = convertToTimeZone(
+        // const timeZone = 'UTC'; // Change this to your desired time zone
+        formattedReleaseDateTime.value = convertToTimeZone(
             new Date(releaseDateTime),
-            timeZone
+            userTimezone.value
         );
     } else {
-        formattedDateTime.value = '';
+        formattedReleaseDateTime.value = '';
     }
 };
 
-userStore.currentPage = 'episodes'
-userStore.showFlashMessage = true;
-teamStore.setActiveTeam(props.team);
-teamStore.setActiveShow(props.show);
-showStore.episodePoster = props.image.name;
-
-// onBeforeMount(() => {
-//     userStore.scrollToTopCounter = 0;
-// })
+const updateScheduledDateTime = () => {
+    if (selectedScheduledDateTime.value) {
+        // Convert the selected date and time to the desired time zone
+        // const timeZone = 'UTC'; // Change this to your desired time zone
+        formattedScheduledDateTime.value = convertToTimeZone(
+            new Date(scheduledDateTime),
+            userTimezone.value
+        );
+    } else {
+        formattedScheduledDateTime.value = '';
+    }
+};
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
@@ -500,27 +528,13 @@ onMounted(() => {
         videoPlayerStore.ott = 0
     }
     document.getElementById("topDiv").scrollIntoView()
-    // if (userStore.scrollToTopCounter === 0 ) {
-    //
-    //     userStore.scrollToTopCounter ++;
-    // }
-
-    // let episodeVideoPlayer = videojs('episodeEditPlayer', {
-    //     controls: true,
-    //     muted: false,
-    //     autoplay: false,
-    //     preload: 'none',
-    //     techOrder: ["html5", "youtube"],
-    //     youtube: {"customVars":
-    //             {
-    //                 "wmode": "transparent"
-    //             }}
-    // })
-    // episodeVideoPlayer.ready(function() {
-    //     episodeVideoPlayer.muted(false)
-    //     episodeVideoPlayer.pause();
-    // });
+    getUserTimezone()
+    console.log(userTimezone.value)
 });
+
+onUnmounted( () => {
+    showStore.errorMessage = ''
+})
 
 function addEmbedCodeConfirm() {
     if (confirm("Are you sure you want to add this embed code? It will override the video url.")) {

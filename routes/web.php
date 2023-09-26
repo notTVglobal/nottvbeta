@@ -747,6 +747,7 @@ Route::middleware([
     Route::resource('users', UsersController::class);
 
     Route::post('/getUserStoreData', [UsersController::class, 'getUserStoreData']);
+    Route::post('/users/update-timezone', [UsersController::class, 'updateTimezone'])->name('users.update.timezone');
 
     // List all users -- this has to be a different controller than the UsersAdminCreateEditController
     // because it uses a different resource class for the search function.

@@ -49,6 +49,29 @@ class ShowsController extends Controller
     public function index()
     {
 
+        // convert release dateTime to user's timezone
+
+        // Get the user's timezone
+
+
+
+        // release dateTime
+        function formatReleaseDate($date)  {
+
+            $user = Auth::user();
+            $userTimezone = $user->timezone;
+
+            $releaseDateTimeString = $date;
+
+            // Create a Carbon instance from the datetime string
+            $releaseDateTime = \Carbon\Carbon::parse($releaseDateTimeString, 'UTC');
+
+            // Convert to the user's timezone
+            $releaseDateTime->setTimezone($userTimezone);
+
+            return $releaseDateTime->format('Y-m-d H:i:s');
+        }
+
         return Inertia::render('Shows/Index', [
 
             'shows' => Show::with('team', 'user', 'image', 'episodes', 'showStatus')
@@ -124,7 +147,7 @@ class ShowsController extends Controller
                     'releaseDate' => $showEpisode->release_dateTime,
                     'categoryName' => $showEpisode->show->showCategory->name,
                     'categorySubName' => $showEpisode->show->showCategorySub->name,
-                    'release_date' => $showEpisode->release_dateTime,
+                    'release_date' => formatReleaseDate($showEpisode->release_dateTime),
                 ]),
 //            'mostAnticipated' => Show::with('image')
 //                ->paginate(3, ['*'], 'trending')
@@ -742,9 +765,30 @@ class ShowsController extends Controller
             $episodeId = $request->input('episode_id');
             $newStatusId = $request->input('new_status_id');
 
-            if ($newStatusId === 7) {
+            if ($newStatusId === 6) {
+                // validate the request
+                $request->validate([
+                    'scheduled_release_dateTime' => 'date|after:now',
+                ]);
+                $scheduledDateTime = $request->input('scheduled_release_dateTime');
+
+                // Create a Carbon instance from the datetime string
+                $carbonDatetime = Carbon::parse($scheduledDateTime);
+
+                // Convert to UTC
+                $utcDatetime = $carbonDatetime->utc();
+
+                // Format $utcDatetime as a string in ISO 8601 format:
+                $formattedUtcDatetime = $utcDatetime->toIso8601String();
+
+            } else if ($newStatusId === 7) {
                 $releaseDateTime = Carbon::now();
                 $releaseYear = Carbon::now()->year;
+                $formattedUtcDatetime = null;
+            } else if ($newStatusId > 7) {
+                $releaseDateTime = null;
+                $releaseYear = null;
+                $formattedUtcDatetime = null;
             }
 
             // Find the episode by ID
@@ -758,6 +802,7 @@ class ShowsController extends Controller
             $episode->show_episode_status_id = $newStatusId;
             $episode->release_dateTime = $releaseDateTime ?? null;
             $episode->release_year = $releaseYear ?? null;
+            $episode->scheduled_release_dateTime = $formattedUtcDatetime ?? null;
             $episode->save();
 
             // If successful, return a success response

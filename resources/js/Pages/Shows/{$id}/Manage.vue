@@ -6,6 +6,12 @@
         <div class="min-h-screen bg-white text-black dark:bg-gray-900 dark:text-gray-50 rounded px-5 pb-36">
 
             <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+            <div class="alert alert-error mt-4 mx-3"
+                 v-if="showStore.errorMessage">
+                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                <span>{{ showStore.errorMessage }}</span>
+                <button class="text-xs ml-12" @click="showStore.errorMessage = ''"> Close</button>
+            </div>
 
             <header>
             <div class="flex justify-between mb-3 pt-6">
@@ -86,7 +92,8 @@
 <!--            </div>-->
 
             <div class="p-5 text-gray-100">
-                <span class="uppercase text-xs font-semibold text-orange-300">SHOW NOTES: </span> {{ props.show.notes }}
+                <span class="uppercase text-xs font-semibold text-orange-300">SHOW NOTES: </span>
+                <span class="text-black light:text-black dark:text-white">{{ props.show.notes }}</span>
             </div>
 
 
@@ -171,7 +178,7 @@ import ShowEpisodesList from "@/Components/Shows/Manage/ShowEpisodesList"
 import ShowFooter from "@/Components/Shows/ShowFooter"
 import ShowCreditsList from "@/Components/Shows/Manage/ShowCreditsList";
 import Message from "@/Components/Modals/Messages";
-import {onBeforeMount, onMounted, ref} from "vue";
+import {onBeforeMount, onMounted, onUnmounted, ref} from "vue";
 
 
 let videoPlayerStore = useVideoPlayerStore()
@@ -190,6 +197,10 @@ onMounted(() => {
     }
     document.getElementById("topDiv").scrollIntoView()
 });
+
+onUnmounted( () => {
+    showStore.errorMessage = ''
+})
 
 let props = defineProps({
     show: Object,

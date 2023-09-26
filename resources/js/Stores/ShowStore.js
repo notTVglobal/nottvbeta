@@ -17,6 +17,7 @@ export let useShowStore = defineStore('showStore', {
         noteEdit: 0,
         note: '',
         saveNoteProcessing: Boolean,
+        errorMessage: '',
 
     }),
 

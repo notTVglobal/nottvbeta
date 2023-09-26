@@ -6,7 +6,7 @@
 
 
 <script setup>
-import { inject, onBeforeMount, onMounted, onUnmounted } from "vue";
+import {inject, onBeforeMount, onMounted, onUnmounted, ref} from "vue";
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useUserStore } from "@/Stores/UserStore.js"
 import { useStreamStore } from "@/Stores/StreamStore.js"
@@ -17,17 +17,19 @@ let userStore = useUserStore()
 let streamStore = useStreamStore()
 let chatStore = useChatStore()
 
-const getUserData = inject('getUserData')
+const getUserData = inject('getUserData', null)
 
 onBeforeMount( () => {
+    getUserTimezone()
     videoPlayerStore.currentPageIsStream = true;
     videoPlayerStore.currentView = 'stream'
     userStore.currentPage = 'stream'
 })
 
-onMounted(async() => {
+onMounted(() => {
     if (!getUserData) {
-        await updateUserStore()
+        updateUserStore()
+
     }
     videoPlayerStore.makeVideoFullPage()
     videoPlayerStore.showOsdAndControlsAndNav()
@@ -61,6 +63,7 @@ let props = defineProps ({
 function updateUserStore() {
     axios.post('/getUserStoreData')
         .then(response => {
+            userStore.id = response.data.id
             userStore.isAdmin = response.data.isAdmin
             userStore.isCreator = response.data.isCreator
             userStore.isNewsPerson = response.data.isNewsPerson
@@ -68,12 +71,39 @@ function updateUserStore() {
             userStore.isSubscriber = response.data.isSubscriber
             userStore.hasAccount = response.data.hasAccount
             userStore.getUserDataCompleted = true
+            userStore.timezone = userTimezone
             console.log('get user data on Stream')
         })
         .catch(error => {
             console.log(error);
         })
+    // save user Timezone
+    updateUserTimezone()
 }
+
+const userTimezone = ref('');
+
+const getUserTimezone = () => {
+    // Use the Intl object to get the user's timezone
+    userTimezone.value = Intl.DateTimeFormat().resolvedOptions().timeZone;
+};
+
+const updateUserTimezone = async () => {
+    try {
+        const response = await axios.post('/users/update-timezone', { timezone: userTimezone.value });
+
+        // Handle success response as needed
+        console.log(response.data.message);
+    } catch (error) {
+        // Handle error response or network error
+        console.error(error);
+
+        if (error.response) {
+            // Handle specific error responses if needed
+            console.error(error.response.data);
+        }
+    }
+};
 
 </script>
 

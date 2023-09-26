@@ -43,6 +43,7 @@ export let useUserStore = defineStore('userStore', {
         notifications: ref([]),
         notificationsKey: 0,
         userSubscribedToNotifications: false,
+        timezone: null,
 
     }),
 
