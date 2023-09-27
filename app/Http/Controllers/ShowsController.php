@@ -296,7 +296,7 @@ class ShowsController extends Controller
 //        dd($latestEpisodeWithVideo->video);
 
         $latestEpisodeWithVideoUrl = $show->episodes->reverse()->first(function ($episode) {
-            return !empty($episode->video_url);
+            return !empty($episode->video->video_url);
         });
 
 //        $firstPlayFile = $show->episodes->first(function ($episode) {
@@ -359,7 +359,10 @@ class ShowsController extends Controller
                     'cloud_folder' => $latestEpisodeWithVideo->video->cloud_folder ?? '',
                     'upload_status' => $latestEpisodeWithVideo->video->upload_status ?? '',
                 ],
-                'firstPlayVideoUrl' => $latestEpisodeWithVideoUrl->video_url ?? '',
+                'firstPlayVideoFromUrl' => [
+                    'video_url' => $latestEpisodeWithVideoUrl->video->video_url ?? '',
+                    'type' => $latestEpisodeWithVideoUrl->video->type ?? '',
+                ],
                 'copyrightYear' => $show->created_at->format('Y'),
                 'first_release_year' => $show->first_release_year,
                 'last_release_year' => $show->last_release_year,

@@ -11,6 +11,7 @@ September 26, 2023
 * Both of the above aren't working in development using Laravel sail. There may be a permissions issue accessing ffmpeg.
 * Fixed the chat messages time stamp problem.
 * Successfully tested mistserver playback of an external video url using ffmpeg to push the video to a mistserver stream.
+* Updated Show page and Show Episode page to playback video url from video model
 
 ## v0.7.3.5d
 September 25, 2023

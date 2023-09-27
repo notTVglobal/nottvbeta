@@ -69,13 +69,13 @@
 
                     </div>
 
-                    <p v-if="episode.video.upload_status === 'processing' && !episode.video_url" class="mt-12 px-3 py-3 text-gray-50 mr-1 lg:mr-36 bg-black w-full text-center lg:text-left">
+                    <p v-if="episode.video.upload_status === 'processing' && !episode.video.video_url" class="mt-12 px-3 py-3 text-gray-50 mr-1 lg:mr-36 bg-black w-full text-center lg:text-left">
                         The episode video is currently processing. Please check back later.
                     </p>
 
                     <div class="flex flex-wrap mt-12 m-auto lg:mx-0 justify-center lg:justify-start space-x-3 space-y-3">
                         <div></div>
-                        <button v-if="episode.video.file_name || episode.video_url" :disabled="episode.video.upload_status === 'processing' && !episode.video_url"  class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-700 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
+                        <button v-if="episode.video.file_name || episode.video.video_url" :disabled="episode.video.upload_status === 'processing' && !episode.video.video_url"  class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-700 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
                                 @click="playEpisode">
                             <svg class="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg"
                                  viewBox="0 0 485 485">
@@ -199,8 +199,8 @@ let playEpisode = () => {
         Inertia.visit('/stream')
     } else if
     // else if url exists, play url
-        (props.episode.video_url) {
-        videoPlayerStore.loadNewSourceFromUrl(props.episode.video_url)
+        (props.episode.video.video_url) {
+        videoPlayerStore.loadNewSourceFromUrl(props.episode.video)
         videoPlayerStore.videoName = props.episode.name+' (web)'
         videoPlayerStore.currentChannelName = 'On Demand ('+props.episode.name+') from web'
         Inertia.visit('/stream')
@@ -250,12 +250,12 @@ function scrollTo(selector) {
 //     } if (props.episode.youtube_url) {
 //         videoPlayerStore.hasVideo = true;
 //     } else
-//     if (props.episode.video_url) {
+//     if (props.episode.video.video_url) {
 //         videoPlayerStore.hasVideo = true;
 //     } else
-//     if (!props.episode.video_url && props.video.upload_status === 'processing'){
+//     if (!props.episode.video.video_url && props.video.upload_status === 'processing'){
 //         videoPlayerStore.hasVideo = false;
-//     } else if (!props.video.file_name && !props.episode.video_url) {
+//     } else if (!props.video.file_name && !props.episode.video.video_url) {
 //         videoPlayerStore.hasVideo = false;
 //     } return true;
 // }

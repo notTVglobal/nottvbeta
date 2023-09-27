@@ -449,7 +449,7 @@ let form = useForm({
     description: props.episode.description,
     notes: props.episode.notes,
     show_id: props.episode.show_id,
-    video_url: props.episode.video_url,
+    video_url: props.episode.video.video_url,
     youtube_url: props.episode.youtube_url,
     video_embed_code: props.episode.video_embed_code,
     release_dateTime: '',

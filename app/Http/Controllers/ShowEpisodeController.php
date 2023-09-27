@@ -224,8 +224,9 @@ class ShowEpisodeController extends Controller
                     'folder' => $showEpisode->video->folder ?? '',
                     'cloud_folder' => $showEpisode->video->cloud_folder ?? '',
                     'upload_status' => $showEpisode->video->upload_status ?? '',
+                    'video_url' => $showEpisode->video->video_url ?? '',
+                    'type' => $showEpisode->video->type ?? '',
                 ],
-                'video_url' => $showEpisode->video_url ?? '',
                 'youtube_url' => $showEpisode->youtube_url ?? '',
                 'video_embed_code' => $showEpisode->video_embed_code,
             ],
@@ -364,7 +365,6 @@ class ShowEpisodeController extends Controller
                 'scheduled_release_dateTime' => $formattedScheduledDateTime ?? null,
                 'mist_stream_id' => $showEpisode->mist_stream_id,
                 'video_id' => $showEpisode->video_id,
-                'video_url' => $showEpisode->video_url,
                 'youtube_url' => $showEpisode->youtube_url,
                 'video_embed_code' => $showEpisode->video_embed_code,
                 'video' => [
@@ -373,6 +373,8 @@ class ShowEpisodeController extends Controller
                     'folder' => $videoForEpisode->folder ?? '',
                     'cloud_folder' => $videoForEpisode->cloud_folder ?? '',
                     'upload_status' => $videoForEpisode->upload_status ?? '',
+                    'video_url' => $showEpisode->video->video_url ?? '',
+                    'type' => $showEpisode->video->type ?? '',
                 ],
                 'image' => [
                     'id' => $showEpisode->image->id,
@@ -474,6 +476,30 @@ class ShowEpisodeController extends Controller
             'scheduled_release_dateTime' => 'nullable|date|after:now',
         ]);
 
+        if ($request->video_url) {
+
+            // Create a new Video instance
+            $video = new Video();
+
+            // Set the user_id, video_url and storage_location attributes
+            $video->user_id = Auth::user()->id;
+            $video->name = 'External video';
+            $video->file_name = 'external_video_' . Str::uuid();
+            $video->video_url = $request->video_url;
+            $video->storage_location = 'external';
+
+            // Save the video to the database
+            $video->save();
+
+            // Get the ID of the newly created Video model
+            $videoId = $video->id;
+
+            $jobName = null;
+
+            // get the video information.
+            dispatch(new ProcessVideoInfo($videoId, $jobName))->onQueue('high');
+        }
+
 
 //        $scheduledDateTime = $request->input('scheduled_release_dateTime');
 //        $releaseDateTime = $request->input('release_dateTime');
@@ -566,7 +592,7 @@ class ShowEpisodeController extends Controller
         $showEpisode->episode_number = $request->episode_number;
         $showEpisode->slug = \Str::slug($request->name);
         $showEpisode->notes = $request->notes;
-        $showEpisode->video_url = $request->video_url;
+        $showEpisode->video_id = $videoId;
         $showEpisode->youtube_url = $request->youtube_url;
         $showEpisode->video_embed_code = $request->video_embed_code;
         $showEpisode->release_dateTime = $formattedReleaseUtcDatetime ?? null;

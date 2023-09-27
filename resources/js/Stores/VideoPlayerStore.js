@@ -294,9 +294,9 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             this.videoIsYoutube = false
             useChannelStore().clearChannel()
             let videoJs = videojs('main-player')
-            this.videoSource = source
-            this.videoSourceType = "video/mp4"
-            videoJs.src({'src': this.videoSource, 'type': this.videoSourceType})
+            this.videoSource = source.video_url
+            this.videoSourceType = source.type
+            videoJs.src({'src': source.video_url, 'type': source.type})
             // this.play()
             this.unmute()
             this.paused = false

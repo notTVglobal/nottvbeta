@@ -254,8 +254,8 @@ let playEpisode = () => {
         videoPlayerStore.loadNewSourceFromFile(props.show.firstPlayVideo)
         videoPlayerStore.videoName = props.show.name+' (file)'
         Inertia.visit('/stream')
-    } else if (props.show.firstPlayVideoUrl) {
-        videoPlayerStore.loadNewSourceFromUrl(props.show.firstPlayVideoUrl)
+    } else if (props.show.firstPlayVideoFromUrl) {
+        videoPlayerStore.loadNewSourceFromUrl(props.show.firstPlayVideoFromUrl)
         videoPlayerStore.videoName = props.show.name+' (web)'
         Inertia.visit('/stream')
     }
