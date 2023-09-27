@@ -75,7 +75,7 @@
 
                     <div class="flex flex-wrap mt-12 m-auto lg:mx-0 justify-center lg:justify-start space-x-3 space-y-3">
                         <div></div>
-                        <button v-if="episode.video.file_name || episode.video.video_url" :disabled="episode.video.upload_status === 'processing' && !episode.video.video_url"  class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-700 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
+                        <button v-if="episode.video.storage_location === 'spaces' || episode.video.video_url" :disabled="episode.video.upload_status === 'processing' && !episode.video.video_url"  class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-700 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
                                 @click="playEpisode">
                             <svg class="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg"
                                  viewBox="0 0 485 485">
