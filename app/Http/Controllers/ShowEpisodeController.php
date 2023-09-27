@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\NewNotificationEvent;
 use App\Jobs\AddVideoUrlFromEmbedCodeJob;
+use App\Jobs\ProcessVideoInfo;
 use App\Models\Creator;
 use App\Models\Image;
 use App\Models\Notification;
@@ -20,8 +21,8 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Str;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use App\Rules\UniqueEpisodeName;
 use Inertia\Inertia;
@@ -77,10 +78,34 @@ class ShowEpisodeController extends Controller
             'show_id' => 'required',
             'episode_number' => 'nullable|max:10',
             'notes' => 'nullable|string',
-            'video_file_url' => 'nullable|active_url',
+            'video_url' => 'nullable|active_url',
             'youtube_url' => 'nullable|active_url',
             'video_embed_code' => 'nullable|string',
         ]);
+
+        if ($request->video_url) {
+
+            // Create a new Video instance
+            $video = new Video();
+
+            // Set the user_id, video_url and storage_location attributes
+            $video->user_id = $request->user_id;
+            $video->name = 'External video';
+            $video->file_name = 'external_video_' . Str::uuid();
+            $video->video_url = $request->video_url;
+            $video->storage_location = 'external';
+
+            // Save the video to the database
+            $video->save();
+
+            // Get the ID of the newly created Video model
+            $videoId = $video->id;
+
+            $jobName = null;
+
+            // get the video information.
+            dispatch(new ProcessVideoInfo($videoId, $jobName))->onQueue('high');
+        }
 
 
         // MOVE THIS TO A JOB... SEND THE showEpisode SLUG with it.
@@ -102,7 +127,8 @@ class ShowEpisodeController extends Controller
         $showEpisode->show_id = $request->show_id;
         $showEpisode->episode_number = $request->episode_number;
         $showEpisode->slug = \Str::slug($request->name);
-        $showEpisode->video_url = $request->url;
+//        $showEpisode->video_url = $request->url;
+        $showEpisode->video_id = $videoId;
         $showEpisode->youtube_url = $request->youtube_url;
         $showEpisode->video_embed_code = $request->video_embed_code;
         $showEpisode->notes = $request->notes;
@@ -115,7 +141,6 @@ class ShowEpisodeController extends Controller
             $show->show_status_id = 2;
             $show->save();
         }
-
 
         $showSlug = $request->show_slug;
         $showEpisodeSlug = $showEpisode->slug;

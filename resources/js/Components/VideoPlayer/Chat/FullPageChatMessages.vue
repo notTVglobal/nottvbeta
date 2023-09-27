@@ -9,12 +9,12 @@
         <div class="chatChrome w-full h-full pb-8 py-2 flex flex-col-reverse overflow-y-scroll overflow-x-clip break-words messages scrollbar-hide">
             <div id="scrollToMe"></div>
 
-            <div id="newMessages" v-for="(message, messages) in chatStore.newMessages.slice().reverse()" :key="messages">
-                <message-item :id="message.id" :message="message"/>
+            <div id="newMessages" v-for="(newMessage, index) in chatStore.newMessages.slice().reverse()" :key="index">
+                <message-item :id="newMessage.id" :message="newMessage"/>
             </div>
 
-            <div id="oldMessages" v-for="(message, messages) in chatStore.oldMessages.slice()" :key="messages">
-                <message-item :id="message.id" :message="message"/>
+            <div id="oldMessages" v-for="(oldMessage, index) in chatStore.oldMessages.slice()" :key="index">
+                <message-item :id="oldMessage.id" :message="oldMessage"/>
             </div>
 
         </div>
@@ -59,6 +59,7 @@ onUpdated(() => {
 
 onBeforeUnmount(() => {
     chatStore.newMessages = [];
+    chatStore.oldMessages = [];
     disconnect();
 });
 

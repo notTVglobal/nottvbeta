@@ -1,8 +1,16 @@
 # not.tv Changelog
 
 
-Last Update: September 25, 2023\
+Last Update: September 26, 2023\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.7.3.5e
+September 26, 2023
+* Changed video url from embed code to create a new video model and get the video info using FFprobe.
+* When creating a new show episode, if the user adds an external video url a job runs to get the video info.
+* Both of the above aren't working in development using Laravel sail. There may be a permissions issue accessing ffmpeg.
+* Fixed the chat messages time stamp problem.
+* Successfully tested mistserver playback of an external video url using ffmpeg to push the video to a mistserver stream.
 
 ## v0.7.3.5d
 September 25, 2023

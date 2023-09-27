@@ -15,7 +15,6 @@ class Video extends Model
         'extension',
         'size',
         'type',
-        'full_url',
         'poster',
         'sprite_path',
         'sprite_full_url',
@@ -25,8 +24,14 @@ class Video extends Model
         'video_status',
         'category',
         'commons_license',
-        'access_level'
-
+        'access_level',
+        'upload_status',
+        'is_processing',
+        'url',
+        'audio_codec',
+        'video_codec',
+        'audio_channels',
+        'length',
     ];
 
     protected $hidden = [

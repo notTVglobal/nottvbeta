@@ -2,6 +2,9 @@
 
 namespace App\Jobs;
 
+use App\Events\ProcessVideoInfoCompleted;
+use App\Listeners\ProcessVideoInfoListener;
+use App\Models\Video;
 use App\Events\NewNotificationEvent;
 use App\Models\Notification;
 use App\Models\ShowEpisode;
@@ -13,8 +16,11 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Log;
-use Mockery\Matcher\Not;
+use Illuminate\Support\Str;
 
 class AddVideoUrlFromEmbedCodeJob implements ShouldQueue
 {
@@ -43,6 +49,23 @@ class AddVideoUrlFromEmbedCodeJob implements ShouldQueue
      */
     public function handle()
     {
+
+        $userId = $this->showEpisode->isBeingEditedByUser_id;
+
+        // Generate a unique job name for JobA
+        $jobName = 'job_a_' . Str::uuid();
+        $jobId = $this->job->getJobId();
+        $cacheKey = 'job_data_' . $jobId;
+
+        // Store the generated job name in a shared cache
+        // Store data in the cache using the unique key
+        Cache::put($cacheKey, $jobName, now()->addMinutes(60));
+
+        // Set the coordination flag for JobA
+        DB::table('job_flags')->updateOrInsert(
+            ['job_name' => $jobName],
+            ['flag' => true]
+        );
 
         sleep(10);
 
@@ -158,14 +181,67 @@ class AddVideoUrlFromEmbedCodeJob implements ShouldQueue
             }
 
             // write firstMp4 to database.
+            // Create a new Video instance
+            $video = new Video();
+
+            // Set the user_id, video_url and storage_location attributes
+            $video->user_id = $userId;
+            $video->video_url = $url;
+            $video->storage_location = $sourceIs;
+
+            // Save the video to the database
+            $video->save();
+
+            // Get the ID of the newly created Video model
+            $videoId = $video->id;
+
+            // update the showEpisode
             $updateShowEpisode = ShowEpisode::find($this->showEpisode->id);
+
+            // TODO: the video url needs to be removed form the showEpisode,
+            // it will only be in the video model. The front end needs to be
+            // updated accordingly.
             $updateShowEpisode->video_url = $url;
+
+            $updateShowEpisode->video_id = $videoId;
             $updateShowEpisode->save();
+
+            // Initialize the message variable
+            $processVideoInfoMessage = '';
+
+            // Listen for custom events
+            Event::listen(ProcessVideoInfoListener::class, function ($event) use (&$processVideoInfoMessage) {
+
+                // Check if the event represents a success or an error
+                if ($event->type === 'success') {
+                    // Set the success message
+                    $processVideoInfoMessage = 'with updated video info in the database.';
+                } elseif ($event->type === 'error') {
+                    // Set the error message
+                    $processVideoInfoMessage = 'but was unable to update the info in the database.';
+                }
+                Log::channel('custom_error')->info('AddVideoUrlFromEmbedCodeJob Event Listener: '.$message);
+
+                // Handle success or error in the first job...
+            });
+
+            // get the video information.
+            dispatch(new ProcessVideoInfo($videoId, $jobName))->onQueue('high');
+
+            // Check the coordination flag for JobA before proceeding
+            retry(10, function () use ($jobName) {
+                return !DB::table('job_flags')->where('job_name', $jobName)->value('flag');
+            }, 2000); // Retry up to 10 times, waiting 2 second (2000 milliseconds) between retries
+
+            // Check if the data is null
+            if ($firstMp4 == []) {
+                throw new \Exception("There was an error importing the video embed code for ShowName: Episode #. Please check the embed code and try again.
+                                          if you continue to see this error please let Travis know.");
+            }
 
             // Create and save the notification
             $notification = new Notification;
-            $userId = $this->showEpisode->isBeingEditedByUser_id;
-//            $userId = 1;
+
             $notification->user_id = $userId;
 
             // make the image the show_episode_poster
@@ -174,7 +250,7 @@ class AddVideoUrlFromEmbedCodeJob implements ShouldQueue
 //            $notification->title = $this->showEpisode->name;
             $notification->url = '/shows/'.$this->showEpisode->show->slug.'/episode/'.$this->showEpisode->slug;
             $notification->title = $this->showEpisode->show->name.': ' . $this->showEpisode->name;
-            $notification->message = 'The video is now ready.';
+            $notification->message = 'The video is now ready ' . $processVideoInfoMessage;
             $notification->save();
 
             // Trigger the event to broadcast the new notification
