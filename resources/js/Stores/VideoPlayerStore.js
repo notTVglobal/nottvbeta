@@ -296,6 +296,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             let videoJs = videojs('main-player')
             this.videoSource = source.video_url
             this.videoSourceType = source.type
+            console.log(source)
             videoJs.src({'src': source.video_url, 'type': source.type})
             // this.play()
             this.unmute()
