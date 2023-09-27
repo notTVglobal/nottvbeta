@@ -358,6 +358,7 @@ class ShowsController extends Controller
                     'folder' => $latestEpisodeWithVideo->video->folder ?? '',
                     'cloud_folder' => $latestEpisodeWithVideo->video->cloud_folder ?? '',
                     'upload_status' => $latestEpisodeWithVideo->video->upload_status ?? '',
+                    'storage_location' => $showEpisode->video->storage_location ?? '',
                 ],
                 'firstPlayVideoFromUrl' => [
                     'video_url' => $latestEpisodeWithVideoUrl->video->video_url ?? '',

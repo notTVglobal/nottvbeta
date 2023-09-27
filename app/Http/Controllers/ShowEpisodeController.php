@@ -375,6 +375,7 @@ class ShowEpisodeController extends Controller
                     'upload_status' => $videoForEpisode->upload_status ?? '',
                     'video_url' => $showEpisode->video->video_url ?? '',
                     'type' => $showEpisode->video->type ?? '',
+                    'storage_location' => $showEpisode->video->storage_location ?? '',
                 ],
                 'image' => [
                     'id' => $showEpisode->image->id,

@@ -192,7 +192,7 @@ let userStore = useUserStore()
 
 let playEpisode = () => {
     // if video has a file and is !processing, play file.
-    if (props.episode.video.file_name !== '' && props.episode.video.upload_status !== 'processing') {
+    if (props.episode.video.storage_location === 'spaces' && props.episode.video.upload_status !== 'processing') {
         videoPlayerStore.loadNewSourceFromFile(props.episode.video)
         videoPlayerStore.videoName = props.episode.name+' (file)'
         videoPlayerStore.currentChannelName = 'On Demand ('+props.episode.name+') from file'

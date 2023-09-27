@@ -249,7 +249,7 @@ let props = defineProps({
 
 let playEpisode = () => {
 
-    if (props.show.firstPlayVideo.file_name && props.show.firstPlayVideo.upload_status !== 'processing') {
+    if (props.show.firstPlayVideo.storage_location === 'spaces' && props.show.firstPlayVideo.upload_status !== 'processing') {
         // play video if !processing
         videoPlayerStore.loadNewSourceFromFile(props.show.firstPlayVideo)
         videoPlayerStore.videoName = props.show.name+' (file)'
