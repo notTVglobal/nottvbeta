@@ -115,8 +115,9 @@ class DashboardController extends Controller
 //                    ]
 //                ]),
             'myTotalStorageUsed' => formatBytes(Video::where('user_id', auth()->user()->id)
+                ->where('storage_location', '=', 'spaces')
                 ->sum('size')),
-            'notTvTotalStorageUsed' => formatBytes(Video::all()
+            'notTvTotalStorageUsed' => formatBytes(Video::where('storage_location', '=', 'spaces')
                 ->sum('size')),
             'showCount' => $showCount,
             'userCount' => $userCount,

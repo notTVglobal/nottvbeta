@@ -68,8 +68,9 @@ class VideoUploadController extends Controller
         return Inertia::render('VideoUpload', [
 //            'videos' => fn () => Video::query()->where('user_id', auth()->user()->id)
             'myTotalStorageUsed' => formatBytes(Video::where('user_id', auth()->user()->id)
+                ->where('storage_location', '=', 'spaces')
                 ->sum('size')),
-            'notTvTotalStorageUsed' => formatBytes(Video::all()
+            'notTvTotalStorageUsed' => formatBytes(Video::where('storage_location', '=', 'spaces')
                 ->sum('size')),
             'videos' => Video::with('showEpisode', 'movie', 'movieTrailer', 'newsPost' )->where('user_id', auth()->user()->id)
                 ->latest()
