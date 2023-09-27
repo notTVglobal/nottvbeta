@@ -76,10 +76,26 @@ class ProcessVideoInfo implements ShouldQueue
 
             $ffProbe = FFProbe::create();
             $videoInfo = $ffProbe->format($video->video_url);
-            $videoType = $videoInfo->get('format_name');
+//            $videoType = $videoInfo->get('format_name');
             $videoSize = $videoInfo->get('size');
-            // Update the database with the extracted information
 
+            sleep(2);
+
+            // Get the headers of the remote file
+            $headers = get_headers($video->video_url, 1);
+
+            // Extract the "Content-Type" header, which contains the MIME type
+            $videoMimeType = $headers['Content-Type'] ?? null;
+
+            if ($videoMimeType === null) {
+                // Handle the case where the MIME type couldn't be determined
+                $videoType = null;
+            } else {
+                // $videoMimeType now contains the MIME type, e.g., "video/mp4"
+                $videoType = $videoMimeType;
+            }
+
+            // Update the database with the extracted information
             // Check if the video model exists
             if ($video) {
                 // Update the attributes of the Video model
