@@ -16,7 +16,7 @@
 </template>
 
 <script setup>
-import {onBeforeMount, onBeforeUnmount, onUpdated, ref} from "vue";
+import {onBeforeMount, onBeforeUnmount, onMounted, onUpdated, ref} from "vue";
 
 import MessageItem from "@/Components/VideoPlayer/Chat/ChatMessage.vue"
 import {useChatStore} from "@/Stores/ChatStore";
@@ -43,6 +43,10 @@ channel.subscribed(() => {
 onBeforeMount(async() => {
     await connect();
 });
+
+onMounted(() => {
+
+})
 
 onUpdated(() => {
     scrollTo('#scrollToMe')

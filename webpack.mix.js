@@ -1,5 +1,6 @@
 const mix = require('laravel-mix');
 // require('dotenv').config();
+// const Dotenv = require('dotenv-webpack');
 
 /*
  |--------------------------------------------------------------------------
@@ -37,6 +38,14 @@ mix.js('resources/js/app.js', 'public/js')
         '@': 'resources/js',
         ziggy: "vendor/tightenco/ziggy/dist/vue",
     })
+    // .webpackConfig({
+    //     stats: {
+    //         children: true,
+    //     },
+    //     plugins: [
+    //         new Dotenv()
+    //     ]
+    // })
     // .browserSync({
     //     proxy: 'beta.local:8081'
     // });
