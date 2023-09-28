@@ -4,6 +4,10 @@
 Last Update: September 27, 2023\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.7.3.6b
+September 27, 2023
+* Brought back Show Episode Manage page.
+
 ## v0.7.3.6
 September 27, 2023
 * Added new video player controls

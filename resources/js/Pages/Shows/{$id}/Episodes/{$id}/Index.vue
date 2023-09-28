@@ -10,6 +10,14 @@
 
             <div v-if="props.can.editShow || props.can.manageShow" class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4 py-5">
                 <Link
+                    v-if="props.can.manageShow"
+                    :href="`/shows/${props.show.slug}/episode/${props.episode.slug}/manage`">
+                    <button
+                        class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
+                    >Manage Episode
+                    </button>
+                </Link>
+                <Link
                     v-if="props.can.editShow"
                     :href="`/shows/${props.show.slug}/episode/${props.episode.slug}/edit`">
                     <button
