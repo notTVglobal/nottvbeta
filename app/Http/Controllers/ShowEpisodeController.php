@@ -30,6 +30,9 @@ use Inertia\Inertia;
 class ShowEpisodeController extends Controller
 {
 
+    private string $formattedScheduledDateTime;
+    private string $formattedReleaseDateTime;
+    private int $videoId;
 
     public function __construct()
     {
@@ -40,6 +43,10 @@ class ShowEpisodeController extends Controller
 //        $this->middleware('can:createEpisode,show')->only(['createEpisode']);
 //        $this->middleware('can:viewEpisodeManagePage,show')->only(['manageEpisode']);
           $this->middleware('can:editEpisode,show')->only(['editEpisode']);
+
+          $this->formattedReleaseDateTime = null;
+          $this->formattedScheduledDateTime = null;
+          $this->videoId = 0;
 
     }
 
@@ -99,12 +106,12 @@ class ShowEpisodeController extends Controller
             $video->save();
 
             // Get the ID of the newly created Video model
-            $videoId = $video->id;
+            $this->videoId = $video->id;
 
             $jobName = null;
 
             // get the video information.
-            dispatch(new ProcessVideoInfo($videoId, $jobName))->onQueue('high');
+            dispatch(new ProcessVideoInfo($this->videoId, $jobName))->onQueue('high');
         }
 
 
@@ -128,7 +135,7 @@ class ShowEpisodeController extends Controller
         $showEpisode->episode_number = $request->episode_number;
         $showEpisode->slug = \Str::slug($request->name);
 //        $showEpisode->video_url = $request->url;
-        $showEpisode->video_id = $videoId;
+        $showEpisode->video_id = $this->videoId;
         $showEpisode->youtube_url = $request->youtube_url;
         $showEpisode->video_embed_code = $request->video_embed_code;
         $showEpisode->notes = $request->notes;
@@ -187,6 +194,16 @@ class ShowEpisodeController extends Controller
         $teamId = $show->team_id;
 //        $video = Video::where('show_episodes_id', $showEpisode->id)->first();
 
+        // convert release dateTime to user's timezone
+        if ($showEpisode->release_dateTime) {
+            $this->formattedReleaseDateTime = $this->convertTimeToUserTime($showEpisode->release_dateTime);
+        }
+
+        // convert scheduled_release dateTime to user's timezone
+        if ($showEpisode->scheduled_release_dateTime) {
+            $this->formattedScheduledDateTime = $this->convertTimeToUserTime($showEpisode->scheduled_release_dateTime);
+        }
+
         return Inertia::render('Shows/{$id}/Episodes/{$id}/Index', [
             'show' => [
                 'name' => $show->name,
@@ -216,7 +233,8 @@ class ShowEpisodeController extends Controller
                 'episode_number' => $showEpisode->episode_number,
                 'created_at' => $showEpisode->created_at,
                 'release_year' => $showEpisode->release_year,
-                'release_dateTime' => $showEpisode->release_dateTime,
+                'release_dateTime' => $this->formattedReleaseDateTime,
+                'scheduled_release_dateTime' => $this->formattedScheduledDateTime,
                 'mist_stream_id' => $showEpisode->mist_stream_id,
                 'video' => [
                     'file_name' => $showEpisode->video->file_name ?? '',
@@ -297,40 +315,15 @@ class ShowEpisodeController extends Controller
 
         $videoForEpisode = Video::where('show_episodes_id', $showEpisode->id)->first();
 
-        // convert scheduled_release and release dateTime to user's timezone
-
-        // Get the user's timezone
-        $user = Auth::user();
-        $userTimezone = $user->timezone;
-
-        // release dateTime
+        // convert release dateTime to user's timezone
         if ($showEpisode->release_dateTime) {
-            $releaseDateTimeString = $showEpisode->release_dateTime;
-
-            // Create a Carbon instance from the datetime string
-            $releaseDateTime = Carbon::parse($releaseDateTimeString, 'UTC');
-
-            // Convert to the user's timezone
-            $releaseDateTime->setTimezone($userTimezone);
-
-            $formattedReleaseDateTime = $releaseDateTime->format('Y-m-d H:i:s');
+            $this->formattedReleaseDateTime = $this->convertTimeToUserTime($showEpisode->release_dateTime);
         }
-
-        // scheduled_release dateTime
-        if ($showEpisode->scheduled_release_dateTime) {
-            $scheduledDateTimeString = $showEpisode->scheduled_release_dateTime;
-
-            // Create a Carbon instance from the datetime string
-            $scheduledDateTime = Carbon::parse($scheduledDateTimeString, 'UTC');
-
-            // Convert to the user's timezone
-            $scheduledDateTime->setTimezone($userTimezone);
-
-            $formattedScheduledDateTime = $scheduledDateTime->format('Y-m-d H:i:s');
-        }
-
 
         // convert scheduled_release dateTime to user's timezone
+        if ($showEpisode->scheduled_release_dateTime) {
+            $this->formattedScheduledDateTime = $this->convertTimeToUserTime($showEpisode->scheduled_release_dateTime);
+        }
 
         return Inertia::render('Shows/{$id}/Episodes/{$id}/Edit', [
             'show' => [
@@ -362,8 +355,8 @@ class ShowEpisodeController extends Controller
                 'episode_number' => $showEpisode->episode_number,
                 'status' => $showEpisode->showEpisodeStatus,
                 'release_year' => $showEpisode->release_year ?? null,
-                'release_dateTime' => $formattedReleaseDateTime ?? null,
-                'scheduled_release_dateTime' => $formattedScheduledDateTime ?? null,
+                'release_dateTime' => $this->formattedReleaseDateTime ?? null,
+                'scheduled_release_dateTime' => $this->formattedScheduledDateTime ?? null,
                 'mist_stream_id' => $showEpisode->mist_stream_id,
                 'video_id' => $showEpisode->video_id,
                 'youtube_url' => $showEpisode->youtube_url,
@@ -494,12 +487,12 @@ class ShowEpisodeController extends Controller
             $video->save();
 
             // Get the ID of the newly created Video model
-            $videoId = $video->id;
+            $this->videoId = $video->id;
 
             $jobName = null;
 
             // get the video information.
-            dispatch(new ProcessVideoInfo($videoId, $jobName))->onQueue('high');
+            dispatch(new ProcessVideoInfo($this->videoId, $jobName))->onQueue('high');
         }
 
 
@@ -545,11 +538,8 @@ class ShowEpisodeController extends Controller
             // Get the year from the Carbon instance
             $releaseYear = $releaseDateTime->year;
 
-            // Convert to UTC
-            $utcReleaseDatetime = $releaseDateTime->utc();
-
             // Format $utcDatetime as a string in ISO 8601 format:
-            $formattedReleaseUtcDatetime = $utcReleaseDatetime->toIso8601String();
+            $formattedReleaseUtcDatetime = $this->convertTimeToUserTime($request->release_dateTime);
 
         }
 
@@ -558,14 +548,8 @@ class ShowEpisodeController extends Controller
             $showEpisode->show_episode_status_id = 6;
             $releaseYear = null;
 
-            // Create a Carbon instance from the DateTime string
-            $scheduledDateTime = Carbon::parse($request->scheduled_release_dateTime);
+            $formattedScheduledUtcDatetime = $this->convertTimeToUserTime($request->scheduled_release_dateTime);
 
-            // Convert to UTC
-            $utcScheduledDatetime = $scheduledDateTime->utc();
-
-            // Format $utcDatetime as a string in ISO 8601 format:
-            $formattedScheduledUtcDatetime = $utcScheduledDatetime->toIso8601String();
         }
 
         if ($showEpisode->scheduled_release_dateTime && $request->scheduled_release_dateTime === null) {
@@ -594,7 +578,7 @@ class ShowEpisodeController extends Controller
         $showEpisode->episode_number = $request->episode_number;
         $showEpisode->slug = \Str::slug($request->name);
         $showEpisode->notes = $request->notes;
-        $showEpisode->video_id = $videoId;
+        $showEpisode->video_id = $this->videoId;
         $showEpisode->youtube_url = $request->youtube_url;
         $showEpisode->video_embed_code = $request->video_embed_code;
         $showEpisode->release_dateTime = $formattedReleaseUtcDatetime ?? null;
@@ -828,6 +812,23 @@ class ShowEpisodeController extends Controller
             // Handle the case where the image retrieval was not successful
             return response()->json(['message' => 'Failed to fetch the image'], 500);
         }
+    }
+
+    public function convertTimeToUserTime($dateTime): string
+    {
+        // Get the user's timezone
+        $user = Auth::user();
+        $userTimezone = $user->timezone;
+
+        // Create a Carbon instance from the DateTime string
+        $dateTime = Carbon::parse($dateTime);
+
+        // Convert to UTC
+        $convertedDatetime = $dateTime->utc();
+
+        // Format $utcDatetime as a string in ISO 8601 format:
+        return $convertedDatetime->toIso8601String();
+
     }
 
 }

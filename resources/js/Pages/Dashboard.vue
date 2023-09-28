@@ -86,13 +86,11 @@
                         :key="team.id"
                         class="border-b bg-white hover:bg-blue-300 dark:bg-gray-600 dark:border-gray-700 dark:hover:bg-blue-800 inset-x-0 bottom-0"
                     >
-                        <Link
-                            @click="videoPlayer.makeVideoTopRight()"
-                            :href="`/teams/${team.slug}/manage`"
-
+                        <button
+                            @click="visitTeamManagePage(team.slug)"
                             class="text-blue-800 hover:text-blue-900 dark:text-blue-100 dark:hover:text-white"><p class="px-2 py-1">
                             {{ team.name }}
-                        </p></Link>
+                        </p></button>
                     </div>
                     <div class="w-full text-center mb-12">
                         <Popper
@@ -371,7 +369,7 @@
 </template>
 
 <script setup>
-import {computed, onBeforeMount, onMounted, ref} from "vue";
+import {computed, inject, onBeforeMount, onMounted, ref} from "vue";
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useUserStore } from "@/Stores/UserStore";
 import Pagination from "@/Components/Pagination"
@@ -381,26 +379,29 @@ import {Inertia} from "@inertiajs/inertia";
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 
+const getUserData = inject('getUserData', null)
+
 videoPlayerStore.loggedIn = true
 userStore.currentPage = 'dashboard'
 userStore.showFlashMessage = true;
 
 onBeforeMount( () => {
-    if (!userStore.getUserDataCompleted) {
-        getUserTimezone()
-        updateUserStore()
-    }
+
 })
 
 onMounted(() => {
+    if (!getUserData) {
+        getUserTimezone()
+        updateUserStore()
+    }
     videoPlayerStore.makeVideoTopRight();
     if (userStore.isMobile) {
         videoPlayerStore.ottClass = 'ottClose'
         videoPlayerStore.ott = 0
     }
     document.getElementById("topDiv").scrollIntoView()
+    Inertia.reload()
 });
-
 
 
 // isCreator, isNewsPerson, isVip, isSubscriber
@@ -461,6 +462,11 @@ const myTotalStorageRoundedPercentage = computed(() => {
 
 function createShowWithNoTeamButton() {
     document.getElementById('dashboardNoTeams').showModal()
+}
+
+function visitTeamManagePage(team) {
+    videoPlayerStore.makeVideoTopRight()
+    Inertia.visit(`/teams/${team}/manage`)
 }
 
 async function updateUserStore() {

@@ -140,6 +140,7 @@
                 </JetResponsiveNavLink>
 
                 <JetResponsiveNavLink
+                    v-if="userStore.isSubscriber || userStore.isVip || userStore.isAdmin"
                     @click="userStore.closeNavDropdown()"
                     :href="route('news')"
                     :active="userStore.currentPage === 'news'">

@@ -1,8 +1,16 @@
 # not.tv Changelog
 
 
-Last Update: September 26, 2023\
+Last Update: September 27, 2023\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.7.3.6
+September 27, 2023
+* Added new video player controls
+* New popup modal as placeholder for video next and previous buttons
+* Updated Schedule mockup page
+* Moved pages and features that aren't ready to VIP only views
+* Modified the notification icon styling slightly
 
 ## v0.7.3.5e
 September 26, 2023

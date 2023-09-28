@@ -10,6 +10,9 @@ use Inertia\Inertia;
 
 class ChannelController extends Controller
 {
+
+    // TODO: Setup the CRUD pages in Vue
+
     /**
      * Display a listing of the resource.
      *

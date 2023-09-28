@@ -23,6 +23,7 @@ import { onMounted } from "vue"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useUserStore } from "@/Stores/UserStore"
 import { useShopStore } from "@/Stores/ShopStore"
+import {Inertia} from "@inertiajs/inertia";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -46,6 +47,8 @@ onMounted(async() => {
     if(props.userIsSubscriber) {
         userStore.isSubscriber = true
     }
+
+    Inertia.reload()
 
 });
 

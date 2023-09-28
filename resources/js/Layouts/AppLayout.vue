@@ -78,7 +78,7 @@ setPage()
 
 onBeforeMount( () => {
     getUserTimezone()
-    if(props.user) {
+    if(props.user && !userStore.getUserDataCompleted) {
         updateUserStore()
         provide(/* key */ 'getUserData', /* value */ true)
     } else

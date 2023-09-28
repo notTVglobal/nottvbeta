@@ -1,9 +1,9 @@
 <template>
-    <Head title="Live Schedule" />
+    <Head title="Schedule" />
 
     <div class="place-self-center flex flex-col gap-y-3 w-full overscroll-x-none pb-8">
         <div id="topDiv" class="flex justify-end px-5">
-            <div class="text-3xl font-semibold pt-4">Live Schedule</div>
+            <div class="text-3xl font-semibold pt-4">Schedule</div>
         </div>
         <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
         <div class="mx-6">
@@ -22,10 +22,8 @@
 
         </ul>
 
-        <div class="ml-5 mb-5 p-2">
-            <span class="text-sm uppercase text-purple-500">All times listed in your timezone.</span><br>
-                <span>If you use a VPN you can set your preferred timezone in the settings menu <span class="text-orange-500">(coming soon).</span></span><br>
-            <span class="text-white">All scheduled shows will stream on the <span class="font-semibold">Live Channel</span> <span class="text-orange-500">(coming soon).</span></span>
+        <div class="ml-5 px-2">
+            <span class="text-sm uppercase text-purple-500">All times are listed in your timezone.</span>
         </div>
 
         <table class="table-fixed mx-5">
@@ -45,7 +43,7 @@
             </thead>
             <tbody>
                 <tr class="border-b border-0.5 border-white">
-                    <td class="p-2 bg-gray-900">PACIFIC</td>
+                    <td class="p-2 bg-gray-900 text-center">LIVE</td>
                     <td class="p-2 bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
                         <div class="flex flex-col">
                         <span>Scheduled Show</span>
@@ -89,7 +87,7 @@
 
                 </tr>
                 <tr class="border-b border-0.5 border-white">
-                    <td class="p-2 bg-gray-900">WEST</td>
+                    <td class="p-2 bg-gray-900 text-center">AMBIENT</td>
                     <td class="p-2 bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
                         <div class="flex flex-col">
                         <span>Scheduled Show</span>
@@ -133,7 +131,7 @@
 
                 </tr>
                 <tr class="border-b border-0.5 border-white">
-                    <td class="p-2 bg-gray-900">CENTRAL</td>
+                    <td class="p-2 bg-gray-900 text-center">TALK</td>
                     <td class="p-2 bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
                         <div class="flex flex-col">
                             <span>Scheduled Show</span>
@@ -172,7 +170,7 @@
 
                 </tr>
                 <tr class="border-b border-0.5 border-white">
-                    <td class="p-2 bg-gray-900">ONTARIO</td>
+                    <td class="p-2 bg-gray-900 text-center">DOCUMENTARY</td>
                     <td class="p-2 bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
                         <div class="flex flex-col">
                             <span>Scheduled Show</span>
@@ -216,7 +214,7 @@
 
                 </tr>
                 <tr class="border-b border-0.5 border-white">
-                    <td class="p-2 bg-gray-900">EAST</td>
+                    <td class="p-2 bg-gray-900 text-center">ANIMATED</td>
                     <td class="p-2 bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
                         <div class="flex flex-col">
                             <span>Scheduled Show</span>
@@ -259,94 +257,7 @@
                     </td>
 
                 </tr>
-                <tr class="border-b border-0.5 border-white">
-                    <td class="p-2 bg-gray-900">U.S.A.</td>
-                    <td class="p-2 bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                            <span>Scheduled Show</span>
-                        </div>
-                    </td>
-                    <td class="p-2 bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                            <span>Scheduled Show</span>
-                        </div>
-                    </td>
-                    <td class="p-2 bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                            <span>Scheduled Show</span>
-                        </div>
-                    </td>
-                    <td class="p-2 hidden lg:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                            <span>Scheduled Show</span>
-                        </div>
-                    </td>
-                    <td class="p-2 hidden xl:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                            <span>Scheduled Show</span>
-                        </div>
-                    </td>
-                    <td class="p-2 hidden xl:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                            <span>Scheduled Show</span>
-                        </div>
-                    </td>
-                    <td class="p-2 hidden 2xl:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                            <span>Scheduled Show</span>
-                        </div>
-                    </td>
-                    <td class="p-2 hidden 2xl:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                            <span>Scheduled Show</span>
-                        </div>
-                    </td>
 
-                </tr>
-                <tr class="border-b border-0.5 border-white">
-                    <td class="p-2 bg-gray-900">WORLD</td>
-                    <td class="p-2 bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                            <span>Scheduled Show</span>
-                        </div>
-                    </td>
-                    <td class="p-2 bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                            <span>Scheduled Show</span>
-                        </div>
-                    </td>
-                    <td class="p-2 bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                            <span>Scheduled Show</span>
-                        </div>
-                    </td>
-                    <td class="p-2 hidden lg:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                            <span>Scheduled Show</span>
-                        </div>
-                    </td>
-                    <td class="p-2 hidden xl:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                            <span>Scheduled Show</span>
-                        </div>
-                    </td>
-                    <td class="p-2 hidden xl:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                            <span>Scheduled Show</span>
-                        </div>
-                    </td>
-                    <td class="p-2 hidden 2xl:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                            <span>Scheduled Show</span>
-                        </div>
-                    </td>
-                    <td class="p-2 hidden 2xl:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                            <span>Scheduled Show</span>
-                        </div>
-                    </td>
-
-                </tr>
 
             </tbody>
 

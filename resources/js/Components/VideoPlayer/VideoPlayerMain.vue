@@ -25,7 +25,7 @@
 
                 <!-- Video Player Controls-->
                 <VideoControlsTopRight
-                    v-if="videoPlayerStore.controls"
+                    v-show="videoPlayerStore.controls"
                     class="hidden lg:block"
                     @mouseenter="mouseEnter"
                     @mouseleave="mouseLeave" />

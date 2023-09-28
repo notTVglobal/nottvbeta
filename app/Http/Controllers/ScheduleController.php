@@ -12,10 +12,12 @@ class ScheduleController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Inertia\Response
      */
     public function index()
     {
+        // TODO: return first 5 channels to !subscribers
+
         return Inertia::render('Schedule', [
             'schedule' => Schedule::query()
                 ->when(\Illuminate\Support\Facades\Request::input('search'), function ($query, $search) {

@@ -13,7 +13,7 @@
                     type="submit"
                     class="h-fit bg-blue-600 hover:bg-blue-500 text-white rounded py-2 px-4"
                     :disabled="form.processing"
-                    @click="$emit('submit')"
+                    @click="emitSubmit"
                 >
                     Save
                 </button>
@@ -44,6 +44,13 @@ defineProps({
     team: Object,
     form: Object,
 })
+
+const emits = defineEmits(['submit']);
+
+// Emit the "submit" event when the button is clicked.
+const emitSubmit = () => {
+    emits('submit');
+};
 
 function back() {
     window.history.back()

@@ -3,11 +3,13 @@
 
         <div class="ottButtonsContainer" id="ottButtons">
             <button
+                v-if="userStore.isSubscriber || userStore.isVip || userStore.isAdmin"
                 @click="back"
                 class="ottButton bg-gray-400 text-white hover:bg-gray-600 hover:text-gray-300">
                 <font-awesome-icon icon="fa-angle-left" class="ml-2 text-3xl mb-1"/><div>BACK</div>
             </button>
             <button
+                    v-if="userStore.isVip || userStore.isAdmin"
                     @click="openChannels"
                     class="ottButton bg-green-400 text-white hover:bg-green-600 hover:text-green-300">
                 <font-awesome-icon icon="fa-rocket" class="ml-3.5 text-3xl mb-1"/><div>CHANNELS</div>

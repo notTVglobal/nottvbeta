@@ -45,6 +45,7 @@ onMounted( () => {
     // let videoPlayer = videojs('main-player')
     videoPlayer.ready(function() {
         videoPlayer.muted(true)
+        videoPlayerStore.muted = true
         videoPlayer.play();
     });
 })

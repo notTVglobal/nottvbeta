@@ -184,6 +184,21 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
         },
 
         // video controls
+        toggleMute() {
+            let videoJs = videojs('main-player')
+            this.muted = !this.muted
+            videoJs.muted(this.muted);
+        },
+        togglePlay() {
+            let videoJs = videojs('main-player')
+            this.paused = !this.paused
+            if (videoJs.paused()) {
+                videoJs.play()
+                this.paused = false
+            } else
+                videoJs.pause()
+                this.paused = true
+        },
         unmute() {
             let videoJs = videojs('main-player')
             videoJs.muted(false)
