@@ -22,17 +22,18 @@
 <!--            </div>-->
 
 <!--            <header>-->
-<!--                <div class="flex justify-between mb-3">-->
-<!--                    <div class="gap-2">-->
-<!--                        <div class="font-bold mb-4 text-orange-400">MANAGE EPISODE</div>-->
-<!--                        <div>-->
-<!--                            <EpisodeHeader-->
-<!--                                :episode="props.episode"-->
-<!--                                :show="props.show"-->
-<!--                                :team="props.team"-->
-<!--                            />-->
-<!--                        </div>-->
-<!--                    </div>-->
+                <div class="flex justify-between mb-3">
+                    <div class="gap-2">
+                        <div class="font-bold mb-4 text-orange-400">MANAGE EPISODE</div>
+                        <div>
+                            <EpisodeHeader
+                                :episode="props.episode"
+                                :show="props.show"
+                                :team="props.team"
+                            />
+                        </div>
+                    </div>
+                </div>
 
 
 <!--                    <div>-->
@@ -203,7 +204,7 @@ onMounted(async () => {
 });
 
 let props = defineProps({
-    // show: Object,
+    show: Object,
     team: Object,
     episode: Object,
     can: Object,
