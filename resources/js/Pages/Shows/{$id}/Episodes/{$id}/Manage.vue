@@ -2,12 +2,14 @@
 
     <Head :title="`Manage Episode: ${props.episode.name}`"/>
 
-    <div class="bg-black text-red-600 font-bold text-xl p-4 my-4 w-full text-center">
-        This page will be re-imagined.
-    </div>
 
-    <div class="place-self-center flex flex-col gap-y-3">
-        <div id="topDiv" class="bg-dark rounded text-light p-5">
+
+    <div id="topDiv" class="place-self-center flex flex-col gap-y-3">
+        <div class="bg-white rounded text-black p-5">
+
+            <div class="bg-black text-red-600 font-bold text-xl p-4 my-4 w-full text-center">
+                This page will be re-imagined.
+            </div>
 
             <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
@@ -21,106 +23,109 @@
 <!--                                </span>-->
 <!--            </div>-->
 
-<!--            <header>-->
+            <header>
                 <div class="flex justify-between mb-3">
                     <div class="gap-2">
                         <div class="font-bold mb-4 text-orange-400">MANAGE EPISODE</div>
+                    </div>
+                    <div class="flex flex-wrap-reverse justify-end gap-2">
+
+                        <div class="">
+                            <Link
+                                :href="`/shows/${show.slug}/episode/${episode.slug}/upload`"
+                                v-if="!episode.video_file_url">
+                                <button
+                                    :disabled="teamStore.goLiveDisplay"
+                                    class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg disabled:bg-gray-400"
+                                >Upload
+                                </button>
+                            </Link>
+                        </div>
+
+                        <div class="" v-if="teamStore.can.goLive && !episode.video_file_url">
+                            <button
+                                v-if="!teamStore.goLiveDisplay"
+                                @click="teamStore.toggleGoLiveDisplay()"
+                                class="px-4 py-2 text-white bg-red-600 hover:bg-red-500 rounded-lg disabled:bg-gray-400"
+                            >Go Live
+                            </button>
+                            <button
+                                v-if="teamStore.goLiveDisplay"
+                                @click="teamStore.toggleGoLiveDisplay()"
+                                class="px-4 py-2 text-white bg-red-600 hover:bg-red-500 rounded-lg disabled:bg-gray-400"
+                            >Cancel
+                            </button>
+                        </div>
+                        <div class="">
+                            <Link
+                                :href="`/shows/${show.slug}/episode/${episode.slug}/edit`"
+
+                                v-if="teamStore.can.editEpisode">
+                                <button
+                                    :disabled="teamStore.goLiveDisplay"
+                                    class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg disabled:bg-gray-400"
+                                >Edit
+                                </button>
+                            </Link>
+                        </div>
                         <div>
-                            <EpisodeHeader
-                                :episode="props.episode"
-                                :show="props.show"
-                                :team="props.team"
-                            />
+                            <Link :href="`/dashboard`">
+                                <button
+                                    :disabled="teamStore.goLiveDisplay"
+                                    class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg disabled:bg-gray-400"
+                                >Dashboard
+                                </button>
+                            </Link>
                         </div>
                     </div>
+
                 </div>
 
 
-<!--                    <div>-->
-<!--                        <div class="flex flex-wrap-reverse justify-end gap-2">-->
-
-<!--                            <div class="">-->
-<!--                                <Link-->
-<!--                                    :href="`/shows/${show.slug}/episode/${episode.slug}/upload`"-->
-<!--                                    v-if="!episode.video_file_url">-->
-<!--                                    <button-->
-<!--                                        :disabled="teamStore.goLiveDisplay"-->
-<!--                                        class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg disabled:bg-gray-400"-->
-<!--                                    >Upload-->
-<!--                                    </button>-->
-<!--                                </Link>-->
-<!--                            </div>-->
-
-<!--                            <div class="" v-if="teamStore.can.goLive && !episode.video_file_url">-->
-<!--                                <button-->
-<!--                                    v-if="!teamStore.goLiveDisplay"-->
-<!--                                    @click="teamStore.toggleGoLiveDisplay()"-->
-<!--                                    class="px-4 py-2 text-white bg-red-600 hover:bg-red-500 rounded-lg disabled:bg-gray-400"-->
-<!--                                >Go Live-->
-<!--                                </button>-->
-<!--                                <button-->
-<!--                                    v-if="teamStore.goLiveDisplay"-->
-<!--                                    @click="teamStore.toggleGoLiveDisplay()"-->
-<!--                                    class="px-4 py-2 text-white bg-red-600 hover:bg-red-500 rounded-lg disabled:bg-gray-400"-->
-<!--                                >Cancel-->
-<!--                                </button>-->
-<!--                            </div>-->
-<!--                            <div class="">-->
-<!--                                <Link-->
-<!--                                    :href="`/shows/${show.slug}/episode/${episode.slug}/edit`"-->
-
-<!--                                    v-if="teamStore.can.editEpisode">-->
-<!--                                    <button-->
-<!--                                        :disabled="teamStore.goLiveDisplay"-->
-<!--                                        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg disabled:bg-gray-400"-->
-<!--                                    >Edit-->
-<!--                                    </button>-->
-<!--                                </Link>-->
-<!--                            </div>-->
-<!--                            <div>-->
-<!--                                <Link :href="`/dashboard`">-->
-<!--                                    <button-->
-<!--                                        :disabled="teamStore.goLiveDisplay"-->
-<!--                                        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg disabled:bg-gray-400"-->
-<!--                                    >Dashboard-->
-<!--                                    </button>-->
-<!--                                </Link>-->
-<!--                            </div>-->
-<!--                        </div>-->
 
 
-<!--                        <div class="flex justify-end mt-6">-->
-<!--                            <div class="flex flex-col">-->
-<!--                                <div><span class="text-xs capitalize font-semibold">Show: </span>-->
-<!--                                    <Link :href="`/shows/${show.slug}/manage`" class="text-blue-500 ml-2 uppercase"> {{-->
-<!--                                            show.name-->
-<!--                                        }}-->
-<!--                                    </Link>-->
-<!--                                </div>-->
-<!--                                <div><span class="text-xs capitalize font-semibold mr-2">Show Runner: </span> {{-->
-<!--                                        show.showRunner-->
-<!--                                    }}-->
-<!--                                </div>-->
-<!--                                <div><span class="text-xs capitalize font-semibold mr-2">Episode Number: </span>-->
-<!--                                    <span v-if="episode.episode_number">{{ episode.episode_number }}</span>-->
-<!--                                    <span v-if="!episode.episode_number">{{ episode.id }}</span>-->
-<!--                                </div>-->
-<!--                                <div><span class="text-xs capitalize font-semibold mr-2">-->
-<!--                                    {{ formatDate(props.episode.created_at) }}-->
-<!--                                </span></div>-->
+                <div class="flex justify-between flex-wrap">
+                    <div>
+                        <EpisodeHeader
+                            :episode="props.episode"
+                            :show="props.show"
+                            :team="props.team"
+                        />
+                    </div>
 
-<!--                            </div>-->
-<!--                        </div>-->
+                    <div class="flex justify-end mt-6">
+                        <div class="flex flex-col">
+                            <div><span class="text-xs capitalize font-semibold">Show: </span>
+                                <Link :href="`/shows/${props.show.slug}/manage`" class="text-blue-500 ml-2 uppercase"> {{
+                                        props.show.name
+                                    }}
+                                </Link>
+                            </div>
+                            <div><span class="text-xs capitalize font-semibold mr-2">Show Runner: </span> {{
+                                    props.show.showRunner
+                                }}
+                            </div>
+                            <div><span class="text-xs capitalize font-semibold mr-2">Episode Number: </span>
+                                <span v-if="episode.episode_number">{{ episode.episode_number }}</span>
+                                <span v-if="!episode.episode_number">{{ episode.id }}</span>
+                            </div>
+                            <div><span class="text-xs capitalize font-semibold mr-2">
+                                    {{ formatDate(props.episode.created_at) }}
+                                </span></div>
 
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </header>-->
+                        </div>
+                    </div>
 
-<!--            <div v-if="teamStore.goLiveDisplay" class="">-->
-<!--                <div class="text-sm font-semibold uppercase mb-2">Go Live Instructions</div>-->
-<!--                Display the RTMP Url with streamkey using episode UUID: rtmp://mist.nottv.io/live/showName+UUID-->
-<!--                <video-player-aux />-->
-<!--            </div>-->
+                </div>
+
+
+            </header>
+
+            <div v-if="teamStore.goLiveDisplay" class="">
+                <div class="text-sm font-semibold uppercase mb-2">Go Live Instructions</div>
+                Display the RTMP Url with streamkey using episode UUID: rtmp://mist.nottv.io/live/showName+UUID
+                <video-player-aux />
+            </div>
 
 <!--            <div class="my-6 ml-10 w-3/4">-->
 <!--                <div class="text-sm font-semibold uppercase mb-2">Episode Description</div>-->
@@ -148,20 +153,20 @@
 
 <!--                    </div>-->
 
-<!--                    <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg p-5">-->
+                    <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg p-5">
 
-<!--                        <div class="my-6 ml-10 md:w-3/4">-->
-<!--                            <div class="text-sm font-semibold uppercase mb-2">Episode Notes (only team members see-->
-<!--                                these)-->
-<!--                            </div>-->
-<!--                            {{ episode.notes }}-->
-<!--                        </div>-->
+                        <div class="my-6 ml-10 md:w-3/4">
+                            <div class="text-sm font-semibold uppercase mb-2">Episode Notes (only team members see
+                                these)
+                            </div>
+                            {{ episode.notes }}
+                        </div>
 
-<!--                    </div>-->
+                    </div>
 
 <!--                </div>-->
 
-<!--                <EpisodeFooter :team="props.team"/>-->
+                <EpisodeFooter :team="props.team" :episode="props.episode" :show="props.show"/>
 <!--            </div>-->
         </div>
     </div>
