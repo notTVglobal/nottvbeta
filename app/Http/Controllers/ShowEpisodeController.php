@@ -44,8 +44,8 @@ class ShowEpisodeController extends Controller
 //        $this->middleware('can:viewEpisodeManagePage,show')->only(['manageEpisode']);
           $this->middleware('can:editEpisode,show')->only(['editEpisode']);
 
-          $this->formattedReleaseDateTime = null;
-          $this->formattedScheduledDateTime = null;
+          $this->formattedReleaseDateTime = '';
+          $this->formattedScheduledDateTime = '';
           $this->videoId = 0;
 
     }
@@ -511,8 +511,8 @@ class ShowEpisodeController extends Controller
 //        $formattedScheduledUtcDatetime = $utcScheduledDatetime->toIso8601String();
 //        $formattedReleaseUtcDatetime = $utcReleaseDatetime->toIso8601String();
 
-        $formattedScheduledUtcDatetime = null;
-        $formattedReleaseUtcDatetime = null;
+        $formattedScheduledUtcDatetime = '';
+        $formattedReleaseUtcDatetime = '';
         $releaseYear = null;
 
         Log::channel('custom_error')->info('episode name: '.$request->name);
@@ -552,7 +552,7 @@ class ShowEpisodeController extends Controller
 
         }
 
-        if ($showEpisode->scheduled_release_dateTime && $request->scheduled_release_dateTime === null) {
+        if ($showEpisode->scheduled_release_dateTime && !$request->scheduled_release_dateTime) {
             $showEpisode->show_episode_status_id = 5;
         }
 
