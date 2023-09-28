@@ -32,7 +32,7 @@ class ShowEpisodeController extends Controller
 
     private string $formattedScheduledDateTime;
     private string $formattedReleaseDateTime;
-    private int $videoId;
+    private ?int $videoId = null;
 
     public function __construct()
     {
@@ -46,7 +46,6 @@ class ShowEpisodeController extends Controller
 
           $this->formattedReleaseDateTime = '';
           $this->formattedScheduledDateTime = '';
-          $this->videoId = 0;
 
     }
 

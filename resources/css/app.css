@@ -692,7 +692,7 @@ h3 {
 /*}*/
 
 .videoOTT {
-    z-index: 900;
+    z-index: 30;
     @apply fixed top-40 lg:top-72 h-fit w-full lg:w-96 right-0
 }
 .OttOpen {
