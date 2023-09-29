@@ -189,6 +189,7 @@ function prev() {
 /* Normal state styles for the icon */
 .icon-container {
     display: inline-block;
+    color: #f59e0b;
 }
 
 .icon {
@@ -198,7 +199,7 @@ function prev() {
 
 /* Hover state styles for the icon */
 .icon-container:hover .icon {
-    fill: #f59e0b; /* Change to text-yellow-500 color on hover */
+    fill: #d08509; /* Change to text-yellow-500 color on hover */
 }
 
 

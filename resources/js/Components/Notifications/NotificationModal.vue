@@ -1,7 +1,7 @@
 <template>
     <div>
         <dialog id="notifications" class="modal">
-            <div class="modal-box bg-gray-900">
+            <div class="modal-box bg-gray-900 border-2 border-accent">
                 <NotificationsContainer @closeModal="closeModalFunction" :key="userStore.notificationsKey" />
 
             </div>

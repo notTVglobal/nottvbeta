@@ -510,8 +510,8 @@ class ShowEpisodeController extends Controller
 //        $formattedScheduledUtcDatetime = $utcScheduledDatetime->toIso8601String();
 //        $formattedReleaseUtcDatetime = $utcReleaseDatetime->toIso8601String();
 
-        $formattedScheduledUtcDatetime = '';
-        $formattedReleaseUtcDatetime = '';
+        $formattedScheduledUtcDatetime = null;
+        $formattedReleaseUtcDatetime = null;
         $releaseYear = null;
 
         Log::channel('custom_error')->info('episode name: '.$request->name);
@@ -531,6 +531,7 @@ class ShowEpisodeController extends Controller
 //        }
 
         if ($request->release_dateTime) {
+
             // Create a Carbon instance from the DateTime string
             $releaseDateTime = Carbon::parse($request->release_dateTime);
 
@@ -538,7 +539,7 @@ class ShowEpisodeController extends Controller
             $releaseYear = $releaseDateTime->year;
 
             // Format $utcDatetime as a string in ISO 8601 format:
-            $formattedReleaseUtcDatetime = $this->convertTimeToUserTime($request->release_dateTime);
+            $formattedReleaseUtcDatetime = $this->convertToUtcTime($request->release_dateTime);
 
         }
 
@@ -547,7 +548,7 @@ class ShowEpisodeController extends Controller
             $showEpisode->show_episode_status_id = 6;
             $releaseYear = null;
 
-            $formattedScheduledUtcDatetime = $this->convertTimeToUserTime($request->scheduled_release_dateTime);
+            $formattedScheduledUtcDatetime = $this->convertToUtcTime($request->scheduled_release_dateTime);
 
         }
 
@@ -822,12 +823,24 @@ class ShowEpisodeController extends Controller
         // Create a Carbon instance from the DateTime string
         $dateTime = Carbon::parse($dateTime);
 
+        // Convert to the user's timezone
+        $dateTime->setTimezone($userTimezone);
+
+        // Format $dateTime as a string in ISO 8601 format:
+        return $dateTime->toIso8601String();
+    }
+
+
+    public function convertToUtcTime($dateTime): string
+    {
+        // Create a Carbon instance from the DateTime string
+        $dateTime = Carbon::parse($dateTime);
+
         // Convert to UTC
-        $convertedDatetime = $dateTime->utc();
+        $dateTime->setTimezone('UTC');
 
-        // Format $utcDatetime as a string in ISO 8601 format:
-        return $convertedDatetime->toIso8601String();
-
+        // Format $dateTime as a string in ISO 8601 format:
+        return $dateTime->toIso8601String();
     }
 
 }

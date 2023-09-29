@@ -1,5 +1,7 @@
 <template>
     <div>
+
+<!--        <ProgressBar />-->
 <!-- iPhone needs the options loaded from the video tag here to autoplay. -->
         <video-js id="main-player"
                   class="video-js vjs-big-play-centered vjs-fit"
@@ -11,6 +13,7 @@
 <!--            <source type="video/youtube" src="https://www.youtube.com/watch?v=fqaHrwOhihI">-->
 <!--            <source type="video/youtube" src="https://www.youtube.com/watch?v=xjS6SftYQaQ&list=SPA60DCEB33156E51F">-->
         </video-js>
+
     </div>
 
 </template>
@@ -21,9 +24,15 @@ import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useStreamStore } from "@/Stores/StreamStore"
 import { useChatStore } from "@/Stores/ChatStore"
 import { useUserStore } from "@/Stores/UserStore"
-import { onMounted } from "vue"
+import {defineAsyncComponent, onBeforeUnmount, onMounted, ref} from "vue"
 import videojs from "video.js"
 import youtube from "videojs-youtube"
+// import ProgressBar from "@/Components/VideoPlayer/Osd/ProgressBar.vue";
+
+// const ProgressBar = defineAsyncComponent( () =>
+//     import('@/Components/VideoPlayer/Osd/ProgressBar')
+// )
+
 
 let videoPlayerStore = useVideoPlayerStore()
 let streamStore = useStreamStore()
@@ -31,6 +40,8 @@ let chatStore = useChatStore()
 let userStore = useUserStore()
 
 onMounted( () => {
+
+
     let videoPlayer = videojs('main-player', {
         controls: false,
         muted: false,
@@ -42,13 +53,34 @@ onMounted( () => {
                     "wmode": "transparent"
                     }}
     })
+    // Ensure that the progress-bar element exists before setting progressRef
+
     // let videoPlayer = videojs('main-player')
     videoPlayer.ready(function() {
         videoPlayer.muted(true)
         videoPlayerStore.muted = true
         videoPlayer.play();
-    });
+
+        // Ensure that the seek-handle element exists before adding the event listener
+        // seekHandleRef.value = document.getElementById('seek-handle');
+        // if (seekHandleRef.value) {
+        //     seekHandleRef.value.addEventListener('mousedown', handleMouseDown);
+        // }
+
+
+
+    })
+
+
+
 })
+
+onBeforeUnmount(() => {
+    let videoPlayer = videojs('main-player')
+    // Cleanup event listeners when the component is unmounted
+    videoPlayer.off('timeupdate');
+    // seekHandleRef.value.removeEventListener('mousedown', handleMouseDown);
+});
 
 // async function getFirstPlaySettings() {
 //     await axios.get('/api/app_settings')
@@ -66,9 +98,12 @@ onMounted( () => {
 //     // videoJs = videojs('main-player', videoOptions)
 // }
 
+
+
+
 </script>
 
-<style>
+<style scoped>
 
 .video-js .vjs-tech {
     position: absolute;

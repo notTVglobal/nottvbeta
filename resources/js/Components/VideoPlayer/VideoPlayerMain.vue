@@ -11,6 +11,9 @@
                   <videoJs /></div>
 
             </div>
+        <div class="custom-progress-bar" id="progress-bar" @mousedown="handleProgressClick">
+            <div class="custom-progress" id="progress"></div>
+        </div>
 
 
     <!-- TopRight Video -->
@@ -71,7 +74,7 @@
 
 
 <script setup>
-import { ref, onUnmounted } from 'vue'
+import {ref, onUnmounted, onMounted} from 'vue'
 import { Inertia } from "@inertiajs/inertia"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useStreamStore } from "@/Stores/StreamStore"
@@ -97,6 +100,7 @@ import OsdFullPage from "@/Components/VideoPlayer/Osd/OsdFullPage"
 import videojs from 'video.js'
 import { tryOnBeforeMount, useScreenOrientation } from '@vueuse/core'
 import videoJs from "@/Components/VideoPlayer/VideoJs"
+import ProgressBar from "@/Components/VideoPlayer/Osd/ProgressBar.vue";
 // const VideoJs = defineAsyncComponent( () =>
 //     import('@/Components/VideoPlayer/VideoJs')
 // )
@@ -106,9 +110,41 @@ let streamStore = useStreamStore()
 let chatStore = useChatStore()
 let userStore = useUserStore()
 
+
 let showLogin = ref(false)
 let screenWidth = ref(screen.width)
 let mouseActive = false
+
+const progressBarRef = ref(null);
+const progressRef = ref(null);
+const seekHandleRef = ref(null);
+
+
+onMounted( () => {
+    // Set the references to the DOM elements here
+    progressBarRef.value = document.getElementById('progress-bar');
+    progressRef.value = document.getElementById('progress'); // If progressRef refers to the same element
+    seekHandleRef.value = document.getElementById('seek-handle'); // If you have a seek handle
+
+    // progressRef.value = document.getElementById('progress-bar');
+    if (!progressRef.value) {
+        console.error('Progress bar element not found.');
+    }
+    // Add an event listener to update the custom progress bar when the video progresses
+    let videoPlayer = videojs('main-player')
+    videoPlayer.on('timeupdate', () => {
+        let currentTime = videoPlayer.currentTime();
+        let duration = videoPlayer.duration();
+        let progressPercentage = (currentTime / duration) * 100;
+        // progressRef.value.style.width = `${progressPercentage}%`;
+        // Make sure progressRef.value is not null before setting the width
+        if (progressRef.value) {
+            progressRef.value.style.width = `${progressPercentage}%`;
+        }
+
+    });
+})
+
 
 let props = defineProps({
     src: '',
@@ -120,6 +156,23 @@ let props = defineProps({
 const isMobile = ref({
     mobile: userStore.isMobile,
 })
+
+function handleProgressClick(event) {
+    let videoPlayer = videojs('main-player');
+    let progressBarRect = progressBarRef.value.getBoundingClientRect();
+    let offsetX = event.clientX - progressBarRect.left;
+    let progressBarWidth = progressBarRect.width;
+
+    // Calculate the seek percentage
+    let seekPercentage = (offsetX / progressBarWidth) * 100;
+
+    // Calculate the seek time in seconds
+    let seekTime = (seekPercentage / 100) * videoPlayer.duration();
+
+    // Set the video's current time to seekTime
+    videoPlayer.currentTime(seekTime);
+    videoPlayer.play();
+}
 
 // const videoContainer = computed(() => ({
 //     welcomeVideoContainer: userStore.currentPage === 'welcome',
@@ -276,6 +329,27 @@ function mouseMove(event) {
 }
 
 </script>
+
+<style scoped>
+
+.custom-progress-bar {
+    position: fixed;
+    top:4rem;
+    left:0;
+    width: 100%;
+    height: 10px;
+    z-index:999;
+    background-color: #2d3b4f;
+}
+
+.custom-progress {
+    position: absolute;
+    height: 100%;
+    width: 0;
+    background-color: #062fad;
+    z-index:999;
+}
+</style>
 
 <!-- A note about audio Tracks. -->
 <!-- https://github.com/videojs/http-streaming/blob/main/docs/multiple-alternative-audio-tracks.md -->
