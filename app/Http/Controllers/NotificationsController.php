@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Notification;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class NotificationsController extends Controller
 {
@@ -14,20 +16,26 @@ class NotificationsController extends Controller
         $this->middleware('can:delete,notification')->only(['destroy']);
     }
 
+
+
     public function index()
     {
+        try {
 
-        $user = auth()->user()->id;
-        $notifications = Notification::where('user_id', $user)
-            ->with(['image.appSetting'])
-            ->get()
-            ->map(function ($notification) {
-                // Convert the created_at timestamp to the user's timezone
-                $notification->created_at = $notification->created_at->setTimezone(auth()->user()->timezone);
-                return $notification;
-            });
+            // In your code, fetch and process notifications
+            $user = auth()->user();
+            if (!$user) {
+                return response()->json(['error' => 'User not authenticated'], 401);
+            }
 
-        return response()->json(['notifications' => $notifications]);
+            $notifications = Notification::where('user_id', $user->id)
+                ->with(['image.appSetting'])
+                ->get();
+
+            return response()->json(['notifications' => $notifications]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'An error occurred while fetching notifications'], 500);
+        }
     }
 
     public function markAsRead($id)

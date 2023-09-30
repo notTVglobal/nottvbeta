@@ -1,6 +1,6 @@
 <template>
     <div class="lg:hidden fixed top-0 w-full nav-mask">
-        <div class="flex justify-between h-16 w-full border-b border-gray-100 bg-black">
+        <div class="flex justify-between h-16 w-full border-b border-gray-100 bg-black nav-mask">
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">

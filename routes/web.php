@@ -833,7 +833,7 @@ Route::middleware([
 ///
     Route::post('/clear-flash', [\App\Http\Middleware\HandleInertiaRequests::class, 'clearFlash'])->name('flash.clear');
 
-    Route::get('/notifications', [NotificationsController::class, 'index']);
+    Route::get('/notifications', [NotificationsController::class, 'index'])->name('notifications');
     Route::put('/notifications/{id}/mark-as-read', [NotificationsController::class, 'markAsRead']);
     Route::delete('/notifications/{notification}', [NotificationsController::class, 'destroy']);
 

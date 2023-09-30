@@ -6,7 +6,7 @@
 
 
 <script setup>
-import {inject, onBeforeMount, onMounted, onUnmounted, ref} from "vue";
+import {inject, onBeforeMount, onBeforeUnmount, onMounted, onUnmounted, ref} from "vue";
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useUserStore } from "@/Stores/UserStore.js"
 import { useStreamStore } from "@/Stores/StreamStore.js"
@@ -43,6 +43,10 @@ onMounted(() => {
     videoPlayerStore.ottFilters = false
 })
 
+onBeforeUnmount(() => {
+    videoPlayerStore.controls = false
+})
+
 onUnmounted(() => {
     videoPlayerStore.currentPageIsStream = false;
     videoPlayerStore.ott = 0
@@ -54,56 +58,55 @@ onUnmounted(() => {
     videoPlayerStore.ottFilters = false
 })
 
-let props = defineProps ({
-    getUserData: Boolean,
-    video: Object,
-    user: Object,
-})
+    let props = defineProps({
+        getUserData: Boolean,
+        video: Object,
+        user: Object,
+    })
 
-function updateUserStore() {
-    axios.post('/getUserStoreData')
-        .then(response => {
-            userStore.id = response.data.id
-            userStore.isAdmin = response.data.isAdmin
-            userStore.isCreator = response.data.isCreator
-            userStore.isNewsPerson = response.data.isNewsPerson
-            userStore.isVip = response.data.isVip
-            userStore.isSubscriber = response.data.isSubscriber
-            userStore.hasAccount = response.data.hasAccount
-            userStore.getUserDataCompleted = true
-            userStore.timezone = userTimezone
-            console.log('get user data on Stream')
-        })
-        .catch(error => {
-            console.log(error);
-        })
-    // save user Timezone
-    updateUserTimezone()
-}
+    function updateUserStore() {
+        axios.post('/getUserStoreData')
+            .then(response => {
+                userStore.id = response.data.id
+                userStore.isAdmin = response.data.isAdmin
+                userStore.isCreator = response.data.isCreator
+                userStore.isNewsPerson = response.data.isNewsPerson
+                userStore.isVip = response.data.isVip
+                userStore.isSubscriber = response.data.isSubscriber
+                userStore.hasAccount = response.data.hasAccount
+                userStore.getUserDataCompleted = true
+                userStore.timezone = userTimezone
+                console.log('get user data on Stream')
+            })
+            .catch(error => {
+                console.log(error);
+            })
+        // save user Timezone
+        updateUserTimezone()
+    }
 
-const userTimezone = ref('');
+    const userTimezone = ref('');
 
-const getUserTimezone = () => {
-    // Use the Intl object to get the user's timezone
-    userTimezone.value = Intl.DateTimeFormat().resolvedOptions().timeZone;
-};
+    const getUserTimezone = () => {
+        // Use the Intl object to get the user's timezone
+        userTimezone.value = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    };
 
-const updateUserTimezone = async () => {
-    try {
-        const response = await axios.post('/users/update-timezone', { timezone: userTimezone.value });
+    const updateUserTimezone = async () => {
+        try {
+            const response = await axios.post('/users/update-timezone', {timezone: userTimezone.value});
 
-        // Handle success response as needed
-        console.log(response.data.message);
-    } catch (error) {
-        // Handle error response or network error
-        console.error(error);
+            // Handle success response as needed
+            console.log(response.data.message);
+        } catch (error) {
+            // Handle error response or network error
+            console.error(error);
 
-        if (error.response) {
-            // Handle specific error responses if needed
-            console.error(error.response.data);
+            if (error.response) {
+                // Handle specific error responses if needed
+                console.error(error.response.data);
+            }
         }
     }
-};
-
 </script>
 

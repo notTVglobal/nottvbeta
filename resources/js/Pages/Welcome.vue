@@ -1,11 +1,10 @@
 <template>
     <Head title="Beta" />
         <div id="topDiv"
-             class="w-full vh-100 place-self-center flex flex-col bg-black text-gray-200 z-50"
-
+             class="w-full vh-100 place-self-center flex flex-col text-gray-200 z-50"
              :class="welcomeOverlayBG">
             <header class="headerContainer w-full">
-                <div class=" w-full flex flex-row md:px-6 py-4 welcomeOverlay">
+                <div class="w-full flex flex-row md:px-6 py-4 welcomeOverlay">
                     <WelcomeBug />
                     <div class="flex justify-end pt-4 md:pr-6 w-full">
                             <Button class="bg-opacity-50 hover:bg-opacity-75 text-sm md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md" v-if="!$page.props.user" @click="welcomeStore.showLogin = true" >
@@ -48,6 +47,14 @@
     <!--                    <div class="mt-32 text-center italic">(Log in to chat)</div>-->
 
                 </section>
+
+                <section class="flex flex-col justify-center items-center vh-100 bg-gray-900 text-white px-28 md:px-32 py-20">
+                    <div class="text-left font-semibold text-xl uppercase my-4">Problem </div>
+                    <p class="leading-loose tracking-wide"><span class="text-4xl text-yellow-500">In </span>our society, pressing issues such as education, healthcare, poverty, and systemic challenges often go unaddressed due to limited resources and a lack of transparency. Independent journalism, which plays a vital role in uncovering truths and holding powerful entities accountable, also struggles to secure adequate funding. Additionally, the current digital media landscape is dominated by unaccountable powerful entities, leaving content creators, including independent journalists, live streamers, and social media influencers, at their mercy. This lack of accountability results in unfair compensation, limited creative control, and a lack of transparency.</p>
+                    <div class="text-left mt-8 mb-4 font-semibold text-xl uppercase">Solution </div>
+                    <p class="leading-loose tracking-wide"><span class="text-4xl text-yellow-500">Unlike </span>traditional media platforms, notTV offers a unique solution—a cooperative ecosystem where content creators are also platform owners. By joining notTV as investors and members, individuals directly contribute to addressing societal problems, ensuring that critical issues are no longer ignored. Profits are shared fairly among cooperative members, ensuring creators receive just compensation for their work. notTV leverages blockchain technology and smart contracts for transparent and secure transactions. It fosters collaboration and community engagement while allocating a percentage of profits to support crucial societal initiatives through the Public Good Fund and independent investigative journalism. Invest in notTV to be part of a transformative movement where content creators thrive, users have a voice, societal problems are actively tackled, and unaccountable powerful entities are held in check. Together, we create a more equitable, informed, and empowered society and media ecosystem.</p>
+                </section>
+
                 <section class="grid md:grid-cols-2 vh-100 content-center gap-10 bg-gray-300 text-white p-10">
                     <div class="px-6 py-20 bg-fuchsia-600 rounded">
                         <div class="font-bold text-4xl text-center pb-3 space-x-2">
@@ -103,6 +110,7 @@ import Button from "@/Jetstream/Button"
 import WelcomeOverlay from "@/Components/Welcome/WelcomeOverlay"
 import WelcomeBug from "@/Components/Welcome/WelcomeBug.vue"
 import VideoControlsWelcome from "@/Components/VideoPlayer/VideoControls/VideoControlsWelcome.vue"
+import videojs from "video.js";
 
 let videoPlayerStore = useVideoPlayerStore()
 let welcomeStore = useWelcomeStore()
@@ -122,7 +130,7 @@ let props = defineProps({
 });
 
 const welcomeOverlayBG = computed(() => ({
-    'bg-opacity-80': welcomeStore.showOverlay,
+    'bg-black bg-opacity-80': welcomeStore.showOverlay,
     'bg-opacity-0': !welcomeStore.showOverlay
 }))
 
@@ -148,8 +156,48 @@ onBeforeUnmount( () => {
 
 function watchNow(){
     welcomeStore.showOverlay = false;
-    videoPlayerStore.unmute()
+// Call the function to unmute and fade the volume over 3 seconds
+    unmuteAndFadeVolume(3);
 }
+
+// Function to unmute and fade the volume
+const unmuteAndFadeVolume = (durationInSeconds) => {
+    // Get the Video.js player instance
+    const videoPlayer = videojs('main-player');
+
+    // Check if the video is muted
+    if (videoPlayer.muted()) {
+        // Unmute the video
+        videoPlayer.muted(false);
+        videoPlayerStore.muted = false
+
+        // Get the current volume (0 to 1)
+        const currentVolume = videoPlayer.volume();
+
+        // Set the volume to 0
+        videoPlayer.volume(0);
+
+        // Calculate the step size for fading
+        const stepSize = currentVolume / (durationInSeconds * 1000 / 100); // Adjust as needed
+
+        // Create a timer to increment the volume gradually
+        const fadeTimer = setInterval(() => {
+            // Increment the volume
+            const newVolume = videoPlayer.volume() + stepSize;
+
+            // Update the video volume
+            videoPlayer.volume(newVolume);
+
+            // Check if the volume has reached 1 (100%)
+            if (newVolume >= 1) {
+                // Clear the timer
+                clearInterval(fadeTimer);
+            }
+        }, 100); // Adjust the interval as needed
+    }
+};
+
+
 </script>
 
 

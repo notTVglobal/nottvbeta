@@ -21,7 +21,7 @@
             </div>
             <div class="ml-4 lg:ml-8 pr-2 w-5/6 justify-left">
                 <button @click.prevent="visitUrl(notification.url)"><h3 class="font-bold text-lg text-left justify-left">{{ notification.title }}</h3></button>
-                <p class="py-4">{{ notification.message }}</p>
+                <p class="py-4">{{ truncatedMessage }}</p>
                 <p class="py-1 text-xs font-light">{{ timeAgo }}</p>
             </div>
         </div>
@@ -32,7 +32,7 @@
 
 <script setup>
 import {useUserStore} from "@/Stores/UserStore";
-import {ref} from "vue";
+import {computed, ref} from "vue";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import {Inertia} from "@inertiajs/inertia";
 import { useTimeAgo } from '@vueuse/core';
@@ -47,6 +47,17 @@ let timeAgo = useTimeAgo(props.notification.created_at)
 
 const notificationsDialog = ref(null);
 const emit = defineEmits('closeModal')
+
+// Computed property to truncate the message
+const truncatedMessage = computed(() => {
+    const message = props.notification.message || '';
+
+    if (message.length <= 300) {
+        return message;
+    } else {
+        return message.slice(0, 300) + '...';
+    }
+});
 
 const markAsRead = async (notificationId) => {
     // Make an API request to mark a notification as read

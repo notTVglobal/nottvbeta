@@ -136,7 +136,6 @@ class AddVideoUrlFromEmbedCodeJob implements ShouldQueue
                 preg_match_all($pattern, $response, $matches);
                 // start at the first "mp4" extract https: .... .mp4 and replace \ with ""
                 $firstMp4 = $matches[0][0];
-                Log::channel('custom_error')->info('FIRST MP4: ' . $firstMp4);
             }
 
 
@@ -279,7 +278,7 @@ class AddVideoUrlFromEmbedCodeJob implements ShouldQueue
             $notification->image_id = $this->showEpisode->image_id;
 //            $notification->image_id = 1;
 //            $notification->title = $this->showEpisode->name;
-            $notification->url = '/shows/'.$this->showEpisode->show->slug.'/episode/'.$this->showEpisode->slug;
+            $notification->url = '/shows/'.$this->showEpisode->show->slug.'/episode/'.$this->showEpisode->slug.'/manage';
             $notification->title = $this->showEpisode->show->name.': ' . $this->showEpisode->name;
             $notification->message = 'There was a problem getting the video. ' . $response;
             $notification->save();

@@ -44,6 +44,18 @@ import ConfirmDialog from '@/Components/Modals/ConfirmDialog';
 // import vueCountryRegionSelect from 'vue3-country-region-select';
 // import { setupCalendar } from 'v-calendar';
 
+// Vuetify
+// import '@mdi/font/css/materialdesignicons.css'
+import 'vuetify/styles'
+import { createVuetify } from 'vuetify'
+import * as components from 'vuetify/components'
+import * as directives from 'vuetify/directives'
+
+const vuetify = createVuetify({
+    components,
+    directives
+})
+
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'notTV';
 
 
@@ -80,6 +92,7 @@ createInertiaApp({
             .use(ZiggyVue, Ziggy)
             .use(createPinia())
             .use(Vue3TouchEvents)
+            .use(vuetify)
             // .use(vueCountryRegionSelect)
             // .use(setupCalendar, {})
             .component("Link", Link)

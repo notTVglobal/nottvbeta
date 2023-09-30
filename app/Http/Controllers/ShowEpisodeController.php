@@ -445,8 +445,6 @@ class ShowEpisodeController extends Controller
 
     public function update(HttpRequest $request, Show $show, ShowEpisode $showEpisode)
     {
-        Log::channel('custom_error')->info('release raw date in: '.$request->release_dateTime);
-        Log::channel('custom_error')->info('scheduled raw date in: '.$request->scheduled_release_dateTime);
 
         // validate the request
         $request->validate([
@@ -560,6 +558,7 @@ class ShowEpisodeController extends Controller
 
 
         $showSlug = Show::query()->where('id', $showEpisode->show_id)->pluck('slug')->first();
+        $oldEmbedCode = $showEpisode->video_embed_code;
         $videoUrlFromEmbedCode = '';
 
         // get the *.mp4 video url from embed code
@@ -586,7 +585,8 @@ class ShowEpisodeController extends Controller
         $showEpisode->scheduled_release_dateTime = $formattedScheduledUtcDatetime ?? null;
         $showEpisode->save();
 
-        if ($request->video_embed_code !== $showEpisode->video_embed_code && !$request->video_url) {
+        if ($request->video_embed_code !== $oldEmbedCode && !$request->video_url) {
+
             // Create and save the notification
             $notification = new Notification;
             $userId = auth()->user()->id;
@@ -594,7 +594,7 @@ class ShowEpisodeController extends Controller
 
             // make the image the show_episode_poster
             $notification->image_id = $showEpisode->image_id;
-            $notification->url = '/shows/'.$showEpisode->show->slug.'/episode/'.$showEpisode->slug;
+            $notification->url = '/shows/'.$showEpisode->show->slug.'/episode/'.$showEpisode->slug.'/manage';
             $notification->title = $showEpisode->name;
             $notification->message = 'The video url is being generated from the embed code. You will be notified when it is done.';
             $notification->save();
@@ -814,20 +814,30 @@ class ShowEpisodeController extends Controller
         }
     }
 
-    public function convertTimeToUserTime($dateTime): string
+    public function convertTimeToUserTime($dateTime): ?string
     {
-        // Get the user's timezone
-        $user = Auth::user();
-        $userTimezone = $user->timezone;
+        try {
+            // Get the user's timezone
+            $user = Auth::user();
+            if (!$user) {
+                // No authenticated user, unable to determine timezone
+                return null;
+            }
 
-        // Create a Carbon instance from the DateTime string
-        $dateTime = Carbon::parse($dateTime);
+            $userTimezone = $user->timezone;
 
-        // Convert to the user's timezone
-        $dateTime->setTimezone($userTimezone);
+            // Create a Carbon instance from the DateTime string
+            $dateTime = Carbon::parse($dateTime);
 
-        // Format $dateTime as a string in ISO 8601 format:
-        return $dateTime->toIso8601String();
+            // Convert to the user's timezone
+            $dateTime->setTimezone($userTimezone);
+
+            // Format $dateTime as a string in ISO 8601 format:
+            return $dateTime->toIso8601String();
+        } catch (\Exception $e) {
+            // Handle any parsing or timezone conversion errors here
+            return null;
+        }
     }
 
 

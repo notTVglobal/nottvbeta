@@ -1,18 +1,19 @@
 <template>
 
     <Head title="Upgrade Account" />
-    <div id="topDiv" class="h-[calc(100vh-16rem)] text-center bg-gray-800 text-white p-10">
+    <div id="topDiv" class="h-[calc(100vh-16rem)] text-center bg-gray-800 text-white px-10">
 
         <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
         <!--            <h1 class="text-3xl font-semibold pb-3">Become a notTV Premium Subscriber</h1>-->
 
             <div class="flex justify-center w-full">
-                <div class="flex flex-col justify-center w-fit bg-gray-900 rounded-md py-10 pb-96">
+                <div class="flex flex-col justify-center w-fit bg-gray-900 rounded-md py-10">
 
                     <h2 class="text-3xl py-8 px-2 font-bold">Choose a Subscription</h2>
 
                     <div class="flex flex-wrap justify-center space-y-3 space-x-3 px-8 mx-auto">
+                        <div></div>
 
                             <div class="card monthly bg-gray-700 hover:bg-gray-600 hover:cursor-pointer rounded-lg px-12 pt-6"
                                  @mouseover="hoverMonthlyFull = true"
@@ -28,7 +29,7 @@
                                 <div>
                                     Get full access to all features, shows, channels and movies!
                                 </div>
-                                <div class="flex no-wrap justify-center bg-gray-900 hover:bg-gray-800 hover:cursor-pointer rounded-lg w-full mt-6 px-4 py-4 mb-4 mx-auto"
+                                <div class="flex no-wrap justify-center bg-gray-900 hover:bg-gray-800 hover:cursor-pointer rounded-lg w-full mt-12 px-4 py-4 mb-4 mx-auto"
                                      @mouseover="hoverMonthly = true"
                                      @mouseleave="hoverMonthly = false">
                                     <span class="bg-gray-700 mr-4 py-1 px-2 w-fit rounded-full"
@@ -50,7 +51,7 @@
                             <div>
                                 Get full access to all features, shows, channels and movies!
                             </div>
-                            <div class="flex no-wrap justify-center bg-gray-900 hover:bg-gray-800 hover:cursor-pointer rounded-lg w-full mt-6 px-4 py-4 mb-4 mx-auto"
+                            <div class="flex no-wrap justify-center bg-gray-900 hover:bg-gray-800 hover:cursor-pointer rounded-lg w-full mt-12 px-4 py-4 mb-4 mx-auto"
                                  @mouseover="hoverYearly = true"
                                  @mouseleave="hoverYearly = false">
 
@@ -73,7 +74,7 @@
                             <div>
                                 Get full access to all features, shows, channels and movies!
                             </div>
-                            <div class="flex no-wrap justify-center bg-gray-900 hover:bg-gray-800 hover:cursor-pointer rounded-lg w-full mt-6 px-4 py-4 mb-4 mx-auto"
+                            <div class="flex no-wrap justify-center bg-gray-900 hover:bg-gray-800 hover:cursor-pointer rounded-lg w-full mt-12 px-4 py-4 mb-4 mx-auto"
                                  @mouseover="hoverForever = true"
                                  @mouseleave="hoverForever = false">
                                 <span class="bg-gray-700 mr-4 py-1 px-2 w-fit rounded-full"
@@ -81,6 +82,8 @@
 
                         </div>
                     </div>
+
+                    <div class="py-20"></div>
 
 
 <!--                    <div class="mx-auto mt-8 px-12">-->

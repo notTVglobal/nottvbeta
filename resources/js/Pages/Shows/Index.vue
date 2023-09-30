@@ -109,8 +109,8 @@
                     </div>
 
 <!--                    <MostAnticipated :mostAnticipated="mostAnticipated"/>-->
-                    <div class="coming-soon xl:w-1/4 mt-12 xl:mt-0">
-                        <h2 id="coming-soon" class="text-purple-500 uppercase tracking-wide font-semibold mt-16 text-2xl">Coming Soon</h2>
+                    <div class="coming-soon xl:w-1/4 mt-12 xl:mt-0 xl:ml-4">
+                        <h2 id="coming-soon" class="text-purple-500 uppercase tracking-wide font-semibold mt-10 xl:mt-0 text-2xl">Coming Soon</h2>
                         <div class="most-anticipated-container space-y-10 mt-8">
 
                             <div v-for="show in comingSoon.data"

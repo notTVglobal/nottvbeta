@@ -78,6 +78,7 @@
         "vue3-emoji-picker": "^1.1.5",
         "vue3-popper": "^1.5.0",
         "vue3-touch-events": "^4.1.0",
+        "vuetify": "^3.3.19",
         "webpack": "^5.76.1",
         "yargs": "^17.5.1",
         "yargs-parser": "^21.0.1",

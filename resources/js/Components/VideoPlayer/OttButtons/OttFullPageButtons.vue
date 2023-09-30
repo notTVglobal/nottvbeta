@@ -3,7 +3,7 @@
 
         <div class="ottButtonsContainer" id="ottButtons">
             <button
-                v-if="userStore.isSubscriber || userStore.isVip || userStore.isAdmin"
+                v-if="urlPrev !== 'empty'"
                 @click="back"
                 class="ottButton bg-gray-400 text-white hover:bg-gray-600 hover:text-gray-300">
                 <font-awesome-icon icon="fa-angle-left" class="ml-2 text-3xl mb-1"/><div>BACK</div>
@@ -47,9 +47,9 @@ import {Inertia} from "@inertiajs/inertia";
 let videoPlayerStore = useVideoPlayerStore()
 let chatStore = useChatStore()
 let userStore = useUserStore()
+let urlPrev = usePage().props.value.urlPrev
 
 function back() {
-    let urlPrev = usePage().props.value.urlPrev
     if (urlPrev !== 'empty') {
         Inertia.visit(urlPrev)
     }

@@ -7,11 +7,17 @@ html {
 #topDiv {
     padding-top: 4px;
 }
+.vjs-big-play-button {
+    display: none !important;
+}
+.vjs-play-button {
+    display: none !important;
+}
 .videoZ {
     z-index:1;
 }
 .nav-mask {
-    z-index:300;
+    z-index:2000;
 }
 .hamburgerMask {
     z-index: 300;
@@ -706,7 +712,7 @@ h3 {
 }
 
 .ottButton {
-    @apply opacity-80 w-20 h-20 rounded-full cursor-pointer grid justify-center content-center text-xs
+    @apply bg-opacity-80 w-20 h-20 rounded-full cursor-pointer grid justify-center content-center text-xs
 }
 
 /* this is the OPEN chat button */
