@@ -193,6 +193,23 @@
                 >
                 <div v-if="form.errors.postalCode" v-text="form.errors.postalCode" class="text-xs text-red-600 mt-1"></div>
             </div>
+
+            <div class="mb-6">
+                <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-50"
+                       for="text"
+                >
+                    Stripe ID
+                </label>
+
+                <input v-model="form.stripe_id"
+                       class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                       type="text"
+                       name="stripe_id"
+                       id="stripe_id"
+                >
+                <div v-if="form.errors.stripe_id" v-text="form.errors.stripe_id" class="text-xs text-red-600 mt-1"></div>
+            </div>
+
             <div class="flex justify-between mb-6">
                 <JetValidationErrors class="mr-4" />
                 <button
@@ -251,6 +268,7 @@ let form = useForm({
     country: null,
     postalCode: null,
     phone: null,
+    stripe_id: null,
 });
 
 // const role = ref(null);

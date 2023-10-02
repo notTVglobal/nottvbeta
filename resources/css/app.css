@@ -17,7 +17,7 @@ html {
     z-index:1;
 }
 .nav-mask {
-    z-index:2000;
+    z-index:997;
 }
 .hamburgerMask {
     z-index: 300;
@@ -47,7 +47,7 @@ html {
     background-color: #48776e;
 }
 .specialVideoPlayerClass {
-    z-index: 999;
+    z-index: 998;
 }
 .bugFullPageContainer {
     @apply fixed h-screen top-4 left-5 opacity-10 z-50

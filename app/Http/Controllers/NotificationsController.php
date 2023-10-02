@@ -17,11 +17,9 @@ class NotificationsController extends Controller
     }
 
 
-
     public function index()
     {
         try {
-
             // In your code, fetch and process notifications
             $user = auth()->user();
             if (!$user) {
@@ -32,11 +30,16 @@ class NotificationsController extends Controller
                 ->with(['image.appSetting'])
                 ->get();
 
+            if ($notifications->isEmpty()) {
+                return response()->json(['message' => 'No notifications found for this user.'], 200);
+            }
+
             return response()->json(['notifications' => $notifications]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'An error occurred while fetching notifications'], 500);
         }
     }
+
 
     public function markAsRead($id)
     {

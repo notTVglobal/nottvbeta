@@ -44,7 +44,10 @@
                     <span v-if="$page.props.userSelected.role_id === 4" class="text-sm font-semibold capitalize">Creator Number: </span>{{props.userSelected.creatorNumber}}
                 </div>
                 <div>
-                    <span class="text-sm font-semibold capitalize">Subscription Status: </span>{{props.userSelected.subscriptionStatus}}
+                    <span class="text-sm font-semibold capitalize">Subscription Status: </span>{{props.subscriptionStatus}}
+                </div>
+                <div>
+                    <span class="text-sm font-semibold capitalize">Stripe ID: </span>{{props.userSelected.stripe_id}}
                 </div>
             </div>
             <div class="p-6 light:bg-white dark:bg-gray-800 border-b border-gray-200">
@@ -113,6 +116,7 @@ onMounted(() => {
 
 let props = defineProps({
     userSelected: Object,
+    subscriptionStatus: String,
     role: String,
     teams: Object,
 });

@@ -1,6 +1,6 @@
 <template>
-    <div class="hidden lg:block fixed top-0 w-full nav-mask">
-    <nav class="sticky top-0 bg-black border-b border-gray-100" :class="{ isFullPageCss: videoPlayerStore.fullPage }">
+    <div class="hidden lg:block fixed top-0 w-full nav-mask border-b-2 border-gray-100">
+    <nav class="sticky top-0 bg-black" :class="{ isFullPageCss: videoPlayerStore.fullPage }">
         <!-- Primary Navigation Menu -->
         <div class="mx-auto px-4 lg:px-6 xl:px-8">
             <div class="flex justify-between h-16">

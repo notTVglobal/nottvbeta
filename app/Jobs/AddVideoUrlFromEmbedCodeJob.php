@@ -75,9 +75,9 @@ class AddVideoUrlFromEmbedCodeJob implements ShouldQueue
                 return;
             } else
                 $firstMp4 = '';
-            $matches = [];
-            $response = '';
-            $sourceIs = '';
+                $matches = [];
+                $response = '';
+                $sourceIs = '';
 
             // strip the url from the embed code
             $regex = '/https?\:\/\/[^\",]+/i';
@@ -209,7 +209,7 @@ class AddVideoUrlFromEmbedCodeJob implements ShouldQueue
             $processVideoInfoMessage = '';
 
             // Listen for custom events
-            Event::listen(ProcessVideoInfoListener::class, function ($event) use (&$processVideoInfoMessage) {
+            Event::listen(ProcessVideoInfoListener::class, function ($event) use (&$processVideoInfoMessage, $firstMp4) {
 
                 // Check if the event represents a success or an error
                 if ($event->type === 'success') {
@@ -219,7 +219,7 @@ class AddVideoUrlFromEmbedCodeJob implements ShouldQueue
                     // Set the error message
                     $processVideoInfoMessage = 'but was unable to update the info in the database.';
                 }
-                Log::channel('custom_error')->info('AddVideoUrlFromEmbedCodeJob Event Listener: '.$message);
+                Log::channel('custom_error')->info('AddVideoUrlFromEmbedCodeJob Event Listener: '.$event->message);
 
                 // Handle success or error in the first job...
             });
@@ -249,7 +249,7 @@ class AddVideoUrlFromEmbedCodeJob implements ShouldQueue
 //            $notification->title = $this->showEpisode->name;
             $notification->url = '/shows/'.$this->showEpisode->show->slug.'/episode/'.$this->showEpisode->slug;
             $notification->title = $this->showEpisode->show->name.': ' . $this->showEpisode->name;
-            $notification->message = 'The video is now ready ' . $processVideoInfoMessage;
+            $notification->message = '<span class="text-green-500">The video is now ready</span>' . $processVideoInfoMessage;
             $notification->save();
 
             // Trigger the event to broadcast the new notification
@@ -270,8 +270,6 @@ class AddVideoUrlFromEmbedCodeJob implements ShouldQueue
 
             // Create and save the notification
             $notification = new Notification;
-            $userId = $this->showEpisode->isBeingEditedByUser_id;
-//            $userId = 1;
             $notification->user_id = $userId;
 
             // make the image the show_episode_poster

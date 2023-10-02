@@ -27,7 +27,13 @@ const fetchNotifications = async () => {
     // Make an API request to fetch notifications
     const response = await fetch(`/notifications`);
     const data = await response.json();
-    userStore.notifications = data.notifications;
+    // userStore.notifications = data.notifications;
+    if (data.notifications && Array.isArray(data.notifications)) {
+        userStore.newNotifications = data.notifications.length;
+    } else {
+        // Handle the case where notifications are missing or not an array
+        userStore.newNotifications = 0; // or some other default value or error handling logic
+    }
 };
 
 function closeModalFunction() {

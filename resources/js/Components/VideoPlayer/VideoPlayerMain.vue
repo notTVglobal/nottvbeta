@@ -408,7 +408,7 @@ function mouseMove(event) {
     padding-bottom: 20px;
     width: 100%;
     height: 5px;
-    z-index:999;
+    z-index:998;
 }
 
 .custom-progress-bar {
@@ -418,7 +418,7 @@ function mouseMove(event) {
     padding-bottom: 20px;
     width: 100%;
     height: 5px;
-    z-index:999;
+    z-index:998;
     //background-color: #2d3b4f;
     @apply cursor-progress;
 }
@@ -429,7 +429,7 @@ function mouseMove(event) {
     height: 2px;
     width: 0;
     background-color: #062fad;
-    z-index:999;
+    z-index:998;
 }
 
 .hover-time {

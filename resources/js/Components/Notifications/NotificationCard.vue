@@ -1,6 +1,6 @@
 <template>
     <div class="relative">
-        <button v-if="userStore.notifications.length > 0"
+        <button v-if="userStore.newNotifications > 0"
                 class="absolute z-50 bg-accent/30 hover:bg-accent/50 flex justify-right w-fit mr-2 px-4 py-2 rounded right-0 bottom-3"
                 @click.prevent="deleteNotification(notification.id)">
             <font-awesome-icon icon="fa-trash-can" />
@@ -21,7 +21,7 @@
             </div>
             <div class="ml-4 lg:ml-8 pr-2 w-5/6 justify-left">
                 <button @click.prevent="visitUrl(notification.url)"><h3 class="font-bold text-lg text-left justify-left">{{ notification.title }}</h3></button>
-                <p class="py-4">{{ truncatedMessage }}</p>
+                <p class="py-4"><span v-html="truncatedMessage" /></p>
                 <p class="py-1 text-xs font-light">{{ timeAgo }}</p>
             </div>
         </div>
@@ -69,7 +69,7 @@ const markAsRead = async (notificationId) => {
     userStore.removeNotificationById(notificationId)
 
     // if this is the last notification then close the modal
-    if (userStore.notifications.length === 0) {
+    if (userStore.newNotifications === 0) {
         emit('closeModal')
         notificationsDialog.value = document.getElementById('notifications');
         notificationsDialog.value.removeAttribute('open');
@@ -85,7 +85,7 @@ const deleteNotification = async (notificationId) => {
             userStore.newNotifications--;
         }
         // if this is the last notification then close the modal
-        if (userStore.notifications.length === 0) {
+        if (userStore.newNotifications === 0) {
             emit('closeModal')
             notificationsDialog.value = document.getElementById('notifications');
             notificationsDialog.value.removeAttribute('open');

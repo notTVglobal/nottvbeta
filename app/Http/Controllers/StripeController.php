@@ -158,4 +158,43 @@ class StripeController extends Controller
     {
         // Log the failed payment if you wish
     }
+
+    public function getUserSubscriptionsFromStripe(Request $request) {
+        dd($request->data);
+        // these first variables go in the subscriptions table
+        $name = 'default';
+        $stripeSubscriptionId = ''; // e.g, sub_xx
+        $stripeStatus = ''; // e.g active
+        $stripePrice = ''; // e.g. price_xx
+        $quantity = 0;
+        $currentPeriodEnd = ''; // ends_at
+
+        // these second variables go in the subscription_items table
+        $subscriptionId = ''; // this is the id created in the subscriptions table, used to create a new row in the subscription_item table
+        $stripeSubscriptionItemId = ''; // e.g. si_xx
+        $stripeProduct = ''; // e.g. prod_xx
+        $createdAt = '';
+
+        // 1. Find the user and set the user stripe customer id
+        $userId = $request->id;
+        $user = User::find($userId);
+        $customerId = $user->stripe_id; // 'cus_'
+
+        // 2. Get all subscriptions from Stripe
+        $stripeSecret = env('STRIPE_SECRET');
+        $stripe = new \Stripe\StripeClient($stripeSecret);
+        $subscriptions = $stripe->subscriptions->all();
+
+        // 3. Loop through results where subscription belongs to customer
+
+        // 4. Create the subscriptions on the subscriptions table if they don't exist (look for existing subscription by $subStripeId)
+
+        // 5. Create the subscription_item on the subscription_items table
+
+        // 6. Update the user (if we have the pm_type, pm_last_four, trial_ends_at information)
+
+
+
+
+    }
 }

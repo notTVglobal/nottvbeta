@@ -41,12 +41,16 @@
                         Remove User from Newsroom</button>
                     <button v-if="!isVip"
                             @click="addUserToVip"
-                            class="text-white font-semibold bg-yellow-600 hover:bg-yellow-800 hover:text-gray-100 rounded px-4 py-2 w-fit h-12">
+                            class="text-white font-semibold bg-indigo-600 hover:bg-indigo-800 hover:text-gray-100 rounded px-4 py-2 w-fit h-12">
                         Make User a VIP</button>
                     <button v-if="isVip"
                             @click="removeUserFromVip"
-                            class="text-white font-semibold bg-yellow-600 hover:bg-yellow-800 hover:text-gray-100 rounded px-4 py-2 w-fit h-12">
+                            class="text-white font-semibold bg-orange-600 hover:bg-orange-800 hover:text-gray-100 rounded px-4 py-2 w-fit h-12">
                         Remove User from VIP</button>
+                    <button v-if="!hasSubscription"
+                            @click="getUserSubscriptionFromStripe"
+                            class="text-white font-semibold bg-blue-600 hover:bg-blue-800 hover:text-gray-100 rounded px-4 py-2 w-fit h-12">
+                        Get Subscription From Stripe</button>
                 </div>
             </div>
 
@@ -57,7 +61,7 @@
                     >
                         User Role
                     </label>
-                    <select class="border border-gray-400 p-2 w-full rounded-lg block mb-2 uppercase font-bold text-xs text-gray-700"
+                    <select class="border border-gray-400 p-2 w-full rounded-lg block mb-2 uppercase font-bold text-xs bg-white text-gray-700"
                             v-model="form.role_id"
                     >
                         <option value="1">Standard User</option>
@@ -208,14 +212,30 @@
                     <div v-if="form.errors.postalCode" v-text="form.errors.postalCode" class="text-xs text-red-600 mt-1"></div>
                 </div>
 
+                <div class="mb-6">
+                    <label class="block mb-2 uppercase font-bold text-xs light:text-gray-700 dark:text-gray-50"
+                           for="text"
+                    >
+                        Stripe ID
+                    </label>
+
+                    <input v-model="form.stripe_id"
+                           class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                           type="text"
+                           name="stripe_id"
+                           id="stripe_id"
+                    >
+                    <div v-if="form.errors.stripe_id" v-text="form.errors.stripe_id" class="text-xs text-red-600 mt-1"></div>
+                </div>
+
                 <div class="flex justify-between mb-6">
                     <JetValidationErrors class="mr-4" />
                     <button
                         type="submit"
-                        class="h-fit bg-blue-400 text-white rounded py-2 px-4 hover:bg-blue-500"
+                        class="h-fit bg-blue-600 text-white rounded py-2 px-4 hover:bg-blue-500"
                         :disabled="form.processing"
                     >
-                        Submit
+                        Save
                     </button>
                     <div v-if="form.errors" v-text="form.errors" class="text-xs text-red-600 mt-1"></div>
                 </div>
@@ -255,6 +275,7 @@ let props = defineProps({
     isNewsPerson: Boolean,
     isVip: Boolean,
     isSubscriber: Boolean,
+    hasSubscription: null,
     subscriptionStatus: '',
 });
 
@@ -270,6 +291,7 @@ let form = useForm({
     country: props.userEdit.country,
     postalCode: props.userEdit.postalCode,
     phone: props.userEdit.phone,
+    stripe_id: props.userEdit.stripe_id,
 });
 
 function reset() {
@@ -308,6 +330,17 @@ function addUserToVip() {
 function removeUserFromVip() {
     if (confirm("Are you sure you want to remove this person from VIP?")) {
         form.put(route('user.vip.remove', props.userEdit.id));
+    }
+}
+
+function getUserSubscriptionFromStripe() {
+    if (!props.userEdit.stripe_id && !form.stripe_id) {
+        alert('User must have a Stripe ID')
+    } else if (!props.userEdit.stripe_id && form.stripe_id) {
+        alert('Please save the Stripe ID before getting the subscription.')
+    } else
+    if (confirm("Are you sure you want to retrieve the subscription from Stripe? This will take a minute.")) {
+        Inertia.post(route('getUserSubscriptionsFromStripe', {'id': form.id}));
     }
 }
 

@@ -1,18 +1,19 @@
 <template>
     <div>
-
-        <div v-for="notification in userStore.notifications.slice().reverse()" :key="notification.id">
-
-            <NotificationCard :notification="notification" @closeModal="closeModalFunction"/>
-            <!--                    <button @click="markAsRead(notification.id)" v-if="!notification.read">Mark as Read</button>-->
+        <div v-if="userStore.newNotifications === 0">
+            No notifications.
         </div>
-        <span v-if="userStore.notifications.length === 0">No notifications.</span>
+        <div v-else>
+            <div v-for="notification in notifications.slice().reverse()" :key="notification.id">
+                <NotificationCard :notification="notification" @closeModal="closeModalFunction"/>
+                <!-- <button @click="markAsRead(notification.id)" v-if="!notification.read">Mark as Read</button> -->
+            </div>
+        </div>
     </div>
-
 </template>
 
 <script setup>
-import {nextTick, onMounted, onUpdated, ref} from "vue";
+import {nextTick, onBeforeMount, onMounted, onUpdated, ref} from "vue";
 import {useUserStore} from "@/Stores/UserStore";
 import NotificationCard from "@/Components/Notifications/NotificationCard.vue";
 import Pagination from "@/Components/PaginationDark.vue";
@@ -29,11 +30,17 @@ const fetchNotifications = async () => {
     // Make an API request to fetch notifications
     const response = await fetch(`/notifications`);
     const data = await response.json();
-    userStore.notifications = data.notifications;
+    // userStore.notifications = data.notifications;
+    if (data.notifications && Array.isArray(data.notifications)) {
+        userStore.newNotifications = data.notifications.length;
+    } else {
+        // Handle the case where notifications are missing or not an array
+        userStore.newNotifications = 0; // or some other default value or error handling logic
+    }
 };
 
 
-onMounted(() => {
+onBeforeMount(() => {
     fetchNotifications();
 });
 

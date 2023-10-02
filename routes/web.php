@@ -370,6 +370,9 @@ Route::middleware([
     Route::post('payment/complete', [StripeController::class, 'completePayment']);
     Route::post('payment/failure', [StripeController::class, 'failPayment']);
 
+    Route::post('/admin/getUserSubscriptionsFromStripe', [StripeController::class, 'getUserSubscriptionsFromStripe'])
+        ->name('getUserSubscriptionsFromStripe');
+
     // tec21: this route isn't used yet. This uses Stripe Checkout.
 //    Route::get('shop/product-checkout', function (Request $request) {
 //        return Checkout::guest()
@@ -833,7 +836,7 @@ Route::middleware([
 ///
     Route::post('/clear-flash', [\App\Http\Middleware\HandleInertiaRequests::class, 'clearFlash'])->name('flash.clear');
 
-    Route::get('/notifications', [NotificationsController::class, 'index'])->name('notifications');
+    Route::get('/notifications', [NotificationsController::class, 'index']);
     Route::put('/notifications/{id}/mark-as-read', [NotificationsController::class, 'markAsRead']);
     Route::delete('/notifications/{notification}', [NotificationsController::class, 'destroy']);
 

@@ -6,6 +6,7 @@ use App\Models\Role;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Http\Request as HttpRequest;
@@ -15,6 +16,7 @@ use App\Models\User;
 use App\Models\Creator;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Response;
+use Stripe\Stripe;
 
 class UsersController extends Controller
 {
@@ -123,6 +125,7 @@ class UsersController extends Controller
             'country' => ['nullable', 'string', 'max:255'],
             'postalCode' => ['nullable', 'string', 'max:255'],
             'phone' => ['nullable', 'regex:/^([0-9\s\-\+\(\)]*)$/', 'min:10'],
+            'stripe_id' => ['nullable', 'string', 'max:255'],
         ]);
 
         // create the user
@@ -152,8 +155,27 @@ class UsersController extends Controller
             $role = Role::query()->where('id', $roleId)->first();
             return $role->role;
         }
+
+
+
+//        dd($user->subscriptions->all());
+
+
+
+
+        try {
+            $user->updateStripeSubscription($stripeSubscriptionId);
+            Log::info('Subscription association succeeded for user: ' . $user->id);
+
+            // Optionally, you can update your application's database records to reflect the subscription association.
+        } catch (\Exception $e) {
+            // Handle any errors that may occur during the association process.
+            Log::error('Subscription association failed for user: ' . $user->id . '. Error: ' . $e->getMessage());
+        }
+
         return Inertia::render('Users/{$id}/Index', [
             'userSelected' => $user,
+            'subscriptionStatus' => $user->subscription('default')->stripe_status ?? null,
             'role' => role($user->role_id),
             'teams' => $user->teams,
             'can' => [
@@ -180,7 +202,8 @@ class UsersController extends Controller
         return Inertia::render('Users/{$id}/Edit', [
             'userEdit' => $user,
             'isNewsPerson' => $isNewsPerson,
-            'isVip' => $user->isVip
+            'isVip' => $user->isVip,
+            'hasSubscription' => $user->subscription() ?? null,
         ]);
     }
 
@@ -213,7 +236,8 @@ class UsersController extends Controller
             'country' => ['nullable', 'string', 'max:255'],
             'postalCode' => ['nullable', 'string', 'max:255'],
             'phone' => ['nullable', 'regex:/^([0-9\s\-\+\(\)]*)$/', 'min:10'],
-            'role_id' => 'integer'
+            'role_id' => 'integer',
+            'stripe_id' => ['nullable', 'string', 'max:255'],
         ]);
 
         // update the user
@@ -264,7 +288,7 @@ class UsersController extends Controller
                 'createUser' => Auth::user()->can('create', User::class),
                 'editUser' => Auth::user()->can('edit', User::class)
             ]
-        ])->with('message', 'User Updated Successfully');
+        ])->with('message', $user->name . ' updated successfully.');
     }
 
 

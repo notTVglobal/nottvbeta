@@ -49,7 +49,7 @@ class HandleInertiaRequests extends Middleware
             'firstPlayVideoSource' => fn () => $appSetting->first_play_video_source,
             'firstPlayVideoSourceType' => fn () => $appSetting->first_play_video_source_type,
             'urlPrev'	=> function() {
-                if (url()->previous() !== route('login') && url()->previous() !== route('notifications') && url()->previous() !== '' && url()->previous() !== url()->current()) {
+                if (url()->previous() !== route('login') && url()->previous() !== 'notifications' && url()->previous() !== '' && url()->previous() !== url()->current()) {
                     return url()->previous();
                 } else {
                     return 'empty'; // used in javascript to disable back button behavior
