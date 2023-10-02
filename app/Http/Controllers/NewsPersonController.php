@@ -20,7 +20,14 @@ class NewsPersonController extends Controller
      */
     public function index()
     {
-        //
+//        return Inertia::render('Public/News/Reporters/Index', [
+//            'newsPerson' => [
+//                'id' => $newsPerson->user->id,
+//                'name' => $newsPerson->user->name,
+//                'profile_photo_path' => $newsPerson->user->profile_photo_path,
+//                'profile_photo_url' => $newsPerson->user->profile_photo_url,
+//            ],
+//        ]);
     }
 
     /**

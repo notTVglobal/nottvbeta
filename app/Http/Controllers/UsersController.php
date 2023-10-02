@@ -160,9 +160,9 @@ class UsersController extends Controller
 //        dd($user->subscription());
         // get Subscription where subscription_plan matches price_id, return subscription name
 
-        $priceId = $user->subscription()->stripe_price;
+        $priceId = $user->subscription()->stripe_price ?? null;
         $subscriptionPlan = SubscriptionPlan::where('price_id', '=', $priceId)->first();
-        $subscriptionName = $subscriptionPlan->name;
+        $subscriptionName = $subscriptionPlan->name ?? null;
 
         return Inertia::render('Users/{$id}/Index', [
             'userSelected' => $user,

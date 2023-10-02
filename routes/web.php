@@ -150,6 +150,10 @@ Route::get('public/news', [NewsController::class, 'index'])
 //        ->middleware('can:create,App\Models\NewsPerson')
     ->name('public.news.index');
 
+Route::get('public/news/reporters', [NewsPersonController::class, 'index'])
+//        ->middleware('can:create,App\Models\NewsPerson')
+    ->name('public.newsPerson.index');
+
 Route::get('public/news/reporter/{newsPerson}', [NewsPersonController::class, 'show'])
 //        ->middleware('can:create,App\Models\NewsPerson')
     ->name('public.newsPerson.show');

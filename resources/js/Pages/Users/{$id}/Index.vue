@@ -7,7 +7,7 @@
 
             <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
-            <div class="flex justify-end mb-3 gap-2">
+            <div class="flex justify-end mb-3 gap-2 pt-6">
                 <Link v-if="$page.props.user.isAdmin === 1" :href="`/users`"><button
                     class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                 >All Users</button>
