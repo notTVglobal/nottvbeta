@@ -40,7 +40,7 @@ export let useUserStore = defineStore('userStore', {
         showFlashMessage: false,
         newNotifications: 0,
         showNotifications: false,
-        notifications: ref([]),
+        notifications: ref([null]),
         notificationsKey: 0,
         userSubscribedToNotifications: false,
         timezone: null,
@@ -114,7 +114,13 @@ export let useUserStore = defineStore('userStore', {
         async fetchNotifications() {
             const response = await fetch(`/notifications`);
             const data = await response.json();
-            this.notifications = data.notifications;
+            if (data.notifications && Array.isArray(data.notifications)) {
+                this.notifications = data.notifications;
+                this.newNotifications = data.notifications.length;
+            } else {
+                // Handle the case where notifications are missing or not an array
+                this.newNotifications = 0; // or some other default value or error handling logic
+            }
         }
     },
 

@@ -1,10 +1,15 @@
 <template>
     <div>
-        <div v-if="userStore.newNotifications === 0">
-            No notifications.
+        <!-- Check if notifications are loading or empty -->
+        <div v-if="isLoading || notifications.length === 0">
+            <!-- Render a loading message or placeholder content -->
+            <p v-if="isLoading">Loading notifications...</p>
+            <p v-else>No notifications available.</p>
         </div>
+
+        <!-- Check if notifications are available and not empty -->
         <div v-else>
-            <div v-for="notification in notifications.slice().reverse()" :key="notification.id">
+            <div v-for="notification in userStore.notifications.slice().reverse()" :key="notification.id">
                 <NotificationCard :notification="notification" @closeModal="closeModalFunction"/>
                 <!-- <button @click="markAsRead(notification.id)" v-if="!notification.read">Mark as Read</button> -->
             </div>
@@ -21,28 +26,17 @@ import NotificationsContainer from "@/Components/Notifications/NotificationsCont
 
 let userStore = useUserStore();
 
+const isLoading = ref(true); // Initialize loading state
 let notifications = ref([]);
 const closeModal = ref(null);
 
 const emit = defineEmits('closeModal')
 
-const fetchNotifications = async () => {
-    // Make an API request to fetch notifications
-    const response = await fetch(`/notifications`);
-    const data = await response.json();
-    notifications = data.notifications;
-    if (data.notifications && Array.isArray(data.notifications)) {
-        userStore.newNotifications = data.notifications.length;
-    } else {
-        // Handle the case where notifications are missing or not an array
-        userStore.newNotifications = 0; // or some other default value or error handling logic
-    }
-};
+setTimeout(() => {
+    notifications.value = userStore.notifications;
+    isLoading.value = false;
+}, 2000); // Simulated 2-second delay
 
-
-onBeforeMount(() => {
-    fetchNotifications();
-});
 
 function closeModalFunction() {
     // Handle the custom event
@@ -51,13 +45,5 @@ function closeModalFunction() {
     // notificationsDialog.value = document.getElementById('notifications');
     // notificationsDialog.value.removeAttribute('open');
 }
-
-
-
-
-// nextTick(() => {
-//     // This code runs after the DOM has been updated.
-//     fetchNotifications();
-// });
 
 </script>

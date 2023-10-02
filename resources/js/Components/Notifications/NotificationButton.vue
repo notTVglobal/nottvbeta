@@ -46,16 +46,16 @@ const fetchNotifications = async () => {
     }
 };
 
-const channel = Echo.private(`user.${userStore.id}`)
+// const channel = Echo.private(`user.${userStore.id}`)
 // Listen for the event when the component is mounted
 onMounted( () => {
-    fetchNotifications()
-
-    Echo.private(`user.${userStore.id}`).subscribed(() => {
-    }).listen('.userNotifications', (event) => {
-        userStore.newNotifications++;
-        // Inertia.reload();
-    })
+    // fetchNotifications()
+    //
+    // Echo.private(`user.${userStore.id}`).subscribed(() => {
+    // }).listen('.userNotifications', (event) => {
+    //     userStore.newNotifications++;
+    //     // Inertia.reload();
+    // })
     // const channel = Echo.private('user.1')
     // channel.subscribed(() => {
     // }).listen('.chat', (event) => {
