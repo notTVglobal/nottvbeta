@@ -48,10 +48,10 @@
 
                 </section>
 
-                <section class="flex flex-col justify-center items-center vh-100 bg-gray-900 text-white px-28 md:px-32 py-20">
+                <section class="flex flex-col justify-center items-center vh-100 bg-gray-900 text-white px-12 md:px-32 py-20">
                     <div class="text-left font-semibold text-xl uppercase my-4">Problem </div>
                     <p class="leading-loose tracking-wide"><span class="text-4xl text-yellow-500">In </span>our society, pressing issues such as education, healthcare, poverty, and systemic challenges often go unaddressed due to limited resources and a lack of transparency. Independent journalism, which plays a vital role in uncovering truths and holding powerful entities accountable, also struggles to secure adequate funding. Additionally, the current digital media landscape is dominated by unaccountable powerful entities, leaving content creators, including independent journalists, live streamers, and social media influencers, at their mercy. This lack of accountability results in unfair compensation, limited creative control, and a lack of transparency.</p>
-                    <div class="text-left mt-8 mb-4 font-semibold text-xl uppercase">Solution </div>
+                    <div class="text-left mt-16 mb-4 font-semibold text-xl uppercase">Solution </div>
                     <p class="leading-loose tracking-wide"><span class="text-4xl text-yellow-500">Unlike </span>traditional media platforms, notTV offers a unique solution—a cooperative ecosystem where content creators are also platform owners. By joining notTV as investors and members, individuals directly contribute to addressing societal problems, ensuring that critical issues are no longer ignored. Profits are shared fairly among cooperative members, ensuring creators receive just compensation for their work. notTV leverages blockchain technology and smart contracts for transparent and secure transactions. It fosters collaboration and community engagement while allocating a percentage of profits to support crucial societal initiatives through the Public Good Fund and independent investigative journalism. Invest in notTV to be part of a transformative movement where content creators thrive, users have a voice, societal problems are actively tackled, and unaccountable powerful entities are held in check. Together, we create a more equitable, informed, and empowered society and media ecosystem.</p>
                 </section>
 
