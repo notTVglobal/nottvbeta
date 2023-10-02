@@ -43,10 +43,19 @@
                 <div>
                     <span v-if="$page.props.userSelected.role_id === 4" class="text-sm font-semibold capitalize">Creator Number: </span>{{props.userSelected.creatorNumber}}
                 </div>
+                <div v-if="props.subscriptionName">
+                    <span class="text-sm font-semibold capitalize">Subscription: </span>{{props.subscriptionName}}
+                </div>
                 <div>
                     <span class="text-sm font-semibold capitalize">Subscription Status: </span>{{props.subscriptionStatus}}
                 </div>
-                <div>
+                <div v-if="props.trialEndsAt">
+                    <span class="text-sm font-semibold capitalize">Trial Ends At: </span>{{formatDate(props.trialEndsAt)}}
+                </div>
+                <div v-if="props.endsAt">
+                    <span class="text-sm font-semibold capitalize">Subscription Renewal Date: </span>{{formatDate(props.endsAt)}}
+                </div>
+                <div v-if="userStore.isAdmin">
                     <span class="text-sm font-semibold capitalize">Stripe ID: </span>{{props.userSelected.stripe_id}}
                 </div>
             </div>
@@ -76,7 +85,7 @@
                     <span class="text-sm font-semibold capitalize">Postal Code: </span>{{ props.userSelected.postalCode }}
                 </div>
             </div>
-            <div class="p-6 light:bg-white dark:bg-gray-800 border-b border-gray-200">
+            <div v-if="userSelected.role_id === 4" class="p-6 light:bg-white dark:bg-gray-800 border-b border-gray-200">
                 <div class="text-2xl pb-2">
                     Teams this user belongs to:
                 </div>
@@ -117,6 +126,9 @@ onMounted(() => {
 let props = defineProps({
     userSelected: Object,
     subscriptionStatus: String,
+    trialEndsAt: String,
+    endsAt: String,
+    subscriptionName: String,
     role: String,
     teams: Object,
 });

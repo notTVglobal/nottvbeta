@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Role;
+use App\Models\SubscriptionPlan;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
@@ -156,26 +157,19 @@ class UsersController extends Controller
             return $role->role;
         }
 
+//        dd($user->subscription());
+        // get Subscription where subscription_plan matches price_id, return subscription name
 
-
-//        dd($user->subscriptions->all());
-
-
-
-
-        try {
-            $user->updateStripeSubscription($stripeSubscriptionId);
-            Log::info('Subscription association succeeded for user: ' . $user->id);
-
-            // Optionally, you can update your application's database records to reflect the subscription association.
-        } catch (\Exception $e) {
-            // Handle any errors that may occur during the association process.
-            Log::error('Subscription association failed for user: ' . $user->id . '. Error: ' . $e->getMessage());
-        }
+        $priceId = $user->subscription()->stripe_price;
+        $subscriptionPlan = SubscriptionPlan::where('price_id', '=', $priceId)->first();
+        $subscriptionName = $subscriptionPlan->name;
 
         return Inertia::render('Users/{$id}/Index', [
             'userSelected' => $user,
             'subscriptionStatus' => $user->subscription('default')->stripe_status ?? null,
+            'trialEndsAt' => $user->subscription('default')->trial_ends_at ?? null,
+            'endsAt' => $user->subscription('default')->ends_at ?? null,
+            'subscriptionName' => $subscriptionName,
             'role' => role($user->role_id),
             'teams' => $user->teams,
             'can' => [
@@ -201,6 +195,7 @@ class UsersController extends Controller
 
         return Inertia::render('Users/{$id}/Edit', [
             'userEdit' => $user,
+            'subscriptionStatus' => $user->subscription('default')->stripe_status ?? null,
             'isNewsPerson' => $isNewsPerson,
             'isVip' => $user->isVip,
             'hasSubscription' => $user->subscription() ?? null,

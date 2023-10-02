@@ -7,6 +7,7 @@ use App\Http\Controllers\ChannelController;
 
 use App\Http\Controllers\FlashController;
 use App\Http\Controllers\NotificationsController;
+use App\Http\Controllers\SubscriptionPlanController;
 use App\Http\Controllers\TestMessageController;
 use App\Http\Controllers\WelcomeController;
 use App\Mail\VerifyMail;
@@ -396,6 +397,29 @@ Route::middleware([
     Route::get('billing-portal-access', [StripeController::class, 'getBillingPortalAccessUrl']);
 
 
+// Subscriptions
+////////////////
+
+        // Index page
+        Route::get('/admin/subscriptions', [SubscriptionPlanController::class, 'index'])->name('subscription-plans.index');
+
+        // Show page
+        Route::get('/admin/subscription/{subscriptionPlan}', [SubscriptionPlanController::class, 'show'])->name('subscription-plans.show');
+
+        // Create page
+        Route::get('/admin/subscriptions/create', [SubscriptionPlanController::class, 'create'])->name('subscription-plans.create');
+
+        // Store method (for creating)
+        Route::post('/admin/subscription', [SubscriptionPlanController::class, 'store'])->name('subscription-plans.store');
+
+        // Edit page
+        Route::get('/admin/subscription/{subscriptionPlan}/edit', [SubscriptionPlanController::class, 'edit'])->name('subscription-plans.edit');
+
+        // Update method (for updating)
+        Route::put('/admin/subscription/{subscriptionPlan}', [SubscriptionPlanController::class, 'update'])->name('subscription-plans.update');
+
+        // Delete method (for deleting)
+        Route::delete('/admin/subscription/{subscriptionPlan}', [SubscriptionPlanController::class, 'destroy'])->name('subscription-plans.destroy');
 
 
 

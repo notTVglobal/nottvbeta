@@ -1,8 +1,14 @@
 # not.tv Changelog
 
 
-Last Update: September 30, 2023\
+Last Update: October 1, 2023\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.7.3.8
+October 1, 2023
+* Added Subscription Plans to the database
+* Add new function for Admin to add an existing Premium Subscriber's subscription to the database from Stripe.
+* Admin will now be able to see a user's subscription plan, renewal date and subscription status from the user's profile page.
 
 ## v0.7.3.7
 September 30, 2023

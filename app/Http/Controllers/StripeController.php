@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Stripe\StripeClient;
 use Stripe\PaymentIntent;
@@ -160,7 +163,6 @@ class StripeController extends Controller
     }
 
     public function getUserSubscriptionsFromStripe(Request $request) {
-        dd($request->data);
         // these first variables go in the subscriptions table
         $name = 'default';
         $stripeSubscriptionId = ''; // e.g, sub_xx
@@ -180,21 +182,88 @@ class StripeController extends Controller
         $user = User::find($userId);
         $customerId = $user->stripe_id; // 'cus_'
 
+        try {
+
         // 2. Get all subscriptions from Stripe
         $stripeSecret = env('STRIPE_SECRET');
         $stripe = new \Stripe\StripeClient($stripeSecret);
         $subscriptions = $stripe->subscriptions->all();
+        $newlyInsertedSubscriptionIds = [];
+        $currentDateTime = now(); // Get the current date and time
+
+//        dd($subscriptions);
 
         // 3. Loop through results where subscription belongs to customer
+        foreach ($subscriptions->data as $subscription) {
+            // Check if the subscription's customer matches $customerId
+            if ($subscription->customer === $customerId) {
+                $subscriptionId = $subscription->id;
 
-        // 4. Create the subscriptions on the subscriptions table if they don't exist (look for existing subscription by $subStripeId)
+                // 4. Create the subscriptions on the subscriptions table if they don't exist (look for existing subscription by sub_)
+                // Attempt to update or insert a new subscription record into the 'subscriptions' table
+                $insertedId = DB::table('subscriptions')->updateOrInsert(
+                    ['stripe_id' => $subscriptionId],
+                    [
+                        'user_id' => $userId,
+                        'name' => $name,
+                        'stripe_id' => $subscriptionId,
+                        'stripe_status' => $subscription->status,
+                        'stripe_price' => $subscription->plan->id,
+                        'quantity' => $subscription->quantity,
+                        'trial_ends_at' => date('Y-m-d H:i:s', $subscription->trial_end),
+                        'ends_at' => date('Y-m-d H:i:s', $subscription->current_period_end),
+                        'created_at' => date('Y-m-d H:i:s', $subscription->created),
+                        'updated_at' => $currentDateTime,
+                    ]
+                );
 
-        // 5. Create the subscription_item on the subscription_items table
+                // If a new subscription was inserted or an existing one was updated, store the ID
+                if ($insertedId) {
+                    $newlyInsertedSubscriptionIds[] = $insertedId;
 
+                    // Check if the subscription has items
+                    if (isset($subscription->items) && isset($subscription->items->data[0])) {
+                        $item = $subscription->items->data[0];
+                        $itemId = $item->id;
+
+                        // 5. Create the subscription_item on the subscription_items table
+                        // Attempt to update or insert a new subscription_items record
+                        DB::table('subscription_items')->updateOrInsert(
+                            ['stripe_id' => $itemId],
+                            [
+                                'subscription_id' => $insertedId,
+                                'stripe_id' => $itemId,
+                                'stripe_product' => $subscription->plan->product,
+                                'stripe_price' => $subscription->plan->id,
+                                'quantity' => $subscription->quantity,
+                                'created_at' => date('Y-m-d H:i:s', $subscription->created),
+                                'updated_at' => $currentDateTime,
+                            ]
+                        );
+                    }
+                }
+            }
+        }
+
+        // Add any additional logic you need after processing subscriptions and creating subscription items
         // 6. Update the user (if we have the pm_type, pm_last_four, trial_ends_at information)
 
+        // Check if no subscriptions were retrieved
+        if (count($newlyInsertedSubscriptionIds) === 0) {
+            return Redirect::route('users.index')->with('message', 'No subscriptions were retrieved for ' . $user->name . '.');
+        }
 
+        // Return message with the number of newly inserted subscription IDs
+//        return $newlyInsertedSubscriptionIds;
+            return Redirect::route('users.index')->with('message', 'Successfully retrieved ' . count($newlyInsertedSubscriptionIds) . ' ' . (count($newlyInsertedSubscriptionIds) === 1 ? 'subscription' : 'subscriptions') . ' for ' . $user->name . '.');
+        } catch (\Exception $e) {
+            // Log the error for debugging
+            Log::error($e);
 
+            // Return an error message
+//            return "An error occurred: " . $e->getMessage();
+            return Redirect::route('users.index')->with('message', 'An error occurred: ' . $e->getMessage());
+        }
 
     }
 }

@@ -69,6 +69,11 @@ class Image extends Model
         return $this->hasMany(Notification::class);
     }
 
+    public function subscriptionPlan()
+    {
+        return $this->hasMany(SubscriptionPlan::class);
+    }
+
 //    public function appSetting(): BelongsTo
 //    {
 //        return $this->belongsTo(AppSetting::class)->withDefault([
