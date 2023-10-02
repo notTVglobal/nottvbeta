@@ -4,6 +4,12 @@
 Last Update: October 1, 2023\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.7.3.8a
+October 1, 2023
+* Fix team members number wrong on Team Manage page
+* Fix notifications not showing up
+* Fix border bottom not showing up on Responsive Navigation Menu
+
 ## v0.7.3.8
 October 1, 2023
 * Added Subscription Plans to the database

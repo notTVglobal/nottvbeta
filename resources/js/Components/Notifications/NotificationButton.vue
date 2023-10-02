@@ -46,16 +46,16 @@ const fetchNotifications = async () => {
     }
 };
 
-// const channel = Echo.private(`user.${userStore.id}`)
+const channel = Echo.private(`user.${userStore.id}`)
 // Listen for the event when the component is mounted
 onMounted( () => {
     fetchNotifications()
 
-    // Echo.private(`user.${userStore.id}`).subscribed(() => {
-    // }).listen('.userNotifications', (event) => {
-    //     userStore.newNotifications++;
-    //     // Inertia.reload();
-    // })
+    Echo.private(`user.${userStore.id}`).subscribed(() => {
+    }).listen('.userNotifications', (event) => {
+        userStore.newNotifications++;
+        // Inertia.reload();
+    })
     // const channel = Echo.private('user.1')
     // channel.subscribed(() => {
     // }).listen('.chat', (event) => {
@@ -74,7 +74,7 @@ onMounted( () => {
 });
 
 const hasNotifications = computed(() => ({
-    'bg-white hover:bg-gray-400 dark:text-white text-blue-700 hover:text-blue-600': userStore.newNotifications > 0,
+    'bg-white hover:bg-gray-400 text-blue-700 hover:text-blue-600': userStore.newNotifications > 0,
     'bg-gray-600 hover:bg-gray-500 text-black hover:text-gray-800': userStore.newNotifications === 0,
     // 'text-danger': error.value && error.value.type === 'fatal'
 }))

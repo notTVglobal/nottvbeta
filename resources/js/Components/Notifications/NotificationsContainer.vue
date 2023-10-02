@@ -21,7 +21,7 @@ import NotificationsContainer from "@/Components/Notifications/NotificationsCont
 
 let userStore = useUserStore();
 
-const notifications = ref([]);
+let notifications = ref([]);
 const closeModal = ref(null);
 
 const emit = defineEmits('closeModal')
@@ -30,7 +30,7 @@ const fetchNotifications = async () => {
     // Make an API request to fetch notifications
     const response = await fetch(`/notifications`);
     const data = await response.json();
-    // userStore.notifications = data.notifications;
+    notifications = data.notifications;
     if (data.notifications && Array.isArray(data.notifications)) {
         userStore.newNotifications = data.notifications.length;
     } else {

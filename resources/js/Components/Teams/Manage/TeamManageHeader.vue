@@ -9,7 +9,7 @@
                 <Link :href="`/teams/${team.slug}`" class="uppercase">{{ team.name }}</Link>
                 <div
                     class="bg-green-400 w-5 h-5 text-xs text-white rounded-full flex justify-center items-center absolute -right-4 -top-0.5">
-                    {{ team.memberSpots }}
+                    {{ team.members.length }}
                 </div>
             </h3>
 
