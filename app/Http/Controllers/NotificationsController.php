@@ -61,4 +61,17 @@ class NotificationsController extends Controller
 //            return response()->json(['error' => 'Unauthorized'], 403);
 //        }
     }
+
+    public function destroyAll()
+    {
+//        $oneMinuteAgo = Carbon::now()->subMinutes(1);
+        $tenSecondsAgo = Carbon::now()->subSeconds(10);
+        $user = Auth::user();
+
+        Notification::where('user_id', $user->id)
+            ->where('created_at', '<', $tenSecondsAgo)
+            ->delete();
+
+        return response()->json(['message' => 'Notifications deleted successfully']);
+    }
 }

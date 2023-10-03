@@ -1,7 +1,7 @@
 <template>
     <Head title="Shows" />
 
-    <div class="place-self-center flex flex-col gap-y-3">
+    <div class="place-self-center flex flex-col gap-y-3 w-full overscroll-x-none">
         <div id="topDiv" class="bg-white text-black dark:bg-gray-900 dark:text-white p-5 mb-10">
 
             <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
@@ -15,8 +15,15 @@
             </div>
 
 
-            <div class="flex flex-col">
+            <div>
+                <!-- Paginator -->
+                <Pagination :data="shows" class=""/>
+            </div>
+
+            <div class="flex flex-col max-w-calc[100%-96rem]">
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+
+
                     <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
 
@@ -26,10 +33,7 @@
                                         class="relative shadow-md sm:rounded-lg"
                                     >
 
-                                            <div>
-                                                <!-- Paginator -->
-                                                <Pagination :data="shows" class=""/>
-                                            </div>
+
 
                                         <table
                                             class="w-full text-sm text-left text-gray-500 dark:text-gray-400 overflow-x-auto"
@@ -147,16 +151,21 @@
                                             </tr>
                                             </tbody>
                                         </table>
-                                        <!-- Paginator -->
-                                        <Pagination :data="shows" class="pb-6"/>
+
                                     </div>
                                 </div>
                             </div>
 
                         </div>
                     </div>
+
+
+
                 </div>
             </div>
+
+            <!-- Paginator -->
+            <Pagination :data="shows" class="pb-6"/>
 
 
             <div class="flex items-center">

@@ -867,6 +867,7 @@ Route::middleware([
     Route::get('/notifications', [NotificationsController::class, 'index']);
     Route::put('/notifications/{id}/mark-as-read', [NotificationsController::class, 'markAsRead']);
     Route::delete('/notifications/{notification}', [NotificationsController::class, 'destroy']);
+    Route::delete('/notifications', [NotificationsController::class, 'destroyAll']);
 
 
 
