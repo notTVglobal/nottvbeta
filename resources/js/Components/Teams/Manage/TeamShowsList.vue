@@ -1,45 +1,52 @@
 <template>
-    <div class="bg-orange-300 text-black p-2 font-bold">Shows</div>
+    <div>
+        <div class="bg-orange-300 text-black p-2 font-bold">Shows</div>
 
 
-    <table class="table-auto min-w-full divide-y divide-gray-200">
-        <thead class="divide-y divide-gray-200">
-        <tr>
-            <td class="px-6 py-4">
-<!--                Poster-->
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium">
-                Show Name
+        <table class="table-auto min-w-full divide-y divide-gray-200">
+            <thead class="divide-y divide-gray-200">
+            <tr>
+                <td class="px-6 py-4">
+    <!--                Poster-->
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium">
+                    Show Name
 
-            </td>
+                </td>
 
-            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                Show Notes
-            </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    Show Notes
+                </td>
 
-            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                Category
-            </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    Category
+                </td>
 
-            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                Show Status
-            </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    Show Status
+                </td>
 
-            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-right">
-                Show Runner
-            </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-right">
+                    Show Runner
+                </td>
 
-        </tr>
-        </thead>
-        <tbody class="divide-y divide-gray-200">
+                <td v-if="can.manageTeam || can.editTeam" class="px-6 py-4 whitespace-nowrap text-sm font-medium text-right">
 
-        <TeamShow
-            v-for="show in shows"
-            :show="show"
-        />
+                </td>
 
-        </tbody>
-    </table>
+            </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+
+            <TeamShow
+                v-for="show in shows"
+                :show="show"
+                :can="can"
+            />
+
+            </tbody>
+        </table>
+    </div>
 
 </template>
 
@@ -53,6 +60,7 @@ let teamStore = useTeamStore();
 
 defineProps({
     shows: Object,
+    can: Object,
 })
 
 </script>

@@ -40,7 +40,7 @@ import {
 // import popper for pop-up tooltips
 import Popper from "vue3-popper";
 // import confirm dialog
-import ConfirmDialog from '@/Components/Modals/ConfirmDialog';
+// import ConfirmDialog from '@/Components/Modals/ConfirmDialog';
 // import vueCountryRegionSelect from 'vue3-country-region-select';
 // import { setupCalendar } from 'v-calendar';
 
@@ -99,7 +99,7 @@ createInertiaApp({
             .component("Head", Head)
             .component("font-awesome-icon", FontAwesomeIcon)
             .component("Popper", Popper)
-            .component("ConfirmDialog", ConfirmDialog)
+            // .component("ConfirmDialog", ConfirmDialog)
             .mixin(formatDate())
             .mount(el);
     },

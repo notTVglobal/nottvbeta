@@ -46,13 +46,13 @@
                 Status
             </td>
 
-            <td v-if="teamStore.can.editTeam" class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+            <td v-if="can.manageTeam" class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                 <!-- Remove -->
             </td>
         </tr>
         </thead>
         <tbody class="divide-y divide-gray-200">
-            <TeamMember v-for="member in teamStore.members" :member="member" :key="member.id"/>
+            <TeamMember v-for="member in teamStore.members" :member="member" :key="member.id" :can="can"/>
         </tbody>
     </table>
     </div>
@@ -79,6 +79,7 @@ let teamStore = useTeamStore();
 let props = defineProps({
     creators: Object,
     creatorFilters: Object,
+    can: Object,
 })
 
 onBeforeMount(async () => {

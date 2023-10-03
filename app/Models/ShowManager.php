@@ -5,12 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class TeamAdmin extends Model
+class ShowManager extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'team_id',
+        'show_id',
         'user_id',
     ];
+
 }

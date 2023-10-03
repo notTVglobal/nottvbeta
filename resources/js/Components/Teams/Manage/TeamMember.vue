@@ -18,7 +18,8 @@
         </td>
 
         <td class="light:text-gray-600 dark:text-gray-200 px-6 py-4 text-sm">
-            {{  props.member.position }}
+            <span v-if="props.member.id === teamStore.teamLeader.id">Team Leader</span>
+            <span v-if="teamStore.managers.some(manager => manager.id === props.member.id)">Team Manager</span>
         </td>
 
         <td class="light:text-gray-600 dark:text-gray-200 px-6 py-4 text-sm">
@@ -34,29 +35,43 @@
             <button v-if="props.member.team_members.active === 0" class="text-gray-400 text-xl font-semibold" disabled>Inactive</button>
         </td>
 
-        <td v-if="teamStore.can.editTeam" class="px-6 py-4">
+        <td v-if="can.manageTeam" class="px-6 py-4">
             <div>
-
-                <button class="bg-red-600 text-white hover:bg-red-500 ml-2 my-2 px-2 py-1 rounded disabled:bg-gray-400 h-max w-max"
+                <button v-if="props.member.id !== teamStore.teamLeader.id" class="bg-blue-600 text-white hover:bg-blue-500 ml-2 my-2 px-2 py-1 rounded disabled:bg-gray-400 h-max w-max"
+                        @click.prevent="confirmTeamManager(props.member)"
+                >
+                    <span v-if="addManager">Make Manager</span><span v-if="removeManager">Remove Manager</span></button>
+                <button v-if="props.member.id !== teamStore.teamLeader.id" class="bg-red-600 text-white hover:bg-red-500 ml-2 my-2 px-2 py-1 rounded disabled:bg-gray-400 h-max w-max"
                         @click.prevent="deleteTeamMember(props.member)"
                         >
                     Remove</button>
             </div>
         </td>
+
     </tr>
 
-    <ConfirmDialog :member="props.member" @confirmDelete="teamStore.deleteTeamMember"/>
+    <ConfirmRemoveTeamMemberDialog :member="props.member" @confirmDelete="teamStore.deleteTeamMember"/>
+    <ConfirmTeamManagerDialog :member="props.member" @confirmRemoveManager="teamStore.removeTeamManager" @confirmAddManager="teamStore.addTeamManager">
+        <span v-if="teamStore.addManager">add</span>
+        <span v-if="!teamStore.addManager">remove</span>
+    </ConfirmTeamManagerDialog>
 
 </template>
 
 <script setup>
 import {useTeamStore} from "@/Stores/TeamStore";
-import ConfirmDialog from "@/Components/Modals/ConfirmDialog";
+import ConfirmRemoveTeamMemberDialog from "@/Components/Modals/ConfirmRemoveTeamMemberDialog";
+import ConfirmTeamManagerDialog from "@/Components/Modals/ConfirmTeamManagerDialog.vue";
+import {onBeforeMount, ref} from "vue";
 
 let teamStore = useTeamStore();
 
+let removeManager = ref(false)
+let addManager = ref(false)
+
 let props = defineProps({
     member: Object,
+    can: Object,
 });
 
 teamStore.confirmDialog = false;
@@ -66,6 +81,32 @@ function deleteTeamMember(member) {
     teamStore.deleteMemberId = member.id;
     teamStore.confirmDialog = true;
 }
+
+function confirmTeamManager(member) {
+    teamStore.selectedManagerName = member.name;
+    teamStore.selectedManagerId = member.id;
+    teamStore.confirmManagerDialog = true;
+
+    teamStore.addManager = !teamStore.managers.some(manager => manager.id === member.id);
+
+
+}
+
+const memberID = props.member.id;
+
+const isManager = teamStore.managers.some(manager => manager.id === memberID);
+
+if (isManager) {
+    removeManager = true;
+    addManager = false;
+} else if (!isManager) {
+    addManager = true;
+    removeManager = false;
+}
+
+onBeforeMount(() => {
+
+})
 
 defineEmits ([
     'removeMember'

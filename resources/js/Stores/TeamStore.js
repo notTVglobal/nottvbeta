@@ -9,12 +9,19 @@ export let useTeamStore = defineStore('teamStore', {
         slug: '',
         totalSpots: '',
         memberSpots: '',
+        teamLeader: [],
         members: [],
+        managers: [],
         activeShow: [],
         activeEpisode: [],
         creators: [],
         showModal: Boolean,
         confirmDialog: false,
+        confirmManagerDialog: false,
+        selectedManagerName: '',
+        selectedManagerId: 0,
+        addManager: false,
+        removeManager: false,
         deleteMemberName: '',
         deleteMemberId: 0,
         noteEdit: 0,
@@ -51,6 +58,9 @@ export let useTeamStore = defineStore('teamStore', {
         deleteTeamMemberCancel() {
             this.confirmDialog = false;
         },
+        confirmTeamManagerCancel() {
+            this.confirmManagerDialog = false;
+        },
         // loadTeamMembers(members){
         //     this.members = members;
         // }
@@ -63,6 +73,28 @@ export let useTeamStore = defineStore('teamStore', {
                     team_slug: this.slug
                 },
             })
+        },
+        addTeamManager() {
+            Inertia.visit(route('teams.addTeamManager'), {
+                method: 'post',
+                data: {
+                    user_id: this.selectedManagerId,
+                    team_id: this.id,
+                    team_slug: this.slug
+                },
+            })
+            this.confirmManagerDialog = false;
+        },
+        removeTeamManager() {
+            Inertia.visit(route('teams.removeTeamManager'), {
+                method: 'post',
+                data: {
+                    user_id: this.selectedManagerId,
+                    team_id: this.id,
+                    team_slug: this.slug
+                },
+            })
+            this.confirmManagerDialog = false;
         },
         toggleGoLiveDisplay() {
             this.goLiveDisplay = ! this.goLiveDisplay;

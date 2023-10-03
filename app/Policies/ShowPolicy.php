@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Models\Creator;
 use App\Models\Show;
 use App\Models\Team;
+use App\Models\TeamManager;
 use App\Models\TeamMember;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -50,8 +51,10 @@ class ShowPolicy
         $userId = $user->id;
         $checkUser = TeamMember::where('team_id', '=', $teamId)
             ->where('user_id', '=', $userId)->pluck('active')->first();
+        $isManager = TeamManager::where('team_id', '=', $show->team_id)
+            ->where('user_id', '=', $userId)->first();
 
-        if($checkUser === 1 || $user->isAdmin || $show->user_id === $user->id){
+        if($show->team->user_id === $userId || $show->team->team_leader === $userId || $isManager || Auth::user()->isAdmin || $show->user_id === $userId){
             return true;
         }
         elseif($checkUser === 0){
@@ -69,7 +72,7 @@ class ShowPolicy
         if($user->isAdmin || $show->user_id === $user->id){
             return true;
         }
-        return Response::deny('You must be the Show Runner to edit this show.');
+        return Response::deny('You must be the Show Runner, Show Manager, Team Leader, or a Team Manager to edit this show.');
     }
 
 
@@ -106,7 +109,7 @@ class ShowPolicy
         $userId = $user->id;
         $checkUser = Creator::where('user_id', $userId)->pluck('status_id')->first();
 
-        if ($checkUser === 1 || Auth::user()->isAdmin) {
+        if($checkUser === 1 || Auth::user()->isAdmin){
             return true;
         }
         elseif ($checkUser === 2) {
@@ -126,12 +129,14 @@ class ShowPolicy
         $userId = Auth::user()->id;
         $checkUser = TeamMember::where('team_id', '=', $teamId)
             ->where('user_id', '=', $userId)->pluck('active')->first();
+        $isManager = TeamManager::where('team_id', '=', $show->team_id)
+            ->where('user_id', '=', $userId)->first();
 
-        if($show->team->user_id === $userId || Auth::user()->isAdmin || $show->user_id === $userId){
+        if($show->team->user_id === $userId || $show->team->team_leader === $userId || $isManager || Auth::user()->isAdmin || $show->user_id === $userId){
             return true;
         }
         elseif($checkUser === 1){
-            return Response::deny('You are not the show runner or manager.');
+            return Response::deny('You are not the show runner or a manager.');
         }
         elseif($checkUser === 0){
             return Response::deny('You are not active on this team.');
@@ -149,7 +154,10 @@ class ShowPolicy
         $checkUser = TeamMember::where('team_id', '=', $teamId)
             ->where('user_id', '=', $userId)->pluck('active')->first();
 
-        if($checkUser === 1 || $user->isAdmin || $show->user_id === $user->id){
+        $isManager = TeamManager::where('team_id', '=', $show->team_id)
+            ->where('user_id', '=', $userId)->first();
+
+        if($show->team->user_id === $userId || $show->team->team_leader === $userId || $isManager || Auth::user()->isAdmin || $show->user_id === $userId){
             return true;
         }
         elseif($checkUser === 0){
@@ -168,7 +176,10 @@ class ShowPolicy
         $checkUser = TeamMember::where('team_id', '=', $teamId)
             ->where('user_id', '=', $userId)->pluck('active')->first();
 
-        if($checkUser === 1 || $user->isAdmin || $show->user_id === $user->id){
+        $isManager = TeamManager::where('team_id', '=', $show->team_id)
+            ->where('user_id', '=', $userId)->first();
+
+        if($show->team->user_id === $userId || $show->team->team_leader === $userId || $isManager || Auth::user()->isAdmin || $show->user_id === $userId){
             return true;
         }
         elseif($checkUser === 0){
@@ -187,7 +198,10 @@ class ShowPolicy
         $checkUser = TeamMember::where('team_id', '=', $teamId)
             ->where('user_id', '=', $userId)->pluck('active')->first();
 
-        if($show->team->user_id === $user->id || $user->isAdmin || $show->user_id === $user->id){
+        $isManager = TeamManager::where('team_id', '=', $show->team_id)
+            ->where('user_id', '=', $userId)->first();
+
+        if($show->team->user_id === $userId || $show->team->team_leader === $userId || $isManager || Auth::user()->isAdmin || $show->user_id === $userId){
             return true;
         }
         elseif($checkUser === 1){
@@ -209,7 +223,10 @@ class ShowPolicy
         $checkUser = TeamMember::where('team_id', '=', $teamId)
             ->where('user_id', '=', $userId)->pluck('active')->first();
 
-        if($show->team->user_id === $user->id || $user->isAdmin || $show->user_id === $user->id){
+        $isManager = TeamManager::where('team_id', '=', $show->team_id)
+            ->where('user_id', '=', $userId)->first();
+
+        if($show->team->user_id === $userId || $show->team->team_leader === $userId || $isManager || Auth::user()->isAdmin || $show->user_id === $userId){
             return true;
         }
         elseif($checkUser === 1){
@@ -232,11 +249,28 @@ class ShowPolicy
      */
     public function manage(User $user, Show $show)
     {
-        if ($user->id === $show->user_id)
-            return $user->id === $show->user_id;
+        $teamId = $show->team_id;
+        $userId = $user->id;
+        $checkUser = TeamMember::where('team_id', '=', $teamId)
+            ->where('user_id', '=', $userId)->pluck('active')->first();
 
-        elseif($user->isAdmin === 1)
-            return $user->isAdmin === 1;
+        $isManager = TeamManager::where('team_id', '=', $show->team_id)
+            ->where('user_id', '=', $userId)->first();
+
+        if($show->team->user_id === $userId || $show->team->team_leader === $userId || $isManager || Auth::user()->isAdmin || $show->user_id === $userId){
+            return true;
+        }
+        elseif($checkUser === 1){
+            return Response::deny('You are not the show runner or manager.');
+        }
+        elseif($checkUser === 0){
+            return Response::deny('You are not active on this team.');
+        }
+        elseif($checkUser === null){
+            return Response::deny('You are not a member of this team.');
+        }
+        return Response::deny('There\'s been a problem. Please let not.TV know.');
+
     }
 
     /**
@@ -264,11 +298,28 @@ class ShowPolicy
      */
     public function update(User $user, Show $show)
     {
-        if ($user->id === $show->user_id)
-            return $user->id === $show->user_id;
+        $teamId = $show->team_id;
+        $userId = $user->id;
+        $checkUser = TeamMember::where('team_id', '=', $teamId)
+            ->where('user_id', '=', $userId)->pluck('active')->first();
 
-        elseif($user->isAdmin === 1)
-            return $user->isAdmin === 1;
+        $isManager = TeamManager::where('team_id', '=', $show->team_id)
+            ->where('user_id', '=', $userId)->first();
+
+        if($show->team->user_id === $userId || $show->team->team_leader === $userId || $isManager || Auth::user()->isAdmin || $show->user_id === $userId){
+            return true;
+        }
+        elseif($checkUser === 1){
+            return Response::deny('You are not the show runner or manager.');
+        }
+        elseif($checkUser === 0){
+            return Response::deny('You are not active on this team.');
+        }
+        elseif($checkUser === null){
+            return Response::deny('You are not a member of this team.');
+        }
+        return Response::deny('There\'s been a problem. Please let not.TV know.');
+
     }
 
     /**
@@ -280,11 +331,28 @@ class ShowPolicy
      */
     public function delete(User $user, Show $show)
     {
-        if ($user->id === $show->user_id)
-            return $user->id === $show->user_id;
+        $teamId = $show->team_id;
+        $userId = $user->id;
+        $checkUser = TeamMember::where('team_id', '=', $teamId)
+            ->where('user_id', '=', $userId)->pluck('active')->first();
 
-        elseif($user->isAdmin === 1)
-            return $user->isAdmin === 1;
+        $isManager = TeamManager::where('team_id', '=', $show->team_id)
+            ->where('user_id', '=', $userId)->first();
+
+        if($show->team->user_id === $userId || $show->team->team_leader === $userId || $isManager || Auth::user()->isAdmin || $show->user_id === $userId){
+            return true;
+        }
+        elseif($checkUser === 1){
+            return Response::deny('You are not the show runner or manager.');
+        }
+        elseif($checkUser === 0){
+            return Response::deny('You are not active on this team.');
+        }
+        elseif($checkUser === null){
+            return Response::deny('You are not a member of this team.');
+        }
+        return Response::deny('There\'s been a problem. Please let not.TV know.');
+
     }
 
     /**
@@ -296,11 +364,27 @@ class ShowPolicy
      */
     public function restore(User $user, Show $show)
     {
-        if ($user->id === $show->user_id)
-            return $user->id === $show->user_id;
+        $teamId = $show->team_id;
+        $userId = $user->id;
+        $checkUser = TeamMember::where('team_id', '=', $teamId)
+            ->where('user_id', '=', $userId)->pluck('active')->first();
 
-        elseif($user->isAdmin === 1)
-            return $user->isAdmin === 1;
+        $isManager = TeamManager::where('team_id', '=', $show->team_id)
+            ->where('user_id', '=', $userId)->first();
+
+        if($show->team->user_id === $userId || $show->team->team_leader === $userId || $isManager || Auth::user()->isAdmin || $show->user_id === $userId){
+            return true;
+        }
+        elseif($checkUser === 1){
+            return Response::deny('You are not the show runner or manager.');
+        }
+        elseif($checkUser === 0){
+            return Response::deny('You are not active on this team.');
+        }
+        elseif($checkUser === null){
+            return Response::deny('You are not a member of this team.');
+        }
+        return Response::deny('There\'s been a problem. Please let not.TV know.');
     }
 
     /**
@@ -312,10 +396,26 @@ class ShowPolicy
      */
     public function forceDelete(User $user, Show $show)
     {
-        if ($user->id === $show->user_id)
-            return $user->id === $show->user_id;
+        $teamId = $show->team_id;
+        $userId = $user->id;
+        $checkUser = TeamMember::where('team_id', '=', $teamId)
+            ->where('user_id', '=', $userId)->pluck('active')->first();
 
-        elseif($user->isAdmin === 1)
-            return $user->isAdmin === 1;
+        $isManager = TeamManager::where('team_id', '=', $show->team_id)
+            ->where('user_id', '=', $userId)->first();
+
+        if($show->team->user_id === $userId || $show->team->team_leader === $userId || $isManager || Auth::user()->isAdmin ){
+            return true;
+        }
+        elseif($checkUser === 1){
+            return Response::deny('You are not the show runner or manager.');
+        }
+        elseif($checkUser === 0){
+            return Response::deny('You are not active on this team.');
+        }
+        elseif($checkUser === null){
+            return Response::deny('You are not a member of this team.');
+        }
+        return Response::deny('There\'s been a problem. Please let not.TV know.');
     }
 }

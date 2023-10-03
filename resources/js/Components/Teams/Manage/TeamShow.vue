@@ -1,9 +1,9 @@
 <template>
     <tr>
-        <td class="px-6 py-4 whitespace-nowrap">
+        <td class="px-6 py-4 w-20 whitespace-nowrap">
 <!--            <img :src="'/storage/images/' + show.poster" class="h-20 w-20 object-cover">-->
 
-            <SingleImage :image="show.image" :poster="show.poster" :alt="'show cover'" class="h-20 w-20 object-cover"/>
+            <SingleImage :image="show.image" :poster="show.poster" :alt="'show cover'" class="h-20 w-20 min-w-[2.5rem] object-cover"/>
 
         </td>
 
@@ -34,6 +34,16 @@
             {{  show.showRunnerName }}
         </td>
 
+        <td v-if="can.manageTeam || can.editTeam" class="text-gray-600 dark:text-gray-100 px-6 py-4 text-sm text-right">
+            <Link
+                v-if="can.editTeam" :href="`/shows/${show.slug}/edit`">
+                <button
+                    class="bg-blue-500 hover:bg-blue-600 text-white font-semibold ml-2 my-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
+                >Edit
+                </button>
+            </Link>
+        </td>
+
     </tr>
 </template>
 
@@ -49,6 +59,7 @@ let teamStore = useTeamStore();
 
 let props = defineProps({
     show: Object,
+    can: Object,
 });
 
 teamStore.noteEdit = 0

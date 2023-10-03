@@ -30,7 +30,7 @@ class TeamMember extends Pivot
 
     public function teams()
     {
-        return $this->belongsToMany(Teams::class);
+        return $this->belongsToMany(Team::class);
     }
 
     /**

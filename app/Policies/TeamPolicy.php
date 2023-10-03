@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Models\Show;
+use App\Models\TeamManager;
 use App\Models\User;
 use App\Models\Team;
 use App\Models\TeamMember;
@@ -19,6 +20,20 @@ class TeamPolicy
         if($user->role_id > 1){
             return true;
         }
+    }
+
+    public function manage(User $user, Team $team)
+    {
+//        $teamId = $team->id;
+//        $userId = $user->id;
+        $userIsManager = TeamManager::where('team_id', '=', $team->id)
+            ->where('user_id', '=', $user->id)->first();
+
+        if($userIsManager || $user->isAdmin || $user->id === $team->team_leader){
+            return true;
+        } elseif($userIsManager === null){
+            return Response::deny('You are not a team manager.');
+        } return Response::deny('There\'s been a problem. Please let not.tv know.');
     }
 
 
@@ -42,12 +57,6 @@ class TeamPolicy
 //? Response::allow()
 //: Response::deny('You are not a member of this team.');
 //return true;
-
-
-    public function manage(User $user, Team $team)
-    {
-        //
-    }
 
 
     public function createTeam(User $user)

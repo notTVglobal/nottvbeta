@@ -127,6 +127,7 @@ class TeamsController extends Controller
             'name' => $request->name,
             'description' => $request->description,
             'user_id' => $request->user_id,
+            'team_leader' => $request->user_id,
             'totalSpots' => $request->totalSpots,
             'slug' => \Str::slug($request->name),
             'isBeingEditedByUser_id' => $request->user_id,
@@ -270,7 +271,10 @@ class TeamsController extends Controller
             return $poster;
         }
 
-        $teamLeader = User::query()->where('id', $team->user_id)->pluck('name')->first();
+        $teamLeader = User::query()
+            ->where('id', $team->team_leader)
+            ->select(['id', 'name'])
+            ->first();
 
         // tec21: I am querying the database here because there is currently no
         // pivot table between creators and teams.
@@ -302,6 +306,7 @@ class TeamsController extends Controller
             // probably be re-written.
             //
             'members' => $team->members,
+            'managers' => $team->managers,
 //            'members' => TeamMember::join('users AS user', 'team_members.user_id', '=', 'user.id')
 //                ->select('team_members.*', 'user.name AS name')
 //                ->when(Request::input('search'), function ($query, $search) {
@@ -345,11 +350,11 @@ class TeamsController extends Controller
                     'showRunnerName' => User::query()->where('id', $show->user_id)->pluck('name')->first(),
                     'team_id' => $show->team_id,
                     'image' => [
-                        'id' => $team->image->id,
-                        'name' => $team->image->name,
-                        'folder' => $team->image->folder,
-                        'cdn_endpoint' => $team->appSetting->cdn_endpoint,
-                        'cloud_folder' => $team->image->cloud_folder,
+                        'id' => $show->image->id,
+                        'name' => $show->image->name,
+                        'folder' => $show->image->folder,
+                        'cdn_endpoint' => $show->appSetting->cdn_endpoint,
+                        'cloud_folder' => $show->image->cloud_folder,
                     ],
                     'slug' => $show->slug,
                     'notes' => $show->notes,
@@ -360,7 +365,8 @@ class TeamsController extends Controller
             'creatorFilters' => Request::only(['search']),
             'can' => [
                 'editTeam' => auth()->user()->can('update', $team),
-                'manageTeam' => auth()->user()->can('viewTeamManagePage', $team),
+//                'manageTeam' => auth()->user()->can('viewTeamManagePage', $team),
+                'manageTeam' => auth()->user()->can('manage', $team),
         ]
         ]);
     }

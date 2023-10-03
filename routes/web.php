@@ -8,6 +8,7 @@ use App\Http\Controllers\ChannelController;
 use App\Http\Controllers\FlashController;
 use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\SubscriptionPlanController;
+use App\Http\Controllers\TeamManagersController;
 use App\Http\Controllers\TestMessageController;
 use App\Http\Controllers\WelcomeController;
 use App\Mail\VerifyMail;
@@ -619,6 +620,14 @@ Route::middleware([
         // Remove team member
         Route::post('/teams/removeTeamMember', [TeamMembersController::class, 'detach'])
             ->name('teams.removeTeamMember');
+
+        // Add team manager
+        Route::post('/teams/addTeamManager', [TeamManagersController::class, 'attach'])
+            ->name('teams.addTeamManager');
+
+        // Remove team manager
+        Route::post('/teams/removeTeamManager', [TeamManagersController::class, 'detach'])
+            ->name('teams.removeTeamManager');
 
     });
 

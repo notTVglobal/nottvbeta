@@ -24,7 +24,7 @@ import SingleImage from "@/Components/Multimedia/SingleImage";
 
 defineProps({
     team: Object,
-    teamLeader: String,
+    teamLeader: Object,
     logo: String,
     image: Object,
     can: Object,

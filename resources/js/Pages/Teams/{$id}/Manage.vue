@@ -2,7 +2,7 @@
 
     <Head :title="`Manage Team: ${props.team.name}`"/>
 
-    <div class="place-self-center flex flex-col gap-y-3 overflow-x-hidden">
+    <div class="place-self-center flex flex-col gap-y-3 w-full overscroll-x-none">
         <div id="topDiv" class="min-h-screen bg-white text-black dark:bg-gray-900 dark:text-gray-50 p-5 pb-36">
 
             <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
@@ -11,8 +11,39 @@
 
             <header>
                 <div class="flex justify-between mb-3 pt-6">
-                    <div class="gap-2">
-                        <div class="font-bold mb-4 text-orange-400">MANAGE TEAM</div>
+                    <div class="font-bold mb-4 text-orange-400">MANAGE TEAM</div>
+                    <div class="flex flex-wrap-reverse justify-end gap-2">
+                        <Link
+                            :href="`/shows/create`"
+                            v-if="teamStore.can.manageTeam">
+                            <button
+                                class="bg-green-500 hover:bg-green-600 text-white font-semibold ml-2 mt-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
+                            >Create Show
+                            </button>
+                        </Link>
+                        <button
+                            class="bg-green-500 hover:bg-green-600 text-white font-semibold ml-2 my-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
+                            @click="openModal"
+                            :disabled="!teamStore.spotsRemaining"
+                            v-if="teamStore.can.manageTeam"
+                        >Add Member ({{ teamStore.spotsRemaining }} spots left)</button>
+                        <Link
+                            v-if="can.editTeam" :href="`/teams/${team.slug}/edit`">
+                            <button
+                                class="bg-blue-500 hover:bg-blue-600 text-white font-semibold ml-2 my-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
+                            >Edit
+                            </button>
+                        </Link>
+                        <Link v-if="!can.manageTeam" :href="`/dashboard`">
+                            <button
+                                class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                            >Dashboard
+                            </button>
+                        </Link>
+                    </div>
+                </div>
+
+                <div class="flex justify-between mb-3 pt-6">
                         <div>
                             <TeamManageHeader
                                 :team="props.team"
@@ -22,48 +53,15 @@
                                 :message="props.message"
                             />
                         </div>
-                    </div>
-                    <div>
-                        <div class="flex flex-wrap-reverse justify-end gap-2">
-                            <Link
-                                :href="`/shows/create`"
-                                v-if="teamStore.can.editTeam">
-                                <button
-                                    class="bg-green-500 hover:bg-green-600 text-white font-semibold ml-2 mt-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
-                                >Create Show
-                                </button>
-                            </Link>
-                            <button
-                                class="bg-green-500 hover:bg-green-600 text-white font-semibold ml-2 my-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
-                                @click="openModal"
-                                :disabled="!teamStore.spotsRemaining"
-                                v-if="teamStore.can.editTeam"
-                            >Add Member ({{ teamStore.spotsRemaining }} spots left)</button>
-                            <Link
-                                v-if="can.editTeam" :href="`/teams/${team.slug}/edit`">
-                                <button
-                                    class="bg-blue-500 hover:bg-blue-600 text-white font-semibold ml-2 my-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
-                                >Edit
-                                </button>
-                            </Link>
-                            <Link :href="`/dashboard`">
-                                <button
-                                    class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                                    hidden
-                                >Dashboard
-                                </button>
-                            </Link>
-                        </div>
-
 
                         <div class="flex justify-end mt-6">
                             <div class="flex flex-col">
                                 <div><span class="text-xs font-semibold mr-2 uppercase">Team Leader: </span>
-                                    <span class="font-bold">{{ teamLeader }}</span>
+                                    <span class="font-bold">{{ teamLeader.name }}</span>
                                 </div>
                             </div>
                         </div>
-                    </div>
+
 
                 </div>
 
@@ -74,18 +72,18 @@
 <!--            </p>-->
 
 
-            <div class="flex flex-col">
+            <div class="flex flex-col max-w-calc[100%-96rem]">
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                     <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
 
                         <div class="mt-4 mb-12 pb-6 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                            <TeamShowsList :shows="props.shows.data" />
+                            <TeamShowsList :shows="props.shows.data" :can="props.can" />
                             <!-- Paginator -->
-                            <Pagination :data="props.shows" class="mt-6"/>
+                            <Pagination :data="props.shows" class="mt-6" />
                         </div>
 
                         <div class="mt-4 mb-12 pb-6 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                            <TeamMembersList :creatorFilters="props.creatorFilters" :creators="props.creators"/>
+                            <TeamMembersList :creatorFilters="props.creatorFilters" :creators="props.creators" :can="props.can" />
                         </div>
 
                         <div class="mt-4 pb-6 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
@@ -136,8 +134,9 @@ let props = defineProps({
     team: Object,
     logo: String,
     image: Object,
-    teamLeader: String,
+    teamLeader: Object,
     members: Object,
+    managers: Object,
     shows: Object,
     creators: Object,
     filters: Object,
@@ -146,7 +145,9 @@ let props = defineProps({
 });
 
 teamStore.setActiveTeam(props.team);
+teamStore.teamLeader = props.teamLeader;
 teamStore.members = props.members;
+teamStore.managers = props.managers;
 teamStore.can = props.can;
 
 function openModal() {

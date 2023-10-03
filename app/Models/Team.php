@@ -30,6 +30,15 @@ class Team extends Model
         return $this->hasMany(Show::class);
     }
 
+    public function managers()
+    {
+        return $this->belongsToMany(User::class, 'team_managers', 'team_id', 'user_id')
+            ->using(TeamManager::class)
+            ->as('teamManagers')
+            ->withTimestamps()
+            ->addSelect('users.*', 'users.id as user_id', 'users.name', 'users.email', 'users.phone', 'users.profile_photo_path');
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);
