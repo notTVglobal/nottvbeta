@@ -11,7 +11,7 @@ class ChannelApiController extends Controller
 {
     public function index()
     {
-        return Channel::with(['channel_source'])->get();
+        return Channel::with(['channelSource'])->get();
     }
 
     /**
