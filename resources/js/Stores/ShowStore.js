@@ -18,6 +18,7 @@ export let useShowStore = defineStore('showStore', {
         note: '',
         saveNoteProcessing: Boolean,
         errorMessage: '',
+        episodeIsBeingDeleted: 0, // put episode id here if being deleted (used on the Show Manage page, Show Episode component)
 
     }),
 

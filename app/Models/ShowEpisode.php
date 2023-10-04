@@ -6,10 +6,20 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ShowEpisode extends Model
 {
+    use SoftDeletes;
     use HasFactory;
+
+//    protected $show;
+//
+//    public function __construct(array $attributes = [])
+//    {
+//        parent::__construct($attributes);
+//        $this->show = new Show(); // Initialize the property with an instance of the Show model
+//    }
 
     /**
      * The attributes that are mass assignable.

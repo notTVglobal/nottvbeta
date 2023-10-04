@@ -309,10 +309,9 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
         loadNewSourceFromUrl(source) {
             this.videoIsYoutube = false
             useChannelStore().clearChannel()
-            let videoJs = videojs('main-player')
+            let videoJs = videojs('main-player', { controls: false })
             this.videoSource = source.video_url
             this.videoSourceType = source.type
-            console.log(source)
             videoJs.src({'src': source.video_url, 'type': source.type})
             // this.play()
             this.unmute()
@@ -572,7 +571,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
         // addViewer() {
         //     axios.post('/api/addCurrentViewer', {'channel_id': this.currentChannelId, 'user_id': useUserStore().id})
         //     .then(response => {
-        //         console.log(response);
+        //         `console.log`(response);
         //     })
         //     .catch(error => {
         //         console.log(error);

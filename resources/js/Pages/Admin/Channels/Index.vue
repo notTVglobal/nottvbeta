@@ -51,7 +51,7 @@
                                     </div>
                                     <div class="table-row-group">
                                         <div
-                                            v-for="channel in channels"
+                                            v-for="channel in channels.data"
                                             :key="channel.id"
                                             class="table-row bg-white border-b dark:bg-gray-800 dark:border-gray-700"
                                         >
@@ -94,19 +94,22 @@
 
 
 <script setup>
-import { onBeforeMount, onMounted, ref } from "vue"
+import {onBeforeMount, onMounted, ref, watch} from "vue"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useUserStore } from "@/Stores/UserStore";
 import Message from "@/Components/Modals/Messages";
 import Pagination from "@/Components/Pagination.vue";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import AdminHeader from "@/Components/Admin/AdminHeader.vue";
+import throttle from "lodash/throttle";
+import {Inertia} from "@inertiajs/inertia";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 
 let props = defineProps({
     channels: Object,
+    filters: Object,
 })
 
 userStore.currentPage = 'adminChannels'
@@ -121,10 +124,26 @@ onMounted(() => {
     document.getElementById("topDiv").scrollIntoView()
 });
 
-function hasChannelSource (channel) {
-    if (channel.channel_source !== null) {
-        return channel.channel_source.name
+// function hasChannelSource (channel) {
+//     if (channel.source !== null) {
+//         return channel.source.name
+//     }
+// }
+
+function hasChannelSource(channel) {
+    if (channel && channel.source && channel.source.name) {
+        return channel.source.name;
     }
+    return null; // Or return any other default value if needed
 }
+
+let search = ref(props.filters.search);
+
+watch(search, throttle(function (value) {
+    Inertia.get('/admin/channels', { search: value }, {
+        preserveState: true,
+        replace: true
+    });
+}, 300));
 
 </script>

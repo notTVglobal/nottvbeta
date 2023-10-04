@@ -94,9 +94,21 @@ onMounted( () => {
         // if (seekHandleRef.value) {
         //     seekHandleRef.value.addEventListener('mousedown', handleMouseDown);
         // }
+    })
 
-
-
+// Handle the fullscreen change event
+    videoPlayer.on('fullscreenchange', () => {
+        if (videoPlayer.isFullscreen()) {
+            // Video is entering fullscreen mode
+            // You can add custom behavior for entering fullscreen here if needed
+        } else {
+            // Video is exiting fullscreen mode
+            // Check if the video was playing before entering fullscreen
+            if (videoPlayer.paused() === false) {
+                // Resume playback after exiting fullscreen
+                videoPlayer.play();
+            }
+        }
     })
 
 

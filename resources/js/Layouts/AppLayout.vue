@@ -36,6 +36,7 @@ import Messages from "@/Components/VideoPlayer/Chat/VideoOTTChatMessages.vue";
 import Message from "@/Components/Modals/Messages.vue";
 import NotificationModal from "@/Components/Notifications/NotificationModal.vue";
 import {format} from "date-fns-tz";
+import {Inertia} from "@inertiajs/inertia";
 
 // const ResponsiveNavigationMenu = defineAsyncComponent( () =>
 //     import('@/Components/Navigation/ResponsiveNavigationMenu'))
@@ -165,5 +166,38 @@ function showOSD() {
 function disconnect() {
     window.Echo.leave("channel." + channelStore.currentChannelId);
     console.log('CHANNEL DISCONNECTED');
+}
+
+function clickOnVideoAction() {
+
+    // if (!userStore.isMobile && !videoPlayerStore.currentPageIsStream) {
+    //     videoPlayerStore.toggleOsdAndControls()
+    // }
+    if (!videoPlayerStore.currentPageIsStream) {
+        Inertia.visit('/stream')
+    }
+    if(videoPlayerStore.currentPageIsStream) {
+        // let videoPlayer = videojs('main-player');
+        videoPlayerStore.togglePlay()
+        // videoPlayerStore.toggleOsdAndControls()
+    }
+    // if (videoPlayerStore.currentPageIsStream === true) {
+    //     // if (userStore.isMobile && orientation.value === 'landscape-primary') {
+    //     //         videoPlayerStore.toggleOsdAndControlsAndNav()
+    //     // } else if (!userStore.isMobile) {
+    //     //     videoPlayerStore.toggleOsdAndControls()
+    //     // }
+    //     // videoPlayerStore.toggleOsdAndControlsAndNav()
+    // } else {
+    //     Inertia.visit('/stream')
+    // }
+    // videoPlayerStore.ottClass = 'OttClose'
+    // videoPlayerStore.ott = 0
+    // if(userStore.isMobile) {
+    //
+    // } else {
+    //     // videoPlayerStore.toggleOsdAndControls()
+    // }
+    // }
 }
 </script>

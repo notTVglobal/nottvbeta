@@ -1,5 +1,5 @@
 <template>
-    <tr>
+    <tr v-if="showStore.episodeIsBeingDeleted !== episode.id">
         <td class="px-6 py-4 text-sm">
 
             <!-- If there is no episode number set by the user
@@ -43,7 +43,8 @@
 
         </td>
         <td>
-            <div class="">
+            <div class="flex flex-row justify-end space-x-1 space-y-1 mr-1">
+                <div></div>
                 <Link
                     :href="`/shows/${showSlug}/episode/${episode.slug}/edit`"
                     v-if="teamStore.can.editShow">
@@ -52,7 +53,18 @@
                     >Edit
                     </button>
                 </Link>
+                <button
+                    v-if="teamStore.can.manageShow && !props.episode.isPublished"
+                    @click="deleteShowEpisode"
+                    class="px-4 py-2 text-white font-semibold bg-red-500 hover:bg-red-600 rounded-lg"
+                ><font-awesome-icon icon="fa-trash-can" />
+                </button>
             </div>
+        </td>
+    </tr>
+    <tr v-else>
+        <td class="w-full text-center">
+            <span class="loading loading-infinity loading-lg"></span><span class="ml-3">The episode is being deleted...</span>
         </td>
     </tr>
 </template>
@@ -64,6 +76,8 @@ import {computed, ref} from "vue";
 import {useForm} from "@inertiajs/inertia-vue3";
 import EpisodeNoteEdit from "@/Components/Shows/Manage/EpisodeNoteEdit";
 import ShowEpisodeStatuses from "@/Components/Shows/Manage/ShowEpisodeStatuses.vue";
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+import {Inertia} from "@inertiajs/inertia";
 
 let teamStore = useTeamStore();
 let showStore = useShowStore();
@@ -75,6 +89,7 @@ let props = defineProps({
 });
 
 let showEpisodeStatuses = ref(false)
+
 showStore.noteEdit = 0
 const componentKey = ref(0);
 
@@ -95,6 +110,58 @@ function openEpisodeStatuses() {
     document.getElementById('episodeStatuses').showModal()
 }
 
+const deleteShowEpisode = async () => {
+
+    // episode is being deleted
+
+
+    const confirmation = confirm('Are you sure you want to delete this show episode?');
+
+    if (confirmation) {
+        try {
+            showStore.episodeIsBeingDeleted = props.episode.id;
+            // Make the DELETE request to delete the show episode
+            await axios.delete(`/shows/${props.showSlug}/episode/${props.episode.slug}`)
+                .then((response) => {
+                    // Handle the response
+                    if (response.status === 200) {
+                        // Display the JSON message from the response
+                        showStore.errorMessage = response.data.message
+                        // alert(response.data.message);
+                        // Update the UI
+                        Inertia.reload()
+                        showStore.episodeIsBeingDeleted = 0;
+                        // For example, you can use Inertia's visit method to navigate to a new page:
+                        // await Inertia.visit(route('some.route'));
+                    } else {
+                        // Handle other response statuses if needed
+                        showStore.errorMessage = response.statusText
+                        console.error('Delete request failed:', response.statusText);
+                        showStore.episodeIsBeingDeleted = 0;
+                        Inertia.reload()
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error deleting show episode:', error);
+                    showStore.errorMessage = error
+                    showStore.episodeIsBeingDeleted = 0;
+                    Inertia.reload()
+                });
+
+
+
+            // await Inertia.delete(route('shows.showEpisodes.destroy', [props.showSlug, props.episode.slug]));
+            console.log("it should've been deleted");
+            // Redirect to a different page or update the UI as needed
+
+            console.log('inertia reload');
+            // For example, you can use Inertia's visit method to navigate to a new page:
+            // await Inertia.visit(route('some.route'));
+        } catch (error) {
+            console.error('Error deleting show episode:', error);
+        }
+    }
+};
 
 
 

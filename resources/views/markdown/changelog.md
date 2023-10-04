@@ -4,13 +4,15 @@
 Last Update: October 3, 2023\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
-## v0.7.3.9
+## v0.7.3.9b
 October 3, 2023
 * Fix team members number wrong on Team Manage page
 * Fix notifications not showing up
 * Fix border bottom not showing up on Responsive Navigation Menu
 * Added Delete All feature to the notifications when there is more than 1 notification
 * Added Team Managers with the ability to create and edit shows and show episodes.
+* Added the ability for Team Leader and Team Managers to delete episodes
+* Added Team Notifications, when an episode is created or deleted all team members get notified.
 
 ## v0.7.3.8
 October 1, 2023

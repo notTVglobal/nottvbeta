@@ -242,7 +242,7 @@ class ShowPolicy
     }
 
     /**
-     * Determine whether the user can manage models.
+     * Determine whether the user can manage shows.
      *
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
@@ -254,10 +254,10 @@ class ShowPolicy
         $checkUser = TeamMember::where('team_id', '=', $teamId)
             ->where('user_id', '=', $userId)->pluck('active')->first();
 
-        $isManager = TeamManager::where('team_id', '=', $show->team_id)
+        $isTeamManager = TeamManager::where('team_id', '=', $show->team_id)
             ->where('user_id', '=', $userId)->first();
 
-        if($show->team->user_id === $userId || $show->team->team_leader === $userId || $isManager || Auth::user()->isAdmin || $show->user_id === $userId){
+        if($show->team->user_id === $userId || $show->team->team_leader === $userId || $isTeamManager || Auth::user()->isAdmin || $show->user_id === $userId){
             return true;
         }
         elseif($checkUser === 1){

@@ -28,6 +28,7 @@ class VerifyCsrfToken extends Middleware
         'stripe/*',
         'notifications/*',
         'notifications',
+        '^shows\/[^\/]+\/episode\/[^\/]+$',
 //        '/subscribe',
     ];
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\NewNotificationEvent;
 use App\Jobs\AddVideoUrlFromEmbedCodeJob;
 use App\Jobs\ProcessVideoInfo;
+use App\Jobs\SendTeamMembersNotificationJob;
 use App\Models\Creator;
 use App\Models\Image;
 use App\Models\Notification;
@@ -14,6 +15,7 @@ use App\Models\Team;
 use App\Models\TeamMember;
 use App\Models\User;
 use App\Models\Video;
+use App\Policies\ShowEpisodePolicy;
 use Carbon\Carbon;
 use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Facades\Auth;
@@ -43,6 +45,7 @@ class ShowEpisodeController extends Controller
 //        $this->middleware('can:createEpisode,show')->only(['createEpisode']);
 //        $this->middleware('can:viewEpisodeManagePage,show')->only(['manageEpisode']);
           $this->middleware('can:editEpisode,show')->only(['editEpisode']);
+          $this->middleware('can:destroy,showEpisode')->only(['destroy']);
 
           $this->formattedReleaseDateTime = '';
           $this->formattedScheduledDateTime = '';
@@ -150,6 +153,14 @@ class ShowEpisodeController extends Controller
 
         $showSlug = $request->show_slug;
         $showEpisodeSlug = $showEpisode->slug;
+
+        $title = $showEpisode->name;
+
+        $message = '<span class="text-green-500 italic">A new episode has been created.</span>';
+
+        $url = '/shows/' . $showSlug . '/episode/' . $showEpisodeSlug;
+
+        dispatch(new SendTeamMembersNotificationJob($showEpisode->show->team, $title, $message, $url));
 
         if ($request->video_embed_code && !$request->video_url) {
             // Create and save the notification
@@ -661,13 +672,34 @@ class ShowEpisodeController extends Controller
 ///
 ///
 
-    public function destroy(ShowEpisode $showEpisode)
+    public function destroy(Show $show, ShowEpisode $showEpisode)
     {
+        // TODO: remove showEpisode from Image (discuss first..)
+
+        if ($showEpisode->isPublished) {
+            return response()->json(['alert', 'This episode has already been published. Please contact the notTV team for assistance.'], 400);
+        }
         $showEpisode->delete();
-        sleep(1);
+        Log::channel('slack')->info('An episode has been deleted. Show: ' . $showEpisode->show->name . '. Episode: ' . $showEpisode->name);
+
+        // Create a SendTeamMembersNotificationJob
+        // Send the following message with:
+        // 1. teamSlug or teamId
+        // 2. message (An episode has been deleted. Show: ' . $showEpisode->show->name . '. Episode: ' . $showEpisode->name)
+        $message = '<span class="text-yellow-500 italic">An episode has been deleted.</span> <br /><br /> <span class="font-semibold">Show:</span> ' . $showEpisode->show->name . '.<br /> <span class="font-semibold">Episode:</span> ' . $showEpisode->name;
+
+        $title = $showEpisode->show->team->name;
+
+        $url = '/teams/' . $showEpisode->show->team->slug . '/manage/';
+
+        dispatch(new SendTeamMembersNotificationJob($showEpisode->show->team, $title, $message, $url));
+
+
+        //return with message
+        return response()->json(['message', 'Episode Deleted Successfully'], 200);
 
         // redirect
-        return redirect()->route('showEpisode')->with('message', 'Episode Deleted Successfully');
+//        return redirect()->route('showEpisode')->with('message', 'Episode Deleted Successfully');
     }
 
 

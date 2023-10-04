@@ -114,7 +114,9 @@ class AddVideoUrlFromEmbedCodeJob implements ShouldQueue
                 0);
             $response = curl_exec($ch);
             curl_close($ch);
-            Log::channel('custom_error')->info('RESPONSE: ' . $response);
+            $responseToLog = strlen($response) > 500 ? substr($response, 0, 500) : $response;
+            Log::channel('custom_error')->info('SCRAPER API RESPONSE: ' . $responseToLog);
+            Log::channel('slack')->info('SCRAPER API RESPONSE: ' . $responseToLog);
 
 //            Log::channel('custom_error')->error($response);
 
@@ -128,7 +130,6 @@ class AddVideoUrlFromEmbedCodeJob implements ShouldQueue
                 // start at the first "mp4" extract https: .... .mp4 and replace \ with ""
                 $firstMp4 = $matches[0][0];
 //                            Log::channel('custom_error')->error('MATCHES: '.$matches[0]);
-                Log::channel('custom_error')->info('FIRST MP4: ' . $firstMp4);
             } elseif (str_contains($sourceUrl, 'bitchute.com')) {
                 // if bitchute ...
                 $sourceIs = 'bitchute';
@@ -136,7 +137,12 @@ class AddVideoUrlFromEmbedCodeJob implements ShouldQueue
                 preg_match_all($pattern, $response, $matches);
                 // start at the first "mp4" extract https: .... .mp4 and replace \ with ""
                 $firstMp4 = $matches[0][0];
+
+
             }
+
+            Log::channel('custom_error')->info('FIRST MP4 RETRIEVED FROM SCRAPER API: ' . $firstMp4 . ' for show episode: ' . $this->showEpisode->name);
+            Log::channel('slack')->info('FIRST MP4 RETRIEVED FROM SCRAPER API: ' . $firstMp4 . ' for show episode: ' . $this->showEpisode->name);
 
 
             // Check if the data is null
@@ -220,6 +226,7 @@ class AddVideoUrlFromEmbedCodeJob implements ShouldQueue
                     $processVideoInfoMessage = 'but was unable to update the info in the database.';
                 }
                 Log::channel('custom_error')->info('AddVideoUrlFromEmbedCodeJob Event Listener: '.$event->message);
+                Log::channel('slack')->info('AddVideoUrlFromEmbedCodeJob Event Listener: '.$event->message);
 
                 // Handle success or error in the first job...
             });
@@ -231,12 +238,6 @@ class AddVideoUrlFromEmbedCodeJob implements ShouldQueue
             retry(10, function () use ($jobName) {
                 return !DB::table('job_flags')->where('job_name', $jobName)->value('flag');
             }, 2000); // Retry up to 10 times, waiting 2 second (2000 milliseconds) between retries
-
-            // Check if the data is null
-            if ($firstMp4 == []) {
-                throw new \Exception("There was an error importing the video embed code for ShowName: Episode #. Please check the embed code and try again.
-                                          if you continue to see this error please let Travis know.");
-            }
 
             // Create and save the notification
             $notification = new Notification;
@@ -266,6 +267,8 @@ class AddVideoUrlFromEmbedCodeJob implements ShouldQueue
         } catch (\Exception $e) {
             Log::channel('custom_error')->error($e->getMessage());
             Log::channel('custom_error')->error($e->getCode());
+            Log::channel('slack')->error($e->getMessage());
+            Log::channel('slack')->error($e->getCode());
 
 
             // Create and save the notification

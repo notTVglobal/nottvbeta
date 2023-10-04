@@ -128,11 +128,16 @@ async function changeEpisodeStatus(episodeId, statusId) {
         });
         // Handle success response as needed
         // ...
+        // Check if the response contains an "alert" message
+        if (response.data.alert) {
+            // Display the alert message
+            alert(response.data.alert);
+        }
     } catch (error) {
         if (error.response) {
             showStore.errorMessage = error.response.data.error
         } else {
-            console.error(error);
+            // console.error(error);
         }
     }
     // return response

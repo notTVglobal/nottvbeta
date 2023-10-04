@@ -53,7 +53,7 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['single'],
+            'channels' => ['daily', 'slack'],
             'ignore_exceptions' => false,
         ],
 
@@ -67,7 +67,7 @@ return [
             'driver' => 'daily',
             'path' => storage_path('logs/laravel.log'),
             'level' => env('LOG_LEVEL', 'debug'),
-            'days' => 14,
+            'days' => 14, // Number of days to keep log files
         ],
 
         'slack' => [
@@ -75,7 +75,8 @@ return [
             'url' => env('LOG_SLACK_WEBHOOK_URL'),
             'username' => 'Laravel Log',
             'emoji' => ':boom:',
-            'level' => env('LOG_LEVEL', 'critical'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'formatter' => App\Logging\CustomSlackLogFormatter::class, // Use the custom formatter
         ],
 
         'papertrail' => [

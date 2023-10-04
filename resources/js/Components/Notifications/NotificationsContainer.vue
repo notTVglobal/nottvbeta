@@ -1,5 +1,9 @@
 <template>
     <div>
+        <div v-if="userStore.newNotifications > 1" class="flex justify-end mr-2 text-accent hover:text-accent/80 underline cursor-pointer">
+            <button @click.prevent="deleteAllNotifications">Delete all</button>
+        </div>
+
         <!-- Check if notifications are loading or empty -->
         <div v-if="isLoading || userStore.newNotifications === 0">
             <!-- Render a loading message or placeholder content -->

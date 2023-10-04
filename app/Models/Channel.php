@@ -30,7 +30,7 @@ class Channel extends Model
         return $this->belongsTo(Video::class);
     }
 
-    public function channel_source()
+    public function channelSource()
     {
         return $this->belongsTo(ChannelSource::class);
     }

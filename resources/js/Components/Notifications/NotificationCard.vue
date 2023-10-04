@@ -9,15 +9,23 @@
         <div class="flex flex-row py-6 mb-3 border-b-2 border-accent border-opacity-25">
 
             <div class="w-fit">
-                <img v-if="!props.notification.image.folder"
-                     :src="'/storage/images/' + props.notification.image.name"
-                     :alt="props.notification.image.name"
-                     class="w-20 h-20 object-cover"/>
 
-                <img v-if="props.notification.image.folder"
-                     :src="props.notification.image.app_setting.cdn_endpoint + props.notification.image.cloud_folder + props.notification.image.folder + '/' + props.notification.image.name"
-                     :alt="props.notification.image.name"
-                     class="w-20 h-20 object-cover"/>
+                <div v-if="props.notification.image" >
+                    <img v-if="!props.notification.image.folder"
+                         :src="'/storage/images/' + props.notification.image.name"
+                         :alt="props.notification.image.name"
+                         class="w-20 h-20 object-cover"/>
+
+                    <img v-if="props.notification.image.folder"
+                         :src="props.notification.image.app_setting.cdn_endpoint + props.notification.image.cloud_folder + props.notification.image.folder + '/' + props.notification.image.name"
+                         :alt="props.notification.image.name"
+                         class="w-20 h-20 object-cover"/>
+
+                </div>
+                <div v-else>
+                    🔔
+                </div>
+
             </div>
             <div class="ml-4 lg:ml-8 pr-2 w-5/6 justify-left">
                 <button @click.prevent="visitUrl(props.notification.url)"><h3 class="font-bold text-lg text-left justify-left">{{ props.notification.title }}</h3></button>
@@ -52,10 +60,10 @@ const emit = defineEmits('closeModal')
 const truncatedMessage = computed(() => {
     const message = props.notification.message || '';
 
-    if (message.length <= 300) {
+    if (message.length <= 500) {
         return message;
     } else {
-        return message.slice(0, 300) + '...';
+        return message.slice(0, 500) + '...';
     }
 });
 

@@ -90,6 +90,18 @@ class TeamManagersController extends Controller
 //            'members' => $team->members,
 //        ])->with('message', $user->name . ' has been successfully removed from the team.');
 
+        // notify new team member
+        $notification = new Notification;
+        $notification->user_id = $user->id;
+        // make the image the team_poster
+        $notification->image_id = $team->image_id;
+        $notification->url = '/teams/'.$team->slug;
+        $notification->title = $team->name;
+        $notification->message = 'You have been removed as a team manager.';
+        $notification->save();
+        // Trigger the event to broadcast the new notification
+        event(new NewNotificationEvent($notification));
+
         return redirect()->route('teams.manage', $teamSlug)->with('message', $user->name . ' has been removed as a manager.');
 //        return redirect(route('teams.manage', [$teamSlug]))->with('message', $user->name . ' has been successfully removed from the team.');
     }

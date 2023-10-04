@@ -57,7 +57,8 @@
                         <div class="flex justify-end mt-6">
                             <div class="flex flex-col">
                                 <div><span class="text-xs font-semibold mr-2 uppercase">Team Leader: </span>
-                                    <span class="font-bold">{{ teamLeader.name }}</span>
+                                    <span class="font-bold" v-if="teamLeader">{{ teamLeader.name }}</span>
+                                    <span v-else>No team leader assigned</span>
                                 </div>
                             </div>
                         </div>
@@ -145,7 +146,13 @@ let props = defineProps({
 });
 
 teamStore.setActiveTeam(props.team);
-teamStore.teamLeader = props.teamLeader;
+props.teamLeader && (teamStore.teamLeader = props.teamLeader);
+// teamStore.teamLeader.name = props.teamLeader ? props.teamLeader.name : 'No team leader assigned';
+// if (props.teamLeader) {
+//     teamStore.teamLeader = props.teamLeader
+
+// }
+
 teamStore.members = props.members;
 teamStore.managers = props.managers;
 teamStore.can = props.can;

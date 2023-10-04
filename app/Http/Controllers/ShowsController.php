@@ -503,10 +503,12 @@ class ShowsController extends Controller
                     'notes' => $showEpisode->notes,
                     'episodeStatus' => $showEpisode->showEpisodeStatus->name,
                     'episodeStatusId' => $showEpisode->showEpisodeStatus->id,
+                    'isPublished' => $showEpisode->isPublished,
                 ]),
             'episodeStatuses' => $filteredStatuses,
             'can' => [
                 'editShow' => auth()->user()->can('edit', $show),
+                'manageShow' => auth()->user()->can('manage', $show),
                 'createEpisode' => auth()->user()->can('createEpisode', $show),
                 'createAssignment' => auth()->user()->can('editShow', $show),
                 'goLive' => auth()->user()->can('goLive', $show),
@@ -764,12 +766,21 @@ class ShowsController extends Controller
         // set release year and dateTime
         // Carbon::now();
 
-        try {
-            // Get the episode ID and new status from the request
-            $episodeId = $request->input('episode_id');
-            $newStatusId = $request->input('new_status_id');
+        // Get the episode ID and new status from the request
+        $episodeId = $request->input('episode_id');
+        $newStatusId = $request->input('new_status_id');
 
-            if ($newStatusId === 6) {
+        // Find the episode by ID
+        $episode = ShowEpisode::find($episodeId);
+
+        if ($episode->isPublished) {
+            return response()->json(['alert' => 'This episode has already been published. Please contact the notTV team for assistance.']);
+        }
+
+        try {
+
+
+            if ($newStatusId === 6) { // 6 is 'scheduled'
                 // validate the request
                 $request->validate([
                     'scheduled_release_dateTime' => 'date|after:now',
@@ -785,18 +796,18 @@ class ShowsController extends Controller
                 // Format $utcDatetime as a string in ISO 8601 format:
                 $formattedUtcDatetime = $utcDatetime->toIso8601String();
 
-            } else if ($newStatusId === 7) {
+            } else if ($newStatusId === 7) { // 7 is 'published'
                 $releaseDateTime = Carbon::now();
                 $releaseYear = Carbon::now()->year;
                 $formattedUtcDatetime = null;
+                $isPublished = 1;
             } else if ($newStatusId > 7) {
                 $releaseDateTime = null;
                 $releaseYear = null;
                 $formattedUtcDatetime = null;
             }
 
-            // Find the episode by ID
-            $episode = ShowEpisode::find($episodeId);
+
 
             if (!$episode) {
                 return response()->json(['message' => 'Episode not found'], 404);
@@ -807,6 +818,7 @@ class ShowsController extends Controller
             $episode->release_dateTime = $releaseDateTime ?? null;
             $episode->release_year = $releaseYear ?? null;
             $episode->scheduled_release_dateTime = $formattedUtcDatetime ?? null;
+            $episode->isPublished = $isPublished ?? 0;
             $episode->save();
 
             // If successful, return a success response

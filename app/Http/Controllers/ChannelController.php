@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\NewsPost;
-use Illuminate\Http\Request;
+use App\Models\User;
+use Illuminate\Http\Request as HttpRequest;
+use Illuminate\Support\Facades\Request;
 use App\Models\Channel;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -21,7 +23,21 @@ class ChannelController extends Controller
     public function index()
     {
         return Inertia::render('Admin/Channels/Index', [
-            'channels' => Channel::with('channel_source', 'video')->get()
+            'channels' => Channel::with('channelSource', 'video')
+                ->when(Request::input('search'), function ($query, $search) {
+                $query->where('name', 'like', "%{$search}%");
+            })  ->latest()
+                ->paginate(13, ['*'], 'admin/channels')
+                ->withQueryString()
+                ->through(fn($channel) => [
+                        'id' => $channel->id,
+                        'name' => $channel->name,
+                        'currentVideo' => $channel->video ?? null,
+                        'isLive' => $channel->isLive,
+                        'stream' => $channel->stream,
+                        'source' => $channel->channelSource ?? null,
+                    ]),
+            'filters' => Request::only(['search']),
         ]);
     }
 

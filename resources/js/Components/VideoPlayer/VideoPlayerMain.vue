@@ -11,7 +11,7 @@
                   <videoJs /></div>
 
             </div>
-        <div v-show="videoPlayerStore.currentPageIsStream"
+        <div v-show="videoPlayerStore.currentPageIsStream && !userStore.showNavDropdown"
              class="tooltip tooltip-bottom hover-time"
              :style="{ left: hoverPosition }"
              :data-tip="hoverTime">

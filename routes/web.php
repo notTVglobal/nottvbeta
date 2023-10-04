@@ -701,6 +701,10 @@ Route::middleware([
 //        ->middleware('can:edit,show')
         ->name('shows.showEpisodes.edit')
         ->scopeBindings();
+    // Delete an episode
+    Route::delete('/shows/{show}/episode/{showEpisode}', [ShowEpisodeController::class, 'destroy'])
+        ->name('shows.showEpisodes.destroy')
+        ->scopeBindings();
     // Display episode upload page
     Route::get('/shows/{show}/episode/{showEpisode}/upload', [ShowEpisodeController::class, 'upload'])
 //        ->middleware('can:edit,show')
