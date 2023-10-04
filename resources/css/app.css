@@ -23,7 +23,7 @@ html {
     z-index: 300;
 }
 .menuMask {
-    z-index: 300;
+    z-index: 998;
 }
 .welcomeOverlay {
     z-index: 500;
