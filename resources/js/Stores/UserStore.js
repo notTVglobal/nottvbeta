@@ -101,6 +101,7 @@ export let useUserStore = defineStore('userStore', {
         },
         removeNotificationById(id) {
             this.notifications = this.notifications.filter(notification => notification.id !== id);
+            this.newNotifications--;
         },
         async subscribeToUserNotifications(userId) {
             await this.fetchNotifications()

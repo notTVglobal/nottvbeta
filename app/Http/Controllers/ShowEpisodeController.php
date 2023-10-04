@@ -87,7 +87,7 @@ class ShowEpisodeController extends Controller
             'show_id' => 'required',
             'episode_number' => 'nullable|max:10',
             'notes' => 'nullable|string',
-            'video_url' => 'nullable|active_url',
+            'video_url' => 'nullable|active_url|ends_with:.mp4',
             'youtube_url' => 'nullable|active_url',
             'video_embed_code' => 'nullable|string',
         ]);
@@ -472,7 +472,7 @@ class ShowEpisodeController extends Controller
             'episode_number' => 'max:10',
             'description' => 'required',
             'notes' => 'nullable|string',
-            'video_url' => 'nullable|active_url',
+            'video_url' => 'nullable|active_url|ends_with:.mp4',
             'youtube_url' => 'nullable|active_url',
             'video_embed_code' => 'nullable|string',
             'release_dateTime' => 'nullable|date',
