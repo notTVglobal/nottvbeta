@@ -34,6 +34,42 @@ class DashboardController extends Controller
             $query->where('stripe_status', 'active');
         })->count();
 
+        $teams = $user->teams()
+            ->where('active', 1)
+            ->orWhere('team_leader', $user->id)
+            ->orWhereHas('managers', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })
+            ->get();
+
+        // Use a collection to deduplicate the teams based on their IDs
+        $uniqueTeams = $teams->unique('id');
+
+        // Paginate the unique teams manually
+        $perPage = 5;
+        $pageName = 'teams';
+        $page = \Illuminate\Pagination\Paginator::resolveCurrentPage($pageName);
+        $queryString = \Illuminate\Pagination\Paginator::resolveQueryString($pageName);
+        $paginatedTeams = new \Illuminate\Pagination\LengthAwarePaginator(
+            $uniqueTeams->forPage($page, $perPage),
+            count($uniqueTeams),
+            $perPage,
+            $page,
+            [
+                'path' => \Illuminate\Pagination\Paginator::resolveCurrentPath(),
+                'pageName' => $pageName,
+                'query' => $queryString,
+            ]
+        );
+
+        // Paginate the unique teams
+//        $paginatedTeams = \Illuminate\Pagination\Paginator::make(
+//            $uniqueTeams->all(),
+//            count($uniqueTeams),
+//            5
+//        )->setPageName('teams');
+
+
         function formatBytes($bytes, $precision = 2) {
             $unit = ["B", "KB", "MB", "GB"];
             $exp = floor(log($bytes, 1024)) | 0;
@@ -82,6 +118,22 @@ class DashboardController extends Controller
             'hasAccount' => $hasAccount,
             'shows' => Show::query()
                 ->where('user_id', Auth::user()->id)
+                ->orWhere(function ($query) {
+                    $query->whereHas('team', function ($subQuery) {
+                        $subQuery->where('team_leader', Auth::user()->id)
+                            ->orWhereHas('managers', function ($managerQuery) {
+                                $managerQuery->where('user_id', Auth::user()->id);
+                            });
+                    })
+                        ->orWhereExists(function ($existsQuery) {
+                            $existsQuery->select(\DB::raw(1))
+                                ->from('teams')
+                                ->whereRaw('teams.user_id = ' . Auth::user()->id)
+                                ->whereRaw('teams.id = shows.team_id');
+                        })
+                        ->orWhere('user_id', Auth::user()->id); // User's own shows
+                })
+                ->distinct() // Ensure unique shows
                 ->paginate(5, ['*'], 'shows')
                 ->withQueryString()
                 ->through(fn($show) => [
@@ -92,15 +144,29 @@ class DashboardController extends Controller
                         'manageShow' => Auth::user()->can('manage', $show)
                     ]
                 ]),
-
-            'teams' => $user->teams()->where('active', 1)
-                ->paginate(5, ['*'], 'teams')
-                ->withQueryString()
-                ->through(fn($team) => [
+            'teams' => $paginatedTeams->through(function ($team) {
+                return [
                     'id' => $team->id,
                     'name' => $team->name,
                     'slug' => $team->slug,
-                ]),
+                ];
+            }),
+//            }
+//            'teams' => $user->teams()
+//                ->where('active', 1)
+////                ->orWhere('user_id', Auth::user()->id)
+//                ->orWhere('team_leader', $user->id)
+//                ->orWhereHas('managers', function ($query) use ($user) {
+//                    $query->where('user_id', $user->id);
+//                })
+//                ->distinct()
+//                ->paginate(5, ['*'], 'teams')
+//                ->withQueryString()
+//                ->through(fn($team) => [
+//                    'id' => $team->id,
+//                    'name' => $team->name,
+//                    'slug' => $team->slug,
+//                ]),
 
 //            'teams' => User::with('teams')
 //                ->where('id', Auth::user()->id)

@@ -214,7 +214,13 @@ class ShowsController extends Controller
 
              return Inertia::render('Shows/Create', [
                  'teams' => Team::query()
-                     ->where('user_id', Auth::user()->id)
+                     ->where(function ($query) {
+                         $query->where('user_id', Auth::user()->id)
+                             ->orWhere('team_leader', Auth::user()->id)
+                             ->orWhereHas('managers', function ($query) {
+                                 $query->where('user_id', Auth::user()->id);
+                             });
+                     })
                      ->paginate(5, ['*'], 'teams')
                      ->withQueryString()
                      ->through(fn($team) => [

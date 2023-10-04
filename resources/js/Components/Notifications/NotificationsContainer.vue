@@ -21,7 +21,7 @@
             </div>
 
         </div>
-        <div v-if="userStore.newNotifications > 1" class="flex justify-end mr-2 text-accent hover:text-accent/80 underline cursor-pointer">
+        <div v-if="userStore.newNotifications > 4" class="flex justify-end mr-2 text-accent hover:text-accent/80 underline cursor-pointer">
             <button @click.prevent="deleteAllNotifications">Delete all</button>
         </div>
     </div>

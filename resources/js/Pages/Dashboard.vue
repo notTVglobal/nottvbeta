@@ -2,7 +2,7 @@
     <Head title="Dashboard" />
 
     <div class="place-self-center flex flex-col gap-y-3 bg-blue-500 w-full">
-        <div id="topDiv" class="bg-white rounded text-black dark:text-white dark:bg-gray-900 p-5 mb-10">
+        <div id="topDiv" class="rounded light:bg-white light:text-black dark:text-white dark:bg-gray-900 p-5 mb-10">
 
             <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
@@ -84,7 +84,7 @@
                     <div
                         v-for="team in teams.data"
                         :key="team.id"
-                        class="border-b bg-white hover:bg-blue-300 dark:bg-gray-600 dark:border-gray-700 dark:hover:bg-blue-800 inset-x-0 bottom-0"
+                        class="border-b light:bg-white hover:bg-blue-300 dark:bg-gray-600 dark:border-gray-700 dark:hover:bg-blue-800 inset-x-0 bottom-0"
                     >
                         <button
                             @click="visitTeamManagePage(team.slug)"
@@ -149,7 +149,7 @@
                     <div
                         v-for="show in shows.data"
                         :key="show.id"
-                        class="border-b bg-white hover:bg-blue-300 dark:bg-gray-600 dark:border-gray-700 dark:hover:bg-blue-800 inset-x-0 bottom-0"
+                        class="border-b light:bg-white hover:bg-blue-300 dark:bg-gray-600 dark:border-gray-700 dark:hover:bg-blue-800 inset-x-0 bottom-0"
                     >
                         <Link
                             @click="videoPlayer.makeVideoTopRight()"
@@ -181,9 +181,9 @@
 
             </section>
 
-            <div class="w-full bg-gray-300 dark:bg-gray-900 rounded p-3 my-8 mx-2 border-b border-2">
+            <div class="w-full light:bg-gray-300 dark:bg-gray-900 rounded p-3 my-8 mx-2 border-b border-2">
                 <div class="stat place-items-center mb-4">
-                    <div class="stat-title text-black dark:text-white mb-2">Yesterday's Top Show</div>
+                    <div class="stat-title light:text-black dark:text-white mb-2">Yesterday's Top Show</div>
                     <div class="stat-value text-accent md:text-lg text-sm">Down The Rabbit Hole</div>
                     <div class="stat-desc">︎Episode 2</div>
                 </div>

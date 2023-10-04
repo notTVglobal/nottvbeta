@@ -13,6 +13,9 @@ October 3, 2023
 * Added Team Managers with the ability to create and edit shows and show episodes.
 * Added the ability for Team Leader and Team Managers to delete episodes
 * Added Team Notifications, when an episode is created or deleted all team members get notified.
+* Updated the paginator to only display 3 page buttons ( it doesn't look right when there is less than 3 pages)
+* Fixed the css on the dashboard
+* Fixed the way teams and show appear on the dashboard, now Team Members will see their teams and shows.
 
 ## v0.7.3.8
 October 1, 2023
