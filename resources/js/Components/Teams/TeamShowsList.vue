@@ -7,10 +7,10 @@
             <div
                 v-for="(show, key) in shows.data"
                 :key="show.id"
-                class="bg-white dark:bg-gray-800 dark:border-gray-700"
+                class="bg-gray-800 border-gray-700"
             >
-                <Link :href="`/shows/${show.slug}`" class="text-gray-50 dark:hover:text-blue-50">
-                <div class=" min-w-[8rem] max-w-[14rem] px-6 py-4 font-medium break-words grow-0 w-full text-center text-blue-800 hover:text-blue-600 dark:text-gray-50 dark:hover:text-blue-500">
+                <Link :href="`/shows/${show.slug}`" class="text-gray-50 hover:text-blue-50">
+                <div class=" min-w-[8rem] max-w-[14rem] px-6 py-4 font-medium break-words grow-0 w-full text-center text-gray-50 hover:text-blue-500">
 
                     <SingleImage :image="show.image" :poster="show.poster" :alt="'show cover'" class="h-64 min-w-[8rem] mb-4 object-cover hover:opacity-75 transition ease-in-out duration-150"/>
                     {{ show.name }}

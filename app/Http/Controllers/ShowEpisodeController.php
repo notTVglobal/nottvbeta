@@ -632,7 +632,7 @@ class ShowEpisodeController extends Controller
 //        $showEpisodeSlug = $showEpisode->slug;
 
         // redirect
-        return redirect(route('shows.showEpisodes.show', [$showSlug, $showEpisode->slug]))
+        return redirect(route('shows.showEpisodes.manageEpisode', [$showSlug, $showEpisode->slug]))
             ->with('success', 'Episode Updated Successfully');
 
 

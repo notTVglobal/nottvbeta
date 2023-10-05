@@ -9,16 +9,30 @@
             <AdminHeader>Channels</AdminHeader>
 
             <div class="flex flex-row justify-between gap-x-4 mb-3">
-                <Link :href="`/users/create`"><button
-                    class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded disabled:bg-gray-400"
-                    disabled
-                >Add Channel</button>
-                </Link>
+                <div>
+                    <Link :href="`#`"><button
+                        class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 mr-2 rounded disabled:bg-gray-400"
+                        disabled
+                    >Add Channel</button>
+                    </Link>
+                    <Link :href="`#`"><button
+                        class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 mr-2 rounded disabled:bg-gray-400"
+                        disabled
+                    >Add External Source</button>
+                    </Link>
+                    <Link :href="`#`"><button
+                        class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 mr-2 rounded disabled:bg-gray-400"
+                        disabled
+                    >Add Mist Stream</button>
+                    </Link>
+                </div>
                 <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg" />
             </div>
 
             <div class="bg-orange-300 px-2 text-black mb-3">
-                Add a channel: create playlist and add shows.
+                <p>Add a channel: create playlist and add shows.</p>
+                <p><span class="font-semibold">TRAVIS NOTE: </span>Use FFMPEG to push an .mp4 to a mist stream. This will allow us to schedule video objects from anywhere
+                into our channels, and we can have a channel that loads the current video at the right time spot in the video based on our schedule saved in the database.</p>
             </div>
 
             <div class="flex flex-col">
@@ -36,16 +50,17 @@
                                         <div class="table-row">
                                             <div scope="col" class="table-cell px-6 py-3">
                                                 <font-awesome-icon icon="fa-repeat" class="mr-2 cursor-pointer hover:text-blue-500" @click.prevent="reload()"/>
-                                                Name
+                                                Channel Name
                                             </div>
                                             <div scope="col" class="hidden md:table-cell px-6 py-3">
                                                 Current Video
                                             </div>
                                             <div scope="col" class="table-cell px-6 py-3">
-                                                Source
+                                                External Source <br />
+                                                <span class="italic text-xs text-gray-400">Playlist or Live Stream</span>
                                             </div>
                                             <div scope="col" class="px-6 py-3">
-                                                Stream
+                                                Mist Stream
                                             </div>
                                         </div>
                                     </div>
@@ -60,19 +75,65 @@
                                                 class="table-cell min-w-[8rem] px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                                             >
                                                 <span>{{ channel.name }}</span>
+                                                <div v-if="channel.isLive" class="ml-2 text-xs badge badge-secondary badge-outline">live</div>
 
                                             </div>
                                             <div
                                                 scope="row"
                                                 class="md:table-cell px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                                             >
-                                                <span>{{ channel.video }}</span>
+                                                <div v-if="channel.currentVideo">
+                                                    <Popper
+                                                        hover openDelay="50" closeDelay="50" offset-skid="0" offset-distance="0" placement="bottom"
+
+                                                    ><template #content>
+                                                        <div class="text-xs" id="tooltip">
+                                                            <div>ID: {{ channel.currentVideo.id }}</div>
+                                                            <div>File Name: {{ channel.currentVideo.file_name }}</div>
+                                                            <div>Type: {{ channel.currentVideo.type }}</div>
+                                                            <div>Folder: {{ channel.currentVideo.folder }}</div>
+                                                            <div>Storage Location: {{ channel.currentVideo.storage_location }}</div>
+                                                            <div>Processing: <span v-if="channel.currentVideo.is_processing">true</span><span v-else>false</span></div>
+                                                            <div>Length: {{ channel.currentVideo.length }}</div>
+                                                        </div>
+                                                    </template>
+
+                                                        <span v-if="channel.currentVideo.name" class="cursor-help text-green-500 font-semibold">{{ channel.currentVideo.name }}</span>
+                                                        <span v-else class="cursor-help text-blue-500 font-semibold">Video has no name</span>
+
+                                                    </Popper>
+
+                                                </div>
+                                                <div v-else class="italic text-gray-300 text-xs">No video object playing</div>
                                             </div>
                                             <div class="table-cell px-6 py-4">
-                                                <span>{{ hasChannelSource(channel) }}</span>
+                                                <div v-if="channel.source">
+                                                    <Popper
+                                                        hover openDelay="50" closeDelay="50" offset-skid="0" offset-distance="0" placement="bottom"
+
+                                                    ><template #content>
+                                                        <div class="text-xs" id="tooltip">
+                                                            <div>ID: {{ channel.source.id }}</div>
+                                                            <div>Name: {{ channel.source.name }}</div>
+                                                            <div>Path: {{ channel.source.path }}</div>
+                                                            <div>Type: {{ channel.source.type }}</div>
+                                                            <div>Provider: {{ channel.source.provider }}</div>
+                                                        </div>
+                                                    </template>
+
+                                                        <span class="cursor-help text-orange-500 font-semibold">{{ hasChannelSource(channel) }}</span>
+
+                                                    </Popper>
+
+                                                </div>
+                                                <div v-else>
+                                                    <span class="italic text-gray-300 text-sm">no source</span>
+                                                </div>
+
                                             </div>
                                             <div class="table-cell px-6 py-4">
-                                                <span>{{ channel.stream }}</span>
+                                                <span v-if="channel.stream" class="text-green-500 font-semibold">{{ channel.stream }}</span>
+                                                <span v-else class="italic text-gray-300 text-sm">no stream</span>
                                             </div>
 
                                         </div>
@@ -147,3 +208,32 @@ watch(search, throttle(function (value) {
 }, 300));
 
 </script>
+
+<style scoped>
+#tooltip {
+    background: #333;
+    color: white;
+    font-weight: bold;
+    padding: 4px 8px;
+    font-size: 13px;
+    border-radius: 4px;
+}
+
+:deep(.popper) {
+    background: #333333;
+    padding: 2px;
+    border-radius: 20px;
+    color: #fff;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+:deep(.popper #arrow::before) {
+    background: #333333;
+}
+
+:deep(.popper:hover),
+:deep(.popper:hover > #arrow::before) {
+    background: #333333;
+}
+</style>

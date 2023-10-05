@@ -36,6 +36,7 @@ import {
     faUserSecret,
     faAngleLeft,
     faTrashCan,
+    faCircleInfo,
 } from '@fortawesome/free-solid-svg-icons'
 // import popper for pop-up tooltips
 import Popper from "vue3-popper";
@@ -107,6 +108,6 @@ createInertiaApp({
 
 library.add(faUserSecret, faPlay, faQuestion, faStar, faUsers, faHandsHelping, faRocket,
             faEye, faComments, faPaperPlane, faUser, faLeaf, faFlagUsa, faList, faFilter,
-            faShare, faCircleDown, faRepeat, faCheck, faAngleLeft, faTrashCan);
+            faShare, faCircleDown, faRepeat, faCheck, faAngleLeft, faTrashCan, faCircleInfo);
 
 InertiaProgress.init({ delay: 250, color: '#FCEF5B', includeCSS: true, showSpinner: true, });

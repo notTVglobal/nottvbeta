@@ -40,7 +40,7 @@ export let useUserStore = defineStore('userStore', {
         showFlashMessage: false,
         newNotifications: 0,
         showNotifications: false,
-        notifications: ref([null]),
+        notifications: ref([]),
         notificationsKey: 0,
         userSubscribedToNotifications: false,
         timezone: null,
@@ -101,7 +101,7 @@ export let useUserStore = defineStore('userStore', {
         },
         removeNotificationById(id) {
             this.notifications = this.notifications.filter(notification => notification.id !== id);
-            this.newNotifications--;
+            // this.newNotifications--;
         },
         async subscribeToUserNotifications(userId) {
             await this.fetchNotifications()

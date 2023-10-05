@@ -99,7 +99,10 @@
 
                         </div>
                     </div>
-                    <div class="most-anticipated lg:w-1/4 mt-12 lg:mt-0">
+
+                    <div class="flex flex-col xl:flex-row my-10 pl-4">
+
+                    <div class="most-anticipated w-full xl:w-3/4 mr-0 md:mr-16 xl:mr-32">
                         <h2 class="text-yellow-500 uppercase tracking-wide font-semibold text-2xl">Most Anticipated</h2>
                         <div class="most-anticipated-container space-y-10 mt-8">
                             <div v-for="movie in mostAnticipated.data"
@@ -129,6 +132,8 @@
                                 </div>
                             </div>
                         </div>
+
+                    </div>
                     </div>
 
 

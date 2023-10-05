@@ -1,10 +1,23 @@
 # not.tv Changelog
 
 
-Last Update: October 3, 2023\
+Last Update: October 5, 2023\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
-## v0.7.3.9b
+## v0.7.3.10
+October 5, 2023
+* New design for Show Episode Mange page.
+* Fixed notifications, problem deleting when only one notification
+* Added notifications if a user is added to a team or removed from a team
+* If a user is removed from a team they are removed as a team manager
+* If an episode is published only an admin can change the releaseDateTime
+* If an episode is scheduled for release it says how long until the release on the Episode Manage page.
+* Added an example Episode Rundown on the episode manage page.
+* Fixed some dark: css styling
+* Reverted the Paginator back to the previous style, it displays too many page links for smaller screens, this will need to be fixed later.
+* Some other styling fixes
+
+## v0.7.3.9
 October 3, 2023
 * Fix team members number wrong on Team Manage page
 * Fix notifications not showing up
@@ -16,6 +29,7 @@ October 3, 2023
 * Updated the paginator to only display 3 page buttons ( it doesn't look right when there is less than 3 pages)
 * Fixed the css on the dashboard
 * Fixed the way teams and show appear on the dashboard, now Team Members will see their teams and shows.
+* Added a new validation for Show Episodes, the video URL must end in .mp4
 
 ## v0.7.3.8
 October 1, 2023

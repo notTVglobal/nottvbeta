@@ -3,13 +3,13 @@
     <Head :title="props.team.name" />
 
     <div class="place-self-center flex flex-col gap-y-3 overflow-x-hidden">
-        <div id="topDiv" class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 rounded p-5 mb-10">
+        <div id="topDiv" class="light:bg-white light:text-black dark:bg-gray-800 dark:text-gray-50 rounded p-5 mb-10">
 
             <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
             <header class="flex justify-between mb-3 pt-6">
                 <div>
-                    <h3 class="dark:text-gray-50 inline-flex items-center text-3xl font-semibold relative uppercase">
+                    <h3 class="light:text-gray-900 dark:text-gray-50 inline-flex items-center text-3xl font-semibold relative uppercase">
 
                         <SingleImage :image="image" :alt="'team logo'" :class="'w-20 mr-2'"/>
                         {{ props.team.name }}
@@ -44,20 +44,20 @@
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                     <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
 
-                    <div class="w-full bg-gray-300 dark:bg-gray-900 text-black dark:text-gray-50 text-2xl p-4 mb-8">SHOWS</div>
+                    <div class="w-full bg-gray-900 text-white text-2xl p-4 mb-8">SHOWS</div>
 
                         <TeamShowsList :shows="props.shows" />
 
-                    <div class="w-full bg-gray-300 dark:bg-gray-900 text-black dark:text-gray-50 text-2xl p-4 mb-8">CREATORS</div>
+                    <div class="w-full bg-gray-900 text-white text-2xl p-4 mb-8">CREATORS</div>
 
                         <div class="flex flex-row flex-wrap">
                             <div v-for="creator in props.creators.data"
                                  :key="creator.id"
-                                 class="pb-8 dark:bg-gray-800 bg-white">
+                                 class="pb-8 bg-gray-800">
 
                                 <div class="flex flex-col min-w-[8rem] px-6 py-4 font-medium break-words grow-0">
                                     <img :src="'/storage/' + creator.profile_photo_path" class="pb-2 rounded-full h-32 w-32 object-cover mb-2">
-                                    <span class="text-gray-800 dark:text-gray-50 w-full text-center">{{ creator.name }}</span>
+                                    <span class="text-gray-50 w-full text-center">{{ creator.name }}</span>
                                 </div>
                             </div>
                         </div>

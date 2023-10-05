@@ -86,18 +86,20 @@ const truncatedMessage = computed(() => {
 
 const deleteNotification = async (notificationId) => {
     try {
-        await fetch(`/notifications/${notificationId}`, { method: 'DELETE' });
-        // Handle success, e.g., remove the deleted notification from your store
-        userStore.removeNotificationById(notificationId)
-        if (userStore.newNotifications > 0) {
-            userStore.newNotifications--;
-        }
-        // if this is the last notification then close the modal
-        if (userStore.newNotifications === 0) {
-            emit('closeModal')
-            notificationsDialog.value = document.getElementById('notifications');
-            notificationsDialog.value.removeAttribute('open');
-        }
+        await axios.delete(`/notifications/${notificationId}`, { method: 'DELETE' }).then((response) => {
+            // Handle success, e.g., remove the deleted notification from your store
+            userStore.removeNotificationById(notificationId)
+            if (userStore.newNotifications > 0) {
+                userStore.newNotifications--;
+            }
+            // if this is the last notification then close the modal
+            if (userStore.newNotifications === 0) {
+                emit('closeModal')
+                notificationsDialog.value = document.getElementById('notifications');
+                notificationsDialog.value.removeAttribute('open');
+            }
+        })
+
     } catch (error) {
         // Handle any errors that occur during the deletion
     }

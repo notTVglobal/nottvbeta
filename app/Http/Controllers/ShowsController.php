@@ -28,6 +28,9 @@ use Inertia\Inertia;
 class ShowsController extends Controller
 {
 
+    private string $formattedReleaseDateTime;
+    private string $formattedScheduledDateTime;
+
     public function __construct()
     {
 
@@ -39,6 +42,9 @@ class ShowsController extends Controller
 //        $this->middleware('can:create,show')->only(['store']);
         $this->middleware('can:createEpisode,show')->only(['createEpisode']);
         $this->middleware('can:viewEpisodeManagePage,show')->only(['manageEpisode']);
+
+        $this->formattedReleaseDateTime = '';
+        $this->formattedScheduledDateTime = '';
 
     }
 
@@ -735,6 +741,16 @@ class ShowsController extends Controller
 
     public function manageEpisode(Show $show, ShowEpisode $showEpisode) {
 
+        // convert release dateTime to user's timezone
+        if ($showEpisode->release_dateTime) {
+            $this->formattedReleaseDateTime = $this->convertTimeToUserTime($showEpisode->release_dateTime);
+        }
+
+        // convert scheduled_release dateTime to user's timezone
+        if ($showEpisode->scheduled_release_dateTime) {
+            $this->formattedScheduledDateTime = $this->convertTimeToUserTime($showEpisode->scheduled_release_dateTime);
+        }
+
         return Inertia::render('Shows/{$id}/Episodes/{$id}/Manage', [
             'show' => [
                 'name' => $show->name,
@@ -754,6 +770,12 @@ class ShowsController extends Controller
                 'slug' => $show->team->slug,
             ],
             'episode' => $showEpisode,
+            'releaseDateTime' => $this->formattedReleaseDateTime ?? null,
+            'scheduledDateTime' => $this->formattedScheduledDateTime ?? null,
+            'episodeStatus' => [
+                'id' => $showEpisode->showEpisodeStatus->id,
+                'name' => $showEpisode->showEpisodeStatus->name,
+            ],
             'can' => [
                 'editEpisode' => auth()->user()->can('editEpisode', $show),
                 'goLive' => auth()->user()->can('goLive', $show),
@@ -839,6 +861,32 @@ class ShowsController extends Controller
 
 
 
+    }
+
+    public function convertTimeToUserTime($dateTime): ?string
+    {
+        try {
+            // Get the user's timezone
+            $user = Auth::user();
+            if (!$user) {
+                // No authenticated user, unable to determine timezone
+                return null;
+            }
+
+            $userTimezone = $user->timezone;
+
+            // Create a Carbon instance from the DateTime string
+            $dateTime = \Carbon\Carbon::parse($dateTime);
+
+            // Convert to the user's timezone
+            $dateTime->setTimezone($userTimezone);
+
+            // Format $dateTime as a string in ISO 8601 format:
+            return $dateTime->toIso8601String();
+        } catch (\Exception $e) {
+            // Handle any parsing or timezone conversion errors here
+            return null;
+        }
     }
 
 }

@@ -9,7 +9,13 @@
             <div class="flex justify-between mb-6 pt-4">
 
                 <h1 class="text-3xl font-semibold">Dashboard for Creators</h1>
-                <p>Your timezone: {{userStore.timezone}}</p>
+                <div class="flex flex-end w-full">
+                    <p class="px-2">{{ now }}</p>
+                    <p>Your timezone: {{userStore.timezone}}</p>
+                </div>
+
+
+
 
             </div>
 
@@ -375,11 +381,13 @@ import { useUserStore } from "@/Stores/UserStore";
 import Pagination from "@/Components/Pagination"
 import Message from "@/Components/Modals/Messages";
 import {Inertia} from "@inertiajs/inertia";
+import { useNow } from '@vueuse/core'
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 
 const getUserData = inject('getUserData', null)
+const now = useNow()
 
 videoPlayerStore.loggedIn = true
 userStore.currentPage = 'dashboard'

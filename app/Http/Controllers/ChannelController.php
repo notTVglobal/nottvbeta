@@ -32,7 +32,7 @@ class ChannelController extends Controller
                 ->through(fn($channel) => [
                         'id' => $channel->id,
                         'name' => $channel->name,
-                        'currentVideo' => $channel->video ?? null,
+                        'currentVideo' => $channel->video,
                         'isLive' => $channel->isLive,
                         'stream' => $channel->stream,
                         'source' => $channel->channelSource ?? null,

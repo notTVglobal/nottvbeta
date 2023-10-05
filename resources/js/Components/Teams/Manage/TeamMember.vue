@@ -17,16 +17,16 @@
             </div>
         </td>
 
-        <td class="light:text-gray-600 dark:text-gray-200 px-6 py-4 text-sm">
+        <td class="light:text-gray-600 px-6 py-4 text-sm">
             <span v-if="props.member.id === teamStore.teamLeader.id">Team Leader</span>
             <span v-if="teamStore.managers.some(manager => manager.id === props.member.id)">Team Manager</span>
         </td>
 
-        <td class="light:text-gray-600 dark:text-gray-200 px-6 py-4 text-sm">
+        <td class="light:text-gray-600 px-6 py-4 text-sm">
             {{  props.member.phone }}
         </td>
 
-        <td class="light:text-gray-600 dark:text-gray-200 px-6 py-4 text-sm">
+        <td class="light:text-gray-600 px-6 py-4 text-sm">
             {{  props.member.email }}
         </td>
 

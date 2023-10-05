@@ -4,7 +4,7 @@
         <div v-if="!teamStore.can.editShow || props.episodeStatusId === 9 || props.episodeStatusId === 10" class="cursor-not-allowed" :class="episodeStatusClass">{{ episodeStatus }}</div>
 
         <dialog :id="dialogId" class="modal">
-            <div class="modal-box h-fit overflow-scroll">
+            <div class="modal-box h-fit overflow-scroll bg-white text-black">
                 <div v-if="!setDateTime">
                     <h2 class="text-center mb-2">Change the Episode Status:</h2>
                     <div v-for="(status, key)  in episodeStatuses" :key="key" class="text-center">

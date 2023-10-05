@@ -129,7 +129,7 @@
 
 
 
-                                        <DateTimePickerSelect :date="props.episode.release_dateTime" @date-time-selected="handleReleaseDateTime">
+                                        <DateTimePickerSelect v-if="userStore.isAdmin" :date="props.episode.release_dateTime" @date-time-selected="handleReleaseDateTime">
                                             <template v-slot:buttonName>
                                                 Change date
                                             </template>

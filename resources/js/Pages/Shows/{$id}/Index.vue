@@ -4,7 +4,7 @@
     <Head :title="props.show.name" />
 
     <div class="place-self-center flex flex-col">
-        <div id="topDiv" class="bg-gray-900 text-white px-5">
+        <div id="topDiv" class="bg-gray-900 text-white px-5 pt-6">
 
             <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 

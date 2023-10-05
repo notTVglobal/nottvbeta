@@ -50,7 +50,7 @@ class TeamManagersController extends Controller
         $notification->image_id = $team->image_id;
         $notification->url = '/teams/'.$team->slug;
         $notification->title = $team->name;
-        $notification->message = 'You are now a team manager.';
+        $notification->message = '<span class="text-yellow-500">You are now a team manager.</span>';
         $notification->save();
         // Trigger the event to broadcast the new notification
         event(new NewNotificationEvent($notification));
@@ -97,7 +97,7 @@ class TeamManagersController extends Controller
         $notification->image_id = $team->image_id;
         $notification->url = '/teams/'.$team->slug;
         $notification->title = $team->name;
-        $notification->message = 'You have been removed as a team manager.';
+        $notification->message = '<span class="text-yellow-500">You have been removed as a team manager.</span>';
         $notification->save();
         // Trigger the event to broadcast the new notification
         event(new NewNotificationEvent($notification));

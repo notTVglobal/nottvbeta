@@ -27,7 +27,7 @@ class Channel extends Model
 
     public function video()
     {
-        return $this->belongsTo(Video::class);
+        return $this->belongsTo(Video::class, 'current_video_id');
     }
 
     public function channelSource()
