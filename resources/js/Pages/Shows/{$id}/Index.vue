@@ -36,8 +36,8 @@
                             <div class="text-gray-400 text-center lg:text-left">
                                 <span>{{ show.categoryName }}</span>
                                 &middot;
-                                <span>{{ show.categorySubName }}</span>
-                                &middot;
+                                <span class="hidden">{{ show.categorySubName }} &middot;</span>
+
                                 <span v-if="show.last_release_year" >{{ show.first_release_year }}-{{show.last_release_year}}</span>
                                 <span v-if="!show.last_release_year">{{show.first_release_year}}</span>
 <!--                                This will need a change in the database to allow the creator to update

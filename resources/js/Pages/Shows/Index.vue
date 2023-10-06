@@ -56,7 +56,7 @@
                                 <div class="text-gray-400 text-lg mt-1">{{ show.categoryName }} &middot;
                                     <span v-if="show.last_release_year">({{show.last_release_year}})</span>
                                     <span v-if="!show.last_release_year">({{show.first_release_year}})</span></div>
-                                <div class="text-gray-400 mt-1 font-thin">{{ show.categorySubName }}</div>
+                                <div class="text-gray-400 mt-1 font-thin hidden">{{ show.categorySubName }}</div>
                             </Link>
                         </div>
 
@@ -81,7 +81,7 @@
                                         <SingleImage :image="episode.image" :alt="'episode cover'" class="h-28 w-48 min-w-[12rem] object-cover bg-black"/>
                                         <div>
                                             <div class="mt-4 w-full justify-end text-yellow-300">{{episode.categoryName}}</div>
-                                            <div class="w-full justify-end text-yellow-500 font-thin">{{episode.categorySubName}}</div>
+                                            <div class="w-full justify-end text-yellow-500 font-thin hidden">{{episode.categorySubName}}</div>
                                         </div>
                                     </div>
 
@@ -122,7 +122,7 @@
                                 <div class="ml-4">
                                     <Link :href="`/shows/${show.slug}`" class="hover:text-gray-300">{{ show.name }}</Link>
                                     <div class="text-gray-400 text-sm mt-1">{{ show.categoryName }}</div>
-                                    <div class="text-gray-400 text-sm font-thin mt-1">{{ show.categorySubName }}</div>
+                                    <div class="text-gray-400 text-sm font-thin mt-1 hidden">{{ show.categorySubName }}</div>
                                 </div>
                             </div>
                         </div>

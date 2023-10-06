@@ -11,6 +11,7 @@ October 6, 2023
 * Fixed the Show FirstPlay button.
 * Cleaned up the Show Episode Manage page. Made the Show Rundown and extra buttons hidden (these are features to develop later).
 * Fix the bg-opacity on the Welcome page.
+* Made sub-category hidden on Show, Show Episode and Movie pages
 
 ## v0.7.3.10
 October 5, 2023

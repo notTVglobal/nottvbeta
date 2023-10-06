@@ -36,18 +36,20 @@
                     <div class="flex flex-wrap justify-between px-5">
                         <div class="">
                             <div class="mb-4">
-                                <h3 class="mb-1 inline-flex items-center text-3xl font-semibold relative">
+                                <h3 class="mb-1 inline-flex items-center text-3xl font-semibold hover:text-blue-500 relative">
+                                    <Link :href="`/shows/${props.show.slug}/`">
 
-                                    {{ props.episode.name }}
+                                        {{ props.show.name }}
+
+                                    </Link>
+
+
 
                                 </h3>
                                 <div class="mb-1">
-                                    <span class="font-semibold hover:text-blue-500 text-xl">
-                                        <Link :href="`/shows/${props.show.slug}/`">
-
-                                            {{ props.show.name }}
-
-                                        </Link></span>
+                                    <span class="font-semibold text-xl">
+                                        {{ props.episode.name }}
+                                        </span>
                                 </div>
                                 <div class="text-xs space-y-1">
                                     <span class="uppercase">Episode Number: </span>
@@ -66,7 +68,7 @@
                                 <span class="text-xs uppercase">Category: </span>
                                 <span class="text-sm uppercase font-semibold">{{ props.show.categoryName }}</span>
                             </div>
-                            <div class="pb-4">
+                            <div class="pb-4 hidden">
                                 <span class="text-xs uppercase">Sub-category: </span>
                                 <span class="text-sm uppercase font-semibold">{{ props.show.categorySubName }}</span>
                             </div>

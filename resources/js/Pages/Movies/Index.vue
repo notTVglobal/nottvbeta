@@ -60,7 +60,7 @@
                             <Link :href="`/movies/${movie.slug}`" class="block text-base font-semibold leading-tight max-w-[8rem] hover:text-gray-400 mt-4 mb-2">{{ movie.name }}</Link>
                             <div class="text-gray-400 mt-1">{{ movie.category }}
                                 <span v-if="movie.release_year">({{movie.release_year}})</span></div>
-                            <div class="text-gray-400 mt-1">{{ movie.subCategory }}</div>
+                            <div class="text-gray-400 mt-1 hidden">{{ movie.subCategory }}</div>
                         </div>
 
                     </div>
@@ -90,7 +90,7 @@
                                 <div class="ml-12">
                                     <Link :href="`/movies/${movie.slug}`" class="block text-lg font-semibold leading-tight max-w-[8rem] hover:text-gray-400 mt-4">
                                         {{ movie.name }}</Link>
-                                    <div class="text-gray-400 mt-1">{{ movie.category }}, {{ movie.subCategory }}</div>
+                                    <div class="text-gray-400 mt-1">{{ movie.category }}<span class="hidden">, {{ movie.subCategory }}</span></div>
                                     <p class="mt-6 pr-4 text-gray-300 hidden lg:block">
                                         {{ movie.logline }}
                                     </p>
@@ -113,7 +113,7 @@
                                 </Link>
                                 <div class="ml-4">
                                     <Link :href="`/movies/${movie.slug}`" class="hover:text-gray-300">{{ movie.name }}</Link>
-                                    <div class="text-gray-400 text-sm mt-1">{{ movie.category }}, {{ movie.subCategory }}</div>
+                                    <div class="text-gray-400 text-sm mt-1">{{ movie.category }}<span class="hidden">, {{ movie.subCategory }}</span></div>
                                 </div>
                             </div>
                         </div>
@@ -128,7 +128,7 @@
                                 </Link>
                                 <div class="ml-4">
                                     <Link :href="`/movies/${movie.slug}`" class="hover:text-gray-300">{{ movie.name }}</Link>
-                                    <div class="text-gray-400 text-sm mt-1">{{ movie.category }}, {{ movie.subCategory }}</div>
+                                    <div class="text-gray-400 text-sm mt-1">{{ movie.category }}<span class="hidden">, {{ movie.subCategory }}</span></div>
                                 </div>
                             </div>
                         </div>

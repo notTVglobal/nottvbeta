@@ -24,7 +24,7 @@
                     <div class="lg:ml-12 lg:mr-0">
                         <h2 class="font-semibold text-4xl text-center lg:text-left">{{ movie.name }}</h2>
                         <div class="text-gray-400 text-center lg:text-left">
-                            <span>{{ movie.category }}, {{ movie.subCategory }}</span>
+                            <span>{{ movie.category }}<span class="hidden">&middot; {{ movie.subCategory }}</span></span>
                             <span v-if="movie.release_year"> &middot; {{movie.release_year}}</span>
                         </div>
 

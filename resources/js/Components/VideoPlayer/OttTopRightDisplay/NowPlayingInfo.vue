@@ -9,16 +9,16 @@
                  :class="[{'h-[calc(100vh-22rem)]':!userStore.isMobile},{'h-[calc(100vh-20rem)]':userStore.isMobile}]">
                 <div class="flex justify-between">
                     <div>
-                        <div><span class="text-xs uppercase">Name: </span><Link :href="`${videoPlayerStore.nowPlayingUrl}`">{{ videoPlayerStore.nowPlayingName }}</Link></div>
-                        <div><span class="text-xs uppercase">Description: </span>{{ videoPlayerStore.nowPlayingDescription }}</div>
-                        <div><span class="text-xs uppercase">Team: </span><Link :href="`/teams/${videoPlayerStore.nowPlayingTeam.slug}`">{{ videoPlayerStore.nowPlayingTeam.name }}</Link></div>
+                        <div class="flex flex-wrap">
+                            <div><Link :href="`${videoPlayerStore.nowPlayingUrl}`"><SingleImage :image="videoPlayerStore.nowPlayingImage" :alt="`${videoPlayerStore.nowPlayingName}`" :class="`h-16 w-12  object-cover hover:opacity-75 transition ease-in-out duration-150`"/></Link></div>
+                            <div class="pl-3 text-xl font-semibold"><Link :href="`${videoPlayerStore.nowPlayingUrl}`">{{ videoPlayerStore.nowPlayingName }}</Link></div>
+                        </div>
+                        <div class="p-2">{{ videoPlayerStore.nowPlayingDescription }}</div>
                     </div>
 
-                    <div><Link :href="`${videoPlayerStore.nowPlayingUrl}`"><SingleImage :image="videoPlayerStore.nowPlayingImage" :alt="`${videoPlayerStore.nowPlayingName}`" :class="`h-16 w-12  object-cover hover:opacity-75 transition ease-in-out duration-150`"/>
 <!--                        <img :src="`/storage/images/EBU_Colorbars.svg.png`" alt="poster" class="h-16 w-12  object-cover hover:opacity-75 transition ease-in-out duration-150">-->
     <!--                    <img :src="`/storage/images/${streamStore.posterUrl}`">-->
 
-                    </Link></div>
                 </div>
 
 <!--                <div v-if="videoPlayerStore.nowPlayingCreators" class="creators-section mt-6">-->
@@ -41,7 +41,7 @@
 <!--                    </div>-->
 <!--                </div>-->
 
-                <div class="py-2 mt-24 text-sm uppercase">
+                <div v-if="videoPlayerStore.nowPlayingTeam.name" class="py-2 mt-24 text-sm uppercase">
                     Copyright <Link :href="`/teams/${videoPlayerStore.nowPlayingTeam.slug}`">{{ videoPlayerStore.nowPlayingTeam.name }}</Link>.
                 </div>
             </div>
