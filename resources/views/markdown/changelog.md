@@ -10,6 +10,7 @@ October 6, 2023
 * Updated the Now Playing Info ott panel with actual info if a Show Episode is played
 * Fixed the Show FirstPlay button.
 * Cleaned up the Show Episode Manage page. Made the Show Rundown and extra buttons hidden (these are features to develop later).
+* Fix the bg-opacity on the Welcome page.
 
 ## v0.7.3.10
 October 5, 2023

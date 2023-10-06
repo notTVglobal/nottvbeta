@@ -1,8 +1,8 @@
 <template>
     <Head title="Beta" />
         <div id="topDiv"
-             class="w-full vh-100 place-self-center flex flex-col text-gray-200 z-50"
-             :class="welcomeOverlayBG">
+             class=""
+             :class="welcomeContainer">
             <header class="headerContainer w-full">
                 <div class="w-full flex flex-row md:px-6 py-4 welcomeOverlay">
                     <WelcomeBug />
@@ -129,9 +129,9 @@ let props = defineProps({
     user: Object,
 });
 
-const welcomeOverlayBG = computed(() => ({
-    'bg-black bg-opacity-80': welcomeStore.showOverlay,
-    'bg-opacity-0': !welcomeStore.showOverlay
+const welcomeContainer = computed(() => ({
+    'w-full vh-100 place-self-center flex flex-col text-gray-200 z-50 bg-blue-500 bg-opacity-50': welcomeStore.showOverlay,
+    'w-full vh-100 place-self-center flex flex-col text-gray-200 z-50 bg-opacity-0': !welcomeStore.showOverlay
 }))
 
 userStore.currentPage = 'welcome'
