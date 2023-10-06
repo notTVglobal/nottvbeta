@@ -8,6 +8,7 @@
         leave-to-class="opacity-0 scale-125"
     >
 <!--        <div v-if="welcomeStore.showOverlay===true">-->
+        <div class="">
                     <div class="grid md:grid-cols-1 grid-cols-1 align-items-center -mt-32">
                         <JetApplicationLogo class="block md:w-auto p-10"/>
                             <div class="my-4 text-center">
@@ -32,6 +33,7 @@
 
 
                     </div>
+        </div>
 <!--                </div>-->
 
     </Transition>

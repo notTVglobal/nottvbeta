@@ -1,5 +1,6 @@
 <template>
     <Head title="Beta" />
+    <transition name="fade" mode="out-in">
         <div id="topDiv"
              class=""
              :class="welcomeContainer">
@@ -28,7 +29,7 @@
                         <div class="w-full flex justify-center items-center h-screen">
 
                             <WelcomeOverlay v-show="welcomeStore.showOverlay"
-                                            @watchNow="watchNow"/>
+                                            @watchNow="watchNow" />
                             <VideoControlsWelcome v-show="!welcomeStore.showOverlay" />
 
                         </div>
@@ -92,6 +93,7 @@
                 </div>
 
         </div>
+    </transition>
 
     <Teleport to="body">
         <Login :show="welcomeStore.showLogin===true" :userType="userType" @close="welcomeStore.showLogin = false" />
@@ -130,7 +132,7 @@ let props = defineProps({
 });
 
 const welcomeContainer = computed(() => ({
-    'w-full vh-100 place-self-center flex flex-col text-gray-200 z-50 bg-blue-500 bg-opacity-50': welcomeStore.showOverlay,
+    'w-full vh-100 place-self-center flex flex-col text-gray-200 z-50 bg-gray-900 bg-opacity-50': welcomeStore.showOverlay,
     'w-full vh-100 place-self-center flex flex-col text-gray-200 z-50 bg-opacity-0': !welcomeStore.showOverlay
 }))
 
@@ -204,5 +206,11 @@ const unmuteAndFadeVolume = (durationInSeconds) => {
 <style scoped>
 .headerContainer {
     z-index:500;
+}
+.fade-enter-active, .fade-leave-active {
+    transition: opacity 1s;
+}
+.fade-enter, .fade-leave-to {
+    opacity: 0;
 }
 </style>
