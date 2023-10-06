@@ -9,33 +9,40 @@
                  :class="[{'h-[calc(100vh-22rem)]':!userStore.isMobile},{'h-[calc(100vh-20rem)]':userStore.isMobile}]">
                 <div class="flex justify-between">
                     <div>
-                        <div><span class="text-xs uppercase">Name: </span><Link :href="`#`">{{ streamStore.name }}</Link></div>
-                        <div><span class="text-xs uppercase">Description: </span>{{ streamStore.description }}</div>
-                        <div><span class="text-xs uppercase">Team: </span><Link :href="`#`">{{ streamStore.teamName }}</Link></div>
+                        <div><span class="text-xs uppercase">Name: </span><Link :href="`${videoPlayerStore.nowPlayingUrl}`">{{ videoPlayerStore.nowPlayingName }}</Link></div>
+                        <div><span class="text-xs uppercase">Description: </span>{{ videoPlayerStore.nowPlayingDescription }}</div>
+                        <div><span class="text-xs uppercase">Team: </span><Link :href="`/teams/${videoPlayerStore.nowPlayingTeam.slug}`">{{ videoPlayerStore.nowPlayingTeam.name }}</Link></div>
                     </div>
 
-                    <div><Link :href="`#`"><img :src="`/storage/images/EBU_Colorbars.svg.png`" alt="poster" class="h-16 w-12  object-cover hover:opacity-75 transition ease-in-out duration-150">
+                    <div><Link :href="`${videoPlayerStore.nowPlayingUrl}`"><SingleImage :image="videoPlayerStore.nowPlayingImage" :alt="`${videoPlayerStore.nowPlayingName}`" :class="`h-16 w-12  object-cover hover:opacity-75 transition ease-in-out duration-150`"/>
+<!--                        <img :src="`/storage/images/EBU_Colorbars.svg.png`" alt="poster" class="h-16 w-12  object-cover hover:opacity-75 transition ease-in-out duration-150">-->
     <!--                    <img :src="`/storage/images/${streamStore.posterUrl}`">-->
 
                     </Link></div>
                 </div>
 
-                <div class="creators-section mt-6">
-                    <div class="creators-header w-full p-1 bg-purple-900 text-white uppercase text-xs">Creators</div>
-                    <div class="creators-list py-2">
-                        &lt;Creators here&gt;
-                    </div>
-                </div>
+<!--                <div v-if="videoPlayerStore.nowPlayingCreators" class="creators-section mt-6">-->
+<!--                    <div class="creators-header w-full p-1 bg-purple-900 text-white uppercase text-xs">Creators</div>-->
+<!--                    <div class="creators-list py-2">-->
+<!--                        <div v-for="creator in videoPlayerStore.validCreators" :key="creator.id">-->
+<!--                            <SingleImage />-->
+<!--                            <div>{{creator.name}}</div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
 
-                <div class="creators-section mt-6">
-                    <div class="creators-header w-full p-1 bg-purple-900 text-white uppercase text-xs">Bonus Content</div>
-                    <div class="creators-list py-2">
-                        &lt;Content here&gt;
-                    </div>
-                </div>
+<!--                <div v-if="videoPlayerStore.nowPlayingBonusContent" class="bonus-content-section mt-6">-->
+<!--                    <div class="bonus-content-header w-full p-1 bg-purple-900 text-white uppercase text-xs">Bonus Content</div>-->
+<!--                    <div class="bonus-content-list py-2">-->
+<!--                        <div v-for="bonus in videoPlayerStore.nowPlayingBonusContent" :key="bonus.id">-->
+<!--                            <SingleImage :image="bonus.image"/>-->
+<!--                            <div>{{bonus.name}}</div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
 
                 <div class="py-2 mt-24 text-sm uppercase">
-                    Copyright &lt;Team Name&gt; here.
+                    Copyright <Link :href="`/teams/${videoPlayerStore.nowPlayingTeam.slug}`">{{ videoPlayerStore.nowPlayingTeam.name }}</Link>.
                 </div>
             </div>
 
@@ -54,6 +61,7 @@ import { useUserStore } from "@/Stores/UserStore"
 import VideoOTTChat from "@/Components/VideoPlayer/Chat/VideoOTTChat"
 import Channels from "@/Components/VideoPlayer/Channels/Channels"
 import ChannelFooter from "@/Components/VideoPlayer/Channels/ChannelFooter.vue";
+import SingleImage from "@/Components/Multimedia/SingleImage.vue";
 
 let videoPlayerStore = useVideoPlayerStore()
 let streamStore = useStreamStore()
@@ -76,6 +84,8 @@ const ottChannels = computed(() => ({
     channelsOttMobile: userStore.isMobile,
     channelsOttDesktop: !userStore.isMobile
 }))
+
+
 
 </script>
 

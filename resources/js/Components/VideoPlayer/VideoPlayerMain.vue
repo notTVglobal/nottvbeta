@@ -4,8 +4,7 @@
     <!-- Video Player -->
             <div v-touch="() => {clickOnVideoAction()}"
                  :class="videoPlayerStore.videoContainerClass"
-                 @mouseenter="mouseEnter"
-                 @mouseleave="mouseLeave">
+                 >
 
                 <div :class="videoPlayerStore.class">
                   <videoJs /></div>
@@ -65,7 +64,7 @@
                     <img :src="`/storage/images/logo_white_512.png`" class="bugFullPageClass"></div>
 
                 <!-- On Screen Display (OSD) -->
-                <OsdFullPage v-show="videoPlayerStore.osd"/>
+            <OsdFullPage v-show="videoPlayerStore.osd" />
 
                 <!-- Video Player Controls -->
                 <VideoControlsFullPage
@@ -167,6 +166,9 @@ onMounted( () => {
         }
 
     });
+    if (!videoPlayerStore.fullPage) {
+        videoPlayerStore.controls = false
+    }
 })
 
 function formatDuration(durationInSeconds) {
@@ -333,6 +335,7 @@ function clickOnVideoAction() {
     // }
     if (!videoPlayerStore.currentPageIsStream) {
         Inertia.visit('/stream')
+        // videoPlayerStore.controls = true
     }
     if(videoPlayerStore.currentPageIsStream) {
         // let videoPlayer = videojs('main-player');

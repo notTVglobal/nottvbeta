@@ -302,14 +302,29 @@ class ShowsController extends Controller
 
         $teamId = $show->team_id;
 
-        $latestEpisodeWithVideo = $show->episodes->reverse()->first(function ($episode) {
-            return !empty($episode->video_id);
-        });
+//        $latestEpisodeWithVideo = $show->episodes->reverse()->first(function ($episode) {
+//            return !empty($episode->video_id);
+//        });
+
+        $latestEpisodeWithVideo = $show->episodes()
+            ->whereNotNull('video_id')
+            ->with('image')
+            ->latest()
+            ->first();
+
 //        dd($latestEpisodeWithVideo->video);
 
-        $latestEpisodeWithVideoUrl = $show->episodes->reverse()->first(function ($episode) {
-            return !empty($episode->video->video_url);
-        });
+//        $latestEpisodeWithVideoUrl = $show->episodes->reverse()->first(function ($episode) {
+//            return !empty($episode->video->video_url);
+//        });
+
+        $latestEpisodeWithVideoUrl = $show->episodes()
+            ->whereHas('video', function ($query) {
+                $query->whereNotNull('video_url');
+            })
+            ->with('image')
+            ->latest()
+            ->first();
 
 //        $firstPlayFile = $show->episodes->first(function ($episode) {
 //            return !empty($episode->video_id);
@@ -365,6 +380,10 @@ class ShowsController extends Controller
 //                ],
                 // TODO: firstPlay returns a single video... replace with a show_playlist which needs to be created.
                 'firstPlayVideo' => [
+                    'name' => $latestEpisodeWithVideo->name ?? '',
+                    'description' => $latestEpisodeWithVideo->description ?? '',
+                    'slug' => $latestEpisodeWithVideo->slug ?? '',
+                    'image' => $latestEpisodeWithVideo->image ?? '',
                     'file_name' => $latestEpisodeWithVideo->video->file_name ?? '',
                     'cdn_endpoint' => $latestEpisodeWithVideo->appSetting->cdn_endpoint ?? '',
                     'folder' => $latestEpisodeWithVideo->video->folder ?? '',
@@ -373,6 +392,10 @@ class ShowsController extends Controller
                     'storage_location' => $showEpisode->video->storage_location ?? '',
                 ],
                 'firstPlayVideoFromUrl' => [
+                    'name' => $latestEpisodeWithVideo->name ?? '',
+                    'description' => $latestEpisodeWithVideo->description ?? '',
+                    'slug' => $latestEpisodeWithVideo->slug ?? '',
+                    'image' => $latestEpisodeWithVideo->image ?? '',
                     'video_url' => $latestEpisodeWithVideoUrl->video->video_url ?? '',
                     'type' => $latestEpisodeWithVideoUrl->video->type ?? '',
                 ],

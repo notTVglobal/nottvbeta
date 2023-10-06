@@ -6,7 +6,7 @@
              class="w-full h-full m-auto text-center align-middle">
             <span class="loading loading-spinner text-accent"></span>
         </div>
-
+        <div v-else >
             <div v-for="channel in channelStore.channel_list"
                  :key="channel.id"
                  class="channel">
@@ -17,6 +17,9 @@
             </div>
 
             <ChannelFooter />
+        </div>
+
+
 
     </div>
 
@@ -28,6 +31,7 @@ import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore";
 import { useChannelStore } from "@/Stores/ChannelStore";
 import { useUserStore } from "@/Stores/UserStore";
 import ChannelFooter from "@/Components/VideoPlayer/Channels/ChannelFooter"
+import {Inertia} from "@inertiajs/inertia";
 
 let videoPlayerStore = useVideoPlayerStore();
 let channelStore = useChannelStore();
@@ -45,6 +49,7 @@ async function changeChannel(channel) {
     videoPlayerStore.toggleChannels()
     videoPlayerStore.toggleOttChannels()
     videoPlayerStore.ott = 0
+    Inertia.reload()
 }
 
 const channelClass = computed(() => ({

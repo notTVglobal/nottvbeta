@@ -1,8 +1,15 @@
 # not.tv Changelog
 
 
-Last Update: October 5, 2023\
+Last Update: October 6, 2023\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.7.3.11
+October 6, 2023
+* Re-designed Schedule Page to only show 1 channel and include show posters (a placeholder for now). Show's can display a different size poster depending on how long their time slot is. Longer time slots have larger posters.
+* Updated the Now Playing Info ott panel with actual info if a Show Episode is played
+* Fixed the Show FirstPlay button.
+* Cleaned up the Show Episode Manage page. Made the Show Rundown and extra buttons hidden (these are features to develop later).
 
 ## v0.7.3.10
 October 5, 2023

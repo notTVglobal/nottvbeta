@@ -93,7 +93,8 @@
 		S125.327,30,242.5,30S455,125.327,455,242.5S359.673,455,242.5,455z"/>
                                 <polygon points="181.062,336.575 343.938,242.5 181.062,148.425 	"/>
                             </svg>
-                            <span class="ml-2">Watch Episode</span>
+                            <span v-if="videoPlayerStore.nowPlayingName === props.episode.name" class="ml-2">Now Playing</span>
+                            <span v-else class="ml-2">Watch Episode</span>
                         </button>
 
                         <button disabled class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed">
@@ -198,32 +199,6 @@ let teamStore = useTeamStore();
 let showStore = useShowStore();
 let userStore = useUserStore()
 
-let playEpisode = () => {
-    // if video has a file and is !processing, play file.
-    if (props.episode.video.storage_location === 'spaces' && props.episode.video.upload_status !== 'processing') {
-        videoPlayerStore.loadNewSourceFromFile(props.episode.video)
-        videoPlayerStore.videoName = props.episode.name+' (file)'
-        videoPlayerStore.currentChannelName = 'On Demand ('+props.episode.name+') from file'
-        Inertia.visit('/stream')
-    } else if
-    // else if url exists, play url
-        (props.episode.video.video_url) {
-        videoPlayerStore.loadNewSourceFromUrl(props.episode.video)
-        videoPlayerStore.videoName = props.episode.name+' (web)'
-        videoPlayerStore.currentChannelName = 'On Demand ('+props.episode.name+') from web'
-        Inertia.visit('/stream')
-    }
-    else if
-        // else if youtube_url exists, play youtube_url
-        (props.episode.youtube_url) {
-        videoPlayerStore.loadNewSourceFromYouTube(props.episode.youtube_url)
-        videoPlayerStore.videoName = props.episode.name+' (YouTube)'
-        videoPlayerStore.currentChannelName = 'On Demand ('+props.episode.name+') from YouTube'
-        Inertia.visit('/stream')
-    }
-
-}
-
 let props = defineProps({
     show: Object,
     team: Object,
@@ -232,6 +207,42 @@ let props = defineProps({
     creators: Object,
     can: Object,
 });
+
+let playEpisode = () => {
+
+    videoPlayerStore.videoName = `<Link :href="/shows/${props.show.slug}">${props.show.name}</Link>`
+    videoPlayerStore.nowPlayingUrl = `/shows/${props.show.slug}/episode/${props.episode.slug}`
+    videoPlayerStore.nowPlayingName = props.episode.name
+    videoPlayerStore.nowPlayingDescription = props.episode.description
+    videoPlayerStore.nowPlayingImage = props.image
+    videoPlayerStore.nowPlayingTeam = props.team
+    videoPlayerStore.nowPlayingCreators = props.creators.data
+    videoPlayerStore.nowPlayingBonusContent = []
+
+    // if video has a file and is !processing, play file.
+    if (props.episode.video.storage_location === 'spaces' && props.episode.video.upload_status !== 'processing') {
+        videoPlayerStore.loadNewSourceFromFile(props.episode.video)
+        videoPlayerStore.videoName = props.episode.name
+        // videoPlayerStore.currentChannelName = 'On Demand ('+props.episode.name+') from file'
+        Inertia.visit('/stream')
+    } else if
+    // else if url exists, play url
+        (props.episode.video.video_url) {
+        videoPlayerStore.loadNewSourceFromUrl(props.episode.video)
+        videoPlayerStore.videoName = props.episode.name
+        // videoPlayerStore.currentChannelName = 'On Demand ('+props.episode.name+') from web'
+        Inertia.visit('/stream')
+    }
+    else if
+        // else if youtube_url exists, play youtube_url
+        (props.episode.youtube_url) {
+        videoPlayerStore.loadNewSourceFromYouTube(props.episode.youtube_url)
+        videoPlayerStore.videoName = props.episode.name
+        // videoPlayerStore.currentChannelName = 'On Demand ('+props.episode.name+') from YouTube'
+        Inertia.visit('/stream')
+    }
+
+}
 
 userStore.currentPage = 'episodes'
 userStore.showFlashMessage = true;

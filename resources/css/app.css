@@ -246,7 +246,8 @@ h3 {
         @apply hidden fixed right-2 top-20 w-10 mr-4
     }
     .osdFullPage {
-        @apply fixed flex flex-col bottom-24 left-0 p-5 drop-shadow z-50
+        top: calc(100vh - 50%);
+        @apply fixed flex flex-col align-top justify-start w-full h-1/2 left-0 right-0 px-5 drop-shadow z-50
     }
     .videoControls {
         z-index: 200;

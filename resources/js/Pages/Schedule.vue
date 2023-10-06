@@ -1,7 +1,7 @@
 <template>
     <Head title="Schedule" />
 
-    <div class="place-self-center flex flex-col gap-y-3 w-full overscroll-x-none pb-8">
+    <div class="place-self-center flex flex-col gap-y-3 w-full overscroll-x-none pb-64">
         <div id="topDiv" class="flex justify-end px-5">
             <div class="text-3xl font-semibold pt-4">Schedule</div>
         </div>
@@ -29,230 +29,55 @@
         <table class="table-fixed mx-5">
             <thead class="bg-gray-900">
                 <tr class="border-b border-0.5 border-white">
-                    <th class="p-2">CHANNEL</th>
-                    <th class="p-2 border-x border-0.5 border-white">10:00</th>
-                    <th class="p-2 border-x border-0.5 border-white">10:30</th>
-                    <th class="p-2 border-x border-0.5 border-white">11:00</th>
-                    <th class="p-2 hidden lg:table-cell border-x border-0.5 border-white">11:30</th>
-                    <th class="p-2 hidden xl:table-cell border-x border-0.5 border-white">12:00</th>
-                    <th class="p-2 hidden xl:table-cell">12:30</th>
-                    <th class="p-2 hidden 2xl:table-cell border-x border-0.5 border-white">1:00</th>
-                    <th class="p-2 hidden 2xl:table-cell">1:30</th>
+                    <th class="column-width p-2 border-r border-0.5 border-white">10:00am</th>
+                    <th class="column-width p-2 border-x border-0.5 border-white">10:30am</th>
+                    <th class="column-width p-2 border-x border-0.5 border-white">11:00am</th>
+                    <th class="column-width p-2 hidden lg:table-cell border-x border-0.5 border-white">11:30am</th>
+                    <th class="column-width p-2 hidden xl:table-cell border-x border-0.5 border-white">12:00pm</th>
+                    <th class="column-width p-2 hidden xl:table-cell">12:30pm</th>
+                    <th class="column-width p-2 hidden 2xl:table-cell border-x border-0.5 border-white">1:00pm</th>
+                    <th class="column-width p-2 hidden 2xl:table-cell">1:30pm</th>
 
                 </tr>
             </thead>
             <tbody>
                 <tr class="border-b border-0.5 border-white">
-                    <td class="p-2 bg-gray-900 text-center">LIVE</td>
-                    <td class="p-2 bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
+                    <td colspan="2" onclick="goToNowPlayingModal.showModal()" class="column-width p-2 bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
                         <div class="flex flex-col">
-                        <span>Scheduled Show</span>
+                            <span class="text-center pb-2">Scheduled Show</span>
+                            <div class="w-full h-64 bg-gray-400"></div>
                         </div>
                     </td>
-                    <td class="p-2 bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
+<!--                    <td class="p-2 bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">-->
+<!--                        <div class="flex flex-col">-->
+<!--                            <span class="text-center pb-2">Scheduled Show</span>-->
+<!--                            <div class="w-full h-64 bg-gray-400"></div>-->
+<!--                        </div>-->
+<!--                    </td>-->
+                    <td onclick="getReminderModal.showModal()" class="column-width p-2 bg-purple-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-purple-600 hover:border-blue-500 cursor-pointer">
                         <div class="flex flex-col">
-                        <span>Scheduled Show</span>
-                        </div>
-                    </td>
-                    <td class="p-2 bg-purple-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                        <span>New Release</span>
-                        </div>
-                    </td>
-                    <td class="p-2 hidden lg:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                        <span>Scheduled Show</span>
-                        </div>
-                    </td>
-                    <td class="p-2 hidden xl:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                        <span>Scheduled Show</span>
-                        </div>
-                    </td>
-                    <td class="p-2 hidden xl:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                        <span>Scheduled Show</span>
-                        </div>
-                    </td>
-                    <td class="p-2 hidden 2xl:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                        <span>Scheduled Show</span>
-                        </div>
-                    </td>
-                    <td class="p-2 hidden 2xl:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                        <span>Scheduled Show</span>
+                            <span class="text-center pb-2">New Release</span>
+                            <div class="w-full h-64 bg-gray-400"></div>
                         </div>
                     </td>
 
-                </tr>
-                <tr class="border-b border-0.5 border-white">
-                    <td class="p-2 bg-gray-900 text-center">AMBIENT</td>
-                    <td class="p-2 bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
+                    <td colspan="3" onclick="getReminderModal.showModal()" class="column-width p-2 hidden xl:table-cell bg-blue-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-blue-600 hover:border-blue-500 cursor-pointer">
                         <div class="flex flex-col">
-                        <span>Scheduled Show</span>
-                        </div>
-                    </td>
-                    <td class="p-2 bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                        <span>Scheduled Show</span>
-                        </div>
-                    </td>
-                    <td class="p-2 bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                        <span>Scheduled Show</span>
-                        </div>
-                    </td>
-                    <td class="p-2 hidden lg:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                        <span>Scheduled Show</span>
-                        </div>
-                    </td>
-                    <td class="p-2 hidden xl:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                        <span>Scheduled Show</span>
-                        </div>
-                    </td>
-                    <td class="p-2 hidden xl:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                        <span>Scheduled Show</span>
-                        </div>
-                    </td>
-                    <td class="p-2 hidden 2xl:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                        <span>Scheduled Show</span>
-                        </div>
-                    </td>
-                    <td class="p-2 hidden 2xl:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                        <span>Scheduled Show</span>
+                            <span class="text-center pb-2">Live Event</span>
+                            <div class="w-full h-64 bg-gray-400"></div>
                         </div>
                     </td>
 
-                </tr>
-                <tr class="border-b border-0.5 border-white">
-                    <td class="p-2 bg-gray-900 text-center">TALK</td>
-                    <td class="p-2 bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
+                    <td onclick="getReminderModal.showModal()" class="column-width p-2 hidden 2xl:table-cell bg-yellow-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-yellow-600 hover:border-blue-500 cursor-pointer">
                         <div class="flex flex-col">
-                            <span>Scheduled Show</span>
+                            <span class="text-center pb-2">News Program</span>
+                            <div class="w-full h-64 bg-gray-400"></div>
                         </div>
                     </td>
-                    <td class="p-2 bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
+                    <td onclick="getReminderModal.showModal()" class="column-width p-2 hidden 2xl:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
                         <div class="flex flex-col">
-                            <span>Scheduled Show</span>
-                        </div>
-                    </td>
-                    <td class="p-2 bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                            <span>Scheduled Show</span>
-                        </div>
-                    </td>
-                    <td colspan="2" class="p-2 hidden lg:table-cell bg-yellow-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-yellow-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                            <span>News Program</span>
-                        </div>
-                    </td>
-                    <td class="p-2 hidden xl:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                            <span>Scheduled Show</span>
-                        </div>
-                    </td>
-                    <td class="p-2 hidden 2xl:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                            <span>Scheduled Show</span>
-                        </div>
-                    </td>
-                    <td class="p-2 hidden 2xl:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                            <span>Scheduled Show</span>
-                        </div>
-                    </td>
-
-                </tr>
-                <tr class="border-b border-0.5 border-white">
-                    <td class="p-2 bg-gray-900 text-center">DOCUMENTARY</td>
-                    <td class="p-2 bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                            <span>Scheduled Show</span>
-                        </div>
-                    </td>
-                    <td class="p-2 bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                            <span>Scheduled Show</span>
-                        </div>
-                    </td>
-                    <td class="p-2 bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                            <span>Scheduled Show</span>
-                        </div>
-                    </td>
-                    <td class="p-2 hidden lg:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                            <span>Scheduled Show</span>
-                        </div>
-                    </td>
-                    <td class="p-2 hidden xl:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                            <span>Scheduled Show</span>
-                        </div>
-                    </td>
-                    <td class="p-2 hidden xl:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                            <span>Scheduled Show</span>
-                        </div>
-                    </td>
-                    <td class="p-2 hidden 2xl:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                            <span>Scheduled Show</span>
-                        </div>
-                    </td>
-                    <td class="p-2 hidden 2xl:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                            <span>Scheduled Show</span>
-                        </div>
-                    </td>
-
-                </tr>
-                <tr class="border-b border-0.5 border-white">
-                    <td class="p-2 bg-gray-900 text-center">ANIMATED</td>
-                    <td class="p-2 bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                            <span>Scheduled Show</span>
-                        </div>
-                    </td>
-                    <td class="p-2 bg-blue-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                            <span>Live Event</span>
-                        </div>
-                    </td>
-                    <td class="p-2 bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                            <span>Scheduled Show</span>
-                        </div>
-                    </td>
-                    <td class="p-2 hidden lg:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                            <span>Scheduled Show</span>
-                        </div>
-                    </td>
-                    <td class="p-2 hidden xl:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                            <span>Scheduled Show</span>
-                        </div>
-                    </td>
-                    <td class="p-2 hidden xl:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                            <span>Scheduled Show</span>
-                        </div>
-                    </td>
-                    <td class="p-2 hidden 2xl:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                            <span>Scheduled Show</span>
-                        </div>
-                    </td>
-                    <td class="p-2 hidden 2xl:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-                        <div class="flex flex-col">
-                            <span>Scheduled Show</span>
+                            <span class="text-center pb-2">Scheduled Show</span>
+                            <div class="w-full h-64 bg-gray-400"></div>
                         </div>
                     </td>
 
@@ -262,6 +87,16 @@
             </tbody>
 
         </table>
+
+        <PopUpModal :id="`goToNowPlayingModal`">
+            <template v-slot:header>Now Playing</template>
+            <template v-slot:main><span class="text-orange-500">This modal is temporary. This will take you to the now playing show or episode page.</span></template>
+        </PopUpModal>
+        <PopUpModal :id="`getReminderModal`">
+            <template v-slot:header>Set Reminder</template>
+            <template v-slot:main><span class="text-orange-500">This modal is temporary. Set a reminder when this show starts and/or subscribe to the show to get all notifications when new episodes are released or the show goes live.</span></template>
+        </PopUpModal>
+
     </div>
 </template>
 
@@ -270,6 +105,7 @@ import { onBeforeMount, onMounted, ref } from "vue";
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useUserStore } from "@/Stores/UserStore.js"
 import Message from "@/Components/Modals/Messages";
+import PopUpModal from "@/Components/Modals/PopUpModal.vue";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -300,3 +136,10 @@ let props = defineProps({
 
 </script>
 
+<style scoped>
+
+.column-width {
+    @apply w-16;
+}
+
+</style>

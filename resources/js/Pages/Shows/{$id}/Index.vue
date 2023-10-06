@@ -50,10 +50,10 @@
 
                             <div class="flex flex-wrap my-2 m-auto lg:mx-0 justify-center lg:justify-start space-x-4 space-y-2">
                                 <div></div>
-                                <div v-if="props.show.firstPlayVideo.upload_status === 'processing' && !props.show.firstPlayVideoUrl" class="ml-3 px-3 py-3 text-gray-50 bg-black w-full text-center lg:text-left">
+                                <div v-if="props.show.firstPlayVideo.upload_status === 'processing' && !props.show.firstPlayVideoFromUrl" class="ml-3 px-3 py-3 text-gray-50 bg-black w-full text-center lg:text-left">
                                     The first episode is currently processing. <br>Please check back later.
                                 </div>
-                                <button v-if="props.show.firstPlayVideo.file_name || props.show.firstPlayVideoUrl" :disabled="props.show.firstPlayVideo.upload_status === 'processing' && !props.show.firstPlayVideoUrl" class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
+                                <button v-if="props.show.firstPlayVideo.file_name || props.show.firstPlayVideoFromUrl" :disabled="props.show.firstPlayVideo.upload_status === 'processing' && !props.show.firstPlayVideoUrl" class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
                                         @click="playEpisode">
                                     <svg class="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg"
                                          viewBox="0 0 485 485">
@@ -63,7 +63,9 @@
                                                 S125.327,30,242.5,30S455,125.327,455,242.5S359.673,455,242.5,455z"/>
                                         <polygon points="181.062,336.575 343.938,242.5 181.062,148.425 	"/>
                                     </svg>
-                                    <span class="ml-2">Watch Now</span>
+
+                                    <span v-if="videoPlayerStore.nowPlayingName === props.show.firstPlayVideo.name || videoPlayerStore.nowPlayingName === props.show.firstPlayVideoFromUrl.name" class="ml-2">Now Playing</span>
+                                    <span v-else class="ml-2">Watch Now</span>
                                 </button>
 
                                 <button disabled class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed">
@@ -252,12 +254,26 @@ let playEpisode = () => {
     if (props.show.firstPlayVideo.storage_location === 'spaces' && props.show.firstPlayVideo.upload_status !== 'processing') {
         // play video if !processing
         videoPlayerStore.loadNewSourceFromFile(props.show.firstPlayVideo)
-        videoPlayerStore.videoName = props.show.name+' (file)'
-        Inertia.visit('/stream')
+        videoPlayerStore.videoName = props.show.firstPlayVideo.name
+        videoPlayerStore.nowPlayingUrl = `/shows/${props.show.slug}/episode/${props.show.firstPlayVideo.slug}`
+        videoPlayerStore.nowPlayingName = props.show.firstPlayVideo.name
+        videoPlayerStore.nowPlayingDescription = props.show.firstPlayVideo.description
+        videoPlayerStore.nowPlayingImage = props.show.image
+        videoPlayerStore.nowPlayingTeam = props.team
+        videoPlayerStore.nowPlayingCreators = props.creators.data
+        videoPlayerStore.nowPlayingBonusContent = []
+        // Inertia.visit('/stream')
     } else if (props.show.firstPlayVideoFromUrl) {
         videoPlayerStore.loadNewSourceFromUrl(props.show.firstPlayVideoFromUrl)
-        videoPlayerStore.videoName = props.show.name+' (web)'
-        Inertia.visit('/stream')
+        videoPlayerStore.videoName = props.show.firstPlayVideoFromUrl.name
+        videoPlayerStore.nowPlayingUrl = `/shows/${props.show.slug}/episode/${props.show.firstPlayVideoFromUrl.slug}`
+        videoPlayerStore.nowPlayingName = props.show.firstPlayVideoFromUrl.name
+        videoPlayerStore.nowPlayingDescription = props.show.firstPlayVideoFromUrl.description
+        videoPlayerStore.nowPlayingImage = props.show.image
+        videoPlayerStore.nowPlayingTeam = props.team
+        videoPlayerStore.nowPlayingCreators = props.creators.data
+        videoPlayerStore.nowPlayingBonusContent = []
+        // Inertia.visit('/stream')
     }
 }
 

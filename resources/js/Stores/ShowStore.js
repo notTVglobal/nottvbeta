@@ -4,6 +4,7 @@ export let useShowStore = defineStore('showStore', {
     state: () => ({
         id: 0,
         name: '',
+        episodeName: '',
         category_id: 0,
         category_sub_id: 0,
         category_description: '',

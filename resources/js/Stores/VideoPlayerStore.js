@@ -5,6 +5,7 @@ import { useUserStore } from "@/Stores/UserStore";
 import videojs from 'video.js';
 import {Inertia} from "@inertiajs/inertia";
 import {useChannelStore} from "@/Stores/ChannelStore";
+import {computed} from "vue";
 
 export const useVideoPlayerStore = defineStore('videoPlayerStore', {
     state: () => ({
@@ -27,7 +28,18 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             currentView: '',
             currentChannelId: 0,
             currentChannelName: '',
+            currentShow: {},
+            currentShowEpisode: {},
+            currentVideo: {},
             viewerCount: 0,
+
+            nowPlayingName: '',
+            nowPlayingUrl: '',
+            nowPlayingDescription: '',
+            nowPlayingImage: {},
+            nowPlayingTeam: {},
+            nowPlayingCreators: [],
+            nowPlayingBonusContent: [],
 
             // move currentPage from here to userStore.
             currentPage: '',
@@ -186,57 +198,69 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
         // video controls
         toggleMute() {
             let videoJs = videojs('main-player')
+            videoJs.controls(false)
             this.muted = !this.muted
             videoJs.muted(this.muted);
         },
         togglePlay() {
             let videoJs = videojs('main-player')
+            videoJs.controls(false)
             // this.paused = !this.paused
             if (videoJs.paused()) {
                 videoJs.play()
+                videoJs.controls(false)
                 this.paused = false
             } else if (!videoJs.paused()) {
                 videoJs.pause()
+                videoJs.controls(false)
                 this.paused = true
             }
         },
         unmute() {
             let videoJs = videojs('main-player')
+            videoJs.controls(false)
             videoJs.muted(false)
             this.muted = false
         },
         mute() {
             let videoJs = videojs('main-player')
+            videoJs.controls(false)
             videoJs.muted(true)
             this.muted = true
         },
         pause() {
             let videoJs = videojs('main-player')
+            videoJs.controls(false)
             videoJs.pause()
             this.paused = true
         },
         play() {
             let videoJs = videojs('main-player')
+            videoJs.controls(false)
             videoJs.play()
             this.paused = false
         },
         // next not built yet
         next() {
             let videoJs = videojs('main-player')
+            videoJs.controls(false)
             videoJs.src(this.nextSource)
         },
         // back not built yet
         back() {
             let videoJs = videojs('main-player')
+            videoJs.controls(false)
             videoJs.src(this.previousSource)
         },
         fullscreen() {
             let videoJs = videojs('main-player')
+            videoJs.controls(false)
             // videoJs.fullscreen(this.previousSource)
             videoJs.requestFullscreen()
         },
         getVideoCurrentTime() {
             let videoJs = videojs('main-player')
+            videoJs.controls(false)
             this.videoCurrentTime = videoJs.currentTime
         },
 
@@ -293,6 +317,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             this.videoSource = source
             this.videoSourceType = "video/youtube"
             videoJs.src({'src': this.videoSource, 'type': this.videoSourceType})
+            videoJs.controls(false)
             this.unmute()
             this.paused = false
         },
@@ -303,16 +328,18 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             this.videoSource = source
             this.videoSourceType = "application/x-mpegURL"
             videoJs.src({'src': this.videoSource, 'type': this.videoSourceType})
+            videoJs.controls(false)
             this.unmute()
             this.paused = false
         },
         loadNewSourceFromUrl(source) {
             this.videoIsYoutube = false
             useChannelStore().clearChannel()
-            let videoJs = videojs('main-player', { controls: false })
+            let videoJs = videojs('main-player')
             this.videoSource = source.video_url
             this.videoSourceType = source.type
             videoJs.src({'src': source.video_url, 'type': source.type})
+            videoJs.controls(false)
             // this.play()
             this.unmute()
             this.paused = false
@@ -324,6 +351,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             this.videoSource = filePath+source+'/index.m3u8'
             this.videoSourceType = "application/x-mpegURL"
             videoJs.src({'src': this.videoSource, 'type': this.videoSourceType})
+            videoJs.controls(false)
             this.unmute()
             this.paused = false
         },
@@ -337,6 +365,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             this.videoSource = source.file_name
             this.videoSourceType = source.type
             videoJs.src({'src': filePath+this.videoSource, 'type': this.videoSourceType})
+            videoJs.controls(false)
             this.unmute()
             this.paused = false
         },
@@ -345,6 +374,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
         makeVideoPiP() {
             if (useUserStore().isMobile) {
                 let videoJs = videojs('main-player')
+                videoJs.controls(false)
                 this.class = 'pipVideoClass'
                 this.videoContainerClass = 'pipVideoContainerClass'
             }
@@ -382,167 +412,197 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             this.loggedIn = false
             // useChatStore().chatHidden();
         },
-
+        setNowPlayingName(name) {
+            this.setNowPlayingName = name;
+        },
+        setNowPlayingUrl(url) {
+            this.setNowPlayingUrl = url;
+        },
+        setNowPlayingDescription(description) {
+            this.setNowPlayingDescription = description;
+        },
+        setNowPlayingImage(image) {
+            this.setNowPlayingImage = image;
+        },
+        setNowPlayingTeam(team) {
+            this.setNowPlayingTeam = team;
+        },
+        setNowPlayingCreators(creators) {
+            this.setNowPlayingCreators = creators;
+        },
+        setNowPlayingBonusContent(bonusContent) {
+            this.setNowPlayingBonusContent = bonusContent;
+        },
 
         // change channel
-        changeChannel(name) {
-            if (name==='one') {
-                let source = 'mist1pull1'
-                this.videoName = 'notTV One'
-                this.currentChannelName = 'one'
-                this.currentChannelId = 1
-                this.addViewerToChannel()
-                this.getViewerCount()
-                this.loadNewSourceFromMist(source)
-            }
-            if (name==='ambient') {
-                let source = 'mist1pull2'
-                this.videoName = 'Ambient'
-                this.currentChannelName = 'ambient'
-                this.currentChannelId = 2
-                this.addViewerToChannel()
-                this.getViewerCount()
-                this.loadNewSourceFromMist(source)
-
-            }
-            if (name==='news') {
-                let source = 'mist1pull3'
-                this.videoName = 'News'
-                this.currentChannelName = 'news'
-                this.currentChannelId = 3
-                this.addViewerToChannel()
-                this.getViewerCount()
-                this.loadNewSourceFromMist(source)
-
-            }
-            if (name==='talk') {
-                let source = 'mist1pull4'
-                this.videoName = 'Talk'
-                this.currentChannelName = 'talk'
-                this.currentChannelId = 4
-                this.addViewerToChannel()
-                this.getViewerCount()
-                this.loadNewSourceFromMist(source)
-
-            }
-            if (name==='documentary') {
-                let source = 'mist1pull5'
-                this.videoName = 'Documentary'
-                this.currentChannelName = 'documentary'
-                this.currentChannelId = 5
-                this.addViewerToChannel()
-                this.getViewerCount()
-                this.loadNewSourceFromMist(source)
-
-            }
-            if (name==='music') {
-                let source = 'mist1pull6'
-                this.videoName = 'Music'
-                this.currentChannelName = 'music'
-                this.currentChannelId = 6
-                this.addViewerToChannel()
-                this.getViewerCount()
-                this.loadNewSourceFromMist(source)
-
-            }
-            if (name==='drama') {
-                let source = 'mist1pull7'
-                this.videoName = 'Drama'
-                this.currentChannelName = 'drama'
-                this.currentChannelId = 7
-                this.addViewerToChannel()
-                this.getViewerCount()
-                this.loadNewSourceFromMist(source)
-
-            }
-            if (name==='comedy') {
-                let source = 'mist1pull8'
-                this.videoName = 'Comedy'
-                this.currentChannelName = 'comedy'
-                this.currentChannelId = 8
-                this.addViewerToChannel()
-                this.getViewerCount()
-                this.loadNewSourceFromMist(source)
-
-            }
-            if (name==='education') {
-                let source = 'mist1pull9'
-                this.videoName = 'Education'
-                this.currentChannelName = 'education'
-                this.currentChannelId = 9
-                this.addViewerToChannel()
-                this.getViewerCount()
-                this.loadNewSourceFromMist(source)
-
-            }
-            if (name==='spirituality') {
-                let source = 'mist1pull10'
-                this.videoName = 'Spirituality'
-                this.currentChannelName = 'spirituality'
-                this.currentChannelId = 10
-                this.addViewerToChannel()
-                this.getViewerCount()
-                this.loadNewSourceFromMist(source)
-
-            }
-            if (name==='reality') {
-                let source = 'mist1pull11'
-                this.videoName = 'Reality'
-                this.currentChannelName = 'reality'
-                this.currentChannelId = 11
-                this.addViewerToChannel()
-                this.getViewerCount()
-                this.loadNewSourceFromMist(source)
-
-            }
-            if (name==='variety') {
-                this.disconnectViewerFromChannel()
-                let source = 'mist1pull12'
-                this.videoName = 'Variety'
-                this.currentChannelName = 'variety'
-                this.currentChannelId = 12
-                this.addViewerToChannel()
-                this.getViewerCount()
-                this.loadNewSourceFromMist(source)
-
-            }
-            if (name==='sports') {
-                this.disconnectViewerFromChannel()
-                let source = 'mist1pull13'
-                this.videoName = 'Sports'
-                this.currentChannelName = 'sports'
-                this.currentChannelId = 13
-                this.addViewerToChannel()
-                this.getViewerCount()
-                this.loadNewSourceFromMist(source)
-
-            }
-            if (name==='local') {
-                this.disconnectViewerFromChannel()
-                let source = 'mist1pull14'
-                this.videoName = 'Local'
-                this.currentChannelName = 'local'
-                this.currentChannelId = 14
-                this.addViewerToChannel()
-                this.getViewerCount()
-                this.loadNewSourceFromMist(source)
-
-            }
-            if (name==='world') {
-                this.disconnectViewerFromChannel()
-                let source = 'mist1pull15'
-                this.videoName = 'notTV World'
-                this.currentChannelName = 'world'
-                this.currentChannelId = 15
-                this.addViewerToChannel()
-                this.getViewerCount()
-                this.loadNewSourceFromMist(source)
-
-            }
-        },
+        // changeChannel(name) {
+        //     if (name==='one') {
+        //         let source = 'mist1pull1'
+        //         this.videoName = 'notTV One'
+        //         this.currentChannelName = 'one'
+        //         this.currentChannelId = 1
+        //         this.addViewerToChannel()
+        //         this.getViewerCount()
+        //         this.loadNewSourceFromMist(source)
+        //     }
+        //     if (name==='ambient') {
+        //         let source = 'mist1pull2'
+        //         this.videoName = 'Ambient'
+        //         this.currentChannelName = 'ambient'
+        //         this.currentChannelId = 2
+        //         this.addViewerToChannel()
+        //         this.getViewerCount()
+        //         this.loadNewSourceFromMist(source)
+        //
+        //     }
+        //     if (name==='news') {
+        //         let source = 'mist1pull3'
+        //         this.videoName = 'News'
+        //         this.currentChannelName = 'news'
+        //         this.currentChannelId = 3
+        //         this.addViewerToChannel()
+        //         this.getViewerCount()
+        //         this.loadNewSourceFromMist(source)
+        //
+        //     }
+        //     if (name==='talk') {
+        //         let source = 'mist1pull4'
+        //         this.videoName = 'Talk'
+        //         this.currentChannelName = 'talk'
+        //         this.currentChannelId = 4
+        //         this.addViewerToChannel()
+        //         this.getViewerCount()
+        //         this.loadNewSourceFromMist(source)
+        //
+        //     }
+        //     if (name==='documentary') {
+        //         let source = 'mist1pull5'
+        //         this.videoName = 'Documentary'
+        //         this.currentChannelName = 'documentary'
+        //         this.currentChannelId = 5
+        //         this.addViewerToChannel()
+        //         this.getViewerCount()
+        //         this.loadNewSourceFromMist(source)
+        //
+        //     }
+        //     if (name==='music') {
+        //         let source = 'mist1pull6'
+        //         this.videoName = 'Music'
+        //         this.currentChannelName = 'music'
+        //         this.currentChannelId = 6
+        //         this.addViewerToChannel()
+        //         this.getViewerCount()
+        //         this.loadNewSourceFromMist(source)
+        //
+        //     }
+        //     if (name==='drama') {
+        //         let source = 'mist1pull7'
+        //         this.videoName = 'Drama'
+        //         this.currentChannelName = 'drama'
+        //         this.currentChannelId = 7
+        //         this.addViewerToChannel()
+        //         this.getViewerCount()
+        //         this.loadNewSourceFromMist(source)
+        //
+        //     }
+        //     if (name==='comedy') {
+        //         let source = 'mist1pull8'
+        //         this.videoName = 'Comedy'
+        //         this.currentChannelName = 'comedy'
+        //         this.currentChannelId = 8
+        //         this.addViewerToChannel()
+        //         this.getViewerCount()
+        //         this.loadNewSourceFromMist(source)
+        //
+        //     }
+        //     if (name==='education') {
+        //         let source = 'mist1pull9'
+        //         this.videoName = 'Education'
+        //         this.currentChannelName = 'education'
+        //         this.currentChannelId = 9
+        //         this.addViewerToChannel()
+        //         this.getViewerCount()
+        //         this.loadNewSourceFromMist(source)
+        //
+        //     }
+        //     if (name==='spirituality') {
+        //         let source = 'mist1pull10'
+        //         this.videoName = 'Spirituality'
+        //         this.currentChannelName = 'spirituality'
+        //         this.currentChannelId = 10
+        //         this.addViewerToChannel()
+        //         this.getViewerCount()
+        //         this.loadNewSourceFromMist(source)
+        //
+        //     }
+        //     if (name==='reality') {
+        //         let source = 'mist1pull11'
+        //         this.videoName = 'Reality'
+        //         this.currentChannelName = 'reality'
+        //         this.currentChannelId = 11
+        //         this.addViewerToChannel()
+        //         this.getViewerCount()
+        //         this.loadNewSourceFromMist(source)
+        //
+        //     }
+        //     if (name==='variety') {
+        //         this.disconnectViewerFromChannel()
+        //         let source = 'mist1pull12'
+        //         this.videoName = 'Variety'
+        //         this.currentChannelName = 'variety'
+        //         this.currentChannelId = 12
+        //         this.addViewerToChannel()
+        //         this.getViewerCount()
+        //         this.loadNewSourceFromMist(source)
+        //
+        //     }
+        //     if (name==='sports') {
+        //         this.disconnectViewerFromChannel()
+        //         let source = 'mist1pull13'
+        //         this.videoName = 'Sports'
+        //         this.currentChannelName = 'sports'
+        //         this.currentChannelId = 13
+        //         this.addViewerToChannel()
+        //         this.getViewerCount()
+        //         this.loadNewSourceFromMist(source)
+        //
+        //     }
+        //     if (name==='local') {
+        //         this.disconnectViewerFromChannel()
+        //         let source = 'mist1pull14'
+        //         this.videoName = 'Local'
+        //         this.currentChannelName = 'local'
+        //         this.currentChannelId = 14
+        //         this.addViewerToChannel()
+        //         this.getViewerCount()
+        //         this.loadNewSourceFromMist(source)
+        //
+        //     }
+        //     if (name==='world') {
+        //         this.disconnectViewerFromChannel()
+        //         let source = 'mist1pull15'
+        //         this.videoName = 'notTV World'
+        //         this.currentChannelName = 'world'
+        //         this.currentChannelId = 15
+        //         this.addViewerToChannel()
+        //         this.getViewerCount()
+        //         this.loadNewSourceFromMist(source)
+        //
+        //     }
+        // },
     },
 
     getters: {
+        // Filter the creators and remove null values
+        // Define a getter function to get valid creators
+        validCreators(state) {
+               return state.nowPlayingCreators.filter(
+                    (creator) =>
+                        creator &&
+                        creator.id !== undefined && // Filter out undefined 'id'
+                        creator.name !== undefined // Filter out undefined 'name'
+                )
+            }
         // incrementViewerCount() {
         //     this.viewerCount++
         // },
