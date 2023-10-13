@@ -39,10 +39,11 @@
 
                         ><template #content>
                             <div class="text-xs" id="tooltip">
-                                <div>Filename: {{ video.file_name }}</div>
+                                <div v-if="video.file_name">Filename: {{ video.file_name ? video.file_name : 'No File Name' }}</div>
                                 <div>ID: {{ video.id }}</div>
                                 <div>Type: {{ video.type }}</div>
-                                <div>Size: {{ video.size }}</div>
+                                <div v-if="video.storage_location !== 'external'">Size: {{ video.size }}</div>
+                                <div v-else>External</div>
                                 <div v-if="video.user_id">Owner: {{ video.user_id}}</div>
                                 <div v-if="video.showEpisode">Show: {{ video.showEpisode.show.name}}</div>
                                 <div v-if="video.showEpisode">Episode: {{ video.showEpisode.name}}</div>
@@ -59,7 +60,8 @@
                                 :disabled="video.upload_status === 'processing'"
                                 class="disabled:cursor-not-allowed disabled:text-gray-500 disabled:italic inline"
                         >
-                            {{ video.file_name.length > 15 ? video.file_name.substring(0, 15 - 3) + "..." : video.file_name.substring(0, 15) }}
+                            <div v-if="video.file_name">{{ video.file_name.length > 15 ? video.file_name.substring(0, 15 - 3) + "..." : video.file_name.substring(0, 15) }}</div>
+                            <div v-else>{{video.storage_location}}</div>
                         </button>
                         </Popper>
                         <div class="flex flex-row space-x-1">
@@ -69,6 +71,7 @@
                                 Movie</div>
                             <div v-if="video.movieTrailer" class="w-fit text-xs rounded-lg px-1 uppercase bg-indigo-800 text-white font-semibold">Trailer</div>
                             <div v-if="video.newsPost" class="hidden w-fit text-xs rounded-lg px-1 uppercase bg-orange-800 text-white font-semibold">News</div>
+                            <div v-if="video.storage_location === 'external'" class="hidden w-fit text-xs rounded-lg px-1 uppercase bg-blue-800 text-white font-semibold">External</div>
                         </div>
                         <span v-if="!video.can.view" class="font-semibold text-red-700">You are currently unable to view this video. Please check with the admin.</span>
                         <div v-show="video.upload_status === 'processing'" class="ml-2 mb-1 py-1 px-2 bg-gray-600 text-gray-50 text-xs w-fit rounded-lg inline">Processing</div>

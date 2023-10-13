@@ -69,7 +69,7 @@ FOOTER
 </template>
 
 <script setup>
-import { onBeforeMount, onMounted, ref, watch } from "vue"
+import {defineAsyncComponent, onBeforeMount, onMounted, ref, watch} from "vue"
 import { Inertia } from "@inertiajs/inertia"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useUserStore } from "@/Stores/UserStore"
@@ -77,7 +77,11 @@ import { Dropzone } from "dropzone"
 import { useForm } from "@inertiajs/inertia-vue3"
 import Pagination from "@/Components/Pagination"
 import VideoTable from "@/Components/Tables/VideoTable"
-import VideoUpload from "@/Components/Uploaders/VideoUpload"
+
+// import VideoUpload from "@/Components/Uploaders/VideoUpload"
+const VideoUpload = defineAsyncComponent(() =>
+    import('@/Components/Uploaders/VideoUpload')
+)
 import MobileVideoRecord from "@/Components/Uploaders/MobileVideoRecord"
 import throttle from "lodash/throttle";
 import Message from "@/Components/Modals/Messages";

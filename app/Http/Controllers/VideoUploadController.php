@@ -77,9 +77,10 @@ class VideoUploadController extends Controller
                 ->paginate(10, ['*'], 'videos')
                 ->through(fn($video) => [
                     'id' => $video->id,
-                    'file_name' => $video->file_name,
+                    'file_name' => $video->file_name ?? '',
                     'extension' => $video->extension,
                     'folder' => $video->folder,
+                    'storage_location' => $video->storage_location,
                     'cdn_endpoint' => $video->appSetting->cdn_endpoint,
                     'cloud_folder' => $video->cloud_folder,
                     'upload_status' => $video->upload_status,
@@ -116,6 +117,7 @@ class VideoUploadController extends Controller
                     'user_id' => $video->user->name,
                     'file_name' => $video->file_name,
                     'extension' => $video->extension,
+                    'storage_location' => $video->storage_location,
                     'folder' => $video->folder,
                     'cdn_endpoint' => $video->appSetting->cdn_endpoint,
                     'cloud_folder' => $video->cloud_folder,

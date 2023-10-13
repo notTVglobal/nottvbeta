@@ -30,59 +30,68 @@ let uploadCompleteMessage = ref(0);
 let isHidden = ref(false);
 
 onMounted(() => {
-// see options for Dropzone here: https://github.com/dropzone/dropzone/blob/main/src/options.js
-let myDropzone = new Dropzone("#videoUploadForm", {
-    url: "/videoupload",
-    paramName: "file", // The name that will be used to transfer the file
-    maxFilesize: '25 GB', // MB
-    chunking: true,
-    chunkSize: 2 * 1024 * 1024,
-    parallelChunkUploads: false,
-    retryChunks: true,
-    retryChunksLimit: 10,
-    capture: null,
-    // can set the capture method as camera, microphone or video
-    // for mobile devices to skip the file selection and choose the
-    // recording device instead.
-    acceptedFiles: 'video/*, audio/*',
-    uploadprogress: function(file, progress, bytesSent) {
-        userStore.uploadPercentage = progress;
-        console.log(userStore.uploadPercentage);
-        if(userStore.uploadPercentage !== 100){
-            isHidden = true;
-        }
-    },
-    dictDefaultMessage: "Click here or Drop video here to upload <br>(Max video file size is 25GB)",
-    forceFallback: false, // for testing, set to true.
-    accept: function(file, done) {
-        if (file.name === "") {
-            done("Need a file.");
-        } else if (file.size > 25000000000) {
-            console.log(file.size)
-            done("Video file too big.");
-            alert('Video file must be smaller than 25GB');
-        }
-        else { done(); }
+    // Make sure the element with the ID "videoUploadForm" is available in the DOM.
+    const videoUploadForm = document.getElementById('videoUploadForm');
+
+    if (videoUploadForm) {
+        // Initialize Dropzone on the element.
+
+        // see options for Dropzone here: https://github.com/dropzone/dropzone/blob/main/src/options.js
+        let myDropzone = new Dropzone("#videoUploadForm", {
+            url: "/videoupload",
+            paramName: "file", // The name that will be used to transfer the file
+            maxFilesize: '25 GB', // MB
+            chunking: true,
+            chunkSize: 2 * 1024 * 1024,
+            parallelChunkUploads: false,
+            retryChunks: true,
+            retryChunksLimit: 10,
+            capture: null,
+            // can set the capture method as camera, microphone or video
+            // for mobile devices to skip the file selection and choose the
+            // recording device instead.
+            acceptedFiles: 'video/*, audio/*',
+            uploadprogress: function(file, progress, bytesSent) {
+                userStore.uploadPercentage = progress;
+                console.log(userStore.uploadPercentage);
+                if(userStore.uploadPercentage !== 100){
+                    isHidden = true;
+                }
+            },
+            dictDefaultMessage: "Click here or Drop video here to upload <br>(Max video file size is 25GB)",
+            forceFallback: false, // for testing, set to true.
+            accept: function(file, done) {
+                if (file.name === "") {
+                    done("Need a file.");
+                } else if (file.size > 25000000000) {
+                    console.log(file.size)
+                    done("Video file too big.");
+                    alert('Video file must be smaller than 25GB');
+                }
+                else { done(); }
+            }
+        });
+
+        myDropzone.on("addedfile", file => {
+            uploadingMessage = 1;
+            console.log(`File added: ${file.name}`);
+
+        });
+
+        myDropzone.on("complete", function(file) {
+            uploadingMessage = 0;
+            uploadCompleteMessage = 1;
+            myDropzone.removeFile(file);
+            userStore.uploadPercentage = 0;
+            isHidden = false;
+            Inertia.reload({
+                only: ["videos"],
+            });
+        });
+
+    } else {
+        console.error('Element with ID "videoUploadForm" not found in the DOM.');
     }
-});
-
-myDropzone.on("addedfile", file => {
-    uploadingMessage = 1;
-    console.log(`File added: ${file.name}`);
-
-});
-
-myDropzone.on("complete", function(file) {
-    uploadingMessage = 0;
-    uploadCompleteMessage = 1;
-    myDropzone.removeFile(file);
-    userStore.uploadPercentage = 0;
-    isHidden = false;
-    Inertia.reload({
-        only: ["videos"],
-    });
-});
-
 })
 
 let props = defineProps({

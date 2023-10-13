@@ -1,8 +1,12 @@
 # not.tv Changelog
 
 
-Last Update: October 6, 2023\
+Last Update: October 12, 2023\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.7.3.12
+October 12, 2023
+* Fix video uploader error
 
 ## v0.7.3.11
 October 6, 2023
