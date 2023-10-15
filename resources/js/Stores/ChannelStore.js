@@ -2,6 +2,7 @@ import {defineStore} from "pinia";
 import {ref} from "vue";
 import {useUserStore} from "@/Stores/UserStore";
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore";
+import videojs from "video.js";
 
 export let useChannelStore = defineStore('channelStore', {
     state: () => ({
@@ -40,7 +41,9 @@ export let useChannelStore = defineStore('channelStore', {
             }
             if (useUserStore().id !== null) {
                 this.userAddedToChannels = true
-                this.disconnectViewerFromChannel(oldChannelId)
+                if (oldChannelId !== 0) {
+                    this.disconnectViewerFromChannel(oldChannelId)
+                }
                 await this.addViewerToChannel(channel.id)
             }
 

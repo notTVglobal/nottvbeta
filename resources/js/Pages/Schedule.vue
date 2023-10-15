@@ -114,7 +114,11 @@ userStore.currentPage = 'schedule';
 userStore.showFlashMessage = true;
 
 onMounted(() => {
-    videoPlayerStore.makeVideoTopRight();
+    videoPlayerStore.makeVideoTopRight()
+    videoPlayerStore.controls = false
+    // videoPlayerStore.makeVideoTopRight()
+    videoPlayerStore.currentPageIsStream = false
+    videoPlayerStore.fullPage = false
     if (userStore.isMobile) {
         videoPlayerStore.ottClass = 'ottClose'
         videoPlayerStore.ott = 0

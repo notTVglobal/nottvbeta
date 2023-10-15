@@ -45,6 +45,7 @@ onMounted( () => {
     let videoPlayer = videojs('main-player', {
         controlBar: {
             audioTrackButton: false,
+            autoHide: true,
             captionsButton: false,
             chaptersButton: false,
             currentTimeDisplay: false,
@@ -70,6 +71,9 @@ onMounted( () => {
                 },
             },
         },
+        userActions: {
+            hotkeys: true, // Enable hotkeys to show/hide controls
+        },
         controls: false,
         muted: false,
         inactivityTimeout: 0,
@@ -85,6 +89,8 @@ onMounted( () => {
 
     // let videoPlayer = videojs('main-player')
     videoPlayer.ready(function() {
+        videoPlayer.controls(false)
+
         videoPlayer.muted(true)
         videoPlayerStore.muted = true
         videoPlayer.play();

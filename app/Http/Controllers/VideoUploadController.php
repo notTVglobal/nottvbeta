@@ -73,6 +73,7 @@ class VideoUploadController extends Controller
             'notTvTotalStorageUsed' => formatBytes(Video::where('storage_location', '=', 'spaces')
                 ->sum('size')),
             'videos' => Video::with('showEpisode', 'movie', 'movieTrailer', 'newsPost' )->where('user_id', auth()->user()->id)
+                ->where('storage_location', '=', 'spaces')
                 ->latest()
                 ->paginate(10, ['*'], 'videos')
                 ->through(fn($video) => [
@@ -109,6 +110,7 @@ class VideoUploadController extends Controller
                 ->when(Request::input('search'), function ($query, $search) {
                     $query->where('file_name', 'like', "%{$search}%");
                 })
+                ->where('storage_location', '=', 'spaces')
                 ->latest()
                 ->paginate(10, ['*'], 'allVideos')
                 ->withQueryString()

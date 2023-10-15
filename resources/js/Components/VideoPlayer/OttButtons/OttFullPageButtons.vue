@@ -3,11 +3,17 @@
 
         <div class="ottButtonsContainer" id="ottButtons">
             <button
-                v-if="urlPrev !== 'empty'"
+                v-if="userStore.prevUrl"
                 @click="back"
                 class="ottButton bg-gray-400 text-white hover:bg-gray-600 hover:text-gray-300">
                 <font-awesome-icon icon="fa-angle-left" class="ml-2 text-3xl mb-1"/><div>BACK</div>
             </button>
+<!--            <button-->
+<!--                v-if="urlPrev !== 'empty'"-->
+<!--                @click="back"-->
+<!--                class="ottButton bg-gray-400 text-white hover:bg-gray-600 hover:text-gray-300">-->
+<!--                <font-awesome-icon icon="fa-angle-left" class="ml-2 text-3xl mb-1"/><div>BACK</div>-->
+<!--            </button>-->
             <button
                     v-if="userStore.isVip || userStore.isAdmin"
                     @click="openChannels"
@@ -37,7 +43,7 @@
 </template>
 
 <script setup>
-import { computed } from "vue"
+import { ref, onMounted, computed } from "vue"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useChatStore } from "@/Stores/ChatStore"
 import { useUserStore } from "@/Stores/UserStore"
@@ -49,10 +55,27 @@ let chatStore = useChatStore()
 let userStore = useUserStore()
 let urlPrev = usePage().props.value.urlPrev
 
+const previousURL = ref(null);
+
+onMounted(() => {
+
+});
+
 function back() {
-    if (urlPrev !== 'empty') {
-        Inertia.visit(urlPrev)
-    }
+    // if (urlPrev !== 'empty') {
+    //     Inertia.visit(urlPrev)
+    // }
+
+    if (!videoPlayerStore.currentPageIsStream) {
+        videoPlayerStore.makeVideoTopRight()
+        videoPlayerStore.fullPage = false
+        videoPlayerStore.controls = false
+    } else if (userStore.prevUrl) {
+         // Inertia.visit(urlPrev)
+         Inertia.visit(userStore.prevUrl)
+      }
+
+
 }
 
 function openChannels() {

@@ -19,6 +19,8 @@ export let useUserStore = defineStore('userStore', {
 
         // move currentPage from VideoPlayerStore to here.
         currentPage: String,
+        hidePage: Boolean,
+        prevUrl: String,
         id: null,
         roleId: null,
         getUserDataCompleted: null,

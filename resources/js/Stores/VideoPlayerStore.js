@@ -9,6 +9,7 @@ import {computed} from "vue";
 
 export const useVideoPlayerStore = defineStore('videoPlayerStore', {
     state: () => ({
+            videoPlayerLoaded: false,
             class: '',
             videoContainerClass: '',
             // ottClass: 'OttClose',
@@ -218,9 +219,9 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
         },
         unmute() {
             let videoJs = videojs('main-player')
-            videoJs.controls(false)
             videoJs.muted(false)
             this.muted = false
+            videoJs.controls(false)
         },
         mute() {
             let videoJs = videojs('main-player')
@@ -236,8 +237,9 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
         },
         play() {
             let videoJs = videojs('main-player')
-            videoJs.controls(false)
+
             videoJs.play()
+            videoJs.controls(false)
             this.paused = false
         },
         // next not built yet
@@ -351,7 +353,6 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             this.videoSource = filePath+source+'/index.m3u8'
             this.videoSourceType = "application/x-mpegURL"
             videoJs.src({'src': this.videoSource, 'type': this.videoSourceType})
-            videoJs.controls(false)
             this.unmute()
             this.paused = false
         },
@@ -365,7 +366,6 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             this.videoSource = source.file_name
             this.videoSourceType = source.type
             videoJs.src({'src': filePath+this.videoSource, 'type': this.videoSourceType})
-            videoJs.controls(false)
             this.unmute()
             this.paused = false
         },
@@ -377,12 +377,15 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                 videoJs.controls(false)
                 this.class = 'pipVideoClass'
                 this.videoContainerClass = 'pipVideoContainerClass'
+                this.fullPage = false
             }
         },
         makeVideoFullPage() {
             this.fullPage = true;
             this.videoContainerClass = 'fullPageVideoContainer'
             this.class = 'fullPageVideoClass'
+            this.controls = true
+            useUserStore().hidePage = true
             // if (useUserStore().isMobile) {
             //     this.videoContainerClass = 'fullPageVideoContainerMobile'
             //     this.class = 'fullPageVideoClassMobile'
@@ -404,12 +407,15 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             this.videoContainerClass = 'topRightVideoContainer'
             this.class = 'topRightVideoClass'
             this.fullPage = false
+            this.controls = false
+            useUserStore().hidePage = false
         },
         makeVideoWelcomePage() {
             this.videoContainerClass = 'welcomeVideoContainer'
             this.class = 'welcomeVideoClass'
             this.fullPage = true
             this.loggedIn = false
+            useUserStore().hidePage = false
             // useChatStore().chatHidden();
         },
         setNowPlayingName(name) {

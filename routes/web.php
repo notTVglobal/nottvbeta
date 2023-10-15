@@ -689,11 +689,9 @@ Route::middleware([
     Route::resource('showEpisodes', ShowEpisodeController::class);
     // Display episodes index page
     Route::get('/shows/{show}/episodes', [ShowEpisodeController::class, 'index'])
-        ->can('viewPremium', 'App\Models\User')
         ->name('showEpisodes');
     // Display episode page
     Route::get('/shows/{show}/episode/{showEpisode}', [ShowEpisodeController::class, 'show'])
-        ->can('viewPremium', 'App\Models\User')
         ->name('shows.showEpisodes.show')
         ->scopeBindings();
     // Display episode edit page

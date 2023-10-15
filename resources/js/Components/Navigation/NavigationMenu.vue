@@ -7,13 +7,22 @@
                 <div class="flex">
                     <!-- Logo -->
                     <div class="shrink-0 flex items-center">
-                        <Link @click="loadStreamPage()" :href="route('stream')">
+                        <Link @click="navigateToStream" :href="route('stream')">
                             <JetApplicationMark class="block h-9 w-auto"/>
                         </Link>
                     </div>
 
                     <!-- Navigation Links -->
                     <div class="hidden space-x-8 lg:-my-px lg:ml-10 lg:flex">
+                        <h3 class="inline-flex items-center relative">
+                            <JetNavLink
+                                v-touch="()=>(route('stream'))"
+                                @click="navigateToStream()"
+                                :href="route('stream')"
+                                :active="userStore.currentPage === 'stream'">
+                                Stream
+                            </JetNavLink>
+                        </h3>
                         <h3 class="inline-flex items-center relative">
                         <JetNavLink
                             v-touch="()=>(route('schedule'))"
@@ -23,8 +32,7 @@
                                 Schedule
                         </JetNavLink>
                         </h3>
-                        <h3 class="inline-flex items-center relative"
-                            v-if="userStore.isSubscriber || userStore.isVip || userStore.isAdmin">
+                        <h3 class="inline-flex items-center relative">
                         <JetNavLink
                             v-touch="()=>(route('news'))"
                             @click="videoPlayerStore.makeVideoTopRight()"
@@ -43,8 +51,7 @@
                                 Movies
                         </JetNavLink>
                         </h3>
-                        <h3 class="inline-flex items-center relative"
-                            v-if="userStore.isSubscriber || userStore.isVip || userStore.isAdmin">
+                        <h3 class="inline-flex items-center relative">
                         <JetNavLink
                             v-touch="()=>(route('shows'))"
                             @click="videoPlayerStore.makeVideoTopRight()"
@@ -280,11 +287,10 @@ let props = defineProps({
     user: Object,
 })
 
-function loadStreamPage() {
-    videoPlayerStore.makeVideoFullPage()
-    videoPlayerStore.ott = 0
-    userStore.showNavDropdown = false
-}
+// function loadStreamPage() {
+//     videoPlayerStore.makeVideoFullPage()
+//     userStore.showNavDropdown = false
+// }
 
 const logout = () => {
     Inertia.post(route('logout'));
@@ -312,6 +318,13 @@ const logout = () => {
 
 function billingPortal() {
     location.href = ('https://not.tv/billing-portal')
+}
+
+function navigateToStream() {
+    videoPlayerStore.makeVideoFullPage()
+    videoPlayerStore.ott = 0
+    userStore.showNavDropdown = false
+    userStore.prevUrl = window.history.state.url
 }
 
 </script>

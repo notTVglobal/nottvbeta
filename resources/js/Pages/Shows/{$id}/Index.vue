@@ -263,6 +263,7 @@ let playEpisode = () => {
         videoPlayerStore.nowPlayingCreators = props.creators.data
         videoPlayerStore.nowPlayingBonusContent = []
         // Inertia.visit('/stream')
+        videoPlayerStore.makeVideoFullPage()
     } else if (props.show.firstPlayVideoFromUrl) {
         videoPlayerStore.loadNewSourceFromUrl(props.show.firstPlayVideoFromUrl)
         videoPlayerStore.videoName = props.show.firstPlayVideoFromUrl.name
@@ -274,6 +275,7 @@ let playEpisode = () => {
         videoPlayerStore.nowPlayingCreators = props.creators.data
         videoPlayerStore.nowPlayingBonusContent = []
         // Inertia.visit('/stream')
+        videoPlayerStore.makeVideoFullPage()
     }
 }
 

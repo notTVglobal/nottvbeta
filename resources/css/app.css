@@ -13,6 +13,9 @@ html {
 .vjs-play-button {
     display: none !important;
 }
+.vjs-control-bar {
+    display: none !important;
+}
 .videoZ {
     z-index:1;
 }
@@ -246,12 +249,14 @@ h3 {
         @apply hidden fixed right-2 top-20 w-10 mr-4
     }
     .osdFullPage {
+        z-index:999;
         top: calc(100vh - 50%);
         @apply fixed flex flex-col align-top justify-start w-full h-1/2 left-0 right-0 px-5 drop-shadow z-50
     }
     .videoControls {
         z-index: 200;
-        top: calc(100vh - 57%);
+        /*top: calc(100vh - 57%);*/
+        top: calc(100vh - 20%);
         /*padding-top: 56.25%;*/
         @apply fixed flex flex-row justify-center left-0 right-0 mx-auto space-x-4 w-full
     }

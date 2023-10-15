@@ -24,10 +24,12 @@ class ShowPolicy
      */
     public function viewAny(User $user)
     {
-        if ($user->subscribed('default') || $user->isVip || $user->isAdmin) {
-            return true;
-        }
-        return Response::deny('Please upgrade your account.');
+        return true; // all users can view shows
+
+//        if ($user->subscribed('default') || $user->isVip || $user->isAdmin) {
+//            return true;
+//        }
+//        return Response::deny('Please upgrade your account.');
     }
 
     /**
@@ -38,10 +40,12 @@ class ShowPolicy
      */
     public function view(User $user)
     {
-        if ($user->subscribed('default') || $user->isVip || $user->creator || $user->isAdmin) {
-            return true;
-        }
-        return Response::deny('Please upgrade your account.');
+        return true; // all users can view shows
+
+//        if ($user->subscribed('default') || $user->isVip || $user->creator || $user->isAdmin) {
+//            return true;
+//        }
+//        return Response::deny('Please upgrade your account.');
 
     }
 

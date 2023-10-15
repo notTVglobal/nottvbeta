@@ -4,7 +4,7 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <Link @click="loadStreamPage()" :href="route('stream')">
+                    <Link @click="navigateToStream" :href="route('stream')">
                         <JetApplicationMark class="ml-5 block h-9 w-auto"/>
                     </Link>
                 </div>
@@ -125,6 +125,13 @@
                 </JetResponsiveNavLink>
 
                 <JetResponsiveNavLink
+                    @click="navigateToStream"
+                    :href="route('stream')"
+                    :active="userStore.currentPage === 'stream'">
+                    Stream
+                </JetResponsiveNavLink>
+
+                <JetResponsiveNavLink
                     v-if="userStore.isVip"
                     @click="userStore.closeNavDropdown()"
                     :href="route('library')"
@@ -140,7 +147,6 @@
                 </JetResponsiveNavLink>
 
                 <JetResponsiveNavLink
-                    v-if="userStore.isSubscriber || userStore.isVip || userStore.isAdmin"
                     @click="userStore.closeNavDropdown()"
                     :href="route('news')"
                     :active="userStore.currentPage === 'news'">
@@ -156,7 +162,6 @@
                 </JetResponsiveNavLink>
 
                 <JetResponsiveNavLink
-                    v-if="userStore.isSubscriber || userStore.isVip || userStore.isCreator"
                     @click="userStore.closeNavDropdown()"
                     :href="route('shows')"
                     :active="userStore.currentPage === 'shows'">
@@ -300,11 +305,11 @@ const logout = () => {
     userStore.clearUserData()
 };
 
-function loadStreamPage() {
-    videoPlayerStore.makeVideoFullPage()
-    videoPlayerStore.ott = 0
-    userStore.showNavDropdown = false
-}
+// function loadStreamPage() {
+//     videoPlayerStore.makeVideoFullPage()
+//     videoPlayerStore.ott = 0
+//     userStore.showNavDropdown = false
+// }
 
 function billingPortal() {
     location.href = ('https://not.tv/billing-portal')
@@ -312,6 +317,13 @@ function billingPortal() {
 
 function openNotifications() {
     document.getElementById('my_modal_3').showModal()
+}
+
+function navigateToStream() {
+    videoPlayerStore.makeVideoFullPage()
+    videoPlayerStore.ott = 0
+    userStore.closeNavDropdown()
+    userStore.prevUrl = window.history.state.url
 }
 
 </script>

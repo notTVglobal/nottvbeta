@@ -2,8 +2,8 @@
     <div class="fixed top-0 left-0 right-0 bottom-0 bg-gray-800 text-gray-200 vh-100 vw-100 overflow-hidden overscroll-y-none overscroll-x-none">
 
         <!-- Navbar for logged in user -->
-        <ResponsiveNavigationMenu v-if="user"/>
-        <NavigationMenu v-if="user"/>
+        <ResponsiveNavigationMenu v-if="user" :key="userStore.currentPage"/>
+        <NavigationMenu v-if="user" :key="userStore.currentPage"/>
         <NotificationModal v-if="user"/>
 
         <!-- Login for Welcome Page (logged out) -->
@@ -12,7 +12,7 @@
         </Teleport>
 
         <!-- Page Content -->
-        <div :class="layoutClass">
+        <div v-show="!userStore.hidePage" :class="layoutClass">
                 <slot /></div>
 
         <!-- Video Player -->
@@ -44,8 +44,9 @@ import {Inertia} from "@inertiajs/inertia";
 //     import('@/Components/Navigation/NavigationMenu'))
 const Login = defineAsyncComponent( () =>
     import('@/Components/Welcome/Login'))
-const VideoPlayerMain = defineAsyncComponent( () =>
-    import('@/Components/VideoPlayer/VideoPlayerMain'))
+// const VideoPlayerMain = defineAsyncComponent( () =>
+//     import('@/Components/VideoPlayer/VideoPlayerMain'))
+import VideoPlayerMain from "@/Components/VideoPlayer/VideoPlayerMain.vue"
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()

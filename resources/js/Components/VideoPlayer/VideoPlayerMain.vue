@@ -166,6 +166,10 @@ onMounted( () => {
         }
 
     });
+    videoPlayer.ready(() => {
+        videoPlayer.controls(false)
+        videoPlayerStore.videoPlayerLoaded = true
+    })
     if (!videoPlayerStore.fullPage) {
         videoPlayerStore.controls = false
     }
@@ -281,10 +285,10 @@ videoPlayerStore.ottPlaylist = false
 videoPlayerStore.ottFilters = false
 
 onUnmounted(() => {
-    let player = videojs('main-player');
-    player.on('ended', function() {
-        this.dispose();
-    });
+    // let player = videojs('main-player');
+    // player.on('ended', function() {
+    //     this.dispose();
+    // });
 })
 
 
@@ -333,11 +337,16 @@ function clickOnVideoAction() {
     // if (!userStore.isMobile && !videoPlayerStore.currentPageIsStream) {
     //     videoPlayerStore.toggleOsdAndControls()
     // }
-    if (!videoPlayerStore.currentPageIsStream) {
-        Inertia.visit('/stream')
-        // videoPlayerStore.controls = true
+    // if (!videoPlayerStore.currentPageIsStream) {
+    //     Inertia.visit('/stream')
+    //     // videoPlayerStore.controls = true
+    // }
+    if (videoPlayerStore.fullPage === false) {
+        videoPlayerStore.makeVideoFullPage()
+        videoPlayerStore.fullPage = true
+        videoPlayerStore.controls = true
     }
-    if(videoPlayerStore.currentPageIsStream) {
+    else if(videoPlayerStore.fullPage === true) {
         // let videoPlayer = videojs('main-player');
         videoPlayerStore.togglePlay()
         // videoPlayerStore.toggleOsdAndControls()

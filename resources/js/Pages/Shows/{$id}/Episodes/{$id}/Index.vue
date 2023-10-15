@@ -226,14 +226,16 @@ let playEpisode = () => {
         videoPlayerStore.loadNewSourceFromFile(props.episode.video)
         videoPlayerStore.videoName = props.episode.name
         // videoPlayerStore.currentChannelName = 'On Demand ('+props.episode.name+') from file'
-        Inertia.visit('/stream')
+        // Inertia.visit('/stream')
+        videoPlayerStore.makeVideoFullPage()
     } else if
     // else if url exists, play url
         (props.episode.video.video_url) {
         videoPlayerStore.loadNewSourceFromUrl(props.episode.video)
         videoPlayerStore.videoName = props.episode.name
         // videoPlayerStore.currentChannelName = 'On Demand ('+props.episode.name+') from web'
-        Inertia.visit('/stream')
+        // Inertia.visit('/stream')
+        videoPlayerStore.makeVideoFullPage()
     }
     else if
         // else if youtube_url exists, play youtube_url
@@ -241,7 +243,8 @@ let playEpisode = () => {
         videoPlayerStore.loadNewSourceFromYouTube(props.episode.youtube_url)
         videoPlayerStore.videoName = props.episode.name
         // videoPlayerStore.currentChannelName = 'On Demand ('+props.episode.name+') from YouTube'
-        Inertia.visit('/stream')
+        // Inertia.visit('/stream')
+        videoPlayerStore.makeVideoFullPage()
     }
 
 }

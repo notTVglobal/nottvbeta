@@ -1,8 +1,14 @@
 # not.tv Changelog
 
 
-Last Update: October 12, 2023\
+Last Update: October 14, 2023\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.7.3.13
+October 14, 2023
+* Fix video player Back button. Added a PrevUrl to the userStore.
+* Added Stream Page to navigation. Stream loads a single channel. This is esp. for non-premium users.
+* Fixed the videojs controlbar showing up occasionally. The controlbar is now hidden in the app.css.
 
 ## v0.7.3.12
 October 12, 2023
