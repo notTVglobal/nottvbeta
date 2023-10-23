@@ -31,16 +31,16 @@ import { useChatStore } from "@/Stores/ChatStore.js"
 let videoPlayerStore = useVideoPlayerStore()
 let chatStore = useChatStore()
 
+let props = defineProps({
+    user: Object,
+    input: ref(''),
+});git 
+
 let form = useForm({
     message: '',
     user_name: props.user.name,
     user_profile_photo_path: props.user.profile_photo_path,
     user_profile_photo_url: props.user.profile_photo_url,
-});
-
-let props = defineProps({
-    user: Object,
-    input: ref(''),
 });
 
 const vFocus = {

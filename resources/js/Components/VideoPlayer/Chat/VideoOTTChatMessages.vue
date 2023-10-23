@@ -1,6 +1,5 @@
 <template>
     <div class="scrollbar-hide">
-        <button @click.prevent="scrollTo('#scrollToMe')" class="bottom-0 mr-32 h-12 bg-blue-800 hover:bg-blue-600 w-56 rounded-lg hidden">CLICK HERE TO SCROLL TO BOTTOM</button>
         <div class="videoOttChatMessages chatChrome w-full h-full pt-5 bottom-0 flex flex-col-reverse overflow-y-scroll overflow-x-clip break-words messages scrollbar-hide">
             <div id="scrollToMe"></div>
 
@@ -16,7 +15,7 @@
 </template>
 
 <script setup>
-import {onBeforeMount, onBeforeUnmount, onMounted, onUpdated, ref} from "vue";
+import {nextTick, onBeforeMount, onBeforeUnmount, onMounted, onUpdated, ref} from "vue";
 
 import MessageItem from "@/Components/VideoPlayer/Chat/ChatMessage.vue"
 import {useChatStore} from "@/Stores/ChatStore";
@@ -47,12 +46,16 @@ onBeforeMount(async() => {
 onMounted(() => {
 
 })
+//
+// onUpdated(() => {
+//     scrollTo('#scrollToMe')
+//     // if (chatStore.newMessages[0]) {
+//     //     document.getElementById(chatStore.newMessages[0].id).scrollIntoView({behavior: "smooth"})
+//     // }
+// })
 
-onUpdated(() => {
+nextTick(() => {
     scrollTo('#scrollToMe')
-    // if (chatStore.newMessages[0]) {
-    //     document.getElementById(chatStore.newMessages[0].id).scrollIntoView({behavior: "smooth"})
-    // }
 })
 
 onBeforeUnmount(() => {
