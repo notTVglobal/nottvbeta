@@ -56,7 +56,7 @@
                             for="content_json"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                         >Content</label>
-                        <tiptap v-if="videoPlayerStore.currentPage === 'newsCreate'" />
+                        <tiptap v-if="userStore.currentPage === 'newsCreate'" />
 <!--                        <textarea-->
 <!--                            type="text"-->
 <!--                            v-model="form.content_json"-->
@@ -107,6 +107,7 @@ import { useNewsStore } from "@/Stores/NewsStore"
 import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
 // import TabbableTextarea from "@/Components/TabbableTextarea.vue";
 import Tiptap from "@/Components/TextEditor/TiptapNewsPostCreate.vue";
+// import Tiptap from "@/Components/TextEditor/TiptapNewsPostEdit.vue";
 import Message from "@/Components/Modals/Messages";
 import {Inertia} from "@inertiajs/inertia";
 
