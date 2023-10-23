@@ -26,11 +26,7 @@
                 </div>
                 <div>
                     <div class="flex flex-wrap-reverse justify-end gap-2">
-                        <button
-                            @click="back"
-                            class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
-                        >Cancel
-                        </button>
+                        <CancelButton />
                     </div>
                 </div>
             </div>
@@ -157,6 +153,7 @@ import { useUserStore } from "@/Stores/UserStore";
 import Message from "@/Components/Modals/Messages"
 import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
 import {Inertia} from "@inertiajs/inertia";
+import CancelButton from "@/Components/Buttons/CancelButton.vue";
 
 let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore()
@@ -214,14 +211,6 @@ onMounted(() => {
     }
     document.getElementById("topDiv").scrollIntoView()
 });
-
-
-function back() {
-    let urlPrev = usePage().props.value.urlPrev
-    if (urlPrev !== 'empty') {
-        Inertia.visit(urlPrev)
-    }
-}
 
 // Dropzone tutorial: https://www.youtube.com/watch?v=wWKhKPN_Pmw
 

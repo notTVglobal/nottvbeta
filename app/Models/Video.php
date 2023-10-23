@@ -5,11 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Symfony\Component\Uid\Ulid;
 
 class Video extends Model
 {
     use SoftDeletes;
     use HasFactory;
+
+    protected static function booted()
+    {
+        static::creating(function ($model) {
+            $model->ulid = (string) Ulid::generate();
+        });
+    }
 
     protected $fillable = [
         'user_id',

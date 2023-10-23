@@ -9,16 +9,10 @@
                 <div id="topDiv"></div>
                 <header class="flex justify-between mb-3 border-b border-gray-800 pb-6">
 
-                        <h1 class="text-3xl font-semibold text-center lg:text-left">Video Upload</h1>
-
+                    <h1 class="text-3xl font-semibold text-center lg:text-left">Video Upload</h1>
 
                     <div>
-                        <button
-                            @click="back"
-                            class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                        >Back
-                        </button>
-
+                        <BackButton />
                     </div>
 
                 </header>
@@ -85,6 +79,7 @@ const VideoUpload = defineAsyncComponent(() =>
 import MobileVideoRecord from "@/Components/Uploaders/MobileVideoRecord"
 import throttle from "lodash/throttle";
 import Message from "@/Components/Modals/Messages";
+import BackButton from "@/Components/Buttons/BackButton.vue";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -166,10 +161,6 @@ watch(search, throttle(function (value) {
 // let form = useForm({
 //     file: [],
 // });
-
-function back() {
-    window.history.back()
-}
 
 </script>
 

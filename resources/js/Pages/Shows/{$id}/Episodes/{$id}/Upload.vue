@@ -21,11 +21,7 @@
                         </h1>
                     </div>
                     <div>
-                        <button
-                            @click="back"
-                            class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
-                        >Cancel
-                        </button>
+                        <CancelButton />
                     </div>
                 </div>
                 <div>
@@ -147,6 +143,7 @@ import 'filepond/dist/filepond.min.css'
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css'
 import Message from "@/Components/Modals/Messages";
 import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
+import CancelButton from "@/Components/Buttons/CancelButton.vue";
 
 let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore()

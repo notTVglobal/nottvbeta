@@ -9,16 +9,9 @@
     <!--    <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">-->
     <div class="place-self-center flex flex-col gap-y-3">
         <div id="topDiv" class="bg-white dark:bg-gray-800 text-black dark:text-gray-50 p-5 mb-10">
-
             <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+            <NewsHeader :can="can">News Feeds</NewsHeader>
 
-            <NewsHeader>News Feeds</NewsHeader>
-
-
-            <div class="w-full flex flex-row justify-end mb-4">
-
-                <NewsHeaderButtons :can="can"/>
-            </div>
             <div class="bg-orange-500 mb-1 px-2 py-1 text-black font-semibold">TODO: create special parser for <a href="https://www.canada.ca/en/news/web-feeds.html#a7" target="_blank">Government of Canada Feeds</a></div>
 
             <div class="w-full overflow-hidden bg-white shadow-sm sm:rounded-lg">
@@ -34,12 +27,11 @@
                                 <th scope="col" class="w-full flex flex-row justify-between px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                                     <div>
                                         <span class="text-lg">News Feeds</span>
-                                        <Link
-                                            :href="`/rss2/create`"><button
-                                            class="bg-green-600 hover:bg-green-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
+                                        <button
                                             v-if="can.viewNewsroom"
+                                            @click="userStore.btnRedirect(`/rss2/create`)"
+                                            class="bg-green-600 hover:bg-green-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
                                         >Add Feed</button>
-                                        </Link>
                                     </div>
                                     <div class="flex items-center mt-6 lg:mt-0">
                                         <div class="relative">
@@ -71,23 +63,25 @@
                                 >
                                     <div class="flex flex-row justify-between space-x-2">
                                         <div class="">
-                                                <Link type="text/javascript" :href="`/rss2/${feed.slug}`" class="text-blue-800 uppercase font-semibold text-md hover:text-blue-600 hover:opacity-75 transition ease-in-out duration-150">
-                                                {{feed.name}}
-                                            </Link>
+<!--                                                <Link type="text/javascript" :href="`/rss2/${feed.slug}`" class="text-blue-800 uppercase font-semibold text-md hover:text-blue-600 hover:opacity-75 transition ease-in-out duration-150">-->
+<!--                                                {{feed.name}}-->
+<!--                                            </Link>-->
+                                            <button
+                                                @click="userStore.btnRedirect(`/rss2/${feed.slug}`)"
+                                                class="text-blue-800 uppercase font-semibold text-md hover:text-blue-600 hover:opacity-75 transition ease-in-out duration-150"
+                                            >{{feed.name}}</button>
                                         </div>
                                         <div class="space-x-1">
-                                            <Link :href="`/rss2/${feed.slug}/edit`"><button
-                                                class="px-2 py-1 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                                                v-if="userStore.isNewsPerson"
-                                            >Edit</button>
-                                            </Link>
                                             <button
-                                                class="px-2 py-1 text-white bg-red-600 hover:bg-red-500 rounded-lg"
-                                                @click="destroy(feed.id)"
+                                                v-if="userStore.isNewsPerson"
+                                                @click="userStore.btnRedirect(`/rss2/${feed.slug}/edit`)"
+                                                class="px-2 py-1 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                                            >Edit</button>
+                                            <button
                                                 v-if="userStore.isAdmin"
-                                            >
-                                                Delete
-                                            </button>
+                                                @click="destroy(feed.id)"
+                                                class="px-2 py-1 text-white bg-red-600 hover:bg-red-500 rounded-lg"
+                                            ><font-awesome-icon icon="fa-trash-can" /></button>
                                         </div>
                                     </div>
                                 </td>
@@ -118,6 +112,7 @@ import Pagination from "@/Components/Pagination"
 import Message from "@/Components/Modals/Messages";
 import NewsHeaderButtons from "@/Components/News/NewsHeaderButtons.vue";
 import NewsHeader from "@/Components/News/NewsHeader.vue";
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()

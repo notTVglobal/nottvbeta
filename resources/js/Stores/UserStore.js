@@ -53,7 +53,7 @@ export let useUserStore = defineStore('userStore', {
         updateStore() {
             this.testNum++;
         },
-        substractStore() {
+        subtractStore() {
             this.testNum--;
         },
         toggleNavDropdown() {
@@ -124,6 +124,13 @@ export let useUserStore = defineStore('userStore', {
                 // Handle the case where notifications are missing or not an array
                 this.newNotifications = 0; // or some other default value or error handling logic
             }
+        },
+        setPrevUrl() {
+            this.prevUrl = window.history.state.url
+        },
+        btnRedirect(newUrl) {
+            this.setPrevUrl()
+            Inertia.visit(newUrl)
         }
     },
 

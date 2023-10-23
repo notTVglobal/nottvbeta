@@ -38,21 +38,24 @@
                                      :episodeStatusId="props.episode.episodeStatusId"
                                      :episodeStatuses="props.episodeStatuses"
                                      :episodeId="props.episode.id"
+                                     :episodeUlid="props.episode.ulid"
+                                     :episodeName="props.episode.name"
+                                     :episodeSlug="props.episode.slug"
+                                     :showSlug="props.showSlug"
+                                     :showName="props.showName"
                                      :scheduledDateTime="props.episode.scheduled_release_dateTime"/>
             </div>
 
         </td>
         <td>
             <div class="flex flex-row justify-end space-x-1 space-y-1 mr-1">
-                <div></div>
-                <Link
-                    :href="`/shows/${showSlug}/episode/${episode.slug}/edit`"
-                    v-if="teamStore.can.editShow">
+                <div>
                     <button
+                        v-if="teamStore.can.editShow"
+                        @click="userStore.btnRedirect(`/shows/${showSlug}/episode/${episode.slug}/edit`)"
                         class="px-4 py-2 text-white font-semibold bg-blue-500 hover:bg-blue-600 rounded-lg"
-                    >Edit
-                    </button>
-                </Link>
+                    >Edit</button>
+                </div>
                 <button
                     v-if="teamStore.can.manageShow && !props.episode.isPublished"
                     @click="deleteShowEpisode"
@@ -72,6 +75,7 @@
 <script setup>
 import { useTeamStore } from "@/Stores/TeamStore";
 import { useShowStore } from "@/Stores/ShowStore";
+import { useUserStore } from "@/Stores/UserStore";
 import {computed, ref} from "vue";
 import {useForm} from "@inertiajs/inertia-vue3";
 import EpisodeNoteEdit from "@/Components/Shows/Manage/EpisodeNoteEdit";
@@ -81,11 +85,13 @@ import {Inertia} from "@inertiajs/inertia";
 
 let teamStore = useTeamStore();
 let showStore = useShowStore();
+let userStore = useUserStore();
 
 let props = defineProps({
     episode: Object,
     episodeStatuses: Object,
     showSlug: String,
+    showName: String,
 });
 
 let showEpisodeStatuses = ref(false)

@@ -58,10 +58,9 @@ html {
 .bugFullPageClass {
     @apply block h-9 w-auto shrink-0
 }
-.news-paragraph p {
+.news-paragraph {
     margin-top: 0.75rem;
-    margin-bottom: 10px;
-    padding-top: 2rem;
+    margin-bottom: 1rem;
     @apply text-xl flex flex-wrap overscroll-x-none w-fit break-words;
 }
 .news-paragraph ul,
@@ -76,6 +75,41 @@ h2 {
 }
 h3 {
     @apply text-2xl
+}
+/*code {*/
+/*    background-color: rgba(0,0,0, 1);*/
+/*    color: #fff;*/
+/*    padding: 1rem 1rem;*/
+/*    @apply rounded-xl my-2;*/
+/*}*/
+pre {
+    background: #0D0D0D;
+    color: #FFF;
+    font-family: 'JetBrainsMono', monospace;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    @apply text-lg flex flex-wrap max-w-screen-md overflow-x-scroll break-words;
+
+    & code {
+        color: inherit;
+        padding: 0;
+        background: none;
+        font-size: 0.8rem;
+        @apply text-lg flex flex-wrap max-w-screen-md break-words;
+    }
+}
+
+blockquote {
+    margin: 3rem 2rem;
+    padding: 1rem 3rem;
+    border-left: 2px solid rgba(13,13,13, 0.1);
+    @apply text-xl text-gray-700;
+}
+
+hr {
+    border: none;
+    border-top: 2px solid rgba(13,13,13, 0.1);
+    margin: 2rem 0;
 }
 
 /* VIDEO CONTAINERS AND CLASSES*/

@@ -7,22 +7,16 @@
 
             <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
-            <NewsHeaderButtons :can="can"/>
-
-            <div class="flex flex-row justify-between">
-                <h2 class="text-xl font-semibold leading-tight">
-                    Edit RSS Feed
-                </h2>
-                <div class="flex justify-end space-x-2">
-                    <div>
-                        <button
-                            @click="back"
-                            class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
-                        >Back
-                        </button>
+            <header>
+                <div class="pt-6">
+                    <div class="flex flex-row justify-between">
+                        <h2 class="text-xl font-semibold leading-tight">
+                            Edit RSS Feed</h2>
+                        <CancelButton />
                     </div>
                 </div>
-            </div>
+            </header>
+
 
             <div class="p-6 border-b border-gray-200">
                 <form @submit.prevent="submit">
@@ -76,10 +70,6 @@
                         >
                             Submit
                         </button>
-                        <Link :href="`/feeds`"><button
-                            class="h-fit ml-2 px-4 py-2 text-white bg-blue-700 hover:bg-blue-300 rounded-lg"
-                        >Cancel</button>
-                        </Link>
                         <JetValidationErrors class="ml-4" />
                     </div>
                 </form>
@@ -103,6 +93,8 @@ import Button from "@/Jetstream/Button.vue";
 import Message from "@/Components/Modals/Messages";
 import NewsHeaderButtons from "@/Components/News/NewsHeaderButtons.vue";
 import {Inertia} from "@inertiajs/inertia";
+import BackButton from "@/Components/Buttons/BackButton.vue";
+import CancelButton from "@/Components/Buttons/CancelButton.vue";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()

@@ -228,6 +228,46 @@ class AdminController extends Controller
         ]);
     }
 
+////////////  EPISODES INDEX
+/////////////////////////
+
+    public function episodesIndex()
+    {
+
+        return Inertia::render('Admin/Episodes', [
+            'episodes' => ShowEpisode::with('show.team', 'show.image', 'show.user', 'show', 'showEpisodeStatus')
+                ->when(Request::input('search'), function ($query, $search) {
+                    $query->where('name', 'like', "%{$search}%")
+                        ->orWhere('ulid', 'like', "%{$search}%");
+                })
+                ->latest()
+                ->paginate(10, ['*'], 'episodes')
+                ->withQueryString()
+                ->through(fn($episode) => [
+                    'ulid' => $episode->ulid,
+                    'name' => $episode->name,
+                    'slug' => $episode->slug,
+                    'show' => $episode->show->name,
+                    'showSlug' => $episode->show->slug,
+                    'teamName' => $episode->show->team->name,
+                    'teamSlug' => $episode->show->team->slug,
+                    'showRunnerId' => $episode->show->user_id,
+                    'showRunnerName' => $episode->show->user->name,
+                    'image' => [
+                        'id' => $episode->show->image->id,
+                        'name' => $episode->show->image->name,
+                        'folder' => $episode->show->image->folder,
+                        'cdn_endpoint' => $episode->show->appSetting->cdn_endpoint,
+                        'cloud_folder' => $episode->show->image->cloud_folder,
+                    ],
+                    'status' => $episode->showEpisodeStatus->name,
+                    'statusId' => $episode->showEpisodeStatus->id,
+                    'created_at' => $episode->created_at->format('M d, Y'),
+                ]),
+            'filters' => Request::only(['search']),
+        ]);
+    }
+
 ////////////  TEAMS INDEX
 //////////////////////////
 
@@ -272,7 +312,7 @@ class AdminController extends Controller
                     'memberSpots' => $team->memberSpots,
                     'totalSpots' => $team->totalSpots,
                     'can' => [
-                        'editTeam' => Auth::user()->can('editTeam', $team),
+                        'editTeam' => Auth::user()->can('update', $team),
                         'viewTeam' => Auth::user()->can('viewTeamManagePage', $team)
                     ]
                 ]),

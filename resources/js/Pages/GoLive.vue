@@ -20,11 +20,7 @@
                     <h1 class="text-3xl font-semibold">Go Live</h1>
                 </div>
                 <div>
-                    <button
-                        @click="back"
-                        class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
-                    >Cancel
-                    </button>
+                    <CancelButton />
                 </div>
 <!--                <div class="grid grid-cols-1 grid-rows-2">-->
 <!--                    <div class="justify-self-end">-->
@@ -67,6 +63,7 @@ import { useUserStore } from "@/Stores/UserStore";
 import Message from "@/Components/Modals/Messages";
 import {usePage} from "@inertiajs/inertia-vue3";
 import {Inertia} from "@inertiajs/inertia";
+import CancelButton from "@/Components/Buttons/CancelButton.vue";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -82,13 +79,6 @@ onMounted(() => {
     }
     document.getElementById("topDiv").scrollIntoView()
 });
-
-function back() {
-    let urlPrev = usePage().props.value.urlPrev
-    if (urlPrev !== 'empty') {
-        Inertia.visit(urlPrev)
-    }
-}
 
 </script>
 

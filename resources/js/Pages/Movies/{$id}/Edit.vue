@@ -3,7 +3,7 @@
     <Head :title="`Edit Movie: ${movie.name}`"/>
 
     <div class="place-self-center flex flex-col gap-y-3">
-        <div id="topDiv" class="bg-dark text-light p-5 mb-10">
+        <div id="topDiv" class="bg-dark text-light p-5 mb-10 pt-6">
 
             <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
@@ -16,11 +16,7 @@
                         </h1>
                     </div>
                     <div>
-                        <button
-                            @click="back"
-                            class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
-                        >Cancel
-                        </button>
+                        <CancelButton />
                     </div>
                 </div>
             </header>
@@ -403,6 +399,7 @@ import ShowEpisodeEditHeader from "@/Components/ShowEpisodes/Edit/ShowEpisodeEdi
 import SingleImage from "@/Components/Multimedia/SingleImage"
 import ImageUpload from "@/Components/Uploaders/ImageUpload"
 import VideoUpload from "@/Components/Uploaders/VideoUpload"
+import CancelButton from "@/Components/Buttons/CancelButton.vue";
 
 let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore()

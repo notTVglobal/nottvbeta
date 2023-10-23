@@ -11,28 +11,21 @@
         <div id="topDiv" class="bg-white dark:bg-gray-800 text-black dark:text-gray-50 p-5 mb-10">
 
             <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+            <NewsHeader :can="can">News</NewsHeader>
 
-            <header class="w-full mx-auto flex flex-wrap justify-between mb-3 pb-3 border-b border-gray-500 space-x-2 space-y-3">
-                    <div></div>
-                    <NewsHeader>News</NewsHeader>
-                    <div class="flex items-center">
-                        <div class="relative">
-                            <input v-model="search" type="search" class="bg-gray-50 text-black text-sm rounded-full
+            <div class="my-4">
+                Events, shows, episodes, movies, news, channel updates, announcements, etc.
+            </div>
+
+            <div class="flex items-center my-3 lg:mt-0">
+                <div class="relative">
+                    <input v-model="search" type="search" class="bg-gray-50 text-black text-sm rounded-full
                             focus:outline-none focus:shadow w-64 pl-8 px-3 py-1" placeholder="Search...">
-                            <div class="absolute top-0 flex items-center h-full ml-2">
-                                <svg class="fill-current text-gray-400 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M456.69 421.39 362.6 327.3a173.81 173.81 0 0 0 34.84-104.58C397.44 126.38 319.06 48 222.72 48S48 126.38 48 222.72s78.38 174.72 174.72 174.72A173.81 173.81 0 0 0 327.3 362.6l94.09 94.09a25 25 0 0 0 35.3-35.3ZM97.92 222.72a124.8 124.8 0 1 1 124.8 124.8 124.95 124.95 0 0 1-124.8-124.8Z"/></svg>
+                    <div class="absolute top-0 flex items-center h-full ml-2">
+                        <svg class="fill-current text-gray-400 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M456.69 421.39 362.6 327.3a173.81 173.81 0 0 0 34.84-104.58C397.44 126.38 319.06 48 222.72 48S48 126.38 48 222.72s78.38 174.72 174.72 174.72A173.81 173.81 0 0 0 327.3 362.6l94.09 94.09a25 25 0 0 0 35.3-35.3ZM97.92 222.72a124.8 124.8 0 1 1 124.8 124.8 124.95 124.95 0 0 1-124.8-124.8Z"/></svg>
 
-                            </div>
-                        </div>
                     </div>
-
-            </header>
-
-            <div class="flex flex-wrap justify-between mb-4">
-                <div class="my-4">
-                    Events, shows, episodes, movies, news, channel updates, announcements, etc.
                 </div>
-                <NewsHeaderButtons :can="can"/>
             </div>
 
             <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
@@ -50,9 +43,6 @@
                                 </th>
                                 <th scope="col" class="text-left px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                                     Published on
-                                </th>
-                                <th scope="col" class="text-right px-6 py-2 space-x-2 space-y-2">
-
                                 </th>
                             </tr>
                             </thead>
@@ -73,22 +63,6 @@
                                 </td>
                                 <td class="text-gray-900">
                                     {{ formatDate(post.published_at) }}
-                                </td>
-                                <td class="text-right px-6 py-2 space-x-2 space-y-2">
-                                    <div class="flex flex-row space-x-2">
-                                        <Link :href="`/news/${post.slug}/edit`"><button
-                                        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                                        v-if="post.can.editNewsPost"
-                                    >Edit</button>
-                                    </Link>
-                                    <button
-                                        class="px-4 py-2 text-white bg-red-600 hover:bg-red-500 rounded-lg"
-                                        @click="destroy(post.id)"
-                                        v-if="post.can.deleteNewsPost"
-                                    >
-                                        Delete
-                                    </button>
-                                    </div>
                                 </td>
                             </tr>
                             </tbody>

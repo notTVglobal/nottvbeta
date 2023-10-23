@@ -469,14 +469,33 @@ let submit = () => {
     form.put(route('showEpisodes.update', props.episode.slug));
 };
 
+// Compare the converted date to the current date in the user's timezone
+const currentDate = convertToTimeZone(
+    new Date(),
+    userTimezone.value
+);
+
 const handleReleaseDateTime = (newDate) => {
-    selectedReleaseDateTime.value = newDate;
-    releaseDateTime = newDate.date;
-    // console.log(releaseDateTime)
-    updateReleaseDateTime()
-    console.log(formattedReleaseDateTime.value)
-    form.release_dateTime = formattedReleaseDateTime
-    form.scheduled_release_dateTime = null
+    let changedDate = convertToTimeZone(
+        newDate.date,
+        userTimezone.value
+    )
+console.log(changedDate)
+    console.log(currentDate)
+    // if release dateTime is in the future, alert and return
+    if (changedDate > currentDate) {
+        // selectedReleaseDateTime.value = props.episode.release_dateTime
+        return alert("The selected release date and time is in the future! Please select a date/time in the past.");
+    } else {
+        // else proceed
+        selectedReleaseDateTime.value = newDate;
+        releaseDateTime = newDate.date;
+        // console.log(releaseDateTime)
+        updateReleaseDateTime()
+        console.log(formattedReleaseDateTime.value)
+        form.release_dateTime = formattedReleaseDateTime
+        form.scheduled_release_dateTime = null
+    }
 }
 const handleScheduledDateTime = (newDate) => {
     selectedScheduledDateTime.value = newDate;
@@ -503,6 +522,18 @@ const updateReleaseDateTime = () => {
             new Date(releaseDateTime),
             userTimezone.value
         );
+
+        // Compare the converted date to the current date in the user's timezone
+        // const currentDate = convertToTimeZone(
+        //     new Date(),
+        //     userTimezone.value
+        // );
+        //
+        // if (formattedReleaseDateTime.value > currentDate) {
+        //     props.episode.release_dateTime = userReleaseDateTime.value
+        //     alert("The selected release date and time is in the future!");
+        // }
+
     } else {
         formattedReleaseDateTime.value = '';
     }

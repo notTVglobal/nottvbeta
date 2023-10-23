@@ -28,6 +28,7 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use App\Rules\UniqueEpisodeName;
 use Inertia\Inertia;
+use Symfony\Component\Uid\Ulid;
 
 class ShowEpisodeController extends Controller
 {
@@ -129,6 +130,7 @@ class ShowEpisodeController extends Controller
 //        } else $videoUrl = $request->video_url;
 
         $showEpisode = new ShowEpisode();
+        $showEpisode->ulid = (string) Ulid::generate();
         $showEpisode->isBeingEditedByUser_id = Auth::user()->id;
         $showEpisode->name = $request->name;
         $showEpisode->description = $request->description;

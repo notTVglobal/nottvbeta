@@ -7,18 +7,14 @@
 
             <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
-            <NewsHeader>News</NewsHeader>
+            <NewsHeader :can="can">News</NewsHeader>
 
             <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white dark:bg-gray-900 border-b border-gray-200">
                     <div class="flex justify-between">
                         <div class="text-2xl">{{props.feed.name}}</div>
                         <div>
-                            <button
-                                @click="back"
-                                class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
-                            >Back
-                            </button>
+                            <BackButton />
                         </div>
                     </div>
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -53,6 +49,7 @@ import dayjs from "dayjs"
 import NewsHeader from "@/Components/News/NewsHeader.vue";
 import {Inertia} from "@inertiajs/inertia";
 import {usePage} from "@inertiajs/inertia-vue3";
+import BackButton from "@/Components/Buttons/BackButton.vue";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -78,13 +75,6 @@ onMounted(() => {
 function newFormatDate(dateString) {
     const date = dayjs(dateString)
     return date.format('dddd MMMM D, YYYY')
-}
-
-function back() {
-    let urlPrev = usePage().props.value.urlPrev
-    if (urlPrev !== 'empty') {
-        Inertia.visit(urlPrev)
-    }
 }
 
 

@@ -9,10 +9,10 @@
             <AdminHeader>Users</AdminHeader>
 
             <div class="flex flex-row justify-between gap-x-4">
-                <Link :href="`/users/create`"><button
-                    class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded disabled:bg-gray-400"
+                <button
+                    @click="userStore.btnRedirect(`/users/create`)"
+                    class="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded-lg disabled:bg-gray-400"
                 >Add User</button>
-                </Link>
                 <input v-model="search" type="search" placeholder="Search..." class="text-black border px-2 rounded-lg" />
             </div>
 

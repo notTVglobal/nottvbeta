@@ -35,6 +35,7 @@
             <ShowEpisode v-for="episode in props.episodes.data"
                          :episode="episode"
                          :showSlug="props.show.slug"
+                         :showName="props.show.name"
                          :episodeStatuses="props.episodeStatuses"/>
 
         </tbody>

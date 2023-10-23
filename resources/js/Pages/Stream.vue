@@ -128,6 +128,11 @@ function updateUserStore() {
             userStore.getUserDataCompleted = true
             userStore.timezone = userTimezone
             console.log('get user data on Stream')
+            if (userStore.isCreator) {
+                userStore.prevUrl = '/dashboard'
+            } else {
+                userStore.prevUrl = '/stream'
+            }
         })
         .catch(error => {
             console.log(error);

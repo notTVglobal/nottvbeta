@@ -114,6 +114,11 @@ async function updateUserStore() {
             console.log('get user data on AppLayout')
             userStore.subscribeToUserNotifications(response.data.id)
             reloadNav++
+            if (userStore.isCreator) {
+                userStore.prevUrl = '/dashboard'
+            } else {
+                userStore.prevUrl = '/stream'
+            }
 
         })
         .catch(error => {

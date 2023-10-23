@@ -146,6 +146,7 @@ class NewsPostController extends Controller
                     'content' => html_entity_decode($newsPost->content),
 //                    'content_json' => $newsPost->content_json,
                     'published_at' => $newsPost->published_at,
+                    'updated_at' => $newsPost->updated_at,
                     'author' => $newsPost->user->name,
                 ],
                 'image' =>$newsPost->image->name,

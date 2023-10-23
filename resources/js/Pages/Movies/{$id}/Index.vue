@@ -8,14 +8,13 @@
             <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
             <header v-if="props.can.editMovie" class="flex justify-end mt-6 mr-4 pb-3 border-b border-gray-800">
-                <Link
-                    :href="`/movies/${props.movie.slug}/edit`"><button
+                <button
+                    @click="userStore.btnRedirect(`/movies/${props.movie.slug}/edit`)"
                     class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                 >Edit</button>
-                </Link>
             </header>
 
-<main class="mt-12">
+    <main class="mt-12">
             <div class="container mx-auto px-4">
                 <div class="movie-details border-b border-gray-800 pb-12 flex flex-col lg:flex-row">
                     <div class="items-center">
@@ -153,7 +152,7 @@
                     </div>
                 </div>
             </div>
-</main>
+    </main>
 
 
 

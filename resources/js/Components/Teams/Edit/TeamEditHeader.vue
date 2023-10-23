@@ -9,11 +9,7 @@
             </h1>
         </div>
         <div>
-            <button
-                @click="back"
-                class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
-            >Cancel
-            </button>
+            <CancelButton />
         </div>
 
     </div>
@@ -29,13 +25,11 @@
 </template>
 
 <script setup>
+import CancelButton from "@/Components/Buttons/CancelButton.vue";
+
 defineProps({
     team: Object,
     teamLeaderName: String,
 })
-
-function back() {
-    window.history.back()
-}
 
 </script>

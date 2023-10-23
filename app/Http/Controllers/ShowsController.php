@@ -525,6 +525,7 @@ class ShowsController extends Controller
                 ->withQueryString()
                 ->through(fn($showEpisode) => [
                     'id' => $showEpisode->id,
+                    'ulid' => $showEpisode->ulid,
                     'name' => $showEpisode->name,
                     'image' => [
                         'id' => $show->image->id,
@@ -824,13 +825,11 @@ class ShowsController extends Controller
         // Find the episode by ID
         $episode = ShowEpisode::find($episodeId);
 
-        if ($episode->isPublished) {
+        if ($episode->isPublished && !auth()->user()->isAdmin) {
             return response()->json(['alert' => 'This episode has already been published. Please contact the notTV team for assistance.']);
         }
 
         try {
-
-
             if ($newStatusId === 6) { // 6 is 'scheduled'
                 // validate the request
                 $request->validate([

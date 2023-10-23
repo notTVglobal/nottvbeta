@@ -25,7 +25,8 @@
 <!--        Code-->
 <!--    </button>-->
 <!--    <tabbable-textarea :editor="editor" class="element" />-->
-    <div class="overflow-y-scroll min-h-[13rem] max-h-[13rem] mb-2 pb-2 bg-gray-50 border border-1 border-gray-300 focus:outline-none text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 ">
+
+    <div class="h-auto overflow-y-auto min-h-[13rem] max-h-[96rem] mb-2 pb-2 bg-gray-50 border border-1 border-gray-300 focus:outline-none text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 ">
         <editor-content :editor="editor" class=""/>
     </div>
 </template>
@@ -78,7 +79,7 @@ const editor = new Editor({
     autofocus: true,
     editorProps: {
         attributes: {
-            class: 'min-h-[12rem] max-h-[12rem] block w-full p-2.5 focus:outline-none'
+            class: 'h-auto min-h-[12rem] max-h-[96rem] overflow-y-auto block w-full p-2.5 focus:outline-none'
         }
     }
 })
@@ -105,12 +106,5 @@ const editor = new Editor({
 </script>
 
 <style scoped>
-p {
-    margin-top: 0.75em;
-    margin-bottom: 1em;
-}
-ul,
-ol {
-    padding: 0 1rem;
-}
+
 </style>

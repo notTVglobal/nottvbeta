@@ -14,12 +14,10 @@
                     </div>
                     <div>
                         <div class="flex flex-wrap-reverse justify-end gap-2">
-                                <Link :href="`/dashboard`">
-                                    <button
-                                        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                                    >Dashboard
-                                    </button>
-                                </Link>
+                            <button
+                                @click="userStore.btnRedirect(`/dashboard`)"
+                                class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                            >Dashboard</button>
                         </div>
                     </div>
                 </div>
@@ -30,52 +28,46 @@
             <div class="bg-gray-300 dark:bg-gray-900 rounded pb-8 p-3 mb-6 mx-2 border-b border-2">
                 <div class="font-semibold text-xl pb-2">Administrator only links</div>
                 <div class="flex flex-wrap md:flex-row justify-items-start gap-2">
-                    <!--disable button if ! admin-->
-                    <Link :href="`/users`"><button
+                    <button
+                        @click="userStore.btnRedirect(`/users`)"
                         class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 col-span-1 rounded disabled:bg-gray-400"
                     >All Users</button>
-                    </Link>
-                    <Link :href="`/admin/shows`"><button
+                    <button
+                        @click="userStore.btnRedirect(`/admin/episodes`)"
+                        class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 col-span-1 rounded disabled:bg-gray-400"
+                    >All Episodes</button>
+                    <button
+                        @click="userStore.btnRedirect(`/admin/shows`)"
                         class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 col-span-1 rounded disabled:bg-gray-400"
                     >All Shows</button>
-                    </Link>
-                    <Link :href="`/admin/teams`"><button
+                    <button
+                        @click="userStore.btnRedirect(`/admin/teams`)"
                         class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 col-span-1 rounded disabled:bg-gray-400"
                     >All Teams</button>
-                    </Link>
-                    <!--disable button if ! admin-->
-                    <Link :href="`/admin/channels`"><button
+                    <button
+                        @click="userStore.btnRedirect(`/admin/channels`)"
                         class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"
                     >All Channels</button>
-                    </Link>
-                    <!--disable button if ! admin-->
-                    <Link :href="`/admin/mistServerApi`"><button
+                    <button
+                        @click="userStore.btnRedirect(`/admin/mistServerApi`)"
                         class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"
                     >MistServer API</button>
-                    </Link>
-
-                    <!--disable button if ! admin-->
-                    <Link :href="`/admin/images`"><button
+                    <button
+                        @click="userStore.btnRedirect(`/admin/images`)"
                         class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"
                     >Images</button>
-                    </Link>
-
-                    <!--disable button if ! admin-->
-                    <Link :href="`/videoupload`"><button
+                    <button
+                        @click="userStore.btnRedirect(`/videoupload`)"
                         class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"
                     >Video Upload</button>
-                    </Link>
-
-                    <Link
-                        :href="`/movies/create`"><button
+                    <button
+                        @click="userStore.btnRedirect(`/movies/create`)"
                         class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
                     >Add a Movie</button>
-                    </Link>
-                    <Link
-                        :href="`/admin/invite_codes`"><button
+                    <button
+                        @click="userStore.btnRedirect(`/admin/invite_codes`)"
                         class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
                     >Invite Codes</button>
-                    </Link>
                     <button
                         @click="getEpisodesFromEmbedCodes"
                         class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400 disabled:no-cursor"
@@ -294,7 +286,7 @@ let submit = () => {
     form.put(route('admin.settings'));
 };
 
-let getAllEpisodesButtonActive = ref(true);
+let getAllEpisodesButtonActive = ref(false);
 
 userStore.currentPage = 'adminSettings'
 userStore.showFlashMessage = true;

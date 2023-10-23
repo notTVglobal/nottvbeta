@@ -9,11 +9,7 @@
             <div class="flex justify-between mt-3 mb-6 pt-6">
             <div class="text-3xl">Create New Team</div>
             <div>
-                <button
-                    @click="back"
-                    class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
-                >Cancel
-                </button>
+                <CancelButton />
             </div>
         </div>
 
@@ -93,6 +89,7 @@ import { useUserStore } from "@/Stores/UserStore";
 import Message from "@/Components/Modals/Messages";
 import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
 import {Inertia} from "@inertiajs/inertia";
+import CancelButton from "@/Components/Buttons/CancelButton.vue";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -126,13 +123,6 @@ onMounted(() => {
 
 function reset() {
     form.reset();
-}
-
-function back() {
-    let urlPrev = usePage().props.value.urlPrev
-    if (urlPrev !== 'empty') {
-        Inertia.visit(urlPrev)
-    }
 }
 
 </script>

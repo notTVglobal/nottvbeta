@@ -235,7 +235,7 @@
                                             <JetValidationErrors class="mr-4" />
                                              <button
                                                 type="submit"
-                                                class="h-fit bg-blue-600 hover:bg-blue-500 text-white rounded py-2 px-4"
+                                                class="h-fit bg-blue-600 hover:bg-blue-500 text-white rounded-lg py-2 px-4"
                                                 :disabled="form.processing"
                                             >
                                                 Save

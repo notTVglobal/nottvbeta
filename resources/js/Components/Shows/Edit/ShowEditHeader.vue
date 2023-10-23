@@ -8,20 +8,18 @@
                     <Link :href="`/shows/${show.slug}`" class="text-red-700 font-bold uppercase">{{ show.name }}</Link>
                 </h1>
             </div>
-            <div>
-                <button
-                    type="submit"
-                    class="h-fit bg-blue-600 hover:bg-blue-500 text-white rounded py-2 px-4"
-                    :disabled="form.processing"
-                    @click="emitSubmit"
-                >
-                    Save
-                </button>
-                <button
-                    @click="back"
-                    class="ml-2 px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
-                >Cancel
-                </button>
+            <div class="flex flex-wrap-reverse justify-end gap-2">
+                <div>
+                    <button
+                        type="submit"
+                        class="h-fit bg-blue-600 hover:bg-blue-500 text-white rounded-lg py-2 px-4"
+                        :disabled="form.processing"
+                        @click="emitSubmit"
+                    >
+                        Save
+                    </button>
+                </div>
+                <CancelButton />
             </div>
 
     </div>
@@ -29,9 +27,9 @@
 
     <div>
         <div class="mb-6"><span class="text-xs uppercase font-semibold">Team: </span>
-            <Link :href="`/teams/${team.slug}`">
-            <span class="font-bold uppercase text-blue-700 dark:text-blue-300 hover:text-blue-500">{{ team.name }}</span>
-            </Link>
+            <button
+                @click="userStore.btnRedirect(`/teams/${team.slug}`)"
+                class="font-bold uppercase text-blue-700 dark:text-blue-300 hover:text-blue-500">{{ team.name }}</button>
         </div>
     </div>
 
@@ -39,6 +37,11 @@
 </template>
 
 <script setup>
+import CancelButton from "@/Components/Buttons/CancelButton.vue"
+import {useUserStore} from "@/Stores/UserStore";
+
+let userStore = useUserStore()
+
 defineProps({
     show: Object,
     team: Object,
@@ -51,9 +54,5 @@ const emits = defineEmits(['submit']);
 const emitSubmit = () => {
     emits('submit');
 };
-
-function back() {
-    window.history.back()
-}
 
 </script>

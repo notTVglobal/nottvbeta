@@ -18,21 +18,28 @@
 
                 </div>
                 <div class="flex flex-wrap-reverse justify-end gap-2">
-                    <Link
-                        v-if="props.can.editTeam" :href="`/teams/${props.team.slug}/edit`"><button
-                        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                    >Edit</button>
-                    </Link>
-                    <Link
-                        v-if="props.can.manageTeam" :href="`/teams/${props.team.slug}/manage`"><button
-                        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                    >Manage Team</button>
-                    </Link>
-                    <Link v-if="props.user.role_id === 4" :href="`/dashboard`"><button
-                        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                        hidden
-                    >Dashboard</button>
-                    </Link>
+                    <div>
+                        <button
+                            v-if="props.can.editTeam"
+                            @click="userStore.btnRedirect(`/teams/${props.team.slug}/edit`)"
+                            class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                        >Edit</button>
+                    </div>
+                    <div>
+                        <button
+                            v-if="props.can.manageTeam"
+                            @click="userStore.btnRedirect(`/teams/${props.team.slug}/manage`)"
+                            class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                        >Manage Team</button>
+                    </div>
+                    <div>
+                        <button
+                            v-if="props.user.role_id === 4"
+                            @click="userStore.btnRedirect(`/dashboard`)"
+                            class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                            hidden
+                        >Dashboard</button>
+                    </div>
                 </div>
             </header>
 

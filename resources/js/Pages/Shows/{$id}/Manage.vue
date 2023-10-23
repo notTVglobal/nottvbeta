@@ -28,44 +28,37 @@
 
                 <div>
                     <div class="flex flex-wrap-reverse justify-end gap-2">
-                        <div class="">
-                            <Link
-                                :href="`/golive`"
-                                v-if="teamStore.can.goLive">
-                                <button
-                                    class="px-4 py-2 text-white font-semibold bg-red-500 hover:bg-red-600 rounded-lg disabled:bg-gray-400"
-                                >Go Live
-                                </button>
-                            </Link>
-                        </div>
-                        <div class="">
-                        <Link
-                            :href="route('shows.createEpisode',{show: props.show.slug})"
-                            v-if="teamStore.can.createEpisode">
+                        <div>
                             <button
+                                v-if="teamStore.can.goLive"
+                                @click="userStore.btnRedirect(`/golive`)"
+                                class="px-4 py-2 text-white font-semibold bg-red-500 hover:bg-red-600 rounded-lg disabled:bg-gray-400"
+                            >Go Live
+                            </button>
+                        </div>
+                        <div>
+                            <button
+                                v-if="teamStore.can.createEpisode"
+                                @click="userStore.btnRedirect(`/shows/${show.slug}/episode/create`)"
                                 class="px-4 py-2 text-white font-semibold bg-green-500 hover:bg-green-600 rounded-lg disabled:bg-gray-400"
 
                             >Create Episode
                             </button>
-                        </Link>
                         </div>
-                        <div class="">
-                            <Link
-                                :href="`/shows/${show.slug}/edit`"
-                                v-if="teamStore.can.editShow">
-                                <button
-                                    class="px-4 py-2 text-white font-semibold bg-blue-500 hover:bg-blue-600 rounded-lg"
-                                >Edit
-                                </button>
-                            </Link>
+                        <div>
+                            <button
+                                v-if="teamStore.can.editShow"
+                                @click="userStore.btnRedirect(`/shows/${show.slug}/edit`)"
+                                class="px-4 py-2 text-white font-semibold bg-blue-500 hover:bg-blue-600 rounded-lg"
+                            >Edit
+                            </button>
                         </div>
                         <div hidden>
-                            <Link :href="`/dashboard`">
-                                <button
-                                    class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                                >Dashboard
-                                </button>
-                            </Link>
+                            <button
+                                @click="userStore.btnRedirect(`/dashboard`)"
+                                class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                            >Dashboard
+                            </button>
                         </div>
                     </div>
 

@@ -7,17 +7,18 @@
 
             <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
-            <div class="flex flex-row justify-between">
+            <div class="flex flex-row justify-between mt-6">
                 <h2 class="text-xl font-semibold leading-tight">
                     Create News Post
                 </h2>
                 <div class="flex justify-end space-x-2">
-                    <Link
-                        :href="`/newsroom`"><button
-                        class="px-4 py-2 text-white bg-yellow-600 hover:bg-yellow-500 rounded-lg disabled:bg-gray-400"
-                        v-if="props.can.viewNewsroom"
-                    >Newsroom</button>
-                    </Link>
+                    <div>
+                        <button
+                            v-if="props.can.viewNewsroom"
+                            @click="userStore.btnRedirect(`/newsroom`)"
+                            class="px-4 py-2 text-white bg-yellow-600 hover:bg-yellow-500 rounded-lg disabled:bg-gray-400"
+                        >Newsroom</button>
+                    </div>
                     <div>
                         <button
                             @click="back"
@@ -152,10 +153,7 @@ onMounted(() => {
 
 function back() {
     newsStore.newsArticleContentTiptop = '';
-    let urlPrev = usePage().props.value.urlPrev
-    if (urlPrev !== 'empty') {
-        Inertia.visit(urlPrev)
-    }
+    Inertia.visit(userStore.prevUrl)
 }
 
 </script>

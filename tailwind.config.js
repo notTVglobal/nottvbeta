@@ -22,6 +22,10 @@ module.exports = {
                 '78': '19.25rem',
             },
         },
+        listStyleType: {
+            disc: 'disc',
+            // ... other styles
+        }
     },
 
     plugins: [require('@tailwindcss/forms'), require('@tailwindcss/typography'), require("daisyui")],

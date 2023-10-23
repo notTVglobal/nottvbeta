@@ -3,51 +3,42 @@
     <Head title="News Post" />
 
     <div class="place-self-center flex flex-col">
-        <div id="topDiv" class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-1 w-full">
+        <div id="topDiv" class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-1 pt-6 w-full">
 
             <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
-            <header class="mb-5 border-b border-gray-800">
-                <div class="container mx-auto flex flex-col lg:flex-row justify-between items-center px-4 py-6">
+            <header class="w-full mx-auto text-center mb-5 border-b border-gray-800">
+                <div v-if="can.viewNewsroom || can.editNewsPost"
+                    class="flex flex-wrap gap-2 justify-end">
+                    <div>
+                        <button
+                            v-if="props.can.viewNewsroom"
+                            @click="userStore.btnRedirect(`/newsroom`)"
+                            class="bg-yellow-600 hover:bg-yellow-500 text-white px-4 py-2 rounded-lg disabled:bg-gray-400"
+                        >Newsroom</button>
+                    </div>
+                    <div>
+                        <button
+                            v-if="can.editNewsPost"
+                            @click="userStore.btnRedirect(`/news/${props.news.slug}/edit`)"
+                            class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                        >Edit</button>
+                    </div>
+                </div>
+
+                <div class="w-full mx-auto text-center flex justify-center px-4 py-6">
+                    <div class="text-center lg:text-left mb-4 lg:ml-6">
+                        <h2 class="text-3xl font-semibold leading-tight">
+                            {{ news.title }}
+                        </h2>
+                        <div class="">by {{ news.author }}</div>
+
+                        <div v-if="news.published_at" class="font-light mt-4">Published {{ formatDate(news.published_at) }}</div>
+                        <div v-else class="font-light mt-4 italic">not published yet</div>
+                        <div v-if="news.published_at < news.updated_at" class="font-light">Last updated {{ formatDate(news.updated_at) }}</div>
 
 
-                        <div class="text-center lg:text-left mb-4 lg:ml-6">
-                            <h2 class="text-3xl font-semibold leading-tight">
-                                {{ news.title }}
-                            </h2>
-                            <div class="">{{ news.author }}</div>
-                            <div class="font-light">{{ formatDate(news.published_at) }}</div>
-                        </div>
-
-
-                        <div class="space-x-2 space-y-2 justify-end">
-                            <Link
-                                :href="`/newsroom`"><button
-                                class="bg-yellow-600 hover:bg-yellow-500 text-white mt-1 px-4 py-2 rounded disabled:bg-gray-400"
-                                v-if="props.can.viewNewsroom"
-                            >Newsroom</button>
-                            </Link>
-                            <Link :href="`/news/${props.news.slug}/edit`"><button
-                                class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                                v-if="can.editNewsPost"
-                            >Edit</button>
-                            </Link>
-                            <Button
-                                class="px-4 py-2 text-white bg-red-600 hover:bg-red-500 rounded-lg"
-                                @click="destroy(news.id)"
-                                v-if="can.deleteNewsPost"
-                            >
-                                Delete
-                            </Button>
-                                <button
-                                    @click="back"
-                                    class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
-                                >Back
-                                </button>
-                        </div>
-
-
-
+                    </div>
                 </div>
 
             </header>
@@ -87,6 +78,7 @@ import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useUserStore } from "@/Stores/UserStore";
 import Message from "@/Components/Modals/Messages";
 import {Inertia} from "@inertiajs/inertia";
+import BackButton from "@/Components/Buttons/BackButton.vue";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
@@ -133,6 +125,10 @@ function back() {
 pre p {
     white-space: break-spaces;
     overflow-x: auto;
+}
+ul,
+ol {
+    padding: 0 1rem;
 }
 
 </style>

@@ -13,33 +13,41 @@
                 <div class="flex justify-between mb-3 pt-6">
                     <div class="font-bold mb-4 text-orange-400">MANAGE TEAM</div>
                     <div class="flex flex-wrap-reverse justify-end gap-2">
-                        <Link
-                            :href="`/shows/create`"
-                            v-if="teamStore.can.manageTeam">
+                        <div>
                             <button
+                                v-if="teamStore.can.manageTeam"
+                                @click="userStore.btnRedirect('/shows/create')"
                                 class="bg-green-500 hover:bg-green-600 text-white font-semibold ml-2 mt-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
                             >Create Show
                             </button>
-                        </Link>
-                        <button
-                            class="bg-green-500 hover:bg-green-600 text-white font-semibold ml-2 my-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
-                            @click="openModal"
-                            :disabled="!teamStore.spotsRemaining"
-                            v-if="teamStore.can.manageTeam"
-                        >Add Member ({{ teamStore.spotsRemaining }} spots left)</button>
-                        <Link
-                            v-if="can.editTeam" :href="`/teams/${team.slug}/edit`">
+                        </div>
+                        <div>
                             <button
+                                class="bg-green-500 hover:bg-green-600 text-white font-semibold ml-2 my-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
+                                @click="openModal"
+                                :disabled="!teamStore.spotsRemaining"
+                                v-if="teamStore.can.manageTeam"
+                            >Add Member ({{ teamStore.spotsRemaining }} spots left)
+                            </button>
+                        </div>
+                        <div>
+                            <button
+                                v-if="can.editTeam"
+                                @click="userStore.btnRedirect(`/teams/${team.slug}/edit`)"
                                 class="bg-blue-500 hover:bg-blue-600 text-white font-semibold ml-2 my-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
                             >Edit
                             </button>
-                        </Link>
-                        <Link v-if="!can.manageTeam" :href="`/dashboard`">
-                            <button
-                                class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                            >Dashboard
-                            </button>
-                        </Link>
+
+                        </div>
+                       <div>
+                           <button
+                               v-if="!can.manageTeam"
+                               @click="userStore.btnRedirect('/dashboard')"
+                               class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                           >Dashboard
+                           </button>
+                       </div>
+
                     </div>
                 </div>
 

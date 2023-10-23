@@ -9,17 +9,21 @@
             <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
             <header v-if="props.can.editShow || props.can.manageShow" class="flex justify-end">
-                <div class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4 my-10">
-                    <Link
-                        v-if="props.can.editShow" :href="`/shows/${props.show.slug}/edit`"><button
-                        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                    >Edit</button>
-                    </Link>
-                    <Link
-                        v-if="props.can.manageShow" :href="`/shows/${props.show.slug}/manage`"><button
-                        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                    >Manage Show</button>
-                    </Link>
+                <div class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4 my-4">
+                    <div>
+                        <button
+                            v-if="props.can.editShow"
+                            @click="userStore.btnRedirect(`/shows/${props.show.slug}/edit`)"
+                            class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                        >Edit</button>
+                    </div>
+                    <div>
+                        <button
+                            v-if="props.can.manageShow"
+                            @click="userStore.btnRedirect(`/shows/${props.show.slug}/manage`)"
+                            class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                        >Manage Show</button>
+                    </div>
                 </div>
         </header>
 

@@ -27,7 +27,6 @@
                         <div class="font-bold mb-4 text-orange-400">MANAGE EPISODE</div>
                     </div>
                     <div class="flex flex-wrap-reverse justify-end gap-2">
-
                         <div class="" v-if="teamStore.can.goLive && !episode.video_file_url">
                             <button
                                 v-if="!teamStore.goLiveDisplay"
@@ -43,43 +42,39 @@
                             >Cancel
                             </button>
                         </div>
-                        <div class="">
-                            <Link
-                                :href="`/shows/${show.slug}/episode/${episode.slug}/edit`"
-
-                                v-if="teamStore.can.editEpisode">
-                                <button
-                                    :disabled="teamStore.goLiveDisplay"
-                                    class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg disabled:bg-gray-400"
-                                >Edit
-                                </button>
-                            </Link>
+                        <div>
+                            <button
+                                v-if="teamStore.can.editEpisode"
+                                @click="userStore.btnRedirect(`/shows/${show.slug}/episode/${episode.slug}/edit`)"
+                                :disabled="teamStore.goLiveDisplay"
+                                class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg disabled:bg-gray-400"
+                            >Edit</button>
                         </div>
                         <div>
-                            <Link :href="`/shows/${show.slug}/manage`">
-                                <button
-                                    :disabled="teamStore.goLiveDisplay"
-                                    class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg disabled:bg-gray-400"
-                                >Manage Show
-                                </button>
-                            </Link>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="flex w-full justify-end">
-                    <div class="mr-2">
-                        <Link
-                            :href="`/shows/${show.slug}/episode/${episode.slug}/upload`"
-                            v-if="!episode.video_file_url">
                             <button
                                 :disabled="teamStore.goLiveDisplay"
-                                class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg disabled:bg-gray-400"
-                            >Upload Video
+                                @click="userStore.btnRedirect(`/shows/${show.slug}/manage`)"
+                                class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg disabled:bg-gray-400"
+                            >Manage Show
                             </button>
-                        </Link>
+                        </div>
                     </div>
-                    <button onclick="addBonusContentNotice.showModal()" class="bg-orange-600 hover:bg-orange-500 text-white font-semibold rounded-lg px-4 py-2">Add Bonus Content</button>
+                </div>
+                <div class="flex w-full justify-end gap-x-2">
+                    <div>
+                        <button
+                            v-if="!episode.video_file_url"
+                            @click="userStore.btnRedirect(`/shows/${show.slug}/episode/${episode.slug}/upload`)"
+                            :disabled="teamStore.goLiveDisplay"
+                            class="px-4 py-2 text-white font-semibold bg-orange-600 hover:bg-orange-500 rounded-lg disabled:bg-gray-400"
+                        >Upload Video</button>
+                    </div>
+                    <div>
+                        <button
+                            onclick="addBonusContentNotice.showModal()"
+                            class="bg-orange-600 hover:bg-orange-500 text-white font-semibold rounded-lg px-4 py-2"
+                        >Add Bonus Content</button>
+                    </div>
                 </div>
 
                 <div class="font-bold text-xl p-4 my-4 w-full text-center"
@@ -324,7 +319,7 @@
 
 <!--                </div>-->
 
-                <EpisodeFooter :team="props.team" :episode="props.episode" :show="props.show"/>
+                <EpisodeFooter :can="props.can" :team="props.team" :episode="props.episode" :show="props.show"/>
 <!--            </div>-->
         </div>
     </div>

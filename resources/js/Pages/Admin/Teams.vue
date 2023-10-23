@@ -8,11 +8,10 @@
 
             <AdminHeader>Teams</AdminHeader>
 
-            <Link :href="`/teams/create`"><button
+            <button
+                @click="userStore.btnRedirect(`/teams/create`)"
                 class="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded disabled:bg-gray-400"
             >Create Team (needs to go to a new page: Admin/teams/create)</button>
-            </Link>
-
 
             <div class="flex flex-row justify-end gap-x-4">
                 <input v-model="search" type="search" placeholder="Search..." class="text-black border px-2 rounded-lg" />
@@ -101,14 +100,16 @@
                                                 {{ team.totalShows }}
                                             </td>
                                             <td  class="px-6 py-4 space-x-2">
-                                                <Link v-if="team.can.viewTeam" :href="`/teams/${team.slug}/manage`"><button
+                                                <button
+                                                    v-if="team.can.viewTeam"
+                                                    @click="userStore.btnRedirect(`/teams/${team.slug}/manage`)"
                                                     class="px-4 py-2 text-white bg-purple-600 hover:bg-purple-500 rounded-lg"
                                                 >Manage</button>
-                                                </Link>
-                                                <Link v-if="team.can.editTeam" :href="`/teams/${team.slug}/edit`"><button
+                                                <button
+                                                    v-if="team.can.editTeam"
+                                                    @click="userStore.btnRedirect(`/teams/${team.slug}/edit`)"
                                                     class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                                                 >Edit</button>
-                                                </Link>
                                             </td>
                                         </tr>
                                         </tbody>

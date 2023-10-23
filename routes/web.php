@@ -509,6 +509,11 @@ Route::middleware([
         ->can('viewAdmin', 'App\Models\User')
         ->name('admin.shows');
 
+    //// EPISODES - INDEX
+    Route::get('/admin/episodes', [AdminController::class, 'episodesIndex'])
+        ->can('viewAdmin', 'App\Models\User')
+        ->name('admin.episodes');
+
     //// TEAMS - INDEX
     Route::get('/admin/teams', [AdminController::class, 'teamsIndex'])
         ->can('viewAdmin', 'App\Models\User')

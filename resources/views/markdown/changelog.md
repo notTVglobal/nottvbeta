@@ -1,8 +1,25 @@
 # not.tv Changelog
 
 
-Last Update: October 14, 2023\
+Last Update: October 22, 2023\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.7.3.14
+October 22, 2023
+* Add ULIDs to Videos and Show Episodes
+* Add Episode ID to the bottom of the Episode Manage Page, only visible to users who can edit the episode.
+* Add a modal to confirm Episode Publish.
+* Add All Episodes page for Admin Only. This allows the admin to search through all episodes to help assist creators and teams.
+* Admin can now un-publish an episode. This will affect promotional links and should only be done if absolutely necessary at the team leader's request with the appropriate team approvals.
+* Admin can now change the status of a published episode to Frozen or Restricted, as per community requirements.
+* Fix Release Date must be in the past if it's changed by an Admin after the episode is published.
+* Created a userStore.btnRedirect() function to generate a userStore.prevUrl variable. This allows 2 new buttons to be used for page navigations, CancelButton and BackButton.
+* Fix Back buttons and Cancel buttons to use the new prevUrl variable.
+* Removed News edit and delete buttons from News Index page. Edit and Delete buttons are now only available from in the Newsroom Index.
+* Change the Newsroom and News Index header styling.
+* Change the News Post layout
+* Make the News Edit text area larger
+* Added additional text editor functions, such as horizontal line, code block, block quote, undo and redo. The bullet point and numbered list functions are NOT working right now.
 
 ## v0.7.3.13
 October 14, 2023
