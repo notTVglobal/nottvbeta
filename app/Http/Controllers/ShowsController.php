@@ -753,6 +753,9 @@ class ShowsController extends Controller
                 'categorySubName' => $show->showCategorySub->name,
             ],
             'team' => Team::query()->where('id', $show->team_id)->first(),
+            'user' => [
+                'id' => auth()->user()->id,
+            ],
         ]);
     }
 
