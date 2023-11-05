@@ -4,12 +4,12 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div id="topDiv" class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 
-            <Message v-if="userStore.showFlashMessage && $page.props.flash" :flash="$page.props.flash"/>
+<!--            <Message v-if="userStore.showFlashMessage && $page.props.flash" :flash="$page.props.flash"/>-->
 
             <div class="flex justify-between mt-3 mb-6">
                 <div class="text-3xl">Create Episode</div>
                 <div>
-                    
+
                 </div>
             </div>
 
@@ -224,8 +224,8 @@ let props = defineProps({
     team: Object,
 })
 
-userStore.currentPage = 'episodes'
-userStore.showFlashMessage = true;
+// userStore.currentPage = 'episodes'
+// userStore.showFlashMessage = true;
 
 // if (props.show) {
 //     teamStore.setActiveShow(props.show);
@@ -278,7 +278,7 @@ let submit = () => {
 //     form.put(route('shows.showEpisodes.store'));
 // };
 
-let showMessage = ref(true);
+// let showMessage = ref(true);
 
 // function back() {
 //     let urlPrev = usePage().props.value.urlPrev
