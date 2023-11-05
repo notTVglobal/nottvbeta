@@ -227,13 +227,13 @@ let props = defineProps({
 userStore.currentPage = 'episodes'
 userStore.showFlashMessage = true;
 
-if (props.show) {
-    teamStore.setActiveShow(props.show);
-}
-
-if (props.team) {
-    teamStore.setActiveTeam(props.team);
-}
+// if (props.show) {
+//     teamStore.setActiveShow(props.show);
+// }
+//
+// if (props.team) {
+//     teamStore.setActiveTeam(props.team);
+// }
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
