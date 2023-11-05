@@ -218,6 +218,12 @@ let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore()
 let userStore = useUserStore()
 
+let props = defineProps({
+    user: Object,
+    show: Object,
+    team: Object,
+})
+
 userStore.currentPage = 'episodes'
 userStore.showFlashMessage = true;
 teamStore.setActiveShow(props.show);
@@ -231,12 +237,6 @@ onMounted(() => {
     }
     document.getElementById("topDiv").scrollIntoView()
 });
-
-let props = defineProps({
-    user: Object,
-    show: Object,
-    team: Object,
-})
 
 let form = useForm({
     name: '',

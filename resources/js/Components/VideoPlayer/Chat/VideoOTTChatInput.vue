@@ -34,7 +34,7 @@ let chatStore = useChatStore()
 let props = defineProps({
     user: Object,
     input: ref(''),
-});
+});4
 
 let form = useForm({
     message: '',
