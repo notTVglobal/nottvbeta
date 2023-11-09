@@ -49,7 +49,7 @@
 
                 </section>
 
-                <section class="flex flex-col justify-center items-center vh-100 bg-gray-300 text-white px-5 py-20">
+                <section class="flex flex-col justify-center items-center vh-100 bg-gray-300 text-primary px-5 py-20">
 
                     <div class="text-center font-semibold text-3xl mb-6">Sign up for our Newsletter!</div>
                     <div class="text-center text-2xl">
@@ -59,7 +59,7 @@
                             Click Here
                         </button>
                     </div>
-                    <span class="text-sm italic mt-12">Weekly updates and get notified of new broadcasts!</span>
+                    <span class="text-black text-sm italic mt-12">Weekly updates and get notified of new broadcasts!</span>
                     <!--                    <div class="mt-32 text-center italic">(Log in to chat)</div>-->
 
                 </section>
