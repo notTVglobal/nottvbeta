@@ -4,6 +4,11 @@
 Last Update: November 5, 2023\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.7.3.15
+November 8, 2023
+* Add signup for newsletter on home page.
+* The show/episode create page still isn't working in production on the live server.
+
 ## v0.7.3.14b
 November 5, 2023
 * Fix Show Episode Create page, blank page error.

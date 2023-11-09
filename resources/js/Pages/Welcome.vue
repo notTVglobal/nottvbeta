@@ -43,9 +43,24 @@
                 <section class="flex flex-col justify-center items-center vh-100 bg-white text-black px-5 py-20">
 
                         <div class="text-center font-semibold text-3xl">Welcome to notTV</div>
-                        <div class="text-center text-2xl">Where artists own the platform.</div>
-                    <span class="text-sm italic mt-12">Log in for more features!</span>
+                        <div class="text-center text-2xl">Independent news, arts and culture.</div>
+                    <span class="text-sm italic mt-12">Log in to chat!</span>
     <!--                    <div class="mt-32 text-center italic">(Log in to chat)</div>-->
+
+                </section>
+
+                <section class="flex flex-col justify-center items-center vh-100 bg-gray-300 text-white px-5 py-20">
+
+                    <div class="text-center font-semibold text-3xl mb-6">Sign up for our Newsletter!</div>
+                    <div class="text-center text-2xl">
+                        <button
+                            class="btn btn-primary text-white"
+                            @click="goToNewsletterSignup">
+                            Click Here
+                        </button>
+                    </div>
+                    <span class="text-sm italic mt-12">Weekly updates and get notified of new broadcasts!</span>
+                    <!--                    <div class="mt-32 text-center italic">(Log in to chat)</div>-->
 
                 </section>
 
@@ -135,6 +150,10 @@ const welcomeContainer = computed(() => ({
     'w-full vh-100 place-self-center flex flex-col text-gray-200 z-50 bg-gray-900 bg-opacity-50': welcomeStore.showOverlay,
     'w-full vh-100 place-self-center flex flex-col text-gray-200 z-50 bg-opacity-0': !welcomeStore.showOverlay
 }))
+
+const goToNewsletterSignup = () => {
+    window.open('https://not.tv/subscribe', '_blank');
+};
 
 userStore.currentPage = 'welcome'
 welcomeStore.showLogin = false

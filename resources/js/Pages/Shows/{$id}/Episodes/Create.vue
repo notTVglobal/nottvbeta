@@ -106,7 +106,7 @@
                         Description
                     </label>
                     <textarea v-model="form.description"
-                              class="bg-gray-50 border border-gray-400 text-gray-900 text-sm p-2 w-full rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                              class="bg-gray-50 border border-gray-400 text-gray-900 text-sm p-2 w-full rounded-lg focus:ring-blue-500 focus:border-blue-500 block"
                               type="text"
                               name="description"
                               id="description"
@@ -155,7 +155,7 @@
                         Embed Code (Rumble or Bitchute only) <span class="text-white">*</span>
                     </label>
                     <textarea v-model="form.video_embed_code"
-                              class="bg-gray-50 border border-gray-400 text-gray-900 text-sm p-2 w-full rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                              class="bg-gray-50 border border-gray-400 text-gray-900 text-sm p-2 w-full rounded-lg focus:ring-blue-500 focus:border-blue-500 block"
                               type="text"
                               name="video_embed_code"
                               id="video_embed_code"
