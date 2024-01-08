@@ -43,7 +43,7 @@
  */
 
 /*!
- * Pusher JavaScript Library v7.6.0
+ * Pusher JavaScript Library v8.4.0-rc2
  * https://pusher.com/
  *
  * Copyright 2020, Pusher
@@ -69,15 +69,9 @@
 
 /*! #__NO_SIDE_EFFECTS__ */
 
-/*! @name @videojs/http-streaming @version 2.16.2 @license Apache-2.0 */
-
 /*! @name @videojs/http-streaming @version 3.9.1 @license Apache-2.0 */
 
-/*! @name aes-decrypter @version 3.1.3 @license Apache-2.0 */
-
 /*! @name aes-decrypter @version 4.0.1 @license Apache-2.0 */
-
-/*! @name m3u8-parser @version 4.8.0 @license Apache-2.0 */
 
 /*! @name m3u8-parser @version 7.1.0 @license Apache-2.0 */
 
@@ -94,18 +88,6 @@
  * Released under MIT license <https://lodash.com/license>
  * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
  * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- */
-
-/**
- * @license
- * Video.js 7.21.5 <http://videojs.com/>
- * Copyright Brightcove, Inc. <https://www.brightcove.com/>
- * Available under Apache License Version 2.0
- * <https://github.com/videojs/video.js/blob/main/LICENSE>
- *
- * Includes vtt.js <https://github.com/mozilla/vtt.js>
- * Available under Apache License Version 2.0
- * <https://github.com/mozilla/vtt.js/blob/main/LICENSE>
  */
 
 /**
