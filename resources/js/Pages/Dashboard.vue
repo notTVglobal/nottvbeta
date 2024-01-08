@@ -12,7 +12,7 @@
 
             <div class="flex justify-between mb-6 pt-4">
 
-                <h1 class="text-3xl font-semibold">Dashboard for Creators</h1>
+                <h1 class="text-3xl font-semibold text-accent">Dashboard for Creators</h1>
                 <p>Your timezone: {{userStore.timezone}}</p>
 <!--                <div class="flex flex-end w-full">-->
 
