@@ -15,7 +15,7 @@ January 8, 2024
   * daisyui upgraded from 3.9.4 to 4.5.0
   * file-type upgraded from 17.1.6 to 19.0.0
   * node-polyfill-webpack-plugin upgraded from 2.0.1 to 3.0.0
-  * pusher-js upgraded from 7.6.0 to 8.4.0-rc2
+  * !!! pusher-js NOT upgraded from 7.6.0... This was a breaking change to 8.4.0-rc2
   * vue upgraded from 3.4.5 to 3.4.6
 * Upgraded Node from 18.17.1 to 21.5.0
 
