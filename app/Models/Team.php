@@ -19,6 +19,7 @@ class Team extends Model
         'totalSpots',
         'slug',
         'isBeingEditedByUser_id',
+        'team_leader',
     ];
 
     public function getRouteKeyName() {

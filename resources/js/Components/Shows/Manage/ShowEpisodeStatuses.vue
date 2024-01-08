@@ -81,14 +81,14 @@
 
 <script setup>
 
-import {computed, ref} from "vue";
-import {Inertia} from "@inertiajs/inertia";
-import {useTeamStore} from "@/Stores/TeamStore";
-import {useShowStore} from "@/Stores/ShowStore";
-import {useUserStore} from "@/Stores/UserStore";
+import { computed, ref } from "vue";
+import { Inertia } from "@inertiajs/inertia";
+import { useTeamStore } from "@/Stores/TeamStore";
+import { useShowStore } from "@/Stores/ShowStore";
+import { useUserStore } from "@/Stores/UserStore";
 import DateTimePicker from "@/Components/Calendar/DateTimePicker.vue";
 import DateTimePickerSelect from "@/Components/Calendar/DateTimePickerSelect.vue";
-// import {format} from "date-fns-tz";
+import { format } from "date-fns";
 
 let teamStore = useTeamStore()
 let showStore = useShowStore()

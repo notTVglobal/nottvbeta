@@ -8,10 +8,10 @@
             <span class="text-xs">
                 &#174;
             </span>
-            TV &#169; sail 2009-{{new Date().getFullYear()}}
+            TV &#169; 2009-{{new Date().getFullYear()}}
         </div>
         <div class="flex justify-center">
-            Beta Preview v0.7.3.15
+            Beta Preview v0.7.3.16
         </div>
         <div class="flex justify-center text-blue-600 hover:text-blue-400 underline">
             <Link @click="userStore.closeNavDropdown()" :href="route('changelog.show')">changelog</Link>

@@ -41,11 +41,11 @@ class ShowEpisodeController extends Controller
     {
 
 //        $this->middleware('can:viewShowManagePage,show')->only(['manage']);
-//        $this->middleware('can:editShow,show')->only(['edit']);
-//        $this->middleware('can:createShow,show')->only(['create']);
+//        $this->middleware('can:editShowEpisode,showEpisode')->only(['edit']);
+//        $this->middleware('can:createShow,show')->only(['create']);F
 //        $this->middleware('can:createEpisode,show')->only(['createEpisode']);
 //        $this->middleware('can:viewEpisodeManagePage,show')->only(['manageEpisode']);
-          $this->middleware('can:editEpisode,show')->only(['editEpisode']);
+          $this->middleware('can:editEpisode,show')->only(['edit']);
           $this->middleware('can:destroy,showEpisode')->only(['destroy']);
 
           $this->formattedReleaseDateTime = '';

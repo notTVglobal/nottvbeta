@@ -375,7 +375,7 @@ import SingleImage from "@/Components/Multimedia/SingleImage.vue";
 import VideoUpload from "@/Components/Uploaders/VideoUpload"
 import videojs from "video.js";
 import DateTimePickerSelect from "@/Components/Calendar/DateTimePickerSelect";
-// import { format } from 'date-fns-tz';
+import { format } from 'date-fns';
 // import {DatePicker} from "v-calendar";
 // import 'v-calendar/style.css';
 

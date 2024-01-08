@@ -1,8 +1,16 @@
 # not.tv Changelog
 
 
-Last Update: November 5, 2023\
+Last Update: January 8, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.7.3.16
+January 8, 2024
+* Setup a staging server
+* Fixed policies for creating, editing, managing shows/teams/episodes where a user who was not a member of a team could access a show or episode to edit.
+* Fixed date-fns import on some pages that were importing date-fns-tz with errors (need to import the main library: date-fns)
+* Updated axios to the latest version, but a vulnerability is still being listed (inertiajs and inertia-vue3 are referencing the vulnerable version of axios)
+* The Show/Edit bug is fixed, where we ran into the error "J is not defined" when Vue was compiled for production (the bug was only on the production server)
 
 ## v0.7.3.15
 November 8, 2023

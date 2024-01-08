@@ -192,24 +192,9 @@ import TeamLogoUpload from "@/Components/FilePond/TeamLogoUpload";
 import TabbableTextarea from "@/Components/TabbableTextarea"
 import ImageUpload from "@/Components/Uploaders/ImageUpload";
 
-
 let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore()
 let userStore = useUserStore()
-
-userStore.currentPage = 'teams'
-userStore.showFlashMessage = true;
-teamStore.setActiveTeam(props.team);
-teamStore.logoName = props.image.name;
-
-onMounted(() => {
-    videoPlayerStore.makeVideoTopRight();
-    if (userStore.isMobile) {
-        videoPlayerStore.ottClass = 'ottClose'
-        videoPlayerStore.ott = 0
-    }
-    document.getElementById("topDiv").scrollIntoView()
-});
 
 let props = defineProps({
     user: Object,
@@ -234,6 +219,20 @@ let reloadImage = () => {
 let submit = () => {
     form.put(route('teams.update', props.team.slug));
 };
+
+onMounted(() => {
+    videoPlayerStore.makeVideoTopRight();
+    if (userStore.isMobile) {
+        videoPlayerStore.ottClass = 'ottClose'
+        videoPlayerStore.ott = 0
+    }
+    document.getElementById("topDiv").scrollIntoView()
+});
+
+userStore.currentPage = 'teams'
+userStore.showFlashMessage = true;
+teamStore.setActiveTeam(props.team);
+teamStore.logoName = props.image.name;
 
 </script>
 
