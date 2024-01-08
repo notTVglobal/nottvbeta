@@ -4,6 +4,10 @@
 Last Update: January 8, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.7.4.1
+January 8, 2024
+* feature/stream-ui-ux-improvement. Stream page makes video full page, no longer changes the channel.
+
 ## v0.7.4.0
 January 8, 2024
 * Updates to node packages:

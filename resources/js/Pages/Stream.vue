@@ -32,15 +32,15 @@ onBeforeMount(() => {
     userStore.currentPage = 'stream'
 })
 
-const channel = [
-    {
-        id: 2,
-        name: 'Stream',
-        stream: 'thirdeyespies',
-        channel_source: null,
-        isLive: null
-    }
-]
+// const channel = [
+//     {
+//         id: 2,
+//         name: 'Stream',
+//         stream: 'thirdeyespies',
+//         channel_source: null,
+//         isLive: null
+//     }
+// ]
 
 onMounted(async () => {
     // console.log(window.location.href)
@@ -80,16 +80,16 @@ onMounted(async () => {
     // app on the stream page or refreshes the page on the stream page.
 
 
-    if (videoPlayerStore.videoPlayerLoaded) {
-        if (channelStore.currentChannelId !== 2 && urlPrev !== 'empty' && urlPrev !== 'stream') {
-            await (async () => {
-                // await channelStore.getChannels();
-                await channelStore.disconnectViewerFromChannel();
-                await channelStore.changeChannel(channel[0]);
-                // Inertia.reload();
-            })();
-        }
-    }
+    // if (videoPlayerStore.videoPlayerLoaded) {
+    //     if (channelStore.currentChannelId !== 2 && urlPrev !== 'empty' && urlPrev !== 'stream') {
+    //         await (async () => {
+    //             // await channelStore.getChannels();
+    //             await channelStore.disconnectViewerFromChannel();
+    //             await channelStore.changeChannel(channel[0]);
+    //             // Inertia.reload();
+    //         })();
+    //     }
+    // }
 })
 
 onBeforeUnmount(() => {
