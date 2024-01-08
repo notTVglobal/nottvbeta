@@ -84,7 +84,7 @@
 
 <script setup>
 import { onMounted, ref } from "vue";
-import {useForm, usePage} from '@inertiajs/inertia-vue3'
+import { useForm, usePage } from '@inertiajs/inertia-vue3'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useUserStore } from "@/Stores/UserStore";
 import { useNewsStore } from "@/Stores/NewsStore"
@@ -92,7 +92,7 @@ import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
 import Button from "@/Jetstream/Button.vue";
 import Message from "@/Components/Modals/Messages";
 import NewsHeaderButtons from "@/Components/News/NewsHeaderButtons.vue";
-import {Inertia} from "@inertiajs/inertia";
+import { Inertia } from "@inertiajs/inertia";
 import BackButton from "@/Components/Buttons/BackButton.vue";
 import CancelButton from "@/Components/Buttons/CancelButton.vue";
 

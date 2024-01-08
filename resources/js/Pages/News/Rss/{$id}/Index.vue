@@ -45,13 +45,13 @@ import { onMounted, ref } from "vue"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useUserStore } from "@/Stores/UserStore"
 import { useNewsStore } from "@/Stores/NewsStore"
-import {parseMasterXml} from "@videojs/http-streaming/src/dash-playlist-loader"
-import {formatDate} from "@vueuse/shared"
+// import {parseMasterXml} from "@videojs/http-streaming/src/dash-playlist-loader"
+import { formatDate } from "@vueuse/shared"
 import Message from "@/Components/Modals/Messages.vue"
 import dayjs from "dayjs"
 import NewsHeader from "@/Components/News/NewsHeader.vue";
-import {Inertia} from "@inertiajs/inertia";
-import {usePage} from "@inertiajs/inertia-vue3";
+import { Inertia } from "@inertiajs/inertia";
+import { usePage } from "@inertiajs/inertia-vue3";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
