@@ -1,8 +1,18 @@
 # not.tv Changelog
 
 
-Last Update: January 8, 2024\
+Last Update: January 10, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.7.4.4
+January 10, 2024
+* Updated the Laravel Forge Repository Badge to be displayed in the README.md on github (notTVglobal/nottvbeta).
+* Add a notification to Create Show page, if a user doesn't have a team and lands on this page a modal pops up (using NotificationStore) and asks them to make a team first.
+* Created DialogNotification in AppLayout
+  * Open the Dialog with the function: notificationStore.openDialogNotification
+    * set notificationStore.title
+    * set notificationStore.body
+  * This notification closes when you tap or click outside the modal or push ESC. The notificationStore is cleared when the modal closes.
 
 ## v0.7.4.3
 January 10, 2024

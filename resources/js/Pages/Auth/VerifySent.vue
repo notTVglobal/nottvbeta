@@ -29,7 +29,12 @@ export default {
 
     <JetAuthenticationCard>
         <template #logo>
-            <img :src="`/storage/images/logo_black_311.png`" alt="image" class="justify-center max-w-[16rem]">
+            <Link
+                :href="route('home')"
+                class="underline text-sm text-gray-600 hover:text-gray-900 ml-2"
+            >
+                <img :src="`/storage/images/logo_black_311.png`" alt="image" class="justify-center max-w-[16rem]">
+            </Link>
         </template>
 
 <!--        <div class="mb-4 text text-gray-600 font-bold">-->

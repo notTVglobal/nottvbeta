@@ -19,6 +19,8 @@
         <VideoPlayerMain
             :user="user" />
 
+        <DialogNotification />
+
     </div>
 </template>
 
@@ -35,6 +37,7 @@ import NavigationMenu from '@/Components/Navigation/NavigationMenu'
 import Messages from "@/Components/VideoPlayer/Chat/VideoOTTChatMessages.vue";
 import Message from "@/Components/Modals/Messages.vue";
 import NotificationModal from "@/Components/Notifications/NotificationModal.vue";
+import DialogNotification from "@/Components/Modals/DialogNotification.vue";
 import { format } from "date-fns";
 import { Inertia } from "@inertiajs/inertia";
 

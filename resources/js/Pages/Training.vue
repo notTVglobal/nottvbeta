@@ -31,6 +31,9 @@
                                 </li>
 
                             </ul>
+
+            <button @click="notificationStore.openDialogNotification()" class="mt-8">OPEN TEST NOTIFICATION</button>
+
                         </div>
                     </div>
 <!--                </div>-->
@@ -42,10 +45,12 @@
 import { onBeforeMount, onMounted, ref } from "vue";
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useUserStore } from "@/Stores/UserStore";
+import { useNotificationStore } from "@/Stores/NotificationStore";
 import Message from "@/Components/Modals/Messages";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
+let notificationStore = useNotificationStore()
 
 userStore.currentPage = 'training'
 userStore.showFlashMessage = true;
@@ -57,6 +62,8 @@ onMounted(() => {
         videoPlayerStore.ott = 0
     }
     document.getElementById("topDiv").scrollIntoView()
+    notificationStore.title = "Test Notification"
+    notificationStore.body = "This is just a temporary notification!"
 });
 
 </script>

@@ -214,6 +214,8 @@
 
             </form>
 
+            <CheckboxNotification />
+
     </div>
     </div>
 </template>
@@ -223,27 +225,18 @@ import { onBeforeMount, onMounted, ref } from 'vue'
 import {useForm, usePage} from "@inertiajs/inertia-vue3"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useTeamStore } from "@/Stores/TeamStore.js"
-import { useUserStore } from "@/Stores/UserStore";
+import { useUserStore } from "@/Stores/UserStore.js";
+import { useNotificationStore } from "@/Stores/NotificationStore.js";
 import Message from "@/Components/Modals/Messages";
 import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
 import {Inertia} from "@inertiajs/inertia";
 import CancelButton from "@/Components/Buttons/CancelButton.vue";
+import CheckboxNotification from "@/Components/Modals/CheckboxNotification.vue";
 
 let videoPlayerStore = useVideoPlayerStore()
 let teamStore = useTeamStore()
 let userStore = useUserStore()
-
-userStore.currentPage = 'shows'
-userStore.showFlashMessage = true;
-
-onMounted(() => {
-    videoPlayerStore.makeVideoTopRight();
-    if (userStore.isMobile) {
-        videoPlayerStore.ottClass = 'ottClose'
-        videoPlayerStore.ott = 0
-    }
-    document.getElementById("topDiv").scrollIntoView()
-});
+let notificationStore = useNotificationStore()
 
 let props = defineProps({
     teams: Object,
@@ -266,15 +259,46 @@ let form = useForm({
     notes: '',
 });
 
+let showCategoryDescription = ref(null);
+
+userStore.currentPage = 'shows'
+userStore.showFlashMessage = true;
 form.team_id = teamStore.id;
 
-let showCategoryDescription = ref(null);
-function chooseCategory(event) {
-    showCategoryDescription = props.categories[event.target.selectedIndex].description;
-}
+const checkForTeams = () => {
+    if (props.teams.data.length === 0) {
+        // Perform some actions if data array is empty
+        console.log('No teams available.');
+        notificationStore.active = true;
+        notificationStore.title = "No teams available.";
+        notificationStore.body = "Please create a team before you create a show.";
+        notificationStore.buttonLabel = "OKAY";
+        notificationStore.onClickAction = "redirect";
+        notificationStore.uri = "/shows/create";
+        notificationStore.redirectPageUri = "/teams/create";
+        // Additional logic for empty array
+    } else {
+        // Do nothing if data array is not empty
+        console.log('Teams are available.');
+    }
+};
+
+onMounted(() => {
+    videoPlayerStore.makeVideoTopRight();
+    if (userStore.isMobile) {
+        videoPlayerStore.ottClass = 'ottClose'
+        videoPlayerStore.ott = 0
+    }
+    document.getElementById("topDiv").scrollIntoView()
+    checkForTeams();
+});
 
 let submit = () => {
     form.post('/shows');
+}
+
+function chooseCategory(event) {
+    showCategoryDescription = props.categories[event.target.selectedIndex].description;
 }
 
 function reset() {
