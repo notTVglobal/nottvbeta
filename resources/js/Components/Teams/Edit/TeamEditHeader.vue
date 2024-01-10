@@ -15,9 +15,12 @@
     </div>
     </header>
 
-    <div>
-        <div class="mb-6"><span class="text-xs uppercase font-semibold">Team Leader: </span>
-            <span class="font-bold">{{ teamLeaderName }}</span>
+    <div class="mb-6">
+        <div><span class="text-xs uppercase font-semibold">Team Creator: </span>
+            <span class="font-bold">{{ teamCreator.name }}</span>
+        </div>
+        <div><span class="text-xs uppercase font-semibold">Team Status: </span>
+            <span class="font-bold">{{ team.team_status_name }}</span>
         </div>
     </div>
 
@@ -29,7 +32,7 @@ import CancelButton from "@/Components/Buttons/CancelButton.vue";
 
 defineProps({
     team: Object,
-    teamLeaderName: String,
+    teamCreator: Object,
 })
 
 </script>

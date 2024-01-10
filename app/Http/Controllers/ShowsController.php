@@ -219,7 +219,7 @@ class ShowsController extends Controller
         $sub_categories = ShowCategorySub::all();
 
              return Inertia::render('Shows/Create', [
-                 'teams' => Team::query()
+                 'teams' => Team::with('teamStatus')
                      ->where(function ($query) {
                          $query->where('user_id', Auth::user()->id)
                              ->orWhere('team_leader', Auth::user()->id)
@@ -233,6 +233,10 @@ class ShowsController extends Controller
                          'id' => $team->id,
                          'name' => $team->name,
                          'slug' => $team->slug,
+                         'status' => [
+                             'id' => $team->teamStatus->id,
+                             'status' => $team->teamStatus->status,
+                             ],
                          'can' => [
                              'manageTeam' => Auth::user()->can('manage', $team)
                          ]
@@ -247,12 +251,12 @@ class ShowsController extends Controller
 
     public function store(HttpRequest $request)
     {
-        $request->validate([
+        $validatedData = $request->validate([
             'name' => 'unique:shows|required|string|max:255',
 //            'name' => ['required', 'string', 'max:255', Rule::unique('shows')->ignore($show->id)],
             'description' => 'required|string',
             'user_id' => 'required',
-            'team_id' => 'required|integer|min:1',
+            'team_id' => 'required|exists:teams,id',
             'category' => 'required',
             'sub_category' => 'nullable',
             'instagram_name' => 'nullable|string|max:30',
@@ -261,6 +265,22 @@ class ShowsController extends Controller
             'notes' => 'nullable|string|max:1024',
         ],
             [ 'team_id' => 'A team must be selected.']);
+        $teamId = $validatedData['team_id'];
+        // Retrieve the team with the team_id and check its status
+        $team = Team::find($teamId);
+        // Check if the team's status is 1, 2, 3, 4, or 11
+        if (!$team || !in_array($team->team_status_id, [1, 2, 3, 4, 11])) {
+            return back()->withErrors([
+                'team_id' => __('The selected team is invalid or does not have a valid status.'),
+            ])->withInput();
+        }
+
+        // If the team's status is 1 or 11, change it to 2 (active)
+        if (in_array($team->team_status_id, [1, 11])) {
+            $team->team_status_id = 2;
+            $team->save();
+        }
+
         Show::create([
             'name' => $request->name,
             'description' => $request->description,

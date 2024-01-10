@@ -121,7 +121,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function creator()
     {
-        return $this->hasOne(Creator::class);
+        return $this->hasOne(Creator::class, 'user_id');
     }
 
     public function newsPerson()

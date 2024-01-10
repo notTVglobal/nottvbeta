@@ -30,10 +30,9 @@ class TeamMembersController extends Controller
         $user = User::findOrFail($request->user_id);
         $team = Team::findOrFail($teamId);
 
-        // If you are not the owner of the team, no way.
-        if ($team->user_id !== auth()->user()->id && !auth()->user()->isAdmin) {
-            abort(403, 'You are not the owner of this team.');
-        }
+        // If you are not the creator of the team or the team leader, no way.
+        // Use the 'update' policy method
+        $this->authorize('update', $team);
 
         // If the team is maxed out, no way.
         if ($team->memberSpots == $team->totalSpots) {

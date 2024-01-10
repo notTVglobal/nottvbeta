@@ -18,8 +18,9 @@
         </td>
 
         <td class="light:text-gray-600 px-6 py-4 text-sm">
-            <span v-if="props.member.id === teamStore.teamLeader.id">Team Leader</span>
-            <span v-if="teamStore.managers.some(manager => manager.id === props.member.id)">Team Manager</span>
+            <span v-if="props.member.id === teamStore.teamCreator.id">Team Creator</span>
+            <span v-else-if="props.member.id === teamStore.teamLeader.id">Team Leader</span>
+            <span v-else-if="teamStore.managers.some(manager => manager.id === props.member.id)">Team Manager</span>
         </td>
 
         <td class="light:text-gray-600 px-6 py-4 text-sm">
@@ -35,7 +36,7 @@
             <button v-if="props.member.team_members.active === 0" class="text-gray-400 text-xl font-semibold" disabled>Inactive</button>
         </td>
 
-        <td v-if="can.manageTeam" class="px-6 py-4">
+        <td v-if="can.editTeam" class="px-6 py-4">
             <div>
                 <button v-if="props.member.id !== teamStore.teamLeader.id" class="bg-blue-600 text-white hover:bg-blue-500 ml-2 my-2 px-2 py-1 rounded disabled:bg-gray-400 h-max w-max"
                         @click.prevent="confirmTeamManager(props.member)"

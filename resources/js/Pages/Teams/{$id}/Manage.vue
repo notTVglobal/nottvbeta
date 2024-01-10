@@ -21,7 +21,7 @@
                             >Create Show
                             </button>
                         </div>
-                        <div>
+                        <div v-if="can.editTeam">
                             <button
                                 class="bg-green-500 hover:bg-green-600 text-white font-semibold ml-2 my-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
                                 @click="openModal"
@@ -143,6 +143,7 @@ let props = defineProps({
     team: Object,
     logo: String,
     image: Object,
+    teamCreator: Object,
     teamLeader: Object,
     members: Object,
     managers: Object,
@@ -154,6 +155,7 @@ let props = defineProps({
 });
 
 teamStore.setActiveTeam(props.team);
+props.teamCreator && (teamStore.teamCreator = props.teamCreator);
 props.teamLeader && (teamStore.teamLeader = props.teamLeader);
 // teamStore.teamLeader.name = props.teamLeader ? props.teamLeader.name : 'No team leader assigned';
 // if (props.teamLeader) {

@@ -47,7 +47,7 @@
                                                 Team Name
                                             </th>
                                             <th scope="col" class="px-6 py-3">
-                                                Team Owner
+                                                Team Creator
                                             </th>
                                             <th scope="col" class="px-6 py-3">
                                                 # of Members
@@ -74,18 +74,21 @@
                                                 <Link :href="`/teams/${team.slug}`" class="">
                                                     <SingleImage :image="team.image" :poster="team.logo" :alt="'show cover'" class="rounded-full h-20 w-20 object-cover"/>
                                                 </Link>
+                                                <span :class="`badge ${getBadgeColor(team.status.id)} text-white font-semibold flex items-center justify-center`" class="relative badge-position">{{ team.status.status }}</span>
                                             </th>
                                             <th
                                                 scope="row"
                                                 class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                                             >
-                                                <Link :href="`/teams/${team.slug}`" class="text-blue-800 hover:text-blue-600 dark:text-blue-200 dark:hover:text-blue-400">{{ team.name }}</Link>
+                                                <Link :href="`/teams/${team.slug}`" class="text-blue-800 hover:text-blue-600 dark:text-blue-200 dark:hover:text-blue-400">
+                                                    {{ team.name }}
+                                                </Link>
                                             </th>
                                             <th
                                                 scope="row"
                                                 class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                                             >
-                                                {{ team.teamOwner }}
+                                                {{ team.teamCreator }}
                                             </th>
                                             <td
                                                 scope="row"
@@ -171,7 +174,42 @@ watch(search, throttle(function (value) {
     });
 }, 300));
 
+function getBadgeColor(statusId) {
+    switch (statusId) {
+        case 1: return 'bg-green-500';     // Green
+        case 2: return 'bg-blue-500';      // Blue
+        case 3: return 'bg-purple-500';    // Purple
+        case 4: return 'bg-orange-500';    // Orange
+        case 5: return 'bg-red-500';       // Red
+        case 6: return 'darkgray-italic';  // Custom class
+        case 7: return 'black-italic';     // Custom class
+        case 8: return 'black-italic';     // Custom class
+        case 9: return 'red-italic';       // Custom class
+        case 10: return 'red-italic';      // Custom class
+        case 11: return 'bg-gray-700';     // Dark gray
+        default: return 'bg-gray-300';     // Default color
+    }
+}
 
 </script>
 
+<style scoped>
+.badge-position {
+    position: relative;
+    left: 4rem; /* Move to the right */
+    top: -5rem; /* Move upwards */
+}
+.darkgray-italic {
+    color: darkgray;
+    font-style: italic;
+}
+.black-italic {
+    color: black;
+    font-style: italic;
+}
+.red-italic {
+    color: red;
+    font-style: italic;
+}
+</style>
 

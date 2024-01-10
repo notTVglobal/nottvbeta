@@ -32,9 +32,13 @@ class TeamManagersController extends Controller
         $team = Team::findOrFail($teamId);
 
         // If you are not the owner of the team, no way.
-        if ($team->user_id !== auth()->user()->id && !auth()->user()->isAdmin) {
-            abort(403, 'You must be the owner of this team to add new managers.');
-        }
+//        if ($team->user_id !== auth()->user()->id && !auth()->user()->isAdmin) {
+//            abort(403, 'You must be the owner of this team to add new managers.');
+//        }
+
+        // If you are not the creator of the team or the team leader, no way.
+        // Use the 'update' policy method
+        $this->authorize('update', $team);
 
         $team->managers()->attach($request->user_id, [
             'user_id' => $userId,

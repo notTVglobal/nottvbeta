@@ -9,6 +9,7 @@ export let useTeamStore = defineStore('teamStore', {
         slug: '',
         totalSpots: '',
         memberSpots: '',
+        teamCreator: [],
         teamLeader: [],
         members: [],
         managers: [],

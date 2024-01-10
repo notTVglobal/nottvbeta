@@ -4,6 +4,16 @@
 Last Update: January 8, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.7.4.3
+January 10, 2024
+* Add feature, Team Creator can now select self or a manager to be the Team Leader.
+  * Team Leader and Team Creator can make Team Members into Team Managers or remove managers.
+  * Team Managers, Team Leader and Team Creator can:
+    * add new Team Members.
+    * create new shows.
+    * edit shows.
+  * Only the Team Leader or Team Creator can edit a team.
+
 ## v0.7.4.2
 January 9, 2024
 * CSS styling changes to the Welcome page

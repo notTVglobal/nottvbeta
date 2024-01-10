@@ -28,16 +28,15 @@
                         <select class="border border-gray-400 p-2 w-full rounded-lg block mb-2 uppercase font-bold text-xs text-gray-800"
                                 v-model="form.team_id"
                                 required
-
                         >
                             <option
                                 v-for="team in props.teams.data"
                                 :key="team.id"
                                 :value="team.id"
                                 class="bg-white text-black border-b dark:text-gray-50 dark:bg-gray-800 dark:border-gray-600"
-
+                                :class="'status-' + team.status.id"
                             >
-                                {{ team.name }}
+                                {{ team.name }} ({{ team.status.status }})
                             </option>
 
                         </select>
@@ -290,3 +289,44 @@ function back() {
 }
 
 </script>
+
+<style scoped>
+.status-1 {
+    color: green; /* Example color for status ID 1 */
+}
+.status-2 {
+    color: blue; /* Example color for status ID 2 */
+}
+.status-3 {
+    color: purple; /* Example color for status ID 3 */
+}
+.status-4 {
+    color: orange; /* Example color for status ID 4 */
+}
+.status-5 {
+    color: red; /* Example color for status ID 4 */
+}
+.status-6 {
+    color: darkgray; /* Example color for status ID 4 */
+    font-style: italic;
+}
+.status-7 {
+    color: black; /* Example color for status ID 4 */
+    font-style: italic;
+}
+.status-8 {
+    color: black; /* Example color for status ID 4 */
+    font-style: italic;
+}
+.status-9 {
+    color: red; /* Example color for status ID 4 */
+    font-style: italic;
+}
+.status-10 {
+    color: red; /* Example color for status ID 4 */
+    font-style: italic;
+}
+.status-11 {
+    color: darkgray; /* Example color for status ID 4 */
+}
+</style>

@@ -26,6 +26,11 @@ class Team extends Model
         return 'slug';
     }
 
+    public function teamStatus()
+    {
+        return $this->belongsTo(TeamStatus::class, 'team_status_id');
+    }
+
     public function shows()
     {
         return $this->hasMany(Show::class);
@@ -56,7 +61,7 @@ class Team extends Model
 
     public function teamLeader()
     {
-        return $this->belongsTo(Creator::class);
+        return $this->belongsTo(Creator::class, 'team_leader');
     }
 
 //    public function members()
@@ -77,7 +82,6 @@ class Team extends Model
 //    {
 //        return $this->belongsTo(AppSetting::class);
 //    }
-
 
     public function appSetting(): BelongsTo
     {

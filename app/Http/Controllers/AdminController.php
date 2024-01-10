@@ -288,7 +288,7 @@ class AdminController extends Controller
         }
 
         return Inertia::render('Admin/Teams', [
-            'teams' => Team::with('user', 'image', 'shows')
+            'teams' => Team::with('user', 'image', 'shows', 'teamStatus')
                 ->when(\Illuminate\Support\Facades\Request::input('search'), function ($query, $search) {
                     $query->where('name', 'like', "%{$search}%");
                 })
@@ -306,7 +306,8 @@ class AdminController extends Controller
                         'cdn_endpoint' => $team->appSetting->cdn_endpoint,
                         'cloud_folder' => $team->image->cloud_folder,
                     ],
-                    'teamOwner' => $team->user->name,
+                    'teamCreator' => $team->user->name,
+                    'status' => $team->teamStatus,
                     'slug' => $team->slug,
                     'totalShows' => $team->shows->count(),
                     'memberSpots' => $team->memberSpots,

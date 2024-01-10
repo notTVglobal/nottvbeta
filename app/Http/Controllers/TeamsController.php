@@ -17,6 +17,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 
 class TeamsController extends Controller
@@ -69,7 +70,7 @@ class TeamsController extends Controller
         }
 
         return Inertia::render('Teams/Index', [
-            'teams' => Team::with('user', 'image', 'shows')
+            'teams' => Team::with('user', 'image', 'shows', 'teamStatus')
                 ->when(Request::input('search'), function ($query, $search) {
                     $query->where('name', 'like', "%{$search}%");
                 })
@@ -87,7 +88,8 @@ class TeamsController extends Controller
                         'cdn_endpoint' => $team->appSetting->cdn_endpoint,
                         'cloud_folder' => $team->image->cloud_folder,
                     ],
-                    'teamOwner' => $team->user->name,
+                    'teamCreator' => $team->user->name,
+                    'status' => $team->teamStatus,
                     'slug' => $team->slug,
                     'totalShows' => $team->shows->count(),
                     'memberSpots' => $team->memberSpots,
@@ -245,19 +247,6 @@ class TeamsController extends Controller
 
     public function manage(Team $team, Show $show)
     {
-        function getLogo($team){
-            $getLogo = Image::query()
-                ->where('team_id', $team->id)
-                ->pluck('name')
-                ->first();
-            if(!empty($getLogo)){
-                $logo = $getLogo;
-            } else {
-                $logo = 'Ping.png';
-            }
-            return $logo;
-        }
-
         function getPoster($show){
             $getPoster = Image::query()
                 ->where('show_id', $show->id)
@@ -271,10 +260,46 @@ class TeamsController extends Controller
             return $poster;
         }
 
-        $teamLeader = User::query()
-            ->where('id', $team->team_leader)
-            ->select(['id', 'name'])
-            ->first();
+        // check if teamCreator is not null before attempting to access its related properties
+        $teamCreatorData = [
+            'id' => null,
+            'name' => null,
+            'creator_status_id' => null,
+            'creator_status_name' => null,
+        ];
+
+        if ($team->user_id) {
+            $teamCreatorData = [
+                'id' => $team->user->id,
+                'name' => $team->user->name,
+                'creator_status_id' => optional($team->user->creator->status)->id ?? null,
+                'creator_status_name' => optional($team->user->creator->status)->status ?? null,
+            ];
+        }
+
+        // check if teamLeader is not null before attempting to access its related properties
+        $teamLeaderData = [
+            'id' => null,
+            'name' => null,
+            'creator_status_id' => null,
+            'creator_status_name' => null,
+        ];
+
+        if ($team->teamLeader) {
+            $teamLeaderData = [
+                'id' => $team->teamLeader->user->id ?? null,
+                'name' => $team->teamLeader->user->name ?? null,
+                'creator_status_id' => optional($team->teamLeader->status)->id ?? null,
+                'creator_status_name' => optional($team->teamLeader->status)->status ?? null,
+            ];
+        }
+
+        $managers = $team->managers->map(function ($manager) {
+            return [
+                'id' => $manager->id,
+                'name' => $manager->name
+            ];
+        });
 
         // tec21: I am querying the database here because there is currently no
         // pivot table between creators and teams.
@@ -291,7 +316,6 @@ class TeamsController extends Controller
 
         return Inertia::render('Teams/{$id}/Manage', [
             'team' => $team,
-            'logo' => getLogo($team),
             'image' => [
                 'id' => $team->image->id,
                 'name' => $team->image->name,
@@ -299,14 +323,15 @@ class TeamsController extends Controller
                 'cdn_endpoint' => $team->appSetting->cdn_endpoint,
                 'cloud_folder' => $team->image->cloud_folder,
             ],
-            'teamLeader' => $teamLeader,
+            'teamCreator' => $teamCreatorData,
+            'teamLeader' => $teamLeaderData,
 
         // tec21: 'members' will need to be returned with pagination and searchable.
             // this will be for larger teams. But, at that point, all of this will
             // probably be re-written.
             //
             'members' => $team->members,
-            'managers' => $team->managers,
+            'managers' => $managers,
 //            'members' => TeamMember::join('users AS user', 'team_members.user_id', '=', 'user.id')
 //                ->select('team_members.*', 'user.name AS name')
 //                ->when(Request::input('search'), function ($query, $search) {
@@ -377,34 +402,94 @@ class TeamsController extends Controller
 
     public function edit(Team $team)
     {
-        function getLogo($team){
-            $getLogo = Image::query()
-                ->where('team_id', $team->id)
-                ->pluck('name')
-                ->first();
-            if(!empty($getLogo)){
-                $logo = $getLogo;
-            } else {
-                $logo = 'Ping.png';
-            }
-            return $logo;
-        }
-
+        // lock the team from being edited by more than 1 person.
         DB::table('users')->where('id', Auth::user()->id)->update([
             'isEditingTeam_id' => $team->id,
         ]);
-
         DB::table('teams')->where('id', $team->id)->update([
             'isBeingEditedByUser_id' => Auth::user()->id,
         ]);
 
-        // Currently this queries all images in the database
-        // this needs to be changed to limit the query.
-        //
+        // check if teamLeader is not null before attempting to access its related properties
+        $teamLeaderData = [
+            'id' => null,
+            'name' => null,
+            'creator_status_id' => null,
+            'creator_status_name' => null,
+        ];
+
+        if ($team->teamLeader) {
+            $teamLeaderData = [
+                'id' => $team->teamLeader->user->id ?? null,
+                'name' => $team->teamLeader->user->name ?? null,
+                'creator_status_id' => optional($team->teamLeader->status)->id ?? null,
+                'creator_status_name' => optional($team->teamLeader->status)->status ?? null,
+            ];
+        }
+
+        // check if teamCreator is not null before attempting to access its related properties
+        $teamCreatorData = [
+            'id' => null,
+            'name' => null,
+            'creator_status_id' => null,
+            'creator_status_name' => null,
+        ];
+
+        if ($team->user_id) {
+            $teamCreatorData = [
+                'id' => $team->user->id,
+                'name' => $team->user->name,
+                'creator_status_id' => optional($team->user->creator->status)->id ?? null,
+                'creator_status_name' => optional($team->user->creator->status)->status ?? null,
+            ];
+        }
+
+        // get a list of possible team leaders
+        $possibleTeamLeaders = [];
+        // 1. Check the status of each (creator, leader, and managers) to ensure their status->id is equal to 1.
+        // Check if Team Creator's status is 1
+        if ($team->user->creator->status->id == 1) {
+            $possibleTeamLeaders[] = ['id' => $team->user->id, 'name' => $team->user->name, 'role' => 'Team Creator'];
+        }
+        // Check if Team Leader's status is 1
+        if ($team->teamLeader && $team->teamLeader->status->id == 1) {
+            $possibleTeamLeaders[] = ['id' => $team->teamLeader->user->id, 'name' => $team->teamLeader->user->name, 'role' => 'Team Leader'];
+        }
+        // Check each manager's status
+        foreach ($team->managers as $manager) {
+            if ($manager->creator->status->id == 1) {
+                $possibleTeamLeaders[] = ['id' => $manager->id, 'name' => $manager->name, 'role' => 'Team Manager'];
+            }
+        }
+        // 2. Remove duplicate entries
+//        $possibleTeamLeaders = array_unique($possibleTeamLeaders, SORT_REGULAR);
+        function uniqueById($array): array {
+            $result = [];
+            $idsSeen = [];
+
+            foreach ($array as $item) {
+                if (!in_array($item['id'], $idsSeen)) {
+                    $idsSeen[] = $item['id'];
+                    $result[] = $item;
+                }
+            }
+
+            return $result;
+        }
+        $possibleTeamLeaders = uniqueById($possibleTeamLeaders);
+
         return Inertia::render('Teams/{$id}/Edit', [
-            'team' => $team,
-            'teamLeaderName' => User::query()->where('id', $team->user_id)->pluck('name')->first(),
-            'logo' => getLogo($team),
+            'team' => [
+                'name' => $team->name,
+                'description' => $team->description,
+                'slug' => $team->slug,
+                'totalSpots' => $team->totalSpots,
+                'team_status_id' => $team->teamStatus->id,
+                'team_status_name' => $team->teamStatus->status,
+            ],
+            'teamCreator' => $teamCreatorData,
+            'teamLeader' => $teamLeaderData,
+            'possibleTeamLeaders' => $possibleTeamLeaders,
             'image' => [
                 'id' => $team->image->id,
                 'name' => $team->image->name,
@@ -412,20 +497,20 @@ class TeamsController extends Controller
                 'cdn_endpoint' => $team->appSetting->cdn_endpoint,
                 'cloud_folder' => $team->image->cloud_folder,
             ],
-            'creators' => Creator::join('users AS user', 'creators.user_id', '=', 'user.id')
-                ->select('creators.*', 'user.name AS name')
-                ->when(Request::input('search'), function ($query, $search) {
-                    $query->where('name', 'like', "%{$search}%");
-                })
-                ->latest()
-                ->paginate(5)
-                ->withQueryString()
-                ->through(fn($creator) => [
-                    'id' => $creator->user->id,
-                    'name' => $creator->user->name,
-                ]),
+//            'creators' => Creator::join('users AS user', 'creators.user_id', '=', 'user.id')
+//                ->select('creators.*', 'user.name AS name')
+//                ->when(Request::input('search'), function ($query, $search) {
+//                    $query->where('name', 'like', "%{$search}%");
+//                })
+//                ->latest()
+//                ->paginate(5)
+//                ->withQueryString()
+//                ->through(fn($creator) => [
+//                    'id' => $creator->user->id,
+//                    'name' => $creator->user->name,
+//                ]),
             'can' => [
-                'viewTeams' => Auth::user()->can('view', Team::class),
+//                'viewTeams' => Auth::user()->can('view', Team::class),
                 'editTeam' => Auth::user()->can('edit', Team::class),
 //                'viewCreator' => Auth::user()->can('viewCreator', User::class),
             ]
@@ -443,16 +528,30 @@ class TeamsController extends Controller
         }
 
         // validate the request
-        $request->validate([
+        $validatedData = $request->validate([
             'name' => ['required', 'string', 'max:255', Rule::unique('teams')->ignore($team->id)],
             'description' => 'required|string|max:5000',
             'totalSpots' => 'required|integer|min:1',
+            'teamLeader' => 'required|exists:users,id',
         ]);
+
+        // Check if the user is a creator with a status of 1
+        $creator = Creator::where('user_id', $validatedData['teamLeader'])
+            ->whereHas('status', function ($query) {
+                $query->where('id', 1);
+            })->first();
+
+        if (!$creator) {
+            throw ValidationException::withMessages([
+                'teamLeader' => 'The selected team leader must be a valid creator with an active status.'
+            ]);
+        }
 
         // update the team
         $team->name = $request->name;
         $team->description = $request->description;
         $team->totalSpots = $request->totalSpots;
+        $team->team_leader = $creator->id;
         $team->slug = \Str::slug($request->name);
         $team->save();
         sleep(1);

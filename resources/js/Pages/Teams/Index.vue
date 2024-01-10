@@ -53,7 +53,7 @@
                                                 Team Name
                                             </th>
                                             <th scope="col" class="px-6 py-3">
-                                                Team Owner
+                                                Team Creator
                                             </th>
                                             <th scope="col" class="px-6 py-3">
                                                 # of Members

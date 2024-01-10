@@ -121,7 +121,7 @@ class TeamPolicy
         $userId = $user->id;
         $checkUser = Creator::where('user_id', $userId)->pluck('status_id')->first();
 
-        if($team->user_id === $user->id || $user->isAdmin) {
+        if($team->user_id === $user->id || $team->teamLeader->user->id === $user->id || $user->isAdmin) {
             return true;
         } elseif($checkUser === 2){
             return Response::deny('You\'re creator account has been frozen.');
@@ -129,8 +129,8 @@ class TeamPolicy
             return Response::deny('You\'re creator account has been suspended.');
         } elseif($checkUser === null){
             return Response::deny('Please register as a creator to use this feature.');
-        } elseif ($userId != $team->user_id) {
-            return Response::deny('You\'re not the owner of this team.');
+        } elseif ($userId != $team->user_id && (!isset($team->teamLeader) || $userId != $team->teamLeader->user->id)) {
+            return Response::deny('You\'re not the creator of this team or the team leader.');
         } return Response::deny('There\'s been a problem. Please let not.tv know.');
     }
 

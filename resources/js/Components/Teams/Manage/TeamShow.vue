@@ -36,7 +36,6 @@
 
         <td v-if="can.manageTeam || can.editTeam" class="text-gray-600 px-6 py-4 text-sm text-right">
             <button
-                v-if="can.editTeam"
                 @click="userStore.btnRedirect(`/shows/${show.slug}/edit`)"
                 class="bg-blue-500 hover:bg-blue-600 text-white font-semibold ml-2 my-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
             >Edit</button>

@@ -7,7 +7,7 @@
 
             <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
-            <TeamEditHeader :team="props.team" :teamLeaderName="props.teamLeaderName" />
+            <TeamEditHeader :team="props.team" :teamCreator="props.teamCreator" />
 
 
             <div class="flex flex-col">
@@ -132,6 +132,34 @@
 
                                         <div class="mb-6">
                                             <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
+                                                   for="teamLeader"
+                                            >
+                                                Team Leader
+                                            </label>
+                                            <select class="border border-gray-400 p-2 w-full rounded-lg block mb-2 uppercase font-bold text-xs text-gray-800"
+                                                    v-model="selectedTeamLeader"
+                                                    required
+                                            >
+                                                <option
+                                                    v-for="leader in props.possibleTeamLeaders"
+                                                    :key="leader.id"
+                                                    :value="leader.id"
+                                                    class="bg-white text-black border-b dark:text-gray-50 dark:bg-gray-800 dark:border-gray-600"
+                                                >
+                                                    {{ leader.name }} ({{ leader.role }})
+                                                </option>
+
+                                            </select>
+
+                                            <div class="text-xs">Only the team creator and team managers are listed, if their creator accounts are in good standing.</div>
+
+                                            <div v-if="form.errors.teamLeader" v-text="form.errors.teamLeader" class="text-xs text-red-600 mt-1"></div>
+
+
+                                        </div>
+
+                                        <div class="mb-6">
+                                            <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
                                                    for="description"
                                             >
                                                 Maximum # of Team Members
@@ -177,7 +205,7 @@
 </template>
 
 <script setup>
-import { onBeforeMount, onMounted, ref } from "vue";
+import { onBeforeMount, onMounted, ref, watch } from "vue";
 import { Inertia } from "@inertiajs/inertia";
 import { useForm } from "@inertiajs/inertia-vue3";
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
@@ -197,17 +225,43 @@ let teamStore = useTeamStore()
 let userStore = useUserStore()
 
 let props = defineProps({
-    user: Object,
     team: Object,
-    teamLeaderName: String,
+    teamCreator: Object,
+    possibleTeamLeaders: Array,
+    teamLeader: Object,
+    // possibleTeamLeaders: {
+    //     type: Object,
+    //     default: () => ({ data: [] }) // Provide a default value
+    // },
     image: Object,
 });
+
+// const selectedTeamLeader = ref(props.teamLeader ? props.teamLeader.id : null);
+// const selectedTeamLeader = ref(null);
+
+// watchEffect(() => {
+//     if (props.possibleTeamLeaders && props.possibleTeamLeaders.data && props.teamLeader) {
+//         const teamLeaderExists = props.possibleTeamLeaders.data.some(leader => leader.id === props.teamLeader.id);
+//         if (!teamLeaderExists) {
+//             props.possibleTeamLeaders.data.push(props.teamLeader);
+//         }
+//         selectedTeamLeader.value = props.teamLeader.id;
+//     }
+// });
 
 let form = useForm({
     id: props.team.id,
     name: props.team.name,
     description: props.team.description,
     totalSpots: props.team.totalSpots,
+    teamLeader: props.teamLeader ? props.teamLeader.id : null,
+});
+
+const selectedTeamLeader = ref(props.teamLeader ? props.teamLeader.id : null);
+
+// Watch for changes in selectedTeamLeader and update the form
+watch(selectedTeamLeader, (newValue) => {
+    form.teamLeader = newValue;
 });
 
 let reloadImage = () => {
