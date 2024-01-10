@@ -102,9 +102,9 @@
                             <p class="">Teams manage shows, </p>
                             <p class="">even if you're a solo creator</p>
                         </template>
-                            <button><font-awesome-icon
+                            <button class="rounded-full bg-black w-12 h-12 hover:bg-pink-600 text-pink-600 hover:text-black"><font-awesome-icon
                                 icon="fa-solid fa-question"
-                                class="text-3xl text-pink-600 dark:text-pink-300 dark:hover:text-blue-400 hover:text-blue-400 mt-6 py-2"
+                                class="text-3xl"
                             /></button>
                         </Popper>
                     </div>
@@ -167,9 +167,9 @@
                             <p class="text-xl font-semibold mb-2">🍿 These are your shows </p>
                             <p class="">Join or create a team to start a show.</p>
                         </template>
-                            <button><font-awesome-icon
+                            <button class="rounded-full bg-black w-12 h-12 hover:bg-pink-600 text-pink-600 hover:text-black"><font-awesome-icon
                                 icon="fa-solid fa-question"
-                                class="text-3xl text-pink-600 dark:text-pink-300 dark:hover:text-blue-400 hover:text-blue-400 mt-6 py-2"
+                                class="text-3xl"
                             /></button>
                         </Popper>
                     </div>

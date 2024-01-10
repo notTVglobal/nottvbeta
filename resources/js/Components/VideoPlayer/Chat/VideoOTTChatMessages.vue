@@ -3,7 +3,7 @@
         <div class="videoOttChatMessages chatChrome w-full h-full pt-5 bottom-0 flex flex-col-reverse overflow-y-scroll overflow-x-clip break-words messages scrollbar-hide">
             <div id="scrollToMe"></div>
 
-            <div id="newMessages" v-for="(newMessage, index) in chatStore.newMessages.slice().reverse()" :key="index">
+            <div id="newMessages" v-for="(newMessage, index) in chatStore.newMessages.slice().reverse()" :key="newMessage.id">
                 <message-item :id="newMessage.id" :message="newMessage"/>
             </div>
             <div id="oldMessages" v-for="(oldMessage, index) in chatStore.oldMessages.slice()" :key="index">
@@ -35,7 +35,9 @@ let channels = ref([])
 const channel = Echo.private('chat.' + '1')
 channel.subscribed(() => {
 }).listen('.chat', (event) => {
-    chatStore.newMessages.push(event.message)
+    const tempId = Date.now(); // or another method to generate a unique temporary ID
+    const newMessage = { ...event.message, id: tempId };
+    chatStore.newMessages.push(newMessage)
 })
 
 
@@ -54,10 +56,16 @@ onMounted(() => {
 //     // }
 // })
 
-nextTick(() => {
-    scrollTo('#scrollToMe')
-})
+// nextTick(() => {
+//     scrollTo('#scrollToMe')
+// })
 
+onUpdated(() => {
+    scrollTo('#scrollToMe')
+    // if (chatStore.newMessages[0]) {
+    //     document.getElementById(chatStore.newMessages[0].id).scrollIntoView({behavior: "smooth"})
+    // }
+})
 onBeforeUnmount(() => {
     chatStore.newMessages = [];
     chatStore.oldMessages = [];
@@ -130,6 +138,7 @@ export default {
     },
     mounted() {
         this.getMessages();
+        this.$nextTick(() => this.scrollToEnd());
     },
     updated() {
         // whenever data changes and the component re-renders, this is called.

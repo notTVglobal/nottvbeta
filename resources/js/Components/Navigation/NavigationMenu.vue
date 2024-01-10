@@ -293,16 +293,36 @@ let props = defineProps({
 // }
 
 const logout = () => {
-    Inertia.post(route('logout'));
+    Inertia.post(route('logout'), {}, {
+        onSuccess: () => {
+            // Reset state inside onSuccess callback
+            resetStores();
+            window.location.reload(); // Force a page reload
+        }
+    });
+};
+//     videoPlayerStore.mute();
+//     videoPlayerStore.fullPage = true;
+//     videoPlayerStore.loggedIn = false;
+//     videoPlayerStore.ottChat = false;
+//     videoPlayerStore.ott = 0;
+//     videoPlayerStore.class = "videoBgFull";
+//     videoPlayerStore.videoContainerClass = "videoContainerBgFull";
+//     userStore.showNavDropdown = false;
+//     userStore.clearUserData()
+// };
+
+const resetStores = () => {
+    // Reset logic for your stores
     videoPlayerStore.mute();
     videoPlayerStore.fullPage = true;
     videoPlayerStore.loggedIn = false;
     videoPlayerStore.ottChat = false;
     videoPlayerStore.ott = 0;
-    videoPlayerStore.class = "videoBgFull";
-    videoPlayerStore.videoContainerClass = "videoContainerBgFull";
+    videoPlayerStore.class = "welcomeVideoClass";
+    videoPlayerStore.videoContainerClass = "welcomeVideoContainer";
     userStore.showNavDropdown = false;
-    userStore.clearUserData()
+    userStore.clearUserData();
 };
 
 // let isStreamPage = false

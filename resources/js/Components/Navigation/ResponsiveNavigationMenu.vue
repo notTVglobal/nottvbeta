@@ -293,7 +293,17 @@ let props = defineProps({
 })
 
 const logout = () => {
-    Inertia.post(route('logout'));
+    Inertia.post(route('logout'), {}, {
+        onSuccess: () => {
+            // Reset state inside onSuccess callback
+            resetStores();
+            window.location.reload(); // Force a page reload
+        }
+    });
+};
+
+const resetStores = () => {
+    // Reset logic for your stores
     videoPlayerStore.mute();
     videoPlayerStore.fullPage = true;
     videoPlayerStore.loggedIn = false;
@@ -302,7 +312,7 @@ const logout = () => {
     videoPlayerStore.class = "welcomeVideoClass";
     videoPlayerStore.videoContainerClass = "welcomeVideoContainer";
     userStore.showNavDropdown = false;
-    userStore.clearUserData()
+    userStore.clearUserData();
 };
 
 // function loadStreamPage() {

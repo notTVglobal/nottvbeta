@@ -10,7 +10,6 @@
             <div class="flex flex-col bg-gray-600 rounded-l-xl rounded-r-xl px-2 pb-1 bg-opacity-50 break-words">
                 <span class="text-xs font-semibold text-gray-100 pt-1">{{ message.user_name }}</span>
                 <span class="text-white break-words" v-html="message.message" />
-    <!--            <span v-html="message.message"></span>-->
             </div>
             <div class="text-xs text-gray-200 pl-2 opacity-60">{{ timeAgo }}</div>
         </div>
@@ -20,21 +19,24 @@
 </template>
 
 <script setup>
-// import dayjs from 'dayjs';
+
 import {onMounted, onUnmounted, reactive, ref, render, watchEffect} from "vue";
 import {useChatStore} from "@/Stores/ChatStore";
 import { useTimeAgo } from '@vueuse/core';
 
 let chatStore = useChatStore()
 
-// let relativeTime = require('dayjs/plugin/relativeTime')
-// dayjs.extend(relativeTime)
-
 let props = defineProps({
     message: Object,
 })
-// const nowTime = current.getHours() + ":" + current.getMinutes() + ":" + current.getSeconds();
+
 const timeAgo = useTimeAgo(props.message.created_at)
+</script>
+<script>
+// import dayjs from 'dayjs';
+// let relativeTime = require('dayjs/plugin/relativeTime')
+// dayjs.extend(relativeTime)
+// const nowTime = current.getHours() + ":" + current.getMinutes() + ":" + current.getSeconds();
 // let timeAgo =
 
 // onUnmounted( () => {
@@ -49,5 +51,5 @@ const timeAgo = useTimeAgo(props.message.created_at)
 // let createdAt = props.message.created_at;
 //
 // let date = formatDate(createdAt)
-
 </script>
+

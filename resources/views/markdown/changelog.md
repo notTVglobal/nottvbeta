@@ -4,6 +4,13 @@
 Last Update: January 10, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.7.4.5
+January 10, 2024
+* Added black circle background to the question mark tool tips (PopperJs) on the creator dashboard page for Teams and Shows
+* Fix the logout function on navMenu and responsiveNavMenu + force a page reload after logout.
+* Fixed the chat message timestamps. New messages now display the correct "just now" time stamp.
+* Fixed the chat messages not properly scrolling on Top Right mode.
+
 ## v0.7.4.4
 January 10, 2024
 * Updated the Laravel Forge Repository Badge to be displayed in the README.md on github (notTVglobal/nottvbeta).

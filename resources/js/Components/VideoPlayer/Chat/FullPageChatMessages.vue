@@ -9,7 +9,7 @@
         <div class="chatChrome w-full h-full pb-8 py-2 flex flex-col-reverse overflow-y-scroll overflow-x-clip break-words messages scrollbar-hide">
             <div id="scrollToMe"></div>
 
-            <div id="newMessages" v-for="(newMessage, index) in chatStore.newMessages.slice().reverse()" :key="index">
+            <div id="newMessages" v-for="(newMessage, index) in chatStore.newMessages.slice().reverse()" :key="newMessage.id">
                 <message-item :id="newMessage.id" :message="newMessage"/>
             </div>
 
@@ -43,7 +43,9 @@ let channels = ref([])
 const channel = Echo.private('chat.' + '1')
 channel.subscribed(() => {
 }).listen('.chat', (event) => {
-    chatStore.newMessages.push(event.message)
+    const tempId = Date.now(); // or another method to generate a unique temporary ID
+    const newMessage = { ...event.message, id: tempId };
+    chatStore.newMessages.push(newMessage)
 })
 
 onBeforeMount(async() => {

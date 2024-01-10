@@ -6,14 +6,14 @@ import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore";
 export let useChatStore = defineStore('chatStore', {
     state() {
         return {
-            showChat: Boolean,
+            showChat: false,
             class: '',
-            oldMessages: ref([]),
-            newMessages: ref([]),
-            message: ref(''),
-            input: ref(''),
+            oldMessages: [],
+            newMessages: [],
+            message: '',
+            input: '',
             echo: [],
-            currentChannel: ref([]),
+            currentChannel: [],
         };
     },
 
