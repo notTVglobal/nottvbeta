@@ -901,4 +901,3 @@ Route::get('/subscribe', function () {
 Route::get('/coffee', function () {
     return Inertia::location('https://www.buymeacoffee.com/hellorq');
 });
-

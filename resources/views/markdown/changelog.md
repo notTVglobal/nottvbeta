@@ -4,9 +4,18 @@
 Last Update: January 8, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.7.4.2
+January 9, 2024
+* CSS styling changes to the Welcome page
+* Added a footer to the Welcome page
+* Updated the text copy on the Welcome page
+
 ## v0.7.4.1
 January 8, 2024
-* feature/stream-ui-ux-improvement. Stream page makes video full page, no longer changes the channel.
+* feature/stream-ui-ux-improvement.
+  * Stream page makes video full page, no longer changes the channel.
+  * Click the video in TopRight to go to the Stream page and FullPage mode (on mobile/tablet)
+  * Click the video in TopRight to toggle the controls (on desktop)
 
 ## v0.7.4.0
 January 8, 2024

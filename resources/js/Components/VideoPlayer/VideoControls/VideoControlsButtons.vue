@@ -3,7 +3,7 @@
     <div>
         <div class="icon-container">
             <button
-                @click="videoPlayerStore.fullscreen()">
+                @click="fullscreen">
 
                 <svg class="fill-current icon"
                      xmlns="http://www.w3.org/2000/svg"
@@ -158,6 +158,7 @@
 
 <script setup>
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js"
+import {Inertia} from "@inertiajs/inertia";
 
 let videoPlayerStore = useVideoPlayerStore()
 
@@ -169,6 +170,16 @@ function next() {
 function prev() {
     document.getElementById('nextPrevButtonsInfoModal').showModal()
     // videoPlayerStore.back()
+}
+
+function fullscreen() {
+    if (videoPlayerStore.currentPageIsStream) {
+        videoPlayerStore.fullscreen()
+    } else {
+        videoPlayerStore.makeVideoFullPage()
+        videoPlayerStore.fullPage = true
+        Inertia.visit('/stream')
+    }
 }
 
 </script>

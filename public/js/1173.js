@@ -1,2 +1,2 @@
-"use strict";(self.webpackChunk=self.webpackChunk||[]).push([[1173],{81173:(e,l,n)=>{n.r(l),n.d(l,{default:()=>c});var u=n(70821),t={class:"w-full h-full"};const c={__name:"Billing",props:{},setup:function(e){return function(e,l){return(0,u.openBlock)(),(0,u.createElementBlock)("div",t)}}}}}]);
+"use strict";(self.webpackChunk=self.webpackChunk||[]).push([[1173],{1173:(e,l,n)=>{n.r(l),n.d(l,{default:()=>c});var u=n(821),t={class:"w-full h-full"};const c={__name:"Billing",props:{},setup:function(e){return function(e,l){return(0,u.openBlock)(),(0,u.createElementBlock)("div",t)}}}}}]);
 //# sourceMappingURL=1173.js.map

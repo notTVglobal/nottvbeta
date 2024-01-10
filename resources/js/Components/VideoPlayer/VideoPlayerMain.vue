@@ -341,12 +341,32 @@ function clickOnVideoAction() {
     //     Inertia.visit('/stream')
     //     // videoPlayerStore.controls = true
     // }
-    if (videoPlayerStore.fullPage === false) {
-        videoPlayerStore.makeVideoFullPage()
-        videoPlayerStore.fullPage = true
-        videoPlayerStore.controls = true
+    // if (videoPlayerStore.fullPage === false) {
+    //     videoPlayerStore.makeVideoFullPage()
+    //     videoPlayerStore.fullPage = true
+    //     videoPlayerStore.controls = true
+    // }
+    // else if(videoPlayerStore.fullPage === true) {
+    //     // let videoPlayer = videojs('main-player');
+    //     videoPlayerStore.togglePlay()
+    //     // videoPlayerStore.toggleOsdAndControls()
+    // }
+
+    if (!videoPlayerStore.currentPageIsStream) {
+        // videoPlayerStore.makeVideoFullPage()
+        // videoPlayerStore.fullPage = true
+        // videoPlayerStore.controls = true
+        // Inertia.visit('/stream')
+        if (userStore.isMobile) {
+            videoPlayerStore.makeVideoFullPage()
+            videoPlayerStore.fullPage = true
+            Inertia.visit('/stream')
+        } else {
+            videoPlayerStore.toggleControls();
+        }
+        // videoPlayerStore.controls = !!videoPlayerStore.controls;
     }
-    else if(videoPlayerStore.fullPage === true) {
+    else {
         // let videoPlayer = videojs('main-player');
         videoPlayerStore.togglePlay()
         // videoPlayerStore.toggleOsdAndControls()
@@ -374,7 +394,7 @@ function clickOnVideoAction() {
 function mouseEnter(event) {
     mouseActive = true
     if (!videoPlayerStore.fullPage) {
-        videoPlayerStore.controls = true
+        // videoPlayerStore.controls = true
     }
     // console.log(mouseActive);
     // videoPlayerStore.showOsdControlsOnly()
@@ -390,7 +410,7 @@ function mouseEnter(event) {
 function mouseLeave(event) {
     mouseActive = false
     if (!videoPlayerStore.fullPage) {
-        videoPlayerStore.controls = false
+        // videoPlayerStore.controls = false
     }
     // console.log(mouseActive);
 

@@ -18,7 +18,7 @@
                 </header>
 
                 <div class="py-3 text-gray-600">
-                    Please register for an account to watch notTV.
+                    Please register for an account to join notTV.<br>For a chance to get an invite code <a href="https://not.tv/subscribe" target="_blank" class="text-blue-600 hover:blue-400 hover:cursor-pointer">subscribe to our newsletter</a>.
                 </div>
                 <div class="py-3">
                 <form @submit.prevent="submit" ref="registrationForm">
@@ -71,12 +71,12 @@
                     </div>
 
                     <div class="mt-4">
-                        <JetLabel for="invite_code" value="Invite Code" class="text-green-800" />
+                        <JetLabel for="invite_code" value="Invite Code" class="text-green-800 font-semibold" />
                         <JetInput
                             id="invite_code"
                             v-model="form.invite_code"
                             type="invite_code"
-                            class="mt-1 block w-full text-black text-xl border-2 border-green-800 h-14 px-4"
+                            class="mt-1 block w-full text-black text-xl h-14 px-4 border-2 border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
                             required
                         />
                     </div>
