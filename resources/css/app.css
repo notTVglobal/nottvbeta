@@ -53,7 +53,7 @@ html {
     z-index: 998;
 }
 .bugFullPageContainer {
-    @apply fixed h-screen top-4 left-5 opacity-10 z-50
+    @apply fixed h-fit top-4 left-5 opacity-10 z-50
 }
 .bugFullPageClass {
     @apply block h-9 w-auto shrink-0
@@ -110,6 +110,17 @@ hr {
     border: none;
     border-top: 2px solid rgba(13,13,13, 0.1);
     margin: 2rem 0;
+}
+
+.hide-scrollbar {
+    /* Hide scrollbar for Webkit browsers */
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Hide scrollbar for IE, Edge, and Firefox */
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
 }
 
 /* VIDEO CONTAINERS AND CLASSES*/
@@ -301,15 +312,29 @@ hr {
     }
     .ottButtonsContainer {
         z-index: 200;
-        @apply fixed flex flex-row justify-center left-0 right-0 mx-auto space-x-4 bottom-4 w-full
+        left: 0;
+        right: 0;
+        gap: 0.5rem; /* You can adjust the gap size as needed */
+        @apply fixed flex flex-wrap justify-center mx-auto space-x-2 bottom-4 w-full
     }
+    /*.channelsFullPageContainer {*/
+    /*    z-index: 200;*/
+    /*    !*height:calc(100vh - 4rem);*!*/
+    /*    height:calc(50vh + 1rem);*/
+    /*    !*top: 4rem;*!*/
+    /*    @apply fixed w-full bottom-0 right-0 left-0 pb-12 bg-opacity-80 bg-green-600 text-sm text-white*/
+    /*    overflow-y-auto scroll-smooth hover:scroll-auto break-words*/
+    /*}*/
     .channelsFullPageContainer {
         z-index: 200;
-        height:calc(100vh - 4rem);
-        top: 4rem;
-        @apply fixed w-full bottom-0 right-0 left-0 pb-12 bg-opacity-80 bg-green-600 text-sm text-white
-        overflow-y-auto scroll-smooth hover:scroll-auto break-words
+        height: calc(50vh + 1rem);
+        @apply fixed w-full bottom-0 right-0 left-0 pb-12 bg-opacity-80 bg-green-600 text-sm text-white overflow-y-auto scroll-smooth hover:scroll-auto break-words hide-scrollbar
     }
+    /* For Firefox - additional container */
+    /*.channelsFullPageInner {*/
+    /*    margin-right: -1rem; !* Hide scrollbar *!*/
+    /*    padding-right: 1rem; !* Prevent content from being hidden under scrollbar area *!*/
+    /*}*/
     .channelsCloseButton {
         @apply fixed bottom-5 left-0 right-0 mx-auto opacity-100 w-fit h-12 p-4 rounded-full
         text-gray-50 bg-green-900 hover:bg-green-800
@@ -317,37 +342,82 @@ hr {
     }
     .playlistFullPageContainer {
         z-index: 200;
-        height:calc(100vh - 4rem);
-        top: 4rem;
+        /*height:calc(100vh - 4rem);*/
+        height:calc(50vh + 1rem);
+        /*top: 4rem;*/
         @apply fixed w-full bottom-0 right-0 left-0 px-1 pb-12 bg-opacity-80 bg-orange-600 text-sm text-white
-        overflow-y-auto scroll-smooth hover:scroll-auto break-words
+        overflow-y-auto scroll-smooth hover:scroll-auto break-words hide-scrollbar
     }
     .playlistCloseButton {
         @apply fixed bottom-5 left-0 right-0 mx-auto opacity-100 w-fit h-12 p-4 rounded-full
         text-gray-50 bg-orange-900 hover:bg-orange-800 cursor-pointer font-semibold text-xs
     }
+    /* Mobile and Tablet */
+    /*.chatFullPageContainer {*/
+    /*    z-index: 40;*/
+    /*    min-height:calc(50vh - 7rem);*/
+    /*    display: flex; !* Enable Flexbox *!*/
+    /*    !*align-items: center; !* Vertically center children *!*!*/
+    /*    justify-content: left; !* Horizontally center children *!*/
+    /*    !*padding-top: 56.25%;*!*/
+    /*    @apply absolute w-full bottom-36 pt-2 px-6 pb-2 -mb-4 mt-4 bg-opacity-80 text-sm text-white*/
+    /*    overflow-y-auto scroll-smooth hover:scroll-auto break-words*/
+    /*}*/
     .chatFullPageContainer {
         z-index: 40;
-        min-height:calc(50vh + 1rem);
-        /*padding-top: 56.25%;*/
-        @apply absolute w-full bottom-0 right-0 px-6 pb-12 bg-opacity-80 text-sm text-white
-        overflow-y-auto scroll-smooth hover:scroll-auto break-words
+        min-height: calc(50vh - 7rem);
+        display: flex;
+        justify-content: left;
+        @apply absolute w-full bottom-36 pt-2 px-6 pb-2 -mb-4 mt-4 bg-opacity-80 text-sm text-white overflow-y-auto scroll-smooth hover:scroll-auto break-words hide-scrollbar
     }
+    /* For Firefox - additional container */
+    /*.chatFullPageInner {*/
+    /*    margin-right: -1rem; !* Hide scrollbar *!*/
+    /*    padding-right: 1rem; !* Prevent content from being hidden under scrollbar area *!*/
+    /*}*/
+    .chatFullPageMessages {
+        @apply w-full h-full flex flex-col-reverse overflow-y-scroll overflow-x-clip break-words
+    }
+    /*.chatFullPageMessages {*/
+    /*    @apply w-full h-full flex flex-col-reverse overflow-y-scroll overflow-x-clip break-words*/
+    /*    !* Hide scrollbar for Webkit browsers - assuming scrollbar-hide is handling it *!*/
+    /*        !* Hide scrollbar for Webkit browsers *!*/
+    /*    &::-webkit-scrollbar {*/
+    /*        display: none;*/
+    /*    }*/
+    /*    !* Hide scrollbar for IE, Edge, and Firefox *!*/
+    /*    -ms-overflow-style: none;  !* IE and Edge *!*/
+    /*    scrollbar-width: none;  !* Firefox *!*/
+    /*}*/
+
+    /*.chatFullPageInput {*/
+    /*    display: flex; !* Enable Flexbox *!*/
+    /*    justify-content: center; !* Horizontally center children *!*/
+    /*    @apply fixed w-full left-0 bottom-0 mb-2 bg-opacity-60 text-black*/
+    /*}*/
     .chatFullPageInput {
-        @apply fixed w-full flex flex-row left-0 right-0 mx-auto p-2 mb-2 text-black border-2 border-gray-800 hover:border-blue-800 focus:outline-none
+        display: flex; /* Enable Flexbox */
+        justify-content: center; /* Horizontally center children */
+        @apply fixed w-full left-0 bottom-12 mb-2 bg-opacity-60 text-black
     }
+    /*.chatCloseButton {*/
+    /*    z-index: 60;*/
+    /*    @apply fixed top-1/2 right-2 opacity-80 px-2 py-2 w-fit rounded-full bg-orange-800*/
+    /*    text-gray-50 hover:bg-blue-800 hover:text-blue-200*/
+    /*    cursor-pointer font-semibold text-xs*/
+    /*}*/
     .chatCloseButton {
         z-index: 60;
-        @apply fixed top-1/2 right-2 opacity-80 w-16 px-2 py-2 w-fit rounded-full bg-orange-800
-        text-gray-50 hover:bg-blue-800 hover:text-blue-200
-        cursor-pointer font-semibold text-xs
+        @apply fixed bottom-5 left-0 right-0 mx-auto opacity-100 w-fit h-12 p-4 rounded-full
+        text-gray-50 hover:bg-blue-800 hover:text-blue-200 cursor-pointer font-semibold text-xs
     }
     .filtersFullPageContainer {
         z-index: 200;
-        height:calc(100vh - 4rem);
-        top: 4rem;
+        /*height:calc(50vh - 4rem);*/
+        height:calc(50vh + 1rem);
+        /*top: 4rem;*/
         @apply fixed w-full bottom-0 right-0 left-0 px-1 pb-12 bg-opacity-80 bg-yellow-600 text-sm text-white
-        overflow-y-auto scroll-smooth hover:scroll-auto break-words
+        overflow-y-auto scroll-smooth hover:scroll-auto break-words hide-scrollbar
     }
     .filtersCloseButton {
         @apply fixed bottom-5 left-0 right-0 mx-auto opacity-100 w-fit h-12 p-4 rounded-full
@@ -517,21 +587,30 @@ hr {
         text-gray-50 bg-orange-900 hover:bg-orange-800 grid justify-center content-center
         cursor-pointer font-semibold text-xs
     }
+    /* Desktop Lg*/
     .chatFullPageContainer {
         z-index: 200;
         position: fixed;
         top: 4rem;
         right:0;
         max-height: 96rem;
-        @apply w-[24rem] bottom-0 bg-opacity-80 bg-blue-600 text-sm text-white px-6 pb-12
+        display: flex; /* Enable Flexbox */
+        /*align-items: center; !* Vertically center children *!*/
+        justify-content: left;
+        @apply w-[24rem] bottom-24 mb-6 pt-6 bg-opacity-80 text-sm text-white px-4
         overflow-y-scroll scroll-smooth hover:scroll-auto break-words
     }
+    .chatFullPageMessages {
+        @apply w-full h-full flex flex-col-reverse overflow-y-scroll overflow-x-clip break-words scrollbar-hide
+    }
     .chatFullPageInput {
-        @apply fixed right-20 p-2 m-2 mb-2 w-fit text-black border-2 border-gray-800 hover:border-blue-800 focus:outline-none
+        display: flex; /* Enable Flexbox */
+        justify-content: center; /* Horizontally center children */
+        @apply fixed bottom-12 px-2 mb-2 w-[24rem]
     }
     .chatCloseButton {
         z-index: 60;
-        @apply fixed top-20 right-6 opacity-100 w-fit h-12 p-4 rounded-full
+        @apply fixed bottom-5 right-32 opacity-100 w-fit h-12 p-4 rounded-full
         bg-orange-800 text-gray-50 hover:bg-blue-800 hover:text-blue-200 grid justify-center content-center
         cursor-pointer font-semibold text-xs
     }

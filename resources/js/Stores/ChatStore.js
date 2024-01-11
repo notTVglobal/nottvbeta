@@ -12,6 +12,7 @@ export let useChatStore = defineStore('chatStore', {
             newMessages: [],
             message: '',
             input: '',
+            inputTooLong: false,
             echo: [],
             currentChannel: [],
         };

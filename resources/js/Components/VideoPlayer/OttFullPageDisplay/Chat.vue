@@ -9,13 +9,14 @@
     >
 
             <div v-if="videoPlayerStore.ottChat" class="chatFullPageContainer">
+                <div class="chatFullPageInner">
+                    <full-page-chat :user="user"/>
 
-                <full-page-chat :user="user"/>
-
-                <button v-touch="()=>closeChat()"
-                        v-if="videoPlayerStore.ottChat" class="chatCloseButton">
-                    CLOSE CHAT
-                </button>
+                    <button v-touch="()=>closeChat()"
+                            v-if="videoPlayerStore.ottChat" class="chatCloseButton">
+                        CLOSE CHAT
+                    </button>
+                </div>
             </div>
 
     </Transition>

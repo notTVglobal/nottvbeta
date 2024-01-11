@@ -24,9 +24,7 @@
 
                     <div class="top-0 px-5 space-y-2">
                         <div>
-                            Add a loop here to display the playlist... scrollable. If the current channel is the users_channel,
-                            display the playlist for the user. If the current channel is another channel (e.g., stream), display
-                            the stream_playlist.
+                            Coming soon.
                         </div>
                     </div>
 

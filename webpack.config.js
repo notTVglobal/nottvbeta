@@ -11,7 +11,7 @@ module.exports = {
             // "path": false
         },
         alias: {
-            '@': path.resolve('resources/js'),
+            '@': path.resolve(__dirname, 'resources/js'),
             '@i': path.resolve('public/images'),
         },
     },

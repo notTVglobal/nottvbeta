@@ -60,7 +60,7 @@
          class="lg:hidden bg-gray-800 text-white fixed w-full h-full">
         <!-- Responsive Settings Options -->
         <!--   Fix Menu height e.g., h-[calc(h-100%-16rem)]      -->
-        <div class="pb-0 h-[calc(100vh)] overflow-y-auto">
+        <div ref="scrollableDiv" class="pb-0 h-[calc(100vh)] overflow-y-auto hide-scrollbar">
             <div class="px-4 bg-gray-800 border-b border-1 border-white w-full h-100%">
 
                 <div class="flex justify-between pt-2">
@@ -265,7 +265,9 @@
                     <AppVersion />
                 </div>
             </div>
-        </div> <div class="fixed w-full bottom-4 text-center hidden">Scroll the menu.</div>
+        </div> <div class="fixed w-full bottom-4 text-center fade-out"
+                    :class="{ 'visible': !hasScrolled }"
+                    v-show="!hasScrolled">Scroll the menu.</div>
     </div>
     </div>
 </template>
@@ -276,7 +278,7 @@ import NotificationsButton from '@/Components/Navigation/NotificationsButton.vue
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useChatStore } from "@/Stores/ChatStore"
 import { useUserStore } from "@/Stores/UserStore"
-import { ref } from "vue"
+import { ref, onMounted, onUnmounted } from "vue"
 import {Inertia} from "@inertiajs/inertia"
 import JetApplicationMark from "@/Jetstream/ApplicationMark.vue";
 import {Link} from "@inertiajs/inertia-vue3";
@@ -291,6 +293,27 @@ let userStore = useUserStore();
 let props = defineProps({
     user: Object,
 })
+
+const hasScrolled = ref(false);
+const scrollableDiv = ref(null);
+
+const handleScroll = () => {
+    // Check if the page has been scrolled down
+    const scrollPosition = scrollableDiv.value.scrollTop;
+    hasScrolled.value = scrollPosition > 0;
+};
+
+onMounted(() => {
+    if (scrollableDiv.value) {
+        scrollableDiv.value.addEventListener('scroll', handleScroll);
+    }
+});
+
+onUnmounted(() => {
+    if (scrollableDiv.value) {
+        scrollableDiv.value.removeEventListener('scroll', handleScroll);
+    }
+});
 
 const logout = () => {
     Inertia.post(route('logout'), {}, {
@@ -337,3 +360,14 @@ function navigateToStream() {
 }
 
 </script>
+
+<style scoped>
+.fade-out {
+    transition: opacity 0.5s ease-in-out;
+    opacity: 0;
+}
+
+.fade-out.visible {
+    opacity: 1;
+}
+</style>

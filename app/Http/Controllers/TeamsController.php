@@ -532,26 +532,52 @@ class TeamsController extends Controller
             'name' => ['required', 'string', 'max:255', Rule::unique('teams')->ignore($team->id)],
             'description' => 'required|string|max:5000',
             'totalSpots' => 'required|integer|min:1',
-            'teamLeader' => 'required|exists:users,id',
+            'teamLeader' => 'nullable|exists:users,id',
         ]);
 
-        // Check if the user is a creator with a status of 1
-        $creator = Creator::where('user_id', $validatedData['teamLeader'])
-            ->whereHas('status', function ($query) {
-                $query->where('id', 1);
-            })->first();
+        // Initialize the team_leader_id variable
+        $team_leader_id = null;
 
-        if (!$creator) {
-            throw ValidationException::withMessages([
-                'teamLeader' => 'The selected team leader must be a valid creator with an active status.'
-            ]);
+        // Check if the teamLeader is provided and is a valid creator with a status of 1
+        if (!is_null($validatedData['teamLeader'])) {
+            $creator = Creator::where('user_id', $validatedData['teamLeader'])
+                ->whereHas('status', function ($query) {
+                    $query->where('id', 1);
+                })->first();
+
+            if (!$creator) {
+                throw ValidationException::withMessages([
+                    'teamLeader' => 'The selected team leader must be a valid creator with an active status.'
+                ]);
+            }
+
+            $team_leader_id = $creator->id;
         }
+
+
+        // Check if the user is a creator with a status of 1
+//        $creator = Creator::where('user_id', $validatedData['teamLeader'])
+//            ->whereHas('status', function ($query) {
+//                $query->where('id', 1);
+//            })->first();
+
+//        if (!$creator) {
+//            throw ValidationException::withMessages([
+//                'teamLeader' => 'The selected team leader must be a valid creator with an active status.'
+//            ]);
+//        }
+        // Update the team leader only if a valid creator is found
+//        if ($creator) {
+//            $team->team_leader = $creator->id;
+//        } else {
+//            $team->team_leader = null;
+//        }
 
         // update the team
         $team->name = $request->name;
         $team->description = $request->description;
         $team->totalSpots = $request->totalSpots;
-        $team->team_leader = $creator->id;
+        $team->team_leader = $team_leader_id;
         $team->slug = \Str::slug($request->name);
         $team->save();
         sleep(1);

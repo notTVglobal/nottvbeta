@@ -27,14 +27,13 @@
 import { useForm } from "@inertiajs/inertia-vue3"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useChatStore } from "@/Stores/ChatStore.js"
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 
 let videoPlayerStore = useVideoPlayerStore()
 let chatStore = useChatStore()
 
 let props = defineProps({
     user: Object,
-    input: ref(''),
 });
 
 let form = useForm({
@@ -42,6 +41,11 @@ let form = useForm({
     user_name: props.user.name,
     user_profile_photo_path: props.user.profile_photo_path,
     user_profile_photo_url: props.user.profile_photo_url,
+});
+
+// Watch the form.message for changes
+watch(() => form.message, (newValue) => {
+    chatStore.inputTooLong = newValue.length > 300;
 });
 
 const vFocus = {
@@ -72,6 +76,7 @@ function sendMessage() {
     }).then(response => {
         if( response.status === 201 ) {
             form.message = '';
+            chatStore.inputTooLong = false;
             console.log( 'MESSAGE SENT' );
         }
     })

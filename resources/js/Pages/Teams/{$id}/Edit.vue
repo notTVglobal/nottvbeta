@@ -138,15 +138,18 @@
                                             </label>
                                             <select class="border border-gray-400 p-2 w-full rounded-lg block mb-2 uppercase font-bold text-xs text-gray-800"
                                                     v-model="selectedTeamLeader"
-                                                    required
                                             >
                                                 <option
+                                                    v-if="props.possibleTeamLeaders && props.possibleTeamLeaders.length > 0"
                                                     v-for="leader in props.possibleTeamLeaders"
                                                     :key="leader.id"
                                                     :value="leader.id"
                                                     class="bg-white text-black border-b dark:text-gray-50 dark:bg-gray-800 dark:border-gray-600"
                                                 >
                                                     {{ leader.name }} ({{ leader.role }})
+                                                </option>
+                                                <option v-else disabled>
+                                                    There are no eligible team leaders.
                                                 </option>
 
                                             </select>

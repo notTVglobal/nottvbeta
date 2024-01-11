@@ -4,12 +4,26 @@
 Last Update: January 10, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.7.4.6
+January 10, 2024
+* Added placeholder message to Team Edit select Team Leader when no user is available as team leader.
+  * If there are no eligible team leaders yet someone is already a team leader, now when you save the edit page they will be removed as a team leader. This needs some future logic about what happens if a Team leader's creator account becomes frozen or suspended.
+* FullPage Desktop mode on screens wider than 800px:
+  * Make chat background transparent in FullPage Desktop mode on screens wider than 800px.
+  * Move close chat button to bottom (same as the other Ott Panels)
+* Fix the CSS styling for the chat on all displays.
+* Fix the problem with the chat input not working properly on mobile.
+
 ## v0.7.4.5
 January 10, 2024
 * Added black circle background to the question mark tool tips (PopperJs) on the creator dashboard page for Teams and Shows
 * Fix the logout function on navMenu and responsiveNavMenu + force a page reload after logout.
 * Fixed the chat message timestamps. New messages now display the correct "just now" time stamp.
 * Fixed the chat messages not properly scrolling on Top Right mode.
+* Created new utility class (css) to .hide-scrollbar
+* Fixed the layout of the OttButtons in FullPage Mobile/Tablet
+* Changed the OttPanels in FullPage Mobile/Tablet to only take up the bottom half of the screen.
+* Added the words "scroll the menu" back to the bottom of the ResponsiveNavMenu, and it fades out when the user starts to scroll.
 
 ## v0.7.4.4
 January 10, 2024

@@ -10,19 +10,20 @@
 
 
             <div v-if="videoPlayerStore.ottChannels" class="channelsFullPageContainer">
+                <div class="channelsFullPageInner">
+                    <div class="flex flex-col p-5 mt-2">
+                        <div class="text-3xl text-center font-semibold uppercase mb-3 w-full bg-green-900 text-white p-2">CHANNELS</div>
+                    </div>
 
-                <div class="flex flex-col p-5 mt-2">
-                    <div class="text-3xl text-center font-semibold uppercase mb-3 w-full bg-green-900 text-white p-2">CHANNELS</div>
+                    <div class="px-5 space-y-1 overflow-y-scroll scrollbar-hide">
+                      <Channels/>
+                    </div>
+
+                    <button v-touch="()=>videoPlayerStore.toggleChannels()"
+                            v-if="videoPlayerStore.ottChannels" class="channelsCloseButton">
+                        CLOSE CHANNELS
+                    </button>
                 </div>
-
-                <div class="px-5 space-y-1 overflow-y-scroll scrollbar-hide">
-                  <Channels/>
-                </div>
-
-                <button v-touch="()=>videoPlayerStore.toggleChannels()"
-                        v-if="videoPlayerStore.ottChannels" class="channelsCloseButton">
-                    CLOSE CHANNELS
-                </button>
         </div>
 
     </Transition>

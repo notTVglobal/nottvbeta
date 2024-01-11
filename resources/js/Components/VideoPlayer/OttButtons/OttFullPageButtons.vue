@@ -2,6 +2,7 @@
     <div v-if="videoPlayerStore.ottButtons">
 
         <div class="ottButtonsContainer" id="ottButtons">
+
             <button
                 v-if="userStore.prevUrl"
                 @click="back"

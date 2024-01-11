@@ -1,15 +1,19 @@
 <template>
     <div>
-        <div class="flex flex-col mt-10">
+        <div class="flex flex-col ">
             <div class="text-3xl font-semibold">Conversation</div>
         </div>
-        <div class="italic">The newest message is at the bottom.</div>
+        <div class="italic mb-10">The newest message is at the bottom.</div>
         <div class="absolute">
-            <div class="relative h-[calc(h-100%-16rem)] top-0">
+            <div>
                 <chat-messages />
             </div>
-            <div class="relative h-16 w-full mx-auto">
-                <input-message :user="props.user" class="fixed bottom-2"/>
+            <div>
+                <input-message
+                    :user="props.user"
+                    class="chatFullPageInput"
+                    :class="{ 'text-gray-100': !chatStore.inputTooLong, 'text-red-600': chatStore.inputTooLong }"
+                />
             </div>
         </div>
     </div>
