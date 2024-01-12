@@ -19,6 +19,7 @@
             </div>
             <div class="ml-2 mt-1 font-thin text-xs">{{form.message.length}}</div>
 
+
         </form>
     </div>
 </template>

@@ -58,7 +58,7 @@ export let useUserStore = defineStore('userStore', {
         },
         toggleNavDropdown() {
             this.showNavDropdown = ! this.showNavDropdown;
-
+            useVideoPlayerStore().toggleOSD();
         },
         closeNavDropdown() {
             this.showNavDropdown = false;

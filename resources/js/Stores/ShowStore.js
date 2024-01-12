@@ -4,7 +4,9 @@ export let useShowStore = defineStore('showStore', {
     state: () => ({
         id: 0,
         name: '',
+        url: '',
         episodeName: '',
+        episodeUrl: '',
         category_id: 0,
         category_sub_id: 0,
         category_description: '',
@@ -27,6 +29,18 @@ export let useShowStore = defineStore('showStore', {
         async fill() {
             let r = await import('@/Json/show.json');
             this.$state = r.default;
+        },
+        setName(name) {
+            this.name = name;
+        },
+        setUrl(url) {
+            this.url = url;
+        },
+        setEpisodeName(episodeName) {
+            this.episodeName = episodeName;
+        },
+        setEpisodeUrl(episodeUrl) {
+            this.episodeUrl = episodeUrl;
         }
     },
 

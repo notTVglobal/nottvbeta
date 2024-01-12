@@ -2,9 +2,11 @@ import { defineStore } from "pinia";
 import { useChatStore } from "@/Stores/ChatStore";
 import { useStreamStore } from "@/Stores/StreamStore";
 import { useUserStore } from "@/Stores/UserStore";
+import {useChannelStore} from "@/Stores/ChannelStore";
+import {useShowStore} from "@/Stores/ShowStore";
 import videojs from 'video.js';
 import {Inertia} from "@inertiajs/inertia";
-import {useChannelStore} from "@/Stores/ChannelStore";
+
 import {computed} from "vue";
 
 export const useVideoPlayerStore = defineStore('videoPlayerStore', {
@@ -34,6 +36,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             currentVideo: {},
             viewerCount: 0,
 
+            nowPlayingType: '',
             nowPlayingName: '',
             nowPlayingUrl: '',
             nowPlayingDescription: '',
@@ -132,7 +135,6 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
         },
         toggleOSD() {
             this.osd = !this.osd
-            this.controls = !this.controls
         },
         toggleControls() {
             this.controls = !this.controls
@@ -154,28 +156,48 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             }
         },
         toggleChannels() {
-            this.ottButtons = !this.ottButtons
-            this.osd = !this.osd
-            this.controls = !this.controls
-            this.ottChannels = !this.ottChannels
+            if(useUserStore().isMobile) {
+                this.ottButtons = !this.ottButtons
+                this.osd = !this.osd
+                this.controls = !this.controls
+                this.ottChannels = !this.ottChannels
+            } else {
+                this.ottButtons = !this.ottButtons
+                this.ottChannels = !this.ottChannels
+            }
         },
         togglePlaylist() {
-            this.ottButtons = !this.ottButtons
-            this.osd = !this.osd
-            this.controls = !this.controls
-            this.ottPlaylist = !this.ottPlaylist
+            if(useUserStore().isMobile) {
+                this.ottButtons = !this.ottButtons
+                this.osd = !this.osd
+                this.controls = !this.controls
+                this.ottPlaylist = !this.ottPlaylist
+            } else {
+                this.ottButtons = !this.ottButtons
+                this.ottPlaylist = !this.ottPlaylist
+            }
         },
         toggleChat() {
-            this.ottButtons = !this.ottButtons
-            this.osd = !this.osd
-            this.controls = !this.controls
-            this.ottChat = !this.ottChat
+            if(useUserStore().isMobile) {
+                this.ottButtons = !this.ottButtons
+                this.osd = !this.osd
+                this.controls = !this.controls
+                this.ottChat = !this.ottChat
+            } else {
+                this.ottButtons = !this.ottButtons
+                this.ottChat = !this.ottChat
+            }
         },
         toggleFilters() {
-            this.ottButtons = !this.ottButtons
-            this.osd = !this.osd
-            this.controls = !this.controls
-            this.ottFilters = !this.ottFilters
+            if(useUserStore().isMobile) {
+                this.ottButtons = !this.ottButtons
+                this.osd = !this.osd
+                this.controls = !this.controls
+                this.ottFilters = !this.ottFilters
+            } else {
+                this.ottButtons = !this.ottButtons
+                this.ottFilters = !this.ottFilters
+            }
         },
         toggleOttInfo() {
             this.toggleOtt(1)
@@ -341,7 +363,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             this.videoSource = source.video_url
             this.videoSourceType = source.type
             videoJs.src({'src': source.video_url, 'type': source.type})
-            videoJs.controls(false)
+            // videoJs.controls(false)
             // this.play()
             this.unmute()
             this.paused = false
@@ -361,15 +383,47 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             useChannelStore().clearChannel()
             let videoJs = videojs('main-player')
             let filePath = source.cdn_endpoint+source.cloud_folder+source.folder+'/'
-            this.videoName = "Video File"
-            useStreamStore().currentChannel = 'On Demand'
             this.videoSource = source.file_name
             this.videoSourceType = source.type
             videoJs.src({'src': filePath+this.videoSource, 'type': this.videoSourceType})
             this.unmute()
             this.paused = false
         },
+        setNowPlayingInfoVideoFile(source) {
+            this.nowPlayingType = "Video File"
+            this.nowPlayingName = source.file_name
+            useStreamStore().currentChannel = 'On Demand'
+        },
+        setNowPlayingInfoShow(show, episode) {
+            this.clearNowPlayingInfo();
+            const showStore = useShowStore();
 
+            if (show.firstPlayVideo) {
+                showStore.setName(show.firstPlayVideo.name);
+                showStore.setEpisodeUrl(`/shows/${show.slug}/episode/${source.firstPlayVideo.slug}`);
+            } else if(episode) {
+                showStore.setName(show.name);
+                showStore.setUrl(`/shows/${show.slug}`);
+                showStore.setEpisodeName(episode.name);
+                showStore.setEpisodeUrl(`/shows/${show.slug}/episode/${episode.slug}`);
+            } else {
+                showStore.setName(show.name);
+                showStore.setUrl(`/shows/${show.slug}`);
+            }
+            // this.clearNowPlayingInfo()
+            // if (source.firstPlayVideo) {
+            //     useShowStore().name = source.firstPlayVideo.name
+            //     useShowStore().episodeUrl = `/shows/${source.slug}/episode/${source.firstPlayVideo.slug}`
+            // } else if(source.episode) {
+            //     useShowStore().name = source.name
+            //     useShowStore().url = `/shows/${source.slug}`
+            //     useShowStore().episodeName = source.episode.name
+            //     useShowStore().episodeUrl = `/shows/${source.slug}/episode/${source.episode.slug}`
+            // } else {
+            //     useShowStore().name = source.name
+            //     useShowStore().url = `/shows/${source.slug}`
+            // }
+        },
         // change video size/position and page layout
         makeVideoPiP() {
             if (useUserStore().isMobile) {
@@ -438,6 +492,16 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
         },
         setNowPlayingBonusContent(bonusContent) {
             this.setNowPlayingBonusContent = bonusContent;
+        },
+        clearNowPlayingInfo() {
+            this.nowPlayingType = ''
+            this.nowPlayingName = ''
+            this.nowPlayingUrl = ''
+            this.nowPlayingDescription = ''
+            this.nowPlayingImage = {}
+            this.nowPlayingTeam = {}
+            this.nowPlayingCreators = []
+            this.nowPlayingBonusContent = []
         },
 
         // change channel

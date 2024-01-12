@@ -11,16 +11,20 @@
 
     <!--                     class="fixed bottom-0 right-0 w-full lg:w-96 pb-24 px-2 overflow-y-scroll scrollbar-hide bg-gray-900"-->
 
-        <div v-if="videoPlayerStore.ott === 4" class="ottTopRightDisplay bg-gray-800">
+        <div v-if="videoPlayerStore.ott === 4" class="ottTopRightDisplay bg-gray-800 hide-scrollbar">
 <!--                <div v-if=""-->
 <!--                     class="fixed top-44 lg:top-78 right-0 h-full w-full lg:w-96 mt-4 pb-12 px-2 overflow-y-scroll scrollbar-hide bg-gray-800"-->
 <!--                     :class="ottDisplay">-->
 
-                <div class="overflow-y-scroll scrollbar-hide w-full">
+                <div class="overflow-y-scroll w-full hide-scrollbar">
 
                             <VideoOTTChatMessages/>
 
-                            <VideoOTTChatInput :user="props.user" class="fixed bottom-20"/>
+                            <VideoOTTChatInput
+                                :user="props.user"
+                                class="fixed bottom-20"
+                                :class="{ 'text-gray-100': !chatStore.inputTooLong, 'text-red-600': chatStore.inputTooLong }"
+                            />
 
                 </div>
         </div>
@@ -43,7 +47,7 @@ import Channels from "@/Components/VideoPlayer/OttTopRightDisplay/Channels.vue";
 
 let videoPlayerStore = useVideoPlayerStore()
 let streamStore = useStreamStore()
-let chat = useChatStore()
+let chatStore = useChatStore()
 let userStore = useUserStore()
 
 let props = defineProps ({

@@ -293,15 +293,22 @@ hr {
         z-index: 900;
         @apply hidden fixed right-2 top-20 w-10 mr-4
     }
-    .osdFullPage {
+    .osdFullPageTop {
         z-index:999;
-        top: calc(100vh - 50%);
-        @apply fixed flex flex-col align-top justify-start w-full h-1/2 left-0 right-0 px-5 drop-shadow z-50
+        /*top: calc(50vh + 2rem);*/
+        top: 4.5rem;
+        @apply fixed align-top justify-start w-full h-fit left-0 right-0 px-5 drop-shadow
+    }
+    .osdFullPageBottom {
+        z-index:999;
+        top: calc(50vh - 0.5rem);
+        /*top: 4.5rem;*/
+        @apply fixed align-top justify-start w-full h-fit left-0 right-0 px-5 drop-shadow
     }
     .videoControls {
         z-index: 200;
         /*top: calc(100vh - 57%);*/
-        top: calc(100vh - 20%);
+        top: calc(50vh - 4rem);
         /*padding-top: 56.25%;*/
         @apply fixed flex flex-row justify-center left-0 right-0 mx-auto space-x-4 w-full
     }
@@ -409,7 +416,7 @@ hr {
     .chatCloseButton {
         z-index: 60;
         @apply fixed bottom-5 left-0 right-0 mx-auto opacity-100 w-fit h-12 p-4 rounded-full
-        text-gray-50 hover:bg-blue-800 hover:text-blue-200 cursor-pointer font-semibold text-xs
+        text-gray-50 hover:bg-blue-800 cursor-pointer font-semibold text-xs
     }
     .filtersFullPageContainer {
         z-index: 200;
@@ -424,7 +431,7 @@ hr {
         text-gray-50 bg-yellow-600 hover:bg-yellow-500 cursor-pointer font-semibold text-xs
     }
     .ottTopRightDisplay {
-        @apply fixed top-40 right-0 h-full w-full mt-7 px-2 overflow-y-scroll scrollbar-hide z-50 border-t border-gray-900
+        @apply fixed top-40 right-0 h-full w-full mt-7 px-2 overflow-y-scroll z-50 border-t border-gray-900
     }
 }
 /* End Mobile and Tablet */
@@ -543,8 +550,11 @@ hr {
         z-index: 900;
         @apply fixed right-2 top-20 w-10 mr-4 hidden lg:block
     }
-    .osdFullPage {
+    .osdFullPageTop {
         @apply fixed w-full flex flex-col top-16 left-0 p-5 drop-shadow z-50
+    }
+    .osdFullPageBottom {
+        @apply fixed w-full flex flex-col top-20 left-0 p-5 mt-2 drop-shadow z-50
     }
     .videoControls {
         z-index: 200;
@@ -611,7 +621,7 @@ hr {
     .chatCloseButton {
         z-index: 60;
         @apply fixed bottom-5 right-32 opacity-100 w-fit h-12 p-4 rounded-full
-        bg-orange-800 text-gray-50 hover:bg-blue-800 hover:text-blue-200 grid justify-center content-center
+        text-gray-50 hover:bg-blue-800 grid justify-center content-center
         cursor-pointer font-semibold text-xs
     }
     .filtersFullPageContainer {
@@ -629,7 +639,7 @@ hr {
         cursor-pointer font-semibold text-xs
     }
     .ottTopRightDisplay {
-        @apply fixed top-72 right-0 h-full w-96 mt-7 px-2 overflow-y-scroll scrollbar-hide z-50 border-t border-gray-900
+        @apply fixed top-72 right-0 h-full w-96 mt-7 px-2 overflow-y-scroll z-50 border-t border-gray-900
     }
 
 }

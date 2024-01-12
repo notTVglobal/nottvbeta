@@ -258,26 +258,30 @@ let playEpisode = () => {
     if (props.show.firstPlayVideo.storage_location === 'spaces' && props.show.firstPlayVideo.upload_status !== 'processing') {
         // play video if !processing
         videoPlayerStore.loadNewSourceFromFile(props.show.firstPlayVideo)
-        videoPlayerStore.videoName = props.show.firstPlayVideo.name
-        videoPlayerStore.nowPlayingUrl = `/shows/${props.show.slug}/episode/${props.show.firstPlayVideo.slug}`
-        videoPlayerStore.nowPlayingName = props.show.firstPlayVideo.name
-        videoPlayerStore.nowPlayingDescription = props.show.firstPlayVideo.description
-        videoPlayerStore.nowPlayingImage = props.show.image
-        videoPlayerStore.nowPlayingTeam = props.team
-        videoPlayerStore.nowPlayingCreators = props.creators.data
-        videoPlayerStore.nowPlayingBonusContent = []
-        // Inertia.visit('/stream')
+        videoPlayerStore.setNowPlayingInfoShow(props.show)
         videoPlayerStore.makeVideoFullPage()
+        // showStore.name = props.show.name
+        // showStore.episodeName = props.show.firstPlayVideo.name
+        // showStore.episodeUrl = `/shows/${props.show.slug}/episode/${props.show.firstPlayVideo.slug}`
+        // videoPlayerStore.nowPlayingName = props.show.firstPlayVideo.name
+        // videoPlayerStore.nowPlayingDescription = props.show.firstPlayVideo.description
+        // videoPlayerStore.nowPlayingImage = props.show.image
+        // videoPlayerStore.nowPlayingTeam = props.team
+        // videoPlayerStore.nowPlayingCreators = props.creators.data
+        // videoPlayerStore.nowPlayingBonusContent = []
+        // Inertia.visit('/stream')
+
     } else if (props.show.firstPlayVideoFromUrl) {
         videoPlayerStore.loadNewSourceFromUrl(props.show.firstPlayVideoFromUrl)
-        videoPlayerStore.videoName = props.show.firstPlayVideoFromUrl.name
-        videoPlayerStore.nowPlayingUrl = `/shows/${props.show.slug}/episode/${props.show.firstPlayVideoFromUrl.slug}`
-        videoPlayerStore.nowPlayingName = props.show.firstPlayVideoFromUrl.name
-        videoPlayerStore.nowPlayingDescription = props.show.firstPlayVideoFromUrl.description
-        videoPlayerStore.nowPlayingImage = props.show.image
-        videoPlayerStore.nowPlayingTeam = props.team
-        videoPlayerStore.nowPlayingCreators = props.creators.data
-        videoPlayerStore.nowPlayingBonusContent = []
+        // videoPlayerStore.videoName = props.show.firstPlayVideoFromUrl.name
+        // videoPlayerStore.nowPlayingUrl = `/shows/${props.show.slug}/episode/${props.show.firstPlayVideoFromUrl.slug}`
+        // // videoPlayerStore.nowPlayingName = props.show.firstPlayVideoFromUrl.name
+        // videoPlayerStore.nowPlayingName = props.show.firstPlayVideoFromUrl.name
+        // videoPlayerStore.nowPlayingDescription = props.show.firstPlayVideoFromUrl.description
+        // videoPlayerStore.nowPlayingImage = props.show.image
+        // videoPlayerStore.nowPlayingTeam = props.team
+        // videoPlayerStore.nowPlayingCreators = props.creators.data
+        // videoPlayerStore.nowPlayingBonusContent = []
         // Inertia.visit('/stream')
         videoPlayerStore.makeVideoFullPage()
     }

@@ -1,6 +1,6 @@
 <template>
-    <div class="scrollbar-hide">
-        <div class="videoOttChatMessages chatChrome w-full h-full pt-5 bottom-0 flex flex-col-reverse overflow-y-scroll overflow-x-clip break-words messages scrollbar-hide">
+    <div class="">
+        <div class="videoOttChatMessages w-full h-full pt-5 bottom-0 flex flex-col-reverse overflow-y-scroll overflow-x-clip break-words messages hide-scrollbar">
             <div id="scrollToMe"></div>
 
             <div id="newMessages" v-for="(newMessage, index) in chatStore.newMessages.slice().reverse()" :key="newMessage.id">

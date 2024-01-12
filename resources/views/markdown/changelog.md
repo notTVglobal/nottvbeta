@@ -1,8 +1,17 @@
 # not.tv Changelog
 
-
-Last Update: January 10, 2024\
+Last Update: January 11, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.7.4.7
+January 11, 2024
+* Changed the layout/positioning of the on screen display (OSD) in FullPage
+* Changed Now Playing info on the FullPage mobile
+  * Created new methods in the ShowStore to set name, url, episodeName, episodeUrl
+* Created 3 new methods in the VideoPlayerStore:
+  * setNowPlayingInfoVideoFile
+  * setNowPlayingInfoShow
+  * clearNowPlaying
 
 ## v0.7.4.6
 January 10, 2024

@@ -23,7 +23,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useForm } from "@inertiajs/inertia-vue3"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useChatStore } from "@/Stores/ChatStore.js"
@@ -33,8 +33,7 @@ let chatStore = useChatStore()
 
 let props = defineProps({
     user: Object,
-    input: ref(''),
-});4
+});
 
 let form = useForm({
     message: '',
@@ -42,6 +41,12 @@ let form = useForm({
     user_profile_photo_path: props.user.profile_photo_path,
     user_profile_photo_url: props.user.profile_photo_url,
 });
+
+// Watch the form.message for changes
+watch(() => form.message, (newValue) => {
+    chatStore.inputTooLong = newValue.length > 300;
+});
+
 
 const vFocus = {
     mounted: (el) => el.focus(),

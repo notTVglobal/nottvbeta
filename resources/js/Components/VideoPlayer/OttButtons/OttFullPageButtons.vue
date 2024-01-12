@@ -6,7 +6,7 @@
             <button
                 v-if="userStore.prevUrl"
                 @click="back"
-                class="ottButton bg-gray-400 text-white hover:bg-gray-600 hover:text-gray-300">
+                class="ottButton bg-gray-400 text-white hover:bg-gray-600">
                 <font-awesome-icon icon="fa-angle-left" class="ml-2 text-3xl mb-1"/><div>BACK</div>
             </button>
 <!--            <button-->
@@ -18,24 +18,24 @@
             <button
                     v-if="userStore.isVip || userStore.isAdmin"
                     @click="openChannels"
-                    class="ottButton bg-green-400 text-white hover:bg-green-600 hover:text-green-300">
+                    class="ottButton bg-green-400 text-white hover:bg-green-600">
                 <font-awesome-icon icon="fa-rocket" class="ml-3.5 text-3xl mb-1"/><div>CHANNELS</div>
             </button>
 
             <button v-if="userStore.isSubscriber || userStore.isVip || userStore.isAdmin"
                     @click="openPlaylist"
-                    class="ottButton bg-orange-400 text-white hover:bg-orange-600 hover:text-orange-300">
+                    class="ottButton bg-orange-400 text-white hover:bg-orange-600">
                 <font-awesome-icon icon="fa-list" class="ml-2 text-3xl mb-1"/><div>PLAYLIST</div>
             </button>
 
             <button @click="openChat"
-                    class="ottButton bg-blue-400 text-white hover:bg-blue-600 hover:text-blue-300">
+                    class="ottButton bg-blue-400 text-white hover:bg-blue-600">
                 <font-awesome-icon icon="fa-comments" class="text-3xl mb-1"/><div>CHAT</div>
             </button>
 
             <button v-if="userStore.isVip || userStore.isAdmin"
                     @click="openFilters"
-                    class="ottButton bg-yellow-400 text-white hover:bg-yellow-600 hover:text-yellow-300">
+                    class="ottButton bg-yellow-400 text-white hover:bg-yellow-600">
                 <font-awesome-icon icon="fa-filter" class="ml-1 text-3xl mb-1"/><div>FILTERS</div>
             </button>
         </div>

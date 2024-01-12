@@ -8,15 +8,12 @@
         leave-to-class="opacity-0"
     >
 
-            <div v-if="videoPlayerStore.ottChat" class="chatFullPageContainer">
-                <div class="chatFullPageInner">
+            <div v-if="videoPlayerStore.ottChat" class="chatFullPageContainer hide-scrollbar">
                     <full-page-chat :user="user"/>
-
                     <button v-touch="()=>closeChat()"
                             v-if="videoPlayerStore.ottChat" class="chatCloseButton">
                         CLOSE CHAT
                     </button>
-                </div>
             </div>
 
     </Transition>

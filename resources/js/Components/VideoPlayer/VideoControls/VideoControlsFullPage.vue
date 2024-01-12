@@ -14,8 +14,6 @@
 
         <div class="videoControls">
 
-
-
             <VideoControlsButtons />
 
         </div>

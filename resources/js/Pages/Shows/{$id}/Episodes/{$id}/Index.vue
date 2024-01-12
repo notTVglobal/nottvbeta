@@ -224,7 +224,10 @@ let playEpisode = () => {
     // if video has a file and is !processing, play file.
     if (props.episode.video.storage_location === 'spaces' && props.episode.video.upload_status !== 'processing') {
         videoPlayerStore.loadNewSourceFromFile(props.episode.video)
-        videoPlayerStore.videoName = props.episode.name
+        // videoPlayerStore.videoName = props.episode.name
+        videoPlayerStore.setNowPlayingInfoShow(props.show,props.episode)
+        videoPlayerStore.makeVideoFullPage()
+
         // videoPlayerStore.currentChannelName = 'On Demand ('+props.episode.name+') from file'
         // Inertia.visit('/stream')
         videoPlayerStore.makeVideoFullPage()

@@ -2,88 +2,84 @@
     <div>
 
     <!-- Video Player -->
-            <div v-touch="() => {clickOnVideoAction()}"
-                 :class="videoPlayerStore.videoContainerClass"
-                 >
+        <div v-touch="() => {clickOnVideoAction()}"
+             :class="videoPlayerStore.videoContainerClass"
+             >
 
-                <div :class="videoPlayerStore.class">
-                  <videoJs /></div>
+            <div :class="videoPlayerStore.class">
+              <videoJs /></div>
 
-            </div>
+        </div>
+
         <div v-show="videoPlayerStore.currentPageIsStream && !userStore.showNavDropdown"
              class="tooltip tooltip-bottom hover-time"
              :style="{ left: hoverPosition }"
              :data-tip="hoverTime">
             <div class="thumbnail"></div>
-        <button class="custom-progress-bar"
-                id="progress-bar"
-                @mousedown="handleProgressClick($event)"
-                @mousemove="showHoverTime($event)"
-                @mouseleave="hideHoverTime">
-            <div class="custom-progress" id="progress">
-<!--                <div v-if="isHovering" class="hover-overlay">{{timeRemainingTime}}</div>-->
-            </div>
-        </button>
+            <button class="custom-progress-bar"
+                    id="progress-bar"
+                    @mousedown="handleProgressClick($event)"
+                    @mousemove="showHoverTime($event)"
+                    @mouseleave="hideHoverTime">
+                <div class="custom-progress" id="progress">
+        <!--                <div v-if="isHovering" class="hover-overlay">{{timeRemainingTime}}</div>-->
+                </div>
+            </button>
         </div>
 
-
-
     <!-- TopRight Video -->
-            <div v-if="!videoPlayerStore.fullPage && user">
+        <div v-if="!videoPlayerStore.fullPage && user">
 
-                <!-- notTV Bug -->
-                <div class="bugTopRightContainer">
-                    <img :src="`/storage/images/logo_white_512.png`" class="bugTopRightClass"></div>
+            <!-- notTV Bug -->
+            <div class="bugTopRightContainer">
+                <img :src="`/storage/images/logo_white_512.png`" class="bugTopRightClass">
+            </div>
 
-                <!-- On Screen Display (OSD)-->
+            <!-- On Screen Display (OSD)-->
 <!--                <OsdTopRight v-if="videoPlayerStore.showOSD" class="" />-->
 
-                <!-- Video Player Controls-->
-                <VideoControlsTopRight
-                    v-show="videoPlayerStore.controls"
-                    class="hidden lg:block"
-                    @mouseenter="mouseEnter"
-                    @mouseleave="mouseLeave" />
+            <!-- Video Player Controls-->
+            <VideoControlsTopRight
+                v-show="videoPlayerStore.controls"
+                class="hidden lg:block"
+            />
 
-<!--                </div>-->
-                <!-- OTT Buttons and Displays -->
-                <OttTopRightButtons :key="userStore.key"/>
-                <OttTopRightDisplayNowPlayingInfo :user="user"/>
-                <OttTopRightDisplayPlaylist :user="user"/>
-                <OttTopRightDisplayChannels :user="user"/>
-                <OttTopRightDisplayChat :user="user"/>
-                <OttTopRightDisplayFilters :user="user"/>
+            <!-- OTT Buttons and Displays -->
+            <OttTopRightButtons :key="userStore.key"/>
+            <OttTopRightDisplayNowPlayingInfo :user="user"/>
+            <OttTopRightDisplayPlaylist :user="user"/>
+            <OttTopRightDisplayChannels :user="user"/>
+            <OttTopRightDisplayChat :user="user"/>
+            <OttTopRightDisplayFilters :user="user"/>
 
-            </div>
+        </div>
 
         <!-- FullPage -->
         <div v-if="videoPlayerStore.fullPage && user">
 
-                <!-- notTV Bug -->
-                <div v-if="! videoPlayerStore.osd" class="bugFullPageContainer">
-                    <img :src="`/storage/images/logo_white_512.png`" class="bugFullPageClass"></div>
+            <!-- notTV Bug -->
+            <div v-if="! videoPlayerStore.osd" class="bugFullPageContainer">
+                <img :src="`/storage/images/logo_white_512.png`" class="bugFullPageClass">
+            </div>
 
                 <!-- On Screen Display (OSD) -->
             <OsdFullPage v-show="videoPlayerStore.osd" />
 
-                <!-- Video Player Controls -->
-                <VideoControlsFullPage
-                    v-if="videoPlayerStore.controls"
-                    @mouseenter="mouseEnter"
-                    @mouseleave="mouseLeave" />
+            <!-- Video Player Controls -->
+            <VideoControlsFullPage
+                v-if="videoPlayerStore.controls"
+            />
 
-                <!-- Over The Top (OTT) -->
-                <OttFullPageButtons v-if="videoPlayerStore.osd"/>
-                <OttFullPageDisplayChannels />
-                <OttFullPageDisplayPlaylist />
-                <OttFullPageDisplayChat :user="user"/>
-                <OttFullPageDisplayFilters />
+            <!-- Over The Top (OTT) -->
+            <OttFullPageButtons v-if="videoPlayerStore.osd"/>
+            <OttFullPageDisplayChannels />
+            <OttFullPageDisplayPlaylist />
+            <OttFullPageDisplayChat :user="user"/>
+            <OttFullPageDisplayFilters />
 
-            </div>
-</div>
-
+        </div>
+    </div>
 </template>
-
 
 <script setup>
 import {ref, onUnmounted, onMounted} from 'vue'
@@ -391,43 +387,43 @@ function clickOnVideoAction() {
     // }
 }
 
-function mouseEnter(event) {
-    mouseActive = true
-    if (!videoPlayerStore.fullPage) {
-        // videoPlayerStore.controls = true
-    }
-    // console.log(mouseActive);
-    // videoPlayerStore.showOsdControlsOnly()
-    // document.addEventListener('mousemove', mouseMove, true);
-    // setInterval(function() {
-    //     videoPlayerStore.hideOsdAndControls()
-    // }, 3000);
-    // setInterval(function() {
-    //     mouseActive = false
-    //     videoPlayerStore.hideOsdControlsOnly()
-    // }, 3000);
-}
-function mouseLeave(event) {
-    mouseActive = false
-    if (!videoPlayerStore.fullPage) {
-        // videoPlayerStore.controls = false
-    }
-    // console.log(mouseActive);
-
-    // videoPlayerStore.hideOsdControlsOnly()
-    // this.popup = false;
-    // document.addEventListener('mousemove', mouseMove, false);
-
-}
-function mouseMove(event) {
-    mouseActive = true
-    // videoPlayerStore.showOsdControlsOnly()
-    // console.log(event.clientX, event.clientY);
-    // setInterval(function() {
-    //     mouseActive = false
-    //     videoPlayerStore.hideOsdAndControls()
-    // }, 3000);
-}
+// function mouseEnter(event) {
+//     mouseActive = true
+//     if (!videoPlayerStore.fullPage) {
+//         // videoPlayerStore.controls = true
+//     }
+//     // console.log(mouseActive);
+//     // videoPlayerStore.showOsdControlsOnly()
+//     // document.addEventListener('mousemove', mouseMove, true);
+//     // setInterval(function() {
+//     //     videoPlayerStore.hideOsdAndControls()
+//     // }, 3000);
+//     // setInterval(function() {
+//     //     mouseActive = false
+//     //     videoPlayerStore.hideOsdControlsOnly()
+//     // }, 3000);
+// }
+// function mouseLeave(event) {
+//     mouseActive = false
+//     if (!videoPlayerStore.fullPage) {
+//         // videoPlayerStore.controls = false
+//     }
+//     // console.log(mouseActive);
+//
+//     // videoPlayerStore.hideOsdControlsOnly()
+//     // this.popup = false;
+//     // document.addEventListener('mousemove', mouseMove, false);
+//
+// }
+// function mouseMove(event) {
+//     mouseActive = true
+//     // videoPlayerStore.showOsdControlsOnly()
+//     // console.log(event.clientX, event.clientY);
+//     // setInterval(function() {
+//     //     mouseActive = false
+//     //     videoPlayerStore.hideOsdAndControls()
+//     // }, 3000);
+// }
 
 </script>
 

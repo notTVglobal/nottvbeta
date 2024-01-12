@@ -60,7 +60,7 @@
          class="lg:hidden bg-gray-800 text-white fixed w-full h-full">
         <!-- Responsive Settings Options -->
         <!--   Fix Menu height e.g., h-[calc(h-100%-16rem)]      -->
-        <div ref="scrollableDiv" class="pb-0 h-[calc(100vh)] overflow-y-auto hide-scrollbar">
+        <div ref="scrollableDiv" class="pb-0 h-[calc(100vh)] overflow-y-auto hide-scrollbar" @scroll="handleScroll">
             <div class="px-4 bg-gray-800 border-b border-1 border-white w-full h-100%">
 
                 <div class="flex justify-between pt-2">
@@ -258,16 +258,12 @@
                         </JetResponsiveNavLink>
                     </div>
 
-
-
-
                 <div class="flex flex-col w-full space-y-1 text-gray-600 text-sm pb-20">
                     <AppVersion />
                 </div>
             </div>
         </div> <div class="fixed w-full bottom-4 text-center fade-out"
-                    :class="{ 'visible': !hasScrolled }"
-                    v-show="!hasScrolled">Scroll the menu.</div>
+                    :class="{ 'visible': !hasScrolled && isContentOverflowing }">Scroll down.</div>
     </div>
     </div>
 </template>
@@ -278,7 +274,7 @@ import NotificationsButton from '@/Components/Navigation/NotificationsButton.vue
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useChatStore } from "@/Stores/ChatStore"
 import { useUserStore } from "@/Stores/UserStore"
-import { ref, onMounted, onUnmounted } from "vue"
+import { ref, onMounted, onUnmounted, watch, nextTick } from "vue"
 import {Inertia} from "@inertiajs/inertia"
 import JetApplicationMark from "@/Jetstream/ApplicationMark.vue";
 import {Link} from "@inertiajs/inertia-vue3";
@@ -295,21 +291,54 @@ let props = defineProps({
 })
 
 const hasScrolled = ref(false);
+const isContentOverflowing = ref(false);
 const scrollableDiv = ref(null);
+//
+// const checkOverflow = () => {
+//     if (scrollableDiv.value) {
+//         isContentOverflowing.value = scrollableDiv.value.scrollHeight > scrollableDiv.value.clientHeight;
+//     }
+// };
+
+const checkOverflow = () => {
+    if (scrollableDiv.value) {
+        const isOverflowing = scrollableDiv.value.scrollHeight > scrollableDiv.value.clientHeight;
+        isContentOverflowing.value = isOverflowing;
+    }
+};
 
 const handleScroll = () => {
     // Check if the page has been scrolled down
-    const scrollPosition = scrollableDiv.value.scrollTop;
-    hasScrolled.value = scrollPosition > 0;
+    // const scrollPosition = scrollableDiv.value.scrollTop;
+    // hasScrolled.value = scrollPosition > 0;
+    hasScrolled.value = scrollableDiv.value.scrollTop > 0;
 };
 
 onMounted(() => {
+    nextTick(() => {
+        checkOverflow();
+    });
+
+    window.addEventListener('resize', checkOverflow); // Recheck on window resize
+
     if (scrollableDiv.value) {
         scrollableDiv.value.addEventListener('scroll', handleScroll);
     }
 });
 
+// Watch for changes in the dropdown visibility
+watch(() => userStore.showNavDropdown, (newValue, oldValue) => {
+    if (newValue !== oldValue) {
+        nextTick(() => {
+            checkOverflow();
+        });
+    }
+});
+
+// Cleanup
 onUnmounted(() => {
+    window.removeEventListener('resize', checkOverflow);
+
     if (scrollableDiv.value) {
         scrollableDiv.value.removeEventListener('scroll', handleScroll);
     }
@@ -356,7 +385,9 @@ function navigateToStream() {
     videoPlayerStore.makeVideoFullPage()
     videoPlayerStore.ott = 0
     userStore.closeNavDropdown()
-    userStore.prevUrl = window.history.state.url
+    if (!videoPlayerStore.currentPageIsStream) {
+        userStore.prevUrl = window.history.state.url
+    }
 }
 
 </script>
