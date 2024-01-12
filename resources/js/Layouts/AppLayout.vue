@@ -1,5 +1,6 @@
 <template>
-    <div class="fixed top-0 left-0 right-0 bottom-0 bg-gray-800 text-gray-200 vh-100 vw-100 overflow-hidden overscroll-y-none overscroll-x-none">
+    <div :class="appSettingStore.pageBgColor"
+         class="fixed top-0 left-0 right-0 bottom-0 text-gray-200 vh-100 vw-100 overflow-hidden overscroll-y-none overscroll-x-none">
 
         <!-- Navbar for logged in user -->
         <ResponsiveNavigationMenu v-if="user" :key="userStore.currentPage"/>
@@ -12,7 +13,8 @@
         </Teleport>
 
         <!-- Page Content -->
-        <div v-show="!userStore.hidePage" :class="layoutClass">
+<!--        <div v-show="!userStore.hidePage" :class="layoutClass">-->
+        <div v-show="!appSettingStore.hidePage" :class="layoutClass">
                 <slot /></div>
 
         <!-- Video Player -->
@@ -26,6 +28,7 @@
 
 <script setup>
 import {ref, provide, computed, onBeforeMount, onBeforeUnmount, defineAsyncComponent, onMounted} from "vue"
+import { useAppSettingStore } from '@/Stores/AppSettingStore';
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useStreamStore } from "@/Stores/StreamStore"
 import { useUserStore } from "@/Stores/UserStore"
@@ -51,6 +54,7 @@ const Login = defineAsyncComponent( () =>
 //     import('@/Components/VideoPlayer/VideoPlayerMain'))
 import VideoPlayerMain from "@/Components/VideoPlayer/VideoPlayerMain.vue"
 
+const appSettingStore = useAppSettingStore();
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 let streamStore = useStreamStore()
@@ -209,4 +213,15 @@ function clickOnVideoAction() {
     // }
     // }
 }
+
+const pageClass = computed(() => {
+    return appSettingStore.pipChatMode
+        ? appSettingStore.pipChatModeAppLayoutBgColor
+        : appSettingStore.primaryAppLayoutBgColor;
+});
 </script>
+
+<style scoped>
+
+
+</style>

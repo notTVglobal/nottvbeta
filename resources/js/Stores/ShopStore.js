@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import {ref} from "vue";
 
-export let useShopStore = defineStore('shopStore', {
+export const useShopStore = defineStore('shopStore', {
     state() {
         return {
             products: [],

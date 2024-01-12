@@ -3,7 +3,7 @@ import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore";
 import {Inertia} from "@inertiajs/inertia";
 import {ref} from "vue";
 
-export let useUserStore = defineStore('userStore', {
+export const useUserStore = defineStore('userStore', {
     state: () => ({
         isMobile: Boolean,
 

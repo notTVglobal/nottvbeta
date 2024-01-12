@@ -17,13 +17,15 @@
 </template>
 
 <script setup>
+import { onBeforeMount, onBeforeUnmount, onUpdated, ref, watch } from "vue";
 import MessageItem from "@/Components/VideoPlayer/Chat/ChatMessage.vue"
+import { useAppSettingStore } from '@/Stores/AppSettingStore';
 import { useChatStore } from "@/Stores/ChatStore"
 import { useUserStore } from "@/Stores/UserStore"
-import dayjs from 'dayjs'
-import relativeTime from "dayjs/plugin/relativeTime"
-import { onBeforeMount, onBeforeUnmount, onUpdated, ref } from "vue";
+// import dayjs from 'dayjs'
+// import relativeTime from "dayjs/plugin/relativeTime"
 
+const appSettingStore = useAppSettingStore();
 let chatStore = useChatStore()
 let userStore = useUserStore()
 
@@ -106,6 +108,14 @@ function disconnect() {
 function scrollTo(selector) {
     document.querySelector(selector).scrollIntoView({ behavior: 'smooth'});
 }
+
+// Watch for changes in pipChatMode
+watch(() => appSettingStore.pipChatMode, (newVal, oldVal) => {
+    if (oldVal === true && newVal === false) {
+        // If pipChatMode was just turned off, scroll to the bottom
+        scrollTo('#scrollToMe');
+    }
+});
 
 </script>
 

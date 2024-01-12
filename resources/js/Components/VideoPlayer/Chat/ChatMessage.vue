@@ -7,7 +7,8 @@
                 src="" class="rounded-full h-8 w-8 object-cover bg-gray-300">
        </div>
         <div class="flex flex-col">
-            <div class="flex flex-col bg-gray-600 rounded-l-xl rounded-r-xl px-2 pb-1 bg-opacity-50 break-words">
+            <div :class="messageBgClass"
+                 class="flex flex-col rounded-l-xl rounded-r-xl px-2 pb-1 bg-opacity-50 break-words">
                 <span class="text-xs font-semibold text-gray-100 pt-1">{{ message.user_name }}</span>
                 <span class="text-white break-words" v-html="message.message" />
             </div>
@@ -19,11 +20,12 @@
 </template>
 
 <script setup>
-
-import {onMounted, onUnmounted, reactive, ref, render, watchEffect} from "vue";
-import {useChatStore} from "@/Stores/ChatStore";
+import { computed } from "vue";
+import { useAppSettingStore } from '@/Stores/AppSettingStore';
+import { useChatStore } from "@/Stores/ChatStore";
 import { useTimeAgo } from '@vueuse/core';
 
+const appSettingStore = useAppSettingStore();
 let chatStore = useChatStore()
 
 let props = defineProps({
@@ -31,6 +33,12 @@ let props = defineProps({
 })
 
 const timeAgo = useTimeAgo(props.message.created_at)
+
+const messageBgClass = computed(() => {
+    return appSettingStore.pipChatMode
+        ? appSettingStore.chatMessageBgColor
+        : appSettingStore.primaryChatMessageBgColor;
+});
 </script>
 <script>
 // import dayjs from 'dayjs';

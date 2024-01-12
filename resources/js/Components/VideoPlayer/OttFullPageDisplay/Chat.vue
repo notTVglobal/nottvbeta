@@ -8,7 +8,9 @@
         leave-to-class="opacity-0"
     >
 
-            <div v-if="videoPlayerStore.ottChat" class="chatFullPageContainer hide-scrollbar">
+            <div v-if="videoPlayerStore.ottChat"
+                 :class="pipChatModeChangeTopPosition"
+                 class="chatFullPageContainer hide-scrollbar">
                     <full-page-chat :user="user"/>
                     <button v-touch="()=>closeChat()"
                             v-if="videoPlayerStore.ottChat" class="chatCloseButton">
@@ -20,9 +22,12 @@
 </template>
 
 <script setup>
+import { computed } from "vue";
+import { useAppSettingStore } from '@/Stores/AppSettingStore';
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import FullPageChat from "@/Components/VideoPlayer/Chat/FullPageChat"
 
+const appSettingStore = useAppSettingStore();
 let videoPlayerStore = useVideoPlayerStore();
 
 defineProps({
@@ -34,5 +39,9 @@ function closeChat() {
     videoPlayerStore.osd = true
     videoPlayerStore.makeVideoFullPage()
 }
+
+const pipChatModeChangeTopPosition = computed(() => {
+    return appSettingStore.pipChatMode ? 'chatFullPageContainerChangeTopPositionForPipChatMode' : '';
+});
 
 </script>

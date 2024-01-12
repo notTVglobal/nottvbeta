@@ -1,7 +1,7 @@
 import {defineStore} from "pinia";
 import {Inertia} from "@inertiajs/inertia";
 
-export let useTeamStore = defineStore('teamStore', {
+export const useTeamStore = defineStore('teamStore', {
     state: () => ({
         id: 0,
         name: '',

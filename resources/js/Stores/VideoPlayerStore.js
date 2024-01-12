@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { useChatStore } from "@/Stores/ChatStore";
+import { useAppSettingStore } from '@/Stores/AppSettingStore';
 import { useStreamStore } from "@/Stores/StreamStore";
 import { useUserStore } from "@/Stores/UserStore";
 import {useChannelStore} from "@/Stores/ChannelStore";
@@ -426,20 +426,36 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
         },
         // change video size/position and page layout
         makeVideoPiP() {
-            if (useUserStore().isMobile) {
+            const appSettingStore = useAppSettingStore();
+            const userStore = useUserStore();
+
+            if (userStore.isMobile) {
                 let videoJs = videojs('main-player')
                 videoJs.controls(false)
-                this.class = 'pipVideoClass'
-                this.videoContainerClass = 'pipVideoContainerClass'
-                this.fullPage = false
+                if(this.fullPage) {
+                    this.class = 'pipVideoClassFullPage'
+                    this.videoContainerClass = 'pipVideoContainerFullPage'
+                } else {
+                    this.class = 'pipVideoClassTopRight'
+                    this.videoContainerClass = 'pipVideoContainerTopRight'
+                }
+                appSettingStore.togglePipChatMode()
+                // appSettingStore.setPageBgColor('bg-black');
+                // appSettingStore.setChatMessageBgColor('bg-gray-900');
+                // this.fullPage = false
             }
         },
         makeVideoFullPage() {
+            const appSettingStore = useAppSettingStore();
+            const userStore = useUserStore();
+
             this.fullPage = true;
             this.videoContainerClass = 'fullPageVideoContainer'
             this.class = 'fullPageVideoClass'
-            this.controls = true
-            useUserStore().hidePage = true
+            // appSettingStore.setPageBgColor('bg-gray-800');
+            // appSettingStore.setChatMessageBgColor('bg-gray-600');
+            this.controls = !(this.ottChat && userStore.isMobile);
+            userStore.hidePage = true
             // if (useUserStore().isMobile) {
             //     this.videoContainerClass = 'fullPageVideoContainerMobile'
             //     this.class = 'fullPageVideoClassMobile'
@@ -457,12 +473,17 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             // videoJs.play()
         },
         makeVideoTopRight() {
+            const appSettingStore = useAppSettingStore();
+            const userStore = useUserStore();
+
             this.currentPageIsStream = false
             this.videoContainerClass = 'topRightVideoContainer'
             this.class = 'topRightVideoClass'
+            // appSettingStore.setPageBgColor('bg-gray-800');
+            // appSettingStore.setChatMessageBgColor('bg-gray-600');
             this.fullPage = false
             this.controls = false
-            useUserStore().hidePage = false
+            userStore.hidePage = false
         },
         makeVideoWelcomePage() {
             this.videoContainerClass = 'welcomeVideoContainer'

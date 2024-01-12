@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 
-export let useMovieStore = defineStore('movieStore', {
+export const useMovieStore = defineStore('movieStore', {
     state: () => ({
         id: 0,
         category_id: 0,

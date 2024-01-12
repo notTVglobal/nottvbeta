@@ -201,6 +201,7 @@ hr {
     }
     .topRightVideoContainer {
         position: fixed;
+        z-index: 40;
         top: 4rem;
         left: 0;
         right: 0;
@@ -219,6 +220,7 @@ hr {
     }
     .topRightVideoClass {
         /*position: fixed;*/
+        z-index: 40;
         top: 4rem;
         left: 0;
         right: 0;
@@ -238,53 +240,41 @@ hr {
         justify-content: center;
         background-color: black;
     }
-    .pipVideoContainer {
+    .pipVideoContainerTopRight {
         position: fixed;
-        /*top: 24rem;*/
-        bottom: 4rem;
-        right: 2rem;
-        /*min-height:calc(50vh - 5.5rem);*/
-        /*min-height:calc(56.25% - 4rem);*/
-        /*min-height:calc(50vh - 50rem);*/
-        width:50vw;
+        bottom: 5rem;
+        left: 0;
+        right: 0;
+        width:100vw;
         padding-top:56.25%;
-        /*height:10rem;*/
-        /*min-height:100vh;*/
-        /*max-height:calc(100vh - 4rem);*/
-        /*z-index:900;*/
-        /*max-height:calc(100vh - 8rem);*/
-        /*padding-top: 56.25%;*/
-        /*display: flex;*/
-        /*flex-wrap: wrap;*/
-        /*display: flex;*/
-        /*flex-wrap: wrap;*/
-        /*align-content: flex-start;*/
+        z-index:40;
         background-color: dodgerblue;
     }
-    .pipVideoClass {
+    .pipVideoClassTopRight {
         position: fixed;
-        /*top: 24rem;*/
-        bottom: 4rem;
-        right: 2rem;
-        /*right:0;*/
-        /*padding-top:56.25%;*/
-        /*min-height:calc(50vh - 5.5rem);*/
-        /*min-height:calc(56.25% - 4rem);*/
-        /*min-height:calc(50vh - 50rem);*/
-        width:50vw;
+        bottom: 5rem;
+        left: 0;
+        right: 0;
+        width:100vw;
         padding-top:56.25%;
-        /*height:10rem;*/
-        /*min-height:100vh;*/
-        /*max-height:calc(100vh - 4rem);*/
-        /*z-index:900;*/
-        /*max-height:calc(100vh - 8rem);*/
-        /*padding-top: 56.25%;*/
-        /*display: flex;*/
-        /*flex-wrap: wrap;*/
-        /*display: flex;*/
-        /*flex-wrap: wrap;*/
-        /*align-content: flex-start;*/
-        opacity: 0.8;
+    }
+    .pipVideoContainerFullPage {
+        position: fixed;
+        bottom: 8rem;
+        left: 0;
+        right: 0;
+        width:100vw;
+        padding-top:56.25%;
+        z-index:40;
+        background-color: dodgerblue;
+    }
+    .pipVideoClassFullPage {
+        position: fixed;
+        bottom: 8rem;
+        left: 0;
+        right: 0;
+        width:100vw;
+        padding-top:56.25%;
     }
     .bugTopRightContainer {
         @apply opacity-10
@@ -318,6 +308,7 @@ hr {
         @apply fixed w-fit right-6 p-2 drop-shadow bg-gray-800 text-white hover:bg-gray-600
     }
     .ottButtonsContainer {
+        /* FullPage ottButtonContainer */
         z-index: 200;
         left: 0;
         right: 0;
@@ -359,6 +350,7 @@ hr {
         @apply fixed bottom-5 left-0 right-0 mx-auto opacity-100 w-fit h-12 p-4 rounded-full
         text-gray-50 bg-orange-900 hover:bg-orange-800 cursor-pointer font-semibold text-xs
     }
+
     /* Mobile and Tablet */
     /*.chatFullPageContainer {*/
     /*    z-index: 40;*/
@@ -370,12 +362,30 @@ hr {
     /*    @apply absolute w-full bottom-36 pt-2 px-6 pb-2 -mb-4 mt-4 bg-opacity-80 text-sm text-white*/
     /*    overflow-y-auto scroll-smooth hover:scroll-auto break-words*/
     /*}*/
+
+    /* Mobile and Tablet */
     .chatFullPageContainer {
         z-index: 40;
         min-height: calc(50vh - 7rem);
+        /*min-height: 75vh;*/
         display: flex;
         justify-content: left;
         @apply absolute w-full bottom-36 pt-2 px-6 pb-2 -mb-4 mt-4 bg-opacity-80 text-sm text-white overflow-y-auto scroll-smooth hover:scroll-auto break-words hide-scrollbar
+    }
+    .chatTopRightContainer {
+        position: fixed;
+        z-index: 30;
+        /*min-height: calc(50vh - 7rem);*/
+        /*max-height: 68vh;*/
+        max-height: calc(100% - 18rem);
+        max-width: 100%;
+        /*/*min-height: 75vh;*/
+        /*display: flex;*/
+        /*justify-content: left;*/
+        /*@apply w-full h-full pt-5 bottom-0 flex flex-col-reverse overflow-y-scroll overflow-x-clip break-words messages hide-scrollbar*/
+        /*@apply absolute w-full bottom-36 pt-2 px-6 pb-2 -mb-4 mt-4 bg-opacity-80 text-sm text-white overflow-y-auto scroll-smooth hover:scroll-auto break-words hide-scrollbar*/
+        @apply bottom-24 pt-5 flex flex-col overflow-y-scroll overflow-x-hidden break-words hide-scrollbar
+
     }
     /* For Firefox - additional container */
     /*.chatFullPageInner {*/
@@ -498,6 +508,7 @@ hr {
     }
     .topRightVideoContainer {
         position: fixed;
+        z-index: 40;
         top: 0;
         right: 0;
         width:24rem;
@@ -509,6 +520,7 @@ hr {
     }
     .topRightVideoClass {
         position:fixed;
+        z-index: 40;
         top: 4rem;
         right: 0;
         width:24rem;
@@ -518,7 +530,7 @@ hr {
         align-content: flex-start;
         background-color: black;
     }
-    .pipVideoContainer {
+    .pipVideoContainerTopRight {
         position: fixed;
         top: 0;
         right: 0;
@@ -529,7 +541,29 @@ hr {
         align-content: flex-start;
         background-color: purple;
     }
-    .pipVideoClass {
+    .pipVideoClassTopRight {
+        position:fixed;
+        top: 4rem;
+        right: 0;
+        width:24rem;
+        min-height:14rem;
+        display: flex;
+        flex-wrap: wrap;
+        align-content: flex-start;
+        background-color: black;
+    }
+    .pipVideoContainerFullPage {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width:24rem;
+        min-height:14rem;
+        display: flex;
+        flex-wrap: wrap;
+        align-content: flex-start;
+        background-color: purple;
+    }
+    .pipVideoClassFullPage {
         position:fixed;
         top: 4rem;
         right: 0;
@@ -565,6 +599,7 @@ hr {
         @apply fixed w-fit top-20 right-4 p-2 drop-shadow bg-gray-800 text-white hover:bg-gray-600
     }
     .ottButtonsContainer {
+        /* Desktop and Standard ottButtonsContainer */
         z-index: 200;
         position: fixed;
         @apply flex flex-row space-x-2 bottom-6 right-6
@@ -610,6 +645,15 @@ hr {
         @apply w-[24rem] bottom-24 mb-6 pt-6 bg-opacity-80 text-sm text-white px-4
         overflow-y-scroll scroll-smooth hover:scroll-auto break-words
     }
+    .chatTopRightContainer {
+        position: fixed;
+        z-index: 30;
+        /*max-height: 42rem;*/
+        max-height: calc(100% - 6rem);
+        /*max-height: 70vh;*/
+        max-width: 100%;
+        @apply bottom-24 pt-5 flex flex-col overflow-y-scroll overflow-x-hidden break-words hide-scrollbar
+    }
     .chatFullPageMessages {
         @apply w-full h-full flex flex-col-reverse overflow-y-scroll overflow-x-clip break-words scrollbar-hide
     }
@@ -639,7 +683,7 @@ hr {
         cursor-pointer font-semibold text-xs
     }
     .ottTopRightDisplay {
-        @apply fixed top-72 right-0 h-full w-96 mt-7 px-2 overflow-y-scroll z-50 border-t border-gray-900
+        @apply fixed top-72 right-0 h-full w-96 mt-7 px-2 overflow-y-scroll z-30 border-t border-gray-900
     }
 
 }
@@ -700,7 +744,8 @@ hr {
     /*    right: 2rem;*/
     /*    z-index: 60;*/
     /*}*/
-    .videoOttChatMessages {
+    .videoOttChatMessagesBottomPadding {
+        /* Portrait Min-Width: 800px */
         padding-bottom: 22rem;
     }
 }
@@ -745,7 +790,8 @@ hr {
         top: 20rem;
         z-index: 60;
     }
-    .videoOttChatMessages {
+    .videoOttChatMessagesBottomPadding {
+        /* Portrait Max-Width: 800px */
         padding-bottom: 18rem;
     }
 }
@@ -769,7 +815,8 @@ hr {
     .OttButtonsMobile {
         bottom:3rem;
     }
-    .videoOttChatMessages {
+    .videoOttChatMessagesBottomPadding {
+        /* Landscape Max-Width: 800px */
         padding-bottom: -30rem;
     }
 }
@@ -797,7 +844,8 @@ hr {
     /*.backToPage {*/
     /*    @apply fixed bottom-5 left-2*/
     /*}*/
-    .videoOttChatMessages {
+    .videoOttChatMessagesBottomPadding {
+        /* Landscape Min-Width: 800px */
         padding-bottom: 25rem;
     }
 
@@ -826,8 +874,8 @@ hr {
 /*    z-index:1;*/
 /*}*/
 
-.videoOTT {
-    z-index: 30;
+.videoOttTopRightButtonsContainer {
+    z-index: 40;
     @apply fixed top-40 lg:top-72 h-fit w-full lg:w-96 right-0
 }
 .OttOpen {
@@ -994,6 +1042,32 @@ hr {
 }
 .chatHidden {
     display: none;
+}
+
+.chatFullPageContainerChangeTopPositionForPipChatMode {
+    /*min-height: 75vh;*/
+    min-height: calc(50vh + 32rem);
+}
+
+.videoOTTChatMessagesChangeHeightForPipChatMode {
+    /*min-height: 75vh;*/
+    min-height: calc(70vh + 4rem);
+}
+
+.z-60 {
+    z-index: 60;
+}
+.z-70 {
+    z-index: 70;
+}
+.z-80 {
+    z-index: 80;
+}
+.z-90 {
+    z-index: 90;
+}
+.z-100 {
+    z-index: 100;
 }
 
 @tailwind utilities;

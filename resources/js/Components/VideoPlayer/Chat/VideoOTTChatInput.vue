@@ -2,21 +2,25 @@
     <div>
 
         <form @submit.prevent="">
-            <input
-                class="fixed right-20 p-2 m-2 mb-2 w-fit text-black form-control border-2 border-gray-800 hover:border-blue-800 focus:outline-none"
-                type="text"
-                maxlength=”300″
-                placeholder="Write a message..."
-                v-model="form.message"
-                @keyup.enter="sendMessage"
-                v-on:blur="videoPlayerStore.makeVideoTopRight()"
-                v-on:focus="videoPlayerStore.makeVideoPiP()"
-            />
-            <div class="fixed mt-12 pt-2 right-20 p-2 m-2 mb-2 font-thin text-xs">{{form.message.length}}</div>
-
-            <div @click="sendMessage" class="fixed right-10 p-2 m-2 mb-2 w-fit text-white form-control cursor-pointer">
-                <font-awesome-icon icon="fa-paper-plane" class="hover:text-blue-800 text-xl"/>
+            <div class="flex">
+                <input
+                    class="right-auto lg:right-10 p-2 w-fit text-black form-control border-2 border-gray-800 hover:border-blue-800 focus:outline-none"
+                    type="text"
+                    maxlength=”300″
+                    placeholder="Write a message..."
+                    v-model="form.message"
+                    @keyup.enter="sendMessage"
+                    v-on:blur="blurInput"
+                    v-on:focus="focusInput"
+                />
+                <div @click="sendMessage" class="right-auto lg:right-5 p-2 w-fit text-white form-control cursor-pointer">
+                    <font-awesome-icon icon="fa-paper-plane" class="hover:text-blue-800 text-xl"/>
+                </div>
             </div>
+            <div>
+                <div class="pt-2 right-auto lg:right-10 font-thin text-xs">{{form.message.length}}</div>
+            </div>
+
 
         </form>
     </div>
@@ -25,9 +29,13 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { useForm } from "@inertiajs/inertia-vue3"
+import { useAppSettingStore } from '@/Stores/AppSettingStore';
+import { useUserStore } from '@/Stores/UserStore';
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useChatStore } from "@/Stores/ChatStore.js"
 
+const appSettingStore = useAppSettingStore();
+const userStore = useUserStore();
 let videoPlayerStore = useVideoPlayerStore()
 let chatStore = useChatStore()
 
@@ -51,6 +59,22 @@ watch(() => form.message, (newValue) => {
 const vFocus = {
     mounted: (el) => el.focus(),
 }
+
+const focusInput = () => {
+    if (userStore.isMobile) {
+        videoPlayerStore.makeVideoPiP()
+        console.log('toggle PiP Chat Mode: focus Input')
+    }
+}
+
+let blurInput = () => {
+    if (userStore.isMobile) {
+        videoPlayerStore.makeVideoTopRight();
+        appSettingStore.togglePipChatMode();
+        console.log('toggle PiP Chat Mode: blur Input')
+    }
+};
+
 
 function sendMessage() {
     //

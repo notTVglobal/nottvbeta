@@ -84,6 +84,7 @@
 <script setup>
 import {ref, onUnmounted, onMounted} from 'vue'
 import { Inertia } from "@inertiajs/inertia"
+import { useAppSettingStore } from '@/Stores/AppSettingStore';
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useStreamStore } from "@/Stores/StreamStore"
 import { useChatStore } from "@/Stores/ChatStore"
@@ -113,6 +114,7 @@ import ProgressBar from "@/Components/VideoPlayer/Osd/ProgressBar.vue";
 //     import('@/Components/VideoPlayer/VideoJs')
 // )
 //
+const appSettingStore = useAppSettingStore();
 let videoPlayerStore = useVideoPlayerStore()
 let streamStore = useStreamStore()
 let chatStore = useChatStore()
@@ -348,18 +350,25 @@ function clickOnVideoAction() {
     //     // videoPlayerStore.toggleOsdAndControls()
     // }
 
-    if (!videoPlayerStore.currentPageIsStream) {
+    if (!videoPlayerStore.currentPageIsStream && !appSettingStore.pipChatMode) {
         // videoPlayerStore.makeVideoFullPage()
         // videoPlayerStore.fullPage = true
         // videoPlayerStore.controls = true
         // Inertia.visit('/stream')
-        if (userStore.isMobile) {
-            videoPlayerStore.makeVideoFullPage()
-            videoPlayerStore.fullPage = true
-            Inertia.visit('/stream')
-        } else {
-            videoPlayerStore.toggleControls();
-        }
+
+        videoPlayerStore.makeVideoFullPage()
+        videoPlayerStore.fullPage = true
+        Inertia.visit('/stream')
+
+        // if (userStore.isMobile) {
+        //     videoPlayerStore.makeVideoFullPage()
+        //     videoPlayerStore.fullPage = true
+        //     Inertia.visit('/stream')
+        // } else {
+        //     videoPlayerStore.toggleControls();
+        // }
+        //
+
         // videoPlayerStore.controls = !!videoPlayerStore.controls;
     }
     else {

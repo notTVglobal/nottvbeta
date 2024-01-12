@@ -11,7 +11,9 @@
 
     <!--                     class="fixed bottom-0 right-0 w-full lg:w-96 pb-24 px-2 overflow-y-scroll scrollbar-hide bg-gray-900"-->
 
-        <div v-if="videoPlayerStore.ott === 4" class="ottTopRightDisplay bg-gray-800 hide-scrollbar">
+        <div v-if="videoPlayerStore.ott === 4"
+             :class="pipChatModeChangeStyle"
+             class="ottTopRightDisplay hide-scrollbar">
 <!--                <div v-if=""-->
 <!--                     class="fixed top-44 lg:top-78 right-0 h-full w-full lg:w-96 mt-4 pb-12 px-2 overflow-y-scroll scrollbar-hide bg-gray-800"-->
 <!--                     :class="ottDisplay">-->
@@ -22,7 +24,7 @@
 
                             <VideoOTTChatInput
                                 :user="props.user"
-                                class="fixed bottom-20"
+                                class="fixed bottom-5 left-1/2 transform -translate-x-1/2 lg:left-auto lg:transform-none"
                                 :class="{ 'text-gray-100': !chatStore.inputTooLong, 'text-red-600': chatStore.inputTooLong }"
                             />
 
@@ -36,15 +38,15 @@
 
 <script setup>
 import { computed } from "vue";
+import { useAppSettingStore } from '@/Stores/AppSettingStore';
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useStreamStore } from "@/Stores/StreamStore"
 import { useChatStore } from "@/Stores/ChatStore.js"
 import { useUserStore } from "@/Stores/UserStore"
-import VideoOTTChat from "@/Components/VideoPlayer/Chat/VideoOTTChat"
 import VideoOTTChatMessages from "@/Components/VideoPlayer/Chat/VideoOTTChatMessages.vue";
 import VideoOTTChatInput from "@/Components/VideoPlayer/Chat/VideoOTTChatInput.vue";
-import Channels from "@/Components/VideoPlayer/OttTopRightDisplay/Channels.vue";
 
+const appSettingStore = useAppSettingStore();
 let videoPlayerStore = useVideoPlayerStore()
 let streamStore = useStreamStore()
 let chatStore = useChatStore()
@@ -66,5 +68,9 @@ const ottDisplay = computed(() => ({
     ottDisplayMobile: userStore.isMobile,
     ottDisplayDesktop: !userStore.isMobile
 }))
+
+const pipChatModeChangeStyle = computed(() => {
+    return appSettingStore.pipChatMode ? 'top-16' : 'bg-gray-800';
+});
 
 </script>

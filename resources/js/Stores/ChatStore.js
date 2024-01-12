@@ -3,7 +3,7 @@ import {default as Echo} from "laravel-echo";
 import { ref } from "vue";
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore";
 
-export let useChatStore = defineStore('chatStore', {
+export const useChatStore = defineStore('chatStore', {
     state() {
         return {
             showChat: false,

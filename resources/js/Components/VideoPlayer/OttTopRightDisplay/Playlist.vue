@@ -23,9 +23,6 @@ import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useStreamStore } from "@/Stores/StreamStore"
 import { useChatStore } from "@/Stores/ChatStore.js"
 import { useUserStore } from "@/Stores/UserStore"
-import VideoOTTChat from "@/Components/VideoPlayer/Chat/VideoOTTChat"
-import Channels from "@/Components/VideoPlayer/Channels/Channels"
-import ChannelFooter from "@/Components/VideoPlayer/Channels/ChannelFooter.vue";
 import Upgrade from "@/Components/VideoPlayer/OttTopRightDisplay/Upgrade.vue";
 
 let videoPlayerStore = useVideoPlayerStore()

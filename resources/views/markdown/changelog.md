@@ -1,7 +1,16 @@
 # not.tv Changelog
 
-Last Update: January 11, 2024\
+Last Update: January 12, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.8.0.0
+January 12, 2024
+* Fix the PiP bug on mobile (isMobile):
+    * The Chat had a bg-gray-800 which was covering the PiP Video. Removed the bg color.
+    * Made the PiP video the full device width and removed the opacity 80% setting.
+* Fixed the chat layouts across all screen sizes. The secret to getting the height right was in using position: fixed, max-height: calc(#vh - #rem), bottom-#. Bottom is a tailwind property, the others are traditional CSS. Plus, using z-index so the overflow is hidden under the video, ottButtons and navbar.
+* Create an AppSettingStore for managing global UI settings like background color, theme mode and other dynamic styles. This store can be extended in the future to include user-specific settings like light/dark mode or custom themes.
+* Changed the Pinia stores (in all stores) from **export let** to **export const** to follow best practices (keep its definition constant and not be reassigned)
 
 ## v0.7.4.7
 January 11, 2024

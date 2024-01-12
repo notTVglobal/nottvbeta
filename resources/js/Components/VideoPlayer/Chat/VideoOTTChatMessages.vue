@@ -1,28 +1,40 @@
 <template>
-    <div class="">
-        <div class="videoOttChatMessages w-full h-full pt-5 bottom-0 flex flex-col-reverse overflow-y-scroll overflow-x-clip break-words messages hide-scrollbar">
-            <div id="scrollToMe"></div>
+    <div class="h-full scrollbar-hide">
+        <div :class="pipChatModeChangeHeight"
+             class=" chatTopRightContainer">
 
-            <div id="newMessages" v-for="(newMessage, index) in chatStore.newMessages.slice().reverse()" :key="newMessage.id">
-                <message-item :id="newMessage.id" :message="newMessage"/>
-            </div>
-            <div id="oldMessages" v-for="(oldMessage, index) in chatStore.oldMessages.slice()" :key="index">
+            <div class="oldMessage" v-for="(oldMessage, index) in chatStore.oldMessages.slice().reverse()" :key="index">
                 <message-item :id="oldMessage.id" :message="oldMessage"/>
             </div>
+            <div class="newMessage" v-for="(newMessage, index) in chatStore.newMessages.slice()" :key="newMessage.id">
+                <message-item :id="newMessage.id" :message="newMessage"/>
+            </div>
+            <div id="scrollToMe"></div>
+
+<!--            <div class="newMessage" v-for="(newMessage, index) in chatStore.newMessages.slice().reverse()" :key="newMessage.id">-->
+<!--                <message-item :id="newMessage.id" :message="newMessage"/>-->
+<!--            </div>-->
+<!--            <div class="oldMessage" v-for="(oldMessage, index) in chatStore.oldMessages.slice()" :key="index">-->
+<!--                <message-item :id="oldMessage.id" :message="oldMessage"/>-->
+<!--            </div>-->
 
         </div>
     </div>
 </template>
 
 <script setup>
-import {nextTick, onBeforeMount, onBeforeUnmount, onMounted, onUpdated, ref} from "vue";
+import { computed, nextTick, onBeforeMount, onBeforeUnmount, onMounted, onUpdated, ref } from "vue";
 
 import MessageItem from "@/Components/VideoPlayer/Chat/ChatMessage.vue"
-import {useChatStore} from "@/Stores/ChatStore";
-import {useUserStore} from "@/Stores/UserStore";
+
+import { useAppSettingStore } from '@/Stores/AppSettingStore';
+import { useChatStore } from "@/Stores/ChatStore";
+import { useUserStore } from "@/Stores/UserStore";
+
 import dayjs from 'dayjs';
 import relativeTime from "dayjs/plugin/relativeTime";
 
+const appSettingStore = useAppSettingStore();
 let chatStore = useChatStore()
 let userStore = useUserStore()
 
@@ -120,6 +132,10 @@ function disconnect() {
 function scrollTo(selector) {
     document.querySelector(selector).scrollIntoView({ behavior: 'smooth'});
 }
+
+const pipChatModeChangeHeight = computed(() => {
+    return appSettingStore.pipChatMode ? 'videoOTTChatMessagesChangeHeightForPipChatMode' : '';
+});
 
 
 

@@ -7,7 +7,7 @@ import { Inertia } from "@inertiajs/inertia";
 // new page props when it's appropriate, and clear the notifications
 // here regardless if the page props persists.
 
-export let useNotificationStore = defineStore('notificationStore', {
+export const useNotificationStore = defineStore('notificationStore', {
     state() {
         return {
             title: '',

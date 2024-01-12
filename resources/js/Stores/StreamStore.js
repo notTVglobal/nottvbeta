@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 
-export let useStreamStore = defineStore('streamStore', {
+export const useStreamStore = defineStore('streamStore', {
     state: () => ({
         isLive: Boolean,
         currentChannel: String,

@@ -6,14 +6,15 @@
             <input
                 class="p-2 w-fit text-black form-control border-2 border-gray-800 hover:border-blue-800 focus:outline-none"
                 type="text"
+                ref="messageInput"
                 maxlength=”300″
                 placeholder="Write a message..."
                 v-model="form.message"
                 @keyup.enter="sendMessage"
-                v-on:blur="videoPlayerStore.makeVideoFullPage()"
+                v-on:blur="blurInput"
                 v-on:focus="focusInput"
             />
-            <div @click="sendMessage" class="ml-2 mt-2 w-fit text-white form-control cursor-pointer">
+            <div v-if="!userStore.isMobile" @click="sendMessage" class="ml-2 mt-2 w-fit text-white form-control cursor-pointer">
                 <font-awesome-icon icon="fa-paper-plane" class="hover:text-blue-800 text-xl"/>
             </div>
             </div>
@@ -25,17 +26,23 @@
 </template>
 
 <script setup>
+import { ref, watch } from 'vue'
 import { useForm } from "@inertiajs/inertia-vue3"
+import { useAppSettingStore } from '@/Stores/AppSettingStore';
+import { useUserStore } from "@/Stores/UserStore.js"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useChatStore } from "@/Stores/ChatStore.js"
-import { ref, watch } from 'vue'
 
+const appSettingStore = useAppSettingStore();
+const userStore = useUserStore();
 let videoPlayerStore = useVideoPlayerStore()
 let chatStore = useChatStore()
 
 let props = defineProps({
     user: Object,
 });
+
+const messageInput = ref(null); // Ref for the input element
 
 let form = useForm({
     message: '',
@@ -53,11 +60,21 @@ const vFocus = {
     mounted: (el) => el.focus()
 }
 
-function focusInput() {
-    videoPlayerStore.makeVideoPiP()
-    videoPlayerStore.ott = false
-    videoPlayerStore.ottButtons = false
+const focusInput = () => {
+    if (userStore.isMobile) {
+        videoPlayerStore.makeVideoPiP()
+        videoPlayerStore.ott = false
+        videoPlayerStore.ottButtons = false
+    }
 }
+
+let blurInput = () => {
+    if (userStore.isMobile) {
+        videoPlayerStore.makeVideoFullPage();
+        appSettingStore.togglePipChatMode();
+        console.log('toggle PiP Chat Mode: blur Input')
+    }
+};
 
 function sendMessage() {
     //
@@ -79,6 +96,11 @@ function sendMessage() {
             form.message = '';
             chatStore.inputTooLong = false;
             console.log( 'MESSAGE SENT' );
+
+            // Refocus the input element
+            if (messageInput.value && userStore.isMobile) {
+                messageInput.value.focus();
+            }
         }
     })
         .catch( error => {

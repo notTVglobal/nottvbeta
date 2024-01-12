@@ -1,5 +1,6 @@
 <template>
-    <div class="videoOTT">
+    <div :class="pipChatModeChangeTopPosition"
+         class="videoOttTopRightButtonsContainer">
     <div class="flex flex-row h-7 justify-around bg-red-500 w-full text-xs uppercase font-semibold">
 
         <button class="h-full w-full border-r-2 border-r-gray-900"
@@ -31,9 +32,11 @@
 
 <script setup>
 import { computed, ref } from "vue"
+import { useAppSettingStore } from '@/Stores/AppSettingStore';
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useUserStore } from "@/Stores/UserStore";
 
+const appSettingStore = useAppSettingStore();
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
 
@@ -75,6 +78,11 @@ const filtersClass = computed(() => ({
     'bg-yellow-700': videoPlayerStore.ott === 5 && userIsVip(),
     'bg-yellow-900 hover:bg-yellow-700': videoPlayerStore.ott !== 5 && userIsVip(),
 }))
+
+const pipChatModeChangeTopPosition = computed(() => {
+    return appSettingStore.pipChatMode ? 'hidden' : '';
+});
+
 
 function userNeedsToUpgrade() {
     return !(userStore.isSubscriber || userStore.isVip || userStore.isAdmin);

@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 
 
 
-export let useNewsStore = defineStore('newsStore', {
+export const useNewsStore = defineStore('newsStore', {
     state() {
         return {
             newsArticleIdTiptop: '',

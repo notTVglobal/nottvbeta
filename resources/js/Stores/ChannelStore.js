@@ -4,7 +4,7 @@ import {useUserStore} from "@/Stores/UserStore";
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore";
 import videojs from "video.js";
 
-export let useChannelStore = defineStore('channelStore', {
+export const useChannelStore = defineStore('channelStore', {
     state: () => ({
         currentChannelId: 0,
         currentChannelName: '',
