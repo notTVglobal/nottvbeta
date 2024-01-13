@@ -3,6 +3,11 @@
 Last Update: January 12, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.0.2
+January 12, 2024
+* In the last update, a new log feature was added to send notifications to our Log and Slack when new videos are being uploaded.
+* OSD (On Screen Display) now hides when any of the OTT (Over-The-Top) panels are open on FullPage Video mode.
+
 ## v0.8.0.1
 January 12, 2024
 * CSS cleanup. Hide scrollbars.

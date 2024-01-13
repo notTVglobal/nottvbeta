@@ -14,7 +14,8 @@
                 </div>
             </div>
         </div>
-        <div class="osdFullPageBottom">
+        <div :class="ottPanelsOpen"
+             class="osdFullPageBottom">
             <div v-if="nowPlayingStore.show.name || nowPlayingStore.movie.name || nowPlayingStore.videoFile.name" class="w-fit flex flex-col justify-start text-xs uppercase text-gray-500 break-words uppercase">
                 Now Playing</div>
                 <div>
@@ -45,12 +46,19 @@
 </template>
 
 <script setup>
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useNowPlayingStore } from "@/Stores/NowPlayingStore.js"
 import { useUserStore } from "@/Stores/UserStore.js"
 import CurrentViewers from "@/Components/VideoPlayer/CurrentViewers/CurrentViewers.vue";
 import { Inertia } from "@inertiajs/inertia";
+import { computed } from 'vue';
 
+let videoPlayerStore = useVideoPlayerStore()
 let nowPlayingStore = useNowPlayingStore()
 let userStore = useUserStore()
+
+const ottPanelsOpen = computed(() => {
+    return (videoPlayerStore.ottChannels || videoPlayerStore.ottPlaylist || videoPlayerStore.ottFilters || videoPlayerStore.ottChat) ? 'hidden' : '';
+});
 
 </script>
