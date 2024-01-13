@@ -380,10 +380,9 @@ class ShowsController extends Controller
         return Inertia::render('Shows/{$id}/Index', [
             'show' => [
                 'name' => $show->name,
+                'slug' => $show->slug,
                 'description' => $show->description,
                 'showRunner' => $show->user->name,
-                'slug' => $show->slug,
-//                'poster' => $show->image->name,
                 'image' => [
                     'id' => $show->image->id,
                     'name' => $show->image->name,
@@ -391,6 +390,8 @@ class ShowsController extends Controller
                     'cdn_endpoint' => $show->appSetting->cdn_endpoint,
                     'cloud_folder' => $show->image->cloud_folder,
                 ],
+                'category' => $show->showCategory->name,
+                'categorySub' => $show->showCategorySub->name,
 //                'firstPlay' => [
 //                    'file_name' => $episode->video->file_name ?? '',
 //                    'cdn_endpoint' => $episode->appSetting->cdn_endpoint ?? '',
@@ -401,9 +402,15 @@ class ShowsController extends Controller
                 // TODO: firstPlay returns a single video... replace with a show_playlist which needs to be created.
                 'firstPlayVideo' => [
                     'name' => $latestEpisodeWithVideo->name ?? '',
-                    'description' => $latestEpisodeWithVideo->description ?? '',
                     'slug' => $latestEpisodeWithVideo->slug ?? '',
-                    'image' => $latestEpisodeWithVideo->image ?? '',
+                    'description' => $latestEpisodeWithVideo->description ?? '',
+                    'image' => [
+                        'id' => $latestEpisodeWithVideo->image->id,
+                        'name' => $latestEpisodeWithVideo->image->name,
+                        'folder' => $latestEpisodeWithVideo->image->folder,
+                        'cdn_endpoint' => $latestEpisodeWithVideo->appSetting->cdn_endpoint,
+                        'cloud_folder' => $latestEpisodeWithVideo->image->cloud_folder,
+                    ],
                     'file_name' => $latestEpisodeWithVideo->video->file_name ?? '',
                     'cdn_endpoint' => $latestEpisodeWithVideo->appSetting->cdn_endpoint ?? '',
                     'folder' => $latestEpisodeWithVideo->video->folder ?? '',
@@ -413,9 +420,15 @@ class ShowsController extends Controller
                 ],
                 'firstPlayVideoFromUrl' => [
                     'name' => $latestEpisodeWithVideo->name ?? '',
-                    'description' => $latestEpisodeWithVideo->description ?? '',
                     'slug' => $latestEpisodeWithVideo->slug ?? '',
-                    'image' => $latestEpisodeWithVideo->image ?? '',
+                    'description' => $latestEpisodeWithVideo->description ?? '',
+                    'image' => [
+                        'id' => $latestEpisodeWithVideo->image->id,
+                        'name' => $latestEpisodeWithVideo->image->name,
+                        'folder' => $latestEpisodeWithVideo->image->folder,
+                        'cdn_endpoint' => $latestEpisodeWithVideo->appSetting->cdn_endpoint,
+                        'cloud_folder' => $latestEpisodeWithVideo->image->cloud_folder,
+                    ],
                     'video_url' => $latestEpisodeWithVideoUrl->video->video_url ?? '',
                     'type' => $latestEpisodeWithVideoUrl->video->type ?? '',
                 ],

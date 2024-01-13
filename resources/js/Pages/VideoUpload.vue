@@ -63,9 +63,9 @@ FOOTER
 </template>
 
 <script setup>
-import {defineAsyncComponent, onBeforeMount, onMounted, ref, watch} from "vue"
+import { defineAsyncComponent, onBeforeMount, onMounted, ref, watch } from "vue"
 import { Inertia } from "@inertiajs/inertia"
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useUserStore } from "@/Stores/UserStore"
 import { Dropzone } from "dropzone"
 import { useForm } from "@inertiajs/inertia-vue3"
@@ -81,8 +81,8 @@ import throttle from "lodash/throttle";
 import Message from "@/Components/Modals/Messages";
 import BackButton from "@/Components/Buttons/BackButton.vue";
 
-let videoPlayerStore = useVideoPlayerStore()
-let userStore = useUserStore()
+const videoPlayerStore = useVideoPlayerStore()
+const userStore = useUserStore()
 
 userStore.currentPage = 'videoUpload'
 userStore.showFlashMessage = true;

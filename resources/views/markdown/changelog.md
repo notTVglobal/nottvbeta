@@ -3,6 +3,23 @@
 Last Update: January 12, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.0.1
+January 12, 2024
+* CSS cleanup. Hide scrollbars.
+* Darkened the background of chat messages on Full Screen Desktop.
+* Created a NowPlayingStore to hold the Now Playing Info.
+* Now Playing Info displays on FullPage in the top left
+  * Show Name
+  * Episode Name
+  * Movie Name
+  * File name
+  * The names are clickable and will take you to the show, episode or movie page.
+  * File name is only displayed if you play the video back from the video upload page.
+  * (web) is displayed if the video is playing back from an external source.
+  * Channel Name is displayed when a channel is selected, along with the active viewer count
+  * A live badge will appear in the top right when activated for live streams. This feature still needs to be completed. The badge exists is all.
+* Fixed the navigation so the Back button on the FullPage Video actually goes back.
+
 ## v0.8.0.0
 January 12, 2024
 * Fix the PiP bug on mobile (isMobile):

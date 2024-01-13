@@ -3,54 +3,54 @@
         <div class="osdFullPageTop">
             <div class="flex justify-between">
                 <div>
-                    <div v-if="channelStore.currentChannelId" class="drop-shadow">
+                    <div v-if="nowPlayingStore.displayCurrentViewerCount" class="drop-shadow">
                         <CurrentViewers />
                     </div>
                 </div>
                 <div>
-                    <span v-if="channelStore.isLive" class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-white bg-opacity-80 drop-shadow bg-red-800 last:mr-0 mr-1 mb-1">
+                    <span v-if="nowPlayingStore.isLive" class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-white bg-opacity-80 drop-shadow bg-red-800 last:mr-0 mr-1 mb-1">
                         live
                     </span>
                 </div>
             </div>
         </div>
         <div class="osdFullPageBottom">
-            <div v-if="showStore.name" class="break-words">
-                <div class="text-xs uppercase text-gray-500">Now Playing</div>
-                <div class="uppercase"><Link :href="`${showStore.url}`">{{ showStore.name }}</Link></div>
-                <div class="text-sm uppercase">
-                    <span v-if="showStore.episodeName"><Link :href="`${showStore.episodeUrl}`">{{ showStore.episodeName }}</Link></span>
+            <div v-if="nowPlayingStore.show.name || nowPlayingStore.movie.name || nowPlayingStore.videoFile.name" class="w-fit flex flex-col justify-start text-xs uppercase text-gray-500 break-words uppercase">
+                Now Playing</div>
+                <div>
+                    <button v-if="nowPlayingStore.show.name" class="cursor-pointer" @click.prevent="Inertia.visit(nowPlayingStore.show.url)">
+                        {{nowPlayingStore.show.name}}
+                    </button>
                 </div>
-
-            </div>
-            <div v-if="channelStore.currentChannelName" class="break-words">
-                <span class="text-xs uppercase pr-2">Channel: </span>
-                <span class="text-xs font-semibold">{{ channelStore.currentChannelName }}</span>
-            </div>
-            <div v-if="videoPlayerStore.nowPlayingName !== ''">
-                <div class="break-words">
-                    <span class="text-xs uppercase pr-2">Now playing: </span>
-                    <span class="font-semibold">{{ videoPlayerStore.nowPlayingType }}</span>
+                <div>
+                    <button v-if="nowPlayingStore.show.episode.name" class="text-sm uppercase" @click="Inertia.visit(nowPlayingStore.show.episode.url)">
+                        {{nowPlayingStore.show.episode.name}}
+                    </button>
+                    <button v-if="nowPlayingStore.movie.name" class="cursor-pointer" @click.prevent="Inertia.visit(nowPlayingStore.movie.url)">
+                        {{nowPlayingStore.movie.name}}
+                    </button>
+                    <span v-if="nowPlayingStore.isFromWeb" class="ml-2 text-yellow-500">(web)</span>
                 </div>
-                <div class="break-words">
-                    <span class="text-xs uppercase pr-2">Filename: </span>
-                    <span class="font-semibold"><Link :href="`${videoPlayerStore.nowPlayingUrl}`">{{ videoPlayerStore.nowPlayingName }}</Link></span>
+                <div v-if="nowPlayingStore.videoFile.name" class="break-words uppercase">
+                    {{nowPlayingStore.videoFile.name}}
                 </div>
-            </div>
+                <div v-if="nowPlayingStore.channel.name" class="-ml-3 break-words">
+                    <span class="text-xs uppercase pr-2">Channel: </span>
+                    <span class="text-xs font-semibold">{{nowPlayingStore.channel.name}}</span>
+                </div>
         </div>
+
+
     </div>
 </template>
 
 <script setup>
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
-import { useStreamStore } from "@/Stores/StreamStore"
-import { useShowStore } from "@/Stores/ShowStore"
-import { useChannelStore } from "@/Stores/ChannelStore"
+import { useNowPlayingStore } from "@/Stores/NowPlayingStore.js"
+import { useUserStore } from "@/Stores/UserStore.js"
 import CurrentViewers from "@/Components/VideoPlayer/CurrentViewers/CurrentViewers.vue";
+import { Inertia } from "@inertiajs/inertia";
 
-let videoPlayerStore = useVideoPlayerStore()
-let streamStore = useStreamStore()
-let showStore = useShowStore()
-let channelStore = useChannelStore()
+let nowPlayingStore = useNowPlayingStore()
+let userStore = useUserStore()
 
 </script>

@@ -3,6 +3,9 @@
 namespace App\Jobs;
 
 use App\Models\Video;
+use App\Models\ShowEpisode;
+use App\Models\MovieTrailer;
+use App\Models\Movie;
 use App\Models\VideoUploadJob;
 
 use Carbon\Carbon;
@@ -17,6 +20,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class UploadVideoToSpacesJob implements ShouldQueue
@@ -63,7 +67,7 @@ class UploadVideoToSpacesJob implements ShouldQueue
         // upload the file to the cloud
         Storage::disk('spaces')->putFileAs($this->video->cloud_folder.$this->video->folder, storage_path('app/temp-videos/').$this->video->file_name, $this->video->file_name);
 //        error_log('upload to the cloud done.');
-
+        Log::info('Video uploaded to Spaces. ID: '.$this->video->id.'. ULID: '. $this->video->ulid .'. Filename: '.$this->video->file_name);
         // delete the temporary file
         // not working yet.
 //        Storage::delete(storage_path('app/temp-videos/').$this->video->file_name);
@@ -74,6 +78,73 @@ class UploadVideoToSpacesJob implements ShouldQueue
         $this->video->upload_status = 'Uploaded to Spaces via Job';
         $this->video->storage_location = 'spaces';
         $this->video->save();
+
+        // update the showEpisode if applicable
+        // Check if the Video has a show_episodes_id
+        if ($this->video->show_episodes_id) {
+            // Update the ShowEpisode with the video_id
+            $showEpisode = ShowEpisode::find($this->video->show_episodes_id);
+            if ($showEpisode) {
+                $showEpisode->video_id = $this->video->id;
+                $showEpisode->save();
+                // Retrieve the ULID of the ShowEpisode
+                $ulid = $showEpisode->ulid;
+                // if Show Episode does not have a ulid use the id.
+                if(!$ulid) {
+                    $ulid = $this->video->show_episodes_id;
+                }
+                Log::info('Successfully updated the Show Episode '. $ulid .' with the video ID '. $this->video->id);
+            } else {
+                // Handle the case where ShowEpisode is not found
+                // e.g., log an error or throw an exception
+                Log::info('Problem updating the Show Episode with the video ID.');
+            }
+        }
+
+        // update the movieTrailer if applicable
+        // Check if the Video has a movie_trailers_id
+        if ($this->video->movie_trailers_id) {
+            // Update the MovieTrailer with the video_id
+            $movieTrailer = MovieTrailer::find($this->video->movie_trailers_id);
+            if ($movieTrailer) {
+                $movieTrailer->video_id = $this->video->id;
+                $movieTrailer->save();
+                // Retrieve the ULID of the MovieTrailer
+                $ulid = $movieTrailer->ulid;
+                // if Movie Trailer does not have a ulid use the id.
+                if(!$ulid) {
+                    $ulid = $this->video->movie_trailers_id;
+                }
+                Log::info('Successfully updated the Movie Trailer '. $ulid .' with the video ID '. $this->video->id);
+            } else {
+                // Handle the case where MovieTrailer is not found
+                // e.g., log an error or throw an exception
+                Log::info('Problem updating the Movie Trailer with the video ID.');
+            }
+        }
+
+        // update the movie if applicable
+        // Check if the Video has a movies_id
+        if ($this->video->movies_id) {
+            // Update the Movie with the video_id
+            $movie = Movie::find($this->video->movies_id);
+            if ($movie) {
+                $movie->video_id = $this->video->id;
+                $movie->save();
+                // Retrieve the ULID of the Movie
+                $ulid = $movie->ulid;
+                // if Movie does not have a ulid use the id.
+                if(!$ulid) {
+                    $ulid = $this->video->movies_id;
+                }
+                Log::info('Successfully updated the Movie '. $ulid .' with the video ID '. $this->video->id);
+            } else {
+                // Handle the case where Movie is not found
+                // e.g., log an error or throw an exception
+                Log::info('Problem updating the Movie with the video ID.');
+            }
+        }
+
 
 //        error_log('Updated the Video model');
 

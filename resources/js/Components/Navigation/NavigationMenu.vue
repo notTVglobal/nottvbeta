@@ -7,7 +7,7 @@
                 <div class="flex">
                     <!-- Logo -->
                     <div class="shrink-0 flex items-center">
-                        <Link @click="navigateToStream" :href="route('stream')">
+                        <Link @click="navigateToStream">
                             <JetApplicationMark class="block h-9 w-auto"/>
                         </Link>
                     </div>
@@ -16,9 +16,8 @@
                     <div class="hidden space-x-8 lg:-my-px lg:ml-10 lg:flex">
                         <h3 class="inline-flex items-center relative">
                             <JetNavLink
-                                v-touch="()=>(route('stream'))"
+                                v-touch="()=>(navigateToStream())"
                                 @click="navigateToStream()"
-                                :href="route('stream')"
                                 :active="userStore.currentPage === 'stream'">
                                 Stream
                             </JetNavLink>
@@ -345,6 +344,7 @@ function navigateToStream() {
     videoPlayerStore.ott = 0
     userStore.showNavDropdown = false
     userStore.prevUrl = window.history.state.url
+    Inertia.visit(`/stream`)
 }
 
 </script>

@@ -1,6 +1,6 @@
 <template>
 
-    <div class="ottTopRightDisplay bg-gray-600 text-gray-50 pt-2">
+    <div class="ottTopRightDisplay bg-gray-600 text-gray-50 pt-2 hide-scrollbar">
 
         <h1 class="text-xs font-semibold uppercase mb-3 w-full bg-yellow-600 text-black p-2">UPGRADE</h1>
         <div class="pb-24 w-full overflow-y-scroll scrollbar-hide"

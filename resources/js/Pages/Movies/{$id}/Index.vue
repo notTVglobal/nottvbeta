@@ -234,6 +234,7 @@
 <script setup>
 import { onMounted, onBeforeMount, ref } from "vue"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+import { useNowPlayingStore } from "@/Stores/NowPlayingStore.js"
 import { useTeamStore } from "@/Stores/TeamStore.js"
 import { useShowStore } from "@/Stores/ShowStore.js"
 import { useUserStore } from "@/Stores/UserStore.js"
@@ -242,12 +243,13 @@ import SingleImage from "@/Components/Multimedia/SingleImage";
 
 import 'filepond/dist/filepond.min.css'
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css'
-import {Inertia} from "@inertiajs/inertia";
+import { Inertia } from "@inertiajs/inertia";
 
-let videoPlayerStore = useVideoPlayerStore()
-let teamStore = useTeamStore()
-let showStore = useShowStore()
-let userStore = useUserStore()
+const videoPlayerStore = useVideoPlayerStore()
+const nowPlayingStore = useNowPlayingStore()
+const teamStore = useTeamStore()
+const showStore = useShowStore()
+const userStore = useUserStore()
 
 let props = defineProps({
     movie: Object,
@@ -263,10 +265,18 @@ let thisYear = new Date().getFullYear()
 let playTrailer = () => {
     //
 }
+let source = {
+    video_url: ref(''),
+    type: ref(''),
+}
+
 
 let playMovie = () => {
+    nowPlayingStore.reset()
     // if file exists and is !processing, play file.
     if (props.video.file_name !== '' && props.video.upload_status !== 'processing') {
+        nowPlayingStore.movie.name = props.movie.name
+        nowPlayingStore.movie.url = 'movies/'+props.movie.slug
         videoPlayerStore.loadNewSourceFromFile(props.video)
         videoPlayerStore.videoName = props.movie.name+' (file)'
         videoPlayerStore.currentChannelName = 'On Demand ('+props.movie.name+') from file'
@@ -275,9 +285,14 @@ let playMovie = () => {
     if
         // else if url exists, play url
     (props.movie.file_url) {
-        videoPlayerStore.loadNewSourceFromUrl(props.movie.file_url)
-        videoPlayerStore.videoName = props.movie.name+' (web)'
-        videoPlayerStore.currentChannelName = 'On Demand ('+props.movie.name+') from web'
+        nowPlayingStore.isFromWeb = true
+        nowPlayingStore.videoFile.name = props.movie.name
+        source.video_url = props.movie.file_url
+        source.type = 'video/mp4'
+        console.log(source)
+        videoPlayerStore.loadNewSourceFromUrl(source)
+        // videoPlayerStore.videoName = props.movie.name+' (web)'
+        // videoPlayerStore.currentChannelName = 'On Demand ('+props.movie.name+') from web'
         Inertia.visit('/stream')
     }
 

@@ -41,6 +41,7 @@ class ShowEpisode extends Model
         'show_id',
         'slug',
         'notes',
+        'video_id',
         'video_url',
         'youtube_url',
         'video_embed_code',
@@ -48,7 +49,7 @@ class ShowEpisode extends Model
         'isBeingEditedByUser_id',
         'image_id',
         'release_year',
-        'release_dateTime'
+        'release_dateTime',
     ];
 
     protected $with = ['show', 'image'];

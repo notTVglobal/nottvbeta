@@ -1,7 +1,7 @@
-import {defineStore} from "pinia";
-import {ref} from "vue";
-import {useUserStore} from "@/Stores/UserStore";
-import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore";
+import { defineStore } from "pinia";
+import { useUserStore } from "@/Stores/UserStore";
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore";
+import { useNowPlayingStore } from "@/Stores/NowPlayingStore";
 import videojs from "video.js";
 
 export const useChannelStore = defineStore('channelStore', {
@@ -27,13 +27,23 @@ export const useChannelStore = defineStore('channelStore', {
                 })
         },
         async changeChannel(channel) {
+            const videoPlayerStore = useVideoPlayerStore();
+            const nowPlayingStore = useNowPlayingStore();
+
             let oldChannelId = 0
             oldChannelId = this.currentChannelId
-            useVideoPlayerStore().currentChannelName = channel.name
+
+            nowPlayingStore.reset()
+            nowPlayingStore.setActiveType(2)
+            nowPlayingStore.channel.id = channel.id
+            nowPlayingStore.channel.name = channel.name
+            nowPlayingStore.displayCurrentViewerCount = true
+            nowPlayingStore.isLive = channel.isLive
+
             this.currentChannelName = channel.name
             this.currentChannelId = channel.id
             this.isLive = channel.isLive
-            useVideoPlayerStore().clearNowPlaying()
+            videoPlayerStore.clearNowPlayingInfo()
             console.log('Change Channel')
             console.log(channel.id)
             console.log(channel.name)
@@ -49,16 +59,16 @@ export const useChannelStore = defineStore('channelStore', {
             }
 
             if (channel.channel_source !== null) {
-                useVideoPlayerStore().videoName = channel.channel_source.name
+                videoPlayerStore.videoName = channel.channel_source.name
                 if (channel.channel_source.provider === 'youtube'){
-                    useVideoPlayerStore().loadNewSourceFromYouTube(channel.channel_source.path)
+                    videoPlayerStore.loadNewSourceFromYouTube(channel.channel_source.path)
                 } else if (channel.channel_source.provider === 'rumble') {
-                    useVideoPlayerStore().loadNewLiveSourceFromRumble(channel.channel_source.path)
+                    videoPlayerStore.loadNewLiveSourceFromRumble(channel.channel_source.path)
                 }
 
 
             } else
-                useVideoPlayerStore().loadNewSourceFromMist(channel.stream)
+                videoPlayerStore.loadNewSourceFromMist(channel.stream)
 
 
             // await this.getViewerCount()
@@ -91,7 +101,9 @@ export const useChannelStore = defineStore('channelStore', {
             //     })
         },
         async addViewerToChannel(id) {
-            useVideoPlayerStore().videoName = ''
+            const videoPlayerStore = useVideoPlayerStore();
+
+            videoPlayerStore.videoName = ''
             Echo.join('viewerCount.' + id)
                 .here((users) => {
                     this.userAddedToChannels = true

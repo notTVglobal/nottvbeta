@@ -9,7 +9,7 @@
     >
 
 
-        <div v-if="videoPlayerStore.ottFilters" class="filtersFullPageContainer">
+        <div v-if="videoPlayerStore.ottFilters" class="filtersFullPageContainer hide-scrollbar">
 
 <!--        Previous version (full screen background for Ott) -->
 <!--        <div v-if="videoPlayerStore.showChannels" class="channelsForStreamPageStandard max-w-screen h-screen left-0 bottom-0 sm:bottom-8 bg-opacity-80 bg-green-600 text-sm text-white pb-12-->

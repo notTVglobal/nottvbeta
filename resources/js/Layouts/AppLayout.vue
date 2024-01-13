@@ -1,6 +1,6 @@
 <template>
     <div :class="appSettingStore.pageBgColor"
-         class="fixed top-0 left-0 right-0 bottom-0 text-gray-200 vh-100 vw-100 overflow-hidden overscroll-y-none overscroll-x-none">
+         class="fixed top-0 left-0 right-0 bottom-0 text-gray-200 vh-100 vw-100 overflow-hidden overscroll-y-none overscroll-x-none hide-scrollbar">
 
         <!-- Navbar for logged in user -->
         <ResponsiveNavigationMenu v-if="user" :key="userStore.currentPage"/>
@@ -14,7 +14,7 @@
 
         <!-- Page Content -->
 <!--        <div v-show="!userStore.hidePage" :class="layoutClass">-->
-        <div v-show="!appSettingStore.hidePage" :class="layoutClass">
+        <div v-show="!appSettingStore.hidePage" :class="layoutClass" class="hide-scrollbar">
                 <slot /></div>
 
         <!-- Video Player -->

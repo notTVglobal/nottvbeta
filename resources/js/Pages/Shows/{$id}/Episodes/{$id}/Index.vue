@@ -185,6 +185,7 @@
 <script setup>
 import {onBeforeMount, onMounted, onUpdated, ref} from 'vue'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+import { useNowPlayingStore } from "@/Stores/NowPlayingStore.js"
 import { useTeamStore } from "@/Stores/TeamStore.js"
 import { useShowStore } from "@/Stores/ShowStore.js"
 import { useUserStore } from "@/Stores/UserStore";
@@ -197,6 +198,7 @@ import SingleImage from "@/Components/Multimedia/SingleImage"
 import {Inertia} from "@inertiajs/inertia";
 
 let videoPlayerStore = useVideoPlayerStore()
+let nowPlayingStore = useNowPlayingStore()
 let teamStore = useTeamStore();
 let showStore = useShowStore();
 let userStore = useUserStore()
@@ -211,45 +213,33 @@ let props = defineProps({
 });
 
 let playEpisode = () => {
-
-    videoPlayerStore.videoName = `<Link :href="/shows/${props.show.slug}">${props.show.name}</Link>`
-    videoPlayerStore.nowPlayingUrl = `/shows/${props.show.slug}/episode/${props.episode.slug}`
-    videoPlayerStore.nowPlayingName = props.episode.name
-    videoPlayerStore.nowPlayingDescription = props.episode.description
-    videoPlayerStore.nowPlayingImage = props.image
-    videoPlayerStore.nowPlayingTeam = props.team
-    videoPlayerStore.nowPlayingCreators = props.creators.data
-    videoPlayerStore.nowPlayingBonusContent = []
-
+    nowPlayingStore.reset()
+    nowPlayingStore.show.name = props.show.name
+    nowPlayingStore.show.url = `/shows/${props.show.slug}`
+    nowPlayingStore.show.episode.url = `/shows/${props.show.slug}/episode/${props.episode.slug}`
+    nowPlayingStore.show.episode.image = props.image
+    nowPlayingStore.show.category = props.show.categoryName
+    nowPlayingStore.show.categorySub = props.show.categorySubName
+    nowPlayingStore.show.image = props.show.image
+    videoPlayerStore.makeVideoFullPage()
+    Inertia.visit('/stream')
     // if video has a file and is !processing, play file.
     if (props.episode.video.storage_location === 'spaces' && props.episode.video.upload_status !== 'processing') {
         videoPlayerStore.loadNewSourceFromFile(props.episode.video)
-        // videoPlayerStore.videoName = props.episode.name
-        videoPlayerStore.setNowPlayingInfoShow(props.show,props.episode)
-        videoPlayerStore.makeVideoFullPage()
-
-        // videoPlayerStore.currentChannelName = 'On Demand ('+props.episode.name+') from file'
-        // Inertia.visit('/stream')
-        videoPlayerStore.makeVideoFullPage()
     } else if
     // else if url exists, play url
         (props.episode.video.video_url) {
+        nowPlayingStore.isFromWeb = true
+        nowPlayingStore.show.episode.name = props.episode.name
         videoPlayerStore.loadNewSourceFromUrl(props.episode.video)
-        videoPlayerStore.videoName = props.episode.name
-        // videoPlayerStore.currentChannelName = 'On Demand ('+props.episode.name+') from web'
-        // Inertia.visit('/stream')
-        videoPlayerStore.makeVideoFullPage()
+
     }
     else if
         // else if youtube_url exists, play youtube_url
         (props.episode.youtube_url) {
+        nowPlayingStore.show.episode.name = props.episode.name
         videoPlayerStore.loadNewSourceFromYouTube(props.episode.youtube_url)
-        videoPlayerStore.videoName = props.episode.name
-        // videoPlayerStore.currentChannelName = 'On Demand ('+props.episode.name+') from YouTube'
-        // Inertia.visit('/stream')
-        videoPlayerStore.makeVideoFullPage()
     }
-
 }
 
 userStore.currentPage = 'episodes'

@@ -45,7 +45,7 @@
                                 <div v-if="video.storage_location !== 'external'">Size: {{ video.size }}</div>
                                 <div v-else>External</div>
                                 <div v-if="video.user_id">Owner: {{ video.user_id}}</div>
-                                <div v-if="video.showEpisode">Show: {{ video.showEpisode.show.name}}</div>
+                                <div v-if="video.showEpisode?.show">Show: {{ video.showEpisode.show.name}}</div>
                                 <div v-if="video.showEpisode">Episode: {{ video.showEpisode.name}}</div>
                                 <div v-if="video.movie">Movie: {{ video.movie.name}}</div>
                                 <div v-if="video.movieTrailer">Trailer: {{ video.movieTrailer.name}}</div>
@@ -56,7 +56,7 @@
 
                         <button
                                 v-if="video.can.view"
-                                @click.prevent="videoPlayerStore.loadNewSourceFromFile(video)"
+                                @click.prevent="playVideo(video)"
                                 :disabled="video.upload_status === 'processing'"
                                 class="disabled:cursor-not-allowed disabled:text-gray-500 disabled:italic inline"
                         >
@@ -65,7 +65,7 @@
                         </button>
                         </Popper>
                         <div class="flex flex-row space-x-1">
-                            <div v-if="video.showEpisode" class="w-fit text-xs rounded-lg px-1 uppercase bg-blue-800 text-white font-semibold hover:cursor-pointer">
+                            <div v-if="video.showEpisode?.show" class="w-fit text-xs rounded-lg px-1 uppercase bg-blue-800 text-white font-semibold hover:cursor-pointer">
                                 Episode</div>
                             <div v-if="video.movie" class="w-fit text-xs rounded-lg px-1 uppercase bg-purple-800 text-white font-semibold hover:cursor-pointer">
                                 Movie</div>
@@ -105,15 +105,60 @@
 <script setup>
 import Pagination from "@/Components/Pagination.vue";
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore";
+import { useNowPlayingStore } from "@/Stores/NowPlayingStore";
+import { useUserStore } from "@/Stores/UserStore";
 import { Inertia } from "@inertiajs/inertia";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
-let videoPlayerStore = useVideoPlayerStore()
+const videoPlayerStore = useVideoPlayerStore()
+const nowPlayingStore = useNowPlayingStore()
+const userStore = useUserStore()
 
-defineProps({
+let props = defineProps({
     videos: Object,
     can: Object,
 })
+
+const playVideo = (video) => {
+    nowPlayingStore.reset()
+    // if file exists and is not processing, play file.
+    if (video.file_name !== '' && video.upload_status !== 'processing') {
+
+        // Check if showEpisode exists
+        if (video.showEpisode?.show) {
+            nowPlayingStore.show.name = video.showEpisode.show.name
+            nowPlayingStore.show.url = 'shows/'+video.showEpisode.show.slug
+            nowPlayingStore.show.episode.name = video.showEpisode.data.name
+            nowPlayingStore.show.episode.url = 'shows/'+video.showEpisode.show.slug+'/episode/'+video.showEpisode.data.slug
+        }
+        // Check if movie exists
+        if (video.movie) {
+            nowPlayingStore.movie.name = video.movie.name
+            nowPlayingStore.movie.url = 'movies/'+video.movie.slug
+        }
+
+        // Check if movieTrailer exists
+        if (video.movieTrailer) {
+            nowPlayingStore.movieTrailer.name = video.movieTrailer.name
+            nowPlayingStore.movieTrailer.url = 'movies/'+video.movieTrailer.slug
+        }
+        // Check if newsPost exists
+        if (video.newsPost) {
+            nowPlayingStore.newsPost.name = props.video.name
+            nowPlayingStore.movie.url = 'movies/'+video.movie.slug
+        }
+        videoPlayerStore.loadNewSourceFromFile(video)
+        nowPlayingStore.videoFile.name = video.file_name +' (file)'
+        videoPlayerStore.makeVideoFullPage()
+        videoPlayerStore.ott = 0
+        userStore.showNavDropdown = false
+        userStore.prevUrl = window.history.state.url
+        Inertia.visit('/stream')
+
+    }
+
+};
+
 
 function reload() {
     Inertia.reload({

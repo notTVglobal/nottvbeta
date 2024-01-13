@@ -227,6 +227,7 @@
 <script setup>
 import {onBeforeMount, onMounted, onUpdated, ref} from 'vue'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+import { useNowPlayingStore } from "@/Stores/NowPlayingStore.js"
 import { useTeamStore } from "@/Stores/TeamStore.js"
 import { useShowStore } from "@/Stores/ShowStore.js"
 import { useStreamStore } from "@/Stores/StreamStore.js"
@@ -240,6 +241,7 @@ import {Inertia} from "@inertiajs/inertia";
 // import ShowCreatorsList from "@/Components/Shows/ShowCreatorsList";
 
 let videoPlayerStore = useVideoPlayerStore()
+let nowPlayingStore = useNowPlayingStore()
 let teamStore = useTeamStore();
 let showStore = useShowStore();
 let streamStore = useStreamStore();
@@ -254,36 +256,29 @@ let props = defineProps({
 });
 
 let playEpisode = () => {
+    nowPlayingStore.reset()
+    nowPlayingStore.show.name = props.show.name
+    nowPlayingStore.show.url = `/shows/${props.show.slug}`
+    nowPlayingStore.show.description = props.show.description
+    nowPlayingStore.show.image = props.show.image
+    nowPlayingStore.show.category = props.show.category
+    nowPlayingStore.show.categorySub = props.show.categorySub
+    videoPlayerStore.makeVideoFullPage()
+    Inertia.visit('/stream')
 
     if (props.show.firstPlayVideo.storage_location === 'spaces' && props.show.firstPlayVideo.upload_status !== 'processing') {
         // play video if !processing
+        nowPlayingStore.show.episode.name = props.show.firstPlayVideo.name
+        nowPlayingStore.show.episode.url = `/shows/${props.show.slug}/episode/${props.show.firstPlayVideo.slug}`
+        nowPlayingStore.show.episode.image = props.show.firstPlayVideo.image
         videoPlayerStore.loadNewSourceFromFile(props.show.firstPlayVideo)
-        videoPlayerStore.setNowPlayingInfoShow(props.show)
-        videoPlayerStore.makeVideoFullPage()
-        // showStore.name = props.show.name
-        // showStore.episodeName = props.show.firstPlayVideo.name
-        // showStore.episodeUrl = `/shows/${props.show.slug}/episode/${props.show.firstPlayVideo.slug}`
-        // videoPlayerStore.nowPlayingName = props.show.firstPlayVideo.name
-        // videoPlayerStore.nowPlayingDescription = props.show.firstPlayVideo.description
-        // videoPlayerStore.nowPlayingImage = props.show.image
-        // videoPlayerStore.nowPlayingTeam = props.team
-        // videoPlayerStore.nowPlayingCreators = props.creators.data
-        // videoPlayerStore.nowPlayingBonusContent = []
-        // Inertia.visit('/stream')
 
     } else if (props.show.firstPlayVideoFromUrl) {
+        nowPlayingStore.isFromWeb = true
+        nowPlayingStore.show.episode.name = props.show.firstPlayVideoFromUrl.name
+        nowPlayingStore.show.episode.url = `/shows/${props.show.slug}/episode/${props.show.firstPlayVideoFromUrl.slug}`
+        nowPlayingStore.show.episode.image = props.show.firstPlayVideoFromUrl.image
         videoPlayerStore.loadNewSourceFromUrl(props.show.firstPlayVideoFromUrl)
-        // videoPlayerStore.videoName = props.show.firstPlayVideoFromUrl.name
-        // videoPlayerStore.nowPlayingUrl = `/shows/${props.show.slug}/episode/${props.show.firstPlayVideoFromUrl.slug}`
-        // // videoPlayerStore.nowPlayingName = props.show.firstPlayVideoFromUrl.name
-        // videoPlayerStore.nowPlayingName = props.show.firstPlayVideoFromUrl.name
-        // videoPlayerStore.nowPlayingDescription = props.show.firstPlayVideoFromUrl.description
-        // videoPlayerStore.nowPlayingImage = props.show.image
-        // videoPlayerStore.nowPlayingTeam = props.team
-        // videoPlayerStore.nowPlayingCreators = props.creators.data
-        // videoPlayerStore.nowPlayingBonusContent = []
-        // Inertia.visit('/stream')
-        videoPlayerStore.makeVideoFullPage()
     }
 }
 

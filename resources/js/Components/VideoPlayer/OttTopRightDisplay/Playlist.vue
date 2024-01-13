@@ -1,5 +1,5 @@
 <template>
-    <div v-if="videoPlayerStore.ott === 3" class="ottTopRightDisplay bg-orange-800 ">
+    <div v-if="videoPlayerStore.ott === 3" class="ottTopRightDisplay bg-orange-800 hide-scrollbar">
     <div class="h-full w-full overflow-y-scroll scrollbar-hide">
 
         <upgrade v-if="videoPlayerStore.ott === 3 && !userStore.isSubscriber && !userStore.isVip && !userStore.isAdmin"/>

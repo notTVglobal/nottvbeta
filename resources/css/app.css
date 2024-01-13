@@ -313,7 +313,7 @@ hr {
         left: 0;
         right: 0;
         gap: 0.5rem; /* You can adjust the gap size as needed */
-        @apply fixed flex flex-wrap justify-center mx-auto space-x-2 bottom-4 w-full
+        @apply fixed flex flex-wrap justify-center mx-auto space-x-2 bottom-4 w-full hide-scrollbar
     }
     /*.channelsFullPageContainer {*/
     /*    z-index: 200;*/
@@ -588,7 +588,7 @@ hr {
         @apply fixed w-full flex flex-col top-16 left-0 p-5 drop-shadow z-50
     }
     .osdFullPageBottom {
-        @apply fixed w-full flex flex-col top-20 left-0 p-5 mt-2 drop-shadow z-50
+        @apply fixed w-fit flex flex-col top-20 left-5 p-5 drop-shadow z-50
     }
     .videoControls {
         z-index: 200;
@@ -602,7 +602,7 @@ hr {
         /* Desktop and Standard ottButtonsContainer */
         z-index: 200;
         position: fixed;
-        @apply flex flex-row space-x-2 bottom-6 right-6
+        @apply flex flex-row space-x-2 bottom-6 right-6 hide-scrollbar
     }
     .channelsFullPageContainer {
         z-index: 200;

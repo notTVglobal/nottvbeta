@@ -14,6 +14,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Pion\Laravel\ChunkUpload\Exceptions\UploadFailedException;
 use Illuminate\Http\Request as HttpRequest;
 use Pion\Laravel\ChunkUpload\Exceptions\UploadMissingFileException;
@@ -25,10 +26,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 
-
-
-
-
 use App\Models\Movie;
 use App\Models\Show;
 use App\Models\ShowEpisode;
@@ -36,7 +33,7 @@ use App\Models\Team;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\File;
 use App\Models\Image;
-use function MongoDB\BSON\toJSON;
+//use function MongoDB\BSON\toJSON;
 
 
 class VideoUploadController extends Controller
@@ -72,35 +69,43 @@ class VideoUploadController extends Controller
                 ->sum('size')),
             'notTvTotalStorageUsed' => formatBytes(Video::where('storage_location', '=', 'spaces')
                 ->sum('size')),
-            'videos' => Video::with('showEpisode', 'movie', 'movieTrailer', 'newsPost' )->where('user_id', auth()->user()->id)
-                ->where('storage_location', '=', 'spaces')
-                ->latest()
-                ->paginate(10, ['*'], 'videos')
-                ->through(fn($video) => [
-                    'id' => $video->id,
-                    'file_name' => $video->file_name ?? '',
-                    'extension' => $video->extension,
-                    'folder' => $video->folder,
-                    'storage_location' => $video->storage_location,
-                    'cdn_endpoint' => $video->appSetting->cdn_endpoint,
-                    'cloud_folder' => $video->cloud_folder,
-                    'upload_status' => $video->upload_status,
-                    'category' => $video->category,
-                    'type' => $video->type,
-                    'size' => formatBytes($video->size),
-                    'created_at' => $video->created_at,
-                    'showEpisode' => $video->showEpisode,
-                    'movie' => $video->movie,
-                    'movieTrailer' => $video->movieTrailer,
-                    'newsPost' => $video->newsPost,
-                    'can' => [
-                        'viewAny' => auth()->user()->can('viewAny', $video),
-                        'view' => auth()->user()->can('view', $video),
-                        'create' => auth()->user()->can('create', $video),
-                        'edit' => auth()->user()->can('update', $video),
-                        'delete' => auth()->user()->can('delete', $video),
-                    ]
-                ]),
+            'videos' => Video::with('showEpisode.show', 'movie', 'movieTrailer', 'newsPost')
+                ->when(Request::input('search'), function ($query, $search) {
+                    $query->where('file_name', 'like', "%{$search}%");
+                })
+            ->where('user_id', auth()->user()->id)
+            ->where('storage_location', '=', 'spaces')
+            ->latest()
+            ->paginate(10, ['*'], 'videos')
+            ->through(fn($video) => [
+                'id' => $video->id,
+                'user_id' => $video->user->name,
+                'file_name' => $video->file_name,
+                'extension' => $video->extension,
+                'storage_location' => $video->storage_location,
+                'folder' => $video->folder,
+                'cdn_endpoint' => $video->appSetting->cdn_endpoint,
+                'cloud_folder' => $video->cloud_folder,
+                'upload_status' => $video->upload_status,
+                'category' => $video->category,
+                'type' => $video->type,
+                'size' => formatBytes($video->size),
+                'created_at' => $video->created_at,
+                'showEpisode' => [
+                    'data' => $video->showEpisode,
+                    'show' => $video->showEpisode?->show, // Optional chaining for safety
+                ],
+                'movie' => $video->movie,
+                'movieTrailer' => $video->movieTrailer,
+                'newsPost' => $video->newsPost,
+                'can' => [
+                    'viewAny' => auth()->user()->can('viewAny', $video),
+                    'view' => auth()->user()->can('view', $video),
+                    'create' => auth()->user()->can('create', $video),
+                    'edit' => auth()->user()->can('update', $video),
+                    'delete' => auth()->user()->can('delete', $video),
+                ]
+            ]),
 
             // this is a temporary query... use chunking or lazy loading
             // to reduce load on the server ... replace it with a more
@@ -158,10 +163,15 @@ class VideoUploadController extends Controller
      * @throws UploadFailedException
      * @throws UploadMissingFileException
      */
+
     public function upload(HttpRequest $request): JsonResponse {
+        $uploadIdentifier = 'upload_' . auth()->user()->id . '_' . $request->dzuuid;
 
         // validate the file
 //        ???
+        $movieId = $request->movieId;
+        $movieTrailerId = $request->movieTrailerId;
+        $showEpisodeId = $request->showEpisodeId;
 
 
         // create the file receiver
@@ -177,6 +187,26 @@ class VideoUploadController extends Controller
         // receive the file
         $save = $receiver->receive();
 
+
+// Check if the message has already been logged for this upload
+        if (!session()->has($uploadIdentifier)) {
+            // Determine the log message based on conditions
+            if ($movieId) {
+                $logMessage = 'A new movie upload has started.';
+            } else if ($movieTrailerId) {
+                $logMessage = 'A new movie trailer upload has started.';
+            } else if ($showEpisodeId) {
+                $logMessage = 'A new show episode upload has started.';
+            } else
+                $logMessage = 'A new video upload has started.';
+
+            Log::info($logMessage);
+
+            // Set the flag in the session to indicate the message has been logged
+            session()->put($uploadIdentifier, true);
+
+        }
+
         // check if the upload has finished (in chunk mode it will send smaller files)
         if ($save->isFinished()) {
             // save the file and return any response you need, current example uses `move` function. If you are
@@ -184,13 +214,7 @@ class VideoUploadController extends Controller
 //            $video = $save->getFile();
 //            return $this->saveFile($save->getFile());
 
-
-
-            $movieId = $request->movieId;
-            $movieTrailerId = $request->movieTrailerId;
-            $showEpisodeId = $request->showEpisodeId;
-
-
+            session()->forget($uploadIdentifier);
             // this needs to be setup as a new job to prevent timeouts on the frontend.
             return $this->saveFile($save->getFile(), $movieId, $movieTrailerId, $showEpisodeId);
 
@@ -217,20 +241,23 @@ class VideoUploadController extends Controller
 
         // remove the previous video
         if ($showEpisodeId !== null) {
+            Log::info('Video upload Show Episode ID ' . $showEpisodeId);
 //            $showEpisode = ShowEpisode::where('id', $showEpisodeId)->get();
             Video::query()->where('show_episodes_id', $showEpisodeId)
                 ->update(['show_episodes_id' => null]);
         }
         else if ($movieId !== null) {
+            Log::info('Video upload Movie ID ' . $movieId);
 //            $movie = Movie::where('id', $movieId)->get();
             Video::query()->where('movies_id', $movieId)
                 ->update(['movies_id' => null]);
         }
-//        else if ($movieTrailerId !== null) {
-////            $movieTrailer = MovieTrailer::where('id', $movieTrailerId)->get();
-//            Video::query()->where('movie_trailers_id', $movieTrailerId)
-//                ->update(['movie_trailers_id' => null]);
-//        }
+        else if ($movieTrailerId !== null) {
+            Log::info('Video upload Movie Trailer ID ' . $movieTrailerId);
+//            $movieTrailer = MovieTrailer::where('id', $movieTrailerId)->get();
+            Video::query()->where('movie_trailers_id', $movieTrailerId)
+                ->update(['movie_trailers_id' => null]);
+        }
 
         $path = storage_path('app/temp-videos');
         $fileName = $this->createFilename($file);
@@ -256,6 +283,7 @@ class VideoUploadController extends Controller
         // $fileName+'.part'
         // unlink($file->getFile()->getPathname());
 
+
         // Store the video in the database
         $video = new Video;
         $video->user_id = auth()->user()->id;
@@ -270,21 +298,50 @@ class VideoUploadController extends Controller
         $video->movies_id = $movieId;
 //        $video->movie_trailers_id = $movieTrailerId;
         $video->save();
-        sleep(1);
+        sleep(2);
 
-        $showEpisode = ShowEpisode::where('id', $showEpisodeId)
-            ->update(['video_id' => $video->id]);
+        Log::info('A new video has been uploaded: '. $video->ulid);
 
-        $movie = Movie::where('id', $movieId)
-            ->update(['video_id' => $video->id]);
+        if ($showEpisodeId) {
+            try {
+                $showEpisode = ShowEpisode::where('id', $showEpisodeId)
+                    ->update(['video_id' => $video->id]);
+                Log::info('Successfully updated a Show Episode with a video ID before upload to spaces.');
+            } catch (\Exception $e) {
+                Log::channel('custom_error')->info("Update failed: " . $e->getMessage());
+                Log::info('Failed to update the Show Episode with the video ID before upload to spaces.');
+            }
+        }
 
-//        $movieTrailer = MovieTrailer::where('id', $movieTrailerId)
-//            ->update(['video_id' => $video->id]);
+        if ($movieId) {
+            try {
+                $movie = Movie::where('id', $movieId)
+                    ->update(['video_id' => $video->id]);
+                Log::info('Successfully updated a Movie with a video ID before upload to spaces.');
+            } catch (\Exception $e) {
+                Log::channel('custom_error')->info("Update failed: " . $e->getMessage());
+                Log::info('Failed to update the Movie with the video ID before upload to spaces.');
+            }
+        }
+
+        if ($movieTrailerId) {
+            try {
+                $movieTrailer = MovieTrailer::where('id', $movieTrailerId)
+                    ->update(['video_id' => $video->id]);
+                Log::info('Successfully updated a Movie Trailer with a video ID before upload to spaces.');
+            } catch (\Exception $e) {
+                Log::channel('custom_error')->info("Update failed: " . $e->getMessage());
+                Log::info('Failed to update the Movie Trailer with the video ID before upload to spaces.');
+            }
+        }
+
+
 
 //        error_log('Video saved to database. Next up is the Job.');
 
         // Dispatch Job
         UploadVideoToSpacesJob::dispatch($video)->onQueue('video_processing');
+        Log::info('Video '. $video->ulid .' has been dispatched for upload to Spaces.');
 
 //        error_log('The end of the saveFile method.');
         return response()->json([

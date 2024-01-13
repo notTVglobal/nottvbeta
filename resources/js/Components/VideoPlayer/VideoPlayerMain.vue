@@ -357,7 +357,11 @@ function clickOnVideoAction() {
         // Inertia.visit('/stream')
 
         videoPlayerStore.makeVideoFullPage()
+        videoPlayerStore.ott = 0
         videoPlayerStore.fullPage = true
+        if (!videoPlayerStore.currentPageIsStream) {
+            userStore.prevUrl = window.history.state.url
+        }
         Inertia.visit('/stream')
 
         // if (userStore.isMobile) {

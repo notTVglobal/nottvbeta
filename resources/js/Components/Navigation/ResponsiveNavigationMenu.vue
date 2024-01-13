@@ -4,7 +4,7 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <Link @click="navigateToStream" :href="route('stream')">
+                    <Link @click="navigateToStream">
                         <JetApplicationMark class="ml-5 block h-9 w-auto"/>
                     </Link>
                 </div>
@@ -126,7 +126,6 @@
 
                 <JetResponsiveNavLink
                     @click="navigateToStream"
-                    :href="route('stream')"
                     :active="userStore.currentPage === 'stream'">
                     Stream
                 </JetResponsiveNavLink>
@@ -388,6 +387,7 @@ function navigateToStream() {
     if (!videoPlayerStore.currentPageIsStream) {
         userStore.prevUrl = window.history.state.url
     }
+    Inertia.visit(`/stream`)
 }
 
 </script>

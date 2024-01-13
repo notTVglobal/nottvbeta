@@ -1,5 +1,5 @@
 <template>
-    <div v-if="videoPlayerStore.ott === 1" class="ottTopRightDisplay bg-purple-800">
+    <div v-if="videoPlayerStore.ott === 1" class="ottTopRightDisplay bg-purple-800 hide-scrollbar">
     <div class="h-full w-full overflow-y-scroll scrollbar-hide">
 
         <div v-if="videoPlayerStore.ott === 1" class="now-playing w-full h-full bg-purple-800 p-2 overflow-y-scroll scrollbar-hide mb-64">
