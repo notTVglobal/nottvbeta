@@ -6,7 +6,6 @@
                 <div>RTMP full url: <span class="font-bold">rtmp://streams.not.tv/live/{YOUR STREAM KEY}</span></div>
                 <div>RTMP url: <span class="font-bold">rtmp://streams.not.tv/live/</span></div>
                 <div>RTMP stream key: <span class="font-bold">{YOUR STREAM KEY}</span></div>
-                <div>RTSP: <span class="font-bold">rtsp://streams.not.tv:5554/{YOUR STREAM KEY}</span></div>
                 <div>
                     <span class="italic">Your stream key is using showName+UUID.</span>
                 </div>

@@ -53,6 +53,10 @@
                         @click="userStore.btnRedirect(`/admin/mistServerApi`)"
                         class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"
                     >MistServer API</button>
+                    <a
+                        :href="`http://`+props.mist_server_ip+`:4242`" target="_blank"
+                        class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"
+                    >MistServer Interface</a>
                     <button
                         @click="userStore.btnRedirect(`/admin/images`)"
                         class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"
@@ -204,6 +208,78 @@
                         <div v-if="form.errors.first_play_channel_id" v-text="form.errors.first_play_channel_id"
                              class="text-xs text-red-600 mt-1"></div>
                     </div>
+                    <div class="mb-6">
+                        <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"
+                               for="mist_server_ip"
+                        >
+                            MIST SERVER IP ADDRESS
+                        </label>
+
+                        <div class="flex flex-row">
+                            <input v-model="form.mist_server_ip"
+                                   class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                                   type="text"
+                                   name="mist_server_ip"
+                                   id="mist_server_ip"
+                            >
+                        </div>
+                        <div v-if="form.errors.mist_server_ip" v-text="form.errors.mist_server_ip"
+                             class="text-xs text-red-600 mt-1"></div>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"
+                               for="mist_server_api_url"
+                        >
+                            MIST SERVER API URL
+                        </label>
+
+                        <div class="flex flex-row">
+                            <input v-model="form.mist_server_api_url"
+                                   class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                                   type="text"
+                                   name="mist_server_api_url"
+                                   id="mist_server_api_url"
+                            >
+                        </div>
+                        <div v-if="form.errors.mist_server_api_url" v-text="form.errors.mist_server_api_url"
+                             class="text-xs text-red-600 mt-1"></div>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"
+                               for="mist_server_username"
+                        >
+                            MIST SERVER USERNAME
+                        </label>
+
+                        <div class="flex flex-row">
+                            <input v-model="form.mist_server_username"
+                                   class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                                   type="text"
+                                   name="mist_server_username"
+                                   id="mist_server_username"
+                            >
+                        </div>
+                        <div v-if="form.errors.mist_server_username" v-text="form.errors.mist_server_username"
+                             class="text-xs text-red-600 mt-1"></div>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"
+                               for="mist_server_password"
+                        >
+                            MIST SERVER PASSWORD
+                        </label>
+
+                        <div class="flex flex-row">
+                            <input v-model="form.mist_server_password"
+                                   class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                                   type="password"
+                                   name="mist_server_password"
+                                   id="mist_server_password"
+                            >
+                        </div>
+                        <div v-if="form.errors.mist_server_password" v-text="form.errors.mist_server_password"
+                             class="text-xs text-red-600 mt-1"></div>
+                    </div>
 
                     <div class="flex justify-end my-6 mr-6">
                         <JetValidationErrors class="mr-4" />
@@ -270,6 +346,10 @@ let props = defineProps({
     first_play_video_source_type: String,
     first_play_video_name: String,
     first_play_channel_id: String,
+    mist_server_ip: String,
+    mist_server_api_url: String,
+    mist_server_username: String,
+    mist_server_password: String,
     messageType: String,
 });
 
@@ -280,7 +360,10 @@ let form = useForm({
     first_play_video_source: props.first_play_video_source,
     first_play_video_source_type: props.first_play_video_source_type,
     first_play_video_name: props.first_play_video_name,
-    first_play_channel_id: props.first_play_channel_id,
+    mist_server_ip: props.mist_server_ip,
+    mist_server_api_url: props.mist_server_api_url,
+    mist_server_username: props.mist_server_username,
+    mist_server_password: props.mist_server_password,
 })
 
 let submit = () => {

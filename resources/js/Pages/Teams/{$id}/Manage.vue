@@ -133,7 +133,14 @@ onMounted(() => {
         videoPlayerStore.ottClass = 'ottClose'
         videoPlayerStore.ott = 0
     }
-    document.getElementById("topDiv").scrollIntoView()
+
+    const savedPosition = sessionStorage.getItem('scrollPosition');
+    if (savedPosition) {
+        window.scrollTo(0, parseInt(savedPosition));
+        sessionStorage.removeItem('scrollPosition'); // Clear after restoring
+    } else {
+        document.getElementById("topDiv").scrollIntoView()
+    }
 });
 
 let props = defineProps({

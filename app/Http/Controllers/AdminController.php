@@ -17,8 +17,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Crypt;
+use Inertia\Inertia;
 //use function GuzzleHttp\Promise\all;
 
 class AdminController extends Controller
@@ -31,6 +32,12 @@ class AdminController extends Controller
     {
 //        $settings = DB::table('app_settings')->where('id', 1)->first();
         $settings = AppSetting::find(1);
+
+        // Decrypting the Mist Server Password
+        if ($settings->mist_server_password) {
+            $decryptedPassword = Crypt::decryptString($settings->mist_server_password);
+        }
+
         return Inertia::render('Admin/Settings', [
             'id' => $settings->id,
             'cdn_endpoint' => $settings->cdn_endpoint,
@@ -40,6 +47,10 @@ class AdminController extends Controller
             'first_play_video_name' => $settings->first_play_video_name,
             'first_play_channel_id' => $settings->first_play_channel_id,
             'first_play_channel_name' => $settings->channel->name,
+            'mist_server_ip' => $settings->mist_server_ip,
+            'mist_server_api_url' => $settings->mist_server_api_url,
+            'mist_server_username' => $settings->mist_server_username,
+            'mist_server_password' => $decryptedPassword ?? null,
         ]);
     }
 
@@ -52,7 +63,16 @@ class AdminController extends Controller
             'first_play_video_source_type' => 'nullable|string',
             'first_play_video_name' => 'nullable|string',
             'first_play_channel_id' => 'nullable|integer',
+            'mist_server_ip' => 'nullable|string',
+            'mist_server_api_url' => 'nullable|string',
+            'mist_server_username' => 'nullable|string',
+            'mist_server_password' => 'nullable|string',
         ]);
+
+        // Encrypting the Mist Server Password
+        if ($request->mist_server_password) {
+            $encryptedPassword = Crypt::encryptString($request->mist_server_password);
+        }
 
         $settings = AppSetting::find($request->id);
         $settings->cdn_endpoint = $request->cdn_endpoint;
@@ -61,6 +81,10 @@ class AdminController extends Controller
         $settings->first_play_video_source_type = $request->first_play_video_source_type;
         $settings->first_play_video_name = $request->first_play_video_name;
         $settings->first_play_channel_id = $request->first_play_channel_id;
+        $settings->mist_server_ip = $request->mist_server_ip;
+        $settings->mist_server_api_url = $request->mist_server_api_url;
+        $settings->mist_server_username = $request->mist_server_username;
+        $settings->mist_server_password = $encryptedPassword;
         $settings->save();
         sleep(1);
 

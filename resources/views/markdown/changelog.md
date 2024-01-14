@@ -3,6 +3,12 @@
 Last Update: January 14, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.0.4
+January 14, 2024
+* Added the <a href="https://not.tv/whitepaper">notTV Whitepaper</a> to the list of links on the footer of the home page.
+* Fixed the Dark Paginator, it was showing the wrong page numbers on the buttons.
+* Added new Admin/Settings for the MistServer
+
 ## v0.8.0.3
 January 14, 2024
 * Only the 1st channel (Live) will show the active viewer count. The viewer count will be temporarily be hidden for the other channels.

@@ -79,10 +79,10 @@
                         <span v-if="episode.show_episode_status_id === 6" class="capitalize font-semibold">{{timeAgo}}</span>
                     </div>
                     <div><span class="text-xs capitalize font-semibold">Show: </span>
-                        <Link :href="`/shows/${show.slug}/manage`" class="text-blue-500 ml-2 uppercase"> {{
+                        <button :disabled="teamStore.goLiveDisplay" :href="`/shows/${show.slug}/manage`" class="text-blue-500 ml-2 uppercase disabled:text-black"> {{
                                 show.name
                             }}
-                        </Link>
+                        </button>
                     </div>
                     <div><span class="text-xs capitalize font-semibold mr-2">Show Runner: </span> {{
                             show.showRunner
@@ -114,6 +114,7 @@ import { useUserStore } from "@/Stores/UserStore";
 import EpisodeHeader from "@/Components/ShowEpisodes/EpisodeHeader";
 import ShowEpisodeManageTopBanner from "@/Components/ShowEpisodes/Manage/Layout/ShowEpisodeManageTopBanner";
 import { useTimeAgo } from '@vueuse/core'
+import Button from "@/Jetstream/Button.vue";
 
 const teamStore = useTeamStore();
 const userStore = useUserStore()

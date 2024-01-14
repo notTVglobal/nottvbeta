@@ -62,7 +62,7 @@
 
                     </div>
                     <!-- Paginator -->
-                    <Pagination :data="shows" class=""/>
+                    <PaginationDark :data="shows" class=""/>
                 </div>
 
                 <div class="flex flex-col xl:flex-row my-10">
@@ -149,12 +149,13 @@ import { onBeforeMount, onMounted, ref, watch } from "vue"
 import { Inertia } from "@inertiajs/inertia"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useUserStore } from "@/Stores/UserStore.js"
-import Pagination from "@/Components/PaginationDark"
+import PaginationDark from "@/Components/PaginationDark"
 import throttle from "lodash/throttle"
 import Message from "@/Components/Modals/Messages";
 import SingleImage from "@/Components/Multimedia/SingleImage";
 import MostAnticipated from "@/Components/Shows/MostAnticipated.vue";
 import {useTimeAgo} from "@vueuse/core";
+import Pagination from "@/Components/Pagination.vue";
 
 let videoPlayerStore = useVideoPlayerStore()
 let userStore = useUserStore()
