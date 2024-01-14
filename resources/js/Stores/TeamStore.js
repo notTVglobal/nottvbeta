@@ -32,6 +32,7 @@ export const useTeamStore = defineStore('teamStore', {
             // turn on the go live div
             goLiveDisplay: false,
         can: [],
+        openComponent: 'teamShows',
     }),
 
     actions: {

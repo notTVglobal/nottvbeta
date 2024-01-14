@@ -1,40 +1,53 @@
 <template>
-    <Head title="Terms of Service"/>
+    <Head title="White Paper"/>
 
-    <div class="font-sans text-gray-200 antialiased">
-        <div class="pt-4 bg-gray-800">
-            <div class="min-h-screen flex flex-col items-center pt-6 sm:pt-0">
-                <div>
-                    <JetApplicationLogo/>
+    <div class="pt-12 font-sans text-gray-900 bg-gray-100 antialiased">
+        <div class="pt-6 pb-10">
+            <div class="flex flex-col items-center">
+                <div class="mb-4">
+                    <Link :href="`/`"><img :src="`/storage/images/logo_black_311.png`" alt="image" class=""></Link>
                 </div>
 
-                <div class="font-['Open_Sans'] w-full min-w-fit sm:max-w-2xl mt-6 p-6 bg-white shadow-md overflow-hidden sm:rounded-lg prose"
-                     v-html="whitepaper"/>
-
-
-
+                <div class="w-full sm:max-w-2xl px-6 py-8 bg-white shadow-lg rounded-lg">
+                    <div class="whitepaper w-full overflow-y-scroll overflow-x-hidden prose prose-lg max-w-none" v-html="whitepaper"></div>
+                </div>
             </div>
         </div>
     </div>
+
+
+
 </template>
 
 <script setup>
 import {Head} from '@inertiajs/inertia-vue3';
 import JetApplicationLogo from '@/Jetstream/ApplicationLogo.vue';
-import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js";
-
-let videoPlayer = useVideoPlayerStore();
-videoPlayer.class = "videoTopRight"
-videoPlayer.fullPage = false
+import { ref, nextTick } from 'vue';
+// import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js";
 
 defineProps({
     whitepaper: String,
 });
 </script>
 <script>
-import NoLayout from '@/Layouts/NoLayout';
+import MarkdownLayout from '@/Layouts/MarkdownLayout';
 
 export default {
-    layout: NoLayout,
+    layout: MarkdownLayout,
 }
 </script>
+
+<style>
+
+.whitepaper {
+    height: 80vh;
+}
+/* Additional styles (if necessary) */
+.prose {
+    font-family: 'Open Sans', sans-serif;
+}
+.prose h1, .prose h2, .prose h3 {
+    color: #2a4365; /* Dark blue color for headings */
+}
+</style>
+

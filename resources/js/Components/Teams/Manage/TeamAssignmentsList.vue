@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-orange-300 text-black p-2 font-bold">Team Assignments</div>
+<!--    <div class="bg-orange-300 text-black p-2 font-bold">Team Assignments</div>-->
     <div class="border-1 border-t mb-3 bg-orange-300 py-1 px-2 text-xs font-semibold text-red-800">
         In development. Not currently working.
     </div>
@@ -55,7 +55,12 @@
 import {useShowStore} from "@/Stores/ShowStore";
 import { useTeamStore } from "@/Stores/TeamStore.js"
 
-let show = useShowStore();
-let teamStore = useTeamStore();
+const show = useShowStore();
+const teamStore = useTeamStore();
+
+function openModal() {
+    teamStore.showModal = true;
+}
+
 
 </script>

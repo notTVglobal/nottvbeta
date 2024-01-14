@@ -9,7 +9,7 @@
             <div class="flex justify-between mt-3 mb-6">
                 <div class="text-3xl">Create Episode</div>
                 <div>
-
+                    <CancelButton />
                 </div>
             </div>
 

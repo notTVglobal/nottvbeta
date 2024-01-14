@@ -8,32 +8,46 @@
         leave-to-class="opacity-0"
     >
 
+        <div ref="scrollRef"
+             v-if="videoPlayerStore.ottChannels"
+             class="channelsMenu channelsFullPageContainer scrollbar-custom">
 
-            <div v-if="videoPlayerStore.ottChannels" class="channelsFullPageContainer hide-scrollbar">
-                <div class="channelsFullPageInner">
-                    <div class="flex flex-col p-5 mt-2">
-                        <div class="text-3xl text-center font-semibold uppercase mb-3 w-full bg-green-900 text-white p-2">CHANNELS</div>
+            <div class="channelsFullPageInner">
+
+                <div class="flex flex-col p-5 mt-2">
+                    <div class="text-3xl text-center font-semibold uppercase mb-3 w-full bg-green-900 text-white p-2">
+                        CHANNELS
                     </div>
-
-                    <div class="px-5 space-y-1 overflow-y-scroll scrollbar-hide">
-                      <Channels/>
-                    </div>
-
-                    <button v-touch="()=>videoPlayerStore.toggleChannels()"
-                            v-if="videoPlayerStore.ottChannels" class="channelsCloseButton">
-                        CLOSE CHANNELS
-                    </button>
                 </div>
-        </div>
 
+                <div class="px-5 space-y-1 overflow-y-scroll hide-scrollbar">
+                    <Channels/>
+                </div>
+
+                <button v-touch="()=>videoPlayerStore.toggleChannels()"
+                        v-if="videoPlayerStore.ottChannels" class="channelsCloseButton">
+                    CLOSE CHANNELS
+                </button>
+
+                <div class="fixed w-full bottom-4 text-center">
+                    <ScrollDownIndicator />
+                </div>
+
+            </div>
+        </div>
     </Transition>
 </template>
 
 <script setup>
+import { ref, provide } from 'vue';
 import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore"
 import Channels from "@/Components/VideoPlayer/Channels/Channels"
+import ScrollDownIndicator from "@/Components/UserHints/ScrollDownIndicator.vue"
 
-let videoPlayerStore = useVideoPlayerStore()
+const videoPlayerStore = useVideoPlayerStore()
+
+const scrollRef = ref(null);
+provide('scrollRef', scrollRef);
 
 let props = defineProps({
     user: Object,

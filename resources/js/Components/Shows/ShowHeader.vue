@@ -5,7 +5,7 @@
             <div class="flex flex-row">
 <!--                <img :src="'/storage/images/' + show.poster" alt="" class="w-20 mr-2 justify-left">-->
                 <SingleImage :image="show.image" :poster="show.poster" alt="'show poster'" class="w-20 mr-2 justify-left" />
-                <span class="inline-flex items-center text-3xl font-semibold relative">{{ show.name }}</span>
+                <span class="ml-2 inline-flex items-center text-3xl font-semibold relative">{{ show.name }}</span>
             </div>
         </Link>
     </div>

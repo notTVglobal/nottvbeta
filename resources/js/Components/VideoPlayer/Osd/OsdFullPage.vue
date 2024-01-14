@@ -3,7 +3,7 @@
         <div class="osdFullPageTop">
             <div class="flex justify-between">
                 <div>
-                    <div v-if="nowPlayingStore.displayCurrentViewerCount" class="drop-shadow">
+                    <div v-if="nowPlayingStore.displayCurrentViewerCount && channelStore.currentChannelId === 1" class="drop-shadow">
                         <CurrentViewers />
                     </div>
                 </div>
@@ -48,12 +48,14 @@
 <script setup>
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useNowPlayingStore } from "@/Stores/NowPlayingStore.js"
+import { useChannelStore } from "@/Stores/ChannelStore.js"
 import { useUserStore } from "@/Stores/UserStore.js"
 import CurrentViewers from "@/Components/VideoPlayer/CurrentViewers/CurrentViewers.vue";
 import { Inertia } from "@inertiajs/inertia";
 import { computed } from 'vue';
 
 let videoPlayerStore = useVideoPlayerStore()
+let channelStore = useChannelStore()
 let nowPlayingStore = useNowPlayingStore()
 let userStore = useUserStore()
 

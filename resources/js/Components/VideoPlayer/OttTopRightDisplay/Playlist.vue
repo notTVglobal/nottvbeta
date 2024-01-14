@@ -1,15 +1,15 @@
 <template>
     <div v-if="videoPlayerStore.ott === 3" class="ottTopRightDisplay bg-orange-800 hide-scrollbar">
-    <div class="h-full w-full overflow-y-scroll scrollbar-hide">
+    <div class="h-full w-full overflow-y-hidden scrollbar-hide">
 
         <upgrade v-if="videoPlayerStore.ott === 3 && !userStore.isSubscriber && !userStore.isVip && !userStore.isAdmin"/>
         <div v-if="videoPlayerStore.ott === 3 && (userStore.isSubscriber || userStore.isVip || userStore.isAdmin)" class="now-playing w-full h-full bg-orange-800 p-2 overflow-y-scroll scrollbar-hide mb-64">
-            <h1 class="text-xs font-semibold uppercase mb-3 w-full bg-orange-900 text-white p-2">PLAYLIST</h1>
-            <div class="pb-24 w-full overflow-y-scroll scrollbar-hide"
-                 :class="[{'h-[calc(100vh-22rem)]':!userStore.isMobile},{'h-[calc(100vh-20rem)]':userStore.isMobile}]">
-                Add a loop here to display the playlist... scrollable. If the current channel is the users_channel,
-                display the playlist for the user. If the current channel is another channel (e.g., stream), display
-                the stream_playlist.
+            <h1 class="text-xs font-semibold uppercase w-full bg-orange-900 text-white p-2">PLAYLIST</h1>
+
+            <div class="top-0 px-5 space-y-2">
+                <div>
+                    Coming soon.
+                </div>
             </div>
         </div>
 

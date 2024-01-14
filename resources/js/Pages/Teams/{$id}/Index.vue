@@ -2,8 +2,10 @@
 
     <Head :title="props.team.name" />
 
-    <div class="place-self-center flex flex-col gap-y-3 overflow-x-hidden">
-        <div id="topDiv" class="light:bg-white light:text-black dark:bg-gray-800 dark:text-gray-50 rounded p-5 mb-10">
+<!--    <div class="place-self-center flex flex-col gap-y-3 overflow-x-hidden">-->
+    <div class="place-self-center flex flex-col">
+<!--        <div id="topDiv" class="light:bg-white light:text-black dark:bg-gray-800 dark:text-gray-50 rounded p-5 mb-10">-->
+        <div id="topDiv" class="bg-gray-800 text-gray-50 rounded px-5 pt-6">
 
             <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 

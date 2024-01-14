@@ -1,5 +1,5 @@
 <template>
-    <div class="overflow-y-scroll scrollbar-hide">
+    <div class="">
 
         <div v-if="!channelStore.channelsLoaded"
              :key="channelStore.channelsLoaded"
@@ -19,6 +19,9 @@
             <ChannelFooter />
         </div>
 
+<!--        <div class="fixed w-full bottom-4 text-center fade-out">-->
+<!--            <ScrollDownIndicator scrollRef="scrollRef"/>-->
+<!--        </div>-->
 
 
     </div>
@@ -26,16 +29,15 @@
 </template>
 
 <script setup>
-import { onBeforeMount, ref, computed } from "vue"
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore";
-import { useChannelStore } from "@/Stores/ChannelStore";
-import { useUserStore } from "@/Stores/UserStore";
+import { computed } from "vue"
+import {Inertia} from "@inertiajs/inertia"
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
+import { useChannelStore } from "@/Stores/ChannelStore"
 import ChannelFooter from "@/Components/VideoPlayer/Channels/ChannelFooter"
-import {Inertia} from "@inertiajs/inertia";
 
-let videoPlayerStore = useVideoPlayerStore();
-let channelStore = useChannelStore();
-let userStore = useChannelStore();
+let videoPlayerStore = useVideoPlayerStore()
+let channelStore = useChannelStore()
+let userStore = useChannelStore()
 
 let props = defineProps({
     channelClasses: String,

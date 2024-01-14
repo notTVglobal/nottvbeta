@@ -1,7 +1,24 @@
 # not.tv Changelog
 
-Last Update: January 12, 2024\
+Last Update: January 14, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.8.0.3
+January 14, 2024
+* Only the 1st channel (Live) will show the active viewer count. The viewer count will be temporarily be hidden for the other channels.
+* Added a "scroll down" indicator to the channels menu.
+* Created a custom scrollbar (.scrollbar-custom) class
+* Updated the <a href="https://not.tv/whitepaper">notTV Whitepaper</a>.
+* Added height:100% to html and body (trying to fix the .md display bug)
+* Changed the base font size for larger screens.
+  * 1920px+, 18px
+  * 2560px+, 24px
+  * 3840px+, 32px
+* Changed some styling on the Creator Dashboard
+* Fixed a bug on the MyTeams element on the Creator Dashboard
+* Started some styling changes on the Team Manage page.
+* Changed the CSS styling of the Team, Show and Episode Manage pages to make it more obvious when you are on a different manage page. Each page now has its own colour. Orange (Team Manage), Blue (Show Manage), Green (Episode Manage).
+* Cleaned up the code on the ShowEpisodeManage page.
 
 ## v0.8.0.2
 January 12, 2024

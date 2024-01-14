@@ -1,4 +1,5 @@
 <template>
+
     <div class="w-full flex flex-end flex-wrap-reverse justify-end gap-2 mr-4 mb-4">
         <button
             v-if="can.viewNewsroom"

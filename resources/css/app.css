@@ -123,6 +123,34 @@ hr {
     scrollbar-width: none;  /* Firefox */
 }
 
+/* Custom scrollbar styling */
+.scrollbar-custom {
+    /* This will modify the scrollbar track (the part the thumb slides along) */
+    &::-webkit-scrollbar-track {
+        background-color: #f4f4f4; /* Light grey track */
+    }
+
+    /* This will modify the scrollbar thumb (the part you drag) */
+    &::-webkit-scrollbar-thumb {
+        background-color: #888; /* Dark grey thumb */
+        border-radius: 10px; /* Rounded corners on the thumb */
+        border: 3px solid #f4f4f4; /* Creates padding around the thumb */
+    }
+
+    /* This will modify the scrollbar itself (including the thumb, track, and buttons) */
+    &::-webkit-scrollbar {
+        width: 12px; /* Width of the entire scrollbar */
+    }
+
+    /* This will modify the scrollbar width and color for non-WebKit browsers like Firefox  */
+    scrollbar-width: thin; /* "auto" or "thin" */
+    scrollbar-color: #888 #f4f4f4; /* thumb and track color */
+}
+.scrollbar-custom.channelsMenu {
+    scrollbar-width: thin; /* "auto" or "thin" */
+    scrollbar-color: #16A34A transparent; /* thumb and track color */
+}
+
 /* VIDEO CONTAINERS AND CLASSES*/
 /*****************************************/
 /*!**!  ---- THE NEW LAYOUT STYLING ---- */
@@ -326,7 +354,7 @@ hr {
     .channelsFullPageContainer {
         z-index: 200;
         height: calc(50vh + 1rem);
-        @apply fixed w-full bottom-0 right-0 left-0 pb-12 bg-opacity-80 bg-green-600 text-sm text-white overflow-y-auto scroll-smooth hover:scroll-auto break-words hide-scrollbar
+        @apply fixed w-full bottom-0 right-0 left-0 pb-12 bg-opacity-80 bg-green-600 text-sm text-white overflow-y-auto scroll-smooth hover:scroll-auto break-words
     }
     /* For Firefox - additional container */
     /*.channelsFullPageInner {*/
@@ -441,7 +469,7 @@ hr {
         text-gray-50 bg-yellow-600 hover:bg-yellow-500 cursor-pointer font-semibold text-xs
     }
     .ottTopRightDisplay {
-        @apply fixed top-40 right-0 h-full w-full mt-7 px-2 overflow-y-scroll z-50 border-t border-gray-900
+        @apply fixed top-40 right-0 bottom-0 w-full mt-7 px-2 overflow-y-scroll z-50 border-t border-gray-900
     }
 }
 /* End Mobile and Tablet */
@@ -683,7 +711,7 @@ hr {
         cursor-pointer font-semibold text-xs
     }
     .ottTopRightDisplay {
-        @apply fixed top-72 right-0 h-full w-96 mt-7 px-2 overflow-y-scroll z-30 border-t border-gray-900
+        @apply fixed top-72 right-0 bottom-0 w-96 mt-7 px-2 overflow-y-scroll z-30 border-t border-gray-900
     }
 
 }
@@ -1052,6 +1080,15 @@ hr {
 .videoOTTChatMessagesChangeHeightForPipChatMode {
     /*min-height: 75vh;*/
     min-height: calc(70vh + 4rem);
+}
+
+.accordion-header {
+    cursor: pointer;
+}
+
+.accordion-content {
+    /* Your content styles here */
+    /* You may add border and shadow styles to match with the header */
 }
 
 .z-60 {

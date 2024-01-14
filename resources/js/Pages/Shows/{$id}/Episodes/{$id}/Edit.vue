@@ -351,7 +351,7 @@
                 </div>
             </div>
 
-
+            <ShowEpisodeEditFooter :can="props.can" :team="props.team" :episode="props.episode" :show="props.show"/>
 
         </div>
     </div>
@@ -368,7 +368,8 @@ import { useShowStore } from "@/Stores/ShowStore.js"
 import { useUserStore } from "@/Stores/UserStore";
 import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
 import TabbableTextarea from "@/Components/TabbableTextarea"
-import ShowEpisodeEditHeader from "@/Components/ShowEpisodes/Edit/ShowEpisodeEditHeader"
+import ShowEpisodeEditHeader from "@/Components/ShowEpisodes/Edit/Layout/ShowEpisodeEditHeader"
+import ShowEpisodeEditFooter from "@/Components/ShowEpisodes/Edit/Layout/ShowEpisodeEditFooter";
 import Message from "@/Components/Modals/Messages";
 import ImageUpload from "@/Components/Uploaders/ImageUpload.vue";
 import SingleImage from "@/Components/Multimedia/SingleImage.vue";

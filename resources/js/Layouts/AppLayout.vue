@@ -14,7 +14,7 @@
 
         <!-- Page Content -->
 <!--        <div v-show="!userStore.hidePage" :class="layoutClass">-->
-        <div v-show="!appSettingStore.hidePage" :class="layoutClass" class="hide-scrollbar">
+        <div v-show="!appSettingStore.hidePage" :class="[layoutClass, scrollbarClass]" class="">
                 <slot /></div>
 
         <!-- Video Player -->
@@ -219,6 +219,12 @@ const pageClass = computed(() => {
         ? appSettingStore.pipChatModeAppLayoutBgColor
         : appSettingStore.primaryAppLayoutBgColor;
 });
+
+const scrollbarClass = computed((() => {
+    return videoPlayerStore.fullPage
+        ? 'hide-scrollbar'
+        : 'scrollbar-custom'
+}))
 </script>
 
 <style scoped>

@@ -16,16 +16,16 @@
 <!--            chat-mask overflow-y-auto scroll-smooth hover:scroll-auto break-words">-->
 
             <div>
-                <div class="flex flex-col p-5 mt-10">
-                    <div class="text-3xl text-center font-semibold uppercase mb-3 w-full bg-yellow-600 text-black p-2">FILTERS</div>
+                <div class="flex flex-col p-5 mt-2 mb-3 ">
+                    <div class="text-3xl text-center font-semibold uppercase w-full bg-yellow-600 text-black p-2">FILTERS</div>
                 </div>
 
-                <div class="absolute">
-                    <div class="relative h-[calc(h-100%-16rem)] text-black top-0 pr-5 space-y-2">
-                        Coming Soon!
+                    <div class="top-0 px-5 space-y-2">
+                        <div class="text-black">
+                            Coming Soon!
+                        </div>
                     </div>
 
-                </div>
             </div>
 
             <button v-touch="()=>videoPlayerStore.toggleFilters()"

@@ -395,7 +395,6 @@ import { useMovieStore } from "@/Stores/MovieStore"
 import JetValidationErrors from '@/Jetstream/ValidationErrors.vue'
 import TabbableTextarea from "@/Components/TabbableTextarea"
 import Message from "@/Components/Modals/Messages"
-import ShowEpisodeEditHeader from "@/Components/ShowEpisodes/Edit/ShowEpisodeEditHeader"
 import SingleImage from "@/Components/Multimedia/SingleImage"
 import ImageUpload from "@/Components/Uploaders/ImageUpload"
 import VideoUpload from "@/Components/Uploaders/VideoUpload"

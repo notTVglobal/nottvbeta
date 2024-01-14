@@ -360,6 +360,7 @@ class ShowEpisodeController extends Controller
             ],
             'episode' => [
                 'id' => $showEpisode->id,
+                'ulid' =>$showEpisode->ulid,
                 'name' => $showEpisode->name,
                 'slug' => $showEpisode->slug,
                 'description' => $showEpisode->description,

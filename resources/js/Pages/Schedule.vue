@@ -1,3 +1,20 @@
+
+<script>
+
+// DELETE THIS SCRIPT TAG
+// This is only for notes about building this page.
+
+// The schedule page will allow free users to look back 72 hours and look ahead 72 hours.
+// On a mobile device it's easy enough to create a forever scroll for looking forward.
+// The easter egg will be scrolling UP to look back at the past 72 hours.
+// Free users can watch any of the content in the past 72 hours for free.
+// Users are given credits each month to watch premium notTV content.
+// They may purchase more credits, or subscribe for unlimited access.
+// They may also use credits to purchase licenses to content from creators.
+// Credits may also be spent in the shop.
+
+</script>
+
 <template>
     <Head title="Schedule" />
 

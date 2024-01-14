@@ -1,5 +1,5 @@
 <template>
-<div class="bg-orange-300 text-black p-2 font-bold">Team Members</div>
+<!--<div class="bg-orange-300 text-black p-2 font-bold">Team Members</div>-->
 <!--    moved this button to the header of the Manage Team page -->
 <!--    <button-->
 <!--        class="bg-green-500 hover:bg-green-600 text-white ml-2 my-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"-->
@@ -9,7 +9,15 @@
 <!--    >Add Member ({{ teamStore.spotsRemaining }} spots left)</button>-->
 
 
-
+    <div v-if="can.editTeam">
+        <button
+            class="bg-green-500 hover:bg-green-600 text-white font-semibold ml-2 my-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
+            @click="openModal"
+            :disabled="!teamStore.spotsRemaining"
+            v-if="teamStore.can.manageTeam"
+        >Add Member ({{ teamStore.spotsRemaining }} spots left)
+        </button>
+    </div>
 
 
 

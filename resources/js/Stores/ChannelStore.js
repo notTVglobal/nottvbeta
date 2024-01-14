@@ -17,14 +17,16 @@ export const useChannelStore = defineStore('channelStore', {
 
     actions: {
         getChannels() {
-            axios.get('/api/channels_list')
-                .then(response => {
-                    this.channel_list = response.data;
-                    this.channelsLoaded = true;
-                })
-                .catch(error => {
-                    console.log(error);
-                })
+            if (!this.channelsLoaded){
+                axios.get('/api/channels_list')
+                    .then(response => {
+                        this.channel_list = response.data;
+                        this.channelsLoaded = true;
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    })
+            }
         },
         async changeChannel(channel) {
             const videoPlayerStore = useVideoPlayerStore();

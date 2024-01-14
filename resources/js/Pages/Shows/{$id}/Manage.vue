@@ -13,70 +13,42 @@
                 <button class="text-xs ml-12" @click="showStore.errorMessage = ''"> Close</button>
             </div>
 
-            <header>
-            <div class="flex justify-between mb-3 pt-6">
-                <div class="gap-2">
-                    <div class="font-bold mb-4 text-orange-400">MANAGE SHOW</div>
+            <header class="bg-gradient-to-r from-blue-100 via-white to-transparent p-4 text-black font-bold rounded-lg">
+<!--            <header class="wave-background p-4 text-black font-bold rounded-lg">-->
+
+                <div class="flex justify-between mb-3 pt-6">
+                    <div class="font-bold mb-4 text-black">MANAGE SHOW</div>
                     <div>
-                        <ShowHeader
-                            :show="props.show"
-                            :team="props.team"
-                        />
+                        <button
+                            @click="userStore.btnRedirect('/dashboard')"
+                            class="bg-black hover:bg-gray-800 text-white font-semibold ml-2 mt-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
+                        >Dashboard
+                        </button>
+
                     </div>
                 </div>
 
+                <ShowHeader
+                    :show="props.show"
+                    :team="props.team"
+                />
 
-                <div>
-                    <div class="flex flex-wrap-reverse justify-end gap-2">
-                        <div>
-                            <button
-                                v-if="teamStore.can.goLive"
-                                @click="userStore.btnRedirect(`/golive`)"
-                                class="px-4 py-2 text-white font-semibold bg-red-500 hover:bg-red-600 rounded-lg disabled:bg-gray-400"
-                            >Go Live
-                            </button>
-                        </div>
-                        <div>
-                            <button
-                                v-if="teamStore.can.createEpisode"
-                                @click="userStore.btnRedirect(`/shows/${show.slug}/episode/create`)"
-                                class="px-4 py-2 text-white font-semibold bg-green-500 hover:bg-green-600 rounded-lg disabled:bg-gray-400"
-
-                            >Create Episode
-                            </button>
-                        </div>
-                        <div>
-                            <button
-                                v-if="teamStore.can.editShow"
-                                @click="userStore.btnRedirect(`/shows/${show.slug}/edit`)"
-                                class="px-4 py-2 text-white font-semibold bg-blue-500 hover:bg-blue-600 rounded-lg"
-                            >Edit
-                            </button>
-                        </div>
-                        <div hidden>
-                            <button
-                                @click="userStore.btnRedirect(`/dashboard`)"
-                                class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                            >Dashboard
-                            </button>
-                        </div>
-                    </div>
-
-
-
-                <div class="flex justify-end mt-6">
+                <div class="flex justify-between mt-6">
                     <div class="flex flex-col">
                         <div><span class="text-xs  font-semibold uppercase">Team: </span><Link :href="`/teams/${team.slug}/manage`" class="text-blue-500 ml-2 uppercase font-bold"> {{ team.name }} </Link></div>
                         <div><span class="text-xs  font-semibold mr-2 uppercase">Show Runner: </span><span class="font-bold"> {{ show.showRunner }} </span></div>
                         <div><span class="text-xs  font-semibold mr-2 uppercase">Category: </span><span class="font-bold"> {{ show.categoryName }} </span></div>
                         <div><span class="text-xs  font-semibold mr-2 uppercase">Sub-category: </span><span class="font-bold"> {{ show.subCategoryName }} </span></div>
                     </div>
+                    <div>
+                        <button
+                            v-if="teamStore.can.editShow"
+                            @click="userStore.btnRedirect(`/shows/${show.slug}/edit`)"
+                            class="px-4 py-2 text-white font-semibold bg-blue-500 hover:bg-blue-600 rounded-lg"
+                        >Edit
+                        </button>
+                    </div>
                 </div>
-
-
-                </div>
-
-            </div>
             </header>
 
 
@@ -84,8 +56,8 @@
 <!--                {{ teamStore.activeShow.description }}-->
 <!--            </div>-->
 
-            <div class="p-5 text-gray-100">
-                <span class="uppercase text-xs font-semibold text-orange-300">SHOW NOTES: </span>
+            <div class="my-6 text-gray-100">
+                <span class="uppercase text-xs font-semibold text-black">SHOW NOTES: </span>
                 <span class="text-black light:text-black dark:text-white">{{ props.show.notes }}</span>
             </div>
 
@@ -103,7 +75,7 @@
 
 <!--                            <div class="collapse" id="collapseExample">-->
                             <div>
-                                <div class="bg-orange-300 p-2 font-bold text-black">Episodes</div>
+                                <div class="bg-blue-100 p-2 font-bold text-black">Episodes</div>
 
                                 <ShowEpisodesList :episodes="props.episodes" :show="props.show" :episodeStatuses="props.episodeStatuses"/>
                             </div>
@@ -134,8 +106,8 @@
                         </div>
 
                         <div class="mt-4 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                            <div class="bg-orange-300 p-2 font-bold text-black">Credits</div>
-                            <div class="border-1 border-t mb-3 bg-orange-300 py-1 px-2 text-xs font-semibold text-red-800">
+                            <div class="bg-blue-100 p-2 font-bold text-black">Credits</div>
+                            <div class="border-1 border-t mb-3 bg-blue-100 py-1 px-2 text-xs font-semibold text-red-800">
                                 In development. Not currently working.
                             </div>
                             <Link
@@ -222,3 +194,20 @@ teamStore.can = props.can;
 </script>
 
 
+<style scoped>
+@keyframes wave-bg {
+    0%, 100% {
+        background-color: #dbeafe; /* Original color */
+    }
+    50% {
+        background-color: #bfdbfe; /* Slightly lighter color */
+    }
+}
+
+.wave-background {
+    animation: wave-bg 5s infinite ease-in-out;
+    background-color: #dbeafe; /* Starting color */
+}
+
+
+</style>

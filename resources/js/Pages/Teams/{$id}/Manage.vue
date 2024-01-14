@@ -9,70 +9,43 @@
 
             <!--            <TeamHeader v-bind="team" :memberSpots="props.team.memberSpots"/>-->
 
-            <header>
-                <div class="flex justify-between mb-3 pt-6">
-                    <div class="font-bold mb-4 text-orange-400">MANAGE TEAM</div>
-                    <div class="flex flex-wrap-reverse justify-end gap-2">
-                        <div>
-                            <button
-                                v-if="teamStore.can.manageTeam"
-                                @click="userStore.btnRedirect('/shows/create')"
-                                class="bg-green-500 hover:bg-green-600 text-white font-semibold ml-2 mt-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
-                            >Create Show
-                            </button>
-                        </div>
-                        <div v-if="can.editTeam">
-                            <button
-                                class="bg-green-500 hover:bg-green-600 text-white font-semibold ml-2 my-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
-                                @click="openModal"
-                                :disabled="!teamStore.spotsRemaining"
-                                v-if="teamStore.can.manageTeam"
-                            >Add Member ({{ teamStore.spotsRemaining }} spots left)
-                            </button>
-                        </div>
-                        <div>
-                            <button
-                                v-if="can.editTeam"
-                                @click="userStore.btnRedirect(`/teams/${team.slug}/edit`)"
-                                class="bg-blue-500 hover:bg-blue-600 text-white font-semibold ml-2 my-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
-                            >Edit
-                            </button>
+            <header class="mb-3 bg-gradient-to-r from-orange-200 via-orange-100 to-transparent p-4 text-black font-bold rounded-lg">
+<!--            <header class="pulsing-background mb-3 p-4 text-white font-bold rounded-lg">-->
 
-                        </div>
-                       <div>
-                           <button
-                               v-if="!can.manageTeam"
-                               @click="userStore.btnRedirect('/dashboard')"
-                               class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                           >Dashboard
-                           </button>
-                       </div>
+
+                <div class="flex justify-between items-end mb-3">
+                    <div class="font-bold mb-4 text-black align-bottom text-lg">MANAGE TEAM</div>
+
+                    <div>
+                        <button
+                            @click="userStore.btnRedirect('/dashboard')"
+                            class="bg-black hover:bg-gray-800 text-white font-semibold ml-2 mt-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
+                        >Dashboard
+                        </button>
+                    </div>
+
+
+
+                </div>
+                <div class="flex justify-end mb-2">
+
+                    <div class="flex flex-wrap-reverse justify-end gap-2">
+
+
 
                     </div>
+
                 </div>
 
-                <div class="flex justify-between mb-3 pt-6">
-                        <div>
                             <TeamManageHeader
-                                :team="props.team"
-                                :teamLeader="props.teamLeader"
-                                :logo="props.logo"
-                                :image="props.image"
-                                :message="props.message"
+                                :team="team"
+                                :teamLeader="teamLeader"
+                                :logo="logo"
+                                :can="can"
+                                :image="image"
+                                :message="message"
                             />
-                        </div>
 
-                        <div class="flex justify-end mt-6">
-                            <div class="flex flex-col">
-                                <div><span class="text-xs font-semibold mr-2 uppercase">Team Leader: </span>
-                                    <span class="font-bold" v-if="teamLeader.name">{{ teamLeader.name }}</span>
-                                    <span v-else>No team leader assigned</span>
-                                </div>
-                            </div>
-                        </div>
-
-
-                </div>
 
             </header>
 
@@ -83,22 +56,40 @@
 
             <div class="flex flex-col max-w-calc[100%-96rem]">
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                    <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+                    <div class="py-2 align-middle inline-block w-full sm:px-6 lg:px-8 space-y-4">
 
-                        <div class="mt-4 mb-12 pb-6 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                            <TeamShowsList :shows="props.shows.data" :can="props.can" />
-                            <!-- Paginator -->
-                            <Pagination :data="props.shows" class="mt-6" />
+                        <div @click="toggleComponent('teamShows')"
+                             :class="{'rounded-t-lg': teamStore.openComponent === 'teamShows', 'rounded-lg': teamStore.openComponent !== 'teamShows'}"
+                             class="accordion-header p-2 font-bold transition duration-300 ease-in-out transform focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 overflow-hidden shadow-lg bg-orange-300 hover:bg-blue-100 dark:hover:bg-blue-900 text-black hover:text-blue-900 dark:text-blue-100 dark:hover:text-white">
+                            Shows
+                        </div>
+                        <div v-if="teamStore.openComponent === 'teamShows'">
+                            <div class="mt-4 mb-12 pb-6 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                                <TeamShowsList :shows="shows" :can="can" />
+                            </div>
                         </div>
 
-                        <div class="mt-4 mb-12 pb-6 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                            <TeamMembersList :creatorFilters="props.creatorFilters" :creators="props.creators" :can="props.can" />
+                        <div @click="toggleComponent('teamMembers')"
+                             :class="{'rounded-t-lg': teamStore.openComponent === 'teamMembers', 'rounded-lg': teamStore.openComponent !== 'teamMembers'}"
+                             class="accordion-header p-2 font-bold transition duration-300 ease-in-out transform focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 overflow-hidden shadow-lg bg-orange-300 hover:bg-blue-100 dark:hover:bg-blue-900 text-black hover:text-blue-900 dark:text-blue-100 dark:hover:text-white">
+                            Team Members
+                        </div>
+                        <div v-if="teamStore.openComponent === 'teamMembers'">
+                            <div class="mt-4 mb-12 pb-6 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                                <TeamMembersList :creatorFilters="creatorFilters" :creators="creators" :can="can" />
+                            </div>
                         </div>
 
-                        <div class="mt-4 pb-6 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                            <TeamAssignmentsList/>
+                        <div @click="toggleComponent('teamAssignments')"
+                             :class="{'rounded-t-lg': teamStore.openComponent === 'teamAssignments', 'rounded-lg': teamStore.openComponent !== 'teamAssignments'}"
+                             class="accordion-header p-2 font-bold transition duration-300 ease-in-out transform focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 overflow-hidden shadow-lg bg-orange-300 hover:bg-blue-100 dark:hover:bg-blue-900 text-black hover:text-blue-900 dark:text-blue-100 dark:hover:text-white">
+                            Team Assignments
                         </div>
-
+                        <div v-if="teamStore.openComponent === 'teamAssignments'">
+                            <div class="mt-4 pb-6 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                                <TeamAssignmentsList/>
+                            </div>
+                        </div>
                         <!--  <TeamFooter />  -->
 
                     </div>
@@ -120,15 +111,21 @@ import TeamManageHeader from "@/Components/Teams/Manage/TeamManageHeader"
 import TeamMembersList from "@/Components/Teams/Manage/TeamMembersList"
 import TeamShowsList from "@/Components/Teams/Manage/TeamShowsList"
 import TeamAssignmentsList from "@/Components/Teams/Manage/TeamAssignmentsList"
-import Pagination from "@/Components/Pagination"
+
 import Message from "@/Components/Modals/Messages";
 
-let videoPlayerStore = useVideoPlayerStore()
-let teamStore = useTeamStore();
-let userStore = useUserStore()
+const videoPlayerStore = useVideoPlayerStore()
+const teamStore = useTeamStore();
+const userStore = useUserStore()
 
 userStore.currentPage = 'teams'
 userStore.showFlashMessage = true;
+
+// const openComponent = ref('teamShows');
+
+const toggleComponent = (componentName) => {
+    teamStore.openComponent = teamStore.openComponent === componentName ? null : componentName;
+};
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
@@ -167,8 +164,22 @@ teamStore.members = props.members;
 teamStore.managers = props.managers;
 teamStore.can = props.can;
 
-function openModal() {
-    teamStore.showModal = true;
-}
 
 </script>
+
+<style scoped>
+@keyframes pulse-bg {
+    0%, 100% {
+        background-color: rgba(255, 237, 213, 1); /* Fully opaque */
+    }
+    50% {
+        background-color: rgba(255, 237, 213, 0.8); /* Slightly transparent */
+    }
+}
+
+.pulsing-background {
+    animation: pulse-bg 2s infinite ease-in-out;
+    background-color: rgba(255, 237, 213, 1); /* Starting color */
+}
+
+</style>

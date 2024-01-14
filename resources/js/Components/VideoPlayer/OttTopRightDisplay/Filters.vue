@@ -4,9 +4,9 @@
 
         <upgrade v-if="videoPlayerStore.ott === 5 && !userStore.isVip && !userStore.isAdmin"/>
         <div v-if="videoPlayerStore.ott === 5 && (userStore.isVip || userStore.isAdmin)"
-             class="now-playing w-full h-full bg-yellow-500 text-black p-2 overflow-y-scroll scrollbar-hide mb-64">
+             class="now-playing w-full h-full bg-yellow-500 text-black p-2 overflow-y-hidden scrollbar-hide">
             <h1 class="text-xs font-semibold uppercase mb-3 w-full bg-yellow-600 text-black p-2">FILTERS</h1>
-            <div class="pb-24 w-full overflow-y-scroll scrollbar-hide"
+            <div class="pb-24 w-full overflow-y-hidden scrollbar-hide"
                  :class="[{'h-[calc(100vh-22rem)]':!userStore.isMobile},{'h-[calc(100vh-20rem)]':userStore.isMobile}]">
                 Coming Soon!
             </div>

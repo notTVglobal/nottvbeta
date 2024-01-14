@@ -3,7 +3,7 @@
 <!--       <Head :title="title"/>-->
     </div>
 
-    <div class="h-full w-full overflow-scroll">
+    <div class="overflow-scroll">
         <slot />
     </div>
 </template>

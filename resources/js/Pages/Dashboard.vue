@@ -6,187 +6,29 @@
 
             <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
-            <div class="w-full px-4 mx-auto text-center pt-4">
-                <p class="px-2 font-bold">{{ now }}</p>
-            </div>
-
-            <div class="flex justify-between mb-6 pt-4">
-
-                <h1 class="text-3xl font-semibold text-accent">Dashboard for Creators</h1>
-                <p>Your timezone: {{userStore.timezone}}</p>
-<!--                <div class="flex flex-end w-full">-->
-
-<!--                    -->
-<!--                </div>-->
-            </div>
-
-                <div class="w-full flex flex-wrap-reverse mx-auto gap-2 mb-6">
-                    <button
-                        v-if="props.can.viewAdmin"
-                        @click="userStore.btnRedirect(`/admin/settings`)"
-                        class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
-                    >Admin Settings</button>
-                    <button
-                        v-if="props.can.viewNewsroom"
-                        @click="userStore.btnRedirect(`/newsroom`)"
-                        class="bg-yellow-600 hover:bg-yellow-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
-                    >Newsroom</button>
-                    <button
-                        @click="userStore.btnRedirect(`/news/upload`)"
-                        class="bg-green-600 hover:bg-green-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400 cursor-not-allowed"
-                        disabled
-                    >Share News</button>
-                    <button
-                        @click="userStore.btnRedirect(`/invite`)"
-                        class="bg-orange-600 hover:bg-orange-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
-                    >Invite Creator</button>
-                    <button
-                        @click="userStore.btnRedirect(`/videoupload`)"
-                        class="bg-green-600 hover:bg-green-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
-                    >Upload Video</button>
-                    <button
-                        @click="userStore.btnRedirect(`/golive`)"
-                        class="bg-red-600 hover:bg-red-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
-                    >Go Live</button>
-
-                </div>
+            <DashboardHeader :can="can"/>
 
             <section class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-8 mx-2 m-auto text-black">
+
                 <div class="p-5 bg-gray-200 dark:bg-gray-800 rounded">
-                    <div class="mb-3 grid grid-cols-1">
-                        <div class="mb-1 font-semibold text-xl justify-self-start dark:text-gray-50">Open Assignments</div>
-                    </div>
-                    <div class="mb-3 bg-orange-300 py-1 px-2 text-xs font-semibold text-red-800">
-                        In development. Not currently working.
-                    </div>
-                    <div class="ml-3 text-center">
-                        <button disabled class="text-blue-800 hover:text-blue-400 dark:text-blue-100 dark:hover:text-blue-400 disabled:text-gray-500">
-                            Assignments list goes here
-                        </button>
-
-                    </div>
-                    <div class="text-center text-gray-500">(coming soon)</div>
+                    <MyAssignments />
                 </div>
 
                 <div class="p-5 bg-gray-200 dark:bg-gray-800 rounded relative">
-
-                    <div class="mb-3 flex justify-between">
-                        <div class="mb-1 font-semibold text-xl dark:text-gray-50">My Teams
-                        </div>
-
-                        <div v-if="can.createTeam" class="">
-                            <button @click="userStore.btnRedirect('/teams/create')"
-                                class="bg-green-600 hover:bg-green-500 text-white px-4 py-2 text-xs rounded disabled:bg-gray-400"
-                            >New Team</button>
-                        </div>
-                    </div>
-                    <div v-if="props.teams.data === 0" class="italic dark:text-gray-50 light:text-black"> You have no teams.
-                    </div>
-                    <div
-                        v-for="team in teams.data"
-                        :key="team.id"
-                        class="border-b light:bg-white hover:bg-blue-300 dark:bg-gray-600 dark:border-gray-700 dark:hover:bg-blue-800 inset-x-0 bottom-0"
-                    >
-                        <button
-                            @click="visitTeamManagePage(team.slug)"
-                            class="text-blue-800 hover:text-blue-900 dark:text-blue-100 dark:hover:text-white"><p class="px-2 py-1">
-                            {{ team.name }}
-                        </p></button>
-                    </div>
-                    <div class="w-full text-center mb-12">
-                        <Popper
-                            hover openDelay="50" closeDelay="50" offset-skid="0" offset-distance="0" placement="top"
-                            arrow
-                        ><template #content>
-                            <p class="text-xl font-semibold mb-2">🎉 Start a new team</p>
-                            <p class="">Teams manage shows, </p>
-                            <p class="">even if you're a solo creator</p>
-                        </template>
-                            <button class="rounded-full bg-black w-12 h-12 hover:bg-pink-600 text-pink-600 hover:text-black"><font-awesome-icon
-                                icon="fa-solid fa-question"
-                                class="text-3xl"
-                            /></button>
-                        </Popper>
-                    </div>
-                    <div class="mt-24">
-                        <!-- Paginator -->
-                        <div><Pagination :data="props.teams" class="mt-6 absolute inset-x-0 bottom-0 py-2 px-2"/></div>
-
-                    </div>
-
+                    <MyTeams :can="can" :teams="teams"/>
                 </div>
 
                 <div class="p-5 bg-gray-200 dark:bg-gray-800 rounded relative">
-                    <div class="mb-3 flex justify-between">
-                        <div class="mb-1 font-semibold text-xl dark:text-gray-50">My Shows</div>
-                        <div v-if="can.createShow" class="">
-
-                            <div v-if="props.teams.data.length > 0">
-                                <Link :href="`/shows/create`"><button
-                                    class="bg-green-600 hover:bg-green-500 text-white px-4 py-2 text-xs rounded disabled:bg-gray-400"
-                                >Create Show</button>
-                                </Link>
-                            </div>
-
-                            <div v-else>
-                                <button class="bg-green-600 hover:bg-green-500 text-white px-4 py-2 text-xs rounded disabled:bg-gray-400" @click="createShowWithNoTeamButton">Create Show</button>
-                                <dialog id="dashboardNoTeams" class="modal">
-                                    <div class="modal-box">
-                                        <h3 class="font-bold text-lg mb-3">You don't have any teams!</h3>
-                                        <button class="btn btn-primary" @click="navigateToCreateTeam">Create a Team</button>
-                                        <p class="py-4">Press ESC key or click outside to close</p>
-                                    </div>
-                                    <form method="dialog" class="modal-backdrop">
-                                        <button>close</button>
-                                    </form>
-                                </dialog>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <div v-if="props.shows.data === 0" class="italic dark:text-gray-50 light:text-black"> You have no shows.
-                    </div>
-                    <div
-                        v-for="show in shows.data"
-                        :key="show.id"
-                        class="border-b light:bg-white hover:bg-blue-300 dark:bg-gray-600 dark:border-gray-700 dark:hover:bg-blue-800 inset-x-0 bottom-0"
-                    >
-                        <Link
-                            @click="videoPlayer.makeVideoTopRight()"
-                            :href="`/shows/${show.slug}/manage`"
-                            class="text-blue-800 hover:text-blue-900 dark:text-blue-100 dark:hover:text-white"><p class="px-2 py-1">
-                            {{ show.name }}
-                        </p></Link>
-                    </div>
-                    <div class="w-full text-center mb-12">
-                        <Popper
-                            hover openDelay="50" closeDelay="50" offset-skid="0" offset-distance="0" placement="top"
-                            arrow
-                        ><template #content>
-                            <p class="text-xl font-semibold mb-2">🍿 These are your shows </p>
-                            <p class="">Join or create a team to start a show.</p>
-                        </template>
-                            <button class="rounded-full bg-black w-12 h-12 hover:bg-pink-600 text-pink-600 hover:text-black"><font-awesome-icon
-                                icon="fa-solid fa-question"
-                                class="text-3xl"
-                            /></button>
-                        </Popper>
-                    </div>
-                    <div class="mt-24">
-                        <Pagination :data="shows" class="mt-6 absolute inset-x-0 bottom-0 py-2 px-2"/>
-                    </div>
-
+                    <MyShows :can="can" :shows="shows" />
                 </div>
-
 
             </section>
 
             <div class="w-full bg-gray-300 dark:bg-gray-900 rounded p-3 my-8 mx-2 border-b border-2">
                 <div class="stat place-items-center mb-4">
-                    <div class="stat-title light:text-black dark:text-white mb-2">Yesterday's Top Show</div>
-                    <div class="stat-value text-accent md:text-lg text-sm">Down The Rabbit Hole</div>
-                    <div class="stat-desc">︎Episode 2</div>
+                    <div class="stat-title font-semibold uppercase text-black dark:text-white mb-2 text-sm">Yesterday's Top Show</div>
+                    <div class="stat-value text-accent text-3xl">Down The Rabbit Hole</div>
+                    <div class="stat-desc mt-2 text-sm">︎Episode 2</div>
                 </div>
             </div>
 
@@ -275,15 +117,7 @@
                         <div class="stat-value">$89,410</div>
                         <div class="stat-actions">
                             <button class="btn btn-sm btn-success">Add funds</button>
-                        </div>
-                    </div>
-
-                    <div class="stat my-2">
-                        <div class="stat-title text-white">Available balance</div>
-                        <div class="stat-value">$89,400</div>
-                        <div class="stat-actions">
-                            <button class="btn btn-sm mr-2">Withdrawal</button>
-                            <button class="btn btn-sm">deposit</button>
+                            <button class="ml-2 btn btn-sm mr-2">Withdrawal</button>
                         </div>
                     </div>
 
@@ -376,13 +210,16 @@ import { useUserStore } from "@/Stores/UserStore";
 import Pagination from "@/Components/Pagination"
 import Message from "@/Components/Modals/Messages";
 import {Inertia} from "@inertiajs/inertia";
-import { useNow } from '@vueuse/core'
+import MyShowsHeader from "@/Components/Dashboard/MyShows/MyShowsHeader.vue";
+import DashboardHeader from "@/Components/Dashboard/Layout/DashboardHeader.vue";
+import MyAssignments from "@/Components/Dashboard/MyAssignments/MyAssignments.vue";
+import MyTeams from "@/Components/Dashboard/MyTeams/MyTeams.vue";
+import MyShows from "@/Components/Dashboard/MyShows/MyShows.vue";
 
-let videoPlayerStore = useVideoPlayerStore()
-let userStore = useUserStore()
+const videoPlayerStore = useVideoPlayerStore()
+const userStore = useUserStore()
 
 const getUserData = inject('getUserData', null)
-const now = useNow()
 
 videoPlayerStore.loggedIn = true
 userStore.currentPage = 'dashboard'
@@ -438,9 +275,7 @@ let props = defineProps({
     can: Object,
 });
 
-const navigateToCreateTeam = () => {
-    Inertia.visit('teams/create');
-};
+
 
 // Function to extract the numeric value from a string with "MB" suffix
 const extractNumericValue = (str) => {
@@ -463,14 +298,6 @@ const myTotalStorageRoundedPercentage = computed(() => {
     return Math.round(myTotalStoragePercentage);
 });
 
-function createShowWithNoTeamButton() {
-    document.getElementById('dashboardNoTeams').showModal()
-}
-
-function visitTeamManagePage(team) {
-    videoPlayerStore.makeVideoTopRight()
-    Inertia.visit(`/teams/${team}/manage`)
-}
 
 async function updateUserStore() {
     userStore.id = props.id

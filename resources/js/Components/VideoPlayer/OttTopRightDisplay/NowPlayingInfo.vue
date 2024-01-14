@@ -1,9 +1,32 @@
 <template>
+
+        <!-- Video OSD (on screen display) when video is TopRight and the user is logged in. -->
+<!--    <div class="absolute flex justify-between top-0 drop-shadow pt-3 px-10 lg:px-2 w-full z-50">-->
+<!--        <div v-if="videoPlayerStore.videoName !== ''">-->
+<!--            <span class="text-xs uppercase pr-2">Now playing: </span>-->
+<!--            <span class="font-semibold text-xs">{{ videoPlayerStore.videoName }}</span>-->
+<!--        </div>-->
+<!--        <div v-if="channelStore.currentChannelName !== '' || null">-->
+<!--            <span class="text-xs uppercase pr-2">Channel: </span>-->
+<!--            <span class="text-xs font-semibold">{{ channelStore.currentChannelName }}</span>-->
+<!--        </div>-->
+<!--        <div v-if="channelStore.isLive" class="absolute pt-6 left-0 pl-10 lg:pl-2 drop-shadow z-50 w-full">-->
+<!--            <div class="flex justify-between">-->
+<!--                <div>-->
+<!--                            <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-white bg-opacity-80 bg-red-800 uppercase last:mr-0 mr-1">-->
+<!--                            live-->
+<!--                            </span>-->
+<!--                </div>-->
+
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+
     <div v-if="videoPlayerStore.ott === 1" class="ottTopRightDisplay bg-purple-800 hide-scrollbar">
     <div class="h-full w-full overflow-y-scroll scrollbar-hide">
 
-        <div v-if="videoPlayerStore.ott === 1" class="now-playing w-full h-full bg-purple-800 p-2 overflow-y-scroll scrollbar-hide mb-64">
-            <h1 class="text-xs font-semibold uppercase mb-3 w-full bg-purple-900 text-white p-2">NOW PLAYING INFO</h1>
+        <div v-if="videoPlayerStore.ott === 1" class="now-playing w-full h-full px-2 bg-purple-800 overflow-y-scroll scrollbar-hide">
+            <h1 class="text-xs font-semibold uppercase w-full bg-purple-900 text-white p-2 mt-2 mb-2">NOW PLAYING INFO</h1>
 
             <div class="pb-24 w-full overflow-y-scroll scrollbar-hide"
                  :class="[{'h-[calc(100vh-22rem)]':!userStore.isMobile},{'h-[calc(100vh-20rem)]':userStore.isMobile}]">
@@ -55,15 +78,18 @@
 <script setup>
 import { computed } from "vue";
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+import { useNowPlayingStore } from "@/Stores/NowPlayingStore.js"
 import { useStreamStore } from "@/Stores/StreamStore"
-import { useChatStore } from "@/Stores/ChatStore.js"
 import { useUserStore } from "@/Stores/UserStore"
+import { useChatStore } from "@/Stores/ChatStore.js"
 import SingleImage from "@/Components/Multimedia/SingleImage.vue";
 
-let videoPlayerStore = useVideoPlayerStore()
-let streamStore = useStreamStore()
-let chat = useChatStore()
-let userStore = useUserStore()
+const videoPlayerStore = useVideoPlayerStore()
+const nowPlayingStore = useNowPlayingStore()
+const streamStore = useStreamStore()
+const chatStore = useChatStore()
+const userStore = useUserStore()
+
 
 let props = defineProps ({
     user: Object,
@@ -77,10 +103,10 @@ const ottDisplayShow = computed(() => ({
     'hidden': !videoPlayerStore.ott
 }))
 
-const ottChannels = computed(() => ({
-    channelsOttMobile: userStore.isMobile,
-    channelsOttDesktop: !userStore.isMobile
-}))
+// const ottChannels = computed(() => ({
+//     channelsOttMobile: userStore.isMobile,
+//     channelsOttDesktop: !userStore.isMobile
+// }))
 
 
 

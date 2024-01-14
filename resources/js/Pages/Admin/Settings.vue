@@ -13,11 +13,12 @@
                         <h1 class="text-3xl font-semibold">Administrative Settings</h1>
                     </div>
                     <div>
-                        <div class="flex flex-wrap-reverse justify-end gap-2">
+                        <div>
                             <button
-                                @click="userStore.btnRedirect(`/dashboard`)"
-                                class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                            >Dashboard</button>
+                                @click="userStore.btnRedirect('/dashboard')"
+                                class="bg-black hover:bg-gray-800 text-white font-semibold ml-2 mt-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
+                            >Dashboard
+                            </button>
                         </div>
                     </div>
                 </div>
