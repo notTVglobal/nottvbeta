@@ -10,15 +10,17 @@ use App\Models\User;
 use App\Models\Creator;
 use App\Models\Image;
 use App\Models\Show;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Str;
-use Illuminate\Support\Carbon;
-use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Http\Request as HttpRequest;
 use Inertia\Inertia;
+
 
 class TeamsController extends Controller
 {
@@ -121,15 +123,26 @@ class TeamsController extends Controller
         $request->validate([
             'name' => 'unique:teams|required|max:255',
             'description' => 'required|string|max:5000',
-            'user_id' => 'required',
+            'user_id' => 'required|exists:users,id',
             'totalSpots' => 'required|integer|min:1',
         ]);
+
+        // Find the user and their creator profile
+        $user = User::with('creator')->find($request->user_id);
+        if (!$user || !$user->creator) {
+            return redirect()->back()->with('error', 'The selected user is not a creator.');
+        }
+
+        // Check if the creator's status is active
+        if ($user->creator->status->id != 1) {
+            return redirect()->back()->with('error', 'The creator does not have the required status to create a team.');
+        }
 
         Team::create([
             'name' => $request->name,
             'description' => $request->description,
             'user_id' => $request->user_id,
-            'team_leader' => $request->user_id,
+            'team_leader' => $user->creator->id, // Set team_leader to the creator's ID
             'totalSpots' => $request->totalSpots,
             'slug' => \Str::slug($request->name),
             'isBeingEditedByUser_id' => $request->user_id,

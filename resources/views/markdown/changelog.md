@@ -3,6 +3,10 @@
 Last Update: January 14, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.0.5
+January 14, 2024
+* Fix the create new Team bug. And add a validation to check if the creator status is active.
+
 ## v0.8.0.4
 January 14, 2024
 * Added the <a href="https://not.tv/whitepaper">notTV Whitepaper</a> to the list of links on the footer of the home page.
