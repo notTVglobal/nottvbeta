@@ -1,7 +1,7 @@
 <template>
     <div>
 
-        <div v-if="!shows.data && shows.data.length < 1" class="w-full text-center mb-12">
+        <div v-if="!shows.data.length > 0" class="w-full text-center mb-12">
             <Popper
                 hover
                 openDelay="50"
@@ -17,7 +17,7 @@
                     <p class="">
                         Join or create a team to start a show.</p></template>
                 <button
-                    class="rounded-full bg-black w-12 h-12 hover:bg-pink-600 text-pink-600 hover:text-black">
+                    class="rounded-full bg-black mt-12 w-12 h-12 hover:bg-pink-600 text-white hover:text-white">
                     <font-awesome-icon
                         icon="fa-solid fa-question"
                         class="text-3xl"/></button>

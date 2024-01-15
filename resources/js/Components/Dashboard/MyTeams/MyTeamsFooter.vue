@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-if="teams.data && teams.data.length === 0" class="w-full text-center mb-4">
+        <div v-if="!teams.data.length > 0" class="w-full text-center mb-4">
             <Popper
                 hover
                 openDelay="50"
@@ -17,7 +17,7 @@
                         Teams manage shows, </p>
                     <p class="">
                         even if you're a solo creator</p></template>
-                <button class="rounded-full bg-black w-12 h-12 hover:bg-pink-600 text-pink-600 hover:text-black">
+                <button class="rounded-full bg-black mt-12 w-12 h-12 hover:bg-pink-600 text-white hover:text-white">
                     <font-awesome-icon
                         icon="fa-solid fa-question"
                         class="text-3xl"/></button>

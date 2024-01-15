@@ -3,6 +3,16 @@
 Last Update: January 14, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.0.6
+January 15, 2024
+* Started to add the base blockchain functionality in the database.
+* Created a feature to transfer a team to a new owner. This feature is still in progress, need to build the notifications and the way for the user receiving the transfer to accept or reject it. Later we'll add the ability to link it to the blockchain.
+* Fixed some permissions errors. Now only a Team Owner or Team Leader can make a new manager. Managers can add new members. Only Team Owner or Team Leader can Edit the Team. Only the Team Owner can transfer the team.
+* Cleaned up ShowPolicy to remove duplicate code.
+* Cleaned up TeamPolicy code.
+* Any Team Member can be made a Team Leader.
+* Created a Creator Dashboard Notification Panel. This will display live updates when new shows are playing as well as live notifications from the community and newsroom and weather.
+
 ## v0.8.0.5
 January 14, 2024
 * Fix the create new Team bug. And add a validation to check if the creator status is active.

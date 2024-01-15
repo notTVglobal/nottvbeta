@@ -10,7 +10,7 @@
             v-html="link.label"
             class="px-4 py-3 text-sm leading-4 h-fit"
             :class="{ 'text-white bg-orange-400 hover:bg-orange-400 dark:bg-orange-400 dark:hover:bg-orange-400': link.active,
-                      'rounded mt-2 mr-0.5 bg-gray-100 hover:bg-gray-100 text-gray-300 dark:bg-gray-900 dark:hover:bg-gray-900 dark:text-gray-700': ! link.url,
+                      'rounded mt-2 mr-0.5 text-gray-300 dark:text-gray-700': ! link.url,
                       'rounded bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-50 focus:text-indigo-500 hover:shadow': link.url }"
             />
     </div>

@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NewNotificationEvent;
+use App\Models\Notification;
 use App\Models\ShowCategory;
 use App\Models\ShowCategorySub;
 use App\Models\Team;
 use App\Models\TeamMember;
+use App\Models\TeamTransfer;
 use App\Models\User;
 use App\Models\Creator;
 use App\Models\Image;
@@ -142,7 +145,7 @@ class TeamsController extends Controller
             'name' => $request->name,
             'description' => $request->description,
             'user_id' => $request->user_id,
-            'team_leader' => $user->creator->id, // Set team_leader to the creator's ID
+//            'team_leader' => $user->creator->id, // Set team_leader to the creator's ID
             'totalSpots' => $request->totalSpots,
             'slug' => \Str::slug($request->name),
             'isBeingEditedByUser_id' => $request->user_id,
@@ -314,6 +317,25 @@ class TeamsController extends Controller
             ];
         });
 
+        // For can permissions passed to Vue below:
+
+        $userId = auth()->id(); // Get the authenticated user's id
+
+        // Managers
+        $managersIds = $team->managers->pluck('id')->toArray(); // Get only ids of managers
+        $isTeamManager = in_array($userId, $managersIds);
+
+        // Team Leader
+        $isTeamLeader = $userId == $team->team_leader;
+
+        // Team Owner
+        $isTeamOwner = $userId == $team->user_id;
+
+        // Team Members
+        // Assuming members are a relation in your Team model
+        $membersIds = $team->members->pluck('id')->toArray(); // Get only ids of members
+        $isTeamMember = in_array($userId, $membersIds);
+
         // tec21: I am querying the database here because there is currently no
         // pivot table between creators and teams.
         //
@@ -403,12 +425,87 @@ class TeamsController extends Controller
             'creatorFilters' => Request::only(['search']),
             'can' => [
                 'editTeam' => auth()->user()->can('update', $team),
-//                'manageTeam' => auth()->user()->can('viewTeamManagePage', $team),
                 'manageTeam' => auth()->user()->can('manage', $team),
+                'transferTeam' => auth()->user()->can('transfer', $team),
+                'isTeamOwner' => $isTeamOwner,
+                'isTeamLeader' => $isTeamLeader,
+                'isTeamManager' => $isTeamManager,
+                'isTeamMember' => $isTeamMember,
         ]
         ]);
     }
 
+////////////  TRANSFER
+//////////////////////
+
+    public function sendTransferRequest(Team $team, HttpRequest $request)
+    {
+        // If you are not signed in, no way.
+        if (auth()->guest()) {
+            abort(403, 'You are not signed in.');
+        }
+
+        // verify the auth user is the team owner
+        $userOwnsTeam = auth()->user()->id === $team->user_id;
+        if (!$userOwnsTeam) {
+            abort(403, 'You are not authorized to perform this action.');
+        }
+
+        // verify the team is eligible to be transferred.
+        $teamIsEligible = !in_array($team->teamStatus->id, [6, 7, 8, 9, 10, 12]);
+        if (!$teamIsEligible) {
+            return response()->json(['error' => 'The team is not eligible for transfer.'], 422);
+        }
+
+        // change the team status to transfer
+        $team->team_status_id = 12;
+        $team->save();
+
+        $formerOwnerUserId = auth()->user()->id;
+        $newOwnerUserId = $request->user_id;
+        $blockchainId = null;
+        $blockchainTransactionId = null;
+        $transferStatusId = 1; // pending
+
+        // save a record in the team_transfers table marked pending approval (and later on blockchain approval when we develop that part.)
+        $teamTransfer = new TeamTransfer([
+            'team_id' => $team->id,
+            'former_owner_user_id' => $formerOwnerUserId, // ID of the former owner
+            'new_owner_user_id' => $newOwnerUserId, // ID of the new owner
+            'blockchain_id' => $blockchainId, // ID of the associated blockchain (if applicable)
+            'blockchain_transaction_id' => $blockchainTransactionId, // ID of the blockchain transaction (if applicable)
+            'transfer_status_id' => $transferStatusId, // ID of the initial transfer status (e.g., 'pending')
+        ]);
+
+        $teamTransfer->save();
+
+        // create dashboard notification with accept/reject options.
+
+        // send a dashboard notification to the user who must approve or reject the transfer
+        // send a notification to user who must approve or reject the transfer
+        // MODIFY THIS CODE:
+        // notify new team member
+        $user = User::findOrFail($request->user_id);
+        $notification = new Notification;
+        $notification->user_id = $user->id;
+        // make the image the team_poster
+        $notification->image_id = $team->image_id;
+        $notification->url = '/teams/'.$team->slug;
+        $notification->title = $team->name;
+        $notification->message = '<span class="text-green-500">This team has been transferred to you. Please go to your <Link href="/dashboard" class="text-blue-600 hover:text-blue-400">Creator Dashboard</Link> to accept or reject the transfer.</span>';
+        $notification->save();
+        // Trigger the event to broadcast the new notification
+        event(new NewNotificationEvent($notification));
+
+        // email the user who must approve or reject the transfer
+
+        // return response
+//        return response()->json(['message' => 'Transfer request sent successfully.'], 200);
+//        return Inertia::render('Teams/{$id}/Manage', ['message' => 'Transfer request sent successfully.']);
+        return redirect(route('teams.manage', [$team->slug]))->with('message', 'Transfer request sent successfully.');
+
+
+    }
 
 ////////////  EDIT
 //////////////////
@@ -457,39 +554,17 @@ class TeamsController extends Controller
             ];
         }
 
-        // get a list of possible team leaders
-        $possibleTeamLeaders = [];
-        // 1. Check the status of each (creator, leader, and managers) to ensure their status->id is equal to 1.
-        // Check if Team Creator's status is 1
-        if ($team->user->creator->status->id == 1) {
-            $possibleTeamLeaders[] = ['id' => $team->user->id, 'name' => $team->user->name, 'role' => 'Team Creator'];
-        }
-        // Check if Team Leader's status is 1
-        if ($team->teamLeader && $team->teamLeader->status->id == 1) {
-            $possibleTeamLeaders[] = ['id' => $team->teamLeader->user->id, 'name' => $team->teamLeader->user->name, 'role' => 'Team Leader'];
-        }
-        // Check each manager's status
-        foreach ($team->managers as $manager) {
-            if ($manager->creator->status->id == 1) {
-                $possibleTeamLeaders[] = ['id' => $manager->id, 'name' => $manager->name, 'role' => 'Team Manager'];
-            }
-        }
-        // 2. Remove duplicate entries
-//        $possibleTeamLeaders = array_unique($possibleTeamLeaders, SORT_REGULAR);
-        function uniqueById($array): array {
-            $result = [];
-            $idsSeen = [];
+        // Get all active team members
+        $activeMembers = $team->members()->wherePivot('active', 1)->get();
 
-            foreach ($array as $item) {
-                if (!in_array($item['id'], $idsSeen)) {
-                    $idsSeen[] = $item['id'];
-                    $result[] = $item;
-                }
-            }
-
-            return $result;
-        }
-        $possibleTeamLeaders = uniqueById($possibleTeamLeaders);
+        // Prepare the list of possible team leaders
+        $possibleTeamLeaders = $activeMembers->map(function ($member) use ($team) {
+            return [
+                'id' => $member->id,
+                'name' => $member->name,
+                'role' => $this->determineRole($member, $team)
+            ];
+        });
 
         return Inertia::render('Teams/{$id}/Edit', [
             'team' => [
@@ -613,4 +688,24 @@ class TeamsController extends Controller
 
         return redirect()->route('teams')->with('message', 'Team Deleted Successfully');
     }
+
+
+    private function determineRole($member, $team)
+    {
+        if ($member->id === $team->user_id) {
+            return 'Creator';
+        } elseif ($member->id === $team->team_leader) {
+            return 'Leader';
+        } elseif ($team->managers->contains('id', $member->id)) {
+            return 'Manager';
+        } else {
+            return 'Member';
+        }
+    }
+
+
+
 }
+
+
+

@@ -615,6 +615,10 @@ Route::middleware([
         Route::get('/teams/{team}/edit', [TeamsController::class, 'edit'])
             ->name('teams.edit');
 
+        // Add team member
+        Route::post('/teams/{team}/transfer', [TeamsController::class, 'sendTransferRequest'])
+            ->name('teams.sendTransferRequest');
+
         // Team Members
         Route::resource('teamMembers', TeamMembersController::class);
 

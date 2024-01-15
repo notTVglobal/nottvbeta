@@ -49,7 +49,7 @@ import { ref } from "vue";
 import { useForm } from "@inertiajs/inertia-vue3";
 import { useTeamStore } from "@/Stores/TeamStore";
 import { useUserStore } from "@/Stores/UserStore";
-import ShowNoteEdit from "@/Components/Teams/Manage/ShowNoteEdit";
+import ShowNoteEdit from "@/Components/Teams/Manage/Elements/ShowNoteEdit";
 
 import SingleImage from "@/Components/Multimedia/SingleImage";
 

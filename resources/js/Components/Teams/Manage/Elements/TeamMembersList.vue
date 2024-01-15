@@ -14,7 +14,7 @@
             class="bg-green-500 hover:bg-green-600 text-white font-semibold ml-2 my-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
             @click="openModal"
             :disabled="!teamStore.spotsRemaining"
-            v-if="teamStore.can.manageTeam"
+            v-if="can.isTeamOwner || can.isTeamLeader || can.isTeamManager"
         >Add Member ({{ teamStore.spotsRemaining }} spots left)
         </button>
     </div>
@@ -60,7 +60,7 @@
         </tr>
         </thead>
         <tbody class="divide-y divide-gray-200">
-            <TeamMember v-for="member in teamStore.members" :member="member" :key="member.id" :can="can"/>
+            <TeamMember v-for="member in teamStore.members" :member="member" :team="team" :key="member.id" :can="can"/>
         </tbody>
     </table>
     </div>
@@ -70,7 +70,7 @@
     </div>
 
     <Teleport to="body">
-        <TeamAddMember :creatorFilters="props.creatorFilters" :creators="props.creators"/>
+        <TeamAddMember :can="can" :creatorFilters="props.creatorFilters" :creators="props.creators"/>
     </Teleport>
 
 
@@ -78,13 +78,14 @@
 
 <script setup>
 import { onBeforeMount } from "vue"
-import TeamMember from "@/Components/Teams/Manage/TeamMember.vue";
-import TeamAddMember from "@/Components/Teams/Manage/TeamAddMember.vue";
+import TeamMember from "@/Components/Teams/Manage/Elements/TeamMember.vue";
+import TeamAddMember from "@/Components/Teams/Manage/Elements/TeamAddMember.vue";
 import { useTeamStore } from "@/Stores/TeamStore";
 
 let teamStore = useTeamStore();
 
 let props = defineProps({
+    team: Object,
     creators: Object,
     creatorFilters: Object,
     can: Object,

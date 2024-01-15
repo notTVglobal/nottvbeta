@@ -79,14 +79,12 @@
                         <span v-if="episode.show_episode_status_id === 6" class="capitalize font-semibold">{{timeAgo}}</span>
                     </div>
                     <div><span class="text-xs capitalize font-semibold">Show: </span>
-                        <button :disabled="teamStore.goLiveDisplay" :href="`/shows/${show.slug}/manage`" class="text-blue-500 ml-2 uppercase disabled:text-black"> {{
-                                show.name
-                            }}
+                        <button :disabled="teamStore.goLiveDisplay" @click="userStore.btnRedirect(`/shows/${show.slug}/manage`)" class="text-blue-500 ml-2 uppercase disabled:text-black">
+                            {{ show.name }}
                         </button>
                     </div>
-                    <div><span class="text-xs capitalize font-semibold mr-2">Show Runner: </span> {{
-                            show.showRunner
-                        }}
+                    <div><span class="text-xs capitalize font-semibold mr-2">Show Runner: </span>
+                        {{ show.showRunner }}
                     </div>
                     <div><span class="text-xs capitalize font-semibold mr-2">Episode Number: </span>
                         <span v-if="episode.episode_number">{{ episode.episode_number }}</span>

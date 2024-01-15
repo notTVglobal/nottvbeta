@@ -20,10 +20,12 @@
                         Create Show
                     </button>
                     <dialog id="dashboardNoTeams" class="modal">
-                        <div class="modal-box">
-                            <h3 class="font-bold text-lg mb-3">You don't have any teams!</h3>
-                            <button class="btn btn-primary" @click="navigateToCreateTeam">Create a Team</button>
-                            <p class="py-4">Press ESC key or click outside to close</p>
+                        <div class="modal-box flex flex-col justify-center">
+                            <div class="font-bold text-lg mb-2 text-center">You don't have any teams!</div>
+                            <div class="w-full flex justify-center py-2">
+                                <button class="btn btn-primary w-fit px-4" @click="navigateToCreateTeam">Create a Team</button>
+                            </div>
+                            <div class="py-2 text-center">Press ESC key or click outside to close</div>
                         </div>
                         <form method="dialog" class="modal-backdrop">
                             <button>close</button>

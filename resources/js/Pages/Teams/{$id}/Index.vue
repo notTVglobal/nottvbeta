@@ -98,7 +98,7 @@ import { onBeforeMount, onMounted, ref } from "vue"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useTeamStore } from "@/Stores/TeamStore.js"
 import { useUserStore } from "@/Stores/UserStore";
-import TeamShowsList from "@/Components/Teams/TeamShowsList.vue";
+import TeamShowsList from "@/Components/Teams/Elements/TeamShowsList.vue";
 import Message from "@/Components/Modals/Messages";
 import SingleImage from "@/Components/Multimedia/SingleImage";
 

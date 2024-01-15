@@ -20,6 +20,7 @@ class Team extends Model
         'slug',
         'isBeingEditedByUser_id',
         'team_leader',
+        'team_status_id',
     ];
 
     public function getRouteKeyName() {

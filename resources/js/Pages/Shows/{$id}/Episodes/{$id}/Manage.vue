@@ -27,7 +27,7 @@
 
             <EpisodeRundown hidden />
 
-            <ShowEpisodeManageBonusContent />
+            <ShowEpi    sodeManageBonusContent />
 
             <EpisodeFooter :can="props.can" :team="props.team" :episode="props.episode" :show="props.show"/>
 

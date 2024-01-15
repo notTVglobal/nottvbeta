@@ -76,7 +76,7 @@
                         </div>
                         <div v-if="teamStore.openComponent === 'teamMembers'">
                             <div class="mt-4 mb-12 pb-6 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                                <TeamMembersList :creatorFilters="creatorFilters" :creators="creators" :can="can" />
+                                <TeamMembersList :creatorFilters="creatorFilters" :creators="creators" :team="team" :can="can" />
                             </div>
                         </div>
 
@@ -88,6 +88,19 @@
                         <div v-if="teamStore.openComponent === 'teamAssignments'">
                             <div class="mt-4 pb-6 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
                                 <TeamAssignmentsList/>
+                            </div>
+                        </div>
+
+                        <div v-if="can.transferTeam">
+                            <div @click="toggleComponent('teamTransfer')"
+                                 :class="{'rounded-t-lg': teamStore.openComponent === 'teamTransfer', 'rounded-lg': teamStore.openComponent !== 'teamTransfer'}"
+                                 class="accordion-header p-2 font-bold transition duration-300 ease-in-out transform focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 overflow-hidden shadow-lg bg-orange-300 hover:bg-blue-100 dark:hover:bg-blue-900 text-black hover:text-blue-900 dark:text-blue-100 dark:hover:text-white">
+                                Team Transfer Process
+                            </div>
+                            <div v-if="teamStore.openComponent === 'teamTransfer'">
+                                <div class="mt-4 pb-6 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                                    <TeamTransferProcess :can="can" :teamStatusId="team.team_status_id" :creators="creators" :creatorFilters="creatorFilters" />
+                                </div>
                             </div>
                         </div>
                         <!--  <TeamFooter />  -->
@@ -107,12 +120,13 @@ import { onBeforeMount, onMounted, ref } from "vue"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useTeamStore } from "@/Stores/TeamStore.js"
 import { useUserStore } from "@/Stores/UserStore";
-import TeamManageHeader from "@/Components/Teams/Manage/TeamManageHeader"
-import TeamMembersList from "@/Components/Teams/Manage/TeamMembersList"
-import TeamShowsList from "@/Components/Teams/Manage/TeamShowsList"
-import TeamAssignmentsList from "@/Components/Teams/Manage/TeamAssignmentsList"
+import TeamManageHeader from "@/Components/Teams/Manage/Layout/TeamManageHeader"
+import TeamMembersList from "@/Components/Teams/Manage/Elements/TeamMembersList"
+import TeamShowsList from "@/Components/Teams/Manage/Elements/TeamShowsList"
+import TeamAssignmentsList from "@/Components/Teams/Manage/Elements/TeamAssignmentsList"
 
 import Message from "@/Components/Modals/Messages";
+import TeamTransferProcess from "@/Components/Teams/Manage/Elements/TeamTransferProcess.vue";
 
 const videoPlayerStore = useVideoPlayerStore()
 const teamStore = useTeamStore();

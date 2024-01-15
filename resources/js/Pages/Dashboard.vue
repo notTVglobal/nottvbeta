@@ -8,6 +8,14 @@
 
             <DashboardHeader :can="can"/>
 
+<!--            <section class="grid grid-cols-1 my-8 mx-2 md:mx-10 m-auto bg-gray-200 rounded p-5 h-64 text-black">-->
+<!--                <div class="flex flex-wrap justify-center">-->
+<!--                    <span class=" font-semibold uppercase">Announcements</span>-->
+<!--                </div>-->
+<!--            </section>-->
+
+            <NotificationPanel />
+
             <section class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-8 mx-2 m-auto text-black">
 
                 <div class="p-5 bg-gray-200 dark:bg-gray-800 rounded">
@@ -215,6 +223,7 @@ import DashboardHeader from "@/Components/Dashboard/Layout/DashboardHeader.vue";
 import MyAssignments from "@/Components/Dashboard/MyAssignments/MyAssignments.vue";
 import MyTeams from "@/Components/Dashboard/MyTeams/MyTeams.vue";
 import MyShows from "@/Components/Dashboard/MyShows/MyShows.vue";
+import NotificationPanel from "@/Components/Dashboard/Elements/DashboardNotification/DashboardNotificationPanel.vue";
 
 const videoPlayerStore = useVideoPlayerStore()
 const userStore = useUserStore()

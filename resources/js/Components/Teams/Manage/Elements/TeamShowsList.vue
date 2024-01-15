@@ -72,7 +72,7 @@ import { useShowStore } from "@/Stores/ShowStore";
 import { useTeamStore } from "@/Stores/TeamStore";
 import { useUserStore } from "@/Stores/UserStore";
 
-import TeamShow from "@/Components/Teams/Manage/TeamShow";
+import TeamShow from "@/Components/Teams/Manage/Elements/TeamShow";
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 import Pagination from "@/Components/Pagination"
 
