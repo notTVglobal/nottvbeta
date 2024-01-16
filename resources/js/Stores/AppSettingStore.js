@@ -32,6 +32,22 @@ export const useAppSettingStore = defineStore('appSetting', {
                 this.setChatMessageBgColor(this.primaryChatMessageBgColor);
             }
         },
+        // turnPipChatModeOn() {
+        //     this.pipChatMode = true;
+        //     this.hidePage = true;
+        //     this.setPageBgColor(this.pipBgColor);
+        //     this.setChatMessageBgColor(this.pipChatMessageBgColor);
+        //     // Additional logic for turning chat mode on
+        //     // let videoJs = videojs('main-player')
+        //     // videoJs.controls(false)
+        // },
+        // turnPipChatModeOff() {
+        //     this.pipChatMode = false;
+        //     this.hidePage = false;
+        //     this.setPageBgColor(this.primaryBgColor);
+        //     this.setChatMessageBgColor(this.primaryChatMessageBgColor);
+        //     // Additional logic for turning chat mode off
+        // },
         setPageBgColor(color) {
             this.pageBgColor = color;
         },

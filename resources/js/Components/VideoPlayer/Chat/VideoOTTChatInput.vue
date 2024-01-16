@@ -10,8 +10,8 @@
                     placeholder="Write a message..."
                     v-model="form.message"
                     @keyup.enter="sendMessage"
-                    v-on:blur="blurInput"
-                    v-on:focus="focusInput"
+                    v-on:focus="chatStore.turnPipChatModeOn"
+                    v-on:blur="chatStore.turnPipChatModeOff"
                 />
                 <div @click="sendMessage" class="right-auto lg:right-5 p-2 w-fit text-white form-control cursor-pointer">
                     <font-awesome-icon icon="fa-paper-plane" class="hover:text-blue-800 text-xl"/>
@@ -60,20 +60,20 @@ const vFocus = {
     mounted: (el) => el.focus(),
 }
 
-const focusInput = () => {
-    if (userStore.isMobile) {
-        videoPlayerStore.makeVideoPiP()
-        console.log('toggle PiP Chat Mode: focus Input')
-    }
-}
-
-let blurInput = () => {
-    if (userStore.isMobile) {
-        videoPlayerStore.makeVideoTopRight();
-        appSettingStore.togglePipChatMode();
-        console.log('toggle PiP Chat Mode: blur Input')
-    }
-};
+// const focusInput = () => {
+//     if (userStore.isMobile) {
+//         videoPlayerStore.makeVideoPiP()
+//         console.log('toggle PiP Chat Mode: focus Input')
+//     }
+// }
+//
+// let blurInput = () => {
+//     if (userStore.isMobile) {
+//         videoPlayerStore.makeVideoTopRight();
+//         appSettingStore.togglePipChatMode();
+//         console.log('toggle PiP Chat Mode: blur Input')
+//     }
+// };
 
 
 function sendMessage() {

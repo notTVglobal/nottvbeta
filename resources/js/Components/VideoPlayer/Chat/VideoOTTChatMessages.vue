@@ -1,6 +1,6 @@
 <template>
     <div class="h-full scrollbar-hide">
-        <div :class="pipChatModeChangeHeight"
+        <div :class="[pipChatModeChangeHeight]"
              class=" chatTopRightContainer">
 
             <div class="oldMessage" v-for="(oldMessage, index) in chatStore.oldMessages.slice().reverse()" :key="index">

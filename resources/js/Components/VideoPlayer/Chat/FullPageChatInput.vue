@@ -1,8 +1,8 @@
 <template>
-    <div class="z-50">
+    <div class="z-60">
 
         <form @submit.prevent="">
-            <div class="flex flex-row">
+            <div class="flex">
             <input
                 class="p-2 w-fit text-black form-control border-2 border-gray-800 hover:border-blue-800 focus:outline-none"
                 type="text"
@@ -11,15 +11,14 @@
                 placeholder="Write a message..."
                 v-model="form.message"
                 @keyup.enter="sendMessage"
-                v-on:blur="blurInput"
-                v-on:focus="focusInput"
+                v-on:focus="chatStore.turnPipChatModeOn"
+                v-on:blur="chatStore.turnPipChatModeOff"
             />
             <div v-if="!userStore.isMobile" @click="sendMessage" class="ml-2 mt-2 w-fit text-white form-control cursor-pointer">
                 <font-awesome-icon icon="fa-paper-plane" class="hover:text-blue-800 text-xl"/>
             </div>
             </div>
             <div class="ml-2 mt-1 font-thin text-xs">{{form.message.length}}</div>
-
 
         </form>
     </div>
@@ -60,21 +59,21 @@ const vFocus = {
     mounted: (el) => el.focus()
 }
 
-const focusInput = () => {
-    if (userStore.isMobile) {
-        videoPlayerStore.makeVideoPiP()
-        videoPlayerStore.ott = false
-        videoPlayerStore.ottButtons = false
-    }
-}
-
-let blurInput = () => {
-    if (userStore.isMobile) {
-        videoPlayerStore.makeVideoFullPage();
-        appSettingStore.togglePipChatMode();
-        console.log('toggle PiP Chat Mode: blur Input')
-    }
-};
+// const focusInput = () => {
+//     if (userStore.isMobile) {
+//         videoPlayerStore.makeVideoPiP()
+//         videoPlayerStore.ott = false
+//         videoPlayerStore.ottButtons = false
+//     }
+// }
+//
+// let blurInput = () => {
+//     if (userStore.isMobile) {
+//         videoPlayerStore.makeVideoFullPage();
+//         appSettingStore.togglePipChatMode();
+//         console.log('toggle PiP Chat Mode: blur Input')
+//     }
+// };
 
 function sendMessage() {
     //

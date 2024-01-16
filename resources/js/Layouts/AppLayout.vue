@@ -27,7 +27,7 @@
 </template>
 
 <script setup>
-import {ref, provide, computed, onBeforeMount, onBeforeUnmount, defineAsyncComponent, onMounted} from "vue"
+import {ref, provide, computed, onBeforeMount, onBeforeUnmount, defineAsyncComponent, onMounted, onUnmounted} from "vue"
 import { useAppSettingStore } from '@/Stores/AppSettingStore';
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useStreamStore } from "@/Stores/StreamStore"
@@ -102,6 +102,7 @@ onBeforeUnmount(() => {
     videoPlayerStore.viewerCount = 0
     disconnect();
 });
+
 
 function setPage() {
     isStreamPage = videoPlayerStore.currentPage === "stream";

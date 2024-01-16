@@ -63,7 +63,12 @@ onMounted(async () => {
     }
 
     videoPlayerStore.makeVideoFullPage()
-    videoPlayerStore.showOsdAndControlsAndNav()
+    if (userStore.isMobile) {
+        videoPlayerStore.showOsd()
+    } else {
+        videoPlayerStore.showOsdAndControlsAndNav()
+    }
+
     videoPlayerStore.loggedIn = true
     videoPlayerStore.ott = 0
     videoPlayerStore.osd = true

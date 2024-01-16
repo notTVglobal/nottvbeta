@@ -1,7 +1,10 @@
 import { defineStore } from "pinia";
-import {default as Echo} from "laravel-echo";
+import { default as Echo } from "laravel-echo";
 import { ref } from "vue";
-import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore";
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore";
+import { useAppSettingStore } from "@/Stores/AppSettingStore";
+import { useUserStore } from "@/Stores/UserStore";
+import videojs from "video.js";
 
 export const useChatStore = defineStore('chatStore', {
     state() {
@@ -38,6 +41,73 @@ export const useChatStore = defineStore('chatStore', {
             this.class = 'chatHidden';
             this.showChat = false;
         },
+        turnPipChatModeOn() {
+            // turn chat mode on
+            const videoPlayerStore = useVideoPlayerStore();
+            const appSettingStore = useAppSettingStore();
+            const userStore = useUserStore();
+
+            if (userStore.isMobile) {
+                let videoJs = videojs('main-player')
+                videoJs.controls(false)
+                // videoPlayerStore.ott = false
+                videoPlayerStore.ottButtons = false
+
+                if (!videoPlayerStore.fullPage) {
+                    appSettingStore.hidePage = true;
+                }
+                appSettingStore.pipChatMode = true;
+
+                appSettingStore.setPageBgColor(appSettingStore.pipBgColor);
+                appSettingStore.setChatMessageBgColor(appSettingStore.pipChatMessageBgColor);
+
+                videoPlayerStore.class = 'pipVideoClassTopRight'
+                videoPlayerStore.videoContainerClass = 'pipVideoContainerTopRight'
+
+                // if(videoPlayerStore.fullPage) {
+                //     videoPlayerStore.class = 'pipVideoClassFullPage'
+                //     videoPlayerStore.videoContainerClass = 'pipVideoContainerFullPage'
+                // } else {
+                //     videoPlayerStore.class = 'pipVideoClassTopRight'
+                //     videoPlayerStore.videoContainerClass = 'pipVideoContainerTopRight'
+                // }
+
+            }
+        },
+        turnPipChatModeOff() {
+            const appSettingStore = useAppSettingStore();
+            const videoPlayerStore = useVideoPlayerStore();
+
+            appSettingStore.pipChatMode = false;
+            appSettingStore.hidePage = false;
+            appSettingStore.setPageBgColor(appSettingStore.primaryBgColor);
+            appSettingStore.setChatMessageBgColor(appSettingStore.primaryChatMessageBgColor);
+
+            if (videoPlayerStore.fullPage) {
+                videoPlayerStore.makeVideoFullPage();
+            } else {
+                videoPlayerStore.makeVideoTopRight();
+            }
+        },
+        // turnPipChatModeOffToFullPage() {
+        //     // turn chat mode off (FullPage)
+        //     const videoPlayerStore = useVideoPlayerStore();
+        //
+        //     if (userStore.isMobile) {
+        //         videoPlayerStore.makeVideoFullPage();
+        //         this.turnPipChatModeOff();
+        //     }
+        // },
+        // turnPipChatModeOffToTopRight() {
+        //     // turn chat mode off (TopRight)
+        //     const videoPlayerStore = useVideoPlayerStore();
+        //
+        //     if (userStore.isMobile) {
+        //         videoPlayerStore.makeVideoTopRight();
+        //         this.turnPipChatModeOff();
+        //     }
+        // },
+
 
 
 

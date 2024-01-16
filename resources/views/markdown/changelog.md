@@ -3,6 +3,11 @@
 Last Update: January 14, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.0.7
+January 15, 2024
+* Fixed the mobile chat layout with PiP Chat Mode.
+* Click video in FullPage mobile to show/hide video controls. There is a bug right now where the user has to click or touch the top portion of the video to make it work. In FullPage desktop mode click the video to pause/unpause.
+
 ## v0.8.0.6
 January 15, 2024
 * Started to add the base blockchain functionality in the database.

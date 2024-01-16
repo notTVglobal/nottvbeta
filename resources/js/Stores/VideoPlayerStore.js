@@ -102,7 +102,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
         showOsd() {
             this.osd = true
         },
-        showOsdControlsOnly() {
+        showControls() {
             this.controls = true
         },
 
@@ -120,7 +120,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
         hideOsd() {
             this.osd = false
         },
-        hideOsdControlsOnly() {
+        hideControls() {
             this.controls = false
         },
 
@@ -159,7 +159,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             if(useUserStore().isMobile) {
                 this.ottButtons = !this.ottButtons
                 this.osd = !this.osd
-                this.controls = !this.controls
+                this.hideControls()
                 this.ottChannels = !this.ottChannels
             } else {
                 this.ottButtons = !this.ottButtons
@@ -170,7 +170,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             if(useUserStore().isMobile) {
                 this.ottButtons = !this.ottButtons
                 this.osd = !this.osd
-                this.controls = !this.controls
+                this.hideControls()
                 this.ottPlaylist = !this.ottPlaylist
             } else {
                 this.ottButtons = !this.ottButtons
@@ -181,7 +181,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             if(useUserStore().isMobile) {
                 this.ottButtons = !this.ottButtons
                 this.osd = !this.osd
-                this.controls = !this.controls
+                this.hideControls()
                 this.ottChat = !this.ottChat
             } else {
                 this.ottButtons = !this.ottButtons
@@ -192,7 +192,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             if(useUserStore().isMobile) {
                 this.ottButtons = !this.ottButtons
                 this.osd = !this.osd
-                this.controls = !this.controls
+                this.hideControls()
                 this.ottFilters = !this.ottFilters
             } else {
                 this.ottButtons = !this.ottButtons
@@ -426,24 +426,21 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
         },
         // change video size/position and page layout
         makeVideoPiP() {
-            const appSettingStore = useAppSettingStore();
-            const userStore = useUserStore();
-
-            if (userStore.isMobile) {
-                let videoJs = videojs('main-player')
-                videoJs.controls(false)
-                if(this.fullPage) {
-                    this.class = 'pipVideoClassFullPage'
-                    this.videoContainerClass = 'pipVideoContainerFullPage'
-                } else {
-                    this.class = 'pipVideoClassTopRight'
-                    this.videoContainerClass = 'pipVideoContainerTopRight'
-                }
-                appSettingStore.togglePipChatMode()
-                // appSettingStore.setPageBgColor('bg-black');
-                // appSettingStore.setChatMessageBgColor('bg-gray-900');
-                // this.fullPage = false
-            }
+            // const appSettingStore = useAppSettingStore();
+            // const userStore = useUserStore();
+            //
+            // if (userStore.isMobile) {
+            //     let videoJs = videojs('main-player')
+            //     videoJs.controls(false)
+            //     if(this.fullPage) {
+            //         this.class = 'pipVideoClassFullPage'
+            //         this.videoContainerClass = 'pipVideoContainerFullPage'
+            //     } else {
+            //         this.class = 'pipVideoClassTopRight'
+            //         this.videoContainerClass = 'pipVideoContainerTopRight'
+            //     }
+            //     appSettingStore.togglePipChatMode()
+            // }
         },
         makeVideoFullPage() {
             const appSettingStore = useAppSettingStore();
@@ -454,7 +451,11 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             this.class = 'fullPageVideoClass'
             // appSettingStore.setPageBgColor('bg-gray-800');
             // appSettingStore.setChatMessageBgColor('bg-gray-600');
-            this.controls = !(this.ottChat && userStore.isMobile);
+            if (userStore.isMobile) {
+                this.hideControls()
+            } else {
+                this.showControls()
+            }
             userStore.hidePage = true
             // if (useUserStore().isMobile) {
             //     this.videoContainerClass = 'fullPageVideoContainerMobile'

@@ -1,8 +1,10 @@
     <template>
     <div>
-        <div class="chatFullPageMessages hide-scrollbar">
+
+
+        <div class="chatFullPageMessages hide-scrollbar" :class="{'pipChatModeOn': appSettingStore.pipChatMode}">
+
             <div id="scrollToMe"></div>
-            <div class="chatFullPageMessages hide-scrollbar">
                 <div id="newMessages" v-for="(newMessage, index) in chatStore.newMessages.slice().reverse()" :key="newMessage.id">
                     <message-item :id="newMessage.id" :message="newMessage"/>
                 </div>
@@ -10,9 +12,13 @@
                 <div id="oldMessages" v-for="(oldMessage, index) in chatStore.oldMessages.slice()" :key="index">
                     <message-item :id="oldMessage.id" :message="oldMessage"/>
                 </div>
-
+<!--            .chatFullPageMessages has a flex-direction: column-reverse applied to it.
+                The Conversation div below appears at the top if its down here. -->
+            <div class="flex flex-col">
+                <div class="text-3xl font-semibold">Conversation</div>
+                <div class="italic mb-1">The newest message is at the bottom.</div>
             </div>
-        </div>
+            </div>
     </div>
 </template>
 

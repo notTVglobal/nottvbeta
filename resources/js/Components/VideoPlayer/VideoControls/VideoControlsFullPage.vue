@@ -1,15 +1,12 @@
 <template>
-<!--    <Transition-->
-<!--        enter-from-class="opacity-0"-->
-<!--        enter-to-class="opacity-100"-->
-<!--        enter-active-class="transition duration-300"-->
-<!--        leave-active-class="transition duration-200"-->
-<!--        leave-from-class="opacity-100"-->
-<!--        leave-to-class="opacity-0"-->
-<!--    >-->
-<!--&lt;!&ndash; this transition doesn't seem to be working&ndash;&gt;-->
-<!--        <div v-if="show">-->
-
+    <Transition
+        enter-from-class="opacity-0 scale-300"
+        enter-to-class="opacity-100 scale-100"
+        enter-active-class="transition ease-in-out duration-500 transform"
+        leave-active-class="transition ease-in-out duration-500 transform"
+        leave-from-class="opacity-100 scale-100"
+        leave-to-class="opacity-0 scale-300"
+    >
 <!-- Video FullPage Controls -->
 
         <div class="videoControls">
@@ -18,7 +15,7 @@
 
         </div>
 
-<!--    </Transition>-->
+    </Transition>
 </template>
 
 <script setup>

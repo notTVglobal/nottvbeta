@@ -1,11 +1,13 @@
 <template>
     <div>
-
+<!--        This v-touch Vuetify directive is not working properly-->
+<!--        Vuetify 3 is still in development. We are implementing-->
+<!--        a vanilla javascript approach with an event listener instead. -->
+<!--        v-touch="() => {clickOnVideoAction()}"-->
     <!-- Video Player -->
-        <div v-touch="() => {clickOnVideoAction()}"
+        <div
              :class="videoPlayerStore.videoContainerClass"
              >
-
             <div :class="videoPlayerStore.class">
               <videoJs /></div>
 
@@ -40,7 +42,7 @@
 
             <!-- Video Player Controls-->
             <VideoControlsTopRight
-                v-show="videoPlayerStore.controls"
+                v-if="videoPlayerStore.controls"
                 class="hidden lg:block"
             />
 
@@ -82,7 +84,7 @@
 </template>
 
 <script setup>
-import {ref, onUnmounted, onMounted} from 'vue'
+import { ref, onUnmounted, onMounted } from 'vue'
 import { Inertia } from "@inertiajs/inertia"
 import { useAppSettingStore } from '@/Stores/AppSettingStore';
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
@@ -133,9 +135,16 @@ const videoDuration = ref('00:00');
 const hoverTime = ref('00:00:00');
 const hoverPosition = ref('0px'); // Initialize with '0px'
 const isHovering = ref(false); // Initialize as false
+// const elementRef = ref(null);
 
 
 onMounted( () => {
+
+    // if (elementRef.value) {
+    //     elementRef.value.addEventListener('touchstart', clickOnVideoAction);
+    //     // For mouse click support in non-touch devices:
+    //     elementRef.value.addEventListener('click', clickOnVideoAction);
+    // }
     // Set the references to the DOM elements here
     progressBarRef.value = document.getElementById('progress-bar');
     progressRef.value = document.getElementById('progress'); // If progressRef refers to the same element
@@ -287,6 +296,10 @@ onUnmounted(() => {
     // player.on('ended', function() {
     //     this.dispose();
     // });
+    if (elementRef.value) {
+        elementRef.value.removeEventListener('touchstart', clickOnVideoAction);
+        elementRef.value.removeEventListener('click', clickOnVideoAction);
+    }
 })
 
 
@@ -328,9 +341,7 @@ function backToPage() {
     videoPlayerStore.osd = false;
 }
 
-
-
-function clickOnVideoAction() {
+const clickOnVideoAction = () => {
 
     // if (!userStore.isMobile && !videoPlayerStore.currentPageIsStream) {
     //     videoPlayerStore.toggleOsdAndControls()
@@ -377,7 +388,12 @@ function clickOnVideoAction() {
     }
     else {
         // let videoPlayer = videojs('main-player');
-        videoPlayerStore.togglePlay()
+        if (userStore.isMobile) {
+            videoPlayerStore.controls = !videoPlayerStore.controls
+        } else {
+            videoPlayerStore.togglePlay()
+        }
+
         // videoPlayerStore.toggleOsdAndControls()
     }
     // if (videoPlayerStore.currentPageIsStream === true) {

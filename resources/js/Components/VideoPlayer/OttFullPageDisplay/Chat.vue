@@ -25,19 +25,30 @@
 import { computed } from "vue";
 import { useAppSettingStore } from '@/Stores/AppSettingStore';
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
+import { useUserStore } from "@/Stores/UserStore"
+import { useChatStore } from "@/Stores/ChatStore"
 import FullPageChat from "@/Components/VideoPlayer/Chat/FullPageChat"
 
 const appSettingStore = useAppSettingStore();
-let videoPlayerStore = useVideoPlayerStore();
+const videoPlayerStore = useVideoPlayerStore();
+const userStore = useUserStore();
+const chatStore = useChatStore();
 
 defineProps({
     user: Object,
 })
 
 function closeChat() {
-    videoPlayerStore.toggleChat()
-    videoPlayerStore.osd = true
-    videoPlayerStore.makeVideoFullPage()
+    if (userStore.isMobile) {
+        videoPlayerStore.toggleChat()
+        videoPlayerStore.osd = true
+        chatStore.turnPipChatModeOff()
+    } else {
+        videoPlayerStore.toggleChat()
+        videoPlayerStore.osd = true
+        videoPlayerStore.makeVideoFullPage()
+    }
+
 }
 
 const pipChatModeChangeTopPosition = computed(() => {

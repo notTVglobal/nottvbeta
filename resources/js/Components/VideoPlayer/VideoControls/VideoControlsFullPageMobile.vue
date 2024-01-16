@@ -12,6 +12,9 @@
 <div>
 <!-- Video FullPage Controls -->
 <!--    <div class="absolute flex justify-center space-x-4 bottom-12 right-px-2 w-full z-50"-->
+
+<!--    tec21: 2024-01-15 This is old. This was the first version of the buttons.. temporary. -->
+
                     <div class="videoControlsMobile">
                             <button
                                 class="text-xs md:text-md md:text-md bg-gray-600 rounded-full p-2 hover:bg-gray-600"
