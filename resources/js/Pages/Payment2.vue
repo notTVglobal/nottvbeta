@@ -11,26 +11,12 @@
 </template>
 
 <script setup>
+import { onMounted } from "vue";
 import { loadStripe } from "@stripe/stripe-js";
 import { useForm } from "@inertiajs/inertia-vue3"
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore";
-import { useUserStore } from "@/Stores/UserStore";
-import { onMounted } from "vue";
+import { usePageSetup } from '@/Utilities/PageSetup'
 
-
-let videoPlayerStore = useVideoPlayerStore()
-let userStore = useUserStore()
-
-userStore.currentPage = 'payment2'
-
-onMounted(() => {
-    videoPlayerStore.makeVideoTopRight();
-    if (userStore.isMobile) {
-        videoPlayerStore.ottClass = 'ottClose'
-        videoPlayerStore.ott = 0
-    }
-    document.getElementById("topDiv").scrollIntoView()
-});
+usePageSetup('payment2')
 
 // This is your test secret API key.
 // const stripePromise = loadStripe('pk_test_51KJwK5Kahp38LUVYOjg7h425exCr6UZmMm1M24d31ZaS0HTsgPWIZE9Hd2F0KnREVHuPm2VHesX3J5SQfFFg7fTC00DMNpq1Lj');

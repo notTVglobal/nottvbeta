@@ -387,24 +387,26 @@
 import { onBeforeMount, onMounted, ref } from "vue"
 import { Inertia } from "@inertiajs/inertia"
 import {useForm, usePage} from "@inertiajs/inertia-vue3"
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import { useTeamStore } from "@/Stores/TeamStore.js"
-import { useShowStore } from "@/Stores/ShowStore.js"
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
+import { useAppSettingStore } from "@/Stores/AppSettingStore"
+const appSettingStore = useAppSettingStore()
+import { useTeamStore } from "@/Stores/TeamStore"
+import { useShowStore } from "@/Stores/ShowStore"
 import { useUserStore } from "@/Stores/UserStore"
 import { useMovieStore } from "@/Stores/MovieStore"
-import JetValidationErrors from '@/Jetstream/ValidationErrors.vue'
-import TabbableTextarea from "@/Components/TabbableTextarea"
-import Message from "@/Components/Modals/Messages"
-import SingleImage from "@/Components/Multimedia/SingleImage"
-import ImageUpload from "@/Components/Uploaders/ImageUpload"
-import VideoUpload from "@/Components/Uploaders/VideoUpload"
-import CancelButton from "@/Components/Buttons/CancelButton.vue";
+import JetValidationErrors from '@/Jetstream/ValidationErrors'
+import TabbableTextarea from "@/Components/Global/TextEditor/TabbableTextarea"
+import Message from "@/Components/Global/Modals/Messages"
+import SingleImage from "@/Components/Global/Multimedia/SingleImage"
+import ImageUpload from "@/Components/Global/Uploaders/ImageUpload"
+import VideoUpload from "@/Components/Global/Uploaders/VideoUpload"
+import CancelButton from "@/Components/Global/Buttons/CancelButton.vue"
 
-let videoPlayerStore = useVideoPlayerStore()
-let teamStore = useTeamStore()
-let showStore = useShowStore()
-let userStore = useUserStore()
-let movieStore = useMovieStore()
+const videoPlayerStore = useVideoPlayerStore()
+const teamStore = useTeamStore()
+const showStore = useShowStore()
+const userStore = useUserStore()
+const movieStore = useMovieStore()
 
 let props = defineProps({
     movie: Object,
@@ -450,8 +452,9 @@ userStore.showFlashMessage = true;
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
     if (userStore.isMobile) {
-        videoPlayerStore.ottClass = 'ottClose'
-        videoPlayerStore.ott = 0
+
+        appSettingStore.ott = 0
+appSettingStore.pageIsHidden = false
     }
     document.getElementById("topDiv").scrollIntoView()
 })

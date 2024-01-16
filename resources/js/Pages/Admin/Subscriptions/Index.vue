@@ -1,33 +1,36 @@
 <template>
-    <div id="topDiv">
-        <div>
-            {{subscriptions}}
-        </div>
+  <div id="topDiv">
+    <div>
+      {{ subscriptions }}
     </div>
+  </div>
 
 </template>
 
 <script setup>
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
+import { useAppSettingStore } from "@/Stores/AppSettingStore"
+const appSettingStore = useAppSettingStore()
 import { onMounted } from "vue"
-import {useUserStore} from "@/Stores/UserStore";
+import { useUserStore } from "@/Stores/UserStore"
 
-let videoPlayerStore = useVideoPlayerStore()
-let userStore = useUserStore()
+const videoPlayerStore = useVideoPlayerStore()
+const userStore = useUserStore()
 
 userStore.currentPage = 'Admin/Subscriptions'
 
 defineProps({
-    subscriptions: Object,
+  subscriptions: Object,
 })
 
 onMounted(() => {
-    videoPlayerStore.makeVideoTopRight()
-    if (userStore.isMobile) {
-        videoPlayerStore.ottClass = 'ottClose'
-        videoPlayerStore.ott = 0
-    }
-    document.getElementById("topDiv").scrollIntoView()
+  videoPlayerStore.makeVideoTopRight()
+  if (userStore.isMobile) {
+
+    appSettingStore.ott = 0
+appSettingStore.pageIsHidden = false
+  }
+  document.getElementById("topDiv").scrollIntoView()
 
 })
 

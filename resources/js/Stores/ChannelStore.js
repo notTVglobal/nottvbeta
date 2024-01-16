@@ -1,21 +1,27 @@
-import { defineStore } from "pinia";
-import { useUserStore } from "@/Stores/UserStore";
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore";
-import { useNowPlayingStore } from "@/Stores/NowPlayingStore";
-import videojs from "video.js";
+import { defineStore } from "pinia"
+import { useUserStore } from "@/Stores/UserStore"
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
+import { useAppSettingStore } from "@/Stores/AppSettingStore"
+// const appSettingStore = useAppSettingStore()
+import { useNowPlayingStore } from "@/Stores/NowPlayingStore"
+
+const initialState = () => ({
+    currentChannelId: 0,
+    currentChannelName: '',
+    isLive: false,
+    viewerCount: 0,
+    channel_list: {},
+    userAddedToChannels: false,
+    channelsLoaded: false,
+})
 
 export const useChannelStore = defineStore('channelStore', {
-    state: () => ({
-        currentChannelId: 0,
-        currentChannelName: '',
-        isLive: false,
-        viewerCount: 0,
-        channel_list: {},
-        userAddedToChannels: false,
-        channelsLoaded: false,
-    }),
-
+    state: initialState,
     actions: {
+        reset() {
+            // Reset the store to its original state (clear all data)
+            Object.assign(this, initialState())
+        },
         getChannels() {
             if (!this.channelsLoaded){
                 axios.get('/api/channels_list')

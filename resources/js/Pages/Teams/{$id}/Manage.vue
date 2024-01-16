@@ -116,46 +116,31 @@
 
 
 <script setup>
-import { onBeforeMount, onMounted, ref } from "vue"
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import { useTeamStore } from "@/Stores/TeamStore.js"
-import { useUserStore } from "@/Stores/UserStore";
-import TeamManageHeader from "@/Components/Teams/Manage/Layout/TeamManageHeader"
-import TeamMembersList from "@/Components/Teams/Manage/Elements/TeamMembersList"
-import TeamShowsList from "@/Components/Teams/Manage/Elements/TeamShowsList"
-import TeamAssignmentsList from "@/Components/Teams/Manage/Elements/TeamAssignmentsList"
+import { usePageSetup } from '@/Utilities/PageSetup'
+import { useTeamStore } from "@/Stores/TeamStore"
+import { useUserStore } from "@/Stores/UserStore"
+import TeamManageHeader from "@/Components/Pages/Teams/Manage/Layout/TeamManageHeader"
+import TeamMembersList from "@/Components/Pages/Teams/Manage/Elements/TeamMembersList"
+import TeamShowsList from "@/Components/Pages/Teams/Manage/Elements/TeamShowsList"
+import TeamAssignmentsList from "@/Components/Pages/Teams/Manage/Elements/TeamAssignmentsList"
 
-import Message from "@/Components/Modals/Messages";
-import TeamTransferProcess from "@/Components/Teams/Manage/Elements/TeamTransferProcess.vue";
+import Message from "@/Components/Global/Modals/Messages"
+import TeamTransferProcess from "@/Components/Pages/Teams/Manage/Elements/TeamTransferProcess"
 
-const videoPlayerStore = useVideoPlayerStore()
+usePageSetup('teamsManage')
+
 const teamStore = useTeamStore();
 const userStore = useUserStore()
-
-userStore.currentPage = 'teams'
-userStore.showFlashMessage = true;
-
-// const openComponent = ref('teamShows');
 
 const toggleComponent = (componentName) => {
     teamStore.openComponent = teamStore.openComponent === componentName ? null : componentName;
 };
 
-onMounted(() => {
-    videoPlayerStore.makeVideoTopRight();
-    if (userStore.isMobile) {
-        videoPlayerStore.ottClass = 'ottClose'
-        videoPlayerStore.ott = 0
-    }
-
-    const savedPosition = sessionStorage.getItem('scrollPosition');
-    if (savedPosition) {
-        window.scrollTo(0, parseInt(savedPosition));
-        sessionStorage.removeItem('scrollPosition'); // Clear after restoring
-    } else {
-        document.getElementById("topDiv").scrollIntoView()
-    }
-});
+const savedPosition = sessionStorage.getItem('scrollPosition');
+if (savedPosition) {
+  window.scrollTo(0, parseInt(savedPosition));
+  sessionStorage.removeItem('scrollPosition'); // Clear after restoring
+}
 
 let props = defineProps({
     team: Object,

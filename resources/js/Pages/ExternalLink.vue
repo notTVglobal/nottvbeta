@@ -31,29 +31,23 @@
 
 <script setup>
 import { onBeforeMount, onMounted, ref } from "vue"
+import { usePageSetup } from '@/Utilities/PageSetup'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import { useUserStore } from "@/Stores/UserStore"
 import { useShopStore } from "@/Stores/ShopStore"
-import Message from "@/Components/Modals/Messages"
+import Message from "@/Components/Global/Modals/Messages"
 
-let videoPlayerStore = useVideoPlayerStore()
-let userStore = useUserStore()
-let shopStore = useShopStore()
+usePageSetup('ExternalLink')
+
+const videoPlayerStore = useVideoPlayerStore()
+const userStore = useUserStore()
+const shopStore = useShopStore()
 
 let props = defineProps({
     can: Object,
 })
 
-userStore.currentPage = 'ExternalLink'
-userStore.showFlashMessage = true;
-
 onMounted(() => {
-    videoPlayerStore.makeVideoTopRight();
-    if (userStore.isMobile) {
-        videoPlayerStore.ottClass = 'ottClose'
-        videoPlayerStore.ott = 0
-    }
-    document.getElementById("topDiv").scrollIntoView()
     shopStore.getProducts()
 });
 

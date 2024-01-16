@@ -72,44 +72,18 @@
 </template>
 
 <script setup>
-import { onBeforeMount, onMounted, ref } from "vue"
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import { useUserStore } from "@/Stores/UserStore"
-import DeleteUserForm from '@/Pages/Profile/Partials/DeleteUserForm.vue'
+import { usePageSetup } from '@/Utilities/PageSetup'
+import DeleteUserForm from '@/Pages/Profile/Partials/DeleteUserForm'
 import JetSectionBorder from '@/Jetstream/SectionBorder.vue'
-import LogoutOtherBrowserSessionsForm from '@/Pages/Profile/Partials/LogoutOtherBrowserSessionsForm.vue'
-import TwoFactorAuthenticationForm from '@/Pages/Profile/Partials/TwoFactorAuthenticationForm.vue'
-import UpdatePasswordForm from '@/Pages/Profile/Partials/UpdatePasswordForm.vue'
-import UpdateProfileInformationForm from '@/Pages/Profile/Partials/UpdateProfileInformationForm.vue'
-import UserUpdateContactForm from "@/Components/Users/UserUpdateContactForm.vue"
+import LogoutOtherBrowserSessionsForm from '@/Pages/Profile/Partials/LogoutOtherBrowserSessionsForm'
+import TwoFactorAuthenticationForm from '@/Pages/Profile/Partials/TwoFactorAuthenticationForm'
+import UpdatePasswordForm from '@/Pages/Profile/Partials/UpdatePasswordForm'
+import UpdateProfileInformationForm from '@/Pages/Profile/Partials/UpdateProfileInformationForm'
+import UserUpdateContactForm from "@/Components/Pages/Users/UserUpdateContactForm"
 
-// import {vue} from "laravel-mix";
-
-let videoPlayerStore = useVideoPlayerStore()
-let userStore = useUserStore()
+usePageSetup('settings')
 
 userStore.currentPage = 'settings'
-
-// onBeforeMount(() => {
-//     userStore.scrollToTopCounter = 0;
-// })
-
-onMounted(() => {
-    videoPlayerStore.makeVideoTopRight()
-    if (userStore.isMobile) {
-        videoPlayerStore.ottClass = 'ottClose'
-        videoPlayerStore.ott = 0
-    }
-    document.getElementById("topDiv").scrollIntoView()
-    // if (userStore.scrollToTopCounter === 0 ) {
-    //
-    //     userStore.scrollToTopCounter ++;
-    // }
-});
-
-// let props = defineProps({
-//     can: Object,
-// })
 
 defineProps({
     // can: Object,

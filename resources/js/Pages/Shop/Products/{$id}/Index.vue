@@ -54,29 +54,20 @@
 </template>
 
 <script setup>
-import { onBeforeMount, onMounted, ref } from "vue"
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+import { onMounted } from "vue"
+import { usePageSetup } from '@/Utilities/PageSetup'
 import { useUserStore } from "@/Stores/UserStore"
 import { useShopStore } from "@/Stores/ShopStore"
 import { storeToRefs } from 'pinia'
-import Message from "@/Components/Modals/Messages"
-import ShopHeader from "@/Components/Shop/ShopHeader"
+import Message from "@/Components/Global/Modals/Messages"
+import ShopHeader from "@/Components/Pages/Shop/ShopHeader"
 
-let videoPlayerStore = useVideoPlayerStore()
-let userStore = useUserStore()
-let shopStore = useShopStore()
+usePageSetup('shopProductsShow')
 
-userStore.currentPage = 'products'
-userStore.showFlashMessage = true;
+const userStore = useUserStore()
+const shopStore = useShopStore()
 
 onMounted(() => {
-    videoPlayerStore.makeVideoTopRight();
-    if (userStore.isMobile) {
-        videoPlayerStore.ottClass = 'ottClose'
-        videoPlayerStore.ott = 0
-    }
-    document.getElementById("topDiv").scrollIntoView()
-
     shopStore.getProducts()
 });
 

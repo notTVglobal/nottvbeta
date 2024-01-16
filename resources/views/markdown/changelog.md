@@ -3,6 +3,24 @@
 Last Update: January 14, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.1.0
+January 16, 2024
+* codebase-restructuring
+* This is a major overhaul of the folder structure and how the OTT components work.
+* The Ott panels still need work.
+* The Chat needs to be fixed.
+* The Back and Cancel buttons now work better than ever.
+* The code is lighter, we introduced a Utilities folder:
+  * PageSetup.js will save time modifying code that loads common to every page.
+  * StoreReset.js makes sure the Logout button resets all of the stores.
+
+## v0.8.0.8
+January 16, 2024
+* Cleaned up code.
+* Created a new folder structure for Components.
+* Rebuilt the Chat Component
+* Combined the FullPage and TopRight Ott Panels into one component
+
 ## v0.8.0.7
 January 15, 2024
 * Fixed the mobile chat layout with PiP Chat Mode.

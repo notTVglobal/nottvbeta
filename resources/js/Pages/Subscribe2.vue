@@ -49,23 +49,25 @@
 </template>
 
 <script setup>
-import { onBeforeMount, onMounted, ref } from "vue";
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import { useUserStore } from "@/Stores/UserStore";
-import Message from "@/Components/Modals/Messages";
-import {Inertia} from "@inertiajs/inertia";
-import { useForm } from "@inertiajs/inertia-vue3";
+import {Inertia} from "@inertiajs/inertia"
+import { useForm } from "@inertiajs/inertia-vue3"
+import { onBeforeMount, onMounted, ref } from "vue"
+import { usePageSetup } from '@/Utilities/PageSetup'
+import { useUserStore } from "@/Stores/UserStore"
+import { loadStripe } from "@stripe/stripe-js"
+import Message from "@/Components/Global/Modals/Messages"
+import SrMessages from "./SrMessages"
 
-import { loadStripe } from "@stripe/stripe-js";
-import SrMessages from "./SrMessages.vue";
+usePageSetup('subscribe')
 
-const isLoading = ref(false);
-const messages = ref([]);
+const userStore = useUserStore()
 
-let stripe;
-let elements;
 
-userStore.showFlashMessage = true;
+const isLoading = ref(false)
+const messages = ref([])
+
+let stripe
+let elements
 
 onMounted(async () => {
     const { publishableKey } = await fetch("/api/config").then((res) => res.json());
@@ -109,23 +111,6 @@ const handleSubmit = async () => {
     isLoading.value = false;
 }
 
-let videoPlayerStore = useVideoPlayerStore()
-let userStore = useUserStore()
-
-userStore.currentPage = 'subscribe'
-
-
-onMounted(() => {
-    videoPlayerStore.makeVideoTopRight();
-    if (userStore.isMobile) {
-        videoPlayerStore.ottClass = 'ottClose'
-        videoPlayerStore.ott = 0
-    }
-    document.getElementById("topDiv").scrollIntoView()
-
-
-});
-
 let props = defineProps({
     intent: Object,
     card: ref(null)
@@ -134,12 +119,6 @@ let props = defineProps({
 let form = useForm({
     name: '',
 });
-
-
-</script>
-
-<script>
-
 
 </script>
 

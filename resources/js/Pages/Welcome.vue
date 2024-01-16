@@ -173,20 +173,22 @@
 
 <script setup>
 import { onMounted, ref, computed, onBeforeUnmount } from 'vue'
-import Login from "@/Components/Welcome/Login.vue"
-import Register from "@/Components/Welcome/Register.vue"
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
+import Login from "@/Components/Pages/Welcome/Login"
+import Register from "@/Components/Pages/Welcome/Register"
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
+import { useAppSettingStore } from "@/Stores/AppSettingStore"
+const appSettingStore = useAppSettingStore()
 import { useWelcomeStore } from "@/Stores/WelcomeStore"
 import { useUserStore } from "@/Stores/UserStore"
 import Button from "@/Jetstream/Button"
-import WelcomeOverlay from "@/Components/Welcome/WelcomeOverlay"
-import WelcomeBug from "@/Components/Welcome/WelcomeBug.vue"
-import VideoControlsWelcome from "@/Components/VideoPlayer/VideoControls/VideoControlsWelcome.vue"
-import videojs from "video.js";
+import WelcomeOverlay from "@/Components/Pages/Welcome/WelcomeOverlay"
+import WelcomeBug from "@/Components/Pages/Welcome/WelcomeBug"
+import VideoControlsWelcome from "@/Components/Global/VideoPlayer/VideoControls/Layout/VideoControlsWelcome"
+import videojs from "video.js"
 
-let videoPlayerStore = useVideoPlayerStore()
-let welcomeStore = useWelcomeStore()
-let userStore = useUserStore()
+const videoPlayerStore = useVideoPlayerStore()
+const welcomeStore = useWelcomeStore()
+const userStore = useUserStore()
 let showLogin = ref(false)
 let showRegister = ref(false)
 
@@ -214,15 +216,16 @@ userStore.currentPage = 'welcome'
 welcomeStore.showLogin = false
 welcomeStore.showRegister = false
 welcomeStore.showOverlay = true
-videoPlayerStore.fullPage = false
+appSettingStore.fullPage = false
 videoPlayerStore.loggedIn = false
 videoPlayerStore.class = "welcomeVideoClass"
 videoPlayerStore.videoContainerClass = "welcomeVideoContainer"
 
 onMounted(() => {
     videoPlayerStore.makeVideoWelcomePage()
-    videoPlayerStore.ottClass = 'ottClose'
-    videoPlayerStore.ott = 0
+
+    appSettingStore.ott = 0
+appSettingStore.pageIsHidden = false
 
 });
 

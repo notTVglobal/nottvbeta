@@ -49,25 +49,15 @@
 </template>
 
 <script setup>
-import { onBeforeMount, onMounted, ref } from "vue"
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import { useUserStore } from "@/Stores/UserStore";
-import Message from "@/Components/Modals/Messages";
+import { usePageSetup } from '@/Utilities/PageSetup'
+import { useUserStore } from "@/Stores/UserStore"
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
+import Message from "@/Components/Global/Modals/Messages"
 
-let videoPlayerStore = useVideoPlayerStore()
-let userStore = useUserStore()
+usePageSetup('calculations')
 
-userStore.currentPage = 'calculations'
-userStore.showFlashMessage = true;
-
-onMounted(() => {
-    videoPlayerStore.makeVideoTopRight();
-    if (userStore.isMobile) {
-        videoPlayerStore.ottClass = 'ottClose'
-        videoPlayerStore.ott = 0
-    }
-    document.getElementById("topDiv").scrollIntoView()
-});
+const videoPlayerStore = useVideoPlayerStore()
+const userStore = useUserStore()
 
 let props = defineProps({
     can: Object,

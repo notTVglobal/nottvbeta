@@ -20,7 +20,7 @@ mix.js('resources/js/app.js', 'public/js')
         version: 3,
         options: {
             compilerOptions: {
-                isCustomElement: (tag) => ['video-player', 'video-js', 'AppLayout', 'button', 'NotificationsButton', 'VideoPlayer', 'Chat'].includes(tag),
+                isCustomElement: (tag) => ['video-player', 'video-js', 'AppLayout', 'button', 'NotificationsButton', 'VideoPlayer', 'Chat', 'ButtonsOttTopRight', 'Info'].includes(tag),
                 // isCustomElement: (tag) => ['AppLayout'].includes(tag),
                 // isCustomElement: (tag) => ['button'].includes(tag),
                 // isCustomElement: (tag) => ['NotificationsButton'].includes(tag),

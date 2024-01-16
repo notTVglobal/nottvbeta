@@ -1,117 +1,30 @@
 <template>
     <Head title="Stream" />
-
-
 </template>
-
 
 <script setup>
 import { inject, onBeforeMount, onBeforeUnmount, onMounted, onUnmounted, ref } from "vue"
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
+// import { usePage } from "@inertiajs/inertia-vue3"
+import { usePageSetup } from '@/Utilities/PageSetup'
+import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import { useUserStore } from "@/Stores/UserStore"
-import { useStreamStore } from "@/Stores/StreamStore"
-import { useChatStore } from "@/Stores/ChatStore"
-import { useChannelStore } from "@/Stores/ChannelStore"
-import { Inertia } from "@inertiajs/inertia";
-import { usePage } from "@inertiajs/inertia-vue3"
-import videojs from "video.js";
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 
-let videoPlayerStore = useVideoPlayerStore()
-let userStore = useUserStore()
-let streamStore = useStreamStore()
-let chatStore = useChatStore()
-let channelStore = useChannelStore()
+usePageSetup('stream')
+
+const appSettingStore = useAppSettingStore()
+const userStore = useUserStore()
+const videoPlayerStore = useVideoPlayerStore()
 
 const getUserData = inject('getUserData', null)
-let urlPrev = usePage().props.value.urlPrev
-
-onBeforeMount(() => {
-    // getUserTimezone()
-    videoPlayerStore.currentPageIsStream = true;
-    videoPlayerStore.currentView = 'stream'
-    userStore.currentPage = 'stream'
-})
-
-// const channel = [
-//     {
-//         id: 2,
-//         name: 'Stream',
-//         stream: 'thirdeyespies',
-//         channel_source: null,
-//         isLive: null
-//     }
-// ]
+// let urlPrev = usePage().props.value.urlPrev
+appSettingStore.osd = true
+videoPlayerStore.makeVideoFullPage()
 
 onMounted(async () => {
-    // console.log(window.location.href)
-    //
-    // console.log(window.history)
-    // userStore.prevUrl = window.history.length > 1 && window.history.state
-    //     ? window.history.state.url : null;
-
-    // async function changeChannel() {
-    //     await channelStore.getChannels()
-    //     await channelStore.disconnectViewerFromChannel()
-    //     await channelStore.changeChannel(channelStore.channel_list[1])
-    //     Inertia.reload()
-    // }
-    //
-    // await changeChannel()
-
     if (!getUserData) {
         updateUserStore()
     }
-
-    videoPlayerStore.makeVideoFullPage()
-    if (userStore.isMobile) {
-        videoPlayerStore.showOsd()
-    } else {
-        videoPlayerStore.showOsdAndControlsAndNav()
-    }
-
-    videoPlayerStore.loggedIn = true
-    videoPlayerStore.ott = 0
-    videoPlayerStore.osd = true
-    videoPlayerStore.ottButtons = true
-    videoPlayerStore.ottChannels = false
-    videoPlayerStore.ottChat = false
-    videoPlayerStore.ottPlaylist = false
-    videoPlayerStore.ottFilters = false
-    videoPlayerStore.fullPage = true
-
-    // for testing purposes, channel 2 on my local machine is my test channel
-    // need to add to the if statement, on firstPlay when the user loads the app
-    // channel is undefined.... so don't run this function if the viewer loads the
-    // app on the stream page or refreshes the page on the stream page.
-
-
-    // if (videoPlayerStore.videoPlayerLoaded) {
-    //     if (channelStore.currentChannelId !== 2 && urlPrev !== 'empty' && urlPrev !== 'stream') {
-    //         await (async () => {
-    //             // await channelStore.getChannels();
-    //             await channelStore.disconnectViewerFromChannel();
-    //             await channelStore.changeChannel(channel[0]);
-    //             // Inertia.reload();
-    //         })();
-    //     }
-    // }
-})
-
-onBeforeUnmount(() => {
-    videoPlayerStore.controls = false
-    videoPlayerStore.makeVideoTopRight()
-    videoPlayerStore.currentPageIsStream = false
-    videoPlayerStore.fullPage = false
-})
-
-onUnmounted(() => {
-    // videoPlayerStore.ott = 0
-    // videoPlayerStore.osd = true
-    // videoPlayerStore.ottButtons = true
-    // videoPlayerStore.ottChannels = false
-    // videoPlayerStore.ottChat = false
-    // videoPlayerStore.ottPlaylist = false
-    // videoPlayerStore.ottFilters = false
 })
 
 let props = defineProps({
@@ -124,6 +37,7 @@ function updateUserStore() {
     axios.post('/getUserStoreData')
         .then(response => {
             userStore.id = response.data.id
+            userStore.loggedIn = true
             userStore.isAdmin = response.data.isAdmin
             userStore.isCreator = response.data.isCreator
             userStore.isNewsPerson = response.data.isNewsPerson

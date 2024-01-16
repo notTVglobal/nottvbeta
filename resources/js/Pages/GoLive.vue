@@ -57,28 +57,14 @@
 </template>
 
 <script setup>
-import { onBeforeMount, onMounted, ref } from "vue";
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import { useUserStore } from "@/Stores/UserStore";
-import Message from "@/Components/Modals/Messages";
-import {usePage} from "@inertiajs/inertia-vue3";
-import {Inertia} from "@inertiajs/inertia";
-import CancelButton from "@/Components/Buttons/CancelButton.vue";
+import { usePageSetup } from '@/Utilities/PageSetup'
+import { useUserStore } from "@/Stores/UserStore"
+import Message from "@/Components/Global/Modals/Messages"
+import CancelButton from "@/Components/Global/Buttons/CancelButton"
 
-let videoPlayerStore = useVideoPlayerStore()
-let userStore = useUserStore()
+usePageSetup('goLive')
 
-userStore.currentPage = 'goLive'
-userStore.showFlashMessage = true;
-
-onMounted(() => {
-    videoPlayerStore.makeVideoTopRight()
-    if (userStore.isMobile) {
-        videoPlayerStore.ottClass = 'ottClose'
-        videoPlayerStore.ott = 0
-    }
-    document.getElementById("topDiv").scrollIntoView()
-});
+const userStore = useUserStore()
 
 </script>
 

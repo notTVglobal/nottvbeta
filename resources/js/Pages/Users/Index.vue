@@ -125,16 +125,19 @@
 <script setup>
 import { onBeforeMount, onMounted, ref, watch } from "vue"
 import { Inertia } from "@inertiajs/inertia"
-import { useForm } from "@inertiajs/inertia-vue3";
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import { useUserStore } from "@/Stores/UserStore";
-import Pagination from "@/Components/Pagination"
+import { useForm } from "@inertiajs/inertia-vue3"
+import { usePageSetup } from '@/Utilities/PageSetup'
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
+import { useUserStore } from "@/Stores/UserStore"
+import Pagination from "@/Components/Global/Paginators/Pagination"
 import throttle from "lodash/throttle"
-import Message from "@/Components/Modals/Messages";
-import AdminHeader from "@/Components/Admin/AdminHeader.vue";
+import Message from "@/Components/Global/Modals/Messages"
+import AdminHeader from "@/Components/Pages/Admin/AdminHeader"
 
-let videoPlayerStore = useVideoPlayerStore()
-let userStore = useUserStore()
+usePageSetup('usersIndex')
+
+const videoPlayerStore = useVideoPlayerStore()
+const userStore = useUserStore()
 
 let props = defineProps({
     users: Object,
@@ -147,18 +150,6 @@ let search = ref(props.filters.search);
 const form = useForm({
     userId: '',
 })
-
-userStore.currentPage = 'users'
-userStore.showFlashMessage = true;
-
-onMounted(() => {
-    videoPlayerStore.makeVideoTopRight()
-    if (userStore.isMobile) {
-        videoPlayerStore.ottClass = 'ottClose'
-        videoPlayerStore.ott = 0
-    }
-    document.getElementById("topDiv").scrollIntoView()
-});
 
 watch(search, throttle(function (value) {
     Inertia.get('/users', { search: value }, {

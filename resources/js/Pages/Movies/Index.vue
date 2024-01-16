@@ -159,17 +159,19 @@
 </template>
 
 <script setup>
-import { onMounted, watch, onBeforeMount, ref } from "vue";
-import { Inertia } from "@inertiajs/inertia";
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import { useUserStore } from "@/Stores/UserStore.js"
-import Pagination from "@/Components/PaginationDark"
-import throttle from "lodash/throttle";
-import Message from "@/Components/Modals/Messages";
-import SingleImage from "@/Components/Multimedia/SingleImage";
+import { Inertia } from "@inertiajs/inertia"
+import { onMounted, watch, onBeforeMount, ref } from "vue"
+import throttle from "lodash/throttle"
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
+import { useAppSettingStore } from "@/Stores/AppSettingStore"
+const appSettingStore = useAppSettingStore()
+import { useUserStore } from "@/Stores/UserStore"
+import Pagination from "@/Components/Global/Paginators/PaginationDark"
+import Message from "@/Components/Global/Modals/Messages"
+import SingleImage from "@/Components/Global/Multimedia/SingleImage"
 
-let videoPlayerStore = useVideoPlayerStore()
-let userStore = useUserStore()
+const videoPlayerStore = useVideoPlayerStore()
+const userStore = useUserStore()
 
 let props = defineProps({
     movies: Object,
@@ -189,8 +191,9 @@ userStore.showFlashMessage = true;
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();
     if (userStore.isMobile) {
-        videoPlayerStore.ottClass = 'ottClose'
-        videoPlayerStore.ott = 0
+
+        appSettingStore.ott = 0
+appSettingStore.pageIsHidden = false
     }
     document.getElementById("topDiv").scrollIntoView()
 });

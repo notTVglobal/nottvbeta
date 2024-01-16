@@ -21,8 +21,8 @@
 
 <script setup>
 import {Head} from '@inertiajs/inertia-vue3';
-import JetApplicationLogo from '@/Jetstream/ApplicationLogo.vue';
-import { ref, nextTick } from 'vue';
+import JetApplicationLogo from '@/Jetstream/ApplicationLogo'
+import { ref, nextTick } from 'vue'
 // import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js";
 
 defineProps({
@@ -30,7 +30,7 @@ defineProps({
 });
 </script>
 <script>
-import MarkdownLayout from '@/Layouts/MarkdownLayout';
+import MarkdownLayout from '@/Layouts/MarkdownLayout'
 
 export default {
     layout: MarkdownLayout,

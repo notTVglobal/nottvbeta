@@ -103,25 +103,13 @@
 </template>
 
 <script setup>
-import { onBeforeMount, onMounted, ref } from "vue";
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import { useUserStore } from "@/Stores/UserStore";
-import Message from "@/Components/Modals/Messages";
+import { usePageSetup } from '@/Utilities/PageSetup'
+import { useUserStore } from "@/Stores/UserStore"
+import Message from "@/Components/Global/Modals/Messages"
 
-let videoPlayerStore = useVideoPlayerStore()
-let userStore = useUserStore()
+usePageSetup('usersShow')
 
-userStore.currentPage = 'users'
-userStore.showFlashMessage = true;
-
-onMounted(() => {
-    videoPlayerStore.makeVideoTopRight();
-    if (userStore.isMobile) {
-        videoPlayerStore.ottClass = 'ottClose'
-        videoPlayerStore.ott = 0
-    }
-    document.getElementById("topDiv").scrollIntoView()
-});
+const userStore = useUserStore()
 
 let props = defineProps({
     userSelected: Object,

@@ -2,222 +2,56 @@ import { defineStore } from "pinia";
 import { useAppSettingStore } from '@/Stores/AppSettingStore';
 import { useStreamStore } from "@/Stores/StreamStore";
 import { useUserStore } from "@/Stores/UserStore";
-import {useChannelStore} from "@/Stores/ChannelStore";
-import {useShowStore} from "@/Stores/ShowStore";
+import { useChannelStore } from "@/Stores/ChannelStore";
+import { useShowStore } from "@/Stores/ShowStore";
 import videojs from 'video.js';
-import {Inertia} from "@inertiajs/inertia";
+import { Inertia } from "@inertiajs/inertia";
 
-import {computed} from "vue";
+const initialState = () => ({
+    videoPlayerLoaded: false,
+    class: '',
+    videoContainerClass: '',
+    // ottClass: 'OttClose',
+    videoSourceIdSrc1: '',
+    videoSourceIdSrc2: '',
+    videoSourceIdSrc3: '',
+    videoSourceTypeSrc1: '',
+    videoSourceTypeSrc2: '',
+    videoSourceTypeSrc3: '',
+    key: '',
+    videoName: '',
+    videoSource: '',
+    videoSourceType: '',
+    videoPoster: '',
+    nextSource: '',
+    previousSource: '',
+    currentView: '',
+    currentChannelId: 0,
+    currentChannelName: '',
+    currentShow: {},
+    currentShowEpisode: {},
+    currentVideo: {},
+    hasVideo: false,
+    controls: true,
+    muted: true,
+    paused: false,
+    videoCurrentTime: '',
+    blue: false, // state for testing purposes. The original test. DO NOT REMOVE.
+    videoIsYoutube: false,
+    videoUploadComplete: false,
+})
 
 export const useVideoPlayerStore = defineStore('videoPlayerStore', {
-    state: () => ({
-            videoPlayerLoaded: false,
-            class: '',
-            videoContainerClass: '',
-            // ottClass: 'OttClose',
-            videoSourceIdSrc1: '',
-            videoSourceIdSrc2: '',
-            videoSourceIdSrc3: '',
-            videoSourceTypeSrc1: '',
-            videoSourceTypeSrc2: '',
-            videoSourceTypeSrc3: '',
-            key: '',
-            videoName: '',
-            videoSource: '',
-            videoSourceType: '',
-            videoPoster: '',
-            nextSource: '',
-            previousSource: '',
-            currentView: '',
-            currentChannelId: 0,
-            currentChannelName: '',
-            currentShow: {},
-            currentShowEpisode: {},
-            currentVideo: {},
-            viewerCount: 0,
-
-            nowPlayingType: '',
-            nowPlayingName: '',
-            nowPlayingUrl: '',
-            nowPlayingDescription: '',
-            nowPlayingImage: {},
-            nowPlayingTeam: {},
-            nowPlayingCreators: [],
-            nowPlayingBonusContent: [],
-
-            // move currentPage from here to userStore.
-            currentPage: '',
-            hasVideo: false,
-
-            currentPageIsStream: false,
-            fullPage: false,
-            pip: false,
-            loggedIn: false,
-
-            osd: true,
-            controls: true,
-            ottButtons: true,
-            ottChannels: false,
-            ottPlaylist: false,
-            ottFilters: false,
-            ottChat: false,
-
-            muted: true,
-            paused: false,
-            videoCurrentTime: '',
-            apiRequest: [],
-            challenge: [],
-            status: [],
-            apiResponse: [],
-            apiActiveStreams: [],
-            mistUsername: [],
-            mistPassword: [],
-            mistStatus: Boolean,
-            mistDisplayPushForm: Boolean,
-            mistDisplay: String,
-            mistNewHashedPassword: [],
-            ott: 0,
-            blue: false,
-            videoIsYoutube: false,
-            videoUploadComplete: false,
-        }),
-
+    state: initialState,
     actions: {
-        // for testing
+        reset() {
+            // Reset the store to its original state (clear all data)
+            Object.assign(this, initialState())
+        },
         makeBlue() {
+            // for testing. DO NOT REMOVE.
             this.blue = true
         },
-
-        // show
-        showOsdAndControls() {
-            this.osd = true
-            this.controls = true
-        },
-        showOsdAndControlsAndNav() {
-            this.osd = true
-            this.controls = true
-            // useUserStore().showNavDropdown = true
-            this.ottButtons = true
-        },
-        showOsd() {
-            this.osd = true
-        },
-        showControls() {
-            this.controls = true
-        },
-
-        // hide
-        hideOsdAndControls() {
-            this.osd = false
-            this.controls = false
-        },
-        hideOsdAndControlsAndNav() {
-            this.osd = false
-            this.controls = false
-            // useUserStore().showNavDropdown = false
-            this.ottButtons = false
-        },
-        hideOsd() {
-            this.osd = false
-        },
-        hideControls() {
-            this.controls = false
-        },
-
-        // toggles
-        togglePiP() {
-            if (this.class === 'topRightVideoClass' && useUserStore().isMobile) {
-                this.class = 'PipVideoClass'
-                this.videoContainerClass = 'PipVideoContainerClass'
-            } else
-                this.class = 'topRightVideoClass'
-                this.videoContainerClass = 'topRightVideoContainer'
-        },
-        toggleOSD() {
-            this.osd = !this.osd
-        },
-        toggleControls() {
-            this.controls = !this.controls
-        },
-        toggleOsdAndControls() {
-            this.osd = !this.osd
-            this.controls = !this.controls
-        },
-        toggleOsdAndControlsAndNav() {
-            this.osd = !this.osd
-            this.controls = !this.controls
-            this.ottButtons = !this.ottButtons
-        },
-        toggleOtt(num) {
-            if (this.ott === num) {
-                this.ott = 0
-            } else {
-                this.ott = num
-            }
-        },
-        toggleChannels() {
-            if(useUserStore().isMobile) {
-                this.ottButtons = !this.ottButtons
-                this.osd = !this.osd
-                this.hideControls()
-                this.ottChannels = !this.ottChannels
-            } else {
-                this.ottButtons = !this.ottButtons
-                this.ottChannels = !this.ottChannels
-            }
-        },
-        togglePlaylist() {
-            if(useUserStore().isMobile) {
-                this.ottButtons = !this.ottButtons
-                this.osd = !this.osd
-                this.hideControls()
-                this.ottPlaylist = !this.ottPlaylist
-            } else {
-                this.ottButtons = !this.ottButtons
-                this.ottPlaylist = !this.ottPlaylist
-            }
-        },
-        toggleChat() {
-            if(useUserStore().isMobile) {
-                this.ottButtons = !this.ottButtons
-                this.osd = !this.osd
-                this.hideControls()
-                this.ottChat = !this.ottChat
-            } else {
-                this.ottButtons = !this.ottButtons
-                this.ottChat = !this.ottChat
-            }
-        },
-        toggleFilters() {
-            if(useUserStore().isMobile) {
-                this.ottButtons = !this.ottButtons
-                this.osd = !this.osd
-                this.hideControls()
-                this.ottFilters = !this.ottFilters
-            } else {
-                this.ottButtons = !this.ottButtons
-                this.ottFilters = !this.ottFilters
-            }
-        },
-        toggleOttInfo() {
-            this.toggleOtt(1)
-        },
-        toggleOttChannels() {
-            this.toggleOtt(2)
-        },
-        toggleOttPlaylist() {
-            this.toggleOtt(3)
-        },
-        toggleOttChat() {
-            this.toggleOtt(4)
-        },
-        toggleOttFilters() {
-            this.toggleOtt(5)
-        },
-        closeOtt() {
-            this.toggleOtt(0)
-        },
-
         // video controls
         toggleMute() {
             let videoJs = videojs('main-player')
@@ -298,7 +132,8 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                 return true
             } else if (source.video_embed_code) {
                 return true
-            } return false
+            }
+            return false
         },
 
         // play video from source
@@ -325,15 +160,14 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                 // need to create a video that can loop
                 // to indicate this video is not available.
             }
-
         },
 
         // load video from different types of sources:
-            // Url
-            // YouTube
-            // EmbedCode
-            // Mist
-            // File
+        // Url
+        // YouTube
+        // EmbedCode
+        // Mist
+        // File
         loadNewSourceFromYouTube(source) {
             this.videoIsYoutube = true
             useChannelStore().clearChannel()
@@ -372,7 +206,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             this.videoIsYoutube = false
             let videoJs = videojs('main-player')
             let filePath = 'https://mist.not.tv/hls/'
-            this.videoSource = filePath+source+'/index.m3u8'
+            this.videoSource = filePath + source + '/index.m3u8'
             this.videoSourceType = "application/x-mpegURL"
             videoJs.src({'src': this.videoSource, 'type': this.videoSourceType})
             this.unmute()
@@ -382,10 +216,10 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             this.videoIsYoutube = false
             useChannelStore().clearChannel()
             let videoJs = videojs('main-player')
-            let filePath = source.cdn_endpoint+source.cloud_folder+source.folder+'/'
+            let filePath = source.cdn_endpoint + source.cloud_folder + source.folder + '/'
             this.videoSource = source.file_name
             this.videoSourceType = source.type
-            videoJs.src({'src': filePath+this.videoSource, 'type': this.videoSourceType})
+            videoJs.src({'src': filePath + this.videoSource, 'type': this.videoSourceType})
             this.unmute()
             this.paused = false
         },
@@ -401,7 +235,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             if (show.firstPlayVideo) {
                 showStore.setName(show.firstPlayVideo.name);
                 showStore.setEpisodeUrl(`/shows/${show.slug}/episode/${source.firstPlayVideo.slug}`);
-            } else if(episode) {
+            } else if (episode) {
                 showStore.setName(show.name);
                 showStore.setUrl(`/shows/${show.slug}`);
                 showStore.setEpisodeName(episode.name);
@@ -410,19 +244,6 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                 showStore.setName(show.name);
                 showStore.setUrl(`/shows/${show.slug}`);
             }
-            // this.clearNowPlayingInfo()
-            // if (source.firstPlayVideo) {
-            //     useShowStore().name = source.firstPlayVideo.name
-            //     useShowStore().episodeUrl = `/shows/${source.slug}/episode/${source.firstPlayVideo.slug}`
-            // } else if(source.episode) {
-            //     useShowStore().name = source.name
-            //     useShowStore().url = `/shows/${source.slug}`
-            //     useShowStore().episodeName = source.episode.name
-            //     useShowStore().episodeUrl = `/shows/${source.slug}/episode/${source.episode.slug}`
-            // } else {
-            //     useShowStore().name = source.name
-            //     useShowStore().url = `/shows/${source.slug}`
-            // }
         },
         // change video size/position and page layout
         makeVideoPiP() {
@@ -443,88 +264,44 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             // }
         },
         makeVideoFullPage() {
-            const appSettingStore = useAppSettingStore();
-            const userStore = useUserStore();
+            const appSettingStore = useAppSettingStore()
+            const userStore = useUserStore()
 
-            this.fullPage = true;
+            // this.fullPage = true; // to be deleted and replaced by appSettingStore.fullPage
+            appSettingStore.fullPage = true
+            // userStore.hidePage = true // to be deleted and replaced by appSettingStore.hidePage
+            appSettingStore.hidePage = true
+
             this.videoContainerClass = 'fullPageVideoContainer'
             this.class = 'fullPageVideoClass'
-            // appSettingStore.setPageBgColor('bg-gray-800');
-            // appSettingStore.setChatMessageBgColor('bg-gray-600');
-            if (userStore.isMobile) {
-                this.hideControls()
-            } else {
-                this.showControls()
-            }
-            userStore.hidePage = true
-            // if (useUserStore().isMobile) {
-            //     this.videoContainerClass = 'fullPageVideoContainerMobile'
-            //     this.class = 'fullPageVideoClassMobile'
-            // } else {
-            //     this.videoContainerClass = 'fullPageVideoContainer'
-            //     this.class = 'fullPageVideoClass'
-            // }
-            // this.currentPageIsStream = true;
-            // useChatStore().makeBig();
-            // useStreamStore().osd = false;
-
-            // tec21: this lets the video start playing when the stream page is loaded.
-            // but it's preventing the videoPlayer from mounting.
-            // let videoJs = videojs.getPlayer('main-player')
-            // videoJs.play()
+            this.controls = !userStore.isMobile
         },
         makeVideoTopRight() {
-            const appSettingStore = useAppSettingStore();
-            const userStore = useUserStore();
+            const appSettingStore = useAppSettingStore()
+            const userStore = useUserStore()
 
-            this.currentPageIsStream = false
+            // this.fullPage = false // to be deleted and replaced by appSettingStore.fullPage
+            appSettingStore.fullPage = false
+            // userStore.hidePage = false // to be deleted and replaced by appSettingStore.hidePage
+            appSettingStore.hidePage = false
+            // this.currentPageIsStream = false // to be deleted and replaced by appSettingStore.currentPageIsStream
+            appSettingStore.currentPageIsStream = false
+
             this.videoContainerClass = 'topRightVideoContainer'
             this.class = 'topRightVideoClass'
-            // appSettingStore.setPageBgColor('bg-gray-800');
-            // appSettingStore.setChatMessageBgColor('bg-gray-600');
-            this.fullPage = false
             this.controls = false
-            userStore.hidePage = false
         },
         makeVideoWelcomePage() {
+            const appSettingStore = useAppSettingStore()
+            const userStore = useUserStore()
             this.videoContainerClass = 'welcomeVideoContainer'
             this.class = 'welcomeVideoClass'
-            this.fullPage = true
-            this.loggedIn = false
-            useUserStore().hidePage = false
-            // useChatStore().chatHidden();
+            userStore.loggedIn = false
+            appSettingStore.fullPage = true
+            appSettingStore.hidePage = false
         },
-        setNowPlayingName(name) {
-            this.setNowPlayingName = name;
-        },
-        setNowPlayingUrl(url) {
-            this.setNowPlayingUrl = url;
-        },
-        setNowPlayingDescription(description) {
-            this.setNowPlayingDescription = description;
-        },
-        setNowPlayingImage(image) {
-            this.setNowPlayingImage = image;
-        },
-        setNowPlayingTeam(team) {
-            this.setNowPlayingTeam = team;
-        },
-        setNowPlayingCreators(creators) {
-            this.setNowPlayingCreators = creators;
-        },
-        setNowPlayingBonusContent(bonusContent) {
-            this.setNowPlayingBonusContent = bonusContent;
-        },
-        clearNowPlayingInfo() {
-            this.nowPlayingType = ''
-            this.nowPlayingName = ''
-            this.nowPlayingUrl = ''
-            this.nowPlayingDescription = ''
-            this.nowPlayingImage = {}
-            this.nowPlayingTeam = {}
-            this.nowPlayingCreators = []
-            this.nowPlayingBonusContent = []
-        },
+
+
 
         // change channel
         // changeChannel(name) {
@@ -688,13 +465,13 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
         // Filter the creators and remove null values
         // Define a getter function to get valid creators
         validCreators(state) {
-               return state.nowPlayingCreators.filter(
-                    (creator) =>
-                        creator &&
-                        creator.id !== undefined && // Filter out undefined 'id'
-                        creator.name !== undefined // Filter out undefined 'name'
-                )
-            }
+            return state.nowPlayingCreators.filter(
+                (creator) =>
+                    creator &&
+                    creator.id !== undefined && // Filter out undefined 'id'
+                    creator.name !== undefined // Filter out undefined 'name'
+            )
+        }
         // incrementViewerCount() {
         //     this.viewerCount++
         // },

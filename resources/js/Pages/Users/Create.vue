@@ -1,281 +1,271 @@
 <template>
-    <Head title="Create User"/>
+  <Head title="Create User"/>
 
-    <div class="place-self-center flex flex-col gap-y-3">
-        <div id="topDiv" class="bg-white dark:bg-gray-800 text-black dark:text-gray-50 p-5 mb-10">
+  <div class="place-self-center flex flex-col gap-y-3">
+    <div id="topDiv" class="bg-white dark:bg-gray-800 text-black dark:text-gray-50 p-5 mb-10">
 
-            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+      <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
 
-            <div class="flex justify-between mt-3 mb-6">
-                <div class="text-3xl">Create New User</div>
-                <div>
-                    <CancelButton />
-                </div>
-            </div>
+      <div class="flex justify-between mt-3 mb-6">
+        <div class="text-3xl">Create New User</div>
+        <div>
+          <CancelButton/>
+        </div>
+      </div>
 
-        <div
-            class="p-4 mb-4 text-sm text-orange700 bg-orange-100 rounded-lg dark:bg-orange-200 dark:text-orange-800"
-            role="alert"
-        >
+      <div
+          class="p-4 mb-4 text-sm text-orange700 bg-orange-100 rounded-lg dark:bg-orange-200 dark:text-orange-800"
+          role="alert"
+      >
                 <span class="font-medium">
                     New users will need to "Reset Password" then "re-send the verification email".
                 </span>
+      </div>
+
+      <form @submit.prevent="submit" class="max-w-md mx-auto mt-8">
+        <div class="mb-6">
+          <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-50"
+                 for="name"
+          >
+            User Role
+          </label>
+          <select name="role"
+                  id="role"
+                  class="border border-gray-400 p-2 w-full rounded-lg block mb-2 uppercase font-bold text-xs text-gray-700"
+                  v-model="form.role_id"
+                  required
+          >
+            <option value="1">Standard User</option>
+            <option value="4">Creator</option>
+          </select>
+
+          <div v-if="form.errors.role_id" v-text="form.errors.role_id" class="text-xs text-red-600 mt-1"></div>
+        </div>
+        <div class="mb-6">
+          <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-50"
+                 for="name"
+          >
+            Name
+          </label>
+
+          <input v-model="form.name"
+                 class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                 type="text"
+                 name="name"
+                 id="name"
+                 required
+          >
+          <div v-if="form.errors.name" v-text="form.errors.name" class="text-xs text-red-600 mt-1"></div>
+        </div>
+        <div class="mb-6">
+          <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-50"
+                 for="email"
+          >
+            Email
+          </label>
+
+          <input v-model="form.email"
+                 class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                 type="email"
+                 name="email"
+                 id="email"
+                 required
+          >
+          <div v-if="form.errors.email" v-text="form.errors.email" class="text-xs text-red-600 mt-1"></div>
+        </div>
+        <div class="mb-6 hidden">
+          <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-50"
+                 for="password"
+          >
+            Password
+          </label>
+
+          <input v-model="form.password"
+                 class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                 type="password"
+                 name="password"
+                 id="password"
+                 hidden
+          >
+          <div v-if="form.errors.password" v-text="form.errors.password" class="text-xs text-red-600 mt-1"></div>
+        </div>
+        <div class="mb-6">
+          <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-50"
+                 for="email"
+          >
+            Phone Number
+          </label>
+
+          <input v-model="form.phone"
+                 class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                 type="text"
+                 name="phone"
+                 id="phone"
+          >
+          <div v-if="form.errors.phone" v-text="form.errors.phone" class="text-xs text-red-600 mt-1"></div>
         </div>
 
-        <form @submit.prevent="submit" class="max-w-md mx-auto mt-8">
-            <div class="mb-6">
-                <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-50"
-                       for="name"
-                >
-                    User Role
-                </label>
-                <select name="role"
-                        id="role"
-                        class="border border-gray-400 p-2 w-full rounded-lg block mb-2 uppercase font-bold text-xs text-gray-700"
-                        v-model="form.role_id"
-                        required
-                >
-                    <option value="1">Standard User</option>
-                    <option value="4">Creator</option>
-                </select>
+        <div class="mb-6">
+          <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-50"
+                 for="email"
+          >
+            Address
+          </label>
 
-                <div v-if="form.errors.role_id" v-text="form.errors.role_id" class="text-xs text-red-600 mt-1"></div>
-            </div>
-            <div class="mb-6">
-                <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-50"
-                       for="name"
-                >
-                    Name
-                </label>
+          <input v-model="form.address1"
+                 class="border border-gray-400 p-2 mb-2 w-full rounded-lg text-black"
+                 type="text"
+                 name="address1"
+                 id="address1"
+          >
 
-                <input v-model="form.name"
-                       class="border border-gray-400 p-2 w-full rounded-lg text-black"
-                       type="text"
-                       name="name"
-                       id="name"
-                       required
-                >
-                <div v-if="form.errors.name" v-text="form.errors.name" class="text-xs text-red-600 mt-1"></div>
-            </div>
-            <div class="mb-6">
-                <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-50"
-                       for="email"
-                >
-                    Email
-                </label>
+          <input v-model="form.address2"
+                 class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                 type="text"
+                 name="address2"
+                 id="address2"
+          >
+          <div v-if="form.errors.address1" v-text="form.errors.address1" class="text-xs text-red-600 mt-1"></div>
+          <div v-if="form.errors.address2" v-text="form.errors.address2" class="text-xs text-red-600 mt-1"></div>
+        </div>
+        <div class="mb-6">
+          <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-50"
+                 for="email"
+          >
+            City
+          </label>
 
-                <input v-model="form.email"
-                       class="border border-gray-400 p-2 w-full rounded-lg text-black"
-                       type="email"
-                       name="email"
-                       id="email"
-                       required
-                >
-                <div v-if="form.errors.email" v-text="form.errors.email" class="text-xs text-red-600 mt-1"></div>
-            </div>
-            <div class="mb-6 hidden">
-                <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-50"
-                       for="password"
-                >
-                    Password
-                </label>
+          <input v-model="form.city"
+                 class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                 type="text"
+                 name="city"
+                 id="city"
+          >
+          <div v-if="form.errors.city" v-text="form.errors.city" class="text-xs text-red-600 mt-1"></div>
+        </div>
+        <div class="mb-6">
+          <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-50"
+                 for="email"
+          >
+            Province
+          </label>
 
-                <input v-model="form.password"
-                       class="border border-gray-400 p-2 w-full rounded-lg text-black"
-                       type="password"
-                       name="password"
-                       id="password"
-                       hidden
-                >
-                <div v-if="form.errors.password" v-text="form.errors.password" class="text-xs text-red-600 mt-1"></div>
-            </div>
-            <div class="mb-6">
-                <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-50"
-                       for="email"
-                >
-                    Phone Number
-                </label>
+          <input v-model="form.province"
+                 class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                 type="text"
+                 name="province"
+                 id="province"
+          >
+          <div v-if="form.errors.province" v-text="form.errors.province" class="text-xs text-red-600 mt-1"></div>
+        </div>
+        <div class="mb-6">
+          <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-50"
+                 for="email"
+          >
+            Country
+          </label>
 
-                <input v-model="form.phone"
-                       class="border border-gray-400 p-2 w-full rounded-lg text-black"
-                       type="text"
-                       name="phone"
-                       id="phone"
-                >
-                <div v-if="form.errors.phone" v-text="form.errors.phone" class="text-xs text-red-600 mt-1"></div>
-            </div>
+          <input v-model="form.country"
+                 class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                 type="text"
+                 name="country"
+                 id="country"
+          >
+          <div v-if="form.errors.country" v-text="form.errors.country" class="text-xs text-red-600 mt-1"></div>
+        </div>
 
-            <div class="mb-6">
-                <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-50"
-                       for="email"
-                >
-                    Address
-                </label>
+        <div class="mb-6">
+          <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-50"
+                 for="email"
+          >
+            Postal Code
+          </label>
 
-                <input v-model="form.address1"
-                       class="border border-gray-400 p-2 mb-2 w-full rounded-lg text-black"
-                       type="text"
-                       name="address1"
-                       id="address1"
-                >
+          <input v-model="form.postalCode"
+                 class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                 type="text"
+                 name="postalCode"
+                 id="postalCode"
+          >
+          <div v-if="form.errors.postalCode" v-text="form.errors.postalCode" class="text-xs text-red-600 mt-1"></div>
+        </div>
 
-                <input v-model="form.address2"
-                       class="border border-gray-400 p-2 w-full rounded-lg text-black"
-                       type="text"
-                       name="address2"
-                       id="address2"
-                >
-                <div v-if="form.errors.address1" v-text="form.errors.address1" class="text-xs text-red-600 mt-1"></div>
-                <div v-if="form.errors.address2" v-text="form.errors.address2" class="text-xs text-red-600 mt-1"></div>
-            </div>
-            <div class="mb-6">
-                <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-50"
-                       for="email"
-                >
-                    City
-                </label>
+        <div class="mb-6">
+          <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-50"
+                 for="text"
+          >
+            Stripe ID
+          </label>
 
-                <input v-model="form.city"
-                       class="border border-gray-400 p-2 w-full rounded-lg text-black"
-                       type="text"
-                       name="city"
-                       id="city"
-                >
-                <div v-if="form.errors.city" v-text="form.errors.city" class="text-xs text-red-600 mt-1"></div>
-            </div>
-            <div class="mb-6">
-                <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-50"
-                       for="email"
-                >
-                    Province
-                </label>
+          <input v-model="form.stripe_id"
+                 class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                 type="text"
+                 name="stripe_id"
+                 id="stripe_id"
+          >
+          <div v-if="form.errors.stripe_id" v-text="form.errors.stripe_id" class="text-xs text-red-600 mt-1"></div>
+        </div>
 
-                <input v-model="form.province"
-                       class="border border-gray-400 p-2 w-full rounded-lg text-black"
-                       type="text"
-                       name="province"
-                       id="province"
-                >
-                <div v-if="form.errors.province" v-text="form.errors.province" class="text-xs text-red-600 mt-1"></div>
-            </div>
-            <div class="mb-6">
-                <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-50"
-                       for="email"
-                >
-                    Country
-                </label>
+        <div class="flex justify-between mb-6">
+          <JetValidationErrors class="mr-4"/>
+          <button
+              type="submit"
+              class="h-fit bg-blue-600 text-white rounded py-2 px-4 hover:bg-blue-400"
+              :disabled="form.processing"
+          >
+            Submit
+          </button>
+          <div @click="reset" class="text-blue-600 text-sm cursor-pointer">Reset</div>
+        </div>
 
-                <input v-model="form.country"
-                       class="border border-gray-400 p-2 w-full rounded-lg text-black"
-                       type="text"
-                       name="country"
-                       id="country"
-                >
-                <div v-if="form.errors.country" v-text="form.errors.country" class="text-xs text-red-600 mt-1"></div>
-            </div>
-
-            <div class="mb-6">
-                <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-50"
-                       for="email"
-                >
-                    Postal Code
-                </label>
-
-                <input v-model="form.postalCode"
-                       class="border border-gray-400 p-2 w-full rounded-lg text-black"
-                       type="text"
-                       name="postalCode"
-                       id="postalCode"
-                >
-                <div v-if="form.errors.postalCode" v-text="form.errors.postalCode" class="text-xs text-red-600 mt-1"></div>
-            </div>
-
-            <div class="mb-6">
-                <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-50"
-                       for="text"
-                >
-                    Stripe ID
-                </label>
-
-                <input v-model="form.stripe_id"
-                       class="border border-gray-400 p-2 w-full rounded-lg text-black"
-                       type="text"
-                       name="stripe_id"
-                       id="stripe_id"
-                >
-                <div v-if="form.errors.stripe_id" v-text="form.errors.stripe_id" class="text-xs text-red-600 mt-1"></div>
-            </div>
-
-            <div class="flex justify-between mb-6">
-                <JetValidationErrors class="mr-4" />
-                <button
-                    type="submit"
-                    class="h-fit bg-blue-600 text-white rounded py-2 px-4 hover:bg-blue-400"
-                    :disabled="form.processing"
-                >
-                    Submit
-                </button>
-                <div @click="reset" class="text-blue-600 text-sm cursor-pointer">Reset</div>
-            </div>
-
-        </form>
+      </form>
 
     </div>
-    </div>
+  </div>
 </template>
 
 <script setup>
-import { onBeforeMount, onMounted, ref } from "vue"
-import {useForm, usePage} from "@inertiajs/inertia-vue3"
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import { useUserStore } from "@/Stores/UserStore";
-import Message from "@/Components/Modals/Messages";
-import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
-import {Inertia} from "@inertiajs/inertia";
-import CancelButton from "@/Components/Buttons/CancelButton.vue";
+import { ref } from "vue"
+import { useForm } from "@inertiajs/inertia-vue3"
+import { usePageSetup } from '@/Utilities/PageSetup'
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
+import { useUserStore } from "@/Stores/UserStore"
+import Message from "@/Components/Global/Modals/Messages"
+import JetValidationErrors from '@/Jetstream/ValidationErrors'
+import CancelButton from "@/Components/Global/Buttons/CancelButton"
 
-let videoPlayerStore = useVideoPlayerStore()
-let userStore = useUserStore()
+usePageSetup('usersCreate')
 
-userStore.currentPage = 'users'
-userStore.showFlashMessage = true;
-
-onMounted(() => {
-    videoPlayerStore.makeVideoTopRight();
-    if (userStore.isMobile) {
-        videoPlayerStore.ottClass = 'ottClose'
-        videoPlayerStore.ott = 0
-    }
-    document.getElementById("topDiv").scrollIntoView()
-})
+const videoPlayerStore = useVideoPlayerStore()
+const userStore = useUserStore()
 
 let props = defineProps({
-    message: String,
+  message: String,
 })
 
 let form = useForm({
-    name: '',
-    email: '',
-    password: ' ',
-    role_id: '',
-    address1: null,
-    address2: null,
-    city: null,
-    province: null,
-    country: null,
-    postalCode: null,
-    phone: null,
-    stripe_id: null,
+  name: '',
+  email: '',
+  password: ' ',
+  role_id: '',
+  address1: null,
+  address2: null,
+  city: null,
+  province: null,
+  country: null,
+  postalCode: null,
+  phone: null,
+  stripe_id: null,
 });
 
 // const role = ref(null);
 
 function reset() {
-    form.reset();
+  form.reset();
 }
 
 const submit = () => {
-    form.post(route("users.store"));
+  form.post(route("users.store"));
 }
 
 let showMessage = ref(true);

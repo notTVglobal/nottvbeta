@@ -7,23 +7,26 @@ import { Inertia } from "@inertiajs/inertia";
 // new page props when it's appropriate, and clear the notifications
 // here regardless if the page props persists.
 
-export const useNotificationStore = defineStore('notificationStore', {
-    state() {
-        return {
-            title: '',
-            body: '',
-            buttonLabel: 'OKAY',
-            // use the primaryUri to ensure this notification is only shown
-            // on the correct page.
-            uri: '',
-            active: false,
-            // onClickAction, close or redirect
-            onClickAction: '',
-            redirectPageUri: '',
-        };
-    },
+const initialState = () => ({
+    title: '',
+    body: '',
+    buttonLabel: 'OKAY',
+    // use the primaryUri to ensure this notification is only shown
+    // on the correct page.
+    uri: '',
+    active: false,
+    // onClickAction, close or redirect
+    onClickAction: '',
+    redirectPageUri: '',
+})
 
+export const useNotificationStore = defineStore('notificationStore', {
+    state: initialState,
     actions: {
+        reset() {
+            // Reset the store to its original state (clear all data)
+            Object.assign(this, initialState());
+        },
         clearNotification() {
             this.title = '';
             this.body = '';
@@ -41,7 +44,7 @@ export const useNotificationStore = defineStore('notificationStore', {
             this.active = false;
             this.clearNotification();
         },
-        // use this to open the @/Components/Modals/DialogNotification
+        // use this to open the @/Components/Global/Modals/DialogNotification
         // it only takes a title and body
         openDialogNotification() {
             const modal = document.getElementById('dialogNotificationModal');

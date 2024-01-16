@@ -98,6 +98,6 @@ export const useNowPlayingStore = defineStore('nowPlayingStore', {
                 console.error('Type not found for the given number');
                 // Handle the case where the num does not exist in your type object
             }
-        }
+        },
     }
 });

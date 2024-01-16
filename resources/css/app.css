@@ -727,17 +727,11 @@ hr {
     @apply h-[calc(100vh-16rem)] lg:mt-3
 }
 
-
 .videoControlsWelcomeStandard {
     z-index: 200;
     @apply absolute flex justify-center space-x-4 bottom-36 w-full
 }
 @media (orientation: portrait) and (min-width: 800px) {
-    .videoFullPageMobileOSD {
-        top: 36rem;
-        left: 2rem;
-        @apply fixed
-    }
     .videoControlsMobile {
         top: 33rem;
         left: 0;
@@ -749,39 +743,16 @@ hr {
         left: 3rem;
         @apply absolute items-center mx-auto space-x-2 w-full
     }
-    /*.backToPage {*/
-    /*    position: fixed;*/
-    /*    bottom: 2rem;*/
-    /*    left: 1rem;*/
-    /*}*/
     .ottDisplayMobile {
         z-index: 200;
         @apply h-[calc(100vh-18rem)] lg:mt-3
     }
-    .chatForStreamPageMobile {
-        z-index: 60;
-        background: linear-gradient(to bottom, rgba(0,0,0,1), rgba(255,0,255,0));
-        top: 32rem;
-        min-height:calc(50vh + 5.5rem);
-        max-height:calc(100vh - 8rem);
-        @apply fixed w-full bottom-0 right-0 left-0 sm:bottom-2 text-sm text-white pl-6 pb-12
-        overflow-y-auto scroll-smooth hover:scroll-auto break-words
-    }
-    /*.chatCloseButtonMobile {*/
-    /*    top: 34rem;*/
-    /*    right: 2rem;*/
-    /*    z-index: 60;*/
-    /*}*/
     .videoOttChatMessagesBottomPadding {
         /* Portrait Min-Width: 800px */
         padding-bottom: 22rem;
     }
 }
 @media (orientation: portrait) and (max-width: 800px) {
-    .videoFullPageMobileOSD {
-        top: 22rem;
-        @apply fixed left-3
-    }
     .videoControlsMobile {
         top: 19rem !important;
         z-index: 200;
@@ -792,11 +763,6 @@ hr {
         z-index: 200;
         @apply absolute mx-auto flex left-3 justify-center space-x-4
     }
-    /*.backToPage {*/
-    /*    position: fixed;*/
-    /*    bottom: 7rem;*/
-    /*    left: 1rem;*/
-    /*}*/
     .ottDisplayMobile {
         z-index: 199;
         @apply h-[calc(100vh-10rem)] lg:mt-3
@@ -814,24 +780,12 @@ hr {
         @apply fixed w-full bottom-0 right-0 left-0 sm:bottom-2 text-sm text-white pl-6 pb-12
         overflow-y-auto scroll-smooth hover:scroll-auto break-words
     }
-    .chatCloseButtonMobile {
-        top: 20rem;
-        z-index: 60;
-    }
     .videoOttChatMessagesBottomPadding {
         /* Portrait Max-Width: 800px */
         padding-bottom: 18rem;
     }
 }
 @media (orientation: landscape) and (max-device-height:800px) {
-    .videoFullPageMobileOSD {
-        position: fixed;
-        top: 5rem;
-        left: 1rem;
-    }
-    /*.backToPage {*/
-    /*    @apply fixed bottom-5 left-2*/
-    /*}*/
     .videoControlsMobile {
         z-index: 200;
         @apply fixed bottom-2 mx-auto flex left-3 justify-center space-x-4
@@ -849,11 +803,6 @@ hr {
     }
 }
 @media (orientation: landscape) and (min-device-height:800px) {
-    .videoFullPageMobileOSD {
-        position: fixed;
-        top: 5rem;
-        left: 2rem;
-    }
     .videoControlsMobile {
         z-index: 200;
         left: 0;
@@ -869,41 +818,23 @@ hr {
         left: 3rem;
         @apply absolute mx-auto flex justify-center space-x-4
     }
-    /*.backToPage {*/
-    /*    @apply fixed bottom-5 left-2*/
-    /*}*/
     .videoOttChatMessagesBottomPadding {
         /* Landscape Min-Width: 800px */
         padding-bottom: 25rem;
     }
 
 }
-/*.welcomeVideoClass {*/
-/*    position:absolute;*/
-/*    top:0;*/
-/*    left:0;*/
-/*    right:0;*/
-/*    bottom:0;*/
-/*    width:100vw;*/
-/*    height:100vh;*/
-/*    min-height: 100vh;*/
-/*    z-index:1;*/
-/*    background-color: black;*/
-/*}*/
-/*.welcomeVideoContainer {*/
-/*    position: absolute;*/
-/*    top:0;*/
-/*    left: 0;*/
-/*    right:0;*/
-/*    bottom:0;*/
-/*    width:100vw;*/
-/*    height:100vh;*/
-/*    min-height: 100vh;*/
-/*    z-index:1;*/
-/*}*/
 
 .videoOttTopRightButtonsContainer {
-    z-index: 40;
+    /*z-index: 900;*/
+    /*position: fixed;*/
+    /*height: 100vh;*/
+    /*width: 100vw;*/
+    /*top:0;*/
+    /*bottom: 0;*/
+    /*right: 0;*/
+    /*left: 0;*/
+    /*background-color: #0a59da;*/
     @apply fixed top-40 lg:top-72 h-fit w-full lg:w-96 right-0
 }
 .OttOpen {
@@ -927,7 +858,6 @@ hr {
     bottom:3rem;
     right:1.5rem;
 }
-
 
 .channelsFullPage{
     @apply w-full py-4 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-2 border-green-800 shadow-md disabled:bg-gray-600 disabled:text-gray-300 disabled:cursor-not-allowed
@@ -1005,16 +935,6 @@ hr {
     scrollbar-width: none;  /* Firefox */
 }
 
-@media (orientation: landscape) {
-    .chatForStreamPageMobile {
-        z-index: 40;
-        min-height: 100vh;
-        max-height: 100vh;
-        @apply fixed w-full bottom-0 right-0 left-0 sm:bottom-2 text-sm text-white pl-6 pb-12
-        overflow-y-auto scroll-smooth hover:scroll-auto break-words
-    }
-}
-
 /* this is the CLOSE chat button */
 .chatForStreamPage button {
     z-index: 200;
@@ -1022,15 +942,6 @@ hr {
     top:5rem;
     right:1rem;
 }
-
-@media (orientation: landscape) {
-    .chatCloseButtonMobile {
-        top: 6rem;
-        z-index: 60;
-    }
-}
-
-
 
 /* this is for the chat scrollbar in chrome */
 .chatChrome::-webkit-scrollbar {

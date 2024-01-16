@@ -127,43 +127,32 @@
 </template>
 
 <script setup>
-import { onBeforeMount, onMounted, ref } from "vue"
 import { Inertia } from "@inertiajs/inertia"
 import {useForm, usePage} from "@inertiajs/inertia-vue3"
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import { useTeamStore } from "@/Stores/TeamStore.js"
-import { useShowStore } from "@/Stores/ShowStore.js"
-import { useUserStore } from "@/Stores/UserStore";
 import vueFilePond, { setOptions } from 'vue-filepond'
+import 'filepond/dist/filepond.min.css'
+import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css'
+import { usePageSetup } from '@/Utilities/PageSetup'
+import { useTeamStore } from "@/Stores/TeamStore"
+import { useShowStore } from "@/Stores/ShowStore"
+import { useUserStore } from "@/Stores/UserStore"
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type"
 import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size"
 import FilePondPluginImagePreview from "filepond-plugin-image-preview"
 import FilePondPluginFileMetadata from "filepond-plugin-file-metadata"
-import 'filepond/dist/filepond.min.css'
-import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css'
-import Message from "@/Components/Modals/Messages";
-import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
-import CancelButton from "@/Components/Buttons/CancelButton.vue";
+import JetValidationErrors from '@/Jetstream/ValidationErrors'
+import Message from '@/Components/Global/Modals/Messages'
+import CancelButton from '@/Components/Global/Buttons/CancelButton'
 
-let videoPlayerStore = useVideoPlayerStore()
-let teamStore = useTeamStore()
-let showStore = useShowStore()
-let userStore = useUserStore()
+usePageSetup('showEpisodesUpload')
 
-userStore.currentPage = 'episodes'
-userStore.showFlashMessage = true;
+const teamStore = useTeamStore()
+const showStore = useShowStore()
+const userStore = useUserStore()
+
 teamStore.setActiveTeam(props.team);
 teamStore.setActiveShow(props.show);
 showStore.episodePoster = props.poster;
-
-onMounted(() => {
-    videoPlayerStore.makeVideoTopRight();
-    if (userStore.isMobile) {
-        videoPlayerStore.ottClass = 'ottClose'
-        videoPlayerStore.ott = 0
-    }
-    document.getElementById("topDiv").scrollIntoView()
-});
 
 let props = defineProps({
     episode: Object,

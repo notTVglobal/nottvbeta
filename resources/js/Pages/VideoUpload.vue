@@ -65,36 +65,26 @@ FOOTER
 <script setup>
 import { defineAsyncComponent, onBeforeMount, onMounted, ref, watch } from "vue"
 import { Inertia } from "@inertiajs/inertia"
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
-import { useUserStore } from "@/Stores/UserStore"
+import throttle from "lodash/throttle";
 import { Dropzone } from "dropzone"
 import { useForm } from "@inertiajs/inertia-vue3"
-import Pagination from "@/Components/Pagination"
-import VideoTable from "@/Components/Tables/VideoTable"
-
-// import VideoUpload from "@/Components/Uploaders/VideoUpload"
+import { usePageSetup } from '@/Utilities/PageSetup'
+import { useUserStore } from "@/Stores/UserStore"
+import Pagination from "@/Components/Global/Paginators/Pagination"
+import VideoTable from "@/Components/Global/Tables/VideoTable"
+// import VideoUpload from "@/Components/Global/Uploaders/VideoUpload"
 const VideoUpload = defineAsyncComponent(() =>
-    import('@/Components/Uploaders/VideoUpload')
+    import('@/Components/Global/Uploaders/VideoUpload')
 )
-import MobileVideoRecord from "@/Components/Uploaders/MobileVideoRecord"
-import throttle from "lodash/throttle";
-import Message from "@/Components/Modals/Messages";
-import BackButton from "@/Components/Buttons/BackButton.vue";
+import MobileVideoRecord from "@/Components/Global/Uploaders/MobileVideoRecord"
 
-const videoPlayerStore = useVideoPlayerStore()
+import Message from "@/Components/Global/Modals/Messages";
+import BackButton from "@/Components/Global/Buttons/BackButton.vue";
+
+usePageSetup('videoUpload')
+
 const userStore = useUserStore()
 
-userStore.currentPage = 'videoUpload'
-userStore.showFlashMessage = true;
-
-onMounted(() => {
-    videoPlayerStore.makeVideoTopRight();
-    if (userStore.isMobile) {
-        videoPlayerStore.ottClass = 'ottClose'
-        videoPlayerStore.ott = 0
-    }
-    document.getElementById("topDiv").scrollIntoView()
-});
 
 // see options for Dropzone here: https://github.com/dropzone/dropzone/blob/main/src/options.js
 //     let myDropzone = new Dropzone("#videoUploadForm", {
