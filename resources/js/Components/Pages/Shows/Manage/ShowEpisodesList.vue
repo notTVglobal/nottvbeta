@@ -3,7 +3,7 @@
   <div>
     <button
         v-if="teamStore.can.createEpisode"
-        @click="userStore.btnRedirect(`/shows/${show.slug}/episode/create`)"
+        @click="appSettingStore.btnRedirect(`/shows/${show.slug}/episode/create`)"
         class="ml-6 my-4 px-4 py-2 text-white font-semibold bg-green-500 hover:bg-green-600 rounded-lg disabled:bg-gray-400"
 
     >Create Episode
@@ -55,14 +55,13 @@
 </template>
 
 <script setup>
-import { ref } from "vue"
+import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import { useTeamStore } from "@/Stores/TeamStore"
-import { useUserStore } from "@/Stores/UserStore"
 import ShowEpisode from "@/Components/Pages/Shows/Manage/ShowEpisode"
 import Pagination from "@/Components/Global/Paginators/Pagination"
 
+const appSettingStore = useAppSettingStore()
 const teamStore = useTeamStore()
-const userStore = useUserStore()
 
 let props = defineProps({
   show: Object,

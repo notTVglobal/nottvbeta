@@ -10,7 +10,7 @@
   <div class="place-self-center flex flex-col gap-y-3">
     <div id="topDiv" class="bg-white dark:bg-gray-800 text-black dark:text-gray-50 p-5 mb-10">
 
-      <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+      <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
       <NewsHeader :can="can">News</NewsHeader>
 
       <div class="my-4">
@@ -93,15 +93,14 @@ import { ref, watch } from "vue"
 import { useForm } from '@inertiajs/inertia-vue3'
 import throttle from "lodash/throttle"
 import { usePageSetup } from '@/Utilities/PageSetup'
-import { useUserStore } from "@/Stores/UserStore"
+import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import NewsHeader from "@/Components/Pages/News/NewsHeader"
-import NewsHeaderButtons from "@/Components/Pages/News/NewsHeaderButtons"
 import Pagination from "@/Components/Global/Paginators/Pagination"
 import Message from "@/Components/Global/Modals/Messages"
 
-usePageSetup('newsIndex')
+usePageSetup('news')
 
-const userStore = useUserStore()
+const appSettingStore = useAppSettingStore()
 
 function scrollToCities() {
   document.getElementById("cities").scrollIntoView({behavior: "smooth"})

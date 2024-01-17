@@ -115,18 +115,14 @@
 <script setup>
 import { Inertia } from "@inertiajs/inertia"
 import { useForm, usePage } from "@inertiajs/inertia-vue3"
-import { onMounted } from "vue"
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
+import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
-const appSettingStore = useAppSettingStore()
-import { useUserStore } from "@/Stores/UserStore"
 import Button from "@/Jetstream/Button"
 import JetValidationErrors from "@/Jetstream/ValidationErrors"
 
-const videoPlayerStore = useVideoPlayerStore()
-const userStore = useUserStore()
+const appSettingStore = useAppSettingStore()
 
-userStore.currentPage = 'Admin/Subscriptions/Create'
+usePageSetup('Admin/Subscriptions/Create')
 
 defineProps({})
 
@@ -148,17 +144,5 @@ function back() {
     Inertia.visit(urlPrev)
   }
 }
-
-onMounted(() => {
-  videoPlayerStore.makeVideoTopRight()
-  if (userStore.isMobile) {
-
-    appSettingStore.ott = 0
-appSettingStore.pageIsHidden = false
-  }
-  document.getElementById("topDiv").scrollIntoView()
-
-})
-
 
 </script>

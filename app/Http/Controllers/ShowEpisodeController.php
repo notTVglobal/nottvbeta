@@ -191,7 +191,7 @@ class ShowEpisodeController extends Controller
 //            ->firstOrFail();
 
         return redirect()
-            ->route('shows.showEpisodes.show',
+            ->route('shows.showEpisodes.manageEpisode',
                 ['show' => $showSlug, 'showEpisode' => $showEpisodeSlug])
             ->with('success', 'Episode Created Successfully');
 
@@ -222,11 +222,11 @@ class ShowEpisodeController extends Controller
                 'slug' => $show->slug,
                 'showRunner' => $show->user->name,
                 'image' => [
-                    'id' => $showEpisode->image->id,
-                    'name' => $showEpisode->image->name,
-                    'folder' => $showEpisode->image->folder,
-                    'cdn_endpoint' => $showEpisode->appSetting->cdn_endpoint,
-                    'cdn_folder' => $showEpisode->appSetting->cdn_folder,
+                    'id' => $show->image->id,
+                    'name' => $show->image->name,
+                    'folder' => $show->image->folder,
+                    'cdn_endpoint' => $show->appSetting->cdn_endpoint,
+                    'cloud_folder' => $show->image->cloud_folder,
                 ],
                 'copyrightYear' => $show->created_at->format('Y'),
                 'first_release_year' => $show->first_release_year,
@@ -325,7 +325,21 @@ class ShowEpisodeController extends Controller
             'isBeingEditedByUser_id' => Auth::user()->id,
         ]);
 
-        $videoForEpisode = Video::where('show_episodes_id', $showEpisode->id)->first();
+//      // Prepare video data
+//      $videoData = [];
+//      if ($showEpisode->video) {
+//        $videoData = [
+//            'file_name' => $showEpisode->video->file_name,
+//            'cdn_endpoint' => $showEpisode->video->appSetting->cdn_endpoint ?? '',
+//            'folder' => $showEpisode->video->folder,
+//            'cloud_folder' => $showEpisode->video->cloud_folder,
+//            'upload_status' => $showEpisode->video->upload_status,
+//            'video_url' => $showEpisode->video->video_url,
+//            'type' => $showEpisode->video->type,
+//            'storage_location' => $showEpisode->video->storage_location,
+//        ];
+//      }
+         $videoForEpisode = Video::where('show_episodes_id', $showEpisode->id)->first();
 
         // convert release dateTime to user's timezone
         if ($showEpisode->release_dateTime) {
@@ -336,6 +350,7 @@ class ShowEpisodeController extends Controller
         if ($showEpisode->scheduled_release_dateTime) {
             $this->formattedScheduledDateTime = $this->convertTimeToUserTime($showEpisode->scheduled_release_dateTime);
         }
+
 
         return Inertia::render('Shows/{$id}/Episodes/{$id}/Edit', [
             'show' => [

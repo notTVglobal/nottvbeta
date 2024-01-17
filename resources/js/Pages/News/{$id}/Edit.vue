@@ -5,7 +5,7 @@
   <div class="place-self-center flex flex-col gap-y-3">
     <div id="topDiv" class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 
-      <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+      <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
       <div class="flex flex-row justify-between mt-6">
         <h2 class="text-xl font-semibold leading-tight">
@@ -15,18 +15,14 @@
           <div>
             <button
                 v-if="props.can.viewNewsroom"
-                @click="userStore.btnRedirect(`/newsroom`)"
+                @click="appSettingStore.btnRedirect(`/newsroom`)"
                 class="px-4 py-2 text-white bg-yellow-600 hover:bg-yellow-500 rounded-lg disabled:bg-gray-400"
 
             >Newsroom
             </button>
           </div>
           <div>
-            <button
-                @click="back"
-                class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
-            >Cancel
-            </button>
+            <CancelButton/>
           </div>
         </div>
       </div>
@@ -58,7 +54,7 @@
                 for="slug"
                 class="block mb-2 text-sm font-bold text-gray-900 dark:text-gray-300"
             >Content</label>
-            <tiptap v-if="userStore.currentPage === 'newsEdit'"/>
+            <tiptap v-if="appSettingStore.currentPage === 'newsEdit'"/>
             <!--                        <tabbable-textarea-->
             <!--                            type="text"-->
             <!--                            v-model="form.content"-->
@@ -104,27 +100,26 @@
 </template>
 
 <script setup>
-import { Inertia } from "@inertiajs/inertia"
-import { onBeforeMount, onMounted, ref } from "vue"
-import { useForm, usePage } from '@inertiajs/inertia-vue3'
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
-import { useAppSettingStore } from "@/Stores/AppSettingStore"
-const appSettingStore = useAppSettingStore()
-import { useUserStore } from "@/Stores/UserStore"
-import { useNewsStore } from "@/Stores/NewsStore"
+import { onBeforeUnmount } from 'vue'
+import { useForm } from '@inertiajs/inertia-vue3'
+import { usePageSetup } from '@/Utilities/PageSetup'
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import { useNewsStore } from '@/Stores/NewsStore'
 import JetValidationErrors from '@/Jetstream/ValidationErrors'
 // import TabbableTextarea from "@/Components/Global/TextEditor/TabbableTextarea.vue"
-import Tiptap from "@/Components/Global/TextEditor/TiptapNewsPostEdit"
-import Message from "@/Components/Global/Modals/Messages"
+import Tiptap from '@/Components/Global/TextEditor/TiptapNewsPostEdit'
+import Message from '@/Components/Global/Modals/Messages'
+import CancelButton from '@/Components/Global/Buttons/CancelButton.vue'
 
-const videoPlayerStore = useVideoPlayerStore()
-const userStore = useUserStore()
+usePageSetup('newsEdit')
+
+const appSettingStore = useAppSettingStore()
 const newsStore = useNewsStore()
 
 const props = defineProps({
   news: Object,
   can: Object,
-});
+})
 
 // note: as of March 2023 the form submission cannot use "content" as
 // a form field name. It conflicts with the HTMLRequest content item.
@@ -136,36 +131,21 @@ const form = useForm({
   title: props.news.title,
   body: newsStore.newsArticleContentTiptop,
   // content: newsStore.newsArticleContentTiptop,
-});
+})
 
 const submit = () => {
-  form.body = newsStore.newsArticleContentTiptop;
-  form.put(route("news.update", props.news.id));
-};
+  form.body = newsStore.newsArticleContentTiptop
+  form.put(route('news.update', props.news.id))
+}
 
-
-userStore.currentPage = 'newsEdit'
-userStore.showFlashMessage = true;
-
-newsStore.newsArticleIdTiptop = props.news.id;
-newsStore.newsArticleTitleTiptop = props.news.title;
-newsStore.newsArticleContentTiptop = props.news.content;
-form.body = newsStore.newsArticleContentTiptop;
+newsStore.newsArticleIdTiptop = props.news.id
+newsStore.newsArticleTitleTiptop = props.news.title
+newsStore.newsArticleContentTiptop = props.news.content
+form.body = newsStore.newsArticleContentTiptop
 // form.content = newsStore.newsArticleContentTiptop;
 
-onMounted(() => {
-  videoPlayerStore.makeVideoTopRight();
-  if (userStore.isMobile) {
-
-    appSettingStore.ott = 0
-appSettingStore.pageIsHidden = false
-  }
-  document.getElementById("topDiv").scrollIntoView()
-});
-
-function back() {
-  newsStore.newsArticleContentTiptop = '';
-  Inertia.visit(userStore.prevUrl)
-}
+onBeforeUnmount(() => {
+  newsStore.newsArticleContentTiptop = ''
+})
 
 </script>

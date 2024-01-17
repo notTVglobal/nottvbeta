@@ -7,7 +7,7 @@
     <!--        <div id="topDiv" class="light:bg-white light:text-black dark:bg-gray-800 dark:text-gray-50 rounded p-5 mb-10">-->
     <div id="topDiv" class="bg-gray-800 text-gray-50 rounded px-5 pt-6">
 
-      <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+      <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
       <header class="flex justify-between mb-3 pt-6">
         <div>
@@ -23,7 +23,7 @@
           <div>
             <button
                 v-if="props.can.editTeam"
-                @click="userStore.btnRedirect(`/teams/${props.team.slug}/edit`)"
+                @click="appSettingStore.btnRedirect(`/teams/${props.team.slug}/edit`)"
                 class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
             >Edit
             </button>
@@ -31,7 +31,7 @@
           <div>
             <button
                 v-if="props.can.manageTeam"
-                @click="userStore.btnRedirect(`/teams/${props.team.slug}/manage`)"
+                @click="appSettingStore.btnRedirect(`/teams/${props.team.slug}/manage`)"
                 class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
             >Manage Team
             </button>
@@ -39,7 +39,7 @@
           <div>
             <button
                 v-if="props.user.role_id === 4"
-                @click="userStore.btnRedirect(`/dashboard`)"
+                @click="appSettingStore.btnRedirect(`/dashboard`)"
                 class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                 hidden
             >Dashboard
@@ -99,16 +99,16 @@
 
 <script setup>
 import { usePageSetup } from '@/Utilities/PageSetup'
-import { useTeamStore } from "@/Stores/TeamStore"
-import { useUserStore } from "@/Stores/UserStore"
-import TeamShowsList from "@/Components/Pages/Teams/Elements/TeamShowsList"
-import Message from "@/Components/Global/Modals/Messages"
-import SingleImage from "@/Components/Global/Multimedia/SingleImage"
+import { useTeamStore } from '@/Stores/TeamStore'
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import TeamShowsList from '@/Components/Pages/Teams/Elements/TeamShowsList'
+import Message from '@/Components/Global/Modals/Messages'
+import SingleImage from '@/Components/Global/Multimedia/SingleImage'
 
-usePageSetup('teamsShow')
+usePageSetup('teams/slug')
 
+const appSettingStore = useAppSettingStore()
 const teamStore = useTeamStore()
-const userStore = useUserStore()
 
 let props = defineProps({
   user: Object,
@@ -119,9 +119,9 @@ let props = defineProps({
   creators: Object,
   filters: Object,
   can: Object,
-});
+})
 
-teamStore.setActiveTeam(props.team);
-teamStore.can = props.can;
+teamStore.setActiveTeam(props.team)
+teamStore.can = props.can
 
 </script>

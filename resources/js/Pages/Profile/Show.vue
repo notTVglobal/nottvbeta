@@ -62,12 +62,8 @@ import TwoFactorAuthenticationForm from '@/Pages/Profile/Partials/TwoFactorAuthe
 import UpdatePasswordForm from '@/Pages/Profile/Partials/UpdatePasswordForm'
 import UpdateProfileInformationForm from '@/Pages/Profile/Partials/UpdateProfileInformationForm'
 import UpdateContactInformationForm from '@/Pages/Profile/Partials/UpdateContactInformationForm'
-import { onBeforeMount, onMounted } from "vue"
-import { useUserStore } from "@/Stores/UserStore"
 
-usePageSetup('dashboard')
-
-const userStore = useUserStore()
+usePageSetup('profile.show')
 
 defineProps({
   confirmsTwoFactorAuthentication: Boolean,

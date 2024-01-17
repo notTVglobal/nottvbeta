@@ -42,40 +42,23 @@
 
 <script setup>
 import { Inertia } from "@inertiajs/inertia"
-import { onMounted, ref } from "vue"
 import { usePage } from "@inertiajs/inertia-vue3"
 import { formatDate } from "@vueuse/shared"
 import dayjs from "dayjs"
 // import {parseMasterXml} from "@videojs/http-streaming/src/dash-playlist-loader"
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
+import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
-const appSettingStore = useAppSettingStore()
-import { useUserStore } from "@/Stores/UserStore"
-import { useNewsStore } from "@/Stores/NewsStore"
 import NewsHeader from "@/Components/Pages/News/NewsHeader"
 import Message from "@/Components/Global/Modals/Messages"
 
-const videoPlayerStore = useVideoPlayerStore()
-const userStore = useUserStore()
-const newsStore = useNewsStore()
+usePageSetup('newsRssIndex')
+
+const appSettingStore = useAppSettingStore()
 
 let props = defineProps({
   feed: Object,
   can: Object,
 })
-
-appSettingStore.currentPage = 'newsRssIndex'
-userStore.showFlashMessage = true;
-
-onMounted(() => {
-  videoPlayerStore.makeVideoTopRight();
-  if (userStore.isMobile) {
-
-    appSettingStore.ott = 0
-appSettingStore.pageIsHidden = false
-  }
-  document.getElementById("topDiv").scrollIntoView()
-});
 
 function newFormatDate(dateString) {
   const date = dayjs(dateString)

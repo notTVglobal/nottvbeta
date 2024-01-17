@@ -4,7 +4,7 @@
   <div class="place-self-center flex flex-col gap-y-3">
     <div id="topDiv" class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 
-      <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+      <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
       <div class="flex justify-between mt-3 mb-6">
         <div class="text-3xl">Create Show</div>
@@ -31,7 +31,7 @@
               required
           >
             <option
-                v-for="team in props.teams.data"
+                v-for="team in props.teams"
                 :key="team.id"
                 :value="team.id"
                 class="bg-white text-black border-b dark:text-gray-50 dark:bg-gray-800 dark:border-gray-600"
@@ -225,22 +225,22 @@
 </template>
 
 <script setup>
-import { Inertia } from "@inertiajs/inertia";
-import { onMounted, ref } from 'vue'
-import { useForm, usePage } from "@inertiajs/inertia-vue3"
+import { Inertia } from '@inertiajs/inertia'
+import { computed, onMounted, ref } from 'vue'
+import { useForm, usePage } from '@inertiajs/inertia-vue3'
 import { usePageSetup } from '@/Utilities/PageSetup'
-import { useTeamStore } from "@/Stores/TeamStore"
-import { useUserStore } from "@/Stores/UserStore"
-import { useNotificationStore } from "@/Stores/NotificationStore"
+import { useAppSettingStore } from "@/Stores/AppSettingStore"
+import { useTeamStore } from '@/Stores/TeamStore'
+import { useNotificationStore } from '@/Stores/NotificationStore'
 import JetValidationErrors from '@/Jetstream/ValidationErrors'
-import Message from "@/Components/Global/Modals/Messages"
-import CancelButton from "@/Components/Global/Buttons/CancelButton"
-import CheckboxNotification from "@/Components/Global/Modals/CheckboxNotification"
+import Message from '@/Components/Global/Modals/Messages'
+import CancelButton from '@/Components/Global/Buttons/CancelButton'
+import CheckboxNotification from '@/Components/Global/Modals/CheckboxNotification'
 
 usePageSetup('showsCreate')
 
+const appSettingStore = useAppSettingStore()
 const teamStore = useTeamStore()
-const userStore = useUserStore()
 const notificationStore = useNotificationStore()
 
 let props = defineProps({
@@ -250,11 +250,15 @@ let props = defineProps({
   subCategories: Object,
 })
 
+const defaultTeamId = computed(() => {
+  return teamStore.id || (props.teams.length > 0 ? props.teams[0].id : null)
+})
+
 let form = useForm({
   name: '',
   description: '',
   user_id: props.userId,
-  team_id: '',
+  team_id: defaultTeamId.value,
   category: '',
   sub_category: '',
   www_url: '',
@@ -262,51 +266,42 @@ let form = useForm({
   telegram_url: '',
   twitter_handle: '',
   notes: '',
-});
+})
 
-let showCategoryDescription = ref(null);
-
-form.team_id = teamStore.id;
+let showCategoryDescription = ref(null)
 
 const checkForTeams = () => {
-  if (props.teams.data.length === 0) {
+  if (props.teams.length === 0) {
     // Perform some actions if data array is empty
-    console.log('No teams available.');
-    notificationStore.active = true;
-    notificationStore.title = "No teams available.";
-    notificationStore.body = "Please create a team before you create a show.";
-    notificationStore.buttonLabel = "OKAY";
-    notificationStore.onClickAction = "redirect";
-    notificationStore.uri = "/shows/create";
-    notificationStore.redirectPageUri = "/teams/create";
+    console.log('No teams available.')
+    notificationStore.active = true
+    notificationStore.title = 'No teams available.'
+    notificationStore.body = 'Please create a team before you create a show.'
+    notificationStore.buttonLabel = 'OKAY'
+    notificationStore.onClickAction = 'redirect'
+    notificationStore.uri = '/shows/create'
+    notificationStore.redirectPageUri = '/teams/create'
     // Additional logic for empty array
   } else {
     // Do nothing if data array is not empty
-    console.log('Teams are available.');
+    console.log('Teams are available.')
   }
-};
+}
 
 onMounted(() => {
-  checkForTeams();
-});
+  checkForTeams()
+})
 
 let submit = () => {
-  form.post('/shows');
+  form.post('/shows')
 }
 
 function chooseCategory(event) {
-  showCategoryDescription = props.categories[event.target.selectedIndex].description;
+  showCategoryDescription = props.categories[event.target.selectedIndex].description
 }
 
 function reset() {
-  form.reset();
-}
-
-function back() {
-  let urlPrev = usePage().props.value.urlPrev
-  if (urlPrev !== 'empty') {
-    Inertia.visit(urlPrev)
-  }
+  form.reset()
 }
 
 </script>

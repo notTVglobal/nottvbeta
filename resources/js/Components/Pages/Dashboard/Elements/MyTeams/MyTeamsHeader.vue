@@ -5,7 +5,7 @@
       </div>
 
       <div v-if="can.createTeam" class="">
-        <button @click="userStore.btnRedirect('/teams/create')"
+        <button @click="appSettingStore.btnRedirect('/teams/create')"
                 class="bg-green-600 hover:bg-green-500 text-white px-4 py-2 text-xs rounded disabled:bg-gray-400"
         >New Team
         </button>
@@ -16,9 +16,9 @@
 </template>
 
 <script setup>
-import { useUserStore } from "@/Stores/UserStore"
+import { useAppSettingStore } from "@/Stores/AppSettingStore"
 
-const userStore = useUserStore()
+const appSettingStore = useAppSettingStore()
 
 defineProps({
   can: Object,

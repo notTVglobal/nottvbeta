@@ -5,7 +5,7 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div id="topDiv" class="bg-dark text-light p-5 mb-10 pt-6">
 
-            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+            <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
             <header>
                 <div class="flex justify-between mb-6">
@@ -384,15 +384,11 @@
 </template>
 
 <script setup>
-import { onBeforeMount, onMounted, ref } from "vue"
 import { Inertia } from "@inertiajs/inertia"
 import {useForm, usePage} from "@inertiajs/inertia-vue3"
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
+import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
-const appSettingStore = useAppSettingStore()
-import { useTeamStore } from "@/Stores/TeamStore"
-import { useShowStore } from "@/Stores/ShowStore"
-import { useUserStore } from "@/Stores/UserStore"
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useMovieStore } from "@/Stores/MovieStore"
 import JetValidationErrors from '@/Jetstream/ValidationErrors'
 import TabbableTextarea from "@/Components/Global/TextEditor/TabbableTextarea"
@@ -402,10 +398,10 @@ import ImageUpload from "@/Components/Global/Uploaders/ImageUpload"
 import VideoUpload from "@/Components/Global/Uploaders/VideoUpload"
 import CancelButton from "@/Components/Global/Buttons/CancelButton.vue"
 
+usePageSetup('movieEdit')
+
+const appSettingStore = useAppSettingStore()
 const videoPlayerStore = useVideoPlayerStore()
-const teamStore = useTeamStore()
-const showStore = useShowStore()
-const userStore = useUserStore()
 const movieStore = useMovieStore()
 
 let props = defineProps({
@@ -445,19 +441,6 @@ let reloadImage = () => {
 let submit = () => {
     form.put(route('movies.update', props.movie.slug));
 }
-
-userStore.currentPage = 'movieEdit'
-userStore.showFlashMessage = true;
-
-onMounted(() => {
-    videoPlayerStore.makeVideoTopRight();
-    if (userStore.isMobile) {
-
-        appSettingStore.ott = 0
-appSettingStore.pageIsHidden = false
-    }
-    document.getElementById("topDiv").scrollIntoView()
-})
 
 // let category = ref();
 

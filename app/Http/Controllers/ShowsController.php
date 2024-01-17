@@ -215,36 +215,42 @@ class ShowsController extends Controller
 
     public function create()
     {
-        $categories = ShowCategory::all();
-        $sub_categories = ShowCategorySub::all();
+      $categories = ShowCategory::all();
+      $sub_categories = ShowCategorySub::all();
+      $userId = Auth::id(); // Store the user ID in a variable to avoid multiple calls
 
-             return Inertia::render('Shows/Create', [
-                 'teams' => Team::with('teamStatus')
-                     ->where(function ($query) {
-                         $query->where('user_id', Auth::user()->id)
-                             ->orWhere('team_leader', Auth::user()->id)
-                             ->orWhereHas('managers', function ($query) {
-                                 $query->where('user_id', Auth::user()->id);
-                             });
-                     })
-                     ->paginate(5, ['*'], 'teams')
-                     ->withQueryString()
-                     ->through(fn($team) => [
-                         'id' => $team->id,
-                         'name' => $team->name,
-                         'slug' => $team->slug,
-                         'status' => [
-                             'id' => $team->teamStatus->id,
-                             'status' => $team->teamStatus->status,
-                             ],
-                         'can' => [
-                             'manageTeam' => Auth::user()->can('manage', $team)
-                         ]
-                     ]),
-                 'userId' => Auth::user()->id,
-                 'categories' => $categories,
-                 'subCategories' => $sub_categories,
-        ]);
+      $teams = Team::with(['teamStatus:id,status'])
+          ->whereIn('team_status_id', [1, 2, 3, 4, 7, 8, 11])
+          ->where(function ($query) use ($userId) {
+            // Directly including the user-specific conditions in the query
+            $query->where('user_id', $userId)
+                ->orWhere('team_leader', $userId)
+                ->orWhereHas('managers', function ($subQuery) use ($userId) {
+                  $subQuery->where('user_id', $userId);
+                });
+          })
+          ->get()
+          ->map(function ($team) use ($userId) {
+            return [
+                'id' => $team->id,
+                'name' => $team->name,
+                'slug' => $team->slug,
+                'status' => [
+                    'id' => $team->teamStatus->id,
+                    'status' => $team->teamStatus->status,
+                ],
+                'can' => [
+                    'manageTeam' => Auth::user()->can('manage', $team)
+                ]
+            ];
+          });
+
+      return Inertia::render('Shows/Create', [
+          'teams' => $teams,
+          'userId' => $userId,
+          'categories' => $categories,
+          'subCategories' => $sub_categories,
+      ]);
 
     }
 
@@ -811,6 +817,26 @@ class ShowsController extends Controller
             $this->formattedScheduledDateTime = $this->convertTimeToUserTime($showEpisode->scheduled_release_dateTime);
         }
 
+      $videoForEpisode = Video::where('show_episodes_id', $showEpisode->id)->first();
+
+//      $videoForEpisode = Video::with('appSetting')
+//          ->where('show_episodes_id', $showEpisode->id)
+//          ->first();
+//
+//      $videoData = [
+//          'file_name' => $videoForEpisode->file_name ?? '',
+//          'cdn_endpoint' => $videoForEpisode->appSetting->cdn_endpoint ?? '',
+//          'folder' => $videoForEpisode->folder ?? '',
+//          'cloud_folder' => $videoForEpisode->cloud_folder ?? '',
+//          'upload_status' => $videoForEpisode->upload_status ?? '',
+//          'video_url' => $videoForEpisode->video_url ?? '',
+//          'type' => $videoForEpisode->type ?? '',
+//          'storage_location' => $videoForEpisode->storage_location ?? '',
+//      ];
+//
+//      $episodeData = $showEpisode->toArray();
+//      $episodeData['video'] = $videoData;
+
         return Inertia::render('Shows/{$id}/Episodes/{$id}/Manage', [
             'show' => [
                 'name' => $show->name,
@@ -829,7 +855,40 @@ class ShowsController extends Controller
                 'name' => $show->team->name,
                 'slug' => $show->team->slug,
             ],
-            'episode' => $showEpisode,
+            'episode' => [
+                'id' => $showEpisode->id,
+                'ulid' =>$showEpisode->ulid,
+                'name' => $showEpisode->name,
+                'slug' => $showEpisode->slug,
+                'description' => $showEpisode->description,
+                'notes' => $showEpisode->notes,
+                'episode_number' => $showEpisode->episode_number,
+                'status' => $showEpisode->showEpisodeStatus,
+                'release_year' => $showEpisode->release_year ?? null,
+                'release_dateTime' => $this->formattedReleaseDateTime ?? null,
+                'scheduled_release_dateTime' => $this->formattedScheduledDateTime ?? null,
+                'mist_stream_id' => $showEpisode->mist_stream_id,
+                'video_id' => $showEpisode->video_id,
+                'youtube_url' => $showEpisode->youtube_url,
+                'video_embed_code' => $showEpisode->video_embed_code,
+                'video' => [
+                    'file_name' => $videoForEpisode->file_name ?? '',
+                    'cdn_endpoint' => $videoForEpisode->appSetting->cdn_endpoint ?? '',
+                    'folder' => $videoForEpisode->folder ?? '',
+                    'cloud_folder' => $videoForEpisode->cloud_folder ?? '',
+                    'upload_status' => $videoForEpisode->upload_status ?? '',
+                    'video_url' => $showEpisode->video->video_url ?? '',
+                    'type' => $showEpisode->video->type ?? '',
+                    'storage_location' => $showEpisode->video->storage_location ?? '',
+                ],
+                'image' => [
+                    'id' => $showEpisode->image->id,
+                    'name' => $showEpisode->image->name,
+                    'folder' => $showEpisode->image->folder,
+                    'cdn_endpoint' => $showEpisode->appSetting->cdn_endpoint,
+                    'cloud_folder' => $showEpisode->image->cloud_folder,
+                ],
+            ],
             'releaseDateTime' => $this->formattedReleaseDateTime ?? null,
             'scheduledDateTime' => $this->formattedScheduledDateTime ?? null,
             'episodeStatus' => [
@@ -841,8 +900,8 @@ class ShowsController extends Controller
                 'goLive' => auth()->user()->can('goLive', $show),
             ]
 
-        ]);
 
+        ]);
     }
 ////////////  CHANGE EPISODE STATUS
 ////////////////////////////

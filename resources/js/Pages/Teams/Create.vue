@@ -4,7 +4,7 @@
   <div class="place-self-center flex flex-col gap-y-3">
     <div id="topDiv" class="bg-white text-black p-5 mb-10">
 
-      <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+      <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
       <div class="flex justify-between mt-3 mb-6 pt-6">
         <div class="text-3xl">Create New Team</div>
@@ -82,17 +82,16 @@
 </template>
 
 <script setup>
-import { useForm } from "@inertiajs/inertia-vue3"
+import { useForm } from '@inertiajs/inertia-vue3'
 import { usePageSetup } from '@/Utilities/PageSetup'
-import { useUserStore } from "@/Stores/UserStore"
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import JetValidationErrors from '@/Jetstream/ValidationErrors'
-import Message from "@/Components/Global/Modals/Messages"
+import Message from '@/Components/Global/Modals/Messages'
+import CancelButton from '@/Components/Global/Buttons/CancelButton'
 
-import CancelButton from "@/Components/Global/Buttons/CancelButton"
+usePageSetup('teams/create')
 
-usePageSetup('teamsCreate')
-
-const userStore = useUserStore()
+const appSettingStore = useAppSettingStore()
 
 let props = defineProps({
   user: Object,
@@ -106,11 +105,11 @@ let form = useForm({
 })
 
 let submit = () => {
-  form.post('/teams');
+  form.post('/teams')
 }
 
 function reset() {
-  form.reset();
+  form.reset()
 }
 
 </script>

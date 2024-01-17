@@ -3,7 +3,7 @@
   <Head title="Upgrade Account"/>
   <div id="topDiv" class="h-[calc(100vh-16rem)] text-center bg-gray-800 text-white px-10">
 
-    <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+    <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
     <!--            <h1 class="text-3xl font-semibold pb-3">Become a notTV Premium Subscriber</h1>-->
 
@@ -104,15 +104,15 @@
 </template>
 
 <script setup>
-import { Inertia } from "@inertiajs/inertia"
+import { Inertia } from '@inertiajs/inertia'
 import { usePageSetup } from '@/Utilities/PageSetup'
-import { useUserStore } from "@/Stores/UserStore"
-import { useShopStore } from "@/Stores/ShopStore"
-import Message from "@/Components/Global/Modals/Messages"
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import { useShopStore } from '@/Stores/ShopStore'
+import Message from '@/Components/Global/Modals/Messages'
 
-usePageSetup('shopUpgrade')
+usePageSetup('shop/upgrade')
 
-const userStore = useUserStore()
+const appSettingStore = useAppSettingStore()
 const shopStore = useShopStore()
 
 let props = defineProps({

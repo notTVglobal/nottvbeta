@@ -5,7 +5,7 @@
   <div class="place-self-center flex flex-col">
     <div id="topDiv" class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-1 pt-6 w-full">
 
-      <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+      <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
       <header class="w-full mx-auto text-center mb-5 border-b border-gray-800">
         <div v-if="can.viewNewsroom || can.editNewsPost"
@@ -13,7 +13,7 @@
           <div>
             <button
                 v-if="props.can.viewNewsroom"
-                @click="userStore.btnRedirect(`/newsroom`)"
+                @click="appSettingStore.btnRedirect(`/newsroom`)"
                 class="bg-yellow-600 hover:bg-yellow-500 text-white px-4 py-2 rounded-lg disabled:bg-gray-400"
             >Newsroom
             </button>
@@ -21,7 +21,7 @@
           <div>
             <button
                 v-if="can.editNewsPost"
-                @click="userStore.btnRedirect(`/news/${props.news.slug}/edit`)"
+                @click="appSettingStore.btnRedirect(`/news/${props.news.slug}/edit`)"
                 class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
             >Edit
             </button>
@@ -75,31 +75,14 @@
 </template>
 
 <script setup>
-import { Inertia } from "@inertiajs/inertia"
-import { onBeforeMount, onMounted, ref } from "vue"
-import { useForm, usePage } from "@inertiajs/inertia-vue3"
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
+import { useForm } from "@inertiajs/inertia-vue3"
+import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
-const appSettingStore = useAppSettingStore()
-import { useUserStore } from "@/Stores/UserStore"
 import Message from "@/Components/Global/Modals/Messages"
-import BackButton from "@/Components/Global/Buttons/BackButton"
 
-const videoPlayerStore = useVideoPlayerStore()
-const userStore = useUserStore()
+usePageSetup('news.slug')
 
-userStore.currentPage = 'news'
-userStore.showFlashMessage = true
-
-onMounted(() => {
-  videoPlayerStore.makeVideoTopRight()
-  if (userStore.isMobile) {
-
-    appSettingStore.ott = 0
-appSettingStore.pageIsHidden = false
-  }
-  document.getElementById("topDiv").scrollIntoView()
-});
+const appSettingStore = useAppSettingStore()
 
 const props = defineProps({
   news: Object,
@@ -113,13 +96,6 @@ function destroy(id) {
   if (confirm("Are you sure you want to Delete")) {
     form.delete(route('news.destroy', id));
 
-  }
-}
-
-function back() {
-  let urlPrev = usePage().props.value.urlPrev
-  if (urlPrev !== 'empty') {
-    Inertia.visit(urlPrev)
   }
 }
 

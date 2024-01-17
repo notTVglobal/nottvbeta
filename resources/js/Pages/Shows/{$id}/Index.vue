@@ -5,14 +5,14 @@
   <div class="place-self-center flex flex-col">
     <div id="topDiv" class="bg-gray-900 text-white px-5 pt-6">
 
-      <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+      <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
       <header v-if="props.can.editShow || props.can.manageShow" class="flex justify-end">
         <div class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4 my-4">
           <div>
             <button
                 v-if="props.can.editShow"
-                @click="userStore.btnRedirect(`/shows/${props.show.slug}/edit`)"
+                @click="appSettingStore.btnRedirect(`/shows/${props.show.slug}/edit`)"
                 class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
             >Edit
             </button>
@@ -20,7 +20,7 @@
           <div>
             <button
                 v-if="props.can.manageShow"
-                @click="userStore.btnRedirect(`/shows/${props.show.slug}/manage`)"
+                @click="appSettingStore.btnRedirect(`/shows/${props.show.slug}/manage`)"
                 class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
             >Manage Show
             </button>
@@ -61,7 +61,7 @@
                     class="ml-3 px-3 py-3 text-gray-50 bg-black w-full text-center lg:text-left">
                   The first episode is currently processing. <br>Please check back later.
                 </div>
-                <button v-if="props.show.firstPlayVideo.file_name || props.show.firstPlayVideoFromUrl"
+                <button v-if="props.show.firstPlayVideo.file_name || props.show.firstPlayVideoFromUrl.video_url !== ''"
                         :disabled="props.show.firstPlayVideo.upload_status === 'processing' && !props.show.firstPlayVideoUrl"
                         class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
                         @click="playEpisode">
@@ -243,11 +243,9 @@
 <script setup>
 import { Inertia } from "@inertiajs/inertia"
 import { usePageSetup } from '@/Utilities/PageSetup'
+import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import { useNowPlayingStore } from "@/Stores/NowPlayingStore"
 import { useTeamStore } from "@/Stores/TeamStore"
-import { useShowStore } from "@/Stores/ShowStore"
-import { useStreamStore } from "@/Stores/StreamStore"
-import { useUserStore } from "@/Stores/UserStore"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import ShowEpisodesList from "@/Components/Pages/Shows/Elements/ShowEpisodesList"
 import ShowFooter from "@/Components/Pages/Shows/Layout/ShowFooter"
@@ -258,11 +256,9 @@ import SingleImage from "@/Components/Global/Multimedia/SingleImage"
 
 usePageSetup('showsShow')
 
-let nowPlayingStore = useNowPlayingStore()
+const appSettingStore = useAppSettingStore()
+const nowPlayingStore = useNowPlayingStore()
 const teamStore = useTeamStore()
-const showStore = useShowStore()
-const streamStore = useStreamStore()
-const userStore = useUserStore()
 const videoPlayerStore = useVideoPlayerStore()
 
 let props = defineProps({
@@ -291,7 +287,7 @@ let playEpisode = () => {
     nowPlayingStore.show.episode.image = props.show.firstPlayVideo.image
     videoPlayerStore.loadNewSourceFromFile(props.show.firstPlayVideo)
 
-  } else if (props.show.firstPlayVideoFromUrl) {
+  } else if (props.show.firstPlayVideoFromUrl.video_url !== '') {
     nowPlayingStore.isFromWeb = true
     nowPlayingStore.show.episode.name = props.show.firstPlayVideoFromUrl.name
     nowPlayingStore.show.episode.url = `/shows/${props.show.slug}/episode/${props.show.firstPlayVideoFromUrl.slug}`

@@ -4,7 +4,7 @@
   <div class="place-self-center flex flex-col gap-y-3">
     <div id="topDiv" class="bg-white text-black p-5 mb-10">
 
-      <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+      <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
       <AdminHeader>MistServer API</AdminHeader>
 
@@ -317,33 +317,22 @@
 </template>
 
 <script setup>
-import { onMounted, ref, reactive, onBeforeMount } from "vue"
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
+import { ref, reactive } from "vue"
+import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
-const appSettingStore = useAppSettingStore()
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useStreamStore } from "@/Stores/StreamStore"
-import { useUserStore } from "@/Stores/UserStore"
 import AdminHeader from "@/Components/Pages/Admin/AdminHeader"
 import Message from "@/Components/Global/Modals/Messages"
 
+usePageSetup('mistServerApi')
+
+const appSettingStore = useAppSettingStore()
 const videoPlayerStore = useVideoPlayerStore()
 const streamStore = useStreamStore()
-const userStore = useUserStore()
 
 videoPlayerStore.apiActiveStreams = null
 videoPlayerStore.mistStatus = false
-userStore.currentPage = 'adminSettings'
-userStore.showFlashMessage = true;
-
-onMounted(() => {
-  videoPlayerStore.makeVideoTopRight()
-  if (userStore.isMobile) {
-
-    appSettingStore.ott = 0
-appSettingStore.pageIsHidden = false
-  }
-  document.getElementById("topDiv").scrollIntoView()
-});
 
 let props = defineProps({
   apiReturn: Object,

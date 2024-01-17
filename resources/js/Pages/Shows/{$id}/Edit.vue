@@ -5,7 +5,7 @@
   <div id="topDiv" class="place-self-center flex flex-col gap-y-3">
     <div class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 px-5 mb-10">
 
-      <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+      <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
       <ShowEditHeader :show="props.show" :team="props.team" :form="form" @submit="submit"/>
 
@@ -265,9 +265,8 @@
 import { Inertia } from "@inertiajs/inertia"
 import { useForm } from "@inertiajs/inertia-vue3"
 import { usePageSetup } from '@/Utilities/PageSetup'
+import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import { useTeamStore } from "@/Stores/TeamStore"
-import { useShowStore } from "@/Stores/ShowStore"
-import { useUserStore } from "@/Stores/UserStore"
 import JetValidationErrors from '@/Jetstream/ValidationErrors'
 import TabbableTextarea from "@/Components/Global/TextEditor/TabbableTextarea"
 import ShowEditHeader from "@/Components/Pages/Shows/Edit/ShowEditHeader"
@@ -275,11 +274,10 @@ import SingleImage from "@/Components/Global/Multimedia/SingleImage"
 import Message from "@/Components/Global/Modals/Messages"
 import ImageUpload from "@/Components/Global/Uploaders/ImageUpload"
 
-usePageSetup('showsEdit')
+usePageSetup('shows/slug/edit')
 
+const appSettingStore = useAppSettingStore()
 const teamStore = useTeamStore()
-const showStore = useShowStore()
-const userStore = useUserStore()
 
 let props = defineProps({
   user: Object,

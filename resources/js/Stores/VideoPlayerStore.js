@@ -271,6 +271,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             appSettingStore.fullPage = true
             // userStore.hidePage = true // to be deleted and replaced by appSettingStore.hidePage
             appSettingStore.hidePage = true
+            appSettingStore.ott = 0
 
             this.videoContainerClass = 'fullPageVideoContainer'
             this.class = 'fullPageVideoClass'

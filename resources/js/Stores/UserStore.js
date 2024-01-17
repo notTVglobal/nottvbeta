@@ -125,24 +125,6 @@ export const useUserStore = defineStore('userStore', {
                 this.newNotifications = 0; // or some other default value or error handling logic
             }
         },
-        setPrevUrl() {
-            const currentUrl = window.history.state ? window.history.state.url : window.location.pathname
-            // If thisUrl has not been set yet, it means the user accessed the page directly
-            if (!this.thisUrl) {
-                this.prevUrl = this.isCreator ? '/dashboard' : '/';
-            }
-            // Update prevUrl only if navigating to a new page
-            else if (this.thisUrl !== currentUrl) {
-                this.prevUrl = this.thisUrl;
-            }
-            // Update thisUrl to the current page
-            this.thisUrl = currentUrl;
-        },
-
-        btnRedirect(newUrl) {
-            this.setPrevUrl()
-            Inertia.visit(newUrl)
-        }
     },
 
     getters: {

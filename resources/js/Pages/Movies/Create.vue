@@ -4,7 +4,7 @@
 
   <header id="topDiv" class="">
 
-    <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+    <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
     <div
         class="flex justify-between p-4 m-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800"
@@ -147,76 +147,57 @@
 </template>
 
 <script setup>
-import { Inertia } from "@inertiajs/inertia"
-import { onMounted, onBeforeMount, ref } from "vue"
-import { useForm, usePage } from "@inertiajs/inertia-vue3"
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
-import { useAppSettingStore } from "@/Stores/AppSettingStore"
-const appSettingStore = useAppSettingStore()
-import { useTeamStore } from "@/Stores/TeamStore"
-import { useShowStore } from "@/Stores/ShowStore"
-import { useUserStore } from "@/Stores/UserStore"
-import JetValidationErrors from '@/Jetstream/ValidationErrors';
-import Message from "@/Components/Global/Modals/Messages"
-import CancelButton from "@/Components/Global/Buttons/CancelButton";
+import { ref } from 'vue'
+import { useForm } from '@inertiajs/inertia-vue3'
+import { usePageSetup } from '@/Utilities/PageSetup'
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import JetValidationErrors from '@/Jetstream/ValidationErrors'
+import Message from '@/Components/Global/Modals/Messages'
+import CancelButton from '@/Components/Global/Buttons/CancelButton'
 
-const videoPlayerStore = useVideoPlayerStore()
-const teamStore = useTeamStore()
-const showStore = useShowStore()
-const userStore = useUserStore()
+usePageSetup('movies/create')
+
+const appSettingStore = useAppSettingStore()
 
 let props = defineProps({
   errors: ref(''),
   isHidden: ref(false),
   // filters: Object,
-});
+})
 
 let form = useForm({
   name: '',
   description: '',
   video: '',
   file_url: '',
-});
+})
 
 let save = () => {
-  axios.post(route('movies.store', form.data));
+  axios.post(route('movies.store', form.data))
 }
 
 let submit = () => {
   // form.append('form', json);
   // axios.post("/api/movies/upload", form.data);
-  form.post(route('movies.store', form));
-};
+  form.post(route('movies.store', form))
+}
 
-let dropzoneFile = ref([]);
+let dropzoneFile = ref([])
 
-const active = ref(false);
+const active = ref(false)
 
 const toggleActive = () => {
-  active.value = !active.value;
+  active.value = !active.value
 }
 
 const drop = (e) => {
-  dropzoneFile.value = e.dataTransfer.files[0];
-  active.value = !active.value;
+  dropzoneFile.value = e.dataTransfer.files[0]
+  active.value = !active.value
 }
 
 const selectedFile = () => {
-  dropzoneFile.value = document.querySelector('.dropzoneFile').files[0];
+  dropzoneFile.value = document.querySelector('.dropzoneFile').files[0]
 }
-
-userStore.currentPage = 'movieCreate'
-userStore.showFlashMessage = true;
-
-onMounted(() => {
-  videoPlayerStore.makeVideoTopRight();
-  if (userStore.isMobile) {
-
-    appSettingStore.ott = 0
-appSettingStore.pageIsHidden = false
-  }
-  document.getElementById("topDiv").scrollIntoView()
-});
 
 // Dropzone tutorial: https://www.youtube.com/watch?v=wWKhKPN_Pmw
 

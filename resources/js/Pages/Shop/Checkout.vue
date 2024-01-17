@@ -5,7 +5,7 @@
   <div class="place-self-center flex flex-col gap-y-3">
     <div id="topDiv" class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 
-      <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+      <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
       <header class="flex justify-between mb-3">
         <div id="topDiv">
@@ -193,17 +193,18 @@
 <script setup>
 import { onMounted } from "vue"
 import { useForm } from "@inertiajs/inertia-vue3"
+import { loadStripe } from "@stripe/stripe-js";
 import { usePageSetup } from '@/Utilities/PageSetup'
-import { useUserStore } from "@/Stores/UserStore"
+import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import { useShopStore } from "@/Stores/ShopStore"
 import Message from "@/Components/Global/Modals/Messages"
-import { loadStripe } from "@stripe/stripe-js";
-// import CountrySelect from "@/Components/Forms/CountrySelect.vue";
-// import RegionSelect from "@/Components/Forms/RegionSelect.vue";
 
-usePageSetup('shopCheckout')
+// import CountrySelect from "@/Components/Global/Forms/CountrySelect.vue";
+// import RegionSelect from "@/Components/Global/Forms/RegionSelect.vue";
 
-const userStore = useUserStore()
+usePageSetup('shop/checkout')
+
+const appSettingStore = useAppSettingStore()
 const shopStore = useShopStore()
 
 let props = defineProps({

@@ -3,6 +3,7 @@
 namespace App\Events;
 
 use App\Models\Video;
+use App\Models\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -13,14 +14,17 @@ class NewVideoUploaded
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+  public $video;
+
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(
-        public Video $video,
-    ) {}
+    public function __construct(Video $video)
+    {
+      $this->video = $video;
+    }
 
 //    /**
 //     * Get the channels the event should broadcast on.

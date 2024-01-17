@@ -83,7 +83,7 @@ import UserUpdateContactForm from "@/Components/Pages/Users/UserUpdateContactFor
 
 usePageSetup('settings')
 
-userStore.currentPage = 'settings'
+appSettingStore.currentPage = 'settings'
 
 defineProps({
     // can: Object,

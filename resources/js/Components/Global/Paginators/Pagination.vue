@@ -6,7 +6,7 @@
         v-for="(link, key) in data.links"
         :key="key"
         :href="link.url"
-        @click="saveScrollPosition"
+        @click.prevent="saveScrollPosition"
         v-html="link.label"
         class="px-4 py-3 text-sm leading-4 h-fit"
         :class="{ 'text-white bg-orange-400 hover:bg-orange-400 dark:bg-orange-400 dark:hover:bg-orange-400': link.active,
@@ -18,25 +18,20 @@
 
 
 <script setup>
+import { onMounted, onUpdated } from 'vue'
 
 defineProps({
   data: Object,
 })
-let savedScrollPosition = 0;
+let savedScrollPosition = 0
 const saveScrollPosition = () => {
-  savedScrollPosition = window.scrollY;
-};
-
-import { onMounted, onUpdated } from 'vue';
-
+  savedScrollPosition = window.scrollY
+}
 onMounted(() => {
-  window.scrollTo(0, savedScrollPosition);
-});
-
-// onUpdated(() => {
-//     window.scrollTo(0, savedScrollPosition);
-// });
+  window.scrollTo(0, savedScrollPosition)
+})
 </script>
+
 
 <!--class="px-1 text-gray-800 dark:text-gray-50 dark:hover:text-blue-400 hover:text-blue-400"-->
 <!--:class="{ 'text-gray-300 dark:text-gray-700 dark:hover:text-gray-700 hover:text-gray-300': ! link.url, 'font-bold' : link.active }"-->

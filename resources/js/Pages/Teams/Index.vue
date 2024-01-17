@@ -4,7 +4,7 @@
   <div class="place-self-center flex flex-col gap-y-3">
     <div id="topDiv" class="light:bg-white light:text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 
-      <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+      <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
       <div v-if="props.can.viewCreator" class="flex justify-end flex-wrap-reverse gap-x-2 pt-6">
 
@@ -148,33 +148,34 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue"
-import { Inertia } from "@inertiajs/inertia"
-import Pagination from "@/Components/Global/Paginators/Pagination"
-import throttle from "lodash/throttle"
+import { Inertia } from '@inertiajs/inertia'
+import { ref, watch } from 'vue'
+
+import throttle from 'lodash/throttle'
 import { usePageSetup } from '@/Utilities/PageSetup'
-import { useUserStore } from "@/Stores/UserStore"
-import Message from "@/Components/Global/Modals/Messages"
-import SingleImage from "@/Components/Global/Multimedia/SingleImage"
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import Message from '@/Components/Global/Modals/Messages'
+import SingleImage from '@/Components/Global/Multimedia/SingleImage'
+import Pagination from '@/Components/Global/Paginators/Pagination'
 
-usePageSetup('teamsIndex')
+usePageSetup('teams')
 
-const userStore = useUserStore()
+const appSettingStore = useAppSettingStore()
 
 let props = defineProps({
   teams: Object,
   filters: Object,
   can: Object,
-});
+})
 
-let search = ref(props.filters.search);
+let search = ref(props.filters.search)
 
 watch(search, throttle(function (value) {
   Inertia.get('/teams', {search: value}, {
     preserveState: true,
-    replace: true
-  });
-}, 300));
+    replace: true,
+  })
+}, 300))
 
 </script>
 

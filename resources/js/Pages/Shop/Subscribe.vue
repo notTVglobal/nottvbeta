@@ -5,7 +5,7 @@
   <div class="w-full lace-self-center flex flex-col gap-y-3 bg-orange-400">
     <div id="topDiv" class="w-full bg-gray-800 text-gray-50 dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 
-      <!--            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>-->
+      <!--            <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>-->
 
       <header class="flex justify-between pt-4">
         <h1 class="text-3xl font-semibold pb-3">Subscription</h1>
@@ -78,30 +78,29 @@
 </template>
 
 <script setup>
-import { onMounted } from "vue"
+import { onMounted } from 'vue'
 import { usePageSetup } from '@/Utilities/PageSetup'
-import { useUserStore } from "@/Stores/UserStore"
-import { useShopStore } from "@/Stores/ShopStore"
-import { useForm } from "@inertiajs/inertia-vue3"
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import { useShopStore } from '@/Stores/ShopStore'
+import { useForm } from '@inertiajs/inertia-vue3'
 import { loadStripe } from '@stripe/stripe-js'
-import Messages from "@/Components/Global/Chat/Elements/VideoOTTChatMessages.vue"
 
-usePageSetup('shopSubscribe')
+usePageSetup('shop/subscribe')
 
-const userStore = useUserStore()
+const appSettingStore = useAppSettingStore()
 const shopStore = useShopStore()
 
 let props = defineProps({
   user: Object,
   error: String,
   intent: Object,
-  elements: {}
+  elements: {},
 })
 
 const options = {
   mode: 'setup',
   currency: 'cad',
-};
+}
 
 let stripe
 let elements
@@ -113,21 +112,21 @@ StripeAPIKey = process.env.MIX_STRIPE_KEY
 onMounted(async () => {
   shopStore.customer = props.user
 
-  stripe = await loadStripe(StripeAPIKey);
+  stripe = await loadStripe(StripeAPIKey)
 
   initialize()
 
   showPaymentForm()
 
   document
-      .querySelector("#payment-form")
+      .querySelector('#payment-form')
   // .addEventListener("submit", handleSubmit);
 
 
-});
+})
 
 function showPaymentForm() {
-  shopStore.showPaymentForm = true;
+  shopStore.showPaymentForm = true
 }
 
 function initialize() {
@@ -148,10 +147,10 @@ function initialize() {
       '.Label': {
         color: 'var(--colorBackgroundText)',
       },
-    }
-  };
+    },
+  }
 
-  elements = stripe.elements({appearance, clientSecret});
+  elements = stripe.elements({appearance, clientSecret})
 
   // this is for linkPayments
   // const linkAuthenticationElement = elements.create("linkAuthentication");
@@ -162,11 +161,11 @@ function initialize() {
   // });
 
   const paymentElementOptions = {
-    layout: "tabs",
-  };
+    layout: 'tabs',
+  }
 
-  const paymentElement = elements.create("payment", paymentElementOptions);
-  paymentElement.mount("#payment-element");
+  const paymentElement = elements.create('payment', paymentElementOptions)
+  paymentElement.mount('#payment-element')
 
 }
 
@@ -175,19 +174,19 @@ async function submit() {
     alert('Please select a subscription.')
     return
   }
-  setLoading(true);
+  setLoading(true)
 
   const {setupIntent, error} = await stripe.confirmSetup({
     elements,
     confirmParams: {
       // Make sure to change this to your payment completion page
-      return_url: "https://not.tv/subscription_success",
+      return_url: 'https://not.tv/subscription_success',
       // receipt_email: emailAddress,
     },
-    redirect: 'if_required'
+    redirect: 'if_required',
 
 
-  });
+  })
 
   // This point will only be reached if there is an immediate error when
   // confirming the payment. Otherwise, your customer will be redirected to
@@ -196,18 +195,18 @@ async function submit() {
   // redirected to the `return_url`.
 
   if (error) {
-    if (error.type === "card_error" || error.type === "validation_error") {
-      showMessage(error.message);
+    if (error.type === 'card_error' || error.type === 'validation_error') {
+      showMessage(error.message)
     } else {
-      showMessage("An unexpected error occurred.");
-      setLoading(false);
+      showMessage('An unexpected error occurred.')
+      setLoading(false)
     }
   } else {
     // console.log(setupIntent)
     let form = useForm({
       paymentMethod: setupIntent.payment_method,
       plan: shopStore.upgradeStripeId,
-    });
+    })
 
     //Submit the form
     form.post('/shop/subscribe')
@@ -219,28 +218,28 @@ async function submit() {
 // ------- UI helpers -------
 
 function showMessage(messageText) {
-  const messageContainer = document.querySelector("#payment-message");
+  const messageContainer = document.querySelector('#payment-message')
 
-  messageContainer.classList.remove("hidden");
-  messageContainer.textContent = messageText;
+  messageContainer.classList.remove('hidden')
+  messageContainer.textContent = messageText
 
   setTimeout(function () {
-    messageContainer.classList.add("hidden");
-    messageContainer.textContent = "";
-  }, 4000);
+    messageContainer.classList.add('hidden')
+    messageContainer.textContent = ''
+  }, 4000)
 }
 
 // Show a spinner on payment submission
 function setLoading(isLoading) {
   if (isLoading) {
     // Disable the button and show a spinner
-    document.querySelector("#submit").disabled = true;
-    document.querySelector("#spinner").classList.remove("hidden");
-    document.querySelector("#button-text").classList.add("hidden");
+    document.querySelector('#submit').disabled = true
+    document.querySelector('#spinner').classList.remove('hidden')
+    document.querySelector('#button-text').classList.add('hidden')
   } else {
-    document.querySelector("#submit").disabled = false;
-    document.querySelector("#spinner").classList.add("hidden");
-    document.querySelector("#button-text").classList.remove("hidden");
+    document.querySelector('#submit').disabled = false
+    document.querySelector('#spinner').classList.add('hidden')
+    document.querySelector('#button-text').classList.remove('hidden')
   }
 }
 

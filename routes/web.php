@@ -905,3 +905,12 @@ Route::get('/subscribe', function () {
 Route::get('/coffee', function () {
     return Inertia::location('https://www.buymeacoffee.com/hellorq');
 });
+
+
+// Routes For Testing
+/////////////////////
+Route::get('/test-mail', function () {
+  Mail::raw('Hello world', function ($msg) {
+    $msg->to('test@example.com')->subject('Test Email');
+  });
+});

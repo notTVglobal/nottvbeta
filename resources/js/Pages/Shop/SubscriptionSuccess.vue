@@ -25,12 +25,10 @@ import { Inertia } from "@inertiajs/inertia"
 import { onMounted } from "vue"
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useUserStore } from "@/Stores/UserStore"
-import { useShopStore } from "@/Stores/ShopStore"
 
-usePageSetup('shopSubscriptionSuccess')
+usePageSetup('shop/SubscriptionSuccess')
 
 const userStore = useUserStore()
-const shopStore = useShopStore()
 
 let props = defineProps({
   userIsSubscriber: null

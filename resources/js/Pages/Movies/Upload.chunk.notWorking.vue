@@ -4,7 +4,7 @@
 
   <header id="topDiv" class="md:pageWidth pageWidthSmall">
 
-    <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+    <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
     <div
         class="flex justify-between p-4 m-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800"
@@ -145,46 +145,28 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeMount } from "vue"
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
-import { useAppSettingStore } from "@/Stores/AppSettingStore"
-const appSettingStore = useAppSettingStore()
-import { useTeamStore } from "@/Stores/TeamStore"
-import { useShowStore } from "@/Stores/ShowStore"
-import { useUserStore } from "@/Stores/UserStore"
-import Message from "@/Components/Global/Modals/Messages"
+import { ref } from 'vue'
+import { usePageSetup } from '@/Utilities/PageSetup'
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
 
-const videoPlayerStore = useVideoPlayerStore()
-const teamStore = useTeamStore()
-const showStore = useShowStore()
-const userStore = useUserStore()
+const appSettingStore = useAppSettingStore()
+
+import Message from '@/Components/Global/Modals/Messages'
+
+usePageSetup('movies.uploadChunkNotWorking')
 
 appSettingStore.currentPage = 'movies'
-userStore.showFlashMessage = true
+appSettingStore.showFlashMessage = true
 
 // onBeforeMount(() => {
 //     userStore.scrollToTopCounter = 0;
 // })
 
-onMounted(() => {
-  videoPlayerStore.makeVideoTopRight();
-  if (userStore.isMobile) {
-
-    appSettingStore.ott = 0
-appSettingStore.pageIsHidden = false
-  }
-  document.getElementById("topDiv").scrollIntoView()
-  // if (userStore.scrollToTopCounter === 0 ) {
-  //
-  //     userStore.scrollToTopCounter ++;
-  // }
-});
-
 let props = defineProps({
   errors: ref(''),
   isHidden: ref(false),
   // filters: Object,
-});
+})
 
 // let form = useForm({
 //     name: '',
@@ -237,8 +219,8 @@ let props = defineProps({
 let submit = () => {
   // form.append('form', json);
   // axios.post("/movies/upload", form.data);
-  form.post(route('movies.store', form));
-};
+  form.post(route('movies.store', form))
+}
 
 
 </script>
@@ -248,30 +230,30 @@ export default {
   watch: {
     chunks(n, o) {
       if (n.length > 0) {
-        this.upload();
+        this.upload()
       }
-    }
+    },
   },
 
   data() {
     return {
       file: null,
       chunks: [],
-      uploaded: 0
-    };
+      uploaded: 0,
+    }
   },
 
   computed: {
     progress() {
-      return Math.floor((this.uploaded * 100) / this.file.size);
+      return Math.floor((this.uploaded * 100) / this.file.size)
     },
     formData() {
-      let formData = new FormData;
+      let formData = new FormData
 
-      formData.set('is_last', this.chunks.length === 1);
-      formData.set('file', this.chunks[0], `${this.file.name}.part`);
+      formData.set('is_last', this.chunks.length === 1)
+      formData.set('file', this.chunks[0], `${this.file.name}.part`)
 
-      return formData;
+      return formData
     },
     config() {
       return {
@@ -279,36 +261,36 @@ export default {
         data: this.formData,
         url: 'movies/upload',
         headers: {
-          'Content-Type': 'application/octet-stream'
+          'Content-Type': 'application/octet-stream',
         },
         onUploadProgress: event => {
-          this.uploaded += event.loaded;
-        }
-      };
-    }
+          this.uploaded += event.loaded
+        },
+      }
+    },
   },
 
   methods: {
     select(event) {
-      this.file = event.target.files.item(0);
-      this.createChunks();
+      this.file = event.target.files.item(0)
+      this.createChunks()
     },
     upload() {
       axios(this.config).then(response => {
-        this.chunks.shift();
+        this.chunks.shift()
       }).catch(error => {
-      });
+      })
     },
     createChunks() {
-      let size = 2048, chunks = Math.ceil(this.file.size / size);
+      let size = 2048, chunks = Math.ceil(this.file.size / size)
 
       for (let i = 0; i < chunks; i++) {
         this.chunks.push(this.file.slice(
-            i * size, Math.min(i * size + size, this.file.size), this.file.type
-        ));
+            i * size, Math.min(i * size + size, this.file.size), this.file.type,
+        ))
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

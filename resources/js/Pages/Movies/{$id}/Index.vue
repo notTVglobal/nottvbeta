@@ -5,11 +5,11 @@
   <div class="place-self-center flex flex-col gap-y-3">
     <div id="topDiv" class="bg-gray-900 text-white px-5">
 
-      <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+      <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
       <header v-if="props.can.editMovie" class="flex justify-end mt-6 mr-4 pb-3 border-b border-gray-800">
         <button
-            @click="userStore.btnRedirect(`/movies/${props.movie.slug}/edit`)"
+            @click="appSettingStore.btnRedirect(`/movies/${props.movie.slug}/edit`)"
             class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
         >Edit
         </button>
@@ -241,20 +241,23 @@
 </template>
 
 <script setup>
-import { Inertia } from "@inertiajs/inertia"
-import { onMounted, onBeforeMount, ref } from "vue"
+import { Inertia } from '@inertiajs/inertia'
+import { ref } from 'vue'
 import 'filepond/dist/filepond.min.css'
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css'
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
-import { useAppSettingStore } from "@/Stores/AppSettingStore"
-const appSettingStore = useAppSettingStore()
-import { useNowPlayingStore } from "@/Stores/NowPlayingStore"
-import { useTeamStore } from "@/Stores/TeamStore"
-import { useShowStore } from "@/Stores/ShowStore"
-import { useUserStore } from "@/Stores/UserStore"
-import Message from "@/Components/Global/Modals/Messages"
-import SingleImage from "@/Components/Global/Multimedia/SingleImage"
+import { usePageSetup } from '@/Utilities/PageSetup'
+import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import { useNowPlayingStore } from '@/Stores/NowPlayingStore'
+import { useTeamStore } from '@/Stores/TeamStore'
+import { useShowStore } from '@/Stores/ShowStore'
+import { useUserStore } from '@/Stores/UserStore'
+import Message from '@/Components/Global/Modals/Messages'
+import SingleImage from '@/Components/Global/Multimedia/SingleImage'
 
+usePageSetup('movies/slug')
+
+const appSettingStore = useAppSettingStore()
 const videoPlayerStore = useVideoPlayerStore()
 const nowPlayingStore = useNowPlayingStore()
 const teamStore = useTeamStore()
@@ -268,7 +271,7 @@ let props = defineProps({
   creators: Object,
   can: Object,
   // filters: Object,
-});
+})
 
 let thisYear = new Date().getFullYear()
 
@@ -279,7 +282,6 @@ let source = {
   video_url: ref(''),
   type: ref(''),
 }
-
 
 let playMovie = () => {
   nowPlayingStore.reset()
@@ -307,31 +309,17 @@ let playMovie = () => {
 
 }
 
-userStore.currentPage = 'movies'
-userStore.showFlashMessage = true;
-
-onMounted(() => {
-  videoPlayerStore.makeVideoTopRight();
-  if (userStore.isMobile) {
-
-    appSettingStore.ott = 0
-appSettingStore.pageIsHidden = false
-  }
-  document.getElementById("topDiv").scrollIntoView()
-});
-
-
 function checkForVideo() {
   if (props.video.file_name) {
-    videoPlayerStore.hasVideo = true;
+    videoPlayerStore.hasVideo = true
   } else if (props.movie.file_url) {
-    videoPlayerStore.hasVideo = true;
+    videoPlayerStore.hasVideo = true
   } else if (!props.movie.file_url && props.video.upload_status === 'processing') {
-    videoPlayerStore.hasVideo = false;
+    videoPlayerStore.hasVideo = false
   } else if (!props.video.file_name && !props.movie.file_url) {
-    videoPlayerStore.hasVideo = false;
+    videoPlayerStore.hasVideo = false
   }
-  return true;
+  return true
 }
 
 checkForVideo()

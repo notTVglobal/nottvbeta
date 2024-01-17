@@ -5,7 +5,7 @@
   <div class="place-self-center flex flex-col gap-y-3">
     <div id="topDiv" class="bg-white dark:bg-gray-800 rounded text-black dark:text-gray-50 p-5">
 
-      <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+      <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
       <AdminHeader>Invite Codes</AdminHeader>
 
@@ -177,20 +177,18 @@
 
 <script setup>
 import { Inertia } from "@inertiajs/inertia";
-import { onBeforeMount, onMounted, ref, watch } from "vue"
+import { onMounted, ref, watch } from "vue"
+import { useForm } from "@inertiajs/inertia-vue3"
 import throttle from "lodash/throttle"
-import { useForm, usePage } from "@inertiajs/inertia-vue3"
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
+import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
-const appSettingStore = useAppSettingStore()
-import { useUserStore } from "@/Stores/UserStore"
-import JetValidationErrors from '@/Jetstream/ValidationErrors'
 import AdminHeader from "@/Components/Pages/Admin/AdminHeader"
 import Message from "@/Components/Global/Modals/Messages"
 import Pagination from "@/Components/Global/Paginators/Pagination"
 
-const videoPlayerStore = useVideoPlayerStore()
-const userStore = useUserStore()
+usePageSetup('Admin/InviteCodes')
+
+const appSettingStore = useAppSettingStore()
 
 let props = defineProps({
   invite_codes: Object,
@@ -205,30 +203,15 @@ let form = useForm({
 let search = ref(props.filters.search);
 
 let submit = () => {
-  // Inertia.reload({ only: ['error'] })
-  // Inertia.reload({ only: ['message'] })
   form.post(route('admin.inviteCodes'));
   form.code = '';
-  // Inertia.reload();
-  // props.message = '';
-  // props.messageKey ++;
 };
 
 let exportCodes = () => {
   Inertia.visit('/admin/export_invite_codes');
 }
 
-userStore.currentPage = 'adminInviteCodes'
-userStore.showFlashMessage = true;
-
 onMounted(async () => {
-  videoPlayerStore.makeVideoTopRight();
-  if (userStore.isMobile) {
-
-    appSettingStore.ott = 0
-appSettingStore.pageIsHidden = false
-  }
-  document.getElementById("topDiv").scrollIntoView()
   props.message = '';
 });
 

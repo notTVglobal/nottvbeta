@@ -6,14 +6,14 @@
   <div class="place-self-center flex flex-col gap-y-3 overflow-x-hidden">
     <div id="topDiv" class="text-white bg-gray-900 rounded py-5 mb-10">
 
-      <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+      <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
       <div v-if="props.can.editShow || props.can.manageShow"
            class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4 py-5">
         <div>
           <button
               v-if="props.can.manageShow"
-              @click="userStore.btnRedirect(`/shows/${props.show.slug}/episode/${props.episode.slug}/manage`)"
+              @click="appSettingStore.btnRedirect(`/shows/${props.show.slug}/episode/${props.episode.slug}/manage`)"
               class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
           >Manage Episode
           </button>
@@ -21,7 +21,7 @@
         <div>
           <button
               v-if="props.can.editShow"
-              @click="userStore.btnRedirect(`/shows/${props.show.slug}/episode/${props.episode.slug}/edit`)"
+              @click="appSettingStore.btnRedirect(`/shows/${props.show.slug}/episode/${props.episode.slug}/edit`)"
               class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
           >Edit
           </button>
@@ -29,7 +29,7 @@
         <div>
           <button
               v-if="props.can.manageShow"
-              @click="userStore.btnRedirect(`/shows/${props.show.slug}/manage`)"
+              @click="appSettingStore.btnRedirect(`/shows/${props.show.slug}/manage`)"
               class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
           >Manage Show
           </button>
@@ -193,25 +193,25 @@
 
 
 <script setup>
-import { Inertia } from "@inertiajs/inertia"
+import { Inertia } from '@inertiajs/inertia'
 import { usePageSetup } from '@/Utilities/PageSetup'
-import { useNowPlayingStore } from "@/Stores/NowPlayingStore"
-import { useTeamStore } from "@/Stores/TeamStore"
-import { useShowStore } from "@/Stores/ShowStore"
-import { useUserStore } from "@/Stores/UserStore"
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import { useNowPlayingStore } from '@/Stores/NowPlayingStore'
+import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
+import { useTeamStore } from '@/Stores/TeamStore'
 // import EpisodeHeader from "@/Components/Pages/ShowEpisodes/EpisodeHeader"
 // import EpisodesList from "@/Components/Pages/ShowEpisodes/EpisodesList"
 // import EpisodeCreditsList from "@/ComponentShows/Episodes/EpisodeCreditsList";
-import EpisodeFooter from "@/Components/Pages/ShowEpisodes/Layout/EpisodeFooter"
-import Message from "@/Components/Global/Modals/Messages"
-import SingleImage from "@/Components/Global/Multimedia/SingleImage"
+import EpisodeFooter from '@/Components/Pages/ShowEpisodes/Layout/EpisodeFooter'
+import Message from '@/Components/Global/Modals/Messages'
+import SingleImage from '@/Components/Global/Multimedia/SingleImage'
 
 usePageSetup('showEpisodesShow')
 
+const appSettingStore = useAppSettingStore()
 const nowPlayingStore = useNowPlayingStore()
+const videoPlayerStore = useVideoPlayerStore()
 const teamStore = useTeamStore()
-const showStore = useShowStore()
-const userStore = useUserStore()
 
 let props = defineProps({
   show: Object,
@@ -220,12 +220,15 @@ let props = defineProps({
   image: Object,
   creators: Object,
   can: Object,
-});
+})
 
 let playEpisode = () => {
   nowPlayingStore.reset()
+  nowPlayingStore.activeType = 6
   nowPlayingStore.show.name = props.show.name
+  nowPlayingStore.show.description = props.show.description
   nowPlayingStore.show.url = `/shows/${props.show.slug}`
+  nowPlayingStore.show.episode.name = props.episode.name
   nowPlayingStore.show.episode.url = `/shows/${props.show.slug}/episode/${props.episode.slug}`
   nowPlayingStore.show.episode.image = props.image
   nowPlayingStore.show.category = props.show.categoryName
@@ -251,11 +254,11 @@ let playEpisode = () => {
   }
 }
 
-teamStore.slug = props.team.slug;
-teamStore.name = props.team.name;
+teamStore.slug = props.team.slug
+teamStore.name = props.team.name
 
 function scrollTo(selector) {
-  document.querySelector(selector).scrollIntoView({behavior: 'smooth'});
+  document.querySelector(selector).scrollIntoView({behavior: 'smooth'})
 }
 
 //

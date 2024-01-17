@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="!teams.data.length > 0" class="w-full text-center mb-4">
+    <div v-if="teams.data.length < 1" class="w-full text-center mb-4">
       <Popper
           hover
           openDelay="50"

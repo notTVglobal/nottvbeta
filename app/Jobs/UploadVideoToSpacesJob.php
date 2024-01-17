@@ -2,6 +2,8 @@
 
 namespace App\Jobs;
 
+use App\Events\NewVideoUploaded;
+use App\Events\VideoProcessed;
 use App\Models\Video;
 use App\Models\ShowEpisode;
 use App\Models\MovieTrailer;
@@ -28,6 +30,7 @@ class UploadVideoToSpacesJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected Video $video;
+    protected $userId;
     public int $timeout = 3600;
     public int $tries = -1;
     public int $backoff = 2;
@@ -36,9 +39,10 @@ class UploadVideoToSpacesJob implements ShouldQueue
      * UploadVideoToSpacesJob constructor.
      * @param Video $video
      */
-    public function __construct(Video $video)
+    public function __construct(Video $video, $userId)
     {
         $this->video = $video;
+        $this->userId = $userId;
     }
 
     /**
@@ -84,9 +88,16 @@ class UploadVideoToSpacesJob implements ShouldQueue
         if ($this->video->show_episodes_id) {
             // Update the ShowEpisode with the video_id
             $showEpisode = ShowEpisode::find($this->video->show_episodes_id);
+            $this->userId = $showEpisode->user_id;
             if ($showEpisode) {
-                $showEpisode->video_id = $this->video->id;
+              Log::info('Before update: ' . json_encode($showEpisode->toArray()));
+              try {
+              $showEpisode->video_id = $this->video->id;
                 $showEpisode->save();
+              } catch (\Exception $e) {
+                Log::error('Error updating ShowEpisode: ' . $e->getMessage());
+              }
+              Log::info('After update: ' . json_encode($showEpisode->fresh()->toArray()));
                 // Retrieve the ULID of the ShowEpisode
                 $ulid = $showEpisode->ulid;
                 // if Show Episode does not have a ulid use the id.
@@ -94,6 +105,7 @@ class UploadVideoToSpacesJob implements ShouldQueue
                     $ulid = $this->video->show_episodes_id;
                 }
                 Log::info('Successfully updated the Show Episode '. $ulid .' with the video ID '. $this->video->id);
+              event(new NewVideoUploaded($this->video, $this->video->user_id));
             } else {
                 // Handle the case where ShowEpisode is not found
                 // e.g., log an error or throw an exception
@@ -106,6 +118,7 @@ class UploadVideoToSpacesJob implements ShouldQueue
         if ($this->video->movie_trailers_id) {
             // Update the MovieTrailer with the video_id
             $movieTrailer = MovieTrailer::find($this->video->movie_trailers_id);
+          $this->userId = $movieTrailer->user_id;
             if ($movieTrailer) {
                 $movieTrailer->video_id = $this->video->id;
                 $movieTrailer->save();
@@ -116,6 +129,7 @@ class UploadVideoToSpacesJob implements ShouldQueue
                     $ulid = $this->video->movie_trailers_id;
                 }
                 Log::info('Successfully updated the Movie Trailer '. $ulid .' with the video ID '. $this->video->id);
+              event(new NewVideoUploaded($this->video, auth()->user()->id));
             } else {
                 // Handle the case where MovieTrailer is not found
                 // e.g., log an error or throw an exception
@@ -128,6 +142,7 @@ class UploadVideoToSpacesJob implements ShouldQueue
         if ($this->video->movies_id) {
             // Update the Movie with the video_id
             $movie = Movie::find($this->video->movies_id);
+          $this->userId = $movie->user_id;
             if ($movie) {
                 $movie->video_id = $this->video->id;
                 $movie->save();
@@ -138,14 +153,15 @@ class UploadVideoToSpacesJob implements ShouldQueue
                     $ulid = $this->video->movies_id;
                 }
                 Log::info('Successfully updated the Movie '. $ulid .' with the video ID '. $this->video->id);
+              event(new NewVideoUploaded($this->video, $this->userId));
             } else {
                 // Handle the case where Movie is not found
                 // e.g., log an error or throw an exception
                 Log::info('Problem updating the Movie with the video ID.');
             }
         }
-
-
+      event(new VideoProcessed($this->video->user_id));
+//      event(new ProcessVideoInfoCompleted($this->videoId, $messageArray));
 //        error_log('Updated the Video model');
 
 

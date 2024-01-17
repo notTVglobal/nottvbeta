@@ -5,28 +5,14 @@
   <div class="place-self-center flex flex-col gap-y-3">
     <div id="topDiv" class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 
-      <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+      <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
       <div class="flex flex-row justify-between mt-6">
         <h2 class="text-xl font-semibold leading-tight">
           Create News Post
         </h2>
         <div class="flex justify-end space-x-2">
-          <div>
-            <button
-                v-if="props.can.viewNewsroom"
-                @click="userStore.btnRedirect(`/newsroom`)"
-                class="px-4 py-2 text-white bg-yellow-600 hover:bg-yellow-500 rounded-lg disabled:bg-gray-400"
-            >Newsroom
-            </button>
-          </div>
-          <div>
-            <button
-                @click="back"
-                class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
-            >Cancel
-            </button>
-          </div>
+
         </div>
       </div>
 
@@ -57,7 +43,7 @@
                 for="content_json"
                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
             >Content</label>
-            <tiptap v-if="userStore.currentPage === 'newsCreate'"/>
+            <tiptap v-if="appSettingStore.currentPage === 'newsCreate'"/>
             <!--                        <textarea-->
             <!--                            type="text"-->
             <!--                            v-model="form.content_json"-->
@@ -83,12 +69,7 @@
             >
               Submit
             </button>
-            <Link :href="`/news`">
-              <button
-                  class="h-fit ml-2 px-4 py-2 text-white bg-blue-500 hover:bg-blue-300 rounded-lg"
-              >Cancel
-              </button>
-            </Link>
+            <CancelButton />
             <JetValidationErrors class="ml-4"/>
           </div>
         </form>
@@ -102,21 +83,21 @@
 </template>
 
 <script setup>
-import { Inertia } from "@inertiajs/inertia"
-import { onBeforeMount, onMounted, ref } from "vue"
-import { useForm, usePage } from '@inertiajs/inertia-vue3'
+import { onBeforeMount } from "vue"
+import { useForm } from '@inertiajs/inertia-vue3'
 import { usePageSetup } from '@/Utilities/PageSetup'
-import { useUserStore } from "@/Stores/UserStore"
+import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import { useNewsStore } from "@/Stores/NewsStore"
 import JetValidationErrors from '@/Jetstream/ValidationErrors'
 // import TabbableTextarea from "@/Components/Global/TextEditor/TabbableTextarea"
 import Tiptap from "@/Components/Global/TextEditor/TiptapNewsPostCreate"
 // import Tiptap from "@/Components/Global/TextEditor/TiptapNewsPostEdit"
 import Message from "@/Components/Global/Modals/Messages"
+import CancelButton from '@/Components/Global/Buttons/CancelButton.vue'
 
 usePageSetup('newsCreate')
 
-const userStore = useUserStore()
+const appSettingStore = useAppSettingStore()
 const newsStore = useNewsStore()
 
 let props = defineProps({
@@ -134,17 +115,9 @@ let submit = () => {
   form.post(route("news.store"));
 };
 
-userStore.currentPage = 'newsCreate'
-userStore.showFlashMessage = true;
-
 onBeforeMount(() => {
   // userStore.scrollToTopCounter = 0;
-  newsStore.newsArticleContentTiptop = [];
-})
-
-function back() {
   newsStore.newsArticleContentTiptop = '';
-  Inertia.visit(userStore.prevUrl)
-}
+})
 
 </script>

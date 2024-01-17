@@ -4,7 +4,7 @@
   <div class="place-self-center flex flex-col gap-y-3 w-full overscroll-x-none">
     <div id="topDiv" class="bg-white text-black dark:bg-gray-900 dark:text-white p-5 mb-10">
 
-      <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+      <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
       <AdminHeader>Shows</AdminHeader>
 
@@ -189,19 +189,18 @@
 
 <script setup>
 import { Inertia } from "@inertiajs/inertia"
-import { onBeforeMount, onMounted, ref, watch } from "vue"
+import { ref, watch } from "vue"
 import throttle from "lodash/throttle"
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
+import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
-const appSettingStore = useAppSettingStore()
-import { useUserStore } from "@/Stores/UserStore"
 import AdminHeader from "@/Components/Pages/Admin/AdminHeader.vue"
 import Pagination from "@/Components/Global/Paginators/Pagination"
 import Message from "@/Components/Global/Modals/Messages"
 import SingleImage from "@/Components/Global/Multimedia/SingleImage"
 
-const videoPlayerStore = useVideoPlayerStore()
-const userStore = useUserStore()
+usePageSetup('adminShows')
+
+const appSettingStore = useAppSettingStore()
 
 let props = defineProps({
   shows: Object,
@@ -212,19 +211,6 @@ let props = defineProps({
 });
 
 let search = ref(props.filters.search)
-
-userStore.currentPage = 'adminShows'
-userStore.showFlashMessage = true;
-
-onMounted(() => {
-  videoPlayerStore.makeVideoTopRight();
-  if (userStore.isMobile) {
-
-    appSettingStore.ott = 0
-appSettingStore.pageIsHidden = false
-  }
-  document.getElementById("topDiv").scrollIntoView()
-});
 
 watch(search, throttle(function (value) {
   Inertia.get('/admin/shows', {search: value}, {

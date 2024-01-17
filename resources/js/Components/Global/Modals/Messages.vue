@@ -43,11 +43,11 @@
 <script setup>
 import { Inertia } from "@inertiajs/inertia"
 import { computed } from "vue"
-import { useUserStore } from "@/Stores/UserStore"
+import { useAppSettingStore } from "@/Stores/AppSettingStore"
 
-const userStore = useUserStore()
+const appSettingStore = useAppSettingStore()
 
-userStore.showFlashMessage = true
+appSettingStore.showFlashMessage = true
 
 let props = defineProps({
   flash: Object,

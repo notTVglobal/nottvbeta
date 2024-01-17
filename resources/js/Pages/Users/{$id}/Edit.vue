@@ -4,7 +4,7 @@
   <div class="place-self-center flex flex-col gap-y-3">
     <div id="topDiv" class="light:bg-white light:text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 
-      <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+      <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
       <div class="flex justify-between mb-6">
 
@@ -17,11 +17,7 @@
           </h1>
         </div>
         <div>
-          <button
-              @click="back"
-              class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
-          >Cancel
-          </button>
+          <BackButton/>
         </div>
 
       </div>
@@ -261,16 +257,17 @@
 </template>
 
 <script setup>
-import { useForm, usePage } from "@inertiajs/inertia-vue3"
-import { Inertia } from "@inertiajs/inertia"
+import { useForm, usePage } from '@inertiajs/inertia-vue3'
+import { Inertia } from '@inertiajs/inertia'
 import { usePageSetup } from '@/Utilities/PageSetup'
-import { useUserStore } from "@/Stores/UserStore"
-import Message from "@/Components/Global/Modals/Messages"
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import Message from '@/Components/Global/Modals/Messages'
 import JetValidationErrors from '@/Jetstream/ValidationErrors'
+import BackButton from '@/Components/Global/Buttons/BackButton'
 
 usePageSetup('usersEdit')
 
-const userStore = useUserStore()
+const appSettingStore = useAppSettingStore()
 
 let props = defineProps({
   userEdit: Object,
@@ -279,7 +276,7 @@ let props = defineProps({
   isSubscriber: Boolean,
   hasSubscription: null,
   subscriptionStatus: String,
-});
+})
 
 let form = useForm({
   id: props.userEdit.id,
@@ -294,35 +291,35 @@ let form = useForm({
   postalCode: props.userEdit.postalCode,
   phone: props.userEdit.phone,
   stripe_id: props.userEdit.stripe_id,
-});
+})
 
 function reset() {
-  form.reset();
-};
+  form.reset()
+}
 
 let submit = () => {
-  form.put(route('users.update', props.userEdit.id));
-};
+  form.put(route('users.update', props.userEdit.id))
+}
 
 function addUserToNewsroom() {
   Inertia.visit('/newsroom/newsperson', {
     method: 'post',
     data: {
       id: props.userEdit.id,
-      name: props.userEdit.name
+      name: props.userEdit.name,
     },
   })
 }
 
 function removeUserFromNewsroom() {
-  if (confirm("Are you sure you want to remove this person from the news team?")) {
-    form.put(route('newsperson.destroy', props.userEdit.id));
+  if (confirm('Are you sure you want to remove this person from the news team?')) {
+    form.put(route('newsperson.destroy', props.userEdit.id))
   }
 }
 
 function addUserToVip() {
-  if (confirm("Are you sure you want to add this person to VIP?")) {
-    form.put(route('user.vip.add', {'id': props.userEdit.id}));
+  if (confirm('Are you sure you want to add this person to VIP?')) {
+    form.put(route('user.vip.add', {'id': props.userEdit.id}))
   }
   // Inertia.reload({
   //     only: ["userEdit", "isVip"],
@@ -330,8 +327,8 @@ function addUserToVip() {
 }
 
 function removeUserFromVip() {
-  if (confirm("Are you sure you want to remove this person from VIP?")) {
-    form.put(route('user.vip.remove', props.userEdit.id));
+  if (confirm('Are you sure you want to remove this person from VIP?')) {
+    form.put(route('user.vip.remove', props.userEdit.id))
   }
 }
 
@@ -340,8 +337,8 @@ function getUserSubscriptionFromStripe() {
     alert('User must have a Stripe ID')
   } else if (!props.userEdit.stripe_id && form.stripe_id) {
     alert('Please save the Stripe ID before getting the subscription.')
-  } else if (confirm("Are you sure you want to retrieve the subscription from Stripe? This will take a minute.")) {
-    Inertia.post(route('getUserSubscriptionsFromStripe', {'id': form.id}));
+  } else if (confirm('Are you sure you want to retrieve the subscription from Stripe? This will take a minute.')) {
+    Inertia.post(route('getUserSubscriptionsFromStripe', {'id': form.id}))
   }
 }
 

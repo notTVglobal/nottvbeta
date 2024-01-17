@@ -5,7 +5,7 @@
   <div id="topDiv" class="place-self-center flex flex-col gap-y-3">
     <div class="bg-white dark:bg-gray-800 text-black light:text-black dark:text-white px-5 mb-10">
 
-      <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+      <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
       <div class="alert alert-error mt-4 mx-3"
            v-if="showStore.errorMessage">
         <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
@@ -367,6 +367,7 @@ import { onMounted, onUnmounted, ref } from "vue"
 import { useForm } from "@inertiajs/inertia-vue3"
 import { format } from 'date-fns'
 import { usePageSetup } from '@/Utilities/PageSetup'
+import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import { useTeamStore } from "@/Stores/TeamStore"
 import { useShowStore } from "@/Stores/ShowStore"
 import { useUserStore } from "@/Stores/UserStore"
@@ -382,8 +383,9 @@ import TabbableTextarea from "@/Components/Global/TextEditor/TabbableTextarea"
 // import {DatePicker} from "v-calendar";
 // import 'v-calendar/style.css';
 
-usePageSetup('showEpisodesEdit')
+usePageSetup('shows/slug/episodes/slug')
 
+const appSettingStore = useAppSettingStore()
 const teamStore = useTeamStore()
 const showStore = useShowStore()
 const userStore = useUserStore()

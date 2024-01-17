@@ -2,9 +2,13 @@ import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useUserStore } from "@/Stores/UserStore"
 
 import { defineStore } from 'pinia'
+import { Inertia } from '@inertiajs/inertia'
 
 const initialState = () => ({
+    thisUrl: window.location.pathname,
+    prevUrl: null,
     showNavDropdown: false, // formerly userStore.showNavDropdown
+    showFlashMessage: true, // formerly appSettingStore.showFlashMessage
     currentPage: '', // formerly videoPlayerStore.currentPage
     fullPage: false, // Used to determine layout FullPage or TopRight
     pageIsHidden: true, // Used to hide the page when fullPage = false && showOtt = true
@@ -26,7 +30,7 @@ const initialState = () => ({
     pipChatMessageBgColor: 'bg-gray-900', // Chat message background color for PiP Chat Mode
 })
 
-export const useAppSettingStore = defineStore('appSetting', {
+export const useAppSettingStore = defineStore('appSettingStore', {
     state: initialState,
     actions: {
         reset() {
@@ -65,8 +69,12 @@ export const useAppSettingStore = defineStore('appSetting', {
         toggleOtt(num) {
             if (this.ott === num) {
                 this.ott = 0
+                this.showOttButtons = true
             } else {
                 this.ott = num
+                if (this.fullPage) {
+                    this.showOttButtons = false
+                }
             }
         },
         toggleOttInfo() {
@@ -86,6 +94,25 @@ export const useAppSettingStore = defineStore('appSetting', {
         },
         closeOtt() {
             this.toggleOtt(0)
+        },
+        setPrevUrl() {
+            const userStore = useUserStore()
+            const currentUrl = window.history.state ? window.history.state.url : window.location.pathname
+            const currentQueryString = window.location.search;
+            // If thisUrl has not been set yet, it means the user accessed the page directly
+            if (!this.thisUrl) {
+                this.prevUrl = userStore.isCreator ? '/dashboard' : '/';
+            }
+            // Update prevUrl only if navigating to a new page and there's no query string
+            else if (this.thisUrl !== currentUrl && currentQueryString === '') {
+                this.prevUrl = this.thisUrl;
+            }
+            // Update thisUrl to the current page
+            this.thisUrl = currentUrl;
+        },
+        btnRedirect(newUrl) {
+            this.setPrevUrl()
+            Inertia.visit(newUrl)
         },
     }
 });

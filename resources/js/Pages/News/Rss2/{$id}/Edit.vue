@@ -5,7 +5,7 @@
   <div class="place-self-center flex flex-col gap-y-3 mt-3">
     <div id="topDiv" class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 
-      <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+      <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
       <header>
         <div class="pt-6">
@@ -83,24 +83,18 @@
 </template>
 
 <script setup>
-import { Inertia } from "@inertiajs/inertia"
-import { onMounted, ref } from "vue"
-import { useForm, usePage } from '@inertiajs/inertia-vue3'
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
+import { ref } from "vue"
+import { useForm } from '@inertiajs/inertia-vue3'
+import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
-const appSettingStore = useAppSettingStore()
-import { useUserStore } from "@/Stores/UserStore"
-import { useNewsStore } from "@/Stores/NewsStore"
 import JetValidationErrors from '@/Jetstream/ValidationErrors'
 import Button from "@/Jetstream/Button"
-import NewsHeaderButtons from "@/Components/Pages/News/NewsHeaderButtons"
 import Message from "@/Components/Global/Modals/Messages"
-import BackButton from "@/Components/Global/Buttons/BackButton"
 import CancelButton from "@/Components/Global/Buttons/CancelButton"
 
-const videoPlayerStore = useVideoPlayerStore()
-const userStore = useUserStore()
-const newsStore = useNewsStore()
+usePageSetup('newsFeedEdit')
+
+const appSettingStore = useAppSettingStore()
 
 const props = defineProps({
   feed: Object,
@@ -119,25 +113,5 @@ let submit = () => {
 };
 
 let showMessage = ref(true);
-
-userStore.currentPage = 'newsFeedEdit'
-userStore.showFlashMessage = true;
-
-onMounted(() => {
-  videoPlayerStore.makeVideoTopRight();
-  if (userStore.isMobile) {
-
-    appSettingStore.ott = 0
-appSettingStore.pageIsHidden = false
-  }
-  document.getElementById("topDiv").scrollIntoView()
-});
-
-function back() {
-  let urlPrev = usePage().props.value.urlPrev
-  if (urlPrev !== 'empty') {
-    Inertia.visit(urlPrev)
-  }
-}
 
 </script>

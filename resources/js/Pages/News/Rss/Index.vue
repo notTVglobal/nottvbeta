@@ -10,7 +10,7 @@
   <div class="place-self-center flex flex-col gap-y-3">
     <div id="topDiv" class="bg-white dark:bg-gray-800 text-black dark:text-gray-50 p-5 mb-10">
 
-      <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+      <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
       <header class="flex justify-between mb-3 border-b border-gray-500">
         <div class="container mx-auto flex flex-col lg:flex-row items-center justify-between px-4 py-6">
@@ -129,58 +129,45 @@
 </template>
 
 <script setup>
-import { onBeforeMount, onMounted, ref, watch } from "vue"
-import { Inertia } from "@inertiajs/inertia"
+import { ref, watch } from 'vue'
+import { Inertia } from '@inertiajs/inertia'
 import { useForm } from '@inertiajs/inertia-vue3'
-import throttle from "lodash/throttle"
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import { useUserStore } from "@/Stores/UserStore"
-import NewsHeaderButtons from "@/Components/Pages/News/NewsHeaderButtons.vue"
-import NewsHeader from "@/Components/Pages/News/NewsHeader.vue"
-import Pagination from "@/Components/Global/Paginators/Pagination"
-import Message from "@/Components/Global/Modals/Messages"
+import throttle from 'lodash/throttle'
+import { usePageSetup } from '@/Utilities/PageSetup'
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import NewsHeaderButtons from '@/Components/Pages/News/NewsHeaderButtons.vue'
+import NewsHeader from '@/Components/Pages/News/NewsHeader.vue'
+import Pagination from '@/Components/Global/Paginators/Pagination'
+import Message from '@/Components/Global/Modals/Messages'
 
-const videoPlayerStore = useVideoPlayerStore()
-const userStore = useUserStore()
+usePageSetup('newsRssFeeds')
+
+const appSettingStore = useAppSettingStore()
 
 let props = defineProps({
   filters: Object,
   can: Object,
   feeds: Object,
-});
+})
 
-let form = useForm({});
+let form = useForm({})
 
-let search = ref(props.filters.search);
-
-appSettingStore.currentPage = 'newsRssFeeds'
-userStore.showFlashMessage = true;
-
-onMounted(() => {
-  videoPlayerStore.makeVideoTopRight();
-  if (userStore.isMobile) {
-
-    appSettingStore.ott = 0
-appSettingStore.pageIsHidden = false
-  }
-  document.getElementById("topDiv").scrollIntoView()
-});
+let search = ref(props.filters.search)
 
 watch(search, throttle(function (value) {
   Inertia.get('/news/feeds', {search: value}, {
     preserveState: true,
-    replace: true
-  });
-}, 300));
-
+    replace: true,
+  })
+}, 300))
 
 function scrollToCities() {
-  document.getElementById("cities").scrollIntoView({behavior: "smooth"})
+  document.getElementById('cities').scrollIntoView({behavior: 'smooth'})
 }
 
 function destroy(id) {
-  if (confirm("Are you sure you want to Delete")) {
-    form.delete(route('feeds.destroy', id));
+  if (confirm('Are you sure you want to Delete')) {
+    form.delete(route('feeds.destroy', id))
 
   }
 }

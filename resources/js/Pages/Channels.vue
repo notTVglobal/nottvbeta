@@ -76,7 +76,7 @@ const appSettingStore = useAppSettingStore()
 const videoPlayerStore = useVideoPlayerStore()
 const chat = useChatStore()
 
-userStore.currentPage = 'channels'
+appSettingStore.currentPage = 'channels'
 
 onMounted(() => {
   videoPlayerStore.makeVideoFullPage()

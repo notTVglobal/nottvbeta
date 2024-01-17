@@ -5,7 +5,7 @@
   <div id="topDiv" class="place-self-center flex flex-col gap-y-3">
     <div class="bg-white dark:bg-gray-800 text-black dark:text-gray-50 p-5 mb-10">
 
-      <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+      <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
       <NewsHeader :can="can">News</NewsHeader>
 
@@ -38,47 +38,26 @@
 </template>
 
 <script setup>
-import { Inertia } from "@inertiajs/inertia"
-import { usePage } from "@inertiajs/inertia-vue3"
-import { onMounted, ref } from "vue"
-import { formatDate } from "@vueuse/shared"
 import dayjs from "dayjs"
 // import {parseMasterXml} from "@videojs/http-streaming/src/dash-playlist-loader"
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
+import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
-const appSettingStore = useAppSettingStore()
-import { useUserStore } from "@/Stores/UserStore"
-import { useNewsStore } from "@/Stores/NewsStore"
 import NewsHeader from "@/Components/Pages/News/NewsHeader"
 import Message from "@/Components/Global/Modals/Messages"
 import BackButton from "@/Components/Global/Buttons/BackButton"
 
-const videoPlayerStore = useVideoPlayerStore()
-const userStore = useUserStore()
-const newsStore = useNewsStore()
+usePageSetup('newsFeed')
+
+const appSettingStore = useAppSettingStore()
 
 let props = defineProps({
   feed: Object,
   can: Object,
 })
 
-userStore.currentPage = 'newsFeed'
-userStore.showFlashMessage = true;
-
-onMounted(() => {
-  videoPlayerStore.makeVideoTopRight();
-  if (userStore.isMobile) {
-
-    appSettingStore.ott = 0
-appSettingStore.pageIsHidden = false
-  }
-  document.getElementById("topDiv").scrollIntoView()
-});
-
 function newFormatDate(dateString) {
   const date = dayjs(dateString)
   return date.format('dddd MMMM D, YYYY')
 }
-
 
 </script>

@@ -5,7 +5,7 @@
   <div class="place-self-center flex flex-col gap-y-3">
     <div id="topDiv" class="bg-white text-black dark:bg-gray-800 p-5 mb-10">
 
-      <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+      <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
       <TeamEditHeader :team="props.team" :teamCreator="props.teamCreator"/>
 
@@ -205,24 +205,25 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue"
-import { useForm } from "@inertiajs/inertia-vue3"
+import { Inertia } from '@inertiajs/inertia'
+import { ref, watch } from 'vue'
+import { useForm } from '@inertiajs/inertia-vue3'
 import { usePageSetup } from '@/Utilities/PageSetup'
-import { useTeamStore } from "@/Stores/TeamStore"
-import { useUserStore } from "@/Stores/UserStore"
-import Message from "@/Components/Global/Modals/Messages"
-import SingleImage from "@/Components/Global/Multimedia/SingleImage"
+import { useTeamStore } from '@/Stores/TeamStore'
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import JetValidationErrors from '@/Jetstream/ValidationErrors'
-import TeamEditHeader from "@/Components/Pages/Teams/Edit/TeamEditHeader"
-import TeamEditBody from "@/Components/Pages/Teams/Edit/TeamEditBody"
-import TeamLogoUpload from "@/Components/Global/FilePond/TeamLogoUpload"
-import TabbableTextarea from "@/Components/Global/TextEditor/TabbableTextarea"
-import ImageUpload from "@/Components/Global/Uploaders/ImageUpload"
+import TeamEditHeader from '@/Components/Pages/Teams/Edit/TeamEditHeader'
+import TeamEditBody from '@/Components/Pages/Teams/Edit/TeamEditBody'
+import TeamLogoUpload from '@/Components/Global/FilePond/TeamLogoUpload'
+import TabbableTextarea from '@/Components/Global/TextEditor/TabbableTextarea'
+import ImageUpload from '@/Components/Global/Uploaders/ImageUpload'
+import Message from '@/Components/Global/Modals/Messages'
+import SingleImage from '@/Components/Global/Multimedia/SingleImage'
 
-usePageSetup('teamsEdit')
+usePageSetup('teams/slug/edit')
 
+const appSettingStore = useAppSettingStore()
 const teamStore = useTeamStore()
-const userStore = useUserStore()
 
 let props = defineProps({
   team: Object,
@@ -234,7 +235,7 @@ let props = defineProps({
   //     default: () => ({ data: [] }) // Provide a default value
   // },
   image: Object,
-});
+})
 
 // const selectedTeamLeader = ref(props.teamLeader ? props.teamLeader.id : null);
 // const selectedTeamLeader = ref(null);
@@ -255,27 +256,27 @@ let form = useForm({
   description: props.team.description,
   totalSpots: props.team.totalSpots,
   teamLeader: props.teamLeader ? props.teamLeader.id : null,
-});
+})
 
-const selectedTeamLeader = ref(props.teamLeader ? props.teamLeader.id : null);
+const selectedTeamLeader = ref(props.teamLeader ? props.teamLeader.id : null)
 
 // Watch for changes in selectedTeamLeader and update the form
 watch(selectedTeamLeader, (newValue) => {
-  form.teamLeader = newValue;
-});
+  form.teamLeader = newValue
+})
 
 let reloadImage = () => {
   Inertia.reload({
     only: ['image'],
-  });
-};
+  })
+}
 
 let submit = () => {
-  form.put(route('teams.update', props.team.slug));
-};
+  form.put(route('teams.update', props.team.slug))
+}
 
-teamStore.setActiveTeam(props.team);
-teamStore.logoName = props.image.name;
+teamStore.setActiveTeam(props.team)
+teamStore.logoName = props.image.name
 
 </script>
 

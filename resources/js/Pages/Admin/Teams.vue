@@ -4,12 +4,12 @@
   <div class="place-self-center flex flex-col gap-y-3">
     <div id="topDiv" class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 
-      <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+      <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
       <AdminHeader>Teams</AdminHeader>
 
       <button
-          @click="userStore.btnRedirect(`/teams/create`)"
+          @click="appSettingStore.btnRedirect(`/teams/create`)"
           class="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded disabled:bg-gray-400"
       >Create Team (needs to go to a new page: Admin/teams/create)
       </button>
@@ -110,13 +110,13 @@
                         <td class="px-6 py-4 space-x-2">
                           <button
                               v-if="team.can.viewTeam"
-                              @click="userStore.btnRedirect(`/teams/${team.slug}/manage`)"
+                              @click="appSettingStore.btnRedirect(`/teams/${team.slug}/manage`)"
                               class="px-4 py-2 text-white bg-purple-600 hover:bg-purple-500 rounded-lg"
                           >Manage
                           </button>
                           <button
                               v-if="team.can.editTeam"
-                              @click="userStore.btnRedirect(`/teams/${team.slug}/edit`)"
+                              @click="appSettingStore.btnRedirect(`/teams/${team.slug}/edit`)"
                               class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                           >Edit
                           </button>
@@ -142,19 +142,19 @@
 
 <script setup>
 import { Inertia } from "@inertiajs/inertia"
-import { onBeforeMount, onMounted, ref, watch } from "vue"
+import { ref, watch } from "vue"
 import throttle from "lodash/throttle"
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
+import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
-const appSettingStore = useAppSettingStore()
-import { useUserStore } from "@/Stores/UserStore"
+
 import AdminHeader from "@/Components/Pages/Admin/AdminHeader"
 import Pagination from "@/Components/Global/Paginators/Pagination"
 import Message from "@/Components/Global/Modals/Messages"
 import SingleImage from "@/Components/Global/Multimedia/SingleImage"
 
-const videoPlayerStore = useVideoPlayerStore()
-const userStore = useUserStore()
+usePageSetup('adminTeams')
+
+const appSettingStore = useAppSettingStore()
 
 let props = defineProps({
   teams: Object,
@@ -163,19 +163,6 @@ let props = defineProps({
 });
 
 let search = ref(props.filters.search)
-
-userStore.currentPage = 'adminTeams'
-userStore.showFlashMessage = true;
-
-onMounted(() => {
-  videoPlayerStore.makeVideoTopRight()
-  if (userStore.isMobile) {
-
-    appSettingStore.ott = 0
-appSettingStore.pageIsHidden = false
-  }
-  document.getElementById("topDiv").scrollIntoView()
-});
 
 watch(search, throttle(function (value) {
   Inertia.get('/admin/teams', {search: value}, {

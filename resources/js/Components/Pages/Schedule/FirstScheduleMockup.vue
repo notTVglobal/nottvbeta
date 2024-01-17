@@ -5,7 +5,7 @@
     <div id="topDiv" class="flex justify-end px-5">
       <div class="text-3xl font-semibold pt-4">Schedule</div>
     </div>
-    <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+    <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
     <div class="mx-6">
       <div class="alert alert-info">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6">
@@ -281,7 +281,7 @@ const videoPlayerStore = useVideoPlayerStore()
 const userStore = useUserStore()
 
 userStore.currentPage = 'schedule'
-userStore.showFlashMessage = true
+appSettingStore.showFlashMessage = true
 
 onMounted(() => {
   videoPlayerStore.makeVideoTopRight()

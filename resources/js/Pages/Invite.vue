@@ -4,7 +4,7 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div id="topDiv" class="bg-white text-black p-5 mb-10">
 
-            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+            <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
             <div class="flex justify-between">
                 <div class="grid grid-cols-1 grid-rows-2 pt-4">
@@ -13,7 +13,7 @@
                 <div class="grid grid-cols-1 grid-rows-2">
                     <div>
                         <button
-                            @click="userStore.btnRedirect('/dashboard')"
+                            @click="appSettingStore.btnRedirect('/dashboard')"
                             class="bg-black hover:bg-gray-800 text-white font-semibold ml-2 mt-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
                         >Dashboard
                         </button>
@@ -37,15 +37,13 @@
 </template>
 
 <script setup>
-import { onBeforeMount, onMounted, ref } from "vue"
 import { usePageSetup } from '@/Utilities/PageSetup'
-import { useUserStore } from "@/Stores/UserStore"
+import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import Message from "@/Components/Global/Modals/Messages"
 
 usePageSetup('invite')
 
-const userStore = useUserStore()
-
+const appSettingStore = useAppSettingStore()
 
 </script>
 

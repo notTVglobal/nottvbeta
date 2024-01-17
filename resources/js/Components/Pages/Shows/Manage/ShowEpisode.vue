@@ -55,7 +55,7 @@
         <div>
           <button
               v-if="teamStore.can.editShow"
-              @click="userStore.btnRedirect(`/shows/${showSlug}/episode/${episode.slug}/edit`)"
+              @click="appSettingStore.btnRedirect(`/shows/${showSlug}/episode/${episode.slug}/edit`)"
               class="px-4 py-2 text-white font-semibold bg-blue-500 hover:bg-blue-600 rounded-lg"
           >Edit
           </button>
@@ -82,15 +82,15 @@ import { Inertia } from "@inertiajs/inertia"
 import { computed, ref } from "vue"
 import { useForm } from "@inertiajs/inertia-vue3"
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"
+import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import { useTeamStore } from "@/Stores/TeamStore"
 import { useShowStore } from "@/Stores/ShowStore"
-import { useUserStore } from "@/Stores/UserStore"
 import EpisodeNoteEdit from "@/Components/Pages/Shows/Manage/EpisodeNoteEdit"
 import ShowEpisodeStatuses from "@/Components/Pages/Shows/Manage/ShowEpisodeStatuses"
 
+const appSettingStore = useAppSettingStore()
 const teamStore = useTeamStore()
 const showStore = useShowStore()
-const userStore = useUserStore()
 
 let props = defineProps({
   episode: Object,

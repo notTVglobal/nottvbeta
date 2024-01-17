@@ -26,7 +26,7 @@
           <div>
             <button
                 v-if="teamStore.can.editEpisode"
-                @click="userStore.btnRedirect(`/shows/${show.slug}/episode/${episode.slug}/edit`)"
+                @click="appSettingStore.btnRedirect(`/shows/${show.slug}/episode/${episode.slug}/edit`)"
                 :disabled="teamStore.goLiveDisplay"
                 class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg disabled:bg-gray-400"
             >Edit
@@ -35,7 +35,7 @@
           <div>
             <button
                 :disabled="teamStore.goLiveDisplay"
-                @click="userStore.btnRedirect(`/shows/${show.slug}/manage`)"
+                @click="appSettingStore.btnRedirect(`/shows/${show.slug}/manage`)"
                 class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg disabled:bg-gray-400"
             >Manage Show
             </button>
@@ -43,7 +43,7 @@
           <div>
             <button
                 :disabled="teamStore.goLiveDisplay"
-                @click="userStore.btnRedirect('/dashboard')"
+                @click="appSettingStore.btnRedirect('/dashboard')"
                 class="bg-black hover:bg-gray-800 text-white font-semibold px-4 py-2 rounded-lg disabled:bg-gray-400"
             >Dashboard
             </button>
@@ -56,7 +56,7 @@
           <button
               hidden
               v-if="!episode.video_file_url"
-              @click="userStore.btnRedirect(`/shows/${show.slug}/episode/${episode.slug}/upload`)"
+              @click="appSettingStore.btnRedirect(`/shows/${show.slug}/episode/${episode.slug}/upload`)"
               :disabled="teamStore.goLiveDisplay"
               class="px-4 py-2 text-white font-semibold bg-orange-600 hover:bg-orange-500 rounded-lg disabled:bg-gray-400"
           >Upload Video
@@ -74,36 +74,55 @@
               :team="team"
           />
         </div>
-        <div class="flex flex-col">
-          <div class="text-center mb-3 pr-3">
-            <button :disabled="teamStore.goLiveDisplay" v-if="episode.show_episode_status_id === 5"
-                    onclick="scheduleReleaseNotice.showModal()"
-                    class="bg-green-600 hover:bg-green-500 text-white rounded-lg font-semibold px-4 py-2 mb-4 mr-2 disabled:bg-gray-400">
-              Schedule Release
-            </button>
-            <br/>
-            <span v-if="episode.show_episode_status_id === 6"
-                  class="text-xs capitalize font-semibold">Scheduled Release</span><br/>
-            <span v-if="episode.show_episode_status_id === 6" class="capitalize font-semibold">{{ timeAgo }}</span>
+
+
+        <div class="flex flex-row flex-wrap justify-between w-full">
+
+          <div class="flex flex-col pt-6">
+
+
+            <div><span class="text-xs capitalize font-semibold">Show: </span>
+              <button :disabled="teamStore.goLiveDisplay" @click="appSettingStore.btnRedirect(`/shows/${show.slug}/manage`)"
+                      class="text-blue-500 ml-2 uppercase disabled:text-black">
+                {{ show.name }}
+              </button>
+            </div>
+            <div><span class="text-xs capitalize font-semibold mr-2">Show Runner: </span>
+              {{ show.showRunner }}
+            </div>
+
+            <div>
+              <span class="text-xs capitalize font-semibold mr-2">Episode Number: </span>
+              <span v-if="episode.episode_number">{{ episode.episode_number }}</span>
+              <span v-if="!episode.episode_number">{{ episode.id }}</span>
+            </div>
+            <div v-if="releaseDateTime">
+              <span class="text-xs capitalize font-semibold mr-2">\
+                {{ formatDate(releaseDateTime) }}
+              </span>
+            </div>
           </div>
-          <div><span class="text-xs capitalize font-semibold">Show: </span>
-            <button :disabled="teamStore.goLiveDisplay" @click="userStore.btnRedirect(`/shows/${show.slug}/manage`)"
-                    class="text-blue-500 ml-2 uppercase disabled:text-black">
-              {{ show.name }}
-            </button>
+
+          <div class="upcomingDateTime">
+
+            <div class="text-center mb-3 pr-3 pt-6">
+              <button :disabled="teamStore.goLiveDisplay" v-if="episode.status.id === 5"
+                      onclick="scheduleReleaseNotice.showModal()"
+                      class="bg-green-600 hover:bg-green-500 text-white rounded-lg font-semibold px-4 py-2 mb-4 mr-2 disabled:bg-gray-400">
+                Schedule Release
+              </button>
+              <br/>
+              <div v-if="episode.status.id === 6">
+                <span class="text-2xl capitalize font-semibold">Scheduled Release:</span><br/>
+                <span class="text-3xl capitalize font-semibold">{{ timeAgo }}</span>
+              </div>
+            </div>
+
           </div>
-          <div><span class="text-xs capitalize font-semibold mr-2">Show Runner: </span>
-            {{ show.showRunner }}
-          </div>
-          <div><span class="text-xs capitalize font-semibold mr-2">Episode Number: </span>
-            <span v-if="episode.episode_number">{{ episode.episode_number }}</span>
-            <span v-if="!episode.episode_number">{{ episode.id }}</span>
-          </div>
-          <div v-if="releaseDateTime"><span class="text-xs capitalize font-semibold mr-2">
-                                {{ formatDate(releaseDateTime) }}
-                            </span></div>
 
         </div>
+
+
 
 
       </div>
@@ -118,13 +137,13 @@
 <script setup>
 import { useTimeAgo } from '@vueuse/core'
 import { useTeamStore } from "@/Stores/TeamStore"
-import { useUserStore } from "@/Stores/UserStore"
+import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import Button from "@/Jetstream/Button.vue"
 import EpisodeHeader from "@/Components/Pages/ShowEpisodes/Layout/EpisodeHeader"
 import ShowEpisodeManageTopBanner from "@/Components/Pages/ShowEpisodes/Manage/Layout/ShowEpisodeManageTopBanner"
 
+const appSettingStore = useAppSettingStore()
 const teamStore = useTeamStore()
-const userStore = useUserStore()
 
 let props = defineProps({
   show: Object,

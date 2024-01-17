@@ -9,7 +9,7 @@
   <!--    <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">-->
   <div class="place-self-center flex flex-col gap-y-3">
     <div id="topDiv" class="bg-white dark:bg-gray-800 text-black dark:text-gray-50 p-5 mb-10">
-      <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+      <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
       <NewsHeader :can="can">News Feeds</NewsHeader>
 
       <div class="bg-orange-500 mb-1 px-2 py-1 text-black font-semibold">TODO: create special parser for <a
@@ -31,7 +31,7 @@
                     <span class="text-lg">News Feeds</span>
                     <button
                         v-if="can.viewNewsroom"
-                        @click="userStore.btnRedirect(`/rss2/create`)"
+                        @click="appSettingStore.btnRedirect(`/rss2/create`)"
                         class="bg-green-600 hover:bg-green-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
                     >Add Feed
                     </button>
@@ -74,7 +74,7 @@
                       <!--                                                {{feed.name}}-->
                       <!--                                            </Link>-->
                       <button
-                          @click="userStore.btnRedirect(`/rss2/${feed.slug}`)"
+                          @click="appSettingStore.btnRedirect(`/rss2/${feed.slug}`)"
                           class="text-blue-800 uppercase font-semibold text-md hover:text-blue-600 hover:opacity-75 transition ease-in-out duration-150"
                       >{{ feed.name }}
                       </button>
@@ -82,7 +82,7 @@
                     <div class="space-x-1">
                       <button
                           v-if="userStore.isNewsPerson"
-                          @click="userStore.btnRedirect(`/rss2/${feed.slug}/edit`)"
+                          @click="appSettingStore.btnRedirect(`/rss2/${feed.slug}/edit`)"
                           class="px-2 py-1 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                       >Edit
                       </button>
@@ -113,61 +113,49 @@
 </template>
 
 <script setup>
-import { onBeforeMount, onMounted, ref, watch } from "vue"
-import { Inertia } from "@inertiajs/inertia"
+import { ref, watch } from 'vue'
+import { Inertia } from '@inertiajs/inertia'
 import { useForm } from '@inertiajs/inertia-vue3'
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"
-import throttle from "lodash/throttle"
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
-import { useAppSettingStore } from "@/Stores/AppSettingStore"
-const appSettingStore = useAppSettingStore()
-import { useUserStore } from "@/Stores/UserStore"
-import NewsHeaderButtons from "@/Components/Pages/News/NewsHeaderButtons"
-import NewsHeader from "@/Components/Pages/News/NewsHeader"
-import Pagination from "@/Components/Global/Paginators/Pagination"
-import Message from "@/Components/Global/Modals/Messages"
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import throttle from 'lodash/throttle'
+import { usePageSetup } from '@/Utilities/PageSetup'
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import { useUserStore } from '@/Stores/UserStore'
+import NewsHeaderButtons from '@/Components/Pages/News/NewsHeaderButtons'
+import NewsHeader from '@/Components/Pages/News/NewsHeader'
+import Pagination from '@/Components/Global/Paginators/Pagination'
+import Message from '@/Components/Global/Modals/Messages'
 
-const videoPlayerStore = useVideoPlayerStore()
+usePageSetup('rss2')
+
+const appSettingStore = useAppSettingStore()
 const userStore = useUserStore()
 
 let props = defineProps({
   filters: Object,
   can: Object,
   feeds: Object,
-});
+})
 
 let form = useForm({})
 
 let search = ref(props.filters.search)
 
-userStore.currentPage = 'rss2'
-userStore.showFlashMessage = true;
-
-onMounted(() => {
-  videoPlayerStore.makeVideoTopRight();
-  if (userStore.isMobile) {
-
-    appSettingStore.ott = 0
-appSettingStore.pageIsHidden = false
-  }
-  document.getElementById("topDiv").scrollIntoView()
-});
-
 watch(search, throttle(function (value) {
   Inertia.get('/rss2', {search: value}, {
     preserveState: true,
-    replace: true
-  });
-}, 300));
+    replace: true,
+  })
+}, 300))
 
 function scrollToCities() {
-  document.getElementById("cities").scrollIntoView({behavior: "smooth"})
+  document.getElementById('cities').scrollIntoView({behavior: 'smooth'})
 }
 
 
 function destroy(id) {
-  if (confirm("Are you sure you want to Delete")) {
-    form.delete(route('feeds.destroy', id));
+  if (confirm('Are you sure you want to Delete')) {
+    form.delete(route('feeds.destroy', id))
 
   }
 }

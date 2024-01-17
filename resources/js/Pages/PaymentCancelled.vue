@@ -12,7 +12,7 @@ import { usePageSetup } from '@/Utilities/PageSetup'
 
 usePageSetup('paymentCancelled')
 
-userStore.currentPage = 'paymentCancelled'
+appSettingStore.currentPage = 'paymentCancelled'
 
 let props = defineProps({
     can: Object,

@@ -6,14 +6,17 @@
         <div class="badge bg-orange-500 text-white text-xs ml-1 -mt-3">Coming Soon!</div>
       </div>
       <div>
-        <button
-            onclick="addBonusContentNotice.showModal()"
-            class="bg-orange-600 hover:bg-orange-500 text-white font-semibold rounded-lg px-4 py-2"
-        >Add Bonus Content
-        </button>
       </div>
       <div>Add videos, images, links and documents for the audience.</div>
     </div>
+    <div class="mt-8 ml-10">
+      <button
+          onclick="addBonusContentNotice.showModal()"
+          class="bg-orange-600 hover:bg-orange-500 text-white font-semibold rounded-lg px-4 py-2"
+      >Add Bonus Content
+      </button>
+    </div>
+
 
     <!--                <div class="flex flex-row flex-wrap my-6 ml-10 md:w-3/4 space-x-2 space-y-2">-->
     <!--                    <div></div>-->

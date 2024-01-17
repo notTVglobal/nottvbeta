@@ -4,7 +4,7 @@
   <div class="place-self-center flex flex-col gap-y-3 w-full">
     <div id="topDiv" class="rounded bg-white text-black dark:text-white dark:bg-gray-900 p-5 mb-10">
 
-      <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+      <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
       <DashboardHeader :can="can"/>
 
@@ -221,38 +221,21 @@
 
 <script setup>
 import { Inertia } from "@inertiajs/inertia"
-import { computed, inject, onBeforeMount, onMounted, ref } from "vue"
-
-import Pagination from "@/Components/Global/Paginators/Pagination"
+import { computed, inject, onMounted, ref } from "vue"
+import { usePageSetup } from '@/Utilities/PageSetup'
+import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import Message from "@/Components/Global/Modals/Messages"
-import MyShowsHeader from "@/Components/Pages/Dashboard/Elements/MyShows/MyShowsHeader"
 import DashboardHeader from "@/Components/Pages/Dashboard/Layout/DashboardHeader"
 import MyAssignments from "@/Components/Pages/Dashboard/Elements/MyAssignments/MyAssignments"
 import MyTeams from "@/Components/Pages/Dashboard/Elements/MyTeams/MyTeams"
 import MyShows from "@/Components/Pages/Dashboard/Elements/MyShows//MyShows"
 import NotificationPanel from "@/Components/Pages/Dashboard/Elements/DashboardNotification/DashboardNotificationPanel"
 
-const getUserData = inject('getUserData', null)
-
-
-
-
-import { useUserStore } from "@/Stores/UserStore"
-
-const userStore = useUserStore()
-
-
-
-
-import { usePageSetup } from '@/Utilities/PageSetup'
-
 usePageSetup('dashboard')
 
+const appSettingStore = useAppSettingStore()
 
-
-
-
-
+const getUserData = inject('getUserData', null)
 
 onMounted(() => {
   if (!getUserData) {
@@ -313,7 +296,6 @@ const myTotalStoragePercentage = computed(() => {
 const myTotalStorageRoundedPercentage = computed(() => {
   return Math.round(myTotalStoragePercentage);
 });
-
 
 async function updateUserStore() {
   userStore.id = props.id

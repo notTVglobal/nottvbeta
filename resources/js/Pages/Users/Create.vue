@@ -4,7 +4,7 @@
   <div class="place-self-center flex flex-col gap-y-3">
     <div id="topDiv" class="bg-white dark:bg-gray-800 text-black dark:text-gray-50 p-5 mb-10">
 
-      <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+      <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
       <div class="flex justify-between mt-3 mb-6">
         <div class="text-3xl">Create New User</div>
@@ -225,19 +225,19 @@
 </template>
 
 <script setup>
-import { ref } from "vue"
-import { useForm } from "@inertiajs/inertia-vue3"
+import { ref } from 'vue'
+import { useForm } from '@inertiajs/inertia-vue3'
 import { usePageSetup } from '@/Utilities/PageSetup'
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
-import { useUserStore } from "@/Stores/UserStore"
-import Message from "@/Components/Global/Modals/Messages"
+import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import Message from '@/Components/Global/Modals/Messages'
 import JetValidationErrors from '@/Jetstream/ValidationErrors'
-import CancelButton from "@/Components/Global/Buttons/CancelButton"
+import CancelButton from '@/Components/Global/Buttons/CancelButton'
 
 usePageSetup('usersCreate')
 
 const videoPlayerStore = useVideoPlayerStore()
-const userStore = useUserStore()
+const appSettingStore = useAppSettingStore()
 
 let props = defineProps({
   message: String,
@@ -256,18 +256,18 @@ let form = useForm({
   postalCode: null,
   phone: null,
   stripe_id: null,
-});
+})
 
 // const role = ref(null);
 
 function reset() {
-  form.reset();
+  form.reset()
 }
 
 const submit = () => {
-  form.post(route("users.store"));
+  form.post(route('users.store'))
 }
 
-let showMessage = ref(true);
+let showMessage = ref(true)
 
 </script>

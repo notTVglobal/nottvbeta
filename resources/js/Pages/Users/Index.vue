@@ -4,13 +4,13 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div id="topDiv" class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 
-            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+            <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
             <AdminHeader>Users</AdminHeader>
 
             <div class="flex flex-row justify-between gap-x-4">
                 <button
-                    @click="userStore.btnRedirect(`/users/create`)"
+                    @click="appSettingStore.btnRedirect(`/users/create`)"
                     class="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded-lg disabled:bg-gray-400"
                 >Add User</button>
                 <input v-model="search" type="search" placeholder="Search..." class="text-black border px-2 rounded-lg" />
@@ -123,21 +123,22 @@
 
 
 <script setup>
-import { onBeforeMount, onMounted, ref, watch } from "vue"
 import { Inertia } from "@inertiajs/inertia"
+import { ref, watch } from "vue"
+
 import { useForm } from "@inertiajs/inertia-vue3"
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
-import { useUserStore } from "@/Stores/UserStore"
+import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import Pagination from "@/Components/Global/Paginators/Pagination"
 import throttle from "lodash/throttle"
 import Message from "@/Components/Global/Modals/Messages"
 import AdminHeader from "@/Components/Pages/Admin/AdminHeader"
 
-usePageSetup('usersIndex')
+usePageSetup('users')
 
+const appSettingStore = useAppSettingStore()
 const videoPlayerStore = useVideoPlayerStore()
-const userStore = useUserStore()
 
 let props = defineProps({
     users: Object,

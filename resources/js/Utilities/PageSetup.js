@@ -9,8 +9,8 @@ export function usePageSetup(pageName) {
     const appSettingStore = useAppSettingStore()
     const videoPlayerStore = useVideoPlayerStore()
 
-    userStore.currentPage = pageName
-    userStore.showFlashMessage = true
+    appSettingStore.currentPage = pageName
+    appSettingStore.showFlashMessage = true
     appSettingStore.pageIsHidden = false
 
     if (userStore.isMobile) {
@@ -20,12 +20,18 @@ export function usePageSetup(pageName) {
     videoPlayerStore.makeVideoTopRight()
 
     onMounted(() => {
-        const topDiv = document.getElementById("topDiv")
-        if (topDiv) {
-            topDiv.scrollIntoView()
+        // Check if the URL contains query strings
+        const hasQueryStrings = window.location.search !== '';
+
+        // Only scroll into view if there are no query strings
+        if (!hasQueryStrings) {
+            const topDiv = document.getElementById("topDiv")
+            if (topDiv) {
+                topDiv.scrollIntoView()
+            }
         }
         // Only update if we're not already on this page to avoid overwriting with the current URL
-        userStore.setPrevUrl()
+        appSettingStore.setPrevUrl()
         Inertia.reload()
 
     });

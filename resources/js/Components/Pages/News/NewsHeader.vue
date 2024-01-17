@@ -9,7 +9,7 @@
       </div>
       <div>
         <button
-            @click="userStore.btnRedirect('/dashboard')"
+            @click="appSettingStore.btnRedirect('/dashboard')"
             class="bg-black hover:bg-gray-800 text-white font-semibold ml-2 mt-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
         >Dashboard
         </button>
@@ -46,7 +46,7 @@
           </li>
           <li>
             <button
-                @click="userStore.btnRedirect(`/rss2`)"
+                @click="appSettingStore.btnRedirect(`/rss2`)"
                 class="text-gray-700 dark:text-gray-50 hover:text-blue-500"
             >Feeds
             </button>
@@ -63,10 +63,10 @@
 </template>
 
 <script setup>
-import { useUserStore } from "@/Stores/UserStore"
+import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import NewsHeaderButtons from "@/Components/Pages/News/NewsHeaderButtons"
 
-const userStore = useUserStore()
+const appSettingStore = useAppSettingStore()
 
 defineProps({
   search: String,

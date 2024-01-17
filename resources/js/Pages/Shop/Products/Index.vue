@@ -5,7 +5,7 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div id="topDiv" class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 
-            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+            <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
             <header class="flex justify-between mb-3">
                 <div id="topDiv">
@@ -71,14 +71,14 @@
 <script setup>
 import { onMounted } from "vue"
 import { usePageSetup } from '@/Utilities/PageSetup'
-import { useUserStore } from "@/Stores/UserStore"
+import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import { useShopStore } from "@/Stores/ShopStore"
-import Message from "@/Components/Global/Modals/Messages"
 import ShopHeader from "@/Components/Pages/Shop/ShopHeader"
+import Message from "@/Components/Global/Modals/Messages"
 
 usePageSetup('shopProductsIndex')
 
-const userStore = useUserStore()
+const appSettingStore = useAppSettingStore()
 const shopStore = useShopStore()
 
 onMounted(() => {

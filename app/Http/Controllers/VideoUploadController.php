@@ -340,7 +340,7 @@ class VideoUploadController extends Controller
 //        error_log('Video saved to database. Next up is the Job.');
 
         // Dispatch Job
-        UploadVideoToSpacesJob::dispatch($video)->onQueue('video_processing');
+        UploadVideoToSpacesJob::dispatch($video, auth()->user()->id)->onQueue('video_processing');
         Log::info('Video '. $video->ulid .' has been dispatched for upload to Spaces.');
 
 //        error_log('The end of the saveFile method.');

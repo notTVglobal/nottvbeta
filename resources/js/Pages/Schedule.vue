@@ -21,7 +21,7 @@
     <div id="topDiv" class="flex justify-end px-5">
       <div class="text-3xl font-semibold pt-4">Schedule</div>
     </div>
-    <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+    <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
     <div class="mx-6">
       <div class="alert alert-info">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6">
@@ -128,13 +128,13 @@
 
 <script setup>
 import { usePageSetup } from '@/Utilities/PageSetup'
-import { useUserStore } from "@/Stores/UserStore"
+import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import Message from "@/Components/Global/Modals/Messages"
 import PopUpModal from "@/Components/Global/Modals/PopUpModal"
 
 usePageSetup('schedule')
 
-const userStore = useUserStore()
+const appSettingStore = useAppSettingStore()
 
 let props = defineProps({
   can: Object,

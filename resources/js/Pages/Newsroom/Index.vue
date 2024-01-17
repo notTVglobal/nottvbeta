@@ -5,7 +5,7 @@
     <div class="place-self-center flex flex-col gap-y-3">
       <div id="topDiv" class="bg-white text-black dark:bg-gray-900 dark:text-gray-50 p-5 mb-10">
 
-        <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+        <Messages v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
         <NewsHeader :can="can">Welcome to the Newsroom</NewsHeader>
 
@@ -17,15 +17,15 @@
 
         <!--            </header>-->
 
-        <div class="alert alert-info">
+        <div class="alert alert-info mb-6">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                class="stroke-current shrink-0 w-6 h-6">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
           </svg>
           <span>
-                    This page is only visible to members of the newsroom. Create news articles, share resources, edit stories, and when they are ready the News Producer(s) can publish them!
-                </span>
+            <span class="font-semibold">This page is only visible to members of the newsroom.</span> <br>Create news articles, share resources, edit stories, and when they are ready the News Producer(s) can publish them!
+          </span>
         </div>
 
         <div class="flex items-center my-3 lg:mt-0">
@@ -86,7 +86,7 @@
                         class="hidden md:table-cell min-w-[8rem] px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                     >
                       <button
-                          @click="userStore.btnRedirect(`/news/${news.slug}`)"
+                          @click="appSettingStore.btnRedirect(`/news/${news.slug}`)"
                       ><img :src="`/storage/images/${news.image}`" class="rounded-full h-20 w-20 object-cover"
                             alt="news cover"></button>
                     </div>
@@ -95,7 +95,7 @@
                         class="table-cell px-6 py-4 font-medium text-gray-900 dark:text-gray-50 whitespace-nowrap align-middle"
                     >
                       <button
-                          @click="userStore.btnRedirect(`/news/${news.slug}`)"
+                          @click="appSettingStore.btnRedirect(`/news/${news.slug}`)"
                           class="text-lg font-semibold text-blue-800 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-200"
                       >{{ news.title }}
                       </button>
@@ -126,7 +126,7 @@
                     <div class="hidden lg:table-cell px-6 py-4 align-middle space-x-2 space-y-2">
                       <button
                           v-if="news.can.editNewsPost"
-                          @click="userStore.btnRedirect(`/news/${news.slug}/edit`)"
+                          @click="appSettingStore.btnRedirect(`/news/${news.slug}/edit`)"
                           class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                       >Edit
                       </button>
@@ -155,22 +155,25 @@
 </template>
 
 <script setup>
-import { Inertia } from "@inertiajs/inertia";
-import { onBeforeMount, onMounted, ref, watch } from "vue"
+import { Inertia } from '@inertiajs/inertia'
+import { ref, watch } from 'vue'
 import { useForm } from '@inertiajs/inertia-vue3'
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"
-import throttle from "lodash/throttle"
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import throttle from 'lodash/throttle'
 import { usePageSetup } from '@/Utilities/PageSetup'
-import { useUserStore } from "@/Stores/UserStore"
-import NewsHeader from "@/Components/Pages/News/NewsHeader"
-import Pagination from "@/Components/Global/Paginators/Pagination"
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import { useUserStore } from '@/Stores/UserStore'
+import NewsHeader from '@/Components/Pages/News/NewsHeader'
+import Pagination from '@/Components/Global/Paginators/Pagination'
+import Messages from '@/Components/Global/Modals/Messages'
 
 usePageSetup('newsroom')
 
+const appSettingStore = useAppSettingStore()
 const userStore = useUserStore()
 
 function scrollToCities() {
-  document.getElementById("cities").scrollIntoView({behavior: "smooth"})
+  document.getElementById('cities').scrollIntoView({behavior: 'smooth'})
 }
 
 let props = defineProps({
@@ -180,7 +183,7 @@ let props = defineProps({
     type: Object,
     default: () => ({}),
   },
-});
+})
 
 let search = ref(props.filters.search)
 
@@ -189,12 +192,12 @@ let form = useForm({})
 watch(search, throttle(function (value) {
   Inertia.get('/newsroom', {search: value}, {
     preserveState: true,
-    replace: true
-  });
+    replace: true,
+  })
 }, 300))
 
 function publish(id) {
-  if (confirm("Are you sure you want to Publish")) {
+  if (confirm('Are you sure you want to Publish')) {
     // form.put(route('news.publish', id));
     Inertia.put(route('newsroom.publish', {id: id}))
 
@@ -202,7 +205,7 @@ function publish(id) {
 }
 
 function destroy(id) {
-  if (confirm("Are you sure you want to Delete")) {
+  if (confirm('Are you sure you want to Delete')) {
     form.delete(route('news.destroy', id))
 
   }

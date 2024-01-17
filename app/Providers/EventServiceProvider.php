@@ -9,7 +9,7 @@ use App\Events\ViewerPresenceChannel;
 use App\Events\VideoProcessed;
 use App\Listeners\LogRegisteredUser;
 use App\Listeners\LogVerifiedUser;
-use App\Listeners\ProcessNewUploadedVideo;
+use App\Listeners\ProcessNewVideoUpload;
 use App\Listeners\SendChatMessageNotification;
 use App\Listeners\SendEmailVerification;
 use App\Listeners\SendNewUserNotification;
@@ -44,7 +44,7 @@ class EventServiceProvider extends ServiceProvider
             SendNewUserNotification::class,
         ],
         NewVideoUploaded::class => [
-          ProcessNewUploadedVideo::class,
+          ProcessNewVideoUpload::class,
         ],
         VideoProcessed::class => [
             SendVideoProcessedNotification::class,

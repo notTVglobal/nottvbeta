@@ -43,7 +43,7 @@
 
     <td v-if="can.manageTeam || can.editTeam" class="text-gray-600 px-6 py-4 text-sm text-right">
       <button
-          @click="userStore.btnRedirect(`/shows/${show.slug}/edit`)"
+          @click="appSettingStore.btnRedirect(`/shows/${show.slug}/edit`)"
           class="bg-blue-500 hover:bg-blue-600 text-white font-semibold ml-2 my-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
       >Edit
       </button>
@@ -55,13 +55,13 @@
 <script setup>
 import { ref } from "vue"
 import { useForm } from "@inertiajs/inertia-vue3"
+import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import { useTeamStore } from "@/Stores/TeamStore"
-import { useUserStore } from "@/Stores/UserStore"
 import ShowNoteEdit from "@/Components/Pages/Teams/Manage/Elements/ShowNoteEdit"
 import SingleImage from "@/Components/Global/Multimedia/SingleImage"
 
+const appSettingStore = useAppSettingStore()
 const teamStore = useTeamStore()
-const userStore = useUserStore()
 
 let props = defineProps({
   show: Object,

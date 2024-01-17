@@ -25,7 +25,7 @@
     <div class="flex justify-end">
       <button
           v-if="can.editTeam"
-          @click="userStore.btnRedirect(`/teams/${team.slug}/edit`)"
+          @click="appSettingStore.btnRedirect(`/teams/${team.slug}/edit`)"
           class="bg-blue-500 hover:bg-blue-600 text-white font-semibold ml-2 my-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
       >Edit
       </button>
@@ -38,10 +38,10 @@
 </template>
 
 <script setup>
-import { useUserStore } from "@/Stores/UserStore"
+import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import SingleImage from "@/Components/Global/Multimedia/SingleImage"
 
-const userStore = useUserStore()
+const appSettingStore = useAppSettingStore()
 
 defineProps({
   team: Object,
@@ -49,6 +49,5 @@ defineProps({
   logo: String,
   image: Object,
   can: Object,
-  message: String,
 })
 </script>

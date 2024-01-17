@@ -5,7 +5,7 @@
   <div id="topDiv" class="place-self-center flex flex-col">
     <div class="min-h-screen bg-white text-black dark:bg-gray-900 dark:text-gray-50 rounded px-5 pb-36">
 
-      <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+      <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
       <div class="alert alert-error mt-4 mx-3"
            v-if="showStore.errorMessage">
         <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
@@ -23,7 +23,7 @@
           <div class="font-bold mb-4 text-black">MANAGE SHOW</div>
           <div>
             <button
-                @click="userStore.btnRedirect('/dashboard')"
+                @click="appSettingStore.btnRedirect('/dashboard')"
                 class="bg-black hover:bg-gray-800 text-white font-semibold ml-2 mt-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
             >Dashboard
             </button>
@@ -36,27 +36,14 @@
             :team="props.team"
         />
 
-        <div class="flex justify-between mt-6">
-          <div class="flex flex-col">
-            <div><span class="text-xs  font-semibold uppercase">Team: </span>
-              <Link :href="`/teams/${team.slug}/manage`" class="text-blue-500 ml-2 uppercase font-bold"> {{
-                  team.name
-                }}
-              </Link>
-            </div>
-            <div><span class="text-xs  font-semibold mr-2 uppercase">Show Runner: </span><span
-                class="font-bold"> {{ show.showRunner }} </span></div>
-            <div><span class="text-xs  font-semibold mr-2 uppercase">Category: </span><span
-                class="font-bold"> {{ show.categoryName }} </span></div>
-            <div><span class="text-xs  font-semibold mr-2 uppercase">Sub-category: </span><span
-                class="font-bold"> {{ show.subCategoryName }} </span></div>
-          </div>
+        <div class="flex justify-end mt-6">
+
           <div>
             <button
                 v-if="teamStore.can.editShow"
-                @click="userStore.btnRedirect(`/shows/${show.slug}/edit`)"
+                @click="appSettingStore.btnRedirect(`/shows/${show.slug}/edit`)"
                 class="px-4 py-2 text-white font-semibold bg-blue-500 hover:bg-blue-600 rounded-lg"
-            >Edit
+            >Edit Show
             </button>
           </div>
         </div>
@@ -146,22 +133,23 @@
 </template>
 
 <script setup>
-import { onUnmounted } from "vue"
+import { onUnmounted } from 'vue'
 import { usePageSetup } from '@/Utilities/PageSetup'
-import { useShowStore } from "@/Stores/ShowStore"
-import { useTeamStore } from "@/Stores/TeamStore"
-import { useUserStore } from "@/Stores/UserStore"
-import ShowHeader from "@/Components/Pages/Shows/Layout/ShowHeader"
-import ShowEpisodesList from "@/Components/Pages/Shows/Manage/ShowEpisodesList"
-import ShowFooter from "@/Components/Pages/Shows/Layout/ShowFooter"
-import ShowCreditsList from "@/Components/Pages/Shows/Manage/ShowCreditsList"
-import Message from "@/Components/Global/Modals/Messages"
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import { useShowStore } from '@/Stores/ShowStore'
+import { useTeamStore } from '@/Stores/TeamStore'
+import ShowHeader from '@/Components/Pages/Shows/Layout/ShowHeader'
+import ShowFooter from '@/Components/Pages/Shows/Layout/ShowFooter'
+import ShowEpisodesList from '@/Components/Pages/Shows/Manage/ShowEpisodesList'
+import ShowCreditsList from '@/Components/Pages/Shows/Manage/ShowCreditsList'
+import Message from '@/Components/Global/Modals/Messages'
 
-usePageSetup('showsManage')
+usePageSetup('shows/slug/manage')
 
+const appSettingStore = useAppSettingStore()
 const showStore = useShowStore()
 const teamStore = useTeamStore()
-const userStore = useUserStore()
+
 
 onUnmounted(() => {
   showStore.errorMessage = ''
@@ -174,11 +162,11 @@ let props = defineProps({
   episodeStatuses: Object,
   // filters: Object,
   can: Object,
-});
+})
 
-teamStore.setActiveTeam(props.team);
-teamStore.setActiveShow(props.show);
-teamStore.can = props.can;
+teamStore.setActiveTeam(props.team)
+teamStore.setActiveShow(props.show)
+teamStore.can = props.can
 
 // let search = ref(props.filters.search);
 //

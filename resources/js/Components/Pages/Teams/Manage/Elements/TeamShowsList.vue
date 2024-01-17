@@ -5,7 +5,7 @@
     <div>
       <button
           v-if="teamStore.can.manageTeam"
-          @click="userStore.btnRedirect('/shows/create')"
+          @click="appSettingStore.btnRedirect('/shows/create')"
           class="bg-green-500 hover:bg-green-600 text-white font-semibold ml-2 mt-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
       >Create Show
       </button>
@@ -71,13 +71,13 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useShowStore } from "@/Stores/ShowStore"
 import { useTeamStore } from "@/Stores/TeamStore"
-import { useUserStore } from "@/Stores/UserStore"
+import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import TeamShow from "@/Components/Pages/Teams/Manage/Elements/TeamShow"
 import Pagination from "@/Components/Global/Paginators/Pagination"
 
+const appSettingStore = useAppSettingStore()
 const showStore = useShowStore()
 const teamStore = useTeamStore()
-const userStore = useUserStore()
 
 const isSmallScreen = ref(false)
 

@@ -8,31 +8,15 @@
 </template>
 
 <script setup>
-import { onMounted } from "vue"
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
+import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
-const appSettingStore = useAppSettingStore()
-import { useUserStore } from "@/Stores/UserStore"
 
-const videoPlayerStore = useVideoPlayerStore()
-const userStore = useUserStore()
+const appSettingStore = useAppSettingStore()
 
 let props = defineProps({
   subscription: Object,
 })
 
-userStore.currentPage = `Admin/Subscription/${props.subscription.id}/Edit`
-
-onMounted(() => {
-  videoPlayerStore.makeVideoTopRight()
-  if (userStore.isMobile) {
-
-    appSettingStore.ott = 0
-appSettingStore.pageIsHidden = false
-  }
-  document.getElementById("topDiv").scrollIntoView()
-
-})
-
+usePageSetup(`Admin/Subscription/${props.subscription.id}/Edit`)
 
 </script>

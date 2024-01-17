@@ -4,7 +4,7 @@
   <div class="place-self-center flex flex-col">
     <div id="topDiv" class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 
-      <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+      <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
       <AdminHeader>Channels</AdminHeader>
 
@@ -174,37 +174,23 @@
 
 <script setup>
 import { Inertia } from "@inertiajs/inertia";
-import { onBeforeMount, onMounted, ref, watch } from "vue"
+import { ref, watch } from "vue"
 import throttle from "lodash/throttle"
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
+import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
-const appSettingStore = useAppSettingStore()
-import { useUserStore } from "@/Stores/UserStore"
 import AdminHeader from "@/Components/Pages/Admin/AdminHeader"
 import Message from "@/Components/Global/Modals/Messages"
 import Pagination from "@/Components/Global/Paginators/Pagination"
 
-const videoPlayerStore = useVideoPlayerStore()
-const userStore = useUserStore()
+usePageSetup('Admin/Channels/Index')
+
+const appSettingStore = useAppSettingStore()
 
 let props = defineProps({
   channels: Object,
   filters: Object,
 })
-
-userStore.currentPage = 'adminChannels'
-userStore.showFlashMessage = true;
-
-onMounted(() => {
-  videoPlayerStore.makeVideoTopRight();
-  if (userStore.isMobile) {
-
-    appSettingStore.ott = 0
-appSettingStore.pageIsHidden = false
-  }
-  document.getElementById("topDiv").scrollIntoView()
-});
 
 // function hasChannelSource (channel) {
 //     if (channel.source !== null) {

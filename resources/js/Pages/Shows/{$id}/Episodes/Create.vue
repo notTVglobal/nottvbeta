@@ -4,7 +4,7 @@
   <div class="place-self-center flex flex-col gap-y-3">
     <div id="topDiv" class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 
-      <!--            <Message v-if="userStore.showFlashMessage && $page.props.flash" :flash="$page.props.flash"/>-->
+      <!--            <Message v-if="appSettingStore.showFlashMessage && $page.props.flash" :flash="$page.props.flash"/>-->
 
       <div class="flex justify-between mt-3 mb-6">
         <div class="text-3xl">Create Episode</div>
@@ -213,16 +213,10 @@
 <script setup>
 import { useForm } from "@inertiajs/inertia-vue3"
 import { usePageSetup } from '@/Utilities/PageSetup'
-import { useTeamStore } from "@/Stores/TeamStore"
-import { useUserStore } from "@/Stores/UserStore"
 import JetValidationErrors from '@/Jetstream/ValidationErrors'
-import Message from "@/Components/Global/Modals/Messages"
 import CancelButton from "@/Components/Global/Buttons/CancelButton"
 
-usePageSetup('showEpisodesCreate')
-
-const teamStore = useTeamStore()
-const userStore = useUserStore()
+usePageSetup('shows/slug/episodes/create')
 
 let props = defineProps({
   user: Object,
@@ -230,8 +224,8 @@ let props = defineProps({
   team: Object,
 })
 
-// userStore.currentPage = 'episodes'
-// userStore.showFlashMessage = true;
+// appSettingStore.currentPage = 'episodes'
+// appSettingStore.showFlashMessage = true;
 
 // if (props.show) {
 //     teamStore.setActiveShow(props.show);

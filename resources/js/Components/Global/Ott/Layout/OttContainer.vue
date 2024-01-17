@@ -1,9 +1,11 @@
 <template>
 
-  <ButtonsFullPage v-if="appSettingStore.fullPage" />
-  <ButtonsTopRight v-if="!appSettingStore.fullPage" />
+  <div v-if="appSettingStore.showOttButtons">
+    <ButtonsFullPage v-if="appSettingStore.fullPage" />
+    <ButtonsTopRight v-if="!appSettingStore.fullPage" />
+  </div>
 
-  <Info :user="user"/>
+  <NowPlayingInfo :user="user"/>
   <Playlist :user="user"/>
   <Channels :user="user"/>
   <Chat :user="user"/>
@@ -16,7 +18,7 @@ import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import { useUserStore } from "@/Stores/UserStore"
 import ButtonsFullPage from "@/Components/Global/Ott/Elements/ButtonsFullPage"
 import ButtonsTopRight from "@/Components/Global/Ott/Elements/ButtonsTopRight"
-import Info from "@/Components/Global/Ott/Elements/Info"
+import NowPlayingInfo from "@/Components/Global/Ott/Elements/NowPlayingInfo"
 import Playlist from "@/Components/Global/Ott/Elements/Playlist"
 import Channels from "@/Components/Global/Ott/Elements/Channels"
 import Chat from "@/Components/Global/Ott/Elements/Chat"

@@ -6,7 +6,7 @@
     <div class="bg-white rounded text-black p-5"
          :class="goLive">
 
-      <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+      <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
       <ShowEpisodeManageNoticeModals/>
 
@@ -21,6 +21,8 @@
 
       <GoLive :episode="episode" :scheduledDateTime="scheduledDateTime"/>
 
+      <EpisodeVideo :episode="episode" />
+
       <EpisodeNotes :episode="episode"/>
 
       <ShowEpisodeManageEpisodeDescription :episode="episode"/>
@@ -28,6 +30,8 @@
       <EpisodeRundown hidden/>
 
       <ShowEpisodeManageBonusContent/>
+
+
 
       <EpisodeFooter :can="props.can" :team="props.team" :episode="props.episode" :show="props.show"/>
 
@@ -40,6 +44,7 @@
 import { computed, onMounted } from "vue"
 import { useTimeAgo } from '@vueuse/core'
 import { usePageSetup } from '@/Utilities/PageSetup'
+import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import { useShowStore } from "@/Stores/ShowStore"
 import { useTeamStore } from "@/Stores/TeamStore"
 import { useUserStore } from "@/Stores/UserStore"
@@ -55,9 +60,11 @@ import ShowEpisodeManageEpisodeDescription
 import ShowEpisodeManageNoticeModals
   from "@/Components/Pages/ShowEpisodes/Manage/Elements/ShowEpisodeManageNoticeModals.vue"
 import Message from "@/Components/Global/Modals/Messages"
+import EpisodeVideo from '@/Components/Pages/ShowEpisodes/Elements/EpisodeVideo.vue'
 
 usePageSetup('showEpisodesManage')
 
+const appSettingStore = useAppSettingStore()
 const showStore = useShowStore()
 const teamStore = useTeamStore()
 const userStore = useUserStore()

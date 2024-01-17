@@ -35,8 +35,6 @@ const initialState = () => ({
                 cdn_endpoint: '',
                 cloud_folder: '',
             },
-            // Add Bonus Content here
-            // Add Creators or Credits here
         },
         category: '',
         categorySub: '',
@@ -80,7 +78,17 @@ const initialState = () => ({
     },
     videoFile: {
         name: '',
-    }
+    },
+    bonusContent: [
+        // Example data structure
+        { title: 'Bonus Content Title', description: 'Description here', url: 'link-to-content' },
+        // ... more bonus content items
+    ],
+    showCreators: [
+        { name: 'Creator Name', slug: 'creator-slug', image: { /* image data */ } },
+    ],
+    // Add Bonus Content here
+    // Add Creators or Credits here
     // ... other properties
 });
 

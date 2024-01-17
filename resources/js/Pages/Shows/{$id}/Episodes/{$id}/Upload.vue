@@ -5,7 +5,7 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div id="topDiv" class="bg-white text-gray-800 dark:bg-gray-800 dark:text-white p-5 mb-10">
 
-            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+            <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
             <div class="bg-black text-red-600 font-bold text-xl p-4 mb-4 w-full text-center">
                 This page needs updating.. attach a video that is already uploaded or upload a new video for this episode.<br>
@@ -144,11 +144,11 @@ import JetValidationErrors from '@/Jetstream/ValidationErrors'
 import Message from '@/Components/Global/Modals/Messages'
 import CancelButton from '@/Components/Global/Buttons/CancelButton'
 
-usePageSetup('showEpisodesUpload')
+usePageSetup('shows/slug/episodes/slug/upload')
 
+const appSettingStore = useAppSettingStore()
 const teamStore = useTeamStore()
 const showStore = useShowStore()
-const userStore = useUserStore()
 
 teamStore.setActiveTeam(props.team);
 teamStore.setActiveShow(props.show);
@@ -213,13 +213,5 @@ function handleProcessedFile(error, file) {
 let submit = () => {
     form.put(route('showEpisodes.update', props.episode.slug));
 };
-
-
-function back() {
-    let urlPrev = usePage().props.value.urlPrev
-    if (urlPrev !== 'empty') {
-        Inertia.visit(urlPrev)
-    }
-}
 
 </script>

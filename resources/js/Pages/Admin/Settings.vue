@@ -6,7 +6,7 @@
     <div
         class="w-fit lg:w-3/4 left-0 right-0 mx-auto bg-white dark:bg-gray-800 rounded text-black dark:text-gray-50 mt-6 p-5">
 
-      <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+      <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
       <header>
         <div class="flex justify-between mb-3">
@@ -16,7 +16,7 @@
           <div>
             <div>
               <button
-                  @click="userStore.btnRedirect('/dashboard')"
+                  @click="appSettingStore.btnRedirect('/dashboard')"
                   class="bg-black hover:bg-gray-800 text-white font-semibold ml-2 mt-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
               >Dashboard
               </button>
@@ -31,32 +31,32 @@
         <div class="font-semibold text-xl pb-2">Administrator only links</div>
         <div class="flex flex-wrap md:flex-row justify-items-start gap-2">
           <button
-              @click="userStore.btnRedirect(`/users`)"
+              @click="appSettingStore.btnRedirect(`/users`)"
               class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 col-span-1 rounded disabled:bg-gray-400"
           >All Users
           </button>
           <button
-              @click="userStore.btnRedirect(`/admin/episodes`)"
+              @click="appSettingStore.btnRedirect(`/admin/episodes`)"
               class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 col-span-1 rounded disabled:bg-gray-400"
           >All Episodes
           </button>
           <button
-              @click="userStore.btnRedirect(`/admin/shows`)"
+              @click="appSettingStore.btnRedirect(`/admin/shows`)"
               class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 col-span-1 rounded disabled:bg-gray-400"
           >All Shows
           </button>
           <button
-              @click="userStore.btnRedirect(`/admin/teams`)"
+              @click="appSettingStore.btnRedirect(`/admin/teams`)"
               class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 col-span-1 rounded disabled:bg-gray-400"
           >All Teams
           </button>
           <button
-              @click="userStore.btnRedirect(`/admin/channels`)"
+              @click="appSettingStore.btnRedirect(`/admin/channels`)"
               class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"
           >All Channels
           </button>
           <button
-              @click="userStore.btnRedirect(`/admin/mistServerApi`)"
+              @click="appSettingStore.btnRedirect(`/admin/mistServerApi`)"
               class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"
           >MistServer API
           </button>
@@ -65,22 +65,22 @@
               class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"
           >MistServer Interface</a>
           <button
-              @click="userStore.btnRedirect(`/admin/images`)"
+              @click="appSettingStore.btnRedirect(`/admin/images`)"
               class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"
           >Images
           </button>
           <button
-              @click="userStore.btnRedirect(`/videoupload`)"
+              @click="appSettingStore.btnRedirect(`/videoupload`)"
               class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"
           >Video Upload
           </button>
           <button
-              @click="userStore.btnRedirect(`/movies/create`)"
+              @click="appSettingStore.btnRedirect(`/movies/create`)"
               class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
           >Add a Movie
           </button>
           <button
-              @click="userStore.btnRedirect(`/admin/invite_codes`)"
+              @click="appSettingStore.btnRedirect(`/admin/invite_codes`)"
               class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
           >Invite Codes
           </button>
@@ -340,18 +340,17 @@
 
 <script setup>
 import { Inertia } from "@inertiajs/inertia"
-import { onBeforeMount, onMounted, ref } from "vue"
+import { ref } from "vue"
 import { useForm } from "@inertiajs/inertia-vue3"
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
+import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
-const appSettingStore = useAppSettingStore()
-import { useUserStore } from "@/Stores/UserStore"
 import JetValidationErrors from '@/Jetstream/ValidationErrors'
 import ServerTime from "@/Components/Pages/Admin/ServerTime"
 import Message from "@/Components/Global/Modals/Messages"
 
-const videoPlayerStore = useVideoPlayerStore()
-const userStore = useUserStore()
+usePageSetup('Admin/Settings')
+
+const appSettingStore = useAppSettingStore()
 
 let props = defineProps({
   id: Number,
@@ -386,19 +385,6 @@ let submit = () => {
 };
 
 let getAllEpisodesButtonActive = ref(false);
-
-userStore.currentPage = 'adminSettings'
-userStore.showFlashMessage = true;
-
-onMounted(async () => {
-  videoPlayerStore.makeVideoTopRight();
-  if (userStore.isMobile) {
-
-    appSettingStore.ott = 0
-appSettingStore.pageIsHidden = false
-  }
-  document.getElementById("topDiv").scrollIntoView()
-});
 
 function getEpisodesFromEmbedCodes() {
   Inertia.post('getVideosFromEmbedCodes')

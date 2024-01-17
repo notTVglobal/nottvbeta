@@ -28,7 +28,7 @@
   <div>
     <div class="mb-6"><span class="text-xs uppercase font-semibold">Team: </span>
       <button
-          @click="userStore.btnRedirect(`/teams/${team.slug}`)"
+          @click="appSettingStore.btnRedirect(`/teams/${team.slug}`)"
           class="font-bold uppercase text-blue-700 dark:text-blue-300 hover:text-blue-500">{{ team.name }}
       </button>
     </div>
@@ -38,10 +38,10 @@
 </template>
 
 <script setup>
-import { useUserStore } from "@/Stores/UserStore"
+import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import CancelButton from "@/Components/Global/Buttons/CancelButton"
 
-const userStore = useUserStore()
+const appSettingStore = useAppSettingStore()
 
 defineProps({
   show: Object,

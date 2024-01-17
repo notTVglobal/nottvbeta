@@ -1,53 +1,52 @@
 <template>
 
-    <Head title="My Library" />
+  <Head title="My Library"/>
 
-    <div class="place-self-center flex flex-col gap-y-3">
-        <div id="topDiv" class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
+  <div class="place-self-center flex flex-col gap-y-3">
+    <div id="topDiv" class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 
-            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+      <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
-            <header class="flex justify-between mb-3">
-                <div class="pt-4">
-                    <h1 class="text-3xl font-semibold pb-3">My Library</h1>
-                </div>
-
-            </header>
-            <div class="flex flex-row justify-end gap-x-4 mb-4">
-
-                <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg text-black" />
-            </div>
-
-            <div class="mb-4">
-                <div class="p-2 text-red-600">This section is in development. Not currently working.</div>
-                <p class="">
-                    Your notTV Library... Shows and creators you follow will appear here. Movies and episodes on your Watch Later list. And live events you're interested in. Also, items from the shop you have saved will all appear here!
-                </p>
-            </div>
-
-
-
-            <div class="bg-orange-300 text-black px-2">
-                Display library items here.
-            </div>
-
+      <header class="flex justify-between mb-3">
+        <div class="pt-4">
+          <h1 class="text-3xl font-semibold pb-3">My Library</h1>
         </div>
+
+      </header>
+      <div class="flex flex-row justify-end gap-x-4 mb-4">
+
+        <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg text-black"/>
+      </div>
+
+      <div class="mb-4">
+        <div class="p-2 text-red-600">This section is in development. Not currently working.</div>
+        <p class="">
+          Your notTV Library... Shows and creators you follow will appear here. Movies and episodes on your Watch Later
+          list. And live events you're interested in. Also, items from the shop you have saved will all appear here!
+        </p>
+      </div>
+
+
+      <div class="bg-orange-300 text-black px-2">
+        Display library items here.
+      </div>
+
     </div>
+  </div>
 
 </template>
 
 <script setup>
 import { usePageSetup } from '@/Utilities/PageSetup'
-import { useUserStore } from "@/Stores/UserStore"
-import Message from "@/Components/Global/Modals/Messages"
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import Message from '@/Components/Global/Modals/Messages'
 
 usePageSetup('library')
 
-const userStore = useUserStore()
-
+const appSettingStore = useAppSettingStore()
 
 let props = defineProps({
-    can: Object,
+  can: Object,
 })
 
 </script>

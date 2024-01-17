@@ -3,6 +3,27 @@
 Last Update: January 14, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.1.2
+January 17, 2024
+* Finish codebase-restructuring
+* Implemented simpler logic in the Vue Templates with the PageSetup and the AppSettingStore
+* Fixed the Back and Cancel button navigation
+* Fixed the Paginator, scrolls to top on button click bug
+* Cleaned up code formatting throughout the project
+* Cleaned up the styling of the Shows Manage and ShowEpisode Manage pages
+* OTT Chat and Channels are still not working.
+
+## v0.8.1.1
+January 16, 2024
+* work on Ott panels.
+  * Filters and Playlists open and close
+  * Now Playing Info opens and populates with Show data
+* Troubleshooting video uploads where the UploadVideoToSpacesJob wasn't adding the video_id to the show_episodes table.
+* Created a New Listener to SendVideoUploadedNotification.
+  * Send a Video Uploaded Admin Notification Email
+  * Send a New Notification Event to the user who uploaded the video (to appear in their navBar notifications)
+* Created a Services/NotificationService to simplify sending users a new notification.
+
 ## v0.8.1.0
 January 16, 2024
 * codebase-restructuring

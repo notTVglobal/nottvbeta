@@ -5,7 +5,7 @@
     <div id="topDiv" class="place-self-center flex flex-col gap-y-3">
         <div class="bg-gray-900 text-white px-5">
 
-            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+            <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
             <header class="flex justify-between mb-3 border-b border-gray-800">
                 <div class="container mx-auto flex flex-col lg:flex-row items-center justify-between px-4 py-6">
@@ -160,18 +160,17 @@
 
 <script setup>
 import { Inertia } from "@inertiajs/inertia"
-import { onMounted, watch, onBeforeMount, ref } from "vue"
+import { watch, ref } from "vue"
 import throttle from "lodash/throttle"
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
+import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
-const appSettingStore = useAppSettingStore()
-import { useUserStore } from "@/Stores/UserStore"
 import Pagination from "@/Components/Global/Paginators/PaginationDark"
 import Message from "@/Components/Global/Modals/Messages"
 import SingleImage from "@/Components/Global/Multimedia/SingleImage"
 
-const videoPlayerStore = useVideoPlayerStore()
-const userStore = useUserStore()
+usePageSetup('movies')
+
+const appSettingStore = useAppSettingStore()
 
 let props = defineProps({
     movies: Object,
@@ -184,19 +183,6 @@ let props = defineProps({
 
 let movie = 'test-movie-2'
 let search = ref(props.filters.search);
-
-userStore.currentPage = 'movies'
-userStore.showFlashMessage = true;
-
-onMounted(() => {
-    videoPlayerStore.makeVideoTopRight();
-    if (userStore.isMobile) {
-
-        appSettingStore.ott = 0
-appSettingStore.pageIsHidden = false
-    }
-    document.getElementById("topDiv").scrollIntoView()
-});
 
 watch(search, throttle(function (value) {
     Inertia.get('/movies', { search: value }, {

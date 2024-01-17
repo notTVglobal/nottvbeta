@@ -4,7 +4,7 @@
   <div class="place-self-center flex flex-col gap-y-3 w-full overscroll-x-none">
     <div id="topDiv" class="bg-gray-900 text-white px-5">
 
-      <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+      <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
       <header class="flex justify-between mb-3 border-b border-gray-800">
         <div class="container mx-auto flex flex-col xl:flex-row items-center justify-between px-4 py-6">
@@ -108,7 +108,7 @@
 
                       <div class="text-gray-400 font-light text-sm">
                         <Link :href="`/shows/${episode.showSlug}`">{{ episode.showName }} &bull;
-                          {{ useTimeAgo(episode.release_date) }}
+                          {{ useTimeAgo(episode.releaseDate) }}
                         </Link>
                       </div>
 
@@ -165,31 +165,31 @@
 </template>
 
 <script setup>
-import { onBeforeMount, onMounted, ref, watch } from "vue"
-import { Inertia } from "@inertiajs/inertia"
-import { useTimeAgo } from "@vueuse/core"
-import throttle from "lodash/throttle"
+import { ref, watch } from 'vue'
+import { Inertia } from '@inertiajs/inertia'
+import { useTimeAgo } from '@vueuse/core'
+import throttle from 'lodash/throttle'
 import { usePageSetup } from '@/Utilities/PageSetup'
-import { useUserStore } from "@/Stores/UserStore"
-import MostAnticipated from "@/Components/Pages/Shows/Elements/MostAnticipated"
-import PaginationDark from "@/Components/Global/Paginators/PaginationDark"
-import Message from "@/Components/Global/Modals/Messages"
-import SingleImage from "@/Components/Global/Multimedia/SingleImage"
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import MostAnticipated from '@/Components/Pages/Shows/Elements/MostAnticipated'
+import PaginationDark from '@/Components/Global/Paginators/PaginationDark'
+import Message from '@/Components/Global/Modals/Messages'
+import SingleImage from '@/Components/Global/Multimedia/SingleImage'
 
 usePageSetup('showsIndex')
 
-const userStore = useUserStore()
+const appSettingStore = useAppSettingStore()
 
 function scrollToNewEpisodes() {
-  document.getElementById("new-episodes").scrollIntoView({behavior: "smooth"})
+  document.getElementById('new-episodes').scrollIntoView({behavior: 'smooth'})
 }
 
 function scrollToComingSoon() {
-  document.getElementById("coming-soon").scrollIntoView({behavior: "smooth"})
+  document.getElementById('coming-soon').scrollIntoView({behavior: 'smooth'})
 }
 
 function scrollToPopularShows() {
-  document.getElementById("popular-shows").scrollIntoView({behavior: "smooth"})
+  document.getElementById('popular-shows').scrollIntoView({behavior: 'smooth'})
 }
 
 // function getTimeAgoDate(date) {
@@ -204,16 +204,16 @@ let props = defineProps({
   filters: Object,
   can: Object,
 
-});
+})
 
-let search = ref(props.filters.search);
+let search = ref(props.filters.search)
 
 watch(search, throttle(function (value) {
   Inertia.get('/shows', {search: value}, {
     preserveState: true,
-    replace: true
-  });
-}, 300));
+    replace: true,
+  })
+}, 300))
 
 </script>
 

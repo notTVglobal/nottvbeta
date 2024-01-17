@@ -1,7 +1,7 @@
 <template>
   <div>
     <button
-        @click="back"
+        @click.prevent="back"
         class="ml-2 px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
     >Back
     </button>
@@ -10,13 +10,19 @@
 
 <script setup>
 import { Inertia } from "@inertiajs/inertia"
-import { useUserStore } from "@/Stores/UserStore"
+import { useAppSettingStore } from "@/Stores/AppSettingStore"
+import { useUserStore } from '@/Stores/UserStore'
 
+const appSettingStore = useAppSettingStore()
 const userStore = useUserStore()
 
 function back() {
-  if (userStore.prevUrl) {
-    Inertia.visit(userStore.prevUrl)
+  if (appSettingStore.prevUrl) {
+    Inertia.visit(appSettingStore.prevUrl)
+  } else {
+    // Fallback if prevUrl is not available
+    let prevUrl = userStore.isCreator ? '/dashboard' : '/';
+    Inertia.visit(prevUrl);
   }
 }
 </script>

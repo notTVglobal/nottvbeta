@@ -4,7 +4,7 @@
   <div class="place-self-center flex flex-col gap-y-3">
     <div id="topDiv" class="bg-white text-black p-5 mb-10">
 
-      <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+      <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
       <div class="flex justify-between mb-6">
         <div class="flex items-center">
@@ -63,46 +63,31 @@
 </template>
 
 <script setup>
-import { Inertia } from "@inertiajs/inertia"
-import { onBeforeMount, onMounted, ref, watch } from "vue"
-import throttle from "lodash/throttle"
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
-import { useAppSettingStore } from "@/Stores/AppSettingStore"
-const appSettingStore = useAppSettingStore()
-import { useUserStore } from "@/Stores/UserStore"
-import Pagination from "@/Components/Global/Paginators/Pagination"
-import Message from "@/Components/Global/Modals/Messages"
+import { Inertia } from '@inertiajs/inertia'
+import { ref, watch } from 'vue'
+import throttle from 'lodash/throttle'
+import { usePageSetup } from '@/Utilities/PageSetup'
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import Pagination from '@/Components/Global/Paginators/Pagination'
+import Message from '@/Components/Global/Modals/Messages'
 
-const videoPlayerStore = useVideoPlayerStore()
-const userStore = useUserStore()
+usePageSetup('creators')
+
+const appSettingStore = useAppSettingStore()
 
 let props = defineProps({
   creators: Object,
   filters: Object,
-});
+})
 
 let search = ref(props.filters.search)
-
-userStore.currentPage = 'creators'
-userStore.showFlashMessage = true
-
-onMounted(() => {
-  videoPlayerStore.makeVideoTopRight()
-  if (userStore.isMobile) {
-
-    appSettingStore.ott = 0
-appSettingStore.pageIsHidden = false
-  }
-  document.getElementById("topDiv").scrollIntoView()
-});
 
 watch(search, throttle(function (value) {
   Inertia.get('/shows', {search: value}, {
     preserveState: true,
-    replace: true
-  });
-}, 300));
-
+    replace: true,
+  })
+}, 300))
 
 </script>
 

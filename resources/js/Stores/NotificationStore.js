@@ -7,6 +7,10 @@ import { Inertia } from "@inertiajs/inertia";
 // new page props when it's appropriate, and clear the notifications
 // here regardless if the page props persists.
 
+// tec21: 2024-01-17 this is silly. Just keep this logic in either the UserStore
+// or the DashboardStore depending on whether notifications are going to be on
+// the dashboard or the navBar Notification bell.
+
 const initialState = () => ({
     title: '',
     body: '',

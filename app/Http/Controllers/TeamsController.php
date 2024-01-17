@@ -693,13 +693,13 @@ class TeamsController extends Controller
     private function determineRole($member, $team)
     {
         if ($member->id === $team->user_id) {
-            return 'Creator';
+            return 'creator';
         } elseif ($member->id === $team->team_leader) {
-            return 'Leader';
+            return 'leader';
         } elseif ($team->managers->contains('id', $member->id)) {
-            return 'Manager';
+            return 'manager';
         } else {
-            return 'Member';
+            return 'member';
         }
     }
 

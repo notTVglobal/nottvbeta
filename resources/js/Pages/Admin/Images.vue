@@ -4,7 +4,7 @@
   <div class="place-self-center flex flex-col gap-y-3">
     <div id="topDiv" class="bg-white text-black dark:bg-gray-900 dark:text-gray-50 p-5 mb-10">
 
-      <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+      <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
       <AdminHeader>Images</AdminHeader>
 
@@ -45,38 +45,23 @@
 
 <script setup>
 import { Inertia } from "@inertiajs/inertia"
-import { onBeforeMount, onMounted, ref } from "vue"
-import { Head, Link } from '@inertiajs/inertia-vue3'
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
+import { Head } from '@inertiajs/inertia-vue3'
+import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
-const appSettingStore = useAppSettingStore()
-import { useUserStore } from "@/Stores/UserStore"
 import AdminHeader from "@/Components/Pages/Admin/AdminHeader"
 import Pagination from "@/Components/Global/Paginators/Pagination"
 import Message from "@/Components/Global/Modals/Messages"
 import SingleImage from "@/Components/Global/Multimedia/SingleImage"
 import ImageUpload from "@/Components/Global/Uploaders/ImageUpload"
 
-const videoPlayerStore = useVideoPlayerStore()
-const userStore = useUserStore()
+usePageSetup('Admin/Images')
+
+const appSettingStore = useAppSettingStore()
 
 let props = defineProps({
   images: Object,
   message: String,
   // filters: Object,
-});
-
-userStore.currentPage = 'adminImageUploader';
-userStore.showFlashMessage = true;
-
-onMounted(() => {
-  videoPlayerStore.makeVideoTopRight();
-  if (userStore.isMobile) {
-
-    appSettingStore.ott = 0
-appSettingStore.pageIsHidden = false
-  }
-  document.getElementById("topDiv").scrollIntoView()
 });
 
 function reloadImage() {
