@@ -9,7 +9,7 @@
         </div>
 
         <dialog :id="dialogId" class="modal">
-            <div class="modal-box h-fit overflow-scroll bg-white text-black">
+            <div class="modal-box h-fit bg-white text-black">
                 <div v-if="props.episodeStatusId === 7">
                     <h3 class="text-center mb-2">Episode is Published</h3>
                     <p class="text-center mb-2">
