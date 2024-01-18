@@ -196,15 +196,15 @@
 import { Inertia } from '@inertiajs/inertia'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
-import { useNowPlayingStore } from '@/Stores/NowPlayingStore'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
+import { useNowPlayingStore } from '@/Stores/NowPlayingStore'
 import { useTeamStore } from '@/Stores/TeamStore'
+import EpisodeFooter from '@/Components/Pages/ShowEpisodes/Layout/EpisodeFooter'
+import SingleImage from '@/Components/Global/Multimedia/SingleImage'
+import Message from '@/Components/Global/Modals/Messages'
 // import EpisodeHeader from "@/Components/Pages/ShowEpisodes/EpisodeHeader"
 // import EpisodesList from "@/Components/Pages/ShowEpisodes/EpisodesList"
 // import EpisodeCreditsList from "@/ComponentShows/Episodes/EpisodeCreditsList";
-import EpisodeFooter from '@/Components/Pages/ShowEpisodes/Layout/EpisodeFooter'
-import Message from '@/Components/Global/Modals/Messages'
-import SingleImage from '@/Components/Global/Multimedia/SingleImage'
 
 usePageSetup('showEpisodesShow')
 

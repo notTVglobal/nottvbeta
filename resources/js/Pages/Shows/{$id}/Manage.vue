@@ -140,8 +140,8 @@ import { useShowStore } from '@/Stores/ShowStore'
 import { useTeamStore } from '@/Stores/TeamStore'
 import ShowHeader from '@/Components/Pages/Shows/Layout/ShowHeader'
 import ShowFooter from '@/Components/Pages/Shows/Layout/ShowFooter'
-import ShowEpisodesList from '@/Components/Pages/Shows/Manage/ShowEpisodesList'
-import ShowCreditsList from '@/Components/Pages/Shows/Manage/ShowCreditsList'
+import ShowEpisodesList from '@/Components/Pages/Shows/Elements/ManageShowEpisodesList'
+import ShowCreditsList from '@/Components/Pages/Shows/Elements/ManageShowCreditsList'
 import Message from '@/Components/Global/Modals/Messages'
 
 usePageSetup('shows/slug/manage')
@@ -149,7 +149,6 @@ usePageSetup('shows/slug/manage')
 const appSettingStore = useAppSettingStore()
 const showStore = useShowStore()
 const teamStore = useTeamStore()
-
 
 onUnmounted(() => {
   showStore.errorMessage = ''
@@ -176,7 +175,6 @@ teamStore.can = props.can
 //         replace: true
 //     });
 // }, 300));
-
 
 </script>
 

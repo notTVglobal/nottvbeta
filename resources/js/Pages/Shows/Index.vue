@@ -165,16 +165,16 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
 import { Inertia } from '@inertiajs/inertia'
+import { ref, watch } from 'vue'
 import { useTimeAgo } from '@vueuse/core'
 import throttle from 'lodash/throttle'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import MostAnticipated from '@/Components/Pages/Shows/Elements/MostAnticipated'
 import PaginationDark from '@/Components/Global/Paginators/PaginationDark'
-import Message from '@/Components/Global/Modals/Messages'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage'
+import Message from '@/Components/Global/Modals/Messages'
 
 usePageSetup('showsIndex')
 

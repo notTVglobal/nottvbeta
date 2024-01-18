@@ -37,12 +37,8 @@
 </template>
 
 <script setup>
-// import {useShowStore} from "@/Stores/ShowStore"
-// import ShowEpisode from "@/Components/Pages/Shows/Manage/ShowEpisode.vue"
-import SingleImage from "@/Components/Global/Multimedia/SingleImage"
 import Pagination from "@/Components/Global/Paginators/PaginationDark"
-
-// const showStore = useShowStore();
+import SingleImage from "@/Components/Global/Multimedia/SingleImage"
 
 defineProps({
   show: Object,

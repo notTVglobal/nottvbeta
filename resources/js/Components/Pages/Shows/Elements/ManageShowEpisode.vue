@@ -79,14 +79,14 @@
 
 <script setup>
 import { Inertia } from "@inertiajs/inertia"
-import { computed, ref } from "vue"
 import { useForm } from "@inertiajs/inertia-vue3"
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"
+import { computed, ref } from "vue"
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import { useTeamStore } from "@/Stores/TeamStore"
 import { useShowStore } from "@/Stores/ShowStore"
-import EpisodeNoteEdit from "@/Components/Pages/Shows/Manage/EpisodeNoteEdit"
-import ShowEpisodeStatuses from "@/Components/Pages/Shows/Manage/ShowEpisodeStatuses"
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"
+import ShowEpisodeStatuses from "@/Components/Pages/Shows/Elements/ManageShowEpisodesStatuses"
+import EpisodeNoteEdit from "@/Components/Pages/Shows/Elements/ManageEpisodeEditNote"
 
 const appSettingStore = useAppSettingStore()
 const teamStore = useTeamStore()

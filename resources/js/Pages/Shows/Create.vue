@@ -225,17 +225,16 @@
 </template>
 
 <script setup>
-import { Inertia } from '@inertiajs/inertia'
 import { computed, onMounted, ref } from 'vue'
-import { useForm, usePage } from '@inertiajs/inertia-vue3'
+import { useForm } from '@inertiajs/inertia-vue3'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
-import { useTeamStore } from '@/Stores/TeamStore'
 import { useNotificationStore } from '@/Stores/NotificationStore'
+import { useTeamStore } from '@/Stores/TeamStore'
 import JetValidationErrors from '@/Jetstream/ValidationErrors'
-import Message from '@/Components/Global/Modals/Messages'
-import CancelButton from '@/Components/Global/Buttons/CancelButton'
 import CheckboxNotification from '@/Components/Global/Modals/CheckboxNotification'
+import CancelButton from '@/Components/Global/Buttons/CancelButton'
+import Message from '@/Components/Global/Modals/Messages'
 
 usePageSetup('showsCreate')
 

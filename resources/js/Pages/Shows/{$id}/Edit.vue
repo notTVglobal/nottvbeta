@@ -268,11 +268,12 @@ import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import { useTeamStore } from "@/Stores/TeamStore"
 import JetValidationErrors from '@/Jetstream/ValidationErrors'
+import ShowEditHeader from "@/Components/Pages/Shows/Layout/EditShowHeader"
 import TabbableTextarea from "@/Components/Global/TextEditor/TabbableTextarea"
-import ShowEditHeader from "@/Components/Pages/Shows/Edit/ShowEditHeader"
 import SingleImage from "@/Components/Global/Multimedia/SingleImage"
-import Message from "@/Components/Global/Modals/Messages"
 import ImageUpload from "@/Components/Global/Uploaders/ImageUpload"
+import Message from "@/Components/Global/Modals/Messages"
+
 
 usePageSetup('shows/slug/edit')
 

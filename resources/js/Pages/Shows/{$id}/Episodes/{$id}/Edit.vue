@@ -372,14 +372,17 @@ import { useTeamStore } from "@/Stores/TeamStore"
 import { useShowStore } from "@/Stores/ShowStore"
 import { useUserStore } from "@/Stores/UserStore"
 import JetValidationErrors from '@/Jetstream/ValidationErrors'
-import ShowEpisodeEditHeader from "@/Components/Pages/ShowEpisodes/Edit/Layout/ShowEpisodeEditHeader"
-import ShowEpisodeEditFooter from "@/Components/Pages/ShowEpisodes/Edit/Layout/ShowEpisodeEditFooter"
+import ShowEpisodeEditHeader from "@/Components/Pages/ShowEpisodes/Layout/EditShowEpisodeHeader"
+import ShowEpisodeEditFooter from "@/Components/Pages/ShowEpisodes/Layout/EditShowEpisodeFooter"
+
+import DateTimePickerSelect from "@/Components/Global/Calendar/DateTimePickerSelect"
+import TabbableTextarea from "@/Components/Global/TextEditor/TabbableTextarea"
+
 import Message from "@/Components/Global/Modals/Messages"
 import ImageUpload from "@/Components/Global/Uploaders/ImageUpload"
 import SingleImage from "@/Components/Global/Multimedia/SingleImage"
 import VideoUpload from "@/Components/Global/Uploaders/VideoUpload"
-import DateTimePickerSelect from "@/Components/Global/Calendar/DateTimePickerSelect"
-import TabbableTextarea from "@/Components/Global/TextEditor/TabbableTextarea"
+
 // import {DatePicker} from "v-calendar";
 // import 'v-calendar/style.css';
 

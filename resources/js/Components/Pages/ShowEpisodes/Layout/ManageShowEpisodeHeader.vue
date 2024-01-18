@@ -65,7 +65,6 @@
 
       </div>
 
-
       <div class="flex justify-between flex-wrap mt-2 align-top">
         <div class="min-w-[12rem]">
           <EpisodeHeader
@@ -75,11 +74,9 @@
           />
         </div>
 
-
         <div class="flex flex-row flex-wrap justify-between w-full">
 
           <div class="flex flex-col pt-6">
-
 
             <div><span class="text-xs capitalize font-semibold">Show: </span>
               <button :disabled="teamStore.goLiveDisplay" @click="appSettingStore.btnRedirect(`/shows/${show.slug}/manage`)"
@@ -119,28 +116,20 @@
             </div>
 
           </div>
-
         </div>
-
-
-
-
       </div>
-
-
     </header>
 
   </div>
-
 </template>
 
 <script setup>
 import { useTimeAgo } from '@vueuse/core'
-import { useTeamStore } from "@/Stores/TeamStore"
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
+import { useTeamStore } from "@/Stores/TeamStore"
 import Button from "@/Jetstream/Button.vue"
+import ShowEpisodeManageTopBanner from "@/Components/Pages/ShowEpisodes/Layout/ManageShowEpisodeTopBanner"
 import EpisodeHeader from "@/Components/Pages/ShowEpisodes/Layout/EpisodeHeader"
-import ShowEpisodeManageTopBanner from "@/Components/Pages/ShowEpisodes/Manage/Layout/ShowEpisodeManageTopBanner"
 
 const appSettingStore = useAppSettingStore()
 const teamStore = useTeamStore()

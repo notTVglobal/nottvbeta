@@ -130,19 +130,18 @@
 import { Inertia } from "@inertiajs/inertia"
 import {useForm, usePage} from "@inertiajs/inertia-vue3"
 import vueFilePond, { setOptions } from 'vue-filepond'
+import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type"
+import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size"
+import FilePondPluginImagePreview from "filepond-plugin-image-preview"
+import FilePondPluginFileMetadata from "filepond-plugin-file-metadata"
 import 'filepond/dist/filepond.min.css'
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useTeamStore } from "@/Stores/TeamStore"
 import { useShowStore } from "@/Stores/ShowStore"
-import { useUserStore } from "@/Stores/UserStore"
-import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type"
-import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size"
-import FilePondPluginImagePreview from "filepond-plugin-image-preview"
-import FilePondPluginFileMetadata from "filepond-plugin-file-metadata"
 import JetValidationErrors from '@/Jetstream/ValidationErrors'
-import Message from '@/Components/Global/Modals/Messages'
 import CancelButton from '@/Components/Global/Buttons/CancelButton'
+import Message from '@/Components/Global/Modals/Messages'
 
 usePageSetup('shows/slug/episodes/slug/upload')
 

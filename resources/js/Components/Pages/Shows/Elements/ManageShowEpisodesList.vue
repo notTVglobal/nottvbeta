@@ -57,7 +57,7 @@
 <script setup>
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import { useTeamStore } from "@/Stores/TeamStore"
-import ShowEpisode from "@/Components/Pages/Shows/Manage/ShowEpisode"
+import ShowEpisode from "@/Components/Pages/Shows/Elements/ManageShowEpisode"
 import Pagination from "@/Components/Global/Paginators/Pagination"
 
 const appSettingStore = useAppSettingStore()

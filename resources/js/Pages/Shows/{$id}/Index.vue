@@ -182,7 +182,6 @@
         </div>
       </main>
 
-
       <div class="flex flex-col px-5">
         <div class="-my-2 overflow-x-hidden sm:-mx-6 lg:-mx-8">
           <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
@@ -239,19 +238,18 @@
 
 </template>
 
-
 <script setup>
 import { Inertia } from "@inertiajs/inertia"
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import { useNowPlayingStore } from "@/Stores/NowPlayingStore"
-import { useTeamStore } from "@/Stores/TeamStore"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
+import { useTeamStore } from "@/Stores/TeamStore"
 import ShowEpisodesList from "@/Components/Pages/Shows/Elements/ShowEpisodesList"
 import ShowFooter from "@/Components/Pages/Shows/Layout/ShowFooter"
+import SingleImage from "@/Components/Global/Multimedia/SingleImage"
 import Pagination from "@/Components/Global/Paginators/PaginationDark"
 import Message from "@/Components/Global/Modals/Messages.vue"
-import SingleImage from "@/Components/Global/Multimedia/SingleImage"
 // import ShowCreatorsList from "@/Components/Pages/Shows/ShowCreatorsList"
 
 usePageSetup('showsShow')
