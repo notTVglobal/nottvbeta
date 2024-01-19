@@ -242,6 +242,7 @@
 import { Inertia } from "@inertiajs/inertia"
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
+import { useUserStore } from "@/Stores/UserStore"
 import { useNowPlayingStore } from "@/Stores/NowPlayingStore"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useTeamStore } from "@/Stores/TeamStore"
@@ -255,6 +256,7 @@ import Message from "@/Components/Global/Modals/Messages.vue"
 usePageSetup('showsShow')
 
 const appSettingStore = useAppSettingStore()
+const userStore = useUserStore()
 const nowPlayingStore = useNowPlayingStore()
 const teamStore = useTeamStore()
 const videoPlayerStore = useVideoPlayerStore()

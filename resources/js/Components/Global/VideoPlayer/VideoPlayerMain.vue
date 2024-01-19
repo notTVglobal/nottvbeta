@@ -45,10 +45,10 @@
       <!--                <OsdTopRight v-if="videoPlayerStore.showOSD" class="" />-->
 
       <!-- Video Player Controls-->
-<!--      <VideoControlsTopRight-->
-<!--          v-if="videoPlayerStore.controls"-->
-<!--          class="hidden lg:block"-->
-<!--      />-->
+      <!--      <VideoControlsTopRight-->
+      <!--          v-if="videoPlayerStore.controls"-->
+      <!--          class="hidden lg:block"-->
+      <!--      />-->
 
       <!-- OTT Buttons and Displays -->
 
@@ -77,21 +77,21 @@
 
 <script setup>
 import { ref, onUnmounted, onMounted } from 'vue'
-import { Inertia } from "@inertiajs/inertia"
+import { Inertia } from '@inertiajs/inertia'
 // import { tryOnBeforeMount, useScreenOrientation } from '@vueuse/core'
 import videojs from 'video.js'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
-import { useStreamStore } from "@/Stores/StreamStore"
-import { useChatStore } from "@/Stores/ChatStore"
-import { useUserStore } from "@/Stores/UserStore"
+import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
+import { useStreamStore } from '@/Stores/StreamStore'
+import { useChatStore } from '@/Stores/ChatStore'
+import { useUserStore } from '@/Stores/UserStore'
 // import OsdTopRight from "@/Components/Global/Osd/Layout/OsdTopRight"
-import OsdFullPage from "@/Components/Global/Osd/Layout/OsdFullPage"
-import VideoControlsFullPage from "@/Components/Global/VideoPlayer/VideoControls/Layout/VideoControlsFullPage"
-import VideoControlsTopRight from "@/Components/Global/VideoPlayer/VideoControls/Layout/VideoControlsTopRight"
-import OttContainer from "@/Components/Global/Ott/Layout/OttContainer"
+import OsdFullPage from '@/Components/Global/Osd/Layout/OsdFullPage'
+import VideoControlsFullPage from '@/Components/Global/VideoPlayer/VideoControls/Layout/VideoControlsFullPage'
+import VideoControlsTopRight from '@/Components/Global/VideoPlayer/VideoControls/Layout/VideoControlsTopRight'
+import OttContainer from '@/Components/Global/Ott/Layout/OttContainer'
 // import OttTopRightDisplayContainer from "@/Components/Global/Ott/Layout/OttContainer"
-import videoJs from "@/Components/Global/VideoPlayer/VideoJs/VideoJs"
+import videoJs from '@/Components/Global/VideoPlayer/VideoJs/VideoJs'
 // import ProgressBar from "@/Components/Global/Osd/ProgressBar"
 
 const appSettingStore = useAppSettingStore()
@@ -111,17 +111,9 @@ const timeRemainingTime = ref('00:00') // Default tooltip text, initialize with 
 const videoDuration = ref('00:00')
 const hoverTime = ref('00:00:00')
 const hoverPosition = ref('0px') // Initialize with '0px'
-const isHovering = ref(false); // Initialize as false
-// const elementRef = ref(null);
-
+const isHovering = ref(false) // Initialize as false
 
 onMounted(() => {
-
-  // if (elementRef.value) {
-  //     elementRef.value.addEventListener('touchstart', clickOnVideoAction);
-  //     // For mouse click support in non-touch devices:
-  //     elementRef.value.addEventListener('click', clickOnVideoAction);
-  // }
   // Set the references to the DOM elements here
   progressBarRef.value = document.getElementById('progress-bar')
   progressRef.value = document.getElementById('progress') // If progressRef refers to the same element
@@ -149,7 +141,7 @@ onMounted(() => {
       progressRef.value.style.width = `${progressPercentage}%`
     }
 
-  });
+  })
   videoPlayer.ready(() => {
     videoPlayer.controls(false)
     videoPlayerStore.videoPlayerLoaded = true
@@ -215,7 +207,7 @@ const isMobile = ref({
 })
 
 function handleProgressClick(event) {
-  const videoPlayer = videojs('main-player');
+  const videoPlayer = videojs('main-player')
   let progressBarRect = progressBarRef.value.getBoundingClientRect()
   let offsetX = event.clientX - progressBarRect.left
   let progressBarWidth = progressBarRect.width
@@ -228,30 +220,7 @@ function handleProgressClick(event) {
 
   // Set the video's current time to seekTime
   videoPlayer.currentTime(seekTime)
-  // videoPlayer.play();
 }
-
-// const videoContainer = computed(() => ({
-//     welcomeVideoContainer: userStore.currentPage === 'welcome',
-//     fullPageVideoContainer: appSettingStore.fullPage && !videoPlayerStore.pip && userStore.currentPage !== 'welcome',
-//     // fullPageVideoContainer: appSettingStore.fullPage && !userStore.isMobile,
-//     // fullPageVideoContainerMobile: appSettingStore.fullPage && userStore.isMobile,
-//     topRightVideoContainer: !appSettingStore.fullPage && !videoPlayerStore.pip && userStore.currentPage !== 'welcome',
-//     // topRightVideoContainer: !appSettingStore.fullPage && !userStore.isMobile,
-//     // topRightVideoContainerMobile: !appSettingStore.fullPage && userStore.isMobile,
-//     pipVideoContainer: videoPlayerStore.pip && userStore.currentPage !== 'welcome'
-// }))
-//
-// const video = computed(() => ({
-//     welcomeVideoClass: userStore.currentPage === 'welcome',
-//     fullPageVideoClass: appSettingStore.fullPage && !videoPlayerStore.pip && userStore.currentPage !== 'welcome',
-//     // fullPageVideoClass: appSettingStore.fullPage && !userStore.isMobile,
-//     // fullPageVideoClassMobile: appSettingStore.fullPage && userStore.isMobile,
-//     topRightVideoClass: !appSettingStore.fullPage && !videoPlayerStore.pip && userStore.currentPage !== 'welcome',
-//     // topRightVideoClass: !appSettingStore.fullPage && !userStore.isMobile,
-//     // topRightVideoClassMobile: !appSettingStore.fullPage && userStore.isMobile,
-//     pipVideoClass: videoPlayerStore.pip && userStore.currentPage !== 'welcome'
-// }))
 
 // const {
 //     isSupported,
@@ -269,17 +238,6 @@ videoPlayerStore.ottPlaylist = false
 videoPlayerStore.ottFilters = false
 
 onUnmounted(() => {
-  // let player = videojs('main-player');
-  // player.on('ended', function() {
-  //     this.dispose();
-  // });
-  if (elementRef.value) {
-    elementRef.value.removeEventListener('touchstart', clickOnVideoAction)
-    elementRef.value.removeEventListener('click', clickOnVideoAction)
-  }
-})
-
-
 // tec21 (03/03/23): this doesn't seem to be working :-(
 // I think this watch is breaking the app on iPhone.
 // watch(orientation, (newOrientation) => {
@@ -295,140 +253,33 @@ onUnmounted(() => {
 //         }
 //     }
 // })
-
-// async function getFirstPlaySettings() {
-//     await axios.get('/api/app_settings')
-//         .then(response => {
-//             videoPlayerStore.videoSource = response.data[0].first_play_video_source
-//             videoPlayerStore.videoSourceType = response.data[0].first_play_video_source_type
-//             videoPlayerStore.videoName = response.data[0].first_play_video_name
-//             console.log('app settings retrieved.');
-//
-//         })
-//         .catch(error => {
-//             console.log(error)
-//         })
-//     // setVideoOptions()
-//     // videoJs = videojs('main-player', videoOptions)
-// }
-
-function backToPage() {
-  videoPlayerStore.makeVideoTopRight()
-  videoPlayerStore.ottChat = false
-  videoPlayerStore.osd = false
-}
-
-const clickOnVideoAction = () => {
-
-  // if (!userStore.isMobile && !videoPlayerStore.currentPageIsStream) {
-  //     videoPlayerStore.toggleOsdAndControls()
-  // }
-  // if (!videoPlayerStore.currentPageIsStream) {
-  //     Inertia.visit('/stream')
-  //     // videoPlayerStore.controls = true
-  // }
-  // if (appSettingStore.fullPage === false) {
-  //     videoPlayerStore.makeVideoFullPage()
-  //     appSettingStore.fullPage = true
-  //     videoPlayerStore.controls = true
-  // }
-  // else if(appSettingStore.fullPage === true) {
-  //     // const videoPlayer = videojs('main-player');
-  //     videoPlayerStore.togglePlay()
-  //     // videoPlayerStore.toggleOsdAndControls()
-  // }
-
-  if (!videoPlayerStore.currentPageIsStream && !appSettingStore.pipChatMode) {
-    // videoPlayerStore.makeVideoFullPage()
-    // appSettingStore.fullPage = true
-    // videoPlayerStore.controls = true
-    // Inertia.visit('/stream')
-
-    videoPlayerStore.makeVideoFullPage()
-    appSettingStore.ott = 0
-    appSettingStore.fullPage = true
-    if (!videoPlayerStore.currentPageIsStream) {
-      userStore.prevUrl = window.history.state.url
-    }
-    Inertia.visit('/stream')
-
-    // if (userStore.isMobile) {
-    //     videoPlayerStore.makeVideoFullPage()
-    //     appSettingStore.fullPage = true
-    //     Inertia.visit('/stream')
-    // } else {
-    //     videoPlayerStore.toggleControls();
-    // }
-    //
-
-    // videoPlayerStore.controls = !!videoPlayerStore.controls;
-  } else {
-    // const videoPlayer = videojs('main-player');
-    if (userStore.isMobile) {
-      videoPlayerStore.controls = !videoPlayerStore.controls
-    } else {
-      videoPlayerStore.togglePlay()
-    }
-
-    // videoPlayerStore.toggleOsdAndControls()
+  function backToPage() {
+    videoPlayerStore.makeVideoTopRight()
+    videoPlayerStore.ottChat = false
+    videoPlayerStore.osd = false
   }
-  // if (videoPlayerStore.currentPageIsStream === true) {
-  //     // if (userStore.isMobile && orientation.value === 'landscape-primary') {
-  //     //         videoPlayerStore.toggleOsdAndControlsAndNav()
-  //     // } else if (!userStore.isMobile) {
-  //     //     videoPlayerStore.toggleOsdAndControls()
-  //     // }
-  //     // videoPlayerStore.toggleOsdAndControlsAndNav()
-  // } else {
-  //     Inertia.visit('/stream')
-  // }
-  //
-  // appSettingStore.ott = 0
-  // if(userStore.isMobile) {
-  //
-  // } else {
-  //     // videoPlayerStore.toggleOsdAndControls()
-  // }
-  // }
-}
 
-// function mouseEnter(event) {
-//     mouseActive = true
-//     if (!appSettingStore.fullPage) {
-//         // videoPlayerStore.controls = true
-//     }
-//     // console.log(mouseActive);
-//     // videoPlayerStore.showOsdControlsOnly()
-//     // document.addEventListener('mousemove', mouseMove, true);
-//     // setInterval(function() {
-//     //     videoPlayerStore.hideOsdAndControls()
-//     // }, 3000);
-//     // setInterval(function() {
-//     //     mouseActive = false
-//     //     videoPlayerStore.hideOsdControlsOnly()
-//     // }, 3000);
-// }
-// function mouseLeave(event) {
-//     mouseActive = false
-//     if (!appSettingStore.fullPage) {
-//         // videoPlayerStore.controls = false
-//     }
-//     // console.log(mouseActive);
-//
-//     // videoPlayerStore.hideOsdControlsOnly()
-//     // this.popup = false;
-//     // document.addEventListener('mousemove', mouseMove, false);
-//
-// }
-// function mouseMove(event) {
-//     mouseActive = true
-//     // videoPlayerStore.showOsdControlsOnly()
-//     // console.log(event.clientX, event.clientY);
-//     // setInterval(function() {
-//     //     mouseActive = false
-//     //     videoPlayerStore.hideOsdAndControls()
-//     // }, 3000);
-// }
+  const clickOnVideoAction = () => {
+
+    if (!videoPlayerStore.currentPageIsStream && !appSettingStore.pipChatMode) {
+
+      videoPlayerStore.makeVideoFullPage()
+      appSettingStore.ott = 0
+      appSettingStore.fullPage = true
+      if (!videoPlayerStore.currentPageIsStream) {
+        userStore.prevUrl = window.history.state.url
+      }
+      Inertia.visit('/stream')
+
+    } else {
+      if (userStore.isMobile) {
+        videoPlayerStore.controls = !videoPlayerStore.controls
+      } else {
+        videoPlayerStore.togglePlay()
+      }
+    }
+  }
+})
 
 </script>
 

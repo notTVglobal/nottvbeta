@@ -1,7 +1,34 @@
 # not.tv Changelog
 
-Last Update: January 14, 2024\
+Last Update: January 19, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+# v0.8.1.4
+January 19, 2024
+* Fix the page layout/loading bugs on the login, register, password reset and password confirmation pages
+* Improve
+* Increased Password Validation Rules to:
+  * Minimum 10 characters
+  * Uncompromised (can't have been in a data leak)
+  * Requires a mix of Letters, mixedCase, Numbers, and Symbols
+* In the middle of updating the Verify Email routes ... redirecting them to /public/{routeName}
+  * This includes the Password Reset pages
+* The /news/* redirects to /public/news/* if the user is not logged in.
+
+## v0.8.1.3
+January 18, 2024
+* Fix the page layout/loading bugs on the login, register, password reset and password confirmation pages
+* Improved the formatting of the login and register components.
+* Added 'layout' to the appSettingStore to allow an easy way to turn off AppLayout on specific pages that need it.
+* Created a Welcome page full reload function to get the video player to restart in certain circumstances
+* Created a noLayout navigation header
+* Created a new style for Public News pages
+* Added the News Reporter Index page
+* Added the footer to all of the public pages.
+* Added a link to the Whitepaper in the footer
+* Made the Changelog private, only registered users can access it.
+* Created Public News Navigation Buttons
+
 
 ## v0.8.1.2
 January 17, 2024

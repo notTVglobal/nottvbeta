@@ -1,4 +1,4 @@
-import { onMounted } from 'vue'
+import { onBeforeMount, onMounted } from 'vue'
 import { useUserStore } from "@/Stores/UserStore"
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
@@ -19,6 +19,17 @@ export function usePageSetup(pageName) {
 
     videoPlayerStore.makeVideoTopRight()
 
+    let reloadPage = () => {
+        if (appSettingStore.pageReload) {
+            appSettingStore.pageReload = false
+            window.location.reload(true);
+        }
+    };
+
+    onBeforeMount(() => {
+        reloadPage()
+    });
+
     onMounted(() => {
         // Check if the URL contains query strings
         const hasQueryStrings = window.location.search !== '';
@@ -32,6 +43,7 @@ export function usePageSetup(pageName) {
         }
         // Only update if we're not already on this page to avoid overwriting with the current URL
         appSettingStore.setPrevUrl()
+        appSettingStore.noLayout = false
         Inertia.reload()
 
     });

@@ -12,7 +12,7 @@
 
         <h2 class="text-3xl py-8 px-2 font-bold">Choose a Subscription</h2>
 
-        <div class="flex flex-wrap justify-center space-y-3 space-x-3 px-8 mx-auto">
+        <div class="flex flex-wrap justify-center space-y-3 space-x-3 px-8 mb-80 mx-auto">
           <div></div>
 
           <div class="card monthly bg-gray-700 hover:bg-gray-600 hover:cursor-pointer rounded-lg px-12 pt-6"
@@ -92,7 +92,9 @@
           </div>
         </div>
 
-        <div class="py-20"></div>
+        <div class="">
+
+        </div>
 
 
       </div>
@@ -110,7 +112,7 @@ import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useShopStore } from '@/Stores/ShopStore'
 import Message from '@/Components/Global/Modals/Messages'
 
-usePageSetup('shop/upgrade')
+usePageSetup('upgrade')
 
 const appSettingStore = useAppSettingStore()
 const shopStore = useShopStore()

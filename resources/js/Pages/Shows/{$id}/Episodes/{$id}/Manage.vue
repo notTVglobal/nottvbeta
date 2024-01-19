@@ -45,7 +45,6 @@ import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useShowStore } from '@/Stores/ShowStore'
 import { useTeamStore } from '@/Stores/TeamStore'
-import { useUserStore } from '@/Stores/UserStore'
 
 import ShowEpisodeManageEpisodeDescription from '@/Components/Pages/ShowEpisodes/Elements/ManageShowEpisodeDescription'
 import ShowEpisodeManageBonusContent from '@/Components/Pages/ShowEpisodes/Elements/ManageShowEpisodeBonusContent'
@@ -63,7 +62,6 @@ usePageSetup('showEpisodesManage')
 const appSettingStore = useAppSettingStore()
 const showStore = useShowStore()
 const teamStore = useTeamStore()
-const userStore = useUserStore()
 
 let props = defineProps({
   show: Object,

@@ -96,13 +96,25 @@ Route::get('/home', function () {
 //    return redirect('/register');
 //})->name('register');
 //
-//Route::get('/login', function () {
-//    return redirect('/login');
-//})->name('login');
+Route::get('/public/register', function () {
+  return Inertia::render('Public/Register');
+})->name('public.register');
+
+Route::get('/public/login', function () {
+  return Inertia::render('Public/Login');
+})->name('public.login');
+
+Route::get('public/forgot-password', function () {
+  return Inertia::render('Public/ForgotPassword');
+})->name('public.forgotPassword');
 
 Route::get('/email/verify', function () {
     return Inertia::render('Auth/VerifyEmail');
 })->middleware('auth')->name('verification.notice');
+
+Route::get('/public/mail/verify', function () {
+  return Inertia::render('Public/EmailVerify');
+})->middleware('auth')->name('public.email.verify');
 
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
     $request->fulfill();
@@ -111,7 +123,7 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
 
 Route::post('/email/verify', function (Request $request) {
     $request->user()->sendEmailVerificationNotification();
-    return Inertia::render('Auth/VerifySent');
+    return Inertia::render('Public/EmailVerify');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send2');
 // Jetstream/Fortify came with an email verification method, but
 // I can't figure out where the verification.send route is. And
@@ -142,21 +154,20 @@ Route::get('/terms-of-service', [\App\Http\Controllers\TermsOfServiceController:
 
 
 Route::get('/whitepaper', [WhitepaperController::class, 'show'])->name('whitepaper.show');
-Route::get('/changelog', [ChangelogController::class, 'show'])->name('changelog.show');
 
 // Public Pages
 
 // News
 Route::get('public/news', [NewsController::class, 'index'])
-//        ->middleware('can:create,App\Models\NewsPerson')
     ->name('public.news.index');
 
+Route::get('public/news/{news}', [NewsController::class, 'show'])
+    ->name('public.news.show');
+
 Route::get('public/news/reporters', [NewsPersonController::class, 'index'])
-//        ->middleware('can:create,App\Models\NewsPerson')
     ->name('public.newsPerson.index');
 
 Route::get('public/news/reporter/{newsPerson}', [NewsPersonController::class, 'show'])
-//        ->middleware('can:create,App\Models\NewsPerson')
     ->name('public.newsPerson.show');
 
 // BEGIN ROUTES FOR
@@ -180,6 +191,8 @@ Route::middleware([
     Route::get('/stream', function () {
         return Inertia::render('Stream');
     })->name('stream');
+
+    Route::get('/changelog', [ChangelogController::class, 'show'])->name('changelog.show');
 
 //
 //    Route::get('/payment', function (Request $request) {

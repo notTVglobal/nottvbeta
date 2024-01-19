@@ -1,4 +1,5 @@
 <script setup>
+import { Inertia } from '@inertiajs/inertia'
 import {Link, useForm} from '@inertiajs/inertia-vue3';
 import JetAuthenticationCard from '@/Jetstream/AuthenticationCard.vue';
 import JetAuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo.vue';
@@ -7,6 +8,11 @@ import JetInput from '@/Jetstream/Input.vue';
 import JetCheckbox from '@/Jetstream/Checkbox.vue';
 import JetLabel from '@/Jetstream/Label.vue';
 import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
+import { useAppSettingStore } from "@/Stores/AppSettingStore"
+
+const appSettingStore = useAppSettingStore()
+
+appSettingStore.noLayout = true
 
 defineProps({
     canResetPassword: Boolean,
@@ -27,15 +33,16 @@ const submit = () => {
     })).post(route('login'), {
         onFinish: () => form.reset('password'),
     });
+  appSettingStore.pageReload = true
 };
 
 </script>
-<script>
-import NoLayout from '../../Layouts/NoLayout';
-export default {
-    layout: NoLayout,
-}
-</script>
+<!--<script>-->
+<!--import NoLayout from '../../Layouts/NoLayout';-->
+<!--export default {-->
+<!--    layout: NoLayout,-->
+<!--}-->
+<!--</script>-->
 
 <template>
     <Head title="Log in" />
@@ -51,7 +58,7 @@ export default {
             {{ status }}
         </div>
 
-        <form @submit.prevent="submit">
+        <form @submit.prevent="submit" class="pb-10">
             <div class="pb-6 flex flex-col">
                 <div>Please log in to watch notTV and chat.</div>
                 <div>Need to <Link

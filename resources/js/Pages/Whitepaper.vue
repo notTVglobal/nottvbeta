@@ -5,11 +5,11 @@
         <div class="pt-6 pb-10">
             <div class="flex flex-col items-center">
                 <div class="mb-4">
-                    <Link :href="`/`"><img :src="`/storage/images/logo_black_311.png`" alt="image" class=""></Link>
+                    <Link @click="returnToWelcomePage"><img :src="`/storage/images/logo_black_311.png`" alt="image" class=""></Link>
                 </div>
 
                 <div class="w-full sm:max-w-2xl px-6 py-8 bg-white shadow-lg rounded-lg">
-                    <div class="whitepaper w-full overflow-y-scroll overflow-x-hidden prose prose-lg max-w-none" v-html="whitepaper"></div>
+                    <div class="whitepaper w-full overflow-y-scroll overflow-x-hidden prose prose-lg max-w-none scrollbar-custom" v-html="whitepaper"></div>
                 </div>
             </div>
         </div>
@@ -23,11 +23,21 @@
 import {Head} from '@inertiajs/inertia-vue3';
 import JetApplicationLogo from '@/Jetstream/ApplicationLogo'
 import { ref, nextTick } from 'vue'
+import { useAppSettingStore } from "@/Stores/AppSettingStore"
+import { Inertia } from '@inertiajs/inertia'
 // import {useVideoPlayerStore} from "@/Stores/VideoPlayerStore.js";
+
+const appSettingStore = useAppSettingStore()
 
 defineProps({
     whitepaper: String,
 });
+
+const returnToWelcomePage = () => {
+  appSettingStore.pageReload = true
+  Inertia.visit('/')
+}
+
 </script>
 <script>
 import MarkdownLayout from '@/Layouts/MarkdownLayout'
@@ -40,7 +50,9 @@ export default {
 <style>
 
 .whitepaper {
-    height: 80vh;
+    height: 75vh;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 /* Additional styles (if necessary) */
 .prose {

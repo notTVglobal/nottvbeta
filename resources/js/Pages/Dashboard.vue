@@ -224,6 +224,7 @@ import { Inertia } from "@inertiajs/inertia"
 import { computed, inject, onMounted, ref } from "vue"
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
+import { useUserStore } from "@/Stores/UserStore"
 import Message from "@/Components/Global/Modals/Messages"
 import DashboardHeader from "@/Components/Pages/Dashboard/Layout/DashboardHeader"
 import MyAssignments from "@/Components/Pages/Dashboard/Elements/MyAssignments/MyAssignments"
@@ -234,16 +235,24 @@ import NotificationPanel from "@/Components/Pages/Dashboard/Elements/DashboardNo
 usePageSetup('dashboard')
 
 const appSettingStore = useAppSettingStore()
+const userStore = useUserStore()
 
 const getUserData = inject('getUserData', null)
 
+const userTimezone = ref('');
+
 onMounted(() => {
+  getUserTimezone();
   if (!getUserData) {
-    getUserTimezone()
-    updateUserStore()
+    updateUserStore();
   }
-  Inertia.reload()
 });
+
+const getUserTimezone = () => {
+  // Use the Intl object to get the user's timezone
+  userTimezone.value = Intl.DateTimeFormat().resolvedOptions().timeZone;
+};
+
 
 // isCreator, isNewsPerson, isVip, isSubscriber
 // need to go in the UserStore. Inertia won't
@@ -298,6 +307,7 @@ const myTotalStorageRoundedPercentage = computed(() => {
 });
 
 async function updateUserStore() {
+  // Set user store data
   userStore.id = props.id
   userStore.loggedIn = true
   userStore.isAdmin = props.isAdmin
@@ -307,7 +317,7 @@ async function updateUserStore() {
   userStore.isSubscriber = props.isSubscriber
   userStore.hasAccount = props.hasAccount
   userStore.getUserDataCompleted = true
-  userStore.timezone = userTimezone
+  userStore.timezone = userTimezone.value
   console.log('get user data on Dashboard')
   if (userStore.isCreator) {
     userStore.prevUrl = '/dashboard'
@@ -322,27 +332,12 @@ async function updateUserStore() {
 
 }
 
-const userTimezone = ref('');
-
-const getUserTimezone = () => {
-  // Use the Intl object to get the user's timezone
-  userTimezone.value = Intl.DateTimeFormat().resolvedOptions().timeZone;
-};
-
 const updateUserTimezone = async () => {
   try {
-    const response = await axios.post('/users/update-timezone', {timezone: userTimezone.value});
-
-    // Handle success response as needed
+    const response = await axios.post('/users/update-timezone', { timezone: userTimezone.value });
     console.log(response.data.message);
   } catch (error) {
-    // Handle error response or network error
-    console.error(error);
-
-    if (error.response) {
-      // Handle specific error responses if needed
-      console.error(error.response.data);
-    }
+    console.error(error.response ? error.response.data : error);
   }
 };
 

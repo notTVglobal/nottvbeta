@@ -7,6 +7,11 @@ import JetInput from '@/Jetstream/Input.vue';
 import JetCheckbox from '@/Jetstream/Checkbox.vue';
 import JetLabel from '@/Jetstream/Label.vue';
 import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
+import { useAppSettingStore } from "@/Stores/AppSettingStore"
+
+const appSettingStore = useAppSettingStore()
+
+appSettingStore.noLayout = true
 
 const form = useForm({
     name: '',
@@ -30,18 +35,18 @@ const submit = () => {
 //     })
 // }
 </script>
-<script>
-import NoLayout from '../../Layouts/NoLayout';
-export default {
-    layout: NoLayout,
-}
+<!--<script>-->
+<!--import NoLayout from '../../Layouts/NoLayout';-->
+<!--export default {-->
+<!--    layout: NoLayout,-->
+<!--}-->
 
-</script>
+<!--</script>-->
 
 <template>
     <Head title="Register" />
-
-    <JetAuthenticationCard >
+<div>
+    <JetAuthenticationCard>
         <template #logo>
             <JetAuthenticationCardLogo />
         </template>
@@ -52,7 +57,7 @@ export default {
             Please register for an account to watch notTV.
         </div>
 
-        <form @submit.prevent="submit">
+        <form @submit.prevent="submit" class="pb-10">
 
             <div>
                 <JetLabel for="name" value="Name" />
@@ -160,7 +165,15 @@ export default {
                     Register
                 </JetButton>
             </div>
+
+          <div class="modal-footer">
+            <div class="mt-4 pt-4 ml-4 border-t border-t-gray-200 text-center font-semibold">
+              For a chance to get an invite code<br> <a
+                href="https://not.tv/subscribe" target="_blank" class="text-blue-600 hover:text-blue-400 hover:cursor-pointer">subscribe
+              to our newsletter</a>
+            </div>
+          </div>
         </form>
     </JetAuthenticationCard>
-
+</div>
 </template>

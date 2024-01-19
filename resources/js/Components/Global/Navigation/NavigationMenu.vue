@@ -68,20 +68,6 @@
                   Shop
                 </JetNavLink>
               </h3>
-              <h3 class="inline-flex items-center relative"
-                  v-if="userStore.isVip || userStore.isAdmin">
-                <JetNavLink
-                    v-touch="()=>(route('library'))"
-                    @click="videoPlayerStore.makeVideoTopRight()"
-                    :href="route('library')"
-                    :active="appSettingStore.currentPage === 'library'">
-                  My Library
-                  <div class="text-xs text-white bg-yellow-800 uppercase flex justify-center items-center ml-1 -right-4 top-1.5
-                                    font-semibold inline-block py-0.5 px-1 rounded last:mr-0 mr-1">
-                    coming soon
-                  </div>
-                </JetNavLink>
-              </h3>
             </div>
 
           </div>
@@ -95,19 +81,27 @@
 
             <div v-if="userStore.isCreator"
                  class="flex-item align-self-center text-yellow-600 uppercase hidden md:block text-xs w-fit">
-              GOAL <span class="text-sm font-semibold">100</span> subscribers
+              <div class="text-fuchsia-700">CREATOR</div>
+              <div>GOAL <span class="text-sm font-semibold">100</span> subscribers</div>
+
             </div>
             <div class="flex-item">
-              <div v-if="!userStore.isAdmin && !userStore.isVip && !userStore.isSubscriber">
-                <JetNavLink v-touch="()=>(route('upgrade'))"
-                            @click="videoPlayerStore.makeVideoTopRight()"
-                            :href="route('upgrade')"
-                            :active="appSettingStore.currentPage === 'upgrade'"
-                            class="active:border-none hover:border-none focus:border-none border-none">
-                  <div class="w-full rounded-lg p-2 bg-gray-100 text-black hover:bg-gray-300 hover:text-green-900">
-                    UPGRADE NOW
-                  </div>
-                </JetNavLink>
+              <div v-if="!userStore.isSubscriber && !userStore.isVip && !userStore.isAdmin">
+                <PublicNavLink
+                    @click="() => Inertia.visit('/upgrade')"
+                    :active="appSettingStore.currentPage === 'upgrade'">
+                  UPGRADE NOW
+                </PublicNavLink>
+<!--                />-->
+<!--                <JetNavLink v-touch="()=>(route('upgrade'))"-->
+<!--                            @click="videoPlayerStore.makeVideoTopRight()"-->
+<!--                            :href="route('upgrade')"-->
+<!--                            :active="appSettingStore.currentPage === 'upgrade'"-->
+<!--                            class="active:border-none hover:border-none focus:border-none border-none">-->
+<!--                  <div class="w-full rounded-lg p-2 bg-gray-100 text-black hover:bg-fuchsia-400 hover:text-green-900">-->
+<!--                    UPGRADE NOW-->
+<!--                  </div>-->
+<!--                </JetNavLink>-->
               </div>
               <div v-if="userStore.isSubscriber && !userStore.isAdmin" class="text-fuchsia-700">PREMIUM</div>
               <div v-if="userStore.isVip && !userStore.isAdmin" class="text-fuchsia-700">VIP</div>
@@ -165,6 +159,18 @@
                           @click="videoPlayerStore.makeVideoTopRight()"
                           :href="route('newsroom')">
                         Newsroom
+                      </JetDropdownLink>
+
+                      <JetDropdownLink
+                          v-if="userStore.isVip || userStore.isAdmin"
+                          @click="videoPlayerStore.makeVideoTopRight()"
+                          :href="route('library')"
+                          class="bg-gray-400 hover:bg-gray-400 focus:bg-gray-400 text-white hover:text-gray-800">
+                        My Library
+                        <div class="text-xs text-white bg-yellow-800 uppercase flex justify-center items-center ml-1 -right-4 top-1.5
+                                    font-semibold inline-block py-0.5 px-1 rounded last:mr-0 mr-1">
+                          coming soon
+                        </div>
                       </JetDropdownLink>
 
                       <JetDropdownLink
@@ -279,6 +285,7 @@ import AppVersion from "@/Components/Global/AppVersion/AppVersion"
 import NotificationButton from "@/Components/Global/Notifications/NotificationButton"
 // import NotificationsButton from "@/Components/Global/Navigation/NotificationsButton"
 import { useStoreReset } from "@/Utilities/StoreReset"
+import PublicNavLink from '@/Components/Global/Buttons/PublicNavLink.vue'
 
 const appSettingStore = useAppSettingStore()
 const videoPlayerStore = useVideoPlayerStore()

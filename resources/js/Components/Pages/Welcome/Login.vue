@@ -7,9 +7,9 @@
       leave-from-class="opacity-100 scale-100"
       leave-to-class="opacity-0 scale-125"
   >
-    <div v-if="show" class="modal-mask">
+    <div v-if="show" class="modal-mask overflow-auto py-32 hide-scrollbar">
       <div class="modal-container">
-        <header class="flex uppercase text-sm font-semibold mb-2 text-center">
+        <header class="flex justify-center uppercase text-sm font-semibold mb-2 text-center">
           <JetAuthenticationCardLogo class="max-w-[8rem]"/>
           <JetValidationErrors class="mb-4"/>
           <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
@@ -17,11 +17,8 @@
           </div>
         </header>
 
-        <div class="py-3 text-gray-600">
-          Please log in to watch notTV and chat.<br>
-          Need to
-          <button @click="showRegister" class="text-blue-800 hover:text-blue-600">register</button>
-          for an account?
+        <div class="text-center mt-4 py-3 text-gray-600">
+          Please log in to watch notTV and chat.
         </div>
         <div class="py-3">
           <form @submit.prevent="submit">
@@ -69,12 +66,17 @@
         </div>
 
         <footer>
-          <div class="modal-footer">
+          <div class="flex justify-between modal-footer">
             <button
                 @click="clearForm"
                 class="bg-gray-300 p-2 rounded-md hover:bg-gray-400 hover:text-gray-800"
             >Cancel
             </button>
+            <div class="mt-2">
+              Need to
+              <button @click="showRegister" class="text-blue-800 hover:text-blue-600">register</button>
+              for an account?
+            </div>
           </div>
         </footer>
       </div>

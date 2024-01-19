@@ -3,7 +3,8 @@
 </template>
 
 <script setup>
-import { inject, onMounted, ref } from 'vue'
+import { Inertia } from '@inertiajs/inertia'
+import { inject, onBeforeMount, onMounted, ref } from 'vue'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useUserStore } from '@/Stores/UserStore'
@@ -20,11 +21,12 @@ const getUserData = inject('getUserData', null)
 appSettingStore.osd = true
 videoPlayerStore.makeVideoFullPage()
 
-onMounted(async () => {
-  if (!getUserData) {
-    updateUserStore()
+let reloadPage = () => {
+  if (appSettingStore.pageReload) {
+    appSettingStore.pageReload = false
+    window.location.reload(true);
   }
-})
+};
 
 let props = defineProps({
   getUserData: Boolean,
@@ -32,55 +34,71 @@ let props = defineProps({
   user: Object,
 })
 
-function updateUserStore() {
-  axios.post('/getUserStoreData')
-      .then(response => {
-        userStore.id = response.data.id
-        userStore.loggedIn = true
-        userStore.isAdmin = response.data.isAdmin
-        userStore.isCreator = response.data.isCreator
-        userStore.isNewsPerson = response.data.isNewsPerson
-        userStore.isVip = response.data.isVip
-        userStore.isSubscriber = response.data.isSubscriber
-        userStore.hasAccount = response.data.hasAccount
-        userStore.getUserDataCompleted = true
-        userStore.timezone = userTimezone
-        console.log('get user data on Stream')
-        if (userStore.isCreator) {
-          userStore.prevUrl = '/dashboard'
-        } else {
-          userStore.prevUrl = '/stream'
-        }
-      })
-      .catch(error => {
-        console.log(error)
-      })
-  // save user Timezone
-  updateUserTimezone()
-}
+onBeforeMount(() => {
+  reloadPage()
+})
 
-const userTimezone = ref('')
+const userTimezone = ref('');
 
+// This should be called as soon as the component mounts
 const getUserTimezone = () => {
-  // Use the Intl object to get the user's timezone
-  userTimezone.value = Intl.DateTimeFormat().resolvedOptions().timeZone
+  userTimezone.value = Intl.DateTimeFormat().resolvedOptions().timeZone;
+};
+
+// Call getUserTimezone early, possibly in onMounted
+onMounted(async () => {
+  getUserTimezone();
+  if (props.getUserData) {
+    await updateUserStore();
+  } else if (!getUserData) {
+    await updateUserStore()
+  }
+  Inertia.reload()
+})
+
+async function updateUserStore() {
+  // Ensure the timezone is set
+  if (!userTimezone.value) {
+    getUserTimezone();
+  }
+
+  try {
+    const response = await axios.post('/getUserStoreData');
+    // Update the store with the response data
+    userStore.id = response.data.id;
+    userStore.loggedIn = true
+    userStore.isAdmin = response.data.isAdmin
+    userStore.isCreator = response.data.isCreator
+    userStore.isNewsPerson = response.data.isNewsPerson
+    userStore.isVip = response.data.isVip
+    userStore.isSubscriber = response.data.isSubscriber
+    userStore.hasAccount = response.data.hasAccount
+    userStore.getUserDataCompleted = true
+    userStore.timezone = userTimezone.value;
+    console.log('get user data on Stream')
+    // Further logic
+    if (userStore.isCreator) {
+      userStore.prevUrl = '/dashboard';
+    } else {
+      userStore.prevUrl = '/stream';
+    }
+
+    // Now update the user timezone on the server
+    await updateUserTimezone();
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 const updateUserTimezone = async () => {
+  if (!userTimezone.value) return;
+
   try {
-    const response = await axios.post('/users/update-timezone', {timezone: userTimezone.value})
-
-    // Handle success response as needed
-    console.log(response.data.message)
+    const response = await axios.post('/users/update-timezone', { timezone: userTimezone.value });
+    console.log(response.data.message);
   } catch (error) {
-    // Handle error response or network error
-    console.error(error)
-
-    if (error.response) {
-      // Handle specific error responses if needed
-      console.error(error.response.data)
-    }
+    console.error(error.response ? error.response.data : error);
   }
-}
+};
 </script>
 

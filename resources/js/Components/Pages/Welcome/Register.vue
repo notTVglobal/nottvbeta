@@ -7,7 +7,7 @@
       leave-from-class="opacity-100 scale-100"
       leave-to-class="opacity-0 scale-125"
   >
-    <div v-if="show" class="modal-mask">
+    <div v-if="show" class="modal-mask overflow-auto py-64 hide-scrollbar">
       <div class="modal-container">
         <header class="flex uppercase text-sm font-semibold mb-2 text-center">
           <JetAuthenticationCardLogo class="max-w-[8rem]"/>
@@ -18,9 +18,7 @@
         </header>
 
         <div class="py-3 text-gray-600">
-          Please register for an account to join notTV.<br>For a chance to get an invite code <a
-            href="https://not.tv/subscribe" target="_blank" class="text-blue-600 hover:blue-400 hover:cursor-pointer">subscribe
-          to our newsletter</a>.
+          Please register for an account to join notTV.
         </div>
         <div class="py-3">
           <form @submit.prevent="submit" ref="registrationForm">
@@ -136,12 +134,19 @@
         </div>
 
         <footer>
-          <div class="modal-footer">
-            <button
-                @click="clearForm"
-                class="bg-gray-300 p-2 rounded-md hover:bg-gray-400 hover:text-gray-800"
-            >Cancel
-            </button>
+          <div class="flex flex-wrap justify-between modal-footer">
+            <div class="w-fit">
+              <button
+                  @click="clearForm"
+                  class="w-fit bg-gray-300 p-2 rounded-md hover:bg-gray-400 hover:text-gray-800"
+              >Cancel
+              </button>
+            </div>
+            <div class="flex flex-wrap justify-end mt-2 ml-4 font-semibold">
+              <div>For a chance to get an invite code&nbsp;</div><div><a
+                href="https://not.tv/subscribe" target="_blank" class="font-bold text-blue-600 hover:text-blue-400 hover:cursor-pointer">subscribe
+              to our newsletter</a></div>
+            </div>
           </div>
         </footer>
       </div>

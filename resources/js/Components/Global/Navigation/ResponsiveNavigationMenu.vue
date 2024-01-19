@@ -105,16 +105,26 @@
 
         <div class="space-y-1 z-50 bg-gray-900 pb-20 border-b border-1 border-white">
 
-          <JetResponsiveNavLink
-              v-if="!userStore.isSubscriber && !userStore.isAdmin && !userStore.isVip"
-              @click="appSettingStore.closeNavDropdown()"
-              :href="route('upgrade')"
-              :active="appSettingStore.currentPage === 'upgrade'"
-          >
-            <div class="rounded-lg p-2 bg-gray-100 text-black hover:text-green-900">
+<!--          <JetResponsiveNavLink-->
+<!--              v-if="!userStore.isSubscriber && !userStore.isVip && !userStore.isAdmin"-->
+<!--              @click="appSettingStore.closeNavDropdown()"-->
+<!--              :href="route('upgrade')"-->
+<!--              :active="appSettingStore.currentPage === 'upgrade'"-->
+<!--          >-->
+<!--            <div class="rounded-lg p-2 bg-gray-100 text-black hover:text-green-900">-->
+<!--              CLICK HERE TO UPGRADE YOUR ACCOUNT-->
+<!--            </div>-->
+<!--          </JetResponsiveNavLink>-->
+
+          <div class="flex flex-row w-full justify-center py-4 bg-yellow-500">
+            <PublicNavLink
+                v-if="!userStore.isSubscriber && !userStore.isVip && !userStore.isAdmin"
+                @click="upgrade"
+                :active="appSettingStore.currentPage === 'upgrade'"
+                class="flex">
               CLICK HERE TO UPGRADE YOUR ACCOUNT
-            </div>
-          </JetResponsiveNavLink>
+            </PublicNavLink>
+          </div>
 
           <JetResponsiveNavLink
               v-if="userStore.isCreator"
@@ -280,6 +290,7 @@ import { useStoreReset } from "@/Utilities/StoreReset"
 import JetApplicationMark from "@/Jetstream/ApplicationMark"
 import AppVersion from "@/Components/Global/AppVersion/AppVersion"
 import NotificationButton from "@/Components/Global/Notifications/NotificationButton"
+import PublicNavLink from '@/Components/Global/Buttons/PublicNavLink.vue'
 
 const showingNavigationDropdown = ref(false)
 
@@ -380,6 +391,11 @@ function navigateToStream() {
   }
   Inertia.visit(`/stream`)
 }
+
+const upgrade = (() => {
+  Inertia.visit('/upgrade')
+  appSettingStore.closeNavDropdown()
+})
 
 </script>
 

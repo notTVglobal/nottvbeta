@@ -1,11 +1,20 @@
 <template>
-  <div :class="appSettingStore.pageBgColor"
-       class="fixed top-0 left-0 right-0 bottom-0 text-gray-200 vh-100 vw-100 overflow-hidden overscroll-y-none overscroll-x-none hide-scrollbar">
 
+
+  <div v-if="appSettingStore.noLayout" :class="[layoutClass, scrollbarClass]">
+    <slot />
+  </div>
+
+  <div v-else>
+    <div :class="appSettingStore.pageBgColor"
+          class="fixed top-0 left-0 right-0 bottom-0 text-gray-200 vh-100 vw-100 overflow-hidden overscroll-y-none overscroll-x-none hide-scrollbar">
+    "
     <!-- Navbar for logged in user -->
-    <ResponsiveNavigationMenu v-if="user" :key="userStore.currentPage"/>
-    <NavigationMenu v-if="user" :key="userStore.currentPage"/>
-    <NotificationModal v-if="user"/>
+    <template v-if="user">
+      <ResponsiveNavigationMenu :key="userStore.currentPage"/>
+      <NavigationMenu :key="userStore.currentPage"/>
+      <NotificationModal />
+    </template>
 
     <!-- Login for Welcome Page (logged out) -->
     <Teleport to="body">
@@ -14,22 +23,24 @@
 
     <!-- Page Content -->
     <!--        <div v-show="!userStore.hidePage" :class="layoutClass">-->
-    <div v-show="!appSettingStore.pageIsHidden" :class="[layoutClass, scrollbarClass]" class="">
-      <slot/>
+
+      <div v-show="!appSettingStore.pageIsHidden" :class="[layoutClass, scrollbarClass]" class="">
+        <slot/>
+      </div>
+
+      <!-- Video Player -->
+      <VideoPlayerMain
+          v-show="!appSettingStore.noLayout"
+          :user="user"/>
+
+      <DialogNotification/>
     </div>
-
-    <!-- Video Player -->
-    <VideoPlayerMain
-        :user="user"/>
-
-    <DialogNotification/>
-
   </div>
 </template>
 
 <script setup>
 import { Inertia } from "@inertiajs/inertia"
-import { ref, provide, computed, onBeforeMount, onBeforeUnmount, defineAsyncComponent, onMounted } from "vue"
+import { ref, watch, provide, computed, onBeforeMount, onBeforeUnmount, defineAsyncComponent, onMounted } from "vue"
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useStreamStore } from "@/Stores/StreamStore"
@@ -68,13 +79,15 @@ let props = defineProps({
   user: Object,
 });
 
+const userTimezone = ref('');
+
 const pageHide = computed(() => ({
   'hidden lg:block': appSettingStore.ott && userStore.isMobile
 }))
 
 const layoutClass = computed(() => ({
-  layoutWelcome: !props.user,
-  layoutLoggedIn: props.user,
+  layoutWelcome: !props.user || appSettingStore.noLayout,
+  layoutLoggedIn: props.user && !appSettingStore.noLayout,
   'hidden lg:block': appSettingStore.ott && userStore.isMobile
 }))
 
@@ -88,8 +101,9 @@ onBeforeMount(() => {
   if (props.user && !userStore.getUserDataCompleted) {
     updateUserStore()
     provide(/* key */ 'getUserData', /* value */ true)
-  } else
+  } else {
     provide(/* key */ 'getUserData', /* value */ false)
+  }
 })
 
 onMounted(() => {
@@ -106,36 +120,33 @@ function setPage() {
   isStreamPage = appSettingStore.currentPage === "stream";
 }
 
+
 async function updateUserStore() {
-  await axios.post('/getUserStoreData')
-      .then(response => {
-        userStore.id = response.data.id
-        userStore.isAdmin = response.data.isAdmin
-        userStore.isCreator = response.data.isCreator
-        userStore.isNewsPerson = response.data.isNewsPerson
-        userStore.isVip = response.data.isVip
-        userStore.isSubscriber = response.data.isSubscriber
-        userStore.hasAccount = response.data.hasAccount
-        userStore.getUserDataCompleted = true
-        console.log('get user data on AppLayout')
-        userStore.subscribeToUserNotifications(response.data.id)
-        reloadNav++
-        if (userStore.isCreator) {
-          userStore.prevUrl = '/dashboard'
-        } else {
-          userStore.prevUrl = '/stream'
-        }
-
-      })
-      .catch(error => {
-        console.log(error);
-      })
-  // save user Timezone
-  await updateUserTimezone()
-  userStore.timezone = userTimezone
+  try {
+    const response = await axios.post('/getUserStoreData');
+    // Update userStore based on response
+    userStore.id = response.data.id;
+    userStore.isAdmin = response.data.isAdmin
+    userStore.isCreator = response.data.isCreator
+    userStore.isNewsPerson = response.data.isNewsPerson
+    userStore.isVip = response.data.isVip
+    userStore.isSubscriber = response.data.isSubscriber
+    userStore.hasAccount = response.data.hasAccount
+    userStore.getUserDataCompleted = true
+    console.log('get user data on AppLayout')
+    await userStore.subscribeToUserNotifications(response.data.id)
+    await updateUserTimezone();
+    userStore.timezone = userTimezone.value;
+    reloadNav++;
+    if (userStore.isCreator) {
+      userStore.prevUrl = '/dashboard';
+    } else {
+      userStore.prevUrl = '/stream';
+    }
+  } catch (error) {
+    console.error(error);
+  }
 }
-
-const userTimezone = ref('');
 
 const getUserTimezone = () => {
   // Use the Intl object to get the user's timezone
@@ -144,20 +155,19 @@ const getUserTimezone = () => {
 
 const updateUserTimezone = async () => {
   try {
-    const response = await axios.post('/users/update-timezone', {timezone: userTimezone.value});
-
-    // Handle success response as needed
+    const response = await axios.post('/users/update-timezone', { timezone: userTimezone.value });
     console.log(response.data.message);
   } catch (error) {
-    // Handle error response or network error
-    console.error(error);
-
-    if (error.response) {
-      // Handle specific error responses if needed
-      console.error(error.response.data);
-    }
+    console.error(error.response ? error.response.data : error);
   }
 };
+
+// Watch for changes in userStore.currentPage
+watch(() => userStore.getUserDataCompleted, (newPage, oldPage) => {
+  // This function will be called whenever userStore.getUserDataCompleted changes
+  reloadNav++
+  console.log(`getUserDataCompleted changed from ${oldPage} to ${newPage}`);
+});
 
 function disconnect() {
   window.Echo.leave("channel." + channelStore.currentChannelId);

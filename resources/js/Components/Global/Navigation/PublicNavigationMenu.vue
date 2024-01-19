@@ -7,48 +7,43 @@
           <div class="flex">
             <!-- Logo -->
             <div class="shrink-0 flex items-center">
-              <Link :href="route('home')">
+              <Link @click="returnToWelcomePage">
                 <JetApplicationMark class="block h-9 w-auto"/>
               </Link>
             </div>
-
-            <!-- Navigation Links -->
-            <div class="space-x-4 py-6 pt-6 ml-8 lg:flex text-gray-200">
-              <h3 class="inline-flex items-center relative">
-                <Link
-                    :href="`/`"
-                    class="text-gray-200 hover:text-blue-500">
-                  Watch Now
-                </Link>
-              </h3>
-              <h3 v-show="route().current() !== 'public.news.index'"
-                  class="inline-flex items-center relative">
-                <Link
-
-                    :href="`/public/news`"
-                    class="text-gray-200 hover:text-blue-500">
-                  News
-                  <!--                            <div v-if="streamStore.isLive"-->
-                  <!--                                class="text-xs text-white bg-red-800 uppercase flex justify-center items-center absolute -right-4 top-1.5-->
-                  <!--                                    font-semibold inline-block py-0.5 px-1 rounded last:mr-0 mr-1">-->
-                  <!--                               live-->
-                  <!--                            </div>-->
-                </Link>
-              </h3>
-              <h3 v-if="route().current('public.news.index')"
-                  class="inline-flex items-center relative">
-                <Link
-                    :href="`/login`"
-                    class="hover:text-blue-500">
-                  Login
-                </Link>
-              </h3>
+            <div class="w-full flex flex-row justify-between">
+              <div class="space-x-4 py-6 pt-6 ml-8 text-gray-200">
+                <h3 class="inline-flex items-center relative">
+                  <JetNavLink
+                      @click="returnToWelcomePage"
+                  >Watch Now</JetNavLink>
+                </h3>
+                <h3 class="inline-flex items-center relative">
+                  <JetNavLink
+                      :href="`/public/news`"
+                      :active="appSettingStore.currentPage === 'public.news.index'">
+                    News</JetNavLink>
+                </h3>
+              </div>
             </div>
+          </div>
+          <div class="space-x-4 py-6 pt-6 mx-8 text-gray-200">
+            <h3 class="inline-flex items-center relative">
+              <JetNavLink
+                  :href="`/public/login`"
+                  :active="appSettingStore.currentPage === 'public.login'">
+                Login</JetNavLink>
+            </h3>
+            <h3 class="inline-flex items-center relative">
+              <JetNavLink
+                  :href="`/public/register`"
+                  :active="appSettingStore.currentPage === 'public.register'">
+                Register</JetNavLink>
+            </h3>
 
           </div>
-
-
         </div>
+
       </div>
     </nav>
   </div>
@@ -58,28 +53,37 @@
 import { Inertia } from "@inertiajs/inertia"
 import { onMounted } from "vue"
 import { Link } from '@inertiajs/inertia-vue3'
+import JetNavLink from '@/Jetstream/NavLink'
 import JetApplicationMark from '@/Jetstream/ApplicationMark'
 import JetDropdownLink from '@/Jetstream/DropdownLink'
 import JetDropdown from '@/Jetstream/Dropdown'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
-const appSettingStore = useAppSettingStore()
+
 import { useChatStore } from "@/Stores/ChatStore"
 import { useStreamStore } from "@/Stores/StreamStore"
-import { useUserStore } from "@/Stores/UserStore"
+// import { useUserStore } from "@/Stores/UserStore"
 import { useWelcomeStore } from "@/Stores/WelcomeStore"
 
+const appSettingStore = useAppSettingStore()
 const chat = useChatStore()
 const videoPlayerStore = useVideoPlayerStore()
 const streamStore = useStreamStore()
-const userStore = useUserStore()
+// const userStore = useUserStore()
 const welcomeStore = useWelcomeStore()
 
-streamStore.isLive(true)
+// streamStore.isLive(true)
 
 let props = defineProps({
   user: Object,
 })
+
+appSettingStore.pageReload = false
+
+const returnToWelcomePage = () => {
+  appSettingStore.pageReload = true
+  Inertia.visit('/')
+}
 // let isStreamPage = false
 //
 // function setPage() {
@@ -91,21 +95,21 @@ let props = defineProps({
 
 // setPage()
 
-onMounted(() => {
-  getUser()
-})
-
-function getUser() {
-  if (props.user) {
-    userStore.id = props.user.id
-    userStore.roleId = props.user.role_id
-    userStore.userIsAdmin = props.user.isAdmin
-  }
-  userStore.isSubscriber()
-  userStore.isCreator()
-  userStore.isVip()
-  userStore.isAdmin()
-}
+// onMounted(() => {
+//   getUser()
+// })
+//
+// function getUser() {
+//   if (props.user) {
+//     userStore.id = props.user.id
+//     userStore.roleId = props.user.role_id
+//     userStore.userIsAdmin = props.user.isAdmin
+//   }
+//   userStore.isSubscriber()
+//   userStore.isCreator()
+//   userStore.isVip()
+//   userStore.isAdmin()
+// }
 
 </script>
 <style>

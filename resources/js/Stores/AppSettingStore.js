@@ -5,6 +5,8 @@ import { defineStore } from 'pinia'
 import { Inertia } from '@inertiajs/inertia'
 
 const initialState = () => ({
+    pageReload: false, // if set to true the page will reload when we land on the Welcome page.
+    noLayout: false, // when true it enables a special "no layout" page class
     thisUrl: window.location.pathname,
     prevUrl: null,
     showNavDropdown: false, // formerly userStore.showNavDropdown
@@ -23,6 +25,7 @@ const initialState = () => ({
     pipChatMode: false, // Chat input focused uses pipChatMode when userStore.isMobile
     pageBgColor: 'bg-gray-800', // Active background color
     primaryBgColor: 'bg-gray-800', // Primary background color
+    noLayoutBgColor: 'bg-gray-900', // Primary background color
     pipBgColor: 'bg-black', // Background color for pipChatMode
     // Other global UI settings...
     chatMessageBgColor: 'bg-gray-600', // Active chat message background color*
@@ -64,7 +67,8 @@ export const useAppSettingStore = defineStore('appSettingStore', {
         },
         closeNavDropdown() {
             this.showNavDropdown = false
-            // this.showOtt = false // tec21: I don't know why we would want this... it could be a leftover.
+            this.showOttButtons = true
+            this.showOtt = false // tec21: I don't know why we would want this... it could be a leftover.
         },
         toggleOtt(num) {
             if (this.ott === num) {
