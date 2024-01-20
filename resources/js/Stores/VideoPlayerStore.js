@@ -465,14 +465,14 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
     getters: {
         // Filter the creators and remove null values
         // Define a getter function to get valid creators
-        validCreators(state) {
-            return state.nowPlayingCreators.filter(
-                (creator) =>
-                    creator &&
-                    creator.id !== undefined && // Filter out undefined 'id'
-                    creator.name !== undefined // Filter out undefined 'name'
-            )
-        }
+        // validCreators(state) {
+        //     return state.nowPlayingCreators.filter(
+        //         (creator) =>
+        //             creator &&
+        //             creator.id !== undefined && // Filter out undefined 'id'
+        //             creator.name !== undefined // Filter out undefined 'name'
+        //     )
+        // }
         // incrementViewerCount() {
         //     this.viewerCount++
         // },

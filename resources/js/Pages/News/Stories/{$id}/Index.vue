@@ -2,48 +2,54 @@
   <Head title="News Post"/>
   <div>
 
-    <div class="flex flex-col min-h-screen bg-gray-50">
+    <div class="flex flex-col min-h-screen bg-gray-50" :class="marginTopClass">
       <div class="place-self-center flex flex-col gap-y-3">
         <div id="topDiv" class="bg-gray-50 text-black dark:bg-gray-800 dark:text-gray-50">
+<!--          <div class="text-center pt-6 text-3xl font-semibold leading-loose">NEWS</div>-->
           <PublicNewsNavigationButtons class=""/>
 
-          <Breadcrumbs :classType="'dark'" :breadcrumbs="[{ text: 'News Stories', to: '/news' }, { text: $page.props.news.title, to: '' }]" />
+          <div class="w-full flex flex-row flex-wrap justify-between">
+            <div>
+              <Breadcrumbs :classType="'dark'" :breadcrumbs="[{ text: 'News Stories', to: '/news' }, { text: $page.props.news.title, to: '' }]" />
+            </div>
+            <div>
+<!--              This Back Button doesn't work...
+                  because there is no prevUrl function that runs unless PageSetup() is called..
+                  and PageSetup() is only called on LoggedIn pages.-->
+<!--              <BackButton v-if="!appSettingStore.loggedIn"/>-->
+              <div v-if="appSettingStore.loggedIn && (props.can.viewNewsroom || can.editNewsStory)"
+                      class="w-full mx-auto text-center ml-5">
+                <div
+                    class="flex flex-wrap gap-2 justify-end pb-5 mr-5">
+                  <BackButton />
+                  <div>
+                    <button
+                        v-if="props.can.viewNewsroom"
+                        @click="appSettingStore.btnRedirect(`/newsroom`)"
+                        class="bg-yellow-600 hover:bg-yellow-500 text-white px-4 py-2 rounded-lg disabled:bg-gray-400"
+                    >Newsroom
+                    </button>
+                  </div>
+                  <div>
+                    <button
+                        v-if="can.editNewsStory"
+                        @click="appSettingStore.btnRedirect(`/newsStory/${props.news.slug}/edit`)"
+                        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                    >Edit
+                    </button>
 
-          <header v-if="appSettingStore.loggedIn && (props.can.viewNewsroom || can.editNewsStory)"
-                  class="w-full mx-auto text-center">
-            <div
-                 class="flex flex-wrap gap-2 justify-end pb-5 mr-5">
-              <div>
-                <button
-                    v-if="props.can.viewNewsroom"
-                    @click="appSettingStore.btnRedirect(`/newsroom`)"
-                    class="bg-yellow-600 hover:bg-yellow-500 text-white px-4 py-2 rounded-lg disabled:bg-gray-400"
-                >Newsroom
-                </button>
-              </div>
-              <div>
-                <button
-                    v-if="can.editNewsStory"
-                    @click="appSettingStore.btnRedirect(`/news/${props.news.slug}/edit`)"
-                    class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                >Edit
-                </button>
-
+                  </div>
+                </div>
               </div>
             </div>
-
-          </header>
+          </div>
 
         </div>
       </div>
+
       <PublicNavigationMenu v-if="!appSettingStore.loggedIn" class="fixed top-0 w-full nav-mask"/>
-      <div v-if="!appSettingStore.loggedIn" class="w-full mx-auto text-center mb-5 ">
-        <!-- Header Content -->
 
 
-
-
-      </div>
 
       <main class="flex-grow text-black">
         <!-- Main Content -->
@@ -91,6 +97,7 @@
 </template>
 
 <script setup>
+import { computed, watch } from 'vue'
 import { useForm } from '@inertiajs/inertia-vue3'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
@@ -99,25 +106,36 @@ import PublicNavigationMenu from '@/Components/Global/Navigation/PublicNavigatio
 import Footer from '@/Components/Global/Layout/Footer.vue'
 import Message from '@/Components/Global/Modals/Messages'
 import Breadcrumbs from '@/Components/Global/Breadcrumbs/Breadcrumbs.vue'
+import BackButton from '@/Components/Global/Buttons/BackButton.vue'
 
 const appSettingStore = useAppSettingStore()
-usePageSetup('news/story/slug')
+appSettingStore.currentPage = 'news/story/slug'
+
 // appSettingStore.noLayout = false
 // appSettingStore.noLayout = true
 // appSettingStore.currentPage = 'news/story/slug'
 
-if (appSettingStore.loggedIn) {
+// Watch for changes in the loggedIn state of appSettingStore
+watch(() => appSettingStore.loggedIn, (loggedIn) => {
+  appSettingStore.noLayout = !loggedIn;
 
-} else {
-  appSettingStore.noLayout = true
-  appSettingStore.currentPage = 'news/story/slug'
-}
+  // Call usePageSetup if loggedIn is true
+  if (loggedIn) {
+    usePageSetup('news');
+  }
+}, {
+  immediate: true // This ensures the watcher runs immediately on setup
+});
 
 const props = defineProps({
   news: Object,
   image: String,
   can: Object,
 })
+
+const marginTopClass = computed(() => {
+  return appSettingStore.loggedIn ? '' : 'mt-16';
+});
 
 let form = useForm({})
 

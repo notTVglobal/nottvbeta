@@ -6,6 +6,30 @@
       <div id="topDiv" class="bg-white text-black dark:bg-gray-900 dark:text-gray-50 p-5 mb-10">
 
         <Messages v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
+        <section class="text-center p-4 md:p-8 mb-8">
+
+        </section>
+
+        <section class="text-center p-4 md:p-8 mb-8">
+          <h1 class="text-2xl md:text-4xl font-bold mb-4">Welcome To Your Digital Newsroom</h1>
+          <p class="text-md md:text-lg mb-8 text-indigo-800 ">
+            Where seasoned journalism intersects with digital innovation.<br>
+          </p>
+          <p class="mb-8 mx-auto w-1/2 text-center text-indigo-800 font-semibold">
+            Here, we harness cutting-edge tools and collaborative expertise to deliver impactful stories with precision and depth, redefining news for the digital era.
+          </p>
+
+          <h2 class="text-center text-xl md:text-3xl  mb-4">Core Pillars of the Newsroom</h2>
+
+          <ul class="list-disc list-inside text-left mx-auto w-1/2 md:w-1/2">
+            <li class="mb-2"><span class="font-semibold">Advanced Information Gathering:</span> Utilizing a vast network of digital resources and on-the-ground insights to capture the full spectrum of news.</li>
+            <li class="mb-2"><span class="font-semibold">Precision Editing:</span> Combining journalistic rigor with digital acumen to sharpen narratives and enhance factual accuracy.</li>
+            <li class="mb-2"><span class="font-semibold">Innovative Content Production:</span> Crafting stories that thrive across mediums – from immersive articles to engaging digital broadcasts.</li>
+            <li class="mb-2"><span class="font-semibold">Strategic Coverage Planning:</span> Focused on impactful journalism, we dissect and deliver stories that matter in real-time.</li>
+            <li class="mb-2"><span class="font-semibold">Collaborative Dynamics:</span> Our strength lies in our collective expertise, fostering a culture of continuous learning and mutual enhancement.</li>
+            <li><span class="font-semibold">Technology at the Forefront:</span> Harnessing the power of the latest digital tools to keep our newsroom ahead in a rapidly evolving media landscape.</li>
+          </ul>
+        </section>
 
         <NewsHeader :can="can">Newsroom</NewsHeader>
 
@@ -17,7 +41,7 @@
 
         <!--            </header>-->
 
-        <section class="p-4">
+        <section hidden class="p-4">
           <div class="alert alert-info text-center">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                  class="stroke-current shrink-0 w-6 h-6">
@@ -30,22 +54,7 @@
           </div>
         </section>
 
-        <section class="text-center p-4 md:p-8 mb-8">
-          <h1 class="text-2xl md:text-4xl font-bold mb-4">Inside Our Digital Newsroom</h1>
-          <p class="text-md md:text-lg mb-8">
-            Welcome to our digital newsroom, where seasoned journalism intersects with digital innovation. Here, we harness cutting-edge tools and collaborative expertise to deliver impactful stories with precision and depth, redefining news for the digital era.
-          </p>
 
-          <h2 class="text-center text-xl md:text-3xl font-semibold mb-4">Core Pillars of Our Digital Newsroom</h2>
-          <ul class="list-disc list-inside text-left mx-auto md:w-3/4">
-            <li class="mb-2"><span class="font-semibold">Advanced Information Gathering:</span> Utilizing a vast network of digital resources and on-the-ground insights to capture the full spectrum of news.</li>
-            <li class="mb-2"><span class="font-semibold">Precision Editing:</span> Combining journalistic rigor with digital acumen to sharpen narratives and enhance factual accuracy.</li>
-            <li class="mb-2"><span class="font-semibold">Innovative Content Production:</span> Crafting stories that thrive across mediums – from immersive articles to engaging digital broadcasts.</li>
-            <li class="mb-2"><span class="font-semibold">Strategic Coverage Planning:</span> Focused on impactful journalism, we dissect and deliver stories that matter in real-time.</li>
-            <li class="mb-2"><span class="font-semibold">Collaborative Dynamics:</span> Our strength lies in our collective expertise, fostering a culture of continuous learning and mutual enhancement.</li>
-            <li><span class="font-semibold">Technology at the Forefront:</span> Harnessing the power of the latest digital tools to keep our newsroom ahead in a rapidly evolving media landscape.</li>
-          </ul>
-        </section>
 
         <h2 class="text-center text-xl md:text-3xl font-semibold mb-4">News Stories</h2>
 
@@ -66,7 +75,7 @@
         <div class="flex justify-end">
           <button
               v-if="can.createNewsStory"
-              @click="appSettingStore.btnRedirect(`/news/story/create`)"
+              @click="appSettingStore.btnRedirect(`newsStory/create`)"
               class="bg-green-600 hover:bg-green-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
           >Create News Story
           </button>
@@ -156,7 +165,7 @@
                     <div class="hidden lg:table-cell px-6 py-4 align-middle space-x-2 space-y-2">
                       <button
                           v-if="news.can.editNewsStory"
-                          @click="appSettingStore.btnRedirect(`/news/story/${news.slug}/edit`)"
+                          @click="appSettingStore.btnRedirect(`/newsStory/${news.slug}/edit`)"
                           class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                       >Edit
                       </button>
@@ -236,7 +245,7 @@ function publish(id) {
 
 function destroy(id) {
   if (confirm('Are you sure you want to Delete')) {
-    form.delete(route('news.destroy', id))
+    form.delete(route('newsStory.destroy', id))
 
   }
 }

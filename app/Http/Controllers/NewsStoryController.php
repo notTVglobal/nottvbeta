@@ -38,32 +38,34 @@ class NewsStoryController extends Controller
      */
     public function index()
     {
-        return Inertia::render('NewsStory/Index', [
-            'news' => NewsStory::with('image')
-                ->orderBy('published_at', 'desc')
-                ->when(Request::input('search'), function ($query, $search) {
-                    $query->where('title', 'like', "%{$search}%");
-                })
-                ->where('published_at', '!=', null)
-                ->paginate(5, ['*'], 'news')
-                ->withQueryString()
-                ->through(fn($newsStory) => [
-                    'slug' => $newsStory->slug,
-                    'title' => html_entity_decode($newsStory->title),
-                    'image' => $newsStory->image->name,
-                    'published_at' => $newsStory->published_at,
-                    'can' => [
-                        'editNewsStory' => Auth::user()->can('update', NewsStory::class),
-                        'deleteNewsStory' => Auth::user()->can('delete', NewsStory::class),
-                    ]
-                ]),
-            'filters' => Request::only(['search']),
-            'can' => [
+      $user = Auth::user();
+
+      return Inertia::render('News/Index', [
+          'news' => NewsStory::with('image')
+              ->orderBy('published_at', 'desc')
+              ->when(Request::input('search'), function ($query, $search) {
+                  $query->where('title', 'like', "%{$search}%");
+              })
+              ->where('published_at', '!=', null)
+              ->paginate(5, ['*'], 'news')
+              ->withQueryString()
+              ->through(fn($newsStory) => [
+                  'slug' => $newsStory->slug,
+                  'title' => html_entity_decode($newsStory->title),
+                  'image' => $newsStory->image->name,
+                  'published_at' => $newsStory->published_at,
+//                  'can' => [
+//                      'editNewsStory' => Auth::user()->can('update', NewsStory::class),
+//                      'deleteNewsStory' => Auth::user()->can('delete', NewsStory::class),
+//                  ]
+              ]),
+          'filters' => Request::only(['search']),
+          'can' => [
 //                'editNewsStory' => Auth::user()->can('update', NewsStory::class),
-                'createNewsStory' => Auth::user()->can('create', NewsStory::class),
-                'viewNewsroom' => Auth::user()->can('viewAny', NewsPerson::class)
-            ]
-        ]);
+//              'createNewsStory' => Auth::user()->can('create', NewsStory::class),
+              'viewNewsroom' => optional($user)->can('viewAny', NewsPerson::class) ?: false,
+          ]
+      ]);
     }
 
     /**
@@ -73,9 +75,9 @@ class NewsStoryController extends Controller
      */
     public function create()
     {
-        $this->authorize('create', NewsStory::class);
+//        $this->authorize('create', NewsStory::class);
         return Inertia::render(
-            'NewsStory/Create', [
+            'News/Stories/Create', [
                 'can' => [
                     'viewNewsroom' => Auth::user()->can('viewAny', NewsPerson::class)
                 ]
@@ -141,12 +143,12 @@ class NewsStoryController extends Controller
       $canEditNewsStory = optional(Auth::user())->can('update', $newsStory);
 
       // Check if the story status is 6 and if the user lacks necessary permissions
-      if ($newsStory->status->id == 6 && !($canViewNewsroom || $canEditNewsStory)) {
+      if ($newsStory->status == 6 && !($canViewNewsroom || $canEditNewsStory)) {
         throw new NotFoundHttpException('Story not available.');
       }
 
         return Inertia::render(
-            'NewsStory/{$id}/Index',
+            'News/Stories/{$id}/Index',
             [
                 'news' => [
                     'id' => $newsStory->id,
@@ -173,13 +175,13 @@ class NewsStoryController extends Controller
      * @param  NewsStory $newsStory
      * @return Response
      */
-    public function edit($slug, NewsStory $newsStory)
+    public function edit(NewsStory $newsStory)
     {
         $this->authorize('update', $newsStory);
 
-        $post = NewsStory::query()->where('slug', $slug)->firstOrFail();
+        $post = NewsStory::query()->where('slug', $newsStory->slug)->firstOrFail();
         return Inertia::render(
-            'NewsStory/{$id}/Edit',
+            'News/Stories/{$id}/Edit',
             [
                 'news' => [
                     'id' => $post->id,
@@ -227,11 +229,11 @@ class NewsStoryController extends Controller
 //                ->route('newsroom')
 //                ->with('message', 'News Story Updated Successfully');
 //        }
+
         return redirect()
             ->route('news/story.show',
                 [$newsStory->slug])
             ->with('success', 'News Story Updated Successfully');
-
     }
 
     // Content is saved through this method, it uses Tiptap

@@ -146,6 +146,7 @@ onMounted(() => {
   videoPlayer.ready(() => {
     videoPlayer.controls(false)
     videoPlayerStore.videoPlayerLoaded = true
+    console.log('videoPlayer ready')
   })
   if (!appSettingStore.fullPage) {
     videoPlayerStore.controls = false

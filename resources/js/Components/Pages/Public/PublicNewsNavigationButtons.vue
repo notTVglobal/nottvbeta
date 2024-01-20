@@ -7,9 +7,8 @@
        Reporters
      </PublicNavLink>
       <PublicNavLink
-          disabled
-          @click="() => Inertia.visit('/news/stories')"
-          :active="appSettingStore.currentPage === 'news.stories'">
+          @click="() => Inertia.visit('/news')"
+          :active="appSettingStore.currentPage === 'news' || appSettingStore.currentPage.includes('news/story')">
         Stories
       </PublicNavLink>
       <PublicNavLink

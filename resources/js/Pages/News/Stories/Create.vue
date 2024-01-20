@@ -112,7 +112,7 @@ let form = useForm({
 
 let submit = () => {
   form.body = newsStore.newsArticleContentTiptop;
-  form.post(route("news.store"));
+  form.post(route("newsStory.store"));
 };
 
 onBeforeMount(() => {

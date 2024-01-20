@@ -1,7 +1,14 @@
 # not.tv Changelog
 
-Last Update: January 19, 2024\
+Last Update: January 20, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+# v0.8.2.1
+January 20, 2024
+* Fixed the News Page routes
+* Rebuilt the Newsroom home page
+* There is a bug when refreshing the page on any of the public news or news reporter pages, if the user is logged in the video is playing but it's muted (firstPlay) and hidden.
+  * Another design bug, the topDiv function doesn't seem to work on these page either.
 
 # v0.8.2.0
 January 19, 2024

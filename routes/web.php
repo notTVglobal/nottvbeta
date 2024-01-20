@@ -149,7 +149,7 @@ Route::get('/whitepaper', [WhitepaperController::class, 'show'])->name('whitepap
 
 // News is no longer a resource.
 // tec21: 2024-01-20 removed the model and table.
-Route::get('/news', [NewsController::class, 'index'])
+Route::get('/news', [NewsStoryController::class, 'index'])
     ->name('news.index');
 
 // Group news reporter related routes under 'news'
@@ -160,6 +160,11 @@ Route::prefix('/news')->group(function () {
       ->name('news.reporter.show');
 });
 
+
+// Redirect GET requests for 'news/story' to 'news'
+Route::get('news/story', function () {
+  return redirect('/news');
+});
 // Public news story route
 Route::get('news/story/{story}', [NewsStoryController::class, 'show'])
     ->name('news/story.show');
@@ -347,13 +352,20 @@ Route::middleware([
 
 
 
-// Newsroom
+  // Newsroom
 ///////////
 
   // Insert Newsroom Routes here.
   Route::get('/newsroom', [NewsroomController::class, 'index'])
       ->middleware('can:viewAny,App\Models\NewsPerson')
       ->name('newsroom');
+
+  Route::put('/newsroom/publish', [NewsroomController::class, 'publish'])
+//        ->can('view', 'App\Models\NewsPerson')
+      ->name('newsroom.publish');
+
+  Route::post('/newsStory/save', [NewsStoryController::class, 'save'])
+      ->name('newsStory.save');
 
   // NewsStory
   ////////////
@@ -364,7 +376,7 @@ Route::middleware([
   Route::get('newsroom/stories', [NewsStoryController::class, 'index'])->name('news.story.index');
 
   // Custom resource routes for 'news/story', excluding the 'index' method
-  Route::resource('news/story', NewsStoryController::class)->except(['index', 'show']);
+  Route::resource('newsStory', NewsStoryController::class)->except(['index', 'show']);
 
 
 

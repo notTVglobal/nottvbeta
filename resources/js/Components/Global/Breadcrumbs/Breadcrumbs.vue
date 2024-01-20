@@ -1,5 +1,5 @@
 <template>
-  <nav aria-label="breadcrumb" class="w-[calc(60vw)] py-4 px-10 2xl:px-96">
+  <div aria-label="breadcrumb" class="w-[calc(60vw)] py-4 px-10 2xl:px-96">
     <ol class="flex list-none">
       <li v-for="(crumb, index) in breadcrumbs" :key="index" class="flex items-center min-w-fit break-words">
         <span v-if="index === breadcrumbs.length - 1" :class="classType === 'dark' ? 'text-gray-500' : 'text-gray-500'">
@@ -11,7 +11,7 @@
         <span v-if="index < breadcrumbs.length - 1" class="mx-2">></span>
       </li>
     </ol>
-  </nav>
+  </div>
 </template>
 
 <script setup>

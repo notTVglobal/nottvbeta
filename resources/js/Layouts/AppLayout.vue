@@ -8,7 +8,6 @@
   <div v-else>
     <div :class="appSettingStore.pageBgColor"
           class="fixed top-0 left-0 right-0 bottom-0 text-gray-200 vh-100 vw-100 overflow-hidden overscroll-y-none overscroll-x-none hide-scrollbar">
-    "
     <!-- Navbar for logged in user -->
     <template v-if="user">
       <ResponsiveNavigationMenu :key="userStore.currentPage"/>
@@ -24,14 +23,14 @@
     <!-- Page Content -->
     <!--        <div v-show="!userStore.hidePage" :class="layoutClass">-->
 
-      <div v-show="!appSettingStore.pageIsHidden" :class="[layoutClass, scrollbarClass]" class="">
+      <div v-show="!appSettingStore.pageIsHidden" :class="[layoutClass, scrollbarClass]">
         <slot/>
       </div>
 
       <!-- Video Player -->
       <VideoPlayerMain
           v-show="!appSettingStore.noLayout"
-          :user="user"/>
+          :user="user" />
 
       <DialogNotification/>
     </div>
@@ -74,6 +73,7 @@ const channelStore = useChannelStore()
 let isStreamPage = ref()
 let showLogin = ref(false)
 let reloadNav = 0
+let reloadVideoMainPlayer = 0
 
 let props = defineProps({
   user: Object,
