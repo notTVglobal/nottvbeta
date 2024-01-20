@@ -5,12 +5,13 @@
     <!--        a vanilla javascript approach with an event listener instead. -->
     <!--        v-touch="() => {clickOnVideoAction()}"-->
     <!-- Video Player -->
-    <div
-        :class="videoPlayerStore.videoContainerClass"
+    <div v-touch="() => {clickOnVideoAction()}"
+         :class="videoPlayerStore.videoContainerClass"
     >
       <div :class="videoPlayerStore.class">
         <videoJs/>
       </div>
+
 
     </div>
 
@@ -38,7 +39,7 @@
 
       <!-- notTV Bug -->
       <div class="bugTopRightContainer">
-        <img :src="`/storage/images/logo_white_512.png`" class="bugTopRightClass">
+        <img :src="`/storage/images/logo_white_512.png`" class="bugTopRightClass" alt="">
       </div>
 
       <!-- On Screen Display (OSD)-->
@@ -60,7 +61,7 @@
 
       <!-- notTV Bug -->
       <div v-if="! videoPlayerStore.osd" class="bugFullPageContainer">
-        <img :src="`/storage/images/logo_white_512.png`" class="bugFullPageClass">
+        <img :src="`/storage/images/logo_white_512.png`" class="bugFullPageClass" alt="">
       </div>
 
       <!-- On Screen Display (OSD) -->
@@ -252,34 +253,27 @@ onUnmounted(() => {
 //             videoPlayerStore.showOsdAndControlsAndNav()
 //         }
 //     }
-// })
-  function backToPage() {
-    videoPlayerStore.makeVideoTopRight()
-    videoPlayerStore.ottChat = false
-    videoPlayerStore.osd = false
-  }
-
-  const clickOnVideoAction = () => {
-
-    if (!videoPlayerStore.currentPageIsStream && !appSettingStore.pipChatMode) {
-
-      videoPlayerStore.makeVideoFullPage()
-      appSettingStore.ott = 0
-      appSettingStore.fullPage = true
-      if (!videoPlayerStore.currentPageIsStream) {
-        userStore.prevUrl = window.history.state.url
-      }
-      Inertia.visit('/stream')
-
-    } else {
-      if (userStore.isMobile) {
-        videoPlayerStore.controls = !videoPlayerStore.controls
-      } else {
-        videoPlayerStore.togglePlay()
-      }
-    }
-  }
 })
+
+//
+// function backToPage() {
+//   videoPlayerStore.makeVideoTopRight()
+//   videoPlayerStore.ottChat = false
+//   videoPlayerStore.osd = false
+// }
+
+const clickOnVideoAction = () => {
+  if (appSettingStore.currentPage === 'stream') {
+    if (userStore.isMobile) {
+      videoPlayerStore.controls = !videoPlayerStore.controls
+    } else {
+      videoPlayerStore.togglePlay()
+    }
+  } else if (!appSettingStore.pipChatMode) {
+    Inertia.visit('/stream')
+  }
+}
+
 
 </script>
 

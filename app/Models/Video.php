@@ -51,9 +51,9 @@ class Video extends Model
 
     ];
 
-    public function newsPost()
+    public function newsStory()
     {
-        return $this->hasOne(NewsPost::class);
+        return $this->hasOne(NewsStory::class);
     }
 
     public function showEpisode()

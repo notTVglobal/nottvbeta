@@ -7,7 +7,7 @@
 
         <Messages v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
-        <NewsHeader :can="can">Welcome to the Newsroom</NewsHeader>
+        <NewsHeader :can="can">Newsroom</NewsHeader>
 
         <!--            <header class="flex justify-between mb-3 border-b border-gray-800">-->
         <!--                <div class="container mx-auto flex flex-col lg:flex-row items-center justify-between">-->
@@ -17,18 +17,39 @@
 
         <!--            </header>-->
 
-        <div class="alert alert-info mb-6">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-               class="stroke-current shrink-0 w-6 h-6">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-          </svg>
-          <span>
-            <span class="font-semibold">This page is only visible to members of the newsroom.</span> <br>Create news articles, share resources, edit stories, and when they are ready the News Producer(s) can publish them!
-          </span>
-        </div>
+        <section class="p-4">
+          <div class="alert alert-info text-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                 class="stroke-current shrink-0 w-6 h-6">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span>
+              <span class="font-semibold">This page is only visible to members of the Newsroom.</span> <br>Create news articles, share resources, edit stories, and when they are ready the News Producer(s) can publish them!
+            </span>
+          </div>
+        </section>
 
-        <div class="flex items-center my-3 lg:mt-0">
+        <section class="text-center p-4 md:p-8 mb-8">
+          <h1 class="text-2xl md:text-4xl font-bold mb-4">Inside Our Digital Newsroom</h1>
+          <p class="text-md md:text-lg mb-8">
+            Welcome to our digital newsroom, where seasoned journalism intersects with digital innovation. Here, we harness cutting-edge tools and collaborative expertise to deliver impactful stories with precision and depth, redefining news for the digital era.
+          </p>
+
+          <h2 class="text-center text-xl md:text-3xl font-semibold mb-4">Core Pillars of Our Digital Newsroom</h2>
+          <ul class="list-disc list-inside text-left mx-auto md:w-3/4">
+            <li class="mb-2"><span class="font-semibold">Advanced Information Gathering:</span> Utilizing a vast network of digital resources and on-the-ground insights to capture the full spectrum of news.</li>
+            <li class="mb-2"><span class="font-semibold">Precision Editing:</span> Combining journalistic rigor with digital acumen to sharpen narratives and enhance factual accuracy.</li>
+            <li class="mb-2"><span class="font-semibold">Innovative Content Production:</span> Crafting stories that thrive across mediums – from immersive articles to engaging digital broadcasts.</li>
+            <li class="mb-2"><span class="font-semibold">Strategic Coverage Planning:</span> Focused on impactful journalism, we dissect and deliver stories that matter in real-time.</li>
+            <li class="mb-2"><span class="font-semibold">Collaborative Dynamics:</span> Our strength lies in our collective expertise, fostering a culture of continuous learning and mutual enhancement.</li>
+            <li><span class="font-semibold">Technology at the Forefront:</span> Harnessing the power of the latest digital tools to keep our newsroom ahead in a rapidly evolving media landscape.</li>
+          </ul>
+        </section>
+
+        <h2 class="text-center text-xl md:text-3xl font-semibold mb-4">News Stories</h2>
+
+        <div class="flex justify-center my-3 lg:mt-0">
           <div class="relative">
             <input v-model="search" type="search" class="bg-gray-50 text-black text-sm rounded-full
                             focus:outline-none focus:shadow w-64 pl-8 px-3 py-1" placeholder="Search...">
@@ -40,6 +61,15 @@
 
             </div>
           </div>
+        </div>
+
+        <div class="flex justify-end">
+          <button
+              v-if="can.createNewsStory"
+              @click="appSettingStore.btnRedirect(`/news/story/create`)"
+              class="bg-green-600 hover:bg-green-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
+          >Create News Story
+          </button>
         </div>
 
         <div class="overflow-hidden shadow-sm sm:rounded-lg">
@@ -86,7 +116,7 @@
                         class="hidden md:table-cell min-w-[8rem] px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                     >
                       <button
-                          @click="appSettingStore.btnRedirect(`/news/${news.slug}`)"
+                          @click="appSettingStore.btnRedirect(`/news/story/${news.slug}`)"
                       ><img :src="`/storage/images/${news.image}`" class="rounded-full h-20 w-20 object-cover"
                             alt="news cover"></button>
                     </div>
@@ -95,7 +125,7 @@
                         class="table-cell px-6 py-4 font-medium text-gray-900 dark:text-gray-50 whitespace-nowrap align-middle"
                     >
                       <button
-                          @click="appSettingStore.btnRedirect(`/news/${news.slug}`)"
+                          @click="appSettingStore.btnRedirect(`/news/story/${news.slug}`)"
                           class="text-lg font-semibold text-blue-800 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-200"
                       >{{ news.title }}
                       </button>
@@ -113,27 +143,27 @@
                     </div>
                     <div class="hidden lg:table-cell px-6 py-4 align-middle space-x-2">
                       <button
-                          v-if="props.can.publishNewsPost && !news.published_at"
+                          v-if="props.can.publishNewsStory && !news.published_at"
                           @click="publish(news.id)"
                           class="bg-green-600 hover:bg-green-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
                       >Publish
                       </button>
-                      <span v-if="!props.can.publishNewsPost && !news.published_at" class="mr-6 text-gray-500 italic"> not yet published</span>
+                      <span v-if="!props.can.publishNewsStory && !news.published_at" class="mr-6 text-gray-500 italic"> not yet published</span>
                       <span v-if="news.published_at" class="mr-6 text-gray-800 dark:text-white font-semibold">{{
                           formatDate(news.published_at)
                         }}</span>
                     </div>
                     <div class="hidden lg:table-cell px-6 py-4 align-middle space-x-2 space-y-2">
                       <button
-                          v-if="news.can.editNewsPost"
-                          @click="appSettingStore.btnRedirect(`/news/${news.slug}/edit`)"
+                          v-if="news.can.editNewsStory"
+                          @click="appSettingStore.btnRedirect(`/news/story/${news.slug}/edit`)"
                           class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                       >Edit
                       </button>
                       <button
                           class="px-4 py-2 text-white font-semibold bg-red-600 hover:bg-red-500 rounded-lg"
                           @click="destroy(news.id)"
-                          v-if="news.can.deleteNewsPost"
+                          v-if="news.can.deleteNewsStory"
                       >
                         <font-awesome-icon icon="fa-trash-can"/>
                       </button>

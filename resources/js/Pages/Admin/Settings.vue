@@ -348,7 +348,7 @@ import JetValidationErrors from '@/Jetstream/ValidationErrors'
 import ServerTime from "@/Components/Pages/Admin/ServerTime"
 import Message from "@/Components/Global/Modals/Messages"
 
-usePageSetup('Admin/Settings')
+usePageSetup('admin.settings')
 
 const appSettingStore = useAppSettingStore()
 

@@ -3,7 +3,7 @@
 Last Update: January 19, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
-# v0.8.1.4
+# v0.8.2.0
 January 19, 2024
 * Fix the page layout/loading bugs on the login, register, password reset and password confirmation pages
 * Improve
@@ -13,7 +13,9 @@ January 19, 2024
   * Requires a mix of Letters, mixedCase, Numbers, and Symbols
 * In the middle of updating the Verify Email routes ... redirecting them to /public/{routeName}
   * This includes the Password Reset pages
-* The /news/* redirects to /public/news/* if the user is not logged in.
+* Fix the VideoPlayer on click/tap functions. If in TopRight mode the video will go to FullPage mode. If in FullPage mode it will pause/play the video. If in Full Page mobile mode it will toggle the controls show/hide.
+  * There is still a bug with the mobile devices where only the top half of the video is clickable/interactive.
+* Rebuilt the News Controllers (major update)
 
 ## v0.8.1.3
 January 18, 2024

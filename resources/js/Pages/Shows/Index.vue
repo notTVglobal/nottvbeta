@@ -1,7 +1,7 @@
 <template>
   <Head title="Shows"/>
 
-  <div class="place-self-center flex flex-col gap-y-3 w-full overscroll-x-none">
+  <div class="place-self-center flex flex-col gap-y-3 w-full overflow-x-hidden">
     <div id="topDiv" class="bg-gray-900 text-white px-5">
 
       <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>

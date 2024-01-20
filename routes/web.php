@@ -29,7 +29,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\NewsPersonController;
-use App\Http\Controllers\NewsPostController;
+use App\Http\Controllers\NewsStoryController;
 use App\Http\Controllers\NewsroomController;
 use App\Http\Controllers\NewsRssFeedController;
 use App\Http\Controllers\MovieController;
@@ -70,15 +70,7 @@ use Laravel\Cashier\Checkout;
 |
 */
 
-//Route::get('/', function () {
-//    return Inertia::render('Welcome', [
-//        'canLogin' => Route::has('login'),
-//        'canRegister' => Route::has('register'),
-//    ]);
-//})->name('home');
-
 Route::get('/', [WelcomeController::class, 'index'])->name('home');
-
 
 Route::get('/send-mail', function () {
    Mail::to('test@test.com')->queue(new VerifyMail());
@@ -92,19 +84,15 @@ Route::get('/home', function () {
     } return redirect('/');
 });
 
-//Route::get('/register', function () {
-//    return redirect('/register');
-//})->name('register');
-//
 Route::get('/public/register', function () {
-  return Inertia::render('Public/Register');
+  return Inertia::render('Register');
 })->name('public.register');
 
 Route::get('/public/login', function () {
-  return Inertia::render('Public/Login');
+  return Inertia::render('Login');
 })->name('public.login');
 
-Route::get('public/forgot-password', function () {
+Route::get('/public/forgot-password', function () {
   return Inertia::render('Public/ForgotPassword');
 })->name('public.forgotPassword');
 
@@ -155,20 +143,27 @@ Route::get('/terms-of-service', [\App\Http\Controllers\TermsOfServiceController:
 
 Route::get('/whitepaper', [WhitepaperController::class, 'show'])->name('whitepaper.show');
 
-// Public Pages
 
-// News
-Route::get('public/news', [NewsController::class, 'index'])
-    ->name('public.news.index');
+// News (public, everyone can see these)
+////////////////////////////////////////
 
-Route::get('public/news/{news}', [NewsController::class, 'show'])
-    ->name('public.news.show');
+// News is no longer a resource.
+// tec21: 2024-01-20 removed the model and table.
+Route::get('/news', [NewsController::class, 'index'])
+    ->name('news.index');
 
-Route::get('public/news/reporters', [NewsPersonController::class, 'index'])
-    ->name('public.newsPerson.index');
+// Group news reporter related routes under 'news'
+Route::prefix('/news')->group(function () {
+  Route::get('/reporters', [NewsPersonController::class, 'reportersIndex'])
+      ->name('news.reporters.index');
+  Route::get('/reporter/{newsPerson}', [NewsPersonController::class, 'reporterShow'])
+      ->name('news.reporter.show');
+});
 
-Route::get('public/news/reporter/{newsPerson}', [NewsPersonController::class, 'show'])
-    ->name('public.newsPerson.show');
+// Public news story route
+Route::get('news/story/{story}', [NewsStoryController::class, 'show'])
+    ->name('news/story.show');
+
 
 // BEGIN ROUTES FOR
 // Logged In Users
@@ -243,71 +238,6 @@ Route::middleware([
         ->name('dashboard');
 
 
-// Newsroom
-///////////
-
-    Route::get('/newsroom', [\App\Http\Controllers\NewsroomController::class, 'index'])
-        ->middleware('can:viewAny,App\Models\NewsPerson')
-        ->name('newsroom');
-
-    Route::post('/newsroom/newsperson', [\App\Http\Controllers\NewsPersonController::class, 'store'])
-//        ->middleware('can:create,App\Models\NewsPerson')
-        ->name('newsperson.store');
-
-    Route::put('/newsroom/newsperson/destroy', [\App\Http\Controllers\NewsPersonController::class, 'destroy'])
-//        ->middleware('can:create,App\Models\NewsPerson')
-        ->name('newsperson.destroy');
-
-    // News Person Resource
-//    Route::resource('newsPerson', \App\Http\Controllers\NewsPersonController::class);
-
-
-// News
-////////
-    Route::resource('news', NewsPostController::class);
-
-    Route::get('/news', [NewsPostController::class, 'index'])
-//        ->can('view', 'App\Models\NewsPerson')
-        ->name('news');
-
-    Route::put('/newsroom/publish', [NewsroomController::class, 'publish'])
-//        ->can('view', 'App\Models\NewsPerson')
-        ->name('newsroom.publish');
-
-    Route::post('/news/save', [NewsPostController::class, 'save'])
-        ->name('news.save');
-
-//    Route::get('/news/rss', [NewsRssFeedController::class, 'index'])
-////        ->can('view', 'App\Models\NewsPerson')
-//        ->name('news.rss.index');
-
-    Route::resource('/feeds', NewsRssFeedController::class);
-
-    Route::get('/feeds', [NewsRssFeedController::class, 'index'])
-//        ->can('view', 'App\Models\NewsPerson')
-        ->name('feeds.index');
-
-    // this is a test
-    Route::get('/rss2', [NewsRssFeedController::class, 'rss2'])
-        ->name('rss2');
-    Route::get('/rss2/create', [NewsRssFeedController::class, 'rss2create'])
-        ->name('rss2create');
-    Route::post('/rss2/store', [NewsRssFeedController::class, 'rss2store'])
-        ->name('rss2store');
-    Route::get('/rss2/{id}', [NewsRssFeedController::class, 'rss2show'])
-        ->name('rss2show');
-    Route::get('/rss2/{id}/edit', [NewsRssFeedController::class, 'rss2edit'])
-        ->name('rss2edit');
-    Route::post('/rss2/update', [NewsRssFeedController::class, 'rss2update'])
-        ->name('rss2update');
-    Route::post('/rss2/destroy', [NewsRssFeedController::class, 'rss2destroy'])
-        ->name('rss2destroy');
-    Route::get('/rss2/error', [NewsRssFeedController::class, 'rss2error'])
-        ->name('rss2error');
-
-//    Route::post('/feeds/save', [NewsRssFeedController::class, 'save'])
-//        ->name('feeds.save');
-
 
 
 // VIP
@@ -345,10 +275,10 @@ Route::middleware([
     Route::get('/shop/checkout', [ShopController::class, 'checkout'])
         ->name('checkout');
 
-    Route::post('shop/summary', [ShopController::class, 'summary'])
+    Route::post('/shop/summary', [ShopController::class, 'summary'])
         ->name('shop.summary');
 
-    Route::redirect('shop/summary', '/shop');
+    Route::redirect('/shop/summary', '/shop');
 
     Route::resource('product', ProductController::class);
 
@@ -378,16 +308,16 @@ Route::middleware([
     Route::get('/shop/subscribe', [StripeController::class, 'subscribe'])
         ->name('shop.subscribe');
 
-    Route::post('shop/subscribe', [StripeController::class, 'setupNewSubscription'])
+    Route::post('/shop/subscribe', [StripeController::class, 'setupNewSubscription'])
         ->name('shop.subscribe.post');
 
     Route::get('/shop/subscription_success', [StripeController::class, 'subscriptionSuccess'])
         ->name('subscriptionSuccess');
 
-    Route::post('payment/setup', [StripeController::class, 'initiateSetup']);
-    Route::post('payment/initiate', [StripeController::class, 'initiatePayment']);
-    Route::post('payment/complete', [StripeController::class, 'completePayment']);
-    Route::post('payment/failure', [StripeController::class, 'failPayment']);
+    Route::post('/payment/setup', [StripeController::class, 'initiateSetup']);
+    Route::post('/payment/initiate', [StripeController::class, 'initiatePayment']);
+    Route::post('/payment/complete', [StripeController::class, 'completePayment']);
+    Route::post('/payment/failure', [StripeController::class, 'failPayment']);
 
     Route::post('/admin/getUserSubscriptionsFromStripe', [StripeController::class, 'getUserSubscriptionsFromStripe'])
         ->name('getUserSubscriptionsFromStripe');
@@ -408,11 +338,50 @@ Route::middleware([
         ]);
     })->name('billing');
 
-        Route::get('billing-portal', function (Request $request) {
+        Route::get('/billing-portal', function (Request $request) {
             return $request->user()->redirectToBillingPortal(route('stream'));
         })->name('billingPortal');
 
-    Route::get('billing-portal-access', [StripeController::class, 'getBillingPortalAccessUrl']);
+    Route::get('/billing-portal-access', [StripeController::class, 'getBillingPortalAccessUrl']);
+
+
+
+
+// Newsroom
+///////////
+
+  // Insert Newsroom Routes here.
+  Route::get('/newsroom', [NewsroomController::class, 'index'])
+      ->middleware('can:viewAny,App\Models\NewsPerson')
+      ->name('newsroom');
+
+  // NewsStory
+  ////////////
+  // Separate route for the NewsStory 'index' method
+  // tec21: the reason for this is because the News Team (NewsPersons)
+  // creates, edits and reviews the stories before publishing. The public route
+  // is the /news route.
+  Route::get('newsroom/stories', [NewsStoryController::class, 'index'])->name('news.story.index');
+
+  // Custom resource routes for 'news/story', excluding the 'index' method
+  Route::resource('news/story', NewsStoryController::class)->except(['index', 'show']);
+
+
+
+// NewsPerson
+/////////////
+
+  // Insert NewsPerson Routes here.
+  // Standard resource route for newsPerson
+  Route::resource('newsroom/newsPerson', NewsPersonController::class);
+
+
+// NewsRssFeeds
+///////////////
+
+  // Insert NewsRssFeeds Routes here.
+
+
 
 
 // Subscriptions

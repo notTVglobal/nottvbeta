@@ -51,7 +51,7 @@
                   <div v-if="video.showEpisode">Episode: {{ video.showEpisode.name }}</div>
                   <div v-if="video.movie">Movie: {{ video.movie.name }}</div>
                   <div v-if="video.movieTrailer">Trailer: {{ video.movieTrailer.name }}</div>
-                  <div v-if="video.newsPost">News Post: {{ video.newsPost.name }}</div>
+                  <div v-if="video.newsStory">News Post: {{ video.newsStory.name }}</div>
                 </div>
               </template>
 
@@ -81,7 +81,7 @@
               <div v-if="video.movieTrailer"
                    class="w-fit text-xs rounded-lg px-1 uppercase bg-indigo-800 text-white font-semibold">Trailer
               </div>
-              <div v-if="video.newsPost"
+              <div v-if="video.newsStory"
                    class="hidden w-fit text-xs rounded-lg px-1 uppercase bg-orange-800 text-white font-semibold">News
               </div>
               <div v-if="video.storage_location === 'external'"
@@ -163,9 +163,9 @@ const playVideo = (video) => {
       nowPlayingStore.movieTrailer.name = video.movieTrailer.name
       nowPlayingStore.movieTrailer.url = 'movies/' + video.movieTrailer.slug
     }
-    // Check if newsPost exists
-    if (video.newsPost) {
-      nowPlayingStore.newsPost.name = props.video.name
+    // Check if newsStory exists
+    if (video.newsStory) {
+      nowPlayingStore.newsStory.name = props.video.name
       nowPlayingStore.movie.url = 'movies/' + video.movie.slug
     }
     videoPlayerStore.loadNewSourceFromFile(video)

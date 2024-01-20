@@ -217,6 +217,11 @@ onMounted(() => {
   appSettingStore.ott = 0
   appSettingStore.pageIsHidden = false
 
+  // Only scroll into view if there are no query strings
+  const topDiv = document.getElementById("topDiv")
+  if (topDiv) {
+    topDiv.scrollIntoView()
+  }
 
 
 })

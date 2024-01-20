@@ -62,7 +62,7 @@ const initialState = () => ({
             cloud_folder: '',
         },
     },
-    newsPost: {
+    newsStory: {
         name: '',
         byLine: '',
         dateTime: '',

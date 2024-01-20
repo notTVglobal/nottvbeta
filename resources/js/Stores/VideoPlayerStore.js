@@ -297,7 +297,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             const userStore = useUserStore()
             this.videoContainerClass = 'welcomeVideoContainer'
             this.class = 'welcomeVideoClass'
-            userStore.loggedIn = false
+            appSettingStore.loggedIn = false
             appSettingStore.fullPage = true
             appSettingStore.hidePage = false
         },

@@ -309,7 +309,7 @@ const myTotalStorageRoundedPercentage = computed(() => {
 async function updateUserStore() {
   // Set user store data
   userStore.id = props.id
-  userStore.loggedIn = true
+  appSettingStore.loggedIn = true
   userStore.isAdmin = props.isAdmin
   userStore.isCreator = props.isCreator
   userStore.isNewsPerson = props.isNewsPerson

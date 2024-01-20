@@ -1,134 +1,53 @@
 <template>
 
   <Head title="News"/>
-  <!--    <div class="sticky top-0 w-full nav-mask">-->
-  <!--        <ResponsiveNavigationMenu/>-->
-  <!--        <NavigationMenu />-->
-  <!--    </div>-->
+  <div>
 
-  <!--    <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">-->
-  <div class="place-self-center flex flex-col gap-y-3">
-    <div id="topDiv" class="bg-white dark:bg-gray-800 text-black dark:text-gray-50 p-5 mb-10">
+    <PublicNavigationMenu v-if="!appSettingStore.loggedIn" class="fixed top-0 w-full nav-mask"/>
 
-      <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
-      <NewsHeader :can="can">News</NewsHeader>
+    <div class="place-self-center flex flex-col gap-y-3 w-full">
+      <div id="topDiv" class="bg-gray-900 text-white px-5">
 
-      <div class="my-4">
-        Events, shows, episodes, movies, news, channel updates, announcements, etc.
-      </div>
+        <PublicNewsNavigationButtons v-if="!appSettingStore.loggedIn"/>
 
-      <div class="flex items-center my-3 lg:mt-0">
-        <div class="relative">
-          <input v-model="search" type="search" class="bg-gray-50 text-black text-sm rounded-full
-                            focus:outline-none focus:shadow w-64 pl-8 px-3 py-1" placeholder="Search...">
-          <div class="absolute top-0 flex items-center h-full ml-2">
-            <svg class="fill-current text-gray-400 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-              <path
-                  d="M456.69 421.39 362.6 327.3a173.81 173.81 0 0 0 34.84-104.58C397.44 126.38 319.06 48 222.72 48S48 126.38 48 222.72s78.38 174.72 174.72 174.72A173.81 173.81 0 0 0 327.3 362.6l94.09 94.09a25 25 0 0 0 35.3-35.3ZM97.92 222.72a124.8 124.8 0 1 1 124.8 124.8 124.95 124.95 0 0 1-124.8-124.8Z"/>
-            </svg>
+        <div class="mt-4 text-gray-50 text-center text-3xl font-semibold tracking-widest uppercase">News Headlines</div>
+
+        <main class="pb-8">
+          <div class="mx-auto px-4 border-b border-gray-800 flex justify-center ">
+
+            <!--            <div class="bg-gray-200 mx-auto p-5 my-10 w-full text-gray-900 rounded">-->
+            <div class="mb-20 bg-gray-200 p-5 my-10 w-[calc(80vw)] px-10 2xl:px-96 py-10 text-gray-900 rounded">
+              <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
+                <div class="w-full flex flex-row justify-center">
+                  <div class="text-2xl font-semibold">
+                    Coming Soon.
+                  </div>
+                </div>
+              </div>
+            </div>
 
           </div>
-        </div>
+        </main>
+
+        <Footer  v-if="!appSettingStore.loggedIn"/>
+
       </div>
-
-      <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-        <div class="p-6 bg-white dark:bg-gray-900 border-b border-gray-200">
-          <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-            <table
-                class="w-full text-sm text-left text-gray-500 dark:text-gray-400"
-            >
-              <thead
-                  class="w-full text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
-              >
-              <tr>
-                <th scope="col" class="w-full px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                  News Posts
-                </th>
-                <th scope="col" class="text-left px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                  Published on
-                </th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr
-                  v-for="post in news.data"
-                  :key="post.id"
-                  class="bg-white border-b dark:bg-gray-300 dark:border-gray-700"
-              >
-
-                <td
-                    scope="row"
-                    class="px-6 py-4 text-gray-900 dark:text-white whitespace-nowrap"
-                >
-                  <Link :href="`/news/${post.slug}`"
-                        class="text-blue-800 uppercase font-semibold text-md hover:text-blue-600 hover:opacity-75 transition ease-in-out duration-150">
-                    <div class="flex flex-row"><img :src="'/storage/images/' + post.image" alt="news cover"
-                                                    class="pr-4 h-6 max-w-[6rem] object-cover ">
-                      {{ post.title }}
-                    </div>
-                  </Link>
-                </td>
-                <td class="text-gray-900">
-                  {{ formatDate(post.published_at) }}
-                </td>
-              </tr>
-              </tbody>
-            </table>
-            <!-- Paginator -->
-            <Pagination :data="news" class="mt-6"/>
-          </div>
-        </div>
-      </div>
-
-
     </div>
-
   </div>
-
 </template>
 
 <script setup>
-import { Inertia } from "@inertiajs/inertia"
-import { ref, watch } from "vue"
-import { useForm } from '@inertiajs/inertia-vue3'
-import throttle from "lodash/throttle"
-import { usePageSetup } from '@/Utilities/PageSetup'
-import { useAppSettingStore } from "@/Stores/AppSettingStore"
-import NewsHeader from "@/Components/Pages/News/NewsHeader"
-import Pagination from "@/Components/Global/Paginators/Pagination"
-import Message from "@/Components/Global/Modals/Messages"
-
-usePageSetup('news')
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import PublicNewsNavigationButtons from '@/Components/Pages/Public/PublicNewsNavigationButtons.vue'
+import PublicNavigationMenu from '@/Components/Global/Navigation/PublicNavigationMenu'
+import Footer from '@/Components/Global/Layout/Footer.vue'
 
 const appSettingStore = useAppSettingStore()
 
-function scrollToCities() {
-  document.getElementById("cities").scrollIntoView({behavior: "smooth"})
-}
+appSettingStore.noLayout = true
+appSettingStore.currentPage = 'public.news.index'
 
-let props = defineProps({
-  filters: Object,
-  can: Object,
-  news: Object,
-});
-
-let form = useForm({
-  id: '',
-});
-
-let search = ref(props.filters.search)
-
-watch(search, throttle(function (value) {
-  Inertia.get('/news', {search: value}, {
-    preserveState: true,
-    replace: true
-  })
-}, 300))
-
-function destroy(id) {
-  if (confirm("Are you sure you want to Delete")) {
-    form.delete(route('news.destroy', ['news', id]))
-  }
-}
-
+const props = defineProps({
+  newsPeople: Array,
+})
 </script>

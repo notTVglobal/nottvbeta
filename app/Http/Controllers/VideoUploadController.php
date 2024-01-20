@@ -69,7 +69,7 @@ class VideoUploadController extends Controller
                 ->sum('size')),
             'notTvTotalStorageUsed' => formatBytes(Video::where('storage_location', '=', 'spaces')
                 ->sum('size')),
-            'videos' => Video::with('showEpisode.show', 'movie', 'movieTrailer', 'newsPost')
+            'videos' => Video::with('showEpisode.show', 'movie', 'movieTrailer', 'newsStory')
                 ->when(Request::input('search'), function ($query, $search) {
                     $query->where('file_name', 'like', "%{$search}%");
                 })
@@ -97,7 +97,7 @@ class VideoUploadController extends Controller
                 ],
                 'movie' => $video->movie,
                 'movieTrailer' => $video->movieTrailer,
-                'newsPost' => $video->newsPost,
+                'newsStory' => $video->newsStory,
                 'can' => [
                     'viewAny' => auth()->user()->can('viewAny', $video),
                     'view' => auth()->user()->can('view', $video),
@@ -111,7 +111,7 @@ class VideoUploadController extends Controller
             // to reduce load on the server ... replace it with a more
             // efficient query.
             //
-            'allVideos' => Video::with('showEpisode', 'movie', 'movieTrailer', 'newsPost')
+            'allVideos' => Video::with('showEpisode', 'movie', 'movieTrailer', 'newsStory')
                 ->when(Request::input('search'), function ($query, $search) {
                     $query->where('file_name', 'like', "%{$search}%");
                 })
@@ -136,7 +136,7 @@ class VideoUploadController extends Controller
                     'showEpisode' => $video->showEpisode,
                     'movie' => $video->movie,
                     'movieTrailer' => $video->movieTrailer,
-                    'newsPost' => $video->newsPost,
+                    'newsStory' => $video->newsStory,
                     'can' => [
                         'viewAny' => auth()->user()->can('viewAny', $video),
                         'view' => auth()->user()->can('view', $video),

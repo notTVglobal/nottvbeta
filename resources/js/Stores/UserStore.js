@@ -7,7 +7,6 @@ import { ref } from "vue"
 // const appSettingStore = useAppSettingStore()
 
 const initialState = () => ({
-    loggedIn: Boolean,
     isMobile: Boolean,
     showNavDropdown: Boolean,
 

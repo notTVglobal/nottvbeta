@@ -13,12 +13,6 @@
         disabled
     >Upload Press Release
     </button>
-    <button
-        v-if="can.createNewsPost"
-        @click="appSettingStore.btnRedirect(`/news/create`)"
-        class="bg-green-600 hover:bg-green-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
-    >Create News
-    </button>
   </div>
 </template>
 

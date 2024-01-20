@@ -33,9 +33,9 @@
               </h3>
               <h3 class="inline-flex items-center relative">
                 <JetNavLink
-                    v-touch="()=>(route('news'))"
+                    v-touch="()=>(route('news.index'))"
                     @click="videoPlayerStore.makeVideoTopRight()"
-                    :href="route('news')"
+                    :href="route('news.index')"
                     :active="appSettingStore.currentPage === 'news'">
                   News
                 </JetNavLink>
@@ -103,11 +103,8 @@
 <!--                  </div>-->
 <!--                </JetNavLink>-->
               </div>
-              <div v-if="userStore.isSubscriber && !userStore.isAdmin" class="text-fuchsia-700">PREMIUM</div>
-              <div v-if="userStore.isVip && !userStore.isAdmin" class="text-fuchsia-700">VIP</div>
-              <div v-if="userStore.isCreator && userStore.isSubscriber && !userStore.isAdmin" class="text-fuchsia-700">
-                CREATOR
-              </div>
+              <div v-if="userStore.isSubscriber" class="text-fuchsia-700">PREMIUM</div>
+              <div v-if="userStore.isVip" class="text-fuchsia-700">VIP</div>
               <div v-if="userStore.isAdmin" class="text-red-700">ADMIN</div>
             </div>
             <!-- Settings Dropdown -->
@@ -117,7 +114,7 @@
                 <template #trigger>
                   <button v-if="$page.props.jetstream.managesProfilePhotos"
                           class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition">
-                    <img class="min-h-[2.5rem] min-w-[2.5rem] max-w-[2.5rem] rounded-full object-cover"
+                    <img class="h-12 w-12 rounded-full object-cover border-2 border-gray-600 hover:border-gray-300"
                          :src="$page.props.user.profile_photo_url" :alt="$page.props.user.name">
                   </button>
 
@@ -150,32 +147,36 @@
                       <JetDropdownLink
                           v-if="userStore.isCreator"
                           @click="videoPlayerStore.makeVideoTopRight()"
-                          :href="route('dashboard')">
+                          :href="route('dashboard')"
+                          :active="appSettingStore.currentPage === 'dashboard'">
                         Dashboard
                       </JetDropdownLink>
 
                       <JetDropdownLink
                           v-if="userStore.isNewsPerson"
                           @click="videoPlayerStore.makeVideoTopRight()"
-                          :href="route('newsroom')">
+                          :href="route('newsroom')"
+                          :active="appSettingStore.currentPage === 'newsroom'">
                         Newsroom
                       </JetDropdownLink>
 
-                      <JetDropdownLink
+                      <Link
                           v-if="userStore.isVip || userStore.isAdmin"
                           @click="videoPlayerStore.makeVideoTopRight()"
                           :href="route('library')"
-                          class="bg-gray-400 hover:bg-gray-400 focus:bg-gray-400 text-white hover:text-gray-800">
+                          class="bg-gray-400 text-white block w-full px-4 py-2 text-sm leading-5 text-left"
+                          :active="appSettingStore.currentPage === 'library'">
                         My Library
                         <div class="text-xs text-white bg-yellow-800 uppercase flex justify-center items-center ml-1 -right-4 top-1.5
-                                    font-semibold inline-block py-0.5 px-1 rounded last:mr-0 mr-1">
+                                    font-semibold inline-block py-0.5 px-1 rounded last:mr-0 mr-1 shadow-cyan-950 drop-shadow-lg">
                           coming soon
                         </div>
-                      </JetDropdownLink>
+                      </Link>
 
                       <JetDropdownLink
                           @click="videoPlayerStore.makeVideoTopRight()"
-                          :href="route('profile.show')">
+                          :href="route('profile.show')"
+                          :active="appSettingStore.currentPage === 'settings'">
                         Settings
                       </JetDropdownLink>
 
@@ -188,14 +189,16 @@
                       <JetDropdownLink
                           v-if="userStore.isCreator"
                           @click="videoPlayerStore.makeVideoTopRight()"
-                          :href="route('training')">
+                          :href="route('training')"
+                          :active="appSettingStore.currentPage === 'training'">
                         Training
                       </JetDropdownLink>
 
                       <JetDropdownLink
                           v-if="userStore.isCreator"
                           @click="videoPlayerStore.makeVideoTopRight()"
-                          :href="route('videoupload')">
+                          :href="route('videoupload')"
+                          :active="appSettingStore.currentPage === 'videoUpload'">
                         Video Upload
                       </JetDropdownLink>
 
@@ -215,25 +218,29 @@
 
                         <JetDropdownLink
                             @click="videoPlayerStore.makeVideoTopRight()"
-                            :href="route('admin.settings')">
+                            :href="route('admin.settings')"
+                            :active="appSettingStore.currentPage === 'admin.settings'">
                           Admin Settings
                         </JetDropdownLink>
 
                         <JetDropdownLink
                             @click="videoPlayerStore.makeVideoTopRight()"
-                            :href="route('admin.channels')">
+                            :href="route('admin.channels')"
+                            :active="appSettingStore.currentPage === 'admin.channels'">
                           Channels
                         </JetDropdownLink>
 
                         <JetDropdownLink
                             @click="videoPlayerStore.makeVideoTopRight()"
-                            :href="route('calculations')">
+                            :href="route('calculations')"
+                            :active="appSettingStore.currentPage === 'calculations'">
                           Calculations
                         </JetDropdownLink>
 
                         <JetDropdownLink
                             @click="videoPlayerStore.makeVideoTopRight()"
-                            :href="route('mistServerApi')">
+                            :href="route('mistServerApi')"
+                            :active="appSettingStore.currentPage === 'mistServerApi'">
                           MistServer API
                         </JetDropdownLink>
 

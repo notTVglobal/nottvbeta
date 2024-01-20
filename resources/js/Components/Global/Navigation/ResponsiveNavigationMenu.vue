@@ -69,7 +69,7 @@
                 <Link @click="userStore.closeNavDropdown()"
                       :href="route('profile.show')"
                       :active="route().current('profile.show')">
-                  <img class="h-10 min-w-[2.5rem] rounded-full object-cover"
+                  <img class="h-12 w-12 rounded-full object-cover border-1 border-gray-300"
                        :src="$page.props.user.profile_photo_url" :alt="$page.props.user.name">
                 </Link>
               </div>
@@ -91,12 +91,13 @@
               </div>
             </div>
             <div class="justify-end text-right w-12">
-              <div v-if="!userStore.isAdmin">
+
+                <div v-if="userStore.isAdmin" class="text-xs font-semibold text-red-700">ADMIN</div>
                 <div v-if="userStore.isSubscriber" class="text-xs font-semibold text-fuchsia-700">PREMIUM</div>
                 <div v-if="userStore.isVip" class="text-xs font-semibold text-fuchsia-700">VIP</div>
                 <div v-if="userStore.isCreator" class="text-xs font-semibold text-fuchsia-700">CREATOR</div>
-              </div>
-              <div v-if="userStore.isAdmin" class="text-xs font-semibold text-red-700">ADMIN</div>
+
+
             </div>
 
           </div>
@@ -116,9 +117,9 @@
 <!--            </div>-->
 <!--          </JetResponsiveNavLink>-->
 
-          <div class="flex flex-row w-full justify-center py-4 bg-yellow-500">
+          <div v-if="!userStore.isSubscriber && !userStore.isVip && !userStore.isAdmin"
+               class="flex flex-row w-full justify-center py-4 bg-yellow-500">
             <PublicNavLink
-                v-if="!userStore.isSubscriber && !userStore.isVip && !userStore.isAdmin"
                 @click="upgrade"
                 :active="appSettingStore.currentPage === 'upgrade'"
                 class="flex">
@@ -157,7 +158,7 @@
 
           <JetResponsiveNavLink
               @click="appSettingStore.closeNavDropdown()"
-              :href="route('news')"
+              :href="route('news.index')"
               :active="appSettingStore.currentPage === 'news'">
             News
           </JetResponsiveNavLink>

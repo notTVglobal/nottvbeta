@@ -20,8 +20,8 @@
                 </h3>
                 <h3 class="inline-flex items-center relative">
                   <JetNavLink
-                      :href="`/public/news`"
-                      :active="appSettingStore.currentPage === 'public.news.index'">
+                      :href="`/news`"
+                      :active="appSettingStore.currentPage === 'news.index'">
                     News</JetNavLink>
                 </h3>
               </div>
@@ -30,14 +30,14 @@
           <div class="space-x-4 py-6 pt-6 mx-8 text-gray-200">
             <h3 class="inline-flex items-center relative">
               <JetNavLink
-                  :href="`/public/login`"
-                  :active="appSettingStore.currentPage === 'public.login'">
+                  :href="`/login`"
+                  :active="appSettingStore.currentPage === 'login'">
                 Login</JetNavLink>
             </h3>
             <h3 class="inline-flex items-center relative">
               <JetNavLink
-                  :href="`/public/register`"
-                  :active="appSettingStore.currentPage === 'public.register'">
+                  :href="`/register`"
+                  :active="appSettingStore.currentPage === 'register'">
                 Register</JetNavLink>
             </h3>
 

@@ -63,7 +63,7 @@ import UpdatePasswordForm from '@/Pages/Profile/Partials/UpdatePasswordForm'
 import UpdateProfileInformationForm from '@/Pages/Profile/Partials/UpdateProfileInformationForm'
 import UpdateContactInformationForm from '@/Pages/Profile/Partials/UpdateContactInformationForm'
 
-usePageSetup('profile.show')
+usePageSetup('settings')
 
 defineProps({
   confirmsTwoFactorAuthentication: Boolean,

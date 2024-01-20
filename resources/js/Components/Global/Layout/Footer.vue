@@ -10,8 +10,8 @@
     </nav>
     <nav>
       <header class="footer-title">Newsroom</header>
-      <Link :href="`/public/news`" class="hover:text-blue-500">Headlines</Link>
-      <Link :href="`/public/news/reporters`" class="hover:text-blue-500">Reporters</Link>
+      <Link :href="`/news`" class="hover:text-blue-500">Headlines</Link>
+      <Link :href="route('news.reporters.index')" class="hover:text-blue-500">Reporters</Link>
       <!--                        <a class="link link-hover">About us</a>-->
       <!--                        <a class="link link-hover">Contact</a>-->
       <!--                        <a class="link link-hover">Jobs</a>-->
@@ -37,7 +37,7 @@
   <footer class="bg-gray-900 text-neutral-content border-t border-base-300 space-y-4 px-10 2xl:px-96 py-10">
     <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
       <div class="flex flex-col items-center md:items-start text-center md:text-left">
-        <img src="/storage/images/logo_white_512.png" alt="Logo" class="w-1/6 mb-2">
+        <img src="/storage/images/logo_white_512.png" alt="Logo" class=" w-1/3 md:w-1/6 mb-2">
         <p>not
           <span class="text-xs -ml-1 -mr-1">
                 &#174;

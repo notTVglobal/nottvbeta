@@ -1,33 +1,33 @@
 <template>
-  <div class="flex mt-24 py-10 px-16 justify-center">
+  <div class="flex py-10 px-16 justify-center">
     <div class="grid grid-cols-2 md:grid-cols-5 gap-4 justify-center">
      <PublicNavLink
-         @click="() => Inertia.visit('/public/news/reporters')"
-         :active="appSettingStore.currentPage === 'public.news.reporters'">
+         @click="() => Inertia.visit('/news/reporters')"
+         :active="appSettingStore.currentPage === 'news.reporters'">
        Reporters
      </PublicNavLink>
       <PublicNavLink
           disabled
-          @click="() => Inertia.visit('/public/news/stories')"
-          :active="appSettingStore.currentPage === 'public.news.stories'">
+          @click="() => Inertia.visit('/news/stories')"
+          :active="appSettingStore.currentPage === 'news.stories'">
         Stories
       </PublicNavLink>
       <PublicNavLink
           disabled
-          @click="() => Inertia.visit('/public/news/categories')"
-          :active="appSettingStore.currentPage === 'public.news.categories'">
+          @click="() => Inertia.visit('/news/categories')"
+          :active="appSettingStore.currentPage === 'news.categories'">
         Categories
       </PublicNavLink>
       <PublicNavLink
           disabled
-          @click="() => Inertia.visit('/public/news/cities')"
-          :active="appSettingStore.currentPage === 'public.news.cities'">
+          @click="() => Inertia.visit('/news/cities')"
+          :active="appSettingStore.currentPage === 'news.cities'">
         Cities
       </PublicNavLink>
       <PublicNavLink
           disabled
-          @click="() => Inertia.visit('/public/news/regions')"
-          :active="appSettingStore.currentPage === 'public.news.regions'">
+          @click="() => Inertia.visit('/news/regions')"
+          :active="appSettingStore.currentPage === 'news.regions'">
         Regions
       </PublicNavLink>
     </div>

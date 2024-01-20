@@ -18,8 +18,7 @@ class NewsPersonController extends Controller
      *
      * @return \Inertia\Response
      */
-    public function index()
-    {
+    public function reportersIndex(): \Inertia\Response {
       $newsPeople = NewsPerson::with('user')->get()->map(function ($newsPerson) {
         return [
             'id' => $newsPerson->user->id,
@@ -28,9 +27,28 @@ class NewsPersonController extends Controller
             'profile_photo_url' => $newsPerson->user->profile_photo_url,
         ];
       });
-      return Inertia::render('Public/News/Reporters/Index', [
+      return Inertia::render('News/Reporters/Index', [
           'newsPeople' => $newsPeople,
       ]);
+  }
+
+  /**
+   * Display the specified resource.
+   *
+   * @param NewsPerson $newsPerson
+   * @return \Inertia\Response
+   */
+  public function reporterShow(NewsPerson $newsPerson): \Inertia\Response
+  {
+
+    return Inertia::render('News/Reporters/{$id}/Index', [
+        'newsPerson' => [
+            'id' => $newsPerson->user->id,
+            'name' => $newsPerson->user->name,
+            'profile_photo_path' => $newsPerson->user->profile_photo_path,
+            'profile_photo_url' => $newsPerson->user->profile_photo_url,
+        ],
+    ]);
   }
 
     /**
@@ -67,19 +85,11 @@ class NewsPersonController extends Controller
      * Display the specified resource.
      *
      * @param NewsPerson $newsPerson
-     * @return \Inertia\Response
+     * @return void
      */
-    public function show(NewsPerson $newsPerson): \Inertia\Response
+    public function show(NewsPerson $newsPerson)
     {
-
-        return Inertia::render('Public/News/Reporters/{$id}/Index', [
-            'newsPerson' => [
-                'id' => $newsPerson->user->id,
-                'name' => $newsPerson->user->name,
-                'profile_photo_path' => $newsPerson->user->profile_photo_path,
-                'profile_photo_url' => $newsPerson->user->profile_photo_url,
-            ],
-        ]);
+        //
     }
 
     /**
@@ -100,7 +110,7 @@ class NewsPersonController extends Controller
      * @param NewsPerson $newsPerson
      * @return Response
      */
-    public function update(Request $request, NewsPerson $newsPerson): Response {
+    public function update(Request $request, NewsPerson $newsPerson) {
         //
     }
 

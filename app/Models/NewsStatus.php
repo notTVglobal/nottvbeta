@@ -11,6 +11,6 @@ class NewsStatus extends Model
 
     public function newsPost()
     {
-        return $this->belongsToMany(NewsPost::class);
+        return $this->belongsToMany(NewsStory::class);
     }
 }

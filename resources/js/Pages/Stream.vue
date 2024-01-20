@@ -66,7 +66,7 @@ async function updateUserStore() {
     const response = await axios.post('/getUserStoreData');
     // Update the store with the response data
     userStore.id = response.data.id;
-    userStore.loggedIn = true
+    appSettingStore.loggedIn = true
     userStore.isAdmin = response.data.isAdmin
     userStore.isCreator = response.data.isCreator
     userStore.isNewsPerson = response.data.isNewsPerson

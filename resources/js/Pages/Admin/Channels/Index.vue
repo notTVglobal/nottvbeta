@@ -183,7 +183,7 @@ import AdminHeader from "@/Components/Pages/Admin/AdminHeader"
 import Message from "@/Components/Global/Modals/Messages"
 import Pagination from "@/Components/Global/Paginators/Pagination"
 
-usePageSetup('Admin/Channels/Index')
+usePageSetup('admin.channels')
 
 const appSettingStore = useAppSettingStore()
 

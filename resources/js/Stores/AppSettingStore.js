@@ -5,6 +5,7 @@ import { defineStore } from 'pinia'
 import { Inertia } from '@inertiajs/inertia'
 
 const initialState = () => ({
+    loggedIn: false, // moved from userStore to here.
     pageReload: false, // if set to true the page will reload when we land on the Welcome page.
     noLayout: false, // when true it enables a special "no layout" page class
     thisUrl: window.location.pathname,

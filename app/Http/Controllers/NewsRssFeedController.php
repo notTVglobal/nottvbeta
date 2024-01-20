@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\NewsPerson;
-use App\Models\NewsPost;
+use App\Models\NewsStory;
 use App\Models\NewsRssFeed;
 use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Facades\Request;
@@ -37,8 +37,8 @@ class NewsRssFeedController extends Controller
                 ]),
             'filters' => Request::only(['search']),
             'can' => [
-//                'editNewsPost' => Auth::user()->can('update', NewsPost::class),
-                'createNewsPost' => Auth::user()->can('create', NewsPost::class),
+//                'editNewsStory' => Auth::user()->can('update', NewsStory::class),
+                'createNewsStory' => Auth::user()->can('create', NewsStory::class),
                 'viewNewsroom' => Auth::user()->can('viewAny', NewsPerson::class)
             ]
         ]);
@@ -62,8 +62,8 @@ class NewsRssFeedController extends Controller
                 ]),
             'filters' => Request::only(['search']),
             'can' => [
-//                'editNewsPost' => Auth::user()->can('update', NewsPost::class),
-                'createNewsPost' => Auth::user()->can('create', NewsPost::class),
+//                'editNewsStory' => Auth::user()->can('update', NewsStory::class),
+                'createNewsStory' => Auth::user()->can('create', NewsStory::class),
                 'viewNewsroom' => Auth::user()->can('viewAny', NewsPerson::class)
             ]
         ]);
@@ -71,7 +71,7 @@ class NewsRssFeedController extends Controller
 
     public function rss2create()
     {
-        $this->authorize('create', NewsPost::class);
+        $this->authorize('create', NewsStory::class);
         return Inertia::render(
             'News/Rss2/Create', [
                 'can' => [
@@ -157,8 +157,8 @@ class NewsRssFeedController extends Controller
                     'items' => $array
                 ],
                 'can' => [
-                    'editNewsPost' => Auth::user()->can('update', NewsPost::class),
-                    'deleteNewsPost' => Auth::user()->can('delete', NewsPost::class),
+                    'editNewsStory' => Auth::user()->can('update', NewsStory::class),
+                    'deleteNewsStory' => Auth::user()->can('delete', NewsStory::class),
                     'viewNewsroom' => Auth::user()->can('viewAny', NewsPerson::class)
                 ]
             ]);
@@ -168,7 +168,7 @@ class NewsRssFeedController extends Controller
     public function rss2edit($id)
     {
         $NewsRssFeed = NewsRssFeed::where('slug', $id)->first();
-        $this->authorize('update', NewsPost::class);
+        $this->authorize('update', NewsStory::class);
         return Inertia::render(
             'News/Rss2/{$id}/Edit', [
                 'feed' => $NewsRssFeed,
@@ -208,7 +208,7 @@ class NewsRssFeedController extends Controller
 
     public function rss2destroy($id)
     {
-        $this->authorize('delete', NewsPost::class);
+        $this->authorize('delete', NewsStory::class);
         NewsRssFeed::destroy($id);
 
         return redirect()->route('rss2')->with('message', 'RSS Feed Deleted Successfully');
@@ -226,7 +226,7 @@ class NewsRssFeedController extends Controller
      */
     public function create()
     {
-        $this->authorize('create', NewsPost::class);
+        $this->authorize('create', NewsStory::class);
         return Inertia::render(
             'News/Rss/Create', [
                 'can' => [
@@ -322,8 +322,8 @@ class NewsRssFeedController extends Controller
                     'items' => $array
                 ],
                 'can' => [
-                    'editNewsPost' => Auth::user()->can('update', NewsPost::class),
-                    'deleteNewsPost' => Auth::user()->can('delete', NewsPost::class),
+                    'editNewsStory' => Auth::user()->can('update', NewsStory::class),
+                    'deleteNewsStory' => Auth::user()->can('delete', NewsStory::class),
                     'viewNewsroom' => Auth::user()->can('viewAny', NewsPerson::class)
                 ]
             ]);
@@ -360,7 +360,7 @@ class NewsRssFeedController extends Controller
      */
     public function destroy($id)
     {
-        $this->authorize('delete', NewsPost::class);
+        $this->authorize('delete', NewsStory::class);
         NewsRssFeed::destroy($id);
 
         return redirect()->route('feeds.index')->with('message', 'RSS Feed Deleted Successfully');

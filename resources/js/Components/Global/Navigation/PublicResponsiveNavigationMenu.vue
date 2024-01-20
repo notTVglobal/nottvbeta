@@ -123,7 +123,7 @@
         <JetResponsiveNavLink
             v-if="$page.props.user.role_id === 2 || $page.props.user.role_id === 3 || $page.props.user.role_id === 4"
             @click="userStore.closeNavDropdown()"
-            :href="route('news')"
+            :href="route('news.index')"
             :active="route().current('news')">
           News
         </JetResponsiveNavLink>

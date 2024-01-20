@@ -51,7 +51,7 @@ class Image extends Model
 
     public function newsPost()
     {
-        return $this->hasMany(NewsPost::class);
+        return $this->hasMany(NewsStory::class);
     }
 
     public function video()
