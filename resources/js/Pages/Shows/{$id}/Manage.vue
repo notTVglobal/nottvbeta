@@ -22,12 +22,7 @@
         <div class="flex justify-between mb-3 pt-6">
           <div class="font-bold mb-4 text-black">MANAGE SHOW</div>
           <div>
-            <button
-                @click="appSettingStore.btnRedirect('/dashboard')"
-                class="bg-black hover:bg-gray-800 text-white font-semibold ml-2 mt-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
-            >Dashboard
-            </button>
-
+            <DashboardButton />
           </div>
         </div>
 
@@ -143,6 +138,7 @@ import ShowFooter from '@/Components/Pages/Shows/Layout/ShowFooter'
 import ShowEpisodesList from '@/Components/Pages/Shows/Elements/ManageShowEpisodesList'
 import ShowCreditsList from '@/Components/Pages/Shows/Elements/ManageShowCreditsList'
 import Message from '@/Components/Global/Modals/Messages'
+import DashboardButton from '@/Components/Global/Buttons/DashboardButton.vue'
 
 usePageSetup('shows/slug/manage')
 

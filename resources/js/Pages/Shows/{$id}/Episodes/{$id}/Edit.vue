@@ -472,7 +472,7 @@ let submit = () => {
   if (form.video_embed_code !== props.episode.video_embed_code && form.video_url) {
     addEmbedCodeConfirm();
   } else
-    form.put(route('showEpisodes.update', props.episode.slug));
+    form.patch(route('showEpisodes.update', props.episode.slug));
 };
 
 // Compare the converted date to the current date in the user's timezone
@@ -569,7 +569,7 @@ onUnmounted(() => {
 
 function addEmbedCodeConfirm() {
   if (confirm("Are you sure you want to add this embed code? It will override the video url.")) {
-    form.put(route('showEpisodes.update', props.episode.slug));
+    form.patch(route('showEpisodes.update', props.episode.slug));
   }
 }
 

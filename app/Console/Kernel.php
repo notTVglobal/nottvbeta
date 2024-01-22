@@ -3,6 +3,8 @@
 namespace App\Console;
 
 use App\Jobs\CheckSubscriptionStatuses;
+use App\Jobs\FetchRssFeedItemsJob;
+use App\Models\NewsRssFeed;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -20,6 +22,15 @@ class Kernel extends ConsoleKernel
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
 //        $schedule->job(new CheckSubscriptionStatuses)->everySixHours();
         $schedule->job(new CheckSubscriptionStatuses, 'default')->daily();
+
+        $feeds = NewsRssFeed::all(); // Get all feeds
+        foreach ($feeds as $feed) {
+          $schedule->job(new FetchRssFeedItemsJob($feed))->hourly();
+        }
+
+        $schedule->command('purge:oldRssFeedItems')->daily();
+
+        $schedule->command('newsRssFeed:archive')->dailyAt('08:00');
     }
 
     /**
@@ -33,4 +44,8 @@ class Kernel extends ConsoleKernel
 
         require base_path('routes/console.php');
     }
+
+  protected $commands = [
+      Commands\ArchiveRssFeedItemsCommand::class,
+  ];
 }

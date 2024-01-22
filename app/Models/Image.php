@@ -81,7 +81,12 @@ class Image extends Model
 //        ]);
 //    }
 
-    public function showImage(): \Illuminate\Database\Eloquent\Relations\HasManyThrough {
-        return $this->hasManyThrough(Image::class, Show::class);
-    }
+  public function showImage(): \Illuminate\Database\Eloquent\Relations\HasManyThrough {
+      return $this->hasManyThrough(Image::class, Show::class);
+  }
+
+  public function newsRssFeedItemArchives()
+  {
+    return $this->hasMany(NewsRssFeedItemArchive::class, 'image_id');
+  }
 }

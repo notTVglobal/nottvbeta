@@ -42,6 +42,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 // import popper for pop-up tooltips
 import Popper from "vue3-popper";
+import { format } from 'date-fns'
 // import confirm dialog
 // import ConfirmDialog from '@/Components/Global/Modals/ConfirmDialog';
 // import vueCountryRegionSelect from 'vue3-country-region-select';
@@ -72,6 +73,14 @@ const formatDate = () => ({
             // Then specify how you want your dates to be formatted
             return new Intl.DateTimeFormat('default', {dateStyle: 'long'}).format(date);
         },
+        formatDateTime: function (dateString) {
+            const date = new Date(dateString);
+            const options = {
+                year: 'numeric', month: 'short', day: 'numeric',
+                hour: '2-digit', minute: '2-digit', hour12: true
+            };
+            return new Intl.DateTimeFormat('default', options).format(date);
+        }
     },
 })
 

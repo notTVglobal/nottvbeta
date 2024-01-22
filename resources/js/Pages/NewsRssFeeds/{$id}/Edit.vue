@@ -92,7 +92,7 @@ import Button from "@/Jetstream/Button"
 import Message from "@/Components/Global/Modals/Messages"
 import CancelButton from "@/Components/Global/Buttons/CancelButton"
 
-usePageSetup('newsFeedEdit')
+usePageSetup('newsRssFeeds.edit')
 
 const appSettingStore = useAppSettingStore()
 
@@ -109,7 +109,7 @@ let form = useForm({
 });
 
 let submit = () => {
-  form.post(route("rss2update"));
+  form.patch(route("newsRssFeeds.update", props.feed.slug));
 };
 
 let showMessage = ref(true);

@@ -106,7 +106,7 @@ let form = useForm({
 });
 
 let submit = () => {
-  form.post(route("rss2store"));
+  form.post(route("newsRssFeeds.store"));
 };
 
 </script>

@@ -313,7 +313,7 @@ let reloadImage = () => {
 };
 
 let submit = () => {
-  form.put(route('shows.update', props.show.slug))
+  form.patch(route('shows.update', props.show.slug))
 };
 
 teamStore.setActiveTeam(props.team)

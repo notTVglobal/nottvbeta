@@ -210,7 +210,7 @@ function handleProcessedFile(error, file) {
 
 
 let submit = () => {
-    form.put(route('showEpisodes.update', props.episode.slug));
+    form.patch(route('showEpisodes.update', props.episode.slug));
 };
 
 </script>

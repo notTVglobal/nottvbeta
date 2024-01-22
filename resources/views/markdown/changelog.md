@@ -1,14 +1,27 @@
 # not.tv Changelog
 
-Last Update: January 20, 2024\
+Last Update: January 22, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+# v0.8.3.0
+January 22, 2024
+* Fixed the News RSS Feed
+  * All feeds now process images
+* Added Search to the News RSS Feeds
+  * Search is by title or description
+* Added Archiving to the News RSS Feed
+  * The feeds are updated every hour
+  * They are purged every 7 days
+  * Archived items will remain indefinitely.
+
 # v0.8.2.1
-January 20, 2024
+January 21, 2024
 * Fixed the News Page routes
 * Rebuilt the Newsroom home page
 * There is a bug when refreshing the page on any of the public news or news reporter pages, if the user is logged in the video is playing but it's muted (firstPlay) and hidden.
   * Another design bug, the topDiv function doesn't seem to work on these page either.
+* Fixed the newsRssFeeds routes
+* Added a :url prop to the BackButton and CancelButton so you can optionally pass a custom route that the button will use, e.g., \<BackButton :url="'/newsRssFeeds'"/>
 
 # v0.8.2.0
 January 19, 2024

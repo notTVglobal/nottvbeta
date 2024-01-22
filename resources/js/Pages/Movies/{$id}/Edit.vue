@@ -439,7 +439,7 @@ let reloadImage = () => {
 };
 
 let submit = () => {
-    form.put(route('movies.update', props.movie.slug));
+    form.patch(route('movies.update', props.movie.slug));
 }
 
 // let category = ref();

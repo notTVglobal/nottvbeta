@@ -381,7 +381,7 @@ let form = useForm({
 })
 
 let submit = () => {
-  form.put(route('admin.settings'));
+  form.patch(route('admin.settings'));
 };
 
 let getAllEpisodesButtonActive = ref(false);

@@ -307,7 +307,7 @@ function reset() {
 }
 
 let submit = () => {
-  form.put(route('users.update', props.userEdit.id))
+  form.patch(route('users.update', props.userEdit.id))
 }
 
 function addUserToNewsroom() {
@@ -322,22 +322,19 @@ function addUserToNewsroom() {
 
 function removeUserFromNewsroom() {
   if (confirm('Are you sure you want to remove this person from the news team?')) {
-    form.put(route('newsPerson.destroy', props.userEdit.id))
+    form.delete(route('newsPerson.destroy', props.userEdit.id))
   }
 }
 
 function addUserToVip() {
   if (confirm('Are you sure you want to add this person to VIP?')) {
-    form.put(route('user.vip.add', {'id': props.userEdit.id}))
+    form.patch(route('user.vip.add'))
   }
-  // Inertia.reload({
-  //     only: ["userEdit", "isVip"],
-  // })
 }
 
 function removeUserFromVip() {
   if (confirm('Are you sure you want to remove this person from VIP?')) {
-    form.put(route('user.vip.remove', props.userEdit.id))
+    form.patch(route('user.vip.remove', props.userEdit.id))
   }
 }
 

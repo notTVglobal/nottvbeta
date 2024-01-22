@@ -10,7 +10,7 @@
   <div class="place-self-center flex flex-col gap-y-3">
     <div id="topDiv" class="bg-white dark:bg-gray-800 text-black dark:text-gray-50 p-5 mb-10">
       <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
-      <NewsHeader :can="can">News Feeds</NewsHeader>
+      <NewsHeader :can="can">News RSS Feeds</NewsHeader>
 
       <div class="bg-orange-500 mb-1 px-2 py-1 text-black font-semibold">TODO: create special parser for <a
           href="https://www.canada.ca/en/news/web-feeds.html#a7" target="_blank">Government of Canada Feeds</a></div>
@@ -28,10 +28,10 @@
                 <th scope="col"
                     class="w-full flex flex-row justify-between px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                   <div>
-                    <span class="text-lg">News Feeds</span>
+                    <span class="text-lg">News RSS Feed</span>
                     <button
                         v-if="can.viewNewsroom"
-                        @click="appSettingStore.btnRedirect(`/rss2/create`)"
+                        @click="appSettingStore.btnRedirect(`newsRssFeeds/create`)"
                         class="bg-green-600 hover:bg-green-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
                     >Add Feed
                     </button>
@@ -74,7 +74,7 @@
                       <!--                                                {{feed.name}}-->
                       <!--                                            </Link>-->
                       <button
-                          @click="appSettingStore.btnRedirect(`/rss2/${feed.slug}`)"
+                          @click="appSettingStore.btnRedirect(`/newsRssFeeds/${feed.slug}`)"
                           class="text-blue-800 uppercase font-semibold text-md hover:text-blue-600 hover:opacity-75 transition ease-in-out duration-150"
                       >{{ feed.name }}
                       </button>
@@ -82,7 +82,7 @@
                     <div class="space-x-1">
                       <button
                           v-if="userStore.isNewsPerson"
-                          @click="appSettingStore.btnRedirect(`/rss2/${feed.slug}/edit`)"
+                          @click="appSettingStore.btnRedirect(`/newsRssFeeds/${feed.slug}/edit`)"
                           class="px-2 py-1 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                       >Edit
                       </button>
@@ -126,7 +126,7 @@ import NewsHeader from '@/Components/Pages/News/NewsHeader'
 import Pagination from '@/Components/Global/Paginators/Pagination'
 import Message from '@/Components/Global/Modals/Messages'
 
-usePageSetup('rss2')
+usePageSetup('newsRssFeeds.index')
 
 const appSettingStore = useAppSettingStore()
 const userStore = useUserStore()
@@ -142,7 +142,7 @@ let form = useForm({})
 let search = ref(props.filters.search)
 
 watch(search, throttle(function (value) {
-  Inertia.get('/rss2', {search: value}, {
+  Inertia.get('/newsRssFeeds', {search: value}, {
     preserveState: true,
     replace: true,
   })
@@ -155,7 +155,7 @@ function scrollToCities() {
 
 function destroy(id) {
   if (confirm('Are you sure you want to Delete')) {
-    form.delete(route('feeds.destroy', id))
+    form.delete(route('newsRssFeeds.destroy', id))
 
   }
 }

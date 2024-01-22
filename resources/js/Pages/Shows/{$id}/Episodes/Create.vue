@@ -266,7 +266,7 @@ let submit = () => {
 };
 
 // let submit = () => {
-//     form.put(route('shows.showEpisodes.store'));
+//     form.patch(route('shows.showEpisodes.store'));
 // };
 
 // let showMessage = ref(true);

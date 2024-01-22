@@ -6,6 +6,8 @@ use App\Http\Controllers\ChangelogController;
 use App\Http\Controllers\ChannelController;
 
 use App\Http\Controllers\FlashController;
+use App\Http\Controllers\NewsRssFeedItemArchiveController;
+use App\Http\Controllers\NewsRssFeedItemTempController;
 use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\SubscriptionPlanController;
 use App\Http\Controllers\TeamManagersController;
@@ -247,11 +249,11 @@ Route::middleware([
 
 // VIP
 ////////
-    Route::put('/userAddToVip', [\App\Http\Controllers\UsersController::class, 'vipAdd'])
+    Route::patch('/userAddToVip', [\App\Http\Controllers\UsersController::class, 'vipAdd'])
 //        ->middleware('auth')->isAdmin
         ->name('user.vip.add');
 
-    Route::put('/userRemoveFromVip', [\App\Http\Controllers\UsersController::class, 'vipRemove'])
+    Route::patch('/userRemoveFromVip', [\App\Http\Controllers\UsersController::class, 'vipRemove'])
 //        ->middleware('auth')->isAdmin
         ->name('user.vip.remove');
 
@@ -360,7 +362,7 @@ Route::middleware([
       ->middleware('can:viewAny,App\Models\NewsPerson')
       ->name('newsroom');
 
-  Route::put('/newsroom/publish', [NewsroomController::class, 'publish'])
+  Route::patch('/newsroom/publish', [NewsroomController::class, 'publish'])
 //        ->can('view', 'App\Models\NewsPerson')
       ->name('newsroom.publish');
 
@@ -391,7 +393,17 @@ Route::middleware([
 // NewsRssFeeds
 ///////////////
 
-  // Insert NewsRssFeeds Routes here.
+  // Route for NewsRssFeeds
+  Route::resource('/newsRssFeeds', NewsRssFeedController::class);
+
+  // Resource route for temporary feed items
+  Route::resource('/newsRssFeedItemsTemp', NewsRssFeedItemTempController::class);
+
+  Route::patch('/newsRssFeedItemsTemp/{newsRssFeedItemTemp}/save', [NewsRssFeedItemTempController::class, 'saveItem'])
+      ->name('newsRssFeedItemsTemp.save');
+
+  // Resource route for archived feed items
+  Route::resource('/newsRssFeedItemsArchive', NewsRssFeedItemArchiveController::class);
 
 
 
@@ -415,7 +427,7 @@ Route::middleware([
         Route::get('/admin/subscription/{subscriptionPlan}/edit', [SubscriptionPlanController::class, 'edit'])->name('subscription-plans.edit');
 
         // Update method (for updating)
-        Route::put('/admin/subscription/{subscriptionPlan}', [SubscriptionPlanController::class, 'update'])->name('subscription-plans.update');
+        Route::patch('/admin/subscription/{subscriptionPlan}', [SubscriptionPlanController::class, 'update'])->name('subscription-plans.update');
 
         // Delete method (for deleting)
         Route::delete('/admin/subscription/{subscriptionPlan}', [SubscriptionPlanController::class, 'destroy'])->name('subscription-plans.destroy');
@@ -494,7 +506,7 @@ Route::middleware([
         ->can('viewAdmin', 'App\Models\User')
         ->name('admin.settings');
     //// SETTINGS - SAVE
-    Route::put('/admin/settings', [AdminController::class, 'saveSettings'])
+    Route::patch('/admin/settings', [AdminController::class, 'saveSettings'])
         ->can('viewAdmin', 'App\Models\User')
         ->name('admin.saveSettings');
 
@@ -819,7 +831,7 @@ Route::middleware([
         ->name('users.edit');
 
     // Update user
-    Route::put('/users', [UsersController::class, 'updateContact'])->name('users.updateContact');
+    Route::patch('/users', [UsersController::class, 'updateContact'])->name('users.updateContact');
 
 // Chat
 ///////////
@@ -879,7 +891,7 @@ Route::middleware([
     Route::post('/clear-flash', [\App\Http\Middleware\HandleInertiaRequests::class, 'clearFlash'])->name('flash.clear');
 
     Route::get('/notifications', [NotificationsController::class, 'index']);
-    Route::put('/notifications/{id}/mark-as-read', [NotificationsController::class, 'markAsRead']);
+    Route::patch('/notifications/{id}/mark-as-read', [NotificationsController::class, 'markAsRead']);
     Route::delete('/notifications/{notification}', [NotificationsController::class, 'destroy']);
     Route::delete('/notifications', [NotificationsController::class, 'destroyAll']);
 

@@ -16,7 +16,7 @@
             Where seasoned journalism intersects with digital innovation.<br>
           </p>
           <p class="mb-8 mx-auto w-1/2 text-center text-indigo-800 font-semibold">
-            Here, we harness cutting-edge tools and collaborative expertise to deliver impactful stories with precision and depth, redefining news for the digital era.
+            Here, we are redefining news for the digital era, cutting-edge tools and collaborative expertise help us deliver impactful stories with precision and depth.
           </p>
 
           <h2 class="text-center text-xl md:text-3xl  mb-4">Core Pillars of the Newsroom</h2>
@@ -238,7 +238,7 @@ watch(search, throttle(function (value) {
 function publish(id) {
   if (confirm('Are you sure you want to Publish')) {
     // form.put(route('news.publish', id));
-    Inertia.put(route('newsroom.publish', {id: id}))
+    Inertia.patch(route('newsroom.publish', {id: id}))
 
   }
 }

@@ -12,12 +12,7 @@
         <div><span class="text-xs font-semibold text-purple-700">Creator Mode</span></div>
         <div class="grid grid-cols-1 grid-rows-2">
           <div class="justify-self-end">
-            <Link :href="`/dashboard`">
-              <button
-                  class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-              >Dashboard
-              </button>
-            </Link>
+            <DashboardButton />
           </div>
         </div>
       </div>
@@ -49,6 +44,7 @@ import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useNotificationStore } from '@/Stores/NotificationStore'
 import Message from '@/Components/Global/Modals/Messages'
+import DashboardButton from '@/Components/Global/Buttons/DashboardButton.vue'
 
 usePageSetup('training')
 

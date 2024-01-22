@@ -16,13 +16,25 @@ import { useUserStore } from '@/Stores/UserStore'
 const appSettingStore = useAppSettingStore()
 const userStore = useUserStore()
 
+let props = defineProps({
+  url: String
+})
+
 function back() {
   if (appSettingStore.prevUrl) {
-    Inertia.visit(appSettingStore.prevUrl)
+    if (props.url) {
+      Inertia.visit(props.url)
+    } else {
+      Inertia.visit(appSettingStore.prevUrl)
+    }
   } else {
-    // Fallback if prevUrl is not available
-    let prevUrl = userStore.isCreator ? '/dashboard' : '/';
-    Inertia.visit(prevUrl);
+    if (props.url) {
+      Inertia.visit(props.url)
+    } else {
+      // Fallback if prevUrl is not available
+      let prevUrl = userStore.isCreator ? '/dashboard' : '/';
+      Inertia.visit(prevUrl);
+    }
   }
 }
 </script>

@@ -135,7 +135,7 @@ const form = useForm({
 
 const submit = () => {
   form.body = newsStore.newsArticleContentTiptop
-  form.put(route('newsStory.update', props.news.slug))
+  form.patch(route('newsStory.update', props.news.slug))
 }
 
 newsStore.newsArticleIdTiptop = props.news.id

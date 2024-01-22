@@ -46,7 +46,7 @@
           </li>
           <li>
             <button
-                @click="appSettingStore.btnRedirect(`/rss2`)"
+                @click="appSettingStore.btnRedirect(`/newsRssFeeds`)"
                 class="text-gray-700 dark:text-gray-50 hover:text-blue-500"
             >Feeds
             </button>
