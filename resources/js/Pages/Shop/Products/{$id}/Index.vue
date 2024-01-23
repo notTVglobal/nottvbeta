@@ -60,6 +60,7 @@
 import { onMounted } from 'vue'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import { useShopStore } from '@/Stores/ShopStore'
 import { storeToRefs } from 'pinia'
 import Message from '@/Components/Global/Modals/Messages'
 import ShopHeader from '@/Components/Pages/Shop/ShopHeader'
@@ -67,6 +68,7 @@ import ShopHeader from '@/Components/Pages/Shop/ShopHeader'
 usePageSetup('shop/products/slug')
 
 const appSettingStore = useAppSettingStore()
+const shopStore = useShopStore()
 
 onMounted(() => {
   shopStore.getProducts()

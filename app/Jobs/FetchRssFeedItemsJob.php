@@ -103,6 +103,8 @@ class FetchRssFeedItemsJob implements ShouldQueue
 
   private function fetchAndProcessRssFeed(NewsRssFeed $newsRssFeed)
   {
+    $newItemCreated = false; // Flag to track if any new item is created
+
     try {
       // Fetch and process the RSS feed
       $feed = file_get_contents($newsRssFeed->url);
@@ -140,14 +142,19 @@ class FetchRssFeedItemsJob implements ShouldQueue
 //                  'additionalField2' => $item->additionalField2,
               ]),
           ]);
+          $newItemCreated = true; // Set flag to true as a new item is created
         } else {
           // Optionally update the existing item
           // $existingItem->update([...]);
         }
       }
 
-      // Update last_successful_update on success
-      $this->newsRssFeed->last_successful_update = now();
+      if ($newItemCreated) {
+        // Update last_successful_update only if a new item was created
+        $this->newsRssFeed->last_successful_update = now();
+        $this->newsRssFeed->save();
+      }
+
     } catch (\Exception $e) {
       // Handle any exceptions
       Log::error("Error processing RSS feed: " . $e->getMessage());

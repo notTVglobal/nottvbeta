@@ -1,7 +1,14 @@
 # not.tv Changelog
 
-Last Update: January 22, 2024\
+Last Update: January 23, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+# v0.8.3.1
+January 23, 2024
+* Create News Sub-categories.
+* Filled the database (seeders) with News Sub-Categories, Movie Sub-Categories, and News Sub-Categories.
+* Created new models for NewsCities, NewsProvinces, NewsPostalCodes, News MLA Ridings, News Federal Ridings
+  * Need to populate the Cities, PostalCodes, MLA and Federal Ridings tables.
 
 # v0.8.3.0
 January 22, 2024
@@ -9,10 +16,18 @@ January 22, 2024
   * All feeds now process images
 * Added Search to the News RSS Feeds
   * Search is by title or description
+  * The main feed list is now ordered by the newest updated feed first
 * Added Archiving to the News RSS Feed
   * The feeds are updated every hour
   * They are purged every 7 days
   * Archived items will remain indefinitely.
+  * Feeds display a new 'updated time' if they successfully add new feed items.
+* Update the DatabaseSeeder and FirstRunSeeder for new developers
+* Added a ShopSeeder
+* Added a MovieSeeder
+* Added News Categories to the news_categories table in the database, to be added to production through the NewsCategorySeeder
+* Added Movie Sub-Categories to the movie_category_subs table in the database, to be added to production through the MovieCategorySubsSeeder
+* Added Show Sub-Categories to the show_category_subs table in the database, to be added to production through the ShowCategorySubsSeeder
 
 # v0.8.2.1
 January 21, 2024

@@ -9,7 +9,7 @@
 
       <div class="flex flex-row justify-between mt-6">
         <h2 class="text-xl font-semibold leading-tight">
-          Create News Post
+          Create News Story
         </h2>
         <div class="flex justify-end space-x-2">
 

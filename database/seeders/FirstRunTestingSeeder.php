@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class FirstRun2Seeder extends Seeder
+class FirstRunTestingSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -17,10 +17,10 @@ class FirstRun2Seeder extends Seeder
         $this->call([
             UserSeeder::class,
             CreatorSeeder::class,
-            ShowSeeder::class,
-            ShowEpisodeSeeder::class,
             TeamSeeder::class,
             TeamMemberSeeder::class,
+            ShowSeeder::class,
+            ShowEpisodeSeeder::class,
         ]);
     }
 }

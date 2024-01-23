@@ -69,15 +69,18 @@
                     class="px-6 py-4 text-gray-900 dark:text-white whitespace-nowrap"
                 >
                   <div class="flex flex-row justify-between space-x-2">
-                    <div class="">
+                    <div class="flex flex-row justify-between w-full">
                       <!--                                                <Link type="text/javascript" :href="`/rss2/${feed.slug}`" class="text-blue-800 uppercase font-semibold text-md hover:text-blue-600 hover:opacity-75 transition ease-in-out duration-150">-->
                       <!--                                                {{feed.name}}-->
                       <!--                                            </Link>-->
-                      <button
-                          @click="appSettingStore.btnRedirect(`/newsRssFeeds/${feed.slug}`)"
-                          class="text-blue-800 uppercase font-semibold text-md hover:text-blue-600 hover:opacity-75 transition ease-in-out duration-150"
-                      >{{ feed.name }}
-                      </button>
+                      <div>
+                        <button
+                            @click="appSettingStore.btnRedirect(`/newsRssFeeds/${feed.slug}`)"
+                            class="text-blue-800 uppercase font-semibold text-md hover:text-blue-600 hover:opacity-75 transition ease-in-out duration-150"
+                        >{{ feed.name }}
+                        </button>
+                      </div>
+                      <div class="mr-2"><span v-if="feed.lastSuccessfulUpdate">Last update on {{formatDateTime(feed.lastSuccessfulUpdate)}}</span><span v-else>Never updated</span></div>
                     </div>
                     <div class="space-x-1">
                       <button

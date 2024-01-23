@@ -165,7 +165,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(ShowEpisode::class);
     }
 
-    public function newsPosts()
+    public function newsStories()
     {
         return $this->hasMany(NewsStory::class);
     }

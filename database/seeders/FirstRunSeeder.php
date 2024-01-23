@@ -15,12 +15,18 @@ class FirstRunSeeder extends Seeder
      */
     public function run()
     {
+      // Seeders for initial, foundational data
         $this->call([
             AdminSeeder::class,
             AppSettingsSeeder::class,
             ImageSeeder::class,
             MovieCategorySeeder::class,
+            MovieCategorySubsTableSeeder::class,
             ShowCategorySeeder::class,
+            ShowCategorySubsTableSeeder::class,
+            NewsCategorySeeder::class,
+            NewsCategorySubsTableSeeder::class,
+            NewsProvincesTableSeeder::class,
         ]);
 
         Team::create([

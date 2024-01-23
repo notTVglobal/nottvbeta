@@ -41,7 +41,7 @@
           <li>
             <button disabled
                     class="text-gray-700 dark:text-gray-50 disabled:text-gray-300 disabled:cursor-not-allowed hover:text-blue-500">
-              Provinces
+              Regions
             </button>
           </li>
           <li>

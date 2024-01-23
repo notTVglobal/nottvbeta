@@ -25,17 +25,18 @@ class NewsRssFeedController extends Controller
     {
         return Inertia::render('NewsRssFeeds/Index', [
             'feeds' => NewsRssFeed::query()
-                ->orderBy('name', 'asc')
+                ->orderBy('last_successful_update', 'desc')
                 ->when(Request::input('search'), function ($query, $search) {
                     $query->where('name', 'like', "%{$search}%");
                 })
-                ->paginate(10, ['*'], 'rss2')
+                ->paginate(10, ['*'], 'rss')
                 ->withQueryString()
                 ->through(fn($newsRssFeed) => [
                     'id' => $newsRssFeed->id,
                     'slug' => $newsRssFeed->slug,
                     'name' => $newsRssFeed->name,
-                    'url' => $newsRssFeed->url
+                    'url' => $newsRssFeed->url,
+                    'lastSuccessfulUpdate' => $newsRssFeed->last_successful_update,
                 ]),
             'filters' => Request::only(['search']),
             'can' => [

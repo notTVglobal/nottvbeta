@@ -28,10 +28,21 @@ class NewsStory extends Model
         return 'slug';
     }
 
-    public function category()
+    public function newsCategory()
     {
-        return $this->belongsTo(NewsCategory::class);
+        return $this->belongsTo(NewsCategory::class)->withDefault([
+          'name' => 'category',
+          'description' => 'category description'
+      ]);
     }
+
+  public function newsCategorySub()
+  {
+    return $this->belongsTo(NewsCategorySub::class)->withDefault([
+        'name' => 'sub category',
+        'description' => 'sub category description'
+    ]);
+  }
 
     public function status()
     {

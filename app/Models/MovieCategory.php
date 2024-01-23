@@ -21,6 +21,9 @@ class MovieCategory extends Model
 
     public function movieCategorySub()
     {
-        return $this->belongsTo(MovieCategorySub::class);
+        return $this->belongsTo(MovieCategorySub::class)->withDefault([
+          'name' => 'sub category',
+          'description' => 'sub category description'
+      ]);
     }
 }

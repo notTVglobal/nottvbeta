@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\Console\Command\Command as CommandAlias;
+use App\Services\ImageService;
 
 class PurgeOldRssFeedItemsCommand extends Command
 {
