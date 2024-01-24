@@ -12,11 +12,12 @@ class NewsCity extends Model
   protected $fillable = [
       'name', // Name of the city
       'type', // City, Town, etc.
-      'news_province_id', // Foreign key to NewsProvinces
-      'federal_riding_id', // Foreign key to NewsFederalRidings
+      'province_id', // Foreign key to NewsProvince
+      'country_id', // Foreign key to NewsCountry
       'population', // Population of the city
       'area', // Total area of the city in square kilometers
-      'geo_coordinates', // Latitude and longitude of the city
+      'latitude', // Latitude of the city
+      'longitude', // Longitude of the city
       'economic_indicators', // Economic indicators of the city
       'cultural_significance', // Cultural significance of the city
       'city_mayor', // Current mayor of the city
@@ -34,8 +35,13 @@ class NewsCity extends Model
     return $this->belongsTo(NewsProvince::class);
   }
 
-  public function federalRiding() {
-    return $this->belongsTo(NewsFederalRiding::class);
+  public function country()
+  {
+    return $this->belongsTo(NewsCountry::class, 'country_id');
+  }
+
+  public function federalElectoralDistrict() {
+    return $this->belongsTo(NewsFederalElectoralDistrict::class);
   }
 
   public function postalCodes() {

@@ -2,12 +2,14 @@
 
 namespace Database\Seeders;
 
+use App\Models\NewsCountry;
 use Carbon\Carbon;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
-class NewsProvincesTableSeeder extends Seeder
+class NewsProvincesTableCANSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -16,15 +18,22 @@ class NewsProvincesTableSeeder extends Seeder
      */
     public function run()
     {
+
+      // Get the country ID from the iso_alpha3_code
+      $countryISO3 = 'CAN';
+      $countryId = NewsCountry::where('iso_alpha3_code', $countryISO3)->first()->id;
+
       $provinces = [
           [
               'name' => 'British Columbia',
               'abbreviation' => 'BC',
+              'country_id' => $countryId,
               'year_joined_confederation' => 1871,
               'population' => null,
               'area' => null,
               'capital' => null,
-              'geo_coordinates' => null,
+              'latitude' => null,
+              'longitude' => null,
               'time_zone' => 'America/Vancouver',
               'gmt_offset' => -8,
               'gmt_offset_dst' => -7,
@@ -33,11 +42,13 @@ class NewsProvincesTableSeeder extends Seeder
           [
               'name' => 'Alberta',
               'abbreviation' => 'AB',
+              'country_id' => $countryId,
               'year_joined_confederation' => 1905,
               'population' => null,
               'area' => null,
               'capital' => null,
-              'geo_coordinates' => null,
+              'latitude' => null,
+              'longitude' => null,
               'time_zone' => 'America/Edmonton',
               'gmt_offset' => -7,
               'gmt_offset_dst' => -6,
@@ -46,11 +57,13 @@ class NewsProvincesTableSeeder extends Seeder
           [
               'name' => 'Saskatchewan',
               'abbreviation' => 'SK',
+              'country_id' => $countryId,
               'year_joined_confederation' => 1905,
               'population' => null,
               'area' => null,
               'capital' => null,
-              'geo_coordinates' => null,
+              'latitude' => null,
+              'longitude' => null,
               'time_zone' => 'America/Regina',
               'gmt_offset' => -6,
               'gmt_offset_dst' => -6,
@@ -59,11 +72,13 @@ class NewsProvincesTableSeeder extends Seeder
           [
               'name' => 'Manitoba',
               'abbreviation' => 'MB',
+              'country_id' => $countryId,
               'year_joined_confederation' => 1870,
               'population' => null,
               'area' => null,
               'capital' => null,
-              'geo_coordinates' => null,
+              'latitude' => null,
+              'longitude' => null,
               'time_zone' => 'America/Winnipeg',
               'gmt_offset' => -6,
               'gmt_offset_dst' => -5,
@@ -72,11 +87,13 @@ class NewsProvincesTableSeeder extends Seeder
           [
               'name' => 'Ontario',
               'abbreviation' => 'ON',
+              'country_id' => $countryId,
               'year_joined_confederation' => 1867,
               'population' => null,
               'area' => null,
               'capital' => null,
-              'geo_coordinates' => null,
+              'latitude' => null,
+              'longitude' => null,
               'time_zone' => 'America/Toronto', // Note: Ontario spans multiple time zones
               'gmt_offset' => -5,
               'gmt_offset_dst' => -4,
@@ -85,11 +102,13 @@ class NewsProvincesTableSeeder extends Seeder
           [
               'name' => 'Quebec',
               'abbreviation' => 'QC',
+              'country_id' => $countryId,
               'year_joined_confederation' => 1867,
               'population' => null,
               'area' => null,
               'capital' => null,
-              'geo_coordinates' => null,
+              'latitude' => null,
+              'longitude' => null,
               'time_zone' => 'America/Montreal', // Note: Quebec spans multiple time zones
               'gmt_offset' => -5,
               'gmt_offset_dst' => -4,
@@ -98,11 +117,13 @@ class NewsProvincesTableSeeder extends Seeder
           [
               'name' => 'New Brunswick',
               'abbreviation' => 'NB',
+              'country_id' => $countryId,
               'year_joined_confederation' => 1867,
               'population' => null,
               'area' => null,
               'capital' => null,
-              'geo_coordinates' => null,
+              'latitude' => null,
+              'longitude' => null,
               'time_zone' => 'America/Moncton',
               'gmt_offset' => -4,
               'gmt_offset_dst' => -3,
@@ -111,11 +132,13 @@ class NewsProvincesTableSeeder extends Seeder
           [
               'name' => 'Nova Scotia',
               'abbreviation' => 'NS',
+              'country_id' => $countryId,
               'year_joined_confederation' => 1867,
               'population' => null,
               'area' => null,
               'capital' => null,
-              'geo_coordinates' => null,
+              'latitude' => null,
+              'longitude' => null,
               'time_zone' => 'America/Halifax',
               'gmt_offset' => -4,
               'gmt_offset_dst' => -3,
@@ -124,11 +147,13 @@ class NewsProvincesTableSeeder extends Seeder
           [
               'name' => 'Prince Edward Island',
               'abbreviation' => 'PE',
+              'country_id' => $countryId,
               'year_joined_confederation' => 1873,
               'population' => null,
               'area' => null,
               'capital' => null,
-              'geo_coordinates' => null,
+              'latitude' => null,
+              'longitude' => null,
               'time_zone' => 'America/Halifax',
               'gmt_offset' => -4,
               'gmt_offset_dst' => -3,
@@ -137,11 +162,13 @@ class NewsProvincesTableSeeder extends Seeder
           [
               'name' => 'Newfoundland and Labrador',
               'abbreviation' => 'NL',
+              'country_id' => $countryId,
               'year_joined_confederation' => 1949,
               'population' => null,
               'area' => null,
               'capital' => null,
-              'geo_coordinates' => null,
+              'latitude' => null,
+              'longitude' => null,
               'time_zone' => 'America/St_Johns',
               'gmt_offset' => -3.5,
               'gmt_offset_dst' => -2.5,
@@ -150,11 +177,13 @@ class NewsProvincesTableSeeder extends Seeder
           [
               'name' => 'Yukon',
               'abbreviation' => 'YT',
+              'country_id' => $countryId,
               'year_joined_confederation' => 1898,
               'population' => null,
               'area' => null,
               'capital' => null,
-              'geo_coordinates' => null,
+              'latitude' => null,
+              'longitude' => null,
               'time_zone' => 'America/Whitehorse',
               'gmt_offset' => -7,
               'gmt_offset_dst' => -7, // As of 2020, Yukon observes MST year-round
@@ -163,11 +192,13 @@ class NewsProvincesTableSeeder extends Seeder
           [
               'name' => 'Northwest Territories',
               'abbreviation' => 'NT',
+              'country_id' => $countryId,
               'year_joined_confederation' => 1870,
               'population' => null,
               'area' => null,
               'capital' => null,
-              'geo_coordinates' => null,
+              'latitude' => null,
+              'longitude' => null,
               'time_zone' => 'America/Yellowknife',
               'gmt_offset' => -7,
               'gmt_offset_dst' => -6,
@@ -176,11 +207,13 @@ class NewsProvincesTableSeeder extends Seeder
           [
               'name' => 'Nunavut',
               'abbreviation' => 'NU',
+              'country_id' => $countryId,
               'year_joined_confederation' => 1999,
               'population' => null,
               'area' => null,
               'capital' => null,
-              'geo_coordinates' => null,
+              'latitude' => null,
+              'longitude' => null,
               'time_zone' => 'America/Iqaluit', // Note: Nunavut spans multiple time zones
               'gmt_offset' => -5, // Eastern parts
               'gmt_offset_dst' => -4,

@@ -12,10 +12,12 @@ class NewsProvince extends Model
   protected $fillable = [
       'name',
       'abbreviation',
+      'country_id',
       'year_joined_confederation',
       'population',
       'area',
-      'geo_coordinates',
+      'latitude',
+      'longitude',
       'capital',
       'province_premier',
       'provinces_website',
@@ -30,11 +32,15 @@ class NewsProvince extends Model
     return $this->hasMany(NewsCity::class);
   }
 
-  public function federalRidings() {
-    return $this->hasMany(NewsFederalRiding::class);
+  public function country() {
+    return $this->belongsTo(NewsCountry::class);
   }
 
-  public function mlaRidings() {
-    return $this->hasMany(NewsMlaRiding::class);
+  public function federalElectoralDistricts() {
+    return $this->hasMany(NewsFederalElectoralDistrict::class);
+  }
+
+  public function subnationalElectoralDistricts() {
+    return $this->hasMany(NewsSubnationalElectoralDistrict::class);
   }
 }

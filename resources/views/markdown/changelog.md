@@ -3,6 +3,11 @@
 Last Update: January 23, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+# v0.8.3.2
+January 24, 2024
+* Fix the News seeders
+* Added python scripts to parse external datasets into csv for Canada's Federal Electoral Districts
+
 # v0.8.3.1
 January 23, 2024
 * Create News Sub-categories.
@@ -13,7 +18,8 @@ January 23, 2024
   * Canadian Cities and Towns, source: https://natural-resources.canada.ca/earth-sciences/geography/download-geographical-names-data/9245
   * Canadian Postal Codes, source: https://github.com/djbelieny/geoinfo-dataset
     * Note: Stats Canada used to provide this dataset but discontinued it in June 2017. Canada Post now charges a fee for a regularly updated dataset.
-* Side Note: Additional Stats Canada Datasets can be found here: https://www.statcan.gc.ca/en/microdata/dli/data/all 
+  * Canadian Electoral Districts (Federal Ridings)
+* Side Note: Additional Stats Canada Datasets can be found here: https://www.statcan.gc.ca/en/microdata/dli/data/all
 
 # v0.8.3.0
 January 22, 2024

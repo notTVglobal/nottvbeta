@@ -416,13 +416,29 @@ class NewsCategorySubsTableSeeder extends Seeder
           ],
       ];
 
+      $batchSize = 500; // Define a suitable batch size
+      $batchData = []; // Array to hold batch data
+
       foreach ($subCategoryGroups as $categoryName => $subCategories) {
         $categoryId = $this->getCategoryIdByName($categoryName);
         if ($categoryId) {
           $this->addCategoryId($subCategories, $categoryId);
           $this->addTimestamps($subCategories);
-          DB::table('news_category_subs')->insert($subCategories);
+
+          foreach ($subCategories as $subCategory) {
+            $batchData[] = $subCategory;
+
+            if (count($batchData) >= $batchSize) {
+              DB::table('news_category_subs')->insert($batchData);
+              $batchData = []; // Reset the batch data
+            }
+          }
         }
+      }
+
+      // Insert any remaining records
+      if (!empty($batchData)) {
+        DB::table('news_category_subs')->insert($batchData);
       }
     }
 

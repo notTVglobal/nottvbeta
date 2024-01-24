@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\NewsCountry;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use App\Models\NewsCity;
@@ -10,7 +11,7 @@ use League\Csv\Reader;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
-class PostalCodeSeeder extends Seeder
+class NewsPostalCodeCANSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -22,17 +23,21 @@ class PostalCodeSeeder extends Seeder
     // Load the CSV document from a file path
     // we need to upload the dataset manually.
     // Put the CSV in storage/app/csv
-    $path = storage_path('app/csv/news_postal_codes.csv');
+    $path = storage_path('app/csv/news_postal_codes_CAN.csv');
 
     // Set the path to save a list of cities missed during the postal code import,
     // this goes to our local storage: storage/app
     $dateTime = Carbon::now()->format('Y_m_d_His'); // Format as 'Year_Month_Day_HourMinuteSecond'
     $notFoundCitiesPath = 'txt/missing_cities_from_postal_code_import_'. $dateTime .'.txt';
 
+    // Get the country ID from the iso_alpha3_code
+    $countryISO3 = 'CAN';
+    $countryId = NewsCountry::where('iso_alpha3_code', $countryISO3)->first()->id;
+
     // Check if the CSV file exists
     if (!file_exists($path)) {
       // Log a message or output a line to the console to inform the user
-      Log::alert('Postal codes CSV file does not exist. PostalCodeSeeder did not run.');
+      Log::alert('news_postal_codes_CAN.csv file does not exist. PostalCodeSeeder did not run.');
 
       return;
     }
@@ -46,7 +51,7 @@ class PostalCodeSeeder extends Seeder
 
     // Initialize variables for batch processing
     $batchSize = 500; // Determine a suitable batch size
-    $insertData = [];
+    $batchData = []; // Array to hold batch data
     $notFoundCities = [];
 
     // Get all the records
@@ -55,16 +60,19 @@ class PostalCodeSeeder extends Seeder
       $postalCode = $record['PostalCode'];
 
       if (isset($cities[$cityName])) {
-        $insertData[] = [
+        $batchData[] = [
             'code'         => $postalCode,
-            'news_city_id' => $cities[$cityName]
+            'city_id' => $cities[$cityName],
+            'country_id' => $countryId,
+            'created_at' => now(),
+            'updated_at' => now(),
         ];
 
         // Insert in batches
-        if (count($insertData) >= $batchSize) {
-          $this->insertBatch($insertData);
+        if (count($batchData) >= $batchSize) {
+          $this->insertBatch($batchData);
 //          NewsPostalCode::insert($insertData);
-          $insertData = []; // Reset the array after batch insert
+          $batchData = []; // Reset the array after batch insert
         }
       } else {
         $notFoundCities[$cityName] = true; // Store unique city names

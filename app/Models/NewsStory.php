@@ -69,14 +69,14 @@ class NewsStory extends Model
     return $this->belongsTo(NewsProvince::class);
   }
 
-  public function federalRiding()
+  public function federalElectoralDistrict()
   {
-    return $this->belongsTo(NewsFederalRiding::class);
+    return $this->belongsTo(NewsFederalElectoralDistrict::class);
   }
 
-  public function mlaRiding()
+  public function subnationalElectoralDistrict()
   {
-    return $this->belongsTo(NewsMlaRiding::class);
+    return $this->belongsTo(NewsSubnationalElectoralDistrict::class);
   }
 
 }

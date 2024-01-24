@@ -26,10 +26,12 @@ class FirstRunSeeder extends Seeder
             ShowCategorySubsTableSeeder::class,
             NewsCategorySeeder::class,
             NewsCategorySubsTableSeeder::class,
-            NewsProvincesTableSeeder::class,
-            CitiesAndTownsSeeder::class,
-            PostalCodeSeeder::class,
-            FederalRidingsSeeder::class,
+            NewsCountriesTableSeeder::class,
+            NewsProvincesTableCANSeeder::class,
+            NewsCitiesAndTownsCANSeeder::class,
+            NewsPostalCodeCANSeeder::class,
+            NewsFederalElectoralDistrictsCANSeeder::class,
+            NewsFederalElectoralDistrictsMoreInfoCANSeeder::class,
         ]);
 
         Team::create([

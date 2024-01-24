@@ -2,13 +2,14 @@
 
 namespace Database\Seeders;
 
+use App\Models\NewsCountry;
 use Illuminate\Database\Seeder;
 use App\Models\NewsCity;
 use App\Models\NewsProvince;
 use Illuminate\Support\Facades\Log;
 use League\Csv\Reader;
 
-class CitiesAndTownsSeeder extends Seeder
+class NewsCitiesAndTownsCANSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -20,12 +21,16 @@ class CitiesAndTownsSeeder extends Seeder
     // Load the CSV document from a file path
     // we need to upload the dataset manually.
     // Put the CSV in storage/app/csv
-    $path = storage_path('../storage/app/csv/news_cities.csv');
+    $path = storage_path('../storage/app/csv/news_cities_CAN.csv');
+
+    // Get the country ID from the iso_alpha3_code
+    $countryISO3 = 'CAN';
+    $countryId = NewsCountry::where('iso_alpha3_code', $countryISO3)->first()->id;
 
     // Check if the CSV file exists
     if (!file_exists($path)) {
       // Log a message or output a line to the console to inform the user
-      Log::alert('News cities CSV file does not exist. CitiesAndTownsSeeder did not run.');
+      Log::alert('news_cities_CAN.csv file does not exist. CitiesAndTownsSeeder did not run.');
       return;
     }
 
@@ -37,8 +42,7 @@ class CitiesAndTownsSeeder extends Seeder
     $provinces = NewsProvince::all()->pluck('id', 'name')->toArray();
 
     $batchSize = 500; // Define a suitable batch size
-    $insertData = [];
-
+    $batchData = []; // Array to hold batch data
 
     // Get all the records
     foreach ($csv->getRecords() as $record) {
@@ -47,16 +51,20 @@ class CitiesAndTownsSeeder extends Seeder
         $provinceId = $provinces[$provinceName] ?? null;
 
         if ($provinceId) {
-          $insertData[] = [
+          $batchData[] = [
               'name' => $record['Geographical Name'],
               'type' => $record['Generic Term'],
-              'geo_coordinates' => $record['Latitude'] . ',' . $record['Longitude'],
-              'news_province_id' => $provinceId,
+              'latitude' => $record['Latitude'], // Storing latitude separately
+              'longitude' => $record['Longitude'], // Storing longitude separately
+              'province_id' => $provinceId,
+              'country_id' => $countryId,
+              'created_at' => now(),
+              'updated_at' => now(),
           ];
 
-          if (count($insertData) >= $batchSize) {
-            NewsCity::insert($insertData);
-            $insertData = [];
+          if (count($batchData) >= $batchSize) {
+            NewsCity::insert($batchData);
+            $batchData = [];
           }
         }
       }

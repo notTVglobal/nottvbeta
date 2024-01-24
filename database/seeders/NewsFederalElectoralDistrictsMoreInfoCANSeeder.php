@@ -3,14 +3,14 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\NewsFederalRiding;
+use App\Models\NewsFederalElectoralDistrict;
 use App\Models\NewsProvince;
 use League\Csv\Reader;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
-class FederalRidingsAddMoreInfoSeeder extends Seeder
+class NewsFederalElectoralDistrictsMoreInfoCANSeeder extends Seeder
 {
 
   // This seeder parses data from Opendatasoft
@@ -30,12 +30,12 @@ class FederalRidingsAddMoreInfoSeeder extends Seeder
       // Load the CSV document from a file path
       // we need to upload the dataset manually.
       // Put the CSV in storage/app/csv
-      $path = storage_path('../storage/app/csv/news_federal_ridings_more_info.csv');
+      $path = storage_path('../storage/app/csv/news_federal_electoral_districts_more_info_CAN.csv');
 
       // Check if the CSV file exists
       if (!file_exists($path)) {
         // Log a message or output a line to the console to inform the user
-        Log::alert('news_federal_ridings_more_info.csv file does not exist. FederalRidingsAddMoreInfoSeeder did not run.');        return;
+        Log::alert('news_federal_electoral_districts_more_info_CAN.csv file does not exist. NewsFederalElectoralDistrictsAddMoreInfoCANSeeder did not run.');        return;
       }
 
       // Load the CSV document from a file path
@@ -43,33 +43,35 @@ class FederalRidingsAddMoreInfoSeeder extends Seeder
       $csv->setHeaderOffset(0); // Set the CSV header offset
 
       $batchSize = 500; // Define batch size
-      $updateData = [];
+      $batchData = []; // Array to hold batch data
 
 
 
       foreach ($csv->getRecords() as $record) {
-        $updateData[] = [
+        $batchData[] = [
             'name' => $record['name'],
             'ed_code' => $record['ed_code'],
-            'population' => $record['population']
+            'population' => $record['population'],
+            'created_at' => now(),
+            'updated_at' => now(),
         ];
 
         // Perform batch update when the batch size is reached
-        if (count($updateData) >= $batchSize) {
-          $this->batchUpdate($updateData);
-          $updateData = [];
+        if (count($batchData) >= $batchSize) {
+          $this->batchUpdate($batchData);
+          $batchData = [];
         }
       }
 
       // Update any remaining records
-      if (!empty($updateData)) {
-        $this->batchUpdate($updateData);
+      if (!empty($batchData)) {
+        $this->batchUpdate($batchData);
       }
     }
 
   private function batchUpdate(array $data)
   {
-    $tableName = (new NewsFederalRiding)->getTable();
+    $tableName = (new NewsFederalElectoralDistrict)->getTable();
 
     foreach ($data as $record) {
 

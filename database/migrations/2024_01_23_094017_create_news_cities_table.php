@@ -17,11 +17,12 @@ return new class extends Migration
         $table->id(); // Primary key
         $table->string('name'); // Name of the city
         $table->string('type'); // 'type' column to specify the category like city, town, etc.
-        $table->foreignId('news_province_id')->references('id')->on('news_provinces');  // Foreign key to NewsProvinces
-        $table->foreignId('news_federal_riding_id')->nullable()->default(null)->references('id')->on('news_federal_ridings');  // Foreign key to NewsFederalRidings
+        $table->foreignId('province_id')->references('id')->on('news_provinces'); // Foreign key to NewsProvince
+        $table->foreignId('country_id')->references('id')->on('news_countries'); // Foreign key to NewsCountry
         $table->integer('population')->nullable(); // Population of the city
         $table->float('area')->nullable(); // Total area of the city in square kilometers
-        $table->string('geo_coordinates')->nullable(); // Latitude and longitude of the city
+        $table->decimal('latitude', 10, 8)->nullable(); // Approximate latitude of the city's centroid
+        $table->decimal('longitude', 11, 8)->nullable(); // Approximate longitude of the city's centroid
         $table->string('economic_indicators')->nullable(); // Economic indicators of the city
         $table->text('cultural_significance')->nullable(); // Cultural significance of the city
         $table->string('city_mayor')->nullable(); // Current mayor of the city

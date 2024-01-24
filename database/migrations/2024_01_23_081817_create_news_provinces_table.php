@@ -18,10 +18,12 @@ return new class extends Migration
           $table->string('name');
           $table->string('abbreviation');
           // Additional fields
+          $table->foreignId('country_id')->references('id')->on('news_countries');
           $table->smallInteger('year_joined_confederation')->nullable();
           $table->integer('population')->nullable();
           $table->float('area')->nullable();
-          $table->string('geo_coordinates')->nullable();
+          $table->decimal('latitude', 10, 8)->nullable(); // Approximate latitude of the province's centroid
+          $table->decimal('longitude', 11, 8)->nullable(); // Approximate longitude of the province's centroid
           $table->string('capital')->nullable();
           $table->string('province_premier')->nullable(); // Current premier of the province
           $table->string('provinces_website')->nullable(); // Official website of the province

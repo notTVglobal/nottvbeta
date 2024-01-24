@@ -14,18 +14,13 @@ return new class extends Migration
     public function up()
     {
       Schema::table('news_stories', function (Blueprint $table) {
-        $table->unsignedBigInteger('news_category_id')->nullable()->after('slug');
-        $table->foreign('news_category_id')->references('id')->on('news_categories');
-        $table->unsignedBigInteger('news_category_sub_id')->nullable()->after('news_category_id');
-        $table->foreign('news_category_sub_id')->references('id')->on('news_category_subs');
-        $table->unsignedBigInteger('news_city_id')->nullable()->after('content');
-        $table->foreign('news_city_id')->references('id')->on('news_cities');
-        $table->unsignedBigInteger('news_province_id')->nullable()->after('news_city_id');
-        $table->foreign('news_province_id')->references('id')->on('news_provinces');
-        $table->unsignedBigInteger('news_federal_riding_id')->nullable()->after('news_province_id');
-        $table->foreign('news_federal_riding_id')->references('id')->on('news_federal_ridings');
-        $table->unsignedBigInteger('news_mla_riding_id')->nullable()->after('news_federal_riding_id');
-        $table->foreign('news_mla_riding_id')->references('id')->on('news_mla_ridings');
+        $table->foreignId('news_category_id')->nullable()->after('slug')->references('id')->on('news_categories');
+        $table->foreignId('news_category_sub_id')->nullable()->after('news_category_id')->references('id')->on('news_category_subs');
+        $table->foreignId('city_id')->nullable()->after('content')->references('id')->on('news_cities');
+        $table->foreignId('province_id')->nullable()->after('city_id')->references('id')->on('news_provinces');
+        $table->foreignId('country_id')->after('province_id')->references('id')->on('news_countries');
+        $table->foreignId('news_federal_electoral_district_id')->nullable()->after('country_id')->references('id')->on('news_federal_electoral_districts');
+        $table->foreignId('news_subnational_electoral_district_id')->nullable()->after('news_federal_electoral_district_id')->references('id')->on('news_subnational_electoral_districts');
       });
     }
 
@@ -41,14 +36,14 @@ return new class extends Migration
         $table->dropColumn('news_category_id');
         $table->dropForeign(['news_category_sub_id']);
         $table->dropColumn('news_category_sub_id');
-        $table->dropForeign(['news_city_id']);
-        $table->dropColumn('news_city_id');
-        $table->dropForeign(['news_province_id']);
-        $table->dropColumn('news_province_id');
-        $table->dropForeign(['news_federal_riding_id']);
-        $table->dropColumn('news_federal_riding_id');
-        $table->dropForeign(['news_mla_riding_id']);
-        $table->dropColumn('news_mla_riding_id');
+        $table->dropForeign(['city_id']);
+        $table->dropColumn('city_id');
+        $table->dropForeign(['province_id']);
+        $table->dropColumn('province_id');
+        $table->dropForeign(['news_federal_electoral_district_id']);
+        $table->dropColumn('news_federal_electoral_district_id');
+        $table->dropForeign(['news_subnational_electoral_district_id']);
+        $table->dropColumn('news_subnational_electoral_district_id');
 //        $table->string('city')->after('content'); // Add back the 'city' column
 //        $table->unsignedBigInteger('category')->nullable()->after('city');  // Add back the 'category' column
 //        $table->foreign('category')->references('id')->on('news_categories');
