@@ -27,6 +27,9 @@ class FirstRunSeeder extends Seeder
             NewsCategorySeeder::class,
             NewsCategorySubsTableSeeder::class,
             NewsProvincesTableSeeder::class,
+            CitiesAndTownsSeeder::class,
+            PostalCodeSeeder::class,
+            FederalRidingsSeeder::class,
         ]);
 
         Team::create([

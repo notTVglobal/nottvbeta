@@ -189,7 +189,7 @@ class AdminController extends Controller
 
 //        dd($codes);
 
-        $handle = fopen('../storage/app/invite_codes.csv', 'w');
+        $handle = fopen('../storage/app/csv/invite_codes.csv', 'w');
 //
 //        collect($data)->each(fn ($row) => fputcsv($handle, $data));
 //        fputcsv($handle, $data);

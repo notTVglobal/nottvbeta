@@ -11,7 +11,9 @@ class NewsCity extends Model
 
   protected $fillable = [
       'name', // Name of the city
+      'type', // City, Town, etc.
       'news_province_id', // Foreign key to NewsProvinces
+      'federal_riding_id', // Foreign key to NewsFederalRidings
       'population', // Population of the city
       'area', // Total area of the city in square kilometers
       'geo_coordinates', // Latitude and longitude of the city
@@ -19,14 +21,21 @@ class NewsCity extends Model
       'cultural_significance', // Cultural significance of the city
       'city_mayor', // Current mayor of the city
       'tourism_attractions', // Key tourism attractions in the city
-      'time_zone', // Time zone of the city
       'city_website', // Official website of the city
       'year_incorporated', // Year the city was incorporated
-      'airport_code' // IATA airport code
+      'airport_code', // IATA airport code
+      'time_zone', // Time zone of the city
+      'gmt_offset',
+      'gmt_offset_dst',
+      'dst_observed'
   ];
 
   public function province() {
     return $this->belongsTo(NewsProvince::class);
+  }
+
+  public function federalRiding() {
+    return $this->belongsTo(NewsFederalRiding::class);
   }
 
   public function postalCodes() {

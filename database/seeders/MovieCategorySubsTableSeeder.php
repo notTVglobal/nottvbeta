@@ -586,24 +586,34 @@ class MovieCategorySubsTableSeeder extends Seeder
           ],
       ];
 
+      $batchSize = 500; // Define a suitable batch size
+      $timestamp = now(); // Current timestamp
+
+
       foreach ($subCategoryGroups as $categoryName => $subCategories) {
         $categoryId = $this->getCategoryIdByName($categoryName);
         if ($categoryId) {
           $this->addCategoryId($subCategories, $categoryId);
+          $batchData = [];
 
           // Modify the addTimestamps function to handle a single subCategory
           foreach ($subCategories as $subCategory) {
-            try {
               // Add timestamps directly to the subCategory array
               $timestamp = now();
               $subCategory['created_at'] = $timestamp;
               $subCategory['updated_at'] = $timestamp;
+              $batchData[] = $subCategory;
 
-              DB::table('movie_category_subs')->insert($subCategory);
-            } catch (\Illuminate\Database\QueryException $e) {
-              // Handle the exception
-              Log::warning("Duplicate entry for subcategory: " . $subCategory['name']);
+              if (count($batchData) >= $batchSize) {
+                DB::table('movie_category_subs')->insert($batchData);
+                $batchData = []; // Reset for next batch
+              }
+
+            // Insert any remaining batch data
+            if (!empty($batchData)) {
+              DB::table('movie_category_subs')->insert($batchData);
             }
+
           }
         }
       }

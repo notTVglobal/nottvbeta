@@ -11,14 +11,18 @@ class NewsProvince extends Model
 
   protected $fillable = [
       'name',
-      'news_province_id',
+      'abbreviation',
+      'year_joined_confederation',
       'population',
       'area',
-      'representation',
       'geo_coordinates',
-      'historical_data',
-      'economic_indicators',
-      'date_founded'
+      'capital',
+      'province_premier',
+      'provinces_website',
+      'time_zone',
+      'gmt_offset',
+      'gmt_offset_dst',
+      'dst_observed'
   ];
 
 

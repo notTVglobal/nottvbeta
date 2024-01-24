@@ -9,6 +9,11 @@ January 23, 2024
 * Filled the database (seeders) with News Sub-Categories, Movie Sub-Categories, and News Sub-Categories.
 * Created new models for NewsCities, NewsProvinces, NewsPostalCodes, News MLA Ridings, News Federal Ridings
   * Need to populate the Cities, PostalCodes, MLA and Federal Ridings tables.
+* Seed the News Tables
+  * Canadian Cities and Towns, source: https://natural-resources.canada.ca/earth-sciences/geography/download-geographical-names-data/9245
+  * Canadian Postal Codes, source: https://github.com/djbelieny/geoinfo-dataset
+    * Note: Stats Canada used to provide this dataset but discontinued it in June 2017. Canada Post now charges a fee for a regularly updated dataset.
+* Side Note: Additional Stats Canada Datasets can be found here: https://www.statcan.gc.ca/en/microdata/dli/data/all 
 
 # v0.8.3.0
 January 22, 2024

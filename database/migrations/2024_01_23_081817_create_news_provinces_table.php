@@ -21,9 +21,14 @@ return new class extends Migration
           $table->smallInteger('year_joined_confederation')->nullable();
           $table->integer('population')->nullable();
           $table->float('area')->nullable();
-          $table->string('capital')->nullable();
-          $table->string('time_zone')->nullable();
           $table->string('geo_coordinates')->nullable();
+          $table->string('capital')->nullable();
+          $table->string('province_premier')->nullable(); // Current premier of the province
+          $table->string('provinces_website')->nullable(); // Official website of the province
+          $table->string('time_zone')->nullable(); // Time zone of the province (may vary in places)
+          $table->float('gmt_offset')->nullable(); // GMT offset
+          $table->float('gmt_offset_dst')->nullable(); // GMT offset during Daylight Saving Time
+          $table->boolean('dst_observed')->nullable()->default(false); // Boolean for whether DST is observed
           $table->timestamps();
         });
     }

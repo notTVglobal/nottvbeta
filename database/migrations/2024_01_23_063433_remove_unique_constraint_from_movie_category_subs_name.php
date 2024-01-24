@@ -26,7 +26,8 @@ return new class extends Migration
     public function down()
     {
       Schema::table('movie_category_subs', function (Blueprint $table) {
-        $table->unique('name');
+        // don't reverse this, if there is data in the table with non-unique names
+        // it will cause a problem. (tec21)
       });
     }
 };

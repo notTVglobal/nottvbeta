@@ -24,19 +24,20 @@ class DropPostsAndPostCategoriesTables extends Migration
    */
   public function down()
   {
+    Schema::create('post_categories', function (Blueprint $table) {
+      $table->id();
+      $table->string('name');
+      $table->string('slug')->unique();
+      $table->timestamps();
+    });
+
     Schema::create('posts', function (Blueprint $table) {
       $table->id();
       $table->string('title');
       $table->string('slug')->unique();
       $table->text('content');
       $table->timestamps();
-    });
-
-    Schema::create('post_categories', function (Blueprint $table) {
-      $table->id();
-      $table->string('name');
-      $table->string('slug')->unique();
-      $table->timestamps();
+      $table->foreignId('post_categories_id')->nullable()->constrained();
     });
   }
 }

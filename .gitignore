@@ -6,6 +6,7 @@
 /storage/app/public/images/logo_white_512.png
 /storage/*.key
 /storage/app
+/storage/app/csv/invite_codes.csv
 /storage/logs
 /storage/framework/cache
 /vendor

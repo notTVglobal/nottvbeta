@@ -17,13 +17,12 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
-            FirstRunSeeder::class,  // Admins, settings, initial categories            TeamSeeder::class,
-            FirstRunTestingSeeder::class, // Additional user data, shows, teams, etc.
-        ]);
+          // Admins, settings, initial categories
+            FirstRunSeeder::class,
 
-        // Call the ShopSeeder
-        $this->call([
-            ShopSeeder::class,
+          // Testing data user data, shows, teams, etc.
+            TestDataSeeder::class,
+
         ]);
     }
 }

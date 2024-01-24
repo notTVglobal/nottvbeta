@@ -12,12 +12,7 @@ class NewsStory extends Model
     use HasFactory;
 
     protected $fillable = [
-        'news_categories_id',
-        'title',
-        'slug',
-        'content',
-        'city',
-        'status'
+
     ];
 
     protected $casts = [
@@ -63,4 +58,25 @@ class NewsStory extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+  public function city()
+  {
+    return $this->belongsTo(NewsCity::class);
+  }
+
+  public function province()
+  {
+    return $this->belongsTo(NewsProvince::class);
+  }
+
+  public function federalRiding()
+  {
+    return $this->belongsTo(NewsFederalRiding::class);
+  }
+
+  public function mlaRiding()
+  {
+    return $this->belongsTo(NewsMlaRiding::class);
+  }
+
 }

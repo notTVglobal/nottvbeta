@@ -235,6 +235,36 @@
           </div>
         </section>
 
+        <section class="bg-white p-6 rounded-lg shadow-md">
+          <h2 class="text-lg font-semibold text-gray-800">Enhancement Proposal: Mapping Federal Ridings with Spatial Data</h2>
+          <p class="text-gray-600 mt-4">
+            Dear News Team,
+          </p>
+          <p class="text-gray-600 mt-2">
+            We have an exciting opportunity to enhance our data capabilities by integrating the mapping of federal ridings using polygon data. By adopting a database that supports spatial data types and Geographic Information System (GIS) features, we can accurately sort cities and towns into their corresponding federal ridings based on geographic coordinates.
+          </p>
+          <p class="text-gray-600 mt-2">
+            This feature would allow us to:
+            <ul class="list-disc ml-6 mt-2 text-gray-600">
+              <li>Enhance our demographic analyses and reporting by aligning them with specific electoral districts.</li>
+              <li>Improve the precision of our political and electoral coverage, offering more localized and relevant news to our audience.</li>
+              <li>Seamlessly integrate other datasets, such as census data or polling results, into the geographical context of these ridings.</li>
+              <li>Provide interactive maps and visualizations for our users, offering a more engaging and informative experience.</li>
+            </ul>
+          </p>
+          <p class="text-gray-600 mt-2">
+            The question arises: Do we need to build this feature? The potential benefits are significant, both in terms of enhancing our reporting capabilities and in providing more targeted and meaningful content to our users. It's an opportunity to leverage modern data processing and mapping technologies to strengthen our position as a leading news provider.
+          </p>
+          <p class="text-gray-600 mt-4">
+            We welcome your thoughts and insights on this proposal.
+          </p>
+          <p class="text-gray-600 mt-4">
+            Best regards,
+            <br><br>
+            Travis Cross<br>
+            notTV Visionary
+          </p>
+        </section>
 
 
 

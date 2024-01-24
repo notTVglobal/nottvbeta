@@ -16,8 +16,12 @@ return new class extends Migration
       Schema::create('news_postal_codes', function (Blueprint $table) {
         $table->id(); // Primary key
         $table->string('code'); // The postal code
-        $table->unsignedBigInteger('news_city_id'); // Foreign key to NewsCities
-        $table->foreign('news_city_id')->references('id')->on('news_cities');
+//        $table->unsignedBigInteger('news_city_id');
+        $table->foreignId('news_city_id')->nullable()->default(null)->references('id')->on('news_cities'); // Foreign key to NewsCities
+//        $table->unsignedBigInteger('news_federal_riding_id');
+        $table->foreignId('news_federal_riding_id')->nullable()->default(null)->references('id')->on('news_federal_ridings'); // Foreign key to FederalRidings
+//        $table->unsignedBigInteger('news_mla_riding_id');
+        $table->foreignId('news_mla_riding_id')->nullable()->default(null)->references('id')->on('news_mla_ridings'); // Foreign key to MlaRidings
         $table->string('city_section')->nullable(); // Specific section or neighborhood within the city
         $table->string('area_coverage')->nullable(); // Description of the area covered by the postal code
         $table->string('geo_coordinates')->nullable(); // Latitude and longitude of the postal code area
