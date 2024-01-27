@@ -33,18 +33,6 @@
           :filters="filters"
           :searchPath="`/newsStory/${newsStory.slug}/edit`"
       />
-      <!--      <CategoryCitySelector-->
-      <!--          :newsStory="newsStory"-->
-      <!--          :country="country"-->
-      <!--          :categories="categories"-->
-      <!--          :locationSearch="locationSearch"-->
-      <!--          :filters="filters"-->
-      <!--          :form-errors="form.errors"-->
-      <!--          @searchChanged="handleSearch"-->
-      <!--          @update:selectedCategory="handleCategoryUpdate"-->
-      <!--          @update:selectedSubcategory="handleSubcategoryUpdate"-->
-      <!--          @update:selectedLocation="handleCityUpdate"-->
-      <!--      />-->
 
       <div class="p-6 border-b border-gray-200">
         <form @submit.prevent="submit">
@@ -150,7 +138,7 @@ onMounted(() => {
   newsStore.newsArticleIdTiptop = props.newsStory.id
   newsStore.newsArticleTitleTiptop = props.newsStory.title
   newsStore.newsArticleContentTiptop = props.newsStory.content
-  // newsStore.content_json = props.newsStory.content_json
+  newsStore.content_json = props.newsStory.content_json
   newsStore.news_category_id = props.newsStory.news_category_id
   newsStore.news_category_sub_id = props.newsStory.news_category_sub_id
   newsStore.city_id = props.newsStory.city_id
@@ -251,14 +239,14 @@ watch(() => [newsStore.news_category_id, newsStore.news_category_sub_id], () => 
 //         // Handle error
 //       });
 // }
-
+// const jsonString = JSON.stringify(newsStore.content_json);
 const submit = () => {
   props.processing = true
   const data = {
     id: newsStore.newsStory.id,
     title: newsStore.newsArticleTitleTiptop,
     body: newsStore.newsArticleContentTiptop,
-    // content_json: '{}',
+    content_json: newsStore.content_json,
     news_category_id: newsStore.selectedCategory.id,
     news_category_sub_id: newsStore.selectedSubcategory.id,
     city_id: newsStore.selectedLocation.city_id,

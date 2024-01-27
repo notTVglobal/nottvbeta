@@ -12,7 +12,7 @@
               class="rounded"
               @change="onCategoryChange"
       >
-        <option :value="{ id: null }" disabled>Choose a category</option>
+        <option :value="{ id: null }" >Choose a category</option>
         <option v-for="category in newsStore.categories" :key="category.id" :value="category">{{ category.name }}</option>
       </select>
     </div>
@@ -113,12 +113,14 @@
 </template>
 
 <script setup>
+import { Inertia } from '@inertiajs/inertia'
 import { usePage } from '@inertiajs/inertia-vue3';
 import { watch, ref, computed, onMounted } from 'vue'
 import { debounce, throttle } from 'lodash'
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useNewsStore } from '@/Stores/NewsStore'
-import { Inertia } from '@inertiajs/inertia'
 
+const appSettingStore = useAppSettingStore()
 const newsStore = useNewsStore()
 
 // Define props and other logic
@@ -199,10 +201,19 @@ const searchInput = computed({
 });
 
 watch(() => newsStore.search, throttle((value) => {
-  Inertia.get(`/newsStory/${newsStore.newsStory.slug}/edit`, { search: value }, {
-    preserveState: true,
-    replace: true,
-  });
+  let url;
+  if (appSettingStore.currentPage === 'newsEdit') {
+    url = `/newsStory/${newsStore.newsStory.slug}/edit`;
+  } else if (appSettingStore.currentPage === 'newsCreate') {
+    url = '/newsStory/create';
+  }
+
+  if (url) {
+    Inertia.get(url, { search: value }, {
+      preserveState: true,
+      replace: true,
+    });
+  }
 }, 300));
 
 const showDropdown = () => {

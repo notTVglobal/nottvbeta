@@ -71,6 +71,7 @@
                 <div v-html="news.content" class="text-left mb-6 text-xl px-16 leading-loose font-['monospace']">
                 </div>
               </div>
+              <div id="content"></div>
 
             </section>
           </main>
@@ -99,8 +100,10 @@ import Message from '@/Components/Global/Modals/Messages'
 import Breadcrumbs from '@/Components/Global/Breadcrumbs/Breadcrumbs.vue'
 import BackButton from '@/Components/Global/Buttons/BackButton.vue'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage.vue'
+import { useNewsStore } from '@/Stores/NewsStore'
 
 const appSettingStore = useAppSettingStore()
+const newsStore = useNewsStore()
 appSettingStore.currentPage = 'news/story/slug'
 
 // appSettingStore.noLayout = false

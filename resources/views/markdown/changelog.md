@@ -3,10 +3,12 @@
 Last Update: January 26, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
-# v0.8.3.4
+# v0.8.3.5
 January 26, 2024
 * Finish the News Story Edit Page.. need to fix the News Story Create Page to match.
   * The TipTap Text Editor is not loading ... work in progress..
+  * Almost got it working...
+* News Create and Edit pages are done.
 
 # v0.8.3.3
 January 25, 2024

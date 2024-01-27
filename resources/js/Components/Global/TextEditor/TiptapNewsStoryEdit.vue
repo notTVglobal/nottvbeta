@@ -33,13 +33,13 @@
 </template>
 
 <script setup>
+import { onMounted, watch } from 'vue';
 import { Inertia } from "@inertiajs/inertia"
-import { watch } from 'vue'
 import throttle from "lodash/throttle"
 import axios from "axios"
 import { Editor, EditorContent } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
-import Document from '@tiptap/extension-document'
+// import Document from '@tiptap/extension-document'
 import Paragraph from '@tiptap/extension-paragraph'
 import Text from '@tiptap/extension-text'
 import HardBreak from '@tiptap/extension-hard-break'
@@ -53,28 +53,46 @@ import TabbableTextarea from "@/Components/Global/TextEditor/TabbableTextarea"
 
 const newsStore = useNewsStore()
 
+// const editor = useEditor({
+//   extensions: [StarterKit],
+//   content: '', // Initially empty
+// });
+
+
+// onMounted(() => {
+//   if (editor && newsStore.content_json) {
+//     editor.commands.setContent(newsStore.content_json);
+//   }
+// });
+
+// Watch for changes in the content and update the editor
+watch(() => newsStore.content_json, (newContent) => {
+  if (editor && newContent) {
+    editor.commands.setContent(newContent);
+  }
+}, { immediate: true });
+
+
 let editor = new Editor({
   content: newsStore.newsArticleContentTiptop,
   extensions: [
     StarterKit,
-    Paragraph.configure({
-      HTMLAttributes: {
-        class: 'news-paragraph',
-      },
-    }),
+    // Paragraph.configure({
+    //   HTMLAttributes: {
+    //     class: 'news-paragraph',
+    //   },
+    // }),
   ],
-
   onUpdate: ({editor}) => {
-    newsStore.newsArticleContentTiptop = editor.getHTML()
-    // newsStore.newsArticleContentTiptop = editor.getJSON()
-    // const value = editor.getJSON()
+    // newsStore.newsArticleContentTiptop = editor.getHTML()
+    newsStore.content_json = editor.getJSON()
+    const value = editor.getJSON()
 
     // Auto-save -> triggered on every change,
     // currently disabled. Needs to be throttled.
     //
     // axios.post('/news/save', { id: newsStore.newsArticleIdTiptop, body:newsStore.newsArticleContentTiptop, title:newsStore.newsArticleTitleTiptop })
   },
-
   autofocus: true,
   editorProps: {
     attributes: {
@@ -82,8 +100,6 @@ let editor = new Editor({
     }
   }
 })
-
-
 // watch(() => newsStore.newsArticleContentTiptop, (newNewsStoryContent) => {
 //   Object.keys(newNewsStoryContent).forEach(key => {
 //     if (form[key] !== undefined) {

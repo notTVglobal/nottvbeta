@@ -143,7 +143,8 @@ class NewsStoryController extends Controller {
     $categories = $this->getCategories();
 
     // Retrieve and combine Cities, Provinces, Federal Electoral Districts for searching
-    $locationSearch = $this->getLocationSearch(Request::input('search'));
+    $search = Request::input('search');
+    $locationSearch = $this->getLocationSearch($search);
 
     return Inertia::render(
         'News/Stories/Create', [
@@ -169,7 +170,7 @@ class NewsStoryController extends Controller {
     $request->validate([
         'title'                             => 'unique:news_stories|required|string|max:255',
         'body'                              => 'required|string',
-        'content_json'                      => 'nullable|json',
+//        'content_json'                      => 'nullable|json',
         'news_category_id'                  => 'required|integer',
         'news_category_sub_id'              => 'nullable|integer',
         'city_id'                           => 'nullable|integer',
@@ -190,7 +191,7 @@ class NewsStoryController extends Controller {
     $newsStory->user_id = Auth::user()->id;
     $newsStory->title = htmlentities($request->title);
     $newsStory->content = htmlentities($request->body);
-//        $newsStory->content_json = $request->content_json;
+        $newsStory->content_json = $request->content_json;
     $newsStory->slug = \Str::slug($request->title);
     $newsStory->user_id = Auth::user()->id;
     $newsStory->news_category_id = $request->news_category_id;
@@ -234,7 +235,7 @@ class NewsStoryController extends Controller {
                 'slug'                         => $newsStory->slug,
                 'title'                        => html_entity_decode($newsStory->title),
                 'content'                      => html_entity_decode($newsStory->content),
-//                    'content_json' => $newsStory->content_json,
+                    'content_json' => $newsStory->content_json,
                 'author'                       => $newsStory->user->name,
                 'newsCategory'                 => $newsStory->newsCategory->name,
                 'newsCategorySub'              => $newsStory->newsCategorySub->name ?? null,
@@ -273,70 +274,22 @@ class NewsStoryController extends Controller {
     $categories = $this->getCategories();
 
     // Retrieve and combine Cities, Provinces, Federal Electoral Districts for searching
-//        $locationSearch = $this->getLocationSearch(Request::input('search'));
-
-
-    $cities = NewsCity::with('province')
-        ->when(Request::input('search'), function ($query, $search) {
-          $query->where('news_cities.name', 'like', "%{$search}%");
-        })
-        ->orderBy('news_cities.name', 'asc')
-        ->select('news_cities.id as city_id', 'news_cities.name', 'news_cities.type as type', 'news_provinces.name as province_name', 'news_provinces.id as province_id')
-        ->leftJoin('news_provinces', 'news_cities.province_id', '=', 'news_provinces.id')
-        ->get()->map(function ($city) {
-          $city->type = strtolower($city->type); // Convert type to lowercase
-
-          return $city;
-        });
-
-//    $cities = null;
-
-    $provinces = NewsProvince::when(Request::input('search'), function ($query, $search) {
-      $query->where('name', 'like', "%{$search}%");
-    })
-        ->select('id as province_id', 'name')
-        ->get()
-        ->map(function ($province) {
-          $province->type = 'province';
-
-          return $province;
-        });
-
-    $federalElectoralDistricts = NewsFederalElectoralDistrict::with('province')
-        ->when(Request::input('search'), function ($query, $search) {
-          $query->where('news_federal_electoral_districts.name', 'like', "%{$search}%");
-        })
-        ->orderBy('news_federal_electoral_districts.name')
-        ->select('news_federal_electoral_districts.id as federal_electoral_district_id', 'news_federal_electoral_districts.name as name', 'news_provinces.name as province_name', 'news_provinces.id as province_id')
-        ->leftJoin('news_provinces', 'news_federal_electoral_districts.province_id', '=', 'news_provinces.id')
-        ->get()
-        ->map(function ($district) {
-          $district->type = 'federalElectoralDistrict';
-
-          return $district;
-        });
-
-    // Combine the results and return
-    $locations = $cities->concat($provinces)->concat($federalElectoralDistricts);
-
-//        $post = NewsStory::query()
-//            ->where('slug', $newsStory->slug)
-//            ->with('image','province','newsStatus', 'city')
-//            ->firstOrFail();
+    $search = Request::input('search');
+    $locationSearch = $this->getLocationSearch($search);
 
     return Inertia::render(
         'News/Stories/{$id}/Edit',
         [
-//                'newsStory' => $newsStory,
             'country'        => $country,
             'categories'     => $categories,
-            'locationSearch' => $locations,
+            'locationSearch' => $locationSearch,
             'filters'        => Request::only(['search']),
             'newsStory'      => [
                 'id'                                => $newsStory->id,
                 'slug'                              => $newsStory->slug,
                 'title'                             => html_entity_decode($newsStory->title),
                 'content'                           => html_entity_decode($newsStory->content),
+                'content_json' => $newsStory->content_json,
                 'user'                              => [
                     'name' => $newsStory->user->name,
                 ],
@@ -372,10 +325,11 @@ class NewsStoryController extends Controller {
   public function update(HttpRequest $request, NewsStory $newsStory) {
     $this->authorize('update', $newsStory);
 //    dd($request);
+//    $content = $request->input('content_json'); // 'json_data' is the key you send from frontend
     $request->validate([
         'title'                             => ['required', 'string', 'max:255', Rule::unique('news_stories')->ignore($newsStory->id)],
         'body'                              => 'required|string',
-        'content_json'                      => 'nullable|json',
+//        'content_json'                      => 'nullable|json',
         'news_category_id'                  => 'required|integer',
         'news_category_sub_id'              => 'nullable|integer',
         'city_id'                           => 'nullable|integer',
@@ -400,6 +354,7 @@ class NewsStoryController extends Controller {
     $newsStory->title = htmlentities($request->title);
     $newsStory->slug = \Str::slug($request->title);
     $newsStory->content = htmlentities($request->body);
+    $newsStory->content_json = $request->content_json;
     $newsStory->news_category_id = $request->news_category_id;
     $newsStory->news_category_sub_id = $request->news_category_sub_id;
     $newsStory->city_id = $request->city_id;
@@ -498,8 +453,6 @@ class NewsStoryController extends Controller {
 
   private function getLocationSearch($search) {
     // Retrieve and combine Cities, Provinces, Federal Electoral Districts for searching
-//    $search = Request::input('search');
-
     $cities = NewsCity::with('province')
         ->when($search, function ($query) use ($search) {
           $query->where('news_cities.name', 'like', "%{$search}%");
@@ -507,9 +460,11 @@ class NewsStoryController extends Controller {
         ->orderBy('news_cities.name', 'asc')
         ->select('news_cities.id as city_id', 'news_cities.name', 'news_cities.type as type', 'news_provinces.name as province_name', 'news_provinces.id as province_id')
         ->leftJoin('news_provinces', 'news_cities.province_id', '=', 'news_provinces.id')
-        ->get();
+        ->get()->map(function ($city) {
+          $city->type = strtolower($city->type); // Convert type to lowercase
 
-//    $cities = null;
+          return $city;
+        });
 
     $provinces = NewsProvince::when($search, function ($query) use ($search) {
       $query->where('name', 'like', "%{$search}%");
@@ -517,7 +472,7 @@ class NewsStoryController extends Controller {
         ->select('id as province_id', 'name')
         ->get()
         ->map(function ($province) {
-          $province->type = 'Province';
+          $province->type = 'province';
 
           return $province;
         });
@@ -526,19 +481,18 @@ class NewsStoryController extends Controller {
         ->when($search, function ($query) use ($search) {
           $query->where('news_federal_electoral_districts.name', 'like', "%{$search}%");
         })
-        ->orderBy('news_federal_electoral_districts.name', 'asc')
+        ->orderBy('news_federal_electoral_districts.name')
         ->select('news_federal_electoral_districts.id as federal_electoral_district_id', 'news_federal_electoral_districts.name as name', 'news_provinces.name as province_name', 'news_provinces.id as province_id')
         ->leftJoin('news_provinces', 'news_federal_electoral_districts.province_id', '=', 'news_provinces.id')
         ->get()
         ->map(function ($district) {
-          $district->type = 'Federal Electoral District';
+          $district->type = 'federalElectoralDistrict';
 
           return $district;
         });
 
     // Combine the results and return
-    return $cities->concat($provinces)->concat($federalElectoralDistricts);
-//    return $provinces->concat($federalElectoralDistricts);
+    return $locations = $cities->concat($provinces)->concat($federalElectoralDistricts);
   }
 
   private function fillNewsStoryAttributes(NewsStory $newsStory, $request) {
