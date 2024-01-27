@@ -21,7 +21,16 @@ class UpdateStatusInNewsStories extends Migration
 
       // Modify the status column
       Schema::table('news_stories', function (Blueprint $table) {
+        // Drop the existing foreign key if it exists
+        $foreignKeys = \DB::getDoctrineSchemaManager()->listTableForeignKeys('news_stories');
+        foreach ($foreignKeys as $key) {
+          if ($key->getName() == 'news_stories_status_foreign') {
+            $table->dropForeign('news_stories_status_foreign');
+          }
+        }
+
         $table->unsignedBigInteger('status')->default(1)->change();
+        $table->foreign('status', 'news_stories_status_foreign')->references('id')->on('news_statuses');
       });
     }
 
@@ -32,15 +41,10 @@ class UpdateStatusInNewsStories extends Migration
      */
     public function down()
     {
-      // Revert the status column to nullable without a default
       Schema::table('news_stories', function (Blueprint $table) {
+        // Use the exact name of the foreign key
+        $table->dropForeign('news_stories_status_foreign');
         $table->unsignedBigInteger('status')->nullable()->default(null)->change();
       });
-
-      // Optionally: Reset the status of articles that were originally NULL
-      // if you need to maintain the original state
-      // DB::table('news_stories')
-      //    ->where('status', 1)
-      //    ->update(['status' => null]);
     }
 };

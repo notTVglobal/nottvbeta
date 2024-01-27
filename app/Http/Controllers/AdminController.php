@@ -6,6 +6,7 @@ use App\Jobs\AddVideoUrlFromEmbedCodeJob;
 use App\Models\AppSetting;
 use App\Models\Image;
 use App\Models\InviteCode;
+use App\Models\NewsCountry;
 use App\Models\Show;
 use App\Models\ShowEpisode;
 use App\Models\Team;
@@ -33,13 +34,18 @@ class AdminController extends Controller
 //        $settings = DB::table('app_settings')->where('id', 1)->first();
         $settings = AppSetting::find(1);
 
-        // Decrypting the Mist Server Password
+      // Fetch all countries
+      $countries = NewsCountry::orderBy('name', 'asc')->get();
+
+      // Decrypting the Mist Server Password
         if ($settings->mist_server_password) {
             $decryptedPassword = Crypt::decryptString($settings->mist_server_password);
         }
 
         return Inertia::render('Admin/Settings', [
             'id' => $settings->id,
+            'countries' => $countries, // Add the list of countries here
+            'default_country' => $settings->country_id,
             'cdn_endpoint' => $settings->cdn_endpoint,
             'cloud_folder' => str_replace('/', '',$settings->cloud_folder),
             'first_play_video_source' => $settings->first_play_video_source,
@@ -57,6 +63,7 @@ class AdminController extends Controller
     public function saveSettings(HttpRequest $request)
     {
         $request->validate([
+            'default_country' => 'nullable|integer',
             'cdn_endpoint' => 'nullable|string',
             'cloud_folder' => 'nullable|string',
             'first_play_video_source' => 'nullable|string',
@@ -75,6 +82,7 @@ class AdminController extends Controller
         }
 
         $settings = AppSetting::find($request->id);
+        $settings->country_id = $request->default_country;
         $settings->cdn_endpoint = $request->cdn_endpoint;
         $settings->cloud_folder = '/'.$request->cloud_folder;
         $settings->first_play_video_source = $request->first_play_video_source;

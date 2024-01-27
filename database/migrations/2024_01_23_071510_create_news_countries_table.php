@@ -58,6 +58,12 @@ return new class extends Migration
      */
     public function down()
     {
+      // Drop foreign key constraint
+      Schema::table('news_stories', function (Blueprint $table) {
+        $table->dropForeign(['country_id']);
+      });
+
+      // Now you can safely drop the news_countries table
         Schema::dropIfExists('news_countries');
     }
 };

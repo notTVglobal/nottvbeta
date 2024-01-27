@@ -9,6 +9,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class NewsPersonController extends Controller
@@ -29,6 +30,9 @@ class NewsPersonController extends Controller
       });
       return Inertia::render('News/Reporters/Index', [
           'newsPeople' => $newsPeople,
+          'can'         => [
+              'viewNewsroom'     => optional(Auth::user())->can('viewAny', NewsPerson::class) ?: false,
+          ]
       ]);
   }
 
@@ -48,6 +52,9 @@ class NewsPersonController extends Controller
             'profile_photo_path' => $newsPerson->user->profile_photo_path,
             'profile_photo_url' => $newsPerson->user->profile_photo_url,
         ],
+        'can' => [
+            'viewNewsroom' => optional(Auth::user())->can('viewAny', NewsPerson::class) ?: false,
+        ]
     ]);
   }
 

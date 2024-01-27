@@ -4,7 +4,7 @@
     <PublicNavigationMenu v-if="!appSettingStore.loggedIn" class="fixed top-0 w-full nav-mask" />
 
     <div class="bg-gray-900 flex flex-col gap-y-3 w-full place-self-center text-white px-5">
-      <PublicNewsNavigationButtons />
+      <PublicNewsNavigationButtons :can="can"/>
 
       <Breadcrumbs :breadcrumbs="[
           { text: 'News', to: '/news' },
@@ -77,6 +77,10 @@ const videoPlayerStore = useVideoPlayerStore()
 
 appSettingStore.noLayout = true
 appSettingStore.currentPage = 'news.reporter.id'
+
+defineProps({
+  can: Object,
+})
 
 // Watch for changes in the loggedIn state of appSettingStore
 watch(() => appSettingStore.loggedIn, (loggedIn) => {

@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\NewsCountry;
+use App\Models\NewsStory;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -15,9 +16,12 @@ class NewsStorySeeder extends Seeder
      */
     public function run()
     {
-      // Get the country ID from the iso_alpha3_code
-      $countryISO3 = 'CAN';
-      $countryId = NewsCountry::where('iso_alpha3_code', $countryISO3)->first()->id;
+
+      // Specify the number of NewsStory instances you want to create
+      $numberOfStories = 50; // for example, create 50 stories
+
+      // Using the factory to create $numberOfStories instances of NewsStory
+      NewsStory::factory($numberOfStories)->create();
 
     }
 }

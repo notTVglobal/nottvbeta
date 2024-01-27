@@ -12,6 +12,7 @@ const initialState = () => ({
     prevUrl: null,
     showNavDropdown: false, // formerly userStore.showNavDropdown
     showFlashMessage: true, // formerly appSettingStore.showFlashMessage
+    showConfirmationDialog: false, // show confirmation Dialog
     currentPage: '', // formerly videoPlayerStore.currentPage
     fullPage: false, // Used to determine layout FullPage or TopRight
     pageIsHidden: true, // Used to hide the page when fullPage = false && showOtt = true

@@ -16,20 +16,79 @@ class NewsroomController extends Controller
     public function index()
     {
         return Inertia::render('Newsroom/Index', [
-            'news' => NewsStory::with('image')
-                ->when(\Illuminate\Support\Facades\Request::input('search'), function ($query, $search) {
-                    $query->where('title', 'like', "%{$search}%");
+            'newsStories' => NewsStory::with('image', 'user', 'newsCategory', 'newsCategorySub', 'city', 'province', 'federalElectoralDistrict', 'subnationalElectoralDistrict', 'newsStatus', 'video')
+                ->when(Request::input('search'), function ($query, $search) {
+                    $query->where('title', 'like', "%{$search}%")
+                        ->orWhere('content', 'like', "%{$search}%")
+                        ->orWhereHas('user', function ($query) use ($search) {
+                          $query->where('name', 'like', "%{$search}%");
+                    })->orWhereHas('newsCategory', function ($query) use ($search) {
+                          $query->where('name', 'like', "%{$search}%");
+                        })
+                        ->orWhereHas('newsCategorySub', function ($query) use ($search) {
+                          $query->where('name', 'like', "%{$search}%");
+                        })
+                        ->orWhereHas('city', function ($query) use ($search) {
+                          $query->where('name', 'like', "%{$search}%");
+                        })
+                        ->orWhereHas('province', function ($query) use ($search) {
+                          $query->where('name', 'like', "%{$search}%");
+                        })
+                        ->orWhereHas('federalElectoralDistrict', function ($query) use ($search) {
+                          $query->where('name', 'like', "%{$search}%");
+                        })
+                        ->orWhereHas('subnationalElectoralDistrict', function ($query) use ($search) {
+                          $query->where('name', 'like', "%{$search}%");
+                        })
+                        ->orWhere(function($query) use ($search) {
+                          // Check if search query could be a year
+                          if (preg_match('/^\d{4}$/', $search)) { // Regex to match a 4-digit year
+                            $query->whereYear('published_at', $search);
+                          }
+                        })
+                        ->orWhere(function($query) use ($search) {
+                          // Check if search query could be a year-month
+                          try {
+                            $date = \Carbon\Carbon::createFromFormat('Y-m', $search);
+                            $query->whereYear('published_at', $date->format('Y'))
+                                ->whereMonth('published_at', $date->format('m'));
+                          } catch (\Exception $e) {
+                            // If it's not a valid year-month, do nothing
+                          }
+                        })
+                        ->orWhere(function($query) use ($search) {
+                          // Check if search query could be a date
+                          try {
+                            $date = \Carbon\Carbon::parse($search);
+                            $query->whereDate('published_at', $date->format('Y-m-d'));
+                          } catch (\Exception $e) {
+                            // If it's not a valid date, do nothing
+                          }
+                        });
                 })
+                ->whereNotIn('status', [6, 7]) // don't return stories with a status of 6 published or 7 hidden
                 ->latest()
                 ->paginate(10, ['*'], 'news')
                 ->withQueryString()
                 ->through(fn($newsStory) => [
                     'id' => $newsStory->id,
-                    'slug' => $newsStory->slug,
+                    'user' => [
+                      'name' => $newsStory->user->name,
+                    ],
                     'title' => $newsStory->title,
-                    'image' => $newsStory->image->name,
+                    'slug' => $newsStory->slug,
+                    'newsCategory' => $newsStory->newsCategory->name ?? null,
+                    'newsCategorySub' => $newsStory->newsCategorySub->name ?? null,
+                    'content' => $newsStory->content,
+                    'city' => $newsStory->city->name ?? null,
+                    'province' => $newsStory->province->name ?? null,
+                    'federalElectoralDistrict' => $newsStory->federalElectoralDistrict->name ?? null,
+                    'subnationalElectoralDistrict' => $newsStory->subnationalElectoralDistrict->name ?? null,
+                    'image' => $newsStory->image,
+                    'status' => $newsStory->newsStatus,
+                    'video' => $newsStory->video ?? null,
                     'created_at' => $newsStory->created_at,
-                    'published_at' => $newsStory->published_at,
+                    'published_at' => $newsStory->published_at ?? null,
                     'can' => [
                         'editNewsStory' => Auth::user()->can('update', NewsStory::class),
                         'deleteNewsStory' => Auth::user()->can('delete', NewsStory::class),
@@ -48,7 +107,8 @@ class NewsroomController extends Controller
     {
         $newsStory = NewsStory::find($request->id);
         $newsStory->published_at = date('Y-m-d H:i:s');
-        $newsStory->save();
+        $newsStory->status = 6;
+        $newsStory->update();
 
         return redirect()->route('newsroom')->with('message', 'News Story Published Successfully');
     }

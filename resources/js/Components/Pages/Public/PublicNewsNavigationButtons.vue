@@ -3,31 +3,42 @@
     <div class="grid grid-cols-2 md:grid-cols-5 gap-4 justify-center">
      <PublicNavLink
          @click="() => Inertia.visit('/news/reporters')"
-         :active="appSettingStore.currentPage === 'news.reporters'">
+         :active="appSettingStore.currentPage === 'news.reporters'"
+          class="min-w-fit">
        Reporters
      </PublicNavLink>
       <PublicNavLink
           @click="() => Inertia.visit('/news')"
-          :active="appSettingStore.currentPage === 'news' || appSettingStore.currentPage.includes('news/story')">
+          :active="appSettingStore.currentPage === 'news'"
+          class="min-w-fit">
         Stories
       </PublicNavLink>
       <PublicNavLink
           disabled
           @click="() => Inertia.visit('/news/categories')"
-          :active="appSettingStore.currentPage === 'news.categories'">
+          :active="appSettingStore.currentPage === 'news.categories'"
+          class="min-w-fit">
         Categories
       </PublicNavLink>
       <PublicNavLink
           disabled
           @click="() => Inertia.visit('/news/cities')"
-          :active="appSettingStore.currentPage === 'news.cities'">
+          :active="appSettingStore.currentPage === 'news.cities'"
+          class="min-w-fit">
         Cities
       </PublicNavLink>
       <PublicNavLink
           disabled
           @click="() => Inertia.visit('/news/regions')"
-          :active="appSettingStore.currentPage === 'news.regions'">
-        Regions
+          :active="appSettingStore.currentPage === 'news.regions'"
+          class="min-w-fit">
+        Districts
+      </PublicNavLink>
+      <PublicNavLink
+          v-if="appSettingStore.loggedIn && can.viewNewsroom"
+          @click="() => Inertia.visit('/newsroom')"
+          class="col-start-3 min-w-fit bg-yellow-600 hover:bg-yellow-500 text-white"
+      >Newsroom
       </PublicNavLink>
     </div>
   </div>
@@ -46,6 +57,7 @@ const appSettingStore = useAppSettingStore()
 const props = defineProps({
   href: String,
   active: Boolean,
+  can: Object,
 });
 
 const classes = computed(() => {

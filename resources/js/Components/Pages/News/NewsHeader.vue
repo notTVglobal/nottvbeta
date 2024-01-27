@@ -4,7 +4,7 @@
 
 
     <div class="w-full mx-auto flex flex-wrap justify-between mb-3 pb-3 gap-2">
-      <div class="text-3xl font-semibold text-center lg:text-left">
+      <div class="text-4xl font-semibold text-center lg:text-left">
         <slot/>
       </div>
       <div>
@@ -21,34 +21,49 @@
       <div>
         <ul class="flex flex-wrap ml-0 lg:ml-16 mt-6 mr-6 lg:mt-0 space-x-8">
           <li>
-            <button disabled
-                    class="text-gray-700 dark:text-gray-50 disabled:text-gray-300 disabled:cursor-not-allowed hover:text-blue-500">
+            <button
+                @click="appSettingStore.btnRedirect(`/newsroom`)"
+                class=""
+                :class="getButtonClass('newsroom')">
               Stories
             </button>
           </li>
           <li>
             <button disabled
-                    class="text-gray-700 dark:text-gray-50 disabled:text-gray-300 disabled:cursor-not-allowed hover:text-blue-500">
+                    class=""
+                    :class="getButtonClass('categories')">
               Categories
             </button>
           </li>
           <li>
             <button disabled
-                    class="text-gray-700 dark:text-gray-50 disabled:text-gray-300 disabled:cursor-not-allowed hover:text-blue-500">
+                    class=""
+                    :class="getButtonClass('cities')">
               Cities
             </button>
           </li>
           <li>
             <button disabled
-                    class="text-gray-700 dark:text-gray-50 disabled:text-gray-300 disabled:cursor-not-allowed hover:text-blue-500">
-              Regions
+                    class=""
+                    :class="getButtonClass('districts')">
+              Districts
             </button>
           </li>
           <li>
             <button
                 @click="appSettingStore.btnRedirect(`/newsRssFeeds`)"
-                class="text-gray-700 dark:text-gray-50 hover:text-blue-500"
-            >Feeds
+                class=""
+                :class="getButtonClass('newsRssFeeds.index')">
+              Feeds
+            </button>
+          </li>
+          <li>
+            <button
+                disabled
+                @click="appSettingStore.btnRedirect(`/newsRssFeedsArchive`)"
+                class=""
+                :class="getButtonClass('newsRssFeeds.archive')">
+              Archive
             </button>
           </li>
         </ul>
@@ -65,6 +80,7 @@
 <script setup>
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import NewsHeaderButtons from "@/Components/Pages/News/NewsHeaderButtons"
+import { computed } from 'vue'
 
 const appSettingStore = useAppSettingStore()
 
@@ -72,4 +88,14 @@ defineProps({
   search: String,
   can: Object,
 })
+
+const getButtonClass = (pageIdentifier) => {
+  const baseClass = 'inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium leading-5 transition';
+  const activeClass = 'border-indigo-400 text-gray-800 focus:outline-none focus:border-indigo-700';
+  const inactiveClass = 'border-transparent text-black hover:text-blue-500 hover:border-indigo-400 focus:outline-none focus:text-gray-700 focus:border-gray-300 disabled:text-gray-300 disabled:cursor-not-allowed disabled:border-none';
+
+  return appSettingStore.currentPage === pageIdentifier
+      ? `${baseClass} ${activeClass}`
+      : `${baseClass} ${inactiveClass}`;
+};
 </script>

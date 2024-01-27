@@ -4,8 +4,8 @@
     <PublicNavigationMenu v-if="!appSettingStore.loggedIn" class="fixed top-0 w-full nav-mask"/>
 
     <div class="bg-gray-900 flex flex-col gap-y-3 w-full place-self-center text-white px-5">
-      <PublicNewsNavigationButtons/>
-      <Breadcrumbs :breadcrumbs="[{ text: 'News', to: '/news' }, { text: 'Reporters', to: '/news/reporters' }]" />
+      <PublicNewsNavigationButtons :can="can"/>
+      <Breadcrumbs :breadcrumbs="[{ text: 'News', to: '/news' }, { text: 'Reporters', to: '' }]" />
 
       <div class="text-center text-3xl font-semibold tracking-widest uppercase text-gray-50">News Reporters</div>
 
@@ -77,6 +77,7 @@ watch(() => appSettingStore.loggedIn, (loggedIn) => {
 
 const props = defineProps({
   newsPeople: Array,
+  can: Object,
 })
 
 const marginTopClass = computed(() => {

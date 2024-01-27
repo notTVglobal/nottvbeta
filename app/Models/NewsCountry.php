@@ -30,6 +30,11 @@ class NewsCountry extends Model
     return $this->hasMany(NewsPostalCode::class, 'country_id');
   }
 
+  public function appSettings()
+  {
+    return $this->hasMany(AppSetting::class, 'country_id');
+  }
+
   public function federalElectoralDistricts()
   {
     return $this->hasMany(NewsFederalElectoralDistrict::class, 'country_id');

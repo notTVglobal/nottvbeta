@@ -104,6 +104,20 @@
         <form @submit.prevent="submit">
           <div class="mb-6">
             <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"
+                   for="default_country"
+            >
+              DEFAULT COUNTRY
+            </label>
+
+            <select id="default_country" v-model="form.default_country">
+              <option v-for="country in countries" :key="country.id" :value="country.id">{{ country.name }}</option>
+            </select>
+
+            <div v-if="form.errors.default_country" v-text="form.errors.default_country"
+                 class="text-xs text-red-600 mt-1"></div>
+          </div>
+          <div class="mb-6">
+            <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"
                    for="cdn_endpoint"
             >
               CDN ENDPOINT
@@ -340,7 +354,7 @@
 
 <script setup>
 import { Inertia } from "@inertiajs/inertia"
-import { ref } from "vue"
+import { onMounted, ref } from 'vue'
 import { useForm } from "@inertiajs/inertia-vue3"
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
@@ -354,6 +368,8 @@ const appSettingStore = useAppSettingStore()
 
 let props = defineProps({
   id: Number,
+  countries: Object,
+  default_country: Number,
   cdn_endpoint: String,
   cloud_folder: String,
   first_play_video_source: String,
@@ -369,6 +385,7 @@ let props = defineProps({
 
 let form = useForm({
   id: props.id,
+  default_country: props.default_country,
   cdn_endpoint: props.cdn_endpoint,
   cloud_folder: props.cloud_folder,
   first_play_video_source: props.first_play_video_source,
@@ -380,6 +397,13 @@ let form = useForm({
   mist_server_password: props.mist_server_password,
 })
 
+console.log(props.default_country)
+const countries = ref([]);
+
+onMounted(() => {
+  countries.value = props.countries;
+});
+
 let submit = () => {
   form.patch(route('admin.settings'));
 };
@@ -387,6 +411,7 @@ let submit = () => {
 let getAllEpisodesButtonActive = ref(false);
 
 function getEpisodesFromEmbedCodes() {
+  console.log(form.default_country)
   Inertia.post('getVideosFromEmbedCodes')
   getAllEpisodesButtonActive = false;
 }

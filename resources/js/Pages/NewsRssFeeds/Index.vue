@@ -12,9 +12,6 @@
       <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
       <NewsHeader :can="can">News RSS Feeds</NewsHeader>
 
-      <div class="bg-orange-500 mb-1 px-2 py-1 text-black font-semibold">TODO: create special parser for <a
-          href="https://www.canada.ca/en/news/web-feeds.html#a7" target="_blank">Government of Canada Feeds</a></div>
-
       <div class="w-full overflow-hidden bg-white shadow-sm sm:rounded-lg">
         <div class="w-full p-6 bg-white dark:bg-gray-900 border-b border-gray-200">
 

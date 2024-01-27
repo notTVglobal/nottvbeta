@@ -17,7 +17,7 @@ class NewsCategorySeeder extends Seeder
     {
       $categories = [
           ['name' => 'World News', 'description' => 'Covering international events, global politics, and significant developments across various countries.'],
-          ['name' => 'National News', 'description' => 'Focused on news and events specific to a particular country, including national politics, policies, and major national occurrences.'],
+          ['name' => 'National News', 'description' => 'Focused on news and events specific to Canada, including national politics, policies, and major national occurrences.'],
           ['name' => 'Local News', 'description' => 'News pertinent to specific cities, towns, or regions, covering local government, community events, and regional issues.'],
           ['name' => 'Politics', 'description' => 'Encompassing political news, elections, government policies, and political party activities both at the national and local levels.'],
           ['name' => 'Business and Economy', 'description' => 'Covering financial markets, economic policies, business developments, corporate news, and economic trends.'],

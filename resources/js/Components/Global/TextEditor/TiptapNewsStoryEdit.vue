@@ -28,12 +28,13 @@
 
   <div
       class="h-auto overflow-y-auto min-h-[13rem] max-h-[96rem] mb-2 pb-2 bg-gray-50 border border-1 border-gray-300 focus:outline-none text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 ">
-    <editor-content :editor="editor" class=""/>
+    <editor-content :editor="editor" class="" :key="updateContent"/>
   </div>
 </template>
 
 <script setup>
 import { Inertia } from "@inertiajs/inertia"
+import { watch } from 'vue'
 import throttle from "lodash/throttle"
 import axios from "axios"
 import { Editor, EditorContent } from '@tiptap/vue-3'
@@ -52,7 +53,7 @@ import TabbableTextarea from "@/Components/Global/TextEditor/TabbableTextarea"
 
 const newsStore = useNewsStore()
 
-const editor = new Editor({
+let editor = new Editor({
   content: newsStore.newsArticleContentTiptop,
   extensions: [
     StarterKit,
@@ -62,7 +63,6 @@ const editor = new Editor({
       },
     }),
   ],
-
 
   onUpdate: ({editor}) => {
     newsStore.newsArticleContentTiptop = editor.getHTML()
@@ -82,6 +82,20 @@ const editor = new Editor({
     }
   }
 })
+
+
+// watch(() => newsStore.newsArticleContentTiptop, (newNewsStoryContent) => {
+//   Object.keys(newNewsStoryContent).forEach(key => {
+//     if (form[key] !== undefined) {
+//       form[key] = newNewsStoryContent[key];
+//     }
+//   });
+// }, { deep: true });
+
+// watch(() => newsStore.newsArticleContentTiptop, () => {
+//   updateContent++;
+//   // You can also watch for other relevant states if they affect setSelectedCategory
+// })
 
 // editor.commands.setContent({
 //     "type": "doc",

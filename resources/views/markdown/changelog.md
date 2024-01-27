@@ -1,7 +1,19 @@
 # not.tv Changelog
 
-Last Update: January 23, 2024\
+Last Update: January 26, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+# v0.8.3.4
+January 26, 2024
+* Finish the News Story Edit Page.. need to fix the News Story Create Page to match.
+  * The TipTap Text Editor is not loading ... work in progress..
+
+# v0.8.3.3
+January 25, 2024
+* Major overhaul of the Newsroom and the News page.
+* Categories, sub-categories, and cities are all working with News Stories.
+* The search on the News page will search by story name, story content (needs to be tested, might be resource intensive), news person, city, province, category, sub-category, or published date (YYYY-MM-DD).
+  * If searching by date, you can search by year (YYYY), year and month (YYYY-MM), or the full date (YYYY-MM-DD).
 
 # v0.8.3.2
 January 24, 2024

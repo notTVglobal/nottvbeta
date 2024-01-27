@@ -19,11 +19,8 @@ class NewsCategory extends Model
         return $this->hasMany(NewsStory::class);
     }
 
-  public function showCategorySub()
+  public function newsCategorySubs()
   {
-    return $this->hasMany(NewsCategorySub::class)->withDefault([
-        'name' => 'sub category',
-        'description' => 'sub category description'
-    ]);
+    return $this->hasMany(NewsCategorySub::class, 'news_categories_id');
   }
 }

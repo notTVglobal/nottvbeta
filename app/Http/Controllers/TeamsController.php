@@ -288,9 +288,9 @@ class TeamsController extends Controller
             $teamCreatorData = [
                 'id' => $team->user->id,
                 'name' => $team->user->name,
-                'creator_status_id' => optional($team->user->creator->status)->id ?? null,
-                'creator_status_name' => optional($team->user->creator->status)->status ?? null,
-            ];
+                'creator_status_id' => optional(optional($team->user->creator)->status)->id ?? null,
+                'creator_status_name' => optional(optional($team->user->creator)->status)->status ?? null,
+                ];
         }
 
         // check if teamLeader is not null before attempting to access its related properties

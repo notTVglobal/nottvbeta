@@ -173,14 +173,14 @@
           <div class="mb-2 block uppercase font-bold text-xs">
             * Notes about video embedding:
           </div>
-          <ul class="list-decimal pb-2 ml-2">
+          <ul class="list-decimal pb-2 ml-2 space-y-2">
             <li>
               If both URL and Embed Code are provided the system will attempt to get the Video Url from the Embed Code.
             </li>
             <li>
               We have <span class="font-bold">not</span> enabled the use of Facebook videos for security purposes.
             </li>
-            <li>
+            <li hidden>
               If you want to use YouTube, enter the YouTube video URL above in the YouTube URL field. This option is
               least preferrable, due to a lower quality user experience.
             </li>
