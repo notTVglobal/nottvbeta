@@ -13,6 +13,7 @@ class NewsStory extends Model {
   protected $fillable = [
       'user_id',
       'title',
+      'content',
       'slug',
       'news_category_id',
       'news_category_sub_id',
@@ -26,10 +27,6 @@ class NewsStory extends Model {
       'status',
       'published_at',
       'video_id',
-  ];
-
-  protected $casts = [
-      'content_json' => 'array'
   ];
 
   public function getRouteKeyName() {

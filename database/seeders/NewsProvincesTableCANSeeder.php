@@ -27,6 +27,7 @@ class NewsProvincesTableCANSeeder extends Seeder
           [
               'name' => 'British Columbia',
               'abbreviation' => 'BC',
+              'type' => 'province',
               'country_id' => $countryId,
               'year_joined_confederation' => 1871,
               'population' => null,
@@ -42,6 +43,7 @@ class NewsProvincesTableCANSeeder extends Seeder
           [
               'name' => 'Alberta',
               'abbreviation' => 'AB',
+              'type' => 'province',
               'country_id' => $countryId,
               'year_joined_confederation' => 1905,
               'population' => null,
@@ -57,6 +59,7 @@ class NewsProvincesTableCANSeeder extends Seeder
           [
               'name' => 'Saskatchewan',
               'abbreviation' => 'SK',
+              'type' => 'province',
               'country_id' => $countryId,
               'year_joined_confederation' => 1905,
               'population' => null,
@@ -72,6 +75,7 @@ class NewsProvincesTableCANSeeder extends Seeder
           [
               'name' => 'Manitoba',
               'abbreviation' => 'MB',
+              'type' => 'province',
               'country_id' => $countryId,
               'year_joined_confederation' => 1870,
               'population' => null,
@@ -87,6 +91,7 @@ class NewsProvincesTableCANSeeder extends Seeder
           [
               'name' => 'Ontario',
               'abbreviation' => 'ON',
+              'type' => 'province',
               'country_id' => $countryId,
               'year_joined_confederation' => 1867,
               'population' => null,
@@ -102,6 +107,7 @@ class NewsProvincesTableCANSeeder extends Seeder
           [
               'name' => 'Quebec',
               'abbreviation' => 'QC',
+              'type' => 'province',
               'country_id' => $countryId,
               'year_joined_confederation' => 1867,
               'population' => null,
@@ -117,6 +123,7 @@ class NewsProvincesTableCANSeeder extends Seeder
           [
               'name' => 'New Brunswick',
               'abbreviation' => 'NB',
+              'type' => 'province',
               'country_id' => $countryId,
               'year_joined_confederation' => 1867,
               'population' => null,
@@ -132,6 +139,7 @@ class NewsProvincesTableCANSeeder extends Seeder
           [
               'name' => 'Nova Scotia',
               'abbreviation' => 'NS',
+              'type' => 'province',
               'country_id' => $countryId,
               'year_joined_confederation' => 1867,
               'population' => null,
@@ -147,6 +155,7 @@ class NewsProvincesTableCANSeeder extends Seeder
           [
               'name' => 'Prince Edward Island',
               'abbreviation' => 'PE',
+              'type' => 'province',
               'country_id' => $countryId,
               'year_joined_confederation' => 1873,
               'population' => null,
@@ -162,6 +171,7 @@ class NewsProvincesTableCANSeeder extends Seeder
           [
               'name' => 'Newfoundland and Labrador',
               'abbreviation' => 'NL',
+              'type' => 'province',
               'country_id' => $countryId,
               'year_joined_confederation' => 1949,
               'population' => null,
@@ -177,6 +187,7 @@ class NewsProvincesTableCANSeeder extends Seeder
           [
               'name' => 'Yukon',
               'abbreviation' => 'YT',
+              'type' => 'territory',
               'country_id' => $countryId,
               'year_joined_confederation' => 1898,
               'population' => null,
@@ -192,6 +203,7 @@ class NewsProvincesTableCANSeeder extends Seeder
           [
               'name' => 'Northwest Territories',
               'abbreviation' => 'NT',
+              'type' => 'territory',
               'country_id' => $countryId,
               'year_joined_confederation' => 1870,
               'population' => null,
@@ -207,6 +219,7 @@ class NewsProvincesTableCANSeeder extends Seeder
           [
               'name' => 'Nunavut',
               'abbreviation' => 'NU',
+              'type' => 'territory',
               'country_id' => $countryId,
               'year_joined_confederation' => 1999,
               'population' => null,

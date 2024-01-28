@@ -24,7 +24,7 @@
 import { defineAsyncComponent, onBeforeUnmount, onMounted, ref } from "vue"
 import videojs from "video.js"
 import 'video.js/dist/video-js.css';
-import youtube from "videojs-youtube"
+// import youtube from "videojs-youtube"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
 const appSettingStore = useAppSettingStore()
@@ -79,13 +79,7 @@ onMounted(() => {
     inactivityTimeout: 0,
     autoplay: true,
     preload: 'auto',
-    techOrder: ["html5", "youtube"],
-    youtube: {
-      "customVars":
-          {
-            "wmode": "transparent"
-          }
-    }
+    techOrder: ["html5"]
   })
   // Ensure that the progress-bar element exists before setting progressRef
 

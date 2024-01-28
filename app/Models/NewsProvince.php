@@ -12,6 +12,7 @@ class NewsProvince extends Model
   protected $fillable = [
       'name',
       'abbreviation',
+      'type',
       'country_id',
       'year_joined_confederation',
       'population',

@@ -139,6 +139,10 @@
                         <span>{{ newsStory.status.name }}</span>
                       </div>
                       <div class="hidden lg:table-cell px-6 py-4 align-middle space-x-2">
+
+                        INSERT STATUS BUTTON HERE. If "Approved", then put the Publish button below.
+                        Copy the button from the Show Manage page for EpisodeStatus
+
                         <button
                             v-if="props.can.publishNewsStory && !newsStory.published_at && newsStory.status.id === 3"
                             @click="openConfirmPublishDialog(newsStory)"
@@ -180,7 +184,7 @@
 
 
         <section class="text-center p-4 md:p-8 mb-8">
-          <h1 class="text-2xl md:text-4xl font-bold mb-4">Welcome To Your Digital Newsroom</h1>
+          <h1 class="text-2xl md:text-4xl font-bold my-12">Welcome To Your Digital Newsroom</h1>
           <p class="text-md md:text-lg mb-8 text-indigo-800 ">
             Where seasoned journalism intersects with digital innovation.<br>
           </p>
@@ -189,7 +193,7 @@
             deliver impactful stories with precision and depth.
           </p>
 
-          <h2 class="text-center text-xl md:text-3xl  mb-4">Core Pillars of the Newsroom</h2>
+          <h2 class="text-center text-xl md:text-3xl mt-20 mb-4">Core Pillars of the Newsroom</h2>
 
           <ul class="list-disc list-inside text-left mx-auto w-1/2 md:w-1/2">
             <li class="mb-2"><span class="font-semibold">Advanced Information Gathering:</span> Utilizing a vast network
@@ -214,7 +218,7 @@
         </section>
 
 
-        <section class="bg-white text-gray-800 p-6">
+        <section class="bg-gray-100 rounded-lg text-gray-800 p-6">
           <h2 class="text-xl font-bold mb-4">Revolutionizing News Delivery: Our Advanced Database System</h2>
           <p class="mb-3">We're thrilled to introduce our cutting-edge news database, a game-changer in how we
             categorize and deliver content. This innovative system uniquely combines detailed geographical data with a
@@ -238,30 +242,35 @@
             media, offering unparalleled service and content to our audience.</p>
         </section>
 
-        <section class="bg-gray-100 py-6 px-4">
+        <section class="py-6 px-4">
           <div class="max-w-4xl mx-auto">
+            <div class="py-6 px-4 rounded-lg border-b border-b-2 mb-6 ">
             <h2 class="text-xl font-semibold mb-4">Understanding Our Geographical News Structure</h2>
 
             <p class="mb-4">Our news database offers a detailed and layered approach to categorizing news stories,
               providing users with the ability to access content based on their geographical preferences, from broad
               national levels to more localized political divisions.</p>
+            </div>
 
-            <div class="mb-6">
+            <div class="bg-gray-100 py-6 px-4 rounded-lg mb-6">
               <h3 class="text-lg font-semibold mb-2">Hierarchical Geographical Structure</h3>
               <ul class="list-disc pl-5">
                 <li class="mb-2">Top Level - <strong>Provinces and Territories</strong>: The broadest categorization,
                   covering all Canadian provinces and territories.
                 </li>
-                <li class="mb-2">Second Level - <strong>Federal MP Ridings</strong>: Within each province or territory,
+                <li class="mb-2">Second Level - <strong>Federal Electoral Districts</strong>: Within each province or territory,
                   further classified into Federal MP ridings for national political news.
                 </li>
-                <li class="mb-2">Third Level - <strong>MLA Ridings</strong>: An additional layer of provincial political
-                  divisions, similar to State Senate or Assembly districts in the U.S.
+                <li class="mb-2">Third Level - <strong>Provincial (Subnational) Electoral Districts</strong>: An additional layer of provincial political
+                  divisions, MLA Ridings. Similar to State Senate or Assembly districts in the U.S.
+                </li>
+                <li class="mb-2">Fourth Level - <strong>Cities and Towns</strong>: At the most granular level of our geographical hierarchy,
+                  representing individual cities and towns across Canada.
                 </li>
               </ul>
             </div>
 
-            <div class="mb-6">
+            <div class="bg-gray-100 py-6 px-4 rounded-lg mb-6">
               <h3 class="text-lg font-semibold mb-2">Database Structure and User Experience</h3>
               <p class="mb-4">Our database structure is designed to reflect this hierarchical model, ensuring that news
                 stories are accurately categorized for ease of access:</p>
@@ -269,7 +278,7 @@
                 <li class="mb-2">The <strong>News Stories Table</strong> links articles to specific ridings or provinces
                   as applicable.
                 </li>
-                <li class="mb-2">The <strong>Provinces, Federal Ridings, and MLA Ridings Tables</strong> offer multiple
+                <li class="mb-2">The <strong>Provinces, Federal Electoral Districts, and MLA Ridings (Subnational Electoral Districts) Tables</strong> offer multiple
                   layers of geographical categorization.
                 </li>
                 <li class="mb-2">This structure allows for scalability and adaptation for expansion into other
@@ -278,7 +287,7 @@
               </ul>
             </div>
 
-            <div>
+            <div class="bg-gray-100 py-6 px-4 rounded-lg mb-6">
               <h3 class="text-lg font-semibold mb-2">Important Considerations</h3>
               <ul class="list-disc pl-5">
                 <li class="mb-2">Regular updates are essential to keep electoral boundaries and categorizations
@@ -408,6 +417,8 @@ const openConfirmPublishDialog = (newsStory) => {
 
 function publish() {
   Inertia.patch(route('newsroom.publish', {id: selectedNewsStory.value.id}))
+  const topDiv = document.getElementById("topDiv")
+  topDiv.scrollIntoView()
 }
 
 function destroy(id) {

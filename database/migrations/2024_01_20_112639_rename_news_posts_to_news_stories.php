@@ -46,7 +46,6 @@ return new class extends Migration
       $table->dropUnique('news_stories_title_unique');
       $table->dropForeign(['user_id']);
       $table->dropForeign(['image_id']);
-      $table->dropForeign(['news_stories_status_foreign']);
       $table->dropForeign(['video_id']);
     });
 

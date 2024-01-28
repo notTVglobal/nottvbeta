@@ -17,9 +17,6 @@ return new class extends Migration
         Schema::table('app_settings', function (Blueprint $table) {
           $table->foreignId('country_id')->nullable()->constrained('news_countries');
         });
-
-      // Set default country_id for existing records
-      DB::table('app_settings')->update(['country_id' => 4]);
     }
 
     /**
@@ -30,7 +27,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('app_settings', function (Blueprint $table) {
-            $table->dropForeign('country_id');
+            $table->dropForeign('app_settings_country_id_foreign');
             $table->dropColumn('country_id');
         });
     }

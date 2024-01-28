@@ -50,7 +50,7 @@ class NewsStoryController extends Controller {
             ->when(Request::input('search'), function ($query, $search) {
               $query->where(function ($query) use ($search) {
                 $query->where('title', 'like', "%{$search}%")
-                    ->orWhere('content', 'like', "%{$search}%")
+                    ->orWhere('content_json', 'like', "%{$search}%")
                     ->orWhereHas('user', function ($query) use ($search) {
                       $query->where('name', 'like', "%{$search}%");
                     })
@@ -166,11 +166,11 @@ class NewsStoryController extends Controller {
    * @return RedirectResponse
    */
   public function store(HttpRequest $request) {
-//      dd($request);
+
     $request->validate([
         'title'                             => 'unique:news_stories|required|string|max:255',
-        'body'                              => 'required|string',
-//        'content_json'                      => 'nullable|json',
+//        'body'                              => 'required|string',
+        'content_json'                      => 'nullable|json',
         'news_category_id'                  => 'required|integer',
         'news_category_sub_id'              => 'nullable|integer',
         'city_id'                           => 'nullable|integer',
@@ -179,9 +179,9 @@ class NewsStoryController extends Controller {
         'subnational_electoral_district_id' => 'nullable|integer',
         'type'                              => 'nullable|string|required_if:news_category_id,3' // Require type if news_category_id is 3 (Local News)
     ], [
-        'body.required'             => 'The content is required.',
-        'news_category_id.required' => 'The news category is required.',
-        'type.required_if'          => 'The news location is required when Local News is selected.',
+        'body.required'                     => 'The content is required.',
+        'news_category_id.required'         => 'The news category is required.',
+        'type.required_if'                  => 'The news location is required when Local News is selected.',
     ]);
 
 
@@ -190,8 +190,8 @@ class NewsStoryController extends Controller {
 //        $this->fillNewsStoryAttributes($newsStory, $request);
     $newsStory->user_id = Auth::user()->id;
     $newsStory->title = htmlentities($request->title);
-    $newsStory->content = htmlentities($request->body);
-        $newsStory->content_json = $request->content_json;
+//    $newsStory->content = $request->body;
+    $newsStory->content_json = $request->content_json;
     $newsStory->slug = \Str::slug($request->title);
     $newsStory->user_id = Auth::user()->id;
     $newsStory->news_category_id = $request->news_category_id;
@@ -230,12 +230,13 @@ class NewsStoryController extends Controller {
     return Inertia::render(
         'News/Stories/{$id}/Index',
         [
-            'news' => [
+            'newsStory' => [
                 'id'                           => $newsStory->id,
                 'slug'                         => $newsStory->slug,
                 'title'                        => html_entity_decode($newsStory->title),
+//                'content'                      => html_entity_decode($newsStory->content),
                 'content'                      => html_entity_decode($newsStory->content),
-                    'content_json' => $newsStory->content_json,
+                'content_json'                 => $newsStory->content_json,
                 'author'                       => $newsStory->user->name,
                 'newsCategory'                 => $newsStory->newsCategory->name,
                 'newsCategorySub'              => $newsStory->newsCategorySub->name ?? null,
@@ -288,7 +289,7 @@ class NewsStoryController extends Controller {
                 'id'                                => $newsStory->id,
                 'slug'                              => $newsStory->slug,
                 'title'                             => html_entity_decode($newsStory->title),
-                'content'                           => html_entity_decode($newsStory->content),
+//                'content'                           => html_entity_decode($newsStory->content),
                 'content_json' => $newsStory->content_json,
                 'user'                              => [
                     'name' => $newsStory->user->name,
@@ -328,8 +329,8 @@ class NewsStoryController extends Controller {
 //    $content = $request->input('content_json'); // 'json_data' is the key you send from frontend
     $request->validate([
         'title'                             => ['required', 'string', 'max:255', Rule::unique('news_stories')->ignore($newsStory->id)],
-        'body'                              => 'required|string',
-//        'content_json'                      => 'nullable|json',
+//        'body'                              => 'required|string',
+        'content_json'                      => 'nullable|json',
         'news_category_id'                  => 'required|integer',
         'news_category_sub_id'              => 'nullable|integer',
         'city_id'                           => 'nullable|integer',
@@ -353,7 +354,7 @@ class NewsStoryController extends Controller {
 //    $this->fillNewsStoryAttributes($newsStory, $request);
     $newsStory->title = htmlentities($request->title);
     $newsStory->slug = \Str::slug($request->title);
-    $newsStory->content = htmlentities($request->body);
+//    $newsStory->content = htmlentities($request->content_json);
     $newsStory->content_json = $request->content_json;
     $newsStory->news_category_id = $request->news_category_id;
     $newsStory->news_category_sub_id = $request->news_category_sub_id;
@@ -469,7 +470,7 @@ class NewsStoryController extends Controller {
     $provinces = NewsProvince::when($search, function ($query) use ($search) {
       $query->where('name', 'like', "%{$search}%");
     })
-        ->select('id as province_id', 'name')
+        ->select('id as province_id', 'name', 'type')
         ->get()
         ->map(function ($province) {
           $province->type = 'province';

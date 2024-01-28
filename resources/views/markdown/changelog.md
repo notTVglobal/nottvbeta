@@ -1,7 +1,12 @@
 # not.tv Changelog
 
-Last Update: January 26, 2024\
+Last Update: January 27, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+# v0.8.3.6
+January 27, 2024
+* Removed the VideoJS YouTube extension because it has a tracker built into it.
+* Added new text editing options to the News Story Create and Edit pages.
 
 # v0.8.3.5
 January 26, 2024

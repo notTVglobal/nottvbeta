@@ -34,7 +34,7 @@
                 type="text"
                 v-model="newsStore.newsArticleTitleTiptop"
                 name="title"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                 placeholder=""
             />
             <div
@@ -49,7 +49,7 @@
                 for="content_json"
                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
             >Content</label>
-            <tiptap v-if="appSettingStore.currentPage === 'newsCreate'"/>
+            <TipTapEditor v-if="appSettingStore.currentPage === 'newsCreate'"/>
             <div
                 v-if="errors.body"
                 class="text-sm text-red-600"
@@ -77,14 +77,15 @@
 
 <script setup>
 import { Inertia } from '@inertiajs/inertia'
-import { onBeforeMount, onMounted, watch } from 'vue'
-import { useForm } from '@inertiajs/inertia-vue3'
+import { onBeforeMount, onBeforeUnmount, onMounted, watch } from 'vue'
+// import { useForm } from '@inertiajs/inertia-vue3'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useNewsStore } from '@/Stores/NewsStore'
 import JetValidationErrors from '@/Jetstream/ValidationErrors'
 // import TabbableTextarea from "@/Components/Global/TextEditor/TabbableTextarea"
-import Tiptap from '@/Components/Global/TextEditor/TiptapNewsStoryCreate'
+// import Tiptap from '@/Components/Global/TextEditor/TiptapNewsStoryCreate'
+import TipTapEditor from '@/Components/Global/TextEditor/TipTapEditor'
 // import Tiptap from "@/Components/Global/TextEditor/TiptapNewsStoryEdit"
 import CategoryCitySelector from '@/Components/Pages/News/CategoryCitySelector.vue'
 import Message from '@/Components/Global/Modals/Messages'
@@ -155,29 +156,44 @@ watch(() => [newsStore.news_category_id, newsStore.news_category_sub_id], () => 
 //   form.post(route('newsStory.store'))
 // }
 
+
+
+
 const submit = () => {
   props.processing = true
+  // if no category selected alert
+
+  // Check if selectedSubcategory.id is null, and if so, set it to a default value or handle it as needed
+  const subcategoryId = newsStore.selectedSubcategory ? newsStore.selectedSubcategory.id : null;
+
   const data = {
     title: newsStore.newsArticleTitleTiptop,
-    body: newsStore.newsArticleContentTiptop,
-    // content_json: '{}',
+    // body: newsStore.newsArticleContentTiptop,
+    // body: JSON.stringify(newsStore.content_json),
+    content_json: JSON.stringify(newsStore.newsArticleContentTiptop),
     news_category_id: newsStore.selectedCategory.id,
-    news_category_sub_id: newsStore.selectedSubcategory.id,
+    news_category_sub_id: subcategoryId, // Use the value after handling null
     city_id: newsStore.selectedLocation.city_id,
     province_id: newsStore.selectedLocation.province_id,
     federal_electoral_district_id: newsStore.selectedLocation.federal_electoral_district_id,
     subnational_electoral_district_id: newsStore.selectedLocation.subnational_electoral_district_id,
     type: newsStore.selectedLocation.type,
-    // ... include other relevant properties from the newsStore
   }
+
   console.log('data submitted.')
-  console.log(data)
   Inertia.post(route('newsStory.store'), data)
 }
 
 
 onBeforeMount(() => {
+  newsStore.newsArticleTitleTiptop = ''
   newsStore.newsArticleContentTiptop = ''
+  newsStore.content_json = null
 })
+
+onBeforeUnmount(() => {
+  newsStore.reset()
+})
+
 
 </script>

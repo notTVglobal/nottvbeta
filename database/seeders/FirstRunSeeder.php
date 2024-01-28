@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Team;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class FirstRunSeeder extends Seeder
 {
@@ -33,6 +34,9 @@ class FirstRunSeeder extends Seeder
             NewsFederalElectoralDistrictsCANSeeder::class,
             NewsFederalElectoralDistrictsMoreInfoCANSeeder::class,
         ]);
+
+        // Set default country_id
+        DB::table('app_settings')->update(['country_id' => 4]);
 
         Team::create([
             'name' => 'notTV Founders',

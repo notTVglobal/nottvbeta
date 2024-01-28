@@ -58,15 +58,21 @@ html {
 .bugFullPageClass {
     @apply block h-9 w-auto shrink-0
 }
-.news-paragraph {
-    margin-top: 0.75rem;
-    margin-bottom: 1rem;
-    @apply text-xl flex flex-wrap overscroll-x-none w-fit break-words;
+/*.news-paragraph {*/
+/*    margin-top: 0.75rem;*/
+/*    margin-bottom: 1rem;*/
+/*    @apply text-xl flex flex-wrap overscroll-x-none w-fit break-words*/
+/*    text-left mb-6 px-16 leading-loose font-['monospace'];*/
+/*}*/
+/*.news-paragraph ul,*/
+/*.news-paragraph ol {*/
+/*    padding: 0 1rem;*/
+/*}*/
+
+.news-story {
+    @apply text-left mb-6 text-xl px-16 leading-loose font-['monospace'];
 }
-.news-paragraph ul,
-.news-paragraph ol {
-    padding: 0 1rem;
-}
+
 h1 {
     @apply text-4xl
 }
@@ -88,6 +94,8 @@ pre {
     font-family: 'JetBrainsMono', monospace;
     padding: 0.75rem 1rem;
     border-radius: 0.5rem;
+    overflow-x: auto; /* Display horizontal scrollbar when needed */
+    white-space: nowrap; /* Prevent code block content from wrapping */
     @apply text-lg flex flex-wrap max-w-screen-md overflow-x-scroll break-words;
 
     & code {
@@ -95,8 +103,19 @@ pre {
         padding: 0;
         background: none;
         font-size: 0.8rem;
+
         @apply text-lg flex flex-wrap max-w-screen-md break-words;
     }
+}
+
+.code-block {
+    overflow-x: auto; /* Display horizontal scrollbar when needed */
+    white-space: nowrap; /* Prevent code block content from wrapping */
+}
+
+pre p {
+    white-space: break-spaces;
+    overflow-x: auto;
 }
 
 blockquote {
@@ -111,6 +130,35 @@ hr {
     border-top: 2px solid rgba(13,13,13, 0.1);
     margin: 2rem 0;
 }
+
+/* Style for unordered list (ul) */
+.news-story ul {
+    list-style-type: disc; /* Use disc bullets for unordered list */
+    margin-left: 20px; /* Add some left margin for indentation */
+}
+
+/* Style for ordered list (ol) */
+.news-story ol {
+    list-style-type: decimal; /* Use numbers for ordered list */
+    margin-left: 20px; /* Add some left margin for indentation */
+}
+
+/* Style for list item (li) */
+.news-story li {
+    margin-bottom: 2px; /* Add space between list items */
+}
+
+.news-story a {
+    color: #68CEF8;
+    transition: color 0.3s; /* Add a smooth transition for the color change */
+    @apply cursor-pointer;
+}
+
+.news-story a:hover {
+    color: #357CA5; /* Use a darker blue color for hover */
+}
+
+
 
 .hide-scrollbar {
     /* Hide scrollbar for Webkit browsers */

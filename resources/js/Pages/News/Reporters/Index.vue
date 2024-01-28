@@ -3,14 +3,14 @@
   <div :class="marginTopClass">
     <PublicNavigationMenu v-if="!appSettingStore.loggedIn" class="fixed top-0 w-full nav-mask"/>
 
-    <div class="bg-gray-900 flex flex-col gap-y-3 w-full place-self-center text-white px-5">
+    <div class="bg-gray-900 flex flex-col gap-y-3 place-self-center text-white px-5">
       <PublicNewsNavigationButtons :can="can"/>
       <Breadcrumbs :breadcrumbs="[{ text: 'News', to: '/news' }, { text: 'Reporters', to: '' }]" />
 
       <div class="text-center text-3xl font-semibold tracking-widest uppercase text-gray-50">News Reporters</div>
 
       <main class="pb-8 mx-auto px-4 border-b border-gray-800">
-        <div class="flex bg-gray-200 my-10 mx-auto p-5 w-[calc(80vw)] rounded justify-center text-gray-900">
+        <div class="flex bg-gray-200 my-10 mx-auto p-5 w-[calc(100%-96)] rounded justify-center text-gray-900">
           <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full px-6">
             <div v-for="person in newsPeople" :key="person.id" class="text-center px-8 py-3">
               <div class="hover:bg-gray-300 rounded-lg cursor-pointer pb-8">

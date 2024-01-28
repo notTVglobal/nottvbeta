@@ -66,7 +66,7 @@
           <div class="flex justify-between pt-2">
             <div class="flex justify-start pb-3">
               <div v-if="$page.props.jetstream.managesProfilePhotos" class="mt-2 min-w-[2.5rem]">
-                <Link @click="userStore.closeNavDropdown()"
+                <Link @click="appSettingStore.closeNavDropdown()"
                       :href="route('profile.show')"
                       :active="route().current('profile.show')">
                   <img class="h-12 w-12 rounded-full object-cover border-1 border-gray-300"
@@ -75,14 +75,14 @@
               </div>
               <div class="mt-1 ml-3 w-full">
                 <div class="font-medium text-base text-gray-100 w-full">
-                  <Link @click="userStore.closeNavDropdown()"
+                  <Link @click="appSettingStore.closeNavDropdown()"
                         :href="route('profile.show')"
                         :active="route().current('profile.show')">
                     {{ $page.props.user.name }}
                   </Link>
                 </div>
                 <div class="font-medium text-sm text-gray-100 w-full">
-                  <Link @click="userStore.closeNavDropdown()"
+                  <Link @click="appSettingStore.closeNavDropdown()"
                         :href="route('profile.show')"
                         :active="route().current('profile.show')">
                     {{ $page.props.user.email }}

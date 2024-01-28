@@ -4,66 +4,76 @@
 
   <!-- The category select -->
   <div class="flex flex-col py-4 px-6">
-    <div class="px-4 py-4">
-      <label for="categorySelect" class="text-sm font-medium text-gray-900 dark:text-gray-300 pr-4">Select Category:</label>
-      <select required
-              v-model="newsStore.selectedCategory"
-              id="categorySelect"
-              class="rounded"
-              @change="onCategoryChange"
-      >
-        <option :value="{ id: null }" >Choose a category</option>
-        <option v-for="category in newsStore.categories" :key="category.id" :value="category">{{ category.name }}</option>
-      </select>
-    </div>
-    <div v-if="newsStore.selectedCategory" class="flex flex-col justify-left px-4 py-4">
-      <div class="font-semibold text-xs uppercase">{{newsStore.selectedCategory.name}}</div>
-      <div v-if="newsStore.selectedCategory" class="px-6 py-4">
-        {{newsStore.selectedCategory.description}}
+
+    <div class="bg-gray-200 rounded-lg">
+      <div class="px-4 py-4 font-semibold text-xs uppercase">Category</div>
+      <div class="px-4 pb-4">
+        <label for="categorySelect" class="text-sm font-medium text-gray-900 dark:text-gray-300 pr-4">Select Category:</label>
+        <select required
+                v-model="newsStore.selectedCategory"
+                id="categorySelect"
+                class="rounded"
+                @change="onCategoryChange"
+        >
+          <option :value="{ id: null }" >Choose a category</option>
+          <option v-for="category in newsStore.categories" :key="category.id" :value="category">{{ category.name }}</option>
+        </select>
+      </div>
+      <div v-if="newsStore.selectedCategory.name" class="flex flex-col justify-left px-4 py-4">
+        <div class="font-semibold text-xs uppercase text-indigo-900">{{newsStore.selectedCategory.name}}</div>
+        <div v-if="newsStore.selectedCategory" class="px-6 py-4 text-indigo-800">
+          {{newsStore.selectedCategory.description}}
+        </div>
       </div>
     </div>
 
 
 
     <!-- The location select -->
-    <div v-if="newsStore.selectedCategory && newsStore.selectedCategory.id === 3" class="flex flex-col pb-8 px-6">
-      <div class="text-sm font-semibold text-gray-900 dark:text-gray-300 py-1">Please select the city, town, province or electoral district:</div>
-      <div class="w-full mr-4 relative">
+    <div v-if="newsStore.selectedCategory && newsStore.selectedCategory.id === 3" class="mt-8 bg-gray-200 rounded-lg">
+      <div class="px-4 py-4 font-semibold text-xs uppercase">Location</div>
+      <div class="flex flex-col pb-4 px-6">
+        <div class="text-sm font-semibold text-gray-900 dark:text-gray-300 py-1">Please select the city, town, province or electoral district:</div>
+        <div class="w-full mr-4 relative">
 
-        <input
-            v-model="searchInput"
-            type="search"
-            class="w-full"
-            placeholder="Search..."
-            @focus="newsStore.citySelectDropdownVisible = true"
-            @blur="handleInputBlur"
-            @keydown="handleKeydown"
-        />
-        <span v-if="newsStore.selectedLocation" class="relative xl:absolute inset-y-0 right-0 flex items-center pr-4">
-              <!-- Styled display text -->
-              <span class="text-gray-500">{{ newsStore.displayText }}</span>
-            </span>
+          <input
+              v-model="searchInput"
+              type="search"
+              class="w-full rounded-lg mt-2"
+              placeholder="Search..."
+              @focus="newsStore.citySelectDropdownVisible = true"
+              @blur="handleInputBlur"
+              @keydown="handleKeydown"
+          />
+          <span v-if="newsStore.selectedLocation" class="relative xl:absolute inset-y-0 right-0 flex items-center pr-4">
+                <!-- Styled display text -->
+                <span class="text-gray-500">{{ newsStore.displayText }}</span>
+              </span>
 
-        <ul v-if="newsStore.citySelectDropdownVisible && locationSearch.length > 0" class="absolute z-10 w-full bg-white mt-1 max-h-60 rounded-md shadow-lg overflow-auto border border-gray-200">
-          <li v-for="(location, index) in newsStore.locationSearch"
-              :key="location.id"
-              class="cursor-pointer select-none relative py-2 pl-3 pr-9 hover:bg-gray-100"
-              :class="{'bg-gray-200': index === newsStore.focusedIndex.value, 'dropdown-item': true, [`dropdown-item-${index}`]: true}"
-              @click="inspectLocation(location)"
-          >
+          <ul v-if="newsStore.citySelectDropdownVisible && locationSearch.length > 0" class="absolute z-10 w-full bg-white mt-1 max-h-60 rounded-lg shadow-lg overflow-auto border border-gray-200">
+            <li v-for="(location, index) in newsStore.locationSearch"
+                :key="location.id"
+                  class="cursor-pointer select-none relative py-2 pl-3 pr-9 hover:bg-gray-100"
+                  :class="{'bg-gray-200': index === newsStore.focusedIndex.value, 'dropdown-item': true, [`dropdown-item-${index}`]: true}"
+                  @click="inspectLocation(location)"
+              >
 
-            <span v-if="location.type === 'city' || location.type === 'town'">{{ location.name }}, {{ location.province_name }}</span>
-            <span v-else>{{ location.name }}</span>
+                <span v-if="location.type === 'city' || location.type === 'town'">{{ location.name }}, <span class="text-gray-600">{{ location.province_name }}</span></span>
+                <span v-if="location.type === 'province'">{{ location.name }} &nbsp;&nbsp;<span class="uppercase text-xs font-semibold text-gray-600">Province</span></span>
+                <span v-if="location.type === 'territory'">{{ location.name }} &nbsp;&nbsp;<span class="uppercase text-xs font-semibold text-gray-600">Territory</span></span>
+                <span v-if="location.type === 'federalElectoralDistrict'">{{ location.name }} &nbsp;&nbsp;<span class="uppercase text-xs font-semibold text-gray-600">Federal Electoral District</span></span>
+                <span v-if="location.type === 'subnationalElectoralDistrict'">{{ location.name }}</span>
 
-          </li>
-        </ul>
-        <div
-            v-if="newsStore.formErrors.type"
-            class="text-sm text-red-600"
-        >
-          {{ newsStore.formErrors.type }}
+              </li>
+            </ul>
+            <div
+                v-if="newsStore.formErrors.type"
+                class="text-sm text-red-600"
+            >
+              {{ newsStore.formErrors.type }}
+            </div>
+          </div>
         </div>
-      </div>
     </div>
 
 
@@ -72,40 +82,34 @@
 
 
     <!-- The sub-category select -->
-    <div class="flex flex-wrap pt-4 px-4">
-      <div class="flex flex-col">
-        <label for="subcategorySelect" class="text-sm font-medium text-gray-900 dark:text-gray-300 pr-4">Select Subcategory:</label>
-        <span class="italic text-sm font-thinm text-gray-900 dark:text-gray-300">(optional)</span>
-      </div>
-      <div v-if="newsStore.selectedCategory" class="flex flex-wrap">
-        <select v-model="newsStore.selectedSubcategory" id="subcategorySelect" class="rounded">
-          <option :value="{ id: null }" disabled>Choose a sub-category</option> <!-- Add a blank option -->
-          <option v-for="subcategory in newsStore.subcategories" :key="subcategory.id" :value="subcategory">{{ subcategory.name }}</option>
-        </select>
-      </div>
-
-
-
-
-
-
-      <div
-          v-if="newsStore.formErrors.news_category_id"
-          class="text-sm text-red-600"
-      >
-        {{ newsStore.formErrors.news_category_id }}
-      </div>
-
+    <div class="mt-8 bg-gray-200 rounded-lg">
+      <div class="px-4 py-4 font-semibold text-xs uppercase">Sub-category</div>
+      <div class="flex flex-wrap py-4 px-4">
+        <div class="flex flex-col">
+          <label for="subcategorySelect" class="text-sm font-medium text-gray-900 dark:text-gray-300 pr-4">Select Subcategory:</label>
+          <span class="italic text-sm font-thin text-gray-900 dark:text-gray-300">(optional)</span>
+        </div>
+        <div v-if="newsStore.selectedCategory" class="flex flex-wrap">
+          <select v-model="newsStore.selectedSubcategory" id="subcategorySelect" class="rounded">
+            <option :value="{ id: null }" disabled>Choose a category first</option> <!-- Add a blank option -->
+            <option v-for="subcategory in newsStore.subcategories" :key="subcategory.id" :value="subcategory">{{ subcategory.name }}</option>
+          </select>
+        </div>
     </div>
 
-
-
-
-    <div v-if="newsStore.selectedSubcategory" class="flex-col justify-left pt-8 px-4">
-      <div v-if="newsStore.selectedSubcategory" class="font-semibold text-xs uppercase">{{newsStore.selectedSubcategory.name}}</div>
-      <div v-if="newsStore.selectedSubcategory" class="px-6 py-4">
+    <div v-if="newsStore.selectedSubcategory" class="flex-col justify-left py-4 px-4">
+      <div v-if="newsStore.selectedSubcategory" class="font-semibold text-xs uppercase text-indigo-900">{{newsStore.selectedSubcategory.name}}</div>
+      <div v-if="newsStore.selectedSubcategory" class="px-6 py-4 text-indigo-800">
         {{newsStore.selectedSubcategory.description}}
       </div>
+    </div>
+    </div>
+
+    <div
+        v-if="newsStore.formErrors.news_category_id"
+        class="text-sm text-red-600"
+    >
+      {{ newsStore.formErrors.news_category_id }}
     </div>
 
   </div>

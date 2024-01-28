@@ -127,6 +127,10 @@ export const useNewsStore = defineStore('newsStore', {
                         this.displayText = 'Province';
                         this.type = 'province';
                         break;
+                    case 'territory':
+                        this.displayText = 'Territory';
+                        this.type = 'territory';
+                        break;
                     case 'federalElectoralDistrict':
                         this.displayText = 'Federal Electoral District';
                         this.type = 'federalElectoralDistrict';
@@ -176,6 +180,7 @@ export const useNewsStore = defineStore('newsStore', {
                     this.province_id = location.province_id || null;
                     break;
                 case 'province':
+                case 'territory':
                     this.province_id = location.province_id;
                     break;
                 case 'federalElectoralDistrict':
@@ -200,6 +205,9 @@ export const useNewsStore = defineStore('newsStore', {
                 case 'province':
                     this.type = 'province';
                     return 'Province';
+                case 'territory':
+                    this.type = 'territory';
+                    return 'Territory';
                 case 'federalElectoralDistrict':
                     this.type = 'federalElectoralDistrict';
                     return 'Federal Electoral District';
@@ -225,6 +233,7 @@ export const useNewsStore = defineStore('newsStore', {
                         this.province_id = matchingLocation.province_id; // Assuming province_id is also part of city data
                         break;
                     case 'province':
+                    case 'territory':
                         this.province_id = matchingLocation.province_id;
                         break;
                     case 'federalElectoralDistrict':

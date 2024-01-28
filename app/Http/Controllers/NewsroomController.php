@@ -19,7 +19,7 @@ class NewsroomController extends Controller
             'newsStories' => NewsStory::with('image', 'user', 'newsCategory', 'newsCategorySub', 'city', 'province', 'federalElectoralDistrict', 'subnationalElectoralDistrict', 'newsStatus', 'video')
                 ->when(Request::input('search'), function ($query, $search) {
                     $query->where('title', 'like', "%{$search}%")
-                        ->orWhere('content', 'like', "%{$search}%")
+                        ->orWhere('content_json', 'like', "%{$search}%")
                         ->orWhereHas('user', function ($query) use ($search) {
                           $query->where('name', 'like', "%{$search}%");
                     })->orWhereHas('newsCategory', function ($query) use ($search) {
