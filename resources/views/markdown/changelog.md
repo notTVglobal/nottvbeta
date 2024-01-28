@@ -1,7 +1,11 @@
 # not.tv Changelog
 
-Last Update: January 27, 2024\
+Last Update: January 28, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+# v0.8.3.7
+January 28, 2024
+* 
 
 # v0.8.3.6
 January 27, 2024

@@ -39,7 +39,7 @@
         </div>
       </div>
 
-      <div v-if="videoPlayerStore.ottChat"
+      <div v-if="videoPlayerStore.ottChat && appSettingStore.fullPage"
            :class="pipChatModeChangeTopPosition"
            class="chatFullPageContainer hide-scrollbar">
         <full-page-chat :user="user"/>

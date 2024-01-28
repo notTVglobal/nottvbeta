@@ -3,7 +3,7 @@
     <div class="ottButtonsContainer" id="ottButtons">
 
       <button
-          v-if="userStore.prevUrl"
+          v-if="appSettingStore.prevUrl"
           @click="back"
           class="ottButton bg-gray-400 text-white hover:bg-gray-600">
         <font-awesome-icon icon="fa-angle-left" class="ml-1.5 text-3xl mb-1"/>
@@ -17,7 +17,7 @@
       <!--            </button>-->
       <button
           v-if="userStore.isVip || userStore.isAdmin"
-          @click="appSettingStore.toggleOttInfo()"
+          @click="appSettingStore.toggleOttChannels()"
           class="ottButton bg-green-400 text-white hover:bg-green-600">
         <font-awesome-icon icon="fa-rocket" class="ml-3.5 text-3xl mb-1"/>
         CHANNELS

@@ -1,41 +1,43 @@
 <template>
-  <Transition
-      enter-from-class="opacity-0"
-      enter-to-class="opacity-100"
-      enter-active-class="transition duration-3000"
-      leave-active-class="transition duration-2000"
-      leave-from-class="opacity-100"
-      leave-to-class="opacity-0"
-  >
+  <div>
+    LIST
+  </div>
+<!--  <Transition-->
+<!--      enter-from-class="opacity-0"-->
+<!--      enter-to-class="opacity-100"-->
+<!--      enter-active-class="transition duration-3000"-->
+<!--      leave-active-class="transition duration-2000"-->
+<!--      leave-from-class="opacity-100"-->
+<!--      leave-to-class="opacity-0"-->
+<!--  >-->
 
     <div ref="scrollRef"
-         v-if="videoPlayerStore.ottChannels"
          class="channelsMenu channelsFullPageContainer scrollbar-custom">
 
       <div class="channelsFullPageInner">
 
-        <div class="flex flex-col p-5 mt-2">
-          <div class="text-3xl text-center font-semibold uppercase mb-3 w-full bg-green-900 text-white p-2">
-            CHANNELS
-          </div>
-        </div>
+<!--        <div class="flex flex-col p-5 mt-2">-->
+<!--          <div class="text-3xl text-center font-semibold uppercase mb-3 w-full bg-green-900 text-white p-2">-->
+<!--            CHANNELS-->
+<!--          </div>-->
+<!--        </div>-->
 
-        <div class="px-5 space-y-1 overflow-y-scroll hide-scrollbar">
-          <Channels/>
-        </div>
+<!--        <div class="px-5 space-y-1 overflow-y-scroll hide-scrollbar">-->
+<!--          <Channels/>-->
+<!--        </div>-->
 
-        <button v-touch="()=>videoPlayerStore.toggleChannels()"
-                v-if="videoPlayerStore.ottChannels" class="channelsCloseButton">
-          CLOSE CHANNELS
-        </button>
+<!--        <button v-touch="()=>videoPlayerStore.toggleChannels()"-->
+<!--                v-if="videoPlayerStore.ottChannels" class="channelsCloseButton">-->
+<!--          CLOSE CHANNELS-->
+<!--        </button>-->
 
-        <div class="fixed w-full bottom-4 text-center">
-          <ScrollDownIndicator/>
-        </div>
+<!--        <div class="fixed w-full bottom-4 text-center">-->
+<!--          <ScrollDownIndicator/>-->
+<!--        </div>-->
 
-      </div>
-    </div>
-  </Transition>
+<!--      </div>-->
+<!--    </div>-->
+<!--  </Transition>-->
 </template>
 
 <script setup>

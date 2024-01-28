@@ -16,6 +16,9 @@ html {
 .vjs-control-bar {
     display: none !important;
 }
+.vjs-modal-dialog-content {
+    @apply text-yellow-300 opacity-50
+}
 .videoZ {
     z-index:1;
 }
@@ -402,7 +405,7 @@ hr {
     .channelsFullPageContainer {
         z-index: 200;
         height: calc(50vh + 1rem);
-        @apply fixed w-full bottom-0 right-0 left-0 pb-12 bg-opacity-80 bg-green-600 text-sm text-white overflow-y-auto scroll-smooth hover:scroll-auto break-words
+        @apply fixed w-full bottom-0 right-0 left-0 pb-12 bg-opacity-80 bg-green-900 text-sm text-white overflow-y-auto scroll-smooth hover:scroll-auto break-words
     }
     /* For Firefox - additional container */
     /*.channelsFullPageInner {*/
@@ -410,8 +413,8 @@ hr {
     /*    padding-right: 1rem; !* Prevent content from being hidden under scrollbar area *!*/
     /*}*/
     .channelsCloseButton {
-        @apply fixed bottom-5 left-0 right-0 mx-auto opacity-100 w-fit h-12 p-4 rounded-full
-        text-gray-50 bg-green-900 hover:bg-green-800
+        @apply fixed bottom-5 mx-auto mb-3 opacity-100 w-fit h-12 p-4 rounded-full
+        text-gray-50 bg-green-800 hover:bg-green-600
         cursor-pointer font-semibold text-xs
     }
     .playlistFullPageContainer {
@@ -423,8 +426,8 @@ hr {
         overflow-y-auto scroll-smooth hover:scroll-auto break-words hide-scrollbar
     }
     .playlistCloseButton {
-        @apply fixed bottom-5 left-0 right-0 mx-auto opacity-100 w-fit h-12 p-4 rounded-full
-        text-gray-50 bg-orange-900 hover:bg-orange-800 cursor-pointer font-semibold text-xs
+        @apply fixed bottom-5 mx-auto opacity-100 w-fit h-12 p-4 rounded-full
+        text-gray-50 bg-orange-700 hover:bg-orange-600 cursor-pointer font-semibold text-xs
     }
 
     /* Mobile and Tablet */
@@ -501,7 +504,7 @@ hr {
     /*}*/
     .chatCloseButton {
         z-index: 60;
-        @apply fixed bottom-5 left-0 right-0 mx-auto opacity-100 w-fit h-12 p-4 rounded-full
+        @apply fixed bottom-5 mx-auto opacity-100 w-fit h-12 p-4 rounded-full
         text-gray-50 hover:bg-blue-800 cursor-pointer font-semibold text-xs
     }
     .filtersFullPageContainer {
@@ -513,11 +516,14 @@ hr {
         overflow-y-auto scroll-smooth hover:scroll-auto break-words hide-scrollbar
     }
     .filtersCloseButton {
-        @apply fixed bottom-5 left-0 right-0 mx-auto opacity-100 w-fit h-12 p-4 rounded-full
-        text-gray-50 bg-yellow-600 hover:bg-yellow-500 cursor-pointer font-semibold text-xs
+        @apply fixed bottom-5 mx-auto opacity-100 w-fit h-12 p-4 rounded-full
+        text-gray-50 bg-yellow-600 hover:bg-yellow-700 cursor-pointer font-semibold text-xs
     }
     .ottTopRightDisplay {
         @apply fixed top-40 right-0 bottom-0 w-full mt-7 px-2 overflow-y-scroll z-50 border-t border-gray-900
+    }
+    .closeButtonContainer {
+        @apply w-full flex flex-row justify-center
     }
 }
 /* End Mobile and Tablet */
@@ -689,10 +695,16 @@ hr {
         @apply w-[24rem] bottom-0 bg-opacity-80 bg-green-600 text-sm text-white pb-12
         overflow-y-scroll scroll-smooth hover:scroll-auto break-words
     }
+    .closeButtonContainer {
+        @apply w-96 flex flex-row justify-center
+    }
     .channelsCloseButton {
-        @apply fixed bottom-5 right-28 opacity-100 w-fit h-12 p-4 rounded-full
-        text-gray-50 bg-green-900 hover:bg-green-800
+        @apply fixed bottom-5 mx-auto mb-3 opacity-100 w-fit h-12 p-4 rounded-full
+        text-gray-50 bg-green-800 hover:bg-green-700
         cursor-pointer font-semibold text-xs
+    }
+    .scrolldownIndicator {
+        @apply w-96
     }
     .playlistFullPageContainer {
         z-index: 200;
@@ -705,7 +717,7 @@ hr {
     }
     .playlistCloseButton {
         @apply fixed bottom-5 right-32 opacity-100 w-fit h-12 p-4 rounded-full
-        text-gray-50 bg-orange-900 hover:bg-orange-800 grid justify-center content-center
+        text-gray-50 bg-orange-700 hover:bg-orange-600 grid justify-center content-center
         cursor-pointer font-semibold text-xs
     }
     /* Desktop Lg*/
@@ -755,7 +767,7 @@ hr {
     }
     .filtersCloseButton {
         @apply fixed bottom-5 right-32 opacity-100 w-fit h-12 p-4 rounded-full
-        text-gray-50 bg-yellow-600 hover:bg-yellow-500 grid justify-center content-center
+        text-gray-50 bg-yellow-600 hover:bg-yellow-700 grid justify-center content-center
         cursor-pointer font-semibold text-xs
     }
     .ottTopRightDisplay {

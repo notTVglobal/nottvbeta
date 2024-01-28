@@ -17,9 +17,10 @@
         </div>
 
         <div v-else class="now-playing w-full h-full bg-orange-800 p-2 overflow-y-scroll scrollbar-hide mb-64">
-          <h1 class="text-xs font-semibold uppercase w-full bg-orange-900 text-white p-2">PLAYLIST</h1>
+          <div v-if="!appSettingStore.fullPage"
+              class="text-xs font-semibold uppercase w-full bg-orange-900 text-white p-2 mb-3">PLAYLIST</div>
 
-          <div class="flex flex-col p-5 mt-2 mb-3">
+          <div v-else class="flex flex-col p-5 mt-2 mb-3">
             <div class="text-3xl text-center font-semibold uppercase w-full bg-orange-800 text-white p-2">
               PLAYLIST
             </div>
@@ -34,10 +35,12 @@
 
       </div>
 
-      <button v-touch="()=>appSettingStore.toggleOttPlaylist()"
-              v-if="appSettingStore.ott === 3" class="playlistCloseButton">
-        CLOSE PLAYLIST
-      </button>
+      <div v-if="appSettingStore.fullPage" class="closeButtonContainer">
+        <button v-touch="()=>appSettingStore.toggleOttPlaylist()"
+                v-if="appSettingStore.ott === 3" class="playlistCloseButton">
+          CLOSE PLAYLIST
+        </button>
+      </div>
 
     </div>
   </Transition>

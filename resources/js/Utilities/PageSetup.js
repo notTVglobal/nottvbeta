@@ -41,6 +41,7 @@ export function usePageSetup(pageName) {
         // Only update if we're not already on this page to avoid overwriting with the current URL
         appSettingStore.setPrevUrl()
         appSettingStore.noLayout = false
+        appSettingStore.showOttButtons = true
         // Inertia.reload()
 
     });

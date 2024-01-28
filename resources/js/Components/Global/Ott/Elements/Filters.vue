@@ -34,20 +34,22 @@
             Coming Soon!
           </div>
 
-          <div class="top-0 px-5 space-y-2">
-            <div class="text-black">
-              Coming Soon!
-            </div>
-          </div>
+<!--          <div class="top-0 px-5 space-y-2">-->
+<!--            <div class="text-black">-->
+<!--              Coming Soon!-->
+<!--            </div>-->
+<!--          </div>-->
 
         </div>
 
       </div>
 
-      <button v-touch="()=>appSettingStore.toggleOttFilters()"
-              v-if="appSettingStore.ott === 5" class="filtersCloseButton">
-        CLOSE FILTERS
-      </button>
+      <div v-if="appSettingStore.fullPage" class="closeButtonContainer">
+        <button v-touch="()=>appSettingStore.toggleOttFilters()"
+                v-if="appSettingStore.ott === 5" class="filtersCloseButton">
+          CLOSE FILTERS
+        </button>
+      </div>
     </div>
   </Transition>
 </template>
@@ -56,19 +58,25 @@
 import { computed } from 'vue'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useUserStore } from '@/Stores/UserStore'
-// import { useStreamStore } from "@/Stores/StreamStore"
-// import { useChatStore } from "@/Stores/ChatStore"
 import Upgrade from '@/Components/Global/Ott/Elements/Upgrade'
 
 const appSettingStore = useAppSettingStore()
 const userStore = useUserStore()
-// const videoPlayerStore = useVideoPlayerStore()
-// const streamStore = useStreamStore()
-// const chat = useChatStore()
 
 let props = defineProps({
   user: Object,
 })
+
+const shouldDisplayOtt = computed(() => {
+  return appSettingStore.ott === 5
+})
+const showUpgrade = computed(() => {
+  return appSettingStore.ott === 5 &&
+      (!props.user.isSubscriber ||
+          !props.user.isVip ||
+          !props.user.isAdmin);
+});
+
 
 // let playVideo = (source) => {
 //   videoPlayerStore.loadNewSourceFromMist(source)
@@ -83,15 +91,6 @@ let props = defineProps({
 //   channelsOttDesktop: !userStore.isMobile
 // }))
 
-const shouldDisplayOtt = computed(() => {
-  return appSettingStore.ott === 5
-})
-const showUpgrade = computed(() => {
-  return appSettingStore.ott === 5 &&
-      (!props.user.isSubscriber ||
-      !props.user.isVip ||
-      !props.user.isAdmin);
-});
 
 
 </script>

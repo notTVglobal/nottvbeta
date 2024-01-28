@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="scrolldownIndicator">
     <div :class="{ 'visible': !hasScrolled && isContentOverflowing }"
          class="fade-out bg-black bg-opacity-80 text-white">
       Scroll down.

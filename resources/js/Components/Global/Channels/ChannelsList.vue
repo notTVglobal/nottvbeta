@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div class="h-full">
 
     <div v-if="!channelStore.channelsLoaded"
          :key="channelStore.channelsLoaded"
@@ -20,9 +20,9 @@
       <ChannelFooter/>
     </div>
 
-    <!--        <div class="fixed w-full bottom-4 text-center fade-out">-->
-    <!--            <ScrollDownIndicator scrollRef="scrollRef"/>-->
-    <!--        </div>-->
+            <div class="fixed w-full bottom-4 text-center fade-out">
+                <ScrollDownIndicator scrollRef="scrollRef"/>
+            </div>
 
 
   </div>
@@ -30,13 +30,14 @@
 </template>
 
 <script setup>
-import { computed } from "vue"
+import { computed, provide, ref } from 'vue'
 import { Inertia } from "@inertiajs/inertia"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
 const appSettingStore = useAppSettingStore()
 import { useChannelStore } from "@/Stores/ChannelStore"
-import ChannelFooter from "@/Components/Global/VideoPlayer/Channels/ChannelFooter"
+import ChannelFooter from "@/Components/Global/Channels/ChannelFooter"
+import ScrollDownIndicator from '@/Components/Global/UserHints/ScrollDownIndicator.vue'
 
 const videoPlayerStore = useVideoPlayerStore()
 let channelStore = useChannelStore()
@@ -45,6 +46,9 @@ const userStore = useChannelStore()
 let props = defineProps({
   channelClasses: String,
 })
+
+const scrollRef = ref(null)
+provide('scrollRef', scrollRef)
 
 channelStore.getChannels()
 

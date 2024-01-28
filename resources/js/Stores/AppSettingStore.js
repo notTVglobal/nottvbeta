@@ -74,7 +74,11 @@ export const useAppSettingStore = defineStore('appSettingStore', {
         },
         toggleOtt(num) {
             if (this.ott === num) {
-                this.ott = 0
+                if (this.fullPage) {
+                    this.toggleOtt(0)
+                } else {
+                    this.toggleOtt(1)
+                }
                 this.showOttButtons = true
             } else {
                 this.ott = num
@@ -84,7 +88,11 @@ export const useAppSettingStore = defineStore('appSettingStore', {
             }
         },
         toggleOttInfo() {
-            this.toggleOtt(1)
+            if (this.ott === 1) {
+
+            } else {
+                this.toggleOtt(1)
+            }
         },
         toggleOttChannels() {
             this.toggleOtt(2)
@@ -99,7 +107,12 @@ export const useAppSettingStore = defineStore('appSettingStore', {
             this.toggleOtt(5)
         },
         closeOtt() {
-            this.toggleOtt(0)
+            if (appSettingStore.fullPage) {
+                this.toggleOtt(0)
+            } else {
+                this.toggleOtt(1)
+            }
+
         },
         setPrevUrl() {
             const userStore = useUserStore()
