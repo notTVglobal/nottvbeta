@@ -1,5 +1,5 @@
 <template>
-  <Head title="Channels Admin"/>
+  <Head title="Admin/Channels"/>
 
   <div class="place-self-center flex flex-col">
     <div id="topDiv" class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">

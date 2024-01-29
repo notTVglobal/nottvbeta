@@ -160,6 +160,7 @@ const submit = () => {
   const data = {
     id: newsStore.newsStory.id,
     title: newsStore.newsArticleTitleTiptop,
+    status: props.newsStory.status.id,
     // body: JSON.stringify(newsStore.content_json),
     content_json: JSON.stringify(newsStore.newsArticleContentTiptop),
     news_category_id: newsStore.selectedCategory.id,

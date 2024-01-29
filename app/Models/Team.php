@@ -37,6 +37,11 @@ class Team extends Model
         return $this->hasMany(Show::class);
     }
 
+  public function movies()
+  {
+    return $this->hasMany(Movie::class);
+  }
+
     public function managers()
     {
         return $this->belongsToMany(User::class, 'team_managers', 'team_id', 'user_id')

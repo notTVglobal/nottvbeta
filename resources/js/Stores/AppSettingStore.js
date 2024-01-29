@@ -43,16 +43,42 @@ export const useAppSettingStore = defineStore('appSettingStore', {
             Object.assign(this, initialState())
         },
         turnPipChatModeOn() {
-            this.pipChatMode = true
-            this.hidePage = true
-            this.pageBgColor = this.pipBgColor
-            this.chatMessageBgColor = this.pipChatMessageBgColor
+            const videoPlayerStore = useVideoPlayerStore()
+            const userStore = useUserStore()
+
+            if(userStore.isMobile) {
+                if(this.fullPage) {
+                    videoPlayerStore.class = 'pipVideoClassFullPage'
+                    videoPlayerStore.videoContainerClass = 'pipVideoContainerFullPage'
+                } else {
+                    videoPlayerStore.class = 'pipVideoClassTopRight'
+                    videoPlayerStore.videoContainerClass = 'pipVideoContainerTopRight'
+                    this.showOttButtons = false
+                }
+                this.pipChatMode = true
+                this.hidePage = true
+                this.pageBgColor = this.pipBgColor
+                this.chatMessageBgColor = this.pipChatMessageBgColor
+            }
         },
         turnPipChatModeOff() {
-            this.pipChatMode = false
-            this.hidePage = false
-            this.pageBgColor = this.primaryBgColor
-            this.chatMessageBgColor = this.primaryChatMessageBgColor
+            const videoPlayerStore = useVideoPlayerStore()
+            const userStore = useUserStore()
+
+            if(userStore.isMobile) {
+                if (this.fullPage) {
+                    videoPlayerStore.videoContainerClass = 'fullPageVideoContainer'
+                    videoPlayerStore.class = 'fullPageVideoClass'
+                } else {
+                    videoPlayerStore.videoContainerClass = 'topRightVideoContainer'
+                    videoPlayerStore.class = 'topRightVideoClass'
+                    this.showOttButtons = true
+                }
+                this.pipChatMode = false
+                this.hidePage = false
+                this.pageBgColor = this.primaryBgColor
+                this.chatMessageBgColor = this.primaryChatMessageBgColor
+            }
         },
         setPageBgColor(color) {
             this.pageBgColor = color
@@ -71,6 +97,22 @@ export const useAppSettingStore = defineStore('appSettingStore', {
             this.showNavDropdown = false
             this.showOttButtons = true
             this.showOtt = false // tec21: I don't know why we would want this... it could be a leftover.
+        },
+        toggleOsd() {
+            const videoPlayerStore = useVideoPlayerStore()
+            this.osd = !this.osd;
+            videoPlayerStore.controls = !videoPlayerStore.controls
+            if (this.ott && !this.osd) {
+                this.showOttButtons = false
+            } else if (this.ott && this.osd) {
+                this.showOttButtons = false
+            } else if (!this.ott && !this.osd) {
+                this.showOttButtons = false
+            } else if (!this.ott && this.osd) {
+                this.showOttButtons = true
+            }
+
+
         },
         toggleOtt(num) {
             if (this.ott === num) {

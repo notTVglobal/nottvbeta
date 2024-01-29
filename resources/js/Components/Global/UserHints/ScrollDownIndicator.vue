@@ -20,7 +20,7 @@ const channelStore = useChannelStore()
 const props = defineProps({
   watchedState: Boolean,
   triggerCheck: Boolean,
-  scrollRef: Object
+  scrollRef: String
 });
 
 // Inject the ref provided by the parent component
@@ -41,14 +41,12 @@ const handleScroll = () => {
   // const scrollPosition = scrollableDiv.value.scrollTop;
   // hasScrolled.value = scrollPosition > 0;
   hasScrolled.value = scrollableDiv.value.scrollTop > 0;
-  console.log('Scrolled:', hasScrolled.value); // Check if scrolling is detected
 };
 
 
 let resizeObserver;
 
 onMounted(() => {
-  console.log(scrollableDiv.value); // Check if the ref is correctly injected
   nextTick(() => {
     checkOverflow();
   });

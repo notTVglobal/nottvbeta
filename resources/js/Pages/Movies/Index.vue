@@ -2,7 +2,7 @@
 
     <Head title="Movies"/>
 
-    <div id="topDiv" class="place-self-center flex flex-col gap-y-3">
+    <div id="topDiv" class="place-self-center flex flex-col gap-y-3 ">
         <div class="bg-gray-900 text-white px-5">
 
             <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
@@ -58,9 +58,9 @@
                                 </div>
                             </div>
                             <Link :href="`/movies/${movie.slug}`" class="block text-base font-semibold leading-tight max-w-[8rem] hover:text-gray-400 mt-4 mb-2">{{ movie.name }}</Link>
-                            <div class="text-gray-400 mt-1">{{ movie.category }}
+                            <div class="text-gray-400 mt-1">{{ movie.category?.name }}
                                 <span v-if="movie.release_year">({{movie.release_year}})</span></div>
-                            <div class="text-gray-400 mt-1 hidden">{{ movie.subCategory }}</div>
+                            <div class="text-gray-400 mt-1">{{ movie.subCategory?.name }}</div>
                         </div>
 
                     </div>
@@ -78,19 +78,19 @@
                                  class="movie bg-gray-800 rounded-lg shadow-md flex px-6 py-6">
 
                                 <div class="relative flex-none">
-                                    <Link :href="`/movies/${movie.slug}`" class="hover:text-blue-400 hover:opacity-75 transition ease-in-out duration-150">
+                                    <button @click="appSettingStore.btnRedirect(`/movies/${movie.slug}`)" class="hover:text-blue-400 hover:opacity-75 transition ease-in-out duration-150">
                                     <SingleImage :image="movie.image" :alt="'movie cover'" class="h-32 md:h-64 md:min-w-[8rem] w-24 md:w-48 object-cover hover:opacity-75 transition ease-in-out duration-150"/>
 <!--                                        <img :src="`/storage/images/EBU_Colorbars.svg.png`" alt="movie cover" class="h-32 md:h-64 md:min-w-[8rem] w-24 md:w-48 object-cover hover:opacity-75 transition ease-in-out duration-150">-->
-                                    </Link>
+                                    </button>
                                     <div class="absolute bottom-0 right-0 w-12 h-12 bg-gray-900 rounded-full" style="right:-20px; bottom:-20px;">
                                         <div class="font-semi-bold text-xs flex justify-center items-center h-full">80%</div>
                                     </div>
                                 </div>
 
-                                <div class="ml-12">
-                                    <Link :href="`/movies/${movie.slug}`" class="block text-lg font-semibold leading-tight max-w-[8rem] hover:text-gray-400 mt-4">
-                                        {{ movie.name }}</Link>
-                                    <div class="text-gray-400 mt-1">{{ movie.category }}<span class="hidden">, {{ movie.subCategory }}</span></div>
+                                <div class="flex flex-col ml-12 w-full">
+                                    <button @click="appSettingStore.btnRedirect(`/movies/${movie.slug}`)" class="text-left w-full block text-lg font-semibold leading-tight hover:text-gray-400 mt-4">
+                                        {{ movie.name }}</button>
+                                    <div class="text-gray-400 mt-1">{{ movie.category?.name }}<span class=""> &middot; {{ movie.subCategory?.name }}</span><span class=""> &middot; {{ movie.release_year }}</span></div>
                                     <p class="mt-6 pr-4 text-gray-300 hidden lg:block">
                                         {{ movie.logline }}
                                     </p>
@@ -113,7 +113,7 @@
                                 </Link>
                                 <div class="ml-4">
                                     <Link :href="`/movies/${movie.slug}`" class="hover:text-gray-300">{{ movie.name }}</Link>
-                                    <div class="text-gray-400 text-sm mt-1">{{ movie.category }}<span class="hidden">, {{ movie.subCategory }}</span></div>
+                                    <div class="text-gray-400 text-sm mt-1">{{ movie.category?.name }}<span class="hidden">, {{ movie.subCategory?.name }}</span></div>
                                 </div>
                             </div>
                         </div>
@@ -128,7 +128,7 @@
                                 </Link>
                                 <div class="ml-4">
                                     <Link :href="`/movies/${movie.slug}`" class="hover:text-gray-300">{{ movie.name }}</Link>
-                                    <div class="text-gray-400 text-sm mt-1">{{ movie.category }}<span class="hidden">, {{ movie.subCategory }}</span></div>
+                                    <div class="text-gray-400 text-sm mt-1">{{ movie.category?.name }}<span class="hidden">, {{ movie.subCategory?.name }}</span></div>
                                 </div>
                             </div>
                         </div>

@@ -1,5 +1,6 @@
 <template>
   <Head :title="$page.props.newsPerson.name" />
+  <div id="topDiv" ></div>
   <div :class="marginTopClass">
     <PublicNavigationMenu v-if="!appSettingStore.loggedIn" class="fixed top-0 w-full nav-mask" />
 
@@ -63,7 +64,7 @@
 
 
 <script setup>
-import { computed, nextTick, watch } from 'vue'
+import { computed, nextTick, onMounted, watch } from 'vue'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
@@ -81,6 +82,12 @@ appSettingStore.currentPage = 'news.reporter.id'
 defineProps({
   can: Object,
 })
+
+onMounted(() => {
+  const topDiv = document.getElementById("topDiv")
+  topDiv.scrollIntoView()
+})
+
 
 // Watch for changes in the loggedIn state of appSettingStore
 watch(() => appSettingStore.loggedIn, (loggedIn) => {

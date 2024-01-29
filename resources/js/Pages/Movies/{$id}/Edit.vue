@@ -15,9 +15,17 @@
                             <Link :href="`/movies/${movie.slug}`" class="text-red-700 font-bold uppercase">{{ movie.name }}</Link>
                         </h1>
                     </div>
-                    <div>
-                        <CancelButton />
-                    </div>
+                  <div class="flex flex-row flex-wrap">
+                    <button
+                        @click="submit"
+                        class="h-fit bg-blue-600 hover:bg-blue-500 text-white rounded py-2 px-4 mr-2"
+                        :disabled="form.processing"
+                    >
+                      Save
+                    </button>
+                    <CancelButton />
+                  </div>
+
                 </div>
             </header>
 
@@ -142,6 +150,25 @@
 
                                     <form @submit.prevent="submit">
 
+                                      <div class="mb-6">
+                                        <label class="block mb-2 uppercase font-bold text-xs text-red-700"
+                                               for="status"
+                                        >
+                                          Status
+                                        </label>
+
+                                        <select required class="border border-gray-400 text-gray-800 p-2 w-1/2 rounded-lg block mb-2 uppercase font-bold text-xs "
+                                                v-model="form.status"
+                                        >
+                                          <option v-for="status in statuses"
+                                                  :key="status.id" :value="status.id">{{status.name}}</option>
+
+
+                                        </select>
+                                        <div v-if="form.errors.status" v-text="form.errors.status"
+                                             class="text-xs text-red-600 mt-1"></div>
+                                      </div>
+
                                         <div class="mb-6">
                                             <label class="block mb-2 uppercase font-bold text-xs text-red-700"
                                                    for="name"
@@ -150,7 +177,7 @@
                                             </label>
 
                                             <input v-model="form.name"
-                                                   class="border border-gray-400 text-gray-800 p-2 w-1/2 rounded-lg"
+                                                   class="border border-gray-400 text-black font-semibold p-2 w-1/2 rounded-lg"
                                                    type="text"
                                                    name="name"
                                                    id="name"
@@ -168,7 +195,7 @@
                                             </label>
 
                                             <input v-model="form.release_year"
-                                                   class="border border-gray-400 text-gray-800 p-2 w-1/2 rounded-lg"
+                                                   class="border border-gray-400 text-black font-semibold p-2 w-1/2 rounded-lg"
                                                    type="number"
                                                    name="release_year"
                                                    id="release_year"
@@ -188,17 +215,14 @@
                                             </label>
 
                                             <select class="border border-gray-400 text-gray-800 p-2 w-1/2 rounded-lg block mb-2 uppercase font-bold text-xs "
-                                                    v-model="form.category" @change="chooseCategory($event)"
+                                                    v-model="selectedCategoryId" @change="chooseCategory"
                                             >
-                                                <option v-for="category in props.categories"
+                                                <option v-for="category in categories"
                                                         :key="category.id" :value="category.id">{{category.name}}</option>
 
 
                                             </select>
-        <!--    This was for practice... the next step is to loop over the sub-categories that belongTo the category selected. -->
-        <!--                                    <select>-->
-        <!--                                        <option v-for="option in options" :value="option.value">{{option.text}}</option>-->
-        <!--                                    </select>-->
+
                                             <span class="">{{movieStore.category_description}}</span>
                                             </div>
 
@@ -213,11 +237,16 @@
                                                 Sub-category
                                             </label>
 
-                                            <select disabled class="border border-gray-400 text-gray-800 disabled:bg-gray-600 disabled:cursor-not-allowed p-2 w-1/2 rounded-lg block mb-2 uppercase font-bold text-xs"
-                                                    v-model="form.sub_category"
+                                            <select class="border border-gray-400 text-gray-800 disabled:bg-gray-600 disabled:cursor-not-allowed p-2 w-1/2 rounded-lg block mb-2 uppercase font-bold text-xs"
+                                                    v-model="selectedSubCategoryId" :disabled="!selectedCategoryId"  @change="chooseSubCategory"
                                             >
-                                                <option value="1">Option</option>
+                                                <option disabled value="">Select a subcategory</option>
+                                                <option v-for="subCategory in subCategories" :key="subCategory.id" :value="subCategory.id">
+
+                                                  {{ subCategory.name }}
+                                                </option>
                                             </select>
+                                          <span class="">{{movieStore.sub_category_description}}</span>
                                             <div v-if="form.errors.sub_category" v-text="form.errors.sub_category"
                                                  class="text-xs text-red-600 mt-1"></div>
                                         </div>
@@ -397,6 +426,7 @@ import SingleImage from "@/Components/Global/Multimedia/SingleImage"
 import ImageUpload from "@/Components/Global/Uploaders/ImageUpload"
 import VideoUpload from "@/Components/Global/Uploaders/VideoUpload"
 import CancelButton from "@/Components/Global/Buttons/CancelButton.vue"
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 usePageSetup('movieEdit')
 
@@ -410,17 +440,57 @@ let props = defineProps({
     trailer: Object,
     image: Object,
     categories: Object,
-    sub_categories: Object,
-    movieCategory: String,
-    movieCategorySub: String,
+    statuses: Object,
+    can: Object,
 })
+
+let selectedCategoryId = ref(props.movie.movie_category_id);
+let selectedSubCategoryId = ref(props.movie.movie_category_sub_id);
+
+const subCategories = computed(() => {
+  const category = props.categories.find(cat => cat.id === selectedCategoryId.value);
+  return category ? category.sub_categories : [];
+});
+
+// Watchers to update the store based on category and subcategory selections
+watch(selectedCategoryId, () => {
+  movieStore.initializeDescriptions(selectedCategoryId.value, selectedSubCategoryId.value);
+}, { immediate: true });
+
+watch(selectedSubCategoryId, () => {
+  movieStore.updateSubCategoryDescription(selectedSubCategoryId.value);
+});
+
+onMounted(() => {
+  movieStore.categories = props.categories;
+  movieStore.initializeDescriptions(selectedCategoryId.value, selectedSubCategoryId.value);
+});
+
+const chooseCategory = () => {
+  // Update the selected category ID based on the new selection
+  // Vue automatically updates selectedCategoryId due to v-model binding
+  // So, there is no need to manually set it here
+
+  // Call the store method to update descriptions and subcategories
+  movieStore.initializeDescriptions(selectedCategoryId.value, selectedSubCategoryId.value);
+};
+
+const chooseSubCategory = () => {
+  // Update the store state based on the new subcategory selection
+  movieStore.updateSubCategoryDescription(selectedSubCategoryId.value);
+};
+
+
+
+// let subCategory = ref(null);
 
 let form = useForm({
     id: props.movie.id,
     name: props.movie.name,
+    status: props.movie.status_id,
     release_year: props.movie.release_year,
-    category: props.movie.movie_category_id,
-    sub_category: props.movie.movie_category_sub_id,
+    category: movieStore.category_id,
+    sub_category: movieStore.sub_category_id,
     description: props.movie.description,
     logline: props.movie.logline,
     user_id: props.movie.user_id,
@@ -432,36 +502,115 @@ let form = useForm({
     twitter_handle: props.movie.twitter_handle,
 })
 
+let submit = () => {
+  form.category = movieStore.category_id;
+  form.sub_category = movieStore.sub_category_id;
+  form.patch(route('movies.update', props.movie.slug));
+}
+
 let reloadImage = () => {
     Inertia.reload({
         only: ['image'],
     });
 };
 
-let submit = () => {
-    form.patch(route('movies.update', props.movie.slug));
-}
+
 
 // let category = ref();
 
-function chooseCategory(event) {
-movieStore.category_description =  props.categories[event.target.selectedIndex].description;
-}
-// next step is to add sub-categories and loop over them based on the selected category.
-// this was for practice:
-// const options = []
-//     Array.from(event.target.selectedOptions).forEach(item => {
-//         options.push({
-//             value: item.value,
-//             text: `You have selected ${item.text}`
-//         })
-//     })
-//     this.options = options
-//     console.log(event.target.selectedOptions);
+// function chooseCategory(event) {
+// movieStore.category_description =  props.categories[event.target.selectedIndex].description;
+// }
 
 
-// showStore.episodePoster = props.poster;
+// Computed property to filter subcategories based on the selected category
+// const subCategories = computed(() => {
+//   const category = props.categories.find(cat => cat.id === selectedCategoryId.value);
+//   return category ? category.sub_categories : [];
+// });
 
+
+
+
+
+// Initialize and update descriptions when IDs change
+// watch([selectedCategoryId, selectedSubCategoryId], () => {
+//   movieStore.initializeDescriptions(props.categories, selectedCategoryId.value, selectedSubCategoryId.value);
+//
+// }, { immediate: true });
+
+// watch([subCategories, selectedCategoryId, selectedSubCategoryId], () => {
+//   movieStore.initializeDescriptions(selectedCategoryId.value, selectedSubCategoryId.value);
+//
+// }, { immediate: true });
+
+// Initialize on mount
+// onMounted(() => {
+//   // movieStore.initializeDescriptions(props.categories, selectedCategoryId.value, selectedSubCategoryId.value);
+//   // movieStore.initializeDescriptions(props.categories, props.movie.movie_category_id, props.movie.movie_category_sub_id);
+//   movieStore.categories = props.categories
+//   movieStore.category_id = props.movie.movie_category_id
+//   movieStore.category_description = props.movie.movie_category.description
+//   movieStore.sub_category_id = props.movie.movie_category_sub_id
+//   movieStore.sub_category_description = props.movie.movie_category_sub.description
+//
+//   // movieStore.initializeDescriptions()
+// });
+
+// // Initialize category and subcategory descriptions
+// const initializeDescriptions = () => {
+//   const category = props.categories.find(cat => cat.id === selectedCategoryId.value);
+//   movieStore.category_id = category ? category.id : '';
+//   movieStore.category_description = category ? category.description : '';
+//   movieStore.sub_categories = category ? category.sub_categories : [];
+//
+//   subCategory = subCategories.value.find(sub => sub.id === selectedSubCategoryId.value);
+//   movieStore.sub_category_id = subCategory ? subCategory.id : '';
+//   movieStore.sub_category_description = subCategory ? subCategory.description : '';
+//   console.log('GARCK' + selectedSubCategoryId.value)
+//   movieStore.sub_category_id = selectedSubCategoryId.value;
+// };
+//
+// // Call the function to set initial descriptions
+// initializeDescriptions();
+//
+// // When a category is chosen
+// const chooseCategory = () => {
+//   selectedCategoryId.value = parseInt(event.target.value);
+//   initializeDescriptions(); // Re-initialize to update subcategories and descriptions
+// };
+//
+// // When a subcategory is chosen
+// const chooseSubCategory = () => {
+//   subCategory = movieStore.sub_categories.find(sub => sub.id === selectedSubCategoryId.value);
+//   console.log('FFFFFFAAAAAA' + selectedSubCategoryId.value)
+//   movieStore.sub_category_id = subCategory ? subCategory.id : '';
+//   movieStore.sub_category_description = subCategory ? subCategory.description : '';
+// };
+
+// Watchers to update descriptions when IDs change
+// watch(selectedCategoryId, () => {
+//   const category = props.categories.find(cat => cat.id === selectedCategoryId.value);
+//   movieStore.category_description = category ? category.description : '';
+//   selectedSubCategoryId.value = null; // Reset subcategory selection
+// });
+//
+// watch(selectedSubCategoryId, () => {
+//   console.log('GET FLIGHTY' + selectedSubCategoryId.value)
+//   const subCategory = movieStore.sub_categories.find(sub => sub.id === selectedSubCategoryId.value);
+//   movieStore.sub_category_id = subCategory ? subCategory.id : '';
+//
+//   movieStore.sub_category_description = subCategory ? subCategory.description : '';
+// });
+
+
+// const chooseCategory = (event) => {
+//   selectedCategoryId.value = parseInt(event.target.value);
+// };
+//
+// const chooseSubCategory = (subCategoryId) => {
+//   selectedSubCategoryId.value = subCategoryId;
+// };
 
 function muteMainVideo(){
     videoPlayerStore.mute();
@@ -473,5 +622,9 @@ function back() {
         Inertia.visit(urlPrev)
     }
 }
+
+onBeforeUnmount(() => {
+  movieStore.reset(); // Call the reset method of your store
+});
 
 </script>

@@ -6,6 +6,7 @@ import { useChannelStore } from "@/Stores/ChannelStore";
 import { useShowStore } from "@/Stores/ShowStore";
 import videojs from 'video.js';
 import { Inertia } from "@inertiajs/inertia";
+import { usePage } from '@inertiajs/inertia-vue3'
 
 const initialState = () => ({
     videoPlayerLoaded: false,
@@ -18,6 +19,8 @@ const initialState = () => ({
     videoSourceTypeSrc1: '',
     videoSourceTypeSrc2: '',
     videoSourceTypeSrc3: '',
+    firstPlayVideoSourceType: '',
+    firstPlayVideoSource: '',
     key: '',
     videoName: '',
     videoSource: '',
@@ -51,6 +54,23 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
         makeBlue() {
             // for testing. DO NOT REMOVE.
             this.blue = true
+        },
+        loadFirstPlay() {
+            const { props } = usePage();
+            let videoJs = videojs('main-player')
+            const type = props.firstPlayVideoSourceType
+            const src = props.firstPlayVideoSource
+            videoJs.ready(() => {
+                videoJs.src({ src, type });
+                videoJs.play().then(() => {
+                    console.log('Playback started successfully');
+                }).catch(error => {
+                    console.error('Error trying to play the video:', error);
+                    // Handle the error (e.g., showing a user-friendly message)
+                });
+            });
+            console.log(type)
+            console.log(src)
         },
         // video controls
         toggleMute() {
@@ -279,7 +299,6 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
         },
         makeVideoTopRight() {
             const appSettingStore = useAppSettingStore()
-            const userStore = useUserStore()
 
             // this.fullPage = false // to be deleted and replaced by appSettingStore.fullPage
             appSettingStore.fullPage = false
@@ -294,7 +313,6 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
         },
         makeVideoWelcomePage() {
             const appSettingStore = useAppSettingStore()
-            const userStore = useUserStore()
             this.videoContainerClass = 'welcomeVideoContainer'
             this.class = 'welcomeVideoClass'
             appSettingStore.loggedIn = false

@@ -1,5 +1,4 @@
 <template>
-
   <div v-if="appSettingStore.showOttButtons">
     <ButtonsFullPage v-if="appSettingStore.fullPage" />
     <ButtonsTopRight v-if="!appSettingStore.fullPage" />
@@ -8,7 +7,7 @@
   <NowPlayingInfo :user="user"/>
   <Playlist :user="user"/>
   <Channels :user="user"/>
-  <Chat :user="user"/>
+  <ChatContainer :user="user" />
   <Filters :user="user"/>
 
 </template>
@@ -21,16 +20,14 @@ import ButtonsTopRight from "@/Components/Global/Ott/Elements/ButtonsTopRight"
 import NowPlayingInfo from "@/Components/Global/Ott/Elements/NowPlayingInfo"
 import Playlist from "@/Components/Global/Ott/Elements/Playlist"
 import Channels from "@/Components/Global/Ott/Elements/Channels"
-import Chat from "@/Components/Global/Ott/Elements/Chat"
 import Filters from "@/Components/Global/Ott/Elements/Filters"
+import ChatContainer from '@/Components/Global/Ott/Elements/Chat'
 
 const appSettingStore = useAppSettingStore()
 const videoPlayerStore = useVideoPlayerStore()
 const userStore = useUserStore()
-console.log('OttContainer')
 
 defineProps({
   user: Object,
 })
-
 </script>

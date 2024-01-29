@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\NewsStatus;
 use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request;
@@ -15,6 +16,9 @@ class NewsroomController extends Controller
 {
     public function index()
     {
+
+      $newsStoryStatuses = NewsStatus::all();
+
         return Inertia::render('Newsroom/Index', [
             'newsStories' => NewsStory::with('image', 'user', 'newsCategory', 'newsCategorySub', 'city', 'province', 'federalElectoralDistrict', 'subnationalElectoralDistrict', 'newsStatus', 'video')
                 ->when(Request::input('search'), function ($query, $search) {
@@ -90,6 +94,7 @@ class NewsroomController extends Controller
                     'status' => $newsStory->newsStatus,
                     'video' => $newsStory->video ?? null,
                     'created_at' => $newsStory->created_at,
+                    'updated_at' => $newsStory->updated_at,
                     'published_at' => $newsStory->published_at ?? null,
                     'can' => [
                         'editNewsStory' => Auth::user()->can('update', NewsStory::class),
@@ -97,6 +102,7 @@ class NewsroomController extends Controller
                     ]
                 ]),
             'filters' => Request::only(['search']),
+            'newsStoryStatuses' => $newsStoryStatuses,
             'can' => [
                 'createNewsStory' => Auth::user()->can('create', NewsStory::class),
                 'editNewsStory' => Auth::user()->can('update', NewsStory::class),

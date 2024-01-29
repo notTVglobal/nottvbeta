@@ -51,7 +51,6 @@ export const useChannelStore = defineStore('channelStore', {
             this.currentChannelName = channel.name
             this.currentChannelId = channel.id
             this.isLive = channel.isLive
-            videoPlayerStore.clearNowPlayingInfo()
             console.log('Change Channel')
             console.log(channel.id)
             console.log(channel.name)

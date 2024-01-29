@@ -37,21 +37,21 @@
       <tbody class="bg-white divide-y divide-gray-200">
       <tr v-for="story in newsStories.data" :key="story.id">
         <td v-if="story.newsCategory" class="px-6 py-4 whitespace-normal">
-          <span class="block"
+          <span class="block font-semibold uppercase"
                 v-if="story.city">
             {{ story.city }}<br><span class="uppercase font-thin">{{ story.province}}</span></span>
           <div v-if="story.province && !story.city && !story.federalElectoralDistrict && !story.subnationalElectoralDistrict">
-            <span class="block uppercase">
+            <span class="block uppercase font-semibold">
             {{ story.province }}</span>
             <span class="block text-sm uppercase font-thin">Province</span>
           </div>
           <div v-if="story.federalElectoralDistrict">
-            <span class="block uppercase">
+            <span class="block uppercase font-semibold">
             {{ story.federalElectoralDistrict }}</span>
             <span class="block text-sm uppercase font-thin">Federal Electoral District</span>
           </div>
           <div v-if="story.subnationalElectoralDistrict">
-            <span class="block uppercase">
+            <span class="block uppercase font-semibold">
             {{ story.subnationalElectoralDistrict }}</span>
             <span class="block text-sm uppercase font-thin">Subnational Electoral District</span>
           </div>
@@ -70,9 +70,9 @@
                 <SingleImage :image="story.image" alt="News Story Image" class="hidden md:block min-h-20 min-w-20 max-h-20 max-w-20 mr-4 rounded-full" />
               </button>
               <div class="flex flex-col">
-                <div>
-                  <button @click="appSettingStore.btnRedirect(`/news/story/${story.slug}`)" class="text-blue-500 hover:text-blue-700">
-                    <span class="pt-2 text-xl uppercase font-semibold text-wrap">{{ story.title }}</span>
+                <div class="flex flex-row pt-2 text-xl uppercase font-semibold">
+                  <button @click="appSettingStore.btnRedirect(`/news/story/${story.slug}`)" class="text-left text-blue-500 hover:text-blue-700">
+                   {{ story.title }}
                   </button>
                 </div>
                 <div>
@@ -85,8 +85,11 @@
 
           </div>
         </td>
-        <td class="pr-3 text-right">
+        <td class="h-full pb-4 align-bottom pr-3 text-right">
           <div class="flex justify-end mt-4">
+            <div v-if="story.status === 'Creators Only'" class="text-gray-700 italic">
+              {{story.status}}
+            </div>
             <div v-if="story.published_at" class="flex flex-col justify-end">
 <!--              <span v-if="!story.published_at">{{ story.status }}</span><br>-->
               <div class="text-xs uppercase font-semibold">Published</div>

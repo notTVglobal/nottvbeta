@@ -221,8 +221,9 @@ class NewsStoryController extends Controller {
     $canViewNewsroom = optional(Auth::user())->can('viewAny', NewsPerson::class);
     $canEditNewsStory = optional(Auth::user())->can('update', $newsStory);
 
-    // Check if the story status is 6 and if the user lacks necessary permissions
-    if ($newsStory->status == 6 && !($canViewNewsroom || $canEditNewsStory)) {
+    // Allow public access if the story status is 6
+    // Otherwise, check permissions
+    if (!($newsStory->status == 6 || $canViewNewsroom || $canEditNewsStory)) {
       throw new NotFoundHttpException('Story not available.');
     }
 
@@ -324,69 +325,75 @@ class NewsStoryController extends Controller {
    */
   public function update(HttpRequest $request, NewsStory $newsStory) {
     $this->authorize('update', $newsStory);
-//    dd($request);
-//    $content = $request->input('content_json'); // 'json_data' is the key you send from frontend
-    $request->validate([
-        'title'                             => ['required', 'string', 'max:255', Rule::unique('news_stories')->ignore($newsStory->id)],
-//        'body'                              => 'required|string',
-        'content_json'                      => 'nullable|json',
-        'news_category_id'                  => 'required|integer',
-        'news_category_sub_id'              => 'nullable|integer',
-        'city_id'                           => 'nullable|integer',
-        'province_id'                       => 'nullable|integer',
-        'federal_electoral_district_id'     => 'nullable|integer',
-        'subnational_electoral_district_id' => 'nullable|integer',
-//        'type'                              => 'nullable|string',
-    ], [
-        'body.required'             => 'The content is required.',
-        'news_category_id.required' => 'The news category is required.',
+
+    $originalStatus = $newsStory->status;
+
+    $validatedData = $request->validate([
+        'title' => 'sometimes|required|string|max:255|' . Rule::unique('news_stories')->ignore($newsStory->id),
+        'content_json' => 'sometimes|nullable|json',
+        'status' => 'sometimes|required|exists:news_statuses,id',
+        'news_category_id' => 'sometimes|required|integer',
+        'news_category_sub_id' => 'sometimes|nullable|integer',
+        'city_id' => 'sometimes|nullable|integer',
+        'province_id' => 'sometimes|nullable|integer',
+        'federal_electoral_district_id' => 'sometimes|nullable|integer',
+        'subnational_electoral_district_id' => 'sometimes|nullable|integer',
     ]);
-//        'city_id'                           => 'nullable|integer',
-//        'province_id'                       => 'nullable|integer',
-//        'federal_electoral_district_id'     => 'nullable|integer',
-//        'subnational_electoral_district_id' => 'nullable|integer',
-//        'type'                              => 'nullable|string|required_if:news_category_id,3' // Require type if news_category_id is 3 (Local News)
 
-//        'type.required_if'          => 'The news location is required when Local News is selected.',
+    // Updating the NewsStory
+    if (array_key_exists('title', $validatedData)) {
+      $newsStory->title = htmlentities($validatedData['title']);
+      $newsStory->slug = \Str::slug($validatedData['title']);
+    }
+    if (array_key_exists('content_json', $validatedData)) {
+      $newsStory->content_json = $validatedData['content_json'];
+    }
+    if (array_key_exists('status', $validatedData)) {
+      $newsStory->status = $validatedData['status'];
+    }
+    if (array_key_exists('news_category_id', $validatedData)) {
+      $newsStory->news_category_id = $validatedData['news_category_id'];
+    }
+    if (array_key_exists('news_category_sub_id', $validatedData)) {
+      $newsStory->news_category_sub_id = $validatedData['news_category_sub_id'];
+    }
+    if (array_key_exists('city_id', $validatedData)) {
+      $newsStory->city_id = $validatedData['city_id'];
+    }
+    if (array_key_exists('province_id', $validatedData)) {
+      $newsStory->province_id = $validatedData['province_id'];
+    }
+    if (array_key_exists('federal_electoral_district_id', $validatedData)) {
+      $newsStory->federal_electoral_district_id = $validatedData['federal_electoral_district_id'];
+    }
+    if (array_key_exists('subnational_electoral_district_id', $validatedData)) {
+      $newsStory->subnational_electoral_district_id = $validatedData['subnational_electoral_district_id'];
+    }
 
-//    $newsStory = NewsStory::find($request->id);
-//    $this->fillNewsStoryAttributes($newsStory, $request);
-    $newsStory->title = htmlentities($request->title);
-    $newsStory->slug = \Str::slug($request->title);
-//    $newsStory->content = htmlentities($request->content_json);
-    $newsStory->content_json = $request->content_json;
-    $newsStory->news_category_id = $request->news_category_id;
-    $newsStory->news_category_sub_id = $request->news_category_sub_id;
-    $newsStory->city_id = $request->city_id;
-    $newsStory->province_id = $request->province_id;
-    $newsStory->news_federal_electoral_district_id = $request->federal_electoral_district_id;
-    $newsStory->news_subnational_electoral_district_id = $request->subnational_electoral_district_id;
-//    $newsStory->type = $request->type;
+    // Check if the status is the only field that has been changed
+    $onlyStatusChanged = $newsStory->isDirty('status') && $newsStory->getDirty() == ['status' => $validatedData['status']];
+
     $newsStory->save();
-    sleep(1);
 
-//        // tec21: I don't know how to display the content of the array in html
-//        // we'll just keep this here for now.
-////        $newsStory->content_json = $request->content_json;
+//    // Check if only the status was changed
+//    $onlyStatusChanged = $originalStatus != $newsStory->status && $newsStory->wasChanged() && count($newsStory->getChanges()) == 1;
 
-//        $newsStory->user_id = Auth::user()->id;
+    // Customizing the success message
+    $message = 'News Story Updated Successfully';
+    if ($newsStory->status == 6) { // Replace '6' with your actual 'published' status ID
+      $message = 'News Story Published Successfully';
+    }
 
-//        $newsStory->city_id = $request->city_id;
-//        $newsStory->province_id = $request->province_id;
-//        $newsStory->news_federal_electoral_district_id = $request->federal_electoral_district_id;
-//        $newsStory->country_id = $country->id;
+    // Return appropriate response
+    if ($request->wantsJson()) {
+      return response()->json(['message' => $message]);
+    }
 
-
-//        if (Auth::user()->can('viewAny', NewsPerson::class)){
-//            return redirect()
-//                ->route('newsroom')
-//                ->with('message', 'News Story Updated Successfully');
-//        }
-
-    return redirect()
-        ->route('news/story.show',
-            [$newsStory->slug])
-        ->with('success', 'News Story Updated Successfully');
+    if ($onlyStatusChanged) {
+      return redirect()->route('newsroom')->with('message', $message);
+    } else {
+      return redirect()->route('news/story.show', [$newsStory->slug])->with('message', $message);
+    }
   }
 
   // Content is saved through this method, it uses Tiptap
@@ -425,6 +432,35 @@ class NewsStoryController extends Controller {
     sleep(1);
 
     return redirect()->route('newsroom')->with('message', 'News Story Deleted Successfully');
+  }
+
+
+  public function changeStatus(HttpRequest $request) {
+    // Validate the request data
+    $validatedData = $request->validate([
+        'newsStory_id' => 'required|exists:news_stories,id',
+        'new_status_id' => 'required|exists:news_statuses,id'
+    ]);
+
+    // Retrieve the news story by ID
+    $newsStory = NewsStory::findOrFail($validatedData['newsStory_id']);
+
+    // Update the status
+    $newsStory->status = $validatedData['new_status_id'];
+    $newsStory->save();
+
+    // Customize the success message
+    $message = 'News Story Status Updated Successfully';
+    if ($newsStory->status == $validatedData['new_status_id']) {
+      // Add additional messages if needed, based on the status
+      // For example, if the status indicates 'published'
+      if ($newsStory->status == 6) { // Replace with actual published status ID
+        $message = 'News Story Published Successfully';
+      }
+    }
+
+    // Redirect with success message
+    return redirect()->route('newsroom')->with('message', $message);
   }
 
 

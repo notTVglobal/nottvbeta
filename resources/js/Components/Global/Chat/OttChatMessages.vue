@@ -1,7 +1,6 @@
 <template>
-  <div class="h-full scrollbar-hide">
-    <div :class="[pipChatModeChangeHeight]"
-         class=" chatTopRightContainer">
+  <div class="h-full scrollbar-hide w-full">
+    <div class="break-all" :class="[pipChatModeChangeHeight, !appSettingStore.fullPage ? 'chatTopRightContainer' : '']">
 
       <div class="oldMessage" v-for="(oldMessage, index) in chatStore.oldMessages.slice().reverse()" :key="index">
         <message-item :id="oldMessage.id" :message="oldMessage"/>
@@ -10,13 +9,6 @@
         <message-item :id="newMessage.id" :message="newMessage"/>
       </div>
       <div id="scrollToMe"></div>
-
-      <!--            <div class="newMessage" v-for="(newMessage, index) in chatStore.newMessages.slice().reverse()" :key="newMessage.id">-->
-      <!--                <message-item :id="newMessage.id" :message="newMessage"/>-->
-      <!--            </div>-->
-      <!--            <div class="oldMessage" v-for="(oldMessage, index) in chatStore.oldMessages.slice()" :key="index">-->
-      <!--                <message-item :id="oldMessage.id" :message="oldMessage"/>-->
-      <!--            </div>-->
 
     </div>
   </div>
@@ -29,7 +21,7 @@ import relativeTime from "dayjs/plugin/relativeTime"
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useChatStore } from "@/Stores/ChatStore"
 import { useUserStore } from "@/Stores/UserStore"
-import MessageItem from "@/Components/Global/Chat/Elements/ChatMessage"
+import MessageItem from "@/Components/Global/Chat/ChatMessage"
 
 const appSettingStore = useAppSettingStore()
 const chatStore = useChatStore()

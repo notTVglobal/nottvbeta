@@ -379,6 +379,7 @@ Route::middleware([
 
   // Custom resource routes for 'news/story', excluding the 'index' method
   Route::resource('newsStory', NewsStoryController::class)->except(['index', 'show']);
+  Route::patch('newsStoryChangeNewsStoryStatus', [NewsStoryController::class, 'changeStatus'])->name('news.story.changeStatus');
 
 
 
@@ -509,6 +510,11 @@ Route::middleware([
     Route::patch('/admin/settings', [AdminController::class, 'saveSettings'])
         ->can('viewAdmin', 'App\Models\User')
         ->name('admin.saveSettings');
+
+    //// MOVIES - INDEX
+    Route::get('/admin/movies', [AdminController::class, 'moviesIndex'])
+        ->can('viewAdmin', 'App\Models\User')
+        ->name('admin.movies');
 
     //// SHOWS - INDEX
     Route::get('/admin/shows', [AdminController::class, 'showsIndex'])

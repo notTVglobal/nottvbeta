@@ -50,7 +50,7 @@ class UserSeeder extends Seeder
             'phone' => null,
             'creatorNumber' => null,
             'subscriptionStatus' => null,
-            'role_id' => 2,
+            'role_id' => 1,
             'isAdmin' => 0,
         ]);
         User::create([
@@ -68,7 +68,7 @@ class UserSeeder extends Seeder
             'phone' => null,
             'creatorNumber' => null,
             'subscriptionStatus' => null,
-            'role_id' => 3,
+            'role_id' => 1,
             'isAdmin' => 0,
         ]);
         $creatorTestId = User::create([

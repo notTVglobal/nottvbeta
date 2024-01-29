@@ -35,8 +35,6 @@
 </template>
 <script setup>
 import { computed } from "vue";
-
-console.log('ButtonsTopRight')
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useUserStore } from "@/Stores/UserStore"

@@ -1,11 +1,39 @@
 # not.tv Changelog
 
-Last Update: January 28, 2024\
+Last Update: January 29, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
-# v0.8.3.7
-January 28, 2024
-* 
+# v0.8.3.8
+January 29, 2024
+* Styling change to the stream page! Now when you click the video it hides the osd (on screen display) instead of pausing/playing.
+* Movies now have categories and sub-categories.
+* Movies have statuses, and must be switched to 'Active' before they are viewable from the movies page.
+* Movies and NewsStories can have a status of "Creator Only" and only creators will be able to see that content.
+* Active movies are only viewable by users with an active subscription or vip.
+* Admin can see movie statuses from the Admin settings.
+* News Story statuses can be changed from the Newsroom. If a story is published it no longer shows up in the NewsRoom Story Table and will immediately appear in the public News Stories list.
+* Fixed the Chat, it's working again.
+* Fixed the Channels, they seem to be working, but need to be tested.
+* The NowPlaying Info needs to be tested and tweaked.
+* Fix the layout of the NowPlaying Ott panel.
+* Movie Release Schedule needs to be created... Movies > Coming Soon will display movies with a release date of at least 24 hours in the future.
+* The videoPlayer playback bar has disappeared and needs to be fixed.
+* The Movie and Show and ShowEpisode Watch Now button is missing or disabled and will need to be fixed.
+* Notification don't appear to be working and will need to be fixed.
+* Need to add Movies to the Teams page.
+* Need to allow Teams to create movies.
+* The VideoPlayer FullScreen button isn't working and needs to be fixed.
+* The upgrade ott panel styling is messed up and needs to be fixed.
+* The Public News and Newsroom need the following pages: Categories, Citites, Districts, Press Releases, Archive
+* Need to add Change News Story Image capability.
+* Need to add Categories and Subcategories to Shows.
+* Need to add Edit ShowEpisode description directly on the showEpisode Manage page.
+* Create a channel manage page where the admin can add shows, episodes, videos and movies to the time slots.
+  * Shows, movies , showEpisodes, News stories can be a one-off
+  * Shows can be recurring
+  * Set live or on demand
+  * Creators get a reminder before their scheduled live time slot. 3 misses and they lose their slot.
+* We need to schedule our town hall meetings
 
 # v0.8.3.6
 January 27, 2024

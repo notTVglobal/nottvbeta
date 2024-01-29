@@ -49,7 +49,7 @@
 
 
 
-          <div class="overflow-hidden shadow-sm sm:rounded-lg">
+          <div class="w-full overflow-x-hidden shadow-sm sm:rounded-lg">
             <div class="p-6 border-b border-gray-200">
               <div
                   class="relative overflow-x-auto shadow-md sm:rounded-lg"
@@ -71,14 +71,8 @@
                       <div scope="col" class="hidden xl:table-cell px-6 py-3">
                         Created On
                       </div>
-                      <div scope="col" class="hidden 2xl:table-cell px-6 py-3">
+                      <div scope="col" class="px-6 py-3">
                         Status
-                      </div>
-                      <div scope="col" class="hidden lg:table-cell px-6 py-3">
-                        Published On
-                      </div>
-                      <div scope="col" class="hidden lg:table-cell px-6 py-3">
-
                       </div>
                     </div>
                   </div>
@@ -127,50 +121,86 @@
                           </div>
 
                         </div>
+                        <div class="block xl:hidden">
+                          <div class="">
+                              <span :class="{'text-gray-500':newsStory.published_at, 'italic':newsStory.published_at}">
+                              <span class="text-xs uppercase">Created on</span>
+                              {{ formatDate(newsStory.created_at) }}</span>
+                          </div>
+                          <div class="">
+                              <span :class="{'text-gray-500':newsStory.published_at, 'italic':newsStory.published_at}">
+                              <span class="text-xs uppercase">Last updated</span>
+                              {{ formatDate(newsStory.updated_at) }}</span>
+                          </div>
+                        </div>
+                        <div>
+                          <button
+                              v-if="props.can.publishNewsStory && !newsStory.published_at && newsStory.status.id === 3"
+                              @click="openConfirmPublishDialog(newsStory)"
+                              class="bg-green-600 hover:bg-green-500 text-white mt-1 mx-2 px-4 py-2 h-fit rounded disabled:bg-gray-400"
+                          >Publish
+                          </button>
+                        </div>
+
                       </div>
                       <div
                           scope="row"
                           class="hidden xl:table-cell px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap align-middle"
                       >
-                      <span :class="{'text-gray-500':newsStory.published_at, 'italic':newsStory.published_at}">{{
-                          formatDate(newsStory.created_at)
-                        }}</span>
+                        <div class="">
+                              <span :class="{'text-gray-500':newsStory.published_at, 'italic':newsStory.published_at}">
+                              <span class="text-xs uppercase">Created on</span>
+                              {{ formatDate(newsStory.created_at) }}</span>
+                        </div>
+                        <div class="">
+                              <span :class="{'text-gray-500':newsStory.published_at, 'italic':newsStory.published_at}">
+                              <span class="text-xs uppercase">Last updated</span>
+                              {{ formatDate(newsStory.updated_at) }}</span>
+                        </div>
                       </div>
-                      <div class="hidden 2xl:table-cell px-6 py-4 align-middle">
-                        <span>{{ newsStory.status.name }}</span>
-                      </div>
-                      <div class="hidden lg:table-cell px-6 py-4 align-middle space-x-2">
 
-                        INSERT STATUS BUTTON HERE. If "Approved", then put the Publish button below.
-                        Copy the button from the Show Manage page for EpisodeStatus
+                      <div class=" px-6 py-4 align-middle space-x-2">
 
-                        <button
-                            v-if="props.can.publishNewsStory && !newsStory.published_at && newsStory.status.id === 3"
-                            @click="openConfirmPublishDialog(newsStory)"
-                            class="bg-green-600 hover:bg-green-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
-                        >Publish
-                        </button>
-                        <span v-if="!props.can.publishNewsStory && !newsStory.published_at"
-                              class="mr-6 text-gray-500 italic"> not yet published</span>
-                        <span v-if="newsStory.published_at" class="mr-6 text-gray-800 dark:text-white font-semibold">{{
-                            formatDate(newsStory.published_at)
-                          }}</span>
+<!--                        INSERT STATUS BUTTON HERE. If "Approved", then put the Publish button below.-->
+<!--                        Copy the button from the Show Manage page for EpisodeStatus-->
+
+
+                        <div class="flex flex-col justify-left w-fit space-y-1 space-x-1">
+                          <div class="flex flex-row justify-left w-full">
+                            <NewsStoryStatusButton :newsStory="newsStory" :newsStoryStatuses="newsStoryStatuses" :can="can"/>
+                          </div>
+                          <div class="flex flex-row justify-left w-full">
+                            <button
+                                v-if="newsStory.can.editNewsStory"
+                                @click="appSettingStore.btnRedirect(`/newsStory/${newsStory.slug}/edit`)"
+                                class="px-2 py-1 h-fit text-white text-sm bg-blue-600 hover:bg-blue-500 rounded-lg"
+                            >Edit
+                            </button>
+                            <button
+                                class="px-2 py-1 ml-1 h-fit text-white text-sm font-semibold bg-red-600 hover:bg-red-500 rounded-lg"
+                                @click="destroy(newsStory.id)"
+                                v-if="newsStory.can.deleteNewsStory && newsStory.status.id === 1"
+                            >
+                              <font-awesome-icon icon="fa-trash-can"/>
+                            </button>
+                          </div>
+                        </div>
+
+
+
+
+
+<!--                        <span v-if="!props.can.publishNewsStory && !newsStory.published_at"-->
+<!--                              class="mr-6 text-gray-500 italic"> not yet published</span>-->
+<!--                        <span v-if="newsStory.published_at" class="mr-6 text-gray-800 dark:text-white font-semibold">{{-->
+<!--                            formatDate(newsStory.published_at)-->
+<!--                          }}</span>-->
+
+
+
+
                       </div>
-                      <div class="hidden lg:table-cell px-6 py-4 align-middle space-x-2 space-y-2">
-                        <button
-                            v-if="newsStory.can.editNewsStory"
-                            @click="appSettingStore.btnRedirect(`/newsStory/${newsStory.slug}/edit`)"
-                            class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                        >Edit
-                        </button>
-                        <button
-                            class="px-4 py-2 text-white font-semibold bg-red-600 hover:bg-red-500 rounded-lg"
-                            @click="destroy(newsStory.id)"
-                            v-if="newsStory.can.deleteNewsStory && newsStory.status.id === 1"
-                        >
-                          <font-awesome-icon icon="fa-trash-can"/>
-                        </button>
-                      </div>
+
 
                     </div>
                   </div>
@@ -373,11 +403,18 @@ import Messages from '@/Components/Global/Modals/Messages'
 import NewsStoriesTable from '@/Components/Pages/Newsroom/NewsStoriesTable.vue'
 import ConfirmPublishNewsDialog from '@/Components/Global/Modals/ConfirmPublishNewsDialog.vue'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage.vue'
+import NewsStoryStatusButton from '@/Components/Pages/News/NewsStoryStatusButton.vue'
 
 usePageSetup('newsroom')
 
 const appSettingStore = useAppSettingStore()
 const userStore = useUserStore()
+
+let showNewsStoryStatuses = ref(false)
+
+function openNewsStoryStatuses() {
+  document.getElementById('newsStoryStatuses').showModal()
+}
 
 function scrollToCities() {
   document.getElementById('cities').scrollIntoView({behavior: 'smooth'})
@@ -391,6 +428,7 @@ let props = defineProps({
   //   default: () => ({}),
   // },
   newsStories: Object,
+  newsStoryStatuses: Object,
 })
 
 const selectedNewsStory = ref(null)

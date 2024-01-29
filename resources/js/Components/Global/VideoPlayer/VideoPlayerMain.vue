@@ -145,8 +145,9 @@ onMounted(() => {
   })
   videoPlayer.ready(() => {
     videoPlayer.controls(false)
-    videoPlayerStore.videoPlayerLoaded = true
     console.log('videoPlayer ready')
+    videoPlayerStore.videoPlayerLoaded = true
+
   })
   if (!appSettingStore.fullPage) {
     videoPlayerStore.controls = false
@@ -268,7 +269,8 @@ const clickOnVideoAction = () => {
     if (userStore.isMobile) {
       videoPlayerStore.controls = !videoPlayerStore.controls
     } else {
-      videoPlayerStore.togglePlay()
+      // videoPlayerStore.togglePlay()
+      appSettingStore.toggleOsd()
     }
   } else if (!appSettingStore.pipChatMode) {
     Inertia.visit('/stream')

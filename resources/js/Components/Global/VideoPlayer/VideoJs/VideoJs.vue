@@ -89,7 +89,12 @@ onMounted(() => {
 
     videoPlayer.muted(true)
     videoPlayerStore.muted = true
-    videoPlayer.play();
+    videoPlayer.play().then(() => {
+      console.log('Playback started successfully');
+    }).catch(error => {
+      console.error('Error trying to play the video:', error);
+      // Handle the error (e.g., showing a user-friendly message)
+    });
 
     // Ensure that the seek-handle element exists before adding the event listener
     // seekHandleRef.value = document.getElementById('seek-handle');

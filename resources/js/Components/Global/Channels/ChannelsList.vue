@@ -55,9 +55,9 @@ channelStore.getChannels()
 async function changeChannel(channel) {
   await channelStore.disconnectViewerFromChannel()
   await channelStore.changeChannel(channel)
-  videoPlayerStore.toggleChannels()
-  videoPlayerStore.toggleOttChannels()
-  appSettingStore.ott = 0
+  // videoPlayerStore.toggleChannels()
+  // videoPlayerStore.toggleOttChannels()
+  // appSettingStore.ott = 0
   Inertia.reload()
 }
 

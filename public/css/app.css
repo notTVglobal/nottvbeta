@@ -3803,6 +3803,13 @@ details.collapse summary::-webkit-details-marker {
 .btm-nav-lg > *:where(.active) {
   border-top-width: 4px;
 }
+.btn-xs {
+  height: 1.5rem;
+  min-height: 1.5rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  font-size: 0.75rem;
+}
 .btn-sm {
   height: 2rem;
   min-height: 2rem;
@@ -3820,6 +3827,11 @@ details.collapse summary::-webkit-details-marker {
 .btn-wide {
   width: 16rem;
 }
+.btn-square:where(.btn-xs) {
+  height: 1.5rem;
+  width: 1.5rem;
+  padding: 0px;
+}
 .btn-square:where(.btn-sm) {
   height: 2rem;
   width: 2rem;
@@ -3828,6 +3840,12 @@ details.collapse summary::-webkit-details-marker {
 .btn-square:where(.btn-md) {
   height: 3rem;
   width: 3rem;
+  padding: 0px;
+}
+.btn-circle:where(.btn-xs) {
+  height: 1.5rem;
+  width: 1.5rem;
+  border-radius: 9999px;
   padding: 0px;
 }
 .btn-circle:where(.btn-sm) {
@@ -4255,8 +4273,8 @@ html {
     position: fixed;
     top: 0px;
     z-index: 10;
-    height: 100%;
-    width: 100%;
+    height: calc(100vh);
+    width: calc(100vw);
     overflow-y: scroll;
     overscroll-behavior-x: none}
 .layoutLoggedIn {
@@ -4471,6 +4489,29 @@ hr {
     /* This will modify the scrollbar width and color for non-WebKit browsers like Firefox  */
     scrollbar-width: thin; /* "auto" or "thin" */
     scrollbar-color: #888 #f4f4f4; /* thumb and track color */
+}
+/* Custom scrollbar styling */
+.scrollbar-custom-dark {
+    /* This will modify the scrollbar track (the part the thumb slides along) */
+    &::-webkit-scrollbar-track {
+        background-color: #888; /* Dark grey track */
+    }
+
+    /* This will modify the scrollbar thumb (the part you drag) */
+    &::-webkit-scrollbar-thumb {
+        background-color: #f4f4f4; /* Light grey thumb */
+        border-radius: 10px; /* Rounded corners on the thumb */
+        border: 3px solid #888; /* Creates padding around the thumb */
+    }
+
+    /* This will modify the scrollbar itself (including the thumb, track, and buttons) */
+    &::-webkit-scrollbar {
+        width: 12px; /* Width of the entire scrollbar */
+    }
+
+    /* This will modify the scrollbar width and color for non-WebKit browsers like Firefox  */
+    scrollbar-width: thin; /* "auto" or "thin" */
+    scrollbar-color: #f4f4f4 #888; /* thumb and track color */
 }
 .scrollbar-channelsMenu {
     scrollbar-width: thin; /* "auto" or "thin" */
@@ -4870,37 +4911,31 @@ hr {
     /*}*/
 
     /* Mobile and Tablet */
+    /*.chatFullPageContainer {*/
+    /*    z-index: 900;*/
+    /*    min-height: calc(50vh - 7rem);*/
+    /*    justify-content: left;*/
+    /*    @apply bg-yellow-400 absolute w-full bottom-36 pt-2 px-6 pb-2 -mb-4 mt-4 bg-opacity-80 text-sm text-white overflow-y-scroll scroll-smooth  break-words hide-scrollbar*/
+    /*}*/
     .chatFullPageContainer {
-        z-index: 40;
-        min-height: calc(50vh - 7rem);
-        /*min-height: 75vh;*/
+        position: fixed;
+        z-index: 90;
+        /*max-height: calc(100% - 27.5rem);*/
+        max-height: calc(50vh - 4.5rem);
+        max-width: 100%;
+        bottom: 5.5rem;
         display: flex;
-        justify-content: left;
-        position: absolute;
-        bottom: 9rem;
-        margin-bottom: -1rem;
-        margin-top: 1rem;
-        width: 100%;
-        overflow-y: auto;
-        scroll-behavior: smooth;
+        flex-direction: column;
+        overflow-x: hidden;
+        overflow-y: scroll;
         overflow-wrap: break-word;
-        --tw-bg-opacity: 0.8;
-        padding-left: 1.5rem;
-        padding-right: 1.5rem;
-        padding-top: 0.5rem;
-        padding-bottom: 0.5rem;
-        font-size: 0.875rem;
-        line-height: 1.25rem;
-        --tw-text-opacity: 1;
-        color: rgb(255 255 255 / var(--tw-text-opacity));
+        padding-left: 2rem;
+        padding-right: 2rem;
     /* Hide scrollbar for Webkit browsers */
 
     /* Hide scrollbar for IE, Edge, and Firefox */
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none  /* Firefox */}
-    .chatFullPageContainer:hover {
-    scroll-behavior: auto;
-  }
     .chatTopRightContainer {
         position: fixed;
         z-index: 30;
@@ -4969,6 +5004,7 @@ hr {
         z-index: 60;
         position: fixed;
         bottom: 1.25rem;
+        right: 1.25rem;
         margin-left: auto;
         margin-right: auto;
         height: 3rem;
@@ -4977,6 +5013,8 @@ hr {
         width: fit-content;
         cursor: pointer;
         border-radius: 9999px;
+        --tw-bg-opacity: 1;
+        background-color: rgb(37 99 235 / var(--tw-bg-opacity));
         padding: 1rem;
         font-size: 0.75rem;
         line-height: 1rem;
@@ -4985,6 +5023,36 @@ hr {
         color: rgb(249 250 251 / var(--tw-text-opacity));
         opacity: 1}
     .chatCloseButton:hover {
+    --tw-bg-opacity: 1;
+    background-color: rgb(30 64 175 / var(--tw-bg-opacity));
+  }
+    .chatCloseButtonIsMobile {
+        z-index: 60;
+        position: fixed;
+        bottom: 1.25rem;
+        left: 0px;
+        right: 0px;
+        margin-left: auto;
+        margin-right: auto;
+        height: -webkit-fit-content;
+        height: -moz-fit-content;
+        height: fit-content;
+        width: -webkit-fit-content;
+        width: -moz-fit-content;
+        width: fit-content;
+        cursor: pointer;
+        border-radius: 9999px;
+        --tw-bg-opacity: 1;
+        background-color: rgb(37 99 235 / var(--tw-bg-opacity));
+        padding-left: 1rem;
+        padding-right: 1rem;
+        font-size: 0.75rem;
+        line-height: 1rem;
+        font-weight: 600;
+        --tw-text-opacity: 1;
+        color: rgb(249 250 251 / var(--tw-text-opacity));
+        opacity: 1}
+    .chatCloseButtonIsMobile:hover {
     --tw-bg-opacity: 1;
     background-color: rgb(30 64 175 / var(--tw-bg-opacity));
   }
@@ -5437,6 +5505,7 @@ hr {
         bottom: 6rem;
         margin-bottom: 1.5rem;
         width: 24rem;
+        max-width: 24rem;
         overflow-y: scroll;
         scroll-behavior: smooth;
         overflow-wrap: break-word;
@@ -5454,12 +5523,17 @@ hr {
     .chatTopRightContainer {
         position: fixed;
         z-index: 30;
+        /*max-height: calc(69%);*/
         /*max-height: 42rem;*/
-        max-height: calc(100% - 6rem);
+        /*max-height: 60rem;*/
+        height: calc(100% - 26rem);
+        max-height: calc(100% - 26rem);
         /*max-height: 70vh;*/
-        max-width: 100%;
+        /*max-width: 100%;*/
         bottom: 6rem;
         display: flex;
+        width: 24rem;
+        max-width: 24rem;
         flex-direction: column;
         overflow-x: hidden;
         overflow-y: scroll;
@@ -5493,7 +5567,7 @@ hr {
         z-index: 60;
         position: fixed;
         bottom: 1.25rem;
-        right: 8rem;
+        right: 1.25rem;
         display: grid;
         height: 3rem;
         width: -webkit-fit-content;
@@ -5503,6 +5577,8 @@ hr {
         align-content: center;
         justify-content: center;
         border-radius: 9999px;
+        --tw-bg-opacity: 1;
+        background-color: rgb(37 99 235 / var(--tw-bg-opacity));
         padding: 1rem;
         font-size: 0.75rem;
         line-height: 1rem;
@@ -6150,6 +6226,9 @@ hr {
 .z-100 {
     z-index: 100;
 }
+.z-999 {
+    z-index: 999;
+}
 
 .sr-only {
   position: absolute;
@@ -6284,10 +6363,6 @@ hr {
 
 .top-3 {
   top: 0.75rem;
-}
-
-.top-44 {
-  top: 11rem;
 }
 
 .top-6 {
@@ -6491,10 +6566,6 @@ hr {
 
 .-mt-px {
   margin-top: -1px;
-}
-
-.mb-0 {
-  margin-bottom: 0px;
 }
 
 .mb-1 {
@@ -7587,10 +7658,6 @@ hr {
   overscroll-behavior-x: none;
 }
 
-.scroll-smooth {
-  scroll-behavior: smooth;
-}
-
 .truncate {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -7830,11 +7897,6 @@ hr {
   border-color: rgb(21 128 61 / var(--tw-border-opacity));
 }
 
-.border-green-800 {
-  --tw-border-opacity: 1;
-  border-color: rgb(22 101 52 / var(--tw-border-opacity));
-}
-
 .border-indigo-400 {
   --tw-border-opacity: 1;
   border-color: rgb(129 140 248 / var(--tw-border-opacity));
@@ -7887,11 +7949,6 @@ hr {
 .border-t-gray-200 {
   --tw-border-opacity: 1;
   border-top-color: rgb(229 231 235 / var(--tw-border-opacity));
-}
-
-.border-b-gray-500 {
-  --tw-border-opacity: 1;
-  border-bottom-color: rgb(107 114 128 / var(--tw-border-opacity));
 }
 
 .border-opacity-25 {
@@ -8274,10 +8331,6 @@ hr {
   fill: currentColor;
 }
 
-.fill-primary {
-  fill: var(--fallback-p,oklch(var(--p)/1));
-}
-
 .stroke-current {
   stroke: currentColor;
 }
@@ -8514,6 +8567,10 @@ hr {
 
 .pb-8 {
   padding-bottom: 2rem;
+}
+
+.pb-96 {
+  padding-bottom: 24rem;
 }
 
 .pl-10 {
@@ -8770,10 +8827,6 @@ hr {
 
 .leading-tight {
   line-height: 1.25;
-}
-
-.leading-none {
-  line-height: 1;
 }
 
 .tracking-wide {
@@ -9302,10 +9355,6 @@ hr {
 
 .hover\:cursor-pointer:hover {
   cursor: pointer;
-}
-
-.hover\:scroll-auto:hover {
-  scroll-behavior: auto;
 }
 
 .hover\:border-none:hover {
@@ -9916,11 +9965,6 @@ hr {
   border-color: rgb(55 65 81 / var(--tw-border-opacity));
 }
 
-:is(.dark .dark\:border-b-gray-500) {
-  --tw-border-opacity: 1;
-  border-bottom-color: rgb(107 114 128 / var(--tw-border-opacity));
-}
-
 :is(.dark .dark\:bg-black) {
   --tw-bg-opacity: 1;
   background-color: rgb(0 0 0 / var(--tw-bg-opacity));
@@ -10122,10 +10166,6 @@ hr {
 
 @media (min-width: 640px) {
 
-  .sm\:bottom-8 {
-    bottom: 2rem;
-  }
-
   .sm\:col-span-4 {
     grid-column: span 4 / span 4;
   }
@@ -10243,6 +10283,10 @@ hr {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .sm\:grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
   .sm\:items-start {
     align-items: flex-start;
   }
@@ -10335,6 +10379,10 @@ hr {
 
   .md\:col-span-2 {
     grid-column: span 2 / span 2;
+  }
+
+  .md\:col-start-3 {
+    grid-column-start: 3;
   }
 
   .md\:mx-10 {
@@ -10527,12 +10575,12 @@ hr {
     right: 1.25rem;
   }
 
-  .lg\:top-78 {
-    top: 19.25rem;
-  }
-
   .lg\:col-span-4 {
     grid-column: span 4 / span 4;
+  }
+
+  .lg\:col-start-3 {
+    grid-column-start: 3;
   }
 
   .lg\:m-0 {
@@ -10607,10 +10655,6 @@ hr {
     margin-top: 0.5rem;
   }
 
-  .lg\:mt-3 {
-    margin-top: 0.75rem;
-  }
-
   .lg\:block {
     display: block;
   }
@@ -10651,10 +10695,6 @@ hr {
     width: 83.333333%;
   }
 
-  .lg\:w-96 {
-    width: 24rem;
-  }
-
   .lg\:transform-none {
     transform: none;
   }
@@ -10671,8 +10711,16 @@ hr {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
+  .lg\:grid-cols-5 {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
   .lg\:flex-row {
     flex-direction: row;
+  }
+
+  .lg\:flex-col {
+    flex-direction: column;
   }
 
   .lg\:justify-start {
@@ -10765,6 +10813,10 @@ hr {
 
   .xl\:table-cell {
     display: table-cell;
+  }
+
+  .xl\:hidden {
+    display: none;
   }
 
   .xl\:w-1\/4 {

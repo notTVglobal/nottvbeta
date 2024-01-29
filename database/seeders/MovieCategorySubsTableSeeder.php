@@ -57,7 +57,7 @@ class MovieCategorySubsTableSeeder extends Seeder
               ['name' => 'Children’s Adventure', 'description' => 'Adventure films geared towards children, often featuring young protagonists and family-friendly themes.'],
               ['name' => 'Mystery Adventure', 'description' => 'Combines elements of mystery with adventure, often involving the solving of riddles, mysteries, or uncovering hidden truths.'],
           ],
-          'Animated' => [
+          'Animation' => [
               ['name' => 'Children\'s Animation', 'description' => 'Animation tailored for a younger audience, featuring child-friendly themes and characters.'],
               ['name' => 'Anime', 'description' => 'Japanese animation known for its diverse art styles, themes, and genres, appealing to a wide range of audiences.'],
               ['name' => 'Computer Animation', 'description' => 'Uses computer-generated imagery (CGI) for creating animated scenes, known for its realistic textures and details.'],
@@ -589,31 +589,27 @@ class MovieCategorySubsTableSeeder extends Seeder
       $batchSize = 500; // Define a suitable batch size
       $timestamp = now(); // Current timestamp
 
-
       foreach ($subCategoryGroups as $categoryName => $subCategories) {
         $categoryId = $this->getCategoryIdByName($categoryName);
         if ($categoryId) {
           $this->addCategoryId($subCategories, $categoryId);
           $batchData = [];
 
-          // Modify the addTimestamps function to handle a single subCategory
           foreach ($subCategories as $subCategory) {
-              // Add timestamps directly to the subCategory array
-              $timestamp = now();
-              $subCategory['created_at'] = $timestamp;
-              $subCategory['updated_at'] = $timestamp;
-              $batchData[] = $subCategory;
+            // Add timestamps directly to the subCategory array
+            $subCategory['created_at'] = $timestamp;
+            $subCategory['updated_at'] = $timestamp;
+            $batchData[] = $subCategory;
 
-              if (count($batchData) >= $batchSize) {
-                DB::table('movie_category_subs')->insert($batchData);
-                $batchData = []; // Reset for next batch
-              }
-
-            // Insert any remaining batch data
-            if (!empty($batchData)) {
+            if (count($batchData) >= $batchSize) {
               DB::table('movie_category_subs')->insert($batchData);
+              $batchData = []; // Reset for next batch
             }
+          }
 
+          // Insert any remaining batch data (outside the inner foreach loop)
+          if (!empty($batchData)) {
+            DB::table('movie_category_subs')->insert($batchData);
           }
         }
       }

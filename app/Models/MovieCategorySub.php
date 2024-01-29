@@ -22,7 +22,7 @@ class MovieCategorySub extends Model
 
     public function movieCategory()
     {
-        return $this->hasOne(MovieCategory::class)->withDefault([
+        return $this->belongsTo(MovieCategory::class, 'movie_categories_id')->withDefault([
           'name' => 'category',
           'description' => 'category description'
       ]);

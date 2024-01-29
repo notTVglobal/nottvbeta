@@ -136,7 +136,8 @@
           </JetResponsiveNavLink>
 
           <JetResponsiveNavLink
-              @click="navigateToStream"
+              @click="appSettingStore.closeNavDropdown()"
+              :href="route('stream')"
               :active="appSettingStore.currentPage === 'stream'">
             Stream
           </JetResponsiveNavLink>

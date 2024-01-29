@@ -46,6 +46,11 @@
           >All Shows
           </button>
           <button
+              @click="appSettingStore.btnRedirect(`/admin/movies`)"
+              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 col-span-1 rounded disabled:bg-gray-400"
+          >All Movies
+          </button>
+          <button
               @click="appSettingStore.btnRedirect(`/admin/teams`)"
               class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 col-span-1 rounded disabled:bg-gray-400"
           >All Teams

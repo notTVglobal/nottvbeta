@@ -1,12 +1,12 @@
 <template>
-  <Head title="Admin/Shows"/>
+  <Head title="Admin/Movies"/>
 
   <div class="place-self-center flex flex-col gap-y-3 w-full overscroll-x-none">
     <div id="topDiv" class="bg-white text-black dark:bg-gray-900 dark:text-white p-5 mb-10">
 
-      <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
+      <Message v-if="appSettingStore.movieFlashMessage" :flash="$page.props.flash"/>
 
-      <AdminHeader>Shows</AdminHeader>
+      <AdminHeader>Admin Movies</AdminHeader>
 
       <div class="flex justify-end mb-6">
         <div>
@@ -17,7 +17,7 @@
 
       <div>
         <!-- Paginator -->
-        <Pagination :data="shows" class=""/>
+        <Pagination :data="movies" class=""/>
       </div>
 
       <div class="flex flex-col max-w-calc[100%-96rem]">
@@ -45,38 +45,32 @@
                           Poster
                         </th>
                         <th scope="col" class="px-6 py-3">
-                          Show Name
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                          Show Runner
+                          Movie Name
                         </th>
                         <th scope="col" class="px-6 py-3">
                           Team
                         </th>
                         <th scope="col" class="px-6 py-3">
-                          # of Episodes
-                        </th>
-                        <th scope="col" class="px-6 py-3">
                           Status
                         </th>
-                        <th v-if="props.can.viewCreator" scope="col" class="px-6 py-3">
+                        <th scope="col" class="px-6 py-3">
                           <!--Manage/Edit-->
                         </th>
                       </tr>
                       </thead>
                       <tbody>
                       <tr
-                          v-for="show in props.shows.data"
-                          :key="show.id"
+                          v-for="movie in props.movies.data"
+                          :key="movie.id"
                           class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
                       >
                         <th
                             scope="row"
                             class="min-w-[8rem] px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                         >
-                          <!--                                                    <img :src="`/storage/images/${show.poster}`" class="rounded-full h-20 w-20 object-cover">-->
-                          <Link :href="`/shows/${show.slug}`" class="text-blue-800 hover:text-blue-600">
-                            <SingleImage :image="show.image" :alt="'show cover'"
+                          <!--                                                    <img :src="`/storage/images/${movie.poster}`" class="rounded-full h-20 w-20 object-cover">-->
+                          <Link :href="`/movies/${movie.slug}`" class="text-blue-800 hover:text-blue-600">
+                            <SingleImage :image="movie.image" :alt="'movie cover'"
                                          :class="'rounded-full h-20 w-20 object-cover'"/>
                           </Link>
 
@@ -86,73 +80,58 @@
                             scope="row"
                             class="px-6 py-4 text-xl text-gray-900 dark:text-white whitespace-nowrap"
                         >
-                          <Link :href="`/shows/${show.slug}`"
+                          <Link :href="`/movies/${movie.slug}`"
                                 class="text-blue-800 hover:text-blue-600 dark:text-blue-200 dark:hover:text-blue-400">
-                            {{ show.name }}
+                            {{ movie.name }}
                           </Link>
+                          <div class="text-sm text-gray-700 mt-1">
+                            {{movie.category?.name}} &middot; {{movie.subCategory?.name}}
+                          </div>
                         </th>
                         <th
                             scope="row"
                             class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                         >
-                          {{ show.showRunnerName }}
-                        </th>
-                        <th
-                            scope="row"
-                            class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
-                        >
-                          <Link :href="`/teams/${show.teamSlug}`"
+                          <Link :href="`/teams/${movie.team.slug}`"
                                 class="text-blue-800 hover:text-blue-600 dark:text-blue-200 dark:hover:text-blue-400">
-                            {{ show.teamName }}
+                            {{ movie.team.name }}
                           </Link>
-                        </th>
-                        <th
-                            scope="row"
-                            class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
-                        >
-                          {{ show.totalEpisodes }}
                         </th>
                         <th
                             scope="row"
                             class="px-6 py-4 whitespace-nowrap"
                         >
-                          <div v-if="show.statusId===1" class="font-semibold text-pink-500">
-                            {{ show.status }}
+                          <div v-if="movie.status.id===1" class="font-semibold text-pink-500">
+                            {{ movie.status.name }}
                           </div>
-                          <div v-if="show.statusId===2" class="font-semibold text-green-600">
-                            {{ show.status }}
+                          <div v-if="movie.status.id===2" class="font-semibold text-green-600">
+                            {{ movie.status.name }}
                           </div>
-                          <div v-if="show.statusId===3" class="font-medium text-orange-400">
-                            {{ show.status }}
+                          <div v-if="movie.status.id===3" class="font-medium text-orange-400">
+                            {{ movie.status.name }}
                           </div>
-                          <div v-if="show.statusId===4" class="text-gray-500">
-                            {{ show.status }}
+                          <div v-if="movie.status.id===4" class="text-gray-500">
+                            {{ movie.status.name }}
                           </div>
-                          <div v-if="show.statusId===5"
+                          <div v-if="movie.status.id===5"
                                class="font-semibold py-1 px-2 w-fit rounded-md bg-black text-gray-50">
-                            {{ show.status }}
+                            {{ movie.status.name }}
                           </div>
-                          <div v-if="show.statusId===6" class="font-italic text-gray-500">
-                            {{ show.status }}
+                          <div v-if="movie.status.id===6" class="font-italic text-gray-500">
+                            {{ movie.status.name }}
                           </div>
-                          <div v-if="show.statusId===7" class="font-medium font-italic text-red-600">
-                            {{ show.status }}
+                          <div v-if="movie.status.id===7" class="font-medium font-italic text-red-600">
+                            {{ movie.status.name }}
                           </div>
-                          <div v-if="show.statusId===8" class="font-semibold font-italic text-gray-500">
-                            {{ show.status }}
+                          <div v-if="movie.status.id===8" class="font-semibold font-italic text-gray-500">
+                            {{ movie.status.name }}
                           </div>
-                          <div v-if="show.statusId===9" class="font-semibold text-green-600">
-                            {{ show.status }}
+                          <div v-if="movie.status.id===9" class="font-semibold text-green-600">
+                            {{ movie.status.name }}
                           </div>
                         </th>
                         <td class="px-6 py-4 space-x-2">
-                          <Link v-if="show.can.viewShow" :href="`/shows/${show.slug}/manage`">
-                            <button
-                                class="px-4 py-2 mb-2 text-white bg-purple-600 hover:bg-purple-500 rounded-lg"
-                            >Manage
-                            </button>
-                          </Link>
-                          <Link v-if="show.can.editShow" :href="`/shows/${show.slug}/edit`">
+                          <Link v-if="movie.can.editMovie" :href="`/movies/${movie.slug}/edit`">
                             <button
                                 class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                             >Edit
@@ -175,11 +154,11 @@
       </div>
 
       <!-- Paginator -->
-      <Pagination :data="shows" class="pb-6"/>
+      <Pagination :data="movies" class="pb-6"/>
 
 
       <div class="flex items-center">
-        <!--               <Link :href="`/shows/${show.id}`" class="text-indigo-600 hover:text-indigo-900">Link to a show</Link>-->
+        <!--               <Link :href="`/movies/${movie.id}`" class="text-indigo-600 hover:text-indigo-900">Link to a movie</Link>-->
 
       </div>
     </div>
@@ -198,14 +177,12 @@ import Pagination from "@/Components/Global/Paginators/Pagination"
 import Message from "@/Components/Global/Modals/Messages"
 import SingleImage from "@/Components/Global/Multimedia/SingleImage"
 
-usePageSetup('adminShows')
+usePageSetup('adminMovies')
 
 const appSettingStore = useAppSettingStore()
 
 let props = defineProps({
-  shows: Object,
-  teamName: String,
-  poster: String,
+  movies: Object,
   filters: Object,
   can: Object,
 });
@@ -213,7 +190,7 @@ let props = defineProps({
 let search = ref(props.filters.search)
 
 watch(search, throttle(function (value) {
-  Inertia.get('/admin/shows', {search: value}, {
+  Inertia.get('/admin/movies', {search: value}, {
     preserveState: true,
     replace: true
   });

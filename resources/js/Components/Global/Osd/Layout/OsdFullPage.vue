@@ -16,7 +16,8 @@
         </div>
       </div>
     </div>
-    <div :class="ottPanelsOpen"
+    <div v-if="appSettingStore.osd"
+        :class="ottPanelsOpen"
          class="osdFullPageBottom">
       <div v-if="nowPlayingStore.show.name || nowPlayingStore.movie.name || nowPlayingStore.videoFile.name"
            class="w-fit flex flex-col justify-start text-xs uppercase text-gray-500 break-words uppercase">

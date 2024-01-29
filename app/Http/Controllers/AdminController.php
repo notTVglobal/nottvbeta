@@ -6,6 +6,7 @@ use App\Jobs\AddVideoUrlFromEmbedCodeJob;
 use App\Models\AppSetting;
 use App\Models\Image;
 use App\Models\InviteCode;
+use App\Models\Movie;
 use App\Models\NewsCountry;
 use App\Models\Show;
 use App\Models\ShowEpisode;
@@ -211,6 +212,56 @@ class AdminController extends Controller
 //return $codes;
         return redirect()->route('admin.inviteCodes')->with('success', 'exported successfully.');
     }
+
+
+
+////////////  MOVIES INDEX
+/////////////////////////
+
+  public function moviesIndex()
+  {
+
+    return Inertia::render('Admin/Movies', [
+        'movies' => Movie::with('team', 'user', 'image', 'status', 'category', 'subCategory')
+            ->when(Request::input('search'), function ($query, $search) {
+              $query->where('name', 'like', "%{$search}%");
+            })
+            ->latest()
+            ->paginate(10, ['*'], 'movies')
+            ->withQueryString()
+            ->through(fn($movie) => [
+                'id' => $movie->id,
+                'name' => $movie->name,
+                'team_id' => $movie->team_id,
+                'team' => [
+                    'name' => $movie->team->name ?? null,
+                    'slug' => $movie->team->slug ?? null,
+                ],
+                'image' => [
+                    'id' => $movie->image->id,
+                    'name' => $movie->image->name,
+                    'folder' => $movie->image->folder,
+                    'cdn_endpoint' => $movie->appSetting->cdn_endpoint,
+                    'cloud_folder' => $movie->image->cloud_folder,
+                ],
+                'slug' => $movie->slug,
+                'status' => $movie->status,
+                'copyrightYear' => $movie->created_at->format('Y'),
+                'category'       => $movie->category ? $movie->category->toArray() : null,
+                'subCategory'    => $movie->subCategory ? $movie->subCategory->toArray() : null,
+                'can' => [
+                    'editMovie' => Auth::user()->can('edit', $movie),
+                    'viewMovie' => Auth::user()->can('view', $movie)
+                ]
+            ]),
+        'filters' => Request::only(['search']),
+        'can' => [
+            'viewMovies' => Auth::user()->can('viewAny', Movie::class),
+            'editMovies' => Auth::user()->can('edit', Movie::class),
+            'createMovies' => Auth::user()->can('create', Movie::class),
+        ]
+    ]);
+  }
 
 
 ////////////  SHOWS INDEX

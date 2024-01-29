@@ -37,7 +37,7 @@
       <PublicNavLink
           v-if="appSettingStore.loggedIn && can.viewNewsroom"
           @click="() => Inertia.visit('/newsroom')"
-          class="col-start-3 min-w-fit bg-yellow-600 hover:bg-yellow-500 text-white"
+          class="md:col-start-3 min-w-fit bg-yellow-600 hover:bg-yellow-500 text-white"
       >Newsroom
       </PublicNavLink>
     </div>

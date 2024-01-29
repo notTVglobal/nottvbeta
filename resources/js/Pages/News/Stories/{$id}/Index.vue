@@ -1,10 +1,10 @@
 <template>
   <Head title="News Post"/>
-  <div>
+  <div id="topDiv">
 
-    <div class="flex flex-col min-h-screen bg-gray-50" :class="marginTopClass">
-      <div class="place-self-center flex flex-col gap-y-3">
-        <div id="topDiv" class="bg-gray-50 text-black dark:bg-gray-800 dark:text-gray-50">
+    <div class="flex flex-col min-h-screen w-full bg-gray-50 overflow-x-hidden" :class="marginTopClass">
+      <div class="place-self-center flex flex-col gap-y-3 bg-gray-50 w-full">
+        <div class="bg-gray-50 text-black dark:bg-gray-800 dark:text-gray-50">
 <!--          <div class="text-center pt-6 text-3xl font-semibold leading-loose">NEWS</div>-->
           <PublicNewsNavigationButtons :can="can" class=""/>
 
@@ -31,7 +31,7 @@
           </div>
 
 
-          <main class="w-full text-black mb-36">
+          <main class="w-full text-black pb-96">
             <!-- Main Content -->
             <section class="w-full mx-auto text-center flex justify-center px-4 py-6 mt-4">
               <div class="flex flex-col xl:flex-row flex-wrap-reverse">
@@ -46,6 +46,9 @@
                   <div class="">by {{ newsStory.author }}</div>
 
                   <div v-if="newsStory.published_at" class="font-light mt-4">Published {{ formatDate(newsStory.published_at) }}</div>
+                  <div v-else-if="newsStory.status === 'Creators Only'" class="text-gray-700 italic">
+                    {{newsStory.status}}
+                  </div>
                   <div v-else class="font-light mt-4 italic">not published yet</div>
                   <div v-if="newsStory.published_at < newsStory.updated_at" class="font-light">Last updated
                     {{ formatDate(newsStory.updated_at) }}
@@ -91,7 +94,7 @@
 </template>
 
 <script setup>
-import { computed, onBeforeUnmount, onMounted, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import PublicNewsNavigationButtons from '@/Components/Pages/Public/PublicNewsNavigationButtons.vue'
@@ -115,8 +118,9 @@ let props = defineProps({
 
 onMounted(() => {
   newsStore.content_json = JSON.parse(props.newsStory.content_json)
+  const topDiv = document.getElementById("topDiv")
+  topDiv.scrollIntoView()
 })
-
 
 // Watch for changes in the loggedIn state of appSettingStore
 watch(() => appSettingStore.loggedIn, (loggedIn) => {

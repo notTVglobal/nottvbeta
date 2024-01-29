@@ -1,6 +1,7 @@
 <template>
   <Head title="News"/>
-  <div id="topDiv" class="flex flex-col min-h-screen bg-gray-50 text-black" :class="marginTopClass">
+  <div id="topDiv" ></div>
+  <div class="flex flex-col min-h-screen bg-gray-50 text-black" :class="marginTopClass">
 
     <header class="place-self-center flex flex-col bg-gray-50 text-black dark:bg-gray-800 dark:text-gray-50">
       <PublicNewsNavigationButtons :can="can"/>
@@ -8,7 +9,7 @@
 
     <PublicNavigationMenu v-if="!appSettingStore.loggedIn" class="fixed top-0 w-full nav-mask"/>
 
-
+<button @click.prevent="reloadVideo">ReloadVideo</button>
 
 
     <main class="flex-grow text-black mx-auto pb-64">
@@ -134,6 +135,15 @@ const videoPlayerStore = useVideoPlayerStore()
 appSettingStore.noLayout = true
 appSettingStore.currentPage = 'news'
 
+const reloadVideo = () => {
+  videoPlayerStore.loadFirstPlay()
+}
+
+onMounted(() => {
+  const topDiv = document.getElementById("topDiv")
+  topDiv.scrollIntoView()
+})
+
 // appSettingStore.pageIsHidden = false
 // videoPlayerStore.makeVideoTopRight()
 
@@ -155,7 +165,7 @@ watch(() => appSettingStore.loggedIn, (loggedIn) => {
 });
 
 const props = defineProps({
-  newsStories: Array,
+  newsStories: Object,
   filters: Object,
   can: Object,
   // news: {

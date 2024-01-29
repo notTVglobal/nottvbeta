@@ -56,7 +56,15 @@ class MoviePolicy
         if ($user->isAdmin) {
             return true;
         }
-        return Response::deny('You must be an admin to edit.');
+        return Response::deny('You must be an admin to edit a movie.');
     }
+
+  public function create(User $user) {
+
+    if ($user->isAdmin) {
+      return true;
+    }
+    return Response::deny('You must be an admin to add a movie.');
+  }
 
 }

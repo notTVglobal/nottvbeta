@@ -1,5 +1,6 @@
 <template>
   <Head :title="`News Reporters`"/>
+  <div id="topDiv" ></div>
   <div :class="marginTopClass">
     <PublicNavigationMenu v-if="!appSettingStore.loggedIn" class="fixed top-0 w-full nav-mask"/>
 
@@ -42,7 +43,7 @@
 
 
 <script setup>
-import { computed, nextTick, watch } from 'vue'
+import { computed, nextTick, onMounted, watch } from 'vue'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import PublicNavigationMenu from '@/Components/Global/Navigation/PublicNavigationMenu'
 import { Link } from '@inertiajs/inertia-vue3'
@@ -57,6 +58,12 @@ const videoPlayerStore = useVideoPlayerStore()
 
 appSettingStore.noLayout = true
 appSettingStore.currentPage = 'news.reporters'
+
+onMounted(() => {
+  const topDiv = document.getElementById("topDiv")
+  topDiv.scrollIntoView()
+})
+
 
 // Watch for changes in the loggedIn state of appSettingStore
 watch(() => appSettingStore.loggedIn, (loggedIn) => {
