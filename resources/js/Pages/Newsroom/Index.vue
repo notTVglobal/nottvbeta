@@ -86,11 +86,11 @@
                     <div
                         v-for="newsStory in newsStories.data"
                         :key="newsStory.id"
-                        class="table-row bg-white border-b dark:bg-gray-900 dark:border-gray-700 "
+                        class="table-row bg-white dark:bg-gray-900"
                     >
                       <div
                           scope="row"
-                          class="hidden md:table-cell min-w-[8rem] px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
+                          class="hidden md:table-cell min-w-[8rem] px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap align-middle border-b-2"
                       >
                         <button
                             @click="appSettingStore.btnRedirect(`/news/story/${newsStory.slug}`)"
@@ -108,23 +108,24 @@
                         >{{ newsStory.title }}
                         </button>
                         <div>By {{newsStory.user.name}}</div>
-                        <div class="flex flex-col pt-2 text-sm uppercase">
+                        <div class="flex flex-col pt-2 text-sm">
+                          <div v-if="newsStory.newsCategory" class="font-medium text-orange-800">
+                            {{newsStory.newsCategory}}
+                            <span v-if="newsStory.newsCategorySub"><span class="text-black"> | </span>{{newsStory.newsCategorySub}}</span>
+                          </div>
                           <div v-if="newsStory.city">
-                            <div>{{newsStory.city}}, {{newsStory.province}}</div>
+                            <div class="font-semibold">{{newsStory.city}}, <span class="font-medium text-gray-800">{{newsStory.province}}</span></div>
                           </div>
                           <div v-if="newsStory.province && !newsStory.city && !newsStory.federalElectoralDistrict && !newsStory.subnationalElectoralDistrict">
-                            <div>{{newsStory.province}}</div>
+                            <div class="font-semibold">{{newsStory.province}} &nbsp;&nbsp;<span class="text-xs font-medium text-gray-500 uppercase">Province</span></div>
                           </div>
                           <div v-if="newsStory.federalElectoralDistrict">
-                            <div>{{newsStory.federalElectoralDistrict}}</div>
+                            <div class="font-semibold">{{newsStory.federalElectoralDistrict}} &nbsp;&nbsp;<span class="text-xs font-medium text-gray-500 uppercase">Federal Electoral District</span></div>
                           </div>
                           <div v-if="newsStory.subnationalElectoralDistrict">
-                            <div>{{newsStory.subnationalElectoralDistrict}}</div>
+                            <div class="font-semibold">{{newsStory.subnationalElectoralDistrict}} &nbsp;&nbsp;<span class="text-xs font-medium text-gray-500 uppercase">Subnational Electoral District</span></div>
                           </div>
-                          <div v-if="newsStory.newsCategory" class="font-thin">
-                            {{newsStory.newsCategory}}
-                            <span v-if="newsStory.newsCategorySub"> | {{newsStory.newsCategorySub}}</span>
-                          </div>
+
                         </div>
                       </div>
                       <div

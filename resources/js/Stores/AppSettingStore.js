@@ -77,7 +77,9 @@ export const useAppSettingStore = defineStore('appSettingStore', {
                 if (this.fullPage) {
                     this.toggleOtt(0)
                 } else {
-                    this.toggleOtt(1)
+                    // change this to toggleOtt(1)
+                    // as part of the go back to ottInfo function
+                    this.toggleOtt(0)
                 }
                 this.showOttButtons = true
             } else {
@@ -89,7 +91,8 @@ export const useAppSettingStore = defineStore('appSettingStore', {
         },
         toggleOttInfo() {
             if (this.ott === 1) {
-
+                // comment this out as part of the go back to ottInfo function
+                this.toggleOtt(1)
             } else {
                 this.toggleOtt(1)
             }
@@ -107,11 +110,13 @@ export const useAppSettingStore = defineStore('appSettingStore', {
             this.toggleOtt(5)
         },
         closeOtt() {
-            if (appSettingStore.fullPage) {
-                this.toggleOtt(0)
-            } else {
-                this.toggleOtt(1)
-            }
+            this.toggleOtt(0)
+            // uncomment this as part of the go back to ottInfo function
+            // if (appSettingStore.fullPage) {
+            //     this.toggleOtt(0)
+            // } else {
+            //     this.toggleOtt(1)
+            // }
 
         },
         setPrevUrl() {

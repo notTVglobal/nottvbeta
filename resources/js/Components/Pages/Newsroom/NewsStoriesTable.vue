@@ -37,20 +37,26 @@
       <tbody class="bg-white divide-y divide-gray-200">
       <tr v-for="story in newsStories.data" :key="story.id">
         <td v-if="story.newsCategory" class="px-6 py-4 whitespace-normal">
-          <span class="block uppercase font-thin"
+          <span class="block"
                 v-if="story.city">
-            {{ story.city }}<br>{{ story.province}}</span>
-          <span class="block uppercase font-thin"
-                v-if="story.province && !story.city && !story.federalElectoralDistrict && !story.subnationalElectoralDistrict">
+            {{ story.city }}<br><span class="uppercase font-thin">{{ story.province}}</span></span>
+          <div v-if="story.province && !story.city && !story.federalElectoralDistrict && !story.subnationalElectoralDistrict">
+            <span class="block uppercase">
             {{ story.province }}</span>
-          <span class="block uppercase font-thin"
-                v-if="story.federalElectoralDistrict">
+            <span class="block text-sm uppercase font-thin">Province</span>
+          </div>
+          <div v-if="story.federalElectoralDistrict">
+            <span class="block uppercase">
             {{ story.federalElectoralDistrict }}</span>
-          <span class="block uppercase font-thin"
-                v-if="story.subnationalElectoralDistrict">
+            <span class="block text-sm uppercase font-thin">Federal Electoral District</span>
+          </div>
+          <div v-if="story.subnationalElectoralDistrict">
+            <span class="block uppercase">
             {{ story.subnationalElectoralDistrict }}</span>
+            <span class="block text-sm uppercase font-thin">Subnational Electoral District</span>
+          </div>
           <span class="px-4"></span>
-          <span class="block text-lg font-semibold">
+          <span class="block text-lg font-semibold text-orange-800">
             {{ story.newsCategory }}</span>
           <span class="block text-wrap"
                 v-if="story.newsCategorySub">
@@ -60,14 +66,14 @@
             v-if="story.title" >
 
             <div class="flex items-center space-x-2 align-middle">
-              <Link :href="`/news/story/${story.slug}`" class="text-blue-500 hover:text-blue-700">
+              <button @click="appSettingStore.btnRedirect(`/news/story/${story.slug}`)" class="text-blue-500 hover:text-blue-700">
                 <SingleImage :image="story.image" alt="News Story Image" class="hidden md:block min-h-20 min-w-20 max-h-20 max-w-20 mr-4 rounded-full" />
-              </Link>
+              </button>
               <div class="flex flex-col">
                 <div>
-                  <Link :href="`/news/story/${story.slug}`" class="text-blue-500 hover:text-blue-700">
+                  <button @click="appSettingStore.btnRedirect(`/news/story/${story.slug}`)" class="text-blue-500 hover:text-blue-700">
                     <span class="pt-2 text-xl uppercase font-semibold text-wrap">{{ story.title }}</span>
-                  </Link>
+                  </button>
                 </div>
                 <div>
                   <span class="uppercase text-xs font-semibold">By</span> {{ story.user.name }}

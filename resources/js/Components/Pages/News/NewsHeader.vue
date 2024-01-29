@@ -50,6 +50,20 @@
             </button>
           </li>
           <li>
+            <button disabled
+                    class=""
+                    :class="getButtonClass('districts')">
+              Press Releases
+            </button>
+          </li>
+          <li>
+            <button disabled
+                    class=""
+                    :class="getButtonClass('districts')">
+              Calendar
+            </button>
+          </li>
+          <li>
             <button
                 @click="appSettingStore.btnRedirect(`/newsRssFeeds`)"
                 class=""

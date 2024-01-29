@@ -60,13 +60,14 @@
                     scope="row"
                     class="px-6 py-4 text-gray-900 dark:text-white whitespace-nowrap"
                 >
-                  <Link :href="`/news/${post.slug}`"
-                        class="text-blue-800 uppercase font-semibold text-md hover:text-blue-600 hover:opacity-75 transition ease-in-out duration-150">
+                  <button
+                      @click="appSettingStore.btnRedirect(`/news/story/${post.slug}`)"
+                      class="text-blue-800 uppercase font-semibold text-md hover:text-blue-600 hover:opacity-75 transition ease-in-out duration-150">
                     <div class="flex flex-row"><img :src="'/storage/images/' + post.image" alt="news cover"
                                                     class="pr-4 h-6 max-w-[6rem] object-cover ">
                       {{ post.title }}
                     </div>
-                  </Link>
+                  </button>
                 </td>
                 <td class="text-gray-900">
                   {{ formatDate(post.published_at) }}

@@ -17,14 +17,21 @@
         </div>
 
         <div v-else class="now-playing w-full h-full bg-orange-800 p-2 overflow-y-scroll scrollbar-hide mb-64">
-          <div v-if="!appSettingStore.fullPage"
-              class="text-xs font-semibold uppercase w-full bg-orange-900 text-white p-2 mb-3">PLAYLIST</div>
 
-          <div v-else class="flex flex-col p-5 mt-2 mb-3">
-            <div class="text-3xl text-center font-semibold uppercase w-full bg-orange-800 text-white p-2">
-              PLAYLIST
-            </div>
+<!--          <div v-if="!appSettingStore.fullPage"-->
+<!--              class="text-xs font-semibold uppercase w-full bg-orange-900 text-white p-2 mb-3">PLAYLIST</div>-->
+
+<!--          <div v-else class="flex flex-col p-5 mt-2 mb-3">-->
+<!--            <div class="text-3xl text-center font-semibold uppercase w-full bg-orange-800 text-white p-2">-->
+<!--              PLAYLIST-->
+<!--            </div>-->
+<!--          </div>-->
+
+          <div v-if="appSettingStore.fullPage" class="flex flex-col p-5 mt-2 mb-3 ">
+            <div class="text-3xl text-center font-semibold uppercase w-full bg-orange-700 text-white p-2">PLAYLIST</div>
           </div>
+
+          <div v-else class="text-xs font-semibold uppercase mb-3 w-full bg-orange-700 text-white p-2">PLAYLIST</div>
 
           <div class="top-0 px-5 space-y-2">
             <div>

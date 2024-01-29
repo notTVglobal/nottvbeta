@@ -13,17 +13,18 @@
 <!--      <div v-if="shouldRenderContent">-->
         <!-- Your content here -->
 
+
     <div v-if="shouldDisplayOtt"
-         :class="[appSettingStore.fullPage ? 'channelsFullPageContainer' : 'ottTopRightDisplay', 'bg-green-900 hide-scrollbar']">
-      <div class="channelsMenu ">
+         ref="scrollRef"
+         class="channelsMenu overflow-y-auto"
+         :class="[appSettingStore.fullPage ? 'channelsFullPageContainer' : 'ottTopRightDisplay', 'bg-green-900']">
 
-        <div v-if="!showUpgrade">
-          <upgrade/>
-        </div>
+<!--      <div v-if="showUpgrade"-->
+<!--           :class="[appSettingStore.fullPage ? 'channelsFullPageContainer' : 'ottTopRightDisplay', 'bg-gray-600 hide-scrollbar']">-->
+<!--        <upgrade/>-->
+<!--      </div>-->
 
 
-        <div v-else ref="scrollRef"
-             class="bg-green-900 overflow-y-auto scrollbar-custom">
 
 <!--          <div v-else ref="scrollRef" class="channelsMenu ottTopRightDisplay bg-green-900 overflow-y-auto scrollbar-custom">-->
 
@@ -34,18 +35,25 @@
 <!--            <div v-else class="text-xs font-semibold uppercase mb-3 w-full bg-yellow-600 text-black p-2">FILTERS</div>-->
 
 
-            <div v-if="appSettingStore.fullPage" class="flex flex-col p-5 mt-2 mb-3">
-              <div class="text-3xl text-center font-semibold uppercase w-full bg-green-900 text-white p-2">
-                CHANNELS
-              </div>
-            </div>
+<!--            <div v-if="appSettingStore.fullPage" class="flex flex-col p-5 mt-2 mb-3">-->
+<!--              <div class="text-3xl text-center font-semibold uppercase w-full bg-green-900 text-white p-2">-->
+<!--                CHANNELS-->
+<!--              </div>-->
+<!--            </div>-->
 
-          <div v-else class="text-xs font-semibold uppercase mt-2 mb-3 w-full bg-green-800 text-white px-2 py-2 text-center">
-            CHANNELS
+<!--          <div v-else class="text-xs font-semibold uppercase mt-2 mb-3 w-full bg-green-800 text-white px-2 py-2 text-center">-->
+<!--            CHANNELS-->
+<!--          </div>-->
+
+          <div v-if="appSettingStore.fullPage" class="flex flex-col p-5 mt-2 mb-3 ">
+            <div class="text-3xl text-center font-semibold uppercase w-full bg-green-700 text-white p-2">CHANNELS</div>
           </div>
 
-          <div class="pb-24 w-full scrollbar-hide"
-               :class="[{'h-[calc(100vh-18rem)]':!userStore.isMobile},{'h-[calc(100vh-20rem)]':userStore.isMobile}]">
+          <div v-else class="text-xs font-semibold uppercase mt-2 mb-3 w-full bg-green-700 text-white p-2">CHANNELS</div>
+
+
+          <div class="pb-24 w-full"
+               :class="[{'h-[calc(100vh-2rem)]':!userStore.isMobile},{'h-[calc(100vh-20rem)]':userStore.isMobile}]">
             <ChannelsList />
           </div>
 
@@ -64,8 +72,7 @@
             <ScrollDownIndicator/>
           </div>
 
-        </div>
-      </div>
+
 
 <!--      <upgrade-->
 <!--          v-if="(appSettingStore.ott === 2 || videoPlayerStore.ottChannels) && !userStore.isSubscriber && !userStore.isVip && !userStore.isAdmin"/>-->
@@ -106,9 +113,9 @@ const shouldDisplayOtt = computed(() => {
 })
 const showUpgrade = computed(() => {
   return appSettingStore.ott === 2 &&
-      (!props.user.isSubscriber ||
-          !props.user.isVip ||
-          !props.user.isAdmin);
+      (props.user.isSubscriber ||
+          props.user.isVip ||
+          props.user.isAdmin);
 });
 
 

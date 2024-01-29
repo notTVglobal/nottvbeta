@@ -52,11 +52,11 @@
                   </div>
 
                   <div class="pt-6">
-                    <div v-if="newsStory.newsCategory" class="text-xs font-semibold uppercase">{{ newsStory.newsCategory }} <span v-if="newsStory.newsCategorySub">| {{newsStory.newsCategorySub}}</span></div>
-                    <div v-if="newsStory.city" class="text-xs font-medium uppercase">{{ newsStory.city }}, {{newsStory.province}}</div>
-                    <div v-if="newsStory.province && !newsStory.city && !newsStory.federalElectoralDistrict && !newsStory.subnationalElectoralDistrict" class="text-xs font-medium uppercase">{{news.province}}</div>
-                    <div v-if="newsStory.federalElectoralDistrict" class="text-xs font-medium uppercase">{{newsStory.federalElectoralDistrict}}</div>
-                    <div v-if="newsStory.subnationalElectoralDistrict" class="text-xs font-medium uppercase">{{newsStory.subnationalElectoralDistrict}}</div>
+                    <div v-if="newsStory.newsCategory" class="font-semibold text-orange-800">{{ newsStory.newsCategory }} <span v-if="newsStory.newsCategorySub"><span class="text-black"> | </span>{{newsStory.newsCategorySub}}</span></div>
+                    <div v-if="newsStory.city" class="font-semibold">{{ newsStory.city }},  <span class="font-medium text-gray-800">{{newsStory.province}}</span></div>
+                    <div v-if="newsStory.province && !newsStory.city && !newsStory.federalElectoralDistrict && !newsStory.subnationalElectoralDistrict" class="font-semibold">{{newsStory.province}} &nbsp;&nbsp;<span class="text-xs font-medium text-gray-500 uppercase">Province</span></div>
+                    <div v-if="newsStory.federalElectoralDistrict" class="font-semibold">{{newsStory.federalElectoralDistrict}} &nbsp;&nbsp;<span class="text-xs font-medium text-gray-500 uppercase">Federal Electoral District</span></div>
+                    <div v-if="newsStory.subnationalElectoralDistrict" class="font-semibold">{{newsStory.subnationalElectoralDistrict}} &nbsp;&nbsp;<span class="text-xs font-medium text-gray-500 uppercase">Subnational Electoral District</span></div>
                   </div>
 
                 </div>

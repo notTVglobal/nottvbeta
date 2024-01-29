@@ -1,9 +1,10 @@
 <template>
 
-  <div class="ottTopRightDisplay bg-gray-600 text-gray-50 pt-2 hide-scrollbar">
+  <div class=""
+       :class="[appSettingStore.fullPage ? 'upgradeFullPageContainer' : 'ottTopRightDisplay', 'bg-gray-600 hide-scrollbar']">
 
-    <h1 class="text-xs font-semibold uppercase mb-3 w-full bg-yellow-600 text-black p-2">UPGRADE</h1>
-    <div class="pb-24 w-full overflow-y-scroll scrollbar-hide"
+    <h1 class="text-xs font-semibold uppercase mb-3 w-full bg-yellow-600 text-black p-2">Channels</h1>
+    <div class="pb-24 px-8 w-full overflow-y-scroll scrollbar-hide"
          :class="[{'h-[calc(100vh-22rem)]':!userStore.isMobile},{'h-[calc(100vh-20rem)]':userStore.isMobile}]">
       Upgrade to a Premium Subscription to gain access to more features, movies and channels!
       <div class="relative top-0 left-0 right-0 w-fit mx-auto mt-2">
@@ -12,6 +13,13 @@
           Upgrade now!
         </button>
       </div>
+    </div>
+
+    <div v-if="appSettingStore.fullPage" class="closeButtonContainer">
+      <button v-touch="()=>appSettingStore.toggleOttChannels()"
+              v-if="appSettingStore.ott === 2" class="upgradeCloseButton">
+        CLOSE UPGRADE
+      </button>
     </div>
 
   </div>

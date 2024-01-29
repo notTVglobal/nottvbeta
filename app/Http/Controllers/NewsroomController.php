@@ -18,28 +18,30 @@ class NewsroomController extends Controller
         return Inertia::render('Newsroom/Index', [
             'newsStories' => NewsStory::with('image', 'user', 'newsCategory', 'newsCategorySub', 'city', 'province', 'federalElectoralDistrict', 'subnationalElectoralDistrict', 'newsStatus', 'video')
                 ->when(Request::input('search'), function ($query, $search) {
-                    $query->where('title', 'like', "%{$search}%")
-                        ->orWhere('content_json', 'like', "%{$search}%")
-                        ->orWhereHas('user', function ($query) use ($search) {
-                          $query->where('name', 'like', "%{$search}%");
-                    })->orWhereHas('newsCategory', function ($query) use ($search) {
-                          $query->where('name', 'like', "%{$search}%");
-                        })
-                        ->orWhereHas('newsCategorySub', function ($query) use ($search) {
-                          $query->where('name', 'like', "%{$search}%");
-                        })
-                        ->orWhereHas('city', function ($query) use ($search) {
-                          $query->where('name', 'like', "%{$search}%");
-                        })
-                        ->orWhereHas('province', function ($query) use ($search) {
-                          $query->where('name', 'like', "%{$search}%");
-                        })
-                        ->orWhereHas('federalElectoralDistrict', function ($query) use ($search) {
-                          $query->where('name', 'like', "%{$search}%");
-                        })
-                        ->orWhereHas('subnationalElectoralDistrict', function ($query) use ($search) {
-                          $query->where('name', 'like', "%{$search}%");
-                        })
+                  $lowerSearch = strtolower($search); // Convert search term to lowercase
+                  $query->whereRaw('LOWER(title) like ?', "%{$lowerSearch}%")
+                      ->orWhereRaw('LOWER(content_json) like ?', "%{$lowerSearch}%")
+                      ->orWhereHas('user', function ($query) use ($lowerSearch) {
+                        $query->whereRaw('LOWER(name) like ?', "%{$lowerSearch}%");
+                      })
+                      ->orWhereHas('newsCategory', function ($query) use ($lowerSearch) {
+                        $query->whereRaw('LOWER(name) like ?', "%{$lowerSearch}%");
+                      })
+                      ->orWhereHas('newsCategorySub', function ($query) use ($lowerSearch) {
+                        $query->whereRaw('LOWER(name) like ?', "%{$lowerSearch}%");
+                      })
+                      ->orWhereHas('city', function ($query) use ($lowerSearch) {
+                        $query->whereRaw('LOWER(name) like ?', "%{$lowerSearch}%");
+                      })
+                      ->orWhereHas('province', function ($query) use ($lowerSearch) {
+                        $query->whereRaw('LOWER(name) like ?', "%{$lowerSearch}%");
+                      })
+                      ->orWhereHas('federalElectoralDistrict', function ($query) use ($lowerSearch) {
+                        $query->whereRaw('LOWER(name) like ?', "%{$lowerSearch}%");
+                      })
+                      ->orWhereHas('subnationalElectoralDistrict', function ($query) use ($lowerSearch) {
+                        $query->whereRaw('LOWER(name) like ?', "%{$lowerSearch}%");
+                      })
                         ->orWhere(function($query) use ($search) {
                           // Check if search query could be a year
                           if (preg_match('/^\d{4}$/', $search)) { // Regex to match a 4-digit year
