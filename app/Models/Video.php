@@ -42,6 +42,7 @@ class Video extends Model
         'video_codec',
         'audio_channels',
         'length',
+        'app_setting'
     ];
 
     protected $hidden = [

@@ -53,7 +53,7 @@
                                 <div>
                                     <div class="flex space-y-3">
                                         <div class="mb-6">
-                                            <SingleImage :image="props.image" :key="props.image"/>
+                                            <SingleImage :image="image" :key="image"/>
                                         </div>
                                     </div>
 
@@ -65,7 +65,7 @@
                                             Change Movie Poster
                                         </label>
 
-                                        <ImageUpload :image="props.image"
+                                        <ImageUpload :image="image"
                                                      :server="'/moviesUploadPoster'"
                                                      :name="'Upload Movie Poster'"
                                                      :maxSize="'30MB'"
@@ -80,7 +80,7 @@
                                             <span
                                                 v-if="video.upload_status === 'processing'"
                                                 class="text-center place-self-center text-white font-semibold text-xl">Video processing...</span>
-                                            <video v-if="video.upload_status !== 'processing'" :src="video.cdn_endpoint+video.cloud_folder+video.folder+'/'+video.file_name" controls></video>
+                                            <video v-if="video.upload_status !== 'processing'" :src="video.cdn_endpoint+video.cloud_folder+video.folder+'/'+video.file_name" :type="video.type" controls></video>
                                         </div>
                                     </div>
 
@@ -214,7 +214,7 @@
                                                 Category
                                             </label>
 
-                                            <select class="border border-gray-400 text-gray-800 p-2 w-1/2 rounded-lg block mb-2 uppercase font-bold text-xs "
+                                            <select class="border border-gray-400 text-gray-800 p-2 w-1/2 rounded-lg block mb-2 uppercase font-bold text-xs"
                                                     v-model="selectedCategoryId" @change="chooseCategory"
                                             >
                                                 <option v-for="category in categories"
@@ -231,7 +231,7 @@
                                         </div>
 
                                         <div class="mb-6">
-                                            <label class="block mb-2 text-gray-600 uppercase font-bold text-xs text-red-700"
+                                            <label class="block mb-2 uppercase font-bold text-xs text-red-700"
                                                    for="sub_category"
                                             >
                                                 Sub-category
@@ -246,7 +246,7 @@
                                                   {{ subCategory.name }}
                                                 </option>
                                             </select>
-                                          <span class="">{{movieStore.sub_category_description}}</span>
+                                            <span class="">{{movieStore.sub_category_description}}</span>
                                             <div v-if="form.errors.sub_category" v-text="form.errors.sub_category"
                                                  class="text-xs text-red-600 mt-1"></div>
                                         </div>

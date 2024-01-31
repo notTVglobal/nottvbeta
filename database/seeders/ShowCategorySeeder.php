@@ -21,7 +21,7 @@ class ShowCategorySeeder extends Seeder
         ]);
         ShowCategory::create([
             'name' => 'Talk',
-            'description' => 'Programs on various topics that include analysis or discussion, for example, talk or panel shows, consumer affairs or reviews, newsmagazines and documentaries that do not fall under "Long-form Documentary". This category excludes programs presenting information primarily for entertainment value. This category excludes programs presenting information primarily for entertainment value. "Docutainment" programs, gossip or entertainment talk shows fall more appropriately under "Reality". Lifestyle magazine shows generally fall under "Education".',
+            'description' => 'Programs on various topics that include analysis or discussion, for example, talk or panel shows, consumer affairs or reviews, newsmagazines and documentaries that do not fall under "Long-form Documentary". This category excludes programs presenting information primarily for entertainment value. "Docutainment" programs, gossip or entertainment talk shows fall more appropriately under "Reality". Lifestyle magazine shows generally fall under "Education".',
         ]);
         ShowCategory::create([
             'name' => 'Documentary',

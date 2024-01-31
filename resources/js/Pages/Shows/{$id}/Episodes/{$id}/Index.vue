@@ -60,21 +60,15 @@
                 <span v-if="props.episode.episode_number">{{ props.episode.episode_number }}</span>
               </div>
             </div>
-            <div v-if="props.episode.release_dateTime">
+            <div v-if="props.episode.release_dateTime" class="text-yellow-500">
               {{ formatDate(props.episode.release_dateTime) }}
             </div>
 
           </div>
 
-          <div class="flex flex-col justify-end">
-            <div class="">
-              <span class="text-xs uppercase">Category: </span>
-              <span class="text-sm uppercase font-semibold">{{ props.show.categoryName }}</span>
-            </div>
-            <div class="pb-4 hidden">
-              <span class="text-xs uppercase">Sub-category: </span>
-              <span class="text-sm uppercase font-semibold">{{ props.show.categorySubName }}</span>
-            </div>
+          <div class="flex flex-col text-right">
+              <span class="text-lg uppercase justify-end leading-loose">{{ props.show.category.name }}</span>
+              <span class="text">{{ props.show.subCategory.name }}</span>
             <div v-if="props.can.viewCreator">
               <span class="text-xs uppercase">Team:</span>
               <Link :href="`/teams/${props.team.slug}`" class="text-blue-300 hover:text-blue-500 ml-2"><span

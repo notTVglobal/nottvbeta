@@ -21,7 +21,7 @@ class ShowCategorySub extends Model
     }
     public function showCategory()
     {
-        return $this->belongsTo(ShowCategory::class)->withDefault([
+        return $this->belongsTo(ShowCategory::class, 'show_categories_id', 'id')->withDefault([
           'name' => 'sub category',
           'description' => 'sub category description'
       ]);

@@ -16,7 +16,8 @@
                 <button :href="``" class="text-gray-700 cursor-not-allowed">Categories</button>
               </li>
               <li>
-                <button :href="``" @click.prevent="scrollToNewEpisodes" class="hover:text-blue-800">Newest Episodes
+                <button :href="``" @click.prevent="scrollToNewEpisodes" class="hover:text-blue-800">
+                  Newest Episodes
                 </button>
               </li>
               <li>
@@ -45,8 +46,8 @@
 
 
         <div class="container mx-auto px-4 border-b border-gray-800 pb-16 max-w-calc[100%-96rem]">
-          <h2 id="popular-shows" class="text-purple-500 uppercase tracking-wide font-semibold text-2xl">Popular
-            Shows</h2>
+          <h2 id="popular-shows" class="text-purple-500 uppercase tracking-wide font-semibold text-2xl">
+            Popular Shows</h2>
           <div
               class="popular-shows text-sm grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-12 pb-12 justify-items-center">
 
@@ -79,8 +80,8 @@
         <div class="flex flex-col xl:flex-row my-10">
 
           <div class="newest-episodes w-full xl:w-3/4 mr-0 md:mr-16 xl:mr-32">
-            <h2 id="new-episodes" class="text-purple-500 uppercase tracking-wide font-semibold text-2xl">Newest
-              Episodes</h2>
+            <h2 id="new-episodes" class="text-purple-500 uppercase tracking-wide font-semibold text-2xl">
+              Newest Episodes</h2>
             <div class="recently-reviewed-container space-y-12 mt-8">
               <div v-for="episode in newestEpisodes.data"
                    :key="episode.id">
@@ -93,9 +94,9 @@
                       <!--                                        <img :src="'/storage/images/' + episode.poster" alt="show cover" class="h-32 md:h-64 md:min-w-[8rem] w-24 md:w-48 object-cover">-->
                       <SingleImage :image="episode.image" :alt="'episode cover'"
                                    class="h-28 w-48 min-w-[12rem] object-cover bg-black"/>
-                      <div>
-                        <div class="mt-4 w-full justify-end text-yellow-300">{{ episode.categoryName }}</div>
-                        <div class="w-full justify-end text-yellow-500 font-thin hidden">{{ episode.categorySubName }}
+                      <div class="flex flex-col mt-4 w-full">
+                        <div class="text-yellow-700 font-semibold">{{ episode.category.name }}</div>
+                        <div v-if="episode.subCategory.name" class="text-yellow-500 font-thin">{{ episode.subCategory.name }}
                         </div>
                       </div>
                     </div>
@@ -106,10 +107,10 @@
                       <span class="text-lg font-semibold leading-tight">{{ episode.name }}</span>
                       <!--                                </Link>-->
 
-                      <div class="text-gray-400 font-light text-sm">
-                        <Link :href="`/shows/${episode.showSlug}`">{{ episode.showName }} &bull;
-                          {{ useTimeAgo(episode.releaseDate) }}
-                        </Link>
+                      <div class="flex flex-row w-full text-gray-200 font-light text-sm">
+
+                        {{ episode.showName }}&nbsp; &bull;
+                        &nbsp;<ConvertDateTimeToTimeAgo :dateTime="episode.releaseDateTime" :class="`text-yellow-400`" />
                       </div>
 
                       <p class="mt-2 pr-4 text-gray-300 xl:block">
@@ -175,6 +176,7 @@ import MostAnticipated from '@/Components/Pages/Shows/Elements/MostAnticipated'
 import PaginationDark from '@/Components/Global/Paginators/PaginationDark'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage'
 import Message from '@/Components/Global/Modals/Messages'
+import ConvertDateTimeToTimeAgo from '@/Components/Global/DateTime/ConvertDateTimeToTimeAgo.vue'
 
 usePageSetup('showsIndex')
 

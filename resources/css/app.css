@@ -390,13 +390,13 @@ hr {
         @apply hidden fixed right-2 top-20 w-10 mr-4
     }
     .osdFullPageTop {
-        z-index:999;
+        z-index:800;
         /*top: calc(50vh + 2rem);*/
         top: 4.5rem;
         @apply fixed align-top justify-start w-full h-fit left-0 right-0 px-5 drop-shadow
     }
     .osdFullPageBottom {
-        z-index:999;
+        z-index:800;
         top: calc(50vh - 0.5rem);
         /*top: 4.5rem;*/
         @apply fixed align-top justify-start w-full h-fit left-0 right-0 px-5 drop-shadow

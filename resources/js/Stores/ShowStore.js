@@ -7,8 +7,10 @@ const initialState = () => ({
     episodeName: '',
     episodeUrl: '',
     category_id: 0,
-    category_sub_id: 0,
     category_description: '',
+    categories: [],
+    sub_category_id: 0,
+    sub_category_description: '',
     sub_categories: [],
     description: '',
     posterName: [],
@@ -45,10 +47,31 @@ export const useShowStore = defineStore('showStore', {
         },
         setEpisodeUrl(episodeUrl) {
             this.episodeUrl = episodeUrl;
-        }
-    },
+        },
+        // },
+        initializeDescriptions(categoryId, subCategoryId) {
+            this.category_id = categoryId;
+            const category = this.categories.find(cat => cat.id === categoryId);
+            this.category_description = category ? category.description : '';
+            this.sub_categories = category ? category.sub_categories : [];
 
-    getters: {
-        //
+            this.updateSubCategoryDescription(subCategoryId);
+        },
+        updateSubCategoryDescription(subCategoryId) {
+            // Ensure sub_categories is not undefined
+            if (!this.sub_categories) {
+                this.sub_category_id = '';
+                this.sub_category_description = '';
+                return;
+            }
+
+            const subCategory = this.sub_categories.find(sub => sub.id === subCategoryId);
+            this.sub_category_id = subCategory ? subCategory.id : '';
+            this.sub_category_description = subCategory ? subCategory.description : '';
+        },
+
+        getters: {
+            //
+        }
     }
 });

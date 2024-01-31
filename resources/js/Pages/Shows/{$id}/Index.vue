@@ -21,7 +21,7 @@
             <button
                 v-if="props.can.manageShow"
                 @click="appSettingStore.btnRedirect(`/shows/${props.show.slug}/manage`)"
-                class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
             >Manage Show
             </button>
           </div>
@@ -40,12 +40,18 @@
             <div class="lg:ml-12 lg:mr-0">
               <h2 class="font-semibold text-4xl text-center lg:text-left">{{ show.name }}</h2>
               <div class="text-gray-400 text-center lg:text-left">
-                <span>{{ show.categoryName }}</span>
-                &middot;
-                <span class="hidden">{{ show.categorySubName }} &middot;</span>
+                <div class="flex flex-row flex-wrap">
+                  <span>{{ show.category.name }}</span>
+                  &nbsp;&middot;&nbsp;
+                  <span class="">{{ show.subCategory.name }}</span>
+                  <span v-if="show.last_release_year"> &nbsp;&middot;&nbsp; {{ show.first_release_year }}-{{ show.last_release_year }}</span>
+                  <span v-if="!show.last_release_year && show.first_release_year"> &nbsp;&middot;&nbsp; {{ show.first_release_year }}</span>
+                  <span v-if="!show.last_release_year && !show.first_release_year"> &nbsp;&middot;&nbsp; {{ show.copyrightYear }}</span>
+                </div>
+                <div class="flex flex-row">
 
-                <span v-if="show.last_release_year">{{ show.first_release_year }}-{{ show.last_release_year }}</span>
-                <span v-if="!show.last_release_year">{{ show.first_release_year }}</span>
+                </div>
+
                 <!--                                This will need a change in the database to allow the creator to update
                                                     the year(s) if they are incorrect. It can automatically set the first release year
                                                     to the same year that the show is created. And the final release year to the year that

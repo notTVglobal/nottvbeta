@@ -227,7 +227,7 @@ class MovieController extends Controller {
 //    $video = Video::where('movies_id', $movie->id)->first();
 //    $trailer = Video::where('movie_trailers_id', $movie->id)->first();
 
-    $movie->load('trailer.video', 'video.appSetting', 'image', 'appSetting', 'category', 'subCategory'); // Eager load necessary relationships
+    $movie->load('trailer.video', 'video.appSetting', 'image', 'video', 'appSetting', 'category', 'subCategory'); // Eager load necessary relationships
 
 
     return Inertia::render('Movies/{$id}/Index', [
@@ -261,18 +261,18 @@ class MovieController extends Controller {
             'subCategory'    => $movie->subCategory ? $movie->subCategory->toArray() : null,
             ],
         'video'   => [
-            'file_name'     => $video->file_name ?? '',
-            'cdn_endpoint'  => $video->appSetting->cdn_endpoint ?? '',
-            'folder'        => $video->folder ?? '',
-            'cloud_folder'  => $video->cloud_folder ?? '',
-            'upload_status' => $video->upload_status ?? '',
+            'file_name'     => $movie->video->file_name ?? '',
+            'cdn_endpoint'  => $movie->video->appSetting->cdn_endpoint ?? '',
+            'folder'        => $movie->video->folder ?? '',
+            'cloud_folder'  => $movie->video->cloud_folder ?? '',
+            'upload_status' => $movie->video->upload_status ?? '',
         ],
         'trailer' => [
-            'file_name'     => $trailer->file_name ?? '',
-            'cdn_endpoint'  => $trailer->appSetting->cdn_endpoint ?? '',
-            'folder'        => $trailer->folder ?? '',
-            'cloud_folder'  => $trailer->cloud_folder ?? '',
-            'upload_status' => $video->upload_status ?? '',
+            'file_name'     => $movie->trailer->video->file_name ?? '',
+            'cdn_endpoint'  => $movie->trailer->video->appSetting->cdn_endpoint ?? '',
+            'folder'        => $movie->trailer->video->folder ?? '',
+            'cloud_folder'  => $movie->trailer->video->cloud_folder ?? '',
+            'upload_status' => $movie->trailer->video->upload_status ?? '',
         ],
         'can'     => [
             'editMovie' => Auth::user()->can('edit', $movie),
@@ -298,12 +298,13 @@ class MovieController extends Controller {
 
     $categories = MovieCategory::with('subCategories')->get(); // Fetch all categories with their sub-categories
     $movieStatuses = MovieStatus::all();
-    $movie->load('trailer.video', 'video.appSetting', 'image', 'appSetting', 'category', 'subCategory'); // Eager load necessary relationships
+    $movie->load('trailer.video', 'video.appSetting', 'image', 'video', 'image.appSetting', 'category', 'subCategory'); // Eager load necessary relationships
 
     return Inertia::render('Movies/{$id}/Edit', [
         'movie'      => $movie,
         'video'      => [
             'file_name'     => $movie->video->file_name ?? '',
+            'type'     => $movie->video->type ?? '',
             'cdn_endpoint'  => $movie->video->appSetting->cdn_endpoint ?? '',
             'folder'        => $movie->video->folder ?? '',
             'cloud_folder'  => $movie->video->cloud_folder ?? '',
@@ -313,6 +314,7 @@ class MovieController extends Controller {
             'trailerDetails' => $movie->trailer, // The entire trailer object
             'video'          => [
                 'file_name'     => $movie->trailer->video->file_name ?? '',
+                'type'     => $movie->trailer->video->type ?? '',
                 'cdn_endpoint'  => $movie->trailer->video->appSetting->cdn_endpoint ?? '',
                 'folder'        => $movie->trailer->video->folder ?? '',
                 'cloud_folder'  => $movie->trailer->video->cloud_folder ?? '',

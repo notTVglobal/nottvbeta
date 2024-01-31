@@ -216,7 +216,10 @@ class ShowEpisodeController extends Controller
             $this->formattedScheduledDateTime = $this->convertTimeToUserTime($showEpisode->scheduled_release_dateTime);
         }
 
-        return Inertia::render('Shows/{$id}/Episodes/{$id}/Index', [
+      $showEpisode->load('video.appSetting', 'image', 'video', 'appSetting', 'show.category', 'show.subCategory'); // Eager load necessary relationships
+//      TODO: Add TeamMember to this eager load
+
+      return Inertia::render('Shows/{$id}/Episodes/{$id}/Index', [
             'show' => [
                 'name' => $show->name,
                 'slug' => $show->slug,
@@ -231,8 +234,8 @@ class ShowEpisodeController extends Controller
                 'copyrightYear' => $show->created_at->format('Y'),
                 'first_release_year' => $show->first_release_year,
                 'last_release_year' => $show->last_release_year,
-                'categoryName' => $show->showCategory->name,
-                'categorySubName' => $show->showCategorySub->name,
+                'category' => $show->category,
+                'subCategory' => $show->subCategory,
             ],
             'team' => [
                 'name' => $show->team->name,
@@ -261,13 +264,13 @@ class ShowEpisodeController extends Controller
                 'youtube_url' => $showEpisode->youtube_url ?? '',
                 'video_embed_code' => $showEpisode->video_embed_code,
             ],
-//            'video' => [
-//                'file_name' => $video->file_name ?? '',
-//                'cdn_endpoint' => $video->appSetting->cdn_endpoint ?? '',
-//                'folder' => $video->folder ?? '',
-//                'cloud_folder' => $video->cloud_folder ?? '',
-//                'upload_status' => $video->upload_status ?? '',
-//            ],
+            'video' => [
+                'file_name' => $showEpisode->showEpisodevideo->file_name ?? '',
+                'cdn_endpoint' => $showEpisode->video->appSetting->cdn_endpoint ?? '',
+                'folder' => $showEpisode->video->folder ?? '',
+                'cloud_folder' => $showEpisode->video->cloud_folder ?? '',
+                'upload_status' => $showEpisode->video->upload_status ?? '',
+            ],
             'image' => [
                 'id' => $showEpisode->image->id,
                 'name' => $showEpisode->image->name,
@@ -366,8 +369,8 @@ class ShowEpisodeController extends Controller
                 ],
                 'first_release_year' => $show->first_release_year,
                 'last_release_year' => $show->last_release_year,
-                'categoryName' => $show->showCategory->name,
-                'categorySubName' => $show->showCategorySub->name,
+                'category' => $show->category->name,
+                'subCategory' => $show->subCategory->name,
             ],
             'team' => [
                 'name' => $show->team->name,

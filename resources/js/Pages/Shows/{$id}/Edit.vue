@@ -68,14 +68,36 @@
                         Show Notes (only visible to team members)
                       </label>
 
-                      <input v-model="form.notes"
-                             class="border border-gray-400 p-2 w-full rounded-lg text-black"
-                             type="text"
-                             name="notes"
-                             id="notes"
+<!--                      <input v-model="form.notes"-->
+<!--                             class="border border-gray-400 p-2 w-full rounded-lg text-black"-->
+<!--                             type="text"-->
+<!--                             name="notes"-->
+<!--                             id="notes"-->
 
-                      >
+<!--                      >-->
+                      <TabbableTextarea v-model="form.notes"
+                                        class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                      />
                       <div v-if="form.errors.notes" v-text="form.errors.notes"
+                           class="text-xs text-red-600 mt-1"></div>
+                    </div>
+
+                    <div class="mb-6">
+                      <label class="block mb-2 uppercase font-bold text-xs text-red-700"
+                             for="status"
+                      >
+                        Status
+                      </label>
+
+                      <select required class="border border-gray-400 text-gray-800 p-2 w-1/2 rounded-lg block mb-2 uppercase font-bold text-xs "
+                              v-model="form.status"
+                      >
+                        <option v-for="status in statuses"
+                                :key="status.id" :value="status.id">{{status.name}}</option>
+
+
+                      </select>
+                      <div v-if="form.errors.status" v-text="form.errors.status"
                            class="text-xs text-red-600 mt-1"></div>
                     </div>
 
@@ -109,40 +131,45 @@
 
                       <select
                           class="border border-gray-400 text-gray-800 p-2 w-full rounded-lg block my-2 uppercase font-bold text-xs "
-                          v-model="form.category" @change="chooseCategory($event)"
+                          v-model="selectedCategoryId" @change="chooseCategory"
                       >
 
-                        <option v-for="category in props.categories"
+                        <option v-for="category in categories"
                                 :key="category.id" :value="category.id">{{ category.name }}
                         </option>
 
 
                       </select>
+                      <span class="">{{showStore.category_description}}</span>
+                    </div>
                       <!--    This was for practice... the next step is to loop over the sub-categories that belongTo the category selected. -->
                       <!--                                    <select>-->
                       <!--                                        <option v-for="option in options" :value="option.value">{{option.text}}</option>-->
                       <!--                                    </select>-->
                       <div v-if="form.errors.category" v-text="form.errors.category"
-                           class="text-xs text-red-600 mt-1"></div>
+                           class="text-xs text-red-600 mt-1">
+                      </div>
+<!--
 
-                      <span class="dark:text-gray-50">{{ showCategoryDescription }}</span>
-                    </div>
-
+<span class="dark:text-gray-50">{{ showCategoryDescription }}</span>-->
 
                     <div class="mb-6">
-                      <label class="block mb-1 text-gray-600 uppercase font-bold text-xs text-light text-gray-600"
+                      <label class="block mb-1 uppercase font-bold text-xs text-light text-gray-600"
                              for="sub_category"
                       >
                         Sub-category
                       </label>
-                      <div class="mb-2 text-sm text-orange-600">Sub-categories are coming soon!</div>
 
-                      <select disabled
-                              class="border border-gray-400 text-gray-800 disabled:bg-gray-300 dark:disabled:bg-gray-600 disabled:cursor-not-allowed p-2 w-full rounded-lg block mb-2 uppercase font-bold text-xs"
-                              v-model="form.sub_category"
+                      <select class="border border-gray-400 text-gray-800 disabled:bg-gray-300 dark:disabled:bg-gray-600 disabled:cursor-not-allowed p-2 w-full rounded-lg block mb-2 uppercase font-bold text-xs"
+                              v-model="selectedSubCategoryId" :disabled="!selectedCategoryId"  @change="chooseSubCategory"
                       >
-                        <option value="1">Option</option>
+                        <option disabled value="">Select a subcategory</option>
+                        <option v-for="subCategory in subCategories" :key="subCategory.id" :value="subCategory.id">
+
+                          {{ subCategory?.name }}
+                        </option>
                       </select>
+                      <span class="">{{showStore.sub_category_description}}</span>
                       <div v-if="form.errors.sub_category" v-text="form.errors.sub_category"
                            class="text-xs text-red-600 mt-1"></div>
                     </div>
@@ -266,6 +293,7 @@ import { Inertia } from "@inertiajs/inertia"
 import { useForm } from "@inertiajs/inertia-vue3"
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
+import { useShowStore } from "@/Stores/ShowStore"
 import { useTeamStore } from "@/Stores/TeamStore"
 import JetValidationErrors from '@/Jetstream/ValidationErrors'
 import ShowEditHeader from "@/Components/Pages/Shows/Layout/EditShowHeader"
@@ -273,11 +301,13 @@ import TabbableTextarea from "@/Components/Global/TextEditor/TabbableTextarea"
 import SingleImage from "@/Components/Global/Multimedia/SingleImage"
 import ImageUpload from "@/Components/Global/Uploaders/ImageUpload"
 import Message from "@/Components/Global/Modals/Messages"
+import { computed, onMounted, ref, watch } from 'vue'
 
 
 usePageSetup('shows/slug/edit')
 
 const appSettingStore = useAppSettingStore()
+const showStore = useShowStore()
 const teamStore = useTeamStore()
 
 let props = defineProps({
@@ -286,15 +316,54 @@ let props = defineProps({
   team: Object,
   poster: String,
   image: Object,
-  categories: Object,
+  category: Object,
   subCategories: Object,
-  showCategory: Object,
+  categories: Object,
+  statuses: Object,
   message: String,
 });
+
+
+let selectedCategoryId = ref(props.show.show_category_id);
+let selectedSubCategoryId = ref(props.show.show_category_sub_id);
+
+const subCategories = computed(() => {
+  const category = props.categories.find(cat => cat.id === selectedCategoryId.value);
+  return category ? category.sub_categories : [];
+});
+
+// Watchers to update the store based on category and subcategory selections
+watch(selectedCategoryId, () => {
+  showStore.initializeDescriptions(selectedCategoryId.value, selectedSubCategoryId.value);
+}, { immediate: true });
+
+watch(selectedSubCategoryId, () => {
+  showStore.updateSubCategoryDescription(selectedSubCategoryId.value);
+});
+
+onMounted(() => {
+  showStore.categories = props.categories;
+  showStore.initializeDescriptions(selectedCategoryId.value, selectedSubCategoryId.value);
+});
+
+const chooseCategory = () => {
+  // Update the selected category ID based on the new selection
+  // Vue automatically updates selectedCategoryId due to v-model binding
+  // So, there is no need to manually set it here
+
+  // Call the store method to update descriptions and subcategories
+  showStore.initializeDescriptions(selectedCategoryId.value, selectedSubCategoryId.value);
+};
+
+const chooseSubCategory = () => {
+  // Update the store state based on the new subcategory selection
+  showStore.updateSubCategoryDescription(selectedSubCategoryId.value);
+};
 
 let form = useForm({
   name: props.show.name,
   description: props.show.description,
+  status: props.show.status_id,
   category: props.show.show_category_id,
   sub_category: props.show.show_category_sub_id,
   www_url: props.show.www_url,
@@ -304,7 +373,7 @@ let form = useForm({
   notes: props.show.notes,
 });
 
-let showCategoryDescription = props.showCategory.Description
+let showCategoryDescription = props.showCategory?.Description
 
 let reloadImage = () => {
   Inertia.reload({
@@ -313,16 +382,17 @@ let reloadImage = () => {
 };
 
 let submit = () => {
+  form.category = showStore.category_id;
+  form.sub_category = showStore.sub_category_id;
   form.patch(route('shows.update', props.show.slug))
 };
 
 teamStore.setActiveTeam(props.team)
 teamStore.setActiveShow(props.show)
 
-
-function chooseCategory(event) {
-  showCategoryDescription = props.categories[event.target.selectedIndex].description;
-}
+// function chooseCategory(event) {
+//   showCategoryDescription = props.categories[event.target.selectedIndex].description;
+// }
 
 // let getCategory = ref(null);
 // onBeforeMount(async () => {

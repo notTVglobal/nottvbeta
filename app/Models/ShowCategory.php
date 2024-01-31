@@ -19,11 +19,8 @@ class ShowCategory extends Model
         return $this->hasMany(Show::class);
     }
 
-    public function showCategorySub()
+    public function subCategories()
     {
-        return $this->hasMany(ShowCategorySub::class)->withDefault([
-          'name' => 'sub category',
-          'description' => 'sub category description'
-      ]);
+      return $this->hasMany(ShowCategorySub::class, 'show_categories_id', 'id');
     }
 }

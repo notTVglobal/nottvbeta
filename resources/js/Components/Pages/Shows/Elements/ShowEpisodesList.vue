@@ -12,39 +12,67 @@
            class="episode mt-8 w-full mx-auto">
 
         <div class="relative inline-block">
-          <Link :href="`/shows/${show.slug}/episode/${episode.slug}`">
+          <button
+                @click="appSettingStore.btnRedirect(`/shows/${show.slug}/episode/${episode.slug}`)">
             <SingleImage :image="episode.image" :alt="'episode cover'"
                          :class="'h-28 w-48 min-w-[12rem] object-cover hover:opacity-75 transition ease-in-out duration-150 bg-black'"/>
             <!--                            <SingleImage :image="episode.image" :alt="'episode cover'" :class="'h-96 min-w-[16rem] w-64 object-cover mb-6 lg:mb-0 m-auto lg:m-0'"/>-->
 
 
-          </Link>
+          </button>
         </div>
         <Link :href="`/shows/${show.slug}/episode/${episode.slug}`"
               class="block text-base font-semibold leading-tight hover:text-gray-400 mt-4">{{ episode.name }}
         </Link>
-        <div class="text-gray-400 mt-1" v-if="!episode.episode_number">Episode {{ episode.id }}</div>
-        <div class="text-gray-400 mt-1" v-if="episode.episode_number">Episode {{ episode.episode_number }}</div>
-        <div class="text-gray-400 mt-1">{{ formatDate(episode.created_at) }}</div>
+        <div class="text-gray-200 mt-1" v-if="!episode.episode_number">Episode {{ episode.id }}</div>
+        <div class="text-gray-200 mt-1" v-if="episode.episode_number">Episode {{ episode.episode_number }}</div>
+        <div class="text-gray-400 mt-1">
+          <ConvertDateTimeToTimeAgo :dateTime="episode.releaseDateTime" :class="`text-yellow-400 font-light`"/>
+        </div>
+        </div>
       </div>
-
-    </div>
 
     <!-- Paginator -->
     <Pagination :data="episodes" class="mt-12 mb-6 pb-6 border-b border-gray-800"/>
-  </div>
+
+    </div>
+
+
 
 </template>
 
 <script setup>
+import { ref, watchEffect } from 'vue'
+import { useTimeAgo } from '@vueuse/core'
+import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import Pagination from "@/Components/Global/Paginators/PaginationDark"
 import SingleImage from "@/Components/Global/Multimedia/SingleImage"
+import ConvertDateTimeToTimeAgo from '@/Components/Global/DateTime/ConvertDateTimeToTimeAgo.vue'
 
-defineProps({
+const appSettingStore = useAppSettingStore()
+
+let props = defineProps({
   show: Object,
   episodes: Object,
   filters: Object,
-  // can: Object,
 });
+
+const convertTimeAgo = (date) => {
+  // Since useTimeAgo expects a ref, create a ref for the date
+  const dateRef = ref(date);
+
+  // Use watchEffect to update the timeAgo value whenever the date changes
+  let timeAgoValue = '';
+  watchEffect(() => {
+    const timeAgo = useTimeAgo(dateRef);
+    timeAgoValue = timeAgo.value;
+  });
+
+  return timeAgoValue;
+}
+
+// const timeAgo = useTimeAgo(props.episode.release_date);
+// const episodeTimeAgo = useTimeAgo(episodeReleaseDate);
+// const episodeTimeAgo = computed(() => useTimeAgo(ref(episode.value.releaseDate)));
 
 </script>
