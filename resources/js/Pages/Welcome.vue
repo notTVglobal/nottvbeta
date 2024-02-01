@@ -13,13 +13,16 @@
                 v-if="!$page.props.user" @click="welcomeStore.showLogin = true">
               Log in
             </Button>
-            <Button
-                class="bg-opacity-50 hover:bg-opacity-75 text-sm mr-2 md:mr-0 ml-2 md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"
-                v-if="!$page.props.user" @click="welcomeStore.showRegister = true">
-              <!--           <Button class="bg-opacity-0 hover:bg-opacity-0"><Link v-if="!$page.props.user" :href="route('register')" class="text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md">-->
+<!--            <Button-->
+<!--                class="bg-opacity-50 hover:bg-opacity-75 text-sm mr-2 md:mr-0 ml-2 md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"-->
+<!--                v-if="!$page.props.user" @click="welcomeStore.showRegister = true">-->
+<!--              &lt;!&ndash;           <Button class="bg-opacity-0 hover:bg-opacity-0"><Link v-if="!$page.props.user" :href="route('register')" class="text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md">&ndash;&gt;-->
 
-              Register
-            </Button>
+<!--              Register-->
+<!--            </Button>-->
+            <Button v-if="!$page.props.user"
+                    class="bg-opacity-50 hover:bg-opacity-75 text-sm mr-2 md:mr-0 ml-2 md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"
+                    @click="Inertia.visit('register')">Register</Button>
           </div>
         </div>
       </header>
@@ -162,6 +165,7 @@ import Register from '@/Components/Pages/Welcome/Register'
 import Login from '@/Components/Pages/Welcome/Login'
 import VideoControlsWelcome from '@/Components/Global/VideoPlayer/VideoControls/Layout/VideoControlsWelcome'
 import Footer from '@/Components/Global/Layout/Footer'
+import { Inertia } from '@inertiajs/inertia'
 
 const appSettingStore = useAppSettingStore()
 const videoPlayerStore = useVideoPlayerStore()

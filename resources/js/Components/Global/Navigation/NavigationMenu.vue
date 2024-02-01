@@ -40,23 +40,23 @@
                   News
                 </JetNavLink>
               </h3>
+              <h3 class="inline-flex items-center relative">
+                <JetNavLink
+                    v-touch="()=>(route('shows.index'))"
+                    @click="videoPlayerStore.makeVideoTopRight()"
+                    :href="route('shows.index')"
+                    :active="appSettingStore.currentPage === 'shows'">
+                  Shows
+                </JetNavLink>
+              </h3>
               <h3 class="inline-flex items-center relative"
                   v-if="userStore.isSubscriber || userStore.isVip || userStore.isAdmin">
                 <JetNavLink
-                    v-touch="()=>(route('movies'))"
+                    v-touch="()=>(route('movies.index'))"
                     @click="videoPlayerStore.makeVideoTopRight()"
-                    :href="route('movies')"
+                    :href="route('movies.index')"
                     :active="appSettingStore.currentPage === 'movies'">
                   Movies
-                </JetNavLink>
-              </h3>
-              <h3 class="inline-flex items-center relative">
-                <JetNavLink
-                    v-touch="()=>(route('shows'))"
-                    @click="videoPlayerStore.makeVideoTopRight()"
-                    :href="route('shows')"
-                    :active="appSettingStore.currentPage === 'shows'">
-                  Shows
                 </JetNavLink>
               </h3>
               <h3 class="inline-flex items-center relative">
@@ -81,7 +81,10 @@
 
             <div v-if="userStore.isCreator"
                  class="flex-item align-self-center text-yellow-600 uppercase hidden md:block text-xs w-fit">
-              <div class="text-fuchsia-700">CREATOR</div>
+              <div class="flex flex-row">
+                <div v-if="userStore.isSubscriber && userStore.isCreator" class="text-fuchsia-700">PREMIUM &nbsp;</div>
+                <div class="text-fuchsia-700">CREATOR</div>
+              </div>
               <div>GOAL <span class="text-sm font-semibold">100</span> subscribers</div>
 
             </div>
@@ -103,7 +106,7 @@
 <!--                  </div>-->
 <!--                </JetNavLink>-->
               </div>
-              <div v-if="userStore.isSubscriber" class="text-fuchsia-700">PREMIUM</div>
+              <div v-if="userStore.isSubscriber && !userStore.isCreator" class="text-fuchsia-700">PREMIUM</div>
               <div v-if="userStore.isVip" class="text-fuchsia-700">VIP</div>
               <div v-if="userStore.isAdmin" class="text-red-700">ADMIN</div>
             </div>

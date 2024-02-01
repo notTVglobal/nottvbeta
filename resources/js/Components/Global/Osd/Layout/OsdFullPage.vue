@@ -19,33 +19,33 @@
     <div v-if="appSettingStore.osd"
         :class="ottPanelsOpen"
          class="osdFullPageBottom">
-      <div v-if="nowPlayingStore.show.name || nowPlayingStore.movie.name || nowPlayingStore.videoFile.name"
+      <div v-if="nowPlayingStore.show?.name || nowPlayingStore.movie?.name || nowPlayingStore.videoFile?.name"
            class="w-fit flex flex-col justify-start text-xs uppercase text-gray-500 break-words uppercase">
         Now Playing
       </div>
       <div>
-        <button v-if="nowPlayingStore.show.name" class="cursor-pointer"
-                @click.prevent="Inertia.visit(nowPlayingStore.show.url)">
-          {{ nowPlayingStore.show.name }}
+        <button v-if="nowPlayingStore.show?.name" class="cursor-pointer"
+                @click.prevent="Inertia.visit(nowPlayingStore.show?.url)">
+          {{ nowPlayingStore.show?.name }}
         </button>
       </div>
       <div>
-        <button v-if="nowPlayingStore.show.episode.name" class="text-sm uppercase"
-                @click="Inertia.visit(nowPlayingStore.show.episode.url)">
-          {{ nowPlayingStore.show.episode.name }}
+        <button v-if="nowPlayingStore.show?.episode.name" class="text-sm uppercase"
+                @click="Inertia.visit(nowPlayingStore.show?.episode.url)">
+          {{ nowPlayingStore.show?.episode.name }}
         </button>
-        <button v-if="nowPlayingStore.movie.name" class="cursor-pointer"
-                @click.prevent="Inertia.visit(nowPlayingStore.movie.url)">
-          {{ nowPlayingStore.movie.name }}
+        <button v-if="nowPlayingStore.movie?.name" class="cursor-pointer"
+                @click.prevent="Inertia.visit(nowPlayingStore.movie?.url)">
+          {{ nowPlayingStore.movie?.name }}
         </button>
         <span v-if="nowPlayingStore.isFromWeb" class="ml-2 text-yellow-500">(web)</span>
       </div>
-      <div v-if="nowPlayingStore.videoFile.name" class="break-words uppercase">
-        {{ nowPlayingStore.videoFile.name }}
+      <div v-if="nowPlayingStore.videoFile?.name" class="break-words uppercase">
+        {{ nowPlayingStore.videoFile?.name }}
       </div>
-      <div v-if="nowPlayingStore.channel.name" class="-ml-3 break-words">
+      <div v-if="nowPlayingStore.channel?.name" class="-ml-3 break-words">
         <span class="text-xs uppercase pr-2">Channel: </span>
-        <span class="text-xs font-semibold">{{ nowPlayingStore.channel.name }}</span>
+        <span class="text-xs font-semibold">{{ nowPlayingStore.channel?.name }}</span>
       </div>
     </div>
 

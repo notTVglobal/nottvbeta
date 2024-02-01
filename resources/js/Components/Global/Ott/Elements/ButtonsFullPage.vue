@@ -16,14 +16,14 @@
       <!--                <font-awesome-icon icon="fa-angle-left" class="ml-2 text-3xl mb-1"/><div>BACK</div>-->
       <!--            </button>-->
       <button
-          v-if="userStore.isVip || userStore.isAdmin"
+          v-if="userStore.isSubscriber || userStore.isVip || userStore.isAdmin"
           @click="appSettingStore.toggleOttChannels()"
           class="ottButton bg-green-400 text-white hover:bg-green-600">
         <font-awesome-icon icon="fa-rocket" class="ml-3.5 text-3xl mb-1"/>
         CHANNELS
       </button>
 
-      <button v-if="userStore.isSubscriber || userStore.isVip || userStore.isAdmin"
+      <button v-if="userStore.isVip || userStore.isAdmin"
               @click="appSettingStore.toggleOttPlaylist()"
               class="ottButton bg-orange-400 text-white hover:bg-orange-600">
         <font-awesome-icon icon="fa-list" class="ml-2 text-3xl mb-1"/>

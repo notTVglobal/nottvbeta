@@ -22,18 +22,18 @@
         <div class="flex flex-wrap-reverse justify-end gap-2">
           <div>
             <button
-                v-if="props.can.editTeam"
-                @click="appSettingStore.btnRedirect(`/teams/${props.team.slug}/edit`)"
-                class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-            >Edit
+                v-if="props.can.manageTeam"
+                @click="appSettingStore.btnRedirect(`/teams/${props.team.slug}/manage`)"
+                class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
+            >Manage Team
             </button>
           </div>
           <div>
             <button
-                v-if="props.can.manageTeam"
-                @click="appSettingStore.btnRedirect(`/teams/${props.team.slug}/manage`)"
+                v-if="props.can.editTeam"
+                @click="appSettingStore.btnRedirect(`/teams/${props.team.slug}/edit`)"
                 class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-            >Manage Team
+            >Edit
             </button>
           </div>
           <div>
@@ -48,7 +48,7 @@
         </div>
       </header>
 
-      <p class="mb-6 p-5">
+      <p class="description mb-6 p-5">
         {{ props.team.description }}
       </p>
 
@@ -125,3 +125,10 @@ teamStore.setActiveTeam(props.team)
 teamStore.can = props.can
 
 </script>
+
+<style scoped>
+.description {
+  white-space: pre-wrap; /* CSS property to preserve whitespace and wrap text */
+  @apply tracking-wide
+}
+</style>

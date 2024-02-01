@@ -4,11 +4,12 @@
     <ButtonsTopRight v-if="!appSettingStore.fullPage" />
   </div>
 
-  <NowPlayingInfo :user="user"/>
-  <Playlist :user="user"/>
-  <Channels :user="user"/>
-  <ChatContainer :user="user" />
-  <Filters :user="user"/>
+  <NowPlayingInfo v-if="appSettingStore.ott === 1" :user="user"/>
+  <Playlist v-if="appSettingStore.ott === 3" :user="user"/>
+  <Channels v-if="appSettingStore.ott === 2" :user="user"/>
+  <ChatContainer v-if="appSettingStore.ott === 4" :user="user" />
+  <Filters v-if="appSettingStore.ott === 5" :user="user"/>
+<!--  <Upgrade :user="user"/>-->
 
 </template>
 <script setup>

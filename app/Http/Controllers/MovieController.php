@@ -25,7 +25,12 @@ class MovieController extends Controller {
 
   public function __construct() {
 
+    $this->middleware('can:view,movie')->only(['show']);
+    $this->middleware('can:create,' . \App\Models\Movie::class)->only(['create']);
+    $this->middleware('can:create,movie')->only(['store']);
     $this->middleware('can:edit,movie')->only(['edit']);
+    $this->middleware('can:edit,movie')->only(['update']);
+    $this->middleware('can:destroy,movie')->only(['destroy']);
 
   }
 
@@ -130,6 +135,7 @@ class MovieController extends Controller {
         'release_year'  => $movie->release_year,
         'category'      => $movie->category ? $movie->category->toArray() : null,
         'subCategory'   => $movie->subCategory ? $movie->subCategory->toArray() : null,
+        'statusId'      => $movie->status->id,
     ];
   }
 
@@ -153,10 +159,10 @@ class MovieController extends Controller {
         $user = auth()->user();
 
         if ($user->creator) {
-          // Creators can see movies with status 9
-          $query->where('status_id', 9);
+          // Creators can see movies with an active or creators only status
+          $query->whereIn('status_id', [2, 9]);
         } elseif ($user->subscription() || $user->isVip) {
-          // Subscribers and VIPs can see movies with status 2
+          // Subscribers and VIPs can see movies with an active status
           $query->where('status_id', 2);
         } else {
           // If neither, no movies should be visible
@@ -175,11 +181,13 @@ class MovieController extends Controller {
    * @return Response
    */
   public function create() {
-    return Inertia::render('Movies/Create', [
-        'can' => [
-            'viewCreator' => Auth::user()->can('viewCreator', User::class),
-        ]
-    ]);
+    return Inertia::render('Movies/Create',
+//        [
+//        'can' => [
+//            'viewCreator' => Auth::user()->can('viewCreator', User::class),
+//        ]
+//    ]
+    );
   }
 
   /**
@@ -227,7 +235,7 @@ class MovieController extends Controller {
 //    $video = Video::where('movies_id', $movie->id)->first();
 //    $trailer = Video::where('movie_trailers_id', $movie->id)->first();
 
-    $movie->load('trailer.video', 'video.appSetting', 'image', 'video', 'appSetting', 'category', 'subCategory'); // Eager load necessary relationships
+    $movie->load('trailer.video', 'video.appSetting', 'image', 'video', 'appSetting', 'category', 'subCategory', 'status'); // Eager load necessary relationships
 
 
     return Inertia::render('Movies/{$id}/Index', [
@@ -259,6 +267,7 @@ class MovieController extends Controller {
             'twitter_handle' => $movie->twitter_handle,
             'category'       => $movie->category ? $movie->category->toArray() : null,
             'subCategory'    => $movie->subCategory ? $movie->subCategory->toArray() : null,
+            'statusId'       => $movie->status->id,
             ],
         'video'   => [
             'file_name'     => $movie->video->file_name ?? '',

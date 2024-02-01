@@ -40,10 +40,23 @@ class MoviePolicy
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
+     * @param  \App\Models\Movie  $movie
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user)
+    public function view(User $user, Movie $movie)
     {
+
+      // Check if the movie has a status_id of 9
+      if ($movie->status_id == 9) {
+        // If the user is a creator, allow viewing
+        if ($user->creator) {
+          return true;
+        }
+
+        return Response::deny('You must be a creator to view this movie.');
+
+      }
+
         if ($user->subscribed('default') || $user->isVip || $user->creator || $user->isAdmin) {
             return true;
         }
@@ -66,5 +79,13 @@ class MoviePolicy
     }
     return Response::deny('You must be an admin to add a movie.');
   }
+  public function destroy(User $user) {
+
+    if ($user->isAdmin) {
+      return true;
+    }
+    return Response::deny('You must be an admin to destroy a movie.');
+  }
+
 
 }

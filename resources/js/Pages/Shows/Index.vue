@@ -46,14 +46,20 @@
 
 
         <div class="container mx-auto px-4 border-b border-gray-800 pb-16 max-w-calc[100%-96rem]">
-          <h2 id="popular-shows" class="text-purple-500 uppercase tracking-wide font-semibold text-2xl">
+          <h2 id="popular-shows" class="text-yellow-500 uppercase tracking-wide font-semibold text-2xl">
             Popular Shows</h2>
           <div
               class="popular-shows text-sm grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-12 pb-12 justify-items-center">
 
             <div v-for="show in shows.data"
                  :key="show.id"
-                 class="show mt-8 ">
+                 class="show mt-8 relative">
+              <div v-if="show.statusId === 9" class="absolute flex justify-end w-full -mt-3 z-50">
+                <div class="badge bg-gray-500 border-gray-500 text-gray-50 drop-shadow-lg">Creators Only</div>
+              </div>
+              <div v-if="show.statusId === 1" class="absolute flex justify-end w-full -mt-3 z-50">
+                <div class="badge bg-yellow-500 border-yellow-500 text-gray-50 drop-shadow-lg">New</div>
+              </div>
               <Link :href="`/shows/${show.slug}`"
                     class="hover:text-blue-400 hover:opacity-75 transition ease-in-out duration-150">
                 <div class="relative inline-block">
@@ -65,10 +71,15 @@
                     show.name
                   }}
                 </div>
-                <div class="text-gray-400 text-lg mt-1">{{ show.categoryName }} &middot;
-                  <span v-if="show.last_release_year">({{ show.last_release_year }})</span>
-                  <span v-if="!show.last_release_year">({{ show.first_release_year }})</span></div>
-                <div class="text-gray-400 mt-1 font-thin hidden">{{ show.categorySubName }}</div>
+                <div class="uppercase tracking-wider flex flex-row align-middle text-yellow-700 text-lg mt-1">{{ show.category.name }}&nbsp;
+                  <div class="text-gray-600">
+                    <span v-if="show.last_release_year > 0">({{ show.last_release_year }})</span>
+                    <span v-if="show.first_release_year > 0 && !show.last_release_year">({{ show.first_release_year }})</span>
+                    <span v-if="!show.last_release_year && !show.first_release_year">({{ show.copyrightYear }})</span>
+                  </div>
+
+                </div>
+                <div class="tracking-wide text-yellow-500 mt-1 font-thin">{{ show.subCategory.name }}</div>
               </Link>
             </div>
 
@@ -77,13 +88,13 @@
           <PaginationDark :data="shows" class=""/>
         </div>
 
-        <div class="flex flex-col xl:flex-row my-10">
+        <div class="w-full flex flex-col xl:flex-row my-10">
 
-          <div class="newest-episodes w-full xl:w-3/4 mr-0 md:mr-16 xl:mr-32">
-            <h2 id="new-episodes" class="text-purple-500 uppercase tracking-wide font-semibold text-2xl">
+          <div class="w-full xl:w-3/4 mr-0 md:mr-16 xl:mr-32">
+            <h2 id="new-episodes" class="text-yellow-500 uppercase tracking-wide font-semibold text-2xl">
               Newest Episodes</h2>
             <div class="recently-reviewed-container space-y-12 mt-8">
-              <div v-for="episode in newestEpisodes.data"
+              <div v-for="episode in newestEpisodes"
                    :key="episode.id">
 
                 <Link :href="`/shows/${episode.showSlug}/episode/${episode.slug}`"
@@ -95,7 +106,7 @@
                       <SingleImage :image="episode.image" :alt="'episode cover'"
                                    class="h-28 w-48 min-w-[12rem] object-cover bg-black"/>
                       <div class="flex flex-col mt-4 w-full">
-                        <div class="text-yellow-700 font-semibold">{{ episode.category.name }}</div>
+                        <div class="uppercase tracking-wider text-yellow-700 font-semibold">{{ episode.category.name }}</div>
                         <div v-if="episode.subCategory.name" class="text-yellow-500 font-thin">{{ episode.subCategory.name }}
                         </div>
                       </div>
@@ -104,7 +115,7 @@
                     <div class="ml-3 block">
                       <!--                                            <div class="text-gray-400 font-light text-xs mt-1 ">Released on {{ episode.release_date }}</div>-->
                       <!--                                    <Link :href="`/shows/${episode.showSlug}/episode/${episode.slug}`" class="block text-lg font-semibold leading-tight hover:text-gray-400 mt-4">-->
-                      <span class="text-lg font-semibold leading-tight">{{ episode.name }}</span>
+                      <span class="text-lg font-semibold tracking-wide">{{ episode.name }}</span>
                       <!--                                </Link>-->
 
                       <div class="flex flex-row w-full text-gray-200 font-light text-sm">
@@ -128,23 +139,28 @@
           </div>
 
           <!--                    <MostAnticipated :mostAnticipated="mostAnticipated"/>-->
-          <div class="coming-soon xl:w-1/4 mt-12 xl:mt-0 xl:ml-4">
-            <h2 id="coming-soon" class="text-purple-500 uppercase tracking-wide font-semibold mt-10 xl:mt-0 text-2xl">
+          <div class="xl:w-1/4 mt-12 xl:mt-0 xl:ml-4 mr-8">
+            <h2 id="coming-soon" class="tracking-wider text-yellow-500 uppercase font-semibold mt-10 xl:mt-0 text-2xl">
               Coming Soon</h2>
-            <div class="most-anticipated-container space-y-10 mt-8">
+            <div class="space-y-10 mt-8">
 
-              <div v-for="show in comingSoon.data"
+              <div v-for="show in comingSoon"
                    :key="show.id"
-                   class="show flex">
-                <Link :href="`/shows/${show.slug}`">
-                  <SingleImage :image="show.image" :alt="'show cover'"
-                               class="h-24 min-w-[4rem] w-16 object-cover hover:opacity-75 transition ease-in-out duration-150"/>
-                </Link>
-                <div class="ml-4">
-                  <Link :href="`/shows/${show.slug}`" class="hover:text-gray-300">{{ show.name }}</Link>
-                  <div class="text-gray-400 text-sm mt-1">{{ show.categoryName }}</div>
-                  <div class="text-gray-400 text-sm font-thin mt-1 hidden">{{ show.categorySubName }}</div>
-                </div>
+                   class="show">
+                <button @click="appSettingStore.btnRedirect(`/shows/${show.slug}`)" class="flex flex-row text-left">
+<!--                  <Link :href="`/shows/${show.slug}`">-->
+                    <SingleImage :image="show.image" :alt="'show cover'"
+                                 class="h-24 min-w-[4rem] w-16 object-cover hover:opacity-75 transition ease-in-out duration-150"/>
+
+                    <div class="ml-4">
+                      <Link :href="`/shows/${show.slug}`" class="tracking-wide hover:text-gray-300">{{ show.name }}</Link>
+                      <div class="uppercase tracking-wider text-yellow-700 text-sm mt-1">{{ show.category.name }}</div>
+                      <div class="tracking-wide text-yellow-500 text-sm font-thin mt-1">{{ show.subCategory.name }}</div>
+                    </div>
+
+                </button>
+
+
               </div>
             </div>
           </div>
@@ -178,7 +194,7 @@ import SingleImage from '@/Components/Global/Multimedia/SingleImage'
 import Message from '@/Components/Global/Modals/Messages'
 import ConvertDateTimeToTimeAgo from '@/Components/Global/DateTime/ConvertDateTimeToTimeAgo.vue'
 
-usePageSetup('showsIndex')
+usePageSetup('shows')
 
 const appSettingStore = useAppSettingStore()
 

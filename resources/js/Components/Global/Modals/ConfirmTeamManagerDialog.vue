@@ -11,7 +11,7 @@
       <template #default>
         You are about to
         <slot/>
-        <span class="font-bold">{{ teamStore.selectedManagerName }}</span> as a manager of the team.
+        <span class="font-bold">&nbsp;{{ teamStore.selectedManagerName }}</span> as a manager of the team.
       </template>
       <template #footer>
         <button @click.prevent="teamStore.confirmTeamManagerCancel"

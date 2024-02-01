@@ -18,7 +18,10 @@
       <main class="mt-12">
         <div class="container mx-auto px-4">
           <div class="movie-details border-b border-gray-800 pb-12 flex flex-col lg:flex-row">
-            <div class="items-center">
+            <div class="relative items-center">
+              <div v-if="movie.statusId === 9" class="absolute flex justify-end w-full -mt-3 z-50">
+                <div class="badge bg-gray-500 border-gray-500 text-gray-50 drop-shadow-lg">Creators Only</div>
+              </div>
               <SingleImage :image="movie.image" :alt="'movie cover'"
                            :class="'h-96 min-w-[16rem] w-64 object-cover mb-6 lg:mb-0 m-auto lg:m-0'"/>
             </div>
@@ -188,7 +191,7 @@
 
         <div class="mb-6 p-5">
           <div class="font-semibold text-xs uppercase mb-3">MOVIE DESCRIPTION</div>
-          <div>{{ movie.description }}</div>
+          <div class="description">{{ movie.description }}</div>
         </div>
       </div>
 
@@ -326,3 +329,10 @@ checkForVideo()
 
 
 </script>
+
+<style scoped>
+.description {
+  white-space: pre-wrap; /* CSS property to preserve whitespace and wrap text */
+  @apply tracking-wide
+}
+</style>

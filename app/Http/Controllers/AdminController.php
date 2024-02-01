@@ -12,8 +12,10 @@ use App\Models\Show;
 use App\Models\ShowEpisode;
 use App\Models\Team;
 use App\Models\User;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Client\Response;
 use Illuminate\Http\Request as HttpRequest;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -26,6 +28,13 @@ use Inertia\Inertia;
 
 class AdminController extends Controller
 {
+
+  public function __construct() {
+
+//    $this->middleware('can:view,show')->only(['show']);
+
+  }
+
 
 ////////////  SETTINGS
 //////////////////////
@@ -53,7 +62,6 @@ class AdminController extends Controller
             'first_play_video_source_type' => $settings->first_play_video_source_type,
             'first_play_video_name' => $settings->first_play_video_name,
             'first_play_channel_id' => $settings->first_play_channel_id,
-            'first_play_channel_name' => $settings->channel->name,
             'mist_server_ip' => $settings->mist_server_ip,
             'mist_server_api_url' => $settings->mist_server_api_url,
             'mist_server_username' => $settings->mist_server_username,
@@ -95,8 +103,21 @@ class AdminController extends Controller
         $settings->mist_server_username = $request->mist_server_username;
         $settings->mist_server_password = $encryptedPassword;
         $settings->save();
-        sleep(1);
 
+      // Now, check for specific form variables and update the JSON file if present
+      if ($request->has(['first_play_video_source', 'first_play_video_source_type'])) {
+
+        $dataToUpdate = $this->updateFirstPlayData($request);
+//        $dataToUpdate = $request->only([
+//            'first_play_video_source',
+//            'first_play_video_source_type',
+//            'first_play_video_name',
+//            'first_play_channel_id',
+//        ]);
+        $jsonFilePath = 'json/firstPlayData.json';
+        Storage::disk('local')->put($jsonFilePath, json_encode($dataToUpdate, JSON_PRETTY_PRINT));
+
+      }
         return redirect(route('admin.settings'))->with('success', 'Settings Saved Successfully');
 //
 //        $db = DB::table('app_settings')
@@ -271,7 +292,7 @@ class AdminController extends Controller
     {
 
         return Inertia::render('Admin/Shows', [
-            'shows' => Show::with('team', 'user', 'image', 'showEpisodes', 'showStatus')
+            'shows' => Show::with('team', 'user', 'image', 'showEpisodes', 'status')
                 ->when(Request::input('search'), function ($query, $search) {
                     $query->where('name', 'like', "%{$search}%");
                 })
@@ -295,8 +316,8 @@ class AdminController extends Controller
                     ],
                     'slug' => $show->slug,
                     'totalEpisodes' => $show->showEpisodes->count(),
-                    'status' => $show->showStatus->name,
-                    'statusId' => $show->showStatus->id,
+                    'status' => $show->status->name,
+                    'statusId' => $show->status->id,
                     'copyrightYear' => $show->created_at->format('Y'),
                     'can' => [
                         'editShow' => Auth::user()->can('edit', $show),
@@ -305,7 +326,7 @@ class AdminController extends Controller
                 ]),
             'filters' => Request::only(['search']),
             'can' => [
-                'viewShows' => Auth::user()->can('view', Show::class),
+//                'viewShows' => Auth::user()->can('view', Show::class),
                 'viewCreator' => Auth::user()->can('viewCreator', User::class),
             ]
         ]);
@@ -435,5 +456,32 @@ class AdminController extends Controller
     }
 
 
+////////////  UPDATE FIRST PLAY JSON FILE
+/////////////////////////////////////////
+  private function updateFirstPlayData(HttpRequest $request) {
+    $validatedData = $request->validate([
+        'first_play_video_source' => 'required|string',
+        'first_play_video_source_type' => 'required|string',
+        'first_play_video_name' => 'nullable|string',
+        'first_play_channel_id' => 'nullable|integer',
+    ]);
+
+    $jsonFilePath = 'json/firstPlayData.json';
+    Storage::disk('local')->put($jsonFilePath, json_encode($validatedData, JSON_PRETTY_PRINT));
+    return $validatedData;
+//    return response()->json(['message' => 'First play data updated successfully.'], 200);
+  }
+
+////////////  CLEAR FIRST PLAY DATA CACHE
+/////////////////////////////////////////
+  public function clearFirstPlayDataCache() {
+
+    if (!Auth::user() || !Auth::user()->isAdmin) {
+      throw new AuthorizationException('You do not have permission to perform this action.');
+    }
+
+    Cache::forget('firstPlayData');
+    return redirect('/admin/settings')->with('message', 'First play cache cleared successfully.');
+  }
 
 }

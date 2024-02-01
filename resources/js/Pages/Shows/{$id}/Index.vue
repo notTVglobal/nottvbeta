@@ -11,39 +11,43 @@
         <div class="flex flex-end flex-wrap-reverse justify-end gap-2 mr-4 my-4">
           <div>
             <button
-                v-if="props.can.editShow"
-                @click="appSettingStore.btnRedirect(`/shows/${props.show.slug}/edit`)"
-                class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-            >Edit
-            </button>
-          </div>
-          <div>
-            <button
                 v-if="props.can.manageShow"
                 @click="appSettingStore.btnRedirect(`/shows/${props.show.slug}/manage`)"
                 class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
             >Manage Show
             </button>
           </div>
+          <div>
+            <button
+                v-if="props.can.editShow"
+                @click="appSettingStore.btnRedirect(`/shows/${props.show.slug}/edit`)"
+                class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+            >Edit
+            </button>
+          </div>
         </div>
       </header>
 
       <main>
-        <div class="container mx-auto px-4 gap-y-3">
+        <div class="container mx-auto px-4 gap-y-3 mt-12">
           <div class="show-details border-b border-gray-800 pb-12 flex flex-col md:flex-row">
-            <div class="items-center">
+            <div class="items-center relative">
               <!--                        <SingleImage :image="props.show.image" :poster="props.show.poster" :alt="'show cover'" class="h-96 min-w-[16rem] w-64 object-cover mb-6 lg:mb-0 m-auto lg:m-0"/>-->
+              <div v-if="show.statusId === 9" class="absolute flex justify-end w-full -mt-3 z-50">
+                <div class="badge bg-gray-500 border-gray-500 text-gray-50 drop-shadow-lg">Creators Only</div>
+              </div>
               <SingleImage :image="props.show.image" :alt="'show cover'"
                            class="h-96 min-w-[16rem] w-64 object-cover mb-6 lg:mb-0 m-auto lg:m-0"/>
+
             </div>
             <div v-if="!props.can.viewCreator && userStore.isMobile" id="topDiv"></div>
             <div class="lg:ml-12 lg:mr-0">
               <h2 class="font-semibold text-4xl text-center lg:text-left">{{ show.name }}</h2>
               <div class="text-gray-400 text-center lg:text-left">
-                <div class="flex flex-row flex-wrap">
-                  <span>{{ show.category.name }}</span>
+                <div class="mt-1">
+                  <span class="uppercase tracking-wider text-yellow-700">{{ show.category.name }}</span>
                   &nbsp;&middot;&nbsp;
-                  <span class="">{{ show.subCategory.name }}</span>
+                  <span class="tracking-wide text-yellow-500">{{ show.subCategory.name }}</span>
                   <span v-if="show.last_release_year"> &nbsp;&middot;&nbsp; {{ show.first_release_year }}-{{ show.last_release_year }}</span>
                   <span v-if="!show.last_release_year && show.first_release_year"> &nbsp;&middot;&nbsp; {{ show.first_release_year }}</span>
                   <span v-if="!show.last_release_year && !show.first_release_year"> &nbsp;&middot;&nbsp; {{ show.copyrightYear }}</span>
@@ -179,7 +183,7 @@
 
               </div>
 
-              <div class="mt-12 pr-6 text-gray-300 mr-1 lg:mr-36 w-full text-center lg:text-left">
+              <div class="description mt-12 pr-6 text-gray-300 mr-1 lg:mr-36 w-full text-center lg:text-left">
                 {{ show.description }}
               </div>
 
@@ -326,5 +330,13 @@ teamStore.name = props.team.name;
 
 
 </script>
+
+<style scoped>
+.description {
+  white-space: pre-wrap; /* CSS property to preserve whitespace and wrap text */
+  @apply tracking-wide
+}
+</style>
+
 
 

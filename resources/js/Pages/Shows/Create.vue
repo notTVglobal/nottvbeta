@@ -72,18 +72,17 @@
 
           <select
               class="border border-gray-400 text-gray-800 p-2 w-full rounded-lg block mb-2 uppercase font-bold text-xs "
-              v-model="form.category" @change="chooseCategory($event)"
+              v-model="selectedCategoryId" @change="chooseCategory"
           >
-            <option v-for="category in props.categories"
+            <option v-for="category in categories"
                     :key="category.id" :value="category.id">{{ category.name }}
             </option>
-
 
           </select>
           <div v-if="form.errors.category" v-text="form.errors.category"
                class="text-xs text-red-600 mt-1"></div>
 
-          {{ showCategoryDescription }}
+          <span class="">{{showStore.category_description}}</span>
         </div>
 
         <div class="mb-6">
@@ -94,13 +93,16 @@
           </label>
           <div class="mb-2 text-sm text-orange-600">Sub-categories are coming soon!</div>
 
-
-          <select disabled
+          <select
                   class="border border-gray-400 text-gray-800 disabled:bg-gray-300 dark:disabled:bg-gray-600 disabled:cursor-not-allowed p-2 w-full rounded-lg block mb-2 uppercase font-bold text-xs"
-                  v-model="form.sub_category"
+                  v-model="selectedSubCategoryId" :disabled="!selectedCategoryId" @change="chooseSubCategory"
           >
-            <option value="1">Option</option>
+            <option disabled value="">Select a subcategory</option>
+            <option v-for="subCategory in subCategories" :key="subCategory.id" :value="subCategory.id">
+              {{ subCategory?.name }}
+            </option>
           </select>
+          <span class="">{{ showStore.sub_category_description }}</span>
           <div v-if="form.errors.sub_category" v-text="form.errors.sub_category"
                class="text-xs text-red-600 mt-1"></div>
         </div>
@@ -225,12 +227,13 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useForm } from '@inertiajs/inertia-vue3'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import { useNotificationStore } from '@/Stores/NotificationStore'
 import { useTeamStore } from '@/Stores/TeamStore'
+import { useShowStore } from '@/Stores/ShowStore'
 import JetValidationErrors from '@/Jetstream/ValidationErrors'
 import CheckboxNotification from '@/Components/Global/Modals/CheckboxNotification'
 import CancelButton from '@/Components/Global/Buttons/CancelButton'
@@ -239,19 +242,56 @@ import Message from '@/Components/Global/Modals/Messages'
 usePageSetup('showsCreate')
 
 const appSettingStore = useAppSettingStore()
-const teamStore = useTeamStore()
 const notificationStore = useNotificationStore()
+const teamStore = useTeamStore()
+const showStore = useShowStore()
 
 let props = defineProps({
   teams: Object,
   userId: Number,
   categories: Object,
-  subCategories: Object,
+})
+
+let selectedCategoryId = ref()
+let selectedSubCategoryId = ref()
+
+const subCategories = computed(() => {
+  const category = props.categories.find(cat => cat.id === selectedCategoryId.value)
+  return category ? category.sub_categories : []
+})
+
+// Watchers to update the store based on category and subcategory selections
+watch(selectedCategoryId, () => {
+  showStore.initializeDescriptions(selectedCategoryId.value, selectedSubCategoryId.value)
+}, {immediate: true})
+
+watch(selectedSubCategoryId, () => {
+  showStore.updateSubCategoryDescription(selectedSubCategoryId.value)
+})
+
+onMounted(() => {
+  showStore.categories = props.categories
+  showStore.initializeDescriptions(selectedCategoryId.value, selectedSubCategoryId.value)
 })
 
 const defaultTeamId = computed(() => {
   return teamStore.id || (props.teams.length > 0 ? props.teams[0].id : null)
 })
+
+const chooseCategory = () => {
+  // Update the selected category ID based on the new selection
+  // Vue automatically updates selectedCategoryId due to v-model binding
+  // So, there is no need to manually set it here
+
+  // Call the store method to update descriptions and subcategories
+  showStore.initializeDescriptions(selectedCategoryId.value, selectedSubCategoryId.value)
+}
+
+const chooseSubCategory = () => {
+  // Update the store state based on the new subcategory selection
+  showStore.updateSubCategoryDescription(selectedSubCategoryId.value)
+}
+
 
 let form = useForm({
   name: '',
@@ -292,12 +332,14 @@ onMounted(() => {
 })
 
 let submit = () => {
+  form.category = showStore.category_id
+  form.sub_category = showStore.sub_category_id
   form.post('/shows')
 }
 
-function chooseCategory(event) {
-  showCategoryDescription = props.categories[event.target.selectedIndex].description
-}
+// function chooseCategory(event) {
+//   showCategoryDescription = props.categories[event.target.selectedIndex].description
+// }
 
 function reset() {
   form.reset()

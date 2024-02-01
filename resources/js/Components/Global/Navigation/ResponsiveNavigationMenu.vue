@@ -90,12 +90,15 @@
                 </div>
               </div>
             </div>
-            <div class="justify-end text-right w-12">
+            <div class="justify-end text-right w-36">
 
                 <div v-if="userStore.isAdmin" class="text-xs font-semibold text-red-700">ADMIN</div>
-                <div v-if="userStore.isSubscriber" class="text-xs font-semibold text-fuchsia-700">PREMIUM</div>
+                <div v-if="userStore.isSubscriber && !userStore.isCreator" class="text-xs font-semibold text-fuchsia-700">PREMIUM</div>
                 <div v-if="userStore.isVip" class="text-xs font-semibold text-fuchsia-700">VIP</div>
+              <div class="flex flex-row justify-end">
+                <div v-if="userStore.isSubscriber && userStore.isCreator" class="text-xs font-semibold text-fuchsia-700">PREMIUM&nbsp;</div>
                 <div v-if="userStore.isCreator" class="text-xs font-semibold text-fuchsia-700">CREATOR</div>
+              </div>
 
 
             </div>
@@ -165,18 +168,18 @@
           </JetResponsiveNavLink>
 
           <JetResponsiveNavLink
-              v-if="userStore.isSubscriber || userStore.isVip || userStore.isCreator"
               @click="appSettingStore.closeNavDropdown()"
-              :href="route('movies')"
-              :active="appSettingStore.currentPage === 'movies'">
-            Movies
+              :href="route('shows.index')"
+              :active="appSettingStore.currentPage === 'shows'">
+            Shows
           </JetResponsiveNavLink>
 
           <JetResponsiveNavLink
+              v-if="userStore.isSubscriber || userStore.isVip || userStore.isCreator"
               @click="appSettingStore.closeNavDropdown()"
-              :href="route('shows')"
-              :active="appSettingStore.currentPage === 'shows'">
-            Shows
+              :href="route('movies.index')"
+              :active="appSettingStore.currentPage === 'movies'">
+            Movies
           </JetResponsiveNavLink>
 
           <JetResponsiveNavLink

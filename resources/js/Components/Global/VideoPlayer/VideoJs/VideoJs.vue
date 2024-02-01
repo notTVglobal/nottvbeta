@@ -10,7 +10,8 @@
               muted
               playsinline
     >
-      <source :type="$page.props.firstPlayVideoSourceType" :src="$page.props.firstPlayVideoSource">
+<!--      <source :type="$page.props.firstPlayVideoSourceType" :src="$page.props.firstPlayVideoSource">-->
+      <source :type="$page.props.firstPlay.first_play_video_source_type" :src="$page.props.firstPlay.first_play_video_source">
       <!--            <source type="video/youtube" src="https://www.youtube.com/watch?v=fqaHrwOhihI">-->
       <!--            <source type="video/youtube" src="https://www.youtube.com/watch?v=xjS6SftYQaQ&list=SPA60DCEB33156E51F">-->
     </video-js>

@@ -159,7 +159,15 @@
             <div v-if="form.errors.cloud_folder" v-text="form.errors.cloud_folder"
                  class="text-xs text-red-600 mt-1"></div>
           </div>
-          <div class="mb-6">
+          <div class="mb-6 border-t-2 pt-4">
+
+            <div>
+              <button @click.prevent="clearFirstPlayCacheData"
+                      class="btn btn-warning btn-sm mb-2">
+                Clear First Play Data Cache</button>
+            </div>
+            <div class="px-3 pb-2 text-sm font-semibold text-orange-400">Please close your browser window after clearing the cache, this only applies to you.</div>
+
             <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"
                    for="cloud_folder"
             >
@@ -219,7 +227,7 @@
             <div v-if="form.errors.first_play_video_name" v-text="form.errors.first_play_video_name"
                  class="text-xs text-red-600 mt-1"></div>
           </div>
-          <div class="mb-6">
+          <div class="mb-6 border-b-2 pb-4">
             <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"
                    for="cloud_folder"
             >
@@ -315,7 +323,7 @@
           <div class="flex justify-end my-6 mr-6">
             <JetValidationErrors class="mr-4"/>
             <button
-                @click="submit"
+                @click.prevent="submit"
                 class="bg-blue-600 hover:bg-blue-500 text-white rounded py-2 px-4"
                 :disabled="form.processing"
             >
@@ -359,7 +367,7 @@
 
 <script setup>
 import { Inertia } from "@inertiajs/inertia"
-import { onMounted, ref } from 'vue'
+import { nextTick, onMounted, ref } from 'vue'
 import { useForm } from "@inertiajs/inertia-vue3"
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
@@ -396,6 +404,7 @@ let form = useForm({
   first_play_video_source: props.first_play_video_source,
   first_play_video_source_type: props.first_play_video_source_type,
   first_play_video_name: props.first_play_video_name,
+  first_play_channel_id: props.first_play_channel_id,
   mist_server_ip: props.mist_server_ip,
   mist_server_api_url: props.mist_server_api_url,
   mist_server_username: props.mist_server_username,
@@ -404,14 +413,28 @@ let form = useForm({
 
 console.log(props.default_country)
 const countries = ref([]);
+// const topDiv = document.getElementById("topDiv")
 
 onMounted(() => {
   countries.value = props.countries;
 });
 
+nextTick(() => {
+  const topDiv = document.getElementById("topDiv");
+  if (topDiv) {
+    topDiv.scrollIntoView();
+  }
+});
+
 let submit = () => {
   form.patch(route('admin.settings'));
+  topDiv.scrollIntoView()
 };
+
+let clearFirstPlayCacheData = () => {
+  Inertia.post(route('admin.clear-first-play-data-cache'));
+  topDiv.scrollIntoView()
+}
 
 let getAllEpisodesButtonActive = ref(false);
 

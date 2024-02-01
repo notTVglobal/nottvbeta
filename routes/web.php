@@ -142,8 +142,9 @@ Route::get('/privacy', function () {
 Route::get('/privacy-policy', [\App\Http\Controllers\PrivacyPolicyController::class, 'show'])->name('policy.show');
 Route::get('/terms-of-service', [\App\Http\Controllers\TermsOfServiceController::class, 'show'])->name('terms.show');
 
-
 Route::get('/whitepaper', [WhitepaperController::class, 'show'])->name('whitepaper.show');
+
+Route::get('/first-play-data', [AppSettingController::class, 'serveFirstPlayData']);
 
 
 // News (public, everyone can see these)
@@ -506,10 +507,15 @@ Route::middleware([
     Route::get('/admin/settings', [AdminController::class, 'settings'])
         ->can('viewAdmin', 'App\Models\User')
         ->name('admin.settings');
+
     //// SETTINGS - SAVE
     Route::patch('/admin/settings', [AdminController::class, 'saveSettings'])
         ->can('viewAdmin', 'App\Models\User')
         ->name('admin.saveSettings');
+
+    Route::post('/admin/clear-first-play-data-cache',
+        [AdminController::class, 'clearFirstPlayDataCache'])
+        ->name('admin.clear-first-play-data-cache');
 
     //// MOVIES - INDEX
     Route::get('/admin/movies', [AdminController::class, 'moviesIndex'])
@@ -676,9 +682,9 @@ Route::middleware([
     // Shows resource
     Route::resource('shows', ShowsController::class);
     // Display shows index page
-    Route::get('/shows', [ShowsController::class, 'index'])
-        ->can('viewAny', 'App\Models\Show')
-        ->name('shows');
+//    Route::get('/shows', [ShowsController::class, 'index'])
+//        ->can('viewAny', 'App\Models\Show')
+//        ->name('shows');
     // Display shows manage page
     Route::get('/shows/{show}/manage', [ShowsController::class, 'manage'])
 //        ->middleware('can:viewShowManagePage,show')
@@ -687,9 +693,9 @@ Route::middleware([
     Route::get('/shows/{show}/edit', [ShowsController::class, 'edit'])
         ->name('shows.edit');
     // Display shows create page
-    Route::get('/shows/create', [ShowsController::class, 'create'])
-        ->can('viewCreator', 'App\Models\User')
-        ->name('shows.create');
+//    Route::get('/shows/create', [ShowsController::class, 'create'])
+//        ->can('viewCreator', 'App\Models\User')
+//        ->name('shows.create');
     // Update show notes
     Route::post('/shows/notes', [ShowsController::class, 'updateNotes']);
 
@@ -765,21 +771,6 @@ Route::middleware([
 // Movies
 ///////////
     Route::resource('movies', MovieController::class);
-    // List all movies
-    Route::get('/movies/{movie}', [MovieController::class, 'show'])
-        ->can('view', 'App\Models\Movie')
-        ->name('movies.show');
-    Route::get('/movies', [MovieController::class, 'index'])
-        ->can('viewAny', 'App\Models\Movie')
-        ->name('movies');
-    // Display movie edit page
-    Route::get('/movies/{movie}/edit', [MovieController::class, 'edit'])
-        ->can('edit', 'App\Models\Movie')
-        ->name('movies.edit');
-//    // Upload movie
-//    Route::post('/movies/upload', [MovieUploadController::class, 'store'])
-//        ->can('viewCreator', 'App\Models\User')
-//        ->name('moviesUpload.store');
 
 // Testing
 ///////////

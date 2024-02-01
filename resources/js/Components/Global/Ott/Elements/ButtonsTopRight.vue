@@ -7,8 +7,7 @@
               @click="appSettingStore.toggleOttInfo()">
         INFO
       </button>
-      <button v-if="userStore.isVip || userStore.isAdmin"
-              class="h-full w-full border-r-2 border-r-gray-900"
+      <button class="h-full w-full border-r-2 border-r-gray-900"
               :class="channelsClass"
               @click="appSettingStore.toggleOttChannels()">
         CHANNELS
@@ -50,12 +49,12 @@ const infoClass = computed(() => ({
 }))
 
 const channelsClass = computed(() => ({
-  // user is !vip
+  // user is !subscriber
   'bg-gray-700': appSettingStore.ott === 2 && userNeedsToUpgrade(),
   'bg-gray-900 hover:bg-gray-700': appSettingStore.ott !== 2 && userNeedsToUpgrade(),
-  // user is vip
-  'bg-green-700': appSettingStore.ott === 2 && userIsVip(),
-  'bg-green-900 hover:bg-green-700': appSettingStore.ott !== 2 && userIsVip(),
+  // user is subscriber
+  'bg-green-700': appSettingStore.ott === 2 && userIsSubscriber(),
+  'bg-green-900 hover:bg-green-700': appSettingStore.ott !== 2 && userIsSubscriber(),
 }))
 
 const playlistClass = computed(() => ({

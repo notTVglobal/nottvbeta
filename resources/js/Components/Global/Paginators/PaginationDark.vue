@@ -3,7 +3,7 @@
     <div></div>
     <Component
         :is="link.url ? 'Link' : 'span'"
-        :id="id"
+
         v-for="(link, key) in data.links"
         :key="key"
         class="px-4 py-3 text-sm leading-4"

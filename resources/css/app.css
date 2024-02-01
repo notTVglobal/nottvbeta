@@ -483,7 +483,7 @@ hr {
         max-height: calc(50vh - 4.5rem);
         max-width: 100%;
         bottom: 5.5rem;
-        @apply px-8 flex flex-col overflow-y-scroll overflow-x-hidden break-words hide-scrollbar
+        @apply px-8 flex flex-col overflow-y-scroll overflow-x-hidden  hide-scrollbar
     }
     .chatTopRightContainer {
         position: fixed;
@@ -778,7 +778,7 @@ hr {
         /*align-items: center; !* Vertically center children *!*/
         justify-content: left;
         @apply w-[24rem] max-w-[24rem] bottom-24 mb-6 pt-6 bg-opacity-80 text-sm text-white px-4
-        overflow-y-scroll scroll-smooth hover:scroll-auto break-words
+        overflow-y-scroll scroll-smooth hover:scroll-auto
     }
     .chatTopRightContainer {
         position: fixed;
@@ -790,10 +790,10 @@ hr {
         max-height: calc(100% - 26rem);
         /*max-height: 70vh;*/
         /*max-width: 100%;*/
-        @apply w-[24rem] max-w-[24rem] bottom-24 pt-5 flex flex-col overflow-y-scroll overflow-x-hidden break-words hide-scrollbar
+        @apply w-[24rem] max-w-[24rem] bottom-24 pt-5 flex flex-col overflow-y-scroll overflow-x-hidden hide-scrollbar
     }
     .chatFullPageMessages {
-        @apply w-full h-full flex flex-col-reverse overflow-y-scroll overflow-x-clip break-words scrollbar-hide
+        @apply w-full h-full flex flex-col-reverse overflow-y-scroll overflow-x-clip scrollbar-hide
     }
     .chatFullPageInput {
         display: flex; /* Enable Flexbox */

@@ -13,6 +13,14 @@
         <div>
           <button
               v-if="props.can.manageShow"
+              @click="appSettingStore.btnRedirect(`/shows/${props.show.slug}/manage`)"
+              class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
+          >Manage Show
+          </button>
+        </div>
+        <div>
+          <button
+              v-if="props.can.manageShow"
               @click="appSettingStore.btnRedirect(`/shows/${props.show.slug}/episode/${props.episode.slug}/manage`)"
               class="px-4 py-2 text-white bg-orange-600 hover:bg-orange-500 rounded-lg"
           >Manage Episode
@@ -24,14 +32,6 @@
               @click="appSettingStore.btnRedirect(`/shows/${props.show.slug}/episode/${props.episode.slug}/edit`)"
               class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
           >Edit
-          </button>
-        </div>
-        <div>
-          <button
-              v-if="props.can.manageShow"
-              @click="appSettingStore.btnRedirect(`/shows/${props.show.slug}/manage`)"
-              class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-          >Manage Show
           </button>
         </div>
       </div>
@@ -67,8 +67,8 @@
           </div>
 
           <div class="flex flex-col text-right">
-              <span class="text-lg uppercase justify-end leading-loose">{{ props.show.category.name }}</span>
-              <span class="text">{{ props.show.subCategory.name }}</span>
+              <span class="text-lg uppercase justify-end tracking-wider text-yellow-700">{{ props.show.category.name }}</span>
+              <span class="tracking-wide text-yellow-500">{{ props.show.subCategory.name }}</span>
             <div v-if="props.can.viewCreator">
               <span class="text-xs uppercase">Team:</span>
               <Link :href="`/teams/${props.team.slug}`" class="text-blue-300 hover:text-blue-500 ml-2"><span
@@ -115,9 +115,9 @@
 
       </header>
 
-      <div class="my-6 p-5">
+      <div class="my-6 py-5 px-8">
         <div class="font-semibold text-xs uppercase mb-3">EPISODE DESCRIPTION</div>
-        <div>{{ props.episode.description }}</div>
+        <div class="description">{{ props.episode.description }}</div>
       </div>
 
 
@@ -275,3 +275,10 @@ function scrollTo(selector) {
 // checkForVideo()
 
 </script>
+
+<style scoped>
+.description {
+  white-space: pre-wrap; /* CSS property to preserve whitespace and wrap text */
+  @apply tracking-wide
+}
+</style>

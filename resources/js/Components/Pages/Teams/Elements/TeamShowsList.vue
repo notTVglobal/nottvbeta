@@ -11,14 +11,16 @@
       >
         <Link :href="`/shows/${show.slug}`" class="text-gray-50 hover:text-blue-50">
           <div
-              class=" min-w-[8rem] max-w-[14rem] px-6 py-4 font-medium break-words grow-0 w-full text-center text-gray-50 hover:text-blue-500">
-
+              class="relative min-w-[8rem] max-w-[14rem] px-6 py-4 font-medium break-words grow-0 w-full text-center text-gray-50 hover:text-blue-500">
+            <div v-if="show.statusId === 9" class="absolute flex justify-end w-full -mt-3 -mr-4 right-5 z-50">
+              <div class="badge bg-gray-500 border-gray-500 text-gray-50 drop-shadow-lg">Creators Only</div>
+            </div>
             <SingleImage :image="show.image" :poster="show.poster" :alt="'show cover'"
                          class="h-64 min-w-[8rem] mb-4 object-cover hover:opacity-75 transition ease-in-out duration-150"/>
             {{ show.name }}
 
-            <div class="text-xs uppercase text-gray-500">{{ show.categoryName[0] }}</div>
-            <div class="text-xs uppercase text-gray-500">{{ show.categorySubName[0] }}</div>
+            <div class="uppercase tracking-wider text-yellow-700 mt-1">{{ show.categoryName[0] }}</div>
+            <div class="text-sm text-yellow-500">{{ show.categorySubName[0] }}</div>
           </div>
         </Link>
       </div>

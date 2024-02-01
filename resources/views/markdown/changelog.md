@@ -1,7 +1,16 @@
 # not.tv Changelog
 
-Last Update: January 29, 2024\
+Last Update: January 31, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+# v0.8.4.0
+January 29, 2024
+* Added show sub-categories
+* Fixed some policies (movie and show)
+* Re-designed the NowPlayingStore
+* Created a First Play Data Cache to store the First play video data in a .json file
+  * Added a "clear cache" button to the admin settings
+  * The data is saved in the database AppSetting as well as in the /js/firstPlayData.json
 
 # v0.8.3.8
 January 29, 2024

@@ -19,10 +19,10 @@
          class="channelsMenu overflow-y-auto"
          :class="[appSettingStore.fullPage ? 'channelsFullPageContainer' : 'ottTopRightDisplay', 'bg-green-900']">
 
-<!--      <div v-if="showUpgrade"-->
-<!--           :class="[appSettingStore.fullPage ? 'channelsFullPageContainer' : 'ottTopRightDisplay', 'bg-gray-600 hide-scrollbar']">-->
-<!--        <upgrade/>-->
-<!--      </div>-->
+      <div v-if="showUpgrade && !appSettingStore.fullPage">
+        <upgrade />
+      </div>
+
 
 
 
@@ -111,11 +111,11 @@ let props = defineProps({
 const shouldDisplayOtt = computed(() => {
   return appSettingStore.ott === 2
 })
+
 const showUpgrade = computed(() => {
-  return appSettingStore.ott === 2 &&
-      (props.user.isSubscriber ||
-          props.user.isVip ||
-          props.user.isAdmin);
+  return !userStore.isSubscriber &&
+      !userStore.isVip &&
+      !userStore.isAdmin;
 });
 
 

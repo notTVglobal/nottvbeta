@@ -1976,6 +1976,19 @@ html {
     }
   }
 
+  .btn-outline.btn-warning:hover {
+    --tw-text-opacity: 1;
+    color: var(--fallback-wac,oklch(var(--wac)/var(--tw-text-opacity)));
+  }
+
+  @supports (color: color-mix(in oklab, black, black)) {
+
+    .btn-outline.btn-warning:hover {
+      background-color: color-mix(in oklab, var(--fallback-wa,oklch(var(--wa)/1)) 90%, black);
+      border-color: color-mix(in oklab, var(--fallback-wa,oklch(var(--wa)/1)) 90%, black);
+    }
+  }
+
   .btn-disabled:hover,
     .btn[disabled]:hover,
     .btn:disabled:hover {
@@ -2685,6 +2698,10 @@ input.tab:checked + .tab-content,
     --btn-color: var(--fallback-su);
   }
 
+  .btn-warning {
+    --btn-color: var(--fallback-wa);
+  }
+
   .prose :where(code):not(:where([class~="not-prose"] *, pre *)) {
     background-color: var(--fallback-b3,oklch(var(--b3)/1));
   }
@@ -2704,6 +2721,11 @@ input.tab:checked + .tab-content,
   .btn-outline.btn-success.btn-active {
     background-color: color-mix(in oklab, var(--fallback-su,oklch(var(--su)/1)) 90%, black);
     border-color: color-mix(in oklab, var(--fallback-su,oklch(var(--su)/1)) 90%, black);
+  }
+
+  .btn-outline.btn-warning.btn-active {
+    background-color: color-mix(in oklab, var(--fallback-wa,oklch(var(--wa)/1)) 90%, black);
+    border-color: color-mix(in oklab, var(--fallback-wa,oklch(var(--wa)/1)) 90%, black);
   }
 }
 .btn:focus-visible {
@@ -2729,6 +2751,10 @@ input.tab:checked + .tab-content,
   .btn-success {
     --btn-color: var(--su);
   }
+
+  .btn-warning {
+    --btn-color: var(--wa);
+  }
 }
 .btn-secondary {
   --tw-text-opacity: 1;
@@ -2739,6 +2765,11 @@ input.tab:checked + .tab-content,
   --tw-text-opacity: 1;
   color: var(--fallback-suc,oklch(var(--suc)/var(--tw-text-opacity)));
   outline-color: var(--fallback-su,oklch(var(--su)/1));
+}
+.btn-warning {
+  --tw-text-opacity: 1;
+  color: var(--fallback-wac,oklch(var(--wac)/var(--tw-text-opacity)));
+  outline-color: var(--fallback-wa,oklch(var(--wa)/1));
 }
 .btn.glass {
   --tw-shadow: 0 0 #0000;
@@ -2773,6 +2804,14 @@ input.tab:checked + .tab-content,
 .btn-outline.btn-success.btn-active {
   --tw-text-opacity: 1;
   color: var(--fallback-suc,oklch(var(--suc)/var(--tw-text-opacity)));
+}
+.btn-outline.btn-warning {
+  --tw-text-opacity: 1;
+  color: var(--fallback-wa,oklch(var(--wa)/var(--tw-text-opacity)));
+}
+.btn-outline.btn-warning.btn-active {
+  --tw-text-opacity: 1;
+  color: var(--fallback-wac,oklch(var(--wac)/var(--tw-text-opacity)));
 }
 .btn.btn-disabled,
   .btn[disabled],
@@ -4910,7 +4949,6 @@ hr {
         flex-direction: column;
         overflow-x: hidden;
         overflow-y: scroll;
-        overflow-wrap: break-word;
         padding-left: 2rem;
         padding-right: 2rem;
     /* Hide scrollbar for Webkit browsers */
@@ -5490,7 +5528,6 @@ hr {
         max-width: 24rem;
         overflow-y: scroll;
         scroll-behavior: smooth;
-        overflow-wrap: break-word;
         --tw-bg-opacity: 0.8;
         padding-left: 1rem;
         padding-right: 1rem;
@@ -5519,7 +5556,6 @@ hr {
         flex-direction: column;
         overflow-x: hidden;
         overflow-y: scroll;
-        overflow-wrap: break-word;
         padding-top: 1.25rem;
     /* Hide scrollbar for Webkit browsers */
 
@@ -5533,7 +5569,6 @@ hr {
     flex-direction: column-reverse;
     overflow-x: clip;
     overflow-y: scroll;
-    overflow-wrap: break-word;
   }
 .chatFullPageMessages::-webkit-scrollbar {
     display: none;
@@ -6323,6 +6358,10 @@ hr {
   right: 1rem;
 }
 
+.right-5 {
+  right: 1.25rem;
+}
+
 .right-auto {
   right: auto;
 }
@@ -6530,6 +6569,14 @@ hr {
   margin-right: -0.5rem;
 }
 
+.-mr-3 {
+  margin-right: -0.75rem;
+}
+
+.-mr-4 {
+  margin-right: -1rem;
+}
+
 .-ms-2 {
   margin-inline-start: -0.5rem;
 }
@@ -6542,8 +6589,8 @@ hr {
   margin-top: -8rem;
 }
 
-.-mt-px {
-  margin-top: -1px;
+.-mt-6 {
+  margin-top: -1.5rem;
 }
 
 .mb-1 {
@@ -6698,6 +6745,10 @@ hr {
   margin-right: 1.5rem;
 }
 
+.mr-8 {
+  margin-right: 2rem;
+}
+
 .mt-1 {
   margin-top: 0.25rem;
 }
@@ -6752,6 +6803,10 @@ hr {
 
 .mt-8 {
   margin-top: 2rem;
+}
+
+.-mt-px {
+  margin-top: -1px;
 }
 
 .line-clamp-2 {
@@ -7048,6 +7103,10 @@ hr {
   width: 8rem;
 }
 
+.w-36 {
+  width: 9rem;
+}
+
 .w-4 {
   width: 1rem;
 }
@@ -7169,10 +7228,6 @@ hr {
   max-width: 56rem;
 }
 
-.max-w-6xl {
-  max-width: 72rem;
-}
-
 .max-w-7xl {
   max-width: 80rem;
 }
@@ -7233,16 +7288,16 @@ hr {
   max-width: 20rem;
 }
 
+.max-w-6xl {
+  max-width: 72rem;
+}
+
 .flex-1 {
   flex: 1 1 0%;
 }
 
 .flex-initial {
   flex: 0 1 auto;
-}
-
-.flex-none {
-  flex: none;
 }
 
 .shrink-0 {
@@ -7912,6 +7967,11 @@ hr {
 .border-white {
   --tw-border-opacity: 1;
   border-color: rgb(255 255 255 / var(--tw-border-opacity));
+}
+
+.border-yellow-500 {
+  --tw-border-opacity: 1;
+  border-color: rgb(234 179 8 / var(--tw-border-opacity));
 }
 
 .border-yellow-700 {
@@ -9059,9 +9119,9 @@ hr {
   color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
-.text-yellow-300 {
+.text-yellow-400 {
   --tw-text-opacity: 1;
-  color: rgb(253 224 71 / var(--tw-text-opacity));
+  color: rgb(250 204 21 / var(--tw-text-opacity));
 }
 
 .text-yellow-500 {
@@ -9072,16 +9132,6 @@ hr {
 .text-yellow-600 {
   --tw-text-opacity: 1;
   color: rgb(202 138 4 / var(--tw-text-opacity));
-}
-
-.text-yellow-400 {
-  --tw-text-opacity: 1;
-  color: rgb(250 204 21 / var(--tw-text-opacity));
-}
-
-.text-purple-400 {
-  --tw-text-opacity: 1;
-  color: rgb(192 132 252 / var(--tw-text-opacity));
 }
 
 .text-yellow-700 {
@@ -10798,6 +10848,10 @@ hr {
 
   .xl\:w-1\/4 {
     width: 25%;
+  }
+
+  .xl\:w-1\/6 {
+    width: 16.666667%;
   }
 
   .xl\:w-3\/4 {

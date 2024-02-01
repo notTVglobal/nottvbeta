@@ -12,7 +12,7 @@
 
       <div class="h-full w-full overflow-y-hidden scrollbar-hide">
 
-        <div v-if="!showUpgrade">
+        <div v-if="showUpgrade && !appSettingStore.fullPage">
           <upgrade />
         </div>
 
@@ -89,10 +89,9 @@ const shouldDisplayOtt = computed(() => {
 })
 
 const showUpgrade = computed(() => {
-  return appSettingStore.ott === 3 &&
-      (!props.user.isSubscriber ||
-      !props.user.isVip ||
-      !props.user.isAdmin);
+  return !userStore.isSubscriber &&
+      !userStore.isVip &&
+      !userStore.isAdmin;
 });
 
 </script>

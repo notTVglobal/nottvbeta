@@ -15,7 +15,7 @@
 
     </div>
 
-    <ProgressBar />
+    <ProgressBar v-if="user"/>
 
     <!-- Over The Top (OTT) -->
     <OttContainer v-if="user" :user="user"/>
@@ -65,9 +65,11 @@
 <script setup>
 import { ref, onUnmounted, onMounted } from 'vue'
 import { Inertia } from '@inertiajs/inertia'
+import { usePage } from '@inertiajs/inertia-vue3'
 import videojs from 'video.js'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
+import { useNowPlayingStore } from '@/Stores/NowPlayingStore'
 import { useStreamStore } from '@/Stores/StreamStore'
 import { useChatStore } from '@/Stores/ChatStore'
 import { useUserStore } from '@/Stores/UserStore'
@@ -79,6 +81,7 @@ import ProgressBar from '@/Components/Global/VideoPlayer/VideoProgressBar/Progre
 
 const appSettingStore = useAppSettingStore()
 const videoPlayerStore = useVideoPlayerStore()
+const nowPlayingStore = useNowPlayingStore()
 const streamStore = useStreamStore()
 const chatStore = useChatStore()
 const userStore = useUserStore()
@@ -87,7 +90,13 @@ let showLogin = ref(false)
 let screenWidth = ref(screen.width)
 let mouseActive = false
 
+// const { pageProps } = usePage();
+
 onMounted(() => {
+  // const firstPlayVideoSourceType = ref(pageProps.value.firstPlayVideoSourceType);
+  // const firstPlayVideoSource = ref(pageProps.value.firstPlayVideoSource);
+  // nowPlayingStore.setActiveMedia(firstPlayVideoSourceType, firstPlayVideoSource);
+
 const videoPlayer = videojs('main-player')
 
   videoPlayer.ready(() => {

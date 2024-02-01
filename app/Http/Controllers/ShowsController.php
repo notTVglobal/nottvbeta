@@ -31,11 +31,22 @@ class ShowsController extends Controller {
 
   public function __construct() {
 
-//        $this->middleware('can:viewAny,show')->only(['index']);
+//        $this->middleware('can:viewAny' . \App\Models\Show::class)->only(['index']);
+    $this->middleware('can:view,show')->only(['show']);
+//    $this->middleware('can:view,' . \App\Models\Show::class)->only(['create']);
+//    $this->middleware('can:view,show')->only('index');
+    $this->middleware('can:create,'.Show::class)->only(['create']);
+    $this->middleware('can:create,'.Show::class)->only(['store']);
+//    $this->middleware('can:create' . \App\Models\Show::class)->only(['store']);
+    $this->middleware('can:edit,show')->only(['edit']);
+    $this->middleware('can:edit,show')->only(['update']);
+    $this->middleware('can:destroy,show')->only(['destroy']);
+
     $this->middleware('can:viewShowManagePage,show')->only(['manage']);
+
     // tec21: this policy isn't working vvv
 //        $this->middleware('can:editShowManagePage,show')->only(['changeEpisodeStatus']);
-    $this->middleware('can:edit,show')->only(['edit']);
+
 //        $this->middleware('can:create,show')->only(['store']);
     $this->middleware('can:createEpisode,show')->only(['createEpisode']);
     $this->middleware('can:viewEpisodeManagePage,show')->only(['manageEpisode']);
@@ -55,7 +66,7 @@ class ShowsController extends Controller {
         'comingSoon'     => $this->fetchComingSoon(),
         'filters'        => Request::only(['search']),
         'can'            => [
-            'viewShows'   => Auth::user()->can('view', Show::class),
+//            'viewShows'   => Auth::user()->can('view', Show::class),
             'viewCreator' => Auth::user()->can('viewCreator', User::class),
         ]
     ]);
@@ -66,12 +77,20 @@ class ShowsController extends Controller {
         ->when(Request::input('search'), function ($query, $search) {
           $query->where('name', 'like', "%{$search}%");
         })
-        ->whereHas('showEpisodes', function ($query) {
-          $query->where('show_episode_status_id', 7); // Filter for episodes that are published
+        // Conditionally apply the filter for published episodes based on user status
+        ->when(!auth()->check() || (auth()->check() && !auth()->user()->creator), function ($query) {
+          $query->whereHas('showEpisodes', function ($query) {
+            $query->where('show_episode_status_id', 7); // Filter for episodes that are published
+          });
         })
         ->where(function ($query) {
-          $query->where('show_status_id', 1) // Filter for shows that are new
-          ->orWhere('show_status_id', 2); // or active
+          if (auth()->check() && auth()->user()->creator) {
+            // If the user is a creator, only show status 9
+            $query->where('show_status_id', 9);
+          } else {
+            // For all other users, filter for shows that are new or active
+            $query->whereIn('show_status_id', [1, 2]);
+          }
         })
         ->latest()
         ->paginate(6, ['*'], 'shows')
@@ -106,7 +125,7 @@ class ShowsController extends Controller {
     ];
   }
 
-  private function fetchNewestEpisodes(): \Illuminate\Contracts\Pagination\LengthAwarePaginator {
+  private function fetchNewestEpisodes() {
     return ShowEpisode::with('show', 'image', 'show.category', 'show.subCategory', 'appSetting')
         ->where('show_episode_status_id', 7) // Assuming 7 is the status ID for published episodes
         ->whereHas('show', function ($query) {
@@ -114,9 +133,9 @@ class ShowsController extends Controller {
           $query->where('show_status_id', 1)->orWhere('show_status_id', 2);
         })
         ->orderBy('release_dateTime', 'desc')
-        ->paginate(5, ['*'], 'episodes')
-        ->withQueryString()
-        ->through(fn($showEpisode) => $this->transformShowEpisode($showEpisode));
+        ->limit(5) // Limit the results to the 5 newest episodes
+        ->get() // Get the results without pagination
+        ->map(fn($showEpisode) => $this->transformShowEpisode($showEpisode)); // Transform each episode if needed
   }
 
   private function transformShowEpisode($showEpisode): array {
@@ -141,19 +160,28 @@ class ShowsController extends Controller {
     ];
   }
 
-  private function fetchComingSoon(): \Illuminate\Contracts\Pagination\LengthAwarePaginator {
+  private function fetchComingSoon() {
+    $threeMonthsAgo = now()->subMonths(3);
+
     return Show::with(['team', 'user', 'image', 'showEpisodes', 'status', 'category', 'subCategory', 'appSetting'])
         ->whereHas('showEpisodes', function ($query) {
-          $query->where('show_episode_status_id', 6); // Assuming 6 is the status ID for coming soon episodes
+          // Instead of filtering by status, directly check for future scheduled_release_dateTime
+          $query->where('scheduled_release_dateTime', '>', now());
         })
+        ->where('updated_at', '>', $threeMonthsAgo) // Continue filtering shows updated within the last 3 months
         ->where(function ($query) {
-          $query->where('show_status_id', 1) // Filter for shows that are new
+          $query->where('show_status_id', 1) // Shows that are new
           ->orWhere('show_status_id', 2); // or active
         })
-        ->latest()
-        ->paginate(3, ['*'], 'comingSoon')
-        ->withQueryString()
-        ->through(fn($show) => $this->transformShow($show));
+        ->orderBy(DB::raw('(
+            SELECT MIN(show_episodes.scheduled_release_dateTime)
+            FROM show_episodes
+            WHERE show_episodes.show_id = shows.id
+            AND show_episodes.scheduled_release_dateTime > NOW()
+        )'))
+        ->limit(8) // Limit to 8 shows
+        ->get() // Get the results without pagination
+        ->map(fn($show) => $this->transformShow($show)); // Transform each show if needed
   }
 
   private function transformImage($image, $appSetting): array {
@@ -190,8 +218,7 @@ class ShowsController extends Controller {
 //////////////////////////////
 
   public function create() {
-    $categories = ShowCategory::all();
-    $sub_categories = ShowCategorySub::all();
+    $categories = ShowCategory::with('subCategories')->get(); // Fetch all categories with their sub-categories
     $userId = Auth::id(); // Store the user ID in a variable to avoid multiple calls
 
     $teams = Team::with(['teamStatus:id,status'])
@@ -224,7 +251,6 @@ class ShowsController extends Controller {
         'teams'         => $teams,
         'userId'        => $userId,
         'categories'    => $categories,
-        'subCategories' => $sub_categories,
     ]);
 
   }
@@ -335,6 +361,7 @@ class ShowsController extends Controller {
         'instagram_name'        => $show->instagram_name,
         'telegram_url'          => $show->telegram_url,
         'twitter_handle'        => $show->twitter_handle,
+        'statusId'              => $show->status->id,
     ];
   }
 
@@ -494,12 +521,16 @@ class ShowsController extends Controller {
 
     $categories = ShowCategory::with('subCategories')->get(); // Fetch all categories with their sub-categories
     $statuses = ShowStatus::all();
-    $show->load('image', 'appSetting', 'category', 'subCategory'); // Eager load necessary relationships
+    $show->load('user', 'image', 'appSetting', 'category', 'subCategory'); // Eager load necessary relationships
 
     return Inertia::render('Shows/{$id}/Edit', [
         'show'        => $show,
         'team'        => Team::query()->where('id', $show->team_id)->firstOrFail(),
-        'showRunner'  => User::query()->where('id', $show->user_id)->pluck('id', 'name')->firstOrFail(),
+//        'showRunner'  => User::query()->where('id', $show->user_id)->pluck('id', 'name')->firstOrFail(),
+//        'showRunner'  => [
+//                        'name' => $show->user->name,
+//                        'id' => $show->user->id,
+//        ],
         'image'       => $this->transformImage($show->image, $show->appSetting),
         'categories'  => $categories,
         'statuses'    => $statuses,
@@ -593,7 +624,7 @@ class ShowsController extends Controller {
     sleep(1);
 
     // redirect
-    return redirect()->route('shows')->with('message', 'Show Deleted Successfully');
+    return redirect()->route('shows.index')->with('message', 'Show Deleted Successfully');
   }
 
   ////////////////////////////////////////////////////////////////////////////////////
@@ -608,6 +639,8 @@ class ShowsController extends Controller {
 
   public function createEpisode(Show $show) {
 
+    $show->load('user', 'image', 'appSetting', 'category', 'subCategory'); // Eager load necessary relationships
+
     return Inertia::render('Shows/{$id}/Episodes/Create', [
         'show' => [
             'name'             => $show->name,
@@ -615,8 +648,8 @@ class ShowsController extends Controller {
             'slug'             => $show->slug,
             'showRunner'       => $show->user->name,
             'image'            => $this->transformImage($show->image, $show->appSetting),
-            'showCategoryName' => $show->showCategory->name,
-            'categorySubName'  => $show->showCategorySub->name,
+            'showCategoryName' => $show->category->name,
+            'categorySubName'  => $show->subCategory->name,
         ],
         'team' => Team::query()->where('id', $show->team_id)->first(),
         'user' => [
