@@ -53,13 +53,59 @@
 
           <div v-if="form.errors.show_id" v-text="form.errors.show_id" class="text-xs text-red-600 mt-1"></div>
         </div>
+
+        <div class="mb-6 w-64">
+          <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"
+                 for="creative_commons"
+          >
+            Creative Commons / Copyright
+          </label>
+
+          <select class="border border-gray-400 text-gray-800 py-2 pl-2 pr-8 w-fit rounded-lg block mb-2 uppercase font-bold text-xs"
+                  v-model="selectedCreativeCommons" @change="handleCreativeCommonsChange">
+            <option v-for="cc in creative_commons" :key="cc.id" :value="cc.id">{{ cc.name }}</option>
+          </select>
+
+          <div class="">{{ selectedCreativeCommonsDescription }}</div>
+
+          <div v-if="form.errors.creative_commons_id" v-text="form.errors.creative_commons_id"
+               class="text-xs text-red-600 mt-1"></div>
+
+        </div>
+
+        <div v-if="selectedCreativeCommons" class="mb-6 w-64">
+
+          <div v-if="selectedCreativeCommons === 8">
+            <input class="hidden border border-gray-400 text-black font-semibold p-2 w-1/2 rounded-lg"
+                   type="hidden"
+                   v-model="selectedCopyrightYear"
+                   value="null">
+          </div>
+          <div v-else>
+            <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"
+                   for="copyrightYear"
+            >
+              Copyright Year
+            </label>
+            <input class="border border-gray-400 text-black font-semibold p-2 w-1/2 rounded-lg"
+                   type="number"
+                   minlength="4"
+                   maxlength="4"
+                   v-model="selectedCopyrightYear">
+          </div>
+
+          <div v-if="form.errors.copyrightYear" v-text="form.errors.copyrightYear"
+               class="text-xs text-red-600 mt-1"></div>
+        </div>
+
+
         <div class="mb-6">
           <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"
                  for="showCategory"
           >
             Category
           </label>
-          <div class="font-bold">{{ props.show.showCategoryName }}</div>
+          <div class="font-bold">{{ props.show.category.name }}</div>
         </div>
         <div class="mb-6">
           <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"
@@ -67,8 +113,7 @@
           >
             Sub-category
           </label>
-          <div class="mb-2 text-sm text-orange-600">Sub-categories are coming soon!</div>
-          <div class="font-bold">{{ props.show.subCategoryName }}</div>
+          <div class="font-bold">{{ props.show.subCategory.name }}</div>
         </div>
         <div class="mb-6">
           <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"
@@ -215,6 +260,7 @@ import { useForm } from "@inertiajs/inertia-vue3"
 import { usePageSetup } from '@/Utilities/PageSetup'
 import JetValidationErrors from '@/Jetstream/ValidationErrors'
 import CancelButton from "@/Components/Global/Buttons/CancelButton"
+import { computed, ref } from 'vue'
 
 usePageSetup('shows/slug/episodes/create')
 
@@ -222,6 +268,7 @@ let props = defineProps({
   user: Object,
   show: Object,
   team: Object,
+  creative_commons: Object,
 })
 
 // appSettingStore.currentPage = 'episodes'
@@ -235,6 +282,10 @@ let props = defineProps({
 //     teamStore.setActiveTeam(props.team);
 // }
 
+let selectedCreativeCommons = ref(null);
+let selectedCopyrightYear = ref(null);
+const currentYear = new Date().getFullYear();
+
 let form = useForm({
   name: '',
   description: '',
@@ -246,6 +297,8 @@ let form = useForm({
   youtube_url: '',
   video_embed_code: '',
   notes: '',
+  creative_commons_id: '',
+  copyrightYear: '',
 });
 
 function reset() {
@@ -258,10 +311,26 @@ function addEmbedCodeConfirm() {
   }
 }
 
+const handleCreativeCommonsChange = () => {
+  if (selectedCreativeCommons.value === 8) {
+    selectedCopyrightYear.value = null;
+  } else if (selectedCopyrightYear.value === null) {
+    // Pre-populate with current year only if copyrightYear is null
+    selectedCopyrightYear.value = currentYear;
+  }
+};
+
+const selectedCreativeCommonsDescription = computed(() => {
+  const selectedCC = props.creative_commons.find((cc) => cc.id === selectedCreativeCommons.value);
+  return selectedCC ? selectedCC.description : '';
+});
+
 let submit = () => {
   if (form.video_embed_code && form.video_url) {
     addEmbedCodeConfirm();
   } else
+    form.creative_commons_id = selectedCreativeCommons.value
+    form.copyrightYear = selectedCopyrightYear.value
     form.post(route('showEpisodes.store', props.show.slug));
 };
 

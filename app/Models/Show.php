@@ -38,6 +38,7 @@ class Show extends Model
         'last_release_year',
         'show_category_id',
         'show_category_sub_id',
+        'episode_play_order',
     ];
 
     public function getRouteKeyName() {

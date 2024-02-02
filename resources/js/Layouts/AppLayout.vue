@@ -42,6 +42,7 @@ import { Inertia } from "@inertiajs/inertia"
 import { ref, watch, provide, computed, onBeforeMount, onBeforeUnmount, defineAsyncComponent, onMounted } from "vue"
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
+import { useNowPlayingStore } from "@/Stores/NowPlayingStore"
 import { useStreamStore } from "@/Stores/StreamStore"
 import { useUserStore } from "@/Stores/UserStore"
 import { useChatStore } from "@/Stores/ChatStore"
@@ -64,6 +65,7 @@ import VideoPlayerMain from "@/Components/Global/VideoPlayer/VideoPlayerMain"
 
 const appSettingStore = useAppSettingStore();
 const videoPlayerStore = useVideoPlayerStore()
+const nowPlayingStore = useNowPlayingStore()
 const userStore = useUserStore()
 const streamStore = useStreamStore()
 const chatStore = useChatStore()
@@ -108,6 +110,8 @@ onBeforeMount(() => {
 
 onMounted(() => {
   console.log('we are here.')
+  nowPlayingStore.fetchFirstPlayData();
+
 })
 
 onBeforeUnmount(() => {

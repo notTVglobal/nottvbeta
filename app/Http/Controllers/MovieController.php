@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CreativeCommons;
 use App\Models\Image;
 use App\Models\Movie;
 use App\Models\MovieCategory;
@@ -27,7 +28,7 @@ class MovieController extends Controller {
 
     $this->middleware('can:view,movie')->only(['show']);
     $this->middleware('can:create,' . \App\Models\Movie::class)->only(['create']);
-    $this->middleware('can:create,movie')->only(['store']);
+    $this->middleware('can:create,' . \App\Models\Movie::class)->only(['store']);
     $this->middleware('can:edit,movie')->only(['edit']);
     $this->middleware('can:edit,movie')->only(['update']);
     $this->middleware('can:destroy,movie')->only(['destroy']);
@@ -40,8 +41,7 @@ class MovieController extends Controller {
    * @return Response
    */
 
-  public function index(): Response
-  {
+  public function index(): Response {
     return Inertia::render('Movies/Index', [
         'movies'           => $this->fetchMovies(),
         'recentlyReviewed' => $this->fetchRecentlyReviewed(),
@@ -53,8 +53,7 @@ class MovieController extends Controller {
 
   // The goal is to fetch movies, apply a search filter if necessary,
   // paginate the results, and transform each movie with the required data.
-  private function fetchMovies()
-  {
+  private function fetchMovies() {
     return Movie::with(['image', 'appSetting', 'category', 'subCategory', 'status'])
         ->when(Request::input('search'), function ($query, $search) {
           $query->where('name', 'like', "%{$search}%");
@@ -72,8 +71,7 @@ class MovieController extends Controller {
   // specific attribute in your Movie model, such as a reviewed_at
   // timestamp, or simply by the created_at or updated_at timestamps
   // if reviewed_at is not available.
-  private function fetchRecentlyReviewed()
-  {
+  private function fetchRecentlyReviewed() {
     return Movie::with(['image', 'appSetting', 'category', 'subCategory', 'status'])
         // Optionally, you can filter by a 'reviewed_at' field if available
         // ->whereNotNull('reviewed_at')
@@ -87,8 +85,7 @@ class MovieController extends Controller {
   // The definition of "most anticipated" can vary based on your application's context.
   // It might be determined by user ratings, the number of pre-orders, a specific flag
   // in the database, or upcoming release dates.
-  private function fetchMostAnticipated()
-  {
+  private function fetchMostAnticipated() {
     return Movie::with(['image', 'appSetting', 'category', 'subCategory', 'status'])
         ->where($this->applyStatusFilter())
         ->where('release_year', '>', now()->year) // Assuming future release years indicate anticipation
@@ -102,8 +99,7 @@ class MovieController extends Controller {
   // fetches movies based on their upcoming status or release dates. The exact criteria
   // will depend on your application's specific needs. In this case, let's assume that
   // "coming soon" movies are determined by their release dates being at least 24 hours in the future.
-  private function fetchComingSoon()
-  {
+  private function fetchComingSoon() {
     $tomorrow = now()->addDay(); // Get the date and time for 24 hours in the future
 
     return Movie::with(['image', 'appSetting', 'category', 'subCategory', 'status'])
@@ -118,8 +114,7 @@ class MovieController extends Controller {
   // The through(fn($movie) => $this->transformMovie($movie)) method
   // transforms each movie using the transformMovie method. This method
   // structures the movie data as needed by your frontend.
-  private function transformMovie($movie)
-  {
+  private function transformMovie($movie) {
     return [
         'id'            => $movie->id,
         'name'          => $movie->name,
@@ -136,13 +131,13 @@ class MovieController extends Controller {
         'category'      => $movie->category ? $movie->category->toArray() : null,
         'subCategory'   => $movie->subCategory ? $movie->subCategory->toArray() : null,
         'statusId'      => $movie->status->id,
-    ];
+        'isNew'         => Carbon::parse($movie->releaseDateTime)->isBetween(Carbon::now()->subWeek(), Carbon::now()),
+        ];
   }
 
   // transformImage is a helper method to structure the image data.
   // It's called within transformMovie
-  private function transformImage($image, $appSetting)
-  {
+  private function transformImage($image, $appSetting) {
     return [
         'id'           => $image->id,
         'name'         => $image->name,
@@ -152,8 +147,7 @@ class MovieController extends Controller {
     ];
   }
 
-  private function applyStatusFilter()
-  {
+  private function applyStatusFilter() {
     return function ($query) {
       if (auth()->check()) {
         $user = auth()->user();
@@ -235,7 +229,7 @@ class MovieController extends Controller {
 //    $video = Video::where('movies_id', $movie->id)->first();
 //    $trailer = Video::where('movie_trailers_id', $movie->id)->first();
 
-    $movie->load('trailer.video', 'video.appSetting', 'image', 'video', 'appSetting', 'category', 'subCategory', 'status'); // Eager load necessary relationships
+    $movie->load('trailer.video', 'video.appSetting', 'image', 'video', 'team', 'appSetting', 'category', 'subCategory', 'status', 'creativeCommons'); // Eager load necessary relationships
 
 
     return Inertia::render('Movies/{$id}/Index', [
@@ -244,10 +238,12 @@ class MovieController extends Controller {
             'name'           => $movie->name,
             'description'    => $movie->description,
             'logline'        => $movie->logline,
-            'file_path'      => $movie->file_path,
-            'file_url'       => $movie->file_url,
-            'teamName'       => $movie->team_id,
-            'teamSlug'       => $movie->slug,
+//            'file_path'      => $movie->file_path,
+//            'file_url'       => $movie->file_url,
+            'team'           => [
+                'name' => $movie->team->name ?? null,
+                'slug' => $movie->team->slug ?? null,
+            ],
             'image'          => [
                 'id'           => $movie->image->id,
                 'name'         => $movie->image->name,
@@ -258,17 +254,31 @@ class MovieController extends Controller {
           // need to link the Movie and Team models.
           // change team to $movie->team->name
           // and add team->slug
-            'copyrightYear'  => $movie->created_at->format('Y'),
+//            'copyrightYear'  => $movie->created_at->format('Y'),
+            'copyrightYear'  => $movie->copyrightYear,
+            'creative_commons' => $movie->creativeCommons,
             'release_year'   => $movie->release_year,
-            'created_at'     => $movie->created_at,
+//            'created_at'     => $movie->created_at,
             'www_url'        => $movie->www_url,
             'instagram_name' => $movie->instagram_name,
             'telegram_url'   => $movie->telegram_url,
             'twitter_handle' => $movie->twitter_handle,
-            'category'       => $movie->category ? $movie->category->toArray() : null,
-            'subCategory'    => $movie->subCategory ? $movie->subCategory->toArray() : null,
-            'statusId'       => $movie->status->id,
+//            'category'       => $movie->category ? $movie->category->toArray() : null,
+            'category'       => [
+                'name'        => $movie->category->name ?? null,
+                'description' => $movie->category->description ?? null,
             ],
+//            'subCategory'    => $movie->subCategory ? $movie->subCategory->toArray() : null,
+            'subCategory'    => [
+                'name'        => $movie->subCategory->name ?? null,
+                'description' => $movie->subCategory->description ?? null,
+            ],
+            'status'         => [
+                'id'   => $movie->status->id,
+                'name' => $movie->status->name,
+            ],
+            'isNew'         => Carbon::parse($movie->releaseDateTime)->isBetween(Carbon::now()->subWeek(), Carbon::now()),
+        ],
         'video'   => [
             'file_name'     => $movie->video->file_name ?? '',
             'cdn_endpoint'  => $movie->video->appSetting->cdn_endpoint ?? '',
@@ -307,13 +317,15 @@ class MovieController extends Controller {
 
     $categories = MovieCategory::with('subCategories')->get(); // Fetch all categories with their sub-categories
     $movieStatuses = MovieStatus::all();
-    $movie->load('trailer.video', 'video.appSetting', 'image', 'video', 'image.appSetting', 'category', 'subCategory'); // Eager load necessary relationships
+    $creativeCommons = CreativeCommons::all();
+
+    $movie->load('trailer.video', 'video.appSetting', 'creativeCommons', 'image', 'video', 'image.appSetting', 'category', 'subCategory'); // Eager load necessary relationships
 
     return Inertia::render('Movies/{$id}/Edit', [
         'movie'      => $movie,
         'video'      => [
             'file_name'     => $movie->video->file_name ?? '',
-            'type'     => $movie->video->type ?? '',
+            'type'          => $movie->video->type ?? '',
             'cdn_endpoint'  => $movie->video->appSetting->cdn_endpoint ?? '',
             'folder'        => $movie->video->folder ?? '',
             'cloud_folder'  => $movie->video->cloud_folder ?? '',
@@ -323,7 +335,7 @@ class MovieController extends Controller {
             'trailerDetails' => $movie->trailer, // The entire trailer object
             'video'          => [
                 'file_name'     => $movie->trailer->video->file_name ?? '',
-                'type'     => $movie->trailer->video->type ?? '',
+                'type'          => $movie->trailer->video->type ?? '',
                 'cdn_endpoint'  => $movie->trailer->video->appSetting->cdn_endpoint ?? '',
                 'folder'        => $movie->trailer->video->folder ?? '',
                 'cloud_folder'  => $movie->trailer->video->cloud_folder ?? '',
@@ -331,14 +343,15 @@ class MovieController extends Controller {
             ],
         ],
         'image'      => [
-            'id' => $movie->image->id ?? '',
-            'name' => $movie->image->name ?? '',
-            'folder' => $movie->image->folder ?? '',
+            'id'           => $movie->image->id ?? '',
+            'name'         => $movie->image->name ?? '',
+            'folder'       => $movie->image->folder ?? '',
             'cdn_endpoint' => $movie->appSetting->cdn_endpoint ?? '',
             'cloud_folder' => $movie->image->cloud_folder ?? '',
         ],
         'categories' => $categories,
-        'statuses' => $movieStatuses,
+        'statuses'   => $movieStatuses,
+        'creative_commons' => $creativeCommons,
         'can'        => [
             'editMovie' => Auth::user()->can('edit', Movie::class),
         ],
@@ -355,13 +368,16 @@ class MovieController extends Controller {
   public function update(HttpRequest $request, Movie $movie) {
 
 //    dd($request);
+
     // validate the request
     $request->validate([
         'name'           => ['required', 'string', 'max:255', Rule::unique('movies')->ignore($movie->id)],
         'description'    => 'required',
         'logline'        => 'required|string',
-        'release_year'   => 'integer|min:1900|max:2300',
+        'release_year'   => ['integer', 'min:1900', 'max:' . date('Y')],
         'release_date'   => 'date|after:tomorrow',
+        'creative_commons_id' => 'required|integer|exists:creative_commons,id',
+        'copyrightYear'   => ['nullable', 'integer', 'min:1900', 'max:' . date('Y')],
         'category'       => 'required',
         'sub_category'   => 'nullable',
         'file_url'       => 'nullable|active_url',
@@ -370,18 +386,29 @@ class MovieController extends Controller {
         'telegram_url'   => 'nullable|active_url',
         'twitter_handle' => 'nullable|string|min:4|max:15',
         'notes'          => 'nullable|string|max:1024',
-        'status' => 'required|integer|exists:movie_statuses,id',
-        ], [
-        'status.exists' => 'The selected status is invalid.',
+        'status'         => 'required|integer|exists:movie_statuses,id',
+    ], [
+        'status.exists'      => 'The selected status is invalid.',
         'release_date.after' => 'The release date must be at least 24 hours in the future.',
+        'copyrightYear.integer' => 'Please choose a copyright year',
     ]);
 
+    // Capture the original status before any changes
+    $originalStatus = $movie->status_id;
+
+    // Check if the status is being changed from something other than 1 to 2
+    if ($originalStatus != 1 && $request->status == 2) {
+      // Set releaseDateTime to now
+      $movie->releaseDateTime = now();
+    }
 
     // update the show
     $movie->name = $request->name;
     $movie->description = $request->description;
     $movie->logline = $request->logline;
     $movie->release_year = $request->release_year;
+    $movie->copyrightYear = $request->copyrightYear;
+    $movie->creative_commons_id = $request->creative_commons_id;
     $movie->movie_category_id = $request->category;
     $movie->movie_category_sub_id = $request->sub_category;
     $movie->slug = \Str::slug($request->name);
@@ -390,7 +417,7 @@ class MovieController extends Controller {
     $movie->instagram_name = $request->instagram_name;
     $movie->telegram_url = $request->telegram_url;
     $movie->twitter_handle = $request->twitter_handle;
-    $movie->status_id = $request->status;
+    $movie->status_id = $request->status; // Update the movie's status with the new status from the request
     $movie->save();
     sleep(1);
 

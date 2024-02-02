@@ -19,16 +19,19 @@
         <div class="container mx-auto px-4">
           <div class="movie-details border-b border-gray-800 pb-12 flex flex-col lg:flex-row">
             <div class="relative items-center">
-              <div v-if="movie.statusId === 9" class="absolute flex justify-end w-full -mt-3 z-50">
-                <div class="badge bg-gray-500 border-gray-500 text-gray-50 drop-shadow-lg">Creators Only</div>
+              <div v-if="movie.status.id === 9" class="absolute flex justify-end w-full -mt-3 z-50">
+                <CreatorsOnlyBadge />
+              </div>
+              <div v-else-if="movie.isNew" class="absolute flex justify-end w-full -mt-3 z-50">
+                <NewContentBadge />
               </div>
               <SingleImage :image="movie.image" :alt="'movie cover'"
                            :class="'h-96 min-w-[16rem] w-64 object-cover mb-6 lg:mb-0 m-auto lg:m-0'"/>
             </div>
             <div class="lg:ml-12 lg:mr-0">
-              <h2 class="font-semibold text-4xl text-center lg:text-left">{{ movie.name }}</h2>
+              <h2 class="font-semibold text-4xl text-center lg:text-left tracking-wide">{{ movie.name }}</h2>
               <div class="text-gray-400 text-center lg:text-left mt-1">
-                <span>{{ movie.category?.name }}<span class=""> &middot; {{ movie.subCategory?.name }}</span></span>
+                <span class="text-yellow-700 tracking-wider uppercase">{{ movie.category?.name }}</span><span class="text-gray-400"> &middot; </span><span class="text-yellow-500 tracking-wide"> {{ movie.subCategory?.name }}</span>
                 <span v-if="movie.release_year"> &middot; {{ movie.release_year }}</span>
               </div>
 
@@ -257,6 +260,8 @@ import { useShowStore } from '@/Stores/ShowStore'
 import { useUserStore } from '@/Stores/UserStore'
 import Message from '@/Components/Global/Modals/Messages'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage'
+import CreatorsOnlyBadge from '@/Components/Global/Badges/CreatorsOnlyBadge.vue'
+import NewContentBadge from '@/Components/Global/Badges/NewContentBadge.vue'
 
 usePageSetup('movies/slug')
 
@@ -286,31 +291,77 @@ let source = {
   type: ref(''),
 }
 
-let playMovie = () => {
-  nowPlayingStore.reset()
-  // if file exists and is !processing, play file.
-  if (props.video.file_name !== '' && props.video.upload_status !== 'processing') {
-    nowPlayingStore.movie.name = props.movie.name
-    nowPlayingStore.movie.url = 'movies/' + props.movie.slug
-    videoPlayerStore.loadNewSourceFromFile(props.video)
-    videoPlayerStore.videoName = props.movie.name + ' (file)'
-    videoPlayerStore.currentChannelName = 'On Demand (' + props.movie.name + ') from file'
-    Inertia.visit('/stream')
-  } else if
-      // else if url exists, play url
-  (props.movie.file_url) {
-    nowPlayingStore.isFromWeb = true
-    nowPlayingStore.videoFile.name = props.movie.name
-    source.video_url = props.movie.file_url
-    source.type = 'video/mp4'
-    console.log(source)
-    videoPlayerStore.loadNewSourceFromUrl(source)
-    // videoPlayerStore.videoName = props.movie.name+' (web)'
-    // videoPlayerStore.currentChannelName = 'On Demand ('+props.movie.name+') from web'
-    Inertia.visit('/stream')
-  }
+// let playMovie = () => {
+//   nowPlayingStore.reset()
+//   // if file exists and is !processing, play file.
+//   if (props.video.file_name !== '' && props.video.upload_status !== 'processing') {
+//     nowPlayingStore.movie.name = props.movie.name
+//     nowPlayingStore.movie.url = 'movies/' + props.movie.slug
+//     videoPlayerStore.loadNewSourceFromFile(props.video)
+//     videoPlayerStore.videoName = props.movie.name + ' (file)'
+//     videoPlayerStore.currentChannelName = 'On Demand (' + props.movie.name + ') from file'
+//     Inertia.visit('/stream')
+//   } else if
+//       // else if url exists, play url
+//   (props.movie.file_url) {
+//     nowPlayingStore.isFromWeb = true
+//     nowPlayingStore.videoFile.name = props.movie.name
+//     source.video_url = props.movie.file_url
+//     source.type = 'video/mp4'
+//     console.log(source)
+//     videoPlayerStore.loadNewSourceFromUrl(source)
+//     // videoPlayerStore.videoName = props.movie.name+' (web)'
+//     // videoPlayerStore.currentChannelName = 'On Demand ('+props.movie.name+') from web'
+//     Inertia.visit('/stream')
+//   }
+//
+// }
+//
+// function checkForVideo() {
+//   if (props.video.file_name) {
+//     videoPlayerStore.hasVideo = true
+//   } else if (props.movie.file_url) {
+//     videoPlayerStore.hasVideo = true
+//   } else if (!props.movie.file_url && props.video.upload_status === 'processing') {
+//     videoPlayerStore.hasVideo = false
+//   } else if (!props.video.file_name && !props.movie.file_url) {
+//     videoPlayerStore.hasVideo = false
+//   }
+//   return true
+// }
 
-}
+let playMovie = () => {
+  nowPlayingStore.reset();
+
+  const isInternalVideo = props.video.file_name !== '' && props.video.upload_status !== 'processing';
+  const isExternalVideo = !!props.movie.file_url;
+
+  // Common details for nowPlayingStore
+  const commonDetails = {
+    name: props.movie.name,
+    url: `movies/${props.movie.slug}`,
+  };
+
+  // Determine media type and specific details based on the video type
+  const mediaType = isInternalVideo ? 'movie' : 'externalVideo';
+  const videoDetails = isInternalVideo ? props.movie : { video_url: props.movie.file_url, type: 'video/mp4' };
+
+  // Set the currently playing media in nowPlayingStore
+  nowPlayingStore.setActiveMedia(mediaType, {
+    ...commonDetails,
+    videoDetails, // Spread in the specific details for internal or external video
+  });
+
+  // Load the video source in videoPlayerStore for playback
+  if (isInternalVideo) {
+    videoPlayerStore.loadNewSourceFromFile(props.video);
+  } else if (isExternalVideo) {
+    videoPlayerStore.loadNewSourceFromUrl({ video_url: props.movie.file_url, type: 'video/mp4' });
+  }
+  appSettingStore.ott = 1
+  // Inertia.visit('/stream');
+};
+
 
 function checkForVideo() {
   if (props.video.file_name) {

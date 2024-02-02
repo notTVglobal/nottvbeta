@@ -218,34 +218,67 @@ let props = defineProps({
 
 let playEpisode = () => {
   nowPlayingStore.reset()
-  nowPlayingStore.activeType = 6
-  nowPlayingStore.show.name = props.show.name
-  nowPlayingStore.show.description = props.show.description
-  nowPlayingStore.show.url = `/shows/${props.show.slug}`
-  nowPlayingStore.show.episode.name = props.episode.name
-  nowPlayingStore.show.episode.url = `/shows/${props.show.slug}/episode/${props.episode.slug}`
-  nowPlayingStore.show.episode.image = props.image
-  nowPlayingStore.show.category = props.show.categoryName
-  nowPlayingStore.show.categorySub = props.show.categorySubName
-  nowPlayingStore.show.image = props.show.image
-  videoPlayerStore.makeVideoFullPage()
-  Inertia.visit('/stream')
-  // if video has a file and is !processing, play file.
-  if (props.episode.video.storage_location === 'spaces' && props.episode.video.upload_status !== 'processing') {
-    videoPlayerStore.loadNewSourceFromFile(props.episode.video)
-  } else if
-      // else if url exists, play url
-  (props.episode.video.video_url) {
-    nowPlayingStore.isFromWeb = true
-    nowPlayingStore.show.episode.name = props.episode.name
-    videoPlayerStore.loadNewSourceFromUrl(props.episode.video)
 
-  } else if
-      // else if youtube_url exists, play youtube_url
-  (props.episode.youtube_url) {
-    nowPlayingStore.show.episode.name = props.episode.name
-    videoPlayerStore.loadNewSourceFromYouTube(props.episode.youtube_url)
+
+  const isInternalVideo = props.episode.video.file_name !== '' && props.episode.video.upload_status !== 'processing';
+  const isExternalVideo = !!props.episode.video.video_url;
+
+  // Common details for nowPlayingStore
+  const commonDetails = {
+    name: props.episode.name,
+    url: `shows/${props.show.slug}/episode/${props.episode.slug}`,
+  };
+
+  // Determine media type and specific details based on the video type
+  const mediaType = isInternalVideo ? 'show' : 'externalVideo';
+  const videoDetails = isInternalVideo ? props.episode : { video_url: props.episode.video.video_url, type: 'video/mp4' };
+
+  // Set the currently playing media in nowPlayingStore
+  nowPlayingStore.setActiveMedia(mediaType, {
+    ...commonDetails,
+    videoDetails, // Spread in the specific details for internal or external video
+  });
+
+  // Load the video source in videoPlayerStore for playback
+  if (isInternalVideo) {
+    videoPlayerStore.loadNewSourceFromFile(props.episode.video);
+  } else if (isExternalVideo) {
+    videoPlayerStore.loadNewSourceFromUrl({ video_url: props.episode.video.video_url, type: 'video/mp4' });
   }
+  appSettingStore.ott = 1
+  // Inertia.visit('/stream');
+
+
+//
+//
+//   nowPlayingStore.activeType = 6
+//   nowPlayingStore.show.name = props.show.name
+//   nowPlayingStore.show.description = props.show.description
+//   nowPlayingStore.show.url = `/shows/${props.show.slug}`
+//   nowPlayingStore.show.episode.name = props.episode.name
+//   nowPlayingStore.show.episode.url = `/shows/${props.show.slug}/episode/${props.episode.slug}`
+//   nowPlayingStore.show.episode.image = props.image
+//   nowPlayingStore.show.category = props.show.categoryName
+//   nowPlayingStore.show.categorySub = props.show.categorySubName
+//   nowPlayingStore.show.image = props.show.image
+//   videoPlayerStore.makeVideoFullPage()
+//   Inertia.visit('/stream')
+//   // if video has a file and is !processing, play file.
+//   if (props.episode.video.storage_location === 'spaces' && props.episode.video.upload_status !== 'processing') {
+//     videoPlayerStore.loadNewSourceFromFile(props.episode.video)
+//   } else if
+//       // else if url exists, play url
+//   (props.episode.video.video_url) {
+//     nowPlayingStore.isFromWeb = true
+//     nowPlayingStore.show.episode.name = props.episode.name
+//     videoPlayerStore.loadNewSourceFromUrl(props.episode.video)
+//
+//   } else if
+//       // else if youtube_url exists, play youtube_url
+//   (props.episode.youtube_url) {
+//     nowPlayingStore.show.episode.name = props.episode.name
+//     videoPlayerStore.loadNewSourceFromYouTube(props.episode.youtube_url)
+//   }
 }
 
 teamStore.slug = props.team.slug

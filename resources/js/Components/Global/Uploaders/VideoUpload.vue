@@ -1,13 +1,13 @@
 <template>
   <div>
 
-    <progress v-show="userStore.uploadPercentage != 0" max="100" :value="userStore.uploadPercentage" class="w-full"/>
-    <div v-show="userStore.uploadPercentage != 0" class="w-full mb-4">{{ userStore.uploadPercentageRounded }}%</div>
+    <progress v-show="userStore.uploadPercentage !== 0" max="100" :value="userStore.uploadPercentage" class="w-full"/>
+    <div v-show="userStore.uploadPercentage !== 0" class="w-full mb-4">{{ userStore.uploadPercentageRounded }}%</div>
 
     <div v-show="uploadingMessage" class="mb-4 font-bold text-center">Please stay on this screen until upload is
       complete.
     </div>
-    <div v-show="uploadCompleteMessage" class="mb-4 font-bold text-center">Upload is complete. The video is now
+    <div v-show="uploadComplete" class="mb-4 font-bold text-center">Upload is complete. The video is now
       processing.
     </div>
     <form v-show="!isHidden" id="videoUploadForm" action="/videoupload"
@@ -27,12 +27,33 @@ import { onMounted, ref } from "vue"
 import { useForm } from "@inertiajs/inertia-vue3"
 import { Dropzone } from "dropzone"
 import { useUserStore } from "@/Stores/UserStore"
+import { useUploadStore } from "@/Stores/UploadStore"
 
 const userStore = useUserStore()
+const uploadStore = useUploadStore()
+
 let uploadPercentage = ref(0)
-let uploadingMessage = ref(0)
-let uploadCompleteMessage = ref(0)
+let uploadingMessage = ref(false)
+let uploadComplete = ref(false)
 let isHidden = ref(false)
+
+const emits = defineEmits(['upload-start', 'upload-finished']);
+
+const uploadCompleteMessage = () => {
+  uploadingMessage = false
+  uploadComplete = true
+}
+
+const uploadStarted = () => {
+  uploadingMessage = true
+  emits('upload-start');
+}
+
+function onUploadSuccess(videoId) {
+  emits('upload-finished', videoId);
+  uploadStore.setVideoId(videoId);
+  uploadStore.setUploadStatus('processing');
+}
 
 onMounted(() => {
   // Make sure the element with the ID "videoUploadForm" is available in the DOM.
@@ -79,14 +100,24 @@ onMounted(() => {
     });
 
     myDropzone.on("addedfile", file => {
-      uploadingMessage = 1;
+      uploadStarted()
       console.log(`File added: ${file.name}`);
-
     });
 
-    myDropzone.on("complete", function (file) {
-      uploadingMessage = 0;
-      uploadCompleteMessage = 1;
+    myDropzone.on("success", function(file, response) {
+      // Assuming 'response' contains the videoId after the file is uploaded
+      if (response.videoId) {
+        console.log(response.videoId)
+        const videoId = response.videoId;
+        if (videoId) {
+          onUploadSuccess(videoId);
+          // onUploadSuccess(response.videoId);
+        }
+      }
+    });
+
+    myDropzone.on("complete", function (file, response) {
+      uploadCompleteMessage()
       myDropzone.removeFile(file);
       userStore.uploadPercentage = 0;
       isHidden = false;

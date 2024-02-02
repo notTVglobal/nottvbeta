@@ -22,21 +22,6 @@ export const useNowPlayingStore = defineStore('nowPlayingStore', {
             this.activeMedia.type = mediaType
             this.activeMedia.details = mediaDetails
         },
-        async fetchFirstPlayData() {
-            try {
-                const response = await axios.get('/first-play-data')
-                this.setActiveMedia('video', { // Assuming 'video' as a default type
-                    source: response.data.first_play_video_source,
-                    sourceType: response.data.first_play_video_source_type,
-                    name: response.data.first_play_video_name,
-                    channelId: response.data.first_play_channel_id,
-                })
-                console.error('Fetch firstPlay data:', response)
-            } catch (error) {
-                console.error('Failed to fetch firstPlay data:', error)
-                // Handle error or set default data
-            }
-        },
         // Special handling for channels
         setActiveChannel(channelDetails) {
             this.activeChannel = channelDetails
@@ -67,6 +52,20 @@ export const useNowPlayingStore = defineStore('nowPlayingStore', {
                 console.error('Failed to fetch channels:', error)
                 // In a production environment, you might want to elaborate on these,
                 // such as providing user feedback or defaulting to specific content when fetching fails.
+            }
+        },
+        async fetchFirstPlayData() {
+            try {
+                const response = await axios.get('/first-play-data')
+                this.setActiveMedia('video', { // Assuming 'video' as a default type
+                    source: response.data.first_play_video_source,
+                    sourceType: response.data.first_play_video_source_type,
+                    name: response.data.first_play_video_name,
+                    channelId: response.data.first_play_channel_id,
+                })
+            } catch (error) {
+                console.error('Failed to fetch firstPlay data:', error)
+                // Handle error or set default data
             }
         },
         async setFirstPlay() {

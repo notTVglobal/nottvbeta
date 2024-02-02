@@ -12,6 +12,7 @@ class Image extends Model
 
     protected $fillable = [
         'user_id',
+        'creative_commons_id',
         'name',
         'extension',
         'size',
@@ -89,4 +90,10 @@ class Image extends Model
   {
     return $this->hasMany(NewsRssFeedItemArchive::class, 'image_id');
   }
+
+  public function creativeCommons()
+  {
+    return $this->belongsTo(CreativeCommons::class, 'creative_commons_id');
+  }
+
 }

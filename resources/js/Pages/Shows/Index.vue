@@ -55,10 +55,10 @@
                  :key="show.id"
                  class="show mt-8 relative">
               <div v-if="show.statusId === 9" class="absolute flex justify-end w-full -mt-3 z-50">
-                <div class="badge bg-gray-500 border-gray-500 text-gray-50 drop-shadow-lg">Creators Only</div>
+                <CreatorsOnlyBadge />
               </div>
               <div v-if="show.statusId === 1" class="absolute flex justify-end w-full -mt-3 z-50">
-                <div class="badge bg-yellow-500 border-yellow-500 text-gray-50 drop-shadow-lg">New</div>
+                <NewContentBadge />
               </div>
               <Link :href="`/shows/${show.slug}`"
                     class="hover:text-blue-400 hover:opacity-75 transition ease-in-out duration-150">
@@ -193,6 +193,8 @@ import PaginationDark from '@/Components/Global/Paginators/PaginationDark'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage'
 import Message from '@/Components/Global/Modals/Messages'
 import ConvertDateTimeToTimeAgo from '@/Components/Global/DateTime/ConvertDateTimeToTimeAgo.vue'
+import CreatorsOnlyBadge from '@/Components/Global/Badges/CreatorsOnlyBadge.vue'
+import NewContentBadge from '@/Components/Global/Badges/NewContentBadge.vue'
 
 usePageSetup('shows')
 

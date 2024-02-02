@@ -39,6 +39,7 @@ use App\Models\Image;
 class VideoUploadController extends Controller
 {
 
+    protected $video;
 
     public function index() {
 
@@ -223,10 +224,12 @@ class VideoUploadController extends Controller
         // we are in chunk mode, lets send the current progress
         $handler = $save->handler();
 //
+
         return response()->json([
             "done" => $handler->getPercentageDone(),
             'status' => true,
             'video' => 'processing',
+//            'videoId' => $this->video->id, // Include the video ID in the response
         ]);
     }
 
@@ -241,19 +244,19 @@ class VideoUploadController extends Controller
 
         // remove the previous video
         if ($showEpisodeId !== null) {
-            Log::info('Video upload Show Episode ID ' . $showEpisodeId);
+//            Log::info('Video upload Show Episode ID ' . $showEpisodeId);
 //            $showEpisode = ShowEpisode::where('id', $showEpisodeId)->get();
             Video::query()->where('show_episodes_id', $showEpisodeId)
                 ->update(['show_episodes_id' => null]);
         }
         else if ($movieId !== null) {
-            Log::info('Video upload Movie ID ' . $movieId);
+//            Log::info('Video upload Movie ID ' . $movieId);
 //            $movie = Movie::where('id', $movieId)->get();
             Video::query()->where('movies_id', $movieId)
                 ->update(['movies_id' => null]);
         }
         else if ($movieTrailerId !== null) {
-            Log::info('Video upload Movie Trailer ID ' . $movieTrailerId);
+//            Log::info('Video upload Movie Trailer ID ' . $movieTrailerId);
 //            $movieTrailer = MovieTrailer::where('id', $movieTrailerId)->get();
             Video::query()->where('movie_trailers_id', $movieTrailerId)
                 ->update(['movie_trailers_id' => null]);
@@ -283,30 +286,29 @@ class VideoUploadController extends Controller
         // $fileName+'.part'
         // unlink($file->getFile()->getPathname());
 
-
         // Store the video in the database
-        $video = new Video;
-        $video->user_id = auth()->user()->id;
-        $video->upload_status = 'processing';
-        $video->file_name = $fileName;
-        $video->extension = $file->getClientOriginalExtension();
-        $video->size = $contents->getSize();
-        $video->type = $mime;
-        $video->folder = $folder;
-        $video->cloud_folder = $cloud_folder;
-        $video->show_episodes_id = $showEpisodeId;
-        $video->movies_id = $movieId;
+        $this->video = new Video;
+        $this->video->user_id = auth()->user()->id;
+        $this->video->upload_status = 'processing';
+        $this->video->file_name = $fileName;
+        $this->video->extension = $file->getClientOriginalExtension();
+        $this->video->size = $contents->getSize();
+        $this->video->type = $mime;
+        $this->video->folder = $folder;
+        $this->video->cloud_folder = $cloud_folder;
+        $this->video->show_episodes_id = $showEpisodeId;
+        $this->video->movies_id = $movieId;
 //        $video->movie_trailers_id = $movieTrailerId;
-        $video->save();
+        $this->video->save();
         sleep(2);
 
-        Log::info('A new video has been uploaded: '. $video->ulid);
+//        Log::info('A new video has been uploaded: '. $this->video->ulid);
 
         if ($showEpisodeId) {
             try {
                 $showEpisode = ShowEpisode::where('id', $showEpisodeId)
-                    ->update(['video_id' => $video->id]);
-                Log::info('Successfully updated a Show Episode with a video ID before upload to spaces.');
+                    ->update(['video_id' => $this->video->id]);
+//                Log::info('Successfully updated a Show Episode with a video ID before upload to spaces.');
             } catch (\Exception $e) {
                 Log::channel('custom_error')->info("Update failed: " . $e->getMessage());
                 Log::info('Failed to update the Show Episode with the video ID before upload to spaces.');
@@ -316,8 +318,8 @@ class VideoUploadController extends Controller
         if ($movieId) {
             try {
                 $movie = Movie::where('id', $movieId)
-                    ->update(['video_id' => $video->id]);
-                Log::info('Successfully updated a Movie with a video ID before upload to spaces.');
+                    ->update(['video_id' => $this->video->id]);
+//                Log::info('Successfully updated a Movie with a video ID before upload to spaces.');
             } catch (\Exception $e) {
                 Log::channel('custom_error')->info("Update failed: " . $e->getMessage());
                 Log::info('Failed to update the Movie with the video ID before upload to spaces.');
@@ -327,8 +329,8 @@ class VideoUploadController extends Controller
         if ($movieTrailerId) {
             try {
                 $movieTrailer = MovieTrailer::where('id', $movieTrailerId)
-                    ->update(['video_id' => $video->id]);
-                Log::info('Successfully updated a Movie Trailer with a video ID before upload to spaces.');
+                    ->update(['video_id' => $this->video->id]);
+//                Log::info('Successfully updated a Movie Trailer with a video ID before upload to spaces.');
             } catch (\Exception $e) {
                 Log::channel('custom_error')->info("Update failed: " . $e->getMessage());
                 Log::info('Failed to update the Movie Trailer with the video ID before upload to spaces.');
@@ -336,18 +338,19 @@ class VideoUploadController extends Controller
         }
 
 
-
 //        error_log('Video saved to database. Next up is the Job.');
 
         // Dispatch Job
-        UploadVideoToSpacesJob::dispatch($video, auth()->user()->id)->onQueue('video_processing');
-        Log::info('Video '. $video->ulid .' has been dispatched for upload to Spaces.');
+        UploadVideoToSpacesJob::dispatch($this->video, auth()->user()->id)->onQueue('video_processing');
+//        Log::info('Video '. $this->video->ulid .' has been dispatched for upload to Spaces.');
 
 //        error_log('The end of the saveFile method.');
         return response()->json([
             'path'      => $path,
             'name'      => $fileName,
-            'mime_type' => $mime
+            'mime_type' => $mime,
+            'video' => 'processing',
+            'videoId' => $this->video->id, // Include the video ID in the response
         ]);
     }
 

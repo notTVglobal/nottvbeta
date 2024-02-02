@@ -60,7 +60,7 @@
                   <div class="xl:col-span-2">
 
                     <div class="mb-6">
-                      <label class="block mb-2 uppercase font-bold text-xs"
+                      <label class="block mb-2 uppercase font-bold text-xs text-red-700"
                              for="notes"
                       >
                         Episode Notes (only the team members see the notes)
@@ -76,9 +76,53 @@
                            class="text-xs text-red-600 mt-1"></div>
                     </div>
 
+                    <div class="mb-6 w-64">
+                      <label class="block mb-2 uppercase font-bold text-xs text-red-700"
+                             for="creative_commons"
+                      >
+                        Creative Commons / Copyright
+                      </label>
+
+                      <select class="border border-gray-400 text-gray-800 py-2 pl-2 pr-8 w-fit rounded-lg block mb-2 uppercase font-bold text-xs"
+                              v-model="selectedCreativeCommons" @change="handleCreativeCommonsChange">
+                        <option v-for="cc in creative_commons" :key="cc.id" :value="cc.id">{{ cc.name }}</option>
+                      </select>
+
+                      <div class="">{{ selectedCreativeCommonsDescription }}</div>
+
+                      <div v-if="form.errors.creative_commons_id" v-text="form.errors.creative_commons_idA"
+                           class="text-xs text-red-600 mt-1"></div>
+
+                    </div>
+
+                    <div v-if="selectedCreativeCommons" class="mb-6 w-64">
+
+                      <div v-if="selectedCreativeCommons === 8">
+                        <input class="hidden border border-gray-400 text-black font-semibold p-2 w-1/2 rounded-lg"
+                               type="hidden"
+                               v-model="selectedCopyrightYear"
+                               value="null">
+                      </div>
+                      <div v-else>
+                        <label class="block mb-2 uppercase font-bold text-xs text-red-700"
+                               for="copyrightYear"
+                        >
+                          Copyright Year
+                        </label>
+                        <input class="border border-gray-400 text-black font-semibold p-2 w-1/2 rounded-lg"
+                               type="number"
+                               minlength="4"
+                               maxlength="4"
+                               v-model="selectedCopyrightYear">
+                      </div>
+
+                      <div v-if="form.errors.copyrightYear" v-text="form.errors.copyrightYear"
+                           class="text-xs text-red-600 mt-1"></div>
+                    </div>
+
 
                     <div v-if="props.episode.status.id < 7" class="mb-6">
-                      <label class="block mb-2 uppercase font-bold text-xs"
+                      <label class="block mb-2 uppercase font-bold text-xs text-red-700"
                              for="releaseDate"
                       >
                                             <span v-if="props.episode.scheduled_release_dateTime">
@@ -115,7 +159,7 @@
                     </div>
 
                     <div v-if="props.episode.status.id === 7" class="mb-6">
-                      <label class="block mb-2 uppercase font-bold text-xs"
+                      <label class="block mb-2 uppercase font-bold text-xs text-red-700"
                              for="releaseDate"
                       >
                         Release Date
@@ -143,7 +187,7 @@
                     </div>
 
                     <div class="mb-6">
-                      <label class="block mb-2 uppercase font-bold text-xs"
+                      <label class="block mb-2 uppercase font-bold text-xs text-red-700"
                              for="name"
                       >
                         Episode Name
@@ -161,7 +205,7 @@
                     </div>
 
                     <div class="mb-6">
-                      <label class="block mb-2 uppercase font-bold text-xs"
+                      <label class="block mb-2 uppercase font-bold text-xs text-red-700"
                              for="episode_number"
                       >
                         Episode Number
@@ -180,7 +224,7 @@
 
 
                     <div class="mb-6 w-full">
-                      <label class="block mb-2 uppercase font-bold text-xs text-light"
+                      <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
                              for="description"
                       >
                         Description
@@ -214,7 +258,7 @@
                     <!--                                    </div>-->
 
                     <div class="mb-6">
-                      <label class="block mb-2 uppercase font-bold text-xs"
+                      <label class="block mb-2 uppercase font-bold text-xs text-red-700"
                              for="video_file_url"
                       >
                         Video URL (External MP4 only)
@@ -234,7 +278,7 @@
                     </div>
 
                     <div class="mb-6">
-                      <label class="block mb-2 uppercase font-bold text-xs"
+                      <label class="block mb-2 uppercase font-bold text-xs text-red-700"
                              for="video_embed_code"
                       >
                         Embed Code (Rumble or Bitchute only) <span class="">*</span>
@@ -252,7 +296,7 @@
                     </div>
 
                     <div class="mt-2 mb-6 pb-4 border-b">
-                      <div class="mb-2 block uppercase font-bold text-xs">
+                      <div class="mb-2 block uppercase font-bold text-xs text-red-700">
                         * Notes about video embedding:
                       </div>
                       <ul class="list-decimal pb-2 ml-2">
@@ -279,7 +323,7 @@
                   <div>
 
                     <div>
-                      <label class="block mb-2 uppercase font-bold text-xs"
+                      <label class="block mb-2 uppercase font-bold text-xs text-red-700"
                              for="episodeVideo"
                       >
                         Upload Episode
@@ -294,7 +338,7 @@
                           </li>
                         </ul>
 
-                        <VideoUpload :showEpisodeId="episode.id" class="text-black"/>
+                        <VideoUpload :showEpisodeId="episode.id" class="text-black" @upload-start="handleUploadStart" @upload-finished="handleUploadEnd" />
 
                       </div>
 
@@ -302,7 +346,7 @@
 
 
                     <div>
-                      <label class="block mb-2 uppercase font-bold text-xs"
+                      <label class="block mb-2 uppercase font-bold text-xs text-red-700"
                              for="name"
                       >
                         Change Episode Poster
@@ -338,10 +382,11 @@
 
                 <div class="flex justify-end mb-6">
                   <JetValidationErrors class="mr-4"/>
+                  <div v-if="isUploading" class="mr-2 font-semibold bg-black text-white px-3 py-2">Please wait until uploading completes to save the form... </div>
                   <button
                       @click.prevent="submit"
-                      class="h-fit bg-blue-600 hover:bg-blue-500 text-white rounded py-2 px-4 mr-5"
-                      :disabled="form.processing"
+                      class="h-fit bg-blue-600 hover:bg-blue-500 text-white rounded py-2 px-4 mr-5 disabled:bg-gray-500 disabled:cursor-not-allowed"
+                      :disabled="form.processing || isUploading"
                   >
                     Save
                   </button>
@@ -363,7 +408,7 @@
 
 <script setup>
 import { Inertia } from "@inertiajs/inertia"
-import { onMounted, onUnmounted, ref } from "vue"
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useForm } from "@inertiajs/inertia-vue3"
 import { format } from 'date-fns'
 import { usePageSetup } from '@/Utilities/PageSetup'
@@ -398,12 +443,18 @@ let props = defineProps({
   team: Object,
   episode: Object,
   image: Object,
+  creative_commons: Object,
   can: Object,
 });
 
 teamStore.setActiveTeam(props.team);
 teamStore.setActiveShow(props.show);
 showStore.episodePoster = props.image.name;
+
+const isUploading = ref(false);
+const selectedCreativeCommons = ref(props.episode?.creative_commons?.id);
+let selectedCopyrightYear = ref(props.episode?.copyrightYear);
+const currentYear = new Date().getFullYear();
 
 let scheduledDateTime = ref(''); // This will hold the selected date and time in ISO format
 let releaseDateTime = ref(''); // This will hold the selected date and time in ISO format
@@ -424,6 +475,22 @@ const userTimezone = ref('');
 // TODO: convert this to the user's local time
 releaseDateTime = props.episode.release_dateTime
 scheduledDateTime = props.episode.scheduled_release_dateTime
+
+function handleUploadStart() {
+  isUploading.value = true;
+}
+
+const videoId = ref('');
+
+function handleUploadEnd(id) {
+  videoId.value = id;
+  console.log(`Received videoId: ${videoId.value}`);
+  console.log('It\'s a DUCK!')
+  console.log(`Received videoId: ${videoId.value}`);
+  isUploading.value = false;
+}
+
+
 
 const getUserTimezone = () => {
   // Use the Intl object to get the user's timezone
@@ -448,12 +515,28 @@ if (scheduledDateTime) {
   console.log('user scheduled dateTime: ' + userScheduledDateTime.value)
 }
 
+const handleCreativeCommonsChange = () => {
+  if (selectedCreativeCommons.value === 8) {
+    selectedCopyrightYear.value = null;
+  } else if (selectedCopyrightYear.value === null) {
+    // Pre-populate with current year only if copyrightYear is null
+    selectedCopyrightYear.value = currentYear;
+  }
+};
+
+const selectedCreativeCommonsDescription = computed(() => {
+  const selectedCC = props.creative_commons.find((cc) => cc.id === selectedCreativeCommons.value);
+  return selectedCC ? selectedCC.description : '';
+});
+
 let form = useForm({
   id: props.episode.id,
   name: props.episode.name,
   episode_number: props.episode.episode_number,
   description: props.episode.description,
   notes: props.episode.notes,
+  copyrightYear: selectedCopyrightYear,
+  creative_commons_id: selectedCreativeCommons.value,
   show_id: props.episode.show_id,
   video_url: props.episode.video.video_url,
   youtube_url: props.episode.youtube_url,
@@ -472,6 +555,8 @@ let submit = () => {
   if (form.video_embed_code !== props.episode.video_embed_code && form.video_url) {
     addEmbedCodeConfirm();
   } else
+    form.copyrightYear = selectedCopyrightYear;
+    form.creative_commons_id = selectedCreativeCommons.value;
     form.patch(route('showEpisodes.update', props.episode.slug));
 };
 
@@ -561,6 +646,10 @@ const updateScheduledDateTime = () => {
 onMounted(() => {
   getUserTimezone()
   console.log(userTimezone.value)
+  watch(() => props.episode?.creative_commons?.id, (newVal) => {
+    selectedCreativeCommons.value = newVal;
+    handleCreativeCommonsChange();
+  });
 });
 
 onUnmounted(() => {

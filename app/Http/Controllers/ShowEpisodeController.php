@@ -6,6 +6,7 @@ use App\Events\NewNotificationEvent;
 use App\Jobs\AddVideoUrlFromEmbedCodeJob;
 use App\Jobs\ProcessVideoInfo;
 use App\Jobs\SendTeamMembersNotificationJob;
+use App\Models\CreativeCommons;
 use App\Models\Creator;
 use App\Models\Image;
 use App\Models\Notification;
@@ -86,37 +87,17 @@ class ShowEpisodeController extends Controller
             'description' => 'required',
             'user_id' => 'required',
             'show_id' => 'required',
+            'creative_commons_id' => 'required|integer|exists:creative_commons,id',
+            'copyrightYear'   => ['nullable', 'integer', 'min:1900', 'max:' . date('Y')],
             'episode_number' => 'nullable|max:10',
             'notes' => 'nullable|string',
             'video_url' => 'nullable|active_url|ends_with:.mp4',
             'youtube_url' => 'nullable|active_url',
             'video_embed_code' => 'nullable|string',
-        ]);
-
-        if ($request->video_url) {
-
-            // Create a new Video instance
-            $video = new Video();
-
-            // Set the user_id, video_url and storage_location attributes
-            $video->user_id = $request->user_id;
-            $video->name = 'External video';
-            $video->file_name = 'external_video_' . Str::uuid();
-            $video->video_url = $request->video_url;
-            $video->storage_location = 'external';
-
-            // Save the video to the database
-            $video->save();
-
-            // Get the ID of the newly created Video model
-            $this->videoId = $video->id;
-
-            $jobName = null;
-
-            // get the video information.
-            dispatch(new ProcessVideoInfo($this->videoId, $jobName))->onQueue('high');
-        }
-
+        ], [
+            'copyrightYear.integer' => 'Please choose a copyright year',
+            'creative_commons_id.required' => 'Please choose a Creative Commons / Copyright',
+        ]);;
 
         // MOVE THIS TO A JOB... SEND THE showEpisode SLUG with it.
         // get the *.mp4 video url from embed code
@@ -138,14 +119,63 @@ class ShowEpisodeController extends Controller
         $showEpisode->show_id = $request->show_id;
         $showEpisode->episode_number = $request->episode_number;
         $showEpisode->slug = \Str::slug($request->name);
-//        $showEpisode->video_url = $request->url;
+        $showEpisode->notes = $request->notes;
+        $showEpisode->release_year = Carbon::now()->format('Y');
+        $showEpisode->copyrightYear = $request->copyrightYear;
+        $showEpisode->creative_commons_id = $request->creative_commons_id;
+        $showEpisode->video_embed_code = $request->video_embed_code;
+
+        $showEpisode->save();
+
+      if ($request->video_embed_code && !$request->video_url) {
+
+        // Create and save the notification
+        $notification = new Notification;
+        $userId = auth()->user()->id;
+        $notification->user_id = $userId;
+
+        // make the image the show_episode_poster
+        $notification->image_id = $showEpisode->image_id;
+        $notification->url = '/shows/'.$showEpisode->show->slug.'/episode/'.$showEpisode->slug.'/manage';
+        $notification->title = $showEpisode->name;
+        $notification->message = 'The video url is being generated from the embed code. You will be notified when it is done.';
+        $notification->save();
+
+        // Trigger the event to broadcast the new notification
+        event(new NewNotificationEvent($notification));
+        AddVideoUrlFromEmbedCodeJob::dispatch($showEpisode)->onQueue('video_processing');
+      }
+
+      if ($request->video_url) {
+
+        // Create a new Video instance
+        $video = new Video();
+
+        // Set the user_id, video_url and storage_location attributes
+        $video->user_id = $request->user_id;
+        $video->name = 'External video';
+        $video->file_name = 'external_video_' . Str::uuid();
+        $video->video_url = $request->video_url;
+        $video->storage_location = 'external';
+        $video->show_episodes_id = $showEpisode->id;
+
+        // Save the video to the database
+        $video->save();
+
+        // Get the ID of the newly created Video model
+        $this->videoId = $video->id;
+
         $showEpisode->video_id = $this->videoId;
         $showEpisode->youtube_url = $request->youtube_url;
         $showEpisode->video_embed_code = $request->video_embed_code;
-        $showEpisode->notes = $request->notes;
-        $showEpisode->release_year = Carbon::now()->format('Y');
-
         $showEpisode->save();
+
+        $jobName = null;
+
+        // get the video information.
+        dispatch(new ProcessVideoInfo($this->videoId, $jobName))->onQueue('high');
+      }
+
 
         if ($showEpisode->show->show_status_id === 1) {
             $show = Show::find($showEpisode->show_id);
@@ -342,7 +372,8 @@ class ShowEpisodeController extends Controller
 //            'storage_location' => $showEpisode->video->storage_location,
 //        ];
 //      }
-         $videoForEpisode = Video::where('show_episodes_id', $showEpisode->id)->first();
+//         $videoForEpisode = Video::where('show_episodes_id', $showEpisode->id)->first();
+         $creativeCommons = CreativeCommons::all();
 
         // convert release dateTime to user's timezone
         if ($showEpisode->release_dateTime) {
@@ -354,8 +385,10 @@ class ShowEpisodeController extends Controller
             $this->formattedScheduledDateTime = $this->convertTimeToUserTime($showEpisode->scheduled_release_dateTime);
         }
 
+      $show->load('team', 'showEpisodes.creativeCommons', 'showEpisodes.video', 'image', 'appSetting', 'category', 'subCategory'); // Eager load necessary relationships
 
-        return Inertia::render('Shows/{$id}/Episodes/{$id}/Edit', [
+
+      return Inertia::render('Shows/{$id}/Episodes/{$id}/Edit', [
             'show' => [
                 'name' => $show->name,
                 'slug' => $show->slug,
@@ -388,16 +421,18 @@ class ShowEpisodeController extends Controller
                 'release_year' => $showEpisode->release_year ?? null,
                 'release_dateTime' => $this->formattedReleaseDateTime ?? null,
                 'scheduled_release_dateTime' => $this->formattedScheduledDateTime ?? null,
+                'copyrightYear' => $showEpisode->copyrightYear ?? null,
+                'creative_commons' => $showEpisode->creativeCommons ?? null,
                 'mist_stream_id' => $showEpisode->mist_stream_id,
                 'video_id' => $showEpisode->video_id,
                 'youtube_url' => $showEpisode->youtube_url,
                 'video_embed_code' => $showEpisode->video_embed_code,
                 'video' => [
-                    'file_name' => $videoForEpisode->file_name ?? '',
-                    'cdn_endpoint' => $videoForEpisode->appSetting->cdn_endpoint ?? '',
-                    'folder' => $videoForEpisode->folder ?? '',
-                    'cloud_folder' => $videoForEpisode->cloud_folder ?? '',
-                    'upload_status' => $videoForEpisode->upload_status ?? '',
+                    'file_name' => $showEpisode->video->file_name ?? '',
+                    'cdn_endpoint' => $showEpisode->video->appSetting->cdn_endpoint ?? '',
+                    'folder' => $showEpisode->video->folder ?? '',
+                    'cloud_folder' => $showEpisode->video->cloud_folder ?? '',
+                    'upload_status' => $showEpisode->video->upload_status ?? '',
                     'video_url' => $showEpisode->video->video_url ?? '',
                     'type' => $showEpisode->video->type ?? '',
                     'storage_location' => $showEpisode->video->storage_location ?? '',
@@ -418,6 +453,7 @@ class ShowEpisodeController extends Controller
                 'cdn_endpoint' => $showEpisode->appSetting->cdn_endpoint,
                 'cloud_folder' => $showEpisode->image->cloud_folder,
             ],
+            'creative_commons' => $creativeCommons,
             'can' => [
                 'manageShow' => Auth::user()->can('manage', $show),
                 'editShow' => Auth::user()->can('edit', $show),
@@ -490,6 +526,8 @@ class ShowEpisodeController extends Controller
                 new UniqueEpisodeName($request->show_id)
             ],
             'show_id' => 'required',
+            'creative_commons_id' => 'required|integer|exists:creative_commons,id',
+            'copyrightYear'   => ['nullable', 'integer', 'min:1900', 'max:' . date('Y')],
             'episode_number' => 'max:10',
             'description' => 'required',
             'notes' => 'nullable|string',
@@ -498,6 +536,9 @@ class ShowEpisodeController extends Controller
             'video_embed_code' => 'nullable|string',
             'release_dateTime' => 'nullable|date',
             'scheduled_release_dateTime' => 'nullable|date|after:now',
+        ], [
+            'copyrightYear.integer' => 'Please choose a copyright year',
+            'creative_commons_id.required' => 'Please choose a Creative Commons / Copyright',
         ]);
 
         if ($request->video_url) {
@@ -511,6 +552,7 @@ class ShowEpisodeController extends Controller
             $video->file_name = 'external_video_' . Str::uuid();
             $video->video_url = $request->video_url;
             $video->storage_location = 'external';
+            $video->show_episodes_id = $showEpisode->id;
 
             // Save the video to the database
             $video->save();
@@ -615,6 +657,8 @@ class ShowEpisodeController extends Controller
         $showEpisode->release_dateTime = $formattedReleaseUtcDatetime ?? null;
         $showEpisode->release_year = $releaseYear ?? null;
         $showEpisode->scheduled_release_dateTime = $formattedScheduledUtcDatetime ?? null;
+        $showEpisode->copyrightYear = $request->copyrightYear;
+        $showEpisode->creative_commons_id = $request->creative_commons_id;
         $showEpisode->save();
 
         if ($request->video_embed_code !== $oldEmbedCode && !$request->video_url) {

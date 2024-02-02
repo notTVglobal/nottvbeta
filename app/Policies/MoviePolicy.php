@@ -79,6 +79,7 @@ class MoviePolicy
     }
     return Response::deny('You must be an admin to add a movie.');
   }
+
   public function destroy(User $user) {
 
     if ($user->isAdmin) {

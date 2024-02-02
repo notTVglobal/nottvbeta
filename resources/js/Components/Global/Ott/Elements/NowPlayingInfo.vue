@@ -32,10 +32,10 @@
 
 
     <div v-if="shouldDisplayOtt"
-         :class="[appSettingStore.fullPage ? 'playlistFullPageContainer' : 'ottTopRightDisplay','bg-purple-800 hide-scrollbar']">
+         :class="[appSettingStore.fullPage ? 'playlistFullPageContainer' : 'ottTopRightDisplay','hide-scrollbar']">
       <div class="h-full w-full overflow-y-scroll scrollbar-hide">
-        <div class="now-playing w-full h-full px-2 bg-purple-800 overflow-y-scroll scrollbar-hide">
-          <h1 class="text-xs font-semibold uppercase w-full bg-purple-900 text-white p-2 mt-2 mb-2">
+        <div class="w-full h-full px-2 bg-gray-800 overflow-y-scroll scrollbar-hide">
+          <h1 class="text-xs font-semibold uppercase w-full bg-purple-900 text-white p-2 mt-4 mb-4">
             NOW PLAYING</h1>
 
           <div class="pb-24 w-full overflow-y-scroll scrollbar-hide"
@@ -46,37 +46,81 @@
                 <div class="flex flex-row">
                   <!-- Image -->
                   <div class="showOrMovieImage">
-                    <Link :href="`${nowPlayingStore.show?.url}`">
+                    <Link :href="`/${nowPlayingStore.activeMedia.details?.url}`">
                       <SingleImage
-                          :image="nowPlayingStore.show?.image"
-                          :alt="nowPlayingStore.show?.name"
-                          class="h-16 w-12 object-cover hover:opacity-75 transition ease-in-out duration-150"
+                          :image="nowPlayingStore.activeMedia.details.videoDetails?.image"
+                          :alt="nowPlayingStore.activeMedia.details?.name"
+                          class="h-16 w-12 mr-2 object-cover hover:opacity-75 transition ease-in-out duration-150"
                       />
                     </Link>
                   </div>
 
-                  <!-- Title and Episode -->
-                  <div class="flex flex-col">
-                    <Link :href="`${nowPlayingStore.show?.url}`"><div class="showOrMovieTitle">{{ nowPlayingStore.show?.name }}</div></Link>
-                    <div class="showEpisodeTitle">{{ nowPlayingStore.show?.episode?.name }}</div>
+
+                  <div class="flex flex-col ml-3">
+                    <h3 v-if="nowPlayingStore.activeMedia.details?.url">
+                      <!-- Render as a link if the URL exists -->
+                      <Link :href="`/${nowPlayingStore.activeMedia.details.url}`">
+                        <!-- Title (with link) -->
+                        {{ nowPlayingStore.activeMedia.details.name }}
+                      </Link>
+                    </h3>
+                    <h3 v-else>
+                      <!-- Just display the name without a link if the URL does not exist -->
+                      <!-- Title (no link) -->
+                      {{ nowPlayingStore.activeMedia.details.name }}
+                    </h3>
+<!--                    <div class="showOrMovieTitle">{{ nowPlayingStore.show?.name }}</div>-->
+<!--                    <div class="showEpisodeTitle">{{ nowPlayingStore.show?.episode?.name }}</div>-->
+                    <!-- Release Date -->
+                    <div class="releaseYear text-gray-400">{{ nowPlayingStore.activeMedia.details.videoDetails?.release_year }}</div>
+<!--                    <div class="releaseDateTime">{{ useTimeAgo(nowPlayingStore.show?.episode.releaseDateTime) }}</div>-->
                   </div>
                 </div>
-                <div class="flex flex-row">
-                  <div class="flex flex-wrap">
-                    <!-- Release Date and Categories -->
-                    <div class="releaseDateTime">{{ useTimeAgo(nowPlayingStore.show?.episode.releaseDateTime) }}</div>
-                    <div class="showOrMovieCategory">{{ nowPlayingStore.show?.category }}</div>
-                    <div class="showOrMovieCategorySub">{{ nowPlayingStore.show?.categorySub }}</div>
+                <div v-if="nowPlayingStore.activeMedia.details.videoDetails?.category?.name" class="flex flex-row mt-2">
+                  <div class="flex flex-wrap mb-4">
+                    <!-- Categories -->
+                    <div class="text-yellow-700 uppercase tracking-wider">{{ nowPlayingStore.activeMedia.details.videoDetails?.category?.name }}</div>
+                    &nbsp;&middot;&nbsp;
+                    <div class="text-yellow-500 tracking-wide">{{ nowPlayingStore.activeMedia.details.videoDetails?.subCategory?.name }}</div>
                   </div>
                 </div>
-                <!-- Description -->
-                <div class="flex flex-row">
-                  <div class="showEpisodeOrMovieDescription">{{ nowPlayingStore.show?.episode.description }}</div>
+<!--                Episode Name -->
+                <div v-if="nowPlayingStore.activeMedia.details.videoDetails?.episode">
+                  <div>
+                    Episode Name
+                  </div>
+                  <div>
+                    Episode Number
+                  </div>
+                </div>
+                <!-- Logline and Description -->
+                <div v-if="nowPlayingStore.activeMedia.details.videoDetails?.logline" class="flex flex-col mt-4">
+                  <div class="text-xs uppercase text-gray-500 font-semibold tracking-wider">Logline</div>
+                  <div class="showEpisodeOrMovieDescription">{{ nowPlayingStore.activeMedia.details.videoDetails?.logline }}</div>
+                </div>
+                <div v-if="nowPlayingStore.activeMedia.details.videoDetails?.description" class="flex flex-col mt-4">
+                  <div class="text-xs uppercase text-gray-500 font-semibold tracking-wider">Description</div>
+                  <div class="showEpisodeOrMovieDescription">{{ nowPlayingStore.activeMedia.details.videoDetails?.description }}</div>
+                </div>
+                <!-- Copyright and Team -->
+                <div class="flex flex-row flex-wrap mt-4">
+                    <div>
+                      <!--                    If there is a copyright year display it... we need to remove the &copy; and replace it with whichever creative commons icon it needs -->
+                      <span class="text-xs font-semibold text-gray-500" v-if="nowPlayingStore.activeMedia.details.videoDetails?.copyrightYear">{{ nowPlayingStore.activeMedia.details.videoDetails?.copyrightYear }}</span>
+                      <span class="text-xs font-semibold text-gray-500" v-if="nowPlayingStore.activeMedia.details.videoDetails?.creative_commons?.id === 7">&nbsp;&copy;&nbsp;</span>
+                      <!--                    If there is no copyright year then it's probably public domain... so we'll just display the creative commons name-->
+                      <span v-if="nowPlayingStore.activeMedia.details.videoDetails?.creative_commons?.name" class="text-xs font-semibold text-gray-500">&nbsp;&bull;&nbsp;{{ nowPlayingStore.activeMedia.details.videoDetails?.creative_commons?.name }}&nbsp;&bull;&nbsp;</span>
+
+                    </div>
+                    <div>
+                      <Link class="text-sm link-dark" :href="`/teams/${nowPlayingStore.activeMedia.details.videoDetails?.team?.slug}`">{{ nowPlayingStore.activeMedia.details.videoDetails?.team?.name }}</Link></div>
                 </div>
                 <!-- Creators -->
-                <div class="flex flex-col mt-6">
-                  <h1 class="tracking-wider text-xs font-semibold uppercase w-full bg-purple-900 text-white p-2 mt-2 mb-2">
-                    Creators</h1>
+                <div v-if="nowPlayingStore.activeMedia.details.videoDetails?.creators" class="flex flex-col mt-6">
+                  <h1 class="tracking-wider text-xs font-semibold uppercase w-full bg-purple-900 text-white p-2 mt-2 mb-4">
+                    <span v-if="nowPlayingStore.activeMedia.type === 'show'">Team</span>
+                    <span v-if="nowPlayingStore.activeMedia.type === 'movie'">Credits</span>
+                  </h1>
                   <div>
 
                   </div>
@@ -89,8 +133,8 @@
 <!--                  </div>-->
                 </div>
                 <!-- Bonus Content -->
-                <div class="flex flex-col mt-6">
-                  <h1 class="tracking-wider text-xs font-semibold uppercase w-full bg-purple-900 text-white p-2 mt-2 mb-2">
+                <div v-if="nowPlayingStore.activeMedia.details.videoDetails?.bonusContent" class="flex flex-col mt-6">
+                  <h1 class="tracking-wider text-xs font-semibold uppercase w-full bg-purple-900 text-white p-2 mt-2 mb-4">
                     Bonus Content</h1>
 
                   <div class="showEpisodeOrMovieBonusContent">{{ nowPlayingStore.bonusContent }}</div>
@@ -142,6 +186,7 @@ import { useStreamStore } from '@/Stores/StreamStore'
 import { useUserStore } from '@/Stores/UserStore'
 import { useChatStore } from '@/Stores/ChatStore'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 const appSettingStore = useAppSettingStore()
 const videoPlayerStore = useVideoPlayerStore()
@@ -156,8 +201,7 @@ let props = defineProps({
 })
 
 onMounted(() => {
-  console.log(nowPlayingStore); // Check the store's content
-  nowPlayingStore.fetchFirstPlayData();
+  // nowPlayingStore.fetchFirstPlayData();
 });
 
 // let playVideo = (source) => {

@@ -125,7 +125,8 @@
             <div class="stat-value">$89,410</div>
             <div class="stat-actions">
               <button class="btn btn-sm btn-success">Add funds</button>
-              <button class="ml-2 btn btn-sm mr-2">Withdrawal</button>
+              <button class="ml-2 btn btn-sm">Withdrawal</button>
+              <button class="ml-2 btn btn-sm">Transfer</button>
             </div>
           </div>
 
@@ -140,11 +141,11 @@
             <td class="bg-blue-400 font-semibold text-sm text-black px-2 mb-3">My Account Name</td>
             <td class="bg-blue-400 px-2 mb-3 text-right font-semibold text-sm text-black">Balance</td>
             </thead>
-            <tr class="border-b border-1 border-gray-100 text-black dark:text-white">
+            <tr class="border-b border-1 border-gray-100 text-black dark:text-white hover:bg-success">
               <td class="px-2 col-span-2 py-2">Chequing</td>
               <td class="px-2 text-right">89,400.00</td>
             </tr>
-            <tr class="border-b border-1 border-gray-100 text-black dark:text-white">
+            <tr class="border-b border-1 border-gray-100 text-black dark:text-white hover:bg-success">
               <td class="px-2 col-span-2 py-2">Equity Shares</td>
               <td class="px-2 text-right">10.00</td>
             </tr>
@@ -156,7 +157,7 @@
             </thead>
             <tr v-for="team in teams.data"
                 :key="team.id"
-                class="border-b border-1 border-gray-100 text-black dark:text-white">
+                class="border-b border-1 border-gray-100 text-black dark:text-white hover:bg-success">
               <td class="px-2 py-2">{{ team.name }}</td>
               <td class="px-2 text-right">0.00</td>
             </tr>
@@ -166,15 +167,15 @@
             <td class="bg-blue-400 font-semibold text-sm text-black px-2 mb-3">Community Account Name</td>
             <td class="bg-blue-400 px-2 mb-3 text-right font-semibold text-sm text-black">Balance</td>
             </thead>
-            <tr class="border-b border-1 border-gray-100 text-black dark:text-white">
+            <tr class="border-b border-1 border-gray-100 text-black dark:text-white hover:bg-success">
               <td class="px-2 col-span-2 py-2">Public Good Fund</td>
               <td class="px-2 text-right">0.00</td>
             </tr>
-            <tr class="border-b border-1 border-gray-100 text-black dark:text-white">
+            <tr class="border-b border-1 border-gray-100 text-black dark:text-white hover:bg-success">
               <td class="px-2 col-span-2 py-2">Production Fund for Members</td>
               <td class="px-2 text-right">0.00</td>
             </tr>
-            <tr class="border-b border-1 border-gray-100 text-black dark:text-white">
+            <tr class="border-b border-1 border-gray-100 text-black dark:text-white hover:bg-success">
               <td class="px-2 col-span-2 py-2">News Fund</td>
               <td class="px-2 text-right">0.00</td>
             </tr>
@@ -189,19 +190,19 @@
           External Links
         </div>
         <a href="https://www.cbsc.ca/" target="_blank">
-          <div class="hover:bg-blue-500 p-2">
+          <div class="hover:bg-success p-2">
             Canadian Broadcast Standards Council
           </div>
         </a>
 
         <a href="https://rtdnacanada.com/" target="_blank">
-          <div class="hover:bg-blue-500 p-2">
+          <div class="hover:bg-success p-2">
             RTNDA
           </div>
         </a>
 
         <a href="https://adstandards.ca/" target="_blank">
-          <div class="hover:bg-blue-500 p-2">
+          <div class="hover:bg-success p-2">
             Ad Standards
           </div>
         </a>

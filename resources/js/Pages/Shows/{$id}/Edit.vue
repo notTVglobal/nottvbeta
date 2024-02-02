@@ -104,24 +104,27 @@
                     </div>
 
                     <div class="mb-6">
+                      <label class="block mb-2 uppercase font-bold text-xs text-red-700"
+                             for="episode_play_order"
+                      >
+                        Episode Play Order
+                      </label>
+
+                      <select required
+                              class="border border-gray-400 text-gray-800 p-2 w-1/2 rounded-lg block mb-2 uppercase font-bold text-xs "
+                              v-model="form.episode_play_order"
+                              id="episode_play_order"
+                      >
+                        <option disabled value="">Please select one</option> <!-- Disabled placeholder option -->
+                        <option value="newest">Start with the Newest Episode</option>
+                        <option value="oldest">Start with the First Episode</option>
+
+                      </select>
+                      <div v-if="form.errors.episode_play_order" v-text="form.errors.episode_play_order"
+                           class="text-xs text-red-600 mt-1"></div>
                     </div>
 
                     <div class="mb-6">
-                      <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
-                             for="name"
-                      >
-                        Show Name
-                      </label>
-
-                      <input v-model="form.name"
-                             class="border border-gray-400 p-2 w-full rounded-lg text-black"
-                             type="text"
-                             name="name"
-                             id="name"
-                             required
-                      >
-                      <div v-if="form.errors.name" v-text="form.errors.name"
-                           class="text-xs text-red-600 mt-1"></div>
                     </div>
 
                     <div class="mb-6">
@@ -148,7 +151,7 @@
                     </div>
 
                     <div class="mb-6">
-                      <label class="block mb-1 uppercase font-bold text-xs text-light text-gray-600"
+                      <label class="block mb-1 uppercase font-bold text-xs text-light text-red-700"
                              for="sub_category"
                       >
                         Sub-category
@@ -165,6 +168,24 @@
                       </select>
                       <span class="">{{ showStore.sub_category_description }}</span>
                       <div v-if="form.errors.sub_category" v-text="form.errors.sub_category"
+                           class="text-xs text-red-600 mt-1"></div>
+                    </div>
+
+                    <div class="mb-6">
+                      <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
+                             for="name"
+                      >
+                        Show Name
+                      </label>
+
+                      <input v-model="form.name"
+                             class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                             type="text"
+                             name="name"
+                             id="name"
+                             required
+                      >
+                      <div v-if="form.errors.name" v-text="form.errors.name"
                            class="text-xs text-red-600 mt-1"></div>
                     </div>
 
@@ -364,6 +385,7 @@ let form = useForm({
   telegram_url: props.show.telegram_url,
   twitter_handle: props.show.twitter_handle,
   notes: props.show.notes,
+  episode_play_order: props.show.episode_play_order
 })
 
 let showCategoryDescription = props.showCategory?.Description

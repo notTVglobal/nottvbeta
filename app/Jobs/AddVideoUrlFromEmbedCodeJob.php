@@ -183,6 +183,10 @@ class AddVideoUrlFromEmbedCodeJob implements ShouldQueue
 //                Log::channel('custom_error')->error('Bitchute Matches: '. $url);
                 // send notification, success.
 //                return $url;
+            }else {
+              // Handle the case when $sourceIs is null
+              // You might want to assign a default behavior or value for $url
+              $sourceIs = 'external_error'; // This is just an example. Adjust as needed.
             }
 
             // write firstMp4 to database.
@@ -191,8 +195,11 @@ class AddVideoUrlFromEmbedCodeJob implements ShouldQueue
 
             // Set the user_id, video_url and storage_location attributes
             $video->user_id = $userId;
+            $video->name = 'External Video';
+            $video->file_name = 'external_video_' . Str::uuid();
             $video->video_url = $url;
             $video->storage_location = $sourceIs;
+            $video->show_episodes_id = $this->showEpisode->id;
 
             // Save the video to the database
             $video->save();
@@ -250,7 +257,15 @@ class AddVideoUrlFromEmbedCodeJob implements ShouldQueue
 //            $notification->title = $this->showEpisode->name;
             $notification->url = '/shows/'.$this->showEpisode->show->slug.'/episode/'.$this->showEpisode->slug;
             $notification->title = $this->showEpisode->show->name.': ' . $this->showEpisode->name;
-            $notification->message = '<span class="text-green-500">The video is now ready</span>' . $processVideoInfoMessage;
+
+            if ($sourceIs === 'external_error') {
+              $notification->message = '<span class="text-red-500">We could not generate a URL from the embed code. Please ask Travis to check the ScraperAPI.</span>' . $processVideoInfoMessage;
+            } else {
+              $notification->message = '<span class="text-green-500">The video url has now been generated from the embed code. The video is now ready for playback.</span>' . $processVideoInfoMessage;
+            }
+
+
+
             $notification->save();
 
             // Trigger the event to broadcast the new notification

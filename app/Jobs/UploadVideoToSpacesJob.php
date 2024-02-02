@@ -90,21 +90,21 @@ class UploadVideoToSpacesJob implements ShouldQueue
             $showEpisode = ShowEpisode::find($this->video->show_episodes_id);
             $this->userId = $showEpisode->user_id;
             if ($showEpisode) {
-              Log::info('Before update: ' . json_encode($showEpisode->toArray()));
+//              Log::info('Before update: ' . json_encode($showEpisode->toArray()));
               try {
               $showEpisode->video_id = $this->video->id;
                 $showEpisode->save();
               } catch (\Exception $e) {
                 Log::error('Error updating ShowEpisode: ' . $e->getMessage());
               }
-              Log::info('After update: ' . json_encode($showEpisode->fresh()->toArray()));
+//              Log::info('After update: ' . json_encode($showEpisode->fresh()->toArray()));
                 // Retrieve the ULID of the ShowEpisode
                 $ulid = $showEpisode->ulid;
                 // if Show Episode does not have a ulid use the id.
                 if(!$ulid) {
                     $ulid = $this->video->show_episodes_id;
                 }
-                Log::info('Successfully updated the Show Episode '. $ulid .' with the video ID '. $this->video->id);
+//                Log::info('Successfully updated the Show Episode '. $ulid .' with the video ID '. $this->video->id);
               event(new NewVideoUploaded($this->video, $this->video->user_id));
             } else {
                 // Handle the case where ShowEpisode is not found

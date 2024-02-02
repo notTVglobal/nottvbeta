@@ -34,7 +34,7 @@
             <div class="items-center relative">
               <!--                        <SingleImage :image="props.show.image" :poster="props.show.poster" :alt="'show cover'" class="h-96 min-w-[16rem] w-64 object-cover mb-6 lg:mb-0 m-auto lg:m-0"/>-->
               <div v-if="show.statusId === 9" class="absolute flex justify-end w-full -mt-3 z-50">
-                <div class="badge bg-gray-500 border-gray-500 text-gray-50 drop-shadow-lg">Creators Only</div>
+                <CreatorsOnlyBadge />
               </div>
               <SingleImage :image="props.show.image" :alt="'show cover'"
                            class="h-96 min-w-[16rem] w-64 object-cover mb-6 lg:mb-0 m-auto lg:m-0"/>
@@ -85,7 +85,7 @@
                   </svg>
 
                   <span
-                      v-if="videoPlayerStore.nowPlayingName === props.show.firstPlayVideo.name || videoPlayerStore.nowPlayingName === props.show.firstPlayVideoFromUrl.name"
+                      v-if="nowPlayingStore.activeMedia.details.name === props.show.firstPlayVideo.name || nowPlayingStore.activeMedia.details.name === props.show.firstPlayVideoFromUrl.name"
                       class="ml-2">Now Playing</span>
                   <span v-else class="ml-2">Watch Now</span>
                 </button>
@@ -261,6 +261,7 @@ import ShowFooter from "@/Components/Pages/Shows/Layout/ShowFooter"
 import SingleImage from "@/Components/Global/Multimedia/SingleImage"
 import Pagination from "@/Components/Global/Paginators/PaginationDark"
 import Message from "@/Components/Global/Modals/Messages.vue"
+import CreatorsOnlyBadge from '@/Components/Global/Badges/CreatorsOnlyBadge.vue'
 // import ShowCreatorsList from "@/Components/Pages/Shows/ShowCreatorsList"
 
 usePageSetup('showsShow')
@@ -280,31 +281,63 @@ let props = defineProps({
 });
 
 let playEpisode = () => {
-  nowPlayingStore.reset()
-  nowPlayingStore.show.name = props.show.name
-  nowPlayingStore.show.url = `/shows/${props.show.slug}`
-  nowPlayingStore.show.description = props.show.description
-  nowPlayingStore.show.image = props.show.image
-  nowPlayingStore.show.category = props.show.category
-  nowPlayingStore.show.categorySub = props.show.categorySub
-  videoPlayerStore.makeVideoFullPage()
-  Inertia.visit('/stream')
 
-  if (props.show.firstPlayVideo.storage_location === 'spaces' && props.show.firstPlayVideo.upload_status !== 'processing') {
-    // play video if !processing
-    nowPlayingStore.show.episode.name = props.show.firstPlayVideo.name
-    nowPlayingStore.show.episode.url = `/shows/${props.show.slug}/episode/${props.show.firstPlayVideo.slug}`
-    nowPlayingStore.show.episode.image = props.show.firstPlayVideo.image
-    videoPlayerStore.loadNewSourceFromFile(props.show.firstPlayVideo)
+  nowPlayingStore.reset();
 
-  } else if (props.show.firstPlayVideoFromUrl.video_url !== '') {
-    nowPlayingStore.isFromWeb = true
-    nowPlayingStore.show.episode.name = props.show.firstPlayVideoFromUrl.name
-    nowPlayingStore.show.episode.url = `/shows/${props.show.slug}/episode/${props.show.firstPlayVideoFromUrl.slug}`
-    nowPlayingStore.show.episode.image = props.show.firstPlayVideoFromUrl.image
-    videoPlayerStore.loadNewSourceFromUrl(props.show.firstPlayVideoFromUrl)
+  const isInternalVideo = props.show.firstPlayVideo.name !== '' && props.show.firstPlayVideo.upload_status !== 'processing';
+  const isExternalVideo = !!props.show.firstPlayVideoFromUrl.video_url;
+
+  // Common details for nowPlayingStore
+  const commonDetails = {
+    name: props.show.name,
+    url: `shows/${props.show.slug}`,
+  };
+
+  // Determine media type and specific details based on the video type
+  const mediaType = isInternalVideo ? 'show' : 'externalVideo';
+  const videoDetails = isInternalVideo ? props.show : { video_url: props.show.firstPlayVideoFromUrl.video_url, type: 'video/mp4' };
+
+  // Set the currently playing media in nowPlayingStore
+  nowPlayingStore.setActiveMedia(mediaType, {
+    ...commonDetails,
+    videoDetails, // Spread in the specific details for internal or external video
+  });
+
+  // Load the video source in videoPlayerStore for playback
+  if (isInternalVideo) {
+    videoPlayerStore.loadNewSourceFromFile(props.show.firstPlayVideo);
+  } else if (isExternalVideo) {
+    videoPlayerStore.loadNewSourceFromUrl({ video_url: props.show.firstPlayVideoFromUrl.video_url, type: 'video/mp4' });
   }
-}
+  appSettingStore.ott = 1
+  // Inertia.visit('/stream');
+};
+  //
+  // nowPlayingStore.reset()
+  // nowPlayingStore.show.name = props.show.name
+  // nowPlayingStore.show.url = `/shows/${props.show.slug}`
+  // nowPlayingStore.show.description = props.show.description
+  // nowPlayingStore.show.image = props.show.image
+  // nowPlayingStore.show.category = props.show.category
+  // nowPlayingStore.show.categorySub = props.show.categorySub
+  // videoPlayerStore.makeVideoFullPage()
+  // Inertia.visit('/stream')
+  //
+  // if (props.show.firstPlayVideo.storage_location === 'spaces' && props.show.firstPlayVideo.upload_status !== 'processing') {
+  //   // play video if !processing
+  //   nowPlayingStore.show.episode.name = props.show.firstPlayVideo.name
+  //   nowPlayingStore.show.episode.url = `/shows/${props.show.slug}/episode/${props.show.firstPlayVideo.slug}`
+  //   nowPlayingStore.show.episode.image = props.show.firstPlayVideo.image
+  //   videoPlayerStore.loadNewSourceFromFile(props.show.firstPlayVideo)
+  //
+  // } else if (props.show.firstPlayVideoFromUrl.video_url !== '') {
+  //   nowPlayingStore.isFromWeb = true
+  //   nowPlayingStore.show.episode.name = props.show.firstPlayVideoFromUrl.name
+  //   nowPlayingStore.show.episode.url = `/shows/${props.show.slug}/episode/${props.show.firstPlayVideoFromUrl.slug}`
+  //   nowPlayingStore.show.episode.image = props.show.firstPlayVideoFromUrl.image
+  //   videoPlayerStore.loadNewSourceFromUrl(props.show.firstPlayVideoFromUrl)
+  // }
+// }
 
 let thisYear = new Date().getFullYear()
 

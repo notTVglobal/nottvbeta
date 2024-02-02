@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CreativeCommons;
 use App\Models\Image;
 use App\Models\Show;
 use App\Models\ShowCategory;
@@ -35,8 +36,8 @@ class ShowsController extends Controller {
     $this->middleware('can:view,show')->only(['show']);
 //    $this->middleware('can:view,' . \App\Models\Show::class)->only(['create']);
 //    $this->middleware('can:view,show')->only('index');
-    $this->middleware('can:create,'.Show::class)->only(['create']);
-    $this->middleware('can:create,'.Show::class)->only(['store']);
+    $this->middleware('can:create,' . Show::class)->only(['create']);
+    $this->middleware('can:create,' . Show::class)->only(['store']);
 //    $this->middleware('can:create' . \App\Models\Show::class)->only(['store']);
     $this->middleware('can:edit,show')->only(['edit']);
     $this->middleware('can:edit,show')->only(['update']);
@@ -73,9 +74,16 @@ class ShowsController extends Controller {
   }
 
   private function fetchShows(): \Illuminate\Contracts\Pagination\LengthAwarePaginator {
-    return Show::with(['team', 'user', 'image', 'showEpisodes', 'status', 'category', 'subCategory', 'appSetting'])
+    return Show::with(['team', 'user', 'image', 'status', 'category', 'subCategory', 'appSetting',
+      // Conditionally load 'showEpisodes' based on publication status
+        'showEpisodes' => function ($query) {
+          $query->where('show_episode_status_id', 7); // Only include published episodes
+        }])
         ->when(Request::input('search'), function ($query, $search) {
-          $query->where('name', 'like', "%{$search}%");
+          // Apply the search filter to shows
+          $query->where('name', 'like', "%" . $search . "%")
+              ->orWhere('description', 'like', "%" . $search . "%");
+          // Extend with additional search criteria as necessary
         })
         // Conditionally apply the filter for published episodes based on user status
         ->when(!auth()->check() || (auth()->check() && !auth()->user()->creator), function ($query) {
@@ -92,13 +100,26 @@ class ShowsController extends Controller {
             $query->whereIn('show_status_id', [1, 2]);
           }
         })
-        ->latest()
+        ->latest('updated_at')
         ->paginate(6, ['*'], 'shows')
         ->withQueryString()
         ->through(fn($show) => $this->transformShow($show));
   }
 
   private function transformShow($show): array {
+
+    // Use a subquery to get the oldest episode's releaseDateTime for the show
+    $oldestEpisodeReleaseDateTime = $show->showEpisodes()
+        ->orderBy('release_dateTime', 'asc')
+        ->limit(1)
+        ->value('release_dateTime');
+
+    $isNew = false;
+    if ($oldestEpisodeReleaseDateTime) {
+      $isNew = \Carbon\Carbon::parse($oldestEpisodeReleaseDateTime)
+          ->isBetween(\Carbon\Carbon::now()->subWeek(), \Carbon\Carbon::now());
+    }
+
     return [
         'id'                 => $show->id,
         'name'               => $show->name,
@@ -118,6 +139,7 @@ class ShowsController extends Controller {
         'last_release_year'  => $show->last_release_year,
         'category'           => $show->category ? $show->category->toArray() : null,
         'subCategory'        => $show->subCategory ? $show->subCategory->toArray() : null,
+        'isNew'              => $isNew,
         'can'                => [
             'editShow' => Auth::user()->can('editShow', $show),
             'viewShow' => Auth::user()->can('viewShowManagePage', $show)
@@ -248,9 +270,9 @@ class ShowsController extends Controller {
         });
 
     return Inertia::render('Shows/Create', [
-        'teams'         => $teams,
-        'userId'        => $userId,
-        'categories'    => $categories,
+        'teams'      => $teams,
+        'userId'     => $userId,
+        'categories' => $categories,
     ]);
 
   }
@@ -313,11 +335,35 @@ class ShowsController extends Controller {
 
   public function show(Show $show) {
 
-    $latestEpisodeWithVideo = $this->fetchLatestEpisodeWithVideo($show);
-    $latestEpisodeWithVideoUrl = $this->fetchLatestEpisodeWithVideoUrl($show);
+//    // Fetch the latest published episode with either an internal or external video
+//    $latestEpisode = $show->showEpisodes()
+//        ->where('show_episode_status_id', 7) // Only published episodes
+//        ->where(function ($query) {
+//          $query->whereHas('video') // Ensures there's an associated video record
+//          ->orWhereNotNull('video_url'); // Or directly has a video URL
+//        })
+//        ->with(['image', 'video']) // Eager loading related models for efficiency
+//        ->latest('release_dateTime') // Assuming 'release_dateTime' is the correct column to order by
+//        ->first();
+
+    // Determine the order dynamically based on the show's 'episode_play_order' attribute
+    $orderMethod = $show->episode_play_order === 'newest' ? 'latest' : 'oldest';
+
+    // Fetch the first play episode with the required conditions
+    $firstPlayEpisode = $show->showEpisodes()
+        ->where('show_episode_status_id', 7) // Only published episodes
+        ->whereNotNull('video_id') // Ensures there's an associated video record
+        ->whereHas('video', function ($query) {
+          $query->whereNotNull('storage_location')
+              ->where('storage_location', '!=', 'external_error') // Exclude 'external_error' storage locations
+              ->where('upload_status', '!=', 'processing'); // Exclude videos that are still processing
+        })
+        ->with(['image', 'video']) // Eager loading related models for efficiency
+        ->$orderMethod('release_dateTime') // Dynamically apply ordering based on user preference
+        ->first();
 
     return Inertia::render('Shows/{$id}/Index', [
-        'show'     => $this->transformShowData($show, $latestEpisodeWithVideo, $latestEpisodeWithVideoUrl),
+        'show'     => $this->transformShowData($show, $firstPlayEpisode),
         'episodes' => $this->fetchEpisodes($show),
         'creators' => $this->fetchCreators($show->team_id),
         'team'     => $this->transformTeamData($show->team),
@@ -325,72 +371,86 @@ class ShowsController extends Controller {
     ]);
   }
 
-  private function fetchLatestEpisodeWithVideo(Show $show) {
-    return $show->showEpisodes()
-        ->whereNotNull('video_id')
-        ->with('image')
-        ->latest()
-        ->first();
-  }
 
-  private function fetchLatestEpisodeWithVideoUrl(Show $show) {
-    return $show->showEpisodes()
-        ->whereHas('video', function ($query) {
-          $query->whereNotNull('video_url');
-        })
-        ->with('image')
-        ->latest()
-        ->first();
-  }
-
-  private function transformShowData(Show $show, $latestEpisodeWithVideo, $latestEpisodeWithVideoUrl) {
+  private function transformShowData(Show $show, $firstPlayEpisode) {
     return [
-        'name'                  => $show->name,
-        'slug'                  => $show->slug,
-        'description'           => $show->description,
-        'showRunner'            => $show->user->name,
-        'image'                 => $this->transformImage($show->image, $show->appSetting),
-        'category'              => $show->category ? $show->category->toArray() : null,
-        'subCategory'           => $show->subCategory ? $show->subCategory->toArray() : null,
-        'firstPlayVideo'        => $this->transformEpisodeData($latestEpisodeWithVideo),
-        'firstPlayVideoFromUrl' => $this->transformEpisodeData($latestEpisodeWithVideoUrl, true),
-        'copyrightYear'         => $show->created_at->format('Y'),
-        'first_release_year'    => $show->first_release_year ?? null,
-        'last_release_year'     => $show->last_release_year ?? null,
-        'www_url'               => $show->www_url,
-        'instagram_name'        => $show->instagram_name,
-        'telegram_url'          => $show->telegram_url,
-        'twitter_handle'        => $show->twitter_handle,
-        'statusId'              => $show->status->id,
+        'name'               => $show->name,
+        'slug'               => $show->slug,
+        'description'        => $show->description,
+        'showRunner'         => $show->user->name,
+        'image'              => $this->transformImage($show->image, $show->appSetting),
+        'category'           => $show->category ? $show->category->toArray() : null,
+        'subCategory'        => $show->subCategory ? $show->subCategory->toArray() : null,
+        'firstPlayEpisode'   => $this->transformEpisodeData($firstPlayEpisode),
+        'copyrightYear'      => $show->created_at->format('Y'),
+        'first_release_year' => $show->first_release_year ?? null,
+        'last_release_year'  => $show->last_release_year ?? null,
+        'www_url'            => $show->www_url,
+        'instagram_name'     => $show->instagram_name,
+        'telegram_url'       => $show->telegram_url,
+        'twitter_handle'     => $show->twitter_handle,
+        'statusId'           => $show->status->id,
     ];
   }
 
-  private function transformEpisodeData($episode, $isUrl = false) {
-    if (!$episode) {
-      return [];
-    }
-
+  private function transformEpisodeData($episode) {
+    if (!$episode) return [];
+    // Adapt this method to handle an episode whether it has a video_id or video_url
     $episodeData = [
         'name'        => $episode->name ?? '',
         'slug'        => $episode->slug ?? '',
         'description' => $episode->description ?? '',
         'image'       => $this->transformImage($episode->image, $episode->appSetting),
+      // Other episode attributes...
+      // Include both 'file_name' and 'video_url' as applicable
     ];
 
-    if ($isUrl) {
-      $episodeData['video_url'] = $episode->video->video_url ?? '';
-      $episodeData['type'] = $episode->video->type ?? '';
-    } else {
-      $episodeData['file_name'] = $episode->video->file_name ?? '';
-      $episodeData['cdn_endpoint'] = $episode->appSetting->cdn_endpoint ?? '';
-      $episodeData['folder'] = $episode->video->folder ?? '';
-      $episodeData['cloud_folder'] = $episode->video->cloud_folder ?? '';
-      $episodeData['upload_status'] = $episode->video->upload_status ?? '';
-      $episodeData['storage_location'] = $episode->video->storage_location ?? '';
+    // Check if the episode has an associated video
+    if ($episode->video) {
+      // Determine the video type based on its storage location.
+      // If the storage location is marked as 'external', categorize it as 'externalVideo';
+      // otherwise, it's considered an internal 'show' video.
+      $videoType = $episode->video->storage_location === 'external' ? 'externalVideo' : 'show';
+      // Construct an array to hold video details for the episode.
+      $episodeData['video'] = [
+          'video_url'        => $episode->video->video_url ?? '',
+          'type'             => $episode->video->type ?? '',
+          'file_name'        => $episode->video->file_name ?? '',
+          'cdn_endpoint'     => $episode->video->cdn_endpoint ?? '',
+          'folder'           => $episode->video->folder ?? '',
+          'cloud_folder'     => $episode->video->cloud_folder ?? '',
+          'upload_status'    => $episode->video->upload_status ?? '',
+          'storage_location' => $episode->video->storage_location ?? '',
+        // Include other relevant video attributes...
+      ];
     }
 
     return $episodeData;
   }
+
+
+
+//    $episodeData = [
+//        'name'        => $episode->name ?? '',
+//        'slug'        => $episode->slug ?? '',
+//        'description' => $episode->description ?? '',
+//        'image'       => $this->transformImage($episode->image, $episode->appSetting),
+//    ];
+
+//    if ($isUrl) {
+//      $episodeData['video_url'] = $episode->video->video_url ?? '';
+//      $episodeData['type'] = $episode->video->type ?? '';
+//    } else {
+//      $episodeData['file_name'] = $episode->video->file_name ?? '';
+//      $episodeData['cdn_endpoint'] = $episode->appSetting->cdn_endpoint ?? '';
+//      $episodeData['folder'] = $episode->video->folder ?? '';
+//      $episodeData['cloud_folder'] = $episode->video->cloud_folder ?? '';
+//      $episodeData['upload_status'] = $episode->video->upload_status ?? '';
+//      $episodeData['storage_location'] = $episode->video->storage_location ?? '';
+//    }
+//
+//    return $episodeData;
+//  }
 
   private function fetchEpisodes(Show $show) {
     return ShowEpisode::with('image', 'show', 'showEpisodeStatus')
@@ -548,17 +608,18 @@ class ShowsController extends Controller {
   public function update(HttpRequest $request, Show $show) {
     // validate the request
     $request->validate([
-        'name'           => ['required', 'string', 'max:255', Rule::unique('shows')->ignore($show->id)],
-        'description'    => 'required',
-        'release_date'   => 'date|after:tomorrow',
-        'category'       => 'required',
-        'sub_category'   => 'nullable',
-        'www_url'        => 'nullable|active_url',
-        'instagram_name' => 'nullable|string|max:30',
-        'telegram_url'   => 'nullable|active_url',
-        'twitter_handle' => 'nullable|string|min:4|max:15',
-        'notes'          => 'nullable|string|max:1024',
-        'status'         => 'required|integer|exists:show_statuses,id',
+        'name'               => ['required', 'string', 'max:255', Rule::unique('shows')->ignore($show->id)],
+        'description'        => 'required',
+        'release_date'       => 'date|after:tomorrow',
+        'category'           => 'required',
+        'sub_category'       => 'nullable',
+        'www_url'            => 'nullable|active_url',
+        'instagram_name'     => 'nullable|string|max:30',
+        'telegram_url'       => 'nullable|active_url',
+        'twitter_handle'     => 'nullable|string|min:4|max:15',
+        'notes'              => 'nullable|string|max:1024',
+        'status'             => 'required|integer|exists:show_statuses,id',
+        'episode_play_order' => 'required|string',
     ], [
         'status.exists'      => 'The selected status is invalid.',
         'release_date.after' => 'The release date must be at least 24 hours in the future.',
@@ -576,6 +637,7 @@ class ShowsController extends Controller {
     $show->twitter_handle = $request->twitter_handle;
     $show->notes = htmlentities($request->notes);
     $show->status_id = $request->status;
+    $show->episode_play_order = $request->episode_play_order;
     $show->save();
     sleep(1);
 
@@ -639,22 +701,32 @@ class ShowsController extends Controller {
 
   public function createEpisode(Show $show) {
 
+    $creativeCommons = CreativeCommons::all();
+
     $show->load('user', 'image', 'appSetting', 'category', 'subCategory'); // Eager load necessary relationships
 
     return Inertia::render('Shows/{$id}/Episodes/Create', [
-        'show' => [
-            'name'             => $show->name,
-            'id'               => $show->id,
-            'slug'             => $show->slug,
-            'showRunner'       => $show->user->name,
-            'image'            => $this->transformImage($show->image, $show->appSetting),
-            'showCategoryName' => $show->category->name,
-            'categorySubName'  => $show->subCategory->name,
+        'show'             => [
+            'name'        => $show->name,
+            'id'          => $show->id,
+            'slug'        => $show->slug,
+            'showRunner'  => $show->user->name,
+            'image'       => $this->transformImage($show->image, $show->appSetting),
+            'category'    => [
+                'name'        => $show->category->name,
+                'description' => $show->category->description,
+            ],
+            'subCategory' => [
+                'name'        => $show->subCategory->name,
+                'description' => $show->subCategory->description,
+            ],
+
         ],
-        'team' => Team::query()->where('id', $show->team_id)->first(),
-        'user' => [
+        'team'             => Team::query()->where('id', $show->team_id)->first(),
+        'user'             => [
             'id' => auth()->user()->id,
         ],
+        'creative_commons' => $creativeCommons,
     ]);
   }
 

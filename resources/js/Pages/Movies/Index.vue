@@ -50,7 +50,10 @@
                              class="movie mt-8">
                             <div class="relative inline-block">
                               <div v-if="movie.statusId === 9" class="absolute flex justify-end w-full -mt-3 z-50">
-                                <div class="badge bg-gray-500 border-gray-500 text-gray-50 drop-shadow-lg">Creators Only</div>
+                                <CreatorsOnlyBadge />
+                              </div>
+                              <div v-else-if="movie.isNew" class="absolute flex justify-end w-full -mt-3 z-50">
+                                <NewContentBadge />
                               </div>
                                 <Link :href="`/movies/${movie.slug}`">
 <!--                                    <img :src="`/storage/images/EBU_Colorbars.svg.png`" alt="movie cover" class="h-48 min-w-[8rem] w-28 object-cover hover:opacity-75 transition ease-in-out duration-150">-->
@@ -63,9 +66,9 @@
                                 </div>
                             </div>
                             <Link :href="`/movies/${movie.slug}`" class="block text-base font-semibold leading-tight max-w-[8rem] hover:text-gray-400 mt-4 mb-2">{{ movie.name }}</Link>
-                            <div class="text-gray-400 mt-1 uppercase tracking-wide">{{ movie.category?.name }}
+                            <div class="text-yellow-700 mt-1 uppercase tracking-wide">{{ movie.category?.name }}
                                 <span v-if="movie.release_year">({{movie.release_year}})</span></div>
-                            <div class="text-gray-400 mt-1">{{ movie.subCategory?.name }}</div>
+                            <div class="text-yellow-500 mt-1 tracking-wide">{{ movie.subCategory?.name }}</div>
                         </div>
 
                     </div>
@@ -86,7 +89,10 @@
                         <Link :href="`/movies/${movie.slug}`" class="flex flex-row bg-gray-800 rounded-lg shadow-md px-6 py-6">
                           <div class="relative w-48 min-w-[12rem]">
                             <div v-if="movie.statusId === 9" class="absolute flex justify-end w-full -mt-3 z-50">
-                              <div class="badge bg-gray-500 border-gray-500 text-gray-50 drop-shadow-lg">Creators Only</div>
+                              <CreatorsOnlyBadge />
+                            </div>
+                            <div v-else-if="movie.isNew" class="absolute flex justify-end w-full -mt-3 z-50">
+                              <NewContentBadge />
                             </div>
                             <SingleImage :image="movie.image" :alt="'movie cover'" class="h-28 w-48 min-w-[12rem] object-cover bg-black"/>
                             <div class="hidden absolute right-0 -mt-6 -mr-3 w-12 h-12 bg-gray-900 rounded-full">
@@ -181,6 +187,8 @@ import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import Pagination from "@/Components/Global/Paginators/PaginationDark"
 import Message from "@/Components/Global/Modals/Messages"
 import SingleImage from "@/Components/Global/Multimedia/SingleImage"
+import CreatorsOnlyBadge from '@/Components/Global/Badges/CreatorsOnlyBadge.vue'
+import NewContentBadge from '@/Components/Global/Badges/NewContentBadge.vue'
 
 usePageSetup('movies')
 

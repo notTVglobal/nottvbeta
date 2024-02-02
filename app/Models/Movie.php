@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Movie extends Model {
   protected $fillable = [
       'user_id',
+      'creative_commons_id',
       'team_id',
       'image_id',
       'name',
@@ -30,7 +31,9 @@ class Movie extends Model {
       'logline',
       'video_id',
       'movies_trailer_id',
-      'status_id'
+      'status_id',
+      'copyrightYear',
+      'releaseDateTime'
   ];
 
   public function getRouteKeyName() {
@@ -88,6 +91,11 @@ class Movie extends Model {
 
   public function status() {
     return $this->belongsTo(MovieStatus::class, 'status_id');
+  }
+
+  public function creativeCommons()
+  {
+    return $this->belongsTo(CreativeCommons::class, 'creative_commons_id');
   }
 }
 

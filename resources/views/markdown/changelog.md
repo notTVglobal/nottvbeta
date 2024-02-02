@@ -3,6 +3,13 @@
 Last Update: January 31, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+# v0.8.4.1
+February 1, 2024
+* Added creative commons licensing to movies and show episodes
+* Created new "new" badge for movies and shows
+* Optimized the database loading on the Shows index page
+* Added the option for Creators to choose whether the first episode played from the Show page when the user clicks "Watch Now" is the oldest episode first or the newest episode first.
+
 # v0.8.4.0
 January 29, 2024
 * Added show sub-categories

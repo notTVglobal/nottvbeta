@@ -207,6 +207,50 @@
                                                  class="text-xs text-red-600 mt-1"></div>
                                         </div>
 
+                                      <div class="mb-6 w-64">
+                                        <label class="block mb-2 uppercase font-bold text-xs text-red-700"
+                                               for="creative_commons"
+                                        >
+                                          Creative Commons / Copyright
+                                        </label>
+
+                                        <select class="border border-gray-400 text-gray-800 py-2 pl-2 pr-8 w-fit rounded-lg block mb-2 uppercase font-bold text-xs"
+                                                v-model="selectedCreativeCommons" @change="handleCreativeCommonsChange">
+                                          <option v-for="cc in creative_commons" :key="cc.id" :value="cc.id">{{ cc.name }}</option>
+                                        </select>
+
+                                        <div class="">{{ selectedCreativeCommonsDescription }}</div>
+
+                                        <div v-if="form.errors.creative_commons" v-text="form.errors.creative_commons"
+                                             class="text-xs text-red-600 mt-1"></div>
+
+                                      </div>
+
+                                      <div v-if="selectedCreativeCommons" class="mb-6 w-64">
+
+                                        <div v-if="selectedCreativeCommons === 8">
+                                          <input class="hidden border border-gray-400 text-black font-semibold p-2 w-1/2 rounded-lg"
+                                                 type="hidden"
+                                                 v-model="selectedCopyrightYear"
+                                                 value="null">
+                                        </div>
+                                        <div v-else>
+                                          <label class="block mb-2 uppercase font-bold text-xs text-red-700"
+                                                 for="copyrightYear"
+                                          >
+                                            Copyright Year
+                                          </label>
+                                          <input class="border border-gray-400 text-black font-semibold p-2 w-1/2 rounded-lg"
+                                                 type="number"
+                                                 minlength="4"
+                                                 maxlength="4"
+                                                 v-model="selectedCopyrightYear">
+                                        </div>
+
+                                        <div v-if="form.errors.copyrightYear" v-text="form.errors.copyrightYear"
+                                             class="text-xs text-red-600 mt-1"></div>
+                                      </div>
+
                                         <div class="mb-6">
                                             <label class="block mb-2 uppercase font-bold text-xs text-red-700"
                                                    for="category"
@@ -441,15 +485,33 @@ let props = defineProps({
     image: Object,
     categories: Object,
     statuses: Object,
+    creative_commons: Object,
     can: Object,
 })
 
 let selectedCategoryId = ref(props.movie.movie_category_id);
 let selectedSubCategoryId = ref(props.movie.movie_category_sub_id);
+const selectedCreativeCommons = ref(props.movie.creative_commons_id);
+let selectedCopyrightYear = ref(props.movie.copyrightYear);
+const currentYear = new Date().getFullYear();
 
 const subCategories = computed(() => {
   const category = props.categories.find(cat => cat.id === selectedCategoryId.value);
   return category ? category.sub_categories : [];
+});
+
+const handleCreativeCommonsChange = () => {
+  if (selectedCreativeCommons.value === 8) {
+    selectedCopyrightYear.value = null;
+  } else if (selectedCopyrightYear.value === null) {
+    // Pre-populate with current year only if copyrightYear is null
+    selectedCopyrightYear.value = currentYear;
+  }
+};
+
+const selectedCreativeCommonsDescription = computed(() => {
+  const selectedCC = props.creative_commons.find((cc) => cc.id === selectedCreativeCommons.value);
+  return selectedCC ? selectedCC.description : '';
 });
 
 // Watchers to update the store based on category and subcategory selections
@@ -464,6 +526,10 @@ watch(selectedSubCategoryId, () => {
 onMounted(() => {
   movieStore.categories = props.categories;
   movieStore.initializeDescriptions(selectedCategoryId.value, selectedSubCategoryId.value);
+  watch(() => props.movie.creative_commons_id, (newVal) => {
+    selectedCreativeCommons.value = newVal;
+    handleCreativeCommonsChange();
+  });
 });
 
 const chooseCategory = () => {
@@ -489,6 +555,8 @@ let form = useForm({
     name: props.movie.name,
     status: props.movie.status_id,
     release_year: props.movie.release_year,
+    copyrightYear: selectedCopyrightYear,
+    creative_commons_id: selectedCreativeCommons.value,
     category: movieStore.category_id,
     sub_category: movieStore.sub_category_id,
     description: props.movie.description,
@@ -505,6 +573,8 @@ let form = useForm({
 let submit = () => {
   form.category = movieStore.category_id;
   form.sub_category = movieStore.sub_category_id;
+  form.copyrightYear = selectedCopyrightYear;
+  form.creative_commons_id = selectedCreativeCommons.value;
   form.patch(route('movies.update', props.movie.slug));
 }
 

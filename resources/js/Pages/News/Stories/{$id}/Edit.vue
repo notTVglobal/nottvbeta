@@ -148,6 +148,7 @@ onMounted(() => {
 // Watch for changes in relevant store states
 watch(() => [newsStore.news_category_id, newsStore.news_category_sub_id], () => {
   newsStore.setSelectedCategory()
+  newsStore.getSubcategories()
   // You can also watch for other relevant states if they affect setSelectedCategory
 })
 

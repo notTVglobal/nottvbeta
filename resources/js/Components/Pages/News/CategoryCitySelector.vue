@@ -91,7 +91,7 @@
         </div>
         <div v-if="newsStore.selectedCategory" class="flex flex-wrap">
           <select v-model="newsStore.selectedSubcategory" id="subcategorySelect" class="rounded">
-            <option :value="{ id: null }" disabled>Choose a category first</option> <!-- Add a blank option -->
+            <option :value="{ id: null }">Choose a sub-category</option> <!-- Add a blank option -->
             <option v-for="subcategory in newsStore.subcategories" :key="subcategory.id" :value="subcategory">{{ subcategory.name }}</option>
           </select>
         </div>

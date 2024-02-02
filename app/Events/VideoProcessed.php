@@ -10,40 +10,38 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
-class VideoProcessed implements ShouldBroadcastNow
-{
-    public $userId;
+class VideoProcessed implements ShouldBroadcastNow {
+  public $userId;
 
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+  use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    /**
-     * Create a new event instance.
-     *
-     * @return void
-     */
-    public function __construct($userId)
-    {
-      $this->userId = $userId;
-    }
+  /**
+   * Create a new event instance.
+   *
+   * @return void
+   */
+  public function __construct($userId) {
+    $this->userId = $userId;
+  }
 
-  public function broadcastAs(): string
-  {
+  public function broadcastAs(): string {
     return 'userNotifications';
   }
 
-    /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return Channel|PrivateChannel|array
-     */
-    public function broadcastOn(): Channel|PrivateChannel|array {
-      return new PrivateChannel('user.' . $this->userId);
-    }
+  /**
+   * Get the channels the event should broadcast on.
+   *
+   * @return Channel|PrivateChannel|array
+   */
+  public function broadcastOn(): Channel|PrivateChannel|array {
+    return new PrivateChannel('user.' . $this->userId);
+  }
 
-  public function broadcastWith()
-  {
+  public function broadcastWith() {
     return [
-        'notification' => 'Your video has been processed',
+        'notification' => [
+            'title' => 'Your video has been processed',
+        ]
     ];
   }
 }
