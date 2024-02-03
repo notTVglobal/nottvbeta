@@ -40,19 +40,17 @@
         <div class="flex flex-wrap justify-between px-5">
           <div class="">
             <div class="mb-4">
-              <h3 class="mb-1 inline-flex items-center text-3xl font-semibold hover:text-blue-500 relative">
-                <Link :href="`/shows/${props.show.slug}/`">
+              <h3 class="mb-1 inline-flex items-center text-3xl font-semibold relative">
 
-                  {{ props.show.name }}
 
-                </Link>
+                {{ props.episode.name }}
 
 
               </h3>
               <div class="mb-1">
-                                    <span class="font-semibold text-xl">
-                                        {{ props.episode.name }}
-                                        </span>
+                  <span class="font-semibold text-xl hover:text-blue-500 hover:cursor-pointer">
+                      <Link :href="`/shows/${props.show.slug}/`">{{ props.show.name }}</Link>
+                  </span>
               </div>
               <div class="text-xs space-y-1">
                 <span class="uppercase">Episode Number: </span>
@@ -67,8 +65,10 @@
           </div>
 
           <div class="flex flex-col text-right">
-              <span class="text-lg uppercase justify-end tracking-wider text-yellow-700">{{ props.show.category.name }}</span>
-              <span class="tracking-wide text-yellow-500">{{ props.show.subCategory.name }}</span>
+            <span class="text-lg uppercase justify-end tracking-wider text-yellow-700">{{
+                props.show.category.name
+              }}</span>
+            <span class="tracking-wide text-yellow-500">{{ props.show.subCategory.name }}</span>
             <div v-if="props.can.viewCreator">
               <span class="text-xs uppercase">Team:</span>
               <Link :href="`/teams/${props.team.slug}`" class="text-blue-300 hover:text-blue-500 ml-2"><span
@@ -85,8 +85,8 @@
 
         <div class="flex flex-wrap mt-12 m-auto lg:mx-0 justify-center lg:justify-start space-x-3 space-y-3">
           <div></div>
-          <button v-if="episode.video.storage_location === 'spaces' || episode.video.video_url"
-                  :disabled="episode.video.upload_status === 'processing' && !episode.video.video_url"
+          <button v-if="episode?.video?.mediaType"
+                  :disabled="nowPlayingStore?.activeMedia?.details?.secondaryName === episode?.name"
                   class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-700 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
                   @click="playEpisode">
             <svg class="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg"
@@ -97,16 +97,18 @@
 		S125.327,30,242.5,30S455,125.327,455,242.5S359.673,455,242.5,455z"/>
               <polygon points="181.062,336.575 343.938,242.5 181.062,148.425 	"/>
             </svg>
-            <span v-if="videoPlayerStore.nowPlayingName === props.episode.name" class="ml-2">Now Playing</span>
+            <span v-if="nowPlayingStore?.activeMedia?.details?.secondaryName === episode?.name" class="ml-2">Now Playing</span>
             <span v-else class="ml-2">Watch Episode</span>
           </button>
 
-          <button disabled
+          <button v-if="userStore.isVip || userStore.isAdmin"
+                  disabled
                   class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed">
             <span class=""><font-awesome-icon icon="fa-circle-down" class="mr-2"/>Save For Later</span>
           </button>
 
-          <button disabled
+          <button v-if="userStore.isVip || userStore.isAdmin"
+                  disabled
                   class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed">
             <span class=""><font-awesome-icon icon="fa-share" class="mr-2"/>Share</span>
           </button>
@@ -193,6 +195,7 @@ import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
 import { useNowPlayingStore } from '@/Stores/NowPlayingStore'
 import { useTeamStore } from '@/Stores/TeamStore'
+import { useUserStore } from '@/Stores/UserStore'
 import EpisodeFooter from '@/Components/Pages/ShowEpisodes/Layout/EpisodeFooter'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage'
 import Message from '@/Components/Global/Modals/Messages'
@@ -206,6 +209,7 @@ const appSettingStore = useAppSettingStore()
 const nowPlayingStore = useNowPlayingStore()
 const videoPlayerStore = useVideoPlayerStore()
 const teamStore = useTeamStore()
+const userStore = useUserStore()
 
 let props = defineProps({
   show: Object,
@@ -219,32 +223,66 @@ let props = defineProps({
 let playEpisode = () => {
   nowPlayingStore.reset()
 
+  // Determine media type and specific details based on the video type
+  const episode = props.episode;
+  const show = props.show;
+  const mediaType = episode.video ? episode.video.mediaType : null; // Use the new 'mediaType' from the backend
 
-  const isInternalVideo = props.episode.video.file_name !== '' && props.episode.video.upload_status !== 'processing';
-  const isExternalVideo = !!props.episode.video.video_url;
+  const isInternalVideo = mediaType  === 'show';
+  const isExternalVideo = mediaType  === 'externalVideo';
+
+  const videoDetails = {
+    // Assuming video details are structured correctly in your episode data
+    video_url: episode.video ? episode.video.video_url : '',
+    type: episode.video ? episode.video.type : 'video/mp4', // MIME type for video.js
+  };
 
   // Common details for nowPlayingStore
   const commonDetails = {
-    name: props.episode.name,
-    url: `shows/${props.show.slug}/episode/${props.episode.slug}`,
-  };
-
-  // Determine media type and specific details based on the video type
-  const mediaType = isInternalVideo ? 'show' : 'externalVideo';
-  const videoDetails = isInternalVideo ? props.episode : { video_url: props.episode.video.video_url, type: 'video/mp4' };
+    primaryName: show.name, // Show or Movie name
+    secondaryName: episode.name, // Episode name
+    primaryUrl: `shows/${show.slug}`,
+    secondaryUrl: `shows/${show.slug}/episode/${episode.slug}`,
+    channelName: '',
+    image: show.image,
+    team: props.team,
+    creative_commons: episode.creative_commons,
+    category: show.category,
+    subCategory: show.subCategory,
+    release_year: episode.release_year,
+    copyrightYear: episode.copyrightYear,
+    logline: '',
+    description: episode.description,
+  }
 
   // Set the currently playing media in nowPlayingStore
   nowPlayingStore.setActiveMedia(mediaType, {
     ...commonDetails,
     videoDetails, // Spread in the specific details for internal or external video
-  });
+  })
+
+  // Load the video source in videoPlayerStore for playback
+  // if (isInternalVideo) {
+  //   videoPlayerStore.loadNewSourceFromFile(props.episode.video)
+  // } else if (isExternalVideo) {
+  //   videoPlayerStore.loadNewSourceFromUrl({video_url: props.episode.video.video_url, type: 'video/mp4'})
+  // }
 
   // Load the video source in videoPlayerStore for playback
   if (isInternalVideo) {
-    videoPlayerStore.loadNewSourceFromFile(props.episode.video);
+    // For internal videos, load using the episode video directly
+    videoPlayerStore.loadNewSourceFromFile(episode.video);
   } else if (isExternalVideo) {
-    videoPlayerStore.loadNewSourceFromUrl({ video_url: props.episode.video.video_url, type: 'video/mp4' });
+    // For external videos, focus on the video_url and type provided within the episode's video details
+    if (episode.video && episode.video.video_url) {
+      videoPlayerStore.loadNewSourceFromUrl({
+        video_url: episode.video.video_url,
+        type: episode.video.type // This assumes that 'type' is correctly set to 'video/mp4' or appropriate video MIME type
+      });
+    }
   }
+
+
   appSettingStore.ott = 1
   // Inertia.visit('/stream');
 

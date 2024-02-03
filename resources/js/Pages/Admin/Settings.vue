@@ -411,7 +411,6 @@ let form = useForm({
   mist_server_password: props.mist_server_password,
 })
 
-console.log(props.default_country)
 const countries = ref([]);
 // const topDiv = document.getElementById("topDiv")
 
@@ -439,7 +438,6 @@ let clearFirstPlayCacheData = () => {
 let getAllEpisodesButtonActive = ref(false);
 
 function getEpisodesFromEmbedCodes() {
-  console.log(form.default_country)
   Inertia.post('getVideosFromEmbedCodes')
   getAllEpisodesButtonActive = false;
 }

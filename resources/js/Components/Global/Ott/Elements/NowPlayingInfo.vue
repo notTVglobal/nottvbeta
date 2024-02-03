@@ -36,7 +36,7 @@
       <div class="h-full w-full overflow-y-scroll scrollbar-hide">
         <div class="w-full h-full px-2 bg-gray-800 overflow-y-scroll scrollbar-hide">
           <h1 class="text-xs font-semibold uppercase w-full bg-purple-900 text-white p-2 mt-4 mb-4">
-            NOW PLAYING</h1>
+            NOW PLAYING <span class="text-gray-500 tracking-widest" v-if="nowPlayingStore.activeMedia.type==='externalVideo'">&nbsp;&nbsp;external video</span></h1>
 
           <div class="pb-24 w-full overflow-y-scroll scrollbar-hide"
                :class="[{'h-[calc(100vh-22rem)]':!userStore.isMobile},{'h-[calc(100vh-20rem)]':userStore.isMobile}]">
@@ -46,10 +46,10 @@
                 <div class="flex flex-row">
                   <!-- Image -->
                   <div class="showOrMovieImage">
-                    <Link :href="`/${nowPlayingStore.activeMedia.details?.url}`">
+                    <Link :href="`/${nowPlayingStore.activeMedia.details?.primaryUrl}`">
                       <SingleImage
-                          :image="nowPlayingStore.activeMedia.details.videoDetails?.image"
-                          :alt="nowPlayingStore.activeMedia.details?.name"
+                          :image="nowPlayingStore.activeMedia.details?.image"
+                          :alt="nowPlayingStore.activeMedia.details?.primaryName"
                           class="h-16 w-12 mr-2 object-cover hover:opacity-75 transition ease-in-out duration-150"
                       />
                     </Link>
@@ -57,35 +57,47 @@
 
 
                   <div class="flex flex-col ml-3">
-                    <h3 v-if="nowPlayingStore.activeMedia.details?.url">
+                    <h3 v-if="nowPlayingStore.activeMedia.details?.primaryUrl">
                       <!-- Render as a link if the URL exists -->
-                      <Link :href="`/${nowPlayingStore.activeMedia.details.url}`">
+                      <Link class="hover:text-blue-500 hover:cursor-pointer" :href="`/${nowPlayingStore.activeMedia.details.primaryUrl}`">
                         <!-- Title (with link) -->
-                        {{ nowPlayingStore.activeMedia.details.name }}
+                        {{ nowPlayingStore.activeMedia.details.primaryName }}
                       </Link>
                     </h3>
                     <h3 v-else>
                       <!-- Just display the name without a link if the URL does not exist -->
                       <!-- Title (no link) -->
-                      {{ nowPlayingStore.activeMedia.details.name }}
+                      {{ nowPlayingStore.activeMedia.details.primaryName }}
+                    </h3>
+                    <h4 v-if="nowPlayingStore.activeMedia.details?.secondaryUrl">
+                      <!-- Render as a link if the URL exists -->
+                      <Link class="hover:text-blue-500 hover:cursor-pointer" :href="`/${nowPlayingStore.activeMedia.details.secondaryUrl}`">
+                        <!-- Title (with link) -->
+                        {{ nowPlayingStore.activeMedia.details.secondaryName }}
+                      </Link>
+                    </h4>
+                    <h3 v-else>
+                      <!-- Just display the name without a link if the URL does not exist -->
+                      <!-- Title (no link) -->
+                      {{ nowPlayingStore.activeMedia.details.secondaryName }}
                     </h3>
 <!--                    <div class="showOrMovieTitle">{{ nowPlayingStore.show?.name }}</div>-->
 <!--                    <div class="showEpisodeTitle">{{ nowPlayingStore.show?.episode?.name }}</div>-->
                     <!-- Release Date -->
-                    <div class="releaseYear text-gray-400">{{ nowPlayingStore.activeMedia.details.videoDetails?.release_year }}</div>
+                    <div class="releaseYear text-gray-400">{{ nowPlayingStore.activeMedia.details?.release_year }}</div>
 <!--                    <div class="releaseDateTime">{{ useTimeAgo(nowPlayingStore.show?.episode.releaseDateTime) }}</div>-->
                   </div>
                 </div>
-                <div v-if="nowPlayingStore.activeMedia.details.videoDetails?.category?.name" class="flex flex-row mt-2">
+                <div v-if="nowPlayingStore.activeMedia.details?.category?.name" class="flex flex-row mt-2">
                   <div class="flex flex-wrap mb-4">
                     <!-- Categories -->
-                    <div class="text-yellow-700 uppercase tracking-wider">{{ nowPlayingStore.activeMedia.details.videoDetails?.category?.name }}</div>
+                    <div class="text-yellow-700 uppercase tracking-wider">{{ nowPlayingStore.activeMedia.details?.category?.name }}</div>
                     &nbsp;&middot;&nbsp;
-                    <div class="text-yellow-500 tracking-wide">{{ nowPlayingStore.activeMedia.details.videoDetails?.subCategory?.name }}</div>
+                    <div class="text-yellow-500 tracking-wide">{{ nowPlayingStore.activeMedia.details?.subCategory?.name }}</div>
                   </div>
                 </div>
 <!--                Episode Name -->
-                <div v-if="nowPlayingStore.activeMedia.details.videoDetails?.episode">
+                <div v-if="nowPlayingStore.activeMedia.details?.episode">
                   <div>
                     Episode Name
                   </div>
@@ -94,29 +106,29 @@
                   </div>
                 </div>
                 <!-- Logline and Description -->
-                <div v-if="nowPlayingStore.activeMedia.details.videoDetails?.logline" class="flex flex-col mt-4">
-                  <div class="text-xs uppercase text-gray-500 font-semibold tracking-wider">Logline</div>
-                  <div class="showEpisodeOrMovieDescription">{{ nowPlayingStore.activeMedia.details.videoDetails?.logline }}</div>
+                <div v-if="nowPlayingStore.activeMedia.details?.logline" class="flex flex-col mt-4">
+                  <div class="text-xs uppercase text-gray-500 font-semibold tracking-wider mb-1">Logline</div>
+                  <div class="showEpisodeOrMovieDescription">{{ nowPlayingStore.activeMedia.details?.logline }}</div>
                 </div>
-                <div v-if="nowPlayingStore.activeMedia.details.videoDetails?.description" class="flex flex-col mt-4">
-                  <div class="text-xs uppercase text-gray-500 font-semibold tracking-wider">Description</div>
-                  <div class="showEpisodeOrMovieDescription">{{ nowPlayingStore.activeMedia.details.videoDetails?.description }}</div>
+                <div v-if="nowPlayingStore.activeMedia.details?.description" class="flex flex-col mt-4">
+                  <div class="text-xs uppercase text-gray-500 font-semibold tracking-wider mb-1">Description</div>
+                  <div class="showEpisodeOrMovieDescription description">{{ nowPlayingStore.activeMedia.details?.description }}</div>
                 </div>
                 <!-- Copyright and Team -->
                 <div class="flex flex-row flex-wrap mt-4">
                     <div>
                       <!--                    If there is a copyright year display it... we need to remove the &copy; and replace it with whichever creative commons icon it needs -->
-                      <span class="text-xs font-semibold text-gray-500" v-if="nowPlayingStore.activeMedia.details.videoDetails?.copyrightYear">{{ nowPlayingStore.activeMedia.details.videoDetails?.copyrightYear }}</span>
-                      <span class="text-xs font-semibold text-gray-500" v-if="nowPlayingStore.activeMedia.details.videoDetails?.creative_commons?.id === 7">&nbsp;&copy;&nbsp;</span>
+                      <span class="text-xs font-semibold text-gray-500" v-if="nowPlayingStore.activeMedia.details?.copyrightYear">{{ nowPlayingStore.activeMedia.details?.copyrightYear }}</span>
+                      <span class="text-xs font-semibold text-gray-500" v-if="nowPlayingStore.activeMedia.details?.creative_commons?.id === 7">&nbsp;&copy;&nbsp;</span>
                       <!--                    If there is no copyright year then it's probably public domain... so we'll just display the creative commons name-->
-                      <span v-if="nowPlayingStore.activeMedia.details.videoDetails?.creative_commons?.name" class="text-xs font-semibold text-gray-500">&nbsp;&bull;&nbsp;{{ nowPlayingStore.activeMedia.details.videoDetails?.creative_commons?.name }}&nbsp;&bull;&nbsp;</span>
+                      <span v-if="nowPlayingStore.activeMedia.details?.creative_commons?.name" class="text-xs font-semibold text-gray-500">&nbsp;&bull;&nbsp;{{ nowPlayingStore.activeMedia.details?.creative_commons?.name }}&nbsp;&bull;&nbsp;</span>
 
                     </div>
                     <div>
-                      <Link class="text-sm link-dark" :href="`/teams/${nowPlayingStore.activeMedia.details.videoDetails?.team?.slug}`">{{ nowPlayingStore.activeMedia.details.videoDetails?.team?.name }}</Link></div>
+                      <Link class="text-sm link-dark" :href="`/teams/${nowPlayingStore.activeMedia.details?.team?.slug}`">{{ nowPlayingStore.activeMedia.details?.team?.name }}</Link></div>
                 </div>
                 <!-- Creators -->
-                <div v-if="nowPlayingStore.activeMedia.details.videoDetails?.creators" class="flex flex-col mt-6">
+                <div v-if="nowPlayingStore.activeMedia.details?.creators" class="flex flex-col mt-6">
                   <h1 class="tracking-wider text-xs font-semibold uppercase w-full bg-purple-900 text-white p-2 mt-2 mb-4">
                     <span v-if="nowPlayingStore.activeMedia.type === 'show'">Team</span>
                     <span v-if="nowPlayingStore.activeMedia.type === 'movie'">Credits</span>
@@ -133,7 +145,7 @@
 <!--                  </div>-->
                 </div>
                 <!-- Bonus Content -->
-                <div v-if="nowPlayingStore.activeMedia.details.videoDetails?.bonusContent" class="flex flex-col mt-6">
+                <div v-if="nowPlayingStore.activeMedia.details?.bonusContent" class="flex flex-col mt-6">
                   <h1 class="tracking-wider text-xs font-semibold uppercase w-full bg-purple-900 text-white p-2 mt-2 mb-4">
                     Bonus Content</h1>
 
@@ -221,34 +233,34 @@ const shouldDisplayOtt = computed(() => {
   return appSettingStore.ott === 1
 })
 
-const nowPlayingContent = computed(() => {
-  switch (nowPlayingStore.activeType) {
-    case nowPlayingStore.type[6]: // 'show'
-      return {
-        title: nowPlayingStore.show?.name,
-        description: nowPlayingStore.show.description,
-        image: nowPlayingStore.show?.image,
-        // Add other show-specific properties if needed
-      }
-    case nowPlayingStore.type[7]: // 'movie'
-      return {
-        title: nowPlayingStore.movie?.name,
-        description: nowPlayingStore.movie.description,
-        image: nowPlayingStore.movie?.image,
-        // Add other movie-specific properties if needed
-      }
-    case nowPlayingStore.type[4]: // 'videoFile'
-      return {
-        title: nowPlayingStore.videoFile?.name,
-        description: '', // Add description if available
-        image: null, // If no image for videoFile, handle accordingly
-        // Add other videoFile-specific properties if needed
-      }
-      // Add other cases for different types
-    default:
-      return {title: '', description: '', image: null} // Default or empty state
-  }
-})
+// const nowPlayingContent = computed(() => {
+//   switch (nowPlayingStore.activeType) {
+//     case nowPlayingStore.type[6]: // 'show'
+//       return {
+//         title: nowPlayingStore.show?.name,
+//         description: nowPlayingStore.show.description,
+//         image: nowPlayingStore.show?.image,
+//         // Add other show-specific properties if needed
+//       }
+//     case nowPlayingStore.type[7]: // 'movie'
+//       return {
+//         title: nowPlayingStore.movie?.name,
+//         description: nowPlayingStore.movie.description,
+//         image: nowPlayingStore.movie?.image,
+//         // Add other movie-specific properties if needed
+//       }
+//     case nowPlayingStore.type[4]: // 'videoFile'
+//       return {
+//         title: nowPlayingStore.videoFile?.name,
+//         description: '', // Add description if available
+//         image: null, // If no image for videoFile, handle accordingly
+//         // Add other videoFile-specific properties if needed
+//       }
+//       // Add other cases for different types
+//     default:
+//       return {title: '', description: '', image: null} // Default or empty state
+//   }
+// })
 
 // Helper method to get image URL
 const getImageUrl = (image) => {
@@ -261,6 +273,8 @@ const getImageUrl = (image) => {
 </script>
 
 <style scoped>
-
-
+.description {
+  white-space: pre-wrap; /* CSS property to preserve whitespace and wrap text */
+  @apply tracking-wide
+}
 </style>

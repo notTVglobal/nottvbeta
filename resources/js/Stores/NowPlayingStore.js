@@ -2,6 +2,8 @@ import { defineStore } from 'pinia'
 import axios from 'axios'
 
 const initialState = () => ({
+    isLive: false   ,
+    viewerCountIsVisible: false,
     activeMedia: {
         type: null, // 'show', 'movie', 'video', 'externalVideo', 'channel'
         details: {}, // The detailed object of the playing media
@@ -60,7 +62,7 @@ export const useNowPlayingStore = defineStore('nowPlayingStore', {
                 this.setActiveMedia('video', { // Assuming 'video' as a default type
                     source: response.data.first_play_video_source,
                     sourceType: response.data.first_play_video_source_type,
-                    name: response.data.first_play_video_name,
+                    primaryName: response.data.first_play_video_name,
                     channelId: response.data.first_play_channel_id,
                 })
             } catch (error) {
@@ -70,7 +72,7 @@ export const useNowPlayingStore = defineStore('nowPlayingStore', {
         },
         async setFirstPlay() {
             // Initial attempt to set firstPlay using static imported data
-            this.setActiveMedia('video', { // Assuming 'video' as a default type
+            this.setActiveMedia('test', { // Assuming 'video' as a default type
                 source: firstPlayData.first_play_video_source,
                 sourceType: firstPlayData.first_play_video_source_type,
                 name: firstPlayData.first_play_video_name,

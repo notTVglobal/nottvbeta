@@ -227,7 +227,6 @@ onMounted(() => {
     topDiv.scrollIntoView()
   }
 
-
 })
 
 onBeforeUnmount(() => {
@@ -236,51 +235,15 @@ onBeforeUnmount(() => {
 
 function watchNow() {
   welcomeStore.showOverlay = false
-// Call the function to unmute and fade the volume over 3 seconds
-  unmuteAndFadeVolume(3)
-
-
-}
-
-// Function to unmute and fade the volume
-const unmuteAndFadeVolume = (durationInSeconds) => {
-  // Get the Video.js player instance
-  const videoPlayer = videojs('main-player')
-
   // Check if the video is muted
+  const videoPlayer = videojs('main-player')
   if (videoPlayer.muted()) {
-    // Unmute the video
-    videoPlayer.muted(false)
-    videoPlayerStore.muted = false
-
-    // Get the current volume (0 to 1)
-    const currentVolume = videoPlayer.volume()
-
-    // Set the volume to 0
-    videoPlayer.volume(0)
-
-    // Calculate the step size for fading
-    const stepSize = currentVolume / (durationInSeconds * 1000 / 100) // Adjust as needed
-
-    // Create a timer to increment the volume gradually
-    const fadeTimer = setInterval(() => {
-      // Increment the volume
-      const newVolume = videoPlayer.volume() + stepSize
-
-      // Update the video volume
-      videoPlayer.volume(newVolume)
-
-      // Check if the volume has reached 1 (100%)
-      if (newVolume >= 1) {
-        // Clear the timer
-        clearInterval(fadeTimer)
-      }
-    }, 100) // Adjust the interval as needed
+    videoPlayerStore.resumeAudioContextIfNeeded()
+    videoPlayerStore.fadeInAudioFromMuted()
   }
 }
 
-
-</script>
+</script>const videoElement = document.querySelector('video#main-player_html5_api');
 
 
 <style scoped>

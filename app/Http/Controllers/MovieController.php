@@ -132,7 +132,7 @@ class MovieController extends Controller {
         'subCategory'   => $movie->subCategory ? $movie->subCategory->toArray() : null,
         'statusId'      => $movie->status->id,
         'isNew'         => Carbon::parse($movie->releaseDateTime)->isBetween(Carbon::now()->subWeek(), Carbon::now()),
-        ];
+    ];
   }
 
   // transformImage is a helper method to structure the image data.
@@ -231,20 +231,29 @@ class MovieController extends Controller {
 
     $movie->load('trailer.video', 'video.appSetting', 'image', 'video', 'team', 'appSetting', 'category', 'subCategory', 'status', 'creativeCommons'); // Eager load necessary relationships
 
+    // Determine the media type based on its storage location.
+    // If the storage location is marked as 'external', categorize it as 'externalVideo';
+    // otherwise, it's considered an internal 'show' video.
+    // Attempt to determine the media type based on the storage location of the video
+    $movieStorageLocation = $movie->video?->storage_location;
+    $movieTrailerStorageLocation = $movie->trailer?->video?->storage_location;
+    // Determine the media type based on the storage location, default to 'show'
+    $mediaTypeMovie = $movieStorageLocation === 'external' ? 'externalVideo' : 'movie';
+    $mediaTypeMovieTrailer = $movieTrailerStorageLocation === 'external' ? 'externalVideo' : 'movie';
 
     return Inertia::render('Movies/{$id}/Index', [
-        'movie'   => [
-            'slug'           => $movie->slug,
-            'name'           => $movie->name,
-            'description'    => $movie->description,
-            'logline'        => $movie->logline,
+        'movie' => [
+            'slug'             => $movie->slug,
+            'name'             => $movie->name,
+            'description'      => $movie->description,
+            'logline'          => $movie->logline,
 //            'file_path'      => $movie->file_path,
 //            'file_url'       => $movie->file_url,
-            'team'           => [
+            'team'             => [
                 'name' => $movie->team->name ?? null,
                 'slug' => $movie->team->slug ?? null,
             ],
-            'image'          => [
+            'image'            => [
                 'id'           => $movie->image->id,
                 'name'         => $movie->image->name,
                 'folder'       => $movie->image->folder,
@@ -255,45 +264,53 @@ class MovieController extends Controller {
           // change team to $movie->team->name
           // and add team->slug
 //            'copyrightYear'  => $movie->created_at->format('Y'),
-            'copyrightYear'  => $movie->copyrightYear,
+            'copyrightYear'    => $movie->copyrightYear,
             'creative_commons' => $movie->creativeCommons,
-            'release_year'   => $movie->release_year,
+            'release_year'     => $movie->release_year,
 //            'created_at'     => $movie->created_at,
-            'www_url'        => $movie->www_url,
-            'instagram_name' => $movie->instagram_name,
-            'telegram_url'   => $movie->telegram_url,
-            'twitter_handle' => $movie->twitter_handle,
+            'www_url'          => $movie->www_url,
+            'instagram_name'   => $movie->instagram_name,
+            'telegram_url'     => $movie->telegram_url,
+            'twitter_handle'   => $movie->twitter_handle,
 //            'category'       => $movie->category ? $movie->category->toArray() : null,
-            'category'       => [
+            'category'         => [
                 'name'        => $movie->category->name ?? null,
                 'description' => $movie->category->description ?? null,
             ],
 //            'subCategory'    => $movie->subCategory ? $movie->subCategory->toArray() : null,
-            'subCategory'    => [
+            'subCategory'      => [
                 'name'        => $movie->subCategory->name ?? null,
                 'description' => $movie->subCategory->description ?? null,
             ],
-            'status'         => [
+            'status'           => [
                 'id'   => $movie->status->id,
                 'name' => $movie->status->name,
             ],
-            'isNew'         => Carbon::parse($movie->releaseDateTime)->isBetween(Carbon::now()->subWeek(), Carbon::now()),
+            'isNew'            => Carbon::parse($movie->releaseDateTime)->isBetween(Carbon::now()->subWeek(), Carbon::now()),
+            'video'            => [
+                'mediaType'        => $mediaTypeMovie, // New attribute for NowPlayingStore
+                'file_name'        => $movie->video->file_name ?? '',
+                'cdn_endpoint'     => $movie->video->appSetting->cdn_endpoint ?? '',
+                'folder'           => $movie->video->folder ?? '',
+                'cloud_folder'     => $movie->video->cloud_folder ?? '',
+                'upload_status'    => $movie->video->upload_status ?? '',
+                'video_url'        => $showEpisode->video->video_url ?? '',
+                'type'             => $showEpisode->video->type ?? '',
+                'storage_location' => $showEpisode->video->storage_location ?? '',
+            ],
+            'trailer'          => [
+                'mediaType'        => $mediaTypeMovieTrailer, // New attribute for NowPlayingStore
+                'file_name'        => $movie->trailer->video->file_name ?? '',
+                'cdn_endpoint'     => $movie->trailer->video->appSetting->cdn_endpoint ?? '',
+                'folder'           => $movie->trailer->video->folder ?? '',
+                'cloud_folder'     => $movie->trailer->video->cloud_folder ?? '',
+                'upload_status'    => $movie->trailer->video->upload_status ?? '',
+                'video_url'        => $showEpisode->video->video_url ?? '',
+                'type'             => $showEpisode->video->type ?? '',
+                'storage_location' => $showEpisode->video->storage_location ?? '',
+            ],
         ],
-        'video'   => [
-            'file_name'     => $movie->video->file_name ?? '',
-            'cdn_endpoint'  => $movie->video->appSetting->cdn_endpoint ?? '',
-            'folder'        => $movie->video->folder ?? '',
-            'cloud_folder'  => $movie->video->cloud_folder ?? '',
-            'upload_status' => $movie->video->upload_status ?? '',
-        ],
-        'trailer' => [
-            'file_name'     => $movie->trailer->video->file_name ?? '',
-            'cdn_endpoint'  => $movie->trailer->video->appSetting->cdn_endpoint ?? '',
-            'folder'        => $movie->trailer->video->folder ?? '',
-            'cloud_folder'  => $movie->trailer->video->cloud_folder ?? '',
-            'upload_status' => $movie->trailer->video->upload_status ?? '',
-        ],
-        'can'     => [
+        'can'   => [
             'editMovie' => Auth::user()->can('edit', $movie),
         ]
     ]);
@@ -322,8 +339,8 @@ class MovieController extends Controller {
     $movie->load('trailer.video', 'video.appSetting', 'creativeCommons', 'image', 'video', 'image.appSetting', 'category', 'subCategory'); // Eager load necessary relationships
 
     return Inertia::render('Movies/{$id}/Edit', [
-        'movie'      => $movie,
-        'video'      => [
+        'movie'            => $movie,
+        'video'            => [
             'file_name'     => $movie->video->file_name ?? '',
             'type'          => $movie->video->type ?? '',
             'cdn_endpoint'  => $movie->video->appSetting->cdn_endpoint ?? '',
@@ -331,7 +348,7 @@ class MovieController extends Controller {
             'cloud_folder'  => $movie->video->cloud_folder ?? '',
             'upload_status' => $movie->video->upload_status ?? '',
         ],
-        'trailer'    => [
+        'trailer'          => [
             'trailerDetails' => $movie->trailer, // The entire trailer object
             'video'          => [
                 'file_name'     => $movie->trailer->video->file_name ?? '',
@@ -342,17 +359,17 @@ class MovieController extends Controller {
                 'upload_status' => $movie->trailer->video->upload_status ?? '',
             ],
         ],
-        'image'      => [
+        'image'            => [
             'id'           => $movie->image->id ?? '',
             'name'         => $movie->image->name ?? '',
             'folder'       => $movie->image->folder ?? '',
             'cdn_endpoint' => $movie->appSetting->cdn_endpoint ?? '',
             'cloud_folder' => $movie->image->cloud_folder ?? '',
         ],
-        'categories' => $categories,
-        'statuses'   => $movieStatuses,
+        'categories'       => $categories,
+        'statuses'         => $movieStatuses,
         'creative_commons' => $creativeCommons,
-        'can'        => [
+        'can'              => [
             'editMovie' => Auth::user()->can('edit', Movie::class),
         ],
     ]);
@@ -371,25 +388,25 @@ class MovieController extends Controller {
 
     // validate the request
     $request->validate([
-        'name'           => ['required', 'string', 'max:255', Rule::unique('movies')->ignore($movie->id)],
-        'description'    => 'required',
-        'logline'        => 'required|string',
-        'release_year'   => ['integer', 'min:1900', 'max:' . date('Y')],
-        'release_date'   => 'date|after:tomorrow',
+        'name'                => ['required', 'string', 'max:255', Rule::unique('movies')->ignore($movie->id)],
+        'description'         => 'required',
+        'logline'             => 'required|string',
+        'release_year'        => ['integer', 'min:1900', 'max:' . date('Y')],
+        'release_date'        => 'date|after:tomorrow',
         'creative_commons_id' => 'required|integer|exists:creative_commons,id',
-        'copyrightYear'   => ['nullable', 'integer', 'min:1900', 'max:' . date('Y')],
-        'category'       => 'required',
-        'sub_category'   => 'nullable',
-        'file_url'       => 'nullable|active_url',
-        'www_url'        => 'nullable|active_url',
-        'instagram_name' => 'nullable|string|max:30',
-        'telegram_url'   => 'nullable|active_url',
-        'twitter_handle' => 'nullable|string|min:4|max:15',
-        'notes'          => 'nullable|string|max:1024',
-        'status'         => 'required|integer|exists:movie_statuses,id',
+        'copyrightYear'       => ['nullable', 'integer', 'min:1900', 'max:' . date('Y')],
+        'category'            => 'required',
+        'sub_category'        => 'nullable',
+        'file_url'            => 'nullable|active_url',
+        'www_url'             => 'nullable|active_url',
+        'instagram_name'      => 'nullable|string|max:30',
+        'telegram_url'        => 'nullable|active_url',
+        'twitter_handle'      => 'nullable|string|min:4|max:15',
+        'notes'               => 'nullable|string|max:1024',
+        'status'              => 'required|integer|exists:movie_statuses,id',
     ], [
-        'status.exists'      => 'The selected status is invalid.',
-        'release_date.after' => 'The release date must be at least 24 hours in the future.',
+        'status.exists'         => 'The selected status is invalid.',
+        'release_date.after'    => 'The release date must be at least 24 hours in the future.',
         'copyrightYear.integer' => 'Please choose a copyright year',
     ]);
 

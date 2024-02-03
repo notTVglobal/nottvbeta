@@ -399,7 +399,8 @@
         </div>
       </div>
 
-      <ShowEpisodeEditFooter :can="props.can" :team="props.team" :episode="props.episode" :show="props.show"/>
+<!--      <ShowEpisodeEditFooter :can="props.can" :team="props.team" :episode="props.episode" :show="props.show"/>-->
+      <EpisodeFooter :can="can" :team="team" :episode="episode" :show="show"/>
 
     </div>
   </div>
@@ -427,6 +428,7 @@ import Message from "@/Components/Global/Modals/Messages"
 import ImageUpload from "@/Components/Global/Uploaders/ImageUpload"
 import SingleImage from "@/Components/Global/Multimedia/SingleImage"
 import VideoUpload from "@/Components/Global/Uploaders/VideoUpload"
+import EpisodeFooter from '@/Components/Pages/ShowEpisodes/Layout/EpisodeFooter.vue'
 
 // import {DatePicker} from "v-calendar";
 // import 'v-calendar/style.css';
@@ -541,8 +543,8 @@ let form = useForm({
   video_url: props.episode.video.video_url,
   youtube_url: props.episode.youtube_url,
   video_embed_code: props.episode.video_embed_code,
-  release_dateTime: '',
-  scheduled_release_dateTime: '',
+  release_dateTime: props.episode.release_dateTime,
+  scheduled_release_dateTime: props.episode.scheduled_release_dateTime,
 });
 
 let reloadImage = () => {

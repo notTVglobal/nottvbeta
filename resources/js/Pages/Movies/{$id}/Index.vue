@@ -116,21 +116,12 @@
 
               </div>
 
-              <p v-if="video.upload_status === 'processing'"
-                 class="mt-12 px-3 py-3 text-gray-50 mr-1 lg:mr-36 bg-black w-full text-center lg:text-left">
-                The video is currently processing. <span v-if="movie.file_url">This video is available to play, but it may be slow to load.</span><span
-                  v-if="!movie.file_url"> check back later.</span>
-              </p>
-              <p v-if="video.upload_status !== 'processing' && !video.file_name && movie.file-url"
-                 class="mt-12 px-3 py-3 text-gray-50 mr-1 lg:mr-36 bg-black w-full text-center lg:text-left">
-                <span v-if="movie.file_url">This video is available to play, but it may be slow to load.</span>
-              </p>
-
               <!--                        <div class="grid grid-rows-2 md:grid-rows-1 mt-12 m-auto lg:mx-0 justify-center lg:justify-start">-->
               <div class="flex flex-wrap mt-12 m-auto lg:mx-0 justify-center lg:justify-start space-x-4 space-y-2">
                 <div></div>
 
-                <button :disabled="!videoPlayerStore.hasVideo"
+                <button v-if="movie?.video?.mediaType"
+                        :disabled="nowPlayingStore?.activeMedia?.details?.primaryName === movie?.name"
                         class="flex bg-blue-500 text-white font-semibold px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
                         @click="playMovie">
                   <svg class="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg"
@@ -141,10 +132,14 @@
                                                 S125.327,30,242.5,30S455,125.327,455,242.5S359.673,455,242.5,455z"/>
                     <polygon points="181.062,336.575 343.938,242.5 181.062,148.425 	"/>
                   </svg>
-                  <span class="ml-2 text-sm md:text-md">Watch Now</span>
+                  <span
+                      v-if="nowPlayingStore?.activeMedia?.details?.primaryName === movie?.name"
+                      class="ml-2 text-sm md:text-md">Now Playing</span>
+                  <span v-else class="ml-2 text-sm md:text-md">Watch Now</span>
                 </button>
 
-                <button disabled
+                <button v-if="userStore.isVip || userStore.isAdmin"
+                        disabled
                         class="h-fit flex bg-blue-500 text-white font-semibold px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
                         @click="playTrailer">
                   <svg class="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg"
@@ -158,12 +153,14 @@
                   <span class="ml-2 text-sm md:text-md">Play Trailer</span>
                 </button>
 
-                <button disabled
+                <button v-if="userStore.isVip || userStore.isAdmin"
+                        disabled
                         class="flex bg-blue-500 text-white font-semibold px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed">
                   <span class="text-sm md:text-md"><font-awesome-icon icon="fa-circle-down" class="mr-2"/>Save For Later</span>
                 </button>
 
-                <button disabled
+                <button v-if="userStore.isVip || userStore.isAdmin"
+                        disabled
                         class="flex bg-blue-500 text-white font-semibold px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed">
                   <span class="text-sm md:text-md"><font-awesome-icon icon="fa-share" class="mr-2"/>Share</span>
                 </button>
@@ -274,8 +271,8 @@ const userStore = useUserStore()
 
 let props = defineProps({
   movie: Object,
-  video: Object,
-  trailer: Object,
+  // video: Object,
+  // trailer: Object,
   creators: Object,
   can: Object,
   // filters: Object,
@@ -332,51 +329,93 @@ let source = {
 
 let playMovie = () => {
   nowPlayingStore.reset();
+  // audioContext.resume().then(() => {
+  //   console.log('AudioContext resumed successfully');
+  //   videoPlayerStore.loadAndPlaySource(movie.video);
+  // }).catch(error => {
+  //   console.error('Error resuming AudioContext:', error);
+  // });
 
-  const isInternalVideo = props.video.file_name !== '' && props.video.upload_status !== 'processing';
-  const isExternalVideo = !!props.movie.file_url;
+  // Determine media type and specific details based on the video type
+  const movie = props.movie;
+  const mediaType = movie.video ? movie.video.mediaType : null; // Use the new 'mediaType' from the backend
+
+  const isInternalVideo = mediaType  === 'movie';
+  const isExternalVideo = mediaType  === 'externalVideo';
+
+  const videoDetails = {
+    // Assuming video details are structured correctly in your episode data
+    video_url: movie.video ? movie.video.video_url : '',
+    type: movie.video ? movie.video.type : 'video/mp4', // MIME type for video.js
+  };
 
   // Common details for nowPlayingStore
   const commonDetails = {
-    name: props.movie.name,
-    url: `movies/${props.movie.slug}`,
-  };
-
-  // Determine media type and specific details based on the video type
-  const mediaType = isInternalVideo ? 'movie' : 'externalVideo';
-  const videoDetails = isInternalVideo ? props.movie : { video_url: props.movie.file_url, type: 'video/mp4' };
+    primaryName: movie.name, // Show or Movie name
+    secondaryName: '', // Episode name
+    primaryUrl: `movies/${movie.slug}`,
+    secondaryUrl: '',
+    channelName: '',
+    image: movie.image,
+    category: movie.category,
+    subCategory: movie.subCategory,
+    release_year: movie.release_year,
+    logline: movie.logline,
+    description: movie.description,
+    creative_commons: movie.creative_commons,
+    copyrightYear: movie.copyrightYear,
+  }
 
   // Set the currently playing media in nowPlayingStore
   nowPlayingStore.setActiveMedia(mediaType, {
     ...commonDetails,
     videoDetails, // Spread in the specific details for internal or external video
   });
+  videoPlayerStore.playNewVideo(movie.video);
+  // Assuming `window.audioContext` is your global AudioContext
+  // if (window.audioContext.state === 'suspended') {
+  //     window.audioContext.resume().then(() => {
+  //         console.log('AudioContext resumed successfully');
+  //       videoPlayerStore.loadAndPlaySource(movie.video);
+  //     }).catch(error => {
+  //         console.error('Error resuming AudioContext:', error);
+  //     });
+  // } else {
+  //   videoPlayerStore.playNewVideo(movie.video);
+  // }
+  // // Load the video source in videoPlayerStore for playback
+  // if (isInternalVideo) {
+  //   // For internal videos, load using the episode video directly
+  //   videoPlayerStore.loadNewSourceFromFile(movie.video);
+  // } else if (isExternalVideo) {
+  //   // For external videos, focus on the video_url and type provided within the episode's video details
+  //   if (movie.video && movie.video.video_url) {
+  //     videoPlayerStore.loadNewSourceFromUrl({
+  //       video_url: movie.video.video_url,
+  //       type: movie.video.type // This assumes that 'type' is correctly set to 'video/mp4' or appropriate video MIME type
+  //     });
+  //   }
+  // }
 
-  // Load the video source in videoPlayerStore for playback
-  if (isInternalVideo) {
-    videoPlayerStore.loadNewSourceFromFile(props.video);
-  } else if (isExternalVideo) {
-    videoPlayerStore.loadNewSourceFromUrl({ video_url: props.movie.file_url, type: 'video/mp4' });
-  }
   appSettingStore.ott = 1
   // Inertia.visit('/stream');
 };
 
 
-function checkForVideo() {
-  if (props.video.file_name) {
-    videoPlayerStore.hasVideo = true
-  } else if (props.movie.file_url) {
-    videoPlayerStore.hasVideo = true
-  } else if (!props.movie.file_url && props.video.upload_status === 'processing') {
-    videoPlayerStore.hasVideo = false
-  } else if (!props.video.file_name && !props.movie.file_url) {
-    videoPlayerStore.hasVideo = false
-  }
-  return true
-}
+// function checkForVideo() {
+//   if (props.video.file_name) {
+//     videoPlayerStore.hasVideo = true
+//   } else if (props.movie.file_url) {
+//     videoPlayerStore.hasVideo = true
+//   } else if (!props.movie.file_url && props.video.upload_status === 'processing') {
+//     videoPlayerStore.hasVideo = false
+//   } else if (!props.video.file_name && !props.movie.file_url) {
+//     videoPlayerStore.hasVideo = false
+//   }
+//   return true
+// }
 
-checkForVideo()
+// checkForVideo()
 
 
 </script>

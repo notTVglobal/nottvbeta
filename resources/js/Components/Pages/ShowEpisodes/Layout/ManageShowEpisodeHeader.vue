@@ -2,7 +2,7 @@
   <div>
     <ShowEpisodeManageTopBanner :episode="episode" :episodeStatus="episodeStatus"/>
 
-    <header class="bg-gradient-to-r from-green-100 via-white to-transparent p-4 text-black font-bold rounded-lg">
+    <header class="bg-gradient-to-r from-green-100 via-white to-transparent p-4 text-black rounded-lg">
       <div class="flex justify-between my-3">
         <div class="gap-2">
           <div class="font-bold mb-4 text-black">MANAGE EPISODE</div>
@@ -94,7 +94,7 @@
               <span v-if="!episode.episode_number">{{ episode.id }}</span>
             </div>
             <div v-if="releaseDateTime">
-              <span class="text-xs capitalize font-semibold mr-2">\
+              <span class="text-xs capitalize font-semibold mr-2">
                 {{ formatDate(releaseDateTime) }}
               </span>
             </div>

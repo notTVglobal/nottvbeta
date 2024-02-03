@@ -61,7 +61,8 @@ import { format } from 'date-fns'
 // })
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'notTV';
-
+const AudioContext = window.AudioContext || window.webkitAudioContext;
+window.audioContext = new AudioContext();
 
 // formatting dates, helper plugins:
 // https://jerickson.net/how-to-format-dates-in-vue-3/

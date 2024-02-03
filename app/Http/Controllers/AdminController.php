@@ -101,7 +101,7 @@ class AdminController extends Controller
         $settings->mist_server_ip = $request->mist_server_ip;
         $settings->mist_server_api_url = $request->mist_server_api_url;
         $settings->mist_server_username = $request->mist_server_username;
-        $settings->mist_server_password = $encryptedPassword;
+        $settings->mist_server_password = $encryptedPassword ?? null;
         $settings->save();
 
       // Now, check for specific form variables and update the JSON file if present

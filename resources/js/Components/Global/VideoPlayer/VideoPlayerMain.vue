@@ -8,14 +8,16 @@
     <div v-touch="() => {clickOnVideoAction()}"
          :class="videoPlayerStore.videoContainerClass"
     >
+
       <div :class="videoPlayerStore.class">
+
         <videoJs/>
       </div>
 
 
     </div>
-
-    <ProgressBar v-if="user"/>
+    <VideoVolumeIndicatorVertical v-if="user"/>
+    <VideoProgressBar v-if="user"/>
 
     <!-- Over The Top (OTT) -->
     <OttContainer v-if="user" :user="user"/>
@@ -73,11 +75,14 @@ import { useNowPlayingStore } from '@/Stores/NowPlayingStore'
 import { useStreamStore } from '@/Stores/StreamStore'
 import { useChatStore } from '@/Stores/ChatStore'
 import { useUserStore } from '@/Stores/UserStore'
+import { useOsdStore } from '@/Stores/OsdStore'
 import OsdFullPage from '@/Components/Global/Osd/Layout/OsdFullPage'
 import VideoControlsFullPage from '@/Components/Global/VideoPlayer/VideoControls/Layout/VideoControlsFullPage'
 import OttContainer from '@/Components/Global/Ott/Layout/OttContainer'
 import videoJs from '@/Components/Global/VideoPlayer/VideoJs/VideoJs'
-import ProgressBar from '@/Components/Global/VideoPlayer/VideoProgressBar/ProgressBar.vue'
+import VideoProgressBar from '@/Components/Global/VideoPlayer/VideoIndicators/VideoProgressBar'
+import VideoVolumeIndicatorVertical
+  from '@/Components/Global/VideoPlayer/VideoIndicators/VideoVolumeIndicatorVertical.vue'
 
 const appSettingStore = useAppSettingStore()
 const videoPlayerStore = useVideoPlayerStore()
@@ -85,6 +90,7 @@ const nowPlayingStore = useNowPlayingStore()
 const streamStore = useStreamStore()
 const chatStore = useChatStore()
 const userStore = useUserStore()
+const osdStore = useOsdStore()
 
 let showLogin = ref(false)
 let screenWidth = ref(screen.width)
@@ -100,9 +106,13 @@ onMounted(() => {
 const videoPlayer = videojs('main-player')
 
   videoPlayer.ready(() => {
+
     videoPlayer.controls(false)
     console.log('videoPlayer ready')
     videoPlayerStore.videoPlayerLoaded = true
+
+    // Now that the player is ready, set up the dynamic gain control
+    videoPlayerStore.setupDynamicGainControl(videoPlayer);
 
   })
   if (!appSettingStore.fullPage) {

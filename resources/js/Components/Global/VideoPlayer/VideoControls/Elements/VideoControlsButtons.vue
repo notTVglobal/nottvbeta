@@ -181,13 +181,7 @@ function prev() {
 }
 
 function fullscreen() {
-  if (videoPlayerStore.currentPageIsStream) {
-    videoPlayerStore.fullscreen()
-  } else {
-    videoPlayerStore.makeVideoFullPage()
-    appSettingStore.fullPage = true
-    Inertia.visit('/stream')
-  }
+  videoPlayerStore.fullscreen()
 }
 
 </script>

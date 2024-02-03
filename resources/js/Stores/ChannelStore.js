@@ -42,21 +42,24 @@ export const useChannelStore = defineStore('channelStore', {
             oldChannelId = this.currentChannelId
 
             nowPlayingStore.reset()
-            nowPlayingStore.setActiveType(2)
-            nowPlayingStore.channel.id = channel.id
-            nowPlayingStore.channel.name = channel.name
+            // nowPlayingStore.setActiveType(2)
+            // nowPlayingStore.channel.id = channel.id
+            // nowPlayingStore.channel.name = channel.name
             nowPlayingStore.displayCurrentViewerCount = true
             nowPlayingStore.isLive = channel.isLive
 
             this.currentChannelName = channel.name
             this.currentChannelId = channel.id
-            this.isLive = channel.isLive
+            if (this.currentChannelId === 1) {
+                nowPlayingStore.isLive = true
+                nowPlayingStore.viewerCountIsVisible = true
+                console.log('Channel is live.')
+            }
+            // this.isLive = channel.isLive
+
             console.log('Change Channel')
             console.log(channel.id)
             console.log(channel.name)
-            if (this.isLive) {
-                console.log('Channel is live.')
-            }
             if (useUserStore().id !== null) {
                 this.userAddedToChannels = true
                 if (oldChannelId !== 0) {

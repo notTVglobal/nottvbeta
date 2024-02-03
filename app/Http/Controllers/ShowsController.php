@@ -335,32 +335,43 @@ class ShowsController extends Controller {
 
   public function show(Show $show) {
 
-//    // Fetch the latest published episode with either an internal or external video
-//    $latestEpisode = $show->showEpisodes()
+    // Eager load necessary relationships for the Show model
+    $show->load([
+        'user',
+        'image.appSetting',
+        'showEpisodes.video.appSetting',
+        'category',
+        'subCategory',
+        'status',
+        'showEpisodes' => function ($query) {
+          // Apply conditions or sorting to episodes here
+          $query->with(['video', 'image.appSetting'])->orderBy('release_dateTime', 'desc');
+        },
+        'team' => function ($query) {
+          // Eager load team members and their user details
+          $query->with(['members' => function ($query) {
+            $query->select(['users.id', 'users.name', 'users.profile_photo_path']);
+          }]);
+        }
+    ]);
+
+//    // Determine the order dynamically based on the show's 'episode_play_order' attribute
+//    $orderMethod = $show->episode_play_order === 'newest' ? 'latest' : 'oldest';
+//
+//    // Fetch the first play episode with the required conditions
+//    $firstPlayEpisode = $show->showEpisodes()
 //        ->where('show_episode_status_id', 7) // Only published episodes
-//        ->where(function ($query) {
-//          $query->whereHas('video') // Ensures there's an associated video record
-//          ->orWhereNotNull('video_url'); // Or directly has a video URL
+//        ->whereNotNull('video_id') // Ensures there's an associated video record
+//        ->whereHas('video', function ($query) {
+//          $query->whereNotNull('storage_location')
+//              ->where('storage_location', '!=', 'external_error') // Exclude 'external_error' storage locations
+//              ->where('upload_status', '!=', 'processing'); // Exclude videos that are still processing
 //        })
 //        ->with(['image', 'video']) // Eager loading related models for efficiency
-//        ->latest('release_dateTime') // Assuming 'release_dateTime' is the correct column to order by
+//        ->$orderMethod('release_dateTime') // Dynamically apply ordering based on user preference
 //        ->first();
 
-    // Determine the order dynamically based on the show's 'episode_play_order' attribute
-    $orderMethod = $show->episode_play_order === 'newest' ? 'latest' : 'oldest';
-
-    // Fetch the first play episode with the required conditions
-    $firstPlayEpisode = $show->showEpisodes()
-        ->where('show_episode_status_id', 7) // Only published episodes
-        ->whereNotNull('video_id') // Ensures there's an associated video record
-        ->whereHas('video', function ($query) {
-          $query->whereNotNull('storage_location')
-              ->where('storage_location', '!=', 'external_error') // Exclude 'external_error' storage locations
-              ->where('upload_status', '!=', 'processing'); // Exclude videos that are still processing
-        })
-        ->with(['image', 'video']) // Eager loading related models for efficiency
-        ->$orderMethod('release_dateTime') // Dynamically apply ordering based on user preference
-        ->first();
+    $firstPlayEpisode = $this->determineFirstPlayEpisode($show);
 
     return Inertia::render('Shows/{$id}/Index', [
         'show'     => $this->transformShowData($show, $firstPlayEpisode),
@@ -371,6 +382,29 @@ class ShowsController extends Controller {
     ]);
   }
 
+  private function determineFirstPlayEpisode(Show $show) {
+    // Determine the order direction dynamically based on the show's 'episode_play_order' attribute
+    $orderDirection = $show->episode_play_order === 'newest' ? 'desc' : 'asc';
+
+    // Fetch the first play episode with the required conditions
+    return $show->showEpisodes()
+        ->where('show_episode_status_id', 7) // Only published episodes
+        ->whereNotNull('video_id') // Ensures there's an associated video record
+        ->whereHas('video', function ($query) {
+          $query
+              ->where(function($q) {
+                $q->whereNotNull('video_url') // Include episodes with external videos
+                ->orWhere(function($innerQuery) {
+                  $innerQuery->whereNotNull('storage_location')
+                      ->where('storage_location', '!=', 'external_error') // Exclude 'external_error' storage locations
+                      ->where('upload_status', '!=', 'processing'); // Exclude videos that are still processing
+                });
+              });
+        })
+        ->with(['image', 'video']) // Eager load related models for efficiency
+        ->orderBy('release_dateTime', $orderDirection) // Apply dynamic ordering
+        ->first();
+  }
 
   private function transformShowData(Show $show, $firstPlayEpisode) {
     return [
@@ -381,7 +415,7 @@ class ShowsController extends Controller {
         'image'              => $this->transformImage($show->image, $show->appSetting),
         'category'           => $show->category ? $show->category->toArray() : null,
         'subCategory'        => $show->subCategory ? $show->subCategory->toArray() : null,
-        'firstPlayEpisode'   => $this->transformEpisodeData($firstPlayEpisode),
+        'firstPlayEpisode'   => $firstPlayEpisode ? $this->transformEpisodeData($firstPlayEpisode) : null,
         'copyrightYear'      => $show->created_at->format('Y'),
         'first_release_year' => $show->first_release_year ?? null,
         'last_release_year'  => $show->last_release_year ?? null,
@@ -393,35 +427,42 @@ class ShowsController extends Controller {
     ];
   }
 
-  private function transformEpisodeData($episode) {
+  private function transformEpisodeData($episode): array {
     if (!$episode) return [];
-    // Adapt this method to handle an episode whether it has a video_id or video_url
+
     $episodeData = [
         'name'        => $episode->name ?? '',
         'slug'        => $episode->slug ?? '',
         'description' => $episode->description ?? '',
         'image'       => $this->transformImage($episode->image, $episode->appSetting),
+        'creative_commons' => $episode->creativeCommons,
+        'copyrightYear' => $episode->copyrightYear,
+
       // Other episode attributes...
       // Include both 'file_name' and 'video_url' as applicable
     ];
 
     // Check if the episode has an associated video
     if ($episode->video) {
-      // Determine the video type based on its storage location.
+
+      // Determine the media type based on its storage location.
       // If the storage location is marked as 'external', categorize it as 'externalVideo';
       // otherwise, it's considered an internal 'show' video.
-      $videoType = $episode->video->storage_location === 'external' ? 'externalVideo' : 'show';
+      $mediaType = $episode->video->storage_location === 'external' ? 'externalVideo' : 'show'; // Adjust logic as needed
+
       // Construct an array to hold video details for the episode.
       $episodeData['video'] = [
+          'mediaType'        => $mediaType, // New attribute for NowPlayingStore
           'video_url'        => $episode->video->video_url ?? '',
           'type'             => $episode->video->type ?? '',
           'file_name'        => $episode->video->file_name ?? '',
-          'cdn_endpoint'     => $episode->video->cdn_endpoint ?? '',
+          'cdn_endpoint'     => $episode->video->appSetting->cdn_endpoint ?? '',
           'folder'           => $episode->video->folder ?? '',
           'cloud_folder'     => $episode->video->cloud_folder ?? '',
           'upload_status'    => $episode->video->upload_status ?? '',
           'storage_location' => $episode->video->storage_location ?? '',
         // Include other relevant video attributes...
+
       ];
     }
 
@@ -429,39 +470,20 @@ class ShowsController extends Controller {
   }
 
 
-
-//    $episodeData = [
-//        'name'        => $episode->name ?? '',
-//        'slug'        => $episode->slug ?? '',
-//        'description' => $episode->description ?? '',
-//        'image'       => $this->transformImage($episode->image, $episode->appSetting),
-//    ];
-
-//    if ($isUrl) {
-//      $episodeData['video_url'] = $episode->video->video_url ?? '';
-//      $episodeData['type'] = $episode->video->type ?? '';
-//    } else {
-//      $episodeData['file_name'] = $episode->video->file_name ?? '';
-//      $episodeData['cdn_endpoint'] = $episode->appSetting->cdn_endpoint ?? '';
-//      $episodeData['folder'] = $episode->video->folder ?? '';
-//      $episodeData['cloud_folder'] = $episode->video->cloud_folder ?? '';
-//      $episodeData['upload_status'] = $episode->video->upload_status ?? '';
-//      $episodeData['storage_location'] = $episode->video->storage_location ?? '';
-//    }
-//
-//    return $episodeData;
-//  }
-
   private function fetchEpisodes(Show $show) {
-    return ShowEpisode::with('image', 'show', 'showEpisodeStatus')
+    // Use already loaded episodes if no search filter is applied
+    if (!Request::input('search')) {
+      return $show->showEpisodes->map(function ($episode) {
+        return $this->transformShowEpisode($episode);
+      });
+    }
+    // Fetch and filter episodes based on search criteria when specified
+    return ShowEpisode::with(['image', 'show', 'showEpisodeStatus'])
         ->where('show_id', $show->id)
         ->when(Request::input('search'), function ($query, $search) {
           $query->where('name', 'like', "%{$search}%");
         })
-        ->where(function ($query) {
-          // Filter episodes with episodeStatus of 7 (Published)
-          $query->where('show_episode_status_id', 7);
-        })
+        ->where('show_episode_status_id', 7) // Filter for published episodes
         ->latest()
         ->paginate(8, ['*'], 'episodes')
         ->withQueryString()
@@ -469,14 +491,35 @@ class ShowsController extends Controller {
   }
 
   private function fetchCreators($teamId) {
-    return TeamMember::where('team_id', $teamId)
-        ->join('users', 'team_members.user_id', '=', 'users.id')
-        ->select('users.*', 'team_members.user_id as team_member_id')
-        ->latest()
-        ->paginate(10, ['*'], 'creators')
-        ->withQueryString()
-        ->through(fn($teamMember) => $this->transformTeamMember($teamMember));
+    // Fetch the team with its members including pivot data and selecting specific user fields
+    $team = Team::with(['members' => function ($query) {
+      // Adjust the select fields as needed
+      $query->select(['users.id', 'users.name', 'users.profile_photo_path'])
+          ->withPivot('active', 'created_at', 'updated_at');
+    }])->findOrFail($teamId);
+
+    // Transform team members (users) for presentation
+    return $team->members->map(function ($user) {
+      // Access pivot data like $user->pivot->active if needed
+      return [
+          'id' => $user->id,
+          'name' => $user->name,
+          'profile_photo_path' => $user->profile_photo_path,
+          'active' => $user->pivot->active ?? null,
+        // Include additional details as necessary
+      ];
+    });
   }
+
+
+//    return TeamMember::where('team_id', $teamId)
+//        ->join('users', 'team_members.user_id', '=', 'users.id')
+//        ->select('users.*', 'team_members.user_id as team_member_id')
+//        ->latest()
+//        ->paginate(10, ['*'], 'creators')
+//        ->withQueryString()
+//        ->through(fn($teamMember) => $this->transformTeamMember($teamMember));
+//  }
 
   private function transformTeamMember($teamMember) {
     return [
@@ -748,7 +791,7 @@ class ShowsController extends Controller {
       $this->formattedScheduledDateTime = $this->convertTimeToUserTime($showEpisode->scheduled_release_dateTime);
     }
 
-    $videoForEpisode = Video::where('show_episodes_id', $showEpisode->id)->first();
+//    $show->load('team', 'showEpisodes.creativeCommons', 'showEpisodes.video', 'image', 'appSetting', 'category', 'subCategory'); // Eager load necessary relationships
 
     return Inertia::render('Shows/{$id}/Episodes/{$id}/Manage', [
         'show'              => [
@@ -778,7 +821,16 @@ class ShowsController extends Controller {
             'video_id'                   => $showEpisode->video_id,
             'youtube_url'                => $showEpisode->youtube_url,
             'video_embed_code'           => $showEpisode->video_embed_code,
-            'video'                      => $this->transformVideo($videoForEpisode),
+            'video'                      => [
+                'file_name'        => $showEpisode->video->file_name ?? '',
+                'cdn_endpoint'     => $showEpisode->video->appSetting->cdn_endpoint ?? '',
+                'folder'           => $showEpisode->video->folder ?? '',
+                'cloud_folder'     => $showEpisode->video->cloud_folder ?? '',
+                'upload_status'    => $showEpisode->video->upload_status ?? '',
+                'video_url'        => $showEpisode->video->video_url ?? '',
+                'type'             => $showEpisode->video->type ?? '',
+                'storage_location' => $showEpisode->video->storage_location ?? '',
+            ],
             'image'                      => $this->transformImage($showEpisode->image, $showEpisode->appSetting),
         ],
         'releaseDateTime'   => $this->formattedReleaseDateTime ?? null,
@@ -796,14 +848,7 @@ class ShowsController extends Controller {
 
   private function transformVideo($video) {
     return $video ? [
-        'file_name'        => $video->file_name ?? '',
-        'cdn_endpoint'     => $video->appSetting->cdn_endpoint ?? '',
-        'folder'           => $video->folder ?? '',
-        'cloud_folder'     => $video->cloud_folder ?? '',
-        'upload_status'    => $video->upload_status ?? '',
-        'video_url'        => $video->video_url ?? '',
-        'type'             => $video->type ?? '',
-        'storage_location' => $video->storage_location ?? '',
+
     ] : null;
   }
 

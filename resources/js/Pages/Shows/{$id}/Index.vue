@@ -66,13 +66,13 @@
 
               <div class="flex flex-wrap my-2 m-auto lg:mx-0 justify-center lg:justify-start space-x-4 space-y-2">
                 <div></div>
-                <div
-                    v-if="props.show.firstPlayVideo.upload_status === 'processing' && !props.show.firstPlayVideoFromUrl"
-                    class="ml-3 px-3 py-3 text-gray-50 bg-black w-full text-center lg:text-left">
-                  The first episode is currently processing. <br>Please check back later.
-                </div>
-                <button v-if="props.show.firstPlayVideo.file_name || props.show.firstPlayVideoFromUrl.video_url !== ''"
-                        :disabled="props.show.firstPlayVideo.upload_status === 'processing' && !props.show.firstPlayVideoUrl"
+<!--                <div-->
+<!--                    v-if="props.show.firstPlayEpisode.upload_status === 'processing' && !props.show.firstPlayVideoFromUrl"-->
+<!--                    class="ml-3 px-3 py-3 text-gray-50 bg-black w-full text-center lg:text-left">-->
+<!--                  The first episode is currently processing. <br>Please check back later.-->
+<!--                </div>-->
+                <button v-if="show?.firstPlayEpisode?.video?.mediaType"
+                        :disabled="nowPlayingStore?.activeMedia?.details?.secondaryName === show?.firstPlayEpisode?.name"
                         class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
                         @click="playEpisode">
                   <svg class="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg"
@@ -85,17 +85,19 @@
                   </svg>
 
                   <span
-                      v-if="nowPlayingStore.activeMedia.details.name === props.show.firstPlayVideo.name || nowPlayingStore.activeMedia.details.name === props.show.firstPlayVideoFromUrl.name"
+                      v-if="nowPlayingStore?.activeMedia?.details?.secondaryName === show?.firstPlayEpisode?.name"
                       class="ml-2">Now Playing</span>
                   <span v-else class="ml-2">Watch Now</span>
                 </button>
 
-                <button disabled
+                <button v-if="userStore.isVip || userStore.isAdmin"
+                        disabled
                         class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed">
                   <span class=""><font-awesome-icon icon="fa-circle-down" class="mr-2"/>Save For Later</span>
                 </button>
 
-                <button disabled
+                <button v-if="userStore.isVip || userStore.isAdmin"
+                        disabled
                         class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed">
                   <span class=""><font-awesome-icon icon="fa-share" class="mr-2"/>Share</span>
                 </button>
@@ -206,7 +208,7 @@
                 <div class="w-full bg-gray-800 text-2xl p-4 mb-4">CREATORS</div>
 
                 <div class="flex flex-row flex-wrap">
-                  <div v-for="creator in props.creators.data"
+                  <div v-for="creator in props.creators"
                        :key="creator.id"
                        class="pb-8 mx-auto lg:mx-0">
 
@@ -218,7 +220,7 @@
                   </div>
                 </div>
                 <!-- Paginator -->
-                <Pagination :data="props.creators" class="mb-6 pb-6 border-b border-gray-800"/>
+<!--                <Pagination :data="props.creators" class="mb-6 pb-6 border-b border-gray-800"/>-->
               </div>
 
 
@@ -267,16 +269,16 @@ import CreatorsOnlyBadge from '@/Components/Global/Badges/CreatorsOnlyBadge.vue'
 usePageSetup('showsShow')
 
 const appSettingStore = useAppSettingStore()
-const userStore = useUserStore()
+const videoPlayerStore = useVideoPlayerStore()
 const nowPlayingStore = useNowPlayingStore()
 const teamStore = useTeamStore()
-const videoPlayerStore = useVideoPlayerStore()
+const userStore = useUserStore()
 
 let props = defineProps({
   show: Object,
-  team: Object,
   episodes: Object,
   creators: Object,
+  team: Object,
   can: Object,
 });
 
@@ -284,18 +286,31 @@ let playEpisode = () => {
 
   nowPlayingStore.reset();
 
-  const isInternalVideo = props.show.firstPlayVideo.name !== '' && props.show.firstPlayVideo.upload_status !== 'processing';
-  const isExternalVideo = !!props.show.firstPlayVideoFromUrl.video_url;
+  // Determine media type and specific details based on the video type
+  const episode = props.show.firstPlayEpisode;
+  const mediaType = episode.video ? episode.video.mediaType : null; // Use the new 'mediaType' from the backend
+
+  const isInternalVideo = mediaType  === 'show';
+  const isExternalVideo = mediaType  === 'externalVideo';
+
+  const videoDetails = {
+    // Assuming video details are structured correctly in your episode data
+    video_url: episode.video ? episode.video.video_url : '',
+    type: episode.video ? episode.video.type : 'video/mp4', // MIME type for video.js
+  };
 
   // Common details for nowPlayingStore
   const commonDetails = {
-    name: props.show.name,
-    url: `shows/${props.show.slug}`,
+    primaryName: props.show.name, // Show or Movie name
+    secondaryName: props.show.firstPlayEpisode.name, // Episode name
+    primaryUrl: `shows/${props.show.slug}`,
+    secondaryUrl: `shows/${props.show.slug}/episode/${props.show.firstPlayEpisode.slug}`,
+    channelName: '',
+    image: props.show.image,
+    category: props.show.category,
+    subCategory: props.show.subCategory,
+    release_year: '',
   };
-
-  // Determine media type and specific details based on the video type
-  const mediaType = isInternalVideo ? 'show' : 'externalVideo';
-  const videoDetails = isInternalVideo ? props.show : { video_url: props.show.firstPlayVideoFromUrl.video_url, type: 'video/mp4' };
 
   // Set the currently playing media in nowPlayingStore
   nowPlayingStore.setActiveMedia(mediaType, {
@@ -303,12 +318,22 @@ let playEpisode = () => {
     videoDetails, // Spread in the specific details for internal or external video
   });
 
-  // Load the video source in videoPlayerStore for playback
+// Load the video source in videoPlayerStore for playback
   if (isInternalVideo) {
-    videoPlayerStore.loadNewSourceFromFile(props.show.firstPlayVideo);
+    // For internal videos, load using the episode video directly
+    videoPlayerStore.loadNewSourceFromFile(episode.video);
   } else if (isExternalVideo) {
-    videoPlayerStore.loadNewSourceFromUrl({ video_url: props.show.firstPlayVideoFromUrl.video_url, type: 'video/mp4' });
+    // For external videos, focus on the video_url and type provided within the episode's video details
+    if (episode.video && episode.video.video_url) {
+      videoPlayerStore.loadNewSourceFromUrl({
+        video_url: episode.video.video_url,
+        type: episode.video.type // This assumes that 'type' is correctly set to 'video/mp4' or appropriate video MIME type
+      });
+    }
   }
+
+
+
   appSettingStore.ott = 1
   // Inertia.visit('/stream');
 };
@@ -323,12 +348,12 @@ let playEpisode = () => {
   // videoPlayerStore.makeVideoFullPage()
   // Inertia.visit('/stream')
   //
-  // if (props.show.firstPlayVideo.storage_location === 'spaces' && props.show.firstPlayVideo.upload_status !== 'processing') {
+  // if (props.show.firstPlayEpisode.storage_location === 'spaces' && props.show.firstPlayEpisode.upload_status !== 'processing') {
   //   // play video if !processing
-  //   nowPlayingStore.show.episode.name = props.show.firstPlayVideo.name
-  //   nowPlayingStore.show.episode.url = `/shows/${props.show.slug}/episode/${props.show.firstPlayVideo.slug}`
-  //   nowPlayingStore.show.episode.image = props.show.firstPlayVideo.image
-  //   videoPlayerStore.loadNewSourceFromFile(props.show.firstPlayVideo)
+  //   nowPlayingStore.show.episode.name = props.show.firstPlayEpisode.name
+  //   nowPlayingStore.show.episode.url = `/shows/${props.show.slug}/episode/${props.show.firstPlayEpisode.slug}`
+  //   nowPlayingStore.show.episode.image = props.show.firstPlayEpisode.image
+  //   videoPlayerStore.loadNewSourceFromFile(props.show.firstPlayEpisode)
   //
   // } else if (props.show.firstPlayVideoFromUrl.video_url !== '') {
   //   nowPlayingStore.isFromWeb = true

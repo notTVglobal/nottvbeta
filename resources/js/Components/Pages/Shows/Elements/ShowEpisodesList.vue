@@ -7,7 +7,7 @@
 
     <div class="show-episodes w-full text-sm grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-8">
 
-      <div v-for="episode in episodes.data"
+      <div v-for="episode in episodes"
            :key="episode.id"
            class="episode mt-8 w-full mx-auto">
 
@@ -33,7 +33,7 @@
       </div>
 
     <!-- Paginator -->
-    <Pagination :data="episodes" class="mt-12 mb-6 pb-6 border-b border-gray-800"/>
+<!--    <Pagination :data="episodes" class="mt-12 mb-6 pb-6 border-b border-gray-800"/>-->
 
     </div>
 
