@@ -16,7 +16,7 @@
 
 
     </div>
-    <VideoVolumeIndicatorVertical v-if="user"/>
+    <VideoVolumeIndicatorVertical v-if="user && appSettingStore.osd && appSettingStore.fullPage"/>
     <VideoProgressBar v-if="user"/>
 
     <!-- Over The Top (OTT) -->
@@ -112,7 +112,7 @@ const videoPlayer = videojs('main-player')
     videoPlayerStore.videoPlayerLoaded = true
 
     // Now that the player is ready, set up the dynamic gain control
-    videoPlayerStore.setupDynamicGainControl(videoPlayer);
+    // videoPlayerStore.setupDynamicGainControl(videoPlayer);
 
   })
   if (!appSettingStore.fullPage) {

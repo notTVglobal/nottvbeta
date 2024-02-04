@@ -235,12 +235,16 @@ onBeforeUnmount(() => {
 
 function watchNow() {
   welcomeStore.showOverlay = false
+  videoPlayerStore.unMute()
   // Check if the video is muted
-  const videoPlayer = videojs('main-player')
-  if (videoPlayer.muted()) {
-    videoPlayerStore.resumeAudioContextIfNeeded()
-    videoPlayerStore.fadeInAudioFromMuted()
-  }
+  // const videoPlayer = videojs('main-player')
+  //
+  // if (videoPlayer.muted()) {
+
+    // videoPlayerStore.resumeAudioContextIfNeeded()
+    // videoPlayerStore.ensureAudioContextAndNodesReady(videoPlayer);
+    // videoPlayerStore.fadeInAudioFromMuted()
+  // }
 }
 
 </script>const videoElement = document.querySelector('video#main-player_html5_api');

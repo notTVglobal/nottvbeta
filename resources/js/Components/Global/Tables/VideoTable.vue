@@ -147,34 +147,36 @@ const playVideo = (video) => {
 
     // Check if showEpisode exists
     if (video.showEpisode?.show) {
-      nowPlayingStore.show.name = video.showEpisode.show.name
-      nowPlayingStore.show.url = 'shows/' + video.showEpisode.show.slug
-      nowPlayingStore.show.episode.name = video.showEpisode.data.name
-      nowPlayingStore.show.episode.url = 'shows/' + video.showEpisode.show.slug + '/episode/' + video.showEpisode.data.slug
+      nowPlayingStore.activeMedia.details.secondaryName = video.showEpisode.show.name
+      nowPlayingStore.activeMedia.details.secondaryUrl = 'shows/' + video.showEpisode.show.slug
+      nowPlayingStore.activeMedia.details.primaryName = video.showEpisode.data.name
+      nowPlayingStore.activeMedia.details.primaryUrl = 'shows/' + video.showEpisode.show.slug + '/episode/' + video.showEpisode.data.slug
     }
     // Check if movie exists
     if (video.movie) {
-      nowPlayingStore.movie.name = video.movie.name
-      nowPlayingStore.movie.url = 'movies/' + video.movie.slug
+      nowPlayingStore.activeMedia.details.primaryName = video.movie.name
+      nowPlayingStore.activeMedia.details.primaryUrl = 'movies/' + video.movie.slug
     }
 
     // Check if movieTrailer exists
     if (video.movieTrailer) {
-      nowPlayingStore.movieTrailer.name = video.movieTrailer.name
-      nowPlayingStore.movieTrailer.url = 'movies/' + video.movieTrailer.slug
+      nowPlayingStore.activeMedia.details.primaryName = video.movieTrailer.name
+      nowPlayingStore.activeMedia.details.primaryUrl = 'movies/' + video.movieTrailer.slug
     }
     // Check if newsStory exists
     if (video.newsStory) {
-      nowPlayingStore.newsStory.name = props.video.name
-      nowPlayingStore.movie.url = 'movies/' + video.movie.slug
+      nowPlayingStore.activeMedia.details.primaryName = props.video.name
+      nowPlayingStore.activeMedia.details.primaryUrl = 'movies/' + video.movie.slug
     }
-    videoPlayerStore.loadNewSourceFromFile(video)
-    nowPlayingStore.videoFile.name = video.file_name + ' (file)'
-    videoPlayerStore.makeVideoFullPage()
-    appSettingStore.ott = 0
+    console.log('load new source from file')
+    // videoPlayerStore.loadNewSourceFromFile(video)
+    videoPlayerStore.prepareForNewVideoSource(video)
+    nowPlayingStore.activeMedia.details.description = 'Filename: ' + video.file_name
+    // videoPlayerStore.makeVideoFullPage()
+    appSettingStore.ott = 1
     userStore.showNavDropdown = false
     userStore.prevUrl = window.history.state.url
-    Inertia.visit('/stream')
+    // Inertia.visit('/stream')
 
   }
 

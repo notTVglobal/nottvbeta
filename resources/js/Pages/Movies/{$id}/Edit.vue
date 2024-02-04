@@ -194,13 +194,14 @@
                                                 Release Year
                                             </label>
 
-                                            <input v-model="form.release_year"
+                                            <input v-model="releaseYear"
+                                                   @input="$emit('update:releaseYear', $event.target.value)"
                                                    class="border border-gray-400 text-black font-semibold p-2 w-1/2 rounded-lg"
                                                    type="number"
                                                    name="release_year"
                                                    id="release_year"
-                                                   minlength="4"
-                                                   maxlength="4"
+                                                   min="1900"
+                                                   max="2100"
 
                                             >
                                             <div v-if="form.errors.release_year" v-text="form.errors.release_year"
@@ -514,6 +515,10 @@ const selectedCreativeCommonsDescription = computed(() => {
   return selectedCC ? selectedCC.description : '';
 });
 
+const releaseYear = computed(() => {
+  return props.movie.release_year === null ? new Date().getFullYear() : props.movie.release_year;
+});
+
 // Watchers to update the store based on category and subcategory selections
 watch(selectedCategoryId, () => {
   movieStore.initializeDescriptions(selectedCategoryId.value, selectedSubCategoryId.value);
@@ -571,6 +576,7 @@ let form = useForm({
 })
 
 let submit = () => {
+  form.release_year = releaseYear
   form.category = movieStore.category_id;
   form.sub_category = movieStore.sub_category_id;
   form.copyrightYear = selectedCopyrightYear;

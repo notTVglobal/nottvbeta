@@ -123,7 +123,7 @@
                 <button v-if="movie?.video?.mediaType"
                         :disabled="nowPlayingStore?.activeMedia?.details?.primaryName === movie?.name"
                         class="flex bg-blue-500 text-white font-semibold px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
-                        @click="playMovie">
+                        @click.prevent="playMovie">
                   <svg class="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg"
                        viewBox="0 0 485 485">
                     <path d="M413.974,71.026C368.171,25.225,307.274,0,242.5,0S116.829,25.225,71.026,71.026C25.225,116.829,0,177.726,0,242.5
@@ -371,7 +371,7 @@ let playMovie = () => {
     ...commonDetails,
     videoDetails, // Spread in the specific details for internal or external video
   });
-  videoPlayerStore.playNewVideo(movie.video);
+  videoPlayerStore.loadNewVideo(movie.video);
   // Assuming `window.audioContext` is your global AudioContext
   // if (window.audioContext.state === 'suspended') {
   //     window.audioContext.resume().then(() => {

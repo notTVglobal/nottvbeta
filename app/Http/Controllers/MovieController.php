@@ -438,7 +438,7 @@ class MovieController extends Controller {
     $movie->save();
     sleep(1);
 
-
+//dd($movie->slug);
     // redirect
     return redirect(route('movies.show', [$movie->slug]))->with('success', 'Movie Updated Successfully');
 

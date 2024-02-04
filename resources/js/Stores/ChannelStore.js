@@ -90,6 +90,7 @@ export const useChannelStore = defineStore('channelStore', {
 
         },
         clearChannel() {
+            console.log('clear channel')
             this.disconnectViewerFromChannel(this.currentChannelId);
             this.currentChannelName = null;
             this.currentChannelId = null;
@@ -155,6 +156,7 @@ export const useChannelStore = defineStore('channelStore', {
 
         },
         disconnectViewerFromChannel(id) {
+            console.log('disconnect from viewer count')
             Echo.leave('viewerCount.' + id)
             // await axios.post('/api/removeCurrentViewer', {
             //     'channel_id': this.currentChannelId,

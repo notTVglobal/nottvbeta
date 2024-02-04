@@ -9,7 +9,7 @@
             @mousedown="handleProgressClick($event)"
             @mousemove="showHoverTime($event)"
             @mouseleave="hideHoverTime">
-      <div class="custom-progress" id="progress">
+      <div class="custom-progress" :style="{ width: progressPercentage + '%' }" id="progress">
         <!--                <div v-if="isHovering" class="hover-overlay">{{timeRemainingTime}}</div>-->
       </div>
     </button>
@@ -19,10 +19,12 @@
 
 <script setup>
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import videojs from 'video.js'
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
 const appSettingStore = useAppSettingStore()
+const videoPlayerStore = useVideoPlayerStore()
 
 const progressBarRef = ref(null)
 const progressRef = ref(null)
@@ -35,7 +37,12 @@ const isHovering = ref(false) // Initialize as false
 let screenWidth = ref(screen.width)
 let mouseActive = false
 
-
+const formattedTime = computed(() => videoPlayerStore.formattedTime);
+const progressPercentage = computed(() => {
+  const currentTime = videoPlayerStore.currentTime;
+  const duration = videoPlayerStore.duration;
+  return (currentTime / duration) * 100 || 0;
+});
 
 onMounted(() => {
   // Set the references to the DOM elements here
@@ -48,23 +55,23 @@ onMounted(() => {
     console.error('Progress bar element not found.')
   }
   // Add an event listener to update the custom progress bar when the video progresses
-  const videoPlayer = videojs('main-player')
-  videoPlayer.on('timeupdate', () => {
-    let currentTime = videoPlayer.currentTime()
-    let duration = videoPlayer.duration()
-    let progressPercentage = (currentTime / duration) * 100
-    const formattedDuration = formatDuration(duration)
-    // Format the time as "00:00:00"
-    const hours = Math.floor(currentTime / 3600)
-    const minutes = Math.floor(currentTime / 60)
-    const seconds = Math.floor(currentTime % 60)
-    timeRemainingTime.value = `${formatDuration(currentTime)} / ${formattedDuration}`
-
-    // Make sure progressRef.value is not null before setting the width
-    if (progressRef.value) {
-      progressRef.value.style.width = `${progressPercentage}%`
-    }
-  })
+  // const videoPlayer = videojs('main-player')
+  // videoPlayer.on('timeupdate', () => {
+  //   let currentTime = videoPlayer.currentTime()
+  //   let duration = videoPlayer.duration()
+  //   let progressPercentage = (currentTime / duration) * 100
+  //   const formattedDuration = formatDuration(duration)
+  //   // Format the time as "00:00:00"
+  //   const hours = Math.floor(currentTime / 3600)
+  //   const minutes = Math.floor(currentTime / 60)
+  //   const seconds = Math.floor(currentTime % 60)
+  //   timeRemainingTime.value = `${formatDuration(currentTime)} / ${formattedDuration}`
+  //
+  //   // Make sure progressRef.value is not null before setting the width
+  //   if (progressRef.value) {
+  //     progressRef.value.style.width = `${progressPercentage}%`
+  //   }
+  // })
 })
 
 function handleProgressClick(event) {
@@ -157,7 +164,7 @@ function hideHoverTime() {
   position: absolute;
   padding: 0;
   height: 2px;
-  width: 0;
+  //width: 0;
   background-color: #062fad;
   z-index: 998;
 }
