@@ -1,59 +1,184 @@
-import { defineStore } from 'pinia';
-import videojs from "video.js";
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
+import { useUserStore } from "@/Stores/UserStore"
 
-export const useAppSettingStore = defineStore('appSetting', {
-    state: () => ({
-        pipChatMode: false,
-        hidePage: false,
-        pageBgColor: 'bg-gray-800', // Active background color
-        primaryBgColor: 'bg-gray-800', // Primary  background color
-        pipBgColor: 'bg-black', // Background color for PiP Chat Mode
-        // Other global UI settings...
-        chatMessageBgColor: 'bg-gray-600', // Active chat message background color
-        primaryChatMessageBgColor: 'bg-gray-600', // Primary chat message background color
-        pipChatMessageBgColor: 'bg-gray-900', // Chat message background color for PiP Chat Mode
-    }),
+import { defineStore } from 'pinia'
+import { Inertia } from '@inertiajs/inertia'
+
+const initialState = () => ({
+    loggedIn: false, // moved from userStore to here.
+    pageReload: false, // if set to true the page will reload when we land on the Welcome page.
+    noLayout: false, // when true it enables a special "no layout" page class
+    thisUrl: window.location.pathname,
+    prevUrl: null,
+    showNavDropdown: false, // formerly userStore.showNavDropdown
+    showFlashMessage: true, // formerly appSettingStore.showFlashMessage
+    showConfirmationDialog: false, // show confirmation Dialog
+    currentPage: '', // formerly videoPlayerStore.currentPage
+    fullPage: false, // Used to determine layout FullPage or TopRight
+    pageIsHidden: true, // Used to hide the page when fullPage = false && showOtt = true
+    ott: 0, // Number representing the Ott Panel currently open. 0 is closed.
+    showOtt: false, // Over-The-Top (OTT) Panel, show (true) or hide (false)
+    showOttButtons: true, // formerly videoPlayerStore.ottButtons
+    osd: false, // On Screen Display (OSD) to be expanded into 8 regions. See below for an example. FEATURE TO BE DEVELOPED. osd is formerly videoPlayerStore.osd
+    showOsd1: false, // On Screen Display 1 (Top Left)
+    showOsd2: false, // On Screen Display 2 (Top Right)
+    showOsd3: false, // On Screen Display 3 (Bottom Left)
+    showOsd4: false, // On Screen Display 4 (Bottom Right)
+    pipChatMode: false, // Chat input focused uses pipChatMode when userStore.isMobile
+    pageBgColor: 'bg-gray-800', // Active background color
+    primaryBgColor: 'bg-gray-800', // Primary background color
+    noLayoutBgColor: 'bg-gray-900', // Primary background color
+    pipBgColor: 'bg-black', // Background color for pipChatMode
+    // Other global UI settings...
+    chatMessageBgColor: 'bg-gray-600', // Active chat message background color*
+    primaryChatMessageBgColor: 'bg-gray-600', // Primary chat message background color
+    pipChatMessageBgColor: 'bg-gray-900', // Chat message background color for PiP Chat Mode
+})
+
+export const useAppSettingStore = defineStore('appSettingStore', {
+    state: initialState,
     actions: {
-        togglePipChatMode() {
-            this.pipChatMode = !this.pipChatMode;
+        reset() {
+            // Reset the store to its original state (clear all data)
+            Object.assign(this, initialState())
+        },
+        turnPipChatModeOn() {
+            const videoPlayerStore = useVideoPlayerStore()
+            const userStore = useUserStore()
 
-            // Update pageBgColor based on the new state of pipChatMode
-            if (this.pipChatMode) {
-                // If pipChatMode is now true
-                this.hidePage = true;
-                this.setPageBgColor(this.pipBgColor);
-                this.setChatMessageBgColor(this.pipChatMessageBgColor);
-                // let videoJs = videojs('main-player')
-                // videoJs.controls(false)
-            } else {
-                // If pipChatMode is now false
-                this.hidePage = false;
-                this.setPageBgColor(this.primaryBgColor);
-                this.setChatMessageBgColor(this.primaryChatMessageBgColor);
+            if(userStore.isMobile) {
+                if(this.fullPage) {
+                    videoPlayerStore.class = 'pipVideoClassFullPage'
+                    videoPlayerStore.videoContainerClass = 'pipVideoContainerFullPage'
+                } else {
+                    videoPlayerStore.class = 'pipVideoClassTopRight'
+                    videoPlayerStore.videoContainerClass = 'pipVideoContainerTopRight'
+                    this.showOttButtons = false
+                }
+                this.pipChatMode = true
+                this.hidePage = true
+                this.pageBgColor = this.pipBgColor
+                this.chatMessageBgColor = this.pipChatMessageBgColor
             }
         },
-        // turnPipChatModeOn() {
-        //     this.pipChatMode = true;
-        //     this.hidePage = true;
-        //     this.setPageBgColor(this.pipBgColor);
-        //     this.setChatMessageBgColor(this.pipChatMessageBgColor);
-        //     // Additional logic for turning chat mode on
-        //     // let videoJs = videojs('main-player')
-        //     // videoJs.controls(false)
-        // },
-        // turnPipChatModeOff() {
-        //     this.pipChatMode = false;
-        //     this.hidePage = false;
-        //     this.setPageBgColor(this.primaryBgColor);
-        //     this.setChatMessageBgColor(this.primaryChatMessageBgColor);
-        //     // Additional logic for turning chat mode off
-        // },
+        turnPipChatModeOff() {
+            const videoPlayerStore = useVideoPlayerStore()
+            const userStore = useUserStore()
+
+            if(userStore.isMobile) {
+                if (this.fullPage) {
+                    videoPlayerStore.videoContainerClass = 'fullPageVideoContainer'
+                    videoPlayerStore.class = 'fullPageVideoClass'
+                } else {
+                    videoPlayerStore.videoContainerClass = 'topRightVideoContainer'
+                    videoPlayerStore.class = 'topRightVideoClass'
+                    this.showOttButtons = true
+                }
+                this.pipChatMode = false
+                this.hidePage = false
+                this.pageBgColor = this.primaryBgColor
+                this.chatMessageBgColor = this.primaryChatMessageBgColor
+            }
+        },
         setPageBgColor(color) {
-            this.pageBgColor = color;
+            this.pageBgColor = color
         },
         // Other actions to modify UI settings...
         setChatMessageBgColor(color) {
-            this.chatMessageBgColor = color;
+            this.chatMessageBgColor = color
+        },
+        toggleNavDropdown() {
+            this.showNavDropdown = ! this.showNavDropdown
+            this.osd = !this.osd
+            this.showOtt = !this.showOtt
+            this.showOttButtons = !this.showOttButtons
+        },
+        closeNavDropdown() {
+            this.showNavDropdown = false
+            this.showOttButtons = true
+            this.showOtt = false // tec21: I don't know why we would want this... it could be a leftover.
+        },
+        toggleOsd() {
+            const videoPlayerStore = useVideoPlayerStore()
+            this.osd = !this.osd;
+            videoPlayerStore.controls = !videoPlayerStore.controls
+            if (this.ott && !this.osd) {
+                this.showOttButtons = false
+            } else if (this.ott && this.osd) {
+                this.showOttButtons = false
+            } else if (!this.ott && !this.osd) {
+                this.showOttButtons = false
+            } else if (!this.ott && this.osd) {
+                this.showOttButtons = true
+            }
+
+
+        },
+        toggleOtt(num) {
+            if (this.ott === num) {
+                if (this.fullPage) {
+                    this.toggleOtt(0)
+                } else {
+                    // change this to toggleOtt(1)
+                    // as part of the go back to ottInfo function
+                    this.toggleOtt(0)
+                }
+                this.showOttButtons = true
+            } else {
+                this.ott = num
+                if (this.fullPage) {
+                    this.showOttButtons = false
+                }
+            }
+        },
+        toggleOttInfo() {
+            if (this.ott === 1) {
+                // comment this out as part of the go back to ottInfo function
+                this.toggleOtt(1)
+            } else {
+                this.toggleOtt(1)
+            }
+        },
+        toggleOttChannels() {
+            this.toggleOtt(2)
+        },
+        toggleOttPlaylist() {
+            this.toggleOtt(3)
+        },
+        toggleOttChat() {
+            this.toggleOtt(4)
+        },
+        toggleOttFilters() {
+            this.toggleOtt(5)
+        },
+        closeOtt() {
+            this.toggleOtt(0)
+            // uncomment this as part of the go back to ottInfo function
+            // if (appSettingStore.fullPage) {
+            //     this.toggleOtt(0)
+            // } else {
+            //     this.toggleOtt(1)
+            // }
+
+        },
+        setPrevUrl() {
+            const userStore = useUserStore()
+            const currentUrl = window.history.state ? window.history.state.url : window.location.pathname
+            const currentQueryString = window.location.search;
+            // If thisUrl has not been set yet, it means the user accessed the page directly
+            if (!this.thisUrl) {
+                this.prevUrl = userStore.isCreator ? '/dashboard' : '/';
+            }
+            // Update prevUrl only if navigating to a new page and there's no query string
+            else if (this.thisUrl !== currentUrl && currentQueryString === '') {
+                this.prevUrl = this.thisUrl;
+            }
+            // Update thisUrl to the current page
+            this.thisUrl = currentUrl;
+        },
+        btnRedirect(newUrl) {
+            this.setPrevUrl()
+            Inertia.visit(newUrl)
         },
     }
 });

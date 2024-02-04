@@ -23,17 +23,22 @@ class ShowEpisodeFactory extends Factory
      */
     public function definition()
     {
+
+      $userIds = \App\Models\User::pluck('id')->all();
+      $showIds = \App\Models\Show::pluck('id')->all();
+      $statusIds = \App\Models\ShowEpisodeStatus::pluck('id')->all();
+
         return [
             'name' => $name = $this->faker->sentence($nbWords = 3, $variableNbWords = true),
             'description' => $this->faker->sentence(5),
             'image_id' => '4',
-            'user_id' => \App\Models\User::all()->random()->id,
-            'show_id' => \App\Models\Show::all()->random()->id,
+            'user_id' => $this->faker->randomElement($userIds),
+            'show_id' => $this->faker->randomElement($showIds),
             'notes' => $this->faker->sentence(5),
             'video_url' => null,
             'video_embed_code' => null,
             'isPublished' => '0',
-            'slug' => \Str::slug($name)
-        ];
+            'slug' => \Str::slug($name),
+            'show_episode_status_id' => $this->faker->randomElement($statusIds),        ];
     }
 }

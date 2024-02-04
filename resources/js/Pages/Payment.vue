@@ -9,26 +9,10 @@
 
 <script setup>
 import { ref, onMounted } from "vue"
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import { useUserStore } from "@/Stores/UserStore";
 import { loadStripe } from "@stripe/stripe-js";
+import { usePageSetup } from '@/Utilities/PageSetup'
 
-let videoPlayerStore = useVideoPlayerStore()
-let userStore = useUserStore()
-
-userStore.currentPage = 'payment'
-
-
-onMounted(() => {
-    videoPlayerStore.makeVideoTopRight();
-    if (userStore.isMobile) {
-        videoPlayerStore.ottClass = 'ottClose'
-        videoPlayerStore.ott = 0
-    }
-    document.getElementById("topDiv").scrollIntoView()
-
-
-});
+usePageSetup('payment')
 
 let stripe = loadStripe('pk_test_51KJwK5Kahp38LUVYOjg7h425exCr6UZmMm1M24d31ZaS0HTsgPWIZE9Hd2F0KnREVHuPm2VHesX3J5SQfFFg7fTC00DMNpq1Lj');
 

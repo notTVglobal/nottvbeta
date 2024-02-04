@@ -1,55 +1,54 @@
-import { defineStore } from "pinia";
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore";
-import {Inertia} from "@inertiajs/inertia";
-import {ref} from "vue";
+import { defineStore } from "pinia"
+import { useAppSettingStore } from "@/Stores/AppSettingStore"
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
+import { Inertia } from "@inertiajs/inertia"
+import { ref } from "vue"
+
+// const appSettingStore = useAppSettingStore()
+
+const initialState = () => ({
+    isMobile: Boolean,
+    showNavDropdown: Boolean,
+
+    // move currentPage from VideoPlayerStore to here.
+    currentPage: String,
+    hidePage: Boolean,
+    thisUrl: window.location.pathname,
+    prevUrl: null,
+    id: null,
+    roleId: null,
+    getUserDataCompleted: null,
+    hasAccount: null,
+    isAdmin: null,
+    isCreator: null,
+    isNewsPerson: null,
+    isVip: null,
+    isSubscriber: null,
+    oldLoggedOutId: null,
+    uploadPercentage: 0,
+    scrollToTopCounter: 0,
+    uploadMovieId: null,
+    uploadShowEpisodeId: null,
+    upgradeSelection: '',
+    testNum: 0,
+    url: null,
+    key: 0,
+    showFlashMessage: false,
+    newNotifications: 0,
+    showNotifications: false,
+    notifications: ref([]),
+    notificationsKey: 0,
+    userSubscribedToNotifications: false,
+    timezone: null,
+})
 
 export const useUserStore = defineStore('userStore', {
-    state: () => ({
-        isMobile: Boolean,
-
-        // remove isFullPage and showNav
-        // put them in the videoPlayerStore
-        // instead this is for performance
-        // improvements.
-        //
-        // isFullPage: false,
-        // showNav: true,
-
-        showNavDropdown: Boolean,
-
-        // move currentPage from VideoPlayerStore to here.
-        currentPage: String,
-        hidePage: Boolean,
-        prevUrl: String,
-        id: null,
-        roleId: null,
-        getUserDataCompleted: null,
-        hasAccount: null,
-        isAdmin: null,
-        isCreator: null,
-        isNewsPerson: null,
-        isVip: null,
-        isSubscriber: null,
-        oldLoggedOutId: null,
-        uploadPercentage: 0,
-        scrollToTopCounter: 0,
-        uploadMovieId: null,
-        uploadShowEpisodeId: null,
-        upgradeSelection: '',
-        testNum: 0,
-        url: null,
-        key: 0,
-        showFlashMessage: false,
-        newNotifications: 0,
-        showNotifications: false,
-        notifications: ref([]),
-        notificationsKey: 0,
-        userSubscribedToNotifications: false,
-        timezone: null,
-
-    }),
-
+    state: initialState,
     actions: {
+        reset() {
+            // Reset the store to its original state (clear all data)
+            Object.assign(this, initialState())
+        },
         updateStore() {
             this.testNum++;
         },
@@ -58,11 +57,11 @@ export const useUserStore = defineStore('userStore', {
         },
         toggleNavDropdown() {
             this.showNavDropdown = ! this.showNavDropdown;
-            useVideoPlayerStore().toggleOSD();
+            // appSettingStore.osd = true
         },
         closeNavDropdown() {
             this.showNavDropdown = false;
-            useVideoPlayerStore().closeOtt()
+            // useVideoPlayerStore().closeOtt()
         },
         checkIsMobile() {
             let screenWidth = screen.width
@@ -125,13 +124,6 @@ export const useUserStore = defineStore('userStore', {
                 this.newNotifications = 0; // or some other default value or error handling logic
             }
         },
-        setPrevUrl() {
-            this.prevUrl = window.history.state.url
-        },
-        btnRedirect(newUrl) {
-            this.setPrevUrl()
-            Inertia.visit(newUrl)
-        }
     },
 
     getters: {

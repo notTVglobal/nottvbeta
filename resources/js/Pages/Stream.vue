@@ -1,173 +1,104 @@
 <template>
-    <Head title="Stream" />
-
-
+  <Head title="Stream"/>
 </template>
 
-
 <script setup>
-import { inject, onBeforeMount, onBeforeUnmount, onMounted, onUnmounted, ref } from "vue"
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
-import { useUserStore } from "@/Stores/UserStore"
-import { useStreamStore } from "@/Stores/StreamStore"
-import { useChatStore } from "@/Stores/ChatStore"
-import { useChannelStore } from "@/Stores/ChannelStore"
-import { Inertia } from "@inertiajs/inertia";
-import { usePage } from "@inertiajs/inertia-vue3"
-import videojs from "video.js";
+import { Inertia } from '@inertiajs/inertia'
+import { inject, onBeforeMount, onMounted, ref } from 'vue'
+import { usePageSetup } from '@/Utilities/PageSetup'
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import { useUserStore } from '@/Stores/UserStore'
+import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
 
-let videoPlayerStore = useVideoPlayerStore()
-let userStore = useUserStore()
-let streamStore = useStreamStore()
-let chatStore = useChatStore()
-let channelStore = useChannelStore()
+usePageSetup('stream')
+
+const appSettingStore = useAppSettingStore()
+const userStore = useUserStore()
+const videoPlayerStore = useVideoPlayerStore()
 
 const getUserData = inject('getUserData', null)
-let urlPrev = usePage().props.value.urlPrev
 
-onBeforeMount(() => {
-    // getUserTimezone()
-    videoPlayerStore.currentPageIsStream = true;
-    videoPlayerStore.currentView = 'stream'
-    userStore.currentPage = 'stream'
-})
+appSettingStore.osd = true
+videoPlayerStore.makeVideoFullPage()
 
-// const channel = [
-//     {
-//         id: 2,
-//         name: 'Stream',
-//         stream: 'thirdeyespies',
-//         channel_source: null,
-//         isLive: null
-//     }
-// ]
-
-onMounted(async () => {
-    // console.log(window.location.href)
-    //
-    // console.log(window.history)
-    // userStore.prevUrl = window.history.length > 1 && window.history.state
-    //     ? window.history.state.url : null;
-
-    // async function changeChannel() {
-    //     await channelStore.getChannels()
-    //     await channelStore.disconnectViewerFromChannel()
-    //     await channelStore.changeChannel(channelStore.channel_list[1])
-    //     Inertia.reload()
-    // }
-    //
-    // await changeChannel()
-
-    if (!getUserData) {
-        updateUserStore()
-    }
-
-    videoPlayerStore.makeVideoFullPage()
-    if (userStore.isMobile) {
-        videoPlayerStore.showOsd()
-    } else {
-        videoPlayerStore.showOsdAndControlsAndNav()
-    }
-
-    videoPlayerStore.loggedIn = true
-    videoPlayerStore.ott = 0
-    videoPlayerStore.osd = true
-    videoPlayerStore.ottButtons = true
-    videoPlayerStore.ottChannels = false
-    videoPlayerStore.ottChat = false
-    videoPlayerStore.ottPlaylist = false
-    videoPlayerStore.ottFilters = false
-    videoPlayerStore.fullPage = true
-
-    // for testing purposes, channel 2 on my local machine is my test channel
-    // need to add to the if statement, on firstPlay when the user loads the app
-    // channel is undefined.... so don't run this function if the viewer loads the
-    // app on the stream page or refreshes the page on the stream page.
-
-
-    // if (videoPlayerStore.videoPlayerLoaded) {
-    //     if (channelStore.currentChannelId !== 2 && urlPrev !== 'empty' && urlPrev !== 'stream') {
-    //         await (async () => {
-    //             // await channelStore.getChannels();
-    //             await channelStore.disconnectViewerFromChannel();
-    //             await channelStore.changeChannel(channel[0]);
-    //             // Inertia.reload();
-    //         })();
-    //     }
-    // }
-})
-
-onBeforeUnmount(() => {
-    videoPlayerStore.controls = false
-    videoPlayerStore.makeVideoTopRight()
-    videoPlayerStore.currentPageIsStream = false
-    videoPlayerStore.fullPage = false
-})
-
-onUnmounted(() => {
-    // videoPlayerStore.ott = 0
-    // videoPlayerStore.osd = true
-    // videoPlayerStore.ottButtons = true
-    // videoPlayerStore.ottChannels = false
-    // videoPlayerStore.ottChat = false
-    // videoPlayerStore.ottPlaylist = false
-    // videoPlayerStore.ottFilters = false
-})
+let reloadPage = () => {
+  if (appSettingStore.pageReload) {
+    appSettingStore.pageReload = false
+    window.location.reload(true);
+  }
+};
 
 let props = defineProps({
-    getUserData: Boolean,
-    video: Object,
-    user: Object,
+  getUserData: Boolean,
+  video: Object,
+  user: Object,
 })
 
-function updateUserStore() {
-    axios.post('/getUserStoreData')
-        .then(response => {
-            userStore.id = response.data.id
-            userStore.isAdmin = response.data.isAdmin
-            userStore.isCreator = response.data.isCreator
-            userStore.isNewsPerson = response.data.isNewsPerson
-            userStore.isVip = response.data.isVip
-            userStore.isSubscriber = response.data.isSubscriber
-            userStore.hasAccount = response.data.hasAccount
-            userStore.getUserDataCompleted = true
-            userStore.timezone = userTimezone
-            console.log('get user data on Stream')
-            if (userStore.isCreator) {
-                userStore.prevUrl = '/dashboard'
-            } else {
-                userStore.prevUrl = '/stream'
-            }
-        })
-        .catch(error => {
-            console.log(error);
-        })
-    // save user Timezone
-    updateUserTimezone()
-}
+onBeforeMount(() => {
+  reloadPage()
+})
 
 const userTimezone = ref('');
 
+// This should be called as soon as the component mounts
 const getUserTimezone = () => {
-    // Use the Intl object to get the user's timezone
-    userTimezone.value = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  userTimezone.value = Intl.DateTimeFormat().resolvedOptions().timeZone;
 };
 
-const updateUserTimezone = async () => {
-    try {
-        const response = await axios.post('/users/update-timezone', {timezone: userTimezone.value});
+// Call getUserTimezone early, possibly in onMounted
+onMounted(async () => {
+  getUserTimezone();
+  if (props.getUserData) {
+    await updateUserStore();
+  } else if (!getUserData) {
+    await updateUserStore()
+  }
+  Inertia.reload()
+})
 
-        // Handle success response as needed
-        console.log(response.data.message);
-    } catch (error) {
-        // Handle error response or network error
-        console.error(error);
+async function updateUserStore() {
+  // Ensure the timezone is set
+  if (!userTimezone.value) {
+    getUserTimezone();
+  }
 
-        if (error.response) {
-            // Handle specific error responses if needed
-            console.error(error.response.data);
-        }
+  try {
+    const response = await axios.post('/getUserStoreData');
+    // Update the store with the response data
+    userStore.id = response.data.id;
+    appSettingStore.loggedIn = true
+    userStore.isAdmin = response.data.isAdmin
+    userStore.isCreator = response.data.isCreator
+    userStore.isNewsPerson = response.data.isNewsPerson
+    userStore.isVip = response.data.isVip
+    userStore.isSubscriber = response.data.isSubscriber
+    userStore.hasAccount = response.data.hasAccount
+    userStore.getUserDataCompleted = true
+    userStore.timezone = userTimezone.value;
+    console.log('get user data on Stream')
+    // Further logic
+    if (userStore.isCreator) {
+      userStore.prevUrl = '/dashboard';
+    } else {
+      userStore.prevUrl = '/stream';
     }
+
+    // Now update the user timezone on the server
+    await updateUserTimezone();
+  } catch (error) {
+    console.error(error);
+  }
 }
+
+const updateUserTimezone = async () => {
+  if (!userTimezone.value) return;
+
+  try {
+    const response = await axios.post('/users/update-timezone', { timezone: userTimezone.value });
+    console.log(response.data.message);
+  } catch (error) {
+    console.error(error.response ? error.response.data : error);
+  }
+};
 </script>
 

@@ -9,8 +9,8 @@ class NewsStatus extends Model
 {
     use HasFactory;
 
-    public function newsPost()
+    public function newsStories()
     {
-        return $this->belongsToMany(NewsPost::class);
+        return $this->hasMany(NewsStory::class);
     }
 }

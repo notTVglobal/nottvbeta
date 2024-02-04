@@ -23,12 +23,15 @@ class ShowFactory extends Factory
      */
     public function definition()
     {
+      $userIds = \App\Models\User::pluck('id')->all();
+      $teamIds = \App\Models\Team::pluck('id')->all();
+
         return [
             'name' => $name = $this->faker->sentence($nbWords = 3, $variableNbWords = true),
             'description' => $this->faker->paragraph,
             'image_id' => '4',
-            'user_id' => \App\Models\User::all()->random()->id,
-            'team_id' => \App\Models\Team::all()->random()->id,
+            'user_id' => $this->faker->randomElement($userIds),
+            'team_id' => $this->faker->randomElement($teamIds),
             'show_status_id' => \App\Models\ShowStatus::all()->random()->id,
             'slug' => \Str::slug($name)
         ];

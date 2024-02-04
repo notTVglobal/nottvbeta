@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\NewNotificationEvent;
 use App\Models\Notification;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Team;
@@ -41,17 +42,14 @@ class TeamMembersController extends Controller
 
         $team->members()->attach($request->user_id);
 
-        // notify new team member
-        $notification = new Notification;
-        $notification->user_id = $user->id;
-        // make the image the team_poster
-        $notification->image_id = $team->image_id;
-        $notification->url = '/teams/'.$team->slug;
-        $notification->title = $team->name;
-        $notification->message = '<span class="text-green-500">You have been added to the team.</span>';
-        $notification->save();
-        // Trigger the event to broadcast the new notification
-        event(new NewNotificationEvent($notification));
+      // notify new team member
+      NotificationService::createAndDispatchNotification(
+          $user->id,
+          $team->image_id,
+          '/teams/'.$team->slug,
+          $team->name,
+          '<span class="text-green-500">You have been added to the team.</span>'
+      );
 
         DB::table('teams')->where('id', $team->id)->increment('memberSpots', 1);
         return redirect(route('teams.manage', [$teamSlug]))->with('message', $user->name . ' has been successfully added to the team.');
@@ -97,16 +95,25 @@ class TeamMembersController extends Controller
 //        ])->with('message', $user->name . ' has been successfully removed from the team.');
 
         // notify new team member
-        $notification = new Notification;
-        $notification->user_id = $user->id;
-        // make the image the team_poster
-        $notification->image_id = $team->image_id;
-        $notification->url = '';
-        $notification->title = $team->name;
-        $notification->message = '<span class="text-orange-500">You have been removed from the team.</span>';
-        $notification->save();
-        // Trigger the event to broadcast the new notification
-        event(new NewNotificationEvent($notification));
+//        $notification = new Notification;
+//        $notification->user_id = $user->id;
+//        // make the image the team_poster
+//        $notification->image_id = $team->image_id;
+//        $notification->url = '';
+//        $notification->title = $team->name;
+//        $notification->message = '<span class="text-orange-500">You have been removed from the team.</span>';
+//        $notification->save();
+//        // Trigger the event to broadcast the new notification
+//        event(new NewNotificationEvent($notification));
+
+      // notify new team member
+      NotificationService::createAndDispatchNotification(
+          $user->id,
+          $team->image_id,
+          '',
+          $team->name,
+          '<span class="text-orange-500">You have been removed from the team.</span>'
+      );
 
         return redirect()->route('teams.manage', $teamSlug)->with('message', $user->name . ' has been successfully removed from the team.');
 //        return redirect(route('teams.manage', [$teamSlug]))->with('message', $user->name . ' has been successfully removed from the team.');

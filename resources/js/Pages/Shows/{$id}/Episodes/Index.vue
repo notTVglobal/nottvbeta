@@ -1,33 +1,19 @@
 <template>
-    <Head title="Create Episode"/>
+  <Head title="Create Episode"/>
 
-    <div class="place-self-center flex flex-col gap-y-3">
-        <div id="topDiv" class="bg-white text-black p-5 mb-10">
+  <div class="place-self-center flex flex-col gap-y-3">
+    <div id="topDiv" class="bg-white text-black p-5 mb-10">
 
-            TEST INDEX
-        </div>
+      INDEX OF ALL EPISODES FOR A SHOW (optional page) -> maybe turn this into an Admin/Episodes to search and display ALL EPISODES for ALL SHOWS?
+
     </div>
+  </div>
 
 </template>
 
 <script setup>
-import {onBeforeMount, onMounted} from "vue";
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import {useUserStore} from "@/Stores/UserStore";
+import { usePageSetup } from '@/Utilities/PageSetup'
 
-let videoPlayerStore = useVideoPlayerStore()
-let userStore = useUserStore()
-
-userStore.currentPage = 'episodes'
-userStore.showFlashMessage = true;
-
-onMounted(() => {
-    videoPlayerStore.makeVideoTopRight();
-    if (userStore.isMobile) {
-        videoPlayerStore.ottClass = 'ottClose'
-        videoPlayerStore.ott = 0
-    }
-    document.getElementById("topDiv").scrollIntoView()
-});
+usePageSetup('shows/slug/episodes/')
 
 </script>

@@ -4,13 +4,13 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div id="topDiv" class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 
-            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+            <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
             <AdminHeader>Users</AdminHeader>
 
             <div class="flex flex-row justify-between gap-x-4">
                 <button
-                    @click="userStore.btnRedirect(`/users/create`)"
+                    @click="appSettingStore.btnRedirect(`/users/create`)"
                     class="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded-lg disabled:bg-gray-400"
                 >Add User</button>
                 <input v-model="search" type="search" placeholder="Search..." class="text-black border px-2 rounded-lg" />
@@ -123,18 +123,22 @@
 
 
 <script setup>
-import { onBeforeMount, onMounted, ref, watch } from "vue"
 import { Inertia } from "@inertiajs/inertia"
-import { useForm } from "@inertiajs/inertia-vue3";
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import { useUserStore } from "@/Stores/UserStore";
-import Pagination from "@/Components/Pagination"
-import throttle from "lodash/throttle"
-import Message from "@/Components/Modals/Messages";
-import AdminHeader from "@/Components/Admin/AdminHeader.vue";
+import { ref, watch } from "vue"
 
-let videoPlayerStore = useVideoPlayerStore()
-let userStore = useUserStore()
+import { useForm } from "@inertiajs/inertia-vue3"
+import { usePageSetup } from '@/Utilities/PageSetup'
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
+import { useAppSettingStore } from "@/Stores/AppSettingStore"
+import Pagination from "@/Components/Global/Paginators/Pagination"
+import throttle from "lodash/throttle"
+import Message from "@/Components/Global/Modals/Messages"
+import AdminHeader from "@/Components/Pages/Admin/AdminHeader"
+
+usePageSetup('users')
+
+const appSettingStore = useAppSettingStore()
+const videoPlayerStore = useVideoPlayerStore()
 
 let props = defineProps({
     users: Object,
@@ -147,18 +151,6 @@ let search = ref(props.filters.search);
 const form = useForm({
     userId: '',
 })
-
-userStore.currentPage = 'users'
-userStore.showFlashMessage = true;
-
-onMounted(() => {
-    videoPlayerStore.makeVideoTopRight()
-    if (userStore.isMobile) {
-        videoPlayerStore.ottClass = 'ottClose'
-        videoPlayerStore.ott = 0
-    }
-    document.getElementById("topDiv").scrollIntoView()
-});
 
 watch(search, throttle(function (value) {
     Inertia.get('/users', { search: value }, {

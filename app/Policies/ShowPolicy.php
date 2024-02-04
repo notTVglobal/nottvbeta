@@ -8,6 +8,7 @@ use App\Models\Team;
 use App\Models\TeamManager;
 use App\Models\TeamMember;
 use App\Models\User;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Support\Facades\Auth;
@@ -22,9 +23,26 @@ class ShowPolicy
         return true; // all users can view shows
     }
 
-    public function view(User $user)
+    public function view(User $user, Show $show)
     {
-        return true; // all users can view shows
+//      return true;
+      // Check if the show has a status_id of 9
+      if ($show->status_id == 9) {
+        // If the user is a creator, allow viewing
+        if ($user->creator) {
+          return true;
+        }
+
+        return Response::deny('You must be a creator to view this show.');
+
+        // We may use these AuthorizationExceptions later to add more functionality
+        // to our authorization denials. tec21: I'll leave this here for now.
+        // If the user is not a creator, throw an exception with a custom message
+//        throw new AuthorizationException('You must be a creator to view this show.');
+      }
+
+      // For all other cases, allow viewing
+      return true;
     }
 
     public function viewShowManagePage(User $user, Show $show)
@@ -37,15 +55,16 @@ class ShowPolicy
     }
 
     // tec21: this policy isn't working.
-    public function editShowManagePage(User $user, Show $show)
-    {
-        if($user->isAdmin || $show->user_id === $user->id){
-            return true;
-        }
-        return Response::deny('You must be the Show Runner, Show Manager, Team Leader, or a Team Manager to edit this show.');
-    }
+//    public function editShowManagePage(User $user, Show $show)
+//    {
+//        if($user->isAdmin || $show->user_id === $user->id){
+//            return true;
+//        }
+//        return Response::deny('You must be the Show Runner, Show Manager, Team Leader, or a Team Manager to edit this show.');
+//    }
 
     public function create(User $user) {
+
         $userId = $user->id;
         $checkUser = Creator::where('user_id', $userId)->pluck('status_id')->first();
 

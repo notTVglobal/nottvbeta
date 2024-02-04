@@ -29,11 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('channels', function (Blueprint $table) {
-            $table->dropForeign(['order_id']);
-            $table->dropColumn('order_id');
-            $table->dropForeign(['product_id']);
-            $table->dropColumn('product_id');
-        });
+      Schema::dropIfExists('product_order_product');
     }
 };

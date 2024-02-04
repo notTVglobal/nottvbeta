@@ -1,27 +1,30 @@
 import { defineStore } from "pinia";
 import {ref} from "vue";
 
-export const useShopStore = defineStore('shopStore', {
-    state() {
-        return {
-            products: [],
-            cart: [],
-            order: [],
-            paymentProcessing: ref(false),
-            customer: {},
-            stripe: {},
-            cardElement: {},
-            upgradeSelection: '',
-            upgradeStripeId: '',
-            selectedSubscriptionPrice: null,
-            showPaymentForm: ref(false),
-            premiumMonthlyStripeId: 'price_1NoiAOKahp38LUVYPWtzQ8f1',
-            premiumYearlyStripeId: 'price_1NhgZTKahp38LUVY8n9Skgwf',
-            premiumForeverStripeId: 'price_1NoiBDKahp38LUVY5OGjIrCM'
-        };
-    },
+const initialState = () => ({
+    products: [],
+    cart: [],
+    order: [],
+    paymentProcessing: ref(false),
+    customer: {},
+    stripe: {},
+    cardElement: {},
+    upgradeSelection: '',
+    upgradeStripeId: '',
+    selectedSubscriptionPrice: null,
+    showPaymentForm: ref(false),
+    premiumMonthlyStripeId: 'price_1NoiAOKahp38LUVYPWtzQ8f1',
+    premiumYearlyStripeId: 'price_1NhgZTKahp38LUVY8n9Skgwf',
+    premiumForeverStripeId: 'price_1NoiBDKahp38LUVY5OGjIrCM'
+})
 
+export const useShopStore = defineStore('shopStore', {
+    state: initialState,
     actions: {
+        reset() {
+            // Reset the store to its original state (clear all data)
+            Object.assign(this, initialState());
+        },
         getProducts() {
             // fetch the products and their attached categories from the api
             axios.get('/api/products')

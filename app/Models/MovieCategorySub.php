@@ -11,7 +11,8 @@ class MovieCategorySub extends Model
 
     protected $fillable = [
         'name',
-        'description'
+        'description',
+        'movie_categories_id'
     ];
 
     public function movie()
@@ -21,6 +22,9 @@ class MovieCategorySub extends Model
 
     public function movieCategory()
     {
-        return $this->hasOne(MovieCategory::class);
+        return $this->belongsTo(MovieCategory::class, 'movie_categories_id')->withDefault([
+          'name' => 'category',
+          'description' => 'category description'
+      ]);
     }
 }

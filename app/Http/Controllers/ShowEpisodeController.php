@@ -6,6 +6,7 @@ use App\Events\NewNotificationEvent;
 use App\Jobs\AddVideoUrlFromEmbedCodeJob;
 use App\Jobs\ProcessVideoInfo;
 use App\Jobs\SendTeamMembersNotificationJob;
+use App\Models\CreativeCommons;
 use App\Models\Creator;
 use App\Models\Image;
 use App\Models\Notification;
@@ -30,39 +31,36 @@ use App\Rules\UniqueEpisodeName;
 use Inertia\Inertia;
 use Symfony\Component\Uid\Ulid;
 
-class ShowEpisodeController extends Controller
-{
+class ShowEpisodeController extends Controller {
 
-    private string $formattedScheduledDateTime;
-    private string $formattedReleaseDateTime;
-    private ?int $videoId = null;
+  private string $formattedScheduledDateTime;
+  private string $formattedReleaseDateTime;
+  private ?int $videoId = null;
 
-    public function __construct()
-    {
+  public function __construct() {
 
 //        $this->middleware('can:viewShowManagePage,show')->only(['manage']);
 //        $this->middleware('can:editShowEpisode,showEpisode')->only(['edit']);
 //        $this->middleware('can:createShow,show')->only(['create']);F
 //        $this->middleware('can:createEpisode,show')->only(['createEpisode']);
 //        $this->middleware('can:viewEpisodeManagePage,show')->only(['manageEpisode']);
-          $this->middleware('can:editEpisode,show')->only(['edit']);
-          $this->middleware('can:destroy,showEpisode')->only(['destroy']);
+    $this->middleware('can:editEpisode,show')->only(['edit']);
+    $this->middleware('can:destroy,showEpisode')->only(['destroy']);
 
-          $this->formattedReleaseDateTime = '';
-          $this->formattedScheduledDateTime = '';
+    $this->formattedReleaseDateTime = '';
+    $this->formattedScheduledDateTime = '';
 
-    }
+  }
 
 
 ////////////  INDEX
 ///////////////////
 
-    public function index()
-    {
-        return Inertia::render('Shows/{$id}/Episodes/Index', [
+  public function index() {
+    return Inertia::render('Shows/{$id}/Episodes/Index', [
 
-        ]);
-    }
+    ]);
+  }
 
 
 ////////////  CREATE AND STORE
@@ -73,54 +71,33 @@ class ShowEpisodeController extends Controller
 /// Controller.
 ///
 
-    public function store(HttpRequest $request)
-    {
-        $request->validate([
-            'name' => [
-                'required',
-                'max:255',
-                'accepted_if:show_id,',
-                'distinct:ignore_case',
-                new UniqueEpisodeName($request->show_id)
-            ],
-            'description' => 'required',
-            'user_id' => 'required',
-            'show_id' => 'required',
-            'episode_number' => 'nullable|max:10',
-            'notes' => 'nullable|string',
-            'video_url' => 'nullable|active_url|ends_with:.mp4',
-            'youtube_url' => 'nullable|active_url',
-            'video_embed_code' => 'nullable|string',
-        ]);
+  public function store(HttpRequest $request) {
+    $request->validate([
+        'name'                => [
+            'required',
+            'max:255',
+            'accepted_if:show_id,',
+            'distinct:ignore_case',
+            new UniqueEpisodeName($request->show_id)
+        ],
+        'description'         => 'required',
+        'user_id'             => 'required',
+        'show_id'             => 'required',
+        'creative_commons_id' => 'required|integer|exists:creative_commons,id',
+        'copyrightYear'       => ['nullable', 'integer', 'min:1900', 'max:' . date('Y')],
+        'episode_number'      => 'nullable|max:10',
+        'notes'               => 'nullable|string',
+        'video_url'           => 'nullable|active_url|ends_with:.mp4',
+        'youtube_url'         => 'nullable|active_url',
+        'video_embed_code'    => 'nullable|string',
+    ], [
+        'copyrightYear.integer'        => 'Please choose a copyright year',
+        'creative_commons_id.required' => 'Please choose a Creative Commons / Copyright',
+    ]);;
 
-        if ($request->video_url) {
-
-            // Create a new Video instance
-            $video = new Video();
-
-            // Set the user_id, video_url and storage_location attributes
-            $video->user_id = $request->user_id;
-            $video->name = 'External video';
-            $video->file_name = 'external_video_' . Str::uuid();
-            $video->video_url = $request->video_url;
-            $video->storage_location = 'external';
-
-            // Save the video to the database
-            $video->save();
-
-            // Get the ID of the newly created Video model
-            $this->videoId = $video->id;
-
-            $jobName = null;
-
-            // get the video information.
-            dispatch(new ProcessVideoInfo($this->videoId, $jobName))->onQueue('high');
-        }
-
-
-        // MOVE THIS TO A JOB... SEND THE showEpisode SLUG with it.
-        // get the *.mp4 video url from embed code
-        // save the *.mp4 url to the video_file_url
+    // MOVE THIS TO A JOB... SEND THE showEpisode SLUG with it.
+    // get the *.mp4 video url from embed code
+    // save the *.mp4 url to the video_file_url
 //        if ($request->video_embed_code) {
 //            $videoUrlFromEmbedCode = $this->getVideoUrlFromEmbedCode($request->video_embed_code);
 //            if ($videoUrlFromEmbedCode === false) {
@@ -129,172 +106,228 @@ class ShowEpisodeController extends Controller
 //                $videoUrl = $videoUrlFromEmbedCode;
 //        } else $videoUrl = $request->video_url;
 
-        $showEpisode = new ShowEpisode();
-        $showEpisode->ulid = (string) Ulid::generate();
-        $showEpisode->isBeingEditedByUser_id = Auth::user()->id;
-        $showEpisode->name = $request->name;
-        $showEpisode->description = $request->description;
-        $showEpisode->user_id = Auth::user()->id;
-        $showEpisode->show_id = $request->show_id;
-        $showEpisode->episode_number = $request->episode_number;
-        $showEpisode->slug = \Str::slug($request->name);
-//        $showEpisode->video_url = $request->url;
-        $showEpisode->video_id = $this->videoId;
-        $showEpisode->youtube_url = $request->youtube_url;
-        $showEpisode->video_embed_code = $request->video_embed_code;
-        $showEpisode->notes = $request->notes;
-        $showEpisode->release_year = Carbon::now()->format('Y');
+    $showEpisode = new ShowEpisode();
+    $showEpisode->ulid = (string) Ulid::generate();
+    $showEpisode->isBeingEditedByUser_id = Auth::user()->id;
+    $showEpisode->name = $request->name;
+    $showEpisode->description = $request->description;
+    $showEpisode->user_id = Auth::user()->id;
+    $showEpisode->show_id = $request->show_id;
+    $showEpisode->episode_number = $request->episode_number;
+    $showEpisode->slug = \Str::slug($request->name);
+    $showEpisode->notes = $request->notes;
+    $showEpisode->release_year = Carbon::now()->format('Y');
+    $showEpisode->copyrightYear = $request->copyrightYear;
+    $showEpisode->creative_commons_id = $request->creative_commons_id;
+    $showEpisode->video_embed_code = $request->video_embed_code;
 
-        $showEpisode->save();
+    $showEpisode->save();
 
-        if ($showEpisode->show->show_status_id === 1) {
-            $show = Show::find($showEpisode->show_id);
-            $show->show_status_id = 2;
-            $show->save();
-        }
+    if ($request->video_embed_code && !$request->video_url) {
 
-        $showSlug = $request->show_slug;
-        $showEpisodeSlug = $showEpisode->slug;
+      // Create and save the notification
+      $notification = new Notification;
+      $userId = auth()->user()->id;
+      $notification->user_id = $userId;
 
-        $title = $showEpisode->name;
+      // make the image the show_episode_poster
+      $notification->image_id = $showEpisode->image_id;
+      $notification->url = '/shows/' . $showEpisode->show->slug . '/episode/' . $showEpisode->slug . '/manage';
+      $notification->title = $showEpisode->name;
+      $notification->message = 'The video url is being generated from the embed code. You will be notified when it is done.';
+      $notification->save();
 
-        $message = '<span class="text-green-500 italic">A new episode has been created.</span>';
+      // Trigger the event to broadcast the new notification
+      event(new NewNotificationEvent($notification));
+      AddVideoUrlFromEmbedCodeJob::dispatch($showEpisode)->onQueue('video_processing');
+    }
 
-        $url = '/shows/' . $showSlug . '/episode/' . $showEpisodeSlug;
+    if (!empty($request->video_url)) { // Check for non-empty video_url
 
-        dispatch(new SendTeamMembersNotificationJob($showEpisode->show->team, $title, $message, $url));
+      // Create and save the video as before
+      $video = new Video([
+          'user_id'          => Auth::user()->id,
+          'name'             => 'External video',
+          'file_name'        => 'external_video_' . Str::uuid(),
+          'type'             => 'video/mp4',
+          'video_url'        => $request->video_url,
+          'storage_location' => 'external',
+          'show_episodes_id' => $showEpisode->id,
+      ]);
+      $video->save();
 
-        if ($request->video_embed_code && !$request->video_url) {
-            // Create and save the notification
-            $notification = new Notification;
-            $userId = auth()->user()->id;
-            $notification->user_id = $userId;
+      // Dispatch job as before
+      $jobName = null;
+      dispatch(new ProcessVideoInfo($video->id, $jobName))->onQueue('high');
 
-            // make the image the show_episode_poster
-            $notification->image_id = $showEpisode->image_id;
-            $notification->url = '/shows/'.$showEpisode->show->slug.'/episode/'.$showEpisode->slug;
-            $notification->title = $showEpisode->name;
-            $notification->message = 'The video url is being generated from the embed code. You will be notified when it is done.';
-            $notification->save();
+      $showEpisode->video_id = $video->id;
+      $showEpisode->youtube_url = $request->youtube_url;
+      $showEpisode->video_embed_code = $request->video_embed_code;
+      $showEpisode->save();
 
-            // Trigger the event to broadcast the new notification
-            event(new NewNotificationEvent($notification));
-            AddVideoUrlFromEmbedCodeJob::dispatch($showEpisode)->onQueue('video_processing');
-        }
+    }
 
-        // Use this route to return
-        // the user to the new episode page.
+
+    if ($showEpisode->show->show_status_id === 1) {
+      $show = Show::find($showEpisode->show_id);
+      $show->show_status_id = 2;
+      $show->save();
+    }
+
+    $showSlug = $request->show_slug;
+    $showEpisodeSlug = $showEpisode->slug;
+
+    $title = $showEpisode->name;
+
+    $message = '<span class="text-green-500 italic">A new episode has been created.</span>';
+
+    $url = '/shows/' . $showSlug . '/episode/' . $showEpisodeSlug;
+
+    dispatch(new SendTeamMembersNotificationJob($showEpisode->show->team, $title, $message, $url));
+
+    if ($request->video_embed_code && !$request->video_url) {
+      // Create and save the notification
+      $notification = new Notification;
+      $userId = auth()->user()->id;
+      $notification->user_id = $userId;
+
+      // make the image the show_episode_poster
+      $notification->image_id = $showEpisode->image_id;
+      $notification->url = '/shows/' . $showEpisode->show->slug . '/episode/' . $showEpisode->slug;
+      $notification->title = $showEpisode->name;
+      $notification->message = 'The video url is being generated from the embed code. You will be notified when it is done.';
+      $notification->save();
+
+      // Trigger the event to broadcast the new notification
+      event(new NewNotificationEvent($notification));
+      AddVideoUrlFromEmbedCodeJob::dispatch($showEpisode)->onQueue('video_processing');
+    }
+
+    // Use this route to return
+    // the user to the new episode page.
 
 //        $episode = ShowEpisode::query()
 //            ->where('name', $request->name)
 //            ->pluck('show_id')
 //            ->firstOrFail();
 
-        return redirect()
-            ->route('shows.showEpisodes.show',
-                ['show' => $showSlug, 'showEpisode' => $showEpisodeSlug])
-            ->with('success', 'Episode Created Successfully');
+    return redirect()
+        ->route('shows.showEpisodes.manageEpisode',
+            ['show' => $showSlug, 'showEpisode' => $showEpisodeSlug])
+        ->with('success', 'Episode Created Successfully');
 
-    }
+  }
 
 
 ////////////  SHOW
 //////////////////
 
-    public function show(Show $show, ShowEpisode $showEpisode) {
+  public function show(Show $show, ShowEpisode $showEpisode) {
 
-        $teamId = $show->team_id;
+    $teamId = $show->team_id;
 //        $video = Video::where('show_episodes_id', $showEpisode->id)->first();
 
-        // convert release dateTime to user's timezone
-        if ($showEpisode->release_dateTime) {
-            $this->formattedReleaseDateTime = $this->convertTimeToUserTime($showEpisode->release_dateTime);
-        }
-
-        // convert scheduled_release dateTime to user's timezone
-        if ($showEpisode->scheduled_release_dateTime) {
-            $this->formattedScheduledDateTime = $this->convertTimeToUserTime($showEpisode->scheduled_release_dateTime);
-        }
-
-        return Inertia::render('Shows/{$id}/Episodes/{$id}/Index', [
-            'show' => [
-                'name' => $show->name,
-                'slug' => $show->slug,
-                'showRunner' => $show->user->name,
-                'image' => [
-                    'id' => $showEpisode->image->id,
-                    'name' => $showEpisode->image->name,
-                    'folder' => $showEpisode->image->folder,
-                    'cdn_endpoint' => $showEpisode->appSetting->cdn_endpoint,
-                    'cdn_folder' => $showEpisode->appSetting->cdn_folder,
-                ],
-                'copyrightYear' => $show->created_at->format('Y'),
-                'first_release_year' => $show->first_release_year,
-                'last_release_year' => $show->last_release_year,
-                'categoryName' => $show->showCategory->name,
-                'categorySubName' => $show->showCategorySub->name,
-            ],
-            'team' => [
-                'name' => $show->team->name,
-                'slug' => $show->team->slug,
-            ],
-            'episode' => [
-                'name' => $showEpisode->name,
-                'slug' => $showEpisode->slug,
-                'description' => $showEpisode->description,
-                'episode_number' => $showEpisode->episode_number,
-                'created_at' => $showEpisode->created_at,
-                'release_year' => $showEpisode->release_year,
-                'release_dateTime' => $this->formattedReleaseDateTime,
-                'scheduled_release_dateTime' => $this->formattedScheduledDateTime,
-                'mist_stream_id' => $showEpisode->mist_stream_id,
-                'video' => [
-                    'file_name' => $showEpisode->video->file_name ?? '',
-                    'cdn_endpoint' => $showEpisode->video->appSetting->cdn_endpoint ?? '',
-                    'folder' => $showEpisode->video->folder ?? '',
-                    'cloud_folder' => $showEpisode->video->cloud_folder ?? '',
-                    'upload_status' => $showEpisode->video->upload_status ?? '',
-                    'video_url' => $showEpisode->video->video_url ?? '',
-                    'type' => $showEpisode->video->type ?? '',
-                    'storage_location' => $showEpisode->video->storage_location ?? '',
-                ],
-                'youtube_url' => $showEpisode->youtube_url ?? '',
-                'video_embed_code' => $showEpisode->video_embed_code,
-            ],
-//            'video' => [
-//                'file_name' => $video->file_name ?? '',
-//                'cdn_endpoint' => $video->appSetting->cdn_endpoint ?? '',
-//                'folder' => $video->folder ?? '',
-//                'cloud_folder' => $video->cloud_folder ?? '',
-//                'upload_status' => $video->upload_status ?? '',
-//            ],
-            'image' => [
-                'id' => $showEpisode->image->id,
-                'name' => $showEpisode->image->name,
-                'folder' => $showEpisode->image->folder,
-                'cdn_endpoint' => $showEpisode->appSetting->cdn_endpoint,
-                'cloud_folder' => $showEpisode->image->cloud_folder,
-            ],
-            'creators' => TeamMember::where('team_id', $teamId)
-                ->join('users', 'team_members.user_id', '=', 'users.id')
-                ->select('users.*', 'team_members.user_id')
-                ->latest()
-                ->paginate(3)
-                ->withQueryString()
-                ->through(fn($user) => [
-                    'id' => $user->id,
-                    'name' => $user->name,
-                    'profile_photo_path' => $user->profile_photo_path,
-                ]),
-            'can' => [
-                'manageShow' => Auth::user()->can('manage', $show),
-                'editShow' => Auth::user()->can('edit', $show),
-                'viewCreator' => Auth::user()->can('viewCreator', User::class),
-            ]
-
-        ]);
-
+    // convert release dateTime to user's timezone
+    if ($showEpisode->release_dateTime) {
+      $this->formattedReleaseDateTime = $this->convertTimeToUserTime($showEpisode->release_dateTime);
     }
+
+    // convert scheduled_release dateTime to user's timezone
+    if ($showEpisode->scheduled_release_dateTime) {
+      $this->formattedScheduledDateTime = $this->convertTimeToUserTime($showEpisode->scheduled_release_dateTime);
+    }
+
+    $showEpisode->load('video.appSetting', 'image', 'video', 'appSetting', 'show.category', 'show.subCategory', 'creativeCommons'); // Eager load necessary relationships
+//      TODO: Add TeamMember to this eager load
+
+    // Determine the media type based on its storage location.
+    // If the storage location is marked as 'external', categorize it as 'externalVideo';
+    // otherwise, it's considered an internal 'show' video.
+    $mediaType = $showEpisode->video?->storage_location === 'external' ? 'externalVideo' : 'show'; // Adjust logic as needed
+
+
+    return Inertia::render('Shows/{$id}/Episodes/{$id}/Index', [
+        'show'     => [
+            'name'               => $show->name,
+            'slug'               => $show->slug,
+            'showRunner'         => $show->user->name,
+            'image'              => [
+                'id'           => $show->image->id,
+                'name'         => $show->image->name,
+                'folder'       => $show->image->folder,
+                'cdn_endpoint' => $show->appSetting->cdn_endpoint,
+                'cloud_folder' => $show->image->cloud_folder,
+            ],
+            'copyrightYear'      => $show->created_at->format('Y'),
+            'first_release_year' => $show->first_release_year,
+            'last_release_year'  => $show->last_release_year,
+            'category'           => $show->category,
+            'subCategory'        => $show->subCategory,
+        ],
+        'team'     => [
+            'name' => $show->team->name,
+            'slug' => $show->team->slug,
+        ],
+        'episode'  => [
+            'name'                       => $showEpisode->name,
+            'slug'                       => $showEpisode->slug,
+            'description'                => $showEpisode->description,
+            'episode_number'             => $showEpisode->episode_number,
+            'created_at'                 => $showEpisode->created_at,
+            'release_year'               => $showEpisode->release_year,
+            'release_dateTime'           => $this->formattedReleaseDateTime,
+            'creative_commons'           => $showEpisode->creativeCommons,
+            'copyrightYear'              => $showEpisode->copyrightYear,
+            'scheduled_release_dateTime' => $this->formattedScheduledDateTime,
+            'mist_stream_id'             => $showEpisode->mist_stream_id,
+            'video'                      => [
+                'mediaType'     => $mediaType, // New attribute for NowPlayingStore
+                'file_name'        => $showEpisode->video->file_name ?? '',
+                'cdn_endpoint'     => $showEpisode->video->appSetting->cdn_endpoint ?? '',
+                'folder'           => $showEpisode->video->folder ?? '',
+                'cloud_folder'     => $showEpisode->video->cloud_folder ?? '',
+                'upload_status'    => $showEpisode->video->upload_status ?? '',
+                'video_url'        => $showEpisode->video->video_url ?? '',
+                'type'             => $showEpisode->video->type ?? '',
+                'storage_location' => $showEpisode->video->storage_location ?? '',
+            ],
+            'youtube_url'                => $showEpisode->youtube_url ?? '',
+            'video_embed_code'           => $showEpisode->video_embed_code,
+        ],
+//        'video'    => [
+//            'file_name'     => $showEpisode->showEpisodevideo->file_name ?? '',
+//            'cdn_endpoint'  => $showEpisode->video->appSetting->cdn_endpoint ?? '',
+//            'folder'        => $showEpisode->video->folder ?? '',
+//            'cloud_folder'  => $showEpisode->video->cloud_folder ?? '',
+//            'upload_status' => $showEpisode->video->upload_status ?? '',
+//        ],
+        'image'    => [
+            'id'           => $showEpisode->image->id,
+            'name'         => $showEpisode->image->name,
+            'folder'       => $showEpisode->image->folder,
+            'cdn_endpoint' => $showEpisode->appSetting->cdn_endpoint,
+            'cloud_folder' => $showEpisode->image->cloud_folder,
+        ],
+        'creators' => TeamMember::where('team_id', $teamId)
+            ->join('users', 'team_members.user_id', '=', 'users.id')
+            ->select('users.*', 'team_members.user_id')
+            ->latest()
+            ->paginate(3)
+            ->withQueryString()
+            ->through(fn($user) => [
+                'id'                 => $user->id,
+                'name'               => $user->name,
+                'profile_photo_path' => $user->profile_photo_path,
+            ]),
+        'can'      => [
+            'manageShow'  => Auth::user()->can('manage', $show),
+            'editShow'    => Auth::user()->can('edit', $show),
+            'viewCreator' => Auth::user()->can('viewCreator', User::class),
+        ]
+
+    ]);
+
+  }
 
 
 ////////////  MANAGE
@@ -306,205 +339,237 @@ class ShowEpisodeController extends Controller
 ///
 
 
-
 ////////////  EDIT
 //////////////////
 
-    public function edit(Show $show, ShowEpisode $showEpisode)
-    {
+  public function edit(Show $show, ShowEpisode $showEpisode) {
 //        $team = Show::query()->where('id', $show->id)->pluck('team_id')->firstOrFail();
 
-        // Currently this queries all images in the database
-        // this needs to be changed to limit the query.
-        //
-        DB::table('users')->where('id', Auth::user()->id)->update([
-            'isEditingShowEpisode_id' => $showEpisode->id,
-        ]);
+    // Currently this queries all images in the database
+    // this needs to be changed to limit the query.
+    //
+    DB::table('users')->where('id', Auth::user()->id)->update([
+        'isEditingShowEpisode_id' => $showEpisode->id,
+    ]);
 
-        DB::table('show_episodes')->where('id', $showEpisode->id)->update([
-            'isBeingEditedByUser_id' => Auth::user()->id,
-        ]);
+    DB::table('show_episodes')->where('id', $showEpisode->id)->update([
+        'isBeingEditedByUser_id' => Auth::user()->id,
+    ]);
 
-        $videoForEpisode = Video::where('show_episodes_id', $showEpisode->id)->first();
+//      // Prepare video data
+//      $videoData = [];
+//      if ($showEpisode->video) {
+//        $videoData = [
+//            'file_name' => $showEpisode->video->file_name,
+//            'cdn_endpoint' => $showEpisode->video->appSetting->cdn_endpoint ?? '',
+//            'folder' => $showEpisode->video->folder,
+//            'cloud_folder' => $showEpisode->video->cloud_folder,
+//            'upload_status' => $showEpisode->video->upload_status,
+//            'video_url' => $showEpisode->video->video_url,
+//            'type' => $showEpisode->video->type,
+//            'storage_location' => $showEpisode->video->storage_location,
+//        ];
+//      }
+//         $videoForEpisode = Video::where('show_episodes_id', $showEpisode->id)->first();
+    $creativeCommons = CreativeCommons::all();
 
-        // convert release dateTime to user's timezone
-        if ($showEpisode->release_dateTime) {
-            $this->formattedReleaseDateTime = $this->convertTimeToUserTime($showEpisode->release_dateTime);
-        }
+    // convert release dateTime to user's timezone
+    if ($showEpisode->release_dateTime) {
+      $this->formattedReleaseDateTime = $this->convertTimeToUserTime($showEpisode->release_dateTime);
+    }
 
-        // convert scheduled_release dateTime to user's timezone
-        if ($showEpisode->scheduled_release_dateTime) {
-            $this->formattedScheduledDateTime = $this->convertTimeToUserTime($showEpisode->scheduled_release_dateTime);
-        }
+    // convert scheduled_release dateTime to user's timezone
+    if ($showEpisode->scheduled_release_dateTime) {
+      $this->formattedScheduledDateTime = $this->convertTimeToUserTime($showEpisode->scheduled_release_dateTime);
+    }
 
-        return Inertia::render('Shows/{$id}/Episodes/{$id}/Edit', [
-            'show' => [
-                'name' => $show->name,
-                'slug' => $show->slug,
-                'showRunner' => $show->user->name,
-                'image' => [
-                    'id' => $show->image->id,
-                    'name' => $show->image->name,
-                    'folder' => $show->image->folder,
-                    'cdn_endpoint' => $show->appSetting->cdn_endpoint,
-                    'cloud_folder' => $show->image->cloud_folder,
-                ],
-                'first_release_year' => $show->first_release_year,
-                'last_release_year' => $show->last_release_year,
-                'categoryName' => $show->showCategory->name,
-                'categorySubName' => $show->showCategorySub->name,
+    $show->load('team', 'showEpisodes.creativeCommons', 'showEpisodes.video', 'image', 'appSetting', 'category', 'subCategory'); // Eager load necessary relationships
+
+
+    return Inertia::render('Shows/{$id}/Episodes/{$id}/Edit', [
+        'show'             => [
+            'name'               => $show->name,
+            'slug'               => $show->slug,
+            'showRunner'         => $show->user->name,
+            'image'              => [
+                'id'           => $show->image->id,
+                'name'         => $show->image->name,
+                'folder'       => $show->image->folder,
+                'cdn_endpoint' => $show->appSetting->cdn_endpoint,
+                'cloud_folder' => $show->image->cloud_folder,
             ],
-            'team' => [
-                'name' => $show->team->name,
-                'slug' => $show->team->slug,
+            'first_release_year' => $show->first_release_year,
+            'last_release_year'  => $show->last_release_year,
+            'category'           => $show->category->name,
+            'subCategory'        => $show->subCategory->name,
+        ],
+        'team'             => [
+            'name' => $show->team->name,
+            'slug' => $show->team->slug,
+        ],
+        'episode'          => [
+            'id'                         => $showEpisode->id,
+            'ulid'                       => $showEpisode->ulid,
+            'name'                       => $showEpisode->name,
+            'slug'                       => $showEpisode->slug,
+            'description'                => $showEpisode->description,
+            'notes'                      => $showEpisode->notes,
+            'episode_number'             => $showEpisode->episode_number,
+            'status'                     => $showEpisode->showEpisodeStatus,
+            'release_year'               => $showEpisode->release_year ?? null,
+            'release_dateTime'           => $this->formattedReleaseDateTime ?? null,
+            'scheduled_release_dateTime' => $this->formattedScheduledDateTime ?? null,
+            'copyrightYear'              => $showEpisode->copyrightYear ?? null,
+            'creative_commons'           => $showEpisode->creativeCommons ?? null,
+            'mist_stream_id'             => $showEpisode->mist_stream_id,
+            'video_id'                   => $showEpisode->video_id,
+            'youtube_url'                => $showEpisode->youtube_url,
+            'video_embed_code'           => $showEpisode->video_embed_code,
+            'video'                      => [
+                'file_name'        => $showEpisode->video->file_name ?? '',
+                'cdn_endpoint'     => $showEpisode->video->appSetting->cdn_endpoint ?? '',
+                'folder'           => $showEpisode->video->folder ?? '',
+                'cloud_folder'     => $showEpisode->video->cloud_folder ?? '',
+                'upload_status'    => $showEpisode->video->upload_status ?? '',
+                'video_url'        => $showEpisode->video->video_url ?? '',
+                'type'             => $showEpisode->video->type ?? '',
+                'storage_location' => $showEpisode->video->storage_location ?? '',
             ],
-            'episode' => [
-                'id' => $showEpisode->id,
-                'ulid' =>$showEpisode->ulid,
-                'name' => $showEpisode->name,
-                'slug' => $showEpisode->slug,
-                'description' => $showEpisode->description,
-                'notes' => $showEpisode->notes,
-                'episode_number' => $showEpisode->episode_number,
-                'status' => $showEpisode->showEpisodeStatus,
-                'release_year' => $showEpisode->release_year ?? null,
-                'release_dateTime' => $this->formattedReleaseDateTime ?? null,
-                'scheduled_release_dateTime' => $this->formattedScheduledDateTime ?? null,
-                'mist_stream_id' => $showEpisode->mist_stream_id,
-                'video_id' => $showEpisode->video_id,
-                'youtube_url' => $showEpisode->youtube_url,
-                'video_embed_code' => $showEpisode->video_embed_code,
-                'video' => [
-                    'file_name' => $videoForEpisode->file_name ?? '',
-                    'cdn_endpoint' => $videoForEpisode->appSetting->cdn_endpoint ?? '',
-                    'folder' => $videoForEpisode->folder ?? '',
-                    'cloud_folder' => $videoForEpisode->cloud_folder ?? '',
-                    'upload_status' => $videoForEpisode->upload_status ?? '',
-                    'video_url' => $showEpisode->video->video_url ?? '',
-                    'type' => $showEpisode->video->type ?? '',
-                    'storage_location' => $showEpisode->video->storage_location ?? '',
-                ],
-                'image' => [
-                    'id' => $showEpisode->image->id,
-                    'name' => $showEpisode->image->name,
-                    'folder' => $showEpisode->image->folder,
-                    'cdn_endpoint' => $showEpisode->appSetting->cdn_endpoint,
-                    'cloud_folder' => $showEpisode->image->cloud_folder,
-                ],
-                'show_id' => $showEpisode->show_id,
-            ],
-            'image' => [
-                'id' => $showEpisode->image->id,
-                'name' => $showEpisode->image->name,
-                'folder' => $showEpisode->image->folder,
+            'image'                      => [
+                'id'           => $showEpisode->image->id,
+                'name'         => $showEpisode->image->name,
+                'folder'       => $showEpisode->image->folder,
                 'cdn_endpoint' => $showEpisode->appSetting->cdn_endpoint,
                 'cloud_folder' => $showEpisode->image->cloud_folder,
             ],
-            'can' => [
-                'manageShow' => Auth::user()->can('manage', $show),
-                'editShow' => Auth::user()->can('edit', $show),
-                'viewCreator' => Auth::user()->can('viewCreator', User::class),
-            ]
-        ]);
-    }
+            'show_id'                    => $showEpisode->show_id,
+        ],
+        'image'            => [
+            'id'           => $showEpisode->image->id,
+            'name'         => $showEpisode->image->name,
+            'folder'       => $showEpisode->image->folder,
+            'cdn_endpoint' => $showEpisode->appSetting->cdn_endpoint,
+            'cloud_folder' => $showEpisode->image->cloud_folder,
+        ],
+        'creative_commons' => $creativeCommons,
+        'can'              => [
+            'manageShow'  => Auth::user()->can('manage', $show),
+            'editShow'    => Auth::user()->can('edit', $show),
+            'editEpisode'    => Auth::user()->can('edit', $show),
+            'viewCreator' => Auth::user()->can('viewCreator', User::class),
+        ]
+    ]);
+  }
 
 ////////////  UPLOAD
 ////////////////////
 
-    public function upload(Show $show, ShowEpisode $showEpisode)
-    {
+  public function upload(Show $show, ShowEpisode $showEpisode) {
 //        $team = Show::query()->where('id', $show->id)->pluck('team_id')->firstOrFail();
 
-        // Currently this queries all images in the database
-        // this needs to be changed to limit the query.
-        //
-        DB::table('users')->where('id', Auth::user()->id)->update([
-            'isEditingShowEpisode_id' => $showEpisode->id,
-        ]);
+    // Currently this queries all images in the database
+    // this needs to be changed to limit the query.
+    //
+    DB::table('users')->where('id', Auth::user()->id)->update([
+        'isEditingShowEpisode_id' => $showEpisode->id,
+    ]);
 
-        DB::table('show_episodes')->where('id', $showEpisode->id)->update([
-            'isBeingEditedByUser_id' => Auth::user()->id,
-        ]);
+    DB::table('show_episodes')->where('id', $showEpisode->id)->update([
+        'isBeingEditedByUser_id' => Auth::user()->id,
+    ]);
 
-        return Inertia::render('Shows/{$id}/Episodes/{$id}/Upload', [
-            'poster' => $showEpisode->image->name,
-            'show' => [
-                'name' => $show->name,
-                'slug' => $show->slug,
-                'showRunner' => $show->user->name,
-                'image' => [
-                    'id' => $show->image->id,
-                    'name' => $show->image->name,
-                    'folder' => $show->image->folder,
-                    'cdn_endpoint' => $show->appSetting->cdn_endpoint,
-                    'cloud_folder' => $show->image->cloud_folder,
-                ],
+    return Inertia::render('Shows/{$id}/Episodes/{$id}/Upload', [
+        'poster'  => $showEpisode->image->name,
+        'show'    => [
+            'name'       => $show->name,
+            'slug'       => $show->slug,
+            'showRunner' => $show->user->name,
+            'image'      => [
+                'id'           => $show->image->id,
+                'name'         => $show->image->name,
+                'folder'       => $show->image->folder,
+                'cdn_endpoint' => $show->appSetting->cdn_endpoint,
+                'cloud_folder' => $show->image->cloud_folder,
             ],
-            'team' => [
-                'name' => $show->team->name,
-                'slug' => $show->team->slug,
-            ],
-            'episode' => $showEpisode,
-            'can' => [
-                'manageShow' => Auth::user()->can('manage', $show),
-                'editShow' => Auth::user()->can('edit', $show),
-                'viewCreator' => Auth::user()->can('viewCreator', User::class),
-            ]
-        ]);
-    }
+        ],
+        'team'    => [
+            'name' => $show->team->name,
+            'slug' => $show->team->slug,
+        ],
+        'episode' => $showEpisode,
+        'can'     => [
+            'manageShow'  => Auth::user()->can('manage', $show),
+            'editShow'    => Auth::user()->can('edit', $show),
+            'viewCreator' => Auth::user()->can('viewCreator', User::class),
+        ]
+    ]);
+  }
 
 
 ////////////  UPDATE
 ////////////////////
 
-    public function update(HttpRequest $request, Show $show, ShowEpisode $showEpisode)
-    {
+  public function update(HttpRequest $request, Show $show, ShowEpisode $showEpisode) {
 
-        // validate the request
-        $request->validate([
+    // validate the request
+    $request->validate([
 //            'name' => ['required', 'string', 'max:255'],
-            'name' => [
-                Rule::excludeIf($request->name === $showEpisode->name),
-                'required',
-                'max:255',
-                'accepted_if:show_id,',
-                'distinct:ignore_case',
-                new UniqueEpisodeName($request->show_id)
-            ],
-            'show_id' => 'required',
-            'episode_number' => 'max:10',
-            'description' => 'required',
-            'notes' => 'nullable|string',
-            'video_url' => 'nullable|active_url|ends_with:.mp4',
-            'youtube_url' => 'nullable|active_url',
-            'video_embed_code' => 'nullable|string',
-            'release_dateTime' => 'nullable|date',
-            'scheduled_release_dateTime' => 'nullable|date|after:now',
+        'name'                       => [
+            Rule::excludeIf($request->name === $showEpisode->name),
+            'required',
+            'max:255',
+            'accepted_if:show_id,',
+            'distinct:ignore_case',
+            new UniqueEpisodeName($request->show_id)
+        ],
+        'show_id'                    => 'required',
+        'creative_commons_id'        => 'required|integer|exists:creative_commons,id',
+        'copyrightYear'              => ['nullable', 'integer', 'min:1900', 'max:' . date('Y')],
+        'episode_number'             => 'max:10',
+        'description'                => 'required',
+        'notes'                      => 'nullable|string',
+        'video_url'                  => 'nullable|active_url|ends_with:.mp4',
+        'youtube_url'                => 'nullable|active_url',
+        'video_embed_code'           => 'nullable|string',
+        'release_dateTime'           => 'nullable|date',
+        'scheduled_release_dateTime' => 'nullable|date|after:now',
+    ], [
+        'copyrightYear.integer'        => 'Please choose a copyright year',
+        'creative_commons_id.required' => 'Please choose a Creative Commons / Copyright',
+    ]);
+
+    // Check if the video_url is not empty and is different from the existing one.
+    if (!empty($request->video_url)) {
+      // Attempt to find an existing video with the same URL for any episode
+      $existingVideo = Video::where('video_url', $request->video_url)->first();
+
+      if ($existingVideo) {
+        // If a video with the same URL already exists, associate its ID with the show episode
+        $showEpisode->video_id = $existingVideo->id;
+      } else {
+        // No existing video with the same URL, proceed to create a new Video instance
+        $video = new Video([
+            'user_id'          => Auth::id(), // Simpler way to get the authenticated user's ID
+            'name'             => 'External video',
+            'file_name'        => 'external_video_' . Str::uuid(),
+            'type'             => 'video/mp4', // Assuming a default type for external videos
+            'video_url'        => $request->video_url,
+            'storage_location' => 'external',
+          // 'show_episodes_id' might not be needed if you're associating via $showEpisode->video_id below
+          // 'show_episodes_id' => $showEpisode->id,
         ]);
+        $video->save();
 
-        if ($request->video_url) {
+        // Dispatch job as before
+        $jobName = null;
+        dispatch(new ProcessVideoInfo($video->id, $jobName))->onQueue('high');
 
-            // Create a new Video instance
-            $video = new Video();
+        // After saving the new video, set its ID as the video_id for the show episode
+        $showEpisode->video_id = $video->id;
 
-            // Set the user_id, video_url and storage_location attributes
-            $video->user_id = Auth::user()->id;
-            $video->name = 'External video';
-            $video->file_name = 'external_video_' . Str::uuid();
-            $video->video_url = $request->video_url;
-            $video->storage_location = 'external';
+      }
+    }
 
-            // Save the video to the database
-            $video->save();
-
-            // Get the ID of the newly created Video model
-            $this->videoId = $video->id;
-
-            $jobName = null;
-
-            // get the video information.
-            dispatch(new ProcessVideoInfo($this->videoId, $jobName))->onQueue('high');
-        }
 
 
 //        $scheduledDateTime = $request->input('scheduled_release_dateTime');
@@ -522,13 +587,13 @@ class ShowEpisodeController extends Controller
 //        $formattedScheduledUtcDatetime = $utcScheduledDatetime->toIso8601String();
 //        $formattedReleaseUtcDatetime = $utcReleaseDatetime->toIso8601String();
 
-        $formattedScheduledUtcDatetime = null;
-        $formattedReleaseUtcDatetime = null;
-        $releaseYear = null;
+    $formattedScheduledUtcDatetime = null;
+    $formattedReleaseUtcDatetime = null;
+    $releaseYear = null;
 
-        Log::channel('custom_error')->info('episode name: '.$request->name);
-        Log::channel('custom_error')->info('release date in: '.$request->release_dateTime);
-        Log::channel('custom_error')->info('scheduled date in: '.$request->scheduled_release_dateTime);
+    Log::channel('custom_error')->info('episode name: ' . $request->name);
+    Log::channel('custom_error')->info('release date in: ' . $request->release_dateTime);
+    Log::channel('custom_error')->info('scheduled date in: ' . $request->scheduled_release_dateTime);
 
 //        function formatDateForMySQL($dateTimeString) {
 //            // Parse the datetime string into a Carbon instance, assuming it's in ISO 8601 format
@@ -542,41 +607,39 @@ class ShowEpisodeController extends Controller
 //            return $formattedDateTime;
 //        }
 
-        if ($request->release_dateTime) {
+    if ($request->release_dateTime) {
 
-            // Create a Carbon instance from the DateTime string
-            $releaseDateTime = Carbon::parse($request->release_dateTime);
+      // Create a Carbon instance from the DateTime string
+      $releaseDateTime = Carbon::parse($request->release_dateTime);
 
-            // Get the year from the Carbon instance
-            $releaseYear = $releaseDateTime->year;
+      // Get the year from the Carbon instance
+      $releaseYear = $releaseDateTime->year;
 
-            // Format $utcDatetime as a string in ISO 8601 format:
-            $formattedReleaseUtcDatetime = $this->convertToUtcTime($request->release_dateTime);
+      // Format $utcDatetime as a string in ISO 8601 format:
+      $formattedReleaseUtcDatetime = $this->convertToUtcTime($request->release_dateTime);
 
-        }
+    }
 
-        if ($request->scheduled_release_dateTime) {
+    if ($request->scheduled_release_dateTime) {
 //            $formattedScheduledReleaseDate = formatDateForMySQL($request->scheduled_release_dateTime);
-            $showEpisode->show_episode_status_id = 6;
-            $releaseYear = null;
+      $showEpisode->show_episode_status_id = 6;
+      $releaseYear = null;
 
-            $formattedScheduledUtcDatetime = $this->convertToUtcTime($request->scheduled_release_dateTime);
+      $formattedScheduledUtcDatetime = $this->convertToUtcTime($request->scheduled_release_dateTime);
 
-        }
+    }
 
-        if ($showEpisode->scheduled_release_dateTime && !$request->scheduled_release_dateTime) {
-            $showEpisode->show_episode_status_id = 5;
-        }
-
-
+    if ($showEpisode->scheduled_release_dateTime && !$request->scheduled_release_dateTime) {
+      $showEpisode->show_episode_status_id = 5;
+    }
 
 
-        $showSlug = Show::query()->where('id', $showEpisode->show_id)->pluck('slug')->first();
-        $oldEmbedCode = $showEpisode->video_embed_code;
-        $videoUrlFromEmbedCode = '';
+    $showSlug = Show::query()->where('id', $showEpisode->show_id)->pluck('slug')->first();
+    $oldEmbedCode = $showEpisode->video_embed_code;
+    $videoUrlFromEmbedCode = '';
 
-        // get the *.mp4 video url from embed code
-        // save the *.mp4 url to the video_file_url
+    // get the *.mp4 video url from embed code
+    // save the *.mp4 url to the video_file_url
 //        if ($request->video_embed_code && $request->video_embed_code !== $showEpisode->video_embed_code) {
 //            $videoUrlFromEmbedCode = $this->getVideoUrlFromEmbedCode($request->video_embed_code);
 //            if ($videoUrlFromEmbedCode === false) {
@@ -585,38 +648,39 @@ class ShowEpisodeController extends Controller
 //                $videoUrl = $videoUrlFromEmbedCode;
 //        } else $videoUrl = $request->video_url;
 
-        // update the show
-        $showEpisode->name = $request->name;
-        $showEpisode->description = $request->description;
-        $showEpisode->episode_number = $request->episode_number;
-        $showEpisode->slug = \Str::slug($request->name);
-        $showEpisode->notes = $request->notes;
-        $showEpisode->video_id = $this->videoId;
-        $showEpisode->youtube_url = $request->youtube_url;
-        $showEpisode->video_embed_code = $request->video_embed_code;
-        $showEpisode->release_dateTime = $formattedReleaseUtcDatetime ?? null;
-        $showEpisode->release_year = $releaseYear ?? null;
-        $showEpisode->scheduled_release_dateTime = $formattedScheduledUtcDatetime ?? null;
-        $showEpisode->save();
+    // update the show
+    $showEpisode->name = $request->name;
+    $showEpisode->description = $request->description;
+    $showEpisode->episode_number = $request->episode_number;
+    $showEpisode->slug = \Str::slug($request->name);
+    $showEpisode->notes = $request->notes;
+    $showEpisode->youtube_url = $request->youtube_url;
+    $showEpisode->video_embed_code = $request->video_embed_code;
+    $showEpisode->release_dateTime = $formattedReleaseUtcDatetime ?? null;
+    $showEpisode->release_year = $releaseYear ?? null;
+    $showEpisode->scheduled_release_dateTime = $formattedScheduledUtcDatetime ?? null;
+    $showEpisode->copyrightYear = $request->copyrightYear;
+    $showEpisode->creative_commons_id = $request->creative_commons_id;
+    $showEpisode->save();
 
-        if ($request->video_embed_code !== $oldEmbedCode && !$request->video_url) {
+    if ($request->video_embed_code !== $oldEmbedCode && !$request->video_url) {
 
-            // Create and save the notification
-            $notification = new Notification;
-            $userId = auth()->user()->id;
-            $notification->user_id = $userId;
+      // Create and save the notification
+      $notification = new Notification;
+      $userId = auth()->user()->id;
+      $notification->user_id = $userId;
 
-            // make the image the show_episode_poster
-            $notification->image_id = $showEpisode->image_id;
-            $notification->url = '/shows/'.$showEpisode->show->slug.'/episode/'.$showEpisode->slug.'/manage';
-            $notification->title = $showEpisode->name;
-            $notification->message = 'The video url is being generated from the embed code. You will be notified when it is done.';
-            $notification->save();
+      // make the image the show_episode_poster
+      $notification->image_id = $showEpisode->image_id;
+      $notification->url = '/shows/' . $showEpisode->show->slug . '/episode/' . $showEpisode->slug . '/manage';
+      $notification->title = $showEpisode->name;
+      $notification->message = 'The video url is being generated from the embed code. You will be notified when it is done.';
+      $notification->save();
 
-            // Trigger the event to broadcast the new notification
-            event(new NewNotificationEvent($notification));
-            AddVideoUrlFromEmbedCodeJob::dispatch($showEpisode)->onQueue('video_processing');
-        }
+      // Trigger the event to broadcast the new notification
+      event(new NewNotificationEvent($notification));
+      AddVideoUrlFromEmbedCodeJob::dispatch($showEpisode)->onQueue('video_processing');
+    }
 
 //        if ($videoUrlFromEmbedCode === false) {
 ////                return response()->json(['message' => 'The embed code could not get a video file.'], 500);
@@ -626,17 +690,17 @@ class ShowEpisodeController extends Controller
 //            ]);
 //        }
 
-        // gather the data needed to render the Manage page
-        // this is all redundant. It's all contained in the
-        // teams.manage route above. But I (tec21) don't know
-        // how to simplify this *frustrated*.
+    // gather the data needed to render the Manage page
+    // this is all redundant. It's all contained in the
+    // teams.manage route above. But I (tec21) don't know
+    // how to simplify this *frustrated*.
 
-        // get new slug
+    // get new slug
 //        $showEpisodeSlug = $showEpisode->slug;
 
-        // redirect
-        return redirect(route('shows.showEpisodes.manageEpisode', [$showSlug, $showEpisode->slug]))
-            ->with('success', 'Episode Updated Successfully');
+    // redirect
+    return redirect(route('shows.showEpisodes.manageEpisode', [$showSlug, $showEpisode->slug]))
+        ->with('success', 'Episode Updated Successfully');
 
 
 //        return Inertia::render('Shows/{$id}/Manage', [
@@ -648,26 +712,25 @@ class ShowEpisodeController extends Controller
 //            'team' => Team::query()->where('id', $show->team_id)->firstOrFail(),
 //            'showRunnerName' => User::query()->where('id', $show->user_id)->pluck('name')->firstOrFail(),
 //        ])->with('message', 'Show Updated Successfully');
-    }
+  }
 
-    public function updateNotes(HttpRequest $request)
-    {
-        // get the show
-        $id = $request->episodeId;
-        $episode = ShowEpisode::find($id);
+  public function updateNotes(HttpRequest $request) {
+    // get the show
+    $id = $request->episodeId;
+    $episode = ShowEpisode::find($id);
 
-        // validate the request
-        $request->validate([
-            'notes' => 'nullable|string|max:1024',
-        ]);
+    // validate the request
+    $request->validate([
+        'notes' => 'nullable|string|max:1024',
+    ]);
 
-        // update the show notes
-        $episode->notes = $request->notes;
-        $episode->save();
-        sleep(1);
+    // update the show notes
+    $episode->notes = $request->notes;
+    $episode->save();
+    sleep(1);
 
-        return $episode;
-    }
+    return $episode;
+  }
 
 
 ////////////  DESTROY
@@ -675,52 +738,51 @@ class ShowEpisodeController extends Controller
 ///
 ///
 
-    public function destroy(Show $show, ShowEpisode $showEpisode)
-    {
-        // TODO: remove showEpisode from Image (discuss first..)
+  public function destroy(Show $show, ShowEpisode $showEpisode) {
+    // TODO: remove showEpisode from Image (discuss first..)
 
-        if ($showEpisode->isPublished) {
-            return response()->json(['alert', 'This episode has already been published. Please contact the notTV team for assistance.'], 400);
-        }
-        $showEpisode->delete();
-        Log::channel('slack')->info('An episode has been deleted. Show: ' . $showEpisode->show->name . '. Episode: ' . $showEpisode->name);
-
-        // Create a SendTeamMembersNotificationJob
-        // Send the following message with:
-        // 1. teamSlug or teamId
-        // 2. message (An episode has been deleted. Show: ' . $showEpisode->show->name . '. Episode: ' . $showEpisode->name)
-        $message = '<span class="text-yellow-500 italic">An episode has been deleted.</span> <br /><br /> <span class="font-semibold">Show:</span> ' . $showEpisode->show->name . '.<br /> <span class="font-semibold">Episode:</span> ' . $showEpisode->name;
-
-        $title = $showEpisode->show->team->name;
-
-        $url = '/teams/' . $showEpisode->show->team->slug . '/manage/';
-
-        dispatch(new SendTeamMembersNotificationJob($showEpisode->show->team, $title, $message, $url));
-
-
-        //return with message
-        return response()->json(['message', 'Episode Deleted Successfully'], 200);
-
-        // redirect
-//        return redirect()->route('showEpisode')->with('message', 'Episode Deleted Successfully');
+    if ($showEpisode->isPublished) {
+      return response()->json(['alert', 'This episode has already been published. Please contact the notTV team for assistance.'], 400);
     }
+    $showEpisode->delete();
+    Log::channel('slack')->info('An episode has been deleted. Show: ' . $showEpisode->show->name . '. Episode: ' . $showEpisode->name);
+
+    // Create a SendTeamMembersNotificationJob
+    // Send the following message with:
+    // 1. teamSlug or teamId
+    // 2. message (An episode has been deleted. Show: ' . $showEpisode->show->name . '. Episode: ' . $showEpisode->name)
+    $message = '<span class="text-yellow-500 italic">An episode has been deleted.</span> <br /><br /> <span class="font-semibold">Show:</span> ' . $showEpisode->show->name . '.<br /> <span class="font-semibold">Episode:</span> ' . $showEpisode->name;
+
+    $title = $showEpisode->show->team->name;
+
+    $url = '/teams/' . $showEpisode->show->team->slug . '/manage/';
+
+    dispatch(new SendTeamMembersNotificationJob($showEpisode->show->team, $title, $message, $url));
 
 
-    public function getVideoUrlFromEmbedCode($embedCode) {
-        $firstMp4 = '';
-        $matches = [];
-        $response = '';
-        $sourceIs = '';
+    //return with message
+    return response()->json(['message', 'Episode Deleted Successfully'], 200);
 
-        try {
-            // strip the url from the embed code
-            $regex = '/https?\:\/\/[^\",]+/i';
-            preg_match($regex, $embedCode, $match);
-            $sourceUrl = implode(" ", $match);
+    // redirect
+//        return redirect()->route('showEpisode')->with('message', 'Episode Deleted Successfully');
+  }
+
+
+  public function getVideoUrlFromEmbedCode($embedCode) {
+    $firstMp4 = '';
+    $matches = [];
+    $response = '';
+    $sourceIs = '';
+
+    try {
+      // strip the url from the embed code
+      $regex = '/https?\:\/\/[^\",]+/i';
+      preg_match($regex, $embedCode, $match);
+      $sourceUrl = implode(" ", $match);
 //            $scraperApiKey =  env('SCRAPER_API_KEY');
 //            Log::channel('custom_error')->warning($scraperApiKey);
 
-            // get the page source from the url
+      // get the page source from the url
 //            $proxy_address = 'http://scraperapi.autoparse=true:' . env('SCRAPER_API_KEY') . '@proxy-server.scraperapi.com:8001';
 ////            $proxy_address = 'https://api.scraperapi.com?api_key=' . env('SCRAPER_API_KEY') . '&autoparse=true&url=' . $url;
 //            $response = file_get_contents($proxy_address);
@@ -734,56 +796,55 @@ class ShowEpisodeController extends Controller
 //            $response = curl_exec($ch);
 //            curl_close($ch);
 
-            $url =
-                "https://api.scraperapi.com?api_key=" . env('SCRAPER_API_KEY') . "&url=" . $sourceUrl . "&render=true&country_code=us";
+      $url =
+          "https://api.scraperapi.com?api_key=" . env('SCRAPER_API_KEY') . "&url=" . $sourceUrl . "&render=true&country_code=us";
 //            Log::channel('custom_error')->error($url);
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER,
-                TRUE);
-            curl_setopt($ch, CURLOPT_HEADER,
-                FALSE);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST,
-                0);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER,
-                0);
-            $response = curl_exec($ch);
-            curl_close($ch);
+      $ch = curl_init();
+      curl_setopt($ch, CURLOPT_URL, $url);
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER,
+          true);
+      curl_setopt($ch, CURLOPT_HEADER,
+          false);
+      curl_setopt($ch, CURLOPT_SSL_VERIFYHOST,
+          0);
+      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER,
+          0);
+      $response = curl_exec($ch);
+      curl_close($ch);
 
 //            Log::channel('custom_error')->error($response);
 
 
-            // get the mp4 urls from the page.
-            if (str_contains($sourceUrl, 'rumble.com')) {
-                // if rumble ...
-                $sourceIs = 'rumble';
-                $pattern = '/https(.*?)mp4/';
-                preg_match_all($pattern, $response, $matches);
-                // start at the first "mp4" extract https: .... .mp4 and replace \ with ""
-                $firstMp4 = $matches[0][0];
-            } elseif (str_contains($sourceUrl, 'bitchute.com')) {
-                // if bitchute ...
-                $sourceIs = 'bitchute';
-                $pattern = '/<source src="https(.*?)mp4/';
-                preg_match_all($pattern, $response, $matches);
-                // start at the first "mp4" extract https: .... .mp4 and replace \ with ""
-                $firstMp4 = $matches[0][0];
+      // get the mp4 urls from the page.
+      if (str_contains($sourceUrl, 'rumble.com')) {
+        // if rumble ...
+        $sourceIs = 'rumble';
+        $pattern = '/https(.*?)mp4/';
+        preg_match_all($pattern, $response, $matches);
+        // start at the first "mp4" extract https: .... .mp4 and replace \ with ""
+        $firstMp4 = $matches[0][0];
+      } elseif (str_contains($sourceUrl, 'bitchute.com')) {
+        // if bitchute ...
+        $sourceIs = 'bitchute';
+        $pattern = '/<source src="https(.*?)mp4/';
+        preg_match_all($pattern, $response, $matches);
+        // start at the first "mp4" extract https: .... .mp4 and replace \ with ""
+        $firstMp4 = $matches[0][0];
 //                Log::channel('custom_error')->error('FIRST MP4: '.$firstMp4);
-            }
+      }
 
 
+      // Check if the data is null
+      if ($matches[0] == []) {
+        throw new \Exception("The data is undefined.");
+      }
 
-            // Check if the data is null
-            if ($matches[0] == []) {
-                throw new \Exception("The data is undefined.");
-            }
-
-            // this poster save needs to be finished...
-            // get the jpg urls from the page.
+      // this poster save needs to be finished...
+      // get the jpg urls from the page.
 //            $pattern = '/poster="([^"]+)"/';
 //
 //            preg_match_all($pattern, $response, $imageMatches);
-            // start at the first "mp4" extract https: .... .mp4 and replace \ with ""
+      // start at the first "mp4" extract https: .... .mp4 and replace \ with ""
 //            $firstJpg = $imageMatches[0];
 //
 //            $image = str_replace('poster=', '', $firstJpg);
@@ -803,89 +864,87 @@ class ShowEpisodeController extends Controller
 //            $episode = ShowEpisode::find($episodeId);
 //            $episode->image_id = $id;
 //            $episode->save();
-            if ($sourceIs === 'rumble') {
-                return str_replace('\\', '', $firstMp4);
-            } elseif ($sourceIs === 'bitchute') {
-                $url = str_replace('<source src="', '', $firstMp4);
+      if ($sourceIs === 'rumble') {
+        return str_replace('\\', '', $firstMp4);
+      } elseif ($sourceIs === 'bitchute') {
+        $url = str_replace('<source src="', '', $firstMp4);
+
 //                Log::channel('custom_error')->error('Bitchute Matches: '. $url);
-                return $url;
-            } else
-                return false;
+        return $url;
+      } else
+        return false;
 
-        } catch (\Exception $e) {
-            // Log the error using Laravel's logging system
-            Log::channel('custom_error')->error($response);
-            Log::channel('custom_error')->error($e->getMessage());
-            Log::channel('custom_error')->error($matches);
+    } catch (\Exception $e) {
+      // Log the error using Laravel's logging system
+      Log::channel('custom_error')->error($response);
+      Log::channel('custom_error')->error($e->getMessage());
+      Log::channel('custom_error')->error($matches);
 
-            // Optionally, return a response to the client
-            return false;
-        }
+      // Optionally, return a response to the client
+      return false;
     }
+  }
 
-    public function saveImageFromInternet($imageUrl)
-    {
-        // Get the URL of the image from the request
+  public function saveImageFromInternet($imageUrl) {
+    // Get the URL of the image from the request
 //        $imageUrl = $request->input('image_url');
 //        dd($imageUrl);
-        // Fetch the image content using Laravel HTTP Client
-        $response = Http::get($imageUrl);
+    // Fetch the image content using Laravel HTTP Client
+    $response = Http::get($imageUrl);
 
-        if ($response->successful()) {
-            // Generate a unique filename for the saved image
-            $filename = 'image_' . time() . '.' . $response->extension();
+    if ($response->successful()) {
+      // Generate a unique filename for the saved image
+      $filename = 'image_' . time() . '.' . $response->extension();
 
-            // Save the image to the local storage (e.g., 'public' disk)
+      // Save the image to the local storage (e.g., 'public' disk)
 //            Storage::disk('public')->put($filename, $response->body());
-            $response->file('poster')->store('images');
+      $response->file('poster')->store('images');
 
-            // Return a success response or perform further actions
-            return $filename;
+      // Return a success response or perform further actions
+      return $filename;
 //            return response()->json(['message' => 'Image saved successfully']);
 
-        } else {
-            // Handle the case where the image retrieval was not successful
-            return response()->json(['message' => 'Failed to fetch the image'], 500);
-        }
+    } else {
+      // Handle the case where the image retrieval was not successful
+      return response()->json(['message' => 'Failed to fetch the image'], 500);
     }
+  }
 
-    public function convertTimeToUserTime($dateTime): ?string
-    {
-        try {
-            // Get the user's timezone
-            $user = Auth::user();
-            if (!$user) {
-                // No authenticated user, unable to determine timezone
-                return null;
-            }
+  public function convertTimeToUserTime($dateTime): ?string {
+    try {
+      // Get the user's timezone
+      $user = Auth::user();
+      if (!$user) {
+        // No authenticated user, unable to determine timezone
+        return null;
+      }
 
-            $userTimezone = $user->timezone;
+      $userTimezone = $user->timezone;
 
-            // Create a Carbon instance from the DateTime string
-            $dateTime = Carbon::parse($dateTime);
+      // Create a Carbon instance from the DateTime string
+      $dateTime = Carbon::parse($dateTime);
 
-            // Convert to the user's timezone
-            $dateTime->setTimezone($userTimezone);
+      // Convert to the user's timezone
+      $dateTime->setTimezone($userTimezone);
 
-            // Format $dateTime as a string in ISO 8601 format:
-            return $dateTime->toIso8601String();
-        } catch (\Exception $e) {
-            // Handle any parsing or timezone conversion errors here
-            return null;
-        }
+      // Format $dateTime as a string in ISO 8601 format:
+      return $dateTime->toIso8601String();
+    } catch (\Exception $e) {
+      // Handle any parsing or timezone conversion errors here
+      return null;
     }
+  }
 
 
-    public function convertToUtcTime($dateTime): string
-    {
-        // Create a Carbon instance from the DateTime string
-        $dateTime = Carbon::parse($dateTime);
+  public function convertToUtcTime($dateTime): string {
+    // Create a Carbon instance from the DateTime string
+    $dateTime = Carbon::parse($dateTime);
 
-        // Convert to UTC
-        $dateTime->setTimezone('UTC');
+    // Convert to UTC
+    $dateTime->setTimezone('UTC');
 
-        // Format $dateTime as a string in ISO 8601 format:
-        return $dateTime->toIso8601String();
-    }
+    // Format $dateTime as a string in ISO 8601 format:
+    return $dateTime->toIso8601String();
+  }
 
 }

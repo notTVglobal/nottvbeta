@@ -1,14 +1,15 @@
-import './bootstrap';
+import './bootstrap'
 
-import {createApp, h} from 'vue';
-import {createInertiaApp, Head, Link} from '@inertiajs/inertia-vue3';
-import {InertiaProgress} from '@inertiajs/progress';
-import AppLayout from "./Layouts/AppLayout";
-import {createPinia} from "pinia";
-import {ZiggyVue} from 'ziggy';
-import Vue3TouchEvents from "vue3-touch-events";
+import {createApp, h} from 'vue'
+import {createInertiaApp, Head, Link} from '@inertiajs/inertia-vue3'
+import { Inertia } from '@inertiajs/inertia'
+import {InertiaProgress} from '@inertiajs/progress'
+import AppLayout from "./Layouts/AppLayout"
+import {createPinia} from "pinia"
+import {ZiggyVue} from 'ziggy'
+import Vue3TouchEvents from "vue3-touch-events"
 // import helmet from "helmet";
-import "../../resources/css/theme.css"; // Magic happens here
+import "../../resources/css/theme.css" // Magic happens here
 // import the fontawesome core
 import {library} from '@fortawesome/fontawesome-svg-core'
 // import font awesome icon component
@@ -41,8 +42,9 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 // import popper for pop-up tooltips
 import Popper from "vue3-popper";
+import { format } from 'date-fns'
 // import confirm dialog
-// import ConfirmDialog from '@/Components/Modals/ConfirmDialog';
+// import ConfirmDialog from '@/Components/Global/Modals/ConfirmDialog';
 // import vueCountryRegionSelect from 'vue3-country-region-select';
 // import { setupCalendar } from 'v-calendar';
 
@@ -59,7 +61,8 @@ import Popper from "vue3-popper";
 // })
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'notTV';
-
+const AudioContext = window.AudioContext || window.webkitAudioContext;
+window.audioContext = new AudioContext();
 
 // formatting dates, helper plugins:
 // https://jerickson.net/how-to-format-dates-in-vue-3/
@@ -71,6 +74,14 @@ const formatDate = () => ({
             // Then specify how you want your dates to be formatted
             return new Intl.DateTimeFormat('default', {dateStyle: 'long'}).format(date);
         },
+        formatDateTime: function (dateString) {
+            const date = new Date(dateString);
+            const options = {
+                year: 'numeric', month: 'short', day: 'numeric',
+                hour: '2-digit', minute: '2-digit', hour12: true
+            };
+            return new Intl.DateTimeFormat('default', options).format(date);
+        }
     },
 })
 
@@ -112,3 +123,9 @@ library.add(faUserSecret, faPlay, faQuestion, faStar, faUsers, faHandsHelping, f
             faShare, faCircleDown, faRepeat, faCheck, faAngleLeft, faTrashCan, faCircleInfo, faPencil);
 
 InertiaProgress.init({ delay: 250, color: '#FCEF5B', includeCSS: true, showSpinner: true, });
+
+let lastUrl = window.location.pathname;
+
+Inertia.on('navigate', (event) => {
+    lastUrl = event.detail.page.url;
+});

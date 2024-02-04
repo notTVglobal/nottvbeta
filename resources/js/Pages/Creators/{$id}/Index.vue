@@ -1,50 +1,36 @@
 <template>
 
-    <Head :title="props.creator.name" />
+  <Head :title="props.creator.name"/>
 
-    <div class="place-self-center flex flex-col gap-y-3">
-        <div id="topDiv" class="bg-white text-black p-5 mb-10">
+  <div class="place-self-center flex flex-col gap-y-3">
+    <div id="topDiv" class="bg-white text-black p-5 mb-10">
 
-            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+      <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
-            <div class="flex justify-between mb-6">
-                <h1 class="text-2xl pb-3">{{props.creator.name}}</h1>
-                <Link href="/shows" class="text-blue-500 text-sm ml-2">Go back</Link>
-            </div>
-            <p>
-                <img :src="props.creator.profile_photo_url" />
-            </p>
+      <div class="flex justify-between mb-6">
+        <h1 class="text-2xl pb-3">{{ props.creator.name }}</h1>
+        <Link href="/shows" class="text-blue-500 text-sm ml-2">Go back</Link>
+      </div>
+      <p>
+        <img :src="props.creator.profile_photo_url"/>
+      </p>
 
-        </div>
     </div>
+  </div>
 
 </template>
 
 <script setup>
-import { onBeforeMount, onMounted, ref } from "vue";
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import { useStreamStore } from "@/Stores/StreamStore.js"
-import { useUserStore } from "@/Stores/UserStore";
-import Message from "@/Components/Modals/Messages";
+import { usePageSetup } from '@/Utilities/PageSetup'
+import { useAppSettingStore } from "@/Stores/AppSettingStore"
+import Message from "@/Components/Global/Modals/Messages"
 
-let videoPlayerStore = useVideoPlayerStore()
-let streamStore = useStreamStore()
-let userStore = useUserStore()
+const appSettingStore = useAppSettingStore()
 
 let props = defineProps({
-    creator: Object,
+  creator: Object,
 });
 
-userStore.currentPage = 'creator'
-userStore.showFlashMessage = true;
-
-onMounted(() => {
-    videoPlayerStore.makeVideoTopRight();
-    if (userStore.isMobile) {
-        videoPlayerStore.ottClass = 'ottClose'
-        videoPlayerStore.ott = 0
-    }
-    document.getElementById("topDiv").scrollIntoView()
-});
+usePageSetup(`creator/${props.creator.slug}`)
 
 </script>

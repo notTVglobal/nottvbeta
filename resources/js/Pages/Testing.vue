@@ -17,16 +17,10 @@
 </template>
 
 <script setup>
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
 import {ref, onBeforeMount, watch, onBeforeUnmount, onMounted} from "vue"
-import {useUserStore} from "@/Stores/UserStore";
-import videojs from 'video.js';
-// import Youtube from 'videojs-youtube';
+import { usePageSetup } from '@/Utilities/PageSetup'
 
-let videoPlayerStore = useVideoPlayerStore()
-let userStore = useUserStore()
-
-userStore.currentPage = 'testing'
+usePageSetup('testing')
 
 // onBeforeMount(() => {
 //     userStore.scrollToTopCounter = 0;
@@ -35,19 +29,7 @@ userStore.currentPage = 'testing'
 // let currentTime = ref()
 
 onMounted(() => {
-    videoPlayerStore.makeVideoTopRight()
-    if (userStore.isMobile) {
-        videoPlayerStore.ottClass = 'ottClose'
-        videoPlayerStore.ott = 0
-    }
-    document.getElementById("topDiv").scrollIntoView()
-
-    // videojs(props.id, props.options)
-    console.log('onPlayerReady2')
-
-
-
-
+  console.log('onPlayerReady2')
 })
 
 

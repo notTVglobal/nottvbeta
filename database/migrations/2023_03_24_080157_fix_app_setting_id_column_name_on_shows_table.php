@@ -30,6 +30,8 @@ return new class extends Migration
         Schema::table('shows', function (Blueprint $table) {
             $table->dropForeign(['app_setting_id']);
             $table->dropColumn('app_setting_id');
+            $table->foreignId('app_settings_id')->nullable()->default(1)->constrained();
+
         });
     }
 };

@@ -114,7 +114,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(ChatMessage::class);
     }
 
-    public function roles()
+    public function role()
     {
         return $this->hasOne(Role::class);
     }
@@ -165,9 +165,9 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(ShowEpisode::class);
     }
 
-    public function newsPosts()
+    public function newsStories()
     {
-        return $this->hasMany(NewsPost::class);
+        return $this->hasMany(NewsStory::class);
     }
 
     public function videos()

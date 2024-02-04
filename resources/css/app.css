@@ -16,6 +16,9 @@ html {
 .vjs-control-bar {
     display: none !important;
 }
+.vjs-modal-dialog-content {
+    @apply text-yellow-300 opacity-50
+}
 .videoZ {
     z-index:1;
 }
@@ -33,7 +36,7 @@ html {
 }
 .layoutWelcome {
     /*@apply fixed h-screen w-full top-0 overflow-y-scroll z-50*/
-    @apply fixed w-full h-full top-0
+    @apply fixed h-[calc(100vh)] w-[calc(100vw)] top-0
     z-10 overflow-y-scroll overscroll-x-none
 }
 .layoutLoggedIn {
@@ -58,15 +61,21 @@ html {
 .bugFullPageClass {
     @apply block h-9 w-auto shrink-0
 }
-.news-paragraph {
-    margin-top: 0.75rem;
-    margin-bottom: 1rem;
-    @apply text-xl flex flex-wrap overscroll-x-none w-fit break-words;
+/*.news-paragraph {*/
+/*    margin-top: 0.75rem;*/
+/*    margin-bottom: 1rem;*/
+/*    @apply text-xl flex flex-wrap overscroll-x-none w-fit break-words*/
+/*    text-left mb-6 px-16 leading-loose font-['monospace'];*/
+/*}*/
+/*.news-paragraph ul,*/
+/*.news-paragraph ol {*/
+/*    padding: 0 1rem;*/
+/*}*/
+
+.news-story {
+    @apply text-left mb-6 text-xl px-16 leading-loose font-['monospace'];
 }
-.news-paragraph ul,
-.news-paragraph ol {
-    padding: 0 1rem;
-}
+
 h1 {
     @apply text-4xl
 }
@@ -88,6 +97,8 @@ pre {
     font-family: 'JetBrainsMono', monospace;
     padding: 0.75rem 1rem;
     border-radius: 0.5rem;
+    overflow-x: auto; /* Display horizontal scrollbar when needed */
+    white-space: nowrap; /* Prevent code block content from wrapping */
     @apply text-lg flex flex-wrap max-w-screen-md overflow-x-scroll break-words;
 
     & code {
@@ -95,8 +106,19 @@ pre {
         padding: 0;
         background: none;
         font-size: 0.8rem;
+
         @apply text-lg flex flex-wrap max-w-screen-md break-words;
     }
+}
+
+.code-block {
+    overflow-x: auto; /* Display horizontal scrollbar when needed */
+    white-space: nowrap; /* Prevent code block content from wrapping */
+}
+
+pre p {
+    white-space: break-spaces;
+    overflow-x: auto;
 }
 
 blockquote {
@@ -111,6 +133,35 @@ hr {
     border-top: 2px solid rgba(13,13,13, 0.1);
     margin: 2rem 0;
 }
+
+/* Style for unordered list (ul) */
+.news-story ul {
+    list-style-type: disc; /* Use disc bullets for unordered list */
+    margin-left: 20px; /* Add some left margin for indentation */
+}
+
+/* Style for ordered list (ol) */
+.news-story ol {
+    list-style-type: decimal; /* Use numbers for ordered list */
+    margin-left: 20px; /* Add some left margin for indentation */
+}
+
+/* Style for list item (li) */
+.news-story li {
+    margin-bottom: 2px; /* Add space between list items */
+}
+
+.news-story a {
+    color: #68CEF8;
+    transition: color 0.3s; /* Add a smooth transition for the color change */
+    @apply cursor-pointer;
+}
+
+.news-story a:hover {
+    color: #357CA5; /* Use a darker blue color for hover */
+}
+
+
 
 .hide-scrollbar {
     /* Hide scrollbar for Webkit browsers */
@@ -146,9 +197,44 @@ hr {
     scrollbar-width: thin; /* "auto" or "thin" */
     scrollbar-color: #888 #f4f4f4; /* thumb and track color */
 }
-.scrollbar-custom.channelsMenu {
+/* Custom scrollbar styling */
+.scrollbar-custom-dark {
+    /* This will modify the scrollbar track (the part the thumb slides along) */
+    &::-webkit-scrollbar-track {
+        background-color: #888; /* Dark grey track */
+    }
+
+    /* This will modify the scrollbar thumb (the part you drag) */
+    &::-webkit-scrollbar-thumb {
+        background-color: #f4f4f4; /* Light grey thumb */
+        border-radius: 10px; /* Rounded corners on the thumb */
+        border: 3px solid #888; /* Creates padding around the thumb */
+    }
+
+    /* This will modify the scrollbar itself (including the thumb, track, and buttons) */
+    &::-webkit-scrollbar {
+        width: 12px; /* Width of the entire scrollbar */
+    }
+
+    /* This will modify the scrollbar width and color for non-WebKit browsers like Firefox  */
+    scrollbar-width: thin; /* "auto" or "thin" */
+    scrollbar-color: #f4f4f4 #888; /* thumb and track color */
+}
+.scrollbar-channelsMenu {
     scrollbar-width: thin; /* "auto" or "thin" */
     scrollbar-color: #16A34A transparent; /* thumb and track color */
+}
+
+.channelsMenu {
+    @apply bg-green-900 scrollbar-channelsMenu;
+ }
+
+.link-dark {
+    @apply text-blue-300 hover:text-blue-500
+}
+
+.link-light {
+    @apply text-blue-800 hover:text-blue-600
 }
 
 /* VIDEO CONTAINERS AND CLASSES*/
@@ -312,13 +398,13 @@ hr {
         @apply hidden fixed right-2 top-20 w-10 mr-4
     }
     .osdFullPageTop {
-        z-index:999;
+        z-index:800;
         /*top: calc(50vh + 2rem);*/
         top: 4.5rem;
         @apply fixed align-top justify-start w-full h-fit left-0 right-0 px-5 drop-shadow
     }
     .osdFullPageBottom {
-        z-index:999;
+        z-index:800;
         top: calc(50vh - 0.5rem);
         /*top: 4.5rem;*/
         @apply fixed align-top justify-start w-full h-fit left-0 right-0 px-5 drop-shadow
@@ -354,7 +440,7 @@ hr {
     .channelsFullPageContainer {
         z-index: 200;
         height: calc(50vh + 1rem);
-        @apply fixed w-full bottom-0 right-0 left-0 pb-12 bg-opacity-80 bg-green-600 text-sm text-white overflow-y-auto scroll-smooth hover:scroll-auto break-words
+        @apply fixed w-full bottom-0 right-0 left-0 pb-12 bg-opacity-80 bg-green-900 text-sm text-white overflow-y-auto scroll-smooth hover:scroll-auto break-words
     }
     /* For Firefox - additional container */
     /*.channelsFullPageInner {*/
@@ -362,8 +448,8 @@ hr {
     /*    padding-right: 1rem; !* Prevent content from being hidden under scrollbar area *!*/
     /*}*/
     .channelsCloseButton {
-        @apply fixed bottom-5 left-0 right-0 mx-auto opacity-100 w-fit h-12 p-4 rounded-full
-        text-gray-50 bg-green-900 hover:bg-green-800
+        @apply fixed bottom-5 mx-auto mb-3 opacity-100 w-fit h-12 p-4 rounded-full
+        text-gray-50 bg-green-800 hover:bg-green-600
         cursor-pointer font-semibold text-xs
     }
     .playlistFullPageContainer {
@@ -375,8 +461,8 @@ hr {
         overflow-y-auto scroll-smooth hover:scroll-auto break-words hide-scrollbar
     }
     .playlistCloseButton {
-        @apply fixed bottom-5 left-0 right-0 mx-auto opacity-100 w-fit h-12 p-4 rounded-full
-        text-gray-50 bg-orange-900 hover:bg-orange-800 cursor-pointer font-semibold text-xs
+        @apply fixed bottom-5 mx-auto opacity-100 w-fit h-12 p-4 rounded-full
+        text-gray-50 bg-orange-700 hover:bg-orange-600 cursor-pointer font-semibold text-xs
     }
 
     /* Mobile and Tablet */
@@ -392,13 +478,20 @@ hr {
     /*}*/
 
     /* Mobile and Tablet */
+    /*.chatFullPageContainer {*/
+    /*    z-index: 900;*/
+    /*    min-height: calc(50vh - 7rem);*/
+    /*    justify-content: left;*/
+    /*    @apply bg-yellow-400 absolute w-full bottom-36 pt-2 px-6 pb-2 -mb-4 mt-4 bg-opacity-80 text-sm text-white overflow-y-scroll scroll-smooth  break-words hide-scrollbar*/
+    /*}*/
     .chatFullPageContainer {
-        z-index: 40;
-        min-height: calc(50vh - 7rem);
-        /*min-height: 75vh;*/
-        display: flex;
-        justify-content: left;
-        @apply absolute w-full bottom-36 pt-2 px-6 pb-2 -mb-4 mt-4 bg-opacity-80 text-sm text-white overflow-y-auto scroll-smooth hover:scroll-auto break-words hide-scrollbar
+        position: fixed;
+        z-index: 90;
+        /*max-height: calc(100% - 27.5rem);*/
+        max-height: calc(50vh - 4.5rem);
+        max-width: 100%;
+        bottom: 5.5rem;
+        @apply px-8 flex flex-col overflow-y-scroll overflow-x-hidden  hide-scrollbar
     }
     .chatTopRightContainer {
         position: fixed;
@@ -453,8 +546,13 @@ hr {
     /*}*/
     .chatCloseButton {
         z-index: 60;
-        @apply fixed bottom-5 left-0 right-0 mx-auto opacity-100 w-fit h-12 p-4 rounded-full
-        text-gray-50 hover:bg-blue-800 cursor-pointer font-semibold text-xs
+        @apply fixed bottom-5 right-5 mx-auto opacity-100 w-fit h-12 p-4 rounded-full
+        text-gray-50 bg-blue-600 hover:bg-blue-800 cursor-pointer font-semibold text-xs
+    }
+    .chatCloseButtonIsMobile {
+        z-index: 60;
+        @apply fixed bottom-5 w-fit mx-auto left-0 right-0 opacity-100 h-fit px-4 rounded-full
+        text-gray-50 bg-blue-600 hover:bg-blue-800 cursor-pointer font-semibold text-xs
     }
     .filtersFullPageContainer {
         z-index: 200;
@@ -465,11 +563,22 @@ hr {
         overflow-y-auto scroll-smooth hover:scroll-auto break-words hide-scrollbar
     }
     .filtersCloseButton {
-        @apply fixed bottom-5 left-0 right-0 mx-auto opacity-100 w-fit h-12 p-4 rounded-full
-        text-gray-50 bg-yellow-600 hover:bg-yellow-500 cursor-pointer font-semibold text-xs
+        @apply fixed bottom-5 mx-auto opacity-100 w-fit h-12 p-4 rounded-full
+        text-gray-50 bg-yellow-600 hover:bg-yellow-700 cursor-pointer font-semibold text-xs
     }
     .ottTopRightDisplay {
         @apply fixed top-40 right-0 bottom-0 w-full mt-7 px-2 overflow-y-scroll z-50 border-t border-gray-900
+    }
+    .closeButtonContainer {
+        @apply w-full flex flex-row justify-center
+    }
+    .upgradeFullPageContainer {
+        z-index: 200;
+        /*height:calc(50vh - 4rem);*/
+        height:calc(50vh - 7rem);
+        /*top: 4rem;*/
+        @apply fixed w-full bottom-0 pt-2 bg-opacity-80 text-gray-50
+        overflow-y-auto scroll-smooth hover:scroll-auto break-words hide-scrollbar
     }
 }
 /* End Mobile and Tablet */
@@ -641,10 +750,16 @@ hr {
         @apply w-[24rem] bottom-0 bg-opacity-80 bg-green-600 text-sm text-white pb-12
         overflow-y-scroll scroll-smooth hover:scroll-auto break-words
     }
+    .closeButtonContainer {
+        @apply w-96 flex flex-row justify-center
+    }
     .channelsCloseButton {
-        @apply fixed bottom-5 right-28 opacity-100 w-fit h-12 p-4 rounded-full
-        text-gray-50 bg-green-900 hover:bg-green-800
+        @apply fixed bottom-5 mx-auto mb-3 opacity-100 w-fit h-12 p-4 rounded-full
+        text-gray-50 bg-green-800 hover:bg-green-600
         cursor-pointer font-semibold text-xs
+    }
+    .scrolldownIndicator {
+        @apply w-96
     }
     .playlistFullPageContainer {
         z-index: 200;
@@ -657,7 +772,7 @@ hr {
     }
     .playlistCloseButton {
         @apply fixed bottom-5 right-32 opacity-100 w-fit h-12 p-4 rounded-full
-        text-gray-50 bg-orange-900 hover:bg-orange-800 grid justify-center content-center
+        text-gray-50 bg-orange-700 hover:bg-orange-600 grid justify-center content-center
         cursor-pointer font-semibold text-xs
     }
     /* Desktop Lg*/
@@ -670,20 +785,23 @@ hr {
         display: flex; /* Enable Flexbox */
         /*align-items: center; !* Vertically center children *!*/
         justify-content: left;
-        @apply w-[24rem] bottom-24 mb-6 pt-6 bg-opacity-80 text-sm text-white px-4
-        overflow-y-scroll scroll-smooth hover:scroll-auto break-words
+        @apply w-[24rem] max-w-[24rem] bottom-24 mb-6 pt-6 bg-opacity-80 text-sm text-white px-4
+        overflow-y-scroll scroll-smooth hover:scroll-auto
     }
     .chatTopRightContainer {
         position: fixed;
         z-index: 30;
+        /*max-height: calc(69%);*/
         /*max-height: 42rem;*/
-        max-height: calc(100% - 6rem);
+        /*max-height: 60rem;*/
+        height: calc(100% - 26rem);
+        max-height: calc(100% - 26rem);
         /*max-height: 70vh;*/
-        max-width: 100%;
-        @apply bottom-24 pt-5 flex flex-col overflow-y-scroll overflow-x-hidden break-words hide-scrollbar
+        /*max-width: 100%;*/
+        @apply w-[24rem] max-w-[24rem] bottom-24 pt-5 flex flex-col overflow-y-scroll overflow-x-hidden hide-scrollbar
     }
     .chatFullPageMessages {
-        @apply w-full h-full flex flex-col-reverse overflow-y-scroll overflow-x-clip break-words scrollbar-hide
+        @apply w-full h-full flex flex-col-reverse overflow-y-scroll overflow-x-clip scrollbar-hide
     }
     .chatFullPageInput {
         display: flex; /* Enable Flexbox */
@@ -692,8 +810,8 @@ hr {
     }
     .chatCloseButton {
         z-index: 60;
-        @apply fixed bottom-5 right-32 opacity-100 w-fit h-12 p-4 rounded-full
-        text-gray-50 hover:bg-blue-800 grid justify-center content-center
+        @apply fixed bottom-5 right-5 opacity-100 w-fit h-12 p-4 rounded-full
+        text-gray-50 bg-blue-600 hover:bg-blue-800 grid justify-center content-center
         cursor-pointer font-semibold text-xs
     }
     .filtersFullPageContainer {
@@ -707,11 +825,24 @@ hr {
     }
     .filtersCloseButton {
         @apply fixed bottom-5 right-32 opacity-100 w-fit h-12 p-4 rounded-full
-        text-gray-50 bg-yellow-600 hover:bg-yellow-500 grid justify-center content-center
+        text-gray-50 bg-yellow-600 hover:bg-yellow-700 grid justify-center content-center
         cursor-pointer font-semibold text-xs
     }
     .ottTopRightDisplay {
         @apply fixed top-72 right-0 bottom-0 w-96 mt-7 px-2 overflow-y-scroll z-30 border-t border-gray-900
+    }
+    .upgradeFullPageContainer {
+        z-index: 200;
+        /*height:calc(50vh - 4rem);*/
+        max-height: calc(100vh - 6rem);
+        top: 4rem;
+        @apply w-[24rem] bottom-0 pt-2 bg-opacity-80 text-gray-50
+        overflow-y-auto scroll-smooth hover:scroll-auto break-words hide-scrollbar
+    }
+    .upgradeCloseButton {
+        @apply fixed bottom-5 mx-auto mb-3 opacity-100 w-fit h-12 p-4 rounded-full
+        text-gray-50 bg-gray-800 hover:bg-gray-700
+        cursor-pointer font-semibold text-xs
     }
 
 }
@@ -727,17 +858,11 @@ hr {
     @apply h-[calc(100vh-16rem)] lg:mt-3
 }
 
-
 .videoControlsWelcomeStandard {
     z-index: 200;
     @apply absolute flex justify-center space-x-4 bottom-36 w-full
 }
 @media (orientation: portrait) and (min-width: 800px) {
-    .videoFullPageMobileOSD {
-        top: 36rem;
-        left: 2rem;
-        @apply fixed
-    }
     .videoControlsMobile {
         top: 33rem;
         left: 0;
@@ -749,39 +874,16 @@ hr {
         left: 3rem;
         @apply absolute items-center mx-auto space-x-2 w-full
     }
-    /*.backToPage {*/
-    /*    position: fixed;*/
-    /*    bottom: 2rem;*/
-    /*    left: 1rem;*/
-    /*}*/
     .ottDisplayMobile {
         z-index: 200;
         @apply h-[calc(100vh-18rem)] lg:mt-3
     }
-    .chatForStreamPageMobile {
-        z-index: 60;
-        background: linear-gradient(to bottom, rgba(0,0,0,1), rgba(255,0,255,0));
-        top: 32rem;
-        min-height:calc(50vh + 5.5rem);
-        max-height:calc(100vh - 8rem);
-        @apply fixed w-full bottom-0 right-0 left-0 sm:bottom-2 text-sm text-white pl-6 pb-12
-        overflow-y-auto scroll-smooth hover:scroll-auto break-words
-    }
-    /*.chatCloseButtonMobile {*/
-    /*    top: 34rem;*/
-    /*    right: 2rem;*/
-    /*    z-index: 60;*/
-    /*}*/
     .videoOttChatMessagesBottomPadding {
         /* Portrait Min-Width: 800px */
         padding-bottom: 22rem;
     }
 }
 @media (orientation: portrait) and (max-width: 800px) {
-    .videoFullPageMobileOSD {
-        top: 22rem;
-        @apply fixed left-3
-    }
     .videoControlsMobile {
         top: 19rem !important;
         z-index: 200;
@@ -792,11 +894,6 @@ hr {
         z-index: 200;
         @apply absolute mx-auto flex left-3 justify-center space-x-4
     }
-    /*.backToPage {*/
-    /*    position: fixed;*/
-    /*    bottom: 7rem;*/
-    /*    left: 1rem;*/
-    /*}*/
     .ottDisplayMobile {
         z-index: 199;
         @apply h-[calc(100vh-10rem)] lg:mt-3
@@ -814,24 +911,12 @@ hr {
         @apply fixed w-full bottom-0 right-0 left-0 sm:bottom-2 text-sm text-white pl-6 pb-12
         overflow-y-auto scroll-smooth hover:scroll-auto break-words
     }
-    .chatCloseButtonMobile {
-        top: 20rem;
-        z-index: 60;
-    }
     .videoOttChatMessagesBottomPadding {
         /* Portrait Max-Width: 800px */
         padding-bottom: 18rem;
     }
 }
 @media (orientation: landscape) and (max-device-height:800px) {
-    .videoFullPageMobileOSD {
-        position: fixed;
-        top: 5rem;
-        left: 1rem;
-    }
-    /*.backToPage {*/
-    /*    @apply fixed bottom-5 left-2*/
-    /*}*/
     .videoControlsMobile {
         z-index: 200;
         @apply fixed bottom-2 mx-auto flex left-3 justify-center space-x-4
@@ -849,11 +934,6 @@ hr {
     }
 }
 @media (orientation: landscape) and (min-device-height:800px) {
-    .videoFullPageMobileOSD {
-        position: fixed;
-        top: 5rem;
-        left: 2rem;
-    }
     .videoControlsMobile {
         z-index: 200;
         left: 0;
@@ -869,41 +949,23 @@ hr {
         left: 3rem;
         @apply absolute mx-auto flex justify-center space-x-4
     }
-    /*.backToPage {*/
-    /*    @apply fixed bottom-5 left-2*/
-    /*}*/
     .videoOttChatMessagesBottomPadding {
         /* Landscape Min-Width: 800px */
         padding-bottom: 25rem;
     }
 
 }
-/*.welcomeVideoClass {*/
-/*    position:absolute;*/
-/*    top:0;*/
-/*    left:0;*/
-/*    right:0;*/
-/*    bottom:0;*/
-/*    width:100vw;*/
-/*    height:100vh;*/
-/*    min-height: 100vh;*/
-/*    z-index:1;*/
-/*    background-color: black;*/
-/*}*/
-/*.welcomeVideoContainer {*/
-/*    position: absolute;*/
-/*    top:0;*/
-/*    left: 0;*/
-/*    right:0;*/
-/*    bottom:0;*/
-/*    width:100vw;*/
-/*    height:100vh;*/
-/*    min-height: 100vh;*/
-/*    z-index:1;*/
-/*}*/
 
 .videoOttTopRightButtonsContainer {
-    z-index: 40;
+    /*z-index: 900;*/
+    /*position: fixed;*/
+    /*height: 100vh;*/
+    /*width: 100vw;*/
+    /*top:0;*/
+    /*bottom: 0;*/
+    /*right: 0;*/
+    /*left: 0;*/
+    /*background-color: #0a59da;*/
     @apply fixed top-40 lg:top-72 h-fit w-full lg:w-96 right-0
 }
 .OttOpen {
@@ -928,7 +990,6 @@ hr {
     right:1.5rem;
 }
 
-
 .channelsFullPage{
     @apply w-full py-4 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-2 border-green-800 shadow-md disabled:bg-gray-600 disabled:text-gray-300 disabled:cursor-not-allowed
 }
@@ -936,7 +997,7 @@ hr {
     @apply w-full px-4 py-2 bg-green-700 hover:bg-green-500 text-xl text-white text-center cursor-pointer border-b border-r-2 border-green-800 shadow-md disabled:bg-gray-600 disabled:text-gray-300 disabled:cursor-not-allowed
 }
 .activeChannelFullPage {
-    @apply bg-blue-500;
+    @apply bg-blue-500 hover:bg-blue-500;
    /*background-color: darkgreen !important;*/
    /*color: #ffcc66 !important;*/
    /*border-right-color: #ffcc66 !important;*/
@@ -1005,16 +1066,6 @@ hr {
     scrollbar-width: none;  /* Firefox */
 }
 
-@media (orientation: landscape) {
-    .chatForStreamPageMobile {
-        z-index: 40;
-        min-height: 100vh;
-        max-height: 100vh;
-        @apply fixed w-full bottom-0 right-0 left-0 sm:bottom-2 text-sm text-white pl-6 pb-12
-        overflow-y-auto scroll-smooth hover:scroll-auto break-words
-    }
-}
-
 /* this is the CLOSE chat button */
 .chatForStreamPage button {
     z-index: 200;
@@ -1022,15 +1073,6 @@ hr {
     top:5rem;
     right:1rem;
 }
-
-@media (orientation: landscape) {
-    .chatCloseButtonMobile {
-        top: 6rem;
-        z-index: 60;
-    }
-}
-
-
 
 /* this is for the chat scrollbar in chrome */
 .chatChrome::-webkit-scrollbar {
@@ -1105,6 +1147,9 @@ hr {
 }
 .z-100 {
     z-index: 100;
+}
+.z-999 {
+    z-index: 999;
 }
 
 @tailwind utilities;

@@ -1,179 +1,181 @@
 <template>
-    <Head title="Teams" />
+  <Head title="Teams"/>
 
-    <div class="place-self-center flex flex-col gap-y-3">
-        <div id="topDiv" class="light:bg-white light:text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
+  <div class="place-self-center flex flex-col gap-y-3">
+    <div id="topDiv" class="light:bg-white light:text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 
-            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+      <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
-            <div v-if="props.can.viewCreator" class="flex justify-end flex-wrap-reverse gap-x-2 pt-6">
+      <div v-if="props.can.viewCreator" class="flex justify-end flex-wrap-reverse gap-x-2 pt-6">
 
-                <Link v-if="can.createTeam" :href="`/teams/create`"><button
-                    class="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded disabled:bg-gray-400"
-                >Add Team</button>
-                </Link>
-                <Link :href="`/dashboard`"><button
-                    class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                >Dashboard</button>
-                </Link>
-            </div>
+        <Link v-if="can.createTeam" :href="`/teams/create`">
+          <button
+              class="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded disabled:bg-gray-400"
+          >Add Team
+          </button>
+        </Link>
+        <Link :href="`/dashboard`">
+          <button
+              class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+          >Dashboard
+          </button>
+        </Link>
+      </div>
 
-            <h1 class="text-3xl font-semibold pb-3">Teams</h1>
+      <h1 class="text-3xl font-semibold pb-3">Teams</h1>
 
-            <div class="flex flex-row justify-end gap-x-4">
-                <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg" />
-            </div>
-
-
-        <div class="flex flex-col">
-            <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-                    <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-
-                        <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-                            <div class="p-6 bg-white border-b border-gray-200">
-                                <!-- Paginator -->
-                                <Pagination :data="teams" class=""/>
-                                <div
-                                    class="relative overflow-x-auto shadow-md sm:rounded-lg"
-                                >
+      <div class="flex flex-row justify-end gap-x-4">
+        <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg"/>
+      </div>
 
 
-                                    <table
-                                        class="w-full text-sm text-left text-gray-500 dark:text-gray-400"
-                                    >
-                                        <thead
-                                            class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
-                                        >
-                                        <tr>
-                                            <th scope="col" class="min-w-[8rem] px-6 py-3">
-                                                Logo
-                                            </th>
-                                            <th scope="col" class="px-6 py-3">
-                                                Team Name
-                                            </th>
-                                            <th scope="col" class="px-6 py-3">
-                                                Team Creator
-                                            </th>
-                                            <th scope="col" class="px-6 py-3">
-                                                # of Members
-                                            </th>
-                                            <th scope="col" class="px-6 py-3">
-                                                # of Shows
-                                            </th>
-                                            <th v-if="props.can.viewCreator" scope="col" class="px-6 py-3">
-                                                <!--Manage/Edit-->
-                                            </th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr
-                                            v-for="team in teams.data"
-                                            :key="team.id"
-                                            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-                                        >
-                                            <th
-                                                scope="row"
-                                                class="min-w-[8rem] px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
-                                            >
-<!--                                                <img :src="`/storage/${team.logo}`" class="rounded-full h-20 w-20 object-cover">-->
-<!--                                                <img :src="'/storage/images/' + team.logo" class="rounded-full h-20 w-20 object-cover">-->
-                                                <SingleImage :image="team.image" :alt="'team logo rounded full'" :key="props.image" :class="'rounded-full h-20 w-20 object-cover'"/>
+      <div class="flex flex-col">
+        <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+          <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+            <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+
+              <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+                <div class="p-6 bg-white border-b border-gray-200">
+                  <!-- Paginator -->
+                  <Pagination :data="teams" class=""/>
+                  <div
+                      class="relative overflow-x-auto shadow-md sm:rounded-lg"
+                  >
 
 
-                                            </th>
-                                            <th
-                                                scope="row"
-                                                class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
-                                            >
-                                                <Link :href="`/teams/${team.slug}`" class="text-blue-800 hover:text-blue-600">{{ team.name }}</Link>
-                                            </th>
-                                            <th
-                                                scope="row"
-                                                class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
-                                            >
-                                                {{ team.teamOwner }}
-                                            </th>
-                                            <td
-                                                scope="row"
-                                                class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
-                                            >
-                                                {{ team.memberSpots }}
-                                            </td>
-                                            <td
-                                                scope="row"
-                                                class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
-                                            >
-                                                {{ team.totalShows }}
-                                            </td>
-                                            <td  class="px-6 py-4 space-x-2">
-                                                <Link v-if="team.can.viewTeam" :href="`/teams/${team.slug}/manage`"><button
-                                                    class="px-4 py-2 text-white bg-purple-600 hover:bg-purple-500 rounded-lg"
-                                                >Manage</button>
-                                                </Link>
-                                                <Link v-if="team.can.editTeam" :href="`/teams/${team.slug}/edit`"><button
-                                                    class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                                                >Edit</button>
-                                                </Link>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                    <!-- Paginator -->
-                                    <Pagination :data="teams" class=""/>
-                                </div>
-                            </div>
-                        </div>
+                    <table
+                        class="w-full text-sm text-left text-gray-500 dark:text-gray-400"
+                    >
+                      <thead
+                          class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+                      >
+                      <tr>
+                        <th scope="col" class="min-w-[8rem] px-6 py-3">
+                          Logo
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                          Team Name
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                          Team Creator
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                          # of Members
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                          # of Shows
+                        </th>
+                        <th v-if="props.can.viewCreator" scope="col" class="px-6 py-3">
+                          <!--Manage/Edit-->
+                        </th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr
+                          v-for="team in teams.data"
+                          :key="team.id"
+                          class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                      >
+                        <th
+                            scope="row"
+                            class="min-w-[8rem] px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
+                        >
+                          <!--                                                <img :src="`/storage/${team.logo}`" class="rounded-full h-20 w-20 object-cover">-->
+                          <!--                                                <img :src="'/storage/images/' + team.logo" class="rounded-full h-20 w-20 object-cover">-->
+                          <SingleImage :image="team.image" :alt="'team logo rounded full'" :key="props.image"
+                                       :class="'rounded-full h-20 w-20 object-cover'"/>
 
-                    </div>
+
+                        </th>
+                        <th
+                            scope="row"
+                            class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
+                        >
+                          <Link :href="`/teams/${team.slug}`" class="text-blue-800 hover:text-blue-600">{{
+                              team.name
+                            }}
+                          </Link>
+                        </th>
+                        <th
+                            scope="row"
+                            class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
+                        >
+                          {{ team.teamOwner }}
+                        </th>
+                        <td
+                            scope="row"
+                            class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
+                        >
+                          {{ team.memberSpots }}
+                        </td>
+                        <td
+                            scope="row"
+                            class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
+                        >
+                          {{ team.totalShows }}
+                        </td>
+                        <td class="px-6 py-4 space-x-2">
+                          <Link v-if="team.can.viewTeam" :href="`/teams/${team.slug}/manage`">
+                            <button
+                                class="px-4 py-2 text-white bg-purple-600 hover:bg-purple-500 rounded-lg"
+                            >Manage
+                            </button>
+                          </Link>
+                          <Link v-if="team.can.editTeam" :href="`/teams/${team.slug}/edit`">
+                            <button
+                                class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                            >Edit
+                            </button>
+                          </Link>
+                        </td>
+                      </tr>
+                      </tbody>
+                    </table>
+                    <!-- Paginator -->
+                    <Pagination :data="teams" class=""/>
+                  </div>
                 </div>
+              </div>
+
             </div>
+          </div>
         </div>
+      </div>
 
     </div>
-    </div>
+  </div>
 
 </template>
 
 <script setup>
-import { onBeforeMount, onMounted, ref, watch } from "vue"
-import {Inertia} from "@inertiajs/inertia"
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import { useUserStore } from "@/Stores/UserStore";
-import Pagination from "@/Components/Pagination"
-import throttle from "lodash/throttle"
-import Message from "@/Components/Modals/Messages";
-import SingleImage from "@/Components/Multimedia/SingleImage.vue";
+import { Inertia } from '@inertiajs/inertia'
+import { ref, watch } from 'vue'
 
-let videoPlayerStore = useVideoPlayerStore()
-let userStore = useUserStore()
+import throttle from 'lodash/throttle'
+import { usePageSetup } from '@/Utilities/PageSetup'
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import Message from '@/Components/Global/Modals/Messages'
+import SingleImage from '@/Components/Global/Multimedia/SingleImage'
+import Pagination from '@/Components/Global/Paginators/Pagination'
 
-userStore.currentPage = 'teams'
-userStore.showFlashMessage = true;
+usePageSetup('teams')
 
-onMounted(() => {
-    videoPlayerStore.makeVideoTopRight();
-    if (userStore.isMobile) {
-        videoPlayerStore.ottClass = 'ottClose'
-        videoPlayerStore.ott = 0
-    }
-    document.getElementById("topDiv").scrollIntoView()
-});
+const appSettingStore = useAppSettingStore()
 
 let props = defineProps({
-    teams: Object,
-    filters: Object,
-    can: Object,
-});
+  teams: Object,
+  filters: Object,
+  can: Object,
+})
 
-let search = ref(props.filters.search);
+let search = ref(props.filters.search)
 
 watch(search, throttle(function (value) {
-    Inertia.get('/teams', { search: value }, {
-        preserveState: true,
-        replace: true
-    });
-}, 300));
+  Inertia.get('/teams', {search: value}, {
+    preserveState: true,
+    replace: true,
+  })
+}, 300))
 
 </script>
 

@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Team;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class FirstRunSeeder extends Seeder
 {
@@ -15,13 +16,27 @@ class FirstRunSeeder extends Seeder
      */
     public function run()
     {
+      // Seeders for initial, foundational data
         $this->call([
             AdminSeeder::class,
             AppSettingsSeeder::class,
             ImageSeeder::class,
             MovieCategorySeeder::class,
+            MovieCategorySubsTableSeeder::class,
             ShowCategorySeeder::class,
+            ShowCategorySubsTableSeeder::class,
+            NewsCategorySeeder::class,
+            NewsCategorySubsTableSeeder::class,
+            NewsCountriesTableSeeder::class,
+            NewsProvincesTableCANSeeder::class,
+            NewsCitiesAndTownsCANSeeder::class,
+            NewsPostalCodeCANSeeder::class,
+            NewsFederalElectoralDistrictsCANSeeder::class,
+            NewsFederalElectoralDistrictsMoreInfoCANSeeder::class,
         ]);
+
+        // Set default country_id
+        DB::table('app_settings')->update(['country_id' => 4]);
 
         Team::create([
             'name' => 'notTV Founders',

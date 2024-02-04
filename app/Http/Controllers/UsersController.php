@@ -395,14 +395,10 @@ class UsersController extends Controller
         return response()->json(['message' => 'Timezone updated successfully']);
     }
 
-    public function vipAdd(HttpRequest $request, User $user) {
-        if (auth()->user()->isAdmin) {
-            $request->validate([
-                'id' => 'required',
-            ]);
-        } elseif (!auth()->user()->isAdmin)
-            return with('message', 'You are not authorized to perform this action.');
-
+    public function vipAdd(HttpRequest $request) {
+      if (!auth()->user()->isAdmin) {
+        return to_route('users.index')->with('message', 'You are not authorized to perform this action.');
+      }
             $user = User::find($request->id);
             $user->isVip = true;
             $user->update();
@@ -415,13 +411,9 @@ class UsersController extends Controller
 
     public function vipRemove(HttpRequest $request)
     {
-//        dd($request);
-        if (auth()->user()->isAdmin) {
-            $request->validate([
-                'id' => 'required',
-            ]);
-        } elseif (!auth()->user()->isAdmin)
-            return with('message', 'You are not authorized to perform this action.');
+      if (!auth()->user()->isAdmin) {
+        return to_route('users.index')->with('message', 'You are not authorized to perform this action.');
+      }
 
         $user = User::find($request->id);
         $user->isVip = false;

@@ -1,0 +1,6 @@
+{
+    "first_play_video_source": "http:\/\/localhost:8080\/hls\/test\/index.m3u8",
+    "first_play_video_source_type": "application\/x-mpegURL",
+    "first_play_video_name": "Test Bars and Music",
+    "first_play_channel_id": null
+}

@@ -5,7 +5,7 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div id="topDiv" class="bg-white text-gray-800 dark:bg-gray-800 dark:text-white p-5 mb-10">
 
-            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+            <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
             <div class="bg-black text-red-600 font-bold text-xl p-4 mb-4 w-full text-center">
                 This page needs updating.. attach a video that is already uploaded or upload a new video for this episode.<br>
@@ -127,13 +127,8 @@
 </template>
 
 <script setup>
-import { onBeforeMount, onMounted, ref } from "vue"
 import { Inertia } from "@inertiajs/inertia"
 import {useForm, usePage} from "@inertiajs/inertia-vue3"
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import { useTeamStore } from "@/Stores/TeamStore.js"
-import { useShowStore } from "@/Stores/ShowStore.js"
-import { useUserStore } from "@/Stores/UserStore";
 import vueFilePond, { setOptions } from 'vue-filepond'
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type"
 import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size"
@@ -141,29 +136,22 @@ import FilePondPluginImagePreview from "filepond-plugin-image-preview"
 import FilePondPluginFileMetadata from "filepond-plugin-file-metadata"
 import 'filepond/dist/filepond.min.css'
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css'
-import Message from "@/Components/Modals/Messages";
-import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
-import CancelButton from "@/Components/Buttons/CancelButton.vue";
+import { usePageSetup } from '@/Utilities/PageSetup'
+import { useTeamStore } from "@/Stores/TeamStore"
+import { useShowStore } from "@/Stores/ShowStore"
+import JetValidationErrors from '@/Jetstream/ValidationErrors'
+import CancelButton from '@/Components/Global/Buttons/CancelButton'
+import Message from '@/Components/Global/Modals/Messages'
 
-let videoPlayerStore = useVideoPlayerStore()
-let teamStore = useTeamStore()
-let showStore = useShowStore()
-let userStore = useUserStore()
+usePageSetup('shows/slug/episodes/slug/upload')
 
-userStore.currentPage = 'episodes'
-userStore.showFlashMessage = true;
+const appSettingStore = useAppSettingStore()
+const teamStore = useTeamStore()
+const showStore = useShowStore()
+
 teamStore.setActiveTeam(props.team);
 teamStore.setActiveShow(props.show);
 showStore.episodePoster = props.poster;
-
-onMounted(() => {
-    videoPlayerStore.makeVideoTopRight();
-    if (userStore.isMobile) {
-        videoPlayerStore.ottClass = 'ottClose'
-        videoPlayerStore.ott = 0
-    }
-    document.getElementById("topDiv").scrollIntoView()
-});
 
 let props = defineProps({
     episode: Object,
@@ -222,15 +210,7 @@ function handleProcessedFile(error, file) {
 
 
 let submit = () => {
-    form.put(route('showEpisodes.update', props.episode.slug));
+    form.patch(route('showEpisodes.update', props.episode.slug));
 };
-
-
-function back() {
-    let urlPrev = usePage().props.value.urlPrev
-    if (urlPrev !== 'empty') {
-        Inertia.visit(urlPrev)
-    }
-}
 
 </script>

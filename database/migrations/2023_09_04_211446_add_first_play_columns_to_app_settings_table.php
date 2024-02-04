@@ -32,7 +32,6 @@ return new class extends Migration
             $table->dropColumn('first_play_video_source');
             $table->dropColumn('first_play_video_source_type');
             $table->dropColumn('first_play_video_name');
-            $table->dropForeign(['first_play_channel_id']);
             $table->dropColumn('first_play_channel_id');
         });
     }

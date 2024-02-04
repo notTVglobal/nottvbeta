@@ -1,4 +1,5 @@
 <script setup>
+import { Inertia } from '@inertiajs/inertia'
 import { Head, useForm } from '@inertiajs/inertia-vue3';
 import JetAuthenticationCard from '@/Jetstream/AuthenticationCard.vue';
 import JetAuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo.vue';
@@ -6,9 +7,16 @@ import JetButton from '@/Jetstream/Button.vue';
 import JetInput from '@/Jetstream/Input.vue';
 import JetLabel from '@/Jetstream/Label.vue';
 import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import { onBeforeMount, onMounted } from 'vue'
 
-defineProps({
-    status: String,
+const appSettingStore = useAppSettingStore()
+
+appSettingStore.noLayout = true
+appSettingStore.currentPage = 'forgot-password'
+
+let props = defineProps({
+  status: String,
 });
 
 const form = useForm({
@@ -20,10 +28,10 @@ const submit = () => {
 };
 </script>
 <script>
-import NoLayout from '../../Layouts/NoLayout';
-export default {
-    layout: NoLayout,
-}
+// import NoLayout from '../../Layouts/NoLayout';
+// export default {
+//     layout: NoLayout,
+// }
 </script>
 
 <template>
@@ -51,7 +59,7 @@ export default {
                     id="email"
                     v-model="form.email"
                     type="email"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full text-gray-800"
                     required
                     autofocus
                 />

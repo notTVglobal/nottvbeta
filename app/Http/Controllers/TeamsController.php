@@ -216,6 +216,15 @@ class TeamsController extends Controller
                 'cloud_folder' => $team->image->cloud_folder,
             ],
             'shows' => Show::with('team', 'image')->where('team_id', $team->id)
+                ->where(function ($query) {
+                  if (auth()->check() && auth()->user()->creator) {
+                    // If the user is a creator, only show status 9
+                    $query->where('show_status_id', 9);
+                  } else {
+                    // For all other users, filter for shows that are new or active
+                    $query->whereIn('show_status_id', [1, 2]);
+                  }
+                })
                 ->latest()
                 ->paginate(6, ['*'], 'shows')
                 ->withQueryString()
@@ -237,6 +246,7 @@ class TeamsController extends Controller
                     'copyrightYear' => Carbon::parse($show->created_at)->format('Y'),
                     'categoryName' => showCategoryName($show->show_category_id),
                     'categorySubName' => showCategorySubName($show->show_category_sub_id),
+                    'statusId' => $show->status->id,
                 ]),
             'creators' => TeamMember::where('team_id', $team->id)
                 ->join('users', 'team_members.user_id', '=', 'users.id')
@@ -288,9 +298,9 @@ class TeamsController extends Controller
             $teamCreatorData = [
                 'id' => $team->user->id,
                 'name' => $team->user->name,
-                'creator_status_id' => optional($team->user->creator->status)->id ?? null,
-                'creator_status_name' => optional($team->user->creator->status)->status ?? null,
-            ];
+                'creator_status_id' => optional(optional($team->user->creator)->status)->id ?? null,
+                'creator_status_name' => optional(optional($team->user->creator)->status)->status ?? null,
+                ];
         }
 
         // check if teamLeader is not null before attempting to access its related properties
@@ -532,8 +542,8 @@ class TeamsController extends Controller
             $teamLeaderData = [
                 'id' => $team->teamLeader->user->id ?? null,
                 'name' => $team->teamLeader->user->name ?? null,
-                'creator_status_id' => optional($team->teamLeader->status)->id ?? null,
-                'creator_status_name' => optional($team->teamLeader->status)->status ?? null,
+                'creator_status_id' => $team->user?->creator?->status->id ?? null,
+                'creator_status_name' => $team->teamLeader?->status ?? null,
             ];
         }
 
@@ -549,8 +559,8 @@ class TeamsController extends Controller
             $teamCreatorData = [
                 'id' => $team->user->id,
                 'name' => $team->user->name,
-                'creator_status_id' => optional($team->user->creator->status)->id ?? null,
-                'creator_status_name' => optional($team->user->creator->status)->status ?? null,
+                'creator_status_id' => $team->user?->creator?->status->id ?? null,
+                'creator_status_name' => $team->teamLeader?->status ?? null,
             ];
         }
 
@@ -693,13 +703,13 @@ class TeamsController extends Controller
     private function determineRole($member, $team)
     {
         if ($member->id === $team->user_id) {
-            return 'Creator';
+            return 'creator';
         } elseif ($member->id === $team->team_leader) {
-            return 'Leader';
+            return 'leader';
         } elseif ($team->managers->contains('id', $member->id)) {
-            return 'Manager';
+            return 'manager';
         } else {
-            return 'Member';
+            return 'member';
         }
     }
 

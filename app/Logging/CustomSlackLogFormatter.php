@@ -2,18 +2,28 @@
 
 namespace App\Logging;
 
-use Monolog\Formatter\LineFormatter;
+use Monolog\Formatter\JsonFormatter;
 
-class CustomSlackLogFormatter extends LineFormatter
+class CustomSlackLogFormatter extends JsonFormatter
 {
-    public function format(array $record): string
-    {
-        // Get the APP_NAME from the environment variables
-        $appName = env('APP_NAME');
+  public function format(array $record): string
+  {
+    // Get the APP_NAME from the environment variables
+    $appName = env('APP_NAME');
 
-        // Add APP_NAME to the log message
-        $record['message'] = "APP_NAME: $appName - " . $record['message'];
+    // Prepare the message as a Slack attachment
+    $slackMessage = [
+        'attachments' => [
+            [
+                'text' => "[" . $appName . "] " . $record['message'],
+                'color' => '#36a64f', // You can set color for different log levels
+            ]
+        ]
+    ];
 
-        return parent::format($record);
-    }
+    // Override the record's formatted data
+    $record['formatted'] = json_encode($slackMessage);
+
+    return parent::format($record);
+  }
 }
