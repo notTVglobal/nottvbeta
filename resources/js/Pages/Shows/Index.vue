@@ -67,7 +67,7 @@
                   <SingleImage :image="show.image" :alt="'show cover'"
                                class="h-96 min-w-[16rem] w-64 mb-6 object-cover lg:mb-0 m-auto lg:m-0"/>
                 </div>
-                <div class="block text-base text-xl font-semibold leading-tight mt-4 max-w-[16rem]">{{
+                <div class="block text-xl font-semibold leading-tight mt-4 max-w-[16rem]">{{
                     show.name
                   }}
                 </div>

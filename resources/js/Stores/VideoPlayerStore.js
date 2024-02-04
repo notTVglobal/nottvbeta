@@ -500,7 +500,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             videoJs.src({'src': source.video_url, 'type': source.type})
             // videoJs.controls(false)
             // this.play()
-            this.unmute()
+            this.unMute()
             this.paused = false
         },
 // loadNewSourceFromMist(source) {

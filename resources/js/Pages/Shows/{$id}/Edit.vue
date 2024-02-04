@@ -91,7 +91,7 @@
 
                       <select required
                               class="border border-gray-400 text-gray-800 p-2 w-1/2 rounded-lg block mb-2 uppercase font-bold text-xs "
-                              v-model="form.status"
+                              v-model="form.show_status_id"
                       >
                         <option v-for="status in statuses"
                                 :key="status.id" :value="status.id">{{ status.name }}
@@ -99,7 +99,7 @@
 
 
                       </select>
-                      <div v-if="form.errors.status" v-text="form.errors.status"
+                      <div v-if="form.errors.show_status_id" v-text="form.errors.show_status_id"
                            class="text-xs text-red-600 mt-1"></div>
                     </div>
 
@@ -377,7 +377,7 @@ const chooseSubCategory = () => {
 let form = useForm({
   name: props.show.name,
   description: props.show.description,
-  status: props.show.status_id,
+  show_status_id: props.show.show_status_id,
   category: props.show.show_category_id,
   sub_category: props.show.show_category_sub_id,
   www_url: props.show.www_url,

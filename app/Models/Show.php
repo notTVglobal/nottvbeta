@@ -54,7 +54,7 @@ class Show extends Model
 
     public function status()
     {
-        return $this->belongsTo(ShowStatus::class, 'status_id');
+        return $this->belongsTo(ShowStatus::class, 'show_status_id');
     }
 
     public function team()

@@ -74,31 +74,29 @@ class ShowsController extends Controller {
   }
 
   private function fetchShows(): \Illuminate\Contracts\Pagination\LengthAwarePaginator {
-    return Show::with(['team', 'user', 'image', 'status', 'category', 'subCategory', 'appSetting',
-      // Conditionally load 'showEpisodes' based on publication status
-        'showEpisodes' => function ($query) {
-          $query->where('show_episode_status_id', 7); // Only include published episodes
-        }])
-        ->when(Request::input('search'), function ($query, $search) {
-          // Apply the search filter to shows
-          $query->where('name', 'like', "%" . $search . "%")
-              ->orWhere('description', 'like', "%" . $search . "%");
-          // Extend with additional search criteria as necessary
-        })
-        // Conditionally apply the filter for published episodes based on user status
-        ->when(!auth()->check() || (auth()->check() && !auth()->user()->creator), function ($query) {
-          $query->whereHas('showEpisodes', function ($query) {
-            $query->where('show_episode_status_id', 7); // Filter for episodes that are published
-          });
-        })
+    return Show::with(['team', 'user', 'image', 'status', 'category', 'subCategory', 'appSetting'])
         ->where(function ($query) {
-          if (auth()->check() && auth()->user()->creator) {
-            // If the user is a creator, only show status 9
-            $query->where('show_status_id', 9);
-          } else {
-            // For all other users, filter for shows that are new or active
-            $query->whereIn('show_status_id', [1, 2]);
-          }
+          // Apply filter for shows based on show_status_id and episodes' status
+          $query->where(function ($q) {
+            $q->whereIn('show_status_id', [1, 2])
+                ->whereHas('showEpisodes', function ($q) {
+                  $q->where('show_episode_status_id', 7);
+                });
+          })
+              // Additional condition for creators
+              ->orWhere(function ($q) {
+                if (auth()->check() && auth()->user()->creator) {
+                  $q->where('show_status_id', 9);
+                }
+              });
+        })
+        // Searchable filter, case-insensitive
+        ->when(Request::input('search'), function ($query, $search) {
+          $lowercaseSearchTerm = strtolower($search); // Convert search term to lowercase
+          $query->where(function ($q) use ($lowercaseSearchTerm) {
+            $q->whereRaw('LOWER(name) LIKE ?', ["%{$lowercaseSearchTerm}%"])
+                ->orWhereRaw('LOWER(description) LIKE ?', ["%{$lowercaseSearchTerm}%"]);
+          });
         })
         ->latest('updated_at')
         ->paginate(6, ['*'], 'shows')
@@ -148,11 +146,14 @@ class ShowsController extends Controller {
   }
 
   private function fetchNewestEpisodes() {
+    $oneWeekAgo = now()->subWeek(); // Calculate the date one week ago from today
+
     return ShowEpisode::with('show', 'image', 'show.category', 'show.subCategory', 'appSetting')
         ->where('show_episode_status_id', 7) // Assuming 7 is the status ID for published episodes
+        ->where('release_dateTime', '>=', $oneWeekAgo) // Only episodes released in the last week
         ->whereHas('show', function ($query) {
           // Filter shows with status of 1 or 2 (New or Active)
-          $query->where('show_status_id', 1)->orWhere('show_status_id', 2);
+          $query->whereIn('show_status_id', [1, 2]);
         })
         ->orderBy('release_dateTime', 'desc')
         ->limit(5) // Limit the results to the 5 newest episodes
@@ -423,7 +424,7 @@ class ShowsController extends Controller {
         'instagram_name'     => $show->instagram_name,
         'telegram_url'       => $show->telegram_url,
         'twitter_handle'     => $show->twitter_handle,
-        'statusId'           => $show->status->id,
+        'status'           => $show->status,
     ];
   }
 
@@ -661,7 +662,7 @@ class ShowsController extends Controller {
         'telegram_url'       => 'nullable|active_url',
         'twitter_handle'     => 'nullable|string|min:4|max:15',
         'notes'              => 'nullable|string|max:1024',
-        'status'             => 'required|integer|exists:show_statuses,id',
+        'show_status_id'     => 'required|integer|exists:show_statuses,id',
         'episode_play_order' => 'required|string',
     ], [
         'status.exists'      => 'The selected status is invalid.',
@@ -679,7 +680,7 @@ class ShowsController extends Controller {
     $show->telegram_url = $request->telegram_url;
     $show->twitter_handle = $request->twitter_handle;
     $show->notes = htmlentities($request->notes);
-    $show->status_id = $request->status;
+    $show->show_status_id = $request->show_status_id;
     $show->episode_play_order = $request->episode_play_order;
     $show->save();
     sleep(1);

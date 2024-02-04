@@ -33,7 +33,7 @@
           <div class="show-details border-b border-gray-800 pb-12 flex flex-col md:flex-row">
             <div class="items-center relative">
               <!--                        <SingleImage :image="props.show.image" :poster="props.show.poster" :alt="'show cover'" class="h-96 min-w-[16rem] w-64 object-cover mb-6 lg:mb-0 m-auto lg:m-0"/>-->
-              <div v-if="show.statusId === 9" class="absolute flex justify-end w-full -mt-3 z-50">
+              <div v-if="show.status.id === 9" class="absolute flex justify-end w-full -mt-3 z-50">
                 <CreatorsOnlyBadge />
               </div>
               <SingleImage :image="props.show.image" :alt="'show cover'"
