@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class SeedShowCategorySubsTable extends Migration
+return new class extends Migration
 {
   /**
    * Run the migrations.
