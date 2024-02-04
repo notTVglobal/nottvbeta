@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class SeedGeopoliticalDataTables extends Migration
+return new class extends Migration
 {
   /**
    * Run the migrations.
@@ -23,7 +23,7 @@ class SeedGeopoliticalDataTables extends Migration
   {
     // Now call the NewsGeopoliticalTablesSeeder
 //    Artisan::call('db:seed', ['--class' => NewsGeopoliticalTablesSeeder::class]);
-    
+
     $this->call([
         NewsCountriesTableSeeder::class,
       // Change these seeders as needed:
