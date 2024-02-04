@@ -11,7 +11,7 @@ class CreateShowScheduleTable extends Migration
     Schema::create('show_schedule', function (Blueprint $table) {
       $table->id();
       $table->unsignedBigInteger('show_id')->nullable();
-      $table->unsignedBigInteger('mist_stream_id')->nullable();
+//      $table->unsignedBigInteger('mist_stream_id')->nullable();
       $table->unsignedBigInteger('show_episode_id')->nullable();
       $table->unsignedBigInteger('movie_id')->nullable();
       $table->unsignedBigInteger('movie_trailer_id')->nullable();
@@ -25,7 +25,7 @@ class CreateShowScheduleTable extends Migration
 
       // Foreign keys
       $table->foreign('show_id')->references('id')->on('shows')->onDelete('set null');
-      $table->foreign('mist_stream_id')->references('id')->on('mist_streams')->onDelete('set null');
+//      $table->foreign('mist_stream_id')->references('id')->on('mist_streams')->onDelete('set null');
       $table->foreign('show_episode_id')->references('id')->on('show_episodes')->onDelete('set null');
       $table->foreign('movie_id')->references('id')->on('movies')->onDelete('set null');
       $table->foreign('movie_trailer_id')->references('id')->on('movie_trailers')->onDelete('set null');

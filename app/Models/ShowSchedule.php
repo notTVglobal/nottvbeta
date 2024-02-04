@@ -9,6 +9,8 @@ class ShowSchedule extends Model
 {
     use HasFactory;
 
+  protected $table = 'show_schedule';
+
   protected $fillable = [
       'show_id',
       'mist_stream_id',

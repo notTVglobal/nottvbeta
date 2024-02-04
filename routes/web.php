@@ -882,6 +882,14 @@ Route::middleware([
 
 });
 
+
+// Schedule
+///////////
+///
+
+Route::get('/api/schedule', [\App\Http\Controllers\ShowScheduleController::class, 'index']);
+Route::post('/api/schedule/{id}', [\App\Http\Controllers\ShowScheduleController::class, 'update']);
+
 // Extra Functions
 //////////////////
 ///

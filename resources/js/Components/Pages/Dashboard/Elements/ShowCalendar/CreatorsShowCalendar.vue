@@ -16,9 +16,10 @@
         <div class="bg-blue-100 p-4 rounded-lg text-center">{{ time }}</div>
 
         <!-- Shows for each day at this time -->
-        <template v-for="(day, dayIndex) in days" :key="day" >
-          <div :key="`show-${day}-${time}`" class="flex flex-col rounded">
+        <template v-for="(day, dayIndex) in days" :key="`show-${day}-${time}`"  >
+
             <!-- Simulate fetching a show for this day and time -->
+          <div class="flex flex-col rounded">
             <div v-if="randomShow(day, time)" class="bg-blue-500 hover:bg-indigo-500 hover:cursor-pointer text-white h-full flex flex-col p-2 rounded-lg shadow transition ease-in-out duration-150" :class="{ 'bg-red-500': isNowPlaying(dayIndex, timeIndex), 'bg-blue-100': !isNowPlaying(dayIndex, timeIndex) }">
 
               <!-- Show details -->
@@ -36,6 +37,7 @@
               <div v-else class="mt-2 text-xs font-thin">{{ formatHour(randomShow(day, time).scheduled_release_dateTime) }}</div>
             </div>
           </div>
+
         </template>
       </template>
     </div>
@@ -44,7 +46,9 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import dayjs from 'dayjs'; // Assume dayjs is installed for date manipulation
+import dayjs from 'dayjs';
+import CreatorsShowCalendarShowCard
+  from '@/Components/Pages/Dashboard/Elements/ShowCalendar/CreatorsShowCalendarShowCard.vue' // Assume dayjs is installed for date manipulation
 
 const now = dayjs();
 
