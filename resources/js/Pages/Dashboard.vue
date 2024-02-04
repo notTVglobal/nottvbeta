@@ -22,26 +22,28 @@
           <MyAssignments/>
         </div>
 
-        <div class="p-5 bg-gray-200 dark:bg-gray-800 rounded relative">
+        <div class="p-5 bg-orange-200 dark:bg-gray-800 rounded relative">
           <MyTeams :can="can" :teams="teams"/>
         </div>
 
-        <div class="p-5 bg-gray-200 dark:bg-gray-800 rounded relative">
+        <div class="p-5 bg-blue-200 dark:bg-gray-800 rounded relative">
           <MyShows :can="can" :shows="shows"/>
         </div>
 
       </section>
 
-      <div class="w-full bg-gray-300 dark:bg-gray-900 rounded p-3 my-8 mx-2 border-b border-2">
+      <div class="w-full bg-yellow-300 dark:bg-gray-900 rounded p-3 my-8 mx-2 border-b border-2">
         <div class="stat place-items-center mb-4">
-          <div class="stat-title font-semibold uppercase text-black dark:text-white mb-2 text-sm">Yesterday's Top Show
+          <div class="stat-title font-bold uppercase text-success tracking-widest text-black dark:text-white mb-2 text-sm">Yesterday's Top Show
           </div>
-          <div class="stat-value text-accent text-3xl">Down The Rabbit Hole</div>
-          <div class="stat-desc mt-2 text-sm">︎Episode 2</div>
+          <div class="stat-value text-success-content hover:text-blue-700 text-3xl"><Link :href="`shows/${yesterdaysTopShow.slug}`" class="drop-shadow-lg outline-1">{{ yesterdaysTopShow.name }}</Link></div>
+          <div hidden class="stat-desc mt-2 text-sm">︎Episode 2</div>
         </div>
       </div>
 
-      <div class="w-full bg-gray-300 dark:bg-gray-900 rounded pb-8 p-3 mb-16 mx-2 border-b border-2">
+      <CreatorsShowCalendar />
+
+      <div class="w-full bg-indigo-300 dark:bg-gray-900 rounded-lg pb-8 p-3 mb-16 mx-2 border-b border-2">
 
         <div class="font-semibold text-xl pb-2 text-black dark:text-white">Stats</div>
 
@@ -232,6 +234,7 @@ import MyAssignments from "@/Components/Pages/Dashboard/Elements/MyAssignments/M
 import MyTeams from "@/Components/Pages/Dashboard/Elements/MyTeams/MyTeams"
 import MyShows from "@/Components/Pages/Dashboard/Elements/MyShows//MyShows"
 import NotificationPanel from "@/Components/Pages/Dashboard/Elements/DashboardNotification/DashboardNotificationPanel"
+import CreatorsShowCalendar from '@/Components/Pages/Dashboard/Elements/ShowCalendar/CreatorsShowCalendar.vue'
 
 usePageSetup('dashboard')
 
@@ -283,6 +286,7 @@ let props = defineProps({
   userCount: Number,
   creatorCount: Number,
   subscriptionCount: Number,
+  yesterdaysTopShow: Object,
   can: Object,
 });
 

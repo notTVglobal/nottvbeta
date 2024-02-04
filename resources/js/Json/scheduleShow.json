@@ -1,0 +1,49 @@
+{
+  "shows": [
+    {
+      "id": 1,
+      "name": "Morning Vibes",
+      "category": "Music",
+      "subCategory": "Jazz",
+      "description": "Start your day right with a smooth selection of jazz tunes.",
+      "image": "https://picsum.photos/200/300",
+      "scheduled_release_dateTime": "2024-02-10T08:00:00Z"
+    },
+    {
+      "id": 2,
+      "name": "Tech Today",
+      "category": "Technology",
+      "subCategory": "Innovations",
+      "description": "Dive into the latest tech trends and innovations with our expert hosts.",
+      "image": "https://picsum.photos/200/300?random=2",
+      "scheduled_release_dateTime": "2024-02-10T09:00:00Z"
+    },
+    {
+      "id": 3,
+      "name": "Evening Reads",
+      "category": "Literature",
+      "subCategory": "Fiction",
+      "description": "Unwind with our selection of captivating fiction stories.",
+      "image": "https://picsum.photos/200/300?random=3",
+      "scheduled_release_dateTime": "2024-02-10T17:00:00Z"
+    },
+    {
+      "id": 4,
+      "name": "Nightly News Roundup",
+      "category": "News",
+      "subCategory": "Global",
+      "description": "Catch up on the day's major global news stories.",
+      "image": "https://picsum.photos/200/300?random=4",
+      "scheduled_release_dateTime": "2024-02-10T20:00:00Z"
+    },
+    {
+      "id": 5,
+      "name": "Cooking with Chefs",
+      "category": "Culinary",
+      "subCategory": "Recipes",
+      "description": "Join top chefs as they share their favorite recipes and kitchen secrets.",
+      "image": "https://picsum.photos/200/300?random=5",
+      "scheduled_release_dateTime": "2024-02-11T12:00:00Z"
+    }
+  ]
+}

@@ -20,7 +20,16 @@
             <div><span class="text-xs font-semibold mr-2 uppercase">Sub-category: </span><span
                 class="font-medium text-orange-800"> {{ show.subCategory.name }} </span></div>
 
+          <div class="mt-12 w-full h-full flex flex-col">
+            <div class="flex-grow"></div>
+            <button class="btn btn-lg btn-success text-success-content drop-shadow-lg py-2 flex flex-col">
+              <span>Add Show To Schedule</span>
+              <span class="text-sm italic font-thin">x number of time slots available</span>
+            </button>
+
+          </div>
         </div>
+
       </div>
 
   </div>
@@ -30,6 +39,7 @@
 import { useShowStore } from "@/Stores/ShowStore"
 import { useTeamStore } from "@/Stores/TeamStore"
 import SingleImage from "@/Components/Global/Multimedia/SingleImage"
+import Button from '@/Jetstream/Button.vue'
 
 const showStore = useShowStore()
 const teamStore = useTeamStore()

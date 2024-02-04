@@ -182,6 +182,8 @@
                      id="first_play_video_source"
               >
             </div>
+            <span class="text-xs">e.g., https://mist.not.tv/hls/test/index.m3u8</span>
+
             <span class="text-xs"></span>
 
             <div v-if="form.errors.first_play_video_source" v-text="form.errors.first_play_video_source"

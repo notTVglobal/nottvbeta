@@ -39,7 +39,7 @@
                                  class="bg-red-600 p-2 w-full text-white font-semibold mt-1 mb-6"></div>
                             <div v-if="form.errors.description" v-text="form.errors.description"
                                  class="bg-red-600 p-2 w-full text-white font-semibold mt-1 mb-6"></div>
-                            <div v-if="form.errors.file_url" v-text="form.errors.file_url"
+                            <div v-if="form.errors.video_url" v-text="form.errors.video_url"
                                  class="bg-red-600 p-2 w-full text-white font-semibold mt-1 mb-6"></div>
                             <!--                            <div v-if="form.errors.video_file_embed_code" v-text="form.errors.video_file_embed_code"-->
                             <!--                                 class="bg-red-600 p-2 w-full text-white font-semibold mt-1"></div>-->
@@ -338,13 +338,13 @@
                                                 Change Video URL (if hosted externally) <span class="text-white dark:text-black">*</span>
                                             </label>
 
-                                            <input v-model="form.file_url"
+                                            <input v-model="form.video_url"
                                                    class="border border-gray-400 text-gray-800 p-2 w-full rounded-lg"
                                                    type="text"
-                                                   name="file_url"
-                                                   id="file_url"
+                                                   name="video_url"
+                                                   id="video_url"
                                             >
-                                            <div v-if="form.errors.file_url" v-text="form.errors.file_url"
+                                            <div v-if="form.errors.video_url" v-text="form.errors.video_url"
                                                  class="text-xs text-red-600 mt-1"></div>
                                         </div>
 
@@ -568,7 +568,7 @@ let form = useForm({
     logline: props.movie.logline,
     user_id: props.movie.user_id,
     team_id: props.movie.team_id,
-    file_url: props.movie.file_url,
+    video_url: props.video.video_url ?? null,
     www_url: props.movie.www_url,
     instagram_name: props.movie.instagram_name,
     telegram_url: props.movie.telegram_url,

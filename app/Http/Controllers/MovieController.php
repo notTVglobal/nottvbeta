@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ProcessVideoInfo;
 use App\Models\CreativeCommons;
 use App\Models\Image;
 use App\Models\Movie;
@@ -195,7 +196,7 @@ class MovieController extends Controller {
         'name'        => 'unique:movies|required|string|max:255',
         'logline'     => 'required|string',
         'description' => 'required|string',
-        'file_url'    => 'nullable|active_url',
+        'video_url'    => 'nullable|active_url|ends_with:.mp4',
     ]);
 
     // Generate the slug
@@ -208,11 +209,27 @@ class MovieController extends Controller {
         'logline'       => $request->logline,
         'copyrightYear' => Carbon::now()->year,
         'slug'          => $slug,
-        'file_url'      => $request->file_url,
         'user_id'       => Auth::user()->id,
     ]);
 
-//        $movie = Movie::query()->where('name', $request->name)->firstOrFail();
+    if (!empty($request->video_url)) { // Check for non-empty video_url
+      // Create and save the video as before
+      $video = new Video([
+          'user_id'          => Auth::user()->id,
+          'name'             => 'External video',
+          'file_name'        => 'external_video_' . \Illuminate\Support\Str::uuid(),
+          'type'             => 'video/mp4',
+          'video_url'        => $request->video_url,
+          'storage_location' => 'external',
+          'movies_id'        => $movie->id,
+      ]);
+      $video->save();
+
+      $movie->video_id = $video->id;
+      $movie->save();
+    }
+
+    // $movie = Movie::query()->where('name', $request->name)->firstOrFail();
     // Use this route to return
     // the user to the new movie page.
     return redirect()->route('movies.show', [$movie->slug])->with('success', 'Movie Added Successfully');
@@ -294,9 +311,9 @@ class MovieController extends Controller {
                 'folder'           => $movie->video->folder ?? '',
                 'cloud_folder'     => $movie->video->cloud_folder ?? '',
                 'upload_status'    => $movie->video->upload_status ?? '',
-                'video_url'        => $showEpisode->video->video_url ?? '',
-                'type'             => $showEpisode->video->type ?? '',
-                'storage_location' => $showEpisode->video->storage_location ?? '',
+                'video_url'        => $movie->video->video_url ?? '',
+                'type'             => $movie->video->type ?? '',
+                'storage_location' => $movie->video->storage_location ?? '',
             ],
             'trailer'          => [
                 'mediaType'        => $mediaTypeMovieTrailer, // New attribute for NowPlayingStore
@@ -305,9 +322,9 @@ class MovieController extends Controller {
                 'folder'           => $movie->trailer->video->folder ?? '',
                 'cloud_folder'     => $movie->trailer->video->cloud_folder ?? '',
                 'upload_status'    => $movie->trailer->video->upload_status ?? '',
-                'video_url'        => $showEpisode->video->video_url ?? '',
-                'type'             => $showEpisode->video->type ?? '',
-                'storage_location' => $showEpisode->video->storage_location ?? '',
+                'video_url'        => $movie->trailer->video->video_url ?? '',
+                'type'             => $movie->trailer->video->type ?? '',
+                'storage_location' => $movie->trailer->video->storage_location ?? '',
             ],
         ],
         'can'   => [
@@ -347,6 +364,7 @@ class MovieController extends Controller {
             'folder'        => $movie->video->folder ?? '',
             'cloud_folder'  => $movie->video->cloud_folder ?? '',
             'upload_status' => $movie->video->upload_status ?? '',
+            'video_url'     => $movie->video->video_url ?? '',
         ],
         'trailer'          => [
             'trailerDetails' => $movie->trailer, // The entire trailer object
@@ -397,7 +415,7 @@ class MovieController extends Controller {
         'copyrightYear'       => ['nullable', 'integer', 'min:1900', 'max:' . date('Y')],
         'category'            => 'required',
         'sub_category'        => 'nullable',
-        'file_url'            => 'nullable|active_url',
+        'video_url'           => 'nullable|active_url|ends_with:.mp4',
         'www_url'             => 'nullable|active_url',
         'instagram_name'      => 'nullable|string|max:30',
         'telegram_url'        => 'nullable|active_url',
@@ -419,6 +437,41 @@ class MovieController extends Controller {
       $movie->releaseDateTime = now();
     }
 
+    // Check if the video_url is not empty and is different from the existing one.
+    if (!empty($request->video_url)) {
+      // Attempt to find an existing video with the same URL for any episode
+      $existingVideo = Video::where('video_url', $request->video_url)->first();
+
+      if ($existingVideo) {
+        // If a video with the same URL already exists, associate its ID with the show episode
+        $movie->video_id = $existingVideo->id;
+      } else {
+        // No existing video with the same URL, proceed to create a new Video instance
+        $video = new Video([
+            'user_id'          => Auth::id(), // Simpler way to get the authenticated user's ID
+            'name'             => 'External video',
+            'file_name'        => 'external_video_' . \Illuminate\Support\Str::uuid(),
+            'type'             => 'video/mp4', // Assuming a default type for external videos
+            'video_url'        => $request->video_url,
+            'storage_location' => 'external',
+          // 'show_episodes_id' might not be needed if you're associating via $showEpisode->video_id below
+          // 'show_episodes_id' => $showEpisode->id,
+        ]);
+        $video->save();
+
+        // Dispatch job as before
+        $jobName = null;
+        dispatch(new ProcessVideoInfo($video->id, $jobName))->onQueue('high');
+
+        // After saving the new video, set its ID as the video_id for the show episode
+        $movie->video_id = $video->id;
+
+      }
+    } else { // else the video_url is empty, check if there was previously a video.
+      // we need to either delete the video (soft delete) or... something...
+      $movie->video_id = null;
+    }
+
     // update the show
     $movie->name = $request->name;
     $movie->description = $request->description;
@@ -429,7 +482,6 @@ class MovieController extends Controller {
     $movie->movie_category_id = $request->category;
     $movie->movie_category_sub_id = $request->sub_category;
     $movie->slug = \Str::slug($request->name);
-    $movie->file_url = $request->file_url;
     $movie->www_url = $request->www_url;
     $movie->instagram_name = $request->instagram_name;
     $movie->telegram_url = $request->telegram_url;

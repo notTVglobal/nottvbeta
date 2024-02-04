@@ -80,14 +80,14 @@
           <div v-if="form.errors.description" v-text="form.errors.description"
                class="bg-red-600 p-2 w-full text-white font-semibold mt-1"></div>
           <input
-              v-model="form.file_url"
+              v-model="form.video_url"
               type="text"
-              name="file_url"
-              id="file_url"
+              name="video_url"
+              id="video_url"
               class="border border-gray-400 rounded w-full px-2 py-2 my-2"
               placeholder="Link to existing video file (optional)"
           />
-          <div v-if="form.errors.file_url" v-text="form.errors.file_url"
+          <div v-if="form.errors.video_url" v-text="form.errors.video_url"
                class="bg-red-600 p-2 w-full text-white font-semibold mt-1"></div>
 
           <div v-if="message" v-text="message"
@@ -203,7 +203,7 @@ let form = useForm({
   name: '',
   description: '',
   video: '',
-  file_url: '',
+  video_url: '',
 })
 
 let save = () => {

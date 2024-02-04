@@ -90,15 +90,14 @@ class ShowsController extends Controller {
                 }
               });
         })
-        // Searchable filter, case-insensitive
+        // Searchable filter
         ->when(Request::input('search'), function ($query, $search) {
-          $lowercaseSearchTerm = strtolower($search); // Convert search term to lowercase
-          $query->where(function ($q) use ($lowercaseSearchTerm) {
-            $q->whereRaw('LOWER(name) LIKE ?', ["%{$lowercaseSearchTerm}%"])
-                ->orWhereRaw('LOWER(description) LIKE ?', ["%{$lowercaseSearchTerm}%"]);
+          $query->where(function ($q) use ($search) {
+            $q->where('name', 'like', "%" . $search . "%")
+                ->orWhere('description', 'like', "%" . $search . "%");
           });
         })
-        ->latest('updated_at')
+        ->orderByRaw('RAND()')
         ->paginate(6, ['*'], 'shows')
         ->withQueryString()
         ->through(fn($show) => $this->transformShow($show));
