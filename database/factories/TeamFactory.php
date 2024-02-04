@@ -17,10 +17,12 @@ class TeamFactory extends Factory
      */
     public function definition()
     {
-        return [
+      $userIds = \App\Models\User::pluck('id')->all();
+
+      return [
             'name' => $name = $this->faker->sentence($nbWords = 2, $variableNbWords = true),
             'description' => $this->faker->paragraph,
-            'user_id' => \App\Models\User::all()->random()->id,
+            'user_id' => $this->faker->randomElement($userIds),
             'image_id' => '3',
             'slug' => \Str::slug($name)
         ];

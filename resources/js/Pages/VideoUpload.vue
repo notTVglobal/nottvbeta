@@ -4,7 +4,7 @@
         <div class="place-self-center flex flex-col gap-y-3">
             <div id="topDiv" class="bg-white text-black p-5 mb-10">
 
-                <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+                <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
                 <div id="topDiv"></div>
                 <header class="flex justify-between mb-3 border-b border-gray-800 pb-6">
@@ -63,38 +63,27 @@ FOOTER
 </template>
 
 <script setup>
-import { defineAsyncComponent, onBeforeMount, onMounted, ref, watch } from "vue"
+import { defineAsyncComponent, ref, watch } from "vue"
 import { Inertia } from "@inertiajs/inertia"
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
-import { useUserStore } from "@/Stores/UserStore"
-import { Dropzone } from "dropzone"
-import { useForm } from "@inertiajs/inertia-vue3"
-import Pagination from "@/Components/Pagination"
-import VideoTable from "@/Components/Tables/VideoTable"
-
-// import VideoUpload from "@/Components/Uploaders/VideoUpload"
-const VideoUpload = defineAsyncComponent(() =>
-    import('@/Components/Uploaders/VideoUpload')
-)
-import MobileVideoRecord from "@/Components/Uploaders/MobileVideoRecord"
 import throttle from "lodash/throttle";
-import Message from "@/Components/Modals/Messages";
-import BackButton from "@/Components/Buttons/BackButton.vue";
+// import { Dropzone } from "dropzone"
+// import { useForm } from "@inertiajs/inertia-vue3"
+import { usePageSetup } from '@/Utilities/PageSetup'
+import { useAppSettingStore } from "@/Stores/AppSettingStore"
+// import Pagination from "@/Components/Global/Paginators/Pagination"
+import VideoTable from "@/Components/Global/Tables/VideoTable"
+// import VideoUpload from "@/Components/Global/Uploaders/VideoUpload"
+const VideoUpload = defineAsyncComponent(() =>
+    import('@/Components/Global/Uploaders/VideoUpload')
+)
+// import MobileVideoRecord from "@/Components/Global/Uploaders/MobileVideoRecord"
 
-const videoPlayerStore = useVideoPlayerStore()
-const userStore = useUserStore()
+import Message from "@/Components/Global/Modals/Messages";
+import BackButton from "@/Components/Global/Buttons/BackButton.vue";
 
-userStore.currentPage = 'videoUpload'
-userStore.showFlashMessage = true;
+usePageSetup('videoUpload')
 
-onMounted(() => {
-    videoPlayerStore.makeVideoTopRight();
-    if (userStore.isMobile) {
-        videoPlayerStore.ottClass = 'ottClose'
-        videoPlayerStore.ott = 0
-    }
-    document.getElementById("topDiv").scrollIntoView()
-});
+const appSettingStore = useAppSettingStore()
 
 // see options for Dropzone here: https://github.com/dropzone/dropzone/blob/main/src/options.js
 //     let myDropzone = new Dropzone("#videoUploadForm", {

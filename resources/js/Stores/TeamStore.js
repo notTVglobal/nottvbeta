@@ -1,41 +1,46 @@
 import {defineStore} from "pinia";
 import {Inertia} from "@inertiajs/inertia";
 
-export const useTeamStore = defineStore('teamStore', {
-    state: () => ({
-        id: 0,
-        name: '',
-        description: '',
-        slug: '',
-        totalSpots: '',
-        memberSpots: '',
-        teamCreator: [],
-        teamLeader: [],
-        members: [],
-        managers: [],
-        activeShow: [],
-        activeEpisode: [],
-        creators: [],
-        showModal: Boolean,
-        confirmDialog: false,
-        confirmManagerDialog: false,
-        selectedManagerName: '',
-        selectedManagerId: 0,
-        addManager: false,
-        removeManager: false,
-        deleteMemberName: '',
-        deleteMemberId: 0,
-        noteEdit: 0,
-        note: '',
-        saveNoteProcessing: Boolean,
-            // on the show episode manage page
-            // turn on the go live div
-            goLiveDisplay: false,
-        can: [],
-        openComponent: 'teamShows',
-    }),
+const initialState = () => ({
+    id: 0,
+    name: '',
+    description: '',
+    slug: '',
+    totalSpots: '',
+    memberSpots: '',
+    teamCreator: [],
+    teamLeader: [],
+    members: [],
+    managers: [],
+    activeShow: [],
+    activeEpisode: [],
+    creators: [],
+    showModal: Boolean,
+    confirmDialog: false,
+    confirmManagerDialog: false,
+    selectedManagerName: '',
+    selectedManagerId: 0,
+    addManager: false,
+    removeManager: false,
+    deleteMemberName: '',
+    deleteMemberId: 0,
+    noteEdit: 0,
+    note: '',
+    saveNoteProcessing: Boolean,
+    // on the show episode manage page
+    // turn on the go live div
+    goLiveDisplay: false,
+    can: [],
+    openComponent: 'teamShows',
+})
 
+export const useTeamStore = defineStore('teamStore', {
+    state: initialState,
     actions: {
+        reset() {
+            // Reset the store to its original state (clear all data)
+            Object.assign(this, initialState());
+        },
         // async fill() {
         //     let r = await import('@/Json/team.json');
         //     this.$state = r.default;

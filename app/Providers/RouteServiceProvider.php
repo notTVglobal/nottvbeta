@@ -30,6 +30,12 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+
+      parent::boot();
+
+      Route::model('movie', \App\Models\Movie::class);
+      Route::model('show', \App\Models\Show::class);
+
         $this->configureRateLimiting();
 
         $this->routes(function () {

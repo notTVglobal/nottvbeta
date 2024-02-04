@@ -11,7 +11,8 @@ class ShowCategorySub extends Model
 
     protected $fillable = [
         'name',
-        'description'
+        'description',
+        'show_categories_id'
     ];
 
     public function show()
@@ -20,7 +21,10 @@ class ShowCategorySub extends Model
     }
     public function showCategory()
     {
-        return $this->belongsTo(ShowCategory::class);
+        return $this->belongsTo(ShowCategory::class, 'show_categories_id', 'id')->withDefault([
+          'name' => 'sub category',
+          'description' => 'sub category description'
+      ]);
     }
 
 }

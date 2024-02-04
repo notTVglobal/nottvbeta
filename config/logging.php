@@ -67,7 +67,7 @@ return [
             'driver' => 'daily',
             'path' => storage_path('logs/laravel.log'),
             'level' => env('LOG_LEVEL', 'debug'),
-            'days' => 14, // Number of days to keep log files
+            'days' => 3, // Number of days to keep log files
         ],
 
         'slack' => [

@@ -5,7 +5,7 @@
     <div class="place-self-center flex flex-col gap-y-3">
         <div id="topDiv" class="bg-white text-black dark:bg-gray-800 dark:text-gray-50 p-5 mb-10">
 
-            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+            <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
             <header class="flex justify-between mb-3">
                 <div id="topDiv">
@@ -35,27 +35,18 @@
 </template>
 
 <script setup>
-import { onBeforeMount, onMounted, ref } from "vue"
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import { useUserStore } from "@/Stores/UserStore"
+import { onMounted } from "vue"
+import { usePageSetup } from '@/Utilities/PageSetup'
+import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import { useShopStore } from "@/Stores/ShopStore"
-import Message from "@/Components/Modals/Messages"
+import Message from "@/Components/Global/Modals/Messages"
 
-let videoPlayerStore = useVideoPlayerStore()
-let userStore = useUserStore()
-let shopStore = useShopStore()
+usePageSetup('shop')
 
-userStore.currentPage = 'shop'
-userStore.showFlashMessage = true;
+const appSettingStore = useAppSettingStore()
+const shopStore = useShopStore()
 
 onMounted(() => {
-    videoPlayerStore.makeVideoTopRight();
-    if (userStore.isMobile) {
-        videoPlayerStore.ottClass = 'ottClose'
-        videoPlayerStore.ott = 0
-    }
-    document.getElementById("topDiv").scrollIntoView()
-
     shopStore.getProducts()
 });
 

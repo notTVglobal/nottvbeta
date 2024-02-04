@@ -1,7 +1,188 @@
 # not.tv Changelog
 
-Last Update: January 14, 2024\
+Last Update: January 31, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+# v0.8.4.1
+February 1, 2024
+* Added creative commons licensing to movies and show episodes
+* Created new "new" badge for movies and shows
+* Optimized the database loading on the Shows index page
+* Added the option for Creators to choose whether the first episode played from the Show page when the user clicks "Watch Now" is the oldest episode first or the newest episode first.
+
+# v0.8.4.0
+January 29, 2024
+* Added show sub-categories
+* Fixed some policies (movie and show)
+* Re-designed the NowPlayingStore
+* Created a First Play Data Cache to store the First play video data in a .json file
+  * Added a "clear cache" button to the admin settings
+  * The data is saved in the database AppSetting as well as in the /js/firstPlayData.json
+
+# v0.8.3.8
+January 29, 2024
+* Styling change to the stream page! Now when you click the video it hides the osd (on screen display) instead of pausing/playing.
+* Movies now have categories and sub-categories.
+* Movies have statuses, and must be switched to 'Active' before they are viewable from the movies page.
+* Movies and NewsStories can have a status of "Creator Only" and only creators will be able to see that content.
+* Active movies are only viewable by users with an active subscription or vip.
+* Admin can see movie statuses from the Admin settings.
+* News Story statuses can be changed from the Newsroom. If a story is published it no longer shows up in the NewsRoom Story Table and will immediately appear in the public News Stories list.
+* Fixed the Chat, it's working again.
+* Fixed the Channels, they seem to be working, but need to be tested.
+* The NowPlaying Info needs to be tested and tweaked.
+* Fix the layout of the NowPlaying Ott panel.
+* Movie Release Schedule needs to be created... Movies > Coming Soon will display movies with a release date of at least 24 hours in the future.
+* The videoPlayer playback bar has disappeared and needs to be fixed.
+* The Movie and Show and ShowEpisode Watch Now button is missing or disabled and will need to be fixed.
+* Notification don't appear to be working and will need to be fixed.
+* Need to add Movies to the Teams page.
+* Need to allow Teams to create movies.
+* The VideoPlayer FullScreen button isn't working and needs to be fixed.
+* The upgrade ott panel styling is messed up and needs to be fixed.
+* The Public News and Newsroom need the following pages: Categories, Citites, Districts, Press Releases, Archive
+* Need to add Change News Story Image capability.
+* Need to add Categories and Subcategories to Shows.
+* Need to add Edit ShowEpisode description directly on the showEpisode Manage page.
+* Create a channel manage page where the admin can add shows, episodes, videos and movies to the time slots.
+  * Shows, movies , showEpisodes, News stories can be a one-off
+  * Shows can be recurring
+  * Set live or on demand
+  * Creators get a reminder before their scheduled live time slot. 3 misses and they lose their slot.
+* We need to schedule our town hall meetings
+
+# v0.8.3.6
+January 27, 2024
+* Removed the VideoJS YouTube extension because it has a tracker built into it.
+* Added new text editing options to the News Story Create and Edit pages.
+
+# v0.8.3.5
+January 26, 2024
+* Finish the News Story Edit Page.. need to fix the News Story Create Page to match.
+  * The TipTap Text Editor is not loading ... work in progress..
+  * Almost got it working...
+* News Create and Edit pages are done.
+
+# v0.8.3.3
+January 25, 2024
+* Major overhaul of the Newsroom and the News page.
+* Categories, sub-categories, and cities are all working with News Stories.
+* The search on the News page will search by story name, story content (needs to be tested, might be resource intensive), news person, city, province, category, sub-category, or published date (YYYY-MM-DD).
+  * If searching by date, you can search by year (YYYY), year and month (YYYY-MM), or the full date (YYYY-MM-DD).
+
+# v0.8.3.2
+January 24, 2024
+* Fix the News seeders
+* Added python scripts to parse external datasets into csv for Canada's Federal Electoral Districts
+
+# v0.8.3.1
+January 23, 2024
+* Create News Sub-categories.
+* Filled the database (seeders) with News Sub-Categories, Movie Sub-Categories, and News Sub-Categories.
+* Created new models for NewsCities, NewsProvinces, NewsPostalCodes, News MLA Ridings, News Federal Ridings
+  * Need to populate the Cities, PostalCodes, MLA and Federal Ridings tables.
+* Seed the News Tables
+  * Canadian Cities and Towns, source: https://natural-resources.canada.ca/earth-sciences/geography/download-geographical-names-data/9245
+  * Canadian Postal Codes, source: https://github.com/djbelieny/geoinfo-dataset
+    * Note: Stats Canada used to provide this dataset but discontinued it in June 2017. Canada Post now charges a fee for a regularly updated dataset.
+  * Canadian Electoral Districts (Federal Ridings)
+* Side Note: Additional Stats Canada Datasets can be found here: https://www.statcan.gc.ca/en/microdata/dli/data/all
+
+# v0.8.3.0
+January 22, 2024
+* Fixed the News RSS Feed
+  * All feeds now process images
+* Added Search to the News RSS Feeds
+  * Search is by title or description
+  * The main feed list is now ordered by the newest updated feed first
+* Added Archiving to the News RSS Feed
+  * The feeds are updated every hour
+  * They are purged every 7 days
+  * Archived items will remain indefinitely.
+  * Feeds display a new 'updated time' if they successfully add new feed items.
+* Update the DatabaseSeeder and FirstRunSeeder for new developers
+* Added a ShopSeeder
+* Added a MovieSeeder
+* Added News Categories to the news_categories table in the database, to be added to production through the NewsCategorySeeder
+* Added Movie Sub-Categories to the movie_category_subs table in the database, to be added to production through the MovieCategorySubsSeeder
+* Added Show Sub-Categories to the show_category_subs table in the database, to be added to production through the ShowCategorySubsSeeder
+
+# v0.8.2.1
+January 21, 2024
+* Fixed the News Page routes
+* Rebuilt the Newsroom home page
+* There is a bug when refreshing the page on any of the public news or news reporter pages, if the user is logged in the video is playing but it's muted (firstPlay) and hidden.
+  * Another design bug, the topDiv function doesn't seem to work on these page either.
+* Fixed the newsRssFeeds routes
+* Added a :url prop to the BackButton and CancelButton so you can optionally pass a custom route that the button will use, e.g., \<BackButton :url="'/newsRssFeeds'"/>
+
+# v0.8.2.0
+January 19, 2024
+* Fix the page layout/loading bugs on the login, register, password reset and password confirmation pages
+* Improve
+* Increased Password Validation Rules to:
+  * Minimum 10 characters
+  * Uncompromised (can't have been in a data leak)
+  * Requires a mix of Letters, mixedCase, Numbers, and Symbols
+* In the middle of updating the Verify Email routes ... redirecting them to /public/{routeName}
+  * This includes the Password Reset pages
+* Fix the VideoPlayer on click/tap functions. If in TopRight mode the video will go to FullPage mode. If in FullPage mode it will pause/play the video. If in Full Page mobile mode it will toggle the controls show/hide.
+  * There is still a bug with the mobile devices where only the top half of the video is clickable/interactive.
+* Rebuilt the News Controllers (major update)
+
+## v0.8.1.3
+January 18, 2024
+* Fix the page layout/loading bugs on the login, register, password reset and password confirmation pages
+* Improved the formatting of the login and register components.
+* Added 'layout' to the appSettingStore to allow an easy way to turn off AppLayout on specific pages that need it.
+* Created a Welcome page full reload function to get the video player to restart in certain circumstances
+* Created a noLayout navigation header
+* Created a new style for Public News pages
+* Added the News Reporter Index page
+* Added the footer to all of the public pages.
+* Added a link to the Whitepaper in the footer
+* Made the Changelog private, only registered users can access it.
+* Created Public News Navigation Buttons
+
+
+## v0.8.1.2
+January 17, 2024
+* Finish codebase-restructuring
+* Implemented simpler logic in the Vue Templates with the PageSetup and the AppSettingStore
+* Fixed the Back and Cancel button navigation
+* Fixed the Paginator, scrolls to top on button click bug
+* Cleaned up code formatting throughout the project
+* Cleaned up the styling of the Shows Manage and ShowEpisode Manage pages
+* OTT Chat and Channels are still not working.
+
+## v0.8.1.1
+January 16, 2024
+* work on Ott panels.
+  * Filters and Playlists open and close
+  * Now Playing Info opens and populates with Show data
+* Troubleshooting video uploads where the UploadVideoToSpacesJob wasn't adding the video_id to the show_episodes table.
+* Created a New Listener to SendVideoUploadedNotification.
+  * Send a Video Uploaded Admin Notification Email
+  * Send a New Notification Event to the user who uploaded the video (to appear in their navBar notifications)
+* Created a Services/NotificationService to simplify sending users a new notification.
+
+## v0.8.1.0
+January 16, 2024
+* codebase-restructuring
+* This is a major overhaul of the folder structure and how the OTT components work.
+* The Ott panels still need work.
+* The Chat needs to be fixed.
+* The Back and Cancel buttons now work better than ever.
+* The code is lighter, we introduced a Utilities folder:
+  * PageSetup.js will save time modifying code that loads common to every page.
+  * StoreReset.js makes sure the Logout button resets all of the stores.
+
+## v0.8.0.8
+January 16, 2024
+* Cleaned up code.
+* Created a new folder structure for Components.
+* Rebuilt the Chat Component
+* Combined the FullPage and TopRight Ott Panels into one component
 
 ## v0.8.0.7
 January 15, 2024

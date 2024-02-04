@@ -2,7 +2,6 @@
 import { computed } from 'vue';
 import { Head, Link, useForm } from '@inertiajs/inertia-vue3';
 import JetAuthenticationCard from '@/Jetstream/AuthenticationCard.vue';
-import JetAuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo.vue';
 import JetButton from '@/Jetstream/Button.vue';
 
 const props = defineProps({
@@ -29,7 +28,9 @@ export default {
 
     <JetAuthenticationCard>
         <template #logo>
+          <Link :href="`/`">
             <img :src="`/storage/images/logo_black_311.png`" alt="image" class="justify-center max-w-[16rem]">
+          </Link>
         </template>
 
         <div class="mb-4 text-sm text-gray-600">

@@ -2,9 +2,7 @@
 
 **Pattern and Economic Incentives for a Cooperative and Decentralized Live Video Streaming Network: The notTV Blueprint**
 
-Last Update: January 14, 2023
-
-Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+Last Update: January 14, 2023<br/>Travis Michael Cross
 
 ## Abstract
 The notTV project represents a groundbreaking venture in the media landscape, aiming to deliver a unique blend of community-driven content creation, decentralized governance, and innovative technology application. At its core, notTV integrates a Digital Autonomous Cooperative (DAC) model built on blockchain technology, fostering a democratic, transparent, and equitable platform for media creators, consumers, and participants.
@@ -23,6 +21,7 @@ The notTV project is more than a media platform; it’s a movement towards a mor
   * Journalism
     * Verification
   * Teams
+  * Community Chapters
   * Decentralized Decision Making
   * Blockchain, NFTs
   * DAO and DAC
@@ -30,7 +29,7 @@ The notTV project is more than a media platform; it’s a movement towards a mor
   * Open-source
   * Broadcast quality
   * Incentives for creators
-  * Collaboration
+  * Collaboration and Management
   * Tokens and Community Credits
   * Founders' ROI
 * Attacks
@@ -40,6 +39,7 @@ The notTV project is more than a media platform; it’s a movement towards a mor
 * Use Cases
   * Pay per view
   * Subscriptions
+  * Advertising
   * Newswire
   * Live journalism
   * Promotion of content
@@ -77,3 +77,6 @@ Furthermore, the cooperative model adopted by notTV ensures that the platform op
     101-1865 Dilworth Dr, Ste353
     Kelowna, British Columbia
     Canada V1Y 9T1
+
+
+

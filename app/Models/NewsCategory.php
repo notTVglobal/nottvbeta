@@ -14,8 +14,13 @@ class NewsCategory extends Model
         'description'
     ];
 
-    public function newsPost()
+    public function newsStories()
     {
-        return $this->hasMany(NewsPost::class);
+        return $this->hasMany(NewsStory::class);
     }
+
+  public function newsCategorySubs()
+  {
+    return $this->hasMany(NewsCategorySub::class, 'news_categories_id');
+  }
 }

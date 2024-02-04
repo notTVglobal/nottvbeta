@@ -18,12 +18,12 @@ trait PasswordValidationRules
 //        return ['required', 'string', new isValidPassword, 'confirmed'];
         return [
                 'required',
-                Password::min(8)
+                Password::min(10)
                 ->uncompromised()
                 ->letters()
-//                ->mixedCase()
-//                ->numbers()
-//                ->symbols()
+                ->mixedCase()
+                ->numbers()
+                ->symbols()
         ];
     }
 

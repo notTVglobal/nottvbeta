@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunk=self.webpackChunk||[]).push([[5398],{55398:(e,t,i)=>{i.r(t),i.d(t,{useNewsStore:()=>p});var n=i(69876),s=function(){return{newsArticleIdTiptop:"",newsArticleTitleTiptop:"",newsArticleContentTiptop:[]}},p=(0,n.Q_)("newsStore",{state:s,actions:{reset:function(){Object.assign(this,{newsArticleIdTiptop:"",newsArticleTitleTiptop:"",newsArticleContentTiptop:[]})}}})}}]);
+//# sourceMappingURL=5398.js.map

@@ -52,7 +52,7 @@ const form = useForm({
 // };
 
 const updateProfileInformation = () => {
-    form.put(route('users.updateContact'), {
+    form.patch(route('users.updateContact'), {
         errorBag: 'updateProfileInformation',
         preserveScroll: true,
     });

@@ -30,14 +30,22 @@ class Video extends Model
         'sprite_full_url',
         'live_count',
         'is_live',
-        'profile_photo_path',
         'video_status',
         'category',
         'commons_license',
         'access_level',
-        'upload_status',
+        'app_setting_id',
+        'cloud_folder',
+        'folder',
+        'storage_location',
+        'temp_path',
+        'magnet_link',
+        'show_episodes_id',
+        'movies_id',
+        'movie_trailers_id',
         'is_processing',
-        'url',
+        'name',
+        'video_url',
         'audio_codec',
         'video_codec',
         'audio_channels',
@@ -51,9 +59,9 @@ class Video extends Model
 
     ];
 
-    public function newsPost()
+    public function newsStory()
     {
-        return $this->hasOne(NewsPost::class);
+        return $this->hasOne(NewsStory::class);
     }
 
     public function showEpisode()

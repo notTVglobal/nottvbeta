@@ -1,4 +1,5 @@
 const mix = require('laravel-mix');
+const path = require('path')
 // require('dotenv').config();
 // const Dotenv = require('dotenv-webpack');
 
@@ -15,17 +16,11 @@ const mix = require('laravel-mix');
 
 mix.js('resources/js/app.js', 'public/js')
     .extract()
-    // .vue(3)
     .vue({
         version: 3,
         options: {
             compilerOptions: {
-                isCustomElement: (tag) => ['video-player', 'video-js', 'AppLayout', 'button', 'NotificationsButton', 'VideoPlayer', 'Chat'].includes(tag),
-                // isCustomElement: (tag) => ['AppLayout'].includes(tag),
-                // isCustomElement: (tag) => ['button'].includes(tag),
-                // isCustomElement: (tag) => ['NotificationsButton'].includes(tag),
-                // isCustomElement: (tag) => ['VideoPlayer'].includes(tag),
-                // isCustomElement: (tag) => ['Chat'].includes(tag),
+                isCustomElement: (tag) => ['video-player', 'video-js', 'AppLayout', 'button', 'NotificationsButton', 'VideoPlayer', 'Chat', 'ButtonsOttTopRight', 'Info'].includes(tag),
             },
         },
     })
@@ -35,22 +30,15 @@ mix.js('resources/js/app.js', 'public/js')
     .sourceMaps()
     .alias({
         // if the @ path changes update the webpack.config.js file too!
-        '@': 'resources/js',
+        '@': path.resolve(__dirname, 'resources/js'),
+        '@i': path.resolve('public/images'),
         ziggy: "vendor/tightenco/ziggy/dist/vue",
     })
-    // .webpackConfig({
-    //     stats: {
-    //         children: true,
-    //     },
-    //     plugins: [
-    //         new Dotenv()
-    //     ]
-    // })
-    // .browserSync({
-    //     proxy: 'beta.local:8081'
-    // });
 
 if (mix.inProduction()) {
     mix.version();
 }
+
+
+
 

@@ -1,256 +1,302 @@
-import { defineStore } from "pinia";
-import { useAppSettingStore } from '@/Stores/AppSettingStore';
-import { useStreamStore } from "@/Stores/StreamStore";
-import { useUserStore } from "@/Stores/UserStore";
-import {useChannelStore} from "@/Stores/ChannelStore";
-import {useShowStore} from "@/Stores/ShowStore";
-import videojs from 'video.js';
-import {Inertia} from "@inertiajs/inertia";
+import { defineStore } from 'pinia'
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import { useStreamStore } from '@/Stores/StreamStore'
+import { useUserStore } from '@/Stores/UserStore'
+import { useChannelStore } from '@/Stores/ChannelStore'
+import { useShowStore } from '@/Stores/ShowStore'
+import { useAudioStore } from '@/Stores/AudioStore'
+import videojs from 'video.js'
+import { usePage } from '@inertiajs/inertia-vue3'
+import { nextTick } from 'vue'
 
-import {computed} from "vue";
+const initialState = () => ({
+    player: null, // Video.js player instance
+    eventListenersAttached: false, // Track if listeners are attached
+    videoPlayerLoaded: false,
+    class: '',
+    videoContainerClass: '',
+    // ottClass: 'OttClose',
+    videoSourceIdSrc1: '',
+    videoSourceIdSrc2: '',
+    videoSourceIdSrc3: '',
+    videoSourceTypeSrc1: '',
+    videoSourceTypeSrc2: '',
+    videoSourceTypeSrc3: '',
+    firstPlayVideoSourceType: '',
+    firstPlayVideoSource: '',
+    key: '',
+    videoName: '',
+    videoSource: '',
+    videoSourceType: '',
+    videoPoster: '',
+    nextSource: '',
+    previousSource: '',
+    currentView: '',
+    currentChannelId: 0,
+    currentChannelName: '',
+    currentShow: {},
+    currentShowEpisode: {},
+    currentVideo: {},
+    hasVideo: false,
+    controls: true,
+    muted: true,
+    paused: true,
+    // videoCurrentTime: '',
+    currentTime: 0, // Current playback time in seconds
+    duration: 0, // Total video duration in seconds
+    formattedTime: '00:00 / 00:00', // Formatted time string
+    blue: false, // DO NOT REMOVE
+    videoIsYoutube: false,
+    videoUploadComplete: false,
+})
 
 export const useVideoPlayerStore = defineStore('videoPlayerStore', {
-    state: () => ({
-            videoPlayerLoaded: false,
-            class: '',
-            videoContainerClass: '',
-            // ottClass: 'OttClose',
-            videoSourceIdSrc1: '',
-            videoSourceIdSrc2: '',
-            videoSourceIdSrc3: '',
-            videoSourceTypeSrc1: '',
-            videoSourceTypeSrc2: '',
-            videoSourceTypeSrc3: '',
-            key: '',
-            videoName: '',
-            videoSource: '',
-            videoSourceType: '',
-            videoPoster: '',
-            nextSource: '',
-            previousSource: '',
-            currentView: '',
-            currentChannelId: 0,
-            currentChannelName: '',
-            currentShow: {},
-            currentShowEpisode: {},
-            currentVideo: {},
-            viewerCount: 0,
-
-            nowPlayingType: '',
-            nowPlayingName: '',
-            nowPlayingUrl: '',
-            nowPlayingDescription: '',
-            nowPlayingImage: {},
-            nowPlayingTeam: {},
-            nowPlayingCreators: [],
-            nowPlayingBonusContent: [],
-
-            // move currentPage from here to userStore.
-            currentPage: '',
-            hasVideo: false,
-
-            currentPageIsStream: false,
-            fullPage: false,
-            pip: false,
-            loggedIn: false,
-
-            osd: true,
-            controls: true,
-            ottButtons: true,
-            ottChannels: false,
-            ottPlaylist: false,
-            ottFilters: false,
-            ottChat: false,
-
-            muted: true,
-            paused: false,
-            videoCurrentTime: '',
-            apiRequest: [],
-            challenge: [],
-            status: [],
-            apiResponse: [],
-            apiActiveStreams: [],
-            mistUsername: [],
-            mistPassword: [],
-            mistStatus: Boolean,
-            mistDisplayPushForm: Boolean,
-            mistDisplay: String,
-            mistNewHashedPassword: [],
-            ott: 0,
-            blue: false,
-            videoIsYoutube: false,
-            videoUploadComplete: false,
-        }),
-
+    state: initialState,
     actions: {
-        // for testing
+        reset() {
+            // Reset the store to its original state (clear all data)
+            Object.assign(this, initialState())
+        },
+
+        // Initialize or update the player instance
+        setPlayer(playerInstance) {
+            this.player = playerInstance;
+            this.initializePlayer().then(() => {
+                this.attachEventListeners(); // Attach event listeners after initialization
+            }).catch(error => {
+                console.error('Error during video player initialization:', error);
+            });
+        },
+
+        // Initialize the player with necessary settings and start playback
+        async initializePlayer() {
+            if (!this.player) {
+                console.error('Video.js player is not initialized.');
+                return;
+            }
+
+            await nextTick(); // Ensure Vue's DOM updates are processed
+
+            // Perform any necessary audio context and node setup
+            await useAudioStore().ensureAudioContextAndNodesReady(this.player);
+
+            // Apply initial player settings
+            this.player.controls(false);
+            this.player.muted(this.muted);
+
+            // Attempt to start playback
+            this.player.ready(() => {
+                this.player.play().then(() => {
+                    console.log('Playback started successfully');
+                }).catch(error => {
+                    console.error('Error trying to play the video:', error);
+                    // Handle the error (e.g., showing a user-friendly message)
+                });
+            });
+        },
+
+        // Attach event listeners to the player
+        attachEventListeners() {
+            if (!this.player || this.eventListenersAttached) {
+                console.log('Event listeners are already attached or video player is not initialized.');
+                return;
+            }
+
+            this.player.on('timeupdate', this.handleTimeUpdate);
+            this.player.on('fullscreenchange', this.handleFullscreenChange);
+            this.player.on('play', this.handlePlay);
+            this.player.on('pause', this.handlePause);
+            this.player.on('error', this.handleError);
+
+            this.eventListenersAttached = true;
+            console.log('Event listeners attached.');
+        },
+
+        // Detach event listeners from the player
+        detachEventListeners() {
+            if (!this.player || !this.eventListenersAttached) {
+                console.log('Event listeners are already detached or video player is not initialized.');
+                return;
+            }
+
+            useAudioStore().stopAudioLevelMonitoring()
+            this.player.off('timeupdate', this.handleTimeUpdate);
+            this.player.off('fullscreenchange', this.handleFullscreenChange);
+            this.player.off('play', this.handlePlay);
+            this.player.off('pause', this.handlePause);
+            this.player.off('error', this.handleError);
+
+            this.eventListenersAttached = false;
+            console.log('Event listeners detached.');
+        },
+
+        // Dispose of the player and perform cleanup
+        disposePlayer() {
+            if (!this.player) {
+                console.error('Video player is not initialized.');
+                return;
+            }
+
+            this.detachEventListeners(); // Detach event listeners if attached
+            this.player.dispose(); // Dispose of the player instance
+            this.player = null; // Reset the player state
+
+            // Optionally, stop audio level monitoring if linked to the player lifecycle
+            // const audioStore = useAudioStore();
+            // audioStore.stopAudioLevelMonitoring();
+
+            console.log('Video player disposed and cleaned up.');
+        },
+
+        // New method to prepare for a new video source
+        prepareForNewVideoSource(source) {
+            console.log('Preparing for new video source');
+
+            // Example: Clear any existing channel or video-specific state
+            useChannelStore().clearChannel();
+
+            // Reset or cleanup any existing video playback, if necessary
+            this.resetPlayback();
+
+            // Load and play the new video source
+            this.loadNewVideo(source);
+        },
+
+        resetPlayback() {
+            if (this.player) {
+                this.player.pause();
+                this.player.muted(true)
+                this.player.currentTime(0); // Optionally reset the time
+                // Further cleanup logic here, if necessary
+                this.detachEventListeners(); // Detach event listeners if attached
+            }
+        },
+
+        // Event handlers
+        handleTimeUpdate() {
+            // console.log('Handling timeupdate...');
+            // Implement your logic
+            this.currentTime = this.player.currentTime();
+            this.duration = this.player.duration();
+            const progressPercentage = (this.currentTime / this.duration) * 100;
+            this.formattedTime = `${this.formatDuration(this.currentTime)} / ${this.formatDuration(this.duration)}`;
+
+            // Update UI elements or emit events as needed
+            // Note: Direct manipulation of the DOM or component refs from the store is not recommended
+
+        },
+        // for the handleTimeUpdate eventHandler
+        formatDuration(durationInSeconds) {
+            const hours = Math.floor(durationInSeconds / 3600);
+            const minutes = Math.floor((durationInSeconds % 3600) / 60);
+            const seconds = Math.floor(durationInSeconds % 60);
+
+            const parts = [hours, minutes, seconds].map(part => part.toString().padStart(2, '0'));
+            return parts.join(':');
+        },
+        handleFullscreenChange() {
+            console.log('Handling fullscreenchange...');
+            // Implement your logic
+            this.player.on('fullscreenchange', () => {
+                if (this.player.isFullscreen()) {
+                    // Video is entering fullscreen mode
+                    // You can add custom behavior for entering fullscreen here if needed
+                } else {
+                    // Video is exiting fullscreen mode
+                    // Check if the video was playing before entering fullscreen
+                    if (this.player.paused() === false) {
+                        // Resume playback after exiting fullscreen
+                        this.player.play()
+                    }
+                }
+            })
+        },
+        handlePlay() {
+            console.log('Handling play...');
+            // Implement your logic
+            this.player.on('play', () => {
+                this.paused = false
+            })
+        },
+        handlePause() {
+            console.log('Handling pause...');
+            // Implement your logic
+            this.player.on('pause', () => {
+                this.paused = true
+            })
+        },
+        handleError() {
+            console.log('Handling error...');
+            // Implement your logic
+            this.player.on('error', function () {
+                const error = this.player.error()
+                console.error('Video.js Error:', error.code, error.message)
+            })
+        },
         makeBlue() {
+            // for testing. DO NOT REMOVE.
             this.blue = true
         },
-
-        // show
-        showOsdAndControls() {
-            this.osd = true
-            this.controls = true
-        },
-        showOsdAndControlsAndNav() {
-            this.osd = true
-            this.controls = true
-            // useUserStore().showNavDropdown = true
-            this.ottButtons = true
-        },
-        showOsd() {
-            this.osd = true
-        },
-        showControls() {
-            this.controls = true
-        },
-
-        // hide
-        hideOsdAndControls() {
-            this.osd = false
-            this.controls = false
-        },
-        hideOsdAndControlsAndNav() {
-            this.osd = false
-            this.controls = false
-            // useUserStore().showNavDropdown = false
-            this.ottButtons = false
-        },
-        hideOsd() {
-            this.osd = false
-        },
-        hideControls() {
-            this.controls = false
-        },
-
-        // toggles
-        togglePiP() {
-            if (this.class === 'topRightVideoClass' && useUserStore().isMobile) {
-                this.class = 'PipVideoClass'
-                this.videoContainerClass = 'PipVideoContainerClass'
-            } else
-                this.class = 'topRightVideoClass'
-                this.videoContainerClass = 'topRightVideoContainer'
-        },
-        toggleOSD() {
-            this.osd = !this.osd
-        },
-        toggleControls() {
-            this.controls = !this.controls
-        },
-        toggleOsdAndControls() {
-            this.osd = !this.osd
-            this.controls = !this.controls
-        },
-        toggleOsdAndControlsAndNav() {
-            this.osd = !this.osd
-            this.controls = !this.controls
-            this.ottButtons = !this.ottButtons
-        },
-        toggleOtt(num) {
-            if (this.ott === num) {
-                this.ott = 0
-            } else {
-                this.ott = num
-            }
-        },
-        toggleChannels() {
-            if(useUserStore().isMobile) {
-                this.ottButtons = !this.ottButtons
-                this.osd = !this.osd
-                this.hideControls()
-                this.ottChannels = !this.ottChannels
-            } else {
-                this.ottButtons = !this.ottButtons
-                this.ottChannels = !this.ottChannels
-            }
-        },
-        togglePlaylist() {
-            if(useUserStore().isMobile) {
-                this.ottButtons = !this.ottButtons
-                this.osd = !this.osd
-                this.hideControls()
-                this.ottPlaylist = !this.ottPlaylist
-            } else {
-                this.ottButtons = !this.ottButtons
-                this.ottPlaylist = !this.ottPlaylist
-            }
-        },
-        toggleChat() {
-            if(useUserStore().isMobile) {
-                this.ottButtons = !this.ottButtons
-                this.osd = !this.osd
-                this.hideControls()
-                this.ottChat = !this.ottChat
-            } else {
-                this.ottButtons = !this.ottButtons
-                this.ottChat = !this.ottChat
-            }
-        },
-        toggleFilters() {
-            if(useUserStore().isMobile) {
-                this.ottButtons = !this.ottButtons
-                this.osd = !this.osd
-                this.hideControls()
-                this.ottFilters = !this.ottFilters
-            } else {
-                this.ottButtons = !this.ottButtons
-                this.ottFilters = !this.ottFilters
-            }
-        },
-        toggleOttInfo() {
-            this.toggleOtt(1)
-        },
-        toggleOttChannels() {
-            this.toggleOtt(2)
-        },
-        toggleOttPlaylist() {
-            this.toggleOtt(3)
-        },
-        toggleOttChat() {
-            this.toggleOtt(4)
-        },
-        toggleOttFilters() {
-            this.toggleOtt(5)
-        },
-        closeOtt() {
-            this.toggleOtt(0)
-        },
-
-        // video controls
+        // Apparently this loadFirstPlay isn't being used...
+        // loadFirstPlay() {
+        //     const {props} = usePage()
+        //     let videoJs = videojs('main-player')
+        //     const type = props.firstPlayVideoSourceType
+        //     const src = props.firstPlayVideoSource
+        //     videoJs.ready(() => {
+        //         videoJs.src({src, type})
+        //         videoJs.play().then(() => {
+        //             console.log('Playback started successfully')
+        //         }).catch(error => {
+        //             console.error('Error trying to play the video:', error)
+        //             // Handle the error (e.g., showing a user-friendly message)
+        //         })
+        //     })
+        //     console.log(type)
+        //     console.log(src)
+        // },
+        // Toggle mute state
         toggleMute() {
-            let videoJs = videojs('main-player')
-            videoJs.controls(false)
-            this.muted = !this.muted
-            videoJs.muted(this.muted);
+            if (this.muted) {
+                this.unMute();
+            } else {
+                this.mute();
+            }
+        },
+        // Mute the video
+        mute() {
+            if (this.player) {
+                this.player.muted(true);
+                this.muted = true;
+                console.log("Video muted");
+            }
+        },
+        // Unmute the video
+        unMute() {
+            const audioStore = useAudioStore();
+
+            if (this.player) {
+                // Prepare audio setup for when it's unmuted
+                audioStore.userInteractionForAudio();
+
+                // Optionally, if fadeInAudioFromMuted is a gradual process,
+                // ensure this.player.muted(false) is called within that function.
+                audioStore.fadeInAudioFromMuted();
+
+                this.muted = false;
+                console.log("Video unmuted");
+            }
         },
         togglePlay() {
             let videoJs = videojs('main-player')
-            videoJs.controls(false)
-            // this.paused = !this.paused
-            if (videoJs.paused()) {
+
+            if (this.paused) {
                 videoJs.play()
-                videoJs.controls(false)
-                this.paused = false
-            } else if (!videoJs.paused()) {
+            } else {
                 videoJs.pause()
-                videoJs.controls(false)
-                this.paused = true
             }
         },
-        unmute() {
-            let videoJs = videojs('main-player')
-            videoJs.muted(false)
-            this.muted = false
-            videoJs.controls(false)
-        },
-        mute() {
-            let videoJs = videojs('main-player')
-            videoJs.controls(false)
-            videoJs.muted(true)
-            this.muted = true
-        },
+
         pause() {
             let videoJs = videojs('main-player')
             videoJs.controls(false)
@@ -288,74 +334,163 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             this.videoCurrentTime = videoJs.currentTime
         },
 
-        // check if episode has a video
-        checkForVideo(source) {
-            if (source.mist_stream_id) {
-                return true
-            } else if (source.video_id) {
-                return true
-            } else if (source.video_url) {
-                return true
-            } else if (source.video_embed_code) {
-                return true
-            } return false
+
+
+
+        // This playNewVideo was created to access the audioContext
+        // which our audio compressor uses. This is new as of 2/2/2024
+        // ~ tec21
+
+        // playNewVideo(source) {
+        //     useChannelStore().clearChannel() // Reset or clear channel store
+        //     const videoJs = videojs('main-player')
+        //     let videoSrc, videoSourceType
+        //     // Determine the source type and construct the source URL if necessary
+        //     if (source.mediaType === 'externalVideo') {
+        //         videoSrc = source.video_url // Direct URL to the video
+        //         videoSourceType = source.type // MIME type, e.g., 'video/youtube', 'video/mp4'
+        //     } else {
+        //         // Construct file path for internal videos
+        //         videoSrc = `${source.cdn_endpoint}${source.cloud_folder}${source.folder}/${source.file_name}`
+        //         videoSourceType = source.type // MIME type, typically 'video/mp4' for file-based sources
+        //     }
+        //     this.resumeAudioContextIfNeeded()
+        //     videoJs.src({src: videoSrc, type: videoSourceType})
+        //     videoJs.muted(false)
+        // },
+
+        // getSourceDetails(source) {
+        //     let videoSrc = source.video_url; // Directly access the video URL
+        //
+        //     // Default to 'video/mp4' if type is falsy ('', null, undefined, etc.)
+        //     let videoSourceType = source.type || 'video/mp4'
+        //
+        //     // Determine the mediaType and construct the source URL if necessary
+        //     if (source.mediaType === 'externalVideo') {
+        //         videoSrc = source.video_url // Direct URL to the video
+        //     } else {
+        //         // Internal video: construct the path, ensuring the file name is encoded
+        //         let encodedFileName = encodeURIComponent(source.file_name);
+        //         console.log(encodedFileName)
+        //         videoSrc = `${source.cdn_endpoint}${source.cloud_folder}${source.folder}/${encodedFileName}`
+        //     }
+        //     // Logic to determine videoSrc and videoSourceType
+        //     console.log(`Video Source: ${videoSrc}, Type: ${videoSourceType}`);
+        //     return { videoSrc, videoSourceType } // Return as an object
+        // },
+
+
+        getSourceDetails(source) {
+            let videoSrc, videoSourceType;
+
+            // Default to 'video/mp4' if type is not specified or is empty
+            videoSourceType = source.type || 'video/mp4';
+
+            if (source.mediaType === 'externalVideo') {
+                // For external videos, use the URL as provided without encoding
+                videoSrc = source.video_url;
+            } else {
+                // For internal videos, construct the URL from its components
+                // Here, we assume the cdn_endpoint, cloud_folder, and folder are correctly formatted
+                // and do not require encoding. Only the file_name might need encoding.
+                const basePath = `${source.cdn_endpoint}${source.cloud_folder}${source.folder}/`;
+                // const encodedFileName = encodeURIComponent(source.file_name);
+                const fileName = source.file_name
+                videoSrc = basePath + fileName;
+
+                // If your server or CDN is configured to handle spaces in URLs without %20 encoding
+                // or if the original working URLs did not use standard URL encoding,
+                // you might adjust the encoding strategy here.
+                // For example, to replace spaces with %20 but leave other characters as-is:
+                // const fileNameForUrl = source.file_name.replace(/ /g, '%20');
+                // videoSrc = basePath + fileNameForUrl;
+            }
+
+            console.log(`Constructed Video Source: ${videoSrc}, Type: ${videoSourceType}`);
+            return { videoSrc, videoSourceType };
         },
 
-        // play video from source
-        playVideo(source) {
-            // useChannelStore().clearChannel();
-            // if mist_id exists:
-            if (source.mist_stream_id) {
-                this.loadNewSourceFromMist(source.mist_stream_id)
-                this.videoName = source.name
-            }
-            // if video_id exists:
-            else if (source.video_id) {
-                this.loadNewSourceFromFile(source.video_id)
-                this.videoName = source.name
-            }
-            // if url exists:
-            else if (source.video_url) {
-                this.loadNewSourceFromUrl(source.video_url)
-                this.videoName = source.name
-                Inertia.visit('/stream')
-            }
-            // else return... videoNotAvailable
-            else {
-                // need to create a video that can loop
-                // to indicate this video is not available.
-            }
 
+        loadNewVideo(source) {
+            console.log('LOAD NEW VIDEO')
+            const audioStore = useAudioStore()
+            // Correctly destructure the returned object to get videoSrc and videoSourceType
+            const { videoSrc, videoSourceType } = this.getSourceDetails(source);
+
+            // Example: Stopping and cleaning up the current video and audio setup
+            if (this.player) {
+                this.player.src({ 'src': videoSrc, 'type': videoSourceType });
+
+                this.player.ready(() => {
+                    // ensureAudioContextAndNodesReady does the following:
+                    // 1. Resumes AudioContext if suspended.
+                    // 2. (Re)connects MediaElementSource from the video element to AudioContext.
+                    audioStore.deferAudioSetup = false
+                    audioStore.ensureAudioContextAndNodesReady(this.player).then(() => {
+                        // Only attempt to play the video after ensuring the AudioContext is ready
+                        this.player.play().catch(error => {
+                            console.error('Playback initiation error:', error);
+                        });
+
+                        // Consider toggling mute based on the user's preference or previous state
+                        this.player.muted(false);
+                        this.muted = false
+                    });
+                });
+
+
+                //     useAudioStore().ensureAudioContextAndNodesReady(this.player);
+                //     this.attachEventListeners(); // Reattach event listeners as needed
+                //
+                //     this.unMute()
+                // });
+
+            }
         },
 
-        // load video from different types of sources:
-            // Url
-            // YouTube
-            // EmbedCode
-            // Mist
-            // File
-        loadNewSourceFromYouTube(source) {
-            this.videoIsYoutube = true
-            useChannelStore().clearChannel()
-            let videoJs = videojs('main-player')
-            this.videoSource = source
-            this.videoSourceType = "video/youtube"
-            videoJs.src({'src': this.videoSource, 'type': this.videoSourceType})
-            videoJs.controls(false)
-            this.unmute()
-            this.paused = false
+        playNewVideo() {
+            console.log('PLAY NEW VIDEO')
+            if (this.player) {
+                // Wait for the video to be ready before playing
+                this.player.ready(() => {
+                    this.player.play();
+                    // Assuming you want to unmute here; check if this aligns with user interaction policies
+                    this.player.muted(false);
+                    this.muted = false
+                });
+            }
         },
-        loadNewLiveSourceFromRumble(source) {
-            this.videoIsYoutube = true
-            useChannelStore().clearChannel()
-            let videoJs = videojs('main-player')
-            this.videoSource = source
-            this.videoSourceType = "application/x-mpegURL"
-            videoJs.src({'src': this.videoSource, 'type': this.videoSourceType})
-            videoJs.controls(false)
-            this.unmute()
-            this.paused = false
-        },
+
+
+
+// load video from different types of sources:
+// Url
+// YouTube
+// EmbedCode
+// Mist
+// File
+// loadNewSourceFromYouTube(source) {
+//     this.videoIsYoutube = true
+//     useChannelStore().clearChannel()
+//     let videoJs = videojs('main-player')
+//     this.videoSource = source
+//     this.videoSourceType = "video/youtube"
+//     videoJs.src({'src': this.videoSource, 'type': this.videoSourceType})
+//     videoJs.controls(false)
+//     this.unmute()
+//     this.paused = false
+// },
+// loadNewLiveSourceFromRumble(source) {
+//     this.videoIsYoutube = true
+//     useChannelStore().clearChannel()
+//     let videoJs = videojs('main-player')
+//     this.videoSource = source
+//     this.videoSourceType = "application/x-mpegURL"
+//     videoJs.src({'src': this.videoSource, 'type': this.videoSourceType})
+//     videoJs.controls(false)
+//     this.unmute()
+//     this.paused = false
+// },
         loadNewSourceFromUrl(source) {
             this.videoIsYoutube = false
             useChannelStore().clearChannel()
@@ -368,63 +503,50 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             this.unmute()
             this.paused = false
         },
-        loadNewSourceFromMist(source) {
-            this.videoIsYoutube = false
-            let videoJs = videojs('main-player')
-            let filePath = 'https://mist.not.tv/hls/'
-            this.videoSource = filePath+source+'/index.m3u8'
-            this.videoSourceType = "application/x-mpegURL"
-            videoJs.src({'src': this.videoSource, 'type': this.videoSourceType})
-            this.unmute()
-            this.paused = false
-        },
-        loadNewSourceFromFile(source) {
-            this.videoIsYoutube = false
-            useChannelStore().clearChannel()
-            let videoJs = videojs('main-player')
-            let filePath = source.cdn_endpoint+source.cloud_folder+source.folder+'/'
-            this.videoSource = source.file_name
-            this.videoSourceType = source.type
-            videoJs.src({'src': filePath+this.videoSource, 'type': this.videoSourceType})
-            this.unmute()
-            this.paused = false
-        },
+// loadNewSourceFromMist(source) {
+//     this.videoIsYoutube = false
+//     let videoJs = videojs('main-player')
+//     let filePath = 'https://mist.not.tv/hls/'
+//     this.videoSource = filePath + source + '/index.m3u8'
+//     this.videoSourceType = "application/x-mpegURL"
+//     videoJs.src({'src': this.videoSource, 'type': this.videoSourceType})
+//     this.unmute()
+//     this.paused = false
+// },
+loadNewSourceFromFile(source) {
+    this.videoIsYoutube = false
+    useChannelStore().clearChannel()
+    let videoJs = videojs('main-player')
+    let filePath = source.cdn_endpoint + source.cloud_folder + source.folder + '/'
+    this.videoSource = source.file_name
+    this.videoSourceType = source.type
+    videoJs.src({'src': filePath + this.videoSource, 'type': this.videoSourceType})
+    this.unMute()
+    this.paused = false
+},
         setNowPlayingInfoVideoFile(source) {
-            this.nowPlayingType = "Video File"
+            this.nowPlayingType = 'Video File'
             this.nowPlayingName = source.file_name
             useStreamStore().currentChannel = 'On Demand'
         },
         setNowPlayingInfoShow(show, episode) {
-            this.clearNowPlayingInfo();
-            const showStore = useShowStore();
+            this.clearNowPlayingInfo()
+            const showStore = useShowStore()
 
             if (show.firstPlayVideo) {
-                showStore.setName(show.firstPlayVideo.name);
-                showStore.setEpisodeUrl(`/shows/${show.slug}/episode/${source.firstPlayVideo.slug}`);
-            } else if(episode) {
-                showStore.setName(show.name);
-                showStore.setUrl(`/shows/${show.slug}`);
-                showStore.setEpisodeName(episode.name);
-                showStore.setEpisodeUrl(`/shows/${show.slug}/episode/${episode.slug}`);
+                showStore.setName(show.firstPlayVideo.name)
+                showStore.setEpisodeUrl(`/shows/${show.slug}/episode/${source.firstPlayVideo.slug}`)
+            } else if (episode) {
+                showStore.setName(show.name)
+                showStore.setUrl(`/shows/${show.slug}`)
+                showStore.setEpisodeName(episode.name)
+                showStore.setEpisodeUrl(`/shows/${show.slug}/episode/${episode.slug}`)
             } else {
-                showStore.setName(show.name);
-                showStore.setUrl(`/shows/${show.slug}`);
+                showStore.setName(show.name)
+                showStore.setUrl(`/shows/${show.slug}`)
             }
-            // this.clearNowPlayingInfo()
-            // if (source.firstPlayVideo) {
-            //     useShowStore().name = source.firstPlayVideo.name
-            //     useShowStore().episodeUrl = `/shows/${source.slug}/episode/${source.firstPlayVideo.slug}`
-            // } else if(source.episode) {
-            //     useShowStore().name = source.name
-            //     useShowStore().url = `/shows/${source.slug}`
-            //     useShowStore().episodeName = source.episode.name
-            //     useShowStore().episodeUrl = `/shows/${source.slug}/episode/${source.episode.slug}`
-            // } else {
-            //     useShowStore().name = source.name
-            //     useShowStore().url = `/shows/${source.slug}`
-            // }
         },
-        // change video size/position and page layout
+// change video size/position and page layout
         makeVideoPiP() {
             // const appSettingStore = useAppSettingStore();
             // const userStore = useUserStore();
@@ -443,290 +565,45 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             // }
         },
         makeVideoFullPage() {
-            const appSettingStore = useAppSettingStore();
-            const userStore = useUserStore();
+            const appSettingStore = useAppSettingStore()
+            const userStore = useUserStore()
 
-            this.fullPage = true;
+            // this.fullPage = true; // to be deleted and replaced by appSettingStore.fullPage
+            appSettingStore.fullPage = true
+            // userStore.hidePage = true // to be deleted and replaced by appSettingStore.hidePage
+            appSettingStore.hidePage = true
+            appSettingStore.ott = 0
+
             this.videoContainerClass = 'fullPageVideoContainer'
             this.class = 'fullPageVideoClass'
-            // appSettingStore.setPageBgColor('bg-gray-800');
-            // appSettingStore.setChatMessageBgColor('bg-gray-600');
-            if (userStore.isMobile) {
-                this.hideControls()
-            } else {
-                this.showControls()
-            }
-            userStore.hidePage = true
-            // if (useUserStore().isMobile) {
-            //     this.videoContainerClass = 'fullPageVideoContainerMobile'
-            //     this.class = 'fullPageVideoClassMobile'
-            // } else {
-            //     this.videoContainerClass = 'fullPageVideoContainer'
-            //     this.class = 'fullPageVideoClass'
-            // }
-            // this.currentPageIsStream = true;
-            // useChatStore().makeBig();
-            // useStreamStore().osd = false;
-
-            // tec21: this lets the video start playing when the stream page is loaded.
-            // but it's preventing the videoPlayer from mounting.
-            // let videoJs = videojs.getPlayer('main-player')
-            // videoJs.play()
+            this.controls = !userStore.isMobile
         },
         makeVideoTopRight() {
-            const appSettingStore = useAppSettingStore();
-            const userStore = useUserStore();
+            const appSettingStore = useAppSettingStore()
 
-            this.currentPageIsStream = false
+            // this.fullPage = false // to be deleted and replaced by appSettingStore.fullPage
+            appSettingStore.fullPage = false
+            // userStore.hidePage = false // to be deleted and replaced by appSettingStore.hidePage
+            appSettingStore.hidePage = false
+            // this.currentPageIsStream = false // to be deleted and replaced by appSettingStore.currentPageIsStream
+            appSettingStore.currentPageIsStream = false
+
             this.videoContainerClass = 'topRightVideoContainer'
             this.class = 'topRightVideoClass'
-            // appSettingStore.setPageBgColor('bg-gray-800');
-            // appSettingStore.setChatMessageBgColor('bg-gray-600');
-            this.fullPage = false
             this.controls = false
-            userStore.hidePage = false
         },
         makeVideoWelcomePage() {
+            const appSettingStore = useAppSettingStore()
             this.videoContainerClass = 'welcomeVideoContainer'
             this.class = 'welcomeVideoClass'
-            this.fullPage = true
-            this.loggedIn = false
-            useUserStore().hidePage = false
-            // useChatStore().chatHidden();
-        },
-        setNowPlayingName(name) {
-            this.setNowPlayingName = name;
-        },
-        setNowPlayingUrl(url) {
-            this.setNowPlayingUrl = url;
-        },
-        setNowPlayingDescription(description) {
-            this.setNowPlayingDescription = description;
-        },
-        setNowPlayingImage(image) {
-            this.setNowPlayingImage = image;
-        },
-        setNowPlayingTeam(team) {
-            this.setNowPlayingTeam = team;
-        },
-        setNowPlayingCreators(creators) {
-            this.setNowPlayingCreators = creators;
-        },
-        setNowPlayingBonusContent(bonusContent) {
-            this.setNowPlayingBonusContent = bonusContent;
-        },
-        clearNowPlayingInfo() {
-            this.nowPlayingType = ''
-            this.nowPlayingName = ''
-            this.nowPlayingUrl = ''
-            this.nowPlayingDescription = ''
-            this.nowPlayingImage = {}
-            this.nowPlayingTeam = {}
-            this.nowPlayingCreators = []
-            this.nowPlayingBonusContent = []
+            appSettingStore.loggedIn = false
+            appSettingStore.fullPage = true
+            appSettingStore.hidePage = false
         },
 
-        // change channel
-        // changeChannel(name) {
-        //     if (name==='one') {
-        //         let source = 'mist1pull1'
-        //         this.videoName = 'notTV One'
-        //         this.currentChannelName = 'one'
-        //         this.currentChannelId = 1
-        //         this.addViewerToChannel()
-        //         this.getViewerCount()
-        //         this.loadNewSourceFromMist(source)
-        //     }
-        //     if (name==='ambient') {
-        //         let source = 'mist1pull2'
-        //         this.videoName = 'Ambient'
-        //         this.currentChannelName = 'ambient'
-        //         this.currentChannelId = 2
-        //         this.addViewerToChannel()
-        //         this.getViewerCount()
-        //         this.loadNewSourceFromMist(source)
-        //
-        //     }
-        //     if (name==='news') {
-        //         let source = 'mist1pull3'
-        //         this.videoName = 'News'
-        //         this.currentChannelName = 'news'
-        //         this.currentChannelId = 3
-        //         this.addViewerToChannel()
-        //         this.getViewerCount()
-        //         this.loadNewSourceFromMist(source)
-        //
-        //     }
-        //     if (name==='talk') {
-        //         let source = 'mist1pull4'
-        //         this.videoName = 'Talk'
-        //         this.currentChannelName = 'talk'
-        //         this.currentChannelId = 4
-        //         this.addViewerToChannel()
-        //         this.getViewerCount()
-        //         this.loadNewSourceFromMist(source)
-        //
-        //     }
-        //     if (name==='documentary') {
-        //         let source = 'mist1pull5'
-        //         this.videoName = 'Documentary'
-        //         this.currentChannelName = 'documentary'
-        //         this.currentChannelId = 5
-        //         this.addViewerToChannel()
-        //         this.getViewerCount()
-        //         this.loadNewSourceFromMist(source)
-        //
-        //     }
-        //     if (name==='music') {
-        //         let source = 'mist1pull6'
-        //         this.videoName = 'Music'
-        //         this.currentChannelName = 'music'
-        //         this.currentChannelId = 6
-        //         this.addViewerToChannel()
-        //         this.getViewerCount()
-        //         this.loadNewSourceFromMist(source)
-        //
-        //     }
-        //     if (name==='drama') {
-        //         let source = 'mist1pull7'
-        //         this.videoName = 'Drama'
-        //         this.currentChannelName = 'drama'
-        //         this.currentChannelId = 7
-        //         this.addViewerToChannel()
-        //         this.getViewerCount()
-        //         this.loadNewSourceFromMist(source)
-        //
-        //     }
-        //     if (name==='comedy') {
-        //         let source = 'mist1pull8'
-        //         this.videoName = 'Comedy'
-        //         this.currentChannelName = 'comedy'
-        //         this.currentChannelId = 8
-        //         this.addViewerToChannel()
-        //         this.getViewerCount()
-        //         this.loadNewSourceFromMist(source)
-        //
-        //     }
-        //     if (name==='education') {
-        //         let source = 'mist1pull9'
-        //         this.videoName = 'Education'
-        //         this.currentChannelName = 'education'
-        //         this.currentChannelId = 9
-        //         this.addViewerToChannel()
-        //         this.getViewerCount()
-        //         this.loadNewSourceFromMist(source)
-        //
-        //     }
-        //     if (name==='spirituality') {
-        //         let source = 'mist1pull10'
-        //         this.videoName = 'Spirituality'
-        //         this.currentChannelName = 'spirituality'
-        //         this.currentChannelId = 10
-        //         this.addViewerToChannel()
-        //         this.getViewerCount()
-        //         this.loadNewSourceFromMist(source)
-        //
-        //     }
-        //     if (name==='reality') {
-        //         let source = 'mist1pull11'
-        //         this.videoName = 'Reality'
-        //         this.currentChannelName = 'reality'
-        //         this.currentChannelId = 11
-        //         this.addViewerToChannel()
-        //         this.getViewerCount()
-        //         this.loadNewSourceFromMist(source)
-        //
-        //     }
-        //     if (name==='variety') {
-        //         this.disconnectViewerFromChannel()
-        //         let source = 'mist1pull12'
-        //         this.videoName = 'Variety'
-        //         this.currentChannelName = 'variety'
-        //         this.currentChannelId = 12
-        //         this.addViewerToChannel()
-        //         this.getViewerCount()
-        //         this.loadNewSourceFromMist(source)
-        //
-        //     }
-        //     if (name==='sports') {
-        //         this.disconnectViewerFromChannel()
-        //         let source = 'mist1pull13'
-        //         this.videoName = 'Sports'
-        //         this.currentChannelName = 'sports'
-        //         this.currentChannelId = 13
-        //         this.addViewerToChannel()
-        //         this.getViewerCount()
-        //         this.loadNewSourceFromMist(source)
-        //
-        //     }
-        //     if (name==='local') {
-        //         this.disconnectViewerFromChannel()
-        //         let source = 'mist1pull14'
-        //         this.videoName = 'Local'
-        //         this.currentChannelName = 'local'
-        //         this.currentChannelId = 14
-        //         this.addViewerToChannel()
-        //         this.getViewerCount()
-        //         this.loadNewSourceFromMist(source)
-        //
-        //     }
-        //     if (name==='world') {
-        //         this.disconnectViewerFromChannel()
-        //         let source = 'mist1pull15'
-        //         this.videoName = 'notTV World'
-        //         this.currentChannelName = 'world'
-        //         this.currentChannelId = 15
-        //         this.addViewerToChannel()
-        //         this.getViewerCount()
-        //         this.loadNewSourceFromMist(source)
-        //
-        //     }
-        // },
+
     },
 
     getters: {
-        // Filter the creators and remove null values
-        // Define a getter function to get valid creators
-        validCreators(state) {
-               return state.nowPlayingCreators.filter(
-                    (creator) =>
-                        creator &&
-                        creator.id !== undefined && // Filter out undefined 'id'
-                        creator.name !== undefined // Filter out undefined 'name'
-                )
-            }
-        // incrementViewerCount() {
-        //     this.viewerCount++
-        // },
-        // decrementViewerCount() {
-        //     this.viewerCount++
-        // },
-        // incrementViewerCount: (state) => this.state.viewerCount++,
-        // decrementViewerCount: (state) => this.state.viewerCount--,
-        // incrementViewerCount(state) {
-        //     return state.viewerCount++
-        // },
-        // decrementViewerCount(state) {
-        //     return state.viewerCount--
-        // },
-        // updateViewerCount() {
-        //     const channel = Echo.private('channel.' + this.currentChannelId)
-        //     channel.subscribed(() => {
-        //     }).listen('channel.' + this.currentChannelId, (event) => {
-        //         if (event.channel_id === this.currentChannelId) {
-        //             this.viewerCount = this.viewerCount + event.viewerCount;
-        //         }
-        //         console.log('channel connected')
-        //     })
-        // }
-
-        // addViewer() {
-        //     axios.post('/api/addCurrentViewer', {'channel_id': this.currentChannelId, 'user_id': useUserStore().id})
-        //     .then(response => {
-        //         `console.log`(response);
-        //     })
-        //     .catch(error => {
-        //         console.log(error);
-        //     })
     },
 })

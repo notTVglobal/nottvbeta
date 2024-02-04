@@ -59,14 +59,14 @@ import { useChatStore } from "@/Stores/ChatStore.js";
 import {onMounted} from "vue";
 import {useForm} from "@inertiajs/inertia-vue3";
 
-let videoPlayerStore = useVideoPlayerStore()
-let chat = useChatStore()
+const videoPlayerStore = useVideoPlayerStore()
+const chat = useChatStore()
 
 let form = useForm({
     message: '',
 });
 
-userStore.currentPage = 'chatTest'
+appSettingStore.currentPage = 'chatTest'
 
 onMounted(() => {
     videoPlayerStore.makeVideoTopRight();

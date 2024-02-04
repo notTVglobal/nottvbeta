@@ -9,6 +9,8 @@ use Inertia\Response;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
+// A note for testing the shop locally. Use https://expose.dev
+
 class ShopController extends Controller
 {
 

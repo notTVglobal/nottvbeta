@@ -10,6 +10,7 @@ class AppSetting extends Model
     use HasFactory;
 
     protected $fillable = [
+        'default_country',
         'cdn_endpoint',
         'cloud_folder',
         'first_play_video_source',
@@ -36,6 +37,11 @@ class AppSetting extends Model
     {
         return $this->hasMany(Team::class);
     }
+
+  public function country()
+  {
+    return $this->belongsTo(NewsCountry::class);
+  }
 
     public function channel()
     {

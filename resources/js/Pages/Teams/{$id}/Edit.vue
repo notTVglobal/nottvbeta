@@ -1,243 +1,241 @@
 <template>
 
-    <Head :title="`Edit Team: ${props.team.name}`"/>
+  <Head :title="`Edit Team: ${props.team.name}`"/>
 
-    <div class="place-self-center flex flex-col gap-y-3">
-        <div id="topDiv" class="bg-white text-black dark:bg-gray-800 p-5 mb-10">
+  <div class="place-self-center flex flex-col gap-y-3">
+    <div id="topDiv" class="bg-white text-black dark:bg-gray-800 p-5 mb-10">
 
-            <Message v-if="userStore.showFlashMessage" :flash="$page.props.flash"/>
+      <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
-            <TeamEditHeader :team="props.team" :teamCreator="props.teamCreator" />
-
-
-            <div class="flex flex-col">
-                <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                    <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-                        <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-
-<!--                            <TeamEditBody-->
-<!--                                :team="props.team"-->
-<!--                                :logo="props.logo"-->
-<!--                                :images="props.images"-->
-<!--                            />-->
+      <TeamEditHeader :team="props.team" :teamCreator="props.teamCreator"/>
 
 
-                            <div v-if="form.errors.name" v-text="form.errors.name"
-                                 class="bg-red-600 p-2 w-full text-white font-semibold mt-1"></div>
-                            <div v-if="form.errors.description" v-text="form.errors.description"
-                                 class="bg-red-600 p-2 w-full text-white font-semibold mt-1"></div>
-                            <div v-if="form.errors.totalSpots" v-text="form.errors.totalSpots"
-                                 class="bg-red-600 p-2 w-full text-white font-semibold mt-1"></div>
+      <div class="flex flex-col">
+        <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+          <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+            <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
 
-                            <!-- Begin grid 2-col -->
-                            <div class="grid grid-cols-1 sm:grid-cols-2 space-x-6 p-6">
-
-                                <!--Left Column-->
-                                <div>
-                                    <div class="flex space-y-3">
-                                        <div class="mb-6">
-                                            <SingleImage :image="props.image" :key="props.image" :alt="'team logo'" class=""/>
-<!--                                            <img :src="'/storage/images/' + props.logo" :key="logo"/>-->
-                                        </div>
-                                    </div>
-
-                                    <div>
-
-                                        <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
-                                               for="name"
-                                        >
-                                            Change Team Logo
-                                        </label>
-                                        <ImageUpload :image="props.image"
-                                                     :server="'/teamsUploadLogo'"
-                                                     :name="'Upload Team Logo'"
-                                                     :metadataKey="'foo2'"
-                                                     :metadataValue="'bar2'"
-                                                     :maxSize="'10MB'"
-                                                     :fileTypes="'image/jpg, image/jpeg, image/png'"
-                                                     @reloadImage="reloadImage"
-                                        />
-
-                                    </div>
-
-                                </div>
-
-                                <!--Right Column-->
-                                <div>
-                                    <!--            Replace this with TeamLogoUpload -->
-<!--                                    <TeamLogoUpload-->
-<!--                                        :team="props.team"-->
-<!--                                        :images="props.images"-->
-<!--                                    />-->
+              <!--                            <TeamEditBody-->
+              <!--                                :team="props.team"-->
+              <!--                                :logo="props.logo"-->
+              <!--                                :images="props.images"-->
+              <!--                            />-->
 
 
+              <div v-if="form.errors.name" v-text="form.errors.name"
+                   class="bg-red-600 p-2 w-full text-white font-semibold mt-1"></div>
+              <div v-if="form.errors.description" v-text="form.errors.description"
+                   class="bg-red-600 p-2 w-full text-white font-semibold mt-1"></div>
+              <div v-if="form.errors.totalSpots" v-text="form.errors.totalSpots"
+                   class="bg-red-600 p-2 w-full text-white font-semibold mt-1"></div>
 
+              <!-- Begin grid 2-col -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 space-x-6 p-6">
 
-
-                                    <form @submit.prevent="submit">
-                                        <div class="mb-6">
-                                        </div>
-
-                                        <div class="mb-6">
-                                            <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
-                                                   for="name"
-                                            >
-                                                Team Name
-                                            </label>
-
-                                            <input v-model="form.name"
-                                                   class="border border-gray-400 p-2 w-full rounded-lg text-black"
-                                                   type="text"
-                                                   name="name"
-                                                   id="name"
-                                                   required
-                                            >
-                                            <div v-if="form.errors.name" v-text="form.errors.name"
-                                                 class="text-xs text-red-600 mt-1"></div>
-                                        </div>
-
-                                        <div class="mb-6">
-                                            <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
-                                                   for="description"
-                                            >
-                                                Description
-                                            </label>
-                                            <TabbableTextarea v-model="form.description"
-                                                              class="border border-gray-400 p-2 w-full rounded-lg text-black"
-                                                              name="description"
-                                                              id="description"
-                                                              rows="10" cols="30"
-                                                              required
-                                            />
-                                            <div v-if="form.errors.description" v-text="form.errors.description"
-                                                 class="text-xs text-red-600 mt-1"></div>
-                                        </div>
-
-<!--                                        tec21: this is to become a searchable list to select a team leader -->
-<!--                                        <div class="mb-6">-->
-<!--                                            <label class="block mb-2 uppercase font-bold text-xs text-gray-700"-->
-<!--                                                   for="teamLeader"-->
-<!--                                            >-->
-<!--                                                Team Leader-->
-<!--                                            </label>-->
-<!--                                            <input v-model="form.teamLeader"-->
-<!--                                                   class="border border-gray-400 p-2 w-full rounded-lg"-->
-<!--                                                   type="text"-->
-<!--                                                   name="teamLeader"-->
-<!--                                                   id="teamLeader"-->
-<!--                                            />-->
-<!--                                            <div v-if="form.errors.teamLeader" v-text="form.errors.teamLeader"-->
-<!--                                                 class="text-xs text-red-600 mt-1"></div>-->
-<!--                                        </div>-->
-
-                                        <div class="mb-6">
-                                            <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
-                                                   for="teamLeader"
-                                            >
-                                                Team Leader
-                                            </label>
-                                            <select class="border border-gray-400 p-2 w-full rounded-lg block mb-2 uppercase font-bold text-xs text-gray-800"
-                                                    v-model="selectedTeamLeader"
-                                            >
-                                                <option
-                                                    v-if="props.possibleTeamLeaders && props.possibleTeamLeaders.length > 0"
-                                                    v-for="leader in props.possibleTeamLeaders"
-                                                    :key="leader.id"
-                                                    :value="leader.id"
-                                                    class="bg-white text-black border-b dark:text-gray-50 dark:bg-gray-800 dark:border-gray-600"
-                                                >
-                                                    {{ leader.name }} ({{ leader.role }})
-                                                </option>
-                                                <option v-else disabled>
-                                                    There are no eligible team leaders.
-                                                </option>
-
-                                            </select>
-
-                                            <div class="text-xs">Only the team creator and team managers are listed, if their creator accounts are in good standing.</div>
-
-                                            <div v-if="form.errors.teamLeader" v-text="form.errors.teamLeader" class="text-xs text-red-600 mt-1"></div>
-
-
-                                        </div>
-
-                                        <div class="mb-6">
-                                            <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
-                                                   for="description"
-                                            >
-                                                Maximum # of Team Members
-                                            </label>
-                                            <input v-model="form.totalSpots"
-                                                   class="border border-gray-400 p-2 w-full rounded-lg text-black"
-                                                   type="text"
-                                                   name="totalSpots"
-                                                   id="totalSpots"
-                                            />
-                                            <div v-if="form.errors.totalSpots" v-text="form.errors.totalSpots"
-                                                 class="text-xs text-red-600 mt-1"></div>
-                                        </div>
-                                        <div v-if="props.message" class="text-sm text-red-600 mt-1 mb-2">
-                                            {{ props.message }}
-                                        </div>
-                                        <div class="flex justify-between mb-6">
-                                            <JetValidationErrors class="mr-4" />
-                                            <button
-                                                type="submit"
-                                                class="h-fit bg-blue-600 hover:bg-blue-500 text-white rounded py-2 px-4 "
-                                                :disabled="form.processing"
-                                            >
-                                                Save
-                                            </button>
-                                        </div>
-                                    </form>
-
-                                </div>
-                                <!-- End Right Column -->
-                            </div>
-                            <!-- End grid 2-col -->
-
-
-
-                        </div>
+                <!--Left Column-->
+                <div>
+                  <div class="flex space-y-3">
+                    <div class="mb-6">
+                      <SingleImage :image="props.image" :key="props.image" :alt="'team logo'" class=""/>
+                      <!--                                            <img :src="'/storage/images/' + props.logo" :key="logo"/>-->
                     </div>
-                </div>
-            </div>
+                  </div>
 
+                  <div>
+
+                    <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
+                           for="name"
+                    >
+                      Change Team Logo
+                    </label>
+                    <ImageUpload :image="props.image"
+                                 :server="'/teamsUploadLogo'"
+                                 :name="'Upload Team Logo'"
+                                 :metadataKey="'foo2'"
+                                 :metadataValue="'bar2'"
+                                 :maxSize="'10MB'"
+                                 :fileTypes="'image/jpg, image/jpeg, image/png'"
+                                 @reloadImage="reloadImage"
+                    />
+
+                  </div>
+
+                </div>
+
+                <!--Right Column-->
+                <div>
+                  <!--            Replace this with TeamLogoUpload -->
+                  <!--                                    <TeamLogoUpload-->
+                  <!--                                        :team="props.team"-->
+                  <!--                                        :images="props.images"-->
+                  <!--                                    />-->
+
+
+                  <form @submit.prevent="submit">
+                    <div class="mb-6">
+                    </div>
+
+                    <div class="mb-6">
+                      <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
+                             for="name"
+                      >
+                        Team Name
+                      </label>
+
+                      <input v-model="form.name"
+                             class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                             type="text"
+                             name="name"
+                             id="name"
+                             required
+                      >
+                      <div v-if="form.errors.name" v-text="form.errors.name"
+                           class="text-xs text-red-600 mt-1"></div>
+                    </div>
+
+                    <div class="mb-6">
+                      <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
+                             for="description"
+                      >
+                        Description
+                      </label>
+                      <TabbableTextarea v-model="form.description"
+                                        class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                                        name="description"
+                                        id="description"
+                                        rows="10" cols="30"
+                                        required
+                      />
+                      <div v-if="form.errors.description" v-text="form.errors.description"
+                           class="text-xs text-red-600 mt-1"></div>
+                    </div>
+
+                    <!--                                        tec21: this is to become a searchable list to select a team leader -->
+                    <!--                                        <div class="mb-6">-->
+                    <!--                                            <label class="block mb-2 uppercase font-bold text-xs text-gray-700"-->
+                    <!--                                                   for="teamLeader"-->
+                    <!--                                            >-->
+                    <!--                                                Team Leader-->
+                    <!--                                            </label>-->
+                    <!--                                            <input v-model="form.teamLeader"-->
+                    <!--                                                   class="border border-gray-400 p-2 w-full rounded-lg"-->
+                    <!--                                                   type="text"-->
+                    <!--                                                   name="teamLeader"-->
+                    <!--                                                   id="teamLeader"-->
+                    <!--                                            />-->
+                    <!--                                            <div v-if="form.errors.teamLeader" v-text="form.errors.teamLeader"-->
+                    <!--                                                 class="text-xs text-red-600 mt-1"></div>-->
+                    <!--                                        </div>-->
+
+                    <div class="mb-6">
+                      <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
+                             for="teamLeader"
+                      >
+                        Team Leader
+                      </label>
+                      <select
+                          class="border border-gray-400 p-2 w-full rounded-lg block mb-2 uppercase font-bold text-xs text-gray-800"
+                          v-model="selectedTeamLeader"
+                      >
+                        <option
+                            v-if="props.possibleTeamLeaders && props.possibleTeamLeaders.length > 0"
+                            v-for="leader in props.possibleTeamLeaders"
+                            :key="leader.id"
+                            :value="leader.id"
+                            class="bg-white text-black border-b dark:text-gray-50 dark:bg-gray-800 dark:border-gray-600"
+                        >
+                          {{ leader.name }} ({{ leader.role }})
+                        </option>
+                        <option v-else disabled>
+                          There are no eligible team leaders.
+                        </option>
+
+                      </select>
+
+                      <div class="text-xs">Only the team creator and team managers are listed, if their creator accounts
+                        are in good standing.
+                      </div>
+
+                      <div v-if="form.errors.teamLeader" v-text="form.errors.teamLeader"
+                           class="text-xs text-red-600 mt-1"></div>
+
+
+                    </div>
+
+                    <div class="mb-6">
+                      <label class="block mb-2 uppercase font-bold text-xs text-light text-red-700"
+                             for="description"
+                      >
+                        Maximum # of Team Members
+                      </label>
+                      <input v-model="form.totalSpots"
+                             class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                             type="text"
+                             name="totalSpots"
+                             id="totalSpots"
+                      />
+                      <div v-if="form.errors.totalSpots" v-text="form.errors.totalSpots"
+                           class="text-xs text-red-600 mt-1"></div>
+                    </div>
+                    <div class="flex justify-between mb-6">
+                      <JetValidationErrors class="mr-4"/>
+                      <button
+                          type="submit"
+                          class="h-fit bg-blue-600 hover:bg-blue-500 text-white rounded py-2 px-4 "
+                          :disabled="form.processing"
+                      >
+                        Save
+                      </button>
+                    </div>
+                  </form>
+
+                </div>
+                <!-- End Right Column -->
+              </div>
+              <!-- End grid 2-col -->
+
+
+            </div>
+          </div>
         </div>
+      </div>
+
     </div>
+  </div>
 </template>
 
 <script setup>
-import { onBeforeMount, onMounted, ref, watch } from "vue";
-import { Inertia } from "@inertiajs/inertia";
-import { useForm } from "@inertiajs/inertia-vue3";
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore.js"
-import { useTeamStore } from "@/Stores/TeamStore.js"
-import { useUserStore } from "@/Stores/UserStore";
-import Message from "@/Components/Modals/Messages";
-import SingleImage from "@/Components/Multimedia/SingleImage";
-import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
-import TeamEditHeader from "@/Components/Teams/Edit/TeamEditHeader";
-import TeamEditBody from "@/Components/Teams/Edit/TeamEditBody";
-import TeamLogoUpload from "@/Components/FilePond/TeamLogoUpload";
-import TabbableTextarea from "@/Components/TabbableTextarea"
-import ImageUpload from "@/Components/Uploaders/ImageUpload";
+import { Inertia } from '@inertiajs/inertia'
+import { ref, watch } from 'vue'
+import { useForm } from '@inertiajs/inertia-vue3'
+import { usePageSetup } from '@/Utilities/PageSetup'
+import { useTeamStore } from '@/Stores/TeamStore'
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import JetValidationErrors from '@/Jetstream/ValidationErrors'
+import TeamEditHeader from '@/Components/Pages/Teams/Edit/TeamEditHeader'
+import TeamEditBody from '@/Components/Pages/Teams/Edit/TeamEditBody'
+import TeamLogoUpload from '@/Components/Global/FilePond/TeamLogoUpload'
+import TabbableTextarea from '@/Components/Global/TextEditor/TabbableTextarea'
+import ImageUpload from '@/Components/Global/Uploaders/ImageUpload'
+import Message from '@/Components/Global/Modals/Messages'
+import SingleImage from '@/Components/Global/Multimedia/SingleImage'
 
-let videoPlayerStore = useVideoPlayerStore()
-let teamStore = useTeamStore()
-let userStore = useUserStore()
+usePageSetup('teams/slug/edit')
+
+const appSettingStore = useAppSettingStore()
+const teamStore = useTeamStore()
 
 let props = defineProps({
-    team: Object,
-    teamCreator: Object,
-    possibleTeamLeaders: Array,
-    teamLeader: Object,
-    // possibleTeamLeaders: {
-    //     type: Object,
-    //     default: () => ({ data: [] }) // Provide a default value
-    // },
-    image: Object,
-});
+  team: Object,
+  teamCreator: Object,
+  possibleTeamLeaders: Array,
+  teamLeader: Object,
+  // possibleTeamLeaders: {
+  //     type: Object,
+  //     default: () => ({ data: [] }) // Provide a default value
+  // },
+  image: Object,
+})
 
 // const selectedTeamLeader = ref(props.teamLeader ? props.teamLeader.id : null);
 // const selectedTeamLeader = ref(null);
@@ -253,43 +251,32 @@ let props = defineProps({
 // });
 
 let form = useForm({
-    id: props.team.id,
-    name: props.team.name,
-    description: props.team.description,
-    totalSpots: props.team.totalSpots,
-    teamLeader: props.teamLeader ? props.teamLeader.id : null,
-});
+  id: props.team.id,
+  name: props.team.name,
+  description: props.team.description,
+  totalSpots: props.team.totalSpots,
+  teamLeader: props.teamLeader ? props.teamLeader.id : null,
+})
 
-const selectedTeamLeader = ref(props.teamLeader ? props.teamLeader.id : null);
+const selectedTeamLeader = ref(props.teamLeader ? props.teamLeader.id : null)
 
 // Watch for changes in selectedTeamLeader and update the form
 watch(selectedTeamLeader, (newValue) => {
-    form.teamLeader = newValue;
-});
+  form.teamLeader = newValue
+})
 
 let reloadImage = () => {
-    Inertia.reload({
-        only: ['image'],
-    });
-};
+  Inertia.reload({
+    only: ['image'],
+  })
+}
 
 let submit = () => {
-    form.put(route('teams.update', props.team.slug));
-};
+  form.patch(route('teams.update', props.team.slug))
+}
 
-onMounted(() => {
-    videoPlayerStore.makeVideoTopRight();
-    if (userStore.isMobile) {
-        videoPlayerStore.ottClass = 'ottClose'
-        videoPlayerStore.ott = 0
-    }
-    document.getElementById("topDiv").scrollIntoView()
-});
-
-userStore.currentPage = 'teams'
-userStore.showFlashMessage = true;
-teamStore.setActiveTeam(props.team);
-teamStore.logoName = props.image.name;
+teamStore.setActiveTeam(props.team)
+teamStore.logoName = props.image.name
 
 </script>
 

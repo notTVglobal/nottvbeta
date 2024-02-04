@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\News;
+use App\Models\NewsPerson;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class NewsController extends Controller
@@ -15,7 +17,13 @@ class NewsController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Public/News/Index');
+      $user = Auth::user();
+
+      return Inertia::render('News/Index', [
+          'can' => [
+              'viewNewsroom' => optional($user)->can('viewAny', NewsPerson::class) ?: false,
+          ],
+      ]);
     }
 
     /**

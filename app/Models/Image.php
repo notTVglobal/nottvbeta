@@ -12,6 +12,7 @@ class Image extends Model
 
     protected $fillable = [
         'user_id',
+        'creative_commons_id',
         'name',
         'extension',
         'size',
@@ -51,7 +52,7 @@ class Image extends Model
 
     public function newsPost()
     {
-        return $this->hasMany(NewsPost::class);
+        return $this->hasMany(NewsStory::class);
     }
 
     public function video()
@@ -81,7 +82,18 @@ class Image extends Model
 //        ]);
 //    }
 
-    public function showImage(): \Illuminate\Database\Eloquent\Relations\HasManyThrough {
-        return $this->hasManyThrough(Image::class, Show::class);
-    }
+  public function showImage(): \Illuminate\Database\Eloquent\Relations\HasManyThrough {
+      return $this->hasManyThrough(Image::class, Show::class);
+  }
+
+  public function newsRssFeedItemArchives()
+  {
+    return $this->hasMany(NewsRssFeedItemArchive::class, 'image_id');
+  }
+
+  public function creativeCommons()
+  {
+    return $this->belongsTo(CreativeCommons::class, 'creative_commons_id');
+  }
+
 }

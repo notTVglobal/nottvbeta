@@ -1,21 +1,27 @@
-import { defineStore } from "pinia";
-import { useUserStore } from "@/Stores/UserStore";
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore";
-import { useNowPlayingStore } from "@/Stores/NowPlayingStore";
-import videojs from "video.js";
+import { defineStore } from "pinia"
+import { useUserStore } from "@/Stores/UserStore"
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
+import { useAppSettingStore } from "@/Stores/AppSettingStore"
+// const appSettingStore = useAppSettingStore()
+import { useNowPlayingStore } from "@/Stores/NowPlayingStore"
+
+const initialState = () => ({
+    currentChannelId: 0,
+    currentChannelName: '',
+    isLive: false,
+    viewerCount: 0,
+    channel_list: {},
+    userAddedToChannels: false,
+    channelsLoaded: false,
+})
 
 export const useChannelStore = defineStore('channelStore', {
-    state: () => ({
-        currentChannelId: 0,
-        currentChannelName: '',
-        isLive: false,
-        viewerCount: 0,
-        channel_list: {},
-        userAddedToChannels: false,
-        channelsLoaded: false,
-    }),
-
+    state: initialState,
     actions: {
+        reset() {
+            // Reset the store to its original state (clear all data)
+            Object.assign(this, initialState())
+        },
         getChannels() {
             if (!this.channelsLoaded){
                 axios.get('/api/channels_list')
@@ -36,22 +42,24 @@ export const useChannelStore = defineStore('channelStore', {
             oldChannelId = this.currentChannelId
 
             nowPlayingStore.reset()
-            nowPlayingStore.setActiveType(2)
-            nowPlayingStore.channel.id = channel.id
-            nowPlayingStore.channel.name = channel.name
+            // nowPlayingStore.setActiveType(2)
+            // nowPlayingStore.channel.id = channel.id
+            // nowPlayingStore.channel.name = channel.name
             nowPlayingStore.displayCurrentViewerCount = true
             nowPlayingStore.isLive = channel.isLive
 
             this.currentChannelName = channel.name
             this.currentChannelId = channel.id
-            this.isLive = channel.isLive
-            videoPlayerStore.clearNowPlayingInfo()
+            if (this.currentChannelId === 1) {
+                nowPlayingStore.isLive = true
+                nowPlayingStore.viewerCountIsVisible = true
+                console.log('Channel is live.')
+            }
+            // this.isLive = channel.isLive
+
             console.log('Change Channel')
             console.log(channel.id)
             console.log(channel.name)
-            if (this.isLive) {
-                console.log('Channel is live.')
-            }
             if (useUserStore().id !== null) {
                 this.userAddedToChannels = true
                 if (oldChannelId !== 0) {
@@ -82,6 +90,7 @@ export const useChannelStore = defineStore('channelStore', {
 
         },
         clearChannel() {
+            console.log('clear channel')
             this.disconnectViewerFromChannel(this.currentChannelId);
             this.currentChannelName = null;
             this.currentChannelId = null;
@@ -147,6 +156,7 @@ export const useChannelStore = defineStore('channelStore', {
 
         },
         disconnectViewerFromChannel(id) {
+            console.log('disconnect from viewer count')
             Echo.leave('viewerCount.' + id)
             // await axios.post('/api/removeCurrentViewer', {
             //     'channel_id': this.currentChannelId,

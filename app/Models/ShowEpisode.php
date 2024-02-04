@@ -38,6 +38,7 @@ class ShowEpisode extends Model
         'name',
         'description',
         'user_id',
+        'creative_commons_id',
         'show_id',
         'slug',
         'notes',
@@ -76,7 +77,7 @@ class ShowEpisode extends Model
 
     public function video()
     {
-        return $this->belongsTo(Video::class);
+        return $this->belongsTo(Video::class, 'video_id');
     }
 
     public function appSetting(): BelongsTo
@@ -85,6 +86,11 @@ class ShowEpisode extends Model
 //            'cdn_endpoint' => 'https://development-nottv.sfo3.cdn.digitaloceanspaces.com',
         ]);
     }
+
+  public function creativeCommons()
+  {
+    return $this->belongsTo(CreativeCommons::class, 'creative_commons_id');
+  }
 
 //    public function showCategory(): HasOneThrough
 //    {

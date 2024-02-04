@@ -1,13 +1,16 @@
 import { defineStore } from 'pinia';
 
-export const useDashboardStore = defineStore('dashboard', {
-    // State
-    state: () => ({
-        currentNotificationType: 'default'
-    }),
+const initialState = () => ({
+    currentNotificationType: 'default'
+})
 
-    // Actions
+export const useDashboardStore = defineStore('dashboard', {
+    state: initialState,
     actions: {
+        reset() {
+            // Reset the store to its original state (clear all data)
+            Object.assign(this, initialState())
+        },
         setNotificationType(type) {
             this.currentNotificationType = type;
         }

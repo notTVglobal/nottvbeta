@@ -9,6 +9,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class NewsPersonController extends Controller
@@ -16,19 +17,46 @@ class NewsPersonController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return void
+     * @return \Inertia\Response
      */
-    public function index()
-    {
-//        return Inertia::render('Public/News/Reporters/Index', [
-//            'newsPerson' => [
-//                'id' => $newsPerson->user->id,
-//                'name' => $newsPerson->user->name,
-//                'profile_photo_path' => $newsPerson->user->profile_photo_path,
-//                'profile_photo_url' => $newsPerson->user->profile_photo_url,
-//            ],
-//        ]);
-    }
+    public function reportersIndex(): \Inertia\Response {
+      $newsPeople = NewsPerson::with('user')->get()->map(function ($newsPerson) {
+        return [
+            'id' => $newsPerson->user->id,
+            'name' => $newsPerson->user->name,
+            'profile_photo_path' => $newsPerson->user->profile_photo_path,
+            'profile_photo_url' => $newsPerson->user->profile_photo_url,
+        ];
+      });
+      return Inertia::render('News/Reporters/Index', [
+          'newsPeople' => $newsPeople,
+          'can'         => [
+              'viewNewsroom'     => optional(Auth::user())->can('viewAny', NewsPerson::class) ?: false,
+          ]
+      ]);
+  }
+
+  /**
+   * Display the specified resource.
+   *
+   * @param NewsPerson $newsPerson
+   * @return \Inertia\Response
+   */
+  public function reporterShow(NewsPerson $newsPerson): \Inertia\Response
+  {
+
+    return Inertia::render('News/Reporters/{$id}/Index', [
+        'newsPerson' => [
+            'id' => $newsPerson->user->id,
+            'name' => $newsPerson->user->name,
+            'profile_photo_path' => $newsPerson->user->profile_photo_path,
+            'profile_photo_url' => $newsPerson->user->profile_photo_url,
+        ],
+        'can' => [
+            'viewNewsroom' => optional(Auth::user())->can('viewAny', NewsPerson::class) ?: false,
+        ]
+    ]);
+  }
 
     /**
      * Show the form for creating a new resource.
@@ -64,19 +92,11 @@ class NewsPersonController extends Controller
      * Display the specified resource.
      *
      * @param NewsPerson $newsPerson
-     * @return \Inertia\Response
+     * @return void
      */
-    public function show(NewsPerson $newsPerson): \Inertia\Response
+    public function show(NewsPerson $newsPerson)
     {
-
-        return Inertia::render('Public/News/Reporters/{$id}/Index', [
-            'newsPerson' => [
-                'id' => $newsPerson->user->id,
-                'name' => $newsPerson->user->name,
-                'profile_photo_path' => $newsPerson->user->profile_photo_path,
-                'profile_photo_url' => $newsPerson->user->profile_photo_url,
-            ],
-        ]);
+        //
     }
 
     /**
@@ -97,7 +117,7 @@ class NewsPersonController extends Controller
      * @param NewsPerson $newsPerson
      * @return Response
      */
-    public function update(Request $request, NewsPerson $newsPerson): Response {
+    public function update(Request $request, NewsPerson $newsPerson) {
         //
     }
 

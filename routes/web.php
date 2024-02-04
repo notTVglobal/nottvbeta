@@ -6,6 +6,8 @@ use App\Http\Controllers\ChangelogController;
 use App\Http\Controllers\ChannelController;
 
 use App\Http\Controllers\FlashController;
+use App\Http\Controllers\NewsRssFeedItemArchiveController;
+use App\Http\Controllers\NewsRssFeedItemTempController;
 use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\SubscriptionPlanController;
 use App\Http\Controllers\TeamManagersController;
@@ -29,7 +31,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\NewsPersonController;
-use App\Http\Controllers\NewsPostController;
+use App\Http\Controllers\NewsStoryController;
 use App\Http\Controllers\NewsroomController;
 use App\Http\Controllers\NewsRssFeedController;
 use App\Http\Controllers\MovieController;
@@ -70,15 +72,7 @@ use Laravel\Cashier\Checkout;
 |
 */
 
-//Route::get('/', function () {
-//    return Inertia::render('Welcome', [
-//        'canLogin' => Route::has('login'),
-//        'canRegister' => Route::has('register'),
-//    ]);
-//})->name('home');
-
 Route::get('/', [WelcomeController::class, 'index'])->name('home');
-
 
 Route::get('/send-mail', function () {
    Mail::to('test@test.com')->queue(new VerifyMail());
@@ -92,17 +86,25 @@ Route::get('/home', function () {
     } return redirect('/');
 });
 
-//Route::get('/register', function () {
-//    return redirect('/register');
-//})->name('register');
-//
-//Route::get('/login', function () {
-//    return redirect('/login');
-//})->name('login');
+Route::get('/public/register', function () {
+  return Inertia::render('Register');
+})->name('public.register');
+
+Route::get('/public/login', function () {
+  return Inertia::render('Login');
+})->name('public.login');
+
+Route::get('/public/forgot-password', function () {
+  return Inertia::render('Public/ForgotPassword');
+})->name('public.forgotPassword');
 
 Route::get('/email/verify', function () {
     return Inertia::render('Auth/VerifyEmail');
 })->middleware('auth')->name('verification.notice');
+
+Route::get('/public/mail/verify', function () {
+  return Inertia::render('Public/EmailVerify');
+})->middleware('auth')->name('public.email.verify');
 
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
     $request->fulfill();
@@ -111,7 +113,7 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
 
 Route::post('/email/verify', function (Request $request) {
     $request->user()->sendEmailVerificationNotification();
-    return Inertia::render('Auth/VerifySent');
+    return Inertia::render('Public/EmailVerify');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send2');
 // Jetstream/Fortify came with an email verification method, but
 // I can't figure out where the verification.send route is. And
@@ -140,24 +142,36 @@ Route::get('/privacy', function () {
 Route::get('/privacy-policy', [\App\Http\Controllers\PrivacyPolicyController::class, 'show'])->name('policy.show');
 Route::get('/terms-of-service', [\App\Http\Controllers\TermsOfServiceController::class, 'show'])->name('terms.show');
 
-
 Route::get('/whitepaper', [WhitepaperController::class, 'show'])->name('whitepaper.show');
-Route::get('/changelog', [ChangelogController::class, 'show'])->name('changelog.show');
 
-// Public Pages
+Route::get('/first-play-data', [AppSettingController::class, 'serveFirstPlayData']);
 
-// News
-Route::get('public/news', [NewsController::class, 'index'])
-//        ->middleware('can:create,App\Models\NewsPerson')
-    ->name('public.news.index');
 
-Route::get('public/news/reporters', [NewsPersonController::class, 'index'])
-//        ->middleware('can:create,App\Models\NewsPerson')
-    ->name('public.newsPerson.index');
+// News (public, everyone can see these)
+////////////////////////////////////////
 
-Route::get('public/news/reporter/{newsPerson}', [NewsPersonController::class, 'show'])
-//        ->middleware('can:create,App\Models\NewsPerson')
-    ->name('public.newsPerson.show');
+// News is no longer a resource.
+// tec21: 2024-01-20 removed the model and table.
+Route::get('/news', [NewsStoryController::class, 'index'])
+    ->name('news.index');
+
+// Group news reporter related routes under 'news'
+Route::prefix('/news')->group(function () {
+  Route::get('/reporters', [NewsPersonController::class, 'reportersIndex'])
+      ->name('news.reporters.index');
+  Route::get('/reporter/{newsPerson}', [NewsPersonController::class, 'reporterShow'])
+      ->name('news.reporter.show');
+});
+
+
+// Redirect GET requests for 'news/story' to 'news'
+Route::get('news/story', function () {
+  return redirect('/news');
+});
+// Public news story route
+Route::get('news/story/{story}', [NewsStoryController::class, 'show'])
+    ->name('news/story.show');
+
 
 // BEGIN ROUTES FOR
 // Logged In Users
@@ -180,6 +194,8 @@ Route::middleware([
     Route::get('/stream', function () {
         return Inertia::render('Stream');
     })->name('stream');
+
+    Route::get('/changelog', [ChangelogController::class, 'show'])->name('changelog.show');
 
 //
 //    Route::get('/payment', function (Request $request) {
@@ -230,80 +246,15 @@ Route::middleware([
         ->name('dashboard');
 
 
-// Newsroom
-///////////
-
-    Route::get('/newsroom', [\App\Http\Controllers\NewsroomController::class, 'index'])
-        ->middleware('can:viewAny,App\Models\NewsPerson')
-        ->name('newsroom');
-
-    Route::post('/newsroom/newsperson', [\App\Http\Controllers\NewsPersonController::class, 'store'])
-//        ->middleware('can:create,App\Models\NewsPerson')
-        ->name('newsperson.store');
-
-    Route::put('/newsroom/newsperson/destroy', [\App\Http\Controllers\NewsPersonController::class, 'destroy'])
-//        ->middleware('can:create,App\Models\NewsPerson')
-        ->name('newsperson.destroy');
-
-    // News Person Resource
-//    Route::resource('newsPerson', \App\Http\Controllers\NewsPersonController::class);
-
-
-// News
-////////
-    Route::resource('news', NewsPostController::class);
-
-    Route::get('/news', [NewsPostController::class, 'index'])
-//        ->can('view', 'App\Models\NewsPerson')
-        ->name('news');
-
-    Route::put('/newsroom/publish', [NewsroomController::class, 'publish'])
-//        ->can('view', 'App\Models\NewsPerson')
-        ->name('newsroom.publish');
-
-    Route::post('/news/save', [NewsPostController::class, 'save'])
-        ->name('news.save');
-
-//    Route::get('/news/rss', [NewsRssFeedController::class, 'index'])
-////        ->can('view', 'App\Models\NewsPerson')
-//        ->name('news.rss.index');
-
-    Route::resource('/feeds', NewsRssFeedController::class);
-
-    Route::get('/feeds', [NewsRssFeedController::class, 'index'])
-//        ->can('view', 'App\Models\NewsPerson')
-        ->name('feeds.index');
-
-    // this is a test
-    Route::get('/rss2', [NewsRssFeedController::class, 'rss2'])
-        ->name('rss2');
-    Route::get('/rss2/create', [NewsRssFeedController::class, 'rss2create'])
-        ->name('rss2create');
-    Route::post('/rss2/store', [NewsRssFeedController::class, 'rss2store'])
-        ->name('rss2store');
-    Route::get('/rss2/{id}', [NewsRssFeedController::class, 'rss2show'])
-        ->name('rss2show');
-    Route::get('/rss2/{id}/edit', [NewsRssFeedController::class, 'rss2edit'])
-        ->name('rss2edit');
-    Route::post('/rss2/update', [NewsRssFeedController::class, 'rss2update'])
-        ->name('rss2update');
-    Route::post('/rss2/destroy', [NewsRssFeedController::class, 'rss2destroy'])
-        ->name('rss2destroy');
-    Route::get('/rss2/error', [NewsRssFeedController::class, 'rss2error'])
-        ->name('rss2error');
-
-//    Route::post('/feeds/save', [NewsRssFeedController::class, 'save'])
-//        ->name('feeds.save');
-
 
 
 // VIP
 ////////
-    Route::put('/userAddToVip', [\App\Http\Controllers\UsersController::class, 'vipAdd'])
+    Route::patch('/userAddToVip', [\App\Http\Controllers\UsersController::class, 'vipAdd'])
 //        ->middleware('auth')->isAdmin
         ->name('user.vip.add');
 
-    Route::put('/userRemoveFromVip', [\App\Http\Controllers\UsersController::class, 'vipRemove'])
+    Route::patch('/userRemoveFromVip', [\App\Http\Controllers\UsersController::class, 'vipRemove'])
 //        ->middleware('auth')->isAdmin
         ->name('user.vip.remove');
 
@@ -332,10 +283,10 @@ Route::middleware([
     Route::get('/shop/checkout', [ShopController::class, 'checkout'])
         ->name('checkout');
 
-    Route::post('shop/summary', [ShopController::class, 'summary'])
+    Route::post('/shop/summary', [ShopController::class, 'summary'])
         ->name('shop.summary');
 
-    Route::redirect('shop/summary', '/shop');
+    Route::redirect('/shop/summary', '/shop');
 
     Route::resource('product', ProductController::class);
 
@@ -365,16 +316,16 @@ Route::middleware([
     Route::get('/shop/subscribe', [StripeController::class, 'subscribe'])
         ->name('shop.subscribe');
 
-    Route::post('shop/subscribe', [StripeController::class, 'setupNewSubscription'])
+    Route::post('/shop/subscribe', [StripeController::class, 'setupNewSubscription'])
         ->name('shop.subscribe.post');
 
     Route::get('/shop/subscription_success', [StripeController::class, 'subscriptionSuccess'])
         ->name('subscriptionSuccess');
 
-    Route::post('payment/setup', [StripeController::class, 'initiateSetup']);
-    Route::post('payment/initiate', [StripeController::class, 'initiatePayment']);
-    Route::post('payment/complete', [StripeController::class, 'completePayment']);
-    Route::post('payment/failure', [StripeController::class, 'failPayment']);
+    Route::post('/payment/setup', [StripeController::class, 'initiateSetup']);
+    Route::post('/payment/initiate', [StripeController::class, 'initiatePayment']);
+    Route::post('/payment/complete', [StripeController::class, 'completePayment']);
+    Route::post('/payment/failure', [StripeController::class, 'failPayment']);
 
     Route::post('/admin/getUserSubscriptionsFromStripe', [StripeController::class, 'getUserSubscriptionsFromStripe'])
         ->name('getUserSubscriptionsFromStripe');
@@ -395,11 +346,68 @@ Route::middleware([
         ]);
     })->name('billing');
 
-        Route::get('billing-portal', function (Request $request) {
+        Route::get('/billing-portal', function (Request $request) {
             return $request->user()->redirectToBillingPortal(route('stream'));
         })->name('billingPortal');
 
-    Route::get('billing-portal-access', [StripeController::class, 'getBillingPortalAccessUrl']);
+    Route::get('/billing-portal-access', [StripeController::class, 'getBillingPortalAccessUrl']);
+
+
+
+
+  // Newsroom
+///////////
+
+  // Insert Newsroom Routes here.
+  Route::get('/newsroom', [NewsroomController::class, 'index'])
+      ->middleware('can:viewAny,App\Models\NewsPerson')
+      ->name('newsroom');
+
+  Route::patch('/newsroom/publish', [NewsroomController::class, 'publish'])
+//        ->can('view', 'App\Models\NewsPerson')
+      ->name('newsroom.publish');
+
+  Route::post('/newsStory/save', [NewsStoryController::class, 'save'])
+      ->name('newsStory.save');
+
+  // NewsStory
+  ////////////
+  // Separate route for the NewsStory 'index' method
+  // tec21: the reason for this is because the News Team (NewsPersons)
+  // creates, edits and reviews the stories before publishing. The public route
+  // is the /news route.
+  Route::get('newsroom/stories', [NewsStoryController::class, 'index'])->name('news.story.index');
+
+  // Custom resource routes for 'news/story', excluding the 'index' method
+  Route::resource('newsStory', NewsStoryController::class)->except(['index', 'show']);
+  Route::patch('newsStoryChangeNewsStoryStatus', [NewsStoryController::class, 'changeStatus'])->name('news.story.changeStatus');
+
+
+
+// NewsPerson
+/////////////
+
+  // Insert NewsPerson Routes here.
+  // Standard resource route for newsPerson
+  Route::resource('newsroom/newsPerson', NewsPersonController::class);
+
+
+// NewsRssFeeds
+///////////////
+
+  // Route for NewsRssFeeds
+  Route::resource('/newsRssFeeds', NewsRssFeedController::class);
+
+  // Resource route for temporary feed items
+  Route::resource('/newsRssFeedItemsTemp', NewsRssFeedItemTempController::class);
+
+  Route::patch('/newsRssFeedItemsTemp/{newsRssFeedItemTemp}/save', [NewsRssFeedItemTempController::class, 'saveItem'])
+      ->name('newsRssFeedItemsTemp.save');
+
+  // Resource route for archived feed items
+  Route::resource('/newsRssFeedItemsArchive', NewsRssFeedItemArchiveController::class);
+
+
 
 
 // Subscriptions
@@ -421,7 +429,7 @@ Route::middleware([
         Route::get('/admin/subscription/{subscriptionPlan}/edit', [SubscriptionPlanController::class, 'edit'])->name('subscription-plans.edit');
 
         // Update method (for updating)
-        Route::put('/admin/subscription/{subscriptionPlan}', [SubscriptionPlanController::class, 'update'])->name('subscription-plans.update');
+        Route::patch('/admin/subscription/{subscriptionPlan}', [SubscriptionPlanController::class, 'update'])->name('subscription-plans.update');
 
         // Delete method (for deleting)
         Route::delete('/admin/subscription/{subscriptionPlan}', [SubscriptionPlanController::class, 'destroy'])->name('subscription-plans.destroy');
@@ -499,10 +507,20 @@ Route::middleware([
     Route::get('/admin/settings', [AdminController::class, 'settings'])
         ->can('viewAdmin', 'App\Models\User')
         ->name('admin.settings');
+
     //// SETTINGS - SAVE
-    Route::put('/admin/settings', [AdminController::class, 'saveSettings'])
+    Route::patch('/admin/settings', [AdminController::class, 'saveSettings'])
         ->can('viewAdmin', 'App\Models\User')
         ->name('admin.saveSettings');
+
+    Route::post('/admin/clear-first-play-data-cache',
+        [AdminController::class, 'clearFirstPlayDataCache'])
+        ->name('admin.clear-first-play-data-cache');
+
+    //// MOVIES - INDEX
+    Route::get('/admin/movies', [AdminController::class, 'moviesIndex'])
+        ->can('viewAdmin', 'App\Models\User')
+        ->name('admin.movies');
 
     //// SHOWS - INDEX
     Route::get('/admin/shows', [AdminController::class, 'showsIndex'])
@@ -664,9 +682,9 @@ Route::middleware([
     // Shows resource
     Route::resource('shows', ShowsController::class);
     // Display shows index page
-    Route::get('/shows', [ShowsController::class, 'index'])
-        ->can('viewAny', 'App\Models\Show')
-        ->name('shows');
+//    Route::get('/shows', [ShowsController::class, 'index'])
+//        ->can('viewAny', 'App\Models\Show')
+//        ->name('shows');
     // Display shows manage page
     Route::get('/shows/{show}/manage', [ShowsController::class, 'manage'])
 //        ->middleware('can:viewShowManagePage,show')
@@ -675,9 +693,9 @@ Route::middleware([
     Route::get('/shows/{show}/edit', [ShowsController::class, 'edit'])
         ->name('shows.edit');
     // Display shows create page
-    Route::get('/shows/create', [ShowsController::class, 'create'])
-        ->can('viewCreator', 'App\Models\User')
-        ->name('shows.create');
+//    Route::get('/shows/create', [ShowsController::class, 'create'])
+//        ->can('viewCreator', 'App\Models\User')
+//        ->name('shows.create');
     // Update show notes
     Route::post('/shows/notes', [ShowsController::class, 'updateNotes']);
 
@@ -753,21 +771,6 @@ Route::middleware([
 // Movies
 ///////////
     Route::resource('movies', MovieController::class);
-    // List all movies
-    Route::get('/movies/{movie}', [MovieController::class, 'show'])
-        ->can('view', 'App\Models\Movie')
-        ->name('movies.show');
-    Route::get('/movies', [MovieController::class, 'index'])
-        ->can('viewAny', 'App\Models\Movie')
-        ->name('movies');
-    // Display movie edit page
-    Route::get('/movies/{movie}/edit', [MovieController::class, 'edit'])
-        ->can('edit', 'App\Models\Movie')
-        ->name('movies.edit');
-//    // Upload movie
-//    Route::post('/movies/upload', [MovieUploadController::class, 'store'])
-//        ->can('viewCreator', 'App\Models\User')
-//        ->name('moviesUpload.store');
 
 // Testing
 ///////////
@@ -825,7 +828,7 @@ Route::middleware([
         ->name('users.edit');
 
     // Update user
-    Route::put('/users', [UsersController::class, 'updateContact'])->name('users.updateContact');
+    Route::patch('/users', [UsersController::class, 'updateContact'])->name('users.updateContact');
 
 // Chat
 ///////////
@@ -885,7 +888,7 @@ Route::middleware([
     Route::post('/clear-flash', [\App\Http\Middleware\HandleInertiaRequests::class, 'clearFlash'])->name('flash.clear');
 
     Route::get('/notifications', [NotificationsController::class, 'index']);
-    Route::put('/notifications/{id}/mark-as-read', [NotificationsController::class, 'markAsRead']);
+    Route::patch('/notifications/{id}/mark-as-read', [NotificationsController::class, 'markAsRead']);
     Route::delete('/notifications/{notification}', [NotificationsController::class, 'destroy']);
     Route::delete('/notifications', [NotificationsController::class, 'destroyAll']);
 
@@ -904,4 +907,13 @@ Route::get('/subscribe', function () {
 
 Route::get('/coffee', function () {
     return Inertia::location('https://www.buymeacoffee.com/hellorq');
+});
+
+
+// Routes For Testing
+/////////////////////
+Route::get('/test-mail', function () {
+  Mail::raw('Hello world', function ($msg) {
+    $msg->to('test@example.com')->subject('Test Email');
+  });
 });

@@ -30,7 +30,7 @@ export default {
     <JetAuthenticationCard>
         <template #logo>
             <Link
-                :href="route('home')"
+                :href="`/`"
                 class="underline text-sm text-gray-600 hover:text-gray-900 ml-2"
             >
                 <img :src="`/storage/images/logo_black_311.png`" alt="image" class="justify-center max-w-[16rem]">

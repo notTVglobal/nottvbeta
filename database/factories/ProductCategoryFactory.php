@@ -17,7 +17,7 @@ class ProductCategoryFactory extends Factory
      */
     public function definition()
     {
-        $name = $this->faker->jobTitle;
+        $name = $this->faker->unique()->word;
 
         $nameArr = explode(' ', $name);
         $name = trim($nameArr[0]);

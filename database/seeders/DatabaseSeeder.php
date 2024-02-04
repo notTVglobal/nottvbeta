@@ -17,23 +17,12 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
-//            TeamSeeder::class,
-//            ShowSeeder::class,
-//            ShowEpisodeSeeder::class,
-//            CreatorSeeder::class,
-//            TeamMemberSeeder::class,
+          // Admins, settings, initial categories
+            FirstRunSeeder::class,
+
+          // Testing data user data, shows, teams, etc.
+            TestDataSeeder::class,
 
         ]);
-
-        Product::factory()->count(5)->create();
-//        ProductCategory::factory()->count(50)->create();
-
-        $categories = ProductCategory::all();
-        Product::all()->each(function ($product) use ($categories) {
-            $product->categories()->attach(
-                $categories->random(2)->pluck('id')->toArray()
-            );
-        });
-
     }
 }

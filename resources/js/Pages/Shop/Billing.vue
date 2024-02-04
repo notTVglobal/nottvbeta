@@ -1,14 +1,12 @@
 <template>
-    <div class="w-full h-full">
+  <div class="w-full h-full">
 
-    </div>
+  </div>
 
 </template>
 
 <script setup>
 
-defineProps({
-
-})
+defineProps({})
 
 </script>

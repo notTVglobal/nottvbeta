@@ -38,6 +38,7 @@ class Show extends Model
         'last_release_year',
         'show_category_id',
         'show_category_sub_id',
+        'episode_play_order',
     ];
 
     public function getRouteKeyName() {
@@ -45,19 +46,15 @@ class Show extends Model
     }
 
     // tec21: I want to use episodes to make the Eloquent call easier to read.
-    public function episodes()
-    {
-        return $this->hasMany(ShowEpisode::class);
-    }
-    // showEpisodes is required for showEpisode.show to display
     public function showEpisodes()
     {
         return $this->hasMany(ShowEpisode::class);
     }
+    // showEpisodes is required for showEpisode.show to display
 
-    public function showStatus()
+    public function status()
     {
-        return $this->belongsTo(ShowStatus::class);
+        return $this->belongsTo(ShowStatus::class, 'status_id');
     }
 
     public function team()
@@ -80,17 +77,17 @@ class Show extends Model
         return $this->belongsTo(Creator::class);
     }
 
-    public function showCategory(): BelongsTo
+    public function category(): BelongsTo
     {
-        return $this->belongsTo(ShowCategory::class)->withDefault([
+        return $this->belongsTo(ShowCategory::class, 'show_category_id')->withDefault([
             'name' => 'category',
             'description' => 'category description'
         ]);
     }
 
-    public function showCategorySub(): BelongsTo
+    public function subCategory(): BelongsTo
     {
-        return $this->belongsTo(ShowCategorySub::class)->withDefault([
+        return $this->belongsTo(ShowCategorySub::class, 'show_category_sub_id')->withDefault([
             'name' => 'sub category',
             'description' => 'sub category description'
             ]);

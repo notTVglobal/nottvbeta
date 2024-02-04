@@ -1,27 +1,32 @@
 import { defineStore } from "pinia";
 import { default as Echo } from "laravel-echo";
 import { ref } from "vue";
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore";
-import { useAppSettingStore } from "@/Stores/AppSettingStore";
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
+import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import { useUserStore } from "@/Stores/UserStore";
 import videojs from "video.js";
 
-export const useChatStore = defineStore('chatStore', {
-    state() {
-        return {
-            showChat: false,
-            class: '',
-            oldMessages: [],
-            newMessages: [],
-            message: '',
-            input: '',
-            inputTooLong: false,
-            echo: [],
-            currentChannel: [],
-        };
-    },
+// const appSettingStore = useAppSettingStore();
 
+const initialState = () => ({
+    showChat: false,
+    class: '',
+    oldMessages: [],
+    newMessages: [],
+    message: '',
+    input: '',
+    inputTooLong: false,
+    echo: [],
+    currentChannel: [],
+})
+
+export const useChatStore = defineStore('chatStore', {
+    state: initialState,
     actions: {
+        reset() {
+            // Reset the store to its original state (clear all data)
+            Object.assign(this, initialState())
+        },
         toggleChatOn() {
             this.showChat = true
         },
@@ -50,10 +55,10 @@ export const useChatStore = defineStore('chatStore', {
             if (userStore.isMobile) {
                 let videoJs = videojs('main-player')
                 videoJs.controls(false)
-                // videoPlayerStore.ott = false
+                // appSettingStore.ott = false
                 videoPlayerStore.ottButtons = false
 
-                if (!videoPlayerStore.fullPage) {
+                if (!appSettingStore.fullPage) {
                     appSettingStore.hidePage = true;
                 }
                 appSettingStore.pipChatMode = true;
@@ -64,7 +69,7 @@ export const useChatStore = defineStore('chatStore', {
                 videoPlayerStore.class = 'pipVideoClassTopRight'
                 videoPlayerStore.videoContainerClass = 'pipVideoContainerTopRight'
 
-                // if(videoPlayerStore.fullPage) {
+                // if(appSettingStore.fullPage) {
                 //     videoPlayerStore.class = 'pipVideoClassFullPage'
                 //     videoPlayerStore.videoContainerClass = 'pipVideoContainerFullPage'
                 // } else {
@@ -83,7 +88,7 @@ export const useChatStore = defineStore('chatStore', {
             appSettingStore.setPageBgColor(appSettingStore.primaryBgColor);
             appSettingStore.setChatMessageBgColor(appSettingStore.primaryChatMessageBgColor);
 
-            if (videoPlayerStore.fullPage) {
+            if (appSettingStore.fullPage) {
                 videoPlayerStore.makeVideoFullPage();
             } else {
                 videoPlayerStore.makeVideoTopRight();
@@ -122,7 +127,7 @@ export const useChatStore = defineStore('chatStore', {
     //             encrypted: true,
     //             forceTLS: true
     //         });
-    //         let videoPlayer = useVideoPlayerStore();
+    //         const videoPlayer = useVideoPlayerStore();
     //     this.echo.private('chat.1')
     //         .listen('.message.new', e => {
     //             console.log('PINIA NEW MESSAGE.');

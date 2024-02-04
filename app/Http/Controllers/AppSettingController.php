@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\AppSetting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class AppSettingController extends Controller
@@ -14,6 +16,19 @@ class AppSettingController extends Controller
         return AppSetting::with('channel:name')
             ->get();
     }
+
+  public function serveFirstPlayData()
+  {
+    $path = storage_path('app/json/firstPlayData.json');
+
+    if (!file_exists($path)) {
+      return response()->json(['error' => 'File not found.'], 404);
+    }
+
+    $content = file_get_contents($path);
+    $data = json_decode($content, true);
+    return response()->json($data);
+  }
 
 
     /**
