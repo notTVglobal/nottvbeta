@@ -459,10 +459,6 @@ class MovieController extends Controller {
         ]);
         $video->save();
 
-        // Dispatch job as before
-        $jobName = null;
-        dispatch(new ProcessVideoInfo($video->id, $jobName))->onQueue('high');
-
         // After saving the new video, set its ID as the video_id for the show episode
         $movie->video_id = $video->id;
 
