@@ -16,8 +16,8 @@ return new class extends Migration
       Schema::create('news_subnational_electoral_districts', function (Blueprint $table) {
         $table->id();
         $table->string('name');
-        $table->foreignId('province_id')->references('id')->on('news_provinces');
-        $table->foreignId('country_id')->references('id')->on('news_countries');
+        $table->foreignId('province_id')->nullable()->references('id')->on('news_provinces');
+        $table->foreignId('country_id')->nullable()->references('id')->on('news_countries');
         $table->unsignedBigInteger('federal_electoral_district_id')->nullable();
         $table->foreign('federal_electoral_district_id', 'subnat_elec_dist_fed_elec_dist_fk')
             ->references('id')

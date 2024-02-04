@@ -17,8 +17,8 @@ return new class extends Migration
         $table->id(); // Primary key
         $table->string('name'); // Name of the city
         $table->string('type'); // 'type' column to specify the category like city, town, etc.
-        $table->foreignId('province_id')->references('id')->on('news_provinces'); // Foreign key to NewsProvince
-        $table->foreignId('country_id')->references('id')->on('news_countries'); // Foreign key to NewsCountry
+        $table->foreignId('province_id')->nullable()->references('id')->on('news_provinces'); // Foreign key to NewsProvince
+        $table->foreignId('country_id')->nullable()->references('id')->on('news_countries'); // Foreign key to NewsCountry
         $table->integer('population')->nullable(); // Population of the city
         $table->float('area')->nullable(); // Total area of the city in square kilometers
         $table->decimal('latitude', 10, 8)->nullable(); // Approximate latitude of the city's centroid

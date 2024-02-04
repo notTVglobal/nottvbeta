@@ -19,7 +19,7 @@ return new class extends Migration
           $table->string('abbreviation');
           $table->string('type')->nullable();
           // Additional fields
-          $table->foreignId('country_id')->references('id')->on('news_countries');
+          $table->foreignId('country_id')->nullable()->references('id')->on('news_countries');
           $table->smallInteger('year_joined_confederation')->nullable();
           $table->integer('population')->nullable();
           $table->float('area')->nullable();

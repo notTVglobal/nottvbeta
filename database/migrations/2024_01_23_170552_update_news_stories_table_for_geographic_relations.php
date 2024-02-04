@@ -18,7 +18,7 @@ return new class extends Migration
         $table->foreignId('news_category_sub_id')->nullable()->after('news_category_id')->references('id')->on('news_category_subs');
         $table->foreignId('city_id')->nullable()->after('content')->references('id')->on('news_cities');
         $table->foreignId('province_id')->nullable()->after('city_id')->references('id')->on('news_provinces');
-        $table->foreignId('country_id')->after('province_id')->references('id')->on('news_countries');
+        $table->foreignId('country_id')->nullable()->after('province_id')->references('id')->on('news_countries');
         $table->foreignId('news_federal_electoral_district_id')->nullable()->after('country_id')->references('id')->on('news_federal_electoral_districts');
         $table->foreignId('news_subnational_electoral_district_id')->nullable()->after('news_federal_electoral_district_id')->references('id')->on('news_subnational_electoral_districts');
       });

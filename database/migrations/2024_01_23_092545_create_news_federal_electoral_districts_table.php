@@ -16,8 +16,8 @@ return new class extends Migration
       Schema::create('news_federal_electoral_districts', function (Blueprint $table) {
         $table->id();
         $table->string('name');
-        $table->foreignId('province_id')->references('id')->on('news_provinces');
-        $table->foreignId('country_id')->references('id')->on('news_countries');
+        $table->foreignId('province_id')->nullable()->references('id')->on('news_provinces');
+        $table->foreignId('country_id')->nullable()->references('id')->on('news_countries');
         $table->integer('population')->nullable();
         $table->float('area')->nullable();
         $table->string('representative')->nullable();

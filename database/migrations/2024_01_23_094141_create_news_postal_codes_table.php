@@ -18,7 +18,7 @@ return new class extends Migration
         $table->string('code'); // The postal code
         $table->foreignId('city_id')->nullable()->default(null)->references('id')->on('news_cities'); // Foreign key to NewsCity
         $table->foreignId('province_id')->nullable()->default(null)->references('id')->on('news_provinces'); // Foreign key to NewsProvince
-        $table->foreignId('country_id')->references('id')->on('news_countries'); // Foreign key to NewsCountry
+        $table->foreignId('country_id')->nullable()->references('id')->on('news_countries'); // Foreign key to NewsCountry
         $table->foreignId('news_federal_electoral_district_id')->nullable()->default(null)->references('id')->on('news_federal_electoral_districts'); // Foreign key to FederalElectoralDistrict
         $table->foreignId('news_subnational_electoral_district_id')->nullable()->default(null)->references('id')->on('news_subnational_electoral_districts'); // Foreign key to SubnationalElectoralDistrict
         $table->string('city_section')->nullable(); // Specific section or neighborhood within the city
