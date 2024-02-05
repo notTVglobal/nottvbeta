@@ -26,7 +26,8 @@
     </div>
 
     <div v-if="teams.last_page >  1" class="">
-      <Pagination :data="teams" class="mt-24 absolute inset-x-0 bottom-0 py-24 px-2"/>
+<!--      <Pagination :data="teams" class="mt-24 absolute inset-x-0 bottom-0 py-24 px-2"/>-->
+      <PaginationDark :data="teams" class="mt-24 absolute py-24 px-2 text-white -ml-6"/>
     </div>
 
   </div>
@@ -34,6 +35,7 @@
 
 <script setup>
 import Pagination from "@/Components/Global/Paginators/Pagination"
+import PaginationDark from '@/Components/Global/Paginators/PaginationDark.vue'
 
 defineProps({
   teams: Object,

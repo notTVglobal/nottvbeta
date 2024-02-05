@@ -26,7 +26,8 @@
     </div>
 
     <div v-if="shows.last_page >  1" class="">
-      <Pagination :data="shows" class="inset-x-0 bottom-0 px-2"/>
+<!--      <Pagination :data="shows" class="inset-x-0 bottom-0 px-2"/>-->
+      <PaginationDark :data="shows" class="text-white -ml-6"/>
     </div>
 
   </div>
@@ -34,6 +35,7 @@
 
 <script setup>
 import Pagination from "@/Components/Global/Paginators/Pagination"
+import PaginationDark from '@/Components/Global/Paginators/PaginationDark.vue'
 
 defineProps({
   shows: Object,

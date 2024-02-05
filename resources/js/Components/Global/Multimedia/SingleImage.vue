@@ -1,5 +1,10 @@
 <template>
   <div>
+    <img v-if="placeholder"
+         :src="placeholder"
+         :alt="alt"
+         :class="props.class"/>
+
     <img v-if="image && image?.placeholder_url"
          :src="image?.placeholder_url"
          :alt="alt"
@@ -20,6 +25,7 @@
 <script setup>
 let props = defineProps({
   image: Object,
+  placeholder: String,
   class: String,
   alt: String,
 })

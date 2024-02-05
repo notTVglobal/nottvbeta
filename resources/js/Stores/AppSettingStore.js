@@ -115,9 +115,13 @@ export const useAppSettingStore = defineStore('appSettingStore', {
 
         },
         toggleOtt(num) {
+            const userStore = useUserStore()
             if (this.ott === num) {
                 if (this.fullPage) {
                     this.toggleOtt(0)
+                    if (userStore.isMobile) {
+                        this.osd = true
+                    }
                 } else {
                     // change this to toggleOtt(1)
                     // as part of the go back to ottInfo function
@@ -128,6 +132,9 @@ export const useAppSettingStore = defineStore('appSettingStore', {
                 this.ott = num
                 if (this.fullPage) {
                     this.showOttButtons = false
+                    if (userStore.isMobile) {
+                        this.osd = false
+                    }
                 }
             }
         },

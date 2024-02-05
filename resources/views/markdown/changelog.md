@@ -1,7 +1,16 @@
 # not.tv Changelog
 
-Last Update: January 31, 2024\
+Last Update: February 5, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+# v0.8.5.0
+February 5, 2024
+* There may be some challenges migrating this to production.
+  * Some of the table migrations got a little funky while building the show schedule
+  * MistStreams now use Ulid as Primary Key.
+  * Created a Show Schedule table and Controller with a grid layout on the Creator Dashboard.
+    * It stays up-to-date and shows 6 hours across 5 days
+    * The data is cached in a local file and stays valid for 15 minutes.
 
 # v0.8.4.1
 February 1, 2024

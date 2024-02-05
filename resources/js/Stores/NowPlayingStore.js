@@ -5,7 +5,7 @@ const initialState = () => ({
     isLive: false   ,
     viewerCountIsVisible: false,
     activeMedia: {
-        type: null, // 'show', 'movie', 'video', 'externalVideo', 'channel'
+        type: null, // mediaType: 'show', 'movie', 'video', 'externalVideo', 'channel'
         details: {}, // The detailed object of the playing media
     },
     // Channels might require additional state to manage their playlist

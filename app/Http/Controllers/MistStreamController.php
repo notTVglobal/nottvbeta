@@ -4,10 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Models\MistStream;
 use Illuminate\Http\Request;
+use RuntimeException;
 
 class MistStreamController extends Controller
 {
-    /**
+
+
+  public function mistServerGet()
+  {
+    // use this to GET and POST data to and from MistServer.
+  }
+
+  public function mistServerPost()
+  {
+    // use this to GET and POST data to and from MistServer.
+  }
+
+
+
+  /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response

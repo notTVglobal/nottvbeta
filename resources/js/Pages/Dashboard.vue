@@ -33,10 +33,12 @@
       </section>
 
       <div class="w-full bg-yellow-300 dark:bg-gray-900 rounded p-3 my-8 mx-2 border-b border-2">
-        <div class="stat place-items-center mb-4">
-          <div class="stat-title font-bold uppercase text-success tracking-widest text-black dark:text-white mb-2 text-sm">Yesterday's Top Show
+        <div class="stat place-items-center text-center mb-4">
+          <div class="stat-title font-bold uppercase text-success tracking-widest dark:text-white mb-2 text-sm">Yesterday's Top Show
           </div>
-          <div class="stat-value text-success-content hover:text-blue-700 text-3xl"><Link :href="`shows/${yesterdaysTopShow.slug}`" class="drop-shadow-lg outline-1">{{ yesterdaysTopShow.name }}</Link></div>
+          <div class="stat-value text-success-content hover:text-blue-700 text-xl md:text-3xl">
+            <Link :href="`shows/${yesterdaysTopShow.slug}`" class="drop-shadow-lg outline-1">{{ yesterdaysTopShow.name }}</Link>
+          </div>
           <div hidden class="stat-desc mt-2 text-sm">︎Episode 2</div>
         </div>
       </div>
@@ -111,7 +113,7 @@
 
       <div class="mt-6 h-0.5 bg-gray-800"></div>
 
-      <section class="grid grid-cols-1 mt-6 gap-2 bg-gray-300 dark:dark:bg-gray-900 rounded">
+      <section class="grid grid-cols-1 mt-6 gap-2 bg-blue-100 dark:dark:bg-gray-900 rounded-lg">
         <div class="font-semibold text-2xl text-gray-800 dark:text-white px-4 pt-6 pb-2">
           Account Summary
         </div>
@@ -187,35 +189,47 @@
 
 
       </section>
-      <section class="mt-16 space-y-4 w-fit px-10 py-6 bg-gray-200 text-black dark:text-white rounded">
-        <div class="text-sm uppercase mb-4 border-b border-blue-500">
-          External Links
-        </div>
-        <a href="https://www.cbsc.ca/" target="_blank">
-          <div class="hover:bg-success p-2">
-            Canadian Broadcast Standards Council
-          </div>
-        </a>
+      <div class="flex flex-col-reverse md:flex-row">
 
-        <a href="https://rtdnacanada.com/" target="_blank">
-          <div class="hover:bg-success p-2">
-            RTNDA
+        <section class="mt-16 space-y-4 w-fit px-10 py-6 bg-gray-900 text-gray-50 dark:text-white rounded-xl drop-shadow-lg">
+          <div class="text-sm uppercase mb-4 border-b border-blue-500">
+            External Links
           </div>
-        </a>
+          <a href="https://www.cbsc.ca/" target="_blank">
+            <div class="hover:bg-blue-500 p-2">
+              Canadian Broadcast Standards Council
+            </div>
+          </a>
 
-        <a href="https://adstandards.ca/" target="_blank">
-          <div class="hover:bg-success p-2">
-            Ad Standards
-          </div>
-        </a>
+          <a href="https://rtdnacanada.com/" target="_blank">
+            <div class="hover:bg-blue-500 p-2">
+              RTNDA
+            </div>
+          </a>
 
-        <a href="https://www.cybertip.ca/en/" target="_blank">
-          <div class="hover:bg-blue-500 p-2">
-            Cybertip
-          </div>
-        </a>
+          <a href="https://adstandards.ca/" target="_blank">
+            <div class="hover:bg-blue-500 p-2">
+              Ad Standards
+            </div>
+          </a>
 
-      </section>
+          <a href="https://www.cybertip.ca/en/" target="_blank">
+            <div class="hover:bg-blue-500 p-2">
+              Cybertip
+            </div>
+          </a>
+
+        </section>
+        <section class="mt-16 space-y-4 w-fit px-10 py-6">
+          <p>
+            At notTV, we are pioneering a new horizon in media and community engagement, blending the cutting-edge world of blockchain technology with the grassroots spirit of local television. We envision a network of autonomous community chapters, each operating like its own vibrant television station, powered by our innovative software platform.
+          </p>
+          <p>
+            Join us in shaping this new era of community-driven media, where every voice has the power to make a difference, every story has a place to be heard, and every community has the tools to shape its own narrative.
+          </p>
+        </section>
+      </div>
+
 
     </div>
   </div>

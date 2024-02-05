@@ -879,6 +879,8 @@ Route::middleware([
 ///
 
     Route::post('/mistapi', [VideoController::class, 'mistApi'])->name('mistApi');
+    Route::get('/api/mistserver', [\App\Http\Controllers\MistStreamController::class, 'mistServer']);
+
 
 });
 

@@ -1,93 +1,200 @@
 <template>
-  <div class="container mx-auto px-4 py-8 bg-blue-200 rounded-lg mb-8">
+
+
+  <div v-if="userStore.isMobile" class="container mx-auto px-4 py-8 bg-blue-200 rounded-lg mb-8">
     <h1 class="text-center font-bold pb-6 mb-6 border-b-2 border-gray-500">Show Schedule</h1>
-    <!-- Define a grid with 1 row for headers and dynamic rows for time slots -->
-    <div class="grid grid-cols-[auto_repeat(5,_minmax(0,_1fr))] gap-4">
-      <!-- Empty corner cell -->
-      <div></div>
-
-      <!-- Day Headers -->
-      <div v-for="day in days" :key="day" class="bg-blue-800 text-white p-4 rounded-lg font-bold text-center">{{ day }}</div>
-
-      <!-- Time Slots & Shows -->
-      <!-- For each time slot, create a row -->
+    <div class="w-full grid grid-cols-1 gap-4"
+         style="grid-template-rows: auto repeat(6, minmax(100px, auto));">
+      <!-- Placeholder for the time labels column (hidden on small screens, shown on medium and up) -->
+      <div class="hidden md:block"></div>
+      <div class="bg-gray-200 text-2xl font-semibold font-serif p-4 rounded-lg text-center md:hidden">
+        {{ days[0] }}
+      </div>
+      <!-- Time labels and schedule items -->
       <template v-for="(time, timeIndex) in times" :key="`time-${timeIndex}`">
-        <!-- Time Label -->
-        <div class="bg-blue-100 p-4 rounded-lg text-center">{{ time }}</div>
-
-        <!-- Shows for each day at this time -->
-        <template v-for="(day, dayIndex) in days" :key="`show-${day}-${time}`"  >
-
-            <!-- Simulate fetching a show for this day and time -->
-          <div class="flex flex-col rounded">
-            <div v-if="randomShow(day, time)" class="bg-blue-500 hover:bg-indigo-500 hover:cursor-pointer text-white h-full flex flex-col p-2 rounded-lg shadow transition ease-in-out duration-150" :class="{ 'bg-red-500': isNowPlaying(dayIndex, timeIndex), 'bg-blue-100': !isNowPlaying(dayIndex, timeIndex) }">
-
-              <!-- Show details -->
-              <div class="flex-grow">
-                <div class="text-orange-500 text-xs font-semibold uppercase tracking-wider">{{ randomShow(day, time).category }}</div>
-                <div class="text-yellow-500 text-xs font-semibold uppercase tracking-wider mb-2">{{ randomShow(day, time).category }}</div>
-
-                <div class="font-semibold">{{ randomShow(day, time).name }}</div>
-
-              </div>
-
-              <img :src="randomShow(day, time).image" alt="Show Image" class="w-full self-end rounded my-2 hover:opacity-75 transition ease-in-out duration-150">
-              <!-- Conditionally display "Now Playing" for the first item -->
-              <div v-if="isNowPlaying(dayIndex, timeIndex)" class="text-lg font-bold text-yellow-500">Now Playing</div>
-              <div v-else class="mt-2 text-xs font-thin">{{ formatHour(randomShow(day, time).scheduled_release_dateTime) }}</div>
+        <!--        <div-->
+        <!--            class="bg-gray-200 h-full flex items-center justify-center text-2xl font-semibold font-serif p-4 rounded-lg md:hidden"-->
+        <!--        >{{ time }}-->
+        <!--        </div>-->
+        <!-- Schedule items for each day -->
+        <template v-for="(daySchedule, dayIndex) in adjustedSchedule" :key="`day-${dayIndex}-time-${timeIndex}`">
+          <div v-if="dayIndex === 0"
+               class="rounded-lg text-center bg-transparent flex flex-col items-center md:items-start">
+            <!-- Display time only for today's schedule on small screens -->
+            <div
+                class="bg-gray-200 h-full flex items-center justify-center text-2xl font-semibold font-serif p-4 mb-4 rounded-lg md:hidden"
+            >{{ time }}
             </div>
+            <CalendarCard :media="daySchedule[timeIndex].show || daySchedule[timeIndex].movie"
+                          :type="daySchedule[timeIndex].type"
+                          :startTime="formatHour(daySchedule[timeIndex].start_time)"
+                          :isLive="dayIndex === 0 && timeIndex === 0"/>
+          </div>
+        </template>
+      </template>
+    </div>
+  </div>
+
+  <div v-else class="container mx-auto px-4 py-8 bg-blue-200 rounded-lg mb-8">
+    <h1 class="text-center font-bold pb-6 mb-6 border-b-2 border-gray-500">Show Schedule</h1>
+    <div class="w-full grid grid-cols-3 xl:grid-cols-[8rem_repeat(5,_minmax(0,_1fr))] gap-4"
+         style="grid-template-rows: auto repeat(6, minmax(100px, auto));">
+      <!-- Placeholder for the time labels column -->
+      <div></div>
+      <div class="xl:col-auto bg-gray-200 text-2xl font-semibold font-serif p-4 rounded-lg text-center" v-for="(day, index) in days"
+           :key="day">{{ day }}
+
+      </div>
+      <!-- Time labels and schedule items -->
+      <template v-for="(time, timeIndex) in times" :key="`time-${timeIndex}`">
+        <div
+            class="xl:col-auto bg-gray-200 h-full flex items-center justify-center text-2xl font-semibold font-serif p-4 rounded-lg"
+            style="width: 8rem;">{{ time }}
+        </div>
+        <!-- Schedule items for each day -->
+        <template v-for="(daySchedule, dayIndex) in adjustedSchedule" :key="`day-${dayIndex}-time-${timeIndex}`">
+          <div v-if="dayIndex === 0 && timeIndex === 0"
+               class="col-span-3 xl:col-auto rounded-lg text-center"
+               :class="{'border-4 border-red-500': dayIndex === 0 && timeIndex === 0}">
+            <CalendarCard :media="daySchedule[timeIndex].show || daySchedule[timeIndex].movie"
+                          :type="daySchedule[timeIndex].type"
+                          :startTime="formatHour(daySchedule[timeIndex].start_time)"
+                          :isLive="true"/>
+          </div>
+          <div v-else class="w-full rounded-lg text-center bg-transparent">
+            <!-- Regular content for other items -->
+            <!--            {{ daySchedule[timeIndex].type }}: {{ daySchedule[timeIndex].show?.name || daySchedule[timeIndex].movie?.name }}-->
+
+            <CalendarCard :media="daySchedule[timeIndex].show || daySchedule[timeIndex].movie"
+                          :type="daySchedule[timeIndex].type"
+                          :startTime="formatHour(daySchedule[timeIndex].start_time)"/>
+
           </div>
 
         </template>
       </template>
     </div>
+
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import dayjs from 'dayjs';
-import CreatorsShowCalendarShowCard
-  from '@/Components/Pages/Dashboard/Elements/ShowCalendar/CreatorsShowCalendarShowCard.vue' // Assume dayjs is installed for date manipulation
+import { ref, onMounted, computed, onUnmounted, watch } from 'vue'
+import { useUserStore } from '@/Stores/UserStore'
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+import timezone from 'dayjs/plugin/timezone'
+import CalendarCard from '@/Components/Pages/Dashboard/Elements/ShowCalendar/CalendarCard'
 
-const now = dayjs();
+dayjs.extend(utc)
+dayjs.extend(timezone)
+
+const userStore = useUserStore()
+
+const now = dayjs()
+let intervalId
+const triggerUpdate = ref(0) // Reactive property for triggering reactivity
+const userTimezone = ref('UTC') // Default to 'UTC'
+
+// Assuming userStore is reactive, watch it for changes
+watch(() => userStore.timezone, (newTimezone) => {
+  userTimezone.value = newTimezone || 'UTC'
+  triggerUpdate.value++
+}, {immediate: true})
 
 // Format functions for display
-const formatDate = (date) => dayjs(date).format('dddd, MMM D');
-const formatHour = (date) => dayjs(date).format('dddd, h A');
+const formatDate = (date) => dayjs.utc(date).tz(userTimezone.value).format('dddd, MMM D')
+const formatHour = (date) => dayjs.utc(date).tz(userTimezone.value).format('dddd, h A')
 
 // Reactive state to hold shows data
-const showsState = ref([]);
+const showsState = ref([])
 
-// Asynchronous function to load the JSON file
+// Asynchronous function to load schedule shows
 async function loadScheduleShows() {
   try {
-    const response = await import('@/Json/scheduleShow.json');
-    showsState.value = response.default.shows; // Load shows from JSON
+    const response = await axios.get('/api/schedule')
+    showsState.value = response.data
   } catch (error) {
-    console.error("Failed to load schedule shows:", error);
+    console.error('Failed to load schedule shows:', error)
   }
 }
 
-// Load the data when the component mounts
-onMounted(loadScheduleShows);
+function findShowForSlot(day, time) {
+  return adjustedSchedule.value.find((schedule) => {
+    const scheduleDay = dayjs(schedule.start_time).format('dddd')
+    const scheduleTime = dayjs(schedule.start_time).format('h A')
+    return scheduleDay === day && scheduleTime === time
+  })
+}
 
-const days = ref(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']);
-const times = ref(['8 AM', '9 AM', '10 AM', '11 AM', '12 PM', '1 PM']);
+// showsState is a ref that holds our fetched schedule data
+const adjustedSchedule = computed(() => {
+  return showsState.value.map(schedule => {
+    // Use a default timezone or wait until userStore.timezone is loaded
+
+    console.log(userStore.timezone)
+    const adjustedStartTime = dayjs.utc(schedule.start_time).tz(userTimezone.value).format('h:mm A')
+    const adjustedEndTime = dayjs.utc(schedule.end_time).tz(userTimezone.value).format('h:mm A')
+
+    return {
+      ...schedule,
+      start_time: adjustedStartTime,
+      end_time: adjustedEndTime,
+      // Add other schedule adjustments as needed
+    }
+  })
+})
+
+// Generate times array dynamically
+const generateTimes = () => {
+  const times = []
+  for (let i = 0; i < 6; i++) { // Next 6 hours
+    times.push(dayjs().add(i, 'hour').format('h A')) // Increment by one hour
+  }
+  return times
+}
+
+// Generate an array of today and the next 4 days
+const generateDays = () => {
+  const days = []
+  for (let i = 0; i < 5; i++) { // Today + next 4 days
+    days.push(dayjs().add(i, 'day').format('dddd')) // Format as day of the week
+  }
+  return days
+}
+
+// Computed property to regenerate times dynamically
+const times = computed(() => {
+  console.log('Updating times due to trigger:', triggerUpdate.value) // This ensures the computed prop recalculates
+  console.log(times)
+  return generateTimes()
+})
+
+// Using a computed property to dynamically generate the days
+const days = computed(() => {
+  console.log('Updating days due to trigger:', triggerUpdate.value) // Ensures reactivity
+  console.log(days)
+
+  return generateDays()
+})
+
+onMounted(() => {
+
+  loadScheduleShows() // Load the data when the component mounts
+
+  intervalId = setInterval(() => { // Set an interval to update the trigger every hour
+    triggerUpdate.value++
+  }, 1000 * 60 * 60) // 1 hour
+})
+
+onUnmounted(() => {
+  clearInterval(intervalId)
+})
 
 // Determine if the current slot is for "Now Playing"
 function isNowPlaying(dayIndex, timeIndex) {
   // Assuming the first time slot of the first day is "Now Playing"
-  return dayIndex === 0 && timeIndex === 0;
+  return dayIndex === 0 && timeIndex === 0
 }
 
-// Function to fetch a random show for demonstration
-// In a real application, this would be replaced with logic to filter shows based on day and time
-function randomShow(day, time) {
-  if (showsState.value.length > 0) {
-    const randomIndex = Math.floor(Math.random() * showsState.value.length);
-    return showsState.value[randomIndex];
-  }
-  return null;
-}
 </script>
