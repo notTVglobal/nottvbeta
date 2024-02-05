@@ -14,8 +14,8 @@ return new class extends Migration
     public function up()
     {
       Schema::table('show_episodes', function (Blueprint $table) {
-//          $table->dropForeign(['mist_stream_id']); // Adjust based on the actual constraint name
-//          $table->dropColumn('mist_stream_id');
+          $table->dropForeign(['mist_stream_id']); // Adjust based on the actual constraint name
+          $table->dropColumn('mist_stream_id');
       });
     }
 
@@ -27,8 +27,8 @@ return new class extends Migration
     public function down()
     {
       Schema::table('show_episodes', function (Blueprint $table) {
-//        $table->unsignedBigInteger('mist_stream_id')->nullable();
-//        $table->foreign('mist_stream_id')->references('id')->on('mist_streams');
+        $table->unsignedBigInteger('mist_stream_id')->nullable();
+        $table->foreign('mist_stream_id')->references('id')->on('mist_streams');
       });
 
     }

@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
       Schema::table('mist_streams', function (Blueprint $table) {
-//        $table->ulid('id')->change();
+        $table->ulid('id')->change();
       });
 
     }
@@ -27,7 +27,7 @@ return new class extends Migration
     public function down()
     {
       Schema::table('mist_streams', function (Blueprint $table) {
-//        $table->id('id')->change(); // Adds back the 'id' column as an auto-increment primary key
+        $table->id('id')->change(); // Adds back the 'id' column as an auto-increment primary key
       });
     }
 };
