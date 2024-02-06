@@ -111,10 +111,11 @@
             <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"
                    for="default_country"
             >
-              DEFAULT COUNTRY
+              COUNTRY
             </label>
+            <div class="text-xs mb-2">This should probably be baked into the code somewhere. Content, and especially News Stories, uploaded and managed to this instance of notTV is specific to this country. The system has a list of provinces, cities and postal codes based on the country. This system is designed to only manage one country. Eventually, each notTV country will be able to share their content and News Stories, with each other.</div>
 
-            <select id="default_country" v-model="form.default_country">
+            <select disabled id="default_country" v-model="form.default_country" class="disabled:bg-gray-100 cursor-not-allowed">
               <option v-for="country in countries" :key="country.id" :value="country.id">{{ country.name }}</option>
             </select>
 
@@ -322,6 +323,25 @@
                  class="text-xs text-red-600 mt-1"></div>
           </div>
 
+          <div class="mb-6">
+            <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"
+                   for="mist_server_password"
+            >
+              MIST ACCESS CONTROL SECRET
+            </label>
+            <div class="text-xs mb-2">A string used to create the access control urls for playing streams and videos from the mist server.</div>
+            <div class="flex flex-row">
+              <input v-model="form.mist_access_control_secret"
+                     class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                     type="text"
+                     name="mist_access_control_secret"
+                     id="mist_access_control_secret"
+              >
+            </div>
+            <div v-if="form.errors.mist_access_control_secret" v-text="form.errors.mist_access_control_secret"
+                 class="text-xs text-red-600 mt-1"></div>
+          </div>
+
           <div class="flex justify-end my-6 mr-6">
             <JetValidationErrors class="mr-4"/>
             <button
@@ -395,6 +415,7 @@ let props = defineProps({
   mist_server_api_url: String,
   mist_server_username: String,
   mist_server_password: String,
+  mist_access_control_secret: String,
   messageType: String,
 });
 
@@ -411,6 +432,7 @@ let form = useForm({
   mist_server_api_url: props.mist_server_api_url,
   mist_server_username: props.mist_server_username,
   mist_server_password: props.mist_server_password,
+  mist_access_control_secret: props.mist_access_control_secret,
 })
 
 const countries = ref([]);

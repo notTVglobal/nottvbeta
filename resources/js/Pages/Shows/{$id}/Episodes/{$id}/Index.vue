@@ -53,9 +53,10 @@
                   </span>
               </div>
               <div class="text-xs space-y-1">
-                <span class="uppercase">Episode Number: </span>
-                <span v-if="!episode.episode_number">{{ episode.id }}</span>
-                <span v-if="props.episode.episode_number">{{ props.episode.episode_number }}</span>
+
+                <div class="text-gray-500 mt-1" v-if="!episode.episode_number">Episode {{ episode.id }}</div>
+                <div class="text-gray-500 mt-1" v-if="episode.episode_number">Episode {{ episode.episode_number }}</div>
+
               </div>
             </div>
             <div v-if="props.episode.release_dateTime" class="text-yellow-500">

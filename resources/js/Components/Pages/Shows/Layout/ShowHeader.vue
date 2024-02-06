@@ -6,9 +6,9 @@
           <SingleImage :image="show.image" alt="'show poster'" class="w-60 h-80 object-cover mr-2 justify-left"/>
         </Link>
         <div class="flex flex-col pl-4">
-          <Link :href="`/shows/${show.slug}`" class="uppercase"><span class="mb-3 inline-flex items-center text-3xl font-semibold relative">{{ show.name }}</span></Link>
+          <Link :href="`/shows/${show.slug}`" class="uppercase"><span class="hover:text-blue-600 mb-3 inline-flex items-center text-3xl font-semibold relative">{{ show.name }}</span></Link>
             <div><span class="text-xs  font-semibold uppercase">Team: </span>
-              <Link :href="`/teams/${team.slug}/manage`" class="text-blue-500 ml-2 uppercase font-bold"> {{
+              <Link :href="`/teams/${team.slug}/manage`" class="text-blue-500 hover:text-blue-600 ml-2 uppercase font-bold"> {{
                   team.name
                 }}
               </Link>
@@ -22,9 +22,9 @@
 
           <div class="mt-12 w-full h-full flex flex-col">
             <div class="flex-grow"></div>
-            <button class="btn btn-lg btn-success text-success-content drop-shadow-lg py-2 flex flex-col">
+            <button class="btn btn-lg bg-green-500 hover:bg-green-700 border-green-500 text-white text-success-content drop-shadow-lg py-2 flex flex-col">
               <span>Add Show To Schedule</span>
-              <span class="text-sm italic font-thin">x number of time slots available</span>
+              <span class="text-sm italic font-thin">7 time slots available</span>
             </button>
 
           </div>

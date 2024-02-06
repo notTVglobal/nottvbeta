@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div class="py-3">
     <div class="flex flex-wrap justify-center mb-4">
       <span class="text-lg font-bold uppercase text-blue-200">Notification</span>
     </div>
@@ -21,6 +21,7 @@
         </button>
       </div>
     </div>
+    <p class="alert alert-info my-3 ">Feature in development. This is for demonstration purposes only.</p>
   </div>
 </template>
 <script>

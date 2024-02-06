@@ -25,9 +25,9 @@
       </Popper>
     </div>
 
-    <div v-if="teams.last_page >  1" class="">
+    <div v-if="teams.last_page >  1" class=""><div class=""></div>
 <!--      <Pagination :data="teams" class="mt-24 absolute inset-x-0 bottom-0 py-24 px-2"/>-->
-      <PaginationDark :data="teams" class="mt-24 absolute py-24 px-2 text-white -ml-6"/>
+      <PaginationDark :data="teams" class="text-white -ml-6"/>
     </div>
 
   </div>

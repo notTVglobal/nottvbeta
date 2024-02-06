@@ -22,14 +22,7 @@
       </div>
     </div>
 
-    <div class="flex justify-end">
-      <button
-          v-if="can.editTeam"
-          @click="appSettingStore.btnRedirect(`/teams/${team.slug}/edit`)"
-          class="bg-blue-500 hover:bg-blue-600 text-white font-semibold ml-2 my-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
-      >Edit
-      </button>
-    </div>
+
 
 
   </div>

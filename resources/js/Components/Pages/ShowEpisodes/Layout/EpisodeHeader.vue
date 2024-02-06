@@ -6,7 +6,7 @@
         <!--                <img :src="'/storage/images/' + show.poster" alt="" class="w-20 mr-2 justify-left">-->
         <SingleImage :image="episode.image" alt="'episode poster'"
                      class="h-50 w-80 object-cover"/>
-        <span class="pl-4 inline-flex items-center text-3xl font-semibold relative">{{ episode.name }}</span>
+        <span class="hover:text-blue-700 pl-4 inline-flex items-center text-3xl font-semibold relative">{{ episode.name }}</span>
       </div>
     </Link>
 

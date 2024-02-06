@@ -104,7 +104,7 @@ watch(() => userStore.timezone, (newTimezone) => {
 
 // Format functions for display
 const formatDate = (date) => dayjs.utc(date).tz(userTimezone.value).format('dddd, MMM D')
-const formatHour = (date) => dayjs.utc(date).tz(userTimezone.value).format('dddd, h A')
+const formatHour = (date) => dayjs.utc(date).tz(userTimezone.value).format('ddd, h A')
 
 // Reactive state to hold shows data
 const showsState = ref([])

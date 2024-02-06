@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AppSettingController;
+use App\Http\Controllers\MistStreamController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ChatController;
@@ -50,4 +51,6 @@ Route::post('/chatTest', [TestMessageController::class, 'broadcast'])
 Route::get('/products', [ProductController::class, 'index']);
 
 Route::get('/channels_list', [ChannelApiController::class, 'index']);
+
+Route::post('/userValidation', [MistStreamController::class, 'userValidation']);
 

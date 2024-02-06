@@ -80,7 +80,7 @@
 
             <div><span class="text-xs capitalize font-semibold">Show: </span>
               <button :disabled="teamStore.goLiveDisplay" @click="appSettingStore.btnRedirect(`/shows/${show.slug}/manage`)"
-                      class="text-blue-500 ml-2 uppercase disabled:text-black">
+                      class="hover:text-blue-700 text-blue-500 ml-2 uppercase disabled:text-black">
                 {{ show.name }}
               </button>
             </div>

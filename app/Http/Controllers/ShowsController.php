@@ -163,6 +163,7 @@ class ShowsController extends Controller {
   private function transformShowEpisode($showEpisode): array {
     return [
         'id'              => $showEpisode->id,
+        'episode_number'  => $showEpisode->episode_number,
         'name'            => $showEpisode->name,
         'description'     => \Str::limit($showEpisode->description, 100, '...'),
         'image'           => $this->transformImage($showEpisode->image, $showEpisode->appSetting),
@@ -347,7 +348,7 @@ class ShowsController extends Controller {
           // Apply conditions or sorting to episodes here
           $query->with(['video', 'image.appSetting'])->orderBy('release_dateTime', 'desc');
         },
-        'team' => function ($query) {
+        'team'         => function ($query) {
           // Eager load team members and their user details
           $query->with(['members' => function ($query) {
             $query->select(['users.id', 'users.name', 'users.profile_photo_path']);
@@ -392,9 +393,9 @@ class ShowsController extends Controller {
         ->whereNotNull('video_id') // Ensures there's an associated video record
         ->whereHas('video', function ($query) {
           $query
-              ->where(function($q) {
+              ->where(function ($q) {
                 $q->whereNotNull('video_url') // Include episodes with external videos
-                ->orWhere(function($innerQuery) {
+                ->orWhere(function ($innerQuery) {
                   $innerQuery->whereNotNull('storage_location')
                       ->where('storage_location', '!=', 'external_error') // Exclude 'external_error' storage locations
                       ->where('upload_status', '!=', 'processing'); // Exclude videos that are still processing
@@ -423,7 +424,7 @@ class ShowsController extends Controller {
         'instagram_name'     => $show->instagram_name,
         'telegram_url'       => $show->telegram_url,
         'twitter_handle'     => $show->twitter_handle,
-        'status'           => $show->status,
+        'status'             => $show->status,
     ];
   }
 
@@ -431,12 +432,14 @@ class ShowsController extends Controller {
     if (!$episode) return [];
 
     $episodeData = [
-        'name'        => $episode->name ?? '',
-        'slug'        => $episode->slug ?? '',
-        'description' => $episode->description ?? '',
-        'image'       => $this->transformImage($episode->image, $episode->appSetting),
+        'id'               => $episode->id,
+        'episode_number'   => $episode->number,
+        'name'             => $episode->name ?? '',
+        'slug'             => $episode->slug ?? '',
+        'description'      => $episode->description ?? '',
+        'image'            => $this->transformImage($episode->image, $episode->appSetting),
         'creative_commons' => $episode->creativeCommons,
-        'copyrightYear' => $episode->copyrightYear,
+        'copyrightYear'    => $episode->copyrightYear,
 
       // Other episode attributes...
       // Include both 'file_name' and 'video_url' as applicable
@@ -477,6 +480,7 @@ class ShowsController extends Controller {
         return $this->transformShowEpisode($episode);
       });
     }
+
     // Fetch and filter episodes based on search criteria when specified
     return ShowEpisode::with(['image', 'show', 'showEpisodeStatus'])
         ->where('show_id', $show->id)
@@ -502,10 +506,10 @@ class ShowsController extends Controller {
     return $team->members->map(function ($user) {
       // Access pivot data like $user->pivot->active if needed
       return [
-          'id' => $user->id,
-          'name' => $user->name,
+          'id'                 => $user->id,
+          'name'               => $user->name,
           'profile_photo_path' => $user->profile_photo_path,
-          'active' => $user->pivot->active ?? null,
+          'active'             => $user->pivot->active ?? null,
         // Include additional details as necessary
       ];
     });

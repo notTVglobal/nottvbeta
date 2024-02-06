@@ -12,7 +12,7 @@
       <!--            <img :src="`/storage/images/${episode.poster}`" alt="" class="rounded-xl w-10">-->
       <!--                                                    <Link :href="`/admin/users/${episode.id}`" class="text-indigo-600 hover:text-indigo-900">{{ episode.name }}</Link>-->
       <Link :href="`/shows/${showSlug}/episode/${episode.slug}/manage`"
-            class="font-semibold light:text-blue-800 light:hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-200">
+            class="hover:text-blue-600 font-semibold dark:text-blue-400 dark:hover:text-blue-200">
 
         {{ episode.name }}
 

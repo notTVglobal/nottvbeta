@@ -20,10 +20,20 @@
         <!--            <header class="wave-background p-4 text-black font-bold rounded-lg">-->
 
         <div class="flex justify-between mb-3 pt-6">
-          <div class="font-bold mb-4 text-black">MANAGE SHOW</div>
-          <div>
-            <DashboardButton />
+          <div class="font-bold mb-4 text-black align-bottom text-lg">MANAGE SHOW</div>
+          <div class="flex flex-wrap-reverse justify-end">
+
+              <button
+                  v-if="teamStore.can.editShow"
+                  @click="appSettingStore.btnRedirect(`/shows/${show.slug}/edit`)"
+                  class="px-4 py-2 h-fit text-white font-semibold bg-blue-500 hover:bg-blue-600 rounded-lg"
+              >Edit Show
+              </button>
+
+              <DashboardButton />
+
           </div>
+
         </div>
 
         <ShowHeader
@@ -33,14 +43,7 @@
 
         <div class="flex justify-end mt-6">
 
-          <div>
-            <button
-                v-if="teamStore.can.editShow"
-                @click="appSettingStore.btnRedirect(`/shows/${show.slug}/edit`)"
-                class="px-4 py-2 text-white font-semibold bg-blue-500 hover:bg-blue-600 rounded-lg"
-            >Edit Show
-            </button>
-          </div>
+
         </div>
       </header>
 

@@ -14,19 +14,29 @@
         <!--            <header class="pulsing-background mb-3 p-4 text-white font-bold rounded-lg">-->
 
 
-        <div class="flex justify-between items-end mb-3">
-          <div class="font-bold mb-4 text-black align-bottom text-lg">MANAGE TEAM</div>
 
-          <div>
+
+        <div class="flex justify-between mb-3 pt-6">
+          <div class="font-bold mb-4 text-black align-bottom text-lg">MANAGE TEAM</div>
+          <div class="flex flex-wrap-reverse justify-end">
+
             <button
-                @click="appSettingStore.btnRedirect('/dashboard')"
-                class="bg-black hover:bg-gray-800 text-white font-semibold ml-2 mt-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
-            >Dashboard
+                v-if="can.editTeam"
+                @click="appSettingStore.btnRedirect(`/teams/${team.slug}/edit`)"
+                class="px-4 py-2 h-fit text-white font-semibold bg-blue-500 hover:bg-blue-600 rounded-lg"
+            >Edit Team
             </button>
+
+            <DashboardButton />
+
           </div>
 
-
         </div>
+
+
+
+
+
         <div class="flex justify-end mb-2">
 
           <div class="flex flex-wrap-reverse justify-end gap-2">
@@ -124,6 +134,7 @@ import TeamShowsList from '@/Components/Pages/Teams/Manage/Elements/TeamShowsLis
 import TeamAssignmentsList from '@/Components/Pages/Teams/Manage/Elements/TeamAssignmentsList'
 import Message from '@/Components/Global/Modals/Messages'
 import TeamTransferProcess from '@/Components/Pages/Teams/Manage/Elements/TeamTransferProcess'
+import DashboardButton from '@/Components/Global/Buttons/DashboardButton.vue'
 
 usePageSetup('teams/slug/manage')
 

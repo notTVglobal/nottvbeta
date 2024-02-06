@@ -91,11 +91,10 @@
           >
             Sub-category
           </label>
-          <div class="mb-2 text-sm text-orange-600">Sub-categories are coming soon!</div>
 
           <select
                   class="border border-gray-400 text-gray-800 disabled:bg-gray-300 dark:disabled:bg-gray-600 disabled:cursor-not-allowed p-2 w-full rounded-lg block mb-2 uppercase font-bold text-xs"
-                  v-model="selectedSubCategoryId" :disabled="!selectedCategoryId" @change="chooseSubCategory"
+                  v-model="selectedSubCategoryId" @change="chooseSubCategory"
           >
             <option disabled value="">Select a subcategory</option>
             <option v-for="subCategory in subCategories" :key="subCategory.id" :value="subCategory.id">

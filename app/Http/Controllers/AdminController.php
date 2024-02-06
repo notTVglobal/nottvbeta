@@ -66,6 +66,7 @@ class AdminController extends Controller
             'mist_server_api_url' => $settings->mist_server_api_url,
             'mist_server_username' => $settings->mist_server_username,
             'mist_server_password' => $decryptedPassword ?? null,
+            'mist_access_control_secret' => $settings->mist_access_control_secret,
         ]);
     }
 
@@ -83,6 +84,7 @@ class AdminController extends Controller
             'mist_server_api_url' => 'nullable|string',
             'mist_server_username' => 'nullable|string',
             'mist_server_password' => 'nullable|string',
+            'mist_access_control_secret' => 'nullable|string',
         ]);
 
         // Encrypting the Mist Server Password
@@ -102,6 +104,8 @@ class AdminController extends Controller
         $settings->mist_server_api_url = $request->mist_server_api_url;
         $settings->mist_server_username = $request->mist_server_username;
         $settings->mist_server_password = $encryptedPassword ?? null;
+        $settings->mist_access_control_secret = $request->mist_access_control_secret;
+
         $settings->save();
 
       // Now, check for specific form variables and update the JSON file if present
