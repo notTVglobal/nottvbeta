@@ -30,7 +30,7 @@ class MistStreamController extends Controller
    * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|Response
    */
   public function userValidation(Request $request): \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|Response {
-    Log::info('!!!!!!');
+    Log::info($request);
     $secretKey = AppSetting::where('id', 1)->first()->mist_access_control_secret ?? 'fallback_secret';
 //    return response()->json(1);
 //          return response()->json('true');

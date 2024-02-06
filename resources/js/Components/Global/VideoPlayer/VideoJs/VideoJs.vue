@@ -88,6 +88,14 @@ onMounted(() => {
   // Use the store to manage the player
   videoPlayerStore.setPlayer(videoPlayer);
 
+  // Access the video DOM element controlled by VideoJS
+  const videoDomElement = videoPlayer.el();
+
+  // Disable right-click on the video element
+  videoDomElement.addEventListener('contextmenu', (event) => {
+    event.preventDefault();
+  });
+
 })
 </script>
 

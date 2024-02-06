@@ -46,7 +46,7 @@
                 <div class="flex flex-row">
                   <!-- Image -->
                   <div class="showOrMovieImage">
-                    <Link :href="`/${nowPlayingStore.activeMedia.details?.primaryUrl}`">
+                    <Link @click.prevent="goToPage">
                       <SingleImage
                           :image="nowPlayingStore.activeMedia.details?.image"
                           :alt="nowPlayingStore.activeMedia.details?.primaryName"
@@ -59,7 +59,7 @@
                   <div class="flex flex-col ml-3">
                     <h3 v-if="nowPlayingStore.activeMedia.details?.primaryUrl">
                       <!-- Render as a link if the URL exists -->
-                      <Link class="hover:text-blue-500 hover:cursor-pointer" :href="`/${nowPlayingStore.activeMedia.details.primaryUrl}`">
+                      <Link class="hover:text-blue-500 hover:cursor-pointer" @click.prevent="goToPage">
                         <!-- Title (with link) -->
                         {{ nowPlayingStore.activeMedia.details.primaryName }}
                       </Link>
@@ -199,6 +199,7 @@ import { useUserStore } from '@/Stores/UserStore'
 import { useChatStore } from '@/Stores/ChatStore'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { Inertia } from '@inertiajs/inertia'
 
 const appSettingStore = useAppSettingStore()
 const videoPlayerStore = useVideoPlayerStore()
@@ -215,6 +216,11 @@ let props = defineProps({
 onMounted(() => {
   // nowPlayingStore.fetchFirstPlayData();
 });
+
+const goToPage = () => {
+  Inertia.visit(`/${nowPlayingStore.activeMedia.details?.primaryUrl}`)
+  appSettingStore.ott = 0
+}
 
 // let playVideo = (source) => {
 //   videoPlayerStore.loadNewSourceFromMist(source)

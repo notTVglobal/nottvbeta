@@ -74,8 +74,6 @@ use Laravel\Cashier\Checkout;
 */
 
 
-Route::post('/userValidation', [MistStreamController::class, 'userValidation']);
-
 
 Route::get('/', [WelcomeController::class, 'index'])->name('home');
 

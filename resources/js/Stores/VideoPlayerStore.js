@@ -197,7 +197,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
         handleFullscreenChange() {
             console.log('Handling fullscreenchange...');
             // Implement your logic
-            this.player.on('fullscreenchange', () => {
+            this.player?.on('fullscreenchange', () => {
                 if (this.player.isFullscreen()) {
                     // Video is entering fullscreen mode
                     // You can add custom behavior for entering fullscreen here if needed
@@ -214,28 +214,28 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
         handlePlay() {
             console.log('Handling play...');
             // Implement your logic
-            this.player.on('play', () => {
+            this.player?.on('play', () => {
                 this.paused = false
             })
         },
         handlePause() {
             console.log('Handling pause...');
             // Implement your logic
-            this.player.on('pause', () => {
+            this.player?.on('pause', () => {
                 this.paused = true
             })
         },
         handleError() {
             console.log('Handling error...');
             // Implement your logic
-            this.player.on('error', function () {
+            this.player?.on('error', function () {
                 const error = this.player.error()
                 console.error('Video.js Error:', error.code, error.message)
             })
         },
         makeBlue() {
-            // for testing. DO NOT REMOVE.
-            this.blue = true
+        // for testing. DO NOT REMOVE.
+        this.blue = true
         },
         // Apparently this loadFirstPlay isn't being used...
         // loadFirstPlay() {

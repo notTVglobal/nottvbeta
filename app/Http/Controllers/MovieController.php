@@ -22,10 +22,13 @@ use Illuminate\Support\Facades\Str;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Services\MistVideoUrlService;
 
 class MovieController extends Controller {
 
-  public function __construct() {
+  protected MistVideoUrlService $mistVideoUrlService;
+
+  public function __construct(MistVideoUrlService $mistVideoUrlService) {
 
     $this->middleware('can:view,movie')->only(['show']);
     $this->middleware('can:create,' . \App\Models\Movie::class)->only(['create']);
@@ -33,6 +36,8 @@ class MovieController extends Controller {
     $this->middleware('can:edit,movie')->only(['edit']);
     $this->middleware('can:edit,movie')->only(['update']);
     $this->middleware('can:destroy,movie')->only(['destroy']);
+
+    $this->mistVideoUrlService = $mistVideoUrlService;
 
   }
 
@@ -241,7 +246,7 @@ class MovieController extends Controller {
    * @param Movie $movie
    * @return Response
    */
-  public function show(Movie $movie) {
+  public function show(HttpRequest $request, Movie $movie) {
 
 //    $video = Video::where('movies_id', $movie->id)->first();
 //    $trailer = Video::where('movie_trailers_id', $movie->id)->first();
@@ -257,6 +262,15 @@ class MovieController extends Controller {
     // Determine the media type based on the storage location, default to 'show'
     $mediaTypeMovie = $movieStorageLocation === 'external' ? 'externalVideo' : 'movie';
     $mediaTypeMovieTrailer = $movieTrailerStorageLocation === 'external' ? 'externalVideo' : 'movie';
+
+    $userId = auth()->id(); // Assuming user ID is obtained from authentication
+    // Generate the URL append part (query parameters)
+    $urlAppend = $this->mistVideoUrlService->generateUrlAppend($request, $userId);
+    // Assuming $movie is retrieved earlier in the method
+    $videoUrl = $movie->video->video_url ?? '';
+
+    // Append $urlAppend to your video URL
+    $fullVideoUrl = $videoUrl . $urlAppend;
 
     return Inertia::render('Movies/{$id}/Index', [
         'movie' => [
@@ -311,7 +325,8 @@ class MovieController extends Controller {
                 'folder'           => $movie->video->folder ?? '',
                 'cloud_folder'     => $movie->video->cloud_folder ?? '',
                 'upload_status'    => $movie->video->upload_status ?? '',
-                'video_url'        => $movie->video->video_url ?? '',
+//                'video_url'        => $movie->video->video_url ?? '',
+                'video_url'        => $fullVideoUrl,
                 'type'             => $movie->video->type ?? '',
                 'storage_location' => $movie->video->storage_location ?? '',
             ],
