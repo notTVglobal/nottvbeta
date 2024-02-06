@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\AppSetting;
 use App\Models\MistStream;
-use Illuminate\Http\Request;
+
+use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use RuntimeException;
@@ -29,8 +30,8 @@ class MistStreamController extends Controller
    * @param Request $request
    * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|Response
    */
-  public function userValidation(Request $request): \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|Response {
-    Log::info($request);
+  public function userValidation(HttpRequest $request): \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|Response {
+//    Log::info($request);
     $secretKey = AppSetting::where('id', 1)->first()->mist_access_control_secret ?? 'fallback_secret';
 //    return response()->json(1);
 //          return response()->json('true');
