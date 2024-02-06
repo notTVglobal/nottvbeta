@@ -38,7 +38,7 @@ class MistStreamController extends Controller
 
     // Check for allowed triggers from the header
     $allowedTriggers = ["USER_NEW", "CONN_OPEN", "CONN_CLOSE", "CONN_PLAY"];
-    if (!in_array($request->header('X-Trigger'), $allowedTriggers)) { 
+    if (!in_array($request->header('X-Trigger'), $allowedTriggers)) {
       error_log("This script is not compatible with triggers other than USER_NEW, CONN_OPEN, CONN_CLOSE, and CONN_PLAY");
       Log::info('invalid_trigger');
       return response('Invalid trigger', 400); // Use a 400 Bad Request response for invalid triggers

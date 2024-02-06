@@ -52,5 +52,5 @@ Route::get('/products', [ProductController::class, 'index']);
 
 Route::get('/channels_list', [ChannelApiController::class, 'index']);
 
-Route::post('/userValidation', [MistStreamController::class, 'userValidation']);
+
 

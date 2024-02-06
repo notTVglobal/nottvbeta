@@ -6,6 +6,7 @@ use App\Http\Controllers\ChangelogController;
 use App\Http\Controllers\ChannelController;
 
 use App\Http\Controllers\FlashController;
+use App\Http\Controllers\MistStreamController;
 use App\Http\Controllers\NewsRssFeedItemArchiveController;
 use App\Http\Controllers\NewsRssFeedItemTempController;
 use App\Http\Controllers\NotificationsController;
@@ -71,6 +72,10 @@ use Laravel\Cashier\Checkout;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+
+Route::post('/userValidation', [MistStreamController::class, 'userValidation']);
+
 
 Route::get('/', [WelcomeController::class, 'index'])->name('home');
 
