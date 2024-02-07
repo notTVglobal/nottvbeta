@@ -48,7 +48,12 @@ class MistStreamController extends Controller
     $lines = explode("\n", $bodyContent);
     // Assuming the IP address is always on the second line
     $ipAddress = $lines[1] ?? 'unknown'; // Default to 'unknown' if not found
-    $requestUrl = $lines[5] ?? 'unknown'; // it's only line 5 if USER_NEW, otherwise its line 4.
+    $requestUrl = $lines[4] ?? 'unknown'; // it's only line 5 if USER_NEW, otherwise its line 4.
+//    Log::info('Raw Request', [
+//        'headers' => $request->headers->all(),
+//        'body' => $request->getContent() // For raw body content
+//    ]);
+//    Log::info("Url: {$requestUrl}");
 
 //    $parts = explode(" ", $bodyContent);
 //    $requestUrl = end($parts); // Assuming the URL is the last part of the body
@@ -59,41 +64,42 @@ class MistStreamController extends Controller
     if (!$userId) {
       return response('User ID is required', 400);
     }
+//    Log::info("UserId: {$userId}");
 
-    $userActiveSecureVideoHash = User::where('id', $userId)->value('active_secure_video_hash');
-    if (!$userActiveSecureVideoHash) {
-      return response('User not found or no hash set', 404);
-    }
+//    $userActiveSecureVideoHash = User::where('id', $userId)->value('active_secure_video_hash');
+//    if (!$userActiveSecureVideoHash) {
+//      return response('User not found or no hash set', 404);
+//    }
 
-    $hashReceived = $requestUrlParams['hash'] ?? null;
-    if ($hashReceived !== $userActiveSecureVideoHash) {
-      Log::warning("Hash mismatch for user ID: {$userId}");
-      return response('Unauthorized - Hash mismatch', 401);
-    }
+//    $hashReceived = $requestUrlParams['hash'] ?? null;
+
 
 //    Log::warning($userId);
     $hashReceived = $requestUrlParams['hash'] ?? null;
     $hashExpected = hash('sha256', $userId . $ipAddress . $secretKey);
 //    $hashExpected = $userActiveSecureVideoHash;
 //     For testing only
-    Log::info('Raw Request', [
-        'headers' => $request->headers->all(),
-        'body' => $request->getContent() // For raw body content
-    ]);
-    Log::alert('Hash Debug', [
-        'Expected Hash' => $hashExpected,
-        'Received Hash' => $hashReceived,
-        'Hash Base String (Expected)' => $userId . $ipAddress . $secretKey,
-        'User ID' => $userId,
-        'IP Address from Mist' => $ipAddress,
-        'Secret Key' => $secretKey,
-    ]);
 
     // Comparing the expected hash with the received hash
     if ($hashReceived !== $hashExpected) {
-      Log::info('Unauthorized - Hash mismatch');
-      return response('Unauthorized', 401); // Respond with 401 Unauthorized for invalid hash
+      Log::warning("Hash mismatch for user ID: {$userId}");
+      return response('Unauthorized - Hash mismatch', 401);
     }
+
+//    Log::alert('Hash Debug', [
+//        'Expected Hash' => $hashExpected,
+//        'Received Hash' => $hashReceived,
+//        'Hash Base String (Expected)' => $userId . $ipAddress . $secretKey,
+//        'User ID' => $userId,
+//        'IP Address from Mist' => $ipAddress,
+//        'Secret Key' => $secretKey,
+//    ]);
+
+
+//    if ($hashReceived !== $hashExpected) {
+//      Log::info('Unauthorized - Hash mismatch');
+//      return response('Unauthorized', 401); // Respond with 401 Unauthorized for invalid hash
+//    }
 
     // If hash matches, proceed with additional checks (if any) and ultimately approve access
     Log::info('Access granted');
