@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\AppSetting;
 use App\Models\MistStream;
 
+use App\Models\User;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use RuntimeException;
 
@@ -37,7 +39,6 @@ class MistStreamController extends Controller
       return response('Invalid trigger', 400); // Use a 400 Bad Request response for invalid triggers
     }
 
-    $userId = auth()->id();
     // Retrieve the secret key from configuration or fallback
     $secretKey = AppSetting::where('id', 1)->first()->mist_access_control_secret ?? 'default_secret';
 
@@ -53,11 +54,28 @@ class MistStreamController extends Controller
     parse_str(parse_url($requestUrl, PHP_URL_QUERY), $requestUrlParams);
 
     // Extracting userId and received hash from URL parameters
-//    $userId = $requestUrlParams['user'] ?? null;
+    $userId = $requestUrlParams['user'] ?? null;
+
+    $userId = $requestUrlParams['user'] ?? null;
+    if (!$userId) {
+      return response('User ID is required', 400);
+    }
+
+    $userActiveSecureVideoHash = User::where('id', $userId)->value('active_secure_video_hash');
+    if (!$userActiveSecureVideoHash) {
+      return response('User not found or no hash set', 404);
+    }
 
     $hashReceived = $requestUrlParams['hash'] ?? null;
-    $hashExpected = hash('sha256', $userId . $ipAddress . $secretKey);
+    if ($hashReceived !== $userActiveSecureVideoHash) {
+      Log::warning("Hash mismatch for user ID: {$userId}");
+      return response('Unauthorized - Hash mismatch', 401);
+    }
 
+//    Log::warning($userId);
+    $hashReceived = $requestUrlParams['hash'] ?? null;
+//    $hashExpected = hash('sha256', $userId . $ipAddress . $secretKey);
+    $hashExpected = $userActiveSecureVideoHash;
 //     For testing only
 //    Log::alert('Hash Debug', [
 //        'Expected Hash' => $hashExpected,
