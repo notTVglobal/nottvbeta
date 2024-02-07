@@ -63,6 +63,7 @@ class AdminController extends Controller
             'first_play_video_name' => $settings->first_play_video_name,
             'first_play_channel_id' => $settings->first_play_channel_id,
             'mist_server_ip' => $settings->mist_server_ip,
+            'mist_server_uri' => $settings->mist_server_uri,
             'mist_server_api_url' => $settings->mist_server_api_url,
             'mist_server_username' => $settings->mist_server_username,
             'mist_server_password' => $decryptedPassword ?? null,
@@ -81,7 +82,8 @@ class AdminController extends Controller
             'first_play_video_name' => 'nullable|string',
             'first_play_channel_id' => 'nullable|integer',
             'mist_server_ip' => 'nullable|string',
-            'mist_server_api_url' => 'nullable|string',
+            'mist_server_uri' => 'nullable|url',
+            'mist_server_api_url' => 'nullable|url',
             'mist_server_username' => 'nullable|string',
             'mist_server_password' => 'nullable|string',
             'mist_access_control_secret' => 'nullable|string',
@@ -101,6 +103,7 @@ class AdminController extends Controller
         $settings->first_play_video_name = $request->first_play_video_name;
         $settings->first_play_channel_id = $request->first_play_channel_id;
         $settings->mist_server_ip = $request->mist_server_ip;
+        $settings->mist_server_uri = $request->mist_server_uri;
         $settings->mist_server_api_url = $request->mist_server_api_url;
         $settings->mist_server_username = $request->mist_server_username;
         $settings->mist_server_password = $encryptedPassword ?? null;

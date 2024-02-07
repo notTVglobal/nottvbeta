@@ -63,12 +63,12 @@
           <button
               @click="appSettingStore.btnRedirect(`/admin/mistServerApi`)"
               class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"
-          >MistServer API
+          >MistServer API Test Page
           </button>
           <a
-              :href="`http://`+props.mist_server_ip+`:4242`" target="_blank"
+              :href="mistServerUriForManagementInterface+`:4242`" target="_blank"
               class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"
-          >MistServer Interface</a>
+          >MistServer Management Interface</a>
           <button
               @click="appSettingStore.btnRedirect(`/admin/images`)"
               class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"
@@ -250,12 +250,36 @@
             <div v-if="form.errors.first_play_channel_id" v-text="form.errors.first_play_channel_id"
                  class="text-xs text-red-600 mt-1"></div>
           </div>
+
+          <div class="mb-6">
+            <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"
+                   for="mist_server_api_url"
+            >
+              MIST SERVER URI
+            </label>
+            <div class="text-xs mb-2">This is the primary mist server. Right now we don't have a load balancer.</div>
+
+            <div class="flex flex-row">
+              <input v-model="form.mist_server_uri"
+                     class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                     type="text"
+                     name="mist_server_uri"
+                     id="mist_server_uri"
+              >
+            </div>
+            <div class="text-xs mb-2">e.g., https://mist.nottv.io</div>
+
+            <div v-if="form.errors.mist_server_uri" v-text="form.errors.mist_server_uri"
+                 class="text-xs text-red-600 mt-1"></div>
+          </div>
+
           <div class="mb-6">
             <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"
                    for="mist_server_ip"
             >
               MIST SERVER IP ADDRESS
             </label>
+            <div class="text-xs mb-2">This is used as part of the hash for Mist Stream Access Control.</div>
 
             <div class="flex flex-row">
               <input v-model="form.mist_server_ip"
@@ -283,6 +307,8 @@
                      id="mist_server_api_url"
               >
             </div>
+            <div class="text-xs mb-2">e.g., https://mist.nottv.io/api</div>
+
             <div v-if="form.errors.mist_server_api_url" v-text="form.errors.mist_server_api_url"
                  class="text-xs text-red-600 mt-1"></div>
           </div>
@@ -412,6 +438,7 @@ let props = defineProps({
   first_play_video_name: String,
   first_play_channel_id: String,
   mist_server_ip: String,
+  mist_server_uri: String,
   mist_server_api_url: String,
   mist_server_username: String,
   mist_server_password: String,
@@ -429,6 +456,7 @@ let form = useForm({
   first_play_video_name: props.first_play_video_name,
   first_play_channel_id: props.first_play_channel_id,
   mist_server_ip: props.mist_server_ip,
+  mist_server_uri: props.mist_server_uri,
   mist_server_api_url: props.mist_server_api_url,
   mist_server_username: props.mist_server_username,
   mist_server_password: props.mist_server_password,
@@ -465,5 +493,18 @@ function getEpisodesFromEmbedCodes() {
   Inertia.post('getVideosFromEmbedCodes')
   getAllEpisodesButtonActive = false;
 }
+
+
+// Sample URL
+const mistServerUri = props.mist_server_uri ?? '';
+
+// Function to remove 's' from 'https'
+function convertToHttp(url) {
+  return url.replace('https://', 'http://');
+}
+
+// Convert the URL and store it
+const mistServerUriForManagementInterface = ref(convertToHttp(mistServerUri));
+
 
 </script>
