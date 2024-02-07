@@ -75,6 +75,10 @@ class MistStreamController extends Controller
     $hashExpected = hash('sha256', $userId . $ipAddress . $secretKey);
 //    $hashExpected = $userActiveSecureVideoHash;
 //     For testing only
+    Log::info('Raw Request', [
+        'headers' => $request->headers->all(),
+        'body' => $request->getContent() // For raw body content
+    ]);
     Log::alert('Hash Debug', [
         'Expected Hash' => $hashExpected,
         'Received Hash' => $hashReceived,
