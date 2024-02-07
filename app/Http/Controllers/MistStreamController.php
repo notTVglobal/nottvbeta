@@ -53,6 +53,11 @@ class MistStreamController extends Controller
 
     // Parsing the request body
     $bodyContent = $request->getContent();
+    // Split the string by line breaks to get an array of lines
+    $lines = explode("\n", $bodyContent);
+    // Assuming the IP address is always on the second line
+    $ipAddress = $lines[1] ?? 'unknown'; // Default to 'unknown' if not found
+
     $parts = explode(" ", $bodyContent);
     $requestUrl = end($parts); // Assuming the URL is the last part of the body
     parse_str(parse_url($requestUrl, PHP_URL_QUERY), $requestUrlParams);
@@ -79,7 +84,8 @@ class MistStreamController extends Controller
         'Received Hash' => $hashReceived,
         'Hash Base String (Expected)' => $userIp . $secretKey,
         'User ID' => $userId,
-        'IP Address' => $userIp,
+        'Request IP Address' => $userIp,
+        'IP Address from Mist' => $ipAddress,
         'Secret Key' => $secretKey,
     ]);
 
