@@ -48,9 +48,10 @@ class MistStreamController extends Controller
     $lines = explode("\n", $bodyContent);
     // Assuming the IP address is always on the second line
     $ipAddress = $lines[1] ?? 'unknown'; // Default to 'unknown' if not found
+    $requestUrl = $lines[5] ?? 'unknown'; // it's only line 5 if USER_NEW, otherwise its line 4.
 
-    $parts = explode(" ", $bodyContent);
-    $requestUrl = end($parts); // Assuming the URL is the last part of the body
+//    $parts = explode(" ", $bodyContent);
+//    $requestUrl = end($parts); // Assuming the URL is the last part of the body
     parse_str(parse_url($requestUrl, PHP_URL_QUERY), $requestUrlParams);
 
     // Extracting userId and received hash from URL parameters
