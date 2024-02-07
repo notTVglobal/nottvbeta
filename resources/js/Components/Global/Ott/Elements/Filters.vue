@@ -45,7 +45,7 @@
       </div>
 
       <div v-if="appSettingStore.fullPage" class="closeButtonContainer">
-        <button v-touch="()=>appSettingStore.toggleOttFilters()"
+        <button v-touch="()=>appSettingStore.closeOtt()"
                 v-if="appSettingStore.ott === 5" class="filtersCloseButton">
           CLOSE FILTERS
         </button>

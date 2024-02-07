@@ -16,7 +16,7 @@
 
 
     </div>
-    <VideoVolumeIndicatorVertical v-if="user && appSettingStore.osd && appSettingStore.fullPage"/>
+    <VideoVolumeIndicatorVertical v-if="user && appSettingStore.osd && appSettingStore.osdSlot.two && appSettingStore.fullPage"/>
     <VideoProgressBar v-if="user"/>
 
     <!-- Over The Top (OTT) -->

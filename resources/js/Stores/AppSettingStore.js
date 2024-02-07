@@ -19,11 +19,13 @@ const initialState = () => ({
     ott: 0, // Number representing the Ott Panel currently open. 0 is closed.
     showOtt: false, // Over-The-Top (OTT) Panel, show (true) or hide (false)
     showOttButtons: true, // formerly videoPlayerStore.ottButtons
-    osd: false, // On Screen Display (OSD) to be expanded into 8 regions. See below for an example. FEATURE TO BE DEVELOPED. osd is formerly videoPlayerStore.osd
-    showOsd1: false, // On Screen Display 1 (Top Left)
-    showOsd2: false, // On Screen Display 2 (Top Right)
-    showOsd3: false, // On Screen Display 3 (Bottom Left)
-    showOsd4: false, // On Screen Display 4 (Bottom Right)
+    osd: false, // On Screen Display (OSD) to be expanded into 8 regions
+    osdSlot: {
+        one: true, // On Screen Display 1 (Top Left)
+        two: true, // On Screen Display 2 (Top Right)
+        three: true, // On Screen Display 3 (Bottom Left)
+        four: true, // On Screen Display 4 (Bottom Right)
+    },
     pipChatMode: false, // Chat input focused uses pipChatMode when userStore.isMobile
     pageBgColor: 'bg-gray-800', // Active background color
     primaryBgColor: 'bg-gray-800', // Primary background color
@@ -114,60 +116,120 @@ export const useAppSettingStore = defineStore('appSettingStore', {
 
 
         },
-        toggleOtt(num) {
-            const userStore = useUserStore()
-            if (this.ott === num) {
-                if (this.fullPage) {
-                    this.toggleOtt(0)
-                    if (userStore.isMobile) {
-                        this.osd = true
-                    }
-                } else {
-                    // change this to toggleOtt(1)
-                    // as part of the go back to ottInfo function
-                    this.toggleOtt(0)
-                }
-                this.showOttButtons = true
-            } else {
-                this.ott = num
-                if (this.fullPage) {
-                    this.showOttButtons = false
-                    if (userStore.isMobile) {
-                        this.osd = false
-                    }
-                }
-            }
-        },
-        toggleOttInfo() {
-            if (this.ott === 1) {
-                // comment this out as part of the go back to ottInfo function
-                this.toggleOtt(1)
-            } else {
-                this.toggleOtt(1)
-            }
-        },
-        toggleOttChannels() {
-            this.toggleOtt(2)
-        },
-        toggleOttPlaylist() {
-            this.toggleOtt(3)
-        },
-        toggleOttChat() {
-            this.toggleOtt(4)
-        },
-        toggleOttFilters() {
-            this.toggleOtt(5)
-        },
-        closeOtt() {
-            this.toggleOtt(0)
-            // uncomment this as part of the go back to ottInfo function
-            // if (appSettingStore.fullPage) {
-            //     this.toggleOtt(0)
-            // } else {
-            //     this.toggleOtt(1)
-            // }
+        // toggleOtt(num) {
+        //     const userStore = useUserStore()
+        //     if (this.ott === num) {
+        //         if (this.fullPage) {
+        //             this.toggleOtt(0)
+        //             if (userStore.isMobile) {
+        //                 this.osd = true
+        //             }
+        //         } else {
+        //             // change this to toggleOtt(1)
+        //             // as part of the go back to ottInfo function
+        //             this.toggleOtt(0)
+        //         }
+        //         this.showOttButtons = true
+        //     } else {
+        //         this.ott = num
+        //         if (this.fullPage) {
+        //             this.showOttButtons = false
+        //             if (userStore.isMobile) {
+        //                 this.osd = false
+        //             }
+        //         }
+        //     }
+        // },
 
+
+        toggleOtt(num) {
+            const userStore = useUserStore();
+            this.ott = num === this.ott && !this.fullPage ? 0 : num;
+
+            // Handling the visibility of ottSlot.one and ottSlot.two
+            this.osdSlot.one = this.fullPage && this.ott === 0;
+            this.osdSlot.two = this.fullPage && this.ott === 0;
+
+            if (this.fullPage) {
+                this.showOttButtons = this.ott === 0;
+                if (userStore.isMobile) {
+                    this.osd = this.ott === 0;
+                }
+            } else {
+                // Assuming default behavior for non-fullPage state is required here,
+                // adjust as necessary based on additional context.
+                this.showOttButtons = true;
+                if (userStore.isMobile) {
+                    this.osd = this.ott !== 0;
+                }
+            }
         },
+
+
+
+
+        toggleOttInfo() {
+            // Simplifying the logic based on the updated toggleOtt behavior
+            this.toggleOtt(1);
+        },
+
+        toggleOttChannels() {
+            this.toggleOtt(2);
+        },
+
+        toggleOttPlaylist() {
+            this.toggleOtt(3);
+        },
+
+        toggleOttChat() {
+            this.toggleOtt(4);
+        },
+
+        toggleOttFilters() {
+            this.toggleOtt(5);
+        },
+
+        closeOtt() {
+            // Simplified close logic based on the updated toggleOtt method
+            this.toggleOtt(0);
+        },
+
+
+
+
+
+
+
+        // toggleOttInfo() {
+        //     if (this.ott === 1) {
+        //         // comment this out as part of the go back to ottInfo function
+        //         this.toggleOtt(1)
+        //     } else {
+        //         this.toggleOtt(1)
+        //     }
+        // },
+        // toggleOttChannels() {
+        //     this.toggleOtt(2)
+        // },
+        // toggleOttPlaylist() {
+        //     this.toggleOtt(3)
+        // },
+        // toggleOttChat() {
+        //     this.toggleOtt(4)
+        // },
+        // toggleOttFilters() {
+        //     this.toggleOtt(5)
+        // },
+        // closeOtt() {
+        //     this.toggleOtt(0)
+        //     // uncomment this as part of the go back to ottInfo function
+        //     // if (appSettingStore.fullPage) {
+        //     //     this.toggleOtt(0)
+        //     // } else {
+        //     //     this.toggleOtt(1)
+        //     // }
+        //
+        // },
         setPrevUrl() {
             const userStore = useUserStore()
             const currentUrl = window.history.state ? window.history.state.url : window.location.pathname

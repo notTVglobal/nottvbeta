@@ -6357,6 +6357,14 @@ hr {
   top: 15rem;
 }
 
+.top-10 {
+  top: 2.5rem;
+}
+
+.right-10 {
+  right: 2.5rem;
+}
+
 .z-0 {
   z-index: 0;
 }
@@ -7265,6 +7273,12 @@ hr {
 
 .max-w-6xl {
   max-width: 72rem;
+}
+
+.max-w-fit {
+  max-width: -webkit-fit-content;
+  max-width: -moz-fit-content;
+  max-width: fit-content;
 }
 
 .flex-1 {

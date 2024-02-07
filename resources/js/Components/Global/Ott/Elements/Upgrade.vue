@@ -16,7 +16,7 @@
     </div>
 
     <div v-if="appSettingStore.fullPage" class="closeButtonContainer">
-      <button v-touch="()=>appSettingStore.toggleOttChannels()"
+      <button v-touch="()=>appSettingStore.closeOtt()"
               v-if="appSettingStore.ott === 2" class="upgradeCloseButton">
         CLOSE UPGRADE
       </button>

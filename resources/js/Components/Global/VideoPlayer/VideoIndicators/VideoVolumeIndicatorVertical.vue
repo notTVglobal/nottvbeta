@@ -1,6 +1,6 @@
 <template>
-
-    <div  class="custom-volume-indicator"> <!-- Ensure the parent container has a defined height -->
+<div class="fixed flex justify-end text-right top-10 left-0 right-10 z-999 w-calc([100vw])">
+    <div class="flex justify-end custom-volume-indicator"> <!-- Ensure the parent container has a defined height -->
       <!--      <div id="volumeIndicator" class="absolute bottom-0 bg-green-500 w-3 z-999"></div>-->
       <!-- Volume Indicator; shown when volume is not at its default state -->
       <div v-if="audioStore.audioLevel > 1" class="flex flex-row">
@@ -19,7 +19,7 @@
       </div>
       <div v-else class="text-xs text-gray-500 uppercase tracking-widest pr-2">No Audio Signal</div>
     </div>
-
+</div>
 
 
 </template>
@@ -35,7 +35,7 @@ const audioStore = useAudioStore()
 
 <style scoped>
 .custom-volume-indicator {
-  position: fixed;
+  position: relative;
   top: 5rem; /* Start from at least 4rem down to accommodate the navbar */
   right: 0;
   bottom: 0;

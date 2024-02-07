@@ -13,8 +13,8 @@ class VideoUrlService
   {
     $userId = auth()->id();
     $userIp = $request->ip();
-    $secret = AppSetting::where('id', 1)->first()->mist_access_control_secret ?? 'default_secret';
-    $hash = hash('sha256', $userIp . $secret);
+    $secretKey = AppSetting::where('id', 1)->first()->mist_access_control_secret ?? 'default_secret';
+    $hash = hash('sha256', $userId . $userIp . $secretKey);
 
     return "{$videoPath}?user={$userId}&hash={$hash}";
   }

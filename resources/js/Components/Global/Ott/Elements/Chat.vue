@@ -17,7 +17,7 @@
             :class="{ 'text-gray-100': !chatStore.inputTooLong, 'text-red-600': chatStore.inputTooLong }"
         />
 
-        <button v-if="appSettingStore.fullPage" v-touch="()=>appSettingStore.toggleOttChat()"
+        <button v-if="appSettingStore.fullPage" v-touch="()=>appSettingStore.closeOtt()"
                 :class="chatCloseClass">
           CLOSE CHAT
         </button>

@@ -43,7 +43,7 @@
       </div>
 
       <div v-if="appSettingStore.fullPage" class="closeButtonContainer">
-        <button v-touch="()=>appSettingStore.toggleOttPlaylist()"
+        <button v-touch="()=>appSettingStore.closeOtt()"
                 v-if="appSettingStore.ott === 3" class="playlistCloseButton">
           CLOSE PLAYLIST
         </button>
