@@ -75,15 +75,14 @@ class MistStreamController extends Controller
     $hashExpected = hash('sha256', $userId . $ipAddress . $secretKey);
 //    $hashExpected = $userActiveSecureVideoHash;
 //     For testing only
-//    Log::alert('Hash Debug', [
-//        'Expected Hash' => $hashExpected,
-//        'Received Hash' => $hashReceived,
-//        'Hash Base String (Expected)' => $userIp . $secretKey,
-//        'User ID' => $userId,
-//        'Request IP Address' => $userIp,
-//        'IP Address from Mist' => $ipAddress,
-//        'Secret Key' => $secretKey,
-//    ]);
+    Log::alert('Hash Debug', [
+        'Expected Hash' => $hashExpected,
+        'Received Hash' => $hashReceived,
+        'Hash Base String (Expected)' => $userId . $ipAddress . $secretKey,
+        'User ID' => $userId,
+        'IP Address from Mist' => $ipAddress,
+        'Secret Key' => $secretKey,
+    ]);
 
     // Comparing the expected hash with the received hash
     if ($hashReceived !== $hashExpected) {
