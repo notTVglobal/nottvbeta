@@ -16,21 +16,22 @@ class VideoUrlService
   {
     // Assuming this code is executed in a context where the user is authenticated.
     $user = auth()->user(); // Directly use the authenticated user instance.
+    $userId = $user->id;
     if ($user) {
       $userIp = $request->ip();
       $secretKey = AppSetting::where('id', 1)->first()->mist_access_control_secret ?? 'default_secret';
       // Directly using $user->id since we know $user is not null here.
-      $hash = hash('sha256', $user->id . $userIp . $secretKey);
-
-      $user->active_secure_video_hash = $hash;
-      $user->save();
+      $hash = hash('sha256', $userId . $userIp . $secretKey);
+//
+//      $user->active_secure_video_hash = $hash;
+//      $user->save();
     } else {
       // Handle the case where there's no authenticated user, if necessary.
       // This could be redirecting to login, throwing an exception, etc.,
       // depending on your application's requirements.
     }
 
-    return "{$videoPath}?user={$user->id}&hash={$hash}";
+    return "{$videoPath}?user={$userId}&hash={$hash}";
 
 //    $userId = auth()->user()->id ?? null;
 //    $user = User::where('id', $userId)->first();
