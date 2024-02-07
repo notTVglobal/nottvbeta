@@ -263,15 +263,8 @@ class MovieController extends Controller {
     $mediaTypeMovie = $movieStorageLocation === 'external' ? 'externalVideo' : 'movie';
     $mediaTypeMovieTrailer = $movieTrailerStorageLocation === 'external' ? 'externalVideo' : 'movie';
 
-    $userId = auth()->id(); // Assuming user ID is obtained from authentication
-    // Generate the URL append part (query parameters)
-    $urlAppend = $this->mistVideoUrlService->generateUrlAppend($request, $userId);
-    // Assuming $movie is retrieved earlier in the method
-    $videoUrl = $movie->video->video_url ?? '';
+//  Generate the secure URL with hash for Mist Server Access Control
     $secureVideoUrl = $videoUrlService->generateSecureVideoUrl($request, $movie->video->video_url);
-
-    // Append $urlAppend to your video URL
-    $fullVideoUrl = $videoUrl . $urlAppend;
 
     return Inertia::render('Movies/{$id}/Index', [
         'movie' => [

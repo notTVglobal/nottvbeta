@@ -77,7 +77,7 @@ class MistStreamController extends Controller
 //    }
 
     $userIp = $request->ip();
-    $hashExpected = hash('sha256', $userIp . $secretKey);
+    $hashExpected = hash('sha256', $ipAddress . $secretKey);
 
     Log::alert('Hash Debug', [
         'Expected Hash' => $hashExpected,
