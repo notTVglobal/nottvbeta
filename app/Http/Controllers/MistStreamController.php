@@ -55,8 +55,6 @@ class MistStreamController extends Controller
 
     // Extracting userId and received hash from URL parameters
     $userId = $requestUrlParams['user'] ?? null;
-
-    $userId = $requestUrlParams['user'] ?? null;
     if (!$userId) {
       return response('User ID is required', 400);
     }
@@ -74,8 +72,8 @@ class MistStreamController extends Controller
 
 //    Log::warning($userId);
     $hashReceived = $requestUrlParams['hash'] ?? null;
-//    $hashExpected = hash('sha256', $userId . $ipAddress . $secretKey);
-    $hashExpected = $userActiveSecureVideoHash;
+    $hashExpected = hash('sha256', $userId . $ipAddress . $secretKey);
+//    $hashExpected = $userActiveSecureVideoHash;
 //     For testing only
 //    Log::alert('Hash Debug', [
 //        'Expected Hash' => $hashExpected,
