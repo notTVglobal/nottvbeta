@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AppSettingController;
+use App\Http\Controllers\MistServerController;
 use App\Http\Controllers\MistStreamController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -52,5 +53,8 @@ Route::get('/products', [ProductController::class, 'index']);
 
 Route::get('/channels_list', [ChannelApiController::class, 'index']);
 
-Route::post('/userValidation', [MistStreamController::class, 'userValidation']);
+Route::post('/validateUser', [MistStreamController::class, 'validateUser']);
+
+Route::post('/mistserver-trigger', [MistServerController::class, 'handleTrigger']);
+
 

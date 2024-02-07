@@ -22,13 +22,13 @@ use Illuminate\Support\Facades\Str;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
-use App\Services\MistVideoUrlService;
+use App\Services\VideoUrlService;
 
 class MovieController extends Controller {
 
-  protected MistVideoUrlService $mistVideoUrlService;
+  protected VideoUrlService $mistVideoUrlService;
 
-  public function __construct(MistVideoUrlService $mistVideoUrlService) {
+  public function __construct(VideoUrlService $mistVideoUrlService) {
 
     $this->middleware('can:view,movie')->only(['show']);
     $this->middleware('can:create,' . \App\Models\Movie::class)->only(['create']);
@@ -246,7 +246,7 @@ class MovieController extends Controller {
    * @param Movie $movie
    * @return Response
    */
-  public function show(HttpRequest $request, Movie $movie) {
+  public function show(VideoUrlService $videoUrlService, HttpRequest $request, Movie $movie) {
 
 //    $video = Video::where('movies_id', $movie->id)->first();
 //    $trailer = Video::where('movie_trailers_id', $movie->id)->first();
@@ -268,6 +268,7 @@ class MovieController extends Controller {
     $urlAppend = $this->mistVideoUrlService->generateUrlAppend($request, $userId);
     // Assuming $movie is retrieved earlier in the method
     $videoUrl = $movie->video->video_url ?? '';
+    $secureVideoUrl = $videoUrlService->generateSecureVideoUrl($request, $movie->video->video_url);
 
     // Append $urlAppend to your video URL
     $fullVideoUrl = $videoUrl . $urlAppend;
@@ -326,7 +327,7 @@ class MovieController extends Controller {
                 'cloud_folder'     => $movie->video->cloud_folder ?? '',
                 'upload_status'    => $movie->video->upload_status ?? '',
 //                'video_url'        => $movie->video->video_url ?? '',
-                'video_url'        => $fullVideoUrl,
+                'video_url'        => $secureVideoUrl,
                 'type'             => $movie->video->type ?? '',
                 'storage_location' => $movie->video->storage_location ?? '',
             ],
@@ -430,7 +431,7 @@ class MovieController extends Controller {
         'copyrightYear'       => ['nullable', 'integer', 'min:1900', 'max:' . date('Y')],
         'category'            => 'required',
         'sub_category'        => 'nullable',
-        'video_url'           => 'nullable|active_url|ends_with:.mp4',
+        'video_url'           => 'nullable|url|ends_with:.mp4',
         'www_url'             => 'nullable|active_url',
         'instagram_name'      => 'nullable|string|max:30',
         'telegram_url'        => 'nullable|active_url',
