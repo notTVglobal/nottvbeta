@@ -4142,6 +4142,14 @@ module.exports = webpackAsyncContext;
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 var map = {
+	"./AdminStore": [
+		"./resources/js/Stores/AdminStore.js",
+		"resources_js_Stores_AdminStore_js"
+	],
+	"./AdminStore.js": [
+		"./resources/js/Stores/AdminStore.js",
+		"resources_js_Stores_AdminStore_js"
+	],
 	"./AppSettingStore": [
 		"./resources/js/Stores/AppSettingStore.js"
 	],

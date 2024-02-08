@@ -22,7 +22,8 @@ class TestDataSeeder extends Seeder
             ShowSeeder::class, // Seeds data for shows.
             ShowEpisodeSeeder::class, // Seeds individual episodes for each show.
             ShopSeeder::class, // Seeds product categories and product data.
-            NewsStorySeeder::class // Seeds news stories.
+            NewsStorySeeder::class, // Seeds news stories.
+            PlaylistWithItemsSeeder::class, // Seeds channel playlists with playlist items and movies, movie trailers, show episodes, other content and news stories.
         ]);
     }
 }

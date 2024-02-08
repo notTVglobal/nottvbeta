@@ -13,6 +13,6 @@ class ChannelExternalSource extends Model
 
     public function channel()
     {
-        return $this->hasMany(Channel::class);
+        return $this->hasMany(Channel::class, 'channel_external_source_id');
     }
 }

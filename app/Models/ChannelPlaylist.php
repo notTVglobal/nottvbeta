@@ -22,13 +22,12 @@ class ChannelPlaylist extends Model {
   ];
 
   public function channel() {
-    return $this->belongsTo('App\Models\Channel');
+    return $this->belongsTo('App\Models\Channel', 'channel_playlist_id');
   }
 
   public function items()
   {
     return $this->hasMany(ChannelPlaylistItem::class, 'playlist_id')->orderBy('order');
   }
-
 
 }

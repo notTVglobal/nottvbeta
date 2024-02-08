@@ -22,8 +22,11 @@ class ChannelController extends Controller
      */
     public function index()
     {
+
+//Channel::with(['externalSource', 'channelPlaylist', 'mistStream'])->get();
+
         return Inertia::render('Admin/Channels/Index', [
-            'channels' => Channel::with('channelExternalSource')
+            'channels' => Channel::with(['externalSource', 'channelPlaylist', 'mistStream'])
                 ->when(Request::input('search'), function ($query, $search) {
                 $query->where('name', 'like', "%{$search}%");
             })  ->latest()
@@ -32,14 +35,20 @@ class ChannelController extends Controller
                 ->through(fn($channel) => [
                         'id' => $channel->id,
                         'name' => $channel->name,
-                        'currentVideo' => $channel->video ?? null,
-                        'isLive' => $channel->isLive ?? null,
-                        'stream' => $channel->stream ?? null,
-                        'source' => $channel->channelSource ?? null,
+                        'channelPlaylist' => $channel->channelPlaylist ?? null,
+                        'mistStream' => $channel->mistStream ?? null,
+                        'externalSource' => $channel->externalSource ?? null,
                     ]),
             'filters' => Request::only(['search']),
         ]);
     }
+
+
+  public function search($type, Request $request)
+  {
+    // Logic to fetch items based on the type and search term
+    // Return Inertia response or JSON, depending on your setup
+  }
 
     /**
      * Show the form for creating a new resource.

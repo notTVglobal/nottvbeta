@@ -5,6 +5,8 @@ use App\Http\Controllers\AppSettingController;
 use App\Http\Controllers\ChangelogController;
 use App\Http\Controllers\ChannelController;
 
+use App\Http\Controllers\ChannelExternalSourceController;
+use App\Http\Controllers\ChannelPlaylistController;
 use App\Http\Controllers\FlashController;
 use App\Http\Controllers\MistStreamController;
 use App\Http\Controllers\NewsRssFeedItemArchiveController;
@@ -273,6 +275,9 @@ Route::middleware([
     Route::get('/admin/channels', [ChannelController::class, 'index'])
         ->can('viewAdmin', 'App\Models\User')
         ->name('admin.channels');
+
+  Route::get('/admin/channels/search/{type}', [ChannelController::class, 'search']);
+  Route::post('/admin/channels/{channel}/{type}/update', [ChannelController::class, 'updateType']);
 
 
 // Shop
@@ -891,7 +896,23 @@ Route::middleware([
 ///////////////
 ///
 
-Route::resource('mistStream', MistStreamController::class);
+Route::resource('mistStreams', MistStreamController::class);
+Route::get('/admin/mist-stream/search', [MistStreamController::class, 'adminSearchMistStreams']);
+
+// Channel Playlists
+////////////////////
+///
+
+Route::resource('channelPlaylists', ChannelPlaylistController::class);
+Route::get('/admin/channel-playlist/search', [ChannelPlaylistController::class, 'adminSearchChannelPlaylists']);
+
+// External Sources
+///////////////////
+///
+
+Route::resource('externalSources', ChannelExternalSourceController::class);
+Route::get('/admin/external-source/search', [ChannelExternalSourceController::class, 'adminSearchExternalSources']);
+
 
 
 // Schedule

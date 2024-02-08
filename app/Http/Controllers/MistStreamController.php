@@ -11,6 +11,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Inertia\Inertia;
 use RuntimeException;
 
 class MistStreamController extends Controller
@@ -18,7 +19,7 @@ class MistStreamController extends Controller
 
   public function __construct() {
 
-    $this->middleware('can:viewAny,' . \App\Models\MistStream::class)->only(['index']);
+    $this->middleware('can:viewAny,' . MistStream::class)->only(['index']);
     $this->middleware('can:view,mistStream')->only(['show']);
     $this->middleware('can:create,' . MistStream::class)->only(['create']);
     $this->middleware('can:store,' . MistStream::class)->only(['store']);
@@ -103,12 +104,41 @@ class MistStreamController extends Controller
   /**
      * Display a listing of the resource.
      *
-     * @return Response
-     */
-    public function index()
+     * @return \Inertia\Response
+   */
+    public function adminSearchMistStreams(Request $request)
     {
-//        return MistStream::class
+      $search = $request->input('search', '');
+
+      // Directly fetch mistStreams based on the search input.
+      $mistStreams = MistStream::query()
+          ->when($search, function ($query, $search) {
+            // Use the $search variable captured from the request
+            return $query->where('name', 'like', "%{$search}%");
+          })
+          ->get();
+
+      $filters = [
+          'search' => $search, // Use the $search variable you've already set
+      ];
+
+      return Inertia::render('Admin/Channels/Index', [
+          'mistStreams' => $mistStreams, // Pass the fetched mistStreams directly
+          'mistStreamsSearchFilters' => $filters,
+      ]);
+
     }
+
+  /**
+   * Display a listing of the resource.
+   *
+   * @return \Illuminate\Http\JsonResponse
+   */
+  public function index()
+  {
+    $mistStreams = MistStream::all();
+    return response()->json($mistStreams);
+  }
 
     /**
      * Show the form for creating a new resource.

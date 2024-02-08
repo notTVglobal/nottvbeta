@@ -31,4 +31,9 @@ class MistStream extends Model {
     return $this->hasMany(Video::class, 'mist_stream_id');
   }
 
+  public function channel()
+  {
+    return $this->hasMany(Channel::class, 'mist_stream_id');
+  }
+
 }

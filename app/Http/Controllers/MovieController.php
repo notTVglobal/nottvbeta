@@ -67,7 +67,7 @@ class MovieController extends Controller {
         })
         ->where($this->applyStatusFilter())
         ->latest()
-        ->paginate(10, ['*'], 'movies')
+        ->paginate(12, ['*'], 'movies')
         ->withQueryString()
         ->through(fn($movie) => $this->transformMovie($movie));
   }

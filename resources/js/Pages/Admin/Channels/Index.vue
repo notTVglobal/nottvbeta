@@ -31,13 +31,8 @@
             >Add Channel Playlist
             </button>
           </Link>
-          <Link :href="`#`">
-            <button
-                class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 mr-2 rounded disabled:bg-gray-400"
-                disabled
-            >Add Mist Stream
-            </button>
-          </Link>
+          <AdminAddMistStreamModal />
+
         </div>
         <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg"/>
       </div>
@@ -159,7 +154,10 @@
 
                         </div>
                         <div v-else>
-                          <span class="italic text-gray-300 text-sm">no source</span>
+                          <button @click="openModal(channel, 'externalSource')">
+                            <span v-if="channel?.externalSource" class="text-green-500 font-semibold">{{ channel?.externalSource }}</span>
+                            <span v-else class="italic text-gray-300 text-sm">no source</span>
+                          </button>
                           <!-- Status indicator + action to change source -->
                           <source-selector :priority="channel.playbackPriorityType" :source="channel.externalSource" @change="updateSource(channel.id, $event, 'external')"></source-selector>
 
@@ -189,17 +187,22 @@
 
                         </div>
                         <div v-else>
-                          <span class="italic text-gray-300 text-sm">no playlist</span>
-                          <source-selector :priority="channel.playbackPriorityType" :source="channel.channelPlaylist" @change="updateSource(channel.id, $event, 'playlist')"></source-selector>
+                          <button @click="openModal(channel, 'channelPlaylist')">
+                            <span v-if="channel?.channelPlaylist" class="text-green-500 font-semibold">{{ channel?.channelPlaylist }}</span>
+                            <span v-else class="italic text-gray-300 text-sm">no playlist</span>
+                          </button>
+                          <source-selector :priority="channel?.playbackPriorityType" :source="channel?.channelPlaylist" @change="updateSource(channel.id, $event, 'playlist')"></source-selector>
 
                         </div>
 
                       </div>
                       <div class="table-cell px-6 py-4">
-                        <span v-if="channel?.mistStream" class="text-green-500 font-semibold">{{ channel?.mistStream }}</span>
-                        <span v-else class="italic text-gray-300 text-sm">no mist stream</span>
+                        <button @click="openModal(channel, 'mistStream')">
+                          <span v-if="channel?.mistStream" class="text-green-500 font-semibold">{{ channel?.mistStream }}</span>
+                          <span v-else class="italic text-gray-300 text-sm">no mist stream</span>
+                        </button>
                         <!-- Status indicator + action to change source -->
-                        <source-selector :source="channel.mistStream" @change="updateSource(channel.id, $event, 'mist')"></source-selector>
+                        <source-selector :source="channel?.mistStream" @change="updateSource(channel.id, $event, 'mist')"></source-selector>
                       </div>
 
                     </div>
@@ -208,7 +211,7 @@
                 <!-- Paginator -->
                 <Pagination :data="channels" class="pb-6"/>
               </div>
-
+              <DynamicModal />
 
             </div>
           </div>
@@ -227,17 +230,22 @@ import throttle from "lodash/throttle"
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
+import { useAdminStore } from '@/Stores/AdminStore'
 import AdminHeader from "@/Components/Pages/Admin/AdminHeader"
 import Message from "@/Components/Global/Modals/Messages"
 import Pagination from "@/Components/Global/Paginators/Pagination"
 import SourceSelector from '@/Components/Pages/Admin/Channels/AdminChannelSourceSelector'
+import DynamicModal from '@/Components/Pages/Admin/Channels/DynamicModal.vue'
+import AdminAddMistStreamModal from '@/Components/Pages/Admin/Channels/AdminAddMistStreamModal.vue'
 
 usePageSetup('admin.channels')
 
 const appSettingStore = useAppSettingStore()
+const adminStore = useAdminStore()
 
 let props = defineProps({
   channels: Object,
+  mistStreams: Object,
   filters: Object,
 })
 
@@ -268,6 +276,20 @@ const hasPriority = (playbackPriorityType) => {
     return true
   }
 }
+
+const openModal = (channel, type) => {
+  // const currentItem = {
+  //   // id: channel[`${type}_id`], // Dynamically access the ID based on type
+  //   type: type, // This could be additional context if needed
+  //   // Include other relevant details or fetch based on this ID
+  // };
+  adminStore.reset();
+  adminStore.setSelectedChannel(channel);
+  adminStore.setCurrentType(type);
+  adminStore.fetchItems(type); // Optionally prefetch items if the modal needs it
+
+  document.getElementById('dynamicModal').showModal(); // Assuming the modal has an ID of 'dynamicModal'
+};
 
 </script>
 

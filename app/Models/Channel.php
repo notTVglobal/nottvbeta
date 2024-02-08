@@ -10,7 +10,7 @@ class Channel extends Model {
 
   protected $fillable = [
       'name',
-      'channel_source_id',
+      'channel_external_source_id',
       'channel_playlist_id',
       'mist_stream_id',
       'playback_priority_type'
@@ -25,16 +25,16 @@ class Channel extends Model {
 //        return $this->belongsTo(User::class);
   }
 
-  public function mistStream() {
+  public function mistStream(): \Illuminate\Database\Eloquent\Relations\BelongsTo {
     return $this->belongsTo(MistStream::class, 'mist_stream_id');
   }
 
-  public function channelPlaylist() {
+  public function channelPlaylist(): \Illuminate\Database\Eloquent\Relations\BelongsTo {
     return $this->belongsTo(ChannelPlaylist::class, 'channel_playlist_id');
   }
 
-  public function channelExternalSource() {
-    return $this->belongsTo(ChannelExternalSource::class);
+  public function externalSource(): \Illuminate\Database\Eloquent\Relations\BelongsTo {
+    return $this->belongsTo(ChannelExternalSource::class, 'channel_external_source_id');
   }
 
   public function getPriorityPlaybackAttribute() {

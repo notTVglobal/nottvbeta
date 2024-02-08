@@ -2,11 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Movie extends Model {
+
+  use HasFactory;
+
   protected $fillable = [
       'user_id',
       'creative_commons_id',
@@ -56,8 +60,8 @@ class Movie extends Model {
     return $this->belongsTo(Video::class);
   }
 
-  public function trailer() {
-    return $this->HasOne(MovieTrailer::class);
+  public function trailers() {
+    return $this->hasMany(MovieTrailer::class, 'movie_id');
   }
 
   public function category() {
@@ -68,24 +72,8 @@ class Movie extends Model {
     return $this->belongsTo(MovieCategorySub::class, 'movie_category_sub_id');
   }
 
-
-//  public function category(): BelongsTo {
-//    return $this->belongsTo(MovieCategory::class)->withDefault([
-//        'name'        => 'category',
-//        'description' => 'category description'
-//    ]);
-//  }
-//
-//  public function subCategory(): BelongsTo {
-//    return $this->belongsTo(MovieCategorySub::class)->withDefault([
-//        'name'        => 'sub category',
-//        'description' => 'sub category description'
-//    ]);
-//  }
-
   public function appSetting(): BelongsTo {
     return $this->belongsTo(AppSetting::class)->withDefault([
-//            'cdn_endpoint' => 'https://development-nottv.sfo3.cdn.digitaloceanspaces.com',
     ]);
   }
 
