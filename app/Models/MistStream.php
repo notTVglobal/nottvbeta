@@ -7,12 +7,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class MistStream extends Model
-{
-    use HasUlids, HasFactory;
+class MistStream extends Model {
+  use HasUlids, HasFactory;
 
-  protected static function boot()
-  {
+  protected $fillable = [
+      'name',
+      'comment',
+      'source'
+  ];
+
+  protected static function boot() {
     parent::boot();
 
     static::creating(function ($model) {
@@ -21,6 +25,10 @@ class MistStream extends Model
         $model->name = Str::uuid();
       }
     });
+  }
+
+  public function videos() {
+    return $this->hasMany(Video::class, 'mist_stream_id');
   }
 
 }

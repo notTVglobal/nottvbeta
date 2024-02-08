@@ -24,4 +24,9 @@ class MovieTrailer extends Model {
   public function video() {
     return $this->belongsTo(Video::class);
   }
+
+  public function playlistItems()
+  {
+    return $this->morphMany(ChannelPlaylistItem::class, 'content');
+  }
 }

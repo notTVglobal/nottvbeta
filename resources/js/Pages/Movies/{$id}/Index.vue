@@ -121,7 +121,6 @@
                 <div></div>
 
                 <button v-if="movie?.video?.mediaType"
-                        :disabled="nowPlayingStore?.activeMedia?.details?.primaryName === movie?.name"
                         class="flex bg-blue-500 text-white font-semibold px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
                         @click.prevent="playMovie">
                   <svg class="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg"

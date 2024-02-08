@@ -399,7 +399,6 @@
         </div>
       </div>
 
-<!--      <ShowEpisodeEditFooter :can="props.can" :team="props.team" :episode="props.episode" :show="props.show"/>-->
       <EpisodeFooter :can="can" :team="team" :episode="episode" :show="show"/>
 
     </div>
@@ -419,7 +418,6 @@ import { useShowStore } from "@/Stores/ShowStore"
 import { useUserStore } from "@/Stores/UserStore"
 import JetValidationErrors from '@/Jetstream/ValidationErrors'
 import ShowEpisodeEditHeader from "@/Components/Pages/ShowEpisodes/Layout/EditShowEpisodeHeader"
-import ShowEpisodeEditFooter from "@/Components/Pages/ShowEpisodes/Layout/EditShowEpisodeFooter"
 
 import DateTimePickerSelect from "@/Components/Global/Calendar/DateTimePickerSelect"
 import TabbableTextarea from "@/Components/Global/TextEditor/TabbableTextarea"
@@ -454,7 +452,9 @@ teamStore.setActiveShow(props.show);
 showStore.episodePoster = props.image.name;
 
 const isUploading = ref(false);
-const selectedCreativeCommons = ref(props.episode?.creative_commons?.id);
+// const selectedCreativeCommons = ref(props.episode?.creative_commons?.id);
+// Initialize selectedCreativeCommons with a default value of 7 if the id is null
+const selectedCreativeCommons = ref(props.episode?.creative_commons?.id || 7);
 let selectedCopyrightYear = ref(props.episode?.copyrightYear);
 const currentYear = new Date().getFullYear();
 
@@ -649,9 +649,13 @@ onMounted(() => {
   getUserTimezone()
   console.log(userTimezone.value)
   watch(() => props.episode?.creative_commons?.id, (newVal) => {
-    selectedCreativeCommons.value = newVal;
+    // selectedCreativeCommons.value = newVal;
+    // Set selectedCreativeCommons to newVal if it's not null, otherwise default to 7
+    selectedCreativeCommons.value = newVal !== null ? newVal : 7;
     handleCreativeCommonsChange();
   });
+  // Call handleCreativeCommonsChange immediately to handle the initial value
+  handleCreativeCommonsChange();
 });
 
 onUnmounted(() => {

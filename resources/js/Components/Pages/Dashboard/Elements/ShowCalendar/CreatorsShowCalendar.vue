@@ -25,9 +25,10 @@
                 class="bg-gray-200 h-full flex items-center justify-center text-2xl font-semibold font-serif p-4 mb-4 rounded-lg md:hidden"
             >{{ time }}
             </div>
-            <CalendarCard :media="daySchedule[timeIndex].show || daySchedule[timeIndex].movie"
-                          :type="daySchedule[timeIndex].type"
-                          :startTime="formatHour(daySchedule[timeIndex].start_time)"
+            <CalendarCard v-if="daySchedule[timeIndex]"
+                          :media="daySchedule[timeIndex]?.show || daySchedule[timeIndex]?.movie"
+                          :type="daySchedule[timeIndex]?.type"
+                          :startTime="formatHour(daySchedule[timeIndex]?.start_time)"
                           :isLive="dayIndex === 0 && timeIndex === 0"/>
           </div>
         </template>
@@ -56,18 +57,20 @@
           <div v-if="dayIndex === 0 && timeIndex === 0"
                class="col-span-3 xl:col-auto rounded-lg text-center"
                :class="{'border-4 border-red-500': dayIndex === 0 && timeIndex === 0}">
-            <CalendarCard :media="daySchedule[timeIndex].show || daySchedule[timeIndex].movie"
-                          :type="daySchedule[timeIndex].type"
-                          :startTime="formatHour(daySchedule[timeIndex].start_time)"
+            <CalendarCard v-if="daySchedule[timeIndex]"
+                          :media="daySchedule[timeIndex]?.show || daySchedule[timeIndex]?.movie"
+                          :type="daySchedule[timeIndex]?.type"
+                          :startTime="formatHour(daySchedule[timeIndex]?.start_time)"
                           :isLive="true"/>
           </div>
           <div v-else class="w-full rounded-lg text-center bg-transparent">
             <!-- Regular content for other items -->
             <!--            {{ daySchedule[timeIndex].type }}: {{ daySchedule[timeIndex].show?.name || daySchedule[timeIndex].movie?.name }}-->
 
-            <CalendarCard :media="daySchedule[timeIndex].show || daySchedule[timeIndex].movie"
-                          :type="daySchedule[timeIndex].type"
-                          :startTime="formatHour(daySchedule[timeIndex].start_time)"/>
+            <CalendarCard v-if="daySchedule[timeIndex]"
+                          :media="daySchedule[timeIndex]?.show || daySchedule[timeIndex]?.movie"
+                          :type="daySchedule[timeIndex]?.type"
+                          :startTime="formatHour(daySchedule[timeIndex]?.start_time)"/>
 
           </div>
 
@@ -177,6 +180,9 @@ const days = computed(() => {
 
   return generateDays()
 })
+
+console.log({ adjustedSchedule, times });
+
 
 onMounted(() => {
 

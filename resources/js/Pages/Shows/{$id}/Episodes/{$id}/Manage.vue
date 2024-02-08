@@ -31,7 +31,7 @@
 
       <ShowEpisodeManageBonusContent/>
 
-      <EpisodeFooter :can="props.can" :team="props.team" :episode="props.episode" :show="props.show"/>
+      <EpisodeFooter :can="can" :team="team" :episode="episode" :show="show"/>
 
     </div>
   </div>

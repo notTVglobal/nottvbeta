@@ -1,5 +1,5 @@
 <template>
-<div class="fixed flex justify-end text-right top-10 left-0 right-10 z-999 w-calc([100vw])">
+<div class="fixed flex justify-end text-right top-10 left-0 right-10 z-50 w-calc([100vw])">
     <div class="flex justify-end custom-volume-indicator"> <!-- Ensure the parent container has a defined height -->
       <!--      <div id="volumeIndicator" class="absolute bottom-0 bg-green-500 w-3 z-999"></div>-->
       <!-- Volume Indicator; shown when volume is not at its default state -->

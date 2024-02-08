@@ -28,6 +28,13 @@
             <button
                 class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 mr-2 rounded disabled:bg-gray-400"
                 disabled
+            >Add Channel Playlist
+            </button>
+          </Link>
+          <Link :href="`#`">
+            <button
+                class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 mr-2 rounded disabled:bg-gray-400"
+                disabled
             >Add Mist Stream
             </button>
           </Link>
@@ -53,24 +60,30 @@
                     class="table w-full text-sm text-left text-gray-500 dark:text-gray-400"
                 >
                   <div
-                      class="table-header-group text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+                      class="table-header-group text-xs text-gray-700 bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
                   >
                     <div class="table-row">
-                      <div scope="col" class="table-cell px-6 py-3">
+                      <div scope="col" class="table-cell px-6 py-3 uppercase">
                         <font-awesome-icon icon="fa-repeat" class="mr-2 cursor-pointer hover:text-blue-500"
                                            @click.prevent="reload()"/>
-                        Channel Name
+                        <span class="uppercase">Channel </span>
                       </div>
-                      <div scope="col" class="hidden md:table-cell px-6 py-3">
-                        Current Video
+                      <div scope="col" class="hidden md:table-cell px-6 py-3 uppercase">
+                        <span class="uppercase">Current Video</span>
+                      </div>
+                      <div scope="col" class="table-cell px-6 py-3 uppercase">
+                        <span class="uppercase">External Source</span> <br/>
+                        <span class="italic text-xs text-gray-400"></span>
+                      </div>
+                      <div scope="col" class="px-6 py-3 max-w-64">
+                        <span class="uppercase">Channel Playlist</span> <br />
+                        <span class="italic text-xs text-gray-400">Knows the currently playing object to feed our NowPlayingInfo panel. Push the object to the set MistStream via ffmpeg realtime video playout. Will need to make it through a validateUser trigger. This will allow the MistServer receiving the streams to Push out to the actual playback destinations... e.g., a closer MistServer to the user on Kubernetes to scale with a load balancer as needed, or to LivePeer, or to Cloudflare, or to PeerTube.</span>
                       </div>
                       <div scope="col" class="table-cell px-6 py-3">
-                        External Source <br/>
-                        <span class="italic text-xs text-gray-400">Playlist or Live Stream</span>
+                        <span class="uppercase">Mist Stream</span> <br/>
+                        <span class="italic text-xs text-gray-400"></span>
                       </div>
-                      <div scope="col" class="px-6 py-3">
-                        Mist Stream
-                      </div>
+
                     </div>
                   </div>
                   <div class="table-row-group">
@@ -84,14 +97,14 @@
                           class="table-cell min-w-[8rem] px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                       >
                         <span>{{ channel.name }}</span>
-                        <div v-if="channel.isLive" class="ml-2 text-xs badge badge-secondary badge-outline">live</div>
+                        <div v-if="channel?.isLive" class="ml-2 text-xs badge badge-secondary badge-outline">live</div>
 
                       </div>
                       <div
                           scope="row"
                           class="md:table-cell px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                       >
-                        <div v-if="channel.currentVideo">
+                        <div v-if="channel?.currentVideo">
                           <Popper
                               hover openDelay="50" closeDelay="50" offset-skid="0" offset-distance="0"
                               placement="bottom"
@@ -99,19 +112,19 @@
                           >
                             <template #content>
                               <div class="text-xs" id="tooltip">
-                                <div>ID: {{ channel.currentVideo.id }}</div>
-                                <div>File Name: {{ channel.currentVideo.file_name }}</div>
-                                <div>Type: {{ channel.currentVideo.type }}</div>
-                                <div>Folder: {{ channel.currentVideo.folder }}</div>
-                                <div>Storage Location: {{ channel.currentVideo.storage_location }}</div>
-                                <div>Processing: <span v-if="channel.currentVideo.is_processing">true</span><span
+                                <div>ID: {{ channel?.currentVideo.id }}</div>
+                                <div>File Name: {{ channel?.currentVideo.file_name }}</div>
+                                <div>Type: {{ channel?.currentVideo.type }}</div>
+                                <div>Folder: {{ channel?.currentVideo.folder }}</div>
+                                <div>Storage Location: {{ channel?.currentVideo.storage_location }}</div>
+                                <div>Processing: <span v-if="channel?.currentVideo.is_processing">true</span><span
                                     v-else>false</span></div>
-                                <div>Length: {{ channel.currentVideo.length }}</div>
+                                <div>Length: {{ channel?.currentVideo.length }}</div>
                               </div>
                             </template>
 
-                            <span v-if="channel.currentVideo.name" class="cursor-help text-green-500 font-semibold">{{
-                                channel.currentVideo.name
+                            <span v-if="channel?.currentVideo.name" class="cursor-help text-green-500 font-semibold">{{
+                                channel?.currentVideo.name
                               }}</span>
                             <span v-else class="cursor-help text-blue-500 font-semibold">Video has no name</span>
 
@@ -121,7 +134,7 @@
                         <div v-else class="italic text-gray-300 text-xs">No video object playing</div>
                       </div>
                       <div class="table-cell px-6 py-4">
-                        <div v-if="channel.source">
+                        <div v-if="channel?.externalSource">
                           <Popper
                               hover openDelay="50" closeDelay="50" offset-skid="0" offset-distance="0"
                               placement="bottom"
@@ -129,11 +142,11 @@
                           >
                             <template #content>
                               <div class="text-xs" id="tooltip">
-                                <div>ID: {{ channel.source.id }}</div>
-                                <div>Name: {{ channel.source.name }}</div>
-                                <div>Path: {{ channel.source.path }}</div>
-                                <div>Type: {{ channel.source.type }}</div>
-                                <div>Provider: {{ channel.source.provider }}</div>
+                                <div>ID: {{ channel?.externalSource.id }}</div>
+                                <div>Name: {{ channel?.externalSource.name }}</div>
+                                <div>Path: {{ channel?.externalSource.path }}</div>
+                                <div>Type: {{ channel?.externalSource.type }}</div>
+                                <div>Provider: {{ channel?.externalSource.provider }}</div>
                               </div>
                             </template>
 
@@ -143,15 +156,50 @@
 
                           </Popper>
 
+
                         </div>
                         <div v-else>
                           <span class="italic text-gray-300 text-sm">no source</span>
+                          <!-- Status indicator + action to change source -->
+                          <source-selector :priority="channel.playbackPriorityType" :source="channel.externalSource" @change="updateSource(channel.id, $event, 'external')"></source-selector>
+
                         </div>
 
                       </div>
                       <div class="table-cell px-6 py-4">
-                        <span v-if="channel.stream" class="text-green-500 font-semibold">{{ channel.stream }}</span>
-                        <span v-else class="italic text-gray-300 text-sm">no stream</span>
+                        <div v-if="channel?.channelPlaylist">
+                          <Popper
+                              hover openDelay="50" closeDelay="50" offset-skid="0" offset-distance="0"
+                              placement="bottom"
+
+                          >
+                            <template #content>
+                              <div class="text-xs" id="tooltip">
+                                <div>ID: {{ channel?.channelPlaylist.id }}</div>
+                                <div>Name: {{ channel?.channelPlaylist.name }}</div>
+                                <div>Path: {{ channel?.channelPlaylist.path }}</div>
+                                <div>Type: {{ channel?.channelPlaylist.type }}</div>
+                                <div>Provider: {{ channel?.channelPlaylist.provider }}</div>
+                              </div>
+                            </template>
+
+                            <span class="cursor-help text-orange-500 font-semibold"></span>
+
+                          </Popper>
+
+                        </div>
+                        <div v-else>
+                          <span class="italic text-gray-300 text-sm">no playlist</span>
+                          <source-selector :priority="channel.playbackPriorityType" :source="channel.channelPlaylist" @change="updateSource(channel.id, $event, 'playlist')"></source-selector>
+
+                        </div>
+
+                      </div>
+                      <div class="table-cell px-6 py-4">
+                        <span v-if="channel?.mistStream" class="text-green-500 font-semibold">{{ channel?.mistStream }}</span>
+                        <span v-else class="italic text-gray-300 text-sm">no mist stream</span>
+                        <!-- Status indicator + action to change source -->
+                        <source-selector :source="channel.mistStream" @change="updateSource(channel.id, $event, 'mist')"></source-selector>
                       </div>
 
                     </div>
@@ -182,6 +230,7 @@ import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import AdminHeader from "@/Components/Pages/Admin/AdminHeader"
 import Message from "@/Components/Global/Modals/Messages"
 import Pagination from "@/Components/Global/Paginators/Pagination"
+import SourceSelector from '@/Components/Pages/Admin/Channels/AdminChannelSourceSelector'
 
 usePageSetup('admin.channels')
 
@@ -214,9 +263,16 @@ watch(search, throttle(function (value) {
   });
 }, 300));
 
+const hasPriority = (playbackPriorityType) => {
+  if (playbackPriorityType) {
+    return true
+  }
+}
+
 </script>
 
 <style scoped>
+
 #tooltip {
   background: #333;
   color: white;

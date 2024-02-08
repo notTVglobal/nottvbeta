@@ -821,6 +821,8 @@ class ShowsController extends Controller {
             'release_year'               => $showEpisode->release_year ?? null,
             'release_dateTime'           => $this->formattedReleaseDateTime ?? null,
             'scheduled_release_dateTime' => $this->formattedScheduledDateTime ?? null,
+            'copyrightYear'              => $showEpisode->copyrightYear ?? null,
+            'creative_commons'           => $showEpisode->creativeCommons ?? null,
             'mist_stream_id'             => $showEpisode->mist_stream_id,
             'video_id'                   => $showEpisode->video_id,
             'youtube_url'                => $showEpisode->youtube_url,

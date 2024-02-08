@@ -887,6 +887,12 @@ Route::middleware([
 
 });
 
+// Mist Streams
+///////////////
+///
+
+Route::resource('mistStream', MistStreamController::class);
+
 
 // Schedule
 ///////////

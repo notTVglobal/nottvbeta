@@ -54,7 +54,6 @@ class User extends Authenticatable implements MustVerifyEmail
         'two_factor_recovery_codes',
         'two_factor_secret',
         'creatorNumber',
-        'active_secure_video_hash'
     ];
 
     /**

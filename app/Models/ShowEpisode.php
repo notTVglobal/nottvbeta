@@ -92,6 +92,11 @@ class ShowEpisode extends Model
     return $this->belongsTo(CreativeCommons::class, 'creative_commons_id');
   }
 
+  public function playlistItems()
+  {
+    return $this->morphMany(ChannelPlaylistItem::class, 'content');
+  }
+
 //    public function showCategory(): HasOneThrough
 //    {
 //        return $this->hasOneThrough(Show::class, ShowCategory::class);

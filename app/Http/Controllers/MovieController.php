@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Str;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -263,8 +264,33 @@ class MovieController extends Controller {
     $mediaTypeMovie = $movieStorageLocation === 'external' ? 'externalVideo' : 'movie';
     $mediaTypeMovieTrailer = $movieTrailerStorageLocation === 'external' ? 'externalVideo' : 'movie';
 
+
 //  Generate the secure URL with hash for Mist Server Access Control
-    $secureVideoUrl = $videoUrlService->generateSecureVideoUrl($request, $movie->video->video_url);
+//// Check if $movie->video is not null and then if video_url is not null
+//    if (!is_null($movie->video) && !is_null($movie->video->video_url)) {
+//      // Handle the null case, e.g., set $secureVideoUrl to null, a default value, or perform an action
+//      $secureVideoUrl = $movie->video->video_url; // or any appropriate handling
+//    } else {
+//      // If video_url is not null, proceed to generate the secure URL
+//      $secureVideoUrl = $videoUrlService->generateSecureVideoUrl($request, $movie->video->video_url);
+//    }
+
+    // Initialize $secureVideoUrl to a default value in case $movie->video or $movie->video->video_url is null
+    $secureVideoUrl = null;
+
+// Check if $movie->video is not null and then if video_url is not null
+    if ($movie->video !== null && $movie->video->video_url !== null) {
+      // If video_url is not null, proceed to generate the secure URL
+      $secureVideoUrl = $videoUrlService->generateSecureVideoUrl($request, $movie->video->video_url);
+    } else if ($movie->video) {
+      $secureVideoUrl = $movie->video->video_url;
+      // Here, handle the case where $movie->video is null or $movie->video->video_url is null
+      // For example, keep $secureVideoUrl as null or set it to a default/fallback value
+      // $secureVideoUrl = 'default_value_or_action'; // Uncomment or modify as needed
+    }
+
+// Now, $secureVideoUrl is either the generated secure URL, null, or a default value, based on the checks above
+
 
     return Inertia::render('Movies/{$id}/Index', [
         'movie' => [
@@ -289,14 +315,14 @@ class MovieController extends Controller {
           // change team to $movie->team->name
           // and add team->slug
 //            'copyrightYear'  => $movie->created_at->format('Y'),
-            'copyrightYear'    => $movie->copyrightYear,
-            'creative_commons' => $movie->creativeCommons,
-            'release_year'     => $movie->release_year,
+            'copyrightYear'    => $movie->copyrightYear ?? null,
+            'creative_commons' => $movie->creativeCommons ?? null,
+            'release_year'     => $movie->release_year ?? null,
 //            'created_at'     => $movie->created_at,
-            'www_url'          => $movie->www_url,
-            'instagram_name'   => $movie->instagram_name,
-            'telegram_url'     => $movie->telegram_url,
-            'twitter_handle'   => $movie->twitter_handle,
+            'www_url'          => $movie->www_url ?? null,
+            'instagram_name'   => $movie->instagram_name ?? null,
+            'telegram_url'     => $movie->telegram_url ?? null,
+            'twitter_handle'   => $movie->twitter_handle ?? null,
 //            'category'       => $movie->category ? $movie->category->toArray() : null,
             'category'         => [
                 'name'        => $movie->category->name ?? null,
@@ -308,8 +334,8 @@ class MovieController extends Controller {
                 'description' => $movie->subCategory->description ?? null,
             ],
             'status'           => [
-                'id'   => $movie->status->id,
-                'name' => $movie->status->name,
+                'id'   => $movie->status->id ?? null,
+                'name' => $movie->status->name ?? null,
             ],
             'isNew'            => Carbon::parse($movie->releaseDateTime)->isBetween(Carbon::now()->subWeek(), Carbon::now()),
             'video'            => [
@@ -414,12 +440,18 @@ class MovieController extends Controller {
 //    dd($request);
 
     // validate the request
-    $request->validate([
+    $validatedData = $request->validate([
         'name'                => ['required', 'string', 'max:255', Rule::unique('movies')->ignore($movie->id)],
         'description'         => 'required',
         'logline'             => 'required|string',
-        'release_year'        => ['integer', 'min:1900', 'max:' . date('Y')],
         'release_date'        => 'date|after:tomorrow',
+        'release_year' => [
+            'required_if:status,2',
+            'nullable',
+            'integer',
+            'min:1900',
+            'max:' . date('Y')
+        ],
         'creative_commons_id' => 'required|integer|exists:creative_commons,id',
         'copyrightYear'       => ['nullable', 'integer', 'min:1900', 'max:' . date('Y')],
         'category'            => 'required',
@@ -432,9 +464,15 @@ class MovieController extends Controller {
         'notes'               => 'nullable|string|max:1024',
         'status'              => 'required|integer|exists:movie_statuses,id',
     ], [
+        'category.required'   => 'The category is required.',
+        'creative_commons_id.required'   => 'The creative commons selection is required.',
         'status.exists'         => 'The selected status is invalid.',
-        'release_date.after'    => 'The release date must be at least 24 hours in the future.',
         'copyrightYear.integer' => 'Please choose a copyright year',
+        'release_date.after'    => 'The release date must be at least 24 hours in the future.',
+        'release_year.required_if' => 'The release year is required when the status is active.',
+        'release_year.integer' => 'The release year must be an number.',
+        'release_year.min' => 'The release year must be greater than 1900.',
+        'release_year.max' => 'The release year cannot be beyond this year.',
     ]);
 
     // Capture the original status before any changes

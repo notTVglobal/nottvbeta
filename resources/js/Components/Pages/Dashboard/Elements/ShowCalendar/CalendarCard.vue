@@ -63,6 +63,10 @@ const props = defineProps({
   type: String,
   startTime: String,
   isLive: Boolean,
+  isWatching: {
+    type: Boolean,
+    default: false, // Provide a default value if appropriate
+  },
 });
 
 const badgeBgColorClass = computed(() => {

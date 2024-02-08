@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Models\MistStream;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Auth\Access\Response;
 
 class MistStreamPolicy
 {
@@ -18,7 +19,13 @@ class MistStreamPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        $isAdmin = $user->isAdmin;
+      // If the user is an admin, allow viewing
+        if ($isAdmin) {
+          return true;
+        }
+
+        return Response::deny('You must be an admin to display this.');
     }
 
     /**
@@ -30,7 +37,13 @@ class MistStreamPolicy
      */
     public function view(User $user, MistStream $mistStream)
     {
-        //
+      $isAdmin = $user->isAdmin;
+      // If the user is an admin, allow viewing
+      if ($isAdmin) {
+        return true;
+      }
+
+      return Response::deny('You must be an admin to view this.');
     }
 
     /**
@@ -41,7 +54,13 @@ class MistStreamPolicy
      */
     public function create(User $user)
     {
-        //
+      $isAdmin = $user->isAdmin;
+      // If the user is an admin, allow viewing
+      if ($isAdmin) {
+        return true;
+      }
+
+      return Response::deny('You must be an admin to create this.');
     }
 
     /**
@@ -53,7 +72,13 @@ class MistStreamPolicy
      */
     public function update(User $user, MistStream $mistStream)
     {
-        //
+      $isAdmin = $user->isAdmin;
+      // If the user is an admin, allow viewing
+      if ($isAdmin) {
+        return true;
+      }
+
+      return Response::deny('You must be an admin to update this.');
     }
 
     /**
@@ -65,7 +90,13 @@ class MistStreamPolicy
      */
     public function delete(User $user, MistStream $mistStream)
     {
-        //
+      $isAdmin = $user->isAdmin;
+      // If the user is an admin, allow viewing
+      if ($isAdmin) {
+        return true;
+      }
+
+      return Response::deny('You must be an admin delete this.');
     }
 
     /**
@@ -77,7 +108,13 @@ class MistStreamPolicy
      */
     public function restore(User $user, MistStream $mistStream)
     {
-        //
+      $isAdmin = $user->isAdmin;
+      // If the user is an admin, allow viewing
+      if ($isAdmin) {
+        return true;
+      }
+
+      return Response::deny('You must be an admin to restore this.');
     }
 
     /**
@@ -89,6 +126,12 @@ class MistStreamPolicy
      */
     public function forceDelete(User $user, MistStream $mistStream)
     {
-        //
+      $isAdmin = $user->isAdmin;
+      // If the user is an admin, allow viewing
+      if ($isAdmin) {
+        return true;
+      }
+
+      return Response::deny('You must be an admin to force delete this.');
     }
 }

@@ -75,4 +75,9 @@ class NewsStory extends Model {
     return $this->belongsTo(NewsSubnationalElectoralDistrict::class, 'news_subnational_electoral_district_id');
   }
 
+  public function playlistItems()
+  {
+    return $this->morphMany(ChannelPlaylistItem::class, 'content');
+  }
+
 }

@@ -53,8 +53,10 @@ Route::get('/products', [ProductController::class, 'index']);
 
 Route::get('/channels_list', [ChannelApiController::class, 'index']);
 
+// our first mist server trigger... for Access Control
 Route::post('/validateUser', [MistStreamController::class, 'validateUser']);
 
+// this api endpoint was built for testing purposes. It may serve a use...
 Route::post('/mistserver-trigger', [MistServerController::class, 'handleTrigger']);
 
 

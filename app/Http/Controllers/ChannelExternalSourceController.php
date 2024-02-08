@@ -2,43 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\NewsStory;
-use App\Models\User;
-use Illuminate\Http\Request as HttpRequest;
-use Illuminate\Support\Facades\Request;
-use App\Models\Channel;
-use Illuminate\Support\Facades\Auth;
-use Inertia\Inertia;
+use Illuminate\Http\Request;
 
-class ChannelController extends Controller
+class ChannelExternalSourceController extends Controller
 {
-
-    // TODO: Setup the CRUD pages in Vue
-
     /**
      * Display a listing of the resource.
      *
-     * @return \Inertia\Response
+     * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        return Inertia::render('Admin/Channels/Index', [
-            'channels' => Channel::with('channelExternalSource')
-                ->when(Request::input('search'), function ($query, $search) {
-                $query->where('name', 'like', "%{$search}%");
-            })  ->latest()
-                ->paginate(13, ['*'], 'admin/channels')
-                ->withQueryString()
-                ->through(fn($channel) => [
-                        'id' => $channel->id,
-                        'name' => $channel->name,
-                        'currentVideo' => $channel->video ?? null,
-                        'isLive' => $channel->isLive ?? null,
-                        'stream' => $channel->stream ?? null,
-                        'source' => $channel->channelSource ?? null,
-                    ]),
-            'filters' => Request::only(['search']),
-        ]);
+        //
     }
 
     /**

@@ -36,13 +36,39 @@
 
 
                             <div v-if="form.errors.name" v-text="form.errors.name"
-                                 class="bg-red-600 p-2 w-full text-white font-semibold mt-1 mb-6"></div>
+                                 class="topBannerErrorMessage"></div>
                             <div v-if="form.errors.description" v-text="form.errors.description"
-                                 class="bg-red-600 p-2 w-full text-white font-semibold mt-1 mb-6"></div>
-                            <div v-if="form.errors.video_url" v-text="form.errors.video_url"
-                                 class="bg-red-600 p-2 w-full text-white font-semibold mt-1 mb-6"></div>
+                                 class="topBannerErrorMessage"></div>
+                          <div v-if="form.errors.logline" v-text="form.errors.logline"
+                               class="topBannerErrorMessage"></div>
+                          <div v-if="form.errors.release_year" v-text="form.errors.release_year"
+                               class="topBannerErrorMessage"></div>
+                          <div v-if="form.errors.release_date" v-text="form.errors.release_date"
+                               class="topBannerErrorMessage"></div>
+                          <div v-if="form.errors.creative_commons_id" v-text="form.errors.creative_commons_id"
+                               class="topBannerErrorMessage"></div>
+                          <div v-if="form.errors.copyrightYear" v-text="form.errors.copyrightYear"
+                               class="topBannerErrorMessage"></div>
+                          <div v-if="form.errors.category" v-text="form.errors.category"
+                               class="topBannerErrorMessage"></div>
+                          <div v-if="form.errors.sub_category" v-text="form.errors.sub_category"
+                               class="topBannerErrorMessage"></div>
+                          <div v-if="form.errors.video_url" v-text="form.errors.video_url"
+                               class="topBannerErrorMessage"></div>
+                          <div v-if="form.errors.www_url" v-text="form.errors.www_url"
+                               class="topBannerErrorMessage"></div>
+                          <div v-if="form.errors.instagram_name" v-text="form.errors.instagram_name"
+                               class="topBannerErrorMessage"></div>
+                          <div v-if="form.errors.telegram_url" v-text="form.errors.telegram_url"
+                               class="topBannerErrorMessage"></div>
+                          <div v-if="form.errors.twitter_handle" v-text="form.errors.twitter_handle"
+                               class="topBannerErrorMessage"></div>
+                          <div v-if="form.errors.notes" v-text="form.errors.notes"
+                               class="topBannerErrorMessage"></div>
+                          <div v-if="form.errors.status" v-text="form.errors.status"
+                               class="topBannerErrorMessage"></div>
                             <!--                            <div v-if="form.errors.video_file_embed_code" v-text="form.errors.video_file_embed_code"-->
-                            <!--                                 class="bg-red-600 p-2 w-full text-white font-semibold mt-1"></div>-->
+                            <!--                                 class="topBannerErrorMessage-->
 
 
                             <!-- Begin grid 2-col -->
@@ -157,6 +183,8 @@
                                           Status
                                         </label>
 
+                                        <div class="text-sm mb-2">Set the status to Active to make the movie accessible to the public. Set the status to Creators only to only make it available to creators. All other statuses will only be viewable by you.</div>
+
                                         <select required class="border border-gray-400 text-gray-800 p-2 w-1/2 rounded-lg block mb-2 uppercase font-bold text-xs "
                                                 v-model="form.status"
                                         >
@@ -166,7 +194,7 @@
 
                                         </select>
                                         <div v-if="form.errors.status" v-text="form.errors.status"
-                                             class="text-xs text-red-600 mt-1"></div>
+                                             class="errorClass"></div>
                                       </div>
 
                                         <div class="mb-6">
@@ -184,7 +212,7 @@
                                                    required
                                             >
                                             <div v-if="form.errors.name" v-text="form.errors.name"
-                                                 class="text-xs text-red-600 mt-1"></div>
+                                                 class="errorClass"></div>
                                         </div>
 
                                         <div class="mb-6 w-64">
@@ -194,8 +222,8 @@
                                                 Release Year
                                             </label>
 
-                                            <input v-model="releaseYear"
-                                                   @input="$emit('update:releaseYear', $event.target.value)"
+                                            <input v-model="selectedReleaseYear" @change="handleReleaseYearChange"
+
                                                    class="border border-gray-400 text-black font-semibold p-2 w-1/2 rounded-lg"
                                                    type="number"
                                                    name="release_year"
@@ -205,7 +233,7 @@
 
                                             >
                                             <div v-if="form.errors.release_year" v-text="form.errors.release_year"
-                                                 class="text-xs text-red-600 mt-1"></div>
+                                                 class="errorClass"></div>
                                         </div>
 
                                       <div class="mb-6 w-64">
@@ -220,10 +248,10 @@
                                           <option v-for="cc in creative_commons" :key="cc.id" :value="cc.id">{{ cc.name }}</option>
                                         </select>
 
-                                        <div class="">{{ selectedCreativeCommonsDescription }}</div>
+                                        <div v-if="form.errors.creative_commons_id" v-text="form.errors.creative_commons_id"
+                                             class="errorClass"></div>
 
-                                        <div v-if="form.errors.creative_commons" v-text="form.errors.creative_commons"
-                                             class="text-xs text-red-600 mt-1"></div>
+                                        <div class="">{{ selectedCreativeCommonsDescription }}</div>
 
                                       </div>
 
@@ -249,7 +277,7 @@
                                         </div>
 
                                         <div v-if="form.errors.copyrightYear" v-text="form.errors.copyrightYear"
-                                             class="text-xs text-red-600 mt-1"></div>
+                                             class="errorClass"></div>
                                       </div>
 
                                         <div class="mb-6">
@@ -264,15 +292,14 @@
                                             >
                                                 <option v-for="category in categories"
                                                         :key="category.id" :value="category.id">{{category.name}}</option>
-
-
                                             </select>
 
-                                            <span class="">{{movieStore.category_description}}</span>
-                                            </div>
+                                          <div v-if="form.errors.category" v-text="form.errors.category"
+                                               class="errorClass"></div>
 
-                                            <div v-if="form.errors.category" v-text="form.errors.category"
-                                                 class="text-xs text-red-600 mb-2">
+                                            <span class="">{{movieStore.category_description}}</span>
+
+
                                         </div>
 
                                         <div class="mb-6">
@@ -293,7 +320,7 @@
                                             </select>
                                             <span class="">{{movieStore.sub_category_description}}</span>
                                             <div v-if="form.errors.sub_category" v-text="form.errors.sub_category"
-                                                 class="text-xs text-red-600 mt-1"></div>
+                                                 class="errorClass"></div>
                                         </div>
 
                                         <div class="mb-6">
@@ -311,7 +338,7 @@
                                                    required
                                             >
                                             <div v-if="form.errors.logline" v-text="form.errors.logline"
-                                                 class="text-xs text-red-600 mt-1"></div>
+                                                 class="errorClass"></div>
                                         </div>
 
                                         <div class="mb-6">
@@ -328,7 +355,7 @@
                                                               required
                                             />
                                             <div v-if="form.errors.description" v-text="form.errors.description"
-                                                 class="text-xs text-red-600 mt-1"></div>
+                                                 class="errorClass"></div>
                                         </div>
 
                                         <div class="mb-6">
@@ -345,15 +372,15 @@
                                                    id="video_url"
                                             >
                                             <div v-if="form.errors.video_url" v-text="form.errors.video_url"
-                                                 class="text-xs text-red-600 mt-1"></div>
+                                                 class="errorClass"></div>
                                         </div>
 
-                                        <div class="block mb-6 uppercase font-bold text-xs text-light">
-                                            <div class="mb-2">* Notes:</div>
+                                        <div class="block mb-6 text-sm font-semibold tracking-wider">
+                                            <div class="mb-2 uppercase">* Note:</div>
 
-                                            <ul class="list-decimal pb-2 ml-2 mb-4 border-b">
+                                            <ul class="list-decimal pb-2 ml-2 mb-4 border-b font-medium">
                                                 <li>
-                                                    We have not enabled the use of Facebook videos for security purposes.
+                                                  We have <span class="underline">not</span> enabled the use of Facebook or YouTube videos for security purposes.
                                                 </li>
                                             </ul>
                                         </div>
@@ -373,7 +400,7 @@
                                                    id="www_url"
                                             >
                                             <div v-if="form.errors.www_url" v-text="form.errors.www_url"
-                                                 class="text-xs text-red-600 mt-1"></div>
+                                                 class="errorClass"></div>
                                         </div>
 
                                         <div class="mb-6">
@@ -390,7 +417,7 @@
                                                    id="instagram_name"
                                             >
                                             <div v-if="form.errors.instagram_name" v-text="form.errors.instagram_name"
-                                                 class="text-xs text-red-600 mt-1"></div>
+                                                 class="errorClass"></div>
                                         </div>
 
                                         <div class="mb-6">
@@ -407,7 +434,7 @@
                                                    id="telegram_url"
                                             >
                                             <div v-if="form.errors.telegram_url" v-text="form.errors.telegram_url"
-                                                 class="text-xs text-red-600 mt-1"></div>
+                                                 class="errorClass"></div>
                                         </div>
 
                                         <div class="mb-6">
@@ -424,7 +451,7 @@
                                                    id="twitter_handle"
                                             >
                                             <div v-if="form.errors.twitter_handle" v-text="form.errors.twitter_handle"
-                                                 class="text-xs text-red-600 mt-1"></div>
+                                                 class="errorClass"></div>
                                         </div>
 
                                     </form>
@@ -471,7 +498,7 @@ import SingleImage from "@/Components/Global/Multimedia/SingleImage"
 import ImageUpload from "@/Components/Global/Uploaders/ImageUpload"
 import VideoUpload from "@/Components/Global/Uploaders/VideoUpload"
 import CancelButton from "@/Components/Global/Buttons/CancelButton.vue"
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, toRefs, watch } from 'vue'
 
 usePageSetup('movieEdit')
 
@@ -494,6 +521,7 @@ let selectedCategoryId = ref(props.movie.movie_category_id);
 let selectedSubCategoryId = ref(props.movie.movie_category_sub_id);
 const selectedCreativeCommons = ref(props.movie.creative_commons_id);
 let selectedCopyrightYear = ref(props.movie.copyrightYear);
+let selectedReleaseYear = ref(props.movie.release_year);
 const currentYear = new Date().getFullYear();
 
 const subCategories = computed(() => {
@@ -515,9 +543,25 @@ const selectedCreativeCommonsDescription = computed(() => {
   return selectedCC ? selectedCC.description : '';
 });
 
-const releaseYear = computed(() => {
-  return props.movie.release_year === null ? new Date().getFullYear() : props.movie.release_year;
-});
+const handleReleaseYearChange = () => {
+  if (selectedReleaseYear.value === null) {
+    // Pre-populate with current year only if copyrightYear is null
+    selectedReleaseYear.value = currentYear;
+  }
+};
+
+// const releaseYear = computed(() => {
+//   return props.movie.release_year === null ? new Date().getFullYear() : props.movie.release_year;
+// });
+
+// Initialize releaseYear with either the movie's release_year or the current year
+// form.releaseYear = props.movie.release_year ?? new Date().getFullYear();
+// Destructure props for easier access
+// const { movie, video } = toRefs(props);
+
+// Handling nullable release_year
+// const releaseYear = computed(() => movie.value.release_year ?? new Date().getFullYear());
+
 
 // Watchers to update the store based on category and subcategory selections
 watch(selectedCategoryId, () => {
@@ -559,7 +603,7 @@ let form = useForm({
     id: props.movie.id,
     name: props.movie.name,
     status: props.movie.status_id,
-    release_year: props.movie.release_year,
+    release_year: selectedReleaseYear,
     copyrightYear: selectedCopyrightYear,
     creative_commons_id: selectedCreativeCommons.value,
     category: movieStore.category_id,
@@ -576,11 +620,11 @@ let form = useForm({
 })
 
 let submit = () => {
-  form.release_year = releaseYear
   form.category = movieStore.category_id;
   form.sub_category = movieStore.sub_category_id;
   form.copyrightYear = selectedCopyrightYear;
   form.creative_commons_id = selectedCreativeCommons.value;
+  form.release_year = selectedReleaseYear.value;
   form.patch(route('movies.update', props.movie.slug));
 }
 
@@ -704,3 +748,17 @@ onBeforeUnmount(() => {
 });
 
 </script>
+<style scoped>
+.topBannerErrorMessage {
+  background-color: black; /* bg-black */
+  padding: 0.5rem; /* p-2 */
+  width: 100%; /* w-full */
+  color: white; /* text-white */
+  font-weight: 600; /* font-semibold, for bold you might want to use 700 */
+  font-size: 1rem; /* Adjust based on your design, as Tailwind's text sizes are utility-based */
+}
+.errorClass {
+  color: lightgreen;
+  font-weight: 600; /* font-semibold, for bold you might want to use 700 */
+}
+</style>

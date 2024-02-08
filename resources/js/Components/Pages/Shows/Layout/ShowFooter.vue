@@ -4,7 +4,7 @@
         <!-- Paginator -->
         <!--                            <Pagination :links="`#`" class="mt-6"/>-->
         <Link :href="`/teams/${team.slug}`" class="text-blue-500 hover:text-blue-700 ml-2 uppercase">
-          {{ team.name }}
+          {{ team.name }}&nbsp;
         </Link>
           <div v-if="appSettingStore.currentPage !== 'showsShow'">
             ©

@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\AppSetting;
 use App\Models\MistStream;
-
-use App\Models\User;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
@@ -18,6 +16,19 @@ use RuntimeException;
 class MistStreamController extends Controller
 {
 
+  public function __construct() {
+
+    $this->middleware('can:viewAny,' . \App\Models\MistStream::class)->only(['index']);
+    $this->middleware('can:view,mistStream')->only(['show']);
+    $this->middleware('can:create,' . MistStream::class)->only(['create']);
+    $this->middleware('can:store,' . MistStream::class)->only(['store']);
+    $this->middleware('can:edit,mistStream')->only(['edit']);
+    $this->middleware('can:update,mistStream')->only(['update']);
+    $this->middleware('can:delete,mistStream')->only(['delete']);
+    $this->middleware('can:restore,mistStream')->only(['restore']);
+    $this->middleware('can:forceDelete,mistStream')->only(['forceDelete']);
+  }
+
   /**
    * Validates a video request to ensure it meets criteria for viewing.
    *
@@ -25,6 +36,13 @@ class MistStreamController extends Controller
    * @return Application|ResponseFactory|Response
    */
   public function validateUser(Request $request) {
+    // NOTE: This currently uses the USER_NEW trigger.
+    // The request_url is on a different line of the
+    // request body in CONN_PLAY. And CONN_PLAY makes
+    // more requests to the endpoint than USER_NEW.
+    // It sends a request with every packet played.
+    // Whereas USER_NEW sends a request to start a
+    // new session and caches it on the MistServer.
 
     // Check for allowed triggers from the header
     $allowedTriggers = ["USER_NEW", "CONN_OPEN", "CONN_CLOSE", "CONN_PLAY"];
@@ -32,10 +50,10 @@ class MistStreamController extends Controller
       error_log("This script is not compatible with triggers other than USER_NEW, CONN_OPEN, CONN_CLOSE, and CONN_PLAY");
       Log::info('invalid_trigger');
       //     Log raw request data for testing only
-      Log::info('Raw Request', [
-          'headers' => $request->headers->all(),
-          'body' => $request->getContent() // For raw body content
-      ]);
+//      Log::info('Raw Request', [
+//          'headers' => $request->headers->all(),
+//          'body' => $request->getContent() // For raw body content
+//      ]);
       return response('Invalid trigger', 400); // Use a 400 Bad Request response for invalid triggers
     }
 
@@ -49,14 +67,7 @@ class MistStreamController extends Controller
     // Assuming the IP address is always on the second line
     $ipAddress = $lines[1] ?? 'unknown'; // Default to 'unknown' if not found
     $requestUrl = $lines[4] ?? 'unknown'; // it's only line 5 if USER_NEW, otherwise its line 4.
-//    Log::info('Raw Request', [
-//        'headers' => $request->headers->all(),
-//        'body' => $request->getContent() // For raw body content
-//    ]);
-//    Log::info("Url: {$requestUrl}");
 
-//    $parts = explode(" ", $bodyContent);
-//    $requestUrl = end($parts); // Assuming the URL is the last part of the body
     parse_str(parse_url($requestUrl, PHP_URL_QUERY), $requestUrlParams);
 
     // Extracting userId and received hash from URL parameters
@@ -64,26 +75,13 @@ class MistStreamController extends Controller
     if (!$userId) {
       return response('User ID is required', 400);
     }
-//    Log::info("UserId: {$userId}");
-
-//    $userActiveSecureVideoHash = User::where('id', $userId)->value('active_secure_video_hash');
-//    if (!$userActiveSecureVideoHash) {
-//      return response('User not found or no hash set', 404);
-//    }
-
-//    $hashReceived = $requestUrlParams['hash'] ?? null;
-
-
-//    Log::warning($userId);
     $hashReceived = $requestUrlParams['hash'] ?? null;
     $hashExpected = hash('sha256', $userId . $ipAddress . $secretKey);
-//    $hashExpected = $userActiveSecureVideoHash;
-//     For testing only
 
     // Comparing the expected hash with the received hash
     if ($hashReceived !== $hashExpected) {
       Log::warning("Hash mismatch for user ID: {$userId}");
-      return response('Unauthorized - Hash mismatch', 401);
+      return response('Unauthorized - Hash mismatch', 401);  // Respond with 401 Unauthorized for invalid hash
     }
 
 //    Log::alert('Hash Debug', [
@@ -94,12 +92,6 @@ class MistStreamController extends Controller
 //        'IP Address from Mist' => $ipAddress,
 //        'Secret Key' => $secretKey,
 //    ]);
-
-
-//    if ($hashReceived !== $hashExpected) {
-//      Log::info('Unauthorized - Hash mismatch');
-//      return response('Unauthorized', 401); // Respond with 401 Unauthorized for invalid hash
-//    }
 
     // If hash matches, proceed with additional checks (if any) and ultimately approve access
     Log::info('Access granted');
@@ -115,7 +107,7 @@ class MistStreamController extends Controller
      */
     public function index()
     {
-        //
+//        return MistStream::class
     }
 
     /**

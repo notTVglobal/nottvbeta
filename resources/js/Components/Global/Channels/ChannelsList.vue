@@ -53,7 +53,7 @@ provide('scrollRef', scrollRef)
 channelStore.getChannels()
 
 async function changeChannel(channel) {
-  await channelStore.disconnectViewerFromChannel()
+  // await channelStore.disconnectViewerFromChannel() // This is in the channelStore.changeChannel function.
   await channelStore.changeChannel(channel)
   // videoPlayerStore.toggleChannels()
   // videoPlayerStore.toggleOttChannels()
