@@ -36,7 +36,11 @@
       <div class="h-full w-full overflow-y-scroll scrollbar-hide">
         <div class="w-full h-full px-2 bg-gray-800 overflow-y-scroll scrollbar-hide">
           <h1 class="text-xs font-semibold uppercase w-full bg-purple-900 text-white p-2 mt-4 mb-4">
-            NOW PLAYING <span class="text-gray-500 tracking-widest" v-if="nowPlayingStore.activeMedia.type==='externalVideo'">&nbsp;&nbsp;external video</span></h1>
+            NOW PLAYING
+            <span class="text-gray-500 tracking-widest" v-if="nowPlayingStore.activeMedia.type==='channel'">&nbsp;&nbsp;{{ channelStore.currentChannelName }}&nbsp;Channel</span>
+            <span class="text-gray-500 tracking-widest" v-if="nowPlayingStore.activeMedia.type==='externalVideo'">&nbsp;&nbsp;external video</span>
+
+          </h1>
 
           <div class="pb-24 w-full overflow-y-scroll scrollbar-hide"
                :class="[{'h-[calc(100vh-22rem)]':!userStore.isMobile},{'h-[calc(100vh-20rem)]':userStore.isMobile}]">
@@ -194,6 +198,7 @@ import { useTimeAgo } from '@vueuse/core'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
 import { useNowPlayingStore } from '@/Stores/NowPlayingStore'
+import { useChannelStore } from '@/Stores/ChannelStore'
 import { useStreamStore } from '@/Stores/StreamStore'
 import { useUserStore } from '@/Stores/UserStore'
 import { useChatStore } from '@/Stores/ChatStore'
@@ -204,6 +209,7 @@ import { Inertia } from '@inertiajs/inertia'
 const appSettingStore = useAppSettingStore()
 const videoPlayerStore = useVideoPlayerStore()
 const nowPlayingStore = useNowPlayingStore()
+const channelStore = useChannelStore()
 const streamStore = useStreamStore()
 const chatStore = useChatStore()
 const userStore = useUserStore()

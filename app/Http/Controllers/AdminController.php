@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Jobs\AddVideoUrlFromEmbedCodeJob;
 use App\Models\AppSetting;
+use App\Models\Channel;
 use App\Models\Image;
 use App\Models\InviteCode;
 use App\Models\Movie;
@@ -103,7 +104,7 @@ class AdminController extends Controller
         $settings->first_play_video_name = $request->first_play_video_name;
         $settings->first_play_channel_id = $request->first_play_channel_id;
         $settings->mist_server_ip = $request->mist_server_ip;
-        $settings->mist_server_uri = $request->mist_server_uri;
+        $settings->mist_server_uri = rtrim($request->mist_server_uri, '/') . '/';
         $settings->mist_server_api_url = $request->mist_server_api_url;
         $settings->mist_server_username = $request->mist_server_username;
         $settings->mist_server_password = $encryptedPassword ?? null;
@@ -142,6 +143,31 @@ class AdminController extends Controller
 
     }
 
+////////////  ADMIN CHANNELS PAGE
+/////////////////////////////////
+  public function adminChannelsPage()
+  {
+
+//Channel::with(['externalSource', 'channelPlaylist', 'mistStream'])->get();
+
+    return Inertia::render('Admin/Channels/Index', [
+//        'channels' => Channel::with(['channelExternalSource', 'channelPlaylist', 'mistStream'])
+//            ->when(Request::input('search'), function ($query, $search) {
+//              $query->where('name', 'like', "%{$search}%");
+//            })  ->latest()
+//            ->paginate(13, ['*'], 'admin/channels')
+//            ->withQueryString()
+//            ->through(fn($channel) => [
+//                'id' => $channel->id,
+//                'name' => $channel->name,
+//                'channelPlaylist' => $channel->channelPlaylist ?? null,
+//                'mistStream' => $channel->mistStream ?? null,
+//                'externalSource' => $channel->channelExternalSource ?? null,
+//                'playbackPriorityType' => $channel->playback_priority_type ?? null,
+//            ]),
+//        'filters' => Request::only(['search']),
+    ]);
+  }
 
 ////////////  SERVER TIME
 //////////////////////////

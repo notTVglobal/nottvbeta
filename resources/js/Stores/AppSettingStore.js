@@ -17,6 +17,11 @@ const initialState = () => ({
     fullPage: false, // Used to determine layout FullPage or TopRight
     pageIsHidden: true, // Used to hide the page when fullPage = false && showOtt = true
     ott: 0, // Number representing the Ott Panel currently open. 0 is closed.
+            // 1: Info
+            // 2: Channels
+            // 3: Playlist
+            // 4: Chat
+            // 5: Filters
     showOtt: false, // Over-The-Top (OTT) Panel, show (true) or hide (false)
     showOttButtons: true, // formerly videoPlayerStore.ottButtons
     osd: false, // On Screen Display (OSD) to be expanded into 8 regions

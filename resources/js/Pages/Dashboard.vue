@@ -146,7 +146,7 @@
             <td class="bg-blue-400 px-2 mb-3 text-right font-semibold text-sm text-black">Balance</td>
             </thead>
             <tr class="border-b border-1 border-gray-100 text-black dark:text-white hover:bg-success">
-              <td class="px-2 col-span-2 py-2">Chequing</td>
+              <td class="px-2 col-span-2 py-2">Flex Account</td>
               <td class="px-2 text-right">89,400.00</td>
             </tr>
             <tr class="border-b border-1 border-gray-100 text-black dark:text-white hover:bg-success">
@@ -168,7 +168,7 @@
           </table>
           <table class="w-full mt-6">
             <thead class="">
-            <td class="bg-blue-400 font-semibold text-sm text-black px-2 mb-3">Community Account Name</td>
+            <td class="bg-blue-400 font-semibold text-sm text-black px-2 mb-3">Community Account</td>
             <td class="bg-blue-400 px-2 mb-3 text-right font-semibold text-sm text-black">Balance</td>
             </thead>
             <tr class="border-b border-1 border-gray-100 text-black dark:text-white hover:bg-success">

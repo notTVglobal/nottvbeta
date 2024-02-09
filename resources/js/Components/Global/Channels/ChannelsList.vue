@@ -50,7 +50,7 @@ let props = defineProps({
 const scrollRef = ref(null)
 provide('scrollRef', scrollRef)
 
-channelStore.getChannels()
+channelStore.reloadChannels()
 
 async function changeChannel(channel) {
   // await channelStore.disconnectViewerFromChannel() // This is in the channelStore.changeChannel function.

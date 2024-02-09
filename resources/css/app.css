@@ -747,7 +747,7 @@ hr {
         top: 4rem;
         right:0;
         max-height: 96rem;
-        @apply w-[24rem] bottom-0 bg-opacity-80 bg-green-600 text-sm text-white pb-12
+        @apply w-[24rem] bottom-0 bg-opacity-80 bg-green-600 text-sm text-white
         overflow-y-scroll scroll-smooth hover:scroll-auto break-words
     }
     .closeButtonContainer {
@@ -1010,7 +1010,7 @@ hr {
     border-right-width: 2px;
 }
 .channelFooterFullPage {
-    @apply px-4 py-4 pb-24 bg-green-700 shadow-md
+    @apply px-4 py-4 bg-green-700 shadow-md
 }
 .channelFooterTopRight {
     @apply mt-4 pb-4 px-2

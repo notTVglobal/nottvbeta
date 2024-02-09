@@ -22,25 +22,7 @@ class ChannelController extends Controller
      */
     public function index()
     {
-
-//Channel::with(['externalSource', 'channelPlaylist', 'mistStream'])->get();
-
-        return Inertia::render('Admin/Channels/Index', [
-            'channels' => Channel::with(['externalSource', 'channelPlaylist', 'mistStream'])
-                ->when(Request::input('search'), function ($query, $search) {
-                $query->where('name', 'like', "%{$search}%");
-            })  ->latest()
-                ->paginate(13, ['*'], 'admin/channels')
-                ->withQueryString()
-                ->through(fn($channel) => [
-                        'id' => $channel->id,
-                        'name' => $channel->name,
-                        'channelPlaylist' => $channel->channelPlaylist ?? null,
-                        'mistStream' => $channel->mistStream ?? null,
-                        'externalSource' => $channel->externalSource ?? null,
-                    ]),
-            'filters' => Request::only(['search']),
-        ]);
+      //
     }
 
 
@@ -50,7 +32,87 @@ class ChannelController extends Controller
     // Return Inertia response or JSON, depending on your setup
   }
 
-    /**
+
+  public function setPlaybackPriorityType(Channel $channel, HttpRequest $request)
+  {
+    //
+    $validatedData = $request->validate([
+//        'channelId' => 'unique:teams|required|max:255',
+        'setPriorityType' => 'required|nullable|string|max:15',
+    ]);
+
+//    $channelId = $validatedData->channelId;
+    $priorityType = $validatedData['setPriorityType'];
+//    $channel = Channel::where('id', $channelId)->first();
+    $channel->playback_priority_type = $priorityType;
+    $channel->save();
+
+//    return redirect()->route('admin.channels', $channel)->with('message', 'Channel '. $channel->id .'Priority Successfully Changed');
+    // Return a JSON response
+    return response()->json([
+        'success' => true,
+        'message' => 'Channel ' . $channel->id . ' Priority Successfully Changed',
+        'channel' => $channel,
+    ]);
+
+  }
+
+  public function setMistStream(Channel $channel, HttpRequest $request)
+  {
+    $validatedData = $request->validate([
+        'mistStreamId' => 'required|nullable|string',
+    ]);
+
+    $mistStreamId = $validatedData['mistStreamId'];
+    $channel->mist_stream_id = $mistStreamId;
+    $channel->save();
+
+    // Return a JSON response
+    return response()->json([
+        'success' => true,
+        'message' => 'Channel ' . $channel->id . ' Mist Stream Successfully Changed',
+        'channel' => $channel,
+    ]);
+  }
+
+  public function setChannelPlaylist(Channel $channel, HttpRequest $request)
+  {
+    $validatedData = $request->validate([
+        'channelPlaylistId' => 'required|nullable|integer',
+    ]);
+
+    $channelPlaylistId = $validatedData['channelPlaylistId'];
+    $channel->channel_playlist_id = $channelPlaylistId;
+    $channel->save();
+
+    // Return a JSON response
+    return response()->json([
+        'success' => true,
+        'message' => 'Channel ' . $channel->id . ' Channel Playlist Successfully Changed',
+        'channel' => $channel,
+    ]);
+  }
+
+  public function setExternalSource(Channel $channel, HttpRequest $request)
+  {
+    $validatedData = $request->validate([
+        'externalSourceId' => 'required|nullable|integer',
+    ]);
+
+    $externalSourceId = $validatedData['externalSourceId'];
+    $channel->channel_external_source_id = $externalSourceId;
+    $channel->save();
+
+    // Return a JSON response
+    return response()->json([
+        'success' => true,
+        'message' => 'Channel ' . $channel->id . ' Channel External Source Successfully Changed',
+        'channel' => $channel,
+    ]);
+  }
+
+
+  /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response

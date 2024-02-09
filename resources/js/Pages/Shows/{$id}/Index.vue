@@ -320,7 +320,12 @@ let playEpisode = () => {
 // Load the video source in videoPlayerStore for playback
   if (isInternalVideo) {
     // For internal videos, load using the episode video directly
-    videoPlayerStore.loadNewSourceFromFile(episode.video);
+    // videoPlayerStore.loadNewSourceFromFile(episode.video);
+
+
+    videoPlayerStore.loadNewVideo(episode.video);
+    // videoPlayerStore.loadVideoFromFile(episode.video);
+
   } else if (isExternalVideo) {
     // For external videos, focus on the video_url and type provided within the episode's video details
     if (episode.video && episode.video.video_url) {

@@ -8,6 +8,7 @@
               autoplay
               muted
               playsinline
+              crossorigin="anonymous"
     >
       <source :type="$page.props.firstPlay.first_play_video_source_type"
               :src="$page.props.firstPlay.first_play_video_source">

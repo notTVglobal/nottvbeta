@@ -2,10 +2,15 @@
   <dialog id="dynamicModal" class="modal">
     <div class="modal-box w-11/12 max-w-5xl">
 
-      <div class="flex flex-row justify-between mb-6">
-        <div>
-          <h3 class="font-bold text-lg">{{ adminStore.modalHeader }}</h3>
+      <div class="flex flex-row justify-between align-bottom">
+        <div >
+         <h3 class="font-bold text-lg">{{ adminStore.modalHeader }}</h3>
         </div>
+        <div>
+          <h3>{{ adminStore?.selectedChannel?.name }}</h3>
+        </div>
+      </div>
+      <div class="flex justify-center mb-6">
         <div class="flex items-center mt-6 xl:mt-0">
           <div class="relative">
             <input v-model="adminStore.searchTerm" @input="debouncedFetchItems" type="search" class="bg-gray-50 text-black text-sm rounded-full
@@ -39,23 +44,24 @@
               </th>
               <th>
                 <span v-if="adminStore.currentType === 'channelPlaylist'">Priority</span>
-                <span v-if="adminStore.currentType === 'mistStream'">Comment</span>
+                <span v-if="adminStore.currentType === 'mistStream'">MIME Type</span>
               </th>
               <th>
                 <span v-if="adminStore.currentType === 'channelPlaylist'">Repeat Mode</span>
-                <span v-if="adminStore.currentType === 'mistStream'">Created At</span>
+                <span v-if="adminStore.currentType === 'mistStream'">Comment</span>
               </th>
               <th>
                 <span v-if="adminStore.currentType === 'channelPlaylist'">Start Time</span>
-                <span v-if="adminStore.currentType === 'mistStream'">Updated At</span>
+                <span v-if="adminStore.currentType === 'mistStream'">Created On</span>
               </th>
-              <th v-if="adminStore.currentType === 'channelPlaylist'">
-                <span >End Time</span>
+              <th>
+                <span v-if="adminStore.currentType === 'channelPlaylist'">End Time</span>
+                <span v-if="adminStore.currentType === 'mistStream'">Updated At</span>
               </th>
             </tr>
             </thead>
             <tbody>
-            <tr v-for="item in items" :key="item.id" @click="selectItem(item)">
+            <tr v-for="item in adminStore.paginatedItems" :key="item.id" @click="selectItem(item)" class="hover:bg-blue-300 hover:cursor-pointer" :class="{'bg-yellow-500': item.id === adminStore.activeItemId}">
               <td>
                 <div v-if="adminStore.currentType === 'channelPlaylist'"><span v-if="item.active" class="text-green-500">Active</span><span v-else class="text-red-700">Inactive</span></div>
                 <div v-if="adminStore.currentType === 'mistStream'"><span v-if="item.active" class="text-green-500">Active</span><span v-else class="text-red-700">Inactive</span></div>
@@ -70,58 +76,28 @@
               </td>
               <td>
                 <span v-if="adminStore.currentType === 'channelPlaylist'">{{ item.priority }}</span>
-                <span v-if="adminStore.currentType === 'mistStream'">{{ item.comment }}</span>
+                <span v-if="adminStore.currentType === 'mistStream'">{{ item.mime_type }}</span>
               </td>
               <td>
                 <span v-if="adminStore.currentType === 'channelPlaylist'">{{ item.repeat_mode }}</span>
-                <span v-if="adminStore.currentType === 'mistStream'">{{ formatDate(item.created_at) }}</span>
+                <span v-if="adminStore.currentType === 'mistStream'">{{ item.comment }}</span>
               </td>
               <td>
                 <span v-if="adminStore.currentType === 'channelPlaylist'">{{ formatDateTime(item.start_time) }}</span>
-                <span v-if="adminStore.currentType === 'mistStream'">{{ formatDate(item.updated_at) }}</span>
+                <span v-if="adminStore.currentType === 'mistStream'">{{ formatDateTime(item.created_at) }}</span>
               </td>
-              <td v-if="adminStore.currentType === 'channelPlaylist'">
-                <span >{{ formatDateTime(item.end_time) }}</span>
+              <td>
+                <span v-if="adminStore.currentType === 'channelPlaylist'">{{ formatDateTime(item.end_time) }}</span>
+                <span v-if="adminStore.currentType === 'mistStream'">{{ formatDateTime(item.updated_at) }}</span>
               </td>
             </tr>
             </tbody>
-            <tfoot>
-            <tr>
-              <td>
-                <span v-if="adminStore.currentType === 'channelPlaylist'">Active</span>
-                <span v-if="adminStore.currentType === 'mistStream'">Active</span>
-              </td>
-              <td>
-                <span v-if="adminStore.currentType === 'channelPlaylist'">Name</span>
-                <span v-if="adminStore.currentType === 'mistStream'">Source</span>
-              </td>
-              <td>
-                <span v-if="adminStore.currentType === 'channelPlaylist'">Type</span>
-                <span v-if="adminStore.currentType === 'mistStream'">Name</span>
-              </td>
-              <td>
-                <span v-if="adminStore.currentType === 'channelPlaylist'">Priority</span>
-                <span v-if="adminStore.currentType === 'mistStream'">Comment</span>
-              </td>
-              <td>
-                <span v-if="adminStore.currentType === 'channelPlaylist'">Repeat Mode</span>
-                <span v-if="adminStore.currentType === 'mistStream'">Created At</span>
-              </td>
-              <td>
-                <span v-if="adminStore.currentType === 'channelPlaylist'">Start Time</span>
-                <span v-if="adminStore.currentType === 'mistStream'">Updated At</span>
-              </td>
-              <td v-if="adminStore.currentType === 'channelPlaylist'">
-                <span >End Time</span>
-              </td>
-            </tr>
-            </tfoot>
           </table>
         </div>
         <div class="flex flex-row justify-center mt-6 w-full">
           <div class="join grid grid-cols-2">
-            <button class="join-item btn btn-sm btn-outline">Previous page</button>
-            <button class="join-item btn btn-sm btn-outline">Next</button>
+            <button class="join-item btn btn-sm btn-outline" @click="adminStore.prevPage">Previous page</button>
+            <button class="join-item btn btn-sm btn-outline" @click="adminStore.nextPage">Next</button>
           </div>
         </div>
       </div>
@@ -129,6 +105,18 @@
 
 
 
+      <dialog id="confirmSelectionModal" class="modal">
+        <div class="modal-box">
+          <h3 class="font-bold text-lg">Confirm Selection</h3>
+          <p class="py-4">
+            Are you sure you want to select <span id="selectedItemName"></span>?
+          </p>
+          <div class="modal-action">
+            <button class="btn" @click="confirmSelection">Confirm</button>
+            <button class="btn" onclick="document.getElementById('confirmSelectionModal').close()">Cancel</button>
+          </div>
+        </div>
+      </dialog>
 
 
 
@@ -136,7 +124,7 @@
       <div class="modal-action">
         <form method="dialog">
           <!-- if there is a button, it will close the modal -->
-          <button class="btn">Close</button>
+          <button class="btn" @click="adminStore.clearSelectedChannelAndItems">Close</button>
         </form>
       </div>
     </div>
@@ -149,7 +137,7 @@ import { useAdminStore } from '@/Stores/AdminStore'
 import debounce from "lodash/debounce"
 
 const adminStore = useAdminStore();
-const searchTerm = ref('');
+// const searchTerm = ref('');
 
 let props = defineProps({
   type: String
@@ -166,10 +154,26 @@ const currentItemId = computed(() => adminStore.activeItem);
 
 // watch(searchTerm, debouncedFetchItems);
 
+
+const selectedItem = ref(null); // A reactive property to hold the currently selected item
+
 const selectItem = (item) => {
-  adminStore.updateActiveItemId(item.id);
-  // Handle additional logic for item selection if necessary
+  selectedItem.value = item; // Store the item temporarily
+  document.getElementById('selectedItemName').textContent = item.name; // Display the name in the modal
+  document.getElementById('confirmSelectionModal').showModal(); // Open the modal for confirmation
 };
+
+const confirmSelection = async () => {
+  if (selectedItem.value) {
+    await adminStore.updateActiveItemId(selectedItem.value.id);
+    document.getElementById('confirmSelectionModal').close(); // Close the modal
+    // Handle additional logic for item selection if necessary
+  }
+};
+// const selectItem = async (item) => {
+//   await adminStore.updateActiveItemId(item.id);
+//   // Handle additional logic for item selection if necessary
+// };
 
 onMounted(async () => {
   await adminStore.fetchItems(props.type)

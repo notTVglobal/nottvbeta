@@ -12,21 +12,21 @@
         <div>
           <Link :href="`#`">
             <button
-                class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 mr-2 rounded disabled:bg-gray-400"
+                class="btn btn-sm bg-green-500 hover:bg-green-600 text-white px-4 py-2 mr-2 rounded disabled:bg-gray-400"
                 disabled
             >Add Channel
             </button>
           </Link>
           <Link :href="`#`">
             <button
-                class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 mr-2 rounded disabled:bg-gray-400"
+                class="btn btn-sm bg-green-500 hover:bg-green-600 text-white px-4 py-2 mr-2 rounded disabled:bg-gray-400"
                 disabled
             >Add External Source
             </button>
           </Link>
           <Link :href="`#`">
             <button
-                class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 mr-2 rounded disabled:bg-gray-400"
+                class="btn btn-sm bg-green-500 hover:bg-green-600 text-white px-4 py-2 mr-2 rounded disabled:bg-gray-400"
                 disabled
             >Add Channel Playlist
             </button>
@@ -34,7 +34,7 @@
           <AdminAddMistStreamModal />
 
         </div>
-        <input v-model="search" type="search" placeholder="Search..." class="border px-2 rounded-lg"/>
+        <input v-model="adminStore.searchTerm" type="search" placeholder="Search..." class="border px-2 rounded-lg"/>
       </div>
 
       <div class="bg-orange-300 px-2 text-black mb-3">
@@ -60,7 +60,7 @@
                     <div class="table-row">
                       <div scope="col" class="table-cell px-6 py-3 uppercase">
                         <font-awesome-icon icon="fa-repeat" class="mr-2 cursor-pointer hover:text-blue-500"
-                                           @click.prevent="reload()"/>
+                                           @click.prevent="reloadChannelsList()"/>
                         <span class="uppercase">Channel </span>
                       </div>
                       <div scope="col" class="hidden md:table-cell px-6 py-3 uppercase">
@@ -71,8 +71,7 @@
                         <span class="italic text-xs text-gray-400"></span>
                       </div>
                       <div scope="col" class="px-6 py-3 max-w-64">
-                        <span class="uppercase">Channel Playlist</span> <br />
-                        <span class="italic text-xs text-gray-400">Knows the currently playing object to feed our NowPlayingInfo panel. Push the object to the set MistStream via ffmpeg realtime video playout. Will need to make it through a validateUser trigger. This will allow the MistServer receiving the streams to Push out to the actual playback destinations... e.g., a closer MistServer to the user on Kubernetes to scale with a load balancer as needed, or to LivePeer, or to Cloudflare, or to PeerTube.</span>
+                        <span class="uppercase">Channel Playlist</span>
                       </div>
                       <div scope="col" class="table-cell px-6 py-3">
                         <span class="uppercase">Mist Stream</span> <br/>
@@ -83,7 +82,7 @@
                   </div>
                   <div class="table-row-group">
                     <div
-                        v-for="channel in channels.data"
+                        v-for="channel in adminStore.paginatedChannels"
                         :key="channel.id"
                         class="table-row bg-white border-b dark:bg-gray-800 dark:border-gray-700"
                     >
@@ -155,12 +154,24 @@
                         </div>
                         <div v-else>
                           <button @click="openModal(channel, 'externalSource')">
-                            <span v-if="channel?.externalSource" class="text-green-500 font-semibold">{{ channel?.externalSource }}</span>
+                            <div v-if="channel?.channel_external_source" class="text-gray-700 tracking-wide">
+                              <span v-if="channel.playback_priority_type === 'externalSource'" :class="{'text-black font-bold': channel.playback_priority_type === 'externalSource'}">{{ channel?.channel_external_source.name }}</span>
+                              <span v-else>{{ channel?.channel_external_source.name }}</span>
+                            </div>
                             <span v-else class="italic text-gray-300 text-sm">no source</span>
                           </button>
                           <!-- Status indicator + action to change source -->
-                          <source-selector :priority="channel.playbackPriorityType" :source="channel.externalSource" @change="updateSource(channel.id, $event, 'external')"></source-selector>
-
+                          <source-selector :source="channel"
+                                           :source-type="'externalSource'" />
+<!--                          -->
+<!--                          <div v-if="channel.playback_priority_type === 'externalSource'">-->
+<!--                            <button class="btn btn-xs hover:bg-green-500 bg-green-500">Priority</button>-->
+<!--                          </div>-->
+<!--                          <div v-else>-->
+<!--                            <button class="btn btn-xs"-->
+<!--                                    :class="{'bg-green-500':channel.playback_priority_type === 'externalSource'}"-->
+<!--                                    @click="adminStore.setPlaybackPriorityType(channel,'externalSource')">Set as Priority</button>-->
+<!--                          </div>-->
                         </div>
 
                       </div>
@@ -188,28 +199,74 @@
                         </div>
                         <div v-else>
                           <button @click="openModal(channel, 'channelPlaylist')">
-                            <span v-if="channel?.channelPlaylist" class="text-green-500 font-semibold">{{ channel?.channelPlaylist }}</span>
+                            <div v-if="channel?.channel_playlist" class="text-gray-700 tracking-wide">
+                              <span v-if="channel.playback_priority_type === 'channelPlaylist'" :class="{'text-black font-bold': channel.playback_priority_type === 'channelPlaylist'}">{{ channel?.channel_playlist.name }}</span>
+                              <span v-else>{{ channel?.channel_playlist.name }}</span>
+                            </div>
                             <span v-else class="italic text-gray-300 text-sm">no playlist</span>
                           </button>
-                          <source-selector :priority="channel?.playbackPriorityType" :source="channel?.channelPlaylist" @change="updateSource(channel.id, $event, 'playlist')"></source-selector>
+                          <source-selector :source="channel"
+                                           :source-type="'channelPlaylist'" />
 
+<!--                          <div v-if="channel.playback_priority_type === 'channelPlaylist'">-->
+<!--                            <button class="btn btn-xs hover:bg-green-500 bg-green-500">Priority</button>-->
+<!--                          </div>-->
+<!--                          <div v-else>-->
+<!--                            <button class="btn btn-xs"-->
+<!--                                    :class="{'bg-green-500':channel.playback_priority_type === 'channelPlaylist'}"-->
+<!--                                    @click="adminStore.setPlaybackPriorityType(channel,'channelPlaylist')">Set as Priority</button>-->
+<!--                          </div>-->
                         </div>
 
                       </div>
                       <div class="table-cell px-6 py-4">
                         <button @click="openModal(channel, 'mistStream')">
-                          <span v-if="channel?.mistStream" class="text-green-500 font-semibold">{{ channel?.mistStream }}</span>
+                          <div v-if="channel?.mist_stream" class="text-gray-700 tracking-wide">
+                            <span v-if="channel.playback_priority_type === 'mistStream'" :class="{'text-black font-bold': channel.playback_priority_type === 'mistStream'}">{{ channel?.mist_stream.name }}</span>
+                            <span v-else>{{ channel?.mist_stream.name }}</span>
+                          </div>
                           <span v-else class="italic text-gray-300 text-sm">no mist stream</span>
                         </button>
                         <!-- Status indicator + action to change source -->
-                        <source-selector :source="channel?.mistStream" @change="updateSource(channel.id, $event, 'mist')"></source-selector>
+                        <source-selector :source="channel"
+                                         :source-type="'mistStream'" />
+<!--                        <div v-if="channel.playback_priority_type === 'mistStream'">-->
+<!--                          <button class="btn btn-xs hover:bg-green-500 bg-green-500">Priority</button>-->
+<!--                        </div>-->
+<!--                        <div v-else>-->
+<!--                          <button class="btn btn-xs"-->
+<!--                                  :class="{'bg-green-500':channel.playback_priority_type === 'mistStream'}"-->
+<!--                                  @click="adminStore.setPlaybackPriorityType(channel,'mistStream')">Set as Priority</button>-->
+<!--                        </div>-->
                       </div>
 
                     </div>
                   </div>
                 </div>
                 <!-- Paginator -->
-                <Pagination :data="channels" class="pb-6"/>
+                <div class="flex flex-row justify-center my-6 w-full">
+<!--                  <div class="join grid grid-cols-2">-->
+<!--                    <button class="join-item btn btn-sm btn-outline" @click="adminStore.prevChannelsPage">Previous page</button>-->
+<!--                    <button class="join-item btn btn-sm btn-outline" @click="adminStore.nextChannelsPage">Next</button>-->
+<!--                  </div>-->
+                  <div class="join">
+                    <input
+                        v-for="page in adminStore.totalChannelsPages"
+                        :key="page"
+                        type="radio"
+                        name="options"
+                        :value="page"
+                        v-model="adminStore.currentChannelsPage"
+                        @change="() => adminStore.setChannelsPage(page)"
+                        class="join-item btn btn-square !bg-none"
+                        :aria-label="`${page}`"
+                    />
+                  </div>
+
+                </div>
+
+
+
               </div>
               <DynamicModal />
 
@@ -225,7 +282,7 @@
 
 <script setup>
 import { Inertia } from "@inertiajs/inertia";
-import { ref, watch } from "vue"
+import { onMounted, ref, watch } from 'vue'
 import throttle from "lodash/throttle"
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"
 import { usePageSetup } from '@/Utilities/PageSetup'
@@ -234,9 +291,9 @@ import { useAdminStore } from '@/Stores/AdminStore'
 import AdminHeader from "@/Components/Pages/Admin/AdminHeader"
 import Message from "@/Components/Global/Modals/Messages"
 import Pagination from "@/Components/Global/Paginators/Pagination"
-import SourceSelector from '@/Components/Pages/Admin/Channels/AdminChannelSourceSelector'
-import DynamicModal from '@/Components/Pages/Admin/Channels/DynamicModal.vue'
-import AdminAddMistStreamModal from '@/Components/Pages/Admin/Channels/AdminAddMistStreamModal.vue'
+import SourceSelector from '@/Components/Pages/Admin/Channels/SourceSelector'
+import DynamicModal from '@/Components/Pages/Admin/Channels/DynamicModal'
+import AdminAddMistStreamModal from '@/Components/Pages/Admin/Channels/AdminAddMistStreamModal'
 
 usePageSetup('admin.channels')
 
@@ -244,9 +301,9 @@ const appSettingStore = useAppSettingStore()
 const adminStore = useAdminStore()
 
 let props = defineProps({
-  channels: Object,
-  mistStreams: Object,
-  filters: Object,
+  // channels: Object,
+  // mistStreams: Object,
+  // filters: Object,
 })
 
 // function hasChannelSource (channel) {
@@ -255,6 +312,9 @@ let props = defineProps({
 //     }
 // }
 
+
+adminStore.fetchChannels()
+
 function hasChannelSource(channel) {
   if (channel && channel.source && channel.source.name) {
     return channel.source.name;
@@ -262,14 +322,14 @@ function hasChannelSource(channel) {
   return null; // Or return any other default value if needed
 }
 
-let search = ref(props.filters.search);
+// let search = ref(props.filters.search);
 
-watch(search, throttle(function (value) {
-  Inertia.get('/admin/channels', {search: value}, {
-    preserveState: true,
-    replace: true
-  });
-}, 300));
+// watch(search, throttle(function (value) {
+//   Inertia.get('/admin/channels', {search: value}, {
+//     preserveState: true,
+//     replace: true
+//   });
+// }, 300));
 
 const hasPriority = (playbackPriorityType) => {
   if (playbackPriorityType) {
@@ -278,18 +338,26 @@ const hasPriority = (playbackPriorityType) => {
 }
 
 const openModal = (channel, type) => {
-  // const currentItem = {
-  //   // id: channel[`${type}_id`], // Dynamically access the ID based on type
-  //   type: type, // This could be additional context if needed
-  //   // Include other relevant details or fetch based on this ID
-  // };
-  adminStore.reset();
-  adminStore.setSelectedChannel(channel);
-  adminStore.setCurrentType(type);
-  adminStore.fetchItems(type); // Optionally prefetch items if the modal needs it
-
-  document.getElementById('dynamicModal').showModal(); // Assuming the modal has an ID of 'dynamicModal'
+  // adminStore.reset()
+  // adminStore.fetchChannels()
+  adminStore.setSelectedChannel(channel)
+  adminStore.setCurrentType(type)
+  adminStore.fetchItems(type) // Optionally prefetch items if the modal needs it
+  document.getElementById('dynamicModal').showModal() // Assuming the modal has an ID of 'dynamicModal'
 };
+
+const setPlaybackPriorityType = async (channel, priorityType) => {
+  const dataToSend = { setPriorityType: priorityType }
+  try {
+    const response = await axios.post(`/admin/channels/${channel.id}/setPlaybackPriorityType`, dataToSend)
+    // do something here
+  } catch(error) {
+        console.log(error)
+      }
+}
+const reloadChannelsList = () => {
+  adminStore.fetchChannels()
+}
 
 </script>
 

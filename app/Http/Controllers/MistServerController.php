@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AppSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -23,5 +24,9 @@ class MistServerController extends Controller
 
       // Positive response for blocking triggers
       return response('1', 200);
+    }
+
+    public function uri() {
+      return AppSetting::where('id', 1)->pluck('mist_server_uri')->first();
     }
 }

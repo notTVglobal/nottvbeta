@@ -17,7 +17,7 @@
     <div v-if="shouldDisplayOtt"
          ref="scrollRef"
          class="channelsMenu overflow-y-auto"
-         :class="[appSettingStore.fullPage ? 'channelsFullPageContainer' : 'ottTopRightDisplay', 'bg-green-900']">
+         :class="[appSettingStore.fullPage ? 'channelsFullPageContainer opacity-95' : 'ottTopRightDisplay', 'bg-green-900']">
 
       <div v-if="showUpgrade && !appSettingStore.fullPage">
         <upgrade />

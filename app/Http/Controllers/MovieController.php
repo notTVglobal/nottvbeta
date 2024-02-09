@@ -252,17 +252,19 @@ class MovieController extends Controller {
 //    $video = Video::where('movies_id', $movie->id)->first();
 //    $trailer = Video::where('movie_trailers_id', $movie->id)->first();
 
-    $movie->load('trailer.video', 'video.appSetting', 'image', 'video', 'team', 'appSetting', 'category', 'subCategory', 'status', 'creativeCommons'); // Eager load necessary relationships
+    $movie->load('trailers.video', 'video.appSetting', 'image', 'video', 'team', 'appSetting', 'category', 'subCategory', 'status', 'creativeCommons'); // Eager load necessary relationships
 
     // Determine the media type based on its storage location.
     // If the storage location is marked as 'external', categorize it as 'externalVideo';
     // otherwise, it's considered an internal 'show' video.
     // Attempt to determine the media type based on the storage location of the video
     $movieStorageLocation = $movie->video?->storage_location;
-    $movieTrailerStorageLocation = $movie->trailer?->video?->storage_location;
     // Determine the media type based on the storage location, default to 'show'
     $mediaTypeMovie = $movieStorageLocation === 'external' ? 'externalVideo' : 'movie';
-    $mediaTypeMovieTrailer = $movieTrailerStorageLocation === 'external' ? 'externalVideo' : 'movie';
+
+// Movies HasMany Movie Trailers... so these need to be part of an array...
+//    $movieTrailerStorageLocation = $movie->trailers?->video?->storage_location;
+//    $mediaTypeMovieTrailer = $movieTrailerStorageLocation === 'external' ? 'externalVideo' : 'movie';
 
 
 //  Generate the secure URL with hash for Mist Server Access Control
@@ -351,7 +353,7 @@ class MovieController extends Controller {
                 'storage_location' => $movie->video->storage_location ?? '',
             ],
             'trailer'          => [
-                'mediaType'        => $mediaTypeMovieTrailer, // New attribute for NowPlayingStore
+                'mediaType'        => null, // New attribute for NowPlayingStore
                 'file_name'        => $movie->trailer->video->file_name ?? '',
                 'cdn_endpoint'     => $movie->trailer->video->appSetting->cdn_endpoint ?? '',
                 'folder'           => $movie->trailer->video->folder ?? '',

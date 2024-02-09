@@ -113,6 +113,7 @@ class HandleInertiaRequests extends Middleware {
             'success' => fn() => $request->session()->get('success'),
             'warning' => fn() => $request->session()->get('warning'),
             'error'   => fn() => $request->session()->get('error'),
+            'feedback' => fn() => $request->session()->get('feedback'),
         ],
         'firstPlay' => fn() => $firstPlayData,
     ]);

@@ -8,6 +8,7 @@ use App\Http\Controllers\ChannelController;
 use App\Http\Controllers\ChannelExternalSourceController;
 use App\Http\Controllers\ChannelPlaylistController;
 use App\Http\Controllers\FlashController;
+use App\Http\Controllers\MistServerController;
 use App\Http\Controllers\MistStreamController;
 use App\Http\Controllers\NewsRssFeedItemArchiveController;
 use App\Http\Controllers\NewsRssFeedItemTempController;
@@ -272,12 +273,16 @@ Route::middleware([
         ->name('channels');
 
     // Admin manage the channels
-    Route::get('/admin/channels', [ChannelController::class, 'index'])
+    Route::get('/admin/channels', [AdminController::class, 'adminChannelsPage'])
         ->can('viewAdmin', 'App\Models\User')
         ->name('admin.channels');
 
   Route::get('/admin/channels/search/{type}', [ChannelController::class, 'search']);
   Route::post('/admin/channels/{channel}/{type}/update', [ChannelController::class, 'updateType']);
+  Route::post('/admin/channels/{channel}/setPlaybackPriorityType', [ChannelController::class, 'setPlaybackPriorityType']);
+  Route::post('/admin/channels/{channel}/setMistStream', [ChannelController::class, 'setMistStream']);
+  Route::post('/admin/channels/{channel}/setChannelPlaylist', [ChannelController::class, 'setChannelPlaylist']);
+  Route::post('/admin/channels/{channel}/setExternalSource', [ChannelController::class, 'setExternalSource']);
 
 
 // Shop
@@ -899,6 +904,13 @@ Route::middleware([
 Route::resource('mistStreams', MistStreamController::class);
 Route::get('/admin/mist-stream/search', [MistStreamController::class, 'adminSearchMistStreams']);
 
+// Mist Server
+//////////////
+///
+
+Route::get('/mist-server/uri', [MistServerController::class, 'uri']);
+
+
 // Channel Playlists
 ////////////////////
 ///
@@ -932,6 +944,13 @@ Route::post('/api/schedule/{id}', [\App\Http\Controllers\ShowScheduleController:
     Route::delete('/notifications/{notification}', [NotificationsController::class, 'destroy']);
     Route::delete('/notifications', [NotificationsController::class, 'destroyAll']);
 
+
+// Feedback Form
+////////////////
+///
+
+    Route::post('/user/feedback', [UsersController::class, 'submitFeedback'])
+    ->name('user.feedback');
 
 
 //Route::any('/{any}', function() {

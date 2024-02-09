@@ -57,8 +57,8 @@
           </button>
           <button
               @click="appSettingStore.btnRedirect(`/admin/channels`)"
-              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"
-          >All Channels
+              class="bg-orange-600 hover:bg-orange-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"
+          >Channels
           </button>
           <button
               @click="appSettingStore.btnRedirect(`/admin/mistServerApi`)"

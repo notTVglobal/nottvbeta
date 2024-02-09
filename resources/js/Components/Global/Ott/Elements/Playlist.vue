@@ -8,7 +8,7 @@
       leave-to-class="opacity-0"
   >
     <div v-if="shouldDisplayOtt"
-         :class="[appSettingStore.fullPage ? 'playlistFullPageContainer' : 'ottTopRightDisplay', 'bg-orange-800 hide-scrollbar']">
+         :class="[appSettingStore.fullPage ? 'playlistFullPageContainer opacity-95' : 'ottTopRightDisplay', 'bg-orange-800 hide-scrollbar']">
 
       <div class="h-full w-full overflow-y-hidden scrollbar-hide">
 

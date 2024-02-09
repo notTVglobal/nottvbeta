@@ -11,7 +11,7 @@ class ChannelApiController extends Controller
 {
     public function index()
     {
-        return Channel::with(['channelSource', 'video'])->get();
+        return Channel::with(['channelExternalSource', 'channelPlaylist', 'mistStream'])->get();
     }
 
     /**

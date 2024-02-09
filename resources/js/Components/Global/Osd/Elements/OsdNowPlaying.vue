@@ -4,7 +4,9 @@
     <div
         class="w-fit flex flex-row justify-start text-xs text-gray-500 break-words uppercase tracking-wider"
         :class="{ 'pt-4': applyPaddingTop }">
-      Now Playing <span class="text-xs text-gray-700 tracking-widest"
+      Now Playing
+      <span class="text-gray-500 tracking-widest" v-if="nowPlayingStore.activeMedia.type==='channel'">&nbsp;<span class="text-yellow-400">{{ channelStore.currentChannelName }}&nbsp;Channel</span></span>
+      <span class="text-xs text-gray-700 tracking-widest"
                         v-if="nowPlayingStore.activeMedia.type==='externalVideo'">&nbsp;&nbsp;external video</span>
     </div>
     <div>
@@ -69,9 +71,11 @@
 
 <script setup>
 import { useNowPlayingStore } from '@/Stores/NowPlayingStore'
+import { useChannelStore } from '@/Stores/ChannelStore'
 import { computed } from 'vue'
 
 const nowPlayingStore = useNowPlayingStore()
+const channelStore = useChannelStore()
 
 const applyPaddingTop = computed(() => {
   return nowPlayingStore.isLive || nowPlayingStore.viewerCountIsVisible

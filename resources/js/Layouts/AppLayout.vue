@@ -32,7 +32,9 @@
           v-show="!appSettingStore.noLayout"
           :user="user" />
 
-      <DialogNotification/>
+      <DialogNotification v-if="user"/>
+      <GeneralServiceNotification v-if="user" />
+      <OrangeFeedbackBox v-if="user"/>
     </div>
   </div>
 </template>
@@ -62,6 +64,8 @@ const Login = defineAsyncComponent(() =>
 // const VideoPlayerMain = defineAsyncComponent( () =>
 //     import('@/Components/Global/VideoPlayer/VideoPlayerMain'))
 import VideoPlayerMain from "@/Components/Global/VideoPlayer/VideoPlayerMain"
+import GeneralServiceNotification from '@/Components/Global/Modals/GeneralServiceNotification.vue'
+import OrangeFeedbackBox from '@/Components/Global/Feedback/OrangeFeedbackBox.vue'
 
 const appSettingStore = useAppSettingStore();
 const videoPlayerStore = useVideoPlayerStore()

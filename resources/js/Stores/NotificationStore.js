@@ -22,6 +22,8 @@ const initialState = () => ({
     // onClickAction, close or redirect
     onClickAction: '',
     redirectPageUri: '',
+    generalServiceNotification: null, // put a title and a body in here, the modal opens in AppLayout
+    showGeneralServiceNotification: false, // used with the generalServiceNotification title and body, the modal opens in AppLayout
 })
 
 export const useNotificationStore = defineStore('notificationStore', {
@@ -30,6 +32,19 @@ export const useNotificationStore = defineStore('notificationStore', {
         reset() {
             // Reset the store to its original state (clear all data)
             Object.assign(this, initialState());
+        },
+        setGeneralServiceNotification(title, body) {
+            console.log('open modal')
+          this.generalServiceNotification = {
+              'title': title,
+              'body': body
+          }
+          document.getElementById('generalServiceNotificationModal').showModal()
+          this.showGeneralServiceNotification = true
+        },
+        clearGeneralServiceNotification() {
+            this.generalServiceNotification = null
+            this.showGeneralServiceNotification = false
         },
         clearNotification() {
             this.title = '';

@@ -1,7 +1,14 @@
 # not.tv Changelog
 
-Last Update: February 5, 2024\
+Last Update: February 9, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+# v0.8.6.0
+February 9, 2024
+* Channel scheduling system has gone through some big updates. It's a work in progress, however, and while we can choose MistStreams for channel playback we still need to creat the modal form to Add new MistStreams.
+* Added a Feedback Form button that floats across all pages for logged in viewers
+* Increased the @media screen base px size on 1024-1920px width screens.
+* Other changes... see git log commit history for more info.
 
 # v0.8.5.0
 February 5, 2024

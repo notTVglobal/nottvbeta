@@ -33,7 +33,7 @@ class Channel extends Model {
     return $this->belongsTo(ChannelPlaylist::class, 'channel_playlist_id');
   }
 
-  public function externalSource(): \Illuminate\Database\Eloquent\Relations\BelongsTo {
+  public function channelExternalSource(): \Illuminate\Database\Eloquent\Relations\BelongsTo {
     return $this->belongsTo(ChannelExternalSource::class, 'channel_external_source_id');
   }
 

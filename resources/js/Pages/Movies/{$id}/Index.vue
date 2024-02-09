@@ -370,7 +370,7 @@ let playMovie = () => {
     ...commonDetails,
     videoDetails, // Spread in the specific details for internal or external video
   });
-  videoPlayerStore.loadNewVideo(movie.video);
+  // videoPlayerStore.loadNewVideo(movie.video);
   // Assuming `window.audioContext` is your global AudioContext
   // if (window.audioContext.state === 'suspended') {
   //     window.audioContext.resume().then(() => {
@@ -380,21 +380,22 @@ let playMovie = () => {
   //         console.error('Error resuming AudioContext:', error);
   //     });
   // } else {
-  //   videoPlayerStore.playNewVideo(movie.video);
+  //   videoPlayerStore.loadNewVideo(movie.video);
   // }
-  // // Load the video source in videoPlayerStore for playback
-  // if (isInternalVideo) {
-  //   // For internal videos, load using the episode video directly
-  //   videoPlayerStore.loadNewSourceFromFile(movie.video);
-  // } else if (isExternalVideo) {
-  //   // For external videos, focus on the video_url and type provided within the episode's video details
-  //   if (movie.video && movie.video.video_url) {
-  //     videoPlayerStore.loadNewSourceFromUrl({
-  //       video_url: movie.video.video_url,
-  //       type: movie.video.type // This assumes that 'type' is correctly set to 'video/mp4' or appropriate video MIME type
-  //     });
-  //   }
-  // }
+  // Load the video source in videoPlayerStore for playback
+  if (isInternalVideo) {
+    // For internal videos, load using the episode video directly
+    videoPlayerStore.loadNewVideo(movie.video);
+    // videoPlayerStore.loadNewSourceFromFile(movie.video);
+  } else if (isExternalVideo) {
+    // For external videos, focus on the video_url and type provided within the episode's video details
+    if (movie.video && movie.video.video_url) {
+      videoPlayerStore.loadNewSourceFromUrl({
+        video_url: movie.video.video_url,
+        type: movie.video.type // This assumes that 'type' is correctly set to 'video/mp4' or appropriate video MIME type
+      });
+    }
+  }
 
   appSettingStore.ott = 1
   // Inertia.visit('/stream');

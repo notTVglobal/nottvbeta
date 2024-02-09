@@ -170,6 +170,9 @@ const clickOnVideoAction = () => {
     } else {
       // videoPlayerStore.togglePlay()
       appSettingStore.toggleOsd()
+      if (appSettingStore.ott === 2 || appSettingStore.ott === 3 || appSettingStore.ott === 5 ) {
+        appSettingStore.closeOtt()
+      }
     }
   } else if (!appSettingStore.pipChatMode) {
     Inertia.visit('/stream')

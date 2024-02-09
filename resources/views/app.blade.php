@@ -27,11 +27,12 @@
             /*}*/
 
             /* Optional: Scaling using root font size */
-            @media screen and (min-width: 1920px) {
+            @media screen and (min-width: 1024px) {
                 html {
-                    font-size: 18px; /* Increase the base font size */
+                    font-size: 24px; /* Increase the base font size */
                 }
             }
+
             @media screen and (min-width: 2560px) {
                 html {
                     font-size: 24px; /* Increase the base font size */

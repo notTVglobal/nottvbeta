@@ -1,5 +1,5 @@
 <template>
-  <button class="btn bg-green-500 hover:bg-green-600 text-white px-4 py-2 mr-2 rounded-lg disabled:bg-gray-400"
+  <button class="btn btn-sm bg-green-500 hover:bg-green-600 text-white px-4 py-2 mr-2 rounded-lg disabled:bg-gray-400"
           onclick="adminAddMistStreamModal.showModal()">
     Add Mist Stream
   </button>

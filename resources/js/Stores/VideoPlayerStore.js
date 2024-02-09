@@ -10,6 +10,7 @@ import { usePage } from '@inertiajs/inertia-vue3'
 import { nextTick } from 'vue'
 
 const initialState = () => ({
+    mistServerUri: 'https://mist.nottv.io/', // tec21: 2024-02-09, if we don't start with the address here changing channels is really slow and buggy. Address for the MistServer listed in the Admin Settings saved in AppSetting
     player: null, // Video.js player instance
     eventListenersAttached: false, // Track if listeners are attached
     videoPlayerLoaded: false,
@@ -58,117 +59,126 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             Object.assign(this, initialState())
         },
 
+        async getMistServerUri() {
+            try {
+                let response = await axios.get('/mist-server/uri')
+                this.mistServerUri = response.data
+            } catch (error) {
+                console.error(error)
+            }
+        },
+
         // Initialize or update the player instance
         setPlayer(playerInstance) {
-            this.player = playerInstance;
+            this.player = playerInstance
             this.initializePlayer().then(() => {
-                this.attachEventListeners(); // Attach event listeners after initialization
+                this.attachEventListeners() // Attach event listeners after initialization
             }).catch(error => {
-                console.error('Error during video player initialization:', error);
-            });
+                console.error('Error during video player initialization:', error)
+            })
         },
 
         // Initialize the player with necessary settings and start playback
         async initializePlayer() {
             if (!this.player) {
-                console.error('Video.js player is not initialized.');
-                return;
+                console.error('Video.js player is not initialized.')
+                return
             }
 
-            await nextTick(); // Ensure Vue's DOM updates are processed
+            await nextTick() // Ensure Vue's DOM updates are processed
 
             // Perform any necessary audio context and node setup
-            await useAudioStore().ensureAudioContextAndNodesReady(this.player);
+            await useAudioStore().ensureAudioContextAndNodesReady(this.player)
 
             // Apply initial player settings
-            this.player.controls(false);
-            this.player.muted(this.muted);
+            this.player.controls(false)
+            this.player.muted(this.muted)
 
             // Attempt to start playback
             this.player.ready(() => {
                 this.player.play().then(() => {
-                    console.log('Playback started successfully');
+                    console.log('Playback started successfully')
                 }).catch(error => {
-                    console.error('Error trying to play the video:', error);
+                    console.error('Error trying to play the video:', error)
                     // Handle the error (e.g., showing a user-friendly message)
-                });
-            });
+                })
+            })
         },
 
         // Attach event listeners to the player
         attachEventListeners() {
             if (!this.player || this.eventListenersAttached) {
-                console.log('Event listeners are already attached or video player is not initialized.');
-                return;
+                console.log('Event listeners are already attached or video player is not initialized.')
+                return
             }
 
-            this.player.on('timeupdate', this.handleTimeUpdate);
-            this.player.on('fullscreenchange', this.handleFullscreenChange);
-            this.player.on('play', this.handlePlay);
-            this.player.on('pause', this.handlePause);
-            this.player.on('error', this.handleError);
+            this.player.on('timeupdate', this.handleTimeUpdate)
+            this.player.on('fullscreenchange', this.handleFullscreenChange)
+            this.player.on('play', this.handlePlay)
+            this.player.on('pause', this.handlePause)
+            this.player.on('error', this.handleError)
 
-            this.eventListenersAttached = true;
-            console.log('Event listeners attached.');
+            this.eventListenersAttached = true
+            console.log('Event listeners attached.')
         },
 
         // Detach event listeners from the player
         detachEventListeners() {
             if (!this.player || !this.eventListenersAttached) {
-                console.log('Event listeners are already detached or video player is not initialized.');
-                return;
+                console.log('Event listeners are already detached or video player is not initialized.')
+                return
             }
 
             useAudioStore().stopAudioLevelMonitoring()
-            this.player.off('timeupdate', this.handleTimeUpdate);
-            this.player.off('fullscreenchange', this.handleFullscreenChange);
-            this.player.off('play', this.handlePlay);
-            this.player.off('pause', this.handlePause);
-            this.player.off('error', this.handleError);
+            this.player.off('timeupdate', this.handleTimeUpdate)
+            this.player.off('fullscreenchange', this.handleFullscreenChange)
+            this.player.off('play', this.handlePlay)
+            this.player.off('pause', this.handlePause)
+            this.player.off('error', this.handleError)
 
-            this.eventListenersAttached = false;
-            console.log('Event listeners detached.');
+            this.eventListenersAttached = false
+            console.log('Event listeners detached.')
         },
 
         // Dispose of the player and perform cleanup
         disposePlayer() {
             if (!this.player) {
-                console.error('Video player is not initialized.');
-                return;
+                console.error('Video player is not initialized.')
+                return
             }
 
-            this.detachEventListeners(); // Detach event listeners if attached
-            this.player.dispose(); // Dispose of the player instance
-            this.player = null; // Reset the player state
+            this.detachEventListeners() // Detach event listeners if attached
+            this.player.dispose() // Dispose of the player instance
+            this.player = null // Reset the player state
 
             // Optionally, stop audio level monitoring if linked to the player lifecycle
             // const audioStore = useAudioStore();
             // audioStore.stopAudioLevelMonitoring();
 
-            console.log('Video player disposed and cleaned up.');
+            console.log('Video player disposed and cleaned up.')
         },
 
         // New method to prepare for a new video source
         prepareForNewVideoSource(source) {
-            console.log('Preparing for new video source');
+            console.log('Preparing for new video source')
 
             // Example: Clear any existing channel or video-specific state
-            useChannelStore().clearChannel();
+            useChannelStore().clearChannel()
 
             // Reset or cleanup any existing video playback, if necessary
-            this.resetPlayback();
+            // this.resetPlayback();
 
             // Load and play the new video source
-            this.loadNewVideo(source);
+            this.loadNewVideo(source)
         },
 
         resetPlayback() {
             if (this.player) {
-                this.player.pause();
+                this.player.pause()
                 this.player.muted(true)
-                this.player.currentTime(0); // Optionally reset the time
+                this.player.currentTime(0) // Optionally reset the time
                 // Further cleanup logic here, if necessary
-                this.detachEventListeners(); // Detach event listeners if attached
+                this.detachEventListeners() // Detach event listeners if attached
             }
         },
 
@@ -176,10 +186,10 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
         handleTimeUpdate() {
             // console.log('Handling timeupdate...');
             // Implement your logic
-            this.currentTime = this.player.currentTime();
-            this.duration = this.player.duration();
-            const progressPercentage = (this.currentTime / this.duration) * 100;
-            this.formattedTime = `${this.formatDuration(this.currentTime)} / ${this.formatDuration(this.duration)}`;
+            this.currentTime = this.player.currentTime()
+            this.duration = this.player.duration()
+            const progressPercentage = (this.currentTime / this.duration) * 100
+            this.formattedTime = `${this.formatDuration(this.currentTime)} / ${this.formatDuration(this.duration)}`
 
             // Update UI elements or emit events as needed
             // Note: Direct manipulation of the DOM or component refs from the store is not recommended
@@ -187,15 +197,15 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
         },
         // for the handleTimeUpdate eventHandler
         formatDuration(durationInSeconds) {
-            const hours = Math.floor(durationInSeconds / 3600);
-            const minutes = Math.floor((durationInSeconds % 3600) / 60);
-            const seconds = Math.floor(durationInSeconds % 60);
+            const hours = Math.floor(durationInSeconds / 3600)
+            const minutes = Math.floor((durationInSeconds % 3600) / 60)
+            const seconds = Math.floor(durationInSeconds % 60)
 
-            const parts = [hours, minutes, seconds].map(part => part.toString().padStart(2, '0'));
-            return parts.join(':');
+            const parts = [hours, minutes, seconds].map(part => part.toString().padStart(2, '0'))
+            return parts.join(':')
         },
         handleFullscreenChange() {
-            console.log('Handling fullscreenchange...');
+            console.log('Handling fullscreenchange...')
             // Implement your logic
             this.player?.on('fullscreenchange', () => {
                 if (this.player.isFullscreen()) {
@@ -212,21 +222,21 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             })
         },
         handlePlay() {
-            console.log('Handling play...');
+            console.log('Handling play...')
             // Implement your logic
             this.player?.on('play', () => {
                 this.paused = false
             })
         },
         handlePause() {
-            console.log('Handling pause...');
+            console.log('Handling pause...')
             // Implement your logic
             this.player?.on('pause', () => {
                 this.paused = true
             })
         },
         handleError() {
-            console.log('Handling error...');
+            console.log('Handling error...')
             // Implement your logic
             this.player?.on('error', function () {
                 const error = this.player.error()
@@ -234,8 +244,8 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             })
         },
         makeBlue() {
-        // for testing. DO NOT REMOVE.
-        this.blue = true
+            // for testing. DO NOT REMOVE.
+            this.blue = true
         },
         // Apparently this loadFirstPlay isn't being used...
         // loadFirstPlay() {
@@ -258,33 +268,33 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
         // Toggle mute state
         toggleMute() {
             if (this.muted) {
-                this.unMute();
+                this.unMute()
             } else {
-                this.mute();
+                this.mute()
             }
         },
         // Mute the video
         mute() {
             if (this.player) {
-                this.player.muted(true);
-                this.muted = true;
-                console.log("Video muted");
+                this.player.muted(true)
+                this.muted = true
+                console.log('Video muted')
             }
         },
         // Unmute the video
         unMute() {
-            const audioStore = useAudioStore();
+            const audioStore = useAudioStore()
 
             if (this.player) {
                 // Prepare audio setup for when it's unmuted
-                audioStore.userInteractionForAudio();
+                audioStore.userInteractionForAudio()
 
                 // Optionally, if fadeInAudioFromMuted is a gradual process,
                 // ensure this.player.muted(false) is called within that function.
-                audioStore.fadeInAudioFromMuted();
+                audioStore.fadeInAudioFromMuted()
 
-                this.muted = false;
-                console.log("Video unmuted");
+                this.muted = false
+                console.log('Video unmuted')
             }
         },
         togglePlay() {
@@ -335,8 +345,6 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
         },
 
 
-
-
         // This playNewVideo was created to access the audioContext
         // which our audio compressor uses. This is new as of 2/2/2024
         // ~ tec21
@@ -381,23 +389,31 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
 
 
         getSourceDetails(source) {
-            let videoSrc, videoSourceType;
+            let videoSrc, videoSourceType
+
+            console.log('getSourceDetails called with source:', source);
 
             // Default to 'video/mp4' if type is not specified or is empty
-            videoSourceType = source.type || 'video/mp4';
+            videoSourceType = source.type || 'video/mp4'
+            console.log(`Determined Video Source Type: ${videoSourceType}`);
 
             if (source.mediaType === 'externalVideo') {
                 // For external videos, use the URL as provided without encoding
-                videoSrc = source.video_url;
+                videoSrc = source.video_url
+                console.log('Using external video source:', videoSrc);
             } else {
+                console.log('CDN Endpoint:', source.cdn_endpoint);
+                console.log('Cloud Folder:', source.cloud_folder);
+                console.log('Folder:', source.folder);
+                console.log('File Name:', source.file_name);
                 // For internal videos, construct the URL from its components
                 // Here, we assume the cdn_endpoint, cloud_folder, and folder are correctly formatted
                 // and do not require encoding. Only the file_name might need encoding.
-                const basePath = `${source.cdn_endpoint}${source.cloud_folder}${source.folder}/`;
+                const basePath = `${source.cdn_endpoint}${source.cloud_folder}${source.folder}/`
                 // const encodedFileName = encodeURIComponent(source.file_name);
                 const fileName = source.file_name
-                videoSrc = basePath + fileName;
-
+                videoSrc = basePath + fileName
+                console.log('Constructed internal video source:', videoSrc);
                 // If your server or CDN is configured to handle spaces in URLs without %20 encoding
                 // or if the original working URLs did not use standard URL encoding,
                 // you might adjust the encoding strategy here.
@@ -406,37 +422,38 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                 // videoSrc = basePath + fileNameForUrl;
             }
 
-            console.log(`Constructed Video Source: ${videoSrc}, Type: ${videoSourceType}`);
-            return { videoSrc, videoSourceType };
+            console.log(`Final Constructed Video Source: ${videoSrc}, Type: ${videoSourceType}`);
+            return {videoSrc, videoSourceType}
         },
 
 
         loadNewVideo(source) {
+            let videoJs = videojs('main-player')
             console.log('LOAD NEW VIDEO')
             const audioStore = useAudioStore()
             // Correctly destructure the returned object to get videoSrc and videoSourceType
-            const { videoSrc, videoSourceType } = this.getSourceDetails(source);
+            const {videoSrc, videoSourceType} = this.getSourceDetails(source)
 
             // Example: Stopping and cleaning up the current video and audio setup
-            if (this.player) {
-                this.player.src({ 'src': videoSrc, 'type': videoSourceType });
+            if (videoJs) {
+                videoJs.src({'src': videoSrc, 'type': videoSourceType})
 
-                this.player.ready(() => {
+                videoJs.ready(() => {
                     // ensureAudioContextAndNodesReady does the following:
                     // 1. Resumes AudioContext if suspended.
                     // 2. (Re)connects MediaElementSource from the video element to AudioContext.
                     audioStore.deferAudioSetup = false
-                    audioStore.ensureAudioContextAndNodesReady(this.player).then(() => {
+                    audioStore.ensureAudioContextAndNodesReady(videoJs).then(() => {
                         // Only attempt to play the video after ensuring the AudioContext is ready
-                        this.player.play().catch(error => {
-                            console.error('Playback initiation error:', error);
-                        });
+                        videoJs.play().catch(error => {
+                            console.error('Playback initiation error:', error)
+                        })
 
                         // Consider toggling mute based on the user's preference or previous state
-                        this.player.muted(false);
+                        videoJs.muted(false)
                         this.muted = false
-                    });
-                });
+                    })
+                })
 
 
                 //     useAudioStore().ensureAudioContextAndNodesReady(this.player);
@@ -448,19 +465,62 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             }
         },
 
+        // loadNewVideo(source) {
+        //     console.log('LOAD NEW VIDEO TTTTTTTTTTTTTTTTTTTTTTTTTS');
+        //     console.log('LOAD NEW VIDEO initiated with source:', source);
+        //     const audioStore = useAudioStore();
+        //     this.unMute();
+        //     // Destructure the returned object to get videoSrc and videoSourceType
+        //     const { videoSrc, videoSourceType } = this.getSourceDetails(source);
+        //     console.log(`Video source details received: Src - ${videoSrc}, Type - ${videoSourceType}`);
+        //
+        //     // Ensure you're using the same player instance (`videoJs` in this context) for consistency
+        //     let videoJs = videojs('main-player'); // Ensure this ID matches your video player element
+        //     console.log('Video.js player instance created or retrieved.');
+        //
+        //     // Stop and clean up the current video and audio setup if necessary
+        //     videoJs.ready(() => {
+        //         console.log('Video.js player is ready.');
+        //         videoJs.src({ 'src': videoSrc, 'type': videoSourceType });
+        //         console.log(`Video source set: ${videoSrc} of type ${videoSourceType}`);
+        //
+        //         // Ensure AudioContext and nodes are ready
+        //         audioStore.ensureAudioContextAndNodesReady(videoJs).then(() => {
+        //             console.log('Audio context and nodes are ready. Attempting to play video.');
+        //
+        //             videoJs.play().then(() => {
+        //                 console.log('Video playback started successfully.');
+        //             }).catch(error => {
+        //                 console.error('Playback initiation error:', error);
+        //             });
+        //             // Attempt to play the video after ensuring the AudioContext is ready
+        //             // videoJs.play().catch(error => {
+        //             //     console.error('Playback initiation error:', error);
+        //             // });
+        //
+        //             // Apply the unMute logic from loadMistStreamVideo to ensure audio is correctly configured
+        //             this.unMute();
+        //             console.log('Audio unmuted.');
+        //             this.paused = false;
+        //             console.log('Paused flag set to false.');
+        //         }).catch(error => {
+        //             console.error('Error ensuring audio context and nodes are ready:', error);
+        //         });
+        //     });
+        // },
+
         playNewVideo() {
             console.log('PLAY NEW VIDEO')
             if (this.player) {
                 // Wait for the video to be ready before playing
                 this.player.ready(() => {
-                    this.player.play();
+                    this.player.play()
                     // Assuming you want to unmute here; check if this aligns with user interaction policies
-                    this.player.muted(false);
+                    this.player.muted(false)
                     this.muted = false
-                });
+                })
             }
         },
-
 
 
 // load video from different types of sources:
@@ -469,28 +529,28 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
 // EmbedCode
 // Mist
 // File
-// loadNewSourceFromYouTube(source) {
-//     this.videoIsYoutube = true
-//     useChannelStore().clearChannel()
-//     let videoJs = videojs('main-player')
-//     this.videoSource = source
-//     this.videoSourceType = "video/youtube"
-//     videoJs.src({'src': this.videoSource, 'type': this.videoSourceType})
-//     videoJs.controls(false)
-//     this.unmute()
-//     this.paused = false
-// },
-// loadNewLiveSourceFromRumble(source) {
-//     this.videoIsYoutube = true
-//     useChannelStore().clearChannel()
-//     let videoJs = videojs('main-player')
-//     this.videoSource = source
-//     this.videoSourceType = "application/x-mpegURL"
-//     videoJs.src({'src': this.videoSource, 'type': this.videoSourceType})
-//     videoJs.controls(false)
-//     this.unmute()
-//     this.paused = false
-// },
+        loadNewSourceFromYouTube(source) {
+            this.videoIsYoutube = true
+            useChannelStore().clearChannel()
+            let videoJs = videojs('main-player')
+            this.videoSource = source
+            this.videoSourceType = 'video/youtube'
+            videoJs.src({'src': this.videoSource, 'type': this.videoSourceType})
+            videoJs.controls(false)
+            this.unMute()
+            this.paused = false
+        },
+        loadNewLiveSourceFromRumble(source) {
+            this.videoIsYoutube = true
+            useChannelStore().clearChannel()
+            let videoJs = videojs('main-player')
+            this.videoSource = source
+            this.videoSourceType = 'application/x-mpegURL'
+            videoJs.src({'src': this.videoSource, 'type': this.videoSourceType})
+            videoJs.controls(false)
+            this.unMute()
+            this.paused = false
+        },
         loadNewSourceFromUrl(source) {
             this.videoIsYoutube = false
             useChannelStore().clearChannel()
@@ -503,27 +563,103 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             this.unMute()
             this.paused = false
         },
-// loadNewSourceFromMist(source) {
-//     this.videoIsYoutube = false
-//     let videoJs = videojs('main-player')
-//     let filePath = 'https://mist.not.tv/hls/'
-//     this.videoSource = filePath + source + '/index.m3u8'
-//     this.videoSourceType = "application/x-mpegURL"
-//     videoJs.src({'src': this.videoSource, 'type': this.videoSourceType})
-//     this.unmute()
-//     this.paused = false
-// },
-loadNewSourceFromFile(source) {
-    this.videoIsYoutube = false
-    useChannelStore().clearChannel()
-    let videoJs = videojs('main-player')
-    let filePath = source.cdn_endpoint + source.cloud_folder + source.folder + '/'
-    this.videoSource = source.file_name
-    this.videoSourceType = source.type
-    videoJs.src({'src': filePath + this.videoSource, 'type': this.videoSourceType})
-    this.unMute()
-    this.paused = false
-},
+        loadNewSourceFromMist(source) {
+            this.videoIsYoutube = false
+            let videoJs = videojs('main-player')
+            let filePath = 'https://mist.not.tv/hls/'
+            this.videoSource = filePath + source + '/index.m3u8'
+            this.videoSourceType = 'application/x-mpegURL'
+            videoJs.src({'src': this.videoSource, 'type': this.videoSourceType})
+            this.unMute()
+            this.paused = false
+        },
+        loadNewSourceFromFile(source) {
+            this.videoIsYoutube = false
+            useChannelStore().clearChannel()
+            let videoJs = videojs('main-player')
+            let filePath = source.cdn_endpoint + source.cloud_folder + source.folder + '/'
+            this.videoSource = source.file_name
+            this.videoSourceType = source.type
+            videoJs.src({'src': filePath + this.videoSource, 'type': this.videoSourceType})
+            this.unMute()
+            this.paused = false
+        },
+
+        // The new load video functions (2024-02-09 tec21 and ChatGPT)
+        loadExternalSourceVideo() {
+
+        },
+        loadPlaylistVideos() {
+
+        },
+        async loadMistStreamVideo(mistStream) {
+            // console.log('Loading Mist Stream Video for:', mistStream.name); // Log which Mist Stream is being loaded
+            // This mistServerUri comes from appSettings
+            if (!this.mistServerUri) {
+                console.log('Mist Server URI not set, fetching...') // Log fetching attempt
+                await this.getMistServerUri()
+            }
+            if (this.mistServerUri) {
+                // console.log('Mist Server URI:', this.mistServerUri); // Log the URI to confirm it's fetched
+                let basePath = this.mistServerUri
+                this.videoSource = basePath + 'hls/' + mistStream.name + '/index.m3u8'
+                // console.log('Video Source Set To:', this.videoSource); // Log the final video source
+
+                this.videoSourceType = 'application/vnd.apple.mpegURL'
+                // console.log('Setting player source to:', this.videoSource, 'of type:', this.videoSourceType); // Log the source setting
+                let videoJs = videojs('main-player')
+                videoJs.src({'src': this.videoSource, 'type': this.videoSourceType})
+                this.unMute()
+                this.paused = false
+            } else {
+                console.error('Mist Server URI is still not set after fetching.')
+            }
+            // let basePath = this.mistServerUri
+            // this.videoSource = basePath + 'hls/' + mistStream.name + '/index.m3u8'
+            // this.videoSourceType = "application/vnd.apple.mpegURL"
+            // this.player.src({'src': this.videoSource, 'type': this.videoSourceType})
+            // this.unMute()
+            // this.paused = false
+        },
+        async loadVideoFromFile(video) {
+            // console.log('Loading Mist Stream Video for:', mistStream.name); // Log which Mist Stream is being loaded
+            // This mistServerUri comes from appSettings
+            // if (!this.mistServerUri) {
+            //     console.log('Mist Server URI not set, fetching...') // Log fetching attempt
+            //     await this.getMistServerUri()
+            // }
+            // if (this.mistServerUri) {
+                // console.log('Mist Server URI:', this.mistServerUri); // Log the URI to confirm it's fetched
+                // let basePath = this.mistServerUri
+                // this.videoSource = basePath + 'hls/' + video.name + '/index.m3u8'
+                // console.log('Video Source Set To:', this.videoSource); // Log the final video source
+
+            // this.videoSourceType = 'video/mp4'
+            console.log('Video Source Type:', video.type);
+            console.log('Video URL:', video.video_url);
+            console.log('CDN Endpoint:', video.cdn_endpoint);
+            console.log('Cloud Folder:', video.cloud_folder);
+            console.log('Folder:', video.folder);
+            console.log('File Name:', video.file_name);
+
+            let videoSource = video.cdn_endpoint + video.cloud_folder + video.folder + '/' + video.file_name
+                // console.log('Setting player source to:', this.videoSource, 'of type:', this.videoSourceType); // Log the source setting
+                let videoJs = videojs('main-player')
+                videoJs.src({'src': videoSource, 'type': video.type})
+                this.unMute()
+                this.paused = false
+            // } else {
+            //     console.error('Mist Server URI is still not set after fetching.')
+            // }
+            // let basePath = this.mistServerUri
+            // this.videoSource = basePath + 'hls/' + mistStream.name + '/index.m3u8'
+            // this.videoSourceType = "application/vnd.apple.mpegURL"
+            // this.player.src({'src': this.videoSource, 'type': this.videoSourceType})
+            // this.unMute()
+            // this.paused = false
+        },
+
+
         setNowPlayingInfoVideoFile(source) {
             this.nowPlayingType = 'Video File'
             this.nowPlayingName = source.file_name
@@ -604,6 +740,5 @@ loadNewSourceFromFile(source) {
 
     },
 
-    getters: {
-    },
+    getters: {},
 })

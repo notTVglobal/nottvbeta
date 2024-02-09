@@ -14,7 +14,7 @@
 
 
     <div v-if="shouldDisplayOtt"
-         :class="[appSettingStore.fullPage ? 'filtersFullPageContainer' : 'ottTopRightDisplay', 'bg-yellow-500 hide-scrollbar']">
+         :class="[appSettingStore.fullPage ? 'filtersFullPageContainer opacity-95' : 'ottTopRightDisplay', 'bg-yellow-500 hide-scrollbar']">
       <div class="h-full w-full overflow-y-scroll scrollbar-hide">
 
         <div v-if="!showUpgrade">
