@@ -1,5 +1,3 @@
-
-
 <?php $__env->startSection('title', 'Page Not Found'); ?>
 
 <?php $__env->startSection('message'); ?>

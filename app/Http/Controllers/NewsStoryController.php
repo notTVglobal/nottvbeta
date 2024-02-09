@@ -445,6 +445,10 @@ class NewsStoryController extends Controller {
     // Retrieve the news story by ID
     $newsStory = NewsStory::findOrFail($validatedData['newsStory_id']);
 
+    if ($request->new_status_id === 6) {
+      $newsStory->published_at = date('Y-m-d H:i:s');
+    }
+
     // Update the status
     $newsStory->status = $validatedData['new_status_id'];
     $newsStory->save();
