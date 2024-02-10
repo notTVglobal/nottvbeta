@@ -58,7 +58,7 @@ async function changeChannel(channel) {
   // videoPlayerStore.toggleChannels()
   // videoPlayerStore.toggleOttChannels()
   // appSettingStore.ott = 0
-  Inertia.reload()
+  // Inertia.reload()
 }
 
 const channelClass = computed(() => ({

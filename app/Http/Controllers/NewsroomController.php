@@ -17,7 +17,14 @@ class NewsroomController extends Controller
     public function index()
     {
 
-      $newsStoryStatuses = NewsStatus::all();
+      // tec21: 2024-02-09 excluding New, Published and Hidden from what will be displayed in the change status pop-up
+      // this is to force the user to "Approve" then "Publish" stories using the dedicated publish button.
+      // plus, I was having trouble getting the published_at date to get added to the model on the NewsController.changeStatus().
+      // We are hiding "Hidden" because we have no way of making a hidden story visible again.
+      // And New is not necessary, it's only used for when a story is first created.
+      $newsStoryStatuses = NewsStatus::all()->reject(function ($status) {
+        return in_array($status->id, [1, 6, 7]);
+      });
 
         return Inertia::render('Newsroom/Index', [
             'newsStories' => NewsStory::with('image', 'user', 'newsCategory', 'newsCategorySub', 'city', 'province', 'federalElectoralDistrict', 'subnationalElectoralDistrict', 'newsStatus', 'video')
