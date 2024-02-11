@@ -47,6 +47,14 @@
 
             <div > <!-- Example for 'show' -->
               <div class="flex flex-col">
+                <div v-if="nowPlayingStore.activeMedia.details?.category?.name" class="flex flex-row mt-2">
+                  <div class="flex flex-wrap mb-4">
+                    <!-- Categories -->
+                    <div class="text-yellow-700 uppercase tracking-wider">{{ nowPlayingStore.activeMedia.details?.category?.name }}</div>
+                    &nbsp;&middot;&nbsp;
+                    <div class="text-yellow-500 tracking-wide">{{ nowPlayingStore.activeMedia.details?.subCategory?.name }}</div>
+                  </div>
+                </div>
                 <div class="flex flex-row">
                   <!-- Image -->
                   <div class="showOrMovieImage">
@@ -60,7 +68,7 @@
                   </div>
 
 
-                  <div class="flex flex-col ml-3">
+                  <div class="flex flex-col ml-3 -mt-2">
                     <h3 v-if="nowPlayingStore.activeMedia.details?.primaryUrl">
                       <!-- Render as a link if the URL exists -->
                       <Link class="hover:text-blue-500 hover:cursor-pointer" @click.prevent="goToPage">
@@ -88,25 +96,15 @@
 <!--                    <div class="showOrMovieTitle">{{ nowPlayingStore.show?.name }}</div>-->
 <!--                    <div class="showEpisodeTitle">{{ nowPlayingStore.show?.episode?.name }}</div>-->
                     <!-- Release Date -->
-                    <div class="releaseYear text-gray-400">{{ nowPlayingStore.activeMedia.details?.release_year }}</div>
-<!--                    <div class="releaseDateTime">{{ useTimeAgo(nowPlayingStore.show?.episode.releaseDateTime) }}</div>-->
+                    <div class="releaseYear text-gray-400" v-if="!nowPlayingStore.activeMedia.details?.releaseDateTime">{{ nowPlayingStore.activeMedia.details?.release_year }}</div>
+                    <ConvertDateTimeToTimeAgo v-if="nowPlayingStore.activeMedia.details?.releaseDateTime" :dateTime="nowPlayingStore.activeMedia.details?.releaseDateTime" :class="`text-yellow-400`" />
                   </div>
                 </div>
-                <div v-if="nowPlayingStore.activeMedia.details?.category?.name" class="flex flex-row mt-2">
-                  <div class="flex flex-wrap mb-4">
-                    <!-- Categories -->
-                    <div class="text-yellow-700 uppercase tracking-wider">{{ nowPlayingStore.activeMedia.details?.category?.name }}</div>
-                    &nbsp;&middot;&nbsp;
-                    <div class="text-yellow-500 tracking-wide">{{ nowPlayingStore.activeMedia.details?.subCategory?.name }}</div>
-                  </div>
-                </div>
-<!--                Episode Name -->
-                <div v-if="nowPlayingStore.activeMedia.details?.episode">
-                  <div>
-                    Episode Name
-                  </div>
-                  <div>
-                    Episode Number
+
+<!--                Episode Number -->
+                <div v-if="nowPlayingStore.activeMedia.details?.episodeNumber">
+                  <div class="text-xs mt-4">
+                    Episode {{ nowPlayingStore.activeMedia.details?.episodeNumber }}
                   </div>
                 </div>
                 <!-- Logline and Description -->
@@ -205,6 +203,7 @@ import { useChatStore } from '@/Stores/ChatStore'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { Inertia } from '@inertiajs/inertia'
+import ConvertDateTimeToTimeAgo from '@/Components/Global/DateTime/ConvertDateTimeToTimeAgo.vue'
 
 const appSettingStore = useAppSettingStore()
 const videoPlayerStore = useVideoPlayerStore()
