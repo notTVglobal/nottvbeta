@@ -24,6 +24,7 @@ const initialState = () => ({
     redirectPageUri: '',
     generalServiceNotification: null, // put a title and a body in here, the modal opens in AppLayout
     showGeneralServiceNotification: false, // used with the generalServiceNotification title and body, the modal opens in AppLayout
+    showOrangeFeedbackBox: false,
 })
 
 export const useNotificationStore = defineStore('notificationStore', {

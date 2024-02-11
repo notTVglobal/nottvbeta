@@ -7,9 +7,10 @@
       <header class="headerContainer w-full">
         <div class="w-full flex flex-row md:px-6 py-4 welcomeOverlay">
           <WelcomeBug/>
+
           <div class="flex justify-end pt-4 md:pr-6 w-full">
             <Button
-                class="bg-opacity-50 hover:bg-opacity-75 text-sm md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"
+                class="h-fit py-4 px-6 bg-opacity-50 hover:bg-opacity-75 text-xl md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"
                 v-if="!$page.props.user" @click="welcomeStore.showLogin = true">
               Log in
             </Button>
@@ -21,7 +22,7 @@
 <!--              Register-->
 <!--            </Button>-->
             <Button v-if="!$page.props.user"
-                    class="bg-opacity-50 hover:bg-opacity-75 text-sm mr-2 md:mr-0 ml-2 md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"
+                    class="h-fit py-4 px-6 bg-opacity-50 hover:bg-opacity-75 text-xl mr-2 md:mr-0 ml-2 md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"
                     @click="Inertia.visit('register')">Register</Button>
           </div>
         </div>
@@ -43,36 +44,19 @@
           </div>
         </div>
 
+        <section class="flex flex-col justify-center items-center vh-100 bg-gray-300 text-primary px-5 py-24">
 
-        <section class="flex flex-col justify-center items-center vh-100 bg-white text-black px-5 py-20">
+          <div @click="goToNewsletterSignup"
+              class="text-center text-lg md:text-xl font-semibold text-white bg-blue-500 hover:bg-blue-600 hover:cursor-pointer px-6 md:px-4 py-2 tracking-wide rounded-lg drop-shadow-lg">
+            <span class="text-2xl md:text-3xl">Unlock Exclusive Access:</span><br/> <span class="">Subscribe to Our Newsletter for Your Chance to Receive an Invitation Code!</span>
 
-          <div class="text-center font-semibold text-3xl">Welcome to notTV</div>
-          <div class="text-center text-2xl">Independent news, arts and culture.</div>
-          <span class="text-4xl font-bold italic mt-12 text-secondary">Coming Soon!</span>
-          <!--                    <div class="mt-32 text-center italic">(Log in to chat)</div>-->
-
-        </section>
-
-        <section class="flex flex-col justify-center items-center vh-100 bg-gray-300 text-primary px-5 py-20">
-
-          <div class="text-center font-bold text-3xl mb-6">Sign up for our Newsletter<br>for a chance to get an invite
-            code!
           </div>
-          <div class="text-center text-2xl">
-            <button
-                class="btn btn-primary text-white uppercase"
-                @click="goToNewsletterSignup">
-              Click Here
-            </button>
-          </div>
-          <span class="text-black italic mt-6">Weekly updates and get notified of new broadcasts!</span>
-          <!--                    <div class="mt-32 text-center italic">(Log in to chat)</div>-->
 
         </section>
 
         <section class="flex flex-col justify-center items-center vh-100 bg-gray-900 text-white px-12 md:px-32 py-20">
-          <div class="text-left font-semibold text-xl uppercase my-4">Problem</div>
-          <p class="leading-loose tracking-wide"><span class="text-4xl text-yellow-500">In</span>
+          <div class="text-2xl text-left font-semibold uppercase my-4">Problem</div>
+          <p class="text-xl leading-loose tracking-wide"><span class="text-4xl text-yellow-500">In</span>
             our communities, we face big issues like education, health, poverty, and unfair systems, but they often get
             overlooked because we don't have enough resources or clear information. Independent journalists, who are
             important for revealing the truth and keeping powerful groups honest, struggle to find enough funding. Also,
@@ -82,8 +66,8 @@
             influence over the stories that get told. This means that we don't always hear the whole story, especially
             if it goes against what these powerful sponsors want.
           </p>
-          <div class="text-left mt-16 mb-4 font-semibold text-xl uppercase">Solution</div>
-          <p class="leading-loose tracking-wide"><span class="text-4xl text-yellow-500">notTV</span>
+          <div class="text-2xl text-left mt-16 mb-4 font-semibold uppercase">Solution</div>
+          <p class="text-xl leading-loose tracking-wide"><span class="text-4xl text-yellow-500">notTV</span>
             is a unique answer to these problems, different from usual media sites. It's a cooperative community where
             content creators also own the platform. Joining notTV means helping to solve big community issues and
             ensuring important topics get the attention they deserve. Members share profits fairly, so creators are

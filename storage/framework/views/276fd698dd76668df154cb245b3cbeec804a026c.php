@@ -27,15 +27,36 @@
             /*}*/
 
             /* Optional: Scaling using root font size */
+
+
             @media screen and (min-width: 1024px) {
                 html {
-                    font-size: 24px; /* Increase the base font size */
+                    font-size: 16px; /* Increase the base font size */
+                }
+            }
+
+
+            /*@media screen and (min-width: 1024px) {*/
+            /*    html {*/
+            /*        font-size: 12px; !* Increase the base font size *!*/
+            /*    }*/
+            /*}*/
+
+            /*@media screen and (min-width: 1600px) {*/
+            /*    html {*/
+            /*        font-size: 14px; !* Increase the base font size *!*/
+            /*    }*/
+            /*}*/
+
+            @media screen and (min-width: 1920px) {
+                html {
+                    font-size: 16px; /* Increase the base font size */
                 }
             }
 
             @media screen and (min-width: 2560px) {
                 html {
-                    font-size: 24px; /* Increase the base font size */
+                    font-size: 20px; /* Increase the base font size */
                 }
             }
             @media screen and (min-width: 3840px) {

@@ -66,7 +66,7 @@
           >MistServer API Test Page
           </button>
           <a
-              :href="mistServerUriForManagementInterface+`:4242`" target="_blank"
+              :href="mistServerUriForManagementInterface.replace(/\/$/, '') + ':4242'" target="_blank"
               class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"
           >MistServer Management Interface</a>
           <button

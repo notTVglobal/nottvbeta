@@ -48,12 +48,12 @@
     <div v-if="appSettingStore.fullPage && user">
 
       <!-- notTV Bug -->
-      <div v-if="! videoPlayerStore.osd" class="bugFullPageContainer">
+      <div v-if="!videoPlayerStore.osd" class="bugFullPageContainer">
         <img :src="`/storage/images/logo_white_512.png`" class="bugFullPageClass" alt="">
       </div>
 
       <!-- On Screen Display (OSD) -->
-      <OsdFullPage v-show="videoPlayerStore.osd"/>
+      <OsdFullPage v-if="videoPlayerStore.osd"/>
 
       <!-- Video Player Controls -->
       <VideoControlsFullPage

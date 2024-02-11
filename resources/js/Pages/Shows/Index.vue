@@ -27,7 +27,7 @@
           </div>
           <div class="flex items-center mt-6 xl:mt-0">
             <div class="relative">
-              <input v-model="search" type="search" class="bg-gray-50 text-black text-sm rounded-full
+              <input v-model="search" type="search" class="bg-gray-50 text-black text-md rounded-full
                             focus:outline-none focus:shadow w-64 pl-8 px-3 py-1" placeholder="Search...">
               <div class="absolute top-0 flex items-center h-full ml-2">
                 <svg class="fill-current text-gray-400 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">

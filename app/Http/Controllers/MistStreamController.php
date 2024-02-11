@@ -37,6 +37,7 @@ class MistStreamController extends Controller
    * @return Application|ResponseFactory|Response
    */
   public function validateUser(Request $request) {
+
     // NOTE: This currently uses the USER_NEW trigger.
     // The request_url is on a different line of the
     // request body in CONN_PLAY. And CONN_PLAY makes
@@ -46,6 +47,13 @@ class MistStreamController extends Controller
     // new session and caches it on the MistServer.
 
     // Check for allowed triggers from the header
+
+          Log::info('Raw Request', [
+          'headers' => $request->headers->all(),
+          'body' => $request->getContent() // For raw body content
+          ]);
+    return response('1', 200)
+        ->header('Content-Type', 'text/plain');
     $allowedTriggers = ["USER_NEW", "CONN_OPEN", "CONN_CLOSE", "CONN_PLAY"];
     if (!in_array($request->header('X-Trigger'), $allowedTriggers)) {
       error_log("This script is not compatible with triggers other than USER_NEW, CONN_OPEN, CONN_CLOSE, and CONN_PLAY");
@@ -65,9 +73,17 @@ class MistStreamController extends Controller
     $bodyContent = $request->getContent();
     // Split the string by line breaks to get an array of lines
     $lines = explode("\n", $bodyContent);
+
+    $streamName = $lines[0] ?? 'unknown';
     // Assuming the IP address is always on the second line
     $ipAddress = $lines[1] ?? 'unknown'; // Default to 'unknown' if not found
     $requestUrl = $lines[4] ?? 'unknown'; // it's only line 5 if USER_NEW, otherwise its line 4.
+
+
+    Log::info($streamName);
+    if ($streamName === 'test' || $streamName === 'first-play') {
+      return response('1', 200);
+    }
 
     parse_str(parse_url($requestUrl, PHP_URL_QUERY), $requestUrlParams);
 

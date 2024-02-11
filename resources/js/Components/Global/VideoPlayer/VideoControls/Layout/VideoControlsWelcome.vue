@@ -14,31 +14,31 @@
 
     <div :class="videoControlsClass">
       <button
-          class="text-xs md:text-md  md:text-md bg-gray-800 rounded-full p-2 hover:bg-gray-600"
+          class="text-lg md:text-xl bg-gray-800 rounded-full py-2 px-4 tracking-wider hover:bg-gray-600"
           @click="videoPlayerStore.fullscreen()">
         FULLSCREEN
       </button>
 
       <button v-if="videoPlayerStore.muted===true"
-              class="text-xs md:text-md  md:text-md bg-gray-800 rounded-full p-2 hover:bg-gray-600"
-              @click="videoPlayerStore.unmute()">
+              class="text-lg md:text-xl bg-gray-800 rounded-full py-2 px-4 tracking-wider hover:bg-gray-600"
+              @click="videoPlayerStore.unMute()">
         UNMUTE
       </button>
 
       <button v-if="videoPlayerStore.muted===false"
-              class="text-xs md:text-md  bg-gray-800 rounded-full p-2 hover:bg-gray-600"
+              class="text-lg md:text-xl bg-gray-800 rounded-full py-2 px-4 tracking-wider hover:bg-gray-600"
               @click="videoPlayerStore.mute()">
         MUTE
       </button>
 
       <button v-if="!videoPlayerStore.paused"
-              class="text-xs md:text-md bg-gray-800 rounded-full p-2 hover:bg-gray-600"
+              class="text-lg md:text-xl bg-gray-800 rounded-full py-2 px-4 tracking-wider hover:bg-gray-600"
               @click="videoPlayerStore.pause()">
         PAUSE
       </button>
 
       <button v-if="videoPlayerStore.paused"
-              class="text-xs md:text-md bg-gray-800 rounded-full p-2 hover:bg-gray-600"
+              class="text-lg md:text-xl bg-gray-800 rounded-full py-2 px-4 tracking-wider hover:bg-gray-600"
               @click="videoPlayerStore.play()">
         PLAY
       </button>
