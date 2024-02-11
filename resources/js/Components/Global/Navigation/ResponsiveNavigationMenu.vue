@@ -121,11 +121,11 @@
 <!--          </JetResponsiveNavLink>-->
 
           <div v-if="!userStore.isSubscriber && !userStore.isVip && !userStore.isAdmin"
-               class="flex flex-row w-full justify-center py-4 bg-yellow-500">
+               class="flex flex-row w-full justify-center py-4">
             <PublicNavLink
                 @click="upgrade"
                 :active="appSettingStore.currentPage === 'upgrade'"
-                class="flex">
+                class="flex bg-indigo-700">
               CLICK HERE TO UPGRADE YOUR ACCOUNT
             </PublicNavLink>
           </div>

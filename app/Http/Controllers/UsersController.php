@@ -484,6 +484,9 @@ class UsersController extends Controller {
 //      $screenshotPath = $request->file('screenshot')->store('screenshots', 'public');
 //    }
 
+    // add Message to log:
+    Log::notice("Orange Feedback Form Submission" . "\n*Message*: `" . ($request->message ?? 'N/A') . "`\n*Name*: `" . ($user->name ?? 'N/A') . "`");
+
     // Send the email
     try {
       Mail::to('hello@not.tv')->send(new FeedbackMail([

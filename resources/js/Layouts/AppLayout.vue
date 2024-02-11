@@ -34,7 +34,7 @@
 
       <DialogNotification v-if="user"/>
       <GeneralServiceNotification v-if="user" />
-      <OrangeFeedbackBox v-if="user"/>
+      <OrangeFeedbackBox v-if="user && !appSettingStore.showNavDropdown"/>
     </div>
   </div>
 </template>

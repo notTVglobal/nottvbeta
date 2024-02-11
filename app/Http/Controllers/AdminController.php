@@ -17,6 +17,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Client\Response;
 use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -74,7 +75,7 @@ class AdminController extends Controller
 
     public function saveSettings(HttpRequest $request)
     {
-        $request->validate([
+      $request->validate([
             'default_country' => 'nullable|integer',
             'cdn_endpoint' => 'nullable|string',
             'cloud_folder' => 'nullable|string',
@@ -115,33 +116,46 @@ class AdminController extends Controller
       // Now, check for specific form variables and update the JSON file if present
       if ($request->has(['first_play_video_source', 'first_play_video_source_type'])) {
 
-        $dataToUpdate = $this->updateFirstPlayData($request);
-//        $dataToUpdate = $request->only([
-//            'first_play_video_source',
-//            'first_play_video_source_type',
-//            'first_play_video_name',
-//            'first_play_channel_id',
-//        ]);
+        $dataToUpdate = $request->only([
+            'first_play_video_source',
+            'first_play_video_source_type',
+            'first_play_video_name',
+            'first_play_channel_id',
+        ]);
+
         $jsonFilePath = 'json/firstPlayData.json';
         Storage::disk('local')->put($jsonFilePath, json_encode($dataToUpdate, JSON_PRETTY_PRINT));
-
       }
+
+      $db = DB::table('app_settings')
+          ->where('id', 1)
+          ->update(['cdn_endpoint'=> $request->cdn_endpoint])
+      ;
+
+      $db = DB::table('app_settings')
+          ->where('id', 1)
+          ->update(['cloud_folder'=> '/'.$request->cloud_folder])
+      ;
+
         return redirect(route('admin.settings'))->with('success', 'Settings Saved Successfully');
-//
-//        $db = DB::table('app_settings')
-//            ->where('id', 1)
-//            ->update(['cdn_endpoint'=> $request->cdn_endpoint])
-//        ;
-//
-//        $db = DB::table('app_settings')
-//            ->where('id', 1)
-//            ->update(['cloud_folder'=> '/'.$request->cloud_folder])
-//        ;
-//
-//        // redirect
-//        return redirect()->route('admin.settings')->with('message', 'Settings Saved Successfully');
 
     }
+
+////////////  CLEAR FIRST PLAY DATA CACHE
+/////////////////////////////////////////
+  public function clearFirstPlayDataCache() {
+
+    if (!Auth::user() || !Auth::user()->isAdmin) {
+      throw new AuthorizationException('You do not have permission to perform this action.');
+    }
+
+    Cache::forget('firstPlayData');
+    return redirect('/admin/settings')->with('message', 'First play cache cleared successfully.');
+  }
+
+
+
+
 
 ////////////  ADMIN CHANNELS PAGE
 /////////////////////////////////
@@ -487,34 +501,5 @@ class AdminController extends Controller
 
         // send notification on job completion.
     }
-
-
-////////////  UPDATE FIRST PLAY JSON FILE
-/////////////////////////////////////////
-  private function updateFirstPlayData(HttpRequest $request) {
-    $validatedData = $request->validate([
-        'first_play_video_source' => 'required|string',
-        'first_play_video_source_type' => 'required|string',
-        'first_play_video_name' => 'nullable|string',
-        'first_play_channel_id' => 'nullable|integer',
-    ]);
-
-    $jsonFilePath = 'json/firstPlayData.json';
-    Storage::disk('local')->put($jsonFilePath, json_encode($validatedData, JSON_PRETTY_PRINT));
-    return $validatedData;
-//    return response()->json(['message' => 'First play data updated successfully.'], 200);
-  }
-
-////////////  CLEAR FIRST PLAY DATA CACHE
-/////////////////////////////////////////
-  public function clearFirstPlayDataCache() {
-
-    if (!Auth::user() || !Auth::user()->isAdmin) {
-      throw new AuthorizationException('You do not have permission to perform this action.');
-    }
-
-    Cache::forget('firstPlayData');
-    return redirect('/admin/settings')->with('message', 'First play cache cleared successfully.');
-  }
 
 }

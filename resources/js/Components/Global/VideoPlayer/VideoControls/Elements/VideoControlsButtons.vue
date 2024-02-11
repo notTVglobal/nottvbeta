@@ -203,6 +203,7 @@ function fullscreen() {
 .icon-container {
   display: inline-block;
   color: #f59e0b;
+  @apply hover:bg-yellow-400
 }
 
 .icon {

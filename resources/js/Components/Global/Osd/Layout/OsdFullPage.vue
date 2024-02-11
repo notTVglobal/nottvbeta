@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div :class="appSettingStore.ott !== 0 ? 'hidden lg:block' : ''">
     <div class="osdFullPageTop">
-      <div v-if="appSettingStore.osd" class="flex justify-between">
+      <div class="flex justify-between">
         <div class="flex flex-row">
           <div v-if="isLive">
             <span
