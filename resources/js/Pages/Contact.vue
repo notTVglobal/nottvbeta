@@ -10,14 +10,11 @@
       <div class="pt-10 text-center text-3xl font-semibold tracking-widest uppercase text-gray-50">Contact Us</div>
       <main class="mx-auto border-b border-gray-800 pb-36">
 
-
-        <div class="text-green-500 py-12 w-56" v-if="$page.props.flash.success">Thank You for Reaching Out!<br />Your message is on its way to us. We appreciate you taking the time to get in touch and will respond as quickly as possible. Look forward to speaking with you soon!</div>
+        <div class="text-green-500 py-12 w-56" v-if="$page.props.flash.success && !$page.props.flash.error">Thank You for Reaching Out!<br />Your message is on its way to us. We appreciate you taking the time to get in touch and will respond as quickly as possible. Look forward to speaking with you soon!</div>
         <div class="text-orange-500 py-12" v-if="$page.props.flash.error">There was an error submitting the form. Please email hello@not.tv</div>
-
-
-        <div class="w-72 mb-6">We'd love to hear from you! Send us your questions, feedback, or just say hello.</div>
-
+        
         <form class="w-72" v-if="!$page.props.flash.success && !$page.props.flash.error" @submit.prevent="submit">
+          <div class="mb-6">We'd love to hear from you! Send us your questions, feedback, or just say hello.</div>
           <div class="mb-4">
             <label for="name" class="block text-gray-200 text-sm font-bold mb-2">
               Name:
