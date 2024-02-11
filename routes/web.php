@@ -971,8 +971,20 @@ Route::post('/api/schedule/{id}', [\App\Http\Controllers\ShowScheduleController:
 // External Redirects
 /////////////////////
 
+//Route::get('/subscribe', function () {
+//    return Inertia::location('https://99fd701b.sibforms.com/serve/MUIFAAAMUBfnlUf5rgaD2zSTE_76pHldyCCXhQvz-CBNZwd9lLYST4jcuwwsudQEHOkX1isAFHV6iXvtIepJSh5RkVrZY1wUQ5yaf1j6kWyzMJ75s2FZfHOZMdO7mkE-pDv96yW4bekMX67ZevIlWsjQvdDgEXUEKqfAvvQieIM3WxRCFru3o3y3Z9K2_6N17EaTq5eAHP04AIgp');
+//});
+
 Route::get('/subscribe', function () {
-    return Inertia::location('https://99fd701b.sibforms.com/serve/MUIFAAAMUBfnlUf5rgaD2zSTE_76pHldyCCXhQvz-CBNZwd9lLYST4jcuwwsudQEHOkX1isAFHV6iXvtIepJSh5RkVrZY1wUQ5yaf1j6kWyzMJ75s2FZfHOZMdO7mkE-pDv96yW4bekMX67ZevIlWsjQvdDgEXUEKqfAvvQieIM3WxRCFru3o3y3Z9K2_6N17EaTq5eAHP04AIgp');
+  return redirect('/newsletterSignup');
+});
+
+Route::get('/newsletter', function () {
+  return redirect('/newsletterSignup');
+});
+
+Route::get('/join', function () {
+  return redirect('/newsletterSignup');
 });
 
 Route::get('/coffee', function () {
