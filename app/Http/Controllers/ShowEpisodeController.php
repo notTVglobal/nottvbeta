@@ -223,7 +223,6 @@ class ShowEpisodeController extends Controller {
 //////////////////
 
   public function show(Show $show, ShowEpisode $showEpisode) {
-
     $teamId = $show->team_id;
 //        $video = Video::where('show_episodes_id', $showEpisode->id)->first();
 
@@ -240,11 +239,16 @@ class ShowEpisodeController extends Controller {
     $showEpisode->load('video.appSetting', 'image', 'video', 'appSetting', 'show.category', 'show.subCategory', 'creativeCommons'); // Eager load necessary relationships
 //      TODO: Add TeamMember to this eager load
 
+    $videoIsAvailable = false;
+
+    if ($showEpisode->video?->video_url || ($showEpisode->video?->folder && $showEpisode->video?->upload_status !== 'processing')) {
+      $videoIsAvailable = true;
+    }
+
     // Determine the media type based on its storage location.
     // If the storage location is marked as 'external', categorize it as 'externalVideo';
     // otherwise, it's considered an internal 'show' video.
     $mediaType = $showEpisode->video?->storage_location === 'external' ? 'externalVideo' : 'show'; // Adjust logic as needed
-
 
     return Inertia::render('Shows/{$id}/Episodes/{$id}/Index', [
         'show'     => [
@@ -252,11 +256,11 @@ class ShowEpisodeController extends Controller {
             'slug'               => $show->slug,
             'showRunner'         => $show->user->name,
             'image'              => [
-                'id'           => $show->image->id,
-                'name'         => $show->image->name,
-                'folder'       => $show->image->folder,
-                'cdn_endpoint' => $show->appSetting->cdn_endpoint,
-                'cloud_folder' => $show->image->cloud_folder,
+                'id'              => $show->image->id,
+                'name'            => $show->image->name,
+                'folder'          => $show->image->folder,
+                'cdn_endpoint'    => $show->appSetting->cdn_endpoint,
+                'cloud_folder'    => $show->image->cloud_folder,
                 'placeholder_url' => $show->image->placeholder_url,
             ],
             'copyrightYear'      => $show->created_at->format('Y'),
@@ -283,7 +287,8 @@ class ShowEpisodeController extends Controller {
             'scheduled_release_dateTime' => $this->formattedScheduledDateTime ?? null,
             'mist_stream_id'             => $showEpisode->mist_stream_id,
             'video'                      => [
-                'mediaType'     => $mediaType, // New attribute for NowPlayingStore
+                'isAvailable'      => $videoIsAvailable ?? false,
+                'mediaType'        => $mediaType, // New attribute for NowPlayingStore
                 'file_name'        => $showEpisode->video->file_name ?? '',
                 'cdn_endpoint'     => $showEpisode->video->appSetting->cdn_endpoint ?? '',
                 'folder'           => $showEpisode->video->folder ?? '',
@@ -457,7 +462,7 @@ class ShowEpisodeController extends Controller {
         'can'              => [
             'manageShow'  => Auth::user()->can('manage', $show),
             'editShow'    => Auth::user()->can('edit', $show),
-            'editEpisode'    => Auth::user()->can('edit', $show),
+            'editEpisode' => Auth::user()->can('edit', $show),
             'viewCreator' => Auth::user()->can('viewCreator', User::class),
         ]
     ]);
@@ -571,7 +576,6 @@ class ShowEpisodeController extends Controller {
 
       }
     }
-
 
 
 //        $scheduledDateTime = $request->input('scheduled_release_dateTime');

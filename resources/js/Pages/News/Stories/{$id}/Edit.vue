@@ -21,10 +21,22 @@
             >Newsroom
             </button>
           </div>
+          <div class="">
+            <button
+                @click.prevent="submit"
+                class="text-white bg-blue-700 hover:bg-blue-500 focus:outline-none  font-medium rounded-lg text-sm px-5 py-2.5 "
+                :disabled="processing"
+                :class="{ 'opacity-25': processing }"
+            >
+              Save
+            </button>
+          </div>
           <div>
             <CancelButton/>
           </div>
+
         </div>
+        <JetValidationErrors class="ml-4"/>
       </div>
 
       <CategoryCitySelector
@@ -78,7 +90,7 @@
               {{ errors.body }}
             </div>
           </div>
-          <div class=" flex justify-start">
+          <div class=" flex justify-end">
             <button
                 type="submit"
                 class="text-white bg-blue-700 hover:bg-blue-500 focus:outline-none  font-medium rounded-lg text-sm px-5 py-2.5 "

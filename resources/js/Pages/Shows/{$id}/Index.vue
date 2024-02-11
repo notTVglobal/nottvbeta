@@ -71,7 +71,7 @@
 <!--                    class="ml-3 px-3 py-3 text-gray-50 bg-black w-full text-center lg:text-left">-->
 <!--                  The first episode is currently processing. <br>Please check back later.-->
 <!--                </div>-->
-                <button v-if="show?.firstPlayEpisode?.video?.mediaType"
+                <button v-if="show?.firstPlayEpisode"
                         class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-400 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
                         @click="playEpisode">
                   <svg class="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg"
