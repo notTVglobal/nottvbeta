@@ -6555,6 +6555,10 @@ hr {
   bottom: 9rem;
 }
 
+.top-20 {
+  top: 5rem;
+}
+
 .z-0 {
   z-index: 0;
 }
@@ -6978,6 +6982,14 @@ hr {
   margin-left: 6rem;
 }
 
+.-ml-10 {
+  margin-left: -2.5rem;
+}
+
+.mr-10 {
+  margin-right: 2.5rem;
+}
+
 .line-clamp-2 {
   overflow: hidden;
   display: -webkit-box;
@@ -7172,6 +7184,30 @@ hr {
   height: 100vh;
 }
 
+.h-\[calc\(1000px\)\] {
+  height: calc(1000px);
+}
+
+.h-\[calc\(900px\)\] {
+  height: calc(900px);
+}
+
+.h-\[calc\(1200px\)\] {
+  height: calc(1200px);
+}
+
+.h-\[calc\(1500px\)\] {
+  height: calc(1500px);
+}
+
+.h-\[calc\(1300px\)\] {
+  height: calc(1300px);
+}
+
+.h-\[calc\(1400px\)\] {
+  height: calc(1400px);
+}
+
 .max-h-20 {
   max-height: 5rem;
 }
@@ -7355,6 +7391,18 @@ hr {
   width: 10rem;
 }
 
+.w-\[calc\(1-00\%\)\] {
+  width: calc(1 - 00%);
+}
+
+.w-\[calc\(100\%\)\] {
+  width: calc(100%);
+}
+
+.w-\[calc\(800px\)\] {
+  width: calc(800px);
+}
+
 .min-w-0 {
   min-width: 0px;
 }
@@ -7475,6 +7523,10 @@ hr {
 
 .max-w-xs {
   max-width: 20rem;
+}
+
+.max-w-full {
+  max-width: 100%;
 }
 
 .flex-1 {
@@ -8555,6 +8607,11 @@ hr {
   background-color: rgb(23 37 84 / var(--tw-bg-opacity));
 }
 
+.bg-\[\#EFF2F7\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(239 242 247 / var(--tw-bg-opacity));
+}
+
 .bg-opacity-0 {
   --tw-bg-opacity: 0;
 }
@@ -9007,6 +9064,10 @@ hr {
 
 .pb-5 {
   padding-bottom: 1.25rem;
+}
+
+.pt-20 {
+  padding-top: 5rem;
 }
 
 .text-left {
@@ -10784,6 +10845,18 @@ hr {
     top: 1rem;
   }
 
+  .md\:top-6 {
+    top: 1.5rem;
+  }
+
+  .md\:top-10 {
+    top: 2.5rem;
+  }
+
+  .md\:top-16 {
+    top: 4rem;
+  }
+
   .md\:col-span-1 {
     grid-column: span 1 / span 1;
   }
@@ -10817,6 +10890,10 @@ hr {
     margin-top: 4rem;
   }
 
+  .md\:mt-4 {
+    margin-top: 1rem;
+  }
+
   .md\:block {
     display: block;
   }
@@ -10835,6 +10912,10 @@ hr {
 
   .md\:h-64 {
     height: 16rem;
+  }
+
+  .md\:h-\[calc\(900px\)\] {
+    height: calc(900px);
   }
 
   .md\:w-1\/2 {
@@ -10948,6 +11029,16 @@ hr {
   .md\:px-4 {
     padding-left: 1rem;
     padding-right: 1rem;
+  }
+
+  .md\:py-6 {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+  }
+
+  .md\:py-4 {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
   }
 
   .md\:pr-6 {

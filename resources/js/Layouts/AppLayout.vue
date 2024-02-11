@@ -29,7 +29,6 @@
 
       <!-- Video Player -->
       <VideoPlayerMain
-          v-show="!appSettingStore.noLayout"
           :user="user" />
 
       <DialogNotification v-if="user"/>

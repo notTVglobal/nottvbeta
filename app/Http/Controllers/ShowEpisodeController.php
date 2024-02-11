@@ -257,6 +257,7 @@ class ShowEpisodeController extends Controller {
                 'folder'       => $show->image->folder,
                 'cdn_endpoint' => $show->appSetting->cdn_endpoint,
                 'cloud_folder' => $show->image->cloud_folder,
+                'placeholder_url' => $show->image->placeholder_url,
             ],
             'copyrightYear'      => $show->created_at->format('Y'),
             'first_release_year' => $show->first_release_year,

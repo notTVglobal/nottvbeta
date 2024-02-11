@@ -3,7 +3,7 @@
   <div id="topDiv" ></div>
   <div :class="marginTopClass">
     <PublicNavigationMenu v-if="!appSettingStore.loggedIn" class="fixed top-0 w-full nav-mask"/>
-
+    <PublicResponsiveNavigationMenu />
     <div class="bg-gray-900 flex flex-col gap-y-3 place-self-center text-white px-5">
       <PublicNewsNavigationButtons :can="can"/>
       <Breadcrumbs :breadcrumbs="[{ text: 'News', to: '/news' }, { text: 'Reporters', to: '' }]" />
@@ -13,6 +13,9 @@
       <main class="pb-8 mx-auto px-4 border-b border-gray-800">
         <div class="flex bg-gray-200 my-10 mx-auto p-5 w-[calc(100%-96)] rounded justify-center text-gray-900">
           <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full px-6">
+            <div v-if="newsPeople.length === 0">
+              We are in the process of building our news team.
+            </div>
             <div v-for="person in newsPeople" :key="person.id" class="text-center px-8 py-3">
               <div class="hover:bg-gray-300 rounded-lg cursor-pointer pb-8">
                 <header class="pt-8 pb-6">
@@ -52,6 +55,7 @@ import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
 import PublicNewsNavigationButtons from '@/Components/Pages/Public/PublicNewsNavigationButtons'
 import Footer from '@/Components/Global/Layout/Footer'
 import Breadcrumbs from '@/Components/Global/Breadcrumbs/Breadcrumbs'
+import PublicResponsiveNavigationMenu from '@/Components/Global/Navigation/PublicResponsiveNavigationMenu.vue'
 
 const appSettingStore = useAppSettingStore()
 const videoPlayerStore = useVideoPlayerStore()
@@ -59,9 +63,12 @@ const videoPlayerStore = useVideoPlayerStore()
 appSettingStore.noLayout = true
 appSettingStore.currentPage = 'news.reporters'
 
+
+
 onMounted(() => {
   const topDiv = document.getElementById("topDiv")
   topDiv.scrollIntoView()
+  appSettingStore.noVideo = true
 })
 
 

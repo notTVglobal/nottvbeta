@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Image;
 use App\Models\Show;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
@@ -29,7 +30,7 @@ class ShowFactory extends Factory
         return [
             'name' => $name = $this->faker->sentence($nbWords = 3, $variableNbWords = true),
             'description' => $this->faker->paragraph,
-            'image_id' => '4',
+            'image_id' => function () { return Image::factory()->create()->id; },
             'user_id' => $this->faker->randomElement($userIds),
             'team_id' => $this->faker->randomElement($teamIds),
             'show_status_id' => \App\Models\ShowStatus::all()->random()->id,

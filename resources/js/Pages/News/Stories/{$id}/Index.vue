@@ -7,7 +7,7 @@
         <div class="bg-gray-50 text-black dark:bg-gray-800 dark:text-gray-50">
 <!--          <div class="text-center pt-6 text-3xl font-semibold leading-loose">NEWS</div>-->
           <PublicNewsNavigationButtons :can="can" class=""/>
-
+          <PublicResponsiveNavigationMenu />
           <div class="w-full">
             <Breadcrumbs :classType="'dark'" :breadcrumbs="[{ text: 'News Stories', to: '/news' }, { text: $page.props.newsStory.newsCategory, to: '' }, { text: $page.props.newsStory.newsCategorySub, to: '' }]" />
           </div>
@@ -33,9 +33,9 @@
 
           <main class="w-full text-black pb-96">
             <!-- Main Content -->
-            <section class="w-full mx-auto text-center flex justify-center px-4 py-6 mt-4">
-              <div class="flex flex-col xl:flex-row flex-wrap-reverse">
-                <div class="flex items-start">
+            <section class="w-full mx-auto text-center flex justify-center px-4 md:py-6 md:mt-4">
+              <div class="flex xl:flex-row flex-wrap-reverse">
+                <div class="w-full flex justify-center md:items-start">
                   <!--            <img :src="`/storage/images/${props.image}`" class="object-scale-down md:max-w-sm px-6 mb-4 mx-auto">-->
                   <SingleImage :image="newsStory.image" :alt="''" :class="'object-scale-down md:max-w-sm px-3 mb-4 mx-auto'" />
                 </div>
@@ -105,6 +105,7 @@ import BackButton from '@/Components/Global/Buttons/BackButton.vue'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage.vue'
 import { useNewsStore } from '@/Stores/NewsStore'
 import TipTapRender from '@/Components/Global/TextEditor/TipTapRender.vue'
+import PublicResponsiveNavigationMenu from '@/Components/Global/Navigation/PublicResponsiveNavigationMenu.vue'
 // import TipTapViewOnly from '@/Components/Global/TextEditor/TipTapViewOnly.vue'
 
 const appSettingStore = useAppSettingStore()

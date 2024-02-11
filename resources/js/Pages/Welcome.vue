@@ -10,7 +10,7 @@
 
           <div class="flex justify-end pt-4 md:pr-6 w-full">
             <Button
-                class="h-fit py-4 px-6 bg-opacity-50 hover:bg-opacity-75 text-xl md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"
+                class="h-fit py-2 px-4 md:py-4 md:px-6 bg-opacity-50 hover:bg-opacity-75 text-lg md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"
                 v-if="!$page.props.user" @click="welcomeStore.showLogin = true">
               Log in
             </Button>
@@ -22,7 +22,7 @@
 <!--              Register-->
 <!--            </Button>-->
             <Button v-if="!$page.props.user"
-                    class="h-fit py-4 px-6 bg-opacity-50 hover:bg-opacity-75 text-xl mr-2 md:mr-0 ml-2 md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"
+                    class="h-fit py-2 px-4 md:py-4 md:px-6 bg-opacity-50 hover:bg-opacity-75 text-lg mr-2 md:mr-0 ml-2 md:text-2xl text-gray-200 hover:text-blue-600 drop-shadow-md"
                     @click="Inertia.visit('register')">Register</Button>
           </div>
         </div>
@@ -176,7 +176,8 @@ const welcomeContainer = computed(() => ({
 }))
 
 const goToNewsletterSignup = () => {
-  window.open('https://not.tv/subscribe', '_blank')
+  // window.open('https://not.tv/subscribe', '_blank')
+  Inertia.visit('/newsletterSignup')
 }
 
 appSettingStore.currentPage = 'welcome'
@@ -204,6 +205,7 @@ onMounted(() => {
 
   appSettingStore.ott = 0
   appSettingStore.pageIsHidden = false
+  appSettingStore.noVideo = false
 
   // Only scroll into view if there are no query strings
   const topDiv = document.getElementById("topDiv")

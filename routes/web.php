@@ -100,6 +100,14 @@ Route::get('/public/login', function () {
   return Inertia::render('Login');
 })->name('public.login');
 
+Route::get('/newsletterSignup', function () {
+  return Inertia::render('NewsletterSignup');
+})->name('public.newsletterSignup');
+
+Route::get('/contact', function () {
+  return Inertia::render('Contact');
+})->name('public.contact');
+
 Route::get('/public/forgot-password', function () {
   return Inertia::render('Public/ForgotPassword');
 })->name('public.forgotPassword');
@@ -151,6 +159,7 @@ Route::get('/terms-of-service', [\App\Http\Controllers\TermsOfServiceController:
 Route::get('/whitepaper', [WhitepaperController::class, 'show'])->name('whitepaper.show');
 
 Route::get('/first-play-data', [AppSettingController::class, 'serveFirstPlayData']);
+
 
 
 // News (public, everyone can see these)

@@ -214,6 +214,7 @@ class ShowsController extends Controller {
         'folder'       => $image->folder,
         'cdn_endpoint' => $appSetting->cdn_endpoint,
         'cloud_folder' => $image->cloud_folder,
+        'placeholder_url' => $image->placeholder_url,
     ];
   }
 

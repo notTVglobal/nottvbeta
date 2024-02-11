@@ -4,6 +4,7 @@
   <div class="bg-gray-900 h-[calc(100vh)]">
     <div>
       <PublicNavigationMenu class="fixed top-0 w-full h-16"/>
+      <PublicResponsiveNavigationMenu />
     </div>
 
       <div id="topDiv" class="bg-gray-900 text-white px-5 flex flex-col w-full hide-scrollbar">
@@ -15,7 +16,7 @@
         <main class="pb-8  hide-scrollbar">
           <div class="mx-auto px-4 border-b border-gray-800  hide-scrollbar">
 
-            <div class=" hide-scrollbar bg-gray-200 mt-6 mb-36 mx-auto p-5 w-3/4 max-w-96 text-gray-900 rounded">
+            <div class=" hide-scrollbar bg-gray-200 mt-6 mb-36 mx-auto p-5 w-full md:w-3/4 max-w-96 text-gray-900 rounded">
 
 
               <div class="">
@@ -107,6 +108,8 @@ import JetLabel from '@/Jetstream/Label.vue';
 import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
 import ApplicationLogo from '@/Jetstream/ApplicationLogo.vue'
 import AuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo.vue'
+import PublicResponsiveNavigationMenu from '@/Components/Global/Navigation/PublicResponsiveNavigationMenu.vue'
+import { onMounted } from 'vue'
 
 
 const appSettingStore = useAppSettingStore()
@@ -133,4 +136,9 @@ const submit = () => {
   });
   appSettingStore.pageReload = true
 };
+
+onMounted(() => {
+  const topDiv = document.getElementById("topDiv")
+  topDiv.scrollIntoView()
+});
 </script>
