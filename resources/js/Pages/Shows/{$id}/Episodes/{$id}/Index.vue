@@ -252,13 +252,8 @@ let playEpisode = () => {
     copyrightYear: episode.copyrightYear,
     logline: '',
     description: episode.description,
-<<<<<<< HEAD
-    episodeNumber: episode.episode_number,
-    episodeReleaseDateTime: episode.release_dateTime
-=======
     releaseDateTime: episode.release_dateTime,
     episodeNumber: episode.episode_number,
->>>>>>> development
   }
 
   // Set the currently playing media in nowPlayingStore

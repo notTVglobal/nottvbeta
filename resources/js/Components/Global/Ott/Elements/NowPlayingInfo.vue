@@ -96,14 +96,10 @@
 <!--                    <div class="showOrMovieTitle">{{ nowPlayingStore.show?.name }}</div>-->
 <!--                    <div class="showEpisodeTitle">{{ nowPlayingStore.show?.episode?.name }}</div>-->
                     <!-- Release Date -->
-<<<<<<< HEAD
-                    <div class="releaseYear text-gray-400">{{ nowPlayingStore.activeMedia.details?.release_year }}</div>
-                    <div class="episodeReleaseDateTime text-yellow-900">{{ nowPlayingStore.activeMedia.details?.episodeReleaseDateTime }}</div>
-<!--                    <div class="releaseDateTime">{{ useTimeAgo(nowPlayingStore.show?.episode.releaseDateTime) }}</div>-->
-=======
+
                     <div class="releaseYear text-gray-400" v-if="!nowPlayingStore.activeMedia.details?.releaseDateTime">{{ nowPlayingStore.activeMedia.details?.release_year }}</div>
                     <ConvertDateTimeToTimeAgo v-if="nowPlayingStore.activeMedia.details?.releaseDateTime" :dateTime="nowPlayingStore.activeMedia.details?.releaseDateTime" :class="`text-yellow-400`" />
->>>>>>> development
+
                   </div>
                 </div>
 
