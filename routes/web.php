@@ -108,6 +108,8 @@ Route::get('/contact', function () {
   return Inertia::render('Contact');
 })->name('public.contact');
 
+Route::post('/contact', [WelcomeController::class, 'contactFormSubmission'])->name('public.contact.submit')->middleware('throttle:3,1');
+
 Route::get('/public/forgot-password', function () {
   return Inertia::render('Public/ForgotPassword');
 })->name('public.forgotPassword');

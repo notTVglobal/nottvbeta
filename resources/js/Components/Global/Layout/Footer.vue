@@ -20,6 +20,7 @@
     <nav>
       <header class="footer-title">Company</header>
       <Link :href="`/whitepaper`" class="hover:text-blue-500">Whitepaper</Link>
+      <Link :href="`/contact`" class="hover:text-blue-500">Contact Us</Link>
       <!--                        <a class="link link-hover">About us</a>-->
       <!--                        <a class="link link-hover">Contact</a>-->
       <!--                        <a class="link link-hover">Jobs</a>-->

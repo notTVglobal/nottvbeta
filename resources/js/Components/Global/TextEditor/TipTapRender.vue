@@ -4,7 +4,7 @@
   </div>
 </template>
 <script setup>
-import { Editor, useEditor, EditorContent, Text } from '@tiptap/vue-3'
+import { Editor, useEditor, EditorContent } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
 import { ref } from 'vue'
 import { TextStyle } from '@tiptap/extension-text-style'

@@ -11,11 +11,12 @@
       <div class="text-center text-3xl font-semibold tracking-widest uppercase text-gray-50">News Reporters</div>
 
       <main class="pb-8 mx-auto px-4 border-b border-gray-800">
-        <div class="flex bg-gray-200 my-10 mx-auto p-5 w-[calc(100%-96)] rounded justify-center text-gray-900">
+        <div class="flex flex-col w-full bg-gray-200 my-10 mx-auto p-5 rounded justify-center text-gray-900">
+          <div v-if="newsPeople.length === 0" class="w-full">
+            <div class="flex flex-row">We are in the process of building our news team.</div>
+          </div>
           <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full px-6">
-            <div v-if="newsPeople.length === 0">
-              We are in the process of building our news team.
-            </div>
+
             <div v-for="person in newsPeople" :key="person.id" class="text-center px-8 py-3">
               <div class="hover:bg-gray-300 rounded-lg cursor-pointer pb-8">
                 <header class="pt-8 pb-6">
