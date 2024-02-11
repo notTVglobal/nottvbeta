@@ -248,10 +248,12 @@ let playEpisode = () => {
     creative_commons: episode.creative_commons,
     category: show.category,
     subCategory: show.subCategory,
-    release_year: episode.release_year,
+    release_year: '',
     copyrightYear: episode.copyrightYear,
     logline: '',
     description: episode.description,
+    episodeNumber: episode.episode_number,
+    episodeReleaseDateTime: episode.release_dateTime
   }
 
   // Set the currently playing media in nowPlayingStore

@@ -89,6 +89,7 @@
 <!--                    <div class="showEpisodeTitle">{{ nowPlayingStore.show?.episode?.name }}</div>-->
                     <!-- Release Date -->
                     <div class="releaseYear text-gray-400">{{ nowPlayingStore.activeMedia.details?.release_year }}</div>
+                    <div class="episodeReleaseDateTime text-yellow-900">{{ nowPlayingStore.activeMedia.details?.episodeReleaseDateTime }}</div>
 <!--                    <div class="releaseDateTime">{{ useTimeAgo(nowPlayingStore.show?.episode.releaseDateTime) }}</div>-->
                   </div>
                 </div>
