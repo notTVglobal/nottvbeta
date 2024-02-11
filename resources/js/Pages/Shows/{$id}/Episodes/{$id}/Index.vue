@@ -238,10 +238,10 @@ let playEpisode = () => {
 
   // Common details for nowPlayingStore
   const commonDetails = {
-    primaryName: show.name, // Show or Movie name
-    secondaryName: episode.name, // Episode name
-    primaryUrl: `shows/${show.slug}`,
-    secondaryUrl: `shows/${show.slug}/episode/${episode.slug}`,
+    primaryName: episode.name, // Show or Movie name
+    secondaryName: show.name, // Episode name
+    primaryUrl: `shows/${show.slug}/episode/${episode.slug}`,
+    secondaryUrl: `shows/${show.slug}`,
     channelName: '',
     image: show.image,
     team: props.team,
@@ -252,8 +252,13 @@ let playEpisode = () => {
     copyrightYear: episode.copyrightYear,
     logline: '',
     description: episode.description,
+<<<<<<< HEAD
     episodeNumber: episode.episode_number,
     episodeReleaseDateTime: episode.release_dateTime
+=======
+    releaseDateTime: episode.release_dateTime,
+    episodeNumber: episode.episode_number,
+>>>>>>> development
   }
 
   // Set the currently playing media in nowPlayingStore

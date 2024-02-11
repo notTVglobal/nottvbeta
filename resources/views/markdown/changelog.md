@@ -3,11 +3,13 @@
 Last Update: February 11, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
-# v0.8.6.1
+# v0.8.6.2
 February 11, 2024
 * Updated the Home page
 * Added a contact form, moved the newsletter signup to its own page on our site.
 * Redirect the /subscribe link to our newsletter signup page.
+* Fixed playing external videos.
+* Added Date and Episode Number to Now Playing Info Box.
 
 # v0.8.6.0
 February 9, 2024
