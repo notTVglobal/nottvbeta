@@ -19,8 +19,8 @@
             v-if="episode?.creative_commons?.id === 7">&nbsp;&copy;&nbsp;</span>
 
       <!--                    If there is a copyright year display it... we need to remove the &copy; and replace it with whichever creative commons icon it needs -->
-      <span v-if="show?.last_release_year > 0">{{ show?.first_release_year }}-{{ show?.last_release_year }}</span>
-      <span v-if="!show?.last_release_year && show?.first_release_year">{{ show?.first_release_year }}</span>
+      <span class="text-xs font-semibold text-gray-500" v-if="show?.last_release_year > 0">{{ show?.first_release_year }}-{{ show?.last_release_year }}</span>
+      <span class="text-xs font-semibold text-gray-500" v-if="!show?.last_release_year && show?.first_release_year">{{ show?.first_release_year }}</span>
       <span class="text-xs font-semibold text-gray-500"
             v-if="!show?.last_release_year && !show?.first_release_year && episode?.copyrightYear">{{
           episode.copyrightYear

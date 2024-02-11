@@ -24,14 +24,14 @@
           <!-- Title (no link) -->
           {{ nowPlayingStore.activeMedia.details.primaryName }}
         </h3>
-        <h2 v-if="nowPlayingStore?.activeMedia?.details?.secondaryUrl">
+        <h4 v-if="nowPlayingStore?.activeMedia?.details?.secondaryUrl">
           <!-- Render as a link if the URL exists -->
           <Link class="hover:text-blue-500 hover:cursor-pointer"
                 :href="`/${nowPlayingStore?.activeMedia?.details?.secondaryUrl}`">
             <!-- Title (with link) -->
             {{ nowPlayingStore?.activeMedia?.details?.secondaryName }}
           </Link>
-        </h2>
+        </h4>
         <h2 v-else>
           <!-- Just display the name without a link if the URL does not exist -->
           <!-- Title (no link) -->
