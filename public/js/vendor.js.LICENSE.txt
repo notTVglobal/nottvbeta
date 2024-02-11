@@ -69,7 +69,7 @@
 
 /*! #__NO_SIDE_EFFECTS__ */
 
-/*! @name @videojs/http-streaming @version 3.9.1 @license Apache-2.0 */
+/*! @name @videojs/http-streaming @version 3.10.0 @license Apache-2.0 */
 
 /*! @name aes-decrypter @version 4.0.1 @license Apache-2.0 */
 
@@ -97,3 +97,9 @@
  * Available under the MIT license
  * <https://github.com/kesla/parse-headers/blob/master/LICENCE>
  */
+
+/**
+* @vue/shared v3.4.15
+* (c) 2018-present Yuxi (Evan) You and Vue contributors
+* @license MIT
+**/
