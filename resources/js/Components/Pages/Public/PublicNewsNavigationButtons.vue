@@ -1,5 +1,5 @@
 <template>
-  <div class="flex py-10 px-16 justify-center">
+  <div class="hidden md:block flex py-10 px-16 justify-center">
     <div class="grid grid-cols-2 md:grid-cols-5 gap-4 justify-center">
      <PublicNavLink
          @click="() => Inertia.visit('/news/reporters')"

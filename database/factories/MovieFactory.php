@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Image;
 use App\Models\Movie;
 use App\Models\MovieCategory;
 use App\Models\MovieCategorySub;
@@ -28,7 +29,7 @@ class MovieFactory extends Factory
         'user_id' => \App\Models\User::factory(),
         'creative_commons_id' => \App\Models\CreativeCommons::inRandomOrder()->first()->id,
         'team_id' => \App\Models\Team::factory(),
-        'image_id' => \App\Models\Image::factory(),
+        'image_id' => function () { return Image::factory()->create()->id; },
         'name' => $this->faker->sentence,
         'description' => $this->faker->paragraph,
         'slug' => Str::slug($this->faker->sentence),

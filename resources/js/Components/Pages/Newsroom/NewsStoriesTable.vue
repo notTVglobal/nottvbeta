@@ -1,11 +1,11 @@
 <template>
-  <div class="w-full mx-auto p-4">
+  <div class="mx-auto">
 
-    <div class="flex w-full h-fit flex-wrap justify-between align-baseline space-x-10">
-        <h2 class="text-center text-xl md:text-3xl font-semibold my-auto align-middle pl-6">News Stories</h2>
+    <div class="pt-10 flex w-full h-fit flex-wrap justify-between align-baseline space-x-10">
+        <div><h2 class="text-center text-xl md:text-3xl font-semibold my-auto align-middle pl-6">News Stories</h2></div>
       <div class="my-auto">
         <div class="relative">
-          <input v-model="search" type="search" class="bg-gray-50 text-black text-sm rounded-full
+          <input v-model="search" type="search" class="bg-gray-50 text-black text-md rounded-full
                             focus:outline-none focus:shadow w-64 pl-8 px-3 py-1" placeholder="Search...">
           <div class="absolute top-0 flex items-center h-full ml-2">
             <svg class="fill-current text-gray-400 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">

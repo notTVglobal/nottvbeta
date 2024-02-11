@@ -52,9 +52,11 @@ class MistStreamController extends Controller
           'headers' => $request->headers->all(),
           'body' => $request->getContent() // For raw body content
           ]);
-    return response('1', 200)
-        ->header('Content-Type', 'text/plain');
+//    return response('1', 200)
+//        ->header('Content-Type', 'text/plain');
+//
     $allowedTriggers = ["USER_NEW", "CONN_OPEN", "CONN_CLOSE", "CONN_PLAY"];
+
     if (!in_array($request->header('X-Trigger'), $allowedTriggers)) {
       error_log("This script is not compatible with triggers other than USER_NEW, CONN_OPEN, CONN_CLOSE, and CONN_PLAY");
       Log::info('invalid_trigger');
@@ -80,7 +82,7 @@ class MistStreamController extends Controller
     $requestUrl = $lines[4] ?? 'unknown'; // it's only line 5 if USER_NEW, otherwise its line 4.
 
 
-    Log::info($streamName);
+//    Log::info($streamName);
     if ($streamName === 'test' || $streamName === 'first-play') {
       return response('1', 200);
     }

@@ -14,7 +14,7 @@
 
 <script setup>
 import { watch } from 'vue'
-import { Editor, EditorContent, Text } from '@tiptap/vue-3'
+import { Editor, EditorContent } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
 import { History } from '@tiptap/extension-history'
 import { useNewsStore } from '@/Stores/NewsStore'

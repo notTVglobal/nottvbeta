@@ -25,4 +25,7 @@ module.exports = {
     optimization: {
         usedExports: true,
     },
+    stats: {
+        children: true, // This will provide details from child compilations
+    },
 };

@@ -2,8 +2,10 @@
 
 namespace Database\Factories;
 
+use App\Models\Image;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\Str;
+//use Illuminate\Support\Facades\Str;
+use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Team>
@@ -23,8 +25,8 @@ class TeamFactory extends Factory
             'name' => $name = $this->faker->sentence($nbWords = 2, $variableNbWords = true),
             'description' => $this->faker->paragraph,
             'user_id' => $this->faker->randomElement($userIds),
-            'image_id' => '3',
-            'slug' => \Str::slug($name)
+            'image_id' => function () { return Image::factory()->create()->id; },
+            'slug' => Str::slug($name)
         ];
     }
 }

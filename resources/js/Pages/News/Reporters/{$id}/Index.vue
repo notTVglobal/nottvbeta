@@ -3,7 +3,7 @@
   <div id="topDiv" ></div>
   <div :class="marginTopClass">
     <PublicNavigationMenu v-if="!appSettingStore.loggedIn" class="fixed top-0 w-full nav-mask" />
-
+    <PublicResponsiveNavigationMenu />
     <div class="bg-gray-900 flex flex-col gap-y-3 w-full place-self-center text-white px-5">
       <PublicNewsNavigationButtons :can="can"/>
 
@@ -72,6 +72,7 @@ import PublicNewsNavigationButtons from '@/Components/Pages/Public/PublicNewsNav
 import PublicNavigationMenu from '@/Components/Global/Navigation/PublicNavigationMenu'
 import Footer from '@/Components/Global/Layout/Footer.vue'
 import Breadcrumbs from '@/Components/Global/Breadcrumbs/Breadcrumbs'
+import PublicResponsiveNavigationMenu from '@/Components/Global/Navigation/PublicResponsiveNavigationMenu.vue'
 
 const appSettingStore = useAppSettingStore()
 const videoPlayerStore = useVideoPlayerStore()

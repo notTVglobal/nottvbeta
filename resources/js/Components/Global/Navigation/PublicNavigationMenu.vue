@@ -1,5 +1,5 @@
 <template>
-  <div class="fixed top-0 w-full nav-mask">
+  <div class="hidden lg:block fixed top-0 w-full nav-mask">
     <nav class="sticky top-0 bg-black border-b border-gray-100 z-50">
       <!-- Primary Navigation Menu -->
       <div class="max-w-7xl mx-auto px-4 lg:px-6 xl:px-8 z-50">
@@ -20,9 +20,27 @@
                 </h3>
                 <h3 class="inline-flex items-center relative">
                   <JetNavLink
-                      :href="`/news`"
-                      :active="appSettingStore.currentPage === 'news.index'">
-                    News</JetNavLink>
+                      :href="route('news.index')"
+                      :active="route().current('news.index')">
+                    News Stories</JetNavLink>
+                </h3>
+                <h3 class="inline-flex items-center relative">
+                  <JetNavLink
+                      :href="route('news.reporters.index')"
+                      :active="route().current('news.reporters.index')">
+                    Reporters</JetNavLink>
+                </h3>
+                <h3 class="inline-flex items-center relative">
+                  <JetNavLink
+                      :href="route('public.newsletterSignup')"
+                      :active="route().current('public.newsletterSignup')">
+                    Get Exclusive Access!</JetNavLink>
+                </h3>
+                <h3 class="inline-flex items-center relative">
+                  <JetNavLink
+                      :href="route('public.contact')"
+                      :active="route().current('public.contact')">
+                    Contact Us</JetNavLink>
                 </h3>
               </div>
             </div>
@@ -84,6 +102,8 @@ const returnToWelcomePage = () => {
   appSettingStore.pageReload = true
   Inertia.visit('/')
 }
+
+
 // let isStreamPage = false
 //
 // function setPage() {

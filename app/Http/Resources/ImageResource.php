@@ -22,6 +22,7 @@ class ImageResource extends JsonResource
         'folder' => $this->folder ?? '',
         'cdn_endpoint' => $appSetting->cdn_endpoint ?? '',
         'cloud_folder' => $this->cloud_folder ?? '',
+        'placeholder_url' => $this->placeholder_url ?? '',
     ];
   }
 }

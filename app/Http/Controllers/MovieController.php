@@ -151,6 +151,7 @@ class MovieController extends Controller {
         'folder'       => $image->folder,
         'cdn_endpoint' => $appSetting->cdn_endpoint,
         'cloud_folder' => $image->cloud_folder,
+        'placeholder_url' => $image->placeholder_url,
     ];
   }
 
@@ -312,6 +313,7 @@ class MovieController extends Controller {
                 'folder'       => $movie->image->folder,
                 'cdn_endpoint' => $movie->appSetting->cdn_endpoint,
                 'cloud_folder' => $movie->image->cloud_folder,
+                'placeholder_url' => $movie->image->placeholder_url,
             ],
           // need to link the Movie and Team models.
           // change team to $movie->team->name

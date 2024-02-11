@@ -1,14 +1,15 @@
 <template>
   <Head title="News"/>
   <div id="topDiv" ></div>
-  <div class="flex flex-col min-h-screen bg-gray-50 text-black" :class="marginTopClass">
+  <div class="flex flex-col min-h-screen bg-gray-50 text-black w-full overflow-x-hidden" :class="marginTopClass">
 
     <header class="place-self-center flex flex-col bg-gray-50 text-black dark:bg-gray-800 dark:text-gray-50">
       <PublicNewsNavigationButtons :can="can"/>
+
     </header>
 
     <PublicNavigationMenu v-if="!appSettingStore.loggedIn" class="fixed top-0 w-full nav-mask"/>
-
+    <PublicResponsiveNavigationMenu />
     <main class="flex-grow text-black mx-auto pb-64">
       <div class="mx-auto px-4 border-b border-gray-800 flex justify-center">
 
@@ -36,6 +37,7 @@ import { useForm } from '@inertiajs/inertia-vue3'
 import throttle from 'lodash/throttle'
 import { Inertia } from '@inertiajs/inertia'
 import NewsStoriesTable from '@/Components/Pages/Newsroom/NewsStoriesTable.vue'
+import PublicResponsiveNavigationMenu from '@/Components/Global/Navigation/PublicResponsiveNavigationMenu.vue'
 
 const appSettingStore = useAppSettingStore()
 const videoPlayerStore = useVideoPlayerStore()
