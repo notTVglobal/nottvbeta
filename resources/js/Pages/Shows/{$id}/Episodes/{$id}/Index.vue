@@ -38,7 +38,7 @@
 
       <header class="p-5 mb-6">
         <div class="flex flex-wrap justify-between px-5">
-          <div class="">
+          <div class="w-3/4">
             <div class="mb-4">
               <h3 class="mb-1 inline-flex items-center text-3xl font-semibold relative">
 
@@ -65,7 +65,7 @@
 
           </div>
 
-          <div class="flex flex-col text-right">
+          <div class="flex flex-col text-right w-1/4">
             <span class="text-lg uppercase justify-end tracking-wider text-yellow-700">{{
                 props.show.category.name
               }}</span>
@@ -254,6 +254,7 @@ let playEpisode = () => {
     description: episode.description,
     releaseDateTime: episode.release_dateTime,
     episodeNumber: episode.episode_number,
+    episodeId: episode.ulid,
   }
 
   // Set the currently playing media in nowPlayingStore

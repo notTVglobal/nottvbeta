@@ -85,11 +85,11 @@ class ShowEpisodeController extends Controller {
         'show_id'             => 'required',
         'creative_commons_id' => 'required|integer|exists:creative_commons,id',
         'copyrightYear'       => ['integer', 'min:1900', 'max:' . date('Y')],
-        'episode_number'      => 'string|min:1|max:10',
-        'notes'               => 'string',
-        'video_url'           => 'active_url|ends_with:.mp4',
-        'youtube_url'         => 'active_url',
-        'video_embed_code'    => 'string',
+        'episode_number'      => 'nullable|string|min:1|max:10',
+        'notes'               => 'nullable|string',
+        'video_url'           => 'nullable|ends_with:.mp4',
+//        'youtube_url'         => 'active_url',
+        'video_embed_code'    => 'nullable|string',
     ], [
         'copyrightYear.integer'        => 'Please choose a copyright year',
         'creative_commons_id.required' => 'Please choose a Creative Commons / Copyright',
@@ -226,11 +226,15 @@ class ShowEpisodeController extends Controller {
     $teamId = $show->team_id;
 //        $video = Video::where('show_episodes_id', $showEpisode->id)->first();
 
-    // convert release dateTime to user's timezone
-    if ($showEpisode->release_dateTime) {
-      $this->formattedReleaseDateTime = $this->convertTimeToUserTime($showEpisode->release_dateTime);
-    }
 
+    // NOTE: we are deprecating the backend timezone conversion
+    // in favour of the frontend timezone conversion.
+    // OLD CODE: convert release dateTime to user's timezone
+//    if ($showEpisode->release_dateTime) {
+//      $this->formattedReleaseDateTime = $this->convertTimeToUserTime($showEpisode->release_dateTime);
+//    }
+
+    // TODO: Change this timezone method to a frontend process.
     // convert scheduled_release dateTime to user's timezone
     if ($showEpisode->scheduled_release_dateTime) {
       $this->formattedScheduledDateTime = $this->convertTimeToUserTime($showEpisode->scheduled_release_dateTime);
@@ -275,13 +279,14 @@ class ShowEpisodeController extends Controller {
         ],
         'episode'  => [
             'id'                         => $showEpisode->id,
+            'ulid'                       => $showEpisode->ulid,
             'name'                       => $showEpisode->name,
             'slug'                       => $showEpisode->slug,
             'description'                => $showEpisode->description,
             'episode_number'             => $showEpisode->episode_number,
             'created_at'                 => $showEpisode->created_at,
             'release_year'               => $showEpisode->release_year ?? null,
-            'release_dateTime'           => $this->formattedReleaseDateTime ?? null,
+            'release_dateTime'           => $showEpisode->release_dateTime ?? null,
             'creative_commons'           => $showEpisode->creativeCommons ?? null,
             'copyrightYear'              => $showEpisode->copyrightYear ?? null,
             'scheduled_release_dateTime' => $this->formattedScheduledDateTime ?? null,

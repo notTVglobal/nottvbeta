@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Services\MistServerService;
 use Illuminate\Support\ServiceProvider;
 use Inertia\Inertia;
 use Laravel\Cashier\Cashier;
@@ -15,7 +16,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+      $this->app->singleton(MistServerService::class, function ($app) {
+        return new MistServerService();
+      });
     }
 
     /**

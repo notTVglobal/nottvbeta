@@ -31,7 +31,7 @@
             >Add Channel Playlist
             </button>
           </Link>
-          <AdminAddMistStreamModal />
+          <AdminAddMistStreamModal :form-errors="$page.props.errors"/>
 
         </div>
         <input v-model="adminStore.searchTerm" type="search" placeholder="Search..." class="border px-2 rounded-lg"/>
