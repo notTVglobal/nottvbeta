@@ -8,6 +8,7 @@ import { useAudioStore } from '@/Stores/AudioStore'
 import videojs from 'video.js'
 import { usePage } from '@inertiajs/inertia-vue3'
 import { nextTick } from 'vue'
+import { useNotificationStore } from '@/Stores/NotificationStore'
 
 const initialState = () => ({
     mistServerUri: 'https://mist.nottv.io/', // tec21: 2024-02-09, if we don't start with the address here changing channels is really slow and buggy. Address for the MistServer listed in the Admin Settings saved in AppSetting
@@ -428,40 +429,39 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
 
 
         loadNewVideo(source) {
-            let videoJs = videojs('main-player')
-            console.log('LOAD NEW VIDEO')
-            const audioStore = useAudioStore()
-            // Correctly destructure the returned object to get videoSrc and videoSourceType
-            const {videoSrc, videoSourceType} = this.getSourceDetails(source)
+            try {
+                let videoJs = videojs('main-player');
+                console.log('LOAD NEW VIDEO');
+                const audioStore = useAudioStore();
+                // Correctly destructure the returned object to get videoSrc and videoSourceType
+                const {videoSrc, videoSourceType} = this.getSourceDetails(source);
 
-            // Example: Stopping and cleaning up the current video and audio setup
-            if (videoJs) {
-                videoJs.src({'src': videoSrc, 'type': videoSourceType})
+                // Example: Stopping and cleaning up the current video and audio setup
+                if (videoJs) {
+                    videoJs.src({'src': videoSrc, 'type': videoSourceType});
 
-                videoJs.ready(() => {
-                    // ensureAudioContextAndNodesReady does the following:
-                    // 1. Resumes AudioContext if suspended.
-                    // 2. (Re)connects MediaElementSource from the video element to AudioContext.
-                    audioStore.deferAudioSetup = false
-                    audioStore.ensureAudioContextAndNodesReady(videoJs).then(() => {
-                        // Only attempt to play the video after ensuring the AudioContext is ready
-                        videoJs.play().catch(error => {
-                            console.error('Playback initiation error:', error)
-                        })
+                    videoJs.ready(() => {
+                        // ensureAudioContextAndNodesReady does the following:
+                        // 1. Resumes AudioContext if suspended.
+                        // 2. (Re)connects MediaElementSource from the video element to AudioContext.
+                        audioStore.deferAudioSetup = false;
+                        audioStore.ensureAudioContextAndNodesReady(videoJs).then(() => {
+                            // Only attempt to play the video after ensuring the AudioContext is ready
+                            videoJs.play().catch(error => {
+                                useNotificationStore().setGeneralServiceNotification('Error', 'Playback initiation error: ' + error)
+                                console.error('Playback initiation error: ', error);
+                            });
 
-                        // Consider toggling mute based on the user's preference or previous state
-                        videoJs.muted(false)
-                        this.muted = false
-                    })
-                })
-
-
-                //     useAudioStore().ensureAudioContextAndNodesReady(this.player);
-                //     this.attachEventListeners(); // Reattach event listeners as needed
-                //
-                //     this.unMute()
-                // });
-
+                            // Consider toggling mute based on the user's preference or previous state
+                            videoJs.muted(false);
+                            this.muted = false;
+                        });
+                    });
+                }
+            } catch (error) {
+                // Log the error or perform any other error handling
+                useNotificationStore().setGeneralServiceNotification('Error', 'Error loading new video: ' + error)
+                console.error('Error loading new video: ', error);
             }
         },
 
@@ -552,16 +552,27 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             this.paused = false
         },
         loadNewSourceFromUrl(source) {
-            this.videoIsYoutube = false
-            useChannelStore().clearChannel()
-            let videoJs = videojs('main-player')
-            this.videoSource = source.video_url
-            this.videoSourceType = source.type
-            videoJs.src({'src': source.video_url, 'type': source.type})
-            // videoJs.controls(false)
-            // this.play()
-            this.unMute()
-            this.paused = false
+            try {
+                this.videoIsYoutube = false;
+                useChannelStore().clearChannel();
+                let videoJs = videojs('main-player');
+
+                if (!source.video_url || !source.type) {
+                    useNotificationStore().setGeneralServiceNotification('Error', 'Invalid video source.')
+                    throw new Error("Invalid video source.");
+                }
+
+                this.videoSource = source.video_url;
+                this.videoSourceType = source.type;
+                videoJs.src({'src': source.video_url, 'type': source.type});
+
+                this.unMute();
+                this.paused = false;
+            } catch (error) {
+                useNotificationStore().setGeneralServiceNotification('Error', 'Failed to load new source: ' + error)
+                console.error("Failed to load new source:", error);
+                throw error; // Re-throw the error to be caught by the caller
+            }
         },
         loadNewSourceFromMist(source) {
             this.videoIsYoutube = false

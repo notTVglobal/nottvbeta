@@ -103,23 +103,28 @@
                   </div>
                 </div>
 
-<!--                Episode Number -->
-                <div v-if="nowPlayingStore.activeMedia.details?.episodeNumber">
-                  <div class="text-xs mt-4">
-                    Episode {{ nowPlayingStore.activeMedia.details?.episodeNumber }}
-                  </div>
-                </div>
+
                 <!-- Logline and Description -->
                 <div v-if="nowPlayingStore.activeMedia.details?.logline" class="flex flex-col mt-4">
                   <div class="text-xs uppercase text-gray-500 font-semibold tracking-wider mb-1">Logline</div>
                   <div class="showEpisodeOrMovieDescription">{{ nowPlayingStore.activeMedia.details?.logline }}</div>
                 </div>
-                <div v-if="nowPlayingStore.activeMedia.details?.description" class="flex flex-col mt-4">
+                <div v-if="nowPlayingStore.activeMedia.details?.description" class="flex flex-col my-4">
                   <div class="text-xs uppercase text-gray-500 font-semibold tracking-wider mb-1">Description</div>
                   <div class="showEpisodeOrMovieDescription description">{{ nowPlayingStore.activeMedia.details?.description }}</div>
                 </div>
+
+                <!-- Episode Number & Episode ID -->
+                <div v-if="nowPlayingStore.activeMedia.details?.episodeNumber" class="flex flex-row space-x-2 text-gray-400">
+                  <div class="text-xs">
+                    Episode {{ nowPlayingStore.activeMedia.details?.episodeNumber }}
+                  </div>
+                  <div class="text-xs">
+                    Episode ID: {{ nowPlayingStore.activeMedia.details?.episodeId }}
+                  </div>
+                </div>
                 <!-- Copyright and Team -->
-                <div class="flex flex-row flex-wrap mt-4">
+                <div class="flex flex-row flex-wrap">
                     <div>
                       <!--                    If there is a copyright year display it... we need to remove the &copy; and replace it with whichever creative commons icon it needs -->
                       <span class="text-xs font-semibold text-gray-500" v-if="nowPlayingStore.activeMedia.details?.copyrightYear">{{ nowPlayingStore.activeMedia.details?.copyrightYear }}</span>

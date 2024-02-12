@@ -13,7 +13,10 @@ class MistStream extends Model {
   protected $fillable = [
       'name',
       'comment',
-      'source'
+      'source',
+      'mime_type',
+      'active',
+      'metadata'
   ];
 
   protected static function boot() {

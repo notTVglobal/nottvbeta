@@ -1,7 +1,14 @@
 # not.tv Changelog
 
-Last Update: February 11, 2024\
+Last Update: February 12, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+# v0.8.6.3
+February 12, 2024
+* Added the ability for Admin to create new streams and remove streams.
+* Added a general service notification for videos that have an error with playback.
+* Added the Episode ID (Ulid) to the bottom of the Now Playing Info panel.
+* Created a MistServerService class for handling connections to the MistServer.
 
 # v0.8.6.2
 February 11, 2024

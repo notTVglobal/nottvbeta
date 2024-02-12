@@ -146,7 +146,7 @@ function showRegister() {
   color: black;
   padding: 1rem;
   width: 80vw;
-  max-width: 500px;
+  max-width: 450px;
   border-radius: 8px;
 }
 

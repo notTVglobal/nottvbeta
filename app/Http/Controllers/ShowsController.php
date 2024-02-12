@@ -179,7 +179,7 @@ class ShowsController extends Controller {
             'name'        => $showEpisode->show->subCategory->name,
             'description' => $showEpisode->show->subCategory->description,
         ],
-        'releaseDateTime' => $this->formatReleaseDate($showEpisode->release_dateTime),
+        'releaseDateTime' => $showEpisode->release_dateTime,
     ];
   }
 
@@ -220,22 +220,25 @@ class ShowsController extends Controller {
 
   // release dateTime
   private function formatReleaseDate($date): string {
-    if (is_null($date)) {
-      // Handle the null case. You can return an empty string or a default value.
-      return ''; // or return some default value or message
-    }
-    $user = Auth::user();
-    $userTimezone = $user->timezone;
 
-//    $releaseDateTimeString = $date;
+    // NOTE: We are deprecating this in favour of doing the timezone conversions
+    // on the frontend.
+    //    if (is_null($date)) {
+//      // Handle the null case. You can return an empty string or a default value.
+//      return ''; // or return some default value or message
+//    }
+//    $user = Auth::user();
+//    $userTimezone = $user->timezone;
+//
+////    $releaseDateTimeString = $date;
+//
+//    // Create a Carbon instance from the datetime string
+//    $releaseDateTime = \Carbon\Carbon::parse($date, 'UTC');
+//
+//    // Convert to the user's timezone
+//    $releaseDateTime->setTimezone($userTimezone);
 
-    // Create a Carbon instance from the datetime string
-    $releaseDateTime = \Carbon\Carbon::parse($date, 'UTC');
-
-    // Convert to the user's timezone
-    $releaseDateTime->setTimezone($userTimezone);
-
-    return $releaseDateTime->toIso8601String();
+//    return $releaseDateTime->toIso8601String();
   }
 
 ////////////  CREATE AND STORE
@@ -441,6 +444,7 @@ class ShowsController extends Controller {
         'image'            => $this->transformImage($episode->image, $episode->appSetting),
         'creative_commons' => $episode->creativeCommons,
         'copyrightYear'    => $episode->copyrightYear,
+        'release_dateTime'    => $episode->release_dateTime,
 
       // Other episode attributes...
       // Include both 'file_name' and 'video_url' as applicable

@@ -914,6 +914,8 @@ Route::middleware([
 
 Route::resource('mistStreams', MistStreamController::class);
 Route::get('/admin/mist-stream/search', [MistStreamController::class, 'adminSearchMistStreams']);
+Route::post('/admin/mist-stream/add', [MistStreamController::class, 'adminAddMistStream'])->name('mistStream.add');
+Route::post('/admin/mist-stream/remove', [MistStreamController::class, 'adminRemoveMistStream'])->name('mistStream.remove');
 
 // Mist Server
 //////////////

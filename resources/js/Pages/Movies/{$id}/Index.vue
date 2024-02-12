@@ -327,7 +327,8 @@ let source = {
 // }
 
 let playMovie = () => {
-  nowPlayingStore.reset();
+
+
   // audioContext.resume().then(() => {
   //   console.log('AudioContext resumed successfully');
   //   videoPlayerStore.loadAndPlaySource(movie.video);
@@ -341,6 +342,30 @@ let playMovie = () => {
 
   const isInternalVideo = mediaType  === 'movie';
   const isExternalVideo = mediaType  === 'externalVideo';
+
+
+  // Load the video source in videoPlayerStore for playback
+  if (isInternalVideo) {
+    // For internal videos, load using the episode video directly
+    try {
+      videoPlayerStore.loadNewVideo(movie.video);
+      // Further actions that depend on the success of loadNewVideo
+    } catch (error) {
+      console.error("Failed to load new video:", error);
+      // Handle the failure, e.g., by showing an error message to the user
+      // Avoid performing further actions that depend on the successful execution of loadNewVideo
+    }
+    // videoPlayerStore.loadNewSourceFromFile(movie.video);
+  } else if (isExternalVideo) {
+    // For external videos, focus on the video_url and type provided within the episode's video details
+    if (movie.video && movie.video.video_url) {
+      videoPlayerStore.loadNewSourceFromUrl({
+        video_url: movie.video.video_url,
+        type: movie.video.type // This assumes that 'type' is correctly set to 'video/mp4' or appropriate video MIME type
+      });
+    }
+  }
+  nowPlayingStore.reset();
 
   const videoDetails = {
     // Assuming video details are structured correctly in your episode data
@@ -382,20 +407,7 @@ let playMovie = () => {
   // } else {
   //   videoPlayerStore.loadNewVideo(movie.video);
   // }
-  // Load the video source in videoPlayerStore for playback
-  if (isInternalVideo) {
-    // For internal videos, load using the episode video directly
-    videoPlayerStore.loadNewVideo(movie.video);
-    // videoPlayerStore.loadNewSourceFromFile(movie.video);
-  } else if (isExternalVideo) {
-    // For external videos, focus on the video_url and type provided within the episode's video details
-    if (movie.video && movie.video.video_url) {
-      videoPlayerStore.loadNewSourceFromUrl({
-        video_url: movie.video.video_url,
-        type: movie.video.type // This assumes that 'type' is correctly set to 'video/mp4' or appropriate video MIME type
-      });
-    }
-  }
+
 
   appSettingStore.ott = 1
   // Inertia.visit('/stream');

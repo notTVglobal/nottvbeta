@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\AddMistStreamToServer;
+use App\Jobs\RemoveMistStreamFromServer;
 use App\Models\AppSetting;
+use App\Models\Channel;
 use App\Models\MistStream;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
@@ -14,8 +17,7 @@ use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use RuntimeException;
 
-class MistStreamController extends Controller
-{
+class MistStreamController extends Controller {
 
   public function __construct() {
 
@@ -48,10 +50,10 @@ class MistStreamController extends Controller
 
     // Check for allowed triggers from the header
 
-          Log::info('Raw Request', [
-          'headers' => $request->headers->all(),
-          'body' => $request->getContent() // For raw body content
-          ]);
+    Log::info('Raw Request', [
+        'headers' => $request->headers->all(),
+        'body'    => $request->getContent() // For raw body content
+    ]);
 //    return response('1', 200)
 //        ->header('Content-Type', 'text/plain');
 //
@@ -100,6 +102,7 @@ class MistStreamController extends Controller
     // Comparing the expected hash with the received hash
     if ($hashReceived !== $hashExpected) {
       Log::warning("Hash mismatch for user ID: {$userId}");
+
       return response('Unauthorized - Hash mismatch', 401);  // Respond with 401 Unauthorized for invalid hash
     }
 
@@ -114,113 +117,169 @@ class MistStreamController extends Controller
 
     // If hash matches, proceed with additional checks (if any) and ultimately approve access
     Log::info('Access granted');
+
     return response('1', 200); // Positive response for blocking triggers
 
   }
 
 
   /**
-     * Display a listing of the resource.
-     *
-     * @return \Inertia\Response
+   * Display a listing of the resource.
+   *
+   * @return \Inertia\Response
    */
-    public function adminSearchMistStreams(Request $request)
-    {
-      $search = $request->input('search', '');
+  public function adminSearchMistStreams(Request $request) {
+    $search = $request->input('search', '');
 
-      // Directly fetch mistStreams based on the search input.
-      $mistStreams = MistStream::query()
-          ->when($search, function ($query, $search) {
-            // Use the $search variable captured from the request
-            return $query->where('name', 'like', "%{$search}%");
-          })
-          ->get();
+    // Directly fetch mistStreams based on the search input.
+    $mistStreams = MistStream::query()
+        ->when($search, function ($query, $search) {
+          // Use the $search variable captured from the request
+          return $query->where('name', 'like', "%{$search}%");
+        })
+        ->get();
 
-      $filters = [
-          'search' => $search, // Use the $search variable you've already set
-      ];
+    $filters = [
+        'search' => $search, // Use the $search variable you've already set
+    ];
 
-      return Inertia::render('Admin/Channels/Index', [
-          'mistStreams' => $mistStreams, // Pass the fetched mistStreams directly
-          'mistStreamsSearchFilters' => $filters,
-      ]);
+    return Inertia::render('Admin/Channels/Index', [
+        'mistStreams'              => $mistStreams, // Pass the fetched mistStreams directly
+        'mistStreamsSearchFilters' => $filters,
+    ]);
 
+  }
+
+  public function adminAddMistStream(Request $request) {
+    MistStream::query()->get();
+    // Validate the incoming request
+    $validateData = $request->validate([
+        'name' => [
+            'required',
+            'string',
+            'unique:mist_streams,name',
+            'regex:/^[a-z_\-\.]+[a-z0-9_\-\.]*$/'
+        ],
+        'comment' => 'nullable|string'
+    ], [
+        'name.regex' => 'The name must be lowercase, cannot start with a number, and can only include . _ - characters.'
+    ]);
+
+    // Create a new MistStream
+    $mistStream = MistStream::create([
+        'name' => $validateData['name'],
+        'comment' => $validateData['comment'],
+        'mime_type' => 'application/vnd.apple.mpegurl' // hard coded this type for now... technically, the stream adapts based on the input.
+    ]);
+
+    AddMistStreamToServer::dispatch($mistStream);
+
+    // Return back with a success message
+    return redirect()->back()->with('message', 'Mist Stream Successfully Added.');
+
+  }
+
+  public function adminRemoveMistStream(Request $request) {
+    // Retrieve the MistStream by name
+    $mistStreamName = $request->name;
+    $mistStream = MistStream::where('name', $mistStreamName)->first();
+
+    if (!$mistStream) {
+      // MistStream not found, return with an error message
+      return redirect()->back()->with('error', 'Mist Stream not found.');
     }
+
+    // Check if the MistStream is used by any channels
+    $relatedChannels = Channel::where('mist_stream_id', $mistStream->id)->get();
+
+    if ($relatedChannels->isNotEmpty()) {
+      // Build a comma-separated list of channel names (if the Channel model has a 'name' attribute)
+      $channelNames = $relatedChannels->pluck('name')->join(', ');
+
+      // Return back with a warning message
+      return redirect()->back()->with('warning', "You cannot delete a MistStream that is currently on the following channel(s): {$channelNames}.");
+    }
+
+    // Dispatch job to remove MistStream from server
+    RemoveMistStreamFromServer::dispatch($mistStream);
+
+    // No related channels found, safe to delete
+    $mistStream->delete();
+
+    // Return back with a success message
+    return redirect()->back()->with('success', 'Mist Stream Successfully Removed.');
+
+  }
+
 
   /**
    * Display a listing of the resource.
    *
    * @return \Illuminate\Http\JsonResponse
    */
-  public function index()
-  {
+  public function index() {
     $mistStreams = MistStream::all();
+
     return response()->json($mistStreams);
   }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        //
-    }
+  /**
+   * Show the form for creating a new resource.
+   *
+   * @return Response
+   */
+  public function create() {
+    //
+  }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+  /**
+   * Store a newly created resource in storage.
+   *
+   * @param \Illuminate\Http\Request $request
+   * @return Response
+   */
+  public function store(Request $request) {
+    //
+  }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\MistStream  $mistStream
-     * @return Response
-     */
-    public function show(MistStream $mistStream)
-    {
-        //
-    }
+  /**
+   * Display the specified resource.
+   *
+   * @param \App\Models\MistStream $mistStream
+   * @return Response
+   */
+  public function show(MistStream $mistStream) {
+    //
+  }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\MistStream  $mistStream
-     * @return Response
-     */
-    public function edit(MistStream $mistStream)
-    {
-        //
-    }
+  /**
+   * Show the form for editing the specified resource.
+   *
+   * @param \App\Models\MistStream $mistStream
+   * @return Response
+   */
+  public function edit(MistStream $mistStream) {
+    //
+  }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\MistStream  $mistStream
-     * @return Response
-     */
-    public function update(Request $request, MistStream $mistStream)
-    {
-        //
-    }
+  /**
+   * Update the specified resource in storage.
+   *
+   * @param \Illuminate\Http\Request $request
+   * @param \App\Models\MistStream $mistStream
+   * @return Response
+   */
+  public function update(Request $request, MistStream $mistStream) {
+    //
+  }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\MistStream  $mistStream
-     * @return Response
-     */
-    public function destroy(MistStream $mistStream)
-    {
-        //
-    }
+  /**
+   * Remove the specified resource from storage.
+   *
+   * @param \App\Models\MistStream $mistStream
+   * @return Response
+   */
+  public function destroy(MistStream $mistStream) {
+    //
+  }
 }

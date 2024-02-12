@@ -30,7 +30,7 @@
 </template>
 
 <script setup>
-import { computed, provide, ref } from 'vue'
+import { computed, onMounted, provide, ref } from 'vue'
 import { Inertia } from "@inertiajs/inertia"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
@@ -49,6 +49,10 @@ let props = defineProps({
 
 const scrollRef = ref(null)
 provide('scrollRef', scrollRef)
+
+onMounted(async () => {
+  await videoPlayerStore.getMistServerUri()
+})
 
 channelStore.reloadChannels()
 

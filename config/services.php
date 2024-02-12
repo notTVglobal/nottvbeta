@@ -30,4 +30,10 @@ return [
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
+
+    'mistserver' => [
+        'username' => env('MISTSERVER_USERNAME', 'admin'),
+        'password' => env('MISTSERVER_PASSWORD', 'secret'),
+        'host' => env('MISTSERVER_HOST', 'http://localhost:4242/api'),
+    ],
 ];
