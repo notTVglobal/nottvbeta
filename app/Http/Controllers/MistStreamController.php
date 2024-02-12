@@ -175,7 +175,7 @@ class MistStreamController extends Controller {
     AddMistStreamToServer::dispatch($mistStream);
 
     // Return back with a success message
-    return redirect()->back()->with('message', 'Mist Stream Successfully Added.');
+    return redirect()->back()->with('success', 'Mist Stream Successfully Added. Check the logs to confirm.');
 
   }
 
@@ -207,7 +207,7 @@ class MistStreamController extends Controller {
     $mistStream->delete();
 
     // Return back with a success message
-    return redirect()->back()->with('success', 'Mist Stream Successfully Removed.');
+    return redirect()->back()->with('message', 'Mist Stream Successfully Removed. Check the logs to confirm.');
 
   }
 
