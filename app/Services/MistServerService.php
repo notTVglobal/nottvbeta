@@ -23,6 +23,7 @@ class MistServerService {
   }
 
   public function send(array $data = []) {
+    Log::debug("Sending request to MistServer", ['url' => $this->host, 'data' => $data]);
 
     if ($this->challenge) {
       // If there is a challenge, hash the password with the challenge
@@ -45,16 +46,22 @@ class MistServerService {
     $response = Http::get($this->host, ['command' => json_encode($data)]);
 
     if ($response->failed()) {
-      Log::error('Request to MistServer failed');
+      Log::error('Request to MistServer failed', [
+          'status' => $response->status(),
+          'response' => $response->body(),
+      ]);
 
       return ['error' => 'Request to MistServer failed'];
     }
 
     $responseData = $response->json();
+    Log::debug("Received response from MistServer", ['response' => $responseData]);
+
 
     if (isset($responseData['authorize']) && $responseData['authorize']['status'] === 'CHALL') {
       $this->challenge = $responseData['authorize']['challenge'];
 
+      Log::debug("Received challenge from MistServer, retrying", ['challenge' => $this->challenge]);
       return $this->send($data); // Retry with the challenge response
     }
 
