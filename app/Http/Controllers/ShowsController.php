@@ -163,6 +163,7 @@ class ShowsController extends Controller {
   private function transformShowEpisode($showEpisode): array {
     return [
         'id'              => $showEpisode->id,
+        'ulid'            => $showEpisode->ulid,
         'episode_number'  => $showEpisode->episode_number,
         'name'            => $showEpisode->name,
         'description'     => \Str::limit($showEpisode->description, 100, '...'),
@@ -209,11 +210,11 @@ class ShowsController extends Controller {
 
   private function transformImage($image, $appSetting): array {
     return [
-        'id'           => $image->id,
-        'name'         => $image->name,
-        'folder'       => $image->folder,
-        'cdn_endpoint' => $appSetting->cdn_endpoint,
-        'cloud_folder' => $image->cloud_folder,
+        'id'              => $image->id,
+        'name'            => $image->name,
+        'folder'          => $image->folder,
+        'cdn_endpoint'    => $appSetting->cdn_endpoint,
+        'cloud_folder'    => $image->cloud_folder,
         'placeholder_url' => $image->placeholder_url,
     ];
   }
@@ -437,14 +438,15 @@ class ShowsController extends Controller {
 
     $episodeData = [
         'id'               => $episode->id,
-        'episode_number'   => $episode->number,
+        'ulid'             => $episode->ulid,
+        'episode_number'   => $episode->episode_number,
         'name'             => $episode->name ?? '',
         'slug'             => $episode->slug ?? '',
         'description'      => $episode->description ?? '',
         'image'            => $this->transformImage($episode->image, $episode->appSetting),
         'creative_commons' => $episode->creativeCommons,
         'copyrightYear'    => $episode->copyrightYear,
-        'release_dateTime'    => $episode->release_dateTime,
+        'release_dateTime' => $episode->release_dateTime,
 
       // Other episode attributes...
       // Include both 'file_name' and 'video_url' as applicable
