@@ -315,6 +315,7 @@ let playEpisode = () => {
     description: props.show.firstPlayEpisode.description,
     releaseDateTime: props.show.firstPlayEpisode.release_dateTime,
     episodeNumber: props.show.firstPlayEpisode.episode_number,
+    episodeId: props.show.firstPlayEpisode.ulid,
   };
 
   // Set the currently playing media in nowPlayingStore
