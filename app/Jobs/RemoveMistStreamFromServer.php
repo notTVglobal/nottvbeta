@@ -52,7 +52,7 @@ class RemoveMistStreamFromServer implements ShouldQueue {
       $response = $mistServerService->send($data);
       Log::debug("MistServer response", ['response' => $response]);
 
-      // Assuming the MistServerService returns null or a different structure in case of connection issues
+      // Assuming the MistServerService returns null or a different structure in case of    connection issues
       if (!$response || isset($response['error'])) {
         // Handle case where there's an error or no response
         $errorMessage = $response['error'] ?? 'Unknown error occurred';
