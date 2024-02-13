@@ -69,7 +69,7 @@
 
   <dialog id="orangeFeedbackModal" class="modal text-black">
 
-    <div v-if="!sentMessage">
+    <div>
       <div class="modal-box">
         <div class="flex flex-col text-center justify-center w-full">
           <div class="tracking-wider uppercase text-orange-500">

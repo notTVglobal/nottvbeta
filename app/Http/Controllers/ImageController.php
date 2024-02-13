@@ -246,7 +246,6 @@ class ImageController extends Controller
     public function uploadTeamLogo(HttpRequest $request)
     {
 //        $metadata = $request->input('metadata');
-dd($request);
         // Can we create a function createImage() --- started below
         // to simplify these upload requests?
 

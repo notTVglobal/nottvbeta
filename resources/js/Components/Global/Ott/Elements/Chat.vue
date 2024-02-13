@@ -17,7 +17,7 @@
             :class="{ 'text-gray-100': !chatStore.inputTooLong, 'text-red-600': chatStore.inputTooLong }"
         />
 
-        <button v-if="appSettingStore.fullPage" v-touch="()=>appSettingStore.closeOtt()"
+        <button v-if="appSettingStore.fullPage" @click="closeChat"
                 :class="chatCloseClass">
           CLOSE CHAT
         </button>
@@ -54,20 +54,23 @@ function closeChat() {
     appSettingStore.osd = true
     videoPlayerStore.makeVideoFullPage()
   }
+  appSettingStore.closeOtt()
 }
-
-const pipChatModeChangeStyle = computed(() => {
-  return appSettingStore.pipChatMode ? 'top-16' : 'bg-gray-800'
-})
 
 const pipChatModeChangeTopPosition = computed(() => {
   return appSettingStore.pipChatMode ? 'chatFullPageContainerChangeTopPositionForPipChatMode' : ''
 })
 
+const pipChatModeChangeStyle = computed(() => {
+  return appSettingStore.pipChatMode ? 'top-16' : 'bg-gray-800'
+})
+
 const divClass = computed(() => {
   if (appSettingStore.ott === 4) {
-    if (appSettingStore.fullPage) {
+    if (appSettingStore.fullPage && !appSettingStore.pipChatMode) {
       return `chatFullPageContainer hide-scrollbar ${pipChatModeChangeTopPosition.value}`
+    } else if (appSettingStore.fullPage && appSettingStore.pipChatMode) {
+      return `pipChatFullPageContainer hide-scrollbar ${pipChatModeChangeTopPosition.value}`
     } else {
       return `ottTopRightDisplay hide-scrollbar ${pipChatModeChangeStyle.value}`
     }

@@ -488,10 +488,22 @@ hr {
         position: fixed;
         z-index: 90;
         /*max-height: calc(100% - 27.5rem);*/
-        max-height: calc(50vh - 4.5rem);
+        max-height: calc(50vh - 4.2rem);
         max-width: 100%;
-        bottom: 5.5rem;
-        @apply px-8 flex flex-col overflow-y-scroll overflow-x-hidden  hide-scrollbar
+        bottom: 0;
+        left: 0;
+        right: 0;
+        @apply px-8 pb-24 flex flex-col overflow-y-scroll overflow-x-hidden hide-scrollbar
+    }
+    .pipChatFullPageContainer {
+        z-index: 90;
+        /*max-height: calc(100% - 27.5rem);*/
+        max-height: calc(10vh);
+        bottom: 0;
+        left: 0;
+        right: 0;
+        /*@apply px-8 pb-24 flex flex-col overflow-y-scroll overflow-x-hidden hide-scrollbar*/
+        @apply fixed w-full mt-7 px-8 pb-24 overflow-y-scroll z-50 border-t border-gray-900
     }
     .chatTopRightContainer {
         position: fixed;

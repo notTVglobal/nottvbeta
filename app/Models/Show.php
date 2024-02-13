@@ -7,11 +7,19 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Symfony\Component\Uid\Ulid;
 
 class Show extends Model
 {
     use SoftDeletes;
     use HasFactory;
+
+  protected static function booted()
+  {
+    static::creating(function ($model) {
+      $model->ulid = (string) Ulid::generate();
+    });
+  }
 
     /**
      * The attributes that are mass assignable.
