@@ -6572,6 +6572,30 @@ hr {
   top: 15rem;
 }
 
+.top-24 {
+  top: 6rem;
+}
+
+.top-5 {
+  top: 1.25rem;
+}
+
+.top-64 {
+  top: 16rem;
+}
+
+.top-96 {
+  top: 24rem;
+}
+
+.top-52 {
+  top: 13rem;
+}
+
+.top-56 {
+  top: 14rem;
+}
+
 .z-0 {
   z-index: 0;
 }
@@ -7420,6 +7444,10 @@ hr {
 
 .min-w-full {
   min-width: 100%;
+}
+
+.min-w-12 {
+  min-width: 3rem;
 }
 
 .max-w-20 {
@@ -10856,6 +10884,10 @@ hr {
     width: 50%;
   }
 
+  .md\:w-1\/4 {
+    width: 25%;
+  }
+
   .md\:w-1\/6 {
     width: 16.666667%;
   }
@@ -10874,10 +10906,6 @@ hr {
 
   .md\:w-auto {
     width: auto;
-  }
-
-  .md\:w-1\/4 {
-    width: 25%;
   }
 
   .md\:min-w-\[8rem\] {

@@ -16,7 +16,6 @@
 
 
     </div>
-    <VideoVolumeIndicatorVertical v-if="user && appSettingStore.osd && appSettingStore.osdSlot.two && appSettingStore.fullPage"/>
     <VideoProgressBar v-if="user"/>
 
     <!-- Over The Top (OTT) -->
@@ -81,8 +80,6 @@ import VideoControlsFullPage from '@/Components/Global/VideoPlayer/VideoControls
 import OttContainer from '@/Components/Global/Ott/Layout/OttContainer'
 import videoJs from '@/Components/Global/VideoPlayer/VideoJs/VideoJs'
 import VideoProgressBar from '@/Components/Global/VideoPlayer/VideoIndicators/VideoProgressBar'
-import VideoVolumeIndicatorVertical
-  from '@/Components/Global/VideoPlayer/VideoIndicators/VideoVolumeIndicatorVertical.vue'
 
 const appSettingStore = useAppSettingStore()
 const videoPlayerStore = useVideoPlayerStore()

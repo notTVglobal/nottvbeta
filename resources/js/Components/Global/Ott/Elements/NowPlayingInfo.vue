@@ -62,7 +62,7 @@
                       <SingleImage
                           :image="nowPlayingStore.activeMedia.details?.image"
                           :alt="nowPlayingStore.activeMedia.details?.primaryName"
-                          class="h-16 w-12 mr-2 object-cover hover:opacity-75 transition ease-in-out duration-150"
+                          class="h-16 w-12 min-w-12 mr-2 object-cover hover:opacity-75 transition ease-in-out duration-150"
                       />
                     </Link>
                   </div>
