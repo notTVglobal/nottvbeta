@@ -7,11 +7,11 @@
       <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
       <header class="flex justify-between mb-3 border-b border-gray-800">
-        <div class="container mx-auto flex flex-col xl:flex-row items-center justify-between px-4 py-6">
+        <div class="container mx-auto flex flex-col xl:flex-row items-center justify-between px-4 pb-4 md:py-6">
 
-          <div class="flex flex-col xl:flex-row items-center">
+          <div class="hidden md:block flex flex-col xl:flex-row items-center">
             <h1 class="text-3xl font-semibold">Shows</h1>
-            <ul class="flex ml-0 xl:ml-16 mt-6 xl:mt-0 space-x-8">
+            <ul class="flex md:pt-6 ml-0 xl:ml-16 mt-6 xl:mt-0 space-x-8">
               <li>
                 <button :href="``" class="text-gray-700 cursor-not-allowed">Categories</button>
               </li>
@@ -25,10 +25,10 @@
               </li>
             </ul>
           </div>
-          <div class="flex items-center mt-6 xl:mt-0">
+          <div class="flex items-center mt-0 md:mt-6 xl:mt-0">
             <div class="relative">
               <input v-model="search" type="search" class="bg-gray-50 text-black text-md rounded-full
-                            focus:outline-none focus:shadow w-64 pl-8 px-3 py-1" placeholder="Search...">
+                            focus:outline-none focus:shadow w-64 pl-8 px-3 py-1" placeholder="Search Shows...">
               <div class="absolute top-0 flex items-center h-full ml-2">
                 <svg class="fill-current text-gray-400 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                   <path
@@ -42,44 +42,47 @@
 
       </header>
 
-      <main class="py-8">
+      <main class="pb-8">
 
 
-        <div class="container mx-auto px-4 border-b border-gray-800 pb-16 max-w-calc[100%-96rem]">
+        <div class="container mx-auto px-6 border-b border-gray-800 pb-16 max-w-calc[100%-96rem]">
           <h2 id="popular-shows" class="text-yellow-500 uppercase tracking-wide font-semibold text-2xl">
             Popular Shows</h2>
           <div
-              class="popular-shows text-sm grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-12 pb-12 justify-items-center">
+              class="popular-shows text-sm grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 md:gap-12 pb-12 justify-items-center">
 
             <div v-for="show in shows.data"
                  :key="show.id"
-                 class="show mt-8 relative">
-              <div v-if="show.statusId === 9" class="absolute flex justify-end w-full -mt-3 z-50">
+                 class="show mt-8 relative w-full">
+              <div v-if="show.statusId === 9" class="absolute flex justify-end w-full -mt-4 md:-mt-3 z-50">
                 <CreatorsOnlyBadge />
               </div>
-              <div v-if="show.statusId === 1" class="absolute flex justify-end w-full -mt-3 z-50">
+              <div v-if="show.statusId === 1" class="absolute flex justify-end w-full -mt-4 md:-mt-3 z-50">
                 <NewContentBadge />
               </div>
               <Link :href="`/shows/${show.slug}`"
-                    class="hover:text-blue-400 hover:opacity-75 transition ease-in-out duration-150">
+                    class="flex flex-row md:flex-col hover:text-blue-400 hover:opacity-75 transition ease-in-out duration-150">
                 <div class="relative inline-block">
                   <!--                                    <SingleImage :image="show.image" :alt="'show cover'" class="min-h-[24rem]  max-h-[24rem] min-w-[16rem] w-fit object-cover"/>-->
                   <SingleImage :image="show.image" :alt="'show cover'"
-                               class="h-96 min-w-[16rem] w-64 mb-6 object-cover lg:mb-0 m-auto lg:m-0"/>
+                               class="md:h-96 md:min-w-[16rem] mr-2 md:mr-0 min-w-20 w-20 md:w-64 mb-6 object-cover lg:mb-0 m-auto lg:m-0"/>
                 </div>
-                <div class="block text-xl font-semibold leading-tight mt-4 max-w-[16rem]">{{
-                    show.name
-                  }}
-                </div>
-                <div class="uppercase tracking-wider flex flex-row align-middle text-yellow-700 text-lg mt-1">{{ show.category.name }}&nbsp;
-                  <div class="text-gray-600">
-                    <span v-if="show.last_release_year > 0">({{ show.last_release_year }})</span>
-                    <span v-if="show.first_release_year > 0 && !show.last_release_year">({{ show.first_release_year }})</span>
-                    <span v-if="!show.last_release_year && !show.first_release_year">({{ show.copyrightYear }})</span>
+                <div class="flex flex-col">
+                  <div class="block text-xl font-semibold leading-tight md:mt-4 w-full md:max-w-[16rem]">{{
+                      show.name
+                    }}
                   </div>
+                  <div class="uppercase tracking-wider flex flex-row align-middle text-yellow-700 text-lg mt-1">{{ show.category.name }}&nbsp;
+                    <div class="text-gray-600">
+                      <span v-if="show.last_release_year > 0">({{ show.last_release_year }})</span>
+                      <span v-if="show.first_release_year > 0 && !show.last_release_year">({{ show.first_release_year }})</span>
+                      <span v-if="!show.last_release_year && !show.first_release_year">({{ show.copyrightYear }})</span>
+                    </div>
 
+                  </div>
+                  <div class="tracking-wide text-yellow-500 mt-1 font-thin">{{ show.subCategory.name }}</div>
                 </div>
-                <div class="tracking-wide text-yellow-500 mt-1 font-thin">{{ show.subCategory.name }}</div>
+
               </Link>
             </div>
 
@@ -88,7 +91,7 @@
           <PaginationDark :data="shows" class=""/>
         </div>
 
-        <div class="w-full flex flex-col xl:flex-row my-10">
+        <div class="w-full flex flex-col xl:flex-row my-10 px-6">
 
           <div class="w-full xl:w-3/4 mr-0 md:mr-16 xl:mr-32">
             <h2 id="new-episodes" class="text-yellow-500 uppercase tracking-wide font-semibold text-2xl">

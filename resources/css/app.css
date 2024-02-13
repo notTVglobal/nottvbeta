@@ -991,7 +991,7 @@ hr {
 }
 
 .ottButton {
-    @apply bg-opacity-80 w-20 h-20 rounded-full cursor-pointer grid justify-center content-center text-xs
+    @apply bg-opacity-80 w-20 min-w-20 max-w-20 h-20 rounded-full cursor-pointer grid justify-center content-center text-xs
 }
 
 /* this is the OPEN chat button */

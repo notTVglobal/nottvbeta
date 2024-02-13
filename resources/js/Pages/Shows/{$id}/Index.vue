@@ -3,7 +3,8 @@
   <Head :title="props.show.name"/>
 
   <div class="place-self-center flex flex-col">
-    <div id="topDiv" class="bg-gray-900 text-white px-5 pt-6">
+    <div v-if="can.viewCreator && !userStore.isMobile" id="topDiv"></div>
+    <div class="bg-gray-900 text-white px-5 pt-6">
 
       <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
@@ -40,7 +41,7 @@
                            class="h-96 min-w-[16rem] w-64 object-cover mb-6 lg:mb-0 m-auto lg:m-0"/>
 
             </div>
-            <div v-if="!props.can.viewCreator && userStore.isMobile" id="topDiv"></div>
+            <div v-if="!props.can.viewCreator || userStore.isMobile" id="topDiv"></div>
             <div class="lg:ml-12 lg:mr-0">
               <h2 class="font-semibold text-4xl text-center lg:text-left">{{ show.name }}</h2>
               <div class="text-gray-400 text-center lg:text-left">

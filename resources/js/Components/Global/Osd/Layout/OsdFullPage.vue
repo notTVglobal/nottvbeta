@@ -66,7 +66,7 @@ const isLive = computed(() => {
 });
 
 const isMobileVolumeIndicator = computed(() => {
-  return (userStore.isMobile) ? 'fixed flex justify-end text-right top-56 left-0 right-10 z-50 w-calc([100vw])' : 'fixed flex justify-end text-right top-10 left-0 right-10 z-50 w-calc([100vw])'
+  return (userStore.isMobile) ? 'fixed flex justify-end text-right top-48  left-0 right-10 z-50 w-calc([100vw])' : 'fixed flex justify-end text-right top-10 left-0 right-10 z-50 w-calc([100vw])'
 })
 
 
