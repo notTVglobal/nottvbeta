@@ -347,8 +347,10 @@ class ShowsController extends Controller {
           'mime_type' => 'application/vnd.apple.mpegurl',
       ]);
 
+      $lowercaseShowUlid = strtolower($show->ulid); // Mist server can only use lowercase letters, numbers _ - or .
+
       $mistStreamWildcard = MistStreamWildcard::create([
-          'name' => 'show+' . $show->ulid,
+          'name' => 'show+' . $lowercaseShowUlid, // by appending show+ this becomes our full stream key.
           'comment' => 'Automatically created with new show.',
           'source' => 'push://',
           'mist_stream_id' => $mistStream->id,
