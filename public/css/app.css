@@ -6570,20 +6570,12 @@ hr {
   top: 0.75rem;
 }
 
-.top-56 {
-  top: 14rem;
+.top-48 {
+  top: 12rem;
 }
 
 .top-60 {
   top: 15rem;
-}
-
-.left-12 {
-  left: 3rem;
-}
-
-.top-48 {
-  top: 12rem;
 }
 
 .z-0 {
@@ -6793,6 +6785,10 @@ hr {
   margin-top: -8rem;
 }
 
+.-mt-4 {
+  margin-top: -1rem;
+}
+
 .-mt-6 {
   margin-top: -1.5rem;
 }
@@ -6949,6 +6945,10 @@ hr {
   margin-right: 2rem;
 }
 
+.mt-0 {
+  margin-top: 0px;
+}
+
 .mt-1 {
   margin-top: 0.25rem;
 }
@@ -6999,18 +6999,6 @@ hr {
 
 .mt-8 {
   margin-top: 2rem;
-}
-
-.-mr-12 {
-  margin-right: -3rem;
-}
-
-.mt-0 {
-  margin-top: 0px;
-}
-
-.-mt-4 {
-  margin-top: -1rem;
 }
 
 .line-clamp-2 {
@@ -9727,6 +9715,17 @@ hr {
   }
 }
 
+@media (min-width: 768px) {
+
+  .md\:badge-md {
+    height: 1.25rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    padding-left: 0.563rem;
+    padding-right: 0.563rem;
+  }
+}
+
 @media (min-width: 1024px) {
 
   .lg\:stats-horizontal {
@@ -10842,6 +10841,14 @@ hr {
     margin-right: 2.5rem;
   }
 
+  .md\:-mt-3 {
+    margin-top: -0.75rem;
+  }
+
+  .md\:ml-0 {
+    margin-left: 0px;
+  }
+
   .md\:mr-0 {
     margin-right: 0px;
   }
@@ -10858,16 +10865,8 @@ hr {
     margin-top: 1rem;
   }
 
-  .md\:ml-0 {
-    margin-left: 0px;
-  }
-
   .md\:mt-6 {
     margin-top: 1.5rem;
-  }
-
-  .md\:-mt-3 {
-    margin-top: -0.75rem;
   }
 
   .md\:block {
@@ -10890,12 +10889,12 @@ hr {
     height: 16rem;
   }
 
-  .md\:h-\[calc\(900px\)\] {
-    height: calc(900px);
-  }
-
   .md\:h-96 {
     height: 24rem;
+  }
+
+  .md\:h-\[calc\(900px\)\] {
+    height: calc(900px);
   }
 
   .md\:w-1\/2 {
@@ -10922,28 +10921,28 @@ hr {
     width: 12rem;
   }
 
-  .md\:w-auto {
-    width: auto;
-  }
-
   .md\:w-64 {
     width: 16rem;
   }
 
-  .md\:min-w-\[8rem\] {
-    min-width: 8rem;
+  .md\:w-auto {
+    width: auto;
   }
 
   .md\:min-w-\[16rem\] {
     min-width: 16rem;
   }
 
-  .md\:max-w-sm {
-    max-width: 24rem;
+  .md\:min-w-\[8rem\] {
+    min-width: 8rem;
   }
 
   .md\:max-w-\[16rem\] {
     max-width: 16rem;
+  }
+
+  .md\:max-w-sm {
+    max-width: 24rem;
   }
 
   .md\:grid-cols-1 {
@@ -10982,16 +10981,20 @@ hr {
     justify-content: flex-start;
   }
 
+  .md\:justify-end {
+    justify-content: flex-end;
+  }
+
   .md\:justify-between {
     justify-content: space-between;
   }
 
-  .md\:gap-6 {
-    gap: 1.5rem;
-  }
-
   .md\:gap-12 {
     gap: 3rem;
+  }
+
+  .md\:gap-6 {
+    gap: 1.5rem;
   }
 
   .md\:space-x-24 > :not([hidden]) ~ :not([hidden]) {
@@ -11045,12 +11048,13 @@ hr {
     padding-bottom: 1.5rem;
   }
 
-  .md\:pr-6 {
-    padding-right: 1.5rem;
+  .md\:py-0 {
+    padding-top: 0px;
+    padding-bottom: 0px;
   }
 
-  .md\:pb-6 {
-    padding-bottom: 1.5rem;
+  .md\:pr-6 {
+    padding-right: 1.5rem;
   }
 
   .md\:pt-6 {
