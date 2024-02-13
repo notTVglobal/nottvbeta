@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\AddMistStreamToServer;
+use App\Jobs\AddMistStreamWildcardToServer;
+use App\Jobs\CheckOrAddMistStreamToServer;
 use App\Models\CreativeCommons;
 use App\Models\Image;
+use App\Models\MistStream;
+use App\Models\MistStreamWildcard;
 use App\Models\Show;
 use App\Models\ShowCategory;
 use App\Models\ShowCategorySub;
@@ -22,6 +27,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
@@ -314,26 +320,58 @@ class ShowsController extends Controller {
       $team->save();
     }
 
-    Show::create([
-        'name'                   => $request->name,
-        'description'            => $request->description,
-        'user_id'                => $request->user_id,
-        'team_id'                => $request->team_id,
-        'show_category_id'       => $request->category,
-        'show_category_sub_id'   => $request->sub_category,
-        'slug'                   => \Str::slug($request->name),
-        'www_url'                => $request->www_url,
-        'instagram_name'         => $request->instagram_name,
-        'telegram_url'           => $request->telegram_url,
-        'twitter_handle'         => $request->twitter_handle,
-        'notes'                  => $request->notes,
-        'isBeingEditedByUser_id' => $request->user_id,
-        'first_release_year'     => \Carbon\Carbon::now()->format('Y'),
-    ]);
+    DB::beginTransaction();
 
-    $show = Show::query()->where('name', $request->name)->firstOrFail();
+    try {
+      $show = Show::create([
+          'name' => $request->name,
+          'description' => $request->description,
+          'user_id' => $request->user_id,
+          'team_id' => $request->team_id,
+          'show_category_id' => $request->category,
+          'show_category_sub_id' => $request->sub_category,
+          'slug' => \Str::slug($request->name),
+          'www_url' => $request->www_url,
+          'instagram_name' => $request->instagram_name,
+          'telegram_url' => $request->telegram_url,
+          'twitter_handle' => $request->twitter_handle,
+          'notes' => $request->notes,
+          'isBeingEditedByUser_id' => $request->user_id,
+          'first_release_year' => Carbon::now()->format('Y'),
+      ]);
 
-    return redirect()->route('shows.manage', $show)->with('success', 'Show Created Successfully');
+      $mistStream = MistStream::firstOrCreate([
+          'name' => 'show',
+      ], [
+          'comment' => 'Created for Show integration.',
+          'mime_type' => 'application/vnd.apple.mpegurl',
+      ]);
+
+      $mistStreamWildcard = MistStreamWildcard::create([
+          'name' => 'show+' . $show->ulid,
+          'comment' => 'Automatically created with new show.',
+          'source' => 'push://',
+          'mist_stream_id' => $mistStream->id,
+      ]);
+
+      $show->update(['mist_stream_wildcard_id' => $mistStreamWildcard->id]);
+
+      DB::commit();
+
+      // Dispatch the job with the MistStreamWildcard after successful creation and association
+      CheckOrAddMistStreamToServer::withChain([
+          new AddMistStreamWildcardToServer($mistStreamWildcard)
+      ])->dispatch($mistStream);
+
+      // Return a successful response
+      return redirect()->route('shows.manage', $show)->with('success', 'Show Created Successfully');
+    } catch (\Exception $e) {
+      DB::rollBack();
+      Log::error("Failed to create show and associated entities: {$e->getMessage()}");
+
+      // Optionally, return an error response or redirect with error message
+      return back()->withErrors(['msg' => 'Failed to create the show.'])->withInput();
+    }
   }
 
 ////////////  SHOW

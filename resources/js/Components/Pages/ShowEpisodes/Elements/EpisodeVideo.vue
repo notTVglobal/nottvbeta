@@ -2,9 +2,9 @@
   <div>
     <!-- Conditional rendering for the video section -->
       <!-- Episode Video Label -->
-      <div class="mt-6 px-5 flex justify-center w-full">
+      <div v-if="!episode.video?.video_id && !episode.video?.video_url" class="mt-6 px-5 flex justify-center w-full">
         <div class="bg-black text-white text-center uppercase font-bold text-xs p-5 mb-2 w-full">
-          Episode Video
+          No Video
         </div>
       </div>
 
@@ -23,7 +23,7 @@
 
     <!-- Processing or external storage placeholder -->
     <div v-if="episode.video?.storage_location === 'external' || episode.video?.upload_status === 'processing'" class="flex justify-center shadow overflow-hidden border-b border-gray-200 bg-white dark:bg-black text-2xl sm:rounded-lg p-5">
-      <div v-if="episode.video?.video_url === ''">NO VIDEO2</div>
+      <div v-if="episode.video?.video_url === ''">NO VIDEO</div>
       <video v-else id="episodeEditVideoPlayer" class="video-js w-full h-auto" controls>
         <source :src="episode.video?.video_url" :type="episode.video?.type">
       </video>

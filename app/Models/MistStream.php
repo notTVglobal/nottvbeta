@@ -39,4 +39,9 @@ class MistStream extends Model {
     return $this->hasMany(Channel::class, 'mist_stream_id');
   }
 
+  public function mistStreamWildcards()
+  {
+    return $this->hasMany(MistStreamWildcard::class);
+  }
+
 }

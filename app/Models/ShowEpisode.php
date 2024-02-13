@@ -35,6 +35,7 @@ class ShowEpisode extends Model
      * @var string[]
      */
     protected $fillable = [
+        'mist_stream_wildcard_id',
         'name',
         'description',
         'user_id',
@@ -95,6 +96,11 @@ class ShowEpisode extends Model
   public function playlistItems()
   {
     return $this->morphMany(ChannelPlaylistItem::class, 'content');
+  }
+
+  public function mistStreamWildcard()
+  {
+    return $this->belongsTo(MistStreamWildcard::class, 'mist_stream_wildcard_id');
   }
 
 //    public function showCategory(): HasOneThrough

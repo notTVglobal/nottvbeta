@@ -14,9 +14,9 @@ return new class extends Migration
     public function up()
     {
         Schema::create('mist_stream_wildcards', function (Blueprint $table) {
-          $table->id();
+          $table->ulid('id')->primary();
           $table->string('mist_stream_id', 36);
-          $table->string('name')->comment('The name of the mist stream wildcard.')->index();
+          $table->string('name')->comment('The name of the mist stream wildcard.')->unique();
           $table->text('comment')->nullable()->comment('An optional comment for additional context or notes.');
           $table->string('source')->default('push://')->comment('The source of the stream, push:// or file');
           $table->boolean('active')->default(true)->comment('A boolean flag indicating if the content is active or inactive.');

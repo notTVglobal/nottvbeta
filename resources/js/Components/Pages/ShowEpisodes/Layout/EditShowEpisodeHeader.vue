@@ -39,12 +39,6 @@
       </div>
       <div class=""><span class="text-xs uppercase font-semibold">Sub-category: </span>
         <span class="font-bold uppercase">{{ show.subCategory }}</span>
-        <span class="text-xs">
-                    (change the sub-category on the
-                    <Link :href="`/shows/${show.slug}/edit`"
-                          class="text-blue-600 hover:text-blue-800 dark:text-blue-300 dark:hover:text-blue-500">
-                        show edit page</Link>)
-                </span>
       </div>
       <div class=""><span class="text-xs uppercase font-semibold">Team: </span>
         <Link :href="`/teams/${team.slug}/manage`">

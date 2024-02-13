@@ -19,7 +19,7 @@ class Show extends Model
      * @var string[]
      */
     protected $fillable = [
-
+        'mist_stream_wildcard_id',
         'user_id',
         'team_id',
         'image_id',
@@ -104,6 +104,11 @@ class Show extends Model
     {
         return $this->hasMany(ShowNote::class);
     }
+
+  public function mistStreamWildcard()
+  {
+    return $this->belongsTo(MistStreamWildcard::class, 'mist_stream_wildcard_id');
+  }
 
 }
 
