@@ -25,7 +25,10 @@
       <OsdNowPlaying />
 
     </div>
+<div :class="isMobileVolumeIndicator" >
+  <VideoVolumeIndicatorVertical v-if="appSettingStore.osd && appSettingStore.osdSlot.two && appSettingStore.fullPage"/>
 
+</div>
 
   </div>
 </template>
@@ -41,6 +44,8 @@ import { useUserStore } from '@/Stores/UserStore'
 import OsdCurrentViewers from '@/Components/Global/Osd/Elements/OsdCurrentViewers'
 import OsdNowPlaying from '@/Components/Global/Osd/Elements/OsdNowPlaying.vue'
 import OsdIsLive from '@/Components/Global/Osd/Elements/OsdIsLive.vue'
+import VideoVolumeIndicatorVertical
+  from '@/Components/Global/VideoPlayer/VideoIndicators/VideoVolumeIndicatorVertical.vue'
 
 const appSettingStore = useAppSettingStore()
 const videoPlayerStore = useVideoPlayerStore()
@@ -59,5 +64,11 @@ const viewerCountIsVisible = computed(() => {
 const isLive = computed(() => {
   return nowPlayingStore.isLive;
 });
+
+const isMobileVolumeIndicator = computed(() => {
+  return (userStore.isMobile) ? 'fixed flex justify-end text-right top-56 left-0 right-10 z-50 w-calc([100vw])' : 'fixed flex justify-end text-right top-10 left-0 right-10 z-50 w-calc([100vw])'
+})
+
+
 
 </script>
