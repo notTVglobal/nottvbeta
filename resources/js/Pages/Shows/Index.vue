@@ -54,10 +54,10 @@
             <div v-for="show in shows.data"
                  :key="show.id"
                  class="show mt-8 relative w-full">
-              <div v-if="show.statusId === 9" class="absolute flex justify-end w-full -mt-4 md:-mt-3 z-50">
+              <div v-if="show.statusId === 9" class="absolute flex justify-start md:justify-end w-full -mt-4 md:-mt-3 z-50">
                 <CreatorsOnlyBadge />
               </div>
-              <div v-if="show.statusId === 1" class="absolute flex justify-end w-full -mt-4 md:-mt-3 z-50">
+              <div v-if="show.statusId === 1" class="absolute flex justify-start md:justify-end w-full -mt-4 md:-mt-3 z-50">
                 <NewContentBadge />
               </div>
               <Link :href="`/shows/${show.slug}`"
@@ -68,12 +68,12 @@
                                class="md:h-96 md:min-w-[16rem] mr-2 md:mr-0 min-w-20 w-20 md:w-64 mb-6 object-cover lg:mb-0 m-auto lg:m-0"/>
                 </div>
                 <div class="flex flex-col">
-                  <div class="block text-xl font-semibold leading-tight md:mt-4 w-full md:max-w-[16rem]">{{
+                  <div class="block md:text-xl font-semibold leading-tight md:mt-4 w-full md:max-w-[16rem]">{{
                       show.name
                     }}
                   </div>
-                  <div class="uppercase tracking-wider flex flex-row align-middle text-yellow-700 text-lg mt-1">{{ show.category.name }}&nbsp;
-                    <div class="text-gray-600">
+                  <div class="uppercase tracking-wider flex flex-row align-middle text-yellow-700 md:text-lg mt-1">{{ show.category.name }}&nbsp;
+                    <div class="text-gray-600 text-md md:text-lg">
                       <span v-if="show.last_release_year > 0">({{ show.last_release_year }})</span>
                       <span v-if="show.first_release_year > 0 && !show.last_release_year">({{ show.first_release_year }})</span>
                       <span v-if="!show.last_release_year && !show.first_release_year">({{ show.copyrightYear }})</span>
