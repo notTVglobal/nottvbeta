@@ -1,7 +1,12 @@
 <template>
   <div :class="appSettingStore.ott !== 0 ? 'hidden lg:block' : ''" class="fixed z-999 mx-auto bottom-36">
-    <div @click="openModal"
-         class="h-custom w-3 bg-orange-500 text-white hover:cursor-pointer">
+    <div class="absolute w-12 h-full  z-999 hover:cursor-pointer"
+         @mouseover="hover = true"
+         @mouseleave="hover = false"
+         @click="openModal"
+         ></div>
+    <div
+         class="h-custom w-3 bg-orange-500 z-100 text-white">
 
 
 <!--      <div class="fixed z-50 left-3 bottom-24 w-28 h-14 bg-orange-950 hover:bg-blue-950 bg-opacity-80">-->
@@ -27,8 +32,7 @@
     'group',
     notificationStore.showOrangeFeedbackBox || hover ? 'bg-blue-950 bg-opacity-100 flex-row pb-5' : 'flex-col',
     ]"
-           @mouseover="hover = true"
-           @mouseleave="hover = false"
+
       >
         <div :class="[
       'pl-2 uppercase font-semibold text-sm tracking-wider transition-transform',

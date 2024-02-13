@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="ml-6 md:ml-0">
 
     <div
         class="w-fit flex flex-row justify-start text-xs text-gray-500 break-words uppercase tracking-wider"
