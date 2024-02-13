@@ -8,7 +8,7 @@
           <Link :href="`/shows/${show.slug}`" class="text-red-700 font-bold uppercase">{{ show.name }}</Link>
         </h1>
       </div>
-      <div class="flex flex-wrap-reverse justify-end gap-2">
+      <div class="flex flex-wrap-reverse justify-end">
         <div>
           <button
               type="submit"

@@ -37,8 +37,8 @@
       </div>
 
       <header class="p-5 mb-6">
-        <div class="flex flex-wrap justify-between px-5">
-          <div class="w-3/4">
+        <div class="flex flex-col md:flex-row flex-wrap justify-between px-5">
+          <div class="w-full md:w-3/4">
             <div class="mb-4">
               <h3 class="mb-1 inline-flex items-center text-3xl font-semibold relative">
 
@@ -65,7 +65,7 @@
 
           </div>
 
-          <div class="flex flex-col text-right w-1/4">
+          <div class="flex flex-col text-left md:text-right w-full md:w-1/4">
             <span class="text-lg uppercase justify-end tracking-wider text-yellow-700">{{
                 props.show.category.name
               }}</span>

@@ -5076,20 +5076,41 @@ hr {
         position: fixed;
         z-index: 90;
         /*max-height: calc(100% - 27.5rem);*/
-        max-height: calc(50vh - 4.5rem);
+        max-height: calc(50vh - 4.2rem);
         max-width: 100%;
-        bottom: 5.5rem;
+        bottom: 0;
+        left: 0;
+        right: 0;
         display: flex;
         flex-direction: column;
         overflow-x: hidden;
         overflow-y: scroll;
         padding-left: 2rem;
         padding-right: 2rem;
+        padding-bottom: 6rem;
     /* Hide scrollbar for Webkit browsers */
 
     /* Hide scrollbar for IE, Edge, and Firefox */
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none  /* Firefox */}
+    .pipChatFullPageContainer {
+        /*max-height: calc(100% - 27.5rem);*/
+        max-height: calc(10vh);
+        bottom: 0;
+        left: 0;
+        right: 0;
+        /*@apply px-8 pb-24 flex flex-col overflow-y-scroll overflow-x-hidden hide-scrollbar*/
+        position: fixed;
+        z-index: 50;
+        margin-top: 1.75rem;
+        width: 100%;
+        overflow-y: scroll;
+        border-top-width: 1px;
+        --tw-border-opacity: 1;
+        border-color: rgb(17 24 39 / var(--tw-border-opacity));
+        padding-left: 2rem;
+        padding-right: 2rem;
+        padding-bottom: 6rem}
     .chatTopRightContainer {
         position: fixed;
         z-index: 30;
@@ -10855,6 +10876,10 @@ hr {
     width: auto;
   }
 
+  .md\:w-1\/4 {
+    width: 25%;
+  }
+
   .md\:min-w-\[8rem\] {
     min-width: 8rem;
   }
@@ -10960,6 +10985,10 @@ hr {
 
   .md\:text-left {
     text-align: left;
+  }
+
+  .md\:text-right {
+    text-align: right;
   }
 
   .md\:text-2xl {

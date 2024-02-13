@@ -361,9 +361,11 @@ class ShowsController extends Controller {
       DB::commit();
 
       // Dispatch the job with the MistStreamWildcard after successful creation and association
-      CheckOrAddMistStreamToServer::withChain([
-          new AddMistStreamWildcardToServer($mistStreamWildcard)
-      ])->dispatch($mistStream);
+      // We don't actually need to add wildcards to the Mist Server, they just appear when they get used.
+//      CheckOrAddMistStreamToServer::withChain([
+//          new AddMistStreamWildcardToServer($mistStreamWildcard)
+//      ])->dispatch($mistStream);
+      CheckOrAddMistStreamToServer::dispatch($mistStream);
 
       // Return a successful response
       return redirect()->route('shows.manage', $show)->with('success', 'Show Created Successfully');

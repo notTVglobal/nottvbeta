@@ -51,12 +51,12 @@
 
     </td>
     <td>
-      <div class="flex flex-row justify-end space-x-1 space-y-1 mr-1">
+      <div class="flex flex-row justify-start mr-2">
         <div>
           <button
               v-if="teamStore.can.editShow"
               @click="appSettingStore.btnRedirect(`/shows/${showSlug}/episode/${episode.slug}/edit`)"
-              class="px-4 py-2 text-white font-semibold bg-blue-500 hover:bg-blue-600 rounded-lg"
+              class="px-4 py-2 text-white font-semibold bg-blue-500 hover:bg-blue-600 rounded-lg mr-2"
           >Edit
           </button>
         </div>

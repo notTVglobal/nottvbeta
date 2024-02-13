@@ -7,7 +7,7 @@
 
       <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
-      <TeamEditHeader :team="props.team" :teamCreator="props.teamCreator"/>
+      <TeamEditHeader :team="props.team" :teamCreator="props.teamCreator" :form="form" @submit="submit"/>
 
 
       <div class="flex flex-col">
@@ -177,11 +177,11 @@
                       <div v-if="form.errors.totalSpots" v-text="form.errors.totalSpots"
                            class="text-xs text-red-600 mt-1"></div>
                     </div>
-                    <div class="flex justify-between mb-6">
+                    <div class="flex justify-end mb-6">
                       <JetValidationErrors class="mr-4"/>
                       <button
                           type="submit"
-                          class="h-fit bg-blue-600 hover:bg-blue-500 text-white rounded py-2 px-4 "
+                          class="h-fit bg-blue-600 hover:bg-blue-500 text-white rounded-lg py-2 px-4 "
                           :disabled="form.processing"
                       >
                         Save
