@@ -17,7 +17,10 @@ class MistStreamWildcard extends Model
       'source',
       'mime_type',
       'active',
-      'metadata'
+  ];
+
+  protected $casts = [
+      'metadata' => 'array',
   ];
 
   public function mistStream()

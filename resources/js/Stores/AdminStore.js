@@ -175,8 +175,8 @@ export const useAdminStore = defineStore('adminStore', {
             }
         },
         nextPage() {
-            const totalPages = Math.ceil(this.items.length / this.itemsPerPage)
-            if (this.currentPage < totalPages) this.currentPage++
+            const totalModalPages = Math.ceil(this.items.length / this.itemsPerPage)
+            if (this.currentPage < totalModalPages) this.currentPage++
         },
         prevPage() {
             if (this.currentPage > 1) this.currentPage--
@@ -185,8 +185,8 @@ export const useAdminStore = defineStore('adminStore', {
             this.currentPage = page
         },
         nextChannelsPage() {
-            const totalPages = Math.ceil(this.channels.length / this.itemsPerChannelsPage)
-            if (this.currentChannelsPage < totalPages) this.currentChannelsPage++
+            const totalModalPages = Math.ceil(this.channels.length / this.itemsPerChannelsPage)
+            if (this.currentChannelsPage < totalModalPages) this.currentChannelsPage++
         },
         prevChannelsPage() {
             if (this.currentChannelsPage > 1) this.currentChannelsPage--
@@ -211,7 +211,7 @@ export const useAdminStore = defineStore('adminStore', {
             const end = start + state.itemsPerChannelsPage
             return state.channels.slice(start, end)
         },
-        totalPages(state) {
+        totalModalPages(state) {
             return Math.ceil(state.items.length / state.itemsPerPage)
         },
         totalChannelsPages(state) {

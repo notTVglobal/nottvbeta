@@ -2,20 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Jobs\AddMistStreamToServer;
-use App\Jobs\RemoveMistStreamFromServer;
+use App\Jobs\AddOrUpdateMistStreamJob;
+use App\Jobs\RemoveMistStreamJob;
 use App\Models\AppSetting;
 use App\Models\Channel;
 use App\Models\MistStream;
+use App\Services\MistServerService;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use RuntimeException;
+use GuzzleHttp\Client;
 
 class MistStreamController extends Controller {
 
@@ -128,7 +132,7 @@ class MistStreamController extends Controller {
    *
    * @return \Inertia\Response
    */
-  public function adminSearchMistStreams(Request $request) {
+  public function searchMistStreams(Request $request) {
     $search = $request->input('search', '');
 
     // Directly fetch mistStreams based on the search input.
@@ -150,36 +154,33 @@ class MistStreamController extends Controller {
 
   }
 
-  public function adminAddMistStream(Request $request) {
-    MistStream::query()->get();
+  public function addOrUpdateMistStream(Request $request) {
     // Validate the incoming request
-    $validateData = $request->validate([
+    $originalName = $request->input('originalName') ?? $request->input('name');
+
+    $validatedData = $request->validate([
         'name' => [
             'required',
             'string',
-            'unique:mist_streams,name',
-            'regex:/^[a-z_\-\.]+[a-z0-9_\-\.]*$/'
+            Rule::unique('mist_streams', 'name')->ignore($request->id),
+            'regex:/^[a-z_\-\.]+[a-z0-9_\-\.]*$/',
         ],
-        'comment' => 'nullable|string'
+        'source' => 'required|string',
+        'mime_type' => 'required|string',
+        'comment' => 'nullable|string',
+        'metadata' => 'nullable|array' // Assuming metadata is sent as an associative array
     ], [
         'name.regex' => 'The name must be lowercase, cannot start with a number, and can only include . _ - characters.'
     ]);
 
-    // Create a new MistStream
-    $mistStream = MistStream::create([
-        'name' => $validateData['name'],
-        'comment' => $validateData['comment'],
-        'mime_type' => 'application/vnd.apple.mpegurl' // hard coded this type for now... technically, the stream adapts based on the input.
-    ]);
-
-    AddMistStreamToServer::dispatch($mistStream);
+    // Dispatch the job with validated data
+    AddOrUpdateMistStreamJob::dispatch($validatedData, $originalName);
 
     // Return back with a success message
     return redirect()->back()->with('success', 'Mist Stream Successfully Added. Check the logs to confirm.');
-
   }
 
-  public function adminRemoveMistStream(Request $request) {
+  public function removeMistStream(Request $request) {
     // Retrieve the MistStream by name
     $mistStreamName = $request->name;
     $mistStream = MistStream::where('name', $mistStreamName)->first();
@@ -201,7 +202,7 @@ class MistStreamController extends Controller {
     }
 
     // Dispatch job to remove MistStream from server
-    RemoveMistStreamFromServer::dispatch($mistStream);
+    RemoveMistStreamJob::dispatch($mistStream);
 
     // No related channels found, safe to delete
     $mistStream->delete();
@@ -211,13 +212,39 @@ class MistStreamController extends Controller {
 
   }
 
+  public function fetchStreamInfo($streamName)
+  {
+    $encodedStreamName = urlencode($streamName);
+    $url = "http://mist.nottv.io:8080/json_${encodedStreamName}.js"; // Replace with the actual URL
+
+    try {
+      $response = Http::get($url);
+
+      if ($response->successful()) {
+        $streamInfo = $response->json();
+        // Do something with $streamInfo
+        return response()->json($streamInfo); // Example: Return the data as JSON response
+      } else {
+        throw new \Exception('Failed to fetch');
+      }
+    } catch (\Exception $e) {
+      // Handle the error appropriately
+      return response()->json(['error' => 'Error fetching stream info: ' . $e->getMessage()], 500);
+    }
+  }
+
 
   /**
    * Display a listing of the resource.
    *
    * @return \Illuminate\Http\JsonResponse
    */
-  public function index() {
+  public function index(MistServerService $mistServerService) {
+    // Fetch streams
+//    $streams = $mistServerService->fetchConfiguredStreams();
+//    dd($streams);
+
+    // Now retrieve the updated list from the database
     $mistStreams = MistStream::all();
 
     return response()->json($mistStreams);

@@ -31,7 +31,21 @@
             >Add Channel Playlist
             </button>
           </Link>
-          <AdminAddMistStreamModal :form-errors="$page.props.errors"/>
+          <button class="btn btn-sm bg-green-500 hover:bg-green-600 text-white px-4 py-2 mr-2 rounded-lg disabled:bg-gray-400"
+                  onclick="addMistStreamModal.showModal()">
+            Add Mist Stream
+          </button>
+          <AddOrUpdateMistStreamModal :id="`addMistStreamModal`" :form-errors="$page.props.errors">
+            <template #form-title>
+              Add Mist Stream
+            </template>
+            <template #form-description>
+              Add a new stream to the Mist Server
+            </template>
+            <template #button-label>
+              Add
+            </template>
+          </AddOrUpdateMistStreamModal>
 
         </div>
         <input v-model="adminStore.searchTerm" type="search" placeholder="Search..." class="border px-2 rounded-lg"/>
@@ -293,7 +307,7 @@ import Message from "@/Components/Global/Modals/Messages"
 import Pagination from "@/Components/Global/Paginators/Pagination"
 import SourceSelector from '@/Components/Pages/Admin/Channels/SourceSelector'
 import DynamicModal from '@/Components/Pages/Admin/Channels/DynamicModal'
-import AdminAddMistStreamModal from '@/Components/Pages/Admin/Channels/AdminAddMistStreamModal'
+import AddOrUpdateMistStreamModal from '@/Components/Global/MistStreams/AddOrUpdateMistStreamModal'
 
 usePageSetup('admin.channels')
 

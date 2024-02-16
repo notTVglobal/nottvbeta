@@ -74,4 +74,31 @@ class CreatorPolicy
         }
         return Response::deny('There\'s been a problem. Please let not.TV know.');
     }
+
+  public function goLive(User $user)
+  {
+    // Check if the user is a member of any team and is active
+    $isActiveMember = TeamMember::where('user_id', $user->id)
+        ->where('active', 1)
+        ->exists();
+
+    // If user is active in any team or is an admin
+    if ($isActiveMember || $user->isAdmin) {
+      return true;
+    }
+
+    // If user is not active but is a member of any team
+    $isMember = TeamMember::where('user_id', $user->id)->exists();
+    if ($isMember && !$isActiveMember) {
+      return Response::deny('You are not active on any team.');
+    }
+
+    // If user is not a member of any team
+    if (!$isMember) {
+      return Response::deny('You are not a member of any team.');
+    }
+
+    // Default deny if none of the above conditions are met
+    return Response::deny('There\'s been a problem. Please let not.TV know.');
+  }
 }

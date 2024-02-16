@@ -32,11 +32,11 @@
             <tr>
               <th>
                 <span v-if="adminStore.currentType === 'channelPlaylist'">Active</span>
-                <span v-if="adminStore.currentType === 'mistStream'">ID</span>
+                <span v-if="adminStore.currentType === 'mistStream'">Active</span>
               </th>
               <th>
                 <span v-if="adminStore.currentType === 'channelPlaylist'">Name</span>
-                <span v-if="adminStore.currentType === 'mistStream'">Active</span>
+                <span v-if="adminStore.currentType === 'mistStream'">Name</span>
               </th>
               <th>
                 <span v-if="adminStore.currentType === 'channelPlaylist'">Type</span>
@@ -44,19 +44,19 @@
               </th>
               <th>
                 <span v-if="adminStore.currentType === 'channelPlaylist'">Priority</span>
-                <span v-if="adminStore.currentType === 'mistStream'">Name</span>
-              </th>
-              <th>
-                <span v-if="adminStore.currentType === 'channelPlaylist'">Repeat Mode</span>
                 <span v-if="adminStore.currentType === 'mistStream'">MIME Type</span>
               </th>
               <th>
-                <span v-if="adminStore.currentType === 'channelPlaylist'">Start Time</span>
+                <span v-if="adminStore.currentType === 'channelPlaylist'">Repeat Mode</span>
                 <span v-if="adminStore.currentType === 'mistStream'">Comment</span>
               </th>
               <th>
-                <span v-if="adminStore.currentType === 'channelPlaylist'">End Time</span>
+                <span v-if="adminStore.currentType === 'channelPlaylist'">Start Time</span>
                 <span v-if="adminStore.currentType === 'mistStream'">Created On</span>
+              </th>
+              <th>
+                <span v-if="adminStore.currentType === 'channelPlaylist'">End Time</span>
+                <span v-if="adminStore.currentType === 'mistStream'"></span>
               </th>
               <th>
                   <!-- For delete -->
@@ -67,11 +67,11 @@
             <tr v-for="item in adminStore.paginatedItems" :key="item.id" class="hover:bg-blue-300 hover:cursor-pointer" :class="{'bg-yellow-500': item.id === adminStore.activeItemId}">
               <td @click="selectItem(item)" >
                 <div v-if="adminStore.currentType === 'channelPlaylist'"><span v-if="item.active" class="text-green-500">Active</span><span v-else class="text-red-700">Inactive</span></div>
-                <div v-if="adminStore.currentType === 'mistStream'">{{ item.id }}</div>
+                <span v-if="adminStore.currentType === 'mistStream'"><span v-if="item.active" class="text-green-500">Active</span><span v-else class="text-red-700">Inactive</span></span>
               </td>
               <td @click="selectItem(item)" >
                 <span v-if="adminStore.currentType === 'channelPlaylist'">{{ item.name }}</span>
-                <span v-if="adminStore.currentType === 'mistStream'"><span v-if="item.active" class="text-green-500">Active</span><span v-else class="text-red-700">Inactive</span></span>
+                <span v-if="adminStore.currentType === 'mistStream'">{{ item.name }}</span>
               </td>
               <td @click="selectItem(item)" >
                 <span v-if="adminStore.currentType === 'channelPlaylist'">{{ item.type }}</span>
@@ -79,25 +79,33 @@
               </td>
               <td @click="selectItem(item)" >
                 <span v-if="adminStore.currentType === 'channelPlaylist'">{{ item.priority }}</span>
-                <span v-if="adminStore.currentType === 'mistStream'">{{ item.name }}</span>
-              </td>
-              <td @click="selectItem(item)" >
-                <span v-if="adminStore.currentType === 'channelPlaylist'">{{ item.repeat_mode }}</span>
                 <span v-if="adminStore.currentType === 'mistStream'">{{ item.mime_type }}</span>
               </td>
               <td @click="selectItem(item)" >
-                <span v-if="adminStore.currentType === 'channelPlaylist'">{{ formatDateTime(item.start_time) }}</span>
+                <span v-if="adminStore.currentType === 'channelPlaylist'">{{ item.repeat_mode }}</span>
                 <span v-if="adminStore.currentType === 'mistStream'">{{ item.comment }}</span>
               </td>
               <td @click="selectItem(item)" >
-                <span v-if="adminStore.currentType === 'channelPlaylist'">{{ formatDateTime(item.end_time) }}</span>
+                <span v-if="adminStore.currentType === 'channelPlaylist'">{{ formatDateTime(item.start_time) }}</span>
                 <span v-if="adminStore.currentType === 'mistStream'">{{ formatDateTime(item.created_at) }}</span>
+
               </td>
-              <td>
+              <td @click="selectItem(item)" >
+                <span v-if="adminStore.currentType === 'channelPlaylist'">{{ formatDateTime(item.end_time) }}</span>
+                <span v-if="adminStore.currentType === 'mistStream'"></span>
+              </td>
+              <td class="w-fit whitespace-nowrap overflow-hidden">
+                <button
+                    v-if="adminStore.currentType === 'mistStream'"
+                    @click.prevent="openEditModal(item)"
+                    class="ml-2 px-2 py-1 text-white font-semibold bg-blue-500 hover:bg-blue-600 rounded-lg"
+                >
+                  <font-awesome-icon icon="fa-pencil" class="text-xs"/>
+                </button>
                 <button
                     v-if="adminStore.currentType === 'mistStream'"
                     @click="removeItem(item)"
-                    class="ml-2 px-2 py-1 text-white font-semibold bg-red-500 hover:bg-red-600 rounded-lg"
+                    class="ml-1 px-2 py-1 text-white font-semibold bg-red-500 hover:bg-red-600 rounded-lg"
                 >
                   <font-awesome-icon icon="fa-trash-can" class="text-xs"/>
                 </button>
@@ -106,7 +114,7 @@
             </tbody>
           </table>
         </div>
-        <div class="flex flex-row justify-center mt-6 w-full">
+        <div v-if="adminStore.totalModalPages > 1" class="flex flex-row justify-center mt-6 w-full">
           <div class="join grid grid-cols-2">
             <button class="join-item btn btn-sm btn-outline" @click="adminStore.prevPage">Previous page</button>
             <button class="join-item btn btn-sm btn-outline" @click="adminStore.nextPage">Next</button>
@@ -114,7 +122,17 @@
         </div>
       </div>
 
-
+      <AddOrUpdateMistStreamModal :id="`updateMistStreamModal`" :form-errors="$page.props.errors" @update-list="refreshList">
+        <template #form-title>
+          Update Mist Stream
+        </template>
+        <template #form-description>
+          Note: You cannot edit the stream name (right now), it will only create a new stream. This is a bug that needs to be fixed in the AddOrUpdateMistStreamJob
+        </template>
+        <template #button-label>
+          Update
+        </template>
+      </AddOrUpdateMistStreamModal>
 
 
       <dialog id="confirmSelectionModal" class="modal">
@@ -155,13 +173,16 @@
 </template>
 
 <script setup>
-import { ref, watch, computed, onMounted } from 'vue'
+import { ref, watch, computed, onMounted, nextTick } from 'vue'
 import { useAdminStore } from '@/Stores/AdminStore'
+import { useChannelStore } from '@/Stores/ChannelStore'
 import debounce from "lodash/debounce"
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { Inertia } from '@inertiajs/inertia'
+import AddOrUpdateMistStreamModal from '@/Components/Global/MistStreams/AddOrUpdateMistStreamModal.vue'
 
 const adminStore = useAdminStore();
+const channelStore = useChannelStore();
 // const searchTerm = ref('');
 
 let props = defineProps({
@@ -194,6 +215,13 @@ const removeItem = (item) => {
   document.getElementById('confirmRemoveModal').showModal(); // Open the modal for confirmation
 };
 
+const editItem = (item) => {
+  selectedItem.value = item; // Store the item temporarily
+  // Create Modal for editing
+  // document.getElementById('selectedForRemovalItemName').textContent = item.name; // Display the name in the modal
+  // document.getElementById('confirmRemoveModal').showModal(); // Open the modal for confirmation
+};
+
 const confirmSelection = async () => {
   if (selectedItem.value) {
     await adminStore.updateActiveItemId(selectedItem.value.id);
@@ -214,6 +242,11 @@ const confirmRemove = async () => {
 //   // Handle additional logic for item selection if necessary
 // };
 
+const openEditModal = (item) => {
+  updateMistStreamModal.showModal()
+  channelStore.mistStream = item
+}
+
 onMounted(async () => {
   await adminStore.fetchItems(props.type)
 })
@@ -222,6 +255,10 @@ onMounted(async () => {
 const removeMistStream = (name) => {
   Inertia.post(route('mistStream.remove'), { 'name': name } )
   document.getElementById('dynamicModal').close();
+}
+
+const refreshList = () => {
+  adminStore.fetchItems(props.type);
 }
 // adminStore.fetchItems(props.type)
 

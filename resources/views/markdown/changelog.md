@@ -1,7 +1,19 @@
 # not.tv Changelog
 
-Last Update: February 12, 2024\
+Last Update: February 15, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+# v0.8.6.4
+February 15, 2024
+* Changes are now getting pushed from our development branch to our staging branch then pulled into master (production).
+  * See our git log for more details.
+* Admin can now edit streams and add metadata (optional parameters) to streams
+* We are testing a 72 hour DVR system on our main live channel. 
+* Added GoLive back to the Show Manage page.
+* Updated the goLive page to allow the user to choose a valid show to goLive on.
+  * The unique stream key is displayed for the show.
+  * Added a mockup "Go Live Now" button, this will be a premium creator feature where they can go live on their show page and/or to other push destinations. This is more like a streamyard service and outside our core offering.
+  * Added a mockup countdown until live. When a show is scheduled this will count down until the show gets pushed to the channel. This allows the creator to pre-connect and check the stream conditions/quality.
 
 # v0.8.6.3
 February 12, 2024

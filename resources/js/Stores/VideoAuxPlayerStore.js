@@ -52,7 +52,7 @@ const initialState = () => ({
     videoUploadComplete: false,
 })
 
-export const useVideoPlayerStore = defineStore('videoPlayerStore', {
+export const useVideoAuxPlayerStore = defineStore('videoAuxPlayerStore', {
     state: initialState,
     actions: {
         reset() {
@@ -77,10 +77,6 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             }).catch(error => {
                 console.error('Error during video player initialization:', error)
             })
-        },
-
-        setMistServerUri(mistServerUri) {
-          this.mistServerUri = mistServerUri
         },
 
         // Initialize the player with necessary settings and start playback
@@ -255,7 +251,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
         // Apparently this loadFirstPlay isn't being used...
         // loadFirstPlay() {
         //     const {props} = usePage()
-        //     let videoJs = videojs('main-player')
+        //     let videoJs = videojs('aux-player')
         //     const type = props.firstPlayVideoSourceType
         //     const src = props.firstPlayVideoSource
         //     videoJs.ready(() => {
@@ -288,22 +284,23 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
         },
         // Unmute the video
         unMute() {
-            const audioStore = useAudioStore()
+            // const audioStore = useAudioStore()
 
             if (this.player) {
                 // Prepare audio setup for when it's unmuted
-                audioStore.userInteractionForAudio()
+                // audioStore.userInteractionForAudio()
 
                 // Optionally, if fadeInAudioFromMuted is a gradual process,
                 // ensure this.player.muted(false) is called within that function.
-                audioStore.fadeInAudioFromMuted()
+                // audioStore.fadeInAudioFromMuted()
 
+                this.player.muted(false)
                 this.muted = false
-                console.log('Video unmuted')
+                console.log('Video muted')
             }
         },
         togglePlay() {
-            let videoJs = videojs('main-player')
+            let videoJs = videojs('aux-player')
 
             if (this.paused) {
                 videoJs.play()
@@ -311,15 +308,24 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                 videoJs.pause()
             }
         },
-
+        load() {
+            let videoJs = videojs('aux-player')
+            videoJs.load()
+        },
+        loadNewLiveSource(source, sourceType) {
+            let videoJs = videojs('aux-player')
+            let fullSourceUrl = this.mistServerUri + '/hls/' + source + '/index.m3u8'
+            videoJs.src({'src': fullSourceUrl, 'type': sourceType});
+            videoJs.play()
+        },
         pause() {
-            let videoJs = videojs('main-player')
+            let videoJs = videojs('aux-player')
             videoJs.controls(false)
             videoJs.pause()
             this.paused = true
         },
         play() {
-            let videoJs = videojs('main-player')
+            let videoJs = videojs('aux-player')
 
             videoJs.play()
             videoJs.controls(false)
@@ -327,24 +333,24 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
         },
         // next not built yet
         next() {
-            let videoJs = videojs('main-player')
+            let videoJs = videojs('aux-player')
             videoJs.controls(false)
             videoJs.src(this.nextSource)
         },
         // back not built yet
         back() {
-            let videoJs = videojs('main-player')
+            let videoJs = videojs('aux-player')
             videoJs.controls(false)
             videoJs.src(this.previousSource)
         },
         fullscreen() {
-            let videoJs = videojs('main-player')
+            let videoJs = videojs('aux-player')
             videoJs.controls(false)
             // videoJs.fullscreen(this.previousSource)
             videoJs.requestFullscreen()
         },
         getVideoCurrentTime() {
-            let videoJs = videojs('main-player')
+            let videoJs = videojs('aux-player')
             videoJs.controls(false)
             this.videoCurrentTime = videoJs.currentTime
         },
@@ -356,7 +362,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
 
         // playNewVideo(source) {
         //     useChannelStore().clearChannel() // Reset or clear channel store
-        //     const videoJs = videojs('main-player')
+        //     const videoJs = videojs('aux-player')
         //     let videoSrc, videoSourceType
         //     // Determine the source type and construct the source URL if necessary
         //     if (source.mediaType === 'externalVideo') {
@@ -434,7 +440,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
 
         loadNewVideo(source) {
             try {
-                let videoJs = videojs('main-player');
+                let videoJs = videojs('aux-player');
                 console.log('LOAD NEW VIDEO');
                 const audioStore = useAudioStore();
                 // Correctly destructure the returned object to get videoSrc and videoSourceType
@@ -479,7 +485,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
         //     console.log(`Video source details received: Src - ${videoSrc}, Type - ${videoSourceType}`);
         //
         //     // Ensure you're using the same player instance (`videoJs` in this context) for consistency
-        //     let videoJs = videojs('main-player'); // Ensure this ID matches your video player element
+        //     let videoJs = videojs('aux-player'); // Ensure this ID matches your video player element
         //     console.log('Video.js player instance created or retrieved.');
         //
         //     // Stop and clean up the current video and audio setup if necessary
@@ -536,7 +542,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
         loadNewSourceFromYouTube(source) {
             this.videoIsYoutube = true
             useChannelStore().clearChannel()
-            let videoJs = videojs('main-player')
+            let videoJs = videojs('aux-player')
             this.videoSource = source
             this.videoSourceType = 'video/youtube'
             videoJs.src({'src': this.videoSource, 'type': this.videoSourceType})
@@ -547,7 +553,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
         loadNewLiveSourceFromRumble(source) {
             this.videoIsYoutube = true
             useChannelStore().clearChannel()
-            let videoJs = videojs('main-player')
+            let videoJs = videojs('aux-player')
             this.videoSource = source
             this.videoSourceType = 'application/x-mpegURL'
             videoJs.src({'src': this.videoSource, 'type': this.videoSourceType})
@@ -559,7 +565,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             try {
                 this.videoIsYoutube = false;
                 useChannelStore().clearChannel();
-                let videoJs = videojs('main-player');
+                let videoJs = videojs('aux-player');
 
                 if (!source.video_url || !source.type) {
                     useNotificationStore().setGeneralServiceNotification('Error', 'Invalid video source.')
@@ -580,7 +586,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
         },
         loadNewSourceFromMist(source) {
             this.videoIsYoutube = false
-            let videoJs = videojs('main-player')
+            let videoJs = videojs('aux-player')
             let filePath = 'https://mist.not.tv/hls/'
             this.videoSource = filePath + source + '/index.m3u8'
             this.videoSourceType = 'application/x-mpegURL'
@@ -591,7 +597,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
         loadNewSourceFromFile(source) {
             this.videoIsYoutube = false
             useChannelStore().clearChannel()
-            let videoJs = videojs('main-player')
+            let videoJs = videojs('aux-player')
             let filePath = source.cdn_endpoint + source.cloud_folder + source.folder + '/'
             this.videoSource = source.file_name
             this.videoSourceType = source.type
@@ -622,7 +628,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
 
                 this.videoSourceType = 'application/vnd.apple.mpegURL'
                 // console.log('Setting player source to:', this.videoSource, 'of type:', this.videoSourceType); // Log the source setting
-                let videoJs = videojs('main-player')
+                let videoJs = videojs('aux-player')
                 videoJs.src({'src': this.videoSource, 'type': this.videoSourceType})
                 this.unMute()
                 this.paused = false
@@ -659,7 +665,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
 
             let videoSource = video.cdn_endpoint + video.cloud_folder + video.folder + '/' + video.file_name
                 // console.log('Setting player source to:', this.videoSource, 'of type:', this.videoSourceType); // Log the source setting
-                let videoJs = videojs('main-player')
+                let videoJs = videojs('aux-player')
                 videoJs.src({'src': videoSource, 'type': video.type})
                 this.unMute()
                 this.paused = false
@@ -703,7 +709,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             // const userStore = useUserStore();
             //
             // if (userStore.isMobile) {
-            //     let videoJs = videojs('main-player')
+            //     let videoJs = videojs('aux-player')
             //     videoJs.controls(false)
             //     if(this.fullPage) {
             //         this.class = 'pipVideoClassFullPage'
