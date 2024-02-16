@@ -15,7 +15,7 @@
         <div class="flex flex-row flex-wrap space-x-2 space-y-2 w-2/3 justify-between pt-10 mx-auto">
           <div></div>
           <div class="flex flex-col justify-center text-center space-y-2">
-            <div v-if="props.episode.show_episode_status_id === 6">
+            <div v-if="episode.show_episode_status_id === 6">
               <div>Countdown to scheduled live:</div>
               <div>{{ timeAgo }}</div>
             </div>
@@ -100,12 +100,12 @@ const teamStore = useTeamStore()
 
 let props = defineProps({
   episode: Object,
-  scheduledDateTime: String,
+  // scheduledDateTime: String,
 })
 
 let playerName = 'aux-player';
-let videoEmbedCode = props.episode.video_file_embed_code;
+// let videoEmbedCode = props.episode.video_file_embed_code;
 
 // const timeAgo = useTimeAgo(new Date(2023, 10, 5))
-const timeAgo = useTimeAgo(props.scheduledDateTime)
+const timeAgo = useTimeAgo(props.episode.scheduledDateTime)
 </script>

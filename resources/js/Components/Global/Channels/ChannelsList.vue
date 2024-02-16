@@ -12,7 +12,7 @@
            class="channel">
 
         <button :class="[ channelClass, {activeChannelFullPage:channelStore.currentChannelId===channel.id }]"
-                @click="changeChannel(channel)">
+                @click="channelStore.changeChannel(channel)">
           {{ channel.name }}
         </button>
       </div>
@@ -50,20 +50,20 @@ let props = defineProps({
 const scrollRef = ref(null)
 provide('scrollRef', scrollRef)
 
-onMounted(async () => {
-  await videoPlayerStore.getMistServerUri()
-})
+// onMounted(async () => {
+//   await videoPlayerStore.getMistServerUri()
+// })
 
 channelStore.reloadChannels()
 
-async function changeChannel(channel) {
-  // await channelStore.disconnectViewerFromChannel() // This is in the channelStore.changeChannel function.
-  await channelStore.changeChannel(channel)
-  // videoPlayerStore.toggleChannels()
-  // videoPlayerStore.toggleOttChannels()
-  // appSettingStore.ott = 0
-  // Inertia.reload()
-}
+// async function changeChannel(channel) {
+//   // await channelStore.disconnectViewerFromChannel() // This is in the channelStore.changeChannel function.
+//   await channelStore.changeChannel(channel)
+//   // videoPlayerStore.toggleChannels()
+//   // videoPlayerStore.toggleOttChannels()
+//   // appSettingStore.ott = 0
+//   // Inertia.reload()
+// }
 
 const channelClass = computed(() => ({
   channelsFullPage: appSettingStore.fullPage,

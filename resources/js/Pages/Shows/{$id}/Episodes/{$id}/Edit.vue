@@ -321,6 +321,21 @@
 
                   <!--Right Column-->
                   <div>
+                    <div class="mb-4">
+                      <label class="block mb-2 uppercase font-bold text-xs text-red-700"
+                             for="episodeVideo"
+                      >
+                        Attach Recording
+                      </label>
+
+                      <select class="rounded-lg">
+                        <option>No recordings available</option>
+                        <option>Select recording...</option>
+                      </select>
+
+
+                    </div>
+
 
                     <div>
                       <label class="block mb-2 uppercase font-bold text-xs text-red-700"

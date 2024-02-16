@@ -22,7 +22,12 @@
         <div class="flex justify-between mb-3 pt-6">
           <div class="font-bold mb-4 text-black align-bottom text-lg">MANAGE SHOW</div>
           <div class="flex flex-wrap-reverse justify-end">
-
+            <button
+                v-if="teamStore.can.editShow"
+                @click="goLive"
+                class="px-4 py-2 mr-2 h-fit text-white font-semibold bg-red-500 hover:bg-red-600 rounded-lg"
+            >Go Live
+            </button>
               <button
                   v-if="teamStore.can.editShow"
                   @click="appSettingStore.btnRedirect(`/shows/${show.slug}/edit`)"
@@ -121,6 +126,13 @@
 
             </div>
 
+            <div class="mt-4 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+              <div class="bg-blue-100 p-2 font-bold text-black">Recordings</div>
+
+              <ShowRecordings />
+
+            </div>
+
           </div>
         </div>
       </div>
@@ -136,18 +148,21 @@ import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useShowStore } from '@/Stores/ShowStore'
 import { useTeamStore } from '@/Stores/TeamStore'
+import { useGoLiveStore } from '@/Stores/GoLiveStore'
 import ShowHeader from '@/Components/Pages/Shows/Layout/ShowHeader'
 import ShowFooter from '@/Components/Pages/Shows/Layout/ShowFooter'
 import ShowEpisodesList from '@/Components/Pages/Shows/Elements/ManageShowEpisodesList'
 import ShowCreditsList from '@/Components/Pages/Shows/Elements/ManageShowCreditsList'
 import Message from '@/Components/Global/Modals/Messages'
 import DashboardButton from '@/Components/Global/Buttons/DashboardButton.vue'
+import ShowRecordings from '@/Components/Pages/Shows/Elements/ShowRecordings.vue'
 
 usePageSetup('shows/slug/manage')
 
 const appSettingStore = useAppSettingStore()
 const showStore = useShowStore()
 const teamStore = useTeamStore()
+const goLiveStore = useGoLiveStore()
 
 onUnmounted(() => {
   showStore.errorMessage = ''
@@ -174,6 +189,12 @@ teamStore.can = props.can
 //         replace: true
 //     });
 // }, 300));
+
+const goLive = () => {
+  console.log('Show ID:', props.show.id);
+  goLiveStore.preSelectedShowId = props.show.id
+  appSettingStore.btnRedirect(`/golive`)
+}
 
 </script>
 

@@ -16,7 +16,10 @@ class MistStream extends Model {
       'source',
       'mime_type',
       'active',
-      'metadata'
+  ];
+
+  protected $casts = [
+      'metadata' => 'array',
   ];
 
   protected static function boot() {

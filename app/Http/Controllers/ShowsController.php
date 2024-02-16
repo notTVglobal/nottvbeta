@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Jobs\AddMistStreamToServer;
+use App\Jobs\AddOrUpdateMistStreamJob;
 use App\Jobs\AddMistStreamWildcardToServer;
 use App\Jobs\CheckOrAddMistStreamToServer;
 use App\Models\CreativeCommons;
@@ -324,35 +324,35 @@ class ShowsController extends Controller {
 
     try {
       $show = Show::create([
-          'name' => $request->name,
-          'description' => $request->description,
-          'user_id' => $request->user_id,
-          'team_id' => $request->team_id,
-          'show_category_id' => $request->category,
-          'show_category_sub_id' => $request->sub_category,
-          'slug' => \Str::slug($request->name),
-          'www_url' => $request->www_url,
-          'instagram_name' => $request->instagram_name,
-          'telegram_url' => $request->telegram_url,
-          'twitter_handle' => $request->twitter_handle,
-          'notes' => $request->notes,
+          'name'                   => $request->name,
+          'description'            => $request->description,
+          'user_id'                => $request->user_id,
+          'team_id'                => $request->team_id,
+          'show_category_id'       => $request->category,
+          'show_category_sub_id'   => $request->sub_category,
+          'slug'                   => \Str::slug($request->name),
+          'www_url'                => $request->www_url,
+          'instagram_name'         => $request->instagram_name,
+          'telegram_url'           => $request->telegram_url,
+          'twitter_handle'         => $request->twitter_handle,
+          'notes'                  => $request->notes,
           'isBeingEditedByUser_id' => $request->user_id,
-          'first_release_year' => Carbon::now()->format('Y'),
+          'first_release_year'     => Carbon::now()->format('Y'),
       ]);
 
       $mistStream = MistStream::firstOrCreate([
           'name' => 'show',
       ], [
-          'comment' => 'Created for Show integration.',
+          'comment'   => 'Created for Show integration.',
           'mime_type' => 'application/vnd.apple.mpegurl',
       ]);
 
       $lowercaseShowUlid = strtolower($show->ulid); // Mist server can only use lowercase letters, numbers _ - or .
 
       $mistStreamWildcard = MistStreamWildcard::create([
-          'name' => 'show+' . $lowercaseShowUlid, // by appending show+ this becomes our full stream key.
-          'comment' => 'Automatically created with new show.',
-          'source' => 'push://',
+          'name'           => 'show+' . $lowercaseShowUlid, // by appending show+ this becomes our full stream key.
+          'comment'        => 'Automatically created with new show.',
+          'source'         => 'push://',
           'mist_stream_id' => $mistStream->id,
       ]);
 
@@ -374,7 +374,7 @@ class ShowsController extends Controller {
       Log::error("Failed to create show and associated entities: {$e->getMessage()}");
 
       // Optionally, return an error response or redirect with error message
-      return back()->withErrors(['msg' => 'Failed to create the show.'])->withInput();
+      return back()->with(['error' => 'Failed to create the show.'])->withInput();
     }
   }
 
@@ -456,6 +456,7 @@ class ShowsController extends Controller {
 
   private function transformShowData(Show $show, $firstPlayEpisode) {
     return [
+        'id'                 => $show->id,
         'name'               => $show->name,
         'slug'               => $show->slug,
         'description'        => $show->description,
@@ -610,6 +611,7 @@ class ShowsController extends Controller {
 
     return Inertia::render('Shows/{$id}/Manage', [
         'show'            => [
+            'id'            => $show->id,
             'name'          => $show->name,
             'description'   => $show->description,
             'showRunner'    => $show->user->name,

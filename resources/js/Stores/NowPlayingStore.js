@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
+import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
 
 const initialState = () => ({
     isLive: false   ,
@@ -57,8 +58,10 @@ export const useNowPlayingStore = defineStore('nowPlayingStore', {
             }
         },
         async fetchFirstPlayData() {
+            const videoPlayerStore = useVideoPlayerStore()
             try {
                 const response = await axios.get('/first-play-data')
+                videoPlayerStore.setMistServerUri(response.data.mist_server_uri)
                 this.setActiveMedia('video', { // Assuming 'video' as a default type
                     source: response.data.first_play_video_source,
                     sourceType: response.data.first_play_video_source_type,

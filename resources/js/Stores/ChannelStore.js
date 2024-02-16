@@ -11,14 +11,17 @@ const initialState = () => ({
     currentChannelName: '',
     isLive: false,
     viewerCount: 0,
+    playbackPriorityType: '',
+    mistStreamId: null,
+    mistStreamName: null,
+    mistStream: null,
+    externalSourceId: null,
+    channelPlaylistId: null,
+    currentChannel: null,
     channel_list: {},
     userAddedToChannels: false,
     channelsLoaded: false,
     reloadChannelsList: false,
-    playbackPriorityType: '',
-    externalSourceId: null,
-    channelPlaylistId: null,
-    mistStreamId: null
 })
 
 export const useChannelStore = defineStore('channelStore', {
@@ -40,6 +43,12 @@ export const useChannelStore = defineStore('channelStore', {
                     })
             }
         },
+        setMistStream(stream) {
+            this.mistStream = stream;
+        },
+        clearMistStream() {
+            this.mistStream = null;
+        },
         reloadChannels() {
                 axios.get('/api/channels_list')
                     .then(response => {
@@ -57,7 +66,7 @@ export const useChannelStore = defineStore('channelStore', {
 
         async changeChannel(channel) {
 
-
+            this.currentChannel = channel
             // oldChannelId is used to determine whether to disconnect the viewer from the chat channel or not.
             let oldChannelId = 0
             oldChannelId = this.currentChannelId
@@ -66,7 +75,7 @@ export const useChannelStore = defineStore('channelStore', {
             const loadSuccess = await this.loadChannelMediaByPriority(channel);
             if (!loadSuccess) {
 
-                return; // Stop execution if loading media failed
+                 // Stop execution if loading media failed
             }
 
 
@@ -78,13 +87,13 @@ export const useChannelStore = defineStore('channelStore', {
 
 
             // Add user to the chat channel. However, for the MVP we are only using 1 chat channel.
-            // if (useUserStore().id !== null) {
-            //     this.userAddedToChannels = true
-            //     if (oldChannelId !== 0) {
-            //         this.disconnectViewerFromChannel(oldChannelId)
-            //     }
-            //     await this.addViewerToChannel(channel.id)
-            // }
+            if (useUserStore().id !== null) {
+                this.userAddedToChannels = true
+                if (oldChannelId !== 0) {
+                    this.disconnectViewerFromChannel(oldChannelId)
+                }
+                await this.addViewerToChannel(channel.id)
+            }
 
             // Some externalSource logic... this is old logic.
             // if (channel.channel_external_source !== null) {
@@ -105,7 +114,7 @@ export const useChannelStore = defineStore('channelStore', {
             // streamType = channel.source.type (e.g. "application/vnd.apple.mpegURL")
 
 
-            // await this.getViewerCount()
+            await this.getViewerCount()
 
         },
 
@@ -173,6 +182,7 @@ export const useChannelStore = defineStore('channelStore', {
             this.externalSourceId = channel.channel_external_source_id
             this.channelPlaylistId = channel.channel_playlist_id
             this.mistStreamId = channel.mist_stream_id
+            this.mistStreamName = channel.mist_stream.name
 
 
             console.log('Change Channel')

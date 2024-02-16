@@ -160,6 +160,29 @@
             <div v-if="form.errors.cloud_folder" v-text="form.errors.cloud_folder"
                  class="text-xs text-red-600 mt-1"></div>
           </div>
+
+          <div class="mb-6">
+            <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"
+                   for="mist_server_api_url"
+            >
+              MIST SERVER URI
+            </label>
+            <div class="text-xs mb-2">This is the primary mist server. Right now we don't have a load balancer.</div>
+
+            <div class="flex flex-row">
+              <input v-model="form.mist_server_uri"
+                     class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                     type="text"
+                     name="mist_server_uri"
+                     id="mist_server_uri"
+              >
+            </div>
+            <div class="text-xs mb-2">e.g., https://mist.nottv.io</div>
+
+            <div v-if="form.errors.mist_server_uri" v-text="form.errors.mist_server_uri"
+                 class="text-xs text-red-600 mt-1"></div>
+          </div>
+
           <div class="mb-6 border-t-2 pt-4">
 
             <div>
@@ -251,122 +274,102 @@
                  class="text-xs text-red-600 mt-1"></div>
           </div>
 
-          <div class="mb-6">
-            <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"
-                   for="mist_server_api_url"
-            >
-              MIST SERVER URI
-            </label>
-            <div class="text-xs mb-2">This is the primary mist server. Right now we don't have a load balancer.</div>
 
-            <div class="flex flex-row">
-              <input v-model="form.mist_server_uri"
-                     class="border border-gray-400 p-2 w-full rounded-lg text-black"
-                     type="text"
-                     name="mist_server_uri"
-                     id="mist_server_uri"
-              >
-            </div>
-            <div class="text-xs mb-2">e.g., https://mist.nottv.io</div>
 
-            <div v-if="form.errors.mist_server_uri" v-text="form.errors.mist_server_uri"
-                 class="text-xs text-red-600 mt-1"></div>
-          </div>
+<!--          <div class="mb-6">-->
+<!--            <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"-->
+<!--                   for="mist_server_ip"-->
+<!--            >-->
+<!--              MIST SERVER IP ADDRESS-->
+<!--            </label>-->
+<!--            <div class="text-xs mb-2">This is used as part of the hash for Mist Stream Access Control.</div>-->
 
-          <div class="mb-6">
-            <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"
-                   for="mist_server_ip"
-            >
-              MIST SERVER IP ADDRESS
-            </label>
-            <div class="text-xs mb-2">This is used as part of the hash for Mist Stream Access Control.</div>
+<!--            <div class="flex flex-row">-->
+<!--              <input v-model="form.mist_server_ip"-->
+<!--                     class="border border-gray-400 p-2 w-full rounded-lg text-black"-->
+<!--                     type="text"-->
+<!--                     name="mist_server_ip"-->
+<!--                     id="mist_server_ip"-->
+<!--              >-->
+<!--            </div>-->
+<!--            <div v-if="form.errors.mist_server_ip" v-text="form.errors.mist_server_ip"-->
+<!--                 class="text-xs text-red-600 mt-1"></div>-->
+<!--          </div>-->
+<!--          <div class="mb-6">-->
+<!--            <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"-->
+<!--                   for="mist_server_api_url"-->
+<!--            >-->
+<!--              MIST SERVER API URL-->
+<!--            </label>-->
 
-            <div class="flex flex-row">
-              <input v-model="form.mist_server_ip"
-                     class="border border-gray-400 p-2 w-full rounded-lg text-black"
-                     type="text"
-                     name="mist_server_ip"
-                     id="mist_server_ip"
-              >
-            </div>
-            <div v-if="form.errors.mist_server_ip" v-text="form.errors.mist_server_ip"
-                 class="text-xs text-red-600 mt-1"></div>
-          </div>
-          <div class="mb-6">
-            <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"
-                   for="mist_server_api_url"
-            >
-              MIST SERVER API URL
-            </label>
+<!--            <div class="flex flex-row">-->
+<!--              <input v-model="form.mist_server_api_url"-->
+<!--                     class="border border-gray-400 p-2 w-full rounded-lg text-black"-->
+<!--                     type="text"-->
+<!--                     name="mist_server_api_url"-->
+<!--                     id="mist_server_api_url"-->
+<!--              >-->
+<!--            </div>-->
+<!--            <div class="text-xs mb-2">e.g., https://mist.nottv.io/api</div>-->
 
-            <div class="flex flex-row">
-              <input v-model="form.mist_server_api_url"
-                     class="border border-gray-400 p-2 w-full rounded-lg text-black"
-                     type="text"
-                     name="mist_server_api_url"
-                     id="mist_server_api_url"
-              >
-            </div>
-            <div class="text-xs mb-2">e.g., https://mist.nottv.io/api</div>
+<!--            <div v-if="form.errors.mist_server_api_url" v-text="form.errors.mist_server_api_url"-->
+<!--                 class="text-xs text-red-600 mt-1"></div>-->
+<!--          </div>-->
+<!--          <div class="mb-6">-->
+<!--            <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"-->
+<!--                   for="mist_server_username"-->
+<!--            >-->
+<!--              MIST SERVER USERNAME-->
+<!--            </label>-->
 
-            <div v-if="form.errors.mist_server_api_url" v-text="form.errors.mist_server_api_url"
-                 class="text-xs text-red-600 mt-1"></div>
-          </div>
-          <div class="mb-6">
-            <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"
-                   for="mist_server_username"
-            >
-              MIST SERVER USERNAME
-            </label>
+<!--            <div class="flex flex-row">-->
+<!--              <input v-model="form.mist_server_username"-->
+<!--                     class="border border-gray-400 p-2 w-full rounded-lg text-black"-->
+<!--                     type="text"-->
+<!--                     name="mist_server_username"-->
+<!--                     id="mist_server_username"-->
+<!--              >-->
+<!--            </div>-->
+<!--            <div v-if="form.errors.mist_server_username" v-text="form.errors.mist_server_username"-->
+<!--                 class="text-xs text-red-600 mt-1"></div>-->
+<!--          </div>-->
+<!--          <div class="mb-6">-->
+<!--            <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"-->
+<!--                   for="mist_server_password"-->
+<!--            >-->
+<!--              MIST SERVER PASSWORD-->
+<!--            </label>-->
 
-            <div class="flex flex-row">
-              <input v-model="form.mist_server_username"
-                     class="border border-gray-400 p-2 w-full rounded-lg text-black"
-                     type="text"
-                     name="mist_server_username"
-                     id="mist_server_username"
-              >
-            </div>
-            <div v-if="form.errors.mist_server_username" v-text="form.errors.mist_server_username"
-                 class="text-xs text-red-600 mt-1"></div>
-          </div>
-          <div class="mb-6">
-            <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"
-                   for="mist_server_password"
-            >
-              MIST SERVER PASSWORD
-            </label>
+<!--            <div class="flex flex-row">-->
+<!--              <input v-model="form.mist_server_password"-->
+<!--                     class="border border-gray-400 p-2 w-full rounded-lg text-black"-->
+<!--                     type="password"-->
+<!--                     name="mist_server_password"-->
+<!--                     id="mist_server_password"-->
+<!--              >-->
+<!--            </div>-->
+<!--            <div v-if="form.errors.mist_server_password" v-text="form.errors.mist_server_password"-->
+<!--                 class="text-xs text-red-600 mt-1"></div>-->
+<!--          </div>-->
 
-            <div class="flex flex-row">
-              <input v-model="form.mist_server_password"
-                     class="border border-gray-400 p-2 w-full rounded-lg text-black"
-                     type="password"
-                     name="mist_server_password"
-                     id="mist_server_password"
-              >
-            </div>
-            <div v-if="form.errors.mist_server_password" v-text="form.errors.mist_server_password"
-                 class="text-xs text-red-600 mt-1"></div>
-          </div>
-
-          <div class="mb-6">
-            <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"
-                   for="mist_server_password"
-            >
-              MIST ACCESS CONTROL SECRET
-            </label>
-            <div class="text-xs mb-2">A string used to create the access control urls for playing streams and videos from the mist server.</div>
-            <div class="flex flex-row">
-              <input v-model="form.mist_access_control_secret"
-                     class="border border-gray-400 p-2 w-full rounded-lg text-black"
-                     type="text"
-                     name="mist_access_control_secret"
-                     id="mist_access_control_secret"
-              >
-            </div>
-            <div v-if="form.errors.mist_access_control_secret" v-text="form.errors.mist_access_control_secret"
-                 class="text-xs text-red-600 mt-1"></div>
-          </div>
+<!--          <div class="mb-6">-->
+<!--            <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"-->
+<!--                   for="mist_server_password"-->
+<!--            >-->
+<!--              MIST ACCESS CONTROL SECRET-->
+<!--            </label>-->
+<!--            <div class="text-xs mb-2">A string used to create the access control urls for playing streams and videos from the mist server.</div>-->
+<!--            <div class="flex flex-row">-->
+<!--              <input v-model="form.mist_access_control_secret"-->
+<!--                     class="border border-gray-400 p-2 w-full rounded-lg text-black"-->
+<!--                     type="text"-->
+<!--                     name="mist_access_control_secret"-->
+<!--                     id="mist_access_control_secret"-->
+<!--              >-->
+<!--            </div>-->
+<!--            <div v-if="form.errors.mist_access_control_secret" v-text="form.errors.mist_access_control_secret"-->
+<!--                 class="text-xs text-red-600 mt-1"></div>-->
+<!--          </div>-->
 
           <div class="flex justify-end my-6 mr-6">
             <JetValidationErrors class="mr-4"/>
@@ -437,12 +440,12 @@ let props = defineProps({
   first_play_video_source_type: String,
   first_play_video_name: String,
   first_play_channel_id: String,
-  mist_server_ip: String,
+  // mist_server_ip: String,
   mist_server_uri: String,
-  mist_server_api_url: String,
-  mist_server_username: String,
-  mist_server_password: String,
-  mist_access_control_secret: String,
+  // mist_server_api_url: String,
+  // mist_server_username: String,
+  // mist_server_password: String,
+  // mist_access_control_secret: String,
   messageType: String,
 });
 
@@ -455,15 +458,16 @@ let form = useForm({
   first_play_video_source_type: props.first_play_video_source_type,
   first_play_video_name: props.first_play_video_name,
   first_play_channel_id: props.first_play_channel_id,
-  mist_server_ip: props.mist_server_ip,
+  // mist_server_ip: props.mist_server_ip,
   mist_server_uri: props.mist_server_uri,
-  mist_server_api_url: props.mist_server_api_url,
-  mist_server_username: props.mist_server_username,
-  mist_server_password: props.mist_server_password,
-  mist_access_control_secret: props.mist_access_control_secret,
+  // mist_server_api_url: props.mist_server_api_url,
+  // mist_server_username: props.mist_server_username,
+  // mist_server_password: props.mist_server_password,
+  // mist_access_control_secret: props.mist_access_control_secret,
 })
 
 const countries = ref([]);
+const topDiv = document.getElementById("topDiv");
 // const topDiv = document.getElementById("topDiv")
 
 onMounted(() => {
@@ -471,7 +475,6 @@ onMounted(() => {
 });
 
 nextTick(() => {
-  const topDiv = document.getElementById("topDiv");
   if (topDiv) {
     topDiv.scrollIntoView();
   }

@@ -79,6 +79,10 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             })
         },
 
+        setMistServerUri(mistServerUri) {
+          this.mistServerUri = mistServerUri
+        },
+
         // Initialize the player with necessary settings and start playback
         async initializePlayer() {
             if (!this.player) {

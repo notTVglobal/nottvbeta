@@ -1,6 +1,8 @@
 <template>
-  <div class="max-w-[12rem]">
-    <div class="max-w-[12rem]">
+<!--  <div class="max-w-[12rem]">-->
+  <div class="w-100">
+<!--    <div class="max-w-[12rem]">-->
+    <div class="w-100">
       <video-player :id="`aux-player`" :options="videoOptions"/>
     </div>
   </div>
@@ -28,7 +30,7 @@ let playerName = 'aux-player'
 <script>
 import VideoPlayer from '@/Components/Global/VideoPlayer/VideoJs/VideoJsAux'
 
-let videoSource = 'https://mist.not.tv/hls/test/index.m3u8'
+let videoSource = 'https://mist.nottv.io/hls/test/index.m3u8'
 let videoSourceType = 'application/x-mpegURL'
 
 export default {

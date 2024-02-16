@@ -12,7 +12,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
-class AddMistStreamToServer implements ShouldQueue {
+class RemoveMistStreamJob implements ShouldQueue {
   use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
   // for production
@@ -42,28 +42,30 @@ class AddMistStreamToServer implements ShouldQueue {
    * @return void
    */
   public function handle(MistServerService $mistServerService) {
-    $data = [
-        "addstream" => [
-            $this->mistStream->name => [
-                "source" => $this->mistStream->source
-              // Add additional options here if necessary
-            ]
-        ]
-    ];
 
     try {
-      $response = $mistServerService->send($data);
 
-      if (isset($response['error'])) {
-        Log::error("Failed to add MistStream '{$this->mistStream->name}' to server: " . $response['error']);
+      // Removing a single stream
+      $streamName = $this->mistStream->name;
+      $success = $mistServerService->removeStream($streamName);
+
+      // Removing multiple streams
+      // tec21: not currently implemented.
+//      $streamNames = ["streamname_here", "another_streamname"];
+//      $mistServerService->removeStream($streamNames);
+
+      if (!$success) {
+        // Handle the failure case
+        Log::error("Failed to remove MistStream '{$streamName}' from server.");
+        // Consider re-throwing an exception or marking the job for retry depending on your use case
       } else {
-        // Optionally update the $mistStream object or log success
-        // For example, log the success or update the database accordingly
-        Log::info("Successfully added MistStream '{$this->mistStream->name}' to server.");
+        // Handle the success case
+        Log::info("Successfully removed MistStream '{$streamName}' from server.");
+        // Perform any additional cleanup or follow-up actions as needed
       }
     } catch (\Exception $e) {
-      Log::error("Failed to add MistStream '{$this->mistStream->name}' to server: {$e->getMessage()}");
+      Log::error("Exception when trying to remove MistStream '{$streamName}' from server: {$e->getMessage()}");
+      // Optionally retry the job or handle the exception as needed
     }
-
   }
 }

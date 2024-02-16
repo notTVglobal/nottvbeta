@@ -8,6 +8,7 @@ use App\Http\Controllers\ChannelController;
 use App\Http\Controllers\ChannelExternalSourceController;
 use App\Http\Controllers\ChannelPlaylistController;
 use App\Http\Controllers\FlashController;
+use App\Http\Controllers\GoLiveController;
 use App\Http\Controllers\MistServerController;
 use App\Http\Controllers\MistStreamController;
 use App\Http\Controllers\NewsRssFeedItemArchiveController;
@@ -18,6 +19,7 @@ use App\Http\Controllers\TeamManagersController;
 use App\Http\Controllers\TestMessageController;
 use App\Http\Controllers\WelcomeController;
 use App\Mail\VerifyMail;
+use App\Models\Creator;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\CreatorsController;
 use App\Http\Controllers\AdminController;
@@ -475,14 +477,6 @@ Route::middleware([
         ->name('schedule');
 
 
-// Go Live
-///////////
-
-    Route::get('/golive', function () {
-        return Inertia::render('GoLive');
-    })->can('viewCreator', 'App\Models\User')
-        ->name('golive');
-
 // Invite
 ///////////
 /// We'll make a public version of this page where a creator
@@ -898,6 +892,33 @@ Route::middleware([
         ->name('video.destroy');
 
 
+
+
+// Go Live
+/////////
+
+
+Route::get('/golive', [GoLiveController::class, 'index'])
+    ->can('goLive', Creator::class)
+    ->name('goLive.index');
+
+// List available shows
+  Route::get('/go-live/shows', [GoLiveController::class, 'listAvailableShows']);
+
+// List episodes for a show
+  Route::get('/go-live/shows/{showId}/episodes', [GoLiveController::class, 'listEpisodesForShow']);
+
+// Get stream key for an episode
+  Route::post('/go-live/episodes/{showEpisode}/stream-key', [GoLiveController::class, 'getStreamKeyForEpisode']);
+
+  // Get stream key for a show
+  Route::post('/go-live/shows/{showId}/stream-key', [GoLiveController::class, 'getStreamKeyForShow']);
+
+// Prepare live stream for an episode
+  Route::post('/go-live/episodes/{episodeId}/prepare', [GoLiveController::class, 'prepareLiveStream']);
+
+
+
 // MistAPI
 ///////////
 ///
@@ -913,9 +934,10 @@ Route::middleware([
 ///
 
 Route::resource('mistStreams', MistStreamController::class);
-Route::get('/admin/mist-stream/search', [MistStreamController::class, 'adminSearchMistStreams']);
-Route::post('/admin/mist-stream/add', [MistStreamController::class, 'adminAddMistStream'])->name('mistStream.add');
-Route::post('/admin/mist-stream/remove', [MistStreamController::class, 'adminRemoveMistStream'])->name('mistStream.remove');
+Route::get('/admin/mist-stream/search', [MistStreamController::class, 'searchMistStreams']);
+Route::post('/admin/mist-stream/addOrUpdate', [MistStreamController::class, 'addOrUpdateMistStream'])->name('mistStream.addOrUpdate');
+Route::post('/admin/mist-stream/remove', [MistStreamController::class, 'removeMistStream'])->name('mistStream.remove');
+Route::get('/fetch-stream-info/{streamName}', [MistStreamController::class, 'fetchStreamInfo']);
 
 // Mist Server
 //////////////
