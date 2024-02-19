@@ -17,16 +17,16 @@
             </button>
 
           </div>
-          <div>RTMP full url: <span class="font-bold">{{rtmpUri}}{{streamKey}}</span>
-            &nbsp;<button @click="copyFullUrl"><font-awesome-icon icon="fa-clipboard" class="text-blue-500 hover:text-blue-700 hover:cursor-pointer"/></button>
+          <div>RTMP full url: <span v-if="rtmpUri && streamKey" class="font-bold">{{rtmpUri}}{{streamKey}}</span>
+            &nbsp;<button v-if="rtmpUri && streamKey" @click="copyFullUrl"><font-awesome-icon v-if="rtmpUri && streamKey" icon="fa-clipboard" class="text-blue-500 hover:text-blue-700 hover:cursor-pointer"/></button>
             <span v-if="showCopiedFullUrl" class="ml-1 copied-message" style="transition: opacity 0.5s; opacity: 1;">Copied!</span>
           </div>
           <div>RTMP url: <span class="font-bold">{{rtmpUri}}</span>
-            &nbsp;<button @click="copyRtmpUri"><font-awesome-icon icon="fa-clipboard" class="text-blue-500 hover:text-blue-700 hover:cursor-pointer"/></button>
+            &nbsp;<button v-if="rtmpUri" @click="copyRtmpUri"><font-awesome-icon v-if="rtmpUri" icon="fa-clipboard" class="text-blue-500 hover:text-blue-700 hover:cursor-pointer"/></button>
             <span v-if="showCopiedRtmpUri" class="ml-1 copied-message" style="transition: opacity 0.5s; opacity: 1;">Copied!</span>
           </div>
           <div>RTMP stream key: <span class="font-bold">{{streamKey}}</span>
-            &nbsp;<button @click="copyStreamKey"><font-awesome-icon icon="fa-clipboard" class="text-blue-500 hover:text-blue-700 hover:cursor-pointer"/></button>
+            &nbsp;<button v-if="streamKey" @click="copyStreamKey"><font-awesome-icon v-if="streamKey" icon="fa-clipboard" class="text-blue-500 hover:text-blue-700 hover:cursor-pointer"/></button>
             <span v-if="showCopiedStreamKey" class="ml-1 copied-message" style="transition: opacity 0.5s; opacity: 1;">Copied!</span>
           </div>
         </div>

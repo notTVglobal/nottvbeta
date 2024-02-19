@@ -100,7 +100,7 @@ export const useGoLiveStore = defineStore('goLiveStore', {
             this.displayEpisodeGoLiveComponent = ! this.displayEpisodeGoLiveComponent;
             this.isEpisode = !!this.displayEpisodeGoLiveComponent;
             this.episode = episode
-            this.selectedShowId = this.episode.show_id
+            this.selectedShowId = this?.episode?.show_id
 
         },
         updateEpisode(episode) {
