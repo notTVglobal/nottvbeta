@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\MistServerService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -134,6 +135,8 @@ class Show extends Model
       }
 
       $ulid = $show->ulid;
+
+
 
       // Begin transaction
       DB::beginTransaction();

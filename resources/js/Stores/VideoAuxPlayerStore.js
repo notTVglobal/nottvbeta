@@ -11,7 +11,6 @@ import { nextTick } from 'vue'
 import { useNotificationStore } from '@/Stores/NotificationStore'
 
 const initialState = () => ({
-    mistServerUri: 'https://mist.nottv.io/', // tec21: 2024-02-09, if we don't start with the address here changing channels is really slow and buggy. Address for the MistServer listed in the Admin Settings saved in AppSetting
     player: null, // Video.js player instance
     eventListenersAttached: false, // Track if listeners are attached
     videoPlayerLoaded: false,

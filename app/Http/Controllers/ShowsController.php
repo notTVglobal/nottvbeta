@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Jobs\AddOrUpdateMistStreamJob;
 use App\Jobs\AddMistStreamWildcardToServer;
-use App\Jobs\CheckOrAddMistStreamToServer;
 use App\Models\CreativeCommons;
 use App\Models\Image;
 use App\Models\MistStream;
@@ -343,9 +342,22 @@ class ShowsController extends Controller {
       $mistStream = MistStream::firstOrCreate([
           'name' => 'show',
       ], [
+          'source' => 'push://',
           'comment'   => 'Created for Show integration.',
-          'mime_type' => 'application/vnd.apple.mpegurl',
+          'mime_type' => '',
       ]);
+
+      // Prepare data for add Mist Stream Job
+      // Prepare $mistStreamData with necessary details
+      $mistStreamData = [
+          'name'   => $mistStream['name'], // e.g., "live_stream+myEvent"
+          'source' => $mistStream['source'], // Define the source, e.g., 'push://'
+        // Add any other necessary details for the mist stream here
+      ];
+      // $originalName is null for new streams, or set it to the current name if updating an existing stream
+      $originalName = null; // This is for a new stream creation, or set appropriately for updates
+
+      AddOrUpdateMistStreamJob::dispatch($mistStreamData, $originalName);
 
       $lowercaseShowUlid = strtolower($show->ulid); // Mist server can only use lowercase letters, numbers _ - or .
 
@@ -365,7 +377,6 @@ class ShowsController extends Controller {
 //      CheckOrAddMistStreamToServer::withChain([
 //          new AddMistStreamWildcardToServer($mistStreamWildcard)
 //      ])->dispatch($mistStream);
-      CheckOrAddMistStreamToServer::dispatch($mistStream);
 
       // Return a successful response
       return redirect()->route('shows.manage', $show)->with('success', 'Show Created Successfully');
@@ -606,6 +617,9 @@ class ShowsController extends Controller {
 ////////////////////
 
   public function manage(Show $show) {
+    // Eager load related entities for the Show model
+    $show->load(['user', 'image', 'appSetting', 'category', 'subCategory', 'team']);
+
     $episodeStatuses = DB::table('show_episode_statuses')->get()->toArray();
     $filteredStatuses = array_slice($episodeStatuses, 0, -2);
 
@@ -848,6 +862,13 @@ class ShowsController extends Controller {
 
 //    $show->load('team', 'showEpisodes.creativeCommons', 'showEpisodes.video', 'image', 'appSetting', 'category', 'subCategory'); // Eager load necessary relationships
 
+    // Eager load relationships for the Show model
+    $show->load(['team', 'image', 'appSetting', 'category', 'subCategory']);
+
+    // Eager load relationships for the ShowEpisode model
+    $showEpisode->load(['creativeCommons', 'video.appSetting', 'image', 'showEpisodeStatus', 'mistStreamWildcard']);
+
+
     return Inertia::render('Shows/{$id}/Episodes/{$id}/Manage', [
         'show'              => [
             'name'          => $show->name,
@@ -863,6 +884,7 @@ class ShowsController extends Controller {
         'episode'           => [
             'id'                         => $showEpisode->id,
             'ulid'                       => $showEpisode->ulid,
+            'show_id'                    => $showEpisode->show_id,
             'name'                       => $showEpisode->name,
             'slug'                       => $showEpisode->slug,
             'description'                => $showEpisode->description,
@@ -874,7 +896,8 @@ class ShowsController extends Controller {
             'scheduled_release_dateTime' => $this->formattedScheduledDateTime ?? null,
             'copyrightYear'              => $showEpisode->copyrightYear ?? null,
             'creative_commons'           => $showEpisode->creativeCommons ?? null,
-            'mist_stream_id'             => $showEpisode->mist_stream_id,
+            'mist_stream_wildcard_id'    => $showEpisode->mist_stream_wildcard_id,
+            'mist_stream_wildcard'    => $showEpisode->mistStreamWildcard,
             'video_id'                   => $showEpisode->video_id,
             'youtube_url'                => $showEpisode->youtube_url,
             'video_embed_code'           => $showEpisode->video_embed_code,

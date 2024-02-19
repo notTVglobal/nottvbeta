@@ -21,6 +21,10 @@
       </p>
       <ul class="list-disc list-inside pt-4">
         <li>
+          <Link class="text-blue-500 hover:text-blue-700 font-semibold" :href="`/training/go-live-using-zoom`">How to Stream to notTV Using Zoom</Link>
+        </li>
+
+        <li>
           Field production
         </li>
         <li>

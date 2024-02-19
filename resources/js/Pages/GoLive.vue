@@ -31,7 +31,6 @@
         <!--                    </div>-->
         <!--                </div>-->
       </div>
-
       <div v-if="goLiveStore.shows && goLiveStore.shows.length > 0" class="mb-6 mx-4 px-6">
         <label class="block mb-2 uppercase font-bold text-xs text-light text-gray-700"
                for="show"
@@ -89,6 +88,7 @@ import GoLive from '@/Components/Global/GoLive/GoLive'
 import { computed, onMounted, ref, watch, withDefaults } from 'vue'
 import videojs from 'video.js'
 import ManageShowEpisodeNoticeModals from '@/Components/Pages/ShowEpisodes/Elements/ManageShowEpisodeNoticeModals.vue'
+import Button from '@/Jetstream/Button.vue'
 
 usePageSetup('goLive')
 
@@ -102,6 +102,8 @@ const props = defineProps({
 })
 
 onMounted(async () => {
+  goLiveStore.isEpisode = null
+  goLiveStore.episode = null
   goLiveStore.fetchShows().then(() => {
     if (goLiveStore.preSelectedShowId) {
       goLiveStore.selectedShowId = goLiveStore.preSelectedShowId;

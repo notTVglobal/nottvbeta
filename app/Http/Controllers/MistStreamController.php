@@ -215,7 +215,9 @@ class MistStreamController extends Controller {
   public function fetchStreamInfo($streamName)
   {
     $encodedStreamName = urlencode($streamName);
-    $url = "http://mist.nottv.io:8080/json_${encodedStreamName}.js"; // Replace with the actual URL
+    $mistServerIp = config('services.mistserver.internal_ip');
+//    $url = "http://mist.nottv.io:8080/json_${encodedStreamName}.js"; // Replace with the actual URL
+    $url = "http://${mistServerIp}:8080/json_${encodedStreamName}.js"; // Replace with the actual URL
 
     try {
       $response = Http::get($url);

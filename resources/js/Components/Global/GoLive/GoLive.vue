@@ -7,28 +7,56 @@
     </div>
     <div class="shadow overflow-hidden border-2 border-red-600 rounded p-2 md:p-6"
          :class="[ goLiveStore.isLive ? 'bg-gray-100' : 'bg-red-100' ]">
+
+
       <div class="flex flex-row flex-wrap-reverse w-full justify-between">
         <div>
-          <div>RTMP full url: <span
-              class="font-bold">rtmp://stream.not.tv/live/{{
-              goLiveStore.selectedShow.mist_stream_wildcard.name
-            }}</span>
+          <div class="mb-2">
+            <button @click="appSettingStore.btnRedirect('/training/go-live-using-zoom')"
+                    class="btn bg-blue-500 hover:bg-blue-700 rounded-lg text-white">How To Stream From Zoom
+            </button>
+
           </div>
-          <div>RTMP url: <span class="font-bold">rtmp://stream.not.tv/live/</span></div>
-          <div>RTMP stream key: <span class="font-bold">{{ goLiveStore.selectedShow.mist_stream_wildcard.name }}</span>
+          <div>RTMP full url: <span class="font-bold">{{rtmpUri}}{{streamKey}}</span>
+            &nbsp;<button @click="copyFullUrl"><font-awesome-icon icon="fa-clipboard" class="text-blue-500 hover:text-blue-700 hover:cursor-pointer"/></button>
+            <span v-if="showCopiedFullUrl" class="ml-1 copied-message" style="transition: opacity 0.5s; opacity: 1;">Copied!</span>
+          </div>
+          <div>RTMP url: <span class="font-bold">{{rtmpUri}}</span>
+            &nbsp;<button @click="copyRtmpUri"><font-awesome-icon icon="fa-clipboard" class="text-blue-500 hover:text-blue-700 hover:cursor-pointer"/></button>
+            <span v-if="showCopiedRtmpUri" class="ml-1 copied-message" style="transition: opacity 0.5s; opacity: 1;">Copied!</span>
+          </div>
+          <div>RTMP stream key: <span class="font-bold">{{streamKey}}</span>
+            &nbsp;<button @click="copyStreamKey"><font-awesome-icon icon="fa-clipboard" class="text-blue-500 hover:text-blue-700 hover:cursor-pointer"/></button>
+            <span v-if="showCopiedStreamKey" class="ml-1 copied-message" style="transition: opacity 0.5s; opacity: 1;">Copied!</span>
           </div>
         </div>
-        <div class="">
-          <button v-if="!goLiveStore.isLive" @click="goLiveStore.goLive"
-                  class="btn text-white bg-green-500 hover:bg-green-700 uppercase"
-          >Go Live Now
-          </button>
-          <button v-else @click="goLiveStore.stopLive" class="btn text-white bg-red-700 hover:bg-red-900 uppercase"
-          >End Live
-          </button>
-          <div v-if="!goLiveStore.isLive" class="text-xs text-green-500 font-semibold tracking-wider">Premium Creator Service</div>
+        <div class="flex flex-col">
+          <div class="">
+            <button v-if="!goLiveStore.isRecording" @click="goLiveStore.startRecording"
+                    class="btn text-white bg-green-500 hover:bg-green-700 uppercase"
+            >Start Recording
+            </button>
+            <button v-else @click="goLiveStore.stopRecording" class="btn text-white bg-red-700 hover:bg-red-900 uppercase"
+            >Stop Recording
+            </button>
+            <div v-if="!goLiveStore.isRecording" class="text-xs text-green-500 font-semibold tracking-wider">Premium Creator
+              Service
+            </div>
+          </div>
+          <div class="my-4">
+            <button v-if="!goLiveStore.isLive" @click="goLiveStore.goLive"
+                    class="btn text-white bg-green-500 hover:bg-green-700 uppercase"
+            >Go Live Now
+            </button>
+            <button v-else @click="goLiveStore.stopLive" class="btn text-white bg-red-700 hover:bg-red-900 uppercase"
+            >End Live
+            </button>
+            <div v-if="!goLiveStore.isLive" class="text-xs text-green-500 font-semibold tracking-wider">Premium Creator
+              Service
+            </div>
+          </div>
           <div></div>
-          <div>Live will begin in... </div>
+          <div>Live will begin in...</div>
           <div>{{ formattedCountdown }}</div>
         </div>
       </div>
@@ -42,17 +70,18 @@
             <div class="px-10 h-fit w-fit">
               <button @click="reloadPlayer"
                       class="btn btn-xs w-full"
-                      :class="[ goLiveStore.isLive ? 'bg-gray-200 hover:bg-400' : '' ]"
+                      :class="liveOrRecordingGrayButtonClass"
               >Reload Player
               </button>
-              <div v-if="goLiveStore.isLive" class="w-full bg-red-700 text-white text-center uppercase font-bold">LIVE +
-                RECORDING
+              <div v-if="goLiveStore.isLive || goLiveStore.isRecording" class="w-full bg-red-700 text-white text-center uppercase font-bold">
+                <span v-if="goLiveStore.isLive">LIVE</span> <span v-if="goLiveStore.isLive && goLiveStore.isRecording"> + </span>
+                <span v-if="goLiveStore.isRecording">RECORDING</span>
               </div>
               <video-js-aux :id="`aux-player`"
                             :source="videoSource"
                             :sourceType="videoSourceType"
                             class=""
-                            :class="[ goLiveStore.isLive ? 'border-4 border-red-700' : '' ]"/>
+                            :class="liveOrRecordingVideoBorderClass"/>
 
 
               <!--            <div v-if="playerTargetId" class="mistvideo" :id="playerTargetId">-->
@@ -68,32 +97,32 @@
               <div class="mt-2">
                 <button v-if="!videoPlayerStore.muted"
                         class="btn"
-                        :class="[ goLiveStore.isLive ? 'bg-gray-200 hover:bg-400' : '' ]"
+                        :class="liveOrRecordingGrayButtonClass"
                         @click="videoPlayerStore.mute">Mute Main Player Audio
                 </button>
                 <button v-else
                         class="btn"
                         @click="videoPlayerStore.unMute"
-                        :class="[ goLiveStore.isLive ? 'bg-gray-200 hover:bg-400' : '' ]">Turn On Main Player Audio
+                        :class="liveOrRecordingGrayButtonClass">Turn On Main Player Audio
                 </button>
               </div>
               <div class="mt-2 ml-2">
                 <button v-if="!videoAuxPlayerStore.muted"
                         class="btn"
-                        :class="[ goLiveStore.isLive ? 'bg-gray-200 hover:bg-400' : '' ]"
+                        :class="liveOrRecordingGrayButtonClass"
                         @click="videoAuxPlayerStore.mute">Mute Live Stream
                   Video
                 </button>
                 <button v-else
                         class="btn"
-                        :class="[ goLiveStore.isLive ? 'bg-gray-200 hover:bg-400' : '' ]"
+                        :class="liveOrRecordingGrayButtonClass"
                         @click="videoAuxPlayerStore.unMute">Turn On Live Stream Audio
                 </button>
               </div>
             </div>
           </div>
 
-          <div v-if="goLiveStore.streamInfo" class="w-fit" :key="goLiveStore.selectedShowId">
+          <div v-if="goLiveStore.streamInfo && !goLiveStore.streamInfo.error" class="w-fit" :key="goLiveStore.selectedShowId">
             <div>
               <h3>Stream Info</h3>
               <!--                <RecursivePropertyList :object="serverInfo" />-->
@@ -105,20 +134,27 @@
               <div v-if="goLiveStore.streamInfo?.meta?.tracks">
                 <h4 class="font-semibold">Tracks</h4>
                 <ul>
-                  <li v-for="(track, name) in goLiveStore.streamInfo.meta.tracks" :key="name">
+                  <li v-for="(track, name) in goLiveStore?.streamInfo?.meta.tracks" :key="name">
                     &middot; {{ name }} - Codec: {{ track.codec }}, Rate: {{ track.rate }}
                   </li>
                 </ul>
               </div>
             </div>
           </div>
-          <div v-else>
+          <div v-if="!goLiveStore?.streamInfo && !goLiveStore?.streamInfo?.error">
             <div class="flex flex-col">
               <span class="mb-2">Loading stream data...</span>
               <span class="loading loading-spinner text-neutral"></span>
             </div>
 
           </div>
+          <div v-if="goLiveStore?.streamInfo?.error">
+            <div class="flex flex-col">
+              <span class="mb-2">{{ goLiveStore?.streamInfo?.error }}</span>
+            </div>
+
+          </div>
+
         </div>
 
       </div>
@@ -177,30 +213,105 @@
 </template>
 
 <script setup>
-import { useTimeAgo } from '@vueuse/core'
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+// import { useTimeAgo } from '@vueuse/core'
+import { computed, onBeforeUnmount, onMounted, ref, watchEffect } from 'vue'
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
 import { useVideoAuxPlayerStore } from '@/Stores/VideoAuxPlayerStore'
 import { useGoLiveStore } from '@/Stores/GoLiveStore'
 import VideoJsAux from '@/Components/Global/VideoPlayer/VideoJs/VideoJsAux'
 import videojs from 'video.js'
-import RecursivePropertyList from '@/Components/Global/MistStreams/RecursivePropertyList'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { useClipboard } from '@vueuse/core'
 
+const appSettingStore = useAppSettingStore()
 const videoPlayerStore = useVideoPlayerStore()
 const videoAuxPlayerStore = useVideoAuxPlayerStore()
 const goLiveStore = useGoLiveStore()
 
 let props = defineProps({
-  show: Object,
+  // show: Object,
 })
 
+const showCopiedFullUrl = ref(false)
+const showCopiedRtmpUri = ref(false)
+const showCopiedStreamKey = ref(false)
+const { copy } = useClipboard()
 
-let videoSource = 'https://mist.nottv.io/hls/' + goLiveStore.selectedShow.mist_stream_wildcard.name
+// const copyText = () => {
+//   copy('Text to be copied');
+//   showCopied.value = true;
+//   setTimeout(() => {
+//     showCopied.value = false;
+//   }, 2000); // Hide the message after 2 seconds
+// };
+
+let videoSource = videoPlayerStore.mistServerUri + 'hls/' + goLiveStore?.selectedShow?.mist_stream_wildcard.name
     + '/index.m3u8'
-let videoSourceType = 'application/x-mpegURL'
+let videoSourceType = 'application/vnd.apple.mpegURL'
 
 // Fetch server info on component mount
-goLiveStore.fetchStreamInfo(goLiveStore.selectedShow.mist_stream_wildcard.name)
+// goLiveStore.fetchStreamInfo(goLiveStore?.selectedShow?.mist_stream_wildcard.name)
+// goLiveStore.fetchRtmpUri()
+
+const fullUrl = ref('');
+const rtmpUri = ref('');
+const streamKey = ref('');
+
+// Initialize fetching of server information
+goLiveStore.fetchStreamInfo(goLiveStore?.selectedShow?.mist_stream_wildcard.name);
+goLiveStore.fetchRtmpUri();
+
+// Reactively update URLs when the store updates
+watchEffect(() => {
+  if (goLiveStore.rtmpUri) {
+    rtmpUri.value = goLiveStore.rtmpUri + 'live/';
+    // Check if it's an episode or a selected show and update accordingly
+    if (goLiveStore.isEpisode && goLiveStore.episode?.mist_stream_wildcard?.name) {
+      streamKey.value = goLiveStore.episode.mist_stream_wildcard.name;
+    } else if (!goLiveStore.isEpisode && goLiveStore.selectedShow?.mist_stream_wildcard?.name) {
+      streamKey.value = goLiveStore.selectedShow.mist_stream_wildcard.name;
+    }
+    fullUrl.value = `${rtmpUri.value}${streamKey.value}`;
+  }
+});
+
+// Function to handle the copy action and display the "copied" message for each type
+const copyFullUrl = () => {
+  copy(fullUrl.value);
+  showCopiedFullUrl.value = true;
+  setTimeout(() => showCopiedFullUrl.value = false, 1000);
+};
+
+const copyRtmpUri = () => {
+  copy(rtmpUri.value);
+  showCopiedRtmpUri.value = true;
+  setTimeout(() => showCopiedRtmpUri.value = false, 1000);
+};
+
+const copyStreamKey = () => {
+  copy(streamKey.value);
+  showCopiedStreamKey.value = true;
+  setTimeout(() => showCopiedStreamKey.value = false, 1000);
+};
+
+// if (goLiveStore.isEpisode) {
+//   fullUrl = rtmpUri.value + goLiveStore?.episode?.mist_stream_wildcard?.name
+//   streamKey = goLiveStore?.episode?.mist_stream_wildcard?.name
+// } else if (!goLiveStore.isEpisode) {
+//   fullUrl = rtmpUri.value + goLiveStore?.selectedShow?.mist_stream_wildcard?.name
+//   streamKey = goLiveStore?.selectedShow?.mist_stream_wildcard?.name
+// }
+
+// const copyFullUrl = () => copy(fullUrl);
+// const copyRtmpUri = () => copy(rtmpUri.value);
+// const copyStreamKey = () => copy(streamKey);
+//
+// watchEffect(() => {
+//   if (goLiveStore.rtmpUri) {
+//     rtmpUri.value = goLiveStore.rtmpUri + 'live/';
+//   }
+// });
 
 // Asynchronously fetch the JSON data
 // async function fetchServerInfo() {
@@ -232,16 +343,24 @@ goLiveStore.fetchStreamInfo(goLiveStore.selectedShow.mist_stream_wildcard.name)
 // });
 
 const reloadPlayer = () => {
-  let source = goLiveStore.selectedShow.mist_stream_wildcard.name
-  let sourceUrl = videoAuxPlayerStore.mistServerUri + 'hls/' + source + '/index.m3u8'
+  let source = null
+  if(goLiveStore?.selectedShow?.mist_stream_wildcard?.name) {
+    source = goLiveStore?.selectedShow?.mist_stream_wildcard?.name
+    goLiveStore.fetchStreamInfo(goLiveStore?.selectedShow?.mist_stream_wildcard?.name)
+  } else if (goLiveStore?.episode?.mist_stream_wildcard?.name) {
+    source = goLiveStore?.episode?.mist_stream_wildcard?.name
+    goLiveStore.fetchStreamInfo(goLiveStore?.episode?.mist_stream_wildcard?.name)
+  }
+  let sourceUrl = videoPlayerStore.mistServerUri + 'hls/' + source + '/index.m3u8'
   console.log('source url: ' + sourceUrl)
   let sourceType = 'application/vnd.apple.mpegurl'
   let videoJs = videojs('aux-player')
   videoJs.src({'src': sourceUrl, 'type': sourceType})
   // videoAuxPlayerStore.loadNewLiveSource(source, sourceType)
   console.log('reload player')
-  goLiveStore.fetchStreamInfo(goLiveStore.selectedShow.mist_stream_wildcard.name)
 }
+
+
 
 onMounted(() => {
   // videoSrc = goLiveStore.selectedShow.mist_stream_wildcard.name
@@ -249,36 +368,54 @@ onMounted(() => {
   // videoJsAux.ready(() => {
   //
   // })
-  startCountdown();
+  startCountdown()
+
   console.log('onPlayerReady AUX')
   // fetchServerInfo()
 
 })
 
 // Initial countdown time in seconds (5 minutes * 60 seconds)
-const countdownTime = 5 * 60;
+const countdownTime = 5 * 60
 // Reactive state for the countdown
-const countdown = ref(countdownTime);
+const countdown = ref(countdownTime)
 
 // Computed property to format the countdown as mm:ss
 const formattedCountdown = computed(() => {
-  const minutes = Math.floor(countdown.value / 60);
-  const seconds = countdown.value % 60;
-  return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-});
+  const minutes = Math.floor(countdown.value / 60)
+  const seconds = countdown.value % 60
+  return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+})
 
-// Function to start the countdown
+// Function to start the countdown - temporary for demo purposes.
 const startCountdown = () => {
   const interval = setInterval(() => {
-    countdown.value--;
+    countdown.value--
 
     if (countdown.value < 0) {
-      clearInterval(interval); // Stop the interval
-      countdown.value = countdownTime; // Reset countdown
-      startCountdown(); // Restart the countdown
+      clearInterval(interval) // Stop the interval
+      countdown.value = countdownTime // Reset countdown
+      startCountdown() // Restart the countdown
     }
-  }, 1000);
-};
+  }, 1000)
+}
+
+const liveOrRecordingGrayButtonClass = computed(() => {
+  if (goLiveStore.isLive || goLiveStore.isRecording) {
+    return 'bg-gray-200 hover:bg-gray-400'
+  } else {
+    return ''
+  }
+})
+
+const liveOrRecordingVideoBorderClass = computed(() => {
+  if (goLiveStore.isLive || goLiveStore.isRecording) {
+    return 'border-4 border-red-700'
+  } else {
+    return ''
+  }
+})
+
 //
 // // Assuming props.show.mist_stream_wildcard.name exists and is reactive
 // const playerTargetId = ref('');
@@ -439,12 +576,13 @@ const startCountdown = () => {
 // //   }
 // // };
 //
-// // onBeforeUnmount(() => {
-// //   // Example cleanup logic; adjust based on your player's API
-// //   if (window.mistplayers && window.mistplayers[playerTargetId.value]) {
-// //     window.mistplayers[playerTargetId.value].destroy(); // Hypothetical destroy method
-// //   }
-// // });
+onBeforeUnmount(() => {
+  // goLiveStore.reset()
+  // Example cleanup logic; adjust based on your player's API
+  // if (window.mistplayers && window.mistplayers[playerTargetId.value]) {
+  //   window.mistplayers[playerTargetId.value].destroy(); // Hypothetical destroy method
+  // }
+});
 //
 // onBeforeUnmount(() => {
 //   if (videoPlayer && typeof videoPlayer.dispose === 'function') {
@@ -456,3 +594,18 @@ const startCountdown = () => {
 // const timeAgo = useTimeAgo(new Date(2023, 10, 5))
 // const timeAgo = useTimeAgo(props.episode.scheduledDateTime)
 </script>
+
+<style scoped>
+.copied-message-fade {
+  animation: fadeOut 2s forwards;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+</style>

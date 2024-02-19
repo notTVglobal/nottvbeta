@@ -19,7 +19,8 @@
           :releaseDateTime="releaseDateTime"
       />
 
-      <GoLive :episode="episode" :scheduledDateTime="scheduledDateTime"/>
+<!--      <GoLive :episode="episode" :scheduledDateTime="scheduledDateTime"/>-->
+      <GoLive v-if="goLiveStore.displayEpisodeGoLiveComponent" />
 
       <EpisodeVideo :episode="episode"/>
 
@@ -39,10 +40,11 @@
 </template>
 
 <script setup>
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, watch } from 'vue'
 import { useTimeAgo } from '@vueuse/core'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import { useGoLiveStore } from '@/Stores/GoLiveStore'
 import { useShowStore } from '@/Stores/ShowStore'
 import { useTeamStore } from '@/Stores/TeamStore'
 
@@ -52,7 +54,8 @@ import ShowEpisodeManageNoticeModals from '@/Components/Pages/ShowEpisodes/Eleme
 import ShowEpisodeManageHeader from '@/Components/Pages/ShowEpisodes/Layout/ManageShowEpisodeHeader'
 import EpisodeRundown from '@/Components/Pages/ShowEpisodes/Elements/ManageShowEpisodeRundown'
 import EpisodeNotes from '@/Components/Pages/ShowEpisodes/Elements/ManageShowEpisodeNotes'
-import GoLive from '@/Components/Pages/ShowEpisodes/Elements/ManageShowEpisodeGoLive'
+// import GoLive from '@/Components/Pages/ShowEpisodes/Elements/ManageShowEpisodeGoLive'
+import GoLive from '@/Components/Global/GoLive/GoLive'
 import EpisodeVideo from '@/Components/Pages/ShowEpisodes/Elements/EpisodeVideo'
 import EpisodeFooter from '@/Components/Pages/ShowEpisodes/Layout/EpisodeFooter'
 import Message from '@/Components/Global/Modals/Messages'
@@ -60,6 +63,7 @@ import Message from '@/Components/Global/Modals/Messages'
 usePageSetup('showEpisodesManage')
 
 const appSettingStore = useAppSettingStore()
+const goLiveStore = useGoLiveStore()
 const showStore = useShowStore()
 const teamStore = useTeamStore()
 
@@ -72,6 +76,8 @@ let props = defineProps({
   scheduledDateTime: String,
   can: Object,
 })
+
+goLiveStore.updateEpisode(props.episode);
 
 // const timeAgo = useTimeAgo(new Date(2023, 10, 5))
 const timeAgo = useTimeAgo(props.scheduledDateTime)

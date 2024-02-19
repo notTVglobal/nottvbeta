@@ -35,5 +35,6 @@ return [
         'username' => env('MISTSERVER_USERNAME', 'admin'),
         'password' => env('MISTSERVER_PASSWORD', 'secret'),
         'host' => env('MISTSERVER_HOST', 'http://localhost:4242/api'),
+        'internal_ip' => env('MISTSERVER_INTERNAL_IP', '0.0.0.0'),
     ],
 ];
