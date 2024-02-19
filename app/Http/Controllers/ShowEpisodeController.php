@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use App\Rules\UniqueEpisodeName;
@@ -72,11 +73,11 @@ class ShowEpisodeController extends Controller {
 ///
 
   public function store(HttpRequest $request) {
-    $request->validate([
+    $validator = Validator::make($request->all(), [
         'name'                => [
             'required',
             'max:255',
-            'accepted_if:show_id,',
+          // Assuming 'accepted_if:show_id,' is a placeholder for a specific rule
             'distinct:ignore_case',
             new UniqueEpisodeName($request->show_id)
         ],
@@ -84,16 +85,33 @@ class ShowEpisodeController extends Controller {
         'user_id'             => 'required',
         'show_id'             => 'required',
         'creative_commons_id' => 'required|integer|exists:creative_commons,id',
-        'copyrightYear'       => ['integer', 'min:1900', 'max:' . date('Y')],
+      // The 'copyrightYear' validation is conditionally added below
         'episode_number'      => 'nullable|string|min:1|max:10',
         'notes'               => 'nullable|string',
         'video_url'           => 'nullable|ends_with:.mp4',
-//        'youtube_url'         => 'active_url',
+      // 'youtube_url'         => 'active_url', // Commented out
         'video_embed_code'    => 'nullable|string',
     ], [
-        'copyrightYear.integer'        => 'Please choose a copyright year',
-        'creative_commons_id.required' => 'Please choose a Creative Commons / Copyright',
-    ]);;
+      // Custom error messages
+        'name.required'                => 'The name is required.',
+        'description.required'         => 'A description is required.',
+        'user_id.required'             => 'A user ID is required.',
+        'show_id.required'             => 'A show ID is required.',
+        'creative_commons_id.required' => 'Please choose a Creative Commons / Copyright.',
+        'creative_commons_id.integer'  => 'The Creative Commons ID must be an integer.',
+        'creative_commons_id.exists'   => 'The selected Creative Commons ID is invalid.',
+        'copyrightYear.integer'        => 'The copyright year must be an integer.',
+        'copyrightYear.required'       => 'The copyright year is required when not Public Domain.',
+    ]);
+
+    // Conditional validation for copyrightYear
+    $validator->sometimes('copyrightYear', 'required|integer|min:1900|max:' . date('Y'), function ($input) {
+      return $input->creative_commons_id != 8;
+    });
+
+    if ($validator->fails()) {
+      return redirect()->back()->withErrors($validator)->withInput();
+    }
 
     // MOVE THIS TO A JOB... SEND THE showEpisode SLUG with it.
     // get the *.mp4 video url from embed code

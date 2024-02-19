@@ -1,13 +1,15 @@
-import { defineStore } from "pinia";
+import { defineStore } from 'pinia'
 
 const initialState = () => ({
     preSelectedShowId: null,
     selectedShowId: null,
-    selectedShow: null,
+    // selectedShow: null, this uses the getter... set it up in the component as a computed property
     shows: [], // Assuming you might want to store shows here too
     streamKey: '', // Optional: Store the generated stream key if needed
     isLive: false,
+    isRecording: false,
     streamInfo: null,
+    rtmpUri: null,
 })
 
 export const useGoLiveStore = defineStore('goLiveStore', {
@@ -59,15 +61,33 @@ export const useGoLiveStore = defineStore('goLiveStore', {
         stopLive() {
             this.isLive = false
         },
+        startRecording() {
+            this.isRecording = true
+        },
+        stopRecording() {
+            this.isRecording = false
+        },
         async fetchStreamInfo(streamName) {
             const encodedStreamName = encodeURIComponent(streamName);
             try {
-                const response = await fetch(`http://mist.nottv.io:8080/json_${encodedStreamName}.js`); // Replace with your URL
+                // const response = await fetch(`http://mist.nottv.io:8080/json_${encodedStreamName}.js`); // Replace with your URL
+                const response = await fetch(`/fetch-stream-info/${streamName}`); // Replace with your URL
                 if (!response.ok) throw new Error('Failed to fetch');
-                const data = await response.json();
-                this.streamInfo = data; // Store the data in serverInfo
+                this.streamInfo = await response.json(); // Store the data in serverInfo
             } catch (error) {
                 console.error('Error fetching server info:', error);
+            }
+        },
+        async fetchRtmpUri() {
+            try {
+                const response = await fetch(`/fetch-rtmp-uri`);
+                if (!response.ok) throw new Error('Failed to fetch');
+
+                // Parse the plain text body of the response
+                // Store the RTMP URI string in a Vue data property or similar
+                this.rtmpUri = await response.text();
+            } catch (error) {
+                console.error('Error fetching RTMP URI:', error);
             }
         },
         clearStreamInfo() {

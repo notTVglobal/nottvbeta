@@ -17,7 +17,8 @@
 
         </div>
       </div>
-      <div v-else class="text-xs text-gray-500 uppercase tracking-widest pr-2">No Audio Signal</div>
+      <div v-if="audioStore.audioLevel < 1 && !videoPlayerStore.muted" class="text-xs text-gray-500 uppercase tracking-widest pr-2">No Audio Signal</div>
+      <div v-if="videoPlayerStore.muted" class="text-xs text-gray-500 uppercase tracking-widest pr-2">Audio Muted</div>
     </div>
 </div>
 
@@ -28,8 +29,10 @@
 // import videojs from 'video.js'
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useAudioStore } from '@/Stores/AudioStore'
+import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
 
 const audioStore = useAudioStore()
+const videoPlayerStore = useVideoPlayerStore()
 
 
 </script>

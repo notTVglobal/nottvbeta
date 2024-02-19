@@ -6,6 +6,7 @@ use App\Models\Show;
 use App\Models\ShowEpisode;
 use App\Models\TeamMember;
 use App\Models\User;
+use App\Services\MistServerService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -48,6 +49,7 @@ class GoLiveController extends Controller
   public function listEpisodesForShow($showId)
   {
     // Validate user has access to the show
+    // this should get updated to allow the team members... or whoever is given access for this.
     $show = Show::where('id', $showId)->where('user_id', Auth::id())->firstOrFail();
 
     // episodes must belong to a new or active or creator only show... and episode must be scheduled
@@ -79,8 +81,12 @@ class GoLiveController extends Controller
    */
   public function getStreamKeyForShow($showId)
   {
-
-
+    $streamDetails = [
+        'name' => 'show',
+        'source' => 'push://',
+    ];
+    $mistServerService = app(MistServerService::class);
+    $response = $mistServerService->addOrUpdateStream('show', $streamDetails);
     try {
       $mistStreamWildcard = Show::generateStreamKey($showId);
       // Success response
@@ -101,12 +107,12 @@ class GoLiveController extends Controller
 
 
     // Query the Show model by slug
-    $show = Show::where('id', $showId)->firstOrFail();
+//    $show = Show::where('id', $showId)->firstOrFail();
 
     // Assuming you store or generate a stream key in your Show model
-    $streamKey = $show->stream_key;
+//    $streamKey = $show->stream_key;
 
-    return response()->json(['stream_key' => $streamKey]);
+//    return response()->json(['stream_key' => $streamKey]);
   }
 
   /**

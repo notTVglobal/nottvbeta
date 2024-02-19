@@ -167,7 +167,7 @@
             >
               MIST SERVER URI
             </label>
-            <div class="text-xs mb-2">This is the primary mist server. Right now we don't have a load balancer.</div>
+            <div class="text-xs mb-2">This is the primary mist server. Right now we don't have a load balancer. This URI is used for playback. The .env holds the settings for connecting to the MistServer API.</div>
 
             <div class="flex flex-row">
               <input v-model="form.mist_server_uri"
@@ -177,9 +177,31 @@
                      id="mist_server_uri"
               >
             </div>
-            <div class="text-xs mb-2">e.g., https://mist.nottv.io</div>
+            <div class="text-xs mb-2">e.g., https://mist.nottv.io/</div>
 
             <div v-if="form.errors.mist_server_uri" v-text="form.errors.mist_server_uri"
+                 class="text-xs text-red-600 mt-1"></div>
+          </div>
+
+          <div class="mb-6">
+            <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"
+                   for="mist_server_api_url"
+            >
+              MIST SERVER RTMP URI
+            </label>
+            <div class="text-xs mb-2">This is the address users will push their streams to.</div>
+
+            <div class="flex flex-row">
+              <input v-model="form.mist_server_rtmp_uri"
+                     class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                     type="text"
+                     name="mist_server_rtmp_uri"
+                     id="mist_server_rtmp_uri"
+              >
+            </div>
+            <div class="text-xs mb-2">e.g., rtmp://stream.not.tv/ or rtmp://localhost/</div>
+
+            <div v-if="form.errors.mist_server_rtmp_uri" v-text="form.errors.mist_server_rtmp_uri"
                  class="text-xs text-red-600 mt-1"></div>
           </div>
 
@@ -237,7 +259,7 @@
             <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"
                    for="cloud_folder"
             >
-              VIDEO NAME
+              FIRST PLAY VIDEO NAME
             </label>
 
             <div class="flex flex-row">
@@ -442,6 +464,7 @@ let props = defineProps({
   first_play_channel_id: String,
   // mist_server_ip: String,
   mist_server_uri: String,
+  mist_server_rtmp_uri: String,
   // mist_server_api_url: String,
   // mist_server_username: String,
   // mist_server_password: String,
@@ -460,6 +483,7 @@ let form = useForm({
   first_play_channel_id: props.first_play_channel_id,
   // mist_server_ip: props.mist_server_ip,
   mist_server_uri: props.mist_server_uri,
+  mist_server_rtmp_uri: props.mist_server_rtmp_uri,
   // mist_server_api_url: props.mist_server_api_url,
   // mist_server_username: props.mist_server_username,
   // mist_server_password: props.mist_server_password,
@@ -467,7 +491,7 @@ let form = useForm({
 })
 
 const countries = ref([]);
-const topDiv = document.getElementById("topDiv");
+
 // const topDiv = document.getElementById("topDiv")
 
 onMounted(() => {
@@ -476,17 +500,20 @@ onMounted(() => {
 
 nextTick(() => {
   if (topDiv) {
+    const topDiv = document.getElementById("topDiv");
     topDiv.scrollIntoView();
   }
 });
 
 let submit = () => {
   form.patch(route('admin.settings'));
+  const topDiv = document.getElementById("topDiv");
   topDiv.scrollIntoView()
 };
 
 let clearFirstPlayCacheData = () => {
   Inertia.post(route('admin.clear-first-play-data-cache'));
+  const topDiv = document.getElementById("topDiv");
   topDiv.scrollIntoView()
 }
 

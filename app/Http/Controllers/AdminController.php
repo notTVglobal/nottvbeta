@@ -66,6 +66,7 @@ class AdminController extends Controller
             'first_play_channel_id' => $settings->first_play_channel_id,
 //            'mist_server_ip' => $settings->mist_server_ip,
             'mist_server_uri' => $settings->mist_server_uri,
+            'mist_server_rtmp_uri' => $settings->mist_server_rtmp_uri,
 //            'mist_server_api_url' => $settings->mist_server_api_url,
 //            'mist_server_username' => $settings->mist_server_username,
 //            'mist_server_password' => $decryptedPassword ?? null,
@@ -85,6 +86,7 @@ class AdminController extends Controller
             'first_play_channel_id' => 'nullable|integer',
 //            'mist_server_ip' => 'nullable|string',
             'mist_server_uri' => 'nullable|url',
+            'mist_server_rtmp_uri' => 'nullable|string',
 //            'mist_server_api_url' => 'nullable|url',
 //            'mist_server_username' => 'nullable|string',
 //            'mist_server_password' => 'nullable|string',
@@ -106,6 +108,7 @@ class AdminController extends Controller
         $settings->first_play_channel_id = $request->first_play_channel_id;
 //        $settings->mist_server_ip = $request->mist_server_ip;
         $settings->mist_server_uri = rtrim($request->mist_server_uri, '/') . '/';
+        $settings->mist_server_rtmp_uri = rtrim($request->mist_server_rtmp_uri, '/') . '/';
 //        $settings->mist_server_api_url = $request->mist_server_api_url;
 //        $settings->mist_server_username = $request->mist_server_username;
 //        $settings->mist_server_password = $encryptedPassword ?? null;
@@ -343,7 +346,8 @@ class AdminController extends Controller
         return Inertia::render('Admin/Shows', [
             'shows' => Show::with('team', 'user', 'image', 'showEpisodes', 'status')
                 ->when(Request::input('search'), function ($query, $search) {
-                    $query->where('name', 'like', "%{$search}%");
+                    $query->where('name', 'like', "%{$search}%")
+                        ->orWhere('ulid', 'like', "%" . $search . "%");;
                 })
                 ->latest()
                 ->paginate(10, ['*'], 'shows')

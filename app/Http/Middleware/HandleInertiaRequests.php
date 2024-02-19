@@ -116,6 +116,7 @@ class HandleInertiaRequests extends Middleware {
             'feedback' => fn() => $request->session()->get('feedback'),
         ],
         'firstPlay' => fn() => $firstPlayData,
+        'appUrl' => fn() => config('app.url'),
     ]);
   }
 

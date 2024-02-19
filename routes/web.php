@@ -695,6 +695,11 @@ Route::middleware([
     })->can('viewCreator', 'App\Models\User')
         ->name('training');
 
+  Route::get('/training/go-live-using-zoom', function () {
+    return Inertia::render('Training/GoLiveUsingZoom');
+  })->can('viewCreator', 'App\Models\User')
+      ->name('training.goLiveUsingZoom');
+
 // Shows
 ///////////
     // Shows resource
@@ -901,6 +906,9 @@ Route::middleware([
 Route::get('/golive', [GoLiveController::class, 'index'])
     ->can('goLive', Creator::class)
     ->name('goLive.index');
+
+// Get RTMP Uri
+  Route::get('/fetch-rtmp-uri', [AppSettingController::class, 'getRtmpUri']);
 
 // List available shows
   Route::get('/go-live/shows', [GoLiveController::class, 'listAvailableShows']);

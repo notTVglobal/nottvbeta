@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Jobs\AddOrUpdateMistStreamJob;
 use App\Jobs\AddMistStreamWildcardToServer;
-use App\Jobs\CheckOrAddMistStreamToServer;
 use App\Models\CreativeCommons;
 use App\Models\Image;
 use App\Models\MistStream;
@@ -365,7 +364,18 @@ class ShowsController extends Controller {
 //      CheckOrAddMistStreamToServer::withChain([
 //          new AddMistStreamWildcardToServer($mistStreamWildcard)
 //      ])->dispatch($mistStream);
-      CheckOrAddMistStreamToServer::dispatch($mistStream);
+
+      // Prepare data for add Mist Stream Job
+      // Prepare $mistStreamData with necessary details
+      $mistStreamData = [
+          'name' => $mistStreamWildcard['name'], // e.g., "live_stream+myEvent"
+          'source' => 'push://', // Define the source, e.g., 'push://'
+        // Add any other necessary details for the mist stream here
+      ];
+      // $originalName is null for new streams, or set it to the current name if updating an existing stream
+      $originalName = null; // This is for a new stream creation, or set appropriately for updates
+
+      AddOrUpdateMistStreamJob::dispatch($mistStreamData, $originalName);
 
       // Return a successful response
       return redirect()->route('shows.manage', $show)->with('success', 'Show Created Successfully');

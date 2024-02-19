@@ -7,28 +7,52 @@
     </div>
     <div class="shadow overflow-hidden border-2 border-red-600 rounded p-2 md:p-6"
          :class="[ goLiveStore.isLive ? 'bg-gray-100' : 'bg-red-100' ]">
+
+
       <div class="flex flex-row flex-wrap-reverse w-full justify-between">
         <div>
+          <div class="mb-2">
+            <button @click="appSettingStore.btnRedirect('/training/go-live-using-zoom')"
+                    class="btn bg-blue-500 hover:bg-blue-700 rounded-lg text-white">How To Stream From Zoom
+            </button>
+
+          </div>
           <div>RTMP full url: <span
-              class="font-bold">rtmp://stream.not.tv/live/{{
+              class="font-bold">{{ goLiveStore.rtmpUri }}live/{{
               goLiveStore.selectedShow.mist_stream_wildcard.name
             }}</span>
           </div>
-          <div>RTMP url: <span class="font-bold">rtmp://stream.not.tv/live/</span></div>
+          <div>RTMP url: <span class="font-bold">{{ goLiveStore.rtmpUri }}live/</span></div>
           <div>RTMP stream key: <span class="font-bold">{{ goLiveStore.selectedShow.mist_stream_wildcard.name }}</span>
           </div>
         </div>
-        <div class="">
-          <button v-if="!goLiveStore.isLive" @click="goLiveStore.goLive"
-                  class="btn text-white bg-green-500 hover:bg-green-700 uppercase"
-          >Go Live Now
-          </button>
-          <button v-else @click="goLiveStore.stopLive" class="btn text-white bg-red-700 hover:bg-red-900 uppercase"
-          >End Live
-          </button>
-          <div v-if="!goLiveStore.isLive" class="text-xs text-green-500 font-semibold tracking-wider">Premium Creator Service</div>
+        <div class="flex flex-col">
+          <div class="">
+            <button v-if="!goLiveStore.isRecording" @click="goLiveStore.startRecording"
+                    class="btn text-white bg-green-500 hover:bg-green-700 uppercase"
+            >Start Recording
+            </button>
+            <button v-else @click="goLiveStore.stopRecording" class="btn text-white bg-red-700 hover:bg-red-900 uppercase"
+            >Stop Recording
+            </button>
+            <div v-if="!goLiveStore.isRecording" class="text-xs text-green-500 font-semibold tracking-wider">Premium Creator
+              Service
+            </div>
+          </div>
+          <div class="my-4">
+            <button v-if="!goLiveStore.isLive" @click="goLiveStore.goLive"
+                    class="btn text-white bg-green-500 hover:bg-green-700 uppercase"
+            >Go Live Now
+            </button>
+            <button v-else @click="goLiveStore.stopLive" class="btn text-white bg-red-700 hover:bg-red-900 uppercase"
+            >End Live
+            </button>
+            <div v-if="!goLiveStore.isLive" class="text-xs text-green-500 font-semibold tracking-wider">Premium Creator
+              Service
+            </div>
+          </div>
           <div></div>
-          <div>Live will begin in... </div>
+          <div>Live will begin in...</div>
           <div>{{ formattedCountdown }}</div>
         </div>
       </div>
@@ -42,17 +66,18 @@
             <div class="px-10 h-fit w-fit">
               <button @click="reloadPlayer"
                       class="btn btn-xs w-full"
-                      :class="[ goLiveStore.isLive ? 'bg-gray-200 hover:bg-400' : '' ]"
+                      :class="liveOrRecordingGrayButtonClass"
               >Reload Player
               </button>
-              <div v-if="goLiveStore.isLive" class="w-full bg-red-700 text-white text-center uppercase font-bold">LIVE +
-                RECORDING
+              <div v-if="goLiveStore.isLive || goLiveStore.isRecording" class="w-full bg-red-700 text-white text-center uppercase font-bold">
+                <span v-if="goLiveStore.isLive">LIVE</span> <span v-if="goLiveStore.isLive && goLiveStore.isRecording"> + </span>
+                <span v-if="goLiveStore.isRecording">RECORDING</span>
               </div>
               <video-js-aux :id="`aux-player`"
                             :source="videoSource"
                             :sourceType="videoSourceType"
                             class=""
-                            :class="[ goLiveStore.isLive ? 'border-4 border-red-700' : '' ]"/>
+                            :class="liveOrRecordingVideoBorderClass"/>
 
 
               <!--            <div v-if="playerTargetId" class="mistvideo" :id="playerTargetId">-->
@@ -68,25 +93,25 @@
               <div class="mt-2">
                 <button v-if="!videoPlayerStore.muted"
                         class="btn"
-                        :class="[ goLiveStore.isLive ? 'bg-gray-200 hover:bg-400' : '' ]"
+                        :class="liveOrRecordingGrayButtonClass"
                         @click="videoPlayerStore.mute">Mute Main Player Audio
                 </button>
                 <button v-else
                         class="btn"
                         @click="videoPlayerStore.unMute"
-                        :class="[ goLiveStore.isLive ? 'bg-gray-200 hover:bg-400' : '' ]">Turn On Main Player Audio
+                        :class="liveOrRecordingGrayButtonClass">Turn On Main Player Audio
                 </button>
               </div>
               <div class="mt-2 ml-2">
                 <button v-if="!videoAuxPlayerStore.muted"
                         class="btn"
-                        :class="[ goLiveStore.isLive ? 'bg-gray-200 hover:bg-400' : '' ]"
+                        :class="liveOrRecordingGrayButtonClass"
                         @click="videoAuxPlayerStore.mute">Mute Live Stream
                   Video
                 </button>
                 <button v-else
                         class="btn"
-                        :class="[ goLiveStore.isLive ? 'bg-gray-200 hover:bg-400' : '' ]"
+                        :class="liveOrRecordingGrayButtonClass"
                         @click="videoAuxPlayerStore.unMute">Turn On Live Stream Audio
                 </button>
               </div>
@@ -177,15 +202,16 @@
 </template>
 
 <script setup>
-import { useTimeAgo } from '@vueuse/core'
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+// import { useTimeAgo } from '@vueuse/core'
+import { computed, onMounted, ref } from 'vue'
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
 import { useVideoAuxPlayerStore } from '@/Stores/VideoAuxPlayerStore'
 import { useGoLiveStore } from '@/Stores/GoLiveStore'
 import VideoJsAux from '@/Components/Global/VideoPlayer/VideoJs/VideoJsAux'
 import videojs from 'video.js'
-import RecursivePropertyList from '@/Components/Global/MistStreams/RecursivePropertyList'
 
+const appSettingStore = useAppSettingStore()
 const videoPlayerStore = useVideoPlayerStore()
 const videoAuxPlayerStore = useVideoAuxPlayerStore()
 const goLiveStore = useGoLiveStore()
@@ -195,7 +221,7 @@ let props = defineProps({
 })
 
 
-let videoSource = 'https://mist.nottv.io/hls/' + goLiveStore.selectedShow.mist_stream_wildcard.name
+let videoSource = videoPlayerStore.mistServerUri + 'hls/' + goLiveStore.selectedShow.mist_stream_wildcard.name
     + '/index.m3u8'
 let videoSourceType = 'application/x-mpegURL'
 
@@ -233,7 +259,7 @@ goLiveStore.fetchStreamInfo(goLiveStore.selectedShow.mist_stream_wildcard.name)
 
 const reloadPlayer = () => {
   let source = goLiveStore.selectedShow.mist_stream_wildcard.name
-  let sourceUrl = videoAuxPlayerStore.mistServerUri + 'hls/' + source + '/index.m3u8'
+  let sourceUrl = videoPlayerStore.mistServerUri + 'hls/' + source + '/index.m3u8'
   console.log('source url: ' + sourceUrl)
   let sourceType = 'application/vnd.apple.mpegurl'
   let videoJs = videojs('aux-player')
@@ -243,42 +269,62 @@ const reloadPlayer = () => {
   goLiveStore.fetchStreamInfo(goLiveStore.selectedShow.mist_stream_wildcard.name)
 }
 
+goLiveStore.fetchRtmpUri()
+
 onMounted(() => {
   // videoSrc = goLiveStore.selectedShow.mist_stream_wildcard.name
   // videoJsAux.src({'src': videoSrc, 'type': 'application/vnd.apple.mpegurl'});
   // videoJsAux.ready(() => {
   //
   // })
-  startCountdown();
+  startCountdown()
+
   console.log('onPlayerReady AUX')
   // fetchServerInfo()
 
 })
 
 // Initial countdown time in seconds (5 minutes * 60 seconds)
-const countdownTime = 5 * 60;
+const countdownTime = 5 * 60
 // Reactive state for the countdown
-const countdown = ref(countdownTime);
+const countdown = ref(countdownTime)
 
 // Computed property to format the countdown as mm:ss
 const formattedCountdown = computed(() => {
-  const minutes = Math.floor(countdown.value / 60);
-  const seconds = countdown.value % 60;
-  return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-});
+  const minutes = Math.floor(countdown.value / 60)
+  const seconds = countdown.value % 60
+  return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+})
 
 // Function to start the countdown
 const startCountdown = () => {
   const interval = setInterval(() => {
-    countdown.value--;
+    countdown.value--
 
     if (countdown.value < 0) {
-      clearInterval(interval); // Stop the interval
-      countdown.value = countdownTime; // Reset countdown
-      startCountdown(); // Restart the countdown
+      clearInterval(interval) // Stop the interval
+      countdown.value = countdownTime // Reset countdown
+      startCountdown() // Restart the countdown
     }
-  }, 1000);
-};
+  }, 1000)
+}
+
+const liveOrRecordingGrayButtonClass = computed(() => {
+  if (goLiveStore.isLive || goLiveStore.isRecording) {
+    return 'bg-gray-200 hover:bg-gray-400'
+  } else {
+    return ''
+  }
+})
+
+const liveOrRecordingVideoBorderClass = computed(() => {
+  if (goLiveStore.isLive || goLiveStore.isRecording) {
+    return 'border-4 border-red-700'
+  } else {
+    return ''
+  }
+})
+
 //
 // // Assuming props.show.mist_stream_wildcard.name exists and is reactive
 // const playerTargetId = ref('');

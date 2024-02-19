@@ -26,16 +26,16 @@ class AddOrUpdateMistStreamJob implements ShouldQueue {
   public int $tries = 3;
   public int $backoff = 2;
 
-  private array $streamData;
-  private string $originalName;
+  private array $mistStreamData;
+  private ?string $originalName;
 
   /**
    * Create a new job instance.
    *
    * @return void
    */
-  public function __construct(array $streamData, string $originalName) {
-    $this->streamData = $streamData;
+  public function __construct(array $mistStreamData, ?string $originalName) {
+    $this->mistStreamData = $mistStreamData;
     $this->originalName = $originalName;
   }
 
@@ -47,7 +47,7 @@ class AddOrUpdateMistStreamJob implements ShouldQueue {
   public function handle(MistServerService $mistServerService) {
 
     // Determine the correct name to use
-    $streamNameForService = $this->originalName ?? $this->streamData['name'];
+    $streamNameForService = $this->originalName ?? $this->mistStreamData['name'];
 
     // Find the stream by its original name or another stable identifier
 //    $stream = MistStream::firstWhere('name', $this->originalName)->firstOrNew([
@@ -58,7 +58,7 @@ class AddOrUpdateMistStreamJob implements ShouldQueue {
     // Use where() to get a query builder instance, then use firstOrNew to find or create the model
     $stream = MistStream::where('name', $streamNameForService)->firstOrNew();
     // Now update or set attributes directly
-    $stream->fill(Arr::except($this->streamData, ['metadata']));
+    $stream->fill(Arr::except($this->mistStreamData, ['metadata']));
     // Handle 'metadata' if it's part of your streamData
 //    if (isset($this->streamData['metadata'])) {
 //      $metadata = collect($this->streamData['metadata'])->mapWithKeys(function ($item) {
@@ -67,7 +67,7 @@ class AddOrUpdateMistStreamJob implements ShouldQueue {
 //      $stream->metadata = $metadata;
 //    }
     // Transform 'metadata' from the submitted array of key-value pairs to an associative array
-    $metadata = collect($this->streamData['metadata'] ?? [])->mapWithKeys(function ($item) {
+    $metadata = collect($this->mistStreamData['metadata'] ?? [])->mapWithKeys(function ($item) {
       return [$item['key'] => $item['value']];
     })->toArray();
 
