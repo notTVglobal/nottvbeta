@@ -82,17 +82,20 @@
               </div>
               <div v-else class="pl-4 mt-4">
                 <p class="text-lg font-semibold text-blue-600"><strong>Streaming URL:</strong> <span
-                    class="text-blue-800">{{ goLiveStore.rtmpUri }}live</span></p>
+                    class="text-blue-800">
+                  {{rtmpUri}}</span>
+                  &nbsp;<button @click="copyRtmpUri"><font-awesome-icon icon="fa-clipboard" class="text-blue-500 hover:text-blue-700 hover:cursor-pointer"/></button>
+                  <span v-if="showCopiedRtmpUri" class="ml-1 copied-message" style="transition: opacity 0.5s; opacity: 1;">Copied!</span>
+                </p>
                 <p class="text-lg font-semibold text-green-600"><strong>Streaming Key:</strong> <span
-                    class="text-green-800">
-                  <span v-if="!goLiveStore.isEpisode">{{ selectedShow?.mist_stream_wildcard?.name }}</span>
-                  <span v-if="goLiveStore.isEpisode">{{ goLiveStore?.episode?.mist_stream_wildcard?.name }}</span>
-
-
-                </span></p>
-                <p class="text-lg font-semibold text-red-600"><strong>Live Streaming Page URL:</strong>
-                  <span v-if="!goLiveStore.isEpisode">{{ $page.props.appUrl }}/shows/{{ selectedShow?.slug }}</span>
-                  <span v-if="goLiveStore.isEpisode">{{ $page.props.appUrl }}/shows/{{ selectedShow?.slug }}/episode/{{ goLiveStore?.episode?.slug }}</span>
+                    class="text-green-800">{{streamKey}}</span>
+                  &nbsp;<button @click="copyStreamKey"><font-awesome-icon icon="fa-clipboard" class="text-blue-500 hover:text-blue-700 hover:cursor-pointer"/></button>
+                  <span v-if="showCopiedStreamKey" class="ml-1 copied-message" style="transition: opacity 0.5s; opacity: 1;">Copied!</span>
+                </p>
+                <p class="text-lg font-semibold text-red-600"><strong>Live Streaming Page URL: </strong>
+                  {{ fullUrl }}
+                  &nbsp;<button @click="copyFullUrl"><font-awesome-icon icon="fa-clipboard" class="text-blue-500 hover:text-blue-700 hover:cursor-pointer"/></button>
+                  <span v-if="showCopiedFullUrl" class="ml-1 copied-message" style="transition: opacity 0.5s; opacity: 1;">Copied!</span>
                 </p>
 
               </div>
@@ -113,12 +116,15 @@
 </template>
 
 <script setup>
+import { usePage } from '@inertiajs/inertia-vue3'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useGoLiveStore } from '@/Stores/GoLiveStore'
 import Message from '@/Components/Global/Modals/Messages'
-import { computed, ref } from 'vue'
-import BackButton from '@/Components/Global/Buttons/BackButton.vue'
+import { computed, ref, watchEffect } from 'vue'
+import BackButton from '@/Components/Global/Buttons/BackButton'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { useClipboard } from '@vueuse/core'
 
 usePageSetup('training.streamToNotTV')
 
@@ -126,9 +132,21 @@ const appSettingStore = useAppSettingStore()
 const goLiveStore = useGoLiveStore()
 let selectedShow = ref(null)
 
+const page = usePage();
+
 let props = defineProps({
   can: Object,
 })
+
+const showCopiedFullUrl = ref(false)
+const showCopiedRtmpUri = ref(false)
+const showCopiedStreamKey = ref(false)
+const { copy } = useClipboard()
+
+const fullUrl = ref('');
+const rtmpUri = ref('');
+const streamKey = ref('');
+const appUrl = page.props.value.appUrl
 
 const setSelectedShow = async () => {
   await goLiveStore.fetchShows().then (
@@ -137,5 +155,57 @@ const setSelectedShow = async () => {
 }
 setSelectedShow()
 
+// Reactively update URLs when the store updates
+watchEffect(() => {
+  if (goLiveStore.rtmpUri) {
+    rtmpUri.value = goLiveStore.rtmpUri + 'live/';
+    // Check if it's an episode or a selected show and update accordingly
+    if (goLiveStore.isEpisode && goLiveStore.episode?.mist_stream_wildcard?.name) {
+      streamKey.value = goLiveStore.episode.mist_stream_wildcard.name;
+    } else if (!goLiveStore.isEpisode && goLiveStore.selectedShow?.mist_stream_wildcard?.name) {
+      streamKey.value = goLiveStore.selectedShow.mist_stream_wildcard.name;
+    }
+    if (goLiveStore.isEpisode && goLiveStore.episode?.slug) {
+      fullUrl.value = `${appUrl}/shows/${selectedShow.value?.slug}/episode/${goLiveStore.episode.slug}`;
+    } else if (!goLiveStore.isEpisode && selectedShow.value?.slug) {
+      fullUrl.value = `${appUrl}/shows/${selectedShow.value?.slug}`;
+    }
+  }
+});
+
+// Function to handle the copy action and display the "copied" message for each type
+const copyFullUrl = () => {
+  copy(fullUrl.value);
+  showCopiedFullUrl.value = true;
+  setTimeout(() => showCopiedFullUrl.value = false, 1000);
+};
+
+const copyRtmpUri = () => {
+  copy(rtmpUri.value);
+  showCopiedRtmpUri.value = true;
+  setTimeout(() => showCopiedRtmpUri.value = false, 1000);
+};
+
+const copyStreamKey = () => {
+  copy(streamKey.value);
+  showCopiedStreamKey.value = true;
+  setTimeout(() => showCopiedStreamKey.value = false, 1000);
+};
+
 
 </script>
+
+<style scoped>
+.copied-message-fade {
+  animation: fadeOut 2s forwards;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+</style>

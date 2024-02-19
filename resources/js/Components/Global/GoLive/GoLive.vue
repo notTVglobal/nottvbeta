@@ -17,21 +17,17 @@
             </button>
 
           </div>
-          <div>RTMP full url: <span
-              v-if="!goLiveStore.isEpisode"
-              class="font-bold">{{ goLiveStore.rtmpUri }}live/{{
-              goLiveStore?.selectedShow?.mist_stream_wildcard.name }}
-          </span><span
-                v-if="goLiveStore.isEpisode"
-                class="font-bold">{{ goLiveStore.rtmpUri }}live/{{
-                goLiveStore?.episode?.mist_stream_wildcard.name }}
-          </span>
+          <div>RTMP full url: <span class="font-bold">{{rtmpUri}}{{streamKey}}</span>
+            &nbsp;<button @click="copyFullUrl"><font-awesome-icon icon="fa-clipboard" class="text-blue-500 hover:text-blue-700 hover:cursor-pointer"/></button>
+            <span v-if="showCopiedFullUrl" class="ml-1 copied-message" style="transition: opacity 0.5s; opacity: 1;">Copied!</span>
           </div>
-          <div>RTMP url: <span class="font-bold">{{ goLiveStore.rtmpUri }}live/</span></div>
-          <div>RTMP stream key: <span class="font-bold">
-                  <span v-if="!goLiveStore.isEpisode">{{ goLiveStore?.selectedShow?.mist_stream_wildcard?.name }}</span>
-                  <span v-if="goLiveStore.isEpisode">{{ goLiveStore?.episode?.mist_stream_wildcard?.name }}</span>
-          </span>
+          <div>RTMP url: <span class="font-bold">{{rtmpUri}}</span>
+            &nbsp;<button @click="copyRtmpUri"><font-awesome-icon icon="fa-clipboard" class="text-blue-500 hover:text-blue-700 hover:cursor-pointer"/></button>
+            <span v-if="showCopiedRtmpUri" class="ml-1 copied-message" style="transition: opacity 0.5s; opacity: 1;">Copied!</span>
+          </div>
+          <div>RTMP stream key: <span class="font-bold">{{streamKey}}</span>
+            &nbsp;<button @click="copyStreamKey"><font-awesome-icon icon="fa-clipboard" class="text-blue-500 hover:text-blue-700 hover:cursor-pointer"/></button>
+            <span v-if="showCopiedStreamKey" class="ml-1 copied-message" style="transition: opacity 0.5s; opacity: 1;">Copied!</span>
           </div>
         </div>
         <div class="flex flex-col">
@@ -218,13 +214,15 @@
 
 <script setup>
 // import { useTimeAgo } from '@vueuse/core'
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watchEffect } from 'vue'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
 import { useVideoAuxPlayerStore } from '@/Stores/VideoAuxPlayerStore'
 import { useGoLiveStore } from '@/Stores/GoLiveStore'
 import VideoJsAux from '@/Components/Global/VideoPlayer/VideoJs/VideoJsAux'
 import videojs from 'video.js'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { useClipboard } from '@vueuse/core'
 
 const appSettingStore = useAppSettingStore()
 const videoPlayerStore = useVideoPlayerStore()
@@ -235,13 +233,85 @@ let props = defineProps({
   // show: Object,
 })
 
+const showCopiedFullUrl = ref(false)
+const showCopiedRtmpUri = ref(false)
+const showCopiedStreamKey = ref(false)
+const { copy } = useClipboard()
+
+// const copyText = () => {
+//   copy('Text to be copied');
+//   showCopied.value = true;
+//   setTimeout(() => {
+//     showCopied.value = false;
+//   }, 2000); // Hide the message after 2 seconds
+// };
 
 let videoSource = videoPlayerStore.mistServerUri + 'hls/' + goLiveStore?.selectedShow?.mist_stream_wildcard.name
     + '/index.m3u8'
 let videoSourceType = 'application/vnd.apple.mpegURL'
 
 // Fetch server info on component mount
-goLiveStore.fetchStreamInfo(goLiveStore?.selectedShow?.mist_stream_wildcard.name)
+// goLiveStore.fetchStreamInfo(goLiveStore?.selectedShow?.mist_stream_wildcard.name)
+// goLiveStore.fetchRtmpUri()
+
+const fullUrl = ref('');
+const rtmpUri = ref('');
+const streamKey = ref('');
+
+// Initialize fetching of server information
+goLiveStore.fetchStreamInfo(goLiveStore?.selectedShow?.mist_stream_wildcard.name);
+goLiveStore.fetchRtmpUri();
+
+// Reactively update URLs when the store updates
+watchEffect(() => {
+  if (goLiveStore.rtmpUri) {
+    rtmpUri.value = goLiveStore.rtmpUri + 'live/';
+    // Check if it's an episode or a selected show and update accordingly
+    if (goLiveStore.isEpisode && goLiveStore.episode?.mist_stream_wildcard?.name) {
+      streamKey.value = goLiveStore.episode.mist_stream_wildcard.name;
+    } else if (!goLiveStore.isEpisode && goLiveStore.selectedShow?.mist_stream_wildcard?.name) {
+      streamKey.value = goLiveStore.selectedShow.mist_stream_wildcard.name;
+    }
+    fullUrl.value = `${rtmpUri.value}${streamKey.value}`;
+  }
+});
+
+// Function to handle the copy action and display the "copied" message for each type
+const copyFullUrl = () => {
+  copy(fullUrl.value);
+  showCopiedFullUrl.value = true;
+  setTimeout(() => showCopiedFullUrl.value = false, 1000);
+};
+
+const copyRtmpUri = () => {
+  copy(rtmpUri.value);
+  showCopiedRtmpUri.value = true;
+  setTimeout(() => showCopiedRtmpUri.value = false, 1000);
+};
+
+const copyStreamKey = () => {
+  copy(streamKey.value);
+  showCopiedStreamKey.value = true;
+  setTimeout(() => showCopiedStreamKey.value = false, 1000);
+};
+
+// if (goLiveStore.isEpisode) {
+//   fullUrl = rtmpUri.value + goLiveStore?.episode?.mist_stream_wildcard?.name
+//   streamKey = goLiveStore?.episode?.mist_stream_wildcard?.name
+// } else if (!goLiveStore.isEpisode) {
+//   fullUrl = rtmpUri.value + goLiveStore?.selectedShow?.mist_stream_wildcard?.name
+//   streamKey = goLiveStore?.selectedShow?.mist_stream_wildcard?.name
+// }
+
+// const copyFullUrl = () => copy(fullUrl);
+// const copyRtmpUri = () => copy(rtmpUri.value);
+// const copyStreamKey = () => copy(streamKey);
+//
+// watchEffect(() => {
+//   if (goLiveStore.rtmpUri) {
+//     rtmpUri.value = goLiveStore.rtmpUri + 'live/';
+//   }
+// });
 
 // Asynchronously fetch the JSON data
 // async function fetchServerInfo() {
@@ -290,7 +360,7 @@ const reloadPlayer = () => {
   console.log('reload player')
 }
 
-goLiveStore.fetchRtmpUri()
+
 
 onMounted(() => {
   // videoSrc = goLiveStore.selectedShow.mist_stream_wildcard.name
@@ -524,3 +594,18 @@ onBeforeUnmount(() => {
 // const timeAgo = useTimeAgo(new Date(2023, 10, 5))
 // const timeAgo = useTimeAgo(props.episode.scheduledDateTime)
 </script>
+
+<style scoped>
+.copied-message-fade {
+  animation: fadeOut 2s forwards;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+</style>

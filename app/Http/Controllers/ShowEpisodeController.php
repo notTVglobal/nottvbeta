@@ -299,7 +299,7 @@ class ShowEpisodeController extends Controller {
 
     // Assuming $teamId is available
     $teamId = $show->team_id;
-    
+
 //        $video = Video::where('show_episodes_id', $showEpisode->id)->first();
 
 
