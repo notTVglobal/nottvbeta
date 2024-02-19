@@ -18,12 +18,20 @@
 
           </div>
           <div>RTMP full url: <span
+              v-if="!goLiveStore.isEpisode"
               class="font-bold">{{ goLiveStore.rtmpUri }}live/{{
-              goLiveStore.selectedShow.mist_stream_wildcard.name
-            }}</span>
+              goLiveStore?.selectedShow?.mist_stream_wildcard.name }}
+          </span><span
+                v-if="goLiveStore.isEpisode"
+                class="font-bold">{{ goLiveStore.rtmpUri }}live/{{
+                goLiveStore?.episode?.mist_stream_wildcard.name }}
+          </span>
           </div>
           <div>RTMP url: <span class="font-bold">{{ goLiveStore.rtmpUri }}live/</span></div>
-          <div>RTMP stream key: <span class="font-bold">{{ goLiveStore.selectedShow.mist_stream_wildcard.name }}</span>
+          <div>RTMP stream key: <span class="font-bold">
+                  <span v-if="!goLiveStore.isEpisode">{{ goLiveStore?.selectedShow?.mist_stream_wildcard?.name }}</span>
+                  <span v-if="goLiveStore.isEpisode">{{ goLiveStore?.episode?.mist_stream_wildcard?.name }}</span>
+          </span>
           </div>
         </div>
         <div class="flex flex-col">
@@ -118,7 +126,7 @@
             </div>
           </div>
 
-          <div v-if="goLiveStore.streamInfo" class="w-fit" :key="goLiveStore.selectedShowId">
+          <div v-if="goLiveStore.streamInfo && !goLiveStore.streamInfo.error" class="w-fit" :key="goLiveStore.selectedShowId">
             <div>
               <h3>Stream Info</h3>
               <!--                <RecursivePropertyList :object="serverInfo" />-->
@@ -130,20 +138,27 @@
               <div v-if="goLiveStore.streamInfo?.meta?.tracks">
                 <h4 class="font-semibold">Tracks</h4>
                 <ul>
-                  <li v-for="(track, name) in goLiveStore.streamInfo.meta.tracks" :key="name">
+                  <li v-for="(track, name) in goLiveStore?.streamInfo?.meta.tracks" :key="name">
                     &middot; {{ name }} - Codec: {{ track.codec }}, Rate: {{ track.rate }}
                   </li>
                 </ul>
               </div>
             </div>
           </div>
-          <div v-else>
+          <div v-if="!goLiveStore?.streamInfo && !goLiveStore?.streamInfo?.error">
             <div class="flex flex-col">
               <span class="mb-2">Loading stream data...</span>
               <span class="loading loading-spinner text-neutral"></span>
             </div>
 
           </div>
+          <div v-if="goLiveStore?.streamInfo?.error">
+            <div class="flex flex-col">
+              <span class="mb-2">{{ goLiveStore?.streamInfo?.error }}</span>
+            </div>
+
+          </div>
+
         </div>
 
       </div>
@@ -203,7 +218,7 @@
 
 <script setup>
 // import { useTimeAgo } from '@vueuse/core'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
 import { useVideoAuxPlayerStore } from '@/Stores/VideoAuxPlayerStore'
@@ -217,16 +232,16 @@ const videoAuxPlayerStore = useVideoAuxPlayerStore()
 const goLiveStore = useGoLiveStore()
 
 let props = defineProps({
-  show: Object,
+  // show: Object,
 })
 
 
-let videoSource = videoPlayerStore.mistServerUri + 'hls/' + goLiveStore.selectedShow.mist_stream_wildcard.name
+let videoSource = videoPlayerStore.mistServerUri + 'hls/' + goLiveStore?.selectedShow?.mist_stream_wildcard.name
     + '/index.m3u8'
-let videoSourceType = 'application/x-mpegURL'
+let videoSourceType = 'application/vnd.apple.mpegURL'
 
 // Fetch server info on component mount
-goLiveStore.fetchStreamInfo(goLiveStore.selectedShow.mist_stream_wildcard.name)
+goLiveStore.fetchStreamInfo(goLiveStore?.selectedShow?.mist_stream_wildcard.name)
 
 // Asynchronously fetch the JSON data
 // async function fetchServerInfo() {
@@ -258,7 +273,14 @@ goLiveStore.fetchStreamInfo(goLiveStore.selectedShow.mist_stream_wildcard.name)
 // });
 
 const reloadPlayer = () => {
-  let source = goLiveStore.selectedShow.mist_stream_wildcard.name
+  let source = null
+  if(goLiveStore?.selectedShow?.mist_stream_wildcard?.name) {
+    source = goLiveStore?.selectedShow?.mist_stream_wildcard?.name
+    goLiveStore.fetchStreamInfo(goLiveStore?.selectedShow?.mist_stream_wildcard?.name)
+  } else if (goLiveStore?.episode?.mist_stream_wildcard?.name) {
+    source = goLiveStore?.episode?.mist_stream_wildcard?.name
+    goLiveStore.fetchStreamInfo(goLiveStore?.episode?.mist_stream_wildcard?.name)
+  }
   let sourceUrl = videoPlayerStore.mistServerUri + 'hls/' + source + '/index.m3u8'
   console.log('source url: ' + sourceUrl)
   let sourceType = 'application/vnd.apple.mpegurl'
@@ -266,7 +288,6 @@ const reloadPlayer = () => {
   videoJs.src({'src': sourceUrl, 'type': sourceType})
   // videoAuxPlayerStore.loadNewLiveSource(source, sourceType)
   console.log('reload player')
-  goLiveStore.fetchStreamInfo(goLiveStore.selectedShow.mist_stream_wildcard.name)
 }
 
 goLiveStore.fetchRtmpUri()
@@ -296,7 +317,7 @@ const formattedCountdown = computed(() => {
   return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
 })
 
-// Function to start the countdown
+// Function to start the countdown - temporary for demo purposes.
 const startCountdown = () => {
   const interval = setInterval(() => {
     countdown.value--
@@ -485,12 +506,13 @@ const liveOrRecordingVideoBorderClass = computed(() => {
 // //   }
 // // };
 //
-// // onBeforeUnmount(() => {
-// //   // Example cleanup logic; adjust based on your player's API
-// //   if (window.mistplayers && window.mistplayers[playerTargetId.value]) {
-// //     window.mistplayers[playerTargetId.value].destroy(); // Hypothetical destroy method
-// //   }
-// // });
+onBeforeUnmount(() => {
+  // goLiveStore.reset()
+  // Example cleanup logic; adjust based on your player's API
+  // if (window.mistplayers && window.mistplayers[playerTargetId.value]) {
+  //   window.mistplayers[playerTargetId.value].destroy(); // Hypothetical destroy method
+  // }
+});
 //
 // onBeforeUnmount(() => {
 //   if (videoPlayer && typeof videoPlayer.dispose === 'function') {

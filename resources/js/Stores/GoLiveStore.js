@@ -1,6 +1,9 @@
 import { defineStore } from 'pinia'
 
 const initialState = () => ({
+    displayEpisodeGoLiveComponent: false,
+    isEpisode: null,
+    episode: null,
     preSelectedShowId: null,
     selectedShowId: null,
     // selectedShow: null, this uses the getter... set it up in the component as a computed property
@@ -93,11 +96,21 @@ export const useGoLiveStore = defineStore('goLiveStore', {
         clearStreamInfo() {
             this.streamInfo = null
         },
+        toggleDisplayEpisodeGoLiveComponent(episode) {
+            this.displayEpisodeGoLiveComponent = ! this.displayEpisodeGoLiveComponent;
+            this.isEpisode = !!this.displayEpisodeGoLiveComponent;
+            this.episode = episode
+            this.selectedShowId = this.episode.show_id
+
+        },
+        updateEpisode(episode) {
+            this.episode = episode;
+        },
     },
     getters: {
         selectedShow: (state) => {
             return state.shows.find(show => show.id === state.selectedShowId) || null;
-        }
+        },
     },
 
 })

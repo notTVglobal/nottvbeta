@@ -191,7 +191,7 @@ teamStore.can = props.can
 // }, 300));
 
 const goLive = () => {
-  console.log('Show ID:', props.show.id);
+  goLiveStore.reset()
   goLiveStore.preSelectedShowId = props.show.id
   appSettingStore.btnRedirect(`/golive`)
 }

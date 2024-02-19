@@ -32,13 +32,16 @@
 
       </section>
 
-      <div class="bg-yellow-300 dark:bg-gray-900 rounded p-3 my-8 mx-2 border-b border-2">
-        <div class="stat place-items-center text-center mb-4">
+      <div class="w-full bg-yellow-300 dark:bg-gray-900 rounded p-3 my-8 mx-2 border-b border-2">
+        <div class="w-full stat place-items-center text-center mb-4">
           <div class="stat-title font-bold uppercase text-success tracking-widest dark:text-white mb-2 text-sm">Yesterday's Top Show
           </div>
-          <div class="max-w-full stat-value text-success-content hover:text-blue-700 text-xl md:text-3xl overflow-x-hidden">
+          <div class="hover:text-blue-700 text-xl md:text-3xl">
+            <div class="flex flex-col break-words">
+              <Link :href="`shows/${yesterdaysTopShow.slug}`" class="drop-shadow-lg outline-1 font-bold break-words">{{ yesterdaysTopShow.name }}</Link>
+
+            </div>
             <!-- Use the `break-words` utility here to ensure wrapping !!!! Doesn't work ! (tec21) -->
-              <Link :href="`shows/${yesterdaysTopShow.slug}`" class="drop-shadow-lg outline-1">{{ yesterdaysTopShow.name }}</Link>
           </div>
           <div hidden class="stat-desc mt-2 text-sm">Episode 2</div>
         </div>

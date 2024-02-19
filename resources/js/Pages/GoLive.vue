@@ -102,6 +102,8 @@ const props = defineProps({
 })
 
 onMounted(async () => {
+  goLiveStore.isEpisode = null
+  goLiveStore.episode = null
   goLiveStore.fetchShows().then(() => {
     if (goLiveStore.preSelectedShowId) {
       goLiveStore.selectedShowId = goLiveStore.preSelectedShowId;

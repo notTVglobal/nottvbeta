@@ -7654,6 +7654,10 @@ hr {
   max-width: 20rem;
 }
 
+.max-w-10 {
+  max-width: 2.5rem;
+}
+
 .flex-1 {
   flex: 1 1 0%;
 }
@@ -8092,6 +8096,10 @@ hr {
 
 .break-words {
   overflow-wrap: break-word;
+}
+
+.\!break-words {
+  overflow-wrap: break-word !important;
 }
 
 .break-all {

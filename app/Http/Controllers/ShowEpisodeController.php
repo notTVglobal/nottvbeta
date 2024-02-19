@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Events\NewNotificationEvent;
+use App\Jobs\AddOrUpdateMistStreamJob;
 use App\Jobs\AddVideoUrlFromEmbedCodeJob;
 use App\Jobs\ProcessVideoInfo;
 use App\Jobs\SendTeamMembersNotificationJob;
 use App\Models\CreativeCommons;
 use App\Models\Creator;
 use App\Models\Image;
+use App\Models\MistStream;
+use App\Models\MistStreamWildcard;
 use App\Models\Notification;
 use App\Models\Show;
 use App\Models\ShowEpisode;
@@ -124,116 +127,159 @@ class ShowEpisodeController extends Controller {
 //                $videoUrl = $videoUrlFromEmbedCode;
 //        } else $videoUrl = $request->video_url;
 
-    $showEpisode = new ShowEpisode();
-    $showEpisode->ulid = (string) Ulid::generate();
-    $showEpisode->isBeingEditedByUser_id = Auth::user()->id;
-    $showEpisode->name = $request->name;
-    $showEpisode->description = $request->description;
-    $showEpisode->user_id = Auth::user()->id;
-    $showEpisode->show_id = $request->show_id;
-    $showEpisode->episode_number = $request->episode_number;
-    $showEpisode->slug = \Str::slug($request->name);
-    $showEpisode->notes = $request->notes;
-    $showEpisode->release_year = Carbon::now()->format('Y');
-    $showEpisode->copyrightYear = $request->copyrightYear;
-    $showEpisode->creative_commons_id = $request->creative_commons_id;
-    $showEpisode->video_embed_code = $request->video_embed_code;
+    DB::beginTransaction();
 
-    $showEpisode->save();
-
-    if ($request->video_embed_code && !$request->video_url) {
-
-      // Create and save the notification
-      $notification = new Notification;
-      $userId = auth()->user()->id;
-      $notification->user_id = $userId;
-
-      // make the image the show_episode_poster
-      $notification->image_id = $showEpisode->image_id;
-      $notification->url = '/shows/' . $showEpisode->show->slug . '/episode/' . $showEpisode->slug . '/manage';
-      $notification->title = $showEpisode->name;
-      $notification->message = 'The video url is being generated from the embed code. You will be notified when it is done.';
-      $notification->save();
-
-      // Trigger the event to broadcast the new notification
-      event(new NewNotificationEvent($notification));
-      AddVideoUrlFromEmbedCodeJob::dispatch($showEpisode)->onQueue('video_processing');
-    }
-
-    if (!empty($request->video_url)) { // Check for non-empty video_url
-
-      // Create and save the video as before
-      $video = new Video([
-          'user_id'          => Auth::user()->id,
-          'name'             => 'External video',
-          'file_name'        => 'external_video_' . Str::uuid(),
-          'type'             => 'video/mp4',
-          'video_url'        => $request->video_url,
-          'storage_location' => 'external',
-          'show_episodes_id' => $showEpisode->id,
-      ]);
-      $video->save();
-
-      // Dispatch job as before
-      $jobName = null;
-      dispatch(new ProcessVideoInfo($video->id, $jobName))->onQueue('high');
-
-      $showEpisode->video_id = $video->id;
-      $showEpisode->youtube_url = $request->youtube_url;
+    try {
+      $showEpisode = new ShowEpisode();
+      $showEpisode->ulid = (string) Ulid::generate();
+      $showEpisode->isBeingEditedByUser_id = Auth::user()->id;
+      $showEpisode->name = $request->name;
+      $showEpisode->description = $request->description;
+      $showEpisode->user_id = Auth::user()->id;
+      $showEpisode->show_id = $request->show_id;
+      $showEpisode->episode_number = $request->episode_number;
+      $showEpisode->slug = \Str::slug($request->name);
+      $showEpisode->notes = $request->notes;
+      $showEpisode->release_year = Carbon::now()->format('Y');
+      $showEpisode->copyrightYear = $request->copyrightYear;
+      $showEpisode->creative_commons_id = $request->creative_commons_id;
       $showEpisode->video_embed_code = $request->video_embed_code;
+
       $showEpisode->save();
 
-    }
+      if ($request->video_embed_code && !$request->video_url) {
+
+        // Create and save the notification
+        $notification = new Notification;
+        $userId = auth()->user()->id;
+        $notification->user_id = $userId;
+
+        // make the image the show_episode_poster
+        $notification->image_id = $showEpisode->image_id;
+        $notification->url = '/shows/' . $showEpisode->show->slug . '/episode/' . $showEpisode->slug . '/manage';
+        $notification->title = $showEpisode->name;
+        $notification->message = 'The video url is being generated from the embed code. You will be notified when it is done.';
+        $notification->save();
+
+        // Trigger the event to broadcast the new notification
+        event(new NewNotificationEvent($notification));
+        AddVideoUrlFromEmbedCodeJob::dispatch($showEpisode)->onQueue('video_processing');
+      }
+
+      if (!empty($request->video_url)) { // Check for non-empty video_url
+
+        // Create and save the video as before
+        $video = new Video([
+            'user_id'          => Auth::user()->id,
+            'name'             => 'External video',
+            'file_name'        => 'external_video_' . Str::uuid(),
+            'type'             => 'video/mp4',
+            'video_url'        => $request->video_url,
+            'storage_location' => 'external',
+            'show_episodes_id' => $showEpisode->id,
+        ]);
+        $video->save();
+
+        // Dispatch job as before
+        $jobName = null;
+        dispatch(new ProcessVideoInfo($video->id, $jobName))->onQueue('high');
+
+        $showEpisode->video_id = $video->id;
+        $showEpisode->youtube_url = $request->youtube_url;
+        $showEpisode->video_embed_code = $request->video_embed_code;
+        $showEpisode->save();
+
+      }
 
 
-    if ($showEpisode->show->show_status_id === 1) {
-      $show = Show::find($showEpisode->show_id);
-      $show->show_status_id = 2;
-      $show->save();
-    }
+      if ($showEpisode->show->show_status_id === 1) {
+        $show = Show::find($showEpisode->show_id);
+        $show->show_status_id = 2;
+        $show->save();
+      }
 
-    $showSlug = $request->show_slug;
-    $showEpisodeSlug = $showEpisode->slug;
+      $showSlug = $request->show_slug;
+      $showEpisodeSlug = $showEpisode->slug;
 
-    $title = $showEpisode->name;
+      $title = $showEpisode->name;
 
-    $message = '<span class="text-green-500 italic">A new episode has been created.</span>';
+      $message = '<span class="text-green-500 italic">A new episode has been created.</span>';
 
-    $url = '/shows/' . $showSlug . '/episode/' . $showEpisodeSlug;
+      $url = '/shows/' . $showSlug . '/episode/' . $showEpisodeSlug;
 
-    dispatch(new SendTeamMembersNotificationJob($showEpisode->show->team, $title, $message, $url));
+      dispatch(new SendTeamMembersNotificationJob($showEpisode->show->team, $title, $message, $url));
 
-    if ($request->video_embed_code && !$request->video_url) {
-      // Create and save the notification
-      $notification = new Notification;
-      $userId = auth()->user()->id;
-      $notification->user_id = $userId;
+      if ($request->video_embed_code && !$request->video_url) {
+        // Create and save the notification
+        $notification = new Notification;
+        $userId = auth()->user()->id;
+        $notification->user_id = $userId;
 
-      // make the image the show_episode_poster
-      $notification->image_id = $showEpisode->image_id;
-      $notification->url = '/shows/' . $showEpisode->show->slug . '/episode/' . $showEpisode->slug;
-      $notification->title = $showEpisode->name;
-      $notification->message = 'The video url is being generated from the embed code. You will be notified when it is done.';
-      $notification->save();
+        // make the image the show_episode_poster
+        $notification->image_id = $showEpisode->image_id;
+        $notification->url = '/shows/' . $showEpisode->show->slug . '/episode/' . $showEpisode->slug;
+        $notification->title = $showEpisode->name;
+        $notification->message = 'The video url is being generated from the embed code. You will be notified when it is done.';
+        $notification->save();
 
-      // Trigger the event to broadcast the new notification
-      event(new NewNotificationEvent($notification));
-      AddVideoUrlFromEmbedCodeJob::dispatch($showEpisode)->onQueue('video_processing');
-    }
+        // Trigger the event to broadcast the new notification
+        event(new NewNotificationEvent($notification));
+        AddVideoUrlFromEmbedCodeJob::dispatch($showEpisode)->onQueue('video_processing');
+      }
 
-    // Use this route to return
-    // the user to the new episode page.
+      $mistStream = MistStream::firstOrCreate([
+          'name' => 'episode',
+      ], [
+          'source' => 'push://',
+          'comment'   => 'Created for Episode integration.',
+          'mime_type' => '',
+      ]);
+
+      // Prepare data for add Mist Stream Job
+      // Prepare $mistStreamData with necessary details
+      $mistStreamData = [
+          'name'   => $mistStream['name'], // e.g., "live_stream+myEvent"
+          'source' => $mistStream['source'], // Define the source, e.g., 'push://'
+        // Add any other necessary details for the mist stream here
+      ];
+      $originalName = null; // This is for a new stream creation, or set appropriately for updates
+
+      AddOrUpdateMistStreamJob::dispatch($mistStreamData, $originalName);
+
+      $lowercaseShowEpisodeUlid = strtolower($showEpisode->ulid); // Mist server can only use lowercase letters, numbers _ - or .
+
+      $mistStreamWildcard = MistStreamWildcard::create([
+          'name'           => 'episode+' . $lowercaseShowEpisodeUlid, // by appending show+ this becomes our full stream key.
+          'comment'        => 'Automatically created with new episode.',
+          'source'         => 'push://',
+          'mist_stream_id' => $mistStream->id,
+      ]);
+
+      $showEpisode->update(['mist_stream_wildcard_id' => $mistStreamWildcard->id]);
+
+      DB::commit();
+
+      // Use this route to return
+      // the user to the new episode page.
 
 //        $episode = ShowEpisode::query()
 //            ->where('name', $request->name)
 //            ->pluck('show_id')
 //            ->firstOrFail();
 
-    return redirect()
-        ->route('shows.showEpisodes.manageEpisode',
-            ['show' => $showSlug, 'showEpisode' => $showEpisodeSlug])
-        ->with('success', 'Episode Created Successfully');
 
+      return redirect()
+          ->route('shows.showEpisodes.manageEpisode',
+              ['show' => $showSlug, 'showEpisode' => $showEpisodeSlug])
+          ->with('success', 'Episode Created Successfully');
+
+    } catch (\Exception $e) {
+      DB::rollBack();
+      Log::error("Failed to create show and associated entities: {$e->getMessage()}");
+
+// Optionally, return an error response or redirect with error message
+      return back()->with(['error' => 'Failed to create the show.'])->withInput();
+    }
   }
 
 
@@ -241,7 +287,19 @@ class ShowEpisodeController extends Controller {
 //////////////////
 
   public function show(Show $show, ShowEpisode $showEpisode) {
+
+    // Eager load related entities for the Show model
+    $show->load(['user', 'team.users', 'image', 'appSetting', 'category', 'subCategory', 'team']);
+
+    // Eager load related entities for the ShowEpisode model
+    $showEpisode->load(['creativeCommons', 'video.appSetting', 'mistStreamWildcard', 'image.appSetting']);
+
+    $showEpisode->load('video.appSetting', 'image', 'video', 'appSetting', 'creativeCommons'); // Eager load necessary relationships
+//      TODO: Add TeamMember to this eager load
+
+    // Assuming $teamId is available
     $teamId = $show->team_id;
+    
 //        $video = Video::where('show_episodes_id', $showEpisode->id)->first();
 
 
@@ -258,8 +316,7 @@ class ShowEpisodeController extends Controller {
       $this->formattedScheduledDateTime = $this->convertTimeToUserTime($showEpisode->scheduled_release_dateTime);
     }
 
-    $showEpisode->load('video.appSetting', 'image', 'video', 'appSetting', 'show.category', 'show.subCategory', 'creativeCommons'); // Eager load necessary relationships
-//      TODO: Add TeamMember to this eager load
+
 
     $videoIsAvailable = false;
 
@@ -308,7 +365,8 @@ class ShowEpisodeController extends Controller {
             'creative_commons'           => $showEpisode->creativeCommons ?? null,
             'copyrightYear'              => $showEpisode->copyrightYear ?? null,
             'scheduled_release_dateTime' => $this->formattedScheduledDateTime ?? null,
-            'mist_stream_id'             => $showEpisode->mist_stream_id,
+            'mist_stream_wildcard_id'             => $showEpisode->mist_stream_wildcard_id,
+            'mist_stream_wildcard'             => $showEpisode->mistStreamWildcard,
             'video'                      => [
                 'isAvailable'      => $videoIsAvailable ?? false,
                 'mediaType'        => $mediaType, // New attribute for NowPlayingStore
