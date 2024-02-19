@@ -347,17 +347,20 @@ class ShowsController extends Controller {
           'mime_type' => '',
       ]);
 
-      // Prepare data for add Mist Stream Job
-      // Prepare $mistStreamData with necessary details
-      $mistStreamData = [
-          'name'   => $mistStream['name'], // e.g., "live_stream+myEvent"
-          'source' => $mistStream['source'], // Define the source, e.g., 'push://'
-        // Add any other necessary details for the mist stream here
-      ];
-      // $originalName is null for new streams, or set it to the current name if updating an existing stream
-      $originalName = null; // This is for a new stream creation, or set appropriately for updates
+      if ($mistStream->wasRecentlyCreated) {
+        // The model was created, run the job
+        // Prepare data for add Mist Stream Job
+        // Prepare $mistStreamData with necessary details
+        $mistStreamData = [
+            'name'   => $mistStream['name'], // e.g., "live_stream+myEvent"
+            'source' => $mistStream['source'], // Define the source, e.g., 'push://'
+          // Add any other necessary details for the mist stream here
+        ];
+        // $originalName is null for new streams, or set it to the current name if updating an existing stream
+        $originalName = null; // This is for a new stream creation, or set appropriately for updates
 
-      AddOrUpdateMistStreamJob::dispatch($mistStreamData, $originalName);
+        AddOrUpdateMistStreamJob::dispatch($mistStreamData, $originalName);
+      }
 
       $lowercaseShowUlid = strtolower($show->ulid); // Mist server can only use lowercase letters, numbers _ - or .
 

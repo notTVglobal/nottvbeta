@@ -235,16 +235,20 @@ class ShowEpisodeController extends Controller {
           'mime_type' => '',
       ]);
 
-      // Prepare data for add Mist Stream Job
-      // Prepare $mistStreamData with necessary details
-      $mistStreamData = [
-          'name'   => $mistStream['name'], // e.g., "live_stream+myEvent"
-          'source' => $mistStream['source'], // Define the source, e.g., 'push://'
-        // Add any other necessary details for the mist stream here
-      ];
-      $originalName = null; // This is for a new stream creation, or set appropriately for updates
+      if ($mistStream->wasRecentlyCreated) {
+        // The model was created, run the job
+        // Prepare data for add Mist Stream Job
+        // Prepare $mistStreamData with necessary details
+        $mistStreamData = [
+            'name'   => $mistStream['name'], // e.g., "live_stream+myEvent"
+            'source' => $mistStream['source'], // Define the source, e.g., 'push://'
+          // Add any other necessary details for the mist stream here
+        ];
+        // $originalName is null for new streams, or set it to the current name if updating an existing stream
+        $originalName = null; // This is for a new stream creation, or set appropriately for updates
 
-      AddOrUpdateMistStreamJob::dispatch($mistStreamData, $originalName);
+        AddOrUpdateMistStreamJob::dispatch($mistStreamData, $originalName);
+      }
 
       $lowercaseShowEpisodeUlid = strtolower($showEpisode->ulid); // Mist server can only use lowercase letters, numbers _ - or .
 
@@ -289,7 +293,7 @@ class ShowEpisodeController extends Controller {
   public function show(Show $show, ShowEpisode $showEpisode) {
 
     // Eager load related entities for the Show model
-    $show->load(['user', 'team.users', 'image', 'appSetting', 'category', 'subCategory', 'team']);
+    $show->load(['user', 'team.user', 'image', 'appSetting', 'category', 'subCategory', 'team']);
 
     // Eager load related entities for the ShowEpisode model
     $showEpisode->load(['creativeCommons', 'video.appSetting', 'mistStreamWildcard', 'image.appSetting']);
