@@ -1,7 +1,13 @@
 # not.tv Changelog
 
-Last Update: February 15, 2024\
+Last Update: February 19, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+# v0.8.6.5
+February 19, 2024
+* Updated the GoLive component, it works for Shows and ShowEpisodes with unique stream keys for each
+* Added a clipboard to the stream keys to make them easier to copy
+* Create a /training/go-live-using-zoom page
 
 # v0.8.6.4
 February 15, 2024

@@ -84,17 +84,17 @@
                 <p class="text-lg font-semibold text-blue-600"><strong>Streaming URL:</strong> <span
                     class="text-blue-800">
                   {{rtmpUri}}</span>
-                  &nbsp;<button @click="copyRtmpUri"><font-awesome-icon icon="fa-clipboard" class="text-blue-500 hover:text-blue-700 hover:cursor-pointer"/></button>
+                  &nbsp;<button v-if="rtmpUri" @click="copyRtmpUri"><font-awesome-icon v-if="rtmpUri" icon="fa-clipboard" class="text-blue-500 hover:text-blue-700 hover:cursor-pointer"/></button>
                   <span v-if="showCopiedRtmpUri" class="ml-1 copied-message" style="transition: opacity 0.5s; opacity: 1;">Copied!</span>
                 </p>
                 <p class="text-lg font-semibold text-green-600"><strong>Streaming Key:</strong> <span
                     class="text-green-800">{{streamKey}}</span>
-                  &nbsp;<button @click="copyStreamKey"><font-awesome-icon icon="fa-clipboard" class="text-blue-500 hover:text-blue-700 hover:cursor-pointer"/></button>
+                  &nbsp;<button v-if="streamKey" @click="copyStreamKey"><font-awesome-icon v-if="streamKey" icon="fa-clipboard" class="text-blue-500 hover:text-blue-700 hover:cursor-pointer"/></button>
                   <span v-if="showCopiedStreamKey" class="ml-1 copied-message" style="transition: opacity 0.5s; opacity: 1;">Copied!</span>
                 </p>
                 <p class="text-lg font-semibold text-red-600"><strong>Live Streaming Page URL: </strong>
                   {{ fullUrl }}
-                  &nbsp;<button @click="copyFullUrl"><font-awesome-icon icon="fa-clipboard" class="text-blue-500 hover:text-blue-700 hover:cursor-pointer"/></button>
+                  &nbsp;<button v-if="fullUrl" @click="copyFullUrl"><font-awesome-icon v-if="fullUrl" icon="fa-clipboard" class="text-blue-500 hover:text-blue-700 hover:cursor-pointer"/></button>
                   <span v-if="showCopiedFullUrl" class="ml-1 copied-message" style="transition: opacity 0.5s; opacity: 1;">Copied!</span>
                 </p>
 

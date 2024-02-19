@@ -118,20 +118,20 @@ onMounted(async () => {
 // const selectedShow = computed(() => goLiveStore.selectedShow);
 
 const reloadPlayer = () => {
-  let source = goLiveStore.selectedShow.mist_stream_wildcard.name
+  let source = goLiveStore?.selectedShow?.mist_stream_wildcard?.name
   let sourceUrl = videoAuxPlayerStore.mistServerUri + 'hls/' + source + '/index.m3u8'
   console.log('source url: ' + sourceUrl)
   let sourceType = 'application/vnd.apple.mpegurl'
   let videoJs = videojs('aux-player')
   videoJs.src({'src': sourceUrl, 'type': sourceType})
   // videoAuxPlayerStore.loadNewLiveSource(source, sourceType)
-  goLiveStore.fetchStreamInfo(goLiveStore.selectedShow.mist_stream_wildcard.name);
+  goLiveStore.fetchStreamInfo(goLiveStore?.selectedShow?.mist_stream_wildcard?.name);
   console.log('reload player')
 }
 
 const onChangeShow = (event) => {
   goLiveStore.setSelectedShowId(event);
-  goLiveStore.fetchStreamInfo(goLiveStore.selectedShow.mist_stream_wildcard.name);
+  goLiveStore.fetchStreamInfo(goLiveStore?.selectedShow?.mist_stream_wildcard?.name);
   reloadPlayer()
   // videoAuxPlayerStore.loadNewVideo(goLiveStore.selectedShow.mist)
 };
@@ -161,15 +161,15 @@ const handleGenerateStreamKey = async () => {
 //       });
 // }
 
-watch(goLiveStore.preSelectedShowId, (newVal, oldVal) => {
-  if (newVal !== '') {
-    // Assuming the video player is ready to be initialized at this point
-    // const videoPlayer = videojs('main-player');
-    videoPlayerStore.mute()
-    // goLiveStore.selectedShowId = selectedShowId
-
-    // Additional logic to load the video based on selectedShowId can be added here
-  }
-});
+// watch(goLiveStore.preSelectedShowId, (newVal, oldVal) => {
+//   if (newVal !== '') {
+//     // Assuming the video player is ready to be initialized at this point
+//     // const videoPlayer = videojs('main-player');
+//     videoPlayerStore.mute()
+//     // goLiveStore.selectedShowId = selectedShowId
+//
+//     // Additional logic to load the video based on selectedShowId can be added here
+//   }
+// });
 </script>
 
