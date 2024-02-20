@@ -45,6 +45,7 @@ class Video extends Model {
       'name',
       'video_url',
       'mist_stream_id',
+      'mist_stream_wildcard_id',
       'audio_codec',
       'video_codec',
       'audio_channels',

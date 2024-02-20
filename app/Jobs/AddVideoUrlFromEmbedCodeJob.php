@@ -4,6 +4,8 @@ namespace App\Jobs;
 
 use App\Events\ProcessVideoInfoCompleted;
 use App\Listeners\ProcessVideoInfoListener;
+use App\Models\MistStream;
+use App\Models\MistStreamWildcard;
 use App\Models\Video;
 use App\Events\NewNotificationEvent;
 use App\Models\Notification;
@@ -183,6 +185,43 @@ class AddVideoUrlFromEmbedCodeJob implements ShouldQueue
 //                Log::channel('custom_error')->error('Bitchute Matches: '. $url);
                 // send notification, success.
 //                return $url;
+
+              // Bitchute has CORS issues, we need to proxy the video through our Mist Server.
+              // Therefore, we create a new MistStreamWildcard for the video with the Bitchute *.mp4 url as a source.
+
+              $mistStream = MistStream::firstOrCreate([
+                  'name' => 'bitchute',
+              ], [
+                  'source' => '',
+                  'comment'   => 'Created as Bitchute proxy.',
+                  'mime_type' => '',
+              ]);
+
+              if ($mistStream->wasRecentlyCreated) {
+                // The model was created, run the job
+                // Prepare data for add Mist Stream Job
+                // Prepare $mistStreamData with necessary details
+                $mistStreamData = [
+                    'name'   => $mistStream['name'], // e.g., "live_stream+myEvent"
+                    'source' => $mistStream['source'], // Define the source, e.g., 'push://'
+                  // Add any other necessary details for the mist stream here
+                ];
+
+                // $originalName is null for new streams, or set it to the current name if updating an existing stream
+                $originalName = null; // This is for a new stream creation, or set appropriately for updates
+
+                AddOrUpdateMistStreamJob::dispatch($mistStreamData, $originalName);
+
+                $lowercaseShowEpisodeUlid = strtolower($this->showEpisode->ulid); // Mist server can only use lowercase letters, numbers _ - or .
+
+                $mistStreamWildcard = MistStreamWildcard::create([
+                    'name'           => 'bitchute+' . $lowercaseShowEpisodeUlid, // by appending show+ this becomes our full stream key.
+                    'comment'        => 'Automatically created with new episode.',
+                    'source'         => $url,
+                    'mist_stream_id' => $mistStream->id,
+                ]);
+              }
+
             }else {
               // Handle the case when $sourceIs is null
               // You might want to assign a default behavior or value for $url
@@ -198,8 +237,10 @@ class AddVideoUrlFromEmbedCodeJob implements ShouldQueue
             $video->name = 'External Video';
             $video->file_name = 'external_video_' . Str::uuid();
             $video->video_url = $url;
+            $video->type = 'video/mp4';
             $video->storage_location = $sourceIs;
             $video->show_episodes_id = $this->showEpisode->id;
+            $video->mist_stream_wildcard_id = $mistStreamWildcard->id;
 
             // Save the video to the database
             $video->save();
