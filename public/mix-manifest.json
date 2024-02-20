@@ -1,6 +1,6 @@
 {
-    "/js/app.js": "/js/app.js?id=e5efb26a85680cef8e0989e667fd6a52",
-    "/js/manifest.js": "/js/manifest.js?id=760639c77a747252771db31c67e23c8d",
-    "/css/app.css": "/css/app.css?id=efbb307ebe475df242868fd44e4625cc",
-    "/js/vendor.js": "/js/vendor.js?id=27f016d0941ec0ce07a1d3ee53762336"
+    "/js/app.js": "/js/app.js",
+    "/js/manifest.js": "/js/manifest.js",
+    "/css/app.css": "/css/app.css",
+    "/js/vendor.js": "/js/vendor.js"
 }
