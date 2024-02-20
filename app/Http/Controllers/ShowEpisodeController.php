@@ -296,9 +296,8 @@ class ShowEpisodeController extends Controller {
     $show->load(['user', 'team.user', 'image', 'appSetting', 'category', 'subCategory', 'team']);
 
     // Eager load related entities for the ShowEpisode model
-    $showEpisode->load(['creativeCommons', 'video.appSetting', 'video.mistStream', 'video.mistStreamWildcard', 'mistStreamWildcard', 'image.appSetting']);
+    $showEpisode->load(['creativeCommons', 'video.appSetting', 'video.mistStream', 'video.mistStreamWildcard', 'mistStreamWildcard', 'appSetting' ]);
 
-    $showEpisode->load('video.appSetting', 'image', 'video', 'appSetting', 'creativeCommons'); // Eager load necessary relationships
 //      TODO: Add TeamMember to this eager load
 
     // Assuming $teamId is available
@@ -312,12 +311,6 @@ class ShowEpisodeController extends Controller {
     // OLD CODE: convert release dateTime to user's timezone
 //    if ($showEpisode->release_dateTime) {
 //      $this->formattedReleaseDateTime = $this->convertTimeToUserTime($showEpisode->release_dateTime);
-//    }
-
-    // TODO: Change this timezone method to a frontend process.
-    // convert scheduled_release dateTime to user's timezone
-//    if ($showEpisode->scheduled_release_dateTime) {
-//      $this->formattedScheduledDateTime = $this->convertTimeToUserTime($showEpisode->scheduled_release_dateTime);
 //    }
 
 

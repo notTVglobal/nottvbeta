@@ -408,7 +408,7 @@ class ShowsController extends Controller {
         'status',
         'showEpisodes' => function ($query) {
           // Apply conditions or sorting to episodes here
-          $query->with(['video.appSetting', 'video.mistStream', 'video.mistStreamWildcard', 'image.appSetting', 'mistStreamWildcard'])->orderBy('release_dateTime', 'desc');
+          $query->with(['show', 'video.appSetting', 'video.mistStream', 'video.mistStreamWildcard', 'image.appSetting', 'mistStreamWildcard'])->orderBy('release_dateTime', 'desc');
         },
         'team'         => function ($query) {
           // Eager load team members and their user details
@@ -553,13 +553,22 @@ class ShowsController extends Controller {
 
 
   private function fetchEpisodes(Show $show) {
+    // Determine the episode play order from the Show model
+    $episodePlayOrder = $show->episode_play_order; // Assume 'oldest' or 'newest'
+
     $episodesQuery = ShowEpisode::with(['image', 'show', 'showEpisodeStatus'])
         ->where('show_id', $show->id)
         ->when(Request::input('search'), function ($query, $search) {
           $query->where('name', 'like', "%{$search}%");
         })
-        ->whereIn('show_episode_status_id', [6, 7]) // Filter for published episodes
-        ->latest();
+        ->whereIn('show_episode_status_id', [6, 7]); // Adjusted as per previous discussion
+
+    // Apply conditional ordering based on the Show's episode play order
+    if ($episodePlayOrder === 'oldest') {
+      $episodesQuery->orderBy('release_dateTime', 'asc'); // Oldest episodes first
+    } else {
+      $episodesQuery->orderBy('release_dateTime', 'desc'); // Newest episodes first
+    }
 
     // Decide whether to paginate based on whether a search term is present
     $episodes = Request::input('search') ?

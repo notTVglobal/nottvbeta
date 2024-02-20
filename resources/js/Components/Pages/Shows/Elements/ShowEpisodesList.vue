@@ -25,7 +25,7 @@
         </Link>
         <div class="text-gray-400 mt-1">
           <ConvertDateTimeToTimeAgo v-if="episode.releaseDateTime" :dateTime="episode.releaseDateTime" :class="`text-yellow-400 font-light`"/>
-          <ConvertDateTimeToTimeAgo v-if="episode.scheduledDateTime" :dateTime="episode.scheduledDateTime" :class="`text-yellow-400 font-light`"/>
+          <ConvertDateTimeToTimeAgo v-if="episode.scheduledDateTime" :dateTime="episode.scheduledDateTime" :class="`text-green-400 font-light`"/>
         </div>
         <div class="text-gray-500 mt-1" v-if="!episode.episode_number">Episode {{ episode.id }}</div>
         <div class="text-gray-500 mt-1" v-if="episode.episode_number">Episode {{ episode.episode_number }}</div>
