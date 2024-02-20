@@ -316,9 +316,9 @@ class ShowEpisodeController extends Controller {
 
     // TODO: Change this timezone method to a frontend process.
     // convert scheduled_release dateTime to user's timezone
-    if ($showEpisode->scheduled_release_dateTime) {
-      $this->formattedScheduledDateTime = $this->convertTimeToUserTime($showEpisode->scheduled_release_dateTime);
-    }
+//    if ($showEpisode->scheduled_release_dateTime) {
+//      $this->formattedScheduledDateTime = $this->convertTimeToUserTime($showEpisode->scheduled_release_dateTime);
+//    }
 
 
     $videoIsAvailable = false;
@@ -377,7 +377,7 @@ class ShowEpisodeController extends Controller {
             'release_dateTime'           => $showEpisode->release_dateTime ?? null,
             'creative_commons'           => $showEpisode->creativeCommons ?? null,
             'copyrightYear'              => $showEpisode->copyrightYear ?? null,
-            'scheduled_release_dateTime' => $this->formattedScheduledDateTime ?? null,
+            'scheduled_release_dateTime' => $showEpisode->scheduled_release_dateTime ?? null,
             'mist_stream_wildcard_id'    => $showEpisode->mist_stream_wildcard_id,
             'mist_stream_wildcard'       => $showEpisode->mistStreamWildcard,
             'video'                      => [

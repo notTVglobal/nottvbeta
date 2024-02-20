@@ -18,14 +18,14 @@
                          :class="'h-28 w-48 min-w-[12rem] object-cover hover:opacity-75 transition ease-in-out duration-150 bg-black'"/>
             <!--                            <SingleImage :image="episode.image" :alt="'episode cover'" :class="'h-96 min-w-[16rem] w-64 object-cover mb-6 lg:mb-0 m-auto lg:m-0'"/>-->
 
-
           </button>
         </div>
         <Link :href="`/shows/${show.slug}/episode/${episode.slug}`"
               class="block text-base font-semibold leading-tight hover:text-gray-400 mt-4">{{ episode.name }}
         </Link>
         <div class="text-gray-400 mt-1">
-          <ConvertDateTimeToTimeAgo :dateTime="episode.releaseDateTime" :class="`text-yellow-400 font-light`"/>
+          <ConvertDateTimeToTimeAgo v-if="episode.releaseDateTime" :dateTime="episode.releaseDateTime" :class="`text-yellow-400 font-light`"/>
+          <ConvertDateTimeToTimeAgo v-if="episode.scheduledDateTime" :dateTime="episode.scheduledDateTime" :class="`text-yellow-400 font-light`"/>
         </div>
         <div class="text-gray-500 mt-1" v-if="!episode.episode_number">Episode {{ episode.id }}</div>
         <div class="text-gray-500 mt-1" v-if="episode.episode_number">Episode {{ episode.episode_number }}</div>
@@ -57,23 +57,4 @@ let props = defineProps({
   episodes: Object,
   filters: Object,
 });
-
-const convertTimeAgo = (date) => {
-  // Since useTimeAgo expects a ref, create a ref for the date
-  const dateRef = ref(date);
-
-  // Use watchEffect to update the timeAgo value whenever the date changes
-  let timeAgoValue = '';
-  watchEffect(() => {
-    const timeAgo = useTimeAgo(dateRef);
-    timeAgoValue = timeAgo.value;
-  });
-
-  return timeAgoValue;
-}
-
-// const timeAgo = useTimeAgo(props.episode.release_date);
-// const episodeTimeAgo = useTimeAgo(episodeReleaseDate);
-// const episodeTimeAgo = computed(() => useTimeAgo(ref(episode.value.releaseDate)));
-
 </script>
