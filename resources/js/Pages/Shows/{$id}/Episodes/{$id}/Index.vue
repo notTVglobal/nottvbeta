@@ -62,6 +62,7 @@
             <div v-if="props.episode.release_dateTime" class="text-yellow-500">
               {{ formatDate(props.episode.release_dateTime) }}
             </div>
+            <ConvertDateTimeToTimeAgo v-if="episode.scheduled_release_dateTime" :dateTime="episode.scheduled_release_dateTime" :class="`text-yellow-500`" />
 
           </div>
 
@@ -86,7 +87,7 @@
 
         <div class="flex flex-wrap mt-12 m-auto lg:mx-0 justify-center lg:justify-start space-x-3 space-y-3">
           <div></div>
-          <button v-if="episode.video.isAvailable"
+          <button v-if="episode.video.isAvailable && episode.status === 7"
 
                   class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-700 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
                   @click="playEpisode">
@@ -200,6 +201,7 @@ import { useUserStore } from '@/Stores/UserStore'
 import EpisodeFooter from '@/Components/Pages/ShowEpisodes/Layout/EpisodeFooter'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage'
 import Message from '@/Components/Global/Modals/Messages'
+import ConvertDateTimeToTimeAgo from '@/Components/Global/DateTime/ConvertDateTimeToTimeAgo.vue'
 
 usePageSetup('showEpisodesShow')
 

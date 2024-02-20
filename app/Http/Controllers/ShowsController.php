@@ -186,6 +186,7 @@ class ShowsController extends Controller {
             'description' => $showEpisode->show->subCategory->description,
         ],
         'releaseDateTime' => $showEpisode->release_dateTime,
+        'scheduledDateTime' => $showEpisode->scheduled_release_dateTime,
     ];
   }
 
@@ -552,25 +553,55 @@ class ShowsController extends Controller {
 
 
   private function fetchEpisodes(Show $show) {
-    // Use already loaded episodes if no search filter is applied
-    if (!Request::input('search')) {
-      return $show->showEpisodes->map(function ($episode) {
-        return $this->transformShowEpisode($episode);
-      });
-    }
-
-    // Fetch and filter episodes based on search criteria when specified
-    return ShowEpisode::with(['image', 'show', 'showEpisodeStatus'])
+    $episodesQuery = ShowEpisode::with(['image', 'show', 'showEpisodeStatus'])
         ->where('show_id', $show->id)
         ->when(Request::input('search'), function ($query, $search) {
           $query->where('name', 'like', "%{$search}%");
         })
-        ->where('show_episode_status_id', 7) // Filter for published episodes
-        ->latest()
-        ->paginate(8, ['*'], 'episodes')
-        ->withQueryString()
-        ->through(fn($showEpisode) => $this->transformShowEpisode($showEpisode));
+        ->whereIn('show_episode_status_id', [6, 7]) // Filter for published episodes
+        ->latest();
+
+    // Decide whether to paginate based on whether a search term is present
+    $episodes = Request::input('search') ?
+        $episodesQuery->paginate(8, ['*'], 'episodes')->withQueryString() :
+        $episodesQuery->get();
+
+    return $episodes->map(fn($episode) => $this->transformShowEpisode($episode));
   }
+
+//  private function fetchEpisodes(Show $show) {
+//
+//    Log::info(
+//        ShowEpisode::with(['image', 'show', 'showEpisodeStatus'])
+//            ->where('show_id', $show->id)
+//            ->when(Request::input('search'), function ($query, $search) {
+//              $query->where('name', 'like', "%{$search}%");
+//            })
+//            ->where('show_episode_status_id', 7)
+//            ->latest()
+//            ->toSql()
+//    );
+//    // Use already loaded episodes if no search filter is applied
+//    if (!Request::input('search')) {
+//      return $show->showEpisodes->map(function ($episode) {
+//        return $this->transformShowEpisode($episode);
+//      });
+//    }
+//
+//
+//
+//    // Fetch and filter episodes based on search criteria when specified
+//    return ShowEpisode::with(['image', 'show', 'showEpisodeStatus'])
+//        ->where('show_id', $show->id)
+//        ->when(Request::input('search'), function ($query, $search) {
+//          $query->where('name', 'like', "%{$search}%");
+//        })
+//        ->where('show_episode_status_id', 7) // Filter for published episodes
+//        ->latest()
+//        ->paginate(8, ['*'], 'episodes')
+//        ->withQueryString()
+//        ->through(fn($showEpisode) => $this->transformShowEpisode($showEpisode));
+//  }
 
   private function fetchCreators($teamId) {
     // Fetch the team with its members including pivot data and selecting specific user fields
