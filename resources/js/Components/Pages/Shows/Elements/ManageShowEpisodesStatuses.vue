@@ -32,7 +32,7 @@
                     <div v-if="setDateTime">
                         <h3 class="text-center mb-2">Set the Scheduled Release Date and Time:</h3>
                         <div class="text-center">
-                            <DateTimePicker :date="props.scheduled_release_dateTime" @date-time-selected="handleScheduledDateTime" />
+                            <DateTimePicker :date="convertedDate" @date-time-selected="handleScheduledDateTime" />
                             <button class="btn my-2" @click="changeEpisodeStatus(episodeId, 6)">Schedule it!</button>
                             <button class="btn ml-2 my-2" @click="cancelScheduleEpisode">Cancel</button>
                         </div>
@@ -81,17 +81,26 @@
 
 <script setup>
 import { Inertia } from "@inertiajs/inertia"
-import { computed, ref } from "vue"
+import { computed, ref, watch, watchEffect } from 'vue'
 import { format } from "date-fns"
 import { useTeamStore } from "@/Stores/TeamStore"
 import { useShowStore } from "@/Stores/ShowStore"
 import { useUserStore } from "@/Stores/UserStore"
 import DateTimePicker from "@/Components/Global/Calendar/DateTimePicker"
 import DateTimePickerSelect from "@/Components/Global/Calendar/DateTimePickerSelect"
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc'; // Required for timezone support
 
 const teamStore = useTeamStore()
 const showStore = useShowStore()
 const userStore = useUserStore()
+
+// Extend Day.js with the plugins
+dayjs.extend(relativeTime);
+dayjs.extend(timezone);
+dayjs.extend(utc);
 
 let props = defineProps({
     episodeId: '',
@@ -103,8 +112,24 @@ let props = defineProps({
     episodeStatuses: Object,
     showName: '',
     showSlug: '',
-    scheduledDateTime: '',
+    scheduledDateTime: String,
 })
+
+// Ref for reactive timezone
+const userTimezone = ref(userStore.timezone);
+
+const convertedDate = ref('');
+watchEffect(() => {
+  if (userStore.timezone) {
+    convertedDate.value = dayjs.utc(props.scheduledDateTime).tz(userStore.timezone).format();
+    console.log('where\'s the scheduled dateTime??? CONVERTED: ' + convertedDate.value)
+  }
+})
+
+const convertTimeToUserTimezone = (date, timezone) => {
+  // Convert the date to the provided timezone using Day.js
+  return dayjs.tz(date, timezone);
+};
 
 const errorMessage = ref('');
 const dialogId = props.episodeId+'episodeStatuses'
@@ -131,7 +156,7 @@ const checkEpisodeStatus = (episodeId, statusId) => {
         setDateTime.value = !setDateTime.value;
     } else if (statusId === 7) {
         // open modal to confirm they want to publish.
-        document.getElementById('confirmPublishModal.'+props.episodeId).showModal()
+        document.getElementById('confirmPublishModal.' + props.episodeId).showModal()
     }
     else if (statusId !== 6) {
         changeEpisodeStatus(episodeId, statusId)
@@ -154,12 +179,12 @@ const handleScheduledDateTime = (newDate) => {
     console.log(formattedScheduledDateTime)
 }
 
-const userTimezone = ref('');
+console.log('we already have the user timezone: ' + userStore.timezone)
 
-const getUserTimezone = () => {
-    // Use the Intl object to get the user's timezone
-    userTimezone.value = Intl.DateTimeFormat().resolvedOptions().timeZone;
-};
+// const getUserTimezone = () => {
+//     // Use the Intl object to get the user's timezone
+//     userTimezone.value = Intl.DateTimeFormat().resolvedOptions().timeZone;
+// };
 
 let selectedScheduledDateTime = ref('');
 let formattedScheduledDateTime = ref(''); // This will display the formatted date and time

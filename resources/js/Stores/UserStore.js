@@ -3,6 +3,13 @@ import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { Inertia } from "@inertiajs/inertia"
 import { ref } from "vue"
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+
+// Extend Day.js with the necessary plugins
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 // const appSettingStore = useAppSettingStore()
 
@@ -124,6 +131,15 @@ export const useUserStore = defineStore('userStore', {
                 this.newNotifications = 0; // or some other default value or error handling logic
             }
         },
+        convertUtcToUserTimezone(utcDate) {
+            // Ensure the date is treated as UTC, then convert to the desired timezone
+            const dateInUserTimezone = dayjs.utc(utcDate).tz(this.timezone);
+            return dateInUserTimezone.format(); // You can adjust the format string as needed
+        },
+        // Optional: a method to format the datetime string in a specific way
+        formatDateTimeInUserTimezone(date, formatString = 'YYYY-MM-DD HH:mm:ss') {
+            return dayjs.tz(date, this.timezone).format(formatString);
+        }
     },
 
     getters: {

@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+// import { useVideoAuxPlayerStore } from '@/Stores/VideoAuxPlayerStore'
 
 const initialState = () => ({
     displayEpisodeGoLiveComponent: false,
@@ -97,6 +98,8 @@ export const useGoLiveStore = defineStore('goLiveStore', {
             this.streamInfo = null
         },
         toggleDisplayEpisodeGoLiveComponent(episode) {
+            // const videoPlayerAuxStore = useVideoAuxPlayerStore()
+            // videoPlayerAuxStore.reset()
             this.displayEpisodeGoLiveComponent = ! this.displayEpisodeGoLiveComponent;
             this.isEpisode = !!this.displayEpisodeGoLiveComponent;
             this.episode = episode

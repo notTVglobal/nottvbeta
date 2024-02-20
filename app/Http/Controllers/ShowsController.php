@@ -342,7 +342,7 @@ class ShowsController extends Controller {
       $mistStream = MistStream::firstOrCreate([
           'name' => 'show',
       ], [
-          'source' => 'push://',
+          'source'    => 'push://',
           'comment'   => 'Created for Show integration.',
           'mime_type' => '',
       ]);
@@ -407,7 +407,7 @@ class ShowsController extends Controller {
         'status',
         'showEpisodes' => function ($query) {
           // Apply conditions or sorting to episodes here
-          $query->with(['video', 'image.appSetting'])->orderBy('release_dateTime', 'desc');
+          $query->with(['video.appSetting', 'video.mistStream', 'video.mistStreamWildcard', 'image.appSetting', 'mistStreamWildcard'])->orderBy('release_dateTime', 'desc');
         },
         'team'         => function ($query) {
           // Eager load team members and their user details
@@ -515,19 +515,33 @@ class ShowsController extends Controller {
       // Determine the media type based on its storage location.
       // If the storage location is marked as 'external', categorize it as 'externalVideo';
       // otherwise, it's considered an internal 'show' video.
-      $mediaType = $episode->video->storage_location === 'external' ? 'externalVideo' : 'show'; // Adjust logic as needed
+//      $mediaType = $episode->video->storage_location === 'external' ? 'externalVideo' : 'show'; // Adjust logic as needed
+
+      // Bitchute needs to be run through a proxy for our AudioStore settings to work... so we are replacing
+      // our $mediaType with this:
+      // Check the storage_location and set $mediaType accordingly
+      if ($episode->video?->storage_location === 'external') {
+        $mediaType = 'externalVideo';
+      } elseif ($episode->video?->storage_location === 'bitchute') {
+        $mediaType = 'bitchute';
+      } else {
+        $mediaType = 'show';
+      }
 
       // Construct an array to hold video details for the episode.
       $episodeData['video'] = [
-          'mediaType'        => $mediaType, // New attribute for NowPlayingStore
-          'video_url'        => $episode->video->video_url ?? '',
-          'type'             => $episode->video->type ?? '',
-          'file_name'        => $episode->video->file_name ?? '',
-          'cdn_endpoint'     => $episode->video->appSetting->cdn_endpoint ?? '',
-          'folder'           => $episode->video->folder ?? '',
-          'cloud_folder'     => $episode->video->cloud_folder ?? '',
-          'upload_status'    => $episode->video->upload_status ?? '',
-          'storage_location' => $episode->video->storage_location ?? '',
+          'ulid'                 => $episode->video->ulid ?? '',
+          'mediaType'            => $mediaType, // New attribute for NowPlayingStore
+          'video_url'            => $episode->video->video_url ?? '',
+          'type'                 => $episode->video->type ?? '',
+          'file_name'            => $episode->video->file_name ?? '',
+          'cdn_endpoint'         => $episode->video->appSetting->cdn_endpoint ?? '',
+          'folder'               => $episode->video->folder ?? '',
+          'cloud_folder'         => $episode->video->cloud_folder ?? '',
+          'upload_status'        => $episode->video->upload_status ?? '',
+          'storage_location'     => $episode->video->storage_location ?? '',
+          'mist_stream'          => $episode->video->mistStream ?? null,
+          'mist_stream_wildcard' => $episode->video->mistStreamWildcard ?? null,
         // Include other relevant video attributes...
 
       ];
@@ -660,16 +674,17 @@ class ShowsController extends Controller {
             ->paginate(5, ['*'], 'shows')
             ->withQueryString()
             ->through(fn($showEpisode) => [
-                'id'              => $showEpisode->id,
-                'ulid'            => $showEpisode->ulid,
-                'name'            => $showEpisode->name,
-                'image'           => $this->transformImage($showEpisode->image, $showEpisode->appSetting),
-                'slug'            => $showEpisode->slug,
-                'episodeNumber'   => $showEpisode->episode_number,
-                'notes'           => $showEpisode->notes,
-                'episodeStatus'   => $showEpisode->showEpisodeStatus->name,
-                'episodeStatusId' => $showEpisode->showEpisodeStatus->id,
-                'isPublished'     => $showEpisode->isPublished,
+                'id'                       => $showEpisode->id,
+                'ulid'                     => $showEpisode->ulid,
+                'name'                     => $showEpisode->name,
+                'image'                    => $this->transformImage($showEpisode->image, $showEpisode->appSetting),
+                'slug'                     => $showEpisode->slug,
+                'episodeNumber'            => $showEpisode->episode_number,
+                'notes'                    => $showEpisode->notes,
+                'episodeStatus'            => $showEpisode->showEpisodeStatus->name,
+                'episodeStatusId'          => $showEpisode->showEpisodeStatus->id,
+                'isPublished'              => $showEpisode->isPublished,
+                'scheduledReleaseDateTime' => $showEpisode->scheduled_release_dateTime,
             ]),
         'episodeStatuses' => $filteredStatuses,
         'can'             => [
@@ -900,7 +915,7 @@ class ShowsController extends Controller {
             'copyrightYear'              => $showEpisode->copyrightYear ?? null,
             'creative_commons'           => $showEpisode->creativeCommons ?? null,
             'mist_stream_wildcard_id'    => $showEpisode->mist_stream_wildcard_id,
-            'mist_stream_wildcard'    => $showEpisode->mistStreamWildcard,
+            'mist_stream_wildcard'       => $showEpisode->mistStreamWildcard,
             'video_id'                   => $showEpisode->video_id,
             'youtube_url'                => $showEpisode->youtube_url,
             'video_embed_code'           => $showEpisode->video_embed_code,

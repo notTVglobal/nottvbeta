@@ -230,7 +230,7 @@ class ShowEpisodeController extends Controller {
       $mistStream = MistStream::firstOrCreate([
           'name' => 'episode',
       ], [
-          'source' => 'push://',
+          'source'    => 'push://',
           'comment'   => 'Created for Episode integration.',
           'mime_type' => '',
       ]);
@@ -296,7 +296,7 @@ class ShowEpisodeController extends Controller {
     $show->load(['user', 'team.user', 'image', 'appSetting', 'category', 'subCategory', 'team']);
 
     // Eager load related entities for the ShowEpisode model
-    $showEpisode->load(['creativeCommons', 'video.appSetting', 'mistStreamWildcard', 'image.appSetting']);
+    $showEpisode->load(['creativeCommons', 'video.appSetting', 'video.mistStream', 'video.mistStreamWildcard', 'mistStreamWildcard', 'image.appSetting']);
 
     $showEpisode->load('video.appSetting', 'image', 'video', 'appSetting', 'creativeCommons'); // Eager load necessary relationships
 //      TODO: Add TeamMember to this eager load
@@ -321,7 +321,6 @@ class ShowEpisodeController extends Controller {
     }
 
 
-
     $videoIsAvailable = false;
 
     if ($showEpisode->video?->video_url || ($showEpisode->video?->folder && $showEpisode->video?->upload_status !== 'processing')) {
@@ -331,7 +330,17 @@ class ShowEpisodeController extends Controller {
     // Determine the media type based on its storage location.
     // If the storage location is marked as 'external', categorize it as 'externalVideo';
     // otherwise, it's considered an internal 'show' video.
-    $mediaType = $showEpisode->video?->storage_location === 'external' ? 'externalVideo' : 'show'; // Adjust logic as needed
+//    $mediaType = $showEpisode->video?->storage_location === 'external' ? 'externalVideo' : 'show'; // Adjust logic as needed
+    // Bitchute needs to be run through a proxy for our AudioStore settings to work... so we are replacing
+    // our $mediaType with this:
+    // Check the storage_location and set $mediaType accordingly
+    if ($showEpisode->video?->storage_location === 'external') {
+      $mediaType = 'externalVideo';
+    } elseif ($showEpisode->video?->storage_location === 'bitchute') {
+      $mediaType = 'bitchute';
+    } else {
+      $mediaType = 'show';
+    }
 
     return Inertia::render('Shows/{$id}/Episodes/{$id}/Index', [
         'show'     => [
@@ -369,19 +378,22 @@ class ShowEpisodeController extends Controller {
             'creative_commons'           => $showEpisode->creativeCommons ?? null,
             'copyrightYear'              => $showEpisode->copyrightYear ?? null,
             'scheduled_release_dateTime' => $this->formattedScheduledDateTime ?? null,
-            'mist_stream_wildcard_id'             => $showEpisode->mist_stream_wildcard_id,
-            'mist_stream_wildcard'             => $showEpisode->mistStreamWildcard,
+            'mist_stream_wildcard_id'    => $showEpisode->mist_stream_wildcard_id,
+            'mist_stream_wildcard'       => $showEpisode->mistStreamWildcard,
             'video'                      => [
-                'isAvailable'      => $videoIsAvailable ?? false,
-                'mediaType'        => $mediaType, // New attribute for NowPlayingStore
-                'file_name'        => $showEpisode->video->file_name ?? '',
-                'cdn_endpoint'     => $showEpisode->video->appSetting->cdn_endpoint ?? '',
-                'folder'           => $showEpisode->video->folder ?? '',
-                'cloud_folder'     => $showEpisode->video->cloud_folder ?? '',
-                'upload_status'    => $showEpisode->video->upload_status ?? '',
-                'video_url'        => $showEpisode->video->video_url ?? '',
-                'type'             => $showEpisode->video->type ?? '',
-                'storage_location' => $showEpisode->video->storage_location ?? '',
+                'ulid'                 => $showEpisode->video->ulid ?? '',
+                'isAvailable'          => $videoIsAvailable ?? false,
+                'mediaType'            => $mediaType, // New attribute for NowPlayingStore
+                'file_name'            => $showEpisode->video->file_name ?? '',
+                'cdn_endpoint'         => $showEpisode->video->appSetting->cdn_endpoint ?? '',
+                'folder'               => $showEpisode->video->folder ?? '',
+                'cloud_folder'         => $showEpisode->video->cloud_folder ?? '',
+                'upload_status'        => $showEpisode->video->upload_status ?? '',
+                'video_url'            => $showEpisode->video->video_url ?? '',
+                'type'                 => $showEpisode->video->type ?? '',
+                'storage_location'     => $showEpisode->video->storage_location ?? '',
+                'mist_stream'          => $showEpisode->video->mistStream ?? null,
+                'mist_stream_wildcard' => $showEpisode->video->mistStreamWildcard ?? null,
             ],
             'youtube_url'                => $showEpisode->youtube_url ?? '',
             'video_embed_code'           => $showEpisode->video_embed_code,

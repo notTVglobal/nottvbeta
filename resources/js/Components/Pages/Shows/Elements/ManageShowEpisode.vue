@@ -46,7 +46,7 @@
                              :episodeSlug="props.episode.slug"
                              :showSlug="props.showSlug"
                              :showName="props.showName"
-                             :scheduledDateTime="props.episode.scheduled_release_dateTime"/>
+                             :scheduledDateTime="props.episode.scheduledReleaseDateTime"/>
       </div>
 
     </td>

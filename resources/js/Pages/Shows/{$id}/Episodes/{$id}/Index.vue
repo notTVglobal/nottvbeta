@@ -98,7 +98,8 @@
 		S125.327,30,242.5,30S455,125.327,455,242.5S359.673,455,242.5,455z"/>
               <polygon points="181.062,336.575 343.938,242.5 181.062,148.425 	"/>
             </svg>
-            <span v-if="nowPlayingStore?.activeMedia?.details?.secondaryName === episode?.name" class="ml-2">Now Playing</span>
+            <span v-if="nowPlayingStore?.activeMedia?.details?.primaryName === episode?.name"
+                  class="ml-2">Now Playing</span>
             <span v-else class="ml-2">Watch Episode</span>
           </button>
 
@@ -190,7 +191,6 @@
 
 
 <script setup>
-import { Inertia } from '@inertiajs/inertia'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
@@ -200,7 +200,6 @@ import { useUserStore } from '@/Stores/UserStore'
 import EpisodeFooter from '@/Components/Pages/ShowEpisodes/Layout/EpisodeFooter'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage'
 import Message from '@/Components/Global/Modals/Messages'
-
 
 usePageSetup('showEpisodesShow')
 
@@ -223,18 +222,19 @@ let playEpisode = () => {
   nowPlayingStore.reset()
 
   // Determine media type and specific details based on the video type
-  const episode = props.episode;
-  const show = props.show;
-  const mediaType = episode.video ? episode.video.mediaType : null; // Use the new 'mediaType' from the backend
+  const episode = props.episode
+  const show = props.show
+  const mediaType = episode.video ? episode.video.mediaType : null // Use the new 'mediaType' from the backend
 
-  const isInternalVideo = mediaType  === 'show';
-  const isExternalVideo = mediaType  === 'externalVideo';
+  const isInternalVideo = mediaType === 'show'
+  const isExternalVideo = mediaType === 'externalVideo'
+  const isBitchute = mediaType === 'bitchute'
 
   const videoDetails = {
     // Assuming video details are structured correctly in your episode data
     video_url: episode.video ? episode.video.video_url : '',
     type: episode.video ? episode.video.type : 'video/mp4', // MIME type for video.js
-  };
+  }
 
   // Common details for nowPlayingStore
   const commonDetails = {
@@ -273,19 +273,25 @@ let playEpisode = () => {
   // Load the video source in videoPlayerStore for playback
   if (isInternalVideo) {
     // For internal videos, load using the episode video directly
-    videoPlayerStore.loadNewSourceFromFile(episode.video);
+    videoPlayerStore.loadNewSourceFromFile(episode.video)
   } else if (isExternalVideo) {
     // For external videos, focus on the video_url and type provided within the episode's video details
     if (episode.video && episode.video.video_url) {
       videoPlayerStore.loadNewSourceFromUrl({
         video_url: episode.video.video_url,
-        type: episode.video.type // This assumes that 'type' is correctly set to 'video/mp4' or appropriate video MIME type
-      });
+        type: episode.video.type, // This assumes that 'type' is correctly set to 'video/mp4' or appropriate video MIME type
+      })
     }
+  } else if (isBitchute) {
+    console.log('it\'s bitchute!')
+    videoPlayerStore.loadNewSourceFromUrl({
+      video_url: videoPlayerStore.mistServerUri + episode.video.mist_stream.name + '.mp4',
+      type: episode.video.mist_stream.mime_type, // This assumes that 'type' is correctly set to 'video/mp4' or appropriate video MIME type
+    })
   }
 
 
-  appSettingStore.ott = 1
+    appSettingStore.ott = 1
   // Inertia.visit('/stream');
 
 

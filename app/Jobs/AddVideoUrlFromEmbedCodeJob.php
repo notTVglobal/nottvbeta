@@ -189,12 +189,14 @@ class AddVideoUrlFromEmbedCodeJob implements ShouldQueue
               // Bitchute has CORS issues, we need to proxy the video through our Mist Server.
               // Therefore, we create a new MistStreamWildcard for the video with the Bitchute *.mp4 url as a source.
 
+              $lowercaseShowEpisodeUlid = strtolower($this->showEpisode->ulid); // Mist server can only use lowercase letters, numbers _ - or .
+
               $mistStream = MistStream::firstOrCreate([
-                  'name' => 'bitchute',
+                  'name' => 'z.bitchute.' . $lowercaseShowEpisodeUlid,
               ], [
                   'source' => '',
                   'comment'   => 'Created as Bitchute proxy.',
-                  'mime_type' => '',
+                  'mime_type' => 'video/mp4',
               ]);
 
               if ($mistStream->wasRecentlyCreated) {
@@ -212,10 +214,9 @@ class AddVideoUrlFromEmbedCodeJob implements ShouldQueue
 
                 AddOrUpdateMistStreamJob::dispatch($mistStreamData, $originalName);
 
-                $lowercaseShowEpisodeUlid = strtolower($this->showEpisode->ulid); // Mist server can only use lowercase letters, numbers _ - or .
 
                 $mistStreamWildcard = MistStreamWildcard::create([
-                    'name'           => 'bitchute+' . $lowercaseShowEpisodeUlid, // by appending show+ this becomes our full stream key.
+                    'name'           => 'z.bitchute.' . $lowercaseShowEpisodeUlid, // by appending show+ this becomes our full stream key.
                     'comment'        => 'Automatically created with new episode.',
                     'source'         => $url,
                     'mist_stream_id' => $mistStream->id,

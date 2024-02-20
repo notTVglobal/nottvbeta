@@ -63,6 +63,10 @@ class Video extends Model {
     return $this->belongsTo(MistStream::class, 'mist_stream_id');
   }
 
+  public function mistStreamWildcard() {
+    return $this->belongsTo(MistStreamWildcard::class, 'mist_stream_wildcard_id');
+  }
+
   public function newsStory() {
     return $this->hasOne(NewsStory::class);
   }

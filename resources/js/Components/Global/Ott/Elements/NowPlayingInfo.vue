@@ -38,7 +38,7 @@
           <h1 class="text-xs font-semibold uppercase w-full bg-purple-900 text-white p-2 mt-4 mb-4">
             NOW PLAYING
             <span class="text-gray-500 tracking-widest" v-if="nowPlayingStore.activeMedia.type==='channel'">&nbsp;&nbsp;{{ channelStore.currentChannelName }}&nbsp;Channel</span>
-            <span class="text-gray-500 tracking-widest" v-if="nowPlayingStore.activeMedia.type==='externalVideo'">&nbsp;&nbsp;external video</span>
+            <span class="text-gray-500 tracking-widest" v-if="nowPlayingStore.activeMedia.type==='externalVideo' || nowPlayingStore.activeMedia.type==='bitchute'">&nbsp;&nbsp;external video</span>
 
           </h1>
 

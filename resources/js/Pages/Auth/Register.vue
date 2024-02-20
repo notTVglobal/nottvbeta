@@ -40,6 +40,8 @@
                       autocomplete="name"
                   />
                 </div>
+                <div v-if="form.errors.name" v-text="form.errors.name"
+                     class="text-xs text-red-600 mt-1"></div>
 
                 <div class="mt-4">
                   <JetLabel for="email" value="Email" />
@@ -51,6 +53,8 @@
                       required
                   />
                 </div>
+                <div v-if="form.errors.name" v-text="form.errors.name"
+                     class="text-xs text-red-600 mt-1"></div>
 
                 <div class="mt-4">
                   <JetLabel for="password" value="Password" />
@@ -64,6 +68,9 @@
                   />
                 </div>
 
+                <div v-if="form.errors.password" v-text="form.errors.password"
+                     class="text-xs text-red-600 mt-1"></div>
+
                 <div class="mt-4">
                   <JetLabel for="password_confirmation" value="Confirm Password" />
                   <JetInput
@@ -76,6 +83,9 @@
                   />
                 </div>
 
+                <div v-if="form.errors.password_confirmation" v-text="form.errors.password_confirmation"
+                     class="text-xs text-red-600 mt-1"></div>
+
                 <div class="mt-4">
                   <JetLabel for="invite_code" value="Invite Code" />
                   <JetInput
@@ -86,6 +96,9 @@
                       required
                   />
                 </div>
+
+                <div v-if="form.errors.invite_code" v-text="form.errors.invite_code"
+                     class="text-xs text-red-600 mt-1"></div>
 
                 <!--            Jetstream/Fortify Multi-Auth: Roles, Permissions and Guards-->
                 <!--            https://www.youtube.com/watch?v=NiQSNjWKLfU-->
@@ -120,6 +133,8 @@
                       </div>
                     </div>
                   </JetLabel>
+                  <div v-if="form.errors.terms" v-text="form.errors.terms"
+                       class="text-xs text-red-600 mt-1"></div>
                 </div>
 
                 <!-- Google Recaptcha -->

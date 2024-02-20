@@ -7,7 +7,7 @@
       Now Playing
       <span class="text-gray-500 tracking-widest" v-if="nowPlayingStore.activeMedia.type==='channel'">&nbsp;<span class="text-yellow-400">{{ channelStore.currentChannelName }}&nbsp;Channel</span></span>
       <span class="text-xs text-gray-700 tracking-widest"
-                        v-if="nowPlayingStore.activeMedia.type==='externalVideo'">&nbsp;&nbsp;external video</span>
+                        v-if="nowPlayingStore.activeMedia.type==='externalVideo' || nowPlayingStore.activeMedia.type==='bitchute'">&nbsp;&nbsp;external video</span>
     </div>
     <div>
       <div class="flex flex-col">
