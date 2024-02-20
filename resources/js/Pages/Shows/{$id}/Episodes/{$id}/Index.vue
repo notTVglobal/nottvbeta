@@ -62,7 +62,7 @@
             <div v-if="props.episode.release_dateTime" class="text-yellow-500">
               {{ formatDate(props.episode.release_dateTime) }}
             </div>
-            <ConvertDateTimeToTimeAgo v-if="episode.scheduled_release_dateTime" :dateTime="episode.scheduled_release_dateTime" :class="`text-yellow-500`" />
+            <ConvertDateTimeToTimeAgo v-if="episode.scheduled_release_dateTime" :dateTime="episode.scheduled_release_dateTime" :class="`text-green-400`" />
 
           </div>
 
