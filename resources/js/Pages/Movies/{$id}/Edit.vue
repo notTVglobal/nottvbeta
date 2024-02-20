@@ -441,7 +441,7 @@
                                             <label class="block mb-2 uppercase font-bold text-xs text-red-700"
                                                    for="name"
                                             >
-                                                Twitter @
+                                                X (formerly Twitter) @
                                             </label>
 
                                             <input v-model="form.twitter_handle"

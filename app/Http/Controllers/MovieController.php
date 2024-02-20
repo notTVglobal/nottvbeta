@@ -392,7 +392,7 @@ class MovieController extends Controller {
     $movieStatuses = MovieStatus::all();
     $creativeCommons = CreativeCommons::all();
 
-    $movie->load('trailer.video', 'video.appSetting', 'creativeCommons', 'image', 'video', 'image.appSetting', 'category', 'subCategory'); // Eager load necessary relationships
+    $movie->load('trailers.video', 'video.appSetting', 'creativeCommons', 'image', 'video', 'image.appSetting', 'category', 'subCategory'); // Eager load necessary relationships
 
     return Inertia::render('Movies/{$id}/Edit', [
         'movie'            => $movie,
