@@ -39,6 +39,8 @@ class ShowScheduleController extends Controller {
 
     return response()->json($schedulesByDay);
   }
+
+
     private function fetchSchedulesByDay(): array {
       $schedulesByDay = [];
       // Assuming $now is the current time
@@ -50,22 +52,41 @@ class ShowScheduleController extends Controller {
         $segmentEnd = $segmentStart->copy()->addHours(6); // Each segment spans 6 hours from the start time.
 
         // Fetch schedules within the current segment.
-        $schedules = ShowSchedule::with(['show', 'mistStream', 'showEpisode', 'movie'])
+        $schedules = ShowSchedule::with(['content', 'recurrenceDetails'])
             ->whereBetween('start_time', [$segmentStart, $segmentEnd])
             ->orderBy('start_time')
             ->get()
             ->map(function ($schedule) {
+              // Preload the 'show' relationship for ShowEpisode content
+              if ($schedule->content_type === 'App\Models\ShowEpisode') {
+                $schedule->content->load(['appSetting', 'show.category', 'show.subCategory', 'show.image.appSetting', 'creativeCommons', 'mistStreamWildcard', 'image.appSetting', 'video.appSetting', 'video.mistStream', 'video.mistStreamWildcard']);
+              } elseif ($schedule->content_type === 'App\Models\Movie') {
+                // Assuming Movies don't have a 'show' but have 'image' and possibly 'director'
+                $schedule->content->load(['appSetting', 'category', 'subCategory', 'creativeCommons', 'trailers', 'image.appSetting', 'video.appSetting', 'video.mistStream', 'video.mistStreamWildcard']);
+              }
+              // Handle polymorphic relationship
+              $content = null;
+              if ($schedule->content) {
+                switch ($schedule->content_type) {
+                  case 'App\Models\ShowEpisode':
+                    $content = new ShowEpisodeResource($schedule->content);
+                    break;
+                  case 'App\Models\Movie':
+                    $content = new MovieResource($schedule->content);
+                    break;
+                  // Add cases for other content types as needed
+                }
+              }
+
               return [
-                  'show'        => $schedule->show ? new ShowResource($schedule->show) : null, // bigint unsigned Object with show information
-                  'showEpisode' => $schedule->showEpisode ? new ShowEpisodeResource($schedule->showEpisode) : null, // bigint unsigned Object with showEpisode information
-                  'movie'       => $schedule->movie ? new MovieResource($schedule->movie) : null, // bigint unsigned Object with movie information
-                  'mistStream'  => $schedule->mistStream ?? null, // bigint unsigned Object with stream information
+                  'content'     => $content,
                   'type'        => $schedule->type ?? null, // varchar(255) Discriminator: show, movie, trailer, live stream
                   'start_time'  => $schedule->start_time ?? null, // datetime
                   'end_time'    => $schedule->end_time ?? null, // datetime
-                  'event_type'  => $schedule->event_type ?? null, // varchar(255) Indicates if the event is one-time or recurring
                   'status'      => $schedule->status ?? null, // enum('scheduled','live','completed','cancelled')
                   'priority'    => $schedule->priority ?? null, // int used for sorting scheduling conflicts and priority scheduling
+                  'recurrence_flag' => $schedule->recurence_flag ?? null,
+                  'recurrence_details' => $schedule->recurrenceDetails ?? null,
               ];
             });
 

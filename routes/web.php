@@ -298,6 +298,19 @@ Route::middleware([
   Route::post('/admin/channels/{channel}/setExternalSource', [ChannelController::class, 'setExternalSource']);
 
 
+  // Schedule
+///////////
+
+  // User view
+  Route::get('/schedule', [ScheduleController::class, 'index'])
+      ->name('schedule');
+
+  // Admin manage the schedule
+  Route::get('/admin/schedule', [AdminController::class, 'adminSchedulePage'])
+      ->can('viewAdmin', 'App\Models\User')
+      ->name('admin.schedule');
+
+
 // Shop
 ///////////
 //    Route::resource('shop', ShopController::class);
@@ -469,12 +482,6 @@ Route::middleware([
     })->can('viewVip', 'App\Models\User')
         ->name('library');
 
-
-// Schedule
-///////////
-
-    Route::get('/schedule', [ScheduleController::class, 'index'])
-        ->name('schedule');
 
 
 // Invite

@@ -26,7 +26,7 @@
             >{{ time }}
             </div>
             <CalendarCard v-if="daySchedule[timeIndex]"
-                          :media="daySchedule[timeIndex]?.show || daySchedule[timeIndex]?.movie"
+                          :content="daySchedule[timeIndex]?.content"
                           :type="daySchedule[timeIndex]?.type"
                           :startTime="formatHour(daySchedule[timeIndex]?.start_time)"
                           :isLive="dayIndex === 0 && timeIndex === 0"/>
@@ -58,7 +58,7 @@
                class="col-span-3 xl:col-auto rounded-lg text-center"
                :class="{'border-4 border-red-500': dayIndex === 0 && timeIndex === 0}">
             <CalendarCard v-if="daySchedule[timeIndex]"
-                          :media="daySchedule[timeIndex]?.show || daySchedule[timeIndex]?.movie"
+                          :content="daySchedule[timeIndex]?.content"
                           :type="daySchedule[timeIndex]?.type"
                           :startTime="formatHour(daySchedule[timeIndex]?.start_time)"
                           :isLive="true"/>
@@ -68,7 +68,7 @@
             <!--            {{ daySchedule[timeIndex].type }}: {{ daySchedule[timeIndex].show?.name || daySchedule[timeIndex].movie?.name }}-->
 
             <CalendarCard v-if="daySchedule[timeIndex]"
-                          :media="daySchedule[timeIndex]?.show || daySchedule[timeIndex]?.movie"
+                          :content="daySchedule[timeIndex]?.content"
                           :type="daySchedule[timeIndex]?.type"
                           :startTime="formatHour(daySchedule[timeIndex]?.start_time)"/>
 

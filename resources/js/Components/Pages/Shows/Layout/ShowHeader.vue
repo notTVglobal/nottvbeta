@@ -24,7 +24,6 @@
             <div class="flex-grow"></div>
             <button class="btn btn-lg bg-green-500 hover:bg-green-700 border-green-500 text-white text-success-content drop-shadow-lg py-2 flex flex-col">
               <span>Add Show To Schedule</span>
-              <span class="text-sm italic font-thin">7 time slots available</span>
             </button>
 
           </div>

@@ -12,26 +12,22 @@ use Carbon\Carbon;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ShowSchedule>
  */
-class ShowScheduleFactory extends Factory
-{
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
-  public function definition()
-  {
-  static $hourIncrement = 0; // Keep track of the hour increment for each item
+class ShowScheduleFactory extends Factory {
+  /**
+   * Define the model's default state.
+   *
+   * @return array<string, mixed>
+   */
+  public function definition() {
+    static $hourIncrement = 0; // Keep track of the hour increment for each item
 
     // Calculate the start time at the top of the current (or most recent) hour, then increment
     $startTime = Carbon::now()->startOfHour()->addHours($hourIncrement++);
 
     // Determine whether this schedule is for a show or a movie
     $isShow = $this->faker->boolean;
-    $showId = null;
-    $showEpisodeId = null;
-    $movieId = null;
-    $type = null;
+    $contentId = null;
+    $contentType = null;
     //  $startTime = now(); // Adjust based on your logic
 
     if ($isShow) {
@@ -44,35 +40,30 @@ class ShowScheduleFactory extends Factory
           ->first();
 
       if ($showEpisode) {
-        $showEpisodeId = $showEpisode->id;
-        $showId = $showEpisode->show_id;
-        $type = 'show';
+        $contentId = $showEpisode->id;
+        $contentType = 'App\Models\ShowEpisode'; // Use the fully qualified class name of your ShowEpisode model
       }
     } else {
       // Handle the movie case
       $movie = Movie::inRandomOrder()->first();
       if ($movie) {
-        $movieId = $movie->id;
-        $type = 'movie';
+        $contentId = $movie->id;
+        $contentType = 'App\Models\Movie'; // Use the fully qualified class name of your Movie model
       }
     }
 
     // Ensure $startTime is appropriately set to the top of the hour
     // $startTime = $startTime->minute(0)->second(0);
-    $mistStreamId = MistStream::inRandomOrder()->first()->id; // Assuming MistStream records exist
-
 
     return [
-          'show_id' => $showId,
-          'mist_stream_id' => $mistStreamId,
-          'show_episode_id' => $showEpisodeId,
-          'movie_id' => $movieId,
-          'type' => $type,
-          'start_time' => $startTime,
-          'end_time' => $startTime->copy()->addHour(), // End time is 1 hour later
-          'status' => 'scheduled',
-          'priority' => $this->faker->numberBetween(0, 10),
-          'event_type' => $this->faker->randomElement(['one-time', 'recurring']),
+        'content_type'    => $contentType,
+        'content_id'      => $contentId,
+        'start_time'      => $startTime,
+        'end_time'        => $startTime->copy()->addHour(), // End time is 1 hour later
+        'type'            => $isShow ? 'show' : 'movie', // Assuming you're keeping a 'type' column for other logic
+        'status'          => 'scheduled',
+        'priority'        => $this->faker->numberBetween(0, 10),
+        'recurrence_flag' => 0
     ];
   }
 }

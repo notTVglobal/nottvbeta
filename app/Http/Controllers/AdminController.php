@@ -187,6 +187,16 @@ class AdminController extends Controller
     ]);
   }
 
+  ////////////  ADMIN SCHEDULE PAGE
+/////////////////////////////////
+  public function adminSchedulePage()
+  {
+
+//Channel::with(['externalSource', 'channelPlaylist', 'mistStream'])->get();
+
+    return Inertia::render('Admin/Schedule/Index');
+  }
+
 ////////////  SERVER TIME
 //////////////////////////
 

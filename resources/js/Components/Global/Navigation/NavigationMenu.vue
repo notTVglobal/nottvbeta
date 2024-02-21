@@ -228,6 +228,13 @@
 
                         <JetDropdownLink
                             @click="videoPlayerStore.makeVideoTopRight()"
+                            :href="route('admin.schedule')"
+                            :active="appSettingStore.currentPage === 'admin.schedule'">
+                          Schedule
+                        </JetDropdownLink>
+
+                        <JetDropdownLink
+                            @click="videoPlayerStore.makeVideoTopRight()"
                             :href="route('admin.channels')"
                             :active="appSettingStore.currentPage === 'admin.channels'">
                           Channels
