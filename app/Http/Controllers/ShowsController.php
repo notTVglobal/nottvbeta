@@ -95,11 +95,17 @@ class ShowsController extends Controller {
                 }
               });
         })
-        // Searchable filter
+        // Searchable filter for both Show and ShowEpisode
         ->when(Request::input('search'), function ($query, $search) {
           $query->where(function ($q) use ($search) {
             $q->where('name', 'like', "%" . $search . "%")
-                ->orWhere('description', 'like', "%" . $search . "%");
+                ->orWhere('description', 'like', "%" . $search . "%")
+                // Extend search to ShowEpisode names and descriptions
+                ->orWhereHas('showEpisodes', function ($q) use ($search) {
+                  $q->where('name', 'like', "%" . $search . "%")
+                      ->orWhere('description', 'like', "%" . $search . "%")
+                      ->where('show_episode_status_id', 7); // Ensure episode is published
+                });
           });
         })
         ->orderByRaw('RAND()')

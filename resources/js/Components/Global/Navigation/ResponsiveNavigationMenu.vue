@@ -253,6 +253,13 @@
 
             <JetResponsiveNavLink
                 @click="appSettingStore.closeNavDropdown()"
+                :href="route('admin.schedule')"
+                :active="route().current('admin.schedule')">
+              Schedule
+            </JetResponsiveNavLink>
+
+            <JetResponsiveNavLink
+                @click="appSettingStore.closeNavDropdown()"
                 :href="route('admin.channels')"
                 :active="route().current('admin.channels')">
               Channels

@@ -22,15 +22,28 @@
 
           <div class="mt-12 w-full h-full flex flex-col">
             <div class="flex-grow"></div>
-            <button class="btn btn-lg bg-green-500 hover:bg-green-700 border-green-500 text-white text-success-content drop-shadow-lg py-2 flex flex-col">
+            <button onclick="addShowToScheduleModal.showModal()"
+                    class="btn btn-lg bg-green-500 hover:bg-green-700 border-green-500 text-white text-success-content drop-shadow-lg py-2 flex flex-col">
               <span>Add Show To Schedule</span>
-              <span class="text-sm italic font-thin">7 time slots available</span>
             </button>
 
           </div>
         </div>
 
       </div>
+
+    <AddShowToSchedule :id="`addShowToScheduleModal`" :form-errors="$page.props.errors">
+      <template #form-title>
+        Add Show To Schedule
+      </template>
+      <template #form-description>
+        Add your show to the schedule
+      </template>
+      <template #button-label>
+        Add
+      </template>
+    </AddShowToSchedule>
+
 
   </div>
 </template>
@@ -40,6 +53,7 @@ import { useShowStore } from "@/Stores/ShowStore"
 import { useTeamStore } from "@/Stores/TeamStore"
 import SingleImage from "@/Components/Global/Multimedia/SingleImage"
 import Button from '@/Jetstream/Button.vue'
+import AddShowToSchedule from '@/Components/Global/Schedule/AddShowToSchedule.vue'
 
 const showStore = useShowStore()
 const teamStore = useTeamStore()

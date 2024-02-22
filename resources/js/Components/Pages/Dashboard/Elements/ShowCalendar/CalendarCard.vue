@@ -3,37 +3,38 @@
        :class="badgeBgColorClass">
     {{ type }}
   </div>
-  <Button @click.prevent="Inertia.visit(`${type}s/${media.slug}`)" class="relative w-full bg-blue-500 hover:bg-indigo-800 hover:cursor-pointer text-white h-full flex flex-col p-2 rounded-lg shadow transition ease-in-out duration-150 z-50">
-
+    <Button @click.prevent="buttonSlug" class="relative w-full bg-blue-500 hover:bg-indigo-800 hover:cursor-pointer text-white h-full flex flex-col p-2 rounded-lg shadow transition ease-in-out duration-150 z-50">
     <div class="flex-grow">
+      <!-- Custom message -->
+      <div v-if="isLive">
+        <div v-if="isWatching" class="text-green-500">
+          You're watching this now! Enjoy the show.
+        </div>
+        <div v-else class="text-red-500 my-2">
+          Now Streaming
+        </div>
+      </div>
       <!-- Show Details -->
       <div class="w-full text-orange-500 text-xs font-semibold uppercase tracking-wider">
-        <template v-if="media.category?.name">
-          {{ media.category.name }}
+
+        <template v-if="content?.category?.name">
+          {{ content?.category.name }}
         </template>
         <template v-else>
           <!-- Placeholder to maintain layout -->
           <span class="invisible">No Category</span>
         </template>
       </div>
-      <div class="font-semibold text-sm">{{ media.name }}</div>
-      <!-- Custom message -->
-      <div v-if="isLive">
-        <div v-if="isWatching" class="text-green-500">
-          You're watching this now! Enjoy the show.
-        </div>
-        <div v-else class="text-red-500 mt-4">
-          Streaming now
-        </div>
-      </div>
+      <div class="font-semibold text-sm">{{ content?.name }}</div>
     </div>
     <SingleImage
-        :placeholder="placeholder"
-        :alt="media.name"
+        :image="content?.image"
+        :placeholder="content?.image?.placeholder"
+        :alt="content?.image?.name"
         class="w-full self-end rounded my-2 hover:opacity-75 transition ease-in-out duration-150" />
     <!-- Additional Show Info -->
     <div class="w-full min-h-[20px] text-gray-100 text-xs font-semibold uppercase tracking-wider">
-      <template v-if="media.category?.name">
+      <template v-if="content?.category?.name">
         <div class="flex flex-row w-full justify-center">
           <div>{{ startTime || ' ' }}</div>
         </div>
@@ -59,7 +60,7 @@ let placeholder = ref(`https://picsum.photos/200/300?random=${randomQueryParam}`
 
 
 const props = defineProps({
-  media: Object,
+  content: Object,
   type: String,
   startTime: String,
   isLive: Boolean,
@@ -68,6 +69,14 @@ const props = defineProps({
     default: false, // Provide a default value if appropriate
   },
 });
+
+const buttonSlug = () => {
+  if( props.type === 'movie') {
+    Inertia.visit('movies/' + props.content?.slug)
+  } else if (props.type === 'show') {
+    Inertia.visit('shows/' + props.content?.show?.slug + '/episode/' + props.content?.slug)
+  }
+}
 
 const badgeBgColorClass = computed(() => {
   switch (props.type) {

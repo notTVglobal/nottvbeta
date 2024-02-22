@@ -1,7 +1,20 @@
 # not.tv Changelog
 
-Last Update: February 19, 2024\
+Last Update: February 22, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+# v0.8.6.6
+February 22, 2024
+* Create a ScheduleStore to fetch and save the schedule.
+  * Built a Month and Day view for the schedule on the Admin/Schedule page. We can use this component for the public/users schedule page.
+  * Added Admin functions to purge the schedule cache. The cache is invalid after 15 minutes and users will get fresh data every 15 minutes.
+  * Built a javascript log to determine if the viewer should fetch fresh data from the database when browsing the schedule. This will eventually be replaced by real-time features.
+  * Started to build the Creator's Add Show to Schedule Modal.
+* We have a need for Closed Captioning. This is an important accessibility feature.
+* Still need to finish the Show recordings feature.
+* Integrate OAuth login for people if it adds substantial convenience and we can keep the app secure.
+* If we register with Zoom we can integrate Zoom calls easier for our Creators.
+* Need to implement a Modal into the Schedule that allows the user to 1) subscribe to the show / aka follow the show, 2) Go to the show page, 3) Set a reminder for when the show goes live, 4) go back 
 
 # v0.8.6.5
 February 19, 2024

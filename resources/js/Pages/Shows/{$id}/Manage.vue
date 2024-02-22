@@ -65,8 +65,9 @@
 
       <div class="flex flex-col">
         <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-          <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-            <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+          <div class="py-2 align-middle inline-block w-full sm:px-6 lg:px-8 space-y-4">
+<!--          <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">-->
+<!--            <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">-->
 
               <!-- This code doesn't work .. it's meant to become a header button that collapses/expands each section -->
               <!--                            <button class="bg-orange-300 p-2 font-bold w-full text-left" type="button"-->
@@ -75,12 +76,20 @@
               <!--                            </button>-->
 
               <!--                            <div class="collapse" id="collapseExample">-->
-              <div>
-                <div class="bg-blue-100 p-2 font-bold text-black">Episodes</div>
-
+<!--              <div>-->
+<!--                <div class="bg-blue-100 p-2 font-bold text-black">Episodes</div>-->
+              <div @click="toggleComponent('showEpisodes')"
+                   :class="{'rounded-t-lg': showStore.openComponent === 'showEpisodes', 'rounded-lg': showStore.openComponent !== 'showEpisodes'}"
+                   class="accordion-header p-2 font-bold transition duration-300 ease-in-out transform focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 overflow-hidden shadow-lg bg-blue-100 hover:bg-blue-300 dark:hover:bg-blue-900 text-black hover:text-blue-900 dark:text-blue-100 dark:hover:text-white">
+                Episodes
+              </div>
+              <div v-if="showStore.openComponent === 'showEpisodes'">
+                <div class="mt-4 mb-12 pb-6 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
                 <ShowEpisodesList :episodes="props.episodes" :show="props.show"
                                   :episodeStatuses="props.episodeStatuses"/>
+                </div>
               </div>
+<!--              </div>-->
 
               <!--                            <table class="min-w-full divide-y divide-gray-200">-->
               <!--                                <tbody class="bg-white divide-y divide-gray-200">-->
@@ -105,10 +114,19 @@
               <!--                            &lt;!&ndash; Paginator &ndash;&gt;-->
               <!--                            <Pagination :links="episode.links" class="mt-6"/>-->
 
-            </div>
+<!--            </div>-->
 
-            <div class="mt-4 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-              <div class="bg-blue-100 p-2 font-bold text-black">Credits</div>
+<!--            <div class="mt-4 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">-->
+<!--              <div class="bg-blue-100 p-2 font-bold text-black">Credits</div>-->
+<!--              -->
+<!--              -->
+          <div @click="toggleComponent('showCredits')"
+               :class="{'rounded-t-lg': showStore.openComponent === 'showCredits', 'rounded-lg': showStore.openComponent !== 'showCredits'}"
+               class="accordion-header p-2 font-bold transition duration-300 ease-in-out transform focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 overflow-hidden shadow-lg bg-blue-100 hover:bg-blue-300 dark:hover:bg-blue-900 text-black hover:text-blue-900 dark:text-blue-100 dark:hover:text-white">
+            Credits and Assignments
+          </div>
+          <div v-if="showStore.openComponent === 'showCredits'">
+            <div class="mt-4 mb-12 pb-6 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
               <div class="border-1 border-t mb-3 bg-blue-100 py-1 px-2 text-xs font-semibold text-red-800">
                 In development. Not currently working.
               </div>
@@ -123,16 +141,24 @@
               </Link>
 
               <ShowCreditsList/>
-
             </div>
+          </div>
+<!--            </div>-->
 
-            <div class="mt-4 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-              <div class="bg-blue-100 p-2 font-bold text-black">Recordings</div>
-
+<!--            <div class="mt-4 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">-->
+<!--              <div class="bg-blue-100 p-2 font-bold text-black">Recordings</div>-->
+          <div @click="toggleComponent('showRecordings')"
+               :class="{'rounded-t-lg': showStore.openComponent === 'showRecordings', 'rounded-lg': showStore.openComponent !== 'showRecordings'}"
+               class="accordion-header p-2 font-bold transition duration-300 ease-in-out transform focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 overflow-hidden shadow-lg bg-blue-100 hover:bg-blue-300 dark:hover:bg-blue-900 text-black hover:text-blue-900 dark:text-blue-100 dark:hover:text-white">
+            Recordings
+          </div>
+          <div v-if="showStore.openComponent === 'showRecordings'">
+            <div class="mt-4 mb-12 pb-6 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
               <ShowRecordings />
 
+<!--            </div>-->
             </div>
-
+          </div>
           </div>
         </div>
       </div>
@@ -163,6 +189,10 @@ const appSettingStore = useAppSettingStore()
 const showStore = useShowStore()
 const teamStore = useTeamStore()
 const goLiveStore = useGoLiveStore()
+
+const toggleComponent = (componentName) => {
+  showStore.openComponent = showStore.openComponent === componentName ? null : componentName
+}
 
 onUnmounted(() => {
   showStore.errorMessage = ''

@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\ShowResource;
 use App\Http\Resources\ImageResource;
 use App\Http\Resources\VideoResource;
 
@@ -19,6 +20,7 @@ class ShowEpisodeResource extends JsonResource
     return [
         'name' => $this->name,
         'slug' => $this->slug,
+        'show' => new ShowResource($this->whenLoaded('show')),
         'description' => $this->description,
         'image' => $this->whenLoaded('image') ? new ImageResource($this->image) : null,
       // Include video using VideoResource

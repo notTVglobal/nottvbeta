@@ -18,22 +18,7 @@ class ScheduleController extends Controller
     {
         // TODO: return first 5 channels to !subscribers
 
-        return Inertia::render('Schedule', [
-            'schedule' => Schedule::query()
-                ->when(\Illuminate\Support\Facades\Request::input('search'), function ($query, $search) {
-                    $query->where('name', 'like', "%{$search}%");
-                })
-                ->paginate(10)
-                ->withQueryString()
-                ->through(fn($show) => [
-                    'id' => $show->id,
-                    'name' => $show->name
-                ]),
-            'can' => [
-                'addEvent' => Auth::user()->can('create', Schedule::class),
-                'editEvent' => Auth::user()->can('update', Schedule::class)
-            ]
-        ]);
+        return Inertia::render('Schedule');
     }
 
     /**
