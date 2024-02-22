@@ -32,9 +32,10 @@
             </button>
           </Link>
           <button
+              @click.prevent="purgeAllCaches"
               class="btn btn-sm bg-green-500 hover:bg-green-600 text-white px-4 py-2 mr-2 rounded-lg disabled:bg-gray-400"
           >
-            Blank
+            Purge All Caches
           </button>
 
 
@@ -57,7 +58,7 @@
                     <div class="table-row">
                       <div scope="col" class="table-cell px-6 py-3 uppercase">
                         <font-awesome-icon icon="fa-repeat" class="mr-2 cursor-pointer hover:text-blue-500"
-                                           @click.prevent="scheduleStore.reset()"/>
+                                           @click.prevent="resetCalendar"/>
                         <span class="uppercase">Calendar </span>
                       </div>
 
@@ -142,7 +143,8 @@ const reloadSchedule = () => {
 }
 
 const setToToday = () => {
-  scheduleStore.reset() // Assumes reset() sets viewingWindowStart to today
+  // Use the existing action to set the selected day to today
+  scheduleStore.setSelectedDayToToday(new Date());
   currentView.value = 'oneDay'
 };
 
@@ -150,6 +152,17 @@ const currentView = ref('oneDay')
 
 const setView = (view) => {
   currentView.value = view
+}
+
+const purgeAllCaches = () => {
+  scheduleStore.resetAll()
+  Inertia.post('/invalidate-caches/')
+  Inertia.reload()
+}
+
+const resetCalendar = () => {
+  scheduleStore.reset()
+  scheduleStore.checkAndFetchForUpcomingContent()
 }
 
 onBeforeUnmount(() => {

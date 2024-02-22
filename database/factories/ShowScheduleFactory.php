@@ -13,6 +13,9 @@ use Carbon\Carbon;
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ShowSchedule>
  */
 class ShowScheduleFactory extends Factory {
+  protected $year;
+  protected $month;
+  protected $day;
   /**
    * Define the model's default state.
    *
@@ -21,8 +24,16 @@ class ShowScheduleFactory extends Factory {
   public function definition() {
     static $hourIncrement = 0; // Keep track of the hour increment for each item
 
+    // Use provided $year, $month, and $day, defaulting to current date if not set
+    $year = $this->year ?? now()->year;
+    $month = $this->month ?? now()->month;
+    $day = $this->day ?? now()->day;
+
+    // Initialize start time at 00:00 and add hours based on the increment
+    $startTime = Carbon::create($year, $month, $day, 0, 0)->addHours($hourIncrement++);
+
     // Calculate the start time at the top of the current (or most recent) hour, then increment
-    $startTime = Carbon::now()->startOfHour()->addHours($hourIncrement++);
+//    $startTime = Carbon::now()->startOfHour()->addHours($hourIncrement++);
 
     // Determine whether this schedule is for a show or a movie
     $isShow = $this->faker->boolean;
@@ -66,4 +77,20 @@ class ShowScheduleFactory extends Factory {
         'recurrence_flag' => 0
     ];
   }
+
+  /**
+   * Allow setting custom start date for the schedule.
+   *
+   * @param int $year
+   * @param int $month
+   * @param int $day
+   * @return $this
+   */
+  public function withStartDate($year, $month, $day) {
+    $this->year = $year;
+    $this->month = $month;
+    $this->day = $day;
+    return $this;
+  }
+
 }

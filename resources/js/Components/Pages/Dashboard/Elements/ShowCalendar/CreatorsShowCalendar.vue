@@ -84,6 +84,7 @@
 <script setup>
 import { ref, onMounted, computed, onUnmounted, watch } from 'vue'
 import { useUserStore } from '@/Stores/UserStore'
+import { useScheduleStore } from '@/Stores/ScheduleStore'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import timezone from 'dayjs/plugin/timezone'
@@ -93,6 +94,7 @@ dayjs.extend(utc)
 dayjs.extend(timezone)
 
 const userStore = useUserStore()
+const scheduleStore = useScheduleStore()
 
 const now = dayjs()
 let intervalId
@@ -110,17 +112,9 @@ const formatDate = (date) => dayjs.utc(date).tz(userTimezone.value).format('dddd
 const formatHour = (date) => dayjs.utc(date).tz(userTimezone.value).format('ddd, h A')
 
 // Reactive state to hold shows data
-const showsState = ref([])
+// To access the shows in your template, you can use a computed property or directly reference scheduleStore.shows
+const showsState = computed(() => scheduleStore.fiveDaySixHourSchedule)
 
-// Asynchronous function to load schedule shows
-async function loadScheduleShows() {
-  try {
-    const response = await axios.get('/api/schedule')
-    showsState.value = response.data
-  } catch (error) {
-    console.error('Failed to load schedule shows:', error)
-  }
-}
 
 function findShowForSlot(day, time) {
   return adjustedSchedule.value.find((schedule) => {
@@ -185,8 +179,7 @@ console.log({ adjustedSchedule, times });
 
 
 onMounted(() => {
-
-  loadScheduleShows() // Load the data when the component mounts
+  scheduleStore.fetchFiveDaySixHourSchedule() // Load shows when component mounts
 
   intervalId = setInterval(() => { // Set an interval to update the trigger every hour
     triggerUpdate.value++

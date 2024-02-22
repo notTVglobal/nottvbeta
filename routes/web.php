@@ -14,10 +14,12 @@ use App\Http\Controllers\MistStreamController;
 use App\Http\Controllers\NewsRssFeedItemArchiveController;
 use App\Http\Controllers\NewsRssFeedItemTempController;
 use App\Http\Controllers\NotificationsController;
+use App\Http\Controllers\ShowScheduleController;
 use App\Http\Controllers\SubscriptionPlanController;
 use App\Http\Controllers\TeamManagersController;
 use App\Http\Controllers\TestMessageController;
 use App\Http\Controllers\WelcomeController;
+use App\Http\Middleware\HandleInertiaRequests;
 use App\Mail\VerifyMail;
 use App\Models\Creator;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -981,13 +983,21 @@ Route::get('/admin/external-source/search', [ChannelExternalSourceController::cl
 ///////////
 ///
 
-Route::get('/api/schedule', [\App\Http\Controllers\ShowScheduleController::class, 'index']);
-Route::post('/api/schedule/{id}', [\App\Http\Controllers\ShowScheduleController::class, 'update']);
+Route::get('/api/schedule', [ShowScheduleController::class, 'fetchFiveDaySixHourSchedule']);
+Route::post('/api/schedule/{id}', [ShowScheduleController::class, 'update']);
+Route::get('/api/schedule/today', [ShowScheduleController::class, 'fetchTodaysContent']);
+Route::get('/api/schedule/week', [ShowScheduleController::class, 'preloadWeeklyContent']);
+Route::get('/api/schedule/week/{formattedDate}', [ShowScheduleController::class, 'loadWeekFromDate']);
+
+Route::post('/invalidate-caches/', [ShowScheduleController::class, 'invalidateCaches'])
+    ->can('viewAdmin', 'App\Models\User');
+
+
 
 // Extra Functions
 //////////////////
 ///
-    Route::post('/clear-flash', [\App\Http\Middleware\HandleInertiaRequests::class, 'clearFlash'])->name('flash.clear');
+    Route::post('/clear-flash', [HandleInertiaRequests::class, 'clearFlash'])->name('flash.clear');
 
     Route::get('/notifications', [NotificationsController::class, 'index']);
     Route::patch('/notifications/{id}/mark-as-read', [NotificationsController::class, 'markAsRead']);

@@ -21,7 +21,7 @@
             class="py-2 rounded-full hover:bg-blue-100 cursor-pointer"
             v-for="(day, index) in daysInMonth"
             :key="index"
-            :class="{'bg-blue-200': isSelectedDay(day), 'text-gray-500': !isCurrentMonth(day)}"
+            :class="{'bg-blue-200 text-gray-800': isSelectedDay(day), 'text-gray-300': !isCurrentMonth(day), 'text-gray-800': isCurrentMonth(day)}"
             @click="selectDay(day)"
         >
           {{ day.getDate() }}
@@ -34,17 +34,38 @@
 <script setup>
 // Month view logic
 import { useScheduleStore } from '@/Stores/ScheduleStore';
-import { getMonth, isSameDay, isToday as isTodayDate } from 'date-fns';
+import { getMonth, isSameDay, isToday as isTodayDate, startOfMonth, endOfMonth, startOfWeek, endOfWeek, eachDayOfInterval, addDays } from 'date-fns';
 import { storeToRefs } from 'pinia'
+import { computed, watch } from 'vue'
 
 const scheduleStore = useScheduleStore();
 // const { currentMonthName, currentYear, daysInMonth, subtractMonth, addMonth, currentMonthIndex } = storeToRefs(scheduleStore);
-const { currentMonthName, currentYear, daysInMonth } = storeToRefs(scheduleStore);
+const { viewingWindowStart, currentMonth, currentMonthName, currentYear, daysInMonth } = storeToRefs(scheduleStore);
 
 // const now = new Date();
 // const currentMonth = ref(now);
 
+watch(viewingWindowStart, (newValue, oldValue) => {
+  // When viewingWindowStart changes, update currentMonth to the new month of viewingWindowStart
+  scheduleStore.currentMonth = new Date(viewingWindowStart.value.getFullYear(), viewingWindowStart.value.getMonth(), 1);
+  }, { deep: true });
+
 const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+// Computes the days to be displayed in the month, including days from the previous and next months to fill the weeks
+// const daysInMonth = computed(() => {
+//   const currentMonth = scheduleStore.currentMonth; // Assuming currentMonth is a reactive date object for the current month
+//   const startOfCurrentMonth = startOfMonth(currentMonth);
+//   const endOfCurrentMonth = endOfMonth(currentMonth);
+//
+//   // Start at the beginning of the week where the first day of the month is
+//   const startOfGrid = startOfWeek(startOfCurrentMonth, { weekStartsOn: 0 });
+//   // End at the end of the week where the last day of the month is
+//   const endOfGrid = endOfWeek(endOfCurrentMonth, { weekStartsOn: 0 });
+//
+//   // Generate the days for the calendar grid
+//   return eachDayOfInterval({ start: startOfGrid, end: endOfGrid });
+// });
 
 // Method to handle day selection
 function selectDay(day) {

@@ -14,12 +14,16 @@ class ShowSchedule extends Model
   protected $fillable = [
       'content_id',
       'content_type',
-      'start_time',
-      'end_time',
       'recurrence_flag',
       'recurrence_details_id',
       'status', // scheduled, live, completed, cancelled
       'priority', // defaults to 0
+  ];
+
+  protected $casts = [
+      'start_time' => 'datetime',
+      'end_time' => 'datetime',
+    // other casts
   ];
 
   public function content()
