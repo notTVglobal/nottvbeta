@@ -44,6 +44,7 @@ import {
 // import popper for pop-up tooltips
 import Popper from "vue3-popper";
 import { format } from 'date-fns'
+import VueConfetti from 'vue-confetti'
 // import confirm dialog
 // import ConfirmDialog from '@/Components/Global/Modals/ConfirmDialog';
 // import vueCountryRegionSelect from 'vue3-country-region-select';
@@ -106,6 +107,7 @@ createInertiaApp({
             .use(ZiggyVue, Ziggy)
             .use(createPinia())
             .use(Vue3TouchEvents)
+            .use(VueConfetti)
             // .use(vuetify)
             // .use(vueCountryRegionSelect)
             // .use(setupCalendar, {})

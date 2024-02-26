@@ -122,7 +122,6 @@ const convertedDate = ref('');
 watchEffect(() => {
   if (userStore.timezone) {
     convertedDate.value = dayjs.utc(props.scheduledDateTime).tz(userStore.timezone).format();
-    console.log('where\'s the scheduled dateTime??? CONVERTED: ' + convertedDate.value)
   }
 })
 

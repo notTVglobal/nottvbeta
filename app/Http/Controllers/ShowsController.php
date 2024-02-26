@@ -173,25 +173,25 @@ class ShowsController extends Controller {
 
   private function transformShowEpisode($showEpisode): array {
     return [
-        'id'              => $showEpisode->id,
-        'ulid'            => $showEpisode->ulid,
-        'episode_number'  => $showEpisode->episode_number,
-        'name'            => $showEpisode->name,
-        'description'     => \Str::limit($showEpisode->description, 100, '...'),
-        'image'           => $this->transformImage($showEpisode->image, $showEpisode->appSetting),
-        'slug'            => $showEpisode->slug,
-        'showName'        => $showEpisode->show->name,
-        'showSlug'        => $showEpisode->show->slug,
+        'id'                => $showEpisode->id,
+        'ulid'              => $showEpisode->ulid,
+        'episode_number'    => $showEpisode->episode_number,
+        'name'              => $showEpisode->name,
+        'description'       => \Str::limit($showEpisode->description, 100, '...'),
+        'image'             => $this->transformImage($showEpisode->image, $showEpisode->appSetting),
+        'slug'              => $showEpisode->slug,
+        'showName'          => $showEpisode->show->name,
+        'showSlug'          => $showEpisode->show->slug,
 //        'releaseDate' => $showEpisode->release_dateTime,
-        'category'        => [
+        'category'          => [
             'name'        => $showEpisode->show->category->name,
             'description' => $showEpisode->show->category->description,
         ],
-        'subCategory'     => [
+        'subCategory'       => [
             'name'        => $showEpisode->show->subCategory->name,
             'description' => $showEpisode->show->subCategory->description,
         ],
-        'releaseDateTime' => $showEpisode->release_dateTime,
+        'releaseDateTime'   => $showEpisode->release_dateTime,
         'scheduledDateTime' => $showEpisode->scheduled_release_dateTime,
     ];
   }
@@ -681,10 +681,59 @@ class ShowsController extends Controller {
 
   public function manage(Show $show) {
     // Eager load related entities for the Show model
-    $show->load(['user', 'image', 'appSetting', 'category', 'subCategory', 'team']);
+    $show->load(['user', 'image', 'appSetting', 'category', 'subCategory', 'team', 'schedules.showScheduleRecurrenceDetails']);
 
     $episodeStatuses = DB::table('show_episode_statuses')->get()->toArray();
     $filteredStatuses = array_slice($episodeStatuses, 0, -2);
+
+
+    $now = now(); // Current time
+
+    // Initialize an array to hold schedule details
+    $scheduleDetails = [];
+
+    // Determine if the show is actively scheduled or has a schedule in the future
+    // And compile schedule details
+    $isScheduled = $show->schedules->contains(function ($schedule) use ($now, &$scheduleDetails) {
+      $isActiveOrFuture = $schedule->start_time >= $now || ($schedule->start_time <= $now && $schedule->end_time >= $now);
+      if ($isActiveOrFuture) {
+        $detail = [
+            'contentType' => $schedule->content_type,
+            'contentId' => $schedule->content_id,
+            'type' => $schedule->recurrence_flag ? 'recurring' : 'one-time',
+            'startDateTime' => $schedule->start_time,
+            'durationMinutes' => $schedule->duration_minutes,
+        ];
+
+        if ($schedule->recurrence_flag) {
+          // For recurring schedules, add additional details
+          // For recurring schedules, add additional details
+          $daysOfWeek = $schedule->showScheduleRecurrenceDetails ? json_decode($schedule->showScheduleRecurrenceDetails->days_of_week, true) : [];
+          $orderedDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+          // Sort days of week based on the ordered list
+          usort($daysOfWeek, function ($a, $b) use ($orderedDays) {
+            return array_search($a, $orderedDays) - array_search($b, $orderedDays);
+          });
+
+          // Check for specific combinations
+          if (count($daysOfWeek) == 7) {
+            $detail['daysOfWeek'] = 'Weekdays and Weekends';
+          } elseif (count(array_intersect($daysOfWeek, $orderedDays)) == 5 && !in_array('Saturday', $daysOfWeek) && !in_array('Sunday', $daysOfWeek)) {
+            $detail['daysOfWeek'] = 'Weekdays';
+          } elseif (count($daysOfWeek) == 2 && in_array('Saturday', $daysOfWeek) && in_array('Sunday', $daysOfWeek)) {
+            $detail['daysOfWeek'] = 'Weekends';
+          } else {
+            // If none of the specific combinations match, use the sorted list directly
+            $detail['daysOfWeek'] = implode(', ', $daysOfWeek);
+          }
+          $detail['startTime'] = $schedule->showScheduleRecurrenceDetails ? $schedule->showScheduleRecurrenceDetails->start_time : null;
+        }
+
+        $scheduleDetails[] = $detail;
+      }
+      return $isActiveOrFuture;
+    });
 
     return Inertia::render('Shows/{$id}/Manage', [
         'show'            => [
@@ -706,6 +755,8 @@ class ShowsController extends Controller {
                 'description' => $show->subCategory->description,
             ],
             'notes'         => $show->notes,
+            'isScheduled'   => $isScheduled ?? false,
+            'scheduleDetails' => $scheduleDetails ?? [],
         ],
         'team'            => [
             'name' => $show->team->name,

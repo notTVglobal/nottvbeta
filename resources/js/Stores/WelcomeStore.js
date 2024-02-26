@@ -1,5 +1,4 @@
 import { defineStore } from "pinia";
-import {ref} from "vue";
 
 const initialState = () => ({
     showLogin: Boolean,

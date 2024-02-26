@@ -34,22 +34,24 @@ dayjs.extend(relativeTime)
 dayjs.extend(timezone)
 dayjs.extend(utc)
 
-function convertScheduleToTimezone(scheduleData, timezone) {
+function convertScheduleToTimezone(scheduleData) {
+    const userStore = useUserStore(); // Access the UserStore
+
     return scheduleData.data.map(item => {
-        // Convert top-level start_time and end_time
-        const startTimeInUserTz = item.start_time ? dayjs(item.start_time).tz(timezone).format() : null
-        const endTimeInUserTz = item.end_time ? dayjs(item.end_time).tz(timezone).format() : null
+        // Convert top-level start_time and end_time using UserStore methods
+        const startTimeInUserTz = item.start_time ? userStore.formatDateTimeFromUtcToUserTimezone(item.start_time, 'YYYY-MM-DD HH:mm:ss') : null;
+        const endTimeInUserTz = item.end_time ? userStore.formatDateTimeFromUtcToUserTimezone(item.end_time, 'YYYY-MM-DD HH:mm:ss') : null;
 
         // Check and convert recurrenceDetails if present
-        let recurrenceDetailsInUserTz = null
+        let recurrenceDetailsInUserTz = null;
         if (item.recurrenceDetails) {
-            const {start_time, start_date, end_date} = item.recurrenceDetails
+            const { start_time, start_date, end_date } = item.recurrenceDetails;
             recurrenceDetailsInUserTz = {
                 ...item.recurrenceDetails,
-                start_time: start_time ? dayjs(start_time).tz(timezone).format() : null,
-                start_date: start_date ? dayjs(start_date).tz(timezone).format('YYYY-MM-DD') : null, // Assuming date-only fields should not include time
-                end_date: end_date ? dayjs(end_date).tz(timezone).format('YYYY-MM-DD') : null,
-            }
+                start_time: start_time ? userStore.formatTimeInUserTimezone(start_time, 'HH:mm:ss') : null,
+                start_date: start_date ? userStore.formatDateTimeFromUtcToUserTimezone(start_date, 'YYYY-MM-DD') : null,
+                end_date: end_date ? userStore.formatDateTimeFromUtcToUserTimezone(end_date, 'YYYY-MM-DD') : null,
+            };
         }
 
         return {
@@ -57,8 +59,8 @@ function convertScheduleToTimezone(scheduleData, timezone) {
             start_time: startTimeInUserTz,
             end_time: endTimeInUserTz,
             recurrenceDetails: recurrenceDetailsInUserTz,
-        }
-    })
+        };
+    });
 }
 
 // Helper function to get dates within the next 6 hours from viewingWindowStart
@@ -219,12 +221,16 @@ export const useScheduleStore = defineStore('scheduleStore', {
             }
         },
         async preloadWeeklyContent() {
+            const userStore = useUserStore()
             try {
-                const userStore = useUserStore()
                 const response = await axios.get('/api/schedule/week')
+                if (!userStore.timezone) {
+                    console.error("Timezone is not set.");
+                    return; // Or handle this case as appropriate for your app
+                }
 
                 // Fallback to response timezone if userStore.timezone is not set
-                const timezone = userStore.timezone || response.data.userTimezone || 'UTC'; // Additional fallback to 'UTC'
+                const timezone = userStore.timezone || response.data.userTimezone; // Additional fallback to 'UTC'
 
                 this.weeklyContent = convertScheduleToTimezone(response.data, timezone)
             } catch (error) {

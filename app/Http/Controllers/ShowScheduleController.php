@@ -5,19 +5,148 @@ namespace App\Http\Controllers;
 use App\Http\Resources\MovieResource;
 use App\Http\Resources\ShowEpisodeResource;
 use App\Http\Resources\ShowResource;
+use App\Models\Show;
 use App\Models\ShowSchedule;
+use App\Models\ShowScheduleRecurrenceDetails;
 use Carbon\CarbonInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class ShowScheduleController extends Controller {
 
   public function __construct() {
     $this->middleware('auth');
   }
+
+  public function addToSchedule(Request $request) {
+    // Manually extract the data from the request body
+    $data = $request->json()->all();
+
+    // Manually create a validator instance
+    $validator = Validator::make($data, [
+        'contentId' => 'required|integer',
+        'contentType' => 'required|string',
+        'scheduleType' => 'required|string',
+    ]);
+
+    if ($validator->fails()) {
+      return response()->json($validator->errors(), 422);
+    }
+
+    // Extract input
+    // Correctly extract contentId and contentType using the case used in the validator
+    $contentId = $data['contentId'];
+    $contentType = $data['contentType'];
+    $scheduleType = $data['scheduleType'];
+
+    // Determine the correct model class based on the contentType
+    $modelClass = $this->getModelClass($contentType);
+    if (!$modelClass) {
+      return response()->json(['message' => 'Invalid content type provided'], 400);
+    }
+
+    // Verify the specified content exists
+    $content = $modelClass::find($contentId);
+    if (!$content) {
+      return response()->json(['message' => 'Content not found'], 404);
+    }
+
+    // Convert startDate to UTC
+    $formattedStartDate = \Carbon\Carbon::parse($request->input('startDate'))
+        ->setTimezone('UTC')
+        ->toDateTimeString();
+
+// Convert endDate to UTC
+    $formattedEndDate = \Carbon\Carbon::parse($request->input('endDate'))
+        ->setTimezone('UTC')
+        ->toDateTimeString();
+
+    // Query for overlapping schedules
+    $overlappingSchedules = ShowSchedule::where(function ($query) use ($formattedStartDate, $formattedEndDate) {
+      $query->whereBetween('start_time', [$formattedStartDate, $formattedEndDate])
+          ->orWhereBetween('end_time', [$formattedStartDate, $formattedEndDate]);
+    })->get();
+
+    // Determine the new priority
+    // Default to 5, allowing room for manual adjustments to insert more urgent schedules if needed
+    $newPriority = 5;
+    if (!$overlappingSchedules->isEmpty()) {
+      // If there is a conflict, adjust the priority to be one less than the lowest existing to make it more urgent
+      $minPriority = $overlappingSchedules->min('priority');
+      $newPriority = max(1, $minPriority - 1); // Ensure the priority doesn't go below 1
+    }
+
+    // Recurring schedule specific data handling
+    $recurrenceDetailsId = null;
+    if ($scheduleType === 'recurring') {
+      $recurrenceDetailsData = [
+          'frequency' => 'weekly', // Adjust based on your requirements
+          'days_of_week' => json_encode($request->input('daysOfWeek')),
+          'duration_minutes' => $request->input('duration'),
+          'start_time' => Carbon::parse($formattedStartDate)->format('H:i:s'),
+          'start_date' => $formattedStartDate,
+          'end_date' => $formattedEndDate,
+      ];
+
+      // Create ShowScheduleRecurrenceDetails and capture the ID
+      $recurrenceDetails = ShowScheduleRecurrenceDetails::create($recurrenceDetailsData);
+      $recurrenceDetailsId = $recurrenceDetails->id;
+    }
+
+//    // Determine the correct model class based on the contentType
+//    $modelClass = $this->getModelClass($request->input('contentType'));
+//    if (!$modelClass) {
+//      return response()->json(['message' => 'Invalid content type provided'], 400);
+//    }
+//
+//    // Verify the specified content exists
+//    $content = $modelClass::find($request->input('contentId'));
+//    if (!$content) {
+//      return response()->json(['message' => 'Content not found'], 404);
+//    }
+
+    // Prepare common ShowSchedule data
+    $showScheduleData = [
+        'type' => $request->input('contentType'),
+        'recurrence_flag' => $scheduleType === 'recurring' ? 1 : 0,
+        'recurrence_details_id' => $recurrenceDetailsId ?? null,
+        'status' => 'scheduled',
+        'priority' => $newPriority,
+        'duration_minutes' => $request->input('duration'),
+        'start_time' => $formattedStartDate,
+        'end_time' => $formattedEndDate,
+    ];
+
+    // Create ShowSchedule linked to the determined content
+    $showSchedule = $content->schedules()->create($showScheduleData);
+
+    return response()->json([
+        'message' => 'Schedule added successfully',
+        'data' => $showSchedule,
+    ]);
+  }
+
+  protected function getModelClass($contentType): ?string {
+    // Map the 'contentType' to actual model class namespaces
+    $map = [
+        'show' => \App\Models\Show::class,
+        'showEpisode' => \App\Models\ShowEpisode::class,
+        'movie' => \App\Models\Movie::class,
+        'movieTrailer' => \App\Models\MovieTrailer::class,
+        'otherContent' => \App\Models\OtherContent::class,
+      // Add other content types as needed
+    ];
+
+    return $map[$contentType] ?? null;
+  }
+
+
 
   /**
    * Display Show Schedule.
@@ -162,7 +291,7 @@ class ShowScheduleController extends Controller {
       $segmentEnd = $segmentStart->copy()->addHours(6); // Each segment spans 6 hours from the start time.
 
       // Fetch schedules within the current segment.
-      $schedules = ShowSchedule::with(['content', 'recurrenceDetails'])
+      $schedules = ShowSchedule::with(['content', 'showScheduleRecurrenceDetails'])
           ->whereBetween('start_time', [$segmentStart, $segmentEnd])
           ->orderBy('start_time')
           ->get()
@@ -195,7 +324,7 @@ class ShowScheduleController extends Controller {
                 'status'             => $schedule->status ?? null, // enum('scheduled','live','completed','cancelled')
                 'priority'           => $schedule->priority ?? null, // int used for sorting scheduling conflicts and priority scheduling
                 'recurrence_flag'    => $schedule->recurence_flag ?? null,
-                'recurrence_details' => $schedule->recurrenceDetails ?? null,
+                'recurrence_details' => $schedule->showScheduleRecurrenceDetails ?? null,
             ];
           });
 
@@ -275,7 +404,7 @@ class ShowScheduleController extends Controller {
 
 
   private function fetchSchedules(Carbon $startTime, Carbon $endTime) {
-    return ShowSchedule::with(['content', 'recurrenceDetails'])
+    return ShowSchedule::with(['showScheduleRecurrenceDetails'])
         ->whereBetween('start_time', [$startTime, $endTime])
         ->orderBy('start_time')
         ->get()
@@ -285,11 +414,13 @@ class ShowScheduleController extends Controller {
   }
 
   private function transformSchedule($schedule) {
+    $schedule->load('content');
     // Handle polymorphic relationship and other transformations
-    $content = null;
-    if ($schedule->content) {
+    $content = [];
+    if ($schedule->content_type) {
       // Conditionally preload additional relationships based on content type
       switch ($schedule->content_type) {
+
         case 'App\Models\ShowEpisode':
           $schedule->content->loadMissing([
               'appSetting', 'show.category', 'show.subCategory',
@@ -309,6 +440,19 @@ class ShowScheduleController extends Controller {
           ]);
           $content = new MovieResource($schedule->content);
           break;
+        case 'App\Models\Show':
+          // Load missing relationships for the Show model
+          $schedule->content->loadMissing([
+              'appSetting', 'category', 'subCategory',
+              'image.appSetting', // Assuming this is correct, though it's duplicated in your snippet
+              'mistStreamWildcard', // Ensure this relationship exists in your Show model
+          ]);
+
+          // Prepare the content array with a ShowResource
+          $content = [
+              'show' => new ShowResource($schedule->content),
+          ];
+          break;
         // Add more cases as needed
       }
       // Transform the content based on its type
@@ -316,18 +460,71 @@ class ShowScheduleController extends Controller {
     }
 
     return [
-        'content'            => $content?->resolve(), // Ensure the resource is converted to an array
+        'content'            => $content,
         'type'               => $schedule->type ?? null,
         'start_time'         => $schedule->start_time->toDateTimeString() ?? null,
         'end_time'           => $schedule->end_time->toDateTimeString() ?? null,
         'status'             => $schedule->status ?? null,
         'priority'           => $schedule->priority ?? null,
         'recurrence_flag'    => $schedule->recurrence_flag ?? null,
-        'recurrence_details' => $schedule->recurrenceDetails ? $schedule->recurrenceDetails->toArray() : null,
+        'recurrence_details' => $schedule->showScheduleRecurrenceDetails ? $schedule->showScheduleRecurrenceDetails->toArray() : null,
         'id'                 => $schedule->id,
     ];
   }
 
+  public function removeFromSchedule(Request $request) {
+    // Manually extract the data from the request body
+    $data = $request->json()->all();
+
+    // Manually create a validator instance
+    $validator = Validator::make($data, [
+        'contentId' => 'required|integer',
+        'contentType' => 'required|string',
+    ]);
+
+    if ($validator->fails()) {
+      return response()->json($validator->errors(), 422);
+    }
+
+    // Correctly extract contentId and contentType using the case used in the validator
+    $contentId = $data['contentId'];
+    $contentType = $data['contentType'];
+
+    // Convert contentType to the expected format for the polymorphic relation
+    // Assuming your application uses specific namespacing for models
+    $modelClass = $contentType;
+
+    if (!class_exists($modelClass)) {
+      Log::error('removeFromSchedule failed, Invalid content type provided: ' . $contentType . ', ID: ' . $contentId);
+      return response()->json(['message' => 'Invalid content type provided'], 400);
+    }
+
+    // Attempt to find the content by ID
+    $content = $modelClass::find($contentId);
+    if (!$content) {
+      return response()->json(['message' => 'Content not found'], 404);
+    }
+
+    // Assuming the slug is a property of all content types
+    $slug = $content->slug;
+
+    // Find and delete the ShowSchedule items
+    $content->schedules()->each(function($schedule) {
+      // If there are any related recurrence details, delete them
+      $schedule->showScheduleRecurrenceDetails()->delete();
+      // Then delete the schedule itself
+      $schedule->delete();
+    });
+
+    // Assuming this route and redirection logic applies universally; adjust as necessary
+//    return redirect()->back()->with('message', "{$contentType} Removed From Schedule");
+    return response()->json([
+        'message' => "{$contentType} Removed From Schedule",
+    ]);
+
+  }
+
+//
 
   /**
    * Show the form for creating a new resource.

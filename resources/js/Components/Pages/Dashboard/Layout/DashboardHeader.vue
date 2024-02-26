@@ -8,7 +8,7 @@
       <h1 class="w-full text-center text-3xl font-bold text-black">Dashboard for Creators</h1>
       <p class="flex flex-wrap justify-center items-center w-full text-center">
         <span class="mr-1">Your timezone:</span>
-        <span>{{ userStore.timezone }}</span>
+        <span>{{ userStore.canadianTimezone }}</span>
       </p>
 
     </div>

@@ -8,7 +8,10 @@
       >
         &lt; Previous Day
       </button>
-      <h2 class="text-3xl font-bold text-black">{{ dateMessage }}</h2>
+      <div class="flex flex-col text-center">
+        <h2 class="text-3xl font-bold text-black">{{ dateMessage }}</h2>
+        <h3>{{ userStore.canadianTimezoneDescription }}</h3>
+      </div>
       <button
           @click="scheduleStore.changeDay(1)"
           class="bg-gray-100 hover:bg-gray-200 text-black p-2 rounded shadow"
@@ -38,10 +41,11 @@
           <div v-if="isWithinCurrentHour(item, hour)" :key="item.id"
                :class="getTimeSegment(new Date(item.start_time)).color" class="p-4 rounded-lg shadow">
             <div class="flex flex-row">
-              <div class="font-bold text-black">{{ formatHour(new Date(item.start_time)) }}</div>
+              <div class="font-bold text-black">{{ formatHour(new Date(item.start_time)) }}&nbsp;{{ userStore.timezoneAbbreviation }}</div>
               <div class="ml-4">
                 <button @click.prevent="goToContentPage(item)">
-                  <SingleImage :image="item?.content?.image" :alt="item?.content?.name" class="w-20 h-20"/>
+                  <SingleImage v-if="item.type === 'show'" :image="item?.content?.show?.image" :alt="item?.content?.show?.name" class="w-20 h-20"/>
+                  <SingleImage v-else :image="item?.content?.image" :alt="item?.content?.name" class="w-20 h-20"/>
                 </button>
               </div>
               <div class="ml-4">
@@ -80,7 +84,7 @@
         <!-- Fallback if no content is found for the current hour -->
         <div v-if="!isContentAvailableForHour(hour)" :class="getTimeSegment(hour).color"
              class="p-4 rounded-lg shadow">
-          <div class="font-semibold">{{ formatHour(hour) }}</div>
+          <div class="font-semibold">{{ formatHour(hour) }}&nbsp;{{ userStore.timezoneAbbreviation }}</div>
           <div>Nothing scheduled.</div>
         </div>
 
@@ -105,6 +109,7 @@
 // Today view logic
 // import { ref, computed } from 'vue'
 import { useScheduleStore } from '@/Stores/ScheduleStore'
+import { useUserStore } from '@/Stores/UserStore'
 import {
   format,
   startOfHour,
@@ -117,11 +122,12 @@ import {
   isSameDay,
 } from 'date-fns'
 import { storeToRefs } from 'pinia'
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch, watchEffect } from 'vue'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage.vue'
 import { Inertia } from '@inertiajs/inertia'
 
 const scheduleStore = useScheduleStore()
+const userStore = useUserStore()
 const { upcomingContent, dateMessage } = storeToRefs(scheduleStore);
 
 const selectedDay = ref(scheduleStore.selectedDay);
@@ -195,11 +201,26 @@ const goToContentPage = (item) => {
   }
 }
 
-onMounted(async () => {
-  // await scheduleStore.fetchTodaysContent()
-  await scheduleStore.preloadWeeklyContent()
-})
+// Define a reactive watcher on the timezone
+// This watcher will call preloadWeeklyContent whenever the timezone changes and is not null
+watch(
+    () => userStore.timezone,
+    async (newTimezone, oldTimezone) => {
+      // Ensure the timezone is set before calling preloadWeeklyContent
+      if (newTimezone) {
+        await scheduleStore.preloadWeeklyContent();
+      }
+    },
+    { immediate: true } // This option ensures the watcher is triggered immediately on mount
+);
 
+// Optionally, keep the onMounted if there are other initialization tasks
+onMounted(async () => {
+  // Check if timezone is already available on mount and preload content if it hasn't been done by the watcher
+  if (userStore.timezone) {
+    await scheduleStore.preloadWeeklyContent();
+  }
+});
 </script>
 
 <style scoped>

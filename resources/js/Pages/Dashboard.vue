@@ -34,11 +34,14 @@
 
       <div class="w-full bg-yellow-300 dark:bg-gray-900 rounded p-3 my-8 mx-2 border-b border-2">
         <div class="w-full stat place-items-center text-center mb-4">
-          <div class="stat-title font-bold uppercase text-success tracking-widest dark:text-white mb-2 text-sm">Yesterday's Top Show
+          <div class="stat-title font-bold uppercase text-success tracking-widest dark:text-white mb-2 text-sm">
+            Yesterday's Top Show
           </div>
           <div class="hover:text-blue-700 text-xl md:text-3xl">
             <div class="flex flex-col break-words">
-              <Link :href="`shows/${yesterdaysTopShow.slug}`" class="drop-shadow-lg outline-1 font-bold break-words">{{ yesterdaysTopShow.name }}</Link>
+              <Link :href="`shows/${yesterdaysTopShow.slug}`" class="drop-shadow-lg outline-1 font-bold break-words">
+                {{ yesterdaysTopShow.name }}
+              </Link>
 
             </div>
             <!-- Use the `break-words` utility here to ensure wrapping !!!! Doesn't work ! (tec21) -->
@@ -48,7 +51,7 @@
       </div>
 
 
-      <CreatorsShowCalendar />
+      <CreatorsShowCalendar/>
 
       <div class="w-full bg-indigo-300 dark:bg-gray-900 rounded-lg pb-8 p-3 mb-16 mx-2 border-b border-2">
 
@@ -196,7 +199,8 @@
       </section>
       <div class="flex flex-col-reverse md:flex-row">
 
-        <section class="mt-16 space-y-4 w-fit px-10 py-6 bg-gray-900 text-gray-50 dark:text-white rounded-xl drop-shadow-lg">
+        <section
+            class="mt-16 space-y-4 w-fit px-10 py-6 bg-gray-900 text-gray-50 dark:text-white rounded-xl drop-shadow-lg">
           <div class="text-sm uppercase mb-4 border-b border-blue-500">
             External Links
           </div>
@@ -227,10 +231,15 @@
         </section>
         <section class="mt-16 space-y-4 w-fit px-10 py-6">
           <p>
-            At notTV, we are pioneering a new horizon in media and community engagement, blending the cutting-edge world of blockchain technology with the grassroots spirit of local television. We envision a network of autonomous community chapters, each operating like its own vibrant television station, powered by our innovative software platform.
+            At notTV, we are pioneering a new horizon in media and community engagement, blending the cutting-edge world
+            of blockchain technology with the grassroots spirit of local television. We envision a network of autonomous
+            community chapters, each operating like its own vibrant television station, powered by our innovative
+            software platform.
           </p>
           <p>
-            Join us in shaping this new era of community-driven media, where every voice has the power to make a difference, every story has a place to be heard, and every community has the tools to shape its own narrative.
+            Join us in shaping this new era of community-driven media, where every voice has the power to make a
+            difference, every story has a place to be heard, and every community has the tools to shape its own
+            narrative.
           </p>
         </section>
       </div>
@@ -242,17 +251,17 @@
 </template>
 
 <script setup>
-import { Inertia } from "@inertiajs/inertia"
-import { computed, inject, onMounted, ref } from "vue"
+import { Inertia } from '@inertiajs/inertia'
+import { computed, inject, onMounted, ref } from 'vue'
 import { usePageSetup } from '@/Utilities/PageSetup'
-import { useAppSettingStore } from "@/Stores/AppSettingStore"
-import { useUserStore } from "@/Stores/UserStore"
-import Message from "@/Components/Global/Modals/Messages"
-import DashboardHeader from "@/Components/Pages/Dashboard/Layout/DashboardHeader"
-import MyAssignments from "@/Components/Pages/Dashboard/Elements/MyAssignments/MyAssignments"
-import MyTeams from "@/Components/Pages/Dashboard/Elements/MyTeams/MyTeams"
-import MyShows from "@/Components/Pages/Dashboard/Elements/MyShows//MyShows"
-import NotificationPanel from "@/Components/Pages/Dashboard/Elements/DashboardNotification/DashboardNotificationPanel"
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import { useUserStore } from '@/Stores/UserStore'
+import Message from '@/Components/Global/Modals/Messages'
+import DashboardHeader from '@/Components/Pages/Dashboard/Layout/DashboardHeader'
+import MyAssignments from '@/Components/Pages/Dashboard/Elements/MyAssignments/MyAssignments'
+import MyTeams from '@/Components/Pages/Dashboard/Elements/MyTeams/MyTeams'
+import MyShows from '@/Components/Pages/Dashboard/Elements/MyShows//MyShows'
+import NotificationPanel from '@/Components/Pages/Dashboard/Elements/DashboardNotification/DashboardNotificationPanel'
 import CreatorsShowCalendar from '@/Components/Pages/Dashboard/Elements/ShowCalendar/CreatorsShowCalendar.vue'
 
 usePageSetup('dashboard')
@@ -262,19 +271,19 @@ const userStore = useUserStore()
 
 const getUserData = inject('getUserData', null)
 
-const userTimezone = ref('');
+const userTimezone = ref('')
 
 onMounted(() => {
-  getUserTimezone();
+  getUserTimezone()
   if (!getUserData) {
-    updateUserStore();
+    updateUserStore()
   }
-});
+})
 
 const getUserTimezone = () => {
   // Use the Intl object to get the user's timezone
-  userTimezone.value = Intl.DateTimeFormat().resolvedOptions().timeZone;
-};
+  userTimezone.value = Intl.DateTimeFormat().resolvedOptions().timeZone
+}
 
 
 // isCreator, isNewsPerson, isVip, isSubscriber
@@ -307,28 +316,28 @@ let props = defineProps({
   subscriptionCount: Number,
   yesterdaysTopShow: Object,
   can: Object,
-});
+})
 
 // Function to extract the numeric value from a string with "MB" suffix
 const extractNumericValue = (str) => {
-  const numericValue = parseFloat(str);
-  return isNaN(numericValue) ? 0 : numericValue;
-};
+  const numericValue = parseFloat(str)
+  return isNaN(numericValue) ? 0 : numericValue
+}
 
 // Convert x and n to numeric values
-const myTotalStorageUsedNumeric = extractNumericValue(props.myTotalStorageUsed);
-const notTvTotalStorageUsedNumeric = extractNumericValue(props.notTvTotalStorageUsed);
+const myTotalStorageUsedNumeric = extractNumericValue(props.myTotalStorageUsed)
+const notTvTotalStorageUsedNumeric = extractNumericValue(props.notTvTotalStorageUsed)
 
 // Create a computed property to calculate the percentage
 const myTotalStoragePercentage = computed(() => {
   // return Math.round((myTotalStorageUsedNumeric / notTvTotalStorageUsedNumeric) * 100);
-  return ((myTotalStorageUsedNumeric / notTvTotalStorageUsedNumeric) * 100).toFixed(2);
-});
+  return ((myTotalStorageUsedNumeric / notTvTotalStorageUsedNumeric) * 100).toFixed(2)
+})
 
 // Round the percentage to have no decimal places
 const myTotalStorageRoundedPercentage = computed(() => {
-  return Math.round(myTotalStoragePercentage);
-});
+  return Math.round(myTotalStoragePercentage)
+})
 
 async function updateUserStore() {
   // Set user store data
@@ -358,12 +367,12 @@ async function updateUserStore() {
 
 const updateUserTimezone = async () => {
   try {
-    const response = await axios.post('/users/update-timezone', { timezone: userTimezone.value });
-    console.log(response.data.message);
+    const response = await axios.post('/users/update-timezone', {timezone: userTimezone.value})
+    console.log(response.data.message)
   } catch (error) {
-    console.error(error.response ? error.response.data : error);
+    console.error(error.response ? error.response.data : error)
   }
-};
+}
 
 </script>
 

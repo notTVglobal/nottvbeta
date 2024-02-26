@@ -54,39 +54,33 @@ class Show extends Model
         'episode_play_order',
     ];
 
-    public function getRouteKeyName() {
+    public function getRouteKeyName(): string {
         return 'slug';
     }
 
     // tec21: I want to use episodes to make the Eloquent call easier to read.
-    public function showEpisodes()
-    {
+    public function showEpisodes(): \Illuminate\Database\Eloquent\Relations\HasMany {
         return $this->hasMany(ShowEpisode::class);
     }
     // showEpisodes is required for showEpisode.show to display
 
-    public function status()
-    {
+    public function status(): BelongsTo {
         return $this->belongsTo(ShowStatus::class, 'show_status_id');
     }
 
-    public function team()
-    {
+    public function team(): BelongsTo {
         return $this->belongsTo(Team::class);
     }
 
-    public function image()
-    {
+    public function image(): BelongsTo {
         return $this->belongsTo(Image::class);
     }
 
-    public function user()
-    {
+    public function user(): BelongsTo {
         return $this->belongsTo(User::class);
     }
 
-    public function showRunner()
-    {
+    public function showRunner(): BelongsTo {
         return $this->belongsTo(Creator::class);
     }
 
@@ -113,15 +107,18 @@ class Show extends Model
         ]);
     }
 
-    public function showNotes()
-    {
+    public function showNotes(): \Illuminate\Database\Eloquent\Relations\HasMany {
         return $this->hasMany(ShowNote::class);
     }
 
-  public function mistStreamWildcard()
-  {
+  public function mistStreamWildcard(): BelongsTo {
     return $this->belongsTo(MistStreamWildcard::class, 'mist_stream_wildcard_id');
   }
+
+  public function schedules(): \Illuminate\Database\Eloquent\Relations\MorphMany {
+    return $this->morphMany(ShowSchedule::class, 'content');
+  }
+
 //
 //  public static function generateStreamKey($showId)
 //  {

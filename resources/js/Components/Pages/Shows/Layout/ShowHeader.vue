@@ -22,9 +22,31 @@
 
           <div class="mt-12 w-full h-full flex flex-col">
             <div class="flex-grow"></div>
-            <button onclick="addShowToScheduleModal.showModal()"
-                    class="btn btn-lg bg-green-500 hover:bg-green-700 border-green-500 text-white text-success-content drop-shadow-lg py-2 flex flex-col">
+            <div v-if="show.isScheduled && show.scheduleDetails.length > 0">
+              <div class="mb-2" v-for="(detail, index) in show.scheduleDetails" :key="index">
+                Your show is currently scheduled as <strong>{{ detail.type }}</strong>.
+                <div v-if="detail.type === 'one-time'">
+                  It will start on <strong>{{ userStore.formatDateTimeFromUtcToUserTimezone(detail.startDateTime) }}&nbsp;{{userStore.timezoneAbbreviation}}</strong> and last for <strong>{{ detail.durationMinutes }} minutes</strong>.
+                </div>
+                <div v-else>
+                  <template v-if="Array.isArray(detail.daysOfWeek)">
+                    It recurs on <strong>{{ detail.daysOfWeek.join(', ') }}</strong>
+                  </template>
+                  <template v-else>
+                    It recurs on <strong>{{ detail.daysOfWeek }}</strong>
+                  </template>
+                  starting at <strong>{{ userStore.formatTimeInUserTimezone(detail.startTime) }}&nbsp;{{userStore.timezoneAbbreviation}}</strong> with each occurrence lasting <strong>{{ detail.durationMinutes }} minutes</strong>.
+                </div>
+
+              </div>
+            </div>
+            <button v-if="!show.isScheduled" onclick="addShowToScheduleModal.showModal()"
+                    class="btn btn-lg bg-green-500 hover:bg-green-700 border-green-500 text-white drop-shadow-lg py-2 flex flex-col">
               <span>Add Show To Schedule</span>
+            </button>
+            <button v-if="show.isScheduled" onclick="changeShowScheduleModal.showModal()"
+                    class="btn btn-lg bg-indigo-500 hover:bg-indigo-700 border-indigo-500 text-white drop-shadow-lg py-2 flex flex-col">
+              <span>Change Schedule</span>
             </button>
 
           </div>
@@ -32,9 +54,9 @@
 
       </div>
 
-    <AddShowToSchedule :id="`addShowToScheduleModal`" :form-errors="$page.props.errors">
+    <AddShowToSchedule :show="show">
       <template #form-title>
-        Add Show To Schedule
+        Add your show to the schedule
       </template>
       <template #form-description>
         Add your show to the schedule
@@ -44,6 +66,8 @@
       </template>
     </AddShowToSchedule>
 
+    <ChangeShowSchedule :show="show"/>
+
 
   </div>
 </template>
@@ -51,12 +75,15 @@
 <script setup>
 import { useShowStore } from "@/Stores/ShowStore"
 import { useTeamStore } from "@/Stores/TeamStore"
+import { useUserStore } from "@/Stores/UserStore"
 import SingleImage from "@/Components/Global/Multimedia/SingleImage"
 import Button from '@/Jetstream/Button.vue'
 import AddShowToSchedule from '@/Components/Global/Schedule/AddShowToSchedule.vue'
+import ChangeShowSchedule from '@/Components/Global/Schedule/ChangeShowSchedule.vue'
 
 const showStore = useShowStore()
 const teamStore = useTeamStore()
+const userStore = useUserStore()
 
 defineProps({
   show: Object,

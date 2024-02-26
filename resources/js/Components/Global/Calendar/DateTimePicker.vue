@@ -6,12 +6,15 @@
 </template>
 
 <script setup>
-import { ref, defineProps, defineEmits, watch } from 'vue'
+import { ref, defineProps, defineEmits, watch, watchEffect } from 'vue'
 import { DatePicker } from 'v-calendar'
 import 'v-calendar/style.css'
+import { useUserStore } from '@/Stores/UserStore'
+
+const userStore = useUserStore()
 
 const props = defineProps({
-  date: String,
+  date: null,
 });
 
 const emits = defineEmits();

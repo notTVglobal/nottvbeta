@@ -47,6 +47,14 @@ const initialState = () => ({
     notificationsKey: 0,
     userSubscribedToNotifications: false,
     timezone: null,
+    timezones: [
+        'America/Vancouver', // PT
+        'America/Edmonton',  // MT
+        'America/Winnipeg',  // CT
+        'America/Toronto',   // ET
+        'America/Halifax',   // AT
+        'America/St_Johns'   // NT
+    ],
 })
 
 export const useUserStore = defineStore('userStore', {
@@ -139,7 +147,28 @@ export const useUserStore = defineStore('userStore', {
         // Optional: a method to format the datetime string in a specific way
         formatDateTimeInUserTimezone(date, formatString = 'YYYY-MM-DD HH:mm:ss') {
             return dayjs.tz(date, this.timezone).format(formatString);
-        }
+        },
+        formatDateTimeFromUtcToUserTimezone(dateTime, formatString = 'ddd DD MMM  h:mm a') {
+            if (!this.timezone) {
+                console.error("Timezone is not set.");
+                return dateTime; // Or handle this case as appropriate for your app
+            }
+            return dayjs.utc(dateTime).tz(this.timezone).format(formatString);
+        },
+        formatTimeInUserTimezone(time, formatString = 'h:mm a') {
+            if (!this.timezone) {
+                console.error("Timezone is not set.");
+                return time; // Or handle this case as appropriate for your app
+            }
+            // Assuming the incoming time is like '21:00:00' and you want to convert it
+            const dateTime = `2000-01-01T${time}Z`; // Prepend a placeholder date
+            const formattedTime = dayjs.utc(dateTime).tz(this.timezone);
+            return dayjs.utc(dateTime).tz(this.timezone).format(formatString);
+        },
+        async setUserTimezone(newTimezone) {
+            this.timezone = newTimezone;
+            await axios.post('/users/update-timezone', {'timezone': this.timezone})
+        },
     },
 
     getters: {
@@ -147,6 +176,50 @@ export const useUserStore = defineStore('userStore', {
             if (this.uploadPercentage !== 0) {
                 return Math.round(state.uploadPercentage * 10) / 10
             }
+        },
+        canadianTimezone: (state) => {
+            const timezoneMapping = {
+                'America/Los_Angeles': 'America/Vancouver',
+                'America/Tijuana': 'America/Vancouver',
+                'America/Denver': 'America/Edmonton',
+                'America/Phoenix': 'America/Edmonton',
+                'America/Chicago': 'America/Winnipeg',
+                'America/Mexico_City': 'America/Winnipeg',
+                'America/New_York': 'America/Toronto',
+                'America/Detroit': 'America/Toronto',
+                'America/Kentucky/Louisville': 'America/Toronto',
+                'America/Indiana/Indianapolis': 'America/Toronto',
+                'America/Atlantic': 'America/Halifax',
+                'America/Caracas': 'America/Halifax',
+                'America/St_Johns': 'America/St_Johns',
+            };
+
+            return timezoneMapping[state.timezone] || state.timezone;
+        },
+        timezoneAbbreviation(state) {
+            const mapping = {
+                'America/Vancouver': 'PT',
+                'America/Edmonton': 'MT',
+                'America/Winnipeg': 'CT',
+                'America/Toronto': 'ET',
+                'America/Halifax': 'AT',
+                'America/St_Johns': 'NT',
+            };
+            return mapping[state.canadianTimezone] || 'Unknown';
+        },
+        canadianTimezoneDescription(state) {
+            const descriptionMapping = {
+                'America/Vancouver': 'Pacific',
+                'America/Edmonton': 'West',
+                'America/Winnipeg': 'Central',
+                'America/Toronto': 'Ontario',
+                'America/Ottawa': 'Ontario', // Assuming you want to explicitly mention Ottawa for Ontario
+                'America/Montreal': 'Quebec', // Assuming Montreal represents the Quebec timezone
+                'America/Halifax': 'East',
+                'America/St_Johns': 'Atlantic',
+                // Add other mappings as needed
+            };
+            return descriptionMapping[state.canadianTimezone] || 'Unknown';
         },
     }
 });

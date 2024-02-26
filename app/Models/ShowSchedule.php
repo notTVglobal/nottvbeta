@@ -12,12 +12,16 @@ class ShowSchedule extends Model
   protected $table = 'show_schedule';
 
   protected $fillable = [
-      'content_id',
       'content_type',
+      'content_id',
+      'type', // for display and osd: movie, show, movie trailer, etc.
       'recurrence_flag',
       'recurrence_details_id',
       'status', // scheduled, live, completed, cancelled
       'priority', // defaults to 0
+      'duration_minutes',
+      'start_time',
+      'end_time',
   ];
 
   protected $casts = [
@@ -31,9 +35,8 @@ class ShowSchedule extends Model
     return $this->morphTo(__FUNCTION__, 'content_type', 'content_id');
   }
 
-  public function recurrenceDetails()
+  public function showScheduleRecurrenceDetails()
   {
-    return $this->belongsTo(RecurrenceDetails::class);
-  }
+    return $this->belongsTo(ShowScheduleRecurrenceDetails::class, 'recurrence_details_id', 'id');  }
 
 }

@@ -128,8 +128,6 @@ function findShowForSlot(day, time) {
 const adjustedSchedule = computed(() => {
   return showsState.value.map(schedule => {
     // Use a default timezone or wait until userStore.timezone is loaded
-
-    console.log(userStore.timezone)
     const adjustedStartTime = dayjs.utc(schedule.start_time).tz(userTimezone.value).format('h:mm A')
     const adjustedEndTime = dayjs.utc(schedule.end_time).tz(userTimezone.value).format('h:mm A')
 
@@ -162,21 +160,13 @@ const generateDays = () => {
 
 // Computed property to regenerate times dynamically
 const times = computed(() => {
-  console.log('Updating times due to trigger:', triggerUpdate.value) // This ensures the computed prop recalculates
-  console.log(times)
   return generateTimes()
 })
 
 // Using a computed property to dynamically generate the days
 const days = computed(() => {
-  console.log('Updating days due to trigger:', triggerUpdate.value) // Ensures reactivity
-  console.log(days)
-
   return generateDays()
 })
-
-console.log({ adjustedSchedule, times });
-
 
 onMounted(() => {
   scheduleStore.fetchFiveDaySixHourSchedule() // Load shows when component mounts

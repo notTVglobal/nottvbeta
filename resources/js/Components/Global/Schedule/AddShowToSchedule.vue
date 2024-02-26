@@ -1,217 +1,852 @@
 <template>
 
-  <dialog :id="id" class="modal">
+  <dialog id="addShowToScheduleModal" class="modal">
     <div class="modal-box w-11/12 max-w-5xl">
-      <h3 class="font-bold text-lg">
-        <slot name="form-title">Default Form Title</slot>
-      </h3>
 
-
-      <div>
-        <slot name="form-description">Default Form Description</slot>
-      </div>
-      <div>
-        <div class="flex flex-col space-y-2 px-12 mt-6">
-          <form @submit.prevent="submit">
-
-            <ul class="steps">
-              <li class="step step-primary">Choose days of the week</li>
-              <li class="step step-primary">Choose start time</li>
-              <li class="step">Choose duration</li>
-              <li class="step">Choose start date</li>
-              <li class="step">Choose end date</li>
-            </ul>
-
-          <ol>
-            <li>
-              1. Choose days of the week. Checkboxes. Sunday, Monday, Tu.... Saturday
-            </li>
-            <li>
-              2. Choose start time
-            </li>
-            <li>
-              3. Choose duration
-            </li>
-            <li>
-              4. Choose start date
-            </li>
-            <li>
-              5. Choose end date (cannot be longer than 3 months, so 3 months is pre-set)
-            </li>
-          </ol>
-
-            Last "page": Congratulations! You've scheduled your show on notTV!
-
-            <ul>
-              <li>
-                * You will see a countdown to your next live on your Show Manage page and your Dashboard
-              </li>
-              <li>
-                * You can change your schedule at any time. But you may lose your priority spot
-              </li>
-              <li>
-                * Priority is first come first serve. If there are scheduling conflicts the creator's who pick a spot first get the priority until we build additional priority features.
-              </li>
-              <li>
-                * Each creator is limited to 3 shows for now as we build our notTV MVP (minimum viable product)
-              </li>
-              <li>
-                * Connect your live stream at least 5 minutes before your scheduled live. If you miss a scheduled time slot you lose your priority spot.
-              </li>
-              <li>
-                * You can schedule an episode to playback in place of your live stream at your scheduled time if you won't be able to go live. This allows you to pre-record content to release so you don't lose your priority spot.
-              </li>
-            </ul>
-
-            NEXT: Invite a Creator!
-
-            Here's 10 invite codes for you fans/audience. They will each get 10 invite codes as well.
-
-            <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"
-                   for="name">Stream Name</label>
-            <input v-model="form.name"
-                   class="bg-gray-50 border border-gray-400 text-gray-900 text-sm p-2 w-full rounded-lg focus:ring-blue-500 focus:border-blue-500 block"
-                   type="text"
-                   name="name"
-                   id="name" placeholder="Stream Name...">
-            <div v-if="form.errors.name" v-text="form.errors.name" class="text-xs text-red-600 mt-1"></div>
-
-
-            <div class="flex flex-row justify-center pt-6">
-              <button type="submit" class="btn btn-wide bg-green-500 hover:bg-green-400 text-white"
-                      :disabled="form.processing">
-                <slot name="button-label">Default Form Title</slot>
-              </button>
-
-            </div>
-          </form>
+      <div class="flex flex-row justify-between">
+        <div>
+          <h2 v-if="currentStep !== 6" class="font-bold text-xl">
+            <slot name="form-title">Default Form Title</slot>
+            <span class="font-medium">({{ selectedTimezone }})</span>
+          </h2>
         </div>
-
+        <div>
+          <button v-if="currentStep <= 5"
+                  class="btn"
+                  @click.prevent="closeModalAndReset">Cancel
+          </button>
+        </div>
       </div>
 
+      <div class="flex flex-col space-y-2 px-12 mt-6">
+        <form @submit.prevent="submit">
 
-      <div class="modal-action">
-        <button class="btn" @click.prevent="closeModal">Cancel</button>
-        <form method="dialog">
-          <!-- if there is a button, it will close the modal -->
+          <div v-if="currentStep === 0" class="mt-6">
+            <!-- Step 0 content -->
+            <!-- Part 1: Confirm Timezone -->
+
+            <div v-if="!timezoneConfirmed">
+              <div class="mb-2 pb-6 text-primary text-center">Confirm Timezone</div>
+              <div class="flex flex-row justify-center">
+                <label for="timezone-select">Select your timezone:</label>
+                <select id="timezone-select" v-model="selectedTimezone" @change="updateTimezone" class="ml-2">
+                  <option v-for="timezone in userStore.timezones" :key="timezone" :value="timezone">{{ timezone }}</option>
+                </select>
+              </div>
+              <div class="flex flex-row justify-center pt-6">
+                <button @click.prevent="confirmTimezone" class="btn btn-primary">Confirm Timezone</button>
+              </div>
+            </div>
+
+
+            <!-- Part 2: Choose Schedule Type -->
+            <div v-else>
+              <div class="mb-2 text-primary text-center">Choose Schedule Type</div>
+              <div class="flex justify-center space-x-4 mt-4">
+                <button @click.prevent="selectScheduleType('one-time')"
+                        class="btn btn-primary h-40 w-60 bg-indigo-500 hover:bg-indigo-700 text-white rounded-lg flex flex-col p-4">
+                  <span class="text-lg">One-time Event</span>
+                </button>
+                <button @click.prevent="selectScheduleType('recurring')"
+                        class="btn btn-primary h-40 w-60 bg-indigo-500 hover:bg-indigo-700 text-white rounded-lg flex flex-col p-4">
+                  <span class="text-lg">Recurring Show</span>
+                </button>
+              </div>
+              <div @click.prevent="timezoneConfirmed = false" class="mt-4 btn btn-sm">< change timezone</div>
+            </div>
+
+
+          </div>
+
+
+          <div v-if="form.scheduleType === 'one-time'">
+            <!-- Steps Header for one-time shows -->
+            <ul v-if="currentStep <= 5 && currentStep !== 0" class="steps w-full">
+              <li @click.prevent="goToStep(1)" class="step cursor-pointer"
+                  :class="{ 'step-primary': currentStep >= 1 && currentStep !== 6}">
+                <div>&nbsp;</div>
+                <div :class="{ 'text-primary': currentStep === 1 }">Choose Start Day/Time</div>
+                <div :class="{ 'text-primary': currentStep === 1 }">{{ formattedStartDate }}&nbsp;</div>
+                <div :class="{ 'text-primary': currentStep === 1 }">{{ formattedStartTimeForOneTime }}&nbsp;</div>
+              </li>
+              <li @click.prevent="goToStep(2)" class="step cursor-pointer"
+                  :class="{ 'step-primary': currentStep >= 2 }">
+                <div>&nbsp;</div>
+                <div :class="{ 'text-primary': currentStep === 2 }">Set Duration</div>
+                <div :class="{ 'text-primary': currentStep === 2 }"> {{ form.durationDisplay }}&nbsp;</div>
+                <div>&nbsp;</div>
+              </li>
+            </ul>
+
+            <div class="mt-6 pt-6">
+
+              <div v-if="currentStep === 1" class="flex flex-row justify-center">
+                <!-- Step 1 content -->
+                <div class="flex flex-col">
+                  <div class="mb-2">1. Choose start date and time.</div>
+                  <DateTimePicker :date="form.startDate" @date-time-selected="handleStartDateSelected"/>
+                </div>
+              </div>
+            </div>
+
+            <div v-if="currentStep === 2" class="flex flex-row justify-center">
+              <!-- Step 3 content -->
+              <div class="flex flex-col">
+                <div class="mb-2">3. Choose duration (maximum 3 hours)</div>
+                <div class="flex items-center gap-2">
+                  <select v-model="form.durationHour">
+                    <option value="0">0 hours</option>
+                    <option value="1">1 hour</option>
+                    <option value="2">2 hours</option>
+                    <option value="3">3 hours</option>
+                  </select>
+                  <select v-model="form.durationMinute">
+                    <option v-for="option in minuteOptions" :key="option" :value="option">{{ option }} minutes</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div v-if="form.scheduleType === 'recurring'">
+            <!-- Steps Header for recurring shows -->
+            <ul v-if="currentStep <= 5 && currentStep !== 0" class="steps w-full">
+              <li @click.prevent="goToStep(1)" class="step cursor-pointer"
+                  :class="{ 'step-primary': currentStep >= 1 && currentStep !== 6}">
+                <div>&nbsp;</div>
+                <div :class="{ 'text-primary': currentStep === 1 }">Choose Days</div>
+                <div :class="{ 'text-primary': currentStep === 1 }">{{ abbreviatedDaysOfWeekOrdered }}&nbsp;</div>
+              </li>
+              <li @click.prevent="goToStep(2)" class="step cursor-pointer"
+                  :class="{ 'step-primary': currentStep >= 2 }">
+                <div>&nbsp;</div>
+                <div :class="{ 'text-primary': currentStep === 2 }">Start time</div>
+                <div :class="{ 'text-primary': currentStep === 2 }">{{ formattedStartTime }}&nbsp;</div>
+              </li>
+              <li @click.prevent="goToStep(3)" class="step cursor-pointer"
+                  :class="{ 'step-primary': currentStep >= 3 }">
+                <div>&nbsp;</div>
+                <div :class="{ 'text-primary': currentStep === 3 }">Duration</div>
+                <div :class="{ 'text-primary': currentStep === 3 }"> {{ form.durationDisplay }}&nbsp;</div>
+              </li>
+              <li @click.prevent="goToStep(4)" class="step cursor-pointer"
+                  :class="{ 'step-primary': currentStep >= 4 }">
+                <div>&nbsp;</div>
+                <div :class="{ 'text-primary': currentStep === 4 }">Start date</div>
+                <div :class="{ 'text-primary': currentStep === 4 }">{{ formattedStartDate }}&nbsp;</div>
+              </li>
+              <li @click.prevent="goToStep(5)" class="step cursor-pointer"
+                  :class="{ 'step-primary': currentStep >= 5 }">
+                <div>&nbsp;</div>
+                <div :class="{ 'text-primary': currentStep === 5 }">End date</div>
+                <div :class="{ 'text-primary': currentStep === 5 }">{{ formattedEndDate }}&nbsp;</div>
+              </li>
+            </ul>
+
+
+            <div class="mt-6 pt-6">
+
+              <div v-if="currentStep === 1">
+                <!-- Step 1 content -->
+                <div class="mb-2">1. Choose days of the week.</div>
+                <label v-for="day in ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']"
+                       :key="day"
+                       class="ml-4 cursor-pointer">
+                  <input type="checkbox" v-model="form.daysOfWeek" :value="day" class="cursor-pointer"> <span
+                    class="pl-1">{{ day }}</span>
+                </label>
+              </div>
+              <div v-if="currentStep === 2">
+                <!-- Step 2 content -->
+                <div class="mb-2">2. Choose start time</div>
+                <div class="flex items-center gap-2">
+                  <!-- Hour selection -->
+                  <select v-model="form.startTime.hour" class="form-select">
+                    <option v-for="hour in hours" :key="hour" :value="hour">{{ hour }}</option>
+                  </select>
+
+                  <!-- Minute selection -->
+                  <select v-model="form.startTime.minute" class="form-select">
+                    <option value="00">00</option>
+                    <option value="30">30</option>
+                  </select>
+
+                  <!-- AM/PM selection -->
+                  <select v-model="form.startTime.meridian" class="form-select">
+                    <option value="AM">AM</option>
+                    <option value="PM">PM</option>
+                  </select>
+                </div>
+              </div>
+              <div v-if="currentStep === 3">
+                <!-- Step 3 content -->
+                <div class="mb-2">3. Choose duration (maximum 3 hours)</div>
+                <div class="flex items-center gap-2">
+                  <select v-model="form.durationHour">
+                    <option value="0">0 hours</option>
+                    <option value="1">1 hour</option>
+                    <option value="2">2 hours</option>
+                    <option value="3">3 hours</option>
+                  </select>
+                  <select v-model="form.durationMinute">
+                    <option v-for="option in minuteOptions" :key="option" :value="option">{{ option }} minutes</option>
+                  </select>
+                </div>
+              </div>
+              <div v-if="currentStep === 4">
+                <!-- Step 4 content -->
+                <div class="mb-2">4. Choose start date (tomorrow or later)</div>
+                <DatePicker :date="form.startDate" :disabledDays="disabledDays"
+                            @date-time-selected="handleStartDateSelected"/>
+              </div>
+              <div v-if="currentStep === 5">
+                <!-- Step 5 content -->
+                <div class="mb-2">5. Choose end date (cannot be longer than 3 months, so 3 months is pre-set)</div>
+                <DatePicker :date="form.endDate" :disabledDays="disabledDays"
+                            @date-time-selected="handleEndDateSelected"/>
+              </div>
+            </div>
+          </div>
+
+          <div v-if="currentStep === 6 && Object.keys(form.errors).length === 0" class="p-4">
+            <h2 class="text-2xl mb-2 text-center text-indigo-600">Congratulations!</h2>
+            <p class="mb-6 text-center text-indigo-600">You've successfully scheduled your show on notTV!</p>
+
+            <p class="mt-6 mb-4 px-8 text-left">Here's what you need to know:</p>
+            <ul class="list-disc space-y-2 mb-6 px-8 mx-auto text-left text-black font-medium">
+              <li>The countdown to your next live is on your Manage Show page and Dashboard.</li>
+              <li>In case of scheduling conflicts, priority is determined on a first-come, first-served basis. Early
+                scheduling takes precedence.
+              </li>
+              <li>Changing your schedule is possible at any time, but be aware of priority spot changes.</li>
+              <li>Creators are limited to 3 shows during our beta phase to ensure quality and accessibility.</li>
+              <li>Ensure your live stream is connected at least 5 minutes before your scheduled live to maintain
+                priority.
+              </li>
+              <li>Unable to go live? Schedule a pre-recorded episode to keep your priority spot.</li>
+            </ul>
+
+            <div class="text-center mt-12">
+              <h3 class="text-xl mb-2 text-orange-600">Ready to grow your audience?</h3>
+              <p class="mb-4">Invite creators and fans to join notTV with these invite codes.</p>
+            </div>
+
+            <div class="flex justify-center items-center space-x-4 mt-4">
+              <button
+                  class="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded transition duration-150 ease-in-out">
+                Invite Creator
+              </button>
+              <button
+                  class="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition duration-150 ease-in-out">
+                View My Invite Codes
+              </button>
+            </div>
+          </div>
+
+          <div v-if="currentStep === 6 && Object.keys(form.errors).length > 0" class="p-4 text-red-700">
+            <ul>
+              <li v-for="(error, key) in form.errors" :key="key">{{ error }}</li>
+            </ul>
+          </div>
+
+
+          <div class="flex flex-row justify-between mt-12">
+            <button v-if="(currentStep <= 5 && currentStep !== 0) || (currentStep === 6 && form.errors.length > 0)"
+                    @click.prevent="goToPreviousStep"
+                    :disabled="currentStep === 0"
+                    class="btn">Back
+            </button>
+            <div></div>
+            <div v-if="stepError" class="px-3 text-red-700" v-html="stepError"/>
+            <div></div>
+            <button v-if="currentStep <=5 && currentStep !== 0"
+                    @click.prevent="goToNextStep"
+                    :disabled="currentStep === totalSteps"
+                    class="btn btn-primary text-white">Next
+            </button>
+            <button v-if="currentStep === 6"
+                    @click.prevent="closeModal"
+                    :disabled="currentStep !== totalSteps"
+                    class="btn justify-self-end">Close
+            </button>
+          </div>
+
 
         </form>
       </div>
     </div>
   </dialog>
 
+  <dialog id="confirmAddShowModal" class="modal">
+    <div class="modal-box text-center">
+      <h3 class="font-bold text-lg">Are you sure you want to add your show to the schedule?</h3>
+      <div class="modal-action flex flex-row justify-center">
+        <button class="btn btn-success text-white px-6" @click.prvent="submit">Yes!</button>
+        <button class="btn" @click.prvent="closeConfirmAddShowModal">Go back</button>
+      </div>
+    </div>
+  </dialog>
+
 </template>
 <script setup>
-import { reactive, ref, watch } from 'vue'
+import { computed, onMounted, onUnmounted, reactive, ref, watch, watchEffect } from 'vue'
 import { useForm } from '@inertiajs/inertia-vue3'
-import { useChannelStore } from '@/Stores/ChannelStore'
-import { useAdminStore } from '@/Stores/AdminStore'
-
-const channelStore = useChannelStore()
-const adminStore = useAdminStore()
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc' // Required for UTC support
+import timezone from 'dayjs/plugin/timezone' // Required for timezone support
+import { useUserStore } from '@/Stores/UserStore'
 
 import Label from '@/Jetstream/Label.vue'
 import Button from '@/Jetstream/Button.vue'
 
+const userStore = useUserStore()
+
+dayjs.extend(utc)
+dayjs.extend(timezone)
+
 let props = defineProps({
-  mistStream: Object,
   id: String,
+  show: Object,
   // errors: Object,
 })
 
 // const errors = ref(props.errors);
+
+const timezoneConfirmed = ref(false)
 const modalVisible = ref(false)
 
-const metadata = ref([{key: '', value: ''}])
-let originalName = ref(''); // used for stream name changes
+const currentStep = ref(0)
+const totalSteps = ref(6)
+const stepError = ref('') // To store the error message for the current step
 
-const addMetadataField = () => {
-  form.metadata.push({key: '', value: ''})
-}
 
-const removeMetadataField = (index) => {
-  form.metadata.splice(index, 1)
-}
-
-let form = reactive(useForm({
-  id: '',
-  name: '',
-  source: 'push://',
-  mime_type: 'application/vnd.apple.mpegurl',
-  comment: '',
-  metadata: [], // Initialize with one empty metadata entry
+const form = reactive(useForm({
+  scheduleType: '', // 'one-time' or 'recurring'
+  daysOfWeek: [],
+  startTime: {
+    hour: '12',
+    minute: '00',
+    meridian: 'AM',
+  },
+  duration: '',
+  durationHour: '0', // Initialize as '0' to represent the default selection
+  durationMinute: '30', // Default to '30' minutes for '0' hours
+  durationDisplay: '30 minutes', // Default display text
+  startDate: '',
+  endDate: '',
+  errors: {},
 }))
 
 form.reset() // on modal load, reset form.
 
-// Watch for changes in the mistStream object in your Pinia store
-watch(() => channelStore.mistStream, (newVal) => {
-  if (newVal) {
-    // Populate the form with mistStream data
-    form.id = newVal.id || ''
-    form.name = newVal.name || ''
-    originalName.value = newVal.name || ''; // Capture the original name
-    form.source = newVal.source || 'push://'
-    form.mime_type = newVal.mime_type || 'application/vnd.apple.mpegurl'
-    form.comment = newVal.comment || ''
+function confirmTimezone() {
+  timezoneConfirmed.value = true
+}
 
-    // Convert metadata object to array format
-    if (newVal.metadata && typeof newVal.metadata === 'object') {
-      form.metadata = Object.entries(newVal.metadata).map(([key, value]) => ({
-        key, value,
-      }))
-    } else {
-      form.metadata = [{key: '', value: ''}] // Reset to initial state if no metadata
+function selectScheduleType(type) {
+  form.scheduleType = type
+  // Proceed to the next step based on the selection
+  goToNextStep()
+}
+
+function goToNextStep() {
+  // Clear any existing error message
+  stepError.value = ''
+
+  if (form.scheduleType === 'recurring') {
+    if (currentStep.value === 1 && form.daysOfWeek.length === 0) {
+      // If no days are selected and the current step is 1, set an error message
+      stepError.value = 'Please select at least one day of the week.'
+    } else if (currentStep.value === 4 && !form.startDate) {
+      // If no start date is selected and the current step is 4, set an error message
+      stepError.value = 'Please select a start date.'
+    } else if (currentStep.value === 4 && dayjs(form.startDate).isBefore(dayjs().add(1, 'day').startOf('day'))) {
+      // If the start date is today or earlier when the current step is 4, set an error message
+      stepError.value = 'Start date must be later than today.'
+    } else if (currentStep.value === 5 && dayjs(form.endDate).isAfter(dayjs(form.startDate).add(3, 'months').add(1, 'week'))) {
+      // Allow the end date to be up to one week beyond exactly three months from the start date
+      // const latestEndDate = dayjs(form.startDate).add(3, 'months').add(1, 'week').format('ddd MMM D YYYY')
+      stepError.value = `End date must be within 3 months and 1 week of the start date. <\/br>The latest possible end date is ${provisionalEndDate.value}. <\/br>This limitation is for the Beta Version of notTV only.`
+    } else if (currentStep.value === 5) {
+      document.getElementById('confirmAddShowModal').showModal()
+    } else if (currentStep.value < totalSteps.value) {
+      // Proceed to the next step if there are no errors
+      currentStep.value++
     }
+  } else if (form.scheduleType === 'one-time') {
+    if (currentStep.value === 1 && !form.startDate) {
+      // If no start date is selected and the current step is 1, set an error message
+      stepError.value = 'Please select a start date.'
+    } else if (currentStep.value === 1 && dayjs(form.startDate).isBefore(dayjs().add(1, 'day').startOf('day'))) {
+      // If the start date is today or earlier when the current step is 1, set an error message
+      stepError.value = 'Start date must be later than today.'
+    } else if (currentStep.value === 2) {
+      document.getElementById('confirmAddShowModal').showModal()
+    } else if (currentStep.value < totalSteps.value) {
+      // Proceed to the next step if there are no errors
+      currentStep.value++
+    }
+  }
+
+}
+
+function goToPreviousStep() {
+  if (form.scheduleType === 'recurring' && currentStep.value > 0) {
+    currentStep.value--
+  } else if (form.scheduleType === 'one-time' && currentStep.value > 2) {
+    currentStep.value = 2
+  } else if (form.scheduleType === 'one-time') {
+    currentStep.value--
+  }
+}
+
+function goToStep(num) {
+  // Clear any existing error message
+  stepError.value = ''
+  if (form.scheduleType === 'recurring') {
+    if (currentStep.value === 1 && form.daysOfWeek.length === 0) {
+      // If no days are selected and the current step is 1, set an error message
+      stepError.value = 'Please select at least one day of the week.'
+    } else if ((currentStep.value === 4 && !form.startDate) || (num === 5 && !form.startDate)) {
+      // If no start date is selected and the current step is 4, set an error message
+      stepError.value = 'Please select a start date.'
+    } else if ((currentStep.value === 4 && dayjs(form.startDate).isBefore(dayjs().add(1, 'day').startOf('day'))) || (num === 5 && dayjs(form.startDate).isBefore(dayjs().add(1, 'day').startOf('day')))) {
+      // If the start date is today or earlier when the current step is 4, set an error message
+      stepError.value = 'Start date must be later than today.'
+    } else
+      currentStep.value = num
+  } else if (form.scheduleType === 'one-time') {
+    if (currentStep.value === 1 && !form.startDate) {
+      // If no start date is selected and the current step is 1, set an error message
+      stepError.value = 'Please select a start date.'
+    } else if (currentStep.value === 1 && dayjs(form.startDate).isBefore(dayjs().add(1, 'day').startOf('day'))) {
+      // If the start date is today or earlier when the current step is 1, set an error message
+      stepError.value = 'Start date must be later than today.'
+    } else
+      currentStep.value = num
+  }
+
+}
+
+// Define the order of days
+const daysOrder = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+
+// Mapping full day names to their abbreviations
+const dayAbbreviations = {
+  'Sunday': 'Su',
+  'Monday': 'M',
+  'Tuesday': 'Tu',
+  'Wednesday': 'W',
+  'Thursday': 'Th',
+  'Friday': 'F',
+  'Saturday': 'Sa',
+}
+
+// Define the mapping from day names to their numerical values (0 = Sunday, 6 = Saturday)
+const dayNameToNumber = {
+  'Sunday': 1,
+  'Monday': 2,
+  'Tuesday': 3,
+  'Wednesday': 4,
+  'Thursday': 5,
+  'Friday': 6,
+  'Saturday': 7,
+}
+
+// Computed property to get the abbreviated days of the week in the correct order
+const abbreviatedDaysOfWeekOrdered = computed(() => {
+  // Sort the selected days based on their index in daysOrder
+  const sortedSelectedDays = form.daysOfWeek
+      .map(day => ({day, index: daysOrder.indexOf(day)}))
+      .sort((a, b) => a.index - b.index)
+      .map(sortedDay => dayAbbreviations[sortedDay.day]) // Map to abbreviations
+
+  return sortedSelectedDays.join(', ')
+})
+
+// Watch for changes in the selected days of the week
+watch(() => form.daysOfWeek, (newDays) => {
+  // If currently on the first step and at least one day is selected, clear the error message
+  if (currentStep.value === 1 && newDays.length > 0) {
+    stepError.value = ''
+  }
+}, {immediate: true})
+
+
+// Generate hours (1-12 for AM/PM format)
+const hours = Array.from({length: 12}, (_, i) => (i + 1).toString().padStart(2, '0'))
+
+// A computed property to format the time for display
+let formattedStartTime = computed(() => {
+  // Only format the time if all parts have been selected
+  if (form.startTime.hour && form.startTime.minute && form.startTime.meridian) {
+    return `${form.startTime.hour}:${form.startTime.minute} ${form.startTime.meridian}`
   } else {
-    // Reset the form to initial state if there's no mistStream selected (e.g., for adding a new stream)
-    form.reset()
+    return '' // Default message
   }
-}, {deep: true, immediate: true})
-//
-// let submit = () => {
-//   form.post(route('mistStream.add'))
-//   form.name = ''
-//   form.comment = ''
-//   if (!form.errors) {
-//     document.getElementById('adminAddMistStreamModal').close()
-//   }
-// }
+})
 
-let submit = async () => {
-  await form.post(route('mistStream.addOrUpdate', { originalName: originalName.value })), {
-    onSuccess: () => {
-      postSubmissionActions(); // Call the async function
+// Compute the available minute options based on the selected hour
+const minuteOptions = computed(() => {
+  if (form.durationHour === '0') {
+    return ['30'] // Only '30' minutes if '0 hours' is selected
+  } else if (form.durationHour === '3') {
+    return ['00'] // Only '00' minutes if '3 hours' is selected
+  } else {
+    return ['00', '30'] // Both '00' and '30' minutes options available otherwise
+  }
+})
+
+// Function to update the duration display text based on current selections
+const updateDurationDisplay = () => {
+  let display = `${form.durationHour} hour${form.durationHour === '1' ? '' : 's'}`
+  if (form.durationHour === '0') {
+    display = '30 minutes' // Display '30 minutes' for '0 hours' selection
+  } else if (form.durationMinute === '30' && form.durationHour !== '0') {
+    display += ' and 30 minutes' // Append 'and 30 minutes' for selections other than '0 hours'
+  }
+  form.durationDisplay = display // Update the display text in the form state
+}
+
+// Watch the durationMinute for changes to update the display accordingly
+watch(() => form.durationMinute, () => {
+  updateDurationDisplay()
+}, {immediate: true})
+
+// Automatically adjust the minute selection when the hour changes
+watch(() => form.durationHour, (newHour) => {
+  if (newHour === '1' || newHour === '2' || newHour === '3') {
+    form.durationMinute = '00' // Force to '00' if '3 hours' is selected
+  } else if (newHour === '0') {
+    form.durationMinute = '30' // Force to '30' if '0 hours' is selected
+  }
+  // Update the duration display based on the new selections
+  updateDurationDisplay()
+}, {immediate: true})
+
+// Initialize the display text based on the default selections
+updateDurationDisplay()
+
+// Assuming form.startDate is in 'YYYY-MM-DD' format or a Date object
+const formattedStartTimeForOneTime = computed(() => {
+  if (!form.startDate) return ''
+  // Directly parse and format the date in local time without converting timezones
+  const timeIn = dayjs(form.startDate).format('hh:mm A');
+  console.log('formattedStartTimeForOneTime time in: ' + form.startDate);
+  console.log('formattedStartTimeForOneTime time out: ' + timeIn);
+  return timeIn; // This should match the local time equivalent of the input
+
+
+})
+
+const formattedStartDate = computed(() => {
+  if (!form.startDate) return ''
+  return dayjs(form.startDate).format('ddd MMM D YYYY') // Formats to "Wed Feb 21 2024"
+})
+
+let formattedEndDate = computed(() => {
+  if (!form.endDate) return ''
+  return dayjs(form.endDate).format('ddd MMM D YYYY') // Formats to "Wed Feb 21 2024"
+})
+
+// Compute the disabled days based on the selected days of the week
+const disabledDays = computed(() => {
+  const selectedDayNumbers = form.daysOfWeek.map(day => dayNameToNumber[day])
+  const disabledDayNumbers = Object.values(dayNameToNumber).filter(dayNum => !selectedDayNumbers.includes(dayNum))
+  // Return the structure expected by the DatePicker component for disabling days
+  return [
+    {
+      repeat: {
+        weekdays: disabledDayNumbers,
+      },
     },
-    onError: () => {
-      // Handle errors if needed, e.g., log to console or show a message
-      // Errors are automatically attached to the form object
-    },
+  ]
+})
+
+const provisionalEndDate = ref('')
+// Handle date selection from DatePicker
+const handleStartDateSelected = ({date}) => {
+  stepError.value = '' // Clear any existing error messages
+  const dayjsDate = dayjs(date);
+  // form.startDate = dayjsDate.tz(userStore.canadianTimezone, true).format(); // Update the start date
+  form.startDate = date; // Update the start date
+  console.log('handleStartDate form.startDate: ' + form.startDate)
+  console.log('handleStartDate raw date: ' + date)
+
+  // Calculate a rough endDate 3 months from the startDate
+  let endDate = dayjs(date).add(3, 'months')
+
+  // If endDate's weekday differs from startDate's, adjust to the next occurrence of the same weekday
+  const startWeekday = dayjs(date).day()
+  while (endDate.day() !== startWeekday) {
+    endDate = endDate.add(1, 'day')
+  }
+
+  // If the endDate is more than a week away from being exactly 3 months, adjust by subtracting days to get closer to the 3-month mark
+  if (endDate.diff(dayjs(date).add(3, 'months'), 'week') > 1) {
+    endDate = endDate.subtract(endDate.diff(dayjs(date).add(3, 'months'), 'days') % 7, 'days')
 
   }
-  closeModal()
+
+  form.endDate = endDate
+  console.log('handleStartDate form.endDate: ' + form.endDate)
+  provisionalEndDate.value = endDate.format('ddd MMM D YYYY') // Update the endDate in the form
+  console.log('handleStartDate provisionalEndDate: ' + provisionalEndDate.value)
+}
+
+// Handles end date selection
+const handleEndDateSelected = ({date}) => {
+  console.log('handleEndDate: ' + date)
+  // form.endDate = dayjs(date).tz(userStore.timezone) // Directly set the end date from the selection
+  form.endDate = date // Directly set the end date from the selection
+  console.log('handleEndDate form.endDate: ' + form.endDate)
+  // You might want to add validation or adjustment logic here as well
+}
+
+async function submit() {
+  closeConfirmAddShowModal()
+  let formattedDuration = ''
+
+  console.log('==================================================')
+
+  // If we reach here, user confirmed. Proceed with submission.
+  if (form.scheduleType === 'one-time') {
+
+    // 1. Start date/time
+      // Parse the startDate as a Day.js object
+      console.log('SUBMIT start date in: ' + form.startDate)
+      // form.startDate = dayjs(form.startDate).tz(userStore.canadianTimezone, true).format()
+      // console.log('SUBMIT start date out: ' + form.startDate)
+      let startDate = dayjs(form.startDate).tz(userStore.canadianTimezone, true);
+      form.startDate = startDate.format()
+      console.log('SUBMIT start date formatted: ' + form.startDate);
+
+    // 2. Duration
+      // Ensure duration hours and minutes are treated as numbers
+      let durationHours = Number(form.durationHour);
+      let durationMinutes = Number(form.durationMinute);
+
+      form.duration = (durationHours * 60) + durationMinutes;
+
+    // 3. End date/time
+
+      // Adjust the endDate by setting the correct hour and minute, then adding the duration
+      let endDate = startDate
+          .add(durationHours, 'hour')
+          .add(durationMinutes, 'minute');
+
+      // If you need to adjust for a specific timezone without changing the local time
+        // Note: The true flag in tz() might not be necessary depending on your exact needs for timezone handling
+        form.endDate = dayjs(endDate).tz(userStore.canadianTimezone, true).format();
+        console.log('SUBMIT end date out: ' + form.endDate);
+
+
+    // 4. Other values are null
+      form.startTime = null // not used for one-time
+      form.daysOfWeek = null // not used for one-time
+
+
+  }
+
+
+  if (form.scheduleType === 'recurring') {
+
+
+    // 1. Start date in, add start time
+      console.log('SUBMIT startDate in: ' + form.startDate);
+
+      // Assuming form.startTime.hour, form.startTime.minute are in correct format and form.startTime.meridian is either 'AM' or 'PM'
+      let hour = form.startTime.hour % 12; // Convert to 12-hour format
+      if (form.startTime.meridian === 'PM') hour += 12; // Convert PM to 24-hour format
+
+      // Parse the startDate and set the time
+      let startDate = dayjs(form.startDate).hour(hour).minute(form.startTime.minute);
+      form.startDate = dayjs(startDate).tz(userStore.canadianTimezone, true).format()
+
+    // 2. Start time (HH:MM:SS)
+      // formattedStartTime = startDate.format('HH:mm:ss');
+      form.startTime = startDate.format('HH:mm:ss'); // Use the desired format
+      console.log('SUBMIT start time formatted in dayjs: ' + form.startTime);
+
+    // 3. Duration
+      console.log('SUBMIT duration minute in: ' + form.durationMinute);
+      console.log('SUBMIT duration hour in: ' + form.durationHour);
+
+      // Calculate total duration in minutes
+      formattedDuration = (Number(form.durationHour) * 60) + Number(form.durationMinute);
+      form.duration = formattedDuration
+
+      console.log('SUBMIT formatted duration in minutes: ' + form.duration);
+
+    // 4. End date, add end time (end date with HH:MM:SS = start time + duration)
+      // Ensure the initial timestamp is correctly parsed as a Day.js date object
+          console.log('SUBMIT end date in: ' + form.endDate);
+          let endDate = dayjs(form.endDate);
+          console.log('SUBMIT end date formatted in dayjs: ' + endDate.format());
+
+      // Convert hour and minute from form.startTime to numbers
+          let newHour = Number(form.startTime.hour) % 12;
+          if (form.startTime.meridian === 'PM') newHour += 12; // Adjust for 24-hour format if PM
+
+      // Ensure duration hours and minutes are treated as numbers
+          let durationHours = Number(form.durationHour);
+          let durationMinutes = Number(form.durationMinute);
+
+      // Adjust the endDate by setting the correct hour and minute, then adding the duration
+          endDate = endDate.hour(hour).minute(durationMinutes)
+              .add(durationHours, 'hour')
+              .add(durationMinutes, 'minute');
+
+      // If you need to adjust for a specific timezone without changing the local time
+      // Note: The true flag in tz() might not be necessary depending on your exact needs for timezone handling
+          form.endDate = dayjs(endDate).tz(userStore.canadianTimezone, true).format();
+          console.log('SUBMIT end date out ADDED: ' + form.endDate);
+
+
+    // 5. Days of week
+
+
+
+  }
+
+
+  // Prepare the payload for the API based on the schedule type
+  const payload = {
+    contentType: 'show',
+    contentId: props.show.id,
+    scheduleType: form.scheduleType,
+    startTime: form.startTime,
+    duration: form.duration,
+    // startDate: form.startDate,
+    startDate: form.startDate,
+    endDate: form.endDate,
+    daysOfWeek: form.scheduleType === 'recurring' ? form.daysOfWeek : [],
+    // Include other relevant form data here
+  }
+
+  console.log('==================================================')
+  console.log('PAYLOAD: Content Type: ' + payload.contentType)
+  console.log('PAYLOAD: Content ID: ' + payload.contentId)
+  console.log('PAYLOAD: Formatted Start Date: ' + payload.startDate)
+  console.log('PAYLOAD: Formatted Start Time: ' + payload.startTime)
+  console.log('PAYLOAD: Formatted Duration in minutes: ' + payload.duration)
+  console.log('PAYLOAD: Formatted End Date: ' + payload.endDate)
+  console.log('PAYLOAD: Formatted Days of Week: ' + payload.daysOfWeek)
+
+  // Adjust the start and end time based on the selected time and meridian
+  // const adjustedStartTime = dayjs(`${form.startDate} ${payload.startTime}`, 'YYYY-MM-DD hh:mm A').toISOString()
+  // const durationInMinutes = parseInt(form.durationHour) * 60 + parseInt(form.durationMinute)
+  // const adjustedEndTime = dayjs(adjustedStartTime).add(durationInMinutes, 'minute').toISOString()
+
+  try {
+    // Replace '/api/schedule' with your actual API endpoint
+    const response = await axios.post('/api/schedule/addToSchedule', payload);
+
+    // Handle success - process response.data as needed
+    console.log('Success:', response.data);
+    goToStep(6);
+    startConfetti();
+  } catch (error) {
+    // Handle errors
+    console.error('Error submitting form:', error);
+    goToStep(6); // Navigate to the error display step
+    // Populate `form.errors` with the error details for display
+    // Axios wraps the response error in `error.response`
+    if (error.response && error.response.data) {
+      form.errors.value = error.response.data;
+    } else {
+      form.errors.value = error.message || 'An unknown error occurred';
+    }
+  }
 }
 
 const postSubmissionActions = async () => {
-  await adminStore.fetchItems('mistStream'); // Await the fetching of items
-  channelStore.clearMistStream(); // Clear selected mistStream
-  form.reset(); // Reset form fields
-  closeModal(); // Close modal
-};
+  form.reset() // Reset form fields
+  closeModal() // Close modal
+}
 
 function closeModal() {
-  document.getElementById(props.id).close()
-  channelStore.clearMistStream()
+  document.getElementById('addShowToScheduleModal').close()
   // Reset the form fields to their initial values
   form.reset()
   // Clear all validation errors
   form.clearErrors()
+  stopConfetti()
+  currentStep.value = 0
+  Inertia.visit(`/shows/${props.show.slug}/manage`);
 }
 
-// function toggleModal() {
-//   console.log('Toggling modal:', !modalVisible.value)
-//   modalVisible.value = !modalVisible.value
-//   form.name = ''
-//   form.comment = ''
-// }
+function closeConfirmAddShowModal() {
+  document.getElementById('confirmAddShowModal').close()
+}
+
+const closeModalAndReset = () => {
+  currentStep.value = 0
+  closeModal()
+  Inertia.visit(`/shows/${props.show.slug}/manage`);
+}
+
+// Watcher for currentStep to display Confetti
+// watch(currentStep, (newVal) => {
+//   if (newVal === 6) {
+//     startConfetti()
+//   }
+// })
+
+import { getCurrentInstance } from 'vue'
+import DateTimePicker from '@/Components/Global/Calendar/DateTimePicker.vue'
+import DatePicker from '@/Components/Global/Calendar/DatePicker.vue'
+import { Inertia } from '@inertiajs/inertia'
+
+// Access the global properties
+const {proxy} = getCurrentInstance()
+
+const startConfetti = () => {
+  proxy.$confetti.start()
+}
+
+const stopConfetti = () => {
+  proxy.$confetti.stop()
+}
+
+// Initialize selectedTimezone with the current value from userStore
+const selectedTimezone = ref(userStore.canadianTimezone);
+
+// Watch for changes in userStore's timezone and update selectedTimezone accordingly
+watch(() => userStore.canadianTimezone, (newTimezone) => {
+  selectedTimezone.value = newTimezone;
+  // dayjs.tz.setDefault(userStore.timezone);
+});
+
+
+// Function to handle the keydown event
+const handleKeydown = (event) => {
+  if (event.key === "Escape") {
+    console.log('ESC pressed, modal is open');
+    stopConfetti();
+    currentStep.value = 0
+    Inertia.redirect(`/shows/${props.show.slug}/manage`)
+
+  }
+};
+
+onMounted(() => {
+  document.addEventListener('keydown', handleKeydown);
+});
+
+onUnmounted(() => {
+  document.removeEventListener('keydown', handleKeydown);
+});
+
+// onMounted(async () => {
+//   timezones.value = await getTimeZones(); // Fetch the list of timezones
+// });
+
+function updateTimezone() {
+  // Update the timezone in your store
+  userStore.setUserTimezone(selectedTimezone.value);
+  // Optionally, send the updated timezone to your backend here
+}
+
 </script>
