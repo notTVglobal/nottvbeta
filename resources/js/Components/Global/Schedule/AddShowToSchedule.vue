@@ -28,8 +28,7 @@
             <div v-if="!timezoneConfirmed">
               <div class="mb-2 pb-6 text-primary text-center">Confirm Timezone</div>
               <div class="flex flex-row justify-center">
-                <label for="timezone-select">Select your timezone:</label>
-                <select id="timezone-select" v-model="selectedTimezone" @change="updateTimezone" class="ml-2">
+                <select id="timezone-select" v-model="selectedTimezone" @change="updateTimezone" class="ml-2 rounded-lg select select-bordered">
                   <option v-for="timezone in userStore.timezones" :key="timezone" :value="timezone">{{ timezone }}</option>
                 </select>
               </div>
@@ -59,7 +58,7 @@
           </div>
 
 
-          <div v-if="form.scheduleType === 'one-time'">
+          <div v-if="form.scheduleType === 'one-time'" class="py-6">
             <!-- Steps Header for one-time shows -->
             <ul v-if="currentStep <= 5 && currentStep !== 0" class="steps w-full">
               <li @click.prevent="goToStep(1)" class="step cursor-pointer"
@@ -94,13 +93,13 @@
               <div class="flex flex-col">
                 <div class="mb-2">3. Choose duration (maximum 3 hours)</div>
                 <div class="flex items-center gap-2">
-                  <select v-model="form.durationHour">
+                  <select v-model="form.durationHour" class="select select-bordered">
                     <option value="0">0 hours</option>
                     <option value="1">1 hour</option>
                     <option value="2">2 hours</option>
                     <option value="3">3 hours</option>
                   </select>
-                  <select v-model="form.durationMinute">
+                  <select v-model="form.durationMinute" class="select select-bordered ">
                     <option v-for="option in minuteOptions" :key="option" :value="option">{{ option }} minutes</option>
                   </select>
                 </div>
@@ -109,7 +108,7 @@
 
           </div>
 
-          <div v-if="form.scheduleType === 'recurring'">
+          <div v-if="form.scheduleType === 'recurring'" class="py-6">
             <!-- Steps Header for recurring shows -->
             <ul v-if="currentStep <= 5 && currentStep !== 0" class="steps w-full">
               <li @click.prevent="goToStep(1)" class="step cursor-pointer"
@@ -153,7 +152,7 @@
                 <label v-for="day in ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']"
                        :key="day"
                        class="ml-4 cursor-pointer">
-                  <input type="checkbox" v-model="form.daysOfWeek" :value="day" class="cursor-pointer"> <span
+                  <input type="checkbox" v-model="form.daysOfWeek" :value="day" class="cursor-pointer checkbox"> <span
                     class="pl-1">{{ day }}</span>
                 </label>
               </div>
@@ -162,18 +161,18 @@
                 <div class="mb-2">2. Choose start time</div>
                 <div class="flex items-center gap-2">
                   <!-- Hour selection -->
-                  <select v-model="form.startTime.hour" class="form-select">
+                  <select v-model="form.startTime.hour" class="form-select select select-bordered ">
                     <option v-for="hour in hours" :key="hour" :value="hour">{{ hour }}</option>
                   </select>
 
                   <!-- Minute selection -->
-                  <select v-model="form.startTime.minute" class="form-select">
+                  <select v-model="form.startTime.minute" class="form-select select select-bordered ">
                     <option value="00">00</option>
                     <option value="30">30</option>
                   </select>
 
                   <!-- AM/PM selection -->
-                  <select v-model="form.startTime.meridian" class="form-select">
+                  <select v-model="form.startTime.meridian" class="form-select select select-bordered ">
                     <option value="AM">AM</option>
                     <option value="PM">PM</option>
                   </select>
@@ -183,13 +182,13 @@
                 <!-- Step 3 content -->
                 <div class="mb-2">3. Choose duration (maximum 3 hours)</div>
                 <div class="flex items-center gap-2">
-                  <select v-model="form.durationHour">
+                  <select v-model="form.durationHour" class="select select-bordered">
                     <option value="0">0 hours</option>
                     <option value="1">1 hour</option>
                     <option value="2">2 hours</option>
                     <option value="3">3 hours</option>
                   </select>
-                  <select v-model="form.durationMinute">
+                  <select v-model="form.durationMinute" class="select select-bordered">
                     <option v-for="option in minuteOptions" :key="option" :value="option">{{ option }} minutes</option>
                   </select>
                 </div>
