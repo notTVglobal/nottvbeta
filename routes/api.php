@@ -3,6 +3,7 @@
 use App\Http\Controllers\AppSettingController;
 use App\Http\Controllers\MistServerController;
 use App\Http\Controllers\MistStreamController;
+use App\Http\Controllers\MistTriggerController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ChatController;
@@ -32,7 +33,7 @@ Route::post('messages', [ChatController::class, 'message']);
 Route::post('movies/upload', [MovieUploadController::class, 'upload'])
     ->name('moviesApi.upload');
 
-Route::post('/mistTrigger', [\App\Http\Controllers\mistTriggerController::class, 'logTrigger'])->name('mistTrigger.logTrigger');
+
 
 Route::post('/chatTestMessage', [TestMessageController::class, 'broadcast']);
 
@@ -54,9 +55,14 @@ Route::get('/products', [ProductController::class, 'index']);
 Route::get('/channels_list', [ChannelApiController::class, 'index']);
 
 // our first mist server trigger... for Access Control
-Route::post('/validateUser', [MistStreamController::class, 'validateUser']);
+Route::post('/mist-trigger/validate-user', [MistTriggerController::class, 'validateUser']);
 
-// this api endpoint was built for testing purposes. It may serve a use...
-Route::post('/mistserver-trigger', [MistServerController::class, 'handleTrigger']);
+Route::post('/mist-trigger/push-out-start', [MistTriggerController::class, 'handlePushOutStart']);
+Route::post('/mist-trigger/push-end', [MistTriggerController::class, 'handlePushEnd']);
+
+// this api endpoint was built for testing purposes.
+Route::post('/mist-trigger/trigger', [MistTriggerController::class, 'handleTrigger']);
+
+Route::post('/mist-trigger/log', [MistTriggerController::class, 'logTrigger']);
 
 

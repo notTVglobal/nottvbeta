@@ -48,7 +48,7 @@ class MistServerService {
 
     if ($response->failed()) {
       Log::error('Request to MistServer failed', [
-          'status' => $response->status(),
+          'status'   => $response->status(),
           'response' => $response->body(),
       ]);
 
@@ -63,6 +63,7 @@ class MistServerService {
       $this->challenge = $responseData['authorize']['challenge'];
 
       Log::debug("Received challenge from MistServer, retrying", ['challenge' => $this->challenge]);
+
       return $this->send($data); // Retry with the challenge response
     }
 
@@ -87,10 +88,12 @@ class MistServerService {
 
     if (isset($response['error'])) {
       Log::error("Error fetching configured streams from MistServer", ['error' => $response['error']]);
+
       return false;
     }
 
     Log::debug("Configured streams fetched successfully", ['streams' => $response['streams']]);
+
     return $response['streams']; // Assuming this contains the stream configurations
   }
 
@@ -118,10 +121,12 @@ class MistServerService {
 
     if (isset($response['error'])) {
       Log::error("Error updating configured streams on MistServer", ['error' => $response['error']]);
+
       return false;
     }
 
     Log::debug("Configured streams updated successfully", ['streams' => $response['streams']]);
+
     return $response['streams'];
   }
 
@@ -179,6 +184,7 @@ class MistServerService {
 
     if (isset($response['error'])) {
       Log::error("Error adding/updating stream on MistServer", ['error' => $response['error']]);
+
       return false;
     }
 
@@ -221,6 +227,7 @@ class MistServerService {
 
     if (isset($response['error'])) {
       Log::error("Error removing stream(s) from MistServer", ['error' => $response['error']]);
+
       return false;
     }
 
@@ -264,15 +271,24 @@ class MistServerService {
     // Prepare the target URL as done during the add
     $targetURL = $destination->rtmp_url . $destination->rtmp_key;
     Log::warning('remove ::::: ' . $targetURL);
+//    $data = [
+//        $destination->mistStreamWildcard->name,
+//        $targetURL,
+//    ];
     $data = [
-        $destination->mistStreamWildcard->name,
-        $targetURL,
+
+            "stream" => $destination->mistStreamWildcard->name,
+            "target" => $targetURL,
+//            "scheduletime" => '', // this can get data from the showSchedule but is a future project.
+//            "completetime" => '', // this can get data from the showSchedule but is a future project.
+
     ];
 
     // Wrapping the data inside an array to match the expected format
 
     try {
       $this->send(["push_auto_remove" => $data]); // Assuming 'send' method handles communication with MistServer
+//      $this->send($data); // Assuming 'send' method handles communication with MistServer
       // Since there's no response, consider success if no exception is thrown
 
       // Optionally update the destination to reflect the removal
@@ -292,13 +308,16 @@ class MistServerService {
       $response = $this->send($data); // Assuming 'send' method handles communication with MistServer
       if (isset($response['push_list']) && is_array($response['push_list'])) {
         Log::info("Successfully retrieved active push list from MistServer.");
+
         return $response['push_list'];
       } else {
         Log::error("Failed to retrieve active push list. Response was not as expected.");
+
         return [];
       }
     } catch (\Exception $e) {
       Log::error("Exception occurred while fetching active push list", ['exception' => $e->getMessage()]);
+
       return [];
     }
   }
@@ -386,30 +405,29 @@ class MistServerService {
             MistServerConfig::create(['config' => $encryptedConfig]);
 
             Log::info('MistServer configuration backup succeeded.');
+
             return response()->json(['message' => 'Config backup successful.'], 200);
           } else {
             Log::error('Config backup data missing in the response.', ['response' => $response]);
+
             return response()->json(['error' => 'Config backup data missing.'], 500);
           }
         } else {
           Log::error('Authorization failed or missing in the response.', ['response' => $response]);
+
           return response()->json(['error' => 'Authorization failed or missing.'], 500);
         }
       } else {
         Log::error('Invalid or unexpected API response structure.', ['response' => $response]);
+
         return response()->json(['error' => 'Invalid or unexpected API response structure.'], 500);
       }
     } catch (\Exception $e) {
       Log::error('Exception encountered during MistServer config backup.', ['exception' => $e]);
+
       return response()->json(['error' => 'An error occurred during config backup.', 'exception' => $e->getMessage()], 500);
     }
   }
-
-
-
-
-
-
 
 
   public function getLatestConfigBackup() {
@@ -427,6 +445,7 @@ class MistServerService {
 
     if (!$configData) {
       Log::error('No configuration backup found for restoration.');
+
       return response()->json(['error' => 'No configuration backup found.'], 404);
     }
 
@@ -438,13 +457,14 @@ class MistServerService {
 
       // Since there's no response expected for the restore call, assume success if no exception is thrown
       Log::info('MistServer configuration restore initiated successfully.');
+
       return response()->json(['message' => 'Configuration restore initiated successfully.'], 200);
     } catch (\Exception $e) {
       Log::error('Exception during MistServer config restoration.', ['exception' => $e->getMessage()]);
+
       return response()->json(['error' => 'An error occurred during config restoration.'], 500);
     }
   }
-
 
 
 }

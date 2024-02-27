@@ -295,7 +295,7 @@
 
 <script setup>
 // import { useTimeAgo } from '@vueuse/core'
-import { computed, onBeforeUnmount, onMounted, ref, watchEffect } from 'vue'
+import { computed, onBeforeUnmount, onMounted, onUnmounted, ref, watchEffect } from 'vue'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
 import { useVideoAuxPlayerStore } from '@/Stores/VideoAuxPlayerStore'
@@ -335,7 +335,6 @@ async function getMistStreamPushDestinations() {
       // Append the wildcard ID as a query parameter
       const response = await axios.get(`/mist-stream-push-destinations?wildcardId=${wildcardId}`)
       mistStreamPushDestinations.value = response.data // Update the reactive variable
-      console.log(response.data) // Log or process the list of push destinations
     } catch (error) {
       console.error('Failed to fetch push destinations:', error)
     }
@@ -450,7 +449,7 @@ const editDestination = async (destination) => {
   destinationDetails.value = destination
   document.getElementById('mistStreamPushDestinationForm').showModal()
   console.log(`Editing destination with ID: ${destination}`)
-  const index = mistStreamPushDestinations.value.findIndex(destination => destination.id === destinationId);
+  const index = mistStreamPushDestinations.value.findIndex(destination => destination.id === destinationDetails.value.id);
   if (index !== -1) {
     mistStreamPushDestinations.value[index].has_auto_push = 0;
   }
@@ -647,6 +646,44 @@ const liveOrRecordingVideoBorderClass = computed(() => {
     return ''
   }
 })
+// const mistStreamWildcardId = ref()
+// mistStreamWildcardId.value = goLiveStore?.selectedShow?.mist_stream_wildcard?.id
+const channel = Echo.channel(`mistStreamWildcard.${goLiveStore?.selectedShow?.mist_stream_wildcard?.id}`);
+channel
+    .subscribed(() => {
+      // Handle successful subscription
+      // This log will confirm the subscription success
+      console.log('Successfully subscribed to the channel!');
+    })
+    // .listen('.push-out-start', (event) => {
+    //   console.log('Event received:', event);
+    // })
+// channel.listen('.push-out-start', (event) => {
+//       console.log('push out start EVENT BROADCASTED!', event);
+//     })
+    .listen('.push-out-start', (event) => {
+      console.log('push out start EVENT BROADCASTED!')
+      const index = mistStreamPushDestinations.value.findIndex(destination =>
+          `${destination.rtmp_url}${destination.rtmp_key}` === event.requestUrl);
+      if (index !== -1) {
+        mistStreamPushDestinations.value[index].push_is_started = 1;
+      }
+    })
+    .listen('.push-end', (event) => {
+      console.log('push end EVENT BROADCASTED!')
+      const index = mistStreamPushDestinations.value.findIndex(destination =>
+          `${destination.rtmp_url}${destination.rtmp_key}` === event.requestUrl);
+      if (index !== -1) {
+        mistStreamPushDestinations.value[index].push_is_started = 0;
+      }
+    });
+
+// Cleanup when the component unmounts
+onUnmounted(() => {
+  channel.stopListening('.push-out-start');
+  channel.stopListening('.push-end');
+  Echo.leave(`mistStreamWildcard.${goLiveStore?.selectedShow?.mist_stream_wildcard?.id}`);
+});
 
 //
 // // Assuming props.show.mist_stream_wildcard.name exists and is reactive

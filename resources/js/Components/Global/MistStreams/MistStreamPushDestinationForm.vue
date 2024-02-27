@@ -21,6 +21,8 @@
                  placeholder="RTMP Key"
                  class="input input-bordered" >
           <textarea v-model="form.comment" class="textarea textarea-bordered" placeholder="Optional Comment..." />
+
+          <div v-if="form.errors" class="text-red-700">{{ form.errors }}</div>
           <!-- Add other fields as necessary -->
           <button type="submit" class="mt-2 btn btn-primary text-white">{{ mode    === 'add' ? 'Add' : 'Save Changes' }}</button>
         </div>
@@ -46,6 +48,7 @@ const form = ref({
   rtmp_url: props.destinationDetails.rtmp_url,
   rtmp_key: props.destinationDetails.rtmp_key,
   comment: props.destinationDetails.comment,
+  errors: '',
   // Initialize other model attributes here
 });
 
@@ -80,12 +83,18 @@ const submitForm = async () => {
     // Handle response here, e.g., show a success message, fetch updated list, etc.
     console.log('Success:', response.data);
     emit('update-success');
+    form.value.errors = ''
 
     // Close the modal
     document.getElementById('mistStreamPushDestinationForm').close();
   } catch (error) {
-    // Handle error here, e.g., show an error message
-    console.error('Error submitting form:', error);
+    if (error.response && error.response.data && error.response.data.errors) {
+      // Assign all errors from the response to formErrors
+      form.value.errors = error.response.data.errors;
+    } else {
+      // General error handling
+      console.error('Submission error', error);
+    }
   }
 }
 

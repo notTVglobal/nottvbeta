@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class mistTrigger extends Model
+class MistTrigger extends Model
 {
     use HasFactory;
 

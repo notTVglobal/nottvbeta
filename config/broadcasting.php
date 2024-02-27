@@ -39,15 +39,15 @@ return [
                 'cluster' => env('PUSHER_APP_CLUSTER'),
                 'encrypted' => env('PUSHER_APP_ENCRYPTED'),
 //                'useTLS' => env('PUSHER_APP_TLS'),
-                'host' => env('WEBSOCKET_HOST'),
-                'port' => env('WEBSOCKET_PORT'),
-                'scheme' => env('WEBSOCKET_SCHEME')
+//                'host' => env('WEBSOCKET_HOST'),
+//                'port' => env('WEBSOCKET_PORT'),
+//                'scheme' => env('WEBSOCKET_SCHEME')
 //                'host' => 'socket.not.tv',
 //                'port' => 443,
-//                'scheme' => 'https'
-//                'host' => 'nottv.local',
-//                'port' => 6001,
 //                'scheme' => 'http'
+                'host' => '127.0.0.1',
+                'port' => 6001,
+                'scheme' => 'http'
 
             ],
             'client_options' => [

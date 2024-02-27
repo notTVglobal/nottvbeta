@@ -20,7 +20,7 @@ class MistStreamPushDestination extends Model {
       'destination_image'
   ];
 
-  public function mistStreamWildcard() {
+  public function mistStreamWildcard(): \Illuminate\Database\Eloquent\Relations\BelongsTo {
     return $this->belongsTo(MistStreamWildcard::class);
   }
 }

@@ -23,19 +23,20 @@ class MistStreamWildcard extends Model
       'metadata' => 'array',
   ];
 
-  public function mistStream()
-  {
+  public function mistStream(): \Illuminate\Database\Eloquent\Relations\BelongsTo {
     return $this->belongsTo(MistStream::class);
   }
 
-    public function shows()
-  {
+    public function shows(): \Illuminate\Database\Eloquent\Relations\HasMany {
     return $this->hasMany(Show::class, 'mist_stream_wildcard_id');
   }
 
   // Define the inverse relationship to ShowEpisode
-  public function showEpisodes()
-  {
+  public function showEpisodes(): \Illuminate\Database\Eloquent\Relations\HasMany {
     return $this->hasMany(ShowEpisode::class, 'mist_stream_wildcard_id');
+  }
+
+  public function mistStreamPushDestination(): \Illuminate\Database\Eloquent\Relations\HasMany {
+    return $this->hasMany(MistStreamPushDestination::class);
   }
 }
