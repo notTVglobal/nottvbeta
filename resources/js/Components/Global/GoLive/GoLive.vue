@@ -15,19 +15,35 @@
             <button @click="appSettingStore.btnRedirect('/training/go-live-using-zoom')"
                     class="btn bg-blue-500 hover:bg-blue-700 rounded-lg text-white">How To Stream From Zoom
             </button>
+            <button @click="openObsInstructions = !openObsInstructions"
+                    class="btn bg-blue-500 hover:bg-blue-700 rounded-lg text-white">How To Stream From OBS
+            </button>
 
           </div>
-          <div>RTMP full url: <span v-if="rtmpUri && streamKey" class="font-bold">{{rtmpUri}}{{streamKey}}</span>
-            &nbsp;<button v-if="rtmpUri && streamKey" @click="copyFullUrl"><font-awesome-icon v-if="rtmpUri && streamKey" icon="fa-clipboard" class="text-blue-500 hover:text-blue-700 hover:cursor-pointer"/></button>
-            <span v-if="showCopiedFullUrl" class="ml-1 copied-message" style="transition: opacity 0.5s; opacity: 1;">Copied!</span>
-          </div>
-          <div>RTMP url: <span class="font-bold">{{rtmpUri}}</span>
-            &nbsp;<button v-if="rtmpUri" @click="copyRtmpUri"><font-awesome-icon v-if="rtmpUri" icon="fa-clipboard" class="text-blue-500 hover:text-blue-700 hover:cursor-pointer"/></button>
-            <span v-if="showCopiedRtmpUri" class="ml-1 copied-message" style="transition: opacity 0.5s; opacity: 1;">Copied!</span>
-          </div>
-          <div>RTMP stream key: <span class="font-bold">{{streamKey}}</span>
-            &nbsp;<button v-if="streamKey" @click="copyStreamKey"><font-awesome-icon v-if="streamKey" icon="fa-clipboard" class="text-blue-500 hover:text-blue-700 hover:cursor-pointer"/></button>
-            <span v-if="showCopiedStreamKey" class="ml-1 copied-message" style="transition: opacity 0.5s; opacity: 1;">Copied!</span>
+          <div v-if="openObsInstructions">
+            <h2>Stream from OBS or other software using these details:</h2>
+            <div>RTMP full url: <span v-if="rtmpUri && streamKey" class="font-bold">{{ rtmpUri }}{{ streamKey }}</span>
+              &nbsp;<button v-if="rtmpUri && streamKey" @click="copyFullUrl">
+                <font-awesome-icon v-if="rtmpUri && streamKey" icon="fa-clipboard"
+                                   class="text-blue-500 hover:text-blue-700 hover:cursor-pointer"/>
+              </button>
+              <span v-if="showCopiedFullUrl" class="ml-1 copied-message" style="transition: opacity 0.5s; opacity: 1;">Copied!</span>
+            </div>
+            <div>RTMP url: <span class="font-bold">{{ rtmpUri }}</span>
+              &nbsp;<button v-if="rtmpUri" @click="copyRtmpUri">
+                <font-awesome-icon v-if="rtmpUri" icon="fa-clipboard"
+                                   class="text-blue-500 hover:text-blue-700 hover:cursor-pointer"/>
+              </button>
+              <span v-if="showCopiedRtmpUri" class="ml-1 copied-message" style="transition: opacity 0.5s; opacity: 1;">Copied!</span>
+            </div>
+            <div>RTMP stream key: <span class="font-bold">{{ streamKey }}</span>
+              &nbsp;<button v-if="streamKey" @click="copyStreamKey">
+                <font-awesome-icon v-if="streamKey" icon="fa-clipboard"
+                                   class="text-blue-500 hover:text-blue-700 hover:cursor-pointer"/>
+              </button>
+              <span v-if="showCopiedStreamKey" class="ml-1 copied-message"
+                    style="transition: opacity 0.5s; opacity: 1;">Copied!</span>
+            </div>
           </div>
         </div>
         <div class="flex flex-col">
@@ -36,10 +52,12 @@
                     class="btn text-white bg-green-500 hover:bg-green-700 uppercase"
             >Start Recording
             </button>
-            <button v-else @click="goLiveStore.stopRecording" class="btn text-white bg-red-700 hover:bg-red-900 uppercase"
+            <button v-else @click="goLiveStore.stopRecording"
+                    class="btn text-white bg-red-700 hover:bg-red-900 uppercase"
             >Stop Recording
             </button>
-            <div v-if="!goLiveStore.isRecording" class="text-xs text-green-500 font-semibold tracking-wider">Premium Creator
+            <div v-if="!goLiveStore.isRecording" class="text-xs text-green-500 font-semibold tracking-wider">Premium
+              Creator
               Service
             </div>
           </div>
@@ -73,7 +91,8 @@
                       :class="liveOrRecordingGrayButtonClass"
               >Reload Player
               </button>
-              <div v-if="goLiveStore.isLive || goLiveStore.isRecording" class="w-full bg-red-700 text-white text-center uppercase font-bold">
+              <div v-if="goLiveStore.isLive || goLiveStore.isRecording"
+                   class="w-full bg-red-700 text-white text-center uppercase font-bold">
                 <span v-if="goLiveStore.isLive">LIVE</span> <span v-if="goLiveStore.isLive && goLiveStore.isRecording"> + </span>
                 <span v-if="goLiveStore.isRecording">RECORDING</span>
               </div>
@@ -122,7 +141,8 @@
             </div>
           </div>
 
-          <div v-if="goLiveStore.streamInfo && !goLiveStore.streamInfo.error" class="w-fit" :key="goLiveStore.selectedShowId">
+          <div v-if="goLiveStore.streamInfo && !goLiveStore.streamInfo.error" class="w-fit"
+               :key="goLiveStore.selectedShowId">
             <div>
               <h3>Stream Info</h3>
               <!--                <RecursivePropertyList :object="serverInfo" />-->
@@ -236,7 +256,9 @@ let props = defineProps({
 const showCopiedFullUrl = ref(false)
 const showCopiedRtmpUri = ref(false)
 const showCopiedStreamKey = ref(false)
-const { copy } = useClipboard()
+const {copy} = useClipboard()
+
+const openObsInstructions = ref(false)
 
 // const copyText = () => {
 //   copy('Text to be copied');
@@ -254,46 +276,46 @@ let videoSourceType = 'application/vnd.apple.mpegURL'
 // goLiveStore.fetchStreamInfo(goLiveStore?.selectedShow?.mist_stream_wildcard.name)
 // goLiveStore.fetchRtmpUri()
 
-const fullUrl = ref('');
-const rtmpUri = ref('');
-const streamKey = ref('');
+const fullUrl = ref('')
+const rtmpUri = ref('')
+const streamKey = ref('')
 
 // Initialize fetching of server information
-goLiveStore.fetchStreamInfo(goLiveStore?.selectedShow?.mist_stream_wildcard.name);
-goLiveStore.fetchRtmpUri();
+goLiveStore.fetchStreamInfo(goLiveStore?.selectedShow?.mist_stream_wildcard.name)
+goLiveStore.fetchRtmpUri()
 
 // Reactively update URLs when the store updates
 watchEffect(() => {
   if (goLiveStore.rtmpUri) {
-    rtmpUri.value = goLiveStore.rtmpUri + 'live/';
+    rtmpUri.value = goLiveStore.rtmpUri + 'live/'
     // Check if it's an episode or a selected show and update accordingly
     if (goLiveStore.isEpisode && goLiveStore.episode?.mist_stream_wildcard?.name) {
-      streamKey.value = goLiveStore.episode.mist_stream_wildcard.name;
+      streamKey.value = goLiveStore.episode.mist_stream_wildcard.name
     } else if (!goLiveStore.isEpisode && goLiveStore.selectedShow?.mist_stream_wildcard?.name) {
-      streamKey.value = goLiveStore.selectedShow.mist_stream_wildcard.name;
+      streamKey.value = goLiveStore.selectedShow.mist_stream_wildcard.name
     }
-    fullUrl.value = `${rtmpUri.value}${streamKey.value}`;
+    fullUrl.value = `${rtmpUri.value}${streamKey.value}`
   }
-});
+})
 
 // Function to handle the copy action and display the "copied" message for each type
 const copyFullUrl = () => {
-  copy(fullUrl.value);
-  showCopiedFullUrl.value = true;
-  setTimeout(() => showCopiedFullUrl.value = false, 1000);
-};
+  copy(fullUrl.value)
+  showCopiedFullUrl.value = true
+  setTimeout(() => showCopiedFullUrl.value = false, 1000)
+}
 
 const copyRtmpUri = () => {
-  copy(rtmpUri.value);
-  showCopiedRtmpUri.value = true;
-  setTimeout(() => showCopiedRtmpUri.value = false, 1000);
-};
+  copy(rtmpUri.value)
+  showCopiedRtmpUri.value = true
+  setTimeout(() => showCopiedRtmpUri.value = false, 1000)
+}
 
 const copyStreamKey = () => {
-  copy(streamKey.value);
-  showCopiedStreamKey.value = true;
-  setTimeout(() => showCopiedStreamKey.value = false, 1000);
-};
+  copy(streamKey.value)
+  showCopiedStreamKey.value = true
+  setTimeout(() => showCopiedStreamKey.value = false, 1000)
+}
 
 // if (goLiveStore.isEpisode) {
 //   fullUrl = rtmpUri.value + goLiveStore?.episode?.mist_stream_wildcard?.name
@@ -344,7 +366,7 @@ const copyStreamKey = () => {
 
 const reloadPlayer = () => {
   let source = null
-  if(goLiveStore?.selectedShow?.mist_stream_wildcard?.name) {
+  if (goLiveStore?.selectedShow?.mist_stream_wildcard?.name) {
     source = goLiveStore?.selectedShow?.mist_stream_wildcard?.name
     goLiveStore.fetchStreamInfo(goLiveStore?.selectedShow?.mist_stream_wildcard?.name)
   } else if (goLiveStore?.episode?.mist_stream_wildcard?.name) {
@@ -359,7 +381,6 @@ const reloadPlayer = () => {
   // videoAuxPlayerStore.loadNewLiveSource(source, sourceType)
   console.log('reload player')
 }
-
 
 
 onMounted(() => {
@@ -582,7 +603,7 @@ onBeforeUnmount(() => {
   // if (window.mistplayers && window.mistplayers[playerTargetId.value]) {
   //   window.mistplayers[playerTargetId.value].destroy(); // Hypothetical destroy method
   // }
-});
+})
 //
 // onBeforeUnmount(() => {
 //   if (videoPlayer && typeof videoPlayer.dispose === 'function') {
