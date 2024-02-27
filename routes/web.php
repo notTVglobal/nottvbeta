@@ -955,6 +955,7 @@ Route::resource('mistStreams', MistStreamController::class);
 Route::get('/admin/mist-stream/search', [MistStreamController::class, 'searchMistStreams']);
 Route::post('/admin/mist-stream/addOrUpdate', [MistStreamController::class, 'addOrUpdateMistStream'])->name('mistStream.addOrUpdate');
 Route::post('/admin/mist-stream/remove', [MistStreamController::class, 'removeMistStream'])->name('mistStream.remove');
+Route::post('/admin/mist-stream/restore-all-streams', [MistStreamController::class, 'restoreAllStreams']);
 Route::get('/fetch-stream-info/{streamName}', [MistStreamController::class, 'fetchStreamInfo']);
 
 // Mist Server

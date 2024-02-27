@@ -235,6 +235,38 @@ class MistStreamController extends Controller {
     }
   }
 
+  public function restoreAllStreams()
+  {
+    // Retrieve all Mist Streams from the database
+    $mistStreams = MistStream::all();
+
+    foreach ($mistStreams as $stream) {
+      // Prepare the data for dispatching the job
+      $streamData = [
+          'name' => $stream->name,
+          'source' => $stream->source,
+          'mime_type' => $stream->mime_type,
+          'comment' => $stream->comment ?? '',
+          'metadata' => $stream->metadata ?? [], // Assuming 'metadata' is stored as an associative array and can be directly used
+        // Add 'id' and 'originalName' if needed by the job for processing
+          'id' => $stream->id,
+          'originalName' => $stream->original_name ?? $stream->name,
+      ];
+
+      // Directly dispatch the job without going through the request validation
+      try {
+        AddOrUpdateMistStreamJob::dispatch($streamData, $stream->name);
+      } catch (\Exception $e) {
+        Log::error('Failed to restore Mist Stream: ' . $stream->name, [
+            'exception' => $e->getMessage(),
+        ]);
+        // Optionally, add more error handling here
+      }
+    }
+
+    return response()->json(['message' => 'All Mist Streams have been attempted to restore. Check logs for any errors.']);
+  }
+
 
   /**
    * Display a listing of the resource.

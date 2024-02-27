@@ -100,6 +100,11 @@
           >Restore MistServer Config
           </button>
           <button
+              @click="restoreAllStreams"
+              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
+          >Restore All MistStreams
+          </button>
+          <button
               @click="getEpisodesFromEmbedCodes"
               class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400 disabled:no-cursor"
               :disabled="!getAllEpisodesButtonActive"
@@ -589,6 +594,22 @@ const restoreMistServerConfig = async () => {
     }
   } else {
     console.log('Config restoration cancelled.');
+  }
+}
+
+async function restoreAllStreams() {
+  try {
+    const response = await axios.post('/admin/mist-stream/restore-all-streams');
+    // Handle success response
+    console.log(response.data); // Log or handle the response data
+    popUpModalTitle.value = 'Streams restored successfully.'
+    popUpModalMessage.value = response.data.message
+    document.getElementById('AdminSettingsPopUpModal').showModal()
+  } catch (error) {
+    console.error(error); // Log or handle error
+    popUpModalTitle.value = 'Failed to restore streams.'
+    popUpModalMessage.value = error
+    document.getElementById('AdminSettingsPopUpModal').showModal()
   }
 }
 
