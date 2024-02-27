@@ -90,6 +90,16 @@
           >Invite Codes
           </button>
           <button
+              @click="backupMistServerConfig"
+              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
+          >Backup MistServer Config
+          </button>
+          <button
+              @click="restoreMistServerConfig"
+              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
+          >Restore MistServer Config
+          </button>
+          <button
               @click="getEpisodesFromEmbedCodes"
               class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400 disabled:no-cursor"
               :disabled="!getAllEpisodesButtonActive"
@@ -436,6 +446,14 @@
 
     </div>
   </div>
+  <PopUpModal id="AdminSettingsPopUpModal">
+    <template #header>
+      {{popUpModalTitle}}
+    </template>
+    <template #main>
+      {{popUpModalMessage}}
+    </template>
+  </PopUpModal>
 </template>
 
 <script setup>
@@ -447,6 +465,7 @@ import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import JetValidationErrors from '@/Jetstream/ValidationErrors'
 import ServerTime from "@/Components/Pages/Admin/ServerTime"
 import Message from "@/Components/Global/Modals/Messages"
+import PopUpModal from '@/Components/Global/Modals/PopUpModal.vue'
 
 usePageSetup('admin.settings')
 
@@ -492,6 +511,9 @@ let form = useForm({
 
 const countries = ref([]);
 
+const popUpModalTitle = ref('')
+const popUpModalMessage = ref('')
+
 // const topDiv = document.getElementById("topDiv")
 
 onMounted(() => {
@@ -522,6 +544,52 @@ let getAllEpisodesButtonActive = ref(false);
 function getEpisodesFromEmbedCodes() {
   Inertia.post('getVideosFromEmbedCodes')
   getAllEpisodesButtonActive = false;
+}
+
+const backupMistServerConfig = async () => {
+  // Optional: use confirm dialog to ensure the user wants to proceed with the backup
+  if (confirm('Are you sure you want to backup the current Mist Server Config?')) {
+    try {
+      // Post request to initiate config backup
+      const response = await axios.post('/mist-server/config-backup');
+      console.log('Config backup successful:', response.data);
+      popUpModalTitle.value = 'Backup MistServer Config Success'
+      popUpModalMessage.value = response.data.message
+      document.getElementById('AdminSettingsPopUpModal').showModal()
+    } catch (error) {
+      console.error('Error backing up config:', error);
+      // Handle error, maybe notify the user that backup failed
+      popUpModalTitle.value = 'Backup MistServer Config Error'
+      popUpModalMessage.value = error
+      document.getElementById('AdminSettingsPopUpModal').showModal()
+    }
+  } else {
+    console.log('Config backup cancelled.');
+  }
+}
+
+
+const restoreMistServerConfig = async () => {
+  // Use confirm dialog result to decide whether to proceed
+  if (confirm('Are you sure you want to restore the Mist Server Config to the last saved version?')) {
+    try {
+      // Assuming there's a separate API endpoint or function for restoration
+      const response = await axios.post('/mist-server/config-restore'); // Adjust URL/path as necessary
+      console.log('Config restoration successful:', response.data);
+      popUpModalTitle.value = 'Restore MistServer Config Success'
+      popUpModalMessage.value = response.data.message
+      document.getElementById('AdminSettingsPopUpModal').showModal()
+      // Handle success response
+    } catch (error) {
+      console.error('Error restoring config:', error);
+      popUpModalTitle.value = 'Restore MistServer Config Error'
+      popUpModalMessage.value = error
+      document.getElementById('AdminSettingsPopUpModal').showModal()
+      // Handle error
+    }
+  } else {
+    console.log('Config restoration cancelled.');
+  }
 }
 
 

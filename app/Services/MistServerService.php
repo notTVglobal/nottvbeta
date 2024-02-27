@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Models\MistServerConfig;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -358,6 +360,92 @@ class MistServerService {
       Log::warning("No active push found matching stream: {$streamName} and URI: {$targetURI}");
     }
   }
+
+  public function configBackup() {
+    try {
+      // Log start
+      Log::info('Initiating MistServer config backup process.');
+
+      // Prepare request data
+      $requestData = ["config_backup" => true];
+
+      // Execute API call
+      $response = $this->send($requestData);
+
+      // New log for debugging the response structure
+      Log::debug('Received API response for config backup.', ['response' => $response]);
+
+      // Validate response structure and success status
+      if (isset($response['LTS']) && $response['LTS'] == 1) {
+        if (isset($response['authorize']['status']) && $response['authorize']['status'] == "OK") {
+          if (isset($response['config_backup'])) {
+            $configData = $response['config_backup'];
+
+            // Encrypt and save config data
+            $encryptedConfig = Crypt::encryptString(json_encode($configData));
+            MistServerConfig::create(['config' => $encryptedConfig]);
+
+            Log::info('MistServer configuration backup succeeded.');
+            return response()->json(['message' => 'Config backup successful.'], 200);
+          } else {
+            Log::error('Config backup data missing in the response.', ['response' => $response]);
+            return response()->json(['error' => 'Config backup data missing.'], 500);
+          }
+        } else {
+          Log::error('Authorization failed or missing in the response.', ['response' => $response]);
+          return response()->json(['error' => 'Authorization failed or missing.'], 500);
+        }
+      } else {
+        Log::error('Invalid or unexpected API response structure.', ['response' => $response]);
+        return response()->json(['error' => 'Invalid or unexpected API response structure.'], 500);
+      }
+    } catch (\Exception $e) {
+      Log::error('Exception encountered during MistServer config backup.', ['exception' => $e]);
+      return response()->json(['error' => 'An error occurred during config backup.', 'exception' => $e->getMessage()], 500);
+    }
+  }
+
+
+
+
+
+
+
+
+  public function getLatestConfigBackup() {
+    $latestConfig = MistServerConfig::latest()->first();
+
+    if (!$latestConfig) {
+      return null;
+    }
+
+    return Crypt::decryptString($latestConfig->config);
+  }
+
+  public function configRestore() {
+    $configData = $this->getLatestConfigBackup();
+
+    if (!$configData) {
+      Log::error('No configuration backup found for restoration.');
+      return response()->json(['error' => 'No configuration backup found.'], 404);
+    }
+
+    try {
+      $requestData = ["config_restore" => json_decode($configData, true)]; // Convert the JSON string back to an array
+
+      // Send the restore request to MistServer's API
+      $this->send($requestData);
+
+      // Since there's no response expected for the restore call, assume success if no exception is thrown
+      Log::info('MistServer configuration restore initiated successfully.');
+      return response()->json(['message' => 'Configuration restore initiated successfully.'], 200);
+    } catch (\Exception $e) {
+      Log::error('Exception during MistServer config restoration.', ['exception' => $e->getMessage()]);
+      return response()->json(['error' => 'An error occurred during config restoration.'], 500);
+    }
+  }
+
+
 
 }
 

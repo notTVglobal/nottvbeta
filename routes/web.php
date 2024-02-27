@@ -962,6 +962,8 @@ Route::get('/fetch-stream-info/{streamName}', [MistStreamController::class, 'fet
 ///
 
 Route::get('/mist-server/uri', [MistServerController::class, 'uri']);
+Route::post('/mist-server/config-backup', [MistServerController::class, 'configBackup']);
+Route::post('/mist-server/config-restore', [MistServerController::class, 'configRestore']);
 
 
 // Mist Stream Push Destinations
