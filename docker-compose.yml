@@ -78,7 +78,8 @@ services:
             - '4200:4200'
             - '8889:8889'
         networks:
-            - sail
+            sail:
+                ipv4_address: 172.18.0.2
         volumes:
             - './storage/app/public/videos:/media'
         shm_size: '8gb'

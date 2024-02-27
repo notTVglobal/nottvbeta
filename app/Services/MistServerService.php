@@ -124,7 +124,7 @@ class MistServerService {
   }
 
 
-  public function addOrUpdateStream($streamName, array $streamDetails) {
+  public function addOrUpdateStream($streamName, array $streamDetails): bool {
 
 //    Stream Details: The $streamDetails parameter should be an associative
 // array containing all the necessary details for the stream you're adding
@@ -191,7 +191,7 @@ class MistServerService {
   }
 
 
-  public function removeStream($streamNames) {
+  public function removeStream($streamNames): bool {
 
 //    Flexible Input: The method is designed to accept both a single
 // stream name and an array of stream names for deletion. This
@@ -232,7 +232,135 @@ class MistServerService {
     return true; // Assuming successful removal if no errors were encountered
   }
 
+  public function pushAutoAdd($destination): void {
+    // Correctly format the target URL
+    $targetURL = $destination->rtmp_url . $destination->rtmp_key;
+    Log::warning('add ::::: ' . $targetURL);
+    $data = [
+        "push_auto_add" => [
+            "stream" => $destination->mistStreamWildcard->name,
+            "target" => $targetURL,
+//            "scheduletime" => '', // this can get data from the showSchedule but is a future project.
+//            "completetime" => '', // this can get data from the showSchedule but is a future project.
+        ]
+    ];
+
+    try {
+      $this->send($data); // Assuming 'send' method handles communication with MistServer
+      $destination->has_auto_push = 1;
+      $destination->save();
+      // Log success with more detail
+      Log::info("Push auto add successful for stream: {$destination->mistStreamWildcard->name} to target: {$targetURL}");
+    } catch (\Exception $e) {
+      // Log the error with detail
+      Log::error("Failed to request push_auto_add for stream: {$destination->mistStreamWildcard->name} to target: {$targetURL}", ['exception' => $e->getMessage()]);
+      // Optionally, rethrow or handle the exception as needed
+    }
+  }
+
+  public function pushAutoRemove($destination): void {
+    // Prepare the target URL as done during the add
+    $targetURL = $destination->rtmp_url . $destination->rtmp_key;
+    Log::warning('remove ::::: ' . $targetURL);
+    $data = [
+        $destination->mistStreamWildcard->name,
+        $targetURL,
+    ];
+
+    // Wrapping the data inside an array to match the expected format
+
+    try {
+      $this->send(["push_auto_remove" => $data]); // Assuming 'send' method handles communication with MistServer
+      // Since there's no response, consider success if no exception is thrown
+
+      // Optionally update the destination to reflect the removal
+      $destination->has_auto_push = 0;
+      $destination->save();
+
+      Log::info("Push auto remove successful for stream: {$destination->mistStreamWildcard->name} to target: {$targetURL}");
+    } catch (\Exception $e) {
+      Log::error("Failed to request push_auto_remove for stream: {$destination->mistStreamWildcard->name} to target: {$targetURL}", ['exception' => $e->getMessage()]);
+    }
+  }
+
+  public function getActivePushList(): array {
+    $data = ["push_list" => true]; // The value is ignored, so true is just a placeholder
+
+    try {
+      $response = $this->send($data); // Assuming 'send' method handles communication with MistServer
+      if (isset($response['push_list']) && is_array($response['push_list'])) {
+        Log::info("Successfully retrieved active push list from MistServer.");
+        return $response['push_list'];
+      } else {
+        Log::error("Failed to retrieve active push list. Response was not as expected.");
+        return [];
+      }
+    } catch (\Exception $e) {
+      Log::error("Exception occurred while fetching active push list", ['exception' => $e->getMessage()]);
+      return [];
+    }
+  }
+
+  public function startPush($destination): void {
+    $streamName = $destination->mistStreamWildcard->name; // Adjust based on your model
+    $targetURL = $destination->rtmp_url . $destination->rtmp_key;
+
+    $data = [
+        "push_start" => [
+            "stream" => $streamName,
+            "target" => $targetURL,
+        ]
+    ];
+
+    try {
+      $this->send($data); // Send the request to MistServer
+      $destination->push_is_started = 1;
+      $destination->save();
+      Log::info("Push start successful for stream: {$streamName} to target: {$targetURL}");
+    } catch (\Exception $e) {
+      Log::error("Failed to start push for stream: {$streamName} to target: {$targetURL}", ['exception' => $e->getMessage()]);
+    }
+  }
+
+  public function stopPush($destination): void {
+    // Fetch the list of active pushes from MistServer
+    $activePushes = $this->getActivePushList();
+
+    // Construct the first URI from the destination details
+    $targetURI = $destination->rtmp_url . $destination->rtmp_key;
+    $streamName = $destination->mistStreamWildcard->name;
+
+    // Search for the push that matches the stream name and first URI
+    $pushId = null;
+    foreach ($activePushes as $push) {
+      // Assuming $push[1] is the STREAMNAME and $push[2] is the first URI
+      if ($push[1] === $streamName && $push[2] === $targetURI) {
+        $pushId = $push[0]; // The push ID
+        break;
+      }
+    }
+
+    // If a matching push is found, stop it
+    if ($pushId !== null) {
+      $data = [
+          "push_stop" => $pushId
+      ];
+
+      try {
+        $this->send($data); // Send the push_stop request to MistServer
+        $destination->push_is_started = 0;
+        $destination->save();
+        Log::info("Push stop successful for stream: {$streamName} with push ID: {$pushId}");
+      } catch (\Exception $e) {
+        Log::error("Failed to stop push for stream: {$streamName} with push ID: {$pushId}", ['exception' => $e->getMessage()]);
+      }
+    } else {
+      Log::warning("No active push found matching stream: {$streamName} and URI: {$targetURI}");
+    }
+  }
+
 }
+
 
 
 

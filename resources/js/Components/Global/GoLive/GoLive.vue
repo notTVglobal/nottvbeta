@@ -15,35 +15,53 @@
             <button @click="appSettingStore.btnRedirect('/training/go-live-using-zoom')"
                     class="btn bg-blue-500 hover:bg-blue-700 rounded-lg text-white">How To Stream From Zoom
             </button>
+            <button @click="openObsInstructions = !openObsInstructions"
+                    class="btn bg-blue-500 hover:bg-blue-700 rounded-lg text-white ml-2 ">How To Stream From OBS
+            </button>
 
           </div>
-          <div>RTMP full url: <span v-if="rtmpUri && streamKey" class="font-bold">{{rtmpUri}}{{streamKey}}</span>
-            &nbsp;<button v-if="rtmpUri && streamKey" @click="copyFullUrl"><font-awesome-icon v-if="rtmpUri && streamKey" icon="fa-clipboard" class="text-blue-500 hover:text-blue-700 hover:cursor-pointer"/></button>
-            <span v-if="showCopiedFullUrl" class="ml-1 copied-message" style="transition: opacity 0.5s; opacity: 1;">Copied!</span>
-          </div>
-          <div>RTMP url: <span class="font-bold">{{rtmpUri}}</span>
-            &nbsp;<button v-if="rtmpUri" @click="copyRtmpUri"><font-awesome-icon v-if="rtmpUri" icon="fa-clipboard" class="text-blue-500 hover:text-blue-700 hover:cursor-pointer"/></button>
-            <span v-if="showCopiedRtmpUri" class="ml-1 copied-message" style="transition: opacity 0.5s; opacity: 1;">Copied!</span>
-          </div>
-          <div>RTMP stream key: <span class="font-bold">{{streamKey}}</span>
-            &nbsp;<button v-if="streamKey" @click="copyStreamKey"><font-awesome-icon v-if="streamKey" icon="fa-clipboard" class="text-blue-500 hover:text-blue-700 hover:cursor-pointer"/></button>
-            <span v-if="showCopiedStreamKey" class="ml-1 copied-message" style="transition: opacity 0.5s; opacity: 1;">Copied!</span>
+          <div v-if="openObsInstructions">
+            <h2>Stream from OBS or other software using these details:</h2>
+            <div>RTMP full url: <span v-if="rtmpUri && streamKey" class="font-bold">{{ rtmpUri }}{{ streamKey }}</span>
+              &nbsp;<button v-if="rtmpUri && streamKey" @click="copyFullUrl">
+                <font-awesome-icon v-if="rtmpUri && streamKey" icon="fa-clipboard"
+                                   class="text-blue-500 hover:text-blue-700 hover:cursor-pointer"/>
+              </button>
+              <span v-if="showCopiedFullUrl" class="ml-1 copied-message" style="transition: opacity 0.5s; opacity: 1;">Copied!</span>
+            </div>
+            <div>RTMP url: <span class="font-bold">{{ rtmpUri }}</span>
+              &nbsp;<button v-if="rtmpUri" @click="copyRtmpUri">
+                <font-awesome-icon v-if="rtmpUri" icon="fa-clipboard"
+                                   class="text-blue-500 hover:text-blue-700 hover:cursor-pointer"/>
+              </button>
+              <span v-if="showCopiedRtmpUri" class="ml-1 copied-message" style="transition: opacity 0.5s; opacity: 1;">Copied!</span>
+            </div>
+            <div>RTMP stream key: <span class="font-bold">{{ streamKey }}</span>
+              &nbsp;<button v-if="streamKey" @click="copyStreamKey">
+                <font-awesome-icon v-if="streamKey" icon="fa-clipboard"
+                                   class="text-blue-500 hover:text-blue-700 hover:cursor-pointer"/>
+              </button>
+              <span v-if="showCopiedStreamKey" class="ml-1 copied-message"
+                    style="transition: opacity 0.5s; opacity: 1;">Copied!</span>
+            </div>
           </div>
         </div>
-        <div class="flex flex-col">
-          <div class="">
+        <div class="flex flex-row flex-wrap">
+          <div class="mb-2">
             <button v-if="!goLiveStore.isRecording" @click="goLiveStore.startRecording"
                     class="btn text-white bg-green-500 hover:bg-green-700 uppercase"
             >Start Recording
             </button>
-            <button v-else @click="goLiveStore.stopRecording" class="btn text-white bg-red-700 hover:bg-red-900 uppercase"
+            <button v-else @click="goLiveStore.stopRecording"
+                    class="btn text-white bg-red-700 hover:bg-red-900 uppercase"
             >Stop Recording
             </button>
-            <div v-if="!goLiveStore.isRecording" class="text-xs text-green-500 font-semibold tracking-wider">Premium Creator
+            <div v-if="!goLiveStore.isRecording" class="text-xs text-green-500 font-semibold tracking-wider">Premium
+              Creator
               Service
             </div>
           </div>
-          <div class="my-4">
+          <div class="ml-2">
             <button v-if="!goLiveStore.isLive" @click="goLiveStore.goLive"
                     class="btn text-white bg-green-500 hover:bg-green-700 uppercase"
             >Go Live Now
@@ -56,8 +74,8 @@
             </div>
           </div>
           <div></div>
-          <div>Live will begin in...</div>
-          <div>{{ formattedCountdown }}</div>
+          <div>Live will begin in... &nbsp;</div>
+          <div class="font-semibold">{{ formattedCountdown }} (for demo purposes only)</div>
         </div>
       </div>
 
@@ -73,7 +91,8 @@
                       :class="liveOrRecordingGrayButtonClass"
               >Reload Player
               </button>
-              <div v-if="goLiveStore.isLive || goLiveStore.isRecording" class="w-full bg-red-700 text-white text-center uppercase font-bold">
+              <div v-if="goLiveStore.isLive || goLiveStore.isRecording"
+                   class="w-full bg-red-700 text-white text-center uppercase font-bold">
                 <span v-if="goLiveStore.isLive">LIVE</span> <span v-if="goLiveStore.isLive && goLiveStore.isRecording"> + </span>
                 <span v-if="goLiveStore.isRecording">RECORDING</span>
               </div>
@@ -122,7 +141,8 @@
             </div>
           </div>
 
-          <div v-if="goLiveStore.streamInfo && !goLiveStore.streamInfo.error" class="w-fit" :key="goLiveStore.selectedShowId">
+          <div v-if="goLiveStore.streamInfo && !goLiveStore.streamInfo.error" class="w-fit"
+               :key="goLiveStore.selectedShowId">
             <div>
               <h3>Stream Info</h3>
               <!--                <RecursivePropertyList :object="serverInfo" />-->
@@ -166,20 +186,81 @@
           Push Destinations
         </div>
         <div class="shadow bg-blue-100 overflow-hidden border-2 border-blue-600 rounded p-6 space-y-3">
-          <div></div>
-          <div>Set up <span class="font-bold">push destinations:</span></div>
-          <div>Here you can set additional streaming destinations such as Facebook, YouTube, Rumble, Twitch, etc. and
-            notTV will automatically start pushing to those destinations when you go live.
+          <div class="flex flex-row justify-between">
+            <div><h2 class="text-xl font-bold mb-4">Push Destinations</h2></div>
+            <div>
+              <button class="btn bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-lg"
+                      @click.prevent="addDestination">Add Push
+                Destinations
+              </button>
+            </div>
           </div>
-          <div class="w-full flex justify-center pt-4">
-            <button onclick="setPushDestinationsNotice.showModal()"
-                    class="bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-lg px-4 py-2">Set Push
-              Destinations
-            </button>
+          <div v-if="mistStreamPushDestinations.length === 0">
+            <div>Set up <span class="font-bold">push destinations:</span></div>
+            <div>Here you can set additional streaming destinations such as Facebook, YouTube, Rumble, Twitch, etc. and
+              notTV will automatically start pushing to those destinations when you go live.
+            </div>
+          </div>
+          <div v-if="mistStreamPushDestinations">
+            <div class="flex flex-col gap-4">
+              <div v-for="destination in mistStreamPushDestinations" :key="destination.id"
+                   class="border p-4 rounded-lg shadow flex flex-row items-center gap-4">
+                <img :src="destination.destination_image" alt="Destination Image"
+                     class="w-24 h-24 object-cover rounded-full"/>
+                <div class="flex-grow">
+                  <h3 class="text-lg font-semibold">{{ destination.destination_name }}</h3>
+                  <h4 class="">{{ destination.comment }}</h4>
+                  <p v-if="destination.push_is_started" class="text-green-500">Is Active</p>
+                  <p v-if="destination.has_auto_push && !destination.push_is_started" class="text-green-500">Auto push
+                    is enabled</p>
+                  <div class="flex gap-2 mt-2">
+                    <button v-if="destination.push_is_started" @click="stopPush(destination.id)"
+                            class="py-2 px-4 bg-red-500 text-white rounded hover:bg-red-700 transition duration-150">
+                      Stop Push
+                    </button>
+                    <button v-else @click="startPush(destination.id)"
+                            class="py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-700 transition duration-150">
+                      Start Push
+                    </button>
+                    <button v-if="!destination.has_auto_push && !destination.push_is_started"
+                            @click="enableAutoPush(destination.id)"
+                            class="py-2 px-4 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition duration-150">
+                      Auto Push
+                    </button>
+                    <button v-if="destination.has_auto_push && !destination.push_is_started"
+                            @click="disableAutoPush(destination.id)"
+                            class="py-2 px-4 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition duration-150">
+                      Remove Auto Push
+                    </button>
+                  </div>
+                </div>
+                <div class="flex flex-row justify-end">
+                  <!--                  <button @click="editDestination(destination.id)" class="py-2 px-4 bg-green-500 text-white rounded hover:bg-green-600 transition duration-150">Edit</button>-->
+                  <!--                  <button @click="deleteDestination(destination.id)" class="py-2 px-4 bg-gray-500 text-white rounded hover:bg-gray-600 transition duration-150">Delete</button>-->
+
+                  <button
+                      @click.prevent="editDestination(destination)"
+                      class="btn btn-sm text-white font-semibold bg-blue-500 hover:bg-blue-600 rounded-lg">
+                    <font-awesome-icon icon="fa-pencil" class="my-1 mx-1"/>
+                  </button>
+                </div>
+                <button
+                    @click.prevent="deleteDestination(destination.id)"
+                    class="btn btn-sm text-white font-semibold bg-red-500 hover:bg-red-600 rounded-lg"
+                >
+                  <font-awesome-icon icon="fa-trash-can" class="my-1 mx-1"/>
+                </button>
+
+
+              </div>
+            </div>
           </div>
         </div>
 
       </div>
+      <MistStreamPushDestinationForm @update-success="getMistStreamPushDestinations"
+                                     :destinationDetails="destinationDetails"
+                                     :mode="mistStreamPushDestinationFormModalMode"/>
 
     </div>
 
@@ -223,6 +304,7 @@ import VideoJsAux from '@/Components/Global/VideoPlayer/VideoJs/VideoJsAux'
 import videojs from 'video.js'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { useClipboard } from '@vueuse/core'
+import MistStreamPushDestinationForm from '@/Components/Global/MistStreams/MistStreamPushDestinationForm'
 
 const appSettingStore = useAppSettingStore()
 const videoPlayerStore = useVideoPlayerStore()
@@ -236,7 +318,158 @@ let props = defineProps({
 const showCopiedFullUrl = ref(false)
 const showCopiedRtmpUri = ref(false)
 const showCopiedStreamKey = ref(false)
-const { copy } = useClipboard()
+const {copy} = useClipboard()
+
+const openObsInstructions = ref(false)
+
+
+const mistStreamPushDestinations = ref([])
+const mistStreamPushDestinationFormModalMode = ref('add')
+const destinationDetails = ref({})
+
+async function getMistStreamPushDestinations() {
+  // Assuming `goLiveStore.selectedShow.mist_stream_wildcard.id` holds the wildcard ID
+  const wildcardId = goLiveStore?.selectedShow?.mist_stream_wildcard?.id
+  if (wildcardId) {
+    try {
+      // Append the wildcard ID as a query parameter
+      const response = await axios.get(`/mist-stream-push-destinations?wildcardId=${wildcardId}`)
+      mistStreamPushDestinations.value = response.data // Update the reactive variable
+      console.log(response.data) // Log or process the list of push destinations
+    } catch (error) {
+      console.error('Failed to fetch push destinations:', error)
+    }
+  } else {
+    console.error('No wildcard ID found')
+  }
+}
+
+getMistStreamPushDestinations()
+
+async function startPush(destinationId) {
+  console.log(`Starting push for destination ${destinationId}`);
+  const data = { destinationId };
+
+  try {
+    const response = await axios.post('/mist-stream/start-push', data, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    console.log('Push started successfully:', response.data);
+    // Update the component's state to reflect the change
+    const index = mistStreamPushDestinations.value.findIndex(destination => destination.id === destinationId);
+    if (index !== -1) {
+      mistStreamPushDestinations.value[index].push_is_started = 1;
+    }
+  } catch (error) {
+    console.error('Error starting push:', error);
+    // Handle the error appropriately in your UI
+  }
+}
+
+async function stopPush(destinationId) {
+  console.log(`Stopping push for destination ${destinationId}`);
+  const data = { destinationId };
+
+  try {
+    const response = await axios.post('/mist-stream/stop-push', data, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    console.log('Push stopped successfully:', response.data);
+    // Update the component's state to reflect the change
+    const index = mistStreamPushDestinations.value.findIndex(destination => destination.id === destinationId);
+    if (index !== -1) {
+      mistStreamPushDestinations.value[index].push_is_started = 0;
+    }
+  } catch (error) {
+    console.error('Error stopping push:', error);
+    // Handle the error appropriately in your UI
+  }
+}
+
+const enableAutoPush = async (destinationId) => {
+  const data = {
+    destinationId,
+  }
+
+  try {
+    const response = await axios.post('/mist-stream/push-auto-add', data, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+
+    console.log('Auto push enabled successfully:', response.data)
+    const index = mistStreamPushDestinations.value.findIndex(destination => destination.id === destinationId);
+    if (index !== -1) {
+      mistStreamPushDestinations.value[index].has_auto_push = 1;
+    }
+  } catch (error) {
+    console.error('Error enabling auto push:', error)
+  }
+}
+
+async function disableAutoPush(destinationId) {
+  console.log(`Disabling auto push for destination ${destinationId}`);
+  const data = {
+    destinationId,
+  };
+
+  try {
+    const response = await axios.post('/mist-stream/push-auto-remove', data, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    console.log('Auto push disabled successfully:', response.data);
+    const index = mistStreamPushDestinations.value.findIndex(destination => destination.id === destinationId);
+    if (index !== -1) {
+      mistStreamPushDestinations.value[index].has_auto_push = 0;
+    }
+  } catch (error) {
+    console.error('Error disabling auto push:', error);
+  }
+}
+
+const addDestination = async () => {
+  mistStreamPushDestinationFormModalMode.value = 'add'
+  const wildcardId = goLiveStore.selectedShow?.mist_stream_wildcard?.id
+  destinationDetails.value = {mist_stream_wildcard_id: wildcardId} // Initialize destinationDetails with the wildcard ID
+
+  document.getElementById('mistStreamPushDestinationForm').showModal()
+}
+
+const editDestination = async (destination) => {
+  mistStreamPushDestinationFormModalMode.value = 'edit'
+  destinationDetails.value = destination
+  document.getElementById('mistStreamPushDestinationForm').showModal()
+  console.log(`Editing destination with ID: ${destination}`)
+  const index = mistStreamPushDestinations.value.findIndex(destination => destination.id === destinationId);
+  if (index !== -1) {
+    mistStreamPushDestinations.value[index].has_auto_push = 0;
+  }
+}
+
+const deleteDestination = async (destinationId) => {
+  // Confirm deletion with the user before proceeding
+  if (confirm(`Are you sure you want to delete the destination with ID: ${destinationId}?`)) {
+    try {
+      // Perform the delete operation
+      await axios.delete(`/mist-stream-push-destinations/${destinationId}`)
+      console.log(`Deleted destination with ID: ${destinationId}`)
+      // Optionally, remove the item from your local state to update the UI
+      mistStreamPushDestinations.value = mistStreamPushDestinations.value.filter(destination => destination.id !== destinationId)
+    } catch (error) {
+      console.error(`Error deleting destination with ID: ${destinationId}`, error)
+    }
+  }
+}
 
 // const copyText = () => {
 //   copy('Text to be copied');
@@ -254,46 +487,46 @@ let videoSourceType = 'application/vnd.apple.mpegURL'
 // goLiveStore.fetchStreamInfo(goLiveStore?.selectedShow?.mist_stream_wildcard.name)
 // goLiveStore.fetchRtmpUri()
 
-const fullUrl = ref('');
-const rtmpUri = ref('');
-const streamKey = ref('');
+const fullUrl = ref('')
+const rtmpUri = ref('')
+const streamKey = ref('')
 
 // Initialize fetching of server information
-goLiveStore.fetchStreamInfo(goLiveStore?.selectedShow?.mist_stream_wildcard.name);
-goLiveStore.fetchRtmpUri();
+goLiveStore.fetchStreamInfo(goLiveStore?.selectedShow?.mist_stream_wildcard.name)
+goLiveStore.fetchRtmpUri()
 
 // Reactively update URLs when the store updates
 watchEffect(() => {
   if (goLiveStore.rtmpUri) {
-    rtmpUri.value = goLiveStore.rtmpUri + 'live/';
+    rtmpUri.value = goLiveStore.rtmpUri + 'live/'
     // Check if it's an episode or a selected show and update accordingly
     if (goLiveStore.isEpisode && goLiveStore.episode?.mist_stream_wildcard?.name) {
-      streamKey.value = goLiveStore.episode.mist_stream_wildcard.name;
+      streamKey.value = goLiveStore.episode.mist_stream_wildcard.name
     } else if (!goLiveStore.isEpisode && goLiveStore.selectedShow?.mist_stream_wildcard?.name) {
-      streamKey.value = goLiveStore.selectedShow.mist_stream_wildcard.name;
+      streamKey.value = goLiveStore.selectedShow.mist_stream_wildcard.name
     }
-    fullUrl.value = `${rtmpUri.value}${streamKey.value}`;
+    fullUrl.value = `${rtmpUri.value}${streamKey.value}`
   }
-});
+})
 
 // Function to handle the copy action and display the "copied" message for each type
 const copyFullUrl = () => {
-  copy(fullUrl.value);
-  showCopiedFullUrl.value = true;
-  setTimeout(() => showCopiedFullUrl.value = false, 1000);
-};
+  copy(fullUrl.value)
+  showCopiedFullUrl.value = true
+  setTimeout(() => showCopiedFullUrl.value = false, 1000)
+}
 
 const copyRtmpUri = () => {
-  copy(rtmpUri.value);
-  showCopiedRtmpUri.value = true;
-  setTimeout(() => showCopiedRtmpUri.value = false, 1000);
-};
+  copy(rtmpUri.value)
+  showCopiedRtmpUri.value = true
+  setTimeout(() => showCopiedRtmpUri.value = false, 1000)
+}
 
 const copyStreamKey = () => {
-  copy(streamKey.value);
-  showCopiedStreamKey.value = true;
-  setTimeout(() => showCopiedStreamKey.value = false, 1000);
-};
+  copy(streamKey.value)
+  showCopiedStreamKey.value = true
+  setTimeout(() => showCopiedStreamKey.value = false, 1000)
+}
 
 // if (goLiveStore.isEpisode) {
 //   fullUrl = rtmpUri.value + goLiveStore?.episode?.mist_stream_wildcard?.name
@@ -344,7 +577,7 @@ const copyStreamKey = () => {
 
 const reloadPlayer = () => {
   let source = null
-  if(goLiveStore?.selectedShow?.mist_stream_wildcard?.name) {
+  if (goLiveStore?.selectedShow?.mist_stream_wildcard?.name) {
     source = goLiveStore?.selectedShow?.mist_stream_wildcard?.name
     goLiveStore.fetchStreamInfo(goLiveStore?.selectedShow?.mist_stream_wildcard?.name)
   } else if (goLiveStore?.episode?.mist_stream_wildcard?.name) {
@@ -359,7 +592,6 @@ const reloadPlayer = () => {
   // videoAuxPlayerStore.loadNewLiveSource(source, sourceType)
   console.log('reload player')
 }
-
 
 
 onMounted(() => {
@@ -582,7 +814,7 @@ onBeforeUnmount(() => {
   // if (window.mistplayers && window.mistplayers[playerTargetId.value]) {
   //   window.mistplayers[playerTargetId.value].destroy(); // Hypothetical destroy method
   // }
-});
+})
 //
 // onBeforeUnmount(() => {
 //   if (videoPlayer && typeof videoPlayer.dispose === 'function') {

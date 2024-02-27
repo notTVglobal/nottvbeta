@@ -11,6 +11,7 @@ use App\Http\Controllers\FlashController;
 use App\Http\Controllers\GoLiveController;
 use App\Http\Controllers\MistServerController;
 use App\Http\Controllers\MistStreamController;
+use App\Http\Controllers\MistStreamPushDestinationController;
 use App\Http\Controllers\NewsRssFeedItemArchiveController;
 use App\Http\Controllers\NewsRssFeedItemTempController;
 use App\Http\Controllers\NotificationsController;
@@ -962,6 +963,16 @@ Route::get('/fetch-stream-info/{streamName}', [MistStreamController::class, 'fet
 
 Route::get('/mist-server/uri', [MistServerController::class, 'uri']);
 
+
+// Mist Stream Push Destinations
+////////////////////////////////
+///
+
+Route::resource('mist-stream-push-destinations', MistStreamPushDestinationController::class);
+Route::post('/mist-stream/push-auto-add', [MistStreamPushDestinationController::class, 'pushAutoAdd']);
+Route::post('/mist-stream/push-auto-remove', [MistStreamPushDestinationController::class, 'pushAutoRemove']);
+Route::post('/mist-stream/start-push', [MistStreamPushDestinationController::class, 'startPush']);
+Route::post('/mist-stream/stop-push', [MistStreamPushDestinationController::class, 'stopPush']);
 
 // Channel Playlists
 ////////////////////
