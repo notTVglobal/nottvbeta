@@ -1,5 +1,5 @@
 <template>
-  <Head title="Go Live @@@"/>
+  <Head title="Go Live @@@ 222"/>
   <!--        <template #header>-->
   <!--            <h2 class="font-semibold text-xl text-gray-800 leading-tight">-->
   <!--                Dashboard-->
@@ -17,7 +17,7 @@
 
       <div class="flex justify-between mx-4 px-6">
         <div class="grid grid-cols-1 grid-rows-2">
-          <h1 class="text-3xl font-semibold">Go Live</h1>
+          <h1 class="text-3xl font-semibold">Go Live 2</h1>
         </div>
         <div>
           <CancelButton/>
