@@ -917,6 +917,9 @@ Route::get('/golive', [GoLiveController::class, 'index'])
     ->can('goLive', Creator::class)
     ->name('goLive.index');
 
+  Route::get('/golive2', [GoLiveController::class, 'index2'])
+      ->can('goLive', Creator::class);
+
 // Get RTMP Uri
   Route::get('/fetch-rtmp-uri', [AppSettingController::class, 'getRtmpUri']);
 

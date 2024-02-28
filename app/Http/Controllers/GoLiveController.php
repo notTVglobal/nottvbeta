@@ -12,25 +12,36 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
-class GoLiveController extends Controller
-{
+class GoLiveController extends Controller {
 
   public function index() {
 
     return Inertia::render('GoLive', [
 //        'shows'          => $this->listAvailableShows(),
-        'can'            => [
+        'can' => [
 //            'viewShows'   => Auth::user()->can('view', Show::class),
             'goLive' => Auth::user()->can('goLive', User::class),
         ]
     ]);
 
   }
+
+  public function index2() {
+
+    return Inertia::render('GoLive2', [
+//        'shows'          => $this->listAvailableShows(),
+        'can' => [
+//            'viewShows'   => Auth::user()->can('view', Show::class),
+            'goLive' => Auth::user()->can('goLive', User::class),
+        ]
+    ]);
+
+  }
+
   /**
    * List all shows available for the user to go live on.
    */
-  public function listAvailableShows()
-  {
+  public function listAvailableShows() {
     // Get the IDs of teams where the user is an active member
     $userActiveTeamIds = TeamMember::where('user_id', Auth::id())
         ->where('active', true)
@@ -46,8 +57,7 @@ class GoLiveController extends Controller
   /**
    * List all episodes under a specific show that the user can go live in.
    */
-  public function listEpisodesForShow($showId)
-  {
+  public function listEpisodesForShow($showId) {
     // Validate user has access to the show
     // this should get updated to allow the team members... or whoever is given access for this.
     $show = Show::where('id', $showId)->where('user_id', Auth::id())->firstOrFail();
@@ -63,8 +73,7 @@ class GoLiveController extends Controller
   /**
    * Retrieves or generates a stream key for a specific episode.
    */
-  public function getStreamKeyForEpisode($episodeId)
-  {
+  public function getStreamKeyForEpisode($episodeId) {
     // Validate user has access to the episode
     $episode = ShowEpisode::where('id', $episodeId)->whereHas('show', function ($query) {
       $query->where('user_id', Auth::id());
@@ -79,16 +88,16 @@ class GoLiveController extends Controller
   /**
    * Retrieves or generates a stream key for a specific episode.
    */
-  public function getStreamKeyForShow($showId)
-  {
+  public function getStreamKeyForShow($showId) {
     $streamDetails = [
-        'name' => 'show',
+        'name'   => 'show',
         'source' => 'push://',
     ];
     $mistServerService = app(MistServerService::class);
     $response = $mistServerService->addOrUpdateStream('show', $streamDetails);
     try {
       $mistStreamWildcard = Show::generateStreamKey($showId);
+
       // Success response
       return response()->json(['stream_key' => $mistStreamWildcard->name]);
     } catch (\Exception $e) {
@@ -104,8 +113,6 @@ class GoLiveController extends Controller
     }
 
 
-
-
     // Query the Show model by slug
 //    $show = Show::where('id', $showId)->firstOrFail();
 
@@ -118,8 +125,7 @@ class GoLiveController extends Controller
   /**
    * Prepares the necessary settings and configurations for going live on a specific episode.
    */
-  public function prepareLiveStream(Request $request, $episodeId)
-  {
+  public function prepareLiveStream(Request $request, $episodeId) {
     // Validate user has access to the episode
     $episode = ShowEpisode::where('id', $episodeId)->whereHas('show', function ($query) {
       $query->where('user_id', Auth::id());
