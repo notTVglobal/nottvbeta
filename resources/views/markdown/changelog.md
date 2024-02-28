@@ -3,13 +3,13 @@
 Last Update: February 27, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
-# v0.8.7.1
+## v0.8.7.1
 February 27, 2024
 * Add RTMP Push Destinations
 * Add functionality to the goLive page
 * Update the Admin Settings page
 
-# v0.8.6.6
+## v0.8.6.6
 February 22, 2024
 * Create a ScheduleStore to fetch and save the schedule.
   * Built a Month and Day view for the schedule on the Admin/Schedule page. We can use this component for the public/users schedule page.
@@ -22,13 +22,13 @@ February 22, 2024
 * If we register with Zoom we can integrate Zoom calls easier for our Creators.
 * Need to implement a Modal into the Schedule that allows the user to 1) subscribe to the show / aka follow the show, 2) Go to the show page, 3) Set a reminder for when the show goes live, 4) go back 
 
-# v0.8.6.5
+## v0.8.6.5
 February 19, 2024
 * Updated the GoLive component, it works for Shows and ShowEpisodes with unique stream keys for each
 * Added a clipboard to the stream keys to make them easier to copy
 * Create a /training/go-live-using-zoom page
 
-# v0.8.6.4
+## v0.8.6.4
 February 15, 2024
 * Changes are now getting pushed from our development branch to our staging branch then pulled into master (production).
   * See our git log for more details.
@@ -40,14 +40,14 @@ February 15, 2024
   * Added a mockup "Go Live Now" button, this will be a premium creator feature where they can go live on their show page and/or to other push destinations. This is more like a streamyard service and outside our core offering.
   * Added a mockup countdown until live. When a show is scheduled this will count down until the show gets pushed to the channel. This allows the creator to pre-connect and check the stream conditions/quality.
 
-# v0.8.6.3
+## v0.8.6.3
 February 12, 2024
 * Added the ability for Admin to create new streams and remove streams.
 * Added a general service notification for videos that have an error with playback.
 * Added the Episode ID (Ulid) to the bottom of the Now Playing Info panel.
 * Created a MistServerService class for handling connections to the MistServer.
 
-# v0.8.6.2
+## v0.8.6.2
 February 11, 2024
 * Updated the Home page
 * Added a contact form, moved the newsletter signup to its own page on our site.
@@ -55,14 +55,14 @@ February 11, 2024
 * Fixed playing external videos.
 * Added Date and Episode Number to Now Playing Info Box.
 
-# v0.8.6.0
+## v0.8.6.0
 February 9, 2024
 * Channel scheduling system has gone through some big updates. It's a work in progress, however, and while we can choose MistStreams for channel playback we still need to creat the modal form to Add new MistStreams.
 * Added a Feedback Form button that floats across all pages for logged in viewers
 * Increased the @media screen base px size on 1024-1920px width screens.
 * Other changes... see git log commit history for more info.
 
-# v0.8.5.0
+## v0.8.5.0
 February 5, 2024
 * There may be some challenges migrating this to production.
   * Some of the table migrations got a little funky while building the show schedule
@@ -71,14 +71,14 @@ February 5, 2024
     * It stays up-to-date and shows 6 hours across 5 days
     * The data is cached in a local file and stays valid for 15 minutes.
 
-# v0.8.4.1
+## v0.8.4.1
 February 1, 2024
 * Added creative commons licensing to movies and show episodes
 * Created new "new" badge for movies and shows
 * Optimized the database loading on the Shows index page
 * Added the option for Creators to choose whether the first episode played from the Show page when the user clicks "Watch Now" is the oldest episode first or the newest episode first.
 
-# v0.8.4.0
+## v0.8.4.0
 January 29, 2024
 * Added show sub-categories
 * Fixed some policies (movie and show)
@@ -87,7 +87,7 @@ January 29, 2024
   * Added a "clear cache" button to the admin settings
   * The data is saved in the database AppSetting as well as in the /js/firstPlayData.json
 
-# v0.8.3.8
+## v0.8.3.8
 January 29, 2024
 * Styling change to the stream page! Now when you click the video it hides the osd (on screen display) instead of pausing/playing.
 * Movies now have categories and sub-categories.
@@ -119,31 +119,31 @@ January 29, 2024
   * Creators get a reminder before their scheduled live time slot. 3 misses and they lose their slot.
 * We need to schedule our town hall meetings
 
-# v0.8.3.6
+## v0.8.3.6
 January 27, 2024
 * Removed the VideoJS YouTube extension because it has a tracker built into it.
 * Added new text editing options to the News Story Create and Edit pages.
 
-# v0.8.3.5
+## v0.8.3.5
 January 26, 2024
 * Finish the News Story Edit Page.. need to fix the News Story Create Page to match.
   * The TipTap Text Editor is not loading ... work in progress..
   * Almost got it working...
 * News Create and Edit pages are done.
 
-# v0.8.3.3
+## v0.8.3.3
 January 25, 2024
 * Major overhaul of the Newsroom and the News page.
 * Categories, sub-categories, and cities are all working with News Stories.
 * The search on the News page will search by story name, story content (needs to be tested, might be resource intensive), news person, city, province, category, sub-category, or published date (YYYY-MM-DD).
   * If searching by date, you can search by year (YYYY), year and month (YYYY-MM), or the full date (YYYY-MM-DD).
 
-# v0.8.3.2
+## v0.8.3.2
 January 24, 2024
 * Fix the News seeders
 * Added python scripts to parse external datasets into csv for Canada's Federal Electoral Districts
 
-# v0.8.3.1
+## v0.8.3.1
 January 23, 2024
 * Create News Sub-categories.
 * Filled the database (seeders) with News Sub-Categories, Movie Sub-Categories, and News Sub-Categories.
@@ -156,7 +156,7 @@ January 23, 2024
   * Canadian Electoral Districts (Federal Ridings)
 * Side Note: Additional Stats Canada Datasets can be found here: https://www.statcan.gc.ca/en/microdata/dli/data/all
 
-# v0.8.3.0
+## v0.8.3.0
 January 22, 2024
 * Fixed the News RSS Feed
   * All feeds now process images
@@ -175,7 +175,7 @@ January 22, 2024
 * Added Movie Sub-Categories to the movie_category_subs table in the database, to be added to production through the MovieCategorySubsSeeder
 * Added Show Sub-Categories to the show_category_subs table in the database, to be added to production through the ShowCategorySubsSeeder
 
-# v0.8.2.1
+## v0.8.2.1
 January 21, 2024
 * Fixed the News Page routes
 * Rebuilt the Newsroom home page
@@ -184,7 +184,7 @@ January 21, 2024
 * Fixed the newsRssFeeds routes
 * Added a :url prop to the BackButton and CancelButton so you can optionally pass a custom route that the button will use, e.g., \<BackButton :url="'/newsRssFeeds'"/>
 
-# v0.8.2.0
+## v0.8.2.0
 January 19, 2024
 * Fix the page layout/loading bugs on the login, register, password reset and password confirmation pages
 * Improve

@@ -46,36 +46,53 @@
             </div>
           </div>
         </div>
-        <div class="flex flex-row flex-wrap">
-          <div class="mb-2">
-            <button v-if="!goLiveStore.isRecording" @click="goLiveStore.startRecording"
-                    class="btn text-white bg-green-500 hover:bg-green-700 uppercase"
-            >Start Recording
-            </button>
-            <button v-else @click="goLiveStore.stopRecording"
-                    class="btn text-white bg-red-700 hover:bg-red-900 uppercase"
-            >Stop Recording
-            </button>
-            <div v-if="!goLiveStore.isRecording" class="text-xs text-green-500 font-semibold tracking-wider">Premium
+
+        <div class="flex flex-row flex-wrap justify-between">
+          <div class="flex flex-col justify-center border-2 border-green-500 rounded-lg px-2 py-2">
+            <div class="flex flex-row">
+              <div class="mb-2">
+                <button v-if="!goLiveStore.isRecording" @click="goLiveStore.startRecording"
+                        class="btn text-white bg-green-500 hover:bg-green-700 uppercase"
+                >Start Recording
+                </button>
+                <button v-else @click="goLiveStore.stopRecording"
+                        class="btn text-white bg-red-700 hover:bg-red-900 uppercase"
+                >Stop Recording
+                </button>
+              </div>
+              <div class="ml-2">
+                <button v-if="!goLiveStore.isLive" @click="goLiveStore.goLive"
+                        class="btn text-white bg-green-500 hover:bg-green-700 uppercase"
+                >Go Live Now
+                </button>
+                <button v-else @click="goLiveStore.stopLive"
+                        class="btn text-white bg-red-700 hover:bg-red-900 uppercase"
+                >End Live
+                </button>
+
+              </div>
+            </div>
+            <div v-if="!goLiveStore.isRecording || !goLiveStore.isLive"
+                 class="text-xs text-green-500 font-semibold tracking-wider text-center">
+              Premium
               Creator
               Service
             </div>
           </div>
+
           <div class="ml-2">
-            <button v-if="!goLiveStore.isLive" @click="goLiveStore.goLive"
-                    class="btn text-white bg-green-500 hover:bg-green-700 uppercase"
-            >Go Live Now
-            </button>
-            <button v-else @click="goLiveStore.stopLive" class="btn text-white bg-red-700 hover:bg-red-900 uppercase"
-            >End Live
-            </button>
-            <div v-if="!goLiveStore.isLive" class="text-xs text-green-500 font-semibold tracking-wider">Premium Creator
-              Service
+            <div>Live will begin in... &nbsp;</div>
+            <!--          <div class="font-semibold">{{ formattedCountdown }} (for demo purposes only)</div>-->
+            <div class="countdown font-mono text-2xl">
+              <!-- Hours (if your countdown includes hours) -->
+              <span :style="{ '--value': hours }">{{ hours.toString().padStart(2, '0') }}</span>h
+              <!-- Minutes -->
+              <span :style="{ '--value': minutes }">{{ minutes.toString().padStart(2, '0') }}</span>m
+              <!-- Seconds -->
+              <span :style="{ '--value': seconds }">{{ seconds.toString().padStart(2, '0') }}</span>s
             </div>
+            <div class="text-xs">for demo purposes only</div>
           </div>
-          <div></div>
-          <div>Live will begin in... &nbsp;</div>
-          <div class="font-semibold">{{ formattedCountdown }} (for demo purposes only)</div>
         </div>
       </div>
 
@@ -336,49 +353,48 @@ async function getMistStreamPushDestinations() {
 }
 
 
-
 async function startPush(destinationId) {
-  console.log(`Starting push for destination ${destinationId}`);
-  const data = { destinationId };
+  console.log(`Starting push for destination ${destinationId}`)
+  const data = {destinationId}
 
   try {
     const response = await axios.post('/mist-stream/start-push', data, {
       headers: {
         'Content-Type': 'application/json',
       },
-    });
+    })
 
-    console.log('Push started successfully:', response.data);
+    console.log('Push started successfully:', response.data)
     // Update the component's state to reflect the change
-    const index = mistStreamPushDestinations.value.findIndex(destination => destination.id === destinationId);
+    const index = mistStreamPushDestinations.value.findIndex(destination => destination.id === destinationId)
     if (index !== -1) {
-      mistStreamPushDestinations.value[index].push_is_started = 1;
+      mistStreamPushDestinations.value[index].push_is_started = 1
     }
   } catch (error) {
-    console.error('Error starting push:', error);
+    console.error('Error starting push:', error)
     // Handle the error appropriately in your UI
   }
 }
 
 async function stopPush(destinationId) {
-  console.log(`Stopping push for destination ${destinationId}`);
-  const data = { destinationId };
+  console.log(`Stopping push for destination ${destinationId}`)
+  const data = {destinationId}
 
   try {
     const response = await axios.post('/mist-stream/stop-push', data, {
       headers: {
         'Content-Type': 'application/json',
       },
-    });
+    })
 
-    console.log('Push stopped successfully:', response.data);
+    console.log('Push stopped successfully:', response.data)
     // Update the component's state to reflect the change
-    const index = mistStreamPushDestinations.value.findIndex(destination => destination.id === destinationId);
+    const index = mistStreamPushDestinations.value.findIndex(destination => destination.id === destinationId)
     if (index !== -1) {
-      mistStreamPushDestinations.value[index].push_is_started = 0;
+      mistStreamPushDestinations.value[index].push_is_started = 0
     }
   } catch (error) {
-    console.error('Error stopping push:', error);
+    console.error('Error stopping push:', error)
     // Handle the error appropriately in your UI
   }
 }
@@ -396,9 +412,9 @@ const enableAutoPush = async (destinationId) => {
     })
 
     console.log('Auto push enabled successfully:', response.data)
-    const index = mistStreamPushDestinations.value.findIndex(destination => destination.id === destinationId);
+    const index = mistStreamPushDestinations.value.findIndex(destination => destination.id === destinationId)
     if (index !== -1) {
-      mistStreamPushDestinations.value[index].has_auto_push = 1;
+      mistStreamPushDestinations.value[index].has_auto_push = 1
     }
   } catch (error) {
     console.error('Error enabling auto push:', error)
@@ -406,25 +422,25 @@ const enableAutoPush = async (destinationId) => {
 }
 
 async function disableAutoPush(destinationId) {
-  console.log(`Disabling auto push for destination ${destinationId}`);
+  console.log(`Disabling auto push for destination ${destinationId}`)
   const data = {
     destinationId,
-  };
+  }
 
   try {
     const response = await axios.post('/mist-stream/push-auto-remove', data, {
       headers: {
         'Content-Type': 'application/json',
       },
-    });
+    })
 
-    console.log('Auto push disabled successfully:', response.data);
-    const index = mistStreamPushDestinations.value.findIndex(destination => destination.id === destinationId);
+    console.log('Auto push disabled successfully:', response.data)
+    const index = mistStreamPushDestinations.value.findIndex(destination => destination.id === destinationId)
     if (index !== -1) {
-      mistStreamPushDestinations.value[index].has_auto_push = 0;
+      mistStreamPushDestinations.value[index].has_auto_push = 0
     }
   } catch (error) {
-    console.error('Error disabling auto push:', error);
+    console.error('Error disabling auto push:', error)
   }
 }
 
@@ -441,9 +457,9 @@ const editDestination = async (destination) => {
   destinationDetails.value = destination
   document.getElementById('mistStreamPushDestinationForm').showModal()
   console.log(`Editing destination with ID: ${destination}`)
-  const index = mistStreamPushDestinations.value.findIndex(destination => destination.id === destinationDetails.value.id);
+  const index = mistStreamPushDestinations.value.findIndex(destination => destination.id === destinationDetails.value.id)
   if (index !== -1) {
-    mistStreamPushDestinations.value[index].has_auto_push = 0;
+    mistStreamPushDestinations.value[index].has_auto_push = 0
   }
 }
 
@@ -600,33 +616,78 @@ onMounted(() => {
   getMistStreamPushDestinations()
 
 
-
 })
+
+// // Initial countdown time in seconds (5 minutes * 60 seconds)
+// const countdownTime = 5 * 60
+// // Reactive state for the countdown
+// const countdown = ref(countdownTime)
+//
+// // Computed property to format the countdown as mm:ss
+// const formattedCountdown = computed(() => {
+//   const minutes = Math.floor(countdown.value / 60)
+//   const seconds = countdown.value % 60
+//   return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+// })
+//
+// // Function to start the countdown - temporary for demo purposes.
+// const startCountdown = () => {
+//   const interval = setInterval(() => {
+//     countdown.value--
+//
+//     if (countdown.value < 0) {
+//       clearInterval(interval) // Stop the interval
+//       countdown.value = countdownTime // Reset countdown
+//       startCountdown() // Restart the countdown
+//     }
+//   }, 1000)
+// }
+//
+// Keep a reference to the interval ID so it can be cleared
+let intervalId = null
 
 // Initial countdown time in seconds (5 minutes * 60 seconds)
 const countdownTime = 5 * 60
 // Reactive state for the countdown
 const countdown = ref(countdownTime)
 
-// Computed property to format the countdown as mm:ss
-const formattedCountdown = computed(() => {
-  const minutes = Math.floor(countdown.value / 60)
-  const seconds = countdown.value % 60
-  return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
-})
+// Computed properties for hours, minutes, and seconds
+const hours = computed(() => Math.floor(countdown.value / 3600))
+const minutes = computed(() => Math.floor((countdown.value % 3600) / 60))
+const seconds = computed(() => countdown.value % 60)
 
-// Function to start the countdown - temporary for demo purposes.
+// Function to start the countdown
 const startCountdown = () => {
-  const interval = setInterval(() => {
+  // Clear any existing interval to prevent multiple intervals
+  if (intervalId !== null) {
+    clearInterval(intervalId)
+  }
+
+  // Reset countdown to initial value
+  countdown.value = countdownTime
+
+  // Start a new interval
+  intervalId = setInterval(() => {
     countdown.value--
 
     if (countdown.value < 0) {
-      clearInterval(interval) // Stop the interval
-      countdown.value = countdownTime // Reset countdown
-      startCountdown() // Restart the countdown
+      clearInterval(intervalId) // Stop the interval
+      intervalId = null // Reset the interval ID
+      // Optionally, you can reset countdown.value to countdownTime or another value here
     }
   }, 1000)
 }
+
+// Cleanup interval on component unmount
+onUnmounted(() => {
+  if (intervalId !== null) {
+    clearInterval(intervalId)
+  }
+})
+
+// Automatically start the countdown or trigger based on an event
+startCountdown()
+
 
 const liveOrRecordingGrayButtonClass = computed(() => {
   if (goLiveStore.isLive || goLiveStore.isRecording) {
@@ -645,42 +706,42 @@ const liveOrRecordingVideoBorderClass = computed(() => {
 })
 // const mistStreamWildcardId = ref()
 // mistStreamWildcardId.value = goLiveStore?.selectedShow?.mist_stream_wildcard?.id
-const channel = Echo.channel(`mistStreamWildcard.${goLiveStore?.selectedShow?.mist_stream_wildcard?.id}`);
+const channel = Echo.channel(`mistStreamWildcard.${goLiveStore?.selectedShow?.mist_stream_wildcard?.id}`)
 channel
     .subscribed(() => {
       // Handle successful subscription
       // This log will confirm the subscription success
-      console.log('Successfully subscribed to the channel!');
+      console.log('Successfully subscribed to the channel!')
     })
     // .listen('.push-out-start', (event) => {
     //   console.log('Event received:', event);
     // })
-// channel.listen('.push-out-start', (event) => {
-//       console.log('push out start EVENT BROADCASTED!', event);
-//     })
+    // channel.listen('.push-out-start', (event) => {
+    //       console.log('push out start EVENT BROADCASTED!', event);
+    //     })
     .listen('.push-out-start', (event) => {
       console.log('push out start EVENT BROADCASTED!')
       const index = mistStreamPushDestinations.value.findIndex(destination =>
-          `${destination.rtmp_url}${destination.rtmp_key}` === event.requestUrl);
+          `${destination.rtmp_url}${destination.rtmp_key}` === event.requestUrl)
       if (index !== -1) {
-        mistStreamPushDestinations.value[index].push_is_started = 1;
+        mistStreamPushDestinations.value[index].push_is_started = 1
       }
     })
     .listen('.push-end', (event) => {
       console.log('push end EVENT BROADCASTED!')
       const index = mistStreamPushDestinations.value.findIndex(destination =>
-          `${destination.rtmp_url}${destination.rtmp_key}` === event.requestUrl);
+          `${destination.rtmp_url}${destination.rtmp_key}` === event.requestUrl)
       if (index !== -1) {
-        mistStreamPushDestinations.value[index].push_is_started = 0;
+        mistStreamPushDestinations.value[index].push_is_started = 0
       }
-    });
+    })
 
 // Cleanup when the component unmounts
 onUnmounted(() => {
-  channel.stopListening('.push-out-start');
-  channel.stopListening('.push-end');
-  Echo.leave(`mistStreamWildcard.${goLiveStore?.selectedShow?.mist_stream_wildcard?.id}`);
-});
+  channel.stopListening('.push-out-start')
+  channel.stopListening('.push-end')
+  Echo.leave(`mistStreamWildcard.${goLiveStore?.selectedShow?.mist_stream_wildcard?.id}`)
+})
 
 //
 // // Assuming props.show.mist_stream_wildcard.name exists and is reactive

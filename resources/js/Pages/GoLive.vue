@@ -1,5 +1,5 @@
 <template>
-  <Head title="Go Live @@@"/>
+  <Head title="Go Live"/>
   <!--        <template #header>-->
   <!--            <h2 class="font-semibold text-xl text-gray-800 leading-tight">-->
   <!--                Dashboard-->
@@ -15,7 +15,7 @@
 
       <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
-      <div class="flex justify-between mx-4 px-6">
+      <div class="flex justify-between mx-4 px-6 w-full">
         <div class="grid grid-cols-1 grid-rows-2">
           <h1 class="text-3xl font-semibold">Go Live</h1>
         </div>
@@ -31,25 +31,24 @@
         <!--                    </div>-->
         <!--                </div>-->
       </div>
-      <div v-if="goLiveStore.shows && goLiveStore.shows.length > 0" class="mb-6 mx-4 px-6">
-        <label class="block mb-2 uppercase font-bold text-xs text-light text-gray-700"
+      <div v-if="goLiveStore.shows && goLiveStore.shows.length > 0" class="mb-6 mx-4 px-6 w-full">
+        <label class="block mb-2 uppercase font-bold text-xs text-light text-primary"
                for="show"
         >
           Select Show To Go Live On
         </label>
 
         <select
-            class="border border-gray-400 text-gray-800 p-2 w-full rounded-lg block my-2 uppercase font-bold text-xs "
+            class="select select-primary select-lg w-full p-2 block my-2 uppercase font-bold text-lg"
             v-model="goLiveStore.selectedShowId"
             @change="reloadPlayer"
         >
-          <option disabled value="">Select show</option>
+          <option disabled selected >Select show</option>
           <option v-for="show in goLiveStore.shows"
                   :key="show.id" :value="show.id">{{ show.name }}
           </option>
 
         </select>
-
 
 
       </div>
@@ -62,7 +61,7 @@
         <Link :href="`/shows/${goLiveStore.selectedShow.slug}/manage`">{{goLiveStore.selectedShow.name}}</Link>
       </div>
 
-      <GoLive v-if="goLiveStore.selectedShow && goLiveStore.selectedShow.mist_stream_wildcard_id" />@@@
+      <GoLive v-if="goLiveStore.selectedShow && goLiveStore.selectedShow.mist_stream_wildcard_id" />
       <div v-if="goLiveStore.selectedShow && !goLiveStore.selectedShow.mist_stream_wildcard_id" class="flex flex-col justify-items-center text-center px-16">
         <div class="mb-3">Please generate a stream key:</div>
         <div><button @click="handleGenerateStreamKey" class="btn btn-sm w-fit bg-green-500 hover:bg-green-700 text-white">generate key</button></div>
