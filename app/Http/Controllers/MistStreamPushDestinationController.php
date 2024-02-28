@@ -164,6 +164,22 @@ class MistStreamPushDestinationController extends Controller
     }
   }
 
+  public function getPushAutoList(Request $request) {
+    // start a job to make sure any pushes that are active or auto pushes setup are up to date
+    // on the MistStreamPushDestination table, has_auto_push and push_is_started.
+
+    // create job to getPushAutoList
+
+  }
+
+  public function getPushList(Request $request) {
+    // start a job to make sure any pushes that any active pushes matching this Push Destination
+    // update the Push Destination push_is_started on the MistStreamPushDestination table.
+
+    // create job to getPushList
+
+  }
+
   public function pushAutoAdd(Request $request)
   {
     $validated = $request->validate([

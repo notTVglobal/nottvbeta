@@ -972,6 +972,8 @@ Route::post('/mist-server/config-restore', [MistServerController::class, 'config
 ///
 
 Route::resource('mist-stream-push-destinations', MistStreamPushDestinationController::class);
+Route::post('/mist-stream/get-push-auto-list', [MistStreamPushDestinationController::class, 'getPushAutoList']);
+Route::post('/mist-stream/get-push-list', [MistStreamPushDestinationController::class, 'getPushList']);
 Route::post('/mist-stream/push-auto-add', [MistStreamPushDestinationController::class, 'pushAutoAdd']);
 Route::post('/mist-stream/push-auto-remove', [MistStreamPushDestinationController::class, 'pushAutoRemove']);
 Route::post('/mist-stream/start-push', [MistStreamPushDestinationController::class, 'startPush']);
