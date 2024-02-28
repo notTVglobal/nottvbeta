@@ -421,32 +421,55 @@
 
         </form>
 
+        <div class="card w-full mx-6 bg-neutral text-neutral-content">
+          <div class="card-body items-center text-center">
+            <h2 class="card-title">Pushing to Production!</h2>
+            <div class="mockup-code break-words">
+              <pre data-prefix="$"><code>git checkout staging</code></pre>
+              <pre data-prefix="$"><code>rm -rf public/js/*</code></pre>
+              <pre data-prefix="$"><code>rm -rf public/css/*</code></pre>
+              <pre data-prefix="$"><code>git merge development</code></pre>
+              <pre data-prefix="$"><code>npm run production</code></pre>
+              <pre data-prefix="$"><code>git add .</code></pre>
+              <pre data-prefix="$"><code>git commit -m "merge development build production</code></pre>
+              <pre data-prefix="$"><code>git push origin</code></pre>
+              <div role="alert" class="mt-5 alert alert-info">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <span>You may have to clear the cache on Cloudflare if you don't see all of the changes.</span>
+              </div>
+            </div>
 
-        <div class="w-full flex flex-wrap mb-4 p-2 bg-amber-800 text-white">
-          <span>Change Max Video Upload Size. convert Bytes to KB, MB, GB, TB.</span>
-          <span>Update Video Uploader with the size.</span>
+          </div>
         </div>
 
-        <div class="w-full flex flex-wrap mb-4 p-2 bg-amber-800 text-white">
-          Content licenses
+        <div class="mt-8 w-full">
+          <h2 class="ml-4 mb-3">Tasks To Do:</h2>
+          <div class="mb-4">
+            <ol class="list-decimal pl-5 space-y-2">
+              <li class="bg-amber-800 text-white p-2 rounded-md shadow">
+                  <input type="checkbox" class="mr-2 checkbox checkbox-lg" />
+                    <span>Change Max Video Upload Size. Convert Bytes to KB, MB, GB, TB.</span>
+                    <ul class="list-disc pl-4 mt-1 text-sm">
+                      <li>Update Video Uploader with the size.</li>
+                    </ul>
+              </li>
+              <li class="bg-amber-800 text-white p-2 rounded-md shadow"><input type="checkbox" class="mr-2 checkbox checkbox-lg" />Content licenses</li>
+              <li class="bg-amber-800 text-white p-2 rounded-md shadow"><input type="checkbox" class="mr-2 checkbox checkbox-lg" />Episode Statuses</li>
+              <li class="bg-amber-800 text-white p-2 rounded-md shadow"><input type="checkbox" class="mr-2 checkbox checkbox-lg" />Show Statuses</li>
+              <li class="bg-amber-800 text-white p-2 rounded-md shadow">
+                <input type="checkbox" class="mr-2 checkbox checkbox-lg" />
+                <span>Channels. Display list of channels. Click channel name to go to the channel playlist edit page.</span>
+                <div class="mt-2 text-sm">
+                  <p>Grid style, 1 column mobile, 2 column tablet, 3 column lg, 4 column xl.</p>
+                  <p>Rows: Times (next 24 hours) - can scroll up to 72 hours ahead or 72 hours back.</p>
+                  <p>Columns: Days (next 7 days).</p>
+                  <p>Need new Pages folder: Channels/Index, Channels/Create, Channels/Edit, ch/channelId (e.g., ch/01).</p>
+                </div>
+              </li>
+            </ol>
+          </div>
         </div>
 
-        <div class="w-full flex flex-wrap mb-4 p-2 bg-amber-800 text-white">
-          Episode Statuses
-        </div>
-
-        <div class="w-full flex flex-wrap mb-4 p-2 bg-amber-800 text-white">
-          Show Statuses
-        </div>
-
-        <div class="w-full flex flex-wrap mb-4 p-2 bg-amber-800 text-white">
-          Channels. Display list of channels. Click channel name to go to the channel playlist edit page.
-          Grid style, 1 column mobile, 2 column tablet, 3 column lg, 4 column xl
-          Rows: Times (next 24 hours) --> can scroll up to 72 hours ahead or 72 hours back.
-          Columns: Days (next 7 days). Need new Pages folder: Channels/Index, Channels/Create, Channels/Edit,
-          ch/channelId (e.g., ch/01).
-
-        </div>
       </div>
 
     </div>

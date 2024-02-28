@@ -3,10 +3,11 @@
 Last Update: February 27, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
-# v0.8.7.0
+# v0.8.7.1
 February 27, 2024
 * Add RTMP Push Destinations
 * Add functionality to the goLive page
+* Update the Admin Settings page
 
 # v0.8.6.6
 February 22, 2024
