@@ -103,14 +103,6 @@
                             :class="liveOrRecordingVideoBorderClass"/>
 
 
-              <!--            <div v-if="playerTargetId" class="mistvideo" :id="playerTargetId">-->
-              <!--              <noscript>-->
-              <!--                <a :href="`http://mist.nottv.io:8080/${goLiveStore.selectedShow.mist_stream_wildcard.name}.html`" target="_blank">-->
-              <!--                  Click here to play this video-->
-              <!--                </a>-->
-              <!--              </noscript>-->
-              <!--            </div>-->
-
             </div>
             <div class="flex flex-row px-10">
               <div class="mt-2">
@@ -870,10 +862,6 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-.copied-message-fade {
-  animation: fadeOut 2s forwards;
-}
-
 @keyframes fadeOut {
   from {
     opacity: 1;

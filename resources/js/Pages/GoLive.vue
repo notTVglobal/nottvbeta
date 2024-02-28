@@ -62,7 +62,7 @@
         <Link :href="`/shows/${goLiveStore.selectedShow.slug}/manage`">{{goLiveStore.selectedShow.name}}</Link>
       </div>
 
-      <GoLive v-if="goLiveStore.selectedShow && goLiveStore.selectedShow.mist_stream_wildcard_id" />
+      <GoLive v-if="goLiveStore.selectedShow && goLiveStore.selectedShow.mist_stream_wildcard_id" />@@@
       <div v-if="goLiveStore.selectedShow && !goLiveStore.selectedShow.mist_stream_wildcard_id" class="flex flex-col justify-items-center text-center px-16">
         <div class="mb-3">Please generate a stream key:</div>
         <div><button @click="handleGenerateStreamKey" class="btn btn-sm w-fit bg-green-500 hover:bg-green-700 text-white">generate key</button></div>
