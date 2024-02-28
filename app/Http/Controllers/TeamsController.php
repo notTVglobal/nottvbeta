@@ -451,6 +451,7 @@ class TeamsController extends Controller
                 'isTeamLeader' => $isTeamLeader,
                 'isTeamManager' => $isTeamManager,
                 'isTeamMember' => $isTeamMember,
+                'isAdmin' => auth()->user()->isAdmin,
         ]
         ]);
     }

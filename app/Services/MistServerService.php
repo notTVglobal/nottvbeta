@@ -241,13 +241,41 @@ class MistServerService {
     return true; // Assuming successful removal if no errors were encountered
   }
 
+  public function getPushAutoList(): array {
+    $data = ["push_auto_list" => true]; // The value is ignored, so true is just a placeholder
+
+    try {
+      $response = $this->send($data); // Assuming 'send' method handles communication with MistServer
+      if (isset($response['push_auto_list']) && is_array($response['push_auto_list'])) {
+        Log::info("Successfully retrieved push auto list from MistServer.");
+
+        return $response['push_auto_list'];
+      } else {
+        Log::error("Failed to retrieve push auto list. Response was not as expected.");
+
+        return [];
+      }
+    } catch (\Exception $e) {
+      Log::error("Exception occurred while fetching push auto list", ['exception' => $e->getMessage()]);
+
+      return [];
+    }
+  }
+
   public function pushAutoAdd($destination): void {
-    // Correctly format the target URL
+
+    if (!$destination->relationLoaded('mistStreamWildcard')) {
+      $destination->load('mistStreamWildcard');
+    }
+
+    // Correctly format the target URL and prepare the stream name
     $targetURL = $destination->rtmp_url . $destination->rtmp_key;
-    Log::warning('add ::::: ' . $targetURL);
+    $streamName = $destination->mistStreamWildcard->name;
+
+    Log::warning('add ::::: ' . $targetURL . ' ::::: ' . $streamName);
     $data = [
         "push_auto_add" => [
-            "stream" => $destination->mistStreamWildcard->name,
+            "stream" => $streamName,
             "target" => $targetURL,
 //            "scheduletime" => '', // this can get data from the showSchedule but is a future project.
 //            "completetime" => '', // this can get data from the showSchedule but is a future project.
@@ -259,35 +287,42 @@ class MistServerService {
       $destination->has_auto_push = 1;
       $destination->save();
       // Log success with more detail
-      Log::info("Push auto add successful for stream: {$destination->mistStreamWildcard->name} to target: {$targetURL}");
+      Log::info("Push auto add successful for stream: {$streamName} to target: {$targetURL}");
     } catch (\Exception $e) {
       // Log the error with detail
-      Log::error("Failed to request push_auto_add for stream: {$destination->mistStreamWildcard->name} to target: {$targetURL}", ['exception' => $e->getMessage()]);
+      Log::error("Failed to request push_auto_add for stream: {$streamName} to target: {$targetURL}", ['exception' => $e->getMessage()]);
       // Optionally, rethrow or handle the exception as needed
     }
   }
 
   public function pushAutoRemove($destination): void {
-    // Prepare the target URL as done during the add
+
+    if (!$destination->relationLoaded('mistStreamWildcard')) {
+      $destination->load('mistStreamWildcard');
+    }
+
+    // Prepare the target URL and the stream name as done during the add
     $targetURL = $destination->rtmp_url . $destination->rtmp_key;
-    Log::warning('remove ::::: ' . $targetURL);
+    $streamName = $destination->mistStreamWildcard->name;
+
+    Log::warning('remove ::::: ' . $targetURL . ' ::::: ' . $streamName);
 //    $data = [
 //        $destination->mistStreamWildcard->name,
 //        $targetURL,
 //    ];
     $data = [
-
-            "stream" => $destination->mistStreamWildcard->name,
+        "push_auto_remove" => [
+            "stream" => $streamName,
             "target" => $targetURL,
 //            "scheduletime" => '', // this can get data from the showSchedule but is a future project.
 //            "completetime" => '', // this can get data from the showSchedule but is a future project.
-
+        ]
     ];
 
     // Wrapping the data inside an array to match the expected format
 
     try {
-      $this->send(["push_auto_remove" => $data]); // Assuming 'send' method handles communication with MistServer
+      $this->send($data); // Assuming 'send' method handles communication with MistServer
 //      $this->send($data); // Assuming 'send' method handles communication with MistServer
       // Since there's no response, consider success if no exception is thrown
 
@@ -295,9 +330,9 @@ class MistServerService {
       $destination->has_auto_push = 0;
       $destination->save();
 
-      Log::info("Push auto remove successful for stream: {$destination->mistStreamWildcard->name} to target: {$targetURL}");
+      Log::info("Push auto remove successful for stream: {$streamName} to target: {$targetURL}");
     } catch (\Exception $e) {
-      Log::error("Failed to request push_auto_remove for stream: {$destination->mistStreamWildcard->name} to target: {$targetURL}", ['exception' => $e->getMessage()]);
+      Log::error("Failed to request push_auto_remove for stream: {$streamName} to target: {$targetURL}", ['exception' => $e->getMessage()]);
     }
   }
 

@@ -14,7 +14,7 @@
         class="bg-green-500 hover:bg-green-600 text-white font-semibold ml-2 my-2 px-4 py-2 rounded disabled:bg-gray-400 h-max w-max"
         @click="openModal"
         :disabled="!teamStore.spotsRemaining"
-        v-if="can.isTeamOwner || can.isTeamLeader || can.isTeamManager"
+        v-if="can.isTeamOwner || can.isTeamLeader || can.isTeamManager || can.isAdmin"
     >Add Member ({{ teamStore.spotsRemaining }} spots left)
     </button>
   </div>

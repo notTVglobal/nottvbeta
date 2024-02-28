@@ -343,7 +343,7 @@ async function getMistStreamPushDestinations() {
   }
 }
 
-getMistStreamPushDestinations()
+
 
 async function startPush(destinationId) {
   console.log(`Starting push for destination ${destinationId}`);
@@ -592,6 +592,7 @@ const reloadPlayer = () => {
   console.log('reload player')
 }
 
+// check push_auto_list and update
 
 onMounted(() => {
   // videoSrc = goLiveStore.selectedShow.mist_stream_wildcard.name
@@ -603,6 +604,10 @@ onMounted(() => {
 
   console.log('onPlayerReady AUX')
   // fetchServerInfo()
+
+  getMistStreamPushDestinations()
+
+
 
 })
 
