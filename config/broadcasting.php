@@ -42,12 +42,12 @@ return [
 //                'host' => env('WEBSOCKET_HOST'),
 //                'port' => env('WEBSOCKET_PORT'),
 //                'scheme' => env('WEBSOCKET_SCHEME')
-//                'host' => 'socket.not.tv',
-//                'port' => 443,
+                'host' => 'socket.not.tv',
+                'port' => 443,
+                'scheme' => 'https'
+//                'host' => '127.0.0.1',
+//                'port' => 6001,
 //                'scheme' => 'http'
-                'host' => '127.0.0.1',
-                'port' => 6001,
-                'scheme' => 'http'
 
             ],
             'client_options' => [

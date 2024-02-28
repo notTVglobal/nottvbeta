@@ -1783,16 +1783,6 @@ html {
   outline: 2px solid transparent;
   outline-offset: 2px;
 }
-.card-body {
-  display: flex;
-  flex: 1 1 auto;
-  flex-direction: column;
-  padding: var(--padding-card, 2rem);
-  gap: 0.5rem;
-}
-.card-body :where(p) {
-  flex-grow: 1;
-}
 .card figure {
   display: flex;
   align-items: center;
@@ -2744,14 +2734,6 @@ input.tab:checked + .tab-content,
   --tw-border-opacity: 1;
   border-color: var(--fallback-b1,oklch(var(--b1)/var(--tw-border-opacity)));
 }
-.badge-primary {
-  --tw-border-opacity: 1;
-  border-color: var(--fallback-p,oklch(var(--p)/var(--tw-border-opacity)));
-  --tw-bg-opacity: 1;
-  background-color: var(--fallback-p,oklch(var(--p)/var(--tw-bg-opacity)));
-  --tw-text-opacity: 1;
-  color: var(--fallback-pc,oklch(var(--pc)/var(--tw-text-opacity)));
-}
 .badge-secondary {
   --tw-border-opacity: 1;
   border-color: var(--fallback-s,oklch(var(--s)/var(--tw-border-opacity)));
@@ -2759,27 +2741,6 @@ input.tab:checked + .tab-content,
   background-color: var(--fallback-s,oklch(var(--s)/var(--tw-bg-opacity)));
   --tw-text-opacity: 1;
   color: var(--fallback-sc,oklch(var(--sc)/var(--tw-text-opacity)));
-}
-.badge-info {
-  border-color: transparent;
-  --tw-bg-opacity: 1;
-  background-color: var(--fallback-in,oklch(var(--in)/var(--tw-bg-opacity)));
-  --tw-text-opacity: 1;
-  color: var(--fallback-inc,oklch(var(--inc)/var(--tw-text-opacity)));
-}
-.badge-warning {
-  border-color: transparent;
-  --tw-bg-opacity: 1;
-  background-color: var(--fallback-wa,oklch(var(--wa)/var(--tw-bg-opacity)));
-  --tw-text-opacity: 1;
-  color: var(--fallback-wac,oklch(var(--wac)/var(--tw-text-opacity)));
-}
-.badge-error {
-  border-color: transparent;
-  --tw-bg-opacity: 1;
-  background-color: var(--fallback-er,oklch(var(--er)/var(--tw-bg-opacity)));
-  --tw-text-opacity: 1;
-  color: var(--fallback-erc,oklch(var(--erc)/var(--tw-text-opacity)));
 }
 .badge-outline {
   border-color: currentColor;
@@ -4488,16 +4449,6 @@ details.collapse summary::-webkit-details-marker {
   height: 15%;
   top: 7%;
   right: 7%;
-}
-.card-compact .card-body {
-  padding: 1rem;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-}
-.card-normal .card-body {
-  padding: var(--padding-card, 2rem);
-  font-size: 1rem;
-  line-height: 1.5rem;
 }
 .join.join-vertical > :where(*:not(:first-child)) {
   margin-left: 0px;
@@ -6850,6 +6801,10 @@ hr {
   right: 2.5rem;
 }
 
+.right-2 {
+  right: 0.5rem;
+}
+
 .right-4 {
   right: 1rem;
 }
@@ -6882,6 +6837,10 @@ hr {
   top: 4rem;
 }
 
+.top-2 {
+  top: 0.5rem;
+}
+
 .top-20 {
   top: 5rem;
 }
@@ -6896,14 +6855,6 @@ hr {
 
 .top-60 {
   top: 15rem;
-}
-
-.right-2 {
-  right: 0.5rem;
-}
-
-.top-2 {
-  top: 0.5rem;
 }
 
 .z-0 {
@@ -6971,6 +6922,11 @@ hr {
 .mx-0 {
   margin-left: 0px;
   margin-right: 0px;
+}
+
+.mx-1 {
+  margin-left: 0.25rem;
+  margin-right: 0.25rem;
 }
 
 .mx-2 {
@@ -7056,11 +7012,6 @@ hr {
 .my-auto {
   margin-top: auto;
   margin-bottom: auto;
-}
-
-.mx-1 {
-  margin-left: 0.25rem;
-  margin-right: 0.25rem;
 }
 
 .-ml-1 {
