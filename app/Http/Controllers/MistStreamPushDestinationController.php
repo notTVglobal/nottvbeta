@@ -42,7 +42,7 @@ class MistStreamPushDestinationController extends Controller
     // Validate the request data
     $validated = $request->validate([
         'mist_stream_wildcard_id' => 'required|string',
-        'rtmp_url' => 'required|url',
+        'rtmp_url' => 'required|custom_streaming_url',
         'rtmp_key' => 'nullable|string|max:255',
         'comment' => 'nullable|string',
     ]);
@@ -66,7 +66,7 @@ class MistStreamPushDestinationController extends Controller
     // Validate the request data
     $validated = $request->validate([
         'mist_stream_wildcard_id' => 'required|string',
-        'rtmp_url' => 'required|url',
+        'rtmp_url' => 'required|custom_streaming_url',
         'rtmp_key' => 'nullable|string|max:255', // Changed to 'sometimes' to allow optional key
         'comment' => 'nullable|string',
     ]);
