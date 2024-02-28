@@ -25,6 +25,7 @@ const initialState = () => ({
     generalServiceNotification: null, // put a title and a body in here, the modal opens in AppLayout
     showGeneralServiceNotification: false, // used with the generalServiceNotification title and body, the modal opens in AppLayout
     showOrangeFeedbackBox: false,
+    errorMessage: null,
 })
 
 export const useNotificationStore = defineStore('notificationStore', {
@@ -33,6 +34,12 @@ export const useNotificationStore = defineStore('notificationStore', {
         reset() {
             // Reset the store to its original state (clear all data)
             Object.assign(this, initialState());
+        },
+        setErrorMessage(error) {
+          this.errorMessage = error
+        },
+        clearErrorMessage() {
+          this.errorMessage = null
         },
         setGeneralServiceNotification(title, body) {
             console.log('open modal')
@@ -71,6 +78,18 @@ export const useNotificationStore = defineStore('notificationStore', {
             if (modal) {
                 modal.showModal();
             }
+        }
+    },
+    getters: {
+        formattedErrorMessage: (state) => {
+            // Check if errorMessage is not empty
+            if (Object.keys(state.errorMessage).length > 0) {
+                // Extract all error messages and flatten them into a single array
+                const messages = Object.values(state.errorMessage).flat();
+                // Join all messages into a single string, separated by a space or any delimiter you prefer
+                return messages.join('. '); // Adjust based on how you want to display them
+            }
+            return ''; // Return an empty string if there is no error message
         }
     },
 
