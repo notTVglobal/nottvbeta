@@ -142,7 +142,7 @@ Route::post('/email/verify', function (Request $request) {
   // Flash a status message to the session
   session()->flash('success', 'verification-link-sent');
   return Inertia::render('Auth/VerifyEmail');
-})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+})->middleware(['auth', 'throttle:6,1'])->name('custom.verification.send');
 
 // Jetstream/Fortify came with an email verification method, but
 // I can't figure out where the verification.send route is. And

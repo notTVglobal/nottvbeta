@@ -100,7 +100,7 @@ watch(verificationLinkSent, (newValue, oldValue) => {
 
 const submit = () => {
   submitProcessing.value = true;
-  Inertia.post(route('verification.send'), {}, {
+  Inertia.post(route('custom.verification.send'), {}, {
     // Using onSuccess callback to reset submitProcessing in case of success
     onSuccess: () => {
       submitProcessing.value = false;
