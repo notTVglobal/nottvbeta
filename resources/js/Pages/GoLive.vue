@@ -57,7 +57,7 @@
         You don't have any shows to go live with... please check your show(s).
       </div>
 
-      <div v-if="goLiveStore.selectedShow" class="text-2xl font-semibold text-center w-full">
+      <div v-if="goLiveStore.selectedShow" class="text-3xl font-semibold text-center w-full">
         <Link :href="`/shows/${goLiveStore.selectedShow.slug}/manage`">{{goLiveStore.selectedShow.name}}</Link>
       </div>
 

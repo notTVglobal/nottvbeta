@@ -36,7 +36,7 @@
                 <div>
                   <div class="flex space-y-3">
                     <div class="mb-6">
-                      <SingleImage :image="props.image" :key="props.image" :alt="'team logo'" class=""/>
+                      <SingleImage :image="image" :key="image" :alt="'team logo'" class=""/>
                       <!--                                            <img :src="'/storage/images/' + props.logo" :key="logo"/>-->
                     </div>
                   </div>
@@ -48,11 +48,9 @@
                     >
                       Change Team Logo
                     </label>
-                    <ImageUpload :image="props.image"
+                    <ImageUpload :image="image"
                                  :server="'/teamsUploadLogo'"
                                  :name="'Upload Team Logo'"
-                                 :metadataKey="'foo2'"
-                                 :metadataValue="'bar2'"
                                  :maxSize="'10MB'"
                                  :fileTypes="'image/jpg, image/jpeg, image/png'"
                                  @reloadImage="reloadImage"

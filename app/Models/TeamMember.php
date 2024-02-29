@@ -28,6 +28,13 @@ class TeamMember extends Pivot
         'active',
     ];
 
+
+
+
+
+
+    // THE PREVIOUS RELATIONSHIPS (Feb.28, 2024)
+
     public function teams()
     {
         return $this->belongsToMany(Team::class);

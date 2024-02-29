@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ShowResource;
 use App\Jobs\AddOrUpdateMistStreamJob;
 use App\Jobs\AddMistStreamWildcardToServer;
 use App\Models\CreativeCommons;
+use App\Models\Creator;
 use App\Models\Image;
 use App\Models\MistStream;
 use App\Models\MistStreamWildcard;
@@ -79,7 +81,7 @@ class ShowsController extends Controller {
   }
 
   private function fetchShows(): \Illuminate\Contracts\Pagination\LengthAwarePaginator {
-    return Show::with(['team', 'user', 'image', 'status', 'category', 'subCategory', 'appSetting'])
+    return Show::with(['team', 'user', 'image', 'status', 'category', 'subCategory', 'appSetting', 'showRunner.user'])
         ->where(function ($query) {
           // Apply filter for shows based on show_status_id and episodes' status
           $query->where(function ($q) {
@@ -135,8 +137,10 @@ class ShowsController extends Controller {
         'team_id'            => $show->team_id,
         'teamName'           => $show->team->name ?? null,
         'teamSlug'           => $show->team->slug ?? null,
-        'showRunnerId'       => $show->user_id,
-        'showRunnerName'     => $show->user->name ?? null,
+        'showRunner'         => [
+            'id'   => $show->showRunner->id ?? null,
+            'name' => $show->showRunner->user->name ?? null,
+        ],
         'image'              => $this->transformImage($show->image, $show->appSetting),
         'slug'               => $show->slug,
         'totalEpisodes'      => $show->showEpisodes->count(),
@@ -296,6 +300,15 @@ class ShowsController extends Controller {
   }
 
   public function store(HttpRequest $request) {
+
+    // Check if the authenticated user is a registered creator
+    $creatorId = $this->determineShowRunnerId($request);
+
+    // Check if the authenticated user is not a Creator
+    if (is_null($creatorId)) {
+      return back()->with(['error' => 'An active registered creator is required as the show runner.'])->withInput();
+    }
+
     $validatedData = $request->validate([
         'name'           => 'unique:shows|required|string|max:255',
 //            'name' => ['required', 'string', 'max:255', Rule::unique('shows')->ignore($show->id)],
@@ -308,6 +321,7 @@ class ShowsController extends Controller {
         'telegram_url'   => 'nullable|active_url',
         'twitter_handle' => 'nullable|string|min:4|max:15',
         'notes'          => 'nullable|string|max:1024',
+        'show_runner'    => 'nullable|exists:creators,id'
     ],
         ['team_id' => 'A team must be selected.']);
     $teamId = $validatedData['team_id'];
@@ -344,6 +358,7 @@ class ShowsController extends Controller {
           'notes'                  => $request->notes,
           'isBeingEditedByUser_id' => $request->user_id,
           'first_release_year'     => Carbon::now()->format('Y'),
+          'show_runner'            => $creatorId,
       ]);
 
       $mistStream = MistStream::firstOrCreate([
@@ -421,7 +436,8 @@ class ShowsController extends Controller {
           $query->with(['members' => function ($query) {
             $query->select(['users.id', 'users.name', 'users.profile_photo_path']);
           }]);
-        }
+        },
+        'showRunner.user'
     ]);
 
 //    // Determine the order dynamically based on the show's 'episode_play_order' attribute
@@ -481,7 +497,10 @@ class ShowsController extends Controller {
         'name'               => $show->name,
         'slug'               => $show->slug,
         'description'        => $show->description,
-        'showRunner'         => $show->user->name,
+        'showRunner'         => [
+            'id'   => $show->showRunner->id ?? null,
+            'name' => $show->showRunner->user->name ?? null,
+        ],
         'image'              => $this->transformImage($show->image, $show->appSetting),
         'category'           => $show->category ? $show->category->toArray() : null,
         'subCategory'        => $show->subCategory ? $show->subCategory->toArray() : null,
@@ -681,7 +700,7 @@ class ShowsController extends Controller {
 
   public function manage(Show $show) {
     // Eager load related entities for the Show model
-    $show->load(['user', 'image', 'appSetting', 'category', 'subCategory', 'team', 'schedules.showScheduleRecurrenceDetails']);
+    $show->load(['user', 'image', 'appSetting', 'category', 'subCategory', 'showRunner.user', 'team', 'schedules.showScheduleRecurrenceDetails']);
 
     $episodeStatuses = DB::table('show_episode_statuses')->get()->toArray();
     $filteredStatuses = array_slice($episodeStatuses, 0, -2);
@@ -698,10 +717,10 @@ class ShowsController extends Controller {
       $isActiveOrFuture = $schedule->start_time >= $now || ($schedule->start_time <= $now && $schedule->end_time >= $now);
       if ($isActiveOrFuture) {
         $detail = [
-            'contentType' => $schedule->content_type,
-            'contentId' => $schedule->content_id,
-            'type' => $schedule->recurrence_flag ? 'recurring' : 'one-time',
-            'startDateTime' => $schedule->start_time,
+            'contentType'     => $schedule->content_type,
+            'contentId'       => $schedule->content_id,
+            'type'            => $schedule->recurrence_flag ? 'recurring' : 'one-time',
+            'startDateTime'   => $schedule->start_time,
             'durationMinutes' => $schedule->duration_minutes,
         ];
 
@@ -732,31 +751,35 @@ class ShowsController extends Controller {
 
         $scheduleDetails[] = $detail;
       }
+
       return $isActiveOrFuture;
     });
 
     return Inertia::render('Shows/{$id}/Manage', [
         'show'            => [
-            'id'            => $show->id,
-            'name'          => $show->name,
-            'description'   => $show->description,
-            'showRunner'    => $show->user->name,
-            'slug'          => $show->slug,
-            'image'         => $this->transformImage($show->image, $show->appSetting),
-            'copyrightYear' => $show->created_at->format('Y'),
-            'category'      => [
+            'id'              => $show->id,
+            'name'            => $show->name,
+            'description'     => $show->description,
+            'slug'            => $show->slug,
+            'image'           => $this->transformImage($show->image, $show->appSetting),
+            'copyrightYear'   => $show->created_at->format('Y'),
+            'category'        => [
                 'id'          => $show->category->id,
                 'name'        => $show->category->name,
                 'description' => $show->category->description,
             ],
-            'subCategory'   => [
+            'subCategory'     => [
                 'id'          => $show->subCategory->id,
                 'name'        => $show->subCategory->name,
                 'description' => $show->subCategory->description,
             ],
-            'notes'         => $show->notes,
-            'isScheduled'   => $isScheduled ?? false,
+            'notes'           => $show->notes,
+            'isScheduled'     => $isScheduled ?? false,
             'scheduleDetails' => $scheduleDetails ?? [],
+            'showRunner'      => [
+                'id'   => $show->showRunner->id ?? null,
+                'name' => $show->showRunner->user->name ?? null,
+            ]
         ],
         'team'            => [
             'name' => $show->team->name,
@@ -798,6 +821,7 @@ class ShowsController extends Controller {
 //////////////////
 
   public function edit(Show $show) {
+
     DB::table('users')->where('id', Auth::user()->id)->update([
         'isEditingShow_id' => $show->id,
     ]);
@@ -806,33 +830,101 @@ class ShowsController extends Controller {
         'isBeingEditedByUser_id' => Auth::user()->id,
     ]);
 
-    $categories = ShowCategory::with('subCategories')->get(); // Fetch all categories with their sub-categories
-    $statuses = ShowStatus::all();
-    $show->load('user', 'image', 'appSetting', 'category', 'subCategory'); // Eager load necessary relationships
 
+    // Assuming 'creator' or 'showRunner' is the correct relationship name
+    $show->load('image.appSetting', 'category', 'subCategory', 'team.members', 'showRunner.user');
+
+    // Fetch categories and statuses separately as they are not part of the ShowResource
+    $categories = ShowCategory::with('subCategories')->get(); // Efficiently fetch categories with sub-categories
+    $statuses = ShowStatus::all();
+    // Use ShowResource to transform the Show model, and append additional data
+    $showResourceArray = (new ShowResource($show))->resolve();
+
+    // Manually append additional fields
+    $showResourceArray = array_merge($showResourceArray, [
+        'notes'              => $show->notes,
+        'show_status_id'     => $show->show_status_id,
+        'episode_play_order' => $show->episode_play_order,
+    ]);
+
+
+    // Load the team with members and their creators. Might need adjustment based on actual data structure.
+    $team = Team::with('members.creator')->findOrFail($show->team_id);
+    // Explicitly mapping team members to include creator_id
+    $teamMembers = $team->members->map(function ($user) {
+      // Directly accessing creator relationship to get creator_id
+      $creatorId = $user->creator ? $user->creator->id : null;
+      return [
+          'creator_id' => $creatorId,
+          'name'       => $user->name,
+        // Include any other necessary attributes
+      ];
+    });
+    // Return the Inertia response with the ShowResource and additional data
     return Inertia::render('Shows/{$id}/Edit', [
-        'show'        => $show,
-        'team'        => Team::query()->where('id', $show->team_id)->firstOrFail(),
-//        'showRunner'  => User::query()->where('id', $show->user_id)->pluck('id', 'name')->firstOrFail(),
-//        'showRunner'  => [
-//                        'name' => $show->user->name,
-//                        'id' => $show->user->id,
-//        ],
-        'image'       => $this->transformImage($show->image, $show->appSetting),
+        'show'        => $showResourceArray,
+        'team'        => $team, // Directly use the loaded $team
+        'teamMembers' => $teamMembers,
+      // we are loading the image twice... once in the showResource
+        'image'       => [
+            'id'           => $show->image->id,
+            'name'         => $show->image->name,
+            'folder'       => $show->image->folder,
+            'cdn_endpoint' => $show->appSetting->cdn_endpoint,
+            'cloud_folder' => $show->image->cloud_folder,
+        ],
         'categories'  => $categories,
         'statuses'    => $statuses,
-        'category'    => $show->category ? $show->category->toArray() : null,
-        'subCategory' => $show->subCategory ? $show->subCategory->toArray() : null,
         'can'         => [
             'editShow' => Auth::user()->can('edit', $show),
         ],
     ]);
+
   }
+
+//  public function edit(Show $show) {
+//    DB::table('users')->where('id', Auth::user()->id)->update([
+//        'isEditingShow_id' => $show->id,
+//    ]);
+//
+//    DB::table('shows')->where('id', $show->id)->update([
+//        'isBeingEditedByUser_id' => Auth::user()->id,
+//    ]);
+//
+//    $categories = ShowCategory::with('subCategories')->get(); // Fetch all categories with their sub-categories
+//    $statuses = ShowStatus::all();
+//    $show->load('user', 'image', 'appSetting', 'category', 'subCategory'); // Eager load necessary relationships
+//
+//    return Inertia::render('Shows/{$id}/Edit', [
+//        'show'        => $show,
+//        'team'        => Team::query()->where('id', $show->team_id)->firstOrFail(),
+////        'showRunner'  => User::query()->where('id', $show->user_id)->pluck('id', 'name')->firstOrFail(),
+////        'showRunner'  => [
+////                        'name' => $show->user->name,
+////                        'id' => $show->user->id,
+////        ],
+//        'image'       => $this->transformImage($show->image, $show->appSetting),
+//        'categories'  => $categories,
+//        'statuses'    => $statuses,
+//        'category'    => $show->category ? $show->category->toArray() : null,
+//        'subCategory' => $show->subCategory ? $show->subCategory->toArray() : null,
+//        'can'         => [
+//            'editShow' => Auth::user()->can('edit', $show),
+//        ],
+//    ]);
+//  }
 
 ////////////  UPDATE
 ////////////////////
 
   public function update(HttpRequest $request, Show $show) {
+
+    $creatorId = $this->determineShowRunnerId($request);
+
+    if (is_null($creatorId)) {
+      return back()->with(['error' => 'An active registered creator is required as the show runner.'])->withInput();
+    }
+
     // validate the request
     $request->validate([
         'name'               => ['required', 'string', 'max:255', Rule::unique('shows')->ignore($show->id)],
@@ -847,6 +939,7 @@ class ShowsController extends Controller {
         'notes'              => 'nullable|string|max:1024',
         'show_status_id'     => 'required|integer|exists:show_statuses,id',
         'episode_play_order' => 'required|string',
+        'show_runner'        => 'nullable|exists:creators,id'
     ], [
         'status.exists'      => 'The selected status is invalid.',
         'release_date.after' => 'The release date must be at least 24 hours in the future.',
@@ -865,8 +958,8 @@ class ShowsController extends Controller {
     $show->notes = htmlentities($request->notes);
     $show->show_status_id = $request->show_status_id;
     $show->episode_play_order = $request->episode_play_order;
+    $show->show_runner = $creatorId;
     $show->save();
-    sleep(1);
 
     // gather the data needed to render the Manage page
     // this is all redundant. It's all contained in the
@@ -930,14 +1023,16 @@ class ShowsController extends Controller {
 
     $creativeCommons = CreativeCommons::all();
 
-    $show->load('user', 'image', 'appSetting', 'category', 'subCategory'); // Eager load necessary relationships
+    $show->load('user', 'image', 'appSetting', 'category', 'subCategory', 'showRunner.user'); // Eager load necessary relationships
 
     return Inertia::render('Shows/{$id}/Episodes/Create', [
         'show'             => [
             'name'        => $show->name,
             'id'          => $show->id,
             'slug'        => $show->slug,
-            'showRunner'  => $show->user->name,
+            'showRunner'  => [
+                'name' => $show->showRunner->user->name ?? null,
+            ],
             'image'       => $this->transformImage($show->image, $show->appSetting),
             'category'    => [
                 'name'        => $show->category->name,
@@ -978,7 +1073,7 @@ class ShowsController extends Controller {
 //    $show->load('team', 'showEpisodes.creativeCommons', 'showEpisodes.video', 'image', 'appSetting', 'category', 'subCategory'); // Eager load necessary relationships
 
     // Eager load relationships for the Show model
-    $show->load(['team', 'image', 'appSetting', 'category', 'subCategory']);
+    $show->load(['team', 'image', 'appSetting', 'category', 'subCategory', 'showRunner.user']);
 
     // Eager load relationships for the ShowEpisode model
     $showEpisode->load(['creativeCommons', 'video.appSetting', 'image', 'showEpisodeStatus', 'mistStreamWildcard']);
@@ -988,7 +1083,9 @@ class ShowsController extends Controller {
         'show'              => [
             'name'          => $show->name,
             'slug'          => $show->slug,
-            'showRunner'    => $show->user->name,
+            'showRunner'    => [
+                'name' => $show->showRunner->user->name ?? null,
+            ],
             'image'         => $this->transformImage($show->image, $show->appSetting),
             'copyrightYear' => $show->created_at->format('Y'),
         ],
@@ -1145,6 +1242,41 @@ class ShowsController extends Controller {
       // Handle any parsing or timezone conversion errors here
       return null;
     }
+  }
+
+  private function getAuthenticatedCreatorId() {
+    // Retrieve the Creator associated with the authenticated user
+    $creator = Auth::user()->creator ?? null;
+
+    // Check if the Creator exists and is active (assuming statusId = 1 indicates active)
+    if ($creator && $creator->status_id == 1) {
+      return $creator->user_id;
+    }
+
+    // Return null if there's no Creator or if the Creator is not active
+    return null;
+  }
+
+  private function determineShowRunnerId($request) {
+    // Default to the authenticated creator's ID if they are active
+    $creatorId = $this->getAuthenticatedCreatorId();
+
+    // If `show_runner` is provided in the request, verify it's an active creator
+    if (!is_null($request->show_runner)) {
+      $specifiedCreator = Creator::where('id', $request->show_runner)
+          ->where('status_id', 1) // Assuming 'status 1' indicates active status
+          ->first();
+
+      if ($specifiedCreator) {
+        $creatorId = $specifiedCreator->id; // Use the specified creator id if active
+      } else {
+        // If specified creator is not active or doesn't exist, return null
+        // The calling method will handle this case appropriately
+        return null;
+      }
+    }
+
+    return $creatorId;
   }
 
 }

@@ -40,7 +40,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'postalCode',
         'phone',
         'timezone',
-        'stripe_id'
+        'stripe_id',
+        'isVip',
     ];
 
     /**
@@ -175,9 +176,9 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Video::class);
     }
 
-    public function inviteCodes(): \Illuminate\Database\Eloquent\Relations\HasMany {
-        return $this->hasMany(InviteCode::class);
-    }
+  public function createdInviteCodes(): \Illuminate\Database\Eloquent\Relations\HasMany {
+    return $this->hasMany(InviteCode::class, 'created_by');
+  }
 
     public function orders()
     {
@@ -188,5 +189,13 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Notification::class);
     }
+
+  /**
+   * Get the secure notes for the user.
+   */
+  public function secureNotes()
+  {
+    return $this->hasMany(SecureNote::class);
+  }
 
 }

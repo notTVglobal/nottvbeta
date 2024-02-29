@@ -17,8 +17,8 @@ class ShowsPosterController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param HttpRequest $request
-     * @return Model|Builder|object
+     * @param \Illuminate\Http\Request $request
+     * * @return \Illuminate\Http\Response
      */
 
     public function uploadPoster(HttpRequest $request)
@@ -37,6 +37,11 @@ class ShowsPosterController extends Controller
             $showId = auth()->user()->isEditingShow_id;
             $uploadedFile = $request->file('poster');
             $folder = config('filesystems.disks.spaces.folder');
+
+          // 1. remove previous image from show
+          DB::table('images')->where('show_id', Auth::user()->isEditingShow_id)->update([
+              'show_id' => null,
+          ]);
 
             // create image model
             $id = DB::table('images')->insertGetId([

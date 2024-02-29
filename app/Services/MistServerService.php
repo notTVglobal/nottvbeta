@@ -67,7 +67,7 @@ class MistServerService {
       return $this->send($data); // Retry with the challenge response
     }
 
-    return $responseData;
+    return $responseData; 
 
   }
 

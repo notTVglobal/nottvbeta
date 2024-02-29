@@ -58,7 +58,8 @@ class Team extends Model
 
     public function members()
     {
-        return $this->belongsToMany(User::class, 'team_members')->using(TeamMember::class)
+        return $this->belongsToMany(User::class, 'team_members')
+            ->using(TeamMember::class)
             ->as('teamMembers')
             ->withPivot('active')
             ->withTimestamps()

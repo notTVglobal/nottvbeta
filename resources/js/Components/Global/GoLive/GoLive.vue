@@ -231,12 +231,12 @@
                             class="py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-700 transition duration-150">
                       Start Push
                     </button>
-                    <button v-if="!destination.has_auto_push && !destination.push_is_started"
+                    <button v-if="!destination.has_auto_push"
                             @click="enableAutoPush(destination.id)"
                             class="py-2 px-4 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition duration-150">
                       Auto Push
                     </button>
-                    <button v-if="destination.has_auto_push && !destination.push_is_started"
+                    <button v-if="destination.has_auto_push"
                             @click="disableAutoPush(destination.id)"
                             class="py-2 px-4 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition duration-150">
                       Remove Auto Push
@@ -352,6 +352,37 @@ async function getMistStreamPushDestinations() {
   }
 }
 
+async function getMistStreamPushAutoList() {
+  // Assuming `goLiveStore.selectedShow.mist_stream_wildcard.id` holds the wildcard ID
+  const wildcardId = goLiveStore?.selectedShow?.mist_stream_wildcard?.id
+  if (wildcardId) {
+    try {
+      // Append the wildcard ID as a query parameter
+      const response = await axios.get(`/mist-stream/get-push-auto-list?wildcardId=${wildcardId}`)
+      mistStreamPushDestinations.value = response.data // Update the reactive variable
+    } catch (error) {
+      console.error('Failed to fetch push auto list:', error)
+    }
+  } else {
+    console.error('No wildcard ID found')
+  }
+}
+
+async function getMistStreamPushList() {
+  // Assuming `goLiveStore.selectedShow.mist_stream_wildcard.id` holds the wildcard ID
+  const wildcardId = goLiveStore?.selectedShow?.mist_stream_wildcard?.id
+  if (wildcardId) {
+    try {
+      // Append the wildcard ID as a query parameter
+      const response = await axios.get(`/mist-stream/get-push-list?wildcardId=${wildcardId}`)
+      mistStreamPushDestinations.value = response.data // Update the reactive variable
+    } catch (error) {
+      console.error('Failed to fetch push list:', error)
+    }
+  } else {
+    console.error('No wildcard ID found')
+  }
+}
 
 async function startPush(destinationId) {
   console.log(`Starting push for destination ${destinationId}`)
@@ -613,8 +644,14 @@ onMounted(() => {
   console.log('onPlayerReady AUX')
   // fetchServerInfo()
 
+  // check the push destinations
   getMistStreamPushDestinations()
 
+  // check the auto push list
+  getMistStreamPushAutoList()
+
+  // check the push list
+  getMistStreamPushList()
 
 })
 
@@ -678,13 +715,6 @@ const startCountdown = () => {
   }, 1000)
 }
 
-// Cleanup interval on component unmount
-onUnmounted(() => {
-  if (intervalId !== null) {
-    clearInterval(intervalId)
-  }
-})
-
 // Automatically start the countdown or trigger based on an event
 startCountdown()
 
@@ -741,6 +771,11 @@ onUnmounted(() => {
   channel.stopListening('.push-out-start')
   channel.stopListening('.push-end')
   Echo.leave(`mistStreamWildcard.${goLiveStore?.selectedShow?.mist_stream_wildcard?.id}`)
+
+  // Cleanup interval on component unmount (countdown timer)
+  if (intervalId !== null) {
+    clearInterval(intervalId)
+  }
 })
 
 //

@@ -30,7 +30,7 @@
     </td>
 
     <td class="text-left text-gray-600 px-6 py-4 text-sm text-right">
-      {{ show.categoryName[0] }}
+      {{ show.category.name }}
     </td>
 
     <td class="text-gray-600 px-6 py-4 text-sm text-right">
@@ -38,7 +38,7 @@
     </td>
 
     <td class="text-gray-600 px-6 py-4 text-sm text-right">
-      {{ show.showRunnerName }}
+      {{ show?.showRunner?.name }}
     </td>
 
     <td v-if="can.manageTeam || can.editTeam" class="text-gray-600 px-6 py-4 text-sm text-right">

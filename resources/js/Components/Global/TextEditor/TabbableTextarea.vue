@@ -1,16 +1,30 @@
 <template>
-    <textarea
-        @keydown.tab.prevent="onTabPress"
-        @keyup="emit('update:modelValue', $event.target.value)"
-        v-text="modelValue"/>
+<!--    <textarea-->
+<!--        @keydown.tab.prevent="onTabPress"-->
+<!--        @keyup="emit('update:modelValue', $event.target.value)"-->
+<!--        v-text="modelValue"-->
+<!--        :placeholder="placeholder" />-->
+  <textarea
+      @keydown.tab.prevent="onTabPress"
+      @input="onInput"
+      :value="modelValue"
+      :placeholder="placeholder"
+      class="textarea textarea-bordered"
+  />
 </template>
 
 <script setup>
 defineProps({
-  modelValue: String
+  modelValue: String,
+  placeholder: String
 });
 
-let emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue']);
+// let emit = defineEmits(['update:modelValue']);
+
+const onInput = (event) => {
+  emit('update:modelValue', event.target.value);
+};
 
 function onTabPress(e) {
   let textarea = e.target;
