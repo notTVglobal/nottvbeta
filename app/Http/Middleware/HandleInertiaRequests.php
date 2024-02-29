@@ -114,7 +114,6 @@ class HandleInertiaRequests extends Middleware {
             'warning' => fn() => $request->session()->get('warning'),
             'error'   => fn() => $request->session()->get('error'),
             'feedback' => fn() => $request->session()->get('feedback'),
-            'userSystemNotification' => fn() => $request->session()->get('userSystemNotification'),
         ],
         'firstPlay' => fn() => $firstPlayData,
         'appUrl' => fn() => config('app.url'),
@@ -126,6 +125,5 @@ class HandleInertiaRequests extends Middleware {
     $request->session()->forget('success');
     $request->session()->forget('warning');
     $request->session()->forget('error');
-
   }
 }
