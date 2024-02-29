@@ -139,9 +139,11 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
 
 Route::post('/email/verify', function (Request $request) {
   $request->user()->sendEmailVerificationNotification();
+  // Flash a status message to the session
+  session()->flash('success', 'verification-link-sent');
+  return Inertia::render('Auth/VerifyEmail');
+})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
-  return Inertia::render('Public/EmailVerify');
-})->middleware(['auth', 'throttle:6,1'])->name('verification.send2');
 // Jetstream/Fortify came with an email verification method, but
 // I can't figure out where the verification.send route is. And
 // when I created this form.post to verification.send I got an
@@ -552,7 +554,17 @@ Route::middleware([
 
   Route::post('/admin/clear-first-play-data-cache',
       [AdminController::class, 'clearFirstPlayDataCache'])
+      ->can('viewAdmin', 'App\Models\User')
       ->name('admin.clear-first-play-data-cache');
+
+  //// ADMIN - SECURE NOTES
+  Route::get('/admin/secure-notes',
+      [AdminController::class, 'fetchSecureNotes'])
+      ->can('viewAdmin', 'App\Models\User');
+
+  Route::put('/admin/secure-notes',
+      [AdminController::class, 'putSecureNotes'])
+      ->can('viewAdmin', 'App\Models\User');
 
   //// MOVIES - INDEX
   Route::get('/admin/movies', [AdminController::class, 'moviesIndex'])

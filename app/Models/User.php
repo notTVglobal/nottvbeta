@@ -40,7 +40,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'postalCode',
         'phone',
         'timezone',
-        'stripe_id'
+        'stripe_id',
+        'isVip',
     ];
 
     /**
@@ -188,5 +189,13 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Notification::class);
     }
+
+  /**
+   * Get the secure notes for the user.
+   */
+  public function secureNotes()
+  {
+    return $this->hasMany(SecureNote::class);
+  }
 
 }

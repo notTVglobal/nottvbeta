@@ -25,28 +25,44 @@ class CreateNewUser implements CreatesNewUsers {
    */
   public function create(array $input) {
 
+    // set the role_id based on the invite code... if it's a standard user or VIP continue.
+    // if it's a creator invite code then the user gets an error.
     $this->validateInput($input);
 
     $inviteCode = InviteCode::where('code', $input['invite_code'])->firstOrFail();
 
     DB::beginTransaction();
 
-    // set the role_id based on the invite code... if it's a standard user or VIP continue.
-    // if it's a creator invite code then redirect to the creator registration form.
-
     try {
+
+      // Determine role_id and VIP status based on invite code
+      $roleId = 1; // default to standard user
+      $isVip = 0; // default to not a VIP
+      if ($inviteCode->user_role_id == 3) {
+        $isVip = 1;
+        $roleId = 3; // Assuming 3 is the VIP user role_id
+      }
+
       $user = User::create([
           'name'               => $input['name'],
           'email'              => $input['email'],
           'password'           => Hash::make($input['password']),
-          'role_id'            => 1, // standard user role_ir
+          'role_id'            => $roleId,
+          'isVip'              => $isVip,
           'invite_code'        => $inviteCode->id,
       ]);
 
-      // claim the invite code
-      $inviteCode->claimed = true;
-      $inviteCode->claimed_by = $user->id;
-      $inviteCode->claimed_at = now();
+      // Check invite code volume and used count
+      if ($inviteCode->volume && $inviteCode->used_count < $inviteCode->volume) {
+        $inviteCode->used_count += 1;
+        if ($inviteCode->used_count == $inviteCode->volume) {
+          $inviteCode->claimed = true;
+          $inviteCode->claimed_by = $user->id;
+          $inviteCode->claimed_at = now();
+        }
+      }
+
+      // Save inviteCode changes if used_count was incremented but not necessarily claimed
       $inviteCode->save();
 
       DB::commit();

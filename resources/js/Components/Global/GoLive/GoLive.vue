@@ -231,12 +231,12 @@
                             class="py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-700 transition duration-150">
                       Start Push
                     </button>
-                    <button v-if="!destination.has_auto_push && !destination.push_is_started"
+                    <button v-if="!destination.has_auto_push"
                             @click="enableAutoPush(destination.id)"
                             class="py-2 px-4 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition duration-150">
                       Auto Push
                     </button>
-                    <button v-if="destination.has_auto_push && !destination.push_is_started"
+                    <button v-if="destination.has_auto_push"
                             @click="disableAutoPush(destination.id)"
                             class="py-2 px-4 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition duration-150">
                       Remove Auto Push
