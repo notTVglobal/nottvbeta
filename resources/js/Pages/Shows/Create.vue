@@ -304,6 +304,7 @@ let form = useForm({
   telegram_url: '',
   twitter_handle: '',
   notes: '',
+  showRunner: '',
 })
 
 let showCategoryDescription = ref(null)

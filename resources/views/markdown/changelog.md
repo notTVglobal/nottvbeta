@@ -1,7 +1,12 @@
 # not.tv Changelog
 
-Last Update: February 27, 2024\
+Last Update: February 28, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.8.7.2
+February 28, 2024
+* Updated the Invite Code system to include expiry dates, batches and role specific invite codes.
+* Started a Creator Registration process that uses creator specific invite codes.
 
 ## v0.8.7.1
 February 27, 2024

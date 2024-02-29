@@ -137,8 +137,6 @@
                        class="text-xs text-red-600 mt-1"></div>
                 </div>
 
-                <!-- Google Recaptcha -->
-                <!--            <div class="g-recaptcha mt-4" data-sitekey={config('services.recaptcha.key')}></div>-->
 
                 <div class="flex items-center justify-end mt-4">
                   <Link :href="`/login`" class="underline text-sm text-gray-600 hover:text-gray-900">

@@ -9,6 +9,7 @@ use App\Http\Controllers\ChannelExternalSourceController;
 use App\Http\Controllers\ChannelPlaylistController;
 use App\Http\Controllers\FlashController;
 use App\Http\Controllers\GoLiveController;
+use App\Http\Controllers\InviteCodeController;
 use App\Http\Controllers\MistServerController;
 use App\Http\Controllers\MistStreamController;
 use App\Http\Controllers\MistStreamPushDestinationController;
@@ -82,19 +83,22 @@ use Laravel\Cashier\Checkout;
 */
 
 
-
 Route::get('/', [WelcomeController::class, 'index'])->name('home');
 
 Route::get('/send-mail', function () {
-   Mail::to('test@test.com')->queue(new VerifyMail());
+  Mail::to('test@test.com')->queue(new VerifyMail());
 });
 
 Route::get('/home', function () {
-    if (Auth::user()) {
-        if (auth()->user()->creator) {
-            return redirect('/dashboard');
-        } return redirect('/stream');
-    } return redirect('/');
+  if (Auth::user()) {
+    if (auth()->user()->creator) {
+      return redirect('/dashboard');
+    }
+
+    return redirect('/stream');
+  }
+
+  return redirect('/');
 });
 
 Route::get('/public/register', function () {
@@ -120,7 +124,7 @@ Route::get('/public/forgot-password', function () {
 })->name('public.forgotPassword');
 
 Route::get('/email/verify', function () {
-    return Inertia::render('Auth/VerifyEmail');
+  return Inertia::render('Auth/VerifyEmail');
 })->middleware('auth')->name('verification.notice');
 
 Route::get('/public/mail/verify', function () {
@@ -128,13 +132,15 @@ Route::get('/public/mail/verify', function () {
 })->middleware('auth')->name('public.email.verify');
 
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
-    $request->fulfill();
-    return redirect('/');
+  $request->fulfill();
+
+  return redirect('/');
 })->middleware(['auth', 'signed'])->name('verification.verify');
 
 Route::post('/email/verify', function (Request $request) {
-    $request->user()->sendEmailVerificationNotification();
-    return Inertia::render('Public/EmailVerify');
+  $request->user()->sendEmailVerificationNotification();
+
+  return Inertia::render('Public/EmailVerify');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send2');
 // Jetstream/Fortify came with an email verification method, but
 // I can't figure out where the verification.send route is. And
@@ -145,19 +151,19 @@ Route::post('/email/verify', function (Request $request) {
 // [verification.send] ~ tec21 (March 21, 2023)
 
 Route::get('/testJob', function () {
-    foreach (range(1,100) as $i) {
-        \App\Jobs\TestJob::dispatch()->onQueue('tests');
-    }
+  foreach (range(1, 100) as $i) {
+    \App\Jobs\TestJob::dispatch()->onQueue('tests');
+  }
 
-    return Inertia::render('Testing');
+  return Inertia::render('Testing');
 });
 
 Route::get('/terms', function () {
-    return redirect('/terms-of-service');
+  return redirect('/terms-of-service');
 })->name('terms');
 
 Route::get('/privacy', function () {
-    return redirect('/privacy-policy');
+  return redirect('/privacy-policy');
 })->name('privacy');
 
 Route::get('/privacy-policy', [\App\Http\Controllers\PrivacyPolicyController::class, 'show'])->name('policy.show');
@@ -167,6 +173,13 @@ Route::get('/whitepaper', [WhitepaperController::class, 'show'])->name('whitepap
 
 Route::get('/first-play-data', [AppSettingController::class, 'serveFirstPlayData']);
 
+
+// Creator Invite and Register (public, everyone can see these)
+////////////////////////////////////////////////////////////////
+
+Route::get('/invite/{code}', [CreatorsController::class, 'showCreatorInviteIntroduction'])->name('creator.invite.show');
+Route::get('/register/{code}', [CreatorsController::class, 'showRegistrationForm'])->name('creator.register.show');
+Route::post('/register/{code}', [CreatorsController::class, 'registerCreator'])->name('creator.register.submit');
 
 
 // News (public, everyone can see these)
@@ -205,19 +218,19 @@ Route::middleware([
     'verified',
 ])->group(function () {
 
-    Route::get('/externalLink', function () {
-        return Inertia::render('ExternalLink');
-    })->name('externalLink');
+  Route::get('/externalLink', function () {
+    return Inertia::render('ExternalLink');
+  })->name('externalLink');
 
-    Route::get('/settings', function () {
-        return Inertia::render('Settings');
-    })->name('settings');
+  Route::get('/settings', function () {
+    return Inertia::render('Settings');
+  })->name('settings');
 
-    Route::get('/stream', function () {
-        return Inertia::render('Stream');
-    })->name('stream');
+  Route::get('/stream', function () {
+    return Inertia::render('Stream');
+  })->name('stream');
 
-    Route::get('/changelog', [ChangelogController::class, 'show'])->name('changelog.show');
+  Route::get('/changelog', [ChangelogController::class, 'show'])->name('changelog.show');
 
 //
 //    Route::get('/payment', function (Request $request) {
@@ -257,41 +270,44 @@ Route::middleware([
 //    })->name('srreturn');
 
 
+// Creator Onboarding (private)
+///////////////////////////////
+  Route::get('/onboarding/{step}', [CreatorsController::class, 'showOnboardingStep'])->name('onboarding.show');
+
+
 // Dashboard
 ///////////
-    Route::get('/dashboard', [DashboardController::class, 'index'])
-        ->can('viewDashboard', 'App\Models\Creator')
-        // tec21: it doesn't like the ->middleware option.
-        // The ->can option works well.
-        //
+  Route::get('/dashboard', [DashboardController::class, 'index'])
+      ->can('viewDashboard', 'App\Models\Creator')
+      // tec21: it doesn't like the ->middleware option.
+      // The ->can option works well.
+      //
 //        ->middleware('can:viewDashboard,creator')
-        ->name('dashboard');
-
-
+      ->name('dashboard');
 
 
 // VIP
 ////////
-    Route::patch('/userAddToVip', [\App\Http\Controllers\UsersController::class, 'vipAdd'])
+  Route::patch('/userAddToVip', [\App\Http\Controllers\UsersController::class, 'vipAdd'])
 //        ->middleware('auth')->isAdmin
-        ->name('user.vip.add');
+      ->name('user.vip.add');
 
-    Route::patch('/userRemoveFromVip', [\App\Http\Controllers\UsersController::class, 'vipRemove'])
+  Route::patch('/userRemoveFromVip', [\App\Http\Controllers\UsersController::class, 'vipRemove'])
 //        ->middleware('auth')->isAdmin
-        ->name('user.vip.remove');
+      ->name('user.vip.remove');
 
 // Channels
 ///////////
-    // List all channels
-    Route::get('/channels', function () {
-        return Inertia::render('Channels');
-    })->can('viewVip', 'App\Models\User')
-        ->name('channels');
+  // List all channels
+  Route::get('/channels', function () {
+    return Inertia::render('Channels');
+  })->can('viewVip', 'App\Models\User')
+      ->name('channels');
 
-    // Admin manage the channels
-    Route::get('/admin/channels', [AdminController::class, 'adminChannelsPage'])
-        ->can('viewAdmin', 'App\Models\User')
-        ->name('admin.channels');
+  // Admin manage the channels
+  Route::get('/admin/channels', [AdminController::class, 'adminChannelsPage'])
+      ->can('viewAdmin', 'App\Models\User')
+      ->name('admin.channels');
 
   Route::get('/admin/channels/search/{type}', [ChannelController::class, 'search']);
   Route::post('/admin/channels/{channel}/{type}/update', [ChannelController::class, 'updateType']);
@@ -317,62 +333,63 @@ Route::middleware([
 // Shop
 ///////////
 //    Route::resource('shop', ShopController::class);
-    // List all products
+  // List all products
 
-    Route::get('/shop', [ShopController::class, 'index'])
-        ->name('shop');
+  Route::get('/shop', [ShopController::class, 'index'])
+      ->name('shop');
 
-    Route::get('/shop/checkout', [ShopController::class, 'checkout'])
-        ->name('checkout');
+  Route::get('/shop/checkout', [ShopController::class, 'checkout'])
+      ->name('checkout');
 
-    Route::post('/shop/summary', [ShopController::class, 'summary'])
-        ->name('shop.summary');
+  Route::post('/shop/summary', [ShopController::class, 'summary'])
+      ->name('shop.summary');
 
-    Route::redirect('/shop/summary', '/shop');
+  Route::redirect('/shop/summary', '/shop');
 
-    Route::resource('product', ProductController::class);
+  Route::resource('product', ProductController::class);
 
-    Route::get('/api/products', [\App\Http\Controllers\Api\ProductController::class, 'index'])
-        ->name('api.products');
+  Route::get('/api/products', [\App\Http\Controllers\Api\ProductController::class, 'index'])
+      ->name('api.products');
 
-    Route::get('/shop/products', [ProductController::class, 'index'])
-        ->name('products');
+  Route::get('/shop/products', [ProductController::class, 'index'])
+      ->name('products');
 
-    Route::get('/shop/product/{product}', [ProductController::class, 'show'])
-    ->name('shop.product.show');
+  Route::get('/shop/product/{product}', [ProductController::class, 'show'])
+      ->name('shop.product.show');
 
-    Route::post('/shop/purchase', [StripeController::class, 'purchase']);
+  Route::post('/shop/purchase', [StripeController::class, 'purchase']);
 
-    Route::get('/upgrade', function () {
-        if (auth()->user()->subscribed('default')) {
-            return redirect('/stream');
-        }
-        return Inertia::render('Shop/Upgrade', [
-            'intent' => auth()->user()->createSetupIntent(),
-        ]);
-    })->name('upgrade');
+  Route::get('/upgrade', function () {
+    if (auth()->user()->subscribed('default')) {
+      return redirect('/stream');
+    }
 
-    Route::post('/upgrade', [StripeController::class, 'createCheckoutSession'])
-        ->name('createCheckoutSession');
+    return Inertia::render('Shop/Upgrade', [
+        'intent' => auth()->user()->createSetupIntent(),
+    ]);
+  })->name('upgrade');
 
-    Route::get('/shop/subscribe', [StripeController::class, 'subscribe'])
-        ->name('shop.subscribe');
+  Route::post('/upgrade', [StripeController::class, 'createCheckoutSession'])
+      ->name('createCheckoutSession');
 
-    Route::post('/shop/subscribe', [StripeController::class, 'setupNewSubscription'])
-        ->name('shop.subscribe.post');
+  Route::get('/shop/subscribe', [StripeController::class, 'subscribe'])
+      ->name('shop.subscribe');
 
-    Route::get('/shop/subscription_success', [StripeController::class, 'subscriptionSuccess'])
-        ->name('subscriptionSuccess');
+  Route::post('/shop/subscribe', [StripeController::class, 'setupNewSubscription'])
+      ->name('shop.subscribe.post');
 
-    Route::post('/payment/setup', [StripeController::class, 'initiateSetup']);
-    Route::post('/payment/initiate', [StripeController::class, 'initiatePayment']);
-    Route::post('/payment/complete', [StripeController::class, 'completePayment']);
-    Route::post('/payment/failure', [StripeController::class, 'failPayment']);
+  Route::get('/shop/subscription_success', [StripeController::class, 'subscriptionSuccess'])
+      ->name('subscriptionSuccess');
 
-    Route::post('/admin/getUserSubscriptionsFromStripe', [StripeController::class, 'getUserSubscriptionsFromStripe'])
-        ->name('getUserSubscriptionsFromStripe');
+  Route::post('/payment/setup', [StripeController::class, 'initiateSetup']);
+  Route::post('/payment/initiate', [StripeController::class, 'initiatePayment']);
+  Route::post('/payment/complete', [StripeController::class, 'completePayment']);
+  Route::post('/payment/failure', [StripeController::class, 'failPayment']);
 
-    // tec21: this route isn't used yet. This uses Stripe Checkout.
+  Route::post('/admin/getUserSubscriptionsFromStripe', [StripeController::class, 'getUserSubscriptionsFromStripe'])
+      ->name('getUserSubscriptionsFromStripe');
+
+  // tec21: this route isn't used yet. This uses Stripe Checkout.
 //    Route::get('shop/product-checkout', function (Request $request) {
 //        return Checkout::guest()
 //            ->withPromotionCode('promo-code')
@@ -382,19 +399,17 @@ Route::middleware([
 //            ]);
 //    });
 
-    Route::get('/billing', function () {
-        return Inertia::render('Shop/Billing', [
+  Route::get('/billing', function () {
+    return Inertia::render('Shop/Billing', [
 
-        ]);
-    })->name('billing');
+    ]);
+  })->name('billing');
 
-        Route::get('/billing-portal', function (Request $request) {
-            return $request->user()->redirectToBillingPortal(route('stream'));
-        })->name('billingPortal');
+  Route::get('/billing-portal', function (Request $request) {
+    return $request->user()->redirectToBillingPortal(route('stream'));
+  })->name('billingPortal');
 
-    Route::get('/billing-portal-access', [StripeController::class, 'getBillingPortalAccessUrl']);
-
-
+  Route::get('/billing-portal-access', [StripeController::class, 'getBillingPortalAccessUrl']);
 
 
   // Newsroom
@@ -425,7 +440,6 @@ Route::middleware([
   Route::patch('newsStoryChangeNewsStoryStatus', [NewsStoryController::class, 'changeStatus'])->name('news.story.changeStatus');
 
 
-
 // NewsPerson
 /////////////
 
@@ -450,41 +464,37 @@ Route::middleware([
   Route::resource('/newsRssFeedItemsArchive', NewsRssFeedItemArchiveController::class);
 
 
-
-
 // Subscriptions
 ////////////////
 
-        // Index page
-        Route::get('/admin/subscriptions', [SubscriptionPlanController::class, 'index'])->name('subscription-plans.index');
+  // Index page
+  Route::get('/admin/subscriptions', [SubscriptionPlanController::class, 'index'])->name('subscription-plans.index');
 
-        // Show page
-        Route::get('/admin/subscription/{subscriptionPlan}', [SubscriptionPlanController::class, 'show'])->name('subscription-plans.show');
+  // Show page
+  Route::get('/admin/subscription/{subscriptionPlan}', [SubscriptionPlanController::class, 'show'])->name('subscription-plans.show');
 
-        // Create page
-        Route::get('/admin/subscriptions/create', [SubscriptionPlanController::class, 'create'])->name('subscription-plans.create');
+  // Create page
+  Route::get('/admin/subscriptions/create', [SubscriptionPlanController::class, 'create'])->name('subscription-plans.create');
 
-        // Store method (for creating)
-        Route::post('/admin/subscription', [SubscriptionPlanController::class, 'store'])->name('subscription-plans.store');
+  // Store method (for creating)
+  Route::post('/admin/subscription', [SubscriptionPlanController::class, 'store'])->name('subscription-plans.store');
 
-        // Edit page
-        Route::get('/admin/subscription/{subscriptionPlan}/edit', [SubscriptionPlanController::class, 'edit'])->name('subscription-plans.edit');
+  // Edit page
+  Route::get('/admin/subscription/{subscriptionPlan}/edit', [SubscriptionPlanController::class, 'edit'])->name('subscription-plans.edit');
 
-        // Update method (for updating)
-        Route::patch('/admin/subscription/{subscriptionPlan}', [SubscriptionPlanController::class, 'update'])->name('subscription-plans.update');
+  // Update method (for updating)
+  Route::patch('/admin/subscription/{subscriptionPlan}', [SubscriptionPlanController::class, 'update'])->name('subscription-plans.update');
 
-        // Delete method (for deleting)
-        Route::delete('/admin/subscription/{subscriptionPlan}', [SubscriptionPlanController::class, 'destroy'])->name('subscription-plans.destroy');
-
+  // Delete method (for deleting)
+  Route::delete('/admin/subscription/{subscriptionPlan}', [SubscriptionPlanController::class, 'destroy'])->name('subscription-plans.destroy');
 
 
 // Library
 ///////////
-    Route::get('/library', function () {
-        return Inertia::render('Library');
-    })->can('viewVip', 'App\Models\User')
-        ->name('library');
-
+  Route::get('/library', function () {
+    return Inertia::render('Library');
+  })->can('viewVip', 'App\Models\User')
+      ->name('library');
 
 
 // Invite
@@ -493,217 +503,262 @@ Route::middleware([
 /// enters a code they receive in their email to start the
 /// sign up process.
 
-    Route::get('/invite', function () {
-        return Inertia::render('Invite');
-    })->can('viewCreator', 'App\Models\User')
-        ->name('invite');
+  Route::get('/invite', function () {
+    return Inertia::render('Invite');
+  })->can('viewCreator', 'App\Models\User')
+      ->name('invite');
 
 // For Testing
 ///////////
 
 
-
-    // temp page to test Stores
-    Route::get('/quiz', function () {
-        return Inertia::render('QuizHome');
-    })->can('viewAdmin', 'App\Models\User')
-        ->name('quiz');
+  // temp page to test Stores
+  Route::get('/quiz', function () {
+    return Inertia::render('QuizHome');
+  })->can('viewAdmin', 'App\Models\User')
+      ->name('quiz');
 
 // Admin Pages
 ///////////
 
-    //// temp phpinfo page for testing and debugging on a new server.
+  //// temp phpinfo page for testing and debugging on a new server.
 //    Route::get('/admin/phpmyinfo', function () {
 //        phpinfo();
 //    })->name('admin.phpmyinfo');
 
-    //// A one-time use function for
-    ///  getting video urls from embed
-    ///  codes for all episodes.
-    ///
-    Route::post('/admin/getVideosFromEmbedCodes', [AdminController::class, 'getVideosFromEmbedCodes'])
-        ->can('viewAdmin', 'App\Models\User')
-        ->name('getVideosFromEmbedCodes');
+  //// A one-time use function for
+  ///  getting video urls from embed
+  ///  codes for all episodes.
+  ///
+  Route::post('/admin/getVideosFromEmbedCodes', [AdminController::class, 'getVideosFromEmbedCodes'])
+      ->can('viewAdmin', 'App\Models\User')
+      ->name('getVideosFromEmbedCodes');
 
-    //// temp page to test Stores
-    Route::get('/quiz', function () {
-        return Inertia::render('QuizHome');
-    })->can('viewAdmin', 'App\Models\User')
-        ->name('quiz');
+  //// temp page to test Stores
+  Route::get('/quiz', function () {
+    return Inertia::render('QuizHome');
+  })->can('viewAdmin', 'App\Models\User')
+      ->name('quiz');
 
-    //// SETTINGS
-    Route::get('/admin/settings', [AdminController::class, 'settings'])
-        ->can('viewAdmin', 'App\Models\User')
-        ->name('admin.settings');
+  //// SETTINGS
+  Route::get('/admin/settings', [AdminController::class, 'settings'])
+      ->can('viewAdmin', 'App\Models\User')
+      ->name('admin.settings');
 
-    //// SETTINGS - SAVE
-    Route::patch('/admin/settings', [AdminController::class, 'saveSettings'])
-        ->can('viewAdmin', 'App\Models\User')
-        ->name('admin.saveSettings');
+  //// SETTINGS - SAVE
+  Route::patch('/admin/settings', [AdminController::class, 'saveSettings'])
+      ->can('viewAdmin', 'App\Models\User')
+      ->name('admin.saveSettings');
 
-    Route::post('/admin/clear-first-play-data-cache',
-        [AdminController::class, 'clearFirstPlayDataCache'])
-        ->name('admin.clear-first-play-data-cache');
+  Route::post('/admin/clear-first-play-data-cache',
+      [AdminController::class, 'clearFirstPlayDataCache'])
+      ->name('admin.clear-first-play-data-cache');
 
-    //// MOVIES - INDEX
-    Route::get('/admin/movies', [AdminController::class, 'moviesIndex'])
-        ->can('viewAdmin', 'App\Models\User')
-        ->name('admin.movies');
+  //// MOVIES - INDEX
+  Route::get('/admin/movies', [AdminController::class, 'moviesIndex'])
+      ->can('viewAdmin', 'App\Models\User')
+      ->name('admin.movies');
 
-    //// SHOWS - INDEX
-    Route::get('/admin/shows', [AdminController::class, 'showsIndex'])
-        ->can('viewAdmin', 'App\Models\User')
-        ->name('admin.shows');
+  //// SHOWS - INDEX
+  Route::get('/admin/shows', [AdminController::class, 'showsIndex'])
+      ->can('viewAdmin', 'App\Models\User')
+      ->name('admin.shows');
 
-    //// EPISODES - INDEX
-    Route::get('/admin/episodes', [AdminController::class, 'episodesIndex'])
-        ->can('viewAdmin', 'App\Models\User')
-        ->name('admin.episodes');
+  //// EPISODES - INDEX
+  Route::get('/admin/episodes', [AdminController::class, 'episodesIndex'])
+      ->can('viewAdmin', 'App\Models\User')
+      ->name('admin.episodes');
 
-    //// TEAMS - INDEX
-    Route::get('/admin/teams', [AdminController::class, 'teamsIndex'])
-        ->can('viewAdmin', 'App\Models\User')
-        ->name('admin.teams');
+  //// TEAMS - INDEX
+  Route::get('/admin/teams', [AdminController::class, 'teamsIndex'])
+      ->can('viewAdmin', 'App\Models\User')
+      ->name('admin.teams');
 
-    //// INVITE CODES - INDEX
-    Route::get('/admin/invite_codes', [AdminController::class, 'inviteCodes'])
-        ->can('viewAdmin', 'App\Models\User')
-        ->name('admin.inviteCodes');
+  //// INVITE CODES - INDEX
+  Route::get('/admin/invite_codes', [AdminController::class, 'inviteCodes'])
+      ->can('viewAdmin', 'App\Models\User')
+      ->name('admin.inviteCodes');
 
-    //// INVITE CODES - SAVE
-    Route::post('/admin/invite_codes', [AdminController::class, 'saveInviteCodes'])
-        ->can('viewAdmin', 'App\Models\User')
-        ->name('admin.saveInviteCodes');
+  //// INVITE CODES - SAVE
+  Route::post('/admin/invite_codes', [AdminController::class, 'saveInviteCodes'])
+      ->can('viewAdmin', 'App\Models\User')
+      ->name('admin.saveInviteCodes');
 
-    //// INVITE CODES - EXPORT
-    Route::get('/admin/export_invite_codes', [AdminController::class, 'exportInviteCodes'])
-        ->can('viewAdmin', 'App\Models\User')
-        ->name('admin.exportInviteCodes');
+  //// INVITE CODES - EXPORT
+  Route::get('/admin/export_invite_codes', [AdminController::class, 'exportInviteCodes'])
+      ->can('viewAdmin', 'App\Models\User')
+      ->name('admin.exportInviteCodes');
 
-    //// DELETE USER
-    Route::post('/admin/user/delete', [AdminController::class, 'deleteUser'])
-        ->can('delete', 'App\Models\User')
-        ->name('admin.deleteUser');
+  //// NEW INVITE CODE ROUTES FOR INVITECODECONTROLLER
 
-    //// CALCULATIONS
-    Route::get('/calculations', function () {
-        return Inertia::render('Calculations');
-    })->can('viewAdmin', 'App\Models\User')
-        ->name('calculations');
+  // Listing invite codes
+  Route::get('/invite_codes', [InviteCodeController::class, 'index'])->name('inviteCodes')
+      ->can('viewAdmin', 'App\Models\User');
 
-    //// MIST SERVER API
-    Route::get('/video', function () {
-        return Inertia::render('Admin/MistServerApi');
-    })->can('viewAdmin', 'App\Models\User')
-        ->name('video');
+  Route::get('/generate-invite-code', [InviteCodeController::class, 'generateUniqueInviteCodeJson'])
+      ->name('generate.invite.code')
+      ->can('viewAdmin', 'App\Models\User');
 
-    Route::get('/admin/mistServerApi', function () {
-        return Inertia::render('Admin/MistServerApi');
-    })->can('viewAdmin', 'App\Models\User')
-        ->name('mistServerApi');
+  // Showing the form to create a new code
+  Route::get('/invite_codes/create', [InviteCodeController::class, 'create'])->name('inviteCodes.create')
+      ->can('viewAdmin', 'App\Models\User');
 
-    //// IMAGE GALLERY + UPLOAD
-    Route::get('/admin/images', [ImageController::class, 'index'])
-        ->can('viewAdmin', 'App\Models\User')
-        ->name('admin.image.index');
+  // Storing the new code
+  Route::post('/invite_codes', [InviteCodeController::class, 'store'])->name('inviteCodes.store')
+      ->can('viewAdmin', 'App\Models\User');
 
-    //// GET SERVER TIME
-    Route::get('/admin/server-time', [AdminController::class, 'getServerTime']);
+  Route::get('/invite_codes/{inviteCode}/edit', [InviteCodeController::class, 'edit'])
+      ->name('inviteCodes.edit')
+      ->can('viewAdmin', 'App\Models\User');
 
-    // Teams - Part 1 (part 2 is in the Creator Resources below)
-    ///////////
+  Route::put('/invite_codes/{inviteCode}', [InviteCodeController::class, 'update'])
+      ->name('inviteCodes.update')
+      ->can('viewAdmin', 'App\Models\User');
 
-    // Public view .. Teams/{team}/Index
-    Route::resource('teams', TeamsController::class);
+
+  // Delete the code
+  Route::delete('/invite_codes/{inviteCode}', [InviteCodeController::class, 'destroy'])
+      ->name('inviteCodes.destroy')
+      ->can('viewAdmin', 'App\Models\User');
+
+  Route::get('/invite_codes/report', [InviteCodeController::class, 'report'])->name('inviteCodes.report')
+      ->can('viewAdmin', 'App\Models\User');
+
+  Route::get('/admin/users/search', [UsersController::class, 'search'])->name('admin.users.search')
+      ->can('viewAdmin', 'App\Models\User');
+
+  Route::post('/invite_codes/claim/{codeId}', [InviteCodeController::class, 'claimCode'])->name('invite_codes.claim')
+      ->can('viewAdmin', 'App\Models\User');
+
+  Route::post('/invite_codes/claim_all', [InviteCodeController::class, 'claimAllCodes'])->name('invite_codes.claim_all')
+      ->can('viewAdmin', 'App\Models\User');
+
+
+
+  //// DELETE USER
+  Route::post('/admin/user/delete', [AdminController::class, 'deleteUser'])
+      ->can('delete', 'App\Models\User')
+      ->name('admin.deleteUser');
+
+  //// CALCULATIONS
+  Route::get('/calculations', function () {
+    return Inertia::render('Calculations');
+  })->can('viewAdmin', 'App\Models\User')
+      ->name('calculations');
+
+  //// MIST SERVER API
+  Route::get('/video', function () {
+    return Inertia::render('Admin/MistServerApi');
+  })->can('viewAdmin', 'App\Models\User')
+      ->name('video');
+
+  Route::get('/admin/mistServerApi', function () {
+    return Inertia::render('Admin/MistServerApi');
+  })->can('viewAdmin', 'App\Models\User')
+      ->name('mistServerApi');
+
+  //// IMAGE GALLERY + UPLOAD
+  Route::get('/admin/images', [ImageController::class, 'index'])
+      ->can('viewAdmin', 'App\Models\User')
+      ->name('admin.image.index');
+
+  //// GET SERVER TIME
+  Route::get('/admin/server-time', [AdminController::class, 'getServerTime']);
+
+  // Teams - Part 1 (part 2 is in the Creator Resources below)
+  ///////////
+
+  // Public view .. Teams/{team}/Index
+  Route::resource('teams', TeamsController::class);
 //         Show a team
-    Route::get('/teams/{team}', [TeamsController::class, 'show'])
-        ->middleware('can:view,team')
-        ->name('teams.show');
+  Route::get('/teams/{team}', [TeamsController::class, 'show'])
+      ->middleware('can:view,team')
+      ->name('teams.show');
 
 
-    /////////////////  CREATOR RESOURCES ////////////////
-    /// //////////////////////////////////////////// ///
+  /////////////////  CREATOR RESOURCES ////////////////
+  /// //////////////////////////////////////////// ///
 
 // Creator Resources
-    // Begin middleware authorization
-    // allow creators access to the
-    // following pages.
+  // Begin middleware authorization
+  // allow creators access to the
+  // following pages.
 ///////////
-    Route::middleware([
-        'can:viewAny, App\Models\Creator'
-    ])->group(function () {
+  Route::middleware([
+      'can:viewAny, App\Models\Creator'
+  ])->group(function () {
 
 
-        // Teams - Part 2 (part 1 is outside the Creator Resources above)
-        ///////////
+    // Teams - Part 2 (part 1 is outside the Creator Resources above)
+    ///////////
 
-        // List all teams
-        Route::get('/teams', [TeamsController::class, 'index'])
-            //        ->middleware('can:viewAny,App\Models\User')
-            ->name('teams.index');
+    // List all teams
+    Route::get('/teams', [TeamsController::class, 'index'])
+        //        ->middleware('can:viewAny,App\Models\User')
+        ->name('teams.index');
 
-        // Create a team
-        Route::get('/teams/create', [TeamsController::class, 'create'])
-            ->middleware('can:createTeam,App\Models\Team')
-            ->name('teams.create');
+    // Create a team
+    Route::get('/teams/create', [TeamsController::class, 'create'])
+        ->middleware('can:createTeam,App\Models\Team')
+        ->name('teams.create');
 
-        // Add new team to database
-        Route::post('/teams', [TeamsController::class, 'store'])
-            ->middleware('can:createTeam,App\Models\Team')
-            ->name('teams.store');
+    // Add new team to database
+    Route::post('/teams', [TeamsController::class, 'store'])
+        ->middleware('can:createTeam,App\Models\Team')
+        ->name('teams.store');
 
-        // Display teams manage page
-        Route::get('/teams/{team}/manage', [TeamsController::class, 'manage'])
-            ->middleware('can:viewTeamManagePage,team')
-            ->name('teams.manage');
+    // Display teams manage page
+    Route::get('/teams/{team}/manage', [TeamsController::class, 'manage'])
+        ->middleware('can:viewTeamManagePage,team')
+        ->name('teams.manage');
 
-        // Edit team
-        Route::get('/teams/{team}/edit', [TeamsController::class, 'edit'])
-            ->name('teams.edit');
+    // Edit team
+    Route::get('/teams/{team}/edit', [TeamsController::class, 'edit'])
+        ->name('teams.edit');
 
-        // Add team member
-        Route::post('/teams/{team}/transfer', [TeamsController::class, 'sendTransferRequest'])
-            ->name('teams.sendTransferRequest');
+    // Add team member
+    Route::post('/teams/{team}/transfer', [TeamsController::class, 'sendTransferRequest'])
+        ->name('teams.sendTransferRequest');
 
-        // Team Members
-        Route::resource('teamMembers', TeamMembersController::class);
+    // Team Members
+    Route::resource('teamMembers', TeamMembersController::class);
 
-        // Add team member
-        Route::post('/teams/addTeamMember', [TeamMembersController::class, 'attach'])
-            ->name('teams.addTeamMember');
+    // Add team member
+    Route::post('/teams/addTeamMember', [TeamMembersController::class, 'attach'])
+        ->name('teams.addTeamMember');
 
-        // Remove team member
-        Route::post('/teams/removeTeamMember', [TeamMembersController::class, 'detach'])
-            ->name('teams.removeTeamMember');
+    // Remove team member
+    Route::post('/teams/removeTeamMember', [TeamMembersController::class, 'detach'])
+        ->name('teams.removeTeamMember');
 
-        // Add team manager
-        Route::post('/teams/addTeamManager', [TeamManagersController::class, 'attach'])
-            ->name('teams.addTeamManager');
+    // Add team manager
+    Route::post('/teams/addTeamManager', [TeamManagersController::class, 'attach'])
+        ->name('teams.addTeamManager');
 
-        // Remove team manager
-        Route::post('/teams/removeTeamManager', [TeamManagersController::class, 'detach'])
-            ->name('teams.removeTeamManager');
+    // Remove team manager
+    Route::post('/teams/removeTeamManager', [TeamManagersController::class, 'detach'])
+        ->name('teams.removeTeamManager');
 
-    });
+  });
 
 // Creators
 ///////////
-    // Creators resource
-    Route::resource('creators', CreatorsController::class);
-    // Display creator page
-    Route::get('/creators/{creator}', [CreatorsController::class, 'show'])
-        ->name('creators.show');
-    // Get list of creators
-    Route::get('/api/creators', [CreatorsController::class, 'getCreators'])
-        ->name('creators.getCreators');
+  // Creators resource
+  Route::resource('creators', CreatorsController::class);
+  // Display creator page
+  Route::get('/creators/{creator}', [CreatorsController::class, 'show'])
+      ->name('creators.show');
+  // Get list of creators
+  Route::get('/api/creators', [CreatorsController::class, 'getCreators'])
+      ->name('creators.getCreators');
 
 
 // Training
 ///////////
-    Route::get('/training', function () {
-        return Inertia::render('Training');
-    })->can('viewCreator', 'App\Models\User')
-        ->name('training');
+  Route::get('/training', function () {
+    return Inertia::render('Training');
+  })->can('viewCreator', 'App\Models\User')
+      ->name('training');
 
   Route::get('/training/go-live-using-zoom', function () {
     return Inertia::render('Training/GoLiveUsingZoom');
@@ -712,167 +767,167 @@ Route::middleware([
 
 // Shows
 ///////////
-    // Shows resource
-    Route::resource('shows', ShowsController::class);
-    // Display shows index page
+  // Shows resource
+  Route::resource('shows', ShowsController::class);
+  // Display shows index page
 //    Route::get('/shows', [ShowsController::class, 'index'])
 //        ->can('viewAny', 'App\Models\Show')
 //        ->name('shows');
-    // Display shows manage page
-    Route::get('/shows/{show}/manage', [ShowsController::class, 'manage'])
+  // Display shows manage page
+  Route::get('/shows/{show}/manage', [ShowsController::class, 'manage'])
 //        ->middleware('can:viewShowManagePage,show')
-        ->name('shows.manage');
-    // Display shows edit page
-    Route::get('/shows/{show}/edit', [ShowsController::class, 'edit'])
-        ->name('shows.edit');
-    // Display shows create page
+      ->name('shows.manage');
+  // Display shows edit page
+  Route::get('/shows/{show}/edit', [ShowsController::class, 'edit'])
+      ->name('shows.edit');
+  // Display shows create page
 //    Route::get('/shows/create', [ShowsController::class, 'create'])
 //        ->can('viewCreator', 'App\Models\User')
 //        ->name('shows.create');
-    // Update show notes
-    Route::post('/shows/notes', [ShowsController::class, 'updateNotes']);
+  // Update show notes
+  Route::post('/shows/notes', [ShowsController::class, 'updateNotes']);
 
-    ///////////////
-    // tec21: move these into the ShowEpisodeController section below.
-    // Display episode create page
-    Route::get('/shows/{show}/episode/create', [ShowsController::class, 'createEpisode'])
-        ->name('shows.createEpisode');
-    // Display episode manage page
-    Route::get('/shows/{show}/episode/{showEpisode}/manage', [ShowsController::class, 'manageEpisode'])
-        ->name('shows.showEpisodes.manageEpisode')
-        ->scopeBindings();
+  ///////////////
+  // tec21: move these into the ShowEpisodeController section below.
+  // Display episode create page
+  Route::get('/shows/{show}/episode/create', [ShowsController::class, 'createEpisode'])
+      ->name('shows.createEpisode');
+  // Display episode manage page
+  Route::get('/shows/{show}/episode/{showEpisode}/manage', [ShowsController::class, 'manageEpisode'])
+      ->name('shows.showEpisodes.manageEpisode')
+      ->scopeBindings();
 
 
 // Show Episodes
 ///////////
-    // Shows resource
-    Route::resource('showEpisodes', ShowEpisodeController::class);
-    // Display episodes index page
-    Route::get('/shows/{show}/episodes', [ShowEpisodeController::class, 'index'])
-        ->name('showEpisodes');
-    // Display episode page
-    Route::get('/shows/{show}/episode/{showEpisode}', [ShowEpisodeController::class, 'show'])
-        ->name('shows.showEpisodes.show')
-        ->scopeBindings();
-    // Display episode edit page
-    Route::get('/shows/{show}/episode/{showEpisode}/edit', [ShowEpisodeController::class, 'edit'])
+  // Shows resource
+  Route::resource('showEpisodes', ShowEpisodeController::class);
+  // Display episodes index page
+  Route::get('/shows/{show}/episodes', [ShowEpisodeController::class, 'index'])
+      ->name('showEpisodes');
+  // Display episode page
+  Route::get('/shows/{show}/episode/{showEpisode}', [ShowEpisodeController::class, 'show'])
+      ->name('shows.showEpisodes.show')
+      ->scopeBindings();
+  // Display episode edit page
+  Route::get('/shows/{show}/episode/{showEpisode}/edit', [ShowEpisodeController::class, 'edit'])
 //        ->middleware('can:edit,show')
-        ->name('shows.showEpisodes.edit')
-        ->scopeBindings();
-    // Delete an episode
-    Route::delete('/shows/{show}/episode/{showEpisode}', [ShowEpisodeController::class, 'destroy'])
-        ->name('shows.showEpisodes.destroy')
-        ->scopeBindings();
-    // Display episode upload page
-    Route::get('/shows/{show}/episode/{showEpisode}/upload', [ShowEpisodeController::class, 'upload'])
+      ->name('shows.showEpisodes.edit')
+      ->scopeBindings();
+  // Delete an episode
+  Route::delete('/shows/{show}/episode/{showEpisode}', [ShowEpisodeController::class, 'destroy'])
+      ->name('shows.showEpisodes.destroy')
+      ->scopeBindings();
+  // Display episode upload page
+  Route::get('/shows/{show}/episode/{showEpisode}/upload', [ShowEpisodeController::class, 'upload'])
 //        ->middleware('can:edit,show')
-        ->name('shows.showEpisodes.upload')
-        ->scopeBindings();
-    // Update episode notes
-    Route::post('/shows/episode/notes', [ShowEpisodeController::class, 'updateNotes']);
-    // Route to change showEpisodeStatus
-    Route::post('/shows/episode/changeEpisodeStatus', [ShowsController::class, 'changeEpisodeStatus']);
+      ->name('shows.showEpisodes.upload')
+      ->scopeBindings();
+  // Update episode notes
+  Route::post('/shows/episode/notes', [ShowEpisodeController::class, 'updateNotes']);
+  // Route to change showEpisodeStatus
+  Route::post('/shows/episode/changeEpisodeStatus', [ShowsController::class, 'changeEpisodeStatus']);
 //        ->middleware('can:editShowManagePage,show');
-    // Update episode
+  // Update episode
 //    Route::get('/shows/{show}/episode/{showEpisode}/edit', [ShowEpisodeController::class, 'update'])
 //        ->middleware('can:edit,show')
 //        ->name('shows.showEpisodes.update')
 //        ->scopeBindings();
 
 
-    // tec21: This is probably not the best way to do this
-    // I'm unable to get the FilePond uploader to show the
-    // uploaded image on the shows/edit page after upload.
-    // this is my solution. Copy the ImageController.store
-    // code to a new ShowController.uploadPoster function.
-    Route::post('/showEpisodesUploadPoster', [ImageController::class, 'uploadShowEpisodePoster'])
-        ->can('viewCreator', 'App\Models\User')
-        ->name('showEpisodes.uploadPoster');
+  // tec21: This is probably not the best way to do this
+  // I'm unable to get the FilePond uploader to show the
+  // uploaded image on the shows/edit page after upload.
+  // this is my solution. Copy the ImageController.store
+  // code to a new ShowController.uploadPoster function.
+  Route::post('/showEpisodesUploadPoster', [ImageController::class, 'uploadShowEpisodePoster'])
+      ->can('viewCreator', 'App\Models\User')
+      ->name('showEpisodes.uploadPoster');
 
-    Route::post('/showsUploadPoster', [ImageController::class, 'uploadShowPoster'])
-        ->can('viewCreator', 'App\Models\User')
-        ->name('shows.uploadPoster');
+  Route::post('/showsUploadPoster', [ImageController::class, 'uploadShowPoster'])
+      ->can('viewCreator', 'App\Models\User')
+      ->name('shows.uploadPoster');
 
-    Route::post('/teamsUploadLogo', [ImageController::class, 'uploadTeamLogo'])
-        ->can('viewCreator', 'App\Models\User')
-        ->name('teams.uploadLogo');
+  Route::post('/teamsUploadLogo', [ImageController::class, 'uploadTeamLogo'])
+      ->can('viewCreator', 'App\Models\User')
+      ->name('teams.uploadLogo');
 
-    Route::post('/moviesUploadPoster', [ImageController::class, 'uploadMoviePoster'])
-        ->can('viewCreator', 'App\Models\User')
-        ->name('movies.uploadPoster');
+  Route::post('/moviesUploadPoster', [ImageController::class, 'uploadMoviePoster'])
+      ->can('viewCreator', 'App\Models\User')
+      ->name('movies.uploadPoster');
 
 // Movies
 ///////////
-    Route::resource('movies', MovieController::class);
+  Route::resource('movies', MovieController::class);
 
 // Testing
 ///////////
-    Route::get('/testing', function () {
-        return Inertia::render('Testing');
-    })->can('viewAdmin', 'App\Models\User')
-        ->name('testing');
+  Route::get('/testing', function () {
+    return Inertia::render('Testing');
+  })->can('viewAdmin', 'App\Models\User')
+      ->name('testing');
 
 // Images + Upload
 ///////////
 
-    // this route needs to be refactored to display an image /image/{$id}
+  // this route needs to be refactored to display an image /image/{$id}
 //    Route::get('/images', [ImageController::class, 'show'])
 //        ->can('viewAdmin', 'App\Models\User')
 //        ->name('image.show');
 
-    Route::post('/upload', [ImageController::class, 'store'])
-        ->can('viewCreator', 'App\Models\User')
-        ->name('image.store');
+  Route::post('/upload', [ImageController::class, 'store'])
+      ->can('viewCreator', 'App\Models\User')
+      ->name('image.store');
 
-    Route::get('/upload', function () {
-        return redirect('/stream');
-    });
+  Route::get('/upload', function () {
+    return redirect('/stream');
+  });
 
 // Users
 ///////////
-    // Users resource for admin to create/edit users
-    Route::resource('users', UsersController::class);
+  // Users resource for admin to create/edit users
+  Route::resource('users', UsersController::class);
 
-    Route::post('/getUserStoreData', [UsersController::class, 'getUserStoreData']);
-    Route::post('/users/update-timezone', [UsersController::class, 'updateTimezone'])->name('users.update.timezone');
+  Route::post('/getUserStoreData', [UsersController::class, 'getUserStoreData']);
+  Route::post('/users/update-timezone', [UsersController::class, 'updateTimezone'])->name('users.update.timezone');
 
-    // List all users -- this has to be a different controller than the UsersAdminCreateEditController
-    // because it uses a different resource class for the search function.
-    Route::get('/users', [UsersController::class, 'index'])
-        ->can('viewAny', 'App\Models\User')
-        ->name('users.index');
+  // List all users -- this has to be a different controller than the UsersAdminCreateEditController
+  // because it uses a different resource class for the search function.
+  Route::get('/users', [UsersController::class, 'index'])
+      ->can('viewAny', 'App\Models\User')
+      ->name('users.index');
 
 //    // Create a user
-    Route::get('/users/create', [UsersController::class, 'create'])
-        ->can('create', 'App\Models\User')
-        ->name('usersAdminCreateEdit.create');
+  Route::get('/users/create', [UsersController::class, 'create'])
+      ->can('create', 'App\Models\User')
+      ->name('usersAdminCreateEdit.create');
 
 //    // Add new user to the database
 //    Route::post('/users', [UsersController::class, 'store'])->name('users.store');
 
 //    // Show user
-    Route::get('/users/{user}', [UsersController::class, 'show'])
-        ->can('viewAny', 'App\Models\User')
-        ->name('users.show');
+  Route::get('/users/{user}', [UsersController::class, 'show'])
+      ->can('viewAny', 'App\Models\User')
+      ->name('users.show');
 
 //    // Edit user
-    Route::get('/users/{user}/edit', [UsersController::class, 'edit'])
-        ->can('edit', 'App\Models\User')
-        ->name('users.edit');
+  Route::get('/users/{user}/edit', [UsersController::class, 'edit'])
+      ->can('edit', 'App\Models\User')
+      ->name('users.edit');
 
-    // Update user
-    Route::patch('/users', [UsersController::class, 'updateContact'])->name('users.updateContact');
+  // Update user
+  Route::patch('/users', [UsersController::class, 'updateContact'])->name('users.updateContact');
 
 // Chat
 ///////////
 ///
-    Route::get('/chat/channels', [ChatController::class, 'channels']);
-    Route::get('/chat/channel/{channelId}/messages', [ChatController::class, 'messages']);
-    Route::post('/chat/message', [ChatController::class, 'newMessage']);
-    Route::get('/chatTest', [TestMessageController::class, 'index']);
+  Route::get('/chat/channels', [ChatController::class, 'channels']);
+  Route::get('/chat/channel/{channelId}/messages', [ChatController::class, 'messages']);
+  Route::post('/chat/message', [ChatController::class, 'newMessage']);
+  Route::get('/chatTest', [TestMessageController::class, 'index']);
 
-    Route::post('/chat/message', [ChatController::class, 'newMessage'])
-        ->name('chatMessage');
+  Route::post('/chat/message', [ChatController::class, 'newMessage'])
+      ->name('chatMessage');
 
 //    Route::get('/chatTest', function () {
 //        return Inertia::render('ChatTest');
@@ -893,29 +948,27 @@ Route::middleware([
 //    })->can('viewAdmin', 'App\Models\User')
 //        ->name('videoupload');
 
-    Route::get('/videoupload', [VideoUploadController::class, 'index'])
-        ->can('viewCreator', 'App\Models\User')
-        ->name('videoupload');
+  Route::get('/videoupload', [VideoUploadController::class, 'index'])
+      ->can('viewCreator', 'App\Models\User')
+      ->name('videoupload');
 
-    Route::post('/videoupload', [VideoUploadController::class, 'upload'])
-    ->can('viewCreator', 'App\Models\User')
-    ->name('videoupload.upload');
+  Route::post('/videoupload', [VideoUploadController::class, 'upload'])
+      ->can('viewCreator', 'App\Models\User')
+      ->name('videoupload.upload');
 
-    // delete video
-    Route::post('/video/delete', [VideoUploadController::class, 'destroy'])
-        ->can('delete', 'App\Models\Video')
-        ->name('video.destroy');
-
-
+  // delete video
+  Route::post('/video/delete', [VideoUploadController::class, 'destroy'])
+      ->can('delete', 'App\Models\Video')
+      ->name('video.destroy');
 
 
 // Go Live
 /////////
 
 
-Route::get('/golive', [GoLiveController::class, 'index'])
-    ->can('goLive', Creator::class)
-    ->name('goLive.index');
+  Route::get('/golive', [GoLiveController::class, 'index'])
+      ->can('goLive', Creator::class)
+      ->name('goLive.index');
 
 // Get RTMP Uri
   Route::get('/fetch-rtmp-uri', [AppSettingController::class, 'getRtmpUri']);
@@ -936,13 +989,12 @@ Route::get('/golive', [GoLiveController::class, 'index'])
   Route::post('/go-live/episodes/{episodeId}/prepare', [GoLiveController::class, 'prepareLiveStream']);
 
 
-
 // MistAPI
 ///////////
 ///
 
-    Route::post('/mistapi', [VideoController::class, 'mistApi'])->name('mistApi');
-    Route::get('/api/mistserver', [\App\Http\Controllers\MistStreamController::class, 'mistServer']);
+  Route::post('/mistapi', [VideoController::class, 'mistApi'])->name('mistApi');
+  Route::get('/api/mistserver', [\App\Http\Controllers\MistStreamController::class, 'mistServer']);
 
 
 });
@@ -994,7 +1046,6 @@ Route::resource('externalSources', ChannelExternalSourceController::class);
 Route::get('/admin/external-source/search', [ChannelExternalSourceController::class, 'adminSearchExternalSources']);
 
 
-
 // Schedule
 ///////////
 ///
@@ -1011,23 +1062,22 @@ Route::post('/invalidate-caches/', [ShowScheduleController::class, 'invalidateCa
     ->can('viewAdmin', 'App\Models\User');
 
 
-
 // Extra Functions
 //////////////////
 ///
-    Route::post('/clear-flash', [HandleInertiaRequests::class, 'clearFlash'])->name('flash.clear');
+Route::post('/clear-flash', [HandleInertiaRequests::class, 'clearFlash'])->name('flash.clear');
 
-    Route::get('/notifications', [NotificationsController::class, 'index']);
-    Route::patch('/notifications/{id}/mark-as-read', [NotificationsController::class, 'markAsRead']);
-    Route::delete('/notifications/{notification}', [NotificationsController::class, 'destroy']);
-    Route::delete('/notifications', [NotificationsController::class, 'destroyAll']);
+Route::get('/notifications', [NotificationsController::class, 'index']);
+Route::patch('/notifications/{id}/mark-as-read', [NotificationsController::class, 'markAsRead']);
+Route::delete('/notifications/{notification}', [NotificationsController::class, 'destroy']);
+Route::delete('/notifications', [NotificationsController::class, 'destroyAll']);
 
 
 // Feedback Form
 ////////////////
 ///
 
-    Route::post('/user/feedback', [UsersController::class, 'submitFeedback'])
+Route::post('/user/feedback', [UsersController::class, 'submitFeedback'])
     ->name('user.feedback');
 
 
@@ -1055,7 +1105,7 @@ Route::get('/join', function () {
 });
 
 Route::get('/coffee', function () {
-    return Inertia::location('https://www.buymeacoffee.com/hellorq');
+  return Inertia::location('https://www.buymeacoffee.com/hellorq');
 });
 
 

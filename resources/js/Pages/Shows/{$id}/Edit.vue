@@ -7,7 +7,7 @@
 
       <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
-      <ShowEditHeader :show="props.show" :team="props.team" :form="form" @submit="submit"/>
+      <ShowEditHeader :show="show" :team="team" :form="form" @submit="submit"/>
 
       <div class="flex flex-col">
         <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -26,7 +26,7 @@
                 <div>
                   <div class="flex space-y-3">
                     <div class="mb-6">
-                      <SingleImage :image="props.image" :key="props.image"/>
+                      <SingleImage :image="image" :key="image" :alt="'show poster'" class=""/>
                     </div>
                   </div>
 
@@ -38,11 +38,9 @@
                       Change Show Poster
                     </label>
 
-                    <ImageUpload :image="props.image"
+                    <ImageUpload :image="image"
                                  :server="'/showsUploadPoster'"
                                  :name="'Upload Show Poster'"
-                                 :metadataKey="'foo2'"
-                                 :metadataValue="'bar2'"
                                  :maxSize="'30MB'"
                                  :fileTypes="'image/jpg, image/jpeg, image/png'"
                                  @reloadImage="reloadImage"
@@ -79,6 +77,27 @@
                                         class="border border-gray-400 p-2 w-full rounded-lg text-black"
                       />
                       <div v-if="form.errors.notes" v-text="form.errors.notes"
+                           class="text-xs text-red-600 mt-1"></div>
+                    </div>
+
+                    <div class="mb-6">
+                      <label class="block mb-2 uppercase font-bold text-xs text-red-700"
+                             for="status"
+                      >
+                        Show Runner
+                      </label>
+
+                      <select required
+                              class="border border-gray-400 text-gray-800 p-2 w-1/2 rounded-lg block mb-2 uppercase font-bold text-xs "
+                              v-model="form.show_runner"
+                      >
+                        <option v-for="member in teamMembers"
+                                :key="member.creator_id" :value="member.creator_id">{{ member.name }}
+                        </option>
+
+
+                      </select>
+                      <div v-if="form.errors.show_runner" v-text="form.errors.show_runner"
                            class="text-xs text-red-600 mt-1"></div>
                     </div>
 
@@ -328,18 +347,15 @@ let props = defineProps({
   user: Object,
   show: Object,
   team: Object,
-  poster: String,
   image: Object,
-  category: Object,
-  subCategories: Object,
+  teamMembers: Array,
   categories: Object,
   statuses: Object,
-  message: String,
 })
 
 
-let selectedCategoryId = ref(props.show.show_category_id)
-let selectedSubCategoryId = ref(props.show.show_category_sub_id)
+let selectedCategoryId = ref(props?.show?.category?.id)
+let selectedSubCategoryId = ref(props?.show?.subCategory?.id)
 
 const subCategories = computed(() => {
   const category = props.categories.find(cat => cat.id === selectedCategoryId.value)
@@ -378,17 +394,18 @@ let form = useForm({
   name: props.show.name,
   description: props.show.description,
   show_status_id: props.show.show_status_id,
-  category: props.show.show_category_id,
-  sub_category: props.show.show_category_sub_id,
+  category: props.show.category,
+  sub_category: props.show.subCategory,
   www_url: props.show.www_url,
   instagram_name: props.show.instagram_name,
   telegram_url: props.show.telegram_url,
   twitter_handle: props.show.twitter_handle,
   notes: props.show.notes,
-  episode_play_order: props.show.episode_play_order
+  episode_play_order: props.show.episode_play_order,
+  show_runner: props?.show?.showRunner?.creator_id,
 })
 
-let showCategoryDescription = props.showCategory?.Description
+// let showCategoryDescription = props.showCategory?.Description
 
 let reloadImage = () => {
   Inertia.reload({
@@ -397,6 +414,7 @@ let reloadImage = () => {
 }
 
 let submit = () => {
+  console.log('what\'s the show Runner?? ' + form.show_runner)
   form.category = showStore.category_id
   form.sub_category = showStore.sub_category_id
   form.patch(route('shows.update', props.show.slug))

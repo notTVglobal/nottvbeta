@@ -510,4 +510,17 @@ class UsersController extends Controller {
     // Redirect back or to another relevant page
     return redirect()->back();
     }
+
+  public function search(HttpRequest $request)
+  {
+    $query = $request->input('query');
+
+    $users = User::where('name', 'LIKE', "%{$query}%")
+        ->orWhere('email', 'LIKE', "%{$query}%")
+        ->get(['id', 'name', 'email']); // Only return necessary fields
+
+    return response()->json($users);
+  }
+
+
 }

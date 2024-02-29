@@ -27,98 +27,144 @@
 
       <ServerTime/>
 
-      <div class="bg-gray-300 dark:bg-gray-900 rounded pb-8 p-3 mb-6 mx-2 border-b border-2">
-        <div class="font-semibold text-xl pb-2">Administrator only links</div>
-        <div class="flex flex-wrap md:flex-row justify-items-start gap-2">
-          <button
-              @click="appSettingStore.btnRedirect(`/users`)"
-              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 col-span-1 rounded disabled:bg-gray-400"
-          >All Users
-          </button>
-          <button
-              @click="appSettingStore.btnRedirect(`/admin/episodes`)"
-              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 col-span-1 rounded disabled:bg-gray-400"
-          >All Episodes
-          </button>
-          <button
-              @click="appSettingStore.btnRedirect(`/admin/shows`)"
-              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 col-span-1 rounded disabled:bg-gray-400"
-          >All Shows
-          </button>
-          <button
-              @click="appSettingStore.btnRedirect(`/admin/movies`)"
-              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 col-span-1 rounded disabled:bg-gray-400"
-          >All Movies
-          </button>
-          <button
-              @click="appSettingStore.btnRedirect(`/admin/teams`)"
-              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 col-span-1 rounded disabled:bg-gray-400"
-          >All Teams
-          </button>
-          <button
-              @click="appSettingStore.btnRedirect(`/admin/channels`)"
-              class="bg-orange-600 hover:bg-orange-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"
-          >Channels
-          </button>
-          <button
-              @click="appSettingStore.btnRedirect(`/admin/mistServerApi`)"
-              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"
-          >MistServer API Test Page
-          </button>
-          <a
-              :href="mistServerUriForManagementInterface.replace(/\/$/, '') + ':4242'" target="_blank"
-              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"
-          >MistServer Management Interface</a>
-          <button
-              @click="appSettingStore.btnRedirect(`/admin/images`)"
-              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"
-          >Images
-          </button>
-          <button
-              @click="appSettingStore.btnRedirect(`/videoupload`)"
-              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"
-          >Video Upload
-          </button>
-          <button
-              @click="appSettingStore.btnRedirect(`/movies/create`)"
-              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
-          >Add a Movie
-          </button>
-          <button
-              @click="appSettingStore.btnRedirect(`/admin/invite_codes`)"
-              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
-          >Invite Codes
-          </button>
-          <button
-              @click="backupMistServerConfig"
-              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
-          >Backup MistServer Config
-          </button>
-          <button
-              @click="restoreMistServerConfig"
-              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
-          >Restore MistServer Config
-          </button>
-          <button
-              @click="restoreAllStreams"
-              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
-          >Restore All MistStreams
-          </button>
-          <button
-              @click="getEpisodesFromEmbedCodes"
-              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400 disabled:no-cursor"
-              :disabled="!getAllEpisodesButtonActive"
-          >Get All Episode Videos From Embed Codes
-          </button>
-          <!--                    <Link-->
-          <!--                        :href="`/admin/phpmyinfo`"><button-->
-          <!--                        class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"-->
-          <!--                    >phpinfo()</button>-->
-          <!--                    </Link>-->
 
+
+      <div class="admin-container">
+        <div class="sticky-sidebar">
+          <button @click="appSettingStore.btnRedirect(`/admin/channels`)" class="action-button">Channels</button>
+          <button @click="appSettingStore.btnRedirect(`/admin/schedule`)" class="action-button">Schedule</button>
+          <button @click="appSettingStore.btnRedirect(`/invite_codes`)" class="action-button">Invite Codes</button>
+          <a :href="mistServerUriForManagementInterface.replace(/\/$/, '') + ':4242'" target="_blank" class="action-button">MistServer MI</a>
+          <!-- Add the Schedule button here -->
+        </div>
+        <div class="main-actions">
+          <div class="actions-group">
+            <h3 class="group-title">Content Management</h3>
+            <button @click="appSettingStore.btnRedirect(`/admin/episodes`)" class="action-button">All Episodes</button>
+            <button @click="appSettingStore.btnRedirect(`/admin/shows`)" class="action-button">All Shows</button>
+            <button @click="appSettingStore.btnRedirect(`/admin/movies`)" class="action-button">All Movies</button>
+            <button @click="appSettingStore.btnRedirect(`/admin/images`)" class="action-button">Images</button>
+            <button @click="appSettingStore.btnRedirect(`/videoupload`)" class="action-button">Video Upload</button>
+            <button @click="appSettingStore.btnRedirect(`/movies/create`)" class="action-button">Add a Movie</button>
+          </div>
+
+          <div class="actions-group">
+            <h3 class="group-title">User & Team Management</h3>
+            <button @click="appSettingStore.btnRedirect(`/users`)" class="action-button">All Users</button>
+            <button @click="appSettingStore.btnRedirect(`/admin/teams`)" class="action-button">All Teams</button>
+          </div>
+
+          <div class="actions-group">
+            <h3 class="group-title">System & Backup</h3>
+            <button @click="backupMistServerConfig" class="action-button">Backup MistServer Config</button>
+            <button @click="restoreMistServerConfig" class="action-button">Restore MistServer Config</button>
+            <button @click="restoreAllStreams" class="action-button">Restore All MistStreams</button>
+            <button @click="getEpisodesFromEmbedCodes" class="action-button" :disabled="!getAllEpisodesButtonActive">Get All Episode Videos From Embed Codes</button>
+          </div>
+
+          <div class="actions-group">
+            <h3 class="group-title">MistServer Management</h3>
+            <button @click="appSettingStore.btnRedirect(`/admin/mistServerApi`)" class="action-button">MistServer API Test Page</button>
+            <a :href="mistServerUriForManagementInterface.replace(/\/$/, '') + ':4242'" target="_blank" class="action-button">MistServer Management Interface</a>
+          </div>
         </div>
 
       </div>
+
+
+
+      <!--      <div class="bg-gray-300 dark:bg-gray-900 rounded pb-8 p-3 mb-6 mx-2 border-b border-2">-->
+<!--        <div class="font-semibold text-xl pb-2">Administrator only links</div>-->
+<!--        <div class="flex flex-wrap md:flex-row justify-items-start gap-2">-->
+<!--          <button-->
+<!--              @click="appSettingStore.btnRedirect(`/users`)"-->
+<!--              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 col-span-1 rounded disabled:bg-gray-400"-->
+<!--          >All Users-->
+<!--          </button>-->
+<!--          <button-->
+<!--              @click="appSettingStore.btnRedirect(`/admin/episodes`)"-->
+<!--              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 col-span-1 rounded disabled:bg-gray-400"-->
+<!--          >All Episodes-->
+<!--          </button>-->
+<!--          <button-->
+<!--              @click="appSettingStore.btnRedirect(`/admin/shows`)"-->
+<!--              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 col-span-1 rounded disabled:bg-gray-400"-->
+<!--          >All Shows-->
+<!--          </button>-->
+<!--          <button-->
+<!--              @click="appSettingStore.btnRedirect(`/admin/movies`)"-->
+<!--              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 col-span-1 rounded disabled:bg-gray-400"-->
+<!--          >All Movies-->
+<!--          </button>-->
+<!--          <button-->
+<!--              @click="appSettingStore.btnRedirect(`/admin/teams`)"-->
+<!--              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 col-span-1 rounded disabled:bg-gray-400"-->
+<!--          >All Teams-->
+<!--          </button>-->
+<!--          <button-->
+<!--              @click="appSettingStore.btnRedirect(`/admin/channels`)"-->
+<!--              class="bg-orange-600 hover:bg-orange-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"-->
+<!--          >Channels-->
+<!--          </button>-->
+<!--          <button-->
+<!--              @click="appSettingStore.btnRedirect(`/admin/mistServerApi`)"-->
+<!--              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"-->
+<!--          >MistServer API Test Page-->
+<!--          </button>-->
+<!--          <a-->
+<!--              :href="mistServerUriForManagementInterface.replace(/\/$/, '') + ':4242'" target="_blank"-->
+<!--              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"-->
+<!--          >MistServer Management Interface</a>-->
+<!--          <button-->
+<!--              @click="appSettingStore.btnRedirect(`/admin/images`)"-->
+<!--              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"-->
+<!--          >Images-->
+<!--          </button>-->
+<!--          <button-->
+<!--              @click="appSettingStore.btnRedirect(`/videoupload`)"-->
+<!--              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 p-2 rounded disabled:bg-gray-400"-->
+<!--          >Video Upload-->
+<!--          </button>-->
+<!--          <button-->
+<!--              @click="appSettingStore.btnRedirect(`/movies/create`)"-->
+<!--              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"-->
+<!--          >Add a Movie-->
+<!--          </button>-->
+<!--          <button-->
+<!--              @click="appSettingStore.btnRedirect(`/invite_codes`)"-->
+<!--              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"-->
+<!--          >Invite Codes-->
+<!--          </button>-->
+<!--          <button-->
+<!--              @click="backupMistServerConfig"-->
+<!--              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"-->
+<!--          >Backup MistServer Config-->
+<!--          </button>-->
+<!--          <button-->
+<!--              @click="restoreMistServerConfig"-->
+<!--              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"-->
+<!--          >Restore MistServer Config-->
+<!--          </button>-->
+<!--          <button-->
+<!--              @click="restoreAllStreams"-->
+<!--              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"-->
+<!--          >Restore All MistStreams-->
+<!--          </button>-->
+<!--          <button-->
+<!--              @click="getEpisodesFromEmbedCodes"-->
+<!--              class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400 disabled:no-cursor"-->
+<!--              :disabled="!getAllEpisodesButtonActive"-->
+<!--          >Get All Episode Videos From Embed Codes-->
+<!--          </button>-->
+<!--          &lt;!&ndash;                    <Link&ndash;&gt;-->
+<!--          &lt;!&ndash;                        :href="`/admin/phpmyinfo`"><button&ndash;&gt;-->
+<!--          &lt;!&ndash;                        class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"&ndash;&gt;-->
+<!--          &lt;!&ndash;                    >phpinfo()</button>&ndash;&gt;-->
+<!--          &lt;!&ndash;                    </Link>&ndash;&gt;-->
+
+<!--        </div>-->
+
+<!--      </div>-->
 
       <div>
         <form @submit.prevent="submit">
@@ -651,3 +697,67 @@ const mistServerUriForManagementInterface = ref(convertToHttp(mistServerUri));
 
 
 </script>
+<style scoped>
+.admin-container {
+  display: flex;
+}
+
+.sticky-sidebar {
+  flex-basis: 200px;
+  position: sticky;
+  top: 0; /* Adjust based on header/nav height */
+  height: 100vh;
+  padding: 20px;
+  background-color: #f7fafc;
+}
+
+.action-button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: #4a5568; /* Tailwind gray-700 */
+  color: white;
+  text-align: left;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.action-button:hover {
+  background-color: #2d3748; /* Tailwind gray-800 */
+}
+
+.main-actions {
+  flex-grow: 1;
+  padding: 20px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .admin-container {
+    flex-direction: column;
+  }
+
+  .sticky-sidebar {
+    position: relative;
+    height: auto;
+  }
+}
+.actions-group {
+  margin-bottom: 20px;
+}
+
+.group-title {
+  margin-bottom: 10px;
+  color: #4a5568; /* Tailwind gray-700 */
+  font-size: 1.25rem; /* Tailwind text-lg */
+}
+
+.action-button {
+  display: block;
+  margin-bottom: 8px; /* Adjust spacing between buttons */
+  /* Other styles remain the same */
+}
+
+</style>

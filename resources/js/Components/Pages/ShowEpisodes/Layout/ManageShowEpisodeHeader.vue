@@ -85,7 +85,7 @@
               </button>
             </div>
             <div><span class="text-xs capitalize font-semibold mr-2">Show Runner: </span>
-              {{ show.showRunner }}
+              {{ show.showRunner.name }}
             </div>
 
             <div>

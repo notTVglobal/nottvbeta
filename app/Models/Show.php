@@ -81,7 +81,7 @@ class Show extends Model
     }
 
     public function showRunner(): BelongsTo {
-        return $this->belongsTo(Creator::class);
+        return $this->belongsTo(Creator::class, 'show_runner');
     }
 
     public function category(): BelongsTo

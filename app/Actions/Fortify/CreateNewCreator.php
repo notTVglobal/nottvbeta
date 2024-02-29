@@ -14,7 +14,7 @@ use Laravel\Jetstream\Jetstream;
 use App\Models\InviteCode;
 use App\Rules\UnclaimedInviteCode;
 
-class CreateNewUser implements CreatesNewUsers {
+class CreateNewCreator implements CreatesNewUsers {
   use PasswordValidationRules;
 
   /**
@@ -31,19 +31,15 @@ class CreateNewUser implements CreatesNewUsers {
 
     DB::beginTransaction();
 
-    // set the role_id based on the invite code... if it's a standard user or VIP continue.
-    // if it's a creator invite code then redirect to the creator registration form.
-
     try {
       $user = User::create([
-          'name'               => $input['name'],
-          'email'              => $input['email'],
-          'password'           => Hash::make($input['password']),
-          'role_id'            => 1, // standard user role_ir
-          'invite_code'        => $inviteCode->id,
+          'name'           => $input['name'],
+          'email'          => $input['email'],
+          'password'       => Hash::make($input['password']),
+          'role_id'        => 4, // creator role_id
+          'invite_code_id' => $inviteCode->id,
       ]);
 
-      // claim the invite code
       $inviteCode->claimed = true;
       $inviteCode->claimed_by = $user->id;
       $inviteCode->claimed_at = now();
@@ -59,7 +55,7 @@ class CreateNewUser implements CreatesNewUsers {
           'error_message' => $e->getMessage(),
           'stack_trace'   => $e->getTraceAsString(), // Optionally include the stack trace for more detailed debug information
           'input_name'    => $input['name'], // Be mindful of logging sensitive data like passwords
-          'invite_code'   => $input['invite_code'], // Be mindful of logging sensitive data like passwords
+          'invite_code'   => $input['invite_code'],
       ]);
 
       return redirect()->route('home')->with(['error' => 'An unexpected error occurred. Please contact us to let us know.']);
@@ -67,15 +63,20 @@ class CreateNewUser implements CreatesNewUsers {
   }
 
   private function validateInput(array $input) {
-    // validate the new user input and check the invite code
     Validator::make($input, [
         'name'                  => ['required', 'string', 'max:255'],
         'email'                 => ['required', 'string', 'email', 'max:255', 'unique:users'],
+        'address1'              => ['required', 'string', 'max:255'],
+        'address2'              => ['nullable', 'string', 'max:255'],
+        'city'                  => ['required', 'string', 'max:255'],
+        'province'              => ['required', 'string', 'max:255'],
+        'country'               => ['required', 'string', 'max:255'],
+        'postalCode'            => ['required', 'string', 'max:255'],
+        'phone'                 => ['required', 'string', 'max:255'],
         'password'              => $this->passwordRules(),
         'password_confirmation' => 'required|same:password',
         'terms'                 => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
-//            'invite_code' => ['required', 'exists:invite_codes,code',]
-        'invite_code'           => ['required', 'exists:invite_codes,code', new UnclaimedInviteCode([1, 3])],
+        'invite_code'           => ['required', new UnclaimedInviteCode([4])],
     ])->validate();
   }
 
