@@ -40,6 +40,7 @@
 
               </div>
             </div>
+            <div v-if="can.editShow">
             <button v-if="!show.isScheduled" onclick="addShowToScheduleModal.showModal()"
                     class="btn btn-lg bg-green-500 hover:bg-green-700 border-green-500 text-white drop-shadow-lg py-2 flex flex-col">
               <span>Add Show To Schedule</span>
@@ -48,7 +49,7 @@
                     class="btn btn-lg bg-indigo-500 hover:bg-indigo-700 border-indigo-500 text-white drop-shadow-lg py-2 flex flex-col">
               <span>Change Schedule</span>
             </button>
-
+            </div>
           </div>
         </div>
 
@@ -88,6 +89,7 @@ const userStore = useUserStore()
 defineProps({
   show: Object,
   team: Object,
+  can: Object,
 })
 
 </script>

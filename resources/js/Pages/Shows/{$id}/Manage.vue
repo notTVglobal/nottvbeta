@@ -44,6 +44,7 @@
         <ShowHeader
             :show="props.show"
             :team="props.team"
+            :can="can"
         />
 
         <div class="flex justify-end mt-6">

@@ -380,7 +380,7 @@ onMounted(() => {
   document.getElementById('topDiv').scrollIntoView({ behavior: 'smooth' });
   showStore.categories = props.categories
   showStore.initializeDescriptions(selectedCategoryId.value, selectedSubCategoryId.value)
-  if (!props.show.show_runner) {
+  if (!props.show.showRunner) {
     notificationStore.setGeneralServiceNotification('Please set the show runner.', 'You must set a show runner before you can edit the show.')
   }
 
