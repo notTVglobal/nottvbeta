@@ -925,6 +925,15 @@ class ShowsController extends Controller {
       return back()->with(['error' => 'An active registered creator is required as the show runner.'])->withInput();
     }
 
+    // Check if show_runner is null before validation
+    if (is_null($show->show_runner)) {
+      // Flash a session message to inform the user
+      return redirect()->back()->with([
+          'error' => 'Please set the Show Runner',
+          'form.error.show_runner' => 'Please set the Show Runner', // Custom form error
+      ])->withInput();
+    }
+
     // validate the request
     $request->validate([
         'name'               => ['required', 'string', 'max:255', Rule::unique('shows')->ignore($show->id)],
@@ -939,7 +948,7 @@ class ShowsController extends Controller {
         'notes'              => 'nullable|string|max:1024',
         'show_status_id'     => 'required|integer|exists:show_statuses,id',
         'episode_play_order' => 'required|string',
-        'show_runner'        => 'nullable|exists:creators,id'
+        'show_runner'        => 'exists:creators,id'
     ], [
         'status.exists'      => 'The selected status is invalid.',
         'release_date.after' => 'The release date must be at least 24 hours in the future.',

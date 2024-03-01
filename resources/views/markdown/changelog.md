@@ -1,7 +1,11 @@
 # not.tv Changelog
 
-Last Update: February 29, 2024\
+Last Update: March 1, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.8.7.4
+March 1, 2024
+* Fixed the can't change the show category without a show runner error to display a message to the user to set the show runner.
 
 ## v0.8.7.3
 February 29, 2024

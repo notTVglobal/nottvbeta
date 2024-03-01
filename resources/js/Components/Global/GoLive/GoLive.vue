@@ -204,15 +204,15 @@
               </button>
             </div>
           </div>
-          <div v-if="mistStreamPushDestinations.length === 0">
+          <div v-if="mistStore.mistStreamPushDestinations.length === 0">
             <div>Set up <span class="font-bold">push destinations:</span></div>
             <div>Here you can set additional streaming destinations such as Facebook, YouTube, Rumble, Twitch, etc. and
               notTV will automatically start pushing to those destinations when you go live.
             </div>
           </div>
-          <div v-if="mistStreamPushDestinations">
+          <div v-if="mistStore.mistStreamPushDestinations">
             <div class="flex flex-col gap-4">
-              <div v-for="destination in mistStreamPushDestinations" :key="destination.id"
+              <div v-for="destination in mistStore.mistStreamPushDestinations" :key="destination.id"
                    class="border p-4 rounded-lg shadow flex flex-row items-center gap-4">
                 <img :src="destination.destination_image" alt="Destination Image"
                      class="w-24 h-24 object-cover rounded-full"/>
@@ -223,21 +223,21 @@
                   <p v-if="destination.has_auto_push && !destination.push_is_started" class="text-green-500">Auto push
                     is enabled</p>
                   <div class="flex gap-2 mt-2">
-                    <button v-if="destination.push_is_started" @click="stopPush(destination.id)"
+                    <button v-if="destination.push_is_started" @click="mistStore.stopPush(destination.id)"
                             class="py-2 px-4 bg-red-500 text-white rounded hover:bg-red-700 transition duration-150">
                       Stop Push
                     </button>
-                    <button v-else @click="startPush(destination.id)"
+                    <button v-else @click="mistStore.startPush(destination.id)"
                             class="py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-700 transition duration-150">
                       Start Push
                     </button>
                     <button v-if="!destination.has_auto_push"
-                            @click="enableAutoPush(destination.id)"
+                            @click="mistStore.enableAutoPush(destination.id)"
                             class="py-2 px-4 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition duration-150">
                       Auto Push
                     </button>
                     <button v-if="destination.has_auto_push"
-                            @click="disableAutoPush(destination.id)"
+                            @click="mistStore.disableAutoPush(destination.id)"
                             class="py-2 px-4 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition duration-150">
                       Remove Auto Push
                     </button>
@@ -254,7 +254,7 @@
                   </button>
                 </div>
                 <button
-                    @click.prevent="deleteDestination(destination.id)"
+                    @click.prevent="mistStore.deleteDestination(destination.id)"
                     class="btn btn-sm text-white font-semibold bg-red-500 hover:bg-red-600 rounded-lg"
                 >
                   <font-awesome-icon icon="fa-trash-can" class="my-1 mx-1"/>
@@ -267,7 +267,7 @@
         </div>
 
       </div>
-      <MistStreamPushDestinationForm @update-success="getMistStreamPushDestinations"
+      <MistStreamPushDestinationForm @update-success="mistStore.getMistStreamPushDestinations"
                                      :destinationDetails="destinationDetails"
                                      :mode="mistStreamPushDestinationFormModalMode"/>
 
@@ -309,6 +309,7 @@ import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
 import { useVideoAuxPlayerStore } from '@/Stores/VideoAuxPlayerStore'
 import { useGoLiveStore } from '@/Stores/GoLiveStore'
+import { useMistStore } from '@/Stores/MistStore'
 import VideoJsAux from '@/Components/Global/VideoPlayer/VideoJs/VideoJsAux'
 import videojs from 'video.js'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -319,6 +320,7 @@ const appSettingStore = useAppSettingStore()
 const videoPlayerStore = useVideoPlayerStore()
 const videoAuxPlayerStore = useVideoAuxPlayerStore()
 const goLiveStore = useGoLiveStore()
+const mistStore = useMistStore()
 
 let props = defineProps({
   // show: Object,
@@ -331,149 +333,155 @@ const {copy} = useClipboard()
 
 const openObsInstructions = ref(false)
 
-
-const mistStreamPushDestinations = ref([])
+// const mistStreamPushDestinations = ref([])
 const mistStreamPushDestinationFormModalMode = ref('add')
 const destinationDetails = ref({})
 
-async function getMistStreamPushDestinations() {
-  // Assuming `goLiveStore.selectedShow.mist_stream_wildcard.id` holds the wildcard ID
-  const wildcardId = goLiveStore?.selectedShow?.mist_stream_wildcard?.id
-  if (wildcardId) {
-    try {
-      // Append the wildcard ID as a query parameter
-      const response = await axios.get(`/mist-stream-push-destinations?wildcardId=${wildcardId}`)
-      mistStreamPushDestinations.value = response.data // Update the reactive variable
-    } catch (error) {
-      console.error('Failed to fetch push destinations:', error)
-    }
-  } else {
-    console.error('No wildcard ID found')
-  }
-}
 
-async function getMistStreamPushAutoList() {
-  // Assuming `goLiveStore.selectedShow.mist_stream_wildcard.id` holds the wildcard ID
-  const wildcardId = goLiveStore?.selectedShow?.mist_stream_wildcard?.id
-  if (wildcardId) {
-    try {
-      // Append the wildcard ID as a query parameter
-      const response = await axios.get(`/mist-stream/get-push-auto-list?wildcardId=${wildcardId}`)
-      mistStreamPushDestinations.value = response.data // Update the reactive variable
-    } catch (error) {
-      console.error('Failed to fetch push auto list:', error)
-    }
-  } else {
-    console.error('No wildcard ID found')
-  }
-}
+// moved the logic into the mistStore...
+const wildcardId = ref(goLiveStore?.selectedShow?.mist_stream_wildcard?.id)
+mistStore.getMistStreamPushDestinations(wildcardId)
 
-async function getMistStreamPushList() {
-  // Assuming `goLiveStore.selectedShow.mist_stream_wildcard.id` holds the wildcard ID
-  const wildcardId = goLiveStore?.selectedShow?.mist_stream_wildcard?.id
-  if (wildcardId) {
-    try {
-      // Append the wildcard ID as a query parameter
-      const response = await axios.get(`/mist-stream/get-push-list?wildcardId=${wildcardId}`)
-      mistStreamPushDestinations.value = response.data // Update the reactive variable
-    } catch (error) {
-      console.error('Failed to fetch push list:', error)
-    }
-  } else {
-    console.error('No wildcard ID found')
-  }
-}
 
-async function startPush(destinationId) {
-  console.log(`Starting push for destination ${destinationId}`)
-  const data = {destinationId}
 
-  try {
-    const response = await axios.post('/mist-stream/start-push', data, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
+// async function getMistStreamPushDestinations() {
+//   // Assuming `goLiveStore.selectedShow.mist_stream_wildcard.id` holds the wildcard ID
+//   const wildcardId = goLiveStore?.selectedShow?.mist_stream_wildcard?.id
+//   if (wildcardId) {
+//     try {
+//       // Append the wildcard ID as a query parameter
+//       const response = await axios.get(`/mist-stream-push-destinations?wildcardId=${wildcardId}`)
+//       mistStreamPushDestinations.value = response.data // Update the reactive variable
+//     } catch (error) {
+//       console.error('Failed to fetch push destinations:', error)
+//     }
+//   } else {
+//     console.error('No wildcard ID found')
+//   }
+// }
 
-    console.log('Push started successfully:', response.data)
-    // Update the component's state to reflect the change
-    const index = mistStreamPushDestinations.value.findIndex(destination => destination.id === destinationId)
-    if (index !== -1) {
-      mistStreamPushDestinations.value[index].push_is_started = 1
-    }
-  } catch (error) {
-    console.error('Error starting push:', error)
-    // Handle the error appropriately in your UI
-  }
-}
+// async function getMistStreamPushAutoList() {
+//   // Assuming `goLiveStore.selectedShow.mist_stream_wildcard.id` holds the wildcard ID
+//   const wildcardId = goLiveStore?.selectedShow?.mist_stream_wildcard?.id
+//   if (wildcardId) {
+//     try {
+//       // Append the wildcard ID as a query parameter
+//       const response = await axios.post(`/mist-stream/get-push-auto-list?wildcardId=${wildcardId}`)
+//       mistStreamPushDestinations.value = response.data // Update the reactive variable
+//     } catch (error) {
+//       console.error('Failed to fetch push auto list:', error)
+//     }
+//   } else {
+//     console.error('No wildcard ID found')
+//   }
+// }
 
-async function stopPush(destinationId) {
-  console.log(`Stopping push for destination ${destinationId}`)
-  const data = {destinationId}
+// async function getMistStreamPushList() {
+//   // Assuming `goLiveStore.selectedShow.mist_stream_wildcard.id` holds the wildcard ID
+//   const wildcardId = goLiveStore?.selectedShow?.mist_stream_wildcard?.id
+//   if (wildcardId) {
+//     try {
+//       // Append the wildcard ID as a query parameter
+//       const response = await axios.post(`/mist-stream/get-push-list?wildcardId=${wildcardId}`)
+//       mistStreamPushDestinations.value = response.data // Update the reactive variable
+//     } catch (error) {
+//       console.error('Failed to fetch push list:', error)
+//     }
+//   } else {
+//     console.error('No wildcard ID found')
+//   }
+// }
 
-  try {
-    const response = await axios.post('/mist-stream/stop-push', data, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
+// async function startPush(destinationId) {
+//   console.log(`Starting push for destination ${destinationId}`)
+//   const data = {destinationId}
+//
+//   try {
+//     const response = await axios.post('/mist-stream/start-push', data, {
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//     })
+//
+//     console.log('Push started successfully:', response.data)
+//     // Update the component's state to reflect the change
+//     const index = mistStreamPushDestinations.value.findIndex(destination => destination.id === destinationId)
+//     if (index !== -1) {
+//       mistStreamPushDestinations.value[index].push_is_started = 1
+//     }
+//   } catch (error) {
+//     console.error('Error starting push:', error)
+//     // Handle the error appropriately in your UI
+//   }
+// }
 
-    console.log('Push stopped successfully:', response.data)
-    // Update the component's state to reflect the change
-    const index = mistStreamPushDestinations.value.findIndex(destination => destination.id === destinationId)
-    if (index !== -1) {
-      mistStreamPushDestinations.value[index].push_is_started = 0
-    }
-  } catch (error) {
-    console.error('Error stopping push:', error)
-    // Handle the error appropriately in your UI
-  }
-}
+// async function stopPush(destinationId) {
+//   console.log(`Stopping push for destination ${destinationId}`)
+//   const data = {destinationId}
+//
+//   try {
+//     const response = await axios.post('/mist-stream/stop-push', data, {
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//     })
+//
+//     console.log('Push stopped successfully:', response.data)
+//     // Update the component's state to reflect the change
+//     const index = mistStreamPushDestinations.value.findIndex(destination => destination.id === destinationId)
+//     if (index !== -1) {
+//       mistStreamPushDestinations.value[index].push_is_started = 0
+//     }
+//   } catch (error) {
+//     console.error('Error stopping push:', error)
+//     // Handle the error appropriately in your UI
+//   }
+// }
 
-const enableAutoPush = async (destinationId) => {
-  const data = {
-    destinationId,
-  }
+// const enableAutoPush = async (destinationId) => {
+//   const data = {
+//     destinationId,
+//   }
+//
+//   try {
+//     const response = await axios.post('/mist-stream/push-auto-add', data, {
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//     })
+//
+//     console.log('Auto push enabled successfully:', response.data)
+//     const index = mistStreamPushDestinations.value.findIndex(destination => destination.id === destinationId)
+//     if (index !== -1) {
+//       mistStreamPushDestinations.value[index].has_auto_push = 1
+//     }
+//   } catch (error) {
+//     console.error('Error enabling auto push:', error)
+//   }
+// }
 
-  try {
-    const response = await axios.post('/mist-stream/push-auto-add', data, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-
-    console.log('Auto push enabled successfully:', response.data)
-    const index = mistStreamPushDestinations.value.findIndex(destination => destination.id === destinationId)
-    if (index !== -1) {
-      mistStreamPushDestinations.value[index].has_auto_push = 1
-    }
-  } catch (error) {
-    console.error('Error enabling auto push:', error)
-  }
-}
-
-async function disableAutoPush(destinationId) {
-  console.log(`Disabling auto push for destination ${destinationId}`)
-  const data = {
-    destinationId,
-  }
-
-  try {
-    const response = await axios.post('/mist-stream/push-auto-remove', data, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-
-    console.log('Auto push disabled successfully:', response.data)
-    const index = mistStreamPushDestinations.value.findIndex(destination => destination.id === destinationId)
-    if (index !== -1) {
-      mistStreamPushDestinations.value[index].has_auto_push = 0
-    }
-  } catch (error) {
-    console.error('Error disabling auto push:', error)
-  }
-}
+// async function disableAutoPush(destinationId) {
+//   console.log(`Disabling auto push for destination ${destinationId}`)
+//   const data = {
+//     destinationId,
+//   }
+//
+//   try {
+//     const response = await axios.post('/mist-stream/push-auto-remove', data, {
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//     })
+//
+//     console.log('Auto push disabled successfully:', response.data)
+//     const index = mistStreamPushDestinations.value.findIndex(destination => destination.id === destinationId)
+//     if (index !== -1) {
+//       mistStreamPushDestinations.value[index].has_auto_push = 0
+//     }
+//   } catch (error) {
+//     console.error('Error disabling auto push:', error)
+//   }
+// }
 
 const addDestination = async () => {
   mistStreamPushDestinationFormModalMode.value = 'add'
@@ -493,29 +501,22 @@ const editDestination = async (destination) => {
     mistStreamPushDestinations.value[index].has_auto_push = 0
   }
 }
+//
+// const deleteDestination = async (destinationId) => {
+//   // Confirm deletion with the user before proceeding
+//   if (confirm(`Are you sure you want to delete the destination with ID: ${destinationId}?`)) {
+//     try {
+//       // Perform the delete operation
+//       await axios.delete(`/mist-stream-push-destinations/${destinationId}`)
+//       console.log(`Deleted destination with ID: ${destinationId}`)
+//       // Optionally, remove the item from your local state to update the UI
+//       mistStreamPushDestinations.value = mistStreamPushDestinations.value.filter(destination => destination.id !== destinationId)
+//     } catch (error) {
+//       console.error(`Error deleting destination with ID: ${destinationId}`, error)
+//     }
+//   }
+// }
 
-const deleteDestination = async (destinationId) => {
-  // Confirm deletion with the user before proceeding
-  if (confirm(`Are you sure you want to delete the destination with ID: ${destinationId}?`)) {
-    try {
-      // Perform the delete operation
-      await axios.delete(`/mist-stream-push-destinations/${destinationId}`)
-      console.log(`Deleted destination with ID: ${destinationId}`)
-      // Optionally, remove the item from your local state to update the UI
-      mistStreamPushDestinations.value = mistStreamPushDestinations.value.filter(destination => destination.id !== destinationId)
-    } catch (error) {
-      console.error(`Error deleting destination with ID: ${destinationId}`, error)
-    }
-  }
-}
-
-// const copyText = () => {
-//   copy('Text to be copied');
-//   showCopied.value = true;
-//   setTimeout(() => {
-//     showCopied.value = false;
-//   }, 2000); // Hide the message after 2 seconds
-// };
 
 let videoSource = videoPlayerStore.mistServerUri + 'hls/' + goLiveStore?.selectedShow?.mist_stream_wildcard.name
     + '/index.m3u8'
@@ -566,52 +567,6 @@ const copyStreamKey = () => {
   setTimeout(() => showCopiedStreamKey.value = false, 1000)
 }
 
-// if (goLiveStore.isEpisode) {
-//   fullUrl = rtmpUri.value + goLiveStore?.episode?.mist_stream_wildcard?.name
-//   streamKey = goLiveStore?.episode?.mist_stream_wildcard?.name
-// } else if (!goLiveStore.isEpisode) {
-//   fullUrl = rtmpUri.value + goLiveStore?.selectedShow?.mist_stream_wildcard?.name
-//   streamKey = goLiveStore?.selectedShow?.mist_stream_wildcard?.name
-// }
-
-// const copyFullUrl = () => copy(fullUrl);
-// const copyRtmpUri = () => copy(rtmpUri.value);
-// const copyStreamKey = () => copy(streamKey);
-//
-// watchEffect(() => {
-//   if (goLiveStore.rtmpUri) {
-//     rtmpUri.value = goLiveStore.rtmpUri + 'live/';
-//   }
-// });
-
-// Asynchronously fetch the JSON data
-// async function fetchServerInfo() {
-//   try {
-//     const response = await fetch('http://mist.nottv.io:8080/json_dvr_playback_2.js'); // Replace with your URL
-//     if (!response.ok) throw new Error('Failed to fetch');
-//     const data = await response.json();
-//     serverInfo.value = data; // Store the data in serverInfo
-//     console.log (serverInfo)
-//   } catch (error) {
-//     console.error('Error fetching server info:', error);
-//   }
-// }
-
-// let videoSrc = ref('')
-// let videoJsAux = ('aux-player')
-
-// const videoOptions = ref({
-//   autoplay: true,
-//   muted: true,
-//   controls: true,
-//   fill: true,
-//   sources: [
-//     {
-//       src: videoSource,
-//       type: videoSourceType,
-//     },
-//   ],
-// });
 
 const reloadPlayer = () => {
   let source = null
@@ -634,52 +589,23 @@ const reloadPlayer = () => {
 // check push_auto_list and update
 
 onMounted(() => {
-  // videoSrc = goLiveStore.selectedShow.mist_stream_wildcard.name
-  // videoJsAux.src({'src': videoSrc, 'type': 'application/vnd.apple.mpegurl'});
-  // videoJsAux.ready(() => {
-  //
-  // })
+  // Automatically start the countdown or trigger based on an event
   startCountdown()
 
   console.log('onPlayerReady AUX')
   // fetchServerInfo()
 
   // check the push destinations
-  getMistStreamPushDestinations()
+  mistStore.getMistStreamPushDestinations(goLiveStore?.selectedShow?.mist_stream_wildcard?.id)
 
   // check the auto push list
-  getMistStreamPushAutoList()
+  // mistStore.getMistStreamPushAutoList(goLiveStore?.selectedShow?.mist_stream_wildcard?.id)
 
   // check the push list
-  getMistStreamPushList()
+  // mistStore.getMistStreamPushList(goLiveStore?.selectedShow?.mist_stream_wildcard?.id)
 
 })
 
-// // Initial countdown time in seconds (5 minutes * 60 seconds)
-// const countdownTime = 5 * 60
-// // Reactive state for the countdown
-// const countdown = ref(countdownTime)
-//
-// // Computed property to format the countdown as mm:ss
-// const formattedCountdown = computed(() => {
-//   const minutes = Math.floor(countdown.value / 60)
-//   const seconds = countdown.value % 60
-//   return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
-// })
-//
-// // Function to start the countdown - temporary for demo purposes.
-// const startCountdown = () => {
-//   const interval = setInterval(() => {
-//     countdown.value--
-//
-//     if (countdown.value < 0) {
-//       clearInterval(interval) // Stop the interval
-//       countdown.value = countdownTime // Reset countdown
-//       startCountdown() // Restart the countdown
-//     }
-//   }, 1000)
-// }
-//
 // Keep a reference to the interval ID so it can be cleared
 let intervalId = null
 
@@ -715,10 +641,6 @@ const startCountdown = () => {
   }, 1000)
 }
 
-// Automatically start the countdown or trigger based on an event
-startCountdown()
-
-
 const liveOrRecordingGrayButtonClass = computed(() => {
   if (goLiveStore.isLive || goLiveStore.isRecording) {
     return 'bg-gray-200 hover:bg-gray-400'
@@ -737,32 +659,25 @@ const liveOrRecordingVideoBorderClass = computed(() => {
 // const mistStreamWildcardId = ref()
 // mistStreamWildcardId.value = goLiveStore?.selectedShow?.mist_stream_wildcard?.id
 const channel = Echo.channel(`mistStreamWildcard.${goLiveStore?.selectedShow?.mist_stream_wildcard?.id}`)
-channel
-    .subscribed(() => {
+channel.subscribed(() => {
       // Handle successful subscription
       // This log will confirm the subscription success
       console.log('Successfully subscribed to the channel!')
     })
-    // .listen('.push-out-start', (event) => {
-    //   console.log('Event received:', event);
-    // })
-    // channel.listen('.push-out-start', (event) => {
-    //       console.log('push out start EVENT BROADCASTED!', event);
-    //     })
     .listen('.push-out-start', (event) => {
       console.log('push out start EVENT BROADCASTED!')
-      const index = mistStreamPushDestinations.value.findIndex(destination =>
+      const index = mistStore.mistStreamPushDestinations.findIndex(destination =>
           `${destination.rtmp_url}${destination.rtmp_key}` === event.requestUrl)
       if (index !== -1) {
-        mistStreamPushDestinations.value[index].push_is_started = 1
+        mistStore.mistStreamPushDestinations.value[index].push_is_started = 1
       }
     })
     .listen('.push-end', (event) => {
       console.log('push end EVENT BROADCASTED!')
-      const index = mistStreamPushDestinations.value.findIndex(destination =>
+      const index = mistStore.mistStreamPushDestinations.findIndex(destination =>
           `${destination.rtmp_url}${destination.rtmp_key}` === event.requestUrl)
       if (index !== -1) {
-        mistStreamPushDestinations.value[index].push_is_started = 0
+        mistStore.mistStreamPushDestinations[index].push_is_started = 0
       }
     })
 
@@ -778,183 +693,9 @@ onUnmounted(() => {
   }
 })
 
-//
-// // Assuming props.show.mist_stream_wildcard.name exists and is reactive
-// const playerTargetId = ref('');
-//
-// const initializePlayer = () => {
-//   const targetElement = document.getElementById(playerTargetId.value);
-//   if (targetElement) {
-//     mistPlay(goLiveStore.selectedShow.mist_stream_wildcard.name, {
-//       target: targetElement,
-//       fillSpace: true
-//     });
-//   } else {
-//     console.error('Target element for video player not found.');
-//   }
-// };
-//
-// const removePlayer = () => {
-//   const existingContainer = document.getElementById(playerTargetId.value);
-//   if (existingContainer) {
-//     existingContainer.remove();
-//   }
-// };
-//
-//
-// const reloadPlayer = () => {
-//   removePlayer();
-//
-//   nextTick(() => {
-//     const newPlayerContainer = document.createElement('div');
-//     const uniqueId = `${goLiveStore.selectedShow.mist_stream_wildcard.name}-${Date.now()}`;
-//     newPlayerContainer.id = uniqueId;
-//     playerTargetId.value = uniqueId;
-//
-//     document.body.appendChild(newPlayerContainer); // Append to body or choose a specific container
-//
-//     loadAndInitializePlayer();
-//   });
-// };
-//
-// const loadAndInitializePlayer = () => {
-//   if (!window.mistplayers) {
-//     const playerScript = document.createElement("script");
-//     playerScript.src = "https://mist.nottv.io:443/player.js"; // Assuming HTTPS site
-//     document.head.appendChild(playerScript);
-//     playerScript.onload = initializePlayer;
-//   } else {
-//     initializePlayer();
-//   }
-// };
-//
-// onMounted(() => {
-//   playerTargetId.value = `${goLiveStore.selectedShow.mist_stream_wildcard.name}-${Date.now()}`;
-//   loadAndInitializePlayer();
-// });
-//
-// watch(() => playerTargetId.value, (newVal) => {
-//   if (newVal) {
-//     loadAndInitializePlayer();
-//   }
-// });
-//
-// onBeforeUnmount(() => {
-//   removePlayer(); // Ensure the player's container is removed when the component unmounts
-// });
-
-
-//
-//
-// const loadAndInitializePlayer = () => {
-//   if (!window.mistplayers) {
-//     const playerScript = document.createElement("script");
-//     playerScript.src = location.protocol === "https:" ? "https://mist.nottv.io:443/player.js" : "http://mist.nottv.io:8080/player.js";
-//     document.head.appendChild(playerScript);
-//     playerScript.onload = initializePlayer;
-//   } else {
-//     initializePlayer();
-//   }
-// };
-//
-// const removePlayer = () => {
-//   const targetElement = document.getElementById(playerTargetId.value);
-//   if (targetElement) {
-//     // Option 1: Remove the child element completely
-//     targetElement.parentNode.removeChild(targetElement);
-//
-//     // OR Option 2: Reset the content of the element
-//     // targetElement.innerHTML = '';
-//
-//     console.log('Video player removed.');
-//   } else {
-//     console.error('Target element for video player not found for removal.');
-//   }
-// };
-//
-// onMounted(() => {
-//   playerTargetId.value = `${props.show.mist_stream_wildcard.name}-${Date.now()}` // Set the target ID based on props
-//   console.log(playerTargetId.value)
-//   loadAndInitializePlayer();
-//   // nextTick(() => {
-//   //   loadAndInitializePlayer();
-//   // });
-// });
-//
-// // onMounted(() => {
-// //
-// //   // loadAndInitializePlayer()
-// //   if (!window.mistplayers) {
-// //     const playerScript = document.createElement("script");
-// //     playerScript.src = location.protocol === "https:" ? "https://mist.nottv.io:443/player.js" : "http://mist.nottv.io:8080/player.js";
-// //     document.head.appendChild(playerScript);
-// //     playerScript.onload = initializePlayer;
-// //   } else {
-// //     initializePlayer();
-// //   }
-// // });
-//
-// // Define `reloadPlayer` method to reload the player. This could be the same as `initializePlayer`
-// // if reloading simply means reinitializing.
-// const reloadPlayer = () => {
-//   // Remove the existing player and its container
-//   removePlayer();
-//
-//   // Recreate the container element for the player
-//   const newPlayerContainer = document.createElement('div');
-//   newPlayerContainer.id = `${props.show.mist_stream_wildcard.name}-${Date.now()}`; // Set the new target ID
-//   playerTargetId.value = newPlayerContainer.id; // Update the reactive reference
-//
-//   // Append the new container to the appropriate parent element in your DOM
-//   // Replace `parentElementSelector` with the actual selector of the parent where the player should be attached
-//   const parentElement = document.querySelector('parentElementSelector');
-//   if (parentElement) {
-//     parentElement.appendChild(newPlayerContainer);
-//   } else {
-//     console.error('Parent element for video player not found.');
-//     return;
-//   }
-//
-//   // Initialize the player in the new container
-//   loadAndInitializePlayer();
-// };
-//
-// // If there's a need to watch for `playerTargetId` changes to reinitialize the player
-// watch(() => playerTargetId.value, (newVal) => {
-//   // Load and initialize player only if newVal is truthy
-//   if (newVal) {
-//     loadAndInitializePlayer();
-//   }
-// });
-//
-// // const loadAndInitializePlayer = () => {
-// //   if (!window.mistplayers) {
-// //     const playerScript = document.createElement("script");
-// //     playerScript.src = location.protocol === "https:" ? "https://mist.nottv.io:443/player.js" : "http://mist.nottv.io:8080/player.js";
-// //     document.head.appendChild(playerScript);
-// //     playerScript.onload = initializePlayer;
-// //   } else {
-// //     initializePlayer();
-// //   }
-// // };
-//
 onBeforeUnmount(() => {
-  // goLiveStore.reset()
-  // Example cleanup logic; adjust based on your player's API
-  // if (window.mistplayers && window.mistplayers[playerTargetId.value]) {
-  //   window.mistplayers[playerTargetId.value].destroy(); // Hypothetical destroy method
-  // }
-})
-//
-// onBeforeUnmount(() => {
-//   if (videoPlayer && typeof videoPlayer.dispose === 'function') {
-//     videoPlayer.dispose();
-//   }
-// });
-// let videoEmbedCode = props.episode.video_file_embed_code;
 
-// const timeAgo = useTimeAgo(new Date(2023, 10, 5))
-// const timeAgo = useTimeAgo(props.episode.scheduledDateTime)
+})
 </script>
 
 <style scoped>

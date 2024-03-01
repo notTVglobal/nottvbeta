@@ -87,7 +87,7 @@
                         Show Runner
                       </label>
 
-                      <select required
+                      <select
                               class="border border-gray-400 text-gray-800 p-2 w-1/2 rounded-lg block mb-2 uppercase font-bold text-xs "
                               v-model="form.show_runner"
                       >
@@ -335,13 +335,15 @@ import TabbableTextarea from '@/Components/Global/TextEditor/TabbableTextarea'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage'
 import ImageUpload from '@/Components/Global/Uploaders/ImageUpload'
 import Message from '@/Components/Global/Modals/Messages'
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, onMounted, ref, watch } from 'vue'
+import { useNotificationStore } from '@/Stores/NotificationStore'
 
 usePageSetup('shows/slug/edit')
 
 const appSettingStore = useAppSettingStore()
 const showStore = useShowStore()
 const teamStore = useTeamStore()
+const notificationStore = useNotificationStore()
 
 let props = defineProps({
   user: Object,
@@ -352,6 +354,9 @@ let props = defineProps({
   categories: Object,
   statuses: Object,
 })
+
+console.log('show runner is: ' + props.show.show_runner)
+
 
 
 let selectedCategoryId = ref(props?.show?.category?.id)
@@ -372,8 +377,13 @@ watch(selectedSubCategoryId, () => {
 })
 
 onMounted(() => {
+  document.getElementById('topDiv').scrollIntoView({ behavior: 'smooth' });
   showStore.categories = props.categories
   showStore.initializeDescriptions(selectedCategoryId.value, selectedSubCategoryId.value)
+  if (!props.show.show_runner) {
+    notificationStore.setGeneralServiceNotification('Please set the show runner.', 'You must set a show runner before you can edit the show.')
+  }
+
 })
 
 const chooseCategory = () => {

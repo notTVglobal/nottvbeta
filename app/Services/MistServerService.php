@@ -412,6 +412,8 @@ class MistServerService {
       }
     } else {
       Log::warning("No active push found matching stream: {$streamName} and URI: {$targetURI}");
+      $destination->push_is_started = 0;
+      $destination->save();
     }
   }
 
