@@ -91,6 +91,15 @@ class ShowPolicy
         return $this->handleTeamMemberStatusForEdit($user, $show->team_id);
     }
 
+  public function update(User $user, Show $show)
+  {
+    if ($this->hasAccessToTeam($user, $show) || $show->user_id === $user->id) {
+      return true;
+    }
+
+    return $this->handleTeamMemberStatusForManage($user, $show->team_id);
+  }
+
     public function goLive(User $user, Show $show)
     {
         if ($this->hasAccessToTeam($user, $show) || $show->user_id === $user->id) {
@@ -136,14 +145,7 @@ class ShowPolicy
         return $this->handleTeamMemberStatusForManage($user, $show->team_id);
     }
 
-    public function update(User $user, Show $show)
-    {
-        if ($this->hasAccessToTeam($user, $show) || $show->user_id === $user->id) {
-            return true;
-        }
 
-        return $this->handleTeamMemberStatusForManage($user, $show->team_id);
-    }
 
     public function delete(User $user, Show $show)
     {
@@ -182,9 +184,10 @@ class ShowPolicy
         $isTeamManager = TeamManager::where('team_id', $team->id)
             ->where('user_id', $userId)
             ->exists();
+        $isShowRunner = $show->show_runner === $user->creator->id;
         $isAdmin = $user->isAdmin;
 
-        return $isAdmin || $isTeamOwner || $isTeamLeader || $isTeamManager;
+        return $isAdmin || $isTeamOwner || $isTeamLeader || $isTeamManager || $isShowRunner;
     }
 
     private function handleTeamMemberStatus(User $user, $teamId)

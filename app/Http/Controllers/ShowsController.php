@@ -926,7 +926,7 @@ class ShowsController extends Controller {
     }
 
     // Check if show_runner is null before validation
-    if (is_null($show->show_runner)) {
+    if (is_null($show->show_runner && $request->show_runner)) {
       // Flash a session message to inform the user
       return redirect()->back()->with([
           'error' => 'Please set the Show Runner',

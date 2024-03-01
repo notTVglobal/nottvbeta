@@ -134,7 +134,8 @@ class DashboardController extends Controller {
                         ->whereRaw('teams.user_id = ' . Auth::user()->id)
                         ->whereRaw('teams.id = shows.team_id');
                   })
-                  ->orWhere('user_id', Auth::user()->id); // User's own shows
+                  ->orWhere('user_id', Auth::user()->id) // User's own shows
+                  ->orWhere('show_runner', Auth::user()->creator->id);
             })
             ->distinct() // Ensure unique shows
             ->paginate(5, ['*'], 'shows')

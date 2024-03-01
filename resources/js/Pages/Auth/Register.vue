@@ -90,7 +90,7 @@
                   </svg>
                   <input id="password_confirmation"
                          v-model="form.password_confirmation" type="password" class="grow border-none" value=""
-                         required />
+                         required/>
                 </label>
               </div>
               <div v-if="form.errors.password_confirmation" v-text="form.errors.password_confirmation"
@@ -109,6 +109,19 @@
 
               <div v-if="form.errors.invite_code" v-text="form.errors.invite_code"
                    class="text-xs text-red-600 mt-1"></div>
+
+
+
+              <div class="invite-code">
+                <div class="mt-4 ml-4 border-t border-t-gray-200 text-center font-semibold">
+                  <div>Need an invite code?</div>
+                  <button
+                      @click.prevent="appSettingStore.btnRedirect(`subscribe`)"
+                      class="btn btn-md bg-blue-600 hover:bg-blue-700 text-white hover:cursor-pointer">Get an Invite
+                    Code
+                  </button>
+                </div>
+              </div>
 
               <!--            Jetstream/Fortify Multi-Auth: Roles, Permissions and Guards-->
               <!--            https://www.youtube.com/watch?v=NiQSNjWKLfU-->
@@ -137,7 +150,8 @@
               <div v-if="$page.props.jetstream.hasTermsAndPrivacyPolicyFeature" class="mt-4">
                 <JetLabel for="terms">
                   <div class="flex items-center">
-                    <input id="terms" v-model="form.terms" name="terms" type="checkbox" class="checkbox checkbox-lg checkbox-accent" required />
+                    <input id="terms" v-model="form.terms" name="terms" type="checkbox"
+                           class="checkbox checkbox-lg checkbox-accent" required/>
                     <div class="ml-2">
                       I agree to the <a :href="route('terms.show')" target="_blank"
                                         class="underline text-sm text-gray-600 hover:text-gray-900">Terms of Service</a>
@@ -161,14 +175,6 @@
                 </JetButton>
               </div>
 
-              <div class="modal-footer">
-                <div class="mt-4 pt-4 ml-4 border-t border-t-gray-200 text-center font-semibold">
-                  <span class="">For a chance to get an invite code</span><br> <button
-                    @click.prevent="appSettingStore.btnRedirect(`subscribe`)"
-                    class="btn btn-md bg-blue-600 hover:bg-blue-700 text-white hover:cursor-pointer">subscribe
-                  to our newsletter</button>
-                </div>
-              </div>
             </form>
 
           </div>
