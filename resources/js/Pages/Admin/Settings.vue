@@ -33,8 +33,6 @@
           <button @click="appSettingStore.btnRedirect(`/admin/channels`)" class="action-button">Channels</button>
           <button @click="appSettingStore.btnRedirect(`/admin/schedule`)" class="action-button">Schedule</button>
           <button @click="appSettingStore.btnRedirect(`/invite_codes`)" class="action-button">Invite Codes</button>
-          <a :href="mistServerUriForManagementInterface.replace(/\/$/, '') + ':4242'" target="_blank"
-             class="action-button">MistServer MI</a>
           <button v-if="!secureNotesOpen" @click="openSecureNotes" class="action-button">Secure Notes</button>
           <button v-if="secureNotesOpen" @click="saveSecureNotes" class="action-button save-notes">Save Notes</button>
           <!-- Add the Schedule button here -->
@@ -567,7 +565,7 @@
 
 <script setup>
 import { Inertia } from '@inertiajs/inertia'
-import { nextTick, onMounted, ref } from 'vue'
+import { nextTick, onMounted, onUnmounted, ref } from 'vue'
 import { useForm } from '@inertiajs/inertia-vue3'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
@@ -628,6 +626,11 @@ const popUpModalMessage = ref('')
 
 onMounted(() => {
   countries.value = props.countries
+  secureNotes.value = ''
+})
+
+onUnmounted(() => {
+  secureNotes.value = ''
 })
 
 nextTick(() => {
