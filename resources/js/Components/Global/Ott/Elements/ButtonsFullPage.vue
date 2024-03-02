@@ -23,7 +23,7 @@
           CHANNELS
         </button>
 
-        <button v-if="userStore.isVip || userStore.isAdmin"
+        <button
                 @click="appSettingStore.toggleOttPlaylist()"
                 class="ottButton bg-orange-400 text-white hover:bg-orange-600">
           <font-awesome-icon icon="fa-list" class="ml-2 text-3xl mb-1"/>

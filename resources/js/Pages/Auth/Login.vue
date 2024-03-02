@@ -134,8 +134,4 @@ const submit = () => {
   appSettingStore.pageReload = true
 };
 
-onMounted(() => {
-  const topDiv = document.getElementById("topDiv")
-  topDiv.scrollIntoView()
-});
 </script>

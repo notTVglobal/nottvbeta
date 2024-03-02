@@ -3,6 +3,10 @@
 Last Update: March 1, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.7.6
+March 1, 2024
+* Some changes to the invite code manage page
+
 ## v0.8.7.5
 March 1, 2024
 * Made the 'get an invite' code button on the register page easier to see.

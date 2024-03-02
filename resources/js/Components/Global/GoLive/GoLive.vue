@@ -621,24 +621,24 @@ const seconds = computed(() => countdown.value % 60)
 
 // Function to start the countdown
 const startCountdown = () => {
-  // Clear any existing interval to prevent multiple intervals
-  if (intervalId !== null) {
-    clearInterval(intervalId)
-  }
-
-  // Reset countdown to initial value
-  countdown.value = countdownTime
-
-  // Start a new interval
-  intervalId = setInterval(() => {
-    countdown.value--
-
-    if (countdown.value < 0) {
-      clearInterval(intervalId) // Stop the interval
-      intervalId = null // Reset the interval ID
-      // Optionally, you can reset countdown.value to countdownTime or another value here
-    }
-  }, 1000)
+  // // Clear any existing interval to prevent multiple intervals
+  // if (intervalId !== null) {
+  //   clearInterval(intervalId)
+  // }
+  //
+  // // Reset countdown to initial value
+  // countdown.value = countdownTime
+  //
+  // // Start a new interval
+  // intervalId = setInterval(() => {
+  //   countdown.value--
+  //
+  //   if (countdown.value < 0) {
+  //     clearInterval(intervalId) // Stop the interval
+  //     intervalId = null // Reset the interval ID
+  //     // Optionally, you can reset countdown.value to countdownTime or another value here
+  //   }
+  // }, 1000)
 }
 
 const liveOrRecordingGrayButtonClass = computed(() => {

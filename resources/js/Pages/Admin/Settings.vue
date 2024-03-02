@@ -633,13 +633,6 @@ onUnmounted(() => {
   secureNotes.value = ''
 })
 
-nextTick(() => {
-  if (topDiv) {
-    const topDiv = document.getElementById('topDiv')
-    topDiv.scrollIntoView()
-  }
-})
-
 const secureNotesOpen = ref(false)
 const secureNotes = ref('')
 const secureNotesSaving = ref(false)

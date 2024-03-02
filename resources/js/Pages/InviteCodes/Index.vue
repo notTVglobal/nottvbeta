@@ -6,24 +6,76 @@
 
       <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
-      <div class="flex flex-row justify-end">
-        <button @click.prevent="claimAllCodes"
-                class="mr-2 btn bg-orange-500 hover:bg-orange-700 text-white">Claim All Codes
-        </button>
-        <button @click.prevent="appSettingStore.btnRedirect('/invite_codes/report')"
-                class="mr-2 btn bg-blue-500 hover:bg-blue-700 text-white">Report
-        </button>
-        <button @click.prevent="appSettingStore.btnRedirect('/invite_codes/create')"
-                class="btn bg-green-500 hover:bg-green-700 text-white">Create Code
-        </button>
+      <div class="flex flex-row flex-wrap justify-between">
+        <div>
+        <form>
+          <div class="mb-6">
+            <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"
+                   for="code"
+            >
+              NEW CODE
+            </label>
+
+            <input v-model="form.code"
+                   class="border border-gray-400 p-2 w-64 rounded-lg text-black"
+                   type="text"
+                   name="code"
+                   id="code"
+            >
+            <div v-if="form.errors.code" v-text="form.errors.code"
+                 class="text-xs text-red-600 mt-1"></div>
+          </div>
+
+          <div class="flex justify-start my-6 mr-6">
+            <button
+                @click.prevent="submit"
+                class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded disabled:bg-gray-400"
+                :disabled="form.processing"
+            >
+              Add Code
+            </button>
+
+
+            <!--                        <JetValidationErrors class="ml-4" :key="props.messageKey"/>-->
+          </div>
+
+        </form>
+        </div>
+
+
+        <div class="flex flex-row justify-end">
+          <button
+              @click.prevent="exportCodes"
+              class="mr-2 btn bg-blue-500 hover:bg-blue-700 text-white"
+          >
+            Export Codes
+          </button>
+          <button @click.prevent="claimAllCodes"
+                  class="mr-2 btn bg-orange-500 hover:bg-orange-700 text-white">Claim All Codes
+          </button>
+          <button @click.prevent="appSettingStore.btnRedirect('/invite_codes/report')"
+                  class="mr-2 btn bg-blue-500 hover:bg-blue-700 text-white">Report
+          </button>
+          <button @click.prevent="appSettingStore.btnRedirect('/invite_codes/create')"
+                  class="btn bg-green-500 hover:bg-green-700 text-white">Create Code
+          </button>
+        </div>
       </div>
+
+
 
       <div class="flex flex-col w-full my-8 p-4 gap-8">
 
         <div class="overflow-x-auto">
           <div class="flex items-center justify-center">
             <div class="w-full lg:w-5/6">
-              <h1 class="text-xl font-semibold mb-6">Manage Invite Codes</h1>
+              <div class="flex justify-between mt-4">
+                <h1 class="text-xl font-semibold">Manage Invite Codes</h1>
+                <div class="flex flex-row justify-end gap-x-4">
+                  <input v-model="search" type="search" placeholder="Search..." class="text-black border px-2 rounded-lg"/>
+                </div>
+              </div>
+
               <div class="bg-white shadow-md rounded my-6">
                 <table class="min-w-max w-full table-auto">
                   <thead>
@@ -112,13 +164,39 @@ import { Inertia } from '@inertiajs/inertia'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import Message from '@/Components/Global/Modals/Messages'
+import { ref, watch } from 'vue'
+import throttle from 'lodash/throttle'
+import { useForm } from '@inertiajs/inertia-vue3'
 
 usePageSetup('inviteCodes')
 const appSettingStore = useAppSettingStore()
 
 const props = defineProps({
   inviteCodes: Object,
+  filters: null,
 })
+
+let submit = () => {
+  form.post('/invite_codes/quick-add');
+  form.code = '';
+};
+
+let exportCodes = () => {
+  Inertia.visit(route('inviteCodes.export'));
+}
+
+let form = useForm({
+  code: '',
+})
+
+let search = ref(props.filters.search);
+
+watch(search, throttle(function (value) {
+  Inertia.get('/invite_codes', {search: value}, {
+    preserveState: true,
+    replace: true
+  });
+}, 300));
 
 const changePage = (url) => {
   if (url) {
@@ -139,7 +217,7 @@ const deleteCode = (id) => {
 };
 
 const claimCode = (codeId) => {
-  if (!confirm('Are you sure you want to claim all of the invite codes?')) {
+  if (!confirm('Are you sure you want to claim this invite code?')) {
     return;
   }
 

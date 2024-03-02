@@ -265,30 +265,6 @@ class AdminController extends Controller {
 
   }
 
-  public function exportInviteCodes() {
-
-    // tec21: this needs to
-
-    $codes = InviteCode::all()->toArray();
-
-
-//        dd($codes);
-
-    $handle = fopen('../storage/app/csv/invite_codes.csv', 'w');
-//
-//        collect($data)->each(fn ($row) => fputcsv($handle, $data));
-//        fputcsv($handle, $data);
-
-//
-    foreach ($codes as $line) {
-      fputcsv($handle, $line);
-    }
-
-    fclose($handle);
-
-//return $codes;
-    return redirect()->route('admin.inviteCodes')->with('success', 'exported successfully.');
-  }
 
 
 

@@ -8,6 +8,8 @@ use App\Models\Role;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Http\Request as HttpRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -19,13 +21,99 @@ class InviteCodeController extends Controller {
    *
    * @return Response
    */
-  public function index(): Response {
-    $inviteCodes = InviteCode::with('createdBy', 'role')->latest()->paginate(10); // Adjust the number as per your requirement
+  public function index(Request $request): Response {
 
+//    $inviteCodes = InviteCode::with('createdBy', 'role')->latest()->paginate(10); // Adjust the number as per your requirement
+//
+//    return Inertia::render('InviteCodes/Index', [
+//        'inviteCodes' => InviteCodeResource::collection($inviteCodes)
+//    ]);
+
+    // Capture search input from the request
+    $search = $request->input('search');
+
+    // Start the query with relationships and default ordering
+    $inviteCodesQuery = InviteCode::with('createdBy', 'role')->latest();
+
+    // Apply search filter if provided
+    if ($search) {
+      $inviteCodesQuery->where(function ($query) use ($search) {
+        $query->where('code', 'like', "%{$search}%")
+            ->orWhereHas('createdBy', function ($query) use ($search) {
+              $query->where('name', 'like', "%{$search}%");
+            });
+      });
+    }
+
+    // Paginate the results
+    $inviteCodes = $inviteCodesQuery->paginate(10); // Adjust the pagination as needed
+
+    // Return the Inertia response
     return Inertia::render('InviteCodes/Index', [
-        'inviteCodes' => InviteCodeResource::collection($inviteCodes)
+        'inviteCodes' => InviteCodeResource::collection($inviteCodes),
+      // Include additional data as needed, for example:
+        'filters' => $request->only(['search']), // Pass current filters back to the view for UI consistency
+      // You might want to include additional data for the frontend here
     ]);
+
+//    return Inertia::render('InviteCodes/Index', [
+//        'inviteCodes' => InviteCodeResource::collection($inviteCodes),
+//        'filters' => Request::only(['search']),
+//    ]);
+
   }
+
+  public function inviteCodeQuickAdd(HttpRequest $request) {
+//        $inviteCodes = $request->validate([
+//            'cdn_endpoint' => 'nullable|string',
+//            'cloud_folder' => 'nullable|string',
+//        ]);
+
+    $validatedData = $request->validate([
+        'code' => ['required', 'unique:invite_codes', 'string', 'max:20'],
+    ]);
+
+    $invite_code = new InviteCode;
+    $invite_code->created_by = Auth::user()->id;
+    $invite_code->code = $request->code;
+    $invite_code->user_role_id = 1;
+    $invite_code->volume = 1;
+    $invite_code->notes = 'quick add';
+    $invite_code->save();
+
+//        return $invite_code;
+    // redirect
+    return redirect()->route('inviteCodes')->with('success', 'Code Added Successfully');
+
+  }
+
+  public function exportInviteCodes() {
+
+    // tec21: this needs to
+
+    $codes = InviteCode::all()->toArray();
+
+
+//        dd($codes);
+
+    $handle = fopen('../storage/app/csv/invite_codes.csv', 'w');
+//
+//        collect($data)->each(fn ($row) => fputcsv($handle, $data));
+//        fputcsv($handle, $data);
+
+//
+    foreach ($codes as $line) {
+      fputcsv($handle, $line);
+    }
+
+    fclose($handle);
+
+//return $codes;
+    return redirect()->route('inviteCodes')->with('success', 'exported successfully.');
+  }
+
+
+
 
   /**
    * Display a report of the invite codes.
