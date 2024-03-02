@@ -14,6 +14,8 @@
           <div class="mb-6">
             For now you can <button @click.prevent="removeFromSchedule" class="text-blue-700 hover:text-blue-500">remove the show</button> from the schedule and re-add it again.
           </div>
+          <div class="mt-4 mb-2 text-left"></div>
+          <StepSixCongratulations/>
           <div v-if="errors" class="mb-6 text-red-700">
             <div>{{ errors }}</div>
             <div>Please let Travis know.</div>
@@ -30,6 +32,7 @@
 <script setup>
 import { Inertia } from '@inertiajs/inertia';
 import { ref } from 'vue'
+import StepSixCongratulations from '@/Components/Global/Schedule/StepSixCongratulations.vue'
 
 let props = defineProps({
   show: Object

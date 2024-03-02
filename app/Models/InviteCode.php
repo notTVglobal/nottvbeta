@@ -22,6 +22,10 @@ class InviteCode extends Model {
     return $this->belongsTo(User::class, 'created_by')->withDefault();
   }
 
+  public function claimedBy(): BelongsTo {
+    return $this->belongsTo(User::class, 'claimed_by')->withDefault();
+  }
+
   public function role() {
     return $this->belongsTo(Role::class, 'user_role_id');
   }

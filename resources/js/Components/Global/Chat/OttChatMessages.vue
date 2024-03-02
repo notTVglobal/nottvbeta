@@ -1,11 +1,11 @@
 <template>
-  <div class="h-1/2 scrollbar-hide w-full">
-    <div class="break-all" :class="[pipChatModeChangeHeight, !appSettingStore.fullPage ? 'chatTopRightContainer' : '']">
+  <div class="h-1/2 scrollbar-hide w-full ">
+    <div class="overflow-hidden overflow-ellipsis" :class="[pipChatModeChangeHeight, !appSettingStore.fullPage ? 'chatTopRightContainer' : '']">
 
-      <div class="oldMessage" v-for="(oldMessage, index) in chatStore.oldMessages.slice().reverse()" :key="index">
+      <div class="oldMessage hyphens-auto" v-for="(oldMessage, index) in chatStore.oldMessages.slice().reverse()" :key="index">
         <message-item :id="oldMessage.id" :message="oldMessage"/>
       </div>
-      <div class="newMessage" v-for="(newMessage, index) in chatStore.newMessages.slice()" :key="newMessage.id">
+      <div class="newMessage hyphens-auto" v-for="(newMessage, index) in chatStore.newMessages.slice()" :key="newMessage.id">
         <message-item :id="newMessage.id" :message="newMessage"/>
       </div>
       <div id="scrollToMe"></div>

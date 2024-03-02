@@ -269,21 +269,21 @@ usePageSetup('dashboard')
 const appSettingStore = useAppSettingStore()
 const userStore = useUserStore()
 
-const getUserData = inject('getUserData', null)
+// const getUserData = inject('getUserData', null)
 
-const userTimezone = ref('')
+// const userTimezone = ref('')
 
-onMounted(() => {
-  getUserTimezone()
-  if (!getUserData) {
-    updateUserStore()
-  }
-})
+// onMounted(() => {
+//   getUserTimezone()
+//   if (!getUserData) {
+//     updateUserStore()
+//   }
+// })
 
-const getUserTimezone = () => {
-  // Use the Intl object to get the user's timezone
-  userTimezone.value = Intl.DateTimeFormat().resolvedOptions().timeZone
-}
+// const getUserTimezone = () => {
+//   // Use the Intl object to get the user's timezone
+//   userTimezone.value = Intl.DateTimeFormat().resolvedOptions().timeZone
+// }
 
 
 // isCreator, isNewsPerson, isVip, isSubscriber
@@ -338,41 +338,41 @@ const myTotalStoragePercentage = computed(() => {
 const myTotalStorageRoundedPercentage = computed(() => {
   return Math.round(myTotalStoragePercentage)
 })
+//
+// async function updateUserStore() {
+//   // Set user store data
+//   userStore.id = props.id
+//   appSettingStore.loggedIn = true
+//   userStore.isAdmin = props.isAdmin
+//   userStore.isCreator = props.isCreator
+//   userStore.isNewsPerson = props.isNewsPerson
+//   userStore.isVip = props.isVip
+//   userStore.isSubscriber = props.isSubscriber
+//   userStore.hasAccount = props.hasAccount
+//   userStore.getUserDataCompleted = true
+//   userStore.timezone = userTimezone.value
+//   console.log('get user data on Dashboard')
+//   if (userStore.isCreator) {
+//     userStore.prevUrl = '/dashboard'
+//   } else {
+//     userStore.prevUrl = '/stream'
+//   }
+//   if (!userStore.userSubscribedToNotifications) {
+//     await userStore.subscribeToUserNotifications(props.id)
+//   }
+//   // save user Timezone
+//   await updateUserTimezone()
+//
+// }
 
-async function updateUserStore() {
-  // Set user store data
-  userStore.id = props.id
-  appSettingStore.loggedIn = true
-  userStore.isAdmin = props.isAdmin
-  userStore.isCreator = props.isCreator
-  userStore.isNewsPerson = props.isNewsPerson
-  userStore.isVip = props.isVip
-  userStore.isSubscriber = props.isSubscriber
-  userStore.hasAccount = props.hasAccount
-  userStore.getUserDataCompleted = true
-  userStore.timezone = userTimezone.value
-  console.log('get user data on Dashboard')
-  if (userStore.isCreator) {
-    userStore.prevUrl = '/dashboard'
-  } else {
-    userStore.prevUrl = '/stream'
-  }
-  if (!userStore.userSubscribedToNotifications) {
-    await userStore.subscribeToUserNotifications(props.id)
-  }
-  // save user Timezone
-  await updateUserTimezone()
-
-}
-
-const updateUserTimezone = async () => {
-  try {
-    const response = await axios.post('/users/update-timezone', {timezone: userTimezone.value})
-    console.log(response.data.message)
-  } catch (error) {
-    console.error(error.response ? error.response.data : error)
-  }
-}
+// const updateUserTimezone = async () => {
+//   try {
+//     const response = await axios.post('/users/update-timezone', {timezone: userTimezone.value})
+//     console.log(response.data.message)
+//   } catch (error) {
+//     console.error(error.response ? error.response.data : error)
+//   }
+// }
 
 </script>
 

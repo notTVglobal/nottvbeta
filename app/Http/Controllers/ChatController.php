@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Carbon;
 use App\Events\NewChatMessage;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Validator;
 
 
 class ChatController extends Controller
@@ -36,31 +38,125 @@ class ChatController extends Controller
             ->get();
     }
 
-    public function newMessage(HttpRequest $request): \Illuminate\Http\JsonResponse
-    {
-        if (!$request->filled('message')) {
-            return response()->json([
-                'message' => 'No message to send'
-            ], 422);
-        }
+  public function newMessage(HttpRequest $request): \Illuminate\Http\JsonResponse
+  {
+    $validator = Validator::make($request->all(), [
+        'message' => 'required|string|max:300', // Adjust max length as needed
+        'channel_id' => 'required|exists:channels,id', // Ensure the channel exists
+      // Add validation for other fields if necessary
+        'user_name' => 'required|string',
+        'user_profile_photo_path' => 'nullable|string',
+      // 'user_profile_photo_url' => 'nullable|string',
+    ]);
 
-        // TODO: Sanitize input
-        $request->message = strip_tags($request->input('message'));
-        $url = '@(http(s)?)?(://)?(([a-zA-Z])([-\w]+\.)+([^\s\.]+[^\s]*)+[^,.\s])@';
-        $request->message = preg_replace($url, '<a href="http$2://$4" target="_blank" title="$0" class="text-blue-100 hover:text-yellow-200">$0</a>', $request->message);
-
-        $chatMessage = new ChatMessage;
-
-        $chatMessage->user_id = Auth::id();
-        $chatMessage->channel_id = $request->channel_id;
-        $chatMessage->message = $request->message;
-        $chatMessage->user_name = $request->user_name;
-        $chatMessage->user_profile_photo_path = $request->user_profile_photo_path;
-        $chatMessage->user_profile_photo_url = $request->user_profile_photo_url;
-        event(new NewChatMessage($chatMessage));
-        $chatMessage->save();
-
-        return response()->json(['success'], 201);
-
+    if ($validator->fails()) {
+      return response()->json(['errors' => $validator->errors()], 422);
     }
+
+    $validated = $validator->validated();
+
+    if (Gate::denies('send-chat-message', $validated['channel_id'])) {
+      return response()->json(['message' => 'Unauthorized'], 403);
+    }
+
+    // First, escape the message to prevent XSS attacks
+    $escapedMessage = e($validated['message']);
+
+//    $formattedMessage = preg_replace("#\bhttps?://[^\s()<>]+(?:\([\w\d]+\)|([^[:punct:]\s]|/))#", '<a href="$0" target="_blank" rel="noopener noreferrer" title="$0" class="text-blue-100 hover:text-yellow-200">$0</a>', $escapedMessage);
+
+    $formattedMessage = preg_replace_callback(
+        "#\b(?:https?://|www\.)[^\s()<>]+(?:\([\w\d]+\)|([^[:punct:]\s]|/))#",
+        function ($matches) {
+          $url = $matches[0];
+          // Prepend http:// if the URL does not have a protocol
+          if (!preg_match("~^(?:f|ht)tps?://~i", $url)) {
+            $url = "http://" . $url;
+            $displayText = substr($url, 7); // Remove 'http://'
+          } else {
+            $displayText = $url;
+          }
+          return '<a href="' . $url . '" target="_blank" rel="noopener noreferrer" title="' . $url . '" style="color: #3B82F6; /* Equivalent to text-blue-500 */
+        transition: color 0.2s ease-in-out;" 
+        onmouseover="this.style.color = \'#F59E0B\'" 
+        onmouseout="this.style.color = \'#3B82F6\'">' . $displayText . '</a>';
+        },
+        $escapedMessage
+    );
+
+    // Then, detect URLs in the escaped message and format them as clickable links
+//    $formattedMessage = preg_replace_callback(
+//        "#\b(https?://)?([^\s()<>]+(?:\([\w\d]+\)|([^[:punct:]\s]|/)))#",
+//        function ($matches) {
+//          // Prepend http:// if the URL does not have a protocol
+//          $url = $matches[1] ? $matches[0] : "http://" . $matches[0];
+//          return '<a href="' . $url . '" target="_blank" rel="noopener noreferrer" title="' . $url . '" style="color: #3B82F6; /* Equivalent to text-blue-100 */
+//        transition: color 0.2s ease-in-out;"
+//        onmouseover="this.style.color = \'#F59E0B\'"
+//        onmouseout="this.style.color = \'#3B82F6\'">' . $url . '</a>';
+//        },
+//        $escapedMessage
+//    );
+
+
+    $chatMessage = new ChatMessage([
+        'user_id' => Auth::id(),
+        'channel_id' => $validated['channel_id'],
+        'message' => $formattedMessage, // Use the formatted message
+        'user_name' => $validated['user_name'],
+        'user_profile_photo_path' => $validated['user_profile_photo_path'],
+      // 'user_profile_photo_url' => e($validated['user_profile_photo_url']),
+    ]);
+
+    // Save first, then dispatch event
+    if ($chatMessage->save()) {
+      event(new NewChatMessage($chatMessage));
+      return response()->json(['message' => 'Message sent successfully'], 201);
+    }
+
+    return response()->json(['message' => 'Failed to send message'], 500);
+  }
+
+
+//    public function newMessage(HttpRequest $request): \Illuminate\Http\JsonResponse
+//    {
+//
+//
+//
+//      $validator = Validator::make($request->all(), [
+//          'message' => 'required|string|max:300', // Adjust max length as needed
+//          'channel_id' => 'required|exists:channels,id', // Ensure the channel exists
+//        // Add validation for other fields if necessary
+//          'user_name' => 'required|string',
+//          'user_profile_photo_path' => 'nullable|string',
+////          'user_profile_photo_url' => 'nullable|string',
+//      ]);
+//
+//      if ($validator->fails()) {
+//        return response()->json(['errors' => $validator->errors()], 422);
+//      }
+//
+//      $validated = $validator->validated();
+//
+//      if (Gate::denies('send-chat-message', $validated['channel_id'])) {
+//        return response()->json(['message' => 'Unauthorized'], 403);
+//      }
+//
+//      $chatMessage = new ChatMessage([
+//          'user_id' => Auth::id(),
+//          'channel_id' => $validated['channel_id'],
+//          'message' => e($validated['message']), // Use HTML entity encoding
+//          'user_name' => ($validated['user_name']),
+//          'user_profile_photo_path' => ($validated['user_profile_photo_path']),
+////          'user_profile_photo_url' => e($validated['user_profile_photo_url']),
+//      ]);
+//
+//      // Save first, then dispatch event
+//      if ($chatMessage->save()) {
+//        event(new NewChatMessage($chatMessage));
+//        return response()->json(['message' => 'Message sent successfully'], 201);
+//      }
+//
+//      return response()->json(['message' => 'Failed to send message'], 500);
+//
+//    }
 }

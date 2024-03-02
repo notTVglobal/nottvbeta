@@ -118,6 +118,17 @@ createInertiaApp({
             // .component("ConfirmDialog", ConfirmDialog)
             .mixin(formatDate())
             .mount(el);
+
+        // Register Inertia navigation event listeners
+        Inertia.on('start', (event) => {
+            console.log('Navigation started to:', event.detail.visit.url);
+        });
+        Inertia.on('finish', (event) => {
+            if (event.detail.visit.completed) console.log('Navigation completed to:', event.detail.visit.url);
+            else if (event.detail.visit.interrupted) console.log('Navigation interrupted from:', event.detail.visit.url);
+            else if (event.detail.visit.cancelled) console.log('Navigation cancelled to:', event.detail.visit.url);
+        });
+
     },
 });
 

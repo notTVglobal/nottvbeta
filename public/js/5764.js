@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunk=self.webpackChunk||[]).push([[5764],{5764:(e,n,t)=>{t.r(n),t.d(n,{default:()=>r});var c=t(821);const l={},r=(0,t(3744).Z)(l,[["render",function(e,n){return(0,c.openBlock)(),(0,c.createElementBlock)("div",null," Invite Codes ")}]])}}]);
-//# sourceMappingURL=5764.js.map

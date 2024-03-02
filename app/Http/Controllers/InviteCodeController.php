@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\InviteCodeResource;
+use App\Models\Creator;
 use App\Models\InviteCode;
 use App\Models\Role;
 use Illuminate\Http\RedirectResponse;
@@ -15,6 +16,12 @@ use Inertia\Inertia;
 use Inertia\Response;
 
 class InviteCodeController extends Controller {
+
+  public function __construct()
+  {
+    // Apply authorization middleware to specific controller actions
+//    $this->middleware('can:view,App\Models\InviteCode')->only(['viewMyCodes']);
+  }
 
   /**
    * Display a listing of the invite codes.
@@ -52,7 +59,7 @@ class InviteCodeController extends Controller {
     return Inertia::render('InviteCodes/Index', [
         'inviteCodes' => InviteCodeResource::collection($inviteCodes),
       // Include additional data as needed, for example:
-        'filters' => $request->only(['search']), // Pass current filters back to the view for UI consistency
+        'filters'     => $request->only(['search']), // Pass current filters back to the view for UI consistency
       // You might want to include additional data for the frontend here
     ]);
 
@@ -113,6 +120,38 @@ class InviteCodeController extends Controller {
   }
 
 
+  public function viewMyCodes(): Response
+  {
+    $user = Auth::user();
+
+    // Calculate the date one week ago
+    $oneWeekAgo = Carbon::now()->subWeek();
+
+    // Fetch invite codes that belong to the authenticated user and meet the criteria
+    $codes = InviteCode::with('createdBy', 'role', 'claimedBy')
+        ->where('created_by', $user->id)
+        ->where(function ($query) use ($oneWeekAgo) {
+          $query->where('claimed', false) // Not claimed
+          ->orWhere('claimed', true)
+              ->where('claimed_at', '>=', $oneWeekAgo); // Claimed within the past week
+        })
+        ->latest()
+        ->paginate(10); // Eager load the distributor
+
+    // Check if the user has any invite codes
+    if ($codes->isEmpty()) {
+      // User has no codes, render a view or return a message
+      return Inertia::render('InviteCodes/NoCodes', [
+          'can'                   => [
+              'viewDashboard' => Auth::user()->can('viewDashboard', Creator::class),
+            ],
+      ]);
+    }
+
+    return Inertia::render('InviteCodes/MyCodes', [
+        'codes' => InviteCodeResource::collection($codes)
+    ]);
+  }
 
 
   /**

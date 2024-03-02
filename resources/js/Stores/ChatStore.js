@@ -18,6 +18,10 @@ const initialState = () => ({
     inputTooLong: false,
     echo: [],
     currentChannel: [],
+    cooldown: false,
+    cooldownIntervalId: null, // Track interval ID
+    countdownSeconds: 60, // timeout until next message can be sent, change this throttle in the web.php
+    errorMessage: '',
 })
 
 export const useChatStore = defineStore('chatStore', {
@@ -93,6 +97,23 @@ export const useChatStore = defineStore('chatStore', {
             } else {
                 videoPlayerStore.makeVideoTopRight();
             }
+        },
+
+        handleCooldown() {
+            this.cooldown = true
+
+            // Set up the cooldown interval
+            this.cooldownIntervalId = setInterval(() => {
+                this.countdownSeconds -= 1
+                this.errorMessage = `Hold your horses! Wait for ${this.countdownSeconds} more seconds before your next message. 🕒`
+                if (this.countdownSeconds <= 0) {
+                    clearInterval(this.cooldownIntervalId) // Clear the interval
+                    this.cooldown = false
+                }
+            }, 1000)
+        },
+        clearCooldownInterval() {
+            clearInterval(this.cooldownIntervalId) // Clear the interval
         },
         // turnPipChatModeOffToFullPage() {
         //     // turn chat mode off (FullPage)

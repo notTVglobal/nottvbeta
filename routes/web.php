@@ -596,6 +596,10 @@ Route::middleware([
       ->can('viewAdmin', 'App\Models\User')
       ->name('admin.saveInviteCodes');
 
+  //// INVITE CODES - MY CODES
+  Route::get('/invite_codes/my-codes', [InviteCodeController::class, 'viewMyCodes'])
+      ->name('inviteCodes.myCodes');
+
 
   //// NEW INVITE CODE ROUTES FOR INVITECODECONTROLLER
 
@@ -945,10 +949,10 @@ Route::middleware([
 ///
   Route::get('/chat/channels', [ChatController::class, 'channels']);
   Route::get('/chat/channel/{channelId}/messages', [ChatController::class, 'messages']);
-  Route::post('/chat/message', [ChatController::class, 'newMessage']);
   Route::get('/chatTest', [TestMessageController::class, 'index']);
 
   Route::post('/chat/message', [ChatController::class, 'newMessage'])
+      ->middleware('throttle:10,1') // Allows 10 requests per minute
       ->name('chatMessage');
 
 //    Route::get('/chatTest', function () {

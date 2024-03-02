@@ -15,12 +15,15 @@ class InviteCodeResource extends JsonResource {
    * @return array
    */
   public function toArray($request): array {
+
     return [
         'id'              => $this->id,
         'code'            => $this->code,
         'volume'          => $this->volume,
         'uses'            => $this->used_count,
         'claimed'         => $this->claimed,
+        'claimed_by'      => $this->claimedBy->name,
+        'claimed_at'      => $this->claimed_at,
       // Format expiry_date for HTML input
         'expiry_date' => $this->expiry_date ? Carbon::parse($this->expiry_date)->format('Y-m-d') : null,
         'created_by_name' => $this->createdBy->name, // Assuming the User model has a 'name' attribute

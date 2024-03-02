@@ -589,6 +589,7 @@ const reloadPlayer = () => {
 // check push_auto_list and update
 
 onMounted(() => {
+
   // Automatically start the countdown or trigger based on an event
   startCountdown()
 
@@ -693,9 +694,6 @@ onUnmounted(() => {
   }
 })
 
-onBeforeUnmount(() => {
-
-})
 </script>
 
 <style scoped>

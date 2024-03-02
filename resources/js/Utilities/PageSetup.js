@@ -2,7 +2,6 @@ import { onBeforeMount, onMounted } from 'vue'
 import { useUserStore } from "@/Stores/UserStore"
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
-import { Inertia } from "@inertiajs/inertia"
 
 export function usePageSetup(pageName) {
     const userStore = useUserStore()
