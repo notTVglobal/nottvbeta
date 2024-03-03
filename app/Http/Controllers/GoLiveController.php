@@ -88,7 +88,7 @@ class GoLiveController extends Controller {
   /**
    * Retrieves or generates a stream key for a specific episode.
    */
-  public function getStreamKeyForShow($showId) {
+  public function getStreamKeyForShow(Request $request, $showId) {
     $streamDetails = [
         'name'   => 'show',
         'source' => 'push://',
@@ -96,7 +96,8 @@ class GoLiveController extends Controller {
     $mistServerService = app(MistServerService::class);
     $response = $mistServerService->addOrUpdateStream('show', $streamDetails);
     try {
-      $mistStreamWildcard = Show::generateStreamKey($showId);
+//      $mistStreamWildcard = Show::generateStreamKey($showId);
+      $mistStreamWildcard = Show::generateStreamKey(9999999); // Assuming this ID doesn't exist in your database
 
       // Success response
       return response()->json(['stream_key' => $mistStreamWildcard->name]);
@@ -104,7 +105,7 @@ class GoLiveController extends Controller {
       Log::error("Error in generating stream key for show ID {$showId}: {$e->getMessage()}");
 
       // If it's an API, return a JSON response
-      if ($showId->expectsJson()) {
+      if ($request->expectsJson()) { // Correctly use the request object here
         return response()->json(['error' => $e->getMessage()], 500);
       }
 

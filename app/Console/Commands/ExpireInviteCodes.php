@@ -12,14 +12,14 @@ class ExpireInviteCodes extends Command
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'expire:invitecodes';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Claims expired invite codes in the database.';
 
     /**
      * Execute the console command.

@@ -63,8 +63,15 @@
 
       <GoLive v-if="goLiveStore.selectedShow && goLiveStore.selectedShow.mist_stream_wildcard_id" />
       <div v-if="goLiveStore.selectedShow && !goLiveStore.selectedShow.mist_stream_wildcard_id" class="flex flex-col justify-items-center text-center px-16">
-        <div class="mb-3">Please generate a stream key:</div>
-        <div><button @click="handleGenerateStreamKey" class="btn btn-sm w-fit bg-green-500 hover:bg-green-700 text-white">generate key</button></div>
+        <div v-if="generateStreamKeyError" class="text-red-700">{{generateStreamKeyError}}</div>
+        <div v-if="generateStreamKeyProcessing && !generateStreamKeyError" class="">
+          <div>Stream key is being generated...</div>
+          <div><span class="loading loading-infinity loading-lg text-primary"></span></div>
+        </div>
+        <div v-if="!generateStreamKeyProcessing && !generateStreamKeyError">
+          <div class="mb-3">Please generate a stream key:</div>
+          <div><button @click="handleGenerateStreamKey" class="btn btn-sm w-fit bg-green-500 hover:bg-green-700 text-white">generate key</button></div>
+        </div>
       </div>
     </div>
   </div>
@@ -116,6 +123,9 @@ onMounted(async () => {
 // });
 // const selectedShow = computed(() => goLiveStore.selectedShow);
 
+const generateStreamKeyProcessing = ref(false)
+const generateStreamKeyError = ref('')
+
 const reloadPlayer = () => {
   let source = goLiveStore?.selectedShow?.mist_stream_wildcard?.name
   let sourceUrl = videoAuxPlayerStore.mistServerUri + 'hls/' + source + '/index.m3u8'
@@ -138,7 +148,19 @@ const onChangeShow = (event) => {
 
 
 const handleGenerateStreamKey = async () => {
-  await goLiveStore.generateStreamKey();
+  generateStreamKeyProcessing.value = true; // Start processing
+
+  try {
+    // Await the store's generateStreamKey method
+    await goLiveStore.generateStreamKey();
+    // Optional: Perform any additional actions after the key has been generated
+  } catch (error) {
+    const displayError = 'Failed to generate stream key: ' + error;
+    console.log(displayError)
+    generateStreamKeyError.value = displayError
+  } finally {
+    generateStreamKeyProcessing.value = false; // End processing
+  }
 };
 
 // const generateStreamKey = () => {

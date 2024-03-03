@@ -119,56 +119,56 @@ class Show extends Model
     return $this->morphMany(ShowSchedule::class, 'content');
   }
 
-//
-//  public static function generateStreamKey($showId)
-//  {
-//    try {
-//      $show = self::where('id', $showId)->firstOrFail();
-//
-//      // Check if the show has a ULID, if not generate one and update the show
-//      if (is_null($show->ulid)) {
-//        $show->ulid = strtolower(Ulid::generate()); // Ensure ULID is lowercase
-//        $show->save();
-//      }
-//
-//      $ulid = $show->ulid;
-//
-//
-//
-//      // Begin transaction
-//      DB::beginTransaction();
-//
-//      // Assuming the logic to generate a stream key involves interacting with
-//      // related models like MistStream and MistStreamWildcard
-//
-//      $mistStream = MistStream::firstOrCreate([
-//          'name' => 'show',
-//      ], [
-//          'comment' => 'Created for Show integration.',
-//          'mime_type' => 'application/vnd.apple.mpegurl',
-//      ]);
-//
-//      $mistStreamWildcard = MistStreamWildcard::create([
-//          'name' => 'show+' . $ulid,
-//          'comment' => 'Automatically created with new show.',
-//          'source' => 'push://',
-//          'mist_stream_id' => $mistStream->id,
-//      ]);
-//
-//      $show->update(['mist_stream_wildcard_id' => $mistStreamWildcard->id]);
-//
-//      DB::commit();
-//
-//      return $mistStreamWildcard; // Return the generated wildcard or any relevant data
-//
-//    } catch (\Exception $e) {
-//      DB::rollBack();
-//      Log::error("Failed to create show and associated entities: {$e->getMessage()}");
-//
-//      // Rethrow the exception for the controller to handle
-//      throw new \Exception('Failed to generate the stream key.');
-//    }
-//  }
+
+  public static function generateStreamKey($showId)
+  {
+    try {
+      $show = self::where('id', $showId)->firstOrFail();
+
+      // Check if the show has a ULID, if not generate one and update the show
+      if (is_null($show->ulid)) {
+        $show->ulid = strtolower(Ulid::generate()); // Ensure ULID is lowercase
+        $show->save();
+      }
+
+      $ulid = $show->ulid;
+
+
+
+      // Begin transaction
+      DB::beginTransaction();
+
+      // Assuming the logic to generate a stream key involves interacting with
+      // related models like MistStream and MistStreamWildcard
+
+      $mistStream = MistStream::firstOrCreate([
+          'name' => 'show',
+      ], [
+          'comment' => 'Created for Show integration.',
+          'mime_type' => 'application/vnd.apple.mpegurl',
+      ]);
+
+      $mistStreamWildcard = MistStreamWildcard::create([
+          'name' => 'show+' . $ulid,
+          'comment' => 'Automatically created with new show.',
+          'source' => 'push://',
+          'mist_stream_id' => $mistStream->id,
+      ]);
+
+      $show->update(['mist_stream_wildcard_id' => $mistStreamWildcard->id]);
+
+      DB::commit();
+
+      return $mistStreamWildcard; // Return the generated wildcard or any relevant data
+
+    } catch (\Exception $e) {
+      DB::rollBack();
+      Log::error("Failed to create show and associated entities: {$e->getMessage()}");
+
+      // Rethrow the exception for the controller to handle
+      throw new \Exception('Failed to generate the stream key.');
+    }
+  }
 
 }
 

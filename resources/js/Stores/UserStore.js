@@ -78,7 +78,7 @@ export const useUserStore = defineStore('userStore', {
                 this.isSubscriber = response.data.isSubscriber
                 this.hasAccount = response.data.hasAccount
                 this.getUserDataCompleted = true
-                console.log('get user data on AppLayout')
+                console.log('get user data in User Store')
                 await this.subscribeToUserNotifications(response.data.id)
                 await this.updateUserTimezone;
                 if (this.isCreator) {

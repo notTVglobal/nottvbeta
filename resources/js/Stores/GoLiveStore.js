@@ -41,7 +41,14 @@ export const useGoLiveStore = defineStore('goLiveStore', {
             try {
                 const response = await axios.post(`/go-live/shows/${this.selectedShowId}/stream-key`);
                 console.log("Stream key generated:", response.data);
-                this.streamKey = response.data.streamKey; // Assuming the response includes the stream key
+                this.streamKey = response.data.stream_key; // Assuming the response includes the stream key
+
+                // Update goLiveStore.selectedShow.mist_stream_wildcard_id with the returned stream key
+                if (this.selectedShowId && response.data.stream_key) {
+                    this.selectedShow.mist_stream_wildcard = response.data;
+                    this.selectedShow.mist_stream_wildcard_id = response.data.stream_key;
+                }
+                return response.data; // Return the response data
             } catch (error) {
                 console.error("Error generating stream key:", error.response ? error.response.data : error);
             }

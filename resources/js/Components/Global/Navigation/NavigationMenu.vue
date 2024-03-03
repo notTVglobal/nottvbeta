@@ -329,21 +329,21 @@ const logout = () => {
     }
   })
 }
-const navigateTest = (event) => {
-  event.preventDefault(); // Prevent the link's default navigation action
-  Inertia.visit('/stream');
-  console.log('navigate TEST 11111')
-//   appSettingStore.btnRedirect('/stream')
-//   setTimeout(() => {
-//     Inertia.visit('/stream');
-//   }, 1000); // Adjust timing as needed for testing
+// const navigateTest = (event) => {
+//   event.preventDefault(); // Prevent the link's default navigation action
+//   Inertia.visit('/stream');
+//   console.log('navigate TEST 11111')
+// //   appSettingStore.btnRedirect('/stream')
+// //   setTimeout(() => {
+// //     Inertia.visit('/stream');
+// //   }, 1000); // Adjust timing as needed for testing
+// // }
+// // const navigateTest2 = () => {
+// // console.log('navigate TEST 22222')
+// //   setTimeout(() => {
+// //     Inertia.visit('/stream');
+// //   }, 1000); // Adjust timing as needed for testing
 // }
-// const navigateTest2 = () => {
-// console.log('navigate TEST 22222')
-//   setTimeout(() => {
-//     Inertia.visit('/stream');
-//   }, 1000); // Adjust timing as needed for testing
-}
 
 
 //     videoPlayerStore.mute();

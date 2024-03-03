@@ -87,6 +87,7 @@ onMounted(async () => {
   if (props.user) { // Checking if user is logged in based on page props
     await userStore.updateUserTimezone();
     await userStore.fetchUserData();
+    console.log('get user data on AppLayout')
     // Call any other user-specific initialization functions here
   }
 });

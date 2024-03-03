@@ -121,6 +121,7 @@ const submit = () => {
   })).post(route('login'), {
     onFinish: () => {
       form.reset('password'); // Reset the password field after submission
+      console.log('get user data on Login')
       userStore.fetchUserData() // Fetch user data after successful login
           .then(() => {
             // Handle any post-fetch logic here, e.g., redirecting the user or updating the UI

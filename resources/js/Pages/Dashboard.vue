@@ -251,8 +251,7 @@
 </template>
 
 <script setup>
-import { Inertia } from '@inertiajs/inertia'
-import { computed, inject, onMounted, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useUserStore } from '@/Stores/UserStore'
