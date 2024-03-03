@@ -10,6 +10,7 @@ const initialState = () => ({
     // selectedShow: null, this uses the getter... set it up in the component as a computed property
     shows: [], // Assuming you might want to store shows here too
     streamKey: '', // Optional: Store the generated stream key if needed
+    wildcardId: '',
     isLive: false,
     isRecording: false,
     streamInfo: null,
@@ -160,8 +161,9 @@ export const useGoLiveStore = defineStore('goLiveStore', {
     },
     getters: {
         selectedShow: (state) => {
-            const show = state.shows.find(show => show.id === state.selectedShowId) || null;
-            state.streamKey = show?.mist_stream_wildcard?.name || 'Fallback value if undefined';
+            const show = state.shows.find(show => show.id === state.selectedShowId) || null
+            state.streamKey = show?.mist_stream_wildcard?.name || 'Fallback value if undefined'
+            state.wildcardId = show?.mist_stream_wildcard?.id || 'Fallback value if undefined'
             return show
         },
         fullRtmpUri: (state) => {

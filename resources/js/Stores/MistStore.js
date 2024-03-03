@@ -24,18 +24,21 @@ export const useMistStore = defineStore('mistStore', {
         },
         // add additional actions here
         async getMistStreamPushDestinations(wildcardId) {
+            console.log('is this a wildcard ID?? ' + wildcardId)
             // Assuming `goLiveStore.selectedShow.mist_stream_wildcard.id` holds the wildcard ID
             // const wildcardId = goLiveStore?.selectedShow?.mist_stream_wildcard?.id
             if (wildcardId) {
+                console.log('start try')
                 try {
                     // Append the wildcard ID as a query parameter
                     const response = await axios.get(`/mist-stream-push-destinations?wildcardId=${wildcardId}`)
-                    this.mistStreamPushDestinations.value = response.data // Update the reactive variable
+                    this.mistStreamPushDestinations = response.data // Update the reactive variable
+                    console.log('success! getMistStreamPushDestinations: ', response.data)
                 } catch (error) {
                     console.error('Failed to fetch push destinations:', error)
                 }
             } else {
-                console.error('No wildcard ID found')
+                console.error('No wildcard ID found 111')
             }
         },
         async getMistStreamPushAutoList(wildcardId) {
@@ -50,7 +53,7 @@ export const useMistStore = defineStore('mistStore', {
                     console.error('Failed to fetch push auto list:', error)
                 }
             } else {
-                console.error('No wildcard ID found')
+                console.error('No wildcard ID found 222')
             }
         },
         async getMistStreamPushList(wildcardId) {
@@ -65,7 +68,7 @@ export const useMistStore = defineStore('mistStore', {
                     console.error('Failed to fetch push list:', error)
                 }
             } else {
-                console.error('No wildcard ID found')
+                console.error('No wildcard ID found 333')
             }
         },
         async startPush(destinationId) {

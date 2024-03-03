@@ -338,12 +338,6 @@ const mistStreamPushDestinationFormModalMode = ref('add')
 const destinationDetails = ref({})
 
 
-// moved the logic into the mistStore...
-const wildcardId = ref(goLiveStore?.selectedShow?.mist_stream_wildcard?.id)
-mistStore.getMistStreamPushDestinations(wildcardId)
-
-
-
 // async function getMistStreamPushDestinations() {
 //   // Assuming `goLiveStore.selectedShow.mist_stream_wildcard.id` holds the wildcard ID
 //   const wildcardId = goLiveStore?.selectedShow?.mist_stream_wildcard?.id
@@ -483,6 +477,21 @@ mistStore.getMistStreamPushDestinations(wildcardId)
 //   }
 // }
 
+// moved the logic into the mistStore...
+// const wildcardId = ref(goLiveStore?.selectedShow?.mist_stream_wildcard?.id)
+// console.log('do we have the wildcard ID? ' + wildcardId.value)
+// mistStore.getMistStreamPushDestinations(wildcardId.value)
+
+// mistStore.getMistStreamPushDestinations(goLiveStore?.selectedShow?.mist_stream_wildcard?.id)
+
+watchEffect(() => {
+  // This code will run initially and re-run every time selectedShow or its mist_stream_wildcard.id changes
+  const wildcardId = goLiveStore.wilcardId
+  if (wildcardId) {
+    mistStore.getMistStreamPushDestinations(wilcardId)
+  }
+})
+
 const addDestination = async () => {
   mistStreamPushDestinationFormModalMode.value = 'add'
   const wildcardId = goLiveStore.selectedShow?.mist_stream_wildcard?.id
@@ -527,10 +536,9 @@ let videoSourceType = 'application/vnd.apple.mpegURL'
 // goLiveStore.fetchRtmpUri()
 
 // Now using computed properties to directly refer to goLiveStore getters
-const rtmpUri = computed(() => goLiveStore.fullRtmpUri);
-const streamKey = computed(() => goLiveStore.streamKey);
-const fullUrl = computed(() => goLiveStore.fullUrl);
-
+const rtmpUri = computed(() => goLiveStore.fullRtmpUri)
+const streamKey = computed(() => goLiveStore.streamKey)
+const fullUrl = computed(() => goLiveStore.fullUrl)
 
 
 // Initialize fetching of server information
@@ -572,7 +580,6 @@ const copyStreamKey = () => {
   setTimeout(() => showCopiedStreamKey.value = false, 1000)
 }
 
-
 const reloadPlayer = () => {
   let source = null
   if (goLiveStore?.selectedShow?.mist_stream_wildcard?.name) {
@@ -590,6 +597,14 @@ const reloadPlayer = () => {
   // videoAuxPlayerStore.loadNewLiveSource(source, sourceType)
   console.log('reload player')
 }
+
+// watchEffect(() => {
+//   const mistServerUri = videoPlayerStore.mistServerUri
+//   if (mistServerUri) {
+//     reloadPlayer()
+//   }
+// })
+
 
 // check push_auto_list and update
 
@@ -666,10 +681,10 @@ const liveOrRecordingVideoBorderClass = computed(() => {
 // mistStreamWildcardId.value = goLiveStore?.selectedShow?.mist_stream_wildcard?.id
 const channel = Echo.channel(`mistStreamWildcard.${goLiveStore?.selectedShow?.mist_stream_wildcard?.id}`)
 channel.subscribed(() => {
-      // Handle successful subscription
-      // This log will confirm the subscription success
-      console.log('Successfully subscribed to the channel!')
-    })
+  // Handle successful subscription
+  // This log will confirm the subscription success
+  console.log('Successfully subscribed to the channel!')
+})
     .listen('.push-out-start', (event) => {
       console.log('push out start EVENT BROADCASTED!')
       const index = mistStore.mistStreamPushDestinations.findIndex(destination =>
