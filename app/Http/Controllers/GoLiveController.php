@@ -96,8 +96,7 @@ class GoLiveController extends Controller {
     $mistServerService = app(MistServerService::class);
     $response = $mistServerService->addOrUpdateStream('show', $streamDetails);
     try {
-//      $mistStreamWildcard = Show::generateStreamKey($showId);
-      $mistStreamWildcard = Show::generateStreamKey(9999999); // Assuming this ID doesn't exist in your database
+      $mistStreamWildcard = Show::generateStreamKey($showId);
 
       // Success response
       return response()->json(['stream_key' => $mistStreamWildcard->name]);

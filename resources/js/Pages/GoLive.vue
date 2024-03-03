@@ -154,10 +154,23 @@ const handleGenerateStreamKey = async () => {
     // Await the store's generateStreamKey method
     await goLiveStore.generateStreamKey();
     // Optional: Perform any additional actions after the key has been generated
+    await goLiveStore.fetchStreamInfo(goLiveStore?.selectedShow?.mist_stream_wildcard?.name);
+    reloadPlayer()
   } catch (error) {
-    const displayError = 'Failed to generate stream key: ' + error;
-    console.log(displayError)
-    generateStreamKeyError.value = displayError
+    // Check if the error is from Axios and has a response object
+    let displayError = 'Failed to generate stream key: ';
+    if (error.response && error.response.data && error.response.data.error) {
+      // If there's an error message in the response data, use it
+      displayError += error.response.data.error;
+    } else if (error.message) {
+      // Fallback to the error's message if no detailed response data is available
+      displayError += error.message;
+    } else {
+      // Generic error text if neither of the above is available
+      displayError += 'An unexpected error occurred.';
+    }
+    console.log(displayError);
+    generateStreamKeyError.value = displayError; // Display the detailed error message on the page
   } finally {
     generateStreamKeyProcessing.value = false; // End processing
   }

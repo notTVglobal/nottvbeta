@@ -22,7 +22,7 @@
           </div>
           <div v-if="openObsInstructions">
             <h2>Stream from OBS or other software using these details:</h2>
-            <div>RTMP full url: <span v-if="rtmpUri && streamKey" class="font-bold">{{ rtmpUri }}{{ streamKey }}</span>
+            <div>RTMP full url: <span v-if="fullUrl" class="font-bold">{{ fullUrl }}</span>
               &nbsp;<button v-if="rtmpUri && streamKey" @click="copyFullUrl">
                 <font-awesome-icon v-if="rtmpUri && streamKey" icon="fa-clipboard"
                                    class="text-blue-500 hover:text-blue-700 hover:cursor-pointer"/>
@@ -526,27 +526,32 @@ let videoSourceType = 'application/vnd.apple.mpegURL'
 // goLiveStore.fetchStreamInfo(goLiveStore?.selectedShow?.mist_stream_wildcard.name)
 // goLiveStore.fetchRtmpUri()
 
-const fullUrl = ref('')
-const rtmpUri = ref('')
-const streamKey = ref('')
+// Now using computed properties to directly refer to goLiveStore getters
+const rtmpUri = computed(() => goLiveStore.fullRtmpUri);
+const streamKey = computed(() => goLiveStore.streamKey);
+const fullUrl = computed(() => goLiveStore.fullUrl);
+
+
 
 // Initialize fetching of server information
+goLiveStore.updateAndGetStreamKey()
 goLiveStore.fetchStreamInfo(goLiveStore?.selectedShow?.mist_stream_wildcard.name)
 goLiveStore.fetchRtmpUri()
 
+
 // Reactively update URLs when the store updates
-watchEffect(() => {
-  if (goLiveStore.rtmpUri) {
-    rtmpUri.value = goLiveStore.rtmpUri + 'live/'
-    // Check if it's an episode or a selected show and update accordingly
-    if (goLiveStore.isEpisode && goLiveStore.episode?.mist_stream_wildcard?.name) {
-      streamKey.value = goLiveStore.episode.mist_stream_wildcard.name
-    } else if (!goLiveStore.isEpisode && goLiveStore.selectedShow?.mist_stream_wildcard?.name) {
-      streamKey.value = goLiveStore.selectedShow.mist_stream_wildcard.name
-    }
-    fullUrl.value = `${rtmpUri.value}${streamKey.value}`
-  }
-})
+// watchEffect(() => {
+//   if (goLiveStore.rtmpUri) {
+//     rtmpUri.value = goLiveStore.rtmpUri + 'live/'
+//     // Check if it's an episode or a selected show and update accordingly
+//     if (goLiveStore.isEpisode && goLiveStore.episode?.mist_stream_wildcard?.name) {
+//       streamKey.value = goLiveStore.episode.mist_stream_wildcard.name
+//     } else if (!goLiveStore.isEpisode && goLiveStore.selectedShow?.mist_stream_wildcard?.name) {
+//       streamKey.value = goLiveStore.selectedShow.mist_stream_wildcard.name
+//     }
+//     fullUrl.value = `${rtmpUri.value}${streamKey.value}`
+//   }
+// })
 
 // Function to handle the copy action and display the "copied" message for each type
 const copyFullUrl = () => {
