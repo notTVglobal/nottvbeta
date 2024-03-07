@@ -314,11 +314,13 @@ class ShowEpisodeController extends Controller {
 //    }
 
 
-    $videoIsAvailable = false;
 
-    if ($showEpisode->video?->video_url || ($showEpisode->video?->folder && $showEpisode->video?->upload_status !== 'processing')) {
-      $videoIsAvailable = true;
-    }
+
+    $videoIsAvailable = $showEpisode->video?->video_url ||
+        ($showEpisode->video?->folder && $showEpisode->video?->upload_status !== 'processing');
+
+//    Log::warning($videoIsAvailable);
+
 
     // Determine the media type based on its storage location.
     // If the storage location is marked as 'external', categorize it as 'externalVideo';
@@ -375,7 +377,7 @@ class ShowEpisodeController extends Controller {
             'mist_stream_wildcard'       => $showEpisode->mistStreamWildcard,
             'video'                      => [
                 'ulid'                 => $showEpisode->video->ulid ?? '',
-                'isAvailable'          => $videoIsAvailable ?? false,
+                'isAvailable'          => $videoIsAvailable,
                 'mediaType'            => $mediaType, // New attribute for NowPlayingStore
                 'file_name'            => $showEpisode->video->file_name ?? '',
                 'cdn_endpoint'         => $showEpisode->video->appSetting->cdn_endpoint ?? '',

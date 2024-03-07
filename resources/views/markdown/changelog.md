@@ -3,6 +3,10 @@
 Last Update: March 6, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.7.10
+March 6, 2024
+* Fix Episode Watch Now... remove the episode.status = published requirement to display watch now button. This means creators can preview the episode page more accurately before it's published and gets rid of the bug of the watch now button not displaying.
+
 ## v0.8.7.9
 March 6, 2024
 * Add migration to backfill Ulid's on Show Episodes.

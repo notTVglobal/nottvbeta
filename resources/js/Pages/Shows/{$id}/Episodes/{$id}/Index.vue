@@ -87,8 +87,7 @@
 
         <div class="flex flex-wrap mt-12 m-auto lg:mx-0 justify-center lg:justify-start space-x-3 space-y-3">
           <div></div>
-          <button v-if="episode.video.isAvailable && episode.status === 7"
-
+          <button v-if="episode.video.isAvailable"
                   class="flex bg-blue-500 text-white font-semibold ml-4 px-4 py-4 hover:bg-blue-700 rounded transition ease-in-out duration-150 items-center disabled:bg-gray-600 disabled:cursor-not-allowed"
                   @click="playEpisode">
             <svg class="w-6 h-6 fill-current" xmlns="http://www.w3.org/2000/svg"
@@ -219,7 +218,7 @@ let props = defineProps({
   creators: Object,
   can: Object,
 })
-
+console.log('suck it ' + props.episode.video.isAvailable)
 let playEpisode = () => {
   nowPlayingStore.reset()
 
