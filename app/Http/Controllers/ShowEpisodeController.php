@@ -823,7 +823,6 @@ class ShowEpisodeController extends Controller {
     // update the show notes
     $episode->notes = $request->notes;
     $episode->save();
-    sleep(1);
 
     return $episode;
   }

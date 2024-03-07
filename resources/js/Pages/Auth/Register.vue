@@ -189,25 +189,18 @@
 </template>
 
 <script setup>
-import PublicNavigationMenu from '@/Components/Global/Navigation/PublicNavigationMenu'
-import { useAppSettingStore } from '@/Stores/AppSettingStore'
-import Button from '@/Jetstream/Button.vue'
-import PublicNewsNavigationButtons from '@/Components/Pages/Public/PublicNewsNavigationButtons.vue'
-import Footer from '@/Components/Global/Layout/Footer.vue'
-import Login from '@/Pages/Auth/Login'
-import { Inertia } from '@inertiajs/inertia'
+import { onMounted } from 'vue'
 import { Link, useForm } from '@inertiajs/inertia-vue3'
-import JetAuthenticationCard from '@/Jetstream/AuthenticationCard.vue'
-import JetAuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo.vue'
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import PublicResponsiveNavigationMenu from '@/Components/Global/Navigation/PublicResponsiveNavigationMenu.vue'
+import PublicNavigationMenu from '@/Components/Global/Navigation/PublicNavigationMenu'
+import Button from '@/Jetstream/Button.vue'
+import Footer from '@/Components/Global/Layout/Footer.vue'
 import JetButton from '@/Jetstream/Button.vue'
 import JetInput from '@/Jetstream/Input.vue'
-import JetCheckbox from '@/Jetstream/Checkbox.vue'
 import JetLabel from '@/Jetstream/Label.vue'
 import JetValidationErrors from '@/Jetstream/ValidationErrors.vue'
 import ApplicationLogo from '@/Jetstream/ApplicationLogo.vue'
-import PublicResponsiveNavigationMenu from '@/Components/Global/Navigation/PublicResponsiveNavigationMenu.vue'
-import { onMounted } from 'vue'
-
 
 const appSettingStore = useAppSettingStore()
 
@@ -233,18 +226,4 @@ const submit = () => {
   })
 }
 
-onMounted(() => {
-  const topDiv = document.getElementById('topDiv')
-  topDiv.scrollIntoView()
-})
-
-// const submit = () => {
-//   form.transform(data => ({
-//     ...data,
-//     remember: form.remember ? 'on' : '',
-//   })).post(route('login'), {
-//     onFinish: () => form.reset('password'),
-//   });
-//   // Inertia.reload()
-// };
 </script>

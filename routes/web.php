@@ -596,16 +596,21 @@ Route::middleware([
       ->can('viewAdmin', 'App\Models\User')
       ->name('admin.saveInviteCodes');
 
-  //// INVITE CODES - EXPORT
-  Route::get('/admin/export_invite_codes', [AdminController::class, 'exportInviteCodes'])
-      ->can('viewAdmin', 'App\Models\User')
-      ->name('admin.exportInviteCodes');
+  //// INVITE CODES - MY CODES
+  Route::get('/invite_codes/my-codes', [InviteCodeController::class, 'viewMyCodes'])
+      ->name('inviteCodes.myCodes');
+
 
   //// NEW INVITE CODE ROUTES FOR INVITECODECONTROLLER
 
   // Listing invite codes
-  Route::get('/invite_codes', [InviteCodeController::class, 'index'])->name('inviteCodes')
-      ->can('viewAdmin', 'App\Models\User');
+  Route::get('/invite_codes', [InviteCodeController::class, 'index'])
+      ->can('viewAdmin', 'App\Models\User')
+      ->name('inviteCodes');
+
+  // Search invite codes
+//  Route::post('/invite_codes', [InviteCodeController::class, 'index'])->name('inviteCodes')
+//      ->can('viewAdmin', 'App\Models\User');
 
   Route::get('/generate-invite-code', [InviteCodeController::class, 'generateUniqueInviteCodeJson'])
       ->name('generate.invite.code')
@@ -619,6 +624,10 @@ Route::middleware([
   Route::post('/invite_codes', [InviteCodeController::class, 'store'])->name('inviteCodes.store')
       ->can('viewAdmin', 'App\Models\User');
 
+  // Storing the new code
+  Route::post('/invite_codes/quick-add', [InviteCodeController::class, 'inviteCodeQuickAdd'])->name('inviteCodes.quickAdd')
+      ->can('viewAdmin', 'App\Models\User');
+
   Route::get('/invite_codes/{inviteCode}/edit', [InviteCodeController::class, 'edit'])
       ->name('inviteCodes.edit')
       ->can('viewAdmin', 'App\Models\User');
@@ -626,6 +635,11 @@ Route::middleware([
   Route::put('/invite_codes/{inviteCode}', [InviteCodeController::class, 'update'])
       ->name('inviteCodes.update')
       ->can('viewAdmin', 'App\Models\User');
+
+  //// INVITE CODES - EXPORT
+  Route::get('/invite_codes/export', [InviteCodeController::class, 'exportInviteCodes'])
+      ->can('viewAdmin', 'App\Models\User')
+      ->name('inviteCodes.export');
 
 
   // Delete the code
@@ -935,10 +949,10 @@ Route::middleware([
 ///
   Route::get('/chat/channels', [ChatController::class, 'channels']);
   Route::get('/chat/channel/{channelId}/messages', [ChatController::class, 'messages']);
-  Route::post('/chat/message', [ChatController::class, 'newMessage']);
   Route::get('/chatTest', [TestMessageController::class, 'index']);
 
   Route::post('/chat/message', [ChatController::class, 'newMessage'])
+      ->middleware('throttle:10,1') // Allows 10 requests per minute
       ->name('chatMessage');
 
 //    Route::get('/chatTest', function () {

@@ -39,6 +39,14 @@ class MistStreamPushDestinationController extends Controller
 
   public function store(Request $request)
   {
+    // Log the entire request payload
+    Log::alert('Request received', [
+        'url' => $request->fullUrl(), // Gets the full URL for the request
+        'method' => $request->method(), // Gets the HTTP method for the request
+        'headers' => $request->header(), // Gets all headers (Consider security/privacy before logging all headers)
+        'payload' => $request->all(), // Gets all input data (Be cautious with sensitive information)
+    ]);
+
     // Validate the request data
     $validated = $request->validate([
         'mist_stream_wildcard_id' => 'required|string',

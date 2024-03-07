@@ -88,7 +88,7 @@ class GoLiveController extends Controller {
   /**
    * Retrieves or generates a stream key for a specific episode.
    */
-  public function getStreamKeyForShow($showId) {
+  public function getStreamKeyForShow(Request $request, $showId) {
     $streamDetails = [
         'name'   => 'show',
         'source' => 'push://',
@@ -104,7 +104,7 @@ class GoLiveController extends Controller {
       Log::error("Error in generating stream key for show ID {$showId}: {$e->getMessage()}");
 
       // If it's an API, return a JSON response
-      if ($showId->expectsJson()) {
+      if ($request->expectsJson()) { // Correctly use the request object here
         return response()->json(['error' => $e->getMessage()], 500);
       }
 

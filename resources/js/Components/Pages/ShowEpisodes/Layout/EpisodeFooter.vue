@@ -4,7 +4,7 @@
     <!-- Paginator -->
     <!--                            <Pagination :links="`#`" class="mt-6"/>-->
     <div>
-      <div v-if="can.editEpisode"><span class="text-xs uppercase font-semibold">Episode ID: </span><span
+      <div><span class="text-xs uppercase font-semibold">Episode ID: </span><span
           class="text-xs">{{ episode.ulid }}</span></div>
     </div>
     <div>

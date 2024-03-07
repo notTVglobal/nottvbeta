@@ -16,6 +16,7 @@ import {library} from '@fortawesome/fontawesome-svg-core'
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 // import specific icons
 import {
+    faArrowRightArrowLeft,
     faCheck,
     faCircleDown,
     faComments,
@@ -27,6 +28,7 @@ import {
     faList,
     faPaperPlane,
     faPlay,
+    faPlayCircle,
     faQuestion,
     faRepeat,
     faRocket,
@@ -34,12 +36,16 @@ import {
     faStar,
     faUser,
     faUsers,
+    faUserGroup,
     faUserSecret,
     faAngleLeft,
     faTrashCan,
     faCircleInfo,
     faPencil,
     faClipboard,
+    faClipboardList,
+    faCircle,
+    faClapperboard,
 } from '@fortawesome/free-solid-svg-icons'
 // import popper for pop-up tooltips
 import Popper from "vue3-popper";
@@ -118,12 +124,23 @@ createInertiaApp({
             // .component("ConfirmDialog", ConfirmDialog)
             .mixin(formatDate())
             .mount(el);
+
+        // // Register Inertia navigation event listeners
+        // Inertia.on('start', (event) => {
+        //     console.log('Navigation started to:', event.detail.visit.url);
+        // });
+        // Inertia.on('finish', (event) => {
+        //     if (event.detail.visit.completed) console.log('Navigation completed to:', event.detail.visit.url);
+        //     else if (event.detail.visit.interrupted) console.log('Navigation interrupted from:', event.detail.visit.url);
+        //     else if (event.detail.visit.cancelled) console.log('Navigation cancelled to:', event.detail.visit.url);
+        // });
+
     },
 });
 
-library.add(faUserSecret, faPlay, faQuestion, faStar, faUsers, faHandsHelping, faRocket,
+library.add(faArrowRightArrowLeft, faUserSecret, faPlay, faPlayCircle, faQuestion, faStar, faUsers, faUserGroup, faHandsHelping, faRocket,
             faEye, faComments, faPaperPlane, faUser, faLeaf, faFlagUsa, faList, faFilter,
-            faShare, faCircleDown, faRepeat, faCheck, faAngleLeft, faTrashCan, faCircleInfo, faPencil, faClipboard);
+            faShare, faCircleDown, faRepeat, faCheck, faAngleLeft, faTrashCan, faCircleInfo, faPencil, faClipboard, faClipboardList, faCircle, faClapperboard);
 
 InertiaProgress.init({ delay: 250, color: '#FCEF5B', includeCSS: true, showSpinner: true, });
 

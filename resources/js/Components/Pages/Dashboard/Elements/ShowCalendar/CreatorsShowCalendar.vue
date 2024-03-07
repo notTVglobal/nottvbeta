@@ -171,13 +171,13 @@ const days = computed(() => {
 onMounted(() => {
   scheduleStore.fetchFiveDaySixHourSchedule() // Load shows when component mounts
 
-  intervalId = setInterval(() => { // Set an interval to update the trigger every hour
-    triggerUpdate.value++
-  }, 1000 * 60 * 60) // 1 hour
+  // intervalId = setInterval(() => { // Set an interval to update the trigger every hour
+  //   triggerUpdate.value++
+  // }, 1000 * 60 * 60) // 1 hour
 })
 
 onUnmounted(() => {
-  clearInterval(intervalId)
+  // clearInterval(intervalId)
 })
 
 // Determine if the current slot is for "Now Playing"

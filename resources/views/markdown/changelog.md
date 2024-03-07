@@ -1,7 +1,23 @@
 # not.tv Changelog
 
-Last Update: March 1, 2024\
+Last Update: March 2, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.8.7.8
+March 6, 2024
+* Add database migration to add Ulid's to all existing shows that don't have one.
+* Fix the News, News Story, Reporters page view when logged out and logged in.
+* Fix team notes not editable on the team manage page
+* Remove 1 second sleep when saving notes on team manage and show manage pages.
+
+## v0.8.7.7
+March 2, 2024
+* Changed the way we get UserData into the UserStore. This may break some things, but it should improve the app reliability and performance.
+* Left off trying to fix the Push Destinations, the MistStreamPushDestinationForm Modal is used for both Adding and Editing Mist Stream Push Destinations, but this doesn't follow the best practices to keep things simple.
+
+## v0.8.7.6
+March 1, 2024
+* Some changes to the invite code manage page
 
 ## v0.8.7.5
 March 1, 2024

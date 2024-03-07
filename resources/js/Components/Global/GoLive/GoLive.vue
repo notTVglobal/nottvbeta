@@ -22,7 +22,7 @@
           </div>
           <div v-if="openObsInstructions">
             <h2>Stream from OBS or other software using these details:</h2>
-            <div>RTMP full url: <span v-if="rtmpUri && streamKey" class="font-bold">{{ rtmpUri }}{{ streamKey }}</span>
+            <div>RTMP full url: <span v-if="fullUrl" class="font-bold">{{ fullUrl }}</span>
               &nbsp;<button v-if="rtmpUri && streamKey" @click="copyFullUrl">
                 <font-awesome-icon v-if="rtmpUri && streamKey" icon="fa-clipboard"
                                    class="text-blue-500 hover:text-blue-700 hover:cursor-pointer"/>
@@ -304,7 +304,7 @@
 
 <script setup>
 // import { useTimeAgo } from '@vueuse/core'
-import { computed, onBeforeUnmount, onMounted, onUnmounted, ref, watchEffect } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watchEffect } from 'vue'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
 import { useVideoAuxPlayerStore } from '@/Stores/VideoAuxPlayerStore'
@@ -336,12 +336,6 @@ const openObsInstructions = ref(false)
 // const mistStreamPushDestinations = ref([])
 const mistStreamPushDestinationFormModalMode = ref('add')
 const destinationDetails = ref({})
-
-
-// moved the logic into the mistStore...
-const wildcardId = ref(goLiveStore?.selectedShow?.mist_stream_wildcard?.id)
-mistStore.getMistStreamPushDestinations(wildcardId)
-
 
 
 // async function getMistStreamPushDestinations() {
@@ -483,6 +477,21 @@ mistStore.getMistStreamPushDestinations(wildcardId)
 //   }
 // }
 
+// moved the logic into the mistStore...
+// const wildcardId = ref(goLiveStore?.selectedShow?.mist_stream_wildcard?.id)
+// console.log('do we have the wildcard ID? ' + wildcardId.value)
+// mistStore.getMistStreamPushDestinations(wildcardId.value)
+
+// mistStore.getMistStreamPushDestinations(goLiveStore?.selectedShow?.mist_stream_wildcard?.id)
+
+watchEffect(() => {
+  // This code will run initially and re-run every time selectedShow or its mist_stream_wildcard.id changes
+  const wildcardId = goLiveStore.wilcardId
+  if (wildcardId) {
+    mistStore.getMistStreamPushDestinations(wilcardId)
+  }
+})
+
 const addDestination = async () => {
   mistStreamPushDestinationFormModalMode.value = 'add'
   const wildcardId = goLiveStore.selectedShow?.mist_stream_wildcard?.id
@@ -526,27 +535,31 @@ let videoSourceType = 'application/vnd.apple.mpegURL'
 // goLiveStore.fetchStreamInfo(goLiveStore?.selectedShow?.mist_stream_wildcard.name)
 // goLiveStore.fetchRtmpUri()
 
-const fullUrl = ref('')
-const rtmpUri = ref('')
-const streamKey = ref('')
+// Now using computed properties to directly refer to goLiveStore getters
+const rtmpUri = computed(() => goLiveStore.fullRtmpUri)
+const streamKey = computed(() => goLiveStore.streamKey)
+const fullUrl = computed(() => goLiveStore.fullUrl)
+
 
 // Initialize fetching of server information
+goLiveStore.updateAndGetStreamKey()
 goLiveStore.fetchStreamInfo(goLiveStore?.selectedShow?.mist_stream_wildcard.name)
 goLiveStore.fetchRtmpUri()
 
+
 // Reactively update URLs when the store updates
-watchEffect(() => {
-  if (goLiveStore.rtmpUri) {
-    rtmpUri.value = goLiveStore.rtmpUri + 'live/'
-    // Check if it's an episode or a selected show and update accordingly
-    if (goLiveStore.isEpisode && goLiveStore.episode?.mist_stream_wildcard?.name) {
-      streamKey.value = goLiveStore.episode.mist_stream_wildcard.name
-    } else if (!goLiveStore.isEpisode && goLiveStore.selectedShow?.mist_stream_wildcard?.name) {
-      streamKey.value = goLiveStore.selectedShow.mist_stream_wildcard.name
-    }
-    fullUrl.value = `${rtmpUri.value}${streamKey.value}`
-  }
-})
+// watchEffect(() => {
+//   if (goLiveStore.rtmpUri) {
+//     rtmpUri.value = goLiveStore.rtmpUri + 'live/'
+//     // Check if it's an episode or a selected show and update accordingly
+//     if (goLiveStore.isEpisode && goLiveStore.episode?.mist_stream_wildcard?.name) {
+//       streamKey.value = goLiveStore.episode.mist_stream_wildcard.name
+//     } else if (!goLiveStore.isEpisode && goLiveStore.selectedShow?.mist_stream_wildcard?.name) {
+//       streamKey.value = goLiveStore.selectedShow.mist_stream_wildcard.name
+//     }
+//     fullUrl.value = `${rtmpUri.value}${streamKey.value}`
+//   }
+// })
 
 // Function to handle the copy action and display the "copied" message for each type
 const copyFullUrl = () => {
@@ -567,7 +580,6 @@ const copyStreamKey = () => {
   setTimeout(() => showCopiedStreamKey.value = false, 1000)
 }
 
-
 const reloadPlayer = () => {
   let source = null
   if (goLiveStore?.selectedShow?.mist_stream_wildcard?.name) {
@@ -586,9 +598,18 @@ const reloadPlayer = () => {
   console.log('reload player')
 }
 
+// watchEffect(() => {
+//   const mistServerUri = videoPlayerStore.mistServerUri
+//   if (mistServerUri) {
+//     reloadPlayer()
+//   }
+// })
+
+
 // check push_auto_list and update
 
 onMounted(() => {
+
   // Automatically start the countdown or trigger based on an event
   startCountdown()
 
@@ -621,24 +642,24 @@ const seconds = computed(() => countdown.value % 60)
 
 // Function to start the countdown
 const startCountdown = () => {
-  // Clear any existing interval to prevent multiple intervals
-  if (intervalId !== null) {
-    clearInterval(intervalId)
-  }
-
-  // Reset countdown to initial value
-  countdown.value = countdownTime
-
-  // Start a new interval
-  intervalId = setInterval(() => {
-    countdown.value--
-
-    if (countdown.value < 0) {
-      clearInterval(intervalId) // Stop the interval
-      intervalId = null // Reset the interval ID
-      // Optionally, you can reset countdown.value to countdownTime or another value here
-    }
-  }, 1000)
+  // // Clear any existing interval to prevent multiple intervals
+  // if (intervalId !== null) {
+  //   clearInterval(intervalId)
+  // }
+  //
+  // // Reset countdown to initial value
+  // countdown.value = countdownTime
+  //
+  // // Start a new interval
+  // intervalId = setInterval(() => {
+  //   countdown.value--
+  //
+  //   if (countdown.value < 0) {
+  //     clearInterval(intervalId) // Stop the interval
+  //     intervalId = null // Reset the interval ID
+  //     // Optionally, you can reset countdown.value to countdownTime or another value here
+  //   }
+  // }, 1000)
 }
 
 const liveOrRecordingGrayButtonClass = computed(() => {
@@ -660,10 +681,10 @@ const liveOrRecordingVideoBorderClass = computed(() => {
 // mistStreamWildcardId.value = goLiveStore?.selectedShow?.mist_stream_wildcard?.id
 const channel = Echo.channel(`mistStreamWildcard.${goLiveStore?.selectedShow?.mist_stream_wildcard?.id}`)
 channel.subscribed(() => {
-      // Handle successful subscription
-      // This log will confirm the subscription success
-      console.log('Successfully subscribed to the channel!')
-    })
+  // Handle successful subscription
+  // This log will confirm the subscription success
+  console.log('Successfully subscribed to the channel!')
+})
     .listen('.push-out-start', (event) => {
       console.log('push out start EVENT BROADCASTED!')
       const index = mistStore.mistStreamPushDestinations.findIndex(destination =>
@@ -691,11 +712,14 @@ onUnmounted(() => {
   if (intervalId !== null) {
     clearInterval(intervalId)
   }
+
+  videoAuxPlayerStore.disposePlayer()
+  // let videoJs = videojs('aux-player')
+  // if (videoJs) {
+  //   videoJs.dispose()
+  // }
 })
 
-onBeforeUnmount(() => {
-
-})
 </script>
 
 <style scoped>

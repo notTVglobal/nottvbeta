@@ -93,7 +93,7 @@ export const useAudioStore = defineStore('audioStore', {
                     } else {
                         this.audioLevel = 0; // Reset or initialize the audio signal indicator
                         const videoElement = videoPlayer.tech().el();
-                        console.log('Ensuring AudioContext and nodes are ready for video element', videoElement);
+                        // console.log('Ensuring AudioContext and nodes are ready for video element', videoElement);
 
                         if (window.audioContext.state === 'suspended') {
                             window.audioContext.resume().then(() => {
@@ -147,7 +147,7 @@ export const useAudioStore = defineStore('audioStore', {
 
         configureAudioProcessingChain(videoElement) {
             return new Promise((resolve, reject) => {
-                console.log('Setting up audio nodes for:', videoElement)
+                // console.log('Setting up audio nodes for:', videoElement)
                 // Check and create MediaElementSourceNode, GainNode, etc., as discussed previously
                 // Ensure connections between nodes are correctly set up
                 // This includes checking if nodes already exist to avoid re-initialization

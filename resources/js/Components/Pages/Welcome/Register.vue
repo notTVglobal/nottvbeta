@@ -155,7 +155,7 @@
 </template>
 
 <script setup>
-import { Link, useForm } from '@inertiajs/inertia-vue3'
+import { useForm } from '@inertiajs/inertia-vue3'
 import { useWelcomeStore } from "@/Stores/WelcomeStore"
 import JetAuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo'
 import JetButton from '@/Jetstream/Button'

@@ -40,8 +40,12 @@
 <script setup>
 import { ref, watchEffect } from 'vue'
 import { useNotificationStore } from '@/Stores/NotificationStore'
+import { useGoLiveStore } from '@/Stores/GoLiveStore'
+import { useMistStore } from '@/Stores/MistStore'
 
 const notificationStore = useNotificationStore()
+const goLiveStore = useGoLiveStore()
+const mistStore = useMistStore()
 
 let props = defineProps({
   destinationDetails: Object,
@@ -93,6 +97,12 @@ const submitForm = async () => {
     console.log('Success:', response.data);
     emit('update-success');
     form.value.errors = ''
+
+    // Assuming the wildcard ID is part of the response or known at this point
+    // const wildcardId = response.data.wildcardId || someOtherWayToDetermineWildcardId();
+    console.log('just about to send this wildcardID: ' + goLiveStore.wildcardId)
+    await mistStore.getMistStreamPushDestinations(goLiveStore.wildcardId); // Fetch updated push destinations
+
 
     // Close the modal
     document.getElementById('mistStreamPushDestinationForm').close();

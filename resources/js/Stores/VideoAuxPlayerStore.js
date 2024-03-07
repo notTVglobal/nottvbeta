@@ -146,7 +146,6 @@ export const useVideoAuxPlayerStore = defineStore('videoAuxPlayerStore', {
                 console.error('Video player is not initialized.')
                 return
             }
-
             this.detachEventListeners() // Detach event listeners if attached
             this.player.dispose() // Dispose of the player instance
             this.player = null // Reset the player state

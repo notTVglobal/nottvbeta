@@ -89,6 +89,7 @@
 
 <script setup>
 import { useWelcomeStore } from "@/Stores/WelcomeStore"
+import { useUserStore } from "@/Stores/UserStore"
 import { useForm } from '@inertiajs/inertia-vue3'
 import JetAuthenticationCard from '@/Jetstream/AuthenticationCard'
 import JetAuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo'
@@ -99,6 +100,7 @@ import JetLabel from '@/Jetstream/Label'
 import JetValidationErrors from '@/Jetstream/ValidationErrors'
 
 const welcomeStore = useWelcomeStore()
+const userStore = useUserStore()
 
 defineProps({
   canResetPassword: Boolean,
@@ -117,7 +119,21 @@ const submit = () => {
     ...data,
     remember: form.remember ? 'on' : '',
   })).post(route('login'), {
-    onFinish: () => form.reset('password'),
+    onFinish: () => {
+      form.reset('password'); // Reset the password field after submission
+      console.log('get user data on Login')
+      userStore.fetchUserData() // Fetch user data after successful login
+          .then(() => {
+            // Handle any post-fetch logic here, e.g., redirecting the user or updating the UI
+            // Optionally, update timezone or perform other actions after login
+            // const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            // userStore.updateUserTimezone(timezone);
+          })
+          .catch(error => {
+            console.error("Failed to fetch user data:", error);
+            // Handle any errors in fetching user data here
+          });
+    }
   });
 };
 

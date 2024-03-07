@@ -30,12 +30,12 @@ export const useMistStore = defineStore('mistStore', {
                 try {
                     // Append the wildcard ID as a query parameter
                     const response = await axios.get(`/mist-stream-push-destinations?wildcardId=${wildcardId}`)
-                    this.mistStreamPushDestinations.value = response.data // Update the reactive variable
+                    this.mistStreamPushDestinations = response.data // Update the reactive variable
                 } catch (error) {
                     console.error('Failed to fetch push destinations:', error)
                 }
             } else {
-                console.error('No wildcard ID found')
+                console.error('No wildcard ID found (getMistStreamPushDestinations)')
             }
         },
         async getMistStreamPushAutoList(wildcardId) {
@@ -50,7 +50,7 @@ export const useMistStore = defineStore('mistStore', {
                     console.error('Failed to fetch push auto list:', error)
                 }
             } else {
-                console.error('No wildcard ID found')
+                console.error('No wildcard ID found (getMistStreamPushAutoList)')
             }
         },
         async getMistStreamPushList(wildcardId) {
@@ -65,7 +65,7 @@ export const useMistStore = defineStore('mistStore', {
                     console.error('Failed to fetch push list:', error)
                 }
             } else {
-                console.error('No wildcard ID found')
+                console.error('No wildcard ID found (getMistStreamPushList)')
             }
         },
         async startPush(destinationId) {
@@ -160,7 +160,6 @@ export const useMistStore = defineStore('mistStore', {
                 try {
                     // Perform the delete operation
                     await axios.delete(`/mist-stream-push-destinations/${destinationId}`)
-                    console.log(`Deleted destination with ID: ${destinationId}`)
                     // Optionally, remove the item from your local state to update the UI
                     this.mistStreamPushDestinations = this.mistStreamPushDestinations.filter(destination => destination.id !== destinationId)
                 } catch (error) {

@@ -8,7 +8,7 @@
       leave-to-class="opacity-0"
   >
     <div>
-      <div v-if="divClass" :class="divClass">
+      <div v-if="divClass" :class="divClass" class="">
         <OttChatMessages/>
 
         <OttChatInput
@@ -72,7 +72,7 @@ const divClass = computed(() => {
     } else if (appSettingStore.fullPage && appSettingStore.pipChatMode) {
       return `pipChatFullPageContainer hide-scrollbar ${pipChatModeChangeTopPosition.value}`
     } else {
-      return `ottTopRightDisplay hide-scrollbar ${pipChatModeChangeStyle.value}`
+      return `ottTopRightDisplay hide-scrollbar bg-indigo-700 ${pipChatModeChangeStyle.value}`
     }
   }
   return null // Return null if `ott` is not 4

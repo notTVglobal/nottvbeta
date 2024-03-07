@@ -10,8 +10,8 @@
           class="fixed top-0 left-0 right-0 bottom-0 text-gray-200 vh-100 vw-100 overflow-hidden overscroll-y-none overscroll-x-none hide-scrollbar">
     <!-- Navbar for logged in user -->
     <template v-if="user">
-      <ResponsiveNavigationMenu :key="userStore.currentPage"/>
-      <NavigationMenu :key="userStore.currentPage"/>
+      <ResponsiveNavigationMenu />
+      <NavigationMenu />
       <NotificationModal />
     </template>
 
@@ -77,15 +77,22 @@ const channelStore = useChannelStore()
 
 let isStreamPage = ref()
 let showLogin = ref(false)
-let reloadNav = 0
 let reloadVideoMainPlayer = 0
 
 let props = defineProps({
   user: Object,
 });
 
+onMounted(async () => {
+  if (props.user) { // Checking if user is logged in based on page props
+    await userStore.updateUserTimezone();
+    await userStore.fetchUserData();
+    console.log('get user data on AppLayout')
+    // Call any other user-specific initialization functions here
+  }
+});
 
-const userTimezone = ref('');
+// const userTimezone = ref('');
 
 const pageHide = computed(() => ({
   'hidden lg:block': appSettingStore.ott && userStore.isMobile
@@ -103,13 +110,13 @@ userStore.showNavDropdown = false
 setPage()
 
 onBeforeMount(() => {
-  getUserTimezone()
-  if (props.user && !userStore.getUserDataCompleted) {
-    updateUserStore()
-    provide(/* key */ 'getUserData', /* value */ true)
-  } else {
-    provide(/* key */ 'getUserData', /* value */ false)
-  }
+  // getUserTimezone()
+  // if (props.user && !userStore.getUserDataCompleted) {
+  //   updateUserStore()
+  //   provide(/* key */ 'getUserData', /* value */ true)
+  // } else {
+  //   provide(/* key */ 'getUserData', /* value */ false)
+  // }
 })
 
 onMounted(() => {
@@ -128,55 +135,53 @@ function setPage() {
   isStreamPage = appSettingStore.currentPage === "stream";
 }
 
+//
+// async function updateUserStore() {
+//   try {
+//     const response = await axios.post('/getUserStoreData');
+//     // Update userStore based on response
+//     userStore.id = response.data.id;
+//     appSettingStore.loggedIn = true
+//     userStore.isAdmin = response.data.isAdmin
+//     userStore.isCreator = response.data.isCreator
+//     userStore.isNewsPerson = response.data.isNewsPerson
+//     userStore.isVip = response.data.isVip
+//     userStore.isSubscriber = response.data.isSubscriber
+//     userStore.hasAccount = response.data.hasAccount
+//     userStore.getUserDataCompleted = true
+//     console.log('get user data on AppLayout')
+//     await userStore.subscribeToUserNotifications(response.data.id)
+//     await updateUserTimezone();
+//     userStore.timezone = userTimezone.value;
+//     if (userStore.isCreator) {
+//       userStore.prevUrl = '/dashboard';
+//     } else {
+//       userStore.prevUrl = '/stream';
+//     }
+//   } catch (error) {
+//     console.error(error);
+//   }
+// }
 
-async function updateUserStore() {
-  try {
-    const response = await axios.post('/getUserStoreData');
-    // Update userStore based on response
-    userStore.id = response.data.id;
-    appSettingStore.loggedIn = true
-    userStore.isAdmin = response.data.isAdmin
-    userStore.isCreator = response.data.isCreator
-    userStore.isNewsPerson = response.data.isNewsPerson
-    userStore.isVip = response.data.isVip
-    userStore.isSubscriber = response.data.isSubscriber
-    userStore.hasAccount = response.data.hasAccount
-    userStore.getUserDataCompleted = true
-    console.log('get user data on AppLayout')
-    await userStore.subscribeToUserNotifications(response.data.id)
-    await updateUserTimezone();
-    userStore.timezone = userTimezone.value;
-    reloadNav++;
-    if (userStore.isCreator) {
-      userStore.prevUrl = '/dashboard';
-    } else {
-      userStore.prevUrl = '/stream';
-    }
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-const getUserTimezone = () => {
-  // Use the Intl object to get the user's timezone
-  userTimezone.value = Intl.DateTimeFormat().resolvedOptions().timeZone;
-};
-
-const updateUserTimezone = async () => {
-  try {
-    const response = await axios.post('/users/update-timezone', { timezone: userTimezone.value });
-    console.log(response.data.message);
-  } catch (error) {
-    console.error(error.response ? error.response.data : error);
-  }
-};
+// const getUserTimezone = () => {
+//   // Use the Intl object to get the user's timezone
+//   userTimezone.value = Intl.DateTimeFormat().resolvedOptions().timeZone;
+// };
+//
+// const updateUserTimezone = async () => {
+//   try {
+//     const response = await axios.post('/users/update-timezone', { timezone: userTimezone.value });
+//     console.log(response.data.message);
+//   } catch (error) {
+//     console.error(error.response ? error.response.data : error);
+//   }
+// };
 
 // Watch for changes in userStore.currentPage
-watch(() => userStore.getUserDataCompleted, (newPage, oldPage) => {
-  // This function will be called whenever userStore.getUserDataCompleted changes
-  reloadNav++
-  console.log(`getUserDataCompleted changed from ${oldPage} to ${newPage}`);
-});
+// watch(() => userStore.getUserDataCompleted, (newPage, oldPage) => {
+//   // This function will be called whenever userStore.getUserDataCompleted changes
+//   console.log(`getUserDataCompleted changed from ${oldPage} to ${newPage}`);
+// });
 
 function disconnect() {
   window.Echo.leave("channel." + channelStore.currentChannelId);

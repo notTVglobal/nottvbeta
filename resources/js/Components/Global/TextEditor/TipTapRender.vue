@@ -4,7 +4,7 @@
   </div>
 </template>
 <script setup>
-import { Editor, useEditor, EditorContent } from '@tiptap/vue-3'
+import { useEditor, EditorContent } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
 import { ref } from 'vue'
 import { TextStyle } from '@tiptap/extension-text-style'
@@ -29,13 +29,11 @@ let editor = ref(
       extensions: [
         StarterKit, // Include the desired extensions (e.g., StarterKit for basic functionality)
         Document,
-        Paragraph,
         Text,
         TextStyle,
         FontFamily,
         Color,
         Typography,
-        Strike,
         Underline,
         Subscript,
         Superscript,

@@ -8,8 +8,8 @@
 
     </header>
 
-    <PublicNavigationMenu v-if="!appSettingStore.loggedIn" class="fixed top-0 w-full nav-mask"/>
-    <PublicResponsiveNavigationMenu />
+    <PublicNavigationMenu v-if="!userStore.loggedIn" class="fixed top-0 w-full nav-mask"/>
+    <PublicResponsiveNavigationMenu v-if="!userStore.loggedIn" />
     <main class="flex-grow text-black mx-auto pb-64">
       <div class="mx-auto px-4 border-b border-gray-800 flex justify-center">
 
@@ -20,7 +20,7 @@
       </div>
     </main>
 
-    <Footer v-if="!appSettingStore.loggedIn"/>
+    <Footer v-if="!userStore.loggedIn"/>
 
   </div>
 </template>
@@ -28,26 +28,37 @@
 <script setup>
 import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import { useUserStore } from '@/Stores/UserStore'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
 import PublicNewsNavigationButtons from '@/Components/Pages/Public/PublicNewsNavigationButtons.vue'
 import PublicNavigationMenu from '@/Components/Global/Navigation/PublicNavigationMenu'
 import Footer from '@/Components/Global/Layout/Footer.vue'
 import { usePageSetup } from '@/Utilities/PageSetup'
-import { useForm } from '@inertiajs/inertia-vue3'
+import { useForm, usePage } from '@inertiajs/inertia-vue3'
 import throttle from 'lodash/throttle'
 import { Inertia } from '@inertiajs/inertia'
 import NewsStoriesTable from '@/Components/Pages/Newsroom/NewsStoriesTable.vue'
 import PublicResponsiveNavigationMenu from '@/Components/Global/Navigation/PublicResponsiveNavigationMenu.vue'
 
 const appSettingStore = useAppSettingStore()
+const userStore = useUserStore()
 const videoPlayerStore = useVideoPlayerStore()
 
-appSettingStore.noLayout = true
-appSettingStore.currentPage = 'news'
+const { props } = usePage();
+//
+// console.log('user name???? ' + props.value.user?.name)
+//
+// if (userStore.loggedIn) {
+//   usePageSetup('news');
+// } else {
+//   appSettingStore.noLayout = true
+//   appSettingStore.currentPage = 'news'
+// }
 
-const reloadVideo = () => {
-  videoPlayerStore.loadFirstPlay()
-}
+
+// const reloadVideo = () => {
+//   videoPlayerStore.loadFirstPlay()
+// }
 
 onMounted(() => {
   const topDiv = document.getElementById("topDiv")
@@ -55,7 +66,7 @@ onMounted(() => {
 })
 
 // Watch for changes in the loggedIn state of appSettingStore
-watch(() => appSettingStore.loggedIn, (loggedIn) => {
+watch(() => userStore.loggedIn, (loggedIn) => {
   appSettingStore.noLayout = !loggedIn;
 
   // Call usePageSetup if loggedIn is true
@@ -67,17 +78,15 @@ watch(() => appSettingStore.loggedIn, (loggedIn) => {
     videoPlayerStore.makeVideoTopRight()
     appSettingStore.pageIsHidden = false
   });
-}, {
-  immediate: true // This ensures the watcher runs immediately on setup
 });
 
-const props = defineProps({
+defineProps({
   newsStories: Object,
   filters: Object,
   can: Object,
 })
 
-let search = ref(props.filters.search)
+let search = ref(props.value.filters.search)
 
 let form = useForm({})
 
@@ -89,7 +98,7 @@ watch(search, throttle(function (value) {
 }, 300))
 
 const marginTopClass = computed(() => {
-  return appSettingStore.loggedIn ? '' : 'mt-16';
+  return userStore.loggedIn ? '' : 'mt-16';
 });
 
 </script>

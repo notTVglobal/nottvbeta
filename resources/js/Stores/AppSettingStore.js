@@ -254,5 +254,10 @@ export const useAppSettingStore = defineStore('appSettingStore', {
             this.setPrevUrl()
             Inertia.visit(newUrl)
         },
+        back() {
+            const prevUrl = this.prevUrl
+            this.setPrevUrl()
+            Inertia.visit(prevUrl)
+        },
     }
 });

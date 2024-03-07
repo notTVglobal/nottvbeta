@@ -4,7 +4,7 @@
       <div class="flex flex-row flex-wrap-reverse space-x-2 justify-center">
         <button
             v-if="appSettingStore.prevUrl"
-            @click="back"
+            @click="appSettingStore.back()"
             class="ottButton bg-gray-400 text-white hover:bg-gray-600">
           <font-awesome-icon icon="fa-angle-left" class="ml-1.5 text-3xl mb-1"/>
           BACK
@@ -23,7 +23,7 @@
           CHANNELS
         </button>
 
-        <button v-if="userStore.isVip || userStore.isAdmin"
+        <button
                 @click="appSettingStore.toggleOttPlaylist()"
                 class="ottButton bg-orange-400 text-white hover:bg-orange-600">
           <font-awesome-icon icon="fa-list" class="ml-2 text-3xl mb-1"/>
@@ -68,13 +68,6 @@ const urlPrev = usePage().props.value.urlPrev
 
 const previousURL = ref(null)
 
-onMounted(() => {
-
-})
-
-function back() {
-  Inertia.visit(appSettingStore.prevUrl)
-}
 </script>
 
 <style>

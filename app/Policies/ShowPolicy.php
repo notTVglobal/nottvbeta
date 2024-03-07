@@ -184,8 +184,10 @@ class ShowPolicy
         $isTeamManager = TeamManager::where('team_id', $team->id)
             ->where('user_id', $userId)
             ->exists();
-        $isShowRunner = $show->show_runner === $user->creator->id;
-        $isAdmin = $user->isAdmin;
+      // Check if $user->creator is not null before trying to access $user->creator->id
+      $isShowRunner = $user->creator && $show->show_runner === $user->creator->id;
+
+      $isAdmin = $user->isAdmin;
 
         return $isAdmin || $isTeamOwner || $isTeamLeader || $isTeamManager || $isShowRunner;
     }

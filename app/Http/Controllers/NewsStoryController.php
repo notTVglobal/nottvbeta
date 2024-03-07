@@ -252,7 +252,7 @@ class NewsStoryController extends Controller {
                 'published_at'                 => $newsStory->published_at,
             ],
             'can'  => [
-                'editNewsStory'   => optional(Auth::user())->can('update', $newsStory) ?: false,
+                'editNewsStory'   => optional(Auth::user())->can('edit', $newsStory) ?: false,
                 'deleteNewsStory' => optional(Auth::user())->can('delete', $newsStory) ?: false,
                 'viewNewsroom'    => optional(Auth::user())->can('viewAny', NewsPerson::class) ?: false
             ]

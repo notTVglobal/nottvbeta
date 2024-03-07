@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Mail\VerifyMail;
+use App\Models\Channel;
 use App\Models\Notification;
 use App\Models\User;
 use App\Policies\NotificationPolicy;
@@ -47,7 +48,22 @@ class AuthServiceProvider extends ServiceProvider
                 'travis@not.tv',
                 'admin@not.tv'
             ]);
+
         });
+
+        // this can be used later when we
+      Gate::define('send-chat-message', function ($user, $channelId) {
+
+        // Implement your logic to determine if $user can send a message to $channelId
+        // For allowing any user to send to any channel, you can simply return true
+        return true;
+
+        // TODO: Setup a database connection between Channel and User to ensure a User
+        // can only broadcast on the channel they are on.
+        // Implement your logic to check if $user is a member of $channel
+//        $channel = Channel::find($channelId);
+//        return $user->isMemberOf($channel);
+      });
 
         // this uses the Mail: VerifyMail method and the blade template to send an email.
 //        VerifyEmail::toMailUsing(function ($notifiable, $url) {
