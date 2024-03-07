@@ -7,18 +7,19 @@
         <div class="bg-gray-50 text-black dark:bg-gray-800 dark:text-gray-50">
 <!--          <div class="text-center pt-6 text-3xl font-semibold leading-loose">NEWS</div>-->
           <PublicNewsNavigationButtons :can="can" class=""/>
-          <PublicResponsiveNavigationMenu />
+          <PublicNavigationMenu v-if="!userStore.loggedIn" class="fixed top-0 w-full nav-mask"/>
+          <PublicResponsiveNavigationMenu v-if="!userStore.loggedIn" />
           <div class="w-full">
             <Breadcrumbs :classType="'dark'" :breadcrumbs="[{ text: 'News Stories', to: '/news' }, { text: $page.props.newsStory.newsCategory, to: '' }, { text: $page.props.newsStory.newsCategorySub, to: '' }]" />
           </div>
 
-          <div v-if="appSettingStore.loggedIn" class="w-full flex flex-row justify-end px-6">
+          <div v-if="userStore.loggedIn" class="w-full flex flex-row justify-end px-6">
 <!--              This Back Button doesn't work...
                   because there is no prevUrl function that runs unless PageSetup() is called..
                   and PageSetup() is only called on LoggedIn pages.-->
 <!--              <BackButton v-if="!appSettingStore.loggedIn"/>-->
 
-            <BackButton />
+<!--            <BackButton />-->
 
                   <div v-if="can.editNewsStory" class="ml-2">
                     <button
@@ -84,11 +85,7 @@
         </div>
       </div>
 
-      <PublicNavigationMenu v-if="!appSettingStore.loggedIn" class="fixed top-0 w-full nav-mask"/>
-
-
-
-      <Footer v-if="!appSettingStore.loggedIn" class="w-full bg-gray-900"/>
+      <Footer v-if="!userStore.loggedIn"/>
     </div>
   </div>
 </template>
@@ -97,6 +94,7 @@
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import { useUserStore } from '@/Stores/UserStore'
 import PublicNewsNavigationButtons from '@/Components/Pages/Public/PublicNewsNavigationButtons.vue'
 import PublicNavigationMenu from '@/Components/Global/Navigation/PublicNavigationMenu'
 import Footer from '@/Components/Global/Layout/Footer.vue'
@@ -109,7 +107,9 @@ import PublicResponsiveNavigationMenu from '@/Components/Global/Navigation/Publi
 // import TipTapViewOnly from '@/Components/Global/TextEditor/TipTapViewOnly.vue'
 
 const appSettingStore = useAppSettingStore()
+const userStore = useUserStore()
 const newsStore = useNewsStore()
+
 appSettingStore.currentPage = 'news/story/slug'
 
 let props = defineProps({
@@ -118,30 +118,26 @@ let props = defineProps({
 })
 
 onMounted(() => {
+  newsStore.reset()
   newsStore.content_json = JSON.parse(props.newsStory.content_json)
   const topDiv = document.getElementById("topDiv")
   topDiv.scrollIntoView()
 })
 
 // Watch for changes in the loggedIn state of appSettingStore
-watch(() => appSettingStore.loggedIn, (loggedIn) => {
+watch(() => userStore.loggedIn, (loggedIn) => {
   appSettingStore.noLayout = !loggedIn;
 
   // Call usePageSetup if loggedIn is true
   if (loggedIn) {
     usePageSetup(`news.${props.newsStory.slug}`);
   }
-}, {
-  immediate: true // This ensures the watcher runs immediately on setup
 });
 
 const marginTopClass = computed(() => {
-  return appSettingStore.loggedIn ? '' : 'mt-16';
+  return userStore.loggedIn ? '' : 'mt-16';
 });
 
-onBeforeUnmount(() => {
-  newsStore.reset()
-})
 </script>
 
 <style scoped>

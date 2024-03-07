@@ -3,7 +3,7 @@
   <Head :title="`Manage Show: ${props.show.name}`"/>
 
   <div id="topDiv" class="place-self-center flex flex-col">
-    <div class="min-h-screen bg-white text-black dark:bg-gray-900 dark:text-gray-50 rounded px-5 pb-36">
+    <div class="min-h-screen bg-white text-black dark:bg-gray-900 dark:text-gray-50 rounded px-5">
 
       <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
       <div class="alert alert-error mt-4 mx-3"
@@ -82,6 +82,7 @@
               <div @click="toggleComponent('showEpisodes')"
                    :class="{'rounded-t-lg': showStore.openComponent === 'showEpisodes', 'rounded-lg': showStore.openComponent !== 'showEpisodes'}"
                    class="accordion-header p-2 font-bold transition duration-300 ease-in-out transform focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 overflow-hidden shadow-lg bg-blue-100 hover:bg-blue-300 dark:hover:bg-blue-900 text-black hover:text-blue-900 dark:text-blue-100 dark:hover:text-white">
+                <font-awesome-icon icon="fa-play-circle" class=""/>
                 Episodes
               </div>
               <div v-if="showStore.openComponent === 'showEpisodes'">
@@ -124,6 +125,7 @@
           <div @click="toggleComponent('showCredits')"
                :class="{'rounded-t-lg': showStore.openComponent === 'showCredits', 'rounded-lg': showStore.openComponent !== 'showCredits'}"
                class="accordion-header p-2 font-bold transition duration-300 ease-in-out transform focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 overflow-hidden shadow-lg bg-blue-100 hover:bg-blue-300 dark:hover:bg-blue-900 text-black hover:text-blue-900 dark:text-blue-100 dark:hover:text-white">
+            <font-awesome-icon icon="fa-clipboard-list" class=""/>
             Credits and Assignments
           </div>
           <div v-if="showStore.openComponent === 'showCredits'">
@@ -151,6 +153,7 @@
           <div @click="toggleComponent('showRecordings')"
                :class="{'rounded-t-lg': showStore.openComponent === 'showRecordings', 'rounded-lg': showStore.openComponent !== 'showRecordings'}"
                class="accordion-header p-2 font-bold transition duration-300 ease-in-out transform focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 overflow-hidden shadow-lg bg-blue-100 hover:bg-blue-300 dark:hover:bg-blue-900 text-black hover:text-blue-900 dark:text-blue-100 dark:hover:text-white">
+            <font-awesome-icon icon="fa-circle" class="text-red-700"/>
             Recordings
           </div>
           <div v-if="showStore.openComponent === 'showRecordings'">
@@ -163,7 +166,7 @@
           </div>
         </div>
       </div>
-      <ShowFooter :team="props.team" :show="props.show"/>
+      <ShowFooter :team="team" :show="show"/>
     </div>
   </div>
 
@@ -183,6 +186,7 @@ import ShowCreditsList from '@/Components/Pages/Shows/Elements/ManageShowCredits
 import Message from '@/Components/Global/Modals/Messages'
 import DashboardButton from '@/Components/Global/Buttons/DashboardButton.vue'
 import ShowRecordings from '@/Components/Pages/Shows/Elements/ShowRecordings.vue'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 usePageSetup('shows/slug/manage')
 

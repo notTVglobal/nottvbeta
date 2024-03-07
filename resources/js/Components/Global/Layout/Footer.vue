@@ -1,4 +1,5 @@
 <template>
+  <div class="w-full bg-gray-900">
   <footer class="footer text-lg justify-center space-x-1 md:space-x-24 lg:space-x-32 bg-gray-900 text-neutral-content pt-12 pb-16">
     <nav>
       <header class="footer-title">Membership</header>
@@ -128,6 +129,7 @@
 <!--      </div>-->
 <!--    </nav>-->
 <!--  </footer>-->
+  </div>
 </template>
 
 <script setup>

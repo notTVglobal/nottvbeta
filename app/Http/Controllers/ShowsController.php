@@ -132,6 +132,7 @@ class ShowsController extends Controller {
 
     return [
         'id'                 => $show->id,
+        'ulid'               => $show->ulid,
         'name'               => $show->name,
         'description'        => $show->description,
         'team_id'            => $show->team_id,
@@ -494,6 +495,7 @@ class ShowsController extends Controller {
   private function transformShowData(Show $show, $firstPlayEpisode) {
     return [
         'id'                 => $show->id,
+        'ulid'               => $show->ulid,
         'name'               => $show->name,
         'slug'               => $show->slug,
         'description'        => $show->description,
@@ -758,6 +760,7 @@ class ShowsController extends Controller {
     return Inertia::render('Shows/{$id}/Manage', [
         'show'            => [
             'id'              => $show->id,
+            'ulid'            => $show->ulid,
             'name'            => $show->name,
             'description'     => $show->description,
             'slug'            => $show->slug,
@@ -854,12 +857,14 @@ class ShowsController extends Controller {
     $teamMembers = $team->members->map(function ($user) {
       // Directly accessing creator relationship to get creator_id
       $creatorId = $user->creator ? $user->creator->id : null;
+
       return [
           'creator_id' => $creatorId,
           'name'       => $user->name,
         // Include any other necessary attributes
       ];
     });
+
     // Return the Inertia response with the ShowResource and additional data
     return Inertia::render('Shows/{$id}/Edit', [
         'show'        => $showResourceArray,
@@ -929,7 +934,7 @@ class ShowsController extends Controller {
     if (is_null($show->show_runner && $request->show_runner)) {
       // Flash a session message to inform the user
       return redirect()->back()->with([
-          'error' => 'Please set the Show Runner',
+          'error'                  => 'Please set the Show Runner',
           'form.error.show_runner' => 'Please set the Show Runner', // Custom form error
       ])->withInput();
     }
@@ -994,6 +999,14 @@ class ShowsController extends Controller {
     $id = $request->showId;
     $show = Show::find($id);
 
+    // Check if the show was found
+    if (!$show) {
+      // Respond with an error if not found
+      return response()->json([
+          'message' => 'Show not found',
+      ], 404); // Not Found status code
+    }
+
     // validate the request
     $request->validate([
         'notes' => 'nullable|string|max:1024',
@@ -1002,7 +1015,6 @@ class ShowsController extends Controller {
     // update the show notes
     $show->notes = $request->notes;
     $show->save();
-    sleep(1);
 
     return $show;
   }
@@ -1012,7 +1024,6 @@ class ShowsController extends Controller {
 
   public function destroy(Show $show) {
     $show->delete();
-    sleep(1);
 
     // redirect
     return redirect()->route('shows.index')->with('message', 'Show Deleted Successfully');

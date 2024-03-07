@@ -47,7 +47,24 @@ class NewsStoryPolicy
           : Response::deny('You are not a member of the news team.');
     }
 
-    /**
+
+  /**
+   * Determine whether the user can edit the model.
+   *
+   * @param  \App\Models\User  $user
+   * @param  \App\Models\NewsStory  $newsPost
+   * @return Response|bool
+   */
+
+  public function edit(User $user)
+  {
+    return $user->newsPerson || $user->isAdmin
+        ? Response::allow()
+        : Response::deny('You are not allowed to edit.');
+  }
+
+
+  /**
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
@@ -59,7 +76,7 @@ class NewsStoryPolicy
     {
         return $user->newsPerson || $user->isAdmin
             ? Response::allow()
-            : Response::deny('You are not allowed to edit.');
+            : Response::deny('You are not allowed to update.');
     }
 
     public function publish(User $user)

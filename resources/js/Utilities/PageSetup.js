@@ -18,30 +18,24 @@ export function usePageSetup(pageName) {
 
     videoPlayerStore.makeVideoTopRight()
 
-    onBeforeMount(() => {
-        // reload page
-        if (appSettingStore.pageReload) {
-            appSettingStore.pageReload = false
-            window.location.reload(true);
+    if (appSettingStore.pageReload) {
+        appSettingStore.pageReload = false
+        window.location.reload(true);
+    }
+    // Check if the URL contains query strings
+    const hasQueryStrings = window.location.search !== '';
+
+    // Only scroll into view if there are no query strings
+    if (!hasQueryStrings) {
+        const topDiv = document.getElementById("topDiv")
+        if (topDiv) {
+            topDiv.scrollIntoView()
         }
-    });
+    }
+    // Only update if we're not already on this page to avoid overwriting with the current URL
+    appSettingStore.setPrevUrl()
+    appSettingStore.noLayout = false
+    appSettingStore.showOttButtons = true
+    // Inertia.reload()
 
-    onMounted(() => {
-        // Check if the URL contains query strings
-        const hasQueryStrings = window.location.search !== '';
-
-        // Only scroll into view if there are no query strings
-        if (!hasQueryStrings) {
-            const topDiv = document.getElementById("topDiv")
-            if (topDiv) {
-                topDiv.scrollIntoView()
-            }
-        }
-        // Only update if we're not already on this page to avoid overwriting with the current URL
-        appSettingStore.setPrevUrl()
-        appSettingStore.noLayout = false
-        appSettingStore.showOttButtons = true
-        // Inertia.reload()
-
-    });
 }

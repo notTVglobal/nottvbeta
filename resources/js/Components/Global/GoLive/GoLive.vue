@@ -304,7 +304,7 @@
 
 <script setup>
 // import { useTimeAgo } from '@vueuse/core'
-import { computed, onBeforeUnmount, onMounted, onUnmounted, ref, watchEffect } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watchEffect } from 'vue'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
 import { useVideoAuxPlayerStore } from '@/Stores/VideoAuxPlayerStore'
@@ -712,6 +712,12 @@ onUnmounted(() => {
   if (intervalId !== null) {
     clearInterval(intervalId)
   }
+
+  videoAuxPlayerStore.disposePlayer()
+  // let videoJs = videojs('aux-player')
+  // if (videoJs) {
+  //   videoJs.dispose()
+  // }
 })
 
 </script>

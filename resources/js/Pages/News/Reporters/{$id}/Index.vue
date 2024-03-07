@@ -2,8 +2,8 @@
   <Head :title="$page.props.newsPerson.name" />
   <div id="topDiv" ></div>
   <div :class="marginTopClass">
-    <PublicNavigationMenu v-if="!appSettingStore.loggedIn" class="fixed top-0 w-full nav-mask" />
-    <PublicResponsiveNavigationMenu />
+    <PublicNavigationMenu v-if="!userStore.loggedIn" class="fixed top-0 w-full nav-mask" />
+    <PublicResponsiveNavigationMenu v-if="!userStore.loggedIn" />
     <div class="bg-gray-900 flex flex-col gap-y-3 w-full place-self-center text-white px-5">
       <PublicNewsNavigationButtons :can="can"/>
 
@@ -57,7 +57,7 @@
         </div>
       </main>
 
-      <Footer v-if="!appSettingStore.loggedIn"/>
+      <Footer v-if="!userStore.loggedIn"/>
     </div>
   </div>
 </template>
@@ -65,20 +65,25 @@
 
 <script setup>
 import { computed, nextTick, onMounted, watch } from 'vue'
+import { usePage } from '@inertiajs/inertia-vue3'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import { useUserStore } from '@/Stores/UserStore'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
 import PublicNewsNavigationButtons from '@/Components/Pages/Public/PublicNewsNavigationButtons.vue'
 import PublicNavigationMenu from '@/Components/Global/Navigation/PublicNavigationMenu'
+import PublicResponsiveNavigationMenu from '@/Components/Global/Navigation/PublicResponsiveNavigationMenu.vue'
 import Footer from '@/Components/Global/Layout/Footer.vue'
 import Breadcrumbs from '@/Components/Global/Breadcrumbs/Breadcrumbs'
-import PublicResponsiveNavigationMenu from '@/Components/Global/Navigation/PublicResponsiveNavigationMenu.vue'
 
 const appSettingStore = useAppSettingStore()
+const userStore = useUserStore()
 const videoPlayerStore = useVideoPlayerStore()
 
-appSettingStore.noLayout = true
-appSettingStore.currentPage = 'news.reporter.id'
+// appSettingStore.noLayout = true
+// appSettingStore.currentPage = 'news.reporter.id'
+
+const { props } = usePage();
 
 defineProps({
   can: Object,
@@ -91,7 +96,7 @@ onMounted(() => {
 
 
 // Watch for changes in the loggedIn state of appSettingStore
-watch(() => appSettingStore.loggedIn, (loggedIn) => {
+watch(() => userStore.loggedIn, (loggedIn) => {
   appSettingStore.noLayout = !loggedIn;
 
   // Call usePageSetup if loggedIn is true
@@ -104,11 +109,11 @@ watch(() => appSettingStore.loggedIn, (loggedIn) => {
     appSettingStore.pageIsHidden = false
   });
 }, {
-  immediate: true // This ensures the watcher runs immediately on setup
+  // immediate: true // This ensures the watcher runs immediately on setup
 });
 
 const marginTopClass = computed(() => {
-  return appSettingStore.loggedIn ? '' : 'mt-16'
+  return userStore.loggedIn ? '' : 'mt-16'
 })
 
 </script>

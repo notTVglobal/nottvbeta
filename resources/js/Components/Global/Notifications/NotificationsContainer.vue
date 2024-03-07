@@ -30,11 +30,9 @@
 </template>
 
 <script setup>
-import { computed, nextTick, onBeforeMount, onMounted, onUpdated, ref } from "vue"
+import { computed, ref } from "vue"
 import { useUserStore } from "@/Stores/UserStore"
 import NotificationCard from "@/Components/Global/Notifications/NotificationCard"
-import Pagination from "@/Components/Global/Paginators/PaginationDark"
-import NotificationsContainer from "@/Components/Global/Notifications/NotificationsContainer"
 
 const userStore = useUserStore()
 

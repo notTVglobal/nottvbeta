@@ -42,13 +42,14 @@ channel.subscribed(() => {
 })
 
 
-onBeforeMount(async () => {
+// onBeforeMount(async () => {
+//
+// });
+
+onMounted( async() => {
   await connect();
-});
-
-onMounted(() => {
-
 })
+
 //
 // onUpdated(() => {
 //     scrollTo('#scrollToMe')

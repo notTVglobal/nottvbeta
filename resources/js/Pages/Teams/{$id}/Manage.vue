@@ -69,6 +69,7 @@
             <div @click="toggleComponent('teamShows')"
                  :class="{'rounded-t-lg': teamStore.openComponent === 'teamShows', 'rounded-lg': teamStore.openComponent !== 'teamShows'}"
                  class="accordion-header p-2 font-bold transition duration-300 ease-in-out transform focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 overflow-hidden shadow-lg bg-orange-300 hover:bg-blue-100 dark:hover:bg-blue-900 text-black hover:text-blue-900 dark:text-blue-100 dark:hover:text-white">
+              <font-awesome-icon icon="fa-clapperboard" class=""/>
               Shows
             </div>
             <div v-if="teamStore.openComponent === 'teamShows'">
@@ -80,6 +81,7 @@
             <div @click="toggleComponent('teamMembers')"
                  :class="{'rounded-t-lg': teamStore.openComponent === 'teamMembers', 'rounded-lg': teamStore.openComponent !== 'teamMembers'}"
                  class="accordion-header p-2 font-bold transition duration-300 ease-in-out transform focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 overflow-hidden shadow-lg bg-orange-300 hover:bg-blue-100 dark:hover:bg-blue-900 text-black hover:text-blue-900 dark:text-blue-100 dark:hover:text-white">
+              <font-awesome-icon icon="fa-user-group" class=""/>
               Team Members
             </div>
             <div v-if="teamStore.openComponent === 'teamMembers'">
@@ -91,6 +93,7 @@
             <div @click="toggleComponent('teamAssignments')"
                  :class="{'rounded-t-lg': teamStore.openComponent === 'teamAssignments', 'rounded-lg': teamStore.openComponent !== 'teamAssignments'}"
                  class="accordion-header p-2 font-bold transition duration-300 ease-in-out transform focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 overflow-hidden shadow-lg bg-orange-300 hover:bg-blue-100 dark:hover:bg-blue-900 text-black hover:text-blue-900 dark:text-blue-100 dark:hover:text-white">
+              <font-awesome-icon icon="fa-clipboard-list" class=""/>
               Team Assignments
             </div>
             <div v-if="teamStore.openComponent === 'teamAssignments'">
@@ -103,6 +106,7 @@
               <div @click="toggleComponent('teamTransfer')"
                    :class="{'rounded-t-lg': teamStore.openComponent === 'teamTransfer', 'rounded-lg': teamStore.openComponent !== 'teamTransfer'}"
                    class="accordion-header p-2 font-bold transition duration-300 ease-in-out transform focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 overflow-hidden shadow-lg bg-orange-300 hover:bg-blue-100 dark:hover:bg-blue-900 text-black hover:text-blue-900 dark:text-blue-100 dark:hover:text-white">
+                <font-awesome-icon icon="fa-arrow-right-arrow-left" class=""/>
                 Team Transfer Process
               </div>
               <div v-if="teamStore.openComponent === 'teamTransfer'">
@@ -135,6 +139,7 @@ import TeamAssignmentsList from '@/Components/Pages/Teams/Manage/Elements/TeamAs
 import Message from '@/Components/Global/Modals/Messages'
 import TeamTransferProcess from '@/Components/Pages/Teams/Manage/Elements/TeamTransferProcess'
 import DashboardButton from '@/Components/Global/Buttons/DashboardButton.vue'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 usePageSetup('teams/slug/manage')
 

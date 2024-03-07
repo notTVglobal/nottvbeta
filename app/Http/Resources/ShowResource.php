@@ -15,6 +15,8 @@ class ShowResource extends JsonResource {
    */
   public function toArray($request) {
     return [
+        'id'             => $this->id,
+        'ulid'           => $this->ulid,
         'name'           => $this->name,
         'slug'           => $this->slug,
         'description'    => $this->description,
@@ -36,8 +38,8 @@ class ShowResource extends JsonResource {
 //        'video'       => $this->whenLoaded('video') ? new VideoResource($this->video) : null,
         'showRunner'     => $this->whenLoaded('showRunner', function () {
           return [
-              'creator_id'     => $this->showRunner->id ?? null, // This should be creator id...
-              'name'   => $this->showRunner->user->name ?? null,
+              'creator_id' => $this->showRunner->id ?? null, // This should be creator id...
+              'name'       => $this->showRunner->user->name ?? null,
           ];
         }),
         'www_url'        => $this->www_url,

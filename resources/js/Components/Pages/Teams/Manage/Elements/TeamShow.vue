@@ -23,7 +23,7 @@
       </button>
       <div v-if="teamStore.noteEdit === props.show.id">
 
-        <ShowNoteEdit :show="props.show" v-on:saveNoteProcessing="reloadNote"/>
+        <ShowNoteEdit :show="show" v-on:saveNoteProcessing="reloadNote"/>
         <div v-if="teamStore.saveNoteProcessing">Saving...</div>
       </div>
 
