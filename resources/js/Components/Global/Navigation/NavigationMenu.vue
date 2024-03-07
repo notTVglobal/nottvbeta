@@ -37,7 +37,7 @@
                     v-touch="()=>(route('news.index'))"
                     @click.prevent="videoPlayerStore.makeVideoTopRight()"
                     :href="route('news.index')"
-                    :active="appSettingStore.currentPage === 'news'">
+                    :active="appSettingStore.currentPage.startsWith('news')">
                   News
                 </JetNavLink>
               </h3>

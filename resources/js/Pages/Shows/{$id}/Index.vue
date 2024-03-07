@@ -270,6 +270,7 @@ import SingleImage from '@/Components/Global/Multimedia/SingleImage'
 import Pagination from '@/Components/Global/Paginators/PaginationDark'
 import Message from '@/Components/Global/Modals/Messages.vue'
 import CreatorsOnlyBadge from '@/Components/Global/Badges/CreatorsOnlyBadge.vue'
+import { onMounted } from 'vue'
 // import ShowCreatorsList from "@/Components/Pages/Shows/ShowCreatorsList"
 
 usePageSetup('showsShow')
@@ -286,6 +287,11 @@ let props = defineProps({
   creators: Object,
   team: Object,
   can: Object,
+})
+
+onMounted(() => {
+  const topDiv = document.getElementById("topDiv")
+  topDiv.scrollIntoView()
 })
 
 let playEpisode = () => {

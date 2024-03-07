@@ -52,7 +52,7 @@ const { props } = usePage();
 //   usePageSetup('news');
 // } else {
 //   appSettingStore.noLayout = true
-//   appSettingStore.currentPage = 'news'
+  appSettingStore.currentPage = 'news'
 // }
 
 
