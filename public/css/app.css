@@ -7484,16 +7484,16 @@ hr {
   margin-top: 1.5rem;
 }
 
+.mt-64 {
+  margin-top: 16rem;
+}
+
 .mt-8 {
   margin-top: 2rem;
 }
 
 .mt-auto {
   margin-top: auto;
-}
-
-.mt-64 {
-  margin-top: 16rem;
 }
 
 .line-clamp-2 {
@@ -7982,10 +7982,6 @@ hr {
 
 .max-w-\[50\%\] {
   max-width: 50%;
-}
-
-.max-w-\[6rem\] {
-  max-width: 6rem;
 }
 
 .max-w-\[8rem\] {

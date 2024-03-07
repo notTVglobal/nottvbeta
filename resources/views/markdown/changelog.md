@@ -1,7 +1,11 @@
 # not.tv Changelog
 
-Last Update: March 2, 2024\
+Last Update: March 6, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.8.7.9
+March 6, 2024
+* Add migration to backfill Ulid's on Show Episodes.
 
 ## v0.8.7.8
 March 6, 2024
