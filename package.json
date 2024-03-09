@@ -93,6 +93,7 @@
         "vue": "^3.4.15",
         "vue-confetti": "^2.3.0",
         "vue-filepond": "^7.0.3",
+        "vue-select": "^4.0.0-beta.6",
         "vue3-country-region-select": "^1.0.0",
         "vue3-emoji-picker": "^1.1.5",
         "vue3-popper": "^1.5.0",

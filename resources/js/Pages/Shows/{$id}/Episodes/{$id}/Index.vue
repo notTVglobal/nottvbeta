@@ -201,6 +201,7 @@ import EpisodeFooter from '@/Components/Pages/ShowEpisodes/Layout/EpisodeFooter'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage'
 import Message from '@/Components/Global/Modals/Messages'
 import ConvertDateTimeToTimeAgo from '@/Components/Global/DateTime/ConvertDateTimeToTimeAgo.vue'
+import { onMounted } from 'vue'
 
 usePageSetup('showEpisodesShow')
 
@@ -218,7 +219,12 @@ let props = defineProps({
   creators: Object,
   can: Object,
 })
-console.log('suck it ' + props.episode.video.isAvailable)
+
+onMounted(() => {
+  const topDiv = document.getElementById("topDiv")
+  topDiv.scrollIntoView()
+})
+
 let playEpisode = () => {
   nowPlayingStore.reset()
 

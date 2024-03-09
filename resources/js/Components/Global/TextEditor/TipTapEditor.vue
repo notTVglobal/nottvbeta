@@ -49,13 +49,11 @@ const editor = new Editor({
   extensions: [
     StarterKit,
     Document,
-    Paragraph,
     Text,
     TextStyle,
     FontFamily,
     Color,
     Typography,
-    Strike,
     Underline,
     Subscript,
     Superscript,

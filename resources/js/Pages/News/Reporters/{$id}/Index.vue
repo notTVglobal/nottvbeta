@@ -81,7 +81,7 @@ const userStore = useUserStore()
 const videoPlayerStore = useVideoPlayerStore()
 
 // appSettingStore.noLayout = true
-// appSettingStore.currentPage = 'news.reporter.id'
+appSettingStore.currentPage = 'news.reporter.id'
 
 const { props } = usePage();
 
@@ -102,7 +102,7 @@ watch(() => userStore.loggedIn, (loggedIn) => {
   // Call usePageSetup if loggedIn is true
   if (loggedIn) {
     console.log('Logged In:', loggedIn, 'Video Player Loaded:', videoPlayerStore.videoPlayerLoaded);
-    usePageSetup('news.reporters');
+    usePageSetup('news.reporter.id');
   }
   nextTick(() => {
     videoPlayerStore.makeVideoTopRight()

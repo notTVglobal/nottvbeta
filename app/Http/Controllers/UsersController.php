@@ -199,6 +199,7 @@ class UsersController extends Controller {
         'userEdit'           => $user,
         'subscriptionStatus' => $user->subscription('default')->stripe_status ?? null,
         'isNewsPerson'       => $isNewsPerson,
+        'newsPersonId'      => $user->newsPerson?->id,
         'isVip'              => $user->isVip,
         'hasSubscription'    => $user->subscription() ?? null,
     ]);

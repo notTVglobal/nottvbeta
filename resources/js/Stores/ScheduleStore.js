@@ -348,7 +348,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
             return state.weeklyContent.filter(item => {
                 const itemStart = new Date(item.start_time);
                 return itemStart >= start && itemStart < end;
-            });
+            }).sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
         },
         nextSixHours: (state) => {
             let adjustedStart = state.viewingWindowStart

@@ -101,7 +101,9 @@
                             class="text-lg font-semibold text-blue-800 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-200"
                         >{{ newsStory.title }}
                         </button>
-                        <div>By {{newsStory.user.name}}</div>
+                        <div>By {{ newsStory.news_person && newsStory.news_person.name ? newsStory.news_person.name : newsStory.user.name }}
+                        </div>
+
                         <div class="flex flex-col pt-2 text-sm">
                           <div v-if="newsStory.newsCategory" class="font-medium text-orange-800">
                             {{newsStory.newsCategory}}
@@ -178,7 +180,7 @@
                             </button>
                             <button
                                 class="px-2 py-1 ml-1 h-fit text-white text-sm font-semibold bg-red-600 hover:bg-red-500 rounded-lg"
-                                @click="destroy(newsStory.id)"
+                                @click="destroy(newsStory.slug)"
                                 v-if="newsStory.can.deleteNewsStory && newsStory.status.id === 1"
                             >
                               <font-awesome-icon icon="fa-trash-can"/>
@@ -460,9 +462,9 @@ function publish() {
   topDiv.scrollIntoView()
 }
 
-function destroy(id) {
+function destroy(slug) {
   if (confirm('Are you sure you want to Delete')) {
-    form.delete(route('newsStory.destroy', id))
+    form.delete(route('newsStory.destroy', slug))
 
   }
 }

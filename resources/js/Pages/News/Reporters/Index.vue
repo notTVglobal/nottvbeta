@@ -65,7 +65,7 @@ const userStore = useUserStore()
 const videoPlayerStore = useVideoPlayerStore()
 
 // appSettingStore.noLayout = true
-// appSettingStore.currentPage = 'news.reporters'
+appSettingStore.currentPage = 'news.reporters'
 
 const { props } = usePage();
 

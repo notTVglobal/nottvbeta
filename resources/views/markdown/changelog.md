@@ -1,7 +1,14 @@
 # not.tv Changelog
 
-Last Update: March 6, 2024\
+Last Update: March 8, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.8.7.11
+March 8, 2024
+* Fix the News Story edit/ Location search and select function
+* Added News Person roles
+* Added policies for creating new stories, editing and publishing
+* Added the schedule to the schedule page.
 
 ## v0.8.7.10
 March 6, 2024

@@ -404,16 +404,61 @@ class ShowScheduleController extends Controller {
 
 
   private function fetchSchedules(Carbon $startTime, Carbon $endTime) {
-    return ShowSchedule::with(['showScheduleRecurrenceDetails'])
-        ->whereBetween('start_time', [$startTime, $endTime])
+//    return ShowSchedule::with(['showScheduleRecurrenceDetails'])
+//        ->whereBetween('start_time', [$startTime, $endTime])
+//        ->orderBy('start_time')
+//        ->get()
+//        ->map(function ($schedule) {
+//          return $this->transformSchedule($schedule);
+//        });
+    return ShowSchedule::where(function ($query) use ($startTime, $endTime) {
+      $query->whereBetween('start_time', [$startTime, $endTime])
+          ->orWhere('recurrence_flag', true); // Include recurring schedules
+    })
         ->orderBy('start_time')
         ->get()
-        ->map(function ($schedule) {
-          return $this->transformSchedule($schedule);
+        ->flatMap(function ($schedule) use ($startTime, $endTime) {
+          // If the schedule is recurring, generate instances for each recurrence within the week
+          if ($schedule->recurrence_flag && $schedule->showScheduleRecurrenceDetails) {
+            return $this->generateRecurringInstances($schedule, $startTime, $endTime);
+          }
+
+          // Non-recurring schedules or recurring ones outside the time frame are returned directly
+          return [$this->transformSchedule($schedule)];
         });
   }
 
-  private function transformSchedule($schedule) {
+  private function generateRecurringInstances($schedule, Carbon $startTime, Carbon $endTime): array {
+    $recurrenceDetails = $schedule->showScheduleRecurrenceDetails;
+    $daysOfWeek = json_decode($recurrenceDetails->days_of_week, true);
+    $instances = [];
+
+    // Convert start_date and end_date to Carbon instances, considering null values
+    $recurrenceStartDate = $recurrenceDetails->start_date ? new Carbon($recurrenceDetails->start_date) : null;
+    $recurrenceEndDate = $recurrenceDetails->end_date ? new Carbon($recurrenceDetails->end_date) : null;
+
+    $period = new \DatePeriod($startTime, new \DateInterval('P1D'), $endTime);
+    foreach ($period as $date) {
+      if (in_array($date->format('l'), $daysOfWeek)) {
+        // Check if the recurrence date is within the start_date and end_date range
+        if (($recurrenceStartDate && $date < $recurrenceStartDate) || ($recurrenceEndDate && $date > $recurrenceEndDate)) {
+          continue; // Skip this date as it's outside the recurrence period
+        }
+
+        $instance = clone $schedule;
+        // Adjust the date of the cloned instance to match the recurrence date
+        $instance->start_time = $date->setTime($schedule->start_time->hour, $schedule->start_time->minute);
+        $instance->end_time = $date->setTime($schedule->end_time->hour, $schedule->end_time->minute);
+
+        $instances[] = $this->transformSchedule($instance);
+      }
+    }
+
+    return $instances;
+  }
+
+
+  private function transformSchedule($schedule): array {
     $schedule->load('content');
     // Handle polymorphic relationship and other transformations
     $content = [];
@@ -469,10 +514,11 @@ class ShowScheduleController extends Controller {
         'recurrence_flag'    => $schedule->recurrence_flag ?? null,
         'recurrence_details' => $schedule->showScheduleRecurrenceDetails ? $schedule->showScheduleRecurrenceDetails->toArray() : null,
         'id'                 => $schedule->id,
+        'durationMinutes'   => $schedule->duration_minutes,
     ];
   }
 
-  public function removeFromSchedule(Request $request) {
+  public function removeFromSchedule(Request $request): JsonResponse {
     // Manually extract the data from the request body
     $data = $request->json()->all();
 

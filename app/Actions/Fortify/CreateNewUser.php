@@ -40,7 +40,7 @@ class CreateNewUser implements CreatesNewUsers {
       $isVip = 0; // default to not a VIP
       if ($inviteCode->user_role_id == 3) {
         $isVip = 1;
-        $roleId = 3; // Assuming 3 is the VIP user role_id
+//        $roleId = 3; // Assuming 3 is the VIP user role_id -- we only use 2 userRoles now, Standard User and Creator
       }
 
       $user = User::create([

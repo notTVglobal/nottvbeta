@@ -277,7 +277,6 @@ export const useVideoAuxPlayerStore = defineStore('videoAuxPlayerStore', {
             if (this.player) {
                 this.player.muted(true)
                 this.muted = true
-                console.log('Video muted')
             }
         },
         // Unmute the video
@@ -294,7 +293,6 @@ export const useVideoAuxPlayerStore = defineStore('videoAuxPlayerStore', {
 
                 this.player.muted(false)
                 this.muted = false
-                console.log('Video muted')
             }
         },
         togglePlay() {

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\News;
 use App\Models\NewsPerson;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -10,6 +9,7 @@ use Inertia\Inertia;
 
 class NewsController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *

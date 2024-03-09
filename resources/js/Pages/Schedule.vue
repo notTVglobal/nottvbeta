@@ -123,18 +123,28 @@
       </template>
     </PopUpModal>
 
+    <div class="bg-gray-600 rounded-lg shadow m-10 p-4">
+
+
+      <TodayView />
+    </div>
+
+
   </div>
 </template>
 
 <script setup>
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
+import { useScheduleStore } from "@/Stores/ScheduleStore"
 import Message from "@/Components/Global/Modals/Messages"
 import PopUpModal from "@/Components/Global/Modals/PopUpModal"
+import TodayView from '@/Components/Global/Calendar/TodayView.vue'
 
 usePageSetup('schedule')
 
 const appSettingStore = useAppSettingStore()
+const scheduleStore = useScheduleStore()
 
 let props = defineProps({
   can: Object,
