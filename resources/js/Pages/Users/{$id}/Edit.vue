@@ -40,32 +40,38 @@
                 class="font-semibold">{{ props.userEdit.id }}</span></div>
             <div class=""><span class="text-xs uppercase">Subscription Status: </span><span
                 class="font-semibold">{{ props.subscriptionStatus }}</span></div>
-            <div class="" v-if="props.userEdit.role_id == 4"><span class="text-xs uppercase">Creator #: </span><span
+            <div class="" v-if="props.userEdit.role_id === 4"><span class="text-xs uppercase">Creator #: </span><span
                 class="font-semibold">{{ props.userEdit.creatorNumber }}</span></div>
           </div>
           <div class="flex flex-col space-y-2 align-bottom">
             <button v-if="!isNewsPerson"
-                    @click="addUserToNewsroom"
+                    @click.prevent="openSelectNewsPersonRoleModal"
                     class="text-white font-semibold bg-yellow-600 hover:bg-yellow-800 hover:text-gray-100 rounded px-4 py-2 w-fit h-12">
               Add User to Newsroom
             </button>
             <button v-if="isNewsPerson"
-                    @click="removeUserFromNewsroom"
+                    @click.prevent="removeUserFromNewsroom"
                     class="text-white font-semibold bg-yellow-600 hover:bg-yellow-800 hover:text-gray-100 rounded px-4 py-2 w-fit h-12">
               Remove User from Newsroom
             </button>
+            <button v-if="isNewsPerson"
+                    @click.prevent="openChangeNewsPersonRoleModal"
+                    class="text-white font-semibold bg-yellow-600 hover:bg-yellow-800 hover:text-gray-100 rounded px-4 py-2 w-fit h-12">
+              Change User News Role(s)
+            </button>
+
             <button v-if="!isVip"
-                    @click="addUserToVip"
+                    @click.prevent="addUserToVip"
                     class="text-white font-semibold bg-indigo-600 hover:bg-indigo-800 hover:text-gray-100 rounded px-4 py-2 w-fit h-12">
               Make User a VIP
             </button>
             <button v-if="isVip"
-                    @click="removeUserFromVip"
+                    @click.prevent="removeUserFromVip"
                     class="text-white font-semibold bg-orange-600 hover:bg-orange-800 hover:text-gray-100 rounded px-4 py-2 w-fit h-12">
               Remove User from VIP
             </button>
             <button v-if="!hasSubscription"
-                    @click="getUserSubscriptionFromStripe"
+                    @click.prevent="getUserSubscriptionFromStripe"
                     class="text-white font-semibold bg-blue-600 hover:bg-blue-800 hover:text-gray-100 rounded px-4 py-2 w-fit h-12">
               Get Subscription From Stripe
             </button>
@@ -262,6 +268,37 @@
       </div>
 
     </div>
+
+    <dialog id="newsPersonRoleSelectModal" class="modal">
+      <div class="modal-box text-black">
+        <form method="dialog">
+          <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+        </form>
+        <h3 class="font-bold text-lg mb-2">Select News Person Role</h3>
+        <select v-model="selectedRoles" class="select select-bordered w-full max-w-xs" multiple>
+          <option v-for="role in roles" :key="role.id" :value="role.id">{{ role.name }}</option>
+        </select>
+
+        <button class="btn btn-primary mt-4" @click="addUserToNewsroom">Add User to Newsroom</button>
+
+      </div>
+    </dialog>
+
+    <dialog id="changeNewsPersonRoleModal" class="modal">
+      <div class="modal-box text-black">
+        <form method="dialog">
+          <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+        </form>
+        <h3 class="font-bold text-lg mb-2">Change News Person Role</h3>
+        <select v-model="selectedRoles" class="select select-bordered w-full max-w-xs" multiple>
+          <option v-for="role in roles" :key="role.id" :value="role.id">{{ role.name }}</option>
+        </select>
+
+        <button class="btn btn-primary mt-4" @click="addUserToNewsroom">Change User Role(s)</button>
+
+      </div>
+    </dialog>
+
   </div>
 </template>
 
@@ -273,6 +310,7 @@ import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import Message from '@/Components/Global/Modals/Messages'
 import JetValidationErrors from '@/Jetstream/ValidationErrors'
 import CancelButton from '@/Components/Global/Buttons/CancelButton.vue'
+import { ref } from 'vue'
 
 usePageSetup('users.edit')
 
@@ -281,7 +319,8 @@ const appSettingStore = useAppSettingStore()
 let props = defineProps({
   userEdit: Object,
   isNewsPerson: Boolean,
-  isVip: Boolean,
+  newsPersonId: Number,
+  isVip: Number,
   isSubscriber: Boolean,
   hasSubscription: null,
   subscriptionStatus: String,
@@ -302,6 +341,9 @@ let form = useForm({
   stripe_id: props.userEdit.stripe_id,
 })
 
+const roles = ref([]);
+const selectedRoles = ref([]);
+
 function reset() {
   form.reset()
 }
@@ -310,13 +352,49 @@ let submit = () => {
   form.patch(route('users.update', props.userEdit.id))
 }
 
+async function openSelectNewsPersonRoleModal() {
+  document.getElementById('newsPersonRoleSelectModal').showModal()
+  await fetchRoles();
+}
+
+async function openChangeNewsPersonRoleModal() {
+  await fetchRoles();
+  axios.get(`/newsroom/newsPerson/${props.newsPersonId}/roles`)
+      .then(response => {
+        selectedRoles.value = response.data.map(role => role.id);
+        document.getElementById('changeNewsPersonRoleModal').showModal();
+      })
+      .catch(error => {
+        console.error("There was an error fetching the user's roles: ", error);
+      });
+}
+
+// Fetch roles from the backend
+async function fetchRoles() {
+  await axios.get('/api/news-people-roles')
+      .then(response => {
+        roles.value = response.data;
+      })
+      .catch(error => {
+        console.error("There was an error fetching the roles: ", error);
+      });
+}
+
 function addUserToNewsroom() {
   Inertia.visit('/newsroom/newsPerson', {
     method: 'post',
     data: {
       id: props.userEdit.id,
       name: props.userEdit.name,
+      role_ids: selectedRoles.value, // Send an array of selected role IDs
     },
+  })
+}
+
+function updateUserNewsRoles() {
+  Inertia.post('/newsroom/newsPerson/updateRoles', {
+    id: props.userEdit.id,
+    role_ids: selectedRoles.value, // Send an array of selected role IDs
   })
 }
 

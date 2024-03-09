@@ -13,6 +13,7 @@ use App\Http\Controllers\InviteCodeController;
 use App\Http\Controllers\MistServerController;
 use App\Http\Controllers\MistStreamController;
 use App\Http\Controllers\MistStreamPushDestinationController;
+use App\Http\Controllers\NewsPersonRoleController;
 use App\Http\Controllers\NewsRssFeedItemArchiveController;
 use App\Http\Controllers\NewsRssFeedItemTempController;
 use App\Http\Controllers\NotificationsController;
@@ -441,6 +442,8 @@ Route::middleware([
   Route::resource('newsStory', NewsStoryController::class)->except(['index', 'show']);
   Route::patch('newsStoryChangeNewsStoryStatus', [NewsStoryController::class, 'changeStatus'])->name('news.story.changeStatus');
 
+  Route::get('/api/news-locations', [NewsStoryController::class, 'fetchNewsLocations']);
+
 
 // NewsPerson
 /////////////
@@ -448,6 +451,17 @@ Route::middleware([
   // Insert NewsPerson Routes here.
   // Standard resource route for newsPerson
   Route::resource('newsroom/newsPerson', NewsPersonController::class);
+
+  Route::get('/api/news-persons', [NewsPersonController::class, 'fetchNewsPersons']);
+
+
+// News People Roles
+////////////////////
+
+  Route::get('api/news-people-roles', [NewsPersonRoleController::class, 'index'])->name('newsPersonRole.index');
+  Route::get('/newsroom/newsPerson/{id}/roles', [NewsPersonController::class, 'fetchRoles']);
+  Route::post('/newsroom/newsPerson/updateRoles', [NewsPersonController::class, 'updateRoles'])
+      ->can('viewAdmin', 'App\Models\User');
 
 
 // NewsRssFeeds

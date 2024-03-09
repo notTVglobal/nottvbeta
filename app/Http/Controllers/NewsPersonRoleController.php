@@ -3,19 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Models\NewsPersonRole;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class NewsPersonRoleController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
+  /**
+   * Show the list of all News Person Roles.
+   *
+   * @return JsonResponse
+   */
+  public function index(): JsonResponse {
+    $roles = NewsPersonRole::all();
+    return response()->json($roles);
+  }
 
     /**
      * Show the form for creating a new resource.

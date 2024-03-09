@@ -59,6 +59,11 @@ class NewsStory extends Model {
     return $this->belongsTo(User::class);
   }
 
+  public function newsPerson()
+  {
+    return $this->belongsTo(NewsPerson::class);
+  }
+
   public function city() {
     return $this->belongsTo(NewsCity::class);
   }

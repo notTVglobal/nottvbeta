@@ -5,9 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ShowSchedule extends Model
-{
-    use HasFactory;
+class ShowSchedule extends Model {
+  use HasFactory;
 
   protected $table = 'show_schedule';
 
@@ -26,17 +25,16 @@ class ShowSchedule extends Model
 
   protected $casts = [
       'start_time' => 'datetime',
-      'end_time' => 'datetime',
+      'end_time'   => 'datetime',
     // other casts
   ];
 
-  public function content()
-  {
+  public function content() {
     return $this->morphTo(__FUNCTION__, 'content_type', 'content_id');
   }
 
-  public function showScheduleRecurrenceDetails()
-  {
-    return $this->belongsTo(ShowScheduleRecurrenceDetails::class, 'recurrence_details_id', 'id');  }
+  public function showScheduleRecurrenceDetails() {
+    return $this->belongsTo(ShowScheduleRecurrenceDetails::class, 'recurrence_details_id', 'id');
+  }
 
 }

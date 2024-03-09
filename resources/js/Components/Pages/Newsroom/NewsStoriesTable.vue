@@ -76,7 +76,8 @@
                   </button>
                 </div>
                 <div>
-                  <span class="uppercase text-xs font-semibold">By</span> {{ story.user.name }}
+                  <span class="uppercase text-xs font-semibold">By</span>
+                  {{ story.news_person && story.news_person.name ? story.news_person.name : story.user.name }}
                 </div>
               </div>
             </div>

@@ -283,7 +283,6 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             if (this.player) {
                 this.player.muted(true)
                 this.muted = true
-                console.log('Video muted')
             }
         },
         // Unmute the video
@@ -299,7 +298,6 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                 audioStore.fadeInAudioFromMuted()
 
                 this.muted = false
-                console.log('Video unmuted')
             }
         },
         togglePlay() {

@@ -1,6 +1,14 @@
 <template>
   <!-- Today view layout -->
   <div class="today-view container mx-auto px-4 py-8 flex flex-col">
+    <button  v-if="!scheduleStore.isToday"
+             @click="scheduleStore.setSelectedDayToToday(new Date());"
+             class="py-1 px-2 text-white rounded-lg w-fit"
+             :class="{'bg-blue-300': scheduleStore.isToday, 'bg-green-600 hover:bg-green-700': !scheduleStore.isToday}">
+      Go To Now</button>
+    <div class="flex justify-center text-center mb-4">
+      <h2 class="text-3xl font-bold mb-2">{{ dateMessage }}</h2>
+    </div>
     <div class="flex justify-between items-center mb-4">
       <button
           @click="scheduleStore.changeDay(-1)"
@@ -9,8 +17,8 @@
         &lt; Previous Day
       </button>
       <div class="flex flex-col text-center">
-        <h2 class="text-3xl font-bold text-black">{{ dateMessage }}</h2>
-        <h3>{{ userStore.canadianTimezoneDescription }}</h3>
+
+        <h3>{{ userStore.canadianTimezoneDescription }} Time</h3>
       </div>
       <button
           @click="scheduleStore.changeDay(1)"
@@ -26,25 +34,33 @@
       &#8593; Back 6 Hours
     </button>
 
-    <div class="flex flex-col gap-4 flex-grow">
+    <div class="flex flex-col flex-grow">
       <div v-for="(hour, index) in scheduleStore.nextSixHours" :key="hour.toString()">
 
         <!-- Time Segment Label -->
-        <div v-if="index === 0 || getTimeSegment(hour).segment !== getTimeSegment(scheduleStore.nextSixHours[index - 1]).segment"
-             :class="getTimeSegment(hour).color"
-             class="mb-4 p-2 text-black text-center font-bold text-2xl rounded shadow">
+        <div
+            v-if="index === 0 || getTimeSegment(hour).segment !== getTimeSegment(scheduleStore.nextSixHours[index - 1]).segment"
+            :class="getTimeSegment(hour).color"
+            class="mb-4 p-2 text-black text-center font-bold text-2xl rounded shadow">
           {{ getTimeSegment(hour).segment }}
         </div>
 
         <!-- Content for the current hour -->
         <template v-for="item in upcomingContent">
           <div v-if="isWithinCurrentHour(item, hour)" :key="item.id"
-               :class="getTimeSegment(new Date(item.start_time)).color" class="p-4 rounded-lg shadow">
+               :class="['p-4 rounded-lg shadow', getTimeSegment(new Date(item.start_time)).color, 'mb-4']">
             <div class="flex flex-row">
-              <div class="font-bold text-black">{{ formatHour(new Date(item.start_time)) }}&nbsp;{{ userStore.timezoneAbbreviation }}</div>
-              <div class="ml-4">
+              <div class="flex flex-col w-28 max-w-28 mr-4 text-gray-500">
+                <div class="font-bold text-black break-words">{{
+                    formatHour(new Date(item.start_time))
+                  }}&nbsp;{{ userStore.timezoneAbbreviation }}
+                </div>
+                <div class="break-words">{{ formatDuration(item.durationMinutes) }}</div>
+              </div>
+              <div class="">
                 <button @click.prevent="goToContentPage(item)">
-                  <SingleImage v-if="item.type === 'show'" :image="item?.content?.show?.image" :alt="item?.content?.show?.name" class="w-20 h-20"/>
+                  <SingleImage v-if="item.type === 'show'" :image="item?.content?.show?.image"
+                               :alt="item?.content?.show?.name" class="w-20 h-20"/>
                   <SingleImage v-else :image="item?.content?.image" :alt="item?.content?.name" class="w-20 h-20"/>
                 </button>
               </div>
@@ -56,23 +72,25 @@
                   </button>
                 </div>
                 <div class="mt-2">
-                  <div class="text-gray-700">
-                  <span class="ml-1 text-xs font-semibold tracking-wide uppercase">
-                    <span v-if="item.type === 'show'" class="text-green-500 bg-gray-900 px-2 py-1 rounded">show</span>
-                    <span v-if="item.type === 'movie'" class="text-pink-500 bg-gray-900 px-2 py-1 rounded">movie</span>
-                  </span>
-                    <span v-if="item?.content?.show?.category?.name || item?.content?.category?.name"
-                          class="ml-1 font-semibold text-xs uppercase tracking-wider text-yellow-600 bg-gray-900 px-2 py-1 rounded">
+                  <div class="text-gray-700 flex flex-wrap">
+                    <div class="ml-1 my-1 text-xs font-semibold tracking-wide uppercase">
+                      <span v-if="item.type === 'show'" class="text-green-500 bg-gray-900 px-2 py-1 rounded">show</span>
+                      <span v-if="item.type === 'movie'"
+                            class="text-pink-500 bg-gray-900 px-2 py-1 rounded">movie</span>
+                    </div>
+                    <div v-if="item?.content?.show?.category?.name || item?.content?.category?.name"
+                         class="ml-1 my-1 font-semibold text-xs uppercase tracking-wider text-yellow-600 bg-gray-900 px-2 py-1 rounded">
                     <span v-if="item.type === 'show' && item?.content?.show?.category?.name"
                           class="">{{ item?.content?.show?.category?.name }}</span>
-                    <span v-if="item.type === 'movie' && item?.content?.subCategory?.name"
-                          class="">{{ item?.content?.category?.name }}</span>
-                  </span>
-                    <span v-if="item?.content?.show?.subCategory?.name || item?.content?.subCategory?.name"
-                          class="ml-1 text-xs font-semibold tracking-wide text-yellow-500 bg-gray-900 px-2 py-1 rounded">
-                    <span v-if="item.type === 'show'" class="">{{ item?.content?.show?.subCategory?.name }}</span>
-                    <span v-if="item.type === 'movie'" class="">{{ item?.content?.subCategory?.name }}</span>
-                  </span>
+                      <span v-if="item.type === 'movie' && item?.content?.subCategory?.name"
+                            class="">{{ item?.content?.category?.name }}</span>
+                    </div>
+                    <div v-if="item?.content?.show?.subCategory?.name || item?.content?.subCategory?.name"
+                         class="ml-1 my
+                         -1 text-xs font-semibold tracking-wide text-yellow-500 bg-gray-900 px-2 py-1 rounded">
+                      <span v-if="item.type === 'show'" class="">{{ item?.content?.show?.subCategory?.name }}</span>
+                      <span v-if="item.type === 'movie'" class="">{{ item?.content?.subCategory?.name }}</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -83,14 +101,14 @@
 
         <!-- Fallback if no content is found for the current hour -->
         <div v-if="!isContentAvailableForHour(hour)" :class="getTimeSegment(hour).color"
-             class="p-4 rounded-lg shadow">
+             class="mb-4 p-4 rounded-lg shadow text-gray-500">
           <div class="font-semibold">{{ formatHour(hour) }}&nbsp;{{ userStore.timezoneAbbreviation }}</div>
           <div>Nothing scheduled.</div>
         </div>
 
         <!-- Dynamically insert the dateMessage for the next day if the hour is 11 PM -->
         <div v-if="scheduleStore.isElevenPM(hour) && scheduleStore.nextSixHours[index + 1]"
-             class="mt-4 p-2 bg-blue-800 text-white rounded shadow">
+             class="my-4 p-2 bg-blue-800 text-white rounded shadow">
           {{ generateDateMessage(addHours(hour, 1)) }}
         </div>
       </div>
@@ -98,7 +116,7 @@
 
     <button
         @click="scheduleStore.shiftHours(6)"
-        class="mt-4 bg-gray-100 hover:bg-gray-200 text-black py-2 rounded shadow"
+        class="bg-gray-100 hover:bg-gray-200 text-black py-2 rounded shadow"
     >
       &#8595; Forward 6 Hours
     </button>
@@ -128,21 +146,21 @@ import { Inertia } from '@inertiajs/inertia'
 
 const scheduleStore = useScheduleStore()
 const userStore = useUserStore()
-const { upcomingContent, dateMessage } = storeToRefs(scheduleStore);
+const {upcomingContent, dateMessage} = storeToRefs(scheduleStore)
 
-const selectedDay = ref(scheduleStore.selectedDay);
-const weeklyContent = computed(() => scheduleStore.weeklyContent);
+const selectedDay = ref(scheduleStore.selectedDay)
+const weeklyContent = computed(() => scheduleStore.weeklyContent)
 
 watch(selectedDay, (newValue) => {
-  scheduleStore.setSelectedDay(newValue);
+  scheduleStore.setSelectedDay(newValue)
   // If necessary, trigger other actions when selectedDay changes
-});
+})
 
 function isWithinCurrentHour(item, hour) {
   const startOfCurrentHour = startOfHour(hour)
   const endOfCurrentHour = addHours(startOfCurrentHour, 1)
   const contentStartTime = new Date(item.start_time)
-  return contentStartTime >= startOfCurrentHour && contentStartTime < endOfCurrentHour;
+  return contentStartTime >= startOfCurrentHour && contentStartTime < endOfCurrentHour
 }
 
 // Assuming `upcomingContent` is a computed property that already filters
@@ -160,7 +178,7 @@ function isContentAvailableForHour(hour) {
 }
 
 function formatHour(date) {
-  return format(date, 'h aaaa')
+  return format(date, 'h:mm aaaa')
 }
 
 function getTimeSegment(hour) {
@@ -201,6 +219,23 @@ const goToContentPage = (item) => {
   }
 }
 
+const formatDuration = (minutes) => {
+  if (minutes < 60) {
+    return `${minutes} minutes`
+  } else if (minutes === 60) {
+    return `1 hour`
+  } else {
+    const hours = Math.floor(minutes / 60)
+    const remainingMinutes = minutes % 60
+    if (remainingMinutes === 0) {
+      return `${hours} hours`
+    } else {
+      return `${hours} hour${hours > 1 ? 's' : ''} and ${remainingMinutes} minutes`
+    }
+  }
+}
+
+
 // Define a reactive watcher on the timezone
 // This watcher will call preloadWeeklyContent whenever the timezone changes and is not null
 watch(
@@ -208,19 +243,19 @@ watch(
     async (newTimezone, oldTimezone) => {
       // Ensure the timezone is set before calling preloadWeeklyContent
       if (newTimezone) {
-        await scheduleStore.preloadWeeklyContent();
+        await scheduleStore.preloadWeeklyContent()
       }
     },
-    { immediate: true } // This option ensures the watcher is triggered immediately on mount
-);
+    {immediate: true}, // This option ensures the watcher is triggered immediately on mount
+)
 
 // Optionally, keep the onMounted if there are other initialization tasks
 onMounted(async () => {
   // Check if timezone is already available on mount and preload content if it hasn't been done by the watcher
   if (userStore.timezone) {
-    await scheduleStore.preloadWeeklyContent();
+    await scheduleStore.preloadWeeklyContent()
   }
-});
+})
 </script>
 
 <style scoped>
