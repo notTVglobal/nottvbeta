@@ -103,7 +103,7 @@ class NewsRssFeedController extends Controller {
     // Combine temp and archive items, then apply filters and paginate
     $feedItems = DB::table(DB::raw("((SELECT id, title, description, link as url, image_url, pubDate, is_saved, NULL as image_id FROM news_rss_feed_item_temps WHERE news_rss_feed_id = {$newsRssFeed->id})
                                  UNION
-                                 (SELECT id, title, description, link as url, image_url, pubDate, NULL as is_saved, image_id FROM news_rss_feed_item_archives WHERE news_rss_feed_id = {$newsRssFeed->id})) as feed_items"))
+                                 (SELECT id, title, description, link as url, image_url, pubDate, 1 as is_saved, image_id FROM news_rss_feed_item_archives WHERE news_rss_feed_id = {$newsRssFeed->id})) as feed_items"))
         ->distinct('url')
         ->select('id', 'title', 'description', 'url', 'image_url', 'pubDate', 'is_saved', 'image_id')
         ->when(Request::input('search'), function ($query, $search) {
