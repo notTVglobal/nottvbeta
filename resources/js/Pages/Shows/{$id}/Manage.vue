@@ -187,6 +187,7 @@ import Message from '@/Components/Global/Modals/Messages'
 import DashboardButton from '@/Components/Global/Buttons/DashboardButton.vue'
 import ShowRecordings from '@/Components/Pages/Shows/Elements/ShowRecordings.vue'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { Inertia } from '@inertiajs/inertia'
 
 usePageSetup('shows/slug/manage')
 
@@ -199,8 +200,14 @@ const toggleComponent = (componentName) => {
   showStore.openComponent = showStore.openComponent === componentName ? null : componentName
 }
 
+
+
 onUnmounted(() => {
   showStore.errorMessage = ''
+  // const topDiv = document.getElementById("topDiv");
+  // if (topDiv) {
+  //   topDiv.scrollIntoView();
+  // }
 })
 
 let props = defineProps({

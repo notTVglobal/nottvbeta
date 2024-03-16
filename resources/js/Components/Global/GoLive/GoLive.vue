@@ -190,13 +190,22 @@
 
 
       <div class="mx-4 mt-4 mb-2 px-6 py-1 ">
+
         <div
             class="text-sm font-semibold bg-blue-600 text-white text-center w-full border-2 border-blue-600 rounded uppercase px-6 py-1 ">
           Push Destinations
         </div>
         <div class="shadow bg-blue-100 overflow-hidden border-2 border-blue-600 rounded p-6 space-y-3">
-          <div class="flex flex-row justify-between">
-            <div><h2 class="text-xl font-bold mb-4">Push Destinations</h2></div>
+
+          <div class="flex flex-row flex-wrap-reverse w-full justify-between">
+            <div class="mb-2">
+              <button @click="appSettingStore.btnRedirect('/training/how-to-push-to-facebook')"
+                      class="btn bg-blue-500 hover:bg-blue-700 rounded-lg text-white">How To Push To Facebook
+              </button>
+              <button @click="appSettingStore.btnRedirect('/training/how-to-push-to-rumble')"
+                      class="btn bg-blue-500 hover:bg-blue-700 rounded-lg text-white ml-2 ">How To Push To Rumble
+              </button>
+            </div>
             <div>
               <button class="btn bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-lg"
                       @click.prevent="addDestination">Add Push
@@ -204,6 +213,19 @@
               </button>
             </div>
           </div>
+
+
+          <div class="flex flex-row justify-between">
+            <div><h2 class="text-xl font-bold mb-4">Push Destinations</h2></div>
+
+          </div>
+
+
+
+
+
+
+
           <div v-if="mistStore.mistStreamPushDestinations.length === 0">
             <div>Set up <span class="font-bold">push destinations:</span></div>
             <div>Here you can set additional streaming destinations such as Facebook, YouTube, Rumble, Twitch, etc. and
@@ -219,9 +241,9 @@
                 <div class="flex-grow">
                   <h3 class="text-lg font-semibold">{{ destination.destination_name }}</h3>
                   <h4 class="">{{ destination.comment }}</h4>
-                  <p v-if="destination.push_is_started" class="text-green-500">Is Active</p>
-                  <p v-if="destination.has_auto_push && !destination.push_is_started" class="text-green-500">Auto push
+                  <p v-if="destination.has_auto_push" class="text-yellow-500 font-semibold">Auto push
                     is enabled</p>
+                  <p v-if="destination.push_is_started" class="text-red-500 font-semibold">Push Is Active</p>
                   <div class="flex gap-2 mt-2">
                     <button v-if="destination.push_is_started" @click="mistStore.stopPush(destination.id)"
                             class="py-2 px-4 bg-red-500 text-white rounded hover:bg-red-700 transition duration-150">
@@ -234,12 +256,12 @@
                     <button v-if="!destination.has_auto_push"
                             @click="mistStore.enableAutoPush(destination.id)"
                             class="py-2 px-4 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition duration-150">
-                      Auto Push
+                      Enable Auto Push
                     </button>
                     <button v-if="destination.has_auto_push"
                             @click="mistStore.disableAutoPush(destination.id)"
                             class="py-2 px-4 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition duration-150">
-                      Remove Auto Push
+                      Disable Auto Push
                     </button>
                   </div>
                 </div>

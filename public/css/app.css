@@ -6871,6 +6871,9 @@ hr {
 .z-999 {
     z-index: 999;
 }
+.z-2000 {
+    z-index: 2000;
+}
 
 .sr-only {
   position: absolute;
@@ -7095,6 +7098,10 @@ hr {
   margin: 0.25rem;
 }
 
+.m-10 {
+  margin: 2.5rem;
+}
+
 .m-4 {
   margin: 1rem;
 }
@@ -7105,14 +7112,6 @@ hr {
 
 .m-auto {
   margin: auto;
-}
-
-.m-8 {
-  margin: 2rem;
-}
-
-.m-10 {
-  margin: 2.5rem;
 }
 
 .-mx-2 {
@@ -7718,6 +7717,10 @@ hr {
   max-height: 96rem;
 }
 
+.max-h-full {
+  max-height: 100%;
+}
+
 .min-h-20 {
   min-height: 5rem;
 }
@@ -7952,6 +7955,10 @@ hr {
   max-width: 5rem;
 }
 
+.max-w-28 {
+  max-width: 7rem;
+}
+
 .max-w-4xl {
   max-width: 56rem;
 }
@@ -7996,6 +8003,10 @@ hr {
   max-width: 8rem;
 }
 
+.max-w-full {
+  max-width: 100%;
+}
+
 .max-w-lg {
   max-width: 32rem;
 }
@@ -8018,22 +8029,6 @@ hr {
 
 .max-w-xs {
   max-width: 20rem;
-}
-
-.max-w-10 {
-  max-width: 2.5rem;
-}
-
-.max-w-24 {
-  max-width: 6rem;
-}
-
-.max-w-32 {
-  max-width: 8rem;
-}
-
-.max-w-28 {
-  max-width: 7rem;
 }
 
 .flex-1 {
@@ -8841,6 +8836,11 @@ hr {
   background-color: rgb(191 219 254 / var(--tw-bg-opacity));
 }
 
+.bg-blue-300 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(147 197 253 / var(--tw-bg-opacity));
+}
+
 .bg-blue-400 {
   --tw-bg-opacity: 1;
   background-color: rgb(96 165 250 / var(--tw-bg-opacity));
@@ -9188,11 +9188,6 @@ hr {
 .bg-yellow-900 {
   --tw-bg-opacity: 1;
   background-color: rgb(113 63 18 / var(--tw-bg-opacity));
-}
-
-.bg-blue-300 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(147 197 253 / var(--tw-bg-opacity));
 }
 
 .bg-opacity-0 {
@@ -9962,6 +9957,11 @@ hr {
   color: rgb(49 46 129 / var(--tw-text-opacity));
 }
 
+.text-info {
+  --tw-text-opacity: 1;
+  color: var(--fallback-in,oklch(var(--in)/var(--tw-text-opacity)));
+}
+
 .text-neutral {
   --tw-text-opacity: 1;
   color: var(--fallback-n,oklch(var(--n)/var(--tw-text-opacity)));
@@ -10080,11 +10080,6 @@ hr {
 .text-yellow-700 {
   --tw-text-opacity: 1;
   color: rgb(161 98 7 / var(--tw-text-opacity));
-}
-
-.text-info {
-  --tw-text-opacity: 1;
-  color: var(--fallback-in,oklch(var(--in)/var(--tw-text-opacity)));
 }
 
 .underline {
@@ -10656,10 +10651,6 @@ hr {
 
 .hover\:bg-opacity-80:hover {
   --tw-bg-opacity: 0.8;
-}
-
-.hover\:bg-opacity-50:hover {
-  --tw-bg-opacity: 0.5;
 }
 
 .hover\:fill-accent:hover {
@@ -11587,6 +11578,18 @@ hr {
 
   .md\:max-w-sm {
     max-width: 24rem;
+  }
+
+  .md\:max-w-\[32rem\] {
+    max-width: 32rem;
+  }
+
+  .md\:max-w-\[75\%\] {
+    max-width: 75%;
+  }
+
+  .md\:max-w-\[60\%\] {
+    max-width: 60%;
   }
 
   .md\:grid-cols-1 {
