@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Jobs\ArchiveSavedRssFeedItemsJob;
+use Illuminate\Support\Facades\Log;
 
 class ArchiveRssFeedItemsCommand extends Command
 {
@@ -23,5 +24,6 @@ class ArchiveRssFeedItemsCommand extends Command
     ArchiveSavedRssFeedItemsJob::dispatch();
 
     $this->info('Archiving job dispatched.');
+    Log::info('Archived RSS feed items.');
   }
 }

@@ -3,6 +3,11 @@
 Last Update: March 8, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.7.13
+March 15, 2024
+* Fixed the NewsRssFeed Policies
+* Changed the purge News RSS Feed from daily to monthly
+
 ## v0.8.7.12
 March 15, 2024
 * Added How To Push To Facebook Training page

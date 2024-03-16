@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\InviteCode;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class ExpireInviteCodes extends Command
 {
@@ -39,5 +40,6 @@ class ExpireInviteCodes extends Command
       // Notify the distributor
       // $code->user could be used here to access the distributor's info
     }
+    Log::info('Expired old Invite Codes.');
   }
 }

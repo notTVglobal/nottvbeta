@@ -108,9 +108,9 @@ let form = useForm({
   url: props.feed.url,
 });
 
-let submit = () => {
-  form.patch(route("newsRssFeeds.update", props.feed.slug));
-};
+function submit() {
+  form.patch(route('newsRssFeeds.update', props.feed.slug))
+}
 
 let showMessage = ref(true);
 

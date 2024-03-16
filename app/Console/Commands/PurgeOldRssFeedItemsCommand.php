@@ -20,5 +20,7 @@ class PurgeOldRssFeedItemsCommand extends Command
       NewsRssFeedItemTemp::where('created_at', '<', $threshold)->delete();
 
       $this->info('Old RSS feed items purged successfully.');
+      Log::info('Old RSS feed items purged successfully.');
+
     }
 }
