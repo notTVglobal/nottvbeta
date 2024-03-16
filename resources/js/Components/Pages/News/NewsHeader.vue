@@ -52,14 +52,14 @@
           <li>
             <button disabled
                     class=""
-                    :class="getButtonClass('districts')">
+                    :class="getButtonClass('pressReleases')">
               Press Releases
             </button>
           </li>
           <li>
             <button disabled
                     class=""
-                    :class="getButtonClass('districts')">
+                    :class="getButtonClass('calendar')">
               Calendar
             </button>
           </li>
@@ -73,10 +73,9 @@
           </li>
           <li>
             <button
-                disabled
-                @click="appSettingStore.btnRedirect(`/newsRssFeedsArchive`)"
+                @click="appSettingStore.btnRedirect(`/newsRssArchive`)"
                 class=""
-                :class="getButtonClass('newsRssFeeds.archive')">
+                :class="getButtonClass('newsRssArchive.index')">
               Archive
             </button>
           </li>

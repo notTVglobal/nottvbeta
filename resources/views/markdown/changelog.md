@@ -1,7 +1,12 @@
 # not.tv Changelog
 
-Last Update: March 8, 2024\
+Last Update: March 16, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.8.7.16
+March 16, 2024
+* Add NewsRssArchive page
+* Fix the way items get archived
 
 ## v0.8.7.14
 March 15, 2024

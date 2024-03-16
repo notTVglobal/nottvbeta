@@ -11,6 +11,7 @@ class NewsRssFeedItemArchive extends Model
 
   protected $fillable = [
       'news_rss_feed_id',
+      'feedName',
       'title',
       'description',
       'link',

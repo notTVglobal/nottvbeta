@@ -96,21 +96,16 @@ class NewsRssFeedController extends Controller {
   }
 
   public function show(NewsRssFeed $newsRssFeed): \Inertia\Response {
-    // Depending on the size of your data, using union and groupBy might impact performance.
-    // If performance becomes an issue, consider optimizing your database indexes or rethinking the data architecture.
-    //      $tempItems = NewsRssFeedItemTemp::select('title', 'description', 'link as url', 'pubDate')
-    //          ->where('news_rss_feed_id', $newsRssFeed->id);
-    // Combine temp and archive items, then apply filters and paginate
-    $feedItems = DB::table(DB::raw("((SELECT id, title, description, link as url, image_url, pubDate, is_saved, NULL as image_id FROM news_rss_feed_item_temps WHERE news_rss_feed_id = {$newsRssFeed->id})
-                                 UNION
-                                 (SELECT id, title, description, link as url, image_url, pubDate, 1 as is_saved, image_id FROM news_rss_feed_item_archives WHERE news_rss_feed_id = {$newsRssFeed->id})) as feed_items"))
-        ->distinct('url')
-        ->select('id', 'title', 'description', 'url', 'image_url', 'pubDate', 'is_saved', 'image_id')
+    $feedItems = NewsRssFeedItemTemp::where('news_rss_feed_id', $newsRssFeed->id)
+        ->select('id', 'title', 'description', 'link as url', 'image_url', 'pubDate', 'is_saved', DB::raw('NULL as image_id'))
         ->when(Request::input('search'), function ($query, $search) {
-          $query->where('title', 'like', "%{$search}%")
-              ->orWhere('description', 'like', "%{$search}%");
+          $searchTerm = str_replace(['.', ' '], '', $search); // Optional: preprocess search term
+          $query->where(function($q) use ($searchTerm) {
+            $q->whereRaw("REPLACE(REPLACE(title, ' ', ''), '.', '') LIKE ?", ["%{$searchTerm}%"])
+                ->orWhereRaw("REPLACE(REPLACE(description, ' ', ''), '.', '') LIKE ?", ["%{$searchTerm}%"]);
+          });
         })
-        ->latest('pubDate')
+        ->orderByDesc('pubDate')
         ->paginate(10);
 
     return Inertia::render(

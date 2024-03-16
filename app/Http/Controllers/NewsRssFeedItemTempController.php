@@ -80,31 +80,34 @@ class NewsRssFeedItemTempController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function update(HttpRequest $request)
+    public function update(HttpRequest $request, NewsRssFeedItemTemp $newsRssFeedItemTemp)
     {
       $validatedData = $request->validate([
-          'id' => 'required|integer',
           'is_saved' => 'required|boolean', // Validates that is_saved is a boolean
-          'news_rss_feed_id' => 'required|integer'
       ]);
 
-      $newsRssFeedItemTemp = NewsRssFeedItemTemp::find($validatedData['id']);
-      if (!$newsRssFeedItemTemp) {
-        return response()->json(['message' => 'Feed item not found.'], 404);
-      }
+//      $newsRssFeedItemTemp = NewsRssFeedItemTemp::find($validatedData['id']);
+//      if (!$newsRssFeedItemTemp) {
+//        return response()->json(['message' => 'Feed item not found.'], 404);
+//      }
 
-      $newsRssFeedItemTemp->is_saved = $validatedData['is_saved'] ? 1 : 0;
+//      $newsRssFeedItemTemp->is_saved = $validatedData['is_saved'] ? 1 : 0;
+//      $newsRssFeedItemTemp->save();
+
+      $newsRssFeedItemTemp->is_saved = $validatedData['is_saved'];
       $newsRssFeedItemTemp->save();
 
       // Retrieve the related NewsRssFeed to get the slug
-      $newsRssFeed = NewsRssFeed::find($validatedData['news_rss_feed_id']);
-      if (!$newsRssFeed) {
-        return response()->json(['message' => 'News RSS Feed not found.'], 404);
-      }
+//      $newsRssFeed = NewsRssFeed::find($validatedData['news_rss_feed_id']);
+//      if (!$newsRssFeed) {
+//        return response()->json(['message' => 'News RSS Feed not found.'], 404);
+//      }
 
-      return to_route('newsRssFeeds.show', $newsRssFeed->slug)->with('success', 'Feed item updated successfully.');
+      return response()->json(['message' => 'Feed item updated successfully.']);
+//      return response()->json(['message' => 'Feed item updated successfully.', 'success' => true]);
+//      return to_route('newsRssFeeds.show', $newsRssFeed->slug)->with('success', 'Feed item updated successfully.');
 
 //      $newsRssFeedItemTemp = NewsRssFeedItemTemp::find($request->id);
 //      $newsRssFeedItemTemp->is_saved = $request->is_saved;
@@ -147,8 +150,10 @@ class NewsRssFeedItemTempController extends Controller
   {
     $newsRssFeedItemTemp->is_saved = true;
     $newsRssFeedItemTemp->save();
+    return redirect()->back()->with('success', 'Feed item updated successfully.');
+//    return response()->json(['message' => 'Feed item updated successfully.']);
 
-    return redirect()->route('newsRssFeedItemsTemp.index')
-        ->with('success', 'Feed item saved successfully.');
+//    return redirect()->route('newsRssFeedItemsTemp.index')
+//        ->with('success', 'Feed item saved successfully.');
   }
 }

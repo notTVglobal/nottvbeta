@@ -40,12 +40,13 @@ class ArchiveSavedRssFeedItemsJob implements ShouldQueue
 
       foreach ($savedItems as $item) {
         // Check if the item is already in the archive
-        $existingArchiveItem = NewsRssFeedItemArchive::where('link', $item->link)->first();
+        $existingArchiveItem = NewsRssFeedItemArchive::where('link', $item->link)->with('newsRssFeed')->first();
 
         if (!$existingArchiveItem) {
           // Archive the item
           $archivedItem = new NewsRssFeedItemArchive();
           $archivedItem->news_rss_feed_id = $item->news_rss_feed_id;
+          $archivedItem->feedName = $item->newsRssFeed->name;
           $archivedItem->title = $item->title;
           $archivedItem->description = $item->description;
           $archivedItem->link = $item->link;
