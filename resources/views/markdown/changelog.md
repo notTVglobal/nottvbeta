@@ -3,6 +3,10 @@
 Last Update: March 8, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.7.14
+March 15, 2024
+* Fix Archive RSS Feed Item 500 Error
+
 ## v0.8.7.13
 March 15, 2024
 * Fixed the NewsRssFeed Policies

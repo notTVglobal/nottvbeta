@@ -90,18 +90,34 @@ class NewsRssFeedItemTempController extends Controller
           'news_rss_feed_id' => 'required|integer'
       ]);
 
-      $newsRssFeedItemTemp = NewsRssFeedItemTemp::find($request->id);
-      $newsRssFeedItemTemp->is_saved = $request->is_saved;
+      $newsRssFeedItemTemp = NewsRssFeedItemTemp::find($validatedData['id']);
+      if (!$newsRssFeedItemTemp) {
+        return response()->json(['message' => 'Feed item not found.'], 404);
+      }
+
+      $newsRssFeedItemTemp->is_saved = $validatedData['is_saved'] ? 1 : 0;
       $newsRssFeedItemTemp->save();
 
-      $newsRssFeedId = $request->news_rss_feed_id;
+      // Retrieve the related NewsRssFeed to get the slug
+      $newsRssFeed = NewsRssFeed::find($validatedData['news_rss_feed_id']);
+      if (!$newsRssFeed) {
+        return response()->json(['message' => 'News RSS Feed not found.'], 404);
+      }
 
-      // Retrieve the related NewsRssFeed's slug
-      $newsRssFeed = NewsRssFeed::find($request->news_rss_feed_id);
+      return to_route('newsRssFeeds.show', $newsRssFeed->slug)->with('success', 'Feed item updated successfully.');
+
+//      $newsRssFeedItemTemp = NewsRssFeedItemTemp::find($request->id);
+//      $newsRssFeedItemTemp->is_saved = $request->is_saved;
+//      $newsRssFeedItemTemp->save();
+
+//      $newsRssFeedId = $request->news_rss_feed_id;
+
+
+//      $newsRssFeed = NewsRssFeed::find($request->news_rss_feed_id);
 
         // Redirect to the specific newsRssFeed show route with success message
 //      return response()->json(['message' => 'Feed item updated successfully.']);
-      return to_route('newsRssFeeds.show', $newsRssFeed->slug)->with('success', 'Feed item updated successfully.');
+//      return to_route('newsRssFeeds.show', $newsRssFeed->slug)->with('success', 'Feed item updated successfully.');
 //      return Inertia::location(route('newsRssFeeds.show', $newsRssFeed->slug));
 //        return redirect()->route('newsRssFeeds.show', $newsRssFeedSlug)
 //            ->with('success', 'Feed item updated successfully.');
