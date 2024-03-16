@@ -14,7 +14,7 @@ use App\Http\Controllers\MistServerController;
 use App\Http\Controllers\MistStreamController;
 use App\Http\Controllers\MistStreamPushDestinationController;
 use App\Http\Controllers\NewsPersonRoleController;
-use App\Http\Controllers\NewsRssFeedItemArchiveController;
+use App\Http\Controllers\NewsRssArchiveController;
 use App\Http\Controllers\NewsRssFeedItemTempController;
 use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\ShowScheduleController;
@@ -477,7 +477,7 @@ Route::middleware([
       ->name('newsRssFeedItemsTemp.save');
 
   // Resource route for archived feed items
-  Route::resource('/newsRssFeedItemsArchive', NewsRssFeedItemArchiveController::class);
+  Route::resource('/newsRssArchive', NewsRssArchiveController::class);
 
 
 // Subscriptions
