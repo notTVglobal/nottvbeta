@@ -22,7 +22,7 @@
         </div>
         <div class="py-3 px-6">
           <form @submit.prevent="submit">
-            <div class="">
+            <div class="w-full">
               <label for="email" class="input input-bordered input-primary flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
                      class="w-4 h-4 opacity-70">
@@ -32,11 +32,11 @@
                       d="M15 6.954 8.978 9.86a2.25 2.25 0 0 1-1.956 0L1 6.954V11.5A1.5 1.5 0 0 0 2.5 13h11a1.5 1.5 0 0 0 1.5-1.5V6.954Z"/>
                 </svg>
                 <input id="email"
-                       v-model="form.email" type="email" class="grow border-none" placeholder="Email" required autofocus/>
+                       v-model="form.email" type="email" class="grow border-none w-full" placeholder="Email" required autofocus/>
               </label>
             </div>
 
-            <div class="mt-4">
+            <div class="w-full mt-4">
               <label for="password" class="input input-bordered input-primary flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
                      class="w-4 h-4 opacity-70">
@@ -45,7 +45,7 @@
                         clip-rule="evenodd"/>
                 </svg>
                 <input id="password"
-                       v-model="form.password" type="password" class="grow border-none" value="" required/>
+                       v-model="form.password" type="password" class="grow border-none w-full" value="" required/>
               </label>
             </div>
 
@@ -56,7 +56,7 @@
               </label>
             </div>
 
-            <div class="flex items-center justify-end mt-4">
+            <div class="flex flex-wrap-reverse items-center justify-end mt-4">
               <Link :href="route('password.request')" class="underline text-sm text-gray-600 hover:text-gray-900">
                 Forgot your password?
               </Link>

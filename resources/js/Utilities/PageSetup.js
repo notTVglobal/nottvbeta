@@ -2,6 +2,7 @@ import { onBeforeMount, onMounted } from 'vue'
 import { useUserStore } from "@/Stores/UserStore"
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
+import { Inertia } from '@inertiajs/inertia'
 
 export function usePageSetup(pageName) {
     const userStore = useUserStore()
@@ -23,15 +24,27 @@ export function usePageSetup(pageName) {
         window.location.reload(true);
     }
     // Check if the URL contains query strings
-    const hasQueryStrings = window.location.search !== '';
+
 
     // Only scroll into view if there are no query strings
-    if (!hasQueryStrings) {
-        const topDiv = document.getElementById("topDiv")
-        if (topDiv) {
-            topDiv.scrollIntoView()
-        }
-    }
+
+        // const topDiv = document.getElementById("topDiv")
+        // if (topDiv) {
+        //     topDiv.scrollIntoView()
+        // }
+        Inertia.on('navigate', (event) => {
+            const hasQueryStrings = window.location.search !== '';
+            if (!hasQueryStrings) {
+                requestAnimationFrame(() => {
+                    const topDiv = document.getElementById("topDiv");
+                    if (topDiv) {
+                        topDiv.scrollIntoView({behavior: 'auto'});
+                    } else {
+                        window.scrollTo(0, 0);
+                    }
+                });
+            }
+        })
     // Only update if we're not already on this page to avoid overwriting with the current URL
     appSettingStore.setPrevUrl()
     appSettingStore.noLayout = false

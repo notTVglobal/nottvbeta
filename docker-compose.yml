@@ -82,7 +82,7 @@ services:
                 ipv4_address: 172.20.0.7
         volumes:
             - './storage/app/public/videos:/media'
-        shm_size: '8gb'
+        shm_size: '4gb'
 #    mariadb:
 #        image: 'mariadb:10'
 #        ports:

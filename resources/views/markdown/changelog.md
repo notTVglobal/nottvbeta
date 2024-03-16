@@ -3,6 +3,12 @@
 Last Update: March 8, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.7.12
+March 15, 2024
+* Added How To Push To Facebook Training page
+* Other fixes
+* Start Push and Stop Push buttons are working.
+
 ## v0.8.7.11
 March 8, 2024
 * Fix the News Story edit/ Location search and select function
@@ -37,7 +43,7 @@ March 1, 2024
 ## v0.8.7.5
 March 1, 2024
 * Made the 'get an invite' code button on the register page easier to see.
-* The Show Runner can now seet he shows they are running on their dasboard, and they can edit and schedule the show they are running.
+* The Show Runner can now see the shows they are running on their dashboard, and they can edit and schedule the show they are running.
 * Fixed the Add Show Runner modal still showing up, even if there was a Show Runner on the Show Edit page.
 
 ## v0.8.7.4

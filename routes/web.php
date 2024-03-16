@@ -805,6 +805,16 @@ Route::middleware([
   })->can('viewCreator', 'App\Models\User')
       ->name('training.goLiveUsingZoom');
 
+  Route::get('/training/how-to-push-to-facebook', function () {
+    return Inertia::render('Training/HowToPushToFacebook');
+  })->can('viewCreator', 'App\Models\User')
+      ->name('training.howToPushToFacebook');
+
+  Route::get('/training/how-to-push-to-rumble', function () {
+    return Inertia::render('Training/HowToPushToRumble');
+  })->can('viewCreator', 'App\Models\User')
+      ->name('training.howToPushToRumble');
+
 // Shows
 ///////////
   // Shows resource

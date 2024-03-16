@@ -130,24 +130,24 @@ class MistStreamPushDestinationController extends Controller
         'rtmp_url' => $url, // Update the URL with the adjusted one
         'rtmp_key' => $key, // The key with the adjusted one, if applicable
         'destination_name' => 'Custom RTMP Destination',
-        'destination_image' => 'https://img.api.video/rtmp_f9ff34ac42.png', // Replace with your default image URL
+        'destination_image' => 'https://cdn.nottv.io/public/2024/03/images/ARERR4HkdO0tBXuXoV3pMnjVT9df1CV7MEB7olfd.png', // Replace with your default image URL
     ];
 
     if (str_contains($url, 'facebook')) {
       $details['destination_name'] = 'Facebook';
-      $details['destination_image'] = 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Facebook_Logo_%282019%29.png/900px-Facebook_Logo_%282019%29.png'; // Replace with actual URL
+      $details['destination_image'] = 'https://cdn.nottv.io/public/2024/03/images/fHL00bkodNOe1oDRUlUu9Z9p7VaUsRlcpHU1JdWx.png';
     } elseif (str_contains($url, 'rumble')) {
       $details['destination_name'] = 'Rumble';
-      $details['destination_image'] = 'https://cdn.freelogovectors.net/wp-content/uploads/2023/05/rumble-logo-freelogovectors.net_.png'; // Replace with actual URL
+      $details['destination_image'] = 'https://cdn.nottv.io/public/2024/03/images/8m5K3r1gSRmiSbFKaO7BN1wnPOaLlqwmfjW5QvPW.png';
     } elseif (str_contains($url, 'youtube')) {
       $details['destination_name'] = 'YouTube';
-      $details['destination_image'] = 'https://c0.klipartz.com/pngpicture/982/799/gratis-png-logo-de-youtube-logo-de-youtube-marketing-en-internet-suscribirse.png'; // Replace with actual URL
+      $details['destination_image'] = 'https://cdn.nottv.io/public/2024/03/images/KTAI6CmAjfDzMHI5muYCqvjtBmoRz7jbnnz5Y2Rc.png';
     } elseif (str_contains($url, 'librti')) {
       $details['destination_name'] = 'Librti';
-      $details['destination_image'] = 'https://s3.us-central-1.wasabisys.com/lib-backup-na/bx_organizations_pics_resized/a/au/auw/auwyawyfhtf9z4yvysvptptu6zetz4bg.png'; // Replace with actual URL
+      $details['destination_image'] = 'https://cdn.nottv.io/public/2024/03/images/2obTxvAcBB94EBbF9IYHBsABv7J8ju5jHW9Vmvrs.png';
     } elseif (str_contains($url, 'fbcdn')) {
       $details['destination_name'] = 'Instagram';
-      $details['destination_image'] = 'https://png.pngtree.com/png-clipart/20230401/original/pngtree-three-dimensional-instagram-icon-png-image_9015419.png'; // Replace with actual URL
+      $details['destination_image'] = 'https://cdn.nottv.io/public/2024/03/images/Y3l3cvBI2dEnYBQ7RuavkZyMibTVJVUUTZf9Tbc1.png';
     }
 
     return $details;
