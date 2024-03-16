@@ -172,7 +172,7 @@ class NewsStoryPolicy
       return Response::deny('You must be a producer or assignment editor to restore news stories.');
     }
 
-    public function delete(User $user, NewsStory $newsStory)
+    public function delete(User $user)
     {
 
       // Directly allow admins to delete

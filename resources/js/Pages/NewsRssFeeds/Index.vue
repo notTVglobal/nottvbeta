@@ -88,7 +88,7 @@
                       </button>
                       <button
                           v-if="userStore.isAdmin"
-                          @click="destroy(feed.id)"
+                          @click="destroy(feed.slug)"
                           class="px-2 py-1 text-white bg-red-600 hover:bg-red-500 rounded-lg"
                       >
                         <font-awesome-icon icon="fa-trash-can"/>
@@ -153,9 +153,9 @@ function scrollToCities() {
 }
 
 
-function destroy(id) {
+function destroy(slug) {
   if (confirm('Are you sure you want to Delete')) {
-    form.delete(route('newsRssFeeds.destroy', id))
+    form.delete(route('newsRssFeeds.destroy', slug))
 
   }
 }

@@ -32,7 +32,7 @@ class Kernel extends ConsoleKernel {
       // This means it will run after migrations have completed during an artisan command.
     });
 
-    $schedule->command('purge:oldRssFeedItems')->daily();
+    $schedule->command('purge:oldRssFeedItems')->monthly();
     $schedule->command('newsRssFeed:archive')->dailyAt('08:00');
   }
 
