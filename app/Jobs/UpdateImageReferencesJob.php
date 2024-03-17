@@ -11,6 +11,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class UpdateImageReferencesJob implements ShouldQueue
 {
@@ -33,39 +34,46 @@ class UpdateImageReferencesJob implements ShouldQueue
      *
      * @return void
      */
-    public function handle()
-    {
-      $duplicateImages = ImageHash::where('is_duplicate', 1)->get();
-
+  public function handle()
+  {
+    // Use chunking to manage memory usage better and handle large numbers of images efficiently
+    ImageHash::where('is_duplicate', 1)->chunk(100, function ($duplicateImages) {
       foreach ($duplicateImages as $duplicateImage) {
-        $originalImageId = ImageHash::where('hash', $duplicateImage->hash)
-            ->where('is_duplicate', 0)
-            ->first()
-            ->image_id ?? null;
+        try {
+          // Retrieve the original image ID based on the hash
+          $originalImage = ImageHash::where('hash', $duplicateImage->hash)
+              ->where('is_duplicate', 0)
+              ->first();
 
-        if ($originalImageId) {
-          // Update the table's image_id to the original image_id
-          DB::table($this->table)
-              ->where('image_id', $duplicateImage->image_id)
-              ->update(['image_id' => $originalImageId]);
+          if ($originalImage) {
+            // Perform the update operation within a transaction
+            DB::transaction(function () use ($duplicateImage, $originalImage) {
+              // Update references in the target table to the original image ID
+              DB::table($this->table)
+                  ->where('image_id', $duplicateImage->image_id)
+                  ->update(['image_id' => $originalImage->image_id]);
 
-          DB::transaction(function () use ($duplicateImage) {
-            // Attempt to acquire a lock for the specific duplicate image ID
-            $existingQueueEntry = DB::table('image_deletion_queue')
-                ->where('duplicate_image_id', $duplicateImage->image_id)
-                ->lockForUpdate()
-                ->exists();
+              // Check if this duplicate image ID is already in the deletion queue
+              $exists = DB::table('image_deletion_queue')
+                  ->where('duplicate_image_id', $duplicateImage->image_id)
+                  ->exists();
 
-            if (!$existingQueueEntry) {
-              // If not exists, insert the duplicate image ID into the image_deletion_queue table
-              DB::table('image_deletion_queue')->insert([
-                  'duplicate_image_id' => $duplicateImage->image_id,
-                  'created_at' => now(),
-                  'updated_at' => now(),
-              ]);
-            }
-          });
+              if (!$exists) {
+                // If not, add it to the queue for deletion
+                DB::table('image_deletion_queue')->insert([
+                    'duplicate_image_id' => $duplicateImage->image_id,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+              }
+            });
+          }
+        } catch (\Exception $e) {
+          // Log any exceptions and continue processing the next images
+          Log::error("Failed to process duplicate image {$duplicateImage->image_id}: " . $e->getMessage());
         }
       }
-    }
+    });
+  }
+
 }
