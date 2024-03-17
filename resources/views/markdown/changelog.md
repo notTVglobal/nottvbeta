@@ -3,6 +3,11 @@
 Last Update: March 16, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.7.19
+March 16, 2024
+* Troubleshoot and attempt to fix the failed job error:
+  * App\Jobs\UpdateImageReferencesJob has been attempted too many times or run too long.
+
 ## v0.8.7.18
 March 16, 2024
 * Slight adjustments to the commands and jobs.
