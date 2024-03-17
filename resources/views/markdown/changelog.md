@@ -3,6 +3,11 @@
 Last Update: March 16, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.7.18
+March 16, 2024
+* Slight adjustments to the commands and jobs.
+* Changed RssFeed jobs to update feeds every hour, archive feed items every hour and purge old feed items every month.
+
 ## v0.8.7.17
 March 16, 2024
 * Create three commands to purge duplicate images from the database in preparation to update the ImageController to reference existing images instead of uploading duplicates.
