@@ -39,7 +39,8 @@
                     </label>
 
                     <ImageUpload :image="image"
-                                 :server="'/showsUploadPoster'"
+                                 :modelType="'show'"
+                                 :modelId="show.id"
                                  :name="'Upload Show Poster'"
                                  :maxSize="'30MB'"
                                  :fileTypes="'image/jpg, image/jpeg, image/png'"

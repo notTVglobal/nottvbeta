@@ -369,7 +369,8 @@
                       <div class="max-full mx-auto mt-2 mb-6 bg-gray-200 p-6">
 
                         <ImageUpload :image="props.image"
-                                     :server="'/showEpisodesUploadPoster'"
+                                     :modelType="'showEpisode'"
+                                     :modelId="episode.id"
                                      :name="'Upload Episode Poster'"
                                      :maxSize="'20MB'"
                                      :fileTypes="'image/jpg, image/jpeg, image/png'"

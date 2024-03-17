@@ -12,7 +12,7 @@
           ref="pond"
           label-idle="Click to choose file, or drag here..."
           @init="filepondInitialized"
-          :server="server"
+          :server="serverOptions"
           :accepted-file-types="fileTypes"
           @processfile="handleProcessedFile"
           :max-file-size="maxSize"
@@ -31,8 +31,7 @@
 </template>
 
 <script setup>
-import { Inertia } from "@inertiajs/inertia"
-import { computed, ref } from "vue"
+import { useNotificationStore } from '@/Stores/NotificationStore'
 import vueFilePond, { setOptions } from 'vue-filepond'
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type"
 import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size"
@@ -41,12 +40,15 @@ import FilePondPluginFileMetadata from "filepond-plugin-file-metadata"
 import 'filepond/dist/filepond.min.css'
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css'
 
+const notificationStore = useNotificationStore()
+
 let props = defineProps({
   image: Object,
   name: String,
   metadataKey: String,
   metadataValue: String,
-  server: String,
+  modelType: String,
+  modelId: String,
   maxSize: String,
   fileTypes: String,
 })
@@ -78,31 +80,67 @@ const customMetadata = {
 // FilePond server options (you can customize this)
 const serverOptions = {
   process: (fieldName, file, metadata, load, error, progress, abort) => {
-    // Construct a FormData object to send the file and metadata to your Laravel server
     const formData = new FormData();
-    formData.append('file', file, file.name); // Add the file
-    formData.append('metadata', JSON.stringify(customMetadata)); // Add the metadata as a JSON string
+    formData.append('image', file, file.name); // Attach the file
+    // Append modelType and modelId if it's part of your component
+    if (props.modelType) {
+      formData.append('modelType', props.modelType);
+    }
+    if (props.modelId) {
+      formData.append('modelId', props.modelId);
+    }
 
-    // Make an Axios POST request to your Laravel backend
-    axios.post(props.server, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data', // Set the appropriate content type
-      },
+    // Axios request configuration
+    const config = {
       onUploadProgress: (event) => {
-        const progressPercentage = Math.round((event.loaded / event.total) * 100);
-        // Update the progress bar or display progress percentage if needed
-        progress(progressPercentage);
+        // Calculate and update progress
+        progress(event.lengthComputable, event.loaded, event.total);
       },
-    })
-        .then((response) => {
-          // Handle a successful upload
-          load(response.data.url); // Pass the file URL to the load() function
+    };
+
+    // Perform the Axios POST request
+    axios.post('/api/image-upload', formData, config)
+        .then(response => {
+          // FilePond expects the server to return a file ID on successful upload,
+          // but you can adjust this based on your response structure.
+          load(response.data.fileId);
         })
-        .catch((err) => {
-          // Handle upload error
-          console.error('Upload error:', err);
-          error('Error uploading the file'); // Pass an error message to the error() function
+        .catch(err => {
+          // Default error message and title in case err.response is undefined
+          let errorMessage = 'An unexpected error occurred during the upload. Please try again.';
+          let errorTitle = 'Upload Error';
+
+          // Check if the error response exists and has data
+          if (err.response && err.response.data) {
+            // Example: Extracting error message from server response
+            // Adjust based on your server's error response structure
+            if (typeof err.response.data === 'object' && err.response.data.errors) {
+              // If the errors are in object format, you might want to convert them to a string
+              const errors = err.response.data.errors;
+              const errorMessages = Object.keys(errors).map(key => `${key}: ${errors[key].join(', ')}`).join('\n');
+              errorMessage = `Upload failed with errors:\n${errorMessages}`;
+            } else if (typeof err.response.data === 'string') {
+              // Directly use the error string as the message
+              errorMessage = err.response.data;
+            }
+          }
+
+          // Use the errorMessage and errorTitle in your notification
+          notificationStore.setGeneralServiceNotification(errorTitle, errorMessage);
+
+          // Pass a generic error message to FilePond's error handler to avoid displaying sensitive or detailed information directly in the UI
+          error('An error occurred during the upload.');
         });
+
+
+    // Return an abort function to stop the upload if needed
+    return {
+      abort: () => {
+        // This function is called if the user aborts the upload
+        console.log("Upload aborted by the user.");
+        abort();
+      }
+    };
   },
 };
 

@@ -354,11 +354,11 @@ class TeamsController extends Controller {
     ];
   }
 
-        // tec21: I am querying the database here because there is currently no
-        // pivot table between creators and teams.
-        protected function getTeams($userId): \Illuminate\Support\Collection {
-          return TeamMember::query()->where('user_id', $userId)->pluck('team_id');
-        }
+  // tec21: I am querying the database here because there is currently no
+  // pivot table between creators and teams.
+  protected function getTeams($userId): \Illuminate\Support\Collection {
+    return TeamMember::query()->where('user_id', $userId)->pluck('team_id');
+  }
 
   protected function getCreators() {
     // Assuming Creator model is related to User and has a 'status' relationship
@@ -373,8 +373,8 @@ class TeamsController extends Controller {
         ->withQueryString()
         ->through(function ($creator) {
           return [
-              'id'   => $creator->user->id,
-              'name' => $creator->user_name,
+              'id'    => $creator->user->id,
+              'name'  => $creator->user_name,
               'teams' => $this->getTeams($creator->user->id),
             // Add other necessary fields
           ];
@@ -697,6 +697,7 @@ class TeamsController extends Controller {
 
     return Inertia::render('Teams/{$id}/Edit', [
         'team'                => [
+            'id'               => $team->id,
             'name'             => $team->name,
             'description'      => $team->description,
             'slug'             => $team->slug,

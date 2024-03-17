@@ -906,6 +906,9 @@ Route::middleware([
       ->can('viewCreator', 'App\Models\User')
       ->name('movies.uploadPoster');
 
+  Route::post('/api/image-upload', [ImageController::class, 'upload'])
+    ->name('image.upload');
+
 // Movies
 ///////////
   Route::resource('movies', MovieController::class);

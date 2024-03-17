@@ -92,7 +92,8 @@
                                         </label>
 
                                         <ImageUpload :image="image"
-                                                     :server="'/moviesUploadPoster'"
+                                                     :modelType="'movie'"
+                                                     :modelId="movie.id"
                                                      :name="'Upload Movie Poster'"
                                                      :maxSize="'30MB'"
                                                      :fileTypes="'image/jpg, image/jpeg, image/png'"
