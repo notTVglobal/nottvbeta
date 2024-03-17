@@ -66,6 +66,7 @@ const videoPlayerStore = useVideoPlayerStore()
 
 // appSettingStore.noLayout = true
 appSettingStore.currentPage = 'news.reporters'
+appSettingStore.setPrevUrl()
 
 const { props } = usePage();
 

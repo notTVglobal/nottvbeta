@@ -18,7 +18,8 @@ class NewsRssFeedItemArchive extends Model
       'pubDate',
       'image_url',
       'image_id',
-      'extra_metadata'
+      'extra_metadata',
+      'saved_by_user_id'
   ];
 
   /**
@@ -33,5 +34,10 @@ class NewsRssFeedItemArchive extends Model
   public function image()
   {
     return $this->belongsTo(Image::class, 'image_id');
+  }
+
+  public function savedBy()
+  {
+    return $this->belongsTo(User::class, 'saved_by_user_id');
   }
 }

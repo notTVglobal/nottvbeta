@@ -3,6 +3,13 @@
 Last Update: March 16, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.7.17
+March 16, 2024
+* Create three commands to purge duplicate images from the database in preparation to update the ImageController to reference existing images instead of uploading duplicates.
+  * php artisan images:hash
+  * php artisan images:update-references
+  * php artisan images:delete-queued
+
 ## v0.8.7.16
 March 16, 2024
 * Add NewsRssArchive page

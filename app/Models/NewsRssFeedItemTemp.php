@@ -18,6 +18,7 @@ class NewsRssFeedItemTemp extends Model
       'image_url',
       'is_saved',
       'extra_metadata',
+      'saved_by_user_id'
   ];
 
 //  protected $attributes = [
@@ -33,6 +34,11 @@ class NewsRssFeedItemTemp extends Model
   public function newsRssFeed()
   {
     return $this->belongsTo(NewsRssFeed::class, 'news_rss_feed_id');
+  }
+
+  public function savedBy()
+  {
+    return $this->belongsTo(User::class, 'saved_by_user_id');
   }
 
 }

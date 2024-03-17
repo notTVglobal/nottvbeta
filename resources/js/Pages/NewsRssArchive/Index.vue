@@ -37,7 +37,10 @@
                 </div>
                 <div class="text-xs mb-2">{{ formatDate(item.pubDate) }}</div>
                 <div v-html="item.description" class="mb-2"></div>
-                <div class="flex justify-center"><a :href="item.url" target="_blank"><img :src="item.image_url" class="max-w-full h-auto"></a></div>
+                <div class="flex justify-center"><a :href="item.url" target="_blank">
+                  <img v-if="!item.image" :src="item.image_url" class="max-w-full h-auto">
+                  <SingleImage v-if="item.image" :image="item.image.data"/>
+                </a></div>
                 <p v-if="item.feedName" class="mt-2 text-xs tracking-wider hover:text-blue-300"><Link :href="`/newsRssFeeds/${item.feedSlug}`"><span class="font-semibold">{{ item.feedName }}</span></Link></p>
               </div>
               <div class="py-8">
@@ -69,6 +72,7 @@ import NewsHeaderButtons from '@/Components/Pages/News/NewsHeaderButtons'
 import NewsHeader from '@/Components/Pages/News/NewsHeader'
 import Pagination from '@/Components/Global/Paginators/Pagination'
 import Message from '@/Components/Global/Modals/Messages'
+import SingleImage from '@/Components/Global/Multimedia/SingleImage.vue'
 
 usePageSetup('newsRssArchive.index')
 

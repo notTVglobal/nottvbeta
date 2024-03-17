@@ -19,10 +19,10 @@ const videoPlayerStore = useVideoPlayerStore()
 // const getUserData = inject('getUserData', null)
 
 appSettingStore.osd = true
-appSettingStore.osdSlot.one = true
-appSettingStore.osdSlot.two = true
-appSettingStore.osdSlot.three = true
-appSettingStore.osdSlot.four = true
+appSettingStore.osdSlot.a = true
+appSettingStore.osdSlot.b = true
+appSettingStore.osdSlot.c = true
+appSettingStore.osdSlot.d = true
 videoPlayerStore.makeVideoFullPage()
 
 // let reloadPage = () => {

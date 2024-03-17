@@ -18,7 +18,7 @@ class NewsRssArchiveController extends Controller {
   public function index() {
     return Inertia::render('NewsRssArchive/Index', [
         'archive' => NewsRssFeedItemArchive::query()
-            ->with('image', 'newsRssFeed')
+            ->with('image.appSetting', 'newsRssFeed')
             ->orderBy('pubDate', 'desc')
             ->when(Request::input('search'), function ($query, $search) {
               // Remove periods and spaces from the search term

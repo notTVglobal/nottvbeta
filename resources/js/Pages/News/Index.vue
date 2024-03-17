@@ -45,6 +45,9 @@ const userStore = useUserStore()
 const videoPlayerStore = useVideoPlayerStore()
 
 const { props } = usePage();
+
+appSettingStore.currentPage = 'news'
+appSettingStore.setPrevUrl()
 //
 // console.log('user name???? ' + props.value.user?.name)
 //
@@ -52,7 +55,7 @@ const { props } = usePage();
 //   usePageSetup('news');
 // } else {
 //   appSettingStore.noLayout = true
-  appSettingStore.currentPage = 'news'
+
 // }
 
 
@@ -63,6 +66,7 @@ const { props } = usePage();
 onMounted(() => {
   const topDiv = document.getElementById("topDiv")
   topDiv.scrollIntoView()
+  appSettingStore.currentPage = 'news'
 })
 
 // Watch for changes in the loggedIn state of appSettingStore

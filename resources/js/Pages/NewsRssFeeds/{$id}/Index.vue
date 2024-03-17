@@ -15,13 +15,15 @@
 
           <div class="flex flex-wrap justify-between items-center mb-1">
             <div class="text-2xl">{{ feed.name }}</div>
-            <div>
-              <button
-                  v-if="userStore.isNewsPerson"
-                  @click="appSettingStore.btnRedirect(`/newsRssFeeds/${feed.slug}/edit`)"
-                  class="px-3 py-1 text-white bg-blue-600 hover:bg-blue-500 rounded-lg">
-                Edit
-              </button>
+            <div class="flex flex-row flex-wrap gap-2">
+              <div>
+                <button
+                    v-if="userStore.isNewsPerson"
+                    @click="appSettingStore.btnRedirect(`/newsRssFeeds/${feed.slug}/edit`)"
+                    class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg">
+                  Edit
+                </button>
+              </div>
               <div
                   v-if="appSettingStore.prevUrl === '/newsRssFeeds' || appSettingStore.prevUrl === 'newsRssFeeds.index'">
                 <BackButton :url="'/newsRssFeeds'"/>
@@ -29,8 +31,8 @@
             </div>
           </div>
           <span class="text-sm font-semibold text-indigo-700 mb-4">Last updated ... {{
-              formatDateTime(feed.lastSuccessfulUpdate)
-            }} GMT 0</span>
+              userStore.formatDateTimeFromUtcToUserTimezone(feed.lastSuccessfulUpdate)
+            }} </span>
 
           <div class="flex justify-center my-4">
             <div class="relative w-full max-w-md">
@@ -124,22 +126,17 @@
 
 <script setup>
 import dayjs from 'dayjs'
-// import {parseMasterXml} from "@videojs/http-streaming/src/dash-playlist-loader"
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useUserStore } from '@/Stores/UserStore'
 import NewsHeader from '@/Components/Pages/News/NewsHeader'
 import Message from '@/Components/Global/Modals/Messages'
 import BackButton from '@/Components/Global/Buttons/BackButton'
-import { formatDate } from '@vueuse/shared'
-import { useTimeAgo } from '@vueuse/core'
 import { ref, watch } from 'vue'
 import throttle from 'lodash/throttle'
 import { Inertia } from '@inertiajs/inertia'
 import Pagination from '@/Components/Global/Paginators/Pagination.vue'
 import { useForm } from '@inertiajs/inertia-vue3'
-// import { format } from 'date-fns'
-// import { utcToZonedTime } from 'date-fns-tz'
 
 usePageSetup('newsFeed')
 
@@ -168,49 +165,23 @@ watch(search, throttle(function (value) {
 }, 300))
 
 const addToArchive = async (itemId) => {
-  // Assuming 'is_saved' is simply toggled to true for archiving
   Inertia.patch(`/newsRssFeedItemsTemp/${itemId}/save`, {
-    // is_saved: true,
   }, {
     preserveState: true, // Prevents the page from fully reloading
     preserveScroll: true, // Keeps the scroll position
     onSuccess: (page) => {
-      console.log('Item archived successfully');
+      console.log('Item archived successfully')
       // Here, you can optionally refresh data or handle UI updates
     },
     onError: (errors) => {
-      console.error('Error archiving item:', errors);
-    }
-  });
+      console.error('Error archiving item:', errors)
+    },
+  })
 };
-``
-
-
-
-// let lastUpdatedTime = props.lastUpdateTime
 
 function newFormatDate(dateString) {
   const date = dayjs(dateString)
   return date.format('dddd MMMM D, YYYY')
-}
-
-
-// tec21: I was trying to do a TimeAgo format or this "Last Updated..."
-// but we need a reusable component that converts the serverTime to the user time.
-// then take your pick as to how you want to display this on this page...
-// Last updated TimeAgo or the function below...
-function formatLastUpdatedDate(dateString) {
-  const date = new Date(dateString)
-  const options = {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: '2-digit',
-    hour12: true,
-  }
-  // return `Last updated on ${new Intl.DateTimeFormat('en-US', options).format(date)}`;
-  return `Last updated on ${useTimeAgo(props.feed.lastSuccessfulUpdate)}`
 }
 
 </script>

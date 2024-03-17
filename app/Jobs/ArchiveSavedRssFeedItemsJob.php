@@ -53,11 +53,12 @@ class ArchiveSavedRssFeedItemsJob implements ShouldQueue
           $archivedItem->pubDate = $item->pubDate;
           $archivedItem->image_url = $item->image_url;
           $archivedItem->extra_metadata = $item->extra_metadata;
+          $archivedItem->saved_by_user_id = $item->saved_by_user_id;
           $archivedItem->save();
 
           if ($item->image_url) {
             // Dispatch job to download and store image
-            DownloadAndStoreImageJob::dispatch($archivedItem->id, $item->image_url);
+            DownloadAndStoreImageJob::dispatch($archivedItem->id, $item->image_url, $item->saved_by_user_id);
           }
         }
       }

@@ -48,40 +48,39 @@
         <div class="container mx-auto px-6 border-b border-gray-800 pb-16 max-w-calc[100%-96rem]">
           <h2 id="popular-shows" class="text-yellow-500 uppercase tracking-wide font-semibold text-2xl">
             Popular Shows</h2>
-          <div
-              class="popular-shows text-sm grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 md:gap-12 pb-12 justify-items-center">
+
+            <div class="popular-shows text-sm grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-12 justify-items-center">
 
             <div v-for="show in shows.data"
                  :key="show.id"
                  class="show mt-8 relative w-full">
-              <div v-if="show.statusId === 9" class="absolute flex justify-start md:justify-end w-full -mt-4 md:-mt-3 z-50">
+              <div v-if="show.statusId === 9" class="absolute top-0 left-0 md:right-0 md:left-auto z-10 p-2">
                 <CreatorsOnlyBadge />
               </div>
-              <div v-if="show.statusId === 1" class="absolute flex justify-start md:justify-end w-full -mt-4 md:-mt-3 z-50">
+              <div v-if="show.statusId === 1" class="absolute top-0 left-0 md:right-0 md:left-auto z-10 p-2">
                 <NewContentBadge />
               </div>
+
               <Link :href="`/shows/${show.slug}`"
                     class="flex flex-row md:flex-col hover:text-blue-400 hover:opacity-75 transition ease-in-out duration-150">
-                <div class="relative inline-block">
+                <div class="relative inline-block w-full">
                   <!--                                    <SingleImage :image="show.image" :alt="'show cover'" class="min-h-[24rem]  max-h-[24rem] min-w-[16rem] w-fit object-cover"/>-->
                   <SingleImage :image="show.image" :alt="'show cover'"
-                               class="md:h-96 md:min-w-[16rem] mr-2 md:mr-0 min-w-20 w-20 md:w-64 mb-6 object-cover lg:mb-0 m-auto lg:m-0"/>
+                               class="h-auto w-full object-cover"/>
                 </div>
-                <div class="flex flex-col">
-                  <div class="block md:text-xl font-semibold leading-tight md:mt-4 w-full md:max-w-[16rem]">{{
-                      show.name
-                    }}
-                  </div>
-                  <div class="uppercase tracking-wider flex flex-row align-middle text-yellow-700 md:text-lg mt-1">{{ show.category.name }}&nbsp;
-                    <div class="text-gray-600 text-md md:text-lg">
+                <div class="flex flex-col p-4">
+                  <div class="text-xl font-semibold leading-tight mb-2 truncate">{{ show.name }}</div>
+                  <div class="uppercase tracking-wider text-yellow-700 text-lg flex items-center gap-1">
+                    {{ show.category.name }}
+                    <div class="text-gray-600 text-lg">
                       <span v-if="show.last_release_year > 0">({{ show.last_release_year }})</span>
                       <span v-if="show.first_release_year > 0 && !show.last_release_year">({{ show.first_release_year }})</span>
                       <span v-if="!show.last_release_year && !show.first_release_year">({{ show.copyrightYear }})</span>
                     </div>
-
                   </div>
-                  <div class="tracking-wide text-yellow-500 mt-1 font-thin">{{ show.subCategory.name }}</div>
+                  <div class="tracking-wide text-yellow-500 mt-1">{{ show.subCategory.name }}</div>
                 </div>
+
 
               </Link>
             </div>

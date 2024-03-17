@@ -26,7 +26,7 @@
 
     </div>
 <div :class="isMobileVolumeIndicator" >
-  <VideoVolumeIndicatorVertical v-if="appSettingStore.osd && appSettingStore.osdSlot.two && appSettingStore.fullPage"/>
+  <VideoVolumeIndicatorVertical v-if="appSettingStore.osd && appSettingStore.osdSlot.b && appSettingStore.fullPage"/>
 
 </div>
 

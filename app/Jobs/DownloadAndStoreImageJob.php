@@ -17,16 +17,18 @@ class DownloadAndStoreImageJob implements ShouldQueue
 
     protected $rssFeedItemArchiveId;
     protected $imageUrl;
+    protected $savedByUserId;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($rssFeedItemArchiveId, $imageUrl)
+    public function __construct($rssFeedItemArchiveId, $imageUrl, $savedByUserId)
     {
       $this->rssFeedItemArchiveId = $rssFeedItemArchiveId;
       $this->imageUrl = $imageUrl;
+      $this->savedByUserId = $savedByUserId;
     }
 
     /**
@@ -36,7 +38,7 @@ class DownloadAndStoreImageJob implements ShouldQueue
      */
     public function handle(ImageService $imageService)
     {
-      $imageId = $imageService->storeImage($this->imageUrl, 'your_folder_name');
+      $imageId = $imageService->storeImage($this->imageUrl, $this->savedByUserId);
 
       if ($imageId) {
         // Update the NewsRssFeedItemArchive record with the image ID

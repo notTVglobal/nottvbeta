@@ -22,18 +22,20 @@ class Kernel extends ConsoleKernel {
     $schedule->job(new CheckSubscriptionStatuses, 'default')->daily();
     $schedule->command('expire:invitecodes')->daily();
 
-    $schedule->call(function () use ($schedule) {
-      $feeds = NewsRssFeed::all(); // Get all feeds
-      foreach ($feeds as $feed) {
-        $schedule->job(new FetchRssFeedItemsJob($feed))->hourly();
-      }
-    })->after(function () {
-      // This closure will be executed after the application is fully booted.
-      // This means it will run after migrations have completed during an artisan command.
-    });
+//    $schedule->call(function () use ($schedule) {
+//      $feeds = NewsRssFeed::all(); // Get all feeds
+//      foreach ($feeds as $feed) {
+//        $schedule->job(new FetchRssFeedItemsJob($feed))->hourly();
+//      }
+//    })->after(function () {
+//      // This closure will be executed after the application is fully booted.
+//      // This means it will run after migrations have completed during an artisan command.
+//    });
 
+    $schedule->command('fetch:rssfeeds')->everyMinute();
     $schedule->command('purge:oldRssFeedItems')->monthly();
-    $schedule->command('newsRssFeed:archive')->dailyAt('08:00');
+//    $schedule->command('newsRssFeed:archive')->dailyAt('08:00');
+    $schedule->command('newsRssFeed:archive')->everyMinute();
   }
 
   /**

@@ -188,4 +188,14 @@ class User extends Authenticatable implements MustVerifyEmail {
     return $this->hasMany(SecureNote::class);
   }
 
+  public function savedNewsRssFeedItemTemps()
+  {
+    return $this->hasMany(NewsRssFeedItemTemp::class, 'saved_by_user_id');
+  }
+
+  public function archivedNewsRssFeedItems()
+  {
+    return $this->hasMany(NewsRssFeedItemArchive::class, 'saved_by_user_id');
+  }
+
 }

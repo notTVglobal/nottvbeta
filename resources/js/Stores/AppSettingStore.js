@@ -1,6 +1,5 @@
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useUserStore } from "@/Stores/UserStore"
-
 import { defineStore } from 'pinia'
 import { Inertia } from '@inertiajs/inertia'
 
@@ -26,10 +25,10 @@ const initialState = () => ({
     showOttButtons: true, // formerly videoPlayerStore.ottButtons
     osd: false, // On Screen Display (OSD) to be expanded into 8 regions
     osdSlot: {
-        one: true, // On Screen Display 1 (Top Left)
-        two: true, // On Screen Display 2 (Top Right)
-        three: true, // On Screen Display 3 (Bottom Left)
-        four: true, // On Screen Display 4 (Bottom Right)
+        a: true, // On Screen Display A (Top Left)
+        b: true, // On Screen Display B (Top Right)
+        c: true, // On Screen Display C (Bottom Left)
+        d: true, // On Screen Display D (Bottom Right)
     },
     pipChatMode: false, // Chat input focused uses pipChatMode when userStore.isMobile
     pageBgColor: 'bg-gray-800', // Active background color
@@ -152,8 +151,8 @@ export const useAppSettingStore = defineStore('appSettingStore', {
             this.ott = num === this.ott && !this.fullPage ? 0 : num;
 
             // Handling the visibility of ottSlot.one and ottSlot.two
-            this.osdSlot.one = this.fullPage && this.ott === 0;
-            this.osdSlot.two = this.fullPage && this.ott === 0;
+            this.osdSlot.a = this.fullPage && this.ott === 0;
+            this.osdSlot.b = this.fullPage && this.ott === 0;
 
             if (this.fullPage) {
                 this.showOttButtons = this.ott === 0;
@@ -255,8 +254,11 @@ export const useAppSettingStore = defineStore('appSettingStore', {
             Inertia.visit(newUrl)
         },
         back() {
+            const videoPlayerStore = useVideoPlayerStore()
             const prevUrl = this.prevUrl
             this.setPrevUrl()
+            videoPlayerStore.makeVideoTopRight()
+            this.pageIsHidden = false
             Inertia.visit(prevUrl)
         },
     }
