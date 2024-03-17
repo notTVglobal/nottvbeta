@@ -240,72 +240,172 @@ class ImageController extends Controller
 
     }
 
-    ////////////// UPLOAD TEAM LOGO
-    ///////////////////////////////
-
-    public function uploadTeamLogo(HttpRequest $request)
-    {
-//        $metadata = $request->input('metadata');
-        // Can we create a function createImage() --- started below
-        // to simplify these upload requests?
+    ////////////// UPLOAD FORMERLY UPLOAD TEAM LOGO
+    ///////////////////////////////////////////////
 
 
-        // validate the incoming file
-        // TO DO
-        // Need to validate/sanitize the image upload.
-        // strip the metadata and convert the image file.
-        // don't save the original! HACKER WARNING!!
-        //
+  public function upload(HttpRequest $request)
+  {
+    // Updated validation rules
+    $rules = [
+        'image' => 'required|image|max:30720', // Max 30MB
+        'modelType' => 'nullable|string|in:team,show,showEpisode', // Validate if present
+        'modelId' => 'nullable|integer', // Validate if present
+    ];
 
-        // lock show for editing
-        // TO DO... this needs to be developed,
-        // where more than one person cannot
-        // edit or upload to a show at a time.
-        //
-        // Set up the file and folder
-        $cloud_folder = DB::table('app_settings')->where('id', 1)->pluck('cloud_folder')->first();
-        $folder = Carbon::now()->format('/Y/m').'/images';
-        $file = $request->file('image');
-        $filename = $file->getClientOriginalName();
+    // Perform validation
+    $validator = Validator::make($request->all(), $rules);
 
-        // Store the file to DO_SPACES
-        // Note: if this changes be sure to update the 'storage_location' below.
-        Storage::disk('spaces')->putFile($cloud_folder.$folder, $request->file('image'));
-        // Store image locally
-        //  $request->file('poster')->store('images');
-
-        // Set up the info for the database model
-        $user = auth()->user()->id;
-        $teamId = auth()->user()->isEditingTeam_id;
-        $uploadedFile = $request->file('image');
-
-        // create image model
-        $image_id = DB::table('images')->insertGetId([
-            'user_id' => $user,
-            'team_id' => Auth::user()->isEditingTeam_id,
-            'name' => $uploadedFile->hashName(),
-            'extension' => $uploadedFile->extension(),
-            'size' => $uploadedFile->getSize(),
-            'folder' => $folder,
-            'cloud_folder' => $cloud_folder,
-            // storage_location is hard-coded for now
-            // this will be either:
-            // - a storage provider (s3 like aws, digital ocean, wasabi)
-            // - torrent / p2p ( when we integrate this into the MediaBoxes)
-            // - local (maybe the file is only available locally)
-            'storage_location' => 'do_spaces',
-        ]);
-
-        // store image_id to Teams table
-        $team = Team::find($teamId);
-        $team->image_id = $image_id;
-        $team->save();
-
-        // return that image model back to the frontend
-        $image = DB::table('images')->where('id', $image_id)->first();
-        return $image;
-
+    if ($validator->fails()) {
+      return response()->json(['errors' => $validator->errors()], 422);
+//      return redirect()->back()->with('error', $validator->errors());
     }
+
+    // Proceed with file upload and record creation
+    $file = $request->file('image');
+    $modelType = $request->input('modelType', null); // Default to null if not provided
+    $modelId = $request->input('modelId', null); // Default to null if not provided
+
+    $cloud_folder = DB::table('app_settings')->where('id', 1)->pluck('cloud_folder')->first();
+    $folder = Carbon::now()->format('/Y/m').'/images';
+    $path = Storage::disk('spaces')->putFile($cloud_folder.$folder, $file);
+
+    // Create the image record
+    $image = Image::create([
+        'name' => $file->hashName(),
+        'extension' => $file->extension(),
+        'size' => $file->getSize(),
+        'folder' => $folder,
+        'cloud_folder' => $cloud_folder,
+        'storage_location' => 'do_spaces',
+        'created_at' => Carbon::now(),
+        'updated_at' => Carbon::now()
+    ]);
+
+    // Dynamically update the correct model with the image_id if modelType and modelId are provided
+    if (!is_null($modelType) && !is_null($modelId)) {
+      $this->updateModelWithImageId($modelType, $modelId, $image->id);
+    }
+
+    return $image;
+  }
+
+//  public function upload(HttpRequest $request)
+//  {
+//    // Validate the incoming request...
+//    // Your validation logic here
+//
+//    $file = $request->file('image');
+//    $modelType = $request->input('modelType'); // e.g., 'team', 'show', 'showEpisode'
+//    $modelId = $request->input('modelId'); // The ID of the model to update
+//
+//    $cloud_folder = DB::table('app_settings')->where('id', 1)->pluck('cloud_folder')->first();
+//    $folder = Carbon::now()->format('/Y/m').'/images';
+//    $path = Storage::disk('spaces')->putFile($cloud_folder.$folder, $file);
+//
+//    // Create the image record
+//    $image = Image::create([
+//        'name' => $file->hashName(),
+//        'extension' => $file->extension(),
+//        'size' => $file->getSize(),
+//        'folder' => $folder,
+//        'cloud_folder' => $cloud_folder,
+//        'storage_location' => 'do_spaces',
+//        'created_at' => Carbon::now(),
+//        'updated_at' => Carbon::now()
+//    ]);
+//
+//    // Dynamically update the correct model with the image_id
+//    $this->updateModelWithImageId($modelType, $modelId, $image->id);
+//
+//    return $image;
+//  }
+
+  protected function updateModelWithImageId($modelType, $modelId, $imageId): void {
+    $model = null;
+    switch ($modelType) {
+      case 'team':
+        $model = \App\Models\Team::find($modelId);
+        break;
+      case 'show':
+        $model = \App\Models\Show::find($modelId);
+        break;
+      case 'showEpisode':
+        $model = \App\Models\ShowEpisode::find($modelId);
+        break;
+      // Add more cases as needed for additional models
+    }
+
+    if ($model) {
+      $model->update(['image_id' => $imageId]);
+    } else {
+      // Handle error: Model not found
+    }
+  }
+
+//    public function upload(HttpRequest $request)
+//    {
+////        $metadata = $request->input('metadata');
+//        // Can we create a function createImage() --- started below
+//        // to simplify these upload requests?
+//
+//
+//        // validate the incoming file
+//        // TO DO
+//        // Need to validate/sanitize the image upload.
+//        // strip the metadata and convert the image file.
+//        // don't save the original! HACKER WARNING!!
+//        //
+//
+//        // lock show for editing
+//        // TO DO... this needs to be developed,
+//        // where more than one person cannot
+//        // edit or upload to a show at a time.
+//        //
+//        // Set up the file and folder
+//        $cloud_folder = DB::table('app_settings')->where('id', 1)->pluck('cloud_folder')->first();
+//        $folder = Carbon::now()->format('/Y/m').'/images';
+//        $file = $request->file('image');
+//        $filename = $file->getClientOriginalName();
+//
+//        // Store the file to DO_SPACES
+//        // Note: if this changes be sure to update the 'storage_location' below.
+//        Storage::disk('spaces')->putFile($cloud_folder.$folder, $request->file('image'));
+//        // Store image locally
+//        //  $request->file('poster')->store('images');
+//
+//        // Set up the info for the database model
+//        $user = auth()->user()->id;
+//        $teamId = auth()->user()->isEditingTeam_id;
+//        $uploadedFile = $request->file('image');
+//
+//        // create image model
+//        $image_id = DB::table('images')->insertGetId([
+//            'user_id' => $user,
+//            'team_id' => Auth::user()->isEditingTeam_id,
+//            'name' => $uploadedFile->hashName(),
+//            'extension' => $uploadedFile->extension(),
+//            'size' => $uploadedFile->getSize(),
+//            'folder' => $folder,
+//            'cloud_folder' => $cloud_folder,
+//            // storage_location is hard-coded for now
+//            // this will be either:
+//            // - a storage provider (s3 like aws, digital ocean, wasabi)
+//            // - torrent / p2p ( when we integrate this into the MediaBoxes)
+//            // - local (maybe the file is only available locally)
+//            'storage_location' => 'do_spaces',
+//        ]);
+//
+//        // store image_id to Teams table
+//        $team = Team::find($teamId);
+//        $team->image_id = $image_id;
+//        $team->save();
+//
+//        // return that image model back to the frontend
+//        $image = DB::table('images')->where('id', $image_id)->first();
+//        return $image;
+//
+//    }
 
 
 ////////////// UPLOAD MOVIE POSTER

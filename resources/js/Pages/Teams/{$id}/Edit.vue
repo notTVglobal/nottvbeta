@@ -49,7 +49,8 @@
                       Change Team Logo
                     </label>
                     <ImageUpload :image="image"
-                                 :server="'/teamsUploadLogo'"
+                                 :modelType="'team'"
+                                 :modelId="team.id"
                                  :name="'Upload Team Logo'"
                                  :maxSize="'10MB'"
                                  :fileTypes="'image/jpg, image/jpeg, image/png'"
