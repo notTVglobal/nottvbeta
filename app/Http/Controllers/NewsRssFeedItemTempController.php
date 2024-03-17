@@ -149,6 +149,7 @@ class NewsRssFeedItemTempController extends Controller
   public function saveItem(NewsRssFeedItemTemp $newsRssFeedItemTemp)
   {
     $newsRssFeedItemTemp->is_saved = true;
+    $newsRssFeedItemTemp->saved_by_user_id = auth()->user()->id;
     $newsRssFeedItemTemp->save();
     return redirect()->back()->with('success', 'Feed item updated successfully.');
 //    return response()->json(['message' => 'Feed item updated successfully.']);

@@ -2,7 +2,7 @@
   <div>
     <button
         @click.prevent="back"
-        class="ml-2 px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+        class="px-4 py-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
     >Back
     </button>
   </div>

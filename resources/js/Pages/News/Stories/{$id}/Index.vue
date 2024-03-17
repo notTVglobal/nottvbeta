@@ -110,12 +110,13 @@ const appSettingStore = useAppSettingStore()
 const userStore = useUserStore()
 const newsStore = useNewsStore()
 
-appSettingStore.currentPage = 'news/story/slug'
-
 let props = defineProps({
   newsStory: Object,
   can: Object,
 })
+
+appSettingStore.currentPage = `/news/story/${props.newsStory.slug}`
+appSettingStore.setPrevUrl()
 
 onMounted(() => {
   newsStore.reset()

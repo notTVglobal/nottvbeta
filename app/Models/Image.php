@@ -22,8 +22,13 @@ class Image extends Model
         'show_id',
         'show_episode_id',
         'team_id',
-        'movie_id'
+        'movie_id',
+        'extra_metadata'
     ];
+
+  protected $casts = [
+      'extra_metadata' => 'array',
+  ];
 
     public function show()
     {
@@ -50,7 +55,7 @@ class Image extends Model
         return $this->hasMany(User::class);
     }
 
-    public function newsPost()
+    public function newsStory()
     {
         return $this->hasMany(NewsStory::class);
     }

@@ -7287,6 +7287,10 @@ hr {
   margin-top: -1.5rem;
 }
 
+.mb-0 {
+  margin-bottom: 0px;
+}
+
 .mb-1 {
   margin-bottom: 0.25rem;
 }
@@ -9268,6 +9272,10 @@ hr {
 
 .fill-current {
   fill: currentColor;
+}
+
+.fill-primary {
+  fill: var(--fallback-p,oklch(var(--p)/1));
 }
 
 .stroke-current {
@@ -11459,6 +11467,14 @@ hr {
     top: 1rem;
   }
 
+  .md\:left-auto {
+    left: auto;
+  }
+
+  .md\:right-0 {
+    right: 0px;
+  }
+
   .md\:col-span-1 {
     grid-column: span 1 / span 1;
   }
@@ -12025,6 +12041,10 @@ hr {
 
   .xl\:flex-row {
     flex-direction: row;
+  }
+
+  .xl\:gap-12 {
+    gap: 3rem;
   }
 
   .xl\:px-8 {

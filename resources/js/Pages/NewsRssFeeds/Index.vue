@@ -77,14 +77,15 @@
                         >{{ feed.name }}
                         </button>
                       </div>
-                      <div class="mr-2"><span v-if="feed.lastSuccessfulUpdate">Last update on {{formatDateTime(feed.lastSuccessfulUpdate)}}</span><span v-else>Never updated</span></div>
+                      <div class="mr-2"><span v-if="feed.lastSuccessfulUpdate">Last update on {{userStore.formatDateTimeFromUtcToUserTimezone(feed.lastSuccessfulUpdate)}}</span><span v-else>Never updated</span></div>
                     </div>
                     <div class="space-x-1">
                       <button
                           v-if="userStore.isNewsPerson"
                           @click="appSettingStore.btnRedirect(`/newsRssFeeds/${feed.slug}/edit`)"
                           class="px-2 py-1 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                      >Edit
+                      >
+                        <font-awesome-icon icon="fa-pencil"/>
                       </button>
                       <button
                           v-if="userStore.isAdmin"
