@@ -38,6 +38,8 @@ class UpdateImageReferences extends Command
           'shows',
           'subscription_plans',
           'teams',
+          'product',
+          'video'
       ];
       $jobs = collect($tables)->map(function ($table) {
         return new UpdateImageReferencesJob($table);

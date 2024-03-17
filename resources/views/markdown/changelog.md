@@ -3,6 +3,12 @@
 Last Update: March 17, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.7.22
+March 17, 2024
+* Change video poster to video image_id
+* Add index to image_hashes hash column
+* Add image_id to products table
+
 ## v0.8.7.21
 March 17, 2024
 * Add a job to check a newly uploaded image against the existing image hashes. If it's a duplicate it will update the associated model and queue the image for deletion. Currently the duplicate images are queued for deletion every hour.

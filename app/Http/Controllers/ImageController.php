@@ -308,6 +308,24 @@ class ImageController extends Controller
       case 'movie':
         $model = \App\Models\Movie::find($modelId);
         break;
+      case 'newsStory':
+        $model = \App\Models\NewsStory::find($modelId);
+        break;
+      case 'newsRssFeedItem':
+        $model = \App\Models\NewsRssFeedItemArchive::find($modelId);
+        break;
+      case 'otherContent':
+        $model = \App\Models\OtherContent::find($modelId);
+        break;
+      case 'subscriptionPlan':
+        $model = \App\Models\SubscriptionPlan::find($modelId);
+        break;
+      case 'product':
+        $model = \App\Models\Product::find($modelId);
+        break;
+      case 'video':
+        $model = \App\Models\Video::find($modelId);
+        break;
       // Add more cases as needed for additional models
     }
 
