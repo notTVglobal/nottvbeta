@@ -16,25 +16,17 @@ class Kernel extends ConsoleKernel {
    * @return void
    */
   protected function schedule(Schedule $schedule): void {
-//    $schedule->command('inspire')->hourly();
     $schedule->command('horizon:snapshot')->everyFiveMinutes();
-//        $schedule->job(new CheckSubscriptionStatuses)->everySixHours();
+
+    $schedule->command('images:delete-queued')->hourly();
+    $schedule->command('fetch:rssFeeds')->hourly();
+    $schedule->command('newsRssFeed:archive')->hourly();
+
     $schedule->job(new CheckSubscriptionStatuses, 'default')->daily();
     $schedule->command('expire:inviteCodes')->daily();
 
-//    $schedule->call(function () use ($schedule) {
-//      $feeds = NewsRssFeed::all(); // Get all feeds
-//      foreach ($feeds as $feed) {
-//        $schedule->job(new FetchRssFeedItemsJob($feed))->hourly();
-//      }
-//    })->after(function () {
-//      // This closure will be executed after the application is fully booted.
-//      // This means it will run after migrations have completed during an artisan command.
-//    });
-
-    $schedule->command('fetch:rssFeeds')->hourly();
-    $schedule->command('newsRssFeed:archive')->hourly();
     $schedule->command('purge:oldRssFeedItems')->monthly();
+
   }
 
   /**

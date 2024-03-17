@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\CheckImageHashAndHandleDuplicate;
 use App\Models\Movie;
 use App\Models\Show;
 use App\Models\ShowEpisode;
@@ -268,7 +269,7 @@ class ImageController extends Controller
 
     $cloud_folder = DB::table('app_settings')->where('id', 1)->pluck('cloud_folder')->first();
     $folder = Carbon::now()->format('/Y/m').'/images';
-    $path = Storage::disk('spaces')->putFile($cloud_folder.$folder, $file);
+    Storage::disk('spaces')->putFile($cloud_folder.$folder, $file);
 
     // Create the image record
     $image = Image::create([
@@ -281,6 +282,8 @@ class ImageController extends Controller
         'created_at' => Carbon::now(),
         'updated_at' => Carbon::now()
     ]);
+
+    CheckImageHashAndHandleDuplicate::dispatch($image, $modelType, $modelId);
 
     // Dynamically update the correct model with the image_id if modelType and modelId are provided
     if (!is_null($modelType) && !is_null($modelId)) {
