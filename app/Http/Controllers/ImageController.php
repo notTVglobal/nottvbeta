@@ -62,184 +62,184 @@ class ImageController extends Controller
 
     ////////////// GENERIC STORE IMAGE
     //////////////////////////////////
-    public function store(HttpRequest $request)
-    {
-
-        // Can we create a function createImage() --- started below
-        // to simplify these upload requests?
-
-
-        // validate the incoming file
-        // TO DO
-        // Need to validate/sanitize the image upload.
-        // strip the metadata and convert the image file.
-        // don't save the original! HACKER WARNING!!
-        //
-        // Set up the file and folder
-        $cloud_folder = DB::table('app_settings')->where('id', 1)->pluck('cloud_folder')->first();
-        $folder = Carbon::now()->format('/Y/m').'/images';
-        $file = $request->file('image');
-        $filename = $file->getClientOriginalName();
-
-        // Store the file to DO_SPACES
-        // Note: if this changes be sure to update the 'storage_location' below.
-        Storage::disk('spaces')->putFile($cloud_folder.$folder, $request->file('image'));
-
-        // create image model
-        $image = Image::create([
-            'user_id' => auth()->user()->id,
-            'name' => $file->hashName(),
-            'extension' => $file->extension(),
-            'size' => $file->getSize(),
-            'folder' => $folder,
-            'cloud_folder' => $cloud_folder,
-            // storage_location is hard-coded for now
-            // this will be either:
-            // - a storage provider (s3 like aws, digital ocean, wasabi)
-            // - torrent / p2p ( when we integrate this into the MediaBoxes)
-            // - local (maybe the file is only available locally)
-            'storage_location' => 'do_spaces',
-        ])->insertGetId;
-
-        // return that image model back to the frontend
-        return $image;
-    }
+//    public function store(HttpRequest $request)
+//    {
+//
+//        // Can we create a function createImage() --- started below
+//        // to simplify these upload requests?
+//
+//
+//        // validate the incoming file
+//        // TO DO
+//        // Need to validate/sanitize the image upload.
+//        // strip the metadata and convert the image file.
+//        // don't save the original! HACKER WARNING!!
+//        //
+//        // Set up the file and folder
+//        $cloud_folder = DB::table('app_settings')->where('id', 1)->pluck('cloud_folder')->first();
+//        $folder = Carbon::now()->format('/Y/m').'/images';
+//        $file = $request->file('image');
+//        $filename = $file->getClientOriginalName();
+//
+//        // Store the file to DO_SPACES
+//        // Note: if this changes be sure to update the 'storage_location' below.
+//        Storage::disk('spaces')->putFile($cloud_folder.$folder, $request->file('image'));
+//
+//        // create image model
+//        $image = Image::create([
+//            'user_id' => auth()->user()->id,
+//            'name' => $file->hashName(),
+//            'extension' => $file->extension(),
+//            'size' => $file->getSize(),
+//            'folder' => $folder,
+//            'cloud_folder' => $cloud_folder,
+//            // storage_location is hard-coded for now
+//            // this will be either:
+//            // - a storage provider (s3 like aws, digital ocean, wasabi)
+//            // - torrent / p2p ( when we integrate this into the MediaBoxes)
+//            // - local (maybe the file is only available locally)
+//            'storage_location' => 'do_spaces',
+//        ])->insertGetId;
+//
+//        // return that image model back to the frontend
+//        return $image;
+//    }
 
 
     ////////////// UPLOAD SHOW POSTER
     //////////////////////////////////
 
-    public function uploadShowPoster(HttpRequest $request)
-    {
-
-        // Can we create a function createImage() --- started below
-        // to simplify these upload requests?
-
-
-        // validate the incoming file
-        // TO DO
-        // Need to validate/sanitize the image upload.
-        // strip the metadata and convert the image file.
-        // don't save the original! HACKER WARNING!!
-        //
-
-        // lock show for editing
-        // TO DO... this needs to be developed,
-        // where more than one person cannot
-        // edit or upload to a show at a time.
-        //
-        // Set up the file and folder
-        $cloud_folder = DB::table('app_settings')->where('id', 1)->pluck('cloud_folder')->first();
-        $folder = Carbon::now()->format('/Y/m').'/images';
-        $file = $request->file('image');
-        $filename = $file->getClientOriginalName();
-
-        // Store the file to DO_SPACES
-        // Note: if this changes be sure to update the 'storage_location' below.
-        Storage::disk('spaces')->putFile($cloud_folder.$folder, $request->file('image'));
-        // Store image locally
-        //  $request->file('poster')->store('images');
-
-        // Set up the info for the database model
-        $user = auth()->user()->id;
-        $showId = auth()->user()->isEditingShow_id;
-        $uploadedFile = $request->file('image');
-
-        // create image model
-        $image_id = DB::table('images')->insertGetId([
-            'user_id' => $user,
-            'show_id' => Auth::user()->isEditingShow_id,
-            'name' => $uploadedFile->hashName(),
-            'extension' => $uploadedFile->extension(),
-            'size' => $uploadedFile->getSize(),
-            'folder' => $folder,
-            'cloud_folder' => $cloud_folder,
-            // storage_location is hard-coded for now
-            // this will be either:
-            // - a storage provider (s3 like aws, digital ocean, wasabi)
-            // - torrent / p2p ( when we integrate this into the MediaBoxes)
-            // - local (maybe the file is only available locally)
-            'storage_location' => 'do_spaces',
-        ]);
-
-        // store image_id to Shows table
-        $show = Show::find($showId);
-        $show->image_id = $image_id;
-        $show->save();
-
-        // return that image model back to the frontend
-        $image = DB::table('images')->where('id', $image_id)->first();
-        return $image;
-
-    }
+//    public function uploadShowPoster(HttpRequest $request)
+//    {
+//
+//        // Can we create a function createImage() --- started below
+//        // to simplify these upload requests?
+//
+//
+//        // validate the incoming file
+//        // TO DO
+//        // Need to validate/sanitize the image upload.
+//        // strip the metadata and convert the image file.
+//        // don't save the original! HACKER WARNING!!
+//        //
+//
+//        // lock show for editing
+//        // TO DO... this needs to be developed,
+//        // where more than one person cannot
+//        // edit or upload to a show at a time.
+//        //
+//        // Set up the file and folder
+//        $cloud_folder = DB::table('app_settings')->where('id', 1)->pluck('cloud_folder')->first();
+//        $folder = Carbon::now()->format('/Y/m').'/images';
+//        $file = $request->file('image');
+//        $filename = $file->getClientOriginalName();
+//
+//        // Store the file to DO_SPACES
+//        // Note: if this changes be sure to update the 'storage_location' below.
+//        Storage::disk('spaces')->putFile($cloud_folder.$folder, $request->file('image'));
+//        // Store image locally
+//        //  $request->file('poster')->store('images');
+//
+//        // Set up the info for the database model
+//        $user = auth()->user()->id;
+//        $showId = auth()->user()->isEditingShow_id;
+//        $uploadedFile = $request->file('image');
+//
+//        // create image model
+//        $image_id = DB::table('images')->insertGetId([
+//            'user_id' => $user,
+//            'show_id' => Auth::user()->isEditingShow_id,
+//            'name' => $uploadedFile->hashName(),
+//            'extension' => $uploadedFile->extension(),
+//            'size' => $uploadedFile->getSize(),
+//            'folder' => $folder,
+//            'cloud_folder' => $cloud_folder,
+//            // storage_location is hard-coded for now
+//            // this will be either:
+//            // - a storage provider (s3 like aws, digital ocean, wasabi)
+//            // - torrent / p2p ( when we integrate this into the MediaBoxes)
+//            // - local (maybe the file is only available locally)
+//            'storage_location' => 'do_spaces',
+//        ]);
+//
+//        // store image_id to Shows table
+//        $show = Show::find($showId);
+//        $show->image_id = $image_id;
+//        $show->save();
+//
+//        // return that image model back to the frontend
+//        $image = DB::table('images')->where('id', $image_id)->first();
+//        return $image;
+//
+//    }
 
     ////////////// UPLOAD SHOW EPISODE POSTER
     //////////////////////////////////
 
-    public function uploadShowEpisodePoster(HttpRequest $request)
-    {
-
-        // Can we create a function createImage() --- started below
-        // to simplify these upload requests?
-
-        // validate the incoming file
-        // TO DO
-        // Need to validate/sanitize the image upload.
-        // strip the metadata and convert the image file.
-        // don't save the original! HACKER WARNING!!
-        //
-
-        // lock show for editing
-        // TO DO... this needs to be developed,
-        // where more than one person cannot
-        // edit or upload to a show at a time.
-        //
-        // Set up the file and folder
-        $cloud_folder = DB::table('app_settings')->where('id', 1)->pluck('cloud_folder')->first();
-        $folder = Carbon::now()->format('/Y/m').'/images';
-        $file = $request->file('image');
-        $filename = $file->getClientOriginalName();
-
-        // Store the file to DO_SPACES
-        // Note: if this changes be sure to update the 'storage_location' below.
-        Storage::disk('spaces')->putFile($cloud_folder.$folder, $request->file('image'));
-        // Store image locally
-        //  $request->file('poster')->store('images');
-
-        // Set up the info for the database model
-        $user = auth()->user()->id;
-        $showId = auth()->user()->isEditingShowEpisode_id;
-        $uploadedFile = $request->file('image');
-
-        // create image model
-        $image_id = DB::table('images')->insertGetId([
-            'user_id' => $user,
-            'show_episode_id' => Auth::user()->isEditingShowEpisode_id,
-            'name' => $uploadedFile->hashName(),
-            'extension' => $uploadedFile->extension(),
-            'size' => $uploadedFile->getSize(),
-            'folder' => $folder,
-            'cloud_folder' => $cloud_folder,
-            // storage_location is hard-coded for now
-            // this will be either:
-            // - a storage provider (s3 like aws, digital ocean, wasabi)
-            // - torrent / p2p ( when we integrate this into the MediaBoxes)
-            // - local (maybe the file is only available locally)
-            'storage_location' => 'do_spaces',
-        ]);
-
-
-
-        // store image_id to ShowEpisodes table
-        $show = ShowEpisode::find($showId);
-        $show->image_id = $image_id;
-        $show->save();
-
-        // return that image model back to the frontend
-        $image = DB::table('images')->where('id', $image_id)->first();
-        return $image;
-
-    }
+//    public function uploadShowEpisodePoster(HttpRequest $request)
+//    {
+//
+//        // Can we create a function createImage() --- started below
+//        // to simplify these upload requests?
+//
+//        // validate the incoming file
+//        // TO DO
+//        // Need to validate/sanitize the image upload.
+//        // strip the metadata and convert the image file.
+//        // don't save the original! HACKER WARNING!!
+//        //
+//
+//        // lock show for editing
+//        // TO DO... this needs to be developed,
+//        // where more than one person cannot
+//        // edit or upload to a show at a time.
+//        //
+//        // Set up the file and folder
+//        $cloud_folder = DB::table('app_settings')->where('id', 1)->pluck('cloud_folder')->first();
+//        $folder = Carbon::now()->format('/Y/m').'/images';
+//        $file = $request->file('image');
+//        $filename = $file->getClientOriginalName();
+//
+//        // Store the file to DO_SPACES
+//        // Note: if this changes be sure to update the 'storage_location' below.
+//        Storage::disk('spaces')->putFile($cloud_folder.$folder, $request->file('image'));
+//        // Store image locally
+//        //  $request->file('poster')->store('images');
+//
+//        // Set up the info for the database model
+//        $user = auth()->user()->id;
+//        $showId = auth()->user()->isEditingShowEpisode_id;
+//        $uploadedFile = $request->file('image');
+//
+//        // create image model
+//        $image_id = DB::table('images')->insertGetId([
+//            'user_id' => $user,
+//            'show_episode_id' => Auth::user()->isEditingShowEpisode_id,
+//            'name' => $uploadedFile->hashName(),
+//            'extension' => $uploadedFile->extension(),
+//            'size' => $uploadedFile->getSize(),
+//            'folder' => $folder,
+//            'cloud_folder' => $cloud_folder,
+//            // storage_location is hard-coded for now
+//            // this will be either:
+//            // - a storage provider (s3 like aws, digital ocean, wasabi)
+//            // - torrent / p2p ( when we integrate this into the MediaBoxes)
+//            // - local (maybe the file is only available locally)
+//            'storage_location' => 'do_spaces',
+//        ]);
+//
+//
+//
+//        // store image_id to ShowEpisodes table
+//        $show = ShowEpisode::find($showId);
+//        $show->image_id = $image_id;
+//        $show->save();
+//
+//        // return that image model back to the frontend
+//        $image = DB::table('images')->where('id', $image_id)->first();
+//        return $image;
+//
+//    }
 
     ////////////// UPLOAD FORMERLY UPLOAD TEAM LOGO
     ///////////////////////////////////////////////
@@ -293,37 +293,6 @@ class ImageController extends Controller
     return $image;
   }
 
-//  public function upload(HttpRequest $request)
-//  {
-//    // Validate the incoming request...
-//    // Your validation logic here
-//
-//    $file = $request->file('image');
-//    $modelType = $request->input('modelType'); // e.g., 'team', 'show', 'showEpisode'
-//    $modelId = $request->input('modelId'); // The ID of the model to update
-//
-//    $cloud_folder = DB::table('app_settings')->where('id', 1)->pluck('cloud_folder')->first();
-//    $folder = Carbon::now()->format('/Y/m').'/images';
-//    $path = Storage::disk('spaces')->putFile($cloud_folder.$folder, $file);
-//
-//    // Create the image record
-//    $image = Image::create([
-//        'name' => $file->hashName(),
-//        'extension' => $file->extension(),
-//        'size' => $file->getSize(),
-//        'folder' => $folder,
-//        'cloud_folder' => $cloud_folder,
-//        'storage_location' => 'do_spaces',
-//        'created_at' => Carbon::now(),
-//        'updated_at' => Carbon::now()
-//    ]);
-//
-//    // Dynamically update the correct model with the image_id
-//    $this->updateModelWithImageId($modelType, $modelId, $image->id);
-//
-//    return $image;
-//  }
-
   protected function updateModelWithImageId($modelType, $modelId, $imageId): void {
     $model = null;
     switch ($modelType) {
@@ -335,6 +304,9 @@ class ImageController extends Controller
         break;
       case 'showEpisode':
         $model = \App\Models\ShowEpisode::find($modelId);
+        break;
+      case 'movie':
+        $model = \App\Models\Movie::find($modelId);
         break;
       // Add more cases as needed for additional models
     }
@@ -414,80 +386,68 @@ class ImageController extends Controller
 ////////////// UPLOAD MOVIE POSTER
     ///////////////////////////////
 
-    public function uploadMoviePoster(HttpRequest $request)
-    {
-
-        // Can we create a function createImage() --- started below
-        // to simplify these upload requests?
-
-
-        // validate the incoming file
-        // TO DO
-        // Need to validate/sanitize the image upload.
-        // strip the metadata and convert the image file.
-        // don't save the original! HACKER WARNING!!
-        //
-
-        // lock show for editing
-        // TO DO... this needs to be developed,
-        // where more than one person cannot
-        // edit or upload to a show at a time.
-        //
-        // Set up the file and folder
-        $cloud_folder = DB::table('app_settings')->where('id', 1)->pluck('cloud_folder')->first();
-        $folder = Carbon::now()->format('/Y/m').'/images';
-        $file = $request->file('image');
-        $filename = $file->getClientOriginalName();
-
-        // Store the file to DO_SPACES
-        Storage::disk('spaces')->putFile($cloud_folder.$folder, $request->file('image'));
-
-        // Store image locally
-        //  $request->file('poster')->store('images');
-
-        // Set up the info for the database model
-        $user = auth()->user()->id;
-        // tec21: we use this 'isEditingNNNN_id' to get the
-        // model the image belongs to, because I couldn't
-        // find a way to send any custom data to the backend
-        // from filepond.
-        $movieId = auth()->user()->isEditingMovie_id;
-        $uploadedFile = $request->file('image');
-
-        // create image model
-        $image_id = DB::table('images')->insertGetId([
-            'user_id' => $user,
-            'movie_id' => Auth::user()->isEditingMovie_id,
-            'name' => $uploadedFile->hashName(),
-            'extension' => $uploadedFile->extension(),
-            'size' => $uploadedFile->getSize(),
-            'folder' => $folder,
-            'cloud_folder' => $cloud_folder,
-            'storage_location' => 'do_spaces',
-        ]);
-
-        // store image_id to Movies table
-        $movie = Movie::find($movieId);
-        $movie->image_id = $image_id;
-        $movie->save();
-
-        // return that image model back to the frontend
-        $image = DB::table('images')->where('id', $image_id)->first();
-        return $image;
-
-    }
-
-
-    ////////////// UPLOAD IMAGE AND ADD TO DATABASE
-    ///////////////////////////////////////////////
-
-    protected function createImage()
-    {
-        // can we create a function to simplify our image uploads?
-        // tec21: I tried, but got stuck at the uniqueness of each
-        // upload because they request a unique model and also
-        // update a unique column on the images table.
-    }
+//    public function uploadMoviePoster(HttpRequest $request)
+//    {
+//
+//        // Can we create a function createImage() --- started below
+//        // to simplify these upload requests?
+//
+//
+//        // validate the incoming file
+//        // TO DO
+//        // Need to validate/sanitize the image upload.
+//        // strip the metadata and convert the image file.
+//        // don't save the original! HACKER WARNING!!
+//        //
+//
+//        // lock show for editing
+//        // TO DO... this needs to be developed,
+//        // where more than one person cannot
+//        // edit or upload to a show at a time.
+//        //
+//        // Set up the file and folder
+//        $cloud_folder = DB::table('app_settings')->where('id', 1)->pluck('cloud_folder')->first();
+//        $folder = Carbon::now()->format('/Y/m').'/images';
+//        $file = $request->file('image');
+//        $filename = $file->getClientOriginalName();
+//
+//        // Store the file to DO_SPACES
+//        Storage::disk('spaces')->putFile($cloud_folder.$folder, $request->file('image'));
+//
+//        // Store image locally
+//        //  $request->file('poster')->store('images');
+//
+//        // Set up the info for the database model
+//        $user = auth()->user()->id;
+//        // tec21: we use this 'isEditingNNNN_id' to get the
+//        // model the image belongs to, because I couldn't
+//        // find a way to send any custom data to the backend
+//        // from filepond.
+//        $movieId = auth()->user()->isEditingMovie_id;
+//        $uploadedFile = $request->file('image');
+//
+//        // create image model
+//        $image_id = DB::table('images')->insertGetId([
+//            'user_id' => $user,
+//            'movie_id' => Auth::user()->isEditingMovie_id,
+//            'name' => $uploadedFile->hashName(),
+//            'extension' => $uploadedFile->extension(),
+//            'size' => $uploadedFile->getSize(),
+//            'folder' => $folder,
+//            'cloud_folder' => $cloud_folder,
+//            'storage_location' => 'do_spaces',
+//        ]);
+//
+//        // store image_id to Movies table
+//        $movie = Movie::find($movieId);
+//        $movie->image_id = $image_id;
+//        $movie->save();
+//
+//        // return that image model back to the frontend
+//        $image = DB::table('images')->where('id', $image_id)->first();
+//        return $image;
+//
+//    }
 
 
 

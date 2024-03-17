@@ -12,8 +12,9 @@
         <h3 class="text-2xl font-bold text-center dark:text-white">Image Uploader</h3>
 
         <ImageUpload :image="images"
-                     :server="'/upload'"
-                     :name="''"
+                     :modelType="null"
+                     :modelId="null"
+                     :name="'Generic Image Upload'"
                      :maxSize="'10MB'"
                      :fileTypes="'image/jpg, image/jpeg, image/png'"
                      @reloadImage="reloadImage"
