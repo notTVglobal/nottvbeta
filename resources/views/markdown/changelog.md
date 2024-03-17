@@ -1,7 +1,11 @@
 # not.tv Changelog
 
-Last Update: March 16, 2024\
+Last Update: March 17, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.8.7.20
+March 17, 2024
+* Improve Hash image, remove duplicate job logic to avoid race conditions.
 
 ## v0.8.7.19
 March 16, 2024

@@ -7279,16 +7279,8 @@ hr {
   margin-top: -8rem;
 }
 
-.-mt-4 {
-  margin-top: -1rem;
-}
-
 .-mt-6 {
   margin-top: -1.5rem;
-}
-
-.mb-0 {
-  margin-bottom: 0px;
 }
 
 .mb-1 {
@@ -9272,10 +9264,6 @@ hr {
 
 .fill-current {
   fill: currentColor;
-}
-
-.fill-primary {
-  fill: var(--fallback-p,oklch(var(--p)/1));
 }
 
 .stroke-current {
@@ -11463,16 +11451,16 @@ hr {
     left: 5rem;
   }
 
-  .md\:top-4 {
-    top: 1rem;
-  }
-
   .md\:left-auto {
     left: auto;
   }
 
   .md\:right-0 {
     right: 0px;
+  }
+
+  .md\:top-4 {
+    top: 1rem;
   }
 
   .md\:col-span-1 {
@@ -11495,10 +11483,6 @@ hr {
   .md\:mx-4 {
     margin-left: 1rem;
     margin-right: 1rem;
-  }
-
-  .md\:-mt-3 {
-    margin-top: -0.75rem;
   }
 
   .md\:ml-0 {
@@ -11545,10 +11529,6 @@ hr {
     height: 16rem;
   }
 
-  .md\:h-96 {
-    height: 24rem;
-  }
-
   .md\:h-\[calc\(900px\)\] {
     height: calc(900px);
   }
@@ -11577,24 +11557,12 @@ hr {
     width: 12rem;
   }
 
-  .md\:w-64 {
-    width: 16rem;
-  }
-
   .md\:w-auto {
     width: auto;
   }
 
-  .md\:min-w-\[16rem\] {
-    min-width: 16rem;
-  }
-
   .md\:min-w-\[8rem\] {
     min-width: 8rem;
-  }
-
-  .md\:max-w-\[16rem\] {
-    max-width: 16rem;
   }
 
   .md\:max-w-\[60\%\] {
@@ -11641,16 +11609,8 @@ hr {
     justify-content: flex-start;
   }
 
-  .md\:justify-end {
-    justify-content: flex-end;
-  }
-
   .md\:justify-between {
     justify-content: space-between;
-  }
-
-  .md\:gap-12 {
-    gap: 3rem;
   }
 
   .md\:gap-6 {
@@ -12041,10 +12001,6 @@ hr {
 
   .xl\:flex-row {
     flex-direction: row;
-  }
-
-  .xl\:gap-12 {
-    gap: 3rem;
   }
 
   .xl\:px-8 {

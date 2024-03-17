@@ -52,19 +52,20 @@ class ProcessImageHash implements ShouldQueue
           $hash = hash_final($ctx);
           fclose($stream);
 
-          // Check if a record with the same image_id already exists
-          $existingImageId = DB::table('image_hashes')->where('image_id', $this->image->id)->first();
-
-          if (!$existingImageId) {
-            // No existing record with the same image_id, proceed to insert
+          DB::transaction(function () use ($hash) {
             $isDuplicate = DB::table('image_hashes')->where('hash', $hash)->exists();
 
-            DB::table('image_hashes')->insert([
-                'image_id' => $this->image->id,
-                'hash' => $hash,
-                'is_duplicate' => $isDuplicate, // This will be true if the hash already exists, indicating a duplicate
-            ]);
-          }
+            // If it's not a duplicate hash, we proceed to insert
+            if (!$isDuplicate || !DB::table('image_hashes')->where('image_id', $this->image->id)->exists()) {
+              DB::table('image_hashes')->insert([
+                  'image_id' => $this->image->id,
+                  'hash' => $hash,
+                  'is_duplicate' => $isDuplicate,
+                  'created_at' => now(),
+                  'updated_at' => now(),
+              ]);
+            }
+          });
         } else {
           Log::error("Image file does not exist in DO Spaces: {$path}");
         }
@@ -73,5 +74,6 @@ class ProcessImageHash implements ShouldQueue
       }
     }
   }
+
 
 }
