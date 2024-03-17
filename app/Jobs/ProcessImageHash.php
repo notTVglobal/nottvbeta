@@ -64,14 +64,6 @@ class ProcessImageHash implements ShouldQueue
                 'hash' => $hash,
                 'is_duplicate' => $isDuplicate, // This will be true if the hash already exists, indicating a duplicate
             ]);
-
-            if ($isDuplicate) {
-              // Log or handle duplicate hash case
-              Log::info("Duplicate hash detected for image ID: {$this->image->id}");
-            }
-          } else {
-            // Existing image_id found, no action needed
-            Log::info("Image ID already processed: {$this->image->id}");
           }
         } else {
           Log::error("Image file does not exist in DO Spaces: {$path}");

@@ -12,15 +12,15 @@ class Kernel extends ConsoleKernel {
   /**
    * Define the application's command schedule.
    *
-   * @param \Illuminate\Console\Scheduling\Schedule $schedule
+   * @param Schedule $schedule
    * @return void
    */
-  protected function schedule(Schedule $schedule) {
+  protected function schedule(Schedule $schedule): void {
 //    $schedule->command('inspire')->hourly();
     $schedule->command('horizon:snapshot')->everyFiveMinutes();
 //        $schedule->job(new CheckSubscriptionStatuses)->everySixHours();
     $schedule->job(new CheckSubscriptionStatuses, 'default')->daily();
-    $schedule->command('expire:invitecodes')->daily();
+    $schedule->command('expire:inviteCodes')->daily();
 
 //    $schedule->call(function () use ($schedule) {
 //      $feeds = NewsRssFeed::all(); // Get all feeds
@@ -32,10 +32,9 @@ class Kernel extends ConsoleKernel {
 //      // This means it will run after migrations have completed during an artisan command.
 //    });
 
-    $schedule->command('fetch:rssfeeds')->everyMinute();
+    $schedule->command('fetch:rssFeeds')->hourly();
+    $schedule->command('newsRssFeed:archive')->hourly();
     $schedule->command('purge:oldRssFeedItems')->monthly();
-//    $schedule->command('newsRssFeed:archive')->dailyAt('08:00');
-    $schedule->command('newsRssFeed:archive')->everyMinute();
   }
 
   /**
@@ -43,7 +42,7 @@ class Kernel extends ConsoleKernel {
    *
    * @return void
    */
-  protected function commands() {
+  protected function commands(): void {
     $this->load(__DIR__ . '/Commands');
 
     require base_path('routes/console.php');

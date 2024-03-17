@@ -13,7 +13,7 @@ class ExpireInviteCodes extends Command
      *
      * @var string
      */
-    protected $signature = 'expire:invitecodes';
+    protected $signature = 'expire:inviteCodes';
 
     /**
      * The console command description.
@@ -27,8 +27,7 @@ class ExpireInviteCodes extends Command
      *
      * @return int
      */
-  public function handle()
-  {
+  public function handle(): int {
     $expiredCodes = InviteCode::with('user') // Eager load the distributor
     ->where('expiry_date', '<=', now())
         ->where('claimed', false)
@@ -42,4 +41,5 @@ class ExpireInviteCodes extends Command
     }
     Log::info('Expired old Invite Codes.');
   }
+
 }
