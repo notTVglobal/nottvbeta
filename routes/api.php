@@ -65,5 +65,6 @@ Route::post('/mist-trigger/trigger', [MistTriggerController::class, 'handleTrigg
 
 Route::post('/mist-trigger/log', [MistTriggerController::class, 'logTrigger']);
 Route::post('/mist-trigger/mist-push-handler', [MistTriggerController::class, 'handleMistPush']);
+Route::post('/mist-trigger/recording-stop', [MistTriggerController::class, 'handleRecordingEnd']);
 
 
