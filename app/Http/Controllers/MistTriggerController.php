@@ -133,17 +133,11 @@ class MistTriggerController extends Controller {
     // Additional recording-specific logic here
   }
 
-  public function handleRecordingEnd(Request $request): Response|Application|ResponseFactory|null {
-//    Log::info('Recording End Trigger', [
-//        'headers' => $request->headers->all(),
-//        'body' => $request->getContent()
-//    ]);
-
+  public function handleRecordingEnd(Request $request): Response {
     $bodyContent = $request->getContent();
     $lines = explode("\n", $bodyContent);
 
-    // Assuming the first line is the stream name and the second line is the file path
-
+    // Parse the body content
     $streamName = trim($lines[0]) ?? 'unknown';
     $filePath = trim($lines[1]) ?? 'unknown';
     $fileType = trim($lines[2]) ?? 'unknown';
@@ -157,55 +151,112 @@ class MistTriggerController extends Controller {
     $machineReadableReason = trim($lines[10]) ?? 'unknown';
     $humanReadableReason = trim($lines[11]) ?? 'unknown';
 
-    // Convert total milliseconds of media data recorded to seconds
+    // Convert total milliseconds of media data recorded to seconds for the duration
     $totalSecondsRecorded = $totalMillisecondsRecorded / 1000;
 
-    // Attempt to find the matching Recording initiated at the start
-    // Convert Unix timestamp to Carbon instance for comparison
-    $recordingStartTime = Carbon::createFromTimestamp($unixTimeRecordingStarted);
+    // Convert Unix timestamps to Carbon instances for start and end times
+    $startTime = Carbon::createFromTimestamp($unixTimeRecordingStarted);
+    $endTime = Carbon::createFromTimestamp($unixTimeRecordingStopped);
 
-// Query to find the closest start_time to $unixTimeRecordingStarted for the given stream_name
-    $recording = Recording::where('stream_name', $streamName)
-        ->orderByRaw('ABS(TIMESTAMPDIFF(SECOND, start_time, ?))', [$recordingStartTime])
-        ->first();
-//    $recording = Recording::where('stream_name', $streamName)->first();
+    // Remove the query string from the URL if present
+    $urlWithoutQuery = parse_url($filePath, PHP_URL_PATH);
+    // Extract the file extension using pathinfo() on the URL without the query string
+    $fileExtension = pathinfo($urlWithoutQuery, PATHINFO_EXTENSION);
 
-    // Extract additional details from the body, such as end time, if applicable
-    // For example, parsing the datetime from the file path
+    // Create a new recording entry
+    Recording::create([
+        'stream_name' => $streamName,
+        'path' => $filePath,
+        'file_extension' => $fileExtension,
+        'mime_type' => $fileType,
+        'start_time' => $startTime,
+        'end_time' => $endTime,
+        'file_size' => $bytesRecorded,
+        'duration' => $secondsSpentRecording,
+        'milliseconds_first_packet' => $millisecondsFirstPacket,
+        'milliseconds_last_packet' => $millisecondsLastPacket,
+        'reason_for_exit' => $machineReadableReason,
+        'human_readable_reason_for_exit' => $humanReadableReason,
+    ]);
 
-    if ($recording) {
-      $startTime = Carbon::createFromTimestamp($unixTimeRecordingStarted);
-      $endTime = Carbon::createFromTimestamp($unixTimeRecordingStopped);
+    Log::info("New recording created for: {$streamName}");
 
-      // Remove the query string from the URL if present
-      $urlWithoutQuery = parse_url($filePath, PHP_URL_PATH);
-
-      // Now extract the file extension using pathinfo() on the URL without the query string
-      $fileExtension = pathinfo($urlWithoutQuery, PATHINFO_EXTENSION);
-      
-      // Update the recording with complete details
-      $recording->update([
-          'path' => $filePath,
-          'file_extension' => $fileExtension,
-          'mime_type' => $fileType,
-          'start_time' => $startTime,
-          'end_time' => $endTime,
-          'file_size' => $bytesRecorded,
-          'duration' => $totalSecondsRecorded,
-        // Include new fields
-          'milliseconds_first_packet' => $millisecondsFirstPacket,
-          'milliseconds_last_packet' => $millisecondsLastPacket,
-          'reason_for_exit' => $machineReadableReason,
-          'human_readable_reason_for_exit' => $humanReadableReason,
-      ]);
-
-      Log::info("Recording ended for: {$streamName}");
-    } else {
-      Log::warning("No matching recording start found for: {$streamName}");
-    }
-
-    return response('Recording end processed', 200);
+    return response('1', 200);
   }
+
+//  public function handleRecordingEnd(Request $request): Response|Application|ResponseFactory|null {
+////    Log::info('Recording End Trigger', [
+////        'headers' => $request->headers->all(),
+////        'body' => $request->getContent()
+////    ]);
+//
+//    $bodyContent = $request->getContent();
+//    $lines = explode("\n", $bodyContent);
+//
+//    // Assuming the first line is the stream name and the second line is the file path
+//
+//    $streamName = trim($lines[0]) ?? 'unknown';
+//    $filePath = trim($lines[1]) ?? 'unknown';
+//    $fileType = trim($lines[2]) ?? 'unknown';
+//    $bytesRecorded = (int) trim($lines[3]) ?? 0;
+//    $secondsSpentRecording = (int) trim($lines[4]) ?? 0;
+//    $unixTimeRecordingStarted = (int) trim($lines[5]) ?? 0;
+//    $unixTimeRecordingStopped = (int) trim($lines[6]) ?? 0;
+//    $totalMillisecondsRecorded = (int) trim($lines[7]) ?? 0;
+//    $millisecondsFirstPacket = (int) trim($lines[8]) ?? 0;
+//    $millisecondsLastPacket = (int) trim($lines[9]) ?? 0;
+//    $machineReadableReason = trim($lines[10]) ?? 'unknown';
+//    $humanReadableReason = trim($lines[11]) ?? 'unknown';
+//
+//    // Convert total milliseconds of media data recorded to seconds
+//    $totalSecondsRecorded = $totalMillisecondsRecorded / 1000;
+//
+//    // Attempt to find the matching Recording initiated at the start
+//    // Convert Unix timestamp to Carbon instance for comparison
+//    $recordingStartTime = Carbon::createFromTimestamp($unixTimeRecordingStarted);
+//
+//// Query to find the closest start_time to $unixTimeRecordingStarted for the given stream_name
+//    $recording = Recording::where('stream_name', $streamName)
+//        ->orderByRaw('ABS(TIMESTAMPDIFF(SECOND, start_time, ?))', [$recordingStartTime])
+//        ->first();
+////    $recording = Recording::where('stream_name', $streamName)->first();
+//
+//    // Extract additional details from the body, such as end time, if applicable
+//    // For example, parsing the datetime from the file path
+//
+//    if ($recording) {
+//      $startTime = Carbon::createFromTimestamp($unixTimeRecordingStarted);
+//      $endTime = Carbon::createFromTimestamp($unixTimeRecordingStopped);
+//
+//      // Remove the query string from the URL if present
+//      $urlWithoutQuery = parse_url($filePath, PHP_URL_PATH);
+//
+//      // Now extract the file extension using pathinfo() on the URL without the query string
+//      $fileExtension = pathinfo($urlWithoutQuery, PATHINFO_EXTENSION);
+//
+//      // Update the recording with complete details
+//      $recording->update([
+//          'path' => $filePath,
+//          'file_extension' => $fileExtension,
+//          'mime_type' => $fileType,
+//          'start_time' => $startTime,
+//          'end_time' => $endTime,
+//          'file_size' => $bytesRecorded,
+//          'duration' => $totalSecondsRecorded,
+//        // Include new fields
+//          'milliseconds_first_packet' => $millisecondsFirstPacket,
+//          'milliseconds_last_packet' => $millisecondsLastPacket,
+//          'reason_for_exit' => $machineReadableReason,
+//          'human_readable_reason_for_exit' => $humanReadableReason,
+//      ]);
+//
+//      Log::info("Recording ended for: {$streamName}");
+//    } else {
+//      Log::warning("No matching recording start found for: {$streamName}");
+//    }
+//
+//    return response('Recording end processed', 200);
+//  }
 
   protected function processLiveStreamPush($streamName, $requestUrl, $pushDestination): void {
     Log::info("Processing live stream push for: {$streamName}");
