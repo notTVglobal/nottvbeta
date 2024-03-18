@@ -134,10 +134,10 @@ class MistTriggerController extends Controller {
   }
 
   public function handleRecordingEnd(Request $request): Response|Application|ResponseFactory|null {
-    Log::info('Recording End Trigger', [
-        'headers' => $request->headers->all(),
-        'body' => $request->getContent()
-    ]);
+//    Log::info('Recording End Trigger', [
+//        'headers' => $request->headers->all(),
+//        'body' => $request->getContent()
+//    ]);
 
     $bodyContent = $request->getContent();
     $lines = explode("\n", $bodyContent);
