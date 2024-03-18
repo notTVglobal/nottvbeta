@@ -1,7 +1,12 @@
 # not.tv Changelog
 
-Last Update: March 17, 2024\
+Last Update: March 18, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.8.7.7
+March 18, 2024
+* Recordings for shows now get listed on the Show Manage page.
+  * Next, we need to set up a job to include in the UpdateRecordingModelAndNotify Job to create a MistStreamWildcard for the recording to allow the user to playback the recording. 
 
 ## v0.8.7.6
 March 17, 2024

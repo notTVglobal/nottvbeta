@@ -702,7 +702,7 @@ class ShowsController extends Controller {
 
   public function manage(Show $show) {
     // Eager load related entities for the Show model
-    $show->load(['user', 'image', 'appSetting', 'category', 'subCategory', 'showRunner.user', 'team', 'schedules.showScheduleRecurrenceDetails']);
+    $show->load(['user', 'image', 'appSetting', 'category', 'subCategory', 'showRunner.user', 'team', 'schedules.showScheduleRecurrenceDetails', 'recordings']);
 
     $episodeStatuses = DB::table('show_episode_statuses')->get()->toArray();
     $filteredStatuses = array_slice($episodeStatuses, 0, -2);
@@ -782,13 +782,14 @@ class ShowsController extends Controller {
             'showRunner'      => [
                 'id'   => $show->showRunner->id ?? null,
                 'name' => $show->showRunner->user->name ?? null,
-            ]
+            ],
+            'recordings' => $show->recordings->map->only(['id', 'path', 'file_extension', 'start_time', 'end_time', 'total_milliseconds_recorded', 'mist_stream_wildcard_id', 'download_url']), // Include only necessary fields
         ],
         'team'            => [
             'name' => $show->team->name,
             'slug' => $show->team->slug,
         ],
-        'episodes'        => ShowEpisode::with('image', 'show', 'showEpisodeStatus')
+        'episodes'        => ShowEpisode::with('image', 'show', 'showEpisodeStatus', 'recordings')
             ->where('show_id', $show->id)
             ->when(Request::input('search'), function ($query, $search) {
               $query->where('name', 'like', "%{$search}%");
@@ -808,6 +809,7 @@ class ShowsController extends Controller {
                 'episodeStatusId'          => $showEpisode->showEpisodeStatus->id,
                 'isPublished'              => $showEpisode->isPublished,
                 'scheduledReleaseDateTime' => $showEpisode->scheduled_release_dateTime,
+                'recordings' => $showEpisode->recordings->map->only(['id', 'path', 'file_extension', 'start_time', 'end_time', 'total_milliseconds_recorded', 'mist_stream_wildcard_id', 'download_url']), // Include only necessary fields
             ]),
         'episodeStatuses' => $filteredStatuses,
         'can'             => [

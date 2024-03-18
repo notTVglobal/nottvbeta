@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Events\MistTriggerPushEndEvent;
 use App\Events\MistTriggerPushOutStartEvent;
+use App\Jobs\UpdateRecordingModel;
+use App\Jobs\UpdateRecordingModelAndNotify;
 use App\Models\AppSetting;
 use App\Models\MistStreamPushDestination;
 use App\Models\MistTrigger;
@@ -161,7 +163,7 @@ class MistTriggerController extends Controller {
     $fileExtension = pathinfo($urlWithoutQuery, PATHINFO_EXTENSION);
 
     // Create a new recording entry
-    Recording::create([
+    $recording = Recording::create([
         'stream_name' => $streamName,
         'path' => $filePath,
         'file_extension' => $fileExtension,
@@ -177,6 +179,8 @@ class MistTriggerController extends Controller {
     ]);
 
     Log::info("New recording created for: {$streamName}");
+
+    UpdateRecordingModelAndNotify::dispatch($recording);
 
     return response('1', 200);
   }
