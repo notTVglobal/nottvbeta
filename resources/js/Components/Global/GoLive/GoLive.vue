@@ -52,20 +52,21 @@
             <div class="flex flex-row">
               <div class="mb-2">
                 <button v-if="!goLiveStore.isRecording" @click="goLiveStore.startRecording"
+                        disabled
                         class="btn text-white bg-green-500 hover:bg-green-700 uppercase"
                 >Start Recording
                 </button>
-                <button v-else @click="goLiveStore.stopRecording"
+                <button v-else disabled @click="goLiveStore.stopRecording"
                         class="btn text-white bg-red-700 hover:bg-red-900 uppercase"
                 >Stop Recording
                 </button>
               </div>
               <div class="ml-2">
-                <button v-if="!goLiveStore.isLive" @click="goLiveStore.goLive"
+                <button v-if="!goLiveStore.isLive" disabled @click="goLiveStore.goLive"
                         class="btn text-white bg-green-500 hover:bg-green-700 uppercase"
                 >Go Live Now
                 </button>
-                <button v-else @click="goLiveStore.stopLive"
+                <button v-else disabled @click="goLiveStore.stopLive"
                         class="btn text-white bg-red-700 hover:bg-red-900 uppercase"
                 >End Live
                 </button>

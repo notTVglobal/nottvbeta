@@ -3,6 +3,10 @@
 Last Update: March 18, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.7.8
+March 18, 2024
+* Disabled the Go Live and Start Recording buttons on the Go Live page as these are Premium Creator Features that haven't been developed yet.
+
 ## v0.8.7.7
 March 18, 2024
 * Recordings for shows now get listed on the Show Manage page.
