@@ -119,6 +119,11 @@ class Show extends Model
     return $this->morphMany(ShowSchedule::class, 'content');
   }
 
+  public function recordings()
+  {
+    return $this->morphMany(Recording::class, 'model');
+  }
+
 
   public static function generateStreamKey($showId)
   {

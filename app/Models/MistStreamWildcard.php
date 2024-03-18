@@ -39,4 +39,9 @@ class MistStreamWildcard extends Model
   public function mistStreamPushDestination(): \Illuminate\Database\Eloquent\Relations\HasMany {
     return $this->hasMany(MistStreamPushDestination::class);
   }
+
+  public function recording()
+  {
+    return $this->hasOne(Recording::class, 'mist_stream_wildcard_id');
+  }
 }

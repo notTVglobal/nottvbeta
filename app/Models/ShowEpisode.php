@@ -103,6 +103,11 @@ class ShowEpisode extends Model
     return $this->belongsTo(MistStreamWildcard::class, 'mist_stream_wildcard_id');
   }
 
+  public function recordings()
+  {
+    return $this->morphMany(Recording::class, 'model');
+  }
+
 //    public function showCategory(): HasOneThrough
 //    {
 //        return $this->hasOneThrough(Show::class, ShowCategory::class);

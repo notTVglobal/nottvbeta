@@ -18,7 +18,7 @@ class Kernel extends ConsoleKernel {
   protected function schedule(Schedule $schedule): void {
     $schedule->command('horizon:snapshot')->everyFiveMinutes();
 
-    $schedule->command('images:delete-queued')->everyMinute();
+    $schedule->command('images:delete-queued')->hourly();
     $schedule->command('fetch:rssFeeds')->hourly();
     $schedule->command('newsRssFeed:archive')->hourly();
 
