@@ -193,6 +193,14 @@ export const useUserStore = defineStore('userStore', {
             // const formattedTime = dayjs.utc(dateTime).tz(this.timezone);
             return dayjs.utc(dateTime).tz(this.timezone).format(formatString)
         },
+        formatTimeFromDateInUserTimezone(dateTime, formatString = 'h:mm a') {
+            if (!this.timezone) {
+                console.error('Timezone is not set.')
+                return dateTime // Or handle this case as appropriate for your app
+            }
+            // const formattedTime = dayjs.utc(dateTime).tz(this.timezone);
+            return dayjs.utc(dateTime).tz(this.timezone).format(formatString)
+        },
         formatDateInUserTimezone(dateTime, formatString = 'ddd DD MMM') {
             if (!this.timezone) {
                 console.error('Timezone is not set.')
