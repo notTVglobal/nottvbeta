@@ -55,11 +55,14 @@ class MistTriggerController extends Controller {
 
     // Directly check if it's a recording without querying for a MistStreamPushDestination
     if ($this->isRecording($requestUrl)) {
-      Log::info("Processing as a recording for: {$streamName}");
+      Log::info('push is a recording');
+//      Log::info("Processing as a recording for: {$streamName}");
       // Call your recording processing logic here
       // E.g., creating a Recording entity
       $this->processRecording($streamName, $requestUrl);
       return response('Recording processed', 200);
+    } else {
+      Log::warning('push is not a recording');
     }
 
     // Attempt to find the matching MistStreamPushDestination
@@ -87,17 +90,17 @@ class MistTriggerController extends Controller {
       if ($this->isRecording($requestUrl)) {
         // Handle as recording
         $this->processRecording($streamName, $requestUrl, $pushDestination);
-        return response('Processed PUSH_OUT_START', 200);
       } else {
         // Handle as live stream push
         $this->processLiveStreamPush($streamName, $requestUrl, $pushDestination);
-        return response('Processed PUSH_OUT_START', 200);
       }
+
     } else {
       Log::warning("No matching destination found for stream name: {$streamName} with incoming URL: {$requestUrl}");
-      return response('Processed PUSH_OUT_START', 200);
       // Handle unrecognized push destinations here, if needed
     }
+
+    return response('Processed PUSH_OUT_START', 200);
 
   }
 
