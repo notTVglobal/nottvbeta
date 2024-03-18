@@ -3,6 +3,16 @@
 Last Update: March 17, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.7.3
+March 17, 2024
+* Added a recordings table, and updated the MistTiggerController to handle new recordings.
+  * Send them to /api/mist-push-handler
+  * The mist-push-handler is setup to check the X-TRIGGER header and determine what kind of trigger it is to process accordingly.
+
+## v0.8.7.23
+March 17, 2024
+* Change delete queued images to hourly (was set to everyMinute for testing purposes)
+
 ## v0.8.7.22
 March 17, 2024
 * Change video poster to video image_id
