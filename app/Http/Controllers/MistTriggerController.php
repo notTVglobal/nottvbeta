@@ -102,16 +102,20 @@ class MistTriggerController extends Controller {
   }
 
   protected function isRecording($requestUrl): bool {
-    // Checks if the URL suggests this is a recording
-// Using regular expression to match /media/recordings/ followed by any characters and ending in .mkv
-    return preg_match('/\/media\/recordings\/.*\.mkv$/', $requestUrl) > 0;
+    // This regular expression checks if the URL path suggests it's a recording,
+    // allowing for query parameters after the .mkv extension
+    return preg_match('/\/media\/recordings\/.*\.mkv(\?.*)?$/', $requestUrl) > 0;
   }
 
   protected function processRecording($streamName, $requestUrl): void {
     Log::info("Starting recording for: {$streamName}");
 
-    // Extract the file extension from the request URL
-    $fileExtension = pathinfo($requestUrl, PATHINFO_EXTENSION);
+    // Remove the query string from the URL if present
+    $urlWithoutQuery = parse_url($requestUrl, PHP_URL_PATH);
+
+    // Now extract the file extension using pathinfo() on the URL without the query string
+    $fileExtension = pathinfo($urlWithoutQuery, PATHINFO_EXTENSION);
+
     // Here, you might create a new Recording instance or update existing data
     Recording::create([
         'stream_name' => $streamName,
@@ -160,7 +164,13 @@ class MistTriggerController extends Controller {
     if ($recording) {
       $startTime = Carbon::createFromTimestamp($unixTimeRecordingStarted);
       $endTime = Carbon::createFromTimestamp($unixTimeRecordingStopped);
-      $fileExtension = pathinfo($filePath, PATHINFO_EXTENSION);
+
+      // Remove the query string from the URL if present
+      $urlWithoutQuery = parse_url($filePath, PHP_URL_PATH);
+
+      // Now extract the file extension using pathinfo() on the URL without the query string
+      $fileExtension = pathinfo($urlWithoutQuery, PATHINFO_EXTENSION);
+      
       // Update the recording with complete details
       $recording->update([
           'path' => $filePath,
