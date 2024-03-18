@@ -19,19 +19,21 @@ class MistTriggerController extends Controller {
 
 
   public function handleMistPush(Request $request): Response|Application|ResponseFactory|null {
-    Log::info('MistServer Push Trigger', [
-        'headers' => $request->headers->all(),
-        'body'    => $request->getContent()
-    ]);
+//    Log::info('MistServer Push Trigger', [
+//        'headers' => $request->headers->all(),
+//        'body'    => $request->getContent()
+//    ]);
 
     $triggerType = $request->header('X-TRIGGER');
 
     // Route to the appropriate handler based on the trigger type
     switch ($triggerType) {
       case 'PUSH_OUT_START':
-        return $this->handlePushOutStart($request);
+        $this->handlePushOutStart($request);
+        return response('1', 200); // Positive response for blocking triggers
       case 'RECORDING_END':
-        return $this->handleRecordingEnd($request);
+        $this->handleRecordingEnd($request);
+        return response('1', 200); // Positive response for blocking triggers
       // Add more cases as needed for other trigger types
       default:
         Log::warning("Unhandled trigger type: {$triggerType}");
@@ -42,10 +44,10 @@ class MistTriggerController extends Controller {
 
 
   public function handlePushOutStart(Request $request): Response|Application|ResponseFactory {
-    Log::info('handlePushOutStart Raw Request', [
-        'headers' => $request->headers->all(),
-        'body'    => $request->getContent()
-    ]);
+//    Log::info('handlePushOutStart Raw Request', [
+//        'headers' => $request->headers->all(),
+//        'body'    => $request->getContent()
+//    ]);
 
     $bodyContent = $request->getContent();
     $lines = explode("\n", $bodyContent);
@@ -190,7 +192,7 @@ class MistTriggerController extends Controller {
           'human_readable_reason_for_exit' => $humanReadableReason,
       ]);
 
-      Log::info("Recording updated for end: {$streamName}");
+      Log::info("Recording ended for: {$streamName}");
     } else {
       Log::warning("No matching recording start found for: {$streamName}");
     }
