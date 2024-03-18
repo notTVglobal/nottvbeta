@@ -3,6 +3,11 @@
 Last Update: March 17, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.7.5
+March 17, 2024
+* Updated the log outputs for recordings.
+* The MistServer needs the Triggers set to "Blocking" on production, otherwise they aren't triggering the API call.
+
 ## v0.8.7.4
 March 17, 2024
 * Updated cloudflare rules to allow the api access from the mistserver triggers.
