@@ -3,6 +3,13 @@
 Last Update: March 17, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.7.6
+March 17, 2024
+* Changed the MistServer Trigger for Recordings to only trigger when a Recording Stops.
+  * Updated the recordings table to more accurately reflect the data returned from MistServer:
+    * total_milliseconds_recorded, instead of duration
+    * bytes_recorded, instead of file_size
+
 ## v0.8.7.5
 March 17, 2024
 * Updated the log outputs for recordings.

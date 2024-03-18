@@ -151,9 +151,6 @@ class MistTriggerController extends Controller {
     $machineReadableReason = trim($lines[10]) ?? 'unknown';
     $humanReadableReason = trim($lines[11]) ?? 'unknown';
 
-    // Convert total milliseconds of media data recorded to seconds for the duration
-    $totalSecondsRecorded = $totalMillisecondsRecorded / 1000;
-
     // Convert Unix timestamps to Carbon instances for start and end times
     $startTime = Carbon::createFromTimestamp($unixTimeRecordingStarted);
     $endTime = Carbon::createFromTimestamp($unixTimeRecordingStopped);
@@ -171,8 +168,8 @@ class MistTriggerController extends Controller {
         'mime_type' => $fileType,
         'start_time' => $startTime,
         'end_time' => $endTime,
-        'file_size' => $bytesRecorded,
-        'duration' => $secondsSpentRecording,
+        'bytes_recorded' => $bytesRecorded,
+        'total_milliseconds_recorded' => $totalMillisecondsRecorded,
         'milliseconds_first_packet' => $millisecondsFirstPacket,
         'milliseconds_last_packet' => $millisecondsLastPacket,
         'reason_for_exit' => $machineReadableReason,
