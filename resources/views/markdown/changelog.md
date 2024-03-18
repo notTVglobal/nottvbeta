@@ -3,6 +3,12 @@
 Last Update: March 17, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.7.4
+March 17, 2024
+* Updated cloudflare rules to allow the api access from the mistserver triggers.
+* Fixed the filepath of the mist triggers to allow query strings if present.
+* Adjusted how it gets the file extension in the case of query strings.
+
 ## v0.8.7.3
 March 17, 2024
 * Added a recordings table, and updated the MistTiggerController to handle new recordings.
