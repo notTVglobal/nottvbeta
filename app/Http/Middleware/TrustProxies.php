@@ -16,7 +16,8 @@ class TrustProxies extends Middleware
         '10.124.0.4',
         'streams.not.tv',
         'mist.not.tv',
-        'mist2.not.tv'
+        'mist2.not.tv',
+        'mist.nottv.io'
     ];
 
     /**
