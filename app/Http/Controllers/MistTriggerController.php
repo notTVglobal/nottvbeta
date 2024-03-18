@@ -161,7 +161,14 @@ class MistTriggerController extends Controller {
     $totalSecondsRecorded = $totalMillisecondsRecorded / 1000;
 
     // Attempt to find the matching Recording initiated at the start
-    $recording = Recording::where('stream_name', $streamName)->first();
+    // Convert Unix timestamp to Carbon instance for comparison
+    $recordingStartTime = Carbon::createFromTimestamp($unixTimeRecordingStarted);
+
+// Query to find the closest start_time to $unixTimeRecordingStarted for the given stream_name
+    $recording = Recording::where('stream_name', $streamName)
+        ->orderByRaw('ABS(TIMESTAMPDIFF(SECOND, start_time, ?))', [$recordingStartTime])
+        ->first();
+//    $recording = Recording::where('stream_name', $streamName)->first();
 
     // Extract additional details from the body, such as end time, if applicable
     // For example, parsing the datetime from the file path
