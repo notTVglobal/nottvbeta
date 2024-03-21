@@ -1,7 +1,11 @@
 # not.tv Changelog
 
-Last Update: March 18, 2024\
+Last Update: March 20, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.8.7.9
+March 20, 2024
+* Fix the recordings table, bytes_recorded and total_milliseconds_recorded need to be a BIGINT not an INT.
 
 ## v0.8.7.8
 March 18, 2024
