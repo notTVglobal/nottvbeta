@@ -3,6 +3,11 @@
 Last Update: March 22, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.7.11
+March 22, 2024
+* Fixed the background height on the logged out pages to cover the full page.
+* Added image placeholders to Creators who haven't uploaded an image yet on Show.show and Team.show pages
+
 ## v0.8.7.10
 March 22, 2024
 * Changed the Purge old RSS Feed Items command to remove items that are older than 30 days instead of 7 days.

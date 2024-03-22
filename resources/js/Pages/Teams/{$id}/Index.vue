@@ -68,6 +68,8 @@
                    class="pb-8 bg-gray-800">
 
                 <div class="flex flex-col min-w-[8rem] px-6 py-4 font-medium break-words grow-0">
+                  <img v-if="!creator.profile_photo_path && creator.profile_photo_url" :src="creator.profile_photo_url"
+                       class="pb-2 rounded-full h-20 w-20 object-cover mb-2 justify-center">
                   <img v-if="creator.profile_photo_path" :src="'/storage/' + creator.profile_photo_path"
                        :alt="creator.name + ' profile photo'" class="pb-2 rounded-full h-32 w-32 object-cover mb-2">
                   <img v-else :src="'/storage/images/Ping.png'"

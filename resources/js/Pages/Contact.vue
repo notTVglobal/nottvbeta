@@ -5,7 +5,7 @@
     <PublicNavigationMenu v-if="!appSettingStore.loggedIn" class="fixed top-0 w-full nav-mask"/>
     <PublicResponsiveNavigationMenu v-if="!appSettingStore.loggedIn"/>
 
-    <div class="w-full bg-gray-900 flex flex-col gap-y-3 place-self-center text-white">
+    <div class="w-full h-screen bg-gray-900 flex flex-col gap-y-3 place-self-center text-white">
 
       <div class="pt-10 text-center text-3xl font-semibold tracking-widest uppercase text-gray-50">Contact Us</div>
       <main class="mx-auto border-b border-gray-800 pb-36">
