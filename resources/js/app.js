@@ -145,8 +145,8 @@ library.add(faArrowRightArrowLeft, faUserSecret, faPlay, faPlayCircle, faQuestio
 
 InertiaProgress.init({ delay: 250, color: '#FCEF5B', includeCSS: true, showSpinner: true, });
 
-let lastUrl = window.location.pathname;
-
-Inertia.on('navigate', (event) => {
-    lastUrl = event.detail.page.url;
-});
+// let lastUrl = window.location.pathname;
+//
+// Inertia.on('navigate', (event) => {
+//     lastUrl = event.detail.page.url;
+// });

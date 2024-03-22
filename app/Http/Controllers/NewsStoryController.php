@@ -203,6 +203,7 @@ class NewsStoryController extends Controller {
     $newsStory->content_json = $request->content_json;
     $newsStory->slug = \Str::slug($request->title);
     $newsStory->user_id = Auth::user()->id;
+    $newsStory->news_person_id = Auth::user()->newsPerson->id;
     $newsStory->news_category_id = $request->news_category_id;
     $newsStory->news_category_sub_id = $request->news_category_sub_id;
     $newsStory->city_id = $request->city_id;
@@ -531,7 +532,7 @@ class NewsStoryController extends Controller {
     }
 
     // Redirect with success message
-    return redirect()->route('newsroom')->with('message', $message);
+    return redirect()->route('newsroom');
   }
 
 

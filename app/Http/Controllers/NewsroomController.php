@@ -119,6 +119,7 @@ class NewsroomController extends Controller {
                 'can'                          => [
                     'editNewsStory'   => Auth::user()->can('edit', $newsStory),
                     'deleteNewsStory' => Auth::user()->can('delete', $newsStory),
+                    'publishNewsStory' => Auth::user()->can('canPublish', $newsStory)
                 ]
             ]),
         'filters'           => Request::only(['search']),
@@ -126,13 +127,12 @@ class NewsroomController extends Controller {
         'can'               => [
             'createNewsStory'  => Auth::user()->can('startStory', NewsStory::class),
 //            'editNewsStory'    => Auth::user()->can('edit', NewsStory::class),
-            'publishNewsStory' => Auth::user()->can('publish', NewsStory::class)
         ]
     ]);
   }
 
-  public function publish(HttpRequest $request) {
-    $newsStory = NewsStory::find($request->id);
+  public function publish(HttpRequest $request, NewsStory $newsStory) {
+//    $newsStory = NewsStory::find($request->id);
     $newsStory->published_at = date('Y-m-d H:i:s');
     $newsStory->status = 6;
     $newsStory->update();

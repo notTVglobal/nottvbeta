@@ -12,11 +12,12 @@ use App\Services\ImageService;
 class PurgeOldRssFeedItemsCommand extends Command
 {
     protected $signature = 'purge:oldRssFeedItems';
-    protected $description = 'Purge RSS feed items from the temp table that are older than 7 days';
+    protected $description = 'Purge RSS feed items from the temp table that are older than 30 days';
 
     public function handle()
     {
-      $threshold = Carbon::now()->subDays(7);
+      // Set the threshold to 30 days before now
+      $threshold = Carbon::now()->subDays(30);
       NewsRssFeedItemTemp::where('created_at', '<', $threshold)->delete();
 
       $this->info('Old RSS feed items purged successfully.');

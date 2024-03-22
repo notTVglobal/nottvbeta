@@ -1,7 +1,21 @@
 # not.tv Changelog
 
-Last Update: March 20, 2024\
+Last Update: March 22, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.8.7.10
+March 22, 2024
+* Changed the Purge old RSS Feed Items command to remove items that are older than 30 days instead of 7 days.
+* Fix the ExpireInviteCodes command, needed to return an Int.
+* Enabled Two-Factor Authentication.
+* Fixed the Change Password 405 Method Not Allowed error.
+* Add Twitch to Push Destinations.
+* Add Ping as a placeholder image for Creators with no profile image.
+* Fixed News Story Edit
+  * If a province was selected as the location it would default to the first city in the province, this is fixed it defaults to the selected province instead.
+  * Added the Newsroom button
+* Added the Newsroom button to the News Stories page and to individual News Stories
+* Fixed the policy for changing a News Story status and publishing a News Story.
 
 ## v0.8.7.9
 March 20, 2024

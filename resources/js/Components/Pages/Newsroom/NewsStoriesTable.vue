@@ -17,12 +17,26 @@
         </div>
       </div>
       <div class="my-auto pr-6">
-        <button
-            @click="appSettingStore.btnRedirect(``)"
-            class="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded disabled:bg-gray-400"
-            disabled
-        >Upload Press Release
-        </button>
+        <div class="w-full flex flex-row flex-wrap justify-end px-6 gap-2">
+          <div>
+            <button
+                v-if="props.can.viewNewsroom"
+                @click="appSettingStore.btnRedirect(`/newsroom`)"
+                class="px-4 py-2 text-white bg-yellow-600 hover:bg-yellow-500 rounded-lg disabled:bg-gray-400"
+
+            >Newsroom
+            </button>
+          </div>
+          <div>
+            <button
+                @click="appSettingStore.btnRedirect(``)"
+                class="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded disabled:bg-gray-400"
+                disabled
+            >Upload Press Release
+            </button>
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -128,6 +142,7 @@ const appSettingStore = useAppSettingStore()
 const props = defineProps({
   newsStories: Object,
   filters: Object,
+  can: Object,
 });
 
 const sort = (field) => {

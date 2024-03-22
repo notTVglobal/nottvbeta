@@ -148,6 +148,9 @@ class MistStreamPushDestinationController extends Controller
     } elseif (str_contains($url, 'fbcdn')) {
       $details['destination_name'] = 'Instagram';
       $details['destination_image'] = 'https://cdn.nottv.io/public/2024/03/images/Y3l3cvBI2dEnYBQ7RuavkZyMibTVJVUUTZf9Tbc1.png';
+    } elseif (str_contains($url, 'twitch')) {
+      $details['destination_name'] = 'Twitch';
+      $details['destination_image'] = 'https://cdn.nottv.io/public/2024/03/images/NDJRdtqNSZfHdtmJdsgNmzenUkJlrqo5DcZJU916.png';
     }
 
     return $details;

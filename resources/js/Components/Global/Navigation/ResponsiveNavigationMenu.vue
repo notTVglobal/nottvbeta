@@ -166,7 +166,7 @@
           <JetResponsiveNavLink
               @click="appSettingStore.closeNavDropdown()"
               :href="route('news.index')"
-              :active="appSettingStore.currentPage === 'news'">
+              :active="appSettingStore.currentPage.startsWith('news') && appSettingStore.currentPage !== 'newsroom'">
             News
           </JetResponsiveNavLink>
 

@@ -85,6 +85,12 @@ class NewsStoryPolicy
 
   public function edit(User $user, NewsStory $newsStory)
   {
+
+    // Deny editing if the news story is already published
+    if ($newsStory->status === 6) {
+      return Response::deny('Published news stories cannot be edited.');
+    }
+
     // Directly allow admins to edit
     if ($user->isAdmin) {
       return Response::allow();
@@ -92,7 +98,7 @@ class NewsStoryPolicy
 
     // Additionally, allow if the user is the creator of the news story
     if ($newsStory->user_id === $user->id) {
-      return true;
+      return Response::allow();
     }
 
     // Allow if the user is the newsPerson associated with the story
@@ -112,15 +118,39 @@ class NewsStoryPolicy
     return Response::deny('You are not allowed to edit this news story.');
   }
 
+  public function canPublish(User $user)
+  {
 
-    public function publish(User $user)
+    // Directly allow admins to publish if the news story status is 3
+    if ($user->isAdmin) {
+      return Response::allow();
+    }
+
+    // Check if the user has a role that permits publishing
+    $userRoleIds = $user->newsPerson?->roles->pluck('id')->all() ?? [];
+    if (in_array(NewsRoleConstants::PRODUCER, $userRoleIds) ||
+        in_array(NewsRoleConstants::ASSIGNMENT_EDITOR, $userRoleIds)) {
+      return Response::allow();
+    }
+
+    // If none of the above conditions are met, deny permission
+    return Response::deny('You must be a producer or assignment editor to publish news stories.');
+  }
+
+
+  public function publish(User $user, NewsStory $newsStory)
     {
-      // Directly allow admins to publish
+      // Check if the news story is in the correct status to be published
+      if ($newsStory->status !== 3) {
+        return Response::deny('The news story must be approved before publishing.');
+      }
+
+      // Directly allow admins to publish if the news story status is 3
       if ($user->isAdmin) {
         return Response::allow();
       }
 
-      // Additionally, check if the user has a role that permits editing
+      // Check if the user has a role that permits publishing
       $userRoleIds = $user->newsPerson?->roles->pluck('id')->all() ?? [];
       if (in_array(NewsRoleConstants::PRODUCER, $userRoleIds) ||
           in_array(NewsRoleConstants::ASSIGNMENT_EDITOR, $userRoleIds)) {

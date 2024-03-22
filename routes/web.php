@@ -423,8 +423,7 @@ Route::middleware([
       ->middleware('can:viewAny,App\Models\NewsPerson')
       ->name('newsroom');
 
-  Route::patch('/newsroom/publish', [NewsroomController::class, 'publish'])
-//        ->can('view', 'App\Models\NewsPerson')
+  Route::patch('/newsroom/publish/{newsStory}', [NewsroomController::class, 'publish'])
       ->name('newsroom.publish');
 
   Route::post('/newsStory/save', [NewsStoryController::class, 'save'])

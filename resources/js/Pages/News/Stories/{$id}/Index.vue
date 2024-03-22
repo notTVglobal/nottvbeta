@@ -13,14 +13,22 @@
             <Breadcrumbs :classType="'dark'" :breadcrumbs="[{ text: 'News Stories', to: '/news' }, { text: $page.props.newsStory.newsCategory, to: '' }, { text: $page.props.newsStory.newsCategorySub, to: '' }]" />
           </div>
 
-          <div v-if="userStore.loggedIn" class="w-full flex flex-row justify-end px-6">
+          <div v-if="userStore.loggedIn" class="w-full flex flex-row flex-wrap justify-end px-6 gap-2">
 <!--              This Back Button doesn't work...
                   because there is no prevUrl function that runs unless PageSetup() is called..
                   and PageSetup() is only called on LoggedIn pages.-->
 <!--              <BackButton v-if="!appSettingStore.loggedIn"/>-->
 
 <!--            <BackButton />-->
+            <div class="">
+              <button
+                  v-if="props.can.viewNewsroom"
+                  @click="appSettingStore.btnRedirect(`/newsroom`)"
+                  class="px-4 py-2 text-white bg-yellow-600 hover:bg-yellow-500 rounded-lg disabled:bg-gray-400"
 
+              >Newsroom
+              </button>
+            </div>
                   <div v-if="can.editNewsStory" class="ml-2">
                     <button
 

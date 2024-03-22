@@ -39,8 +39,7 @@
 </template>
 
 <script setup>
-import { Inertia } from "@inertiajs/inertia"
-import { ref, watch, provide, computed, onBeforeMount, onBeforeUnmount, defineAsyncComponent, onMounted } from "vue"
+import { ref, computed, onBeforeMount, onBeforeUnmount, defineAsyncComponent, onMounted } from "vue"
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
 import { useNowPlayingStore } from "@/Stores/NowPlayingStore"

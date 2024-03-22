@@ -123,8 +123,13 @@ const checkNewsStoryStatus = (newsStory, statusId) => {
 
 const changeStatus = (newsStory, statusId) => {
   document.getElementById(dialogId).close()
-  Inertia.patch(`/newsStory/${newsStory.slug}`, {
-    status: statusId
+  Inertia.patch(route('news.story.changeStatus'), {
+    newsStory_id: newsStory.id, // Assuming you have the ID available in `newsStory`
+    new_status_id: statusId
+  }, {
+    onError: (errors) => {
+      console.error('Error changing status:', errors);
+    }
   });
 }
 
