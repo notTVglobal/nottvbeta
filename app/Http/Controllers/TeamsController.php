@@ -271,6 +271,7 @@ class TeamsController extends Controller {
                 'id'                 => $user->id,
                 'name'               => $user->name,
                 'profile_photo_path' => $user->profile_photo_path,
+                'profile_photo_url'  => $user->profile_photo_url,
             ]),
         'filters'  => Request::only(['team_id']),
         'can'      => [

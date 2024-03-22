@@ -654,6 +654,7 @@ class ShowsController extends Controller {
           'id'                 => $user->id,
           'name'               => $user->name,
           'profile_photo_path' => $user->profile_photo_path,
+          'profile_photo_url'  => $user->profile_photo_url,
           'active'             => $user->pivot->active ?? null,
         // Include additional details as necessary
       ];
