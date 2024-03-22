@@ -26,18 +26,6 @@ class GoLiveController extends Controller {
 
   }
 
-  public function index2() {
-
-    return Inertia::render('GoLive2', [
-//        'shows'          => $this->listAvailableShows(),
-        'can' => [
-//            'viewShows'   => Auth::user()->can('view', Show::class),
-            'goLive' => Auth::user()->can('goLive', User::class),
-        ]
-    ]);
-
-  }
-
   /**
    * List all shows available for the user to go live on.
    */

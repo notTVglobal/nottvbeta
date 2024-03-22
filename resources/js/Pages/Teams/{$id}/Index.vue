@@ -68,8 +68,10 @@
                    class="pb-8 bg-gray-800">
 
                 <div class="flex flex-col min-w-[8rem] px-6 py-4 font-medium break-words grow-0">
-                  <img :src="'/storage/' + creator.profile_photo_path"
-                       class="pb-2 rounded-full h-32 w-32 object-cover mb-2">
+                  <img v-if="creator.profile_photo_path" :src="'/storage/' + creator.profile_photo_path"
+                       :alt="creator.name + ' profile photo'" class="pb-2 rounded-full h-32 w-32 object-cover mb-2">
+                  <img v-else :src="'/storage/images/Ping.png'"
+                       :alt="'no profile photo, using our ping logo as a placeholder'" class="pb-2 rounded-full h-32 w-32 object-cover mb-2">
                   <span class="text-gray-50 w-full text-center">{{ creator.name }}</span>
                 </div>
               </div>

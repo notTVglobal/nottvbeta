@@ -136,7 +136,7 @@ export const useNewsStore = defineStore('newsStore', {
             if (this.city_id) {
                 matchingLocation = this.locationSearchItems.find(location => location.city_id === this.city_id)
             } else if (this.province_id) {
-                matchingLocation = this.locationSearchItems.find(location => location.province_id === this.province_id)
+                matchingLocation = this.locationSearchItems.find(location => location.province_id === this.province_id && !location.city_id)
             } else if (this.federal_electoral_district_id) {
                 matchingLocation = this.locationSearchItems.find(location => location.federal_electoral_district_id === this.federal_electoral_district_id)
             } else if (this.subnational_electoral_district_id) {

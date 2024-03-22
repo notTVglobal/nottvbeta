@@ -17,14 +17,15 @@
               <UpdateProfileInformationForm :user="$page.props.user"/>
 
               <JetSectionBorder/>
-
-              <UpdateContactInformationForm :user="$page.props.user" class="pt-10"/>
+            </div>
+            <div v-if="$page.props.jetstream.canUpdatePassword">
+              <UpdatePasswordForm class="mt-10 sm:mt-0"/>
 
               <JetSectionBorder/>
             </div>
 
-            <div v-if="$page.props.jetstream.canUpdatePassword">
-              <UpdatePasswordForm class="mt-10 sm:mt-0"/>
+            <div>
+              <UpdateContactInformationForm :user="$page.props.user" class="pt-10"/>
 
               <JetSectionBorder/>
             </div>

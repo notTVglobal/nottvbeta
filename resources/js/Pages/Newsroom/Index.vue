@@ -137,7 +137,7 @@
                         </div>
                         <div>
                           <button
-                              v-if="props.can.publishNewsStory && !newsStory.published_at && newsStory.status.id === 3"
+                              v-if="newsStory.can.publishNewsStory && !newsStory.published_at && newsStory.status.id === 3"
                               @click="openConfirmPublishDialog(newsStory)"
                               class="bg-green-600 hover:bg-green-500 text-white mt-1 mx-2 px-4 py-2 h-fit rounded disabled:bg-gray-400"
                           >Publish
@@ -457,7 +457,7 @@ const openConfirmPublishDialog = (newsStory) => {
 }
 
 function publish() {
-  Inertia.patch(route('newsroom.publish', {id: selectedNewsStory.value.id}))
+  Inertia.patch(route('newsroom.publish', {newsStory: selectedNewsStory.value.slug}))
   const topDiv = document.getElementById("topDiv")
   topDiv.scrollIntoView()
 }

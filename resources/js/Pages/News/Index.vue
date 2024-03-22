@@ -14,7 +14,7 @@
       <div class="mx-auto px-4 border-b border-gray-800 flex justify-center">
 
         <section>
-          <NewsStoriesTable :newsStories="newsStories" :filters="filters"/>
+          <NewsStoriesTable :newsStories="newsStories" :filters="filters" :can="can"/>
         </section>
 
       </div>

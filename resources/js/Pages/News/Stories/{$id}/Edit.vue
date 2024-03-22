@@ -55,8 +55,6 @@
       </div>
 
 
-
-
       <CategoryCitySelector
           :newsStory="newsStory"
           :locationSearch="locationSearch"
@@ -155,9 +153,9 @@ const props = defineProps({
   filters: Object,
   can: Object,
   errors: Object,
-  processing: false,
 })
 
+const processing = ref(false)
 const errors = props.errors; // This will contain the error messages
 
 onMounted(async () => {
@@ -231,7 +229,7 @@ watch(() => [newsStore.news_category_id, newsStore.news_category_sub_id], () => 
 })
 
 const submit = () => {
-  props.processing = true
+  processing.value = true
   const newsPersonId = selectedNewsPerson.value ? selectedNewsPerson.value.value : null;
   // Check if selectedSubcategory.id is null, and if so, set it to a default value or handle it as needed
   // const subcategoryId = newsStore.selectedSubcategory ? newsStore.selectedSubcategory.id : null;
@@ -252,7 +250,12 @@ const submit = () => {
     news_person_id: newsPersonId, // Use the selected news person ID
   }
 
-  Inertia.patch(route('newsStory.update', newsStore.newsStory.slug), data)
+  Inertia.patch(route('newsStory.update', newsStore.newsStory.slug), data, {
+    onError: (errors) => {
+      console.error(errors);
+      processing.value = false
+    }
+  })
 }
 
 onBeforeUnmount(() => {

@@ -134,7 +134,7 @@
 
           <div class="stat my-2">
             <div class="stat-title text-white">Total balance</div>
-            <div class="stat-value">$89,410</div>
+            <div class="stat-value">$0</div>
             <div class="stat-actions">
               <button class="btn btn-sm btn-success">Add funds</button>
               <button class="ml-2 btn btn-sm">Withdrawal</button>
@@ -155,7 +155,7 @@
             </thead>
             <tr class="border-b border-1 border-gray-100 text-black dark:text-white hover:bg-success">
               <td class="px-2 col-span-2 py-2">Flex Account</td>
-              <td class="px-2 text-right">89,400.00</td>
+              <td class="px-2 text-right">0.00</td>
             </tr>
             <tr class="border-b border-1 border-gray-100 text-black dark:text-white hover:bg-success">
               <td class="px-2 col-span-2 py-2">Equity Shares</td>

@@ -25,7 +25,7 @@ class Kernel extends ConsoleKernel {
     $schedule->job(new CheckSubscriptionStatuses, 'default')->daily();
     $schedule->command('expire:inviteCodes')->daily();
 
-    $schedule->command('purge:oldRssFeedItems')->monthly();
+    $schedule->command('purge:oldRssFeedItems')->daily();
 
   }
 

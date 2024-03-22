@@ -40,6 +40,7 @@ class ExpireInviteCodes extends Command
       // $code->user could be used here to access the distributor's info
     }
     Log::info('Expired old Invite Codes.');
+    return 0; // Indicates success
   }
 
 }
