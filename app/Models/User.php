@@ -42,7 +42,8 @@ class User extends Authenticatable implements MustVerifyEmail {
       'stripe_id',
       'isVip',
       'creatorNumber',
-      'last_login_at'
+      'last_login_at',
+      'terms_agreed_at'
   ];
 
   /**
@@ -65,6 +66,7 @@ class User extends Authenticatable implements MustVerifyEmail {
   protected $casts = [
       'email_verified_at' => 'datetime',
       'last_login_at'     => 'datetime',
+      'terms_agreed_at' => 'datetime',
   ];
 
 //    public function setPasswordAttribute($value)

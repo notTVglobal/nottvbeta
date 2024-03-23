@@ -193,7 +193,8 @@ Route::post('/invite/{inviteCode}/send-creator-email-invitation', [CreatorsContr
 Route::get('/invite/{inviteCode}', [CreatorsController::class, 'showCreatorInviteIntroduction'])->name('creator.invite.show');
 Route::post('/invite/{inviteCode}/check-invite-code', [CreatorsController::class, 'checkInviteCode'])->name('creator.invite.checkInviteCode');
 Route::get('/register/{inviteCode}', [CreatorsController::class, 'showRegistrationForm'])->name('creator.register.show');
-Route::post('/register/{inviteCode}', [CreatorsController::class, 'registerCreator'])->name('creator.register.submit');
+//Route::post('/register/{inviteCode}', [CreatorsController::class, 'store'])->name('creator.store');
+Route::post('/register/creator/{inviteCode}', [CreatorsController::class, 'register'])->name('creator.register.submit');
 
 
 // News (public, everyone can see these)
@@ -465,6 +466,11 @@ Route::middleware([
 
   Route::get('/api/news-persons', [NewsPersonController::class, 'fetchNewsPersons']);
 
+// News Locations and APIs
+//////////////////////////
+
+  // Define a route for fetching news countries
+  Route::get('/api/news-countries-simple-list', [NewsController::class, 'getNewsCountriesSimpleList'])->name('news.countries.simpleList');
 
 // News People Roles
 ////////////////////

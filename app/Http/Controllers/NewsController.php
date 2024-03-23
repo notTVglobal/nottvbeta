@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\NewsPerson;
+use App\Models\NewsCountry;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -24,6 +25,11 @@ class NewsController extends Controller
               'viewNewsroom' => optional($user)->can('viewAny', NewsPerson::class) ?: false,
           ],
       ]);
+    }
+
+    public function getNewsCountriesSimpleList(): \Illuminate\Http\JsonResponse {
+      $countries = NewsCountry::orderBy('name', 'asc')->get(['id', 'name']);
+      return response()->json($countries);
     }
 
     /**
