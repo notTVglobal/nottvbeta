@@ -120,10 +120,10 @@
                           <button @click.prevent="claimCode(code.id)">Claim</button>
                         </div>
                         <div class="w-4 transform hover:text-purple-500 hover:scale-110">
-                          <Link :href="`/invite_codes/${code.id}/edit`">Edit</Link>
+                          <Link :href="`/invite_codes/${code.ulid}/edit`">Edit</Link>
                         </div>
                         <div class="w-4 transform hover:text-red-500 hover:scale-110">
-                          <button @click.prevent="deleteCode(code?.id)">Delete</button>
+                          <button @click.prevent="deleteCode(code?.ulid)">Delete</button>
                         </div>
                       </div>
 

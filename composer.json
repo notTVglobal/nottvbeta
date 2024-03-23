@@ -51,7 +51,9 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests/"
+            "Tests\\": "tests/",
+            "App\\": "app/",
+            "App\\Helpers\\": "app/Helpers/"
         }
     },
     "scripts": {

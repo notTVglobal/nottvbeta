@@ -18,6 +18,7 @@ class InviteCodeResource extends JsonResource {
 
     return [
         'id'              => $this->id,
+        'ulid'            => $this->ulid,
         'code'            => $this->code,
         'volume'          => $this->volume,
         'uses'            => $this->used_count,
@@ -25,7 +26,7 @@ class InviteCodeResource extends JsonResource {
         'claimed_by'      => $this->claimedBy->name,
         'claimed_at'      => $this->claimed_at,
       // Format expiry_date for HTML input
-        'expiry_date' => $this->expiry_date ? Carbon::parse($this->expiry_date)->format('Y-m-d') : null,
+        'expiry_date'     => $this->expiry_date ?? null,
         'created_by_name' => $this->createdBy->name, // Assuming the User model has a 'name' attribute
         'created_by_id'   => $this->createdBy->id, // Assuming the User model has a 'name' attribute
         'role'            => $this->role->role ?? null, // Make sure to handle cases where role might be null

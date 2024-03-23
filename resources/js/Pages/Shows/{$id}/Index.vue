@@ -213,20 +213,16 @@
               <div class="container mx-auto px-4 mb-12">
                 <div class="w-full bg-gray-800 text-2xl p-4 mb-4">CREATORS</div>
 
-                <div class="flex flex-row flex-wrap">
-                  <div v-for="creator in creators"
-                       :key="creator.id"
-                       class="pb-8 mx-auto lg:mx-0">
-
-                    <div class="flex flex-col max-w-[8rem] px-3 py-4 font-medium break-words grow-0">
-                      <img v-if="!creator.profile_photo_path" :src="creator.profile_photo_url"
-                           class="pb-2 rounded-full h-20 w-20 object-cover mb-2 justify-center">
-                      <img v-if="creator.profile_photo_path" :src="'/storage/' + creator.profile_photo_path"
-                           class="pb-2 rounded-full h-20 w-20 object-cover mb-2 justify-center">
-                      <span class="text-gray-200 w-full text-center text-sm">{{ creator.name }}</span>
+                <div class="flex flex-row flex-wrap justify-center">
+                  <div v-for="creator in creators" :key="creator.id" class="pb-8 mx-auto lg:mx-0">
+                    <div class="flex flex-col items-center max-w-[8rem] px-3 py-4 font-medium break-words">
+                      <img v-if="!creator.profile_photo_path" :src="creator.profile_photo_url" class="rounded-full h-20 w-20 min-h-20 min-w-20 object-cover mb-2">
+                      <img v-if="creator.profile_photo_path" :src="'/storage/' + creator.profile_photo_path" class="rounded-full h-20 w-20 min-h-20 min-w-20 object-cover mb-2">
+                      <span class="text-gray-200 text-center text-sm">{{ creator.name }}</span>
                     </div>
                   </div>
                 </div>
+
                 <!-- Paginator -->
                 <!--                <Pagination :data="props.creators" class="mb-6 pb-6 border-b border-gray-800"/>-->
               </div>

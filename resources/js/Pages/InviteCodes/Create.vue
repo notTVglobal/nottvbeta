@@ -70,11 +70,13 @@ import { onMounted, onUnmounted, reactive, ref, watch } from 'vue'
 import { Inertia } from '@inertiajs/inertia'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import { useUserStore } from '@/Stores/UserStore'
 import { throttle } from 'lodash';
 import Message from '@/Components/Global/Modals/Messages'
 
 usePageSetup('inviteCodes')
 const appSettingStore = useAppSettingStore()
+const userStore = useUserStore()
 
 const props = defineProps({
   roles: Object,
@@ -87,6 +89,7 @@ const form = reactive({
   user_role_id: 1,
   volume: 1,
   expiry_date: '',
+  user_timezone: userStore.timezone,
 })
 
 let formErrors = reactive({});

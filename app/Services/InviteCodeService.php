@@ -13,13 +13,13 @@ class InviteCodeService
    * @param string $code
    * @return array
    */
-  public function validateCode(string $code): array
+  public function validateCode(InviteCode $inviteCode): array
   {
-    $inviteCode = InviteCode::where('code', $code)->first();
+//    $inviteCode = InviteCode::where('code', $inviteCode)->first();
 
-    if (!$inviteCode) {
-      return ['success' => false, 'message' => 'Oops! It looks like your invite code might have been mistyped or does not exist.'];
-    }
+//    if (!$inviteCode) {
+//      return ['success' => false, 'message' => 'Oops! It looks like your invite code might have been mistyped or does not exist.'];
+//    }
 
     if ($inviteCode->claimed) {
       return ['success' => false, 'message' => 'This invite code has already embarked on its journey with another creator.'];

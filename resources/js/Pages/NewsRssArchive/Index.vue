@@ -60,7 +60,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { Inertia } from '@inertiajs/inertia'
 import { useForm } from '@inertiajs/inertia-vue3'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -95,5 +95,9 @@ watch(search, throttle(function (value) {
   })
 }, 300))
 
+onMounted(() => {
+  const appSettingStore = useAppSettingStore();
+  appSettingStore.shouldScrollToTop = true;
+});
 
 </script>

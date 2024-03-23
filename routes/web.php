@@ -136,14 +136,14 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
   $request->fulfill();
 
   return redirect('/');
-})->middleware(['auth', 'signed'])->name('verification.verify');
+})->middleware(['auth', 'signed', 'update.last_login'])->name('verification.verify');
 
 Route::post('/email/verify', function (Request $request) {
   $request->user()->sendEmailVerificationNotification();
   // Flash a status message to the session
   session()->flash('success', 'verification-link-sent');
   return Inertia::render('Auth/VerifyEmail');
-})->middleware(['auth', 'throttle:6,1'])->name('custom.verification.send');
+})->middleware(['auth', 'update.last_login', 'throttle:6,1'])->name('custom.verification.send');
 
 // Jetstream/Fortify came with an email verification method, but
 // I can't figure out where the verification.send route is. And
@@ -180,9 +180,20 @@ Route::get('/first-play-data', [AppSettingController::class, 'serveFirstPlayData
 // Creator Invite and Register (public, everyone can see these)
 ////////////////////////////////////////////////////////////////
 
-Route::get('/invite/{code}', [CreatorsController::class, 'showCreatorInviteIntroduction'])->name('creator.invite.show');
-Route::get('/register/{code}', [CreatorsController::class, 'showRegistrationForm'])->name('creator.register.show');
-Route::post('/register/{code}', [CreatorsController::class, 'registerCreator'])->name('creator.register.submit');
+//
+//Route::get('/invite', function () {
+//  return Inertia::render('Invite');
+//})->can('viewCreator', 'App\Models\User')
+//    ->name('invite');
+
+Route::get('/invite', [CreatorsController::class, 'invite'])->name('invite');
+Route::post('/invite', [WelcomeController::class, 'inviteFormSubmission'])->name('public.invite.submit')->middleware('throttle:3,1');
+// note: the {code} is the primary key which is the ulid for the code.
+Route::post('/invite/{inviteCode}/send-creator-email-invitation', [CreatorsController::class, 'sendCreatorEmailInvitation'])->name('creator.sendEmailInvitation.submit')->middleware('throttle:3,1');
+Route::get('/invite/{inviteCode}', [CreatorsController::class, 'showCreatorInviteIntroduction'])->name('creator.invite.show');
+Route::post('/invite/{inviteCode}/check-invite-code', [CreatorsController::class, 'checkInviteCode'])->name('creator.invite.checkInviteCode');
+Route::get('/register/{inviteCode}', [CreatorsController::class, 'showRegistrationForm'])->name('creator.register.show');
+Route::post('/register/{inviteCode}', [CreatorsController::class, 'registerCreator'])->name('creator.register.submit');
 
 
 // News (public, everyone can see these)
@@ -217,6 +228,7 @@ Route::get('news/story/{story}', [NewsStoryController::class, 'show'])
 
 Route::middleware([
     'auth:sanctum',
+    'update.last_login',
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
@@ -511,17 +523,6 @@ Route::middleware([
   })->can('viewVip', 'App\Models\User')
       ->name('library');
 
-
-// Invite
-///////////
-/// We'll make a public version of this page where a creator
-/// enters a code they receive in their email to start the
-/// sign up process.
-
-  Route::get('/invite', function () {
-    return Inertia::render('Invite');
-  })->can('viewCreator', 'App\Models\User')
-      ->name('invite');
 
 // For Testing
 ///////////

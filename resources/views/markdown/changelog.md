@@ -1,7 +1,17 @@
 # not.tv Changelog
 
-Last Update: March 22, 2024\
+Last Update: March 23, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.8.7.12
+March 23, 2024
+* Fixed profile image minimum height and width on Team page and Show page
+* Team Leaders can now remove Team Members instead of only Team Creators
+* Invite Creator form and email now working
+* Creators now see invite codes from the button in their dashboard that lets them invite other creators and audience members.
+* Added a last_login_at dateTime to user table
+* Fix the NewsFeed pages when you change the page it will load the next page from the top instead of the middle.
+* Styling adjustments to the user profile for admin.
 
 ## v0.8.7.11
 March 22, 2024
