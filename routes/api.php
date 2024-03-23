@@ -4,6 +4,7 @@ use App\Http\Controllers\AppSettingController;
 use App\Http\Controllers\MistServerController;
 use App\Http\Controllers\MistStreamController;
 use App\Http\Controllers\MistTriggerController;
+use App\Http\Controllers\NewsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ChatController;
@@ -67,4 +68,5 @@ Route::post('/mist-trigger/log', [MistTriggerController::class, 'logTrigger']);
 Route::post('/mist-trigger/mist-push-handler', [MistTriggerController::class, 'handleMistPush']);
 Route::post('/mist-trigger/recording-stop', [MistTriggerController::class, 'handleRecordingEnd']);
 
+Route::get('/news-countries-simple-list', [NewsController::class, 'getNewsCountriesSimpleList'])->name('news.countries.simpleList');
 

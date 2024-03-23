@@ -157,7 +157,7 @@
               <div v-if="form.errors.country" v-text="form.errors.country"
                    class="text-xs text-red-600 mt-1"></div>
 
-              <div class="mt-4">
+              <div class="mt-4" v-if="isCanadaSelected">
                 <JetLabel for="postalCode" value="Postal Code" />
                 <JetInput
                     id="postalCode"
@@ -234,7 +234,7 @@ import JetLabel from '@/Jetstream/Label.vue';
 import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
 import ApplicationLogo from '@/Jetstream/ApplicationLogo.vue'
 import { Inertia } from '@inertiajs/inertia'
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
 const appSettingStore = useAppSettingStore()
 
@@ -250,18 +250,20 @@ const form = useForm({
   email: '',
   password: '',
   password_confirmation: '',
-  address1: '', // disabled for MVP
-  address2: '', // disabled for MVP
-  city: '', // disabled for MVP
-  province: '', // disabled for MVP
-  phone: '', // disabled for MVP
+  // address1: '', // disabled for MVP
+  // address2: '', // disabled for MVP
+  // city: '', // disabled for MVP
+  // province: '', // disabled for MVP
+  // phone: '', // disabled for MVP
   country: '',
   postalCode: '',
   terms: false,
-  invite_code: props.inviteCodeUlid,
 });
 
 const countries = ref([]);
+
+// Computed property to determine if the selected country is Canada
+const isCanadaSelected = computed(() => form.country === countries.value.find(country => country.name === 'Canada')?.id);
 
 onMounted(async () => {
   try {
@@ -279,7 +281,7 @@ onMounted(async () => {
 });
 
 const submit = () => {
-  form.post(route(`/register/creator/${props.inviteCodeUlid}`), {
+  form.post(`/register/creator/${props.inviteCodeUlid}`, {
     onFinish: () => form.reset('password', 'password_confirmation'),
   });
 };

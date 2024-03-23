@@ -43,7 +43,8 @@ class User extends Authenticatable implements MustVerifyEmail {
       'isVip',
       'creatorNumber',
       'last_login_at',
-      'terms_agreed_at'
+      'terms_agreed_at',
+      'invite_code',
   ];
 
   /**

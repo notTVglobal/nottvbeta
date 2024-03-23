@@ -469,9 +469,6 @@ Route::middleware([
 // News Locations and APIs
 //////////////////////////
 
-  // Define a route for fetching news countries
-  Route::get('/api/news-countries-simple-list', [NewsController::class, 'getNewsCountriesSimpleList'])->name('news.countries.simpleList');
-
 // News People Roles
 ////////////////////
 

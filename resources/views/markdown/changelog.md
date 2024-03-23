@@ -3,6 +3,10 @@
 Last Update: March 23, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.7.13
+March 23, 2024
+* Added register Creator process.
+
 ## v0.8.7.12
 March 23, 2024
 * Fixed profile image minimum height and width on Team page and Show page
