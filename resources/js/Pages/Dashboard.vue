@@ -6,7 +6,7 @@
 
       <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
-      <DashboardHeader :can="can"/>
+      <DashboardHeader :can="can" :hasTeams="hasTeams" />
 
       <!--            <section class="grid grid-cols-1 my-8 mx-2 md:mx-10 m-auto bg-gray-200 rounded p-5 h-64 text-black">-->
       <!--                <div class="flex flex-wrap justify-center">-->
@@ -336,6 +336,10 @@ const myTotalStoragePercentage = computed(() => {
 // Round the percentage to have no decimal places
 const myTotalStorageRoundedPercentage = computed(() => {
   return Math.round(myTotalStoragePercentage)
+})
+
+const hasTeams = computed(() => {
+  return props.teams.data.length > 0
 })
 //
 // async function updateUserStore() {

@@ -135,6 +135,11 @@ Route::get('/public/mail/verify', function () {
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
   $request->fulfill();
 
+  // Check if the currently authenticated user is a creator
+  if (Auth::user()->creator) { // Assuming isCreator() is a method that determines if the user is a creator
+    return redirect('/dashboard');
+  }
+
   return redirect('/');
 })->middleware(['auth', 'signed', 'update.last_login'])->name('verification.verify');
 

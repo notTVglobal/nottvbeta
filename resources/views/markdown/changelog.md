@@ -6,6 +6,11 @@ Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 ## v0.8.7.13
 March 23, 2024
 * Added register Creator process.
+* Hide Go Live button on Dashboard if Creator has no Teams to avoid the error message.
+* Remove verification of postal codes (not working right now)
+* Creators now land on Dashboard after email verification
+* Creator receives Welcome email after registration
+* A News Story can now be deleted by the creator, producer or assignment editor if it's rejected, not just if it's new
 
 ## v0.8.7.12
 March 23, 2024

@@ -9,14 +9,16 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\URL;
 
 class SendCreatorWelcomeEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
   public User $user;
+  private string $verificationUrl;
 
-    /**
+  /**
      * Create a new message instance.
      *
      * @return void
@@ -24,6 +26,10 @@ class SendCreatorWelcomeEmail extends Mailable
     public function __construct($user)
     {
       $this->user = $user;
+      // Generate the email verification URL
+      $this->verificationUrl = URL::temporarySignedRoute(
+          'verification.verify', now()->addMinutes(60), ['id' => $user->getKey(), 'hash' => sha1($user->getEmailForVerification())]
+      );
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Actions\Fortify;
 
 use App\Events\CreatorRegistrationCompleted;
+use App\Models\Creator;
 use App\Models\NewsCountry;
 use App\Models\NewsPostalCode;
 use App\Models\User;
@@ -50,6 +51,10 @@ class CreateNewCreator implements CreatesNewUsers {
           'phone'           => $input['phone'] ?? null,
       ]);
 
+      Creator::create([
+          'user_id' => $user->id,
+      ]);
+
       // Increment the used count
       $inviteCode->used_count += 1;
       // Check if the invite code should be claimed
@@ -80,7 +85,6 @@ class CreateNewCreator implements CreatesNewUsers {
    * @throws ValidationException
    */
   private function validateInput(array $input): void {
-
     Validator::make($input, [
         'name'                  => ['required', 'string', 'max:255'],
         'email'                 => ['required', 'string', 'email', 'max:255', 'unique:users'],
@@ -91,29 +95,11 @@ class CreateNewCreator implements CreatesNewUsers {
         'country'               => ['required', 'exists:news_countries,id'],
         'phone'                 => ['sometimes', 'string', 'max:255'],
         'password'              => $this->passwordRules(),
-        'password_confirmation' => 'required|same:password',
+        'password_confirmation' => ['required', 'same:password'],
         'terms'                 => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
-        'invite_code'           => ['required', new UnclaimedInviteCode([4])], // passing the inviteCode->code in to match the Standard User registration.
-        'postalCode'            => [
-            'nullable',
-            'string',
-            'max:7',
-            Rule::requiredIf(function () use ($input) {
-              $canadaId = NewsCountry::where('name', 'Canada')->first()->id ?? null;
-
-              return isset($input['country']) && $input['country'] == $canadaId;
-            }),
-            function ($attribute, $value, $fail) {
-              // Normalize the input: remove spaces and dashes, convert to uppercase
-              $normalizedValue = strtoupper(str_replace([' ', '-'], '', $value));
-
-              // Custom validation to check if the postal code exists in the NewsPostalCode table
-              if (!NewsPostalCode::where('code', $normalizedValue)->exists()) {
-                $fail($attribute . ' is invalid.');
-              }
-            }
-        ],
-    ])->validate();
+        'invite_code'           => ['required', new UnclaimedInviteCode([4])],
+        'postalCode'            => ['nullable', 'string', 'max:255',]
+    ]);
   }
-
 }
+

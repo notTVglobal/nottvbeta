@@ -15,6 +15,8 @@ We are thrilled to you joined us where creativity knows no bounds, and every sto
 
 At notTV, your voice is invaluable. Our mission is to empower you with the tools, platform, and community support needed to bring your visions to life. Whether you're here to inspire, educate, entertain, or provoke thought, notTV is your canvas.
 
+We're excited to have you onboard. Please click the button in the next email to verify your email and get started on your creator journey.
+
 <br>
 <?php $__env->startComponent('mail::button', ['url' => route('dashboard')]); ?>
     Explore Your Dashboard

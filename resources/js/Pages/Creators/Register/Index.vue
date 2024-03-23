@@ -1,8 +1,8 @@
 <template>
 
   <Head title="Creator Registration"/>
-  <div id="topDiv" class="bg-gray-900 h-[calc(100vh)]">
-    <div>
+  <div class="bg-gray-900 h-[calc(100vh)]">
+    <div id="topDiv">
 <!--      <PublicNavigationMenu class="fixed top-0 w-full h-16"/>-->
 <!--      <PublicResponsiveNavigationMenu />-->
     </div>
