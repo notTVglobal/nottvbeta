@@ -49,7 +49,7 @@
         </button>
 
         <div v-if="$page.props.user.id !== member.id || team.user_id !== member.id">
-          <button v-if="can.isTeamOwner"
+          <button v-if="can.isTeamOwner || can.isTeamLeader"
                   class="bg-red-600 text-white hover:bg-red-500 ml-2 my-2 px-2 py-1 rounded disabled:bg-gray-400 h-max w-max"
                   @click.prevent="deleteTeamMember(member)"
           >

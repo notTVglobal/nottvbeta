@@ -36,62 +36,92 @@
         {{ props.userSelected.name }}
       </h2>
 
-      <div class="p-6 light:bg-white dark:bg-gray-800 border-b border-gray-200 space-y-1">
+      <div class="p-6 bg-gray-800 border-b border-gray-200 space-y-2 text-gray-100">
         <div v-if="props.userSelected.isAdmin === 1">
           <span class="font-bold text-red-600">Administrator</span>
         </div>
-        <div>
-          <div class=""><span class="text-xs uppercase">User ID: </span><span
-              class="font-semibold">{{ props.userSelected.id }}</span></div>
-
-          <span class="text-sm font-semibold capitalize">User Type: </span>
-          {{ props.role }}
+        <div v-if="props.userSelected.isVip">
+          <span class="text-2xl font-semibold text-purple-600">VIP</span>
+        </div>
+        <div v-if="props.isCreator">
+          <span class="text-2xl font-semibold text-blue-500">Creator</span>
+        </div>
+        <div v-if="props.isNewsPerson" class="text-yellow-600">
+          <span class="text-2xl font-semibold">News Team</span>
+          <!-- Displaying roles -->
+          <div v-if="props.newsPersonRoles.length">
+        <span class="text-xl">
+            {{ props.newsPersonRoles.join(', ') }}
+        </span>
+          </div>
         </div>
         <div>
-          <span v-if="$page.props.userSelected.role_id === 4"
-                class="text-sm font-semibold capitalize">Creator Number: </span>{{ props.userSelected.creatorNumber }}
+          <div class=""><span class="text-xs uppercase mr-2">User ID: </span><span
+              class="text-base font-semibold">{{ props.userSelected.id }}</span></div>
+
+          <div><span class="text-xs uppercase mr-2">User Type: </span>{{ props.role }}</div>
+        </div>
+        <div>
+          <div v-if="$page.props.userSelected.role_id === 4">
+            <span class="text-xs uppercase mr-2">Creator Number: </span>{{ props.userSelected.creatorNumber }}
+          </div>
         </div>
         <div v-if="props.subscriptionName">
-          <span class="text-sm font-semibold capitalize">Subscription: </span>{{ props.subscriptionName }}
+          <span class="text-xs uppercase mr-2">Subscription: </span>{{ props.subscriptionName }}
         </div>
         <div>
-          <span class="text-sm font-semibold capitalize">Subscription Status: </span>{{ props.subscriptionStatus }}
+          <span class="text-xs uppercase mr-2">Subscription Status: </span>{{ props.subscriptionStatus }}
         </div>
         <div v-if="props.trialEndsAt">
-          <span class="text-sm font-semibold capitalize">Trial Ends At: </span>{{ formatDate(props.trialEndsAt) }}
+          <span class="text-xs uppercase mr-2">Trial Ends At: </span>{{ formatDate(props.trialEndsAt) }}
         </div>
         <div v-if="props.endsAt">
-          <span
-              class="text-sm font-semibold capitalize">Subscription Renewal Date: </span>{{ formatDate(props.endsAt) }}
+          <span class="text-xs uppercase mr-2">Subscription Renewal Date: </span>{{ formatDate(props.endsAt) }}
         </div>
         <div v-if="$page.props.user.isAdmin">
-          <span class="text-sm font-semibold capitalize">Stripe ID: </span>{{ props.userSelected.stripe_id }}
+          <span class="text-xs uppercase mr-2">Stripe ID: </span>{{ props.userSelected.stripe_id }}
+        </div>
+        <div v-if="$page.props.user.isAdmin" class="text-yellow-500">
+          <span class="text-xs uppercase mr-2">Last Login: </span>{{ userStore.formatDateTimeFromUtcToUserTimezone(props.lastLoginAt) }} {{ userStore.timezoneAbbreviation}}
         </div>
       </div>
-      <div class="p-6 light:bg-white dark:bg-gray-800 border-b border-gray-200">
-        <div class="">
-          <span class="text-sm font-semibold capitalize">Email: </span>{{ props.userSelected.email }}
-        </div>
-        <div class="mb-6">
-          <span class="text-sm font-semibold capitalize">Phone: </span>{{ props.userSelected.phone }}
-        </div>
-        <div>
-          <span class="text-sm font-semibold capitalize">Address 1: </span>{{ props.userSelected.address1 }}
-        </div>
-        <div class="">
-          <span class="text-sm font-semibold capitalize">Address 2: </span>{{ props.userSelected.address2 }}
-        </div>
-        <div class="">
-          <span class="text-sm font-semibold capitalize">City: </span>{{ props.userSelected.city }}
-        </div>
-        <div class="">
-          <span class="text-sm font-semibold capitalize">Province: </span>{{ props.userSelected.province }}
-        </div>
-        <div class="">
-          <span class="text-sm font-semibold capitalize">Country: </span>{{ props.userSelected.country }}
-        </div>
-        <div class="">
-          <span class="text-sm font-semibold capitalize">Postal Code: </span>{{ props.userSelected.postalCode }}
+
+      <div class="p-6 bg-gray-800 border-b border-gray-600">
+        <div class="space-y-3">
+          <div>
+            <span class="text-base font-semibold uppercase mr-2 text-gray-400">Email:</span>
+            <span class="text-sm text-gray-300">{{ props.userSelected.email }}</span>
+          </div>
+          <div>
+            <span class="text-base font-semibold uppercase mr-2 text-gray-400">Phone:</span>
+            <span class="text-sm text-gray-300">{{ props.userSelected.phone }}</span>
+          </div>
+          <div class="pt-5 mt-5 border-t border-gray-600">
+            <div>
+              <span class="text-base font-semibold uppercase mr-2 text-gray-400">Address 1:</span>
+              <span class="text-sm text-gray-300">{{ props.userSelected.address1 }}</span>
+            </div>
+            <div>
+              <span class="text-base font-semibold uppercase mr-2 text-gray-400">Address 2:</span>
+              <span class="text-sm text-gray-300">{{ props.userSelected.address2 }}</span>
+            </div>
+            <div>
+              <span class="text-base font-semibold uppercase mr-2 text-gray-400">City:</span>
+              <span class="text-sm text-gray-300">{{ props.userSelected.city }}</span>
+            </div>
+            <div>
+              <span class="text-base font-semibold uppercase mr-2 text-gray-400">Province:</span>
+              <span class="text-sm text-gray-300">{{ props.userSelected.province }}</span>
+            </div>
+            <div>
+              <span class="text-base font-semibold uppercase mr-2 text-gray-400">Country:</span>
+              <span class="text-sm text-gray-300">{{ props.userSelected.country }}</span>
+            </div>
+            <div>
+              <span class="text-base font-semibold uppercase mr-2 text-gray-400">Postal Code:</span>
+              <span class="text-sm text-gray-300">{{ props.userSelected.postalCode }}</span>
+            </div>
+          </div>
         </div>
       </div>
       <div v-if="userSelected.role_id === 4" class="p-6 light:bg-white dark:bg-gray-800 border-b border-gray-200">
@@ -101,7 +131,7 @@
         <div v-for="team in props.teams"
              :key="team.id">
           <Link :href="`/teams/${team.slug}`"
-                class="light:text-blue-800 light:hover:text-blue-600 dark:text-blue-200 dark:hover:text-blue-400">
+                class="text-xl mt-2 tracking-wider light:text-blue-800 light:hover:text-blue-600 dark:text-blue-200 dark:hover:text-blue-400">
             {{ team.name }}
           </Link>
         </div>
@@ -115,19 +145,25 @@
 <script setup>
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import { useUserStore } from '@/Stores/UserStore'
 import Message from '@/Components/Global/Modals/Messages'
 
 usePageSetup('usersShow')
 
 const appSettingStore = useAppSettingStore()
+const userStore = useUserStore()
 
 let props = defineProps({
   userSelected: Object,
+  isCreator: Boolean,
+  isNewsPerson: Boolean,
+  newsPersonRoles: Array,
   subscriptionStatus: String,
   trialEndsAt: String,
   endsAt: String,
   subscriptionName: String,
   role: String,
+  lastLoginAt: String,
   teams: Object,
 })
 

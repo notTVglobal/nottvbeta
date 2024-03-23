@@ -167,6 +167,8 @@ class UsersController extends Controller {
     $subscriptionPlan = SubscriptionPlan::where('price_id', '=', $priceId)->first();
     $subscriptionName = $subscriptionPlan->name ?? null;
 
+    $user->loadMissing('newsPerson.roles'); // Eager load the roles of newsPerson if not already loaded
+
     return Inertia::render('Users/{$id}/Index', [
         'userSelected'       => $user,
         'subscriptionStatus' => $user->subscription('default')->stripe_status ?? null,
@@ -175,6 +177,10 @@ class UsersController extends Controller {
         'subscriptionName'   => $subscriptionName,
         'role'               => role($user->role_id),
         'teams'              => $user->teams,
+        'lastLoginAt'        => $user->last_login_at,
+        'isNewsPerson'       => $user->relationLoaded('newsPerson') ? !is_null($user->newsPerson) : $user->newsPerson()->exists(),
+        'newsPersonRoles'    => $user->newsPerson?->roles->pluck('name')->toArray() ?? [],
+        'isCreator'          => $user->relationLoaded('creator') ? !is_null($user->creator) : $user->creator()->exists(),
         'can'                => [
             'viewAnyUser' => Auth::user()->can('viewAny', User::class),
             'createUser'  => Auth::user()->can('create', User::class),
@@ -199,7 +205,7 @@ class UsersController extends Controller {
         'userEdit'           => $user,
         'subscriptionStatus' => $user->subscription('default')->stripe_status ?? null,
         'isNewsPerson'       => $isNewsPerson,
-        'newsPersonId'      => $user->newsPerson?->id,
+        'newsPersonId'       => $user->newsPerson?->id,
         'isVip'              => $user->isVip,
         'hasSubscription'    => $user->subscription() ?? null,
     ]);
@@ -445,10 +451,8 @@ class UsersController extends Controller {
 //      ]);
 
 
-
-
-    $request->validate ([
-        'message' => 'required|string',
+    $request->validate([
+        'message'    => 'required|string',
         'screenshot' => 'nullable|image|max:5000', // Allow only images up to 5MB
 
     ]);
@@ -467,7 +471,6 @@ class UsersController extends Controller {
 //    } else {
 //      // Handle the error, file not uploaded correctly
 //    }
-
 
 
 //    $filePath = null;
@@ -491,13 +494,13 @@ class UsersController extends Controller {
     // Send the email
     try {
       Mail::to('hello@not.tv')->send(new FeedbackMail([
-          'message' => $request->message ?? '',
-          'name' => $user->name ?? '',
-          'email' => $user->email ?? '',
-          'phone' => $user->phone ?? '',
-          'city' => $user->city ?? '',
+          'message'  => $request->message ?? '',
+          'name'     => $user->name ?? '',
+          'email'    => $user->email ?? '',
+          'phone'    => $user->phone ?? '',
+          'city'     => $user->city ?? '',
           'province' => $user->province ?? '',
-          'url' =>$fileUrl ?? '',
+          'url'      => $fileUrl ?? '',
         /* other data */
       ]));
     } catch (\Exception $e) {
@@ -510,10 +513,9 @@ class UsersController extends Controller {
 
     // Redirect back or to another relevant page
     return redirect()->back();
-    }
+  }
 
-  public function search(HttpRequest $request)
-  {
+  public function search(HttpRequest $request) {
     $query = $request->input('query');
 
     $users = User::where('name', 'LIKE', "%{$query}%")

@@ -34,7 +34,7 @@ export function usePageSetup(pageName) {
         // }
         Inertia.on('navigate', (event) => {
             const hasQueryStrings = window.location.search !== '';
-            if (!hasQueryStrings) {
+            if (!hasQueryStrings || appSettingStore.shouldScrollToTop) {
                 requestAnimationFrame(() => {
                     const topDiv = document.getElementById("topDiv");
                     if (topDiv) {
@@ -44,6 +44,7 @@ export function usePageSetup(pageName) {
                     }
                 });
             }
+            appSettingStore.shouldScrollToTop = false;
         })
     // Only update if we're not already on this page to avoid overwriting with the current URL
     appSettingStore.setPrevUrl()

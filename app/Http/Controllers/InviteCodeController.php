@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\TimezoneConverter;
 use App\Http\Resources\InviteCodeResource;
 use App\Models\Creator;
 use App\Models\InviteCode;
@@ -17,8 +18,7 @@ use Inertia\Response;
 
 class InviteCodeController extends Controller {
 
-  public function __construct()
-  {
+  public function __construct() {
     // Apply authorization middleware to specific controller actions
 //    $this->middleware('can:view,App\Models\InviteCode')->only(['viewMyCodes']);
   }
@@ -120,8 +120,7 @@ class InviteCodeController extends Controller {
   }
 
 
-  public function viewMyCodes(): Response
-  {
+  public function viewMyCodes(): Response {
     $user = Auth::user();
 
     // Calculate the date one week ago
@@ -142,9 +141,9 @@ class InviteCodeController extends Controller {
     if ($codes->isEmpty()) {
       // User has no codes, render a view or return a message
       return Inertia::render('InviteCodes/NoCodes', [
-          'can'                   => [
+          'can' => [
               'viewDashboard' => Auth::user()->can('viewDashboard', Creator::class),
-            ],
+          ],
       ]);
     }
 
@@ -184,6 +183,7 @@ class InviteCodeController extends Controller {
    *
    * @param Request $request
    * @return RedirectResponse
+   * @throws \Exception
    */
   public function store(Request $request): RedirectResponse {
     $request->validate([
@@ -197,6 +197,7 @@ class InviteCodeController extends Controller {
         'user_role_id'       => 'nullable|exists:roles,id',
         'volume'             => 'required|integer|min:1',
         'expiry_date'        => 'nullable|date',
+        'user_timezone'      => 'nullable|string',
     ], [
         'code.regex' => 'The :attribute must consist of only letters and numbers.',
     ]);
@@ -207,12 +208,22 @@ class InviteCodeController extends Controller {
       $userId = $request->created_by_user_id;
     }
 
+    $userTimezone = $request->user_timezone ?? 'UTC'; // e.g., 'America/New_York'
+    $expiryDate = $request->expiry_date; // e.g., '2024-03-23'
+    if ($expiryDate !== null) {
+      $expiryDateUtc = TimezoneConverter::convertUserTimeToUtc($expiryDate, $userTimezone);
+    } else {
+      // If $expiryDate is null, you can directly set $expiryDateUtc to null
+      // since there's no date to convert.
+      $expiryDateUtc = null;
+    }
+
     InviteCode::create([
         'code'         => $request->code,
         'user_role_id' => $request->user_role_id,
         'volume'       => $request->volume,
         'used_count'   => 0, // Starts unused
-        'expiry_date'  => $request->expiry_date ? Carbon::parse($request->expiry_date) : null,
+        'expiry_date'  => $expiryDateUtc,
         'created_by'   => $userId,
     ]);
 
@@ -238,6 +249,9 @@ class InviteCodeController extends Controller {
     ]);
   }
 
+  /**
+   * @throws \Exception
+   */
   public function update(Request $request, InviteCode $inviteCode): \Illuminate\Http\JsonResponse {
     $request->validate([
         'code'               => [
@@ -250,6 +264,7 @@ class InviteCodeController extends Controller {
         'user_role_id'       => 'nullable|exists:roles,id',
         'volume'             => 'required|integer|min:1',
         'expiry_date'        => 'nullable|date',
+        'user_timezone'      => 'nullable|string',
     ], [
         'code.regex' => 'The :attribute must consist of only letters and numbers.',
     ]);
@@ -268,12 +283,28 @@ class InviteCodeController extends Controller {
       ], 422); // 422 Unprocessable Entity
     }
 
+    $userTimezone = $request->user_timezone ?? 'UTC'; // e.g., 'America/New_York'
+    $expiryDate = $request->expiry_date; // e.g., '2024-03-23'
+    if ($expiryDate !== null) {
+      $expiryDateUtc = TimezoneConverter::convertUserTimeToUtc($expiryDate, $userTimezone);
+    } else {
+      // If $expiryDate is null, you can directly set $expiryDateUtc to null
+      // since there's no date to convert.
+      $expiryDateUtc = null;
+    }
+
+//// Create a Carbon instance of the expiry date at 00:00:00 in the user's timezone
+//    $expiryDateUserTimezone = Carbon::createFromFormat('Y-m-d H:i:s', "{$expiryDate} 00:00:00", $userTimezone);
+//
+//// Convert the date to UTC
+//    $expiryDateUtc = $expiryDateUserTimezone->setTimezone('UTC');
+
     $inviteCode->update([
         'code'         => $request->code,
         'user_role_id' => $request->user_role_id,
         'volume'       => $request->volume,
-        'expiry_date'  => $request->expiry_date ? Carbon::parse($request->expiry_date) : null,
-        'created_by'   => $userId,
+        'expiry_date'  => $expiryDateUtc,
+        'created_by' => $userId,
     ]);
 
     // Set claimed to true if uses reaches volume
@@ -320,16 +351,20 @@ class InviteCodeController extends Controller {
 
   public function generateUniqueInviteCode(): string {
     $adjectives = [
-        'Sunny', 'Stormy', 'Autumn', 'Winter', 'Spring', 'Summer', 'Happy', 'Sad', 'Lonely', 'Joyful',
-        'Crimson', 'Vibrant', 'Serene', 'Chilly', 'Misty', 'Golden', 'Silent', 'Rustic', 'Gleaming', 'Tranquil',
-        'Azure', 'Emerald', 'Scarlet', 'Pastel', 'Twilight', 'Dewy', 'Flourishing', 'Gloomy', 'Luminous', 'Pristine'
+        'Sunny', 'Happy', 'Joyful', 'Vibrant', 'Serene', 'Golden', 'Silent', 'Gleaming', 'Tranquil',
+        'Azure', 'Emerald', 'Scarlet', 'Pastel', 'Twilight', 'Dewy', 'Flourishing', 'Luminous', 'Pristine',
+        'Radiant', 'Sparkling', 'Majestic', 'Ethereal', 'Harmonious', 'Blossoming', 'Blissful', 'Illuminated',
+        'Peaceful', 'Refreshing', 'Enchanting'
     ];
+
 
     $nouns = [
         'Mountain', 'River', 'Forest', 'Valley', 'Ocean', 'Lake', 'Tree', 'Cloud', 'Bird', 'Flower',
-        'Meadow', 'Glacier', 'Canyon', 'Desert', 'Waterfall', 'Garden', 'Peak', 'Fjord', 'Orchard', 'Vineyard',
-        'Rainbow', 'Butterfly', 'Breeze', 'Moonlight', 'Starlight', 'Sunset', 'Dawn', 'Eclipse', 'Horizon', 'Pond'
+        'Meadow', 'Glacier', 'Canyon', 'Garden', 'Peak', 'Fjord', 'Orchard', 'Vineyard',
+        'Rainbow', 'Butterfly', 'Breeze', 'Moonlight', 'Starlight', 'Sunset', 'Dawn', 'Horizon', 'Pond',
+        'Sanctuary', 'Brook', 'Sunrise', 'Haven', 'Paradise', 'Bloom', 'Heaven'
     ];
+
 
     do {
       $code = $adjectives[array_rand($adjectives)] . $nouns[array_rand($nouns)];

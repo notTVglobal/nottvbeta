@@ -77,24 +77,33 @@ import { onMounted, onUnmounted, reactive, ref, watch } from 'vue'
 import { Inertia } from '@inertiajs/inertia'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import { useUserStore } from '@/Stores/UserStore'
 import { throttle } from 'lodash';
 import Message from '@/Components/Global/Modals/Messages'
 
 usePageSetup('inviteCodes.edit')
 const appSettingStore = useAppSettingStore()
+const userStore = useUserStore()
 
 const props = defineProps({
   inviteCode: Object,
   roles: Object,
 })
 
+const expiryDate = userStore.formatDateToISOInUserTimezone(props.inviteCode.expiry_date)
+
 const form = reactive({
   code: props.inviteCode.code,
   created_by_user_id: props.inviteCode.created_by_id,
   user_role_id: props.inviteCode.role_id,
   volume: props.inviteCode.volume,
-  expiry_date: props.inviteCode.expiry_date,
+  expiry_date: expiryDate,
+  user_timezone: userStore.timezone,
 })
+
+watch(() => expiryDate, (newVal) => {
+  form.expiry_date = newVal;
+});
 
 let formErrors = reactive({});
 
@@ -185,7 +194,7 @@ const generateRandomCode = () => {
 
 const updateCode = () => {
   console.log("Form data being submitted:", form);
-  axios.put(`/invite_codes/${props.inviteCode.id}`, form)
+  axios.put(`/invite_codes/${props.inviteCode.ulid}`, form)
       .then(response => {
         // Handle success
         Object.keys(form).forEach(key => form[key] = null);

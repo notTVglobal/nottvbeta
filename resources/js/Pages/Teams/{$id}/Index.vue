@@ -62,22 +62,20 @@
 
             <div class="w-full bg-gray-900 text-white text-2xl p-4 mb-8">CREATORS</div>
 
-            <div class="flex flex-row flex-wrap">
-              <div v-for="creator in props.creators.data"
-                   :key="creator.id"
-                   class="pb-8 bg-gray-800">
-
-                <div class="flex flex-col min-w-[8rem] px-6 py-4 font-medium break-words grow-0">
+            <div class="flex flex-row flex-wrap justify-center">
+              <div v-for="creator in props.creators.data" :key="creator.id" class="pb-8 bg-gray-800">
+                <div class="flex flex-col items-center min-w-[8rem] px-6 py-4 font-medium break-words">
                   <img v-if="!creator.profile_photo_path && creator.profile_photo_url" :src="creator.profile_photo_url"
-                       class="pb-2 rounded-full h-20 w-20 object-cover mb-2 justify-center">
+                       class="rounded-full h-20 w-20 min-h-20 min-w-20 object-cover mb-2">
                   <img v-if="creator.profile_photo_path" :src="'/storage/' + creator.profile_photo_path"
-                       :alt="creator.name + ' profile photo'" class="pb-2 rounded-full h-32 w-32 object-cover mb-2">
+                       :alt="creator.name + ' profile photo'" class="rounded-full h-32 w-32 min-h-32 min-w-32 object-cover mb-2">
                   <img v-else :src="'/storage/images/Ping.png'"
-                       :alt="'no profile photo, using our ping logo as a placeholder'" class="pb-2 rounded-full h-32 w-32 object-cover mb-2">
-                  <span class="text-gray-50 w-full text-center">{{ creator.name }}</span>
+                       :alt="'no profile photo, using our ping logo as a placeholder'" class="rounded-full h-32 w-32 min-h-32 min-w-32 object-cover mb-2">
+                  <span class="text-gray-50 text-center">{{ creator.name }}</span>
                 </div>
               </div>
             </div>
+
 
             <!--                            For now, we are just displaying the team members here.
                                             This will make a good component that can be re-used across

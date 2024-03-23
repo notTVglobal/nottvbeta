@@ -132,7 +132,7 @@ import { useUserStore } from '@/Stores/UserStore'
 import NewsHeader from '@/Components/Pages/News/NewsHeader'
 import Message from '@/Components/Global/Modals/Messages'
 import BackButton from '@/Components/Global/Buttons/BackButton'
-import { ref, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import throttle from 'lodash/throttle'
 import { Inertia } from '@inertiajs/inertia'
 import Pagination from '@/Components/Global/Paginators/Pagination.vue'
@@ -183,5 +183,10 @@ function newFormatDate(dateString) {
   const date = dayjs(dateString)
   return date.format('dddd MMMM D, YYYY')
 }
+
+onMounted(() => {
+  const appSettingStore = useAppSettingStore();
+  appSettingStore.shouldScrollToTop = true;
+});
 
 </script>

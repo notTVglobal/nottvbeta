@@ -41,6 +41,8 @@ class User extends Authenticatable implements MustVerifyEmail {
       'timezone',
       'stripe_id',
       'isVip',
+      'creatorNumber',
+      'last_login_at'
   ];
 
   /**
@@ -53,7 +55,6 @@ class User extends Authenticatable implements MustVerifyEmail {
       'remember_token',
       'two_factor_recovery_codes',
       'two_factor_secret',
-      'creatorNumber',
   ];
 
   /**
@@ -63,6 +64,7 @@ class User extends Authenticatable implements MustVerifyEmail {
    */
   protected $casts = [
       'email_verified_at' => 'datetime',
+      'last_login_at'     => 'datetime',
   ];
 
 //    public function setPasswordAttribute($value)
@@ -188,13 +190,11 @@ class User extends Authenticatable implements MustVerifyEmail {
     return $this->hasMany(SecureNote::class);
   }
 
-  public function savedNewsRssFeedItemTemps()
-  {
+  public function savedNewsRssFeedItemTemps() {
     return $this->hasMany(NewsRssFeedItemTemp::class, 'saved_by_user_id');
   }
 
-  public function archivedNewsRssFeedItems()
-  {
+  public function archivedNewsRssFeedItems() {
     return $this->hasMany(NewsRssFeedItemArchive::class, 'saved_by_user_id');
   }
 
