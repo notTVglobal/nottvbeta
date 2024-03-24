@@ -69,11 +69,11 @@ class StripeController extends Controller
         }
     }
 
-    public function subscribe() {
+    public function subscription() {
         if (auth()->user()->subscribed('default')) {
             return redirect('/stream');
         }
-            return Inertia::render('Shop/Subscribe', [
+            return Inertia::render('Shop/Subscription', [
                 // TODO: list customer's payment methods:
                 'payment_method' => auth()->user()->defaultPaymentMethod(),
                 'intent' => auth()->user()->createSetupIntent(),
@@ -88,7 +88,7 @@ class StripeController extends Controller
         try {
             auth()->user()->newSubscription('default', $request->plan)->create($request->paymentMethod);
         } catch(\Exception $e) {
-            return Inertia::render('Shop/Subscribe', [
+            return Inertia::render('Shop/Subscription', [
                 'error' => $e->getMessage(),
             ]);
         }

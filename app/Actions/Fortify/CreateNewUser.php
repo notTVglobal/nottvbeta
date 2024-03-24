@@ -50,6 +50,7 @@ class CreateNewUser implements CreatesNewUsers {
           'role_id'            => $roleId,
           'isVip'              => $isVip,
           'invite_code'        => $inviteCode->id,
+          'terms_agreed_at '   => now(),
       ]);
 
       // Check invite code volume and used count

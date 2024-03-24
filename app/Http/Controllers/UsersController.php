@@ -245,7 +245,6 @@ class UsersController extends Controller {
 
     // update the user
     $user->update($attributes);
-    sleep(1);
 
     $userId = $user->id;
     $checkCreator = Creator::where('user_id', $userId)->first();

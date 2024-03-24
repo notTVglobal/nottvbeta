@@ -2,24 +2,31 @@
 
   <Head title="Creator Registration"/>
   <div class="bg-gray-900 h-[calc(100vh)]">
-    <div>
+    <div id="topDiv">
 <!--      <PublicNavigationMenu class="fixed top-0 w-full h-16"/>-->
 <!--      <PublicResponsiveNavigationMenu />-->
     </div>
 
-    <div id="topDiv" class="bg-gray-900 text-white px-5 flex flex-col w-full hide-scrollbar">
+    <div class="bg-gray-900 text-white px-5 flex flex-col w-full hide-scrollbar">
 
-      <div class="flex flex-col mt-36 mb-16 text-gray-50 justify-center w-full text-center text-3xl font-semibold tracking-widest">
+      <div class="flex flex-col mt-24 mb-8 text-gray-50 justify-center w-full text-center text-3xl font-semibold tracking-widest">
         <div><ApplicationLogo class="mx-auto w-1/2 lg:w-1/4 xl:w-1/6 mb-6"/></div>
         <div class="uppercase">
           Creator Registration
         </div>
       </div>
       <main class="pb-8  hide-scrollbar">
-        <div class="mx-auto px-4 border-b border-gray-800  hide-scrollbar">
+        <div class="mx-auto w-full md:w-3/4 max-w-96 px-4 border-b border-gray-800  hide-scrollbar">
+          <div class="text-center mb-8 px-4">
+            <h2 class="text-lg md:text-xl text-gray-50 mb-4">Ready to Unleash Your Creativity?</h2>
+            <p class="text-md text-gray-300 mb-6">Before you join us as a creator, we highly recommend watching our brief video. It shares the essence of becoming a part of notTV, highlighting how you can make an impact with your unique voice and stories.</p>
+            <button @click="toggleVideoModal" class="text-white bg-blue-500 hover:bg-blue-700 font-semibold py-2 px-4 border border-blue-700 rounded">
+              Watch the Video
+            </button>
+          </div>
 
 
-          <div class=" hide-scrollbar bg-gray-200 mt-6 mb-36 mx-auto p-5 w-full md:w-3/4 max-w-96 text-gray-900 rounded">
+          <div class=" hide-scrollbar bg-gray-200 mt-6 mb-36 mx-auto p-5 w-full  max-w-96 text-gray-900 rounded">
 
             <JetValidationErrors class="mb-4" />
 
@@ -84,14 +91,13 @@
                    class="text-xs text-red-600 mt-1"></div>
 
 
-              <div class="mt-4">
+              <div hidden class="mt-4">
                 <JetLabel for="address1" value="Address1" />
                 <JetInput
                     id="address1"
                     v-model="form.address1"
                     type="text"
                     class="mt-1 block w-full"
-                    required
                     autofocus
                     autocomplete="address1"
                 />
@@ -99,14 +105,13 @@
               <div v-if="form.errors.address1" v-text="form.errors.address1"
                    class="text-xs text-red-600 mt-1"></div>
 
-              <div class="mt-4">
+              <div hidden class="mt-4">
                 <JetLabel for="address2" value="Address2" />
                 <JetInput
                     id="address2"
                     v-model="form.address2"
                     type="text"
                     class="mt-1 block w-full"
-                    required
                     autofocus
                     autocomplete="address2"
                 />
@@ -114,14 +119,13 @@
               <div v-if="form.errors.address2" v-text="form.errors.address2"
                    class="text-xs text-red-600 mt-1"></div>
 
-              <div class="mt-4">
+              <div hidden class="mt-4">
                 <JetLabel for="city" value="City" />
                 <JetInput
                     id="city"
                     v-model="form.city"
                     type="text"
                     class="mt-1 block w-full"
-                    required
                     autofocus
                     autocomplete="city"
                 />
@@ -129,14 +133,13 @@
               <div v-if="form.errors.city" v-text="form.errors.city"
                    class="text-xs text-red-600 mt-1"></div>
 
-              <div class="mt-4">
+              <div hidden class="mt-4">
                 <JetLabel for="province" value="Province" />
                 <JetInput
                     id="name"
                     v-model="form.province"
                     type="text"
                     class="mt-1 block w-full"
-                    required
                     autofocus
                     autocomplete="province"
                 />
@@ -146,21 +149,16 @@
 
               <div class="mt-4">
                 <JetLabel for="country" value="Country" />
-                <JetInput
-                    id="country"
-                    v-model="form.country"
-                    type="text"
-                    class="mt-1 block w-full"
-                    required
-                    autofocus
-                    autocomplete="country"
-                />
+                <select id="country" v-model="form.country"
+                        class="select select-bordered w-full max-w-xs mt-1 block">
+                  <option v-for="country in countries" :key="country.id" :value="country.id">{{ country.name }}</option>
+                </select>
               </div>
               <div v-if="form.errors.country" v-text="form.errors.country"
                    class="text-xs text-red-600 mt-1"></div>
 
-              <div class="mt-4">
-                <JetLabel for="postalCode" value="PostalCode" />
+              <div class="mt-4" v-if="isCanadaSelected">
+                <JetLabel for="postalCode" value="Postal Code" />
                 <JetInput
                     id="postalCode"
                     v-model="form.postalCode"
@@ -174,14 +172,13 @@
               <div v-if="form.errors.postalCode" v-text="form.errors.postalCode"
                    class="text-xs text-red-600 mt-1"></div>
 
-              <div class="mt-4">
+              <div hidden class="mt-4">
                 <JetLabel for="phone" value="Phone" />
                 <JetInput
                     id="phone"
                     v-model="form.phone"
                     type="tel"
                     class="mt-1 block w-full"
-                    required
                     autofocus
                     autocomplete="phone"
                 />
@@ -193,7 +190,13 @@
               <div v-if="$page.props.jetstream.hasTermsAndPrivacyPolicyFeature" class="mt-4">
                 <JetLabel for="terms">
                   <div class="flex items-center">
-                    <JetCheckbox id="terms" v-model="form.terms" name="terms" required />
+<!--                    <JetCheckbox id="terms" v-model="form.terms" name="terms" required />-->
+                    <input id="terms"
+                           name="terms"
+                           type="checkbox"
+                           v-model="form.terms"
+                           required
+                           class="checkbox checkbox-info" />
                     <div class="ml-2">
                       I agree to the <a :href="route('terms.show')" target="_blank" class="underline text-sm text-gray-600 hover:text-gray-900">Terms of Service</a> and <a :href="route('policy.show')" target="_blank" class="underline text-sm text-gray-600 hover:text-gray-900">Privacy Policy</a>
                     </div>
@@ -222,24 +225,16 @@
 </template>
 
 <script setup>
-import PublicNavigationMenu from '@/Components/Global/Navigation/PublicNavigationMenu'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
-
-import Footer from '@/Components/Global/Layout/Footer.vue'
-
-import { Link, useForm } from '@inertiajs/inertia-vue3'
-import JetAuthenticationCard from '@/Jetstream/AuthenticationCard.vue';
-import JetAuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo.vue';
+import { useForm } from '@inertiajs/inertia-vue3'
 import JetButton from '@/Jetstream/Button.vue';
 import JetInput from '@/Jetstream/Input.vue';
 import JetCheckbox from '@/Jetstream/Checkbox.vue';
 import JetLabel from '@/Jetstream/Label.vue';
 import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
 import ApplicationLogo from '@/Jetstream/ApplicationLogo.vue'
-import AuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo.vue'
-import PublicResponsiveNavigationMenu from '@/Components/Global/Navigation/PublicResponsiveNavigationMenu.vue'
-import { onMounted } from 'vue'
-
+import { Inertia } from '@inertiajs/inertia'
+import { computed, onMounted, ref } from 'vue'
 
 const appSettingStore = useAppSettingStore()
 
@@ -247,7 +242,7 @@ appSettingStore.noLayout = true
 appSettingStore.currentPage = 'creator.registration.show'
 
 const props = defineProps({
-
+  inviteCodeUlid: String,
 })
 
 const form = useForm({
@@ -255,20 +250,51 @@ const form = useForm({
   email: '',
   password: '',
   password_confirmation: '',
-  terms: true,
-  invite_code: '',
+  // address1: '', // disabled for MVP
+  // address2: '', // disabled for MVP
+  // city: '', // disabled for MVP
+  // province: '', // disabled for MVP
+  // phone: '', // disabled for MVP
+  country: '',
+  postalCode: '',
+  terms: false,
+});
+
+const countries = ref([]);
+
+// Computed property to determine if the selected country is Canada
+const isCanadaSelected = computed(() => form.country === countries.value.find(country => country.name === 'Canada')?.id);
+
+onMounted(async () => {
+  try {
+    const response = await axios.get('/api/news-countries-simple-list');
+    countries.value = response.data;
+
+    // Set Canada as default country if it exists in the list
+    const canada = countries.value.find(country => country.name === 'Canada');
+    if (canada) {
+      form.country = canada.id;
+    }
+  } catch (error) {
+    console.error('Failed to fetch countries:', error);
+  }
 });
 
 const submit = () => {
-  form.post(route('register'), {
+  form.post(`/register/creator/${props.inviteCodeUlid}`, {
     onFinish: () => form.reset('password', 'password_confirmation'),
   });
 };
 
+Inertia.on('navigate', (event) => {
+    requestAnimationFrame(() => {
+      const topDiv = document.getElementById("topDiv");
+      if (topDiv) {
+        topDiv.scrollIntoView({behavior: 'auto'});
+      } else {
+        window.scrollTo(0, 0);
+      }
+    });
+})
 
-
-onMounted(() => {
-  const topDiv = document.getElementById("topDiv")
-  topDiv.scrollIntoView()
-});
 </script>

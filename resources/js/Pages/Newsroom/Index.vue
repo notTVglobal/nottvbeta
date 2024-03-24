@@ -181,7 +181,7 @@
                             <button
                                 class="px-2 py-1 ml-1 h-fit text-white text-sm font-semibold bg-red-600 hover:bg-red-500 rounded-lg"
                                 @click="destroy(newsStory.slug)"
-                                v-if="newsStory.can.deleteNewsStory && newsStory.status.id === 1"
+                                v-if="newsStory.can.deleteNewsStory && (newsStory.status.id === 1 || newsStory.status.id === 2)"
                             >
                               <font-awesome-icon icon="fa-trash-can"/>
                             </button>

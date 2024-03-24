@@ -5,6 +5,7 @@ namespace App\Rules;
 use Illuminate\Contracts\Validation\InvokableRule;
 use App\Models\InviteCode;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class UnclaimedInviteCode implements InvokableRule
 {
@@ -26,13 +27,20 @@ class UnclaimedInviteCode implements InvokableRule
      */
     public function __invoke($attribute, $value, $fail)
     {
-
-      $inviteCode  = InviteCode::where('code', $value)->first();
+      // If $value is already an InviteCode model, use it directly.
+      // Otherwise, assume $value is a string and query for the InviteCode.
+      $inviteCode = $value instanceof InviteCode ? $value : InviteCode::where('code', $value)->first();
 
       if (!$inviteCode) {
-        $fail('The invite code is invalid.');
-        return;
+        return $fail($attribute.' is not a valid invite code.');
       }
+
+//      $inviteCode = InviteCode::where('code', $value)->first();
+
+//      if (!$inviteCode) {
+//        $fail('The invite code is invalid.');
+//        return;
+//      }
 
       if ($inviteCode->claimed) {
         $fail('This invite code has already been claimed.');

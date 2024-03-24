@@ -25,7 +25,7 @@ Here are your exclusive access details to get started:
 Accept Your Invitation
 </x-mail::button>
 <br>
-Click the link above to visit the invite page and enter your invite code to embark on your creative journey with notTV.
+Click the link above and enter your invite code to embark on your creative journey with notTV.
 <br><br>
 Are you ready to join us in shaping this new era of media? Together, let's build a world where media is truly by the people, for the people.
 <br><br>

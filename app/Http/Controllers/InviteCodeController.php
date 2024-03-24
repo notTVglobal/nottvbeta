@@ -387,5 +387,4 @@ class InviteCodeController extends Controller {
     return response()->json(['suggestedCode' => $code]);
   }
 
-
 }

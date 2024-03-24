@@ -16,17 +16,26 @@ import {library} from '@fortawesome/fontawesome-svg-core'
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 // import specific icons
 import {
+    faAngleLeft,
     faArrowRightArrowLeft,
     faCheck,
+    faCircle,
     faCircleDown,
+    faCircleInfo,
+    faClipboard,
+    faClipboardList,
+    faClapperboard,
     faComments,
     faEye,
     faFilter,
     faFlagUsa,
+    faGem,
     faHandsHelping,
+    faHeart,
     faLeaf,
     faList,
     faPaperPlane,
+    faPencil,
     faPlay,
     faPlayCircle,
     faQuestion,
@@ -34,18 +43,11 @@ import {
     faRocket,
     faShare,
     faStar,
+    faTrashCan,
     faUser,
     faUsers,
     faUserGroup,
     faUserSecret,
-    faAngleLeft,
-    faTrashCan,
-    faCircleInfo,
-    faPencil,
-    faClipboard,
-    faClipboardList,
-    faCircle,
-    faClapperboard,
 } from '@fortawesome/free-solid-svg-icons'
 // import popper for pop-up tooltips
 import Popper from "vue3-popper";
@@ -140,7 +142,7 @@ createInertiaApp({
 });
 
 library.add(faArrowRightArrowLeft, faUserSecret, faPlay, faPlayCircle, faQuestion, faStar, faUsers, faUserGroup, faHandsHelping, faRocket,
-            faEye, faComments, faPaperPlane, faUser, faLeaf, faFlagUsa, faList, faFilter,
+            faEye, faComments, faPaperPlane, faUser, faGem, faHeart, faLeaf, faFlagUsa, faList, faFilter,
             faShare, faCircleDown, faRepeat, faCheck, faAngleLeft, faTrashCan, faCircleInfo, faPencil, faClipboard, faClipboardList, faCircle, faClapperboard);
 
 InertiaProgress.init({ delay: 250, color: '#FCEF5B', includeCSS: true, showSpinner: true, });

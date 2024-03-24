@@ -8,60 +8,91 @@
 
       <div class="flex flex-row flex-wrap justify-between">
         <div>
-        <form>
-          <div class="mb-6">
-            <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"
-                   for="code"
-            >
-              NEW CODE
-            </label>
+          <form>
+            <div class="mb-6">
+              <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"
+                     for="code"
+              >
+                NEW CODE
+              </label>
 
-            <input v-model="form.code"
-                   class="border border-gray-400 p-2 w-64 rounded-lg text-black"
-                   type="text"
-                   name="code"
-                   id="code"
-            >
-            <div v-if="form.errors.code" v-text="form.errors.code"
-                 class="text-xs text-red-600 mt-1"></div>
-          </div>
+              <input v-model="form.code"
+                     class="border border-gray-400 p-2 w-64 rounded-lg text-black"
+                     type="text"
+                     name="code"
+                     id="code"
+              >
+              <div v-if="form.errors.code" v-text="form.errors.code"
+                   class="text-xs text-red-600 mt-1"></div>
+            </div>
 
-          <div class="flex justify-start my-6 mr-6">
-            <button
-                @click.prevent="submit"
-                class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded disabled:bg-gray-400"
-                :disabled="form.processing"
-            >
-              Add Code
-            </button>
+            <div class="flex justify-start my-6 mr-6">
+              <button
+                  @click.prevent="submit"
+                  class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded disabled:bg-gray-400"
+                  :disabled="form.processing"
+              >
+                Add Code
+              </button>
 
 
-            <!--                        <JetValidationErrors class="ml-4" :key="props.messageKey"/>-->
-          </div>
+              <!--                        <JetValidationErrors class="ml-4" :key="props.messageKey"/>-->
+            </div>
 
-        </form>
+          </form>
         </div>
 
 
-        <div class="flex flex-row justify-end">
-          <button
-              @click.prevent="exportCodes"
-              class="mr-2 btn bg-blue-500 hover:bg-blue-700 text-white"
-          >
-            Export Codes
-          </button>
-          <button @click.prevent="claimAllCodes"
-                  class="mr-2 btn bg-orange-500 hover:bg-orange-700 text-white">Claim All Codes
-          </button>
-          <button @click.prevent="appSettingStore.btnRedirect('/invite_codes/report')"
-                  class="mr-2 btn bg-blue-500 hover:bg-blue-700 text-white">Report
-          </button>
-          <button @click.prevent="appSettingStore.btnRedirect('/invite_codes/create')"
-                  class="btn bg-green-500 hover:bg-green-700 text-white">Create Code
-          </button>
+        <div class="flex flex-col justify-start">
+          <div class="flex flex-wrap">
+            <div class="flex-1 min-w-0">
+              <div class="flex flex-row flex-wrap">
+                <button
+                    @click.prevent="exportCodes"
+                    class="mr-2 btn bg-blue-500 hover:bg-blue-700 text-white"
+                >
+                  Export Codes
+                </button>
+                <button @click.prevent="claimAllCodes"
+                        class="mr-2 btn bg-orange-500 hover:bg-orange-700 text-white">Claim All Codes
+                </button>
+                <button @click.prevent="appSettingStore.btnRedirect('/invite_codes/report')"
+                        class="mr-2 btn bg-blue-500 hover:bg-blue-700 text-white">Report
+                </button>
+                <button @click.prevent="appSettingStore.btnRedirect('/invite_codes/create')"
+                        class="btn bg-green-500 hover:bg-green-700 text-white">Create Code
+                </button>
+              </div>
+              <div class="flex flex-row gap-3 pt-3 shrink">
+                <div class="flex flex-col">
+                  <div class="w-38 pb-2">
+                    How many <span class="font-semibold">Creator Codes</span><br/>
+                    do new creators start with?
+                  </div>
+                  <div>
+                    <input type="number" v-model.number="inviteCodeSettings.creatorCodes" placeholder="Number of creator codes"
+                           class="input input-bordered input-primary w-28 max-w-xs"/>
+                    <button @click="updateInviteCodeSettings('creatorCodes', inviteCodeSettings.creatorCodes)" class="btn btn-primary ml-2">Save</button>
+                    <div v-if="saveStatus" class="text-sm mt-2">{{ saveStatus }}</div>
+                  </div>
+                </div>
+                <div class="flex flex-col">
+                  <div class="w-38 pb-2">
+                    How many <span class="font-semibold">Viewer Codes</span><br/>
+                    do new creators start with?
+                  </div>
+                  <div>
+                    <input type="number" v-model.number="inviteCodeSettings.viewerCodes" placeholder="Number of viewer codes"
+                           class="input input-bordered input-primary w-28 max-w-xs"/>
+                    <button @click="updateInviteCodeSettings('viewerCodes', inviteCodeSettings.viewerCodes)" class="btn btn-primary ml-2">Save</button>
+                    <div v-if="saveStatus" class="text-sm mt-2">{{ saveStatus }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-
 
 
       <div class="flex flex-col w-full my-8 p-4 gap-8">
@@ -72,7 +103,8 @@
               <div class="flex justify-between mt-4">
                 <h1 class="text-xl font-semibold">Manage Invite Codes</h1>
                 <div class="flex flex-row justify-end gap-x-4">
-                  <input v-model="search" type="search" placeholder="Search..." class="text-black border px-2 rounded-lg"/>
+                  <input v-model="search" type="search" placeholder="Search..."
+                         class="text-black border px-2 rounded-lg"/>
                 </div>
               </div>
 
@@ -90,7 +122,8 @@
                   </tr>
                   </thead>
                   <tbody class="text-gray-600 text-sm font-light">
-                  <tr v-for="code in inviteCodes.data" :key="code?.id" class="border-b border-gray-200 hover:bg-gray-100" :class="[{ 'bg-gray-100': code.claimed }]">
+                  <tr v-for="code in inviteCodes.data" :key="code?.id"
+                      class="border-b border-gray-200 hover:bg-gray-100" :class="[{ 'bg-gray-100': code.claimed }]">
                     <td class="py-3 px-6 text-left whitespace-nowrap">
                       {{ code?.code }}
                     </td>
@@ -111,7 +144,7 @@
                         <span v-if="code?.expiry_date">{{ formatDate(code?.expiry_date) }}</span>
                         <span v-else class="text-xs text-gray-600">no expiry</span>
                       </div>
-                      <div v-else class="text-primary"> Code is claimed </div>
+                      <div v-else class="text-primary"> Code is claimed</div>
                     </td>
                     <td class="py-3 px-6 text-center">
                       <div v-if="!code.claimed" class="flex item-center justify-center space-x-4">
@@ -164,7 +197,7 @@ import { Inertia } from '@inertiajs/inertia'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import Message from '@/Components/Global/Modals/Messages'
-import { ref, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import throttle from 'lodash/throttle'
 import { useForm } from '@inertiajs/inertia-vue3'
 
@@ -176,27 +209,72 @@ const props = defineProps({
   filters: null,
 })
 
+const inviteCodeSettings = ref({ viewerCodes: 0, creatorCodes: 0 })
+const saveStatus = ref('');
+
+
+// Function to fetch settings
+async function fetchInviteCodeSettings() {
+  try {
+    const response = await axios.get('/invite-code-settings')
+    inviteCodeSettings.value = typeof response.data === 'string' ? JSON.parse(response.data) : response.data;
+  } catch (error) {
+    console.error('Failed to fetch invite code settings:', error)
+  }
+}
+
+// Function to update invite code settings
+const updateInviteCodeSettings = async (key, value) => {
+  try {
+    const updatedSettings = { ...inviteCodeSettings.value, [key]: value }
+    await axios.patch('/invite-code-settings', updatedSettings)
+    saveStatus.value = 'Settings saved successfully!';
+    // Optionally, clear the message after a few seconds
+    setTimeout(() => saveStatus.value = '', 3000);
+
+    // await fetchInviteCodeSettings()
+  } catch (error) {
+    console.error('Failed to save settings:', error);
+    saveStatus.value = 'Failed to save settings.';
+    // Optionally, clear the message after a few seconds
+    setTimeout(() => saveStatus.value = '', 3000);
+  }
+}
+
+// // Function to update viewer code settings
+// async function updateViewerCodes() {
+//   try {
+//     await axios.patch('/invite-code-settings', {viewerCodes: viewerCodes.value})
+//     // Handle success
+//   } catch (error) {
+//     console.error('Failed to update viewer code settings:', error)
+//   }
+// }
+
+// Fetch settings when component mounts
+onMounted(fetchInviteCodeSettings)
+
 let submit = () => {
-  form.post('/invite_codes/quick-add');
-  form.code = '';
-};
+  form.post('/invite_codes/quick-add')
+  form.code = ''
+}
 
 let exportCodes = () => {
-  Inertia.visit(route('inviteCodes.export'));
+  Inertia.visit(route('inviteCodes.export'))
 }
 
 let form = useForm({
   code: '',
 })
 
-let search = ref(props.filters.search);
+let search = ref(props.filters.search)
 
 watch(search, throttle(function (value) {
   Inertia.get('/invite_codes', {search: value}, {
     preserveState: true,
-    replace: true
-  });
-}, 300));
+    replace: true,
+  })
+}, 300))
 
 const changePage = (url) => {
   if (url) {
@@ -206,37 +284,37 @@ const changePage = (url) => {
 
 const deleteCode = (id) => {
   if (!confirm('Are you sure you want to delete this invite code?')) {
-    return;
+    return
   }
 
   Inertia.delete(`/invite_codes/${id}`, {
     onSuccess: () => {
       // Optionally refresh the page or modify the local state to reflect the deletion
     },
-  });
-};
+  })
+}
 
 const claimCode = (codeId) => {
   if (!confirm('Are you sure you want to claim this invite code?')) {
-    return;
+    return
   }
 
   Inertia.post(`/invite_codes/claim/${codeId}`, {
     onSuccess: () => {
       // Optionally refresh the page or modify the local state to reflect the deletion
     },
-  });
+  })
 }
 
 const claimAllCodes = () => {
   if (!confirm('Are you sure you want to claim all of the invite codes?')) {
-    return;
+    return
   }
 
   Inertia.post('/invite_codes/claim_all', {
     onSuccess: () => {
       // Optionally refresh the page or modify the local state to reflect the deletion
     },
-  });
+  })
 }
 </script>

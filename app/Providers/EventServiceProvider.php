@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Events\CreatorRegistrationCompleted;
 use App\Events\NewChatMessage;
 use App\Events\NewNotificationEvent;
 use App\Events\NewVideoUploaded;
@@ -11,6 +12,7 @@ use App\Listeners\LogRegisteredUser;
 use App\Listeners\LogVerifiedUser;
 use App\Listeners\ProcessNewVideoUpload;
 use App\Listeners\SendChatMessageNotification;
+use App\Listeners\SendCreatorWelcomeEmailListener;
 use App\Listeners\SendEmailVerification;
 use App\Listeners\SendNewUserNotification;
 use App\Listeners\SendVideoProcessedNotification;
@@ -51,6 +53,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         ViewerPresenceChannel::class => [
             ViewerPresenceChannelListener::class,
+        ],
+        CreatorRegistrationCompleted::class => [
+            SendCreatorWelcomeEmailListener::class,
         ],
     ];
 

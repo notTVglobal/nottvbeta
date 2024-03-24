@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\CreatorInvitationMail;
-use App\Mail\InviteCreatorMail;
+
+use App\Models\Creator;
 use App\Models\InviteCode;
+use App\Models\NewsCountry;
+use App\Mail\InviteCreatorMail;
+use App\Actions\Fortify\CreateNewCreator;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
@@ -16,7 +20,7 @@ use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
-use App\Models\Creator;
+
 use Inertia\Response;
 use App\Services\InviteCodeService;
 
@@ -138,7 +142,7 @@ class CreatorsController extends Controller
     $validatedData = Validator::validate($request->all(), [
         'inviteCodeInput' => 'required|string',
     ]);
-        if ($validatedData['inviteCodeInput'] === $inviteCode->code){
+        if (strcasecmp($validatedData['inviteCodeInput'], $inviteCode->code) === 0){
 //          return redirect(route('creator.register.show', [$inviteCode->ulid]));
           return back()->with(['message' => 'Invite code is valid'], 200);
         } else {
@@ -157,26 +161,44 @@ class CreatorsController extends Controller
     }
 
     // Code is valid, proceed to show the registration form
-    return Inertia::render('Creators/Register/Index', ['InviteCodeUlid' => $inviteCode->ulid]);
+    return Inertia::render('Creators/Register/Index', [
+        'inviteCodeUlid' => $inviteCode->ulid,
+    ]);
   }
 
-  public function registerCreator(Request $request, $code)
-  {
-    // Validate the request data and the code.
-    // Create the user and associated creator record.
-    // Mark the invite code as used.
-    // Send a welcome email.
-    // Redirect to the Welcome/Introduction page with progress bar.
-  }
+    public function register(HttpRequest $request, InviteCode $inviteCode) {
+      // Validate the request data and the code.
+      // Create the user and associated creator record.
+      // Mark the invite code as used.
+      // Send a welcome email.
+      $inputData = $request->all() + ['invite_code' => $inviteCode]; // Adding invite code ID to the data array
+      $creatorAction = new CreateNewCreator();
+      try {
+        // Attempt to create the new creator, this method should return the User model on success
+        // or throw an Exception on failure
+        $user = $creatorAction->create($inputData);
+
+        // Assuming the creation was successful, redirect to the dashboard with a success message
+        return redirect()->route('dashboard')->with('feedback', 'Welcome to the platform!');
+        // TODO: Build a Welcome/Introduction page with progress bar (showOnBoardingStep($step))
+
+      } catch (\Exception $e) {
+        // Log the error message for debugging
+        Log::error('Registration failed: '.$e->getMessage());
+
+        // Redirect back to the registration form with an error message.
+        // Assuming you're using Inertia.js, you might want to adjust this to fit its response style.
+        // If you're using traditional blade templates, you can use `redirect()->back()`
+        return back()->with('error', 'An unexpected error occurred during registration. Please try again.')->withInput();
+
+      }
+    }
 
   public function showOnboardingStep($step): Response {
     // Determine the view based on $step, or verify $step's validity...
 
     return Inertia::render('Creators/Onboarding/Index', compact('step'));
   }
-
-
-
 
     /**
      * Display a listing of the resource.
@@ -242,16 +264,6 @@ class CreatorsController extends Controller
         return Inertia::render('Creators/Create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param HttpRequest $request
-     * @return void
-     */
-    public function store(HttpRequest $request)
-    {
-        //
-    }
 
     /**
      * Display the specified resource.
