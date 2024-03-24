@@ -399,7 +399,7 @@ Route::middleware([
       ->name('contribute.subscription');
 
   Route::post('/contribute/subscription', [StripeController::class, 'setupNewSubscription'])
-      ->name('contribute.subscription');
+      ->name('contribute.subscription.post');
 
   Route::get('/shop/subscription_success', [StripeController::class, 'subscriptionSuccess'])
       ->name('subscriptionSuccess');
