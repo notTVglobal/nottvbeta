@@ -43,7 +43,7 @@
       >Upload Video
       </button>
       <button
-          v-if="hasTeams"
+          v-if="canGoLive"
           @click="appSettingStore.btnRedirect(`/golive`)"
           class="bg-red-600 hover:bg-red-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
       >Go Live
@@ -64,7 +64,7 @@ const now = useNow()
 
 defineProps({
   can: Object,
-  hasTeams: Boolean,
+  canGoLive: Boolean,
 })
 
 </script>

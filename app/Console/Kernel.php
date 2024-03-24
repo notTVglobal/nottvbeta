@@ -20,12 +20,13 @@ class Kernel extends ConsoleKernel {
 
     $schedule->command('images:delete-queued')->hourly();
     $schedule->command('fetch:rssFeeds')->hourly();
-    $schedule->command('newsRssFeed:archive')->hourly();
+    $schedule->command('archive:rssFeeds')->hourly();
+    $schedule->command('purge:rssFeed')->daily();
 
     $schedule->job(new CheckSubscriptionStatuses, 'default')->daily();
     $schedule->command('expire:inviteCodes')->daily();
 
-    $schedule->command('purge:oldRssFeedItems')->daily();
+
 
   }
 
@@ -41,6 +42,6 @@ class Kernel extends ConsoleKernel {
   }
 
   protected $commands = [
-      Commands\ArchiveRssFeedItemsCommand::class,
+      Commands\RssFeedsArchiveCommand::class,
   ];
 }

@@ -24,6 +24,6 @@ class ShowSeeder extends Seeder
 //            'image_id' => '4'
 //        ]);
 
-        \App\Models\Show::factory(99)->create();
+        \App\Models\Show::factory(5)->create();
     }
 }

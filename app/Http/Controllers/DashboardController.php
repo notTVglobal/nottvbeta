@@ -43,6 +43,8 @@ class DashboardController extends Controller {
     // Use a collection to deduplicate the teams based on their IDs
     $uniqueTeams = $teams->unique('id');
 
+    $canGoLive = $teams->count() > 0;
+
     // Paginate the unique teams manually
     $perPage = 5;
     $pageName = 'teams';
@@ -70,7 +72,6 @@ class DashboardController extends Controller {
 //            count($uniqueTeams),
 //            5
 //        )->setPageName('teams');
-
 
     function formatBytes($bytes, $precision = 2) {
       $unit = ["B", "KB", "MB", "GB"];
@@ -203,7 +204,8 @@ class DashboardController extends Controller {
             'createTeam'    => Auth::user()->can('createTeam', Team::class),
             'createShow'    => Auth::user()->can('create', Show::class),
             'viewNewsroom'  => Auth::user()->can('viewAny', NewsPerson::class)
-        ]
+        ],
+      'canGoLive' => $canGoLive,
     ]);
   }
 }

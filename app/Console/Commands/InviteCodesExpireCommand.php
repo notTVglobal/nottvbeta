@@ -6,7 +6,7 @@ use App\Models\InviteCode;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-class ExpireInviteCodes extends Command
+class InviteCodesExpireCommand extends Command
 {
     /**
      * The name and signature of the console command.

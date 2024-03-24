@@ -6,7 +6,7 @@
 
       <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
-      <DashboardHeader :can="can" :hasTeams="hasTeams" />
+      <DashboardHeader :can="can" :canGoLive="canGoLive" />
 
       <!--            <section class="grid grid-cols-1 my-8 mx-2 md:mx-10 m-auto bg-gray-200 rounded p-5 h-64 text-black">-->
       <!--                <div class="flex flex-wrap justify-center">-->
@@ -315,6 +315,7 @@ let props = defineProps({
   subscriptionCount: Number,
   yesterdaysTopShow: Object,
   can: Object,
+  canGoLive: Boolean,
 })
 
 // Function to extract the numeric value from a string with "MB" suffix
@@ -338,9 +339,6 @@ const myTotalStorageRoundedPercentage = computed(() => {
   return Math.round(myTotalStoragePercentage)
 })
 
-const hasTeams = computed(() => {
-  return props.teams.data.length > 0
-})
 //
 // async function updateUserStore() {
 //   // Set user store data
