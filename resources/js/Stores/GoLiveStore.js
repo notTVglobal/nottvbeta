@@ -62,7 +62,7 @@ export const useGoLiveStore = defineStore('goLiveStore', {
 
         updateAndGetStreamKey() {
             const show = this.shows.find(show => show.id === this.selectedShowId) || null
-            const streamKey = show?.mist_stream_wildcard?.name || 'Fallback value if undefined'
+            const streamKey = show?.mist_stream_wildcard?.name || ' < RELOAD THIS PAGE TO GET YOUR STREAM KEY > '
 
             // Perform the state update
             this.streamKey = streamKey

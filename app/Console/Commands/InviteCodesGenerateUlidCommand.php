@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 use App\Models\InviteCode;
 use Illuminate\Support\Str;
 
-class GenerateUlidForInviteCodes extends Command
+class InviteCodesGenerateUlidCommand extends Command
 {
     /**
      * The name and signature of the console command.

@@ -3,6 +3,11 @@
 Last Update: March 24, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.7.15
+March 24, 2024
+* Fix the GoLive button on the Dashboard to appear if the user canGoLive instead of only for teams the user owns
+* Disabled extraneous Log messages in MistServerService
+
 ## v0.8.7.14
 March 24, 2024
 * Add Invite Code Settings to App Settings

@@ -6,10 +6,10 @@ use Illuminate\Console\Command;
 use App\Jobs\ArchiveSavedRssFeedItemsJob;
 use Illuminate\Support\Facades\Log;
 
-class ArchiveRssFeedItemsCommand extends Command
+class RssFeedsArchiveCommand extends Command
 {
 
-  protected $signature = 'newsRssFeed:archive';
+  protected $signature = 'archive:rssFeeds';
   protected $description = 'Archives saved RSS feed items to the NewsRssFeedItemArchive table';
 
   public function __construct()

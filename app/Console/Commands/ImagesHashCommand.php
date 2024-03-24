@@ -8,7 +8,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Bus;
 use Throwable;
 
-class HashImages extends Command
+class ImagesHashCommand extends Command
 {
     /**
      * The name and signature of the console command.

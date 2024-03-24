@@ -173,7 +173,7 @@ class FetchRssFeedItemsJob implements ShouldQueue
      */
     public function handle()
     {
-      Log::info('Fetch RSS Feed for ' . $this->newsRssFeed->name . '.');
+//      Log::debug('Fetch RSS Feed for ' . $this->newsRssFeed->name . '.');
       $this->fetchAndProcessRssFeed($this->newsRssFeed);
     }
 }

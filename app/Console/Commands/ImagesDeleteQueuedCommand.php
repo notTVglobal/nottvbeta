@@ -7,7 +7,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\DB;
 
-class DeleteQueuedImages extends Command
+class ImagesDeleteQueuedCommand extends Command
 {
     /**
      * The name and signature of the console command.

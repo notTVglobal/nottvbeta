@@ -6,7 +6,7 @@ use App\Jobs\UpdateImageReferencesJob;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Bus;
 
-class UpdateImageReferences extends Command
+class ImagesUpdateReferencesCommand extends Command
 {
     /**
      * The name and signature of the console command.

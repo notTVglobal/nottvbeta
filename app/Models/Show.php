@@ -54,6 +54,10 @@ class Show extends Model
         'episode_play_order',
     ];
 
+  protected $casts = [
+      'ulid' => 'string',
+  ];
+
     public function getRouteKeyName(): string {
         return 'slug';
     }
@@ -136,9 +140,7 @@ class Show extends Model
         $show->save();
       }
 
-      $ulid = $show->ulid;
-
-
+      $ulid = strtolower($show->ulid);
 
       // Begin transaction
       DB::beginTransaction();
@@ -155,7 +157,7 @@ class Show extends Model
 
       $mistStreamWildcard = MistStreamWildcard::create([
           'name' => 'show+' . $ulid,
-          'comment' => 'Automatically created with new show.',
+          'comment' => 'Automatically created with new show.', // We don't have a way to clarify if it was generated through the Generate Key button on the GoLive page because that is a one-off for DB:Seeders.
           'source' => 'push://',
           'mist_stream_id' => $mistStream->id,
       ]);

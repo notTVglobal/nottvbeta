@@ -25,7 +25,7 @@ class MistServerService {
   }
 
   public function send(array $data = []) {
-    Log::debug("Sending request to MistServer", ['url' => $this->host, 'data' => $data]);
+//    Log::debug("Sending request to MistServer", ['url' => $this->host, 'data' => $data]);
 
     if ($this->challenge) {
       // If there is a challenge, hash the password with the challenge
@@ -56,13 +56,13 @@ class MistServerService {
     }
 
     $responseData = $response->json();
-    Log::debug("Received response from MistServer", ['response' => $responseData]);
+//    Log::debug("Received response from MistServer", ['response' => $responseData]);
 
 
     if (isset($responseData['authorize']) && $responseData['authorize']['status'] === 'CHALL') {
       $this->challenge = $responseData['authorize']['challenge'];
 
-      Log::debug("Received challenge from MistServer, retrying", ['challenge' => $this->challenge]);
+//      Log::debug("Received challenge from MistServer, retrying", ['challenge' => $this->challenge]);
 
       return $this->send($data); // Retry with the challenge response
     }
@@ -92,7 +92,7 @@ class MistServerService {
       return false;
     }
 
-    Log::debug("Configured streams fetched successfully", ['streams' => $response['streams']]);
+//    Log::debug("Configured streams fetched successfully", ['streams' => $response['streams']]);
 
     return $response['streams']; // Assuming this contains the stream configurations
   }
@@ -125,7 +125,7 @@ class MistServerService {
       return false;
     }
 
-    Log::debug("Configured streams updated successfully", ['streams' => $response['streams']]);
+//    Log::debug("Configured streams updated successfully", ['streams' => $response['streams']]);
 
     return $response['streams'];
   }
@@ -189,7 +189,7 @@ class MistServerService {
     }
 
     if (isset($response["streams"]["incomplete list"])) {
-      Log::info("Received incomplete list indication, stream added/updated", ['stream' => $response["streams"][$streamName]]);
+//      Log::debug("Received incomplete list indication, stream added/updated", ['stream' => $response["streams"][$streamName]]);
     } else {
       Log::error("Unexpected response format from MistServer after adding/updating stream");
     }
@@ -215,7 +215,7 @@ class MistServerService {
 // that the actual list of streams is not returned in this scenario,
 // based on the documentation's description.
 
-    Log::info("Removing stream(s) from MistServer", ['streamNames' => $streamNames]);
+//    Log::debug("Removing stream(s) from MistServer", ['streamNames' => $streamNames]);
 
     // Prepare the data for the "deletestream" call
     // Automatically handle both single stream name and array of stream names
@@ -233,7 +233,7 @@ class MistServerService {
 
     // Check for the special "incomplete list" indication
     if (isset($response["streams"]["incomplete list"])) {
-      Log::info("Stream(s) removed successfully, received incomplete list indication");
+//      Log::debug("Stream(s) removed successfully, received incomplete list indication");
     } else {
       Log::error("Unexpected response format from MistServer after removing stream(s)");
     }
@@ -247,7 +247,7 @@ class MistServerService {
     try {
       $response = $this->send($data); // Assuming 'send' method handles communication with MistServer
       if (isset($response['push_auto_list']) && is_array($response['push_auto_list'])) {
-        Log::info("Successfully retrieved push auto list from MistServer.");
+//        Log::debug("Successfully retrieved push auto list from MistServer.");
 
         return $response['push_auto_list'];
       } else {
@@ -272,7 +272,7 @@ class MistServerService {
     $targetURL = $destination->rtmp_url . $destination->rtmp_key;
     $streamName = $destination->mistStreamWildcard->name;
 
-    Log::warning('add ::::: ' . $targetURL . ' ::::: ' . $streamName);
+//    Log::debug('add ::::: ' . $targetURL . ' ::::: ' . $streamName);
     $data = [
         "push_auto_add" => [
             "stream" => $streamName,
@@ -287,7 +287,7 @@ class MistServerService {
       $destination->has_auto_push = 1;
       $destination->save();
       // Log success with more detail
-      Log::info("Push auto add successful for stream: {$streamName} to target: {$targetURL}");
+//      Log::debug("Push auto add successful for stream: {$streamName} to target: {$targetURL}");
     } catch (\Exception $e) {
       // Log the error with detail
       Log::error("Failed to request push_auto_add for stream: {$streamName} to target: {$targetURL}", ['exception' => $e->getMessage()]);
@@ -305,7 +305,7 @@ class MistServerService {
     $targetURL = $destination->rtmp_url . $destination->rtmp_key;
     $streamName = $destination->mistStreamWildcard->name;
 
-    Log::warning('remove ::::: ' . $targetURL . ' ::::: ' . $streamName);
+//    Log::debug('remove ::::: ' . $targetURL . ' ::::: ' . $streamName);
 //    $data = [
 //        $destination->mistStreamWildcard->name,
 //        $targetURL,
@@ -330,7 +330,7 @@ class MistServerService {
       $destination->has_auto_push = 0;
       $destination->save();
 
-      Log::info("Push auto remove successful for stream: {$streamName} to target: {$targetURL}");
+//      Log::debug("Push auto remove successful for stream: {$streamName} to target: {$targetURL}");
     } catch (\Exception $e) {
       Log::error("Failed to request push_auto_remove for stream: {$streamName} to target: {$targetURL}", ['exception' => $e->getMessage()]);
     }
@@ -342,7 +342,7 @@ class MistServerService {
     try {
       $response = $this->send($data); // Assuming 'send' method handles communication with MistServer
       if (isset($response['push_list']) && is_array($response['push_list'])) {
-        Log::info("Successfully retrieved active push list from MistServer.");
+//        Log::debug("Successfully retrieved active push list from MistServer.");
 
         return $response['push_list'];
       } else {
@@ -372,7 +372,7 @@ class MistServerService {
       $this->send($data); // Send the request to MistServer
       $destination->push_is_started = 1;
       $destination->save();
-      Log::info("Push start successful for stream: {$streamName} to target: {$targetURL}");
+//      Log::debug("Push start successful for stream: {$streamName} to target: {$targetURL}");
     } catch (\Exception $e) {
       Log::error("Failed to start push for stream: {$streamName} to target: {$targetURL}", ['exception' => $e->getMessage()]);
     }
@@ -406,7 +406,7 @@ class MistServerService {
         $this->send($data); // Send the push_stop request to MistServer
         $destination->push_is_started = 0;
         $destination->save();
-        Log::info("Push stop successful for stream: {$streamName} with push ID: {$pushId}");
+        Log::debug("Push stop successful for stream: {$streamName} with push ID: {$pushId}");
       } catch (\Exception $e) {
         Log::error("Failed to stop push for stream: {$streamName} with push ID: {$pushId}", ['exception' => $e->getMessage()]);
       }
@@ -420,7 +420,7 @@ class MistServerService {
   public function configBackup() {
     try {
       // Log start
-      Log::info('Initiating MistServer config backup process.');
+//      Log::debug('Initiating MistServer config backup process.');
 
       // Prepare request data
       $requestData = ["config_backup" => true];
@@ -441,7 +441,7 @@ class MistServerService {
             $encryptedConfig = Crypt::encryptString(json_encode($configData));
             MistServerConfig::create(['config' => $encryptedConfig]);
 
-            Log::info('MistServer configuration backup succeeded.');
+            Log::alert('MistServer configuration backup succeeded.');
 
             return response()->json(['message' => 'Config backup successful.'], 200);
           } else {
@@ -493,7 +493,7 @@ class MistServerService {
       $this->send($requestData);
 
       // Since there's no response expected for the restore call, assume success if no exception is thrown
-      Log::info('MistServer configuration restore initiated successfully.');
+      Log::alert('MistServer configuration restore initiated successfully.');
 
       return response()->json(['message' => 'Configuration restore initiated successfully.'], 200);
     } catch (\Exception $e) {
