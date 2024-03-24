@@ -202,6 +202,7 @@ Route::get('/register/{inviteCode}', [CreatorsController::class, 'showRegistrati
 Route::post('/register/creator/{inviteCode}', [CreatorsController::class, 'register'])->name('creator.register.submit');
 
 
+
 // News (public, everyone can see these)
 ////////////////////////////////////////
 
@@ -380,24 +381,25 @@ Route::middleware([
 
   Route::post('/shop/purchase', [StripeController::class, 'purchase']);
 
-  Route::get('/upgrade', function () {
-    if (auth()->user()->subscribed('default')) {
-      return redirect('/stream');
-    }
-
-    return Inertia::render('Shop/Upgrade', [
+  // tec21: We may have to re-evaluate this...
+  // can the setup intent happen on the payment page?
+  // the user still has a choice here about doing a
+  // subscription or a donation (one-time payment).
+  Route::get('/contribute', function () {
+    return Inertia::render('Shop/Contribute', [
         'intent' => auth()->user()->createSetupIntent(),
     ]);
-  })->name('upgrade');
+  })->name('contribute');
+  //////////////////////////////////////////////////
 
   Route::post('/upgrade', [StripeController::class, 'createCheckoutSession'])
       ->name('createCheckoutSession');
 
-  Route::get('/shop/subscribe', [StripeController::class, 'subscribe'])
-      ->name('shop.subscribe');
+  Route::get('/contribute/subscription', [StripeController::class, 'subscription'])
+      ->name('contribute.subscription');
 
-  Route::post('/shop/subscribe', [StripeController::class, 'setupNewSubscription'])
-      ->name('shop.subscribe.post');
+  Route::post('/contribute/subscription', [StripeController::class, 'setupNewSubscription'])
+      ->name('contribute.subscription');
 
   Route::get('/shop/subscription_success', [StripeController::class, 'subscriptionSuccess'])
       ->name('subscriptionSuccess');
@@ -681,6 +683,12 @@ Route::middleware([
   Route::post('/invite_codes/claim_all', [InviteCodeController::class, 'claimAllCodes'])->name('invite_codes.claim_all')
       ->can('viewAdmin', 'App\Models\User');
 
+
+  // Get Invite Code Settings
+  Route::get('/invite-code-settings', [AppSettingController::class, 'getInviteCodeSettings']);
+
+  // Get Invite Code Settings
+  Route::patch('/invite-code-settings', [AppSettingController::class, 'patchInviteCodeSettings']);
 
 
   //// DELETE USER

@@ -17,7 +17,8 @@ class AppSetting extends Model {
       'first_play_video_source',
       'first_play_video_source_type',
       'first_play_video_name',
-      'first_play_channel_id'
+      'first_play_channel_id',
+      'invite_code_settings'
   ];
 
 

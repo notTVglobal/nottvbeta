@@ -1,7 +1,16 @@
 # not.tv Changelog
 
-Last Update: March 23, 2024\
+Last Update: March 24, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.8.7.14
+March 24, 2024
+* Add Invite Code Settings to App Settings
+* New Content Creators automatically get 2 creator invites and 10 audience invites
+* Changed the Upgrade button to a Contribute button
+* changed the upgrade page to the contribute page and completely changed the styling
+* changed the route definitions for the subscription payment from shop/subscribe to contribute/subscription
+* will need to create contribute/donate for one-time payments and to support favourite shows
 
 ## v0.8.7.13
 March 23, 2024

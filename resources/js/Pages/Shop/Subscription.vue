@@ -209,7 +209,7 @@ async function submit() {
     })
 
     //Submit the form
-    form.post('/shop/subscribe')
+    form.post('/contribute/subscription')
 
   }
 }

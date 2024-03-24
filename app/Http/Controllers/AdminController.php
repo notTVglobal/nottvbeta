@@ -208,62 +208,62 @@ class AdminController extends Controller {
 ////////////  INVITE CODES
 //////////////////////////
 
-  public function inviteCodes() {
-    function getUserName($user) {
-      return $name = User::query()
-          ->where('id', $user)
-          ->pluck('name')
-          ->first();
-    }
-
-
-    return Inertia::render('Admin/InviteCodes', [
-        'invite_codes' => InviteCode::query()
-            ->when(Request::input('search'), function ($query, $search) {
-              $query->where('code', 'like', "%{$search}%");
-            })
-            ->latest()
-            ->paginate(10, ['*'], 'codes')
-            ->withQueryString()
-            ->through(fn($code) => [
-                'claimed'    => $code->claimed,
-                'code'       => $code->code,
-                'created_by' => getUserName($code->created_by),
-                'created_at' => $code->created_at,
-                'claimed_by' => getUserName($code->claimed_by),
-                'claimed_at' => $code->claimed_at,
-                'notes'      => $code->notes,
-            ]),
-      // need a pivot table to connect used codes to users.
-        'filters'      => Request::only(['search']),
-// TO DO create a InviteCode Policy
-//            'can' => [
-//                'create' => Auth::user()->can('create', InviteCode::class),
-//                'edit' => Auth::user()->can('edit', InviteCode::class)
-//            ]
-    ]);
-  }
-
-  public function saveInviteCodes(HttpRequest $request) {
-//        $inviteCodes = $request->validate([
-//            'cdn_endpoint' => 'nullable|string',
-//            'cloud_folder' => 'nullable|string',
-//        ]);
-
-    $validatedData = $request->validate([
-        'code' => ['required', 'unique:invite_codes', 'string', 'max:20'],
-    ]);
-
-    $invite_code = new InviteCode;
-    $invite_code->created_by = Auth::user()->id;
-    $invite_code->code = $request->code;
-    $invite_code->save();
-
-//        return $invite_code;
-    // redirect
-    return redirect()->route('admin.inviteCodes')->with('success', 'Code Added Successfully');
-
-  }
+//  public function inviteCodes() {
+//    function getUserName($user) {
+//      return $name = User::query()
+//          ->where('id', $user)
+//          ->pluck('name')
+//          ->first();
+//    }
+//
+//
+//    return Inertia::render('Admin/InviteCodes', [
+//        'invite_codes' => InviteCode::query()
+//            ->when(Request::input('search'), function ($query, $search) {
+//              $query->where('code', 'like', "%{$search}%");
+//            })
+//            ->latest()
+//            ->paginate(10, ['*'], 'codes')
+//            ->withQueryString()
+//            ->through(fn($code) => [
+//                'claimed'    => $code->claimed,
+//                'code'       => $code->code,
+//                'created_by' => getUserName($code->created_by),
+//                'created_at' => $code->created_at,
+//                'claimed_by' => getUserName($code->claimed_by),
+//                'claimed_at' => $code->claimed_at,
+//                'notes'      => $code->notes,
+//            ]),
+//      // need a pivot table to connect used codes to users.
+//        'filters'      => Request::only(['search']),
+//// TO DO create a InviteCode Policy
+////            'can' => [
+////                'create' => Auth::user()->can('create', InviteCode::class),
+////                'edit' => Auth::user()->can('edit', InviteCode::class)
+////            ]
+//    ]);
+//  }
+//
+//  public function saveInviteCodes(HttpRequest $request) {
+////        $inviteCodes = $request->validate([
+////            'cdn_endpoint' => 'nullable|string',
+////            'cloud_folder' => 'nullable|string',
+////        ]);
+//
+//    $validatedData = $request->validate([
+//        'code' => ['required', 'unique:invite_codes', 'string', 'max:20'],
+//    ]);
+//
+//    $invite_code = new InviteCode;
+//    $invite_code->created_by = Auth::user()->id;
+//    $invite_code->code = $request->code;
+//    $invite_code->save();
+//
+////        return $invite_code;
+//    // redirect
+//    return redirect()->route('admin.inviteCodes')->with('success', 'Code Added Successfully');
+//
+//  }
 
 
 

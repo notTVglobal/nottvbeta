@@ -126,10 +126,10 @@
           <div v-if="!userStore.isSubscriber && !userStore.isVip && !userStore.isAdmin"
                class="flex flex-row w-full justify-center py-4">
             <PublicNavLink
-                @click="upgrade"
-                :active="appSettingStore.currentPage === 'upgrade'"
+                @click="contribute"
+                :active="appSettingStore.currentPage === 'contribute'"
                 class="flex bg-indigo-700">
-              CLICK HERE TO UPGRADE YOUR ACCOUNT
+              CONTRIBUTE
             </PublicNavLink>
           </div>
 
@@ -407,8 +407,8 @@ function navigateToStream() {
   Inertia.visit(`/stream`)
 }
 
-const upgrade = (() => {
-  Inertia.visit('/upgrade')
+const contribute = (() => {
+  Inertia.visit('/contribute')
   appSettingStore.closeNavDropdown()
 })
 

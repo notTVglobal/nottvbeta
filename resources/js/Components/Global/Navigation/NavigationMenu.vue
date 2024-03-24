@@ -92,9 +92,9 @@
             <div class="flex-item">
               <div v-if="!userStore.isSubscriber && !userStore.isVip && !userStore.isAdmin">
                 <PublicNavLink
-                    @click.prevent="() => Inertia.visit('/upgrade')"
-                    :active="appSettingStore.currentPage === 'upgrade'">
-                  UPGRADE NOW
+                    @click.prevent="() => Inertia.visit('/contribute')"
+                    :active="appSettingStore.currentPage === 'contribute'">
+                  CONTRIBUTE
                 </PublicNavLink>
 <!--                />-->
 <!--                <JetNavLink v-touch="()=>(route('upgrade'))"-->

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\AppSetting;
+
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -31,6 +33,34 @@ class AppSettingController extends Controller {
   public function getRtmpUri() {
     $rtmpUri = AppSetting::query()->value('mist_server_rtmp_uri');
     return response($rtmpUri, 200)->header('Content-Type', 'text/plain');
+  }
+
+  public function getInviteCodeSettings(Request $request): \Illuminate\Http\JsonResponse {
+    $settings = AppSetting::query()->first();
+
+    // Assuming 'invite_code_settings' is a JSON column in your 'app_settings' table
+    $inviteCodeSettings = $settings?->invite_code_settings;
+
+    return Response::json($inviteCodeSettings);
+  }
+
+  public function patchInviteCodeSettings(Request $request): \Illuminate\Http\JsonResponse {
+    Log::info($request->all()); // Log the request data to check its structure
+    // Validate the request here if necessary
+    $data = $request->validate([
+        'viewerCodes' => 'required|integer',
+        'creatorCodes' => 'required|integer',
+    ]);
+
+    // Assuming there's only one row in app_settings table
+    $settings = AppSetting::query()->firstOrFail();
+    $settings->invite_code_settings = [
+        'viewerCodes' => $data['viewerCodes'],
+        'creatorCodes' => $data['creatorCodes'],
+    ];
+    $settings->save();
+
+    return Response::json(['message' => 'Invite code settings updated successfully']);
   }
 
 

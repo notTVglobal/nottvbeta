@@ -17,6 +17,7 @@ use Illuminate\Validation\ValidationException;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 use Laravel\Jetstream\Jetstream;
 use App\Rules\UnclaimedInviteCode;
+use App\Services\InviteCodeService;
 
 class CreateNewCreator implements CreatesNewUsers {
   use PasswordValidationRules;
@@ -65,6 +66,13 @@ class CreateNewCreator implements CreatesNewUsers {
       $inviteCode->save();
 
       DB::commit();
+
+      // Generate invite codes for new creator based on AppSetting->invite_code_settings
+      $inviteCodeService = new InviteCodeService();
+      $inviteCodeService->generateForCreator($user->id, 'viewer');
+      $inviteCodeService->generateForCreator($user->id, 'creator');
+      $inviteCodeService->generateForCreator($user->id, 'vip');
+
       event(new Registered($user));
       event(new CreatorRegistrationCompleted($user));
 
