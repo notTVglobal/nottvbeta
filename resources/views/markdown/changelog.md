@@ -3,6 +3,10 @@
 Last Update: March 24, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.7.18
+March 24, 2024
+* Fix Team->team_leader where creators(id) on delete was nothing, now it's null.
+
 ## v0.8.7.17
 March 24, 2024
 * Add invite code check (inviteCodeStore) on the creator registration page
