@@ -3,7 +3,7 @@
   <Head title="Creator Registration"/>
   <div class="h-[calc(100vh)]">
 
-    <div id="topDiv" class="bg-gray-900 text-white px-5 flex flex-col w-full hide-scrollbar">
+    <div id="topDiv" class="bg-gray-900 text-white px-5 flex flex-col w-full hide-scrollbar min-h-screen">
 
       <div class="flex flex-col mt-24 mb-8 text-gray-50 justify-center w-full text-center text-3xl font-semibold tracking-widest">
         <div><ApplicationLogo class="mx-auto w-1/2 lg:w-1/4 xl:w-1/6 mb-6"/></div>
@@ -14,15 +14,31 @@
       <main class="pb-8 hide-scrollbar">
         <div class="mx-auto w-full md:w-3/4 max-w-96 px-4 border-b border-gray-800 hide-scrollbar">
           <div class="text-center mb-8 px-4">
-            <h2 class="text-lg md:text-xl text-gray-50 mb-4">Ready to Unleash Your Creativity?</h2>
-            <p class="text-md text-gray-300 mb-6">Before you join us as a creator, we highly recommend watching our brief video. It shares the essence of becoming a part of notTV, highlighting how you can make an impact with your unique voice and stories.</p>
-            <button @click="toggleVideoModal" class="text-white bg-blue-500 hover:bg-blue-700 font-semibold py-2 px-4 border border-blue-700 rounded">
-              Watch the Video
-            </button>
+
+            <div v-if="checkingInviteCode" class="flex flex-col items-center">
+              <span class="loading loading-bars loading-lg text-info"></span>
+              <span> Checking Invite Code</span>
+            </div>
+
+            <div v-if="!checkingInviteCode">
+              <div v-if="!inviteStore.registrationAllowed">
+                <p class="text-md text-gray-300 mb-6">Oops! It looks like you've stumbled upon our creator registration without an invite. Don't worry, though! Please check your email for the exclusive invite link or get in touch with the creator who's bringing you into our community. </p>
+              </div>
+              <div v-if="inviteStore.registrationAllowed">
+                <h2 class="text-lg md:text-xl text-gray-50 mb-4">Ready to Unleash Your Creativity?</h2>
+                <p class="text-md text-gray-300 mb-6">Before you join us as a creator, we highly recommend watching our brief video. It shares the essence of becoming a part of notTV, highlighting how you can make an impact with your unique voice and stories.</p>
+                <button @click="toggleVideoModal" class="text-white bg-blue-500 hover:bg-blue-700 font-semibold py-2 px-4 border border-blue-700 rounded">
+                  Watch the Video
+                </button>
+              </div>
+            </div>
+
           </div>
 
 
-          <div class="hide-scrollbar bg-gray-200 mt-6 mb-36 mx-auto p-5 w-full max-w-96 text-gray-900 rounded">
+
+
+          <div v-if="!checkingInviteCode && inviteStore.registrationAllowed" class="hide-scrollbar bg-gray-200 mt-6 mb-36 mx-auto p-5 w-full max-w-96 text-gray-900 rounded">
 
             <JetValidationErrors class="mb-4" />
 
@@ -233,10 +249,10 @@
 
 <script setup>
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import { useInviteStore } from '@/Stores/InviteStore'
 import { useForm } from '@inertiajs/inertia-vue3'
 import JetButton from '@/Jetstream/Button.vue';
 import JetInput from '@/Jetstream/Input.vue';
-import JetCheckbox from '@/Jetstream/Checkbox.vue';
 import JetLabel from '@/Jetstream/Label.vue';
 import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
 import ApplicationLogo from '@/Jetstream/ApplicationLogo.vue'
@@ -244,6 +260,7 @@ import { Inertia } from '@inertiajs/inertia'
 import { computed, onMounted, ref, watch } from 'vue'
 
 const appSettingStore = useAppSettingStore()
+const inviteStore = useInviteStore()
 
 appSettingStore.noLayout = true
 appSettingStore.currentPage = 'creator.registration.show'
@@ -267,12 +284,13 @@ const form = useForm({
   terms: false,
 });
 
+const checkingInviteCode = ref(true)
+const registrationAccessCheckErrorMessage = ref('')
 const countries = ref([]);
-
 // Computed property to determine if the selected country is Canada
 const isCanadaSelected = computed(() => form.country === countries.value.find(country => country.name === 'Canada')?.id);
-
 const videoActive = ref(false)
+
 
 const toggleVideoModal = () => {
   videoActive.value = true
@@ -281,6 +299,23 @@ const toggleVideoModal = () => {
 }
 
 onMounted(async () => {
+  try {
+    inviteStore.inviteUlid = props.inviteCodeUlid
+    const result = await inviteStore.registrationAccessCheck();
+    if (result) {
+      console.log('Access granted');
+      // Proceed with any actions for successful access check
+      checkingInviteCode.value = false
+    } else {
+      console.log('Access denied');
+      // Handle access denied
+      checkingInviteCode.value = false
+    }
+  } catch (error) {
+    // Handle any errors that occurred during the access check
+    console.error('An error occurred during registration access check:', error);
+    registrationAccessCheckErrorMessage.value = error
+  }
   try {
     const response = await axios.get('/api/news-countries-simple-list');
     countries.value = response.data;

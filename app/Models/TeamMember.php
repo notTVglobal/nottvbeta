@@ -29,10 +29,6 @@ class TeamMember extends Pivot
     ];
 
 
-
-
-
-
     // THE PREVIOUS RELATIONSHIPS (Feb.28, 2024)
 
     public function teams()

@@ -1,9 +1,11 @@
 <template>
   <div>
-      <div class="flex flex-row">
+      <div class="flex flex-row items-start">
         <!--                <img :src="'/storage/images/' + show.poster" alt="" class="w-20 mr-2 justify-left">-->
         <Link :href="`/shows/${show.slug}`" class="uppercase">
-          <SingleImage :image="show.image" alt="'show poster'" class="w-60 h-80 object-cover mr-2 justify-left"/>
+          <div class="h-80">
+            <SingleImage :image="show.image" alt="'show poster'" class="w-60 object-contain mr-2 justify-left"/>
+          </div>
         </Link>
         <div class="flex flex-col pl-4">
           <Link :href="`/shows/${show.slug}`" class="uppercase"><span class="hover:text-blue-600 mb-3 inline-flex items-center text-3xl font-semibold relative">{{ show.name }}</span></Link>

@@ -3,8 +3,11 @@
     <td class="px-6 py-4 w-20 whitespace-nowrap">
       <!--            <img :src="'/storage/images/' + show.poster" class="h-20 w-20 object-cover">-->
 
-      <SingleImage :image="show.image" :poster="show.poster" :alt="'show cover'"
-                   class="h-20 w-20 min-w-[2.5rem] object-cover"/>
+      <div class="h-20 w-20 min-w-[2.5rem]">
+        <SingleImage :image="show.image" :poster="show.poster" :alt="'show cover'"
+                     class="w-full h-full object-cover" />
+      </div>
+
 
     </td>
 
@@ -68,22 +71,20 @@ let props = defineProps({
   can: Object,
 });
 
-teamStore.noteEdit = 0
-
-const componentKey = ref(0)
-
-function reloadNote() {
-  props.show.notes = teamStore.note
-  componentKey.value += 1
-}
-
 let form = useForm({
   note: '',
 });
+
+const componentKey = ref(0)
+teamStore.noteEdit = 0
 
 function editNote() {
   teamStore.noteEdit = props.show.id
 }
 
+function reloadNote() {
+  props.show.notes = teamStore.note
+  componentKey.value += 1
+}
 
 </script>

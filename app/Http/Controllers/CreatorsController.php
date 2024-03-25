@@ -11,6 +11,8 @@ use App\Actions\Fortify\CreateNewCreator;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -151,6 +153,56 @@ class CreatorsController extends Controller
               'inviteCodeInput' => ['The provided invite code is incorrect.'],
           ]);
         }
+  }
+
+  /**
+   * Check the registration access based on the provided invite code.
+   *
+   * @param  Request  $request
+   * @param  InviteCode  $inviteCode  The InviteCode model instance is automatically resolved by Laravel's route model binding.
+   * @return JsonResponse
+   */
+  public function checkRegistrationAccess(HttpRequest $request, InviteCode $inviteCode): JsonResponse {
+if (!$request->inviteCode) {
+  return response()->json(['success' => false, 'message' => 'No invite code provided.'], 500);
+}
+    try {
+      // Validate the incoming request
+      $validated = $request->validate([
+          'inviteCode' => 'required|string',
+      ]);
+
+      // Compare the provided invite code with the model's code
+      if ($validated['inviteCode'] === $inviteCode->code) {
+        // Return a JSON response indicating success
+        return response()->json(['success' => true], 200);
+      } else {
+        // Log the mismatch for auditing purposes
+        Log::error("Invite code mismatch.", [
+            'provided_invite_code' => $validated['inviteCode'],
+            'expected_invite_code' => $inviteCode->code,
+        ]);
+
+        // Return a JSON response indicating failure
+        return response()->json(['success' => false, 'message' => 'Invalid invite code.'], 400);
+      }
+    } catch (ModelNotFoundException $e) {
+      // Log the exception
+      Log::error("Invite code not found.", [
+          'error' => $e->getMessage(),
+      ]);
+
+      // Return a JSON response for not found invite code
+      return response()->json(['success' => false, 'message' => 'Invite code not found.'], 404);
+    } catch (\Exception $e) {
+      // Log any unexpected exceptions
+      Log::error("An unexpected error occurred during the invite code check.", [
+          'error' => $e->getMessage(),
+      ]);
+
+      // Return a JSON response for internal server error
+      return response()->json(['success' => false, 'message' => 'An unexpected error occurred. Please try again later.'], 500);
+    }
   }
 
   public function showRegistrationForm(InviteCode $inviteCode): Response|\Illuminate\Http\RedirectResponse {

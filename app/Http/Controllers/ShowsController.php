@@ -265,6 +265,7 @@ class ShowsController extends Controller {
   public function create() {
     $categories = ShowCategory::with('subCategories')->get(); // Fetch all categories with their sub-categories
     $userId = Auth::id(); // Store the user ID in a variable to avoid multiple calls
+    $creatorId = Auth::user()->creator->id;
 
     $teams = Team::with(['teamStatus:id,status'])
         ->whereIn('team_status_id', [1, 2, 3, 4, 7, 8, 11])
@@ -295,37 +296,53 @@ class ShowsController extends Controller {
     return Inertia::render('Shows/Create', [
         'teams'      => $teams,
         'userId'     => $userId,
+        'creatorId'     => $creatorId,
         'categories' => $categories,
     ]);
 
   }
 
   public function store(HttpRequest $request) {
-
     // Check if the authenticated user is a registered creator
     $creatorId = $this->determineShowRunnerId($request);
 
     // Check if the authenticated user is not a Creator
     if (is_null($creatorId)) {
-      return back()->with(['error' => 'An active registered creator is required as the show runner.'])->withInput();
+      // Use withErrors to pass custom error messages, similar to validation errors
+      // The first argument of withErrors can be an array or MessageBag
+      return back()->withErrors([
+          'show_runner_creator_id' => 'An active registered creator is required as the show runner.'
+      ])->withInput();
     }
 
-    $validatedData = $request->validate([
-        'name'           => 'unique:shows|required|string|max:255',
-//            'name' => ['required', 'string', 'max:255', Rule::unique('shows')->ignore($show->id)],
-        'description'    => 'required|string',
-        'user_id'        => 'required',
-        'team_id'        => 'required|exists:teams,id',
-        'category'       => 'required',
-        'sub_category'   => 'nullable',
-        'instagram_name' => 'nullable|string|max:30',
-        'telegram_url'   => 'nullable|active_url',
-        'twitter_handle' => 'nullable|string|min:4|max:15',
-        'notes'          => 'nullable|string|max:1024',
-        'show_runner'    => 'nullable|exists:creators,id'
-    ],
-        ['team_id' => 'A team must be selected.']);
+    // Manually create a validator for the request's data.
+    // The above was supposed to go in this validator, but it wasn't working.
+    // The form was successfully being submitted despite the show_runner not being active.
+    $validator = Validator::make($request->all(), [
+        'name'                   => 'unique:shows|required|string|max:255',
+        'description'            => 'required|string',
+        'user_id'                => 'required',
+        'team_id'                => 'required|exists:teams,id',
+        'category'               => 'required',
+        'sub_category'           => 'nullable',
+        'instagram_name'         => 'nullable|string|max:30',
+        'telegram_url'           => 'nullable|active_url',
+        'twitter_handle'         => 'nullable|string|min:4|max:15',
+        'notes'                  => 'nullable|string|max:1024',
+        'show_runner_creator_id' => 'nullable|exists:creators,id'
+    ], [
+        'team_id.exists' => 'A team must be selected.'
+    ]);
+    // Check if validation fails, including both the custom check and the standard validation rules
+    if ($validator->fails()) {
+      // Use the validator's failed validation response
+      return back()->withErrors($validator)->withInput();
+    }
+
+    // Validation passes, extract validated data
+    $validatedData = $validator->validated();
     $teamId = $validatedData['team_id'];
+
     // Retrieve the team with the team_id and check its status
     $team = Team::find($teamId);
     // Check if the team's status is 1, 2, 3, 4, or 11
@@ -784,7 +801,7 @@ class ShowsController extends Controller {
                 'id'   => $show->showRunner->id ?? null,
                 'name' => $show->showRunner->user->name ?? null,
             ],
-            'recordings' => $show->recordings->map->only(['id', 'path', 'file_extension', 'start_time', 'end_time', 'total_milliseconds_recorded', 'mist_stream_wildcard_id', 'download_url']), // Include only necessary fields
+            'recordings'      => $show->recordings->map->only(['id', 'path', 'file_extension', 'start_time', 'end_time', 'total_milliseconds_recorded', 'mist_stream_wildcard_id', 'download_url']), // Include only necessary fields
         ],
         'team'            => [
             'name' => $show->team->name,
@@ -810,7 +827,7 @@ class ShowsController extends Controller {
                 'episodeStatusId'          => $showEpisode->showEpisodeStatus->id,
                 'isPublished'              => $showEpisode->isPublished,
                 'scheduledReleaseDateTime' => $showEpisode->scheduled_release_dateTime,
-                'recordings' => $showEpisode->recordings->map->only(['id', 'path', 'file_extension', 'start_time', 'end_time', 'total_milliseconds_recorded', 'mist_stream_wildcard_id', 'download_url']), // Include only necessary fields
+                'recordings'               => $showEpisode->recordings->map->only(['id', 'path', 'file_extension', 'start_time', 'end_time', 'total_milliseconds_recorded', 'mist_stream_wildcard_id', 'download_url']), // Include only necessary fields
             ]),
         'episodeStatuses' => $filteredStatuses,
         'can'             => [
@@ -854,11 +871,18 @@ class ShowsController extends Controller {
     ]);
 
 
-    // Load the team with members and their creators. Might need adjustment based on actual data structure.
-    $team = Team::with('members.creator')->findOrFail($show->team_id);
-    // Explicitly mapping team members to include creator_id
+    // Load the team with members who have creators with status_id of 1
+    $team = Team::with(['members' => function($query) {
+      // Filter members to those who have a creator with status_id of 1
+      $query->whereHas('creator', function($query) {
+        $query->where('status_id', 1);
+      });
+    }, 'members.creator']) // Ensure to still load the creator relationship
+    ->findOrFail($show->team_id);
+
+    // Now, mapping team members to include creator_id, this will only include members filtered by the above condition
     $teamMembers = $team->members->map(function ($user) {
-      // Directly accessing creator relationship to get creator_id
+      // At this point, every user has a creator with status_id of 1 due to the query filter
       $creatorId = $user->creator ? $user->creator->id : null;
 
       return [
@@ -929,34 +953,39 @@ class ShowsController extends Controller {
 
     $creatorId = $this->determineShowRunnerId($request);
 
+    // Check if the authenticated user is not a Creator
     if (is_null($creatorId)) {
-      return back()->with(['error' => 'An active registered creator is required as the show runner.'])->withInput();
+      // Use withErrors to pass custom error messages, similar to validation errors
+      // The first argument of withErrors can be an array or MessageBag
+      return back()->withErrors([
+          'show_runner_creator_id' => 'An active registered creator is required as the show runner.'
+      ])->withInput();
     }
 
     // Check if show_runner is null before validation
     if (is_null($show->show_runner && $request->show_runner)) {
       // Flash a session message to inform the user
       return redirect()->back()->with([
-          'error'                  => 'Please set the Show Runner',
-          'form.error.show_runner' => 'Please set the Show Runner', // Custom form error
+          'error'                             => 'Please set the Show Runner',
+          'form.error.show_runner_creator_id' => 'Please set the Show Runner', // Custom form error
       ])->withInput();
     }
 
     // validate the request
     $request->validate([
-        'name'               => ['required', 'string', 'max:255', Rule::unique('shows')->ignore($show->id)],
-        'description'        => 'required',
-        'release_date'       => 'date|after:tomorrow',
-        'category'           => 'required',
-        'sub_category'       => 'nullable',
-        'www_url'            => 'nullable|active_url',
-        'instagram_name'     => 'nullable|string|max:30',
-        'telegram_url'       => 'nullable|active_url',
-        'twitter_handle'     => 'nullable|string|min:4|max:15',
-        'notes'              => 'nullable|string|max:1024',
-        'show_status_id'     => 'required|integer|exists:show_statuses,id',
-        'episode_play_order' => 'required|string',
-        'show_runner'        => 'exists:creators,id'
+        'name'                   => ['required', 'string', 'max:255', Rule::unique('shows')->ignore($show->id)],
+        'description'            => 'required',
+        'release_date'           => 'date|after:tomorrow',
+        'category'               => 'required',
+        'sub_category'           => 'nullable',
+        'www_url'                => 'nullable|active_url',
+        'instagram_name'         => 'nullable|string|max:30',
+        'telegram_url'           => 'nullable|active_url',
+        'twitter_handle'         => 'nullable|string|min:4|max:15',
+        'notes'                  => 'nullable|string|max:1024',
+        'show_status_id'         => 'required|integer|exists:show_statuses,id',
+        'episode_play_order'     => 'required|string',
+        'show_runner_creator_id' => 'exists:creators,id'
     ], [
         'status.exists'      => 'The selected status is invalid.',
         'release_date.after' => 'The release date must be at least 24 hours in the future.',
@@ -1273,7 +1302,7 @@ class ShowsController extends Controller {
 
     // Check if the Creator exists and is active (assuming statusId = 1 indicates active)
     if ($creator && $creator->status_id == 1) {
-      return $creator->user_id;
+      return $creator->id;
     }
 
     // Return null if there's no Creator or if the Creator is not active
@@ -1285,8 +1314,8 @@ class ShowsController extends Controller {
     $creatorId = $this->getAuthenticatedCreatorId();
 
     // If `show_runner` is provided in the request, verify it's an active creator
-    if (!is_null($request->show_runner)) {
-      $specifiedCreator = Creator::where('id', $request->show_runner)
+    if (!is_null($request->show_runner_creator_id)) {
+      $specifiedCreator = Creator::where('id', $request->show_runner_creator_id)
           ->where('status_id', 1) // Assuming 'status 1' indicates active status
           ->first();
 
