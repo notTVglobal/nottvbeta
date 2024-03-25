@@ -21,15 +21,16 @@
       <form @submit.prevent="submit" class="max-w-md mx-auto mt-8">
         <div class="mb-6">
           <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"
-                 for="name"
+                 for="team"
           >
             Team
           </label>
           <select
               class="border border-gray-400 p-2 w-full rounded-lg block mb-2 uppercase font-bold text-xs text-gray-800"
-              v-model="form.team_id"
+              v-model="selectedTeamId"
               required
           >
+            <option disabled value="">Select Team</option>
             <option
                 v-for="team in props.teams"
                 :key="team.id"
@@ -45,6 +46,32 @@
 
           <div v-if="form.errors.team_id" v-text="form.errors.team_id" class="text-xs text-red-600 mt-1"></div>
         </div>
+
+        <div class="mb-6">
+          <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"
+                 for="show_runner_creator_id"
+          >
+            Show Runner
+          </label>
+          <select
+              class="border border-gray-400 p-2 w-full rounded-lg block mb-2 uppercase font-bold text-xs text-gray-800"
+              v-model="selectedShowRunnerCreatorId"
+              required
+          >
+            <option disabled value="">Select Show Runner</option>
+            <option
+                v-for="member in teamMembers"
+                :key="member.creator_id"
+                :value="member.creator_id"
+                class="bg-white text-black border-b dark:text-gray-50 dark:bg-gray-800 dark:border-gray-600"
+            >
+              {{ member.name }}
+            </option>
+          </select>
+
+          <div v-if="form.errors.show_runner_creator_id" v-text="form.errors.show_runner_creator_id" class="text-xs text-red-600 mt-1"></div>
+        </div>
+
         <div class="mb-6">
           <label class="block mb-2 uppercase font-bold text-xs dark:text-gray-200"
                  for="name"
@@ -248,6 +275,7 @@ const showStore = useShowStore()
 let props = defineProps({
   teams: Object,
   userId: Number,
+  creatorId: Number,
   categories: Object,
 })
 
@@ -269,13 +297,30 @@ watch(selectedSubCategoryId, () => {
 })
 
 onMounted(() => {
+  selectedShowRunnerCreatorId.value = defaultShowRunnerId.value;
   showStore.categories = props.categories
   showStore.initializeDescriptions(selectedCategoryId.value, selectedSubCategoryId.value)
+  selectedTeamId.value = defaultTeamId.value;
 })
 
 const defaultTeamId = computed(() => {
   return teamStore.id || (props.teams.length > 0 ? props.teams[0].id : null)
 })
+
+const defaultShowRunnerId = computed(() => {
+  return props.creatorId
+})
+
+// Reactive property for the selected team ID
+const selectedTeamId = ref(null);
+
+// Reactive property for the selected show_runner ID
+const selectedShowRunnerCreatorId = ref(null);
+
+// Watcher to update the teamStore.id when selectedTeamId changes
+watch(selectedTeamId, (newId) => {
+  teamStore.id = newId;
+});
 
 const chooseCategory = () => {
   // Update the selected category ID based on the new selection
@@ -291,6 +336,23 @@ const chooseSubCategory = () => {
   showStore.updateSubCategoryDescription(selectedSubCategoryId.value)
 }
 
+// fetch Team Members
+const teamMembers = ref([]) // Store team members locally in the component
+
+// Fetch team members when the selected team changes
+const fetchTeamMembers = async () => {
+  if (defaultTeamId.value) {
+    try {
+      const response = await axios.post(`/api/fetch-team-members`, {teamId: defaultTeamId.value})
+      teamMembers.value = response.data
+    } catch (error) {
+      console.error('Error fetching team members:', error)
+    }
+  }
+}
+
+// Use watch to react to changes in defaultTeamId computed property
+watch(defaultTeamId, fetchTeamMembers, { immediate: true }); // immediate: true to run on mount
 
 let form = useForm({
   name: '',
@@ -304,7 +366,7 @@ let form = useForm({
   telegram_url: '',
   twitter_handle: '',
   notes: '',
-  showRunner: '',
+  show_runner_creator_id: '',
 })
 
 let showCategoryDescription = ref(null)
@@ -334,6 +396,8 @@ onMounted(() => {
 let submit = () => {
   form.category = showStore.category_id
   form.sub_category = showStore.sub_category_id
+  form.team_id = selectedTeamId
+  form.show_runner_creator_id = selectedShowRunnerCreatorId
   form.post('/shows')
 }
 

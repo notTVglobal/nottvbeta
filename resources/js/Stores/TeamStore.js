@@ -105,7 +105,10 @@ export const useTeamStore = defineStore('teamStore', {
         },
         toggleGoLiveDisplay() {
             this.goLiveDisplay = ! this.goLiveDisplay;
-        }
+        },
+        async fetchTeamMembers() {
+            await axios.get('/team/team-members').then().error()
+        },
     },
 
     getters: {

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Team;
 use App\Models\TeamMember;
+use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
 
@@ -18,6 +19,43 @@ class TeamMembersController extends Controller
 //    public function toggle(User $user, Team $team) {
 //        $user->member->toggle($team);
 //    }
+
+  public function fetchTeamMembers(Request $request) {
+    // Validate the request data
+    $validatedData = $request->validate([
+        'teamId' => 'required|integer',
+    ]);
+
+    // Extract teamId from the validated data
+    $teamId = $validatedData['teamId'];
+
+    $team = Team::with(['members' => function ($query) {
+      // Apply a constraint to only include members where the creator's status_id is 1
+      $query->whereHas('creator', function ($query) {
+        $query->where('status_id', 1);
+      })
+          ->select('id', 'name', 'email', 'phone', 'profile_photo_path'); // Adjust if you need more fields
+    },
+                        'members.creator' => function ($query) {
+                          // Assuming you only want to load certain fields from the creator
+                          $query->select('id', 'user_id');
+                        }])
+        ->findOrFail($teamId);
+
+    // Extract and transform team members from the loaded relationship
+    $teamMembers = $team->members->map(function ($member) {
+      return [
+          'id'                 => $member->id,
+          'creator_id'         => $member->creator ? $member->creator->id : null, // Access the creator's ID, if available
+          'name'               => $member->name,
+          'profile_photo_path' => $member->profile_photo_path,
+          'profile_photo_url'  => $member->profile_photo_url, // Assuming this is accessible or you have an accessor for it
+      ];
+    });
+
+    // Return the transformed team members data as a JSON response
+    return response()->json($teamMembers);
+  }
 
     public function attach(Request $request)
     {

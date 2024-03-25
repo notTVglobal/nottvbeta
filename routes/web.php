@@ -197,6 +197,7 @@ Route::post('/invite', [WelcomeController::class, 'inviteFormSubmission'])->name
 Route::post('/invite/{inviteCode}/send-creator-email-invitation', [CreatorsController::class, 'sendCreatorEmailInvitation'])->name('creator.sendEmailInvitation.submit')->middleware('throttle:3,1');
 Route::get('/invite/{inviteCode}', [CreatorsController::class, 'showCreatorInviteIntroduction'])->name('creator.invite.show');
 Route::post('/invite/{inviteCode}/check-invite-code', [CreatorsController::class, 'checkInviteCode'])->name('creator.invite.checkInviteCode');
+Route::post('/invite/{inviteCode}/check-registration-access', [CreatorsController::class, 'checkRegistrationAccess'])->name('creator.invite.checkRegistrationAccess');
 Route::get('/register/{inviteCode}', [CreatorsController::class, 'showRegistrationForm'])->name('creator.register.show');
 //Route::post('/register/{inviteCode}', [CreatorsController::class, 'store'])->name('creator.store');
 Route::post('/register/creator/{inviteCode}', [CreatorsController::class, 'register'])->name('creator.register.submit');
@@ -778,6 +779,10 @@ Route::middleware([
 
     // Team Members
     Route::resource('teamMembers', TeamMembersController::class);
+
+    // Fetch team members
+    Route::post('/api/fetch-team-members', [TeamMembersController::class, 'fetchTeamMembers'])
+        ->name('teams.fetchTeamMembers');
 
     // Add team member
     Route::post('/teams/addTeamMember', [TeamMembersController::class, 'attach'])

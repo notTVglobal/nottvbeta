@@ -20,6 +20,9 @@ class WelcomeController extends Controller {
       $user->update(['last_login_at' => now()]);
 
       // Redirect the user to the stream route
+      if ($user->creator) {
+        return redirect()->route('dashboard');
+      }
       return redirect()->route('stream');
     }
 

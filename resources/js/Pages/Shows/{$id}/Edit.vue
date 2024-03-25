@@ -83,14 +83,14 @@
 
                     <div class="mb-6">
                       <label class="block mb-2 uppercase font-bold text-xs text-red-700"
-                             for="status"
+                             for="show_runner_creator_id"
                       >
                         Show Runner
                       </label>
 
                       <select
-                              class="border border-gray-400 text-gray-800 p-2 w-1/2 rounded-lg block mb-2 uppercase font-bold text-xs "
-                              v-model="form.show_runner"
+                              class="border border-gray-400 text-gray-800 p-2 w-fit rounded-lg block mb-2 uppercase font-bold text-xs "
+                              v-model="selectedShowRunnerCreatorId"
                       >
                         <option v-for="member in teamMembers"
                                 :key="member.creator_id" :value="member.creator_id">{{ member.name }}
@@ -98,7 +98,7 @@
 
 
                       </select>
-                      <div v-if="form.errors.show_runner" v-text="form.errors.show_runner"
+                      <div v-if="form.errors.show_runner_creator_id" v-text="form.errors.show_runner_creator_id"
                            class="text-xs text-red-600 mt-1"></div>
                     </div>
 
@@ -110,7 +110,7 @@
                       </label>
 
                       <select required
-                              class="border border-gray-400 text-gray-800 p-2 w-1/2 rounded-lg block mb-2 uppercase font-bold text-xs "
+                              class="border border-gray-400 text-gray-800 p-2 w-fit rounded-lg block mb-2 uppercase font-bold text-xs "
                               v-model="form.show_status_id"
                       >
                         <option v-for="status in statuses"
@@ -131,7 +131,7 @@
                       </label>
 
                       <select required
-                              class="border border-gray-400 text-gray-800 p-2 w-1/2 rounded-lg block mb-2 uppercase font-bold text-xs "
+                              class="border border-gray-400 text-gray-800 p-2 w-fit rounded-lg block mb-2 uppercase font-bold text-xs "
                               v-model="form.episode_play_order"
                               id="episode_play_order"
                       >
@@ -359,9 +359,8 @@ let props = defineProps({
   statuses: Object,
 })
 
-console.log('show runner is: ' + props.show.show_runner)
-
-
+// Reactive property for the selected show_runner ID
+const selectedShowRunnerCreatorId = ref(null);
 
 let selectedCategoryId = ref(props?.show?.category?.id)
 let selectedSubCategoryId = ref(props?.show?.subCategory?.id)
@@ -381,6 +380,7 @@ watch(selectedSubCategoryId, () => {
 })
 
 onMounted(() => {
+  selectedShowRunnerCreatorId.value = props.show.showRunner.creator_id;
   document.getElementById('topDiv').scrollIntoView({ behavior: 'smooth' });
   showStore.categories = props.categories
   showStore.initializeDescriptions(selectedCategoryId.value, selectedSubCategoryId.value)
@@ -416,7 +416,7 @@ let form = useForm({
   twitter_handle: props.show.twitter_handle,
   notes: props.show.notes,
   episode_play_order: props.show.episode_play_order,
-  show_runner: props?.show?.showRunner?.creator_id,
+  show_runner_creator_id: props?.show?.showRunner?.creator_id,
 })
 
 // let showCategoryDescription = props.showCategory?.Description

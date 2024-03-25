@@ -3,6 +3,17 @@
 Last Update: March 24, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.7.17
+March 24, 2024
+* Add invite code check (inviteCodeStore) on the creator registration page
+* Fix bug where Creators not being redirected to Dashboard on route '/'
+* Fix the styling of profile images for Team Members on the Team Manage page
+* Fix the styling of Show images on the Show Manage page
+* Fix the Show Runner, it consistently uses the creator_id now
+  * The create new show form now pre-loads with the logged in creator as show runner
+  * Show Runner drop down now displays all of the possible show runners.
+  * If a Team member's account is Frozen or Suspended they will not appear in the Show Runner drop down.
+
 ## v0.8.7.16
 March 24, 2024
 * Added a video in a pop-up modal on the creator registration page

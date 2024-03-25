@@ -55,6 +55,7 @@
 import { Inertia } from '@inertiajs/inertia'
 import { onMounted, ref } from 'vue'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import { useInviteStore } from '@/Stores/InviteStore'
 import ApplicationLogo from '@/Jetstream/ApplicationLogo'
 import PublicNavigationMenu from '@/Components/Global/Navigation/PublicNavigationMenu'
 import PublicResponsiveNavigationMenu from '@/Components/Global/Navigation/PublicResponsiveNavigationMenu'
@@ -64,6 +65,7 @@ import ContentComponent from '@/Components/Pages/CreatorsInvite/CreatorsInviteCo
 import PopUpModal from '@/Components/Global/Modals/PopUpModal.vue'
 
 const appSettingStore = useAppSettingStore()
+const inviteStore = useInviteStore()
 
 appSettingStore.noLayout = true
 appSettingStore.currentPage = 'creator.invite.show'
@@ -81,12 +83,14 @@ const checkInviteCode = () => {
   Inertia.post(`/invite/${props.inviteCodeUlid}/check-invite-code`, {inviteCodeInput: inviteCodeInput.value}, {
     onSuccess: () => {
       currentState.value = 'welcome'
+      inviteStore.inviteCode = inviteCodeInput.value
       setTimeout(() => currentState.value = 'content', 500) // Adjust timing as needed
     },
     onError: (error) => {
       checkInviteCodeFailedModalHeader.value = 'Please Try Again'
       checkInviteCodeFailedModalMain.value = Object.values(error)[0]
       document.getElementById('checkInviteCodeFailedModal').showModal()
+      inviteStore.inviteCode = ''
     },
   })
 
