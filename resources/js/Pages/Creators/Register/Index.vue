@@ -1,13 +1,9 @@
 <template>
 
   <Head title="Creator Registration"/>
-  <div class="bg-gray-900 h-[calc(100vh)]">
-    <div id="topDiv">
-<!--      <PublicNavigationMenu class="fixed top-0 w-full h-16"/>-->
-<!--      <PublicResponsiveNavigationMenu />-->
-    </div>
+  <div class="h-[calc(100vh)]">
 
-    <div class="bg-gray-900 text-white px-5 flex flex-col w-full hide-scrollbar">
+    <div id="topDiv" class="bg-gray-900 text-white px-5 flex flex-col w-full hide-scrollbar">
 
       <div class="flex flex-col mt-24 mb-8 text-gray-50 justify-center w-full text-center text-3xl font-semibold tracking-widest">
         <div><ApplicationLogo class="mx-auto w-1/2 lg:w-1/4 xl:w-1/6 mb-6"/></div>
@@ -15,8 +11,8 @@
           Creator Registration
         </div>
       </div>
-      <main class="pb-8  hide-scrollbar">
-        <div class="mx-auto w-full md:w-3/4 max-w-96 px-4 border-b border-gray-800  hide-scrollbar">
+      <main class="pb-8 hide-scrollbar">
+        <div class="mx-auto w-full md:w-3/4 max-w-96 px-4 border-b border-gray-800 hide-scrollbar">
           <div class="text-center mb-8 px-4">
             <h2 class="text-lg md:text-xl text-gray-50 mb-4">Ready to Unleash Your Creativity?</h2>
             <p class="text-md text-gray-300 mb-6">Before you join us as a creator, we highly recommend watching our brief video. It shares the essence of becoming a part of notTV, highlighting how you can make an impact with your unique voice and stories.</p>
@@ -26,7 +22,7 @@
           </div>
 
 
-          <div class=" hide-scrollbar bg-gray-200 mt-6 mb-36 mx-auto p-5 w-full  max-w-96 text-gray-900 rounded">
+          <div class="hide-scrollbar bg-gray-200 mt-6 mb-36 mx-auto p-5 w-full max-w-96 text-gray-900 rounded">
 
             <JetValidationErrors class="mb-4" />
 
@@ -157,15 +153,13 @@
               <div v-if="form.errors.country" v-text="form.errors.country"
                    class="text-xs text-red-600 mt-1"></div>
 
-              <div class="mt-4" v-if="isCanadaSelected">
+              <div class="mt-4">
                 <JetLabel for="postalCode" value="Postal Code" />
                 <JetInput
                     id="postalCode"
                     v-model="form.postalCode"
                     type="text"
                     class="mt-1 block w-full"
-                    required
-                    autofocus
                     autocomplete="postalCode"
                 />
               </div>
@@ -220,6 +214,19 @@
         </div>
       </main>
 
+      <dialog id="creatorWelcomeVideoModal" class="modal">
+        <div class="modal-box bg-black">
+          <form method="dialog">
+            <button @click="videoActive = false" class="btn btn-sm btn-circle absolute right-2 top-2">✕</button>
+          </form>
+        <video v-if="videoActive" src="https://cdn.nottv.io/public/2024/03/videos/IMG_6139_5020eb9e3c2bdc89476324e0711cc038.mov"
+                controls/>
+        </div>
+        <form method="dialog" class="modal-backdrop">
+          <button @click="videoActive = false">close</button>
+        </form>
+      </dialog>
+
     </div>
   </div>
 </template>
@@ -234,7 +241,7 @@ import JetLabel from '@/Jetstream/Label.vue';
 import JetValidationErrors from '@/Jetstream/ValidationErrors.vue';
 import ApplicationLogo from '@/Jetstream/ApplicationLogo.vue'
 import { Inertia } from '@inertiajs/inertia'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 
 const appSettingStore = useAppSettingStore()
 
@@ -265,6 +272,14 @@ const countries = ref([]);
 // Computed property to determine if the selected country is Canada
 const isCanadaSelected = computed(() => form.country === countries.value.find(country => country.name === 'Canada')?.id);
 
+const videoActive = ref(false)
+
+const toggleVideoModal = () => {
+  videoActive.value = true
+  console.log('toggle Video Modal')
+  document.getElementById('creatorWelcomeVideoModal').showModal()
+}
+
 onMounted(async () => {
   try {
     const response = await axios.get('/api/news-countries-simple-list');
@@ -278,6 +293,7 @@ onMounted(async () => {
   } catch (error) {
     console.error('Failed to fetch countries:', error);
   }
+
 });
 
 const submit = () => {
@@ -287,14 +303,14 @@ const submit = () => {
 };
 
 Inertia.on('navigate', (event) => {
-    requestAnimationFrame(() => {
-      const topDiv = document.getElementById("topDiv");
-      if (topDiv) {
-        topDiv.scrollIntoView({behavior: 'auto'});
-      } else {
-        window.scrollTo(0, 0);
-      }
-    });
+  requestAnimationFrame(() => {
+    const topDiv = document.getElementById("topDiv");
+    if (topDiv) {
+      topDiv.scrollIntoView({behavior: 'smooth'});
+    } else {
+      window.scrollTo(0, 0);
+    }
+  });
 })
 
 </script>
