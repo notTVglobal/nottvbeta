@@ -7860,16 +7860,16 @@ hr {
   max-height: 24rem;
 }
 
+.max-h-\[3rem\] {
+  max-height: 3rem;
+}
+
 .max-h-\[96rem\] {
   max-height: 96rem;
 }
 
 .max-h-full {
   max-height: 100%;
-}
-
-.max-h-\[3rem\] {
-  max-height: 3rem;
 }
 
 .min-h-20 {
