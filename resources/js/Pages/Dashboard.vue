@@ -50,7 +50,6 @@
         </div>
       </div>
 
-
       <CreatorsShowCalendar/>
 
       <div class="w-full bg-indigo-300 dark:bg-gray-900 rounded-lg pb-8 p-3 mb-16 mx-2 border-b border-2">

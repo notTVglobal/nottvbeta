@@ -9375,6 +9375,11 @@ hr {
   background-color: rgb(113 63 18 / var(--tw-bg-opacity));
 }
 
+.bg-gray-950 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(3 7 18 / var(--tw-bg-opacity));
+}
+
 .bg-opacity-0 {
   --tw-bg-opacity: 0;
 }
@@ -9537,6 +9542,10 @@ hr {
 
 .stroke-current {
   stroke: currentColor;
+}
+
+.object-contain {
+  object-fit: contain;
 }
 
 .object-cover {
@@ -10350,6 +10359,11 @@ hr {
 .text-yellow-700 {
   --tw-text-opacity: 1;
   color: rgb(161 98 7 / var(--tw-text-opacity));
+}
+
+.text-violet-50 {
+  --tw-text-opacity: 1;
+  color: rgb(245 243 255 / var(--tw-text-opacity));
 }
 
 .underline {

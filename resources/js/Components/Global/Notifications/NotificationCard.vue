@@ -14,12 +14,12 @@
           <img v-if="!props.notification.image.folder"
                :src="'/storage/images/' + props.notification.image.name"
                :alt="props.notification.image.name"
-               class="w-20 h-20 object-cover"/>
+               class="w-20 h-20 object-contain"/>
 
           <img v-if="props.notification.image.folder"
                :src="props.notification.image.app_setting.cdn_endpoint + props.notification.image.cloud_folder + props.notification.image.folder + '/' + props.notification.image.name"
                :alt="props.notification.image.name"
-               class="w-20 h-20 object-cover"/>
+               class="w-20 h-20 object-contain"/>
 
         </div>
         <div v-else>

@@ -3,6 +3,10 @@
 Last Update: March 24, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.7.16
+March 24, 2024
+* Added a video in a pop-up modal on the creator registration page
+
 ## v0.8.7.15
 March 24, 2024
 * Fix the GoLive button on the Dashboard to appear if the user canGoLive instead of only for teams the user owns
