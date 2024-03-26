@@ -9,21 +9,21 @@
          :class="[ goLiveStore.isLive ? 'bg-gray-100' : 'bg-red-100' ]">
 
 
-      <div class="flex flex-row flex-wrap-reverse w-full justify-between">
+      <div class="flex flex-row flex-wrap-reverse w-full justify-between gap-2">
         <div>
           <div class="mb-2">
             <button @click="appSettingStore.btnRedirect('/training/go-live-using-zoom')"
-                    class="btn bg-blue-500 hover:bg-blue-700 rounded-lg text-white">How To Stream From Zoom
+                    class="btn bg-blue-500 hover:bg-blue-700 text-white">How To Stream From Zoom
             </button>
             <button @click="openObsInstructions = !openObsInstructions"
-                    class="btn bg-blue-500 hover:bg-blue-700 rounded-lg text-white ml-2 ">
+                    class="btn bg-blue-500 hover:bg-blue-700 text-white ml-2" :class="{'bg-yellow-800 hover:bg-yellow-900 ':openObsInstructions}">
               <span v-if="!openObsInstructions">View Your Stream Key</span>
               <span v-else>Hide Your Stream Key</span>
             </button>
 
           </div>
-          <div v-if="openObsInstructions">
-            <h2>Stream from OBS or other software using these details:</h2>
+          <div v-if="openObsInstructions" class="my-4 ml-10">
+            <h3>Stream from OBS or other software using these details:</h3>
             <div>RTMP full url: <span v-if="fullUrl" class="font-bold">{{ fullUrl }}</span>
               &nbsp;<button v-if="rtmpUri && streamKey" @click="copyFullUrl">
                 <font-awesome-icon v-if="rtmpUri && streamKey" icon="fa-clipboard"
@@ -49,27 +49,27 @@
           </div>
         </div>
 
-        <div class="flex flex-row flex-wrap justify-between">
-          <div class="flex flex-col justify-center border-2 border-green-500 rounded-lg px-2 py-2">
+        <div class="flex flex-row flex-wrap justify-between grow ml-4">
+          <div v-if="!openObsInstructions" class="flex flex-col justify-center border-2 border-green-500 rounded-lg px-2 py-2">
             <div class="flex flex-row">
               <div class="mb-2">
                 <button v-if="!goLiveStore.isRecording" @click="goLiveStore.startRecording"
                         disabled
-                        class="btn text-white bg-green-500 hover:bg-green-700 uppercase"
+                        class="btn btn-sm text-white bg-green-500 hover:bg-green-700 uppercase"
                 >Start Recording
                 </button>
                 <button v-else disabled @click="goLiveStore.stopRecording"
-                        class="btn text-white bg-red-700 hover:bg-red-900 uppercase"
+                        class="btn btn-sm text-white bg-red-700 hover:bg-red-900 uppercase"
                 >Stop Recording
                 </button>
               </div>
               <div class="ml-2">
                 <button v-if="!goLiveStore.isLive" disabled @click="goLiveStore.goLive"
-                        class="btn text-white bg-green-500 hover:bg-green-700 uppercase"
+                        class="btn btn-sm text-white bg-green-500 hover:bg-green-700 uppercase"
                 >Go Live Now
                 </button>
                 <button v-else disabled @click="goLiveStore.stopLive"
-                        class="btn text-white bg-red-700 hover:bg-red-900 uppercase"
+                        class="btn btn-sm text-white bg-red-700 hover:bg-red-900 uppercase"
                 >End Live
                 </button>
 
@@ -77,13 +77,11 @@
             </div>
             <div v-if="!goLiveStore.isRecording || !goLiveStore.isLive"
                  class="text-xs text-green-500 font-semibold tracking-wider text-center">
-              Premium
-              Creator
-              Service
+              Coming Soon!
             </div>
           </div>
 
-          <div class="ml-2">
+          <div class="">
             <div>Live will begin in... &nbsp;</div>
             <!--          <div class="font-semibold">{{ formattedCountdown }} (for demo purposes only)</div>-->
             <div class="countdown font-mono text-2xl">
@@ -101,12 +99,13 @@
 
 
       <div class="flex flex-col justify-center mt-3 h-fit">
-        <div class="text-xs tracking-wider font-semibold mb-1 pl-1">VIDEO STREAM</div>
+        <div class="text-xs tracking-wider font-semibold mb-1 pl-11">LIVE VIDEO STREAM</div>
 
         <div class="flex flex-row flex-wrap">
           <div class="flex flex-col">
+
             <div class="px-10 h-fit w-fit">
-              <button @click="reloadPlayer"
+              <button @click="goLiveStore.reloadPlayer();"
                       class="btn btn-xs w-full"
                       :class="liveOrRecordingGrayButtonClass"
               >Reload Player
@@ -124,36 +123,43 @@
 
 
             </div>
-            <div class="flex flex-row px-10">
+            <div class="flex flex-row px-10 w-full justify-center">
               <div class="mt-2">
                 <button v-if="!videoPlayerStore.muted"
-                        class="btn"
+                        class="btn btn-warning btn-xs"
                         :class="liveOrRecordingGrayButtonClass"
-                        @click="videoPlayerStore.mute">Mute Main Player Audio
+                        @click="videoPlayerStore.mute">
+                  <font-awesome-icon icon="fa-volume-mute" class="mr-1 cursor-pointer hover:text-blue-500"/>
+                  Mute Main Video Audio
                 </button>
                 <button v-else
-                        class="btn"
+                        class="btn btn-neutral text-white btn-xs"
                         @click="videoPlayerStore.unMute"
-                        :class="liveOrRecordingGrayButtonClass">Turn On Main Player Audio
+                        :class="liveOrRecordingGrayButtonClass">
+                  <font-awesome-icon icon="fa-volume-up" class="mr-1 cursor-pointer hover:text-blue-500"/>
+                  Turn On Main Video Audio
                 </button>
               </div>
               <div class="mt-2 ml-2">
                 <button v-if="!videoAuxPlayerStore.muted"
-                        class="btn"
+                        class="btn btn-warning btn-xs"
                         :class="liveOrRecordingGrayButtonClass"
-                        @click="videoAuxPlayerStore.mute">Mute Live Stream
-                  Video
+                        @click="videoAuxPlayerStore.mute">
+                  <font-awesome-icon icon="fa-volume-mute" class="mr-1 cursor-pointer hover:text-blue-500"/>
+                  Mute Live Stream Audio
                 </button>
                 <button v-else
-                        class="btn"
+                        class="btn btn-neutral text-white btn-xs"
                         :class="liveOrRecordingGrayButtonClass"
-                        @click="videoAuxPlayerStore.unMute">Turn On Live Stream Audio
+                        @click="videoAuxPlayerStore.unMute">
+                  <font-awesome-icon icon="fa-volume-up" class="mr-1 cursor-pointer hover:text-blue-500"/>
+                  Turn On Live Stream Audio
                 </button>
               </div>
             </div>
           </div>
 
-          <div v-if="goLiveStore.streamInfo && !goLiveStore.streamInfo.error" class="w-fit"
+          <div v-if="goLiveStore.streamInfo && !goLiveStore.streamInfo.error" class="w-80"
                :key="goLiveStore.selectedShowId">
             <div>
               <h3>Stream Info</h3>
@@ -203,10 +209,10 @@
           <div class="flex flex-row flex-wrap-reverse w-full justify-between">
             <div class="mb-2">
               <button @click="appSettingStore.btnRedirect('/training/how-to-push-to-facebook')"
-                      class="btn bg-blue-500 hover:bg-blue-700 rounded-lg text-white">How To Push To Facebook
+                      class="btn btn-sm bg-blue-500 hover:bg-blue-700 rounded-lg text-white">How To Push To Facebook
               </button>
               <button @click="appSettingStore.btnRedirect('/training/how-to-push-to-rumble')"
-                      class="btn bg-blue-500 hover:bg-blue-700 rounded-lg text-white ml-2 ">How To Push To Rumble
+                      class="btn btn-sm bg-blue-500 hover:bg-blue-700 rounded-lg text-white ml-2 ">How To Push To Rumble
               </button>
             </div>
             <div>
@@ -219,7 +225,7 @@
 
 
           <div class="flex flex-row justify-between">
-            <div><h2 class="text-xl font-bold mb-4">Push Destinations</h2></div>
+            <div><h2 class="text-xl font-bold">Push Destinations</h2></div>
 
           </div>
 
@@ -299,7 +305,7 @@
         class="text-sm font-semibold bg-orange-600 text-white text-center w-full border-2 border-orange-600 rounded uppercase px-6 py-1 ">
       Commercial Breaks
     </div>
-    <div class="shadow bg-orange-100 overflow-hidden border-2 border-orange-600 rounded p-6 space-y-3">
+    <div class="shadow bg-orange-100 overflow-hidden border-2 border-orange-600 rounded py-6 px-10 space-y-3 w-full">
       <div></div>
       <div>Click the <span class="font-bold">Trigger Commercial Break</span> button below to go to commercial.</div>
       <div>You will see a countdown timer until the show resumes. This will be 1-2 minutes.</div>
@@ -384,9 +390,9 @@ const editDestination = async (destination) => {
   }
 }
 
-let videoSource = videoPlayerStore.mistServerUri + 'hls/' + goLiveStore?.selectedShow?.mist_stream_wildcard.name
-    + '/index.m3u8'
-let videoSourceType = 'application/vnd.apple.mpegURL'
+const videoSource = ref(videoPlayerStore.mistServerUri + 'hls/' + goLiveStore?.selectedShow?.mist_stream_wildcard.name
+    + '/index.m3u8')
+const videoSourceType = ref('application/vnd.apple.mpegURL')
 
 // Fetch server info on component mount
 // goLiveStore.fetchStreamInfo(goLiveStore?.selectedShow?.mist_stream_wildcard.name)
@@ -437,23 +443,23 @@ const copyStreamKey = () => {
   setTimeout(() => showCopiedStreamKey.value = false, 1000)
 }
 
-const reloadPlayer = () => {
-  let source = null
-  if (goLiveStore?.selectedShow?.mist_stream_wildcard?.name) {
-    source = goLiveStore?.selectedShow?.mist_stream_wildcard?.name
-    goLiveStore.fetchStreamInfo(goLiveStore?.selectedShow?.mist_stream_wildcard?.name)
-  } else if (goLiveStore?.episode?.mist_stream_wildcard?.name) {
-    source = goLiveStore?.episode?.mist_stream_wildcard?.name
-    goLiveStore.fetchStreamInfo(goLiveStore?.episode?.mist_stream_wildcard?.name)
-  }
-  let sourceUrl = videoPlayerStore.mistServerUri + 'hls/' + source + '/index.m3u8'
-  console.log('source url: ' + sourceUrl)
-  let sourceType = 'application/vnd.apple.mpegurl'
-  let videoJs = videojs('aux-player')
-  videoJs.src({'src': sourceUrl, 'type': sourceType})
-  // videoAuxPlayerStore.loadNewLiveSource(source, sourceType)
-  console.log('reload player')
-}
+// const reloadPlayer = () => {
+//   let source = null
+//   if (goLiveStore?.selectedShow?.mist_stream_wildcard?.name) {
+//     source = goLiveStore?.selectedShow?.mist_stream_wildcard?.name
+//     goLiveStore.fetchStreamInfo(goLiveStore?.selectedShow?.mist_stream_wildcard?.name)
+//   } else if (goLiveStore?.episode?.mist_stream_wildcard?.name) {
+//     source = goLiveStore?.episode?.mist_stream_wildcard?.name
+//     goLiveStore.fetchStreamInfo(goLiveStore?.episode?.mist_stream_wildcard?.name)
+//   }
+//   let sourceUrl = videoPlayerStore.mistServerUri + 'hls/' + source + '/index.m3u8'
+//   console.log('source url: ' + sourceUrl)
+//   let sourceType = 'application/vnd.apple.mpegurl'
+//   let videoJs = videojs('aux-player')
+//   videoJs.src({'src': sourceUrl, 'type': sourceType})
+//   // videoAuxPlayerStore.loadNewLiveSource(source, sourceType)
+//   console.log('reload player')
+// }
 
 // watchEffect(() => {
 //   const mistServerUri = videoPlayerStore.mistServerUri
@@ -465,7 +471,7 @@ const reloadPlayer = () => {
 
 // check push_auto_list and update
 
-onMounted(() => {
+onMounted(async() => {
 
   // Automatically start the countdown or trigger based on an event
   startCountdown()
@@ -474,9 +480,7 @@ onMounted(() => {
   // fetchServerInfo()
 
   // check the push destinations
-  mistStore.getMistStreamPushDestinations(goLiveStore?.selectedShow?.mist_stream_wildcard?.id)
-
-  reloadPlayer()
+  await mistStore.getMistStreamPushDestinations(goLiveStore?.selectedShow?.mist_stream_wildcard?.id)
 
   // check the auto push list
   // mistStore.getMistStreamPushAutoList(goLiveStore?.selectedShow?.mist_stream_wildcard?.id)

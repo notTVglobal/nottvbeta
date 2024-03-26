@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
-// import { useVideoAuxPlayerStore } from '@/Stores/VideoAuxPlayerStore'
+import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
+import videojs from 'video.js'
 
 const initialState = () => ({
     displayEpisodeGoLiveComponent: false,
@@ -60,6 +61,7 @@ export const useGoLiveStore = defineStore('goLiveStore', {
             }
         },
 
+        // Other actions...
         updateAndGetStreamKey() {
             const show = this.shows.find(show => show.id === this.selectedShowId) || null
             const streamKey = show?.mist_stream_wildcard?.name || ' < RELOAD THIS PAGE TO GET YOUR STREAM KEY > '
@@ -70,6 +72,8 @@ export const useGoLiveStore = defineStore('goLiveStore', {
             // Return the stream key for immediate use
             return streamKey
         },
+
+
 
         // async generateStreamKey() {
         //     if (!this.selectedShowId) {
@@ -157,6 +161,28 @@ export const useGoLiveStore = defineStore('goLiveStore', {
         },
         updateEpisode(episode) {
             this.episode = episode
+        },
+        async reloadPlayer() {
+            const videoPlayerStore = useVideoPlayerStore; // Accessing another store
+
+            let source = null;
+            if (this.selectedShow?.mist_stream_wildcard?.name) {
+                source = this.selectedShow?.mist_stream_wildcard?.name;
+                await this.fetchStreamInfo(this.selectedShow?.mist_stream_wildcard?.name);
+            } else if (this.episode?.mist_stream_wildcard?.name) {
+                source = this.episode?.mist_stream_wildcard?.name;
+                await this.fetchStreamInfo(this.episode?.mist_stream_wildcard?.name);
+            }
+
+            let sourceUrl = videoPlayerStore.mistServerUri + 'hls/' + source + '/index.m3u8';
+            console.log('source url: ' + sourceUrl);
+            let sourceType = 'application/vnd.apple.mpegurl';
+
+            let videoJs = videojs('aux-player');
+            videoJs.src({'src': sourceUrl, 'type': sourceType});
+            // You might have other logic here as needed
+
+            console.log('reload player');
         },
     },
     getters: {

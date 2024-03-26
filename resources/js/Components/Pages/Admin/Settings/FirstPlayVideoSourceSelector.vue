@@ -3,7 +3,7 @@
     <form class="px-4 pb-4" @submit.prevent="submit">
       <h2 class="text-2xl font-bold mb-4">First Play Video Source</h2>
       <button @click.prevent="clearFirstPlayCacheData"
-              class="hidden btn btn-warning btn-sm mb-4">
+              class="btn btn-warning btn-sm mb-4">
         Clear First Play Data Cache
       </button>
       <!-- Toggle -->

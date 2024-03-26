@@ -31,15 +31,15 @@
         <!--                    </div>-->
         <!--                </div>-->
       </div>
-      <div v-if="goLiveStore.shows && goLiveStore.shows.length > 0" class="mb-6 mx-4 px-6 w-full">
-        <label class="block mb-2 uppercase font-bold text-xs text-light text-primary"
+      <div v-if="goLiveStore.shows && goLiveStore.shows.length > 0" class="mb-6 px-6 w-full">
+        <label class="block mb-2 uppercase font-bold text-xs text-light text-neutral"
                for="show"
         >
           Select Show To Go Live On
         </label>
 
         <select
-            class="select select-primary select-lg w-full p-2 block my-2 uppercase font-bold text-lg"
+            class="select select-info select-lg w-full p-2 block my-2 uppercase font-bold text-lg"
             v-model="goLiveStore.selectedShowId"
             @change="reloadPlayer"
         >
@@ -138,10 +138,10 @@ const generateStreamKeyError = ref('')
 //   console.log('reload player')
 // }
 
-const onChangeShow = (event) => {
+const onChangeShow = async (event) => {
   goLiveStore.setSelectedShowId(event);
-  goLiveStore.fetchStreamInfo(goLiveStore?.selectedShow?.mist_stream_wildcard?.name);
-  // reloadPlayer()
+  await goLiveStore.fetchStreamInfo(goLiveStore?.selectedShow?.mist_stream_wildcard?.name);
+  await goLiveStore.reloadPlayer();
   // videoAuxPlayerStore.loadNewVideo(goLiveStore.selectedShow.mist)
 };
 
@@ -155,7 +155,7 @@ const handleGenerateStreamKey = async () => {
     await goLiveStore.generateStreamKey();
     // Optional: Perform any additional actions after the key has been generated
     await goLiveStore.fetchStreamInfo(goLiveStore?.selectedShow?.mist_stream_wildcard?.name);
-    reloadPlayer()
+    await goLiveStore.reloadPlayer();
   } catch (error) {
     // Check if the error is from Axios and has a response object
     let displayError = 'Failed to generate stream key: ';

@@ -17,6 +17,7 @@ class Recording extends Model {
       'start_time',
       'end_time',
       'bytes_recorded',
+      'seconds_spent_recording',
       'total_milliseconds_recorded',
       'milliseconds_first_packet',
       'milliseconds_last_packet',
@@ -35,8 +36,9 @@ class Recording extends Model {
 
   // Cast attributes to appropriate data types (optional)
   protected $casts = [
-      'total_milliseconds_recorded' => 'integer',
       'bytes_recorded' => 'integer',
+      'seconds_spent_recording' => 'integer',
+      'total_milliseconds_recorded' => 'integer',
       'milliseconds_first_packet' => 'integer',
       'milliseconds_last_packet' => 'integer',
     // any other fields you wish to cast

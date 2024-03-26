@@ -206,6 +206,7 @@ class AdminController extends Controller {
     ];
 
     $jsonFilePath = 'json/firstPlayData.json';
+    Cache::forget('firstPlayData');
     Storage::disk('local')->put($jsonFilePath, json_encode($cacheDataToUpdate, JSON_PRETTY_PRINT));
 
     // Return a success response

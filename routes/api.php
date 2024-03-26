@@ -60,11 +60,11 @@ Route::post('/mist-trigger/push-out-start', [MistTriggerController::class, 'hand
 Route::post('/mist-trigger/push-end', [MistTriggerController::class, 'handlePushEnd']);
 
 // this api endpoint was built for testing purposes.
-Route::post('/mist-trigger/trigger', [MistTriggerController::class, 'handleTrigger']);
+//Route::post('/mist-trigger/trigger', [MistTriggerController::class, 'handleTrigger']);
 
 Route::post('/mist-trigger/log', [MistTriggerController::class, 'logTrigger']);
-Route::post('/mist-trigger/mist-push-handler', [MistTriggerController::class, 'handleMistPush']);
-Route::post('/mist-trigger/recording-stop', [MistTriggerController::class, 'handleRecordingEnd']);
+//Route::post('/mist-trigger/mist-push-handler', [MistTriggerController::class, 'handleMistPush']);
+Route::post('/mist-trigger/recording-end', [MistTriggerController::class, 'handleRecordingEnd']);
 
 Route::get('/news-countries-simple-list', [NewsController::class, 'getNewsCountriesSimpleList'])->name('news.countries.simpleList');
 
