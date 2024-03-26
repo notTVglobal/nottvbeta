@@ -1,10 +1,9 @@
-import { defineStore } from "pinia"
-import { useUserStore } from "@/Stores/UserStore"
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
-import { useAppSettingStore } from "@/Stores/AppSettingStore"
+import { defineStore } from 'pinia'
+import { useUserStore } from '@/Stores/UserStore'
+import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
 // const appSettingStore = useAppSettingStore()
-import { useNowPlayingStore } from "@/Stores/NowPlayingStore"
-import { useNotificationStore } from "@/Stores/NotificationStore"
+import { useNowPlayingStore } from '@/Stores/NowPlayingStore'
+import { useNotificationStore } from '@/Stores/NotificationStore'
 
 const initialState = () => ({
     currentChannelId: 0,
@@ -294,6 +293,16 @@ export const useChannelStore = defineStore('channelStore', {
         //             console.log(error);
         //         })
         // },
+    },
+    getters: {
+        activeChannels: (state) => {
+            // Assuming channel_list is an object; convert it to an array first
+            const channelsArray = Object.values(state.channel_list);
+
+            // Filter channels that are active
+            // Return the filtered list of active channels
+            return channelsArray.filter(channel => channel.active === true);
+        }
     },
 
 });

@@ -13,7 +13,12 @@ class Channel extends Model {
       'channel_external_source_id',
       'channel_playlist_id',
       'mist_stream_id',
-      'playback_priority_type'
+      'playback_priority_type',
+      'active'
+  ];
+
+  protected $casts = [
+      'active' => 'boolean',
   ];
 
   public function messages() {

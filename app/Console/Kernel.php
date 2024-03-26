@@ -25,9 +25,6 @@ class Kernel extends ConsoleKernel {
 
     $schedule->job(new CheckSubscriptionStatuses, 'default')->daily();
     $schedule->command('expire:inviteCodes')->daily();
-
-
-
   }
 
   /**

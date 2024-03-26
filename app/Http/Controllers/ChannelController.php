@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Request;
 use App\Models\Channel;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class ChannelController extends Controller
 {
@@ -18,7 +19,7 @@ class ChannelController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Inertia\Response
+     * @return void
      */
     public function index()
     {
@@ -33,8 +34,7 @@ class ChannelController extends Controller
   }
 
 
-  public function setPlaybackPriorityType(Channel $channel, HttpRequest $request)
-  {
+  public function setPlaybackPriorityType(Channel $channel, HttpRequest $request): \Illuminate\Http\JsonResponse {
     //
     $validatedData = $request->validate([
 //        'channelId' => 'unique:teams|required|max:255',
@@ -57,8 +57,7 @@ class ChannelController extends Controller
 
   }
 
-  public function setMistStream(Channel $channel, HttpRequest $request)
-  {
+  public function setMistStream(Channel $channel, HttpRequest $request): \Illuminate\Http\JsonResponse {
     $validatedData = $request->validate([
         'mistStreamId' => 'required|nullable|string',
     ]);
@@ -75,8 +74,7 @@ class ChannelController extends Controller
     ]);
   }
 
-  public function setChannelPlaylist(Channel $channel, HttpRequest $request)
-  {
+  public function setChannelPlaylist(Channel $channel, HttpRequest $request): \Illuminate\Http\JsonResponse {
     $validatedData = $request->validate([
         'channelPlaylistId' => 'required|nullable|integer',
     ]);
@@ -93,8 +91,7 @@ class ChannelController extends Controller
     ]);
   }
 
-  public function setExternalSource(Channel $channel, HttpRequest $request)
-  {
+  public function setExternalSource(Channel $channel, HttpRequest $request): \Illuminate\Http\JsonResponse {
     $validatedData = $request->validate([
         'externalSourceId' => 'required|nullable|integer',
     ]);
@@ -107,6 +104,29 @@ class ChannelController extends Controller
     return response()->json([
         'success' => true,
         'message' => 'Channel ' . $channel->id . ' Channel External Source Successfully Changed',
+        'channel' => $channel,
+    ]);
+  }
+
+  public function toggleChannelActive(Channel $channel): \Illuminate\Http\JsonResponse {
+    // Toggle the 'active' status
+    $channel->active = !$channel->active;
+    $channel->save();
+
+    // Determine the message and status based on the new 'active' state
+    if ($channel->active) {
+      $message = 'Channel ' . $channel->id . ' has been activated.';
+      $status = 'success';
+    } else {
+      $message = 'Channel ' . $channel->id . ' has been deactivated.';
+      $status = 'warning';
+    }
+
+    // Return a JSON response with dynamic message and status
+    return response()->json([
+        'success' => true,
+        'message' => $message,
+        'status' => $status, // Include the status in the response
         'channel' => $channel,
     ]);
   }

@@ -126,22 +126,22 @@ onMounted(async () => {
 const generateStreamKeyProcessing = ref(false)
 const generateStreamKeyError = ref('')
 
-const reloadPlayer = () => {
-  let source = goLiveStore?.selectedShow?.mist_stream_wildcard?.name
-  let sourceUrl = videoAuxPlayerStore.mistServerUri + 'hls/' + source + '/index.m3u8'
-  console.log('source url: ' + sourceUrl)
-  let sourceType = 'application/vnd.apple.mpegurl'
-  let videoJs = videojs('aux-player')
-  videoJs.src({'src': sourceUrl, 'type': sourceType})
-  // videoAuxPlayerStore.loadNewLiveSource(source, sourceType)
-  goLiveStore.fetchStreamInfo(goLiveStore?.selectedShow?.mist_stream_wildcard?.name);
-  console.log('reload player')
-}
+// const reloadPlayer = () => {
+//   let source = goLiveStore?.selectedShow?.mist_stream_wildcard?.name
+//   let sourceUrl = videoAuxPlayerStore.mistServerUri + 'hls/' + source + '/index.m3u8'
+//   console.log('source url: ' + sourceUrl)
+//   let sourceType = 'application/vnd.apple.mpegurl'
+//   let videoJs = videojs('aux-player')
+//   videoJs.src({'src': sourceUrl, 'type': sourceType})
+//   // videoAuxPlayerStore.loadNewLiveSource(source, sourceType)
+//   goLiveStore.fetchStreamInfo(goLiveStore?.selectedShow?.mist_stream_wildcard?.name);
+//   console.log('reload player')
+// }
 
 const onChangeShow = (event) => {
   goLiveStore.setSelectedShowId(event);
   goLiveStore.fetchStreamInfo(goLiveStore?.selectedShow?.mist_stream_wildcard?.name);
-  reloadPlayer()
+  // reloadPlayer()
   // videoAuxPlayerStore.loadNewVideo(goLiveStore.selectedShow.mist)
 };
 

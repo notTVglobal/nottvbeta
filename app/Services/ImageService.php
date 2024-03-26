@@ -9,7 +9,7 @@ use App\Models\Image;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 
-class   ImageService
+class ImageService
 {
 
   ////////////// STORE IMAGE
@@ -65,7 +65,7 @@ class   ImageService
         'cloud_folder' => $cloud_folder,
         'storage_location' => 'do_spaces',
     ]);
-    Log::info("Successfully downloaded image for archived news rss item from URL: {$imageUrl}");
+//    Log::debug("Successfully downloaded image for archived news rss item from URL: {$imageUrl}");
     return $image->id;
   }
 }

@@ -6,10 +6,12 @@ let props = defineProps({
     active: Boolean,
     href: String,
     as: String,
+    dark: false,
 });
 
-const baseClasses = 'block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition';
-const activeClasses = computed(() => props.active ? 'bg-gray-100' : '');
+const baseClasses = 'block px-4 py-2 text-sm leading-5 focus:outline-none transition';
+const activeClasses = computed(() => props.active ? 'bg-indigo-200 text-gray-700' : '');
+const darkClasses = computed(() => props.dark ? 'text-gray-50 hover:bg-gray-200 hover:text-gray-700 focus:bg-gray-100 focus:text-gray-700' : 'text-gray-700 hover:bg-gray-200 hover:text-gray-700 focus:bg-gray-100')
 </script>
 
 <template>
@@ -17,7 +19,7 @@ const activeClasses = computed(() => props.active ? 'bg-gray-100' : '');
     <button
         v-if="as === 'button'"
         type="submit"
-        :class="[baseClasses, activeClasses]"
+        :class="[baseClasses, activeClasses, darkClasses]"
     >
       <slot />
     </button>
@@ -25,7 +27,7 @@ const activeClasses = computed(() => props.active ? 'bg-gray-100' : '');
     <a
         v-else-if="as === 'a'"
         :href="href"
-        :class="[baseClasses, activeClasses]"
+        :class="[baseClasses, activeClasses, darkClasses]"
     >
       <slot />
     </a>
@@ -33,7 +35,7 @@ const activeClasses = computed(() => props.active ? 'bg-gray-100' : '');
     <Link
         v-else
         :href="href"
-        :class="[baseClasses, activeClasses]"
+        :class="[baseClasses, activeClasses, darkClasses]"
     >
       <slot />
     </Link>

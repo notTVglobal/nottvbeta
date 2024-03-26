@@ -146,7 +146,7 @@
 
                     <div class="text-xs text-gray-800 py-2 ml-4">Hello, {{ $page.props.user.name }}</div>
 
-                    <div class="pt-2 pb-3">
+                    <div class="pt-2">
 
                       <JetDropdownLink
                           v-if="userStore.isCreator"
@@ -206,6 +206,14 @@
                         Video Upload
                       </JetDropdownLink>
 
+                      <!-- Authentication -->
+                      <form @submit.prevent="logout">
+
+                        <JetDropdownLink as="button">
+                          Log Out
+                        </JetDropdownLink>
+                      </form>
+
                       <!--                                        &lt;!&ndash; Creator Only Links &ndash;&gt;-->
                       <!--                                        <div v-if="userStore.isCreator">-->
                       <!--                                            <div class="border-t border-1 mt-3 border-gray-300 block px-4 py-2 text-xs text-gray-400">-->
@@ -215,61 +223,59 @@
                       <!--                                        </div>-->
 
                       <!-- Admin Only Links -->
-                      <div v-if="userStore.isAdmin">
-                        <div class="border-t border-1 mt-3 border-gray-300 block px-4 py-2 text-xs text-gray-400">
+                      <div v-if="userStore.isAdmin" class="border-t border-b border-gray-300 bg-gray-700">
+                        <div class="border-b border-1 border-gray-300 block px-4 py-2 text-xs text-gray-50 bg-gray-900">
                           Admin Only Links
                         </div>
 
                         <JetDropdownLink
                             @click.prevent="videoPlayerStore.makeVideoTopRight()"
                             :href="route('admin.settings')"
-                            :active="appSettingStore.currentPage === 'admin.settings'">
+                            :active="appSettingStore.currentPage === 'admin.settings'"
+                            :dark="true">
                           Admin Settings
                         </JetDropdownLink>
 
                         <JetDropdownLink
                             @click.prevent="videoPlayerStore.makeVideoTopRight()"
                             :href="route('admin.schedule')"
-                            :active="appSettingStore.currentPage === 'admin.schedule'">
+                            :active="appSettingStore.currentPage === 'admin.schedule'"
+                            :dark="true">
                           Schedule
                         </JetDropdownLink>
 
                         <JetDropdownLink
                             @click.prevent="videoPlayerStore.makeVideoTopRight()"
                             :href="route('admin.channels')"
-                            :active="appSettingStore.currentPage === 'admin.channels'">
+                            :active="appSettingStore.currentPage === 'admin.channels'"
+                            :dark="true">
                           Channels
                         </JetDropdownLink>
 
                         <JetDropdownLink
                             @click.prevent="videoPlayerStore.makeVideoTopRight()"
                             :href="route('calculations')"
-                            :active="appSettingStore.currentPage === 'calculations'">
+                            :active="appSettingStore.currentPage === 'calculations'"
+                            :dark="true">
                           Calculations
                         </JetDropdownLink>
 
                         <JetDropdownLink
                             @click.prevent="videoPlayerStore.makeVideoTopRight()"
                             :href="route('mistServerApi')"
-                            :active="appSettingStore.currentPage === 'mistServerApi'">
+                            :active="appSettingStore.currentPage === 'mistServerApi'"
+                            :dark="true">
                           MistServer API
                         </JetDropdownLink>
 
                       </div>
-                      <!-- Authentication -->
-                      <form @submit.prevent="logout">
-
-                        <JetDropdownLink as="button">
-                          Log Out
-                        </JetDropdownLink>
-                      </form>
 
                     </div>
                     <div class="border-t border-gray-100">
 
                     </div>
 
-                    <div class="grid grid-col-1 w-full text-gray-400 text-sm py-2">
+                    <div class="grid grid-col-1 w-full text-gray-500 text-sm py-2">
                       <AppVersion/>
                     </div>
 
