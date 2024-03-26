@@ -30,9 +30,9 @@ export const useChannelStore = defineStore('channelStore', {
             // Reset the store to its original state (clear all data)
             Object.assign(this, initialState())
         },
-        getChannels() {
+        async getChannels() {
             if (!this.channelsLoaded){
-                axios.get('/api/channels_list')
+                await axios.get('/api/channels_list')
                     .then(response => {
                         this.channel_list = response.data;
                         this.channelsLoaded = true; // removing this flag until we have a Laravel Echo for getting updates.

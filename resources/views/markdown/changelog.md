@@ -1,7 +1,18 @@
 # not.tv Changelog
 
-Last Update: March 25, 2024\
+Last Update: March 26, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.8.7.20
+March 26, 2024
+* Change Channel Footer message.
+* Create a FirstPlaySourceSelector component in Admin/Settings.
+  * Toggle between a custom video source or a channel as the first play source.
+* Modify the First Play Json File (cache) and add FirstPlaySettings Json column to the AppSettings table.
+* Added Toast Notifications
+  * Timeout defaults to 3 seconds and the notification will fade out.
+  * Set ('message', 'status', 'customTimeoutValue')
+  * Status: success, error, info, warning
 
 ## v0.8.7.19
 March 25, 2024

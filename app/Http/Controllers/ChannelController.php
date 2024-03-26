@@ -4,10 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\NewsStory;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Facades\Request;
 use App\Models\Channel;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -34,7 +38,7 @@ class ChannelController extends Controller
   }
 
 
-  public function setPlaybackPriorityType(Channel $channel, HttpRequest $request): \Illuminate\Http\JsonResponse {
+  public function setPlaybackPriorityType(Channel $channel, HttpRequest $request): JsonResponse {
     //
     $validatedData = $request->validate([
 //        'channelId' => 'unique:teams|required|max:255',
@@ -57,7 +61,7 @@ class ChannelController extends Controller
 
   }
 
-  public function setMistStream(Channel $channel, HttpRequest $request): \Illuminate\Http\JsonResponse {
+  public function setMistStream(Channel $channel, HttpRequest $request): JsonResponse {
     $validatedData = $request->validate([
         'mistStreamId' => 'required|nullable|string',
     ]);
@@ -74,7 +78,7 @@ class ChannelController extends Controller
     ]);
   }
 
-  public function setChannelPlaylist(Channel $channel, HttpRequest $request): \Illuminate\Http\JsonResponse {
+  public function setChannelPlaylist(Channel $channel, HttpRequest $request): JsonResponse {
     $validatedData = $request->validate([
         'channelPlaylistId' => 'required|nullable|integer',
     ]);
@@ -91,7 +95,7 @@ class ChannelController extends Controller
     ]);
   }
 
-  public function setExternalSource(Channel $channel, HttpRequest $request): \Illuminate\Http\JsonResponse {
+  public function setExternalSource(Channel $channel, HttpRequest $request): JsonResponse {
     $validatedData = $request->validate([
         'externalSourceId' => 'required|nullable|integer',
     ]);
@@ -108,7 +112,7 @@ class ChannelController extends Controller
     ]);
   }
 
-  public function toggleChannelActive(Channel $channel): \Illuminate\Http\JsonResponse {
+  public function toggleChannelActive(Channel $channel): JsonResponse {
     // Toggle the 'active' status
     $channel->active = !$channel->active;
     $channel->save();
@@ -142,15 +146,46 @@ class ChannelController extends Controller
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
+  /**
+   * Store a newly created resource in storage.
+   *
+   * @param HttpRequest $request
+   * @return JsonResponse
+   * @throws ValidationException
+   */
+    public function store(HttpRequest $request): JsonResponse {
+      $validator = Validator::make($request->all(), [
+          'name' => 'unique:channels|required|string|max:255'
+        ]);
+      // Check if validation fails, including both the custom check and the standard validation rules
+      if ($validator->fails()) {
+        // Use the validator's failed validation response
+        $message = $validator;
+        $status = 'error';
+        // Return a JSON response with dynamic message and status
+        return response()->json([
+            'success' => false,
+            'message' => $message,
+            'status' => $status, // Include the status in the response
+        ]);
+      }
+      // Validation passes, extract validated data
+      $validatedData = $validator->validated();
+      $channel = new Channel;
+
+      $channel->name = $validatedData['name'];
+
+      $channel->save();
+
+      $message = 'Channel ' . $channel->name . ' has been created.';
+      $status = 'success';
+      // Return a JSON response with dynamic message and status
+      return response()->json([
+          'success' => true,
+          'message' => $message,
+          'status' => $status, // Include the status in the response
+      ]);
+
     }
 
     /**
@@ -178,13 +213,47 @@ class ChannelController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param HttpRequest $request
+     * @param  Channel $channel
+     * @return JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update(HttpRequest $request, Channel $channel)
     {
-        //
+      $validator = Validator::make($request->all(), [
+        // Assume $channel is the model instance being updated
+          'name' => [
+              'required',
+              'string',
+              'max:255',
+              Rule::unique('channels')->ignore($channel->id),
+          ],
+      ]);
+      // Check if validation fails, including both the custom check and the standard validation rules
+      if ($validator->fails()) {
+        // Use the validator's failed validation response
+        $message = $validator;
+        $status = 'error';
+        // Return a JSON response with dynamic message and status
+        return response()->json([
+            'success' => false,
+            'message' => $message,
+            'status' => $status, // Include the status in the response
+        ]);
+      }
+      // Validation passes, extract validated data
+      $validatedData = $validator->validated();
+
+      $channel->name = $validatedData['name'];
+      $channel->save();
+
+      $message = 'Channel ' . $channel->name . ' has been updated.';
+      $status = 'success';
+      // Return a JSON response with dynamic message and status
+      return response()->json([
+          'success' => true,
+          'message' => $message,
+          'status' => $status, // Include the status in the response
+      ]);
     }
 
     /**

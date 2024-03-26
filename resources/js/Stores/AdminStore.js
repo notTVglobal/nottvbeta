@@ -17,7 +17,9 @@ const initialState = () => ({
     sourceSelector: {
         source: null,
         sourceType: null
-    }
+    },
+    firstPlaySettings: {},
+    validationErrors: {},
 })
 
 export const useAdminStore = defineStore('adminStore', {
@@ -51,6 +53,68 @@ export const useAdminStore = defineStore('adminStore', {
             } catch (error) {
                 console.error(error);
                 notificationStore.setToastNotification('Failed to toggle channel status.', 'error');
+            }
+        },
+        async addChannel(name) {
+            const notificationStore = useNotificationStore();
+            try {
+                const response = await axios.post('/admin/channels/add', {'name': name});
+
+                if (response.data.success) {
+                    // Operation was a success
+                    await this.fetchChannels();
+                    notificationStore.setToastNotification(response.data.message, 'success');
+                } else {
+                    // Handle logical errors even when the HTTP response was OK
+                    // Assuming 'status' and 'message' are part of the error response
+                    const { message, status } = response.data;
+                    let errorMessage = 'Failed to add channel due to a server error.';
+
+                    if (status === 'error' && message && message.fallbackMessages) {
+                        // Construct a more detailed error message based on validation feedback
+                        const validationMessages = Object.values(message.fallbackMessages)
+                            .map(msgs => msgs.join(' ')) // Join messages if there are multiple for one field
+                            .join('; '); // Separate field messages with semicolons
+
+                        errorMessage = validationMessages || errorMessage;
+                    }
+
+                    notificationStore.setToastNotification(errorMessage, 'error');
+                }
+            } catch (error) {
+                console.error(error);
+                notificationStore.setToastNotification('Failed to add channel due to a network or server error.', 'error');
+            }
+        },
+        async updateChannel(channelId, newName) {
+            const notificationStore = useNotificationStore();
+            try {
+                const response = await axios.post(`/admin/channels/${channelId}`, {'name': newName});
+
+                if (response.data.success) {
+                    // Operation was a success
+                    await this.fetchChannels();
+                    notificationStore.setToastNotification(response.data.message, 'success');
+                } else {
+                    // Handle logical errors even when the HTTP response was OK
+                    // Assuming 'status' and 'message' are part of the error response
+                    const { message, status } = response.data;
+                    let errorMessage = 'Failed to add channel due to a server error.';
+
+                    if (status === 'error' && message && message.fallbackMessages) {
+                        // Construct a more detailed error message based on validation feedback
+                        const validationMessages = Object.values(message.fallbackMessages)
+                            .map(msgs => msgs.join(' ')) // Join messages if there are multiple for one field
+                            .join('; '); // Separate field messages with semicolons
+
+                        errorMessage = validationMessages || errorMessage;
+                    }
+
+                    notificationStore.setToastNotification(errorMessage, 'error');
+                }
+            } catch (error) {
+                console.error(error);
+                notificationStore.setToastNotification('Failed to add channel due to a network or server error.', 'error');
             }
         },
         setSelectedChannel(item) {
@@ -207,6 +271,86 @@ export const useAdminStore = defineStore('adminStore', {
         },
         setChannelsPage(page) {
             this.currentChannelsPage = page
+        },
+        ////// FIRST PLAY SETTINGS
+        /////////////////////////// admin/update-first-play-settings
+        async fetchFirstPlaySettings() {
+            const notificationStore = useNotificationStore();
+            try {
+                const response = await axios.post(`/admin/fetch-first-play-settings`);
+                if (response.data.success) {
+                    // Operation was a success
+                    this.firstPlaySettings = response.data.firstPlaySettings
+                    notificationStore.setToastNotification(response.data.message, 'success', 1500);
+                } else {
+                    // Handle logical errors even when the HTTP response was OK
+                    // Assuming 'status' and 'message' are part of the error response
+                    const { message, status } = response.data;
+                    let errorMessage = 'Failed to fetch First Play Settings due to a server error.';
+
+                    if (status === 'error' && message && message.fallbackMessages) {
+                        // Construct a more detailed error message based on validation feedback
+                        const validationMessages = Object.values(message.fallbackMessages)
+                            .map(msgs => msgs.join(' ')) // Join messages if there are multiple for one field
+                            .join('; '); // Separate field messages with semicolons
+
+                        errorMessage = validationMessages || errorMessage;
+                    }
+
+                    notificationStore.setToastNotification(errorMessage, 'error');
+                }
+            } catch (error) {
+                console.error(error);
+                notificationStore.setToastNotification('Failed to fetch First Play Settings due to a network or server error.', 'error');
+            }
+        },
+        async updateFirstPlaySettings() {
+            const notificationStore = useNotificationStore();
+
+            try {
+                const response = await axios.patch('/admin/update-first-play-settings', this.firstPlaySettings);
+
+                if (!response.data.success) {
+                    // This block might not be necessary if your server correctly uses HTTP status codes for errors
+                    this.validationErrors = response.data.errors || {};
+                    notificationStore.setToastNotification(response.data.message, 'error');
+                    return; // Exit early since we've handled the error case
+                }
+
+                // Operation was a success
+                this.firstPlaySettings = response.data.firstPlaySettings;
+                this.validationErrors = {}; // Clear any existing validation errors
+                notificationStore.setToastNotification(response.data.message, 'success', 1500);
+            } catch (error) {
+                // Properly handle the error response
+                if (error.response && error.response.data) {
+                    // Server responded with a non-2xx status code
+                    console.log("Error response data:", error.response.data);
+                    this.validationErrors = error.response.data.errors || {};
+                    const errorMessage = error.response.data.message || 'Failed to save First Play Settings due to a network or server error.';
+                    notificationStore.setToastNotification(errorMessage, 'error');
+                } else {
+                    // The request was made but no response was received or other errors occurred
+                    notificationStore.setToastNotification('Failed to save First Play Settings due to a network or server error.', 'error');
+                }
+            }
+        },
+        handleErrors(data) {
+            const notificationStore = useNotificationStore();
+            let errorMessage = 'Failed to save First Play Settings due to a server error.';
+
+            if (data.status === 'error') {
+                if (data.errors) {
+                    // Directly use the validation errors from the server response
+                    this.validationErrors = data.errors;
+                    errorMessage = "Please check your input.";
+                } else if (data.message) {
+                    // Use the message provided by the server as the error message
+                    errorMessage = data.message;
+                }
+
+                notificationStore.setToastNotification(errorMessage, 'error');
+            }
         },
     },
 

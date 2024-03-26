@@ -333,13 +333,15 @@ Route::middleware([
       ->name('admin.channels');
 
   Route::get('/api/channels_list', [ChannelApiController::class, 'index']);
-  Route::get('/admin/channels/search/{type}', [ChannelController::class, 'search']);
-  Route::post('/admin/channels/{channel}/{type}/update', [ChannelController::class, 'updateType']);
-  Route::post('/admin/channels/{channel}/setPlaybackPriorityType', [ChannelController::class, 'setPlaybackPriorityType']);
-  Route::post('/admin/channels/{channel}/setMistStream', [ChannelController::class, 'setMistStream']);
-  Route::post('/admin/channels/{channel}/setChannelPlaylist', [ChannelController::class, 'setChannelPlaylist']);
-  Route::post('/admin/channels/{channel}/setExternalSource', [ChannelController::class, 'setExternalSource']);
-  Route::post('/admin/channels/{channel}/toggleChannelActive', [ChannelController::class, 'toggleChannelActive']);
+  Route::get('/admin/channels/search/{type}', [ChannelController::class, 'search'])->can('viewAdmin', 'App\Models\User');
+  Route::post('/admin/channels/add', [ChannelController::class, 'store'])->can('viewAdmin', 'App\Models\User');
+  Route::post('/admin/channels/{channel}', [ChannelController::class, 'update'])->can('viewAdmin', 'App\Models\User');
+  Route::post('/admin/channels/{channel}/{type}/update', [ChannelController::class, 'updateType'])->can('viewAdmin', 'App\Models\User');
+  Route::post('/admin/channels/{channel}/setPlaybackPriorityType', [ChannelController::class, 'setPlaybackPriorityType'])->can('viewAdmin', 'App\Models\User');
+  Route::post('/admin/channels/{channel}/setMistStream', [ChannelController::class, 'setMistStream'])->can('viewAdmin', 'App\Models\User');
+  Route::post('/admin/channels/{channel}/setChannelPlaylist', [ChannelController::class, 'setChannelPlaylist'])->can('viewAdmin', 'App\Models\User');
+  Route::post('/admin/channels/{channel}/setExternalSource', [ChannelController::class, 'setExternalSource'])->can('viewAdmin', 'App\Models\User');
+  Route::post('/admin/channels/{channel}/toggleChannelActive', [ChannelController::class, 'toggleChannelActive'])->can('viewAdmin', 'App\Models\User');
 
 
   // Schedule
@@ -579,10 +581,21 @@ Route::middleware([
       ->can('viewAdmin', 'App\Models\User')
       ->name('admin.saveSettings');
 
+  //// FIRST PLAY SETTINGS
+
+  Route::post('/admin/fetch-first-play-settings', [AdminController::class, 'fetchFirstPlaySettings'])
+      ->can('viewAdmin', 'App\Models\User')
+      ->name('admin.fetchFirstPlaySettings');
+
+  Route::patch('/admin/update-first-play-settings', [AdminController::class, 'updateFirstPlaySettings'])
+      ->can('viewAdmin', 'App\Models\User')
+      ->name('admin.updateFirstPlaySettings');
+
   Route::post('/admin/clear-first-play-data-cache',
       [AdminController::class, 'clearFirstPlayDataCache'])
       ->can('viewAdmin', 'App\Models\User')
       ->name('admin.clear-first-play-data-cache');
+
 
   //// ADMIN - SECURE NOTES
   Route::get('/admin/secure-notes',

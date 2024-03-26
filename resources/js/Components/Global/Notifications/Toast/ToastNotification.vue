@@ -1,6 +1,6 @@
 <template>
   <transition name="fade">
-    <div v-if="notificationStore.toastNotificationVisible" class="toast toast-start">
+    <div v-if="notificationStore.toastNotificationVisible" class="toast toast-start specialZindex">
       <div :class="messageClass">
         <span>{{ notificationStore.toastNotificationMessage }}</span>
       </div>
@@ -32,6 +32,9 @@ watch(() => notificationStore.toastNotificationVisible, (newValue) => {
 </script>
 
 <style>
+.specialZindex {
+  z-index: 9000
+}
 .fade-enter-active, .fade-leave-active {
   transition: opacity 0.5s;
 }

@@ -11488,6 +11488,10 @@ hr {
   opacity: 0.25;
 }
 
+.disabled\:opacity-50:disabled {
+  opacity: 0.5;
+}
+
 .disabled\:hover\:bg-gray-200:hover:disabled {
   --tw-bg-opacity: 1;
   background-color: rgb(229 231 235 / var(--tw-bg-opacity));

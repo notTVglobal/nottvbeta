@@ -6,6 +6,7 @@
   </div>
 
   <div v-else>
+
     <div :class="appSettingStore.pageBgColor"
           class="fixed top-0 left-0 right-0 bottom-0 text-gray-200 vh-100 vw-100 overflow-hidden overscroll-y-none overscroll-x-none hide-scrollbar">
     <!-- Navbar for logged in user -->
@@ -22,7 +23,6 @@
 
     <!-- Page Content -->
     <!--        <div v-show="!userStore.hidePage" :class="layoutClass">-->
-
       <div v-show="!appSettingStore.pageIsHidden" :class="[layoutClass, scrollbarClass]">
         <slot/>
       </div>
@@ -34,6 +34,7 @@
       <DialogNotification v-if="user"/>
       <GeneralServiceNotification v-if="user" />
       <OrangeFeedbackBox v-if="user && !appSettingStore.showNavDropdown"/>
+      <ToastNotification />
     </div>
   </div>
 </template>
@@ -64,6 +65,7 @@ const Login = defineAsyncComponent(() =>
 import VideoPlayerMain from "@/Components/Global/VideoPlayer/VideoPlayerMain"
 import GeneralServiceNotification from '@/Components/Global/Modals/GeneralServiceNotification.vue'
 import OrangeFeedbackBox from '@/Components/Global/Feedback/OrangeFeedbackBox.vue'
+import ToastNotification from '@/Components/Global/Notifications/Toast/ToastNotification.vue'
 
 const appSettingStore = useAppSettingStore();
 const videoPlayerStore = useVideoPlayerStore()
