@@ -3,6 +3,10 @@
 Last Update: March 26, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.7.24
+March 26, 2024
+* Add back in the Cache::forget(key) for First Play settings.
+
 ## v0.8.7.23
 March 26, 2024
 * Overhaul the MistTriggerController.

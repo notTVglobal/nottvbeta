@@ -89,18 +89,24 @@ class HandleInertiaRequests extends Middleware {
 
 // Define a fallback data array
     $fallbackData = [
-        'first_play_video_source'      => 'https://mist.not.tv/hls/test2/index.m3u8?tkn=1151458905',
+        'first_play_video_source'      => 'https:\/\/mist.nottv.io\/hls\/test\/index.m3u8',
         'first_play_video_source_type' => 'application/x-mpegURL',
         'first_play_video_name'        => 'Test Pattern Default',
-        'first_play_channel_id'        => '',
+        'first_play_channel_id'        => 1,
+        'use_custom_video'             => false,
+        'custom_video_source'          => 'https:\/\/mist.nottv.io\/hls\/test\/index.m3u8',
+        'custom_video_source_type'     => 'application\/x-mpegURL',
+        'custom_video_name'            => 'Test Bars & Tone',
     ];
 
 // Function to load data from the JSON file or return fallback data
     $loadData = function () use ($jsonFilePath, $fallbackData) {
       if (Storage::disk('local')->exists($jsonFilePath)) {
         $jsonContent = Storage::disk('local')->get($jsonFilePath);
+
         return json_decode($jsonContent, true);
       }
+
       return $fallbackData;
     };
 
@@ -109,14 +115,14 @@ class HandleInertiaRequests extends Middleware {
 
     return array_merge(parent::share($request), [
         'flash'     => [
-            'message' => fn() => $request->session()->get('message'),
-            'success' => fn() => $request->session()->get('success'),
-            'warning' => fn() => $request->session()->get('warning'),
-            'error'   => fn() => $request->session()->get('error'),
+            'message'  => fn() => $request->session()->get('message'),
+            'success'  => fn() => $request->session()->get('success'),
+            'warning'  => fn() => $request->session()->get('warning'),
+            'error'    => fn() => $request->session()->get('error'),
             'feedback' => fn() => $request->session()->get('feedback'),
         ],
         'firstPlay' => fn() => $firstPlayData,
-        'appUrl' => fn() => config('app.url'),
+        'appUrl'    => fn() => config('app.url'),
     ]);
   }
 
