@@ -12,6 +12,7 @@
           <div v-if="viewerCountIsVisible"
                class="drop-shadow">
             <OsdCurrentViewers/>
+            <OsdTotalWatching />
           </div>
 
         </div>
@@ -46,6 +47,7 @@ import OsdNowPlaying from '@/Components/Global/Osd/Elements/OsdNowPlaying.vue'
 import OsdIsLive from '@/Components/Global/Osd/Elements/OsdIsLive.vue'
 import VideoVolumeIndicatorVertical
   from '@/Components/Global/VideoPlayer/VideoIndicators/VideoVolumeIndicatorVertical.vue'
+import OsdTotalWatching from '@/Components/Global/Osd/Elements/OsdTotalWatching.vue'
 
 const appSettingStore = useAppSettingStore()
 const videoPlayerStore = useVideoPlayerStore()
@@ -58,7 +60,7 @@ const ottPanelsOpen = computed(() => {
 })
 
 const viewerCountIsVisible = computed(() => {
-  return nowPlayingStore.viewerCountIsVisible && channelStore.currentChannelId === 1;
+  return nowPlayingStore.viewerCountIsVisible && channelStore.currentChannelId === 2;
 });
 
 const isLive = computed(() => {

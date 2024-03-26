@@ -38,13 +38,13 @@
     </div>
 
     <!-- Active Toggle -->
-    <div class="table-cell px-6 py-4">
+    <div class="table-cell px-6 py-4 align-middle">
       <div class="flex justify-center items-center w-full">
         <label class="cursor-pointer label">
           <input v-model="channel.active"
                  type="checkbox"
                  @click.prevent="toggleChannelActiveStatus"
-                 class="toggle toggle-primary"/>
+                 class="toggle toggle-success"/>
         </label>
       </div>
     </div>
