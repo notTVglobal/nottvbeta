@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import { useVideoAuxPlayerStore } from '@/Stores/VideoAuxPlayerStore'
 import { useStreamStore } from '@/Stores/StreamStore'
 import { useUserStore } from '@/Stores/UserStore'
 import { useChannelStore } from '@/Stores/ChannelStore'
@@ -61,6 +62,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
         },
 
         async getMistServerUri() {
+            const videoAuxPlayerStore = useVideoAuxPlayerStore()
             try {
                 let response = await axios.get('/mist-server/uri')
                 this.mistServerUri = response.data

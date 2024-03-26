@@ -19,7 +19,7 @@ class MistStream extends Model {
   ];
 
   protected $casts = [
-      'metadata' => 'array',
+      'metadata' => 'json',
   ];
 
   protected static function boot() {
