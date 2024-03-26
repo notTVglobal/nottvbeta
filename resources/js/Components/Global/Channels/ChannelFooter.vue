@@ -1,6 +1,6 @@
 <template>
   <div :class="channelFooterClass">
-    <span>Live is our premiere channel featuring live streams and handpicked content from notTV creators.</span>
+    <span>Stream is our premiere channel featuring live streams and handpicked content from notTV creators.</span>
   </div>
 
 </template>

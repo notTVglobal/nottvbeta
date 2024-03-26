@@ -6,8 +6,10 @@
 
       <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
-      <AdminHeader :badgePrimaryNumber="adminStore.activeChannelsCount"
-                   :badgeSecondaryNumber="adminStore.channels.length">Channels
+      <AdminHeader
+          :displayBadges="true"
+          :badgePrimaryNumber="adminStore.activeChannelsCount"
+          :badgeSecondaryNumber="adminStore.channels.length">Channels
       </AdminHeader>
       <AdminChannelHeaderButtons/>
 
@@ -43,7 +45,7 @@
 
               </div>
               <DynamicModal/>
-              <ToastNotification/>
+
 
             </div>
           </div>
@@ -66,7 +68,6 @@ import AdminChannelHeaderButtons from '@/Components/Pages/Admin/Channels/AdminCh
 import AdminChannelRow from '@/Components/Pages/Admin/Channels/AdminChannelRow.vue'
 import AdminChannelPaginator from '@/Components/Pages/Admin/Channels/AdminChannelPaginator.vue'
 import AdminChannelRowHeader from '@/Components/Pages/Admin/Channels/AdminChannelRowHeader.vue'
-import ToastNotification from '@/Components/Global/Notifications/Toast/ToastNotification.vue'
 
 usePageSetup('admin.channels')
 

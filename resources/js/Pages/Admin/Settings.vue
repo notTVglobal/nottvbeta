@@ -30,14 +30,46 @@
 
       <div class="admin-container">
         <div class="sticky-sidebar">
-          <button @click="appSettingStore.btnRedirect(`/admin/channels`)" class="action-button">Channels</button>
-          <button @click="appSettingStore.btnRedirect(`/admin/schedule`)" class="action-button">Schedule</button>
-          <button @click="appSettingStore.btnRedirect(`/invite_codes`)" class="action-button">Invite Codes</button>
-          <button v-if="!secureNotesOpen" @click="openSecureNotes" class="action-button">Secure Notes</button>
-          <button v-if="secureNotesOpen" @click="saveSecureNotes" class="action-button save-notes">Save Notes</button>
+          <button @click="appSettingStore.btnRedirect('/admin/channels')"
+                  class="action-button"
+                  :class="disabledButtonClasses"
+                  :disabled="secureNotesOpen || firstPlaySettingsOpen">Channels</button>
+
+          <button @click="appSettingStore.btnRedirect('/admin/schedule')"
+                  class="action-button"
+                  :class="disabledButtonClasses"
+                  :disabled="secureNotesOpen || firstPlaySettingsOpen">Schedule</button>
+
+          <button @click="appSettingStore.btnRedirect('/invite_codes')"
+                  class="action-button"
+                  :class="disabledButtonClasses"
+                  :disabled="secureNotesOpen || firstPlaySettingsOpen">Invite Codes</button>
+
+          <button v-if="!secureNotesOpen"
+                  @click="openSecureNotes"
+                  class="action-button"
+                  :class="disabledButtonClasses"
+                  :disabled="firstPlaySettingsOpen">Secure Notes</button>
+
+          <button v-if="secureNotesOpen"
+                  @click="saveSecureNotes"
+                  class="action-button save-notes"
+                  :disabled="firstPlaySettingsOpen">Save Notes</button>
+
+          <button v-if="!firstPlaySettingsOpen"
+                  @click="openFirstPlaySettings"
+                  class="action-button"
+                  :class="disabledButtonClasses"
+                  :disabled="secureNotesOpen">First Play Settings</button>
+
+          <button v-if="firstPlaySettingsOpen"
+                  @click="updateFirstPlaySettings"
+                  class="action-button save-notes"
+                  :disabled="secureNotesOpen">Save First Play</button>
+
           <!-- Add the Schedule button here -->
         </div>
-        <div v-if="!secureNotesOpen" class="main-actions">
+        <div v-if="!secureNotesOpen && !firstPlaySettingsOpen" class="main-actions">
           <div class="actions-group">
             <h3 class="group-title">Content Management</h3>
             <button @click="appSettingStore.btnRedirect(`/admin/episodes`)" class="action-button">All Episodes</button>
@@ -73,10 +105,16 @@
                class="action-button">MistServer Management Interface</a>
           </div>
         </div>
-        <div v-else class="main-actions">
+        <div v-if="secureNotesOpen && !firstPlaySettingsOpen" class="main-actions">
+
           <TabbableTextarea v-if="!secureNotesSaving" :modelValue="secureNotes" @update:modelValue="updateSecureNotes" :placeholder="'Secure notes here'"
                             class="w-full h-64"/>
+          <label class="text-xs ml-2 mb-1 text-gray-700">Only you see these notes.</label>
           <div v-if="secureNotesSaving"><span class="loading loading-bars loading-md"></span> Saving...</div>
+        </div>
+        <div v-if="!secureNotesOpen && firstPlaySettingsOpen" class="main-actions">
+            <FirstPlayVideoSourceSelector />
+          <div v-if="firstPlaySettingsSaving"><span class="loading loading-bars loading-md"></span> Saving...</div>
         </div>
       </div>
 
@@ -284,96 +322,8 @@
 
           <div class="mb-6 border-t-2 pt-4">
 
-            <div>
-              <button @click.prevent="clearFirstPlayCacheData"
-                      class="btn btn-warning btn-sm mb-2">
-                Clear First Play Data Cache
-              </button>
-            </div>
-            <div class="px-3 pb-2 text-sm font-semibold text-orange-400">Please close your browser window after clearing
-              the cache, this only applies to you.
-            </div>
 
-            <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"
-                   for="cloud_folder"
-            >
-              FIRST PLAY VIDEO SOURCE
-            </label>
 
-            <div class="flex flex-row">
-              <input v-model="form.first_play_video_source"
-                     class="border border-gray-400 p-2 w-full rounded-lg text-black"
-                     type="text"
-                     name="first_play_video_source"
-                     id="first_play_video_source"
-              >
-            </div>
-            <span class="text-xs">e.g., https://mist.nottv.io/hls/test/index.m3u8</span>
-
-            <span class="text-xs"></span>
-
-            <div v-if="form.errors.first_play_video_source" v-text="form.errors.first_play_video_source"
-                 class="text-xs text-red-600 mt-1"></div>
-          </div>
-          <div class="mb-6">
-            <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"
-                   for="cloud_folder"
-            >
-              FIRST PLAY VIDEO SOURCE TYPE
-            </label>
-
-            <div class="flex flex-row">
-              <input v-model="form.first_play_video_source_type"
-                     class="border border-gray-400 p-2 w-full rounded-lg text-black"
-                     type="text"
-                     name="first_play_video_source"
-                     id="first_play_video_source"
-              >
-            </div>
-            <span class="text-xs">e.g., video/mp4 or application/x-mpegURL</span>
-
-            <div v-if="form.errors.first_play_video_source" v-text="form.errors.first_play_video_source"
-                 class="text-xs text-red-600 mt-1"></div>
-          </div>
-          <div class="mb-6">
-            <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"
-                   for="cloud_folder"
-            >
-              FIRST PLAY VIDEO NAME
-            </label>
-
-            <div class="flex flex-row">
-              <input v-model="form.first_play_video_name"
-                     class="border border-gray-400 p-2 w-full rounded-lg text-black"
-                     type="text"
-                     name="first_play_video_name"
-                     id="first_play_video_name"
-              >
-            </div>
-            <span class="text-xs"></span>
-
-            <div v-if="form.errors.first_play_video_name" v-text="form.errors.first_play_video_name"
-                 class="text-xs text-red-600 mt-1"></div>
-          </div>
-          <div class="mb-6 border-b-2 pb-4">
-            <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"
-                   for="cloud_folder"
-            >
-              CHANNEL ID
-            </label>
-
-            <div class="flex flex-row">
-              <input v-model="form.first_play_channel_id"
-                     class="border border-gray-400 p-2 w-full rounded-lg text-black"
-                     type="text"
-                     name="first_play_channel_id"
-                     id="first_play_channel_id"
-              >
-            </div>
-            <span class="text-xs text-orange-500">This needs to become a dropdown of channels to select.</span>
-
-            <div v-if="form.errors.first_play_channel_id" v-text="form.errors.first_play_channel_id"
-                 class="text-xs text-red-600 mt-1"></div>
           </div>
 
 
@@ -535,7 +485,7 @@
                 Statuses
               </li>
               <li class="bg-amber-800 text-white p-2 rounded-md shadow">
-                <input type="checkbox" class="mr-2 checkbox checkbox-lg"/>
+                <input type="checkbox" checked class="mr-2 checkbox checkbox-lg"/>
                 <span>Channels. Display list of channels. Click channel name to go to the channel playlist edit page.</span>
                 <div class="mt-2 text-sm">
                   <p>Grid style, 1 column mobile, 2 column tablet, 3 column lg, 4 column xl.</p>
@@ -548,6 +498,53 @@
             </ol>
           </div>
         </div>
+
+
+
+
+        <div class="card w-full mx-6 bg-neutral text-neutral-content">
+          <div class="card-body items-center text-center">
+
+            <div class="mockup-code break-words">
+              <h1 class="pb-4">First Time Setup from Clone</h1>
+              <pre data-prefix="$"><code>unzip README.zip</code></pre>
+              <h2 class="pt-8 pb-2">If you have composer, php 8.1 and nodeJS installed:</h2>
+              <pre data-prefix="$"><code>composer update</code></pre>
+              <pre data-prefix="$"><code>sail up</code></pre>
+              <pre data-prefix="$"><code>npx mix watch</code></pre>
+              <pre data-prefix="$"><code>sail php artisan horizon</code></pre>
+
+              <h2 class="py-4">.env settings</h2>
+              <pre data-prefix=""><code>MISTSERVER_HOST=http://localhost:4242/api</code></pre>
+              <pre data-prefix=""><code>MISTSERVER_USERNAME=nottvadmin</code></pre>
+              <pre data-prefix=""><code>MISTSERVER_PASSWORD=123</code></pre>
+              <pre data-prefix=""><code>MISTSERVER_INTERNAL_IP=mistserver</code></pre>
+
+              <h2 class="py-4">Admin Settings</h2>
+              <pre data-prefix=""><code>MISTSERVER URI: http://localhost:8080/</code></pre>
+              <pre data-prefix=""><code>MISTSERVER RTMP URI: rtmp://localhost/</code></pre>
+
+              <h2 class="py-4">Use these tools:</h2>
+              <pre data-prefix=""><code>http://localhost:4242 (MistServer)</code></pre>
+              <pre data-prefix=""><code>http://localhost:8025 (Mailhog)</code></pre>
+              <pre data-prefix=""><code>http://localhost/horizon (Horizon Job Queue)</code></pre>
+
+            </div>
+
+
+          </div>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
 
       </div>
 
@@ -565,19 +562,22 @@
 
 <script setup>
 import { Inertia } from '@inertiajs/inertia'
-import { nextTick, onMounted, onUnmounted, ref } from 'vue'
+import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue'
 import { useForm } from '@inertiajs/inertia-vue3'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import { useAdminStore } from '@/Stores/AdminStore'
 import JetValidationErrors from '@/Jetstream/ValidationErrors'
 import ServerTime from '@/Components/Pages/Admin/ServerTime'
 import Message from '@/Components/Global/Modals/Messages'
 import PopUpModal from '@/Components/Global/Modals/PopUpModal.vue'
 import TabbableTextarea from '@/Components/Global/TextEditor/TabbableTextarea.vue'
+import FirstPlayVideoSourceSelector from '@/Components/Pages/Admin/Settings/FirstPlayVideoSourceSelector.vue'
 
 usePageSetup('admin.settings')
 
 const appSettingStore = useAppSettingStore()
+const adminStore = useAdminStore()
 
 let props = defineProps({
   id: Number,
@@ -588,7 +588,7 @@ let props = defineProps({
   first_play_video_source: String,
   first_play_video_source_type: String,
   first_play_video_name: String,
-  first_play_channel_id: String,
+  first_play_channel_id: Number,
   // mist_server_ip: String,
   mist_server_uri: String,
   mist_server_rtmp_uri: String,
@@ -633,12 +633,37 @@ onUnmounted(() => {
   secureNotes.value = ''
 })
 
+const disabledButtonClasses = computed(() => ({
+  'disabled:opacity-50 disabled:cursor-not-allowed': secureNotesOpen.value || firstPlaySettingsOpen.value,
+}));
+
+const firstPlaySettingsOpen = ref(false)
+const firstPlaySettingsSaving = ref(false)
+
+const openFirstPlaySettings = async () => {
+  firstPlaySettingsOpen.value = true
+  secureNotesOpen.value = false
+}
+
+const updateFirstPlaySettings = async () => {
+  await adminStore.updateFirstPlaySettings();
+
+  // Check if there are any validation errors after the update attempt
+  if (Object.keys(adminStore.validationErrors).length === 0) {
+    // If there are no validation errors, it's safe to close the settings
+    firstPlaySettingsOpen.value = false;
+  }
+  // If there are errors, the function ends without setting firstPlaySettingsOpen.value to false,
+  // so the settings remain open for the user to see and correct the errors.
+};
+
 const secureNotesOpen = ref(false)
 const secureNotes = ref('')
 const secureNotesSaving = ref(false)
 
 const openSecureNotes = async () => {
   secureNotesOpen.value = true
+  firstPlaySettingsOpen.value = false
   // Fetch the encrypted notes from the server
   try {
     const response = await axios.get('/admin/secure-notes');
@@ -671,12 +696,6 @@ const saveSecureNotes = async () => {
 
 let submit = () => {
   form.patch(route('admin.settings'))
-  const topDiv = document.getElementById('topDiv')
-  topDiv.scrollIntoView()
-}
-
-let clearFirstPlayCacheData = () => {
-  Inertia.post(route('admin.clear-first-play-data-cache'))
   const topDiv = document.getElementById('topDiv')
   topDiv.scrollIntoView()
 }

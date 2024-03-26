@@ -77,20 +77,11 @@ class AdminController extends Controller {
 
   public function saveSettings(HttpRequest $request) {
     $request->validate([
-        'default_country' => 'nullable|integer',
-        'cdn_endpoint'                 => 'nullable|string',
-        'cloud_folder'                 => 'nullable|string',
-        'first_play_video_source'      => 'nullable|string',
-        'first_play_video_source_type' => 'nullable|string',
-        'first_play_video_name'        => 'nullable|string',
-        'first_play_channel_id'        => 'nullable|integer',
-//            'mist_server_ip' => 'nullable|string',
-        'mist_server_uri'              => 'nullable|url',
-        'mist_server_rtmp_uri'         => 'nullable|string',
-//            'mist_server_api_url' => 'nullable|url',
-//            'mist_server_username' => 'nullable|string',
-//            'mist_server_password' => 'nullable|string',
-//            'mist_access_control_secret' => 'nullable|string',
+        'default_country'      => 'nullable|integer',
+        'cdn_endpoint'         => 'nullable|string',
+        'cloud_folder'         => 'nullable|string',
+        'mist_server_uri'      => 'nullable|url',
+        'mist_server_rtmp_uri' => 'nullable|string',
     ]);
 
     // Encrypting the Mist Server Password
@@ -102,34 +93,10 @@ class AdminController extends Controller {
     $settings->country_id = $request->default_country;
     $settings->cdn_endpoint = $request->cdn_endpoint;
     $settings->cloud_folder = '/' . $request->cloud_folder;
-    $settings->first_play_video_source = $request->first_play_video_source;
-    $settings->first_play_video_source_type = $request->first_play_video_source_type;
-    $settings->first_play_video_name = $request->first_play_video_name;
-    $settings->first_play_channel_id = $request->first_play_channel_id;
-//        $settings->mist_server_ip = $request->mist_server_ip;
     $settings->mist_server_uri = rtrim($request->mist_server_uri, '/') . '/';
     $settings->mist_server_rtmp_uri = rtrim($request->mist_server_rtmp_uri, '/') . '/';
-//        $settings->mist_server_api_url = $request->mist_server_api_url;
-//        $settings->mist_server_username = $request->mist_server_username;
-//        $settings->mist_server_password = $encryptedPassword ?? null;
-//        $settings->mist_access_control_secret = $request->mist_access_control_secret;
 
     $settings->save();
-
-    // Now, check for specific form variables and update the JSON file if present
-    if ($request->has(['first_play_video_source', 'first_play_video_source_type'])) {
-
-      $dataToUpdate = $request->only([
-          'mist_server_uri',
-          'first_play_video_source',
-          'first_play_video_source_type',
-          'first_play_video_name',
-          'first_play_channel_id',
-      ]);
-
-      $jsonFilePath = 'json/firstPlayData.json';
-      Storage::disk('local')->put($jsonFilePath, json_encode($dataToUpdate, JSON_PRETTY_PRINT));
-    }
 
     $db = DB::table('app_settings')
         ->where('id', 1)
@@ -143,9 +110,121 @@ class AdminController extends Controller {
 
   }
 
+////////////  FIRST PLAY SETTINGS
+/////////////////////////////////
+
+  public function fetchFirstPlaySettings(): \Illuminate\Http\JsonResponse {
+    $appSetting = AppSetting::find(1);
+//    // Check if first_play_settings is empty and populate it from existing fields
+//    if (empty($appSetting->first_play_settings)) {
+//      $appSetting->first_play_settings = [
+//          'channelId'             => $appSetting->first_play_channel_id,
+//          'useCustomVideo'        => true, // Assuming default to true, adjust as necessary
+//          'customVideoSource'     => $appSetting->first_play_video_source,
+//          'customVideoSourceType' => $appSetting->first_play_video_source_type,
+//          'customVideoName'       => $appSetting->first_play_video_name,
+//      ];
+//      // Optionally save the updated model if you want to persist the merged settings
+//      $appSetting->save();
+//    }
+    // Return a JSON response with dynamic message and status
+    $message = 'First play settings retrieved.';
+    $status = 'success';
+
+    return response()->json([
+        'firstPlaySettings' => $appSetting->first_play_settings,
+        'success'           => true,
+        'message'           => $message,
+        'status'            => $status, // Include the status in the response
+    ]);
+  }
+
+  public function updateFirstPlaySettings(HttpRequest $request): \Illuminate\Http\JsonResponse {
+    // Validate the incoming request data
+    $validator = Validator::make($request->all(), [
+        'channelId'             => 'required_if:useCustomVideo,false|nullable|exists:channels,id',
+        'useCustomVideo'        => 'required|boolean',
+        'customVideoSource'     => 'required_if:useCustomVideo,true|nullable|string',
+        'customVideoSourceType' => 'required_if:useCustomVideo,true|nullable|string',
+        'customVideoName'       => 'required_if:useCustomVideo,true|nullable|string',
+    ]);
+
+    // Check if validation fails
+    if ($validator->fails()) {
+      return response()->json([
+          'success' => false,
+          'message' => 'Validation errors occurred.',
+          'errors'  => $validator->errors(),
+      ], 422);
+    }
+
+    // Retrieve the application settings (assuming a single record for simplicity)
+    $appSetting = AppSetting::find(1);
+    if (!$appSetting) {
+      return response()->json([
+          'success' => false,
+          'message' => 'App settings not found.',
+      ], 404);
+    }
+
+
+    // Prepare the common settings to be updated
+    $updateData = [
+        'first_play_settings' => [
+            'channelId'             => $request->channelId,
+            'useCustomVideo'        => $request->useCustomVideo,
+            'customVideoSource'     => $request->customVideoSource,
+            'customVideoSourceType' => $request->customVideoSourceType,
+            'customVideoName'       => $request->customVideoName,
+        ],
+        'first_play_channel_id' => $request->channelId,
+    ];
+
+    // Conditionally add the custom video fields to the update if useCustomVideo is true
+    if ($request->useCustomVideo) {
+      $updateData = array_merge($updateData, [
+          'first_play_video_source'      => $request->videoSource,
+          'first_play_video_source_type' => $request->customVideoSource, // Ensure this should not be $request->videoSourceType instead
+          'first_play_video_name'        => $request->customVideoName, // Ensure this is the correct request field
+      ]);
+    }
+
+    // Perform the update
+    $appSetting->update($updateData);
+
+    // Ensure dataToUpdate uses the newly updated model attributes
+    $cacheDataToUpdate = [
+        'mist_server_uri'              => $appSetting->mist_server_uri,
+        'first_play_video_source'      => $appSetting->first_play_video_source,
+        'first_play_video_source_type' => $appSetting->first_play_video_source_type,
+        'first_play_video_name'        => $appSetting->first_play_video_name,
+        'first_play_channel_id'        => $appSetting->first_play_settings['channelId'],
+        'use_custom_video'             => $appSetting->first_play_settings['useCustomVideo'],
+        'custom_video_source'          => $appSetting->first_play_settings['customVideoSource'],
+        'custom_video_source_type'     => $appSetting->first_play_settings['customVideoSourceType'],
+        'custom_video_name'            => $appSetting->first_play_settings['customVideoName'],
+    ];
+
+    $jsonFilePath = 'json/firstPlayData.json';
+    Storage::disk('local')->put($jsonFilePath, json_encode($cacheDataToUpdate, JSON_PRETTY_PRINT));
+
+    // Return a success response
+    return response()->json([
+        'success'           => true,
+        'message'           => 'First play settings updated successfully.',
+        'firstPlaySettings' => $appSetting->first_play_settings,
+    ]);
+  }
+
 ////////////  CLEAR FIRST PLAY DATA CACHE
 /////////////////////////////////////////
-  public function clearFirstPlayDataCache() {
+
+// tec21: I think this is deprecated.... we use the Json file as our cache. 2024-03-26
+
+  /**
+   * @throws AuthorizationException
+   */
+  public function clearFirstPlayDataCache(): \Illuminate\Routing\Redirector|\Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse {
 
     if (!Auth::user() || !Auth::user()->isAdmin) {
       throw new AuthorizationException('You do not have permission to perform this action.');
@@ -264,8 +343,6 @@ class AdminController extends Controller {
 //    return redirect()->route('admin.inviteCodes')->with('success', 'Code Added Successfully');
 //
 //  }
-
-
 
 
 ////////////  MOVIES INDEX
@@ -505,6 +582,7 @@ class AdminController extends Controller {
       return response()->json(['content' => $note->content]);
     } catch (\Exception $e) {
       Log::error('Error fetching secure notes', ['error' => $e->getMessage()]);
+
       return response()->json(['error' => 'An unexpected error occurred. Please try again later.'], 500);
     }
   }
@@ -524,6 +602,7 @@ class AdminController extends Controller {
       return response()->json(['message' => 'Secure notes updated successfully.']);
     } catch (\Exception $e) {
       Log::error('Error updating secure notes', ['error' => $e->getMessage()]);
+
       return response()->json(['error' => 'An unexpected error occurred. Please try again later.'], 500);
     }
   }
