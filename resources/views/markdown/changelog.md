@@ -3,6 +3,12 @@
 Last Update: March 26, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.7.21
+March 26, 2024
+* Hot Fix
+  * Create a one-time command to get the FirstPlaySettings from the existing AppSetting columns into the new FirstPlaySettings Json column
+  * $ php artisan settings:migrate-first-play
+
 ## v0.8.7.20
 March 26, 2024
 * Change Channel Footer message.
