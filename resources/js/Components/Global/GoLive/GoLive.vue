@@ -474,6 +474,8 @@ onMounted(() => {
   // check the push destinations
   mistStore.getMistStreamPushDestinations(goLiveStore?.selectedShow?.mist_stream_wildcard?.id)
 
+  reloadPlayer()
+
   // check the auto push list
   // mistStore.getMistStreamPushAutoList(goLiveStore?.selectedShow?.mist_stream_wildcard?.id)
 

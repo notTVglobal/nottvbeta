@@ -48,12 +48,10 @@ Route::get('/app_settings', [AppSettingController::class, 'getAppSettings']);
 //    return ('success');
 //});
 
-Route::post('/chatTest', [TestMessageController::class, 'broadcast'])
-    ->name('chatTestApi');
+//Route::post('/chatTest', [TestMessageController::class, 'broadcast'])
+//    ->name('chatTestApi');
 
 Route::get('/products', [ProductController::class, 'index']);
-
-Route::get('/channels_list', [ChannelApiController::class, 'index']);
 
 // our first mist server trigger... for Access Control
 Route::post('/mist-trigger/validate-user', [MistTriggerController::class, 'validateUser']);

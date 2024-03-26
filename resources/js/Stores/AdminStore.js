@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { useNotificationStore } from '@/Stores/NotificationStore'
 
 const initialState = () => ({
     channels: [], // For Admin Channels page
@@ -30,14 +31,27 @@ export const useAdminStore = defineStore('adminStore', {
         loadChannels(channels) {
             this.channels = channels
         },
-        fetchChannels() {
-            const response = axios.get('/api/channels_list')
+        async fetchChannels() {
+            await axios.get('/api/channels_list')
                 .then(response => {
                     this.channels = response.data
                 })
                 .catch(error => {
                     console.log(error)
                 })
+        },
+        async toggleChannelActiveStatus(channelId) {
+            const notificationStore = useNotificationStore();
+            try {
+                const response = await axios.post('/admin/channels/' + channelId + '/toggleChannelActive');
+                // Extract message and status from the response
+                const { message, status } = response.data;
+                // Use the status from the response for the notification
+                notificationStore.setToastNotification(message, status);
+            } catch (error) {
+                console.error(error);
+                notificationStore.setToastNotification('Failed to toggle channel status.', 'error');
+            }
         },
         setSelectedChannel(item) {
             this.selectedChannel = item
@@ -216,6 +230,12 @@ export const useAdminStore = defineStore('adminStore', {
         },
         totalChannelsPages(state) {
             return Math.ceil(state.channels.length / state.itemsPerChannelsPage)
+        },
+        // Getter to count active channels
+        activeChannelsCount: (state) => {
+            // Use Array.prototype.filter to keep only items with 'active' true,
+            // then use the length property to get the count
+            return state.channels.filter(channel => channel.active).length;
         },
     },
 })

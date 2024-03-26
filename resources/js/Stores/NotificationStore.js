@@ -24,7 +24,10 @@ const initialState = () => ({
     redirectPageUri: '',
     generalServiceNotification: null, // put a title and a body in here, the modal opens in AppLayout
     showGeneralServiceNotification: false, // used with the generalServiceNotification title and body, the modal opens in AppLayout
-    showOrangeFeedbackBox: false,
+    toastNotificationVisible: false,
+    toastNotificationMessage: '',
+    toastNotificationStatus: '', // success, error, info, warning
+    toastNotificationTimeout: 5000, // default timeout to 5 seconds
     errorMessage: null,
 })
 
@@ -53,6 +56,20 @@ export const useNotificationStore = defineStore('notificationStore', {
         clearGeneralServiceNotification() {
             this.generalServiceNotification = null
             this.showGeneralServiceNotification = false
+        },
+        setToastNotification(message, status, customTimeoutValue) {
+            this.toastNotificationVisible = true
+            this.toastNotificationMessage = message
+            this.toastNotificationStatus = status
+            if (customTimeoutValue) {
+                this.toastNotificationTimeout = customTimeoutValue
+            }
+        },
+        resetToastNotification() {
+            this.toastNotificationVisible = false
+            this.toastNotificationMessage = ''
+            this.toastNotificationStatus = ''
+            this.toastNotificationTimeout = 5000
         },
         clearNotification() {
             this.title = '';

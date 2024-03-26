@@ -7,7 +7,7 @@
       <span class="loading loading-spinner text-accent"></span>
     </div>
     <div v-else>
-      <div v-for="channel in channelStore.channel_list"
+      <div v-for="channel in channelStore.activeChannels"
            :key="channel.id"
            class="channel">
 

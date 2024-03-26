@@ -332,12 +332,14 @@ Route::middleware([
       ->can('viewAdmin', 'App\Models\User')
       ->name('admin.channels');
 
+  Route::get('/api/channels_list', [ChannelApiController::class, 'index']);
   Route::get('/admin/channels/search/{type}', [ChannelController::class, 'search']);
   Route::post('/admin/channels/{channel}/{type}/update', [ChannelController::class, 'updateType']);
   Route::post('/admin/channels/{channel}/setPlaybackPriorityType', [ChannelController::class, 'setPlaybackPriorityType']);
   Route::post('/admin/channels/{channel}/setMistStream', [ChannelController::class, 'setMistStream']);
   Route::post('/admin/channels/{channel}/setChannelPlaylist', [ChannelController::class, 'setChannelPlaylist']);
   Route::post('/admin/channels/{channel}/setExternalSource', [ChannelController::class, 'setExternalSource']);
+  Route::post('/admin/channels/{channel}/toggleChannelActive', [ChannelController::class, 'toggleChannelActive']);
 
 
   // Schedule

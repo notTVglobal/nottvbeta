@@ -10,6 +10,7 @@ use App\Models\Team;
 use App\Models\TeamMember;
 use App\Models\Video;
 use App\Policies\AdminPolicy;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 use App\Models\User;
@@ -24,7 +25,7 @@ class DashboardController extends Controller {
    * @return Response
    */
   public function index() {
-    $user = User::find(Auth::user()->id);
+    $user = Auth::user();
     $showCount = Show::count();
     $userCount = User::count();
     $creatorCount = Creator::count();
@@ -121,22 +122,22 @@ class DashboardController extends Controller {
         'isSubscriber'          => auth()->user()->subscribed('default'),
         'hasAccount'            => $hasAccount,
         'shows'                 => Show::query()
-            ->where('user_id', Auth::user()->id)
-            ->orWhere(function ($query) {
-              $query->whereHas('team', function ($subQuery) {
-                $subQuery->where('team_leader', Auth::user()->id)
-                    ->orWhereHas('managers', function ($managerQuery) {
-                      $managerQuery->where('user_id', Auth::user()->id);
+            ->where('user_id', $user->id)
+            ->orWhere(function ($query) use ($user) {
+              $query->whereHas('team', function ($subQuery) use ($user) {
+                $subQuery->where('team_leader', $user->id)
+                    ->orWhereHas('managers', function ($managerQuery) use ($user) {
+                      $managerQuery->where('user_id', $user->id);
                     });
               })
-                  ->orWhereExists(function ($existsQuery) {
-                    $existsQuery->select(\DB::raw(1))
+                  ->orWhereExists(function ($existsQuery) use ($user) {
+                    $existsQuery->select(DB::raw(1))
                         ->from('teams')
-                        ->whereRaw('teams.user_id = ' . Auth::user()->id)
+                        ->whereRaw('teams.user_id = ' . $user->id)
                         ->whereRaw('teams.id = shows.team_id');
                   })
-                  ->orWhere('user_id', Auth::user()->id) // User's own shows
-                  ->orWhere('show_runner', Auth::user()->creator->id);
+                  ->orWhere('user_id', $user->id) // User's own shows
+                  ->orWhere('show_runner', $user->creator->id);
             })
             ->distinct() // Ensure unique shows
             ->paginate(5, ['*'], 'shows')
@@ -156,35 +157,6 @@ class DashboardController extends Controller {
               'slug' => $team->slug,
           ];
         }),
-//            }
-//            'teams' => $user->teams()
-//                ->where('active', 1)
-////                ->orWhere('user_id', Auth::user()->id)
-//                ->orWhere('team_leader', $user->id)
-//                ->orWhereHas('managers', function ($query) use ($user) {
-//                    $query->where('user_id', $user->id);
-//                })
-//                ->distinct()
-//                ->paginate(5, ['*'], 'teams')
-//                ->withQueryString()
-//                ->through(fn($team) => [
-//                    'id' => $team->id,
-//                    'name' => $team->name,
-//                    'slug' => $team->slug,
-//                ]),
-
-//            'teams' => User::with('teams')
-//                ->where('id', Auth::user()->id)
-//                ->paginate(5, ['*'], 'teams_per_page')
-//                ->withQueryString()
-//                ->through(fn($user) => [
-////                    'id' => $team->team->id,
-//                    'name' => $user->team->name,
-//                    'slug' => $user->team->slug,
-//                    'can' => [
-//                        'manageTeam' => Auth::user()->can('manage', $team)
-//                    ]
-//                ]),
         'myTotalStorageUsed'    => formatBytes(Video::where('user_id', auth()->user()->id)
             ->where('storage_location', '=', 'spaces')
             ->sum('size')),

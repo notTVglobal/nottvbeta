@@ -1,7 +1,12 @@
 # not.tv Changelog
 
-Last Update: March 24, 2024\
+Last Update: March 25, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.8.7.19
+March 25, 2024
+* Adjust style on Navigation Menu
+* Restructure the Admin/Channels page and components
 
 ## v0.8.7.18
 March 24, 2024
