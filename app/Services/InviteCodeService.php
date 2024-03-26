@@ -11,8 +11,7 @@ class InviteCodeService
 {
 
   protected function getInviteCodeSettings() {
-    $settings = AppSetting::query()->firstOrFail()->invite_code_settings;
-    return json_decode($settings, true);
+    return AppSetting::query()->firstOrFail()->invite_code_settings;
   }
 
   /**

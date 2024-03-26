@@ -3,6 +3,15 @@
 Last Update: March 26, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.7.22
+March 26, 2024
+* Fix Invite Code Registration validation mistake, where a failed validation was not being returned back to the user.
+* Added a better Invite Code check on Registration submission.
+* Moved the LIVE badge and ViewerCount to Channel 2 (Live).
+* Added a TotalWatching count to Channel 2 to account for users who may not be logged in and watching.
+  * This does not take into consideration if people are watching a different channel.. it's not currently functional and will need to be developed with additional considerations.
+* Enabled the OTT Channel and Playlist buttons for all users.
+
 ## v0.8.7.21
 March 26, 2024
 * Hot Fix

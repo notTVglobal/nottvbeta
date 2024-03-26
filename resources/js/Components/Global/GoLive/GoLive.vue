@@ -16,7 +16,9 @@
                     class="btn bg-blue-500 hover:bg-blue-700 rounded-lg text-white">How To Stream From Zoom
             </button>
             <button @click="openObsInstructions = !openObsInstructions"
-                    class="btn bg-blue-500 hover:bg-blue-700 rounded-lg text-white ml-2 ">How To Stream From OBS
+                    class="btn bg-blue-500 hover:bg-blue-700 rounded-lg text-white ml-2 ">
+              <span v-if="!openObsInstructions">View Your Stream Key</span>
+              <span v-else>Hide Your Stream Key</span>
             </button>
 
           </div>

@@ -30,7 +30,7 @@ class CreateNewCreator implements CreatesNewUsers {
    */
   public function create(array $input) {
 
-    $this->validateInput($input);
+//    $this->validateInput($input);
     $inviteCode = $input['invite_code'];
 
     DB::beginTransaction();
@@ -73,9 +73,6 @@ class CreateNewCreator implements CreatesNewUsers {
       $inviteCodeService->generateForCreator($user->id, 'creator');
       $inviteCodeService->generateForCreator($user->id, 'vip');
 
-      event(new Registered($user));
-      event(new CreatorRegistrationCompleted($user));
-
       return $user;
     } catch (\Exception $e) {
       DB::rollBack();
@@ -89,25 +86,25 @@ class CreateNewCreator implements CreatesNewUsers {
     }
   }
 
-  /**
-   * @throws ValidationException
-   */
-  private function validateInput(array $input): void {
-    Validator::make($input, [
-        'name'                  => ['required', 'string', 'max:255'],
-        'email'                 => ['required', 'string', 'email', 'max:255', 'unique:users'],
-        'address1'              => ['sometimes', 'string', 'max:255'],
-        'address2'              => ['sometimes', 'string', 'max:255'],
-        'city'                  => ['sometimes', 'string', 'max:255'],
-        'province'              => ['sometimes', 'string', 'max:255'],
-        'country'               => ['required', 'exists:news_countries,id'],
-        'phone'                 => ['sometimes', 'string', 'max:255'],
-        'password'              => $this->passwordRules(),
-        'password_confirmation' => ['required', 'same:password'],
-        'terms'                 => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
-        'invite_code'           => ['required', new UnclaimedInviteCode([4])],
-        'postalCode'            => ['nullable', 'string', 'max:255',]
-    ]);
-  }
+//  /**
+//   * @throws ValidationException
+//   */
+//  private function validateInput(array $input): void {
+//    Validator::make($input, [
+//        'name'                  => ['required', 'string', 'max:255'],
+//        'email'                 => ['required', 'string', 'email', 'max:255', 'unique:users'],
+//        'address1'              => ['sometimes', 'string', 'max:255'],
+//        'address2'              => ['sometimes', 'string', 'max:255'],
+//        'city'                  => ['sometimes', 'string', 'max:255'],
+//        'province'              => ['sometimes', 'string', 'max:255'],
+//        'country'               => ['required', 'exists:news_countries,id'],
+//        'phone'                 => ['sometimes', 'string', 'max:255'],
+//        'password'              => $this->passwordRules(),
+//        'password_confirmation' => ['required', 'same:password'],
+//        'terms'                 => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
+//        'invite_code'           => ['required', new UnclaimedInviteCode([4])],
+//        'postalCode'            => ['nullable', 'string', 'max:255',]
+//    ]);
+//  }
 }
 

@@ -10,6 +10,7 @@ const initialState = () => ({
     currentChannelName: '',
     isLive: false,
     viewerCount: 0,
+    totalWatching: null,
     playbackPriorityType: '',
     mistStreamId: null,
     mistStreamName: null,
@@ -192,7 +193,7 @@ export const useChannelStore = defineStore('channelStore', {
 
             // Display the LIVE badge and ViewerCount on the OSD
             // For now this is hardcoded...
-            if (this.currentChannelId === 1) {
+            if (this.currentChannelId === 2) {
                 nowPlayingStore.viewerCountIsVisible = true
                 nowPlayingStore.isLive = true
                 this.isLive = true

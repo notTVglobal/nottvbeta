@@ -113,9 +113,10 @@ const shouldDisplayOtt = computed(() => {
 })
 
 const showUpgrade = computed(() => {
-  return !userStore.isSubscriber &&
-      !userStore.isVip &&
-      !userStore.isAdmin;
+  return false
+  // return !userStore.isSubscriber &&
+  //     !userStore.isVip &&
+  //     !userStore.isAdmin;
 });
 
 

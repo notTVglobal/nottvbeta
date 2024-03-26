@@ -3,12 +3,16 @@
 namespace App\Http\Controllers;
 
 
+use App\Actions\Fortify\PasswordValidationRules;
+use App\Events\CreatorRegistrationCompleted;
 use App\Models\Creator;
 use App\Models\InviteCode;
 use App\Models\NewsCountry;
 use App\Mail\InviteCreatorMail;
 use App\Actions\Fortify\CreateNewCreator;
 use App\Models\User;
+use App\Rules\UnclaimedInviteCode;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -25,9 +29,12 @@ use Inertia\Inertia;
 
 use Inertia\Response;
 use App\Services\InviteCodeService;
+use Laravel\Jetstream\Jetstream;
 
 class CreatorsController extends Controller
 {
+
+  use PasswordValidationRules;
 
   protected InviteCodeService $inviteCodeService;
 
@@ -219,6 +226,54 @@ if (!$request->inviteCode) {
   }
 
     public function register(HttpRequest $request, InviteCode $inviteCode) {
+
+      if ($inviteCode->claimed) {
+        return back()->withErrors(['invite_code' => 'The provided invite code has already been used.'])->withInput();
+      }
+
+      // Validate the request data including the invite code.
+      $validatedData = Validator::make($request->all(), [
+          'name' => ['required', 'string', 'max:255'],
+          'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+        // Include other validation rules as per your requirement
+          'address1'              => ['sometimes', 'string', 'max:255'],
+          'address2'              => ['sometimes', 'string', 'max:255'],
+          'city'                  => ['sometimes', 'string', 'max:255'],
+          'province'              => ['sometimes', 'string', 'max:255'],
+          'country'               => ['required', 'exists:news_countries,name'],
+          'phone'                 => ['sometimes', 'string', 'max:255'],
+          'password' => array_merge(['required', 'confirmed'], $this->passwordRules()),
+          'password_confirmation' => ['required', 'same:password'],
+          'terms'                 => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
+//          'invite_code'           => ['required', new UnclaimedInviteCode([4])],
+          'postalCode'            => ['nullable', 'string', 'max:255',]
+        // Add any other fields you're validating
+      ])->validate();
+
+      $creatorAction = new CreateNewCreator();
+      try {
+        $user = $creatorAction->create($validatedData + ['invite_code' => $inviteCode]);
+
+        event(new Registered($user));
+        event(new CreatorRegistrationCompleted($user));
+
+        return redirect()->route('dashboard')->with('feedback', 'Welcome to the platform!');
+      } catch (\Exception $e) {
+        Log::error('Registration failed: ' . $e->getMessage());
+        return back()->withErrors(['registration' => 'An unexpected error occurred during registration. Please try again.'])->withInput();
+      }
+
+
+
+
+
+
+
+
+
+
+
+
       // Validate the request data and the code.
       // Create the user and associated creator record.
       // Mark the invite code as used.

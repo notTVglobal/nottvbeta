@@ -163,7 +163,7 @@
                 <JetLabel for="country" value="Country" />
                 <select id="country" v-model="form.country"
                         class="select select-bordered w-full max-w-xs mt-1 block">
-                  <option v-for="country in countries" :key="country.id" :value="country.id">{{ country.name }}</option>
+                  <option v-for="country in countries" :key="country.id" :value="country.name">{{ country.name }}</option>
                 </select>
               </div>
               <div v-if="form.errors.country" v-text="form.errors.country"
@@ -323,7 +323,7 @@ onMounted(async () => {
     // Set Canada as default country if it exists in the list
     const canada = countries.value.find(country => country.name === 'Canada');
     if (canada) {
-      form.country = canada.id;
+      form.country = canada.name;
     }
   } catch (error) {
     console.error('Failed to fetch countries:', error);
