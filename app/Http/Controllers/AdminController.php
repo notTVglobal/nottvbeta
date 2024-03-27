@@ -183,8 +183,8 @@ class AdminController extends Controller {
     // Conditionally add the custom video fields to the update if useCustomVideo is true
     if ($request->useCustomVideo) {
       $updateData = array_merge($updateData, [
-          'first_play_video_source'      => $request->videoSource,
-          'first_play_video_source_type' => $request->customVideoSource, // Ensure this should not be $request->videoSourceType instead
+          'first_play_video_source'      => $request->customVideoSource,
+          'first_play_video_source_type' => $request->customVideoSourceType, // Ensure this should not be $request->videoSourceType instead
           'first_play_video_name'        => $request->customVideoName, // Ensure this is the correct request field
       ]);
     }

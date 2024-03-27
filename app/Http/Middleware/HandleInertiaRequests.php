@@ -90,7 +90,7 @@ class HandleInertiaRequests extends Middleware {
 // Define a fallback data array
     $fallbackData = [
         'first_play_video_source'      => 'https:\/\/mist.nottv.io\/hls\/test\/index.m3u8',
-        'first_play_video_source_type' => 'application/x-mpegURL',
+        'first_play_video_source_type' => 'application\/x-mpegURL',
         'first_play_video_name'        => 'Test Pattern Default',
         'first_play_channel_id'        => 1,
         'use_custom_video'             => false,

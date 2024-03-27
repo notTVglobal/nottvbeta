@@ -69,7 +69,9 @@ class MistTriggerController extends Controller {
 //        'body'    => $request->getContent() // For raw body content
 //    ]);
     // Similar to handlePushOutStart
-    broadcast(new MistTriggerPushEnd($request->all())); // Customize
+
+    //// tec21: We'll come back to this
+//    broadcast(new MistTriggerPushEnd($request->all())); // Customize
 
 //    push ID (integer)
 //    stream name (string)
