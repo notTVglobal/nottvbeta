@@ -3,6 +3,18 @@
 Last Update: March 26, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.7.25
+March 26, 2024
+* Fix FirstPlay and Video Player problem
+  * Aux video player is working on Go Live page
+  * First Play video on Main Player is working
+  * Channels with Mist streams are working
+  * Start Push to destination on Go Live page is working
+  * Stop Push to destination on Go Live page is also working
+  * Add Auto Push button works
+  * Remove Auto Push button IS NOT WORKING!
+  * Event Broadcast to Go Live Page to update the Push button status IS NOT WORKING!
+
 ## v0.8.7.24
 March 26, 2024
 * Add back in the Cache::forget(key) for First Play settings.

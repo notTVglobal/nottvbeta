@@ -105,7 +105,7 @@
           <div class="flex flex-col">
 
             <div class="px-10 h-fit w-fit">
-              <button @click="goLiveStore.reloadPlayer();"
+              <button @click="reloadPlayer();"
                       class="btn btn-xs w-full"
                       :class="liveOrRecordingGrayButtonClass"
               >Reload Player
@@ -443,23 +443,23 @@ const copyStreamKey = () => {
   setTimeout(() => showCopiedStreamKey.value = false, 1000)
 }
 
-// const reloadPlayer = () => {
-//   let source = null
-//   if (goLiveStore?.selectedShow?.mist_stream_wildcard?.name) {
-//     source = goLiveStore?.selectedShow?.mist_stream_wildcard?.name
-//     goLiveStore.fetchStreamInfo(goLiveStore?.selectedShow?.mist_stream_wildcard?.name)
-//   } else if (goLiveStore?.episode?.mist_stream_wildcard?.name) {
-//     source = goLiveStore?.episode?.mist_stream_wildcard?.name
-//     goLiveStore.fetchStreamInfo(goLiveStore?.episode?.mist_stream_wildcard?.name)
-//   }
-//   let sourceUrl = videoPlayerStore.mistServerUri + 'hls/' + source + '/index.m3u8'
-//   console.log('source url: ' + sourceUrl)
-//   let sourceType = 'application/vnd.apple.mpegurl'
-//   let videoJs = videojs('aux-player')
-//   videoJs.src({'src': sourceUrl, 'type': sourceType})
-//   // videoAuxPlayerStore.loadNewLiveSource(source, sourceType)
-//   console.log('reload player')
-// }
+const reloadPlayer = () => {
+  let source = null
+  if (goLiveStore?.selectedShow?.mist_stream_wildcard?.name) {
+    source = goLiveStore?.selectedShow?.mist_stream_wildcard?.name
+    goLiveStore.fetchStreamInfo(goLiveStore?.selectedShow?.mist_stream_wildcard?.name)
+  } else if (goLiveStore?.episode?.mist_stream_wildcard?.name) {
+    source = goLiveStore?.episode?.mist_stream_wildcard?.name
+    goLiveStore.fetchStreamInfo(goLiveStore?.episode?.mist_stream_wildcard?.name)
+  }
+  let sourceUrl = videoPlayerStore.mistServerUri + 'hls/' + source + '/index.m3u8'
+  console.log('source url: ' + sourceUrl)
+  let sourceType = 'application/vnd.apple.mpegurl'
+  let videoJs = videojs('aux-player')
+  videoJs.src({'src': sourceUrl, 'type': sourceType})
+  // videoAuxPlayerStore.loadNewLiveSource(source, sourceType)
+  console.log('reload player')
+}
 
 // watchEffect(() => {
 //   const mistServerUri = videoPlayerStore.mistServerUri
