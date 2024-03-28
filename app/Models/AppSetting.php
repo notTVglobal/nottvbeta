@@ -19,7 +19,8 @@ class AppSetting extends Model {
       'first_play_video_source_type',
       'first_play_video_name',
       'first_play_channel_id',
-      'invite_code_settings'
+      'invite_code_settings',
+      'public_stats_url'
   ];
 
   protected $casts = [

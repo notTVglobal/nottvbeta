@@ -1197,6 +1197,8 @@ Route::get('/coffee', function () {
   return Inertia::location('https://www.buymeacoffee.com/hellorq');
 });
 
+Route::get('/stats', [AppSettingController::class, 'redirectStats']);
+
 
 // Routes For Testing
 /////////////////////

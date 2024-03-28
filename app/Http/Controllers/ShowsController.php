@@ -342,6 +342,8 @@ class ShowsController extends Controller {
     // Validation passes, extract validated data
     $validatedData = $validator->validated();
     $teamId = $validatedData['team_id'];
+    $twitterHandle = str_replace('@', '', $request->input('twitter_handle'));
+    $instagramName = str_replace('@', '', $request->input('instagram_name'));
 
     // Retrieve the team with the team_id and check its status
     $team = Team::find($teamId);
@@ -370,9 +372,9 @@ class ShowsController extends Controller {
           'show_category_sub_id'   => $request->sub_category,
           'slug'                   => \Str::slug($request->name),
           'www_url'                => $request->www_url,
-          'instagram_name'         => $request->instagram_name,
+          'instagram_name'         => $instagramName,
           'telegram_url'           => $request->telegram_url,
-          'twitter_handle'         => $request->twitter_handle,
+          'twitter_handle'         => $twitterHandle,
           'notes'                  => $request->notes,
           'isBeingEditedByUser_id' => $request->user_id,
           'first_release_year'     => Carbon::now()->format('Y'),
@@ -991,6 +993,9 @@ class ShowsController extends Controller {
         'release_date.after' => 'The release date must be at least 24 hours in the future.',
     ]);
 
+    $twitterHandle = str_replace('@', '', $request->input('twitter_handle'));
+    $instagramName = str_replace('@', '', $request->input('instagram_name'));
+
     // update the show
     $show->name = $request->name;
     $show->description = $request->description;
@@ -998,9 +1003,9 @@ class ShowsController extends Controller {
     $show->show_category_sub_id = $request->sub_category;
     $show->slug = \Str::slug($request->name);
     $show->www_url = $request->www_url;
-    $show->instagram_name = $request->instagram_name;
+    $show->instagram_name = $instagramName;
     $show->telegram_url = $request->telegram_url;
-    $show->twitter_handle = $request->twitter_handle;
+    $show->twitter_handle = $twitterHandle;
     $show->notes = htmlentities($request->notes);
     $show->show_status_id = $request->show_status_id;
     $show->episode_play_order = $request->episode_play_order;

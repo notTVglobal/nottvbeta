@@ -238,6 +238,13 @@
 
                         <JetDropdownLink
                             @click.prevent="videoPlayerStore.makeVideoTopRight()"
+                            :href="`/settings?q=firstPlaySettings`"
+                            :dark="true">
+                          First Play Settings
+                        </JetDropdownLink>
+
+                        <JetDropdownLink
+                            @click.prevent="videoPlayerStore.makeVideoTopRight()"
                             :href="route('admin.schedule')"
                             :active="appSettingStore.currentPage === 'admin.schedule'"
                             :dark="true">

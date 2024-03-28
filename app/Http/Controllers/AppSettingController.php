@@ -63,6 +63,11 @@ class AppSettingController extends Controller {
     return Response::json(['message' => 'Invite code settings updated successfully']);
   }
 
+  public function redirectStats() {
+    $statsUrl = AppSetting::find(1)->value('public_stats_url');
+    return Inertia::location($statsUrl);
+  }
+
 
   /**
    * Display a listing of the resource.
