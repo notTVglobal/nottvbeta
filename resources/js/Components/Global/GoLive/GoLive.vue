@@ -359,7 +359,7 @@ let props = defineProps({
 const showCopiedFullUrl = ref(false)
 const showCopiedRtmpUri = ref(false)
 const showCopiedStreamKey = ref(false)
-const {copy} = useClipboard()
+const { copy } = useClipboard()
 
 const openObsInstructions = ref(false)
 
