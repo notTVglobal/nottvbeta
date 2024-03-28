@@ -3,6 +3,10 @@
 Last Update: March 28, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.7.27
+March 28, 2024
+* Turn on all debugging logs for Mist Push Triggers (Start, Stop, End Record)
+
 ## v0.8.7.26
 March 28, 2024
 * Add /stats path to redirect to the current public analytics page.
