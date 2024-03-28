@@ -6,6 +6,7 @@ Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 ## v0.8.7.28
 March 28, 2024
 * Fixed the type hints for the MistTriggerController functions
+* Update Log debug messages for testing in MistTriggerController
 
 ## v0.8.7.27
 March 28, 2024

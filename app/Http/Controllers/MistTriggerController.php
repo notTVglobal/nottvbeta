@@ -23,10 +23,12 @@ class MistTriggerController extends Controller {
 
 
   public function handlePushOutStart(Request $request): Response {
-    Log::debug('handlePushEnd Raw Request', [
-    'headers' => $request->headers->all(),
-    'body'    => $request->getContent() // For raw body content
-    ]);
+//    Log::debug('handlePushOutStart Raw Request', [
+//    'headers' => $request->headers->all(),
+//    'body'    => $request->getContent() // For raw body content
+//    ]);
+//
+    Log::alert('handle Push Out Start');
 
     $bodyContent = $request->getContent();
     $lines = explode("\n", $bodyContent);
@@ -69,10 +71,13 @@ class MistTriggerController extends Controller {
   }
 
   public function handlePushEnd(Request $request): Response {
-    Log::debug('handlePushEnd Raw Request', [
-        'headers' => $request->headers->all(),
-        'body'    => $request->getContent() // For raw body content
-    ]);
+//    Log::debug('handlePushEnd Raw Request', [
+//        'headers' => $request->headers->all(),
+//        'body'    => $request->getContent() // For raw body content
+//    ]);
+
+    Log::alert('handle Push End');
+
     // Similar to handlePushOutStart
 
     //// tec21: We'll come back to this
@@ -90,7 +95,9 @@ class MistTriggerController extends Controller {
 
   public function handleRecordingEnd(Request $request): Response {
     // Log the incoming request content for debugging
-    Log::debug('Handling recording end. Request content:', ['content' => $request->getContent()]);
+//    Log::debug('Handling recording end. Request content:', ['content' => $request->getContent()]);
+
+    Log::alert('handle Recording End');
 
     $parsedContent = $this->parseRecordingEndContent($request->getContent());
     // Optionally log the parsed content if needed
