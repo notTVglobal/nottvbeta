@@ -23,6 +23,11 @@ class MistTriggerController extends Controller {
 
 
   public function handlePushOutStart(Request $request): Response|Application|ResponseFactory {
+    Log::debug('handlePushEnd Raw Request', [
+    'headers' => $request->headers->all(),
+    'body'    => $request->getContent() // For raw body content
+    ]);
+
     $bodyContent = $request->getContent();
     $lines = explode("\n", $bodyContent);
 
@@ -64,10 +69,10 @@ class MistTriggerController extends Controller {
   }
 
   public function handlePushEnd(Request $request): Response|Application|ResponseFactory {
-//    Log::debug('handlePushEnd Raw Request', [
-//        'headers' => $request->headers->all(),
-//        'body'    => $request->getContent() // For raw body content
-//    ]);
+    Log::debug('handlePushEnd Raw Request', [
+        'headers' => $request->headers->all(),
+        'body'    => $request->getContent() // For raw body content
+    ]);
     // Similar to handlePushOutStart
 
     //// tec21: We'll come back to this
@@ -188,7 +193,7 @@ class MistTriggerController extends Controller {
    * @param Request $request
    * @return Application|ResponseFactory|Response
    */
-  public function validateUser(Request $request) {
+  public function validateUser(Request $request): Response|Application|ResponseFactory {
 
     // NOTE: This currently uses the USER_NEW trigger.
     // The request_url is on a different line of the
