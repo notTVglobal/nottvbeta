@@ -54,7 +54,7 @@ Route::get('/app_settings', [AppSettingController::class, 'getAppSettings']);
 Route::get('/products', [ProductController::class, 'index']);
 
 // our first mist server trigger... for Access Control
-Route::post('/mist-trigger/validate-user', [MistTriggerController::class, 'validateUser']);
+Route::post('/mist-trigger/validate-user', [MistTriggerController::class, 'handleValidateUser']);
 
 Route::post('/mist-trigger/push-out-start', [MistTriggerController::class, 'handlePushOutStart']);
 Route::post('/mist-trigger/push-end', [MistTriggerController::class, 'handlePushEnd']);

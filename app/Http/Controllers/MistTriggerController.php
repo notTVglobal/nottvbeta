@@ -23,12 +23,11 @@ class MistTriggerController extends Controller {
 
 
   public function handlePushOutStart(Request $request): Response {
-//    Log::debug('handlePushOutStart Raw Request', [
-//    'headers' => $request->headers->all(),
-//    'body'    => $request->getContent() // For raw body content
-//    ]);
-//
     Log::alert('handle Push Out Start');
+    Log::debug('handlePushOutStart Raw Request', [
+      'headers' => $request->headers->all(),
+      'body'    => $request->getContent() // For raw body content
+    ]);
 
     $bodyContent = $request->getContent();
     $lines = explode("\n", $bodyContent);
@@ -71,12 +70,11 @@ class MistTriggerController extends Controller {
   }
 
   public function handlePushEnd(Request $request): Response {
-//    Log::debug('handlePushEnd Raw Request', [
-//        'headers' => $request->headers->all(),
-//        'body'    => $request->getContent() // For raw body content
-//    ]);
-
     Log::alert('handle Push End');
+    Log::debug('handlePushEnd Raw Request', [
+      'headers' => $request->headers->all(),
+      'body'    => $request->getContent() // For raw body content
+    ]);
 
     // Similar to handlePushOutStart
 
@@ -98,6 +96,10 @@ class MistTriggerController extends Controller {
 //    Log::debug('Handling recording end. Request content:', ['content' => $request->getContent()]);
 
     Log::alert('handle Recording End');
+    Log::debug('handlePushEnd Raw Request', [
+        'headers' => $request->headers->all(),
+        'body'    => $request->getContent() // For raw body content
+    ]);
 
     $parsedContent = $this->parseRecordingEndContent($request->getContent());
     // Optionally log the parsed content if needed
@@ -200,8 +202,12 @@ class MistTriggerController extends Controller {
    * @param Request $request
    * @return Application|ResponseFactory|Response
    */
-  public function validateUser(Request $request): Response|Application|ResponseFactory {
-
+  public function handleValidateUser(Request $request): Response|Application|ResponseFactory {
+    Log::alert('handle Validate User');
+    Log::debug('handleValidateUser Raw Request', [
+        'headers' => $request->headers->all(),
+        'body'    => $request->getContent() // For raw body content
+    ]);
     // NOTE: This currently uses the USER_NEW trigger.
     // The request_url is on a different line of the
     // request body in CONN_PLAY. And CONN_PLAY makes
