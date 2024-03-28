@@ -461,15 +461,57 @@
           <div class="card-body items-center text-center">
             <h2 class="card-title">Pushing to Production!</h2>
             <div class="mockup-code break-words">
-              <pre data-prefix="$"><code>git checkout staging</code></pre>
-              <pre data-prefix="$"><code>rm -rf public/js/*</code></pre>
-              <pre data-prefix="$"><code>rm -rf public/css/*</code></pre>
-              <pre data-prefix="$"><code>git merge development</code></pre>
-              <pre data-prefix="$"><code>npm run production</code></pre>
-              <pre data-prefix="$"><code>git add .</code></pre>
-              <pre data-prefix="$"><code>git commit -m "merge development build production"</code></pre>
-              <pre data-prefix="$"><code>git push origin</code></pre>
-              <pre data-prefix="$"><code>git checkout development</code></pre>
+              <div class="commands">
+                <div v-for="command in commands" :key="command.text" class="command">
+                  <pre data-prefix="$"><code>{{ command.text }}
+                                    <button @click="copyCommand(command)">
+                    <font-awesome-icon icon="fa-clipboard" class="ml-2 text-blue-500 hover:text-blue-700 hover:cursor-pointer"/>
+                  </button>
+                  <span v-if="command.copied" class="copied-message">Copied!</span>
+                  </code></pre>
+                </div>
+              </div>
+
+
+
+
+
+
+
+
+
+
+
+<!--              <pre data-prefix="$"><code>git checkout staging-->
+<!--                <button @click="copyCommand('git checkout staging')"><font-awesome-icon icon="fa-clipboard" class="text-blue-500 hover:text-blue-700 hover:cursor-pointer"/>-->
+<!--                </button></code></pre>-->
+<!--              <pre data-prefix="$"><code>rm -rf public/js/*-->
+<!--                <button @click="copyCommand('rm -rf public/js/*')"><font-awesome-icon icon="fa-clipboard" class="text-blue-500 hover:text-blue-700 hover:cursor-pointer"/>-->
+<!--                </button></code></pre>-->
+<!--              <pre data-prefix="$"><code>rm -rf public/css/*-->
+<!--                <button @click="copyCommand('rm -rf public/css/*')"><font-awesome-icon icon="fa-clipboard" class="text-blue-500 hover:text-blue-700 hover:cursor-pointer"/>-->
+<!--                </button></code></pre>-->
+<!--              <pre data-prefix="$"><code>git merge development-->
+<!--                <button @click="copyCommand('git merge development')"><font-awesome-icon icon="fa-clipboard" class="text-blue-500 hover:text-blue-700 hover:cursor-pointer"/>-->
+<!--                </button></code></pre>-->
+<!--              <pre data-prefix="$"><code>npm run production-->
+<!--                <button @click="copyCommand('npm run production')"><font-awesome-icon icon="fa-clipboard" class="text-blue-500 hover:text-blue-700 hover:cursor-pointer"/>-->
+<!--                </button></code></pre>-->
+<!--              <pre data-prefix="$"><code>git add .-->
+<!--                <button @click="copyCommand('git add .')"><font-awesome-icon icon="fa-clipboard" class="text-blue-500 hover:text-blue-700 hover:cursor-pointer"/>-->
+<!--                </button></code></pre>-->
+<!--              <pre data-prefix="$"><code>git commit -m "merge development build production"-->
+<!--                <button @click="copyCommand('git commit -m \'merge development build production\'')"><font-awesome-icon icon="fa-clipboard" class="text-blue-500 hover:text-blue-700 hover:cursor-pointer"/>-->
+<!--                </button></code></pre>-->
+<!--              <pre data-prefix="$"><code>git push origin-->
+<!--                <button @click="copyCommand('git push origin')"><font-awesome-icon icon="fa-clipboard" class="text-blue-500 hover:text-blue-700 hover:cursor-pointer"/>-->
+<!--                </button></code></pre>-->
+<!--              <pre data-prefix="$"><code>git checkout development-->
+<!--                <button @click="copyCommand('git checkout development')"><font-awesome-icon icon="fa-clipboard" class="text-blue-500 hover:text-blue-700 hover:cursor-pointer"/>-->
+<!--                </button></code></pre>-->
+<!--              -->
+
+
               <div role="alert" class="mt-5 alert alert-info">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                      class="stroke-current shrink-0 w-6 h-6">
@@ -584,8 +626,9 @@
 
 <script setup>
 import { Inertia } from '@inertiajs/inertia'
-import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue'
+import { computed, nextTick, onMounted, onUnmounted, reactive, ref } from 'vue'
 import { useForm } from '@inertiajs/inertia-vue3'
+import { useClipboard } from '@vueuse/core'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useAdminStore } from '@/Stores/AdminStore'
@@ -595,11 +638,34 @@ import Message from '@/Components/Global/Modals/Messages'
 import PopUpModal from '@/Components/Global/Modals/PopUpModal.vue'
 import TabbableTextarea from '@/Components/Global/TextEditor/TabbableTextarea.vue'
 import FirstPlayVideoSourceSelector from '@/Components/Pages/Admin/Settings/FirstPlayVideoSourceSelector.vue'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 usePageSetup('admin.settings')
 
 const appSettingStore = useAppSettingStore()
 const adminStore = useAdminStore()
+
+const { copy } = useClipboard()
+
+const commands = reactive([
+  { text: 'git checkout staging', copied: false },
+  { text: 'rm -rf public/js/*', copied: false },
+  { text: 'rm -rf public/css/*', copied: false },
+  { text: 'git merge development', copied: false },
+  { text: 'npm run production', copied: false },
+  { text: 'git add .', copied: false },
+  { text: 'git commit -m "merge development build production"', copied: false },
+  { text: 'git push origin', copied: false },
+  { text: 'git checkout development', copied: false },
+]);
+
+function copyCommand(command) {
+  copy(command.text);
+  command.copied = true;
+  setTimeout(() => {
+    command.copied = false;
+  }, 1000); // Hide the message after 1 second
+}
 
 let props = defineProps({
   id: Number,
@@ -812,6 +878,12 @@ const mistServerUriForManagementInterface = ref(convertToHttp(mistServerUri))
 
 </script>
 <style scoped>
+
+.copied-message {
+  margin-left: 8px; /* Adjust as needed */
+  /* Add any additional styling here */
+}
+
 .admin-container {
   display: flex;
 }
