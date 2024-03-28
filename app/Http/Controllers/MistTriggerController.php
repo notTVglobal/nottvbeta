@@ -22,7 +22,7 @@ use Carbon\Carbon;
 class MistTriggerController extends Controller {
 
 
-  public function handlePushOutStart(Request $request): Response|Application|ResponseFactory {
+  public function handlePushOutStart(Request $request): Response {
     Log::debug('handlePushEnd Raw Request', [
     'headers' => $request->headers->all(),
     'body'    => $request->getContent() // For raw body content
@@ -68,7 +68,7 @@ class MistTriggerController extends Controller {
     return response('1', 200);
   }
 
-  public function handlePushEnd(Request $request): Response|Application|ResponseFactory {
+  public function handlePushEnd(Request $request): Response {
     Log::debug('handlePushEnd Raw Request', [
         'headers' => $request->headers->all(),
         'body'    => $request->getContent() // For raw body content
