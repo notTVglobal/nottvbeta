@@ -84,10 +84,25 @@ class MistTriggerController extends Controller {
   }
 
   public function handleRecordingEnd(Request $request): Response {
+    // Log the incoming request content for debugging
+    Log::debug('Handling recording end. Request content:', ['content' => $request->getContent()]);
+
     $parsedContent = $this->parseRecordingEndContent($request->getContent());
+    // Optionally log the parsed content if needed
+    Log::debug('Parsed recording end content:', ['parsedContent' => $parsedContent]);
+
     $recording = $this->createRecordingEntry($parsedContent);
+    // Log after creating the recording entry
+    Log::debug('Recording entry created:', ['recording' => $recording]);
+
     $this->clearRecordingMetadataAndBroadcast($parsedContent['streamName']);
+    // Log after clearing recording metadata and broadcasting
+    Log::debug('Cleared recording metadata and broadcast for stream:', ['streamName' => $parsedContent['streamName']]);
+
     UpdateRecordingModelAndNotify::dispatch($recording);
+    // Log after dispatching the job
+    Log::debug('Dispatched UpdateRecordingModelAndNotify job for recording:', ['recording' => $recording]);
+
     return response('1', 200);
   }
 

@@ -238,7 +238,7 @@
 
                         <JetDropdownLink
                             @click.prevent="videoPlayerStore.makeVideoTopRight()"
-                            :href="`/settings?q=firstPlaySettings`"
+                            :href="route('admin.settings') + '?section=firstPlaySettings'"
                             :dark="true">
                           First Play Settings
                         </JetDropdownLink>

@@ -43,8 +43,10 @@ class AdminController extends Controller {
 ////////////  SETTINGS
 //////////////////////
 
-  public function settings() {
+  public function settings(HttpRequest $request) {
 //        $settings = DB::table('app_settings')->where('id', 1)->first();
+    $queryParam = $request->query('section');
+
     $settings = AppSetting::find(1);
 
     // Fetch all countries
@@ -69,6 +71,7 @@ class AdminController extends Controller {
         'mist_server_uri'              => $settings->mist_server_uri,
         'mist_server_rtmp_uri'         => $settings->mist_server_rtmp_uri,
         'public_stats_url'             => $settings->public_stats_url,
+        'currentSection'              => $queryParam,
 //            'mist_server_api_url' => $settings->mist_server_api_url,
 //            'mist_server_username' => $settings->mist_server_username,
 //            'mist_server_password' => $decryptedPassword ?? null,

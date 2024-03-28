@@ -584,7 +584,6 @@
 
 <script setup>
 import { Inertia } from '@inertiajs/inertia'
-import { usePage } from '@inertiajs/inertia-vue3';
 import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue'
 import { useForm } from '@inertiajs/inertia-vue3'
 import { usePageSetup } from '@/Utilities/PageSetup'
@@ -621,6 +620,7 @@ let props = defineProps({
   // mist_server_password: String,
   // mist_access_control_secret: String,
   messageType: String,
+  currentSection: String,
 })
 
 let form = useForm({
@@ -652,12 +652,8 @@ const popUpModalMessage = ref('')
 onMounted(() => {
   countries.value = props.countries
   secureNotes.value = ''
-  const { url } = usePage().props.value;
-
-  // Example: Check if a specific query string `showSettings` is present
-  const urlParams = new URLSearchParams(window.location.search);
-  if (urlParams.has('firstPlaySettings')) {
-    openFirstPlaySettings();
+  if(props.currentSection === 'firstPlaySettings'){
+    openFirstPlaySettings()
   }
 })
 
@@ -672,7 +668,7 @@ const disabledButtonClasses = computed(() => ({
 const firstPlaySettingsOpen = ref(false)
 const firstPlaySettingsSaving = ref(false)
 
-const openFirstPlaySettings = async () => {
+const openFirstPlaySettings = () => {
   firstPlaySettingsOpen.value = true
   secureNotesOpen.value = false
 }
