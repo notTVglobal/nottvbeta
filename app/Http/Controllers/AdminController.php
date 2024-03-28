@@ -43,8 +43,10 @@ class AdminController extends Controller {
 ////////////  SETTINGS
 //////////////////////
 
-  public function settings() {
+  public function settings(HttpRequest $request) {
 //        $settings = DB::table('app_settings')->where('id', 1)->first();
+    $queryParam = $request->query('section');
+
     $settings = AppSetting::find(1);
 
     // Fetch all countries
@@ -68,6 +70,8 @@ class AdminController extends Controller {
 //            'mist_server_ip' => $settings->mist_server_ip,
         'mist_server_uri'              => $settings->mist_server_uri,
         'mist_server_rtmp_uri'         => $settings->mist_server_rtmp_uri,
+        'public_stats_url'             => $settings->public_stats_url,
+        'currentSection'              => $queryParam,
 //            'mist_server_api_url' => $settings->mist_server_api_url,
 //            'mist_server_username' => $settings->mist_server_username,
 //            'mist_server_password' => $decryptedPassword ?? null,
@@ -82,12 +86,8 @@ class AdminController extends Controller {
         'cloud_folder'         => 'nullable|string',
         'mist_server_uri'      => 'nullable|url',
         'mist_server_rtmp_uri' => 'nullable|string',
+        'public_stats_url'     => 'nullable|url',
     ]);
-
-    // Encrypting the Mist Server Password
-    if ($request->mist_server_password) {
-      $encryptedPassword = Crypt::encryptString($request->mist_server_password);
-    }
 
     $settings = AppSetting::find($request->id);
     $settings->country_id = $request->default_country;
@@ -95,6 +95,7 @@ class AdminController extends Controller {
     $settings->cloud_folder = '/' . $request->cloud_folder;
     $settings->mist_server_uri = rtrim($request->mist_server_uri, '/') . '/';
     $settings->mist_server_rtmp_uri = rtrim($request->mist_server_rtmp_uri, '/') . '/';
+    $settings->public_stats_url = $request->public_stats_url;
 
     $settings->save();
 
@@ -170,7 +171,7 @@ class AdminController extends Controller {
 
     // Prepare the common settings to be updated
     $updateData = [
-        'first_play_settings' => [
+        'first_play_settings'   => [
             'channelId'             => $request->channelId,
             'useCustomVideo'        => $request->useCustomVideo,
             'customVideoSource'     => $request->customVideoSource,

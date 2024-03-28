@@ -81,6 +81,9 @@
             </div>
           </div>
 
+          <div>
+            <button class="btn btn-secondary" @click="openStats">Live Analytics</button></div>
+
           <div class="">
             <div>Live will begin in... &nbsp;</div>
             <!--          <div class="font-semibold">{{ formattedCountdown }} (for demo purposes only)</div>-->
@@ -96,6 +99,8 @@
           </div>
         </div>
       </div>
+
+
 
 
       <div class="flex flex-col justify-center mt-3 h-fit">
@@ -263,7 +268,7 @@
                     </button>
                     <button v-if="destination.has_auto_push"
                             @click="mistStore.disableAutoPush(destination.id)"
-                            class="py-2 px-4 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition duration-150">
+                            class="py-2 px-4 bg-gray-500 text-white rounded hover:bg-gray-600 transition duration-150">
                       Disable Auto Push
                     </button>
                   </div>
@@ -460,6 +465,10 @@ const reloadPlayer = () => {
   // videoAuxPlayerStore.loadNewLiveSource(source, sourceType)
   console.log('reload player')
 }
+
+const openStats = () => {
+  window.open('/stats', '_blank');
+};
 
 // watchEffect(() => {
 //   const mistServerUri = videoPlayerStore.mistServerUri

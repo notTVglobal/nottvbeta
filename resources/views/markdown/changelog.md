@@ -1,7 +1,15 @@
 # not.tv Changelog
 
-Last Update: March 26, 2024\
+Last Update: March 28, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.8.7.26
+March 28, 2024
+* Add /stats path to redirect to the current public analytics page.
+  * Added an app_setting for the Admin to easily change this in settings.
+* Change the color of the disable auto push button to make it easier to see when push is enabled.
+* Add a Live Analytics button on the Go Live page that opens a new tab with the live analytics of notTV.
+* Add debug lines to the MistTriggerController, handleRecordingEnd
 
 ## v0.8.7.25
 March 26, 2024

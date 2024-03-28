@@ -320,6 +320,28 @@
                  class="text-xs text-red-600 mt-1"></div>
           </div>
 
+          <div class="mb-6">
+            <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"
+                   for="public_stats_url"
+            >
+              PUBLIC STATS URL
+            </label>
+            <div class="text-xs mb-2">The public dashboard of our grafana analytics. Note: https://not.tv/stats will redirect to this page.</div>
+
+            <div class="flex flex-row">
+              <input v-model="form.public_stats_url"
+                     class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                     type="text"
+                     name="public_stats_url"
+                     id="public_stats_url"
+              >
+            </div>
+            <div class="text-xs mb-2">e.g., https://stats.not.tv</div>
+
+            <div v-if="form.errors.public_stats_url" v-text="form.errors.public_stats_url"
+                 class="text-xs text-red-600 mt-1"></div>
+          </div>
+
           <div class="mb-6 border-t-2 pt-4">
 
 
@@ -592,11 +614,13 @@ let props = defineProps({
   // mist_server_ip: String,
   mist_server_uri: String,
   mist_server_rtmp_uri: String,
+  public_stats_url: String,
   // mist_server_api_url: String,
   // mist_server_username: String,
   // mist_server_password: String,
   // mist_access_control_secret: String,
   messageType: String,
+  currentSection: String,
 })
 
 let form = useForm({
@@ -611,6 +635,7 @@ let form = useForm({
   // mist_server_ip: props.mist_server_ip,
   mist_server_uri: props.mist_server_uri,
   mist_server_rtmp_uri: props.mist_server_rtmp_uri,
+  public_stats_url: props.public_stats_url,
   // mist_server_api_url: props.mist_server_api_url,
   // mist_server_username: props.mist_server_username,
   // mist_server_password: props.mist_server_password,
@@ -627,6 +652,9 @@ const popUpModalMessage = ref('')
 onMounted(() => {
   countries.value = props.countries
   secureNotes.value = ''
+  if(props.currentSection === 'firstPlaySettings'){
+    openFirstPlaySettings()
+  }
 })
 
 onUnmounted(() => {
@@ -640,7 +668,7 @@ const disabledButtonClasses = computed(() => ({
 const firstPlaySettingsOpen = ref(false)
 const firstPlaySettingsSaving = ref(false)
 
-const openFirstPlaySettings = async () => {
+const openFirstPlaySettings = () => {
   firstPlaySettingsOpen.value = true
   secureNotesOpen.value = false
 }
