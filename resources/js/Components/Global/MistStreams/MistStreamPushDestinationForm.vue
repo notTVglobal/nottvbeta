@@ -101,7 +101,8 @@ const submitForm = async () => {
     // Assuming the wildcard ID is part of the response or known at this point
     // const wildcardId = response.data.wildcardId || someOtherWayToDetermineWildcardId();
     console.log('just about to send this wildcardID: ' + goLiveStore.wildcardId)
-    await mistStore.getMistStreamPushDestinations(goLiveStore.wildcardId); // Fetch updated push destinations
+    // await mistStore.getMistStreamPushDestinations(goLiveStore.wildcardId); // Fetch updated push destinations
+    await goLiveStore.fetchPushDestinations(); // Fetch updated push destinations
 
 
     // Close the modal

@@ -610,7 +610,11 @@ export const useVideoAuxPlayerStore = defineStore('videoAuxPlayerStore', {
         loadPlaylistVideos() {
 
         },
-        async loadMistStreamVideo(mistStream) {
+        async loadMistStreamVideo(mistStream, stayMuted) {
+            let shouldUnmute = true
+            if(stayMuted) {
+                shouldUnmute = false
+            };
             // console.log('Loading Mist Stream Video for:', mistStream.name); // Log which Mist Stream is being loaded
             // This mistServerUri comes from appSettings
             if (!this.mistServerUri) {
@@ -627,7 +631,9 @@ export const useVideoAuxPlayerStore = defineStore('videoAuxPlayerStore', {
                 // console.log('Setting player source to:', this.videoSource, 'of type:', this.videoSourceType); // Log the source setting
                 let videoJs = videojs('aux-player')
                 videoJs.src({'src': this.videoSource, 'type': this.videoSourceType})
-                this.unMute()
+                if (shouldUnmute) {
+                    this.unMute()
+                }
                 this.paused = false
             } else {
                 console.error('Mist Server URI is still not set after fetching.')

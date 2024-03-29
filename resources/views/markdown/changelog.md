@@ -6,6 +6,18 @@ Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 ## v0.8.7.29
 March 28, 2024
 * Fix the GoLive Component to fetch push destinations in a new way.
+* The Push Start and Push Stop buttons seem to be working
+* The Enable Auto Push seems to be adding it to the MistServer
+* Disable Auto Push does not work.
+* Disable All Auto Pushes does not work.
+* Added Toast Notifications to Push starts/stops
+* Added a mist_server_auto_pushes table to track auto pushes and make removing individual pushes easier
+* Added a mist_server_active_pushes table to track active pushes
+  * This table can get updated every n seconds through a scheduled command
+  * The GoLive component can make an api call to retreive the data that is updated by the command to stay up-to-date
+  * This is the most efficient way to handle polling the MistServer for accurate push data.
+* There is a bug in the mist server... The trigger settings with blocking needs to be just right
+  * Additionally, if a recording is started and then stopped right away and the Stream Resume is enabled then the recording will not start again.
 
 ## v0.8.7.28
 March 28, 2024

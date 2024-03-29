@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Jobs\MistStreamPushAutoAddJob;
 use App\Jobs\MistStreamPushAutoRemoveJob;
 use App\Jobs\MistStreamPushStartJob;
 use App\Jobs\MistStreamPushStopJob;
 use App\Models\MistServerActivePush;
+use App\Models\MistServerAutoPush;
 use App\Models\MistStreamPushDestination;
-use App\Models\MistStreamWildcard;
+use App\Services\MistServerService;
 use App\Services\PushDestinationService;
 use App\Services\RecordingService;
 use Illuminate\Http\Request;
@@ -19,11 +19,13 @@ class MistStreamPushDestinationController extends Controller
 
   protected PushDestinationService $pushDestinationService;
   protected RecordingService $recordingService;
+  protected MistServerService $mistServerService;
 
-  public function __construct(PushDestinationService $pushDestinationService, RecordingService $recordingService)
+  public function __construct(PushDestinationService $pushDestinationService, RecordingService $recordingService, MistServerService $mistServerService)
   {
     $this->pushDestinationService = $pushDestinationService;
     $this->recordingService = $recordingService;
+    $this->mistServerService = $mistServerService;
   }
 
 
@@ -289,13 +291,7 @@ class MistStreamPushDestinationController extends Controller
     }
   }
 
-  public function getPushAutoList(Request $request) {
-    // start a job to make sure any pushes that are active or auto pushes setup are up to date
-    // on the MistStreamPushDestination table, has_auto_push and push_is_started.
 
-    // create job to getPushAutoList
-
-  }
 
   public function getPushList(Request $request) {
     // start a job to make sure any pushes that any active pushes matching this Push Destination
@@ -305,88 +301,127 @@ class MistStreamPushDestinationController extends Controller
 
   }
 
-  public function pushAutoAdd(Request $request, PushDestinationService $pushDestinationService): \Illuminate\Http\JsonResponse {
+  public function pushAutoAdd(MistStreamPushDestination $mistStreamPushDestination): \Illuminate\Http\JsonResponse {
+    Log::debug('Auto push added for MistStreamPushDestination.', ['destinationId' => $mistStreamPushDestination->id]);
+
+//    try {
+      // Use the service to add auto push
+      $this->pushDestinationService->pushAutoAdd($mistStreamPushDestination);
+//    return response()->json(['message' => 'Test success'], 200);
+
+      // Assuming the operation was successful, log the success and return a JSON response with a status
+      Log::debug('Push Destination Service -> pushAutoAdd ran successfully.', ['destinationId' => $mistStreamPushDestination->id]);
+
+      // Successful operation
+      return response()->json([
+          'message' => 'Auto push added successfully for ' . $mistStreamPushDestination->id,
+          'status' => 'success' // Indicate success for the ToastNotification
+      ]);
+//    } catch (\Exception $e) {
+//      // Log the error and return an error response with a status
+//      Log::error('Failed to dispatch PushDestinationService for pushAutoAdd', ['exception' => $e->getMessage(), 'destinationId' => $mistStreamPushDestination->id]);
+//
+//      // Operation failed
+//      return response()->json([
+//          'message' => 'Failed to enable auto push for ' . $mistStreamPushDestination->id,
+//          'status' => 'error' // Indicate error for the ToastNotification
+//      ], 500);
+//    }
+  }
+
+
+  /**
+   * @throws \Exception
+   */
+  public function removeAllAutoPushesForStream(Request $request, PushDestinationService $pushDestinationService) {
+    // Validate the request data
     $validated = $request->validate([
-        'destinationId' => 'required|string',
+        'streamName' => 'required|string',
     ]);
 
-    $destinationId = $validated['destinationId'];
+    $streamName = $validated['streamName'];
+
+//    $streamName = $mistStreamPushDestination->mistStreamWildcard->name;
+
+    // Ensure the mistStreamWildcard relationship is loaded
+//    if (!$mistStreamPushDestination->relationLoaded('mistStreamWildcard')) {
+//      $mistStreamPushDestination->load('mistStreamWildcard');
+//    }
+
+    // Prepare the data array correctly in PHP syntax
+    $data = [
+        "push_auto_remove" => $streamName
+    ];
 
     try {
-      $destination = MistStreamPushDestination::findOrFail($destinationId); // Ensure this call is correct based on your model
+      // Delegate the operation to the service
+      $pushDestinationService->removeAllAutoPushesForStream($streamName);
 
-      // tec21: moved this here from MistStreamPushAutoAddJob - 2024-03-28
-      $pushDestinationService->pushAutoAdd($destination);
-
-      // Assuming you update the job to accept the destination model and other details directly
-//      MistStreamPushAutoAddJob::dispatch($destination);
-
-      return response()->json(['message' => 'Push auto add job dispatched successfully.']);
+      // Respond with success
+      return response()->json(['message' => "Auto pushes removed successfully for stream: {$streamName}"]);
     } catch (\Exception $e) {
-      Log::error('Failed to dispatch MistStreamPushAutoAddJob', ['exception' => $e->getMessage()]);
-      return response()->json(['error' => 'Failed to dispatch job.'], 500);
+      Log::error('Failed to remove all auto pushes for stream.', [
+          'streamName' => $streamName,
+          'exception' => $e->getMessage()
+      ]);
+      return response()->json(['error' => 'Failed to remove auto pushes.'], 500);
     }
   }
 
-  public function pushAutoRemove(Request $request)
-  {
-    $validated = $request->validate([
-        'destinationId' => 'required|string',
-    ]);
 
-    $destinationId = $validated['destinationId'];
 
-    try {
-      $destination = MistStreamPushDestination::findOrFail($destinationId); // Ensure this call is correct based on your model
+  public function pushAutoRemove(MistStreamPushDestination $mistStreamPushDestination): \Illuminate\Http\JsonResponse {
+
+    $response = $this->pushDestinationService->fetchPushAutoList();
+
+    Log::debug('Auto push removed for MistStreamPushDestination.', ['destinationId' => $mistStreamPushDestination->id]);
+//    try {
+
+      $this->pushDestinationService->pushAutoRemove($mistStreamPushDestination);
 
       // Dispatch the MistStreamPushAutoRemoveJob with the destination model
-      MistStreamPushAutoRemoveJob::dispatch($destination);
+//      MistStreamPushAutoRemoveJob::dispatch($destination);
+      Log::debug('Push Destination Service -> pushAutoRemove ran successfully for ', ['destinationId' => $mistStreamPushDestination->id]);
 
-      return response()->json(['message' => 'Push auto remove job dispatched successfully.']);
-    } catch (\Exception $e) {
-      Log::error('Failed to dispatch MistStreamPushAutoRemoveJob', ['exception' => $e->getMessage()]);
-      return response()->json(['error' => 'Failed to dispatch job.'], 500);
-    }
+      return response()->json(['message' => 'Auto push removed successfully for ' . $mistStreamPushDestination->id]);
+//    } catch (\Exception $e) {
+//      Log::error('Failed to run PushDestinationService for pushAutoRemove', ['exception' => $e->getMessage()]);
+//      return response()->json(['error' => 'Failed to dispatch job.'], 500);
+//    }
   }
 
-  public function startPush(Request $request)
-  {
-    $validated = $request->validate([
-        'destinationId' => 'required|string', // Adjust based on your ID's data type
-    ]);
-
-    $destinationId = $validated['destinationId'];
+  public function startPush(MistStreamPushDestination $mistStreamPushDestination): \Illuminate\Http\JsonResponse {
+    Log::debug('Starting push for MistStreamPushDestination.', ['destinationId' => $mistStreamPushDestination->id]);
 
     try {
-      $destination = MistStreamPushDestination::findOrFail($destinationId); // Ensure this call is correct based on your model
-
+      Log::debug('About to dispatch MistStreamPushStartJob', [
+          'destinationId' => $mistStreamPushDestination->id,
+          'destination' => $mistStreamPushDestination->toArray(), // Convert model to array for logging
+      ]);
       // Dispatch the MistStreamPushStartJob with the destination model
-      MistStreamPushStartJob::dispatch($destination);
+      MistStreamPushStartJob::dispatch($mistStreamPushDestination);
 
-      return response()->json(['message' => 'Push start job dispatched successfully for destination ' . $destinationId]);
+      Log::debug('MistStreamPushStartJob dispatched successfully.', ['destinationId' => $mistStreamPushDestination->id]);
+
+      return response()->json(['message' => 'Push start job dispatched successfully for destination ' . $mistStreamPushDestination->id]);
     } catch (\Exception $e) {
-      Log::error('Failed to dispatch MistStreamPushStartJob', ['exception' => $e->getMessage()]);
+      Log::error('Failed to dispatch MistStreamPushStartJob', ['destinationId' => $mistStreamPushDestination->id, 'exception' => $e->getMessage()]);
       return response()->json(['error' => 'Failed to dispatch job.'], 500);
     }
   }
 
-  public function stopPush(Request $request)
-  {
-    $validated = $request->validate([
-        'destinationId' => 'required|string',
-    ]);
-
-    $destinationId = $validated['destinationId'];
-
+  public function stopPush(MistStreamPushDestination $mistStreamPushDestination): \Illuminate\Http\JsonResponse {
     try {
-      $destination = MistStreamPushDestination::findOrFail($destinationId); // Ensure this call is correct based on your model
-
+      Log::debug('About to dispatch MistStreamPushStopJob', [
+          'destinationId' => $mistStreamPushDestination->id,
+          'destination' => $mistStreamPushDestination->toArray(), // Convert model to array for logging
+      ]);
       // Dispatch the MistStreamPushStopJob with the destination model
-      MistStreamPushStopJob::dispatch($destination);
+      MistStreamPushStopJob::dispatch($mistStreamPushDestination);
 
-      return response()->json(['message' => 'Push stop job dispatched successfully.']);
+      return response()->json(['message' => 'Push stop job dispatched successfully for destination ' . $mistStreamPushDestination->id]);
     } catch (\Exception $e) {
-      Log::error('Failed to dispatch MistStreamPushStopJob', ['exception' => $e->getMessage()]);
+      Log::error('Failed to dispatch MistStreamPushStopJob', ['destinationId' => $mistStreamPushDestination->id, 'exception' => $e->getMessage()]);
       return response()->json(['error' => 'Failed to dispatch job.'], 500);
     }
   }

@@ -3,6 +3,7 @@ namespace App\Services;
 
 use App\Events\MistTriggerPushOutStart;
 use App\Models\MistServerActivePush;
+use App\Models\MistServerAutoPush;
 use App\Models\MistStreamPushDestination;
 use App\Models\MistStreamWildcard;
 use App\Services\MistServerService;
@@ -192,8 +193,93 @@ class PushDestinationService {
   }
 
 
+  public function fetchPushAutoList(): array
+  {
+    $data = ["push_auto_list" => true]; // The value is ignored, so true is just a placeholder
+
+    try {
+      $response = $this->mistServerService->send($data);
+      $activeEntries = [];
+
+      if (isset($response['push_auto_list']) && is_array($response['push_auto_list'])) {
+        Log::debug("Successfully retrieved active push list from MistServer.");
+
+        foreach ($response['push_auto_list'] as $autoPushData) {
+          Log::debug('Saving auto push entry:', ['data' => $autoPushData]);
+
+          $newAutoPush = MistServerAutoPush::updateOrCreate(
+              [
+                  'stream_name' => $autoPushData[0],
+                  'uri' => $autoPushData[1],
+              ],
+              [
+                  'col_3' => $autoPushData[2],
+                  'col_4' => $autoPushData[3],
+                  'col_5' => $autoPushData[4],
+                  'col_6' => $autoPushData[5],
+                  'col_7' => $autoPushData[6],
+                  'col_8' => $autoPushData[7],
+                  'col_9' => $autoPushData[8],
+                  'col_10' => $autoPushData[9],
+                  'auto_push_entry' => $autoPushData, // This will be automatically cast to JSON by Laravel
+              ]
+          );
+
+          // Collect active entries for comparison
+          $activeEntries[] = $autoPushData[0] . '|' . $autoPushData[1];
 
 
+          // Optionally log the outcome
+          Log::debug("Processed auto push entry.", ['stream_name' => $newAutoPush->stream_name, 'uri' => $newAutoPush->uri]);
+        }
+        // Find and remove unmatched entries
+        $allAutoPushes = MistServerAutoPush::all();
+        foreach ($allAutoPushes as $autoPush) {
+          $identifier = $autoPush->stream_name . '|' . $autoPush->uri;
+          if (!in_array($identifier, $activeEntries)) {
+            Log::info("Removing unmatched auto push entry.", ['stream_name' => $autoPush->stream_name, 'uri' => $autoPush->uri]);
+            $autoPush->delete(); // Remove the unmatched entry
+          }
+        }
+
+        return $response['push_auto_list'];
+      } else {
+        Log::error("Failed to retrieve active push list. Response was not as expected.");
+        return [];
+      }
+    } catch (\Exception $e) {
+      Log::error("Exception occurred while fetching active push list", ['exception' => $e->getMessage()]);
+      return [];
+    }
+  }
+
+
+  public function removeAllAutoPushesForStream($streamName): array
+  {
+    Log::alert($streamName);
+    $data = ["push_auto_remove" => $streamName];
+
+    try {
+      $response = $this->mistServerService->send($data);
+
+      // Since we're removing auto pushes, there might not be a direct response indicating success,
+      // but you can log the streamName for which the operation was attempted.
+      Log::debug("Attempted to remove all auto pushes for stream.", ['stream_name' => $streamName]);
+
+      // Assuming the response gives some indication of success or failure
+      // This depends entirely on how your `send` method and the MistServer's API handle this operation
+      if (isset($response['success']) && $response['success']) {
+        Log::debug("Successfully removed all auto pushes for stream.", ['stream_name' => $streamName]);
+        return ['success' => true];
+      } else {
+        Log::error("Failed to remove all auto pushes for stream.", ['stream_name' => $streamName]);
+        return ['success' => false, 'error' => 'API operation failed.'];
+      }
+    } catch (\Exception $e) {
+      Log::error("Exception occurred while attempting to remove all auto pushes", ['stream_name' => $streamName, 'exception' => $e->getMessage()]);
+      return ['success' => false, 'error' => $e->getMessage()];
+    }
+  }
 
 
 //
@@ -346,37 +432,135 @@ class PushDestinationService {
 
   }
 
-  public function pushAutoAdd($destination): void {
+//  public function pushAutoAdd(MistStreamPushDestination $mistStreamPushDestination): void {
+//
+//    if (!$mistStreamPushDestination->relationLoaded('mistStreamWildcard')) {
+//      $mistStreamPushDestination->load('mistStreamWildcard');
+//    }
+//
+//    // Correctly format the target URL and prepare the stream name
+//    $targetURL = $mistStreamPushDestination->rtmp_url . $mistStreamPushDestination->rtmp_key;
+//    $streamName = $mistStreamPushDestination->mistStreamWildcard->name;
+//
+////    Log::debug('add ::::: ' . $targetURL . ' ::::: ' . $streamName);
+//    $data = [
+//        "push_auto_add" => [
+//            "stream" => $streamName,
+//            "target" => $targetURL,
+////            "scheduletime" => '', // this can get data from the showSchedule but is a future project.
+////            "completetime" => '', // this can get data from the showSchedule but is a future project.
+//        ]
+//    ];
+//
+//    try {
+//      $this->mistServerService->send($data); // Assuming 'send' method handles communication with MistServer
+//      $mistStreamPushDestination->has_auto_push = 1;
+//      $mistStreamPushDestination->save();
+//      // Log success with more detail
+////      Log::debug("Push auto add successful for stream: {$streamName} to target: {$targetURL}");
+//    } catch (\Exception $e) {
+//      // Log the error with detail
+//      Log::error("Failed to request push_auto_add for stream: {$streamName} to target: {$targetURL}", ['exception' => $e->getMessage()]);
+//      // Optionally, rethrow or handle the exception as needed
+//    }
+//  }
+//
+//  public function pushAutoRemove(MistStreamPushDestination $mistStreamPushDestination): void {
+//
+//    if (!$mistStreamPushDestination->relationLoaded('mistStreamWildcard')) {
+//      $mistStreamPushDestination->load('mistStreamWildcard');
+//    }
+//
+//    // Correctly format the target URL and prepare the stream name
+//    $targetURL = $mistStreamPushDestination->rtmp_url . $mistStreamPushDestination->rtmp_key;
+//    $streamName = $mistStreamPushDestination->mistStreamWildcard->name;
+//
+////    Log::debug('add ::::: ' . $targetURL . ' ::::: ' . $streamName);
+//    $data = [
+//        "push_auto_add" => [
+//            "stream" => $streamName,
+//            "target" => $targetURL,
+////            "scheduletime" => '', // this can get data from the showSchedule but is a future project.
+////            "completetime" => '', // this can get data from the showSchedule but is a future project.
+//        ]
+//    ];
+//
+//    try {
+//      $this->mistServerService->send($data); // Assuming 'send' method handles communication with MistServer
+//      $mistStreamPushDestination->has_auto_push = 1;
+//      $mistStreamPushDestination->save();
+//      // Log success with more detail
+////      Log::debug("Push auto add successful for stream: {$streamName} to target: {$targetURL}");
+//    } catch (\Exception $e) {
+//      // Log the error with detail
+//      Log::error("Failed to request push_auto_add for stream: {$streamName} to target: {$targetURL}", ['exception' => $e->getMessage()]);
+//      // Optionally, rethrow or handle the exception as needed
+//    }
+//  }
 
-    if (!$destination->relationLoaded('mistStreamWildcard')) {
-      $destination->load('mistStreamWildcard');
-    }
+  public function pushAutoAdd(MistStreamPushDestination $mistStreamPushDestination): bool {
+    $this->ensureWildcardLoaded($mistStreamPushDestination);
 
-    // Correctly format the target URL and prepare the stream name
-    $targetURL = $destination->rtmp_url . $destination->rtmp_key;
-    $streamName = $destination->mistStreamWildcard->name;
+    $targetURL = $mistStreamPushDestination->rtmp_url . $mistStreamPushDestination->rtmp_key;
+    $streamName = $mistStreamPushDestination->mistStreamWildcard->name;
 
-//    Log::debug('add ::::: ' . $targetURL . ' ::::: ' . $streamName);
     $data = [
         "push_auto_add" => [
+            $streamName,
+            $targetURL,
+        ]
+    ];
+    return $this->sendPushRequest($data, $mistStreamPushDestination, true);
+  }
+
+  public function pushAutoRemove(MistStreamPushDestination $mistStreamPushDestination): bool {
+    // Ensure the mistStreamWildcard relationship is loaded
+    $this->ensureWildcardLoaded($mistStreamPushDestination);
+
+    // Prepare the target URL and the stream name
+    $targetURL = $mistStreamPushDestination->rtmp_url . $mistStreamPushDestination->rtmp_key;
+    $streamName = $mistStreamPushDestination->mistStreamWildcard->name;
+
+    Log::debug('remove ::::: ' . $targetURL . ' ::::: ' . $streamName);
+    $data = [
+        "push_auto_remove" => [
             "stream" => $streamName,
             "target" => $targetURL,
-//            "scheduletime" => '', // this can get data from the showSchedule but is a future project.
-//            "completetime" => '', // this can get data from the showSchedule but is a future project.
+          // "scheduletime" and "completetime" can be added when relevant
         ]
     ];
 
-    try {
-      $this->mistServerService->send($data); // Assuming 'send' method handles communication with MistServer
-      $destination->has_auto_push = 1;
-      $destination->save();
-      // Log success with more detail
-//      Log::debug("Push auto add successful for stream: {$streamName} to target: {$targetURL}");
-    } catch (\Exception $e) {
-      // Log the error with detail
-      Log::error("Failed to request push_auto_add for stream: {$streamName} to target: {$targetURL}", ['exception' => $e->getMessage()]);
-      // Optionally, rethrow or handle the exception as needed
+    // Use the centralized method for sending the request and handling the response
+    return $this->sendPushRequest($data, $mistStreamPushDestination, true);
+  }
+
+  protected function ensureWildcardLoaded(MistStreamPushDestination $mistStreamPushDestination): void {
+    if (!$mistStreamPushDestination->relationLoaded('mistStreamWildcard')) {
+      $mistStreamPushDestination->load('mistStreamWildcard');
     }
+  }
+
+  protected function sendPushRequest(array $data, MistStreamPushDestination $mistStreamPushDestination, bool $isAddOperation): bool {
+//    try {
+      $response = $this->mistServerService->send($data); // Assuming 'send' returns a response you can evaluate for success
+    $mistStreamPushDestination->has_auto_push = $isAddOperation ? 1 : 0;
+    $mistStreamPushDestination->save();
+    return true;
+      // Assuming the response provides a way to determine success or failure:
+//      if ($response->successful()) { // This is just an example, adjust based on your actual response object
+
+        // Assuming you have a way to get 'stream' and 'target' from $data for logging purposes
+//        Log::debug("Push operation successful", ['stream' => $streamName, 'target' => $targetURL]); // Adjust variables as needed
+//        return true;
+//      } else {
+//        Log::error("Push operation failed", ['data' => $data]);
+//        return false;
+//      }
+//    } catch (\Exception $e) {
+//      Log::error("Failed to perform push operation", ['exception' => $e->getMessage(), 'data' => $data]);
+//      return false;
+//    }
+//    return false;
   }
 
 

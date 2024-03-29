@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\MistServerConfig;
+use App\Models\MistStreamPushDestination;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -47,13 +48,18 @@ class MistServerService {
     $response = Http::get($this->host, ['command' => json_encode($data)]);
 
     if ($response->failed()) {
-      Log::error('Request to MistServer failed', [
+      Log::error('MMMMMMMMMMM Request to MistServer failed', [
           'status'   => $response->status(),
           'response' => $response->body(),
       ]);
 
       return ['error' => 'Request to MistServer failed'];
     }
+
+    Log::alert('NNNNNNNNNNNNNNN Required data to match exactly for auto push remove', [
+        'status'   => $response->status(),
+        'response' => $response->body(),
+    ]);
 
     $responseData = $response->json();
 //    Log::debug("Received response from MistServer", ['response' => $responseData]);
@@ -87,7 +93,7 @@ class MistServerService {
     $response = $this->send(["streams" => "list"]); // Adjusted to specifically request a list
 
     if (isset($response['error'])) {
-      Log::error("Error fetching configured streams from MistServer", ['error' => $response['error']]);
+      Log::error("OOOOOOOOOOOOOO Error fetching configured streams from MistServer", ['error' => $response['error']]);
 
       return false;
     }
@@ -120,7 +126,7 @@ class MistServerService {
     $response = $this->send(["streams" => $updatedStreamsConfiguration]);
 
     if (isset($response['error'])) {
-      Log::error("Error updating configured streams on MistServer", ['error' => $response['error']]);
+      Log::error("PPPPPPPPPPPP  Error updating configured streams on MistServer", ['error' => $response['error']]);
 
       return false;
     }
@@ -309,7 +315,7 @@ class MistServerService {
     try {
       $response = $this->send($data); // Assuming 'send' method handles communication with MistServer
       if (isset($response['push_list']) && is_array($response['push_list'])) {
-        Log::debug("Successfully retrieved active push list from MistServer.");
+        Log::debug("AAAAAAAAAAAA   Successfully retrieved active push list from MistServer.");
 
         return $response['push_list'];
       } else {
@@ -324,9 +330,14 @@ class MistServerService {
     }
   }
 
-  public function startPush($destination): void {
-    $streamName = $destination->mistStreamWildcard->name; // Adjust based on your model
-    $targetURL = $destination->rtmp_url . $destination->rtmp_key;
+  public function startPush(MistStreamPushDestination $mistStreamPushDestination): void {
+    $streamName = $mistStreamPushDestination->mistStreamWildcard->name; // Adjust based on your model
+    $targetURL = $mistStreamPushDestination->rtmp_url . $mistStreamPushDestination->rtmp_key;
+
+    Log::debug("BBBBBBBBBBB  Attempting to start push", [
+        'streamName' => $streamName,
+        'targetURL' => $targetURL
+    ]);
 
     $data = [
         "push_start" => [
@@ -337,21 +348,31 @@ class MistServerService {
 
     try {
       $this->send($data); // Send the request to MistServer
-      $destination->push_is_started = 1;
-      $destination->save();
-//      Log::debug("Push start successful for stream: {$streamName} to target: {$targetURL}");
+      $mistStreamPushDestination->push_is_started = 1;
+      $mistStreamPushDestination->save();
+
+      Log::debug("CCCCCCCCCCCCCCC  Push start successful", [
+          'streamName' => $streamName,
+          'targetURL' => $targetURL,
+          'data' => $data
+      ]);
     } catch (\Exception $e) {
-      Log::error("Failed to start push for stream: {$streamName} to target: {$targetURL}", ['exception' => $e->getMessage()]);
+      Log::error("Failed to start push", [
+          'streamName' => $streamName,
+          'targetURL' => $targetURL,
+          'exception' => $e->getMessage(),
+          'data' => $data
+      ]);
     }
   }
 
-  public function stopPush($destination): void {
+  public function stopPush(MistStreamPushDestination $mistStreamPushDestination): void {
     // Fetch the list of active pushes from MistServer
     $activePushes = $this->getActivePushList();
 
     // Construct the first URI from the destination details
-    $targetURI = $destination->rtmp_url . $destination->rtmp_key;
-    $streamName = $destination->mistStreamWildcard->name;
+    $targetURI = $mistStreamPushDestination->rtmp_url . $mistStreamPushDestination->rtmp_key;
+    $streamName = $mistStreamPushDestination->mistStreamWildcard->name;
 
     // Search for the push that matches the stream name and first URI
     $pushId = null;
@@ -371,16 +392,16 @@ class MistServerService {
 
       try {
         $this->send($data); // Send the push_stop request to MistServer
-        $destination->push_is_started = 0;
-        $destination->save();
+        $mistStreamPushDestination->push_is_started = 0;
+        $mistStreamPushDestination->save();
         Log::debug("Push stop successful for stream: {$streamName} with push ID: {$pushId}");
       } catch (\Exception $e) {
         Log::error("Failed to stop push for stream: {$streamName} with push ID: {$pushId}", ['exception' => $e->getMessage()]);
       }
     } else {
       Log::warning("No active push found matching stream: {$streamName} and URI: {$targetURI}");
-      $destination->push_is_started = 0;
-      $destination->save();
+      $mistStreamPushDestination->push_is_started = 0;
+      $mistStreamPushDestination->save();
     }
   }
 
