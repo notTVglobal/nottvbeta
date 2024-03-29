@@ -3,13 +3,15 @@
 Last Update: March 29, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
-## v0.8.7.30
+## v0.8.7.31
 March 29, 2024
 * Add refreshing loader icons on the Push Destinations page
 * Added a Disable All Auto Pushes button
   * Having some challenges with removing single auto pushes
 * Start push and End push should be working and Enable Auto Push
 * Push destinations refreshes every 10 seconds. This will need to be optimized to just have the server do the refreshing, cache the data for the client.
+* Changed the colour of the TopRight Chat background and Now Playing Info background.
+* Fixed the Websocket bootstrap settings.
 
 ## v0.8.7.29
 March 28, 2024
