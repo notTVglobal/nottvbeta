@@ -1062,6 +1062,9 @@ Route::middleware([
 // Get RTMP Uri
   Route::get('/fetch-rtmp-uri', [AppSettingController::class, 'getRtmpUri']);
 
+// Fetch Push Destinations
+  Route::post('/go-live/fetch-push-destinations/{showId}', [GoLiveController::class, 'fetchPushDestinations']);
+
 // List available shows
   Route::get('/go-live/shows', [GoLiveController::class, 'listAvailableShows']);
 
@@ -1115,10 +1118,12 @@ Route::post('/mist-server/config-restore', [MistServerController::class, 'config
 Route::resource('mist-stream-push-destinations', MistStreamPushDestinationController::class);
 Route::post('/mist-stream/get-push-auto-list', [MistStreamPushDestinationController::class, 'getPushAutoList']);
 Route::post('/mist-stream/get-push-list', [MistStreamPushDestinationController::class, 'getPushList']);
-Route::post('/mist-stream/push-auto-add', [MistStreamPushDestinationController::class, 'pushAutoAdd']);
-Route::post('/mist-stream/push-auto-remove', [MistStreamPushDestinationController::class, 'pushAutoRemove']);
-Route::post('/mist-stream/start-push', [MistStreamPushDestinationController::class, 'startPush']);
-Route::post('/mist-stream/stop-push', [MistStreamPushDestinationController::class, 'stopPush']);
+Route::post('/mist-stream/push-auto-add/{mistStreamPushDestination}', [MistStreamPushDestinationController::class, 'pushAutoAdd']);
+Route::post('/mist-stream/remove-all-auto-pushes-for-stream', [MistStreamPushDestinationController::class, 'removeAllAutoPushesForStream']);
+Route::post('/mist-stream/push-auto-remove/{mistStreamPushDestination}', [MistStreamPushDestinationController::class, 'pushAutoRemove']);
+Route::post('/mist-stream/start-push/{mistStreamPushDestination}', [MistStreamPushDestinationController::class, 'startPush']);
+Route::post('/mist-stream/stop-push/{mistStreamPushDestination}', [MistStreamPushDestinationController::class, 'stopPush']);
+Route::post('/mist-stream/update-stream-push-status', [MistStreamPushDestinationController::class, 'updateStreamPushStatus']);
 
 // Channel Playlists
 ////////////////////

@@ -16,16 +16,16 @@ class MistStreamPushStopJob implements ShouldQueue
 {
   use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-  protected MistStreamPushDestination $destination;
+  protected MistStreamPushDestination $mistStreamPushDestination;
 
   /**
    * Create a new job instance.
    *
-   * @param MistStreamPushDestination $destination
+   * @param MistStreamPushDestination $mistStreamPushDestination
    */
-  public function __construct(MistStreamPushDestination $destination)
+  public function __construct(MistStreamPushDestination $mistStreamPushDestination)
   {
-    $this->destination = $destination;
+    $this->mistStreamPushDestination = $mistStreamPushDestination;
   }
 
   /**
@@ -35,6 +35,6 @@ class MistStreamPushStopJob implements ShouldQueue
    * @return void
    */
   public function handle(MistServerService $mistServerService): void {
-    $mistServerService->stopPush($this->destination);
+    $mistServerService->stopPush($this->mistStreamPushDestination);
   }
 }

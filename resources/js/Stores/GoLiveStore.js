@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia'
+import { useNotificationStore } from '@/Stores/NotificationStore'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
+import { useVideoAuxPlayerStore } from '@/Stores/VideoAuxPlayerStore'
 import videojs from 'video.js'
 
 const initialState = () => ({
@@ -16,6 +18,7 @@ const initialState = () => ({
     isRecording: false,
     streamInfo: null,
     rtmpUri: null,
+    destinations: [], // New state for holding destinations
 })
 
 export const useGoLiveStore = defineStore('goLiveStore', {
@@ -162,27 +165,174 @@ export const useGoLiveStore = defineStore('goLiveStore', {
         updateEpisode(episode) {
             this.episode = episode
         },
+        // async reloadPlayer() {
+        //     const videoPlayerStore = useVideoPlayerStore; // Accessing another store
+        //
+        //     let source = null;
+        //     if (this.selectedShow?.mist_stream_wildcard?.name) {
+        //         source = this.selectedShow?.mist_stream_wildcard?.name;
+        //         await this.fetchStreamInfo(this.selectedShow?.mist_stream_wildcard?.name);
+        //     } else if (this.episode?.mist_stream_wildcard?.name) {
+        //         source = this.episode?.mist_stream_wildcard?.name;
+        //         await this.fetchStreamInfo(this.episode?.mist_stream_wildcard?.name);
+        //     }
+        //
+        //     let sourceUrl = videoPlayerStore.mistServerUri + 'hls/' + source + '/index.m3u8';
+        //     console.log('source url: ' + sourceUrl);
+        //     let sourceType = 'application/vnd.apple.mpegurl';
+        //
+        //     let videoJs = videojs('aux-player');
+        //     videoJs.src({'src': sourceUrl, 'type': sourceType});
+        //     // You might have other logic here as needed
+        //
+        //     console.log('reload player');
+        // },
+
+        // async reloadPlayer () {
+        //     const videoPlayerStore = useVideoPlayerStore
+        //     const videoAuxPlayerStore = useVideoAuxPlayerStore
+        //     let source = null
+        //     if (this?.selectedShow?.mist_stream_wildcard?.name) {
+        //         source = this?.selectedShow?.mist_stream_wildcard?.name
+        //         await this.fetchStreamInfo(this?.selectedShow?.mist_stream_wildcard?.name)
+        //     } else if (this?.episode?.mist_stream_wildcard?.name) {
+        //         source = this?.episode?.mist_stream_wildcard?.name
+        //         await this.fetchStreamInfo(this?.episode?.mist_stream_wildcard?.name)
+        //     }
+        //     let sourceUrl = videoPlayerStore.mistServerUri + 'hls/' + source + '/index.m3u8'
+        //     console.log('source url: ' + sourceUrl)
+        //     let sourceType = 'application/vnd.apple.mpegurl'
+        //     let videoAuxJs = videojs('aux-player')
+        //     videoAuxJs.src({'src': sourceUrl, 'type': sourceType})
+        //     // videoAuxPlayerStore.loadNewLiveSource(source, sourceType)
+        //     console.log('reload player')
+        // },
+
+
         async reloadPlayer() {
-            const videoPlayerStore = useVideoPlayerStore; // Accessing another store
+            const videoAuxPlayerStore = useVideoAuxPlayerStore();
+            // Create an object and set the 'name' property
+            const mistStream = {
+                name: this.sourceName
+            };
+            await videoAuxPlayerStore.getMistServerUri()
+            // Now, you can pass the 'mistStream' object to the method
+            videoAuxPlayerStore.loadMistStreamVideo(mistStream, true);
 
-            let source = null;
-            if (this.selectedShow?.mist_stream_wildcard?.name) {
-                source = this.selectedShow?.mist_stream_wildcard?.name;
-                await this.fetchStreamInfo(this.selectedShow?.mist_stream_wildcard?.name);
-            } else if (this.episode?.mist_stream_wildcard?.name) {
-                source = this.episode?.mist_stream_wildcard?.name;
-                await this.fetchStreamInfo(this.episode?.mist_stream_wildcard?.name);
+            console.log('source: ' + mistStream.name)
+        },
+
+        async fetchPushDestinations() {
+            const notificationStore = useNotificationStore();
+            try {
+                const response = await axios.post('/go-live/fetch-push-destinations/'+this.selectedShowId);
+                console.log(response.data);
+                this.destinations = response.data.destinations || [];
+                this.isRecording = response.data.isRecording || false;
+                // Extract message and status from the response
+                const { message, status } = response.data;
+                // Use the status from the response for the notification
+                notificationStore.setToastNotification(message, status);
+            } catch (error) {
+                console.error(error);
+                notificationStore.setToastNotification('Failed to fetch push destinations.', 'error');
             }
-
-            let sourceUrl = videoPlayerStore.mistServerUri + 'hls/' + source + '/index.m3u8';
-            console.log('source url: ' + sourceUrl);
-            let sourceType = 'application/vnd.apple.mpegurl';
-
-            let videoJs = videojs('aux-player');
-            videoJs.src({'src': sourceUrl, 'type': sourceType});
-            // You might have other logic here as needed
-
-            console.log('reload player');
+        },
+        async deleteDestination (destinationId) {
+            // Confirm deletion with the user before proceeding
+            if (confirm(`Are you sure you want to delete the destination with ID: ${destinationId}?`)) {
+                try {
+                    // Perform the delete operation
+                    await axios.delete('/mist-stream-push-destinations/'+destinationId)
+                    // Optionally, remove the item from your local state to update the UI
+                    this.destinations = this.destinations.filter(destination => destination.id !== destinationId)
+                } catch (error) {
+                    console.error(`Error deleting destination with ID: ${destinationId}`, error)
+                }
+            }
+        },
+        async startPush(destinationId) {
+            const notificationStore = useNotificationStore();
+            // console.log(`Starting push for destination ${destinationId}`)
+            try {
+                const response = await axios.post('/mist-stream/start-push/'+destinationId)
+                console.log('Push started successfully:', response.data)
+                const { message, status } = response.data;
+                // Use the status from the response for the notification
+                notificationStore.setToastNotification(message, status);
+                // Update the component's state to reflect the change
+                const index = this.destinations.findIndex(destination => destination.id === destinationId)
+                if (index !== -1) {
+                    this.destinations[index].push_is_started = 1
+                }
+            } catch (error) {
+                console.error('Error starting push:', error)
+                notificationStore.setToastNotification('Failed to start push.', 'error');
+                // Handle the error appropriately in your UI
+            }
+        },
+        async stopPush(destinationId) {
+            const notificationStore = useNotificationStore();
+            // console.log(`Stopping push for destination ${destinationId}`)
+            try {
+                const response = await axios.post('/mist-stream/stop-push/'+destinationId)
+                console.log('Push stopped successfully:', response.data)
+                const { message, status } = response.data;
+                notificationStore.setToastNotification(message, status);
+                // Update the component's state to reflect the change
+                const index = this.destinations.findIndex(destination => destination.id === destinationId)
+                if (index !== -1) {
+                    this.destinations[index].push_is_started = 0
+                }
+            } catch (error) {
+                console.error('Error stopping push:', error)
+                notificationStore.setToastNotification('Failed to stop push.', 'error');
+            }
+        },
+        async enableAutoPush(destinationId) {
+            const notificationStore = useNotificationStore();
+            try {
+                const response = await axios.post('/mist-stream/push-auto-add/'+destinationId)
+                console.log('Auto push enabled successfully:', response.data)
+                const { message, status } = response.data;
+                notificationStore.setToastNotification(message, status);
+                const index = this.destinations.findIndex(destination => destination.id === destinationId)
+                if (index !== -1) {
+                    this.destinations[index].has_auto_push = 1
+                }
+            } catch (error) {
+                console.error('Error enabling auto push:', error)
+                notificationStore.setToastNotification('Failed to enable auto push.', 'error');
+            }
+        },
+        async disableAutoPush(destinationId) {
+            const notificationStore = useNotificationStore();
+            try {
+                const response = await axios.post('/mist-stream/push-auto-remove/'+destinationId)
+                // console.log('Auto push enabled successfully:', response.data)
+                const { message, status } = response.data;
+                notificationStore.setToastNotification(message, status);
+                const index = this.destinations.findIndex(destination => destination.id === destinationId)
+                if (index !== -1) {
+                    this.destinations[index].has_auto_push = 0
+                }
+            } catch (error) {
+                console.error('Error enabling auto push:', error)
+                notificationStore.setToastNotification('Failed to enable auto push.', 'error');
+            }
+        },
+        async disableAllAutoPushes(streamKey) {
+            const notificationStore = useNotificationStore();
+            try {
+                const response = await axios.post('/mist-stream/remove-all-auto-pushes-for-stream', {'streamKey':streamKey})
+                console.log('Auto push disabled successfully:', response.data)
+                const { message, status } = response.data;
+                notificationStore.setToastNotification(message, status);
+                await this.fetchPushDestinations()
+            } catch (error) {
+                console.error('Error disabling auto push:', error)
+                notificationStore.setToastNotification('Failed to disable auto push.', 'error');
+            }
         },
     },
     getters: {
@@ -205,6 +355,18 @@ export const useGoLiveStore = defineStore('goLiveStore', {
 
             // Return the concatenated URL
             return `${fullRtmpUri}${state.streamKey}`
+        },
+        // Example getter that might filter destinations based on some criteria
+        activeDestinations: (state) => {
+            return state.destinations.filter(destination => destination.push_is_started);
+        },
+        sourceName: (state) => {
+            if (state.selectedShow?.mist_stream_wildcard?.name) {
+                return state.selectedShow.mist_stream_wildcard.name;
+            } else if (state.episode?.mist_stream_wildcard?.name) {
+                return state.episode.mist_stream_wildcard.name;
+            }
+            return null; // No source available
         },
     },
 

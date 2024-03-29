@@ -125,4 +125,19 @@ class GoLiveController extends Controller {
 
     return response()->json(['message' => 'Live stream prepared successfully.']);
   }
+
+
+  public function fetchPushDestinations($showId): \Illuminate\Http\JsonResponse {
+    $show = Show::with('mistStreamWildcard.mistStreamPushDestination')->find($showId);
+    $pushDestinations = $show->mistStreamPushDestinations; // This uses the custom accessor
+
+    return response()->json([
+        'status'       => 'success',
+        'message'      => 'Push Destinations Updated for ' . $show->name,
+        'destinations' => $pushDestinations, // Ensure this variable is always set
+        'isRecording'  => $show->mistStreamWildcard->is_recording,
+    ]);
+  }
+
+
 }

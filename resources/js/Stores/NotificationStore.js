@@ -28,6 +28,7 @@ const initialState = () => ({
     toastNotificationMessage: '',
     toastNotificationStatus: '', // success, error, info, warning
     toastNotificationTimeout: 5000, // default timeout to 5 seconds
+    timeoutId: null, // Add this line
     errorMessage: null,
 })
 
@@ -57,19 +58,29 @@ export const useNotificationStore = defineStore('notificationStore', {
             this.generalServiceNotification = null
             this.showGeneralServiceNotification = false
         },
-        setToastNotification(message, status, customTimeoutValue) {
-            this.toastNotificationVisible = true
-            this.toastNotificationMessage = message
-            this.toastNotificationStatus = status
-            if (customTimeoutValue) {
-                this.toastNotificationTimeout = customTimeoutValue
+        setToastNotification(message, status, customTimeoutValue = 8000) {
+            // Ensure any existing timeout is cleared before setting a new one
+            if (this.timeoutId) {
+                clearTimeout(this.timeoutId);
             }
+
+            this.toastNotificationVisible = true;
+            this.toastNotificationMessage = message;
+            this.toastNotificationStatus = status;
+
+            // Use either the customTimeoutValue or the default
+            this.toastNotificationTimeout = customTimeoutValue;
+
+            // Automatically reset the notification after the specified timeout
+            this.timeoutId = setTimeout(() => {
+                this.resetToastNotification();
+            }, this.toastNotificationTimeout);
         },
         resetToastNotification() {
-            this.toastNotificationVisible = false
-            this.toastNotificationMessage = ''
-            this.toastNotificationStatus = ''
-            this.toastNotificationTimeout = 5000
+            this.toastNotificationVisible = false;
+            this.toastNotificationMessage = '';
+            this.toastNotificationStatus = '';
+            this.timeoutId = null; // Reset the timeout ID
         },
         clearNotification() {
             this.title = '';

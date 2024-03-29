@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\Creator;
 use App\Models\TeamMember;
 use App\Models\User;
 use App\Models\Team;
@@ -101,4 +102,17 @@ class CreatorPolicy
     // Default deny if none of the above conditions are met
     return Response::deny('There\'s been a problem. Please let not.TV know.');
   }
+
+  // tec21: This policy will get a bit advanced. The Creator Model may need
+  // to be updated with a relationship to TeamMember and TeamManager.
+  // ideally, Team Managers and/or Team Members will subscribe to the MistServerUpdates
+  // channel specifically for a MistStreamWildcard that will be for a Show or ShowEpisode.
+  // That channel will broadcast events such as updated Push data.
+  //
+//  public function isAllowedToAccessStream(Creator $creator, string $streamName): bool
+//  {
+//    // Implement your logic to determine access
+//    // For example, check if the creator owns the stream or has rights to it
+//    return $creator->streams()->where('name', $streamName)->exists();
+//  }
 }

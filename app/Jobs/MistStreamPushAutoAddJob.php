@@ -34,6 +34,8 @@ class MistStreamPushAutoAddJob implements ShouldQueue
    * @return void
    */
   public function handle(MistServerService $mistServerService): void {
+    // tec21: moving this directly into the MistStreamPushDestination Controller...
+    // this is extraneous - 2024-03-28
     $mistServerService->pushAutoAdd($this->destination);
   }
 }

@@ -5,13 +5,13 @@ namespace App\Http\Controllers;
 use App\Events\MistTriggerPushEnd;
 use App\Events\MistTriggerPushOutStart;
 use App\Events\MistTriggerRecordingStop;
-use App\Jobs\UpdateRecordingModel;
 use App\Jobs\UpdateRecordingModelAndNotify;
 use App\Models\AppSetting;
 use App\Models\MistStreamPushDestination;
 use App\Models\MistStreamWildcard;
 use App\Models\MistTrigger;
 use App\Models\Recording;
+use App\Services\RecordingService;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
@@ -21,6 +21,12 @@ use Carbon\Carbon;
 
 class MistTriggerController extends Controller {
 
+  protected RecordingService $recordingService;
+
+  public function __construct(RecordingService $recordingService)
+  {
+    $this->recordingService = $recordingService;
+  }
 
   public function handlePushOutStart(Request $request): Response {
     Log::alert('handle Push Out Start');
@@ -36,7 +42,14 @@ class MistTriggerController extends Controller {
     $requestUrl = trim($lines[1]) ?? 'unknown';
 
     // First, retrieve the MistStreamWildcard based on $streamName
-    $mistStreamWildcard = MistStreamWildcard::where('name', $streamName)->first();
+    try {
+      $mistStreamWildcard = MistStreamWildcard::where('name', $streamName)->firstOrFail();
+    } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+      // Handle the error, perhaps log it, or customize the response
+      Log::error("MistStreamWildcard not found for name: {$streamName}");
+      // Optionally, throw the exception further if you want the framework to handle it
+      throw $e;
+    }
 
     if ($mistStreamWildcard) {
       // Attempt to find the matching MistStreamPushDestination directly from the wildcard
@@ -53,10 +66,10 @@ class MistTriggerController extends Controller {
             'mistStreamWildcardId' => $pushDestination->mist_stream_wildcard_id,
             'requestUrl'           => $requestUrl
         ]));
-      } elseif ($this->checkForRecording($requestUrl)) {
+      } elseif ($this->recordingService->checkForRecording($requestUrl)) {
         Log::debug('push is a recording');
         // Handle recording logic here. You might want to flag the recording in the database or perform some other action.
-        $this->handleIfRecording($mistStreamWildcard, $requestUrl);
+        $this->recordingService->handleIfRecording($mistStreamWildcard, $requestUrl);
       } else {
         Log::debug('push is neither a known destination nor a recording');
         // Handle the scenario where the stream is neither a known push destination nor a recording.
@@ -309,7 +322,7 @@ class MistTriggerController extends Controller {
     return preg_match('/\/media\/recordings\/.*\.mkv(\?.*)?$/', $requestUrl) > 0;
   }
 
-  protected function handleIfRecording($mistStreamWildcard, $requestUrl): void {
+  protected function handleIfRecording(MistStreamWildcard $mistStreamWildcard, $requestUrl): void {
     Log::debug("Recording detected for stream: $mistStreamWildcard->name on URL: $requestUrl");
     // Marking the recording as started in the database
     $mistStreamWildcard->is_recording = true;
@@ -324,6 +337,9 @@ class MistTriggerController extends Controller {
     $mistStreamWildcard->save(); // Save the changes to the database
 
     // Optionally, you could broadcast an event or perform other actions as needed
+    broadcast(new MistTriggerPushOutStart([
+        'mistStreamWildcardId' => $mistStreamWildcard,
+    ]));
   }
 
   protected function parseRecordingEndContent(string $bodyContent): array {
