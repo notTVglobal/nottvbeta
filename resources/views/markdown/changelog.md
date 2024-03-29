@@ -11,6 +11,7 @@ March 29, 2024
 * Start push and End push should be working and Enable Auto Push
 * Push destinations refreshes every 10 seconds. This will need to be optimized to just have the server do the refreshing, cache the data for the client.
 * Changed the colour of the TopRight Chat background and Now Playing Info background.
+* Fixed the Websocket bootstrap settings.
 
 ## v0.8.7.29
 March 28, 2024
