@@ -28,19 +28,19 @@ window.Echo = new Echo({
     // wssPort: process.env.MIX_WEBSOCKET_PORT_SSL,
 
 
-    // wsHost: 'socket.not.tv',
-    // wsPort: 443,
-    // wssPort: 443,
-    // disableStats: true,
-    // forceTLS: true,
-    // encrypted: true,
-    // enabledTransports: ['ws', 'wss'],
-
-    wsHost: 'localhost',
-    wsPort: 6001,
+    wsHost: 'socket.not.tv',
+    wsPort: 443,
+    wssPort: 443,
     disableStats: true,
-    forceTLS: false,
-    encrypted: false,
+    forceTLS: true,
+    encrypted: true,
+    enabledTransports: ['ws', 'wss'],
+
+    // wsHost: 'localhost',
+    // wsPort: 6001,
+    // disableStats: true,
+    // forceTLS: false,
+    // encrypted: false,
     // enabledTransports: ['ws'],
 
     // broadcaster: 'pusher',
