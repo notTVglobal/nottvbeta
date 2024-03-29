@@ -132,7 +132,7 @@
               <div class="mt-2">
                 <button v-if="!videoPlayerStore.muted"
                         class="btn btn-warning btn-xs"
-                        :class="liveOrRecordingGrayButtonClass"
+
                         @click="videoPlayerStore.mute">
                   <font-awesome-icon icon="fa-volume-mute" class="mr-1 cursor-pointer hover:text-blue-500"/>
                   Mute Main Video Audio
@@ -140,7 +140,7 @@
                 <button v-else
                         class="btn btn-neutral text-white btn-xs"
                         @click="videoPlayerStore.unMute"
-                        :class="liveOrRecordingGrayButtonClass">
+                        >
                   <font-awesome-icon icon="fa-volume-up" class="mr-1 cursor-pointer hover:text-blue-500"/>
                   Turn On Main Video Audio
                 </button>
@@ -148,14 +148,14 @@
               <div class="mt-2 ml-2">
                 <button v-if="!videoAuxPlayerStore.muted"
                         class="btn btn-warning btn-xs"
-                        :class="liveOrRecordingGrayButtonClass"
+
                         @click="videoAuxPlayerStore.mute">
                   <font-awesome-icon icon="fa-volume-mute" class="mr-1 cursor-pointer hover:text-blue-500"/>
                   Mute Live Stream Audio
                 </button>
                 <button v-else
                         class="btn btn-neutral text-white btn-xs"
-                        :class="liveOrRecordingGrayButtonClass"
+
                         @click="videoAuxPlayerStore.unMute">
                   <font-awesome-icon icon="fa-volume-up" class="mr-1 cursor-pointer hover:text-blue-500"/>
                   Turn On Live Stream Audio
@@ -234,15 +234,15 @@
 
           </div>
 
-          <div v-if="mistStore.mistStreamPushDestinations.length === 0">
+          <div v-if="goLiveStore.destinations.length === 0">
             <div>Set up <span class="font-bold">push destinations:</span></div>
             <div>Here you can set additional streaming destinations such as Facebook, YouTube, Rumble, Twitch, etc. and
               notTV will automatically start pushing to those destinations when you go live.
             </div>
           </div>
-          <div v-if="mistStore.mistStreamPushDestinations">
+          <div v-if="goLiveStore.destinations.length > 0">
             <div class="flex flex-col gap-4">
-              <div v-for="destination in mistStore.mistStreamPushDestinations" :key="destination.id"
+              <div v-for="destination in goLiveStore.destinations" :key="destination.id"
                    class="border p-4 rounded-lg shadow flex flex-row items-center gap-4">
                 <img :src="destination.destination_image" alt="Destination Image"
                      class="w-24 h-24 object-cover rounded-full"/>
@@ -334,7 +334,7 @@
 
 <script setup>
 // import { useTimeAgo } from '@vueuse/core'
-import { computed, onMounted, onUnmounted, ref, watchEffect } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch, watchEffect } from 'vue'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
 import { useVideoAuxPlayerStore } from '@/Stores/VideoAuxPlayerStore'
@@ -368,13 +368,24 @@ const mistStreamPushDestinationFormModalMode = ref('add')
 const destinationDetails = ref({})
 
 
-watchEffect(() => {
-  // This code will run initially and re-run every time selectedShow or its mist_stream_wildcard.id changes
-  const wildcardId = goLiveStore.wilcardId
-  if (wildcardId) {
-    mistStore.getMistStreamPushDestinations(wilcardId)
+const reloadPlayer = () => {
+  let source = null
+  if (goLiveStore?.selectedShow?.mist_stream_wildcard?.name) {
+    source = goLiveStore?.selectedShow?.mist_stream_wildcard?.name
+    goLiveStore.fetchStreamInfo(goLiveStore?.selectedShow?.mist_stream_wildcard?.name)
+  } else if (goLiveStore?.episode?.mist_stream_wildcard?.name) {
+    source = goLiveStore?.episode?.mist_stream_wildcard?.name
+    goLiveStore.fetchStreamInfo(goLiveStore?.episode?.mist_stream_wildcard?.name)
   }
-})
+  let sourceUrl = videoPlayerStore.mistServerUri + 'hls/' + source + '/index.m3u8'
+  console.log('source url: ' + sourceUrl)
+  let sourceType = 'application/vnd.apple.mpegurl'
+  let videoJs = videojs('aux-player')
+  videoJs.src({'src': sourceUrl, 'type': sourceType})
+  // videoAuxPlayerStore.loadNewLiveSource(source, sourceType)
+  console.log('reload player')
+}
+
 
 const addDestination = async () => {
   mistStreamPushDestinationFormModalMode.value = 'add'
@@ -448,24 +459,6 @@ const copyStreamKey = () => {
   setTimeout(() => showCopiedStreamKey.value = false, 1000)
 }
 
-const reloadPlayer = () => {
-  let source = null
-  if (goLiveStore?.selectedShow?.mist_stream_wildcard?.name) {
-    source = goLiveStore?.selectedShow?.mist_stream_wildcard?.name
-    goLiveStore.fetchStreamInfo(goLiveStore?.selectedShow?.mist_stream_wildcard?.name)
-  } else if (goLiveStore?.episode?.mist_stream_wildcard?.name) {
-    source = goLiveStore?.episode?.mist_stream_wildcard?.name
-    goLiveStore.fetchStreamInfo(goLiveStore?.episode?.mist_stream_wildcard?.name)
-  }
-  let sourceUrl = videoPlayerStore.mistServerUri + 'hls/' + source + '/index.m3u8'
-  console.log('source url: ' + sourceUrl)
-  let sourceType = 'application/vnd.apple.mpegurl'
-  let videoJs = videojs('aux-player')
-  videoJs.src({'src': sourceUrl, 'type': sourceType})
-  // videoAuxPlayerStore.loadNewLiveSource(source, sourceType)
-  console.log('reload player')
-}
-
 const openStats = () => {
   window.open('/stats', '_blank');
 };
@@ -478,9 +471,41 @@ const openStats = () => {
 // })
 
 
+
+// const updateStreamPushStatus = async () => {
+//   try {
+//     const responseData = await goLiveStore.updateStreamPushStatus();
+//     console.log('Updated successfully:', responseData);
+//     // Additional logic to handle the response
+//   } catch (error) {
+//     console.error('Failed to update stream push status:', error);
+//     // Error handling logic, if necessary
+//   }
+// };
+
+// const destinations = computed(() => goLiveStore.destinations);
+// const activeDestinations = computed(() => goLiveStore.activeDestinations);
+
+// Use `destinations` and `activeDestinations` in your template as needed
+
+
+
+
+
 // check push_auto_list and update
 
 onMounted(async() => {
+
+  watchEffect(() => {
+    // This code will run initially and re-run every time selectedShow or its mist_stream_wildcard.id changes
+    const wildcardId = goLiveStore.wildcardId
+    if (wildcardId) {
+      goLiveStore.fetchPushDestinations()
+      reloadPlayer()
+      // need to reload video
+      // and mistStore.updateStreamPushStatus()
+    }
+  })
 
   // Automatically start the countdown or trigger based on an event
   startCountdown()
@@ -489,8 +514,8 @@ onMounted(async() => {
   // fetchServerInfo()
 
   // check the push destinations
-  await mistStore.getMistStreamPushDestinations(goLiveStore?.selectedShow?.mist_stream_wildcard?.id)
-
+  // await mistStore.getMistStreamPushDestinations(goLiveStore?.selectedShow?.mist_stream_wildcard?.id)
+// await goLiveStore.fetchPushDestinations()
   // check the auto push list
   // mistStore.getMistStreamPushAutoList(goLiveStore?.selectedShow?.mist_stream_wildcard?.id)
 
@@ -550,29 +575,112 @@ const liveOrRecordingVideoBorderClass = computed(() => {
   }
 })
 // const mistStreamWildcardId = ref()
+
+
+
+
+
+// NEW BROADCAST CODE
+
+// let currentChannel = null;
+
+// watch(
+//     () => goLiveStore.selectedShow?.mist_stream_wildcard?.name,
+//     (newStreamName, oldStreamName) => {
+//       if (newStreamName && newStreamName !== oldStreamName) {
+//         // Leave the old channel if it exists
+//         if (currentChannel) {
+//           Echo.leave(`MistServerUpdate.${oldStreamName}`);
+//           currentChannel = null;
+//         }
+//
+//         // Subscribe to the new channel
+//         currentChannel = Echo.private(`MistServerUpdate.${newStreamName}`);
+//         currentChannel.listen('.PushDataFetched', (event) => {
+//           console.log('PushDataFetched event received:', event);
+//           // Handle the PushDataFetched event
+//         });
+//
+//         // Assuming push-out-start and push-end events are still relevant
+//         // Adjust the .listen event names and logic as needed
+//         currentChannel.listen('.push-out-start', (event) => {
+//           console.log('push out start EVENT BROADCASTED!');
+//           // Logic to handle push-out-start event
+//           const index = goLiveStore.mistStreamPushDestinations.findIndex(destination =>
+//               `${destination.rtmp_url}${destination.rtmp_key}` === event.requestUrl);
+//           if (index !== -1) {
+//             goLiveStore.mistStreamPushDestinations[index].push_is_started = 1;
+//             // Ensure you correctly update your store's state
+//           }
+//         }).listen('.push-end', (event) => {
+//           console.log('push end EVENT BROADCASTED!');
+//           // Logic to handle push-end event
+//           const index = goLiveStore.mistStreamPushDestinations.findIndex(destination =>
+//               `${destination.rtmp_url}${destination.rtmp_key}` === event.requestUrl);
+//           if (index !== -1) {
+//             goLiveStore.mistStreamPushDestinations[index].push_is_started = 0;
+//             // Ensure you correctly update your store's state
+//           }
+//         });
+//       }
+//     },
+//     { immediate: true } // Execute the watcher immediately with the current value
+// );
+
+
+// Assuming `selectedShowStreamName` holds the stream name you're interested in
+// const streamName = selectedShowStreamName; // You'll need to set this based on your application's logic
+// goLiveStore?.selectedShow?.mist_stream_wildcard?.name
+// const channel = Echo.private(`MistServerUpdate.${streamName}`);
+//
+// channel.listen('.PushDataFetched', (event) => {
+//   console.log('PushDataFetched EVENT BROADCASTED!', event);
+//
+
+
+
+
+
+
+
+// OLD BROADCAST CODE
+
 // mistStreamWildcardId.value = goLiveStore?.selectedShow?.mist_stream_wildcard?.id
-const channel = Echo.channel(`mistStreamWildcard.${goLiveStore?.selectedShow?.mist_stream_wildcard?.id}`)
-channel.subscribed(() => {
-  // Handle successful subscription
-  // This log will confirm the subscription success
-  console.log('Successfully subscribed to the channel!')
-})
-    .listen('.push-out-start', (event) => {
-      console.log('push out start EVENT BROADCASTED!')
-      const index = mistStore.mistStreamPushDestinations.findIndex(destination =>
-          `${destination.rtmp_url}${destination.rtmp_key}` === event.requestUrl)
-      if (index !== -1) {
-        mistStore.mistStreamPushDestinations.value[index].push_is_started = 1
-      }
-    })
-    .listen('.push-end', (event) => {
-      console.log('push end EVENT BROADCASTED!')
-      const index = mistStore.mistStreamPushDestinations.findIndex(destination =>
-          `${destination.rtmp_url}${destination.rtmp_key}` === event.requestUrl)
-      if (index !== -1) {
-        mistStore.mistStreamPushDestinations[index].push_is_started = 0
-      }
-    })
+
+// const channel = Echo.channel(`mistStreamWildcard.${goLiveStore?.selectedShow?.mist_stream_wildcard?.name}`)
+// channel.subscribed(() => {
+//   // Handle successful subscription
+//   // This log will confirm the subscription success
+//   console.log('Successfully subscribed to the channel!')
+// })
+//     .listen('.push-out-start', (event) => {
+//       console.log('push out start EVENT BROADCASTED!')
+//       const index = mistStore.mistStreamPushDestinations.findIndex(destination =>
+//           `${destination.rtmp_url}${destination.rtmp_key}` === event.requestUrl)
+//       if (index !== -1) {
+//         mistStore.mistStreamPushDestinations.value[index].push_is_started = 1
+//       }
+//     })
+//     .listen('.push-end', (event) => {
+//       console.log('push end EVENT BROADCASTED!')
+//       const index = mistStore.mistStreamPushDestinations.findIndex(destination =>
+//           `${destination.rtmp_url}${destination.rtmp_key}` === event.requestUrl)
+//       if (index !== -1) {
+//         mistStore.mistStreamPushDestinations[index].push_is_started = 0
+//       }
+//     })
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Cleanup when the component unmounts
 onUnmounted(() => {

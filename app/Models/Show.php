@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Services\MistServerService;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -126,6 +127,21 @@ class Show extends Model
   public function recordings()
   {
     return $this->morphMany(Recording::class, 'model');
+  }
+
+  /**
+   * Get the push destinations associated with the show's wildcard.
+   *
+   * @return \Illuminate\Support\Collection
+   */
+  public function getMistStreamPushDestinationsAttribute(): \Illuminate\Support\Collection {
+    // If there's no associated wildcard, return an empty collection.
+    if (!$this->mistStreamWildcard) {
+      return collect([]);
+    }
+
+    // Otherwise, return the push destinations of the related wildcard.
+    return $this->mistStreamWildcard->mistStreamPushDestination;
   }
 
 

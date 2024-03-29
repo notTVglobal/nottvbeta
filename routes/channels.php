@@ -15,20 +15,18 @@ use App\Models\User;
 |
 */
 
+// A channel specifically for each user.
 Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
 
-//Broadcast::channel('chat.{channelId}', function ($user, $channelId) {
-//        if( Auth::check() ) {
-//            return ['id' => $user->id, 'name' => $user->name];
-//        }
-//});
-
-
-//Broadcast::channel('chat.{channelId}', function (User $user) {
-//    return Auth::check();
-//});
+// This channel is for MistServer Updates like receiving new Push information.
+Broadcast::channel('mistServerUpdate.{streamName}', function ($user) {
+  if( Auth::check() ) {
+    return true;
+  }
+  return !is_null($user->creator);
+});
 
 // This channel is for the chat.
 Broadcast::channel('chat.{id}', function ($user, $id) {

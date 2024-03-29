@@ -6,6 +6,7 @@ use App\Events\CreatorRegistrationCompleted;
 use App\Events\NewChatMessage;
 use App\Events\NewNotificationEvent;
 use App\Events\NewVideoUploaded;
+use App\Events\PushDataFetched;
 use App\Events\ViewerPresenceChannel;
 use App\Events\VideoProcessed;
 use App\Listeners\LogRegisteredUser;
@@ -16,6 +17,7 @@ use App\Listeners\SendCreatorWelcomeEmailListener;
 use App\Listeners\SendEmailVerification;
 use App\Listeners\SendNewUserNotification;
 use App\Listeners\SendVideoProcessedNotification;
+use App\Listeners\UpdatePushDestinations;
 use App\Listeners\ViewerPresenceChannelListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Events\Verified;
@@ -56,6 +58,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         CreatorRegistrationCompleted::class => [
             SendCreatorWelcomeEmailListener::class,
+        ],
+        PushDataFetched::class => [
+            UpdatePushDestinations::class,
         ],
     ];
 

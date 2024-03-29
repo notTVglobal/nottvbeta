@@ -262,39 +262,6 @@ class MistServerService {
     }
   }
 
-  public function pushAutoAdd($destination): void {
-
-    if (!$destination->relationLoaded('mistStreamWildcard')) {
-      $destination->load('mistStreamWildcard');
-    }
-
-    // Correctly format the target URL and prepare the stream name
-    $targetURL = $destination->rtmp_url . $destination->rtmp_key;
-    $streamName = $destination->mistStreamWildcard->name;
-
-//    Log::debug('add ::::: ' . $targetURL . ' ::::: ' . $streamName);
-    $data = [
-        "push_auto_add" => [
-            "stream" => $streamName,
-            "target" => $targetURL,
-//            "scheduletime" => '', // this can get data from the showSchedule but is a future project.
-//            "completetime" => '', // this can get data from the showSchedule but is a future project.
-        ]
-    ];
-
-    try {
-      $this->send($data); // Assuming 'send' method handles communication with MistServer
-      $destination->has_auto_push = 1;
-      $destination->save();
-      // Log success with more detail
-//      Log::debug("Push auto add successful for stream: {$streamName} to target: {$targetURL}");
-    } catch (\Exception $e) {
-      // Log the error with detail
-      Log::error("Failed to request push_auto_add for stream: {$streamName} to target: {$targetURL}", ['exception' => $e->getMessage()]);
-      // Optionally, rethrow or handle the exception as needed
-    }
-  }
-
   public function pushAutoRemove($destination): void {
 
     if (!$destination->relationLoaded('mistStreamWildcard')) {
@@ -342,7 +309,7 @@ class MistServerService {
     try {
       $response = $this->send($data); // Assuming 'send' method handles communication with MistServer
       if (isset($response['push_list']) && is_array($response['push_list'])) {
-//        Log::debug("Successfully retrieved active push list from MistServer.");
+        Log::debug("Successfully retrieved active push list from MistServer.");
 
         return $response['push_list'];
       } else {

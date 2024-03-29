@@ -6,28 +6,56 @@ use App\Jobs\MistStreamPushAutoAddJob;
 use App\Jobs\MistStreamPushAutoRemoveJob;
 use App\Jobs\MistStreamPushStartJob;
 use App\Jobs\MistStreamPushStopJob;
+use App\Models\MistServerActivePush;
 use App\Models\MistStreamPushDestination;
+use App\Models\MistStreamWildcard;
+use App\Services\PushDestinationService;
+use App\Services\RecordingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class MistStreamPushDestinationController extends Controller
 {
+
+  protected PushDestinationService $pushDestinationService;
+  protected RecordingService $recordingService;
+
+  public function __construct(PushDestinationService $pushDestinationService, RecordingService $recordingService)
+  {
+    $this->pushDestinationService = $pushDestinationService;
+    $this->recordingService = $recordingService;
+  }
+
+
   public function index(Request $request) {
-    $request->validate([
-        'wildcardId' => 'required|string',
-    ]);
+    $request->validate(['wildcardId' => 'required|string']);
+    $wildcardId = $request->query('wildcardId');
 
     // Assuming you have a model called `MistStreamPushDestination` that corresponds to your database table
     // and it's related to `MistStreamWildcard` by `mist_stream_wildcard_id`
-    $wildcardId = $request->query('wildcardId');
+
 
     // Fetch destinations filtered by wildcardId if provided, otherwise fetch all
     $destinations = MistStreamPushDestination::when($wildcardId, function ($query, $wildcardId) {
       return $query->where('mist_stream_wildcard_id', $wildcardId);
     })->get();
 
-    // Return the list of push destinations
-    return response()->json($destinations);
+    // Update statuses of the fetched destinations
+//    $updatedDestinations = $this->pushDestinationService->updatePushDestinationsStatus($destinations);
+
+    $updateInfo = $this->pushDestinationService->updatePushDestinationsStatus($destinations);
+// Make sure $updateInfo is indeed an array with the expected keys before trying to access them
+    if (!isset($updateInfo['updatedDestinations']) || !isset($updateInfo['isRecording'])) {
+      Log::error('Unexpected structure returned from updatePushDestinationsStatus', ['response' => $updateInfo]);
+      // Consider adding error handling here, such as returning a default response structure or an error message
+    }
+
+    return response()->json([
+        'destinations' => $updateInfo['updatedDestinations'] ?? [], // Provide a default empty array as a fallback
+        'isRecording' => $updateInfo['isRecording'] ?? false, // Provide a default false as a fallback
+    ]);
+    // Return the updated list of push destinations
+//    return response()->json($updatedDestinations);
   }
 //    // Assuming you want to fetch push destinations associated with a specific wildcard ID
 //    $pushDestinations = MistStreamPushDestination::where('mist_stream_wildcard_id', $wildcardId)
@@ -105,8 +133,7 @@ class MistStreamPushDestinationController extends Controller
     return response()->json($destination);
   }
 
-  private function determineDestinationDetails($url, $key)
-  {
+  private function determineDestinationDetails($url, $key): array {
 
     // Initial key adjustment logic based on the URL and key relationship
     if (str_contains($key, '?') && !str_ends_with($key, '?')) {
@@ -156,6 +183,93 @@ class MistStreamPushDestinationController extends Controller
     return $details;
   }
 
+  public function updateStreamPushStatus($destinations) {
+
+//    $updatedDestinationsInfo = [];
+//
+//    foreach ($destinations as $destination) {
+//      $streamName = $destination->mistStreamWildcard->name ?? null;
+//      $activePush = $streamName ? MistServerActivePush::where('stream_name', $streamName)->first() : null;
+//      $isRecording = false;
+//
+//      // Update push_is_started based on active push
+//      $originalPushStartedStatus = $destination->push_is_started;
+//      $destination->push_is_started = $activePush && $destination->rtmp_url . $destination->rtmp_key === $activePush->original_uri ? 1 : 0;
+//      $destination->save();
+//
+//      // Check and update recording status
+//      if ($activePush) {
+//        $isRecording = $this->recordingService->checkForRecording($activePush->original_uri);
+//        $destination->mistStreamWildcard->is_recording = $isRecording ? 1 : 0;
+//        $destination->mistStreamWildcard->save();
+//      }
+//
+//      // Collect information about the updated destination for the response
+//      $updatedDestinationsInfo[] = [
+//          'id' => $destination->id,
+//          'push_is_started' => $destination->push_is_started,
+//          'is_recording' => $isRecording,
+//          'push_started_changed' => $originalPushStartedStatus !== $destination->push_is_started,
+//          'stream_name' => $streamName,
+//      ];
+//    }
+//
+//    return $updatedDestinationsInfo;
+
+
+
+
+
+
+
+
+
+//    $request->validate([
+//        'mist_stream_wildcard_id' => 'required|string', // Validate request
+//    ]);
+//    // Request contains wildcard_id
+//    $wildcardId = $request->mist_stream_wildcard_id;
+//
+//    $mistStreamWildcard = MistStreamWildcard::findOrFail($wildcardId);
+//    $streamName = $mistStreamWildcard->name;
+//
+//    // Attempt to find an active push based on stream name
+//    $activePush = MistServerActivePush::where('stream_name', $streamName)->first();
+//
+//    // Update PushDestinations related to this Wildcard
+//    $pushDestinations = MistStreamPushDestination::where('mist_stream_wildcard_id', $wildcardId)->get(); // Get related destinations
+//
+//    foreach ($pushDestinations as $destination) {
+//      // Example condition to match destination, adjust as necessary
+//      if ($activePush && $destination->rtmp_url . $destination->rtmp_key == $activePush->original_uri) {
+//        $destination->push_is_started = 1;
+//      } else {
+//        $destination->push_is_started = 0;
+//      }
+//      $destination->save(); // Save the updated push destination
+//    }
+//
+//    // Update Stream recording status
+//    if (!$activePush) {
+//      $mistStreamWildcard->is_recording = 0;
+//    } else {
+//      $isRecording = $this->recordingService->checkForRecording($activePush->original_uri);
+//      if ($isRecording) {
+//        $this->recordingService->handleIfRecording($mistStreamWildcard, $activePush->original_uri);
+//      } else {
+//        $mistStreamWildcard->is_recording = 0; // Assuming you want to update this if not recording
+//      }
+//    }
+//
+//    $mistStreamWildcard->save(); // Save any updates to the wildcard
+//
+//    // change the response to give us an array of all the push destinations and if push_is_started true or false
+//    // and an array item if isRecording true or false
+//    // we are going to use this data in our Vue front end.
+//    return response()->json(['message' => 'Stream push status updated.']);
+
+  }
+
   /**
    * Remove the specified resource from storage.
    *
@@ -191,8 +305,7 @@ class MistStreamPushDestinationController extends Controller
 
   }
 
-  public function pushAutoAdd(Request $request)
-  {
+  public function pushAutoAdd(Request $request, PushDestinationService $pushDestinationService): \Illuminate\Http\JsonResponse {
     $validated = $request->validate([
         'destinationId' => 'required|string',
     ]);
@@ -202,8 +315,11 @@ class MistStreamPushDestinationController extends Controller
     try {
       $destination = MistStreamPushDestination::findOrFail($destinationId); // Ensure this call is correct based on your model
 
+      // tec21: moved this here from MistStreamPushAutoAddJob - 2024-03-28
+      $pushDestinationService->pushAutoAdd($destination);
+
       // Assuming you update the job to accept the destination model and other details directly
-      MistStreamPushAutoAddJob::dispatch($destination);
+//      MistStreamPushAutoAddJob::dispatch($destination);
 
       return response()->json(['message' => 'Push auto add job dispatched successfully.']);
     } catch (\Exception $e) {

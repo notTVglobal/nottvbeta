@@ -3,6 +3,10 @@
 Last Update: March 28, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.7.29
+March 28, 2024
+* Fix the GoLive Component to fetch push destinations in a new way.
+
 ## v0.8.7.28
 March 28, 2024
 * Fixed the type hints for the MistTriggerController functions
