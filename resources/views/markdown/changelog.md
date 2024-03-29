@@ -1,7 +1,15 @@
 # not.tv Changelog
 
-Last Update: March 28, 2024\
+Last Update: March 29, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.8.7.30
+March 29, 2024
+* Add refreshing loader icons on the Push Destinations page
+* Added a Disable All Auto Pushes button
+  * Having some challenges with removing single auto pushes
+* Start push and End push should be working and Enable Auto Push
+* Push destinations refreshes every 10 seconds. This will need to be optimized to just have the server do the refreshing, cache the data for the client.
 
 ## v0.8.7.29
 March 28, 2024
@@ -14,7 +22,7 @@ March 28, 2024
 * Added a mist_server_auto_pushes table to track auto pushes and make removing individual pushes easier
 * Added a mist_server_active_pushes table to track active pushes
   * This table can get updated every n seconds through a scheduled command
-  * The GoLive component can make an api call to retreive the data that is updated by the command to stay up-to-date
+  * The GoLive component can make an api call to retrieve the data that is updated by the command to stay up-to-date
   * This is the most efficient way to handle polling the MistServer for accurate push data.
 * There is a bug in the mist server... The trigger settings with blocking needs to be just right
   * Additionally, if a recording is started and then stopped right away and the Stream Resume is enabled then the recording will not start again.

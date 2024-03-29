@@ -202,7 +202,7 @@ class PushDestinationService {
       $activeEntries = [];
 
       if (isset($response['push_auto_list']) && is_array($response['push_auto_list'])) {
-        Log::debug("Successfully retrieved active push list from MistServer.");
+//        Log::debug("Successfully retrieved active push list from MistServer." . $response);
 
         foreach ($response['push_auto_list'] as $autoPushData) {
           Log::debug('Saving auto push entry:', ['data' => $autoPushData]);
@@ -253,33 +253,33 @@ class PushDestinationService {
     }
   }
 
-
-  public function removeAllAutoPushesForStream($streamName): array
-  {
-    Log::alert($streamName);
-    $data = ["push_auto_remove" => $streamName];
-
-    try {
-      $response = $this->mistServerService->send($data);
-
-      // Since we're removing auto pushes, there might not be a direct response indicating success,
-      // but you can log the streamName for which the operation was attempted.
-      Log::debug("Attempted to remove all auto pushes for stream.", ['stream_name' => $streamName]);
-
-      // Assuming the response gives some indication of success or failure
-      // This depends entirely on how your `send` method and the MistServer's API handle this operation
-      if (isset($response['success']) && $response['success']) {
-        Log::debug("Successfully removed all auto pushes for stream.", ['stream_name' => $streamName]);
-        return ['success' => true];
-      } else {
-        Log::error("Failed to remove all auto pushes for stream.", ['stream_name' => $streamName]);
-        return ['success' => false, 'error' => 'API operation failed.'];
-      }
-    } catch (\Exception $e) {
-      Log::error("Exception occurred while attempting to remove all auto pushes", ['stream_name' => $streamName, 'exception' => $e->getMessage()]);
-      return ['success' => false, 'error' => $e->getMessage()];
-    }
-  }
+//
+//  public function removeAllAutoPushesForStream($streamName): array
+//  {
+//    Log::alert($streamName);
+//    $data = ["push_auto_remove" => $streamName];
+//
+//    try {
+//      $response = $this->mistServerService->send($data);
+//
+//      // Since we're removing auto pushes, there might not be a direct response indicating success,
+//      // but you can log the streamName for which the operation was attempted.
+//      Log::debug("Attempted to remove all auto pushes for stream.", ['stream_name' => $streamName]);
+//
+//      // Assuming the response gives some indication of success or failure
+//      // This depends entirely on how your `send` method and the MistServer's API handle this operation
+//      if (isset($response['success']) && $response['success']) {
+//        Log::debug("Successfully removed all auto pushes for stream.", ['stream_name' => $streamName]);
+//        return ['success' => true];
+//      } else {
+//        Log::error("Failed to remove all auto pushes for stream.", ['stream_name' => $streamName]);
+//        return ['success' => false, 'error' => 'API operation failed.'];
+//      }
+//    } catch (\Exception $e) {
+//      Log::error("Exception occurred while attempting to remove all auto pushes", ['stream_name' => $streamName, 'exception' => $e->getMessage()]);
+//      return ['success' => false, 'error' => $e->getMessage()];
+//    }
+//  }
 
 
 //
@@ -514,6 +514,10 @@ class PushDestinationService {
   }
 
   public function pushAutoRemove(MistStreamPushDestination $mistStreamPushDestination): bool {
+
+
+    $this->fetchPushAutoList();
+
     // Ensure the mistStreamWildcard relationship is loaded
     $this->ensureWildcardLoaded($mistStreamPushDestination);
 
@@ -521,18 +525,51 @@ class PushDestinationService {
     $targetURL = $mistStreamPushDestination->rtmp_url . $mistStreamPushDestination->rtmp_key;
     $streamName = $mistStreamPushDestination->mistStreamWildcard->name;
 
+    $autoPushEntry = MistServerAutoPush::where('stream_name', $streamName)->firstOrFail();
+
+    $first10Values = array_slice($autoPushEntry->auto_push_entry, 0, 10);
+
+
+    // Preprocess the array to ensure empty values are represented as ""
+    $processedValues = array_map(function($value) {
+      return $value === "" ? "\"\"" : $value;
+    }, $first10Values);
+
+
+// Convert the array into a string of values separated by commas and surrounded by braces
+    $valuesString = "[" . implode(", ", $processedValues) . "]";
+
+// Construct the final string to mimic the structure you described
+    $dataString = '{"push_auto_remove": ' . $valuesString . '}';
+
+    Log::debug('This is our autoPushEntry: ' . $dataString);
     Log::debug('remove ::::: ' . $targetURL . ' ::::: ' . $streamName);
+
+
     $data = [
-        "push_auto_remove" => [
-            "stream" => $streamName,
-            "target" => $targetURL,
-          // "scheduletime" and "completetime" can be added when relevant
-        ]
+        "push_auto_remove" => $dataString
     ];
+
+
+
 
     // Use the centralized method for sending the request and handling the response
     return $this->sendPushRequest($data, $mistStreamPushDestination, true);
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   protected function ensureWildcardLoaded(MistStreamPushDestination $mistStreamPushDestination): void {
     if (!$mistStreamPushDestination->relationLoaded('mistStreamWildcard')) {
