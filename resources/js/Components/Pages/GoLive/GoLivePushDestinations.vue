@@ -5,6 +5,7 @@
         class="text-sm font-semibold bg-blue-600 text-white text-center w-full border-2 border-blue-600 rounded uppercase px-6 py-1 ">
       Push Destinations
     </div>
+
     <div class="shadow bg-blue-100 overflow-hidden border-2 border-blue-600 rounded p-6 space-y-3">
 
       <div class="flex flex-row flex-wrap-reverse w-full justify-between">
@@ -32,10 +33,14 @@
       </div>
 
 
-      <div class="flex flex-row justify-between">
-        <div><h2 class="text-xl font-bold">Push Destinations</h2></div>
-
+      <div class="flex flex-row justify-between mb-2 py-2 h-12">
+        <div><h2 class="text-xl font-bold">Push Destinations</h2>
       </div>
+        <div v-if="goLiveStore.isLoadingDestinations">
+          <span class="loading loading-bars loading-lg text-info mr-2"> </span><span class="text-xs uppercase">Refreshing...</span>
+        </div>
+        </div>
+
 
       <div v-if="goLiveStore.destinations.length === 0">
         <div>Set up <span class="font-bold">push destinations:</span></div>
@@ -52,8 +57,7 @@
             <div class="flex-grow">
               <h3 class="text-lg font-semibold">{{ destination.destination_name }}</h3>
               <h4 class="">{{ destination.comment }}</h4>
-              <p v-if="destination.has_auto_push" class="text-yellow-500 font-semibold">Auto push
-                is enabled</p>
+
               <p v-if="destination.push_is_started" class="text-red-500 font-semibold">Push Is Active</p>
               <div class="flex gap-2 mt-2">
                 <button v-if="destination.push_is_started"
@@ -73,9 +77,12 @@
                 </button>
                 <button v-if="destination.has_auto_push"
                         @click="goLiveStore.disableAutoPush(destination.id)"
-                        class="py-2 px-4 bg-gray-500 text-white rounded hover:bg-gray-600 transition duration-150">
+                        class="hidden py-2 px-4 bg-gray-500 text-white rounded hover:bg-gray-600 transition duration-150">
                   Disable Auto Push
                 </button>
+                <p v-if="destination.has_auto_push" class="text-yellow-500 font-semibold">Auto push
+                  is enabled</p>
+                <span v-if="goLiveStore.loadingDestinationId === destination.id" class="loading loading-bars loading-lg text-info"></span>
               </div>
             </div>
             <div class="flex flex-row justify-end">

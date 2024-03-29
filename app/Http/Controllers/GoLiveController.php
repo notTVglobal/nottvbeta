@@ -2,17 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\MistServerActivePush;
+use App\Models\MistServerAutoPush;
 use App\Models\Show;
 use App\Models\ShowEpisode;
 use App\Models\TeamMember;
 use App\Models\User;
 use App\Services\MistServerService;
+use App\Services\PushDestinationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class GoLiveController extends Controller {
+
+  private PushDestinationService $pushDestinationService;
+
+  public function __construct(PushDestinationService $pushDestinationService) {
+    $this->pushDestinationService = $pushDestinationService;
+  }
 
   public function index() {
 
@@ -127,17 +136,54 @@ class GoLiveController extends Controller {
   }
 
 
+
+
   public function fetchPushDestinations($showId): \Illuminate\Http\JsonResponse {
+    $this->pushDestinationService->fetchPushAutoList();
     $show = Show::with('mistStreamWildcard.mistStreamPushDestination')->find($showId);
-    $pushDestinations = $show->mistStreamPushDestinations; // This uses the custom accessor
+    if (!$show) {
+      return response()->json([
+          'status'  => 'error',
+          'message' => 'Show not found',
+      ], 404);
+    }
+
+    // Assuming this relationship and custom accessor correctly resolve the push destinations
+    $pushDestinations = $show->mistStreamPushDestinations;
+    $streamName = $show->mistStreamWildcard->name;
+
+    // Fetch all active pushes once to avoid querying in a loop
+    $activePushURIs = MistServerAutoPush::where('stream_name', $streamName)
+        ->pluck('uri')
+        ->toArray();
+
+    foreach ($pushDestinations as $destination) {
+      // Construct the destination URI for matching
+      $destinationURI = $destination->rtmp_url . $destination->rtmp_key;
+
+      // Check against active pushes for 'has_auto_push'
+      $destination->has_auto_push = in_array($destinationURI, $activePushURIs) ? 1 : 0;
+
+      // Check for an active push match for 'push_is_started'
+      $activePushExists = MistServerActivePush::where([
+          ['stream_name', '=', $streamName],
+          ['original_uri', '=', $destinationURI],
+      ])->exists();
+      $destination->push_is_started = $activePushExists ? 1 : 0;
+
+      // Save the updated destination
+      $destination->save();
+    }
+
+    // Optionally refresh the collection from the database if needed
+    $pushDestinations = $show->fresh()->mistStreamPushDestinations;
 
     return response()->json([
         'status'       => 'success',
         'message'      => 'Push Destinations Updated for ' . $show->name,
-        'destinations' => $pushDestinations, // Ensure this variable is always set
+        'destinations' => $pushDestinations,
         'isRecording'  => $show->mistStreamWildcard->is_recording,
     ]);
   }
-
 
 }

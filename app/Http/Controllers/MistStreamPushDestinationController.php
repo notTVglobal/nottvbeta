@@ -226,49 +226,49 @@ class MistStreamPushDestinationController extends Controller
 
 
 
-//    $request->validate([
-//        'mist_stream_wildcard_id' => 'required|string', // Validate request
-//    ]);
-//    // Request contains wildcard_id
-//    $wildcardId = $request->mist_stream_wildcard_id;
-//
-//    $mistStreamWildcard = MistStreamWildcard::findOrFail($wildcardId);
-//    $streamName = $mistStreamWildcard->name;
-//
-//    // Attempt to find an active push based on stream name
-//    $activePush = MistServerActivePush::where('stream_name', $streamName)->first();
-//
-//    // Update PushDestinations related to this Wildcard
-//    $pushDestinations = MistStreamPushDestination::where('mist_stream_wildcard_id', $wildcardId)->get(); // Get related destinations
-//
-//    foreach ($pushDestinations as $destination) {
-//      // Example condition to match destination, adjust as necessary
-//      if ($activePush && $destination->rtmp_url . $destination->rtmp_key == $activePush->original_uri) {
-//        $destination->push_is_started = 1;
-//      } else {
-//        $destination->push_is_started = 0;
-//      }
-//      $destination->save(); // Save the updated push destination
-//    }
-//
-//    // Update Stream recording status
-//    if (!$activePush) {
-//      $mistStreamWildcard->is_recording = 0;
-//    } else {
-//      $isRecording = $this->recordingService->checkForRecording($activePush->original_uri);
-//      if ($isRecording) {
-//        $this->recordingService->handleIfRecording($mistStreamWildcard, $activePush->original_uri);
-//      } else {
-//        $mistStreamWildcard->is_recording = 0; // Assuming you want to update this if not recording
-//      }
-//    }
-//
-//    $mistStreamWildcard->save(); // Save any updates to the wildcard
-//
-//    // change the response to give us an array of all the push destinations and if push_is_started true or false
-//    // and an array item if isRecording true or false
-//    // we are going to use this data in our Vue front end.
-//    return response()->json(['message' => 'Stream push status updated.']);
+    $request->validate([
+        'mist_stream_wildcard_id' => 'required|string', // Validate request
+    ]);
+    // Request contains wildcard_id
+    $wildcardId = $request->mist_stream_wildcard_id;
+
+    $mistStreamWildcard = MistStreamWildcard::findOrFail($wildcardId);
+    $streamName = $mistStreamWildcard->name;
+
+    // Attempt to find an active push based on stream name
+    $activePush = MistServerActivePush::where('stream_name', $streamName)->first();
+
+    // Update PushDestinations related to this Wildcard
+    $pushDestinations = MistStreamPushDestination::where('mist_stream_wildcard_id', $wildcardId)->get(); // Get related destinations
+
+    foreach ($pushDestinations as $destination) {
+      // Example condition to match destination, adjust as necessary
+      if ($activePush && $destination->rtmp_url . $destination->rtmp_key == $activePush->original_uri) {
+        $destination->push_is_started = 1;
+      } else {
+        $destination->push_is_started = 0;
+      }
+      $destination->save(); // Save the updated push destination
+    }
+
+    // Update Stream recording status
+    if (!$activePush) {
+      $mistStreamWildcard->is_recording = 0;
+    } else {
+      $isRecording = $this->recordingService->checkForRecording($activePush->original_uri);
+      if ($isRecording) {
+        $this->recordingService->handleIfRecording($mistStreamWildcard, $activePush->original_uri);
+      } else {
+        $mistStreamWildcard->is_recording = 0; // Assuming you want to update this if not recording
+      }
+    }
+
+    $mistStreamWildcard->save(); // Save any updates to the wildcard
+
+    // change the response to give us an array of all the push destinations and if push_is_started true or false
+    // and an array item if isRecording true or false
+    // we are going to use this data in our Vue front end.
+    return response()->json(['message' => 'Stream push status updated.']);
 
   }
 
@@ -333,7 +333,7 @@ class MistStreamPushDestinationController extends Controller
   /**
    * @throws \Exception
    */
-  public function removeAllAutoPushesForStream(Request $request, PushDestinationService $pushDestinationService) {
+  public function removeAllAutoPushesForStream(Request $request): \Illuminate\Http\JsonResponse {
     // Validate the request data
     $validated = $request->validate([
         'streamName' => 'required|string',
@@ -341,22 +341,9 @@ class MistStreamPushDestinationController extends Controller
 
     $streamName = $validated['streamName'];
 
-//    $streamName = $mistStreamPushDestination->mistStreamWildcard->name;
-
-    // Ensure the mistStreamWildcard relationship is loaded
-//    if (!$mistStreamPushDestination->relationLoaded('mistStreamWildcard')) {
-//      $mistStreamPushDestination->load('mistStreamWildcard');
-//    }
-
-    // Prepare the data array correctly in PHP syntax
-    $data = [
-        "push_auto_remove" => $streamName
-    ];
+    $this->mistServerService->sendRemoveAllAutoPushesCommand($streamName);
 
     try {
-      // Delegate the operation to the service
-      $pushDestinationService->removeAllAutoPushesForStream($streamName);
-
       // Respond with success
       return response()->json(['message' => "Auto pushes removed successfully for stream: {$streamName}"]);
     } catch (\Exception $e) {
@@ -371,11 +358,8 @@ class MistStreamPushDestinationController extends Controller
 
 
   public function pushAutoRemove(MistStreamPushDestination $mistStreamPushDestination): \Illuminate\Http\JsonResponse {
-
-    $response = $this->pushDestinationService->fetchPushAutoList();
-
     Log::debug('Auto push removed for MistStreamPushDestination.', ['destinationId' => $mistStreamPushDestination->id]);
-//    try {
+    try {
 
       $this->pushDestinationService->pushAutoRemove($mistStreamPushDestination);
 
@@ -384,11 +368,13 @@ class MistStreamPushDestinationController extends Controller
       Log::debug('Push Destination Service -> pushAutoRemove ran successfully for ', ['destinationId' => $mistStreamPushDestination->id]);
 
       return response()->json(['message' => 'Auto push removed successfully for ' . $mistStreamPushDestination->id]);
-//    } catch (\Exception $e) {
-//      Log::error('Failed to run PushDestinationService for pushAutoRemove', ['exception' => $e->getMessage()]);
-//      return response()->json(['error' => 'Failed to dispatch job.'], 500);
-//    }
+    } catch (\Exception $e) {
+      Log::error('Failed to run PushDestinationService for pushAutoRemove', ['exception' => $e->getMessage()]);
+      return response()->json(['error' => 'Failed to dispatch job.'], 500);
+    }
   }
+
+
 
   public function startPush(MistStreamPushDestination $mistStreamPushDestination): \Illuminate\Http\JsonResponse {
     Log::debug('Starting push for MistStreamPushDestination.', ['destinationId' => $mistStreamPushDestination->id]);
@@ -409,6 +395,8 @@ class MistStreamPushDestinationController extends Controller
       return response()->json(['error' => 'Failed to dispatch job.'], 500);
     }
   }
+
+
 
   public function stopPush(MistStreamPushDestination $mistStreamPushDestination): \Illuminate\Http\JsonResponse {
     try {

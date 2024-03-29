@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\MistServerAutoPush;
 use App\Models\MistServerConfig;
 use App\Models\MistStreamPushDestination;
 use Illuminate\Support\Facades\Crypt;
@@ -26,14 +27,153 @@ class MistServerService {
   }
 
   public function send(array $data = []) {
-//    Log::debug("Sending request to MistServer", ['url' => $this->host, 'data' => $data]);
 
+     Log::debug("Sending request to MistServer", ['url' => $this->host, 'data' => $data]);
+
+    // Handle challenge-response for authentication
     if ($this->challenge) {
-      // If there is a challenge, hash the password with the challenge
       $hashedPassword = md5($this->password);
       $authReturn = md5($hashedPassword . $this->challenge);
     } else {
-      // Initial request, no challenge yet
+      $authReturn = md5($this->password);
+    }
+
+    // Merge authorization data with the request payload
+    $data = array_merge($data, [
+        "authorize" => [
+            "username" => $this->username,
+            "password" => $authReturn,
+        ],
+        "minimal" => true,
+    ]);
+
+    // Send a POST request with the JSON-encoded data
+    $response = Http::withHeaders([
+        'Content-Type' => 'application/json',
+    ])->post($this->host, $data);
+
+    // Check for request failure
+    if ($response->failed()) {
+      Log::error('Request to MistServer failed', [
+          'status' => $response->status(),
+          'response' => $response->body(),
+      ]);
+      return ['error' => 'Request to MistServer failed'];
+    }
+
+    $responseData = $response->json();
+
+    // Handle challenge-response authentication
+    if (isset($responseData['authorize']) && $responseData['authorize']['status'] === 'CHALL') {
+      $this->challenge = $responseData['authorize']['challenge'];
+      // Log::debug("Received challenge from MistServer, retrying", ['challenge' => $this->challenge]);
+      return $this->send($data); // Retry with the challenge response
+    }
+
+    // Return the API response
+    return $responseData;
+  }
+
+
+//  public function send(array $data = []) {
+//
+// //    Log::debug("Sending request to MistServer", ['url' => $this->host, 'data' => $data]);
+//
+//    if ($this->challenge) {
+//      // If there is a challenge, hash the password with the challenge
+//      $hashedPassword = md5($this->password);
+//      $authReturn = md5($hashedPassword . $this->challenge);
+//    } else {
+//      // Initial request, no challenge yet
+//      $authReturn = md5($this->password);
+//    }
+//
+//    $data = array_merge($data, [
+//        "authorize" => [
+//            "username" => $this->username,
+//            "password" => $authReturn,
+//        ],
+//        "minimal"   => true,
+//    ]);
+//
+//
+//    // Using the Http facade to make a POST request with a JSON body
+//    $response = Http::withHeaders([
+//        'Content-Type' => 'application/json',
+//      // Add any other headers required by MistServer
+//    ])->post($this->host, $data); // Directly passing the $data array, Laravel will convert it to JSON
+//
+//    if ($response->failed()) {
+//      Log::error('Request to MistServer failed', [
+//          'status'   => $response->status(),
+//          'response' => $response->body(),
+//      ]);
+//
+//      return ['error' => 'Request to MistServer failed'];
+//    }
+//
+//    $responseData = $response->json();
+//
+//    if (isset($responseData['authorize']) && $responseData['authorize']['status'] === 'CHALL') {
+//      $this->challenge = $responseData['authorize']['challenge'];
+//
+//      // Log::debug("Received challenge from MistServer, retrying", ['challenge' => $this->challenge]);
+//
+//      return $this->send($data); // Retry with the challenge response
+//    }
+//
+//    return $responseData;
+//
+//
+//    $response = Http::get($this->host, ['command' => json_encode($data)]);
+//
+//    if ($response->failed()) {
+//      Log::error('MMMMMMMMMMM Request to MistServer failed', [
+//          'status'   => $response->status(),
+//          'response' => $response->body(),
+//      ]);
+//
+//      return ['error' => 'Request to MistServer failed'];
+//    }
+//
+//    Log::alert('NNNNNNNNNNNNNNN Required data to match exactly for auto push remove', [
+//        'status'   => $response->status(),
+//        'response' => $response->body(),
+//    ]);
+//
+//
+//
+//    $responseData = $response->json();
+////    Log::debug("Received response from MistServer", ['response' => $responseData]);
+//
+//
+//    if (isset($responseData['authorize']) && $responseData['authorize']['status'] === 'CHALL') {
+//      $this->challenge = $responseData['authorize']['challenge'];
+//
+////      Log::debug("Received challenge from MistServer, retrying", ['challenge' => $this->challenge]);
+//
+//      return $this->send($data); // Retry with the challenge response
+//    }
+//
+//    return $responseData;
+//
+//  }
+
+
+
+
+//$streamName = 'show+01hss3n71f1kb21sd6rxjvaj7e';
+//$response = $this->sendRemoveCommand($streamName);
+
+  public function sendRemoveAllAutoPushesCommand($streamName) {
+    $data = [
+        "push_auto_remove" => $streamName
+    ];
+
+    if ($this->challenge) {
+      $hashedPassword = md5($this->password);
+      $authReturn = md5($hashedPassword . $this->challenge);
+    } else {
       $authReturn = md5($this->password);
     }
 
@@ -42,40 +182,53 @@ class MistServerService {
             "username" => $this->username,
             "password" => $authReturn,
         ],
-        "minimal"   => true,
+        "minimal" => true,
     ]);
 
-    $response = Http::get($this->host, ['command' => json_encode($data)]);
+    try {
+      $response = Http::withHeaders([
+          'Content-Type' => 'application/json',
+      ])->post($this->host, $data);
 
-    if ($response->failed()) {
-      Log::error('MMMMMMMMMMM Request to MistServer failed', [
-          'status'   => $response->status(),
-          'response' => $response->body(),
+      if ($response->failed()) {
+        Log::error('Request to MistServer failed', [
+            'status' => $response->status(),
+            'response' => $response->body(),
+        ]);
+        return ['error' => 'Request to MistServer failed'];
+      }
+
+      $responseData = $response->json();
+
+      if (isset($responseData['authorize']) && $responseData['authorize']['status'] === 'CHALL') {
+        $this->challenge = $responseData['authorize']['challenge'];
+        return $this->sendRemoveAllAutoPushesCommand($streamName); // Retry with the challenge response
+      }
+
+      return $responseData;
+    } catch (\Exception $e) {
+      Log::error('An error occurred while sending request to MistServer', [
+          'message' => $e->getMessage()
       ]);
-
-      return ['error' => 'Request to MistServer failed'];
+      return ['error' => 'An unexpected error occurred'];
     }
-
-    Log::alert('NNNNNNNNNNNNNNN Required data to match exactly for auto push remove', [
-        'status'   => $response->status(),
-        'response' => $response->body(),
-    ]);
-
-    $responseData = $response->json();
-//    Log::debug("Received response from MistServer", ['response' => $responseData]);
-
-
-    if (isset($responseData['authorize']) && $responseData['authorize']['status'] === 'CHALL') {
-      $this->challenge = $responseData['authorize']['challenge'];
-
-//      Log::debug("Received challenge from MistServer, retrying", ['challenge' => $this->challenge]);
-
-      return $this->send($data); // Retry with the challenge response
-    }
-
-    return $responseData; 
-
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   public function fetchConfiguredStreams() {
 
@@ -310,24 +463,83 @@ class MistServerService {
   }
 
   public function getActivePushList(): array {
-    $data = ["push_list" => true]; // The value is ignored, so true is just a placeholder
 
+    $data = ["push_auto_list" => true]; // The value is ignored, so true is just a placeholder
+    Log::debug("Get Active Push List.");
     try {
-      $response = $this->send($data); // Assuming 'send' method handles communication with MistServer
-      if (isset($response['push_list']) && is_array($response['push_list'])) {
-        Log::debug("AAAAAAAAAAAA   Successfully retrieved active push list from MistServer.");
+      $response = $this->send($data);
+      $activeEntries = [];
 
-        return $response['push_list'];
+      if (isset($response['push_auto_list']) && is_array($response['push_auto_list'])) {
+        Log::debug("Successfully retrieved active push list from MistServer." . $response);
+
+        foreach ($response['push_auto_list'] as $autoPushData) {
+          Log::debug('Saving auto push entry:', ['data' => $autoPushData]);
+
+          $newAutoPush = MistServerAutoPush::updateOrCreate(
+              [
+                  'stream_name' => $autoPushData[0],
+                  'uri' => $autoPushData[1],
+              ],
+              [
+                  'col_3' => $autoPushData[2],
+                  'col_4' => $autoPushData[3],
+                  'col_5' => $autoPushData[4],
+                  'col_6' => $autoPushData[5],
+                  'col_7' => $autoPushData[6],
+                  'col_8' => $autoPushData[7],
+                  'col_9' => $autoPushData[8],
+                  'col_10' => $autoPushData[9],
+                  'auto_push_entry' => $autoPushData, // This will be automatically cast to JSON by Laravel
+              ]
+          );
+
+          // Collect active entries for comparison
+          $activeEntries[] = $autoPushData[0] . '|' . $autoPushData[1];
+
+
+          // Optionally log the outcome
+          Log::debug("Processed auto push entry.", ['stream_name' => $newAutoPush->stream_name, 'uri' => $newAutoPush->uri]);
+        }
+        // Find and remove unmatched entries
+        $allAutoPushes = MistServerAutoPush::all();
+        foreach ($allAutoPushes as $autoPush) {
+          $identifier = $autoPush->stream_name . '|' . $autoPush->uri;
+          if (!in_array($identifier, $activeEntries)) {
+            Log::info("Removing unmatched auto push entry.", ['stream_name' => $autoPush->stream_name, 'uri' => $autoPush->uri]);
+            $autoPush->delete(); // Remove the unmatched entry
+          }
+        }
+
+        return $response['push_auto_list'];
       } else {
         Log::error("Failed to retrieve active push list. Response was not as expected.");
-
         return [];
       }
     } catch (\Exception $e) {
       Log::error("Exception occurred while fetching active push list", ['exception' => $e->getMessage()]);
-
       return [];
     }
+
+
+//    $data = ["push_list" => true]; // The value is ignored, so true is just a placeholder
+//
+//    try {
+//      $response = $this->send($data); // Assuming 'send' method handles communication with MistServer
+//      if (isset($response['push_list']) && is_array($response['push_list'])) {
+//        Log::debug("AAAAAAAAAAAA   Successfully retrieved active push list from MistServer.");
+//
+//        return $response['push_list'];
+//      } else {
+//        Log::error("Failed to retrieve active push list. Response was not as expected.");
+//
+//        return [];
+//      }
+//    } catch (\Exception $e) {
+//      Log::error("Exception occurred while fetching active push list", ['exception' => $e->getMessage()]);
+//
+//      return [];
+//    }
   }
 
   public function startPush(MistStreamPushDestination $mistStreamPushDestination): void {
