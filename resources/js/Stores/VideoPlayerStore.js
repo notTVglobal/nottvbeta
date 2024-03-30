@@ -80,7 +80,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
         },
 
         setMistServerUri(mistServerUri) {
-          this.mistServerUri = mistServerUri
+            this.mistServerUri = mistServerUri
         },
 
         // Initialize the player with necessary settings and start playback
@@ -393,22 +393,28 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
 
         getSourceDetails(source) {
             let videoSrc, videoSourceType
-
-            console.log('getSourceDetails called with source:', source);
-
+            console.log('getSourceDetails called with source:', JSON.stringify(source, null, 2));
             // Default to 'video/mp4' if type is not specified or is empty
             videoSourceType = source.type || 'video/mp4'
-            console.log(`Determined Video Source Type: ${videoSourceType}`);
+            console.log(`Determined Video Source Type: ${videoSourceType}`)
 
             if (source.mediaType === 'externalVideo') {
                 // For external videos, use the URL as provided without encoding
                 videoSrc = source.video_url
-                console.log('Using external video source:', videoSrc);
+                console.log('Using external video source:', videoSrc)
+
+            } else if (source.mediaType === 'recording') {
+                console.log('Video is a recording.')
+                videoSrc = this.mistServerUri + source.recording.source
+                videoSourceType = source.recording.sourceType
+                console.log(videoSrc)
+                console.log(videoSourceType)
+
             } else {
-                console.log('CDN Endpoint:', source.cdn_endpoint);
-                console.log('Cloud Folder:', source.cloud_folder);
-                console.log('Folder:', source.folder);
-                console.log('File Name:', source.file_name);
+                console.log('CDN Endpoint:', source.cdn_endpoint)
+                console.log('Cloud Folder:', source.cloud_folder)
+                console.log('Folder:', source.folder)
+                console.log('File Name:', source.file_name)
                 // For internal videos, construct the URL from its components
                 // Here, we assume the cdn_endpoint, cloud_folder, and folder are correctly formatted
                 // and do not require encoding. Only the file_name might need encoding.
@@ -416,7 +422,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                 // const encodedFileName = encodeURIComponent(source.file_name);
                 const fileName = source.file_name
                 videoSrc = basePath + fileName
-                console.log('Constructed internal video source:', videoSrc);
+                console.log('Constructed internal video source:', videoSrc)
                 // If your server or CDN is configured to handle spaces in URLs without %20 encoding
                 // or if the original working URLs did not use standard URL encoding,
                 // you might adjust the encoding strategy here.
@@ -425,47 +431,48 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                 // videoSrc = basePath + fileNameForUrl;
             }
 
-            console.log(`Final Constructed Video Source: ${videoSrc}, Type: ${videoSourceType}`);
+            console.log(`Final Constructed Video Source: ${videoSrc}, Type: ${videoSourceType}`)
             return {videoSrc, videoSourceType}
         },
 
 
         loadNewVideo(source) {
             try {
-                let videoJs = videojs('main-player');
-                console.log('LOAD NEW VIDEO');
-                const audioStore = useAudioStore();
-                // Correctly destructure the returned object to get videoSrc and videoSourceType
-                const {videoSrc, videoSourceType} = this.getSourceDetails(source);
+                let videoJs = videojs('main-player')
+                console.log('LOAD NEW VIDEO')
+                const audioStore = useAudioStore()
+
+                const {videoSrc, videoSourceType} = this.getSourceDetails(source)
 
                 // Example: Stopping and cleaning up the current video and audio setup
                 if (videoJs) {
-                    videoJs.src({'src': videoSrc, 'type': videoSourceType});
+                    videoJs.src({'src': videoSrc, 'type': videoSourceType})
 
                     videoJs.ready(() => {
                         // ensureAudioContextAndNodesReady does the following:
                         // 1. Resumes AudioContext if suspended.
                         // 2. (Re)connects MediaElementSource from the video element to AudioContext.
-                        audioStore.deferAudioSetup = false;
+                        audioStore.deferAudioSetup = false
                         audioStore.ensureAudioContextAndNodesReady(videoJs).then(() => {
                             // Only attempt to play the video after ensuring the AudioContext is ready
                             videoJs.play().catch(error => {
                                 useNotificationStore().setGeneralServiceNotification('Error', 'Playback initiation error: ' + error)
-                                console.error('Playback initiation error: ', error);
-                            });
+                                console.error('Playback initiation error: ', error)
+                            })
 
                             // Consider toggling mute based on the user's preference or previous state
-                            videoJs.muted(false);
-                            this.muted = false;
-                        });
-                    });
+                            videoJs.muted(false)
+                            this.muted = false
+                        })
+                    })
                 }
             } catch (error) {
                 // Log the error or perform any other error handling
                 useNotificationStore().setGeneralServiceNotification('Error', 'Error loading new video: ' + error)
-                console.error('Error loading new video: ', error);
+                console.error('Error loading new video: ', error)
             }
         },
+
 
         // loadNewVideo(source) {
         //     console.log('LOAD NEW VIDEO TTTTTTTTTTTTTTTTTTTTTTTTTS');
@@ -555,25 +562,25 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
         },
         loadNewSourceFromUrl(source) {
             try {
-                this.videoIsYoutube = false;
-                useChannelStore().clearChannel();
-                let videoJs = videojs('main-player');
+                this.videoIsYoutube = false
+                useChannelStore().clearChannel()
+                let videoJs = videojs('main-player')
 
                 if (!source.video_url || !source.type) {
                     useNotificationStore().setGeneralServiceNotification('Error', 'Invalid video source.')
-                    throw new Error("Invalid video source.");
+                    throw new Error('Invalid video source.')
                 }
 
-                this.videoSource = source.video_url;
-                this.videoSourceType = source.type;
-                videoJs.src({'src': source.video_url, 'type': source.type});
+                this.videoSource = source.video_url
+                this.videoSourceType = source.type
+                videoJs.src({'src': source.video_url, 'type': source.type})
 
-                this.unMute();
-                this.paused = false;
+                this.unMute()
+                this.paused = false
             } catch (error) {
                 useNotificationStore().setGeneralServiceNotification('Error', 'Failed to load new source: ' + error)
-                console.error("Failed to load new source:", error);
-                throw error; // Re-throw the error to be caught by the caller
+                console.error('Failed to load new source:', error)
+                throw error // Re-throw the error to be caught by the caller
             }
         },
         loadNewSourceFromMist(source) {
@@ -642,25 +649,25 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
             //     await this.getMistServerUri()
             // }
             // if (this.mistServerUri) {
-                // console.log('Mist Server URI:', this.mistServerUri); // Log the URI to confirm it's fetched
-                // let basePath = this.mistServerUri
-                // this.videoSource = basePath + 'hls/' + video.name + '/index.m3u8'
-                // console.log('Video Source Set To:', this.videoSource); // Log the final video source
+            // console.log('Mist Server URI:', this.mistServerUri); // Log the URI to confirm it's fetched
+            // let basePath = this.mistServerUri
+            // this.videoSource = basePath + 'hls/' + video.name + '/index.m3u8'
+            // console.log('Video Source Set To:', this.videoSource); // Log the final video source
 
             // this.videoSourceType = 'video/mp4'
-            console.log('Video Source Type:', video.type);
-            console.log('Video URL:', video.video_url);
-            console.log('CDN Endpoint:', video.cdn_endpoint);
-            console.log('Cloud Folder:', video.cloud_folder);
-            console.log('Folder:', video.folder);
-            console.log('File Name:', video.file_name);
+            console.log('Video Source Type:', video.type)
+            console.log('Video URL:', video.video_url)
+            console.log('CDN Endpoint:', video.cdn_endpoint)
+            console.log('Cloud Folder:', video.cloud_folder)
+            console.log('Folder:', video.folder)
+            console.log('File Name:', video.file_name)
 
             let videoSource = video.cdn_endpoint + video.cloud_folder + video.folder + '/' + video.file_name
-                // console.log('Setting player source to:', this.videoSource, 'of type:', this.videoSourceType); // Log the source setting
-                let videoJs = videojs('main-player')
-                videoJs.src({'src': videoSource, 'type': video.type})
-                this.unMute()
-                this.paused = false
+            // console.log('Setting player source to:', this.videoSource, 'of type:', this.videoSourceType); // Log the source setting
+            let videoJs = videojs('main-player')
+            videoJs.src({'src': videoSource, 'type': video.type})
+            this.unMute()
+            this.paused = false
             // } else {
             //     console.error('Mist Server URI is still not set after fetching.')
             // }

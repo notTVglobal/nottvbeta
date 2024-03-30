@@ -37,7 +37,12 @@
     </tr>
     </thead>
     <tbody class="bg-white divide-y divide-gray-200">
-    <tr v-for="recording in showRecordings" :key="recording.id">
+    <tr v-for="recording in showRecordings" :key="recording.id"
+        @mouseover="state.hoveredRow = recording.id"
+        @mouseleave="state.hoveredRow = null"
+        @click="openVideo(recording)"
+        :class="rowClass(recording.id)"
+      >
       <td class="px-6 py-4 whitespace-nowrap">
         {{ userStore.formatDateInUserTimezone(recording.start_time) }}
       </td>
@@ -54,23 +59,99 @@
         <!-- Placeholder for expiration logic -->
       </td>
       <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-1">
-        <button class="btn btn-xs">Add To Episode</button>
-        <button class="btn btn-xs">Download</button>
-        <button class="btn btn-xs">Save to Premium Storage</button>
+        <button @click.stop="shareRecording(recording.shareUrl)"
+                class="btn btn-xs bg-orange-200 hover:bg-orange-300 text-black">
+          <font-awesome-icon icon="fa-share" class=""/>Share
+        </button>
+        <button @click.stop="confirmAddToEpisode"
+                class="btn btn-xs">Add To Episode</button>
+        <button @click.stop="confirmDownload"
+        class="btn btn-xs" >Download</button>
+        <button @click.stop="confirmSaveToPremium"
+                class="btn btn-xs">Save to Premium Storage</button>
       </td>
     </tr>
     </tbody>
 
   </table>
 
+  <dialog id="confirmRecordingPlaybackModal" class="modal">
+    <div class="modal-box w-full items-center text-center">
+      <form method="dialog">
+        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+      </form>
+      <h3 class="font-bold text-lg"></h3>
+      <p class="py-4">Would you like to play the <span class="font-semibold">recording</span> from
+        <span class="font-semibold">{{ selectedRecordingDate }}</span>?</p>
+      <button class="btn" @click="play">Play</button>
+    </div>
+
+    <form method="dialog" class="modal-backdrop">
+      <button>close</button>
+    </form>
+  </dialog>
+
+  <transition name="fade">
+    <div v-if="showCopyMessage" class="copy-message">
+      {{ copyMessage }}
+    </div>
+  </transition>
+
+  <dialog id="confirmAddToEpisodeModal" class="modal">
+    <div class="modal-box text-center">
+      <h3 class="font-bold text-lg pt-8">Add Recording To Episode</h3>
+      <p class="py-4">We are working on this feature!</p>
+      <div class="modal-action">
+        <form method="dialog">
+          <!-- if there is a button in form, it will close the modal -->
+          <button class="btn">Okay</button>
+        </form>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="confirmDownloadModal" class="modal">
+    <div class="modal-box text-center">
+      <h3 class="font-bold text-lg pt-8">Download</h3>
+      <p class="py-4">We are working on this feature!</p>
+      <div class="modal-action">
+        <form method="dialog">
+          <!-- if there is a button in form, it will close the modal -->
+          <button class="btn">Okay</button>
+        </form>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="confirmSaveToPremiumModal" class="modal">
+    <div class="modal-box text-center">
+      <h3 class="font-bold text-lg pt-8">Save To Premium Storage</h3>
+      <p class="py-4">We are working on this feature!</p>
+      <div class="modal-action">
+        <form method="dialog">
+          <!-- if there is a button in form, it will close the modal -->
+          <button class="btn">Okay</button>
+        </form>
+      </div>
+    </div>
+  </dialog>
+
 </template>
 
 <script setup>
+import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
+import { useNowPlayingStore } from "@/Stores/NowPlayingStore"
 import { useUserStore } from '@/Stores/UserStore'
+import { computed, reactive, ref } from 'vue'
+import { useClipboard } from '@vueuse/core'
 
+const videoPlayerStore = useVideoPlayerStore()
+const nowPlayingStore = useNowPlayingStore()
 const userStore = useUserStore()
 
-defineProps({
+const shareClip = useClipboard();
+
+const props = defineProps({
   showRecordings: Array
 })
 
@@ -90,4 +171,104 @@ const formatDuration = (totalMilliseconds) => {
   return `${paddedHours}h ${paddedMinutes}m ${paddedSeconds}s`;
 };
 
+const state = reactive({
+  hoveredRow: null,
+});
+
+const selectedRecordingDate = ref('')
+const selectedRecordingStreamName = ref('')
+const selectedRecordingId = ref('')
+const nowPlayingRecordingId = ref('')
+
+// Computed property returning a function to determine row classes
+const rowClass = computed(() => (recordingId) => ({
+  'hover:bg-blue-100 cursor-pointer': state.hoveredRow === recordingId,
+  'bg-green-100': nowPlayingRecordingId.value === recordingId,
+}));
+
+const openVideo = (recording) => {
+  document.getElementById('confirmRecordingPlaybackModal').showModal()
+  selectedRecordingStreamName.value = recording.streamName
+  selectedRecordingId.value = recording.id
+  selectedRecordingDate.value = userStore.formatDateInUserTimezone(recording.start_time)
+  console.log('Opening video for stream:', recording.streamName);
+  // Implement the video opening logic here
+};
+
+const source = ref({
+  mediaType: '',
+  recording: {
+    source: '',
+    sourceType: '',
+  }
+});
+
+const play = () => {
+  source.value.mediaType = 'recording'
+  source.value.recording = {
+    source: selectedRecordingStreamName,
+    sourceType: 'video/mp4',
+  };
+  console.log('recording source: ' + selectedRecordingStreamName.value)
+  videoPlayerStore.loadNewVideo(source.value)
+  nowPlayingRecordingId.value = selectedRecordingId.value
+  console.log('now playing ID: ' + nowPlayingRecordingId.value)
+  document.getElementById('confirmRecordingPlaybackModal').close()
+}
+
+const shareRecording = (shareUrl) => {
+  shareClip.copy(shareUrl);
+  copyMessage.value = 'Video share URL copied!';
+  showCopyMessage.value = true;
+  setTimeout(() => {
+    showCopyMessage.value = false;
+  }, 1000); // Hide after 3 seconds
+};
+
+const showCopyMessage = ref(false);
+const copyMessage = ref('');
+
+const confirmAddToEpisode = () => {
+  document.getElementById('confirmAddToEpisodeModal').showModal()
+}
+
+const confirmDownload = () => {
+  document.getElementById('confirmDownloadModal').showModal()
+}
+
+const confirmSaveToPremium = () => {
+  document.getElementById('confirmSaveToPremiumModal').showModal()
+}
+
+
+function triggerDownload(url, filename = "") {
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename; // You can specify a filename here, or leave it empty
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
 </script>
+<style>
+.copy-message {
+  position: fixed;
+  bottom: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.75);
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  font-size: 1.5rem;
+  z-index: 100;
+  transition: opacity 0.5s ease;
+}
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+}
+</style>
