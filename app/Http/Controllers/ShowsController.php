@@ -777,6 +777,42 @@ class ShowsController extends Controller {
       return $isActiveOrFuture;
     });
 
+    // Fetch the Mist Server URI setting outside the map function to avoid repetitive database queries
+    $mistServerUri = AppSetting::where('id', 1)->pluck('mist_server_uri')->first();
+
+    $recordings = $show->recordings->map(function ($recording) use ($mistServerUri, $show) {
+      // Remove the specified parts from the path
+      $path = str_replace(['/media/recordings/'], [''], $recording->path);
+      // URL encode the path to ensure it's safe for use in URLs
+      $encodedPath = urlencode($path);
+      // Convert + symbols to %2B in the stream name
+      $streamName = 'recordings%2B' . $encodedPath . '.mp4';
+
+      // Construct the download URL
+      $downloadUrl = rtrim($mistServerUri, '/') . '/' . $streamName; // Ensure no double slashes
+
+      $shareUrl = rtrim($mistServerUri, '/') . '/' . $encodedPath . '.html';
+
+      // Format the start time as a string suitable for a filename, assuming $recording->start_time is a Carbon instance
+      // If $recording->start_time is not a Carbon instance, make sure to convert it first or adjust the formatting accordingly
+      $formattedStartTime = $recording->start_time->format('Y_m_d_H_i_s');
+
+      // Construct the fileName
+      $downloadFileName = $show->name . '_recording_' . $formattedStartTime . '.mkv';
+
+      // Return the modified recording with additional download details
+      return collect($recording->only([
+          'id', 'file_extension', 'start_time', 'end_time',
+          'total_milliseconds_recorded', 'mist_stream_wildcard_id', 'download_url'
+      ]))
+          ->put('streamName', $streamName)
+          ->put('shareUrl', $shareUrl)
+          ->put('download', [
+              'url' => $downloadUrl,
+              'fileName' => $downloadFileName
+          ]);
+    });
+
     return Inertia::render('Shows/{$id}/Manage', [
         'show'            => [
             'id'              => $show->id,
@@ -803,7 +839,8 @@ class ShowsController extends Controller {
                 'id'   => $show->showRunner->id ?? null,
                 'name' => $show->showRunner->user->name ?? null,
             ],
-            'recordings'      => $show->recordings->map->only(['id', 'path', 'file_extension', 'start_time', 'end_time', 'total_milliseconds_recorded', 'mist_stream_wildcard_id', 'download_url']), // Include only necessary fields
+//            'recordings'      => $show->recordings->map->only(['id', 'path', 'file_extension', 'start_time', 'end_time', 'total_milliseconds_recorded', 'mist_stream_wildcard_id', 'download_url']), // Include only necessary fields
+            'recordings'      => $recordings,
         ],
         'team'            => [
             'name' => $show->team->name,

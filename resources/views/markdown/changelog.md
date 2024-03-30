@@ -3,6 +3,12 @@
 Last Update: March 29, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.7.32
+March 29, 2024
+* Video Recordings on shows can now be played back
+* Added a share button to the video recordings which copies the url to the stream playback page
+* Added modals for the download, save to premium and add to episode buttons
+
 ## v0.8.7.31
 March 29, 2024
 * Add refreshing loader icons on the Push Destinations page
