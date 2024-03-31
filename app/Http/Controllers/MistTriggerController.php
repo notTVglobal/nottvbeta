@@ -374,13 +374,13 @@ class MistTriggerController extends Controller {
   protected function createRecordingEntry(array $parsedContent): ?Recording {
 
     // Construct a unique identifier for the recording.
-    $uniqueId = $parsedContent['streamName'] . '-' . $parsedContent['startTime']->format('Y-m-d H:i:s');
+    $uniqueId = $parsedContent['path'];
 
     // First, check if a recording with the same unique identifier already exists.
-    $existingRecording = Recording::where('unique_identifier', $uniqueId)->first();
+    $existingRecording = Recording::where('path', $uniqueId)->first();
 
     if ($existingRecording) {
-      return null;
+      return $existingRecording;
     } else {
       // No existing recording found, proceed to create a new entry.
     }
