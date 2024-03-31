@@ -1,7 +1,15 @@
 # not.tv Changelog
 
-Last Update: March 29, 2024\
+Last Update: March 30, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.8.7.33
+March 30, 2024
+* Rebuild the MistServerService to handle multiple Mist Servers.
+  * Added MIST_PUSH_*
+  * Added MIST_PLAYBACK_*
+  * Added MIST_VOD_*
+* Fix the MistServerService send().
 
 ## v0.8.7.32
 March 29, 2024

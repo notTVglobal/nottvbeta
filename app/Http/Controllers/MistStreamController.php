@@ -4,22 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Jobs\AddOrUpdateMistStreamJob;
 use App\Jobs\RemoveMistStreamJob;
-use App\Models\AppSetting;
 use App\Models\Channel;
 use App\Models\MistStream;
-use App\Services\MistServerService;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\Routing\ResponseFactory;
+use App\Services\MistServer\MistServerService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
-use RuntimeException;
-use GuzzleHttp\Client;
 
 class MistStreamController extends Controller {
 

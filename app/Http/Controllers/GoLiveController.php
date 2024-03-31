@@ -8,7 +8,7 @@ use App\Models\Show;
 use App\Models\ShowEpisode;
 use App\Models\TeamMember;
 use App\Models\User;
-use App\Services\MistServerService;
+use App\Services\MistServer\MistServerService;
 use App\Services\PushDestinationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

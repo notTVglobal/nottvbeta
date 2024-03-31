@@ -21,6 +21,7 @@ const initialState = () => ({
     destinations: [], // New state for holding destinations
     isLoadingDestinations: false,
     loadingDestinationId: null,
+    isProcessingDisableAllAutoPushes: false,
 })
 
 export const useGoLiveStore = defineStore('goLiveStore', {
@@ -353,8 +354,8 @@ export const useGoLiveStore = defineStore('goLiveStore', {
             }
         },
         async disableAllAutoPushes(streamName) {
-            const notificationStore = useNotificationStore();
-            this.isLoadingDestinations = true;
+            const notificationStore = useNotificationStore();c
+            this.isProcessingDisableAllAutoPushes = true;
             try {
                 const response = await axios.post('/mist-stream/remove-all-auto-pushes-for-stream', {'streamName':streamName})
                 console.log('Auto push disabled successfully:', response.data)
@@ -365,7 +366,8 @@ export const useGoLiveStore = defineStore('goLiveStore', {
                 console.error('Error disabling auto push:', error)
                 notificationStore.setToastNotification('Failed to disable auto push.', 'error');
             } finally {
-                this.isLoadingDestinations = false; // Stop loading regardless of outcome
+                this.isProcessingDisableAllAutoPushes = false; // Stop loading regardless of outcome
+                await this.backgroundFetchPushDestinations()
             }
         },
     },

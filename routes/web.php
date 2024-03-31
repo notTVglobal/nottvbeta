@@ -1060,28 +1060,28 @@ Route::middleware([
       ->name('goLive.index');
 
 // Get RTMP Uri
-  Route::get('/fetch-rtmp-uri', [AppSettingController::class, 'getRtmpUri']);
+  Route::get('/fetch-rtmp-uri', [AppSettingController::class, 'getRtmpUri'])->can('viewCreator', 'App\Models\User');
 
 // Fetch Push Destinations
-  Route::post('/go-live/fetch-push-destinations/{showId}', [GoLiveController::class, 'fetchPushDestinations']);
+  Route::post('/go-live/fetch-push-destinations/{showId}', [GoLiveController::class, 'fetchPushDestinations'])->can('viewCreator', 'App\Models\User');
 
 // List available shows
-  Route::get('/go-live/shows', [GoLiveController::class, 'listAvailableShows']);
+  Route::get('/go-live/shows', [GoLiveController::class, 'listAvailableShows'])->can('viewCreator', 'App\Models\User');
 
 // List episodes for a show
-  Route::get('/go-live/shows/{showId}/episodes', [GoLiveController::class, 'listEpisodesForShow']);
+  Route::get('/go-live/shows/{showId}/episodes', [GoLiveController::class, 'listEpisodesForShow'])->can('viewCreator', 'App\Models\User');
 
 // Get stream key for an episode
-  Route::post('/go-live/episodes/{showEpisode}/stream-key', [GoLiveController::class, 'getStreamKeyForEpisode']);
+  Route::post('/go-live/episodes/{showEpisode}/stream-key', [GoLiveController::class, 'getStreamKeyForEpisode'])->can('viewCreator', 'App\Models\User');
 
   // Get stream key for a show
-  Route::post('/go-live/shows/{showId}/stream-key', [GoLiveController::class, 'getStreamKeyForShow']);
+  Route::post('/go-live/shows/{showId}/stream-key', [GoLiveController::class, 'getStreamKeyForShow'])->can('viewCreator', 'App\Models\User');
 
 // Prepare live stream for an episode
-  Route::post('/go-live/episodes/{episodeId}/prepare', [GoLiveController::class, 'prepareLiveStream']);
+  Route::post('/go-live/episodes/{episodeId}/prepare', [GoLiveController::class, 'prepareLiveStream'])->can('viewCreator', 'App\Models\User');
 
 
-// MistAPI
+// MistAPI (the [original] first way we learned to connect to the Mist Server)
 ///////////
 ///
 
@@ -1096,19 +1096,20 @@ Route::middleware([
 ///
 
 Route::resource('mistStreams', MistStreamController::class);
-Route::get('/admin/mist-stream/search', [MistStreamController::class, 'searchMistStreams']);
-Route::post('/admin/mist-stream/addOrUpdate', [MistStreamController::class, 'addOrUpdateMistStream'])->name('mistStream.addOrUpdate');
-Route::post('/admin/mist-stream/remove', [MistStreamController::class, 'removeMistStream'])->name('mistStream.remove');
-Route::post('/admin/mist-stream/restore-all-streams', [MistStreamController::class, 'restoreAllStreams']);
-Route::get('/fetch-stream-info/{streamName}', [MistStreamController::class, 'fetchStreamInfo']);
+Route::get('/admin/mist-stream/search', [MistStreamController::class, 'searchMistStreams'])->can('viewAdmin', 'App\Models\User');
+Route::post('/admin/mist-stream/addOrUpdate', [MistStreamController::class, 'addOrUpdateMistStream'])->can('viewAdmin', 'App\Models\User')->name('mistStream.addOrUpdate');
+Route::post('/admin/mist-stream/remove', [MistStreamController::class, 'removeMistStream'])->can('viewAdmin', 'App\Models\User')->name('mistStream.remove');
+Route::post('/admin/mist-stream/restore-all-streams', [MistStreamController::class, 'restoreAllStreams'])->can('viewAdmin', 'App\Models\User');
+Route::get('/fetch-stream-info/{streamName}', [MistStreamController::class, 'fetchStreamInfo'])->can('viewAdmin', 'App\Models\User');
 
 // Mist Server
 //////////////
 ///
 
 Route::get('/mist-server/uri', [MistServerController::class, 'uri']);
-Route::post('/mist-server/config-backup', [MistServerController::class, 'configBackup']);
-Route::post('/mist-server/config-restore', [MistServerController::class, 'configRestore']);
+Route::get('/mist-server/check-send', [MistServerController::class, 'checkSend'])->can('viewAdmin', 'App\Models\User');
+Route::post('/mist-server/config-backup', [MistServerController::class, 'configBackup'])->can('viewAdmin', 'App\Models\User');
+Route::post('/mist-server/config-restore', [MistServerController::class, 'configRestore'])->can('viewAdmin', 'App\Models\User');
 
 
 // Mist Stream Push Destinations

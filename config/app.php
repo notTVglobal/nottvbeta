@@ -193,10 +193,12 @@ return [
         App\Providers\AuthServiceProvider::class,
         App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
-        App\Providers\HorizonServiceProvider::class,
-        App\Providers\RouteServiceProvider::class,
         App\Providers\FortifyServiceProvider::class,
+        App\Providers\HorizonServiceProvider::class,
         App\Providers\JetstreamServiceProvider::class,
+        App\Providers\MistServerServiceProvider::class,
+        App\Providers\RouteServiceProvider::class,
+
         Jenssegers\Agent\AgentServiceProvider::class,
 //        Maatwebsite\Excel\ExcelServiceProvider::class,
 

@@ -32,9 +32,20 @@ return [
     ],
 
     'mistserver' => [
-        'username' => env('MISTSERVER_USERNAME', 'admin'),
-        'password' => env('MISTSERVER_PASSWORD', 'secret'),
-        'host' => env('MISTSERVER_HOST', 'http://localhost:4242/api'),
-        'internal_ip' => env('MISTSERVER_INTERNAL_IP', '0.0.0.0'),
+        'push' => [
+            'host' => env('MISTSERVER_PUSH_HOST'),
+            'username' => env('MISTSERVER_PUSH_USERNAME'),
+            'password' => env('MISTSERVER_PUSH_PASSWORD'),
+        ],
+        'playback' => [
+            'host' => env('MISTSERVER_PLAYBACK_HOST'),
+            'username' => env('MISTSERVER_PLAYBACK_USERNAME'),
+            'password' => env('MISTSERVER_PLAYBACK_PASSWORD'),
+        ],
+        'vod' => [
+            'host' => env('MISTSERVER_VOD_HOST', 'default-vod-host'), // Default as example
+            'username' => env('MISTSERVER_VOD_USERNAME', 'default-vod-username'),
+            'password' => env('MISTSERVER_VOD_PASSWORD', 'default-vod-password'),
+        ],
     ],
 ];

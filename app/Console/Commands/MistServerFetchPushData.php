@@ -2,11 +2,9 @@
 
 namespace App\Console\Commands;
 
-use App\Events\PushDataFetched;
-use App\Services\MistServerService;
+use App\Services\MistServer\MistServerService;
 use App\Services\PushDestinationService;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 
 class MistServerFetchPushData extends Command
 {

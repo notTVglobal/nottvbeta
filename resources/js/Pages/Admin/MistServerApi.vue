@@ -13,6 +13,11 @@
           <div class="">Status: <span class="font-semibold">{{ videoPlayerStore.status }}</span></div>
 
           <button class="ml-2 py-2 my-2 px-4 text-white bg-orange-800 hover:bg-orange-500 mr-2 rounded-xl"
+                  @click.prevent="checkSend">
+            Check Send()
+          </button>
+
+          <button class="ml-2 py-2 my-2 px-4 text-white bg-orange-800 hover:bg-orange-500 mr-2 rounded-xl"
                   @click.prevent="getStatus">
             Get Status
           </button>
@@ -369,7 +374,33 @@ let mistAddress = 'http://localhost:4242/api'
 // let mistAddress = 'http://mist.nottv.io:4242/api'
 // let mistAddressWs = 'ws://mist.nottv.io:4242/ws'
 //
+const mistServerUri = ref('')
 ///////////////////////////////////////////////////////////////////////
+
+async function getMistServerUri() {
+  console.log('get MistServer URI');
+  await axios.get('/mist-server/uri')
+      .then(response => {
+        mistServerUri.value = response.data
+        console.log('MistServer URI: ' + mistServerUri.value);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+}
+
+async function checkSend() {
+  await getMistServerUri()
+  await axios.get('/mist-server/check-send')
+      .then(response => {
+        console.log(response)
+      })
+      .catch(error => {
+        console.log(error);
+      })
+  console.log('check MistServerService send()');
+
+}
 
 
 async function getStatus() {

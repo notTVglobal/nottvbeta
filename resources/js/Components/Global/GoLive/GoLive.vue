@@ -44,39 +44,6 @@ goLiveStore.updateAndGetStreamKey()
 goLiveStore.fetchStreamInfo(goLiveStore?.selectedShow?.mist_stream_wildcard.name)
 goLiveStore.fetchRtmpUri()
 
-// Function to fetch push destinations and reload the player
-const backgroundFetch = () => {
-  if (goLiveStore.wildcardId) {
-    goLiveStore.backgroundFetchPushDestinations();
-  }
-};
-
-
-let intervalId;
-
-onMounted(async() => {
-
-  // Fetch immediately and then set up an interval for periodic fetching
-  backgroundFetch();
-  intervalId = setInterval(backgroundFetch, 10000); // Fetch every 10 seconds
-
-  // Re-run fetchAndReload whenever the wildcardId changes
-  watchEffect(backgroundFetch);
-  // watchEffect(() => {
-  //   // This code will run initially and re-run every time selectedShow or its mist_stream_wildcard.id changes
-  //   const wildcardId = goLiveStore.wildcardId
-  //   if (wildcardId) {
-  //     goLiveStore.fetchPushDestinations()
-  //     goLiveStore.reloadPlayer()
-  //   }
-  // })
-})
-
-onUnmounted(() => {
-  // Clear the interval when the component unmounts to prevent memory leaks
-  clearInterval(intervalId);
-});
-
 // const reloadPlayer = () => {
 //   const videoPlayerStore = useVideoPlayerStore
 //   let source = null

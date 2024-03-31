@@ -582,7 +582,6 @@
               <pre data-prefix=""><code>MISTSERVER_HOST=http://localhost:4242/api</code></pre>
               <pre data-prefix=""><code>MISTSERVER_USERNAME=nottvadmin</code></pre>
               <pre data-prefix=""><code>MISTSERVER_PASSWORD=123</code></pre>
-              <pre data-prefix=""><code>MISTSERVER_INTERNAL_IP=mistserver</code></pre>
 
               <h2 class="py-4">Admin Settings</h2>
               <pre data-prefix=""><code>MISTSERVER URI: http://localhost:8080/</code></pre>
