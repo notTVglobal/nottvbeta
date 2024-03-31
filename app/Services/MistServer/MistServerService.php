@@ -2,6 +2,7 @@
 
 namespace App\Services\MistServer;
 
+use App\Factories\MistServerServiceFactory;
 use App\Models\MistServerAutoPush;
 use App\Models\MistServerConfig;
 use App\Models\MistStreamPushDestination;
@@ -16,37 +17,20 @@ class MistServerService {
   protected string $username;
   protected string $password;
   protected ?string $challenge = null;
-
   private int $retryCount = 0;
   private int $maxRetries = 3; // Set a max retry limit to prevent infinite recursion
 
-
-  // TODO: Allow the send() to accept the serverType
-  // How do we make the $serverType dynamic? So we can change it based on when we call the send()?
-  public function __construct($serverType = 'push') {
-    // Retrieve the configuration array for the specified server type
+  public function __construct(string $serverType = 'push') {
     $config = config("services.mistserver.{$serverType}");
 
-    // Validate the configuration
     if (is_null($config) || !isset($config['host'], $config['username'], $config['password'])) {
       throw new \InvalidArgumentException("Invalid or missing configuration for MistServer type: {$serverType}");
     }
 
-    // Assign the configuration to class properties if validation passes
     $this->host = $config['host'];
     $this->username = $config['username'];
     $this->password = $config['password'];
-
   }
-
-  /**
-   * Sends a request to the MistServer API.
-   *
-   * @param array $originalData The data to send in the request body.
-   * @param bool $isRetry Indicates if the current call is a retry, default false.
-   * @return array  The API response data.
-   * @throws Exception  If the request fails.
-   */
 
   /**
    * Prepares the authorization data for the request.
@@ -66,47 +50,34 @@ class MistServerService {
     ];
   }
 
+  // TODO: Check the retry loop for the send() to ensure efficiency.
+
   /**
-   * @throws Exception
+   * Sends a request to the MistServer API.
+   *
+   * @param array $originalData The data to send in the request body.
+   * @param bool $isRetry Indicates if the current call is a retry, default false.
+   * @return array  The API response data.
+   * @throws Exception  If the request fails.
    */
-  public function send(array $originalData = [], bool $isRetry = false): Array {
-    $method = 'POST';
+  public function send(array $originalData = [], bool $isRetry = false): array {
     $url = "{$this->host}";
-
-
 
     // Only prepare authorization data if this is a retry or if the logic determines it should be included from the start.
     $authData = $isRetry ? $this->prepareAuthData() : [];
     $dataToSend = $isRetry ? array_merge(['authorize' => $authData], $originalData) : $originalData;
 
-    Log::debug("Sending request to MistServer", ['url' => $url, 'data' => $dataToSend]);
-
-//    $response = Http::withHeaders(['Content-Type' => 'application/json'])
-//        ->$method($url, ['command' => json_encode($dataToSend)]);
-//        $responseData = $response->json();
+//    Log::debug("Sending request to MistServer", ['url' => $url, 'data' => $dataToSend]);
 
     // Prepare the actual payload as an array.
     $actualPayload = $isRetry ? array_merge(['authorize' => $authData], $originalData) : $originalData;
-
-//    Log::debug("Actual payload", ['payload' => $actualPayload]);
-
-//// JSON-encode the actual payload.
-//    $jsonPayload = json_encode($actualPayload);
-//
-//    Log::debug("Json payload", ['payload' => $jsonPayload]);
-//
-//// Wrap the JSON-encoded payload in another array under the 'command' key.
-//    $finalPayload = ['command' => $jsonPayload];
-//
-//    Log::debug("Final payload", ['payload' => $finalPayload]);
-
 
     // Correctly encapsulating the data within the 'command' parameter for POST requests.
     $response = Http::withHeaders(['Content-Type' => 'application/json'])
         ->post($url, $actualPayload); // Let Laravel encode the array, including the command data as a JSON string.
     $responseData = $response->json();
     // Log the response from MistServer for debugging purposes.
-    Log::debug("Received response from MistServer", ['url' => $url, 'response' => $responseData]);
+//    Log::debug("Received response from MistServer", ['url' => $url, 'response' => $responseData]);
 
     // Check the response for a challenge or an error requiring a retry.
     if (isset($responseData['authorize'])) {
@@ -114,6 +85,7 @@ class MistServerService {
         if ($this->retryCount < $this->maxRetries) {
           $this->challenge = $responseData['authorize']['challenge']; // Update challenge for retry.
           $this->retryCount++;
+
           return $this->send($originalData, true); // Retry with updated auth data.
         } else {
           Log::error("Authentication failed after max retry attempts", ['retries' => $this->retryCount]);
@@ -124,14 +96,15 @@ class MistServerService {
       } else if ($responseData['authorize']['status'] === 'NOACC') {
         if ($this->handleNoAccResponse((array) $responseData)) {
           // If account creation was successful, retry the original request.
-          return $this->send($url, $method, $originalData, true);
+          return $this->send($originalData, true);
         }
       }
     }
-           // Reset retry count and challenge on successful request or completion.
-        $this->resetState();
-        return $responseData;
-    }
+    // Reset retry count and challenge on successful request or completion.
+    $this->resetState();
+
+    return $responseData;
+  }
 
   /**
    * @throws Exception
@@ -167,6 +140,7 @@ class MistServerService {
 
         // Optionally, reset and retry the original request if needed.
         $this->resetState();
+
         return true; // Implement with caution to avoid direct recursive calls without exit conditions.
       } else {
         // Log failure to create an account.
@@ -177,296 +151,10 @@ class MistServerService {
   }
 
 
-
-
   protected function resetState() {
     $this->retryCount = 0;
     $this->challenge = null;
   }
-
-//    // Hash the password first, which is consistent with the working approach.
-//    $hashedPassword = md5($this->password);
-//
-//    // Determine the authentication return value based on the presence of a challenge.
-//    $authReturn = $this->challenge ? md5($hashedPassword . $this->challenge) : $hashedPassword;
-//
-//    // Prepare the authorization data correctly, using the determined authReturn.
-//    $authData = [
-//        'username' => $this->username,
-//        'password' => $authReturn,
-//    ];
-
-//    // Combine authorization data with any original data provided to the method.
-//    $dataToSend = ['authorize' => $authData] + $originalData;
-//
-//    // Make the request with the combined data.
-//    $response = Http::withHeaders(['Content-Type' => 'application/json'])
-//        ->$method($url, ['command' => json_encode($dataToSend)]);
-//
-//    $responseData = $response->json();
-//
-//    // Check for a challenge in the response.
-//    if (isset($responseData['authorize']) && $responseData['authorize']['status'] === 'CHALL') {
-//      if ($this->retryCount < $this->maxRetries) {
-//        $this->challenge = $responseData['authorize']['challenge'];
-//        $this->retryCount++;
-//        Log::debug("Received challenge from MistServer, retrying", ['challenge' => $this->challenge, 'retryCount' => $this->retryCount]);
-//
-//        // Important: Reset originalData['authorize']['password'] with new hash for retry.
-//        // This ensures that the next retry uses the updated challenge response.
-//        $originalData['authorize']['password'] = md5(md5($this->password) . $this->challenge);
-//
-//        // Retry with the updated challenge response.
-//        return $this->send($endpoint, $method, $originalData);
-//      } else {
-//        Log::error("Authentication failed after max retry attempts", ['retries' => $this->retryCount]);
-//        $this->resetState();
-//        throw new Exception('Max retry attempts reached for MistServer authentication');
-//      }
-//    }
-
-    // Reset retry count and challenge on successful request or if no challenge was issued.
-//    $this->resetState();
-//    Log::debug("Received response from MistServer", ['response' => $responseData]);
-//    return $responseData;
-//  }
-
-
-
-
-//    // Handle challenge-response mechanism
-//    if (isset($responseData['authorize']) && $responseData['authorize']['status'] === 'CHALL') {
-//      if ($this->retryCount < $this->maxRetries) {
-//        $this->challenge = $responseData['authorize']['challenge'];
-//        $this->retryCount++;
-//        Log::debug("Received challenge from MistServer, retrying", ['challenge' => $this->challenge, 'retryCount' => $this->retryCount]);
-//
-//        // Include $endpoint and $method in the retry to maintain the original request's context
-//        return $this->send($endpoint, $method, $originalData); // Retry with the challenge response
-//      } else {
-//        Log::error("Authentication failed after max retry attempts", ['retries' => $this->retryCount]);
-//        return ['error' => 'Max retry attempts reached for MistServer authentication'];
-//      }
-//    }
-//
-//    // Reset retry count and challenge on successful request
-//    $this->retryCount = 0;
-//    $this->challenge = null;
-//
-//    Log::debug("Received response from MistServer", ['response' => $responseData]);
-//    return $responseData;
-//  }
-
-
-//  public function send(string $endpoint = '/api', string $method = 'POST', array $originalData  = []): array {
-//    $url = "{$this->host}{$endpoint}";
-//    Log::debug("Sending request to MistServer", ['url' => $url, 'data' => $originalData]);
-//
-//    // Compute authorization return.
-//    $authData  = $this->challenge ? md5(md5($this->password) . $this->challenge) : md5($this->password);
-//
-//    // Merge the original data with authorization data just before sending
-//    $dataToSend = array_merge($originalData, (array)$authData);
-//
-//    // Make the request.
-//    $response = Http::withHeaders(['Content-Type' => 'application/json'])
-//        ->$method($url, ['command' => json_encode($dataToSend)]);
-//
-//    // Handle failed request.
-//    if ($response->failed()) {
-//      Log::error('MistServer request failed', [
-//          'method' => $method,
-//          'endpoint' => $endpoint,
-//          'data' => $dataToSend,
-//          'response' => $response->body(),
-//      ]);
-//      throw new \Exception("MistServer request failed: " . $response->body());
-//    }
-
-
-//    $data = array_merge($data, [
-//        "authorize" => [
-//            "username" => $this->username,
-//            "password" => $authReturn,
-//        ],
-//        "minimal"   => true,
-//    ]);
-//
-//    // Make the request.
-//    $response = Http::withHeaders(['Content-Type' => 'application/json'])
-//        ->$method($url, ['command' => json_encode($data)]);
-//
-//    // Handle failed request.
-//    if ($response->failed()) {
-//      Log::error('MistServer request failed', [
-//          'method'   => $method,
-//          'endpoint' => $endpoint,
-//          'data'     => $data,
-//          'response' => $response->body(),
-//      ]);
-//      throw new \Exception("MistServer request failed: " . $response->body());
-//    }
-//
-//    $responseData = $response->json();
-//
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//  public function send(array $data = []) {
-//
-//     Log::debug("Sending request to MistServer", ['url' => $this->host, 'data' => $data]);
-//
-//    // Handle challenge-response for authentication
-//    if ($this->challenge) {
-//      $hashedPassword = md5($this->password);
-//      $authReturn = md5($hashedPassword . $this->challenge);
-//    } else {
-//      $authReturn = md5($this->password);
-//    }
-//
-//    // Merge authorization data with the request payload
-//    $data = array_merge($data, [
-//        "authorize" => [
-//            "username" => $this->username,
-//            "password" => $authReturn,
-//        ],
-//        "minimal" => true,
-//    ]);
-//
-//    // Send a POST request with the JSON-encoded data
-//    $response = Http::withHeaders([
-//        'Content-Type' => 'application/json',
-//    ])->post($this->host, $data);
-//
-//    // Check for request failure
-//    if ($response->failed()) {
-//      Log::error('Request to MistServer failed', [
-//          'status' => $response->status(),
-//          'response' => $response->body(),
-//      ]);
-//      return ['error' => 'Request to MistServer failed'];
-//    }
-//
-//    $responseData = $response->json();
-//
-//    // Handle challenge-response authentication
-//    if (isset($responseData['authorize']) && $responseData['authorize']['status'] === 'CHALL') {
-//      $this->challenge = $responseData['authorize']['challenge'];
-//      // Log::debug("Received challenge from MistServer, retrying", ['challenge' => $this->challenge]);
-//      return $this->send($data); // Retry with the challenge response
-//    }
-//
-//    // Return the API response
-//    return $responseData;
-//  }
-
-//
-//  public function send(array $data = []) {
-//
-//     Log::debug("Sending request to MistServer", ['url' => $this->host, 'data' => $data]);
-//
-//    if ($this->challenge) {
-//      // If there is a challenge, hash the password with the challenge
-//      $hashedPassword = md5($this->password);
-//      $authReturn = md5($hashedPassword . $this->challenge);
-//    } else {
-//      // Initial request, no challenge yet
-//      $authReturn = md5($this->password);
-//    }
-//
-//    $data = array_merge($data, [
-//        "authorize" => [
-//            "username" => $this->username,
-//            "password" => $authReturn,
-//        ],
-//        "minimal"   => true,
-//    ]);
-
-
-//    // Using the Http facade to make a POST request with a JSON body
-//    $response = Http::withHeaders([
-//        'Content-Type' => 'application/json',
-//      // Add any other headers required by MistServer
-//    ])->post($this->host, $data); // Directly passing the $data array, Laravel will convert it to JSON
-//
-//    if ($response->failed()) {
-//      Log::error('Request to MistServer failed', [
-//          'status'   => $response->status(),
-//          'response' => $response->body(),
-//      ]);
-//
-//      return ['error' => 'Request to MistServer failed'];
-//    }
-//
-//    $responseData = $response->json();
-//
-//    if (isset($responseData['authorize']) && $responseData['authorize']['status'] === 'CHALL') {
-//      $this->challenge = $responseData['authorize']['challenge'];
-//
-//      // Log::debug("Received challenge from MistServer, retrying", ['challenge' => $this->challenge]);
-//
-//      return $this->send($data); // Retry with the challenge response
-//    }
-//
-//    return $responseData;
-
-//
-//    $response = Http::get($this->host, ['command' => json_encode($data)]);
-//
-//    if ($response->failed()) {
-//      Log::error('MMMMMMMMMMM Request to MistServer failed', [
-//          'status'   => $response->status(),
-//          'response' => $response->body(),
-//      ]);
-//
-//      return ['error' => 'Request to MistServer failed'];
-//    }
-//
-//    Log::alert('NNNNNNNNNNNNNNN Required data to match exactly for auto push remove', [
-//        'status'   => $response->status(),
-//        'response' => $response->body(),
-//    ]);
-//
-//
-//
-//    $responseData = $response->json();
-////    Log::debug("Received response from MistServer", ['response' => $responseData]);
-//
-//
-//    if (isset($responseData['authorize']) && $responseData['authorize']['status'] === 'CHALL') {
-//      $this->challenge = $responseData['authorize']['challenge'];
-//
-////      Log::debug("Received challenge from MistServer, retrying", ['challenge' => $this->challenge]);
-//
-//      return $this->send($data); // Retry with the challenge response
-//    }
-//
-//    return $responseData;
-//
-//  }
-
-
-//$streamName = 'show+01hss3n71f1kb21sd6rxjvaj7e';
-//$response = $this->sendRemoveCommand($streamName);
 
   public function sendRemoveAllAutoPushesCommand($streamName) {
     $data = [
@@ -910,7 +598,7 @@ class MistServerService {
     }
   }
 
-  public function configBackup() {
+  public function configBackup(): \Illuminate\Http\JsonResponse {
     try {
       // Log start
 //      Log::debug('Initiating MistServer config backup process.');

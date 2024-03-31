@@ -31,20 +31,20 @@ class MistStreamWildcard extends Model {
     return $this->belongsTo(MistStream::class);
   }
 
-  public function shows(): \Illuminate\Database\Eloquent\Relations\HasMany {
-    return $this->hasMany(Show::class, 'mist_stream_wildcard_id');
+  public function show(): \Illuminate\Database\Eloquent\Relations\HasOne {
+    return $this->hasOne(Show::class, 'mist_stream_wildcard_id');
   }
 
   // Define the inverse relationship to ShowEpisode
-  public function showEpisodes(): \Illuminate\Database\Eloquent\Relations\HasMany {
-    return $this->hasMany(ShowEpisode::class, 'mist_stream_wildcard_id');
+  public function showEpisode(): \Illuminate\Database\Eloquent\Relations\HasOne {
+    return $this->hasOne(ShowEpisode::class, 'mist_stream_wildcard_id');
   }
 
   public function mistStreamPushDestination(): \Illuminate\Database\Eloquent\Relations\HasMany {
     return $this->hasMany(MistStreamPushDestination::class);
   }
 
-  public function recording() {
+  public function recording(): \Illuminate\Database\Eloquent\Relations\HasOne {
     return $this->hasOne(Recording::class, 'mist_stream_wildcard_id');
   }
 }

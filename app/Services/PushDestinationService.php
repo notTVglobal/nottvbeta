@@ -189,7 +189,7 @@ class PushDestinationService {
   }
 
 
-  public function fetchPushAutoList(): array
+  public function OLDfetchAutoPushList(): array
   {
     $data = ["push_auto_list" => true]; // The value is ignored, so true is just a placeholder
 
@@ -201,7 +201,7 @@ class PushDestinationService {
 //        Log::debug("Successfully retrieved active push list from MistServer." . $response);
 
         foreach ($response['push_auto_list'] as $autoPushData) {
-          Log::debug('Saving auto push entry:', ['data' => $autoPushData]);
+//          Log::debug('Saving auto push entry:', ['data' => $autoPushData]);
 
           $newAutoPush = MistServerAutoPush::updateOrCreate(
               [
@@ -226,14 +226,14 @@ class PushDestinationService {
 
 
           // Optionally log the outcome
-          Log::debug("Processed auto push entry.", ['stream_name' => $newAutoPush->stream_name, 'uri' => $newAutoPush->uri]);
+//          Log::debug("Processed auto push entry.", ['stream_name' => $newAutoPush->stream_name, 'uri' => $newAutoPush->uri]);
         }
         // Find and remove unmatched entries
         $allAutoPushes = MistServerAutoPush::all();
         foreach ($allAutoPushes as $autoPush) {
           $identifier = $autoPush->stream_name . '|' . $autoPush->uri;
           if (!in_array($identifier, $activeEntries)) {
-            Log::info("Removing unmatched auto push entry.", ['stream_name' => $autoPush->stream_name, 'uri' => $autoPush->uri]);
+//            Log::info("Removing unmatched auto push entry.", ['stream_name' => $autoPush->stream_name, 'uri' => $autoPush->uri]);
             $autoPush->delete(); // Remove the unmatched entry
           }
         }

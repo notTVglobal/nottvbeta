@@ -117,12 +117,12 @@ class MistStreamController extends Controller {
 
   }
 
-  public function fetchStreamInfo($streamName)
-  {
+  public function fetchStreamInfo($streamName): \Illuminate\Http\JsonResponse {
     $encodedStreamName = urlencode($streamName);
     $mistServerIp = config('services.mistserver.internal_ip');
 //    $url = "http://mist.nottv.io:8080/json_${encodedStreamName}.js"; // Replace with the actual URL
-    $url = "http://${mistServerIp}:8080/json_${encodedStreamName}.js"; // Replace with the actual URL
+//    $url = "http://${mistServerIp}:8080/json_${encodedStreamName}.js"; // Replace with the actual URL
+    $url = "http://mistserver:8080/json_${encodedStreamName}.js"; // Replace with the actual URL
 
     try {
       $response = Http::get($url);
@@ -130,7 +130,15 @@ class MistStreamController extends Controller {
       if ($response->successful()) {
         $streamInfo = $response->json();
         // Do something with $streamInfo
-        return response()->json($streamInfo); // Example: Return the data as JSON response
+//        return response()->json($streamInfo); // Example: Return the data as JSON response
+
+        // Return a successful response to the Vue frontend
+        return response()->json([
+            'success' => true,
+            'message' => 'Stream info loaded.',
+            'streamInfo' => $streamInfo, // Optionally include the response from the MistServer
+        ]);
+
       } else {
         throw new \Exception('Failed to fetch');
       }

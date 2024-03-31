@@ -20,6 +20,7 @@ const initialState = () => ({
     },
     firstPlaySettings: {},
     validationErrors: {},
+    checkSendProcessing: false
 })
 
 export const useAdminStore = defineStore('adminStore', {
@@ -32,6 +33,12 @@ export const useAdminStore = defineStore('adminStore', {
 
         loadChannels(channels) {
             this.channels = channels
+        },
+        setCheckSendProcessing() {
+          this.checkSendProcessing = true
+        },
+        unsetCheckSendProcessing() {
+            this.checkSendProcessing = false
         },
         async fetchChannels() {
             await axios.get('/api/channels_list')

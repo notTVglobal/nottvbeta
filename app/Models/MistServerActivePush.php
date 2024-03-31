@@ -24,4 +24,8 @@ class MistServerActivePush extends Model {
       'logs'        => 'json',
       'push_status' => 'json',
   ];
+
+  public function mistStreamPushDestinations(): \Illuminate\Database\Eloquent\Relations\HasMany {
+    return $this->hasMany(MistStreamPushDestination::class, 'mist_push_id', 'push_id');
+  }
 }

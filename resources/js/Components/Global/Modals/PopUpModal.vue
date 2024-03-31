@@ -11,7 +11,7 @@
         <div class="modal-action justify-center w-full">
           <form method="dialog">
             <!-- if there is a button in form, it will close the modal -->
-            <button class="btn btn-secondary">Okay</button>
+            <button @click="notificationStore.showPopUpModal = false" class="btn btn-secondary">Okay</button>
           </form>
         </div>
       </div>
@@ -19,6 +19,9 @@
   </div>
 </template>
 <script setup>
+import { useNotificationStore } from "@/Stores/NotificationStore"
+
+const notificationStore = useNotificationStore()
 
 defineProps({
   id: String,

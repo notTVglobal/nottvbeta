@@ -6,10 +6,11 @@
       <div class="flex flex-col">
 
         <div class="px-10 h-fit w-fit">
+
           <button @click="goLiveStore.reloadPlayer();"
-                  class="btn btn-xs w-full"
+                  class="btn btn-xs w-full py-1"
                   :class="liveOrRecordingGrayButtonClass"
-          >Reload Player
+          ><span v-if="goLiveStore.playerIsReloading" class="loading loading-spinner loading-xs"></span> Reload Player
           </button>
           <div v-if="goLiveStore.isLive || goLiveStore.isRecording"
                class="w-full bg-red-700 text-white text-center uppercase font-bold">

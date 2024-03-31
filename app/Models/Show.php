@@ -139,6 +139,11 @@ class Show extends Model
     return $this->mistStreamWildcard->mistStreamPushDestination;
   }
 
+  // tec21: this is new, I added this after lots of frustration.
+  // Maybe the getMistStreamPushDestinationsAttribute() is still valuable?
+  public function mistStreamPushDestinations(): \Illuminate\Database\Eloquent\Relations\HasMany {
+    return $this->hasMany(MistStreamPushDestination::class, 'show_id', 'show_id');
+  }
 
   public static function generateStreamKey($showId)
   {

@@ -2,7 +2,7 @@
 
 namespace App\Services\MistServer;
 
-class StreamService extends MistServerService {
+class PlaybackService extends MistServerService {
   public function listStreams() {
     return $this->sendRequest('/api', 'POST', ['streams' => new \stdClass()]);
   }

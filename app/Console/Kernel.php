@@ -16,6 +16,8 @@ class Kernel extends ConsoleKernel {
    * @return void
    */
   protected function schedule(Schedule $schedule): void {
+
+    $schedule->command('mistPush:updatePushData')->everyMinute();
     $schedule->command('horizon:snapshot')->everyFiveMinutes();
 
     $schedule->command('images:delete-queued')->hourly();

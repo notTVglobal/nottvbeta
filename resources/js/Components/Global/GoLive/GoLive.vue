@@ -10,7 +10,7 @@
 
       <GoLiveHeader />
       <GoLiveAuxVideoPlayer />
-      <GoLivePushDestinations />
+      <GoLivePushDestinations :key="goLiveStore.selectedShowId"/>
 
     </div>
 
@@ -20,7 +20,6 @@
 </template>
 
 <script setup>
-import { onMounted, onUnmounted, watchEffect } from 'vue'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
 import { useVideoAuxPlayerStore } from '@/Stores/VideoAuxPlayerStore'
@@ -31,7 +30,6 @@ import GoLiveHeader from '@/Components/Pages/GoLive/GoLiveHeader.vue'
 import GoLiveAuxVideoPlayer from '@/Components/Pages/GoLive/GoLiveAuxVideoPlayer.vue'
 import GoLivePushDestinations from '@/Components/Pages/GoLive/GoLivePushDestinations.vue'
 import GoLiveCommercialBreaks from '@/Components/Pages/GoLive/GoLiveCommercialBreaks.vue'
-import videojs from 'video.js'
 
 const appSettingStore = useAppSettingStore()
 const videoPlayerStore = useVideoPlayerStore()
@@ -41,7 +39,7 @@ const mistStore = useMistStore()
 
 // Initialize fetching of server information
 goLiveStore.updateAndGetStreamKey()
-goLiveStore.fetchStreamInfo(goLiveStore?.selectedShow?.mist_stream_wildcard.name)
+goLiveStore.fetchStreamInfo()
 goLiveStore.fetchRtmpUri()
 
 // const reloadPlayer = () => {

@@ -1,9 +1,18 @@
 <template>
-  <div class="mx-4 mt-4 mb-2 px-6 py-1 ">
+  <div class="mx-4 mt-4 mb-2 px-6 py-1">
 
     <div
         class="text-sm font-semibold bg-blue-600 text-white text-center w-full border-2 border-blue-600 rounded uppercase px-6 py-1 ">
       Push Destinations
+    </div>
+
+    <div role="alert" class="alert">
+      <!-- Ensure you're importing Tailwind CSS in your project -->
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current text-blue-500 w-6 h-6">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>
+
+      <span>🌟 Our push statuses are getting a little refresh every minute. Hang tight and keep the creativity flowing – awesome updates are on their way!</span>
     </div>
 
     <div class="shadow bg-blue-100 overflow-hidden border-2 border-blue-600 rounded p-6 space-y-3">
@@ -26,7 +35,7 @@
             <span v-if="goLiveStore.isProcessingDisableAllAutoPushes" class="loading loading-spinner text-info"></span>
             <button
                 v-if="anyDestinationHasActiveAutoPush"
-                @click="goLiveStore.disableAllAutoPushes(goLiveStore.streamKey)"
+                @click="goLiveStore.disableAllAutoPushes()"
                 :disabled="goLiveStore.isProcessingDisableAllAutoPushes"
                 class="py-2 px-4 bg-gray-500 text-white rounded hover:bg-gray-600 transition duration-150 disabled:bg-gray-400 disabled:cursor-not-allowed"
             >
@@ -66,13 +75,13 @@
               <p v-if="destination.push_is_started" class="text-red-500 font-semibold">Push Is Active</p>
               <div class="flex gap-2 mt-2">
                 <button v-if="destination.push_is_started"
-                        @click="goLiveStore.stopPush(destination.id)"
+                        @click="goLiveStore.stopPush(destination.id, destination.mist_push_id)"
                         :disabled="goLiveStore.loadingDestinationId === destination.id"
                         class="py-2 px-4 bg-red-500 text-white rounded hover:bg-red-700 transition duration-150 disabled:bg-gray-400 disabled:cursor-not-allowed">
                   Stop Push
                 </button>
                 <button v-else
-                        @click="goLiveStore.startPush(destination.id)"
+                        @click="goLiveStore.startPush(destination.id, destination.full_push_uri, destination.mist_push_id)"
                         :disabled="goLiveStore.loadingDestinationId === destination.id"
                         class="py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-700 transition duration-150 disabled:bg-gray-400 disabled:cursor-not-allowed">
                   Start Push
@@ -130,7 +139,7 @@ import { useMistStore } from '@/Stores/MistStore'
 import { useGoLiveStore } from '@/Stores/GoLiveStore'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import MistStreamPushDestinationForm from '@/Components/Global/MistStreams/MistStreamPushDestinationForm'
-import { computed, onMounted, onUnmounted, ref, watchEffect } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch, watchEffect } from 'vue'
 import ToastNotification from '@/Components/Global/Notifications/Toast/ToastNotification.vue'
 
 const appSettingStore = useAppSettingStore()
@@ -169,19 +178,37 @@ const backgroundFetchPushDestinationsStatus = () => {
   }
 };
 
+const fetchPushDestinationsStatus = () => {
+  if (goLiveStore.wildcardId) {
+    goLiveStore.fetchPushDestinations();
+  }
+};
+
+watch(goLiveStore.selectedShow, (newVal, oldVal) => {
+  if (newVal !== '') {
+    // Assuming the video player is ready to be initialized at this point
+    // const videoPlayer = videojs('main-player');
+    fetchPushDestinationsStatus()
+    // goLiveStore.selectedShowId = selectedShowId
+
+    // Additional logic to load the video based on selectedShowId can be added here
+  }
+});
+
 let intervalId;
 
 onMounted(async() => {
   // Fetch immediately and then set up an interval for periodic fetching
-  backgroundFetchPushDestinationsStatus();
-  intervalId = setInterval(backgroundFetchPushDestinationsStatus, 10000); // Fetch every 10 seconds
+  fetchPushDestinationsStatus()
+  // backgroundFetchPushDestinationsStatus();
+  intervalId = setInterval(backgroundFetchPushDestinationsStatus, 60000); // Fetch every 60 seconds
   // Re-run whenever the wildcardId changes
   watchEffect(backgroundFetchPushDestinationsStatus);
 })
 
 onUnmounted(() => {
   // Clear the interval when the component unmounts to prevent memory leaks
-  clearInterval(intervalId);
+  // clearInterval(intervalId);
 });
 
 

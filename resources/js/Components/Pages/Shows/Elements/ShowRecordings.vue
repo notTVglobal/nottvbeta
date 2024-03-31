@@ -58,9 +58,10 @@
       <td class="px-6 py-4 whitespace-nowrap">
         <!-- Placeholder for expiration logic -->
       </td>
-      <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-1">
+      <!-- We are not making recordings shareable at this time. -->
+      <td class=" px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-1">
         <button @click.stop="shareRecording(recording.shareUrl)"
-                class="btn btn-xs bg-orange-200 hover:bg-orange-300 text-black">
+                class="hidden btn btn-xs bg-orange-200 hover:bg-orange-300 text-black">
           <font-awesome-icon icon="fa-share" class=""/>Share
         </button>
         <button @click.stop="confirmAddToEpisode"

@@ -30,7 +30,12 @@
             </div>
           </div>
           <!-- Add other fields as necessary -->
-          <button type="submit" class="mt-2 btn btn-primary text-white">{{ mode    === 'add' ? 'Add' : 'Save Changes' }}</button>
+          <button type="submit"
+                  :disabled="goLiveStore.pushDestinationFormSubmitProcessing"
+                  class="mt-2 btn btn-primary text-white disabled:cursor-not-allowed disabled:bg-gray-400">
+            <span v-if="!goLiveStore.pushDestinationFormSubmitProcessing">{{ mode    === 'add' ? 'Add' : 'Save Changes' }}</span>
+            <span v-else>Saving<span class="my-2 loading loading-dots loading-sm"></span> Please Wait</span>
+          </button>
         </div>
       </form>
     </div>
@@ -56,6 +61,8 @@ let props = defineProps({
 const emit = defineEmits(['update-success']);
 
 const form = ref({
+  show_id: goLiveStore.selectedShowId,
+  stream_name: goLiveStore.streamKey,
   mist_stream_wildcard_id: props.destinationDetails.mist_stream_wildcard_id,
   id: props.destinationDetails.id,
   rtmp_url: props.destinationDetails.rtmp_url,
@@ -76,6 +83,7 @@ watchEffect(() => {
 });
 
 const submitForm = async () => {
+  goLiveStore.pushDestinationFormSubmitProcessing = true
   let url = '/mist-stream-push-destinations'; // Default URL for adding
   let method = 'post'; // Default method for adding
 
@@ -102,18 +110,20 @@ const submitForm = async () => {
     // const wildcardId = response.data.wildcardId || someOtherWayToDetermineWildcardId();
     console.log('just about to send this wildcardID: ' + goLiveStore.wildcardId)
     // await mistStore.getMistStreamPushDestinations(goLiveStore.wildcardId); // Fetch updated push destinations
-    await goLiveStore.fetchPushDestinations(); // Fetch updated push destinations
-
-
     // Close the modal
+    await goLiveStore.fetchPushDestinations(); // Fetch updated push destinations
+    goLiveStore.pushDestinationFormSubmitProcessing = false
     document.getElementById('mistStreamPushDestinationForm').close();
+
   } catch (error) {
     if (error.response && error.response.data && error.response.data.errors) {
       // Assign all errors from the response to formErrors
       notificationStore.errorMessage = error.response.data.errors;
+      goLiveStore.pushDestinationFormSubmitProcessing = false
     } else {
       // General error handling
       console.error('Submission error', error);
+      goLiveStore.pushDestinationFormSubmitProcessing = false
     }
   }
 }
