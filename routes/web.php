@@ -1094,7 +1094,7 @@ Route::get('/admin/mist-stream/search', [MistStreamController::class, 'searchMis
 Route::post('/admin/mist-stream/addOrUpdate', [MistStreamController::class, 'addOrUpdateMistStream'])->can('viewAdmin', 'App\Models\User')->name('mistStream.addOrUpdate');
 Route::post('/admin/mist-stream/remove', [MistStreamController::class, 'removeMistStream'])->can('viewAdmin', 'App\Models\User')->name('mistStream.remove');
 Route::post('/admin/mist-stream/restore-all-streams', [MistStreamController::class, 'restoreAllStreams'])->can('viewAdmin', 'App\Models\User');
-Route::get('/fetch-stream-info/{streamName}', [MistStreamController::class, 'fetchStreamInfo'])->can('viewCreator', 'App\Models\User');
+Route::get('/fetch-stream-info', [MistStreamController::class, 'fetchStreamInfo'])->can('viewCreator', 'App\Models\User');
 
 // Mist Server
 //////////////

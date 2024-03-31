@@ -3,6 +3,11 @@
 Last Update: March 31, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.7.36
+March 31, 2024
+* Remove debugging lines from MistPushCommand
+* Change the way fetchStreamInfo handles the Server Uri.
+
 ## v0.8.7.35
 March 31, 2024
 * Add additional line to the environment for mist server

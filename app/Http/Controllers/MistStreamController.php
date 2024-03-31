@@ -30,8 +30,6 @@ class MistStreamController extends Controller {
   }
 
 
-
-
   /**
    * Display a listing of the resource.
    *
@@ -64,16 +62,16 @@ class MistStreamController extends Controller {
     $originalName = $request->input('originalName') ?? $request->input('name');
 
     $validatedData = $request->validate([
-        'name' => [
+        'name'      => [
             'required',
             'string',
             Rule::unique('mist_streams', 'name')->ignore($request->id),
             'regex:/^[a-z_\-\.]+[a-z0-9_\-\.]*$/',
         ],
-        'source' => 'required|string',
+        'source'    => 'required|string',
         'mime_type' => 'required|string',
-        'comment' => 'nullable|string',
-        'metadata' => 'nullable|array' // Assuming metadata is sent as an associative array
+        'comment'   => 'nullable|string',
+        'metadata'  => 'nullable|array' // Assuming metadata is sent as an associative array
     ], [
         'name.regex' => 'The name must be lowercase, cannot start with a number, and can only include . _ - characters.'
     ]);
@@ -117,11 +115,20 @@ class MistStreamController extends Controller {
 
   }
 
-  public function fetchStreamInfo($streamName): \Illuminate\Http\JsonResponse {
+  public function fetchStreamInfo(Request $request): \Illuminate\Http\JsonResponse {
+    // Validate the request data
+    $validated = $request->validate([
+        'streamName'     => 'required|string',
+        '$mistServerUri' => 'required|string',
+    ]);
+
+    $mistServerUri = $validated['$mistServerUri'];
+    $streamName = $validated['streamName'];
     $encodedStreamName = urlencode($streamName);
-    $mistServerIp = config('services.mistserver.push.internal_ip');
+
+//    $mistServer = config('services.mistserver.push.internal_ip');
 //    $url = "http://mist.nottv.io:8080/json_${encodedStreamName}.js"; // Replace with the actual URL
-    $url = "http://${mistServerIp}:8080/json_${encodedStreamName}.js"; // Replace with the actual URL
+    $url = $mistServerUri . '/json_' . $encodedStreamName . '.js'; // Replace with the actual URL
 //    $url = "http://mistserver:8080/json_${encodedStreamName}.js"; // Replace with the actual URL
 
     try {
@@ -134,8 +141,8 @@ class MistStreamController extends Controller {
 
         // Return a successful response to the Vue frontend
         return response()->json([
-            'success' => true,
-            'message' => 'Stream info loaded.',
+            'success'    => true,
+            'message'    => 'Stream info loaded.',
             'streamInfo' => $streamInfo, // Optionally include the response from the MistServer
         ]);
 
@@ -148,21 +155,20 @@ class MistStreamController extends Controller {
     }
   }
 
-  public function restoreAllStreams()
-  {
+  public function restoreAllStreams() {
     // Retrieve all Mist Streams from the database
     $mistStreams = MistStream::all();
 
     foreach ($mistStreams as $stream) {
       // Prepare the data for dispatching the job
       $streamData = [
-          'name' => $stream->name,
-          'source' => $stream->source,
-          'mime_type' => $stream->mime_type,
-          'comment' => $stream->comment ?? '',
-          'metadata' => $stream->metadata ?? [], // Assuming 'metadata' is stored as an associative array and can be directly used
+          'name'         => $stream->name,
+          'source'       => $stream->source,
+          'mime_type'    => $stream->mime_type,
+          'comment'      => $stream->comment ?? '',
+          'metadata'     => $stream->metadata ?? [], // Assuming 'metadata' is stored as an associative array and can be directly used
         // Add 'id' and 'originalName' if needed by the job for processing
-          'id' => $stream->id,
+          'id'           => $stream->id,
           'originalName' => $stream->original_name ?? $stream->name,
       ];
 
