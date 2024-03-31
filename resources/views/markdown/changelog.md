@@ -3,6 +3,11 @@
 Last Update: March 31, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.7.37
+March 31, 2024
+* Fix duplicate recordings bug
+* Fix fetchStreamInfo()
+
 ## v0.8.7.36
 March 31, 2024
 * Remove debugging lines from MistPushCommand

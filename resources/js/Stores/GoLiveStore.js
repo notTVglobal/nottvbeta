@@ -24,6 +24,7 @@ const initialState = () => ({
     isProcessingDisableAllAutoPushes: false,
     playerIsReloading: false,
     pushDestinationFormSubmitProcessing: false,
+    mistServerUri: null,
 })
 
 export const useGoLiveStore = defineStore('goLiveStore', {
@@ -145,9 +146,13 @@ export const useGoLiveStore = defineStore('goLiveStore', {
         // },
         async fetchStreamInfo() {
             const notificationStore = useNotificationStore();
-            const videoAuxPlayerStore = useVideoAuxPlayerStore();
-            try {
-                const response = await axios.get('/fetch-stream-info', {streamName: this.streamKey, mistServerUri: videoAuxPlayerStore.mistServerUri});
+               try {
+                   // Then, use the URI in your next request
+                   const response = await axios.post('/fetch-stream-info', {
+                       streamName: this.streamKey,
+                       mistServerUri: this.mistServerUri, // Pass it as a string
+                   });
+
                 console.log(response.data);
                 this.streamInfo = response.data.streamInfo || [];
                 // Assuming a successful response might look like {"message": "Stream is online", "status": "success"}
@@ -205,12 +210,19 @@ export const useGoLiveStore = defineStore('goLiveStore', {
             const videoAuxPlayerStore = useVideoAuxPlayerStore();
             this.playerIsReloading = true; // Start loading
             try {
+                // First, fetch the URI
+
+                let uriResponse = await axios.get('/mist-server/uri');
+                this.mistServerUri = uriResponse.data; // Accessing the data prop// erty
                 // Create an object and set the 'name' property
                 const mistStream = {
                     name: this.streamKey
                 };
-                console.log('source: ' + mistStream.name)
-                await videoAuxPlayerStore.getMistServerUri()
+                // // Now, use this URI in your next request
+                // const response = await axios.post('/fetch-stream-info', {
+                //     streamName: this.streamKey,
+                //     mistServerUri: this.mistServerUri,
+                // });
                 // Now, you can pass the 'mistStream' object to the method
                 await videoAuxPlayerStore.loadMistStreamVideo(mistStream, true).then (
                     await this.fetchStreamInfo()

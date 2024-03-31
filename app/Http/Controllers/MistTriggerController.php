@@ -29,11 +29,11 @@ class MistTriggerController extends Controller {
   }
 
   public function handlePushOutStart(Request $request): Response {
-    Log::alert('handle Push Out Start');
-    Log::debug('handlePushOutStart Raw Request', [
-      'headers' => $request->headers->all(),
-      'body'    => $request->getContent() // For raw body content
-    ]);
+//    Log::alert('handle Push Out Start');
+//    Log::debug('handlePushOutStart Raw Request', [
+//      'headers' => $request->headers->all(),
+//      'body'    => $request->getContent() // For raw body content
+//    ]);
 
     $bodyContent = $request->getContent();
     $lines = explode("\n", $bodyContent);
@@ -58,7 +58,7 @@ class MistTriggerController extends Controller {
           ->first();
 
       if ($pushDestination) {
-        Log::debug('push is a destination');
+//        Log::debug('push is a destination');
         $pushDestination->push_is_started = 1;
         $pushDestination->update();
         broadcast(new MistTriggerPushOutStart([
@@ -67,15 +67,15 @@ class MistTriggerController extends Controller {
             'requestUrl'           => $requestUrl
         ]));
       } elseif ($this->recordingService->checkForRecording($requestUrl)) {
-        Log::debug('push is a recording');
+//        Log::debug('push is a recording');
         // Handle recording logic here. You might want to flag the recording in the database or perform some other action.
         $this->recordingService->handleIfRecording($mistStreamWildcard, $requestUrl);
       } else {
-        Log::debug('push is neither a known destination nor a recording');
+//        Log::debug('push is neither a known destination nor a recording');
         // Handle the scenario where the stream is neither a known push destination nor a recording.
       }
     } else {
-      Log::debug('MistStreamWildcard not found for the given stream name.');
+//      Log::debug('MistStreamWildcard not found for the given stream name.');
       // Handle the scenario where no wildcard matches the stream name.
     }
 
@@ -83,11 +83,11 @@ class MistTriggerController extends Controller {
   }
 
   public function handlePushEnd(Request $request): Response {
-    Log::alert('handle Push End');
-    Log::debug('handlePushEnd Raw Request', [
-      'headers' => $request->headers->all(),
-      'body'    => $request->getContent() // For raw body content
-    ]);
+//    Log::alert('handle Push End');
+//    Log::debug('handlePushEnd Raw Request', [
+//      'headers' => $request->headers->all(),
+//      'body'    => $request->getContent() // For raw body content
+//    ]);
 
     // Similar to handlePushOutStart
 
@@ -109,26 +109,30 @@ class MistTriggerController extends Controller {
 //    Log::debug('Handling recording end. Request content:', ['content' => $request->getContent()]);
 
     Log::alert('handle Recording End');
-    Log::debug('handlePushEnd Raw Request', [
-        'headers' => $request->headers->all(),
-        'body'    => $request->getContent() // For raw body content
-    ]);
+//    Log::debug('handlePushEnd Raw Request', [
+//        'headers' => $request->headers->all(),
+//        'body'    => $request->getContent() // For raw body content
+//    ]);
 
     $parsedContent = $this->parseRecordingEndContent($request->getContent());
     // Optionally log the parsed content if needed
-    Log::debug('Parsed recording end content:', ['parsedContent' => $parsedContent]);
+//    Log::debug('Parsed recording end content:', ['parsedContent' => $parsedContent]);
 
     $recording = $this->createRecordingEntry($parsedContent);
+    // Log the creation of a new recording entry.
+//    Log::info("Created new recording entry for unique identifier: {$recording->path}");
     // Log after creating the recording entry
-    Log::debug('Recording entry created:', ['recording' => $recording]);
+//    Log::debug('Recording entry created:', ['recording' => $recording]);
 
     $this->clearRecordingMetadataAndBroadcast($parsedContent['streamName']);
     // Log after clearing recording metadata and broadcasting
-    Log::debug('Cleared recording metadata and broadcast for stream:', ['streamName' => $parsedContent['streamName']]);
+//    Log::debug('Cleared recording metadata and broadcast for stream:', ['streamName' => $parsedContent['streamName']]);
 
-    UpdateRecordingModelAndNotify::dispatch($recording);
+    if ($recording) {
+      UpdateRecordingModelAndNotify::dispatch($recording);
+    }
     // Log after dispatching the job
-    Log::debug('Dispatched UpdateRecordingModelAndNotify job for recording:', ['recording' => $recording]);
+//    Log::debug('Dispatched UpdateRecordingModelAndNotify job for recording:', ['recording' => $recording]);
 
     return response('1', 200);
   }
@@ -367,7 +371,19 @@ class MistTriggerController extends Controller {
     return $parsedContent;
   }
 
-  protected function createRecordingEntry(array $parsedContent): Recording {
+  protected function createRecordingEntry(array $parsedContent): ?Recording {
+
+    // Construct a unique identifier for the recording.
+    $uniqueId = $parsedContent['streamName'] . '-' . $parsedContent['startTime']->format('Y-m-d H:i:s');
+
+    // First, check if a recording with the same unique identifier already exists.
+    $existingRecording = Recording::where('unique_identifier', $uniqueId)->first();
+
+    if ($existingRecording) {
+      return null;
+    } else {
+      // No existing recording found, proceed to create a new entry.
+    }
     return Recording::create([
         'stream_name' => $parsedContent['streamName'],
         'path' => $parsedContent['filePath'],
@@ -383,7 +399,9 @@ class MistTriggerController extends Controller {
         'reason_for_exit' => $parsedContent['machineReadableReason'],
         'human_readable_reason_for_exit' => $parsedContent['humanReadableReason'],
     ]);
+
   }
+
 
 
   protected function clearRecordingMetadataAndBroadcast(string $streamName): void {
