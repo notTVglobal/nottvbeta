@@ -3,6 +3,10 @@
 Last Update: March 31, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.7.38
+March 31, 2024
+* Cleaned up Push Destination Form console log and GoLive Store console log messages.
+
 ## v0.8.7.37
 March 31, 2024
 * Fix duplicate recordings bug

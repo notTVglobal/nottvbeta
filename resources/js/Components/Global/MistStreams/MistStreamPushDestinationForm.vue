@@ -102,13 +102,13 @@ const submitForm = async () => {
     });
 
     // Handle response here, e.g., show a success message, fetch updated list, etc.
-    console.log('Success:', response.data);
+    // console.log('Success:', response.data);
     emit('update-success');
     form.value.errors = ''
 
     // Assuming the wildcard ID is part of the response or known at this point
     // const wildcardId = response.data.wildcardId || someOtherWayToDetermineWildcardId();
-    console.log('just about to send this wildcardID: ' + goLiveStore.wildcardId)
+    // console.log('just about to send this wildcardID: ' + goLiveStore.wildcardId)
     // await mistStore.getMistStreamPushDestinations(goLiveStore.wildcardId); // Fetch updated push destinations
     // Close the modal
     await goLiveStore.fetchPushDestinations(); // Fetch updated push destinations
@@ -122,7 +122,8 @@ const submitForm = async () => {
       goLiveStore.pushDestinationFormSubmitProcessing = false
     } else {
       // General error handling
-      console.error('Submission error', error);
+      // console.error('Submission error', error);
+      notificationStore.setGeneralServiceNotification('Submission error', error)
       goLiveStore.pushDestinationFormSubmitProcessing = false
     }
   }
