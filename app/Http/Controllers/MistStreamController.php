@@ -119,16 +119,16 @@ class MistStreamController extends Controller {
     // Validate the request data
     $validated = $request->validate([
         'streamName'     => 'required|string',
-        '$mistServerUri' => 'required|string',
+        'mistServerUri' => 'required|string',
     ]);
 
-    $mistServerUri = $validated['$mistServerUri'];
+    $mistServerUri = $validated['mistServerUri'];
     $streamName = $validated['streamName'];
     $encodedStreamName = urlencode($streamName);
 
 //    $mistServer = config('services.mistserver.push.internal_ip');
 //    $url = "http://mist.nottv.io:8080/json_${encodedStreamName}.js"; // Replace with the actual URL
-    $url = $mistServerUri . '/json_' . $encodedStreamName . '.js'; // Replace with the actual URL
+    $url = $mistServerUri . 'json_' . $encodedStreamName . '.js'; // Replace with the actual URL
 //    $url = "http://mistserver:8080/json_${encodedStreamName}.js"; // Replace with the actual URL
 
     try {
