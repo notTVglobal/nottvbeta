@@ -3,6 +3,10 @@
 Last Update: March 31, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.7.35
+March 31, 2024
+* Add additional line to the environment for mist server
+
 ## v0.8.7.34
 March 31, 2024
 * Update the Push Destinations component on the GoLive page to use the new MistServerService Factory.

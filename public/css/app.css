@@ -9700,10 +9700,6 @@ hr {
   stroke: currentColor;
 }
 
-.stroke-info {
-  stroke: var(--fallback-in,oklch(var(--in)/1));
-}
-
 .object-contain {
   object-fit: contain;
 }
