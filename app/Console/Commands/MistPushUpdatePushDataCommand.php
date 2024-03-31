@@ -94,7 +94,7 @@ class MistPushUpdatePushDataCommand extends Command {
       // Retrieve cached push list to compare
       $cachedPushList = Cache::get('pushList', []);
       $cachedPushListItems = collect($cachedPushList['push_list'] ?? []);
-      Log::debug('Cached Push List', [$cachedPushList]);
+//      Log::debug('Cached Push List', [$cachedPushList]);
 
       // Extract IDs for comparison
       $newPushListIds = $newPushListItems->pluck('0');
@@ -120,9 +120,9 @@ class MistPushUpdatePushDataCommand extends Command {
 
 
       // Log IDs for debugging
-      Log::debug('Cached Push List IDs.', ['IDs' => $cachedPushListIds]);
-      Log::debug('New Push IDs', ['New IDs' => $newIds]);
-      Log::debug('Removed Push IDs', ['Removed IDs' => $removedIds]);
+//      Log::debug('Cached Push List IDs.', ['IDs' => $cachedPushListIds]);
+//      Log::debug('New Push IDs', ['New IDs' => $newIds]);
+//      Log::debug('Removed Push IDs', ['Removed IDs' => $removedIds]);
 
 
       // Process removed IDs: Mark records as removed or delete in the database

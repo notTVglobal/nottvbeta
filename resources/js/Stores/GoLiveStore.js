@@ -145,8 +145,9 @@ export const useGoLiveStore = defineStore('goLiveStore', {
         // },
         async fetchStreamInfo() {
             const notificationStore = useNotificationStore();
+            const videoAuxPlayerStore = useVideoAuxPlayerStore();
             try {
-                const response = await axios.get('/fetch-stream-info/'+this.streamKey);
+                const response = await axios.get('/fetch-stream-info', {streamName: this.streamKey, mistServerUri: videoAuxPlayerStore.mistServerUri});
                 console.log(response.data);
                 this.streamInfo = response.data.streamInfo || [];
                 // Assuming a successful response might look like {"message": "Stream is online", "status": "success"}
