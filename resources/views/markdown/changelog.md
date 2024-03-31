@@ -1,7 +1,24 @@
 # not.tv Changelog
 
-Last Update: March 29, 2024\
+Last Update: March 31, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.8.7.34
+March 31, 2024
+* Update the Push Destinations component on the GoLive page to use the new MistServerService Factory.
+  * The Push Destinations are refreshed on the page through a backroundFetch process every 60 seconds.
+  * The Push data is stored in a Cache and update every 60 seconds on the server through a scheduled command.
+  * The next step for this feature is to optimize the MistServer calls to not have to do an Authorization Challenge on every request.
+    * Send the updates to the creators in real-time using the Web Socket server. Will need to plan a strategy for the broadcast channels.
+  * Facebook is a bit buggy, if you stop and start pushes it doesn't allow the next push to go through.. need to start/stop one more time. And too many starts/stops seems to lock you out.
+
+## v0.8.7.33
+March 30, 2024
+* Rebuild the MistServerService to handle multiple Mist Servers.
+  * Added MIST_PUSH_*
+  * Added MIST_PLAYBACK_*
+  * Added MIST_VOD_*
+* Fix the MistServerService send().
 
 ## v0.8.7.32
 March 29, 2024

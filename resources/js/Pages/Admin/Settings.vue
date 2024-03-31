@@ -582,7 +582,6 @@
               <pre data-prefix=""><code>MISTSERVER_HOST=http://localhost:4242/api</code></pre>
               <pre data-prefix=""><code>MISTSERVER_USERNAME=nottvadmin</code></pre>
               <pre data-prefix=""><code>MISTSERVER_PASSWORD=123</code></pre>
-              <pre data-prefix=""><code>MISTSERVER_INTERNAL_IP=mistserver</code></pre>
 
               <h2 class="py-4">Admin Settings</h2>
               <pre data-prefix=""><code>MISTSERVER URI: http://localhost:8080/</code></pre>
@@ -813,9 +812,18 @@ const backupMistServerConfig = async () => {
       document.getElementById('AdminSettingsPopUpModal').showModal()
     } catch (error) {
       console.error('Error backing up config:', error)
+      // Extract a more user-friendly message from the error object
+      let errorMessage = "An unexpected error occurred. Please try again later.";
+      if (error.response && error.response.data && error.response.data.message) {
+        // Use the custom error message from the server if available
+        errorMessage = error.response.data.message;
+      } else if (error.message) {
+        // Use a generic error message or the message from the error object
+        errorMessage = error.message;
+      }
       // Handle error, maybe notify the user that backup failed
       popUpModalTitle.value = 'Backup MistServer Config Error'
-      popUpModalMessage.value = error
+      popUpModalMessage.value = errorMessage
       document.getElementById('AdminSettingsPopUpModal').showModal()
     }
   } else {

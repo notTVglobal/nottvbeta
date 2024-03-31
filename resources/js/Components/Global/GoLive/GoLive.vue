@@ -10,7 +10,7 @@
 
       <GoLiveHeader />
       <GoLiveAuxVideoPlayer />
-      <GoLivePushDestinations />
+      <GoLivePushDestinations :key="goLiveStore.selectedShowId"/>
 
     </div>
 
@@ -20,7 +20,6 @@
 </template>
 
 <script setup>
-import { onMounted, onUnmounted, watchEffect } from 'vue'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
 import { useVideoAuxPlayerStore } from '@/Stores/VideoAuxPlayerStore'
@@ -31,7 +30,6 @@ import GoLiveHeader from '@/Components/Pages/GoLive/GoLiveHeader.vue'
 import GoLiveAuxVideoPlayer from '@/Components/Pages/GoLive/GoLiveAuxVideoPlayer.vue'
 import GoLivePushDestinations from '@/Components/Pages/GoLive/GoLivePushDestinations.vue'
 import GoLiveCommercialBreaks from '@/Components/Pages/GoLive/GoLiveCommercialBreaks.vue'
-import videojs from 'video.js'
 
 const appSettingStore = useAppSettingStore()
 const videoPlayerStore = useVideoPlayerStore()
@@ -41,41 +39,8 @@ const mistStore = useMistStore()
 
 // Initialize fetching of server information
 goLiveStore.updateAndGetStreamKey()
-goLiveStore.fetchStreamInfo(goLiveStore?.selectedShow?.mist_stream_wildcard.name)
+goLiveStore.fetchStreamInfo()
 goLiveStore.fetchRtmpUri()
-
-// Function to fetch push destinations and reload the player
-const backgroundFetch = () => {
-  if (goLiveStore.wildcardId) {
-    goLiveStore.backgroundFetchPushDestinations();
-  }
-};
-
-
-let intervalId;
-
-onMounted(async() => {
-
-  // Fetch immediately and then set up an interval for periodic fetching
-  backgroundFetch();
-  intervalId = setInterval(backgroundFetch, 10000); // Fetch every 10 seconds
-
-  // Re-run fetchAndReload whenever the wildcardId changes
-  watchEffect(backgroundFetch);
-  // watchEffect(() => {
-  //   // This code will run initially and re-run every time selectedShow or its mist_stream_wildcard.id changes
-  //   const wildcardId = goLiveStore.wildcardId
-  //   if (wildcardId) {
-  //     goLiveStore.fetchPushDestinations()
-  //     goLiveStore.reloadPlayer()
-  //   }
-  // })
-})
-
-onUnmounted(() => {
-  // Clear the interval when the component unmounts to prevent memory leaks
-  clearInterval(intervalId);
-});
 
 // const reloadPlayer = () => {
 //   const videoPlayerStore = useVideoPlayerStore

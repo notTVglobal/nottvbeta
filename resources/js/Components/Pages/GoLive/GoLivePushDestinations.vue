@@ -1,9 +1,18 @@
 <template>
-  <div class="mx-4 mt-4 mb-2 px-6 py-1 ">
+  <div class="mx-4 mt-4 mb-2 px-6 py-1">
 
     <div
         class="text-sm font-semibold bg-blue-600 text-white text-center w-full border-2 border-blue-600 rounded uppercase px-6 py-1 ">
       Push Destinations
+    </div>
+
+    <div role="alert" class="alert">
+      <!-- Ensure you're importing Tailwind CSS in your project -->
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current text-blue-500 w-6 h-6">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>
+
+      <span>🌟 Our push statuses are getting a little refresh every minute. Hang tight and keep the creativity flowing – awesome updates are on their way!</span>
     </div>
 
     <div class="shadow bg-blue-100 overflow-hidden border-2 border-blue-600 rounded p-6 space-y-3">
@@ -22,13 +31,18 @@
                   @click.prevent="addDestination">Add Push
             Destinations
           </button>
-          <button
-              v-if="anyDestinationHasActiveAutoPush"
-              @click="goLiveStore.disableAllAutoPushes(goLiveStore.streamKey)"
-              class="py-2 px-4 bg-gray-500 text-white rounded hover:bg-gray-600 transition duration-150"
-          >
-            Disable All Auto Pushes
-          </button>
+          <div class="flex flex-row justify-end gap-2">
+            <span v-if="goLiveStore.isProcessingDisableAllAutoPushes" class="loading loading-spinner text-info"></span>
+            <button
+                v-if="anyDestinationHasActiveAutoPush"
+                @click="goLiveStore.disableAllAutoPushes()"
+                :disabled="goLiveStore.isProcessingDisableAllAutoPushes"
+                class="py-2 px-4 bg-gray-500 text-white rounded hover:bg-gray-600 transition duration-150 disabled:bg-gray-400 disabled:cursor-not-allowed"
+            >
+              Disable All Auto Pushes
+            </button>
+          </div>
+
         </div>
       </div>
 
@@ -61,28 +75,32 @@
               <p v-if="destination.push_is_started" class="text-red-500 font-semibold">Push Is Active</p>
               <div class="flex gap-2 mt-2">
                 <button v-if="destination.push_is_started"
-                        @click="goLiveStore.stopPush(destination.id)"
-                        class="py-2 px-4 bg-red-500 text-white rounded hover:bg-red-700 transition duration-150">
+                        @click="goLiveStore.stopPush(destination.id, destination.mist_push_id)"
+                        :disabled="goLiveStore.loadingDestinationId === destination.id"
+                        class="py-2 px-4 bg-red-500 text-white rounded hover:bg-red-700 transition duration-150 disabled:bg-gray-400 disabled:cursor-not-allowed">
                   Stop Push
                 </button>
                 <button v-else
-                        @click="goLiveStore.startPush(destination.id)"
-                        class="py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-700 transition duration-150">
+                        @click="goLiveStore.startPush(destination.id, destination.full_push_uri, destination.mist_push_id)"
+                        :disabled="goLiveStore.loadingDestinationId === destination.id"
+                        class="py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-700 transition duration-150 disabled:bg-gray-400 disabled:cursor-not-allowed">
                   Start Push
                 </button>
                 <button v-if="!destination.has_auto_push"
                         @click="goLiveStore.enableAutoPush(destination.id)"
-                        class="py-2 px-4 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition duration-150">
+                        :disabled="goLiveStore.loadingDestinationId === destination.id"
+                        class="py-2 px-4 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition duration-150 disabled:bg-gray-400 disabled:cursor-not-allowed">
                   Enable Auto Push
                 </button>
                 <button v-if="destination.has_auto_push"
                         @click="goLiveStore.disableAutoPush(destination.id)"
-                        class="hidden py-2 px-4 bg-gray-500 text-white rounded hover:bg-gray-600 transition duration-150">
+                        :disabled="goLiveStore.loadingDestinationId === destination.id"
+                        class="hidden py-2 px-4 bg-gray-500 text-white rounded hover:bg-gray-600 transition duration-150 disabled:bg-gray-400 disabled:cursor-not-allowed">
                   Disable Auto Push
                 </button>
                 <p v-if="destination.has_auto_push" class="text-yellow-500 font-semibold">Auto push
                   is enabled</p>
-                <span v-if="goLiveStore.loadingDestinationId === destination.id" class="loading loading-bars loading-lg text-info"></span>
+                <span v-if="goLiveStore.loadingDestinationId === destination.id" class="loading loading-spinner text-info"></span>
               </div>
             </div>
             <div class="flex flex-row justify-end">
@@ -121,12 +139,15 @@ import { useMistStore } from '@/Stores/MistStore'
 import { useGoLiveStore } from '@/Stores/GoLiveStore'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import MistStreamPushDestinationForm from '@/Components/Global/MistStreams/MistStreamPushDestinationForm'
-import { computed, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch, watchEffect } from 'vue'
 import ToastNotification from '@/Components/Global/Notifications/Toast/ToastNotification.vue'
 
 const appSettingStore = useAppSettingStore()
 const mistStore = useMistStore()
 const goLiveStore = useGoLiveStore()
+
+const destinationDetails = ref({})
+const mistStreamPushDestinationFormModalMode = ref('add')
 
 const anyDestinationHasActiveAutoPush = computed(() => {
   return goLiveStore.destinations.some(destination => destination.has_auto_push === 1);
@@ -150,7 +171,45 @@ const editDestination = async (destination) => {
   // }
 }
 
-const destinationDetails = ref({})
-const mistStreamPushDestinationFormModalMode = ref('add')
+// Function to fetch push destinations
+const backgroundFetchPushDestinationsStatus = () => {
+  if (goLiveStore.wildcardId) {
+    goLiveStore.backgroundFetchPushDestinations();
+  }
+};
+
+const fetchPushDestinationsStatus = () => {
+  if (goLiveStore.wildcardId) {
+    goLiveStore.fetchPushDestinations();
+  }
+};
+
+watch(goLiveStore.selectedShow, (newVal, oldVal) => {
+  if (newVal !== '') {
+    // Assuming the video player is ready to be initialized at this point
+    // const videoPlayer = videojs('main-player');
+    fetchPushDestinationsStatus()
+    // goLiveStore.selectedShowId = selectedShowId
+
+    // Additional logic to load the video based on selectedShowId can be added here
+  }
+});
+
+let intervalId;
+
+onMounted(async() => {
+  // Fetch immediately and then set up an interval for periodic fetching
+  fetchPushDestinationsStatus()
+  // backgroundFetchPushDestinationsStatus();
+  intervalId = setInterval(backgroundFetchPushDestinationsStatus, 60000); // Fetch every 60 seconds
+  // Re-run whenever the wildcardId changes
+  watchEffect(backgroundFetchPushDestinationsStatus);
+})
+
+onUnmounted(() => {
+  // Clear the interval when the component unmounts to prevent memory leaks
+  // clearInterval(intervalId);
+});
+
 
 </script>

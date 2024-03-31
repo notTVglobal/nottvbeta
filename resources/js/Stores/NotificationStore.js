@@ -15,6 +15,9 @@ const initialState = () => ({
     title: '',
     body: '',
     buttonLabel: 'OKAY',
+    popUpModalTitle: '',
+    popUpModalMessage: '',
+    showPopUpModal: false, // a work in progress.... look for it in the Admin/Settings and it's used a couple other places... it needs to be moved to the App/Layout and then a function added here to document get by id... and here we need a state to hold the id... and then we can have a function to close it by id...
     // use the primaryUri to ensure this notification is only shown
     // on the correct page.
     uri: '',
@@ -106,6 +109,25 @@ export const useNotificationStore = defineStore('notificationStore', {
             if (modal) {
                 modal.showModal();
             }
+        },
+        showSuccess(title, message) {
+            this.title = title;
+            this.message = message;
+            this.showModal = true;
+        },
+        showError(error) {
+            let errorMessage = "An unexpected error occurred. Please try again later.";
+            if (error.response && error.response.data && error.response.data.message) {
+                errorMessage = error.response.data.message;
+            } else if (error.message) {
+                errorMessage = error.message;
+            }
+            this.title = 'Error';
+            this.message = errorMessage;
+            this.showModal = true;
+        },
+        closeModal() {
+            this.showModal = false;
         }
     },
     getters: {

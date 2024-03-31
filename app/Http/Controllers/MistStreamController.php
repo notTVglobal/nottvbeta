@@ -4,22 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Jobs\AddOrUpdateMistStreamJob;
 use App\Jobs\RemoveMistStreamJob;
-use App\Models\AppSetting;
 use App\Models\Channel;
 use App\Models\MistStream;
-use App\Services\MistServerService;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\Routing\ResponseFactory;
+use App\Services\MistServer\MistServerService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
-use RuntimeException;
-use GuzzleHttp\Client;
 
 class MistStreamController extends Controller {
 
@@ -124,12 +117,12 @@ class MistStreamController extends Controller {
 
   }
 
-  public function fetchStreamInfo($streamName)
-  {
+  public function fetchStreamInfo($streamName): \Illuminate\Http\JsonResponse {
     $encodedStreamName = urlencode($streamName);
     $mistServerIp = config('services.mistserver.internal_ip');
 //    $url = "http://mist.nottv.io:8080/json_${encodedStreamName}.js"; // Replace with the actual URL
-    $url = "http://${mistServerIp}:8080/json_${encodedStreamName}.js"; // Replace with the actual URL
+//    $url = "http://${mistServerIp}:8080/json_${encodedStreamName}.js"; // Replace with the actual URL
+    $url = "http://mistserver:8080/json_${encodedStreamName}.js"; // Replace with the actual URL
 
     try {
       $response = Http::get($url);
@@ -137,7 +130,15 @@ class MistStreamController extends Controller {
       if ($response->successful()) {
         $streamInfo = $response->json();
         // Do something with $streamInfo
-        return response()->json($streamInfo); // Example: Return the data as JSON response
+//        return response()->json($streamInfo); // Example: Return the data as JSON response
+
+        // Return a successful response to the Vue frontend
+        return response()->json([
+            'success' => true,
+            'message' => 'Stream info loaded.',
+            'streamInfo' => $streamInfo, // Optionally include the response from the MistServer
+        ]);
+
       } else {
         throw new \Exception('Failed to fetch');
       }

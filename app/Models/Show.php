@@ -2,17 +2,12 @@
 
 namespace App\Models;
 
-use App\Services\MistServerService;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 use Symfony\Component\Uid\Ulid;
 
 class Show extends Model
@@ -144,6 +139,11 @@ class Show extends Model
     return $this->mistStreamWildcard->mistStreamPushDestination;
   }
 
+  // tec21: this is new, I added this after lots of frustration.
+  // Maybe the getMistStreamPushDestinationsAttribute() is still valuable?
+  public function mistStreamPushDestinations(): \Illuminate\Database\Eloquent\Relations\HasMany {
+    return $this->hasMany(MistStreamPushDestination::class, 'show_id', 'show_id');
+  }
 
   public static function generateStreamKey($showId)
   {

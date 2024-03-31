@@ -2,11 +2,10 @@
 
 namespace App\Providers;
 
-use App\Services\MistServerService;
+use App\Services\MistServer\MistServerService;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
-use Inertia\Inertia;
 use Laravel\Cashier\Cashier;
 
 class AppServiceProvider extends ServiceProvider

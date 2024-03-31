@@ -7,33 +7,46 @@
       <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
       <AdminHeader>MistServer API</AdminHeader>
-
+      <div>Processing: {{ adminStore.checkSendProcessing }}</div>
       <div class="flex justify-between">
-        <div>
-          <div class="">Status: <span class="font-semibold">{{ videoPlayerStore.status }}</span></div>
+        <div><span class="font-semibold">{{ videoPlayerStore.status }}</span>
+          <div class="">Status: </div>
+          <span v-show="adminStore.checkSendProcessing" class="loading loading-spinner loading-xs text-blue-700"></span>
+          <button v-for="server in serverTypes" :key="server.type"
+                  class="ml-2 py-2 my-2 px-4 text-white bg-orange-800 hover:bg-orange-500 mr-2 rounded-xl"
+                  @click.prevent="checkMistApiSendFunction(server.type)">
+            {{ server.name }}
+          </button>
 
           <button class="ml-2 py-2 my-2 px-4 text-white bg-orange-800 hover:bg-orange-500 mr-2 rounded-xl"
                   @click.prevent="getStatus">
             Get Status
           </button>
 
-          <button v-if="videoPlayerStore.status === 'OK'"
-                  class="ml-2 py-2 my-2 px-4 text-white bg-blue-800 hover:bg-blue-500 mr-2 rounded-xl"
-                  @click.prevent="displayPushForm">
-            Start Push
-          </button>
-
-          <button v-if="videoPlayerStore.status === 'OK'"
-                  class="ml-2 py-2 my-2 px-4 text-white bg-blue-800 hover:bg-blue-500 mr-2 rounded-xl"
-                  @click.prevent="addStream">
-            Add Stream
-          </button>
         </div>
         <div v-if="videoPlayerStore.status === 'OK'" class="">
 
         </div>
 
       </div>
+
+
+      <div>
+        <h2>API Response</h2>
+        <!-- Displaying as a string -->
+        <pre>{{ JSON.stringify(responseJson, null, 2) }}</pre>
+
+        <!-- Or iterating over properties -->
+        <!-- Use this as a starting point for displaying the MistServer responses -->
+        <!-- Note: We have another iteration version below -->
+        <div hidden v-if="responseJson">
+          <div v-for="(value, key) in responseJson" :key="key">
+            {{ key }}: {{ value }}
+          </div>
+        </div>
+      </div>
+
+
 
       <div v-if="videoPlayerStore.status === 'CHALL'" class="mb-8">
         <div class="py-3 px-4 mb-4 bg-orange-800 text-white rounded">MistServer needs to be authenticated</div>
@@ -275,35 +288,6 @@
               </table>
             </div>
 
-            <!--                    Begin Push Form ... move this to its own component.           -->
-            <div v-if="videoPlayerStore.mistDisplayPushForm">
-              <div class="font-semibold my-2">Push a Stream:</div>
-              <div class="">
-                <label for="streamName" class="mb-1">Choose stream:</label>
-                <select
-                    id="streamName"
-                    v-model="streamStore.streamName"
-                    class="w-full mb-2">
-                  <option v-for="stream in videoPlayerStore.apiResponse.active_streams" :key="stream">
-                    {{ stream }}
-                  </option>
-                </select>
-                <label for="rtmpDestination" class="mb-1">Set destination:</label>
-                <input type="text"
-                       id="rtmpDestination"
-                       v-model="streamStore.rtmpDestination"
-                       placeholder="RTMP destination..."
-                       class="w-full my-2">
-                <button @click.prevent="startPush"
-                        class="ml-2 py-2 px-4 text-white bg-green-800 hover:bg-green-500 rounded-xl">
-                  Push
-                </button>
-                <video src="https://streams.not.tv/vmixsource01%2bspring.mp4" class="mt-20 w-96" controls
-                       autoplay></video>
-                <br>Preview video is hardcoded to "vmixsource01+spring"
-              </div>
-            </div>
-
           </div>
 
 
@@ -317,17 +301,19 @@
 </template>
 
 <script setup>
-import { ref, reactive } from "vue"
+import { ref, reactive, computed, onMounted } from 'vue'
 import { usePageSetup } from '@/Utilities/PageSetup'
-import { useAppSettingStore } from "@/Stores/AppSettingStore"
-import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
-import { useStreamStore } from "@/Stores/StreamStore"
-import AdminHeader from "@/Components/Pages/Admin/AdminHeader"
-import Message from "@/Components/Global/Modals/Messages"
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import { useAdminStore } from '@/Stores/AdminStore'
+import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
+import { useStreamStore } from '@/Stores/StreamStore'
+import AdminHeader from '@/Components/Pages/Admin/AdminHeader'
+import Message from '@/Components/Global/Modals/Messages'
 
 usePageSetup('mistServerApi')
 
 const appSettingStore = useAppSettingStore()
+const adminStore = useAdminStore()
 const videoPlayerStore = useVideoPlayerStore()
 const streamStore = useStreamStore()
 
@@ -338,7 +324,7 @@ let props = defineProps({
   apiReturn: Object,
   message: ref(String),
   mistNewHashedPassword: ref(String),
-});
+})
 
 let form = reactive({
   challenge: videoPlayerStore.challenge,
@@ -347,15 +333,12 @@ let form = reactive({
   password: '',
 })
 
-videoPlayerStore.mistUsername = 'nottvadmin';
-form.password = '20y$!PwX12S';
+videoPlayerStore.mistUsername = ''
+form.password = ''
 
-videoPlayerStore.mistStatus = true
-videoPlayerStore.mistDisplayPushForm = false
+const password = ref('')
 
-const password = ref('');
-
-let md5 = require('md5');
+let md5 = require('md5')
 
 
 ////////////////////  MIST SERVER ADDRESS //////////////////////////////
@@ -369,20 +352,78 @@ let mistAddress = 'http://localhost:4242/api'
 // let mistAddress = 'http://mist.nottv.io:4242/api'
 // let mistAddressWs = 'ws://mist.nottv.io:4242/ws'
 //
+const mistServerUri = ref('')
+
 ///////////////////////////////////////////////////////////////////////
 
-
-async function getStatus() {
-  await axios.get(mistAddress)
+async function getMistServerUri() {
+  console.log('get MistServer URI')
+  await axios.get('/mist-server/uri')
       .then(response => {
-        videoPlayerStore.apiRequest = response.data;
-        videoPlayerStore.challenge = videoPlayerStore.apiRequest.authorize.challenge;
-        videoPlayerStore.status = videoPlayerStore.apiRequest.authorize.status;
+        mistServerUri.value = response.data
+        console.log('MistServer URI: ' + mistServerUri.value)
+        return response.data
       })
       .catch(error => {
-        console.log(error);
+        console.log(error)
       })
-  console.log('get API');
+}
+
+const responseJson = ref(null);
+const isError = computed(() => {
+  // Check if responseJson is an error object
+  // This is a basic check, you might need to adjust it based on your actual error object's structure
+  isError.value = true
+  adminStore.unsetCheckSendProcessing()
+  return responseJson.value && responseJson.value.message && typeof responseJson.value.message === 'string';
+});
+
+const serverTypes = ref([
+  { name: 'Check Push Server', type: 'push' },
+  { name: 'Check Playback Server', type: 'playback' },
+  { name: 'Check Vod Server', type: 'vod' },
+  { name: 'Check Recording Server', type: 'recording' }
+]);
+
+const checkMistApiSendFunction = async(serverType) => {
+  responseJson.value = null
+  await checkSend(serverType)
+}
+
+const checkSend = async(serverType) => {
+  adminStore.setCheckSendProcessing()
+  await axios.post('/mist-server/check-send', {serverType: serverType /* additional data if any */})
+      .then(response => {
+        console.log('Response:', response)
+        responseJson.value = response.data;
+        adminStore.unsetCheckSendProcessing()
+      })
+      .catch(error => {
+        console.error('Error:', error)
+        responseJson.value = `Error: ${error.response.data.message || 'Request failed'} with status code ${error.response.status}`;
+        responseJson.value.error = true
+        adminStore.unsetCheckSendProcessing()
+      })
+  console.log('Checked MistServerService send() with serverType:', serverType)
+}
+
+
+const getStatus = async() => {
+  responseJson.value = null
+  adminStore.setCheckSendProcessing()
+  const mistUri = await getMistServerUri()
+  await axios.get(mistAddress)
+      .then(response => {
+        videoPlayerStore.apiRequest = response.data
+        videoPlayerStore.challenge = videoPlayerStore.apiRequest.authorize.challenge
+        videoPlayerStore.status = videoPlayerStore.apiRequest.authorize.status
+        adminStore.unsetCheckSendProcessing()
+      })
+      .catch(error => {
+        console.log(error)
+        adminStore.unsetCheckSendProcessing()
+      })
+  console.log('get API')
 
 }
 
@@ -398,75 +439,75 @@ async function getStatus() {
 
 async function authenticateMistServer() {
   let hashedPassword = md5(form.password)
-  console.log("Hashed password: " + hashedPassword)
+  console.log('Hashed password: ' + hashedPassword)
   let authReturn = md5(hashedPassword + videoPlayerStore.challenge)
   videoPlayerStore.mistPassword = authReturn
-  console.log("Final hashed password: " + authReturn)
+  console.log('Final hashed password: ' + authReturn)
   await axios.get(mistAddress + '?command=%7B%0A%22authorize%22%3A%20%7B%0A%22username%22%3A%20%22' + videoPlayerStore.mistUsername + '%22,%0A%22password%22%3A%20%22' + authReturn + '%22%0A%7D%0A%7D')
       .then(response => {
         videoPlayerStore.apiRequest = response.data
         videoPlayerStore.challenge = videoPlayerStore.apiRequest.authorize.challenge
         videoPlayerStore.status = videoPlayerStore.apiRequest.authorize.status
-        console.log(response.data);
+        console.log(response.data)
       })
       .catch(error => {
         console.log(error)
       })
-  console.log('mistServer API authorization sent.');
+  console.log('mistServer API authorization sent.')
 
 }
 
 let checkUpdates = () => {
-  videoPlayerStore.mistDisplay = "updates"
-  let request = "\"update\": true"
+  videoPlayerStore.mistDisplay = 'updates'
+  let request = '"update": true'
   getApi(request)
 }
 
 let getCapabilities = () => {
-  videoPlayerStore.mistDisplay = "capabilities"
-  let request = "%22capabilities%22%3A%20true"
+  videoPlayerStore.mistDisplay = 'capabilities'
+  let request = '%22capabilities%22%3A%20true'
   getApi(request)
 }
 
 let getTotals = () => {
-  videoPlayerStore.mistDisplay = "totals"
-  let request = "\"totals\": {}"
+  videoPlayerStore.mistDisplay = 'totals'
+  let request = '"totals": {}'
   getApi(request)
 }
 
 let getActiveStreams = () => {
-  videoPlayerStore.mistDisplay = "active_streams"
-  let request = "\"active_streams\": true"
+  videoPlayerStore.mistDisplay = 'active_streams'
+  let request = '"active_streams": true'
   getApi(request)
 }
 
 let getClients = () => {
-  videoPlayerStore.mistDisplay = "clients"
+  videoPlayerStore.mistDisplay = 'clients'
   // This request delivers information about each client connected
   // to a specific stream name.
   //
   // let request = "\"clients\": [{\"streams\": [\"vmixsource03\"],},{}]}"
 
   // This request delivers all clients
-  let request = "\"clients\": {}"
+  let request = '"clients": {}'
   getApi(request)
 }
 
 let getLog = () => {
-  videoPlayerStore.mistDisplay = "log"
-  let request = "\"log\": {}"
+  videoPlayerStore.mistDisplay = 'log'
+  let request = '"log": {}'
   getApi(request)
 }
 
 let clearLog = () => {
-  videoPlayerStore.mistDisplay = "log"
-  let request = "\"clearstatlog\": true"
+  videoPlayerStore.mistDisplay = 'log'
+  let request = '"clearstatlog": true'
   getApi(request)
 }
 
 let browseRecordings = () => {
-  videoPlayerStore.mistDisplay = "recordings"
-  let request = "\"path\": \"/media/upload\""
+  videoPlayerStore.mistDisplay = 'recordings'
+  let request = '"path": "/media/upload"'
   getApi(request)
 }
 
@@ -478,14 +519,14 @@ async function getApi(request) {
   let apiRequest = '%7B%20%22authorize%22%3A%20%7B%0A%20%20%20%20%22username%22%3A%20%22' + videoPlayerStore.mistUsername + '%22,%0A%20%20%20%20%22password%22%3A%20%22' + videoPlayerStore.mistPassword + '%22%0A%20%20%20%7D,%0A%20' + request + '%0A%0A%7D'
   await axios.get(mistAddress + '?command=' + apiRequest)
       .then(response => {
-        videoPlayerStore.apiResponse = response.data;
-        videoPlayerStore.challenge = videoPlayerStore.apiResponse.authorize.challenge;
-        videoPlayerStore.status = videoPlayerStore.apiResponse.authorize.status;
+        videoPlayerStore.apiResponse = response.data
+        videoPlayerStore.challenge = videoPlayerStore.apiResponse.authorize.challenge
+        videoPlayerStore.status = videoPlayerStore.apiResponse.authorize.status
       })
       .catch(error => {
-        console.log(error);
+        console.log(error)
       })
-  console.log('mistServer API request sent.');
+  console.log('mistServer API request sent.')
 }
 
 async function getApiLocal(request) {
@@ -495,59 +536,15 @@ async function getApiLocal(request) {
   // let apiRequest = '%7B%20%22authorize%22%3A%20%7B%0A%20%20%20%20%22username%22%3A%20%22'+videoPlayer.mistUsername+'%22,%0A%20%20%20%20%22password%22%3A%20%22'+videoPlayer.mistPassword+'%22%0A%20%20%20%7D,%0A%20'+request+'%0A%0A%7D'
   await axios.get(mistAddress + '?command=' + request)
       .then(response => {
-        videoPlayerStore.apiResponse = response.data;
-        videoPlayerStore.challenge = videoPlayerStore.apiResponse.authorize.challenge;
-        videoPlayerStore.status = videoPlayerStore.apiResponse.authorize.status;
+        videoPlayerStore.apiResponse = response.data
+        videoPlayerStore.challenge = videoPlayerStore.apiResponse.authorize.challenge
+        videoPlayerStore.status = videoPlayerStore.apiResponse.authorize.status
       })
       .catch(error => {
-        console.log(error);
+        console.log(error)
       })
-  console.log('mistServer API request sent.');
+  console.log('mistServer API request sent.')
 }
-
-// Create method to push a stream somewhere
-//
-
-
-function displayPushForm() {
-  getActiveStreams()
-  videoPlayerStore.mistStatus = false
-  videoPlayerStore.mistDisplayPushForm = true
-}
-
-function startPush() {
-  // api call to mist server.
-  // "push_start":["STREAMNAME", "URI"]
-  // let request = "\"push_start\":[\""+streamStore.streamName+", \""+streamStore.rtmpDestination+"\"]"
-  let request = '%7B%20%22push_start%22%3A%20%7B%22stream%22%3A%22' + streamStore.streamName + '%22,%22target%22%3A%22' + streamStore.rtmpDestination + '%22%7D%7D'
-  // setTimeout(() => {  getApi(request); console.log("World!"); }, 2000);
-  getApi(request)
-  videoPlayerStore.mistStatus = false
-  videoPlayerStore.mistDisplayPushForm = true
-  // log output
-  console.log("stream push started: " + request)
-}
-
-function addStream() {
-  console.log("adding new stream")
-  // api call to mist server.
-  let request = "%7B%22addstream%22%3A%7B%22streamname%22%3A%7B%22source%22%3A%22push%3A%2F%2F%22%7D%7D%7D"
-  getApi(request)
-  videoPlayerStore.mistStatus = true
-  videoPlayerStore.mistDisplayPushForm = false
-  // log output
-  console.log("stream added: " + request)
-}
-
-
-// let setMistHashedPassword = () => {
-//     if (props.message) {
-//         props.mistNewHashedPassword = md5(props.message);
-//     }
-// }
-//
-// setMistHashedPassword();
-
 
 /////////////// EXAMPLES OF MISTSERVER API CALLS ///////////////
 //
