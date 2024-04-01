@@ -469,7 +469,7 @@ class MistStreamPushDestinationController extends Controller {
         $fullPushUri,
     ];
 
-    Log::info('data', ['as' => $data]);
+//    Log::info('data', ['as' => $data]);
 
 
 //    Log::debug('Starting push for MistStreamPushDestination.', ['destinationId' => $destinationId->id]);
@@ -486,6 +486,16 @@ class MistStreamPushDestinationController extends Controller {
       // ~ tec21, March 31, 2024
       $response = $this->pushService->pushStart($data);
 
+      $mistStreamPushDestination = MistStreamPushDestination::find($destinationId);
+      // Check if the destination was found
+      if ($mistStreamPushDestination) {
+        $mistStreamPushDestination->push_is_started = 1;
+        $mistStreamPushDestination->save();
+      } else {
+        // Handle the case where the destination is not found, e.g., log an error or throw an exception
+        Log::error('MistStreamPushDestination not found', ['destinationId' => $destinationId]);
+      }
+
       // Dispatch the MistStreamPushStartJob with the destination model
       return response()->json([
           'success' => true,
@@ -494,9 +504,9 @@ class MistStreamPushDestinationController extends Controller {
       ]);
 
     } catch (Exception $e) {
-      Log::error('Failed to dispatch MistStreamPushStartJob', ['destinationId' => $destinationId, 'exception' => $e->getMessage()]);
+//      Log::error('Failed to dispatch MistStreamPushStartJob', ['destinationId' => $destinationId, 'exception' => $e->getMessage()]);
 
-      return response()->json(['error' => 'Failed to dispatch job.'], 500);
+      return response()->json(['error' => 'Failed to start stream.'], 500);
     }
   }
 
@@ -527,9 +537,14 @@ class MistStreamPushDestinationController extends Controller {
     $destinationId = $validated['destination_id'];
     $data = null;
 
-    $mistStreamPushDestination = MistStreamPushDestination::where('id', $destinationId)->first();
-
-    if (!$mistStreamPushDestination) {
+    $mistStreamPushDestination = MistStreamPushDestination::find($destinationId);
+    // Check if the destination was found
+    if ($mistStreamPushDestination) {
+      $mistStreamPushDestination->push_is_started = 1;
+      $mistStreamPushDestination->save();
+    } else {
+      // Handle the case where the destination is not found, e.g., log an error or throw an exception
+      Log::error('MistStreamPushDestination not found', ['destinationId' => $destinationId]);
       return response()->json([
           'status' => 'error',
           'message' => 'Destination not found.',
@@ -556,6 +571,8 @@ class MistStreamPushDestinationController extends Controller {
     // Since $this->pushService is an instance of PushService, it has the fetchPushList method available
     if ($data) {
       $response = $this->pushService->pushStop($data);
+      $mistStreamPushDestination->push_is_started = 0;
+      $mistStreamPushDestination->save();
 
       return response()->json([
           'success' => true,

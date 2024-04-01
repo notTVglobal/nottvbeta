@@ -134,6 +134,7 @@ const videoSourceType = ref('application/vnd.apple.mpegURL')
 
 onMounted(async() => {
   console.log('onPlayerReady AUX')
+  // await goLiveStore.fetchStreamInfo()
 })
 
 // Cleanup when the component unmounts

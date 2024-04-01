@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Factories\MistServerServiceFactory;
 use App\Jobs\AddOrUpdateMistStreamJob;
 use App\Jobs\RemoveMistStreamJob;
 use App\Models\Channel;
@@ -16,7 +17,11 @@ use Inertia\Inertia;
 
 class MistStreamController extends Controller {
 
+  private MistServerService $pushService;
+
   public function __construct() {
+
+    $this->pushService = MistServerServiceFactory::make('push');
 
     $this->middleware('can:viewAny,' . MistStream::class)->only(['index']);
     $this->middleware('can:view,mistStream')->only(['show']);
@@ -116,44 +121,19 @@ class MistStreamController extends Controller {
   }
 
   public function fetchStreamInfo(Request $request): \Illuminate\Http\JsonResponse {
+
     // Validate the request data
     $validated = $request->validate([
-        'streamName'     => 'required|string',
+        'streamName'    => 'required|string',
         'mistServerUri' => 'required|string',
     ]);
 
-    $mistServerUri = $validated['mistServerUri'];
     $streamName = $validated['streamName'];
-    $encodedStreamName = urlencode($streamName);
 
-//    $mistServer = config('services.mistserver.push.internal_ip');
-//    $url = "http://mist.nottv.io:8080/json_${encodedStreamName}.js"; // Replace with the actual URL
-    $url = $mistServerUri . 'json_' . $encodedStreamName . '.js'; // Replace with the actual URL
-//    $url = "http://mistserver:8080/json_${encodedStreamName}.js"; // Replace with the actual URL
-
-    try {
-      $response = Http::get($url);
-
-      if ($response->successful()) {
-        $streamInfo = $response->json();
-        // Do something with $streamInfo
-//        return response()->json($streamInfo); // Example: Return the data as JSON response
-
-        // Return a successful response to the Vue frontend
-        return response()->json([
-            'success'    => true,
-            'message'    => 'Stream info loaded.',
-            'streamInfo' => $streamInfo, // Optionally include the response from the MistServer
-        ]);
-
-      } else {
-        throw new \Exception('Failed to fetch');
-      }
-    } catch (\Exception $e) {
-      // Handle the error appropriately
-      return response()->json(['error' => 'Error fetching stream info: ' . $e->getMessage()], 500);
-    }
+    return $this->pushService->fetchStreamInfo($streamName);
   }
+
+
 
   public function restoreAllStreams() {
     // Retrieve all Mist Streams from the database

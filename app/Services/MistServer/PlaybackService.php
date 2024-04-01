@@ -2,16 +2,32 @@
 
 namespace App\Services\MistServer;
 
+use Exception;
+
 class PlaybackService extends MistServerService {
-  public function listStreams() {
-    return $this->sendRequest('/api', 'POST', ['streams' => new \stdClass()]);
+
+  public function fetchStreamInfo(string $streamName = ''): \Illuminate\Http\JsonResponse {
+    return $this->fetchStreamInfo($streamName);
   }
 
-  public function addStream($streamDetails) {
-    return $this->sendRequest('/api', 'POST', ['addstream' => $streamDetails]);
+  /**
+   * @throws Exception
+   */
+  public function listStreams(): array {
+    return $this->send(['streams' => new \stdClass()]);
   }
 
-  public function deleteStream($streamId) {
-    return $this->sendRequest('/api', 'POST', ['deletestream' => ['id' => $streamId]]);
+  /**
+   * @throws Exception
+   */
+  public function addStream($streamDetails): array {
+    return $this->send(['addstream' => $streamDetails]);
+  }
+
+  /**
+   * @throws Exception
+   */
+  public function deleteStream($streamId): array {
+    return $this->send(['deletestream' => ['id' => $streamId]]);
   }
 }
