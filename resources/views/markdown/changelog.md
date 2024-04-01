@@ -1,7 +1,13 @@
 # not.tv Changelog
 
-Last Update: March 31, 2024\
+Last Update: April 1, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.8.7.40
+April 1, 2024
+* Use the MistServerService to fetchStreamInfo
+* Fixes to the Add Push, Remove Push, fetchPushDestinations and Background Fetch methods.
+* Start troubleshooting the recordings bugs. 
 
 ## v0.8.7.39
 March 31, 2024

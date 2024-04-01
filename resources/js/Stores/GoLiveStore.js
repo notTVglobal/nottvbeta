@@ -83,7 +83,6 @@ export const useGoLiveStore = defineStore('goLiveStore', {
         },
 
 
-
         // async generateStreamKey() {
         //     if (!this.selectedShowId) {
         //         console.error("No show selected");
@@ -145,38 +144,46 @@ export const useGoLiveStore = defineStore('goLiveStore', {
         //     }
         // },
         async fetchStreamInfo() {
-            const notificationStore = useNotificationStore();
-               try {
-                   // Then, use the URI in your next request
-                   const response = await axios.post('/fetch-stream-info', {
-                       streamName: this.streamKey,
-                       mistServerUri: this.mistServerUri, // Pass it as a string
-                   });
-
+            const notificationStore = useNotificationStore()
+            console.log('start fetch stream info...')
+            try {
+                if (!this.mistServerUri) {
+                    await this.fetchMistServerUri()
+                }
+                // Then, use the URI in your next request
+                const response = await axios.post('/fetch-stream-info', {
+                    streamName: this.streamKey,
+                    mistServerUri: this.mistServerUri, // Pass it as a string
+                })
+                console.log('response returned...')
                 // console.log(response.data);
-                this.streamInfo = response.data.streamInfo || [];
+                this.streamInfo = response.data.streamInfo || []
                 // Assuming a successful response might look like {"message": "Stream is online", "status": "success"}
-                let message, status;
+                let message, status
 
                 // Check if the response contains an error field
                 if (response.data.streamInfo.error) {
-                    message = response.data.streamInfo.error;
-                    status = 'error'; // Assuming 'error' as a fallback status
+                    message = response.data.streamInfo.error
+                    status = 'error' // Assuming 'error' as a fallback status
+                    console.log('error returned...')
                 } else if (response.data.message && response.data.success) {
                     // If it's a success message with a status
-                    message = response.data.message;
-                    status = 'info';
+                    message = response.data.message
+                    status = 'info'
+                    console.log('success returned...')
                 } else {
                     // Fallback for unexpected response structure
-                    message = 'Received unexpected response from server.';
-                    status = 'info'; // Default to 'info' or another appropriate fallback status
+                    message = 'Received unexpected response from server.'
+                    status = 'info' // Default to 'info' or another appropriate fallback status
+                    console.log('unexpected response returned...')
                 }
 
                 // Use the status from the response for the notification
-                notificationStore.setToastNotification(message, status);
+                notificationStore.setToastNotification(message, status)
             } catch (error) {
                 // console.error(error);
-                notificationStore.setToastNotification('Failed to fetch stream info.', 'error');
+                notificationStore.setToastNotification('Failed to fetch stream info.', 'error')
+                console.log('catch error...')
             }
         },
         async fetchRtmpUri() {
@@ -206,78 +213,92 @@ export const useGoLiveStore = defineStore('goLiveStore', {
         updateEpisode(episode) {
             this.episode = episode
         },
-        async reloadPlayer() {
+        async fetchMistServerUri() {
             const videoAuxPlayerStore = useVideoAuxPlayerStore();
-            this.playerIsReloading = true; // Start loading
+            let uriResponse = await axios.get('/mist-server/uri')
+            this.mistServerUri = uriResponse.data
+            videoAuxPlayerStore.setMistServerUri(this.mistServerUri)
+        },
+        async reloadPlayer() {
+            const videoAuxPlayerStore = useVideoAuxPlayerStore()
+            this.playerIsReloading = true // Start loading
             try {
                 // First, fetch the URI
 
-                let uriResponse = await axios.get('/mist-server/uri');
-                this.mistServerUri = uriResponse.data; // Accessing the data prop// erty
-                // Create an object and set the 'name' property
+                // let uriResponse = await axios.get('/mist-server/uri');
+                // this.mistServerUri = uriResponse.data; // Accessing the data prop// erty
+                // // Create an object and set the 'name' property
                 const mistStream = {
-                    name: this.streamKey
-                };
+                    name: this.streamKey,
+                }
                 // // Now, use this URI in your next request
                 // const response = await axios.post('/fetch-stream-info', {
                 //     streamName: this.streamKey,
                 //     mistServerUri: this.mistServerUri,
                 // });
                 // Now, you can pass the 'mistStream' object to the method
-                await videoAuxPlayerStore.loadMistStreamVideo(mistStream, true).then (
-                    await this.fetchStreamInfo()
-                );
+                await videoAuxPlayerStore.loadMistStreamVideo(mistStream, true).then(
+                    // await this.fetchStreamInfo(),
+                )
             } catch (error) {
                 // console.error(error);
                 notificationStore.setGeneralServiceNotification('Failed to reload player', error)
-                notificationStore.setToastNotification('Failed to reload player.', 'error');
+                notificationStore.setToastNotification('Failed to reload player.', 'error')
             } finally {
-                this.playerIsReloading = false; // Stop loading regardless of outcome
+                this.playerIsReloading = false // Stop loading regardless of outcome
             }
 
         },
         async fetchPushDestinations() {
-            const notificationStore = useNotificationStore();
-            this.isLoadingDestinations = true; // Start loading
+            const notificationStore = useNotificationStore()
+            this.isLoadingDestinations = true // Start loading
             try {
-                const response = await axios.post('/go-live/fetch-push-destinations', {showId: this.selectedShowId, streamName: this.streamKey});
+                const response = await axios.post('/go-live/fetch-push-destinations', {
+                    showId: this.selectedShowId,
+                    streamName: this.streamKey,
+                    backgroundFetch: false,
+                })
                 // console.log(response.data);
-                this.destinations = response.data.destinations || [];
-                this.isRecording = response.data.isRecording || false;
+                this.destinations = response.data.destinations || []
+                this.isRecording = response.data.isRecording || false
                 // Extract message and status from the response
-                const { message, status } = response.data;
+                const {message, status} = response.data
                 // Use the status from the response for the notification
-                notificationStore.setToastNotification(message, status);
+                notificationStore.setToastNotification(message, status)
             } catch (error) {
                 // console.error(error);
                 notificationStore.setGeneralServiceNotification('Failed to reload player', error)
-                notificationStore.setToastNotification('Failed to fetch push destinations.', 'error');
+                notificationStore.setToastNotification('Failed to fetch push destinations.', 'error')
             } finally {
-                this.isLoadingDestinations = false; // Stop loading regardless of outcome
+                this.isLoadingDestinations = false // Stop loading regardless of outcome
             }
         },
         async backgroundFetchPushDestinations() {
             // Background Fetch doesn't use Toast Notifications,
             // Keep the fetch silent in the background.
 
-            this.isLoadingDestinations = true; // Start loading
+            this.isLoadingDestinations = true // Start loading
             try {
-                const response = await axios.post('/go-live/fetch-push-destinations/', {showId: this.selectedShowId, streamName: this.streamKey});
-                this.destinations = response.data.destinations || [];
-                this.isRecording = response.data.isRecording || false;
+                const response = await axios.post('/go-live/fetch-push-destinations/', {
+                    showId: this.selectedShowId,
+                    streamName: this.streamKey,
+                    backgroundFetch: true,
+                })
+                this.destinations = response.data.destinations || []
+                this.isRecording = response.data.isRecording || false
             } catch (error) {
                 // console.error(error);
                 notificationStore.setGeneralServiceNotification('Error Fetching Push Destinations', error)
             } finally {
-                this.isLoadingDestinations = false; // Stop loading regardless of outcome
+                this.isLoadingDestinations = false // Stop loading regardless of outcome
             }
         },
-        async deleteDestination (destinationId) {
+        async deleteDestination(destinationId) {
             // Confirm deletion with the user before proceeding
             if (confirm(`Are you sure you want to delete the destination with ID: ${destinationId}?`)) {
                 try {
                     // Perform the delete operation
-                    await axios.delete('/mist-stream-push-destinations/'+destinationId)
+                    await axios.delete('/mist-stream-push-destinations/' + destinationId)
                     // Optionally, remove the item from your local state to update the UI
                     this.destinations = this.destinations.filter(destination => destination.id !== destinationId)
                 } catch (error) {
@@ -287,18 +308,22 @@ export const useGoLiveStore = defineStore('goLiveStore', {
             }
         },
         async startPush(destinationId, fullPushUri) {
-            const notificationStore = useNotificationStore();
-            this.loadingDestinationId = destinationId;
+            const notificationStore = useNotificationStore()
+            this.loadingDestinationId = destinationId
             // console.log(`Starting push for destination ${destinationId}`)
             try {
-                const response = await axios.post('/mist-stream/start-push', {destination_id: destinationId, full_push_uri: fullPushUri, stream_name: this.streamKey})
+                const response = await axios.post('/mist-stream/start-push', {
+                    destination_id: destinationId,
+                    full_push_uri: fullPushUri,
+                    stream_name: this.streamKey,
+                })
                 // console.log('Push started successfully:', response.data)
                 // console.log('Destination ID:', destinationId)
                 // console.log('Full Push URI:', fullPushUri)
                 // console.log('Stream Name:', this.streamKey)
-                const { message, status } = response.data;
+                const {message, status} = response.data
                 // Use the status from the response for the notification
-                notificationStore.setToastNotification(message, status);
+                notificationStore.setToastNotification(message, status)
                 // Update the component's state to reflect the change
                 const index = this.destinations.findIndex(destination => destination.id === destinationId)
                 if (index !== -1) {
@@ -306,27 +331,27 @@ export const useGoLiveStore = defineStore('goLiveStore', {
                 }
             } catch (error) {
                 // console.error('Error starting push:', error)
-                notificationStore.setToastNotification('Failed to start push.', 'error');
+                notificationStore.setToastNotification('Failed to start push.', 'error')
                 // Handle the error appropriately in your UI
             } finally {
-                this.loadingDestinationId = null; // Stop loading regardless of outcome
+                this.loadingDestinationId = null // Stop loading regardless of outcome
             }
         },
         async stopPush(destinationId) {
-            const notificationStore = useNotificationStore();
-            this.loadingDestinationId = destinationId;
+            const notificationStore = useNotificationStore()
+            this.loadingDestinationId = destinationId
             // console.log(`Stopping push for destination ${destinationId}`)
             try {
                 const response = await axios.post('/mist-stream/stop-push', {destination_id: destinationId})
                 // console.log('Push stopped successfully:', response.data)
-                const { message, status } = response.data;
-                notificationStore.setToastNotification(message, status);
+                const {message, status} = response.data
+                notificationStore.setToastNotification(message, status)
                 // Update the component's state to reflect the change
             } catch (error) {
                 // console.error('Error stopping push:', error)
-                notificationStore.setToastNotification('Failed to stop push.', 'error');
+                notificationStore.setToastNotification('Failed to stop push.', 'error')
             } finally {
-                this.loadingDestinationId = null; // Stop loading regardless of outcome
+                this.loadingDestinationId = null // Stop loading regardless of outcome
                 const index = this.destinations.findIndex(destination => destination.id === destinationId)
                 if (index !== -1) {
                     this.destinations[index].push_is_started = 0
@@ -334,57 +359,57 @@ export const useGoLiveStore = defineStore('goLiveStore', {
             }
         },
         async enableAutoPush(destinationId) {
-            this.loadingDestinationId = destinationId;
-            const notificationStore = useNotificationStore();
+            this.loadingDestinationId = destinationId
+            const notificationStore = useNotificationStore()
             try {
-                const response = await axios.post('/mist-stream/push-auto-add/'+destinationId)
+                const response = await axios.post('/mist-stream/push-auto-add/' + destinationId)
                 // console.log('Auto push enabled successfully:', response.data)
-                const { message, status } = response.data;
-                notificationStore.setToastNotification(message, status);
+                const {message, status} = response.data
+                notificationStore.setToastNotification(message, status)
                 const index = this.destinations.findIndex(destination => destination.id === destinationId)
                 if (index !== -1) {
                     this.destinations[index].has_auto_push = 1
                 }
             } catch (error) {
                 // console.error('Error enabling auto push:', error)
-                notificationStore.setToastNotification('Failed to enable auto push.', 'error');
+                notificationStore.setToastNotification('Failed to enable auto push.', 'error')
             } finally {
-                this.loadingDestinationId = null; // Stop loading regardless of outcome
+                this.loadingDestinationId = null // Stop loading regardless of outcome
             }
         },
         async disableAutoPush(destinationId) {
-            const notificationStore = useNotificationStore();
-            this.loadingDestinationId = destinationId;
+            const notificationStore = useNotificationStore()
+            this.loadingDestinationId = destinationId
             try {
-                const response = await axios.post('/mist-stream/push-auto-remove/'+destinationId)
+                const response = await axios.post('/mist-stream/push-auto-remove/' + destinationId)
                 // console.log('Auto push removed successfully:', response.data)
-                const { message, status } = response.data;
-                notificationStore.setToastNotification(message, status);
+                const {message, status} = response.data
+                notificationStore.setToastNotification(message, status)
                 const index = this.destinations.findIndex(destination => destination.id === destinationId)
                 if (index !== -1) {
                     this.destinations[index].has_auto_push = 0
                 }
             } catch (error) {
                 // console.error('Error disabling auto push:', error)
-                notificationStore.setToastNotification('Failed to disable auto push.', 'error');
+                notificationStore.setToastNotification('Failed to disable auto push.', 'error')
             } finally {
-                this.loadingDestinationId = null; // Stop loading regardless of outcome
+                this.loadingDestinationId = null // Stop loading regardless of outcome
             }
         },
         async disableAllAutoPushes() {
-            const notificationStore = useNotificationStore();
-            this.isProcessingDisableAllAutoPushes = true;
+            const notificationStore = useNotificationStore()
+            this.isProcessingDisableAllAutoPushes = true
             try {
-                const response = await axios.post('/mist-stream/remove-all-auto-pushes-for-stream', {'streamName':this.streamKey})
+                const response = await axios.post('/mist-stream/remove-all-auto-pushes-for-stream', {'streamName': this.streamKey})
                 // console.log('Auto push disabled successfully:', response.data)
-                const { message, status } = response.data;
-                notificationStore.setToastNotification(message, status);
+                const {message, status} = response.data
+                notificationStore.setToastNotification(message, status)
                 await this.fetchPushDestinations()
             } catch (error) {
                 // console.error('Error disabling auto push:', error)
-                notificationStore.setToastNotification('Failed to disable auto push.', 'error');
+                notificationStore.setToastNotification('Failed to disable auto push.', 'error')
             } finally {
-                this.isProcessingDisableAllAutoPushes = false; // Stop loading regardless of outcome
+                this.isProcessingDisableAllAutoPushes = false // Stop loading regardless of outcome
                 await this.fetchPushDestinations()
             }
         },
@@ -412,15 +437,15 @@ export const useGoLiveStore = defineStore('goLiveStore', {
         },
         // Example getter that might filter destinations based on some criteria
         activeDestinations: (state) => {
-            return state.destinations.filter(destination => destination.push_is_started);
+            return state.destinations.filter(destination => destination.push_is_started)
         },
         sourceName: (state) => {
             if (state.selectedShow?.mist_stream_wildcard?.name) {
-                return state.selectedShow.mist_stream_wildcard.name;
+                return state.selectedShow.mist_stream_wildcard.name
             } else if (state.episode?.mist_stream_wildcard?.name) {
-                return state.episode.mist_stream_wildcard.name;
+                return state.episode.mist_stream_wildcard.name
             }
-            return null; // No source available
+            return null // No source available
         },
     },
 

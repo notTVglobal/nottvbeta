@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class MistServerService {
-  protected string $host;
+  protected string $internal_ip;
   protected string $username;
   protected string $password;
   protected ?string $challenge = null;
@@ -27,7 +27,8 @@ class MistServerService {
       throw new \InvalidArgumentException("Invalid or missing configuration for MistServer type: {$serverType}");
     }
 
-    $this->host = $config['host'];
+//    $this->host = $config['host'];
+    $this->internal_ip = $config['internal_ip'];
     $this->username = $config['username'];
     $this->password = $config['password'];
   }
@@ -61,7 +62,7 @@ class MistServerService {
    * @throws Exception  If the request fails.
    */
   public function send(array $originalData = [], bool $isRetry = false): array {
-    $url = "{$this->host}";
+    $url = "http://{$this->internal_ip}:4242/api2";
 
     // Only prepare authorization data if this is a retry or if the logic determines it should be included from the start.
     $authData = $isRetry ? $this->prepareAuthData() : [];
@@ -684,7 +685,33 @@ class MistServerService {
     }
   }
 
+  public function fetchStreamInfo(string $streamName = ''): \Illuminate\Http\JsonResponse {
+    $encodedStreamName = urlencode($streamName);
+    $url = "http://{$this->internal_ip}:8080/json_${encodedStreamName}.js";
 
+    try {
+      $response = Http::get($url);
+
+      if ($response->successful()) {
+        $streamInfo = $response->json();
+        // Do something with $streamInfo
+//        return response()->json($streamInfo); // Example: Return the data as JSON response
+
+        // Return a successful response to the Vue frontend
+        return response()->json([
+            'success'    => true,
+            'message'    => 'Stream info loaded.',
+            'streamInfo' => $streamInfo, // Optionally include the response from the MistServer
+        ]);
+
+      } else {
+        throw new \Exception('Failed to fetch');
+      }
+    } catch (\Exception $e) {
+      // Handle the error appropriately
+      return response()->json(['error' => 'Error fetching stream info: ' . $e->getMessage()], 500);
+    }
+  }
 }
 
 

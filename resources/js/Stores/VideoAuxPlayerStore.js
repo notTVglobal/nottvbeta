@@ -760,6 +760,9 @@ export const useVideoAuxPlayerStore = defineStore('videoAuxPlayerStore', {
             appSettingStore.fullPage = true
             appSettingStore.hidePage = false
         },
+        setMistServerUri(mistServerUri) {
+            this.mistServerUri = mistServerUri
+        }
 
 
     },

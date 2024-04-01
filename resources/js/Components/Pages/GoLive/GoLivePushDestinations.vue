@@ -8,11 +8,13 @@
 
     <div role="alert" class="alert">
       <!-- Ensure you're importing Tailwind CSS in your project -->
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current text-blue-500 w-6 h-6">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+           class="stroke-current text-blue-500 w-6 h-6">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
       </svg>
 
-      <span>🌟 Our push statuses are getting a little refresh every minute. Hang tight and keep the creativity flowing – awesome updates are on their way!</span>
+      <span>🌟 Our push statuses get a little refresh every minute. Hang tight and keep the creativity flowing – more awesome updates are on their way!</span>
     </div>
 
     <div class="shadow bg-blue-100 overflow-hidden border-2 border-blue-600 rounded p-6 space-y-3">
@@ -33,6 +35,7 @@
           </button>
           <div class="flex flex-row justify-end gap-2">
             <span v-if="goLiveStore.isProcessingDisableAllAutoPushes" class="loading loading-spinner text-info"></span>
+            <span v-show="!goLiveStore.isProcessingDisableAllAutoPushes" class="text-xs">Next refresh in... {{ countdown }}</span>
             <button
                 v-if="anyDestinationHasActiveAutoPush"
                 @click="goLiveStore.disableAllAutoPushes()"
@@ -49,11 +52,11 @@
 
       <div class="flex flex-row justify-between mb-2 py-2 h-12">
         <div><h2 class="text-xl font-bold">Push Destinations</h2>
-      </div>
+        </div>
         <div v-if="goLiveStore.isLoadingDestinations">
           <span class="loading loading-bars loading-lg text-info mr-2"> </span><span class="text-xs uppercase">Refreshing...</span>
         </div>
-        </div>
+      </div>
 
 
       <div v-if="goLiveStore.destinations.length === 0">
@@ -100,7 +103,8 @@
                 </button>
                 <p v-if="destination.has_auto_push" class="text-yellow-500 font-semibold">Auto push
                   is enabled</p>
-                <span v-if="goLiveStore.loadingDestinationId === destination.id" class="loading loading-spinner text-info"></span>
+                <span v-if="goLiveStore.loadingDestinationId === destination.id"
+                      class="loading loading-spinner text-info"></span>
               </div>
             </div>
             <div class="flex flex-row justify-end">
@@ -130,7 +134,7 @@
                                    :destinationDetails="destinationDetails"
 
                                    :mode="mistStreamPushDestinationFormModalMode"/>
-    <ToastNotification />
+    <ToastNotification/>
   </div>
 </template>
 <script setup>
@@ -146,12 +150,14 @@ const appSettingStore = useAppSettingStore()
 const mistStore = useMistStore()
 const goLiveStore = useGoLiveStore()
 
+const countdown = ref(60) // Set initial countdown (in seconds)
+const intervalId = ref(null)
 const destinationDetails = ref({})
 const mistStreamPushDestinationFormModalMode = ref('add')
 
 const anyDestinationHasActiveAutoPush = computed(() => {
-  return goLiveStore.destinations.some(destination => destination.has_auto_push === 1);
-});
+  return goLiveStore.destinations.some(destination => destination.has_auto_push === 1)
+})
 
 const addDestination = async () => {
   mistStreamPushDestinationFormModalMode.value = 'add'
@@ -171,45 +177,72 @@ const editDestination = async (destination) => {
   // }
 }
 
-// Function to fetch push destinations
-const backgroundFetchPushDestinationsStatus = () => {
-  if (goLiveStore.wildcardId) {
-    goLiveStore.backgroundFetchPushDestinations();
-  }
-};
 
-const fetchPushDestinationsStatus = () => {
+const backgroundFetchPushDestinationsStatus = async () => {
   if (goLiveStore.wildcardId) {
-    goLiveStore.fetchPushDestinations();
+    await goLiveStore.backgroundFetchPushDestinations()
   }
-};
+}
 
-watch(goLiveStore.selectedShow, (newVal, oldVal) => {
+const fetchPushDestinationsStatus = async () => {
+  if (goLiveStore.wildcardId) {
+    await goLiveStore.fetchPushDestinations()
+  }
+}
+
+const fetchStreamInfo = async () => {
+  await goLiveStore.fetchStreamInfo()
+}
+
+const reloadPlayer = async () => {
+  await goLiveStore.reloadPlayer()
+}
+
+const backgroundFetch = async () => {
+  await fetchPushDestinationsStatus()
+  await fetchStreamInfo()
+  await reloadPlayer()
+  countdown.value = 60 // Reset the countdown after fetch
+  if (goLiveStore.streamInfo && goLiveStore.streamInfo.error) {
+    console.log('Error detected, reloading player');
+    await reloadPlayer();
+  } else {
+    console.log('No error in streamInfo, not reloading player');
+  }
+}
+
+// Decrement the countdown every second
+const startCountdown = () => {
+  if (intervalId.value !== null) return // Prevent multiple intervals
+  intervalId.value = setInterval(() => {
+    if (countdown.value > 0) {
+      countdown.value -= 1
+    } else {
+      backgroundFetch() // Refresh data when countdown reaches 0
+    }
+  }, 1000)
+}
+
+
+watch(() => goLiveStore.selectedShow, async (newVal, oldVal) => {
   if (newVal !== '') {
-    // Assuming the video player is ready to be initialized at this point
-    // const videoPlayer = videojs('main-player');
-    fetchPushDestinationsStatus()
-    // goLiveStore.selectedShowId = selectedShowId
-
-    // Additional logic to load the video based on selectedShowId can be added here
+    await backgroundFetch()
+    await fetchPushDestinationsStatus()
+    // Additional logic to load the video based on selectedShow can be added here
   }
-});
+})
 
-let intervalId;
-
-onMounted(async() => {
+onMounted(async () => {
   // Fetch immediately and then set up an interval for periodic fetching
-  fetchPushDestinationsStatus()
-  // backgroundFetchPushDestinationsStatus();
-  intervalId = setInterval(backgroundFetchPushDestinationsStatus, 60000); // Fetch every 60 seconds
-  // Re-run whenever the wildcardId changes
-  watchEffect(backgroundFetchPushDestinationsStatus);
+  startCountdown()
+  await backgroundFetch()
+  // intervalId = setInterval(backgroundFetch, 60000) // Fetch every 60 seconds
 })
 
 onUnmounted(() => {
   // Clear the interval when the component unmounts to prevent memory leaks
-  // clearInterval(intervalId);
-});
+  clearInterval(intervalId.value)
+})
 
 
 </script>

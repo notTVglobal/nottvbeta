@@ -140,35 +140,55 @@ class GoLiveController extends Controller {
     return response()->json(['message' => 'Live stream prepared successfully.']);
   }
 
-  public function fetchPushDestinations(Request $request): \Illuminate\Http\JsonResponse
-  {
+  public function fetchPushDestinations(Request $request): \Illuminate\Http\JsonResponse {
     $validated = $request->validate([
-        'showId' => 'required|exists:shows,id',
-        'streamName' => 'required|string',
+        'showId'          => 'required|exists:shows,id',
+        'streamName'      => 'required|string',
+        'backgroundFetch' => 'nullable|boolean'
     ]);
 
     $showId = $validated['showId'];
     $streamName = $validated['streamName'];
+    $backgroundFetch = $validated['backgroundFetch'];
 
-    // Assuming allActivePushes is a collection of arrays with 'stream_name' and 'original_uri' keys
-    $allActivePushes = collect(Cache::get('all_active_pushes', []));
-
-    // Log the content of the cache to debug
-    Log::debug('All active pushes from cache', ['active_pushes' => $allActivePushes->toArray()]);
-
+    // tec21: 2024-03-31 for the first fetch we want to get the active push list
+    // directly from MistServer. Then for the subsequent background
+    // fetches we can use the Cache which gets update through our
+    // Command that runs every minute. This will be updated to handle
+    // Real-time notifications when we build out more of our web sockets.
+    if ($backgroundFetch) {
+      // Assuming allActivePushes is a collection of arrays with 'stream_name' and 'original_uri' keys
+      $allActivePushesCollection = collect(Cache::get('all_active_pushes', []));
+    } else {
+      // Fetch the new push list from the push service
+      $newPushList = $this->pushService->fetchPushList();
+      $newPushListItems = collect($newPushList['push_list'] ?? []);
+      // Prepare the $allActivePushes array
+      $allActivePushesCollection = $newPushListItems->map(function ($item) {
+        return [
+            'push_id'       => $item[0], // Assuming the ID is the first element
+            'stream_name'   => $item[1],
+            'original_uri'  => $item[2],
+            'processed_uri' => $item[3] ?? '', // Provide defaults as necessary
+            'logs'          => $item[4] ?? [],
+            'push_status'   => $item[5] ?? [],
+        ];
+      });
+//      Log::debug('all active pushes: ', ['allActivePushes' => $allActivePushesCollection->toArray()]);
+    }
 
     // Get all destinations for the showId
     $pushDestinations = MistStreamPushDestination::with(['mistStreamWildcard' => function ($query) use ($streamName) {
       $query->where('name', $streamName);
     }])
-        ->whereHas('mistStreamWildcard', function($query) use ($streamName) {
+        ->whereHas('mistStreamWildcard', function ($query) use ($streamName) {
           $query->where('name', $streamName);
         })
         ->get();
 
     // Iterate through each destination to update its 'push_is_started' status
     foreach ($pushDestinations as $destination) {
-      $isMatched = $allActivePushes->contains(function ($push) use ($destination) {
+      $isMatched = $allActivePushesCollection->contains(function ($push) use ($destination) {
         return $push['stream_name'] === $destination->stream_name && $push['original_uri'] === $destination->full_push_uri;
       });
 
@@ -176,10 +196,13 @@ class GoLiveController extends Controller {
       $destination->save();
     }
 
+    // Optionally, return the updated list of destinations
+    $updatedDestinations = $pushDestinations->fresh();
+
     return response()->json([
-        'status' => 'success',
-        'message' => "Push destinations updated for stream: $streamName",
-        'destinations' => $pushDestinations,
+        'status'       => 'success',
+        'message'      => "Push destinations updated for stream: $streamName",
+        'destinations' => $updatedDestinations,
     ]);
   }
 
@@ -194,9 +217,9 @@ class GoLiveController extends Controller {
 //          'original_uri' => $destination['original_uri'],
 //      ];
 //    });
-    // 2. Iterate through the cache
-    // match the $allActivePushes->streamName to the $streamName
-    // 3. Return the array of destinations
+  // 2. Iterate through the cache
+  // match the $allActivePushes->streamName to the $streamName
+  // 3. Return the array of destinations
 
 
 //    $show = Show::with('mistStreamWildcard.mistStreamPushDestination')->find($showId);
@@ -234,7 +257,7 @@ class GoLiveController extends Controller {
 //      $destination->save();
 //    }
 
-    // Optionally refresh the collection from the database if needed
+  // Optionally refresh the collection from the database if needed
 //    $pushDestinations = $show->fresh()->mistStreamPushDestinations;
 
 //    return response()->json([
