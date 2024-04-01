@@ -109,10 +109,10 @@ class MistTriggerController extends Controller {
 //    Log::debug('Handling recording end. Request content:', ['content' => $request->getContent()]);
 
     Log::alert('handle Recording End');
-//    Log::debug('handlePushEnd Raw Request', [
-//        'headers' => $request->headers->all(),
-//        'body'    => $request->getContent() // For raw body content
-//    ]);
+    Log::debug('handlePushEnd Raw Request', [
+        'headers' => $request->headers->all(),
+        'body'    => $request->getContent() // For raw body content
+    ]);
 
     $parsedContent = $this->parseRecordingEndContent($request->getContent());
     // Optionally log the parsed content if needed
@@ -374,16 +374,16 @@ class MistTriggerController extends Controller {
   protected function createRecordingEntry(array $parsedContent): ?Recording {
 
     // Construct a unique identifier for the recording.
-    $uniqueId = $parsedContent['path'];
+    $uniqueId = $parsedContent['filePath'];
 
     // First, check if a recording with the same unique identifier already exists.
     $existingRecording = Recording::where('path', $uniqueId)->first();
 
     if ($existingRecording) {
+      Log::info("Found existing recording entry, avoiding duplication.", ['uniqueId' => $uniqueId]);
       return $existingRecording;
-    } else {
-      // No existing recording found, proceed to create a new entry.
     }
+    // No existing recording found, proceed to create a new entry.
     return Recording::create([
         'stream_name' => $parsedContent['streamName'],
         'path' => $parsedContent['filePath'],

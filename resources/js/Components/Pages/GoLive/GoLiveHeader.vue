@@ -6,7 +6,8 @@
                 class="btn bg-blue-500 hover:bg-blue-700 text-white">How To Stream From Zoom
         </button>
         <button @click="openObsInstructions = !openObsInstructions"
-                class="btn bg-blue-500 hover:bg-blue-700 text-white ml-2" :class="{'bg-yellow-800 hover:bg-yellow-900 ':openObsInstructions}">
+                class="btn bg-blue-500 hover:bg-blue-700 text-white ml-2"
+                :class="{'bg-yellow-800 hover:bg-yellow-900 ':openObsInstructions}">
           <span v-if="!openObsInstructions">View Your Stream Key</span>
           <span v-else>Hide Your Stream Key</span>
         </button>
@@ -39,9 +40,10 @@
       </div>
     </div>
 
-    <div class="flex flex-row flex-wrap justify-between grow ml-4">
-      <div v-if="!openObsInstructions" class="flex flex-col justify-center border-2 border-green-500 rounded-lg px-2 py-2">
-        <div class="flex flex-row">
+    <div class="flex flex-row flex-wrap justify-between grow ml-4 gap-2">
+      <div v-if="!openObsInstructions"
+           class="flex flex-col justify-center border-2 border-green-500 rounded-lg px-2 py-2 gap-2">
+        <div class="flex flex-row gap-2">
           <div class="mb-2">
             <button v-if="!goLiveStore.isRecording" @click="goLiveStore.startRecording"
                     disabled
@@ -71,8 +73,9 @@
         </div>
       </div>
 
-      <div>
-        <button class="btn btn-secondary" @click="openStats">Live Analytics</button></div>
+      <div class="ml-2">
+        <button class="btn btn-secondary" @click="openStats">Live Analytics</button>
+      </div>
 
       <div class="">
         <div>Live will begin in... &nbsp;</div>
@@ -104,7 +107,7 @@ const showCopiedFullUrl = ref(false)
 const showCopiedRtmpUri = ref(false)
 const showCopiedStreamKey = ref(false)
 
-const { copy } = useClipboard()
+const {copy} = useClipboard()
 const openObsInstructions = ref(false)
 
 const rtmpUri = computed(() => goLiveStore.fullRtmpUri)
@@ -143,8 +146,8 @@ const minutes = computed(() => Math.floor((countdown.value % 3600) / 60))
 const seconds = computed(() => countdown.value % 60)
 
 const openStats = () => {
-  window.open('/stats', '_blank');
-};
+  window.open('/stats', '_blank')
+}
 
 
 // Function to start the countdown
@@ -169,7 +172,7 @@ const startCountdown = () => {
   // }, 1000)
 }
 
-onMounted(async() => {
+onMounted(async () => {
   // Automatically start the countdown or trigger based on an event
   startCountdown()
 })
