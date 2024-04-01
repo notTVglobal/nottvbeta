@@ -182,6 +182,7 @@ const selectedRecordingDate = ref('')
 const selectedRecordingStreamName = ref('')
 const selectedRecordingId = ref('')
 const nowPlayingRecordingId = ref('')
+const nowPlayingStreamName = ref('')
 
 // Computed property returning a function to determine row classes
 const rowClass = computed(() => (recordingId) => ({
@@ -216,37 +217,42 @@ const play = () => {
   try {
     videoPlayerStore.loadNewVideo(source.value)
     nowPlayingRecordingId.value = selectedRecordingId.value
+    nowPlayingStreamName.value = selectedRecordingStreamName.value
     appSettingStore.toggleOttInfo()
     console.log('now playing ID: ' + nowPlayingRecordingId.value)
 
+    // Set common details specific to this video play event for nowPlayingStore
+    const mediaType = source.value.mediaType
+    const commonDetails = {
+      primaryName: 'Recording',
+      secondaryName: '',
+      description: nowPlayingStreamName, // Use the selected recording name for description
+      primaryUrl: null,
+      secondaryUrl: null,
+      channelName: null,
+      image: null,
+      team: null,
+      creative_commons: null,
+    }
+    const videoDetails = {
+      // Assuming video details are structured correctly in your episode data
+      video_url: '',
+      type: source.value.recording.sourceType, // MIME type for video.js
+    }
+
+    // Update the currently playing media in nowPlayingStore with the latest details
+    nowPlayingStore.setActiveMedia(mediaType, {
+      ...commonDetails,
+      videoDetails, // Spread in the specific details for internal or external video
+    })
+
+    // Close the modal upon successful video playback
+    document.getElementById('confirmRecordingPlaybackModal').close()
   } catch (error) {
     console.error('Error loading new video:', error);
-    // Handle the error appropriately
+    // Handle error appropriately, possibly with user feedback
   }
-  const mediaType = source.value.mediaType
-  // Common details for nowPlayingStore
-  const commonDetails = {
-    primaryName: 'Recording', // Show or Movie name
-    secondaryName: '', // Episode name
-    description: selectedRecordingStreamName,
-    primaryUrl: null,
-    secondaryUrl: null,
-    channelName: null,
-    image: null,
-    team: null,
-    creative_commons: null,
-  }
-  const videoDetails = {
-    // Assuming video details are structured correctly in your episode data
-    video_url: '',
-    type: source.value.recording.sourceType, // MIME type for video.js
-  }
-  // Set the currently playing media in nowPlayingStore
-  nowPlayingStore.setActiveMedia(mediaType, {
-    ...commonDetails,
-    videoDetails, // Spread in the specific details for internal or external video
-  })
-  document.getElementById('confirmRecordingPlaybackModal').close()
+
 }
 
 const shareRecording = (shareUrl) => {
