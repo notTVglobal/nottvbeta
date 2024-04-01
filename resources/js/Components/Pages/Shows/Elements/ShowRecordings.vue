@@ -141,12 +141,14 @@
 
 <script setup>
 import { useVideoPlayerStore } from "@/Stores/VideoPlayerStore"
+import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import { useNowPlayingStore } from "@/Stores/NowPlayingStore"
 import { useUserStore } from '@/Stores/UserStore'
 import { computed, reactive, ref } from 'vue'
 import { useClipboard } from '@vueuse/core'
 
 const videoPlayerStore = useVideoPlayerStore()
+const appSettingStore = useAppSettingStore()
 const nowPlayingStore = useNowPlayingStore()
 const userStore = useUserStore()
 
@@ -211,9 +213,39 @@ const play = () => {
     sourceType: 'video/mp4',
   };
   console.log('recording source: ' + selectedRecordingStreamName.value)
-  videoPlayerStore.loadNewVideo(source.value)
-  nowPlayingRecordingId.value = selectedRecordingId.value
-  console.log('now playing ID: ' + nowPlayingRecordingId.value)
+  try {
+    videoPlayerStore.loadNewVideo(source.value)
+    nowPlayingRecordingId.value = selectedRecordingId.value
+    appSettingStore.toggleOttInfo()
+    console.log('now playing ID: ' + nowPlayingRecordingId.value)
+
+  } catch (error) {
+    console.error('Error loading new video:', error);
+    // Handle the error appropriately
+  }
+  const mediaType = source.value.mediaType
+  // Common details for nowPlayingStore
+  const commonDetails = {
+    primaryName: 'Recording', // Show or Movie name
+    secondaryName: '', // Episode name
+    description: selectedRecordingStreamName,
+    primaryUrl: null,
+    secondaryUrl: null,
+    channelName: null,
+    image: null,
+    team: null,
+    creative_commons: null,
+  }
+  const videoDetails = {
+    // Assuming video details are structured correctly in your episode data
+    video_url: '',
+    type: source.value.recording.sourceType, // MIME type for video.js
+  }
+  // Set the currently playing media in nowPlayingStore
+  nowPlayingStore.setActiveMedia(mediaType, {
+    ...commonDetails,
+    videoDetails, // Spread in the specific details for internal or external video
+  })
   document.getElementById('confirmRecordingPlaybackModal').close()
 }
 

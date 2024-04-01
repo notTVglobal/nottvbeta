@@ -3,6 +3,11 @@
 Last Update: April 1, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.7.44
+April 1, 2024
+* Playback a recording now displays the recording name in NowPlayingInfo
+* OTT TopRight now defaults to Info
+
 ## v0.8.7.43
 April 1, 2024
 * Update the Go Live Page refresh settings to be every 15 seconds.

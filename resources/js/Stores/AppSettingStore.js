@@ -149,7 +149,7 @@ export const useAppSettingStore = defineStore('appSettingStore', {
 
         toggleOtt(num) {
             const userStore = useUserStore();
-            this.ott = num === this.ott && !this.fullPage ? 0 : num;
+            this.ott = num === this.ott && !this.fullPage ? 1 : num;
 
             // Handling the visibility of ottSlot.one and ottSlot.two
             this.osdSlot.a = this.fullPage && this.ott === 0;

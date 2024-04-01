@@ -68,10 +68,10 @@
                   </div>
 
 
-                  <div class="flex flex-col ml-3 -mt-2">
+                  <div class="flex flex-col ml-3 -mt-2 break-words">
                     <h3 v-if="nowPlayingStore.activeMedia.details?.primaryUrl">
                       <!-- Render as a link if the URL exists -->
-                      <Link class="hover:text-blue-500 hover:cursor-pointer" @click.prevent="goToPage">
+                      <Link class="hover:text-blue-500 hover:cursor-pointer break-words" @click.prevent="goToPage">
                         <!-- Title (with link) -->
                         {{ nowPlayingStore.activeMedia.details.primaryName }}
                       </Link>
@@ -83,7 +83,7 @@
                     </h3>
                     <h4 v-if="nowPlayingStore.activeMedia.details?.secondaryUrl">
                       <!-- Render as a link if the URL exists -->
-                      <Link class="hover:text-blue-500 hover:cursor-pointer" :href="`/${nowPlayingStore.activeMedia.details.secondaryUrl}`">
+                      <Link class="hover:text-blue-500 hover:cursor-pointer break-words" :href="`/${nowPlayingStore.activeMedia.details.secondaryUrl}`">
                         <!-- Title (with link) -->
                         {{ nowPlayingStore.activeMedia.details.secondaryName }}
                       </Link>
@@ -105,11 +105,11 @@
 
 
                 <!-- Logline and Description -->
-                <div v-if="nowPlayingStore.activeMedia.details?.logline" class="flex flex-col mt-4">
+                <div v-if="nowPlayingStore.activeMedia.details?.logline" class="flex flex-col mt-4 break-words">
                   <div class="text-xs uppercase text-gray-500 font-semibold tracking-wider mb-1">Logline</div>
                   <div class="showEpisodeOrMovieDescription">{{ nowPlayingStore.activeMedia.details?.logline }}</div>
                 </div>
-                <div v-if="nowPlayingStore.activeMedia.details?.description" class="flex flex-col my-4">
+                <div v-if="nowPlayingStore.activeMedia.details?.description" class="flex flex-col my-4 break-words">
                   <div class="text-xs uppercase text-gray-500 font-semibold tracking-wider mb-1">Description</div>
                   <div class="showEpisodeOrMovieDescription description">{{ nowPlayingStore.activeMedia.details?.description }}</div>
                 </div>

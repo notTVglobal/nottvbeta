@@ -15,6 +15,8 @@ export function usePageSetup(pageName) {
 
     if (userStore.isMobile) {
         appSettingStore.ott = 0
+    } else {
+        appSettingStore.ott = 1
     }
 
     videoPlayerStore.makeVideoTopRight()
