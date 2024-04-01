@@ -142,21 +142,19 @@ class GoLiveController extends Controller {
 
   public function fetchPushDestinations(Request $request): \Illuminate\Http\JsonResponse {
     $validated = $request->validate([
-        'showId'          => 'required|exists:shows,id',
+        'showId'          => 'nullable|integer',
         'streamName'      => 'required|string',
         'backgroundFetch' => 'nullable|boolean'
     ]);
 
-    $showId = $validated['showId'];
     $streamName = $validated['streamName'];
-    $backgroundFetch = $validated['backgroundFetch'];
 
     // tec21: 2024-03-31 for the first fetch we want to get the active push list
     // directly from MistServer. Then for the subsequent background
     // fetches we can use the Cache which gets update through our
     // Command that runs every minute. This will be updated to handle
     // Real-time notifications when we build out more of our web sockets.
-    if ($backgroundFetch) {
+    if ($validated['backgroundFetch']){
       // Assuming allActivePushes is a collection of arrays with 'stream_name' and 'original_uri' keys
       $allActivePushesCollection = collect(Cache::get('all_active_pushes', []));
     } else {
