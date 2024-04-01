@@ -108,11 +108,11 @@ class MistTriggerController extends Controller {
     // Log the incoming request content for debugging
 //    Log::debug('Handling recording end. Request content:', ['content' => $request->getContent()]);
 
-    Log::alert('handle Recording End');
-    Log::debug('handlePushEnd Raw Request', [
-        'headers' => $request->headers->all(),
-        'body'    => $request->getContent() // For raw body content
-    ]);
+    Log::alert('New Recording End');
+//    Log::debug('handlePushEnd Raw Request', [
+//        'headers' => $request->headers->all(),
+//        'body'    => $request->getContent() // For raw body content
+//    ]);
 
     $parsedContent = $this->parseRecordingEndContent($request->getContent());
     // Optionally log the parsed content if needed
@@ -412,8 +412,9 @@ class MistTriggerController extends Controller {
       $mistStreamWildcard->metadata = $currentMetadata;
       $mistStreamWildcard->is_recording = false;
       $mistStreamWildcard->save();
-      Log::info("Cleared recording metadata for stream: {$streamName}");
-      broadcast(new MistTriggerRecordingStop($mistStreamWildcard->id, 'stopped'));
+//      Log::info("Cleared recording metadata for stream: {$streamName}");
+      // TODO: Broadcast New Recoding to Team
+//      broadcast(new MistTriggerRecordingStop($mistStreamWildcard->id, 'stopped'));
     }
   }
 

@@ -3,6 +3,15 @@
 Last Update: April 1, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.7.43
+April 1, 2024
+* Update the Go Live Page refresh settings to be every 15 seconds.
+  * The video now reloads only if the stream is offline and goes online.
+
+## v0.8.7.42
+April 1, 2024
+* Fix the recording bug.
+
 ## v0.8.7.41
 April 1, 2024
 * Fix the recording bug.

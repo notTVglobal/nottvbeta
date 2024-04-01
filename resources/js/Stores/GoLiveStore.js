@@ -25,6 +25,7 @@ const initialState = () => ({
     playerIsReloading: false,
     pushDestinationFormSubmitProcessing: false,
     mistServerUri: null,
+    previousStreamStatus: null,
 })
 
 export const useGoLiveStore = defineStore('goLiveStore', {
@@ -145,7 +146,7 @@ export const useGoLiveStore = defineStore('goLiveStore', {
         // },
         async fetchStreamInfo() {
             const notificationStore = useNotificationStore()
-            console.log('start fetch stream info...')
+            // console.log('start fetch stream info...')
             try {
                 if (!this.mistServerUri) {
                     await this.fetchMistServerUri()
@@ -155,7 +156,7 @@ export const useGoLiveStore = defineStore('goLiveStore', {
                     streamName: this.streamKey,
                     mistServerUri: this.mistServerUri, // Pass it as a string
                 })
-                console.log('response returned...')
+                // console.log('response returned...')
                 // console.log(response.data);
                 this.streamInfo = response.data.streamInfo || []
                 // Assuming a successful response might look like {"message": "Stream is online", "status": "success"}
@@ -165,17 +166,18 @@ export const useGoLiveStore = defineStore('goLiveStore', {
                 if (response.data.streamInfo.error) {
                     message = response.data.streamInfo.error
                     status = 'error' // Assuming 'error' as a fallback status
-                    console.log('error returned...')
+                    // console.log('error returned...')
                 } else if (response.data.message && response.data.success) {
                     // If it's a success message with a status
                     message = response.data.message
                     status = 'info'
-                    console.log('success returned...')
+                    // console.log('success returned...')
+
                 } else {
                     // Fallback for unexpected response structure
                     message = 'Received unexpected response from server.'
                     status = 'info' // Default to 'info' or another appropriate fallback status
-                    console.log('unexpected response returned...')
+                    // console.log('unexpected response returned...')
                 }
 
                 // Use the status from the response for the notification
@@ -183,7 +185,7 @@ export const useGoLiveStore = defineStore('goLiveStore', {
             } catch (error) {
                 // console.error(error);
                 notificationStore.setToastNotification('Failed to fetch stream info.', 'error')
-                console.log('catch error...')
+                // console.log('catch error...')
             }
         },
         async fetchRtmpUri() {
@@ -446,6 +448,11 @@ export const useGoLiveStore = defineStore('goLiveStore', {
                 return state.episode.mist_stream_wildcard.name
             }
             return null // No source available
+        },
+        streamOffline: (state) => {
+            // Check if the 'error' key exists and if its value is 'Stream is offline'
+            // If streamInfo is null or undefined, it defaults to an empty object {}
+            return (state.streamInfo?.error ?? '') === 'Stream is offline';
         },
     },
 

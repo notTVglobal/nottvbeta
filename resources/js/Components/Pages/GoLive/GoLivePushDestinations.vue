@@ -150,7 +150,7 @@ const appSettingStore = useAppSettingStore()
 const mistStore = useMistStore()
 const goLiveStore = useGoLiveStore()
 
-const countdown = ref(60) // Set initial countdown (in seconds)
+const countdown = ref(15) // Set initial countdown (in seconds)
 const intervalId = ref(null)
 const destinationDetails = ref({})
 const mistStreamPushDestinationFormModalMode = ref('add')
@@ -199,17 +199,34 @@ const reloadPlayer = async () => {
 }
 
 const backgroundFetch = async () => {
-  await fetchPushDestinationsStatus()
-  await fetchStreamInfo()
-  await reloadPlayer()
-  countdown.value = 60 // Reset the countdown after fetch
-  if (goLiveStore.streamInfo && goLiveStore.streamInfo.error) {
-    console.log('Error detected, reloading player');
-    await reloadPlayer();
-  } else {
-    console.log('No error in streamInfo, not reloading player');
+  try {
+    // Fetch data concurrently
+    await Promise.all([
+      fetchPushDestinationsStatus(),
+      fetchStreamInfo(),
+    ]);
+
+    // Reset the countdown at the beginning of the fetch cycle
+    countdown.value = 15;
+
+    // Check if the stream just transitioned from offline to online
+    if (goLiveStore.previousStreamStatus === true && !goLiveStore.streamOffline) {
+      console.log('Stream just transitioned from offline to online, reloading player');
+      await reloadPlayer();
+    } else if (goLiveStore.streamOffline) {
+      console.log('Stream is offline, no action taken');
+    } else {
+      console.log('Stream is online, no action taken');
+    }
+
+    // Update the previous stream status for the next check
+    goLiveStore.previousStreamStatus = goLiveStore.streamOffline;
+  } catch (error) {
+    console.error('Error during background fetch:', error);
+    // Depending on your application's needs, handle the error appropriately
   }
-}
+};
+
 
 // Decrement the countdown every second
 const startCountdown = () => {

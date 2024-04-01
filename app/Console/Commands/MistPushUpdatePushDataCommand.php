@@ -211,11 +211,11 @@ class MistPushUpdatePushDataCommand extends Command {
                 $mistStreamWildcard->is_recording = 1;
                 $mistStreamWildcard->save();
               }
-              Log::warning("Recording found for stream name {$streamName} and URI {$originalUri}.");
+//              Log::debug("Recording found for stream name {$streamName} and URI {$originalUri}.");
             }
 
           } else {
-            Log::warning("Push destination not found for stream name {$streamName} and URI {$originalUri}.");
+//            Log::debug("Push destination not found for stream name {$streamName} and URI {$originalUri}.");
           }
         }
       }
