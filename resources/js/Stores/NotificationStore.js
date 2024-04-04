@@ -61,7 +61,7 @@ export const useNotificationStore = defineStore('notificationStore', {
             this.generalServiceNotification = null
             this.showGeneralServiceNotification = false
         },
-        setToastNotification(message, status, customTimeoutValue = 8000) {
+        setToastNotification(message, status, customTimeoutValue = 5000) {
             // Ensure any existing timeout is cleared before setting a new one
             if (this.timeoutId) {
                 clearTimeout(this.timeoutId);

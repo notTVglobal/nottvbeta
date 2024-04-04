@@ -98,7 +98,7 @@ class MistStreamPushDestinationController extends Controller {
 
     try {
       // Respond with success
-      return response()->json(['message' => "Auto pushes removed successfully for stream: {$streamName}"]);
+      return response()->json(['message' => "🚀 Auto pushes removed successfully for stream: {$streamName}"]);
     } catch (Exception $e) {
       Log::error('Failed to remove all auto pushes for stream.', [
           'streamName' => $streamName,
@@ -181,59 +181,21 @@ class MistStreamPushDestinationController extends Controller {
 //  }
 
   public function store(Request $request): \Illuminate\Http\JsonResponse {
-    // Log the entire request payload
-    Log::alert('Request received', [
-        'url'     => $request->fullUrl(), // Gets the full URL for the request
-        'method'  => $request->method(), // Gets the HTTP method for the request
-        'headers' => $request->header(), // Gets all headers (Consider security/privacy before logging all headers)
-        'payload' => $request->all(), // Gets all input data (Be cautious with sensitive information)
-    ]);
+    $validated = $this->validateRequest($request);
+    $validated = $this->prepareDestinationDetails($validated);
 
-    // Validate the request data
-    $validated = $request->validate([
-        'show_id'                 => 'required|exists:shows,id',
-        'stream_name'             => 'required|string',
-        'mist_stream_wildcard_id' => 'required|exists:mist_stream_wildcards,id',
-        'rtmp_url'                => 'required|custom_streaming_url',
-        'rtmp_key'                => 'nullable|string|max:255',
-        'comment'                 => 'nullable|string',
-    ]);
-
-    // Concatenate the RTMP URL and key to form the full push URI
-    $fullPushUri = $validated['rtmp_url'] . $validated['rtmp_key'];
-    $validated['full_push_uri'] = $fullPushUri;
-
-    // Determine destination details
-    $details = $this->determineDestinationDetails($validated['rtmp_url'], $validated['rtmp_key'] ?? '');
-    $validated = array_merge($validated, $details);
-
-    // Create the destination
     $destination = MistStreamPushDestination::create($validated);
 
     return response()->json($destination, 201);
-
   }
 
-  public function update(Request $request, $id) {
-    // Find and validate as before
+  public function update(Request $request, $id): \Illuminate\Http\JsonResponse {
+
+    $validated = $this->validateRequest($request, true);
+    $validated = $this->prepareDestinationDetails($validated);
+
+    // Find the destination
     $destination = MistStreamPushDestination::findOrFail($id);
-
-    // Validate the request data
-    $validated = $request->validate([
-        'show_id'                 => 'required|exists:shows,id',
-        'stream_name'             => 'required|string',
-        'mist_stream_wildcard_id' => 'required|exists:mist_stream_wildcards,id',
-        'rtmp_url'                => 'required|custom_streaming_url',
-        'rtmp_key'                => 'nullable|string|max:255', // Changed to 'sometimes' to allow optional key
-        'comment'                 => 'nullable|string',
-    ]);
-
-    // Concatenate the RTMP URL and key to form the full push URI, if both are provided
-    $fullPushUri = $validated['rtmp_url'] . $validated['rtmp_key'];
-    $validated['full_push_uri'] = $fullPushUri;
-
-    $details = $this->determineDestinationDetails($validated['rtmp_url'], $validated['rtmp_key'] ?? '');
-    $validated = array_merge($validated, $details);
 
     // if $destination->has_auto_push then cancel auto push.
     if ($destination->has_auto_push) {
@@ -255,6 +217,27 @@ class MistStreamPushDestinationController extends Controller {
     $destination->update($validated);
 
     return response()->json($destination);
+  }
+
+  private function validateRequest(Request $request, $isUpdate = false): array {
+    $rules = [
+        'show_id'                 => 'required|exists:shows,id',
+        'stream_name'             => 'required|string',
+        'mist_stream_wildcard_id' => 'required|exists:mist_stream_wildcards,id',
+        'rtmp_url'                => 'required|custom_streaming_url',
+        'rtmp_key'                => $isUpdate ? 'nullable|string|max:255' : 'required|string|max:255',
+        'comment'                 => 'nullable|string',
+    ];
+
+    return $request->validate($rules);
+  }
+
+  private function prepareDestinationDetails(array $validated): array {
+    $fullPushUri = $validated['rtmp_url'] . ($validated['rtmp_key'] ?? '');
+    $validated['full_push_uri'] = $fullPushUri;
+
+    $details = $this->determineDestinationDetails($validated['rtmp_url'], $validated['rtmp_key'] ?? '');
+    return array_merge($validated, $details);
   }
 
   private function determineDestinationDetails($url, $key): array {

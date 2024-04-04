@@ -181,7 +181,7 @@ export const useGoLiveStore = defineStore('goLiveStore', {
                 }
 
                 // Use the status from the response for the notification
-                notificationStore.setToastNotification(message, status)
+                // notificationStore.setToastNotification(message, status)
             } catch (error) {
                 // console.error(error);
                 notificationStore.setToastNotification('Failed to fetch stream info.', 'error')
@@ -244,7 +244,7 @@ export const useGoLiveStore = defineStore('goLiveStore', {
                 )
             } catch (error) {
                 // console.error(error);
-                notificationStore.setGeneralServiceNotification('Failed to reload player', error)
+                // notificationStore.setGeneralServiceNotification('Failed to reload player', error)
                 notificationStore.setToastNotification('Failed to reload player.', 'error')
             } finally {
                 this.playerIsReloading = false // Stop loading regardless of outcome
@@ -266,10 +266,10 @@ export const useGoLiveStore = defineStore('goLiveStore', {
                 // Extract message and status from the response
                 const {message, status} = response.data
                 // Use the status from the response for the notification
-                notificationStore.setToastNotification(message, status)
+                // notificationStore.setToastNotification(message, status)
             } catch (error) {
                 // console.error(error);
-                notificationStore.setGeneralServiceNotification('Failed to reload player', error)
+                // notificationStore.setGeneralServiceNotification('Failed to reload player', error)
                 notificationStore.setToastNotification('Failed to fetch push destinations.', 'error')
             } finally {
                 this.isLoadingDestinations = false // Stop loading regardless of outcome
@@ -290,7 +290,8 @@ export const useGoLiveStore = defineStore('goLiveStore', {
                 this.isRecording = response.data.isRecording || false
             } catch (error) {
                 // console.error(error);
-                notificationStore.setGeneralServiceNotification('Error Fetching Push Destinations', error)
+                // notificationStore.setGeneralServiceNotification('Error Fetching Push Destinations', error)
+                notificationStore.setToastNotification('Failed to fetch push destinations.', 'error')
             } finally {
                 this.isLoadingDestinations = false // Stop loading regardless of outcome
             }

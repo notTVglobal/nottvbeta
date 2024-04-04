@@ -3,6 +3,12 @@
 Last Update: April 3, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.7.47
+April 3, 2024
+* Remove Toast Notifications for 'Push Destinations Updated' and 'Stream Info Loaded'
+* Updated Terms of Service
+* Update error pages
+
 ## v0.8.7.46
 April 3, 2024
 * Hot fix: 'full_push_uri' column type changed to text. To fix 500 error.

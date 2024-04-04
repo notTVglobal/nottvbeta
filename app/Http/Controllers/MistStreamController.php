@@ -8,12 +8,15 @@ use App\Jobs\RemoveMistStreamJob;
 use App\Models\Channel;
 use App\Models\MistStream;
 use App\Services\MistServer\MistServerService;
+use Illuminate\Bus\Batch;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
+use Throwable;
 
 class MistStreamController extends Controller {
 
@@ -134,36 +137,69 @@ class MistStreamController extends Controller {
   }
 
 
-
-  public function restoreAllStreams() {
+  /**
+   * @throws Throwable
+   */
+  public function restoreAllStreams(): \Illuminate\Http\JsonResponse {
     // Retrieve all Mist Streams from the database
     $mistStreams = MistStream::all();
 
-    foreach ($mistStreams as $stream) {
-      // Prepare the data for dispatching the job
+    $jobs = $mistStreams->map(function ($stream) {
       $streamData = [
           'name'         => $stream->name,
           'source'       => $stream->source,
           'mime_type'    => $stream->mime_type,
           'comment'      => $stream->comment ?? '',
           'metadata'     => $stream->metadata ?? [], // Assuming 'metadata' is stored as an associative array and can be directly used
-        // Add 'id' and 'originalName' if needed by the job for processing
           'id'           => $stream->id,
           'originalName' => $stream->original_name ?? $stream->name,
       ];
 
-      // Directly dispatch the job without going through the request validation
-      try {
-        AddOrUpdateMistStreamJob::dispatch($streamData, $stream->name);
-      } catch (\Exception $e) {
-        Log::error('Failed to restore Mist Stream: ' . $stream->name, [
-            'exception' => $e->getMessage(),
-        ]);
-        // Optionally, add more error handling here
-      }
-    }
+      return new AddOrUpdateMistStreamJob($streamData, $stream->name);
+    })->toArray();
+
+    // Dispatch the array of jobs as a batch
+    Bus::batch($jobs)
+        ->then(function (Batch $batch) {
+          // This callback is executed when the batch completes successfully.
+          Log::info('All Mist Stream jobs have been processed successfully.');
+        })
+        ->catch(function (Batch $batch, Throwable $e) {
+          // This callback is executed if a job within the batch fails.
+          Log::error('A job within the batch failed.', ['exception' => $e->getMessage()]);
+        })
+        ->finally(function (Batch $batch) {
+          // This callback is executed regardless of the batch's success or failure.
+          Log::info('The batch processing is either complete or has failed.');
+        })
+        ->dispatch();
 
     return response()->json(['message' => 'All Mist Streams have been attempted to restore. Check logs for any errors.']);
+
+//    foreach ($mistStreams as $stream) {
+//      // Prepare the data for dispatching the job
+//      $streamData = [
+//          'name'         => $stream->name,
+//          'source'       => $stream->source,
+//          'mime_type'    => $stream->mime_type,
+//          'comment'      => $stream->comment ?? '',
+//          'metadata'     => $stream->metadata ?? [], // Assuming 'metadata' is stored as an associative array and can be directly used
+//        // Add 'id' and 'originalName' if needed by the job for processing
+//          'id'           => $stream->id,
+//          'originalName' => $stream->original_name ?? $stream->name,
+//      ];
+//
+//      // Directly dispatch the job without going through the request validation
+//      try {
+//        AddOrUpdateMistStreamJob::dispatch($streamData, $stream->name);
+//      } catch (\Exception $e) {
+//        Log::error('Failed to restore Mist Stream: ' . $stream->name, [
+//            'exception' => $e->getMessage(),
+//        ]);
+//        // Optionally, add more error handling here
+//      }
+//    }
+
   }
 
 

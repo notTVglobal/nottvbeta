@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\MistStream;
 use App\Services\MistServer\MistServerService;
+use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -13,7 +14,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 
 class AddOrUpdateMistStreamJob implements ShouldQueue {
-  use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+  use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, Batchable;
 
   // for production
 //  public int $timeout = 60;
