@@ -27,3 +27,4 @@
 </article>
 </body>
 </html>
+<?php /**PATH /var/www/html/resources/views/errors/503.blade.php ENDPATH**/ ?>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Error - The notTV Team')</title>
+    <title><?php echo $__env->yieldContent('title', 'Error - The notTV Team'); ?></title>
     <style>
         body { text-align: center; padding: 50px; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
         .logo { margin-bottom: 40px; }
@@ -13,13 +13,14 @@
 <body>
 <div class="content">
     <div class="logo">
-{{--        <img src="/path-to-your-logo.png" alt="notTV Logo" width="200">--}}
+
         <a href="/"><img src="https://not.tv/storage/images/logo_black_311.png" class="w-full" alt="notTV Logo"></a>
 
     </div>
     <div class="message">
-        @yield('message')
+        <?php echo $__env->yieldContent('message'); ?>
     </div>
 </div>
 </body>
 </html>
+<?php /**PATH /var/www/html/resources/views/errors/layout.blade.php ENDPATH**/ ?>
