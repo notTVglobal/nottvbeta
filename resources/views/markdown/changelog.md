@@ -1,7 +1,15 @@
 # not.tv Changelog
 
-Last Update: April 1, 2024\
+Last Update: April 3, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.8.7.46
+April 3, 2024
+* Hot fix: 'full_push_uri' column type changed to text. To fix 500 error.
+
+## v0.8.7.45
+April 1, 2024
+* Update Whitepaper
 
 ## v0.8.7.44
 April 1, 2024
