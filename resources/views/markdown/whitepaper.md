@@ -7,7 +7,7 @@ Last Update: January 14, 2023<br/>Travis Michael Cross
 ## Abstract
 The notTV project represents a groundbreaking venture in the media landscape, aiming to deliver a unique blend of community-driven content creation, decentralized governance, and innovative technology application. At its core, notTV integrates a Digital Autonomous Cooperative (DAC) model built on blockchain technology, fostering a democratic, transparent, and equitable platform for media creators, consumers, and participants.
 
-This white paper outlines notTV's vision of revolutionizing the media sector by empowering local voices and ensuring content authenticity and diversity. Leveraging the Open Source DAC Blockchain, notTV addresses critical challenges in media such as copyright verification, content management, and equitable distribution of rewards. The integration of Snapshot Labs’ decentralized voting tools further enhances notTV's commitment to community-led decision-making and transparent governance.
+This white paper outlines notTV's vision of revolutionizing the media sector by empowering local voices and ensuring content authenticity and diversity. Leveraging the DAC Blockchain, notTV addresses critical challenges in media such as copyright verification, content management, and equitable distribution of rewards. The integration of Snapshot Labs’ decentralized voting tools further enhances notTV's commitment to community-led decision-making and transparent governance.
 
 notTV stands distinct in the digital media realm by prioritizing people over technology. While embracing technological advancements like AI, notTV ensures these tools supplement human creativity rather than dominate it. This human-centric approach, combined with a focus on high-vibrating content and ethical journalism, sets notTV apart as a platform that not only entertains but also educates and empowers.
 
@@ -26,7 +26,7 @@ The notTV project is more than a media platform; it’s a movement towards a mor
   * Blockchain, NFTs
   * DAO and DAC
   * SaaS and PaaS
-  * Open-source
+  * Open-Source Building Blocks
   * Broadcast quality
   * Incentives for creators
   * Collaboration and Management
