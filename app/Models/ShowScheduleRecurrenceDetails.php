@@ -16,13 +16,28 @@ class ShowScheduleRecurrenceDetails extends Model
       'duration_minutes', // int Duration of the recurrence in minutes
       'start_time', // Start time of the recurrence
       'start_date', // Optional start date for the recurrence period
-      'end_time', // Optional end date for the recurrence period
+      'end_date', // Optional end date for the recurrence period
+      'timezone',
+      'monday',
+      'tuesday',
+      'wednesday',
+      'thursday',
+      'friday',
+      'saturday',
+      'sunday',
   ];
 
   protected $casts = [
       'days_of_week' => 'array',
       'start_date' => 'date',
-      'end_time' => 'date',
+      'end_date' => 'date',
+      'monday' => 'boolean',
+      'tuesday' => 'boolean',
+      'wednesday' => 'boolean',
+      'thursday' => 'boolean',
+      'friday' => 'boolean',
+      'saturday' => 'boolean',
+      'sunday' => 'boolean',
     // other casts
   ];
 

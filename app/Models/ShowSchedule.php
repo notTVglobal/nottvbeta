@@ -21,6 +21,7 @@ class ShowSchedule extends Model {
       'duration_minutes',
       'start_time',
       'end_time',
+      'timezone',
   ];
 
   protected $casts = [

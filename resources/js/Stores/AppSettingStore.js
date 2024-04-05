@@ -149,7 +149,11 @@ export const useAppSettingStore = defineStore('appSettingStore', {
 
         toggleOtt(num) {
             const userStore = useUserStore();
-            this.ott = num === this.ott && !this.fullPage ? 1 : num;
+            if (userStore.isMobile || window.innerWidth < 1024) {
+                this.ott = num === this.ott && !this.fullPage ? 0 : num;
+            } else {
+                this.ott = num === this.ott && !this.fullPage ? 1 : num;
+            }
 
             // Handling the visibility of ottSlot.one and ottSlot.two
             this.osdSlot.a = this.fullPage && this.ott === 0;
@@ -163,8 +167,9 @@ export const useAppSettingStore = defineStore('appSettingStore', {
             } else {
                 // Assuming default behavior for non-fullPage state is required here,
                 // adjust as necessary based on additional context.
+
                 this.showOttButtons = true;
-                if (userStore.isMobile) {
+                if (userStore.isMobile || window.innerWidth < 1024) {
                     this.osd = this.ott !== 0;
                 }
             }

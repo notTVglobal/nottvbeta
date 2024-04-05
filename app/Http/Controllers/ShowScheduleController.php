@@ -67,6 +67,10 @@ class ShowScheduleController extends Controller {
         ->setTimezone('UTC')
         ->toDateTimeString();
 
+    // TODO: Need to convert the $overlappingSchedules below into UTC time and then compare to the
+    // $formattedStartDate and $formattedEndDate
+    // this doesn't take into account time changes.. so I think we should just do the prioritization
+    // when we add the show to the schedule on the frontend based on the created_at of the ShowSchedule object.
     // Query for overlapping schedules
     $overlappingSchedules = ShowSchedule::where(function ($query) use ($formattedStartDate, $formattedEndDate) {
       $query->whereBetween('start_time', [$formattedStartDate, $formattedEndDate])
@@ -85,14 +89,31 @@ class ShowScheduleController extends Controller {
     // Recurring schedule specific data handling
     $recurrenceDetailsId = null;
     if ($scheduleType === 'recurring') {
+      $daysOfWeek = $request->input('daysOfWeek');
+
       $recurrenceDetailsData = [
           'frequency' => 'weekly', // Adjust based on your requirements
           'days_of_week' => json_encode($request->input('daysOfWeek')),
           'duration_minutes' => $request->input('duration'),
-          'start_time' => Carbon::parse($formattedStartDate)->format('H:i:s'),
-          'start_date' => $formattedStartDate,
-          'end_date' => $formattedEndDate,
+          'start_time' => Carbon::parse($request->input('startDate'))->format('H:i:s'),
+          'start_date' => $request->input('startDate'),
+          'end_date' => $request->input('endDate'),
+          'timezone' => $request->input('timezone'),
       ];
+
+      // Initialize all days to false
+      $allDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+      foreach ($allDays as $day) {
+        $recurrenceDetailsData[$day] = false;
+      }
+
+      // Set true for the days present in the JSON array
+      foreach ($daysOfWeek as $day) {
+        $dayLower = strtolower($day); // Ensure lowercase to match column names exactly
+        if (in_array($dayLower, $allDays)) {
+          $recurrenceDetailsData[$dayLower] = true;
+        }
+      }
 
       // Create ShowScheduleRecurrenceDetails and capture the ID
       $recurrenceDetails = ShowScheduleRecurrenceDetails::create($recurrenceDetailsData);
@@ -119,8 +140,9 @@ class ShowScheduleController extends Controller {
         'status' => 'scheduled',
         'priority' => $newPriority,
         'duration_minutes' => $request->input('duration'),
-        'start_time' => $formattedStartDate,
-        'end_time' => $formattedEndDate,
+        'start_time' => $request->input('startDate'),
+        'end_time' => $request->input('endDate'),
+        'timezone' => $request->input('timezone'),
     ];
 
     // Create ShowSchedule linked to the determined content
@@ -433,9 +455,37 @@ class ShowScheduleController extends Controller {
     $daysOfWeek = json_decode($recurrenceDetails->days_of_week, true);
     $instances = [];
 
-    // Convert start_date and end_date to Carbon instances, considering null values
-    $recurrenceStartDate = $recurrenceDetails->start_date ? new Carbon($recurrenceDetails->start_date) : null;
-    $recurrenceEndDate = $recurrenceDetails->end_date ? new Carbon($recurrenceDetails->end_date) : null;
+//    // Convert start_date and end_date to Carbon instances, considering null values
+//    $recurrenceStartDate = $recurrenceDetails->start_date ? new Carbon($recurrenceDetails->start_date) : null;
+//    $recurrenceEndDate = $recurrenceDetails->end_date ? new Carbon($recurrenceDetails->end_date) : null;
+
+
+    // Assuming $recurrenceDetails->start_date and $recurrenceDetails->end_date
+// are in the format 'Y-m-d' and the timezone is specified in $recurrenceDetails->timezone
+
+// Check if start_date is provided and create a Carbon instance with the specific timezone
+    $recurrenceStartDate = $recurrenceDetails->start_date
+        ? Carbon::createFromFormat('Y-m-d', $recurrenceDetails->start_date, $recurrenceDetails->timezone)
+        : null;
+
+// Check if end_date is provided and create a Carbon instance in the same way
+    $recurrenceEndDate = $recurrenceDetails->end_date
+        ? Carbon::createFromFormat('Y-m-d', $recurrenceDetails->end_date, $recurrenceDetails->timezone)
+        : null;
+
+// Now, if the dates are not null, convert them to UTC
+    if ($recurrenceStartDate) {
+      $recurrenceStartDate->setTimezone('UTC');
+    }
+
+    if ($recurrenceEndDate) {
+      $recurrenceEndDate->setTimezone('UTC');
+    }
+
+    Log::debug('recurrence start: ' . $recurrenceStartDate);
+    Log::debug('recurrence end: ' . $recurrenceEndDate);
+
+
 
     $period = new \DatePeriod($startTime, new \DateInterval('P1D'), $endTime);
     foreach ($period as $date) {

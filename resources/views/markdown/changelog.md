@@ -1,13 +1,21 @@
 # not.tv Changelog
 
-Last Update: April 3, 2024\
+Last Update: April 5, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.8.7.48
+April 5, 2024
+* Create dedicated cloud folder for video uploads that are Creator user video uploads
+* Mount Spaces to Mistserver to test creating streams from S3
+* Add new cloud_private_folder as database column to AppSettings and Videos
 
 ## v0.8.7.47
 April 3, 2024
 * Remove Toast Notifications for 'Push Destinations Updated' and 'Stream Info Loaded'
 * Updated Terms of Service
 * Update error pages
+* Team Leader, Managers and Show Runners can now change the Published Date on Show Episodes. (This will be temporary up until the blockchain registration comes into effect)
+* Adjusted Add Show To Schedule, must be 24 hours in the future (not just tomorrow or later). This is to ensure time for promoting shows on notTV.
 
 ## v0.8.7.46
 April 3, 2024

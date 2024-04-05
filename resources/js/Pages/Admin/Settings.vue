@@ -276,6 +276,30 @@
 
           <div class="mb-6">
             <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"
+                   for="cloud_folder"
+            >
+              CLOUD PRIVATE FOLDER
+            </label>
+
+            <div class="flex flex-row">
+              <span class="pt-2 mr-2">/ </span>
+              <input v-model="form.cloud_private_folder"
+                     class="border border-gray-400 p-2 w-full rounded-lg text-black"
+                     type="text"
+                     name="cloud_private_folder"
+                     id="cloud_private_folder"
+              >
+            </div>
+            <span
+                class="text-xs">NOTE: The forward slash is already entered in the backend. Just type the folder name.</span>
+                <span class="text-xs">EXTRA NOTE: This folder is where creator video uploads get stored from the Video Upload Page.</span>
+
+            <div v-if="form.errors.cloud_private_folder" v-text="form.errors.cloud_private_folder"
+                 class="text-xs text-red-600 mt-1"></div>
+          </div>
+
+          <div class="mb-6">
+            <label class="block mb-2 uppercase font-bold text-xs text-gray-700 dark:text-gray-300"
                    for="mist_server_api_url"
             >
               MIST SERVER URI
@@ -672,6 +696,7 @@ let props = defineProps({
   default_country: Number,
   cdn_endpoint: String,
   cloud_folder: String,
+  cloud_private_folder: String,
   first_play_video_source: String,
   first_play_video_source_type: String,
   first_play_video_name: String,
@@ -693,6 +718,7 @@ let form = useForm({
   default_country: props.default_country,
   cdn_endpoint: props.cdn_endpoint,
   cloud_folder: props.cloud_folder,
+  cloud_private_folder: props.cloud_private_folder,
   first_play_video_source: props.first_play_video_source,
   first_play_video_source_type: props.first_play_video_source_type,
   first_play_video_name: props.first_play_video_name,

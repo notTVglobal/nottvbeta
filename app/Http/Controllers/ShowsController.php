@@ -720,7 +720,7 @@ class ShowsController extends Controller {
 ////////////  MANAGE
 ////////////////////
 
-  public function manage(Show $show) {
+  public function manage(Show $show): \Inertia\Response {
     // Eager load related entities for the Show model
     $show->load(['user', 'image', 'appSetting', 'category', 'subCategory', 'showRunner.user', 'team', 'schedules.showScheduleRecurrenceDetails', 'recordings']);
 
@@ -736,14 +736,23 @@ class ShowsController extends Controller {
     // Determine if the show is actively scheduled or has a schedule in the future
     // And compile schedule details
     $isScheduled = $show->schedules->contains(function ($schedule) use ($now, &$scheduleDetails) {
-      $isActiveOrFuture = $schedule->start_time >= $now || ($schedule->start_time <= $now && $schedule->end_time >= $now);
+      $isActiveOrFuture = $schedule->start_time >= $now || ($schedule->end_time >= $now);
+
+      // Assuming $schedule->start_time is a string in 'Y-m-d H:i:s' format
+      // First, parse the start_time with the schedule's timezone
+      $startDateTime = Carbon::createFromFormat('Y-m-d H:i:s', $schedule->start_time, $schedule->timezone);
+
+      // Then, convert the datetime to UTC
+      $startDateTimeUtc = $startDateTime->setTimezone('UTC');
+
       if ($isActiveOrFuture) {
         $detail = [
             'contentType'     => $schedule->content_type,
             'contentId'       => $schedule->content_id,
             'type'            => $schedule->recurrence_flag ? 'recurring' : 'one-time',
-            'startDateTime'   => $schedule->start_time,
+            'startDateTime'   => $startDateTimeUtc->toDateTimeString(), // Converted to UTC
             'durationMinutes' => $schedule->duration_minutes,
+            'timezone'        => $schedule->timezone,
         ];
 
         if ($schedule->recurrence_flag) {
@@ -768,7 +777,25 @@ class ShowsController extends Controller {
             // If none of the specific combinations match, use the sorted list directly
             $detail['daysOfWeek'] = implode(', ', $daysOfWeek);
           }
-          $detail['startTime'] = $schedule->showScheduleRecurrenceDetails ? $schedule->showScheduleRecurrenceDetails->start_time : null;
+
+          // Combine start_date and start_time to form a complete datetime string
+//          $dateTimeString = $schedule->showScheduleRecurrenceDetails->start_date;
+//          $timezone = $schedule->showScheduleRecurrenceDetails->timezone;
+          // Parsing the datetime string in the specified timezone, then converting to UTC
+//          $dateTimeUtc = Carbon::createFromFormat('Y-m-d H:i:s', $dateTimeString, $timezone)
+//              ->setTimezone('UTC');
+
+          // Log for debugging
+//          Log::debug('DateTime in UTC:', ['dateTimeUtc' => $dateTimeUtc->toIso8601String()]);
+
+          // Prepare the full UTC datetime string in ISO 8601 format for frontend consumption
+//          $detail['startDateTimeIsoUtc'] = $dateTimeUtc->toIso8601String();
+          $detail['startDateTimeIsoUtc'] = $startDateTimeUtc;
+
+          // If you need to retain the original 'startTime' for any reason, keep this line as is
+//          $detail['startTime'] = $schedule->showScheduleRecurrenceDetails ? $schedule->showScheduleRecurrenceDetails->start_time : null;
+//          Log::debug('Original StartTime:', ['startTime' => $detail['startTime']]);
+
         }
 
         $scheduleDetails[] = $detail;
