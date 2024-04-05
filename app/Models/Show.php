@@ -119,8 +119,7 @@ class Show extends Model
     return $this->morphMany(ShowSchedule::class, 'content');
   }
 
-  public function recordings()
-  {
+  public function recordings(): \Illuminate\Database\Eloquent\Relations\MorphMany {
     return $this->morphMany(Recording::class, 'model');
   }
 

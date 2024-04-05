@@ -393,36 +393,38 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
 
         getSourceDetails(source) {
             let videoSrc, videoSourceType
-            console.log('getSourceDetails called with source:', JSON.stringify(source, null, 2));
+            // console.log('getSourceDetails called with source:', JSON.stringify(source, null, 2));
             // Default to 'video/mp4' if type is not specified or is empty
             videoSourceType = source.type || 'video/mp4'
-            console.log(`Determined Video Source Type: ${videoSourceType}`)
+            // console.log(`Determined Video Source Type: ${videoSourceType}`)
 
             if (source.mediaType === 'externalVideo') {
                 // For external videos, use the URL as provided without encoding
-                videoSrc = source.video_url
-                console.log('Using external video source:', videoSrc)
+                // videoSrc = source.video_url
+                // console.log('Using external video source:', videoSrc)
 
             } else if (source.mediaType === 'recording') {
-                console.log('Video is a recording.')
+                // console.log('Video is a recording.')
                 videoSrc = this.mistServerUri + source.recording.source
                 videoSourceType = source.recording.sourceType
-                console.log(videoSrc)
-                console.log(videoSourceType)
+                // console.log(videoSrc)
+                // console.log(videoSourceType)
 
             } else {
-                console.log('CDN Endpoint:', source.cdn_endpoint)
-                console.log('Cloud Folder:', source.cloud_folder)
-                console.log('Folder:', source.folder)
-                console.log('File Name:', source.file_name)
+                // console.log('CDN Endpoint:', source.cdn_endpoint)
+                // console.log('Cloud Folder:', source.cloud_folder)
+                // console.log('Cloud Private Folder:', source.cloud_private_folder)
+                // console.log('Folder:', source.folder)
+                // console.log('File Name:', source.file_name)
                 // For internal videos, construct the URL from its components
                 // Here, we assume the cdn_endpoint, cloud_folder, and folder are correctly formatted
                 // and do not require encoding. Only the file_name might need encoding.
-                const basePath = `${source.cdn_endpoint}${source.cloud_folder}${source.folder}/`
+                // Determine the basePath using cloud_folder or cloud_private_folder
+                const basePath = `${source.cdn_endpoint}${source.cloud_folder ? source.cloud_folder : source.cloud_private_folder}${source.folder}/`;
                 // const encodedFileName = encodeURIComponent(source.file_name);
                 const fileName = source.file_name
                 videoSrc = basePath + fileName
-                console.log('Constructed internal video source:', videoSrc)
+                // console.log('Constructed internal video source:', videoSrc)
                 // If your server or CDN is configured to handle spaces in URLs without %20 encoding
                 // or if the original working URLs did not use standard URL encoding,
                 // you might adjust the encoding strategy here.
@@ -431,7 +433,7 @@ export const useVideoPlayerStore = defineStore('videoPlayerStore', {
                 // videoSrc = basePath + fileNameForUrl;
             }
 
-            console.log(`Final Constructed Video Source: ${videoSrc}, Type: ${videoSourceType}`)
+            // console.log(`Final Constructed Video Source: ${videoSrc}, Type: ${videoSourceType}`)
             return {videoSrc, videoSourceType}
         },
 

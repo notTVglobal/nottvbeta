@@ -37,7 +37,7 @@
                   <template v-else>
                     It recurs on <strong>{{ detail.daysOfWeek }}</strong>
                   </template>
-                  starting at <strong>{{ userStore.formatTimeInUserTimezone(detail.startTime) }}&nbsp;{{userStore.timezoneAbbreviation}}</strong> with each occurrence lasting <strong>{{ detail.durationMinutes }} minutes</strong>.
+                  starting at <strong>{{ userStore.formatTimeFromDateInUserTimezone(detail.startDateTimeIsoUtc) }}&nbsp;{{userStore.timezoneAbbreviation}}</strong> with each occurrence lasting <strong>{{ detail.durationMinutes }} minutes</strong>.
                 </div>
 
               </div>

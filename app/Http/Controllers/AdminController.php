@@ -63,6 +63,7 @@ class AdminController extends Controller {
         'default_country'              => $settings->country_id,
         'cdn_endpoint'                 => $settings->cdn_endpoint,
         'cloud_folder'                 => str_replace('/', '', $settings->cloud_folder),
+        'cloud_private_folder'         => str_replace('/', '', $settings->cloud_private_folder),
         'first_play_video_source'      => $settings->first_play_video_source,
         'first_play_video_source_type' => $settings->first_play_video_source_type,
         'first_play_video_name'        => $settings->first_play_video_name,
@@ -71,7 +72,7 @@ class AdminController extends Controller {
         'mist_server_uri'              => $settings->mist_server_uri,
         'mist_server_rtmp_uri'         => $settings->mist_server_rtmp_uri,
         'public_stats_url'             => $settings->public_stats_url,
-        'currentSection'              => $queryParam,
+        'currentSection'               => $queryParam,
 //            'mist_server_api_url' => $settings->mist_server_api_url,
 //            'mist_server_username' => $settings->mist_server_username,
 //            'mist_server_password' => $decryptedPassword ?? null,
@@ -84,6 +85,7 @@ class AdminController extends Controller {
         'default_country'      => 'nullable|integer',
         'cdn_endpoint'         => 'nullable|string',
         'cloud_folder'         => 'nullable|string',
+        'cloud_private_folder' => 'nullable|string',
         'mist_server_uri'      => 'nullable|url',
         'mist_server_rtmp_uri' => 'nullable|string',
         'public_stats_url'     => 'nullable|url',
@@ -93,6 +95,7 @@ class AdminController extends Controller {
     $settings->country_id = $request->default_country;
     $settings->cdn_endpoint = $request->cdn_endpoint;
     $settings->cloud_folder = '/' . $request->cloud_folder;
+    $settings->cloud_private_folder = '/' . $request->cloud_private_folder;
     $settings->mist_server_uri = rtrim($request->mist_server_uri, '/') . '/';
     $settings->mist_server_rtmp_uri = rtrim($request->mist_server_rtmp_uri, '/') . '/';
     $settings->public_stats_url = $request->public_stats_url;

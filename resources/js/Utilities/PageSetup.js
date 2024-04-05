@@ -13,10 +13,10 @@ export function usePageSetup(pageName) {
     appSettingStore.showFlashMessage = true
     appSettingStore.pageIsHidden = false
 
-    if (userStore.isMobile) {
-        appSettingStore.ott = 0
+    if (userStore.isMobile || window.innerWidth < 1024) {
+        appSettingStore.ott = 0;
     } else {
-        appSettingStore.ott = 1
+        appSettingStore.ott = 1;
     }
 
     videoPlayerStore.makeVideoTopRight()

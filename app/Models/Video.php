@@ -34,6 +34,7 @@ class Video extends Model {
       'access_level',
       'app_setting_id',
       'cloud_folder',
+      'cloud_private_folder',
       'folder',
       'storage_location',
       'temp_path',

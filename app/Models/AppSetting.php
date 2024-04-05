@@ -14,6 +14,7 @@ class AppSetting extends Model {
       'default_country',
       'cdn_endpoint',
       'cloud_folder',
+      'cloud_private_folder',
       'first_play_settings',
       'first_play_video_source',
       'first_play_video_source_type',

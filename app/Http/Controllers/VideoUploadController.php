@@ -87,6 +87,7 @@ class VideoUploadController extends Controller
                 'folder' => $video->folder,
                 'cdn_endpoint' => $video->appSetting->cdn_endpoint,
                 'cloud_folder' => $video->cloud_folder,
+                'cloud_private_folder' => $video->cloud_private_folder,
                 'upload_status' => $video->upload_status,
                 'category' => $video->category,
                 'type' => $video->type,
@@ -129,6 +130,7 @@ class VideoUploadController extends Controller
                     'folder' => $video->folder,
                     'cdn_endpoint' => $video->appSetting->cdn_endpoint,
                     'cloud_folder' => $video->cloud_folder,
+                    'cloud_private_folder' => $video->cloud_private_folder,
                     'upload_status' => $video->upload_status,
                     'category' => $video->category,
                     'type' => $video->type,
@@ -248,23 +250,30 @@ class VideoUploadController extends Controller
 //            $showEpisode = ShowEpisode::where('id', $showEpisodeId)->get();
             Video::query()->where('show_episodes_id', $showEpisodeId)
                 ->update(['show_episodes_id' => null]);
+          $cloud_folder = DB::table('app_settings')->where('id', 1)->pluck('cloud_folder')->first();
         }
         else if ($movieId !== null) {
 //            Log::info('Video upload Movie ID ' . $movieId);
 //            $movie = Movie::where('id', $movieId)->get();
             Video::query()->where('movies_id', $movieId)
                 ->update(['movies_id' => null]);
+          $cloud_folder = DB::table('app_settings')->where('id', 1)->pluck('cloud_folder')->first();
         }
         else if ($movieTrailerId !== null) {
 //            Log::info('Video upload Movie Trailer ID ' . $movieTrailerId);
 //            $movieTrailer = MovieTrailer::where('id', $movieTrailerId)->get();
             Video::query()->where('movie_trailers_id', $movieTrailerId)
                 ->update(['movie_trailers_id' => null]);
+          $cloud_folder = DB::table('app_settings')->where('id', 1)->pluck('cloud_folder')->first();
+        } else {
+          // if the upload is from the creator user's video upload page its considered private.
+          // TODO: This function will need to be updated and made more efficient to handle
+          // various use cases including upload OtherContent, NewsStory videos and BonusContent videos, etc.
+          $cloud_private_folder = DB::table('app_settings')->where('id', 1)->pluck('cloud_private_folder')->first();
         }
 
         $path = storage_path('app/temp-videos');
         $fileName = $this->createFilename($file);
-        $cloud_folder = DB::table('app_settings')->where('id', 1)->pluck('cloud_folder')->first();
         $folder = Carbon::now()->format('/Y/m').'/videos';
 
 //        $mime = str_replace('/', '-', $file->getMimeType());
@@ -295,7 +304,8 @@ class VideoUploadController extends Controller
         $this->video->size = $contents->getSize();
         $this->video->type = $mime;
         $this->video->folder = $folder;
-        $this->video->cloud_folder = $cloud_folder;
+        $this->video->cloud_folder = $cloud_folder ?? null;
+        $this->video->cloud_private_folder = $cloud_private_folder ?? null; // changed video uploads to use cloud_private_folder, the video table is still cloud_folder
         $this->video->show_episodes_id = $showEpisodeId;
         $this->video->movies_id = $movieId;
 //        $video->movie_trailers_id = $movieTrailerId;

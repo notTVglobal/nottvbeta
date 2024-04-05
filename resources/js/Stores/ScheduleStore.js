@@ -232,7 +232,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
                 // Fallback to response timezone if userStore.timezone is not set
                 const timezone = userStore.timezone || response.data.userTimezone; // Additional fallback to 'UTC'
 
-                this.weeklyContent = convertScheduleToTimezone(response.data, timezone)
+                this.weeklyContent = [...this.weeklyContent, convertScheduleToTimezone(response.data, timezone)]
             } catch (error) {
                 console.error('Failed to preload weekly content:', error)
             }

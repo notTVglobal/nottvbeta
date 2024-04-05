@@ -168,7 +168,7 @@ const playVideo = (video) => {
       nowPlayingStore.activeMedia.details.primaryName = props.video.name
       nowPlayingStore.activeMedia.details.primaryUrl = 'movies/' + video.movie.slug
     }
-    console.log('load new source from file')
+    // console.log('load new source from file')
     // videoPlayerStore.loadNewSourceFromFile(video)
     videoPlayerStore.prepareForNewVideoSource(video)
     nowPlayingStore.activeMedia.details.description = 'Filename: ' + video.file_name
