@@ -11,6 +11,8 @@ class NewsProvince extends Model
 
   protected $fillable = [
       'name',
+      'slug',
+      'description',
       'abbreviation',
       'type',
       'country_id',
@@ -28,6 +30,9 @@ class NewsProvince extends Model
       'dst_observed'
   ];
 
+  public function getRouteKeyName(): string {
+    return 'slug';
+  }
 
   public function cities() {
     return $this->hasMany(NewsCity::class);

@@ -13,6 +13,7 @@ use App\Http\Controllers\InviteCodeController;
 use App\Http\Controllers\MistServerController;
 use App\Http\Controllers\MistStreamController;
 use App\Http\Controllers\MistStreamPushDestinationController;
+use App\Http\Controllers\NewsFederalElectoralDistrictController;
 use App\Http\Controllers\NewsPersonRoleController;
 use App\Http\Controllers\NewsRssArchiveController;
 use App\Http\Controllers\NewsRssFeedItemTempController;
@@ -467,6 +468,12 @@ Route::middleware([
   Route::patch('newsStoryChangeNewsStoryStatus', [NewsStoryController::class, 'changeStatus'])->name('news.story.changeStatus');
 
   Route::get('/api/news-locations', [NewsStoryController::class, 'fetchNewsLocations']);
+
+// News Districts
+/////////////////
+
+  Route::get('/news-districts/', [NewsFederalElectoralDistrictController::class, 'index'])
+    ->name('newsDistricts.index');
 
 
 // NewsPerson

@@ -6,7 +6,7 @@
     <PublicResponsiveNavigationMenu v-if="!userStore.loggedIn" />
     <div class="h-screen bg-gray-900 flex flex-col gap-y-3 place-self-center text-white px-5">
       <PublicNewsNavigationButtons :can="can"/>
-      <Breadcrumbs :breadcrumbs="[{ text: 'News', to: '/news' }, { text: 'Reporters', to: '' }]" />
+      <Breadcrumbs :breadcrumbs="[{ text: 'Reporters', to: '' }]" />
 
       <div class="text-center text-3xl font-semibold tracking-widest uppercase text-gray-50">News Reporters</div>
 

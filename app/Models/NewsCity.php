@@ -11,6 +11,8 @@ class NewsCity extends Model
 
   protected $fillable = [
       'name', // Name of the city
+      'slug',
+      'description',
       'type', // City, Town, etc.
       'province_id', // Foreign key to NewsProvince
       'country_id', // Foreign key to NewsCountry
@@ -30,6 +32,10 @@ class NewsCity extends Model
       'gmt_offset_dst',
       'dst_observed'
   ];
+
+  public function getRouteKeyName(): string {
+    return 'slug';
+  }
 
   public function province() {
     return $this->belongsTo(NewsProvince::class);

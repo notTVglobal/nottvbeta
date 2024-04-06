@@ -11,8 +11,13 @@ class NewsCategory extends Model
 
     protected $fillable = [
         'name',
+        'slug',
         'description'
     ];
+
+  public function getRouteKeyName(): string {
+    return 'slug';
+  }
 
     public function newsStories()
     {

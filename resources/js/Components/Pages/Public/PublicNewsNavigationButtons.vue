@@ -1,17 +1,11 @@
 <template>
   <div class="hidden md:block flex py-10 px-16 justify-center">
     <div class="grid grid-cols-2 md:grid-cols-5 gap-4 justify-center">
-     <PublicNavLink
-         @click="() => Inertia.visit('/news/reporters')"
-         :active="appSettingStore.currentPage === 'news.reporters'"
-          class="min-w-fit">
-       Reporters
-     </PublicNavLink>
       <PublicNavLink
           @click="() => Inertia.visit('/news')"
           :active="appSettingStore.currentPage === 'news'"
           class="min-w-fit">
-        Stories
+        News Stories
       </PublicNavLink>
       <PublicNavLink
           disabled
@@ -28,17 +22,16 @@
         Cities
       </PublicNavLink>
       <PublicNavLink
-          disabled
-          @click="() => Inertia.visit('/news/regions')"
-          :active="appSettingStore.currentPage === 'news.regions'"
+          @click="() => Inertia.visit('/news-districts')"
+          :active="appSettingStore.currentPage === 'newsDistricts.index'"
           class="min-w-fit">
         Districts
       </PublicNavLink>
       <PublicNavLink
-          v-if="appSettingStore.loggedIn && can.viewNewsroom"
-          @click="() => Inertia.visit('/newsroom')"
-          class="md:col-start-3 min-w-fit bg-yellow-600 hover:bg-yellow-500 text-white"
-      >Newsroom
+          @click="() => Inertia.visit('/news/reporters')"
+          :active="appSettingStore.currentPage === 'news.reporters'"
+          class="min-w-fit">
+        Reporters
       </PublicNavLink>
     </div>
   </div>

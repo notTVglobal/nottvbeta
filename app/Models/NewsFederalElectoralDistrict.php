@@ -10,6 +10,8 @@ class NewsFederalElectoralDistrict extends Model {
 
   protected $fillable = [
       'name',
+      'slug',
+      'description',
       'province_id',
       'country_id',
       'population',
@@ -26,6 +28,10 @@ class NewsFederalElectoralDistrict extends Model {
       'created_at',
       'updated_at'
   ];
+
+  public function getRouteKeyName(): string {
+    return 'slug';
+  }
 
   public function province() {
     return $this->belongsTo(NewsProvince::class);
