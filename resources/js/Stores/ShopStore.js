@@ -104,7 +104,9 @@ export const useShopStore = defineStore('shopStore', {
             return this.cart.reduce((acc, item) => acc + item.quantity, 0)
         },
         orderQuantity() {
-            return this.order.products.length
+            if(this.order.products) {
+                return this.order.products.length
+            }
         },
         cartTotal() {
             let price = this.cart.reduce((acc, item) => acc + (item.price * item.quantity), 0)

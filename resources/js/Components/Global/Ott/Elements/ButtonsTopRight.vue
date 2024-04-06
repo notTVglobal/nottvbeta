@@ -45,8 +45,8 @@ const userStore = useUserStore()
 // Access level requirements
 const accessLevels = {
   info: () => true, // All users
-  channels: () => true,
-  playlist: () => true,
+  channels: () => userStore.isSubscriber || userStore.isAdmin,
+  playlist: () => userStore.isVip || userStore.isAdmin,
   chat: () => true, // All users
   filters: () => userStore.isVip || userStore.isAdmin,
 };
@@ -73,7 +73,7 @@ function getClassForSection(section, ottSetting) {
 // Using the function to set classes
 const infoClass = computed(() => getClassForSection('info', 1));
 const channelsClass = computed(() => getClassForSection('channels', 2));
-const playlistClass = computed(() => getClassForSection('playlist', 3));
+// const playlistClass = computed(() => getClassForSection('playlist', 3));
 const chatClass = computed(() => getClassForSection('chat', 4));
 const filtersClass = computed(() => getClassForSection('filters', 5));
 
@@ -92,15 +92,15 @@ const filtersClass = computed(() => getClassForSection('filters', 5));
 //   'bg-green-700': appSettingStore.ott === 2 && userIsSubscriber(),
 //   'bg-green-900 hover:bg-green-700': appSettingStore.ott !== 2 && userIsSubscriber(),
 // }))
-//
-// const playlistClass = computed(() => ({
-//   // user is !subscriber
-//   'bg-gray-700': appSettingStore.ott === 3 && userNeedsToUpgrade(),
-//   'bg-gray-900 hover:bg-gray-700': appSettingStore.ott !== 3 && userNeedsToUpgrade(),
-//   // user is subscriber
-//   'bg-orange-700': appSettingStore.ott === 3 && userIsSubscriber(),
-//   'bg-orange-900 hover:bg-orange-700': appSettingStore.ott !== 3 && userIsSubscriber(),
-// }))
+
+const playlistClass = computed(() => ({
+  // user is !subscriber
+  'bg-gray-700': appSettingStore.ott === 3 && userNeedsToUpgrade(),
+  'bg-gray-900 hover:bg-gray-700': appSettingStore.ott !== 3 && userNeedsToUpgrade(),
+  // user is subscriber
+  'bg-orange-700': appSettingStore.ott === 3 && userIsSubscriber(),
+  'bg-orange-900 hover:bg-orange-700': appSettingStore.ott !== 3 && userIsSubscriber(),
+}))
 //
 // const chatClass = computed(() => ({
 //   // all users
@@ -117,16 +117,16 @@ const filtersClass = computed(() => getClassForSection('filters', 5));
 //   'bg-yellow-900 hover:bg-yellow-700': appSettingStore.ott !== 5 && userIsVip(),
 // }))
 //
-// function userNeedsToUpgrade() {
-//   return !(userStore.isSubscriber || userStore.isVip || userStore.isAdmin);
-// }
-//
-// function userIsSubscriber() {
-//   return (userStore.isSubscriber || userStore.isVip || userStore.isAdmin);
-// }
-//
-// function userIsVip() {
-//   return (userStore.isVip || userStore.isAdmin);
-// }
+function userNeedsToUpgrade() {
+  return !(userStore.isSubscriber || userStore.isVip || userStore.isAdmin);
+}
+
+function userIsSubscriber() {
+  return (userStore.isSubscriber || userStore.isVip || userStore.isAdmin);
+}
+
+function userIsVip() {
+  return (userStore.isVip || userStore.isAdmin);
+}
 
 </script>

@@ -37,7 +37,7 @@ const videoPlayerStore = useVideoPlayerStore()
 const userStore = useUserStore()
 
 function upgrade() {
-  Inertia.get('/upgrade')
+  Inertia.get('/contribute/subscription')
 
   appSettingStore.ott = 0
 }

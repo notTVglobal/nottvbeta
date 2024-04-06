@@ -7,47 +7,62 @@
 
       <!--            <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>-->
 
-      <header class="flex justify-between pt-4">
-        <h1 class="text-3xl font-semibold pb-3">Subscription</h1>
+      <header class="flex justify-center pt-4 mt-2 mb-4">
+        <h1 class="text-3xl font-semibold pb-3">
+          <span v-if="shopStore.upgradeSelection === 'yearlyContribution'">Yearly Contribution</span>
+          <span v-if="shopStore.upgradeSelection === 'monthlyContribution'">Monthly Contribution</span>
+        </h1>
       </header>
 
-      <div v-if="shopStore.upgradeSelection===''" class="w-full flex flex-col">
-        <div class="text-xl">Choose a subscription:</div>
-        <div class="mt-2 w-fit">
-          <button @click.prevent="shopStore.upgradeMonthly()">Premium Monthly - $25 / month</button>
-        </div>
-        <div class="mt-2 w-fit">
-          <button @click.prevent="shopStore.upgradeYearly()">Premium Yearly - $250 / year</button>
-        </div>
-        <div class="mt-2 w-fit hidden">
-          <button @click.prevent="shopStore.upgradeForever()">Premium Forever - $999 / one time</button>
-        </div>
-      </div>
 
-      <div class="flex flex-row mt-4 px-8">
-        <div v-if="shopStore.upgradeSelection!==''" class="space-y-2 flex flex-col">
-          <div v-if="shopStore.upgradeSelection==='monthly'">
-            <label for="standard" class="font-semibold">Premium Monthly - $25 / month</label>
-          </div>
-          <div v-if="shopStore.upgradeSelection==='yearly'">
-            <label for="standard" class="font-semibold">Premium Yearly - $250 / year</label>
-          </div>
-          <div v-if="shopStore.upgradeSelection==='forever'">
-            <label for="standard" class="font-semibold">Premium Forever - $999 / one time</label>
-          </div>
+
+      <section id="security-assurance">
+        <div style="text-align: center; margin-bottom: 20px;">
+          <!-- Font Awesome Padlock Icon -->
+          <font-awesome-icon icon="fa-lock" aria-hidden="true" style="font-size: 24px; color: #2c3e50;"/>
         </div>
-        <div v-if="shopStore.upgradeSelection!==''"
-             class="px-2 text-blue-500 hover:text-blue-400 font-semibold hover:underline hover:cursor-pointer"
-             @click="shopStore.changeUpgradeSelection()">(change)
+        <div style="text-align: center; max-width: 600px; margin: auto;">
+          <h2>Your Security, Our Priority</h2>
+          <p>We take your security seriously. All transactions are encrypted and processed through secure payment gateways. Your payment information is never stored on our servers, ensuring your data remains private and protected.</p>
         </div>
-      </div>
+      </section>
+
 
       <div v-show="!shopStore.showPaymentForm" class="mx-auto mt-8 px-12">
         <h2 class="mt-6 mx-auto text-xl font-semibold text-white dark:text-gray-100">Payment form is loading...</h2>
       </div>
 
-      <div class="w-full mx-auto mt-8">
+      <div class="flex flex-col justify-center items-center w-full mx-auto mt-8">
+
+
+        <div v-if="shopStore.upgradeSelection===''" class="mt-6 mb-12 flex flex-col items-center justify-center text-center">
+          <div class="text-xl">Choose a subscription:</div>
+          <div class="mt-2 w-fit">
+            <button @click.prevent="shopStore.monthlyContribution()">Monthly Contribution - $25 / month</button>
+          </div>
+          <div class="mt-2 w-fit">
+            <button @click.prevent="shopStore.yearlyContribution()">Yearly Contribution - $250 / year</button>
+          </div>
+          <div class="mt-2 w-fit">
+            <button @click.prevent="Inertia.visit('/contribute')" class="">👈 Back to Contribute Page</button>
+          </div>
+        </div>
         <h2 class="text-2xl font-semibold text-gray-100 dark:text-gray-100">Payment</h2>
+
+        <div class="flex flex-row justify-center w-full px-8">
+          <div v-if="shopStore.upgradeSelection!==''" class="space-y-2 flex flex-col">
+            <div v-if="shopStore.upgradeSelection==='monthlyContribution'">
+              <label for="standard" class="font-semibold">Monthly Contribution - $25 / month</label>
+            </div>
+            <div v-if="shopStore.upgradeSelection==='yearlyContribution'">
+              <label for="standard" class="font-semibold">Yearly Contribution - $250 / year</label>
+            </div>
+          </div>
+          <div v-if="shopStore.upgradeSelection!==''"
+               class="px-2 text-blue-500 hover:text-blue-400 font-semibold hover:underline hover:cursor-pointer"
+               @click="shopStore.changeUpgradeSelection()">(change)
+          </div>
+        </div>
 
         <form id="payment-form" class="w-full">
           <div id="link-authentication-element" class="mb-2">
@@ -56,15 +71,17 @@
           <div id="payment-element" class="w-full">
             <!--Stripe.js injects the Payment Element-->
           </div>
-
+          <div class="mb-2 text-xs text-gray-300">By clicking ‘Complete Payment’, you agree to our Terms and Conditions and acknowledge our Privacy Policy.</div>
           <button id="submit"
                   class="h-fit bg-blue-600 hover:bg-blue-500 text-white rounded py-2 px-4"
                   @click.prevent="submit()">
             <div class="spinner hidden" id="spinner"></div>
-            <span id="button-text">Pay now</span>
+            <span id="button-text">Complete Payment</span>
           </button>
           <div id="payment-message" class="hidden"></div>
         </form>
+
+        <div>Your payment is secured with SSL encryption.</div>
 
         <!-- {/* Show any error or success messages */}-->
         <div v-if="error" id="payment-error" class="text-red-600 font-semibold w-full my-2"> {{ error }}</div>
@@ -84,6 +101,7 @@ import { useAppSettingStore } from '@/Stores/AppSettingStore'
 import { useShopStore } from '@/Stores/ShopStore'
 import { useForm } from '@inertiajs/inertia-vue3'
 import { loadStripe } from '@stripe/stripe-js'
+import { Inertia } from '@inertiajs/inertia'
 
 usePageSetup('shop/subscribe')
 

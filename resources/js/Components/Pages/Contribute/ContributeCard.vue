@@ -6,13 +6,13 @@
     <!-- Inner Border -->
     <div :class="innerBorderClass" class="absolute -inset-1 rounded-lg opacity-100 blur"></div>
 
-    <div :class="transitionClass" class="relative bg-gray-900 rounded-lg p-6" style="min-height: 350px;">
+    <div :class="[transitionClass, cardBgClass]" class="relative rounded-lg p-6" style="min-height: 350px;">
       <h3 class="text-xl font-semibold text-gray-100"><slot name="title"/></h3>
       <div class="text-yellow-400 my-4">
         <!-- Star Icon -->
         <slot name="icon"/>
       </div>
-      <p class="text-gray-300 mb-6"><slot name="main"/></p>
+      <p class="bg-gray-800 bg-opacity-40 rounded-lg p-2 text-gray-300 mb-6"><slot name="main"/></p>
       <div class="text-center">
         <button @click="payNow(itemSelected)" :class="buttonClass" class="btn text-white py-2 px-4 rounded">
           <slot name="button"/>
@@ -97,6 +97,41 @@ const gradients = {
   },
 };
 
+const bgColors =  {
+  blue: {
+    outerFrom: 'from-blue-900',
+    outerTo: 'to-blue-700',
+    innerFrom: 'from-blue-800',
+    innerTo: 'to-blue-600',
+    buttonBg: 'bg-blue-900',
+    buttonHover: 'hover:bg-blue-950'
+  },
+  purple: {
+    outerFrom: 'from-purple-900',
+    outerTo: 'to-pink-700',
+    innerFrom: 'from-purple-800',
+    innerTo: 'to-pink-600',
+    buttonBg: 'bg-purple-900',
+    buttonHover: 'hover:bg-purple-950'
+  },
+  green: {
+    outerFrom: "from-green-900",
+    outerTo: "to-green-700",
+    innerFrom: "from-green-800",
+    innerTo: "to-green-600",
+    buttonBg: "bg-green-900",
+    buttonHover: "hover:bg-green-950",
+  },
+  orange: {
+    outerFrom: 'from-orange-900',
+    outerTo: 'to-orange-700',
+    innerFrom: 'from-orange-800',
+    innerTo: 'to-orange-600',
+    buttonBg: 'bg-orange-900',
+    buttonHover: 'hover:bg-orange-950',
+  },
+}
+
 // Computed property to dynamically set the class
 const transitionClass = computed(() => {
   return props.animation
@@ -125,4 +160,10 @@ const buttonClass = computed(() => {
     [colorClasses.buttonHover]: true, // Dynamic hover color class
   };
 });
+
+const cardBgClass = computed(() => ({
+  'bg-gradient-to-r': true,
+      [bgColors[props.color].innerFrom]: true,
+      [bgColors[props.color].innerTo]: true,
+}))
 </script>

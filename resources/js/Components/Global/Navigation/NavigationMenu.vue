@@ -60,7 +60,7 @@
                   Movies
                 </JetNavLink>
               </h3>
-              <h3 class="inline-flex items-center relative">
+              <h3 class="hidden inline-flex items-center relative">
                 <JetNavLink
                     v-touch="()=>(route('shop'))"
                     @click.prevent="videoPlayerStore.makeVideoTopRight()"
@@ -75,6 +75,11 @@
 
 
           <div class="flex flex-row space-x-4 pt-2">
+            <div>
+              <div v-if="userStore.isSubscriber && !userStore.isCreator" class="text-fuchsia-700">PREMIUM</div>
+              <div v-if="userStore.isVip" class="text-fuchsia-700">VIP</div>
+              <div v-if="userStore.isAdmin" class="text-red-700">ADMIN</div>
+            </div>
 
             <div class="flex-item align-text-top mt-2 mx-6">
               <NotificationButton/>
@@ -90,7 +95,7 @@
 
             </div>
             <div class="flex-item">
-              <div v-if="!userStore.isSubscriber && !userStore.isVip && !userStore.isAdmin">
+              <div class="mt-2">
                 <PublicNavLink
                     @click.prevent="() => Inertia.visit('/contribute')"
                     :active="appSettingStore.currentPage === 'contribute'">
@@ -107,9 +112,6 @@
 <!--                  </div>-->
 <!--                </JetNavLink>-->
               </div>
-              <div v-if="userStore.isSubscriber && !userStore.isCreator" class="text-fuchsia-700">PREMIUM</div>
-              <div v-if="userStore.isVip" class="text-fuchsia-700">VIP</div>
-              <div v-if="userStore.isAdmin" class="text-red-700">ADMIN</div>
             </div>
             <!-- Settings Dropdown -->
             <div class="relative menuMask w-fit">

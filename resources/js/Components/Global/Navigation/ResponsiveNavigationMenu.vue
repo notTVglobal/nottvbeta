@@ -123,7 +123,7 @@
 <!--            </div>-->
 <!--          </JetResponsiveNavLink>-->
 
-          <div v-if="!userStore.isSubscriber && !userStore.isVip && !userStore.isAdmin"
+          <div
                class="flex flex-row w-full justify-center py-4">
             <PublicNavLink
                 @click="contribute"
@@ -188,7 +188,8 @@
           <JetResponsiveNavLink
               @click="appSettingStore.closeNavDropdown()"
               :href="route('shop')"
-              :active="appSettingStore.currentPage === 'shop'">
+              :active="appSettingStore.currentPage === 'shop'"
+              hidden>
             Shop
           </JetResponsiveNavLink>
 
