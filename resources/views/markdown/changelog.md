@@ -6,6 +6,7 @@ Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 ## v0.8.7.52
 April 6, 2024
 * Minor adjustment to the Login css, width
+* Fix contribution page
 
 ## v0.8.7.51
 April 6, 2024

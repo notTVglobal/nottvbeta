@@ -44,10 +44,10 @@ function payNow(subscription) {
     return
   }
   switch (subscription) {
-    case 'monthly':
+    case 'monthlyContribution':
       shopStore.monthlyContribution();
       break;
-    case 'yearly':
+    case 'yearlyContribution':
       shopStore.yearlyContribution();
       break;
     case 'oneTimeDonation':
