@@ -496,6 +496,9 @@ Route::middleware([
   // Route for NewsRssFeeds
   Route::resource('/newsRssFeeds', NewsRssFeedController::class);
 
+  // Route for NewsRssFeeds
+//  Route::get('/newsRssFeeds/listFeeds', 'App\Http\Controllers\NewsRssFeedController@listFeeds')->name('newsRssFeeds.listFeeds');
+
   // Resource route for temporary feed items
   Route::resource('/newsRssFeedItemsTemp', NewsRssFeedItemTempController::class);
 
@@ -504,6 +507,7 @@ Route::middleware([
 
   // Resource route for archived feed items
   Route::resource('/newsRssArchive', NewsRssArchiveController::class);
+
 
 
 // Subscriptions

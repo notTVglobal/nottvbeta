@@ -17,73 +17,24 @@
 
     </div>
 
-    <div class="flex justify-between align-items-end mt-4">
-      <div>
-        <ul class="flex flex-wrap ml-0 lg:ml-16 mt-6 mr-6 lg:mt-0 space-x-8">
-          <li>
-            <button
-                @click="appSettingStore.btnRedirect(`/newsroom`)"
-                class=""
-                :class="getButtonClass('newsroom')">
-              Stories
-            </button>
-          </li>
-          <li>
-            <button disabled
-                    class=""
-                    :class="getButtonClass('categories')">
-              Categories
-            </button>
-          </li>
-          <li>
-            <button disabled
-                    class=""
-                    :class="getButtonClass('cities')">
-              Cities
-            </button>
-          </li>
-          <li>
-            <button disabled
-                    class=""
-                    :class="getButtonClass('districts')">
-              Districts
-            </button>
-          </li>
-          <li>
-            <button disabled
-                    class=""
-                    :class="getButtonClass('pressReleases')">
-              Press Releases
-            </button>
-          </li>
-          <li>
-            <button disabled
-                    class=""
-                    :class="getButtonClass('calendar')">
-              Calendar
-            </button>
-          </li>
-          <li>
-            <button
-                @click="appSettingStore.btnRedirect(`/newsRssFeeds`)"
-                class=""
-                :class="getButtonClass('newsRssFeeds.index')">
-              Feeds
-            </button>
-          </li>
-          <li>
-            <button
-                @click="appSettingStore.btnRedirect(`/newsRssArchive`)"
-                class=""
-                :class="getButtonClass('newsRssArchive.index')">
-              Archive
-            </button>
-          </li>
-        </ul>
+    <div class="flex align-items-end mt-4 gap-2">
+      <div class="w-full overflow-hidden bg-white shadow-sm sm:rounded-lg">
+        <div class="w-full p-6 bg-white dark:bg-gray-900 border-b border-gray-200">
+          <div class="w-full relative overflow-x-auto shadow-md sm:rounded-lg py-6">
+            <ul class="flex flex-wrap justify-start ml-0 lg:ml-16 mt-6 mr-6 lg:mt-0 gap-x-2 gap-y-3 md:gap-x-8">
+              <li v-for="button in buttons" :key="button.name" class="mt-4 md:mt-0">
+                <button
+                    @click="button.enabled ? appSettingStore.btnRedirect(button.path) : null"
+                    :class="getButtonClass(button.enabled)"
+                    :disabled="!button.enabled">
+                  {{ button.name }}
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
-      <div>
-        <NewsHeaderButtons :can="can"/>
-      </div>
+
     </div>
 
   </div>
@@ -93,7 +44,7 @@
 <script setup>
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import NewsHeaderButtons from "@/Components/Pages/News/NewsHeaderButtons"
-import { computed } from 'vue'
+import { computed, reactive } from 'vue'
 
 const appSettingStore = useAppSettingStore()
 
@@ -102,13 +53,30 @@ defineProps({
   can: Object,
 })
 
-const getButtonClass = (pageIdentifier) => {
-  const baseClass = 'inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium leading-5 transition';
-  const activeClass = 'border-indigo-400 text-gray-800 focus:outline-none focus:border-indigo-700';
-  const inactiveClass = 'border-transparent text-black hover:text-blue-500 hover:border-indigo-400 focus:outline-none focus:text-gray-700 focus:border-gray-300 disabled:text-gray-300 disabled:cursor-not-allowed disabled:border-none';
+// const getButtonClass = (pageIdentifier) => {
+//   const baseClass = 'inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium leading-5 transition';
+//   const activeClass = 'border-indigo-400 text-gray-800 focus:outline-none focus:border-indigo-700';
+//   const inactiveClass = 'border-transparent text-black hover:text-blue-500 hover:border-indigo-400 focus:outline-none focus:text-gray-700 focus:border-gray-300 disabled:text-gray-300 disabled:cursor-not-allowed disabled:border-none';
+//
+//   return appSettingStore.currentPage === pageIdentifier
+//       ? `${baseClass} ${activeClass}`
+//       : `${baseClass} ${inactiveClass}`;
+// };
 
-  return appSettingStore.currentPage === pageIdentifier
-      ? `${baseClass} ${activeClass}`
-      : `${baseClass} ${inactiveClass}`;
-};
+function getButtonClass(enabled) {
+  return enabled
+      ? 'py-2 px-4 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition ease-in-out duration-150'
+      : 'py-2 px-4 bg-gray-400 text-white font-semibold rounded-lg shadow-md cursor-not-allowed';
+}
+
+const buttons = reactive([
+  { name: 'News Stories', path: '/newsroom', enabled: true },
+  { name: 'News RSS Feeds', path: '/newsRssFeedItemsTemp', enabled: true },
+  { name: 'News RSS Archive', path: '/newsRssArchive', enabled: true },
+  { name: 'Categories', path: '/categories', enabled: false },
+  { name: 'Cities', path: '/cities', enabled: false },
+  { name: 'Districts', path: '/districts', enabled: false },
+  { name: 'Press Releases', path: '/pressReleases', enabled: false },
+  { name: 'Calendar', path: '/calendar', enabled: false },
+]);
 </script>

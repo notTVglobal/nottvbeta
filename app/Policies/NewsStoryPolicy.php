@@ -161,6 +161,7 @@ class NewsStoryPolicy
       return Response::deny('You must be a producer or assignment editor to publish news stories.');
     }
 
+
 //    /**
 //     * Determine whether the user can delete the model.
 //     *

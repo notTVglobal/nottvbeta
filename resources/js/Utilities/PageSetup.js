@@ -35,6 +35,11 @@ export function usePageSetup(pageName) {
         //     topDiv.scrollIntoView()
         // }
         Inertia.on('navigate', (event) => {
+            if (userStore.isMobile || window.innerWidth < 1024) {
+                appSettingStore.ott = 0;
+            } else {
+                appSettingStore.ott = 1;
+            }
             const hasQueryStrings = window.location.search !== '';
             if (!hasQueryStrings || appSettingStore.shouldScrollToTop) {
                 requestAnimationFrame(() => {

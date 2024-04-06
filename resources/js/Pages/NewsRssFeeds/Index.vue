@@ -10,7 +10,7 @@
   <div class="place-self-center flex flex-col gap-y-3">
     <div id="topDiv" class="bg-white dark:bg-gray-800 text-black dark:text-gray-50 p-5 mb-10">
       <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
-      <NewsHeader :can="can">News RSS Feeds</NewsHeader>
+      <NewsHeader :can="can">Newsroom</NewsHeader>
 
       <div class="w-full overflow-hidden bg-white shadow-sm sm:rounded-lg">
         <div class="w-full p-6 bg-white dark:bg-gray-900 border-b border-gray-200">
@@ -25,12 +25,12 @@
                 <th scope="col"
                     class="w-full flex flex-row justify-between px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                   <div>
-                    <span class="text-lg">News RSS Feed</span>
+                    <span class="text-xl md:text-2xl font-medium">News RSS Feeds</span>
                     <button
-                        v-if="can.viewNewsroom"
-                        @click="appSettingStore.btnRedirect(`newsRssFeeds/create`)"
-                        class="bg-green-600 hover:bg-green-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
-                    >Add Feed
+                        v-if="can.manageFeeds"
+                        @click="appSettingStore.btnRedirect(`newsRssFeeds`)"
+                        class="bg-blue-600 hover:bg-blue-500 text-white mt-1 mx-2 px-4 py-2 rounded disabled:bg-gray-400"
+                    >List Feeds
                     </button>
                   </div>
                   <div class="flex items-center mt-6 lg:mt-0">
@@ -49,56 +49,57 @@
                   </div>
                 </th>
                 <th scope="col" class="">
-
+                  <!-- Paginator -->
                 </th>
 
               </tr>
               </thead>
+              <Pagination :data="feeds" class="mt-6"/>
               <tbody>
               <tr
                   v-for="feed in feeds.data"
                   :key="feed.id"
-                  class="bg-white border-b dark:bg-gray-300 dark:border-gray-700"
+                  class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
               >
+                <td class="px-6 py-10 text-gray-900 dark:text-white">
+                  <div class="flex flex-col items-center w-full"> <!-- Ensures full width for centering -->
 
-                <td
-                    scope="row"
-                    class="px-6 py-4 text-gray-900 dark:text-white whitespace-nowrap"
-                >
-                  <div class="flex flex-row justify-between space-x-2">
-                    <div class="flex flex-row justify-between w-full">
-                      <!--                                                <Link type="text/javascript" :href="`/rss2/${feed.slug}`" class="text-blue-800 uppercase font-semibold text-md hover:text-blue-600 hover:opacity-75 transition ease-in-out duration-150">-->
-                      <!--                                                {{feed.name}}-->
-                      <!--                                            </Link>-->
+                    <div class="w-full text-4xl font-semibold mb-2">
+                      <a :href="feed.url" target="_blank">{{ feed.title }}</a>
+                    </div>
+                    <div class="text-left w-full mb-2">{{ formatDate(feed.pubDate) }}</div>
+                    <div v-html="feed.description" class="text-xl mb-6"></div>
+                    <a :href="feed.url" target="_blank" class="flex justify-center w-full">
+                      <!-- Flex container for centering -->
+                      <img v-if="!feed.image" :src="feed.image_url" alt="" class="max-w-full h-auto">
+                      <SingleImage v-else :image="feed.image.data"/>
+                    </a>
+                    <div class="w-full flex flex-wrap justify-between mt-2 gap-y-2">
                       <div>
-                        <button
-                            @click="appSettingStore.btnRedirect(`/newsRssFeeds/${feed.slug}`)"
-                            class="text-blue-800 uppercase font-semibold text-md hover:text-blue-600 hover:opacity-75 transition ease-in-out duration-150"
-                        >{{ feed.name }}
-                        </button>
+                        <p v-if="feed.feedName" class="text-left w-full mt-2 tracking-wider hover:text-blue-300">
+                          <Link :href="`/newsRssFeeds/${feed.feedSlug}`">
+                            <span class="font-semibold">{{ feed.feedName }}</span>
+                          </Link>
+                        </p>
                       </div>
-                      <div class="mr-2"><span v-if="feed.lastSuccessfulUpdate">Last update on {{userStore.formatDateTimeFromUtcToUserTimezone(feed.lastSuccessfulUpdate)}}</span><span v-else>Never updated</span></div>
+                      <div>
+                        <div v-if="feed.is_saved" class="text-green-500 italic font-semibold uppercase text-sm">Archived
+                        </div>
+                        <div v-else>
+                          <button @click="addToArchive(feed.id)"
+                                  class="bg-green-500 text-white rounded-lg px-4 py-2 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+                            Add To Archive
+                          </button>
+                        </div>
+                      </div>
+
                     </div>
-                    <div class="space-x-1">
-                      <button
-                          v-if="userStore.isNewsPerson"
-                          @click="appSettingStore.btnRedirect(`/newsRssFeeds/${feed.slug}/edit`)"
-                          class="px-2 py-1 text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
-                      >
-                        <font-awesome-icon icon="fa-pencil"/>
-                      </button>
-                      <button
-                          v-if="userStore.isAdmin"
-                          @click="destroy(feed.slug)"
-                          class="px-2 py-1 text-white bg-red-600 hover:bg-red-500 rounded-lg"
-                      >
-                        <font-awesome-icon icon="fa-trash-can"/>
-                      </button>
-                    </div>
+
                   </div>
                 </td>
               </tr>
               </tbody>
+
             </table>
             <!-- Paginator -->
             <Pagination :data="feeds" class="mt-6"/>
@@ -114,7 +115,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { Inertia } from '@inertiajs/inertia'
 import { useForm } from '@inertiajs/inertia-vue3'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -126,6 +127,7 @@ import NewsHeaderButtons from '@/Components/Pages/News/NewsHeaderButtons'
 import NewsHeader from '@/Components/Pages/News/NewsHeader'
 import Pagination from '@/Components/Global/Paginators/Pagination'
 import Message from '@/Components/Global/Modals/Messages'
+import SingleImage from '@/Components/Global/Multimedia/SingleImage.vue'
 
 usePageSetup('newsRssFeeds.index')
 
@@ -143,7 +145,7 @@ let form = useForm({})
 let search = ref(props.filters.search)
 
 watch(search, throttle(function (value) {
-  Inertia.get('/newsRssFeeds', {search: value}, {
+  Inertia.get('/newsRssFeedItemsTemp', {search: value}, {
     preserveState: true,
     replace: true,
   })
@@ -160,5 +162,25 @@ function destroy(slug) {
 
   }
 }
+
+const addToArchive = async (itemId) => {
+  Inertia.patch(`/newsRssFeedItemsTemp/${itemId}/save`, {
+  }, {
+    preserveState: true, // Prevents the page from fully reloading
+    preserveScroll: true, // Keeps the scroll position
+    onSuccess: (page) => {
+      console.log('Item archived successfully')
+      // Here, you can optionally refresh data or handle UI updates
+    },
+    onError: (errors) => {
+      console.error('Error archiving item:', errors)
+    },
+  })
+};
+
+onMounted(() => {
+  const appSettingStore = useAppSettingStore()
+  appSettingStore.shouldScrollToTop = true
+})
 
 </script>

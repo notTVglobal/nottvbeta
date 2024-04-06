@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ImageResource;
 use App\Jobs\FetchRssFeedItemsJob;
 use App\Models\NewsPerson;
 use App\Models\NewsRssFeedItemArchive;
@@ -22,6 +23,7 @@ class NewsRssFeedController extends Controller {
   public function __construct() {
 
     $this->middleware('can:viewAny,App\Models\NewsRssFeed')->only(['index']);
+    $this->middleware('can:update,App\Models\NewsRssFeed')->only(['listFeeds']);
     $this->middleware('can:view,App\Models\NewsRssFeed')->only(['show']);
     $this->middleware('can:create,App\Models\NewsRssFeed')->only(['create']);
     $this->middleware('can:update,newsRssFeed')->only(['update']);
@@ -31,7 +33,7 @@ class NewsRssFeedController extends Controller {
 
 
   public function index(): \Inertia\Response {
-    return Inertia::render('NewsRssFeeds/Index', [
+    return Inertia::render('NewsRssFeeds/ListFeeds', [
         'feeds'   => NewsRssFeed::query()
             ->orderBy('last_successful_update', 'desc')
             ->when(Request::input('search'), function ($query, $search) {
