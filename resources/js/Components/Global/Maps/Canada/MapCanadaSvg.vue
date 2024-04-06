@@ -71,6 +71,7 @@
         title="Nunavut"
         id="CA-NU"
         :style="{ fill: getProvinceColor('CA-NU') }"
+        @click="onProvinceClick"
         @mouseover="mouseOverProvince"
         @mouseleave="mouseLeaveProvince" />
     <path
@@ -176,7 +177,7 @@ const mouseLeaveProvince = (event) => {
 
 const onProvinceClick = (event) => {
   const provinceId = event.target.id.replace('CA-', ''); // Removes 'CA-' from the ID
-  // Emitting an event with the province's ID
+    // Emitting an event with the province's ID
   emit('provinceSelected', provinceId);
 };
 </script>
