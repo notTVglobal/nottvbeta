@@ -1,14 +1,14 @@
 <template>
 
   <Head title="Upgrade Account"/>
-  <div id="topDiv" class="h-[calc(100vh-16rem)] text-center bg-gray-800 text-white px-10">
+  <div id="topDiv" class="min-h-screen text-center bg-gray-900 text-white px-10">
 
     <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
     <!--            <h1 class="text-3xl font-semibold pb-3">Become a notTV Premium Subscriber</h1>-->
 
     <div class="flex justify-center w-full">
-      <div class="flex flex-col justify-center w-fit bg-gray-900 rounded-lg py-10">
+      <div class="flex flex-col justify-center w-full bg-gray-900 rounded-lg py-10">
 
         <div class="flex flex-col items-center space-y-8 px-8 mb-80">
           <h2 class="text-3xl font-bold text-white py-4">Contribute to notTV</h2>
@@ -16,9 +16,14 @@
             Your contribution supports independent creators, journalists, and the notTV funds dedicated to production, news, and public good. Together, we're creating a vibrant ecosystem for storytelling and community-driven media. Choose how you'd like to contribute:
           </p>
 
+
+          <div v-if="userStore.isSubscriber" class="max-w-4xl p-4 rounded-lg bg-gradient-to-r from-blue-600 to-blue-400 text-white">
+            🌟 A huge thank you for being a vibrant part of our journey! Dive into your unique content journey and explore your payment plan and history anytime - just navigate to the top menu and select 'Account'. Together, we're redefining the way the world communicates. 🌈
+          </div>
+
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl">
             <!-- Monthly Contribution Card -->
-            <ContributeCard :color="`blue`" :animation="true" :itemSelected="`monthlyContribution`">
+            <ContributeCard v-if="!userStore.isSubscriber" @click="startSubscription('monthly')" :color="`blue`" :animation="true" :itemSelected="`monthlyContribution`" class="cursor-pointer">
               <template #title>Monthly</template>
               <template #icon><font-awesome-icon icon="fa-star" class="text-2xl"/></template>
               <template #main>Join our monthly plan to continuously support independent journalism, content creators, and various funds essential for community enrichment.</template>
@@ -26,7 +31,7 @@
             </ContributeCard>
 
             <!-- Annual Contribution Card -->
-            <ContributeCard color="purple" :animation="true" :itemSelected="`yearlyContribution`">
+            <ContributeCard v-if="!userStore.isSubscriber" @click="startSubscription('yearly')" color="purple" :animation="true" :itemSelected="`yearlyContribution`" class="cursor-pointer">
               <template #title>Annual Contribution</template>
               <template #icon><font-awesome-icon icon="fa-gem" class="text-2xl"/></template>
               <template #main>Opt for an annual contribution to make a lasting impact on our mission towards a decentralized and democratic media platform.</template>
@@ -34,7 +39,7 @@
             </ContributeCard>
 
             <!-- One-Time Contribution Card -->
-            <ContributeCard :color="`green`" :animation="true" :itemSelected="`oneTimeDonation`" :disableButton="true">
+            <ContributeCard @click="oneTimeDonation('onetime')" :color="`green`" :animation="true" :disableButton="true" :itemSelected="`oneTimeDonation`" class="cursor-pointer">
               <template #title>One-Time Donation</template>
               <template #icon><font-awesome-icon icon="fa-heart" class="text-2xl"/></template>
               <template #main>
@@ -54,14 +59,14 @@
                 <!-- Input for manual donation amount entry -->
                 <div class="input-container">
                   <input type="number" v-model="donationAmount" @input="handleDonationAmountChange" placeholder="Enter amount" class="text-black input input-bordered input-success input-md w-24 mr-10 mt-2">
-                  <button @click="donateNow" class="donate-now-btn hover:bg-green-700 bg-green-500 rounded-lg px-2 py-2">Donate Now</button>
+                  <button @click="oneTimeDonation('onetime') " class="donate-now-btn hover:bg-green-700 bg-green-500 rounded-lg px-2 py-2">Donate Now</button>
                 </div>
               </template>
             </ContributeCard>
 
             <!-- Favourite Show Contribution Card -->
-            <ContributeCard color="orange" :animation="true" :itemSelected="`favouriteShowContribution`">
-              <template #title>Support Your Favorite Show</template>
+            <ContributeCard @click="oneTimeDonation('favouriteShow')" color="orange" :animation="true" :disableButton="true" :itemSelected="`favouriteShowContribution`" class="cursor-pointer">
+              <template #title>Support Your Favorite Show, Creator or Journalist</template>
               <template #icon><font-awesome-icon icon="fa-heart" class="text-2xl"/></template>
               <template #main>Contribute directly to the production of your favorite show. Your support helps us create more of the content you love.<br></template>
               <template #button>Support Now</template>
@@ -83,17 +88,17 @@
 
 
 
-        <div class="flex flex-wrap justify-center space-y-3 space-x-3 px-8 mb-10 mx-auto">
+        <div class="hidden flex flex-wrap justify-center space-y-3 space-x-3 px-8 mb-10 mx-auto">
           <div class="bg-gray-800 rounded-lg p-6 text-gray-300">
 
             <h3 class="text-2xl font-semibold">Monthly Contribution</h3>
             <p class="my-4">Support ongoing development and enjoy early access to exclusive content and community features. Your monthly contribution keeps the spirit of independent media alive.</p>
-            <button class="btn bg-green-500 hover:bg-green-700 text-white mt-4">Contribute Monthly</button>
+            <button @click="startSubscription('monthly')" class="btn bg-green-500 hover:bg-green-700 text-white mt-4">Contribute Monthly</button>
           </div>
           <div class="bg-gray-800 rounded-lg p-6 text-gray-300">
             <h3 class="text-2xl font-semibold">Yearly Contribution</h3>
             <p class="my-4">Make a lasting impact with a yearly contribution. Gain special recognition in the community and first access to new features and content. Your support fuels our mission for a whole year.</p>
-            <button class="btn bg-purple-500 hover:bg-purple-700 text-white mt-4">Contribute Yearly</button>
+            <button @click="startSubscription('yearly')" class="btn bg-purple-500 hover:bg-purple-700 text-white mt-4">Contribute Yearly</button>
           </div>
           <div class="bg-gray-800 rounded-lg p-6 text-gray-300">
             <h3 class="text-2xl font-semibold">One-Time Donation</h3>
@@ -111,7 +116,7 @@
               </div>
 
             </div>
-            <button class="btn bg-blue-500 hover:bg-blue-700 text-white mt-4">Donate Now</button>
+            <button @click="oneTimeDonation('onetime')" class="btn bg-blue-500 hover:bg-blue-700 text-white mt-4">Donate Now</button>
           </div>
         </div>
 
@@ -121,13 +126,13 @@
 
 
 
-        <div class="flex flex-wrap justify-center space-y-3 space-x-3 px-8 mb-80 mx-auto">
+        <div class="hidden flex flex-wrap justify-center space-y-3 space-x-3 px-8 mb-80 mx-auto">
           <div></div>
 
           <div class="card monthly bg-gray-700 hover:bg-gray-600 hover:cursor-pointer rounded-lg px-12 pt-6"
                @mouseover="hoverMonthlyFull = true"
                @mouseleave="hoverMonthlyFull = false"
-               @click="payNow('monthly')">
+               @click="startSubscription('monthly')">
             <div class="flex justify-between mb-2">
               <div class="productName">Monthly</div>
               <div class="price">$25</div>
@@ -151,7 +156,7 @@
           <div class="card annually bg-gray-700 hover:bg-gray-600 hover:cursor-pointer rounded-lg px-12 pt-6"
                @mouseover="hoverYearlyFull = true"
                @mouseleave="hoverYearlyFull = false"
-               @click="payNow('yearly')">
+               @click="startSubscription('yearly')">
             <div class="flex justify-between mb-2">
               <div class="productName">Yearly</div>
               <div class="price">$250</div>
@@ -177,7 +182,7 @@
           <div class="hidden card forever bg-gray-700 hover:bg-gray-600 hover:cursor-pointer rounded-lg px-12 py-6"
                @mouseover="hoverForeverFull = true"
                @mouseleave="hoverForeverFull = false"
-               @click="payNow('forever')">
+               @click="oneTimeDonation('onetime')">
             <div class="flex justify-between mb-2">
               <div class="productName">Forever</div>
               <div class="price">$999</div>
@@ -218,6 +223,7 @@
 import { Inertia } from '@inertiajs/inertia'
 import { usePageSetup } from '@/Utilities/PageSetup'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import { useUserStore } from '@/Stores/UserStore'
 import { useShopStore } from '@/Stores/ShopStore'
 import Message from '@/Components/Global/Modals/Messages'
 import ContributeCard from '@/Components/Pages/Contribute/ContributeCard.vue'
@@ -226,6 +232,7 @@ import { computed } from 'vue'
 usePageSetup('upgrade')
 
 const appSettingStore = useAppSettingStore()
+const userStore = useUserStore()
 const shopStore = useShopStore()
 
 let props = defineProps({
@@ -249,25 +256,40 @@ function handleDonationAmountChange(event) {
   shopStore.updateDonationAmount(Number(event.target.value));
 }
 
-function donateNow() {
+function oneTimeDonation(type) {
+  switch (type) {
+    case 'onetime':
+      console.log(`Donating $${shopStore.donationAmount}`);
+      // shopStore.monthlyContribution();
+      break;
+    case 'favouriteShow':
+      console.log(`Choose favourite show next...`);
+      break;
+  }
   // Implement the logic to handle the donation submission
-  console.log(`Donating $${shopStore.donationAmount}`);
+
   // This could involve calling an API endpoint, showing a confirmation message, etc.
 }
 
-function payNow(subscription) {
-  if (subscription === 'monthly') {
-    shopStore.upgradeMonthly()
-    Inertia.get('/shop/subscribe')
+function startSubscription(subscription) {
+  switch (subscription) {
+    case 'monthly':
+      shopStore.monthlyContribution();
+      break;
+    case 'yearly':
+      shopStore.yearlyContribution();
+      break;
+    case 'onetime':
+      shopStore.oneTimeDonation();
+      break;
+    case 'favouriteShow':
+      shopStore.favouriteShowContribution();
+      break;
+    default:
+      console.log('Invalid subscription type');
+      return; // Early return for an invalid case
   }
-  if (subscription === 'yearly') {
-    shopStore.upgradeYearly()
-    Inertia.get('/shop/subscribe')
-  }
-  if (subscription === 'forever') {
-    shopStore.upgradeForever()
-    Inertia.get('/shop/subscribe')
-  }
+  Inertia.get('/contribute/subscription');
 }
 
 </script>

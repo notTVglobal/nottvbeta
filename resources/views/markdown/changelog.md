@@ -3,6 +3,11 @@
 Last Update: April 6, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.7.51
+April 6, 2024
+* Update the Contribution Page
+* Update the Upgrade panel and which OTT components are visible
+
 ## v0.8.7.50
 April 6, 2024
 * Update the RSS Feeds to display all temporary feed items on one page.
