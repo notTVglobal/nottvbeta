@@ -8,7 +8,7 @@
       leave-to-class="opacity-0 scale-125"
   >
     <div v-if="show" class="modal-mask overflow-auto py-32 hide-scrollbar">
-      <div class="modal-container">
+      <div class="bg-white py-4 px-4 rounded-lg">
         <header class="flex justify-center uppercase text-sm font-semibold mb-2 text-center">
           <JetAuthenticationCardLogo class="max-w-[8rem]"/>
           <JetValidationErrors class="mb-4"/>

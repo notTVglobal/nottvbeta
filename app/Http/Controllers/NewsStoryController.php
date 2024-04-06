@@ -340,7 +340,8 @@ class NewsStoryController extends Controller {
 //                    'content_json' => $post->content_json,
             ],
             'can'            => [
-                'viewNewsroom' => Auth::user()->can('viewAny', NewsPerson::class)
+                'viewNewsroom' => Auth::user()->can('viewAny', NewsPerson::class),
+                'publish'      => Auth::user()->can('canPublish', $newsStory),
             ]
         ]);
   }
