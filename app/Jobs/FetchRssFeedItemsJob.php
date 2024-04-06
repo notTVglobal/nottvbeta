@@ -48,22 +48,48 @@ class FetchRssFeedItemsJob implements ShouldQueue
     $imagePatterns = [
         'image',        // <image>http://example.com/image.jpg</image>
         'enclosure',    // <enclosure url="http://example.com/image.jpg" type="image/jpeg"/>
-        'media:content' // <media:content url="http://example.com/image.jpg" type="image/jpeg"/>
+        'media:content', // <media:content url="http://example.com/image.jpg" type="image/jpeg"/>
+        'media:group'    // <media:group> containing <media:content url="..." />
     ];
     try {
     foreach ($imagePatterns as $pattern) {
       // Check if the pattern exists in the item
       if (isset($item->$pattern)) {
-        $image = $item->$pattern;
-        // Depending on the pattern, the URL might be an attribute
-        if ($pattern === 'enclosure' || $pattern === 'media:content') {
-          $attributes = $image->attributes();
-          if (isset($attributes['url'])) {
-            return (string)$attributes['url'];
+
+        if ($pattern === 'media:group') {
+          // If the pattern is media:group, iterate through its media:content children
+          foreach ($item->{'media:group'}->{'media:content'} as $mediaContent) {
+            $attributes = $mediaContent->attributes();
+            if (isset($attributes['url'])) {
+              return (string)$attributes['url'];
+            }
           }
         } else {
-          return (string)$image;
+          $image = $item->$pattern;
+          // Depending on the pattern, the URL might be an attribute
+          if ($pattern === 'enclosure' || $pattern === 'media:content') {
+            $attributes = $image->attributes();
+            if (isset($attributes['url'])) {
+              return (string)$attributes['url'];
+            }
+          } else {
+            return (string)$image;
+          }
         }
+
+//        $image = $item->$pattern;
+//        // Depending on the pattern, the URL might be an attribute
+//        if ($pattern === 'enclosure' || $pattern === 'media:content') {
+//          $attributes = $image->attributes();
+//          if (isset($attributes['url'])) {
+//            return (string)$attributes['url'];
+//          }
+//        } else {
+//          return (string)$image;
+//        }
+
+
+
       }
     }
     } catch (\Exception $e) {

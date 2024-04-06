@@ -3,6 +3,10 @@
 Last Update: April 5, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.7.49
+April 5, 2024
+* Adjust FetchRssFeedJob to handle images in the media:group tag
+
 ## v0.8.7.48
 April 5, 2024
 * Create dedicated cloud folder for video uploads that are Creator user video uploads
