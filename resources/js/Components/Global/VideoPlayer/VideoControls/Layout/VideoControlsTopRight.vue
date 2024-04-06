@@ -11,7 +11,7 @@
   <div class="flex justify-center">
 
     <!-- Video TopRight Controls -->
-    <div class="fixed flex justify-center right-1 top-60 px-2 w-96 z-50">
+    <div v-if="!appSettingStore.fullPage" class="fixed flex justify-center right-1 top-60 px-2 w-96 z-50">
 
 
       <VideoControlsButtons/>

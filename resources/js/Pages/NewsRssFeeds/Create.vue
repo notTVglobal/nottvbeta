@@ -88,8 +88,6 @@ import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import JetValidationErrors from '@/Jetstream/ValidationErrors'
 import Button from "@/Jetstream/Button"
 import Message from "@/Components/Global/Modals/Messages"
-import NewsHeaderButtons from "@/Components/Pages/News/NewsHeaderButtons"
-import BackButton from '@/Components/Global/Buttons/BackButton.vue'
 import CancelButton from '@/Components/Global/Buttons/CancelButton.vue'
 
 usePageSetup('newsFeedCreate')

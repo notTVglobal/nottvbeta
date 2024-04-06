@@ -8,7 +8,6 @@
       <PublicNewsNavigationButtons :can="can"/>
 
       <Breadcrumbs :breadcrumbs="[
-          { text: 'News', to: '/news' },
           { text: 'Reporters', to: '/news/reporters' },
           { text: $page.props.newsPerson.name, to: '' }
       ]" />

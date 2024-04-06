@@ -149,7 +149,7 @@ export const useAppSettingStore = defineStore('appSettingStore', {
 
         toggleOtt(num) {
             const userStore = useUserStore();
-            if (userStore.isMobile || window.innerWidth < 1024) {
+            if (userStore.isMobile || window.innerWidth < 1024 || this.fullPage) {
                 this.ott = num === this.ott && !this.fullPage ? 0 : num;
             } else {
                 this.ott = num === this.ott && !this.fullPage ? 1 : num;

@@ -3,7 +3,7 @@
   <div id="topDiv" ></div>
   <div class="flex flex-col min-h-screen bg-gray-50 text-black w-full overflow-x-hidden" :class="marginTopClass">
 
-    <header class="place-self-center flex flex-col bg-gray-50 text-black dark:bg-gray-800 dark:text-gray-50">
+    <header class="place-self-center flex flex-col w-full text-black bg-gray-800 text-gray-50">
       <PublicNewsNavigationButtons :can="can"/>
 
     </header>
@@ -67,6 +67,13 @@ onMounted(() => {
   const topDiv = document.getElementById("topDiv")
   topDiv.scrollIntoView()
   appSettingStore.currentPage = 'news'
+
+  if (userStore.isMobile || window.innerWidth < 1024 || appSettingStore.fullPage) {
+    appSettingStore.ott = 0;
+  } else {
+    appSettingStore.ott = 1;
+    appSettingStore.showOttButtons = true;
+  }
 })
 
 // Watch for changes in the loggedIn state of appSettingStore

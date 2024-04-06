@@ -1,7 +1,7 @@
 <template>
   <div class="mx-auto">
 
-    <div class="pt-10 flex w-full h-fit flex-wrap justify-between align-baseline space-x-10">
+    <div class="pt-10 flex w-full h-fit flex-wrap justify-between align-baseline gap-x-10 gap-y-2">
         <div><h2 class="text-center text-xl md:text-3xl font-semibold my-auto align-middle pl-6">News Stories</h2></div>
       <div class="my-auto">
         <div class="relative">

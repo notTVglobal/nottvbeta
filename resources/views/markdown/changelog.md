@@ -7,6 +7,10 @@ Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 April 6, 2024
 * Update the RSS Feeds to display all temporary feed items on one page.
 * Added button styling to the Newsroom header buttons.
+* Added a News Districts page.
+* Added an Interactive Map of Canada to the News Districts page.
+* Added an Example Subnational Districts map to Alberta.
+* Added a National Districts map to Alberta.
 
 ## v0.8.7.49
 April 5, 2024

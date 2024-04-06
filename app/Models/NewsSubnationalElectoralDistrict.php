@@ -11,6 +11,8 @@ class NewsSubnationalElectoralDistrict extends Model
 
   protected $fillable = [
       'name', // Name of the Subnational Electoral District
+      'slug',
+      'description',
       'province_id', // Foreign key to NewsProvince
       'country_id', // Foreign key to NewsCountry
       'federal_electoral_district_id', // Foreign key to Federal Electoral District
@@ -22,6 +24,10 @@ class NewsSubnationalElectoralDistrict extends Model
       'economic_indicators',
       'date_founded'
   ];
+
+  public function getRouteKeyName(): string {
+    return 'slug';
+  }
 
   public function province() {
     return $this->belongsTo(NewsProvince::class);

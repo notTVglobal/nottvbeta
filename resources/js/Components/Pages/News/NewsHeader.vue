@@ -3,7 +3,7 @@
   <div class="w-full mx-auto mb-3 pb-3 border-b border-gray-500 pt-6">
 
 
-    <div class="w-full mx-auto flex flex-wrap justify-between mb-3 pb-3 gap-2">
+    <div class="w-full mx-auto flex flex-wrap justify-between mb-3 pb-3 gap-x-2 gap-y-2">
       <div class="text-4xl font-semibold text-center lg:text-left">
         <slot/>
       </div>
@@ -18,9 +18,9 @@
     </div>
 
     <div class="flex align-items-end mt-4 gap-2">
-      <div class="w-full overflow-hidden bg-white shadow-sm sm:rounded-lg">
-        <div class="w-full p-6 bg-white dark:bg-gray-900 border-b border-gray-200">
-          <div class="w-full relative overflow-x-auto shadow-md sm:rounded-lg py-6">
+      <div class="w-full overflow-hidden shadow-sm sm:rounded-lg">
+        <div class="w-full p-6 dark:bg-gray-900 border-b border-gray-200">
+          <div class="w-full relative bg-gray-200 overflow-x-auto shadow-md sm:rounded-lg py-6">
             <ul class="flex flex-wrap justify-start ml-0 lg:ml-16 mt-6 mr-6 lg:mt-0 gap-x-2 gap-y-3 md:gap-x-8">
               <li v-for="button in buttons" :key="button.name" class="mt-4 md:mt-0">
                 <button
@@ -43,8 +43,7 @@
 
 <script setup>
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
-import NewsHeaderButtons from "@/Components/Pages/News/NewsHeaderButtons"
-import { computed, reactive } from 'vue'
+import { reactive } from 'vue'
 
 const appSettingStore = useAppSettingStore()
 
@@ -75,7 +74,7 @@ const buttons = reactive([
   { name: 'News RSS Archive', path: '/newsRssArchive', enabled: true },
   { name: 'Categories', path: '/categories', enabled: false },
   { name: 'Cities', path: '/cities', enabled: false },
-  { name: 'Districts', path: '/districts', enabled: false },
+  { name: 'Districts', path: '/news-districts', enabled: true },
   { name: 'Press Releases', path: '/pressReleases', enabled: false },
   { name: 'Calendar', path: '/calendar', enabled: false },
 ]);

@@ -13,10 +13,11 @@ export function usePageSetup(pageName) {
     appSettingStore.showFlashMessage = true
     appSettingStore.pageIsHidden = false
 
-    if (userStore.isMobile || window.innerWidth < 1024) {
+    if (userStore.isMobile || window.innerWidth < 1024 || appSettingStore.fullPage) {
         appSettingStore.ott = 0;
     } else {
         appSettingStore.ott = 1;
+        appSettingStore.showOttButtons = true;
     }
 
     videoPlayerStore.makeVideoTopRight()
@@ -35,7 +36,7 @@ export function usePageSetup(pageName) {
         //     topDiv.scrollIntoView()
         // }
         Inertia.on('navigate', (event) => {
-            if (userStore.isMobile || window.innerWidth < 1024) {
+            if (userStore.isMobile || window.innerWidth < 1024 || appSettingStore.fullPage) {
                 appSettingStore.ott = 0;
             } else {
                 appSettingStore.ott = 1;
