@@ -43,7 +43,7 @@
         <JetValidationErrors class="ml-4"/>
       </div>
 
-      <div class="flex flex-col py-4 px-6">
+      <div v-if="can.publish" class="flex flex-col py-4 px-6">
         <div class="font-semibold text-xs uppercase mb-2">Select News Person as author</div>
         <v-select
             :options="newsStore.newsPersons.map(person => ({ label: person.user.name, value: person.id }))"

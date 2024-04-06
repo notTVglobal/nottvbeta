@@ -75,6 +75,8 @@ class NewsStoryPolicy
     return Response::deny('You do not have permission to start a news story.');
   }
 
+
+
   /**
    * Determine whether the user can edit the model.
    *

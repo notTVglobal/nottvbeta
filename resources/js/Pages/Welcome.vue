@@ -35,7 +35,7 @@
         <div class="welcomeOverlay">
           <div class="relative flex items-top justify-center min-h-screen text-gray-200">
 
-            <div class="w-full flex justify-center items-center h-screen">
+            <div class="w-full flex justify-center items-center h-screen w-screen">
 
               <WelcomeOverlay v-show="welcomeStore.showOverlay"
                               @watchNow="watchNow"/>
