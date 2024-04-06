@@ -39,6 +39,25 @@ class NewsRssFeedPolicy
           : Response::deny('You must be a member of the news team to view this.');
     }
 
+  public function manage(User $user)
+  {
+
+    // Directly allow admins to publish if the news story status is 3
+    if ($user->isAdmin) {
+      return Response::allow();
+    }
+
+    // Check if the user has a role that permits publishing
+    $userRoleIds = $user->newsPerson?->roles->pluck('id')->all() ?? [];
+    if (in_array(NewsRoleConstants::PRODUCER, $userRoleIds) ||
+        in_array(NewsRoleConstants::ASSIGNMENT_EDITOR, $userRoleIds)) {
+      return Response::allow();
+    }
+
+    // If none of the above conditions are met, deny permission
+    return Response::deny('You must be a producer or assignment editor to publish news stories.');
+  }
+
     /**
      * Determine whether the user can create models.
      *

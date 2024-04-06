@@ -10,22 +10,57 @@
   <div class="place-self-center flex flex-col gap-y-3">
     <div id="topDiv" class="bg-white dark:bg-gray-800 text-black dark:text-gray-50 p-5 mb-10">
       <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
-      <NewsHeader>News RSS Archive</NewsHeader>
+      <NewsHeader>Newsroom</NewsHeader>
 
       <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
         <div class="p-6 bg-white dark:bg-gray-900 border-b border-gray-200">
-          <div class="flex justify-center">
-            <div class="flex items-center">
-              <div class="relative w-full">
-                <input v-model="search" type="search" class="bg-gray-50 text-black text-sm rounded-full focus:outline-none focus:shadow w-full pl-10 py-2" placeholder="Search...">
-                <div class="absolute top-0 left-0 flex items-center h-full ml-4">
-                  <svg class="fill-current text-gray-400 w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                    <path d="M456.69 421.39 362.6 327.3a173.81 173.81 0 0 0 34.84-104.58C397.44 126.38 319.06 48 222.72 48S48 126.38 48 222.72s78.38 174.72 174.72 174.72A173.81 173.81 0 0 0 327.3 362.6l94.09 94.09a25 25 0 0 0 35.3-35.3ZM97.92 222.72a124.8 124.8 0 1 1 124.8 124.8 124.95 124.95 0 0 1-124.8-124.8Z"/>
-                  </svg>
+<!--          <div class="flex justify-center">-->
+<!--            <div class="flex items-center">-->
+<!--              <div class="relative w-full">-->
+<!--                <input v-model="search" type="search" class="bg-gray-50 text-black text-sm rounded-full focus:outline-none focus:shadow w-full pl-10 py-2" placeholder="Search...">-->
+<!--                <div class="absolute top-0 left-0 flex items-center h-full ml-4">-->
+<!--                  <svg class="fill-current text-gray-400 w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">-->
+<!--                    <path d="M456.69 421.39 362.6 327.3a173.81 173.81 0 0 0 34.84-104.58C397.44 126.38 319.06 48 222.72 48S48 126.38 48 222.72s78.38 174.72 174.72 174.72A173.81 173.81 0 0 0 327.3 362.6l94.09 94.09a25 25 0 0 0 35.3-35.3ZM97.92 222.72a124.8 124.8 0 1 1 124.8 124.8 124.95 124.95 0 0 1-124.8-124.8Z"/>-->
+<!--                  </svg>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+
+
+          <table
+              class="table-auto w-full text-sm text-left text-gray-500 dark:text-gray-400"
+          >
+            <thead
+                class="flex flex-justify text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr class="w-full">
+              <th scope="col"
+                  class="w-full flex flex-row justify-between px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
+                <div>
+                  <span class="text-xl md:text-2xl font-medium">News RSS Archive</span>
+
                 </div>
-              </div>
-            </div>
-          </div>
+                <div class="flex items-center mt-6 lg:mt-0">
+                  <div class="relative">
+                    <input v-model="search" type="search" class="bg-gray-50 text-black text-sm rounded-full
+                            focus:outline-none focus:shadow w-64 pl-8 px-3 py-1" placeholder="Search...">
+                    <div class="absolute top-0 flex items-center h-full ml-2">
+                      <svg class="fill-current text-gray-400 w-4" xmlns="http://www.w3.org/2000/svg"
+                           viewBox="0 0 512 512">
+                        <path
+                            d="M456.69 421.39 362.6 327.3a173.81 173.81 0 0 0 34.84-104.58C397.44 126.38 319.06 48 222.72 48S48 126.38 48 222.72s78.38 174.72 174.72 174.72A173.81 173.81 0 0 0 327.3 362.6l94.09 94.09a25 25 0 0 0 35.3-35.3ZM97.92 222.72a124.8 124.8 0 1 1 124.8 124.8 124.95 124.95 0 0 1-124.8-124.8Z"/>
+                      </svg>
+
+                    </div>
+                  </div>
+                </div>
+              </th>
+              <th scope="col" class="">
+
+              </th>
+            </tr>
+            </thead>
+          </table>
 
           <Pagination :data="archive"/>
 

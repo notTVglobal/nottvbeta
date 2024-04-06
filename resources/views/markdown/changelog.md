@@ -1,7 +1,12 @@
 # not.tv Changelog
 
-Last Update: April 5, 2024\
+Last Update: April 6, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.8.7.50
+April 6, 2024
+* Update the RSS Feeds to display all temporary feed items on one page.
+* Added button styling to the Newsroom header buttons.
 
 ## v0.8.7.49
 April 5, 2024

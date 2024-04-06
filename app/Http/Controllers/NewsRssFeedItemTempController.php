@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\NewsPerson;
 use App\Models\NewsRssFeed;
 use App\Models\NewsRssFeedItemTemp;
+use App\Models\NewsStory;
 use Illuminate\Http\Request as HttpRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 
 class NewsRssFeedItemTempController extends Controller
@@ -13,15 +17,52 @@ class NewsRssFeedItemTempController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @return \Inertia\Response
      */
 
     public function index()
     {
-      $items = NewsRssFeedItemTemp::all();
-      return view('newsRssFeedItemsTemp.index', compact('items'));
-      // Replace 'newsRssFeedItemsTemp.index' with your actual view name
+//      $items = NewsRssFeedItemTemp::all();
+
+      return Inertia::render('NewsRssFeeds/Index', [
+          'feeds' => NewsRssFeedItemTemp::query()
+              ->with('newsRssFeed')
+              ->orderBy('pubDate', 'desc')
+              ->when(Request::input('search'), function ($query, $search) {
+                // Remove periods and spaces from the search term
+                $searchTerm = str_replace(['.', ' '], '', $search);
+
+                // Adjust the query to ignore periods and spaces in title and description
+                $query->where(function ($q) use ($searchTerm) {
+                  $q->whereRaw("REPLACE(REPLACE(title, ' ', ''), '.', '') LIKE ?", ["%{$searchTerm}%"])
+                      ->orWhereRaw("REPLACE(REPLACE(description, ' ', ''), '.', '') LIKE ?", ["%{$searchTerm}%"]);
+                });
+              })
+              ->paginate(10, ['*'], 'rss')
+              ->withQueryString()
+              ->through(fn($newsRssFeedTempItem) => [
+                  'id'          => $newsRssFeedTempItem->id,
+                  'feedName'    => $newsRssFeedTempItem->newsRssFeed->name,
+                  'feedSlug'    => $newsRssFeedTempItem->newsRssFeed->slug,
+                  'title'       => $newsRssFeedTempItem->title,
+                  'description' => $newsRssFeedTempItem->description,
+                  'url'         => $newsRssFeedTempItem->link,
+                  'pubDate'     => $newsRssFeedTempItem->pubDate,
+                  'image_url'   => $newsRssFeedTempItem->image_url,
+                  'is_saved'    => $newsRssFeedTempItem->is_saved,
+//                'image'       => $newsRssFeed->image ? new ImageResource($newsRssFeed->image) : null,
+              ]),
+          'filters' => Request::only(['search']),
+          'can'     => [
+//                'editNewsStory' => Auth::user()->can('update', NewsStory::class),
+              'createNewsStory' => Auth::user()->can('create', NewsStory::class),
+              'manageFeeds' => Auth::user()->can('manage', NewsRssFeed::class),
+              'viewNewsroom'    => Auth::user()->can('viewAny', NewsPerson::class)
+          ]
+      ]);
     }
+      // Replace 'newsRssFeedItemsTemp.index' with your actual view name
+
 
     /**
      * Show the form for creating a new resource.
