@@ -8,11 +8,11 @@
 
   <!--    <div class="place-self-center flex flex-col gap-y-3 md:pageWidth pageWidthSmall">-->
   <div class="place-self-center flex flex-col gap-y-3">
-    <div id="topDiv" class="bg-white dark:bg-gray-800 text-black dark:text-gray-50 p-5 mb-10">
+    <div id="topDiv" class="bg-white dark:bg-gray-800 text-black dark:text-gray-50 mb-10">
       <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
       <NewsHeader :can="can">Newsroom</NewsHeader>
 
-      <div class="w-full overflow-hidden bg-white shadow-sm sm:rounded-lg">
+      <div class="w-full overflow-hidden bg-white shadow-sm sm:rounded-lg p-5 ">
         <div class="w-full p-6 bg-white dark:bg-gray-900 border-b border-gray-200">
 
           <div class="w-full relative overflow-x-auto shadow-md sm:rounded-lg">

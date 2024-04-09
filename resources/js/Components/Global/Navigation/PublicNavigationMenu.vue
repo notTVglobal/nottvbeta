@@ -11,7 +11,7 @@
                 <JetApplicationMark class="block h-9 w-auto"/>
               </Link>
             </div>
-            <div class="w-full flex flex-row justify-between">
+            <div v-if="!userStore.loggedIn" class="w-full flex flex-row justify-between">
               <div class="space-x-4 py-6 pt-6 ml-8 text-gray-200">
                 <h3 class="inline-flex items-center relative">
                   <JetNavLink
@@ -45,7 +45,7 @@
               </div>
             </div>
           </div>
-          <div class="space-x-4 py-6 pt-6 mx-8 text-gray-200">
+          <div v-if="!userStore.loggedIn" class="space-x-4 py-6 pt-6 mx-8 text-gray-200">
             <h3 class="inline-flex items-center relative">
               <JetNavLink
                   :href="`/login`"
@@ -57,6 +57,19 @@
                   :href="`/register`"
                   :active="appSettingStore.currentPage === 'register'">
                 Register</JetNavLink>
+            </h3>
+
+          </div>
+          <div v-if="userStore.loggedIn" class="space-x-4 py-6 pt-6 mx-8 text-gray-200">
+            <h3 v-if="userStore.isCreator" class="inline-flex items-center relative">
+              <JetNavLink
+                  :href="`/dashboard`">
+                Dashboard</JetNavLink>
+            </h3>
+            <h3 class="inline-flex items-center relative">
+              <JetNavLink
+                  :href="`/stream`">
+                Back to Stream</JetNavLink>
             </h3>
 
           </div>
@@ -80,14 +93,14 @@ import { useAppSettingStore } from "@/Stores/AppSettingStore"
 
 import { useChatStore } from "@/Stores/ChatStore"
 import { useStreamStore } from "@/Stores/StreamStore"
-// import { useUserStore } from "@/Stores/UserStore"
+import { useUserStore } from "@/Stores/UserStore"
 import { useWelcomeStore } from "@/Stores/WelcomeStore"
 
 const appSettingStore = useAppSettingStore()
 const chat = useChatStore()
 const videoPlayerStore = useVideoPlayerStore()
 const streamStore = useStreamStore()
-// const userStore = useUserStore()
+const userStore = useUserStore()
 const welcomeStore = useWelcomeStore()
 
 // streamStore.isLive(true)

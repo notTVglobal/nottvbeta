@@ -13,7 +13,7 @@
                 v-if="!goLiveStore.displayEpisodeGoLiveComponent"
                 @click="goLiveStore.toggleDisplayEpisodeGoLiveComponent(episode)"
                 :disabled="episode.show_episode_status_id > 6"
-                class="px-4 py-2 text-white bg-red-600 hover:bg-red-500 rounded-lg disabled:bg-gray-400"
+                class="hidden px-4 py-2 text-white bg-red-600 hover:bg-red-500 rounded-lg disabled:bg-gray-400"
             >Go Live
             </button>
             <button

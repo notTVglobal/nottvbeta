@@ -29,8 +29,8 @@ class ShowScheduleRecurrenceDetails extends Model
 
   protected $casts = [
       'days_of_week' => 'array',
-      'start_date' => 'date',
-      'end_date' => 'date',
+      'start_date' => 'datetime',
+      'end_date' => 'datetime',
       'monday' => 'boolean',
       'tuesday' => 'boolean',
       'wednesday' => 'boolean',

@@ -1,7 +1,17 @@
 # not.tv Changelog
 
-Last Update: April 6, 2024\
+Last Update: April 9, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.8.7.54
+April 9, 2024
+* Working on the schedule
+
+## v0.8.7.53
+April 8, 2024
+* Fixed the login modal width and added a bg gradient
+* Hide the movies sections 'new releases' and 'coming soon', and the links at the top.
+  * This is temporary until we have more movies.
 
 ## v0.8.7.52
 April 6, 2024

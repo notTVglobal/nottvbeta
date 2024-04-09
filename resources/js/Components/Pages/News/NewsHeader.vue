@@ -1,7 +1,6 @@
 <template>
 
-  <div class="w-full mx-auto mb-3 pb-3 border-b border-gray-500 pt-6">
-
+  <div class="w-full mx-auto -mt-6 b-3 pb-3 border-b border-gray-500 pt-6 px-12 bg-yellow-950 text-white">
 
     <div class="w-full mx-auto flex flex-wrap justify-between mb-3 pb-3 gap-x-2 gap-y-2">
       <div class="text-4xl font-semibold text-center lg:text-left">

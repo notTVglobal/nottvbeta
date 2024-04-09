@@ -63,6 +63,14 @@ class ShowScheduleFactory extends Factory {
       }
     }
 
+//    $showEpisode = ShowEpisode::where('show_episode_status_id', 7)
+//        ->whereHas('show', function ($query) {
+//          $query->whereIn('show_status_id', [1, 2]);
+//        })
+//        ->inRandomOrder()
+//        ->first();
+//    $contentId = $showEpisode->id;
+
     // Ensure $startTime is appropriately set to the top of the hour
     // $startTime = $startTime->minute(0)->second(0);
 
@@ -70,8 +78,9 @@ class ShowScheduleFactory extends Factory {
         'content_type'    => $contentType,
         'content_id'      => $contentId,
         'start_time'      => $startTime,
+        'duration_minutes' => 60,
         'end_time'        => $startTime->copy()->addHour(), // End time is 1 hour later
-        'type'            => $isShow ? 'show' : 'movie', // Assuming you're keeping a 'type' column for other logic
+        'type'            => 'show', // Assuming you're keeping a 'type' column for other logic
         'status'          => 'scheduled',
         'priority'        => $this->faker->numberBetween(0, 10),
         'recurrence_flag' => 0

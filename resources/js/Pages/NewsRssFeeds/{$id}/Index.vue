@@ -3,7 +3,7 @@
 
 
   <div id="topDiv" class="place-self-center flex flex-col gap-y-3">
-    <div class="bg-white dark:bg-gray-800 text-black dark:text-gray-50 p-5 mb-10">
+    <div class="bg-white dark:bg-gray-800 text-black dark:text-gray-50 mb-10">
 
       <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
@@ -13,7 +13,7 @@
         <div class="p-6 bg-white dark:bg-gray-900 border-b border-gray-200">
 
 
-          <div class="flex flex-wrap justify-between items-center mb-1">
+          <div class="flex flex-wrap justify-between items-center mb-1 p-5">
             <div class="text-2xl">{{ feed.name }}</div>
             <div class="flex flex-row flex-wrap gap-2">
               <div>

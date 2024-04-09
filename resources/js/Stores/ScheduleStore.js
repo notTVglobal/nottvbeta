@@ -3,6 +3,7 @@ import { useUserStore } from '@/Stores/UserStore'
 import {
     addDays,
     addHours,
+    addMinutes,
     addMonths,
     eachDayOfInterval,
     eachHourOfInterval,
@@ -77,6 +78,8 @@ const initialState = () => ({
     viewingWindowStart: new Date(),
     currentMonth: new Date(),
     selectedDay: new Date(),
+    currentWeekStart: null,
+    currentWeekEnd: null,
     // viewingMode: 'automatic', // or 'userSelected'
     fiveDaySixHourSchedule: [], // Holds the schedule shows 5 day / 6 hour structured data
     todaysContent: [],
@@ -101,22 +104,27 @@ export const useScheduleStore = defineStore('scheduleStore', {
             this.selectedDay = day
             // Explicitly set the viewingWindowStart to 4 AM for the selected day
             this.viewingWindowStart = addHours(startOfDay(day), 4)
+            this.currentWeekStart = startOfWeek(day, { weekStartsOn: 0 });
+            this.currentWeekEnd = endOfWeek(day, { weekStartsOn: 0 });
 
-            // Check if the week of the selected day is already loaded
-            const weekStart = startOfWeek(day, {weekStartsOn: 0});
-            const weekEnd = endOfWeek(day, {weekStartsOn: 0});
+            // // Check if the week of the selected day is already loaded
+            // this.currentWeekStart = startOfWeek(day, {weekStartsOn: 0});
+            // this.currentWeekEnd = endOfWeek(day, {weekStartsOn: 0});
 
-            // First, check if we need to load data for the new week
-            if (this.needsDataForWeek(weekStart, weekEnd)) {
-                // If new data is needed for the week, load it
-                await this.loadWeekFromDate(day).catch(error => {
-                    console.error("Failed to load data for the new week:", error);
-                });
-            }
+            // Use the updated fetch logic
+            await this.fetchWeekDataIfNeeded();
+
+            // // First, check if we need to load data for the new week
+            // if (this.needsDataForWeek(weekStart, weekEnd)) {
+            //     // If new data is needed for the week, load it
+            //     await this.loadWeekFromDate(day).catch(error => {
+            //         console.error("Failed to load data for the new week:", error);
+            //     });
+            // }
 
             // Then, check and fetch for any missing upcoming content
             // This is necessary in case the week data is present but specific upcoming content within the week is missing
-            await this.checkAndFetchForUpcomingContent();
+            // await this.checkAndFetchForUpcomingContent();
         },
         setSelectedDayToToday(day) {
             const now = new Date()
@@ -131,42 +139,71 @@ export const useScheduleStore = defineStore('scheduleStore', {
             this.selectedDay = newDay
             this.viewingWindowStart = newDay
 
-            // Check if the week of the new day is already loaded
-            const weekStart = startOfWeek(newDay, {weekStartsOn: 0});
-            const weekEnd = endOfWeek(newDay, {weekStartsOn: 0});
+            // Update the week's range based on the new day
+            this.currentWeekStart = startOfWeek(newDay, { weekStartsOn: 0 });
+            this.currentWeekEnd = endOfWeek(newDay, { weekStartsOn: 0 });
 
-            // Check for the need to load data for the new week
-            if (this.needsDataForWeek(weekStart, weekEnd)) {
-                await this.loadWeekFromDate(newDay).catch(error => {
-                    console.error("Failed to load data for the new week:", error);
-                });
-            }
+            // // Check if the week of the new day is already loaded
+            // const weekStart = startOfWeek(newDay, {weekStartsOn: 0});
+            // const weekEnd = endOfWeek(newDay, {weekStartsOn: 0});
 
-            // Then, check and fetch for any missing upcoming content
-            await this.checkAndFetchForUpcomingContent();
+            // Use the updated centralized fetch logic without redundant checks
+            await this.fetchWeekDataIfNeeded();
+
+            // // Check for the need to load data for the new week
+            // if (this.needsDataForWeek(weekStart, weekEnd)) {
+            //     await this.loadWeekFromDate(newDay).catch(error => {
+            //         console.error("Failed to load data for the new week:", error);
+            //     });
+            // }
+
+            // // Check for the need to load data for the new week
+            // if (!this.needsDataForWeek()) {
+            //     // Data for the current week has already been loaded; skip fetching
+            //     console.log("Data for the current week has already been loaded; skipping redundant fetch.");
+            //     return;
+            // }
+            //
+            // // Proceed with data fetching if needed
+            // await this.checkAndFetchForUpcomingContent();
         },
         async shiftHours(hours) {
             // Shift the viewing window
             this.viewingWindowStart = addHours(this.viewingWindowStart, hours);
+            this.currentWeekStart = startOfWeek(this.viewingWindowStart, { weekStartsOn: 0 });
+            this.currentWeekEnd = endOfWeek(this.viewingWindowStart, { weekStartsOn: 0 });
 
-            // Update selectedDay if the day has changed
+            // // Update selectedDay if the day has changed
+            // if (!isSameDay(this.viewingWindowStart, this.selectedDay)) {
+            //     this.selectedDay = startOfDay(this.viewingWindowStart);
+            // }
+
+            // If the day has changed, update selectedDay and the week's range
             if (!isSameDay(this.viewingWindowStart, this.selectedDay)) {
                 this.selectedDay = startOfDay(this.viewingWindowStart);
             }
 
-            // Check if the week of the new viewing window is already loaded
-            const weekStart = startOfWeek(this.viewingWindowStart, { weekStartsOn: 0 });
-            const weekEnd = endOfWeek(this.viewingWindowStart, { weekStartsOn: 0 });
+            // // Check if the week of the new viewing window is already loaded
+            // this.currentWeekStart = startOfWeek(this.viewingWindowStart, { weekStartsOn: 0 });
+            // this.currentWeekEnd = endOfWeek(this.viewingWindowStart, { weekStartsOn: 0 });
 
-            // Check for the need to load data for the new week
-            if (this.needsDataForWeek(weekStart, weekEnd)) {
-                await this.loadWeekFromDate(this.viewingWindowStart).catch(error => {
-                    console.error("Failed to load data for the new week:", error);
-                });
-            }
+            // Use the updated fetch logic
+            await this.fetchWeekDataIfNeeded();
 
-            // Then, check and fetch for any missing upcoming content
-            await this.checkAndFetchForUpcomingContent();
+            // // Check for the need to load data for the new week
+            // if (!this.needsDataForWeek()) {
+            //     // Data for the current week has already been loaded; skip fetching
+            //     console.log("Data for the current week has already been loaded; skipping redundant fetch.");
+            //     return;
+            // }
+
+            //
+            // await this.loadWeekFromDate(this.viewingWindowStart).catch(error => {
+            //     console.error("Failed to load data for the new week:", error);
+            // });
+
+            // Proceed with data fetching if needed
+            // await this.checkAndFetchForUpcomingContent();
         },
         isElevenPM(date) {
             return getHours(date) === 23 // Checks if the hour is 23 (11 PM)
@@ -193,6 +230,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
             }
         },
         async fetchFiveDaySixHourSchedule() {
+            console.error('fetchFiveDaySixHourSchedule')
             try {
                 const userStore = useUserStore()
                 const response = await axios.get('/api/schedule')
@@ -202,6 +240,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
 
                 // Convert the entire schedule, including nested recurrenceDetails, to the user's timezone
                 this.fiveDaySixHourSchedule = convertScheduleToTimezone(response.data, timezone)
+                console.error('fetchFiveDaySixHourSchedule', response.data)
             } catch (error) {
                 console.error('Failed to load schedule shows:', error)
                 // Handle the error state as needed, e.g., setting an error state property
@@ -221,20 +260,14 @@ export const useScheduleStore = defineStore('scheduleStore', {
             }
         },
         async preloadWeeklyContent() {
-            const userStore = useUserStore()
+            // Use the current date to preload content for the current week
+            const currentDate = new Date();
+
             try {
-                const response = await axios.get('/api/schedule/week')
-                if (!userStore.timezone) {
-                    console.error("Timezone is not set.");
-                    return; // Or handle this case as appropriate for your app
-                }
-
-                // Fallback to response timezone if userStore.timezone is not set
-                const timezone = userStore.timezone || response.data.userTimezone; // Additional fallback to 'UTC'
-
-                this.weeklyContent = [...this.weeklyContent, convertScheduleToTimezone(response.data, timezone)]
+                // Call loadWeekFromDate with the current date
+                await this.loadWeekFromDate(currentDate);
             } catch (error) {
-                console.error('Failed to preload weekly content:', error)
+                console.error('Failed to preload weekly content:', error);
             }
         },
         async loadWeekFromDate(date) {
@@ -242,10 +275,18 @@ export const useScheduleStore = defineStore('scheduleStore', {
             try {
                 const userStore = useUserStore();
                 // Ensure the date is in UTC format for the request
-                const formattedDate = date.toISOString().split('T')[0];
-                console.log(`Loading week data for date: ${formattedDate}`); // Log the date being requested
+                console.log('Date before formatted: ' + date)
+                const fullISODate = date.toISOString();
 
-                const response = await axios.get(`/api/schedule/week/${formattedDate}`);
+                console.log(`Loading week data for date in UTC: ${fullISODate}`);
+
+                // Send the dateTime and timezone as a JSON object in a POST request
+                const response = await axios.post(`/api/schedule/week/${fullISODate}`);
+
+                // const formattedDate = date.toISOString().split('T')[0];
+                // console.log(`Loading week data for date: ${formattedDate}`); // Log the date being requested
+                //
+                // const response = await axios.get(`/api/schedule/week/${formattedDate}`);
                 console.log('Received response:', response.data); // Log the raw response data
 
                 // Fallback to response timezone if userStore.timezone is not set
@@ -277,25 +318,53 @@ export const useScheduleStore = defineStore('scheduleStore', {
             }
         },
 
-        needsDataForWeek(weekStart, weekEnd) {
-            // Extend weekEnd to cover the span of upcoming content from viewingWindowStart
-            const extendedEnd = this.calculateExtendedEndForUpcomingContent();
+        needsDataForWeek() {
+            // Helper function to format ISO date strings for easier comparison
+            const formatISODate = date => date.toISOString().split('T')[0];
 
-            // Adjust weekEnd if the extended end is beyond the original weekEnd
-            if (extendedEnd > weekEnd) {
-                weekEnd = extendedEnd;
-            }
+            // Current week range in ISO date string format
+            const weekStartStr = formatISODate(this.currentWeekStart);
+            const weekEndStr = formatISODate(this.currentWeekEnd);
 
-            // Now weekEnd includes any additional day(s) that might be displayed
-            weekEnd.setHours(23, 59, 59, 999);
+            // Enhanced logging for debugging
+            console.log(`Current week range: ${weekStartStr} to ${weekEndStr}`);
+            console.log('Existing data fetch log entries:', this.dataFetchLog);
 
-            const hasDataForExtendedWeek = this.weeklyContent.some(content => {
-                const contentDate = new Date(content.start_time);
-                return contentDate >= weekStart && contentDate <= weekEnd;
+            // Iterate through the fetch log to check if the current week has been fetched
+            const weekHasBeenFetched = this.dataFetchLog.some(log => {
+                // Convert log dates to ISO string format for comparison
+                const logWeekStartStr = formatISODate(new Date(log.weekStart));
+                const logWeekEndStr = formatISODate(new Date(log.weekEnd));
+
+                // Log each comparison for insight
+                console.log(`Comparing to fetched range: ${logWeekStartStr} to ${logWeekEndStr}`);
+
+                return logWeekStartStr <= weekStartStr && logWeekEndStr >= weekEndStr;
             });
 
-            console.log('Has data for extended week range:', hasDataForExtendedWeek);
-            return !hasDataForExtendedWeek;
+            // Log the final determination
+            console.log(`Week from ${weekStartStr} to ${weekEndStr} has ${weekHasBeenFetched ? '' : 'not '}been fetched.`);
+
+            return !weekHasBeenFetched;
+            // // Extend weekEnd to cover the span of upcoming content from viewingWindowStart
+            // const extendedEnd = this.calculateExtendedEndForUpcomingContent();
+            // let checkWeekEnd = new Date(this.currentWeekEnd); // Work with a copy to avoid side effects
+            //
+            // if (extendedEnd > checkWeekEnd) {
+            //     checkWeekEnd = extendedEnd;
+            // }
+            //
+            // // Now weekEnd includes any additional day(s) that might be displayed
+            // // Adjust the checkWeekEnd to include the entire day
+            // checkWeekEnd.setHours(23, 59, 59, 999);
+            //
+            // const hasDataForExtendedWeek = this.weeklyContent.some(content => {
+            //     const contentDate = new Date(content.start_time);
+            //     return contentDate >= this.currentWeekStart && contentDate <= checkWeekEnd;
+            // });
+            //
+            // console.log('Has data for extended week range:', hasDataForExtendedWeek);
+            // return !hasDataForExtendedWeek;
         },
         calculateExtendedEndForUpcomingContent() {
             // Assuming viewingWindowStart is the reference start time for upcoming content
@@ -335,11 +404,59 @@ export const useScheduleStore = defineStore('scheduleStore', {
             } catch (error) {
                 console.error(`Failed to fetch data for date ${dateString}:`, error);
             }
-        }
+        },
+
+        // Updated to use this.currentWeekStart and this.currentWeekEnd directly
+        async fetchWeekDataIfNeeded() {
+            // Assumes this.currentWeekStart and this.currentWeekEnd are already set
+            if (this.needsDataForWeek()) {
+                await this.checkAndFetchForUpcomingContent().catch(error => {
+                    console.error("Failed to load data for the week:", error);
+                    return false; // Indicates failure to fetch when an error occurs
+                });
+                // await this.loadWeekFromDate(this.currentWeekStart).catch(error => {
+                //     console.error("Failed to load data for the week:", error);
+                //     return false; // Indicates failure to fetch when an error occurs
+                // });
+            } else {
+                console.log("Week data already loaded; no need to fetch.");
+            }
+
+            // Conditionally check for missing upcoming content within the current week
+            // only if new week data hasn't been fetched.
+            // if (!dataFetched) {
+            //     await this.checkAndFetchForUpcomingContent();
+            // }
+        },
 
     },
 
     getters: {
+        nextFourHoursOfContent: (state) => {
+            const now = new Date(); // Get the current date and time
+            const start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours()); // Set to the top of the current hour
+            const end = new Date(start.getTime() + 4 * 60 * 60 * 1000); // 4 hours later from the start
+
+            // Filter weeklyContent for the next 6 hours window
+            return state.weeklyContent.filter(item => {
+                const itemStart = new Date(item.start_time);
+                return itemStart >= start && itemStart < end;
+            }).sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
+        },
+        nextFourHoursWithHalfHourIntervals: (state) => {
+            const intervals = [];
+            const now = new Date(); // Get the current date and time
+            let current = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours()); // Set to the top of the current hour
+
+            // Create intervals for the next 4 hours, each 30 minutes apart
+            for (let i = 0; i < 8; i++) { // 4 hours / 30 minutes = 8 intervals
+                intervals.push(current);
+                current = addMinutes(current, 30); // Move to the next 30-minute interval
+            }
+
+            // Optionally format each time slot for display in your component's header row
+            return intervals.map(interval => format(interval, 'hh:mm a'));
+        },
         upcomingContent: (state) => {
             const start = new Date(state.viewingWindowStart.getTime() - 60 * 60 * 1000); // 1 hour earlier
             const end = new Date(start.getTime() + 7 * 60 * 60 * 1000); // 6 hours later

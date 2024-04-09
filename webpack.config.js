@@ -6,6 +6,7 @@ const webpack = require('webpack');
 module.exports = {
     mode: 'development',
     resolve: {
+        extensions: ['.js', '.vue', '.json'],
         fallback: {
             'path': require.resolve('path-browserify'),
             // "path": false

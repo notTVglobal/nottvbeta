@@ -13,7 +13,10 @@
       <main class="pb-8 mx-auto px-4 border-b border-gray-800">
         <div class="flex flex-col w-full bg-gray-200 my-10 mx-auto p-5 rounded justify-center text-gray-900">
           <div v-if="newsPeople.length === 0" class="w-full">
-            <div class="flex flex-row">We are in the process of building our news team.</div>
+            <div class="flex flex-col gap-y-2">
+              <p>We are in the process of building our news team.</p>
+              <p>If you are an independent journalist please <Link @click.prevent="appSettingStore.btnRedirect('/contact')" class="underline text-blue-800 hover:text-blue-600 transition duration-300">contact us</Link>.</p>
+            </div>
           </div>
           <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full px-6">
 

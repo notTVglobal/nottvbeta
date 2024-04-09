@@ -16,8 +16,6 @@ class ScheduleController extends Controller
      */
     public function index()
     {
-        // TODO: return first 5 channels to !subscribers
-
         return Inertia::render('Schedule');
     }
 

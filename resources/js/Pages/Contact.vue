@@ -80,7 +80,7 @@
 
       </main>
 
-      <Footer v-if="!appSettingStore.loggedIn"/>
+      <Footer v-if="!userStore.loggedIn "/>
     </div>
   </div>
 </template>
@@ -92,12 +92,14 @@
 import { computed, onMounted, watch } from 'vue'
 import PublicNavigationMenu from '@/Components/Global/Navigation/PublicNavigationMenu'
 import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import { useUserStore } from '@/Stores/UserStore'
 import { useVideoPlayerStore } from '@/Stores/VideoPlayerStore'
 import Footer from '@/Components/Global/Layout/Footer'
 import PublicResponsiveNavigationMenu from '@/Components/Global/Navigation/PublicResponsiveNavigationMenu.vue'
 import { useForm } from '@inertiajs/inertia-vue3'
 
 const appSettingStore = useAppSettingStore()
+const userStore = useUserStore()
 const videoPlayerStore = useVideoPlayerStore()
 
 appSettingStore.noLayout = true
