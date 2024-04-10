@@ -2,8 +2,8 @@
   <div>
     <Head title="Newsroom"/>
 
-    <div class="place-self-center flex flex-col gap-y-3">
-      <div id="topDiv" class="bg-white text-black dark:bg-gray-900 dark:text-gray-50 p-5 mb-10">
+    <div class="place-self-center flex flex-col">
+      <div id="topDiv" class="bg-white text-black dark:bg-gray-900 dark:text-gray-50 mb-10">
 
         <Messages v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
@@ -11,7 +11,7 @@
         <NewsHeader :can="can">Newsroom</NewsHeader>
 
         <!--        OLD STORIES PLACEHOLDER-->
-        <section class="mt-10">
+        <section class="mt-10 px-8">
           <div class="flex w-full h-fit flex-wrap justify-between align-baseline">
             <h2 class="text-center text-xl md:text-2xl font-medium my-auto align-middle pl-6 uppercase">News Stories</h2>
 
@@ -216,7 +216,7 @@
         </section>
 
 
-        <section class="text-center p-4 md:p-8 mb-8">
+        <section class="text-center p-8 md:p-12 mb-8">
           <h1 class="text-2xl md:text-4xl font-bold my-12">Welcome To Your Digital Newsroom</h1>
           <p class="text-md md:text-lg mb-8 text-indigo-800 ">
             Where seasoned journalism intersects with digital innovation.<br>

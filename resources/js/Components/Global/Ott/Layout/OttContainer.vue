@@ -41,8 +41,8 @@ const buttonComponent = computed(() => {
 
 const accessLevels = {
   NowPlayingInfo: () => true,
-  Playlist: () => userStore.isVip || userStore.isAdmin,
-  Channels: () => userStore.isSubscriber || userStore.isAdmin,
+  Playlist: () => userStore.isSubscriber ||userStore.isVip || userStore.isAdmin,
+  Channels: () => userStore.isSubscriber || userStore.isVip || userStore.isAdmin,
   ChatContainer: () => true,
   Filters: () => userStore.isVip || userStore.isAdmin,
 }

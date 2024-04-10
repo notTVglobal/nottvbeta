@@ -7,89 +7,103 @@
       leave-from-class="opacity-100 scale-100"
       leave-to-class="opacity-0 scale-125"
   >
-    <div v-if="show" class="modal-mask overflow-auto py-32 hide-scrollbar">
-      <div class="bg-white py-4 px-4 rounded-lg">
-        <header class="flex justify-center uppercase text-sm font-semibold mb-2 text-center">
-          <JetAuthenticationCardLogo class="max-w-[8rem]"/>
-          <JetValidationErrors class="mb-4"/>
-          <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
-            {{ status }}
+    <!--    <div class="modal-mask overflow-auto py-32 hide-scrollbar">-->
+    <!--      <div class="bg-white py-4 px-4 rounded-lg">-->
+
+    <div v-if="show" class="modal-mask overflow-auto py-32 hide-scrollbar bg-base-100">
+      <div class="relative w-full h-full">
+
+        <div class="div1 modal-content bg-base-200 py-4 px-4 rounded-lg">
+          <header class="flex justify-center uppercase text-sm font-semibold pt-6 mb-2 text-center">
+            <JetAuthenticationCardLogo class="max-w-[30%]"/>
+
+            <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
+              {{ status }}
+            </div>
+          </header>
+          <JetValidationErrors class="px-6 my-4"/>
+          <div class="text-center mt-4 py-3 text-gray-600">
+            Please log in to watch notTV and chat.
           </div>
-        </header>
+          <div class="py-3 px-6">
+            <form @submit.prevent="submit">
+              <div class="w-full">
+                <label for="email" class="input input-bordered input-info flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
+                       class="w-4 h-4 opacity-70">
+                    <path
+                        d="M2.5 3A1.5 1.5 0 0 0 1 4.5v.793c.026.009.051.02.076.032L7.674 8.51c.206.1.446.1.652 0l6.598-3.185A.755.755 0 0 1 15 5.293V4.5A1.5 1.5 0 0 0 13.5 3h-11Z"/>
+                    <path
+                        d="M15 6.954 8.978 9.86a2.25 2.25 0 0 1-1.956 0L1 6.954V11.5A1.5 1.5 0 0 0 2.5 13h11a1.5 1.5 0 0 0 1.5-1.5V6.954Z"/>
+                  </svg>
+                  <input id="email"
+                         v-model="form.email" type="email" class="grow border-none w-full" placeholder="Email" required
+                         autofocus/>
+                </label>
+              </div>
 
-        <div class="text-center mt-4 py-3 text-gray-600">
-          Please log in to watch notTV and chat.
-        </div>
-        <div class="py-3 px-6">
-          <form @submit.prevent="submit">
-            <div class="w-full">
-              <label for="email" class="input input-bordered input-primary flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
-                     class="w-4 h-4 opacity-70">
-                  <path
-                      d="M2.5 3A1.5 1.5 0 0 0 1 4.5v.793c.026.009.051.02.076.032L7.674 8.51c.206.1.446.1.652 0l6.598-3.185A.755.755 0 0 1 15 5.293V4.5A1.5 1.5 0 0 0 13.5 3h-11Z"/>
-                  <path
-                      d="M15 6.954 8.978 9.86a2.25 2.25 0 0 1-1.956 0L1 6.954V11.5A1.5 1.5 0 0 0 2.5 13h11a1.5 1.5 0 0 0 1.5-1.5V6.954Z"/>
-                </svg>
-                <input id="email"
-                       v-model="form.email" type="email" class="grow border-none w-full" placeholder="Email" required autofocus/>
-              </label>
-            </div>
+              <div class="w-full mt-4">
+                <label for="password" class="input input-bordered input-info flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
+                       class="w-4 h-4 opacity-70">
+                    <path fill-rule="evenodd"
+                          d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z"
+                          clip-rule="evenodd"/>
+                  </svg>
+                  <input id="password"
+                         v-model="form.password" type="password" class="grow border-none w-full" value="" required/>
+                </label>
+              </div>
 
-            <div class="w-full mt-4">
-              <label for="password" class="input input-bordered input-primary flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
-                     class="w-4 h-4 opacity-70">
-                  <path fill-rule="evenodd"
-                        d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z"
-                        clip-rule="evenodd"/>
-                </svg>
-                <input id="password"
-                       v-model="form.password" type="password" class="grow border-none w-full" value="" required/>
-              </label>
-            </div>
+              <div class="block mt-4">
+                <label class="flex items-center">
+<!--                  <JetCheckbox v-model:checked="form.remember" name="remember"/>-->
+                  <input type="checkbox" v-model="form.remember" class="checkbox checkbox-info" />
+                  <span class="ml-2 text-sm text-gray-600">Remember me</span>
+                </label>
+              </div>
 
-            <div class="block mt-4">
-              <label class="flex items-center">
-                <JetCheckbox v-model:checked="form.remember" name="remember"/>
-                <span class="ml-2 text-sm text-gray-600">Remember me</span>
-              </label>
-            </div>
+              <div class="flex flex-wrap-reverse items-center justify-end mt-4">
+                <Link :href="route('password.request')" class="underline text-sm text-gray-600 hover:text-gray-900">
+                  Forgot your password?
+                </Link>
 
-            <div class="flex flex-wrap-reverse items-center justify-end mt-4">
-              <Link :href="route('password.request')" class="underline text-sm text-gray-600 hover:text-gray-900">
-                Forgot your password?
-              </Link>
-
-              <JetButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                Log in
-              </JetButton>
-            </div>
-          </form>
-        </div>
-
-        <footer>
-          <div class="flex justify-between modal-footer">
-            <button
-                @click="clearForm"
-                class="bg-gray-300 p-2 rounded-md hover:bg-gray-400 hover:text-gray-800"
-            >Cancel
-            </button>
-            <div class="mt-2">
-              Need to
-              <button @click="showRegister" class="text-blue-800 hover:text-blue-600">register</button>
-              for an account?
-            </div>
+                <JetButton class="ml-4 bg-info hover:bg-info/80" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                  Log in
+                </JetButton>
+              </div>
+            </form>
           </div>
-        </footer>
+
+          <footer>
+            <div class="flex justify-between modal-footer">
+              <button
+                  @click="clearForm"
+                  class="bg-gray-300 p-2 rounded-md hover:bg-gray-400 hover:text-gray-800"
+              >Cancel
+              </button>
+              <div class="mt-2">
+                Need to
+                <button @click="showRegister" class="text-blue-800 hover:text-blue-600">register</button>
+                for an account?
+              </div>
+            </div>
+          </footer>
+        </div>
+
+        <div class="div2">
+          <img src="/storage/images/Ping.png">
+        </div>
       </div>
+
+
     </div>
   </Transition>
 </template>
 
 <script setup>
-import { useWelcomeStore } from "@/Stores/WelcomeStore"
-import { useUserStore } from "@/Stores/UserStore"
+import { useWelcomeStore } from '@/Stores/WelcomeStore'
+import { useUserStore } from '@/Stores/UserStore'
 import { useForm } from '@inertiajs/inertia-vue3'
 import JetAuthenticationCard from '@/Jetstream/AuthenticationCard'
 import JetAuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo'
@@ -105,14 +119,14 @@ const userStore = useUserStore()
 defineProps({
   canResetPassword: Boolean,
   status: String,
-  show: Boolean
-});
+  show: Boolean,
+})
 
 const form = useForm({
   email: '',
   password: '',
   remember: false,
-});
+})
 
 const submit = () => {
   form.transform(data => ({
@@ -120,7 +134,7 @@ const submit = () => {
     remember: form.remember ? 'on' : '',
   })).post(route('login'), {
     onFinish: () => {
-      form.reset('password'); // Reset the password field after submission
+      form.reset('password') // Reset the password field after submission
       console.log('get user data on Login')
       userStore.fetchUserData() // Fetch user data after successful login
           .then(() => {
@@ -130,22 +144,22 @@ const submit = () => {
             // userStore.updateUserTimezone(timezone);
           })
           .catch(error => {
-            console.error("Failed to fetch user data:", error);
+            console.error('Failed to fetch user data:', error)
             // Handle any errors in fetching user data here
-          });
-    }
-  });
-};
+          })
+    },
+  })
+}
 
 function clearForm() {
-  form.reset();
-  welcomeStore.showLogin = false;
+  form.reset()
+  welcomeStore.showLogin = false
 }
 
 function showRegister() {
-  form.reset();
-  welcomeStore.showLogin = false;
-  welcomeStore.showRegister = true;
+  form.reset()
+  welcomeStore.showLogin = false
+  welcomeStore.showRegister = true
 }
 
 </script>
@@ -155,18 +169,32 @@ function showRegister() {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.6);
+  background: linear-gradient(135deg, rgba(46, 187, 236, 1) 0%, rgba(28, 147, 209, 0.6) 70%, rgba(28, 147, 209, 0) 100%);
   display: grid;
   place-items: center;
   z-index: 100;
 }
 
-.modal-container {
-  background: white;
+.modal-content {
   color: black;
-  padding: 1rem;
-  width: 80vw;
-  max-width: 450px;
-  border-radius: 8px;
+  padding: 20px; /* Your padding */
+  border-radius: 8px; /* Your border-radius */
+  max-width: 600px; /* Maximum width */
+  width: 90%; /* Default width */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Adds a shadow for depth */
+
+}
+
+@media (min-width: 768px) {
+  .modal-content {
+    width: 50%; /* Adjust based on preference */
+  }
+}
+
+@media (min-width: 1024px) {
+  .modal-content {
+    width: 40%; /* Or fixed size like 600px */
+  }
 }
 
 .modal-footer {
@@ -175,4 +203,21 @@ function showRegister() {
   padding-top: 0.5rem;
   font-size: .8rem;
 }
+
+.div1, .div2 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Centers the divs */
+  /* Additional styles here (width, height, etc.) */
+}
+
+.div1 {
+  z-index: 2; /* Higher z-index, div1 will be in front */
+}
+
+.div2 {
+  z-index: 1; /* Lower z-index, div2 will be behind */
+}
+
 </style>

@@ -118,29 +118,29 @@
             <div class="p-2">
               <div class="relative">
                 <label for="province" class="leading-7 text-sm text-black dark:text-gray-200">Province</label>
-                <region-select
-                    id="province"
-                    name="province"
-                    v-model="shopStore.customer.province"
-                    :country="shopStore.customer.country"
-                    :region="shopStore.customer.province"
-                    class="w-full bg-gray-100 rounded border border-gray-300 focus:border-indigo-500 text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                    :disabled="paymentProcessing"
-                />
+<!--                <region-select-->
+<!--                    id="province"-->
+<!--                    name="province"-->
+<!--                    v-model="shopStore.customer.province"-->
+<!--                    :country="shopStore.customer.country"-->
+<!--                    :region="shopStore.customer.province"-->
+<!--                    class="w-full bg-gray-100 rounded border border-gray-300 focus:border-indigo-500 text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"-->
+<!--                    :disabled="paymentProcessing"-->
+<!--                />-->
               </div>
             </div>
             <div class="p-2">
               <div class="relative">
                 <label for="country" class="leading-7 text-sm text-black dark:text-gray-200">Country</label>
-                <country-select
-                    id="country"
-                    name="country"
-                    v-model="shopStore.customer.country"
-                    :country="shopStore.customer.country"
-                    topCountry="CA"
-                    class="w-full bg-gray-100 rounded border border-gray-300 focus:border-indigo-500 text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                    :disabled="paymentProcessing"
-                />
+<!--                <country-select-->
+<!--                    id="country"-->
+<!--                    name="country"-->
+<!--                    v-model="shopStore.customer.country"-->
+<!--                    :country="shopStore.customer.country"-->
+<!--                    topCountry="CA"-->
+<!--                    class="w-full bg-gray-100 rounded border border-gray-300 focus:border-indigo-500 text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"-->
+<!--                    :disabled="paymentProcessing"-->
+<!--                />-->
               </div>
             </div>
             <div class="p-2">

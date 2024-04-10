@@ -23,7 +23,7 @@ class ShowScheduleSeeder extends Seeder
 
     ShowSchedule::factory()
         ->count(144)
-        ->withStartDate(2024, 3, 2)
+        ->withStartDate(2024, 4, 8)
         ->create();
 
   }

@@ -50,7 +50,7 @@
         </div>
       </div>
 
-      <CreatorsShowCalendar/>
+<!--      <CreatorsShowCalendar/>-->
 
       <div class="w-full bg-indigo-300 dark:bg-gray-900 rounded-lg pb-8 p-3 mb-16 mx-2 border-b border-2">
 
@@ -260,7 +260,7 @@ import MyAssignments from '@/Components/Pages/Dashboard/Elements/MyAssignments/M
 import MyTeams from '@/Components/Pages/Dashboard/Elements/MyTeams/MyTeams'
 import MyShows from '@/Components/Pages/Dashboard/Elements/MyShows//MyShows'
 import NotificationPanel from '@/Components/Pages/Dashboard/Elements/DashboardNotification/DashboardNotificationPanel'
-import CreatorsShowCalendar from '@/Components/Pages/Dashboard/Elements/ShowCalendar/CreatorsShowCalendar.vue'
+// import CreatorsShowCalendar from '@/Components/Pages/Dashboard/Elements/ShowCalendar/CreatorsShowCalendar.vue'
 
 usePageSetup('dashboard')
 

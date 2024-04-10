@@ -22,95 +22,138 @@
       <div class="text-3xl font-semibold pt-4">Schedule</div>
     </div>
     <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
-    <div class="mx-6">
-      <div class="alert alert-info">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-        </svg>
-        <span>The schedule is updated every 15 minutes. Please revisit this page to see the updated changes.</span>
-      </div>
-    </div>
-    <ul class="w-64 ml-12 my-8">
-      <li class="p-2 bg-green-800">Scheduled Shows</li>
-      <li class="p-2 bg-purple-800">New Releases</li>
-      <li class="p-2 bg-blue-800">Live Events</li>
-      <li class="p-2 bg-yellow-800">News</li>
-      <!--            <li class="p-2"><font-awesome-icon icon="fa-leaf" class="text-red-600 text-3xl pr-2"/> Canadian Content</li>-->
-      <!--            <li class="p-2"><font-awesome-icon icon="fa-flag-usa" class="text-red-600 text-3xl pr-2"/> American Content</li>-->
+    <!--    <div class="mx-6">-->
+    <!--      <div class="alert alert-info">-->
+    <!--        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6">-->
+    <!--          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"-->
+    <!--                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>-->
+    <!--        </svg>-->
+    <!--        <span></span>-->
+    <!--      </div>-->
+    <!--    </div>-->
+    <!--    <ul class="w-64 ml-12 my-8">-->
+    <!--      <li class="p-2 bg-green-800">Scheduled Shows</li>-->
+    <!--      <li class="p-2 bg-purple-800">New Releases</li>-->
+    <!--      <li class="p-2 bg-blue-800">Live Events</li>-->
+    <!--      <li class="p-2 bg-yellow-800">News</li>-->
+    <!--      &lt;!&ndash;            <li class="p-2"><font-awesome-icon icon="fa-leaf" class="text-red-600 text-3xl pr-2"/> Canadian Content</li>&ndash;&gt;-->
+    <!--      &lt;!&ndash;            <li class="p-2"><font-awesome-icon icon="fa-flag-usa" class="text-red-600 text-3xl pr-2"/> American Content</li>&ndash;&gt;-->
 
-    </ul>
+    <!--    </ul>-->
 
     <div class="ml-5 px-2">
       <span class="text-sm uppercase text-purple-500">All times are listed in your timezone.</span>
     </div>
 
-    <table class="table-fixed mx-5">
-      <thead class="bg-gray-900">
-      <tr class="border-b border-0.5 border-white">
-        <th class="column-width p-2 border-r border-0.5 border-white">10:00am</th>
-        <th class="column-width p-2 border-x border-0.5 border-white">10:30am</th>
-        <th class="column-width p-2 border-x border-0.5 border-white">11:00am</th>
-        <th class="column-width p-2 hidden lg:table-cell border-x border-0.5 border-white">11:30am</th>
-        <th class="column-width p-2 hidden xl:table-cell border-x border-0.5 border-white">12:00pm</th>
-        <th class="column-width p-2 hidden xl:table-cell">12:30pm</th>
-        <th class="column-width p-2 hidden 2xl:table-cell border-x border-0.5 border-white">1:00pm</th>
-        <th class="column-width p-2 hidden 2xl:table-cell">1:30pm</th>
+    <!--    <div class="schedule-grid">-->
+    <!--      &lt;!&ndash; Header Row for Times &ndash;&gt;-->
+    <!--      <div class="header-row">-->
+    <!--        <template v-for="(time, index) in nextFourHours" :key="`header-${index}`">-->
+    <!--          <div class="schedule-cell" :style="{ 'grid-column': index + 1 }">{{ time.formatted }}</div>-->
+    <!--        </template>-->
+    <!--      </div>-->
 
-      </tr>
-      </thead>
-      <tbody>
-      <tr class="border-b border-0.5 border-white">
-        <td colspan="2" onclick="goToNowPlayingModal.showModal()"
-            class="column-width p-2 bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-          <div class="flex flex-col">
-            <span class="text-center pb-2">Scheduled Show</span>
-            <div class="w-full h-64 bg-gray-400"></div>
+    <div class="schedule-grid">
+      <div class="header-row">
+        <!-- Time slots header -->
+        <div class="time-cell bg-gray-900 px-3 py-2 text-center font-bold" v-for="interval in nextFourHoursWithHalfHourIntervals" :key="interval.dateTime">
+          {{ interval.formatted }}
+        </div>
+      </div>
+
+      <div class="content-row">
+        <!-- Scheduled shows -->
+        <template v-for="item in nextFourHoursOfContent" :key="item.id">
+          <div
+              class="show-cell"
+              :class="getCellClasses(item.type)"
+              :style="gridPlacement(item.start_time, item.durationMinutes)"
+              @click="openModal(`goToNowPlayingModal`)"
+          >
+            <div  class="item-content flex flex-col items-center justify-center gap-y-2">
+              <h3>{{ item.content.show?.name || 'No Show Name' }}</h3>
+              <!-- Display the image if available -->
+              <SingleImage v-if="item.content.show?.image"
+                           :image="item.content.show?.image"
+                           :alt="item.content.show?.name"
+                           class="content-image"/>
+              <!-- Fallback placeholder if no image -->
+              <div v-else class="placeholder"></div>
+            </div>
           </div>
-        </td>
-        <!--                    <td class="p-2 bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">-->
-        <!--                        <div class="flex flex-col">-->
-        <!--                            <span class="text-center pb-2">Scheduled Show</span>-->
-        <!--                            <div class="w-full h-64 bg-gray-400"></div>-->
-        <!--                        </div>-->
-        <!--                    </td>-->
-        <td onclick="getReminderModal.showModal()"
-            class="column-width p-2 bg-purple-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-purple-600 hover:border-blue-500 cursor-pointer">
-          <div class="flex flex-col">
-            <span class="text-center pb-2">New Release</span>
-            <div class="w-full h-64 bg-gray-400"></div>
-          </div>
-        </td>
+        </template>
+      </div>
 
-        <td colspan="3" onclick="getReminderModal.showModal()"
-            class="column-width p-2 hidden xl:table-cell bg-blue-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-blue-600 hover:border-blue-500 cursor-pointer">
-          <div class="flex flex-col">
-            <span class="text-center pb-2">Live Event</span>
-            <div class="w-full h-64 bg-gray-400"></div>
-          </div>
-        </td>
+      <!--      &lt;!&ndash; Content Row &ndash;&gt;-->
+      <!--      <div class="content-row">-->
+      <!--        <div-->
+      <!--            v-for="(item, index) in nextFourHoursOfContent"-->
+      <!--            :key="`content-${index}`"-->
+      <!--            :style="{ 'grid-column': item.gridColumn }"-->
+      <!--            class="item-cell"-->
+      <!--        >-->
+      <!--          &lt;!&ndash; Calculate where the item should start and how many columns it should span &ndash;&gt;-->
+      <!--          <div :style="{-->
+      <!--                'grid-column': `${calculateStartColumn(item.start_time, timeSlots)} / span ${calculateSpan(item.start_time, item.durationMinutes, timeSlots)}`,-->
+      <!--                }">-->
+      <!--            &lt;!&ndash; Content Here &ndash;&gt;-->
+      <!--            &lt;!&ndash; Content Display Logic &ndash;&gt;-->
+      <!--            <div class="item-content">-->
+      <!--              <h3>{{ item.content.show?.name || 'No Show Name' }}</h3>-->
+      <!--              &lt;!&ndash; Display the image if available &ndash;&gt;-->
+      <!--              <SingleImage v-if="item.content.show?.image"-->
+      <!--                           :image="item.content.show?.image"-->
+      <!--                           :alt="item.content.show?.name"-->
+      <!--                           class="content-image" />-->
+      <!--              &lt;!&ndash; Fallback placeholder if no image &ndash;&gt;-->
+      <!--              <div v-else class="placeholder"></div>-->
+      <!--            </div>-->
+      <!--          </div>-->
 
-        <td onclick="getReminderModal.showModal()"
-            class="column-width p-2 hidden 2xl:table-cell bg-yellow-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-yellow-600 hover:border-blue-500 cursor-pointer">
-          <div class="flex flex-col">
-            <span class="text-center pb-2">News Program</span>
-            <div class="w-full h-64 bg-gray-400"></div>
-          </div>
-        </td>
-        <td onclick="getReminderModal.showModal()"
-            class="column-width p-2 hidden 2xl:table-cell bg-green-800 text-sm 2xl:text-md border border-0.5 border-green-300 hover:bg-green-600 hover:border-blue-500 cursor-pointer">
-          <div class="flex flex-col">
-            <span class="text-center pb-2">Scheduled Show</span>
-            <div class="w-full h-64 bg-gray-400"></div>
-          </div>
-        </td>
+      <!--        </div>-->
+      <!--      </div>-->
 
-      </tr>
+    </div>
 
 
-      </tbody>
+<!--    <table class="table-fixed mx-5">-->
+<!--      <thead class="bg-gray-900">-->
+<!--      <tr class="border-b border-0.5 border-white">-->
+<!--        &lt;!&ndash; Loop for each hour, including its half-hour mark &ndash;&gt;-->
+<!--        <template v-for="(time, index) in nextFourHours" :key="index">-->
+<!--          &lt;!&ndash; Hour mark &ndash;&gt;-->
+<!--          <th :class="getColumnVisibilityClass(index * 2)">-->
+<!--            {{ formatTime(new Date(time)) }}-->
+<!--          </th>-->
+<!--          &lt;!&ndash; Half-hour mark &ndash;&gt;-->
+<!--          <th :class="getColumnVisibilityClass(index * 2 + 1)">-->
+<!--            {{ formatHalfHour(new Date(time)) }}-->
+<!--          </th>-->
+<!--        </template>-->
+<!--      </tr>-->
+<!--      </thead>-->
+<!--      <tbody>-->
+<!--      &lt;!&ndash; Loop through each content item &ndash;&gt;-->
+<!--      <tr v-for="(item, index) in nextFourHoursOfContent" :key="index" class="border-b border-0.5 border-white">-->
+<!--        &lt;!&ndash; Calculate the colspan based on durationMinutes &ndash;&gt;-->
+<!--        <td :colspan="calculateColspan(item.durationMinutes)" @click="openModal(`goToNowPlayingModal`)"-->
+<!--            :class="getCellClasses(item.type)">-->
+<!--          <div class="flex flex-col">-->
+<!--            <span class="text-center pb-2">{{ item.content.show?.name || 'No Show Name' }}</span>-->
+<!--            &lt;!&ndash; Optionally display an image if available &ndash;&gt;-->
+<!--            &lt;!&ndash;            <div v-if="content.show?.image" class="w-full h-64" :style="{ backgroundImage: `url(${content.show.image.cdn_endpoint}${content.show.image.folder}/${content.show.image.name})`, backgroundSize: 'cover' }"></div>&ndash;&gt;-->
+<!--            <SingleImage v-if="item.type === 'show'" :image="item?.content?.show?.image"-->
+<!--                         :alt="item?.content?.show?.name" :class="`max-w-full h-auto object-cover`"/>-->
+<!--            <SingleImage v-else :image="item?.content?.image" :alt="item?.content?.name"-->
+<!--                         :class="`max-w-xs h-auto object-cover`"/>-->
+<!--            &lt;!&ndash; Placeholder if no image is available &ndash;&gt;-->
+<!--            <div v-else class="w-full h-64 bg-gray-400"></div>-->
+<!--          </div>-->
+<!--        </td>-->
+<!--      </tr>-->
+<!--      </tbody>-->
 
-    </table>
+<!--    </table>-->
 
     <PopUpModal :id="`goToNowPlayingModal`">
       <template v-slot:header>Now Playing</template>
@@ -126,7 +169,7 @@
     <div class="bg-gray-600 rounded-lg shadow m-10 p-4">
 
 
-      <TodayView />
+      <TodayView/>
     </div>
 
 
@@ -135,11 +178,14 @@
 
 <script setup>
 import { usePageSetup } from '@/Utilities/PageSetup'
-import { useAppSettingStore } from "@/Stores/AppSettingStore"
-import { useScheduleStore } from "@/Stores/ScheduleStore"
-import Message from "@/Components/Global/Modals/Messages"
-import PopUpModal from "@/Components/Global/Modals/PopUpModal"
+import { useAppSettingStore } from '@/Stores/AppSettingStore'
+import { useScheduleStore } from '@/Stores/ScheduleStore'
+import Message from '@/Components/Global/Modals/Messages'
+import PopUpModal from '@/Components/Global/Modals/PopUpModal'
 import TodayView from '@/Components/Global/Calendar/TodayView.vue'
+import { computed } from 'vue'
+import SingleImage from '@/Components/Global/Multimedia/SingleImage.vue'
+import dayjs from 'dayjs'
 
 usePageSetup('schedule')
 
@@ -150,12 +196,390 @@ let props = defineProps({
   can: Object,
 })
 
+// Computed property to ensure reactivity
+const nextFourHours = computed(() => scheduleStore.nextFourHoursWithHalfHourIntervals)
+const nextFourHoursOfContent = computed(() => scheduleStore.nextFourHoursOfContent)
+const nextFourHoursWithHalfHourIntervals = computed(() => scheduleStore.nextFourHoursWithHalfHourIntervals)
+const timeIntervals = computed(() => scheduleStore.nextFourHoursWithHalfHourIntervals)
+const shows = computed(() => scheduleStore.nextFourHoursOfContent)
+
+const gridPlacement = (startTime, durationMinutes) => {
+  // Convert startTime to a comparable format if necessary
+  const startDateTime = new Date(startTime)
+  const timeSlots = nextFourHoursWithHalfHourIntervals.value.map(interval => new Date(interval.dateTimeString))
+
+  // Find the index of the time slot that matches the item's start time
+  let startColumn = timeSlots.findIndex(slot => startDateTime >= slot && startDateTime < new Date(slot.getTime() + 30 * 60000))
+  if (startColumn === -1) {
+    console.error('Start time does not match any interval:', startTime)
+    return {} // Fallback or error handling
+  }
+
+  // Adjust startColumn for 1-based indexing in CSS Grid
+  startColumn += 1
+
+  // Calculate span based on duration
+  const span = Math.ceil(durationMinutes / 30)
+
+  // Return CSS style object for grid placement
+  return {
+    'gridColumn': `${startColumn} / span ${span}`,
+  }
+}
+
+
+// const nextFourHoursOfContent = computed(() => {
+//   return scheduleStore.nextFourHoursOfContent.map(item => {
+//     const { startColumn, span } = calculateGridPlacement(item.start_time, item.durationMinutes, nextFourHours.value);
+//     // Adjust startColumn for CSS Grid (1-indexed)
+//     const gridColumnStart = startColumn + 1;
+//     item.gridColumn = `${gridColumnStart} / span ${span}`;
+//     return item;
+//   });
+// });
+
+// console.log(nextFourHoursOfContent.value);
+const timeSlots = computed(() => {
+  // Assuming nextFourHoursWithHalfHourIntervals is a reactive source
+  return nextFourHoursOfContent.value.map(slot => new Date(slot))
+})
+//
+// console.log(timeSlots.value);
+
+function calculateStartColumn(startTime, timeSlots) {
+  // Convert startTime to a Date object for comparison
+  const startDateTime = new Date(startTime)
+  // Find the first time slot that matches or exceeds the startDateTime
+  const columnIndex = timeSlots.findIndex(timeSlot => {
+    const timeSlotDate = new Date(timeSlot)
+    return startDateTime.getTime() <= timeSlotDate.getTime()
+  })
+  // Return the column index + 1 (CSS grid lines start at 1, not 0)
+  return columnIndex + 1
+}
+
+function calculateSpan(startTime, durationMinutes, timeSlots) {
+  const startDateTime = new Date(startTime)
+  const endDateTime = new Date(startDateTime.getTime() + durationMinutes * 60000) // Convert duration to milliseconds and add
+
+  let startIndex = -1
+  let endIndex = -1
+
+  // Loop through timeSlots to find start and end indexes
+  for (let i = 0; i < timeSlots.length; i++) {
+    const slot = new Date(timeSlots[i])
+    if (startIndex === -1 && startDateTime <= slot) {
+      startIndex = i
+    }
+    if (endDateTime <= slot) {
+      endIndex = i
+      break
+    }
+  }
+
+  // If the end index was not found, it means the event lasts beyond the last time slot
+  if (endIndex === -1) {
+    endIndex = timeSlots.length
+  }
+
+  // The span is the difference between the end and start indexes
+  return endIndex - startIndex
+}
+
+const timeStringToMinutes = (timeStr) => {
+  const [hour, minute] = timeStr.match(/\d+/g)
+  return parseInt(hour) * 60 + parseInt(minute)
+}
+
+// const calculateGridPlacement = (showStartTime, showDuration, timeIntervals) => {
+//   // Convert the show start time and intervals to minutes for comparison
+//   const showStartMinutes = timeStringToMinutes(showStartTime);
+//   const intervalStartMinutes = timeIntervals.map(interval => timeStringToMinutes(interval));
+//
+//   // Find the starting column by finding the closest interval start time
+//   let startColumn = intervalStartMinutes.findIndex(time => time >= showStartMinutes);
+//   startColumn = startColumn === -1 ? timeIntervals.length - 1 : startColumn; // Fallback to the last column if not found
+//
+//   // Calculate span based on duration (rounded up to cover partial intervals)
+//   const span = Math.ceil(showDuration / 30);
+//
+//   return { startColumn, span };
+// };
+
+// Sample usage
+// const timeIntervals = ["05:00 PM", "05:30 PM", "06:00 PM", "06:30 PM", "07:00 PM", "07:30 PM", "08:00 PM", "08:30 PM"];
+// const showStartTime = "17:00"; // "05:00 PM"
+// const showDuration = 60; // 60 minutes
+
+// const { startColumn, span } = calculateGridPlacement(showStartTime, showDuration, timeIntervals);
+
+// shows.value.forEach(show => {
+//   const { startColumn, span } = calculateGridPlacement(show.start_time, show.durationMinutes, timeIntervals.value);
+//   // Apply the calculated start column and span to your grid layout logic
+// });
+//
+// function calculateGridPlacement(showStartTime, showDuration, timeIntervals) {
+//   // Convert showStartTime to the user's timezone and format for comparison
+//   const showStartInUserTZ = userStore.convertUtcToUserTimezone(showStartTime);
+//
+//   // Find the index of the interval that matches the show's start time
+//   const startColumn = timeIntervals.findIndex(interval => showStartInUserTZ === interval.dateTimeString);
+//
+//   // Calculate how many 30-minute intervals the show spans
+//   const intervals = Math.ceil(showDuration / 30);
+//
+//   if (startColumn === -1) {
+//     console.error('Start time does not match any interval:', showStartInUserTZ);
+//     // Handle the error case appropriately
+//     return { startColumn: 1, span: intervals }; // Default or error handling
+//   }
+//
+//   const span = startColumn + intervals > timeIntervals.length ? timeIntervals.length - startColumn : intervals;
+//
+//   return { startColumn: startColumn + 1, span }; // +1 for CSS grid's 1-based indexing
+// }
+
+
+// This function assumes that `showStartTime` is already in the same format as your time intervals.
+// If not, you may need to implement a conversion function to align the time formats.
+
+function convertTo24HourFormat(time) {
+  // Assume input is "HH:MM PM/AM" and convert to 24-hour format "HH:MM"
+  // This is a placeholder for actual conversion logic
+  return time
+}
+
+
+// function calculateGridColumn(startTime, durationMinutes, timeSlots) {
+//   // Find the index of the slot that matches the item's start time
+//   const startSlotIndex = timeSlots.value.findIndex(timeSlot =>
+//       new Date(startTime) >= new Date(timeSlot) &&
+//       new Date(startTime) < new Date(new Date(timeSlot).getTime() + 30 * 60000)
+//   ) + 1; // Grid lines start at 1
+// }
+//   function calculateSpan(startTime, durationMinutes) {
+//     if (!timeSlots.value || timeSlots.value.length === 0) {
+//       console.error('timeSlots is not defined or empty');
+//       return 0; // or some fallback value
+//     }
+//
+//     // Now safe to use timeSlots.value.findIndex
+//     const startIndex = timeSlots.value.findIndex(/* your logic here */);
+//     // Further logic...
+//   }
+
+
+// Example processing of schedule into grid items
+// const processedSchedule = computed(() => {
+//   return shows.map(show => {
+//     const startCol = calculateStartColumn(show.startTime);
+//     const span = calculateSpan(show.duration, show.startTime);
+//
+//     return {
+//       ...show,
+//       startCol,
+//       span,
+//     };
+//   }).sort((a, b) => a.priority - b.priority); // Ensure sorting by priority
+// });
+
+// const calculateStartColumn = (startTime) => {
+//   const showStart = new Date(startTime);
+//   const gridStart = new Date(nextFourHours.value[0]);
+//
+//   // Calculate start column based on half-hour increments from gridStart
+//   const diffHours = (showStart - gridStart) / (1000 * 60 * 60);
+//   return Math.ceil(diffHours * 2) + 1; // +1 because CSS Grid lines start at 1
+// };
+//
+// const calculateSpan = (durationMinutes) => {
+//   return Math.ceil(durationMinutes / 30); // Span based on 30-minute intervals
+// };
+
+// const calculateStartColumn = (startTime) => {
+//   const showStart = new Date(startTime);
+//   const gridStart = nextFourHours[0];
+//
+//   // Find the index of the time slot that matches or immediately precedes the show's start time
+//   const columnIndex = nextFourHours.findIndex(time => showStart < time) - 1;
+//   console.log('BAHH ' + columnIndex);
+//
+//   return columnIndex >= 0 ? columnIndex + 1 : 1; // Ensure it falls within the grid columns
+// };
+//
+// const calculateSpan = (startTime, durationMinutes) => {
+//   const startColumn = calculateStartColumn(startTime);
+//   const span = Math.ceil(durationMinutes / 30); // Determine span based on duration
+//
+//   // Adjust the span to ensure it doesn't extend beyond the grid
+//   return startColumn + span - 1 <= 8 ? span : 8 - startColumn + 1;
+// };
+
+const getItemStyle = (item) => {
+  const startColumn = calculateStartColumn(item.start_time)
+  const span = calculateSpan(item.durationMinutes)
+
+  return {
+    gridColumnStart: startColumn,
+    gridColumnEnd: `span ${span}`,
+    gridRowStart: 2, // All items start in the second row
+  }
+}
+
+// Method to format the full hour
+function formatTime(date) {
+  return date.toLocaleTimeString('en-US', {hour: 'numeric', minute: '2-digit', hour12: true})
+}
+
+// Method to add 30 minutes to the given date and format it
+function formatHalfHour(date) {
+  const halfHourLater = new Date(date.getTime() + 30 * 60 * 1000)
+  return halfHourLater.toLocaleTimeString('en-US', {hour: 'numeric', minute: '2-digit', hour12: true})
+}
+
+// Determine visibility classes based on column index and if it's a half-hour
+function getColumnVisibilityClass(index, isHalfHour) {
+  // Adjust index for half-hour columns
+  const adjustedIndex = isHalfHour ? index * 2 + 1 : index * 2
+
+  if (adjustedIndex >= 6) { // Last two columns visible only on 2xl screens
+    return 'hidden 2xl:table-cell'
+  } else if (adjustedIndex >= 3) { // Columns 4, 5, 6 visible on xl screens and above
+    return 'hidden xl:table-cell'
+  } else { // Columns 1, 2, 3 are always visible
+    return ''
+  }
+}
+
+function calculateColspan(durationMinutes) {
+  // Assuming each hour (and its half-hour mark) is represented by two columns
+  // and that each content item's duration in minutes can determine its span
+  return Math.ceil(durationMinutes / 30)
+}
+
+function getCellClasses(type) {
+  const baseClass = 'column-width text-sm 2xl:text-md border border-0.5 border-green-300 hover:border-blue-500 cursor-pointer'
+  switch (type) {
+    case 'show':
+      return `${baseClass} bg-gradient-show hover:bg-gradient-show-hover`
+    case 'new_release':
+      return `${baseClass} bg-gradient-new-release hover:bg-gradient-new-release-hover`
+      // Add more cases as needed
+    default:
+      return baseClass
+  }
+}
+
+function openModal(modalName) {
+  document.getElementById(modalName).showModal()
+}
+
+// Example test call
+// console.log(calculateGridColumn('2024-04-09 13:00:00', 90, nextFourHours.value));
+
+
 </script>
 
 <style scoped>
 
+.bg-gradient-show {
+  background: linear-gradient(to right, #1f4037, #99f2c8); /* Example green gradient */
+}
+
+.bg-gradient-show-hover:hover {
+  background: linear-gradient(to right, #66D3FA, #6E45E2); /* Example green gradient on hover */
+}
+
+.bg-gradient-new-release {
+  background: linear-gradient(to right, #654ea3, #eaafc8); /* Example purple gradient */
+}
+
+.bg-gradient-new-release-hover:hover {
+  background: linear-gradient(to right, #c2e59c, #64b3f4); /* Example purple gradient on hover */
+}
+
+
 .column-width {
   @apply w-16
+}
+
+
+.schedule-item {
+  background: #f0f0f0;
+  color: #000;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.time-slot {
+  text-align: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #fff;
+  grid-row: 1; /* Ensures all time slots are in the first row */
+}
+
+.time-cell {
+  border: 1px solid #fff;
+}
+
+.content {
+  background: #f0f0f0;
+  padding: 8px;
+  border: 1px solid #ddd;
+}
+
+.placeholder {
+  background: #ccc;
+  width: 100%;
+  height: 60px;
+}
+
+
+.schedule-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr); /* Adjust based on your actual time slots */
+
+}
+
+.header-row, .content-row {
+  display: contents; /* Make these divs act as part of the grid layout without creating extra rows */
+  width: 100%; /* Ensure they span the full width of the grid */
+}
+
+.schedule-cell {
+  background: #333;
+  color: #fff;
+  text-align: center;
+  padding: 8px;
+}
+
+.item-content {
+  padding: 8px;
+  background: linear-gradient(to right, rgba(68, 68, 68, 0.9), rgba(68, 68, 68, 0.7));
+}
+
+.content-image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+/* Responsive visibility */
+@media (min-width: 1280px) {
+  /* 2xl */
+  .xl\:hidden {
+    display: none;
+  }
+}
+
+@media (min-width: 1024px) {
+  /* xl */
+  .lg\:hidden {
+    display: none;
+  }
 }
 
 </style>

@@ -407,7 +407,7 @@ Route::middleware([
   Route::post('/contribute/subscription', [StripeController::class, 'setupNewSubscription'])
       ->name('contribute.subscription.post');
 
-  Route::get('/shop/subscription_success', [StripeController::class, 'subscriptionSuccess'])
+  Route::get('/contribute/subscription_success', [StripeController::class, 'subscriptionSuccess'])
       ->name('subscriptionSuccess');
 
   Route::post('/payment/setup', [StripeController::class, 'initiateSetup']);
@@ -1159,8 +1159,8 @@ Route::post('/api/schedule/addToSchedule', [ShowScheduleController::class, 'addT
 Route::post('/api/schedule/{id}', [ShowScheduleController::class, 'update']);
 Route::delete('/api/schedule/removeFromSchedule', [ShowScheduleController::class, 'removeFromSchedule']);
 Route::get('/api/schedule/today', [ShowScheduleController::class, 'fetchTodaysContent']);
-Route::get('/api/schedule/week', [ShowScheduleController::class, 'preloadWeeklyContent']);
-Route::get('/api/schedule/week/{formattedDate}', [ShowScheduleController::class, 'loadWeekFromDate']);
+Route::post('/api/schedule/week', [ShowScheduleController::class, 'preloadWeeklyContent']);
+Route::post('/api/schedule/week/{formattedDateTimeUtc}', [ShowScheduleController::class, 'loadWeekFromDate']);
 
 Route::post('/invalidate-caches/', [ShowScheduleController::class, 'invalidateCaches'])
     ->can('viewAdmin', 'App\Models\User');

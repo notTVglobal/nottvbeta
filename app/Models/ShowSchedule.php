@@ -30,11 +30,11 @@ class ShowSchedule extends Model {
     // other casts
   ];
 
-  public function content() {
+  public function content(): \Illuminate\Database\Eloquent\Relations\MorphTo {
     return $this->morphTo(__FUNCTION__, 'content_type', 'content_id');
   }
 
-  public function showScheduleRecurrenceDetails() {
+  public function showScheduleRecurrenceDetails(): \Illuminate\Database\Eloquent\Relations\BelongsTo {
     return $this->belongsTo(ShowScheduleRecurrenceDetails::class, 'recurrence_details_id', 'id');
   }
 

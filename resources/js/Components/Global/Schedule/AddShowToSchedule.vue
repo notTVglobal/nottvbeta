@@ -563,8 +563,8 @@ const handleStartDateSelected = ({date}) => {
 
   form.endDate = endDate
   console.log('handleStartDate form.endDate: ' + form.endDate)
-  provisionalEndDate.value = endDate.format('ddd MMM D YYYY') // Update the endDate in the form
-  console.log('handleStartDate provisionalEndDate: ' + provisionalEndDate.value)
+  provisionalEndDate.value = form.endDate.format('ddd MMM D YYYY') // Update the endDate in the form
+  console.log('provisionalEndDate: ' + provisionalEndDate.value)
 }
 
 // Handles end date selection
@@ -637,10 +637,15 @@ async function submit() {
       let startDate = dayjs(form.startDate).hour(hour).minute(form.startTime.minute);
       form.startDate = dayjs(startDate).tz(userStore.canadianTimezone, true).format()
     console.log('whats the start date? ' + form.startDate)
-      let newEndDate = dayjs(form.startDate).add(form.durationHour, 'hours').add(form.durationMinute, 'minutes')
-    form.endTime = newEndDate.format('HH:mm:ss')
+      let newEndTime = dayjs(form.startDate).add(form.durationHour, 'hours').add(form.durationMinute, 'minutes')
+    form.endTime = newEndTime.format('HH:mm:ss')
     console.log('NEW END TIME: ' + form.endTime);
-      let newFormattedEndDateTime = dayjs(newEndDate).tz(userStore.canadianTimezone, true).format()
+    // Extract the date part of form.endDate
+    let endDateOnly = dayjs(form.endDate).format('YYYY-MM-DD');
+// Combine endDateOnly with form.endTime to update the form.endDate
+    form.endDate = dayjs(endDateOnly + ' ' + form.endTime).format('YYYY-MM-DD HH:mm:ss');
+
+    let newFormattedEndDateTime = dayjs(form.endDate).tz(userStore.canadianTimezone, true).format()
     console.log('NEW END DATETIME: ' + newFormattedEndDateTime);
       form.endDate = newFormattedEndDateTime
     console.log('CONFIRM END DATETIME: ' + form.endDate);

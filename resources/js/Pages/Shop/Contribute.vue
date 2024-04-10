@@ -66,7 +66,7 @@
 
             <!-- Favourite Show Contribution Card -->
             <ContributeCard @click="oneTimeDonation('favouriteShow')" color="orange" :animation="true" :disableButton="true" :itemSelected="`favouriteShowContribution`" class="cursor-pointer">
-              <template #title>Support Your Favorite Show, Creator or Journalist</template>
+              <template #title>Support Your Favorite <br />Show, Creator or Reporter</template>
               <template #icon><font-awesome-icon icon="fa-heart" class="text-2xl"/></template>
               <template #main>Contribute directly to the production of your favorite show. Your support helps us create more of the content you love.<br></template>
               <template #button>Support Now</template>

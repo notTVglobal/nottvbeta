@@ -2,8 +2,8 @@
 
     <Head title="Movies"/>
 
-    <div id="topDiv" class="place-self-center flex flex-col gap-y-3 ">
-        <div class="bg-gray-900 text-white px-5">
+    <div id="topDiv" class="place-self-center flex flex-col gap-y-3">
+        <div class="bg-gray-900 text-white px-5 min-h-screen">
 
             <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
 
@@ -11,7 +11,7 @@
             <div class="container mx-auto flex flex-col xl:flex-row items-center justify-between px-4 py-6">
               <div class="flex flex-col xl:flex-row items-center">
                 <h1 class="text-3xl font-semibold">Movies</h1>
-                <ul class="flex ml-0 xl:ml-16 mt-6 xl:mt-0 space-x-8">
+                <ul class="hidden flex ml-0 xl:ml-16 mt-6 xl:mt-0 space-x-8">
                   <li>
                     <button :href="``" class="text-gray-700 cursor-not-allowed">Categories</button>
                   </li>
@@ -77,7 +77,7 @@
 
                 </div>
 
-                <div class="w-full flex flex-col xl:flex-row my-10">
+                <div class="hidden w-full flex-col xl:flex-row my-10">
 
 <!--                    <div class="recently-reviewed w-full lg:w-3/4 mr-0 md:mr-16 lg:mr-32">-->
                   <div class="w-full xl:w-3/4 mr-0 md:mr-16 xl:mr-32">
