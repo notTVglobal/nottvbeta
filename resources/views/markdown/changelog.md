@@ -6,6 +6,7 @@ Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 ## v0.8.7.54
 April 9, 2024
 * Working on the schedule
+* Schedule page is now working. Just finishing the styling, need to test with overlapping shows, conflicts and different lengths of shows.
 
 ## v0.8.7.53
 April 8, 2024

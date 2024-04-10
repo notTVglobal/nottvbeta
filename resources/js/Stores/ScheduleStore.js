@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { useUserStore } from '@/Stores/UserStore'
+import { createTimeSlots } from '@/Utilities/TimeUtils';
 import {
     addDays,
     addHours,
@@ -428,34 +429,116 @@ export const useScheduleStore = defineStore('scheduleStore', {
             //     await this.checkAndFetchForUpcomingContent();
             // }
         },
+        // createTimeSlots(start, durationHours = 4, intervalMinutes = 30) {
+        //     let slots = [];
+        //     for (let i = 0; i < (durationHours * 60) / intervalMinutes; i++) {
+        //         let slotTime = new Date(start.getTime() + i * intervalMinutes * 60000);
+        //         slots.push(slotTime);
+        //     }
+        //     return slots;
+        // },
 
     },
 
     getters: {
         nextFourHoursOfContent: (state) => {
-            const now = new Date(); // Get the current date and time
-            const start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours()); // Set to the top of the current hour
-            const end = new Date(start.getTime() + 4 * 60 * 60 * 1000); // 4 hours later from the start
+            const userStore = useUserStore();
+            const now = new Date(); // Current time
+            const startOfCurrentHour = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours());
+            const fourHoursLater = new Date(startOfCurrentHour.getTime() + 4 * 60 * 60 * 1000);
 
-            // Filter weeklyContent for the next 6 hours window
-            return state.weeklyContent.filter(item => {
-                const itemStart = new Date(item.start_time);
-                return itemStart >= start && itemStart < end;
-            }).sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
+            // Create time slots for the next four hours, at 30-minute intervals, in UTC
+            const utcTimeSlots = createTimeSlots(startOfCurrentHour, 4, 30);
+            // Convert each UTC time slot to the user's local timezone
+            const timeSlots = utcTimeSlots.map(slot =>
+                new Date(userStore.convertUtcToUserTimezone(slot))
+            );
+
+
+            // Filter, sort, and adjust shows based on start time, duration, and priority
+            let sortedShows = state.weeklyContent
+                .filter(item => {
+                    const itemStart = new Date(item.start_time);
+                    return itemStart >= startOfCurrentHour && itemStart < fourHoursLater;
+                })
+                .sort((a, b) => {
+                    // Sort by start time; if equal, then by priority
+                    const startDiff = new Date(a.start_time) - new Date(b.start_time);
+                    return startDiff !== 0 ? startDiff : a.priority - b.priority;
+                })
+                .map((item, index, array) => {
+                    // Convert back to string format matching start_time format
+                    const formattedItemStartTime = dayjs(item.start_time).format('YYYY-MM-DD HH:mm:ss');
+
+                    console.log('itemStartTimeInUserTZ: ' + formattedItemStartTime)
+                    // Calculate grid placement for each show
+                    const itemStart = new Date(item.start_time);
+                    const itemEnd = new Date(item.start_time);
+                    itemEnd.setMinutes(itemEnd.getMinutes() + item.durationMinutes);
+
+                    // Find the index of the slot that the item starts in
+                    // const slotIndex = timeSlots.findIndex(slot => itemStart >= slot && itemStart < new Date(slot.getTime() + 30 * 60000));
+
+                    // Find the index of the slot that the item starts in
+                    const slotIndex = timeSlots.findIndex(slot => {
+                        return formattedItemStartTime >= slot && formattedItemStartTime < new Date(slot.getTime() + 30 * 60000);
+                    });
+
+                    let durationSlots = Math.ceil(item.durationMinutes / 30);
+                    // Adjust for overlaps with subsequent shows
+                    if (index < array.length - 1) {
+                        const nextItemStart = new Date(array[index + 1].start_time);
+                        if (itemEnd > nextItemStart) {
+                            // If overlap, reduce durationSlots
+                            const overlap = Math.ceil((itemEnd - nextItemStart) / (30 * 60000));
+                            durationSlots -= overlap;
+                        }
+                    }
+
+                    // Ensure the span doesn't exceed the grid or become negative
+                    const adjustedSpan = Math.max(1, Math.min(durationSlots, timeSlots.length - slotIndex));
+
+                    // Return the adjusted show with grid placement information
+                    return {
+                        ...item,
+                        gridStart: slotIndex + 1, // Grid is 1-indexed
+                        gridSpan: adjustedSpan
+                    };
+                });
+
+            return sortedShows;
         },
+        // nextFourHoursOfContent: (state) => {
+        //     const now = new Date(); // Get the current date and time
+        //     const start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours()); // Set to the top of the current hour
+        //     const end = new Date(start.getTime() + 4 * 60 * 60 * 1000); // 4 hours later from the start
+        //
+        //     // Filter weeklyContent for the next 6 hours window
+        //     return state.weeklyContent.filter(item => {
+        //         const itemStart = new Date(item.start_time);
+        //         return itemStart >= start && itemStart < end;
+        //     }).sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
+        // },
         nextFourHoursWithHalfHourIntervals: (state) => {
-            const intervals = [];
-            const now = new Date(); // Get the current date and time
-            let current = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours()); // Set to the top of the current hour
+            const userStore = useUserStore(); // Access the user store
+            const userTimezone = userStore.timezone; // Get the user's timezone
 
-            // Create intervals for the next 4 hours, each 30 minutes apart
+            const intervals = [];
+            const now = dayjs().tz(userTimezone); // Get the current time in the user's timezone
+            // Use dayjs to handle time correctly in the specified timezone
+            let current = now.startOf('hour'); // Set to the top of the current hour
+
+            // Generate intervals for the next 4 hours, each 30 minutes apart
             for (let i = 0; i < 8; i++) { // 4 hours / 30 minutes = 8 intervals
-                intervals.push(current);
-                current = addMinutes(current, 30); // Move to the next 30-minute interval
+                // Push an object with both the formatted time for display and the actual DateTime object
+                intervals.push({
+                    formatted: current.format('hh:mm A'), // Formatted time for display
+                    dateTimeString: current.format('YYYY-MM-DD HH:mm:ss') // Y-m-d H:m:s format for comparisons
+                });
+                current = current.add(30, 'minute'); // Move to the next 30-minute interval
             }
 
-            // Optionally format each time slot for display in your component's header row
-            return intervals.map(interval => format(interval, 'hh:mm a'));
+            return intervals;
         },
         upcomingContent: (state) => {
             const start = new Date(state.viewingWindowStart.getTime() - 60 * 60 * 1000); // 1 hour earlier

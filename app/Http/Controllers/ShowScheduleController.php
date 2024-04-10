@@ -710,6 +710,7 @@ class ShowScheduleController extends Controller {
                   'show' => $showResource->resolve(), // Resolve to get an array
                 ],
               'durationMinutes' => $recurrenceDetails->duration_minutes,
+              'priority'        => $schedule->priority,
           ];
         } else {
           // Handle other content types or absence of content
