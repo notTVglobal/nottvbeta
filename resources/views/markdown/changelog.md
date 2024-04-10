@@ -3,6 +3,10 @@
 Last Update: April 9, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.7.55
+April 9, 2024
+* Schedule is working, tested with overlapping shows.
+
 ## v0.8.7.54
 April 9, 2024
 * Working on the schedule

@@ -893,6 +893,7 @@ class ShowsController extends Controller {
                 'episodeStatusId'          => $showEpisode->showEpisodeStatus->id,
                 'isPublished'              => $showEpisode->isPublished,
                 'scheduledReleaseDateTime' => $showEpisode->scheduled_release_dateTime,
+                'releaseDateTime'          => $showEpisode->release_dateTime,
                 'recordings'               => $showEpisode->recordings->map->only(['id', 'path', 'file_extension', 'start_time', 'end_time', 'total_milliseconds_recorded', 'mist_stream_wildcard_id', 'download_url']), // Include only necessary fields
             ]),
         'episodeStatuses' => $filteredStatuses,
