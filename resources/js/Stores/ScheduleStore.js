@@ -1,10 +1,9 @@
 import { defineStore } from 'pinia'
 import { useUserStore } from '@/Stores/UserStore'
-import { createTimeSlots } from '@/Utilities/TimeUtils';
+import { createTimeSlots } from '@/Utilities/TimeUtils'
 import {
     addDays,
     addHours,
-    addMinutes,
     addMonths,
     eachDayOfInterval,
     eachHourOfInterval,
@@ -86,6 +85,7 @@ const initialState = () => ({
     todaysContent: [],
     weeklyContent: [],
     dataFetchLog: [],
+    scheduleIsLoading: false,
 })
 
 export const useScheduleStore = defineStore('scheduleStore', {
@@ -273,6 +273,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
         },
         async loadWeekFromDate(date) {
             let formattedDate; // Declare formattedDate outside of the try block
+            this.scheduleIsLoading = true
             try {
                 const userStore = useUserStore();
                 // Ensure the date is in UTC format for the request
@@ -314,11 +315,12 @@ export const useScheduleStore = defineStore('scheduleStore', {
                             t.id === value.id && t.start_time === value.start_time
                         ))
                 );
+                this.scheduleIsLoading = false
             } catch (error) {
                 console.error(`Failed to load content for week starting ${formattedDate}:`, error);
+                this.scheduleIsLoading = false
             }
         },
-
         needsDataForWeek() {
             // Helper function to format ISO date strings for easier comparison
             const formatISODate = date => date.toISOString().split('T')[0];
@@ -454,57 +456,100 @@ export const useScheduleStore = defineStore('scheduleStore', {
                 new Date(userStore.convertUtcToUserTimezone(slot))
             );
 
+            // Group shows by start time
+            const showsGroupedByStartTime = state.weeklyContent.reduce((acc, item) => {
+                const itemStart = dayjs(item.start_time).format('YYYY-MM-DD HH:mm:ss');
+                if (!acc[itemStart]) {
+                    acc[itemStart] = [];
+                }
+                acc[itemStart].push(item);
+                return acc;
+            }, {});
 
-            // Filter, sort, and adjust shows based on start time, duration, and priority
-            let sortedShows = state.weeklyContent
+            // Select the show with the lowest priority for each start time
+            const selectedShows = Object.values(showsGroupedByStartTime).map(group => {
+                return group.reduce((selected, item) => {
+                    return !selected || item.priority < selected.priority ? item : selected;
+                }, null);
+            });
+
+            // Sort, adjust for overlaps, and calculate grid placement as before
+            let sortedShows = selectedShows
                 .filter(item => {
                     const itemStart = new Date(item.start_time);
                     return itemStart >= startOfCurrentHour && itemStart < fourHoursLater;
                 })
                 .sort((a, b) => {
-                    // Sort by start time; if equal, then by priority
                     const startDiff = new Date(a.start_time) - new Date(b.start_time);
                     return startDiff !== 0 ? startDiff : a.priority - b.priority;
                 })
                 .map((item, index, array) => {
-                    // Convert back to string format matching start_time format
-                    const formattedItemStartTime = dayjs(item.start_time).format('YYYY-MM-DD HH:mm:ss');
-
-                    console.log('itemStartTimeInUserTZ: ' + formattedItemStartTime)
-                    // Calculate grid placement for each show
-                    const itemStart = new Date(item.start_time);
-                    const itemEnd = new Date(item.start_time);
-                    itemEnd.setMinutes(itemEnd.getMinutes() + item.durationMinutes);
-
-                    // Find the index of the slot that the item starts in
-                    // const slotIndex = timeSlots.findIndex(slot => itemStart >= slot && itemStart < new Date(slot.getTime() + 30 * 60000));
-
-                    // Find the index of the slot that the item starts in
-                    const slotIndex = timeSlots.findIndex(slot => {
-                        return formattedItemStartTime >= slot && formattedItemStartTime < new Date(slot.getTime() + 30 * 60000);
-                    });
-
-                    let durationSlots = Math.ceil(item.durationMinutes / 30);
-                    // Adjust for overlaps with subsequent shows
-                    if (index < array.length - 1) {
-                        const nextItemStart = new Date(array[index + 1].start_time);
-                        if (itemEnd > nextItemStart) {
-                            // If overlap, reduce durationSlots
-                            const overlap = Math.ceil((itemEnd - nextItemStart) / (30 * 60000));
-                            durationSlots -= overlap;
-                        }
-                    }
-
+                    // Grid placement logic remains the same as before
                     // Ensure the span doesn't exceed the grid or become negative
+                    const itemStart = new Date(item.start_time);
+                    const slotIndex = timeSlots.findIndex(slot => new Date(item.start_time) >= slot && new Date(item.start_time) < new Date(slot.getTime() + 30 * 60000));
+                    let durationSlots = Math.ceil(item.durationMinutes / 30);
+                    if (index < array.length - 1) {
+                        // Adjust for overlaps with subsequent shows
+                    }
                     const adjustedSpan = Math.max(1, Math.min(durationSlots, timeSlots.length - slotIndex));
-
-                    // Return the adjusted show with grid placement information
                     return {
                         ...item,
-                        gridStart: slotIndex + 1, // Grid is 1-indexed
+                        gridStart: slotIndex + 1,
                         gridSpan: adjustedSpan
                     };
                 });
+
+            // Filter, sort, and adjust shows based on start time, duration, and priority
+            // let sortedShows = state.weeklyContent
+            //     .filter(item => {
+            //         const itemStart = new Date(item.start_time);
+            //         return itemStart >= startOfCurrentHour && itemStart < fourHoursLater;
+            //     })
+            //     .sort((a, b) => {
+            //         // Sort by start time; if equal, then by priority
+            //         const startDiff = new Date(a.start_time) - new Date(b.start_time);
+            //         return startDiff !== 0 ? startDiff : a.priority - b.priority;
+            //     })
+            //     .map((item, index, array) => {
+            //         // Convert back to string format matching start_time format
+            //         const formattedItemStartTime = dayjs(item.start_time).format('YYYY-MM-DD HH:mm:ss');
+            //
+            //         console.log('itemStartTimeInUserTZ: ' + formattedItemStartTime)
+            //         // Calculate grid placement for each show
+            //         const itemStart = new Date(item.start_time);
+            //         const itemEnd = new Date(item.start_time);
+            //         itemEnd.setMinutes(itemEnd.getMinutes() + item.durationMinutes);
+            //
+            //         // Find the index of the slot that the item starts in
+            //         // const slotIndex = timeSlots.findIndex(slot => itemStart >= slot && itemStart < new Date(slot.getTime() + 30 * 60000));
+            //
+            //         // Find the index of the slot that the item starts in
+            //         const slotIndex = timeSlots.findIndex(slot => {
+            //             return formattedItemStartTime >= slot && formattedItemStartTime < new Date(slot.getTime() + 30 * 60000);
+            //         });
+            //
+            //         let durationSlots = Math.ceil(item.durationMinutes / 30);
+            //         // Adjust for overlaps with subsequent shows
+            //         if (index < array.length - 1) {
+            //             const nextItemStart = new Date(array[index + 1].start_time);
+            //             if (itemEnd > nextItemStart) {
+            //                 // If overlap, reduce durationSlots
+            //                 const overlap = Math.ceil((itemEnd - nextItemStart) / (30 * 60000));
+            //                 durationSlots -= overlap;
+            //             }
+            //         }
+            //
+            //         // Ensure the span doesn't exceed the grid or become negative
+            //         const adjustedSpan = Math.max(1, Math.min(durationSlots, timeSlots.length - slotIndex));
+            //
+            //         // Return the adjusted show with grid placement information
+            //         return {
+            //             ...item,
+            //             gridStart: slotIndex + 1, // Grid is 1-indexed
+            //             gridSpan: adjustedSpan
+            //         };
+            //     });
 
             return sortedShows;
         },
@@ -544,11 +589,36 @@ export const useScheduleStore = defineStore('scheduleStore', {
             const start = new Date(state.viewingWindowStart.getTime() - 60 * 60 * 1000); // 1 hour earlier
             const end = new Date(start.getTime() + 7 * 60 * 60 * 1000); // 6 hours later
 
-            // Filter weeklyContent for the next 6 hours window
-            return state.weeklyContent.filter(item => {
-                const itemStart = new Date(item.start_time);
-                return itemStart >= start && itemStart < end;
-            }).sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
+            // Group shows by start time
+            const showsGroupedByStartTime = state.weeklyContent.reduce((acc, item) => {
+                const itemStart = new Date(item.start_time).getTime();
+                if (!acc[itemStart]) {
+                    acc[itemStart] = [];
+                }
+                acc[itemStart].push(item);
+                return acc;
+            }, {});
+
+            // Select the show with the lowest priority for each start time
+            const selectedShows = Object.values(showsGroupedByStartTime).map(group => {
+                return group.reduce((selected, item) => {
+                    return !selected || item.priority < selected.priority ? item : selected;
+                }, null);
+            });
+
+            // Filter, ensuring they fall within the next 6-hour window, and sort
+            return selectedShows
+                .filter(item => {
+                    const itemStart = new Date(item.start_time);
+                    return itemStart >= start && itemStart < end;
+                })
+                .sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
+
+            // // Filter weeklyContent for the next 6 hours window
+            // return state.weeklyContent.filter(item => {
+            //     const itemStart = new Date(item.start_time);
+            //     return itemStart >= start && itemStart < end;
+            // }).sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
         },
         nextSixHours: (state) => {
             let adjustedStart = state.viewingWindowStart

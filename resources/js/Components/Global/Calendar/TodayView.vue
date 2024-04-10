@@ -49,6 +49,8 @@
         <!-- Content for the current hour -->
         <template v-for="item in upcomingContent">
           <div v-if="isWithinCurrentHour(item, hour)" :key="item.id"
+               class="hover:bg-blue-400 hover:cursor-pointer"
+               @click.prevent="goToContentPage(item)"
                :class="['p-4 rounded-lg shadow', getTimeSegment(new Date(item.start_time)).color, 'mb-4']">
             <div class="flex flex-row flex-wrap gap-x-4 gap-y-2">
               <div class="flex flex-col w-28 max-w-28 text-gray-500">

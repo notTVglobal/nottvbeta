@@ -48,6 +48,9 @@
                              :showName="props.showName"
                              :scheduledDateTime="props.episode.scheduledReleaseDateTime"/>
       </div>
+      <div v-if="episode.episodeStatusId === 7">
+        {{ releaseDateTime }}
+      </div>
 
     </td>
     <td>
@@ -84,6 +87,7 @@ import { computed, ref } from "vue"
 import { useAppSettingStore } from "@/Stores/AppSettingStore"
 import { useTeamStore } from "@/Stores/TeamStore"
 import { useShowStore } from "@/Stores/ShowStore"
+import { useUserStore } from "@/Stores/UserStore"
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"
 import ShowEpisodeStatuses from "@/Components/Pages/Shows/Elements/ManageShowEpisodesStatuses"
 import EpisodeNoteEdit from "@/Components/Pages/Shows/Elements/ManageEpisodeEditNote"
@@ -91,6 +95,7 @@ import EpisodeNoteEdit from "@/Components/Pages/Shows/Elements/ManageEpisodeEdit
 const appSettingStore = useAppSettingStore()
 const teamStore = useTeamStore()
 const showStore = useShowStore()
+const userStore = useUserStore()
 
 let props = defineProps({
   episode: Object,
@@ -100,6 +105,8 @@ let props = defineProps({
 });
 
 let showEpisodeStatuses = ref(false)
+
+const releaseDateTime = userStore.formatDateInUserTimezone(props.episode.releaseDateTime, 'ddd DD MMM YYYY')
 
 showStore.noteEdit = 0
 const componentKey = ref(0);

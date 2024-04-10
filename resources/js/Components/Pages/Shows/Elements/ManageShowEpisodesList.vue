@@ -29,9 +29,10 @@
         Episode Notes
       </td>
 
-      <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-right">
-        Episode Status
+      <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+        Episode Notes
       </td>
+
       <td>
         <!--edit button goes in this column-->
       </td>

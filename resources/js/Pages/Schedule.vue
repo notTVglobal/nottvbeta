@@ -17,9 +17,9 @@
 <template>
   <Head title="Schedule"/>
 
-  <div class="place-self-center flex flex-col gap-y-3 w-full overscroll-x-none pb-64">
+  <div class="place-self-center flex flex-col w-full overscroll-x-none pb-64">
     <div id="topDiv" class="flex justify-end px-5">
-      <div class="text-3xl font-semibold pt-4">Schedule</div>
+      <h1 class="text-4xl font-semibold pt-4">Schedule</h1>
     </div>
     <Message v-if="appSettingStore.showFlashMessage" :flash="$page.props.flash"/>
     <!--    <div class="mx-6">-->
@@ -41,7 +41,7 @@
 
     <!--    </ul>-->
 
-    <div class="ml-5 px-2">
+    <div class="ml-5 px-2 mb-2">
       <span class="text-sm uppercase text-purple-500">All times are listed in your timezone.</span>
     </div>
 
@@ -61,16 +61,21 @@
         </div>
       </div>
 
+      <div v-if="scheduleStore.scheduleIsLoading && scheduleStore.nextFourHoursOfContent.length === 0"
+            class="w-full flex justify-center text-center items-center">
+        <span class="loading loading-ball loading-xl text-info"></span>
+      </div>
+
       <div class="content-row">
         <!-- Scheduled shows -->
         <template v-for="item in nextFourHoursOfContent" :key="item.id">
           <div
-              class="show-cell"
+              class="show-cell flex flex-col w-full h-full"
               :class="getCellClasses(item.type)"
               :style="gridPlacement(item.start_time, item.durationMinutes)"
-              @click="openModal(`goToNowPlayingModal`)"
+              @click="handleShowClick(item)"
           >
-            <div  class="item-content flex flex-col items-center justify-center gap-y-2">
+            <div  class="item-content flex flex-col items-center justify-center gap-y-2 flex-grow">
               <h3>{{ item.content.show?.name || 'No Show Name' }}</h3>
               <!-- Display the image if available -->
               <SingleImage v-if="item.content.show?.image"
@@ -80,6 +85,22 @@
               <!-- Fallback placeholder if no image -->
               <div v-else class="placeholder"></div>
             </div>
+          </div>
+        </template>
+      </div>
+
+
+      <!-- Status Row -->
+      <div class="status-row">
+        <!-- Status for each show -->
+        <template v-for="(item, index) in nextFourHoursOfContent" :key="`status-${item.id}`">
+          <div
+              :class="getStatusCellClasses(index)" :style="gridPlacement(item.start_time, item.durationMinutes)"
+          >
+            <!-- Use the index to determine the status -->
+            <span v-if="index === 0">NOW PLAYING</span>
+            <span v-else-if="index === 1">COMING UP NEXT</span>
+
           </div>
         </template>
       </div>
@@ -162,7 +183,7 @@
     </PopUpModal>
     <PopUpModal :id="`getReminderModal`">
       <template v-slot:header>Set Reminder</template>
-      <template v-slot:main><span class="text-orange-500">This modal is temporary. Set a reminder when this show starts and/or subscribe to the show to get all notifications when new episodes are released or the show goes live.</span>
+      <template v-slot:main><span class="text-orange-500">This modal is temporary. Set a reminder when this show starts and/or subscribe to the show to get all notifications when new episodes are released or the show goes live. <br /><br /><span class="font-semibold text-yellow-600">NOTE: Monthly and Yearly contributors get first access to new features.</span></span>
       </template>
     </PopUpModal>
 
@@ -183,9 +204,10 @@ import { useScheduleStore } from '@/Stores/ScheduleStore'
 import Message from '@/Components/Global/Modals/Messages'
 import PopUpModal from '@/Components/Global/Modals/PopUpModal'
 import TodayView from '@/Components/Global/Calendar/TodayView.vue'
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage.vue'
 import dayjs from 'dayjs'
+import { Inertia } from '@inertiajs/inertia'
 
 usePageSetup('schedule')
 
@@ -202,6 +224,30 @@ const nextFourHoursOfContent = computed(() => scheduleStore.nextFourHoursOfConte
 const nextFourHoursWithHalfHourIntervals = computed(() => scheduleStore.nextFourHoursWithHalfHourIntervals)
 const timeIntervals = computed(() => scheduleStore.nextFourHoursWithHalfHourIntervals)
 const shows = computed(() => scheduleStore.nextFourHoursOfContent)
+
+// Determine the "Now Playing" and "Coming Up Next" statuses
+const now = dayjs();
+let nowPlayingIndex = -1;
+let comingUpNextIndex = -1;
+//
+// // Ensure shows.value is defined and is an array before attempting to iterate over it
+// if (Array.isArray(shows.value)) {
+//   shows.value.forEach((show, index) => {
+//     const showStart = dayjs(show.start_time);
+//     const showEnd = showStart.add(show.durationMinutes, 'minutes');
+//     if (now.isSameOrBefore(showEnd) && now.isAfter(showStart)) {
+//       nowPlayingIndex = index; // This show is now playing
+//     }
+//     // Assuming shows are sorted by start time
+//     if (nowPlayingIndex !== -1 && index === nowPlayingIndex + 1) {
+//       comingUpNextIndex = index; // The next show in the list
+//     }
+//   });
+// }
+
+// Provide these indexes for template usage
+// const isNowPlaying = (index) => index === nowPlayingIndex;
+const isComingUpNext = (index) => index === comingUpNextIndex;
 
 const gridPlacement = (startTime, durationMinutes) => {
   // Convert startTime to a comparable format if necessary
@@ -226,6 +272,57 @@ const gridPlacement = (startTime, durationMinutes) => {
     'gridColumn': `${startColumn} / span ${span}`,
   }
 }
+
+// Determines the classes for a status cell
+const getStatusCellClasses = (index) => {
+  const classes = ['status-cell'];
+  if (index === 0) classes.push('now-playing');
+  else if (index === 1) classes.push('coming-up-next');
+  else classes.push('status-cell-empty'); // For cells without specific content
+  return classes;
+};
+
+// Checks if a given show is currently playing
+function isNowPlaying(showStartTime, durationMinutes) {
+  const now = dayjs()
+  const startTime = dayjs(showStartTime)
+  const endTime = startTime.add(durationMinutes, 'minute')
+  console.log('ShowStartTime Time: ' + showStartTime)
+  console.log('Duration Minutes: ' + durationMinutes)
+  console.log('Now: ' + now)
+  console.log('Start Time: ' + startTime)
+  console.log('End Time: ' + endTime)
+  return now.isAfter(startTime) && now.isBefore(endTime)
+}
+
+
+// const isComingUpNext = (shows) => {
+//   const now = dayjs();
+//   let nowPlayingIndex = -1;
+//
+//   // First, find the index of the show that's currently playing, if any
+//   shows.value.forEach((show, index) => {
+//     const showStart = dayjs(show.start_time);
+//     const showEnd = showStart.add(show.durationMinutes, 'minute');
+//     if (now.isAfter(showStart) && now.isBefore(showEnd)) {
+//       nowPlayingIndex = index;
+//     }
+//   });
+//
+//   // The show coming up next would be the first show that starts after the current time
+//   // and is not the currently playing show
+//   for (let i = nowPlayingIndex + 1; i < shows.length; i++) {
+//     const nextShowStart = dayjs(shows[i].start_time);
+//     if (now.isBefore(nextShowStart)) {
+//       return i; // Return the index of the coming up next show
+//     }
+//   }
+//
+//   return -1; // Return -1 if there's no show coming up next
+// };
+
+const nextShowIndex = isComingUpNext(shows);
+console.log("Coming up next show index:", nextShowIndex);
 
 
 // const nextFourHoursOfContent = computed(() => {
@@ -470,13 +567,19 @@ function getCellClasses(type) {
   }
 }
 
+function handleShowClick(item) {
+  if (isNowPlaying(item.start_time, item.durationMinutes)) {
+    // Redirect to the show's page if it's currently playing
+    Inertia.visit(`/shows/${item.content.show.slug}/`)
+  } else {
+    // Open the reminder modal for shows that are not currently playing
+    openModal('getReminderModal')
+  }
+}
+
 function openModal(modalName) {
   document.getElementById(modalName).showModal()
 }
-
-// Example test call
-// console.log(calculateGridColumn('2024-04-09 13:00:00', 90, nextFourHours.value));
-
 
 </script>
 
@@ -544,7 +647,7 @@ function openModal(modalName) {
 
 }
 
-.header-row, .content-row {
+.header-row, .content-row, .status-row {
   display: contents; /* Make these divs act as part of the grid layout without creating extra rows */
   width: 100%; /* Ensure they span the full width of the grid */
 }
@@ -561,10 +664,70 @@ function openModal(modalName) {
   background: linear-gradient(to right, rgba(68, 68, 68, 0.9), rgba(68, 68, 68, 0.7));
 }
 
+.item-content:hover {
+  background: linear-gradient(to right, #06beb6, #48b1bf);
+  /* Adjust the colors above to match your desired hover effect */
+}
+
 .content-image {
   width: 100%;
   height: auto;
   object-fit: cover;
+}
+
+.status-row {
+  width: 100%; /* Ensure the row takes the full width of its container */
+  text-align: center;
+  font-size: 1rem; /* Adjust as needed */
+  color: white; /* Adjust as needed */
+  padding: 10px 0; /* Adjust as needed */
+  background-color: rgba(0,0,0,0.7); /* Adjust as needed for visibility */
+}
+
+.status-cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px;
+  color: white;
+  width: 100%;
+  height:100%;
+  font-weight: bold;
+  opacity: 0.8;
+  transition: background-color 0.3s ease;
+}
+
+.status-cell span {
+  display: block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background-color: black;
+}
+
+/* Optional: If you want the empty cells to have a slight indication they are there */
+.status-cell:empty::after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: none; /* Adjust this to a very subtle color or keep transparent */
+}
+
+.now-playing {
+  background-color: #4CAF50; /* Green for now playing */
+  animation: pulseAnimation 2s infinite;
+}
+
+.coming-up-next {
+  background-color: #FF9800; /* Orange for coming up next */
+}
+
+
+
+@keyframes pulseAnimation {
+  0% { opacity: 0.75; }
+  50% { opacity: 1; }
+  100% { opacity: 0.75; }
 }
 
 /* Responsive visibility */
