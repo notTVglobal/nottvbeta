@@ -807,13 +807,16 @@ class ShowsController extends Controller {
     // Fetch the Mist Server URI setting outside the map function to avoid repetitive database queries
     $mistServerUri = AppSetting::where('id', 1)->pluck('mist_server_uri')->first();
 
-    $recordings = $show->recordings->map(function ($recording) use ($mistServerUri, $show) {
+    $userRecordingsPath = config('paths.user_recordings_path');
+    $autoRecordingsPath = config('paths.auto_recordings_path');
+
+    $recordings = $show->recordings->map(function ($recording) use ($autoRecordingsPath, $userRecordingsPath, $mistServerUri, $show) {
       // Determine the correct directory to remove from the path
-      if (str_contains($recording->path, '/media/vbs01/user_recordings/')) {
-        $path = str_replace(['/media/vbs01/user_recordings/'], [''], $recording->path);
+      if (str_contains($recording->path, $userRecordingsPath)) {
+        $path = str_replace([$userRecordingsPath], [''], $recording->path);
         $streamPrefix = 'user_recordings%2B'; // Use a different prefix if needed
       } else {
-        $path = str_replace(['/media/recordings/'], [''], $recording->path);
+        $path = str_replace([$autoRecordingsPath], [''], $recording->path);
         $streamPrefix = 'recordings%2B';
       }
 

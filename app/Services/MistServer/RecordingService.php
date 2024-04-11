@@ -57,12 +57,15 @@ class RecordingService extends MistServerService {
         return false;
       }
 
-      // Check if 'media/recordings' is a substring of the item at index [2]
-      // and ensure the item does not literally contain the undesired string
-      if (str_contains($item[2], 'media/user_recordings') &&
-          !str_contains($item[2], '/media/recordings/$stream_$datetime.mkv')) {
-        return true;
-      }
+    $userRecordingsPath = config('paths.user_recordings_path');
+    $autoRecordingsPath = config('paths.auto_recordings_path');
+
+    // Check if 'media/recordings' is a substring of the item at index [2]
+    // and ensure the item does not literally contain the undesired string
+    if (str_contains($item[2], $userRecordingsPath) &&
+        !str_contains($item[2], $autoRecordingsPath . '$stream_$datetime.mkv')) {
+      return true;
+    }
 
       return false;
     });
