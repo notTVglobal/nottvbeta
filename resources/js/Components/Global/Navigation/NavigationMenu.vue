@@ -209,12 +209,10 @@
                       </JetDropdownLink>
 
                       <!-- Authentication -->
-                      <form @submit.prevent="logout">
+                      <JetDropdownLink @click.prevent="logout">
+                        Log Out
+                      </JetDropdownLink>
 
-                        <JetDropdownLink as="button">
-                          Log Out
-                        </JetDropdownLink>
-                      </form>
 
                       <!--                                        &lt;!&ndash; Creator Only Links &ndash;&gt;-->
                       <!--                                        <div v-if="userStore.isCreator">-->

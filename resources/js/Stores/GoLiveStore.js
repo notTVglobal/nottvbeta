@@ -21,6 +21,7 @@ const initialState = () => ({
     destinations: [], // New state for holding destinations
     isLoadingDestinations: false,
     loadingDestinationId: null,
+    processingRecordingChange: false,
     isProcessingDisableAllAutoPushes: false,
     playerIsReloading: false,
     pushDestinationFormSubmitProcessing: false,
@@ -128,11 +129,51 @@ export const useGoLiveStore = defineStore('goLiveStore', {
         stopLive() {
             this.isLive = false
         },
-        startRecording() {
-            this.isRecording = true
+        async startRecording() {
+            const notificationStore = useNotificationStore()
+            const showSlug = this.selectedShow.slug
+            console.log(`Starting recording for show ${showSlug}`)
+            this.processingRecordingChange = true
+            try {
+                const response = await axios.post('/mist-stream/start-recording/'+showSlug, {
+                    stream_name: this.streamKey,
+                })
+                // console.log('Recording started successfully:', response.data)
+                // console.log('Stream Name:', this.streamKey)
+                const {message, status} = response.data
+                // Use the status from the response for the notification
+                notificationStore.setToastNotification(message, status)
+                // Update the recording status
+                this.isRecording = true
+            } catch (error) {
+                // console.error('Error starting push:', error)
+                notificationStore.setToastNotification('Failed to start recording.', 'error')
+                // Handle the error appropriately in your UI
+            } finally {
+                this.processingRecordingChange = false // Stop processing spinner regardless of outcome
+            }
         },
-        stopRecording() {
-            this.isRecording = false
+        async stopRecording() {
+            const notificationStore = useNotificationStore()
+            const showSlug = this.selectedShow.slug
+            console.log(`Stopping recording for show ${showSlug}`)
+            this.processingRecordingChange = true
+            // console.log(`Stopping recording for show ${showSlug}`)
+            try {
+                const response = await axios.post('/mist-stream/stop-recording/'+showSlug, {
+                    stream_name: this.streamKey,
+                })
+                // console.log('Recording stopped successfully:', response.data)
+                const {message, status} = response.data
+                notificationStore.setToastNotification(message, status)
+                // Update the recording status
+                this.isRecording = false
+            } catch (error) {
+                // console.error('Error stopping recording:', error)
+                notificationStore.setToastNotification('Failed to stop push.', 'error')
+            } finally {
+                this.processingRecordingChange = false // Stop processing spinner regardless of outcome
+            }
         },
         // async fetchStreamInfo(streamName) {
         //     try {
@@ -262,10 +303,10 @@ export const useGoLiveStore = defineStore('goLiveStore', {
                 })
                 // console.log(response.data);
                 this.destinations = response.data.destinations || []
-                this.isRecording = response.data.isRecording || false
                 // Extract message and status from the response
                 const {message, status} = response.data
-                // Use the status from the response for the notification
+                // Use the status from the response fo
+                // r the notification
                 // notificationStore.setToastNotification(message, status)
             } catch (error) {
                 // console.error(error);
@@ -287,7 +328,6 @@ export const useGoLiveStore = defineStore('goLiveStore', {
                     backgroundFetch: true,
                 })
                 this.destinations = response.data.destinations || []
-                this.isRecording = response.data.isRecording || false
             } catch (error) {
                 // console.error(error);
                 // notificationStore.setGeneralServiceNotification('Error Fetching Push Destinations', error)
@@ -422,6 +462,7 @@ export const useGoLiveStore = defineStore('goLiveStore', {
             const show = state.shows.find(show => show.id === state.selectedShowId) || null
             state.streamKey = show?.mist_stream_wildcard?.name || 'Fallback value if undefined'
             state.wildcardId = show?.mist_stream_wildcard?.id || 'Fallback value if undefined'
+            state.isRecording = show?.mist_stream_wildcard?.is_recording || false
             return show
         },
         fullRtmpUri: (state) => {

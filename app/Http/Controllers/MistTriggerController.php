@@ -11,7 +11,7 @@ use App\Models\MistStreamPushDestination;
 use App\Models\MistStreamWildcard;
 use App\Models\MistTrigger;
 use App\Models\Recording;
-use App\Services\RecordingService;
+use App\Services\RecordingServiceOLD;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
@@ -21,10 +21,9 @@ use Carbon\Carbon;
 
 class MistTriggerController extends Controller {
 
-  protected RecordingService $recordingService;
+  protected RecordingServiceOLD $recordingService;
 
-  public function __construct(RecordingService $recordingService)
-  {
+  public function __construct(RecordingServiceOLD $recordingService) {
     $this->recordingService = $recordingService;
   }
 
@@ -349,18 +348,18 @@ class MistTriggerController extends Controller {
   protected function parseRecordingEndContent(string $bodyContent): array {
     $lines = explode("\n", $bodyContent);
     $parsedContent = [
-        'streamName' => trim($lines[0]) ?? 'unknown',
-        'filePath' => trim($lines[1]) ?? 'unknown',
-        'fileType' => trim($lines[2]) ?? 'unknown',
-        'bytesRecorded' => (int) trim($lines[3]) ?? 0,
-        'secondsSpentRecording' => (int) trim($lines[4]) ?? 0,
-        'unixTimeRecordingStarted' => (int) trim($lines[5]) ?? 0,
-        'unixTimeRecordingStopped' => (int) trim($lines[6]) ?? 0,
+        'streamName'                => trim($lines[0]) ?? 'unknown',
+        'filePath'                  => trim($lines[1]) ?? 'unknown',
+        'fileType'                  => trim($lines[2]) ?? 'unknown',
+        'bytesRecorded'             => (int) trim($lines[3]) ?? 0,
+        'secondsSpentRecording'     => (int) trim($lines[4]) ?? 0,
+        'unixTimeRecordingStarted'  => (int) trim($lines[5]) ?? 0,
+        'unixTimeRecordingStopped'  => (int) trim($lines[6]) ?? 0,
         'totalMillisecondsRecorded' => (int) trim($lines[7]) ?? 0,
-        'millisecondsFirstPacket' => (int) trim($lines[8]) ?? 0,
-        'millisecondsLastPacket' => (int) trim($lines[9]) ?? 0,
-        'machineReadableReason' => trim($lines[10]) ?? 'unknown',
-        'humanReadableReason' => trim($lines[11]) ?? 'unknown',
+        'millisecondsFirstPacket'   => (int) trim($lines[8]) ?? 0,
+        'millisecondsLastPacket'    => (int) trim($lines[9]) ?? 0,
+        'machineReadableReason'     => trim($lines[10]) ?? 'unknown',
+        'humanReadableReason'       => trim($lines[11]) ?? 'unknown',
     ];
 
     $parsedContent['urlWithoutQuery'] = parse_url($parsedContent['filePath'], PHP_URL_PATH);
@@ -381,27 +380,29 @@ class MistTriggerController extends Controller {
 
     if ($existingRecording) {
       Log::info("Found existing recording entry, avoiding duplication.", ['uniqueId' => $uniqueId]);
+
       return $existingRecording;
     }
+
     // No existing recording found, proceed to create a new entry.
     return Recording::create([
-        'stream_name' => $parsedContent['streamName'],
-        'path' => $parsedContent['filePath'],
-        'file_extension' => $parsedContent['fileExtension'],
-        'mime_type' => $parsedContent['fileType'],
-        'start_time' => $parsedContent['startTime'],
-        'end_time' => $parsedContent['endTime'],
-        'bytes_recorded' => $parsedContent['bytesRecorded'],
-        'seconds_spent_recording' => $parsedContent['secondsSpentRecording'],
-        'total_milliseconds_recorded' => $parsedContent['totalMillisecondsRecorded'],
-        'milliseconds_first_packet' => $parsedContent['millisecondsFirstPacket'],
-        'milliseconds_last_packet' => $parsedContent['millisecondsLastPacket'],
-        'reason_for_exit' => $parsedContent['machineReadableReason'],
+        'comment'                        => 'automated recording',
+        'stream_name'                    => $parsedContent['streamName'],
+        'path'                           => $parsedContent['filePath'],
+        'file_extension'                 => $parsedContent['fileExtension'],
+        'mime_type'                      => $parsedContent['fileType'],
+        'start_time'                     => $parsedContent['startTime'],
+        'end_time'                       => $parsedContent['endTime'],
+        'bytes_recorded'                 => $parsedContent['bytesRecorded'],
+        'seconds_spent_recording'        => $parsedContent['secondsSpentRecording'],
+        'total_milliseconds_recorded'    => $parsedContent['totalMillisecondsRecorded'],
+        'milliseconds_first_packet'      => $parsedContent['millisecondsFirstPacket'],
+        'milliseconds_last_packet'       => $parsedContent['millisecondsLastPacket'],
+        'reason_for_exit'                => $parsedContent['machineReadableReason'],
         'human_readable_reason_for_exit' => $parsedContent['humanReadableReason'],
     ]);
 
   }
-
 
 
   protected function clearRecordingMetadataAndBroadcast(string $streamName): void {

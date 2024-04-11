@@ -2975,6 +2975,10 @@ input.tab:checked + .tab-content,
     --btn-color: var(--fallback-n);
   }
 
+  .btn-info {
+    --btn-color: var(--fallback-in);
+  }
+
   .btn-success {
     --btn-color: var(--fallback-su);
   }
@@ -3048,6 +3052,10 @@ input.tab:checked + .tab-content,
     --btn-color: var(--n);
   }
 
+  .btn-info {
+    --btn-color: var(--in);
+  }
+
   .btn-success {
     --btn-color: var(--su);
   }
@@ -3065,6 +3073,11 @@ input.tab:checked + .tab-content,
   --tw-text-opacity: 1;
   color: var(--fallback-nc,oklch(var(--nc)/var(--tw-text-opacity)));
   outline-color: var(--fallback-n,oklch(var(--n)/1));
+}
+.btn-info {
+  --tw-text-opacity: 1;
+  color: var(--fallback-inc,oklch(var(--inc)/var(--tw-text-opacity)));
+  outline-color: var(--fallback-in,oklch(var(--in)/1));
 }
 .btn-success {
   --tw-text-opacity: 1;
@@ -7375,6 +7388,10 @@ hr {
   z-index: 10;
 }
 
+.z-20 {
+  z-index: 20;
+}
+
 .z-40 {
   z-index: 40;
 }
@@ -7528,6 +7545,10 @@ hr {
   margin-bottom: auto;
 }
 
+.-mb-8 {
+  margin-bottom: -2rem;
+}
+
 .-ml-1 {
   margin-left: -0.25rem;
 }
@@ -7590,10 +7611,6 @@ hr {
 
 .-mt-6 {
   margin-top: -1.5rem;
-}
-
-.mb-0 {
-  margin-bottom: 0px;
 }
 
 .mb-1 {
@@ -8227,6 +8244,10 @@ hr {
 
 .w-screen {
   width: 100vw;
+}
+
+.w-1 {
+  width: 0.25rem;
 }
 
 .min-w-0 {
@@ -9842,10 +9863,6 @@ hr {
 
 .fill-current {
   fill: currentColor;
-}
-
-.fill-primary {
-  fill: var(--fallback-p,oklch(var(--p)/1));
 }
 
 .stroke-current {

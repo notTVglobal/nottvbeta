@@ -223,11 +223,9 @@
           </JetResponsiveNavLink>
 
           <!-- Authentication -->
-          <form method="POST" @submit.prevent="logout">
-            <JetResponsiveNavLink as="button" class="border-t-0">
-              Log Out
-            </JetResponsiveNavLink>
-          </form>
+          <JetResponsiveNavLink @click.prevent="logout" class="border-t-0">
+            Log Out
+          </JetResponsiveNavLink>
 
 
           <!--                &lt;!&ndash; Creator Only Links &ndash;&gt;-->

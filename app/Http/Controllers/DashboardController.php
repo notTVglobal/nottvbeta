@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ImageResource;
 use App\Models\Creator;
 use App\Models\Image;
 use App\Models\NewsPerson;
@@ -121,7 +122,7 @@ class DashboardController extends Controller {
         'isVip'                 => $isVip,
         'isSubscriber'          => auth()->user()->subscribed('default'),
         'hasAccount'            => $hasAccount,
-        'shows'                 => Show::query()
+        'shows'                 => Show::with('image.appSetting')
             ->where('user_id', $user->id)
             ->orWhere(function ($query) use ($user) {
               $query->whereHas('team', function ($subQuery) use ($user) {
@@ -146,6 +147,7 @@ class DashboardController extends Controller {
                 'id'   => $show->id,
                 'name' => $show->name,
                 'slug' => $show->slug,
+                'image' => $show->image ? (new ImageResource($show->image))->resolve() : null,
                 'can'  => [
                     'manageShow' => Auth::user()->can('manage', $show)
                 ]

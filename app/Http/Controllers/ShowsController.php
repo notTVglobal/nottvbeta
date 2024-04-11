@@ -815,22 +815,26 @@ class ShowsController extends Controller {
       // Convert + symbols to %2B in the stream name
       $streamName = 'recordings%2B' . $encodedPath . '.mp4';
 
+      // Format the start time as a string suitable for a filename, assuming $recording->start_time is a Carbon instance
+      // If $recording->start_time is not a Carbon instance, make sure to convert it first or adjust the formatting accordingly
+      $formattedStartTime = $recording->start_time->format(' Y m d H i s');
+
+      // Construct the fileName
+      $downloadFileName = $show->name . $formattedStartTime . '.mp4';
+
+      // Using urlencode()
+      $encodedFileName = urlencode($downloadFileName);
+
       // Construct the download URL
-      $downloadUrl = rtrim($mistServerUri, '/') . '/' . $streamName; // Ensure no double slashes
+      $downloadUrl = rtrim($mistServerUri, '/') . '/' . $streamName . '?dl=1&dl=' . $encodedFileName; // Ensure no double slashes
 
       $shareUrl = rtrim($mistServerUri, '/') . '/' . $encodedPath . '.html';
 
-      // Format the start time as a string suitable for a filename, assuming $recording->start_time is a Carbon instance
-      // If $recording->start_time is not a Carbon instance, make sure to convert it first or adjust the formatting accordingly
-      $formattedStartTime = $recording->start_time->format('Y_m_d_H_i_s');
-
-      // Construct the fileName
-      $downloadFileName = $show->name . '_recording_' . $formattedStartTime . '.mkv';
 
       // Return the modified recording with additional download details
       return collect($recording->only([
           'id', 'file_extension', 'start_time', 'end_time',
-          'total_milliseconds_recorded', 'mist_stream_wildcard_id', 'download_url'
+          'total_milliseconds_recorded', 'mist_stream_wildcard_id', 'download_url', 'path', 'comment'
       ]))
           ->put('streamName', $streamName)
           ->put('shareUrl', $shareUrl)

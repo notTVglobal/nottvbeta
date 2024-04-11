@@ -46,11 +46,10 @@
         <div class="flex flex-row gap-2">
           <div class="mb-2">
             <button v-if="!goLiveStore.isRecording" @click="goLiveStore.startRecording"
-                    disabled
                     class="btn btn-sm text-white bg-green-500 hover:bg-green-700 uppercase"
             >Start Recording
             </button>
-            <button v-else disabled @click="goLiveStore.stopRecording"
+            <button v-else @click="goLiveStore.stopRecording"
                     class="btn btn-sm text-white bg-red-700 hover:bg-red-900 uppercase"
             >Stop Recording
             </button>

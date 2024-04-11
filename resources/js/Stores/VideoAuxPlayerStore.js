@@ -163,7 +163,7 @@ export const useVideoAuxPlayerStore = defineStore('videoAuxPlayerStore', {
             console.log('Preparing for new video source')
 
             // Example: Clear any existing channel or video-specific state
-            useChannelStore().clearChannel()
+            // useChannelStore().clearChannel()
 
             // Reset or cleanup any existing video playback, if necessary
             // this.resetPlayback();

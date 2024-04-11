@@ -117,6 +117,13 @@ onMounted(async () => {
   });
 });
 
+const reloadPlayer = async () => {
+  // Use a new Promise to wait for 1 second
+  await new Promise(resolve => setTimeout(resolve, 1000)); // 1000 milliseconds = 1 second
+  // After waiting, call the reloadPlayer method
+  await goLiveStore.reloadPlayer();
+
+};
 // const selectedShowId = ref('');
 // const selectedShow = computed(() => {
 //   return props.shows?.find(show => show.id === selectedShowId.value) || null;
