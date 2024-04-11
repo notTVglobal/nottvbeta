@@ -45,8 +45,8 @@
       >
       <td class="px-6 py-4 whitespace-nowrap">
         <div>{{ userStore.formatDateInUserTimezone(recording.start_time) }}</div>
-        <div v-if="recording.comment" class="text-xs uppercase text-red-500 font-semibold break-words">
-          <span :class="{ 'text-green-500': recording.comment !== 'automated recording' }">{{ recording.comment }}</span>
+        <div v-if="recording.comment" class="text-xs uppercase text-orange-700 font-semibold break-words">
+          <span :class="{ 'text-indigo-600': recording.comment !== 'automated recording' }">{{ recording.comment }}</span>
         </div>
       </td>
       <td class="px-6 py-4 whitespace-nowrap">

@@ -201,7 +201,7 @@ class GoLiveController extends Controller {
       // Perform the additional check for recording status
       $isRecording = !is_null($allActivePushesCollection->first(function ($item) use ($destination) {
         return $item['stream_name'] === $destination->stream_name &&
-            str_contains($item['original_uri'], 'media/recordings') &&
+            str_contains($item['original_uri'], 'media/user_recordings') &&
             !str_contains($item['original_uri'], '/media/recordings/$stream_$datetime.mkv');
       }));
 

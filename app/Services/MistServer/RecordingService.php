@@ -14,10 +14,11 @@ class RecordingService extends MistServerService {
    * @throws Exception
    */
   public function startRecording($data): bool {
-//    Log::debug('Recording Started',['data' => $data]);
+// Debugging to check the structure of $data
+    Log::debug('Received data for recording:', ['data' => $data]);
 
-    // Assuming $data is an associative array for clarity. If it's indexed, consider using list($streamName, $fullPushUri) = $data;
-    $streamName = $data[0];
+    // Ensure data is extracted correctly
+    $streamName = $data[0];  // Adjust according to the actual key or use indexing if array is not associative
     $fullPushUri = $data[1];
 
     $response = $this->send(['push_start' => $data]);
@@ -30,7 +31,7 @@ class RecordingService extends MistServerService {
       $recording->stream_name = $streamName;
       $recording->path = $fullPushUri;
       $recording->file_extension = 'mkv';
-      $recording->comment = 'Recording started by ' . Auth::user()->name; // Ensure authenticated user is available
+      $recording->comment = 'Recorded by ' . Auth::user()->name; // Ensure authenticated user is available
       $recording->start_time = Carbon::now(); // Set the start_time to the current time
       $recording->save();
 
@@ -45,7 +46,7 @@ class RecordingService extends MistServerService {
 
     // check for pushes and match the stream and the uri (contains '/media/recordings')
     $pushList = $this->send(['push_list' => true]);
-//    Log::debug('pushList: ' . json_encode($pushList));
+    Log::debug('pushList: ' . json_encode($pushList));
     $pushListItems = collect($pushList['push_list'] ?? []);
 
     // Find a matching item based on the stream name and 'original_uri' containing '/media/recordings'
@@ -58,7 +59,7 @@ class RecordingService extends MistServerService {
 
       // Check if 'media/recordings' is a substring of the item at index [2]
       // and ensure the item does not literally contain the undesired string
-      if (str_contains($item[2], 'media/recordings') &&
+      if (str_contains($item[2], 'media/user_recordings') &&
           !str_contains($item[2], '/media/recordings/$stream_$datetime.mkv')) {
         return true;
       }

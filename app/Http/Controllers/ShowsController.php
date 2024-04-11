@@ -808,12 +808,20 @@ class ShowsController extends Controller {
     $mistServerUri = AppSetting::where('id', 1)->pluck('mist_server_uri')->first();
 
     $recordings = $show->recordings->map(function ($recording) use ($mistServerUri, $show) {
-      // Process path to remove unnecessary parts and prepare for URL usage
-      $path = str_replace(['/media/recordings/'], [''], $recording->path);
-      $encodedPath = rawurlencode($path);
-      $streamName = 'recordings%2B' . $encodedPath . '.mp4'; // Prepare stream name
+      // Determine the correct directory to remove from the path
+      if (str_contains($recording->path, '/media/user_recordings/')) {
+        $path = str_replace(['/media/user_recordings/'], [''], $recording->path);
+        $streamPrefix = 'user_recordings%2B'; // Use a different prefix if needed
+      } else {
+        $path = str_replace(['/media/recordings/'], [''], $recording->path);
+        $streamPrefix = 'recordings%2B';
+      }
 
-      // Format the start time if available and is a Carbon instance, else use a default
+      // URL encode the path to ensure it's safe for use in URLs
+      $encodedPath = rawurlencode($path);
+      $streamName = $streamPrefix . $encodedPath . '.mp4'; // Prepare stream name
+
+      // Format the start time as a string suitable for a filename, assuming $recording->start_time is a Carbon instance
       $formattedStartTime = optional($recording->start_time)->format('_Y.m.d.H.i.s') ?? 'unknown_time';
 
       // Construct the file name and encode it for URL usage
