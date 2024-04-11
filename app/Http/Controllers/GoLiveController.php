@@ -198,11 +198,14 @@ class GoLiveController extends Controller {
       $destination->push_is_started = $isMatched ? 1 : 0;
       $destination->save();
 
+      $userRecordingsPath = config('paths.user_recordings_path');
+      $autoRecordingsPath = config('paths.auto_recordings_path');
+
       // Perform the additional check for recording status
-      $isRecording = !is_null($allActivePushesCollection->first(function ($item) use ($destination) {
+      $isRecording = !is_null($allActivePushesCollection->first(function ($item) use ($autoRecordingsPath, $userRecordingsPath, $destination) {
         return $item['stream_name'] === $destination->stream_name &&
-            str_contains($item['original_uri'], 'media/user_recordings') &&
-            !str_contains($item['original_uri'], '/media/recordings/$stream_$datetime.mkv');
+            str_contains($item['original_uri'], $userRecordingsPath) &&
+            !str_contains($item['original_uri'], $autoRecordingsPath.'$stream_$datetime.mkv');
       }));
 
       if ($isRecording) {
