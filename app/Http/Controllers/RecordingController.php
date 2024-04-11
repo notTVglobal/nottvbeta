@@ -29,7 +29,7 @@ class RecordingController extends Controller
 
     try {
 
-      $fullPushUri = '/media/recordings/' . $streamName . '_' . Carbon::now()->format('Y.m.d.H.i.s') . '.mkv';
+      $fullPushUri = '/media/user_recordings/' . $streamName . '_' . Carbon::now()->format('Y.m.d.H.i.s') . '.mkv';
 
       $data = [
           $streamName,

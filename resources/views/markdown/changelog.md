@@ -3,6 +3,10 @@
 Last Update: April 11, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.7.59
+April 11, 2024
+* Fix recording download problems by creating a new folder for user initiated recordings vs system auto push recordings
+
 ## v0.8.7.58
 April 11, 2024
 * Attempted fix of download files by switching urlencode() to rawurlencode()
