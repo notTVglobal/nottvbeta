@@ -303,6 +303,8 @@ export const useGoLiveStore = defineStore('goLiveStore', {
                 })
                 // console.log(response.data);
                 this.destinations = response.data.destinations || []
+                this.isRecording = response.data.recording || false
+                console.log('response about recording: ' + response.data.recording)
                 // Extract message and status from the response
                 const {message, status} = response.data
                 // Use the status from the response fo
@@ -328,6 +330,7 @@ export const useGoLiveStore = defineStore('goLiveStore', {
                     backgroundFetch: true,
                 })
                 this.destinations = response.data.destinations || []
+                this.isRecording = response.data.recording || false
             } catch (error) {
                 // console.error(error);
                 // notificationStore.setGeneralServiceNotification('Error Fetching Push Destinations', error)

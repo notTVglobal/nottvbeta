@@ -45,7 +45,9 @@
       >
       <td class="px-6 py-4 whitespace-nowrap">
         <div>{{ userStore.formatDateInUserTimezone(recording.start_time) }}</div>
-        <div v-if="recording.comment" class="text-xs uppercase text-red-500 font-semibold">{{ recording.comment }}</div>
+        <div v-if="recording.comment" class="text-xs uppercase text-red-500 font-semibold break-words">
+          <span :class="{ 'text-green-500': recording.comment !== 'automated recording' }">{{ recording.comment }}</span>
+        </div>
       </td>
       <td class="px-6 py-4 whitespace-nowrap">
         {{ userStore.formatTimeFromDateInUserTimezone(recording.start_time) }}
@@ -87,7 +89,10 @@
       <p class="py-4 text-xl mt-4">Would you like to play the recording<br /> from
         <span class="font-semibold">{{ selectedRecordingDate }}</span>?</p>
       <p class="my-2 text-left" v-if="selectedRecording && selectedRecording.path"><span class="font-semibold">Path: </span>{{ selectedRecording.path }}</p>
-      <p class="my-2 text-left" v-if="selectedRecording && selectedRecording.comment"><span class="font-semibold">Comment: </span>{{ selectedRecording.comment }}</p>
+      <p class="my-2 text-left" v-if="selectedRecording && selectedRecording.comment">
+        <span class="font-semibold">Comment: </span>
+        <span>{{ selectedRecording.comment }}</span>
+      </p>
       <button class="mt-4 btn" @click="play">Play</button>
     </div>
 

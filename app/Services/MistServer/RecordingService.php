@@ -2,7 +2,10 @@
 
 namespace App\Services\MistServer;
 
+use App\Models\Recording;
+use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class RecordingService extends MistServerService {
@@ -11,11 +14,26 @@ class RecordingService extends MistServerService {
    * @throws Exception
    */
   public function startRecording($data): bool {
-    Log::debug('Recording Started',['data' => $data]);
+//    Log::debug('Recording Started',['data' => $data]);
+
+    // Assuming $data is an associative array for clarity. If it's indexed, consider using list($streamName, $fullPushUri) = $data;
+    $streamName = $data[0];
+    $fullPushUri = $data[1];
+
     $response = $this->send(['push_start' => $data]);
     // Check if the response has an "OK" status
     if (isset($response['authorize']) && $response['authorize']['status'] === 'OK') {
-      Log::info('Recording successfully started', ['response' => $response]);
+//      Log::info('Recording successfully started', ['response' => $response]);
+
+      // Create and save the Recording model
+      $recording = new Recording();
+      $recording->stream_name = $streamName;
+      $recording->path = $fullPushUri;
+      $recording->file_extension = 'mkv';
+      $recording->comment = 'Recording started by ' . Auth::user()->name; // Ensure authenticated user is available
+      $recording->start_time = Carbon::now(); // Set the start_time to the current time
+      $recording->save();
+
       return true;
     } else {
       Log::warning('Failed to start recording', ['response' => $response]);
@@ -27,7 +45,7 @@ class RecordingService extends MistServerService {
 
     // check for pushes and match the stream and the uri (contains '/media/recordings')
     $pushList = $this->send(['push_list' => true]);
-    Log::debug('pushList: ' . json_encode($pushList));
+//    Log::debug('pushList: ' . json_encode($pushList));
     $pushListItems = collect($pushList['push_list'] ?? []);
 
     // Find a matching item based on the stream name and 'original_uri' containing '/media/recordings'
@@ -56,11 +74,11 @@ class RecordingService extends MistServerService {
     // Use the push ID from the matched item
     $pushId = $matchedItem[0];
     $response = $this->send(['push_stop' => $pushId]);
-    Log::debug('stopRecording: ' . json_encode($response));
+//    Log::debug('stopRecording: ' . json_encode($response));
 
     // Check the response status
     if (isset($response['authorize']) && $response['authorize']['status'] === 'OK') {
-      Log::info('Recording successfully stopped', ['response' => $response]);
+//      Log::info('Recording successfully stopped', ['response' => $response]);
       return true;
     } else {
       Log::warning('Failed to stop recording', ['response' => $response]);

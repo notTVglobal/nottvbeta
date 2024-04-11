@@ -24,6 +24,12 @@
               <JetSectionBorder/>
             </div>
 
+            <div >
+              <UpdateCreatorSettings class="pt-10" />
+
+              <JetSectionBorder/>
+            </div>
+
             <div>
               <UpdateContactInformationForm :user="$page.props.user" class="pt-10"/>
 
@@ -56,6 +62,7 @@
 
 <script setup>
 import { usePageSetup } from '@/Utilities/PageSetup'
+import { useUserStore } from "@/Stores/UserStore"
 import DeleteUserForm from '@/Pages/Profile/Partials/DeleteUserForm'
 import JetSectionBorder from '@/Jetstream/SectionBorder'
 import LogoutOtherBrowserSessionsForm from '@/Pages/Profile/Partials/LogoutOtherBrowserSessionsForm'
@@ -63,6 +70,9 @@ import TwoFactorAuthenticationForm from '@/Pages/Profile/Partials/TwoFactorAuthe
 import UpdatePasswordForm from '@/Pages/Profile/Partials/UpdatePasswordForm'
 import UpdateProfileInformationForm from '@/Pages/Profile/Partials/UpdateProfileInformationForm'
 import UpdateContactInformationForm from '@/Pages/Profile/Partials/UpdateContactInformationForm'
+import UpdateCreatorSettings from '@/Pages/Profile/Partials/UpdateCreatorSettings.vue'
+
+const userStore = useUserStore()
 
 usePageSetup('settings')
 

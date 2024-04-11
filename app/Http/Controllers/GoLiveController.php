@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Factories\MistServerServiceFactory;
 use App\Models\MistStreamPushDestination;
+use App\Models\MistStreamWildcard;
 use App\Services\MistServer\MistServerService;
 use App\Models\MistServerActivePush;
 use App\Models\MistServerAutoPush;
@@ -154,7 +155,7 @@ class GoLiveController extends Controller {
     // fetches we can use the Cache which gets update through our
     // Command that runs every minute. This will be updated to handle
     // Real-time notifications when we build out more of our web sockets.
-    if ($validated['backgroundFetch']){
+    if ($validated['backgroundFetch']) {
       // Assuming allActivePushes is a collection of arrays with 'stream_name' and 'original_uri' keys
       $allActivePushesCollection = collect(Cache::get('all_active_pushes', []));
     } else {
@@ -184,23 +185,51 @@ class GoLiveController extends Controller {
         })
         ->get();
 
-    // Iterate through each destination to update its 'push_is_started' status
+    $anyRecording = false; // Flag to track if any destination is recording
+    $mistStreamWildcardToUpdate = null; // Placeholder for the mistStreamWildcard
+
+// Iterate through each destination to update its 'push_is_started' status and check recording status
     foreach ($pushDestinations as $destination) {
       $isMatched = $allActivePushesCollection->contains(function ($push) use ($destination) {
         return $push['stream_name'] === $destination->stream_name && $push['original_uri'] === $destination->full_push_uri;
       });
 
+      // Update the push_is_started status based on match
       $destination->push_is_started = $isMatched ? 1 : 0;
       $destination->save();
+
+      // Perform the additional check for recording status
+      $isRecording = !is_null($allActivePushesCollection->first(function ($item) use ($destination) {
+        return $item['stream_name'] === $destination->stream_name &&
+            str_contains($item['original_uri'], 'media/recordings') &&
+            !str_contains($item['original_uri'], '/media/recordings/$stream_$datetime.mkv');
+      }));
+
+      if ($isRecording) {
+        $anyRecording = true; // Set flag if any recording conditions are met
+      }
+
+      // Assign the mistStreamWildcard for later update
+      if ($destination->mistStreamWildcard) {
+        $mistStreamWildcardToUpdate = $destination->mistStreamWildcard;
+      }
+    }
+
+// After determining $anyRecording, update the mistStreamWildcard if it has been assigned
+    if ($mistStreamWildcardToUpdate) {
+      $mistStreamWildcardToUpdate->is_recording = $anyRecording ? 1 : 0;
+      $mistStreamWildcardToUpdate->save();
     }
 
     // Optionally, return the updated list of destinations
     $updatedDestinations = $pushDestinations->fresh();
-
+    // After the loop completes, log and return the aggregated recording status ($anyRecording)
+//    Log::debug('is recording?? ' . json_encode($anyRecording));
     return response()->json([
         'status'       => 'success',
         'message'      => "Push destinations updated for stream: $streamName",
         'destinations' => $updatedDestinations,
+        'recording'    => $anyRecording,  // Return the aggregated recording status
     ]);
   }
 

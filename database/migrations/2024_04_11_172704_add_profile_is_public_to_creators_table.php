@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('teams', function (Blueprint $table) {
-          $table->boolean('team_members_profiles_are_visible')->default(false)->after('totalSpots');
+        Schema::table('creators', function (Blueprint $table) {
+          $table->boolean('profile_is_public')->default(false);
         });
     }
 
@@ -25,8 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('teams', function (Blueprint $table) {
-          $table->dropColumn('team_members_profiles_are_visible');
+        Schema::table('creators', function (Blueprint $table) {
+          $table->dropColumn('profile_is_public');
         });
     }
 };

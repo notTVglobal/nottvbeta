@@ -808,28 +808,23 @@ class ShowsController extends Controller {
     $mistServerUri = AppSetting::where('id', 1)->pluck('mist_server_uri')->first();
 
     $recordings = $show->recordings->map(function ($recording) use ($mistServerUri, $show) {
-      // Remove the specified parts from the path
+      // Process path to remove unnecessary parts and prepare for URL usage
       $path = str_replace(['/media/recordings/'], [''], $recording->path);
-      // URL encode the path to ensure it's safe for use in URLs
       $encodedPath = urlencode($path);
-      // Convert + symbols to %2B in the stream name
-      $streamName = 'recordings%2B' . $encodedPath . '.mp4';
+      $streamName = 'recordings%2B' . $encodedPath . '.mp4'; // Prepare stream name
 
-      // Format the start time as a string suitable for a filename, assuming $recording->start_time is a Carbon instance
-      // If $recording->start_time is not a Carbon instance, make sure to convert it first or adjust the formatting accordingly
-      $formattedStartTime = $recording->start_time->format(' Y m d H i s');
+      // Format the start time if available and is a Carbon instance, else use a default
+      $formattedStartTime = optional($recording->start_time)->format(' Y m d H i s') ?? 'unknown_time';
 
-      // Construct the fileName
+      // Construct the file name and encode it for URL usage
       $downloadFileName = $show->name . $formattedStartTime . '.mp4';
-
-      // Using urlencode()
       $encodedFileName = urlencode($downloadFileName);
 
-      // Construct the download URL
-      $downloadUrl = rtrim($mistServerUri, '/') . '/' . $streamName . '?dl=1&dl=' . $encodedFileName; // Ensure no double slashes
+      // Construct the download URL with correct query parameters
+      $downloadUrl = rtrim($mistServerUri, '/') . '/' . $streamName . '?dl=1&filename=' . $encodedFileName;
 
+      // Construct a share URL
       $shareUrl = rtrim($mistServerUri, '/') . '/' . $encodedPath . '.html';
-
 
       // Return the modified recording with additional download details
       return collect($recording->only([

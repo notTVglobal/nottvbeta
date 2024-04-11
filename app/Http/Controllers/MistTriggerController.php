@@ -379,8 +379,29 @@ class MistTriggerController extends Controller {
     $existingRecording = Recording::where('path', $uniqueId)->first();
 
     if ($existingRecording) {
-      Log::info("Found existing recording entry, avoiding duplication.", ['uniqueId' => $uniqueId]);
+//      Log::info("Found existing recording entry, checking if update is needed.", ['uniqueId' => $uniqueId]);
 
+      // Only update the recording if the comment is not 'automated recording'
+      if ($existingRecording->comment !== 'automated recording') {
+        Log::info("Updating non-automated existing recording.", ['uniqueId' => $uniqueId]);
+        $existingRecording->update([
+            'stream_name'                    => $parsedContent['streamName'],
+            'path'                           => $parsedContent['filePath'],
+            'file_extension'                 => $parsedContent['fileExtension'],
+            'mime_type'                      => $parsedContent['fileType'],
+            'start_time'                     => $parsedContent['startTime'],
+            'end_time'                       => $parsedContent['endTime'],
+            'bytes_recorded'                 => $parsedContent['bytesRecorded'],
+            'seconds_spent_recording'        => $parsedContent['secondsSpentRecording'],
+            'total_milliseconds_recorded'    => $parsedContent['totalMillisecondsRecorded'],
+            'milliseconds_first_packet'      => $parsedContent['millisecondsFirstPacket'],
+            'milliseconds_last_packet'       => $parsedContent['millisecondsLastPacket'],
+            'reason_for_exit'                => $parsedContent['machineReadableReason'],
+            'human_readable_reason_for_exit' => $parsedContent['humanReadableReason'],
+        ]);
+      } else {
+        Log::info("Automated recording found, no update performed.", ['uniqueId' => $uniqueId]);
+      }
       return $existingRecording;
     }
 

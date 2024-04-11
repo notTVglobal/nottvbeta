@@ -413,14 +413,14 @@ class MistStreamPushDestinationController extends Controller {
 
 
   public function pushAutoRemove(MistStreamPushDestination $mistStreamPushDestination): \Illuminate\Http\JsonResponse {
-    Log::debug('Auto push removed for MistStreamPushDestination.', ['destinationId' => $mistStreamPushDestination->id]);
+//    Log::debug('Auto push removed for MistStreamPushDestination.', ['destinationId' => $mistStreamPushDestination->id]);
     try {
 
 //      $this->pushDestinationService->pushAutoRemove($mistStreamPushDestination);
 
       // Dispatch the MistStreamPushAutoRemoveJob with the destination model
 //      MistStreamPushAutoRemoveJob::dispatch($destination);
-      Log::debug('Push Destination Service -> pushAutoRemove ran successfully for ', ['destinationId' => $mistStreamPushDestination->id]);
+//      Log::debug('Push Destination Service -> pushAutoRemove ran successfully for ', ['destinationId' => $mistStreamPushDestination->id]);
 
       return response()->json(['message' => 'Auto push removed successfully for ' . $mistStreamPushDestination->id]);
     } catch (Exception $e) {

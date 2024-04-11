@@ -3,6 +3,10 @@
 Last Update: April 11, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.7.57
+April 11, 2024
+* User generated recordings fail when trying to download. But the automatic recordings download OK. This is true on the development side, not sure about production.
+
 ## v0.8.7.56
 April 11, 2024
 * Added Start Recording and Stop Recording ability on Go Live page.
