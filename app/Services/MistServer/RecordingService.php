@@ -15,7 +15,7 @@ class RecordingService extends MistServerService {
    */
   public function startRecording($data): bool {
 // Debugging to check the structure of $data
-    Log::debug('Received data for recording:', ['data' => $data]);
+//    Log::debug('Received data for recording:', ['data' => $data]);
 
     // Ensure data is extracted correctly
     $streamName = $data[0];  // Adjust according to the actual key or use indexing if array is not associative

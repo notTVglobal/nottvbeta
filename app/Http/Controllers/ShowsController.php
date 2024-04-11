@@ -809,8 +809,8 @@ class ShowsController extends Controller {
 
     $recordings = $show->recordings->map(function ($recording) use ($mistServerUri, $show) {
       // Determine the correct directory to remove from the path
-      if (str_contains($recording->path, '/media/user_recordings/')) {
-        $path = str_replace(['/media/user_recordings/'], [''], $recording->path);
+      if (str_contains($recording->path, '/media/vbs01/user_recordings/')) {
+        $path = str_replace(['/media/vbs01/user_recordings/'], [''], $recording->path);
         $streamPrefix = 'user_recordings%2B'; // Use a different prefix if needed
       } else {
         $path = str_replace(['/media/recordings/'], [''], $recording->path);
