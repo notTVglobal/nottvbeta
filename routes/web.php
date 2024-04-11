@@ -18,6 +18,7 @@ use App\Http\Controllers\NewsPersonRoleController;
 use App\Http\Controllers\NewsRssArchiveController;
 use App\Http\Controllers\NewsRssFeedItemTempController;
 use App\Http\Controllers\NotificationsController;
+use App\Http\Controllers\RecordingController;
 use App\Http\Controllers\ShowScheduleController;
 use App\Http\Controllers\SubscriptionPlanController;
 use App\Http\Controllers\TeamManagersController;
@@ -1134,6 +1135,8 @@ Route::post('/mist-stream/push-auto-remove/{mistStreamPushDestination}', [MistSt
 Route::post('/mist-stream/start-push', [MistStreamPushDestinationController::class, 'startPush']);
 Route::post('/mist-stream/stop-push', [MistStreamPushDestinationController::class, 'stopPush']);
 Route::post('/mist-stream/update-stream-push-status', [MistStreamPushDestinationController::class, 'updateStreamPushStatus']);
+Route::post('/mist-stream/start-recording/{show}', [RecordingController::class, 'startRecording']);
+Route::post('/mist-stream/stop-recording/{show}', [RecordingController::class, 'stopRecording']);
 
 // Channel Playlists
 ////////////////////

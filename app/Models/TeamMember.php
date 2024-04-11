@@ -5,45 +5,47 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class TeamMember extends Pivot
-{
-    use HasFactory;
+class TeamMember extends Pivot {
+  use HasFactory;
 
-    /**
-     * Indicates if the IDs are auto-incrementing.
-     *
-     * @var bool
-     */
+  /**
+   * Indicates if the IDs are auto-incrementing.
+   *
+   * @var bool
+   */
 
-    // tec21: I removed the id's from the TeamMember table.
-    // Put them back if that is necessary
-    // and uncomment this line:
+  // tec21: I removed the id's from the TeamMember table.
+  // Put them back if that is necessary
+  // and uncomment this line:
 //    public $incrementing = true;
 
-    protected $table = 'team_members';
+  protected $table = 'team_members';
 
-    protected $fillable = [
-        'team_id',
-        'user_id',
-        'active',
-    ];
+  protected $fillable = [
+      'team_id',
+      'user_id',
+      'active',
+      'team_profile_is_public',
+  ];
+
+  protected $casts = [
+      'team_profile_is_public' => 'boolean',
+  ];
 
 
-    // THE PREVIOUS RELATIONSHIPS (Feb.28, 2024)
+  // THE PREVIOUS RELATIONSHIPS (Feb.28, 2024)
 
-    public function teams()
-    {
-        return $this->belongsToMany(Team::class);
-    }
+  public function teams(): \Illuminate\Database\Eloquent\Relations\BelongsToMany {
+    return $this->belongsToMany(Team::class);
+  }
 
-    /**
-     * The users that belong to the team.
-     */
+  /**
+   * The users that belong to the team.
+   */
 
-    public function users()
-    {
-        return $this->belongsToMany(User::class);
-    }
+  public function users(): \Illuminate\Database\Eloquent\Relations\BelongsToMany {
+    return $this->belongsToMany(User::class);
+  }
 
 //    public function users()
 //    {

@@ -6,13 +6,8 @@ use App\Models\MistStreamWildcard;
 use App\Services\MistServer\MistServerService;
 use App\Factories\MistServerServiceFactory;
 use App\Jobs\MistStreamPushAutoRemoveJob;
-use App\Jobs\MistStreamPushStartJob;
-use App\Jobs\MistStreamPushStopJob;
 use App\Models\MistServerActivePush;
 use App\Models\MistStreamPushDestination;
-use App\Services\MistServer\PushService;
-use App\Services\PushDestinationService;
-use App\Services\RecordingService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -418,14 +413,14 @@ class MistStreamPushDestinationController extends Controller {
 
 
   public function pushAutoRemove(MistStreamPushDestination $mistStreamPushDestination): \Illuminate\Http\JsonResponse {
-    Log::debug('Auto push removed for MistStreamPushDestination.', ['destinationId' => $mistStreamPushDestination->id]);
+//    Log::debug('Auto push removed for MistStreamPushDestination.', ['destinationId' => $mistStreamPushDestination->id]);
     try {
 
 //      $this->pushDestinationService->pushAutoRemove($mistStreamPushDestination);
 
       // Dispatch the MistStreamPushAutoRemoveJob with the destination model
 //      MistStreamPushAutoRemoveJob::dispatch($destination);
-      Log::debug('Push Destination Service -> pushAutoRemove ran successfully for ', ['destinationId' => $mistStreamPushDestination->id]);
+//      Log::debug('Push Destination Service -> pushAutoRemove ran successfully for ', ['destinationId' => $mistStreamPushDestination->id]);
 
       return response()->json(['message' => 'Auto push removed successfully for ' . $mistStreamPushDestination->id]);
     } catch (Exception $e) {

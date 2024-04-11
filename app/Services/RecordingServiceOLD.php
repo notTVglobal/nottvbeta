@@ -8,7 +8,7 @@ use App\Models\Recording;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
-class RecordingService {
+class RecordingServiceOLD {
   public function handleNewRecording(Request $request) {
     // Logic for handling a new recording
   }

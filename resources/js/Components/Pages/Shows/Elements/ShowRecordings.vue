@@ -44,7 +44,10 @@
         :class="rowClass(recording.id)"
       >
       <td class="px-6 py-4 whitespace-nowrap">
-        {{ userStore.formatDateInUserTimezone(recording.start_time) }}
+        <div>{{ userStore.formatDateInUserTimezone(recording.start_time) }}</div>
+        <div v-if="recording.comment" class="text-xs uppercase text-red-500 font-semibold break-words">
+          <span :class="{ 'text-green-500': recording.comment !== 'automated recording' }">{{ recording.comment }}</span>
+        </div>
       </td>
       <td class="px-6 py-4 whitespace-nowrap">
         {{ userStore.formatTimeFromDateInUserTimezone(recording.start_time) }}
@@ -57,6 +60,7 @@
       </td>
       <td class="px-6 py-4 whitespace-nowrap">
         <!-- Placeholder for expiration logic -->
+
       </td>
       <!-- We are not making recordings shareable at this time. -->
       <td class=" px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-1">
@@ -66,8 +70,8 @@
         </button>
         <button @click.stop="confirmAddToEpisode"
                 class="btn btn-xs">Add To Episode</button>
-        <button @click.stop="confirmDownload"
-        class="btn btn-xs" >Download</button>
+        <button @click.stop="confirmDownload(recording)"
+        class="btn btn-xs btn-info" >Download</button>
         <button @click.stop="confirmSaveToPremium"
                 class="btn btn-xs">Save to Premium Storage</button>
       </td>
@@ -82,9 +86,14 @@
         <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
       </form>
       <h3 class="font-bold text-lg"></h3>
-      <p class="py-4">Would you like to play the <span class="font-semibold">recording</span> from
+      <p class="py-4 text-xl mt-4">Would you like to play the recording<br /> from
         <span class="font-semibold">{{ selectedRecordingDate }}</span>?</p>
-      <button class="btn" @click="play">Play</button>
+      <p class="my-2 text-left" v-if="selectedRecording && selectedRecording.path"><span class="font-semibold">Path: </span>{{ selectedRecording.path }}</p>
+      <p class="my-2 text-left" v-if="selectedRecording && selectedRecording.comment">
+        <span class="font-semibold">Comment: </span>
+        <span>{{ selectedRecording.comment }}</span>
+      </p>
+      <button class="mt-4 btn" @click="play">Play</button>
     </div>
 
     <form method="dialog" class="modal-backdrop">
@@ -113,10 +122,23 @@
 
   <dialog id="confirmDownloadModal" class="modal">
     <div class="modal-box text-center">
-      <h3 class="font-bold text-lg pt-8">Download</h3>
-      <p class="py-4">We are working on this feature!</p>
+      <h3 class="font-bold text-lg pt-8">Confirm Download</h3>
+      <p class="py-4">Are you sure you want to download the recording?</p>
       <div class="modal-action">
-        <form method="dialog">
+        <form method="dialog" class="w-full flex justify-center">
+          <!-- if there is a button in form, it will close the modal -->
+          <button @click="beginDownload" class="btn btn-info w-20">Yes</button>
+        </form>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="downloadStarted" class="modal">
+    <div class="modal-box text-center">
+      <h3 class="font-bold text-lg pt-8">Download Started</h3>
+      <p class="py-4">Your recording is now downloading!</p>
+      <div class="modal-action">
+        <form method="dialog" class="w-full flex justify-center">
           <!-- if there is a button in form, it will close the modal -->
           <button class="btn">Okay</button>
         </form>
@@ -137,6 +159,8 @@
     </div>
   </dialog>
 
+
+
 </template>
 
 <script setup>
@@ -155,6 +179,8 @@ const userStore = useUserStore()
 const shareClip = useClipboard();
 
 const props = defineProps({
+  showName: String,
+  showImage: Object,
   showRecordings: Array
 })
 
@@ -178,9 +204,11 @@ const state = reactive({
   hoveredRow: null,
 });
 
+const selectedRecording = ref(null)
 const selectedRecordingDate = ref('')
 const selectedRecordingStreamName = ref('')
 const selectedRecordingId = ref('')
+const nowPlayingRecording = ref(null)
 const nowPlayingRecordingId = ref('')
 const nowPlayingStreamName = ref('')
 
@@ -192,6 +220,9 @@ const rowClass = computed(() => (recordingId) => ({
 
 const openVideo = (recording) => {
   document.getElementById('confirmRecordingPlaybackModal').showModal()
+  selectedRecording.value = recording
+  console.log(recording)
+  console.log(selectedRecording.value)
   selectedRecordingStreamName.value = recording.streamName
   selectedRecordingId.value = recording.id
   selectedRecordingDate.value = userStore.formatDateInUserTimezone(recording.start_time)
@@ -216,21 +247,25 @@ const play = () => {
   console.log('recording source: ' + selectedRecordingStreamName.value)
   try {
     videoPlayerStore.loadNewVideo(source.value)
+    nowPlayingRecording.value = selectedRecording.value
     nowPlayingRecordingId.value = selectedRecordingId.value
     nowPlayingStreamName.value = selectedRecordingStreamName.value
     appSettingStore.toggleOttInfo()
     console.log('now playing ID: ' + nowPlayingRecordingId.value)
+    const nowPlayingDate = userStore.formatDateInUserTimezone(nowPlayingRecording.value.start_time)
+    const nowPlayingStartTime = userStore.formatTimeFromDateInUserTimezone(nowPlayingRecording.value.start_time)
+    const secondaryName = nowPlayingDate + ' ' + nowPlayingStartTime + ' Recording'
 
     // Set common details specific to this video play event for nowPlayingStore
     const mediaType = source.value.mediaType
     const commonDetails = {
-      primaryName: 'Recording',
-      secondaryName: '',
-      description: nowPlayingStreamName, // Use the selected recording name for description
+      primaryName: props.showName, //showName
+      secondaryName: secondaryName, //date startTime Recording
+      description: nowPlayingRecording?.value?.comment ?? null, // Comment
       primaryUrl: null,
       secondaryUrl: null,
       channelName: null,
-      image: null,
+      image: props?.showImage,
       team: null,
       creative_commons: null,
     }
@@ -271,8 +306,35 @@ const confirmAddToEpisode = () => {
   document.getElementById('confirmAddToEpisodeModal').showModal()
 }
 
-const confirmDownload = () => {
-  document.getElementById('confirmDownloadModal').showModal()
+const confirmDownload = (recording) => {
+  selectedRecording.value = recording
+  // Confirm the download.
+  document.getElementById('confirmDownloadModal').showModal();
+}
+
+const beginDownload = () => {
+  // Once confirmed, execute the download.
+
+  // The URL where your files are hosted
+  const url = selectedRecording.value.download.url;
+
+  console.log('download url: ' + url)
+  // Create an anchor (<a>) element
+  const downloadLink = document.createElement('a');
+  downloadLink.href = url;
+
+  // Optionally, if you want the download to have a specific filename:
+  // downloadLink.download = 'YourCustomFileNameHere';
+
+  // This is necessary for the download to work in Firefox when triggered programmatically
+  document.body.appendChild(downloadLink);
+
+  downloadLink.click();
+
+  // Clean up by removing the element after triggering the download
+  document.body.removeChild(downloadLink);
+  selectedRecording.value = null
+  document.getElementById('downloadStarted').showModal()
 }
 
 const confirmSaveToPremium = () => {
@@ -280,14 +342,14 @@ const confirmSaveToPremium = () => {
 }
 
 
-function triggerDownload(url, filename = "") {
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename; // You can specify a filename here, or leave it empty
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-}
+// function triggerDownload(url, filename = "") {
+//   const a = document.createElement('a');
+//   a.href = url;
+//   a.download = filename; // You can specify a filename here, or leave it empty
+//   document.body.appendChild(a);
+//   a.click();
+//   document.body.removeChild(a);
+// }
 
 </script>
 <style>

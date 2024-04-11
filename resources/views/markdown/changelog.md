@@ -1,7 +1,18 @@
 # not.tv Changelog
 
-Last Update: April 9, 2024\
+Last Update: April 11, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
+
+## v0.8.7.57
+April 11, 2024
+* User generated recordings fail when trying to download. But the automatic recordings download OK. This is true on the development side, not sure about production.
+
+## v0.8.7.56
+April 11, 2024
+* Added Start Recording and Stop Recording ability on Go Live page.
+* The recordings list on the Show Manage page now has download buttons for the recordings
+* Recordings that are created by the Auto Push feature are labelled as "automatic recording" in the recordings list.
+* Fixed the Log Out button to run 1 method instead of 2.
 
 ## v0.8.7.55
 April 9, 2024

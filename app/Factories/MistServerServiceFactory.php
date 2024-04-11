@@ -5,8 +5,8 @@ namespace App\Factories;
 use App\Services\MistServer\MistServerService;
 use App\Services\MistServer\PlaybackService;
 use App\Services\MistServer\PushService;
+use App\Services\MistServer\RecordingService;
 use App\Services\MistServer\VodService;
-use App\Services\RecordingService;
 
 class MistServerServiceFactory
 {

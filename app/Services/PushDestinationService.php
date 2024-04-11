@@ -10,9 +10,9 @@ use Illuminate\Support\Facades\Log;
 class PushDestinationService {
 
   protected MistServerService $mistServerService;
-  protected RecordingService $recordingService;
+  protected RecordingServiceOLD $recordingService;
 
-  public function __construct(RecordingService $recordingService, MistServerService $mistServerService) {
+  public function __construct(RecordingServiceOLD $recordingService, MistServerService $mistServerService) {
     $this->mistServerService = $mistServerService;
     $this->recordingService = $recordingService;
   }

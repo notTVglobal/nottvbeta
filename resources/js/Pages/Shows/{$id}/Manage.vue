@@ -158,7 +158,7 @@
           </div>
           <div v-if="showStore.openComponent === 'showRecordings'">
             <div class="mt-4 mb-12 pb-6 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-              <ShowRecordings :showRecordings="show.recordings"/>
+              <ShowRecordings :showRecordings="show.recordings" :showName="show.name" :showImage="show.image"/>
 
 <!--            </div>-->
             </div>

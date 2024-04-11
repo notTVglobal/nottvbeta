@@ -10,6 +10,7 @@ class Recording extends Model {
   use HasUlids, HasFactory;
 
   protected $fillable = [
+      'comment',
       'stream_name',
       'path',
       'file_extension',
