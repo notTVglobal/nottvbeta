@@ -3,6 +3,10 @@
 Last Update: April 11, 2024\
 Travis Michael Cross <a href="mailto:travis@not.tv">travis@not.tv</a>
 
+## v0.8.7.62
+April 11, 2024
+* Fix recordings not working when user Start Recording.
+
 ## v0.8.7.61
 April 11, 2024
 * Setup an environment variable for recordings
