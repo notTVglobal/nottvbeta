@@ -810,15 +810,15 @@ class ShowsController extends Controller {
     $recordings = $show->recordings->map(function ($recording) use ($mistServerUri, $show) {
       // Process path to remove unnecessary parts and prepare for URL usage
       $path = str_replace(['/media/recordings/'], [''], $recording->path);
-      $encodedPath = urlencode($path);
+      $encodedPath = rawurlencode($path);
       $streamName = 'recordings%2B' . $encodedPath . '.mp4'; // Prepare stream name
 
       // Format the start time if available and is a Carbon instance, else use a default
-      $formattedStartTime = optional($recording->start_time)->format(' Y m d H i s') ?? 'unknown_time';
+      $formattedStartTime = optional($recording->start_time)->format('_Y.m.d.H.i.s') ?? 'unknown_time';
 
       // Construct the file name and encode it for URL usage
       $downloadFileName = $show->name . $formattedStartTime . '.mp4';
-      $encodedFileName = urlencode($downloadFileName);
+      $encodedFileName = rawurlencode($downloadFileName);
 
       // Construct the download URL with correct query parameters
       $downloadUrl = rtrim($mistServerUri, '/') . '/' . $streamName . '?dl=1&filename=' . $encodedFileName;
