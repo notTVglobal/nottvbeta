@@ -108,30 +108,30 @@ class MistTriggerController extends Controller {
 //    Log::debug('Handling recording end. Request content:', ['content' => $request->getContent()]);
 
     Log::alert('New Recording End');
-//    Log::debug('handlePushEnd Raw Request', [
-//        'headers' => $request->headers->all(),
-//        'body'    => $request->getContent() // For raw body content
-//    ]);
+    Log::debug('handlePushEnd Raw Request', [
+        'headers' => $request->headers->all(),
+        'body'    => $request->getContent() // For raw body content
+    ]);
 
     $parsedContent = $this->parseRecordingEndContent($request->getContent());
     // Optionally log the parsed content if needed
-//    Log::debug('Parsed recording end content:', ['parsedContent' => $parsedContent]);
+    Log::debug('Parsed recording end content:', ['parsedContent' => $parsedContent]);
 
     $recording = $this->createRecordingEntry($parsedContent);
     // Log the creation of a new recording entry.
-//    Log::info("Created new recording entry for unique identifier: {$recording->path}");
+    Log::info("Created new recording entry for unique identifier: {$recording->path}");
     // Log after creating the recording entry
-//    Log::debug('Recording entry created:', ['recording' => $recording]);
+    Log::debug('Recording entry created:', ['recording' => $recording]);
 
     $this->clearRecordingMetadataAndBroadcast($parsedContent['streamName']);
     // Log after clearing recording metadata and broadcasting
-//    Log::debug('Cleared recording metadata and broadcast for stream:', ['streamName' => $parsedContent['streamName']]);
+    Log::debug('Cleared recording metadata and broadcast for stream:', ['streamName' => $parsedContent['streamName']]);
 
     if ($recording) {
       UpdateRecordingModelAndNotify::dispatch($recording);
     }
     // Log after dispatching the job
-//    Log::debug('Dispatched UpdateRecordingModelAndNotify job for recording:', ['recording' => $recording]);
+    Log::debug('Dispatched UpdateRecordingModelAndNotify job for recording:', ['recording' => $recording]);
 
     return response('1', 200);
   }
@@ -373,17 +373,17 @@ class MistTriggerController extends Controller {
   protected function createRecordingEntry(array $parsedContent): ?Recording {
 
     // Construct a unique identifier for the recording.
-    $uniqueId = $parsedContent['filePath'];
+    $uniqueFilePath = $parsedContent['filePath'];
 
     // First, check if a recording with the same unique identifier already exists.
-    $existingRecording = Recording::where('path', $uniqueId)->first();
+    $existingRecording = Recording::where('path', $uniqueFilePath)->first();
 
     if ($existingRecording) {
 //      Log::info("Found existing recording entry, checking if update is needed.", ['uniqueId' => $uniqueId]);
 
       // Only update the recording if the comment is not 'automated recording'
       if ($existingRecording->comment !== 'automated recording') {
-        Log::info("Updating non-automated existing recording.", ['uniqueId' => $uniqueId]);
+        Log::info("Updating non-automated existing recording.", ['uniqueFilePath' => $uniqueFilePath]);
         $existingRecording->update([
             'stream_name'                    => $parsedContent['streamName'],
             'path'                           => $parsedContent['filePath'],
@@ -434,9 +434,9 @@ class MistTriggerController extends Controller {
       $mistStreamWildcard->metadata = $currentMetadata;
       $mistStreamWildcard->is_recording = false;
       $mistStreamWildcard->save();
-//      Log::info("Cleared recording metadata for stream: {$streamName}");
+      Log::info("Cleared recording metadata for stream: {$streamName}");
       // TODO: Broadcast New Recoding to Team
-//      broadcast(new MistTriggerRecordingStop($mistStreamWildcard->id, 'stopped'));
+      broadcast(new MistTriggerRecordingStop($mistStreamWildcard->id, 'stopped'));
     }
   }
 

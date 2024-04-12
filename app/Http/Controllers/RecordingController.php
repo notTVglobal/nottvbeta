@@ -83,38 +83,55 @@ class RecordingController extends Controller
   }
 
   public function stopRecording(Show $show, Request $request): JsonResponse {
+    try {
     $validated = $request->validate([
         'stream_name'    => 'required|string',
     ]);
 
     $streamName = $validated['stream_name'];
 
-    try {
-      $isRecordingStopped = $this->recordingService->stopRecording($streamName);
-      Log::alert('User stopped recording for show: ' . $show->name);
-
-      if (!$isRecordingStopped) {
-        // Log the failure or handle it as needed
-        Log::error('Failed to stop recording for show: ', ['streamName' => $streamName, 'showName' => $show->name]);
-        return response()->json(['error' => 'Failed to stop recording.'], 500);
-      }
-
-      // Proceed only if recording stopped successfully
-      $show->mistStreamWildcard()->update(['is_recording' => 0]);
-
-      return response()->json([
-          'success' => true,
-          'status' => 'info',
-          'message' => 'Recording stopped for ' . $show->name,
-      ]);
-
-    } catch (Exception $e) {
-      Log::error('Exception caught in stopPush', [
-          'showName' => $show->name,
-          'message' => $e->getMessage(),
-          'exception' => $e,
-      ]);
-      return response()->json(['error' => 'An error occurred while attempting to stop recording.'], 500);
+    if (!$this->recordingService->stopRecording($streamName)) {
+      Log::error('Failed to stop recording for show: ', ['streamName' => $streamName, 'showName' => $show->name]);
+      return response()->json(['error' => 'Failed to stop recording.'], 500);
     }
+
+    Log::alert('User stopped recording for show: ' . $show->name);
+    return response()->json([
+        'success' => true,
+        'status' => 'info',
+        'message' => 'Recording stopped for ' . $show->name,
+    ]);
+    } catch (Exception $e) {
+      Log::error('Failed to stop recording from controller', ['show' => $show->name, 'message' => $e->getMessage()]);
+      return response()->json(['error' => 'Failed to process your request'], 500);
+    }
+
+//    try {
+//      $isRecordingStopped = $this->recordingService->stopRecording($streamName);
+//      Log::alert('User stopped recording for show: ' . $show->name);
+//
+//      if (!$isRecordingStopped) {
+//        // Log the failure or handle it as needed
+//        Log::error('Failed to stop recording for show: ', ['streamName' => $streamName, 'showName' => $show->name]);
+//        return response()->json(['error' => 'Failed to stop recording.'], 500);
+//      }
+//
+//      // Proceed only if recording stopped successfully
+//      $show->mistStreamWildcard()->update(['is_recording' => 0]);
+//
+//      return response()->json([
+//          'success' => true,
+//          'status' => 'info',
+//          'message' => 'Recording stopped for ' . $show->name,
+//      ]);
+//
+//    } catch (Exception $e) {
+//      Log::error('Exception caught in stopPush', [
+//          'showName' => $show->name,
+//          'message' => $e->getMessage(),
+//          'exception' => $e,
+//      ]);
+//      return response()->json(['error' => 'An error occurred while attempting to stop recording.'], 500);
+//    }
   }
 }
