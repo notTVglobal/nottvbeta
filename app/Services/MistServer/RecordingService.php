@@ -14,6 +14,7 @@ class RecordingService extends MistServerService {
    * @throws Exception
    */
   public function startRecording($data): bool {
+    Log::debug('2c start recording in RecordingService');
 // Debugging to check the structure of $data
 //    Log::debug('Received data for recording:', ['data' => $data]);
 
@@ -35,6 +36,7 @@ class RecordingService extends MistServerService {
       $recording->start_time = Carbon::now(); // Set the start_time to the current time
       $recording->save();
 
+      Log::debug('2d recording started in RecordingService');
       return true;
     } else {
       Log::warning('Failed to start recording', ['response' => $response]);

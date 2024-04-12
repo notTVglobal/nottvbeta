@@ -130,14 +130,17 @@ export const useGoLiveStore = defineStore('goLiveStore', {
             this.isLive = false
         },
         async startRecording() {
+            console.log('1 start recording in Go Live Store')
             const notificationStore = useNotificationStore()
             const showSlug = this.selectedShow.slug
             console.log(`Starting recording for show ${showSlug}`)
             this.processingRecordingChange = true
             try {
+                console.log('2a post to /mist-stream/start-recording/')
                 const response = await axios.post('/mist-stream/start-recording/'+showSlug, {
                     stream_name: this.streamKey,
                 })
+                console.log('5 and we\'re back in the GoLiveStore')
                 // console.log('Recording started successfully:', response.data)
                 // console.log('Stream Name:', this.streamKey)
                 const {message, status} = response.data
