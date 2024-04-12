@@ -21,6 +21,7 @@ class RecordingController extends Controller
   }
 
   public function startRecording(Request $request, Show $show): \Illuminate\Http\JsonResponse {
+    Log::debug('2b start recording in RecordingController');
     $validated = $request->validate([
         'stream_name'    => 'required|string',
     ]);
@@ -39,6 +40,7 @@ class RecordingController extends Controller
 
 //      Log::debug('start recording .', ['data' => $data]);
       $isRecordingStarted = $this->recordingService->startRecording($data);
+      Log::debug('3 recording started back to RecordingController');
       Log::alert('User started recording for show: ' . $show->name);
 
       if (!$isRecordingStarted) {
@@ -50,7 +52,9 @@ class RecordingController extends Controller
       // Proceed only if recording started successfully
 
       if ($show->mistStreamWildcard()->exists()) {
+        Log::debug('4 mistStreamWildcard exists');
         $show->mistStreamWildcard()->update(['is_recording' => 1]);
+        Log::debug('4 mistStreamWildcard is_recording set to true');
       } else {
         // Handle the case where $show does not have a related MistStreamWildcard
         Log::warning('No related MistStreamWildcard found for show.', ['showId' => $show->id]);
@@ -62,6 +66,7 @@ class RecordingController extends Controller
       }
         // Dispatch the MistStreamPushStartJob with the destination model
         // Assuming dispatching the job is done here or somewhere else as needed
+      Log::debug('5 returning to GoLiveStore');
         return response()->json([
             'success' => true,
             'status' => 'success',
