@@ -3,7 +3,7 @@ import { useUserStore } from '@/Stores/UserStore'
 import { createTimeSlots } from '@/Utilities/TimeUtils'
 import {
     addDays,
-    addHours, addMinutes,
+    addHours,
     addMonths,
     eachDayOfInterval,
     eachHourOfInterval,
@@ -88,6 +88,7 @@ function fetchShowsScheduledBetween(state, startDateTime, endDateTime) {
 }
 
 const initialState = () => ({
+    windowWidth: window.innerWidth, // Store window width in state
     viewingWindowStart: new Date(),
     currentMonth: new Date(),
     selectedDay: new Date(),
@@ -99,6 +100,7 @@ const initialState = () => ({
     weeklyContent: [],
     dataFetchLog: [],
     scheduleIsLoading: false,
+    shows: [],
 })
 
 export const useScheduleStore = defineStore('scheduleStore', {
@@ -113,6 +115,10 @@ export const useScheduleStore = defineStore('scheduleStore', {
             this.viewingWindowStart = now
             this.currentMonth = now
             this.selectedDay = now
+        },
+        updateWidth() {
+            // Action to update the window width in state
+            this.windowWidth = window.innerWidth;
         },
         async setSelectedDay(day) {
             this.selectedDay = day
@@ -531,7 +537,7 @@ export const useScheduleStore = defineStore('scheduleStore', {
             })
 
             // Now handle placing the shows with adjusted spans in the grid, including placeholders for empty slots
-            const gridItems = timeSlots.map((slot, index) => {
+            return timeSlots.map((slot, index) => {
                 const showForSlot = showsWithAdjustedSpans.find(show => show.gridStart === index + 1)
                 if (showForSlot) {
                     return showForSlot
@@ -545,8 +551,6 @@ export const useScheduleStore = defineStore('scheduleStore', {
                     }
                 }
             })
-
-            return gridItems
         },
         fillEmptySlotsWithPlaceholders(showsWithPlacement, timeSlots) {
             const gridItems = []
@@ -578,6 +582,18 @@ export const useScheduleStore = defineStore('scheduleStore', {
     },
 
     getters: {
+        numberOfColumns: (state) => {
+            // Compute the number of columns based on window width
+            if (state.windowWidth >= 1024 && state.windowWidth < 1200) {
+                return 4; // 4 columns for widths 1024px to 1199px
+            } else if (state.windowWidth >= 1200 && state.windowWidth < 1600) {
+                return 6; // 6 columns for widths 1200px to 1599px
+            } else if (state.windowWidth >= 1600) {
+                return 8; // 8 columns for widths 1600px and above
+            } else {
+                return 4; // Default to 4 columns for smaller sizes
+            }
+        },
         nextFourHoursOfContent: (state) => {
             const now = new Date()
             const startOfCurrentHour = new Date(now.setMinutes(0, 0, 0))
@@ -585,9 +601,9 @@ export const useScheduleStore = defineStore('scheduleStore', {
 
             const timeSlots = createTimeSlots(startOfCurrentHour, 4, 30)
             let shows = fetchShowsScheduledBetween(state, startOfCurrentHour, fourHoursLater)
-            shows = resolveSchedulingConflicts(shows)
-            let adjustedShows = adjustShowsForGrid(shows, timeSlots)
-            adjustedShows = fillEmptySlotsWithPlaceholders(adjustedShows, timeSlots)
+            shows = this.resolveSchedulingConflicts(shows)
+            let adjustedShows = this.adjustShowsForGrid(shows, timeSlots)
+            adjustedShows = this.fillEmptySlotsWithPlaceholders(adjustedShows, timeSlots)
 
             return adjustedShows
         },

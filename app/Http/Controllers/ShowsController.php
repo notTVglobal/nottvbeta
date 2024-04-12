@@ -810,17 +810,23 @@ class ShowsController extends Controller {
     $userRecordingsPath = config('paths.user_recordings_path');
     $autoRecordingsPath = config('paths.auto_recordings_path');
 
+    Log::debug('Recording paths', ['userRecordingsPath' => $userRecordingsPath, 'autoRecordingsPath' => $autoRecordingsPath]);
+
     $recordings = $show->recordings->map(function ($recording) use ($autoRecordingsPath, $userRecordingsPath, $mistServerUri, $show) {
+      Log::debug('Original recording path', ['path' => $recording->path]);
       // Determine the correct directory to remove from the path
       if (str_contains($recording->path, $userRecordingsPath)) {
         $path = str_replace([$userRecordingsPath], [''], $recording->path);
         $streamPrefix = 'user_recordings%2B'; // Use a different prefix if needed
+        Log::debug('User recording path modified', ['modifiedPath' => $path]);
       } else {
         $path = str_replace([$autoRecordingsPath], [''], $recording->path);
         $streamPrefix = 'recordings%2B';
+        Log::debug('Auto recording path modified', ['modifiedPath' => $path]);
       }
 
       // URL encode the path to ensure it's safe for use in URLs
+      $path = trim($path, '/ ');  // Trim slashes and spaces // NEW
       $encodedPath = rawurlencode($path);
       $streamName = $streamPrefix . $encodedPath . '.mp4'; // Prepare stream name
 
@@ -833,9 +839,11 @@ class ShowsController extends Controller {
 
       // Construct the download URL with correct query parameters
       $downloadUrl = rtrim($mistServerUri, '/') . '/' . $streamName . '?dl=1&filename=' . $encodedFileName;
+      Log::debug('Download URL', ['url' => $downloadUrl]);
 
       // Construct a share URL
       $shareUrl = rtrim($mistServerUri, '/') . '/' . $encodedPath . '.html';
+      Log::debug('Share URL', ['url' => $shareUrl]);
 
       // Return the modified recording with additional download details
       return collect($recording->only([
@@ -850,6 +858,7 @@ class ShowsController extends Controller {
           ]);
     });
 
+    Log::debug('Final data structure for front end', ['recordings' => $recordings]);
     return Inertia::render('Shows/{$id}/Manage', [
         'show'            => [
             'id'              => $show->id,

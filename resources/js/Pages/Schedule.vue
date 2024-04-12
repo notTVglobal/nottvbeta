@@ -56,6 +56,16 @@
     <!--          <div class="schedule-cell" :style="{ 'grid-column': index + 1 }">{{ time.formatted }}</div>-->
     <!--        </template>-->
     <!--      </div>-->
+    <div class="schedule-grid">
+    <div class="header-row">
+      <!-- Time slots header -->
+      <div class="time-cell bg-gray-900 px-3 py-2 text-center font-bold" v-for="interval in nextFourHoursWithHalfHourIntervals" :key="interval.dateTime">
+        {{ interval.formatted }}
+      </div>
+    </div>
+    </div>
+    <ScheduleGrid />
+
 
     <div class="schedule-grid">
       <div class="header-row">
@@ -212,6 +222,7 @@ import { computed, onMounted } from 'vue'
 import SingleImage from '@/Components/Global/Multimedia/SingleImage.vue'
 import dayjs from 'dayjs'
 import { Inertia } from '@inertiajs/inertia'
+import ScheduleGrid from '@/Components/Pages/Schedule/ScheduleGrid.vue'
 
 usePageSetup('schedule')
 
