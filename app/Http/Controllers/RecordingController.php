@@ -27,11 +27,11 @@ class RecordingController extends Controller
 
     $streamName = $validated['stream_name'];
     $userRecordingsPath = config('paths.user_recordings_path'); // this is set in the .env and referenced in our config/paths.php
-
+    Log::debug('userRecordingsPath: ' . $userRecordingsPath);
     try {
 
       $fullPushUri = $userRecordingsPath . $streamName . '_' . Carbon::now()->format('Y.m.d.H.i.s') . '.mkv';
-
+      Log::debug('fullPushUri', (array) $fullPushUri);
       $data = [
           $streamName,
           $fullPushUri,
